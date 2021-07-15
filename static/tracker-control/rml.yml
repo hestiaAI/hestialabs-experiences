@@ -1,0 +1,29 @@
+prefixes:
+  ex: http://www.example.com/
+  schema: http://schema.org/
+
+sources:
+  source: [input.csv~csv]
+
+mappings:
+  organization:
+    sources: source
+    s: ex:organization/$(Tracker Name)
+    po:
+      - [a, schema:Organization]
+      - [ex:organization/name, $(Tracker Name)]
+
+  trace:
+    sources: source
+    po:
+      - [ex:trace/destination, $(daddr)]
+      - [ex:trace/time, $(time)]
+      - [ex:trace/tracker/category, $(Tracker Category)]
+      - p: ex:trace/tracker/organization
+        o:
+          mapping: organization
+          condition:
+            function: equal
+            parameters:
+              - [str1, $(Tracker Name), s]
+              - [str2, $(Tracker Name), o]
