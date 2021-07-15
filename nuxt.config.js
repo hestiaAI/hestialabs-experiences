@@ -69,28 +69,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    babel: {
-      // babelrc: true
-      plugins: [
-        [
-          '@babel/plugin-proposal-class-properties', { loose: false }
-        ],
-        [
-          '@babel/plugin-proposal-private-methods', { loose: false }
-        ],
-        [
-          '@babel/plugin-proposal-private-property-in-object', { loose: false }
-        ]
-      ]
-    //   // presets (_, defaultPreset) {
-    //   //   console.log(defaultPreset)
-    //   //   return [
-    //   //     defaultPreset,
-    //   //     ...['@babel/preset-stage-3']
-    //   //   ]
-    //   // }
-    //   // plugins: [require('@babel/plugin-proposal-class-properties').default, { loose: false }]
-    },
     // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
     extend (config, { isDev, isClient }) {
       config.node = {
@@ -100,7 +78,6 @@ export default {
     plugins: [
       // to ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
       new webpack.IgnorePlugin({ resourceRegExp: /^/u, contextRegExp: /xpath-iterator/u })
-      // '@babel/plugin-proposal-class-properties'
     ]
   }
 }
