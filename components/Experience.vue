@@ -55,7 +55,8 @@ export default {
     }
   },
   async mounted () {
-    this.yarrrml = await this.$axios.$get(`/${this.identifier}/rml.yml`)
+    const result = await fetch(`/${this.identifier}/rml.yml`)
+    this.yarrrml = await result.text()
     this.rml = await parse(this.yarrrml)
   },
   methods: {
