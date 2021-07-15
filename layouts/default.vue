@@ -4,7 +4,7 @@
       fixed
       app
     >
-      <v-toolbar-title>SITRA DEMO</v-toolbar-title>
+      <v-toolbar-title>Hestia.AI - SITRA Demo</v-toolbar-title>
     </v-app-bar>
     <v-main>
       <v-container>

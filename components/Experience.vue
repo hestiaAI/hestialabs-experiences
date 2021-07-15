@@ -9,7 +9,20 @@
     />
 
     <p>Output:</p>
-    <pre cass="mt-6"><code v-text="output" /></pre>
+    <pre cass="mt-6"><code v-text="output || 'None'" /></pre>
+    <v-btn
+      v-if="href"
+      outlined
+      nuxt
+      download
+      :href="href"
+      class="mt-5"
+    >
+      <v-icon left>
+        mdi-download
+      </v-icon>
+      Download
+    </v-btn>
   </div>
 </template>
 
@@ -37,7 +50,9 @@ export default {
     return {
       yarrrml: '',
       rml: '',
-      output: 'None'
+      output: '',
+      error: false,
+      href: ''
     }
   },
   computed: {
@@ -70,8 +85,10 @@ export default {
           }
           const result = await map(this.rml, inputFiles)
           this.output = result
+          this.href = window.URL.createObjectURL(new Blob([result], { type: 'text/plain' }))
         } catch (error) {
           this.output = error
+          this.href = false
         }
       }
     }
