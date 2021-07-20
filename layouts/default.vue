@@ -1,9 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar
-      fixed
-      app
-    >
+    <v-app-bar fixed app>
       <v-toolbar-title>Hestia.AI - SITRA Demo</v-toolbar-title>
     </v-app-bar>
     <v-main>
@@ -11,10 +8,7 @@
         <nuxt />
       </v-container>
     </v-main>
-    <v-footer
-      app
-      absolute
-    >
+    <v-footer app absolute>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
@@ -22,9 +16,8 @@
 
 <script>
 export default {
-  data () {
-    return {
-    }
+  data() {
+    return {}
   }
 }
 </script>

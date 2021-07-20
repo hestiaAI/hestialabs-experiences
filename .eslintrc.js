@@ -10,10 +10,19 @@ module.exports = {
   },
   extends: [
     '@nuxtjs',
+    'plugin:prettier/recommended',
     'plugin:nuxt/recommended'
   ],
-  plugins: [
-  ],
+  plugins: ['prettier'],
   // add your custom rules here
-  rules: {}
+  rules: {
+    // https://stackoverflow.com/a/64609434/8238129
+    'vue/valid-v-slot': [
+      'error',
+      {
+        allowModifiers: true
+      }
+    ],
+    'vue/no-unregistered-components': ['off', {}]
+  }
 }

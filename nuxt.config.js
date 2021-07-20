@@ -15,18 +15,14 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-  ],
+  css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-  ],
+  plugins: [],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -54,7 +50,7 @@ export default {
     theme: {
       dark: false,
       themes: {
-        dark: {
+        light: {
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
@@ -70,14 +66,17 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
-    extend (config, { isDev, isClient }) {
+    extend(config, { isDev, isClient }) {
       config.node = {
         fs: 'empty' // to ignore fs
       }
     },
     plugins: [
       // to ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
-      new webpack.IgnorePlugin({ resourceRegExp: /^/u, contextRegExp: /xpath-iterator/u })
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^/u,
+        contextRegExp: /xpath-iterator/u
+      })
     ]
   }
 }
