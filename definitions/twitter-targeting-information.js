@@ -40,8 +40,12 @@ const sources = [
 
 export default {
   ext: 'zip',
-  files,
-  sources: sourceArraysToObjects(sources),
-  format: 'json',
-  preprocessor
+  // 'files' required for zip-archives and when multiple: true
+  files: Object.values(files),
+  sources: sourceArraysToObjects(sources, 'json'),
+  preprocessor,
+  functions: {
+    'http://www.example.com/dateTimeAddTimeChar': ([input]) =>
+      input.replace(' ', 'T')
+  }
 }
