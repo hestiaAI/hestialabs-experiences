@@ -132,6 +132,7 @@ export default {
         )
         this.success = true
       } catch (error) {
+        console.error(error)
         this.output = error
         this.success = false
       } finally {
