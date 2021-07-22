@@ -14,7 +14,7 @@
             contain
             width="100"
           />
-          <span>SITRA Demo</span>
+          <span>Hestia RML</span>
         </nuxt-link>
       </v-toolbar-title>
     </v-app-bar>

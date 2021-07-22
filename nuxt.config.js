@@ -5,7 +5,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s',
-    title: 'SITRA demo',
+    title: 'Hestia RML',
     htmlAttrs: {
       lang: 'en'
     },
