@@ -52,15 +52,3 @@ export default {
   }
 }
 </script>
-
-<style>
-pre {
-  white-space: pre-wrap;
-  height: 300px;
-  overflow-y: auto;
-}
-
-pre code {
-  width: 100%;
-}
-</style>
