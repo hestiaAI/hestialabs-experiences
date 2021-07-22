@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h1>{{ meta.title }}: {{ meta.subtitle }}</h1>
     <h2 class="mt-3">Input</h2>
     <div class="io-block">
       <div class="mr-lg-6 mb-6">
@@ -144,6 +145,9 @@ export default {
     }
   },
   computed: {
+    meta() {
+      return this.$store.getters.getExperienceByKey(this.$route.params.key)
+    },
     extensions() {
       return this.ext.split(',')
     },

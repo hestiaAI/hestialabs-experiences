@@ -6,7 +6,7 @@
 
     <v-row class="mt-6">
       <v-col
-        v-for="{ title, subtitle, imgsrc, key } in experiences"
+        v-for="{ title, subtitle, imgsrc, key } in $store.state.experiences"
         :key="key"
         cols="12"
         sm="6"
@@ -32,23 +32,7 @@
 <script>
 export default {
   data() {
-    return {
-      experiences: [
-        {
-          title: 'TrackerControl',
-          subtitle: 'Tracking data',
-          key: 'tracker-control',
-          imgsrc: 'https://trackercontrol.org/images/logo.png'
-        },
-        {
-          title: 'Twitter',
-          subtitle: 'Targeting Information',
-          key: 'twitter-targeting-information',
-          imgsrc:
-            'https://www.iconpacks.net/icons/2/free-twitter-logo-icon-2429-thumb.png'
-        }
-      ]
-    }
+    return {}
   }
 }
 </script>
