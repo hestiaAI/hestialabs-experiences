@@ -1,0 +1,19 @@
+authors: Valentin Oliver Loftsson <valentin@hestia.ai>
+
+prefixes:
+  ex: http://www.example.com/
+  schema: http://schema.org/
+
+sources:
+  first_source:
+    access: data/data_file.json
+    referenceFormulation: jsonpath
+    iterator: $.[*]
+
+mappings:
+  first_mapping:
+    sources:
+      - first_source
+    s: schema:predicate/$(variable)
+    po:
+      - [a, schema:object]

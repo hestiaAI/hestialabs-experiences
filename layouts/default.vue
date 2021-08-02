@@ -14,7 +14,7 @@
             contain
             width="100"
           />
-          <span>Hestia RML</span>
+          <span>HestiaLabs Demo</span>
         </nuxt-link>
       </v-toolbar-title>
     </v-app-bar>
