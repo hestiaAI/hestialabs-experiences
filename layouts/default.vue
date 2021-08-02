@@ -4,7 +4,7 @@
       <v-toolbar-title>
         <nuxt-link
           to="/"
-          class="d-flex align-end"
+          class="d-flex align-center"
           style="text-decoration: none; color: inherit;"
         >
           <v-img
