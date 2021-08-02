@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1>{{ meta.title }}: {{ meta.subtitle }}</h1>
+    <h1>{{ meta.title }}</h1>
+    <p class="subtitle-1">{{ meta.subtitle }}</p>
     <div class="io-block">
       <div class="mr-lg-6 mb-6">
         <h2 class="my-3">YARRRML</h2>
@@ -66,7 +67,15 @@
         <h2 class="my-3">RDF</h2>
         <base-button :disabled="generateRDFDisabled" @click="generateRDF">
           Generate RDF
-          <template v-if="rdf">
+          <template v-if="rdfLoading">
+            <v-progress-circular
+              class="ml-2"
+              :size="14"
+              :width="2"
+              indeterminate
+            />
+          </template>
+          <template v-else-if="rdf">
             <v-icon v-if="rdfError" right color="red">mdi-alert</v-icon>
             <v-icon v-else right color="green">mdi-check-circle</v-icon>
           </template>
@@ -98,6 +107,8 @@ import parseYARRRML from '@/lib/parse-yarrrml'
 
 import { createObjectURL, objectIsEmpty } from '@/lib/utils'
 
+import Worker from '@/lib/rdf.worker.js'
+
 export default {
   props: {
     identifier: {
@@ -114,7 +125,7 @@ export default {
     },
     sources: {
       type: Array,
-      required: true
+      default: () => []
     },
     preprocessor: {
       type: Function,
@@ -122,15 +133,12 @@ export default {
         return input
       }
     },
-    functions: {
-      type: Object,
-      default: () => ({})
-    },
     ext: {
       type: String,
       required: true,
       validator(val) {
-        const validExtensions = ['zip', 'csv', 'json', 'xml']
+        // JS files allowed for experimenting with individual twitter files
+        const validExtensions = ['zip', 'csv', 'json', 'js', 'xml']
         return val.split(',').every(v => validExtensions.includes(v))
       }
     }
@@ -147,6 +155,7 @@ export default {
       rmlError: false,
       rmlHref: '',
       rdf: '',
+      rdfLoading: false,
       rdfError: false,
       rdfHref: ''
     }
@@ -248,15 +257,40 @@ export default {
       }
     },
     async generateRDF() {
-      try {
-        this.rdfError = false
-        this.rdf = await mapToRDF(this.rml, this.inputFiles, this.functions)
-        this.rdfHref = createObjectURL(this.rdf, 'text/n3; charset=utf-8')
-      } catch (error) {
-        console.error(error)
-        this.rdfError = true
-        this.rdf = error
-        this.rdfHref = createObjectURL(this.rdf)
+      const { rml, inputFiles } = this
+      this.rdfLoading = true
+
+      if (window.Worker) {
+        const worker = new Worker()
+
+        worker.postMessage([rml, inputFiles])
+
+        worker.addEventListener('message', ({ data }) => {
+          this.rdfLoading = false
+          if (data instanceof Error) {
+            this.rdfError = true
+            this.rdfHref = createObjectURL(data)
+          } else {
+            this.rdfError = false
+            this.rdfHref = createObjectURL(data, 'text/n3; charset=utf-8')
+          }
+
+          this.rdf = data
+        })
+      } else {
+        console.warn('Your browser does not support web workers.')
+        try {
+          this.rdf = await mapToRDF(rml, inputFiles)
+          this.rdfHref = createObjectURL(this.rdf, 'text/n3; charset=utf-8')
+          this.rdfError = false
+        } catch (error) {
+          console.error(error)
+          this.rdfError = true
+          this.rdf = error
+          this.rdfHref = createObjectURL(this.rdf)
+        } finally {
+          this.rdfLoading = false
+        }
       }
     }
   }

@@ -52,7 +52,7 @@ export default {
   },
   props: {
     value: {
-      type: [Object, String],
+      type: [Object, String, Error],
       default: ''
     },
     error: {

@@ -5,7 +5,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s',
-    title: 'Hestia RML',
+    title: 'HestiaLabs Demo',
     htmlAttrs: {
       lang: 'en'
     },
@@ -70,6 +70,10 @@ export default {
       config.node = {
         fs: 'empty' // to ignore fs
       }
+      config.module.rules.push({
+        test: /\.worker\.js$/,
+        use: { loader: 'worker-loader' }
+      })
     },
     plugins: [
       // to ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
