@@ -207,54 +207,58 @@ export default {
   },
   methods: {
     objectIsEmpty,
-    async onFileChange(submittedFiles) {
-      try {
-        // set filesLoading state while processing uploaded files
-        this.filesError = false
-        this.filesLoading = true
-        const start = new Date()
+    async onFileChange(files) {
+      if (files) {
+        // files is an Array already if multiple is true
+        const submittedFiles = this.multiple ? files : [files]
+        try {
+          // set filesLoading state while processing uploaded files
+          this.filesError = false
+          this.filesLoading = true
+          const start = new Date()
 
-        // read file/archive(s) asynchronously
-        const resolvedArr = await Promise.all(
-          submittedFiles.map(async f => {
-            if (f.name.endsWith('.zip')) {
-              // read zip archive and only extract files listed in this.files
-              return await unzipit.readFiles(f, this.files)
-            } else {
-              return await readFile(f)
-            }
-          })
-        )
-
-        // compute upload time
-        this.filesUploadTime = parseInt((new Date() - start) / 1000)
-
-        // create inputFiles object with path-text pairs
-        let inputFiles = {}
-        if (!this.files.length && !this.multiple) {
-          // user submits a single file and the name does not matter
-          inputFiles[`input.${this.extensions[0]}`] = resolvedArr[0] || ''
-        } else {
-          // user submits multiple files or the files prop is not an empty array
-          // 1. Single or multiple zip files
-          let names = this.files
-          if (!this.files.length) {
-            // 2. Multiple individual files
-            names = submittedFiles.map(({ name }) => name)
-          }
-          inputFiles = Object.fromEntries(
-            resolvedArr
-              .flat()
-              .map((text, idx) => [names[idx], this.preprocessor(text)])
+          // read file/archive(s) asynchronously
+          const resolvedArr = await Promise.all(
+            submittedFiles.map(async f => {
+              if (f.name.endsWith('.zip')) {
+                // read zip archive and only extract files listed in this.files
+                return await unzipit.readFiles(f, this.files)
+              } else {
+                return await readFile(f)
+              }
+            })
           )
+
+          // compute upload time
+          this.filesUploadTime = parseInt((new Date() - start) / 1000)
+
+          // create inputFiles object with path-text pairs
+          let inputFiles = {}
+          if (!this.files.length && !this.multiple) {
+            // user submits a single file and the name does not matter
+            inputFiles[`input.${this.extensions[0]}`] = resolvedArr[0] || ''
+          } else {
+            // user submits multiple files or the files prop is not an empty array
+            // 1. Single or multiple zip files
+            let names = this.files
+            if (!this.files.length && this.multiple) {
+              // 2. Multiple individual files
+              names = submittedFiles.map(({ name }) => name)
+            }
+            inputFiles = Object.fromEntries(
+              resolvedArr
+                .flat()
+                .map((text, idx) => [names[idx], this.preprocessor(text)])
+            )
+          }
+          this.inputFiles = inputFiles
+        } catch (error) {
+          console.error(error)
+          this.filesError = true
+          this.inputFiles = error
+        } finally {
+          this.filesLoading = false
         }
-        this.inputFiles = inputFiles
-      } catch (error) {
-        console.error(error)
-        this.filesError = true
-        this.inputFiles = error
-      } finally {
-        this.filesLoading = false
       }
     },
     async generateRML() {
