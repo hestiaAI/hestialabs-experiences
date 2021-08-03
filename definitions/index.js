@@ -1,9 +1,9 @@
 import twitterTargetingInformation from './twitter-targeting-information'
 import trackerControl from './tracker-control'
-import genericJson from './generic-json'
+import playground from './playground'
 
 export default {
   twitterTargetingInformation,
   trackerControl,
-  genericJson
+  playground
 }

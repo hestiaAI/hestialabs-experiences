@@ -6,7 +6,7 @@ prefixes:
 
 sources:
   first_source:
-    access: data/data_file.json
+    access: data.ext  # do not change this line
     referenceFormulation: jsonpath
     iterator: $.[*]
 
