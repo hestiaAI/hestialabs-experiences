@@ -1,9 +1,5 @@
 import { sourceArraysToObjects } from './utils'
-
-const preprocessor = json => {
-  // replace variable assignment in JS file
-  return json.replace(/^.+=/, '')
-}
+import { twitterPreprocessor as preprocessor } from './preprocessors'
 
 const files = {
   adImpressions: 'data/ad-impressions.js',
@@ -40,7 +36,7 @@ const sources = [
 
 export default {
   ext: 'zip',
-  // 'files' required for zip-archives and when multiple: true
+  // 'files' required for zip-archives
   files: Object.values(files),
   sources: sourceArraysToObjects(sources, 'json'),
   preprocessor

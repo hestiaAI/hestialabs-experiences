@@ -19,6 +19,20 @@ export const state = () => ({
       key: 'twitter-targeting-information',
       imgsrc:
         'https://www.iconpacks.net/icons/2/free-twitter-logo-icon-2429-thumb.png'
+    },
+    {
+      title: 'Twitter',
+      subtitle: 'Advertisers',
+      key: 'twitter-advertisers',
+      imgsrc:
+        'https://www.iconpacks.net/icons/2/free-twitter-logo-icon-2429-thumb.png'
+    },
+    {
+      title: 'Twitter',
+      subtitle: 'SHA’d Advertisers',
+      key: 'twitter-advertisers-sha',
+      imgsrc:
+        'https://www.iconpacks.net/icons/2/free-twitter-logo-icon-2429-thumb.png'
     }
   ]
 })
