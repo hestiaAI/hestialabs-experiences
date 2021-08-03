@@ -43,6 +43,7 @@
           :accept="accept"
           :multiple="multiple"
           :loading-files="filesLoading"
+          :disabled="rdfLoading"
           hide-details
           @change="onFileChange"
         >
@@ -187,9 +188,16 @@ export default {
       }
 
       if (files.length) {
+        // Files extracted from zip archive
         return `Success!\nFiles extracted:\n${files.join('\n')}`
       }
 
+      if (this.multiple) {
+        // Multiple files submitted
+        return `Success!\nFiles submitted:\n${Object.keys(f).join('\n')}`
+      }
+
+      // Single file
       return 'Success!'
     }
   },
@@ -223,15 +231,21 @@ export default {
 
         // create inputFiles object with path-text pairs
         let inputFiles = {}
-        if (!this.files.length) {
-          // assuming this case is when the user submits a single file
-          // and the name does not matter
-          inputFiles[`input.${this.extensions[0]}`] = resolvedArr[0]
+        if (!this.files.length && !this.multiple) {
+          // user submits a single file and the name does not matter
+          inputFiles[`input.${this.extensions[0]}`] = resolvedArr[0] || ''
         } else {
+          // user submits multiple files or the files prop is not an empty array
+          // 1. Single or multiple zip files
+          let names = this.files
+          if (!this.files.length) {
+            // 2. Multiple individual files
+            names = submittedFiles.map(({ name }) => name)
+          }
           inputFiles = Object.fromEntries(
             resolvedArr
               .flat()
-              .map((text, idx) => [this.files[idx], this.preprocessor(text)])
+              .map((text, idx) => [names[idx], this.preprocessor(text)])
           )
         }
         this.inputFiles = inputFiles

@@ -1,9 +1,13 @@
-import twitterTargetingInformation from './twitter-targeting-information'
+import playground from './playground'
 import trackerControl from './tracker-control'
-import genericJson from './generic-json'
+import twitterTargetingInformation from './twitter-targeting-information'
+import twitterAdvertisers from './twitter-advertisers'
+import twitterAdvertisersSha from './twitter-advertisers-sha'
 
 export default {
-  twitterTargetingInformation,
+  playground,
   trackerControl,
-  genericJson
+  twitterTargetingInformation,
+  twitterAdvertisers,
+  twitterAdvertisersSha
 }
