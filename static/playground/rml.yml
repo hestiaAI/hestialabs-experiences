@@ -14,6 +14,8 @@ mappings:
   first_mapping:
     sources:
       - first_source
-    s: schema:predicate/$(variable)
+    s: schema:Person/$(name)
     po:
-      - [a, schema:object]
+      - [a, schema:Person]
+      - [schema:name, $(name)]
+      - [schema:age, $(age)]

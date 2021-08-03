@@ -97,6 +97,39 @@
         />
       </div>
     </div>
+    <div class="io-block">
+      <div class="mr-lg-6">
+        <h2 class="my-3">SPARQL</h2>
+        <base-button :disabled="runQueryDisabled" @click="runQuery">
+          Run Query
+          <template v-if="sparqlResults">
+            <v-icon v-if="sparqlError" right color="red">mdi-alert</v-icon>
+            <v-icon v-else right color="green">mdi-check-circle</v-icon>
+          </template>
+        </base-button>
+        <code-editor :value.sync="sparql" class="mt-6" language="sparql" />
+      </div>
+      <div class="mr-lg-6">
+        <h2 class="my-3">Query Results</h2>
+        <base-button
+          nuxt
+          download
+          :href="sparqlResultsHref"
+          :disabled="!sparqlResults"
+        >
+          <v-icon left>
+            mdi-download
+          </v-icon>
+          Download
+        </base-button>
+        <code-editor
+          :value="sparqlResults"
+          :error="sparqlError"
+          class="mt-6"
+          readonly
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -105,6 +138,7 @@ import readFile from '@/lib/file-reader'
 import mapToRDF from '@/lib/map-to-rdf'
 import unzipit from '@/lib/unzip'
 import parseYARRRML from '@/lib/parse-yarrrml'
+import query from '@/lib/sparql'
 
 import { createObjectURL, objectIsEmpty } from '@/lib/utils'
 
@@ -158,7 +192,11 @@ export default {
       rdf: '',
       rdfLoading: false,
       rdfError: false,
-      rdfHref: ''
+      rdfHref: '',
+      sparql: '',
+      sparqlError: false,
+      sparqlResults: '',
+      sparqlResultsHref: ''
     }
   },
   computed: {
@@ -172,10 +210,16 @@ export default {
       return this.extensions.map(ext => `.${ext}`).join()
     },
     label() {
-      return `Select file${this.multiple ? 's' : ''} (${this.ext})`
+      return `Select file${this.multiple ? 's' : ''} (${this.ext.replace(
+        /,/g,
+        ', '
+      )})`
     },
     generateRDFDisabled() {
       return !this.rml || this.rmlError || objectIsEmpty(this.inputFiles)
+    },
+    runQueryDisabled() {
+      return !this.rdf || this.rdfError
     },
     inputFilesResult() {
       const { inputFiles: f, files } = this
@@ -309,6 +353,18 @@ export default {
         } finally {
           this.rdfLoading = false
         }
+      }
+    },
+    async runQuery() {
+      try {
+        this.sparqlError = false
+        this.sparqlResults = await query(this.rdf, this.sparql)
+        this.sparqlResultsHref = createObjectURL(this.rml, 'text/turtle')
+      } catch (error) {
+        console.error(error)
+        this.sparqlError = true
+        this.sparqlResults = error
+        this.sparqlResultsHref = createObjectURL(this.rml)
       }
     }
   }

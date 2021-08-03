@@ -24,7 +24,7 @@ import 'prismjs/components/prism-clike'
 import 'prismjs/components/prism-javascript'
 import 'prismjs/components/prism-yaml'
 import 'prismjs/components/prism-turtle'
-import 'prismjs/components/prism-graphql'
+import 'prismjs/components/prism-sparql'
 import 'prismjs/components/prism-json'
 
 // import syntax highlighting styles
