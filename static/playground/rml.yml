@@ -18,4 +18,4 @@ mappings:
     po:
       - [a, schema:Person]
       - [schema:name, $(name)]
-      - [schema:age, $(age)]
+      - [schema:age, $(age), xsd:int]
