@@ -102,7 +102,7 @@
         <h2 class="my-3">SPARQL</h2>
         <base-button :disabled="runQueryDisabled" @click="runQuery">
           Run Query
-          <template v-if="sparqlResults">
+          <template v-if="sparqlErrorMessage">
             <v-icon v-if="sparqlError" right color="red">mdi-alert</v-icon>
             <v-icon v-else right color="green">mdi-check-circle</v-icon>
           </template>
@@ -111,22 +111,28 @@
       </div>
       <div class="mr-lg-6">
         <h2 class="my-3">Query Results</h2>
-        <base-button
+        <!-- <base-button
           nuxt
           download
           :href="sparqlResultsHref"
-          :disabled="!sparqlResults"
+          :disabled="!sparqlErrorMessage"
         >
           <v-icon left>
             mdi-download
           </v-icon>
           Download
-        </base-button>
+        </base-button> -->
         <code-editor
-          :value="sparqlResults"
+          v-if="sparqlError"
+          :value="sparqlErrorMessage"
           :error="sparqlError"
           class="mt-6"
           readonly
+        />
+        <query-results-data-table
+          v-else
+          :headers="sparqlResultsHeaders"
+          :items="sparqlResultsItems"
         />
       </div>
     </div>
@@ -195,8 +201,10 @@ export default {
       rdfHref: '',
       sparql: '',
       sparqlError: false,
-      sparqlResults: '',
-      sparqlResultsHref: ''
+      sparqlErrorMessage: '',
+      sparqlResultsHeaders: [],
+      sparqlResultsItems: []
+      // sparqlResultsHref: ''
     }
   },
   computed: {
@@ -358,13 +366,25 @@ export default {
     async runQuery() {
       try {
         this.sparqlError = false
-        this.sparqlResults = await query(this.rdf, this.sparql)
-        this.sparqlResultsHref = createObjectURL(this.rml, 'text/turtle')
+        const bindings = await query(this.rdf, this.sparql)
+        if (bindings.length) {
+          const headers = Array.from(bindings[0].keys())
+          this.sparqlResultsItems = bindings.map(map =>
+            // map.get(k) returns an N3 Term
+            // https://github.com/rdfjs/N3.js/blob/main/src/N3DataFactory.js
+            Object.fromEntries(headers.map(h => [h, map.get(h).value]))
+          )
+          this.sparqlResultsHeaders = headers.map(h => ({
+            text: h.substring(1),
+            value: h
+          }))
+        } else {
+          this.sparqlResultsHeaders = []
+        }
       } catch (error) {
         console.error(error)
         this.sparqlError = true
-        this.sparqlResults = error
-        this.sparqlResultsHref = createObjectURL(this.rml)
+        this.sparqlErrorMessage = error
       }
     }
   }
