@@ -1,11 +1,14 @@
 <template>
   <div>
-    <h1>{{ meta.title }}</h1>
-    <p class="subtitle-1">{{ meta.subtitle }}</p>
+    <div class="d-flex">
+      <v-img max-width="50" :src="icon" contain />
+      <h1 class="ml-3">{{ title }}</h1>
+    </div>
+    <p class="subtitle-1 mt-4">{{ subtitle }}</p>
     <div class="io-block">
       <div class="mr-lg-6 mb-6">
         <h2 class="my-3">YARRRML</h2>
-        <base-button @click="yarrrml = yarrrmlPrecontructed">
+        <base-button @click="yarrrmlCustom = yarrrml">
           Use preconstructed
         </base-button>
         <base-button @click="generateRML">
@@ -15,7 +18,7 @@
             <v-icon v-else right color="green">mdi-check-circle</v-icon>
           </template>
         </base-button>
-        <code-editor :value.sync="yarrrml" class="mt-6" language="yaml" />
+        <code-editor :value.sync="yarrrmlCustom" class="mt-6" language="yaml" />
       </div>
       <div>
         <h2 class="my-3">RML</h2>
@@ -111,17 +114,6 @@
       </div>
       <div class="mr-lg-6">
         <h2 class="my-3">Query Results</h2>
-        <!-- <base-button
-          nuxt
-          download
-          :href="sparqlResultsHref"
-          :disabled="!sparqlErrorMessage"
-        >
-          <v-icon left>
-            mdi-download
-          </v-icon>
-          Download
-        </base-button> -->
         <code-editor
           v-if="sparqlError"
           :value="sparqlErrorMessage"
@@ -145,14 +137,20 @@ import mapToRDF from '@/lib/map-to-rdf'
 import unzipit from '@/lib/unzip'
 import parseYARRRML from '@/lib/parse-yarrrml'
 import query from '@/lib/sparql'
-
 import { createObjectURL, objectIsEmpty } from '@/lib/utils'
-
 import Worker from '@/lib/rdf.worker.js'
 
 export default {
   props: {
-    identifier: {
+    title: {
+      type: String,
+      required: true
+    },
+    subtitle: {
+      type: String,
+      default: ''
+    },
+    icon: {
       type: String,
       required: true
     },
@@ -161,10 +159,6 @@ export default {
       default: false
     },
     files: {
-      type: Array,
-      default: () => []
-    },
-    sources: {
       type: Array,
       default: () => []
     },
@@ -182,6 +176,10 @@ export default {
         const validExtensions = ['zip', 'csv', 'json', 'js', 'xml']
         return val.split(',').every(v => validExtensions.includes(v))
       }
+    },
+    yarrrml: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -190,8 +188,7 @@ export default {
       filesLoading: false,
       filesError: false,
       filesUploadTime: 0,
-      yarrrmlPrecontructed: '',
-      yarrrml: 'mappings:',
+      yarrrmlCustom: 'mappings:',
       rml: '',
       rmlError: false,
       rmlHref: '',
@@ -204,7 +201,6 @@ export default {
       sparqlErrorMessage: '',
       sparqlResultsHeaders: [],
       sparqlResultsItems: []
-      // sparqlResultsHref: ''
     }
   },
   computed: {
@@ -253,9 +249,10 @@ export default {
       return 'Success!'
     }
   },
-  async mounted() {
-    const result = await fetch(`/${this.identifier}/rml.yml`)
-    this.yarrrmlPrecontructed = await result.text()
+  mounted() {
+    if (this.extensions.includes('zip') && !this.files.length) {
+      throw new TypeError('Extension zip requires files to be specified')
+    }
   },
   methods: {
     objectIsEmpty,
@@ -317,7 +314,7 @@ export default {
       try {
         this.rdfError = false
         this.rmlError = false
-        this.rml = await parseYARRRML(this.yarrrml)
+        this.rml = await parseYARRRML(this.yarrrmlCustom)
         this.rmlHref = createObjectURL(this.rml, 'text/turtle')
       } catch (error) {
         console.error(error)

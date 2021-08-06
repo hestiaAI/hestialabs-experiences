@@ -10,10 +10,10 @@ sources:
 mappings:
   organization:
     sources: source
-    s: ex:organization/$(Tracker Name)
+    s: schema:Organization/$(Tracker Name)
     po:
       - [a, schema:Organization]
-      - [ex:organization/name, $(Tracker Name)]
+      - [schema:name, $(Tracker Name)]
 
   trace:
     sources: source
@@ -22,6 +22,7 @@ mappings:
       - [ex:trace/time, $(time)]
       - [ex:trace/tracker/category, $(Tracker Category)]
       - p: ex:trace/tracker/organization
+        link: true
         o:
           mapping: organization
           condition:

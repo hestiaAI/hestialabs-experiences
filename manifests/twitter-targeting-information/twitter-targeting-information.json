@@ -1,0 +1,8 @@
+{
+  "title": "Twitter",
+  "subtitle": "Targeting Information",
+  "icon": "https://www.iconpacks.net/icons/2/free-twitter-logo-icon-2429-thumb.png",
+  "ext": "zip",
+  "files": ["data/ad-impressions.js", "data/ad-engagements.js"],
+  "preprocessor": "twitter"
+}

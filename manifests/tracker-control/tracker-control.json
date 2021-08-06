@@ -1,0 +1,6 @@
+{
+  "title": "TrackerControl",
+  "subtitle": "Tracking data",
+  "icon": "https://trackercontrol.org/images/logo.png",
+  "ext": "csv"
+}

@@ -1,16 +1,15 @@
 <template>
-  <data-experience :identifier="$route.params.key" v-bind="def" />
+  <data-experience v-bind="manifest" />
 </template>
 
 <script>
-import defs from '@/definitions'
+import manifests from '@/manifests'
 
-const defKeyToCamelCase = ({ params: { key } }) =>
-  key.replace(/-[a-z]/g, m => m[1].toUpperCase())
+const keys = Object.keys(manifests)
 
 export default {
   beforeRouteEnter(to, from, next) {
-    if (defKeyToCamelCase(to) in defs) {
+    if (keys.includes(to.params.key)) {
       return next()
     }
 
@@ -20,11 +19,8 @@ export default {
     return {}
   },
   computed: {
-    // defKeyCamelCase() {
-    //   return this.$route.params.key.replace(/-[a-z]/g, m => m[1].toUpperCase())
-    // },
-    def() {
-      return defs[defKeyToCamelCase(this.$route)]
+    manifest() {
+      return manifests[this.$route.params.key]
     }
   }
 }

@@ -1,11 +1,16 @@
 import colors from 'vuetify/es5/util/colors'
 import webpack from 'webpack'
 
+const appName = 'HestiaLabs Demo'
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s',
-    title: 'HestiaLabs Demo',
+    titleTemplate(title) {
+      const { appName } = this.context.env
+      return title ? `${title} | ${appName}` : appName
+    },
+    title: '',
     htmlAttrs: {
       lang: 'en'
     },
@@ -44,6 +49,12 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
 
+  vue: {
+    config: {
+      watch: ['~/manifests/']
+    }
+  },
+
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
@@ -63,6 +74,10 @@ export default {
     }
   },
 
+  env: {
+    appName
+  },
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
@@ -70,10 +85,17 @@ export default {
       config.node = {
         fs: 'empty' // to ignore fs
       }
-      config.module.rules.push({
-        test: /\.worker\.js$/,
-        use: { loader: 'worker-loader' }
-      })
+      config.module.rules.push(
+        {
+          test: /\.worker\.js$/,
+          use: { loader: 'worker-loader' }
+        },
+        {
+          // enable importing yaml file as a string
+          test: /\.ya?ml$/i,
+          use: 'raw-loader'
+        }
+      )
     },
     plugins: [
       // to ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
