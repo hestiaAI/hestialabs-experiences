@@ -18,6 +18,21 @@ export default {
   data() {
     return {}
   },
+  head() {
+    const { title: t, subtitle: s } = this.manifest
+    const title = `${t}: ${s}`
+
+    return {
+      title,
+      meta: [
+        {
+          hid: 'og:title',
+          property: 'og:title',
+          content: `${title} | ${this.$appName}`
+        }
+      ]
+    }
+  },
   computed: {
     manifest() {
       return manifests[this.$route.params.key]

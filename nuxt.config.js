@@ -2,6 +2,14 @@ import colors from 'vuetify/es5/util/colors'
 import webpack from 'webpack'
 
 const appName = 'HestiaLabs Demo'
+const host = 'https://hestia-rml.herokuapp.com/'
+
+let baseUrl = 'http://localhost:3000'
+if (process.production) {
+  baseUrl =
+    process.env.BASE_URL ||
+    `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`
+}
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -18,7 +26,12 @@ export default {
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
+      {
+        hid: 'og:title',
+        property: 'og:title',
+        content: appName
+      }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
@@ -37,7 +50,9 @@ export default {
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify'
+    '@nuxtjs/vuetify',
+    // https://go.nuxtjs.dev/pwa
+    '@nuxtjs/pwa'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -48,6 +63,23 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
+
+  // PWA module configuration: https://go.nuxtjs.dev/pwa
+  pwa: {
+    icon: {},
+    meta: {
+      name: appName,
+      theme_color: '#ffffff',
+      ogHost: host,
+      // set following meta tags with vue-meta
+      ogTitle: false,
+      ogUrl: false
+    },
+    manifest: {
+      name: appName,
+      short_name: 'Demo'
+    }
+  },
 
   vue: {
     config: {
@@ -75,6 +107,7 @@ export default {
   },
 
   env: {
+    baseUrl,
     appName
   },
 

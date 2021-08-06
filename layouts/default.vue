@@ -33,6 +33,17 @@
 export default {
   data() {
     return {}
+  },
+  head() {
+    return {
+      meta: [
+        {
+          hid: 'og:url',
+          property: 'og:url',
+          content: `${process.env.baseUrl}${this.$route.path}`
+        }
+      ]
+    }
   }
 }
 </script>
