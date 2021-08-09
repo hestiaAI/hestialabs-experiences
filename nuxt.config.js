@@ -19,21 +19,14 @@ export default {
       return title ? `${title} | ${appName}` : appName
     },
     title: '',
-    htmlAttrs: {
-      lang: 'en'
-    },
     meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
       {
         hid: 'og:title',
         property: 'og:title',
         content: appName
       }
-    ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -69,6 +62,7 @@ export default {
     icon: {},
     meta: {
       name: appName,
+      description: 'We create a new relationship to personal data',
       theme_color: '#ffffff',
       ogHost: host,
       // set following meta tags with vue-meta
