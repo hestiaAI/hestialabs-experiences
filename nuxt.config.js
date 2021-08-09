@@ -111,26 +111,31 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    // Transpile yarrrml-parser with Babel
     // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
+    transpile: ['yarrrml-parser'],
     extend(config, { isDev, isClient }) {
       config.node = {
-        fs: 'empty' // to ignore fs
+        // ignore fs Node.js module (used in yarrrml-parser)
+        // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
+        fs: 'empty'
       }
       config.module.rules.push(
+        // for importing/exporting workers as ES modules
         {
           test: /\.worker\.js$/,
           use: { loader: 'worker-loader' }
         },
+        // enable importing yaml file as a string
         {
-          // enable importing yaml file as a string
           test: /\.ya?ml$/i,
           use: 'raw-loader'
         }
       )
     },
     plugins: [
-      // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
       // to ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
+      // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
       new webpack.IgnorePlugin({
         resourceRegExp: /^/u,
         contextRegExp: /xpath-iterator/u
