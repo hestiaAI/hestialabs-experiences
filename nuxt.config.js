@@ -2,10 +2,9 @@ import colors from 'vuetify/es5/util/colors'
 import webpack from 'webpack'
 
 const appName = 'HestiaLabs Demo'
-const host = 'https://hestia-rml.herokuapp.com/'
 
 let baseUrl = 'http://localhost:3000'
-if (process.production) {
+if (process.env.NODE_ENV === 'production') {
   baseUrl =
     process.env.BASE_URL ||
     `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`
@@ -69,7 +68,7 @@ export default {
         height: 630,
         type: 'image/png'
       },
-      ogHost: host,
+      ogHost: baseUrl,
       // set following meta tags with vue-meta
       ogTitle: false,
       ogUrl: false
