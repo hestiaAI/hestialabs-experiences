@@ -1,5 +1,6 @@
 {
   "name": "hestia-rml-demo",
+  "description": "We create a new relationship to personal data",
   "version": "1.0.0",
   "private": true,
   "scripts": {

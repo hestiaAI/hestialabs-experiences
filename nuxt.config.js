@@ -62,7 +62,6 @@ export default {
     icon: {},
     meta: {
       name: appName,
-      description: 'We create a new relationship to personal data',
       theme_color: '#ffffff',
       ogHost: host,
       // set following meta tags with vue-meta
@@ -125,6 +124,7 @@ export default {
       )
     },
     plugins: [
+      // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
       // to ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
       new webpack.IgnorePlugin({
         resourceRegExp: /^/u,
