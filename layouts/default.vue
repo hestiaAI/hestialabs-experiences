@@ -21,6 +21,19 @@
     <v-main>
       <v-container class="mt-5">
         <nuxt />
+        <v-snackbar
+          v-model="snackbar"
+          content-class="v-snack__content-online-status"
+          color="info"
+          :timeout="timeout"
+        >
+          <template v-if="$nuxt.isOffline">
+            The app is running in offline mode
+          </template>
+          <template v-else>
+            You are online again!
+          </template>
+        </v-snackbar>
       </v-container>
     </v-main>
     <v-footer app absolute>
@@ -32,7 +45,11 @@
 <script>
 export default {
   data() {
-    return {}
+    return {
+      // Display offline message if user opens app when offline
+      snackbar: this.$nuxt.isOffline,
+      timeout: 5000
+    }
   },
   head() {
     return {
@@ -44,6 +61,19 @@ export default {
         }
       ]
     }
+  },
+  watch: {
+    '$nuxt.isOffline'(isOffline) {
+      this.snackbar = true
+      // changing timeout property resets the timeout
+      this.timeout = isOffline ? 5001 : 5000
+    }
   }
 }
 </script>
+
+<style>
+.v-snack__content.v-snack__content-online-status {
+  text-align: center;
+}
+</style>
