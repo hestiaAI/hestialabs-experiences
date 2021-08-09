@@ -63,6 +63,12 @@ export default {
     meta: {
       name: appName,
       theme_color: '#ffffff',
+      ogImage: {
+        path: '/ogimg.png',
+        width: 1200,
+        height: 630,
+        type: 'image/png'
+      },
       ogHost: host,
       // set following meta tags with vue-meta
       ogTitle: false,
