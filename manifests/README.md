@@ -51,4 +51,4 @@ Please read these instructions carefully.
 }
 ```
 
-3. Add `.yml` file containing [YARRRML mappings](https://rml.io/yarrrml/)
+3. Add `.yml` (or `.yaml`) file containing [YARRRML mappings](https://rml.io/yarrrml/). This file is used when the user clicks on the "Use Preconstructed" button.
