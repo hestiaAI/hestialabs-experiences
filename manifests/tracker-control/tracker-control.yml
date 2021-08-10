@@ -22,7 +22,6 @@ mappings:
       - [ex:trace/time, $(time)]
       - [ex:trace/tracker/category, $(Tracker Category)]
       - p: ex:trace/tracker/organization
-        link: true
         o:
           mapping: organization
           condition:

@@ -13,7 +13,7 @@
         </base-button>
         <base-button @click="generateRML">
           Generate RML
-          <template v-if="rml">
+          <template v-if="rmlGenerateAlert">
             <v-icon v-if="rmlError" right color="red">mdi-alert</v-icon>
             <v-icon v-else right color="green">mdi-check-circle</v-icon>
           </template>
@@ -79,7 +79,7 @@
               indeterminate
             />
           </template>
-          <template v-else-if="rdf">
+          <template v-else-if="rdfGenerateAlert">
             <v-icon v-if="rdfError" right color="red">mdi-alert</v-icon>
             <v-icon v-else right color="green">mdi-check-circle</v-icon>
           </template>
@@ -189,9 +189,11 @@ export default {
       filesError: false,
       filesUploadTime: 0,
       yarrrmlCustom: 'mappings:',
+      rmlGenerateAlert: false,
       rml: '',
       rmlError: false,
       rmlHref: '',
+      rdfGenerateAlert: false,
       rdf: '',
       rdfLoading: false,
       rdfError: false,
@@ -247,6 +249,14 @@ export default {
 
       // Single file
       return 'Success!'
+    }
+  },
+  watch: {
+    yarrrmlCustom() {
+      this.rmlGenerateAlert = false
+    },
+    rml() {
+      this.rdfGenerateAlert = false
     }
   },
   mounted() {
@@ -321,6 +331,8 @@ export default {
         this.rmlError = true
         this.rml = error
         this.rmlHref = createObjectURL(this.rml)
+      } finally {
+        this.rmlGenerateAlert = true
       }
     },
     async generateRDF() {
@@ -334,6 +346,7 @@ export default {
 
         worker.addEventListener('message', ({ data }) => {
           this.rdfLoading = false
+          this.rdfGenerateAlert = true
           if (data instanceof Error) {
             this.rdfError = true
             this.rdfHref = createObjectURL(data)
@@ -357,6 +370,7 @@ export default {
           this.rdfHref = createObjectURL(this.rdf)
         } finally {
           this.rdfLoading = false
+          this.rdfGenerateAlert = true
         }
       }
     },
