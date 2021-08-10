@@ -69,34 +69,46 @@
       </div>
       <div>
         <h2 class="my-3">RDF</h2>
-        <base-button :disabled="generateRDFDisabled" @click="generateRDF">
-          Generate RDF
-          <template v-if="rdfLoading">
-            <v-progress-circular
-              class="ml-2"
-              :size="14"
-              :width="2"
-              indeterminate
-            />
-          </template>
-          <template v-else-if="rdfGenerateAlert">
-            <v-icon v-if="rdfError" right color="red">mdi-alert</v-icon>
-            <v-icon v-else right color="green">mdi-check-circle</v-icon>
-          </template>
-        </base-button>
-        <base-button nuxt download :href="rdfHref" :disabled="!rdf">
-          <v-icon left>
-            mdi-download
-          </v-icon>
-          Download
-        </base-button>
+        <div class="d-flex">
+          <base-button :disabled="generateRDFDisabled" @click="generateRDF">
+            Generate RDF
+            <template v-if="rdfLoading">
+              <v-progress-circular
+                class="ml-2"
+                :size="14"
+                :width="2"
+                indeterminate
+              />
+            </template>
+            <template v-else-if="rdfGenerateAlert">
+              <v-icon v-if="rdfError" right color="red">mdi-alert</v-icon>
+              <v-icon v-else right color="green">mdi-check-circle</v-icon>
+            </template>
+          </base-button>
+          <v-select
+            v-model="toRDF"
+            :items="rdfFormats"
+            style="max-width: 150px"
+            hide-details
+            label="Format"
+            outlined
+            dense
+            class="ma-2"
+          />
+          <base-button nuxt download :href="rdfHref" :disabled="!rdf">
+            <v-icon left>
+              mdi-download
+            </v-icon>
+            Download
+          </base-button>
+        </div>
 
         <code-editor
           :value="rdf"
           :error="rdfError"
           class="mt-6"
           readonly
-          language="turtle"
+          :language="rdfEditorLanguage"
         />
       </div>
     </div>
@@ -193,6 +205,12 @@ export default {
       rml: '',
       rmlError: false,
       rmlHref: '',
+      toRDF: true,
+      rdfEditorLanguage: 'turtle',
+      rdfFormats: [
+        { text: 'N-Quads', value: true },
+        { text: 'JSON-LD', value: false }
+      ],
       rdfGenerateAlert: false,
       rdf: '',
       rdfLoading: false,
@@ -225,7 +243,7 @@ export default {
       return !this.rml || this.rmlError || objectIsEmpty(this.inputFiles)
     },
     runQueryDisabled() {
-      return !this.rdf || this.rdfError
+      return !this.rdf || this.rdfError || !this.toRDF
     },
     inputFilesResult() {
       const { inputFiles: f, files } = this
@@ -256,6 +274,9 @@ export default {
       this.rmlGenerateAlert = false
     },
     rml() {
+      this.rdfGenerateAlert = false
+    },
+    toRDF() {
       this.rdfGenerateAlert = false
     }
   },
@@ -336,13 +357,15 @@ export default {
       }
     },
     async generateRDF() {
-      const { rml, inputFiles } = this
+      const { rml, inputFiles, toRDF } = this
+      this.rdf = ''
+      this.rdfEditorLanguage = toRDF ? 'turtle' : 'json'
       this.rdfLoading = true
 
       if (window.Worker) {
         const worker = new Worker()
 
-        worker.postMessage([rml, inputFiles])
+        worker.postMessage([rml, inputFiles, toRDF])
 
         worker.addEventListener('message', ({ data }) => {
           this.rdfLoading = false
@@ -355,12 +378,23 @@ export default {
             this.rdfHref = createObjectURL(data, 'text/n3; charset=utf-8')
           }
 
-          this.rdf = data
+          if (toRDF) {
+            this.rdf = data
+          } else {
+            // JSON-LD
+            this.rdf = JSON.stringify(data)
+          }
         })
       } else {
         console.warn('Your browser does not support web workers.')
         try {
-          this.rdf = await mapToRDF(rml, inputFiles)
+          const data = await mapToRDF(rml, inputFiles, toRDF)
+          if (toRDF) {
+            this.rdf = data
+          } else {
+            // JSON-LD
+            this.rdf = JSON.stringify(data)
+          }
           this.rdfHref = createObjectURL(this.rdf, 'text/n3; charset=utf-8')
           this.rdfError = false
         } catch (error) {
