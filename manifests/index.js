@@ -1,4 +1,5 @@
 import preprocessors from './preprocessors'
+import parseYarrrml from '@/lib/parse-yarrrml'
 
 // https://github.com/webpack/docs/wiki/context#context-module-api
 // https://stackoverflow.com/a/54066904/8238129
@@ -17,9 +18,21 @@ const extractDirectory = path => path.match(/^\.\/(.+)\//)[1]
     ...
   }
 */
-const yarrrml = Object.fromEntries(
-  reqYAML.keys().map(path => [extractDirectory(path), reqYAML(path).default])
-)
+const yarrrmlEntries = reqYAML
+  .keys()
+  .map(path => [extractDirectory(path), reqYAML(path).default])
+
+// validate preconstructed YARRRML by parsing each file
+yarrrmlEntries.forEach(async ([k, yarrrml]) => {
+  try {
+    await parseYarrrml(yarrrml)
+  } catch (err) {
+    console.error(`Error parsing YARRRML: ${k}`)
+    console.error(err)
+  }
+})
+
+const yarrrml = Object.fromEntries(yarrrmlEntries)
 
 /*
   Import manifests from JSON files and add yarrrml field:
