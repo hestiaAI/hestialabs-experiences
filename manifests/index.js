@@ -20,6 +20,29 @@ const reqYAML = require.context(
 const extractDirectory = path => path.match(/^\.\/(.+)\//)[1]
 
 /*
+  Import manifests from JSON files and add yarrrml field:
+  {
+    directory1: {
+      ...some manifest options
+    },
+    directory2: {
+      ...some manifest options
+    }
+  }
+*/
+const manifests = Object.fromEntries(
+  reqJSON.keys().map(path => {
+    const dir = extractDirectory(path)
+    const config = reqJSON(path)
+    if (config.preprocessor) {
+      // Replace preprocessor reference with the function itself
+      config.preprocessor = preprocessors[config.preprocessor]
+    }
+    return [dir, config]
+  })
+)
+
+/*
   Extract from YAML files. Output:
   {
     directory1: 'some-yarrrml-string',
@@ -45,36 +68,10 @@ yarrrmlEntries.forEach(async ([k, yarrrml]) => {
 
 const yarrrml = Object.fromEntries(yarrrmlEntries)
 
-/*
-  Import manifests from JSON files and add yarrrml field:
-  {
-    directory1: {
-      ...some manifest options,
-      yarrrml: 'some-yarrrml-string'
-    },
-    directory2: {
-      ...some manifest options,
-      yarrrml: 'some-yarrrml-string'
-    }
-  }
-*/
-const manifests = Object.fromEntries(
-  reqJSON.keys().map(path => {
-    const dir = extractDirectory(path)
-    const config = reqJSON(path)
-    if (config.preprocessor) {
-      // Replace preprocessor reference with the function itself
-      config.preprocessor = preprocessors[config.preprocessor]
-    }
-    return [
-      dir,
-      {
-        ...config,
-        yarrrml: yarrrml[dir]
-      }
-    ]
-  })
-)
+// Merge yarrrml to respective config object
+for (const key in manifests) {
+  manifests[key].yarrrml = yarrrml[key]
+}
 
 export const keys = Object.keys(manifests)
 export default manifests
