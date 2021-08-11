@@ -11,28 +11,28 @@ Please read these instructions carefully.
 ```js
 {
   /**
-    * Title of experience
+    * Title of experience (required)
     * @type String
     */
   "title": "Fancy Title",
   /**
-    * Subtitle of experience
+    * Subtitle of experience (optional, recommended)
     * @type String
     */
   "subtitle": "Explanatory Subtitle",
   /**
-    * URL to an icon
+    * URL to an icon (required)
     * @type String
     */
   "icon": "https://icon-site.web/some-icon.jpg",
   /**
-    * Comma-separated list of file extensions
+    * Comma-separated list of allowed file extensions
     * @type String
     */
   "ext": "json,csv",
   /**
-    * The list of files to extract from a zip archive
-    * This property is required when "ext" includes "zip"
+    * Array of paths of files to extract from a zip archive
+    * (required when "ext" includes "zip")
     * @type Array
     * @default []
     */
@@ -44,7 +44,7 @@ Please read these instructions carefully.
     */
   "multiple": false,
   /**
-    * Reference to a preprocessor (see preprocessors.js)
+    * Reference to a preprocessor (optional, see preprocessors.js)
     * @type String
     */
   "preprocessor": "twitter"
@@ -52,3 +52,4 @@ Please read these instructions carefully.
 ```
 
 3. Add `.yml` (or `.yaml`) file containing [YARRRML mappings](https://rml.io/yarrrml/). This file is used when the user clicks on the "Use Preconstructed" button.
+4. If needed, add custom functions to [`functions.js`](https://github.com/hestiaAI/hestia-rml-demo/edit/master/manifests/functions.js)
