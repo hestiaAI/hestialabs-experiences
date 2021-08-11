@@ -1,3 +1,4 @@
+/* eslint no-console: "off" */
 import preprocessors from './preprocessors'
 import parseYarrrml from '@/lib/parse-yarrrml'
 
@@ -5,8 +6,16 @@ import parseYarrrml from '@/lib/parse-yarrrml'
 // https://stackoverflow.com/a/54066904/8238129
 // https://stackoverflow.com/a/57009738/8238129
 // require all modules on the path and with the pattern defined
-const reqJSON = require.context('./', true, /.json$/)
-const reqYAML = require.context('./', true, /.ya?ml$/)
+const reqJSON = require.context(
+  './experiences/',
+  true,
+  /[a-z-]+\/[a-z-]+.json$/
+)
+const reqYAML = require.context(
+  './experiences/',
+  true,
+  /[a-z-]+\/[a-z-]+.ya?ml$/
+)
 
 const extractDirectory = path => path.match(/^\.\/(.+)\//)[1]
 
@@ -23,8 +32,10 @@ const yarrrmlEntries = reqYAML
   .map(path => [extractDirectory(path), reqYAML(path).default])
 
 // validate preconstructed YARRRML by parsing each file
+console.log('Validating YARRRML')
 yarrrmlEntries.forEach(async ([k, yarrrml]) => {
   try {
+    console.log(`Parsing ${k}...`)
     await parseYarrrml(yarrrml)
   } catch (err) {
     console.error(`Error parsing YARRRML: ${k}`)
