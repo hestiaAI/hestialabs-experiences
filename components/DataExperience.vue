@@ -104,11 +104,10 @@
         </div>
 
         <code-editor
-          :value="rdf"
+          :value="rdfGenerateMessage"
           :error="rdfError"
           class="mt-6"
           readonly
-          :language="rdfEditorLanguage"
         />
       </div>
     </div>
@@ -147,10 +146,10 @@
 import readFile from '@/lib/file-reader'
 import mapToRDF from '@/lib/map-to-rdf'
 import unzipit from '@/lib/unzip'
-import parseYARRRML from '@/lib/parse-yarrrml'
+import parseYarrrml from '@/lib/parse-yarrrml'
 import query from '@/lib/sparql'
 import { createObjectURL, objectIsEmpty } from '@/lib/utils'
-import Worker from '@/lib/rdf.worker.js'
+import RDFWorker from '@/lib/rdf.worker.js'
 
 export default {
   props: {
@@ -202,6 +201,7 @@ export default {
       filesUploadTime: 0,
       yarrrmlCustom: 'mappings:',
       rmlGenerateAlert: false,
+      rdfGenerateMessage: '',
       rml: '',
       rmlError: false,
       rmlHref: '',
@@ -240,7 +240,12 @@ export default {
       )})`
     },
     generateRDFDisabled() {
-      return !this.rml || this.rmlError || objectIsEmpty(this.inputFiles)
+      return (
+        !this.rml ||
+        this.rmlError ||
+        objectIsEmpty(this.inputFiles) ||
+        this.rdfLoading
+      )
     },
     runQueryDisabled() {
       return !this.rdf || this.rdfError || !this.toRDF
@@ -275,9 +280,11 @@ export default {
     },
     rml() {
       this.rdfGenerateAlert = false
+      this.rdfGenerateMessage = ''
     },
     toRDF() {
       this.rdfGenerateAlert = false
+      this.rdfGenerateMessage = ''
     }
   },
   mounted() {
@@ -345,7 +352,7 @@ export default {
       try {
         this.rdfError = false
         this.rmlError = false
-        this.rml = await parseYARRRML(this.yarrrmlCustom)
+        this.rml = await parseYarrrml(this.yarrrmlCustom)
         this.rmlHref = createObjectURL(this.rml, 'text/turtle')
       } catch (error) {
         console.error(error)
@@ -356,55 +363,50 @@ export default {
         this.rmlGenerateAlert = true
       }
     },
+    handleRdfData(data) {
+      this.rdf = data
+      this.rdfError = false
+      this.rdfGenerateMessage = 'RDF generated successfully'
+      this.rdfHref = createObjectURL(data, 'application/n-quads')
+    },
+    handleRdfError(error) {
+      console.error(error)
+      this.rdfError = true
+      this.rdfGenerateMessage = error
+      this.rdfHref = createObjectURL(error)
+    },
+    handleRdfEnd() {
+      this.rdfLoading = false
+      this.rdfGenerateAlert = true
+    },
     async generateRDF() {
       const { rml, inputFiles, toRDF } = this
       this.rdf = ''
-      this.rdfEditorLanguage = toRDF ? 'turtle' : 'json'
       this.rdfLoading = true
 
       if (window.Worker) {
-        const worker = new Worker()
+        const worker = new RDFWorker()
 
         worker.postMessage([rml, inputFiles, toRDF])
 
         worker.addEventListener('message', ({ data }) => {
-          this.rdfLoading = false
-          this.rdfGenerateAlert = true
           if (data instanceof Error) {
-            this.rdfError = true
-            this.rdfHref = createObjectURL(data)
+            this.handleRdfError(data)
           } else {
-            this.rdfError = false
-            this.rdfHref = createObjectURL(data, 'text/n3; charset=utf-8')
+            this.handleRdfData(data)
           }
 
-          if (toRDF) {
-            this.rdf = data
-          } else {
-            // JSON-LD
-            this.rdf = JSON.stringify(data)
-          }
+          this.handleRdfEnd()
         })
       } else {
         console.warn('Your browser does not support web workers.')
         try {
           const data = await mapToRDF(rml, inputFiles, toRDF)
-          if (toRDF) {
-            this.rdf = data
-          } else {
-            // JSON-LD
-            this.rdf = JSON.stringify(data)
-          }
-          this.rdfHref = createObjectURL(this.rdf, 'text/n3; charset=utf-8')
-          this.rdfError = false
+          this.handleRdfData(data)
         } catch (error) {
-          console.error(error)
-          this.rdfError = true
-          this.rdf = error
-          this.rdfHref = createObjectURL(this.rdf)
+          this.handleRdfError(error)
         } finally {
-          this.rdfLoading = false
-          this.rdfGenerateAlert = true
+          this.handleRdfEnd()
         }
       }
     },
