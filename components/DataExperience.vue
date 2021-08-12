@@ -397,11 +397,16 @@ export default {
 
         worker.postMessage([rml, inputFiles, toRDF])
 
-        worker.addEventListener('message', ({ data }) => {
+        worker.addEventListener('message', async ({ data }) => {
           if (data instanceof Error) {
             this.handleRdfError(data)
           } else {
-            this.handleRdfData(data)
+            // Worker returns ArrayBuffer
+            // We create a Blob from it
+            // and then use Blob.text() that resolves with a string
+            const blob = new Blob([data])
+            const txt = await blob.text()
+            this.handleRdfData(txt)
           }
 
           this.handleRdfEnd()
