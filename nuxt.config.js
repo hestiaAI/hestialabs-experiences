@@ -111,13 +111,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    babel: {
-      plugins: [
-        // Solve bug. Remove this when Nuxt has been upgraded.
-        // https://github.com/hestiaAI/hestia-rml-demo/issues/22
-        ['@babel/plugin-proposal-private-property-in-object', { loose: true }]
-      ]
-    },
     // Transpile yarrrml-parser with Babel
     // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
     transpile: ['yarrrml-parser'],
