@@ -422,8 +422,6 @@ export default {
       try {
         this.sparqlError = false
         this.sparqlResultsLoading = true
-        // this.sparqlResultsItems = []
-        // this.sparqlResultsHeaders = []
         const bindings = await query(this.rdf, this.sparql)
         if (bindings.length) {
           const headers = Array.from(bindings[0].keys())
