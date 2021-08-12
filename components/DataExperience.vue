@@ -116,7 +116,7 @@
         <h2 class="my-3">SPARQL</h2>
         <base-button :disabled="runQueryDisabled" @click="runQuery">
           Run Query
-          <template v-if="sparqlErrorMessage">
+          <template v-if="sparqlAlert">
             <v-icon v-if="sparqlError" right color="red">mdi-alert</v-icon>
             <v-icon v-else right color="green">mdi-check-circle</v-icon>
           </template>
@@ -135,7 +135,9 @@
         <query-results-data-table
           v-else
           :headers="sparqlResultsHeaders"
+          :hide-default-footer="!sparqlResultsHeaders.length"
           :items="sparqlResultsItems"
+          :loading="sparqlResultsLoading"
         />
       </div>
     </div>
@@ -216,9 +218,11 @@ export default {
       rdfLoading: false,
       rdfError: false,
       rdfHref: '',
+      sparqlAlert: false,
       sparql: '',
       sparqlError: false,
       sparqlErrorMessage: '',
+      sparqlResultsLoading: false,
       sparqlResultsHeaders: [],
       sparqlResultsItems: []
     }
@@ -285,6 +289,9 @@ export default {
     toRDF() {
       this.rdfGenerateAlert = false
       this.rdfGenerateMessage = ''
+    },
+    sparql() {
+      this.sparqlAlert = false
     }
   },
   mounted() {
@@ -382,6 +389,7 @@ export default {
     async generateRDF() {
       const { rml, inputFiles, toRDF } = this
       this.rdf = ''
+      this.rdfGenerateMessage = ''
       this.rdfLoading = true
 
       if (window.Worker) {
@@ -413,25 +421,33 @@ export default {
     async runQuery() {
       try {
         this.sparqlError = false
+        this.sparqlResultsLoading = true
+        // this.sparqlResultsItems = []
+        // this.sparqlResultsHeaders = []
         const bindings = await query(this.rdf, this.sparql)
         if (bindings.length) {
           const headers = Array.from(bindings[0].keys())
-          this.sparqlResultsItems = bindings.map(map =>
-            // map.get(k) returns an N3 Term
-            // https://github.com/rdfjs/N3.js/blob/main/src/N3DataFactory.js
-            Object.fromEntries(headers.map(h => [h, map.get(h).value]))
-          )
-          this.sparqlResultsHeaders = headers.map(h => ({
-            text: h.substring(1),
-            value: h
-          }))
-        } else {
-          this.sparqlResultsHeaders = []
+          window.setTimeout(() => {
+            this.sparqlResultsItems = bindings.map(map =>
+              // map.get(k) returns an N3 Term
+              // https://github.com/rdfjs/N3.js/blob/main/src/N3DataFactory.js
+              Object.fromEntries(headers.map(h => [h, map.get(h).value]))
+            )
+            this.sparqlResultsHeaders = headers.map(h => ({
+              text: h.substring(1),
+              value: h
+            }))
+
+            this.sparqlResultsLoading = false
+          }, 1000)
         }
       } catch (error) {
         console.error(error)
         this.sparqlError = true
         this.sparqlErrorMessage = error
+        this.sparqlResultsLoading = false
+      } finally {
+        this.sparqlAlert = true
       }
     }
   }

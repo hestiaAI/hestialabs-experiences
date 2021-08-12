@@ -1,23 +1,7 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="items"
-    :hide-default-footer="!headers.length"
-  >
-  </v-data-table>
+  <v-data-table v-bind="$attrs" />
 </template>
 
 <script>
-export default {
-  props: {
-    headers: {
-      type: Array,
-      required: true
-    },
-    items: {
-      type: Array,
-      required: true
-    }
-  }
-}
+export default {}
 </script>
