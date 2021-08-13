@@ -126,7 +126,7 @@ export default {
           test: /\.worker\.js$/,
           use: { loader: 'worker-loader' }
         },
-        // enable importing yaml file as a string
+        // enable raw importing of .yaml and .rq files
         {
           test: /\.ya?ml$/i,
           use: 'raw-loader'
