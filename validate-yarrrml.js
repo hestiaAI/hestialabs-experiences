@@ -33,6 +33,9 @@ async function getFiles(dir) {
     } catch (err) {
       console.error(`Error parsing YARRRML: ${f}`)
       console.error(err)
+
+      // All YARRRML files must be valid
+      process.exit(1)
     }
   })
 })()
