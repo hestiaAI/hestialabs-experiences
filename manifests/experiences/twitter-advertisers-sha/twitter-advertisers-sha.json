@@ -5,5 +5,5 @@
   "ext": "zip",
   "files": ["data/ad-impressions.js", "data/ad-engagements.js"],
   "preprocessor": "twitter",
-	"samples": ["twitter.zip"]
+	"data": ["twitter.zip"]
 }

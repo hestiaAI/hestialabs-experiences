@@ -128,7 +128,7 @@ export default {
         },
         // enable raw importing of .yaml and .rq files
         {
-          test: /\.ya?ml$/i,
+          test: /\.(ya?ml|rq)$/i,
           use: 'raw-loader'
         }
       )

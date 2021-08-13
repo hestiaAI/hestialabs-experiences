@@ -1,0 +1,8 @@
+# authors: Valentin Oliver Loftsson <valentin@hestia.ai>
+PREFIX :  <http://hestia.ai/>
+
+SELECT *
+WHERE {
+    ?person :age ?age
+    FILTER(?age <= 45)
+}

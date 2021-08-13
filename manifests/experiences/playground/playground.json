@@ -4,5 +4,6 @@
   "icon": "https://dinacon.ch/wp-content/uploads/sites/4/2018/05/rdf-icon-with-shadow-300x300.png",
   "ext": "json,js,csv,xml",
   "multiple": true,
-  "preprocessor": "twitter"
+  "preprocessor": "twitter",
+  "data": ["colors.csv", "people.json"]
 }

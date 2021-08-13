@@ -1,77 +1,81 @@
-/* eslint no-console: "off" */
 import preprocessors from './preprocessors'
-import parseYarrrml from '@/lib/parse-yarrrml'
 
+// require all modules on the path and with the pattern defined
+// Warning! The arguments passed to require.context must be literals!
 // https://github.com/webpack/docs/wiki/context#context-module-api
 // https://stackoverflow.com/a/54066904/8238129
 // https://stackoverflow.com/a/57009738/8238129
-// require all modules on the path and with the pattern defined
 const reqJSON = require.context(
   './experiences/',
   true,
-  /[a-z-]+\/[a-z-]+.json$/
+  /[a-z-]+\/[a-z-]+\.json$/
 )
-const reqYAML = require.context(
+const reqYARRRML = require.context(
   './experiences/',
   true,
-  /[a-z-]+\/[a-z-]+.ya?ml$/
+  /[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.ya?ml$/
+)
+const reqSPARQL = require.context(
+  './experiences/',
+  true,
+  /[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.rq$/
 )
 
-const extractDirectory = path => path.match(/^\.\/(.+)\//)[1]
+const extractFirstDirectory = path => path.match(/^(?:\.\/)?([a-z0-9-]+)\//)[1]
 
-/*
-  Import manifests from JSON files and add yarrrml field:
-  {
-    directory1: {
-      ...some manifest options
-    },
-    directory2: {
-      ...some manifest options
-    }
-  }
-*/
+// Import configs from JSON files
 const manifests = Object.fromEntries(
   reqJSON.keys().map(path => {
-    const dir = extractDirectory(path)
+    // Extract directory name of the experience
+    const dir = extractFirstDirectory(path)
+
+    // Extract JSON config
     const config = reqJSON(path)
-    if (config.preprocessor) {
-      // Replace preprocessor reference with the function itself
-      config.preprocessor = preprocessors[config.preprocessor]
+
+    // Add preprocessor if specified
+    const { preprocessor } = config
+    if (preprocessor) {
+      if (preprocessor in preprocessors) {
+        // Replace preprocessor reference with the function itself
+        config.preprocessor = preprocessors[preprocessor]
+      } else {
+        throw new Error(`Preprocessor ${preprocessor} does not exist`)
+      }
     }
-    return [dir, config]
+
+    return [
+      dir,
+      {
+        ...config,
+        examples: {}
+      }
+    ]
   })
 )
 
-/*
-  Extract from YAML files. Output:
-  {
-    directory1: 'some-yarrrml-string',
-    directory2: 'some-yarrrml-string',
-    ...
-  }
-*/
-const yarrrmlEntries = reqYAML
-  .keys()
-  .map(path => [extractDirectory(path), reqYAML(path).default])
-
-// validate preconstructed YARRRML by parsing each file
-console.log('Validating YARRRML')
-yarrrmlEntries.forEach(async ([k, yarrrml]) => {
-  try {
-    console.log(`Parsing ${k}...`)
-    await parseYarrrml(yarrrml)
-  } catch (err) {
-    console.error(`Error parsing YARRRML: ${k}`)
-    console.error(err)
+reqYARRRML.keys().forEach(path => {
+  // Extract directory name of the experience
+  const dir = extractFirstDirectory(path)
+  // Extract example name
+  const name = path.match(/\/examples\/(.+)\//)[1]
+  // Add example
+  manifests[dir].examples[name] = {
+    // assume single YARRRML file per example
+    yarrrml: reqYARRRML(path).default,
+    // empty Object for all SPARQL samples of the example
+    sparql: {}
   }
 })
 
-const yarrrml = Object.fromEntries(yarrrmlEntries)
-
-// Merge yarrrml to respective config object
-for (const key in manifests) {
-  manifests[key].yarrrml = yarrrml[key]
-}
+reqSPARQL.keys().forEach(path => {
+  // Extract directory name of the experience
+  const dir = extractFirstDirectory(path)
+  // Extract example name and SPARQL query sample name
+  const match = path.match(/\/examples\/(?<example>.+)\/(?<sparql>.+)\.rq/)
+  const { example, sparql } = match.groups
+  // Add SPARQL sample
+  manifests[dir].examples[example].sparql[sparql] = reqSPARQL(path).default
+})
 
 export const keys = Object.keys(manifests)
 export default manifests

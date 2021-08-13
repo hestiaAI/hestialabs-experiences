@@ -1,0 +1,13 @@
+authors: Valentin Oliver Loftsson <valentin@hestia.ai>
+
+prefixes:
+  h: http://hestia.ai/
+
+mappings:
+  people:
+    sources: [people.json~jsonpath, $.*]
+    po:
+      - [a, h:Person]
+      - [h:name, "$(firstName) $(lastName)"]
+      - [h:age, $(age)]
+      - [h:address, "$(street) $(houseNumber), $(zip) $(city)"]

@@ -98,8 +98,6 @@ mappings:
         o:
           mapping: impression
           condition:
-            # Valentin: I keep getting an error from RocketRML when
-            # I try to condition on multiple fields
             function: equal
             parameters:
               - [str1, $(^^.impressionAttributes.impressionTime)]
@@ -144,8 +142,6 @@ mappings:
         o:
           mapping: impression
           condition:
-            # Valentin: I keep getting an error from RocketRML when
-            # I try to condition on multiple fields
             function: equal
             parameters:
               - [str1, $(^^.impressionTime), s]

@@ -2,9 +2,12 @@
 
 Please read these instructions carefully.
 
-## How to add a new data experience
+Note: All files and folders should match the following regular expression: [`^(?:[a-z0-9]+-?)+[a-z0-9]$`](regexr.com/63ncg)
 
-1. Create a new folder in `manifests/experiences/` and give it a unique name matching the regular expression `[a-z-]+` (only lowercase ASCII characters and dashes are allowed). Note that this name will also be the slug (URL identifier) of the data experience.
+
+## Adding new data experiences
+
+1. Create a new folder in `manifests/experiences/` and give it a unique name. Note that this name will also be the slug (URL identifier) of the data experience.
 
 2. Add `.json` config file
 
@@ -49,13 +52,25 @@ Please read these instructions carefully.
     */
   "preprocessor": "twitter",
 	/**
-    * Array of paths to sample data files (optional, see data folder)
+    * Array of paths to sample data files in /manifests/data/ (optional)
     * @type Array[String]
     */
-  "samples": ["twitter.zip"]
+  "data": ["twitter.zip"]
 }
 ```
 
-3. Add `.yml` (or `.yaml`) file containing [YARRRML mappings](https://rml.io/yarrrml/). This file is used when the user clicks on the "Use Preconstructed" button.
-4. If needed, add custom functions to [`functions.js`](https://github.com/hestiaAI/hestia-rml-demo/edit/master/manifests/functions.js)
-5. Add example data to the `manifests/data/` folder.
+3. Create a subfolder `examples/`. This directory will contain all YARRRML and SPARQL examples, and needs to contain at the bare minimum a `main` example directory including the main YARRRML file. Selecting examples is only available to power users for development and testing purposes. When a general user uses the app, the `main` mapping is used.
+
+4. Add a subdirectory `examples/main/` and add to it the main `.yml` (or `.yaml`) file containing [YARRRML mappings](https://rml.io/yarrrml/).
+
+5. If needed, add custom functions to [`functions.js`](https://github.com/hestiaAI/hestia-rml-demo/edit/master/manifests/functions.js)
+
+
+## Adding sample data
+
+Add sample data to the `manifests/data/` folder. Update the `data` array in the JSON config file of the relevant data experiences to make the new data file available.
+
+
+## Adding new examples for power users
+
+Add a folder to the `examples` folder of the experience. The name of the folder corresponds to the name of the example. Add a single `yml`/`yaml` file with the example YARRRML. Add zero or more `.rq` files containing SPARQL query samples.
