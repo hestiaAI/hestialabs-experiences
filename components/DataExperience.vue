@@ -5,12 +5,20 @@
       <h1 class="ml-3">{{ title }}</h1>
     </div>
     <p class="subtitle-1 mt-4">{{ subtitle }}</p>
+
+    <v-select
+      v-model="selectedExample"
+      :items="examples"
+      item-text="name"
+      return-object
+      label="Select example"
+      :disabled="examples.length === 1"
+      style="max-width: 150px"
+    ></v-select>
+
     <div class="io-block">
       <div class="mr-lg-6 mb-6">
         <h2 class="my-3">YARRRML</h2>
-        <base-button @click="yarrrmlCustom = yarrrml">
-          Use preconstructed
-        </base-button>
         <base-button @click="generateRML">
           Generate RML
           <template v-if="rmlGenerateAlert">
@@ -18,7 +26,7 @@
             <v-icon v-else right color="green">mdi-check-circle</v-icon>
           </template>
         </base-button>
-        <code-editor :value.sync="yarrrmlCustom" class="mt-6" language="yaml" />
+        <code-editor :value.sync="yarrrml" class="mt-6" language="yaml" />
       </div>
       <div>
         <h2 class="my-3">RML</h2>
@@ -70,7 +78,19 @@
       <div>
         <h2 class="my-3">RDF</h2>
         <div class="d-flex">
-          <base-button :disabled="generateRDFDisabled" @click="generateRDF">
+          <v-select
+            v-model="toRDF"
+            :items="rdfFormats"
+            style="max-width: 150px"
+            hide-details
+            label="Format"
+            class="ma-2"
+          />
+          <base-button
+            :disabled="generateRDFDisabled"
+            class="ma-2"
+            @click="generateRDF"
+          >
             Generate RDF
             <template v-if="rdfLoading">
               <v-progress-circular
@@ -85,16 +105,6 @@
               <v-icon v-else right color="green">mdi-check-circle</v-icon>
             </template>
           </base-button>
-          <v-select
-            v-model="toRDF"
-            :items="rdfFormats"
-            style="max-width: 150px"
-            hide-details
-            label="Format"
-            outlined
-            dense
-            class="ma-2"
-          />
           <base-button nuxt download :href="rdfHref" :disabled="!rdf">
             <v-icon left>
               mdi-download
@@ -114,13 +124,26 @@
     <div class="io-block">
       <div class="mr-lg-6">
         <h2 class="my-3">SPARQL</h2>
-        <base-button :disabled="runQueryDisabled" @click="runQuery">
-          Run Query
-          <template v-if="sparqlAlert">
-            <v-icon v-if="sparqlError" right color="red">mdi-alert</v-icon>
-            <v-icon v-else right color="green">mdi-check-circle</v-icon>
-          </template>
-        </base-button>
+        <div class="d-flex">
+          <v-select
+            v-model="sparql"
+            :items="selectedExample.sparql"
+            item-text="name"
+            item-value="sparql"
+            style="max-width: 150px"
+            hide-details
+            label="Select query"
+            :disabled="!selectedExample.sparql.length"
+            class="ma-2"
+          />
+          <base-button :disabled="runQueryDisabled" @click="runQuery">
+            Run Query
+            <template v-if="sparqlAlert">
+              <v-icon v-if="sparqlError" right color="red">mdi-alert</v-icon>
+              <v-icon v-else right color="green">mdi-check-circle</v-icon>
+            </template>
+          </base-button>
+        </div>
         <code-editor :value.sync="sparql" class="mt-6" language="sparql" />
       </div>
       <div class="mr-lg-6">
@@ -190,18 +213,25 @@ export default {
         return val.split(',').every(v => validExtensions.includes(v))
       }
     },
-    yarrrml: {
-      type: String,
+    examples: {
+      type: Array,
       required: true
     }
+    // yarrrml: {
+    //   type: String,
+    //   required: true
+    // }
   },
   data() {
+    // main example is selected by default
+    const selectedExample = this.examples[0]
     return {
+      selectedExample,
       inputFiles: {},
       filesLoading: false,
       filesError: false,
       filesUploadTime: 0,
-      yarrrmlCustom: 'mappings:',
+      yarrrml: selectedExample.yarrrml,
       rmlGenerateAlert: false,
       rdfGenerateMessage: '',
       rml: '',
@@ -279,7 +309,7 @@ export default {
     }
   },
   watch: {
-    yarrrmlCustom() {
+    yarrrml() {
       this.rmlGenerateAlert = false
     },
     rml() {
@@ -292,6 +322,9 @@ export default {
     },
     sparql() {
       this.sparqlAlert = false
+    },
+    selectedExample({ yarrrml }) {
+      this.yarrrml = yarrrml
     }
   },
   mounted() {
@@ -359,7 +392,7 @@ export default {
       try {
         this.rdfError = false
         this.rmlError = false
-        this.rml = await parseYarrrml(this.yarrrmlCustom)
+        this.rml = await parseYarrrml(this.yarrrml)
         this.rmlHref = createObjectURL(this.rml, 'text/turtle')
       } catch (error) {
         console.error(error)

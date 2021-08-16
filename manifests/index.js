@@ -47,7 +47,7 @@ const manifests = Object.fromEntries(
       dir,
       {
         ...config,
-        examples: {}
+        examples: []
       }
     ]
   })
@@ -59,11 +59,19 @@ reqYARRRML.keys().forEach(path => {
   // Extract example name
   const name = path.match(/\/examples\/(.+)\//)[1]
   // Add example
-  manifests[dir].examples[name] = {
+  const example = {
+    name,
     // assume single YARRRML file per example
     yarrrml: reqYARRRML(path).default,
     // empty Object for all SPARQL samples of the example
-    sparql: {}
+    sparql: []
+  }
+  const { examples } = manifests[dir]
+  if (name === 'main') {
+    // Add main example to the beginning of the Array
+    examples.unshift(example)
+  } else {
+    examples.push(example)
   }
 })
 
@@ -74,7 +82,11 @@ reqSPARQL.keys().forEach(path => {
   const match = path.match(/\/examples\/(?<example>.+)\/(?<sparql>.+)\.rq/)
   const { example, sparql } = match.groups
   // Add SPARQL sample
-  manifests[dir].examples[example].sparql[sparql] = reqSPARQL(path).default
+  const exampleObj = manifests[dir].examples.find(e => e.name === example)
+  exampleObj.sparql.push({
+    name: sparql,
+    sparql: reqSPARQL(path).default
+  })
 })
 
 export const keys = Object.keys(manifests)
