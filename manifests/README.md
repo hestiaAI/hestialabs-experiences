@@ -68,7 +68,7 @@ Note: All files and folders should match the following regular expression: [`^(?
 
 ## Adding sample data
 
-Add sample data to the `manifests/data/` folder. Update the `data` array in the JSON config file of the relevant data experiences to make the new data file available.
+Add sample data to the `static/data/` folder. Update the `data` array in the JSON config file of the relevant data experiences to make the new data file available.
 
 
 ## Adding new examples for power users
