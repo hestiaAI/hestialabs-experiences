@@ -3,9 +3,7 @@
 </template>
 
 <script>
-import manifests from '@/manifests'
-
-const keys = Object.keys(manifests)
+import manifests, { keys } from '@/manifests'
 
 export default {
   beforeRouteEnter(to, from, next) {

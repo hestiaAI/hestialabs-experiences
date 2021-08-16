@@ -1,23 +1,50 @@
 <template>
   <v-app>
     <v-app-bar fixed app height="75">
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>
         <nuxt-link
           to="/"
           class="d-flex align-center"
           style="text-decoration: none; color: inherit;"
         >
-          <v-img
-            src="https://hestialabs.org/assets/img/hestialabs-logo+text.svg"
-            alt="HestiaLabs logo"
-            class="mr-5"
-            contain
-            width="100"
-          />
+          <logo-img class="mr-5" width="100" />
           <span>HestiaLabs Demo</span>
         </nuxt-link>
       </v-toolbar-title>
     </v-app-bar>
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      temporary
+      class="pa-5"
+      :width="500"
+    >
+      <template #prepend>
+        <div class="d-flex justify-space-between align-center">
+          <v-btn icon to="/"><v-icon>mdi-home-outline</v-icon></v-btn>
+          <v-btn icon @click="drawer = false"><v-icon>mdi-close</v-icon></v-btn>
+        </div>
+      </template>
+      <div class="mt-6">
+        <logo-img width="250" />
+        <v-list class="mt-6" rounded>
+          <v-list-item
+            v-for="({ title, subtitle, icon }, slug) in manifests"
+            :key="slug"
+            :to="`/${slug}`"
+          >
+            <v-list-item-avatar tile>
+              <v-img :src="icon" />
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title v-text="title"></v-list-item-title>
+              <v-list-item-subtitle v-text="subtitle"></v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </div>
+    </v-navigation-drawer>
     <v-main>
       <v-container class="mt-5">
         <nuxt />
@@ -43,12 +70,16 @@
 </template>
 
 <script>
+import manifests from '@/manifests'
+
 export default {
   data() {
     return {
+      drawer: false,
       // Display offline message if user opens app when offline
       snackbar: this.$nuxt.isOffline,
-      timeout: 5000
+      timeout: 5000,
+      manifests
     }
   },
   head() {
