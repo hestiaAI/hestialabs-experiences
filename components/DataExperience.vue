@@ -13,10 +13,11 @@
       return-object
       label="Select example"
       :disabled="examples.length === 1"
-      style="max-width: 150px"
+      hide-details
+      style="max-width: 200px"
     ></v-select>
 
-    <div class="io-block">
+    <div class="io-block mt-6">
       <div class="mr-lg-6 mb-6">
         <h2 class="my-3">YARRRML</h2>
         <base-button @click="generateRML">
@@ -48,6 +49,14 @@
     <div class="io-block">
       <div class="mr-lg-6">
         <h2>File</h2>
+        <v-select
+          v-model="selectedDataSample"
+          :items="data"
+          label="Select sample"
+          :disabled="!data.length"
+          hide-details
+          style="max-width: 200px"
+        />
         <v-file-input
           :label="label"
           show-size
@@ -58,15 +67,15 @@
           hide-details
           @change="onFileChange"
         >
-          <template v-if="!objectIsEmpty(inputFiles)" #append>
-            <v-icon v-if="filesError" color="red">
-              mdi-cross
-            </v-icon>
-            <v-icon v-else color="green">
-              mdi-check-circle
-            </v-icon>
-          </template>
         </v-file-input>
+        <template v-if="!objectIsEmpty(inputFiles)">
+          <v-icon v-if="filesError" color="red">
+            mdi-cross
+          </v-icon>
+          <v-icon v-else color="green">
+            mdi-check-circle
+          </v-icon>
+        </template>
         <span v-if="filesUploadTime">{{ filesUploadTime }} sec.</span>
         <code-editor
           :value="inputFilesResult"
@@ -216,6 +225,10 @@ export default {
     examples: {
       type: Array,
       required: true
+    },
+    data: {
+      type: Array,
+      default: () => []
     }
     // yarrrml: {
     //   type: String,
@@ -227,6 +240,7 @@ export default {
     const selectedExample = this.examples[0]
     return {
       selectedExample,
+      selectedDataSample: null,
       inputFiles: {},
       filesLoading: false,
       filesError: false,
@@ -311,6 +325,7 @@ export default {
   watch: {
     yarrrml() {
       this.rmlGenerateAlert = false
+      this.rml = ''
     },
     rml() {
       this.rdfGenerateAlert = false
@@ -325,6 +340,13 @@ export default {
     },
     selectedExample({ yarrrml }) {
       this.yarrrml = yarrrml
+    },
+    async selectedDataSample(filename) {
+      // Assumes only single file can be selected at once
+      const response = await window.fetch(`/data/${filename}`)
+      const blob = await response.blob()
+      const file = new File([blob], filename)
+      await this.onFileChange(file)
     }
   },
   mounted() {
@@ -336,8 +358,8 @@ export default {
     objectIsEmpty,
     async onFileChange(files) {
       if (files) {
-        // files is an Array already if multiple is true
-        const submittedFiles = this.multiple ? files : [files]
+        // files is an Array already if multiple files were submitted
+        const submittedFiles = Array.isArray(files) ? files : [files]
         try {
           // set filesLoading state while processing uploaded files
           this.filesError = false
