@@ -5,6 +5,6 @@ SELECT ?name ?rgb
 WHERE {
 		?color :name ?name .
     ?color :rgb ?rgb .
-    ?color :r ?r .
+    ?color :r ?r
     FILTER(?r > 200)
 }

@@ -2,8 +2,8 @@
 PREFIX :  <http://hestia.ai/>
 
 SELECT ?name ?hex WHERE {
-    ?color a :Color
+    ?color a :Color .
     ?color :name ?name .
-    ?color :hex ?hex .
-    FILTER(contains(lcase(?name), "blue")) .
+    ?color :hex ?hex
+    FILTER(contains(lcase(?name), "blue"))
 }

@@ -5,7 +5,8 @@ prefixes:
 
 mappings:
   color:
-    sources: [colors.csv~csv]
+    sources:
+      - [colors.csv~csv]
     s: h:color/$(code)
     po:
       - [a, h:Color]

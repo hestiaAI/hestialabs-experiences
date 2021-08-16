@@ -5,6 +5,5 @@ SELECT ?name ?hex
 WHERE {
 		?color :name ?name .
     ?color :hex ?hex .
-    ?color :rgb ?rgb .
-    FILTER(?rgb = "rgb(255, 3, 62)")
+    ?color :rgb "rgb(255, 3, 62)"
 }
