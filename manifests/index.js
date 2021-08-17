@@ -89,5 +89,14 @@ reqSPARQL.keys().forEach(path => {
   })
 })
 
+// Add examples from other experiences to playground Array.
+Object.entries(manifests).forEach(([key, value]) => {
+  if (key !== 'playground') {
+    manifests.playground.examples.push(
+      ...value.examples.map(ex => ({ ...ex, name: `${key}-${ex.name}` }))
+    )
+  }
+})
+
 export const keys = Object.keys(manifests)
 export default manifests
