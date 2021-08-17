@@ -32,14 +32,14 @@ Note: All files and folders should match the following regular expression: [`^(?
     * Comma-separated list of allowed file extensions
     * @type String
     */
-  "ext": "json,csv",
+  "ext": "json,csv,zip",
   /**
-    * Array of paths of files to extract from a zip archive
+    * Array of relative paths to files to extract from a zip archive
     * (required when "ext" includes "zip", except the playground)
     * @type Array
     * @default []
     */
-  "files": [""],
+  "files": ["data/ad-impressions.js"],
   /**
     * Can the user input multiple files?
     * @type Boolean
