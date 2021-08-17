@@ -2,7 +2,7 @@
 
 Please read these instructions carefully.
 
-Note: All files and folders should match the following regular expression: [`^(?:[a-z0-9]+-?)+[a-z0-9]$`](regexr.com/63ncg)
+Note: All files and folders should match the following regular expression: [`^(?:[a-z0-9]+-?)+[a-z0-9]$`](https://regexr.com/63ncg)
 
 
 ## Adding new data experiences
