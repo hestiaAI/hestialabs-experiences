@@ -3,10 +3,9 @@
     <!-- line numbers don't align correctly -->
     <prism-editor
       v-model="code"
+      v-bind="$attrs"
       class="my-editor my-6"
-      :line-numbers="false"
       :highlight="highlighter"
-      :readonly="readonly"
       style="max-height: 300px"
     ></prism-editor>
   </client-only>
@@ -50,6 +49,7 @@ export default {
   components: {
     PrismEditor
   },
+  inheritAttrs: false,
   props: {
     value: {
       type: [Object, String, Error],
@@ -62,10 +62,6 @@ export default {
     language: {
       type: String,
       default: 'text'
-    },
-    readonly: {
-      type: Boolean,
-      default: false
     }
   },
   data() {

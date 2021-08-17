@@ -2,8 +2,8 @@
   "title": "Playground",
   "subtitle": "Help for experimentation",
   "icon": "https://dinacon.ch/wp-content/uploads/sites/4/2018/05/rdf-icon-with-shadow-300x300.png",
-  "ext": "json,js,csv,xml",
+  "ext": "csv,js,json,xml,zip",
   "multiple": true,
   "preprocessor": "twitter",
-  "data": ["colors.csv", "people.json"]
+  "data": ["colors.csv", "people.json", "twitter.zip"]
 }

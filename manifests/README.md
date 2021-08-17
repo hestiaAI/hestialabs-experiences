@@ -63,6 +63,9 @@ Note: All files and folders should match the following regular expression: [`^(?
 
 4. Add a subdirectory `examples/main/` and add to it the main `.yml` (or `.yaml`) file containing [YARRRML mappings](https://rml.io/yarrrml/).
 
+**Note**
+If the data experience involves a single non-zip file input, use the name `input.<ext>` in the YARRRML `access` field of the source definition.
+
 5. If needed, add custom functions to [`functions.js`](https://github.com/hestiaAI/hestia-rml-demo/edit/master/manifests/functions.js)
 
 

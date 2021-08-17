@@ -27,7 +27,12 @@
             <v-icon v-else right color="green">mdi-check-circle</v-icon>
           </template>
         </base-button>
-        <code-editor :value.sync="yarrrml" class="mt-6" language="yaml" />
+        <code-editor
+          :value.sync="yarrrml"
+          class="mt-6"
+          line-numbers
+          language="yaml"
+        />
       </div>
       <div>
         <h2 class="my-3">RML</h2>
@@ -49,6 +54,18 @@
     <div class="io-block">
       <div class="mr-lg-6">
         <h2>File</h2>
+        <v-combobox
+          v-if="isPlayground"
+          v-model="filesCombobox"
+          :items="filesComboboxItems"
+          clearable
+          multiple
+          small-chips
+          outlined
+          dense
+          class="mt-6"
+          label="Add files to extract from zip archive..."
+        />
         <v-select
           v-model="selectedDataSample"
           :items="data"
@@ -68,7 +85,7 @@
           @change="onFileChange"
         >
         </v-file-input>
-        <template v-if="!objectIsEmpty(inputFiles)">
+        <template v-if="!objectIsEmpty(inputFilesRocketRML)">
           <v-icon v-if="filesError" color="red">
             mdi-cross
           </v-icon>
@@ -78,7 +95,7 @@
         </template>
         <span v-if="filesUploadTime">{{ filesUploadTime }} sec.</span>
         <code-editor
-          :value="inputFilesResult"
+          :value="filesUploadMessage"
           :error="filesError"
           class="mt-9"
           readonly
@@ -153,7 +170,12 @@
             </template>
           </base-button>
         </div>
-        <code-editor :value.sync="sparql" class="mt-6" language="sparql" />
+        <code-editor
+          :value.sync="sparql"
+          class="mt-6"
+          line-numbers
+          language="sparql"
+        />
       </div>
       <div class="mr-lg-6">
         <h2 class="my-3">Query Results</h2>
@@ -182,8 +204,10 @@ import mapToRDF from '@/lib/map-to-rdf'
 import unzipit from '@/lib/unzip'
 import parseYarrrml from '@/lib/parse-yarrrml'
 import query from '@/lib/sparql'
-import { createObjectURL, objectIsEmpty } from '@/lib/utils'
 import RDFWorker from '@/lib/rdf.worker.js'
+
+import { createObjectURL, objectIsEmpty } from '@/utils/utils'
+import filesComboboxItems from '@/utils/files-combobox-items'
 
 export default {
   props: {
@@ -230,10 +254,6 @@ export default {
       type: Array,
       default: () => []
     }
-    // yarrrml: {
-    //   type: String,
-    //   required: true
-    // }
   },
   data() {
     // main example is selected by default
@@ -241,7 +261,9 @@ export default {
     return {
       selectedExample,
       selectedDataSample: null,
-      inputFiles: {},
+      filesCombobox: [],
+      filesComboboxItems,
+      inputFilesRocketRML: {},
       filesLoading: false,
       filesError: false,
       filesUploadTime: 0,
@@ -272,6 +294,9 @@ export default {
     }
   },
   computed: {
+    isPlayground() {
+      return this.$route.params.key === 'playground'
+    },
     meta() {
       return this.$store.getters.getExperienceByKey(this.$route.params.key)
     },
@@ -291,15 +316,18 @@ export default {
       return (
         !this.rml ||
         this.rmlError ||
-        objectIsEmpty(this.inputFiles) ||
+        objectIsEmpty(this.inputFilesRocketRML) ||
         this.rdfLoading
       )
     },
     runQueryDisabled() {
       return !this.rdf || this.rdfError || !this.toRDF
     },
-    inputFilesResult() {
-      const { inputFiles: f, files } = this
+    filesToExtract() {
+      return this.isPlayground ? this.filesCombobox : this.files
+    },
+    filesUploadMessage() {
+      const { inputFilesRocketRML: f, extractedFiles: xfiles } = this
       if (this.filesError) {
         return f
       }
@@ -308,18 +336,27 @@ export default {
         return ''
       }
 
-      if (files.length) {
-        // Files extracted from zip archive
-        return `Success!\nFiles extracted:\n${files.join('\n')}`
+      if (!this.files.length && !this.multiple) {
+        // Single file input.<ext>
+        return `Success! File registered: ${Object.keys(f)[0]}`
       }
 
-      if (this.multiple) {
-        // Multiple files submitted
-        return `Success!\nFiles submitted:\n${Object.keys(f).join('\n')}`
+      if (objectIsEmpty(xfiles)) {
+        return 'Unexpected result'
       }
 
-      // Single file
-      return 'Success!'
+      let msg = 'Success!\n'
+      Object.entries(xfiles).forEach(([archive, filelist]) => {
+        if (!archive) {
+          // archive is empty string
+          msg += 'Files submitted:'
+        } else {
+          msg += `Files extracted from ${archive}:`
+        }
+        msg += `\n${filelist.join('\n')}\n\n`
+      })
+
+      return msg.slice(0, -2)
     }
   },
   watch: {
@@ -330,6 +367,9 @@ export default {
     rml() {
       this.rdfGenerateAlert = false
       this.rdfGenerateMessage = ''
+    },
+    filesCombobox() {
+      this.inputFilesRocketRML = {}
     },
     toRDF() {
       this.rdfGenerateAlert = false
@@ -350,8 +390,14 @@ export default {
     }
   },
   mounted() {
-    if (this.extensions.includes('zip') && !this.files.length) {
-      throw new TypeError('Extension zip requires files to be specified')
+    if (
+      this.extensions.includes('zip') &&
+      !this.files.length &&
+      !this.isPlayground
+    ) {
+      // Does not apply to the playground since there
+      // we allow to list the files to extract
+      throw new TypeError('Extension `zip` requires `files` to be specified')
     }
   },
   methods: {
@@ -367,44 +413,101 @@ export default {
           const start = new Date()
 
           // read file/archive(s) asynchronously
+          // returns [[archive, filepath, contents]]
           const resolvedArr = await Promise.all(
-            submittedFiles.map(async f => {
+            submittedFiles.flatMap(async f => {
               if (f.name.endsWith('.zip')) {
-                // read zip archive and only extract files listed in this.files
-                return await unzipit.readFiles(f, this.files)
+                // read zip archive and only extract listed files
+                const filesRes = await unzipit.readFiles(
+                  f,
+                  this.filesToExtract,
+                  !this.isPlayground
+                )
+                return filesRes.flat()
               } else {
-                return await readFile(f)
+                // single non-archive file
+                return [['', f.name, await readFile(f)]]
               }
             })
           )
+          const results = resolvedArr.flat()
 
           // compute upload time
           this.filesUploadTime = parseInt((new Date() - start) / 1000)
 
-          // create inputFiles object with path-text pairs
-          let inputFiles = {}
-          if (!this.files.length && !this.multiple) {
-            // user submits a single file and the name does not matter
-            inputFiles[`input.${this.extensions[0]}`] = resolvedArr[0] || ''
-          } else {
-            // user submits multiple files or the files prop is not an empty array
-            // 1. Single or multiple zip files
-            let names = this.files
-            if (!this.files.length && this.multiple) {
-              // 2. Multiple individual files
-              names = submittedFiles.map(({ name }) => name)
+          // count number of times each path was extracted
+          // so we can take detect if files with same name were submitted or if
+          // multiple zip-archives overlap or are of the same type
+          // (for example, multiple twitter archives)
+          const fileDuplicateCounts = results.reduce((acc, cur) => {
+            const name = cur[1]
+            if (name in acc) {
+              acc[name]++
+            } else {
+              acc[name] = 0
             }
-            inputFiles = Object.fromEntries(
-              resolvedArr
-                .flat()
-                .map((text, idx) => [names[idx], this.preprocessor(text)])
+            return acc
+          }, {})
+
+          const filePrefixes = Object.fromEntries(
+            Object.entries(fileDuplicateCounts).map(([name, count]) => {
+              if (count === 0) {
+                return [name, ['']]
+              }
+              const prefixes = [...Array(count + 1).keys()].map(
+                k => `${k}`.padStart(3, '0') + '-'
+              )
+              return [name, prefixes]
+            })
+          )
+
+          // create inputFiles object with path-text pairs
+          this.inputFilesRocketRML = {}
+          this.extractedFiles = []
+          if (!this.files.length && !this.multiple) {
+            // the data experience involves a single file input so the name is irrelevant
+            // -> input.<ext>
+            this.inputFilesRocketRML[`input.${this.extensions[0]}`] =
+              results[0][2] || ''
+          } else {
+            // user can submit multiple files or the files prop is not an empty array
+
+            const inputFilesEntries = results.map(
+              ([archiveName, filepath, content]) => {
+                const contentProcessed = this.preprocessor(content)
+                // filename is a key in inputFilesRocketRML object
+
+                // multiple files share this file name (which can be a path)
+                const prefix =
+                  filePrefixes[filepath][fileDuplicateCounts[filepath]--]
+                const filename = prefix + filepath
+
+                return [archiveName, filename, contentProcessed]
+              }
             )
+
+            // group by archive
+            this.extractedFiles = inputFilesEntries.reduce(
+              (acc, [archive, filename, c]) => {
+                if (archive in acc) {
+                  acc[archive].push(filename)
+                } else {
+                  acc[archive] = [filename]
+                }
+                return acc
+              },
+              {}
+            )
+
+            this.inputFilesRocketRML = Object.fromEntries(
+              inputFilesEntries.map(([a, f, c]) => [f, c])
+            )
+            console.log(this.inputFilesRocketRML)
           }
-          this.inputFiles = inputFiles
         } catch (error) {
           console.error(error)
           this.filesError = true
-          this.inputFiles = error
+          this.inputFilesRocketRML = error
         } finally {
           this.filesLoading = false
         }
@@ -442,7 +545,7 @@ export default {
       this.rdfGenerateAlert = true
     },
     async generateRDF() {
-      const { rml, inputFiles, toRDF } = this
+      const { rml, inputFilesRocketRML, toRDF } = this
       this.rdf = ''
       this.rdfGenerateMessage = ''
       this.rdfLoading = true
@@ -450,7 +553,7 @@ export default {
       if (window.Worker) {
         const worker = new RDFWorker()
 
-        worker.postMessage([rml, inputFiles, toRDF])
+        worker.postMessage([rml, inputFilesRocketRML, toRDF])
 
         worker.addEventListener('message', async ({ data }) => {
           if (data instanceof Error) {
@@ -469,7 +572,7 @@ export default {
       } else {
         console.warn('Your browser does not support web workers.')
         try {
-          const data = await mapToRDF(rml, inputFiles, toRDF)
+          const data = await mapToRDF(rml, inputFilesRocketRML, toRDF)
           this.handleRdfData(data)
         } catch (error) {
           this.handleRdfError(error)
