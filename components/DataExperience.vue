@@ -27,12 +27,7 @@
             <v-icon v-else right color="green">mdi-check-circle</v-icon>
           </template>
         </base-button>
-        <code-editor
-          :value.sync="yarrrml"
-          class="mt-6"
-          line-numbers
-          language="yaml"
-        />
+        <code-editor :value.sync="yarrrml" class="mt-6" language="yaml" />
       </div>
       <div>
         <h2 class="my-3">RML</h2>
@@ -64,6 +59,7 @@
           outlined
           dense
           class="mt-6"
+          placeholder="Type file name or select from below"
           label="Add files to extract from zip archive..."
         />
         <v-select

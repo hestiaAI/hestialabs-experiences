@@ -1,6 +1,5 @@
 <template>
   <client-only placeholder="Loading...">
-    <!-- line numbers don't align correctly -->
     <prism-editor
       v-model="code"
       v-bind="$attrs"
