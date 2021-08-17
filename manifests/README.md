@@ -7,7 +7,7 @@ Note: All files and folders should match the following regular expression: [`^(?
 
 ## Adding new data experiences
 
-1. Create a new folder in `manifests/experiences/` and give it a unique name. Note that this name will also be the slug (URL identifier) of the data experience.
+1. Create a new folder in `/manifests/experiences/` and give it a unique name. Note that this name will also be the slug (URL identifier) of the data experience.
 
 2. Add `.json` config file
 
@@ -35,7 +35,7 @@ Note: All files and folders should match the following regular expression: [`^(?
   "ext": "json,csv",
   /**
     * Array of paths of files to extract from a zip archive
-    * (required when "ext" includes "zip")
+    * (required when "ext" includes "zip", except the playground)
     * @type Array
     * @default []
     */
@@ -52,7 +52,7 @@ Note: All files and folders should match the following regular expression: [`^(?
     */
   "preprocessor": "twitter",
 	/**
-    * Array of paths to sample data files in /manifests/data/ (optional)
+    * Array of paths to sample data files in /static/data/ (optional)
     * @type Array[String]
     */
   "data": ["twitter.zip"]
@@ -71,7 +71,7 @@ If the data experience involves a single non-zip file input, use the name `input
 
 ## Adding sample data
 
-Add sample data to the `static/data/` folder. Update the `data` array in the JSON config file of the relevant data experiences to make the new data file available.
+Add sample data to the `/static/data/` folder. Update the `data` array in the JSON config file of the relevant data experiences to make the new data file available.
 
 
 ## Adding new examples for power users
