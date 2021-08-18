@@ -498,7 +498,6 @@ export default {
             this.inputFilesRocketRML = Object.fromEntries(
               inputFilesEntries.map(([a, f, c]) => [f, c])
             )
-            console.log(this.inputFilesRocketRML)
           }
         } catch (error) {
           console.error(error)
