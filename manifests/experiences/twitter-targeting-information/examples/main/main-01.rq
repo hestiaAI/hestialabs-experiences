@@ -1,0 +1,14 @@
+# authors: Valentin Oliver Loftsson <valentin@hestia.ai>
+PREFIX :   <http://schema.org/>
+PREFIX ex: <http://www.example.com/>
+
+SELECT ?advertiserName ?date ?time
+WHERE {
+    ?imp a :AdvertiserContentArticle .
+    ?imp :creator ?advertiser .
+    ?advertiser :name ?advertiserName .
+    ?imp :contentReferenceTime ?d
+    FILTER(?d > "2021-07-01:24:00:00"^^xsd:dateTime)
+    BIND(substr(str(?d), -7) AS ?time)
+    BIND(substr(str(?d), 1, 10) AS ?date)
+}
