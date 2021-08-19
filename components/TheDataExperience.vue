@@ -1,11 +1,10 @@
 <template>
-  <div>
-    <component
-      :is="component"
-      v-bind="$props"
-      :preprocessor-func="preprocessorFunc"
-    />
-  </div>
+  <client-only placeholder="Loading...">
+    <keep-alive>
+      <the-data-experience-power v-if="$store.state.power" v-bind="props" />
+      <the-data-experience-default v-else v-bind="props" />
+    </keep-alive>
+  </client-only>
 </template>
 
 <script>
@@ -44,17 +43,19 @@ export default {
     }
   },
   computed: {
-    component() {
-      return `the-data-experience-${
-        this.$store.state.power ? 'power' : 'default'
-      }`
-    },
     preprocessorFunc() {
       if (!this.preprocessor) {
         // identity
         return val => val
       }
       return preprocessors[this.preprocessor]
+    },
+    props() {
+      const { preprocessor, ...rest } = this.$props
+      return {
+        ...rest,
+        preprocessorFunc: this.preprocessorFunc
+      }
     }
   }
 }
