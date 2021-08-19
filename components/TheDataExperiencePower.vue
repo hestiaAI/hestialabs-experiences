@@ -69,7 +69,7 @@
           show-size
           :accept="accept"
           :multiple="multiple"
-          :loading-files="filesLoading"
+          :loading="filesLoading"
           :disabled="rdfLoading"
           hide-details
           @change="onFileChange"

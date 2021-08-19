@@ -1,11 +1,11 @@
 <template>
-  <keep-alive>
+  <div>
     <component
       :is="component"
       v-bind="$props"
       :preprocessor-func="preprocessorFunc"
     />
-  </keep-alive>
+  </div>
 </template>
 
 <script>

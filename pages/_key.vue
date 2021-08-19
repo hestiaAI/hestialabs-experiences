@@ -14,7 +14,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   head() {
-    const { title: t, subtitle: s } = this.manifest
+    const { title: t, subtitle: s } = this.m
     const title = `${t}: ${s}`
 
     return {
