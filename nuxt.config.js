@@ -79,6 +79,11 @@ export default {
     }
   },
 
+  router: {
+    // middleware for validating a route
+    middleware: 'validate'
+  },
+
   vue: {
     config: {
       watch: ['~/manifests/']
@@ -92,7 +97,7 @@ export default {
       dark: false,
       themes: {
         light: {
-          primary: colors.blue.darken2,
+          primary: '#58539e',
           accent: colors.grey.darken3,
           secondary: colors.amber.darken3,
           info: colors.teal.lighten1,

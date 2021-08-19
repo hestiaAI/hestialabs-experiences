@@ -12,6 +12,8 @@
           <span>HestiaLabs Demo</span>
         </nuxt-link>
       </v-toolbar-title>
+      <v-spacer />
+      <mode-switch />
     </v-app-bar>
     <v-navigation-drawer
       v-model="drawer"
@@ -26,13 +28,16 @@
           <v-btn icon @click="drawer = false"><v-icon>mdi-close</v-icon></v-btn>
         </div>
       </template>
+      <template #append>
+        <mode-switch />
+      </template>
       <div class="mt-6">
         <logo-img width="250" />
         <v-list class="mt-6" rounded>
           <v-list-item
-            v-for="({ title, subtitle, icon }, slug) in manifests"
-            :key="slug"
-            :to="`/${slug}`"
+            v-for="{ key, title, subtitle, icon } in $store.getters.manifests"
+            :key="key"
+            :to="`/${key}`"
           >
             <v-list-item-avatar tile>
               <v-img :src="icon" />
@@ -70,16 +75,13 @@
 </template>
 
 <script>
-import manifests from '@/manifests'
-
 export default {
   data() {
     return {
       drawer: false,
       // Display offline message if user opens app when offline
       snackbar: this.$nuxt.isOffline,
-      timeout: 5000,
-      manifests
+      timeout: 5000
     }
   },
   head() {

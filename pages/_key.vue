@@ -1,21 +1,18 @@
 <template>
-  <data-experience v-bind="manifest" />
+  <div>
+    <div class="d-flex">
+      <v-img max-width="50" :src="m.icon" contain />
+      <h1 class="ml-3">{{ m.title }}</h1>
+    </div>
+    <p class="subtitle-1 mt-4">{{ m.subtitle }}</p>
+    <the-data-experience v-bind="m.rest" />
+  </div>
 </template>
 
 <script>
-import manifests, { keys } from '@/manifests'
+import { mapGetters } from 'vuex'
 
 export default {
-  beforeRouteEnter(to, from, next) {
-    if (keys.includes(to.params.key)) {
-      return next()
-    }
-
-    next('/not-found')
-  },
-  data() {
-    return {}
-  },
   head() {
     const { title: t, subtitle: s } = this.manifest
     const title = `${t}: ${s}`
@@ -32,8 +29,10 @@ export default {
     }
   },
   computed: {
-    manifest() {
-      return manifests[this.$route.params.key]
+    ...mapGetters(['manifest']),
+    m() {
+      const { title, subtitle, icon, ...rest } = this.manifest(this.$route)
+      return { title, subtitle, icon, rest }
     }
   }
 }

@@ -35,10 +35,7 @@ const manifests = Object.fromEntries(
     // Add preprocessor if specified
     const { preprocessor } = config
     if (preprocessor) {
-      if (preprocessor in preprocessors) {
-        // Replace preprocessor reference with the function itself
-        config.preprocessor = preprocessors[preprocessor]
-      } else {
+      if (!(preprocessor in preprocessors)) {
         throw new Error(`Preprocessor ${preprocessor} does not exist`)
       }
     }
@@ -90,13 +87,12 @@ reqSPARQL.keys().forEach(path => {
 })
 
 // Add examples from other experiences to playground Array.
-Object.entries(manifests).forEach(([key, value]) => {
+Object.entries(manifests).forEach(([key, val]) => {
   if (key !== 'playground') {
     manifests.playground.examples.push(
-      ...value.examples.map(ex => ({ ...ex, name: `${key}-${ex.name}` }))
+      ...val.examples.map(ex => ({ ...ex, name: `${key}-${ex.name}` }))
     )
   }
 })
 
-export const keys = Object.keys(manifests)
-export default manifests
+export default Object.entries(manifests).map(([key, val]) => ({ key, ...val }))

@@ -1,11 +1,5 @@
 <template>
   <div>
-    <div class="d-flex">
-      <v-img max-width="50" :src="icon" contain />
-      <h1 class="ml-3">{{ title }}</h1>
-    </div>
-    <p class="subtitle-1 mt-4">{{ subtitle }}</p>
-
     <v-select
       v-model="selectedExample"
       :items="examples"
@@ -182,7 +176,7 @@
           class="mt-6"
           readonly
         />
-        <query-results-data-table
+        <the-query-results-data-table
           v-else
           :headers="sparqlResultsHeaders"
           :hide-default-footer="!sparqlResultsHeaders.length"
@@ -195,6 +189,7 @@
 </template>
 
 <script>
+/* eslint-disable vue/require-default-prop */
 import readFile from '@/lib/file-reader'
 import mapToRDF from '@/lib/map-to-rdf'
 import unzipit from '@/lib/unzip'
@@ -207,49 +202,12 @@ import filesComboboxItems from '@/utils/files-combobox-items'
 
 export default {
   props: {
-    title: {
-      type: String,
-      required: true
-    },
-    subtitle: {
-      type: String,
-      default: ''
-    },
-    icon: {
-      type: String,
-      required: true
-    },
-    multiple: {
-      type: Boolean,
-      default: false
-    },
-    files: {
-      type: Array,
-      default: () => []
-    },
-    preprocessor: {
-      type: Function,
-      default(input) {
-        return input
-      }
-    },
-    ext: {
-      type: String,
-      required: true,
-      validator(val) {
-        // JS files allowed for experimenting with individual twitter files
-        const validExtensions = ['zip', 'csv', 'json', 'js', 'xml']
-        return val.split(',').every(v => validExtensions.includes(v))
-      }
-    },
-    examples: {
-      type: Array,
-      required: true
-    },
-    data: {
-      type: Array,
-      default: () => []
-    }
+    multiple: Boolean,
+    files: Array,
+    preprocessorFunc: Function,
+    ext: String,
+    examples: Array,
+    data: Array
   },
   data() {
     // main example is selected by default
@@ -470,7 +428,7 @@ export default {
 
             const inputFilesEntries = results.map(
               ([archiveName, filepath, content]) => {
-                const contentProcessed = this.preprocessor(content)
+                const contentProcessed = this.preprocessorFunc(content)
                 // filename is a key in inputFilesRocketRML object
 
                 // multiple files share this file name (which can be a path)
