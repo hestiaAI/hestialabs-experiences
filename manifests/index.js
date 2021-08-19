@@ -95,4 +95,20 @@ Object.entries(manifests).forEach(([key, val]) => {
   }
 })
 
-export default Object.entries(manifests).map(([key, val]) => ({ key, ...val }))
+// Object -> Array
+const manifestsArray = Object.entries(manifests).map(([key, val]) => ({
+  key,
+  ...val
+}))
+
+// Move playground to the end of the Array
+manifestsArray.splice(
+  manifestsArray.length - 1,
+  0,
+  ...manifestsArray.splice(
+    manifestsArray.findIndex(m => m.key === 'playground'),
+    1
+  )
+)
+
+export default manifestsArray
