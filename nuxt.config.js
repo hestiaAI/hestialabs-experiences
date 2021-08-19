@@ -1,6 +1,5 @@
 import colors from 'vuetify/es5/util/colors'
 import webpack from 'webpack'
-import VuetifyLoaderPlugin from 'vuetify-loader/lib/plugin'
 
 const appName = 'HestiaLabs Demo'
 
@@ -145,9 +144,6 @@ export default {
       new webpack.IgnorePlugin({
         resourceRegExp: /^/u,
         contextRegExp: /xpath-iterator/u
-      }),
-      new VuetifyLoaderPlugin({
-        progressiveImages: true
       })
     ]
   }
