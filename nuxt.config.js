@@ -1,5 +1,6 @@
 import colors from 'vuetify/es5/util/colors'
 import webpack from 'webpack'
+import VuetifyLoaderPlugin from 'vuetify-loader/lib/plugin'
 
 const appName = 'HestiaLabs Demo'
 
@@ -118,7 +119,7 @@ export default {
   build: {
     // Transpile yarrrml-parser with Babel
     // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
-    transpile: ['yarrrml-parser'],
+    transpile: ['yarrrml-parser', 'vuetify/lib'],
     extend(config, { isDev, isClient }) {
       config.node = {
         // ignore fs Node.js module (used in yarrrml-parser)
@@ -144,6 +145,9 @@ export default {
       new webpack.IgnorePlugin({
         resourceRegExp: /^/u,
         contextRegExp: /xpath-iterator/u
+      }),
+      new VuetifyLoaderPlugin({
+        progressiveImages: true
       })
     ]
   }

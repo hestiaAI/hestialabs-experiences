@@ -13,7 +13,7 @@
         xl="2"
       >
         <v-card class="d-flex flex-column" nuxt :to="`/${key}`" hover shaped>
-          <v-img max-height="250" :src="icon" contain />
+          <v-img max-height="250" contain :src="icon" :lazy-src="icon" />
 
           <v-card-title v-text="title" />
           <v-card-subtitle
