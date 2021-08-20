@@ -13,12 +13,7 @@
       </template>
       <template v-else-if="success">
         <v-alert type="success">Success</v-alert>
-        <base-button nuxt download :href="rdfHref">
-          <v-icon left>
-            mdi-download
-          </v-icon>
-          Download
-        </base-button>
+        <base-download-button :data="rdf" :mime-type="mimeType" />
       </template>
     </div>
   </div>
@@ -28,7 +23,6 @@
 /* eslint-disable vue/require-default-prop */
 import processFiles from '@/utils/process-files'
 import rdfUtils from '@/utils/rdf'
-import { createObjectURL, revokeObjectURL } from '@/utils/utils'
 
 import parseYarrrml from '@/lib/parse-yarrrml'
 
@@ -54,7 +48,8 @@ export default {
       loading: false,
       error: false,
       success: false,
-      rdfHref: ''
+      rdf: '',
+      mimeType: 'application/n-quads'
     }
   },
   computed: {
@@ -68,12 +63,9 @@ export default {
       this.error = false
       this.success = false
       this.loading = true
-      revokeObjectURL(this.rdfHref)
     },
     handleRdfData(data) {
-      // handle data
-      this.rdfHref = createObjectURL(data, 'application/n-quads')
-
+      this.rdf = data
       this.success = true
     },
     handleRdfError(error) {

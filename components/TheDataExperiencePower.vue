@@ -25,12 +25,11 @@
       </div>
       <div>
         <h2 class="my-3">RML</h2>
-        <base-button nuxt download :href="rmlHref" :disabled="!rml">
-          <v-icon left>
-            mdi-download
-          </v-icon>
-          Download
-        </base-button>
+        <base-download-button
+          :mime-type="rmlMimeType"
+          :data="rml"
+          :disabled="!rml"
+        />
         <code-editor
           :value="rml"
           :error="rmlError"
@@ -120,12 +119,11 @@
               <v-icon v-else right color="green">mdi-check-circle</v-icon>
             </template>
           </base-button>
-          <base-button nuxt download :href="rdfHref" :disabled="!rdf">
-            <v-icon left>
-              mdi-download
-            </v-icon>
-            Download
-          </base-button>
+          <base-download-button
+            :mime-type="rdfMimeType"
+            :data="rdf"
+            :disabled="!rdf"
+          />
         </div>
 
         <code-editor
@@ -191,7 +189,6 @@
 /* eslint-disable vue/require-default-prop */
 import processFiles from '@/utils/process-files'
 import rdfUtils from '@/utils/rdf'
-import { createObjectURL, revokeObjectURL } from '@/utils/utils'
 import filesComboboxItems from '@/utils/files-combobox-items'
 
 import parseYarrrml from '@/lib/parse-yarrrml'
@@ -297,6 +294,15 @@ export default {
       })
 
       return msg.slice(0, -2)
+    },
+    rmlMimeType() {
+      return this.rmlError ? undefined : 'text/turtle'
+    },
+    rdfMimeType() {
+      if (this.rdfError) {
+        return
+      }
+      return this.toRDF ? 'application/n-quads' : 'application/ld+json'
     }
   },
   watch: {
@@ -356,17 +362,14 @@ export default {
       }
     },
     async generateRML() {
-      revokeObjectURL(this.rmlHref)
       try {
         this.rdfError = false
         this.rmlError = false
         this.rml = await parseYarrrml(this.yarrrml)
-        this.rmlHref = createObjectURL(this.rml, 'text/turtle')
       } catch (error) {
         console.error(error)
         this.rmlError = true
         this.rml = error
-        this.rmlHref = createObjectURL(this.rml)
       } finally {
         this.rmlGenerateAlert = true
       }
@@ -375,21 +378,17 @@ export default {
       this.rdf = data
       this.rdfError = false
       this.rdfGenerateMessage = 'RDF generated successfully'
-      const type = this.toRDF ? 'application/n-quads' : 'application/json'
-      this.rdfHref = createObjectURL(data, type)
     },
     handleRdfError(error) {
       console.error(error)
       this.rdfError = true
       this.rdfGenerateMessage = error
-      this.rdfHref = createObjectURL(error)
     },
     handleRdfEnd() {
       this.rdfLoading = false
       this.rdfGenerateAlert = true
     },
     async generateRDF() {
-      revokeObjectURL(this.rdfHref)
       const { rml, inputFilesRocketRML, toRDF } = this
       this.rdf = ''
       this.rdfGenerateMessage = ''
