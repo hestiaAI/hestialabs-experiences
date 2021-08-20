@@ -197,7 +197,7 @@ import parseYarrrml from '@/lib/parse-yarrrml'
 import query from '@/lib/sparql'
 import RDFWorker from '@/lib/rdf.worker.js'
 
-import { createObjectURL, objectIsEmpty } from '@/utils/utils'
+import { createObjectURL, revokeObjectURL, objectIsEmpty } from '@/utils/utils'
 import filesComboboxItems from '@/utils/files-combobox-items'
 
 export default {
@@ -417,7 +417,7 @@ export default {
 
           // create inputFiles object with path-text pairs
           this.inputFilesRocketRML = {}
-          this.extractedFiles = []
+          this.extractedFiles = {}
           if (!this.files.length && !this.multiple) {
             // the data experience involves a single file input so the name is irrelevant
             // -> input.<ext>
@@ -467,6 +467,7 @@ export default {
       }
     },
     async generateRML() {
+      revokeObjectURL(this.rmlHref)
       try {
         this.rdfError = false
         this.rmlError = false
@@ -498,6 +499,7 @@ export default {
       this.rdfGenerateAlert = true
     },
     async generateRDF() {
+      revokeObjectURL(this.rdfHref)
       const { rml, inputFilesRocketRML, toRDF } = this
       this.rdf = ''
       this.rdfGenerateMessage = ''
