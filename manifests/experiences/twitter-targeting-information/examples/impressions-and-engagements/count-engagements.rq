@@ -1,0 +1,11 @@
+# authors: Florian Singer <florian.singer@hestia.ai>
+PREFIX ex: <http://www.example.com/>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?name (count(?engagement) AS ?count_eng) WHERE {
+  ?x  a  schema:Organization .
+  ?x  schema:name  ?name .
+  ?x  ^ex:Advertiser  ?engagement .
+  ?engagement  a  ex:Engagement .
+}
+GROUP BY ?name

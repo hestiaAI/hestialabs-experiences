@@ -1,0 +1,11 @@
+# authors: Florian Singer <florian.singer@hestia.ai>
+PREFIX ex: <http://www.example.com/>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?name (count(?impression) AS ?count_imp) WHERE {
+  ?x  a  schema:Organization .
+  ?x  schema:name  ?name .
+  ?x  ^ex:Advertiser  ?impression .
+  ?impression  a  ex:Impression .
+}
+GROUP BY ?name
