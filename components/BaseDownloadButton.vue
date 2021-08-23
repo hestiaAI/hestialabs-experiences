@@ -1,5 +1,5 @@
 <template>
-  <base-button nuxt :disabled="disabled" :download="download" :href="href">
+  <base-button :disabled="disabled" :href="href" :download="download">
     <v-icon left>
       mdi-download
     </v-icon>
@@ -45,8 +45,8 @@ export default {
     }
   },
   watch: {
-    data() {
-      revokeObjectURL(this.href)
+    href(href, oldHref) {
+      revokeObjectURL(oldHref)
     }
   }
 }
