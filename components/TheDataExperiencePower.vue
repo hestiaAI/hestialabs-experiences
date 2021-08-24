@@ -68,10 +68,6 @@
           :error="filesError"
         />
 
-        <span v-if="inputFilesRocketRML && filesProcessingTime"
-          >{{ filesProcessingTime / 1000 }} sec.</span
-        >
-
         <code-editor
           :value="filesUploadMessage"
           :error="filesError"
@@ -239,7 +235,11 @@ export default {
       return this.isPlayground ? this.filesCombobox : this.files
     },
     filesUploadMessage() {
-      const { inputFilesRocketRML: f, extractedFiles: xfiles } = this
+      const {
+        inputFilesRocketRML: f,
+        extractedFiles: xfiles,
+        filesProcessingTime: ms
+      } = this
       if (this.filesError) {
         return f
       }
@@ -248,16 +248,20 @@ export default {
         return ''
       }
 
+      const secs = ms / 1000
+
       if (this.isSingleFileExperience) {
         // Single file input.<ext>
-        return `Success! File registered: ${Object.keys(f)[0]}`
+        return `Success! File registered: ${
+          Object.keys(f)[0]
+        }\nTime elapsed: ${secs}`
       }
 
       if (!xfiles) {
         return 'Unexpected result'
       }
 
-      let msg = 'Success!\n'
+      let msg = `Success! Time elapsed: ${secs} sec.\n`
       Object.entries(xfiles).forEach(([archive, filelist]) => {
         if (!archive) {
           // archive is empty string
@@ -325,6 +329,11 @@ export default {
         this.filesProcessingTime = res.filesProcessingTime
         this.extractedFiles = res.extractedFiles
         this.inputFilesRocketRML = res.inputFilesRocketRML
+
+        if (!this.generateRDFDisabled) {
+          // Proceed to generate RDF if RML is available
+          await this.generateRDF()
+        }
       } catch (error) {
         console.error(error)
         this.filesError = true
