@@ -11,12 +11,13 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export default {
+  ssr: false, // Disable Server-Side Rendering
+  target: 'static',
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate(title) {
-      const { appName } = this.context.env
-      return title ? `${title} | ${appName}` : appName
-    },
+    titleTemplate: title =>
+      title ? `${title} | HestiaLabs Demo` : 'HestiaLabs Demo',
     title: '',
     meta: [
       { name: 'format-detection', content: 'telephone=no' },
@@ -86,6 +87,7 @@ export default {
 
   vue: {
     config: {
+      productionTip: false,
       watch: ['~/manifests/']
     }
   },

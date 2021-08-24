@@ -5,9 +5,10 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
-    "build": "nuxt build",
+    "build": "npm run build:static",
     "start": "nuxt start",
-    "generate": "nuxt generate",
+    "build:static": "nuxt generate",
+    "build:server": "nuxt build",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "prepare": "husky install",
     "lint": "npm run lint:js",
