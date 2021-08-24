@@ -63,7 +63,7 @@
           name="file-input"
           :loading="filesLoading"
           :disabled="rdfLoading"
-          :handle-files="onFileChange"
+          :handle-files="handleFiles"
           :status="Boolean(inputFilesRocketRML)"
           :error="filesError"
         />
@@ -304,7 +304,7 @@ export default {
     }
   },
   methods: {
-    async onFileChange(submittedFiles) {
+    async handleFiles(submittedFiles) {
       try {
         // set filesLoading state while processing uploaded files
         this.filesError = false

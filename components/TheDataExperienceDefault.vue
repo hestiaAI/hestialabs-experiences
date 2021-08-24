@@ -4,7 +4,7 @@
       name="file-input"
       :loading="loading"
       :disabled="loading"
-      :handle-files="onFileChange"
+      :handle-files="handleFiles"
       :status="error || success"
       :error="error"
       :message="message"
@@ -73,7 +73,7 @@ export default {
     handleRdfEnd() {
       this.loading = false
     },
-    async onFileChange(submittedFiles) {
+    async handleFiles(submittedFiles) {
       this.initState()
       try {
         const { inputFilesRocketRML } = await processFiles(
