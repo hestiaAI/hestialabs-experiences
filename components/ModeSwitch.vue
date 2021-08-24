@@ -15,8 +15,11 @@ export default {
     ...mapState(['power'])
   },
   watch: {
-    power(value) {
-      this.model = value
+    power: {
+      immediate: true,
+      handler(value) {
+        this.model = value
+      }
     },
     model(value) {
       this.$store.commit('updatePower', value)
