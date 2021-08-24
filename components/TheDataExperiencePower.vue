@@ -349,7 +349,8 @@ export default {
     handleRdfData({ data, elapsed }) {
       this.rdf = data
       this.rdfError = false
-      this.rdfGenerateMessage = 'RDF generated successfully'
+      const secs = elapsed / 1000
+      this.rdfGenerateMessage = `RDF generated successfully in ${secs} sec.`
     },
     handleRdfError(error) {
       console.error(error)

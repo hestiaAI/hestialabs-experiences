@@ -64,6 +64,7 @@ export default {
     handleRdfData({ data, elapsed }) {
       this.rdf = data
       this.success = true
+      this.message = `Successfully processed in ${elapsed / 1000} sec.`
     },
     handleRdfError(error) {
       console.error(error)
