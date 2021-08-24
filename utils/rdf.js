@@ -1,5 +1,5 @@
-import mapToRDF from '@/lib/map-to-rdf'
-import RDFWorker from '@/lib/rdf.worker.js'
+import mapToRDF from '@/utils/map-to-rdf'
+import RDFWorker from '@/utils/rdf.worker.js'
 
 const noDataError = new Error('No data found')
 

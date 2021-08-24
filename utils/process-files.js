@@ -1,5 +1,5 @@
-import unzip from '@/lib/unzip'
-import readFile from '@/lib/file-reader'
+import unzip from '@/utils/unzip'
+import readFile from '@/utils/file-reader'
 
 /**
  * Counts number of times each path was extracted

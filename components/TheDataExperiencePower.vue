@@ -167,9 +167,8 @@
 import processFiles from '@/utils/process-files'
 import rdfUtils from '@/utils/rdf'
 import filesComboboxItems from '@/utils/files-combobox-items'
-
-import parseYarrrml from '@/lib/parse-yarrrml'
-import query from '@/lib/sparql'
+import parseYarrrml from '@/utils/parse-yarrrml'
+import query from '@/utils/sparql'
 
 export default {
   props: {

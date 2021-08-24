@@ -1,4 +1,4 @@
-import mapToRDF from '@/lib/map-to-rdf'
+import mapToRDF from '@/utils/map-to-rdf'
 
 onmessage = async function({ data: { toRDF = true, ...rest } }) {
   try {

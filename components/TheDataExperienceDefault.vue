@@ -23,8 +23,7 @@
 /* eslint-disable vue/require-default-prop */
 import processFiles from '@/utils/process-files'
 import rdfUtils from '@/utils/rdf'
-
-import parseYarrrml from '@/lib/parse-yarrrml'
+import parseYarrrml from '@/utils/parse-yarrrml'
 
 function getErrorMessage(error) {
   return error instanceof Error ? error.message : error
