@@ -77,14 +77,14 @@
       </div>
       <div>
         <h2 class="my-3">RDF</h2>
-        <div class="d-flex">
+        <div class="d-flex flex-column flex-sm-row align-start">
           <v-select
             v-model="toRDF"
             :items="rdfFormats"
             style="max-width: 150px"
             hide-details
             label="Format"
-            class="ma-2"
+            class="ma-sm-2"
           />
           <base-button
             :disabled="generateRDFDisabled"
@@ -92,13 +92,14 @@
             :status="rdfGenerateStatus"
             :error="rdfError"
             text="Generate RDF"
-            class="ma-2"
+            class="ma-sm-2"
             @click="generateRDF"
           />
           <base-download-button
             :mime-type="rdfMimeType"
             :data="rdf"
             :disabled="!rdf"
+            class="ma-sm-2"
           />
         </div>
 
