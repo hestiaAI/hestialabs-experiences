@@ -11,6 +11,7 @@ export async function generateRDF(
   inputFiles,
   toRDF = true
 ) {
+  const start = new Date()
   const rocketRMLParams = { rml, inputFiles, toRDF }
   if (window.Worker) {
     const worker = new RDFWorker()
@@ -29,7 +30,8 @@ export async function generateRDF(
         if (!text) {
           handleError(noDataError)
         } else {
-          handleData(text)
+          const elapsed = new Date() - start
+          handleData({ data: text, elapsed })
         }
       }
 
@@ -42,7 +44,8 @@ export async function generateRDF(
       if (!data) {
         handleError(noDataError)
       } else {
-        handleData(data)
+        const elapsed = new Date() - start
+        handleData({ data, elapsed })
       }
     } catch (error) {
       handleError(error)

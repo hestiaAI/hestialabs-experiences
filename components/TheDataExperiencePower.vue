@@ -68,6 +68,10 @@
           :error="filesError"
         />
 
+        <span v-if="inputFilesRocketRML && filesProcessingTime"
+          >{{ filesProcessingTime / 1000 }} sec.</span
+        >
+
         <code-editor
           :value="filesUploadMessage"
           :error="filesError"
@@ -342,7 +346,7 @@ export default {
         this.rmlGenerateStatus = true
       }
     },
-    handleRdfData(data) {
+    handleRdfData({ data, elapsed }) {
       this.rdf = data
       this.rdfError = false
       this.rdfGenerateMessage = 'RDF generated successfully'

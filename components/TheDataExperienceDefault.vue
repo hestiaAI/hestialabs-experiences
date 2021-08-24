@@ -61,7 +61,7 @@ export default {
       this.success = false
       this.loading = true
     },
-    handleRdfData(data) {
+    handleRdfData({ data, elapsed }) {
       this.rdf = data
       this.success = true
     },

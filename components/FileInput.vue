@@ -22,9 +22,6 @@
       class="mt-4"
       @click="processFiles"
     />
-    <!-- <span v-if="inputFilesRocketRML && filesProcessingTime"
-      >{{ filesProcessingTime / 1000 }} sec.</span
-    > -->
   </div>
 </template>
 
