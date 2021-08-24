@@ -128,6 +128,7 @@
           />
           <base-button
             :disabled="runQueryDisabled"
+            :progress="sparqlResultsLoading"
             :status="sparqlStatus"
             :error="sparqlError"
             text="Run Query"
