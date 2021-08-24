@@ -1,6 +1,7 @@
 <template>
   <v-img
-    src="https://hestialabs.org/assets/img/hestialabs-logo+text.svg"
+    src="/hestialabs-logo.svg"
+    lazy-src="/hestialabs-logo.svg"
     alt="HestiaLabs logo"
     contain
     v-bind="$attrs"

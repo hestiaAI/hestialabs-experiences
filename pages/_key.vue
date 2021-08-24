@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex">
-      <v-img max-width="50" :src="m.icon" contain />
+      <v-img max-width="50" :src="m.icon" :lazy-src="$icon(512)" contain />
       <h1 class="ml-3">{{ m.title }}</h1>
     </div>
     <p class="subtitle-1 mt-4">{{ m.subtitle }}</p>

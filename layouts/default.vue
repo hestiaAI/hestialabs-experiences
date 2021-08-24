@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar fixed app height="75">
+    <v-app-bar fixed app color="white" height="75" style="z-index: 2000;">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>
         <nuxt-link
@@ -9,11 +9,10 @@
           style="text-decoration: none; color: inherit;"
         >
           <logo-img class="mr-5" width="100" />
-          <span>HestiaLabs Demo</span>
         </nuxt-link>
       </v-toolbar-title>
       <v-spacer />
-      <mode-switch />
+      <mode-switch v-if="$vuetify.breakpoint.smAndUp" />
     </v-app-bar>
     <v-navigation-drawer
       v-model="drawer"
@@ -21,6 +20,7 @@
       temporary
       class="pa-5"
       :width="500"
+      style="z-index: 3000;"
     >
       <template #prepend>
         <div class="d-flex justify-space-between align-center">
@@ -68,8 +68,13 @@
         </v-snackbar>
       </v-container>
     </v-main>
-    <v-footer app absolute>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+    <v-footer app absolute color="primary">
+      <div class="lighten-2 py-2 ma-auto white--text">
+        <span
+          >&copy; {{ new Date().getFullYear() }} —
+          <span class="font-bold">Hestia.ai</span></span
+        >
+      </div>
     </v-footer>
   </v-app>
 </template>
