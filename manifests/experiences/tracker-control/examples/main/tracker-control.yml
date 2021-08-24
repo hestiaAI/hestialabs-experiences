@@ -1,8 +1,7 @@
 authors: Valentin Oliver Loftsson <valentin@hestia.ai>
 
 prefixes:
-  ex: http://www.example.com/
-  schema: http://schema.org/
+  h: http://hestia.ai/
 
 sources:
   source: [input.csv~csv]
@@ -10,18 +9,18 @@ sources:
 mappings:
   organization:
     sources: source
-    s: schema:Organization/$(Tracker Name)
+    s: h:Organization/$(Tracker Name)
     po:
-      - [a, schema:Organization]
-      - [schema:name, $(Tracker Name)]
+      - [a, h:Organization]
+      - [h:name, $(Tracker Name)]
 
   trace:
     sources: source
     po:
-      - [ex:trace/destination, $(daddr)]
-      - [ex:trace/time, $(time)]
-      - [ex:trace/tracker/category, $(Tracker Category)]
-      - p: ex:trace/tracker/organization
+      - [h:destination, $(daddr)]
+      - [h:time, $(time)]
+      - [h:category, $(Tracker Category)]
+      - p: h:organization
         o:
           mapping: organization
           condition:
