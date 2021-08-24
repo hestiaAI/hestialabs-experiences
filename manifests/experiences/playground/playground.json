@@ -5,5 +5,5 @@
   "ext": "csv,js,json,xml,zip",
   "multiple": true,
   "preprocessor": "twitter",
-  "data": ["colors.csv", "people.json", "twitter.zip"]
+  "data": ["colors.csv", "people.json", "tracker-control.csv", "twitter.zip"]
 }
