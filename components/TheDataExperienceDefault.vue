@@ -4,18 +4,18 @@
       name="file-input"
       :loading="loading"
       :disabled="loading"
-      :on-file-change="onFileChange"
+      :handle-files="onFileChange"
+      :status="error || success"
+      :error="error"
+      :message="message"
     ></slot>
 
-    <div class="mt-6">
-      <template v-if="error">
-        <v-alert type="error">{{ error }}</v-alert>
-      </template>
-      <template v-else-if="success">
-        <v-alert type="success">Success</v-alert>
-        <base-download-button :data="rdf" :mime-type="mimeType" />
-      </template>
-    </div>
+    <base-download-button
+      v-if="success"
+      class="my-4"
+      :data="rdf"
+      :mime-type="mimeType"
+    />
   </div>
 </template>
 
@@ -32,15 +32,10 @@ function getErrorMessage(error) {
 
 export default {
   props: {
-    accept: String,
-    data: Array,
     examples: Array,
-    ext: String,
     extensions: Array,
     files: Array,
     isSingleFileExperience: Boolean,
-    label: String,
-    multiple: Boolean,
     preprocessorFunc: Function
   },
   data() {
@@ -48,6 +43,7 @@ export default {
       loading: false,
       error: false,
       success: false,
+      message: '',
       rdf: '',
       mimeType: 'application/n-quads'
     }
@@ -60,6 +56,7 @@ export default {
   },
   methods: {
     initState() {
+      this.message = ''
       this.error = false
       this.success = false
       this.loading = true
@@ -70,7 +67,8 @@ export default {
     },
     handleRdfError(error) {
       console.error(error)
-      this.error = getErrorMessage(error)
+      this.error = true
+      this.message = getErrorMessage(error)
     },
     handleRdfEnd() {
       this.loading = false
@@ -82,7 +80,7 @@ export default {
           submittedFiles,
           this.files,
           true,
-          this.ext,
+          this.extensions,
           this.preprocessorFunc,
           this.isSingleFileExperience
         )
@@ -96,7 +94,8 @@ export default {
         )
       } catch (error) {
         console.error(error)
-        this.error = error instanceof Error ? error.message : error
+        this.error = true
+        this.message = error instanceof Error ? error.message : error
         this.loading = false
       }
     }

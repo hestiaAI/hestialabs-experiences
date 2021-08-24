@@ -1,9 +1,15 @@
 <template>
-  <base-button :disabled="disabled" :href="href" :download="download">
-    <v-icon left>
-      mdi-download
-    </v-icon>
-    Download
+  <base-button
+    :disabled="disabled"
+    :href="href"
+    :download="download"
+    text="Download"
+  >
+    <template #prepend-icon>
+      <v-icon left>
+        mdi-download
+      </v-icon>
+    </template>
   </base-button>
 </template>
 

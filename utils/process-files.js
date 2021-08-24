@@ -44,6 +44,9 @@ function computeFilePrefixes(fileDuplicateCounts) {
 /**
  * Computes file prefixes based on file duplicate counts
  * @param {Array} results - output from processFiles()
+ * @param {Array} extensions - allowed extensions
+ * @param {Function} preprocessorFunc
+ * @param {Boolean} isSingleFileExperience
  * @returns {Object} {
  *  extractedFiles: {Object} key: archive name, value: Array of file paths extracted
  *  inputFilesRocketRML: {Object} corresponds to inputFiles parameter of RocketRML.parseFileLive()
@@ -51,7 +54,7 @@ function computeFilePrefixes(fileDuplicateCounts) {
  */
 export function getInputFiles(
   results,
-  ext,
+  extensions,
   preprocessorFunc,
   isSingleFileExperience
 ) {
@@ -64,7 +67,7 @@ export function getInputFiles(
   if (isSingleFileExperience) {
     // the data experience involves a single file input so the name is irrelevant
     // -> input.<ext>
-    const filename = `input.${ext}`
+    const filename = `input${extensions[0]}`
     inputFilesRocketRML = { [filename]: preprocessorFunc(results[0][2]) || '' }
   } else {
     // user can submit multiple files or an archive
@@ -106,6 +109,7 @@ export function getInputFiles(
  * @param {Array} files - File objects
  * @param {Array} filesToExtract - Array of Strings, specifying which paths to extract from archives
  * @param {Boolean} strictExtraction
+ * @param {Object} getInputFilesParams - parameters for getInputFiles()
  * @returns {Object} { results: Array of [archive, filepath, contents] triples, elapsed: Integer }
  */
 export default async function processFiles(

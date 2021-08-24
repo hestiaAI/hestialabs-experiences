@@ -14,13 +14,12 @@
     <div class="io-block mt-6">
       <div class="mr-lg-6 mb-6">
         <h2 class="my-3">YARRRML</h2>
-        <base-button @click="generateRML">
-          Generate RML
-          <template v-if="rmlGenerateAlert">
-            <v-icon v-if="rmlError" right color="red">mdi-alert</v-icon>
-            <v-icon v-else right color="green">mdi-check-circle</v-icon>
-          </template>
-        </base-button>
+        <base-button
+          :status="rmlGenerateStatus"
+          :error="rmlError"
+          text="Generate RML"
+          @click="generateRML"
+        />
         <code-editor :value.sync="yarrrml" class="mt-6" language="yaml" />
       </div>
       <div>
@@ -41,7 +40,7 @@
     </div>
     <div class="io-block">
       <div class="mr-lg-6">
-        <h2>File</h2>
+        <h2 class="mb-2">Files</h2>
         <v-combobox
           v-if="isPlayground"
           v-model="filesCombobox"
@@ -52,36 +51,23 @@
           deletable-chips
           outlined
           dense
-          class="mt-6"
-          placeholder="Type file name or select from below"
-          label="Add files to extract from zip archive..."
-        />
-        <v-select
-          v-model="selectedDataSample"
-          :items="data"
-          label="Select sample"
-          :disabled="!data.length"
           hide-details
-          style="max-width: 200px"
+          class="mt-6"
+          menu-props="auto, overflowY, offsetY, top"
+          placeholder="Type file name or select from list..."
+          label="Specify files to extract from zip archives..."
+          style="max-width: 650px"
         />
+
         <slot
           name="file-input"
           :loading="filesLoading"
           :disabled="rdfLoading"
-          :on-file-change="onFileChange"
-        ></slot>
+          :handle-files="onFileChange"
+          :status="Boolean(inputFilesRocketRML)"
+          :error="filesError"
+        />
 
-        <template v-if="inputFilesRocketRML">
-          <v-icon v-if="filesError" color="red">
-            mdi-cross
-          </v-icon>
-          <v-icon v-else color="green">
-            mdi-check-circle
-          </v-icon>
-        </template>
-        <span v-if="filesProcessingTime"
-          >{{ filesProcessingTime / 1000 }} sec.</span
-        >
         <code-editor
           :value="filesUploadMessage"
           :error="filesError"
@@ -102,23 +88,13 @@
           />
           <base-button
             :disabled="generateRDFDisabled"
+            :progress="rdfLoading"
+            :status="rdfGenerateStatus"
+            :error="rdfError"
+            text="Generate RDF"
             class="ma-2"
             @click="generateRDF"
-          >
-            Generate RDF
-            <template v-if="rdfLoading">
-              <v-progress-circular
-                class="ml-2"
-                :size="14"
-                :width="2"
-                indeterminate
-              />
-            </template>
-            <template v-else-if="rdfGenerateAlert">
-              <v-icon v-if="rdfError" right color="red">mdi-alert</v-icon>
-              <v-icon v-else right color="green">mdi-check-circle</v-icon>
-            </template>
-          </base-button>
+          />
           <base-download-button
             :mime-type="rdfMimeType"
             :data="rdf"
@@ -149,13 +125,13 @@
             :disabled="!selectedExample.sparql.length"
             class="ma-2"
           />
-          <base-button :disabled="runQueryDisabled" @click="runQuery">
-            Run Query
-            <template v-if="sparqlAlert">
-              <v-icon v-if="sparqlError" right color="red">mdi-alert</v-icon>
-              <v-icon v-else right color="green">mdi-check-circle</v-icon>
-            </template>
-          </base-button>
+          <base-button
+            :disabled="runQueryDisabled"
+            :status="sparqlStatus"
+            :error="sparqlError"
+            text="Run Query"
+            @click="runQuery"
+          />
         </div>
         <code-editor
           :value.sync="sparql"
@@ -196,15 +172,10 @@ import query from '@/lib/sparql'
 
 export default {
   props: {
-    accept: String,
-    data: Array,
     examples: Array,
-    ext: String,
     extensions: Array,
     files: Array,
     isSingleFileExperience: Boolean,
-    label: String,
-    multiple: Boolean,
     preprocessorFunc: Function
   },
   data() {
@@ -212,7 +183,6 @@ export default {
     const selectedExample = this.examples[0]
     return {
       selectedExample,
-      selectedDataSample: null,
       filesCombobox: [],
       filesComboboxItems,
       inputFilesRocketRML: null,
@@ -220,7 +190,7 @@ export default {
       filesError: false,
       filesProcessingTime: 0,
       yarrrml: selectedExample.yarrrml,
-      rmlGenerateAlert: false,
+      rmlGenerateStatus: false,
       rdfGenerateMessage: '',
       rml: '',
       rmlError: false,
@@ -231,12 +201,12 @@ export default {
         { text: 'N-Quads', value: true },
         { text: 'JSON-LD', value: false }
       ],
-      rdfGenerateAlert: false,
+      rdfGenerateStatus: false,
       rdf: '',
       rdfLoading: false,
       rdfError: false,
       rdfHref: '',
-      sparqlAlert: false,
+      sparqlStatus: false,
       sparql: '',
       sparqlError: false,
       sparqlErrorMessage: '',
@@ -307,32 +277,25 @@ export default {
   },
   watch: {
     yarrrml() {
-      this.rmlGenerateAlert = false
+      this.rmlGenerateStatus = false
       this.rml = ''
     },
     rml() {
-      this.rdfGenerateAlert = false
+      this.rdfGenerateStatus = false
       this.rdfGenerateMessage = ''
     },
     filesCombobox() {
       this.inputFilesRocketRML = null
     },
     toRDF() {
-      this.rdfGenerateAlert = false
+      this.rdfGenerateStatus = false
       this.rdfGenerateMessage = ''
     },
     sparql() {
-      this.sparqlAlert = false
+      this.sparqlStatus = false
     },
     selectedExample({ yarrrml }) {
       this.yarrrml = yarrrml
-    },
-    async selectedDataSample(filename) {
-      // Assumes only single file can be selected at once
-      const response = await window.fetch(`/data/${filename}`)
-      const blob = await response.blob()
-      const file = new File([blob], filename)
-      await this.onFileChange([file])
     }
   },
   methods: {
@@ -345,7 +308,7 @@ export default {
           submittedFiles,
           this.filesToExtract,
           !this.isPlayground,
-          this.ext,
+          this.extensions,
           this.preprocessorFunc,
           this.isSingleFileExperience
         )
@@ -371,7 +334,7 @@ export default {
         this.rmlError = true
         this.rml = error
       } finally {
-        this.rmlGenerateAlert = true
+        this.rmlGenerateStatus = true
       }
     },
     handleRdfData(data) {
@@ -386,7 +349,7 @@ export default {
     },
     handleRdfEnd() {
       this.rdfLoading = false
-      this.rdfGenerateAlert = true
+      this.rdfGenerateStatus = true
     },
     async generateRDF() {
       const { rml, inputFilesRocketRML, toRDF } = this
@@ -429,7 +392,7 @@ export default {
         this.sparqlErrorMessage = error
         this.sparqlResultsLoading = false
       } finally {
-        this.sparqlAlert = true
+        this.sparqlStatus = true
       }
     }
   }

@@ -2,16 +2,12 @@
   <client-only placeholder="Loading...">
     <keep-alive>
       <component :is="isComponent" v-bind="props">
-        <template #file-input="{ loading, disabled, onFileChange }">
+        <template #file-input="slotProps">
           <file-input
-            :accept="accept"
-            :disabled="disabled"
-            hide-details
-            :label="label"
-            :loading="loading"
+            :samples="data"
+            :extensions="extensions"
             :multiple="multiple"
-            show-size
-            :handle-change="onFileChange"
+            v-bind="slotProps"
           >
           </file-input>
         </template>
@@ -31,17 +27,13 @@ const TheDataExperiencePower = () =>
 
 export default {
   props: {
-    multiple: {
-      type: Boolean,
-      default: false
-    },
-    files: {
+    data: {
       type: Array,
       default: () => []
     },
-    preprocessor: {
-      type: String,
-      default: null
+    examples: {
+      type: Array,
+      required: true
     },
     ext: {
       type: String,
@@ -52,13 +44,17 @@ export default {
         return val.split(',').every(v => validExtensions.includes(v))
       }
     },
-    examples: {
-      type: Array,
-      required: true
-    },
-    data: {
+    files: {
       type: Array,
       default: () => []
+    },
+    multiple: {
+      type: Boolean,
+      default: false
+    },
+    preprocessor: {
+      type: String,
+      default: null
     }
   },
   computed: {
@@ -73,31 +69,20 @@ export default {
       return preprocessors[this.preprocessor]
     },
     extensions() {
-      return this.ext.split(',')
-    },
-    accept() {
-      return this.extensions.map(ext => `.${ext}`).join()
-    },
-    label() {
-      const exts = this.ext.replace(/\s/g, '').replace(/,/g, ', ')
-      return `Select file${this.multiple ? 's' : ''} (${exts})`
+      return this.ext
+        .replace(/\s/g, '')
+        .split(',')
+        .map(ext => `.${ext}`)
     },
     props() {
-      const {
-        isSingleFileExperience,
-        preprocessorFunc,
-        extensions,
-        accept,
-        label
-      } = this
-      const { preprocessor, ...rest } = this.$props
+      const { isSingleFileExperience, preprocessorFunc, extensions } = this
+      const propNames = ['examples', 'extensions', 'files']
+      const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
       return {
-        ...rest,
+        ...props,
         isSingleFileExperience,
         preprocessorFunc,
-        extensions,
-        accept,
-        label
+        extensions
       }
     },
     isComponent() {
@@ -109,7 +94,7 @@ export default {
   },
   mounted() {
     if (
-      this.extensions.includes('zip') &&
+      this.extensions.includes('.zip') &&
       !this.files.length &&
       // Does not apply to the playground since there
       // we allow to list the files to extract
