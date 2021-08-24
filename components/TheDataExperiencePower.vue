@@ -295,8 +295,12 @@ export default {
     sparql() {
       this.sparqlStatus = false
     },
-    selectedExample({ yarrrml }) {
-      this.yarrrml = yarrrml
+    selectedExample: {
+      immediate: true,
+      async handler({ yarrrml }) {
+        this.yarrrml = yarrrml
+        await this.generateRML()
+      }
     }
   },
   methods: {
