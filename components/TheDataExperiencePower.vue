@@ -172,6 +172,9 @@ import parseYarrrml from '@/utils/parse-yarrrml'
 import query from '@/utils/sparql'
 import localforage from '@/utils/localforage'
 
+const extractedFilesKey = 'extractedFiles'
+const inputFilesRRMLKey = 'inputFilesRocketRML'
+
 export default {
   props: {
     examples: Array,
@@ -187,6 +190,7 @@ export default {
       selectedExample,
       filesCombobox: [],
       filesComboboxItems,
+      extractedFiles: null,
       inputFilesRocketRML: null,
       filesLoading: false,
       filesError: false,
@@ -316,12 +320,14 @@ export default {
     }
   },
   async mounted() {
-    const inputFilesCached = await localforage.getItem(
-      'inputFilesRocketRML',
+    this.inputFilesRocketRML = await localforage.getItem(
+      inputFilesRRMLKey,
       this.key
     )
-    if (inputFilesCached) {
-      this.inputFilesRocketRML = inputFilesCached
+    this.extractedFiles = await localforage.getItem(extractedFilesKey, this.key)
+    if (!this.generateRDFDisabled) {
+      // Proceed to generate RDF if RML is available
+      await this.generateRDF()
     }
   },
   methods: {
@@ -343,8 +349,13 @@ export default {
         this.extractedFiles = res.extractedFiles
         this.inputFilesRocketRML = res.inputFilesRocketRML
         await localforage.setItem(
-          'inputFilesRocketRML',
+          inputFilesRRMLKey,
           res.inputFilesRocketRML,
+          this.key
+        )
+        await localforage.setItem(
+          extractedFilesKey,
+          res.extractedFiles,
           this.key
         )
 
