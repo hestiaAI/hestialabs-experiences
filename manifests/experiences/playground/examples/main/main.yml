@@ -1,1 +1,7 @@
+author: Hestia <hestia@hestia.ai>
+
+sources:
+  mysource: [input.json~jsonpath]
+
 mappings:
+  mymapping:
