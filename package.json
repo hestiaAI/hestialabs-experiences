@@ -26,6 +26,7 @@
     "@uppy/dashboard": "^1.21.1",
     "@uppy/drop-target": "^0.2.4",
     "core-js": "^3.16.2",
+    "localforage": "^1.10.0",
     "n3": "^1.11.1",
     "nuxt": "^2.15.8",
     "prismjs": "^1.24.1",

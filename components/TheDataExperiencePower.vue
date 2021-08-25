@@ -170,6 +170,7 @@ import rdfUtils from '@/utils/rdf'
 import filesComboboxItems from '@/utils/files-combobox-items'
 import parseYarrrml from '@/utils/parse-yarrrml'
 import query from '@/utils/sparql'
+import localforage from '@/utils/localforage'
 
 export default {
   props: {
@@ -217,8 +218,11 @@ export default {
     }
   },
   computed: {
+    key() {
+      return this.$route.params.key
+    },
     isPlayground() {
-      return this.$route.params.key === 'playground'
+      return this.key === 'playground'
     },
     generateRDFDisabled() {
       return (
@@ -311,6 +315,15 @@ export default {
       }
     }
   },
+  async mounted() {
+    const inputFilesCached = await localforage.getItem(
+      'inputFilesRocketRML',
+      this.key
+    )
+    if (inputFilesCached) {
+      this.inputFilesRocketRML = inputFilesCached
+    }
+  },
   methods: {
     async handleFiles(submittedFiles) {
       try {
@@ -329,6 +342,11 @@ export default {
         this.filesProcessingTime = res.filesProcessingTime
         this.extractedFiles = res.extractedFiles
         this.inputFilesRocketRML = res.inputFilesRocketRML
+        await localforage.setItem(
+          'inputFilesRocketRML',
+          res.inputFilesRocketRML,
+          this.key
+        )
 
         if (!this.generateRDFDisabled) {
           // Proceed to generate RDF if RML is available
