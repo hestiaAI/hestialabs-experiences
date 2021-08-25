@@ -76,7 +76,7 @@ export default {
     },
     manifest: {
       name: appName,
-      short_name: 'Demo'
+      short_name: 'HestiaLabs'
     }
   },
 
@@ -120,7 +120,7 @@ export default {
   build: {
     // Transpile yarrrml-parser with Babel
     // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
-    transpile: ['yarrrml-parser', 'vuetify/lib'],
+    transpile: ['yarrrml-parser'],
     extend(config, { isDev, isClient }) {
       config.node = {
         // ignore fs Node.js module (used in yarrrml-parser)
