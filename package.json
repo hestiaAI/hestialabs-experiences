@@ -25,7 +25,7 @@
     "@uppy/core": "^1.20.1",
     "@uppy/dashboard": "^1.21.1",
     "@uppy/drop-target": "^0.2.4",
-    "core-js": "^3.16.2",
+    "core-js": "^3.16.3",
     "localforage": "^1.10.0",
     "n3": "^1.11.1",
     "nuxt": "^2.15.8",
