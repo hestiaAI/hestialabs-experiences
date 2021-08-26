@@ -1,27 +1,38 @@
 <template>
   <div>
-    <slot
-      name="file-input"
-      :loading="loading"
+    <!-- :loading="loading"
       :disabled="loading"
-      :handle-files="handleFiles"
       :status="error || success"
-      :error="error"
-      :message="message"
-    ></slot>
+      :error="error" -->
+    <!-- :message="message" -->
+    <slot name="unit-files" @update="onUnitFilesUpdate" />
 
     <base-download-button
       v-if="success"
       class="my-4"
       :data="rdf"
-      :mime-type="mimeType"
+      extension="nq"
+      text="Download RDF"
     />
+    <template v-if="loading">
+      <base-progress-circular class="ml-2" />
+      <span>Generating Linked Data...</span>
+    </template>
+    <template v-else-if="error || success">
+      <v-alert
+        :type="error ? 'error' : 'success'"
+        border="top"
+        colored-border
+        >{{ message }}</v-alert
+      >
+      <!-- <status-indicator :error="error" />
+      <span>{{ message }}</span> -->
+    </template>
   </div>
 </template>
 
 <script>
 /* eslint-disable vue/require-default-prop */
-import processFiles from '@/utils/process-files'
 import rdfUtils from '@/utils/rdf'
 import parseYarrrml from '@/utils/parse-yarrrml'
 
@@ -31,11 +42,7 @@ function getErrorMessage(error) {
 
 export default {
   props: {
-    examples: Array,
-    extensions: Array,
-    files: Array,
-    isSingleFileExperience: Boolean,
-    preprocessorFunc: Function
+    examples: Array
   },
   data() {
     return {
@@ -43,14 +50,23 @@ export default {
       error: false,
       success: false,
       message: '',
-      rdf: '',
-      mimeType: 'application/n-quads'
+      rml: '',
+      rdf: ''
     }
   },
   computed: {
     yarrrml() {
       // main example's YARRRML
       return this.examples.find(e => e.name === 'main').yarrrml
+    }
+  },
+  watch: {
+    yarrrml: {
+      immediate: true,
+      async handler(yarrrml) {
+        // this should be quick ...
+        this.rml = await parseYarrrml(yarrrml)
+      }
     }
   },
   methods: {
@@ -73,23 +89,17 @@ export default {
     handleRdfEnd() {
       this.loading = false
     },
-    async handleFiles(submittedFiles) {
+    async onUnitFilesUpdate({ inputFilesRocketRML }) {
       this.initState()
       try {
-        const { inputFilesRocketRML } = await processFiles(
-          submittedFiles,
-          this.files,
-          true,
-          this.extensions,
-          this.preprocessorFunc,
-          this.isSingleFileExperience
-        )
-        const rml = await parseYarrrml(this.yarrrml)
+        if (!this.rml) {
+          throw new Error('RML not ready')
+        }
         await rdfUtils.generateRDF(
           this.handleRdfData,
           this.handleRdfError,
           this.handleRdfEnd,
-          rml,
+          this.rml,
           inputFilesRocketRML
         )
       } catch (error) {

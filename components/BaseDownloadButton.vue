@@ -1,10 +1,5 @@
 <template>
-  <base-button
-    :disabled="disabled"
-    :href="href"
-    :download="download"
-    text="Download"
-  >
+  <base-button v-bind="{ disabled, href, download, text }">
     <template #prepend-icon>
       <v-icon left>
         mdi-download
@@ -16,15 +11,18 @@
 <script>
 import { createObjectURL, revokeObjectURL } from '@/utils/utils'
 
-const defaultMimeType = 'text/plain;charset=UTF-8'
+const defaultExtension = 'txt'
 
-const extensions = {
-  [defaultMimeType]: 'txt',
-  'application/json': 'json',
-  'application/ld+json': 'jsonld',
-  'application/n-quads': 'nq',
-  'text/csv': 'csv',
-  'text/turtle': 'ttl'
+const mimeTypes = {
+  csv: 'text/csv',
+  json: 'application/json',
+  jsonld: 'application/ld+json',
+  nq: 'application/n-quads',
+  rq: 'application/sparql-query',
+  ttl: 'text/turtle',
+  yaml: 'application/x-yaml',
+  yml: 'application/x-yaml',
+  [defaultExtension]: 'text/plain;charset=UTF-8'
 }
 
 export default {
@@ -33,21 +31,28 @@ export default {
       type: String,
       required: true
     },
-    mimeType: {
+    extension: {
       type: String,
-      default: defaultMimeType
+      default: defaultExtension,
+      validator(val) {
+        return Object.keys(mimeTypes).includes(val)
+      }
     },
     disabled: {
       type: Boolean,
       default: false
+    },
+    text: {
+      type: String,
+      default: 'Download'
     }
   },
   computed: {
     href() {
-      return createObjectURL(this.data, this.mimeType)
+      return createObjectURL(this.data, mimeTypes[this.extension])
     },
     download() {
-      return `results.${extensions[this.mimeType]}`
+      return `results.${this.extension}`
     }
   },
   watch: {
