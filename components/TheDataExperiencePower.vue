@@ -4,6 +4,7 @@
       :value.sync="selectedExample"
       :items="examples"
       :disabled="examples.length === 1"
+      class="mb-6 mt-4"
     />
 
     <unit-rml
@@ -14,66 +15,41 @@
     <div class="io-block">
       <div class="mr-lg-6">
         <h2 class="mb-2">Files</h2>
-
         <slot name="unit-files" :update="onUnitFilesUpdate" />
       </div>
-      <unit-rdf v-bind="{ rml, inputFiles }" @update="onUnitRdfUpdate" />
+      <unit-rdf
+        v-bind="{ rml, inputFiles }"
+        class="mr-lg-6"
+        @update="onUnitRdfUpdate"
+      />
     </div>
-    <div class="io-block">
-      <div class="mr-lg-6">
-        <h2 class="my-3">SPARQL</h2>
-        <div class="d-flex">
-          <v-select
-            v-model="sparql"
-            :items="selectedExample.sparql"
-            item-text="name"
-            item-value="sparql"
-            style="max-width: 150px"
-            hide-details
-            label="Select query"
-            :disabled="!selectedExample.sparql.length"
-            class="ma-2"
-          />
-          <base-button
-            :disabled="runQueryDisabled"
-            :progress="sparqlResultsLoading"
-            :status="sparqlStatus"
-            :error="sparqlError"
-            text="Run Query"
-            @click="runQuery"
+    <v-expand-transition>
+      <div v-show="toRDF" class="io-block" transition="expand-transition">
+        <unit-sparql :rdf="rdf" class="mr-lg-6" @update="onUnitSparqlUpdate">
+          <template #selector="{ change }">
+            <the-sparql-selector
+              :items="selectedExample.sparql"
+              :disabled="!selectedExample.sparql.length"
+              class="ma-2"
+              @change="change"
+            />
+          </template>
+        </unit-sparql>
+        <div class="mr-lg-6">
+          <h2 class="my-3">Query Results</h2>
+          <the-query-results-data-table
+            v-bind="{ headers, items }"
+            :hide-default-footer="!headers.length"
+            :loading="false"
           />
         </div>
-        <code-editor
-          :value.sync="sparql"
-          class="mt-6"
-          line-numbers
-          language="sparql"
-        />
       </div>
-      <div class="mr-lg-6">
-        <h2 class="my-3">Query Results</h2>
-        <code-editor
-          v-if="sparqlError"
-          :value="sparqlErrorMessage"
-          :error="sparqlError"
-          class="mt-6"
-          readonly
-        />
-        <the-query-results-data-table
-          v-else
-          :headers="sparqlResultsHeaders"
-          :hide-default-footer="!sparqlResultsHeaders.length"
-          :items="sparqlResultsItems"
-          :loading="sparqlResultsLoading"
-        />
-      </div>
-    </div>
+    </v-expand-transition>
   </div>
 </template>
 
 <script>
 /* eslint-disable vue/require-default-prop */
-import query from '@/utils/sparql'
 
 export default {
   props: {
@@ -87,27 +63,14 @@ export default {
       inputFiles: undefined,
       rml: '',
       rdf: '',
-      sparqlStatus: false,
-      sparql: '',
-      sparqlError: false,
-      sparqlErrorMessage: '',
-      sparqlResultsLoading: false,
-      sparqlResultsHeaders: [],
-      sparqlResultsItems: []
+      toRDF: true,
+      headers: [],
+      items: []
     }
   },
   computed: {
     runQueryDisabled() {
       return !this.rdf
-    }
-  },
-  watch: {
-    rml() {
-      this.rdfGenerateStatus = false
-      this.rdfGenerateMessage = ''
-    },
-    sparql() {
-      this.sparqlStatus = false
     }
   },
   methods: {
@@ -117,38 +80,14 @@ export default {
     onUnitFilesUpdate({ inputFilesRocketRML: i, error }) {
       this.inputFiles = i
     },
-    onUnitRdfUpdate({ rdf = '', error }) {
+    onUnitRdfUpdate({ rdf = '', toRDF = this.toRDF, error }) {
       this.rdf = rdf
+      this.toRDF = toRDF
     },
-    async runQuery() {
-      try {
-        this.sparqlError = false
-        this.sparqlResultsLoading = true
-        const bindings = await query(this.rdf, this.sparql)
-        if (bindings.length) {
-          const headers = Array.from(bindings[0].keys())
-          window.setTimeout(() => {
-            this.sparqlResultsItems = bindings.map(map =>
-              // map.get(k) returns an N3 Term
-              // https://github.com/rdfjs/N3.js/blob/main/src/N3DataFactory.js
-              Object.fromEntries(headers.map(h => [h, map.get(h).value]))
-            )
-            this.sparqlResultsHeaders = headers.map(h => ({
-              text: h.substring(1),
-              value: h
-            }))
-
-            this.sparqlResultsLoading = false
-          }, 1000)
-        }
-      } catch (error) {
-        console.error(error)
-        this.sparqlError = true
-        this.sparqlErrorMessage = error
-        this.sparqlResultsLoading = false
-      } finally {
-        this.sparqlStatus = true
-      }
+    onUnitSparqlUpdate({ headers = [], items = [], error }) {
+      // Vuetify DataTable component expects text and value properties
+      this.headers = headers.map(h => ({ text: h, value: h }))
+      this.items = items
     }
   }
 }

@@ -80,11 +80,6 @@ export default {
     }
   },
 
-  router: {
-    // middleware for validating a route
-    middleware: 'validate'
-  },
-
   vue: {
     config: {
       productionTip: false,

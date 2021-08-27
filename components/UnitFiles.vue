@@ -7,6 +7,7 @@
     <lazy-the-sample-selector
       v-if="samples.length"
       :items="samples"
+      class="mb-6 mt-4"
       @update="updateSelectedSamples"
     />
 
@@ -43,6 +44,7 @@ import '@uppy/drop-target/dist/style.css'
 import preprocessors from '@/manifests/preprocessors'
 import processFiles from '@/utils/process-files'
 import localforage from '@/utils/localforage'
+import { processError } from '@/utils/utils'
 
 async function fetchSampleFile(filename) {
   const response = await window.fetch(`/data/${filename}`)
@@ -237,7 +239,7 @@ export default {
       }
     },
     async processFiles() {
-      this.loading = true
+      this.progress = true
       this.error = false
       this.status = false
 
@@ -262,14 +264,15 @@ export default {
             this.$route.params.key
           )
           this.$emit('update', result)
-        } catch (error) {
-          console.error(error)
+        } catch (err) {
+          console.error(err)
           this.error = true
+          const error = processError(err)
           this.messagePowerUser = error
           this.$emit('update', { error })
         } finally {
           this.status = true
-          this.loading = false
+          this.progress = false
         }
       }
     }

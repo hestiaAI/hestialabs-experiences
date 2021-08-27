@@ -13,6 +13,12 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  middleware({ error, params, store }) {
+    if (!store.getters.keys.includes(params.key)) {
+      // not found
+      return error({ statusCode: 404 })
+    }
+  },
   head() {
     const { title: t, subtitle: s } = this.m
     const title = `${t}: ${s}`

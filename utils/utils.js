@@ -11,17 +11,15 @@ export function objectIsEmpty(obj) {
   return obj && Object.keys(obj).length === 0 && obj.constructor === Object
 }
 
-export function processError(v, isError) {
-  if (isError) {
-    if (v.stack) {
-      return v.stack
-    }
+export function processError(v) {
+  if (v.stack) {
+    return v.stack
+  }
 
-    if (typeof v === 'object') {
-      return Object.entries(v)
-        .reduce((acc, [k, v]) => `${acc}${k}: ${v}\n`, 'ERROR\n')
-        .trimRight()
-    }
+  if (typeof v === 'object') {
+    return Object.entries(v)
+      .reduce((acc, [k, v]) => `${acc}${k}: ${v}\n`, 'ERROR\n')
+      .trimRight()
   }
 
   return v

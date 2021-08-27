@@ -3,15 +3,15 @@
     <div class="mr-lg-6 mb-6">
       <h2 class="my-3">YARRRML</h2>
       <base-download-button extension="yml" :data="yarrrml" />
+      <code-editor :value.sync="yarrrml" class="mt-6" language="yaml" />
+    </div>
+    <div>
+      <h2 class="my-3">RML</h2>
       <base-button
         v-bind="{ progress, status, error }"
         text="Generate RML"
         @click="generateRML"
       />
-      <code-editor :value.sync="yarrrml" class="mt-6" language="yaml" />
-    </div>
-    <div>
-      <h2 class="my-3">RML</h2>
       <base-download-button v-bind="{ data, extension }" :disabled="!rml" />
       <code-editor
         :value="data"
@@ -63,6 +63,7 @@ export default {
       }
     },
     yarrrml() {
+      this.error = false
       this.status = false
       this.rml = ''
     }
@@ -73,6 +74,7 @@ export default {
       this.message = ''
       this.progress = true
       this.status = false
+      this.error = false
       try {
         const rml = await parseYarrrml(this.yarrrml)
         this.rml = rml
@@ -83,8 +85,13 @@ export default {
         this.message = processError(error)
         this.$emit('update', { error })
       } finally {
-        this.progress = false
-        this.status = true
+        window.setTimeout(() => {
+          // RML generation is usually super quick
+          // so the user will not see the progress indicator
+          // without this timeout
+          this.progress = false
+          this.status = true
+        }, 500)
       }
     }
   }

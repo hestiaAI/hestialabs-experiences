@@ -2,25 +2,28 @@
   <div>
     <slot name="unit-files" :update="onUnitFilesUpdate" />
 
-    <base-download-button
-      v-if="success"
-      class="my-4"
-      :data="rdf"
-      extension="nq"
-      text="Download RDF"
-    />
-    <template v-if="loading">
-      <base-progress-circular class="ml-2" />
-      <span>Generating Linked Data...</span>
-    </template>
-    <template v-else-if="error || success">
-      <v-alert
-        :type="error ? 'error' : 'success'"
-        border="top"
-        colored-border
-        >{{ message }}</v-alert
-      >
-    </template>
+    <div class="mt-6">
+      <template v-if="progress">
+        <base-progress-circular class="mr-2" />
+        <span>Generating Linked Data...</span>
+      </template>
+      <template v-else-if="error || success">
+        <v-alert
+          :type="error ? 'error' : 'success'"
+          border="top"
+          colored-border
+          max-width="600"
+          >{{ message }}</v-alert
+        >
+      </template>
+      <base-download-button
+        v-if="success"
+        class="my-4"
+        :data="rdf"
+        extension="nq"
+        text="Download RDF"
+      />
+    </div>
   </div>
 </template>
 
@@ -39,7 +42,7 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      progress: false,
       error: false,
       success: false,
       message: '',
@@ -67,7 +70,7 @@ export default {
       this.message = ''
       this.error = false
       this.success = false
-      this.loading = true
+      this.progress = true
     },
     handleRdfData({ data, elapsed }) {
       this.rdf = data
@@ -80,26 +83,31 @@ export default {
       this.message = getErrorMessage(error)
     },
     handleRdfEnd() {
-      this.loading = false
+      this.progress = false
     },
-    async onUnitFilesUpdate({ inputFilesRocketRML }) {
+    async onUnitFilesUpdate({ inputFilesRocketRML, error }) {
       this.initState()
-      try {
-        if (!this.rml) {
-          throw new Error('RML not ready')
-        }
-        await rdfUtils.generateRDF(
-          this.handleRdfData,
-          this.handleRdfError,
-          this.handleRdfEnd,
-          this.rml,
-          inputFilesRocketRML
-        )
-      } catch (error) {
-        console.error(error)
+      if (error) {
         this.error = true
-        this.message = error instanceof Error ? error.message : error
-        this.loading = false
+        this.message = error
+        this.progress = false
+      } else if (!this.rml) {
+        throw new Error('RML not ready')
+      } else {
+        try {
+          await rdfUtils.generateRDF(
+            this.handleRdfData,
+            this.handleRdfError,
+            this.handleRdfEnd,
+            this.rml,
+            inputFilesRocketRML
+          )
+        } catch (error) {
+          console.error(error)
+          this.error = true
+          this.message = error instanceof Error ? error.message : error
+          this.progress = false
+        }
       }
     }
   }

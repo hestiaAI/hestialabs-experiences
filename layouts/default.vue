@@ -60,8 +60,13 @@ export default {
 }
 </script>
 
-<style>
-.v-snack__content.v-snack__content-online-status {
-  text-align: center;
-}
+<style lang="sass">
+// hide scroll bar when page can't scroll
+html
+  overflow-y: auto
+  .overflow-y-hidden
+    overflow-y: scroll !important
+
+.v-snack__content.v-snack__content-online-status
+  text-align: center
 </style>

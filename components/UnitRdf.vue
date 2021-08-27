@@ -2,17 +2,7 @@
   <div>
     <h2 class="my-3">RDF</h2>
     <div class="d-flex flex-column flex-sm-row align-start">
-      <v-select
-        v-model="toRDF"
-        :items="[
-          { text: 'N-Quads', value: true },
-          { text: 'JSON-LD', value: false }
-        ]"
-        style="max-width: 150px"
-        hide-details
-        label="Format"
-        class="ma-sm-2"
-      />
+      <the-rdf-format-selector class="ma-sm-2" :value.sync="format" />
       <base-button
         v-bind="{ progress, status, error, disabled }"
         text="Generate RDF"
@@ -46,7 +36,7 @@ export default {
   },
   data() {
     return {
-      toRDF: true,
+      format: {},
       message: '',
       status: false,
       error: false,
@@ -60,9 +50,10 @@ export default {
     },
     extension() {
       if (this.error) {
+        // use default extension
         return
       }
-      return this.toRDF ? 'nq' : 'jsonld'
+      return this.format.ext
     },
     data() {
       // if there is an error, download the message, o/w the RDF
@@ -74,8 +65,9 @@ export default {
       this.error = false
       this.rdf = rdf
       const secs = elapsed / 1000
-      this.message = `RDF generated successfully in ${secs} sec.`
-      this.$emit('update', { rdf })
+      const { text, toRDF } = this.format
+      this.message = `RDF generated successfully in ${secs} sec. (Format: ${text})`
+      this.$emit('update', { rdf, toRDF })
     },
     handleRdfError(error) {
       console.error(error)
@@ -88,6 +80,8 @@ export default {
       this.status = true
     },
     async generateRDF() {
+      // let parent know generation started
+      this.$emit('update', {})
       this.rdf = ''
       this.message = ''
       this.progress = true

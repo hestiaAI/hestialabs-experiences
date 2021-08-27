@@ -5,7 +5,6 @@
     label="Select sample data"
     hide-details
     style="max-width: 200px"
-    class="mb-6 mt-4"
     menu-props="auto, overflowY, offsetY, top"
     multiple
   />

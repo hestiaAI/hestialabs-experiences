@@ -7,6 +7,7 @@
     label="Select example"
     hide-details
     style="max-width: 200px"
+    @change="$emit('update:value', $event)"
   ></v-select>
 </template>
 
@@ -22,13 +23,6 @@ export default {
     return {
       selected: this.value
     }
-  },
-  value(v) {
-    this.selected = v
-  },
-  selected(v) {
-    // propagate to parent component
-    this.$emit('update:value', v)
   }
 }
 </script>
