@@ -53,14 +53,6 @@ async function fetchSampleFile(filename) {
 
 export default {
   props: {
-    // disabled: {
-    //   type: Boolean,
-    //   default: false
-    // },
-    // error: {
-    //   type: Boolean,
-    //   default: false
-    // },
     extensions: {
       type: Array,
       required: true
@@ -69,14 +61,6 @@ export default {
       type: Array,
       required: true
     },
-    // loading: {
-    //   type: Boolean,
-    //   default: false
-    // },
-    // message: {
-    //   type: String,
-    //   default: ''
-    // },
     multiple: {
       type: Boolean,
       default: false
@@ -89,10 +73,6 @@ export default {
       type: Array,
       default: () => []
     }
-    // status: {
-    //   type: Boolean,
-    //   default: false
-    // }
   },
   data() {
     const config = {
@@ -107,7 +87,6 @@ export default {
       uppy: new Uppy(config),
       selectedSamples: [],
       filesEmpty: true,
-      // enableStatus: true,
       status: false,
       error: false,
       progress: false,
@@ -126,16 +105,9 @@ export default {
       const exts = this.extensions.join(', ')
       return `Allowed file types: ${exts}`
     },
-    // processButtonProps() {
-    //   const propNames = ['error', 'disabled', 'progress', 'status']
-    //   return Object.fromEntries(propNames.map(p => [p, this[p]]))
-    // }
-    // processDisabled() {
-    //   return this.disabled || this.filesEmpty
-    // },
-    // processStatus() {
-    //   return this.status && this.enableStatus
-    // },
+    disabled() {
+      return this.filesEmpty
+    },
     preprocessorFunc() {
       if (!this.preprocessor) {
         // identity
@@ -151,12 +123,6 @@ export default {
         this.validateProps()
       }
     }
-    // message(val) {
-    //   if (val) {
-    //     // show message in Uppy Informer
-    //     this.uppy.info(val)
-    //   }
-    // }
   },
   mounted() {
     this.uppy

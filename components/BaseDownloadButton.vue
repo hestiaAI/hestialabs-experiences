@@ -59,6 +59,9 @@ export default {
     href(href, oldHref) {
       revokeObjectURL(oldHref)
     }
+  },
+  beforeDestroy() {
+    revokeObjectURL(this.href)
   }
 }
 </script>

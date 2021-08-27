@@ -28,22 +28,6 @@ import 'prismjs/components/prism-json'
 // import syntax highlighting styles
 import 'prismjs/themes/prism-tomorrow.css'
 
-function processValue(v, isError) {
-  if (isError) {
-    if (v.stack) {
-      return v.stack
-    }
-
-    if (typeof v === 'object') {
-      return Object.entries(v)
-        .reduce((acc, [k, v]) => `${acc}${k}: ${v}\n`, 'ERROR\n')
-        .trimRight()
-    }
-  }
-
-  return v
-}
-
 export default {
   components: {
     PrismEditor
@@ -65,7 +49,7 @@ export default {
   },
   data() {
     return {
-      code: processValue(this.value, this.error)
+      code: this.value
     }
   },
   computed: {
@@ -76,7 +60,7 @@ export default {
   },
   watch: {
     value(v) {
-      this.code = processValue(v, this.error)
+      this.code = v
     },
     code(v) {
       // propagate to parent component

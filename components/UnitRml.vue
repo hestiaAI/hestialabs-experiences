@@ -4,8 +4,7 @@
       <h2 class="my-3">YARRRML</h2>
       <base-download-button extension="yml" :data="yarrrml" />
       <base-button
-        :status="rmlGenerateStatus"
-        :error="rmlError"
+        v-bind="{ progress, status, error }"
         text="Generate RML"
         @click="generateRML"
       />
@@ -13,14 +12,10 @@
     </div>
     <div>
       <h2 class="my-3">RML</h2>
-      <base-download-button
-        :extension="rmlExtension"
-        :data="rml"
-        :disabled="!rml"
-      />
+      <base-download-button v-bind="{ data, extension }" :disabled="!rml" />
       <code-editor
-        :value="rml"
-        :error="rmlError"
+        :value="data"
+        :error="error"
         class="mt-6"
         readonly
         language="turtle"
@@ -31,6 +26,7 @@
 
 <script>
 import parseYarrrml from '@/utils/parse-yarrrml'
+import { processError } from '@/utils/utils'
 
 export default {
   props: {
@@ -42,14 +38,20 @@ export default {
   data() {
     return {
       yarrrml: this.yarrrmlExample,
-      rmlGenerateStatus: false,
-      rml: '',
-      rmlError: false
+      message: '',
+      status: false,
+      error: false,
+      progress: false,
+      rml: ''
     }
   },
   computed: {
-    rmlExtension() {
+    extension() {
       return this.rmlError ? undefined : 'ttl'
+    },
+    data() {
+      // if there is an error, download the message, o/w the RDF
+      return this.error ? this.message : this.rml
     }
   },
   watch: {
@@ -61,24 +63,28 @@ export default {
       }
     },
     yarrrml() {
-      this.rmlGenerateStatus = false
+      this.status = false
       this.rml = ''
     }
   },
   methods: {
     async generateRML() {
+      this.rml = ''
+      this.message = ''
+      this.progress = true
+      this.status = false
       try {
-        this.rmlError = false
         const rml = await parseYarrrml(this.yarrrml)
         this.rml = rml
         this.$emit('update', { rml })
       } catch (error) {
         console.error(error)
-        this.rmlError = true
-        this.rml = error
+        this.error = true
+        this.message = processError(error)
         this.$emit('update', { error })
       } finally {
-        this.rmlGenerateStatus = true
+        this.progress = false
+        this.status = true
       }
     }
   }

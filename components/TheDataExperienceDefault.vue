@@ -1,11 +1,6 @@
 <template>
   <div>
-    <!-- :loading="loading"
-      :disabled="loading"
-      :status="error || success"
-      :error="error" -->
-    <!-- :message="message" -->
-    <slot name="unit-files" @update="onUnitFilesUpdate" />
+    <slot name="unit-files" :update="onUnitFilesUpdate" />
 
     <base-download-button
       v-if="success"
@@ -25,8 +20,6 @@
         colored-border
         >{{ message }}</v-alert
       >
-      <!-- <status-indicator :error="error" />
-      <span>{{ message }}</span> -->
     </template>
   </div>
 </template>

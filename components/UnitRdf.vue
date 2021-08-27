@@ -20,9 +20,8 @@
         @click="generateRDF"
       />
       <base-download-button
-        :extension="extension"
-        :data="rdf"
-        :disabled="!rdf"
+        v-bind="{ data, extension }"
+        :disabled="!message"
         class="ma-sm-2"
       />
     </div>
@@ -32,16 +31,17 @@
 
 <script>
 import rdfUtils from '@/utils/rdf'
+import { processError } from '@/utils/utils'
 
 export default {
   props: {
     rml: {
       type: String,
-      required: true
+      default: ''
     },
     inputFiles: {
       type: Object,
-      required: true
+      default: undefined
     }
   },
   data() {
@@ -50,7 +50,8 @@ export default {
       message: '',
       status: false,
       error: false,
-      progress: false
+      progress: false,
+      rdf: ''
     }
   },
   computed: {
@@ -62,19 +63,25 @@ export default {
         return
       }
       return this.toRDF ? 'nq' : 'jsonld'
+    },
+    data() {
+      // if there is an error, download the message, o/w the RDF
+      return this.error ? this.message : this.rdf
     }
   },
   methods: {
-    handleRdfData({ data, elapsed }) {
-      this.rdf = data
+    handleRdfData({ data: rdf, elapsed }) {
       this.error = false
+      this.rdf = rdf
       const secs = elapsed / 1000
       this.message = `RDF generated successfully in ${secs} sec.`
+      this.$emit('update', { rdf })
     },
     handleRdfError(error) {
       console.error(error)
       this.error = true
-      this.message = error
+      this.message = processError(error)
+      this.$emit('update', { error })
     },
     handleRdfEnd() {
       this.progress = false
@@ -84,6 +91,7 @@ export default {
       this.rdf = ''
       this.message = ''
       this.progress = true
+      this.status = false
       await rdfUtils.generateRDF(
         this.handleRdfData,
         this.handleRdfError,

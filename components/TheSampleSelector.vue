@@ -20,8 +20,7 @@ export default {
   },
   watch: {
     selectedSamples(...params) {
-      console.log(params)
-      this.$emit('update', params)
+      this.$emit('update', ...params)
     }
   }
 }
