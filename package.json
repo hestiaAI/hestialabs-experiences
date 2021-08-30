@@ -16,7 +16,8 @@
     "lint": "npm run lint:js",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint:fix": "npm run lint:js -- --fix",
-    "pre-commit": "lint-staged && node validate-yarrrml",
+    "lint:staged": "lint-staged",
+    "pre-commit": "npm run lint:staged && node validate-yarrrml",
     "prepare": "husky install"
   },
   "lint-staged": {
