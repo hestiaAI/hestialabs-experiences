@@ -89,6 +89,11 @@ export default {
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
+    // https://github.com/nuxt-community/vuetify-module#offline-applications
+    defaultAssets: false,
+    icons: {
+      iconfont: 'mdiSvg'
+    },
     customVariables: ['~/assets/variables.scss'],
     theme: {
       dark: false,

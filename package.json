@@ -16,8 +16,7 @@
     "lint": "npm run lint:js",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint:fix": "npm run lint:js -- --fix",
-    "lint:staged": "lint-staged",
-    "pre-commit": "npm run lint:staged && node validate-yarrrml",
+    "pre-commit": "lint-staged && node validate-yarrrml",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -45,6 +44,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.15.0",
+    "@mdi/js": "^5.9.55",
     "@nuxtjs/eslint-config": "^6.0.1",
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/pwa": "^3.3.5",

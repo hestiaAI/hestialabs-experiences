@@ -1,14 +1,14 @@
 <template>
   <base-button v-bind="{ disabled, href, download, text }">
     <template #prepend-icon>
-      <v-icon left>
-        mdi-download
-      </v-icon>
+      <v-icon left>{{ mdiDownload }}</v-icon>
     </template>
   </base-button>
 </template>
 
 <script>
+import { mdiDownload } from '@mdi/js'
+
 import { createObjectURL, revokeObjectURL } from '@/utils/utils'
 
 const defaultExtension = 'txt'
@@ -45,6 +45,11 @@ export default {
     text: {
       type: String,
       default: 'Download'
+    }
+  },
+  data() {
+    return {
+      mdiDownload
     }
   },
   computed: {

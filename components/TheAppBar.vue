@@ -24,8 +24,12 @@
     >
       <template #prepend>
         <div class="d-flex justify-space-between align-center">
-          <v-btn icon to="/"><v-icon>mdi-home-outline</v-icon></v-btn>
-          <v-btn icon @click="drawer = false"><v-icon>mdi-close</v-icon></v-btn>
+          <v-btn icon to="/">
+            <v-icon>{{ mdiHome }}</v-icon>
+          </v-btn>
+          <v-btn icon @click="drawer = false">
+            <v-icon>{{ mdiClose }}</v-icon>
+          </v-btn>
         </div>
       </template>
       <template #append>
@@ -40,10 +44,14 @@
 </template>
 
 <script>
+import { mdiHome, mdiClose } from '@mdi/js'
+
 export default {
   data() {
     return {
-      drawer: false
+      drawer: false,
+      mdiHome,
+      mdiClose
     }
   }
 }

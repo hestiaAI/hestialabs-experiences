@@ -7,7 +7,7 @@
       <base-button nuxt to="/">
         <template #prepend-icon>
           <v-icon left>
-            mdi-home
+            {{ mdiHome }}
           </v-icon>
         </template>
         Home page
@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { mdiHome } from '@mdi/js'
+
 export default {
   layout: 'empty',
   props: {
@@ -27,8 +29,7 @@ export default {
   },
   data() {
     return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
+      mdiHome
     }
   },
   head() {
@@ -38,7 +39,9 @@ export default {
   },
   computed: {
     title() {
-      return this.error.statusCode === 404 ? this.pageNotFound : this.otherError
+      return this.error.statusCode === 404
+        ? '404 Not Found'
+        : 'An error occurred'
     }
   }
 }
