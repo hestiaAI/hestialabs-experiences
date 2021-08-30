@@ -1,11 +1,6 @@
-import { unzip, setOptions } from 'unzipit'
+import { unzip } from 'unzipit'
 
 export async function extractFiles(blob, whitelist = [], strict = true) {
-  setOptions({
-    workerURL: 'https://unpkg.com/unzipit@1.3.5/dist/unzipit-worker.module.js',
-    numWorkers: 2
-  })
-
   const { entries } = await unzip(blob)
 
   if (!Array.isArray(whitelist)) {
