@@ -22,10 +22,7 @@
             />
 
             <v-card-title v-text="title" />
-            <v-card-subtitle
-              class="subtitle-1"
-              v-text="subtitle || 'Data Experience'"
-            />
+            <v-card-subtitle class="subtitle-1" v-text="subtitle" />
           </v-card>
         </v-col>
       </v-row>

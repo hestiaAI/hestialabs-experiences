@@ -1,7 +1,7 @@
 {
   "title": "Twitter",
   "subtitle": "Advertisers",
-  "icon": "https://www.iconpacks.net/icons/2/free-twitter-logo-icon-2429-thumb.png",
+  "icon": "twitter.png",
   "ext": "zip",
   "files": ["data/ad-impressions.js", "data/ad-engagements.js"],
   "preprocessor": "twitter",

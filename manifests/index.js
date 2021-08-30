@@ -30,20 +30,51 @@ const manifests = Object.fromEntries(
     const dir = extractFirstDirectory(path)
 
     // Extract JSON config
-    const config = reqJSON(path)
+    const {
+      title,
+      subtitle = 'Data Experience',
+      icon,
+      ext,
+      files = [],
+      multiple = false,
+      data = [],
+      preprocessor
+    } = reqJSON(path)
 
-    // Add preprocessor if specified
-    const { preprocessor } = config
-    if (preprocessor) {
-      if (!(preprocessor in preprocessors)) {
-        throw new Error(`Preprocessor ${preprocessor} does not exist`)
+    // Validate config
+    const requiredParams = { title, icon, ext }
+    Object.entries(requiredParams).forEach(([name, param]) => {
+      if (!param) {
+        throw new Error(`[${dir}] ${name} is required`)
       }
+    })
+
+    const validExtensions = ['zip', 'csv', 'json', 'js', 'xml']
+    if (ext.split(',').some(v => !validExtensions.includes(v))) {
+      throw new Error(`[${dir}] parameter ext is invalid`)
+    }
+
+    if (dir !== 'playground' && ext.includes('zip') && !files.length) {
+      throw new Error(
+        `[${dir}] extension zip specified but list of files to extract is empty`
+      )
+    }
+
+    if (preprocessor && !(preprocessor in preprocessors)) {
+      throw new Error(`[${dir}] Preprocessor ${preprocessor} does not exist`)
     }
 
     return [
       dir,
       {
-        ...config,
+        title,
+        subtitle,
+        icon: require(`@/manifests/icons/${icon}`),
+        ext,
+        files,
+        multiple,
+        data,
+        preprocessor,
         examples: []
       }
     ]

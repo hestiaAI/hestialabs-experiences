@@ -21,22 +21,23 @@ Note: All files and folders should match the following regular expression: [`^(?
   /**
     * Subtitle of experience (optional, recommended)
     * @type String
+    * @default 'Data Experience'
     */
   "subtitle": "Explanatory Subtitle",
   /**
-    * URL to an icon (required)
+    * Icon file name (required)
     * @type String
     */
-  "icon": "https://icon-site.web/some-icon.jpg",
+  "icon": "twitter.png",
   /**
-    * Comma-separated list of allowed file extensions
+    * Comma-separated list of allowed file extensions (required)
     * @type String
     */
   "ext": "json,csv,zip",
   /**
     * Array of relative paths to files to extract from a zip archive
     * (required when "ext" includes "zip", except the playground)
-    * @type Array
+    * @type Array[String]
     * @default []
     */
   "files": ["data/ad-impressions.js"],
@@ -54,6 +55,7 @@ Note: All files and folders should match the following regular expression: [`^(?
 	/**
     * Array of paths to sample data files in /static/data/ (optional)
     * @type Array[String]
+    * @default []
     */
   "data": ["twitter.zip"]
 }
@@ -68,6 +70,7 @@ If the data experience involves a single non-zip file input, use the name `input
 
 5. If needed, add custom functions to [`functions.js`](https://github.com/hestiaAI/hestia-rml-demo/edit/master/manifests/functions.js)
 
+6. If the icon is not there yet, add the image file to `manifests/icons/`
 
 ## Adding sample data
 
