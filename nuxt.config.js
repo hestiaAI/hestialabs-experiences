@@ -1,4 +1,3 @@
-import colors from 'vuetify/es5/util/colors'
 import webpack from 'webpack'
 
 const appName = 'HestiaLabs Demo'
@@ -51,7 +50,8 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    'nuxt-webfontloader'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -87,28 +87,17 @@ export default {
     }
   },
 
+  webfontloader: {
+    google: {
+      families: ['Roboto:100,300,400,500,700,900&display=swap']
+    }
+  },
+
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     // https://github.com/nuxt-community/vuetify-module#offline-applications
     defaultAssets: false,
-    icons: {
-      iconfont: 'mdiSvg'
-    },
-    customVariables: ['~/assets/variables.scss'],
-    theme: {
-      dark: false,
-      themes: {
-        light: {
-          primary: '#58539e',
-          accent: colors.grey.darken3,
-          secondary: colors.amber.darken3,
-          info: colors.teal.lighten1,
-          warning: colors.amber.base,
-          error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        }
-      }
-    }
+    optionsPath: 'vuetify.options.js'
   },
 
   env: {
@@ -122,6 +111,9 @@ export default {
     // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
     transpile: ['yarrrml-parser'],
     extend(config, { isDev, isClient }) {
+      if (isClient) {
+        config.devtool = 'source-map'
+      }
       config.node = {
         // ignore fs Node.js module (used in yarrrml-parser)
         // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637

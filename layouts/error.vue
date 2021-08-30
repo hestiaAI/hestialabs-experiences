@@ -7,7 +7,7 @@
       <base-button nuxt to="/">
         <template #prepend-icon>
           <v-icon left>
-            {{ mdiHome }}
+            $vuetify.icons.mdiHome
           </v-icon>
         </template>
         Home page
@@ -17,19 +17,12 @@
 </template>
 
 <script>
-import { mdiHome } from '@mdi/js'
-
 export default {
   layout: 'empty',
   props: {
     error: {
       type: Object,
       default: null
-    }
-  },
-  data() {
-    return {
-      mdiHome
     }
   },
   head() {

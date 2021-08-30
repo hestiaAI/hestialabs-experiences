@@ -25,10 +25,10 @@
       <template #prepend>
         <div class="d-flex justify-space-between align-center">
           <v-btn icon to="/">
-            <v-icon>{{ mdiHome }}</v-icon>
+            <v-icon>$vuetify.icons.mdiHome</v-icon>
           </v-btn>
           <v-btn icon @click="drawer = false">
-            <v-icon>{{ mdiClose }}</v-icon>
+            <v-icon>$vuetify.icons.mdiClose</v-icon>
           </v-btn>
         </div>
       </template>
@@ -44,14 +44,10 @@
 </template>
 
 <script>
-import { mdiHome, mdiClose } from '@mdi/js'
-
 export default {
   data() {
     return {
-      drawer: false,
-      mdiHome,
-      mdiClose
+      drawer: false
     }
   }
 }
