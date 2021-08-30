@@ -30,7 +30,6 @@
             <the-sparql-selector
               :items="selectedExample.sparql"
               :disabled="!selectedExample.sparql.length"
-              class="ma-2"
               @change="change"
             />
           </template>
