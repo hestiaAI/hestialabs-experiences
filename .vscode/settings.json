@@ -1,4 +1,8 @@
 {
   "files.eol": "\n",
-  "editor.acceptSuggestionOnCommitCharacter": false
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "eslint.validate": [
+    "javascript",
+    "vue"
+  ]
 }
