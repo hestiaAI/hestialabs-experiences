@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "npm": "7.x",
-    "node": ">=16.8.0"
+    "npm": ">=6.x",
+    "node": ">=14.7.x"
   },
   "scripts": {
     "dev": "nuxt",
@@ -34,7 +34,6 @@
     "localforage": "^1.10.0",
     "n3": "^1.11.1",
     "nuxt": "^2.15.8",
-    "nuxt-webfontloader": "^1.1.0",
     "prismjs": "^1.24.1",
     "rocketrml": "^1.11.0",
     "sha1": "^1.1.1",
@@ -50,6 +49,7 @@
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/vuetify": "^1.12.1",
+    "@vue/preload-webpack-plugin": "^2.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-nuxt": "^2.0.0",

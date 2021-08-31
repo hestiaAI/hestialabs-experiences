@@ -61,11 +61,7 @@ export default {
 </script>
 
 <style lang="sass">
-// hide scroll bar when page can't scroll
-html
-  overflow-y: auto
-  .overflow-y-hidden
-    overflow-y: scroll !important
+@import "./assets/styles"
 
 .v-snack__content.v-snack__content-online-status
   text-align: center

@@ -1,0 +1,21 @@
+// https://google-webfonts-helper.herokuapp.com/fonts/roboto?subsets=latin
+$roboto: "regular" 400 normal, "italic" 400 italic, "700" 700 normal, "700italic" 700 italic
+// https://google-webfonts-helper.herokuapp.com/fonts/assistant?subsets=latin
+$assistant: "regular" 400 normal, "700" 700 normal
+
+$fonts-list: "roboto-v27-latin" "Roboto" $roboto, "assistant-v8-latin" "Assistant" $assistant
+
+@mixin font-face($family, $postfix, $dirName, $weight: 400, $style: normal,)
+  $filename: "assets/fonts/#{$dirName}/#{$dirName}-#{$postfix}"
+
+  @font-face
+    font-family: $family
+    font-weight: $weight
+    font-style: $style
+    src: url(#{$filename}.woff2) format("woff2"), url(#{$filename}.woff) format("woff")
+    font-display: swap
+
+
+@each $dirName, $family, $fonts in $fonts-list
+  @each $postfix, $weight, $style in $fonts
+    @include font-face($family, $postfix, $dirName, $weight, $style)
