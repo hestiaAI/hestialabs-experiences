@@ -6,9 +6,7 @@
 
       <base-button nuxt to="/">
         <template #prepend-icon>
-          <v-icon left>
-            $vuetify.icons.mdiHome
-          </v-icon>
+          <v-icon left> $vuetify.icons.mdiHome </v-icon>
         </template>
         Home page
       </base-button>

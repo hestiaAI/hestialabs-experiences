@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar fixed app color="white" height="75" style="z-index: 2000;">
+    <v-app-bar fixed app color="white" height="75" style="z-index: 2000">
       <v-app-bar-nav-icon
         aria-label="Open navigation menu"
         @click.stop="drawer = !drawer"
@@ -9,7 +9,7 @@
         <nuxt-link
           to="/"
           class="d-flex align-center"
-          style="text-decoration: none; color: inherit;"
+          style="text-decoration: none; color: inherit"
         >
           <logo-img class="mr-5" width="100" />
         </nuxt-link>
@@ -23,7 +23,7 @@
       temporary
       class="pa-5"
       :width="500"
-      style="z-index: 3000;"
+      style="z-index: 3000"
     >
       <template #prepend>
         <div class="d-flex justify-space-between align-center">

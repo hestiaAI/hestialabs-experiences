@@ -18,9 +18,11 @@ export const getters = {
     return getters.manifests.map(({ key }) => key)
   },
   // https://vuex.vuejs.org/guide/getters.html#method-style-access
-  manifest: state => ({ params: { key } }) => {
-    return state.manifests.find(m => m.key === key)
-  }
+  manifest:
+    state =>
+    ({ params: { key } }) => {
+      return state.manifests.find(m => m.key === key)
+    }
 }
 
 export const mutations = {

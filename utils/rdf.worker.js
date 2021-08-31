@@ -1,6 +1,6 @@
 import mapToRDF from '@/utils/map-to-rdf'
 
-onmessage = async function({ data: { toRDF = true, ...rest } }) {
+onmessage = async function ({ data: { toRDF = true, ...rest } }) {
   try {
     const result = await mapToRDF({ toRDF, ...rest })
     // We need to stringify JSON-LD before
