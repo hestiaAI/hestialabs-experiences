@@ -13,9 +13,7 @@
           <template v-if="$nuxt.isOffline">
             The app is running in offline mode
           </template>
-          <template v-else>
-            You are online again!
-          </template>
+          <template v-else> You are online again! </template>
         </v-snackbar>
       </v-container>
     </v-main>
