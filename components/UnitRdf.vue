@@ -14,6 +14,11 @@
         :disabled="!message"
         class="ma-sm-2"
       />
+      <base-share-button
+        v-bind="{ disabled }"
+        :disabled="!message"
+        class="ma-sm-2"
+      />
     </div>
     <code-editor :value="message" :error="error" class="mt-6" readonly />
   </div>
