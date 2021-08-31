@@ -77,6 +77,9 @@ export default {
     manifest: {
       name: appName,
       short_name: 'HestiaLabs'
+    },
+    workbox: {
+      pagesURLPattern: ['/']
     }
   },
 
