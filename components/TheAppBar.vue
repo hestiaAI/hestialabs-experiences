@@ -1,7 +1,10 @@
 <template>
   <div>
     <v-app-bar fixed app color="white" height="75" style="z-index: 2000;">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-app-bar-nav-icon
+        aria-label="Open navigation menu"
+        @click.stop="drawer = !drawer"
+      />
       <v-toolbar-title>
         <nuxt-link
           to="/"

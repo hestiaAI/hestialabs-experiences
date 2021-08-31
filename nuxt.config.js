@@ -1,4 +1,5 @@
 import webpack from 'webpack'
+import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
 const appName = 'HestiaLabs Demo'
 
@@ -50,8 +51,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
-    'nuxt-webfontloader'
+    '@nuxtjs/axios'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -87,17 +87,13 @@ export default {
     }
   },
 
-  webfontloader: {
-    google: {
-      families: ['Roboto:100,300,400,500,700,900&display=swap']
-    }
-  },
-
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
+    customVariables: ['@/assets/styles/variables.sass'],
+    treeShake: true,
+    optionsPath: 'vuetify.options.js',
     // https://github.com/nuxt-community/vuetify-module#offline-applications
-    defaultAssets: false,
-    optionsPath: 'vuetify.options.js'
+    defaultAssets: false
   },
 
   env: {
@@ -138,6 +134,15 @@ export default {
       new webpack.IgnorePlugin({
         resourceRegExp: /^/u,
         contextRegExp: /xpath-iterator/u
+      }),
+      // preload fonts to avoid FOUT
+      new PreloadWebpackPlugin({
+        rel: 'preload',
+        include: 'allAssets',
+        // restrict to .woff2 to minimize preloading
+        fileWhitelist: [/\.woff2$/],
+        // crossorigin attribute added by plugin for as='font'
+        as: 'font'
       })
     ]
   }

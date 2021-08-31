@@ -18,7 +18,6 @@ export default {
       mdiHome
     }
   },
-  customVariables: ['~/assets/variables.scss'],
   theme: {
     dark: false,
     themes: {
