@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { validExtensions } from '@/manifests'
+import { validExtensions } from '@/manifests/utils'
 
 // https://github.com/nuxt/components/issues/13#issuecomment-902590143
 const TheDataExperienceDefault = () =>
@@ -44,7 +44,6 @@ export default {
       type: String,
       required: true,
       validator(val) {
-        // JS files allowed for experimenting with individual twitter files
         return val.split(',').every(v => validExtensions.includes(v))
       }
     },

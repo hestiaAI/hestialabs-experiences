@@ -1,6 +1,8 @@
 import webpack from 'webpack'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
+import { validExtensions } from './manifests/utils'
+
 const name = 'HestiaLabs Demo'
 const description = 'We create a new relationship to personal data'
 
@@ -133,7 +135,12 @@ export default {
           use: 'raw-loader'
         },
         {
-          test: /data.+\.(csv|json|xml|zip)$/i,
+          // allow all valid extensions as sample data except JS files!
+          test: new RegExp(
+            `data.+\\.(${validExtensions
+              .filter(ext => ext !== 'js')
+              .join('|')})$`
+          ),
           // https://v4.webpack.js.org/migrate/4/#json-and-loaders
           type: 'javascript/auto',
           use: [
