@@ -175,10 +175,6 @@ export default {
         resourceRegExp: /^/u,
         contextRegExp: /xpath-iterator/u
       }),
-      // new webpack.IgnorePlugin({
-      //   // resourceRegExp: /^/u,
-      //   contextRegExp: /worker_threads/
-      // }),
       // preload fonts to avoid FOUT
       new PreloadWebpackPlugin({
         rel: 'preload',
