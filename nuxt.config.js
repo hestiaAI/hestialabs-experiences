@@ -127,7 +127,7 @@ export default {
         // for importing/exporting workers as ES modules
         {
           test: /\.worker\.js$/,
-          use: { loader: 'worker-loader' }
+          use: 'worker-loader'
         },
         // enable raw importing of .yaml and .rq files
         {
@@ -141,7 +141,7 @@ export default {
               .filter(ext => ext !== 'js')
               .join('|')})$`
           ),
-          // https://v4.webpack.js.org/migrate/4/#json-and-loaders
+          // https://webpack.js.org/configuration/module/#ruletype
           type: 'javascript/auto',
           use: [
             {
@@ -152,16 +152,33 @@ export default {
               }
             }
           ]
+        },
+        {
+          test: /unzipit-worker.module.js$/,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                name: '[path][name].[contenthash:7].[ext]'
+              }
+            }
+          ]
         }
       )
     },
     plugins: [
-      // to ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
+      // To ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
       // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
+      // We also need to ignore worker_threads used by the unzipit worker module
+      // https://github.com/greggman/unzipit/blob/580c5cd75ca136fd918ae173f422600fa35c57a4/dist/unzipit-worker.module.js#L304
       new webpack.IgnorePlugin({
         resourceRegExp: /^/u,
         contextRegExp: /xpath-iterator/u
       }),
+      // new webpack.IgnorePlugin({
+      //   // resourceRegExp: /^/u,
+      //   contextRegExp: /worker_threads/
+      // }),
       // preload fonts to avoid FOUT
       new PreloadWebpackPlugin({
         rel: 'preload',
