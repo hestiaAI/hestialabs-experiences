@@ -6,9 +6,9 @@
     />
     <lazy-the-sample-selector
       v-if="samples.length"
+      :value.sync="selectedSamples"
       :items="samples"
       class="mb-6 mt-4"
-      @update="updateSelectedSamples"
     />
 
     <div class="caption mb-2">{{ extensionsMessage }}</div>
@@ -46,8 +46,8 @@ import processFiles from '@/utils/process-files'
 import localforage from '@/utils/localforage'
 import { processError } from '@/utils/utils'
 
-async function fetchSampleFile(filename) {
-  const response = await window.fetch(`/data/${filename}`)
+async function fetchSampleFile({ path, filename }) {
+  const response = await window.fetch(path)
   const blob = await response.blob()
   const file = new File([blob], filename)
   return file
@@ -124,6 +124,35 @@ export default {
       handler() {
         this.validateProps()
       }
+    },
+    async selectedSamples(newSamples, oldSamples) {
+      if (newSamples.length > oldSamples.length) {
+        // some sample was added
+        const addedSamples = newSamples.filter(
+          ns => !oldSamples.find(os => os.key === ns.key)
+        )
+        const files = await Promise.all(addedSamples.map(fetchSampleFile))
+        files.forEach(file =>
+          this.uppy.addFile({
+            name: file.name,
+            type: file.type,
+            data: file
+          })
+        )
+      } else {
+        // some sample was removed
+        const removedSamples = oldSamples.filter(
+          os => !newSamples.find(ns => ns.key === os.key)
+        )
+        removedSamples.forEach(sample => {
+          const file = this.uppy
+            .getFiles()
+            .find(f => f.name === sample.filename)
+          if (file) {
+            this.uppy.removeFile(file.id)
+          }
+        })
+      }
     }
   },
   mounted() {
@@ -149,8 +178,12 @@ export default {
         this.enableStatus = false
       })
       .on('file-removed', (file, reason) => {
-        // ensure selectedSamples is updated if sample file is removed using the Uppy dashboard
-        this.selectedSamples = this.selectedSamples.filter(s => s !== file.name)
+        if (reason === 'removed-by-user') {
+          // ensure selectedSamples is updated if sample file is removed using the Uppy dashboard
+          this.selectedSamples = this.selectedSamples.filter(
+            s => s.filename !== file.name
+          )
+        }
 
         if (reason !== 'cancel-all' && !this.uppy.getFiles().length) {
           this.filesEmpty = true
@@ -214,29 +247,6 @@ export default {
       })
 
       return msg.slice(0, -2)
-    },
-    async updateSelectedSamples(newSamples, oldSamples) {
-      if (newSamples.length > oldSamples.length) {
-        // some sample was added
-        const addedSamples = newSamples.filter(s => !oldSamples.includes(s))
-        const files = await Promise.all(addedSamples.map(fetchSampleFile))
-        files.forEach(file =>
-          this.uppy.addFile({
-            name: file.name,
-            type: file.type,
-            data: file
-          })
-        )
-      } else {
-        // some sample was removed
-        const removedSamples = oldSamples.filter(s => !newSamples.includes(s))
-        removedSamples.forEach(sample => {
-          const file = this.uppy.getFiles().find(f => f.name === sample)
-          if (file) {
-            this.uppy.removeFile(file.id)
-          }
-        })
-      }
     },
     async processFiles() {
       this.progress = true

@@ -2,8 +2,6 @@
   "title": "Playground",
   "subtitle": "For experimentation",
   "icon": "hestia.png",
-  "ext": "csv,js,json,xml,zip",
   "multiple": true,
-  "preprocessor": "twitter",
-  "data": ["colors.csv", "people.json", "tracker-control.csv", "twitter.zip"]
+  "preprocessor": "twitter"
 }

@@ -53,7 +53,7 @@ Note: All files and folders should match the following regular expression: [`^(?
     */
   "preprocessor": "twitter",
 	/**
-    * Array of paths to sample data files in /static/data/ (optional)
+    * Array of paths to sample data files in /assets/data/ (optional)
     * @type Array[String]
     * @default []
     */
@@ -74,7 +74,7 @@ If the data experience involves a single non-zip file input, use the name `input
 
 ## Adding sample data
 
-Add sample data to the `/static/data/` folder. Update the `data` array in the JSON config file of the relevant data experiences to make the new data file available.
+Add sample data to the `/assets/data/` folder. Update the `data` array in the JSON config file of the relevant data experiences to make the new data file available. Additionally, the data sample is automatically added to the Playground.
 
 
 ## Adding new examples for power users

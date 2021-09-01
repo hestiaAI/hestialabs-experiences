@@ -129,6 +129,20 @@ export default {
         {
           test: /\.(ya?ml|rq)$/i,
           use: 'raw-loader'
+        },
+        {
+          test: /data.+\.(csv|json|xml|zip)$/i,
+          // https://v4.webpack.js.org/migrate/4/#json-and-loaders
+          type: 'javascript/auto',
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                esModule: false,
+                name: '[path][name].[contenthash:7].[ext]'
+              }
+            }
+          ]
         }
       )
     },

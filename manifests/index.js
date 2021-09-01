@@ -1,5 +1,11 @@
 import preprocessors from './preprocessors'
 
+// helper function to extract the top directory in a path
+const extractFirstDirectory = path => path.match(/^(?:\.\/)?([a-z0-9-]+)\//)[1]
+
+// list of valid extensions for data samples
+export const validExtensions = ['csv', 'js', 'json', 'xml', 'zip']
+
 // require all modules on the path and with the pattern defined
 // Warning! The arguments passed to require.context must be literals!
 // https://github.com/webpack/docs/wiki/context#context-module-api
@@ -21,7 +27,21 @@ const reqSPARQL = require.context(
   /[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.rq$/
 )
 
-const extractFirstDirectory = path => path.match(/^(?:\.\/)?([a-z0-9-]+)\//)[1]
+// files in assets/data/ are loaded only with file-loader
+const reqData = require.context('../assets/data/', true, /.*/)
+const dataSamples = reqData
+  .keys()
+  // filter out invalid keys, and only keep valid extensions
+  // JSON files appear twice
+  // -> for example ./people.json and ./people
+  .filter(k =>
+    k.match(new RegExp(`^\\.\\/[a-z0-9-]+\\.(${validExtensions.join('|')})$`))
+  )
+  .map(key => ({
+    key,
+    filename: key.replace('./', ''),
+    path: reqData(key)
+  }))
 
 // Import configs from JSON files
 const manifests = Object.fromEntries(
@@ -34,12 +54,24 @@ const manifests = Object.fromEntries(
       title,
       subtitle = 'Data Experience',
       icon,
-      ext,
+      ext: extensions,
       files = [],
       multiple = false,
-      data = [],
+      data: dataFiles = [],
       preprocessor
     } = reqJSON(path)
+
+    let data = dataSamples.filter(({ filename }) =>
+      dataFiles.includes(filename)
+    )
+    let ext = extensions
+
+    if (dir === 'playground') {
+      // Add all data samples to playground
+      data = dataSamples
+      // All extensions are allowed in the playground
+      ext = validExtensions.join(',')
+    }
 
     // Validate config
     const requiredParams = { title, icon, ext }
@@ -49,7 +81,6 @@ const manifests = Object.fromEntries(
       }
     })
 
-    const validExtensions = ['zip', 'csv', 'json', 'js', 'xml']
     if (ext.split(',').some(v => !validExtensions.includes(v))) {
       throw new Error(`[${dir}] parameter ext is invalid`)
     }
@@ -117,9 +148,9 @@ reqSPARQL.keys().forEach(path => {
   })
 })
 
-// Add examples from other experiences to playground Array.
 Object.entries(manifests).forEach(([key, val]) => {
   if (key !== 'playground') {
+    // Add examples from other experiences to playground Array.
     manifests.playground.examples.push(
       ...val.examples.map(ex => ({ ...ex, name: `${key}-${ex.name}` }))
     )
