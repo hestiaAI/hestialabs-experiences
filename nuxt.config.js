@@ -17,8 +17,10 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: title =>
-      title ? `${title} | HestiaLabs Demo` : 'HestiaLabs Demo',
+    titleTemplate(title) {
+      const appName = 'HestiaLabs Demo'
+      return title ? `${title} | ${appName}` : appName
+    },
     title: '',
     meta: [
       { name: 'format-detection', content: 'telephone=no' },
