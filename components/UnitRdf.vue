@@ -15,7 +15,7 @@
         class="ma-sm-2"
       />
       <base-share-button
-        v-bind="{ disabled }"
+        v-bind="{ data }"
         :disabled="!message"
         class="ma-sm-2"
       />
