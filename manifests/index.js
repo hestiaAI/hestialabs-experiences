@@ -1,6 +1,12 @@
 import preprocessors from './preprocessors'
 import { validExtensions, extractFirstDirectory } from './utils'
 
+// helper function to extract the top directory in a path
+const extractFirstDirectory = path => path.match(/^(?:\.\/)?([a-z0-9-]+)\//)[1]
+
+// list of valid extensions for data samples
+export const validExtensions = ['csv', 'js', 'json', 'xml', 'zip']
+
 // require all modules on the path and with the pattern defined
 // Warning! The arguments passed to require.context must be literals!
 // https://github.com/webpack/docs/wiki/context#context-module-api
