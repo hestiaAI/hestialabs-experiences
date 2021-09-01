@@ -1,4 +1,11 @@
-import { unzip } from 'unzipit'
+import { unzip, setOptions } from 'unzipit'
+
+import workerURL from 'unzipit/dist/unzipit-worker.module.js'
+
+setOptions({
+  workerURL,
+  numWorkers: 2
+})
 
 export async function extractFiles(blob, whitelist = [], strict = true) {
   const { entries } = await unzip(blob)

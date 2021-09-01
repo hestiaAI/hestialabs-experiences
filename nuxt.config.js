@@ -1,6 +1,8 @@
 import webpack from 'webpack'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
+import { validExtensions } from './manifests/utils'
+
 const name = 'HestiaLabs Demo'
 const description = 'We create a new relationship to personal data'
 
@@ -17,8 +19,10 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: title =>
-      title ? `${title} | HestiaLabs Demo` : 'HestiaLabs Demo',
+    titleTemplate(title) {
+      const appName = 'HestiaLabs Demo'
+      return title ? `${title} | ${appName}` : appName
+    },
     title: '',
     meta: [
       { name: 'format-detection', content: 'telephone=no' },
@@ -123,7 +127,7 @@ export default {
         // for importing/exporting workers as ES modules
         {
           test: /\.worker\.js$/,
-          use: { loader: 'worker-loader' }
+          use: 'worker-loader'
         },
         // enable raw importing of .yaml and .rq files
         {
@@ -131,8 +135,13 @@ export default {
           use: 'raw-loader'
         },
         {
-          test: /data.+\.(csv|json|xml|zip)$/i,
-          // https://v4.webpack.js.org/migrate/4/#json-and-loaders
+          // allow all valid extensions as sample data except JS files!
+          test: new RegExp(
+            `data.+\\.(${validExtensions
+              .filter(ext => ext !== 'js')
+              .join('|')})$`
+          ),
+          // https://webpack.js.org/configuration/module/#ruletype
           type: 'javascript/auto',
           use: [
             {
@@ -143,12 +152,25 @@ export default {
               }
             }
           ]
+        },
+        {
+          test: /unzipit-worker.module.js$/,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                name: '[path][name].[contenthash:7].[ext]'
+              }
+            }
+          ]
         }
       )
     },
     plugins: [
-      // to ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
+      // To ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
       // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
+      // We also need to ignore worker_threads used by the unzipit worker module
+      // https://github.com/greggman/unzipit/blob/580c5cd75ca136fd918ae173f422600fa35c57a4/dist/unzipit-worker.module.js#L304
       new webpack.IgnorePlugin({
         resourceRegExp: /^/u,
         contextRegExp: /xpath-iterator/u

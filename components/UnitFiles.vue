@@ -13,14 +13,14 @@
 
     <div class="caption mb-2">{{ extensionsMessage }}</div>
 
-    <div ref="dashboard" />
-
     <base-button
       v-bind="{ disabled, progress, status, error }"
       text="Process files"
       class="mt-4"
       @click="processFiles"
     />
+
+    <div ref="dashboard" />
 
     <lazy-code-editor
       v-if="$store.state.power"
