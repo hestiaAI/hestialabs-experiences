@@ -1,7 +1,8 @@
 import webpack from 'webpack'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
-const appName = 'HestiaLabs Demo'
+const name = 'HestiaLabs Demo'
+const description = 'We create a new relationship to personal data'
 
 let baseUrl = 'http://localhost:3000'
 if (process.env.NODE_ENV === 'production') {
@@ -24,7 +25,7 @@ export default {
       {
         hid: 'og:title',
         property: 'og:title',
-        content: appName
+        content: name
       }
     ]
   },
@@ -61,7 +62,8 @@ export default {
   pwa: {
     icon: {},
     meta: {
-      name: appName,
+      name,
+      description,
       theme_color: '#ffffff',
       ogImage: {
         path: '/ogimg.png',
@@ -75,12 +77,11 @@ export default {
       ogUrl: false
     },
     manifest: {
-      name: appName,
-      short_name: 'HestiaLabs'
+      name,
+      short_name: 'HestiaLabs',
+      description
     },
-    workbox: {
-      pagesURLPattern: ['/']
-    }
+    workbox: {}
   },
 
   vue: {
@@ -101,7 +102,7 @@ export default {
 
   env: {
     baseUrl,
-    appName
+    appName: name
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
