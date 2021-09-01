@@ -1,4 +1,5 @@
 import preprocessors from './preprocessors'
+import { validExtensions, extractFirstDirectory } from './utils'
 
 // helper function to extract the top directory in a path
 const extractFirstDirectory = path => path.match(/^(?:\.\/)?([a-z0-9-]+)\//)[1]
