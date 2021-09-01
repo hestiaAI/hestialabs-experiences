@@ -19,7 +19,7 @@
 
 [build.environment]
   NODE_VERSION = "14"
-  NPM_VERSION = "6"
+  NPM_VERSION = "7"
   BASE_URL = "https://hestia-rml.netlify.app"
 
 [[redirects]]
