@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "npm": ">=6.x",
-    "node": ">=14.7.x"
+    "npm": "7.x",
+    "node": "14.x"
   },
   "scripts": {
     "dev": "nuxt",
