@@ -1,5 +1,7 @@
 import { newEngine } from '@comunica/actor-init-sparql'
 
+const N3 = require('n3')
+
 const engine = newEngine()
 
 // TODO put in a separate config file
@@ -22,11 +24,13 @@ export async function updateEndpoint(rdf) {
   }
 }
 
-export async function queryEndpoint(sparql) {
+export async function queryEndpoint() {
+  const sparql = 'CONSTRUCT WHERE { ?s ?p ?o }'
   const result = await engine.query(sparql, {
     sources: [endpoint]
   })
-  const bindings = await result.bindings()
-
-  return bindings
+  const quads = await result.quads()
+  const writer = new N3.Writer()
+  const data = writer.quadsToString(quads)
+  return data
 }
