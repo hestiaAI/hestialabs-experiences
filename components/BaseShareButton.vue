@@ -1,5 +1,8 @@
 <template>
-  <base-button v-bind="{ disabled, text }" @click="share()">
+  <base-button
+    v-bind="{ disabled, text, progress, status, error }"
+    @click="share()"
+  >
     <template #prepend-icon>
       <v-icon left>$vuetify.icons.mdiShareVariant</v-icon>
     </template>
@@ -24,9 +27,25 @@ export default {
       default: 'Share'
     }
   },
+  data() {
+    return {
+      status: false,
+      error: false,
+      progress: false
+    }
+  },
   methods: {
     async share() {
-      await updateEndpoint(this.data)
+      this.status = false
+      this.error = false
+      this.progress = true
+      try {
+        await updateEndpoint(this.data)
+      } catch (error) {
+        this.error = true
+      }
+      this.progress = false
+      this.status = true
     }
   }
 }
