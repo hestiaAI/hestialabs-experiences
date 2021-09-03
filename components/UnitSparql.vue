@@ -11,12 +11,7 @@
       />
       <base-download-button extension="rq" :data="sparql" class="ma-sm-2" />
     </div>
-    <code-editor
-      :value.sync="sparql"
-      class="mt-6"
-      line-numbers
-      language="sparql"
-    />
+    <code-editor :value="sparql" class="mt-6" line-numbers language="sparql" />
     <v-alert v-if="message" type="error">{{ message }}</v-alert>
   </div>
 </template>

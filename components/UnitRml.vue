@@ -3,7 +3,12 @@
     <div class="mr-lg-6 mb-6">
       <h2 class="my-3">YARRRML</h2>
       <base-download-button extension="yml" :data="yarrrml" />
-      <code-editor :value.sync="yarrrml" class="mt-6" language="yaml" />
+      <code-editor
+        :value.sync="yarrrml"
+        class="mt-6"
+        language="yaml"
+        line-numbers
+      />
     </div>
     <div>
       <h2 class="my-3">RML</h2>
@@ -18,6 +23,7 @@
         :error="error"
         class="mt-6"
         readonly
+        line-numbers
         language="turtle"
       />
     </div>

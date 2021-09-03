@@ -1,36 +1,20 @@
 <template>
   <client-only placeholder="Loading...">
-    <prism-editor
+    <ace-editor
       v-model="code"
-      v-bind="$attrs"
-      class="my-editor my-6"
-      :highlight="highlighter"
-      style="max-height: 300px"
-    ></prism-editor>
+      :lang="editorLanguage"
+      theme="monokai"
+      height="500"
+      class="my-ace-editor my-6"
+      @init="initEditor"
+    ></ace-editor>
   </client-only>
 </template>
 
 <script>
-// import Prism Editor
-import { PrismEditor } from 'vue-prism-editor'
-import 'vue-prism-editor/dist/prismeditor.min.css' // import the styles somewhere
-
-// import highlighting library (you can use any library you want just return html string)
-import { highlight, languages } from 'prismjs/components/prism-core'
-
-import 'prismjs/components/prism-clike'
-import 'prismjs/components/prism-javascript'
-import 'prismjs/components/prism-yaml'
-import 'prismjs/components/prism-turtle'
-import 'prismjs/components/prism-sparql'
-import 'prismjs/components/prism-json'
-
-// import syntax highlighting styles
-import 'prismjs/themes/prism-tomorrow.css'
-
 export default {
   components: {
-    PrismEditor
+    AceEditor: require('vue2-ace-editor')
   },
   inheritAttrs: false,
   props: {
@@ -68,29 +52,34 @@ export default {
     }
   },
   methods: {
-    highlighter(code) {
-      return highlight(code, languages[this.editorLanguage])
+    initEditor(editor) {
+      editor.setReadOnly('readonly' in this.$attrs)
+      editor.setOption('showGutter', 'line-numbers' in this.$attrs)
+      editor.session.setUseWrapMode(true)
+      // https://ace.c9.io/demo/autoresize.html
+      editor.setOption('minLines', 2)
+      editor.setOption('maxLines', 14)
+
+      // available modes:
+      // https://github.com/ajaxorg/ace/tree/master/lib/ace/mode
+      require('brace/ext/language_tools') // language extension prerequsite...
+      require('brace/mode/javascript') // language
+      require('brace/mode/json') // language
+      require('brace/mode/sparql')
+      require('brace/mode/yaml')
+      require('brace/mode/turtle')
+      require('brace/theme/monokai')
+      require('brace/snippets/javascript') // snippet
     }
   }
 }
 </script>
 
 <style>
-/* required class */
-.my-editor {
-  /* we dont use `language-` classes anymore so thats why we need to add background and text color manually */
-  background: #2d2d2d;
-  color: #ccc;
-
-  /* you must provide font-family font-size line-height. Example: */
+.my-ace-editor {
+  /* you can provide font-family font-size line-height. Example: */
   font-family: Fira code, Fira Mono, Consolas, Menlo, Courier, monospace;
   font-size: 14px;
   line-height: 1.5;
-  padding: 5px;
-}
-
-/* optional class for removing the outline */
-.prism-editor__textarea:focus {
-  outline: none;
 }
 </style>
