@@ -66,7 +66,8 @@
         <div class="mr-lg-6">
           <h2 class="my-3">Aggregated Data Query Results</h2>
           <the-query-results-data-table
-            v-bind="{ headersAgg, itemsAgg }"
+            :headers="headersAgg"
+            :items="itemsAgg"
             :hide-default-footer="!headersAgg.length"
             :loading="false"
           />
