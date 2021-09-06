@@ -1,6 +1,7 @@
 # authors: Valentin Oliver Loftsson <valentin@hestia.ai>
 PREFIX :   <http://schema.org/>
 PREFIX ex: <http://www.example.com/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 SELECT ?advertiserName ?date ?time
 WHERE {
@@ -8,7 +9,7 @@ WHERE {
     ?imp :creator ?advertiser .
     ?advertiser :name ?advertiserName .
     ?imp :contentReferenceTime ?d
-    FILTER(?d > "2021-07-01:24:00:00"^^xsd:dateTime)
+    FILTER(?d > "2021-06-01T24:00:00Z"^^xsd:dateTime)
     BIND(substr(str(?d), -7) AS ?time)
     BIND(substr(str(?d), 1, 10) AS ?date)
 }
