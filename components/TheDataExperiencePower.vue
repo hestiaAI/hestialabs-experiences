@@ -44,36 +44,6 @@
         </div>
       </div>
     </v-expand-transition>
-
-    <div class="io-block">
-      <unit-retrieve-data :rdf="rdfAgg" @update="onUnitRetrieveDataUpdate" />
-    </div>
-    <v-expand-transition>
-      <div class="io-block" transition="expand-transition">
-        <unit-sparql
-          :rdf="rdfAgg"
-          class="mr-lg-6"
-          @update="onUnitSparqlAggUpdate"
-        >
-          <template #selector="{ change }">
-            <the-sparql-selector
-              :items="selectedExample.sparql"
-              :disabled="!selectedExample.sparql.length"
-              @change="change"
-            />
-          </template>
-        </unit-sparql>
-        <div class="mr-lg-6">
-          <h2 class="my-3">Aggregated Data Query Results</h2>
-          <the-query-results-data-table
-            :headers="headersAgg"
-            :items="itemsAgg"
-            :hide-default-footer="!headersAgg.length"
-            :loading="false"
-          />
-        </div>
-      </div>
-    </v-expand-transition>
   </div>
 </template>
 
@@ -94,10 +64,7 @@ export default {
       rdf: '',
       toRDF: true,
       headers: [],
-      items: [],
-      rdfAgg: '',
-      headersAgg: [],
-      itemsAgg: []
+      items: []
     }
   },
   computed: {
@@ -120,13 +87,6 @@ export default {
       // Vuetify DataTable component expects text and value properties
       this.headers = headers.map(h => ({ text: h, value: h }))
       this.items = items
-    },
-    onUnitSparqlAggUpdate({ headers = [], items = [], error }) {
-      this.headersAgg = headers.map(h => ({ text: h, value: h }))
-      this.itemsAgg = items
-    },
-    onUnitRetrieveDataUpdate({ rdfAgg = '', error }) {
-      this.rdfAgg = rdfAgg
     }
   }
 }
