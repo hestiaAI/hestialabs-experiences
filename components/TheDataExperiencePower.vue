@@ -48,6 +48,8 @@
     <div class="io-block">
       <unit-share-data :rdf-input="rdf" />
     </div>
+
+    <block-public-data :rdf-local="rdf" />
   </div>
 </template>
 
