@@ -1,24 +1,32 @@
 import localforage from 'localforage'
 
-async function getItem(key, name = 'root') {
-  try {
-    const store = localforage.createInstance({ name })
-    const value = await store.getItem(key)
-    return value
-  } catch (err) {
-    console.error(err)
-  }
+function createInstance(name) {
+  return localforage.createInstance({ name })
 }
-async function setItem(key, value, name = 'root') {
-  try {
-    const store = localforage.createInstance({ name })
-    await store.setItem(key, value)
-  } catch (err) {
-    console.error(err)
-  }
+
+async function getItem(key, name) {
+  return await createInstance(name).getItem(key)
 }
+
+async function setItem(key, value, name) {
+  return await createInstance(name).setItem(key, value)
+}
+
+async function clear(...names) {
+  await Promise.all(
+    names.map(name => {
+      const store = createInstance(name)
+      return store.clear()
+    })
+  )
+}
+
+const keyNames = ['processFilesResult']
+const keys = Object.fromEntries(keyNames.map(k => [k, k]))
 
 export default {
   getItem,
-  setItem
+  setItem,
+  clear,
+  keys
 }

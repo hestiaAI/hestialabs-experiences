@@ -4,7 +4,9 @@ import {
   mdiCheckCircle,
   mdiClose,
   mdiDownload,
-  mdiHome
+  mdiHome,
+  mdiDatabase,
+  mdiDatabaseRemove
 } from '@mdi/js'
 
 export default {
@@ -15,7 +17,9 @@ export default {
       mdiCheckCircle,
       mdiClose,
       mdiDownload,
-      mdiHome
+      mdiHome,
+      mdiDatabase,
+      mdiDatabaseRemove
     }
   },
   theme: {
