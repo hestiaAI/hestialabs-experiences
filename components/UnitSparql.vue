@@ -14,7 +14,12 @@
         class="ma-sm-2"
         @click="runQuery"
       />
-      <base-download-button extension="rq" :data="sparql" class="ma-sm-2" />
+      <base-download-button
+        extension="rq"
+        :data="sparql"
+        class="ma-sm-2"
+        :disabled="!sparql"
+      />
     </div>
     <code-editor
       :value.sync="sparql"
