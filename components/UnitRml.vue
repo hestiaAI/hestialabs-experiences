@@ -15,9 +15,14 @@
       <base-button
         v-bind="{ progress, status, error }"
         text="Generate RML"
+        class="mr-sm-2 my-sm-2"
         @click="generateRML"
       />
-      <base-download-button v-bind="{ data, extension }" :disabled="!rml" />
+      <base-download-button
+        v-bind="{ data, extension }"
+        :disabled="!rml"
+        class="ma-sm-2"
+      />
       <code-editor
         :value="data"
         :error="error"
