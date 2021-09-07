@@ -15,10 +15,10 @@
           :progress="progress[1]"
           :status="status[1]"
           :error="error[1]"
-          :disabled="disabledRun"
-          text="Run function"
+          :disabled="disabledCompare"
+          text="Compare"
           class="ma-sm-2"
-          @click="computeCSV"
+          @click="compareData"
         />
       </div>
     </div>
@@ -55,7 +55,7 @@ export default {
     }
   },
   computed: {
-    disabledRun() {
+    disabledCompare() {
       return !this.rdfPublic || !this.rdfLocal
     }
   },
@@ -74,7 +74,7 @@ export default {
       this.progress[i] = false
       this.status[i] = true
     },
-    async computeCSV() {
+    async compareData() {
       const i = 1
       this.status[i] = false
       this.error[i] = false
