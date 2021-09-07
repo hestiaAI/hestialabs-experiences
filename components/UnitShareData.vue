@@ -52,6 +52,7 @@ export default {
       try {
         this.rdfOutput = await construct(this.rdfInput, this.sparql)
       } catch (error) {
+        console.error(error)
         this.error = true
       }
       this.progress = false

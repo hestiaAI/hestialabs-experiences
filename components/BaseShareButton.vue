@@ -43,6 +43,7 @@ export default {
       try {
         await updateEndpoint(this.data)
       } catch (error) {
+        console.error(error)
         this.error = true
       }
       this.progress = false
