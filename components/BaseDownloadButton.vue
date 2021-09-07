@@ -1,9 +1,5 @@
 <template>
-  <base-button v-bind="{ disabled, href, download, text }">
-    <template #prepend-icon>
-      <v-icon left>$vuetify.icons.mdiDownload</v-icon>
-    </template>
-  </base-button>
+  <base-button v-bind="{ disabled, href, download, text }" icon="mdiDownload" />
 </template>
 
 <script>
