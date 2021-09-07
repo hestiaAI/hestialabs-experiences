@@ -35,14 +35,7 @@
             />
           </template>
         </unit-sparql>
-        <div class="mr-lg-6">
-          <h2 class="my-3">Query Results</h2>
-          <the-query-results-data-table
-            v-bind="{ headers, items }"
-            :hide-default-footer="!headers.length"
-            :loading="false"
-          />
-        </div>
+        <unit-query-results v-bind="{ headers, items }" />
       </div>
     </v-expand-transition>
   </div>
@@ -50,7 +43,6 @@
 
 <script>
 /* eslint-disable vue/require-default-prop */
-
 export default {
   props: {
     examples: Array
