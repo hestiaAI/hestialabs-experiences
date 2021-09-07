@@ -1,6 +1,6 @@
 <template>
   <v-btn outlined v-bind="$attrs" class="my-2" @click="$emit('click', $event)">
-    <slot name="prepend-icon"></slot>
+    <v-icon v-if="icon" left>{{ mdiIcon }}</v-icon>
     <slot>
       <span>{{ text }}</span>
     </slot>
@@ -27,6 +27,15 @@ export default {
     error: {
       type: Boolean,
       default: false
+    },
+    icon: {
+      type: String,
+      default: null
+    }
+  },
+  computed: {
+    mdiIcon() {
+      return this.$vuetify.icons.values[this.icon]
     }
   }
 }
