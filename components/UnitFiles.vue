@@ -4,12 +4,12 @@
       v-if="isPlayground"
       @update="filesToExtract = $event"
     />
-    <div class="d-flex flex-column flex-sm-row align-end">
+    <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
       <lazy-the-sample-selector
         v-if="samples.length"
         :value.sync="selectedSamples"
         :items="samples"
-        class="ma-sm-2"
+        class="my-sm-2 mr-sm-2 mb-2"
       />
 
       <base-button
@@ -20,7 +20,7 @@
       />
     </div>
 
-    <div class="caption mb-2">{{ extensionsMessage }}</div>
+    <div class="caption my-2">{{ extensionsMessage }}</div>
 
     <div ref="dashboard" />
 
