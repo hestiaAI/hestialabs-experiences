@@ -44,6 +44,10 @@
         </div>
       </div>
     </v-expand-transition>
+
+    <div class="io-block">
+      <unit-share-data :rdf-input="rdf" />
+    </div>
   </div>
 </template>
 
