@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import query from '@/utils/sparql'
+import { query } from '@/utils/sparql'
 import { processError } from '@/utils/utils'
 
 export default {
