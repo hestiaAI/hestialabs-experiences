@@ -18,10 +18,6 @@ export default {
       type: String,
       required: true
     },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
     text: {
       type: String,
       default: 'Share'
@@ -32,6 +28,11 @@ export default {
       status: false,
       error: false,
       progress: false
+    }
+  },
+  computed: {
+    disabled() {
+      return !this.data || this.progress
     }
   },
   methods: {
