@@ -26,10 +26,11 @@
     <v-expand-transition>
       <div v-show="toRDF" class="io-block" transition="expand-transition">
         <unit-sparql :rdf="rdf" class="mr-lg-6" @update="onUnitSparqlUpdate">
-          <template #selector="{ change }">
+          <template #selector="{ change, classAttr }">
             <the-sparql-selector
               :items="selectedExample.sparql"
               :disabled="!selectedExample.sparql.length"
+              :class="classAttr"
               @change="change"
             />
           </template>

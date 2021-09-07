@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="my-3">RDF</h2>
-    <div class="d-flex flex-column flex-sm-row align-start">
+    <div class="d-flex flex-column flex-sm-row align-end">
       <the-rdf-format-selector class="ma-sm-2" :value.sync="format" />
       <base-button
         v-bind="{ progress, status, error, disabled }"

@@ -4,21 +4,23 @@
       v-if="isPlayground"
       @update="filesToExtract = $event"
     />
-    <lazy-the-sample-selector
-      v-if="samples.length"
-      :value.sync="selectedSamples"
-      :items="samples"
-      class="mb-6 mt-4"
-    />
+    <div class="d-flex flex-column flex-sm-row align-end">
+      <lazy-the-sample-selector
+        v-if="samples.length"
+        :value.sync="selectedSamples"
+        :items="samples"
+        class="ma-sm-2"
+      />
+
+      <base-button
+        v-bind="{ disabled, progress, status, error }"
+        text="Process files"
+        class="ma-sm-2"
+        @click="processFiles"
+      />
+    </div>
 
     <div class="caption mb-2">{{ extensionsMessage }}</div>
-
-    <base-button
-      v-bind="{ disabled, progress, status, error }"
-      text="Process files"
-      class="mt-4"
-      @click="processFiles"
-    />
 
     <div ref="dashboard" />
 

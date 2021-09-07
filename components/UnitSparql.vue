@@ -1,8 +1,8 @@
 <template>
   <div>
     <h2 class="my-3">SPARQL</h2>
-    <div class="d-flex flex-column flex-sm-row align-start">
-      <slot name="selector" :change="v => (sparql = v)" class="ma-sm-2" />
+    <div class="d-flex flex-column flex-sm-row align-end">
+      <slot name="selector" :change="v => (sparql = v)" classAttr="ma-sm-2" />
       <base-button
         v-bind="{ progress, status, error, disabled }"
         text="Run Query"
