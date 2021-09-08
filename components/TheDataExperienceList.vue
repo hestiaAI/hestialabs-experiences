@@ -6,7 +6,7 @@
       :to="`/${key}`"
     >
       <v-list-item-avatar tile>
-        <v-img :src="icon" />
+        <v-img :src="icon" :lazy-src="icon" />
       </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title v-text="title"></v-list-item-title>
