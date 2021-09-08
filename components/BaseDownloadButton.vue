@@ -3,21 +3,12 @@
 </template>
 
 <script>
-import { createObjectURL, revokeObjectURL } from '@/utils/utils'
-
-const defaultExtension = 'txt'
-
-const mimeTypes = {
-  csv: 'text/csv',
-  json: 'application/json',
-  jsonld: 'application/ld+json',
-  nq: 'application/n-quads',
-  rq: 'application/sparql-query',
-  ttl: 'text/turtle',
-  yaml: 'application/x-yaml',
-  yml: 'application/x-yaml',
-  [defaultExtension]: 'text/plain;charset=UTF-8'
-}
+import {
+  createObjectURL,
+  revokeObjectURL,
+  defaultExtension,
+  mimeTypes
+} from '@/utils/utils'
 
 export default {
   props: {

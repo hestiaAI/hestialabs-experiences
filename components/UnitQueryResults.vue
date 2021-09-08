@@ -17,7 +17,7 @@
 
 <script>
 import { writeToString } from '@fast-csv/format'
-import { createObjectURL, revokeObjectURL, processError } from '@/utils/utils'
+import { sendDownload, processError, mimeTypes } from '@/utils/utils'
 
 export default {
   props: {
@@ -51,7 +51,8 @@ export default {
       try {
         const headers = this.headers.map(h => h.text)
         const content = await writeToString(this.items, { headers })
-        this.sendDownload(content, 'text/csv', 'csv')
+        const extension = 'csv'
+        sendDownload(content, mimeTypes[extension], extension)
         this.progress = false
         this.status = true
       } catch (error) {
@@ -61,14 +62,6 @@ export default {
         this.$emit('update', { error })
       }
       return false
-    },
-    sendDownload(content, mimeType, extension) {
-      // https://stackoverflow.com/questions/53772331/vue-html-js-how-to-download-a-file-to-browser-using-the-download-tag
-      const link = document.createElement('a')
-      link.href = createObjectURL(content, mimeType)
-      link.download = 'results.' + extension
-      link.click()
-      revokeObjectURL(link.href)
     }
   }
 }
