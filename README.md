@@ -1,4 +1,4 @@
-# hestia-rml-demo
+# HestiaLabs Experiences
 
 ## Build Setup
 
@@ -68,8 +68,8 @@ This directory contains your Vuex store files. Creating a file in this directory
 
 More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
 
-## Upgrading npm on windows
-This is only relevant for windows users who work with nvm.
+## Upgrading npm on Windows
+This is only relevant for Windows users who work with nvm.
 
 We work with a version of npm more recent than the one shipped with the node LTS we are using. There is a standard way of upgrading npm, but it doesn't work with nvm-windows. The way to do it is described in this [comment on github](https://github.com/coreybutler/nvm-windows/issues/300#issuecomment-798776683):
 

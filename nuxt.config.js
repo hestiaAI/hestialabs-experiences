@@ -3,7 +3,7 @@ import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
 import { validExtensions } from './manifests/utils'
 
-const name = 'HestiaLabs Demo'
+const name = 'HestiaLabs Experiences'
 const description = 'We create a new relationship to personal data'
 
 const { NODE_ENV, BASE_URL } = process.env
@@ -21,7 +21,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate(title) {
-      const appName = 'HestiaLabs Demo'
+      const appName = 'HestiaLabs Experiences'
       return title ? `${title} | ${appName}` : appName
     },
     title: '',
