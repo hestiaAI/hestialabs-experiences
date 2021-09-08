@@ -64,7 +64,9 @@ export default {
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
-    icon: {},
+    icon: {
+      plugin: false
+    },
     meta: {
       name,
       description,
