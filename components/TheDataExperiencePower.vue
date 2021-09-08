@@ -14,7 +14,7 @@
 
     <div class="io-block">
       <div class="mr-lg-6">
-        <h2 class="mb-2">Files</h2>
+        <h2 class="my-3">Files</h2>
         <slot name="unit-files" :update="onUnitFilesUpdate" />
       </div>
       <unit-rdf v-bind="{ rml, inputFiles }" @update="onUnitRdfUpdate" />

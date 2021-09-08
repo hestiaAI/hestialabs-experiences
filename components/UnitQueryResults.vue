@@ -8,7 +8,11 @@
       @click.native="onDownload"
     />
     <v-alert v-if="error" type="error">{{ message }}</v-alert>
-    <v-data-table v-bind="{ headers, items }" :hide-default-footer="disabled" />
+    <v-data-table
+      v-bind="{ headers, items }"
+      :hide-default-footer="disabled"
+      multi-sort
+    />
   </div>
 </template>
 
