@@ -1,23 +1,22 @@
 <template>
   <div>
     <h2 class="my-3">Query Results</h2>
-    <base-button
-      v-bind="{ progress, error, disabled }"
+    <base-download-button
+      v-bind="{ progress, error, disabled, extension, data, status }"
       text="Download"
-      icon="mdiDownload"
-      @click="downloadCSVResults"
+      @click.native="onDownload"
     />
+    <v-alert v-if="error" type="error">{{ message }}</v-alert>
     <the-query-results-data-table
       v-bind="{ headers, items }"
       :hide-default-footer="disabled"
-      :loading="false"
     />
   </div>
 </template>
 
 <script>
 import { writeToString } from '@fast-csv/format'
-import { sendDownload, processError, mimeTypes } from '@/utils/utils'
+import { processError } from '@/utils/utils'
 
 export default {
   props: {
@@ -35,7 +34,9 @@ export default {
       status: false,
       error: false,
       progress: false,
-      rml: ''
+      data: '',
+      message: '',
+      extension: 'csv'
     }
   },
   computed: {
@@ -44,24 +45,21 @@ export default {
     }
   },
   methods: {
-    async downloadCSVResults() {
+    async onDownload() {
       this.progress = true
       this.status = false
       this.error = false
       try {
         const headers = this.headers.map(h => h.text)
-        const content = await writeToString(this.items, { headers })
-        const extension = 'csv'
-        sendDownload(content, mimeTypes[extension], extension)
-        this.progress = false
-        this.status = true
+        this.data = await writeToString(this.items, { headers })
       } catch (error) {
         console.error(error)
         this.error = true
         this.message = processError(error)
-        this.$emit('update', { error })
+      } finally {
+        this.progress = false
+        this.status = true
       }
-      return false
     }
   }
 }

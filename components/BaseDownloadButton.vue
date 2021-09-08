@@ -1,5 +1,8 @@
 <template>
-  <base-button v-bind="{ disabled, href, download, text }" icon="mdiDownload" />
+  <base-button
+    v-bind="{ disabled, href, download, text, ...$attrs }"
+    icon="mdiDownload"
+  />
 </template>
 
 <script>

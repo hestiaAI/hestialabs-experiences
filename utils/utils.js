@@ -20,15 +20,6 @@ export function revokeObjectURL(objectURL) {
   window.URL.revokeObjectURL(objectURL)
 }
 
-export function sendDownload(content, mimeType, extension) {
-  // https://stackoverflow.com/questions/53772331/vue-html-js-how-to-download-a-file-to-browser-using-the-download-tag
-  const link = document.createElement('a')
-  link.href = createObjectURL(content, mimeType)
-  link.download = 'results.' + extension
-  link.click()
-  revokeObjectURL(link.href)
-}
-
 export function objectIsEmpty(obj) {
   // https://stackoverflow.com/a/32108184/8238129
   return obj && Object.keys(obj).length === 0 && obj.constructor === Object

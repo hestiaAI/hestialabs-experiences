@@ -171,8 +171,6 @@ export default {
     plugins: [
       // To ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
       // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
-      // We also need to ignore worker_threads used by the unzipit worker module
-      // https://github.com/greggman/unzipit/blob/580c5cd75ca136fd918ae173f422600fa35c57a4/dist/unzipit-worker.module.js#L304
       new webpack.IgnorePlugin({
         resourceRegExp: /^/u,
         contextRegExp: /xpath-iterator/u
