@@ -9,6 +9,7 @@
       <base-button
         v-bind="{ progress, status, error, disabled }"
         text="Generate RDF"
+        icon="mdiStepForward"
         class="ma-sm-2"
         @click="generateRDF"
       />

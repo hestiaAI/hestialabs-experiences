@@ -15,6 +15,7 @@
       <base-button
         v-bind="{ disabled, progress, status, error }"
         text="Process files"
+        icon="mdiStepForward"
         class="ma-sm-2"
         @click="processFiles"
       />

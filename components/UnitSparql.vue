@@ -10,6 +10,7 @@
       <base-button
         v-bind="{ progress, status, error, disabled }"
         text="Run Query"
+        icon="mdiStepForward"
         class="ma-sm-2"
         @click="runQuery"
       />

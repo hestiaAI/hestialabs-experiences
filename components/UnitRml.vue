@@ -15,6 +15,7 @@
       <base-button
         v-bind="{ progress, status, error }"
         text="Generate RML"
+        icon="mdiStepForward"
         class="mr-sm-2 my-sm-2"
         @click="generateRML"
       />
