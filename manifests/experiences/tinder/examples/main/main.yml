@@ -1,0 +1,4 @@
+sources:
+  tinder: [input.json~jsonpath, $]
+
+mappings:
