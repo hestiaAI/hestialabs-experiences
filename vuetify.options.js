@@ -3,10 +3,11 @@ import {
   mdiAlert,
   mdiCheckCircle,
   mdiClose,
+  mdiDatabase,
+  mdiDatabaseRemove,
   mdiDownload,
   mdiHome,
-  mdiDatabase,
-  mdiDatabaseRemove
+  mdiStepForward
 } from '@mdi/js'
 
 export default {
@@ -16,10 +17,11 @@ export default {
       mdiAlert,
       mdiCheckCircle,
       mdiClose,
+      mdiDatabase,
+      mdiDatabaseRemove,
       mdiDownload,
       mdiHome,
-      mdiDatabase,
-      mdiDatabaseRemove
+      mdiStepForward
     }
   },
   theme: {
