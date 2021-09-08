@@ -9,6 +9,12 @@
         @click="constructRDF"
       />
       <base-share-button :data="rdfOutput" class="ma-sm-2" />
+      <base-download-button
+        extension="nq"
+        :data="rdfOutput"
+        :disabled="!rdfOutput"
+        class="ma-sm-2"
+      />
     </div>
     <code-editor
       :value.sync="sparql"

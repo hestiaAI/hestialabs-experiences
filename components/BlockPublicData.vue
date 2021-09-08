@@ -20,6 +20,12 @@
           class="ma-sm-2"
           @click="compareData"
         />
+        <base-download-button
+          extension="nq"
+          :data="rdfPublic"
+          :disabled="!rdfPublic"
+          class="ma-sm-2"
+        />
       </div>
     </div>
     <div>
