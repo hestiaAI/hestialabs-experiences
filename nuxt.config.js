@@ -6,11 +6,12 @@ import { validExtensions } from './manifests/utils'
 const name = 'HestiaLabs Demo'
 const description = 'We create a new relationship to personal data'
 
-let baseUrl = 'http://localhost:3000'
-if (process.env.NODE_ENV === 'production') {
-  baseUrl =
-    process.env.BASE_URL ||
-    `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`
+const { NODE_ENV, BASE_URL } = process.env
+
+const baseUrl = NODE_ENV === 'production' ? BASE_URL : 'http://localhost:3000'
+
+if (!baseUrl) {
+  throw new Error('BASE_URL environment variable is missing')
 }
 
 export default {
