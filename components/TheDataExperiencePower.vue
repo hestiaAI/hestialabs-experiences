@@ -17,14 +17,10 @@
         <h2 class="mb-2">Files</h2>
         <slot name="unit-files" :update="onUnitFilesUpdate" />
       </div>
-      <unit-rdf
-        v-bind="{ rml, inputFiles }"
-        class="mr-lg-6"
-        @update="onUnitRdfUpdate"
-      />
+      <unit-rdf v-bind="{ rml, inputFiles }" @update="onUnitRdfUpdate" />
     </div>
     <v-expand-transition>
-      <div v-show="toRDF" class="io-block" transition="expand-transition">
+      <div v-show="toRDF" class="io-block">
         <unit-sparql :rdf="rdf" class="mr-lg-6" @update="onUnitSparqlUpdate">
           <template #selector="{ change, classAttr }">
             <the-sparql-selector

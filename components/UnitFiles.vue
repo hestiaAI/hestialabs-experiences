@@ -1,22 +1,11 @@
 <template>
   <div>
-    <lazy-the-files-combobox
-      v-if="isPlayground"
-      @update="filesToExtract = $event"
-    />
     <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
-      <lazy-the-sample-selector
-        v-if="samples.length"
-        :value.sync="selectedSamples"
-        :items="samples"
-        class="my-sm-2 mr-sm-2 mb-2"
-      />
-
       <base-button
         v-bind="{ disabled, progress, status, error }"
         text="Process files"
         icon="mdiStepForward"
-        class="ma-sm-2"
+        class="my-sm-2 mr-sm-2"
         @click="processFiles"
       />
       <base-button
@@ -34,6 +23,19 @@
         @click="clearCache"
       />
     </div>
+
+    <lazy-the-files-combobox
+      v-if="isPlayground"
+      class="mb-4"
+      @update="filesToExtract = $event"
+    />
+
+    <lazy-the-sample-selector
+      v-if="samples.length"
+      :value.sync="selectedSamples"
+      :items="samples"
+      class="my-sm-2 mr-sm-2 mb-2"
+    />
 
     <div class="caption my-2">{{ extensionsMessage }}</div>
 
@@ -192,7 +194,7 @@ export default {
         hideUploadButton: true,
         proudlyDisplayPoweredByUppy: false,
         theme: 'light',
-        width: 600,
+        width: 550,
         height: 400
       })
       // allow dropping files anywhere on the page

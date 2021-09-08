@@ -3,9 +3,9 @@
     <h2 class="my-3">Query Results</h2>
     <base-button
       v-bind="{ progress, error, disabled }"
-      text="Download as CSV"
-      @click="downloadCSVResults"
+      text="Download"
       icon="mdiDownload"
+      @click="downloadCSVResults"
     />
     <the-query-results-data-table
       v-bind="{ headers, items }"
