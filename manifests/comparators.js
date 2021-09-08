@@ -1,6 +1,6 @@
 import { query } from '@/utils/sparql'
 
-export async function advertisersIntersection(rdf1, rdf2) {
+const advertisersIntersection = async (rdf1, rdf2) => {
   const sparql = `
   PREFIX :  <http://schema.org/>
   SELECT ?name
@@ -20,4 +20,8 @@ export async function advertisersIntersection(rdf1, rdf2) {
   const intersection = advertisers1.filter(item => advertisers2.includes(item))
   const items = intersection.map(b => ({ [header]: b }))
   return [[header], items]
+}
+
+export default {
+  advertisersIntersection
 }

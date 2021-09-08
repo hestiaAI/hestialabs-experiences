@@ -41,13 +41,17 @@
 
 <script>
 import { queryEndpoint } from '@/utils/endpoint'
-import { advertisersIntersection } from '@/utils/compare-rdf'
+import comparators from '~/manifests/comparators'
 
 export default {
   props: {
     rdfLocal: {
       type: String,
       default: ''
+    },
+    comparator: {
+      type: String,
+      default: 'advertisersIntersection'
     }
   },
   data() {
@@ -86,7 +90,7 @@ export default {
       this.error[i] = false
       this.progress[i] = true
       try {
-        const [headers, items] = await advertisersIntersection(
+        const [headers, items] = await comparators[this.comparator](
           this.rdfLocal,
           this.rdfPublic
         )
