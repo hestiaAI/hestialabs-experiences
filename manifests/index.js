@@ -9,17 +9,28 @@ import { validExtensions, extractFirstDirectory } from './utils'
 const reqJSON = require.context(
   './experiences/',
   true,
-  /[a-z-]+\/[a-z-]+\.json$/
+  /^\.\/[a-z-]+\/[a-z-]+\.json$/
 )
 const reqYARRRML = require.context(
   './experiences/',
   true,
-  /[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.ya?ml$/
+  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+\.ya?ml$/
 )
 const reqSPARQL = require.context(
   './experiences/',
   true,
-  /[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.rq$/
+  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+\.rq$/
+)
+
+const reqSharingJSON = require.context(
+  './experiences/',
+  true,
+  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+\/[a-z0-9-]+\.json$/
+)
+const reqSharingSPARQL = require.context(
+  './experiences/',
+  true,
+  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+\/[a-z0-9-]+\.rq$/
 )
 
 // files in assets/data/ are loaded only with file-loader
@@ -118,7 +129,9 @@ reqYARRRML.keys().forEach(path => {
     // assume single YARRRML file per example
     yarrrml: reqYARRRML(path).default,
     // empty Object for all SPARQL samples of the example
-    sparql: []
+    sparql: [],
+    // empty Object for all sharing use-cases
+    sharing: []
   }
   const { examples } = manifests[dir]
   if (name === 'main') {
@@ -141,6 +154,42 @@ reqSPARQL.keys().forEach(path => {
     name: sparql,
     sparql: reqSPARQL(path).default
   })
+})
+
+reqSharingJSON.keys().forEach(path => {
+  // Extract directory name of the experience
+  const dir = extractFirstDirectory(path)
+  // Extract comparator name
+  const match = path.match(
+    /\/examples\/(?<example>.+)\/(?<key>.+)\/[a-z0-9-]+\.json/
+  )
+  const { example, key } = match.groups
+
+  const { name, comparator } = reqSharingJSON(path)
+
+  const exampleObj = manifests[dir].examples.find(e => e.name === example)
+  exampleObj.sharing.push({
+    key,
+    name,
+    comparator,
+    sparql: ''
+  })
+})
+
+reqSharingSPARQL.keys().forEach(path => {
+  // Extract directory name of the experience
+  const dir = extractFirstDirectory(path)
+  // Extract comparator name
+  const match = path.match(
+    /\/examples\/(?<example>.+)\/(?<key>.+)\/[a-z0-9-]+\.rq/
+  )
+  const { example, key } = match.groups
+
+  const sparql = reqSharingSPARQL(path).default
+
+  const exampleObj = manifests[dir].examples.find(e => e.name === example)
+  const sharingObj = exampleObj.sharing.find(e => e.key === key)
+  sharingObj.sparql = sparql
 })
 
 Object.entries(manifests).forEach(([key, val]) => {
