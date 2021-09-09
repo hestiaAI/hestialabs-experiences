@@ -1,1 +1,8 @@
-CONSTRUCT WHERE { ?s ?p ?o }
+# authors: Florian Singer <florian.singer@hestia.ai>
+PREFIX :  <http://schema.org/>
+
+CONSTRUCT WHERE
+{
+  ?advertiser a :Organization .
+  ?advertiser :name ?name .
+}
