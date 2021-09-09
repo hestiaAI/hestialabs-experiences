@@ -13,11 +13,12 @@
     <div>
       <h2 class="my-3">RML</h2>
       <base-button
-        v-bind="{ progress, status, error }"
+        :f="f"
+        :args="args"
         text="Generate RML"
         icon="mdiStepForward"
         class="mr-sm-2 my-sm-2"
-        @click="generateRML"
+        @click="handleResult"
       />
       <base-download-button
         v-bind="{ data, extension }"
@@ -59,51 +60,38 @@ export default {
   },
   computed: {
     extension() {
-      return this.rmlError ? undefined : 'ttl'
+      return this.rml ? 'ttl' : undefined
     },
     data() {
-      // if there is an error, download the message, o/w the RDF
-      return this.error ? this.message : this.rml
+      // if there is RML, download it, otherwise download the message
+      return this.rml ? this.rml : this.message
+    },
+    f() {
+      return parseYarrrml
+    },
+    args() {
+      return [this.yarrrml]
     }
   },
   watch: {
     yarrrmlExample: {
       immediate: true,
-      async handler(val) {
+      handler(val) {
         this.yarrrml = val
-        await this.generateRML()
+        // FIXME call button function
       }
-    },
-    yarrrml() {
-      this.error = false
-      this.status = false
-      this.rml = ''
     }
   },
   methods: {
-    async generateRML() {
+    handleResult(result) {
       this.rml = ''
       this.message = ''
-      this.progress = true
-      this.status = false
-      this.error = false
-      try {
-        const rml = await parseYarrrml(this.yarrrml)
-        this.rml = rml
-        this.$emit('update', { rml })
-      } catch (error) {
-        console.error(error)
-        this.error = true
-        this.message = processError(error)
-        this.$emit('update', { error })
-      } finally {
-        window.setTimeout(() => {
-          // RML generation is usually super quick
-          // so the user will not see the progress indicator
-          // without this timeout
-          this.progress = false
-          this.status = true
-        }, 500)
+      if (result.value) {
+        this.rml = result.value
+        this.$emit('update', { rml: result.value })
+      } else {
+        this.message = processError(result.error)
+        this.$emit('update', { error: result.error })
       }
     }
   }
