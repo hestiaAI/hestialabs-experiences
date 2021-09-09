@@ -3,10 +3,12 @@
     <div>
       <h2 class="my-3">Get Public Data</h2>
       <div class="d-flex flex-column flex-sm-row align-start">
+        <slot name="selector" :change="v => (comparator = v)" class="ma-sm-2" />
         <base-button
           :progress="progress[0]"
           :status="status[0]"
           :error="error[0]"
+          :disabled="disabledGet"
           text="Get RDF"
           class="ma-sm-2"
           @click="retrieveData"
@@ -48,10 +50,6 @@ export default {
     rdfLocal: {
       type: String,
       default: ''
-    },
-    comparator: {
-      type: String,
-      default: 'advertisersIntersection'
     }
   },
   data() {
@@ -61,12 +59,16 @@ export default {
       error: [false, false],
       headers: [],
       items: [],
-      rdfPublic: ''
+      rdfPublic: '',
+      comparator: ''
     }
   },
   computed: {
     disabledCompare() {
       return !this.rdfPublic || !this.rdfLocal
+    },
+    disabledGet() {
+      return !this.comparator
     }
   },
   methods: {

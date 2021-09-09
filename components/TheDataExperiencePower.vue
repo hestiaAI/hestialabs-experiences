@@ -57,7 +57,15 @@
       </unit-share-data>
     </div>
 
-    <block-public-data :rdf-local="rdf" />
+    <block-public-data :rdf-local="rdf">
+      <template #selector="{ change }">
+        <comparator-selector
+          :items="selectedExample.sharing"
+          :disabled="!selectedExample.sharing.length"
+          @change="change"
+        />
+      </template>
+    </block-public-data>
   </div>
 </template>
 
