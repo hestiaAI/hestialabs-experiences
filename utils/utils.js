@@ -1,3 +1,17 @@
+export const defaultExtension = 'txt'
+
+export const mimeTypes = {
+  csv: 'text/csv',
+  json: 'application/json',
+  jsonld: 'application/ld+json',
+  nq: 'application/n-quads',
+  rq: 'application/sparql-query',
+  ttl: 'text/turtle',
+  yaml: 'application/x-yaml',
+  yml: 'application/x-yaml',
+  [defaultExtension]: 'text/plain;charset=UTF-8'
+}
+
 export function createObjectURL(text, type = 'text/plain') {
   return window.URL.createObjectURL(new Blob([text], { type }))
 }

@@ -4,12 +4,7 @@
       <h1 class="h1">{{ title }}</h1>
       <logo-img max-width="300" class="my-12" />
 
-      <base-button nuxt to="/">
-        <template #prepend-icon>
-          <v-icon left> $vuetify.icons.mdiHome </v-icon>
-        </template>
-        Home page
-      </base-button>
+      <base-button nuxt to="/" icon="mdiHome" text="Home page" />
     </v-row>
   </v-container>
 </template>

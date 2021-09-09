@@ -3,14 +3,15 @@ import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
 import { validExtensions } from './manifests/utils'
 
-const name = 'HestiaLabs Demo'
+const name = 'HestiaLabs Experiences'
 const description = 'We create a new relationship to personal data'
 
-let baseUrl = 'http://localhost:3000'
-if (process.env.NODE_ENV === 'production') {
-  baseUrl =
-    process.env.BASE_URL ||
-    `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`
+const { NODE_ENV, BASE_URL } = process.env
+
+const baseUrl = NODE_ENV === 'production' ? BASE_URL : 'http://localhost:3000'
+
+if (!baseUrl) {
+  throw new Error('BASE_URL environment variable is missing')
 }
 
 export default {
@@ -20,7 +21,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate(title) {
-      const appName = 'HestiaLabs Demo'
+      const appName = 'HestiaLabs Experiences'
       return title ? `${title} | ${appName}` : appName
     },
     title: '',
@@ -64,7 +65,9 @@ export default {
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
-    icon: {},
+    icon: {
+      plugin: false
+    },
     meta: {
       name,
       description,
@@ -169,8 +172,6 @@ export default {
     plugins: [
       // To ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
       // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
-      // We also need to ignore worker_threads used by the unzipit worker module
-      // https://github.com/greggman/unzipit/blob/580c5cd75ca136fd918ae173f422600fa35c57a4/dist/unzipit-worker.module.js#L304
       new webpack.IgnorePlugin({
         resourceRegExp: /^/u,
         contextRegExp: /xpath-iterator/u

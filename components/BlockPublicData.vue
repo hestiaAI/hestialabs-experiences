@@ -32,11 +32,7 @@
     </div>
     <div>
       <h2 class="my-3">Results</h2>
-      <the-query-results-data-table
-        v-bind="{ headers, items }"
-        :hide-default-footer="!headers.length"
-        :loading="false"
-      />
+      <unit-query-results v-bind="{ headers, items }" />
     </div>
   </div>
 </template>

@@ -1,8 +1,0 @@
-{
-  "root": "dist",
-  "https_only": true,
-  "routes": {
-    "/data/*": "/data/",
-    "/**": "index.html"
-  }
-}

@@ -29,6 +29,14 @@ export default {
     language: {
       type: String,
       default: 'text'
+    },
+    lineNumbers: {
+      type: Boolean,
+      default: false
+    },
+    readonly: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -53,8 +61,8 @@ export default {
   },
   methods: {
     initEditor(editor) {
-      editor.setReadOnly('readonly' in this.$attrs)
-      editor.setOption('showGutter', 'line-numbers' in this.$attrs)
+      editor.setReadOnly(this.readonly)
+      editor.setOption('showGutter', this.lineNumbers)
       editor.session.setUseWrapMode(true)
       // https://ace.c9.io/demo/autoresize.html
       editor.setOption('minLines', 2)

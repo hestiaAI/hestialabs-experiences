@@ -1,15 +1,25 @@
 <template>
   <div>
     <h2 class="my-3">SPARQL</h2>
-    <div class="d-flex flex-column flex-sm-row align-start">
-      <slot name="selector" :change="v => (sparql = v)" class="ma-sm-2" />
+    <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
+      <slot
+        name="selector"
+        :change="v => (sparql = v)"
+        classAttr="my-sm-2 mr-sm-2 mb-2"
+      />
       <base-button
         v-bind="{ progress, status, error, disabled }"
         text="Run Query"
+        icon="mdiStepForward"
         class="ma-sm-2"
         @click="runQuery"
       />
-      <base-download-button extension="rq" :data="sparql" class="ma-sm-2" />
+      <base-download-button
+        extension="rq"
+        :data="sparql"
+        class="ma-sm-2"
+        :disabled="!sparql"
+      />
     </div>
     <code-editor
       :value.sync="sparql"

@@ -14,34 +14,24 @@
 
     <div class="io-block">
       <div class="mr-lg-6">
-        <h2 class="mb-2">Files</h2>
+        <h2 class="my-3">Files</h2>
         <slot name="unit-files" :update="onUnitFilesUpdate" />
       </div>
-      <unit-rdf
-        v-bind="{ rml, inputFiles }"
-        class="mr-lg-6"
-        @update="onUnitRdfUpdate"
-      />
+      <unit-rdf v-bind="{ rml, inputFiles }" @update="onUnitRdfUpdate" />
     </div>
     <v-expand-transition>
-      <div v-show="toRDF" class="io-block" transition="expand-transition">
+      <div v-show="toRDF" class="io-block">
         <unit-sparql :rdf="rdf" class="mr-lg-6" @update="onUnitSparqlUpdate">
-          <template #selector="{ change }">
+          <template #selector="{ change, classAttr }">
             <sparql-selector
               :items="selectedExample.sparql"
               :disabled="!selectedExample.sparql.length"
+              :class="classAttr"
               @change="change"
             />
           </template>
         </unit-sparql>
-        <div class="mr-lg-6">
-          <h2 class="my-3">Query Results</h2>
-          <the-query-results-data-table
-            v-bind="{ headers, items }"
-            :hide-default-footer="!headers.length"
-            :loading="false"
-          />
-        </div>
+        <unit-query-results v-bind="{ headers, items }" />
       </div>
     </v-expand-transition>
 
@@ -71,7 +61,6 @@
 
 <script>
 /* eslint-disable vue/require-default-prop */
-
 export default {
   props: {
     examples: Array

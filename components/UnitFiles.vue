@@ -1,24 +1,43 @@
 <template>
   <div>
+    <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
+      <base-button
+        v-bind="{ disabled, progress, status, error }"
+        text="Process files"
+        icon="mdiStepForward"
+        class="my-sm-2 mr-sm-2"
+        @click="processFiles"
+      />
+      <base-button
+        :disabled="!cachedResult"
+        text="Use cached"
+        icon="mdiDatabase"
+        class="ma-sm-2"
+        @click="useCached"
+      />
+      <base-button
+        :disabled="!cachedResult"
+        text="Clear cache"
+        icon="mdiDatabaseRemove"
+        class="ma-sm-2"
+        @click="clearCache"
+      />
+    </div>
+
     <lazy-the-files-combobox
       v-if="isPlayground"
+      class="mb-4"
       @update="filesToExtract = $event"
     />
+
     <lazy-the-sample-selector
       v-if="samples.length"
       :value.sync="selectedSamples"
       :items="samples"
-      class="mb-6 mt-4"
+      class="my-sm-2 mr-sm-2 mb-2"
     />
 
-    <div class="caption mb-2">{{ extensionsMessage }}</div>
-
-    <base-button
-      v-bind="{ disabled, progress, status, error }"
-      text="Process files"
-      class="mt-4"
-      @click="processFiles"
-    />
+    <div class="caption my-2">{{ extensionsMessage }}</div>
 
     <div ref="dashboard" />
 
@@ -93,15 +112,19 @@ export default {
       error: false,
       progress: false,
       filesToExtract: this.files,
-      messagePowerUser: ''
+      messagePowerUser: '',
+      cachedResult: null
     }
   },
   computed: {
+    key() {
+      return this.$route.params.key
+    },
     isSingleFileExperience() {
       return !this.filesToExtract.length && !this.multiple
     },
     isPlayground() {
-      return this.$route.params.key === 'playground'
+      return this.key === 'playground'
     },
     extensionsMessage() {
       const exts = this.extensions.join(', ')
@@ -132,13 +155,20 @@ export default {
           ns => !oldSamples.find(os => os.key === ns.key)
         )
         const files = await Promise.all(addedSamples.map(fetchSampleFile))
-        files.forEach(file =>
-          this.uppy.addFile({
-            name: file.name,
-            type: file.type,
-            data: file
-          })
-        )
+        files.forEach(file => {
+          try {
+            this.uppy.addFile({
+              name: file.name,
+              type: file.type,
+              data: file
+            })
+          } catch (error) {
+            // addFile gives an error if the file cannot be added
+            // -> most likely restrictions checks failed
+            this.selectedSamples = oldSamples
+            this.uppy.info(error.message)
+          }
+        })
       } else {
         // some sample was removed
         const removedSamples = oldSamples.filter(
@@ -155,7 +185,7 @@ export default {
       }
     }
   },
-  mounted() {
+  async mounted() {
     this.uppy
       .use(Dashboard, {
         target: this.$refs.dashboard,
@@ -164,7 +194,7 @@ export default {
         hideUploadButton: true,
         proudlyDisplayPoweredByUppy: false,
         theme: 'light',
-        width: 600,
+        width: 550,
         height: 400
       })
       // allow dropping files anywhere on the page
@@ -191,6 +221,11 @@ export default {
 
         this.enableStatus = false
       })
+
+    this.cachedResult = await localforage.getItem(
+      localforage.keys.processFilesResult,
+      this.key
+    )
   },
   beforeDestroy() {
     this.uppy.close()
@@ -216,9 +251,9 @@ export default {
     getMessagePowerUser({
       inputFilesRocketRML: inputFiles,
       extractedFiles: xfiles,
-      filesProcessingTime: ms
+      filesProcessingTime: ms = 0
     }) {
-      if (!inputFiles) {
+      if (!this.$store.state.power || !inputFiles) {
         return ''
       }
 
@@ -265,13 +300,17 @@ export default {
             this.preprocessorFunc,
             this.isSingleFileExperience
           )
-          if (this.$store.state.power) {
-            this.messagePowerUser = this.getMessagePowerUser(result)
-          }
+          this.messagePowerUser = this.getMessagePowerUser(result)
+          // do not cache processing time
+          delete result.filesProcessingTime
           await localforage.setItem(
-            'inputFilesRocketRML',
-            result.inputFilesRocketRML,
-            this.$route.params.key
+            localforage.keys.processFilesResult,
+            result,
+            this.key
+          )
+          this.cachedResult = result
+          this.uppy.info(
+            'Your files were processed successfully and saved in your browser'
           )
           this.$emit('update', result)
         } catch (err) {
@@ -284,6 +323,21 @@ export default {
           this.status = true
           this.progress = false
         }
+      }
+    },
+    useCached() {
+      const { cachedResult } = this
+      this.messagePowerUser = this.getMessagePowerUser(cachedResult)
+      this.$emit('update', cachedResult)
+    },
+    async clearCache() {
+      try {
+        await localforage.clear(this.key)
+        this.uppy.info('Cache cleared successfully')
+        this.cachedResult = null
+      } catch (error) {
+        console.error(error)
+        this.uppy.info('Unable to clear cache. Some error occurred.')
       }
     }
   }

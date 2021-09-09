@@ -1,11 +1,15 @@
 <template>
   <div>
     <h2 class="my-3">RDF</h2>
-    <div class="d-flex flex-column flex-sm-row align-start">
-      <the-rdf-format-selector class="ma-sm-2" :value.sync="format" />
+    <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
+      <the-rdf-format-selector
+        class="my-sm-2 mr-sm-2 mb-2"
+        :value.sync="format"
+      />
       <base-button
         v-bind="{ progress, status, error, disabled }"
         text="Generate RDF"
+        icon="mdiStepForward"
         class="ma-sm-2"
         @click="generateRDF"
       />

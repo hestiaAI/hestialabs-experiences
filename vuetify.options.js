@@ -3,9 +3,12 @@ import {
   mdiAlert,
   mdiCheckCircle,
   mdiClose,
+  mdiDatabase,
+  mdiDatabaseRemove,
   mdiDownload,
   mdiHome,
-  mdiShareVariant
+  mdiShareVariant,
+  mdiStepForward
 } from '@mdi/js'
 
 export default {
@@ -15,9 +18,12 @@ export default {
       mdiAlert,
       mdiCheckCircle,
       mdiClose,
+      mdiDatabase,
+      mdiDatabaseRemove,
       mdiDownload,
       mdiHome,
-      mdiShareVariant
+      mdiShareVariant,
+      mdiStepForward
     }
   },
   theme: {
