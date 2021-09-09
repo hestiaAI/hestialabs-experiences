@@ -2,6 +2,7 @@
   <div>
     <h2 class="my-3">Share Data</h2>
     <div class="d-flex flex-column flex-sm-row align-start">
+      <slot name="selector" :change="v => (sparql = v)" class="ma-sm-2" />
       <base-button
         v-bind="{ progress, status, error, disabled }"
         text="Generate RDF"
@@ -38,7 +39,7 @@ export default {
   },
   data() {
     return {
-      sparql: 'CONSTRUCT WHERE { ?s ?p ?o }',
+      sparql: '',
       status: false,
       error: false,
       progress: false,
@@ -47,7 +48,7 @@ export default {
   },
   computed: {
     disabled() {
-      return !this.rdfInput || this.progress
+      return !this.rdfInput || !this.sparql || this.progress
     }
   },
   methods: {

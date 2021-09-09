@@ -27,7 +27,7 @@
       <div v-show="toRDF" class="io-block" transition="expand-transition">
         <unit-sparql :rdf="rdf" class="mr-lg-6" @update="onUnitSparqlUpdate">
           <template #selector="{ change }">
-            <the-sparql-selector
+            <sparql-selector
               :items="selectedExample.sparql"
               :disabled="!selectedExample.sparql.length"
               @change="change"
@@ -46,7 +46,15 @@
     </v-expand-transition>
 
     <div class="io-block">
-      <unit-share-data :rdf-input="rdf" />
+      <unit-share-data :rdf-input="rdf">
+        <template #selector="{ change }">
+          <sparql-selector
+            :items="selectedExample.sharing"
+            :disabled="!selectedExample.sharing.length"
+            @change="change"
+          />
+        </template>
+      </unit-share-data>
     </div>
 
     <block-public-data :rdf-local="rdf" />
