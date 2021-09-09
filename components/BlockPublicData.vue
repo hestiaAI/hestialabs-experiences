@@ -3,13 +3,13 @@
     <div>
       <h2 class="my-3">Get Public Data</h2>
       <div class="d-flex flex-column flex-sm-row align-start">
-        <slot name="selector" :change="v => (comparator = v)" class="ma-sm-2" />
         <base-button
           :progress="progress[0]"
           :status="status[0]"
           :error="error[0]"
           :disabled="disabledGet"
           text="Get RDF"
+          icon="mdiStepForward"
           class="ma-sm-2"
           @click="retrieveData"
         />
@@ -19,6 +19,7 @@
           :error="error[1]"
           :disabled="disabledCompare"
           text="Compare"
+          icon="mdiStepForward"
           class="ma-sm-2"
           @click="compareData"
         />
@@ -28,6 +29,9 @@
           :disabled="!rdfPublic"
           class="ma-sm-2"
         />
+      </div>
+      <div class="d-flex flex-column flex-sm-row align-start">
+        <slot name="selector" :change="v => (comparator = v)" class="ma-sm-3" />
       </div>
     </div>
     <div>
