@@ -53,8 +53,14 @@ const manifests = Object.fromEntries(
       files = [],
       multiple = false,
       data: dataFiles = [],
-      preprocessor
+      preprocessor,
+      collaborator,
+      ...rest
     } = reqJSON(path)
+
+    if (typeof collaborator === 'object' && collaborator.icon) {
+      collaborator.icon = require(`@/manifests/icons/${collaborator.icon}`)
+    }
 
     let data = dataSamples.filter(({ filename }) =>
       dataFiles.includes(filename)
@@ -101,6 +107,8 @@ const manifests = Object.fromEntries(
         multiple,
         data,
         preprocessor,
+        collaborator,
+        ...rest,
         examples: []
       }
     ]
