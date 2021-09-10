@@ -4,9 +4,9 @@
       <h2 class="my-3">Get Public Data</h2>
       <div class="d-flex flex-column flex-sm-row align-start">
         <base-button
-          :progress="progress[0]"
-          :status="status[0]"
-          :error="error[0]"
+          :progress="progressGet"
+          :status="statusGet"
+          :error="errorGet"
           :disabled="disabledGet"
           text="Get RDF"
           icon="mdiStepForward"
@@ -14,9 +14,9 @@
           @click="retrieveData"
         />
         <base-button
-          :progress="progress[1]"
-          :status="status[1]"
-          :error="error[1]"
+          :progress="progressCompare"
+          :status="statusCompare"
+          :error="errorCompare"
           :disabled="disabledCompare"
           text="Compare"
           icon="mdiStepForward"
@@ -54,9 +54,12 @@ export default {
   },
   data() {
     return {
-      progress: [false, false],
-      status: [false, false],
-      error: [false, false],
+      progressGet: false,
+      statusGet: false,
+      errorGet: false,
+      progressCompare: false,
+      statusCompare: false,
+      errorCompare: false,
       headers: [],
       items: [],
       rdfPublic: '',
@@ -65,7 +68,7 @@ export default {
   },
   computed: {
     disabledCompare() {
-      return !this.rdfPublic || !this.rdfLocal
+      return !this.rdfPublic || !this.rdfLocal || this.progressGet
     },
     disabledGet() {
       return !this.comparator
@@ -73,24 +76,20 @@ export default {
   },
   methods: {
     async retrieveData() {
-      const i = 0
-      this.status[i] = false
-      this.error[i] = false
-      this.progress[i] = true
+      this.progressGet = true
+      this.errorGet = false
       try {
         this.rdfPublic = await queryEndpoint()
       } catch (error) {
         console.error(error)
-        this.error[i] = true
+        this.errorGet = true
       }
-      this.progress[i] = false
-      this.status[i] = true
+      this.statusGet = true
+      this.progressGet = false
     },
     async compareData() {
-      const i = 1
-      this.status[i] = false
-      this.error[i] = false
-      this.progress[i] = true
+      this.progressCompare = true
+      this.errorCompare = false
       try {
         const [headers, items] = await comparators[this.comparator](
           this.rdfLocal,
@@ -100,10 +99,10 @@ export default {
         this.items = items
       } catch (error) {
         console.error(error)
-        this.error[i] = true
+        this.errorCompare = true
       }
-      this.progress[i] = false
-      this.status[i] = true
+      this.statusCompare = true
+      this.progressCompare = false
     }
   }
 }

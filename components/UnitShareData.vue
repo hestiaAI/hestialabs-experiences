@@ -3,9 +3,9 @@
     <h2 class="my-3">Share Data</h2>
     <div class="d-flex flex-column flex-sm-row align-start">
       <base-button
-        :progress="progress[0]"
-        :status="status[0]"
-        :error="error[0]"
+        :progress="progressGenerate"
+        :status="statusGenerate"
+        :error="errorGenerate"
         :disabled="disabledGenerate"
         text="Generate RDF"
         icon="mdiStepForward"
@@ -13,9 +13,9 @@
         @click="constructRDF"
       />
       <base-button
-        :progress="progress[1]"
-        :status="status[1]"
-        :error="error[1]"
+        :progress="progressShare"
+        :status="statusShare"
+        :error="errorShare"
         :disabled="disabledShare"
         text="Share"
         icon="mdiShareVariant"
@@ -56,48 +56,47 @@ export default {
   data() {
     return {
       sparql: '',
-      progress: [false, false],
-      status: [false, false],
-      error: [false, false],
+      progressGenerate: false,
+      statusGenerate: false,
+      errorGenerate: false,
+      progressShare: false,
+      statusShare: false,
+      errorShare: false,
       rdfOutput: ''
     }
   },
   computed: {
     disabledGenerate() {
-      const i = 0
-      return !this.rdfInput || !this.sparql || this.progress[i]
+      return !this.rdfInput || !this.sparql || this.progressGenerate
     },
     disabledShare() {
-      const i = 1
-      return !this.rdfOutput || this.progress[i]
+      return !this.rdfOutput || this.progressShare
     }
   },
   methods: {
     async constructRDF() {
-      const i = 0
-      this.error[i] = false
-      this.progress[i] = true
+      this.errorGenerate = false
+      this.progressGenerate = true
       try {
         this.rdfOutput = await construct(this.rdfInput, this.sparql)
       } catch (error) {
         console.error(error)
-        this.error[i] = true
+        this.errorGenerate = true
       }
-      this.status[i] = true
-      this.progress[i] = false
+      this.statusGenerate = true
+      this.progressGenerate = false
     },
     async share() {
-      const i = 1
-      this.error[i] = false
-      this.progress[i] = true
+      this.errorShare = false
+      this.progressShare = true
       try {
         await updateEndpoint(this.rdfOutput)
       } catch (error) {
         console.error(error)
-        this.error[i] = true
+        this.errorShare = true
       }
-      this.status[i] = true
-      this.progress[i] = false
+      this.statusShare = true
+      this.progressShare = false
     }
   }
 }
