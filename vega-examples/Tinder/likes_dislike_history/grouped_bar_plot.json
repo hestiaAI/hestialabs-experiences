@@ -17,20 +17,7 @@
   "data": [
     {
       "name": "table",
-      "values": [
-        {"date":"01-01-2021", "like":5, "dislike":10},
-        {"date":"02-01-2021", "like":7, "dislike":13},
-        {"date":"03-01-2021", "like":3, "dislike":7},
-        {"date":"04-01-2021", "like":15, "dislike":20},
-        {"date":"05-01-2021", "like":6, "dislike":7},
-        {"date":"06-01-2021", "like":8, "dislike":3},
-        {"date":"07-01-2021", "like":15, "dislike":10},
-        {"date":"08-01-2021", "like":20, "dislike":2},
-        {"date":"09-01-2021", "like":10, "dislike":11},
-        {"date":"10-01-2021", "like":11, "dislike":16},
-        {"date":"11-01-2021", "like":13, "dislike":10},
-        {"date":"12-01-2021", "like":8, "dislike":2}
-      ],
+      "url": "data.json",
       "format": {"type": "json", "parse": {"date": "date:'%d-%m-%Y'"}},
       "transform": [
         {
@@ -66,7 +53,7 @@
       "name": "color",
       "type": "ordinal",
       "range": ["#66cc99", "#d24d57"],
-      "domain": ["Likes", "Dislike"]
+      "domain": ["Likes", "Dislikes"]
     }
   ],
   "legends": [
@@ -110,7 +97,7 @@
           "width": {"scale": "x", "band": 1, "offset": 10},
           "y": {"scale": "y", "field": "dislike"},
           "y2": {"scale": "y", "value": 0},
-          "fill": {"scale": "color", "value":"Dislike"},
+          "fill": {"scale": "color", "value":"Dislikes"},
           "tooltip": {
             "signal": "datum.dislike + ' dislikes on ' + datum.dateStr"
           }
