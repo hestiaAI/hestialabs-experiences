@@ -1,0 +1,1465 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Donut chart representing the top 10 advertisers",
+  "width": 600,
+  "height": 600,
+  "autosize": "fit",
+  "data": [
+    {
+      "name": "table",
+      "values": [
+        {
+          "companyName": "Crypto.com",
+          "count": 182,
+          "total": 2209,
+          "rank": 1,
+          "startAngle": 4.848380130383245,
+          "endAngle": 6.283185307179588
+        },
+        {
+          "companyName": "Apple",
+          "count": 156,
+          "total": 2209,
+          "rank": 2,
+          "startAngle": 3.618547121700666,
+          "endAngle": 4.848380130383245
+        },
+        {
+          "companyName": "Confluent",
+          "count": 96,
+          "total": 2209,
+          "rank": 3,
+          "startAngle": 2.8617268086652325,
+          "endAngle": 3.618547121700666
+        },
+        {
+          "companyName": "Producteurs Suisses de Lait | PSL | Swissmilk",
+          "count": 79,
+          "total": 2209,
+          "rank": 4,
+          "startAngle": 2.2389267593964903,
+          "endAngle": 2.8617268086652325
+        },
+        {
+          "companyName": "UBS Schweiz",
+          "count": 74,
+          "total": 2209,
+          "rank": 5,
+          "startAngle": 1.6555444347650106,
+          "endAngle": 2.2389267593964903
+        },
+        {
+          "companyName": "Swisscom Business",
+          "count": 57,
+          "total": 2209,
+          "rank": 6,
+          "startAngle": 1.206182373900222,
+          "endAngle": 1.6555444347650106
+        },
+        {
+          "companyName": "PostFinance",
+          "count": 56,
+          "total": 2209,
+          "rank": 7,
+          "startAngle": 0.7647038579628858,
+          "endAngle": 1.206182373900222
+        },
+        {
+          "companyName": "Siemens Schweiz",
+          "count": 53,
+          "total": 2209,
+          "rank": 8,
+          "startAngle": 0.34687597680790694,
+          "endAngle": 0.7647038579628858
+        },
+        {
+          "companyName": "Swissquote",
+          "count": 44,
+          "total": 2209,
+          "rank": 9,
+          "startAngle": 0,
+          "endAngle": 0.34687597680790694
+        },
+        {"companyName": "Logitech", "count": 39, "total": 2209, "rank": 10},
+        {"companyName": "digitec", "count": 37, "total": 2209, "rank": 11},
+        {"companyName": "Taste France", "count": 34, "total": 2209, "rank": 12},
+        {
+          "companyName": "Rockstar Games",
+          "count": 28,
+          "total": 2209,
+          "rank": 13
+        },
+        {"companyName": "MastercardCH", "count": 27, "total": 2209, "rank": 14},
+        {"companyName": "HUG", "count": 26, "total": 2209, "rank": 15},
+        {"companyName": "Glencore", "count": 22, "total": 2209, "rank": 16},
+        {"companyName": "Axpo", "count": 22, "total": 2209, "rank": 16},
+        {"companyName": "Iberia_fr", "count": 19, "total": 2209, "rank": 18},
+        {"companyName": "IBM Cloud", "count": 19, "total": 2209, "rank": 18},
+        {"companyName": "Reface", "count": 18, "total": 2209, "rank": 20},
+        {"companyName": "Bank CIC", "count": 17, "total": 2209, "rank": 21},
+        {"companyName": "UPC Schweiz", "count": 17, "total": 2209, "rank": 21},
+        {"companyName": "Too Cool", "count": 17, "total": 2209, "rank": 21},
+        {"companyName": "Buildkite", "count": 17, "total": 2209, "rank": 21},
+        {"companyName": "Nx", "count": 17, "total": 2209, "rank": 21},
+        {"companyName": "houzy", "count": 16, "total": 2209, "rank": 26},
+        {
+          "companyName": "Schweizer Milchproduzenten | SMP | Swissmilk",
+          "count": 16,
+          "total": 2209,
+          "rank": 26
+        },
+        {"companyName": "Bitstamp", "count": 16, "total": 2209, "rank": 26},
+        {
+          "companyName": "Groupe Mutuel",
+          "count": 15,
+          "total": 2209,
+          "rank": 29
+        },
+        {"companyName": "Swisscom", "count": 15, "total": 2209, "rank": 29},
+        {
+          "companyName": "CODE41 Watches",
+          "count": 14,
+          "total": 2209,
+          "rank": 31
+        },
+        {"companyName": "Iberia", "count": 14, "total": 2209, "rank": 31},
+        {"companyName": "NordVPN", "count": 13, "total": 2209, "rank": 33},
+        {"companyName": "idexo ⛺⛰️", "count": 12, "total": 2209, "rank": 34},
+        {
+          "companyName": "UoL Online Degrees with LSE",
+          "count": 12,
+          "total": 2209,
+          "rank": 34
+        },
+        {"companyName": "Yuh", "count": 12, "total": 2209, "rank": 34},
+        {"companyName": "Valuu", "count": 12, "total": 2209, "rank": 34},
+        {"companyName": "OnMyMind", "count": 11, "total": 2209, "rank": 38},
+        {
+          "companyName": "Pluralsight ☁️",
+          "count": 11,
+          "total": 2209,
+          "rank": 38
+        },
+        {
+          "companyName": "scienceindustries",
+          "count": 11,
+          "total": 2209,
+          "rank": 38
+        },
+        {
+          "companyName": "Aberdeen Standard Investments CH",
+          "count": 11,
+          "total": 2209,
+          "rank": 38
+        },
+        {"companyName": "SofaScore", "count": 11, "total": 2209, "rank": 38},
+        {"companyName": "Siemens", "count": 11, "total": 2209, "rank": 38},
+        {
+          "companyName": "Insight Prediction",
+          "count": 11,
+          "total": 2209,
+          "rank": 38
+        },
+        {
+          "companyName": "Universal Pictures",
+          "count": 10,
+          "total": 2209,
+          "rank": 45
+        },
+        {"companyName": "The Reboot", "count": 10, "total": 2209, "rank": 45},
+        {
+          "companyName": "Volkswagen Schweiz",
+          "count": 10,
+          "total": 2209,
+          "rank": 45
+        },
+        {
+          "companyName": "patagoniaeurope",
+          "count": 10,
+          "total": 2209,
+          "rank": 45
+        },
+        {"companyName": "eToro DE", "count": 10, "total": 2209, "rank": 45},
+        {"companyName": "SHEIN", "count": 9, "total": 2209, "rank": 50},
+        {"companyName": "Huawei", "count": 9, "total": 2209, "rank": 50},
+        {
+          "companyName": "SIX Digital Exchange",
+          "count": 9,
+          "total": 2209,
+          "rank": 50
+        },
+        {
+          "companyName": "Microsoft Research",
+          "count": 9,
+          "total": 2209,
+          "rank": 50
+        },
+        {
+          "companyName": "Rage of Destiny",
+          "count": 9,
+          "total": 2209,
+          "rank": 50
+        },
+        {"companyName": "SplunkDE", "count": 9, "total": 2209, "rank": 50},
+        {"companyName": "Lombard Odier", "count": 8, "total": 2209, "rank": 56},
+        {"companyName": "Destiny", "count": 8, "total": 2209, "rank": 56},
+        {"companyName": "PETRONAS", "count": 8, "total": 2209, "rank": 56},
+        {"companyName": "Bucherer 1888", "count": 8, "total": 2209, "rank": 56},
+        {"companyName": "Geek Universe", "count": 8, "total": 2209, "rank": 56},
+        {
+          "companyName": "Flow Cloud Platform",
+          "count": 8,
+          "total": 2209,
+          "rank": 56
+        },
+        {"companyName": "ParentsDome", "count": 8, "total": 2209, "rank": 56},
+        {"companyName": "Snyk", "count": 7, "total": 2209, "rank": 63},
+        {"companyName": "PlayStationDE", "count": 7, "total": 2209, "rank": 63},
+        {"companyName": "getir France", "count": 7, "total": 2209, "rank": 63},
+        {"companyName": "Thinktecture", "count": 7, "total": 2209, "rank": 63},
+        {
+          "companyName": "Digitec Galaxus Advertising Platform",
+          "count": 7,
+          "total": 2209,
+          "rank": 63
+        },
+        {
+          "companyName": "Pew Environment",
+          "count": 7,
+          "total": 2209,
+          "rank": 63
+        },
+        {
+          "companyName": "PlayStation Europe",
+          "count": 7,
+          "total": 2209,
+          "rank": 63
+        },
+        {"companyName": "Illumeably", "count": 7, "total": 2209, "rank": 63},
+        {"companyName": "SGKB News", "count": 7, "total": 2209, "rank": 63},
+        {"companyName": "Gamesload", "count": 7, "total": 2209, "rank": 63},
+        {
+          "companyName": "traderepublicFR",
+          "count": 6,
+          "total": 2209,
+          "rank": 73
+        },
+        {
+          "companyName": "Raytheon Missiles & Defense",
+          "count": 6,
+          "total": 2209,
+          "rank": 73
+        },
+        {
+          "companyName": "Touring Club Suisse",
+          "count": 6,
+          "total": 2209,
+          "rank": 73
+        },
+        {"companyName": "Europeana", "count": 6, "total": 2209, "rank": 73},
+        {"companyName": "Infomaniak", "count": 6, "total": 2209, "rank": 73},
+        {
+          "companyName": "Victorinox DACH",
+          "count": 6,
+          "total": 2209,
+          "rank": 73
+        },
+        {"companyName": "Hasan", "count": 6, "total": 2209, "rank": 73},
+        {
+          "companyName": "Travelerdoor Trending",
+          "count": 5,
+          "total": 2209,
+          "rank": 80
+        },
+        {"companyName": "Story Journal", "count": 5, "total": 2209, "rank": 80},
+        {"companyName": "SpiderFoot", "count": 5, "total": 2209, "rank": 80},
+        {"companyName": "Cohesity", "count": 5, "total": 2209, "rank": 80},
+        {"companyName": "Blick | fr", "count": 5, "total": 2209, "rank": 80},
+        {"companyName": "CyCognito", "count": 4, "total": 2209, "rank": 85},
+        {
+          "companyName": "Swisscom Gaming",
+          "count": 4,
+          "total": 2209,
+          "rank": 85
+        },
+        {"companyName": "Ravity Store", "count": 4, "total": 2209, "rank": 85},
+        {"companyName": "Nintendo DE", "count": 4, "total": 2209, "rank": 85},
+        {"companyName": "@Constative", "count": 4, "total": 2209, "rank": 85},
+        {"companyName": "Better Uptime", "count": 4, "total": 2209, "rank": 85},
+        {"companyName": "Credit Suisse", "count": 4, "total": 2209, "rank": 85},
+        {"companyName": "Toonami", "count": 4, "total": 2209, "rank": 85},
+        {"companyName": "Mikeln Shop", "count": 4, "total": 2209, "rank": 85},
+        {
+          "companyName": "Genesys Deutschland",
+          "count": 4,
+          "total": 2209,
+          "rank": 85
+        },
+        {"companyName": "Salesforce", "count": 4, "total": 2209, "rank": 85},
+        {"companyName": "Saidler & Co.", "count": 4, "total": 2209, "rank": 85},
+        {"companyName": "Tc Mart", "count": 4, "total": 2209, "rank": 85},
+        {"companyName": "FlowBank", "count": 4, "total": 2209, "rank": 85},
+        {"companyName": "Powertage", "count": 4, "total": 2209, "rank": 85},
+        {"companyName": "Pressl Store", "count": 4, "total": 2209, "rank": 85},
+        {"companyName": "Infosys", "count": 4, "total": 2209, "rank": 85},
+        {
+          "companyName": "Erfrischungsgetränke",
+          "count": 4,
+          "total": 2209,
+          "rank": 85
+        },
+        {"companyName": "SIX", "count": 4, "total": 2209, "rank": 85},
+        {
+          "companyName": "Roza & George Radio",
+          "count": 4,
+          "total": 2209,
+          "rank": 85
+        },
+        {
+          "companyName": "Merck Healthcare",
+          "count": 4,
+          "total": 2209,
+          "rank": 85
+        },
+        {
+          "companyName": "Dominic Williams ∞",
+          "count": 3,
+          "total": 2209,
+          "rank": 106
+        },
+        {"companyName": "Intezer", "count": 3, "total": 2209, "rank": 106},
+        {"companyName": "Getize", "count": 3, "total": 2209, "rank": 106},
+        {
+          "companyName": "Rainbow Six: Extraction Deutschland",
+          "count": 3,
+          "total": 2209,
+          "rank": 106
+        },
+        {"companyName": "Processica", "count": 3, "total": 2209, "rank": 106},
+        {"companyName": "CUPRA", "count": 3, "total": 2209, "rank": 106},
+        {"companyName": "Ready!", "count": 3, "total": 2209, "rank": 106},
+        {
+          "companyName": "Tier One Silver",
+          "count": 3,
+          "total": 2209,
+          "rank": 106
+        },
+        {
+          "companyName": "400gChallengeFR",
+          "count": 3,
+          "total": 2209,
+          "rank": 106
+        },
+        {
+          "companyName": "Proskauer Rose LLP",
+          "count": 3,
+          "total": 2209,
+          "rank": 106
+        },
+        {
+          "companyName": "Gates Foundation",
+          "count": 3,
+          "total": 2209,
+          "rank": 106
+        },
+        {"companyName": "bridgecrew", "count": 3, "total": 2209, "rank": 106},
+        {"companyName": "Infortix", "count": 3, "total": 2209, "rank": 106},
+        {"companyName": "Photomyne", "count": 3, "total": 2209, "rank": 106},
+        {"companyName": "Coinscrum", "count": 3, "total": 2209, "rank": 106},
+        {
+          "companyName": "Microsoft Schweiz",
+          "count": 3,
+          "total": 2209,
+          "rank": 106
+        },
+        {"companyName": "Buzzerilla", "count": 3, "total": 2209, "rank": 106},
+        {
+          "companyName": "Siemens Mobility",
+          "count": 3,
+          "total": 2209,
+          "rank": 106
+        },
+        {
+          "companyName": "Cassini Initiative",
+          "count": 3,
+          "total": 2209,
+          "rank": 106
+        },
+        {"companyName": "ICRC", "count": 3, "total": 2209, "rank": 106},
+        {"companyName": "Slidebean", "count": 3, "total": 2209, "rank": 106},
+        {"companyName": "Sellab", "count": 3, "total": 2209, "rank": 106},
+        {
+          "companyName": "@myhealthgazette",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "IBM", "count": 2, "total": 2209, "rank": 128},
+        {"companyName": "Sunrise_fr", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "Voxbone, now part of Bandwidth.",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "GELI", "count": 2, "total": 2209, "rank": 128},
+        {"companyName": "FedEx Europe", "count": 2, "total": 2209, "rank": 128},
+        {"companyName": "Hooded Horse", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "Feel Slovenia",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "New Relic", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "The Canary Islands",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "FER Genève", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "Fallout Deutschland",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "DuckDuckGo", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "NobleSolicitors",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Wallaby.js and Quokka.js",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "The Home & Body Shop",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "FT Partner Content",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Abilis - Your Health Platform",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Touhou LostWord",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Berlin Convention Office",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Tableau Software",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Innovation Atelier Ltd",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Deep Instinct",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "Cytiva", "count": 2, "total": 2209, "rank": 128},
+        {"companyName": "Elastic", "count": 2, "total": 2209, "rank": 128},
+        {"companyName": "IFPMA", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "Intuit QuickBooks",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "EKZ", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "TV-Herrin Chantal. Für Sklaven ab 21 Jahren.",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "Exasol", "count": 2, "total": 2209, "rank": 128},
+        {"companyName": "Iztore Shop", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "Christophe L.",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Cisco Data Center and Cloud",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "CoinGeek", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "Carlos Creus Moreira",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Renault Group",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Caisse des Dépôts",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "elopage", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "ewz - mehr als Strom",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "Rapid7", "count": 2, "total": 2209, "rank": 128},
+        {"companyName": "CAST AI", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "Sanofi Genzyme France",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Solace Developers",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Le Tour de Franz",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "Matrox Video", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "Lumina Foundation",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Mercedes-Benz",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "CME Group", "count": 2, "total": 2209, "rank": 128},
+        {"companyName": "Mobius Labs", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "EClinicalMedicine – Published by The Lancet",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Shadow And Bone",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "Proximie", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "CIEB Universität Basel",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "SAINT LAURENT",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Raiffeisen CH",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Renault France",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "EUSport", "count": 2, "total": 2209, "rank": 128},
+        {"companyName": "SEBA Bank AG", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "ALL - Accor Live Limitless",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "Zilliqa", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "Adobe Experience Cloud DE",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Springer Nature",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "foreseeti", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "All in your head.",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "PGIM", "count": 2, "total": 2209, "rank": 128},
+        {"companyName": "NeuraLegion", "count": 2, "total": 2209, "rank": 128},
+        {"companyName": "sommfinance", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "Advanced Security Training",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Peter Zaitsev",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {
+          "companyName": "Pets Reporter",
+          "count": 2,
+          "total": 2209,
+          "rank": 128
+        },
+        {"companyName": "Adobe Summit", "count": 2, "total": 2209, "rank": 128},
+        {"companyName": "Pokémon GO", "count": 2, "total": 2209, "rank": 128},
+        {"companyName": "SABIC Europe", "count": 2, "total": 2209, "rank": 128},
+        {
+          "companyName": "Braven Environmental",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Calm Cado - 🎶 Relaxing Music & Sounds 💤",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Flare Audio", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "CDI Laboratories",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Origins Insights",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "GS 10,000 Women",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Galaxus", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Bybit", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Mutualité Française",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "CANAL+", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "NerveNetwork", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "24/7Mirror", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Nordace", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "NEOMA Business School",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "NIO Deutschland",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Nature Communications",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Nature Portfolio",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Nature World Today",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Nestlé Switzerland",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "OVHcloud France",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Oney Group", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Bryan Finnerty",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "OperaNews", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Adobe Document Cloud",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Brainstorming.com",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Blue Origin", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Aiven", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Bpifrance", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "AIKON", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "AJC Berlin", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Abbey Lunney", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Academic Society",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Board International",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Adonal Foyle", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Oxford Politics",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Amazon Prime Video France",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "AmazonNewsFR", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Amnesty Schweiz",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Amnesty Suisse",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Antulang Beach",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "ArGo", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Arrow.com", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Cdiscount Corporate",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Astellas Europe",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "BANDAI NAMCO DE",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "BBA", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Bethesda Deutschland",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Opera News - US",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Medici & Sprecher AG",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "GameTurnier.gg",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Julius Baer", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "MSD", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "LUSTAT Statistik Luzern",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Hostpoint", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Huawei Mobile France",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "I'm an Alligator",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "ICON Plc", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "IMP", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "James Napoli, MD, MMM, CPE",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Joe Orr", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "MasterworksIO",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Kasten", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "H&M", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Latifa Ibn Ziaten",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "P&G Deutschland",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "LeMondeInformatique",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Libby Rodney", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Lingoda", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Liti Capital", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Little Nightmares II",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Lucara Diamond Corp",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Luis Berruga", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "MROpen EVO", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Med by Cell Press",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Marc", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Heppie Shopping",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "GroupDocs", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Holcim", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Heinrich-Böll-Stiftung",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "HackEDU", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "PGA TOUR", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "PIXLIP Gaming",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "PLinLuxembourg",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Parent Influence",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Percona Community",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Petro-Logistics",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Pfizer Inc.", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Phrase", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "PictureThis", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Pint of Science CH",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Powder Coatings by AkzoNobel",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Prusa3D by Josef Prusa",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Paul Donovan", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Maxon", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Ari Rudd", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "JetBrains", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Go Mojo", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Graubünden", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "ABB", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Comcast Business",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Citrix Virtual Apps & Desktops",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Signal Sciences",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "WSJ Custom Content",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "SBLY", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Uber", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "actnano", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Siemens Industry",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Zach Hubeck", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Sigmaways", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "SPIE", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "SiteGround", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Stillwater", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Smart Energy Portal",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Snapmaker", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "World Stroke Org",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Wipro", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Social Links", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Woodi Watches",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "SonarCloud", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "SonarQube", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "SonarSource", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Studie Einflussfaktoren auf Finanzentscheidungen",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "beqom", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "TRT Deutsch", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "dot.LA", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "The Washington Post",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Thomas Gadient",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "TheFunPost", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "TechCrunch", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "S IMMO", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Taiwan in Geneva",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Roving Naija", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "scalac.io", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Transporeon", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Rollbar", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Steph Cruchon",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Travala.com", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "valantic Digital Strategy & Analytics",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Roland", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Robeco Asset Management",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Ringtail Security",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "The Cura Foundation",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "strategy+business",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "UBS Formula 1",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "The Elders", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "تلفزيون سوريا",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Torq Resources - $TORQ $TRBMF",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "The Serenity Fund",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "euronews", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Erik Meers", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Financial Times",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Springer Medicine",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Craig Brabec", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Code Intelligence",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "DailyBee", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Container Solutions",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Conholdate", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "CompuGroup Medical SE & Co. KGaA",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Derek Oberholtzer",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "DevSecCon", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Disneyland Paris",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Doctrine", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Dot Dot Stand",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Drew Clancy", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "EQONEX", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "ElderScrollsOnlineDE",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Elsevier Physics",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Erich Heneke", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Digital EU 🇪🇺",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "ExxonMobil en France",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Fabrick", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "FactSet", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Fauna", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Pyroscope", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "David Gendre Guérisseur",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "cs_earena", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "David M. Wright",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Scott Syphax", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Daimler Mobility AG",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "colette nzinga",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "TCS Digital Transformation",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Verity Systems",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "chroma.space", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Vincenzo Naddeo | 納文 森",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "VisualChase", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Samsung Mobile",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Schneider Electric",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Science Animated",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {
+          "companyName": "Swiss Innovation Challenge #SIC",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Codacy", "count": 1, "total": 2209, "rank": 201},
+        {"companyName": "Work + Money", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": ".swiss | get the origin-approving internet address",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "RSF", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Dassault Systèmes",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "Deloitte", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Decrypted News",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "DebugBear", "count": 1, "total": 2209, "rank": 201},
+        {
+          "companyName": "Debbie Holton",
+          "count": 1,
+          "total": 2209,
+          "rank": 201
+        },
+        {"companyName": "💉 gimpft.ch", "count": 1, "total": 2209, "rank": 201}
+      ],
+      "transform": [
+        {
+          "type": "joinaggregate",
+          "fields": ["count"],
+          "ops": ["sum"],
+          "as": ["total"]
+        },
+        {"type": "extent", "field": "total", "signal": "extent"},
+        {
+          "type": "window",
+          "sort": {"field": "count", "order": "descending"},
+          "ops": ["rank"],
+          "fields": ["count"],
+          "as": ["rank"]
+        },
+        {"type": "filter", "expr": "datum.rank < 10"},
+        {"type": "pie", "field": "count", "sort": true}
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {"data": "table", "field": "companyName"},
+      "range": {"scheme": "category20"}
+    }
+  ],
+  "marks": [
+    {
+      "type": "arc",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "fill": {"scale": "color", "field": "companyName"},
+          "x": {"signal": "width / 2"},
+          "y": {"signal": "height / 2"},
+          "tooltip": {
+            "signal": "datum.companyName + ' ' + (datum.count ? ': targeted you ' + format(datum.count, ',.0f') + ' times' : '')"
+          }
+        },
+        "update": {
+          "startAngle": {"field": "startAngle"},
+          "endAngle": {"field": "endAngle"},
+          "padAngle": {"value": 0.02},
+          "innerRadius": {"signal": "width / 5"},
+          "outerRadius": {"signal": "width / 2.5"},
+          "cornerRadius": {"value": 7},
+          "opacity": {"value": 1},
+          "zindex": {"value": 0}
+        },
+        "hover": {"opacity": {"value": 0.6}, "zindex": {"value": 1}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {"signal": "width / 2"},
+          "y": {"signal": "height / 2"},
+          "fontSize": {"value": 54},
+          "fontWeight": {"value": "bold"},
+          "fill": {"value": "#2e3131"},
+          "align": {"value": "center"}
+        },
+        "update": {"text": {"signal": "extent[1]"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {"signal": "width / 2"},
+          "y": {"signal": "height / 1.8"},
+          "fontSize": {"value": 32},
+          "fontWeight": {"value": "bold"},
+          "fill": {"value": "#2e3131"},
+          "align": {"value": "center"}
+        },
+        "update": {"text": {"value": "ads"}}
+      }
+    }
+  ],
+  "title": {
+    "text": "Top 10 companies that target you with ads",
+    "encode": {
+      "title": {
+        "enter": {
+          "fill": {"value": "#2e3131"},
+          "fontSize": {"value": 22},
+          "fontWeight": {"value": "bold"}
+        }
+      }
+    }
+  },
+  "config": {}
+}

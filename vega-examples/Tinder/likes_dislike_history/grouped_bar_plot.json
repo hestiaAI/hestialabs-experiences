@@ -1,0 +1,155 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "width": 500,
+  "height": 300,
+  "padding": 50,
+  "signals": [
+    {
+      "name": "tooltip",
+      "value": {},
+      "on": [
+        
+        {"events": "rect:mouseout",  "update": "{}"}
+       
+      ]
+    }
+  ],
+  "data": [
+    {
+      "name": "table",
+      "values": [
+        {"date":"01-01-2021", "like":5, "dislike":10},
+        {"date":"02-01-2021", "like":7, "dislike":13},
+        {"date":"03-01-2021", "like":3, "dislike":7},
+        {"date":"04-01-2021", "like":15, "dislike":20},
+        {"date":"05-01-2021", "like":6, "dislike":7},
+        {"date":"06-01-2021", "like":8, "dislike":3},
+        {"date":"07-01-2021", "like":15, "dislike":10},
+        {"date":"08-01-2021", "like":20, "dislike":2},
+        {"date":"09-01-2021", "like":10, "dislike":11},
+        {"date":"10-01-2021", "like":11, "dislike":16},
+        {"date":"11-01-2021", "like":13, "dislike":10},
+        {"date":"12-01-2021", "like":8, "dislike":2}
+      ],
+      "format": {"type": "json", "parse": {"date": "date:'%d-%m-%Y'"}},
+      "transform": [
+        {
+          "type": "formula",
+          "as": "max",
+          "expr": "max(datum.like, datum.dislike)"
+        },
+        {
+          "type": "formula",
+          "as": "dateStr",
+          "expr": "utcFormat(datum.date,'%B %d, %Y')"
+        },
+        {"type": "extent", "field": "max", "signal": "extent"}
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "time",
+      "range": "width",
+      "domain": {"data": "table", "field": "date"}
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "range": "height",
+      "nice": true,
+      "zero": true,
+      "domain": [0, {"signal": "extent[1]"}]
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "range": ["#66cc99", "#d24d57"],
+      "domain": ["Likes", "Dislike"]
+    }
+  ],
+  "legends": [
+    {
+      "orient": "top-right",
+      "fill": "color",
+      "offset": -50,
+      "zindex": 1,
+      "symbolType": "square"
+    }
+  ],
+  "axes": [
+    {"scale": "x", "orient": "bottom", "tickCount": 10, "offset": 5},
+    {"scale": "y", "orient": "left", "offset": 25}
+  ],
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "xc": {"scale": "x", "field": "date", "offset": -5},
+          "width": {"scale": "x", "band": 1, "offset": 10},
+          "y": {"scale": "y", "field": "like"},
+          "y2": {"scale": "y", "value": 0},
+          "fill": {"scale": "color", "value":"Likes"},
+          "tooltip": {
+            "signal": "datum.like + ' likes on ' + datum.dateStr"
+          }
+        },
+        "update": {"fillOpacity": {"value": 1}},
+        "hover": {"fillOpacity": {"value": 0.5}}
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "xc": {"scale": "x", "field": "date", "offset": 5},
+          "width": {"scale": "x", "band": 1, "offset": 10},
+          "y": {"scale": "y", "field": "dislike"},
+          "y2": {"scale": "y", "value": 0},
+          "fill": {"scale": "color", "value":"Dislike"},
+          "tooltip": {
+            "signal": "datum.dislike + ' dislikes on ' + datum.dateStr"
+          }
+        },
+        "update": {"fillOpacity": {"value": 1}},
+        "hover": {"fillOpacity": {"value": 0.5}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "align": {"value": "center"},
+          "baseline": {"value": "bottom"},
+          "fill": {"value": "#333"}
+        },
+        "update": {
+          "x": {"scale": "x", "signal": "tooltip.date", "band": 0.5},
+          "y": {"scale": "y", "signal": "tooltip.like", "offset": -2},
+          "text": {"signal": "tooltip.like"},
+          "fillOpacity": [
+            {"test": "datum === tooltip", "value": 0},
+            {"value": 1}
+          ]
+        }
+      }
+    }
+  ],
+  "title": {
+    "text": "History of likes and dislikes you have made",
+    "encode": {
+      "title": {
+        "enter": {
+          "fill": {"value": "#2e3131"},
+          "fontSize": {"value": 18},
+          "fontWeight": {"value": "bold"}
+        }
+      }
+    }
+  },
+  "config": {}
+}
