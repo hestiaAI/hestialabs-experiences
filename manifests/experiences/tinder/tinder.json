@@ -2,7 +2,7 @@
   "title": "Tinder",
   "icon": "tinder.png",
   "ext": "json",
-  "data": [],
+  "data": ["tinder-synthetic.json"],
   "collaborator": {
     "title": "Dating Privacy Collective",
     "icon": "dating-privacy-collective.svg",
