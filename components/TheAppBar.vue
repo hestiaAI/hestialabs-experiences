@@ -5,7 +5,7 @@
         aria-label="Open navigation menu"
         @click.stop="drawer = !drawer"
       />
-      <v-toolbar-title>
+      <v-toolbar-title class="d-flex align-center">
         <nuxt-link
           to="/"
           class="d-flex align-center"
@@ -13,6 +13,22 @@
         >
           <logo-img class="mr-5" width="100" />
         </nuxt-link>
+        <template v-if="collaborator">
+          <a
+            :href="collaborator.url"
+            target="_blank"
+            rel="noreferrer noopener"
+            class="ml-2"
+          >
+            <v-img
+              :src="collaborator.icon"
+              :lazy-src="collaborator.icon"
+              :alt="collaborator.title"
+              contain
+              width="100"
+            />
+          </a>
+        </template>
       </v-toolbar-title>
       <v-spacer />
       <mode-switch v-if="$vuetify.breakpoint.smAndUp" />
@@ -47,10 +63,22 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
       drawer: false
+    }
+  },
+  computed: {
+    ...mapGetters(['manifest']),
+    collaborator() {
+      if (this.$route.params.key) {
+        const { collaborator } = this.manifest(this.$route) || {}
+        return collaborator
+      }
+      return null
     }
   }
 }
