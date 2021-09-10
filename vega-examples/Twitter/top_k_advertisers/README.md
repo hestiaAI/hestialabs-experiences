@@ -2,9 +2,9 @@
 ## Data format
 > This Vega configuration file expects the following JSON format:
 
-| advertiserName | count | date
-|---|---|
-| 14-01-2021 | 340 | 15-01-2021
+| advertiserName | count | date |
+|---|---|---|
+| 14-01-2021 | 340 | 15-01-2021 |
 
 > A full example of the data is under `data.json`
 
