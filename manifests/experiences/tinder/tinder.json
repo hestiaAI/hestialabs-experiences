@@ -1,0 +1,11 @@
+{
+  "title": "Tinder",
+  "icon": "tinder.png",
+  "ext": "json",
+  "data": ["tinder-synthetic.json"],
+  "collaborator": {
+    "title": "Dating Privacy Collective",
+    "icon": "dating-privacy-collective.svg",
+    "url": "https://dating-privacy.hestialabs.org/"
+  }
+}
