@@ -1,0 +1,10 @@
+PREFIX :   <http://schema.org/>
+PREFIX ex: <http://www.example.com/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?event ?date ?number
+WHERE {
+    ?event a ex:swipe_pass .
+    ?event :DateTime ?date .
+    ?event :Number ?number .
+}

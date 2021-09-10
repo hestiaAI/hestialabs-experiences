@@ -3,7 +3,19 @@
 </template>
 
 <script>
-// const json = {}
+import embed from 'vega-embed'
+
+const someValues = [
+  { category: 'A', amount: 28 },
+  { category: 'B', amount: 55 },
+  { category: 'C', amount: 43 },
+  { category: 'D', amount: 91 },
+  { category: 'E', amount: 81 },
+  { category: 'F', amount: 53 },
+  { category: 'G', amount: 19 },
+  { category: 'H', amount: 87 }
+]
+
 const someBarChartSpec = {
   $schema: 'https://vega.github.io/schema/vega/v5.json',
   description:
@@ -15,15 +27,9 @@ const someBarChartSpec = {
   data: [
     {
       name: 'table',
-      values: [
+      values: () => [
         { category: 'A', amount: 28 },
-        { category: 'B', amount: 55 },
-        { category: 'C', amount: 43 },
-        { category: 'D', amount: 91 },
-        { category: 'E', amount: 81 },
-        { category: 'F', amount: 53 },
-        { category: 'G', amount: 19 },
-        { category: 'H', amount: 87 }
+        { category: 'B', amount: 55 }
       ]
     }
   ],
@@ -101,18 +107,36 @@ const someBarChartSpec = {
 
 export default {
   props: {
+    spec: {
+      type: Object,
+      default: () => someBarChartSpec
+      // required: true
+    },
     data: {
       type: Array,
-      required: true
+      default: () => someValues
+      // default: () => []
     }
   },
-  mounted() {
-    console.log(someBarChartSpec)
-    // const config = {
-    //   data: {
-    //     values: this.data
-    //   }
-    // }
+  watch: {
+    spec(v) {
+      if (v) {
+        this.draw()
+      }
+    }
+  },
+  async mounted() {
+    await this.draw()
+  },
+  methods: {
+    async draw() {
+      await embed('#viz', this.buildUpdatedSpec(), { actions: false })
+    },
+    buildUpdatedSpec() {
+      const clonedSpec = Object.assign({}, this.spec)
+      clonedSpec.data = [{ name: 'table', values: this.data }]
+      return clonedSpec
+    }
   }
 }
 </script>

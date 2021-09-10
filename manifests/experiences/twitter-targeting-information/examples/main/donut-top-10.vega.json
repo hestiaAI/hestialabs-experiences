@@ -1,0 +1,209 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Donut chart representing the top 10 advertisers",
+  "width": 600,
+  "height": 600,
+  "autosize": "fit",
+  "data": [
+    {
+      "name": "table",
+      "values": [
+        {
+          "companyName": "Crypto.com",
+          "count": 182,
+          "total": 2209,
+          "rank": 1,
+          "startAngle": 4.848380130383245,
+          "endAngle": 6.283185307179588
+        },
+        {
+          "companyName": "Apple",
+          "count": 156,
+          "total": 2209,
+          "rank": 2,
+          "startAngle": 3.618547121700666,
+          "endAngle": 4.848380130383245
+        },
+        {
+          "companyName": "Confluent",
+          "count": 96,
+          "total": 2209,
+          "rank": 3,
+          "startAngle": 2.8617268086652325,
+          "endAngle": 3.618547121700666
+        },
+        {
+          "companyName": "Producteurs Suisses de Lait | PSL | Swissmilk",
+          "count": 79,
+          "total": 2209,
+          "rank": 4,
+          "startAngle": 2.2389267593964903,
+          "endAngle": 2.8617268086652325
+        },
+        {
+          "companyName": "UBS Schweiz",
+          "count": 74,
+          "total": 2209,
+          "rank": 5,
+          "startAngle": 1.6555444347650106,
+          "endAngle": 2.2389267593964903
+        },
+        {
+          "companyName": "Swisscom Business",
+          "count": 57,
+          "total": 2209,
+          "rank": 6,
+          "startAngle": 1.206182373900222,
+          "endAngle": 1.6555444347650106
+        },
+        {
+          "companyName": "PostFinance",
+          "count": 56,
+          "total": 2209,
+          "rank": 7,
+          "startAngle": 0.7647038579628858,
+          "endAngle": 1.206182373900222
+        },
+        {
+          "companyName": "Siemens Schweiz",
+          "count": 53,
+          "total": 2209,
+          "rank": 8,
+          "startAngle": 0.34687597680790694,
+          "endAngle": 0.7647038579628858
+        },
+        {
+          "companyName": "Swissquote",
+          "count": 44,
+          "total": 2209,
+          "rank": 9,
+          "startAngle": 0,
+          "endAngle": 0.34687597680790694
+        },
+        {"companyName": "Logitech", "count": 39, "total": 2209, "rank": 10},
+        {"companyName": "digitec", "count": 37, "total": 2209, "rank": 11},
+        {"companyName": "Taste France", "count": 34, "total": 2209, "rank": 12},
+        {
+          "companyName": "Rockstar Games",
+          "count": 28,
+          "total": 2209,
+          "rank": 13
+        },
+        {"companyName": "MastercardCH", "count": 27, "total": 2209, "rank": 14},
+        {"companyName": "HUG", "count": 26, "total": 2209, "rank": 15},
+        {"companyName": "Glencore", "count": 22, "total": 2209, "rank": 16},
+        {"companyName": "Axpo", "count": 22, "total": 2209, "rank": 16},
+        {"companyName": "Iberia_fr", "count": 19, "total": 2209, "rank": 18},
+        {"companyName": "IBM Cloud", "count": 19, "total": 2209, "rank": 18},
+        {"companyName": "Reface", "count": 18, "total": 2209, "rank": 20},
+        {"companyName": "Bank CIC", "count": 17, "total": 2209, "rank": 21},
+        {"companyName": "UPC Schweiz", "count": 17, "total": 2209, "rank": 21},
+        {"companyName": "Too Cool", "count": 17, "total": 2209, "rank": 21},
+        {"companyName": "Buildkite", "count": 17, "total": 2209, "rank": 21},
+        {"companyName": "Nx", "count": 17, "total": 2209, "rank": 21},
+        {"companyName": "houzy", "count": 16, "total": 2209, "rank": 26},
+        {
+          "companyName": "Schweizer Milchproduzenten | SMP | Swissmilk",
+          "count": 16,
+          "total": 2209,
+          "rank": 26
+        },
+        {"companyName": "💉 gimpft.ch", "count": 1, "total": 2209, "rank": 201}
+      ],
+      "transform": [
+        {
+          "type": "joinaggregate",
+          "fields": ["count"],
+          "ops": ["sum"],
+          "as": ["total"]
+        },
+        {"type": "extent", "field": "total", "signal": "extent"},
+        {
+          "type": "window",
+          "sort": {"field": "count", "order": "descending"},
+          "ops": ["rank"],
+          "fields": ["count"],
+          "as": ["rank"]
+        },
+        {"type": "filter", "expr": "datum.rank < 10"},
+        {"type": "pie", "field": "count", "sort": true}
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {"data": "table", "field": "companyName"},
+      "range": {"scheme": "category20"}
+    }
+  ],
+  "marks": [
+    {
+      "type": "arc",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "fill": {"scale": "color", "field": "companyName"},
+          "x": {"signal": "width / 2"},
+          "y": {"signal": "height / 2"},
+          "tooltip": {
+            "signal": "datum.companyName + ' ' + (datum.count ? ': targeted you ' + format(datum.count, ',.0f') + ' times' : '')"
+          }
+        },
+        "update": {
+          "startAngle": {"field": "startAngle"},
+          "endAngle": {"field": "endAngle"},
+          "padAngle": {"value": 0.02},
+          "innerRadius": {"signal": "width / 5"},
+          "outerRadius": {"signal": "width / 2.5"},
+          "cornerRadius": {"value": 7},
+          "opacity": {"value": 1},
+          "zindex": {"value": 0}
+        },
+        "hover": {"opacity": {"value": 0.6}, "zindex": {"value": 1}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {"signal": "width / 2"},
+          "y": {"signal": "height / 2"},
+          "fontSize": {"value": 54},
+          "fontWeight": {"value": "bold"},
+          "fill": {"value": "#2e3131"},
+          "align": {"value": "center"}
+        },
+        "update": {"text": {"signal": "extent[1]"}}
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "x": {"signal": "width / 2"},
+          "y": {"signal": "height / 1.8"},
+          "fontSize": {"value": 32},
+          "fontWeight": {"value": "bold"},
+          "fill": {"value": "#2e3131"},
+          "align": {"value": "center"}
+        },
+        "update": {"text": {"value": "ads"}}
+      }
+    }
+  ],
+  "title": {
+    "text": "Top 10 companies that target you with ads",
+    "encode": {
+      "title": {
+        "enter": {
+          "fill": {"value": "#2e3131"},
+          "fontSize": {"value": 22},
+          "fontWeight": {"value": "bold"}
+        }
+      }
+    }
+  },
+  "config": {}
+}

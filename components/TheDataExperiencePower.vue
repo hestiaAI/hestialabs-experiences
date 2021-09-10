@@ -62,6 +62,10 @@ export default {
       return !this.rdf
     }
   },
+  mounted() {
+    console.log('MOUNTED sp', this.examples[0].sparql[0].name)
+    // console.log('MOUNTED ve', this.examples[0].vega[0].vega)
+  },
   methods: {
     onUnitRmlUpdate({ rml = '', error }) {
       this.rml = rml
