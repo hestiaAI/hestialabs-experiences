@@ -1,6 +1,6 @@
 # Likes/Dislikes history
 ## Data format
-> This Vega configuration file expects the following CSV format:
+> This Vega configuration file expects the following JSON format:
 
 | date | like | dislike |
 |---|---|---|
