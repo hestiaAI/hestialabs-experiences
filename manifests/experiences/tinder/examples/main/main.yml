@@ -1,4 +1,49 @@
+prefixes:
+  ex: http://www.example.com/
+  schema: http://schema.org/
+
 sources:
-  tinder: [input.json~jsonpath, $]
+  tinder_app_opens:
+    access: input.json
+    referenceFormulation: jsonpath
+    iterator: $.Usage.app_opens[*]
+  tinder_swipes_likes:
+    access: input.json
+    referenceFormulation: jsonpath
+    iterator: $.Usage.swipes_likes[*]
+  tinder_swipes_passes:
+    access: input.json
+    referenceFormulation: jsonpath
+    iterator: $.Usage.swipes_passes[*]
+  #superlikes
+  #matches
+  #messages_sent
+  #messages_received
 
 mappings:
+  app_opens:
+    sources:
+      - tinder_app_opens
+    s: ex:AppOpen/$(date)
+    po:
+      - [a, ex:AppOpen]
+      - [ex:date, $(date)]
+      - [ex:value, $(value)]
+
+  swipes_likes:
+    sources:
+      - tinder_swipes_likes
+    s: ex:SwipeLike/$(date)
+    po:
+      - [a, ex:SwipeLike]
+      - [ex:date, $(date)]
+      - [ex:value, $(value)]
+
+  swipes_passes:
+    sources:
+      - tinder_swipes_passes
+    s: ex:SwipePass/$(date)
+    po:
+      - [a, ex:SwipePass]
+      - [ex:date, $(date)]
+      - [ex:value, $(value)]
