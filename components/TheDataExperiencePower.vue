@@ -34,6 +34,7 @@
         <unit-query-results v-bind="{ headers, items }" />
       </div>
     </v-expand-transition>
+    <unit-vega-viz />
   </div>
 </template>
 
