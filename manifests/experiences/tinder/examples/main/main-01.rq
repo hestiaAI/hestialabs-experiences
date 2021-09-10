@@ -2,9 +2,12 @@ PREFIX :   <http://schema.org/>
 PREFIX ex: <http://www.example.com/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT ?event ?date ?number
+SELECT ?date ?dislike ?like
 WHERE {
-    ?event a ex:swipe_pass .
-    ?event :DateTime ?date .
-    ?event :Number ?number .
+    ?swipepass a ex:SwipePass .
+    ?swipepass ex:date ?date .
+    ?swipepass ex:value ?dislike .
+    ?swipelike a ex:SwipeLike .
+    ?swipelike ex:date ?date .
+    ?swipelike ex:value ?like .
 }

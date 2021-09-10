@@ -38,6 +38,7 @@ export default {
     ...mapGetters(['manifest']),
     m() {
       const { title, subtitle, icon, ...rest } = this.manifest(this.$route)
+      console.log('rMANI', rest)
       return { title, subtitle, icon, rest }
     }
   }

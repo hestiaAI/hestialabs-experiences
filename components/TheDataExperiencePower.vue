@@ -47,6 +47,7 @@ export default {
   data() {
     // main example is selected by default
     const selectedExample = this.examples[0]
+    console.log('EXA', selectedExample?.name)
     return {
       selectedExample,
       inputFiles: undefined,
@@ -61,10 +62,6 @@ export default {
     runQueryDisabled() {
       return !this.rdf
     }
-  },
-  mounted() {
-    console.log('MOUNTED sp', this.examples[0].sparql[0].name)
-    // console.log('MOUNTED ve', this.examples[0].vega[0].vega)
   },
   methods: {
     onUnitRmlUpdate({ rml = '', error }) {

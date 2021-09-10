@@ -24,7 +24,7 @@ const reqSPARQL = require.context(
 const reqVEGA = require.context(
   './experiences/',
   true,
-  /[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.vega.json$/
+  /[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.vega$/
 )
 
 // files in assets/data/ are loaded only with file-loader
@@ -145,7 +145,6 @@ reqYARRRML.keys().forEach(path => {
 })
 
 reqSPARQL.keys().forEach(path => {
-  console.log('Spath', path)
   // Extract directory name of the experience
   const dir = extractFirstDirectory(path)
   // Extract example name and SPARQL query sample name
@@ -159,15 +158,12 @@ reqSPARQL.keys().forEach(path => {
   })
 })
 
-// console.log('HEY', reqVEGA.keys())
 reqVEGA.keys().forEach(path => {
-  console.log('VPATH', path)
   // Extract directory name of the experience
   const dir = extractFirstDirectory(path)
   // Extract example name and VEGA query sample name
-  const match = path.match(/\/examples\/(?<example>.+)\/(?<vega>.+)\.vega.json/)
+  const match = path.match(/\/examples\/(?<example>.+)\/(?<vega>.+)\.vega/)
   const { example, vega } = match.groups
-  console.log('Vexo', path, example, vega)
   // Add VEGA sample
   const exampleObj = manifests[dir].examples.find(e => e.name === example)
   exampleObj.vega.push({

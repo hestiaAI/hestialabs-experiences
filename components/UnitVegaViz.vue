@@ -126,6 +126,7 @@ export default {
     }
   },
   async mounted() {
+    console.log('THIS', Object.keys(this), this)
     await this.draw()
   },
   methods: {

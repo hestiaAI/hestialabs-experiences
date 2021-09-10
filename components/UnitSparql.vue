@@ -1,10 +1,11 @@
+<!-- :change="v => (sparql = v)" -->
 <template>
   <div>
     <h2 class="my-3">SPARQL</h2>
     <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
       <slot
         name="selector"
-        :change="v => (sparql = v)"
+        :change="onChange"
         classAttr="my-sm-2 mr-sm-2 mb-2"
       />
       <base-button
@@ -83,6 +84,10 @@ export default {
         this.status = true
         this.progress = false
       }
+    },
+    onChange(event) {
+      console.log(event.name)
+      this.sparql = event.sparql
     }
   }
 }
