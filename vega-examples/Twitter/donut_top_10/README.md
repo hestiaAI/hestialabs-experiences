@@ -1,6 +1,6 @@
 # Top 10 advertisers who target you
 ## Data format
-> This Vega configuration file expects the following CSV format:
+> This Vega configuration file expects the following JSON format:
 
 | companyName | count | 
 |---|---|
