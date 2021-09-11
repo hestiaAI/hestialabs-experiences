@@ -69,7 +69,7 @@ export default {
     },
     exampleVisualizations() {
       const exampleName = this.selectedExample.name
-      return this.visualizations[exampleName]
+      return this.visualizations?.[exampleName] || {}
     }
   },
   methods: {

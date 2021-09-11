@@ -53,7 +53,7 @@ export default {
     },
     visualizations: {
       type: Object,
-      required: true
+      default: () => {}
     },
     multiple: {
       type: Boolean,
