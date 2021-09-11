@@ -85,17 +85,9 @@ export default {
             keys.map((key, index) => [headers[index], map.get(key).value])
           )
         )
-        // TODO figure out what vega really needs
-        // apparently vega changes the values, we need to clone them?
-        // vega possibly accepts values only as strings? json or csv
-        this.vegaValues = items.map(i => ({ ...i }))
-        console.log('value from query', items[0])
-        console.log(
-          'value for vega',
-          this.vegaValues[0],
-          this.vegaValues[0]?.date
-        )
-        console.log(items)
+        // vega changes the values, we need to clone them
+        // if we want to show also show them in the table
+        this.vegaValues = this.cloneItems(items)
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)
@@ -106,6 +98,18 @@ export default {
         this.status = true
         this.progress = false
       }
+    },
+    cloneItems(items) {
+      if (!items.length) {
+        return []
+      }
+      const keys = Object.keys(items[0])
+      return items.map(item =>
+        keys.reduce((clone, key) => {
+          clone[key] = item[key].slice()
+          return clone
+        }, {})
+      )
     },
     onChangeSelector(event) {
       this.sparql = event.sparql
