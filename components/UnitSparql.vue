@@ -85,7 +85,17 @@ export default {
             keys.map((key, index) => [headers[index], map.get(key).value])
           )
         )
-        this.vegaValues = items
+        // TODO figure out what vega really needs
+        // apparently vega changes the values, we need to clone them?
+        // vega possibly accepts values only as strings? json or csv
+        this.vegaValues = items.map(i => ({ ...i }))
+        console.log('value from query', items[0])
+        console.log(
+          'value for vega',
+          this.vegaValues[0],
+          this.vegaValues[0]?.date
+        )
+        console.log(items)
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)

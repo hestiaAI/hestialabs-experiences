@@ -43,10 +43,13 @@ export default {
       if (!this.hasValidSpec) {
         return {}
       }
+
+      console.log('value ', this.values[0])
       const clonedSpec = Object.assign({}, this.spec)
       const clonedFirstData = Object.assign({}, this.spec.data[0])
       clonedFirstData.values = this.values
       clonedSpec.data = [clonedFirstData]
+      console.log('Vega data', clonedFirstData)
       return clonedSpec
     }
   }
