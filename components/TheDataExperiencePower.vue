@@ -21,7 +21,13 @@
     </div>
     <v-expand-transition>
       <div v-show="toRDF" class="io-block">
-        <unit-sparql :rdf="rdf" class="mr-lg-6" @update="onUnitSparqlUpdate">
+        <unit-sparql
+          :rdf="rdf"
+          class="mr-lg-6"
+          :example-visualizations="exampleVisualizations"
+          :vega-specs="selectedExample.vega"
+          @update="onUnitSparqlUpdate"
+        >
           <template #selector="{ change, classAttr }">
             <the-sparql-selector
               :items="selectedExample.sparql"
@@ -34,7 +40,6 @@
         <unit-query-results v-bind="{ headers, items }" />
       </div>
     </v-expand-transition>
-    <unit-vega-viz />
   </div>
 </template>
 
@@ -42,12 +47,12 @@
 /* eslint-disable vue/require-default-prop */
 export default {
   props: {
-    examples: Array
+    examples: Array,
+    visualizations: Object
   },
   data() {
     // main example is selected by default
     const selectedExample = this.examples[0]
-    console.log('EXA', selectedExample?.name)
     return {
       selectedExample,
       inputFiles: undefined,
@@ -61,6 +66,10 @@ export default {
   computed: {
     runQueryDisabled() {
       return !this.rdf
+    },
+    exampleVisualizations() {
+      const exampleName = this.selectedExample.name
+      return this.visualizations[exampleName]
     }
   },
   methods: {

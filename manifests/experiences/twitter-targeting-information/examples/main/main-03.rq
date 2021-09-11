@@ -2,12 +2,12 @@
 PREFIX :   <http://schema.org/>
 PREFIX ex: <http://www.example.com/>
 
-SELECT ?name (COUNT(?imp) AS ?count)
+SELECT ?companyName (COUNT(?imp) AS ?count)
 WHERE {
     ?imp a :AdvertiserContentArticle .
     ?imp :creator ?advertiser .
-    ?advertiser :name ?name .
+    ?advertiser :name ?companyName .
     ?imp :contentReferenceTime ?d
 }
-GROUP BY  ?name
+GROUP BY  ?companyName
 ORDER BY DESC(?count)

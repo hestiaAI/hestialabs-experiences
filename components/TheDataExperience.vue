@@ -51,6 +51,10 @@ export default {
       type: Array,
       default: () => []
     },
+    visualizations: {
+      type: Object,
+      required: true
+    },
     multiple: {
       type: Boolean,
       default: false
@@ -68,7 +72,7 @@ export default {
         .map(ext => `.${ext}`)
     },
     props() {
-      const propNames = ['examples']
+      const propNames = ['examples', 'visualizations']
       const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
       return props
     },

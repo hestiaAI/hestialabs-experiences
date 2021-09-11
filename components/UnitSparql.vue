@@ -5,7 +5,7 @@
     <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
       <slot
         name="selector"
-        :change="onChange"
+        :change="onChangeSelector"
         classAttr="my-sm-2 mr-sm-2 mb-2"
       />
       <base-button
@@ -29,6 +29,7 @@
       language="sparql"
     />
     <v-alert v-if="message" type="error">{{ message }}</v-alert>
+    <unit-vega-viz :spec="vegaSpec" :values="vegaValues" />
   </div>
 </template>
 
@@ -41,11 +42,21 @@ export default {
     rdf: {
       type: String,
       default: ''
+    },
+    exampleVisualizations: {
+      type: Object,
+      default: () => {}
+    },
+    vegaSpecs: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
       sparql: '',
+      vegaSpec: {},
+      vegaValues: [],
       message: '',
       status: false,
       error: false,
@@ -74,6 +85,7 @@ export default {
             keys.map((key, index) => [headers[index], map.get(key).value])
           )
         )
+        this.vegaValues = items
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)
@@ -85,9 +97,21 @@ export default {
         this.progress = false
       }
     },
-    onChange(event) {
-      console.log(event.name)
+    onChangeSelector(event) {
       this.sparql = event.sparql
+      const vizName = this.exampleVisualizations[event.name]
+      const vegaFile = this.vegaSpecs.find(s => s.name === vizName)
+      const vegaSpecJson = vegaFile?.vega
+      if (!vegaSpecJson) {
+        this.vegaSpec = {}
+      } else {
+        try {
+          this.vegaSpec = JSON.parse(vegaSpecJson)
+        } catch (error) {
+          // TODO maybe display this error to the user
+          console.error(`could not parse ${vizName}`, error)
+        }
+      }
     }
   }
 }
