@@ -4,7 +4,7 @@
   "ext": "json",
   "data": ["tinder-synthetic.json"],
   "preprocessor": "tinder",
-  "visualizations": {"main": {"main-01": "line-plot"}},
+  "visualizations": {"main": {"likes-dislikes": "line-plot"}},
   "collaborator": {
     "title": "Dating Privacy Collective",
     "icon": "dating-privacy-collective.svg",
