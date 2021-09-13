@@ -4,7 +4,11 @@
   "ext": "json",
   "data": ["tinder-synthetic.json"],
   "preprocessor": "tinder",
-  "visualizations": {"main": {"likes-dislikes": "line-plot"}},
+  "visualizations": {"main": {
+    "likes-dislikes": ["line-plot"],
+    "app-opens": ["open"],
+    "likes-dislikes-open": ["line-plot", "grouped-bar-plot"]
+  }},
   "collaborator": {
     "title": "Dating Privacy Collective",
     "icon": "dating-privacy-collective.svg",

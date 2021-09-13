@@ -113,7 +113,8 @@ export default {
     },
     onChangeSelector(event) {
       this.sparql = event.sparql
-      const vizName = this.exampleVisualizations[event.name]
+      const vizNames = this.exampleVisualizations[event.name]
+      const vizName = vizNames[0]
       const vegaFile = this.vegaSpecs.find(s => s.name === vizName)
       const vegaSpecJson = vegaFile?.vega
       if (!vegaSpecJson) {
