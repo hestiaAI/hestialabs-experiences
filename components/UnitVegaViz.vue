@@ -1,5 +1,5 @@
 <template v-if="hasValidSpec">
-  <div id="unit-vega-viz"></div>
+  <div :id="divId"></div>
 </template>
 
 <script>
@@ -7,6 +7,7 @@ import embed from 'vega-embed'
 
 export default {
   props: {
+    name: { type: String, default: '' },
     spec: {
       type: Object,
       default: () => {},
@@ -18,12 +19,14 @@ export default {
     }
   },
   computed: {
+    divId() {
+      return `unit-vega-viz-${this.name}`
+    },
     specWithValues() {
       if (!this.spec?.data) {
         // invalid data
         return {}
       }
-      console.log('value ', this.values[0])
       const clonedSpec = Object.assign({}, this.spec)
       const clonedFirstData = Object.assign({}, this.spec.data[0])
       clonedFirstData.values = this.values
@@ -44,7 +47,9 @@ export default {
   },
   methods: {
     async draw() {
-      await embed('#unit-vega-viz', this.specWithValues, { actions: false })
+      await embed(`#${this.divId}`, this.specWithValues, {
+        actions: false
+      })
     }
   }
 }

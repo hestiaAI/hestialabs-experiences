@@ -30,9 +30,10 @@
     />
     <v-alert v-if="message" type="error">{{ message }}</v-alert>
     <unit-vega-viz
-      v-for="(spec, index) in vegaSpecs"
-      :key="`spec-${index}`"
-      :spec="spec"
+      v-for="spec in vegaSpecs"
+      :key="`spec-${spec.name}`"
+      :name="spec.name"
+      :spec="spec.content"
       :values="vegaValues"
     />
   </div>
@@ -122,25 +123,22 @@ export default {
       const vegaFiles = this.exampleVegaSpecs.filter(s =>
         vizNames?.includes(s.name)
       )
-      console.log('vf', vegaFiles)
       this.vegaSpecs = vegaFiles
-        .map(vegaFile => {
-          const vegaSpecJson = vegaFile?.vega
-          let spec
-          if (vegaSpecJson) {
-            try {
-              spec = JSON.parse(vegaSpecJson)
-            } catch (error) {
-              // TODO maybe display this error to the user
-              console.error(`could not parse ${vegaFile.name}`, error)
-            }
-          }
-          return spec
-        })
-        .filter(spec => !!spec)
-        .filter((_o, i) => i < 1)
-
-      console.log('vs', this.vegaSpecs)
+        .map(this.mapVegaFile)
+        .filter(spec => !!spec.content)
+    },
+    mapVegaFile(vegaFile) {
+      const vegaSpecJson = vegaFile?.vega
+      let spec
+      if (vegaSpecJson) {
+        try {
+          spec = JSON.parse(vegaSpecJson)
+        } catch (error) {
+          // TODO maybe display this error to the user
+          console.error(`could not parse ${vegaFile.name}`, error)
+        }
+      }
+      return { content: spec, name: vegaFile.name }
     }
   }
 }
