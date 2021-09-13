@@ -1,8 +1,13 @@
 # authors: Florian Singer <florian.singer@hestia.ai>
 PREFIX :  <http://schema.org/>
 
-CONSTRUCT WHERE
-{
+CONSTRUCT {
   ?advertiser a :Organization .
   ?advertiser :name ?name .
+  ?advertiser :advertised ?person .
+}
+WHERE {
+  ?advertiser a :Organization .
+  ?advertiser :name ?name .
+  ?person a :Person
 }

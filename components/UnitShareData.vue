@@ -2,6 +2,13 @@
   <div>
     <h2 class="my-3">Share Data</h2>
     <div class="d-flex flex-column flex-sm-row align-start">
+      <v-text-field
+        v-model="username"
+        label="Username"
+        class="ma-sm-2"
+      ></v-text-field>
+    </div>
+    <div class="d-flex flex-column flex-sm-row align-start">
       <base-button
         :progress="progressGenerate"
         :status="statusGenerate"
@@ -44,7 +51,8 @@
 
 <script>
 import { construct } from '@/utils/sparql'
-import { updateEndpoint } from '~/utils/endpoint'
+import { updateEndpoint } from '@/utils/endpoint'
+import { personalizeRDF } from '@/utils/sharing'
 
 export default {
   props: {
@@ -62,12 +70,18 @@ export default {
       progressShare: false,
       statusShare: false,
       errorShare: false,
-      rdfOutput: ''
+      rdfOutput: '',
+      username: ''
     }
   },
   computed: {
     disabledGenerate() {
-      return !this.rdfInput || !this.sparql || this.progressGenerate
+      return (
+        !this.rdfInput ||
+        !this.sparql ||
+        !this.username ||
+        this.progressGenerate
+      )
     },
     disabledShare() {
       return !this.rdfOutput || this.progressShare
@@ -78,7 +92,8 @@ export default {
       this.errorGenerate = false
       this.progressGenerate = true
       try {
-        this.rdfOutput = await construct(this.rdfInput, this.sparql)
+        const rdf = personalizeRDF(this.username, this.rdfInput)
+        this.rdfOutput = await construct(rdf, this.sparql)
       } catch (error) {
         console.error(error)
         this.errorGenerate = true
