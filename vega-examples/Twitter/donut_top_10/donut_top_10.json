@@ -4,7 +4,32 @@
   "width": 600,
   "height": 600,
   "autosize": "fit",
-  "url": "data.json",
+  "data": [
+    {
+      "name": "source",
+      "url": "data.json"
+    },
+    {
+      "name": "ranks",
+      "source": "source",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["companyName"],
+          "ops": ["sum"],
+          "fields": ["count"],
+          "as": ["count"]
+        },
+        {
+          "type": "window",
+          "sort": {"field": "count", "order": "descending"},
+          "ops": ["row_number"], "as": ["rank"]
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "source": "ranks",
       "transform": [
         {
           "type": "joinaggregate",
@@ -12,15 +37,8 @@
           "ops": ["sum"],
           "as": ["total"]
         },
-        {"type": "extent", "field": "total", "signal": "extent"},
-        {
-          "type": "window",
-          "sort": {"field": "count", "order": "descending"},
-          "ops": ["rank"],
-          "fields": ["count"],
-          "as": ["rank"]
-        },
-        {"type": "filter", "expr": "datum.rank < 10"},
+        {"type": "extent", "field": "total", "signal": "extent"},        
+        {"type": "filter", "expr": "datum.rank <= 10"},
         {"type": "pie", "field": "count", "sort": true}
       ]
     }
