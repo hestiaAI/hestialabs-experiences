@@ -28,7 +28,7 @@
         {
           "type": "formula",
           "as": "dateStr",
-          "expr": "utcFormat(datum.date,'%B %d, %Y')"
+          "expr": "timeFormat(datum.date,'%B %d, %Y')"
         },
         {"type": "extent", "field": "max", "signal": "extent"}
       ]
