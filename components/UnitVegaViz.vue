@@ -17,6 +17,11 @@ export default {
       default: () => []
     }
   },
+  computed: {
+    hasValidSpec() {
+      return !!this.spec?.data
+    }
+  },
   // TODO see if specWithValues could be a computed property
   // and replace watch and buildUpdatedSpec
   watch: {
@@ -29,11 +34,6 @@ export default {
   },
   async mounted() {
     await this.draw()
-  },
-  computed: {
-    hasValidSpec() {
-      return !!this.spec?.data
-    }
   },
   methods: {
     async draw() {
