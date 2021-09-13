@@ -25,7 +25,7 @@
           :rdf="rdf"
           class="mr-lg-6"
           :example-visualizations="exampleVisualizations"
-          :vega-specs="selectedExample.vega"
+          :example-vega-specs="selectedExample.vega"
           @update="onUnitSparqlUpdate"
         >
           <template #selector="{ change, classAttr }">

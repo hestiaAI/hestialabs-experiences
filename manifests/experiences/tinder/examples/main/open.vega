@@ -6,7 +6,6 @@
   "data": [
     {
       "name": "table",
-      "url": "data.json",
       "format": {"type": "json", "parse": {"date": "date:'%Y-%m-%d'"}},
       "transform": [
         {

@@ -27,7 +27,9 @@ export default {
       const clonedSpec = Object.assign({}, this.spec)
       const clonedFirstData = Object.assign({}, this.spec.data[0])
       clonedFirstData.values = this.values
-      clonedSpec.data = [clonedFirstData]
+      const clonedData = this.spec.data.slice()
+      clonedData[0] = clonedFirstData
+      clonedSpec.data = clonedData
       console.log('Vega data', clonedFirstData)
       return clonedSpec
     }
