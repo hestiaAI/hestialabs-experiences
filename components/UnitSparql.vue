@@ -29,7 +29,12 @@
       language="sparql"
     />
     <v-alert v-if="message" type="error">{{ message }}</v-alert>
-    <unit-vega-viz :spec="vegaSpec" :values="vegaValues" />
+    <unit-vega-viz
+      v-for="(spec, index) in vegaSpecs"
+      :spec="spec"
+      :key="`spec-${index}`"
+      :values="vegaValues"
+    />
   </div>
 </template>
 
@@ -47,7 +52,7 @@ export default {
       type: Object,
       default: () => {}
     },
-    vegaSpecs: {
+    exampleVegaSpecs: {
       type: Array,
       default: () => []
     }
@@ -55,7 +60,7 @@ export default {
   data() {
     return {
       sparql: '',
-      vegaSpec: {},
+      vegaSpecs: [],
       vegaValues: [],
       message: '',
       status: false,
@@ -114,19 +119,28 @@ export default {
     onChangeSelector(event) {
       this.sparql = event.sparql
       const vizNames = this.exampleVisualizations[event.name]
-      const vizName = vizNames[0]
-      const vegaFile = this.vegaSpecs.find(s => s.name === vizName)
-      const vegaSpecJson = vegaFile?.vega
-      if (!vegaSpecJson) {
-        this.vegaSpec = {}
-      } else {
-        try {
-          this.vegaSpec = JSON.parse(vegaSpecJson)
-        } catch (error) {
-          // TODO maybe display this error to the user
-          console.error(`could not parse ${vizName}`, error)
-        }
-      }
+      const vegaFiles = this.exampleVegaSpecs.filter(s =>
+        vizNames?.includes(s.name)
+      )
+      console.log('vf', vegaFiles)
+      this.vegaSpecs = vegaFiles
+        .map(vegaFile => {
+          const vegaSpecJson = vegaFile?.vega
+          let spec
+          if (vegaSpecJson) {
+            try {
+              spec = JSON.parse(vegaSpecJson)
+            } catch (error) {
+              // TODO maybe display this error to the user
+              console.error(`could not parse ${vegaFile.name}`, error)
+            }
+          }
+          return spec
+        })
+        .filter(spec => !!spec)
+        .filter((_o, i) => i < 1)
+
+      console.log('vs', this.vegaSpecs)
     }
   }
 }
