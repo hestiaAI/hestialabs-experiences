@@ -6,11 +6,7 @@
     style="max-width: 150px"
     hide-details
     label="Select query"
-    @change="
-      $emit(
-        'change',
-        $attrs.items.find(i => i.name == $event)
-      )
-    "
+    return-object
+    @change="$emit('change', $event)"
   />
 </template>
