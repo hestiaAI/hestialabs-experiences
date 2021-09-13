@@ -1,0 +1,127 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "width": 500,
+  "height": 200,
+  "padding": 50,
+  "data": [
+    {
+      "name": "table",
+      "url": "data.json",
+      "format": {"type": "json", "parse": {"date": "date:'%Y-%m-%d'"}},
+      "transform": [
+        {
+          "type": "formula",
+          "as": "dateStr",
+          "expr": "utcFormat(datum.date,'%B %d, %Y')"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "time",
+      "range": "width",
+      "domain": {"data": "table", "field": "date"}
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "range": "height",
+      "nice": true,
+      "zero": true,
+      "domain": {"data": "table", "field": "open"}
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "range": ["#d24d57"],
+      "domain": ["App opened"]
+    }
+  ],
+  "legends": [
+    {
+      "stroke": "color",
+      "symbolType": "circle",
+      "encode": {
+        "symbols": {
+          "update": {"fill": {"value": "white"}, "opacity": {"value": 1}}
+        }
+      }
+    }
+  ],
+  "axes": [
+    {"orient": "bottom", "scale": "x", "offset": 10},
+    {"orient": "left", "scale": "y", "offset": 10}
+  ],
+  "marks": [
+    {
+      "name": "open_line",
+      "type": "line",
+      "style": ["line"],
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "field": "date"},
+          "y": {"scale": "y", "field": "open"},
+          "stroke": {"scale": "color", "value": "App opened"},
+          "strokeWidth": {"value": 2}
+        }
+      }
+    },
+    {
+      "name": "open_marks",
+      "type": "symbol",
+      "style": ["point"],
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "opacity": {"value": 1},
+          "fill": {"value": "white"},
+          "stroke": {"scale": "color", "value": "App opened"},
+          "strokeWidth": {"value": 2},
+          "ariaRoleDescription": {"value": "point"},
+          "x": {"scale": "x", "field": "date"},
+          "y": {"scale": "y", "field": "open"},
+          "tooltip": {
+            "signal": "'App was opened ' + datum.open + ' times on ' + datum.dateStr"
+          }
+        },
+        "update": {"strokeOpacity": {"value": 1}},
+        "hover": {"strokeOpacity": {"value": 0.5}}
+      }
+    },
+    {
+      "name": "likes_marks",
+      "type": "symbol",
+      "style": ["point"],
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "opacity": {"value": 1},
+          "fill": {"value": "white"},
+          "stroke": {"scale": "color", "value": "Likes"},
+          "strokeWidth": {"value": 2},
+          "ariaRoleDescription": {"value": "point"},
+          "x": {"scale": "x", "field": "date"},
+          "y": {"scale": "y", "field": "like"},
+          "tooltip": {"signal": "datum.like + ' likes on ' + datum.dateStr"}
+        },
+        "update": {"strokeOpacity": {"value": 1}},
+        "hover": {"strokeOpacity": {"value": 0.5}}
+      }
+    }
+  ],
+  "title": {
+    "text": "Number of times the application has been opened",
+    "encode": {
+      "title": {
+        "enter": {
+          "fill": {"value": "#2e3131"},
+          "fontSize": {"value": 15},
+          "fontWeight": {"value": "bold"}
+        }
+      }
+    }
+  }
+}
