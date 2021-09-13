@@ -31,8 +31,8 @@
     <v-alert v-if="message" type="error">{{ message }}</v-alert>
     <unit-vega-viz
       v-for="(spec, index) in vegaSpecs"
-      :spec="spec"
       :key="`spec-${index}`"
+      :spec="spec"
       :values="vegaValues"
     />
   </div>
