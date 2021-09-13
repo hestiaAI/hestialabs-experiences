@@ -12,7 +12,7 @@
         {
           "type": "formula",
           "as": "dateStr",
-          "expr": "utcFormat(datum.date,'%B %d, %Y')"
+          "expr": "timeFormat(datum.date,'%B %d, %Y')"
         }
       ]
     }
@@ -86,26 +86,6 @@
           "tooltip": {
             "signal": "'App was opened ' + datum.open + ' times on ' + datum.dateStr"
           }
-        },
-        "update": {"strokeOpacity": {"value": 1}},
-        "hover": {"strokeOpacity": {"value": 0.5}}
-      }
-    },
-    {
-      "name": "likes_marks",
-      "type": "symbol",
-      "style": ["point"],
-      "from": {"data": "table"},
-      "encode": {
-        "enter": {
-          "opacity": {"value": 1},
-          "fill": {"value": "white"},
-          "stroke": {"scale": "color", "value": "Likes"},
-          "strokeWidth": {"value": 2},
-          "ariaRoleDescription": {"value": "point"},
-          "x": {"scale": "x", "field": "date"},
-          "y": {"scale": "y", "field": "like"},
-          "tooltip": {"signal": "datum.like + ' likes on ' + datum.dateStr"}
         },
         "update": {"strokeOpacity": {"value": 1}},
         "hover": {"strokeOpacity": {"value": 0.5}}
