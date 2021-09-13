@@ -13,12 +13,11 @@
     <div>
       <h2 class="my-3">RML</h2>
       <base-button
-        :f="f"
-        :args="args"
+        v-bind="{ progress, status, error }"
         text="Generate RML"
         icon="mdiStepForward"
         class="mr-sm-2 my-sm-2"
-        @click="handleResult"
+        @click="generateRML"
       />
       <base-download-button
         v-bind="{ data, extension }"
@@ -60,38 +59,51 @@ export default {
   },
   computed: {
     extension() {
-      return this.rml ? 'ttl' : undefined
+      return this.rmlError ? undefined : 'ttl'
     },
     data() {
-      // if there is RML, download it, otherwise download the message
-      return this.rml ? this.rml : this.message
-    },
-    f() {
-      return parseYarrrml
-    },
-    args() {
-      return [this.yarrrml]
+      // if there is an error, download the message, o/w the RDF
+      return this.error ? this.message : this.rml
     }
   },
   watch: {
     yarrrmlExample: {
       immediate: true,
-      handler(val) {
+      async handler(val) {
         this.yarrrml = val
-        // FIXME call button function
+        await this.generateRML()
       }
+    },
+    yarrrml() {
+      this.error = false
+      this.status = false
+      this.rml = ''
     }
   },
   methods: {
-    handleResult(result) {
+    async generateRML() {
       this.rml = ''
       this.message = ''
-      if (result.value) {
-        this.rml = result.value
-        this.$emit('update', { rml: result.value })
-      } else {
-        this.message = processError(result.error)
-        this.$emit('update', { error: result.error })
+      this.progress = true
+      this.status = false
+      this.error = false
+      try {
+        const rml = await parseYarrrml(this.yarrrml)
+        this.rml = rml
+        this.$emit('update', { rml })
+      } catch (error) {
+        console.error(error)
+        this.error = true
+        this.message = processError(error)
+        this.$emit('update', { error })
+      } finally {
+        window.setTimeout(() => {
+          // RML generation is usually super quick
+          // so the user will not see the progress indicator
+          // without this timeout
+          this.progress = false
+          this.status = true
+        }, 500)
       }
     }
   }
