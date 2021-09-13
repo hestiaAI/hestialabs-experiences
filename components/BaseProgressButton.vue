@@ -6,6 +6,10 @@
 </template>
 
 <script>
+/**
+ * BaseProgressButton provides an abstraction for the progress, status and error properties of the BaseButton.
+ * It expects a function f to be run along with its arguments args, and emits a click event containing the result.
+ */
 export default {
   props: {
     text: {
