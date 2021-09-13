@@ -15,10 +15,22 @@ sources:
     access: input.json
     referenceFormulation: jsonpath
     iterator: $.Usage.swipes_passes[*]
-  #superlikes
-  #matches
-  #messages_sent
-  #messages_received
+  tinder_superlikes:
+    access: input.json
+    referenceFormulation: jsonpath
+    iterator: $.Usage.superlikes[*]
+  tinder_matches:
+    access: input.json
+    referenceFormulation: jsonpath
+    iterator: $.Usage.matches[*]
+  tinder_messages_sent:
+    access: input.json
+    referenceFormulation: jsonpath
+    iterator: $.Usage.messages_sent[*]
+  tinder_messages_received:
+    access: input.json
+    referenceFormulation: jsonpath
+    iterator: $.Usage.messages_received[*]
 
 mappings:
   app_opens:
@@ -47,3 +59,40 @@ mappings:
       - [a, ex:SwipePass]
       - [ex:date, $(date)]
       - [ex:value, $(value)]
+      
+  superlikes:
+    sources:
+      - tinder_superlikes
+    s: ex:superlike/$(date)
+    po:
+      - [a, ex:superlike]
+      - [ex:date, $(date)]
+      - [ex:value, $(value)]
+ 
+  matches:
+    sources:
+      - tinder_matches
+    s: ex:match/$(date)
+    po:
+      - [a, ex:match]
+      - [ex:date, $(date)]
+      - [ex:value, $(value)]     
+
+  messages_sent:
+    sources:
+      - tinder_messages_sent
+    s: ex:message_sent/$(date)
+    po:
+      - [a, ex:message_sent]
+      - [ex:date, $(date)]
+      - [ex:value, $(value)]    
+
+  messages_received:
+    sources:
+      - tinder_messages_received
+    s: ex:message_received/$(date)
+    po:
+      - [a, ex:message_received]
+      - [ex:date, $(date)]
+      - [ex:value, $(value)]  
+
