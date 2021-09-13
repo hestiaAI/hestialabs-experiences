@@ -1,4 +1,5 @@
 {
   "name": "Advertisers Intersection",
-  "comparator": "advertisersIntersection"
+  "comparator": "advertisersIntersection",
+  "oneToOne": true
 }

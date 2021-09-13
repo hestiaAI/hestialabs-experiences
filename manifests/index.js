@@ -165,13 +165,14 @@ reqSharingJSON.keys().forEach(path => {
   )
   const { example, key } = match.groups
 
-  const { name, comparator } = reqSharingJSON(path)
+  const { name, comparator, oneToOne } = reqSharingJSON(path)
 
   const exampleObj = manifests[dir].examples.find(e => e.name === example)
   exampleObj.sharing.push({
     key,
     name,
     comparator,
+    oneToOne,
     sparql: ''
   })
 })

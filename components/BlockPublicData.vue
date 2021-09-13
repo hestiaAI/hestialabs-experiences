@@ -20,10 +20,16 @@
         />
       </div>
       <div class="d-flex flex-column flex-sm-row align-start">
-        <slot name="selector" :change="v => (comparator = v)" class="ma-sm-3" />
+        <comparator-selector
+          class="ma-sm-3"
+          :items="example.sharing"
+          :disabled="!example.sharing.length"
+          @change="changeComparator"
+        />
       </div>
       <div class="d-flex flex-column flex-sm-row align-start">
         <v-text-field
+          v-if="oneToOne"
           v-model="username"
           label="Username"
           class="ma-sm-2"
@@ -58,6 +64,10 @@ export default {
     rdfLocal: {
       type: String,
       default: ''
+    },
+    example: {
+      type: Object,
+      default: null
     }
   },
   data() {
@@ -71,8 +81,9 @@ export default {
       headers: [],
       items: [],
       rdfPublic: '',
+      username: '',
       comparator: '',
-      username: ''
+      oneToOne: false
     }
   },
   computed: {
@@ -110,6 +121,11 @@ export default {
       }
       this.statusCompare = true
       this.progressCompare = false
+    },
+    changeComparator(key) {
+      const obj = this.example.sharing.find(e => e.key === key)
+      this.comparator = obj.comparator
+      this.oneToOne = obj.oneToOne
     }
   }
 }
