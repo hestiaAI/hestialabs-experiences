@@ -1,17 +1,32 @@
-import { query } from '@/utils/sparql'
+import { query, construct } from '@/utils/sparql'
 
-const advertisersIntersection = async (rdf1, rdf2) => {
+const advertisersIntersection = async (rdfLocal, rdfPublic, username) => {
+  const filterUser = `
+  PREFIX :  <http://schema.org/>
+  CONSTRUCT {
+    ?advertiser a :Organization .
+    ?advertiser :name ?name .
+  }
+  WHERE {
+    ?advertiser a :Organization .
+    ?advertiser :name ?name .
+    ?advertiser :advertised ?person .
+    ?person :name "${username}" .
+  }
+  `
+  rdfPublic = await construct(rdfPublic, filterUser)
+
   const sparql = `
   PREFIX :  <http://schema.org/>
   SELECT ?name
   WHERE {
-      ?advertiser a :Organization .
-      ?advertiser :name ?name
+    ?advertiser a :Organization .
+    ?advertiser :name ?name
   }
   ORDER BY ?name
   `
-  const b1 = await query(rdf1, sparql)
-  const b2 = await query(rdf2, sparql)
+  const b1 = await query(rdfLocal, sparql)
+  const b2 = await query(rdfPublic, sparql)
   const key = '?name'
   const header = key.substring(1)
   const advertisers1 = b1.map(binding => binding.get(key).value)

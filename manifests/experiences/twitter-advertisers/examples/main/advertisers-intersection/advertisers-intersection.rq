@@ -4,10 +4,13 @@ PREFIX :  <http://schema.org/>
 CONSTRUCT {
   ?advertiser a :Organization .
   ?advertiser :name ?name .
+  ?person a :Person .
+  ?person :name ?namePerson .
   ?advertiser :advertised ?person .
 }
 WHERE {
   ?advertiser a :Organization .
   ?advertiser :name ?name .
-  ?person a :Person
+  ?person a :Person .
+  ?person :name ?namePerson .
 }

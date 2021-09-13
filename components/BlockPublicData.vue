@@ -7,21 +7,10 @@
           :progress="progressGet"
           :status="statusGet"
           :error="errorGet"
-          :disabled="disabledGet"
           text="Get RDF"
           icon="mdiStepForward"
           class="ma-sm-2"
           @click="retrieveData"
-        />
-        <base-button
-          :progress="progressCompare"
-          :status="statusCompare"
-          :error="errorCompare"
-          :disabled="disabledCompare"
-          text="Compare"
-          icon="mdiStepForward"
-          class="ma-sm-2"
-          @click="compareData"
         />
         <base-download-button
           extension="nq"
@@ -32,6 +21,25 @@
       </div>
       <div class="d-flex flex-column flex-sm-row align-start">
         <slot name="selector" :change="v => (comparator = v)" class="ma-sm-3" />
+      </div>
+      <div class="d-flex flex-column flex-sm-row align-start">
+        <v-text-field
+          v-model="username"
+          label="Username"
+          class="ma-sm-2"
+        ></v-text-field>
+      </div>
+      <div class="d-flex flex-column flex-sm-row align-start">
+        <base-button
+          :progress="progressCompare"
+          :status="statusCompare"
+          :error="errorCompare"
+          :disabled="disabledCompare"
+          text="Compare"
+          icon="mdiStepForward"
+          class="ma-sm-2"
+          @click="compareData"
+        />
       </div>
     </div>
     <div>
@@ -63,15 +71,13 @@ export default {
       headers: [],
       items: [],
       rdfPublic: '',
-      comparator: ''
+      comparator: '',
+      username: ''
     }
   },
   computed: {
     disabledCompare() {
       return !this.rdfPublic || !this.rdfLocal || this.progressGet
-    },
-    disabledGet() {
-      return !this.comparator
     }
   },
   methods: {
@@ -93,7 +99,8 @@ export default {
       try {
         const [headers, items] = await comparators[this.comparator](
           this.rdfLocal,
-          this.rdfPublic
+          this.rdfPublic,
+          this.username
         )
         this.headers = headers.map(h => ({ text: h, value: h }))
         this.items = items
