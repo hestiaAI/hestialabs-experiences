@@ -37,6 +37,35 @@ const advertisersIntersection = async (rdfLocal, rdfPublic, username) => {
   return [[header], items]
 }
 
+const advertisersCountAvg = async (rdfLocal, rdfPublic) => {
+  const sparqlPublic = `
+  PREFIX :  <http://schema.org/>
+  SELECT ?nAdvertisers
+  WHERE {
+    ?person a :Person .
+    ?person :hasAdvertiserCount ?nAdvertisers .
+  }
+  `
+  const sparqlLocal = `
+  PREFIX :  <http://schema.org/>
+  SELECT (COUNT(?advertiser) as ?nAdvertisers) WHERE { 
+    ?advertiser a :Organization .
+    ?advertiser :name ?name .
+  } 
+  `
+  const b1 = await query(rdfLocal, sparqlLocal)
+  const b2 = await query(rdfPublic, sparqlPublic)
+  const key = '?nAdvertisers'
+  const header1 = 'nAdvertisersLocal'
+  const header2 = 'nAdvertisersAvg'
+  const nLocal = b1.map(binding => binding.get(key).value)[0]
+  const nAdvertisers = b2.map(binding => parseInt(binding.get(key).value))
+  const avg = nAdvertisers.reduce((a, b) => a + b, 0) / nAdvertisers.length
+  const items = [{ [header1]: nLocal, [header2]: avg }]
+  return [[header1, header2], items]
+}
+
 export default {
-  advertisersIntersection
+  advertisersIntersection,
+  advertisersCountAvg
 }

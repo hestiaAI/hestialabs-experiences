@@ -1,0 +1,18 @@
+# authors: Florian Singer <florian.singer@hestia.ai>
+PREFIX :  <http://schema.org/>
+
+CONSTRUCT {
+  ?person :hasAdvertiserCount ?nAdvertisers .
+  ?person a :Person .
+  ?person :name ?namePerson .
+}
+WHERE {
+  { 
+    SELECT (COUNT(?advertiser) as ?nAdvertisers) WHERE { 
+      ?advertiser a :Organization .
+      ?advertiser :name ?name .
+    } 
+  }
+  ?person a :Person .
+  ?person :name ?namePerson .
+}

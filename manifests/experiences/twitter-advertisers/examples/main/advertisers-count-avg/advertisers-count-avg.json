@@ -1,0 +1,5 @@
+{
+  "name": "Advertisers Count Average",
+  "comparator": "advertisersCountAvg",
+  "oneToOne": false
+}
