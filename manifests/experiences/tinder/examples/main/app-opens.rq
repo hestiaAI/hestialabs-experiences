@@ -1,0 +1,9 @@
+PREFIX :   <http://schema.org/>
+PREFIX ex: <http://www.example.com/>
+
+SELECT ?date ?open
+WHERE {
+    ?appOpen a ex:AppOpen .
+    ?appOpen ex:date ?date .
+    ?appOpen ex:value ?open .
+}
