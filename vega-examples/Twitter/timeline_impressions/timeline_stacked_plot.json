@@ -18,13 +18,13 @@
   },
   "data": [
     {
-      "name": "table",
-      "url": "data.json",
+      "name": "source",
+      "values": [0],
       "format": {"type": "json", "parse": {"date": "date:'%d-%m-%Y'"}}
     },
     {
       "name": "ranks",
-      "source": "table",
+      "source": "source",
       "transform": [
         {
           "type": "aggregate",
@@ -42,7 +42,7 @@
     },
     {
       "name": "companies",
-      "source": "table",
+      "source": "source",
       "transform": [
         {
           "type": "lookup",

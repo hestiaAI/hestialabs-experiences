@@ -5,8 +5,8 @@
   "padding": 50,
   "data": [
     {
-      "name": "table",
-      "url": "data.json",
+      "name": "source",
+      "values": [],
       "format": {"type": "json", "parse": {"date": "date:'%Y-%m-%d'"}},
       "transform": [
         {
@@ -22,7 +22,7 @@
       "name": "x",
       "type": "time",
       "range": "width",
-      "domain": {"data": "table", "field": "date"}
+      "domain": {"data": "source", "field": "date"}
     },
     {
       "name": "y",
@@ -30,7 +30,7 @@
       "range": "height",
       "nice": true,
       "zero": true,
-      "domain": {"data": "table", "field": "open"}
+      "domain": {"data": "source", "field": "open"}
     },
     {
       "name": "color",
@@ -59,7 +59,7 @@
       "name": "open_line",
       "type": "line",
       "style": ["line"],
-      "from": {"data": "table"},
+      "from": {"data": "source"},
       "encode": {
         "enter": {
           "x": {"scale": "x", "field": "date"},
@@ -73,7 +73,7 @@
       "name": "open_marks",
       "type": "symbol",
       "style": ["point"],
-      "from": {"data": "table"},
+      "from": {"data": "source"},
       "encode": {
         "enter": {
           "opacity": {"value": 1},

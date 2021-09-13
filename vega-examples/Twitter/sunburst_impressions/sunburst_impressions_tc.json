@@ -6,8 +6,8 @@
   "autosize": "none",
   "data": [
     {
-      "name": "tree",
-      "url": "data.json",
+      "name": "source",
+      "values":[],
       "transform": [
         {"type": "stratify", "key": "id", "parentKey": "parent"},
         {
@@ -29,7 +29,7 @@
   "marks": [
     {
       "type": "arc",
-      "from": {"data": "tree"},
+      "from": {"data": "source"},
       "encode": {
         "enter": {
           "x": {"signal": "width / 2"},

@@ -100,7 +100,7 @@
   "data": [
     {
       "name": "source",
-      "url": "data.json",
+      "values":[],
       "transform": [
         {"type": "fold", "fields": ["dislike", "like"]},
         {

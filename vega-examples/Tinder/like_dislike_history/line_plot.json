@@ -6,8 +6,8 @@
 
   "data": [
     {
-      "name": "table",
-      "url": "data.json",
+      "name": "source",
+      "values": [],
       "format": {"type": "json", "parse": {"date": "date:'%Y-%m-%d'"}},
       "transform": [
         {
@@ -18,7 +18,7 @@
         {
           "type": "formula",
           "as": "dateStr",
-          "expr": "utcFormat(datum.date,'%B %d, %Y')"
+          "expr": "timeFormat(datum.date,'%B %d, %Y')"
         },
         {"type": "extent", "field": "max", "signal": "extent"}
       ]
@@ -30,7 +30,7 @@
       "name": "x",
       "type": "time",
       "range": "width",
-      "domain": {"data": "table", "field": "date"}
+      "domain": {"data": "source", "field": "date"}
     },
     {
       "name": "y",
@@ -71,7 +71,7 @@
       "name": "likes_line",
       "type": "line",
       "style": ["line"],
-      "from": {"data": "table"},
+      "from": {"data": "source"},
       "encode": {
         "enter": {
           "x": {"scale": "x", "field": "date"},
@@ -84,7 +84,7 @@
     {
       "name": "dislikes_line",
       "type": "line",
-      "from": {"data": "table"},
+      "from": {"data": "source"},
       "encode": {
         "enter": {
           "x": {"scale": "x", "field": "date"},
@@ -98,7 +98,7 @@
       "name": "dislikes_marks",
       "type": "symbol",
       "style": ["point"],
-      "from": {"data": "table"},
+      "from": {"data": "source"},
       "encode": {
         "enter": {
           "opacity": {"value": 1},
@@ -124,7 +124,7 @@
       "name": "likes_marks",
       "type": "symbol",
       "style": ["point"],
-      "from": {"data": "table"},
+      "from": {"data": "source"},
       "encode": {
         "enter": {
           "opacity": {"value": 1},

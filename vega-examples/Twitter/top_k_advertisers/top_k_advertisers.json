@@ -30,7 +30,7 @@
   "data": [
     {
       "name": "source",
-      "url": "data.json",
+      "values": [],
       "transform": [
         {
           "type": "filter",
