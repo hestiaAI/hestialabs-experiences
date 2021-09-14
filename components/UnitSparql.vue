@@ -90,8 +90,6 @@ export default {
             keys.map((key, index) => [headers[index], map.get(key).value])
           )
         )
-        // vega changes the values, we need to clone them
-        // if we want to show also show them in the table
         this.items = items
         this.$emit('update', { headers, items })
       } catch (error) {
