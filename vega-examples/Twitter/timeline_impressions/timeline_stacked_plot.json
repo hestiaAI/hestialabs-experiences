@@ -1,6 +1,5 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
-  "description": "A basic stacked bar chart example.",
   "width": 600,
   "height": 300,
   "padding": 5,
@@ -19,7 +18,7 @@
   "data": [
     {
       "name": "source",
-      "values": [0],
+      "values": [],
       "format": {"type": "json", "parse": {"date": "date:'%d-%m-%Y'"}}
     },
     {
