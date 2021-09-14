@@ -7,8 +7,8 @@
   "visualizations": {"main": {
     "likes-dislikes": ["line-plot"],
     "app-opens": ["open"],
-    "likes-dislikes-open": ["open-like-dislike-summary"],
-    "_likes-dislikes-open": ["open-like-dislike-summary", "line-plot", "open"]
+    "likes-dislikes-open": ["line-plot", "open", "open-like-dislike-summary"],
+    "all": ["line-plot", "open", "open-like-dislike-summary"]
   }},
   "collaborator": {
     "title": "Dating Privacy Collective",

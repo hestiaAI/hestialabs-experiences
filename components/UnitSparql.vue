@@ -29,17 +29,11 @@
       language="sparql"
     />
     <v-alert v-if="message" type="error">{{ message }}</v-alert>
-    <unit-vega-viz
-      v-for="(spec, index) in vegaSpecs"
-      :key="`spec-${index}`"
-      :spec="spec"
-      :values="vegaValues"
-    />
   </div>
 </template>
 
 <script>
-import query from '@/utils/sparql'
+import { queryHeadersItems } from '@/utils/sparql'
 import { processError } from '@/utils/utils'
 
 export default {
@@ -47,21 +41,11 @@ export default {
     rdf: {
       type: String,
       default: ''
-    },
-    exampleVisualizations: {
-      type: Object,
-      default: () => {}
-    },
-    exampleVegaSpecs: {
-      type: Array,
-      default: () => []
     }
   },
   data() {
     return {
       sparql: '',
-      vegaSpecs: [],
-      vegaValues: [],
       message: '',
       status: false,
       error: false,
@@ -79,20 +63,7 @@ export default {
         this.message = ''
         this.error = false
         this.progress = true
-
-        const bindings = await query(this.rdf, this.sparql)
-        const keys = Array.from((bindings[0] || new Map()).keys())
-        const headers = keys.map(k => k.substring(1))
-        const items = bindings.map(map =>
-          // map.get(k) returns an N3 Term
-          // https://github.com/rdfjs/N3.js/blob/main/src/N3DataFactory.js
-          Object.fromEntries(
-            keys.map((key, index) => [headers[index], map.get(key).value])
-          )
-        )
-        // vega changes the values, we need to clone them
-        // if we want to show also show them in the table
-        this.vegaValues = this.cloneItems(items)
+        const [headers, items] = await queryHeadersItems(this.rdf, this.sparql)
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)
@@ -104,43 +75,9 @@ export default {
         this.progress = false
       }
     },
-    cloneItems(items) {
-      if (!items.length) {
-        return []
-      }
-      const keys = Object.keys(items[0])
-      return items.map(item =>
-        keys.reduce((clone, key) => {
-          clone[key] = item[key].slice()
-          return clone
-        }, {})
-      )
-    },
     onChangeSelector(event) {
       this.sparql = event.sparql
-      const vizNames = this.exampleVisualizations[event.name]
-      const vegaFiles = this.exampleVegaSpecs.filter(s =>
-        vizNames?.includes(s.name)
-      )
-      console.log('vf', vegaFiles)
-      this.vegaSpecs = vegaFiles
-        .map(vegaFile => {
-          const vegaSpecJson = vegaFile?.vega
-          let spec
-          if (vegaSpecJson) {
-            try {
-              spec = JSON.parse(vegaSpecJson)
-            } catch (error) {
-              // TODO maybe display this error to the user
-              console.error(`could not parse ${vegaFile.name}`, error)
-            }
-          }
-          return spec
-        })
-        .filter(spec => !!spec)
-        .filter((_o, i) => i < 1)
-
-      console.log('vs', this.vegaSpecs)
+      this.$emit('change', { name: event.name })
     }
   }
 }

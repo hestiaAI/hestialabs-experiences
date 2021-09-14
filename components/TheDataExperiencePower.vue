@@ -24,9 +24,8 @@
         <unit-sparql
           :rdf="rdf"
           class="mr-lg-6"
-          :example-visualizations="exampleVisualizations"
-          :example-vega-specs="selectedExample.vega"
           @update="onUnitSparqlUpdate"
+          @change="onSparqlSelectorChange"
         >
           <template #selector="{ change, classAttr }">
             <the-sparql-selector
@@ -40,6 +39,12 @@
         <unit-query-results v-bind="{ headers, items }" />
       </div>
     </v-expand-transition>
+    <unit-vega-viz
+      v-for="specFile in vegaFiles"
+      :key="`spec-${specFile.name}`"
+      :spec-file="specFile"
+      :values="items"
+    />
   </div>
 </template>
 
@@ -60,7 +65,8 @@ export default {
       rdf: '',
       toRDF: true,
       headers: [],
-      items: []
+      items: [],
+      vegaFiles: []
     }
   },
   computed: {
@@ -87,6 +93,12 @@ export default {
       // Vuetify DataTable component expects text and value properties
       this.headers = headers.map(h => ({ text: h, value: h }))
       this.items = items
+    },
+    onSparqlSelectorChange({ name = '' }) {
+      const vizNames = this.exampleVisualizations[name]
+      this.vegaFiles = this.selectedExample.vega.filter(s =>
+        vizNames?.includes(s.name)
+      )
     }
   }
 }
