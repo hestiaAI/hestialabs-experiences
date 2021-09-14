@@ -16,12 +16,18 @@
           >{{ message }}</v-alert
         >
       </template>
-      <unit-vega-viz
-        v-for="specFile in vegaFiles"
-        :key="`spec-${specFile.name}`"
-        :spec-file="specFile"
-        :values="items"
-      />
+      <template v-if="progressQuery">
+        <base-progress-circular class="mr-2" />
+        <span>Generating Graphs...</span>
+      </template>
+      <template v-if="successQuery">
+        <unit-vega-viz
+          v-for="specFile in vegaFiles"
+          :key="`spec-${specFile.name}`"
+          :spec-file="specFile"
+          :values="items"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -47,6 +53,9 @@ export default {
       error: false,
       success: false,
       message: '',
+      progressQuery: false,
+      errorQuery: false,
+      successQuery: false,
       rml: '',
       rdf: '',
       headers: [],
@@ -130,7 +139,9 @@ export default {
       }
     },
     async runQuery() {
-      // Run SPARQL query
+      this.errorQuery = false
+      this.successQuery = false
+      this.progressQuery = true
       try {
         const [headers, items] = await queryHeadersItems(
           this.rdf,
@@ -138,9 +149,12 @@ export default {
         )
         this.headers = headers
         this.items = items
+        this.successQuery = true
       } catch (error) {
         console.error(error)
+        this.errorQuery = true
       }
+      this.progressQuery = false
     }
   }
 }
