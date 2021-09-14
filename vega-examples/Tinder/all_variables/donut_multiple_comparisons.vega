@@ -45,7 +45,7 @@
         },
         {
           "type": "aggregate",
-          "fields":["like", "open", "number_of_superlike", "dislike", "number_of_messages_sent", "number_of_messages_received", "number_of_match"],
+          "fields":["like", "open", "number_of_superlike", "pass", "number_of_messages_sent", "number_of_messages_received", "number_of_match"],
           "ops":["sum","sum","sum","sum","sum","sum", "sum"],
           "as":["Likes", "App opened", "Superlikes", "Passes", "Messages sent", "Messages received", "Matches"]
         },

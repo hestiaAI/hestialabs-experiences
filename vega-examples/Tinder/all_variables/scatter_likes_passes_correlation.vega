@@ -107,7 +107,7 @@
       "transform": [
         {
           "type": "aggregate",
-          "fields":["like", "dislike", "open"],
+          "fields":["like", "pass", "open"],
           "groupby":["date"],
           "ops":["sum", "sum", "sum"],
           "as":["Likes", "Passes", "open"]
