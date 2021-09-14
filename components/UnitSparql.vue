@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import query from '@/utils/sparql'
+import { queryHeadersItems } from '@/utils/sparql'
 import { processError } from '@/utils/utils'
 
 export default {
@@ -63,17 +63,7 @@ export default {
         this.message = ''
         this.error = false
         this.progress = true
-
-        const bindings = await query(this.rdf, this.sparql)
-        const keys = Array.from((bindings[0] || new Map()).keys())
-        const headers = keys.map(k => k.substring(1))
-        const items = bindings.map(map =>
-          // map.get(k) returns an N3 Term
-          // https://github.com/rdfjs/N3.js/blob/main/src/N3DataFactory.js
-          Object.fromEntries(
-            keys.map((key, index) => [headers[index], map.get(key).value])
-          )
-        )
+        const [headers, items] = await queryHeadersItems(this.rdf, this.sparql)
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)
