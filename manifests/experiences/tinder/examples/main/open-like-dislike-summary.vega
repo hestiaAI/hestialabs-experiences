@@ -102,10 +102,10 @@
       "name": "source",
       "url": "data.json",
       "transform": [
-        {"type": "fold", "fields": ["dislike", "like"]},
+        {"type": "fold", "fields": ["pass", "like"]},
         {
           "type": "filter",
-          "expr": "(datum['dislike'] != null || datum['like'] != null) && datum['open'] != null"
+          "expr": "(datum['pass'] != null || datum['like'] != null) && datum['open'] != null"
         }
       ]
     },
@@ -163,7 +163,7 @@
       "domain": false,
       "orient": "left",
       "titlePadding": 20,
-      "title": "Number of likes/dislikes"
+      "title": "Number of likes/passes"
     }
   ],
 

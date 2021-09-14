@@ -26,13 +26,13 @@
       "range": "height",
       "nice": true,
       "zero": true,
-      "domain": {"data": "table", "field": "dislike"}
+      "domain": {"data": "table", "field": "pass"}
     },
     {
       "name": "color",
       "type": "ordinal",
       "range": ["#66cc99", "#d24d57"],
-      "domain": ["Likes", "Dislikes"]
+      "domain": ["Likes", "Passes"]
     }
   ],
 
@@ -76,8 +76,8 @@
       "encode": {
         "enter": {
           "x": {"scale": "x", "field": "date"},
-          "y": {"scale": "y", "field": "dislike"},
-          "stroke":{"scale": "color", "value":"Dislikes"},
+          "y": {"scale": "y", "field": "pass"},
+          "stroke":{"scale": "color", "value":"Passes"},
           "strokeWidth": {"value": 2}
         },
         "update": {
@@ -90,7 +90,7 @@
     }
   ],
   "title": {
-    "text": "History of likes and dislikes you have made",
+    "text": "History of likes and passes you have made",
     "encode": {
       "title": {
         "enter": {
