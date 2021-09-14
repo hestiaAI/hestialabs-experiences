@@ -22,6 +22,18 @@ export default {
     divId() {
       return `unit-vega-viz-${this.name}`
     },
+    clonedValues() {
+      if (!this.values.length) {
+        return []
+      }
+      const keys = Object.keys(this.values[0])
+      return this.values.map(item =>
+        keys.reduce((clone, key) => {
+          clone[key] = item[key].slice()
+          return clone
+        }, {})
+      )
+    },
     specWithValues() {
       if (!this.spec?.data) {
         // invalid data
@@ -29,7 +41,7 @@ export default {
       }
       const clonedSpec = Object.assign({}, this.spec)
       const clonedFirstData = Object.assign({}, this.spec.data[0])
-      clonedFirstData.values = this.values
+      clonedFirstData.values = this.clonedValues
       const clonedData = this.spec.data.slice()
       clonedData[0] = clonedFirstData
       clonedSpec.data = clonedData

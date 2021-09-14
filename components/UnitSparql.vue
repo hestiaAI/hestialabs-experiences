@@ -34,7 +34,7 @@
       :key="`spec-${spec.name}`"
       :name="spec.name"
       :spec="spec.content"
-      :values="vegaValues"
+      :values="items"
     />
   </div>
 </template>
@@ -62,7 +62,7 @@ export default {
     return {
       sparql: '',
       vegaSpecs: [],
-      vegaValues: [],
+      items: [],
       message: '',
       status: false,
       error: false,
@@ -93,7 +93,7 @@ export default {
         )
         // vega changes the values, we need to clone them
         // if we want to show also show them in the table
-        this.vegaValues = this.cloneItems(items)
+        this.items = items
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)
@@ -104,18 +104,6 @@ export default {
         this.status = true
         this.progress = false
       }
-    },
-    cloneItems(items) {
-      if (!items.length) {
-        return []
-      }
-      const keys = Object.keys(items[0])
-      return items.map(item =>
-        keys.reduce((clone, key) => {
-          clone[key] = item[key].slice()
-          return clone
-        }, {})
-      )
     },
     onChangeSelector(event) {
       this.sparql = event.sparql
