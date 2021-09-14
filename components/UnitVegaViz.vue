@@ -7,11 +7,9 @@ import embed from 'vega-embed'
 
 export default {
   props: {
-    name: { type: String, default: '' },
-    spec: {
+    specFile: {
       type: Object,
-      default: () => {},
-      required: true
+      default: () => {}
     },
     values: {
       type: Array,
@@ -22,7 +20,27 @@ export default {
     divId() {
       return `unit-vega-viz-${this.name}`
     },
+    name() {
+      return this.specFile?.name
+    },
+    jsonSpec() {
+      const stringSpec = this.specFile?.vega
+      let jsonSpec
+      if (stringSpec) {
+        try {
+          jsonSpec = JSON.parse(stringSpec)
+        } catch (error) {
+          // TODO maybe display this error to the user
+          console.error(`could not parse ${this.specFile.name}`, error)
+        }
+      }
+      return jsonSpec
+    },
     clonedValues() {
+      // Vega happens to modify values,
+      // so we clone them to avoid affecting
+      // other graphs that could
+      // possibly use the same values
       if (!this.values.length) {
         return []
       }
@@ -35,17 +53,25 @@ export default {
       )
     },
     specWithValues() {
-      if (!this.spec?.data) {
+      // Changing the values involves
+      // stuffing them into a spec.
+      // We'll keep an original spec
+      // that we clone whenever values change.
+      // That's not entirely necessary
+      // but keeps the linter happy.
+      if (!this.jsonSpec?.data) {
         // invalid data
         return {}
       }
-      const clonedSpec = Object.assign({}, this.spec)
-      const clonedFirstData = Object.assign({}, this.spec.data[0])
-      clonedFirstData.values = this.clonedValues
-      const clonedData = this.spec.data.slice()
-      clonedData[0] = clonedFirstData
-      clonedSpec.data = clonedData
-      console.log('Vega data', clonedFirstData)
+      const values = this.clonedValues
+      const spec = this.jsonSpec
+      // we only change spec.data[0].values
+      const clonedSpec = Object.assign({}, spec, {
+        data: [
+          Object.assign({}, spec.data[0], { values }),
+          ...spec.data.slice(1)
+        ]
+      })
       return clonedSpec
     }
   },

@@ -30,10 +30,9 @@
     />
     <v-alert v-if="message" type="error">{{ message }}</v-alert>
     <unit-vega-viz
-      v-for="spec in vegaSpecs"
-      :key="`spec-${spec.name}`"
-      :name="spec.name"
-      :spec="spec.content"
+      v-for="specFile in vegaFiles"
+      :key="`spec-${specFile.name}`"
+      :specFile="specFile"
       :values="items"
     />
   </div>
@@ -61,7 +60,7 @@ export default {
   data() {
     return {
       sparql: '',
-      vegaSpecs: [],
+      vegaFiles: [],
       items: [],
       message: '',
       status: false,
@@ -108,25 +107,9 @@ export default {
     onChangeSelector(event) {
       this.sparql = event.sparql
       const vizNames = this.exampleVisualizations[event.name]
-      const vegaFiles = this.exampleVegaSpecs.filter(s =>
+      this.vegaFiles = this.exampleVegaSpecs.filter(s =>
         vizNames?.includes(s.name)
       )
-      this.vegaSpecs = vegaFiles
-        .map(this.mapVegaFile)
-        .filter(spec => !!spec.content)
-    },
-    mapVegaFile(vegaFile) {
-      const vegaSpecJson = vegaFile?.vega
-      let spec
-      if (vegaSpecJson) {
-        try {
-          spec = JSON.parse(vegaSpecJson)
-        } catch (error) {
-          // TODO maybe display this error to the user
-          console.error(`could not parse ${vegaFile.name}`, error)
-        }
-      }
-      return { content: spec, name: vegaFile.name }
     }
   }
 }
