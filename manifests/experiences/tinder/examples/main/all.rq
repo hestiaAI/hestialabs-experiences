@@ -1,11 +1,11 @@
 PREFIX :   <http://schema.org/>
 PREFIX ex: <http://www.example.com/>
 
-SELECT ?date ?dislike ?like ?open ?number_of_match ?number_of_messages_received ?number_of_messages_sent ?number_of_superlike
+SELECT ?date ?pass ?like ?open ?number_of_match ?number_of_messages_received ?number_of_messages_sent ?number_of_superlike
 WHERE {
     ?swipePass a ex:SwipePass .
     ?swipePass ex:date ?date .
-    ?swipePass ex:value ?dislike .
+    ?swipePass ex:value ?pass .
     ?swipeLike a ex:SwipeLike .
     ?swipeLike ex:date ?date .
     ?swipeLike ex:value ?like .
