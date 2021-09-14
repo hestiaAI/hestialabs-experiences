@@ -29,12 +29,6 @@
       language="sparql"
     />
     <v-alert v-if="message" type="error">{{ message }}</v-alert>
-    <unit-vega-viz
-      v-for="specFile in vegaFiles"
-      :key="`spec-${specFile.name}`"
-      :specFile="specFile"
-      :values="items"
-    />
   </div>
 </template>
 
@@ -47,21 +41,11 @@ export default {
     rdf: {
       type: String,
       default: ''
-    },
-    exampleVisualizations: {
-      type: Object,
-      default: () => {}
-    },
-    exampleVegaSpecs: {
-      type: Array,
-      default: () => []
     }
   },
   data() {
     return {
       sparql: '',
-      vegaFiles: [],
-      items: [],
       message: '',
       status: false,
       error: false,
@@ -90,7 +74,6 @@ export default {
             keys.map((key, index) => [headers[index], map.get(key).value])
           )
         )
-        this.items = items
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)
@@ -104,10 +87,7 @@ export default {
     },
     onChangeSelector(event) {
       this.sparql = event.sparql
-      const vizNames = this.exampleVisualizations[event.name]
-      this.vegaFiles = this.exampleVegaSpecs.filter(s =>
-        vizNames?.includes(s.name)
-      )
+      this.$emit('change', { name: event.name })
     }
   }
 }
