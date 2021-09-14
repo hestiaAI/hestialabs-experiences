@@ -38,6 +38,9 @@ import rdfUtils from '@/utils/rdf'
 import parseYarrrml from '@/utils/parse-yarrrml'
 import { queryHeadersItems } from '@/utils/sparql'
 
+const DEFAULT_EXAMPLE = 'main'
+const DEFAULT_QUERY = 'all'
+
 function getErrorMessage(error) {
   return error instanceof Error ? error.message : error
 }
@@ -64,12 +67,10 @@ export default {
   },
   computed: {
     example() {
-      // Select the main example
-      return this.examples.find(e => e.name === 'main')
+      return this.examples.find(e => e.name === DEFAULT_EXAMPLE)
     },
     exampleSparql() {
-      // TODO change value
-      return this.example.sparql.find(e => e.name === 'likes-dislikes-open')
+      return this.example.sparql.find(e => e.name === DEFAULT_QUERY)
     },
     exampleVisualizations() {
       return this.visualizations?.[this.example.name] || {}
