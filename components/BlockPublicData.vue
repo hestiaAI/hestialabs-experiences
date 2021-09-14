@@ -7,9 +7,9 @@
           :progress="progressGet"
           :status="statusGet"
           :error="errorGet"
-          text="Get RDF"
+          text="Get Public RDF"
           icon="mdiStepForward"
-          class="ma-sm-2"
+          class="my-sm-2 mr-sm-2"
           @click="retrieveData"
         />
         <base-download-button
@@ -19,34 +19,28 @@
           class="ma-sm-2"
         />
       </div>
-      <div class="d-flex flex-column flex-sm-row align-start">
-        <comparator-selector
-          class="ma-sm-3"
-          :items="example.sharing"
-          :disabled="!example.sharing.length"
-          @change="changeComparator"
-        />
-      </div>
-      <div class="d-flex flex-column flex-sm-row align-start">
-        <v-text-field
-          v-if="oneToOne"
-          v-model="username"
-          label="Username"
-          class="ma-sm-2"
-        ></v-text-field>
-      </div>
-      <div class="d-flex flex-column flex-sm-row align-start">
-        <base-button
-          :progress="progressCompare"
-          :status="statusCompare"
-          :error="errorCompare"
-          :disabled="disabledCompare"
-          text="Compare"
-          icon="mdiStepForward"
-          class="ma-sm-2"
-          @click="compareData"
-        />
-      </div>
+      <comparator-selector
+        class="my-sm-2 mr-sm-2"
+        :items="example.sharing"
+        :disabled="!example.sharing.length"
+        @change="changeComparator"
+      />
+      <v-text-field
+        v-if="oneToOne"
+        v-model="username"
+        label="Username"
+        class="my-sm-2 mr-sm-2"
+      ></v-text-field>
+      <base-button
+        :progress="progressCompare"
+        :status="statusCompare"
+        :error="errorCompare"
+        :disabled="disabledCompare"
+        text="Compare"
+        icon="mdiStepForward"
+        class="my-sm-2 mr-sm-2"
+        @click="compareData"
+      />
     </div>
     <div>
       <h2 class="my-3">Results</h2>

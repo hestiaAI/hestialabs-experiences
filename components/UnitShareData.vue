@@ -1,23 +1,29 @@
 <template>
   <div>
     <h2 class="my-3">Share Data</h2>
-    <div class="d-flex flex-column flex-sm-row align-start">
-      <v-text-field
-        v-model="username"
-        label="Username"
-        class="ma-sm-2"
-      ></v-text-field>
-    </div>
-    <div class="d-flex flex-column flex-sm-row align-start">
+    <slot name="selector" :change="v => (sparql = v)" class="my-sm-2 mr-sm-2" />
+    <v-text-field
+      v-model="username"
+      label="Username"
+      class="my-sm-2 mr-sm-2"
+    ></v-text-field>
+    <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
       <base-button
         :progress="progressGenerate"
         :status="statusGenerate"
         :error="errorGenerate"
         :disabled="disabledGenerate"
-        text="Generate RDF"
+        text="Construct RDF"
         icon="mdiStepForward"
-        class="ma-sm-2"
+        class="my-sm-2 mr-sm-2"
         @click="constructRDF"
+      />
+      <base-download-button
+        extension="nq"
+        text="Preview"
+        :data="rdfOutput"
+        :disabled="!rdfOutput"
+        class="ma-sm-2"
       />
       <base-button
         :progress="progressShare"
@@ -29,15 +35,6 @@
         class="ma-sm-2"
         @click="share"
       />
-      <base-download-button
-        extension="nq"
-        :data="rdfOutput"
-        :disabled="!rdfOutput"
-        class="ma-sm-2"
-      />
-    </div>
-    <div class="d-flex flex-column flex-sm-row align-start">
-      <slot name="selector" :change="v => (sparql = v)" class="ma-sm-2" />
     </div>
     <code-editor
       :value.sync="sparql"
