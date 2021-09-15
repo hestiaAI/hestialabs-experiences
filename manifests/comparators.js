@@ -1,4 +1,4 @@
-import { query, construct } from '@/utils/sparql'
+import { queryBindings, construct } from '@/utils/sparql'
 
 const advertisersIntersection = async (rdfLocal, rdfPublic, username) => {
   const filterUser = `
@@ -25,8 +25,8 @@ const advertisersIntersection = async (rdfLocal, rdfPublic, username) => {
   }
   ORDER BY ?name
   `
-  const b1 = await query(rdfLocal, sparql)
-  const b2 = await query(rdfPublic, sparql)
+  const b1 = await queryBindings(rdfLocal, sparql)
+  const b2 = await queryBindings(rdfPublic, sparql)
   const key = '?name'
   const header = key.substring(1)
   const advertisers1 = b1.map(binding => binding.get(key).value)
@@ -53,8 +53,8 @@ const advertisersCountAvg = async (rdfLocal, rdfPublic) => {
     ?advertiser :name ?name .
   } 
   `
-  const b1 = await query(rdfLocal, sparqlLocal)
-  const b2 = await query(rdfPublic, sparqlPublic)
+  const b1 = await queryBindings(rdfLocal, sparqlLocal)
+  const b2 = await queryBindings(rdfPublic, sparqlPublic)
   const key = '?nAdvertisers'
   const header1 = 'nAdvertisersLocal'
   const header2 = 'nAdvertisersAvg'
