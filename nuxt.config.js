@@ -132,9 +132,9 @@ export default {
           test: /\.worker\.js$/,
           use: 'worker-loader'
         },
-        // enable raw importing of .yaml and .rq files
+        // enable raw importing of .yaml, .rq and .vega.json files
         {
-          test: /\.(ya?ml|rq)$/i,
+          test: /\.(ya?ml|rq|vega)$/i,
           use: 'raw-loader'
         },
         {

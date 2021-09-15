@@ -16,13 +16,18 @@
           >{{ message }}</v-alert
         >
       </template>
-      <base-download-button
-        v-if="success"
-        class="my-4"
-        :data="rdf"
-        extension="nq"
-        text="Download RDF"
-      />
+      <template v-if="progressQuery">
+        <base-progress-circular class="mr-2" />
+        <span>Generating Graphs...</span>
+      </template>
+      <template v-if="successQuery">
+        <unit-vega-viz
+          v-for="specFile in vegaFiles"
+          :key="`spec-${specFile.name}`"
+          :spec-file="specFile"
+          :values="items"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -31,6 +36,10 @@
 /* eslint-disable vue/require-default-prop */
 import rdfUtils from '@/utils/rdf'
 import parseYarrrml from '@/utils/parse-yarrrml'
+import { queryHeadersItems } from '@/utils/sparql'
+
+const DEFAULT_EXAMPLE = 'main'
+const DEFAULT_QUERY = 'all'
 
 function getErrorMessage(error) {
   return error instanceof Error ? error.message : error
@@ -38,7 +47,8 @@ function getErrorMessage(error) {
 
 export default {
   props: {
-    examples: Array
+    examples: Array,
+    visualizations: Object
   },
   data() {
     return {
@@ -46,22 +56,41 @@ export default {
       error: false,
       success: false,
       message: '',
+      progressQuery: false,
+      errorQuery: false,
+      successQuery: false,
       rml: '',
-      rdf: ''
+      rdf: '',
+      headers: [],
+      items: []
     }
   },
   computed: {
-    yarrrml() {
-      // main example's YARRRML
-      return this.examples.find(e => e.name === 'main').yarrrml
+    example() {
+      return this.examples.find(e => e.name === DEFAULT_EXAMPLE)
+    },
+    exampleSparql() {
+      return this.example.sparql.find(e => e.name === DEFAULT_QUERY)
+    },
+    exampleVisualizations() {
+      return this.visualizations?.[this.example.name] || {}
+    },
+    vegaFiles() {
+      const vizNames = this.exampleVisualizations[this.exampleSparql.name]
+      return this.example.vega.filter(s => vizNames?.includes(s.name))
     }
   },
   watch: {
-    yarrrml: {
+    example: {
       immediate: true,
-      async handler(yarrrml) {
+      async handler(example) {
         // this should be quick ...
-        this.rml = await parseYarrrml(yarrrml)
+        this.rml = await parseYarrrml(example.yarrrml)
+      }
+    },
+    rdf: {
+      async handler(rdf) {
+        await this.runQuery()
       }
     }
   },
@@ -109,6 +138,24 @@ export default {
           this.progress = false
         }
       }
+    },
+    async runQuery() {
+      this.errorQuery = false
+      this.successQuery = false
+      this.progressQuery = true
+      try {
+        const [headers, items] = await queryHeadersItems(
+          this.rdf,
+          this.exampleSparql.sparql
+        )
+        this.headers = headers
+        this.items = items
+        this.successQuery = true
+      } catch (error) {
+        console.error(error)
+        this.errorQuery = true
+      }
+      this.progressQuery = false
     }
   }
 }

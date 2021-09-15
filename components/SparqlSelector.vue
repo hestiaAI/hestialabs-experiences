@@ -2,10 +2,11 @@
   <v-select
     v-bind="$attrs"
     item-text="name"
-    item-value="sparql"
+    item-value="name"
     style="max-width: 150px"
     hide-details
     label="Select query"
+    return-object
     @change="$emit('change', $event)"
   />
 </template>

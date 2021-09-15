@@ -21,7 +21,12 @@
     </div>
     <v-expand-transition>
       <div v-show="toRDF" class="io-block">
-        <unit-sparql :rdf="rdf" class="mr-lg-6" @update="onUnitSparqlUpdate">
+        <unit-sparql
+          :rdf="rdf"
+          class="mr-lg-6"
+          @update="onUnitSparqlUpdate"
+          @change="onSparqlSelectorChange"
+        >
           <template #selector="{ change, classAttr }">
             <sparql-selector
               :items="selectedExample.sparql"
@@ -34,6 +39,13 @@
         <unit-query-results v-bind="{ headers, items }" />
       </div>
     </v-expand-transition>
+
+    <unit-vega-viz
+      v-for="specFile in vegaFiles"
+      :key="`spec-${specFile.name}`"
+      :spec-file="specFile"
+      :values="items"
+    />
 
     <div class="io-block">
       <unit-share-data :rdf-input="rdf">
@@ -58,7 +70,8 @@
 /* eslint-disable vue/require-default-prop */
 export default {
   props: {
-    examples: Array
+    examples: Array,
+    visualizations: Object
   },
   data() {
     // main example is selected by default
@@ -70,12 +83,17 @@ export default {
       rdf: '',
       toRDF: true,
       headers: [],
-      items: []
+      items: [],
+      vegaFiles: []
     }
   },
   computed: {
     runQueryDisabled() {
       return !this.rdf
+    },
+    exampleVisualizations() {
+      const exampleName = this.selectedExample.name
+      return this.visualizations?.[exampleName] || {}
     }
   },
   methods: {
@@ -93,6 +111,12 @@ export default {
       // Vuetify DataTable component expects text and value properties
       this.headers = headers.map(h => ({ text: h, value: h }))
       this.items = items
+    },
+    onSparqlSelectorChange({ name = '' }) {
+      const vizNames = this.exampleVisualizations[name]
+      this.vegaFiles = this.selectedExample.vega.filter(s =>
+        vizNames?.includes(s.name)
+      )
     }
   }
 }

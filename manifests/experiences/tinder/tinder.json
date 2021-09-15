@@ -1,0 +1,23 @@
+{
+  "title": "Tinder",
+  "icon": "tinder.png",
+  "ext": "json",
+  "data": ["tinder-synthetic.json"],
+  "preprocessor": "tinder",
+  "visualizations": {"main": {
+    "likes-dislikes": ["daily-likes-passes"],
+    "app-opens": ["daily-usage"],
+    "likes-dislikes-open": ["daily-usage", "daily-likes-passes", "scatter-likes-passes-correlation"],
+    "all": ["monthly-usage",
+            "daily-usage",
+            "monthly-history",
+            "daily-likes-passes",
+            "scatter-likes-passes-correlation",
+            "donut-multiple-comparisons"]
+  }},
+  "collaborator": {
+    "title": "Dating Privacy Collective",
+    "icon": "dating-privacy-collective.svg",
+    "url": "https://dating-privacy.hestialabs.org/"
+  }
+}

@@ -1,0 +1,12 @@
+PREFIX :   <http://schema.org/>
+PREFIX ex: <http://www.example.com/>
+
+SELECT ?date ?pass ?like
+WHERE {
+    ?swipePass a ex:SwipePass .
+    ?swipePass ex:date ?date .
+    ?swipePass ex:value ?pass .
+    ?swipeLike a ex:SwipeLike .
+    ?swipeLike ex:date ?date .
+    ?swipeLike ex:value ?like .
+}

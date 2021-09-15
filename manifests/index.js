@@ -32,6 +32,11 @@ const reqSharingSPARQL = require.context(
   true,
   /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+\/[a-z0-9-]+\.rq$/
 )
+const reqVEGA = require.context(
+  './experiences/',
+  true,
+  /[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.vega$/
+)
 
 // files in assets/data/ are loaded only with file-loader
 const reqData = require.context('../assets/data/', true, /.*/)
@@ -64,8 +69,14 @@ const manifests = Object.fromEntries(
       files = [],
       multiple = false,
       data: dataFiles = [],
-      preprocessor
+      preprocessor,
+      collaborator,
+      ...rest
     } = reqJSON(path)
+
+    if (typeof collaborator === 'object' && collaborator.icon) {
+      collaborator.icon = require(`@/manifests/icons/${collaborator.icon}`)
+    }
 
     let data = dataSamples.filter(({ filename }) =>
       dataFiles.includes(filename)
@@ -112,6 +123,8 @@ const manifests = Object.fromEntries(
         multiple,
         data,
         preprocessor,
+        collaborator,
+        ...rest,
         examples: []
       }
     ]
@@ -131,7 +144,9 @@ reqYARRRML.keys().forEach(path => {
     // empty Object for all SPARQL samples of the example
     sparql: [],
     // empty Object for all sharing use-cases
-    sharing: []
+    sharing: [],
+    // empty Object for all VEGA samples of the example
+    vega: []
   }
   const { examples } = manifests[dir]
   if (name === 'main') {
@@ -191,6 +206,21 @@ reqSharingSPARQL.keys().forEach(path => {
   const exampleObj = manifests[dir].examples.find(e => e.name === example)
   const sharingObj = exampleObj.sharing.find(e => e.key === key)
   sharingObj.sparql = sparql
+})
+
+reqVEGA.keys().forEach(path => {
+  // Extract directory name of the experience
+  const dir = extractFirstDirectory(path)
+  // Extract example name and VEGA query sample name
+  const match = path.match(/\/examples\/(?<example>.+)\/(?<vega>.+)\.vega/)
+  const { example, vega } = match.groups
+  // Add VEGA sample
+  const exampleObj = manifests[dir].examples.find(e => e.name === example)
+  exampleObj.vega.push({
+    name: vega,
+    // vega: 'hellllooooo'
+    vega: reqVEGA(path).default
+  })
 })
 
 Object.entries(manifests).forEach(([key, val]) => {

@@ -1,23 +1,94 @@
-<template>
-  <div></div>
+<template v-if="hasValidSpec">
+  <div :id="divId"></div>
 </template>
 
 <script>
-// const json = {}
+import embed from 'vega-embed'
 
 export default {
   props: {
-    data: {
+    specFile: {
+      type: Object,
+      default: () => {}
+    },
+    values: {
       type: Array,
-      required: true
+      default: () => []
     }
   },
-  mounted() {
-    // const config = {
-    //   data: {
-    //     values: this.data
-    //   }
-    // }
+  computed: {
+    divId() {
+      return `unit-vega-viz-${this.name}`
+    },
+    name() {
+      return this.specFile?.name
+    },
+    jsonSpec() {
+      const stringSpec = this.specFile?.vega
+      let jsonSpec
+      if (stringSpec) {
+        try {
+          jsonSpec = JSON.parse(stringSpec)
+        } catch (error) {
+          // TODO maybe display this error to the user
+          console.error(`could not parse ${this.specFile.name}`, error)
+        }
+      }
+      return jsonSpec
+    },
+    clonedValues() {
+      // Vega happens to modify values,
+      // so we clone them to avoid affecting
+      // other graphs that could
+      // possibly use the same values
+      if (!this.values.length) {
+        return []
+      }
+      const keys = Object.keys(this.values[0])
+      return this.values.map(item =>
+        keys.reduce((clone, key) => {
+          clone[key] = item[key].slice()
+          return clone
+        }, {})
+      )
+    },
+    specWithValues() {
+      // Changing the values involves
+      // stuffing them into a spec.
+      // We'll keep an original spec
+      // that we clone whenever values change.
+      // That's not entirely necessary
+      // but keeps the linter happy.
+      if (!this.jsonSpec?.data) {
+        // invalid data
+        return {}
+      }
+      const values = this.clonedValues
+      const spec = this.jsonSpec
+      // we only change spec.data[0].values
+      const clonedSpec = Object.assign({}, spec, {
+        data: [
+          Object.assign({}, spec.data[0], { values }),
+          ...spec.data.slice(1)
+        ]
+      })
+      return clonedSpec
+    }
+  },
+  watch: {
+    specWithValues(v) {
+      this.draw()
+    }
+  },
+  async mounted() {
+    await this.draw()
+  },
+  methods: {
+    async draw() {
+      await embed(`#${this.divId}`, this.specWithValues, {
+        actions: false
+      })
+    }
   }
 }
 </script>

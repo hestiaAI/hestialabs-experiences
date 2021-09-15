@@ -1,0 +1,133 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "width": 500,
+  "height": 510,
+  "padding": 25,
+  "autosize": "fit",
+
+  "signals": [
+    {
+      "name": "k", "value": 20,
+      "bind": {"input": "range", "name": " ", "min": 10, "max": 50, "step": 1}
+    },
+    {
+      "name": "op", "value": "average",
+      "bind": {"input": "select", "name":" ", "options": ["average", "sum"], "labels": ["per day", "in total"]}
+    },
+    {
+      "name": "label",
+      "value": {"average": "per day", "sum": "in total"}
+    }
+  ],
+
+  "title": {
+    "text": {"signal": "'Advertiser targetting you ' + label[op]"},
+    "fontSize":{"value":18},
+    "anchor": "start",
+    "frame": "group"
+  },
+
+  "data": [
+    {
+      "name": "source",
+      "values": [],
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.advertiserName != null && datum['count'] != null"
+        }
+      ]
+    },
+    {
+      "name": "ranks",
+      "source": "source",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["advertiserName"],
+          "ops": [{"signal": "op"}],
+          "fields": ["count"],
+          "as": ["count"]
+        },
+        {
+          "type": "window",
+          "sort": {"field": "count", "order": "descending"},
+          "ops": ["row_number"], "as": ["rank"]
+        }
+      ]
+    },
+    {
+      "name": "companies",
+      "source": "source",
+      "transform": [
+        {
+          "type": "lookup",
+          "from": "ranks",
+          "key": "advertiserName",
+          "values": ["rank"],
+          "fields": ["advertiserName"]
+        },
+        {
+          "type": "formula",
+          "as": "Category",
+          "expr": "datum.rank < k ? datum.advertiserName : 'All Others'"
+        },
+        {
+          "type": "aggregate",
+          "groupby": ["Category"],
+          "ops": [{"signal": "op"}],
+          "fields": ["count"],
+          "as": ["count"]
+        }
+      ]
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "rect",
+      "from": {"data": "companies"},
+      "encode": {
+        "update": {
+          "x": {"scale": "x", "value": 0},
+          "x2": {"scale": "x", "field": "count"},
+          "y": {"scale": "y", "field": "Category"},
+          "height": {"scale": "y", "band": 1}
+        }
+      }
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": {"data": "companies", "field": "count"},
+      "range": "width",
+      "nice": true
+    },
+    {
+      "name": "y",
+      "type": "band",
+      "domain": {
+        "data": "companies", "field": "Category",
+        "sort": {"op": "max", "field": "count", "order": "descending"}
+      },
+      "range": "height",
+      "padding": 0.2
+    }
+  ],
+
+  "axes": [
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "format": "d",
+      "tickCount": 6
+    },
+    {
+      "scale": "y",
+      "orient": "left"
+    }
+  ]
+}
