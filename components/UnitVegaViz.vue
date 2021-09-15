@@ -92,9 +92,16 @@ export default {
   methods: {
     async draw() {
       // TODO find a way to make vega respect the width...
-      // console.log('w', this.width)
-      await embed(`#${this.divId}`, this.specWithValues, {
-        // width: this.width,
+      // put something like autosize in the spec
+      // "autosize": {"type": "fit", "contains": "padding"},
+      // see https://vega.github.io/vega/docs/specification/
+      const spec = this.specWithValues
+      // const width = this.width
+      // const scaling = width / (spec.width + spec.padding * 2)
+      // const height = spec.height * scaling
+      await embed(`#${this.divId}`, spec, {
+        // width,
+        // height,
         // renderer: 'svg',
         actions: false
       })
