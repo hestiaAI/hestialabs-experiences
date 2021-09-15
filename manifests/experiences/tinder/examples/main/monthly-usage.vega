@@ -75,8 +75,8 @@
   "axes": [
     {"orient": "bottom", "scale": "x", "offset":10},
     {
-      "orient": "left", 
-      "scale": "y",  
+      "orient": "left",
+      "scale": "y",
       "offset":10,
       "title":"Total per month"
     }
@@ -120,7 +120,7 @@
               "x": {"scale": "x", "field": "unit0"},
               "y": {"scale": "y", "field": "value"},
               "tooltip": {
-                "signal": "datum.key + ' ' + datum.value + ' times on ' + datum.dateStr"
+                "signal": "datum.key + ' ' + datum.value + ' times in ' + datum.dateStr"
               }
             },
             "update": {

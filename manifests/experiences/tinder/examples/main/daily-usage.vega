@@ -11,7 +11,7 @@
         {
           "type": "formula",
           "as": "dateStr",
-          "expr": "timeFormat(datum.date,'%B %d, %Y')"
+          "expr": "timeFormat(datum.date,'%d %B %Y')"
         }
       ]
     }
