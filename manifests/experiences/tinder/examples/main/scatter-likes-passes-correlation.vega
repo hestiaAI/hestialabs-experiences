@@ -4,15 +4,18 @@
   "height": 400,
   "padding": 5,
   "autosize": "pad",
+
   "title": {
-    "text": "Summary of Tinder activity",
+    "text": "Likes/Passes correlation",
+    "anchor":"middle",
+    "dy":-10,
     "encode": {
       "title": {
         "enter": {
           "fill": {"value": "#2e3131"},
-          "fontSize": {"value": 15},
-          "fontWeight": {"value": "bold"},
-          "dy": {"value": -15}
+          "fontWeight":{"value": "lighter"},
+          "fontSize":{"value":16},
+          "font": {"value":"Tahoma"}
         }
       }
     }
@@ -100,12 +103,19 @@
   "data": [
     {
       "name": "source",
-      "url": "data.json",
+      "values":[],
       "transform": [
-        {"type": "fold", "fields": ["pass", "like"]},
+        {
+          "type": "aggregate",
+          "fields":["like", "pass", "open"],
+          "groupby":["date"],
+          "ops":["sum", "sum", "sum"],
+          "as":["Likes", "Passes", "open"]
+        },
+        {"type": "fold", "fields": ["Likes", "Passes"]},
         {
           "type": "filter",
-          "expr": "(datum['pass'] != null || datum['like'] != null) && datum['open'] != null"
+          "expr": "(datum['Passes'] != null || datum['Likes'] != null) && datum['open'] != null"
         }
       ]
     },
@@ -142,7 +152,7 @@
     {
       "name": "color",
       "type": "ordinal",
-      "range": ["#d24d57", "#66cc99"],
+      "range": ["#414141","#FF6A6E"],
       "domain": {"data": "source", "field": "key"}
     }
   ],
@@ -154,16 +164,24 @@
       "domain": false,
       "orient": "bottom",
       "tickCount": 5,
-      "titlePadding": 20,
-      "title": "Number of times the application is opened per day"
+      "titlePadding": 10,
+      "title": "Number of times the application is opened per day",
+      "titleColor": {"value": "#2e3131"},
+      "titleFontWeight":{"value": "bold"},
+      "titleFontSize":{"value":10},
+      "titleFont": {"value":"Tahoma"}
     },
     {
       "scale": "y",
       "grid": true,
       "domain": false,
       "orient": "left",
-      "titlePadding": 20,
-      "title": "Number of likes/passes"
+      "titlePadding": 10,
+      "title": "Number of likes/passes",
+      "titleColor": {"value": "#2e3131"},
+      "titleFontWeight":{"value": "bold"},
+      "titleFontSize":{"value":10},
+      "titleFont": {"value":"Tahoma"}      
     }
   ],
 
@@ -171,6 +189,10 @@
     {
       "stroke": "color",
       "title": "Action type",
+      "titleColor": {"value": "#2e3131"},
+      "titleFontWeight":{"value": "bold"},
+      "titleFontSize":{"value":10},
+      "titleFont": {"value":"Tahoma"},
       "encode": {
         "symbols": {
           "name": "legendSymbol",

@@ -5,12 +5,14 @@
   "data": ["tinder-synthetic.json"],
   "preprocessor": "tinder",
   "visualizations": {"main": {
-    "likes-dislikes": ["line-plot"],
-    "app-opens": ["open"],
-    "likes-dislikes-open": ["line-plot", "open", "open-like-dislike-summary"],
-    "all": ["line-plot",
-            "open",
-            "open-like-dislike-summary",
+    "likes-dislikes": ["daily-likes-passes"],
+    "app-opens": ["daily-usage"],
+    "likes-dislikes-open": ["daily-usage", "daily-likes-passes", "scatter-likes-passes-correlation"],
+    "all": ["monthly-usage",
+            "daily-usage",
+            "monthly-history",
+            "daily-likes-passes",
+            "scatter-likes-passes-correlation",
             "donut-multiple-comparisons"]
   }},
   "collaborator": {
