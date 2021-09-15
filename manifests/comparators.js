@@ -65,9 +65,53 @@ const advertisersCountAvg = async (rdfLocal, rdfPublic) => {
   return [[header1, header2], items]
 }
 
-// eslint-disable-next-line require-await
 const impressionCountByAdvertiser = async (rdfLocal, rdfPublic, username) => {
-  throw new Error('Not implemented')
+  const sparqlPublic = `
+  PREFIX :  <http://schema.org/>
+  PREFIX ex: <http://www.example.com/>
+  SELECT ?name ?count WHERE {
+    ?advertiser a :Organization .
+    ?advertiser :name ?name .
+    ?person a :Person .
+    ?person :name "${username}" .
+    ?s a ex:AdvertiserCount .
+    ?s ex:person ?person .
+    ?s ex:advertiser ?advertiser .
+    ?s ex:count ?count .
+  }
+  `
+  const sparqlLocal = `
+  PREFIX :   <http://schema.org/>
+  PREFIX ex: <http://www.example.com/>
+  SELECT ?name (COUNT(?imp) AS ?count)
+  WHERE {
+    ?imp a :AdvertiserContentArticle .
+    ?imp :creator ?advertiser .
+    ?advertiser :name ?name .
+  }
+  GROUP BY ?name
+  `
+  const b1 = await queryBindings(rdfLocal, sparqlLocal)
+  const b2 = await queryBindings(rdfPublic, sparqlPublic)
+  const itemMap = new Map()
+  for (const binding of b1) {
+    const name = binding.get('?name').value
+    const count = parseInt(binding.get('?count').value)
+    itemMap.set(name, { name, countLocal: count, countPublic: 0 })
+  }
+  for (const binding of b2) {
+    const name = binding.get('?name').value
+    const count = parseInt(binding.get('?count').value)
+    if (itemMap.has(name)) {
+      const counts = itemMap.get(name)
+      counts.countPublic = count
+      itemMap.set(name, counts)
+    } else {
+      itemMap.set(name, { name, countLocal: 0, countPublic: count })
+    }
+  }
+  const items = Array.from(itemMap.values())
+  return [['name', 'countLocal', 'countPublic'], items]
 }
 
 export default {
