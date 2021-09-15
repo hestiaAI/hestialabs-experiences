@@ -50,6 +50,7 @@
           v-for="specFile in vegaFiles"
           :key="`spec-${specFile.name}`"
           cols="12"
+          style="text-align: center"
         >
           <unit-vega-viz :spec-file="specFile" :values="items" />
         </v-col>

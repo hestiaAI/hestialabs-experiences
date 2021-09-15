@@ -1,11 +1,16 @@
 <template v-if="hasValidSpec">
-  <div :id="divId"></div>
+  <div :id="divId" ref="graph"></div>
 </template>
 
 <script>
 import embed from 'vega-embed'
 
 export default {
+  data() {
+    return {
+      width: 0
+    }
+  },
   props: {
     specFile: {
       type: Object,
@@ -81,11 +86,16 @@ export default {
     }
   },
   async mounted() {
+    this.width = this.$refs.graph.offsetWidth
     await this.draw()
   },
   methods: {
     async draw() {
+      // TODO find a way to make vega respect the width...
+      // console.log('w', this.width)
       await embed(`#${this.divId}`, this.specWithValues, {
+        // width: this.width,
+        // renderer: 'svg',
         actions: false
       })
     }
