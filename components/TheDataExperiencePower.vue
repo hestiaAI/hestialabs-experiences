@@ -1,50 +1,60 @@
 <template>
   <div>
-    <the-example-selector
-      :value.sync="selectedExample"
-      :items="examples"
-      :disabled="examples.length === 1"
-      class="mb-6 mt-4"
-    />
+    <v-row class="no-gutters">
+      <v-col>
+        <the-example-selector
+          :value.sync="selectedExample"
+          :items="examples"
+          :disabled="examples.length === 1"
+        />
+      </v-col>
+    </v-row>
 
     <unit-rml
       :yarrrml-example="selectedExample.yarrrml"
       @update="onUnitRmlUpdate"
     />
 
-    <div class="io-block">
-      <div class="mr-lg-6">
+    <v-row>
+      <v-col cols="12" lg="6">
         <h2 class="my-3">Files</h2>
         <slot name="unit-files" :update="onUnitFilesUpdate" />
-      </div>
-      <unit-rdf v-bind="{ rml, inputFiles }" @update="onUnitRdfUpdate" />
-    </div>
+      </v-col>
+      <v-col cols="12" lg="6">
+        <unit-rdf v-bind="{ rml, inputFiles }" @update="onUnitRdfUpdate" />
+      </v-col>
+    </v-row>
     <v-expand-transition>
-      <div v-show="toRDF" class="io-block">
-        <unit-sparql
-          :rdf="rdf"
-          class="mr-lg-6"
-          @update="onUnitSparqlUpdate"
-          @change="onSparqlSelectorChange"
+      <v-row v-show="toRDF">
+        <v-col cols="12" lg="6">
+          <unit-sparql
+            :rdf="rdf"
+            class="mr-lg-6"
+            @update="onUnitSparqlUpdate"
+            @change="onSparqlSelectorChange"
+          >
+            <template #selector="{ change, classAttr }">
+              <the-sparql-selector
+                :items="selectedExample.sparql"
+                :disabled="!selectedExample.sparql.length"
+                :class="classAttr"
+                @change="change"
+              />
+            </template>
+          </unit-sparql>
+        </v-col>
+        <v-col cols="12" lg="6">
+          <unit-query-results v-bind="{ headers, items }" />
+        </v-col>
+        <v-col
+          v-for="specFile in vegaFiles"
+          :key="`spec-${specFile.name}`"
+          cols="12"
         >
-          <template #selector="{ change, classAttr }">
-            <the-sparql-selector
-              :items="selectedExample.sparql"
-              :disabled="!selectedExample.sparql.length"
-              :class="classAttr"
-              @change="change"
-            />
-          </template>
-        </unit-sparql>
-        <unit-query-results v-bind="{ headers, items }" />
-      </div>
+          <unit-vega-viz :spec-file="specFile" :values="items" />
+        </v-col>
+      </v-row>
     </v-expand-transition>
-    <unit-vega-viz
-      v-for="specFile in vegaFiles"
-      :key="`spec-${specFile.name}`"
-      :spec-file="specFile"
-      :values="items"
-    />
   </div>
 </template>
 
@@ -103,19 +113,3 @@ export default {
   }
 }
 </script>
-
-<style lang="sass">
-@import '~vuetify/src/styles/settings/_variables'
-.io-block
-  display: flex
-  flex-direction: column
-  align-items: center
-  > div
-    width: 100%
-@media #{map-get($display-breakpoints, 'lg-and-up')}
-  .io-block
-    flex-direction: row
-    align-items: flex-start
-    > div
-      width: 50%
-</style>
