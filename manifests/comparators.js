@@ -65,7 +65,13 @@ const advertisersCountAvg = async (rdfLocal, rdfPublic) => {
   return [[header1, header2], items]
 }
 
+// eslint-disable-next-line require-await
+const impressionCountByAdvertiser = async (rdfLocal, rdfPublic, username) => {
+  throw new Error('Not implemented')
+}
+
 export default {
   advertisersIntersection,
-  advertisersCountAvg
+  advertisersCountAvg,
+  impressionCountByAdvertiser
 }

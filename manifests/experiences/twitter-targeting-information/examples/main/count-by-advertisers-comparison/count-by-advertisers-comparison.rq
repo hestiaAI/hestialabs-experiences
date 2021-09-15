@@ -1,0 +1,29 @@
+# authors: Florian Singer <florian.singer@hestia.ai>
+PREFIX :  <http://schema.org/>
+PREFIX ex: <http://example.com/>
+
+CONSTRUCT {
+  ?advertiser a :Organization .
+  ?advertiser :name ?name .
+  ?person a :Person .
+  ?person :name ?namePerson .
+  ?s a ex:AdvertiserCount .
+  ?s ex:person ?person .
+  ?s ex:advertiser ?advertiser .
+  ?s ex:count ?count .
+}
+WHERE {
+  {
+    SELECT ?advertiser (COUNT(?imp) AS ?count)
+    WHERE {
+        ?imp a :AdvertiserContentArticle .
+        ?imp :creator ?advertiser .
+        ?advertiser a :Organization .
+    }
+    GROUP BY ?advertiser
+  }
+  ?advertiser :name ?name .
+  ?person a :Person .
+  ?person :name ?namePerson .
+  BIND (IRI(ENCODE_FOR_URI(CONCAT("http://example.com/AdvertiserCount/", ?namePerson, "/", ?name))) AS ?s)
+}

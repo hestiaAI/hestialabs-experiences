@@ -1,0 +1,5 @@
+{
+  "name": "Impression Count by Advertiser",
+  "comparator": "impressionCountByAdvertiser",
+  "oneToOne": true
+}
