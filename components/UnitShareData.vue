@@ -1,7 +1,12 @@
 <template>
   <div>
     <h2 class="my-3">Share Data</h2>
-    <slot name="selector" :change="v => (sparql = v)" class="my-sm-2 mr-sm-2" />
+    <comparator-selector
+      class="my-sm-2 mr-sm-2"
+      :items="example.sharing"
+      :disabled="!example.sharing.length"
+      @change="onChangeSelector"
+    />
     <v-text-field
       v-model="username"
       label="Username"
@@ -56,6 +61,10 @@ export default {
     rdfInput: {
       type: String,
       default: ''
+    },
+    example: {
+      type: Object,
+      default: null
     }
   },
   data() {
@@ -109,6 +118,9 @@ export default {
       }
       this.statusShare = true
       this.progressShare = false
+    },
+    onChangeSelector(sharingObject) {
+      this.sparql = sharingObject.sparql
     }
   }
 }

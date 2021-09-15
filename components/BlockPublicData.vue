@@ -23,7 +23,7 @@
         class="my-sm-2 mr-sm-2"
         :items="example.sharing"
         :disabled="!example.sharing.length"
-        @change="changeComparator"
+        @change="onChangeSelector"
       />
       <v-text-field
         v-if="oneToOne"
@@ -116,10 +116,9 @@ export default {
       this.statusCompare = true
       this.progressCompare = false
     },
-    changeComparator(key) {
-      const obj = this.example.sharing.find(e => e.key === key)
-      this.comparator = obj.comparator
-      this.oneToOne = obj.oneToOne
+    onChangeSelector(sharingObject) {
+      this.comparator = sharingObject.comparator
+      this.oneToOne = sharingObject.oneToOne
     }
   }
 }

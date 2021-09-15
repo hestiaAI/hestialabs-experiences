@@ -6,6 +6,7 @@
     style="max-width: 150px"
     hide-details
     label="Select operation"
+    return-object
     @change="$emit('change', $event)"
   />
 </template>

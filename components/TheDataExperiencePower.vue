@@ -48,15 +48,10 @@
     />
 
     <div class="io-block">
-      <unit-share-data :rdf-input="rdf">
-        <template #selector="{ change }">
-          <sparql-selector
-            :items="selectedExample.sharing"
-            :disabled="!selectedExample.sharing.length"
-            @change="change"
-          />
-        </template>
-      </unit-share-data>
+      <unit-share-data
+        :rdf-input="rdf"
+        :example="selectedExample"
+      ></unit-share-data>
     </div>
 
     <block-public-data
