@@ -1,6 +1,6 @@
 # authors: Florian Singer <florian.singer@hestia.ai>
 PREFIX :  <http://schema.org/>
-PREFIX ex: <http://example.com/>
+PREFIX ex: <http://www.example.com/>
 
 CONSTRUCT {
   ?advertiser a :Organization .
@@ -25,5 +25,5 @@ WHERE {
   ?advertiser :name ?name .
   ?person a :Person .
   ?person :name ?namePerson .
-  BIND (IRI(ENCODE_FOR_URI(CONCAT("http://example.com/AdvertiserCount/", ?namePerson, "/", ?name))) AS ?s)
+  BIND (IRI(ENCODE_FOR_URI(CONCAT("http://www.example.com/AdvertiserCount/", ?namePerson, "/", ?name))) AS ?s)
 }
