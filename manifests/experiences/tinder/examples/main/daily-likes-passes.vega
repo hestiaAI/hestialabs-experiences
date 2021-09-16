@@ -26,7 +26,7 @@
       "range": "height",
       "nice": true,
       "zero": true,
-      "domain": {"data": "table", "field": "pass"}
+      "domain": {"data": "table", "fields": ["like", "pass"]}
     },
     {
       "name": "color",
