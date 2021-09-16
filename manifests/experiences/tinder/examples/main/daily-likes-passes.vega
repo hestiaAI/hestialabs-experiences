@@ -31,7 +31,7 @@
     {
       "name": "color",
       "type": "ordinal",
-      "range": ["#66cc99", "#d24d57"],
+      "range": ["#414141", "#ff6a6e"],
       "domain": ["Likes", "Passes"]
     }
   ],

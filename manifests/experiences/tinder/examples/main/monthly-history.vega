@@ -52,7 +52,7 @@
     {
       "name": "color",
       "type": "ordinal",
-      "range": ["#FF6A6E", "#414141", "#14B6C8", "#8E8949"],
+      "range": ["#414141", "#ff6a6e", "#62bcbc", "#f2c063"],
       "domain": {"data": "source", "field": "key"}
     }
   ],
