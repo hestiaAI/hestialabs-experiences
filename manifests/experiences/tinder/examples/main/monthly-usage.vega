@@ -73,7 +73,12 @@
   ],
 
   "axes": [
-    {"orient": "bottom", "scale": "x", "offset":10},
+    {
+      "orient": "bottom",
+      "scale": "x",
+      "labelAlign": "left",
+      "offset":10
+    },
     {
       "orient": "left",
       "scale": "y",
@@ -98,7 +103,10 @@
           "from": {"data": "series"},
           "encode": {
             "enter": {
-              "x": {"scale": "x", "field": "unit0"},
+              "x": {
+                "scale": "x",
+                "field": "unit0"
+              },
               "y": {"scale": "y", "field": "value"},
               "stroke": {"scale": "color", "field": "key"},
               "strokeWidth": {"value": 1.5}

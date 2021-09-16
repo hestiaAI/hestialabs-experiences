@@ -73,10 +73,10 @@
   ],
 
   "axes": [
-    {"orient": "bottom", "scale": "x", "offset":10},
+    {"orient": "bottom", "scale": "x", "offset":10, "labelAlign": "left"},
     {
-      "orient": "left", 
-      "scale": "y",  
+      "orient": "left",
+      "scale": "y",
       "offset":10,
       "title":"Total per month"
     }
