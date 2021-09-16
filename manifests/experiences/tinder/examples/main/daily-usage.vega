@@ -34,7 +34,7 @@
     {
       "name": "color",
       "type": "ordinal",
-      "range": ["#d24d57"],
+      "range": ["#2994F2"],
       "domain": ["App opened"]
     }
   ],

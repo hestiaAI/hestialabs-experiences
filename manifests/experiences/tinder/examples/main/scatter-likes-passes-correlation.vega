@@ -152,7 +152,7 @@
     {
       "name": "color",
       "type": "ordinal",
-      "range": ["#414141","#FF6A6E"],
+      "range": ["#414141","#ff6a6e"],
       "domain": {"data": "source", "field": "key"}
     }
   ],
