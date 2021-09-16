@@ -6,11 +6,6 @@
 import embed from 'vega-embed'
 
 export default {
-  data() {
-    return {
-      width: 0
-    }
-  },
   props: {
     specFile: {
       type: Object,
@@ -19,6 +14,11 @@ export default {
     values: {
       type: Array,
       default: () => []
+    }
+  },
+  data() {
+    return {
+      width: 0
     }
   },
   computed: {
