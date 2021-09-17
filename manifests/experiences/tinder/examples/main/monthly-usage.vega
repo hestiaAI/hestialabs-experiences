@@ -52,7 +52,7 @@
     {
       "name": "color",
       "type": "ordinal",
-      "range": ["#FF6A6E", "#414141", "#14B6C8", "#8E8949"],
+      "range": ["#2994F2"],
       "domain": {"data": "source", "field": "key"}
     }
   ],
@@ -73,10 +73,15 @@
   ],
 
   "axes": [
-    {"orient": "bottom", "scale": "x", "offset":10},
     {
-      "orient": "left", 
-      "scale": "y",  
+      "orient": "bottom",
+      "scale": "x",
+      "labelAlign": "left",
+      "offset":10
+    },
+    {
+      "orient": "left",
+      "scale": "y",
       "offset":10,
       "title":"Total per month"
     }
@@ -98,7 +103,10 @@
           "from": {"data": "series"},
           "encode": {
             "enter": {
-              "x": {"scale": "x", "field": "unit0"},
+              "x": {
+                "scale": "x",
+                "field": "unit0"
+              },
               "y": {"scale": "y", "field": "value"},
               "stroke": {"scale": "color", "field": "key"},
               "strokeWidth": {"value": 1.5}
@@ -120,7 +128,7 @@
               "x": {"scale": "x", "field": "unit0"},
               "y": {"scale": "y", "field": "value"},
               "tooltip": {
-                "signal": "datum.key + ' ' + datum.value + ' times on ' + datum.dateStr"
+                "signal": "datum.key + ' ' + datum.value + ' times in ' + datum.dateStr"
               }
             },
             "update": {

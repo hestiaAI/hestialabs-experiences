@@ -26,12 +26,12 @@
       "range": "height",
       "nice": true,
       "zero": true,
-      "domain": {"data": "table", "field": "pass"}
+      "domain": {"data": "table", "fields": ["like", "pass"]}
     },
     {
       "name": "color",
       "type": "ordinal",
-      "range": ["#66cc99", "#d24d57"],
+      "range": ["#414141", "#ff6a6e"],
       "domain": ["Likes", "Passes"]
     }
   ],
@@ -47,7 +47,7 @@
   ],
 
   "axes": [
-    {"orient": "bottom", "scale": "x", "offset":10},
+    {"orient": "bottom", "scale": "x", "offset":0, "labelAlign": "left"},
     {"orient": "left", "scale": "y",  "offset":10}
   ],
 

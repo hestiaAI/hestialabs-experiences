@@ -1,5 +1,5 @@
 <template v-if="hasValidSpec">
-  <div :id="divId"></div>
+  <div :id="divId" ref="graph"></div>
 </template>
 
 <script>
@@ -14,6 +14,11 @@ export default {
     values: {
       type: Array,
       default: () => []
+    }
+  },
+  data() {
+    return {
+      width: 0
     }
   },
   computed: {
@@ -81,11 +86,23 @@ export default {
     }
   },
   async mounted() {
+    this.width = this.$refs.graph.offsetWidth
     await this.draw()
   },
   methods: {
     async draw() {
-      await embed(`#${this.divId}`, this.specWithValues, {
+      // TODO find a way to make vega respect the width...
+      // put something like autosize in the spec
+      // "autosize": {"type": "fit", "contains": "padding"},
+      // see https://vega.github.io/vega/docs/specification/
+      const spec = this.specWithValues
+      // const width = this.width
+      // const scaling = width / (spec.width + spec.padding * 2)
+      // const height = spec.height * scaling
+      await embed(`#${this.divId}`, spec, {
+        // width,
+        // height,
+        // renderer: 'svg',
         actions: false
       })
     }

@@ -1,6 +1,6 @@
 <template>
-  <div class="io-block">
-    <div>
+  <v-row>
+    <v-col cols="12" lg="6">
       <h2 class="my-3">Get Public Data</h2>
       <div class="d-flex flex-column flex-sm-row align-start">
         <base-button
@@ -41,12 +41,12 @@
         class="my-sm-2 mr-sm-2"
         @click="compareData"
       />
-    </div>
-    <div>
+    </v-col>
+    <v-col cols="12" lg="6">
       <h2 class="my-3">Results</h2>
       <unit-query-results v-bind="{ headers, items }" />
-    </div>
-  </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

@@ -1,6 +1,6 @@
 <template>
-  <div class="io-block mt-6">
-    <div class="mr-lg-6 mb-6">
+  <v-row>
+    <v-col cols="12" lg="6">
       <h2 class="my-3">YARRRML</h2>
       <base-download-button extension="yml" :data="yarrrml" />
       <code-editor
@@ -9,8 +9,8 @@
         language="yaml"
         line-numbers
       />
-    </div>
-    <div>
+    </v-col>
+    <v-col>
       <h2 class="my-3">RML</h2>
       <base-button
         v-bind="{ progress, status, error }"
@@ -32,8 +32,8 @@
         line-numbers
         language="turtle"
       />
-    </div>
-  </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

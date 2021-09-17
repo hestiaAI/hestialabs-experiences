@@ -5,7 +5,7 @@
   "data": ["tinder-synthetic.json"],
   "preprocessor": "tinder",
   "visualizations": {"main": {
-    "likes-dislikes": ["daily-likes-passes"],
+    "likes-dislikes": ["daily-likes-passes", "donut-multiple-comparisons"],
     "app-opens": ["daily-usage"],
     "likes-dislikes-open": ["daily-usage", "daily-likes-passes", "scatter-likes-passes-correlation"],
     "all": ["monthly-usage",

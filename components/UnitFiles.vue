@@ -8,7 +8,7 @@
         class="my-sm-2 mr-sm-2"
         @click="processFiles"
       />
-      <base-button
+      <!--<base-button
         :disabled="!cachedResult"
         text="Use cached"
         icon="mdiDatabase"
@@ -21,7 +21,7 @@
         icon="mdiDatabaseRemove"
         class="ma-sm-2"
         @click="clearCache"
-      />
+      />-->
     </div>
 
     <lazy-the-files-combobox
@@ -62,7 +62,7 @@ import '@uppy/drop-target/dist/style.css'
 
 import preprocessors from '@/manifests/preprocessors'
 import processFiles from '@/utils/process-files'
-import localforage from '@/utils/localforage'
+// import localforage from '@/utils/localforage'
 import { processError } from '@/utils/utils'
 
 async function fetchSampleFile({ path, filename }) {
@@ -112,8 +112,8 @@ export default {
       error: false,
       progress: false,
       filesToExtract: this.files,
-      messagePowerUser: '',
-      cachedResult: null
+      messagePowerUser: ''
+      // cachedResult: null
     }
   },
   computed: {
@@ -185,7 +185,7 @@ export default {
       }
     }
   },
-  async mounted() {
+  mounted() {
     this.uppy
       .use(Dashboard, {
         target: this.$refs.dashboard,
@@ -222,10 +222,10 @@ export default {
         this.enableStatus = false
       })
 
-    this.cachedResult = await localforage.getItem(
-      localforage.keys.processFilesResult,
-      this.key
-    )
+    // this.cachedResult = await localforage.getItem(
+    //   localforage.keys.processFilesResult,
+    //   this.key
+    // )
   },
   beforeDestroy() {
     this.uppy.close()
@@ -301,16 +301,16 @@ export default {
             this.isSingleFileExperience
           )
           this.messagePowerUser = this.getMessagePowerUser(result)
-          // do not cache processing time
-          delete result.filesProcessingTime
-          await localforage.setItem(
-            localforage.keys.processFilesResult,
-            result,
-            this.key
-          )
-          this.cachedResult = result
+          // // do not cache processing time
+          // delete result.filesProcessingTime
+          // await localforage.setItem(
+          //   localforage.keys.processFilesResult,
+          //   result,
+          //   this.key
+          // )
+          // this.cachedResult = result
           this.uppy.info(
-            'Your files were processed successfully and saved in your browser'
+            'Your files were processed successfully' // and saved in your browser'
           )
           this.$emit('update', result)
         } catch (err) {
@@ -324,22 +324,22 @@ export default {
           this.progress = false
         }
       }
-    },
-    useCached() {
-      const { cachedResult } = this
-      this.messagePowerUser = this.getMessagePowerUser(cachedResult)
-      this.$emit('update', cachedResult)
-    },
-    async clearCache() {
-      try {
-        await localforage.clear(this.key)
-        this.uppy.info('Cache cleared successfully')
-        this.cachedResult = null
-      } catch (error) {
-        console.error(error)
-        this.uppy.info('Unable to clear cache. Some error occurred.')
-      }
     }
+    // useCached() {
+    //   const { cachedResult } = this
+    //   this.messagePowerUser = this.getMessagePowerUser(cachedResult)
+    //   this.$emit('update', cachedResult)
+    // },
+    // async clearCache() {
+    //   try {
+    //     await localforage.clear(this.key)
+    //     this.uppy.info('Cache cleared successfully')
+    //     this.cachedResult = null
+    //   } catch (error) {
+    //     console.error(error)
+    //     this.uppy.info('Unable to clear cache. Some error occurred.')
+    //   }
+    // }
   }
 }
 </script>

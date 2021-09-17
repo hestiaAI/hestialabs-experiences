@@ -1,12 +1,17 @@
 <template>
-  <div>
-    <div class="d-flex">
-      <v-img max-width="50" :src="m.icon" :lazy-src="m.icon" contain />
-      <h1 class="ml-3">{{ m.title }}</h1>
-    </div>
-    <p class="subtitle-1 mt-4">{{ m.subtitle }}</p>
+  <!-- avoid double margin: we're already in a container -->
+  <v-container class="ma-n3">
+    <v-row class="no-gutters">
+      <v-col>
+        <div class="d-flex">
+          <v-img max-width="50" :src="m.icon" :lazy-src="m.icon" contain />
+          <h1 class="ml-3">{{ m.title }}</h1>
+        </div>
+        <p class="subtitle-1 mt-4">{{ m.subtitle }}</p>
+      </v-col>
+    </v-row>
     <the-data-experience v-bind="m.rest" />
-  </div>
+  </v-container>
 </template>
 
 <script>
