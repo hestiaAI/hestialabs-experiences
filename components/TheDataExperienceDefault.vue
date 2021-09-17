@@ -34,6 +34,8 @@
         </v-col>
       </v-row>
     </template>
+
+    <block-public-data :rdf-local="rdf" :example="example"></block-public-data>
   </div>
 </template>
 
