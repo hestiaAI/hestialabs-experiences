@@ -34,7 +34,8 @@ const advertisersIntersection = async (rdfLocal, rdfPublic, username) => {
   // TODO Optimize: O(n^2)
   const intersection = advertisers1.filter(item => advertisers2.includes(item))
   const items = intersection.map(b => ({ [header]: b }))
-  return [[header], items]
+  const headers = [{ text: 'Name', value: header }]
+  return [headers, items]
 }
 
 const advertisersCountAvg = async (rdfLocal, rdfPublic) => {
@@ -62,7 +63,11 @@ const advertisersCountAvg = async (rdfLocal, rdfPublic) => {
   const nAdvertisers = b2.map(binding => parseInt(binding.get(key).value))
   const avg = nAdvertisers.reduce((a, b) => a + b, 0) / nAdvertisers.length
   const items = [{ [header1]: nLocal, [header2]: avg }]
-  return [[header1, header2], items]
+  const headers = [
+    { text: '# of advertisers (local)', value: header1 },
+    { text: '# of advertisers (public average)', value: header2 }
+  ]
+  return [headers, items]
 }
 
 const impressionCountByAdvertiser = async (rdfLocal, rdfPublic, username) => {
@@ -94,14 +99,18 @@ const impressionCountByAdvertiser = async (rdfLocal, rdfPublic, username) => {
   const b1 = await queryBindings(rdfLocal, sparqlLocal)
   const b2 = await queryBindings(rdfPublic, sparqlPublic)
   const itemMap = new Map()
+  let totalLocal = 0
+  let totalPublic = 0
   for (const binding of b1) {
     const name = binding.get('?name').value
     const count = parseInt(binding.get('?count').value)
+    totalLocal += count
     itemMap.set(name, { name, countLocal: count, countPublic: 0 })
   }
   for (const binding of b2) {
     const name = binding.get('?name').value
     const count = parseInt(binding.get('?count').value)
+    totalPublic += count
     if (itemMap.has(name)) {
       const counts = itemMap.get(name)
       counts.countPublic = count
@@ -111,7 +120,16 @@ const impressionCountByAdvertiser = async (rdfLocal, rdfPublic, username) => {
     }
   }
   const items = Array.from(itemMap.values())
-  return [['name', 'countLocal', 'countPublic'], items]
+  items.forEach(item => {
+    item.countLocal = ((item.countLocal / totalLocal) * 100).toPrecision(2)
+    item.countPublic = ((item.countPublic / totalPublic) * 100).toPrecision(2)
+  })
+  const headers = [
+    { text: 'Advertiser', value: 'name' },
+    { text: 'Local ratio (%)', value: 'countLocal' },
+    { text: 'Public ratio (%)', value: 'countPublic' }
+  ]
+  return [headers, items]
 }
 
 export default {

@@ -107,7 +107,7 @@ export default {
           this.rdfPublic,
           this.username
         )
-        this.headers = headers.map(h => ({ text: h, value: h }))
+        this.headers = headers
         this.items = items
       } catch (error) {
         console.error(error)
