@@ -1,5 +1,5 @@
 import manifests from '@/manifests'
-import config from '@'
+import config from '@/config'
 
 export const state = () => ({
   config,
