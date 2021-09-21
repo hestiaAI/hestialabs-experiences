@@ -9,22 +9,22 @@ import { validExtensions, extractFirstDirectory } from './utils'
 const reqJSON = require.context(
   './experiences/',
   true,
-  /[a-z-]+\/[a-z-]+\.json$/
+  /^\.\/[a-z-]+\/[a-z-]+\.json$/
 )
 const reqYARRRML = require.context(
   './experiences/',
   true,
-  /[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.ya?ml$/
+  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.ya?ml$/
 )
 const reqSPARQL = require.context(
   './experiences/',
   true,
-  /[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.rq$/
+  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.rq$/
 )
 const reqVEGA = require.context(
   './experiences/',
   true,
-  /[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.vega$/
+  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.vega$/
 )
 
 // files in assets/data/ are loaded only with file-loader
