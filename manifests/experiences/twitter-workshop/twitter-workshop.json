@@ -1,0 +1,9 @@
+{
+  "title": "Twitter",
+  "subtitle": "Workshop",
+  "icon": "twitter.png",
+  "ext": "zip",
+  "files": ["data/ad-impressions.js", "data/ad-engagements.js"],
+  "preprocessor": "twitter",
+	"data": ["twitter.zip", "twitter-sample.zip"]
+}

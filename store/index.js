@@ -1,18 +1,27 @@
 import manifests from '@/manifests'
+import config from '@'
 
 export const state = () => ({
+  config,
   manifests,
   power: false
 })
 
 export const getters = {
+  config(state) {
+    return state.config
+  },
   manifests(state) {
+    const activeManifests = state.manifests.filter(m =>
+      state.config.experiences.includes(m.key)
+    )
+
     if (state.power) {
-      return state.manifests
+      return activeManifests
     }
 
     // playground is not available in default mode
-    return state.manifests.filter(m => m.key !== 'playground')
+    return activeManifests.filter(m => m.key !== 'playground')
   },
   keys(state, getters) {
     return getters.manifests.map(({ key }) => key)
