@@ -9,9 +9,13 @@ sources:
     access: data/ad-impressions.js
     referenceFormulation: jsonpath
     iterator: $.*.ad.adsUserData.adImpressions.impressions[*]
+  imp-criteria:
+    access: data/ad-impressions.js
+    referenceFormulation: jsonpath
+    iterator: $.*.ad.adsUserData.adImpressions.impressions[*].matchedTargetingCriteria[*]
 
 mappings:
-  advertiser:
+  impression:
     sources:
       - imp-impressions
     s: h:Impression/$(advertiserInfo.screenName)/$(impressionTime)
@@ -24,3 +28,12 @@ mappings:
           parameters:
             - [ex:input, $(impressionTime)]
           datatype: xsd:dateTime
+  criterion:
+    sources:
+      - imp-criteria
+    s: h:Criterion/$(targetingType)/$(targetingValue)/$(^^.advertiserInfo.screenName)/$(^^.impressionTime)
+    po:
+      - [a, h:Criterion]
+      - [h:targetingType, $(targetingType)]
+      - [h:targetingValue, $(targetingValue)]
+      - [h:advertiserName, $(^^.advertiserInfo.advertiserName)]
