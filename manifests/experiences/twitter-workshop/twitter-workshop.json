@@ -6,5 +6,5 @@
   "files": ["data/ad-impressions.js", "data/ad-engagements.js"],
   "preprocessor": "twitter",
 	"data": ["twitter.zip", "twitter-sample.zip"],
-  "visualizations": {"main": {"default": "top-k-advertisers"}}
+  "visualizations": {"main": {"advertisers-per-day": "top-k-advertisers"}}
 }

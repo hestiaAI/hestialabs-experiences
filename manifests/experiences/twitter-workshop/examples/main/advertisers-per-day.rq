@@ -6,6 +6,6 @@ SELECT ?advertiserName (COUNT(?impression) AS ?count) ?date WHERE
   ?impression a h:Impression .
   ?impression h:advertiserName ?advertiserName .
   ?impression h:impressionTime ?impressionTime .
-  BIND(SUBSTR(STR(?d), 1, 10) AS ?date)
+  BIND(SUBSTR(STR(?impressionTime), 1, 10) AS ?date)
 }
 GROUP BY ?advertiserName ?date
