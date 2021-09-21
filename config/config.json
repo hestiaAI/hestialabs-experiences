@@ -1,5 +1,6 @@
 {
   "experiences": ["amazon", "apple", "facebook", "google", "playground", "spotify", "tinder", "tracker-control", 
     "twitter-advertisers", "twitter-advertisers-sha", "twitter-targeting-information", "youtube", 
-    "twitter-workshop", "facebook-workshop"]
+    "twitter-workshop", "facebook-workshop"],
+  "saveFiles": true
 }

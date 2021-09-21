@@ -8,7 +8,8 @@
         class="my-sm-2 mr-sm-2"
         @click="processFiles"
       />
-      <!--<base-button
+      <base-button
+        v-if="saveFiles"
         :disabled="!cachedResult"
         text="Use cached"
         icon="mdiDatabase"
@@ -16,12 +17,13 @@
         @click="useCached"
       />
       <base-button
+        v-if="saveFiles"
         :disabled="!cachedResult"
         text="Clear cache"
         icon="mdiDatabaseRemove"
         class="ma-sm-2"
         @click="clearCache"
-      />-->
+      />
     </div>
 
     <lazy-the-files-combobox
@@ -62,7 +64,7 @@ import '@uppy/drop-target/dist/style.css'
 
 import preprocessors from '@/manifests/preprocessors'
 import processFiles from '@/utils/process-files'
-// import localforage from '@/utils/localforage'
+import localforage from '@/utils/localforage'
 import { processError } from '@/utils/utils'
 
 async function fetchSampleFile({ path, filename }) {
@@ -112,8 +114,8 @@ export default {
       error: false,
       progress: false,
       filesToExtract: this.files,
-      messagePowerUser: ''
-      // cachedResult: null
+      messagePowerUser: '',
+      cachedResult: null
     }
   },
   computed: {
@@ -139,6 +141,9 @@ export default {
         return val => val
       }
       return preprocessors[this.preprocessor]
+    },
+    saveFiles() {
+      return this.$store.state.config.saveFiles
     }
   },
   watch: {
@@ -185,7 +190,7 @@ export default {
       }
     }
   },
-  mounted() {
+  async mounted() {
     this.uppy
       .use(Dashboard, {
         target: this.$refs.dashboard,
@@ -222,10 +227,12 @@ export default {
         this.enableStatus = false
       })
 
-    // this.cachedResult = await localforage.getItem(
-    //   localforage.keys.processFilesResult,
-    //   this.key
-    // )
+    if (this.saveFiles) {
+      this.cachedResult = await localforage.getItem(
+        localforage.keys.processFilesResult,
+        this.key
+      )
+    }
   },
   beforeDestroy() {
     this.uppy.close()
@@ -301,17 +308,20 @@ export default {
             this.isSingleFileExperience
           )
           this.messagePowerUser = this.getMessagePowerUser(result)
-          // // do not cache processing time
-          // delete result.filesProcessingTime
-          // await localforage.setItem(
-          //   localforage.keys.processFilesResult,
-          //   result,
-          //   this.key
-          // )
-          // this.cachedResult = result
-          this.uppy.info(
-            'Your files were processed successfully' // and saved in your browser'
-          )
+          let infoMessage = 'Your files were processed successfully'
+          if (this.saveFiles) {
+            // do not cache processing time
+            delete result.filesProcessingTime
+            await localforage.setItem(
+              localforage.keys.processFilesResult,
+              result,
+              this.key
+            )
+            this.cachedResult = result
+            infoMessage =
+              'Your files were processed successfully and saved in your browser'
+          }
+          this.uppy.info(infoMessage)
           this.$emit('update', result)
         } catch (err) {
           console.error(err)
@@ -324,22 +334,22 @@ export default {
           this.progress = false
         }
       }
+    },
+    useCached() {
+      const { cachedResult } = this
+      this.messagePowerUser = this.getMessagePowerUser(cachedResult)
+      this.$emit('update', cachedResult)
+    },
+    async clearCache() {
+      try {
+        await localforage.clear(this.key)
+        this.uppy.info('Cache cleared successfully')
+        this.cachedResult = null
+      } catch (error) {
+        console.error(error)
+        this.uppy.info('Unable to clear cache. Some error occurred.')
+      }
     }
-    // useCached() {
-    //   const { cachedResult } = this
-    //   this.messagePowerUser = this.getMessagePowerUser(cachedResult)
-    //   this.$emit('update', cachedResult)
-    // },
-    // async clearCache() {
-    //   try {
-    //     await localforage.clear(this.key)
-    //     this.uppy.info('Cache cleared successfully')
-    //     this.cachedResult = null
-    //   } catch (error) {
-    //     console.error(error)
-    //     this.uppy.info('Unable to clear cache. Some error occurred.')
-    //   }
-    // }
   }
 }
 </script>
