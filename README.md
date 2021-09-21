@@ -22,7 +22,9 @@ For detailed explanation on how things work, check out the [documentation](https
 ## Global Configuration
 
 The file `config/config.json` contains parameters that can be changed for each deployment:
-- `experiences`: the name of the experiences to display (as defined in `/manifests/experiences/`)
+
+- `experiences` (Array): the name of the experiences to display (as defined in `/manifests/experiences/`)
+- `saveFiles` (Boolean): Activate/deactivate the automatic local saving of data files, and show/hide the "cache" buttons
 
 ## Special Directories
 
@@ -46,7 +48,6 @@ Layouts are a great help when you want to change the look and feel of your Nuxt 
 
 More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
 
-
 ### `pages`
 
 This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
@@ -55,7 +56,7 @@ More information about the usage of this directory in [the documentation](https:
 
 ### `plugins`
 
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application.  $7This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
+The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. $7This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
 
 More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
 
@@ -74,6 +75,7 @@ This directory contains your Vuex store files. Creating a file in this directory
 More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
 
 ## Upgrading npm on Windows
+
 This is only relevant for Windows users who work with nvm.
 
 We work with a version of npm more recent than the one shipped with the node LTS we are using. There is a standard way of upgrading npm, but it doesn't work with nvm-windows. The way to do it is described in this [comment on github](https://github.com/coreybutler/nvm-windows/issues/300#issuecomment-798776683):
