@@ -1,0 +1,26 @@
+authors: Florian Singer <florian.singer@hestia.ai>
+
+prefixes:
+  h: http://hestia.ai/
+  ex: http://www.example.com/
+
+sources:
+  imp-impressions:
+    access: data/ad-impressions.js
+    referenceFormulation: jsonpath
+    iterator: $.*.ad.adsUserData.adImpressions.impressions[*]
+
+mappings:
+  advertiser:
+    sources:
+      - imp-impressions
+    s: h:Impression/$(advertiserInfo.screenName)/$(impressionTime)
+    po:
+      - [a, h:Impression]
+      - [h:advertiserName, $(advertiserInfo.advertiserName)]
+      - p: h:impressionTime
+        o:
+          function: ex:dateTimeAddTimeChar
+          parameters:
+            - [ex:input, $(impressionTime)]
+          datatype: xsd:dateTime
