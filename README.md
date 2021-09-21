@@ -19,6 +19,11 @@ $ npm run generate
 
 For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
 
+## Global Configuration
+
+The file `config/config.json` contains parameters that can be changed for each deployment:
+- `experiences`: the name of the experiences to display (as defined in `/manifests/experiences/`)
+
 ## Special Directories
 
 You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
