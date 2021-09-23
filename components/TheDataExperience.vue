@@ -55,6 +55,10 @@ export default {
       type: Object,
       default: () => {}
     },
+    csvProcessorNames: {
+      type: Object,
+      default: () => {}
+    },
     multiple: {
       type: Boolean,
       default: false
@@ -72,7 +76,7 @@ export default {
         .map(ext => `.${ext}`)
     },
     props() {
-      const propNames = ['examples', 'visualizations']
+      const propNames = ['examples', 'visualizations', 'csvProcessorNames']
       const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
       return props
     },

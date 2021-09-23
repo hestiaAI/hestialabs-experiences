@@ -60,11 +60,14 @@
 </template>
 
 <script>
+import csvProcessors from '@/manifests/csv-processors'
+
 /* eslint-disable vue/require-default-prop */
 export default {
   props: {
     examples: Array,
-    visualizations: Object
+    visualizations: Object,
+    csvProcessorNames: Object
   },
   data() {
     // main example is selected by default
@@ -77,7 +80,8 @@ export default {
       toRDF: true,
       headers: [],
       items: [],
-      vegaFiles: []
+      vegaFiles: [],
+      queryName: ''
     }
   },
   computed: {
@@ -87,6 +91,10 @@ export default {
     exampleVisualizations() {
       const exampleName = this.selectedExample.name
       return this.visualizations?.[exampleName] || {}
+    },
+    exampleProcessors() {
+      const exampleName = this.selectedExample.name
+      return this.csvProcessorNames?.[exampleName] || {}
     }
   },
   methods: {
@@ -101,11 +109,17 @@ export default {
       this.toRDF = toRDF
     },
     onUnitSparqlUpdate({ headers = [], items = [], error }) {
+      // Pre-viz processing
+      const processorName = this.exampleProcessors?.[this.queryName] || null
+      if (processorName) {
+        ;[headers, items] = csvProcessors[processorName](headers, items)
+      }
       // Vuetify DataTable component expects text and value properties
       this.headers = headers.map(h => ({ text: h, value: h }))
       this.items = items
     },
     onSparqlSelectorChange({ name = '' }) {
+      this.queryName = name
       const vizNames = this.exampleVisualizations[name]
       this.vegaFiles = this.selectedExample.vega.filter(s =>
         vizNames?.includes(s.name)
