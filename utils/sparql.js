@@ -42,26 +42,13 @@ export async function queryHeadersItems(rdf, sparql) {
   const headers = keys.map(k => k.substring(1))
   // Transform bindings to a list of objects having the headers as keys
   const items = bindings.map(map =>
-    // This version would be better (it does not include missing values)
-    // But Vega does not handle this format
-    // const res = []
-    // for (const i in keys) {
-    //   const v = map.get(keys[i])
-    //   if (typeof v !== 'undefined') {
-    //     res.push([headers[i], v.value])
-    //   }
-    // }
-    // return Object.fromEntries(res)
     Object.fromEntries(
       keys.map((key, index) => {
         // map.get(k) returns an N3 Term
         // https://github.com/rdfjs/N3.js/blob/main/src/N3DataFactory.js
         const v = map.get(key)
         if (typeof v === 'undefined') {
-          // FIXME the value for missing values should not be '0'
-          // But we keep this hack until 2021-09-16.
-          // Then we should find a way to handle missing data in Vega
-          return [headers[index], '0']
+          return [headers[index], null]
         }
         return [headers[index], v.value]
       })
