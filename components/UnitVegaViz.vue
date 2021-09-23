@@ -49,13 +49,7 @@ export default {
       if (!this.values.length) {
         return []
       }
-      const keys = Object.keys(this.values[0])
-      return this.values.map(item =>
-        keys.reduce((clone, key) => {
-          clone[key] = item[key].slice()
-          return clone
-        }, {})
-      )
+      return JSON.parse(JSON.stringify(this.values))
     },
     specWithValues() {
       // Changing the values involves
