@@ -77,7 +77,8 @@
       "orient": "bottom",
       "scale": "x",
       "labelAlign": "left",
-      "offset":10
+      "offset":10,
+      "labelAngle": 45
     },
     {
       "orient": "left",

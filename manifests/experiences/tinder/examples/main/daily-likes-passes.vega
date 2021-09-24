@@ -47,7 +47,7 @@
   ],
 
   "axes": [
-    {"orient": "bottom", "scale": "x", "offset":0, "labelAlign": "left"},
+    {"orient": "bottom", "scale": "x", "offset":0, "labelAlign": "left", "labelAngle": 45},
     {"orient": "left", "scale": "y",  "offset":10}
   ],
 
