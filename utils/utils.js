@@ -9,6 +9,8 @@ export const mimeTypes = {
   ttl: 'text/turtle',
   yaml: 'application/x-yaml',
   yml: 'application/x-yaml',
+  png: 'image/png',
+  jpeg: 'image/jpeg',
   [defaultExtension]: 'text/plain;charset=UTF-8'
 }
 

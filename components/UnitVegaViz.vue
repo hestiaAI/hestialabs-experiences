@@ -1,5 +1,17 @@
 <template v-if="hasValidSpec">
-  <div :id="divId" ref="graph"></div>
+  <div>
+    <div :id="divId" ref="graph"></div>
+    <v-row>
+      <v-col cols="6 mx-auto">
+        <base-button text="Export" @click="exportViz" />
+        <url-data-download-button
+          :href="href"
+          :extension="exportExtension"
+          :disabled="!href"
+        />
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
@@ -14,11 +26,16 @@ export default {
     values: {
       type: Array,
       default: () => []
+    },
+    exportExtension: {
+      type: String,
+      default: 'png'
     }
   },
   data() {
     return {
-      width: 0
+      width: 0,
+      href: ''
     }
   },
   computed: {
@@ -99,6 +116,11 @@ export default {
         // renderer: 'svg',
         actions: false
       })
+    },
+    exportViz() {
+      const canvas = document.getElementById(this.divId).firstChild
+      const img = canvas.toDataURL('image/' + this.exportExtension)
+      this.href = img
     }
   }
 }
