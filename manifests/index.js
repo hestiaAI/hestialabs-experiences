@@ -26,6 +26,11 @@ const reqVEGA = require.context(
   true,
   /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.vega$/
 )
+const reqParamSPARQL = require.context(
+  './experiences/',
+  true,
+  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.rqx$/
+)
 
 // files in assets/data/ are loaded only with file-loader
 const reqData = require.context('../assets/data/', true, /.*/)
@@ -154,7 +159,22 @@ reqSPARQL.keys().forEach(path => {
   const exampleObj = manifests[dir].examples.find(e => e.name === example)
   exampleObj.sparql.push({
     name: sparql,
+    parametrized: false,
     sparql: reqSPARQL(path).default
+  })
+})
+
+reqParamSPARQL.keys().forEach(path => {
+  const dir = extractFirstDirectory(path)
+  const match = path.match(
+    /\/examples\/(?<example>.+)\/(?<paramSparql>.+)\.rqx/
+  )
+  const { example, paramSparql } = match.groups
+  const exampleObj = manifests[dir].examples.find(e => e.name === example)
+  exampleObj.sparql.push({
+    name: paramSparql,
+    parametrized: true,
+    sparql: reqParamSPARQL(path).default
   })
 })
 

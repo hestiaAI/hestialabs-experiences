@@ -134,7 +134,7 @@ export default {
         },
         // enable raw importing of .yaml, .rq and .vega.json files
         {
-          test: /\.(ya?ml|rq|vega)$/i,
+          test: /\.(ya?ml|rq|vega|rqx)$/i,
           use: 'raw-loader'
         },
         {

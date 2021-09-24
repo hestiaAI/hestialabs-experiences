@@ -1,0 +1,11 @@
+# authors: Florian Singer <florian.singer@hestia.ai>
+PREFIX h: <http://hestia.ai/>
+
+SELECT ?targetingType ?targetingValue (COUNT(?criterion) AS ?count) WHERE
+{
+  ?criterion a h:Criterion .
+  ?criterion h:advertiserName "$Advertiser$" .
+  ?criterion h:targetingType ?targetingType .
+  ?criterion h:targetingValue ?targetingValue .
+}
+GROUP BY ?targetingType ?targetingValue

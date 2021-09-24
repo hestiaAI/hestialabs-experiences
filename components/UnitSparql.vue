@@ -22,6 +22,12 @@
         :disabled="!sparql"
       />
     </div>
+    <v-text-field
+      v-if="parametrized"
+      v-model="queryParameter"
+      :label="queryParameterName"
+      class="my-sm-2 mr-sm-2"
+    ></v-text-field>
     <code-editor
       :value.sync="sparql"
       class="mt-6"
@@ -46,6 +52,8 @@ export default {
   data() {
     return {
       sparql: '',
+      parametrized: false,
+      queryParameter: '',
       message: '',
       status: false,
       error: false,
@@ -55,6 +63,9 @@ export default {
   computed: {
     disabled() {
       return !this.rdf || !this.sparql
+    },
+    queryParameterName() {
+      return this.sparql.match(/\$[a-zA-Z0-9]+\$/)[0].slice(1, -1)
     }
   },
   methods: {
@@ -63,7 +74,11 @@ export default {
         this.message = ''
         this.error = false
         this.progress = true
-        const [headers, items] = await queryHeadersItems(this.rdf, this.sparql)
+        let sparql = this.sparql
+        if (this.parametrized) {
+          sparql = sparql.replace(/\$[a-zA-Z0-9]+\$/, this.queryParameter)
+        }
+        const [headers, items] = await queryHeadersItems(this.rdf, sparql)
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)
@@ -77,6 +92,7 @@ export default {
     },
     onChangeSelector(event) {
       this.sparql = event.sparql
+      this.parametrized = event.parametrized
       this.$emit('change', { name: event.name })
     }
   }
