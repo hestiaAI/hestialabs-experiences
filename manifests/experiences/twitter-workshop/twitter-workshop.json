@@ -6,6 +6,6 @@
   "files": ["data/ad-impressions.js", "data/ad-engagements.js"],
   "preprocessor": "twitter",
 	"data": ["twitter.zip", "twitter-sample.zip"],
-  "csvProcessorNames": {"main": {"targeting-criteria": "sunburstTargeting"}},
-  "visualizations": {"main": {"advertisers-per-day": "top-k-advertisers", "targeting-criteria": "sunburst-targeting"}}
+  "csvProcessorNames": {"main": {"targeting-criteria": "sunburstTargeting", "select-targeting-criteria": "sunburstTargetingAdvertiser"}},
+  "visualizations": {"main": {"advertisers-per-day": "top-k-advertisers", "targeting-criteria": "sunburst-targeting", "select-targeting-criteria": "sunburst-targeting"}}
 }

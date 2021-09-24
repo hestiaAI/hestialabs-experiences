@@ -21,6 +21,7 @@ const sunburstTargeting = (headers, items) => {
   // Flatten tree into CSV. Give IDs and propagate aggregated counts to parents
   let id = 0
   let rootValue = 0
+  const rootID = id
   for (const [advertiser, subtree] of tree.entries()) {
     id += 1
     const advertiserID = id
@@ -57,12 +58,69 @@ const sunburstTargeting = (headers, items) => {
       name: advertiser,
       value: advertiserValue,
       group: advertiser,
-      parent: 0,
+      parent: rootID,
       size: null
     })
   }
   const root = {
-    id: 0,
+    id: rootID,
+    name: 'All',
+    value: rootValue,
+    group: 'All',
+    parent: null,
+    size: null
+  }
+  results.push(root)
+  return [Object.keys(root), results]
+}
+
+const sunburstTargetingAdvertiser = (headers, items) => {
+  // TODO refactor with previous function
+  const results = []
+  const tree = new Map()
+  // Construct tree: Root -> TargetingType -> [TargetingValue, count]
+  for (const item of items) {
+    const targetingType = item.targetingType
+    const targetingValue = item.targetingValue
+    const count = parseInt(item.count)
+    if (!tree.has(targetingType)) {
+      tree.set(targetingType, [])
+    }
+    const leaves = tree.get(targetingType)
+    leaves.push([targetingValue, count])
+  }
+  // Flatten tree into CSV. Give IDs and propagate aggregated counts to parents
+  let id = 0
+  let rootValue = 0
+  const rootID = id
+  for (const [targetingType, leaves] of tree.entries()) {
+    id += 1
+    const targetingTypeID = id
+    let targetingTypeValue = 0
+    for (const [targetingValue, count] of leaves) {
+      id += 1
+      targetingTypeValue += count
+      results.push({
+        id,
+        name: targetingValue,
+        value: count,
+        group: targetingType,
+        parent: targetingTypeID,
+        size: count
+      })
+    }
+    rootValue += targetingTypeValue
+    results.push({
+      id: targetingTypeID,
+      name: targetingType,
+      value: targetingTypeValue,
+      group: targetingType,
+      parent: rootID,
+      size: null
+    })
+  }
+  const root = {
+    id: rootID,
     name: 'All',
     value: rootValue,
     group: 'All',
@@ -74,5 +132,6 @@ const sunburstTargeting = (headers, items) => {
 }
 
 export default {
-  sunburstTargeting
+  sunburstTargeting,
+  sunburstTargetingAdvertiser
 }
