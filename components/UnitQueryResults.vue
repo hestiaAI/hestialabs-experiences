@@ -8,8 +8,15 @@
       @click.native="onDownload"
     />
     <v-alert v-if="error" type="error">{{ message }}</v-alert>
+    <v-text-field
+      v-model="search"
+      append-icon="mdi-magnify"
+      label="Search"
+      single-line
+      hide-details
+    ></v-text-field>
     <v-data-table
-      v-bind="{ headers, items }"
+      v-bind="{ headers, items, search }"
       :hide-default-footer="disabled"
       multi-sort
     />
@@ -38,7 +45,8 @@ export default {
       progress: false,
       data: '',
       message: '',
-      extension: 'csv'
+      extension: 'csv',
+      search: ''
     }
   },
   computed: {
