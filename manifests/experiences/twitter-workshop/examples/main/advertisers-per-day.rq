@@ -1,4 +1,3 @@
-# authors: Florian Singer <florian.singer@hestia.ai>
 PREFIX h: <http://hestia.ai/>
 
 SELECT ?advertiserName (COUNT(?impression) AS ?count) ?date WHERE
