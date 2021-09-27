@@ -11,12 +11,12 @@
       "bind": {"input": "range", "name": " ", "min": 10, "max": 50, "step": 1}
     },
     {
-      "name": "op", "value": "average",
-      "bind": {"input": "select", "name":" ", "options": ["average", "sum"], "labels": ["per day", "in total"]}
+      "name": "op", "value": "sum",
+      "bind": {"input": "select", "name":" ", "options": ["sum", "average"], "labels": ["in total", "per day"]}
     },
     {
       "name": "label",
-      "value": {"average": "per day", "sum": "in total"}
+      "value": {"sum": "in total", "average": "per day"}
     }
   ],
 
