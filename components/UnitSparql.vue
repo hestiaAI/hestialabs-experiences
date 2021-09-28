@@ -31,7 +31,7 @@
         class="my-sm-2 mr-sm-2"
       ></v-text-field>
       <code-editor
-        :value.sync="sparql"
+        :value.sync="code"
         class="mt-6"
         line-numbers
         language="sparql"
@@ -40,15 +40,9 @@
     </div>
 
     <div v-else>
-      <the-sparql-selector
-        :items="selectedExample.sparql"
-        :disabled="!selectedExample.sparql.length"
-        class-attr="my-sm-2 mr-sm-2 mb-2"
-        @change="onChangeSelector"
-      />
       <base-button
         v-bind="{ progress, status, error, disabled }"
-        text="Run Query"
+        text="Run"
         icon="mdiStepForward"
         class="ma-sm-2"
         @click="runQuery"
@@ -76,17 +70,20 @@ export default {
     rdf: {
       type: String,
       default: ''
+    },
+    query: {
+      type: Object,
+      default: null
     }
   },
   data() {
     return {
-      sparql: '',
-      parametrized: false,
       queryParameter: '',
       message: '',
       status: false,
       error: false,
-      progress: false
+      progress: false,
+      code: ''
     }
   },
   computed: {
@@ -95,6 +92,22 @@ export default {
     },
     queryParameterName() {
       return this.sparql.match(/\$[a-zA-Z0-9]+\$/)[0].slice(1, -1)
+    },
+    sparql() {
+      return this.query?.sparql || ''
+    },
+    parametrized() {
+      return this.query?.parametrized || false
+    }
+  },
+  watch: {
+    code(c) {
+      const query = JSON.parse(JSON.stringify(this.query))
+      query.sparql = c
+      this.$emit('change', query)
+    },
+    query(q) {
+      this.code = q.sparql
     }
   },
   methods: {
@@ -119,10 +132,8 @@ export default {
         this.progress = false
       }
     },
-    onChangeSelector(event) {
-      this.sparql = event.sparql
-      this.parametrized = event.parametrized
-      this.$emit('change', { name: event.name })
+    onChangeSelector(query) {
+      this.$emit('change', query)
     }
   }
 }

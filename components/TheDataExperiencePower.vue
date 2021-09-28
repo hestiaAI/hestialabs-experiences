@@ -26,7 +26,14 @@
     </v-row>
 
     <unit-query
-      v-bind="{ selectedExample, rdf, visualizations, csvProcessorNames }"
+      v-bind="{
+        selectedExample,
+        rdf,
+        visualizations,
+        csvProcessorNames,
+        query
+      }"
+      @change="onQueryChange"
     />
   </div>
 </template>
@@ -48,7 +55,7 @@ export default {
       rml: '',
       rdf: '',
       toRDF: true,
-      queryName: ''
+      query: null
     }
   },
   computed: {
@@ -66,6 +73,9 @@ export default {
     onUnitRdfUpdate({ rdf = '', toRDF = this.toRDF, error }) {
       this.rdf = rdf
       this.toRDF = toRDF
+    },
+    onQueryChange(query) {
+      this.query = query
     }
   }
 }

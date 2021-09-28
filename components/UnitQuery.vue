@@ -4,11 +4,10 @@
       <v-row>
         <v-col cols="12" lg="6">
           <unit-sparql
-            :rdf="rdf"
-            :selected-example="selectedExample"
+            v-bind="{ rdf, selectedExample, query }"
             class="mr-lg-6"
             @update="onUnitSparqlUpdate"
-            @change="onSparqlSelectorChange"
+            @change="onChangeSelector"
           />
         </v-col>
         <v-col cols="12" lg="6">
@@ -20,7 +19,11 @@
           cols="12"
           style="text-align: center"
         >
-          <unit-vega-viz :spec-file="specFile" :values="items" />
+          <unit-vega-viz
+            v-if="items.length"
+            :spec-file="specFile"
+            :values="items"
+          />
         </v-col>
       </v-row>
     </div>
@@ -29,11 +32,9 @@
       <v-row>
         <v-col>
           <unit-sparql
-            :rdf="rdf"
-            :selected-example="selectedExample"
+            v-bind="{ rdf, selectedExample, query }"
             class="mr-lg-6"
             @update="onUnitSparqlUpdate"
-            @change="onSparqlSelectorChange"
           />
         </v-col>
       </v-row>
@@ -82,14 +83,16 @@ export default {
     csvProcessorNames: {
       type: Object,
       required: true
+    },
+    query: {
+      type: Object,
+      default: null
     }
   },
   data() {
     return {
       headers: [],
-      items: [],
-      vegaFiles: [],
-      queryName: ''
+      items: []
     }
   },
   computed: {
@@ -100,12 +103,19 @@ export default {
     exampleProcessors() {
       const exampleName = this.selectedExample.name
       return this.csvProcessorNames?.[exampleName] || {}
+    },
+    vegaFiles() {
+      if (!this.query) {
+        return []
+      }
+      const vizNames = this.exampleVisualizations[this.query.name]
+      return this.selectedExample.vega.filter(s => vizNames?.includes(s.name))
     }
   },
   methods: {
     onUnitSparqlUpdate({ headers = [], items = [], error }) {
       // Pre-viz processing
-      const processorName = this.exampleProcessors?.[this.queryName] || null
+      const processorName = this.exampleProcessors?.[this.query.name] || null
       if (processorName) {
         ;[headers, items] = csvProcessors[processorName](headers, items)
       }
@@ -113,13 +123,8 @@ export default {
       this.headers = headers.map(h => ({ text: h, value: h }))
       this.items = items
     },
-    onSparqlSelectorChange({ name = '' }) {
-      // Select relevant visualizations
-      this.queryName = name
-      const vizNames = this.exampleVisualizations[name]
-      this.vegaFiles = this.selectedExample.vega.filter(s =>
-        vizNames?.includes(s.name)
-      )
+    onChangeSelector(query) {
+      this.$emit('change', query)
     }
   }
 }

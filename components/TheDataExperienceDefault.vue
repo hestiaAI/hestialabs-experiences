@@ -18,7 +18,15 @@
         </template>
         <template v-if="success">
           <unit-query
-            v-bind="{ selectedExample, rdf, visualizations, csvProcessorNames }"
+            v-for="(query, index) in selectedExample.sparql"
+            :key="index"
+            v-bind="{
+              selectedExample,
+              rdf,
+              visualizations,
+              csvProcessorNames,
+              query
+            }"
           />
         </template>
       </v-col>
