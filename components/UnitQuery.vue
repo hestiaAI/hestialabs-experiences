@@ -1,26 +1,65 @@
 <template>
-  <v-row>
-    <v-col cols="12" lg="6">
-      <unit-sparql
-        :rdf="rdf"
-        :selected-example="selectedExample"
-        class="mr-lg-6"
-        @update="onUnitSparqlUpdate"
-        @change="onSparqlSelectorChange"
-      />
-    </v-col>
-    <v-col cols="12" lg="6">
-      <unit-query-results v-bind="{ headers, items }" />
-    </v-col>
-    <v-col
-      v-for="specFile in vegaFiles"
-      :key="`spec-${specFile.name}`"
-      cols="12"
-      style="text-align: center"
-    >
-      <unit-vega-viz :spec-file="specFile" :values="items" />
-    </v-col>
-  </v-row>
+  <div>
+    <div v-if="$store.state.power">
+      <v-row>
+        <v-col cols="12" lg="6">
+          <unit-sparql
+            :rdf="rdf"
+            :selected-example="selectedExample"
+            class="mr-lg-6"
+            @update="onUnitSparqlUpdate"
+            @change="onSparqlSelectorChange"
+          />
+        </v-col>
+        <v-col cols="12" lg="6">
+          <unit-query-results v-bind="{ headers, items }" />
+        </v-col>
+        <v-col
+          v-for="specFile in vegaFiles"
+          :key="`spec-${specFile.name}`"
+          cols="12"
+          style="text-align: center"
+        >
+          <unit-vega-viz :spec-file="specFile" :values="items" />
+        </v-col>
+      </v-row>
+    </div>
+
+    <div v-else>
+      <v-row>
+        <v-col>
+          <unit-sparql
+            :rdf="rdf"
+            :selected-example="selectedExample"
+            class="mr-lg-6"
+            @update="onUnitSparqlUpdate"
+            @change="onSparqlSelectorChange"
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <unit-query-results
+            v-if="headers.length"
+            v-bind="{ headers, items }"
+          />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col
+          v-for="specFile in vegaFiles"
+          :key="`spec-${specFile.name}`"
+          style="text-align: center"
+        >
+          <unit-vega-viz
+            v-if="items.length"
+            :spec-file="specFile"
+            :values="items"
+          />
+        </v-col>
+      </v-row>
+    </div>
+  </div>
 </template>
 
 <script>
