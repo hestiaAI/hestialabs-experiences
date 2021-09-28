@@ -24,36 +24,21 @@
         <unit-rdf v-bind="{ rml, inputFiles }" @update="onUnitRdfUpdate" />
       </v-col>
     </v-row>
-    <v-expand-transition>
-      <v-row v-show="toRDF">
-        <v-col cols="12" lg="6">
-          <unit-sparql
-            :rdf="rdf"
-            :selected-example="selectedExample"
-            class="mr-lg-6"
-            @update="onUnitSparqlUpdate"
-            @change="onSparqlSelectorChange"
-          />
-        </v-col>
-        <v-col cols="12" lg="6">
-          <unit-query-results v-bind="{ headers, items }" />
-        </v-col>
-        <v-col
-          v-for="specFile in vegaFiles"
-          :key="`spec-${specFile.name}`"
-          cols="12"
-          style="text-align: center"
-        >
-          <unit-vega-viz :spec-file="specFile" :values="items" />
-        </v-col>
-      </v-row>
-    </v-expand-transition>
+
+    <unit-query
+      v-bind="{
+        selectedExample,
+        rdf,
+        visualizations,
+        csvProcessorNames,
+        query
+      }"
+      @change="onQueryChange"
+    />
   </div>
 </template>
 
 <script>
-import csvProcessors from '@/manifests/csv-processors'
-
 /* eslint-disable vue/require-default-prop */
 export default {
   props: {
@@ -70,23 +55,12 @@ export default {
       rml: '',
       rdf: '',
       toRDF: true,
-      headers: [],
-      items: [],
-      vegaFiles: [],
-      queryName: ''
+      query: null
     }
   },
   computed: {
     runQueryDisabled() {
       return !this.rdf
-    },
-    exampleVisualizations() {
-      const exampleName = this.selectedExample.name
-      return this.visualizations?.[exampleName] || {}
-    },
-    exampleProcessors() {
-      const exampleName = this.selectedExample.name
-      return this.csvProcessorNames?.[exampleName] || {}
     }
   },
   methods: {
@@ -100,22 +74,8 @@ export default {
       this.rdf = rdf
       this.toRDF = toRDF
     },
-    onUnitSparqlUpdate({ headers = [], items = [], error }) {
-      // Pre-viz processing
-      const processorName = this.exampleProcessors?.[this.queryName] || null
-      if (processorName) {
-        ;[headers, items] = csvProcessors[processorName](headers, items)
-      }
-      // Vuetify DataTable component expects text and value properties
-      this.headers = headers.map(h => ({ text: h, value: h }))
-      this.items = items
-    },
-    onSparqlSelectorChange({ name = '' }) {
-      this.queryName = name
-      const vizNames = this.exampleVisualizations[name]
-      this.vegaFiles = this.selectedExample.vega.filter(s =>
-        vizNames?.includes(s.name)
-      )
+    onQueryChange(query) {
+      this.query = query
     }
   }
 }

@@ -7,5 +7,19 @@
   "preprocessor": "twitter",
 	"data": ["twitter.zip", "twitter-sample.zip"],
   "csvProcessorNames": {"main": {"targeting-criteria": "sunburstTargeting", "select-targeting-criteria": "sunburstTargetingAdvertiser"}},
-  "visualizations": {"main": {"advertisers-per-day": "top-k-advertisers", "targeting-criteria": "sunburst-targeting", "select-targeting-criteria": "sunburst-targeting"}}
+  "visualizations": {"main": {"advertisers-per-day": "top-k-advertisers", "targeting-criteria": "sunburst-targeting", "select-targeting-criteria": "sunburst-targeting"}},
+  "defaultView": {
+    "advertisers-per-day": {
+      "showTable": false,
+      "text": "Advertisers per day..."
+    },
+    "targeting-criteria": {
+      "showTable": false,
+      "text": "Targeting criteria..."
+    },
+    "select-targeting-criteria": {
+      "showTable": false,
+      "text": "Targeting criteria of one specific advertiser..."
+    }
+  }
 }

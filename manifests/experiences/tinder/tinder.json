@@ -19,5 +19,11 @@
     "title": "Dating Privacy Collective",
     "icon": "dating-privacy-collective.svg",
     "url": "https://dating-privacy.hestialabs.org/"
+  },
+  "defaultView": {
+    "all": {
+      "showTable": true,
+      "text": "Tinder usage information"
+    }
   }
 }

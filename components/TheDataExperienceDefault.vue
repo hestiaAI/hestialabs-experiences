@@ -16,24 +16,22 @@
             >{{ message }}</v-alert
           >
         </template>
-        <template v-if="progressQuery">
-          <base-progress-circular class="mr-2" />
-          <span>Generating Graphs...</span>
+        <template v-if="success">
+          <unit-query
+            v-for="(query, index) in queries"
+            :key="index"
+            v-bind="{
+              selectedExample,
+              rdf,
+              visualizations,
+              csvProcessorNames,
+              query,
+              defaultView
+            }"
+          />
         </template>
       </v-col>
     </v-row>
-    <template v-if="successQuery">
-      <v-row>
-        <v-col
-          v-for="specFile in vegaFiles"
-          :key="`spec-${specFile.name}`"
-          cols="12"
-          style="text-align: center"
-        >
-          <unit-vega-viz :spec-file="specFile" :values="items" />
-        </v-col>
-      </v-row>
-    </template>
   </div>
 </template>
 
@@ -41,10 +39,6 @@
 /* eslint-disable vue/require-default-prop */
 import rdfUtils from '@/utils/rdf'
 import parseYarrrml from '@/utils/parse-yarrrml'
-import { queryHeadersItems } from '@/utils/sparql'
-
-const DEFAULT_EXAMPLE = 'main'
-const DEFAULT_QUERY = 'all'
 
 function getErrorMessage(error) {
   return error instanceof Error ? error.message : error
@@ -53,49 +47,36 @@ function getErrorMessage(error) {
 export default {
   props: {
     examples: Array,
-    visualizations: Object
+    visualizations: Object,
+    csvProcessorNames: Object,
+    defaultView: Object
   },
   data() {
+    // main example is selected by default
+    const selectedExample = this.examples[0]
     return {
+      selectedExample,
       progress: false,
       error: false,
       success: false,
       message: '',
-      progressQuery: false,
-      errorQuery: false,
-      successQuery: false,
       rml: '',
-      rdf: '',
-      headers: [],
-      items: []
+      rdf: ''
     }
   },
   computed: {
-    example() {
-      return this.examples.find(e => e.name === DEFAULT_EXAMPLE)
-    },
-    exampleSparql() {
-      return this.example.sparql.find(e => e.name === DEFAULT_QUERY)
-    },
-    exampleVisualizations() {
-      return this.visualizations?.[this.example.name] || {}
-    },
-    vegaFiles() {
-      const vizNames = this.exampleVisualizations[this.exampleSparql.name]
-      return this.example.vega.filter(s => vizNames?.includes(s.name))
+    queries() {
+      return this.selectedExample.sparql.filter(s =>
+        Object.keys(this.defaultView).includes(s.name)
+      )
     }
   },
   watch: {
-    example: {
+    selectedExample: {
       immediate: true,
-      async handler(example) {
+      async handler(selectedExample) {
         // this should be quick ...
-        this.rml = await parseYarrrml(example.yarrrml)
-      }
-    },
-    rdf: {
-      async handler(rdf) {
-        await this.runQuery()
+        this.rml = await parseYarrrml(selectedExample.yarrrml)
       }
     }
   },
@@ -143,24 +124,6 @@ export default {
           this.progress = false
         }
       }
-    },
-    async runQuery() {
-      this.errorQuery = false
-      this.successQuery = false
-      this.progressQuery = true
-      try {
-        const [headers, items] = await queryHeadersItems(
-          this.rdf,
-          this.exampleSparql.sparql
-        )
-        this.headers = headers
-        this.items = items
-        this.successQuery = true
-      } catch (error) {
-        console.error(error)
-        this.errorQuery = true
-      }
-      this.progressQuery = false
     }
   }
 }
