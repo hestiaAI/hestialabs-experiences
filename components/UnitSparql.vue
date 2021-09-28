@@ -3,10 +3,11 @@
   <div>
     <h2 class="my-3">SPARQL</h2>
     <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
-      <slot
-        name="selector"
-        :change="onChangeSelector"
-        classAttr="my-sm-2 mr-sm-2 mb-2"
+      <the-sparql-selector
+        :items="selectedExample.sparql"
+        :disabled="!selectedExample.sparql.length"
+        class-attr="my-sm-2 mr-sm-2 mb-2"
+        @change="onChangeSelector"
       />
       <base-button
         v-bind="{ progress, status, error, disabled }"
@@ -44,6 +45,10 @@ import { processError } from '@/utils/utils'
 
 export default {
   props: {
+    selectedExample: {
+      type: Object,
+      default: null
+    },
     rdf: {
       type: String,
       default: ''

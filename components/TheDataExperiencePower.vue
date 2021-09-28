@@ -29,19 +29,11 @@
         <v-col cols="12" lg="6">
           <unit-sparql
             :rdf="rdf"
+            :selected-example="selectedExample"
             class="mr-lg-6"
             @update="onUnitSparqlUpdate"
             @change="onSparqlSelectorChange"
-          >
-            <template #selector="{ change, classAttr }">
-              <the-sparql-selector
-                :items="selectedExample.sparql"
-                :disabled="!selectedExample.sparql.length"
-                :class="classAttr"
-                @change="change"
-              />
-            </template>
-          </unit-sparql>
+          />
         </v-col>
         <v-col cols="12" lg="6">
           <unit-query-results v-bind="{ headers, items }" />
