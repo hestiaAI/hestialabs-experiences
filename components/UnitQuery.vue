@@ -24,8 +24,9 @@
 </template>
 
 <script>
+import csvProcessors from '@/manifests/csv-processors'
+
 export default {
-  // TODO refactoring: turn these props into data once everything works
   props: {
     selectedExample: {
       type: Object,
@@ -35,25 +36,51 @@ export default {
       type: String,
       required: true
     },
-    vegaFiles: {
-      type: Array,
+    visualizations: {
+      type: Object,
       required: true
     },
-    headers: {
-      type: Array,
+    csvProcessorNames: {
+      type: Object,
       required: true
+    }
+  },
+  data() {
+    return {
+      headers: [],
+      items: [],
+      vegaFiles: [],
+      queryName: ''
+    }
+  },
+  computed: {
+    exampleVisualizations() {
+      const exampleName = this.selectedExample.name
+      return this.visualizations?.[exampleName] || {}
     },
-    items: {
-      type: Array,
-      required: true
+    exampleProcessors() {
+      const exampleName = this.selectedExample.name
+      return this.csvProcessorNames?.[exampleName] || {}
     }
   },
   methods: {
     onUnitSparqlUpdate({ headers = [], items = [], error }) {
-      this.$emit('update', { headers, items })
+      // Pre-viz processing
+      const processorName = this.exampleProcessors?.[this.queryName] || null
+      if (processorName) {
+        ;[headers, items] = csvProcessors[processorName](headers, items)
+      }
+      // Vuetify DataTable component expects text and value properties
+      this.headers = headers.map(h => ({ text: h, value: h }))
+      this.items = items
     },
     onSparqlSelectorChange({ name = '' }) {
-      this.$emit('change', { name })
+      // Select relevant visualizations
+      this.queryName = name
+      const vizNames = this.exampleVisualizations[name]
+      this.vegaFiles = this.selectedExample.vega.filter(s =>
+        vizNames?.includes(s.name)
+      )
     }
   }
 }

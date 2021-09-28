@@ -24,19 +24,14 @@
         <unit-rdf v-bind="{ rml, inputFiles }" @update="onUnitRdfUpdate" />
       </v-col>
     </v-row>
-    <v-expand-transition>
-      <unit-query
-        v-bind="{ selectedExample, rdf, vegaFiles, headers, items }"
-        @update="onUnitSparqlUpdate"
-        @change="onSparqlSelectorChange"
-      />
-    </v-expand-transition>
+
+    <unit-query
+      v-bind="{ selectedExample, rdf, visualizations, csvProcessorNames }"
+    />
   </div>
 </template>
 
 <script>
-import csvProcessors from '@/manifests/csv-processors'
-
 /* eslint-disable vue/require-default-prop */
 export default {
   props: {
@@ -53,23 +48,12 @@ export default {
       rml: '',
       rdf: '',
       toRDF: true,
-      headers: [],
-      items: [],
-      vegaFiles: [],
       queryName: ''
     }
   },
   computed: {
     runQueryDisabled() {
       return !this.rdf
-    },
-    exampleVisualizations() {
-      const exampleName = this.selectedExample.name
-      return this.visualizations?.[exampleName] || {}
-    },
-    exampleProcessors() {
-      const exampleName = this.selectedExample.name
-      return this.csvProcessorNames?.[exampleName] || {}
     }
   },
   methods: {
@@ -82,23 +66,6 @@ export default {
     onUnitRdfUpdate({ rdf = '', toRDF = this.toRDF, error }) {
       this.rdf = rdf
       this.toRDF = toRDF
-    },
-    onUnitSparqlUpdate({ headers = [], items = [], error }) {
-      // Pre-viz processing
-      const processorName = this.exampleProcessors?.[this.queryName] || null
-      if (processorName) {
-        ;[headers, items] = csvProcessors[processorName](headers, items)
-      }
-      // Vuetify DataTable component expects text and value properties
-      this.headers = headers.map(h => ({ text: h, value: h }))
-      this.items = items
-    },
-    onSparqlSelectorChange({ name = '' }) {
-      this.queryName = name
-      const vizNames = this.exampleVisualizations[name]
-      this.vegaFiles = this.selectedExample.vega.filter(s =>
-        vizNames?.includes(s.name)
-      )
     }
   }
 }
