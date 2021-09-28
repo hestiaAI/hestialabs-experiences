@@ -29,6 +29,9 @@
     </div>
 
     <div v-else>
+      <div>
+        {{ infoText }}
+      </div>
       <v-row>
         <v-col>
           <unit-sparql
@@ -38,12 +41,9 @@
           />
         </v-col>
       </v-row>
-      <v-row>
+      <v-row v-if="showTable">
         <v-col>
-          <unit-query-results
-            v-if="headers.length"
-            v-bind="{ headers, items }"
-          />
+          <unit-query-results v-bind="{ headers, items }" />
         </v-col>
       </v-row>
       <v-row>
@@ -87,6 +87,10 @@ export default {
     query: {
       type: Object,
       default: null
+    },
+    defaultView: {
+      type: Object,
+      default: null
     }
   },
   data() {
@@ -103,6 +107,14 @@ export default {
     exampleProcessors() {
       const exampleName = this.selectedExample.name
       return this.csvProcessorNames?.[exampleName] || {}
+    },
+    infoText() {
+      return this.defaultView[this.query.name].text
+    },
+    showTable() {
+      return (
+        this.headers.length !== 0 && this.defaultView[this.query.name].showTable
+      )
     },
     vegaFiles() {
       if (!this.query) {

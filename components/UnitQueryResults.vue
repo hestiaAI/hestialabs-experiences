@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="my-3">Query Results</h2>
+    <h2 v-if="$store.state.power" class="my-3">Query Results</h2>
     <base-download-button
       v-bind="{ progress, error, disabled, extension, data, status }"
       ref="downloadButton"
