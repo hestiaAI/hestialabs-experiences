@@ -25,28 +25,11 @@
       </v-col>
     </v-row>
     <v-expand-transition>
-      <v-row v-show="toRDF">
-        <v-col cols="12" lg="6">
-          <unit-sparql
-            :rdf="rdf"
-            :selected-example="selectedExample"
-            class="mr-lg-6"
-            @update="onUnitSparqlUpdate"
-            @change="onSparqlSelectorChange"
-          />
-        </v-col>
-        <v-col cols="12" lg="6">
-          <unit-query-results v-bind="{ headers, items }" />
-        </v-col>
-        <v-col
-          v-for="specFile in vegaFiles"
-          :key="`spec-${specFile.name}`"
-          cols="12"
-          style="text-align: center"
-        >
-          <unit-vega-viz :spec-file="specFile" :values="items" />
-        </v-col>
-      </v-row>
+      <unit-query
+        v-bind="{ selectedExample, rdf, vegaFiles, headers, items }"
+        @update="onUnitSparqlUpdate"
+        @change="onSparqlSelectorChange"
+      />
     </v-expand-transition>
   </div>
 </template>
