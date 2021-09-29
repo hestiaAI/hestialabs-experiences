@@ -37,7 +37,7 @@ $ CONFIG_NAME=workshop npm run dev
 
 ``` bash
 # for production
-CONFIG_NAME=workshop npm run build
+CONFIG_NAME=workshop BASE_URL=experiences.hestialabs.org npm run build
 # launch server
 npm run start
 ```
