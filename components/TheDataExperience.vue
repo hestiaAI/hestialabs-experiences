@@ -9,6 +9,7 @@
               files,
               multiple,
               preprocessor,
+              allowMissingFiles,
               samples: data,
               ...slotProps
             }"
@@ -70,6 +71,10 @@ export default {
     preprocessor: {
       type: String,
       default: undefined
+    },
+    allowMissingFiles: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

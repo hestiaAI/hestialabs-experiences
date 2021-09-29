@@ -107,7 +107,11 @@ export default {
     },
     async onUnitFilesUpdate({ inputFilesRocketRML, error }) {
       this.initState()
-      if (error) {
+      if (Object.keys(inputFilesRocketRML).length === 0) {
+        this.error = true
+        this.message = 'No relevant files were found'
+        this.progress = false
+      } else if (error) {
         this.error = true
         this.message = error
         this.progress = false

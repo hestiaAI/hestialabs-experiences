@@ -95,6 +95,10 @@ export default {
     samples: {
       type: Array,
       default: () => []
+    },
+    allowMissingFiles: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -277,6 +281,10 @@ export default {
         return 'Unexpected result'
       }
 
+      if (Object.keys(xfiles).length === 0) {
+        return 'No relevant files were found.'
+      }
+
       let msg = `Success! Time elapsed: ${secs} sec.\n`
       Object.entries(xfiles).forEach(([archive, filelist]) => {
         if (!archive) {
@@ -298,11 +306,10 @@ export default {
       const files = this.uppy.getFiles().map(f => f.data)
       if (files.length) {
         try {
-          const strictExtraction = !this.isPlayground
           const result = await processFiles(
             files,
             this.filesToExtract,
-            strictExtraction,
+            !this.allowMissingFiles,
             this.extensions,
             this.preprocessorFunc,
             this.isSingleFileExperience

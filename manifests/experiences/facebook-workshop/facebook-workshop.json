@@ -4,5 +4,6 @@
   "icon": "facebook.png",
   "ext": "zip",
   "files": ["apps_and_websites_off_of_facebook/your_off-facebook_activity.json"],
+  "allowMissingFiles": true,
   "data": []
 }

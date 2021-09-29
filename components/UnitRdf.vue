@@ -50,7 +50,12 @@ export default {
   },
   computed: {
     disabled() {
-      return !this.rml || !this.inputFiles || this.progress
+      return (
+        !this.rml ||
+        !this.inputFiles ||
+        this.progress ||
+        Object.keys(this.inputFiles).length === 0
+      )
     },
     extension() {
       if (this.error) {
