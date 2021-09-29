@@ -20,10 +20,11 @@
     "icon": "dating-privacy-collective.svg",
     "url": "https://dating-privacy.hestialabs.org/"
   },
-  "defaultView": {
-    "all": {
+  "defaultView": [
+    {
+      "name": "all",
       "showTable": true,
-      "text": "Tinder usage information"
+      "text": "Tinder usage information. Visualize your daily activity on Tinder, such as the number of likes, passes, matches, or the number of times you have opened the app."
     }
-  }
+  ]
 }

@@ -42,11 +42,6 @@
             />
           </v-col>
         </v-row>
-        <v-row v-if="showTable">
-          <v-col>
-            <unit-query-results v-bind="{ headers, items }" />
-          </v-col>
-        </v-row>
         <v-row v-if="items.length">
           <v-col
             v-for="specFile in vegaFiles"
@@ -54,6 +49,11 @@
             style="text-align: center"
           >
             <unit-vega-viz :spec-file="specFile" :values="items" />
+          </v-col>
+        </v-row>
+        <v-row v-if="showTable">
+          <v-col>
+            <unit-query-results v-bind="{ headers, items }" />
           </v-col>
         </v-row>
       </v-card>
