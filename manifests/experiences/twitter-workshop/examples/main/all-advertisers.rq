@@ -1,0 +1,8 @@
+PREFIX h: <http://hestia.ai/>
+
+SELECT ?advertiserName (COUNT(?impression) AS ?count) WHERE
+{
+  ?impression a h:Impression .
+  ?impression h:advertiserName ?advertiserName .
+}
+GROUP BY ?advertiserName

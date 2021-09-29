@@ -11,15 +11,19 @@
   "defaultView": {
     "advertisers-per-day": {
       "showTable": false,
-      "text": "Advertisers per day..."
+      "text": "See the ranking of advertisers that have shown you the most ads."
     },
     "targeting-criteria": {
       "showTable": false,
-      "text": "Targeting criteria..."
+      "text": "Understand why you have been targeted by these top advertisers."
+    },
+    "all-advertisers": {
+      "showTable": true,
+      "text": "Get more details with a table containing all the advertisers that have shown you ads, and how many times they did."
     },
     "select-targeting-criteria": {
       "showTable": false,
-      "text": "Targeting criteria of one specific advertiser..."
+      "text": "Visualize the targeting criteria of one specific advertiser. You can look up the names in the table above (note: it's case-sensitive)."
     }
   }
 }

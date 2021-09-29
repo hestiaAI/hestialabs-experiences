@@ -6,5 +6,9 @@ SELECT ?targetingType ?targetingValue (COUNT(?criterion) AS ?count) WHERE
   ?criterion h:advertiserName "$Advertiser$" .
   ?criterion h:targetingType ?targetingType .
   ?criterion h:targetingValue ?targetingValue .
+
+  # We could make it case-insensitive like this, but it's MUCH slower
+  # https://stackoverflow.com/questions/10660030/how-to-write-sparql-query-that-efficiently-matches-string-literals-while-ignorin
+  # FILTER (LCASE(STR(?advertiserName)) = LCASE("$Advertiser$"))
 }
 GROUP BY ?targetingType ?targetingValue
