@@ -1,8 +1,7 @@
 import manifests from '@/manifests'
-import config from '@/config'
 
 export const state = () => ({
-  config,
+  config: { notLoaded: true },
   manifests,
   power: false
 })
@@ -13,7 +12,7 @@ export const getters = {
   },
   manifests(state) {
     const activeManifests = state.manifests.filter(m =>
-      state.config.experiences.includes(m.key)
+      state.config.experiences?.includes(m.key)
     )
 
     if (state.power) {
@@ -35,7 +34,23 @@ export const getters = {
 }
 
 export const mutations = {
+  updateConfig(state, config) {
+    state.config = config
+  },
   updatePower(state, power) {
     state.power = power
+  }
+}
+
+export const actions = {
+  async loadConfig({ commit }) {
+    // AK: Not sure if webpack's import is the best solution.
+    // It's faster for server side rendering, which we're not using.
+    // Is it also faster on the client? I don't see an http request for it.
+    // We could also put the config in the static directory
+    // and use window.fetch (breaks ssr) or axios
+    // https://github.com/nuxt/nuxt.js/issues/123#issuecomment-272246782
+    const config = await import(`~/config/${process.env.configName}.json`)
+    commit('updateConfig', config)
   }
 }

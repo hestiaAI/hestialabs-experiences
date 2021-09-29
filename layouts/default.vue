@@ -37,6 +37,9 @@ export default {
       timeout: 5000
     }
   },
+  beforeCreate() {
+    this.$store.dispatch('loadConfig')
+  },
   head() {
     return {
       meta: [

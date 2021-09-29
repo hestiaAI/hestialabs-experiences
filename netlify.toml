@@ -18,6 +18,7 @@
   command = "npm run build"     # triggers nuxt build
 
 [build.environment]
+  # These variables can be overriden in the Site settings
   NODE_VERSION = "14"
   NPM_VERSION = "7"
   BASE_URL = "https://hestia-rml.netlify.app"

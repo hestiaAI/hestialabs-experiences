@@ -26,6 +26,21 @@ The file `config/config.json` contains parameters that can be changed for each d
 - `experiences` (Array): the name of the experiences to display (as defined in `/manifests/experiences/`)
 - `saveFiles` (Boolean): Activate/deactivate the automatic local saving of data files, and show/hide the "cache" buttons
 
+If you want to use another configuration like `config/workshop.json` set the environment variable **CONFIG_NAME**
+
+
+``` bash
+# for development
+$ CONFIG_NAME=workshop npm run dev
+```
+
+
+``` bash
+# for production
+CONFIG_NAME=workshop npm run build
+# launch server
+npm run start
+```
 ## Special Directories
 
 You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.

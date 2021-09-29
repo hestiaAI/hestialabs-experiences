@@ -10,7 +10,7 @@
         <p class="subtitle-1 mt-4">{{ m.subtitle }}</p>
       </v-col>
     </v-row>
-    <the-data-experience v-bind="m.rest" />
+    <the-data-experience v-if="m.rest" v-bind="m.rest" />
   </v-container>
 </template>
 
@@ -18,12 +18,6 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  middleware({ error, params, store }) {
-    if (!store.getters.keys.includes(params.key)) {
-      // not found
-      return error({ statusCode: 404 })
-    }
-  },
   head() {
     const { title: t, subtitle: s } = this.m
     const title = `${t}: ${s}`
@@ -40,10 +34,30 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['manifest']),
+    ...mapGetters(['manifest', 'config', 'keys']),
     m() {
-      const { title, subtitle, icon, ...rest } = this.manifest(this.$route)
+      const manifest = this.manifest(this.$route)
+      if (!manifest) {
+        return {}
+      }
+      const { title, subtitle, icon, ...rest } = manifest
       return { title, subtitle, icon, rest }
+    }
+  },
+  watch: {
+    config(config) {
+      const key = this.$route.params.key
+      const configHasLoaded = !config.notLoaded
+      if (configHasLoaded && !this.keys.includes(key)) {
+        // Redirection to 404 cannot be done in a middleware
+        // because we may need to wait for the config
+        // Is there a better way to do this?
+
+        // $nuxt.error is apparently an undocumented feature.
+        // that works only on the client side
+        // https://github.com/nuxt/nuxt.js/issues/555
+        this.$nuxt.error({ statusCode: 404 })
+      }
     }
   }
 }
