@@ -1,12 +1,6 @@
 <template>
   <div>
     <h2 v-if="$store.state.power" class="my-3">Query Results</h2>
-    <base-download-button
-      v-bind="{ progress, error, disabled, extension, data, status }"
-      ref="downloadButton"
-      text="Download"
-      @click.native="onDownload"
-    />
     <v-alert v-if="error" type="error">{{ message }}</v-alert>
     <v-text-field
       v-model="search"
@@ -19,6 +13,12 @@
       v-bind="{ headers, items, search }"
       :hide-default-footer="disabled"
       multi-sort
+    />
+    <base-download-button
+      v-bind="{ progress, error, disabled, extension, data, status }"
+      ref="downloadButton"
+      text="Download"
+      @click.native="onDownload"
     />
   </div>
 </template>

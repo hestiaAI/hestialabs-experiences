@@ -16,22 +16,24 @@
             >{{ message }}</v-alert
           >
         </template>
-        <template v-if="success">
+      </v-col>
+    </v-row>
+    <template v-if="success">
+      <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
+        <v-col>
           <unit-query
-            v-for="(query, index) in queries"
-            :key="index"
+            :query="queries[index]"
             v-bind="{
               selectedExample,
               rdf,
               visualizations,
               csvProcessorNames,
-              query,
-              defaultView
+              defaultViewElements
             }"
           />
-        </template>
-      </v-col>
-    </v-row>
+        </v-col>
+      </v-row>
+    </template>
   </div>
 </template>
 
@@ -49,7 +51,7 @@ export default {
     examples: Array,
     visualizations: Object,
     csvProcessorNames: Object,
-    defaultView: Object
+    defaultView: Array
   },
   data() {
     // main example is selected by default
@@ -66,9 +68,12 @@ export default {
   },
   computed: {
     queries() {
-      return this.selectedExample.sparql.filter(s =>
-        Object.keys(this.defaultView).includes(s.name)
+      return this.defaultView.map(o =>
+        this.selectedExample.sparql.find(s => s.name === o.name)
       )
+      // return this.selectedExample.sparql.filter(s =>
+      //   Object.keys(this.defaultView).includes(s.name)
+      // )
     }
   },
   watch: {

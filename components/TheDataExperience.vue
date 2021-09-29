@@ -60,8 +60,8 @@ export default {
       default: () => {}
     },
     defaultView: {
-      type: Object,
-      default: () => {}
+      type: Array,
+      default: () => []
     },
     multiple: {
       type: Boolean,

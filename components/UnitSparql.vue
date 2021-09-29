@@ -1,7 +1,7 @@
 <!-- :change="v => (sparql = v)" -->
 <template>
   <div>
-    <div v-if="$store.state.power">
+    <template v-if="$store.state.power">
       <h2 class="my-3">SPARQL</h2>
       <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
         <the-sparql-selector
@@ -37,23 +37,31 @@
         language="sparql"
       />
       <v-alert v-if="message" type="error">{{ message }}</v-alert>
-    </div>
+    </template>
 
-    <div v-else>
-      <base-button
-        v-bind="{ progress, status, error, disabled }"
-        text="Run"
-        icon="mdiStepForward"
-        class="ma-sm-2"
-        @click="runQuery"
-      />
-      <v-text-field
-        v-if="parametrized"
-        v-model="queryParameter"
-        :label="queryParameterName"
-        class="my-sm-2 mr-sm-2"
-      ></v-text-field>
-    </div>
+    <template v-else>
+      <v-row>
+        <v-col cols="4" class="mx-auto">
+          <v-text-field
+            v-if="parametrized"
+            v-model="queryParameter"
+            :label="queryParameterName"
+            class="my-sm-2 mr-sm-2"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <base-button
+            v-bind="{ progress, status, error, disabled }"
+            text="Run"
+            icon="mdiStepForward"
+            class="ma-sm-2"
+            @click="runQuery"
+          />
+        </v-col>
+      </v-row>
+    </template>
   </div>
 </template>
 
@@ -91,7 +99,7 @@ export default {
       return !this.rdf || !this.sparql
     },
     queryParameterName() {
-      return this.sparql.match(/\$[a-zA-Z0-9]+\$/)[0].slice(1, -1)
+      return this.sparql.match(/\$[^$]+\$/)[0].slice(1, -1)
     },
     sparql() {
       return this.query?.sparql || ''

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="$store.state.power">
+    <template v-if="$store.state.power">
       <v-row>
         <v-col cols="12" lg="6">
           <unit-sparql
@@ -26,40 +26,38 @@
           />
         </v-col>
       </v-row>
-    </div>
+    </template>
 
-    <div v-else>
-      <div>
-        {{ infoText }}
-      </div>
-      <v-row>
-        <v-col>
-          <unit-sparql
-            v-bind="{ rdf, selectedExample, query }"
-            class="mr-lg-6"
-            @update="onUnitSparqlUpdate"
-          />
-        </v-col>
-      </v-row>
-      <v-row v-if="showTable">
-        <v-col>
-          <unit-query-results v-bind="{ headers, items }" />
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col
-          v-for="specFile in vegaFiles"
-          :key="`spec-${specFile.name}`"
-          style="text-align: center"
-        >
-          <unit-vega-viz
-            v-if="items.length"
-            :spec-file="specFile"
-            :values="items"
-          />
-        </v-col>
-      </v-row>
-    </div>
+    <template v-else>
+      <v-card class="pa-2 my-6" align="center">
+        <div>
+          {{ defaultViewElements.text }}
+        </div>
+        <v-row>
+          <v-col>
+            <unit-sparql
+              v-bind="{ rdf, selectedExample, query }"
+              class="mr-lg-6"
+              @update="onUnitSparqlUpdate"
+            />
+          </v-col>
+        </v-row>
+        <v-row v-if="items.length">
+          <v-col
+            v-for="specFile in vegaFiles"
+            :key="`spec-${specFile.name}`"
+            style="text-align: center"
+          >
+            <unit-vega-viz :spec-file="specFile" :values="items" />
+          </v-col>
+        </v-row>
+        <v-row v-if="showTable">
+          <v-col>
+            <unit-query-results v-bind="{ headers, items }" />
+          </v-col>
+        </v-row>
+      </v-card>
+    </template>
   </div>
 </template>
 
@@ -88,7 +86,7 @@ export default {
       type: Object,
       default: null
     },
-    defaultView: {
+    defaultViewElements: {
       type: Object,
       default: null
     }
@@ -108,13 +106,8 @@ export default {
       const exampleName = this.selectedExample.name
       return this.csvProcessorNames?.[exampleName] || {}
     },
-    infoText() {
-      return this.defaultView[this.query.name].text
-    },
     showTable() {
-      return (
-        this.headers.length !== 0 && this.defaultView[this.query.name].showTable
-      )
+      return this.headers.length !== 0 && this.defaultViewElements.showTable
     },
     vegaFiles() {
       if (!this.query) {
