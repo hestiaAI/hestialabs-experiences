@@ -29,32 +29,34 @@
     </template>
 
     <template v-else>
-      <div>
-        {{ defaultViewElements.text }}
-      </div>
-      <v-row>
-        <v-col>
-          <unit-sparql
-            v-bind="{ rdf, selectedExample, query }"
-            class="mr-lg-6"
-            @update="onUnitSparqlUpdate"
-          />
-        </v-col>
-      </v-row>
-      <v-row v-if="showTable">
-        <v-col>
-          <unit-query-results v-bind="{ headers, items }" />
-        </v-col>
-      </v-row>
-      <v-row v-if="items.length">
-        <v-col
-          v-for="specFile in vegaFiles"
-          :key="`spec-${specFile.name}`"
-          style="text-align: center"
-        >
-          <unit-vega-viz :spec-file="specFile" :values="items" />
-        </v-col>
-      </v-row>
+      <v-card class="pa-2 my-6" align="center">
+        <div>
+          {{ defaultViewElements.text }}
+        </div>
+        <v-row>
+          <v-col>
+            <unit-sparql
+              v-bind="{ rdf, selectedExample, query }"
+              class="mr-lg-6"
+              @update="onUnitSparqlUpdate"
+            />
+          </v-col>
+        </v-row>
+        <v-row v-if="showTable">
+          <v-col>
+            <unit-query-results v-bind="{ headers, items }" />
+          </v-col>
+        </v-row>
+        <v-row v-if="items.length">
+          <v-col
+            v-for="specFile in vegaFiles"
+            :key="`spec-${specFile.name}`"
+            style="text-align: center"
+          >
+            <unit-vega-viz :spec-file="specFile" :values="items" />
+          </v-col>
+        </v-row>
+      </v-card>
     </template>
   </div>
 </template>

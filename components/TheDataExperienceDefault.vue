@@ -16,10 +16,12 @@
             >{{ message }}</v-alert
           >
         </template>
-        <template v-if="success">
+      </v-col>
+    </v-row>
+    <template v-if="success">
+      <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
+        <v-col>
           <unit-query
-            v-for="(defaultViewElements, index) in defaultView"
-            :key="index"
             :query="queries[index]"
             v-bind="{
               selectedExample,
@@ -29,9 +31,9 @@
               defaultViewElements
             }"
           />
-        </template>
-      </v-col>
-    </v-row>
+        </v-col>
+      </v-row>
+    </template>
   </div>
 </template>
 
