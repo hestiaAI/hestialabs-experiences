@@ -40,6 +40,12 @@
     </div>
 
     <div v-else>
+      <v-text-field
+        v-if="parametrized"
+        v-model="queryParameter"
+        :label="queryParameterName"
+        class="my-sm-2 mr-sm-2"
+      ></v-text-field>
       <base-button
         v-bind="{ progress, status, error, disabled }"
         text="Run"
@@ -47,12 +53,6 @@
         class="ma-sm-2"
         @click="runQuery"
       />
-      <v-text-field
-        v-if="parametrized"
-        v-model="queryParameter"
-        :label="queryParameterName"
-        class="my-sm-2 mr-sm-2"
-      ></v-text-field>
     </div>
   </div>
 </template>
