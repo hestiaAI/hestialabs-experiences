@@ -27,7 +27,7 @@
     {
       "name": "select-targeting-criteria",
       "showTable": false,
-      "text": "Visualize the targeting criteria of one specific advertiser. You can look up the names in the table above (note: it's case-sensitive)."
+      "text": "Visualize the targeting criteria of one specific advertiser. You can look up the names in the table above and write it in the text field below."
     }
   ]
 }

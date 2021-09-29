@@ -91,7 +91,7 @@ export default {
       return !this.rdf || !this.sparql
     },
     queryParameterName() {
-      return this.sparql.match(/\$[a-zA-Z0-9]+\$/)[0].slice(1, -1)
+      return this.sparql.match(/\$[^$]+\$/)[0].slice(1, -1)
     },
     sparql() {
       return this.query?.sparql || ''

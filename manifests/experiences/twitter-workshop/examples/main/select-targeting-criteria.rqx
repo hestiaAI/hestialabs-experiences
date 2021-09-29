@@ -3,7 +3,7 @@ PREFIX h: <http://hestia.ai/>
 SELECT ?targetingType ?targetingValue (COUNT(?criterion) AS ?count) WHERE
 {
   ?criterion a h:Criterion .
-  ?criterion h:advertiserName "$Advertiser$" .
+  ?criterion h:advertiserName "$Advertiser (case-sensitive)$" .
   ?criterion h:targetingType ?targetingType .
   ?criterion h:targetingValue ?targetingValue .
 
