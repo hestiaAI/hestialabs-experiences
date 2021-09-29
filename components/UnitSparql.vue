@@ -40,19 +40,27 @@
     </template>
 
     <template v-else>
-      <v-text-field
-        v-if="parametrized"
-        v-model="queryParameter"
-        :label="queryParameterName"
-        class="my-sm-2 mr-sm-2"
-      ></v-text-field>
-      <base-button
-        v-bind="{ progress, status, error, disabled }"
-        text="Run"
-        icon="mdiStepForward"
-        class="ma-sm-2"
-        @click="runQuery"
-      />
+      <v-row>
+        <v-col cols="4" class="mx-auto">
+          <v-text-field
+            v-if="parametrized"
+            v-model="queryParameter"
+            :label="queryParameterName"
+            class="my-sm-2 mr-sm-2"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <base-button
+            v-bind="{ progress, status, error, disabled }"
+            text="Run"
+            icon="mdiStepForward"
+            class="ma-sm-2"
+            @click="runQuery"
+          />
+        </v-col>
+      </v-row>
     </template>
   </div>
 </template>
