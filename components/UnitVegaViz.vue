@@ -30,6 +30,10 @@ export default {
     exportExtension: {
       type: String,
       default: 'png'
+    },
+    divId: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -39,12 +43,6 @@ export default {
     }
   },
   computed: {
-    divId() {
-      return `unit-vega-viz-${this.name}`
-    },
-    name() {
-      return this.specFile?.name
-    },
     jsonSpec() {
       const stringSpec = this.specFile?.vega
       let jsonSpec

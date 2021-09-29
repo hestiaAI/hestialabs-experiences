@@ -13,18 +13,20 @@
         <v-col cols="12" lg="6">
           <unit-query-results v-bind="{ headers, items }" />
         </v-col>
-        <v-col
-          v-for="specFile in vegaFiles"
-          :key="`spec-${specFile.name}`"
-          cols="12"
-          style="text-align: center"
-        >
-          <unit-vega-viz
-            v-if="items.length"
-            :spec-file="specFile"
-            :values="items"
-          />
-        </v-col>
+        <template v-if="items.length">
+          <v-col
+            v-for="specFile in vegaFiles"
+            :key="`viz-${query.name}-${specFile.name}`"
+            cols="12"
+            style="text-align: center"
+          >
+            <unit-vega-viz
+              :spec-file="specFile"
+              :values="items"
+              :div-id="`viz-${query.name}-${specFile.name}`"
+            />
+          </v-col>
+        </template>
       </v-row>
     </template>
 
@@ -45,10 +47,14 @@
         <v-row v-if="items.length">
           <v-col
             v-for="specFile in vegaFiles"
-            :key="`spec-${specFile.name}`"
+            :key="`viz-${query.name}-${specFile.name}`"
             style="text-align: center"
           >
-            <unit-vega-viz :spec-file="specFile" :values="items" />
+            <unit-vega-viz
+              :spec-file="specFile"
+              :values="items"
+              :div-id="`viz-${query.name}-${specFile.name}`"
+            />
           </v-col>
         </v-row>
         <v-row v-if="showTable">
