@@ -126,7 +126,7 @@ export default {
         this.progress = true
         let sparql = this.sparql
         if (this.parametrized) {
-          sparql = sparql.replace(/\$[a-zA-Z0-9]+\$/, this.queryParameter)
+          sparql = sparql.replace(/\$[^$]+\$/, this.queryParameter)
         }
         const [headers, items] = await queryHeadersItems(this.rdf, sparql)
         this.$emit('update', { headers, items })
