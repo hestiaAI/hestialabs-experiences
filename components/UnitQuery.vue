@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="$store.state.power">
+    <template v-if="$store.state.power">
       <v-row>
         <v-col cols="12" lg="6">
           <unit-sparql
@@ -26,9 +26,9 @@
           />
         </v-col>
       </v-row>
-    </div>
+    </template>
 
-    <div v-else>
+    <template v-else>
       <div>
         {{ defaultViewElements.text }}
       </div>
@@ -46,20 +46,16 @@
           <unit-query-results v-bind="{ headers, items }" />
         </v-col>
       </v-row>
-      <v-row>
+      <v-row v-if="items.length">
         <v-col
           v-for="specFile in vegaFiles"
           :key="`spec-${specFile.name}`"
           style="text-align: center"
         >
-          <unit-vega-viz
-            v-if="items.length"
-            :spec-file="specFile"
-            :values="items"
-          />
+          <unit-vega-viz :spec-file="specFile" :values="items" />
         </v-col>
       </v-row>
-    </div>
+    </template>
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <!-- :change="v => (sparql = v)" -->
 <template>
   <div>
-    <div v-if="$store.state.power">
+    <template v-if="$store.state.power">
       <h2 class="my-3">SPARQL</h2>
       <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
         <the-sparql-selector
@@ -37,9 +37,9 @@
         language="sparql"
       />
       <v-alert v-if="message" type="error">{{ message }}</v-alert>
-    </div>
+    </template>
 
-    <div v-else>
+    <template v-else>
       <v-text-field
         v-if="parametrized"
         v-model="queryParameter"
@@ -53,7 +53,7 @@
         class="ma-sm-2"
         @click="runQuery"
       />
-    </div>
+    </template>
   </div>
 </template>
 
