@@ -1,0 +1,21 @@
+prefixes:
+  h: http://hestia.ai/
+  ex: http://www.example.com/
+
+sources:
+  off_facebook_activity:
+    access: apps_and_websites_off_of_facebook/your_off-facebook_activity.json
+    referenceFormulation: jsonpath
+    iterator: $.off_facebook_activity_v2[*].events[*]
+
+mappings:
+  activity:
+    sources:
+      - off_facebook_activity
+    s: h:off_facebook_activity/$(^^.name)/$(timestamp)
+    po:
+      - [a, h:off_facebook_activity]
+      - [h:app_name, $(^^.name)]
+      - [h:timestamp, $(timestamp)]
+      - [h:app_id, $(id)]
+      - [h:app_type, $(type)]

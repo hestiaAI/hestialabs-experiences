@@ -2,6 +2,7 @@
   "title": "Facebook",
   "subtitle": "Workshop",
   "icon": "facebook.png",
-  "ext": "json",
+  "ext": "zip",
+  "files": ["apps_and_websites_off_of_facebook/your_off-facebook_activity.json"],
   "data": []
 }

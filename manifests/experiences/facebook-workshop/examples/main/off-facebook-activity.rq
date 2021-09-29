@@ -1,0 +1,8 @@
+PREFIX h: <http://hestia.ai/>
+SELECT ?app_name ?event_time ?event_id WHERE
+{
+    ?event a h:off_facebook_activity .
+    ?event h:app_name ?app_name .
+    ?event h:timestamp ?event_time .
+    ?event h:app_id ?event_id .
+}
