@@ -8,22 +8,26 @@
 	"data": ["twitter.zip", "twitter-sample.zip"],
   "csvProcessorNames": {"main": {"targeting-criteria": "sunburstTargeting", "select-targeting-criteria": "sunburstTargetingAdvertiser"}},
   "visualizations": {"main": {"advertisers-per-day": "top-k-advertisers", "targeting-criteria": "sunburst-targeting", "select-targeting-criteria": "sunburst-targeting"}},
-  "defaultView": {
-    "advertisers-per-day": {
+  "defaultView": [
+    {
+      "name": "advertisers-per-day",
       "showTable": false,
       "text": "See the ranking of advertisers that have shown you the most ads."
     },
-    "targeting-criteria": {
+    {
+      "name": "targeting-criteria",
       "showTable": false,
       "text": "Understand why you have been targeted by these top advertisers."
     },
-    "all-advertisers": {
+    {
+      "name": "all-advertisers",
       "showTable": true,
       "text": "Get more details with a table containing all the advertisers that have shown you ads, and how many times they did."
     },
-    "select-targeting-criteria": {
+    {
+      "name": "select-targeting-criteria",
       "showTable": false,
       "text": "Visualize the targeting criteria of one specific advertiser. You can look up the names in the table above (note: it's case-sensitive)."
     }
-  }
+  ]
 }

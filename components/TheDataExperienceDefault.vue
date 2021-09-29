@@ -18,15 +18,15 @@
         </template>
         <template v-if="success">
           <unit-query
-            v-for="(query, index) in queries"
+            v-for="(defaultViewElements, index) in defaultView"
             :key="index"
+            :query="queries[index]"
             v-bind="{
               selectedExample,
               rdf,
               visualizations,
               csvProcessorNames,
-              query,
-              defaultView
+              defaultViewElements
             }"
           />
         </template>
@@ -49,7 +49,7 @@ export default {
     examples: Array,
     visualizations: Object,
     csvProcessorNames: Object,
-    defaultView: Object
+    defaultView: Array
   },
   data() {
     // main example is selected by default
@@ -66,9 +66,12 @@ export default {
   },
   computed: {
     queries() {
-      return this.selectedExample.sparql.filter(s =>
-        Object.keys(this.defaultView).includes(s.name)
+      return this.defaultView.map(o =>
+        this.selectedExample.sparql.find(s => s.name === o.name)
       )
+      // return this.selectedExample.sparql.filter(s =>
+      //   Object.keys(this.defaultView).includes(s.name)
+      // )
     }
   },
   watch: {

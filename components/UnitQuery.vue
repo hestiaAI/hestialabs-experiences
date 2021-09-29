@@ -30,7 +30,7 @@
 
     <div v-else>
       <div>
-        {{ infoText }}
+        {{ defaultViewElements.text }}
       </div>
       <v-row>
         <v-col>
@@ -88,7 +88,7 @@ export default {
       type: Object,
       default: null
     },
-    defaultView: {
+    defaultViewElements: {
       type: Object,
       default: null
     }
@@ -108,13 +108,8 @@ export default {
       const exampleName = this.selectedExample.name
       return this.csvProcessorNames?.[exampleName] || {}
     },
-    infoText() {
-      return this.defaultView[this.query.name].text
-    },
     showTable() {
-      return (
-        this.headers.length !== 0 && this.defaultView[this.query.name].showTable
-      )
+      return this.headers.length !== 0 && this.defaultViewElements.showTable
     },
     vegaFiles() {
       if (!this.query) {
