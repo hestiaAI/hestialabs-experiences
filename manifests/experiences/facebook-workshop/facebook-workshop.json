@@ -3,7 +3,8 @@
   "subtitle": "Workshop",
   "icon": "facebk.png",
   "ext": "zip",
-  "files": ["apps_and_websites_off_of_facebook/your_off-facebook_activity.json"],
+  "preprocessor": "facebook",
+  "files": ["apps_and_websites_off_of_facebook/your_off-facebook_activity.json", "your_topics/your_topics.json"],
   "allowMissingFiles": true,
   "data": []
 }

@@ -18,7 +18,21 @@ const tinder = string => {
   return JSON.stringify(json)
 }
 
+const facebook = string => {
+  // In your_topics/your_topics.json, we have to replace the list of strings
+  // by a list of objects, otherwise yarrrml is unable to get the values.
+  const json = JSON.parse(string)
+  if (Object.keys(json).includes('inferred_topics_v2')) {
+    const topics = json.inferred_topics_v2.map(topic => {
+      return { topic }
+    })
+    json.inferred_topics_v2 = topics
+  }
+  return JSON.stringify(json)
+}
+
 export default {
   twitter,
-  tinder
+  tinder,
+  facebook
 }

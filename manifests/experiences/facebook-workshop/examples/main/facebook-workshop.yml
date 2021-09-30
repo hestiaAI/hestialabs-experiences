@@ -7,6 +7,10 @@ sources:
     access: apps_and_websites_off_of_facebook/your_off-facebook_activity.json
     referenceFormulation: jsonpath
     iterator: $.off_facebook_activity_v2[*].events[*]
+  your_topics:
+    access: your_topics/your_topics.json
+    referenceFormulation: jsonpath
+    iterator: $.inferred_topics_v2[*]
 
 mappings:
   activity:
@@ -19,3 +23,10 @@ mappings:
       - [h:timestamp, $(timestamp)]
       - [h:app_id, $(id)]
       - [h:app_type, $(type)]
+  topics:
+    sources:
+      - your_topics
+    s: h:topic/$(topic)
+    po:
+      - [a, h:topic]
+      - [h:value, $(topic)]
