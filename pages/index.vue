@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Data experiences</h1>
+    <h1>Understand your data</h1>
 
     <template v-if="$vuetify.breakpoint.smAndUp">
       <v-row class="mt-6">

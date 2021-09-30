@@ -20,7 +20,7 @@
     <v-footer app absolute color="primary">
       <div class="lighten-2 py-2 ma-auto white--text">
         <span
-          >&copy; {{ new Date().getFullYear() }} —
+          >Educational material developed by
           <span class="font-bold">Hestia.ai</span></span
         >
       </div>
