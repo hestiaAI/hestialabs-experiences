@@ -32,9 +32,9 @@
 
     <template v-else>
       <v-card class="pa-2 my-6" align="center">
-        <div>
+        <p>
           {{ defaultViewElements.text }}
-        </div>
+        </p>
         <v-row>
           <v-col>
             <unit-sparql
@@ -44,24 +44,35 @@
             />
           </v-col>
         </v-row>
-        <v-row v-if="items.length">
-          <v-col
-            v-for="specFile in vegaFiles"
-            :key="`viz-${query.name}-${specFile.name}`"
-            style="text-align: center"
-          >
-            <unit-vega-viz
-              :spec-file="specFile"
-              :values="items"
-              :div-id="`viz-${query.name}-${specFile.name}`"
-            />
-          </v-col>
-        </v-row>
-        <v-row v-if="showTable">
-          <v-col>
-            <unit-query-results v-bind="{ headers, items }" />
-          </v-col>
-        </v-row>
+        <template v-if="finished">
+          <template v-if="items.length">
+            <v-row>
+              <v-col
+                v-for="specFile in vegaFiles"
+                :key="`viz-${query.name}-${specFile.name}`"
+                style="text-align: center"
+              >
+                <unit-vega-viz
+                  :spec-file="specFile"
+                  :values="items"
+                  :div-id="`viz-${query.name}-${specFile.name}`"
+                />
+              </v-col>
+            </v-row>
+            <v-row v-if="showTable">
+              <v-col>
+                <unit-query-results v-bind="{ headers, items }" />
+              </v-col>
+            </v-row>
+          </template>
+          <template v-else>
+            <v-row>
+              <v-col>
+                <p><i>No relevant data found</i></p>
+              </v-col>
+            </v-row>
+          </template>
+        </template>
       </v-card>
     </template>
   </div>
@@ -100,7 +111,8 @@ export default {
   data() {
     return {
       headers: [],
-      items: []
+      items: [],
+      finished: false
     }
   },
   computed: {
@@ -133,6 +145,7 @@ export default {
       // Vuetify DataTable component expects text and value properties
       this.headers = headers.map(h => ({ text: h, value: h }))
       this.items = items
+      this.finished = true
     },
     onChangeSelector(query) {
       this.$emit('change', query)
