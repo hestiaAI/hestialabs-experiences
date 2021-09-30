@@ -29,8 +29,8 @@ mappings:
       - [a, h:off_facebook_activity]
       - [h:app_name, $(^^.name)]
       - [h:timestamp, $(timestamp)]
-      - [h:app_id, $(id)]
-      - [h:app_type, $(type)]
+      - [h:id, $(id)]
+      - [h:type, $(type)]
   topics:
     sources:
       - your_topics

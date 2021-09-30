@@ -1,0 +1,9 @@
+PREFIX h: <http://hestia.ai/>
+
+SELECT ?app_name (COUNT(?event) AS ?number_of_events) WHERE
+{
+    ?event a h:off_facebook_activity .
+    ?event h:app_name ?app_name .
+}
+GROUP BY ?app_name
+ORDER BY ?app_name
