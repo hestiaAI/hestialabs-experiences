@@ -18,10 +18,50 @@ const tinder = string => {
   return JSON.stringify(json)
 }
 
-const facebook = string => {
+// https://stackoverflow.com/questions/17057407/javascript-create-a-string-or-char-from-an-utf-8-value
+function convertHexToString(input) {
+  // split input into groups of two
+  const hex = input.match(/[\s\S]{2}/g) || []
+  let output = ''
+  // build a hex-encoded representation of your string
+  for (let i = 0, j = hex.length; i < j; i++) {
+    output += '%' + ('0' + hex[i]).slice(-2)
+  }
+  // decode it using this trick
+  output = decodeURIComponent(output)
+  return output
+}
+
+const facebook = s => {
+  // Facebook gives us messed up files (https://stackoverflow.com/questions/52747566/what-encoding-facebook-uses-in-json-files-from-data-export)
+  // For instance the "é" character is encoded in UTF-8 as 0xc3 0xa9
+  // But they give it as \u00c3\u00a9
+  // To make it worse, unicode characters may have 2, 3, or 4 bytes
+  const r = '\\\\u00([0-9a-f]{2})'
+  // Successively try to replace characters with 2, 3, and 4 bytes
+  // Can't use a loop because the number of arguments is variable
+  s = s.replace(new RegExp(r + r, 'g'), (match, p1, p2) => {
+    try {
+      return convertHexToString(p1 + p2)
+    } catch {}
+    return match
+  })
+  s = s.replace(new RegExp(r + r + r, 'g'), (match, p1, p2, p3) => {
+    try {
+      return convertHexToString(p1 + p2 + p3)
+    } catch {}
+    return match
+  })
+  s = s.replace(new RegExp(r + r + r + r, 'g'), (match, p1, p2, p3, p4) => {
+    try {
+      return convertHexToString(p1 + p2 + p3 + p4)
+    } catch {}
+    return match
+  })
+
   // In your_topics/your_topics.json, we have to replace the list of strings
   // by a list of objects, otherwise yarrrml is unable to get the values.
-  const json = JSON.parse(string)
+  const json = JSON.parse(s)
   if (Object.keys(json).includes('inferred_topics_v2')) {
     const topics = json.inferred_topics_v2.map(topic => {
       return { topic }
