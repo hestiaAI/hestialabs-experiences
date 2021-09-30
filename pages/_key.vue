@@ -42,6 +42,11 @@ export default {
       title,
       meta: [
         {
+          hid: 'description',
+          property: 'description',
+          content: `${this.description}`
+        },
+        {
           hid: 'og:title',
           property: 'og:title',
           content: longTitle

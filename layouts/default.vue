@@ -44,6 +44,11 @@ export default {
           hid: 'og:url',
           property: 'og:url',
           content: `${process.env.baseUrl}${this.$route.path}`
+        },
+        {
+          hid: 'twitter:image',
+          property: 'twitter:image',
+          content: `${process.env.baseUrl}/ogimg.png`
         }
       ]
     }
