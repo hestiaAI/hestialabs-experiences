@@ -6,4 +6,3 @@ SELECT ?app_name (COUNT(?event) AS ?number_of_events) WHERE
     ?event h:app_name ?app_name .
 }
 GROUP BY ?app_name
-ORDER BY ?app_name
