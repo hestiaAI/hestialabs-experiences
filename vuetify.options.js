@@ -7,6 +7,8 @@ import {
   mdiDatabaseRemove,
   mdiDownload,
   mdiHome,
+  mdiFacebook,
+  mdiTwitter,
   mdiStepForward
 } from '@mdi/js'
 
@@ -21,6 +23,8 @@ export default {
       mdiDatabaseRemove,
       mdiDownload,
       mdiHome,
+      mdiFacebook,
+      mdiTwitter,
       mdiStepForward
     }
   },

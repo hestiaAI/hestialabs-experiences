@@ -7,7 +7,23 @@
           <v-img max-width="50" :src="m.icon" :lazy-src="m.icon" contain />
           <h1 class="ml-3">{{ m.title }}</h1>
         </div>
-        <p class="subtitle-1 mt-4">{{ m.subtitle }}</p>
+        <p class="subtitle-1 mt-4">
+          {{ m.subtitle }}
+          <FacebookShareButton
+            :url="baseUrl + $route.path"
+            :title="`${appName}: ${title}`"
+            :quote="description"
+            :description="description"
+            hashtags="dataprivacy"
+            class="my-2 ml-4"
+          />
+          <TwitterShareButton
+            :url="baseUrl + $route.path"
+            :title="description"
+            :hashtags="'dataprivacy,' + m.title"
+            class="my-2 ml-2"
+          />
+        </p>
       </v-col>
     </v-row>
     <the-data-experience v-if="m.rest" v-bind="m.rest" />
@@ -21,19 +37,57 @@ export default {
   head() {
     const { title: t, subtitle: s } = this.m
     const title = `${t}: ${s}`
-
+    const longTitle = `${title} | ${this.appName}`
     return {
       title,
       meta: [
         {
           hid: 'og:title',
           property: 'og:title',
-          content: `${title} | ${process.env.appName}`
+          content: longTitle
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: `${this.description}`
+        },
+        {
+          hid: 'twitter:card',
+          property: 'twitter:card',
+          content: 'summary'
+        },
+        {
+          hid: 'twitter:site',
+          property: 'twitter:site',
+          content: '@HestiaLabs'
+        },
+        {
+          hid: 'twitter:title',
+          property: 'twitter:title',
+          content: longTitle
+        },
+        {
+          hid: 'twitter:description',
+          property: 'twitter:description',
+          content: `${this.description}`
         }
       ]
     }
   },
+  data() {
+    return {
+      baseUrl: process.env.baseUrl,
+      appName: process.env.appName
+    }
+  },
   computed: {
+    description() {
+      const title = this.m.title
+      if (title) {
+        return `Analyze the data collected on you by ${title}.`
+      }
+      return 'Analyze the data collected on you.'
+    },
     ...mapGetters(['manifest', 'config', 'keys']),
     m() {
       const manifest = this.manifest(this.$route)
