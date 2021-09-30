@@ -11,6 +11,10 @@ sources:
     access: your_topics/your_topics.json
     referenceFormulation: jsonpath
     iterator: $.inferred_topics_v2[*]
+  ad_interactions:
+    access: ads_information/advertisers_you've_interacted_with.json
+    referenceFormulation: jsonpath
+    iterator: $.history_v2[*]
 
 mappings:
   activity:
@@ -30,3 +34,12 @@ mappings:
     po:
       - [a, h:topic]
       - [h:value, $(topic)]
+  interactions:
+    sources:
+      - ad_interactions
+    s: h:interaction/$(timestamp)
+    po:
+      - [a, h:interaction]
+      - [h:title, $(title)]
+      - [h:action, $(action)]
+      - [h:timestamp, $(timestamp)]

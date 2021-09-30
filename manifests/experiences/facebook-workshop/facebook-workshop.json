@@ -4,7 +4,7 @@
   "icon": "facebk.png",
   "ext": "zip",
   "preprocessor": "facebook",
-  "files": ["apps_and_websites_off_of_facebook/your_off-facebook_activity.json", "your_topics/your_topics.json"],
+  "files": ["apps_and_websites_off_of_facebook/your_off-facebook_activity.json", "your_topics/your_topics.json", "ads_information/advertisers_you've_interacted_with.json"],
   "allowMissingFiles": true,
   "data": []
 }
