@@ -28,7 +28,7 @@ Note: All files and folders should match the following regular expression: [`^(?
     * Icon file name (required)
     * @type String
     */
-  "icon": "twitter.png",
+  "icon": "twittr.png",
   /**
     * Comma-separated list of allowed file extensions (required)
     * @type String
