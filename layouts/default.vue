@@ -37,9 +37,6 @@ export default {
       timeout: 5000
     }
   },
-  beforeCreate() {
-    this.$store.dispatch('loadConfig')
-  },
   head() {
     return {
       meta: [
@@ -57,6 +54,9 @@ export default {
       // changing timeout property resets the timeout
       this.timeout = isOffline ? 5001 : 5000
     }
+  },
+  beforeCreate() {
+    this.$store.dispatch('loadConfig')
   }
 }
 </script>
