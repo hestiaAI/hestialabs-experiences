@@ -142,5 +142,13 @@ export default async function processFiles(
   // Process results
   const res = getInputFiles(results, ...getInputFilesParams)
 
+  // If some files are missing in the archive, they still need to be included in the result
+  // Otherwise RocketRML will fail
+  filesToExtract.forEach(file => {
+    if (!Object.keys(res.inputFilesRocketRML).includes(file)) {
+      res.inputFilesRocketRML[file] = '{}'
+    }
+  })
+
   return { ...res, filesProcessingTime: new Date() - start }
 }
