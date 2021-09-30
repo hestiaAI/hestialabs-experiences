@@ -79,24 +79,19 @@
 </template>
 
 <script>
+/* eslint-disable vue/require-default-prop */
 import csvProcessors from '@/manifests/csv-processors'
 
 export default {
   props: {
+    visualizations: Object,
+    csvProcessorNames: Object,
     selectedExample: {
       type: Object,
       required: true
     },
     rdf: {
       type: String,
-      required: true
-    },
-    visualizations: {
-      type: Object,
-      required: true
-    },
-    csvProcessorNames: {
-      type: Object,
       required: true
     },
     query: {
