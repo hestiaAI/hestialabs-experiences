@@ -15,6 +15,10 @@ sources:
     access: ads_information/advertisers_you've_interacted_with.json
     referenceFormulation: jsonpath
     iterator: $.history_v2[*]
+  advertisers_contact_list:
+    access: ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json
+    referenceFormulation: jsonpath
+    iterator: $.custom_audiences_v2[*]
 
 mappings:
   activity:
@@ -43,3 +47,10 @@ mappings:
       - [h:title, $(title)]
       - [h:action, $(action)]
       - [h:timestamp, $(timestamp)]
+  advertisers:
+    sources:
+      - advertisers_contact_list
+    s: h:advertiser_contact_list/$(advertiser)
+    po:
+      - [a, h:advertiser_contact_list]
+      - [h:value, $(advertiser)]

@@ -27,6 +27,12 @@ const facebook = string => {
       return { topic }
     })
     json.inferred_topics_v2 = topics
+  } else if (Object.keys(json).includes('custom_audiences_v2')) {
+    // Same for ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json
+    const advertisers = json.custom_audiences_v2.map(advertiser => {
+      return { advertiser }
+    })
+    json.custom_audiences_v2 = advertisers
   }
   return JSON.stringify(json)
 }
