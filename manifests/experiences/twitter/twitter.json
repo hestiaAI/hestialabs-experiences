@@ -9,22 +9,25 @@
   "visualizations": {"main": {"advertisers-per-day": "top-k-advertisers", "targeting-criteria": "sunburst-targeting", "select-targeting-criteria": "sunburst-targeting"}},
   "defaultView": [
     {
-      "name": "advertisers-per-day",
+      "query": "advertisers-per-day",
+      "visualizations": ["top-k-advertisers"],
       "showTable": false,
       "text": "See the ranking of advertisers that have shown you the most ads."
     },
     {
-      "name": "targeting-criteria",
+      "query": "targeting-criteria",
+      "visualizations": ["sunburst-targeting"],
       "showTable": false,
       "text": "Understand why you have been targeted by these advertisers. The chart shows the 10 most present advertisers in the inner circle, the targeting types (location, language, ...) in the middle circle, and the targeting values (Switzerland, French, ...) in the outer circle."
     },
     {
-      "name": "all-advertisers",
+      "query": "all-advertisers",
       "showTable": true,
       "text": "Get more details with a table containing all the advertisers that have shown you ads, and how many times they did. Click on the headers to sort the values differently."
     },
     {
-      "name": "select-targeting-criteria",
+      "query": "select-targeting-criteria",
+      "visualizations": ["sunburst-targeting"],
       "showTable": false,
       "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the names in the table above and write it in the text field below."
     }

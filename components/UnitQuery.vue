@@ -126,7 +126,12 @@ export default {
       if (!this.query) {
         return []
       }
-      const vizNames = this.exampleVisualizations[this.query.name]
+      let vizNames
+      if (this.defaultViewElements) {
+        vizNames = this.defaultViewElements?.visualizations || []
+      } else {
+        vizNames = this.exampleVisualizations[this.query.name]
+      }
       return this.selectedExample.vega.filter(s => vizNames?.includes(s.name))
     }
   },
