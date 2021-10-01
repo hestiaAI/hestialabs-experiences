@@ -27,15 +27,6 @@
         </p>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col cols="6 mx-auto">
-        <h1>Analyze your private data</h1>
-        <p class="body-1">
-          Request the private data that {{ m.title }} collected on you. Once you
-          receive it, analyze it here.
-        </p>
-      </v-col>
-    </v-row>
     <the-data-experience v-if="m.rest" v-bind="m.rest" />
   </v-container>
 </template>
@@ -44,6 +35,12 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  data() {
+    return {
+      baseUrl: process.env.baseUrl,
+      appName: process.env.appName
+    }
+  },
   head() {
     const { title: t, subtitle: s } = this.m
     const title = `${t}: ${s}`
@@ -89,12 +86,6 @@ export default {
       ]
     }
   },
-  data() {
-    return {
-      baseUrl: process.env.baseUrl,
-      appName: process.env.appName
-    }
-  },
   computed: {
     description() {
       const title = this.m.title
@@ -109,7 +100,8 @@ export default {
       if (!manifest) {
         return {}
       }
-      const { title, subtitle, icon, ...rest } = manifest
+      const title = manifest.title
+      const { subtitle, icon, ...rest } = manifest
       return { title, subtitle, icon, rest }
     }
   },

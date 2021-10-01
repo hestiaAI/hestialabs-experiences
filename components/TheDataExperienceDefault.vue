@@ -2,6 +2,11 @@
   <div>
     <v-row>
       <v-col cols="6 mx-auto">
+        <unit-introduction :company-name="title" />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="6 mx-auto">
         <slot name="unit-files" :update="onUnitFilesUpdate" />
         <template v-if="progress">
           <base-progress-circular class="mr-2" />
@@ -51,7 +56,8 @@ export default {
     examples: Array,
     visualizations: Object,
     csvProcessorNames: Object,
-    defaultView: Array
+    defaultView: Array,
+    title: String
   },
   data() {
     // main example is selected by default
