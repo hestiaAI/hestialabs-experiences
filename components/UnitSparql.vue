@@ -51,7 +51,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col align="center">
           <base-button
             v-bind="{ progress, status, error, disabled }"
             text="Run"

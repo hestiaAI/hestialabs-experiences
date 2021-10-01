@@ -10,6 +10,12 @@
       </v-col>
     </v-row>
 
+    <v-row>
+      <v-col>
+        <unit-introduction :company-name="title" />
+      </v-col>
+    </v-row>
+
     <unit-rml
       :yarrrml-example="selectedExample.yarrrml"
       @update="onUnitRmlUpdate"
@@ -44,7 +50,8 @@ export default {
   props: {
     examples: Array,
     visualizations: Object,
-    csvProcessorNames: Object
+    csvProcessorNames: Object,
+    title: String
   },
   data() {
     // main example is selected by default

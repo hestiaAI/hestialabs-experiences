@@ -5,9 +5,9 @@
   "data": ["tinder-synthetic.json"],
   "preprocessor": "tinder",
   "visualizations": {"main": {
-    "likes-dislikes": ["daily-likes-passes", "donut-multiple-comparisons"],
-    "app-opens": ["daily-usage"],
-    "likes-dislikes-open": ["daily-usage", "daily-likes-passes", "scatter-likes-passes-correlation"],
+    "likes-dislikes": ["daily-likes-passes"],
+    "app-opens": ["daily-usage", "monthly-usage"],
+    "likes-dislikes-open": ["scatter-likes-passes-correlation", "daily-usage", "monthly-usage", "daily-likes-passes"],
     "all": ["monthly-usage",
             "daily-usage",
             "monthly-history",
@@ -22,17 +22,39 @@
   },
   "defaultView": [
     {
+      "query": "likes-dislikes",
+      "visualizations": ["daily-likes-passes"],
+      "showTable": false,
+      "text": "See the number of likes and dislikes that you made over time."
+    },
+    {
+      "query": "app-opens",
+      "visualizations": ["daily-usage", "monthly-usage"],
+      "showTable": false,
+      "text": "See the number of times that you opened the app (per day or per month)."
+    },
+    {
       "query": "all",
-      "visualizations": [
-        "monthly-usage",
-        "daily-usage",
-        "monthly-history",
-        "daily-likes-passes",
-        "scatter-likes-passes-correlation",
-        "donut-multiple-comparisons"
-      ],
+      "visualizations": ["monthly-history"],
+      "showTable": false,
+      "text": "Compare the number of likes, passes, messages sent and messages received."
+    },
+    {
+      "query": "all",
+      "visualizations": ["donut-multiple-comparisons"],
+      "showTable": false,
+      "text": "Compare different pairs of values in a donut chart."
+    },
+    {
+      "query": "likes-dislikes-open",
+      "visualizations": ["scatter-likes-passes-correlation"],
+      "showTable": false,
+      "text": "Observe the possible correlation between the number of likes/passes and the number of times you open the app."
+    },
+    {
+      "query": "all",
       "showTable": true,
-      "text": "Tinder usage information. Visualize your daily activity on Tinder, such as the number of likes, passes, matches, or the number of times you have opened the app."
+      "text": "If you want to inspect precisely the values for each day, all the data can be summarized in a table."
     }
   ]
 }

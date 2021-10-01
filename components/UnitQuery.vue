@@ -31,10 +31,12 @@
     </template>
 
     <template v-else>
-      <v-card class="pa-2 my-6" align="center">
-        <p>
-          {{ defaultViewElements.text }}
-        </p>
+      <v-card class="pa-2 my-6">
+        <v-row>
+          <v-col cols="8" class="mx-auto">
+            {{ defaultViewElements.text }}
+          </v-col>
+        </v-row>
         <v-row>
           <v-col>
             <unit-sparql

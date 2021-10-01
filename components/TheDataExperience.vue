@@ -33,6 +33,10 @@ const TheDataExperiencePower = () =>
 
 export default {
   props: {
+    title: {
+      type: String,
+      default: undefined
+    },
     data: {
       type: Array,
       default: () => []
@@ -86,6 +90,7 @@ export default {
     },
     props() {
       const propNames = [
+        'title',
         'examples',
         'visualizations',
         'csvProcessorNames',
