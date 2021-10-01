@@ -60,10 +60,6 @@ export default {
       type: Object,
       default: () => {}
     },
-    csvProcessorNames: {
-      type: Object,
-      default: () => {}
-    },
     defaultView: {
       type: Array,
       default: () => []
@@ -89,13 +85,7 @@ export default {
         .map(ext => `.${ext}`)
     },
     props() {
-      const propNames = [
-        'title',
-        'examples',
-        'visualizations',
-        'csvProcessorNames',
-        'defaultView'
-      ]
+      const propNames = ['title', 'examples', 'visualizations', 'defaultView']
       const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
       return props
     },

@@ -5,8 +5,22 @@
   "files": ["data/ad-impressions.js", "data/ad-engagements.js"],
   "preprocessor": "twitter",
 	"data": ["twitter.zip", "twitter-sample.zip"],
-  "csvProcessorNames": {"main": {"targeting-criteria": "sunburstTargeting", "select-targeting-criteria": "sunburstTargetingAdvertiser"}},
-  "visualizations": {"main": {"advertisers-per-day": "top-k-advertisers", "targeting-criteria": "sunburst-targeting", "select-targeting-criteria": "sunburst-targeting"}},
+  "visualizations": {"main": [
+    {
+      "vega": "top-k-advertisers",
+      "query": "advertisers-per-day"
+    },
+    {
+      "vega": "sunburst-targeting",
+      "query": "targeting-criteria",
+      "preprocessor": "sunburstTargeting"
+    },
+    {
+      "vega": "sunburst-targeting",
+      "query": "select-targeting-criteria",
+      "preprocessor": "sunburstTargetingAdvertiser"
+    }
+  ]},
   "defaultView": [
     {
       "query": "advertisers-per-day",

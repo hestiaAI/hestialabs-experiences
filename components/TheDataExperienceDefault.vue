@@ -32,7 +32,6 @@
               selectedExample,
               rdf,
               visualizations,
-              csvProcessorNames,
               defaultViewElements
             }"
           />
@@ -55,7 +54,6 @@ export default {
   props: {
     examples: Array,
     visualizations: Object,
-    csvProcessorNames: Object,
     defaultView: Array,
     title: String
   },

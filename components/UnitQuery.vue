@@ -15,14 +15,14 @@
         </v-col>
         <template v-if="items.length">
           <v-col
-            v-for="specFile in vegaFiles"
-            :key="`viz-${query.name}-${specFile.name}`"
+            v-for="(specFile, index) in vegaFiles"
+            :key="index"
             cols="12"
             style="text-align: center"
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="items"
+              :values="processedItems[index]"
               :div-id="`viz-${query.name}-${specFile.name}`"
             />
           </v-col>
@@ -50,13 +50,13 @@
           <template v-if="items.length">
             <v-row>
               <v-col
-                v-for="specFile in vegaFiles"
-                :key="`viz-${query.name}-${specFile.name}`"
+                v-for="(specFile, index) in vegaFiles"
+                :key="index"
                 style="text-align: center"
               >
                 <unit-vega-viz
                   :spec-file="specFile"
-                  :values="items"
+                  :values="processedItems[index]"
                   :div-id="`viz-${query.name}-${specFile.name}`"
                 />
               </v-col>
@@ -87,7 +87,6 @@ import csvProcessors from '@/manifests/csv-processors'
 export default {
   props: {
     visualizations: Object,
-    csvProcessorNames: Object,
     selectedExample: {
       type: Object,
       required: true
@@ -117,10 +116,6 @@ export default {
       const exampleName = this.selectedExample.name
       return this.visualizations?.[exampleName] || {}
     },
-    exampleProcessors() {
-      const exampleName = this.selectedExample.name
-      return this.csvProcessorNames?.[exampleName] || {}
-    },
     showTable() {
       return this.headers.length !== 0 && this.defaultViewElements.showTable
     },
@@ -132,18 +127,32 @@ export default {
       if (this.defaultViewElements) {
         vizNames = this.defaultViewElements?.visualizations || []
       } else {
-        vizNames = this.exampleVisualizations[this.query.name]
+        vizNames = this.exampleVisualizations
+          .filter(v => v.query === this.query.name)
+          .map(v => v.vega)
       }
       return this.selectedExample.vega.filter(s => vizNames?.includes(s.name))
+    },
+    processedItems() {
+      // For each viz
+      return this.vegaFiles.map(spec => {
+        // Find the viz definition for this query
+        const preprocessor = this.exampleVisualizations.filter(
+          v => this.query.name === v.query && spec.name === v.vega
+        )
+        // If it has a preprocessor defined, run it
+        if (preprocessor.length === 1 && preprocessor[0].preprocessor) {
+          return csvProcessors[preprocessor[0].preprocessor](
+            this.headers,
+            this.items
+          )[1]
+        }
+        return this.items
+      })
     }
   },
   methods: {
     onUnitSparqlUpdate({ headers = [], items = [], error }) {
-      // Pre-viz processing
-      const processorName = this.exampleProcessors?.[this.query.name] || null
-      if (processorName) {
-        ;[headers, items] = csvProcessors[processorName](headers, items)
-      }
       // Vuetify DataTable component expects text and value properties
       this.headers = headers.map(h => ({ text: h, value: h }))
       this.items = items
