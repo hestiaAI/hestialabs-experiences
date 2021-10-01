@@ -1,6 +1,19 @@
 {
-  "experiences": ["amazon", "apple", "facebook", "google", "playground", "spotify", "tinder", "tracker-control", 
-    "twitter-advertisers", "twitter-advertisers-sha", "twitter-targeting-information", "youtube", 
-    "twitter-workshop", "facebook-workshop"],
-  "saveFiles": true
+  "saveFiles": true,
+  "experiences": [
+    "amazon",
+    "apple",
+    "facebook-workshop",
+    "facebook",
+    "google",
+    "spotify",
+    "tinder",
+    "tracker-control",
+    "twitter-workshop",
+    "twitter-advertisers",
+    "twitter-advertisers-sha",
+    "twitter-targeting-information",
+    "youtube",
+    "playground"
+  ]
 }

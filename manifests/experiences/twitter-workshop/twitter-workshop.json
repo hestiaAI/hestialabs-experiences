@@ -1,6 +1,5 @@
 {
   "title": "Twitter",
-  "subtitle": "Workshop",
   "icon": "twittr.png",
   "ext": "zip",
   "files": ["data/ad-impressions.js", "data/ad-engagements.js"],

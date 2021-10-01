@@ -1,6 +1,5 @@
 {
   "title": "Facebook",
-  "subtitle": "Workshop",
   "icon": "facebk.png",
   "ext": "zip",
   "preprocessor": "facebook",
