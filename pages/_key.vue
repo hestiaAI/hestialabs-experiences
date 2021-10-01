@@ -11,7 +11,7 @@
           {{ m.subtitle }}
           <FacebookShareButton
             :url="baseUrl + $route.path"
-            :title="`${appName}: ${title}`"
+            :title="`${appName}: ${m.title}`"
             :quote="description"
             :description="description"
             hashtags="hestialabs"
@@ -24,6 +24,15 @@
             twitter-user="@HestiaLabs"
             class="my-2 ml-2"
           />
+        </p>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="6 mx-auto">
+        <h1>Analyze your private data</h1>
+        <p class="body-1">
+          Request the private data that {{ m.title }} collected on you. Once you
+          receive it, analyze it here.
         </p>
       </v-col>
     </v-row>
