@@ -1,8 +1,8 @@
-import manifests from '@/manifests'
+import manifestMap from '@/manifests'
 
 export const state = () => ({
   config: { notLoaded: true },
-  manifests,
+  manifestMap,
   power: false
 })
 
@@ -11,9 +11,10 @@ export const getters = {
     return state.config
   },
   manifests(state) {
-    const activeManifests = state.manifests.filter(m =>
-      state.config.experiences?.includes(m.key)
-    )
+    const experiences = state.config?.experiences || []
+    const activeManifests = experiences
+      .map(key => state.manifestMap[key])
+      .filter(m => m)
 
     if (state.power) {
       return activeManifests
@@ -29,7 +30,8 @@ export const getters = {
   manifest:
     state =>
     ({ params: { key } }) => {
-      return state.manifests.find(m => m.key === key)
+      // return state.manifests.find(m => m.key === key)
+      return state.manifestMap[key]
     }
 }
 
