@@ -21,7 +21,7 @@
             :url="baseUrl + $route.path"
             :title="description"
             :hashtags="'dataprivacy,hestialabs,' + m.title"
-            twitter-user="@HestiaLabs"
+            twitter-user="HestiaLabs"
             class="my-2 ml-2"
           />
         </p>
