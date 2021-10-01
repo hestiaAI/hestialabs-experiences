@@ -14,13 +14,14 @@
             :title="`${appName}: ${title}`"
             :quote="description"
             :description="description"
-            hashtags="dataprivacy"
+            hashtags="hestialabs"
             class="my-2 ml-4"
           />
           <TwitterShareButton
             :url="baseUrl + $route.path"
             :title="description"
-            :hashtags="'dataprivacy,' + m.title"
+            :hashtags="'dataprivacy,hestialabs,' + m.title"
+            twitter-user="@HestiaLabs"
             class="my-2 ml-2"
           />
         </p>
