@@ -1,0 +1,20 @@
+PREFIX h: <http://hestia.ai/>
+PREFIX h: <http://hestia.ai/>
+
+SELECT ?targetingType ?targetingValue (COUNT(?event) AS ?count) WHERE
+{
+  {
+    SELECT ?targetingType (COUNT(?event) AS ?countEvent) WHERE 
+    {
+        ?event a h:off_facebook_activity .
+        ?event h:app_name ?targetingType .
+    }
+    GROUP BY ?targetingType
+    ORDER BY DESC(?countEvent)
+    LIMIT 10
+  }
+  ?event a h:off_facebook_activity .
+  ?event h:app_name ?targetingType .
+  ?event h:type ?targetingValue
+}
+GROUP BY ?targetingType ?targetingValue

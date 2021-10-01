@@ -11,13 +11,20 @@
   ],
   "allowMissingFiles": true,
   "data": [],
-  "visualizations": {"main": {"off-facebook-activity-count": "top-k-advertisers"}},
+  "csvProcessorNames": {"main": {"off-facebook-activity-type-count": "sunburstTargetingAdvertiser"}},
+  "visualizations": {"main": {"off-facebook-activity-count": "top-k-advertisers", "off-facebook-activity-type-count": "sunburst-off-facebook-activity"}},
   "defaultView": [
     {
       "query": "off-facebook-activity-count",
       "visualizations": ["top-k-advertisers"],
       "showTable": false,
       "text": "See how many times advertisers have informed Facebook of your activity outside of Facebook."
+    },
+    {
+      "query": "off-facebook-activity-type-count",
+      "visualizations": ["sunburst-off-facebook-activity"],
+      "showTable": true,
+      "text": "See which kind of information advertisers have informed Facebook of your activity outside of Facebook."
     },
     {
       "query": "ad-interactions",
