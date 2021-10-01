@@ -1,0 +1,9 @@
+PREFIX h: <http://hestia.ai/>
+
+SELECT ?targetingType ?targetingValue (COUNT(?criterion) AS ?count) WHERE
+{
+  ?criterion a h:Criterion .
+  ?criterion h:targetingType ?targetingType .
+  ?criterion h:targetingValue ?targetingValue .
+}
+GROUP BY ?targetingType ?targetingValue
