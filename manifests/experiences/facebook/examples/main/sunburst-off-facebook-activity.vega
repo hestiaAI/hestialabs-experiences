@@ -14,7 +14,7 @@
           "type": "partition",
           "field": "size",
           "sort": {"field": "value"},
-          "size": [{"signal": "2 * PI"}, {"signal": "width/2"}],
+          "size": [{"signal": "2 * PI"}, {"signal": "width/2.5"}],
           "as": ["a0", "r0", "a1", "r1", "depth", "children"]
         }
       ]
@@ -36,7 +36,7 @@
           "y": {"signal": "height / 2"},
           "fill": {"scale": "color", "field": "group"},
           "tooltip": {
-            "signal": "datum.name + (datum.value ? ': targeted ' + format(datum.value, ',.0f') + ' times' : '')"
+            "signal": "datum.name + (datum.value ? ': shared ' + format(datum.value, ',.0f') + ' times' : '')"
           }
         },
         "update": {
@@ -45,13 +45,13 @@
           "innerRadius": {"field": "r0"},
           "outerRadius": {"field": "r1"},
           "stroke": {"value": "white"},
-          "strokeWidth": {"value": 0.5},
+          "strokeWidth": {"value": 1.5},
           "opacity": {"signal": "1 / (datum.depth/2)"},
-          "zindex": {"value": 0}
+          "zindex": {"value": 0},
+          "fillOpacity": {"value": 1}
         },
         "hover": {
-          "stroke": {"value": "grey"},
-          "strokeWidth": {"value": 2},
+          "fillOpacity": {"value": 0.8},
           "zindex": {"value": 1}
         }
       }

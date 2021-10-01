@@ -23,8 +23,8 @@
     {
       "query": "off-facebook-activity-type-count",
       "visualizations": ["sunburst-off-facebook-activity"],
-      "showTable": true,
-      "text": "See which kind of information advertisers have informed Facebook of your activity outside of Facebook."
+      "showTable": false,
+      "text": "See which kind of information advertisers have shared with Facebook of your activity outside of Facebook."
     },
     {
       "query": "ad-interactions",
