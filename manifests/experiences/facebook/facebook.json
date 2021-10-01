@@ -11,10 +11,11 @@
   ],
   "allowMissingFiles": true,
   "data": [],
+  "visualizations": {"main": {"off-facebook-activity-count": "top-k-advertisers"}},
   "defaultView": [
     {
       "name": "off-facebook-activity-count",
-      "showTable": true,
+      "showTable": false,
       "text": "See how many times advertisers have informed Facebook of your activity outside of Facebook."
     },
     {
