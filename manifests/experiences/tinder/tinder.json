@@ -22,7 +22,15 @@
   },
   "defaultView": [
     {
-      "name": "all",
+      "query": "all",
+      "visualizations": [
+        "monthly-usage",
+        "daily-usage",
+        "monthly-history",
+        "daily-likes-passes",
+        "scatter-likes-passes-correlation",
+        "donut-multiple-comparisons"
+      ],
       "showTable": true,
       "text": "Tinder usage information. Visualize your daily activity on Tinder, such as the number of likes, passes, matches, or the number of times you have opened the app."
     }

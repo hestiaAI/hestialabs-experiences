@@ -14,22 +14,23 @@
   "visualizations": {"main": {"off-facebook-activity-count": "top-k-advertisers"}},
   "defaultView": [
     {
-      "name": "off-facebook-activity-count",
+      "query": "off-facebook-activity-count",
+      "visualizations": ["top-k-advertisers"],
       "showTable": false,
       "text": "See how many times advertisers have informed Facebook of your activity outside of Facebook."
     },
     {
-      "name": "ad-interactions",
+      "query": "ad-interactions",
       "showTable": true,
       "text": "See the list of ads with which you have interacted."
     },
     {
-      "name": "your-topics",
+      "query": "your-topics",
       "showTable": true,
       "text": "Get a list of topics that Facebook thinks you're interested in."
     },
     {
-      "name": "advertisers-contact-list",
+      "query": "advertisers-contact-list",
       "showTable": true,
       "text": "Get a list of advertisers that have uploaded a contact list containing you."
     }

@@ -69,7 +69,7 @@ export default {
   computed: {
     queries() {
       return this.defaultView.map(o =>
-        this.selectedExample.sparql.find(s => s.name === o.name)
+        this.selectedExample.sparql.find(s => s.name === o.query)
       )
       // return this.selectedExample.sparql.filter(s =>
       //   Object.keys(this.defaultView).includes(s.name)
