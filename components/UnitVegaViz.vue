@@ -44,17 +44,7 @@ export default {
   },
   computed: {
     jsonSpec() {
-      const stringSpec = this.specFile?.vega
-      let jsonSpec
-      if (stringSpec) {
-        try {
-          jsonSpec = JSON.parse(stringSpec)
-        } catch (error) {
-          // TODO maybe display this error to the user
-          console.error(`could not parse ${this.specFile.name}`, error)
-        }
-      }
-      return jsonSpec
+      return this.specFile?.vega || {}
     },
     clonedValues() {
       // Vega happens to modify values,
