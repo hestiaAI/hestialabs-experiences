@@ -53,6 +53,11 @@
           "expr": "datum.advertiserName != null && datum['count'] != null"
         },
         {
+            "type":"formula",
+            "expr":"toDate(datum.date * 1000)",
+            "as":"date"
+        },
+        {
           "type": "extent", "field":"date", "signal": "extent"
         }
       ]
