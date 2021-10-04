@@ -24,7 +24,7 @@ const reqSPARQL = require.context(
 const reqVEGA = require.context(
   './experiences/',
   true,
-  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.vega$/
+  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.vega.json$/
 )
 const reqParamSPARQL = require.context(
   './experiences/',
@@ -182,14 +182,13 @@ reqVEGA.keys().forEach(path => {
   // Extract directory name of the experience
   const dir = extractFirstDirectory(path)
   // Extract example name and VEGA query sample name
-  const match = path.match(/\/examples\/(?<example>.+)\/(?<vega>.+)\.vega/)
+  const match = path.match(/\/examples\/(?<example>.+)\/(?<vega>.+)\.vega.json/)
   const { example, vega } = match.groups
   // Add VEGA sample
   const exampleObj = manifests[dir].examples.find(e => e.name === example)
   exampleObj.vega.push({
     name: vega,
-    // vega: 'hellllooooo'
-    vega: reqVEGA(path).default
+    vega: reqVEGA(path)
   })
 })
 

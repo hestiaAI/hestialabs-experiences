@@ -36,7 +36,6 @@
         selectedExample,
         rdf,
         visualizations,
-        csvProcessorNames,
         query
       }"
       @change="onQueryChange"
@@ -50,7 +49,6 @@ export default {
   props: {
     examples: Array,
     visualizations: Object,
-    csvProcessorNames: Object,
     title: String
   },
   data() {

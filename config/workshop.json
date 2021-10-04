@@ -1,4 +1,4 @@
 {
   "experiences": ["facebook", "twitter", "tinder"],
-  "saveFiles": true
+  "saveFiles": false
 }

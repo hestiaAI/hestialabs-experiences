@@ -4,22 +4,65 @@
   "ext": "json",
   "data": ["tinder-synthetic.json"],
   "preprocessor": "tinder",
-  "visualizations": {"main": {
-    "likes-dislikes": ["daily-likes-passes"],
-    "app-opens": ["daily-usage", "monthly-usage"],
-    "likes-dislikes-open": ["scatter-likes-passes-correlation", "daily-usage", "monthly-usage", "daily-likes-passes"],
-    "all": ["monthly-usage",
-            "daily-usage",
-            "monthly-history",
-            "daily-likes-passes",
-            "scatter-likes-passes-correlation",
-            "donut-multiple-comparisons"]
-  }},
   "collaborator": {
     "title": "Dating Privacy Collective",
     "icon": "dating-privacy-collective.svg",
     "url": "https://dating-privacy.hestialabs.org/"
   },
+  "visualizations": {"main": [
+    {
+      "vega": "daily-likes-dislikes",
+      "query": "likes-passes"
+    },
+    {
+      "vega": "daily-usage",
+      "query": "app-opens"
+    },
+    {
+      "vega": "monthly-usage",
+      "query": "app-opens"
+    },
+    {
+      "vega": "scatter-likes-passes-correlation",
+      "query": "likes-dislikes-open"
+    },
+    {
+      "vega": "daily-usage",
+      "query": "likes-dislikes-open"
+    },
+    {
+      "vega": "monthly-usage",
+      "query": "likes-dislikes-open"
+    },
+    {
+      "vega": "daily-likes-passes",
+      "query": "likes-dislikes-open"
+    },
+    {
+      "vega": "daily-likes-passes",
+      "query": "all"
+    },
+    {
+      "vega": "daily-usage",
+      "query": "all"
+    },
+    {
+      "vega": "monthly-usage",
+      "query": "all"
+    },
+    {
+      "vega": "monthly-history",
+      "query": "all"
+    },
+    {
+      "vega": "scatter-likes-passes-correlation",
+      "query": "all"
+    },
+    {
+      "vega": "donut-multiple-comparisons",
+      "query": "all"
+    }
+  ]},
   "defaultView": [
     {
       "query": "likes-dislikes",

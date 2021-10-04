@@ -11,8 +11,22 @@
   ],
   "allowMissingFiles": true,
   "data": [],
-  "csvProcessorNames": {"main": {"off-facebook-activity-type-count": "sunburstTargetingAdvertiser"}},
-  "visualizations": {"main": {"off-facebook-activity-count": "top-k-advertisers", "off-facebook-activity-type-count": "sunburst-off-facebook-activity"}},
+  "collaborator": {
+    "title": "The Eyeballs Collective",
+    "icon": "the-eyeballs.svg",
+    "url": "https://eyeballs.hestialabs.org/"
+  },
+  "visualizations": {"main": [
+    {
+      "vega": "top-k-advertisers",
+      "query": "off-facebook-activity-count"
+    },
+    {
+      "vega": "sunburst-off-facebook-activity",
+      "query": "off-facebook-activity-type-count",
+      "preprocessor": "sunburstTargetingAdvertiser"
+    }
+  ]},
   "defaultView": [
     {
       "query": "off-facebook-activity-count",
