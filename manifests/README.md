@@ -4,7 +4,6 @@ Please read these instructions carefully.
 
 Note: All files and folders should match the following regular expression: [`^(?:[a-z0-9]+-?)+[a-z0-9]$`](https://regexr.com/63ncg)
 
-
 ## Adding new data experiences
 
 1. Create a new folder in `/manifests/experiences/` and give it a unique name. Note that this name will also be the slug (URL identifier) of the data experience.
@@ -57,7 +56,41 @@ Note: All files and folders should match the following regular expression: [`^(?
     * @type Array[String]
     * @default []
     */
-  "data": ["twitter.zip"]
+  "data": ["twitter.zip"],
+  /**
+    * If the input is a zip and a file is missing, the extraction will fail if this parameter is false.
+    * @type Boolean
+    * @default false
+    */
+  "allowMissingFiles": true,
+  /**
+    * Array of visualizations defined for a specific example.
+    * It is necessary to specify the vega file and the query file,
+    * and optionally a preprocessor from csv-processors.js.
+    * @type Object
+    */
+  "visualizations": {"main": [
+    {
+      "vega": "chart_filename",
+      "query": "query_filename",
+      "preprocessor": "csv_processor"
+    }
+  ]},
+  /**
+    * Array defining the blocks to show in the default view.
+    * Each block is tied to one query, can show multiple visualizations,
+    * can show/hide a table containing the results, and can display some introduction text.
+    * The files referenced should be in the 'main' example.
+    * @type Array[Object]
+    */
+  "defaultView": [
+    {
+      "query": "query_filename",
+      "visualizations": ["chart_filename1", "chart_filename2"],
+      "showTable": false,
+      "text": "Lorem ipsum."
+    }
+  ]
 }
 ```
 
@@ -75,7 +108,6 @@ If the data experience involves a single non-zip file input, use the name `input
 ## Adding sample data
 
 Add sample data to the `/assets/data/` folder. Update the `data` array in the JSON config file of the relevant data experiences to make the new data file available. Additionally, the data sample is automatically added to the Playground.
-
 
 ## Adding new examples for power users
 
