@@ -70,7 +70,7 @@ export default {
       // const formData = new FormData(myForm)
       fetch('/', {
         method: 'POST',
-        headers: { 'Content-Type': 'multipart/form-data' },
+        // headers: { 'Content-Type': 'multipart/form-data' },
         body: new URLSearchParams(formData).toString()
       })
         .then(() => console.log('Form successfully submitted'))
