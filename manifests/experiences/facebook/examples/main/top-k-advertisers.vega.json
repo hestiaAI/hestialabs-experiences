@@ -17,19 +17,11 @@
     {
       "name": "k", "value": 20,
       "bind": {"input": "range", "name": " ", "min": 1, "max": 50, "step": 1}
-    },
-    {
-      "name": "op", "value": "sum",
-      "bind": {"input": "select", "name":" ", "options": ["average", "sum"], "labels": ["per day", "in total"]}
-    },
-    {
-      "name": "label",
-      "value": {"average": "per day", "sum": "in total"}
     }
   ],
 
   "title": {
-    "text": {"signal": "'Advertiser targetting you ' + label[op]"},
+    "text": "Advertiser informing Facebook in total",
     "anchor": "start",
     "frame": "group",
     "subtitle": {"signal": "'between ' + timeFormat(extent[0], \"%d/%m/%Y\") + ' and ' + timeFormat(extent[1], \"%d/%m/%Y\")"},
@@ -69,7 +61,7 @@
         {
           "type": "aggregate",
           "groupby": ["advertiserName"],
-          "ops": [{"signal": "op"}],
+          "ops": ["sum"],
           "fields": ["count"],
           "as": ["count"]
         },
@@ -104,7 +96,7 @@
         {
           "type": "aggregate",
           "groupby": ["key"],
-          "ops": [{"signal": "op"}],
+          "ops": ["sum"],
           "fields": ["count"],
           "as": ["value"]
         },
