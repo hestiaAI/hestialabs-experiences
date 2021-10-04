@@ -6,7 +6,7 @@
   "signals": [
     {
       "name": "filterSignal", "value": ["Follower look-alikes"],
-      "bind": {"input": "select", "name":" Criteria:", "options": ["Follower look-alikes", "Locations", "Age", "Languages", "Interests", "App Activity", "Website Activity", "List", "Conversation topics", "Keywords", "Gender", "OS versions", "Platforms", "Events"]}
+      "bind": {"input": "select", "name":" Criteria: ", "options": ["Follower look-alikes", "Locations", "Age", "Languages", "Interests", "App Activity", "Website Activity", "List", "Conversation topics", "Keywords", "Gender", "OS versions", "Platforms", "Events"]}
     },
     {
       "name": "descriptions",

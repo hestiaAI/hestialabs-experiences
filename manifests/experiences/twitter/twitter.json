@@ -16,6 +16,10 @@
       "query": "advertisers-per-day"
     },
     {
+      "vega": "wordcloud-targeting-criteria",
+      "query": "targeting-values-all-advertisers"
+    },
+    {
       "vega": "sunburst-targeting",
       "query": "targeting-criteria",
       "preprocessor": "sunburstTargeting"
@@ -38,6 +42,12 @@
       "visualizations": ["sunburst-targeting"],
       "showTable": false,
       "text": "Understand why you have been targeted by these advertisers. The chart shows the 10 most present advertisers in the inner circle, the targeting types (location, language, ...) in the middle circle, and the targeting values (Switzerland, French, ...) in the outer circle."
+    },
+    {
+      "query": "targeting-values-all-advertisers",
+      "visualizations": ["wordcloud-targeting-criteria"],
+      "showTable": false,
+      "text": "Get more details on how you are targeted by these advertisers. This graph shows the number of times you have been targeted by different advertisers using a specific criterion. You can change the type of criterion and get information about the meaning of each criterion's type at the bottom of the graph."
     },
     {
       "query": "all-advertisers",
