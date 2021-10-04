@@ -7,7 +7,7 @@
         <div>
           <form name="file-upload" method="post" data-netlify="true">
             <div>
-              <input type="hidden" name="form-name" value="contact-form" />
+              <input type="hidden" name="form-name" value="file-upload" />
               <div>
                 <input
                   for="name"
