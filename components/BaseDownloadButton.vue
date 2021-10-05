@@ -1,21 +1,16 @@
 <template>
   <base-button
-    v-bind="{ disabled, href, download, text, ...$attrs }"
+    v-bind="{ href, download, text, ...$attrs }"
     icon="mdiDownload"
   />
 </template>
 
 <script>
-import {
-  createObjectURL,
-  revokeObjectURL,
-  defaultExtension,
-  mimeTypes
-} from '@/utils/utils'
+import { revokeObjectURL, defaultExtension, mimeTypes } from '@/utils/utils'
 
 export default {
   props: {
-    data: {
+    href: {
       type: String,
       required: true
     },
@@ -26,19 +21,12 @@ export default {
         return Object.keys(mimeTypes).includes(val)
       }
     },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
     text: {
       type: String,
       default: 'Download'
     }
   },
   computed: {
-    href() {
-      return createObjectURL(this.data, mimeTypes[this.extension])
-    },
     download() {
       return `results.${this.extension}`
     }

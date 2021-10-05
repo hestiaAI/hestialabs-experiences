@@ -4,10 +4,10 @@
     <v-row>
       <v-col cols="6 mx-auto">
         <base-button text="Export" @click="exportViz" />
-        <url-data-download-button
-          :href="href"
+        <base-download-button
+          :href="dataURL"
           :extension="exportExtension"
-          :disabled="!href"
+          :disabled="!dataURL"
         />
       </v-col>
     </v-row>
@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       width: 0,
-      href: ''
+      dataURL: ''
     }
   },
   computed: {
@@ -107,8 +107,7 @@ export default {
     },
     exportViz() {
       const canvas = document.getElementById(this.divId).firstChild
-      const img = canvas.toDataURL('image/' + this.exportExtension)
-      this.href = img
+      this.dataURL = canvas.toDataURL(`image/${this.exportExtension}`)
     }
   }
 }

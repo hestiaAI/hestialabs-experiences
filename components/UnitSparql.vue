@@ -17,7 +17,7 @@
           class="ma-sm-2"
           @click="runQuery"
         />
-        <base-download-button
+        <base-data-download-button
           extension="rq"
           :data="sparql"
           class="ma-sm-2"
