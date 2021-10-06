@@ -27,14 +27,21 @@
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
-            :query="queries[index]"
             v-bind="{
               selectedExample,
               rdf,
               visualizations,
-              defaultViewElements
+              defaultViewElements,
+              query: queries[index],
+              i: index
             }"
+            @update="onQueryUpdate"
           />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <unit-consent-form v-bind="{ allItems }" />
         </v-col>
       </v-row>
     </template>
@@ -75,9 +82,11 @@ export default {
       return this.defaultView.map(o =>
         this.selectedExample.sparql.find(s => s.name === o.query)
       )
-      // return this.selectedExample.sparql.filter(s =>
-      //   Object.keys(this.defaultView).includes(s.name)
-      // )
+    },
+    allItems() {
+      return Object.fromEntries(
+        Object.keys(this.defaultView).map((x, i) => [i, []])
+      )
     }
   },
   watch: {
@@ -137,6 +146,9 @@ export default {
           this.progress = false
         }
       }
+    },
+    onQueryUpdate({ i, headers, items }) {
+      this.allItems[i] = items
     }
   }
 }

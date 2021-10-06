@@ -102,6 +102,10 @@ export default {
     defaultViewElements: {
       type: Object,
       default: null
+    },
+    i: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -157,6 +161,7 @@ export default {
       this.headers = headers.map(h => ({ text: h, value: h }))
       this.items = items
       this.finished = true
+      this.$emit('update', { i: this.i, headers, items })
     },
     onChangeSelector(query) {
       this.$emit('change', query)
