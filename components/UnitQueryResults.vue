@@ -14,7 +14,7 @@
       :hide-default-footer="disabled"
       multi-sort
     />
-    <base-download-button
+    <base-data-download-button
       v-bind="{ progress, error, disabled, extension, data, status }"
       ref="downloadButton"
       text="Download"

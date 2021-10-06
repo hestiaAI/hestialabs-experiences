@@ -13,7 +13,7 @@
         class="ma-sm-2"
         @click="generateRDF"
       />
-      <base-download-button
+      <base-data-download-button
         v-bind="{ data, extension }"
         :disabled="!message"
         class="ma-sm-2"
