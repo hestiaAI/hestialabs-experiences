@@ -113,8 +113,8 @@ export default {
   },
   computed: {
     exampleVisualizations() {
-      const exampleName = this.selectedExample.name
-      return this.visualizations?.[exampleName] || {}
+      const { name } = this.selectedExample
+      return this.visualizations?.[name] || []
     },
     showTable() {
       return this.headers.length !== 0 && this.defaultViewElements.showTable
