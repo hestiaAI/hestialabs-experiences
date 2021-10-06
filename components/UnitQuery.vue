@@ -32,7 +32,7 @@
 
     <template v-else>
       <v-card class="pa-2 my-6">
-        <v-row>
+        <v-row v-if="defaultViewElements">
           <v-col cols="8" class="mx-auto">
             {{ defaultViewElements.text }}
           </v-col>
