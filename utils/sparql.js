@@ -1,6 +1,7 @@
 import { newEngine } from '@comunica/actor-init-sparql-rdfjs'
 import { Store, Parser } from 'n3'
 // import { LoggerPretty } from '@comunica/logger-pretty'
+import { translate } from 'sparqlalgebrajs'
 
 /**
  * Execute a SPARQL SELECT query
@@ -8,7 +9,7 @@ import { Store, Parser } from 'n3'
  * @param {String} sparql the SELECT query
  * @returns the output data as bindings
  */
-export async function queryBindings(rdf, sparql) {
+async function selectBindings(rdf, sparql) {
   const parser = new Parser({ format: 'N3' })
   const quads = parser.parse(rdf)
   const store = new Store(quads)
@@ -27,30 +28,28 @@ export async function queryBindings(rdf, sparql) {
  * @param {String} sparql the SELECT query
  * @returns the headers and items as an array: [headers, items]
  */
-export async function queryHeadersItems(rdf, sparql) {
-  const bindings = await queryBindings(rdf, sparql)
-  // const keys = Array.from((bindings[0] || new Map()).keys())
-  // Find all the keys
-  let keys = new Set()
-  for (const binding of bindings) {
-    for (const key of binding) {
-      keys.add(key[0])
-    }
-  }
-  keys = Array.from(keys)
-  // Headers are key name without the '?'
-  const headers = keys.map(k => k.substring(1))
+export async function select(rdf, sparql) {
+  const bindings = await selectBindings(rdf, sparql)
+  // get all the variables
+  const { variables } = translate(sparql)
+  // headers are selected variable names name without the '?'
+  const headers = variables.map(v => v.value)
+
   // Transform bindings to a list of objects having the headers as keys
   const items = bindings.map(map =>
     Object.fromEntries(
-      keys.map((key, index) => {
+      headers.map(header => {
         // map.get(k) returns an N3 Term
         // https://github.com/rdfjs/N3.js/blob/main/src/N3DataFactory.js
         // if value is undefined, fallback to null
-        const { value = null } = map.get(key)
-        return [headers[index], value]
+        const { value = null } = map.get(`?${header}`)
+        return [header, value]
       })
     )
   )
-  return [headers, items]
+  return { headers, items }
+}
+
+export default {
+  select
 }

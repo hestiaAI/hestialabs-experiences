@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { queryHeadersItems } from '@/utils/sparql'
+import { select } from '@/utils/sparql'
 import { processError } from '@/utils/utils'
 
 export default {
@@ -128,8 +128,8 @@ export default {
         if (this.parametrized) {
           sparql = sparql.replace(/\$[^$]+\$/, this.queryParameter)
         }
-        const [headers, items] = await queryHeadersItems(this.rdf, sparql)
-        this.$emit('update', { headers, items })
+        const results = await select(this.rdf, sparql)
+        this.$emit('update', results)
       } catch (error) {
         console.error(error)
         this.error = true
