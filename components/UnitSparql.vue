@@ -7,7 +7,7 @@
         <the-sparql-selector
           :items="selectedExample.sparql"
           :disabled="!selectedExample.sparql.length"
-          class-attr="my-sm-2 mr-sm-2 mb-2"
+          class="my-sm-2 mr-sm-2 mb-2"
           @change="onChangeSelector"
         />
         <base-button

@@ -114,10 +114,12 @@ export default {
 </script>
 
 <style>
-/* Vega may insert <select> html components, but because of Vue (?) they are unstyled */
-select {
+/* Vega may insert <select> html components */
+.vega-bind select {
   background-color: #dddddd;
   border: 1px solid black;
   border-radius: 5px;
+  padding: 3px 10px;
+  margin-top: 10px;
 }
 </style>
