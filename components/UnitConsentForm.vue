@@ -25,13 +25,19 @@
         :value="JSON.stringify(items)"
       ></v-checkbox>
       <base-button text="Generate encrypted ZIP" @click="generateZIP" />
-      <!-- Download button -->
-      <base-button text="Send" @click="sendForm" />
+      <base-data-download-button
+        :data="zipFile"
+        extension="zip"
+        :disabled="!success"
+      />
+      <base-button text="Send" :disabled="!success" @click="sendForm" />
     </v-form>
   </v-container>
 </template>
 
 <script>
+import JSZip from 'jszip'
+
 export default {
   props: {
     allItems: {
@@ -45,15 +51,30 @@ export default {
       radio1: 'Share only with PO and Alex',
       radio2: 'Share publicly',
       scope: '',
-      includedResults: []
+      includedResults: [],
+      zipFile: new Blob(),
+      success: false
     }
   },
   methods: {
     switchForm() {
       this.showForm = !this.showForm
     },
-    generateZIP() {
-      throw new Error('not implemented')
+    async generateZIP() {
+      this.success = false
+
+      const zip = new JSZip()
+
+      zip.file('scope.txt', this.scope)
+
+      this.includedResults.forEach((json, i) =>
+        zip.file(`block${i}.json`, json)
+      )
+
+      const content = await zip.generateAsync({ type: 'blob' })
+      this.zipFile = content
+
+      this.success = true
     },
     sendForm() {
       throw new Error('not implemented')
