@@ -24,19 +24,32 @@
         :label="'Data block ' + index"
         :value="[index, JSON.stringify(items)]"
       ></v-checkbox>
-      <base-button text="Generate encrypted ZIP" @click="generateZIP" />
+      <base-button text="Generate ZIP" @click="generateZIP" />
       <base-data-download-button
         :data="zipFile"
         extension="zip"
+        text="Download plaintext"
         :disabled="!success"
       />
-      <base-button text="Send" :disabled="!success" @click="sendForm" />
+      <base-data-download-button
+        :data="encryptedZipFile"
+        extension="zip"
+        text="Download encrypted"
+        :disabled="!success"
+      />
+      <base-button
+        text="Send encrypted"
+        :disabled="!success"
+        @click="sendForm"
+      />
     </v-form>
   </v-container>
 </template>
 
 <script>
 import JSZip from 'jszip'
+
+const _sodium = require('libsodium-wrappers')
 
 export default {
   props: {
@@ -52,7 +65,8 @@ export default {
       radio2: 'Share publicly',
       scope: '',
       includedResults: [],
-      zipFile: new Blob(),
+      zipFile: [],
+      encryptedZipFile: [],
       success: false
     }
   },
@@ -71,9 +85,19 @@ export default {
         zip.file(`block${result[0]}.json`, result[1])
       )
 
-      const content = await zip.generateAsync({ type: 'blob' })
+      const content = await zip.generateAsync({ type: 'uint8array' })
       this.zipFile = content
 
+      // Encrypt the zip
+      await _sodium.ready
+      const sodium = _sodium
+
+      const ciphertext = sodium.crypto_box_seal(
+        content,
+        sodium.from_hex(this.$store.state.config.publicKey)
+      )
+
+      this.encryptedZipFile = ciphertext
       this.success = true
     },
     sendForm() {
