@@ -22,7 +22,7 @@
         v-model="includedResults"
         :disabled="items.length === 0"
         :label="'Data block ' + index"
-        :value="JSON.stringify(items)"
+        :value="[index, JSON.stringify(items)]"
       ></v-checkbox>
       <base-button text="Generate encrypted ZIP" @click="generateZIP" />
       <base-data-download-button
@@ -67,8 +67,8 @@ export default {
 
       zip.file('scope.txt', this.scope)
 
-      this.includedResults.forEach((json, i) =>
-        zip.file(`block${i}.json`, json)
+      this.includedResults.forEach(result =>
+        zip.file(`block${result[0]}.json`, result[1])
       )
 
       const content = await zip.generateAsync({ type: 'blob' })
