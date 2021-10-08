@@ -49,7 +49,8 @@ export default {
   props: {
     examples: Array,
     visualizations: Object,
-    title: String
+    title: String,
+    dataPortal: String
   },
   data() {
     // main example is selected by default

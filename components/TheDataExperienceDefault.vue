@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="12 mx-auto" sm="6">
-        <unit-introduction :company-name="title" />
+        <unit-introduction :company-name="title" :data-portal="dataPortal" />
       </v-col>
     </v-row>
     <v-row>
@@ -55,7 +55,8 @@ export default {
     examples: Array,
     visualizations: Object,
     defaultView: Array,
-    title: String
+    title: String,
+    dataPortal: String
   },
   data() {
     // main example is selected by default

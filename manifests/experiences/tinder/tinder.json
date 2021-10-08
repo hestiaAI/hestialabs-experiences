@@ -1,6 +1,7 @@
 {
   "title": "Tinder",
   "icon": "tinder.png",
+  "dataPortal": "https://account.gotinder.com/data",
   "ext": "json",
   "data": ["tinder-synthetic.json"],
   "preprocessor": "tinder",

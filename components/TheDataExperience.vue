@@ -35,7 +35,11 @@ export default {
   props: {
     title: {
       type: String,
-      default: undefined
+      required: true
+    },
+    dataPortal: {
+      type: String,
+      default: ''
     },
     data: {
       type: Array,
@@ -85,7 +89,13 @@ export default {
         .map(ext => `.${ext}`)
     },
     props() {
-      const propNames = ['title', 'examples', 'visualizations', 'defaultView']
+      const propNames = [
+        'title',
+        'dataPortal',
+        'examples',
+        'visualizations',
+        'defaultView'
+      ]
       const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
       return props
     },
