@@ -12,7 +12,7 @@
 
     <v-row>
       <v-col>
-        <unit-introduction :company-name="title" />
+        <unit-introduction :company-name="title" :data-portal="dataPortal" />
       </v-col>
     </v-row>
 
