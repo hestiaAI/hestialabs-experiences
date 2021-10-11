@@ -40,7 +40,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col>
+        <v-col cols="6 mx-auto">
           <unit-consent-form v-bind="{ allItems }" />
         </v-col>
       </v-row>

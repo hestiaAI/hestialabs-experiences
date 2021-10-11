@@ -7,19 +7,20 @@
     </v-row>
     <v-form v-if="showForm">
       <v-row>
-        <v-col> Scope of the report </v-col>
+        <v-col> <h2>Scope of the report</h2> </v-col>
       </v-row>
       <v-radio-group v-model="scope">
         <v-radio :label="radio1" :value="radio1"></v-radio>
         <v-radio :label="radio2" :value="radio2"></v-radio>
       </v-radio-group>
       <v-row>
-        <v-col> Results to include </v-col>
+        <v-col> <h2 class="mb-2 mt-2">Results to include</h2> </v-col>
       </v-row>
       <v-checkbox
         v-for="(items, index) in allItems"
         :key="index"
         v-model="includedResults"
+        dense="true"
         :disabled="items.length === 0"
         :label="'Data block ' + index"
         :value="[index, JSON.stringify(items)]"
