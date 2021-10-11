@@ -47,6 +47,7 @@
     {
       "name": "source",
       "values": [],
+      "format": {"type": "json", "parse": {"date": "date:'%Y-%m-%d'"}},
       "transform": [
         {
           "type": "filter",
