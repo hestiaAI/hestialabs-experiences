@@ -1,58 +1,46 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col>
-        <base-button text="consent form" @click="switchForm" />
-      </v-col>
-    </v-row>
-    <v-form v-if="showForm">
-      <template v-for="(section, name, i) in $store.state.config.consent">
-        <h2 :key="`${i}-1`">{{ section.title }}</h2>
-        <v-radio-group
-          :key="`${i}-2`"
-          :value="section.selected"
-          @change="option => updateConsent(option, name)"
-        >
-          <v-radio
-            v-for="(option, j) in section.options"
-            :key="j"
-            :label="option"
-            :value="option"
-          ></v-radio>
-        </v-radio-group>
-      </template>
-      <v-row>
-        <v-col> <h2 class="mb-2 mt-2">Results to include</h2> </v-col>
-      </v-row>
-      <v-checkbox
-        v-for="(items, index) in allItems"
-        :key="index"
-        v-model="includedResults"
-        :dense="true"
-        :disabled="items.length === 0"
-        :label="'Data block ' + index"
-        :value="[index, JSON.stringify(items)]"
-      ></v-checkbox>
-      <base-button text="Generate ZIP" @click="generateZIP" />
-      <base-data-download-button
-        :data="zipFile"
-        extension="zip"
-        text="Download plaintext"
-        :disabled="!success"
-      />
-      <base-data-download-button
-        :data="encryptedZipFile"
-        extension="zip"
-        text="Download encrypted"
-        :disabled="!success"
-      />
-      <base-button
-        text="Send encrypted"
-        :disabled="!success"
-        @click="sendForm"
-      />
-    </v-form>
-  </v-container>
+  <v-form v-if="$store.state.config.consent">
+    <h1>Consent Form</h1>
+    <template v-for="(section, name, i) in $store.state.config.consent">
+      <h2 :key="`${i}-1`">{{ section.title }}</h2>
+      <v-radio-group
+        :key="`${i}-2`"
+        :value="section.selected"
+        @change="option => updateConsent(option, name)"
+      >
+        <v-radio
+          v-for="(option, j) in section.options"
+          :key="j"
+          :label="option"
+          :value="option"
+        ></v-radio>
+      </v-radio-group>
+    </template>
+    <h2 class="mb-2 mt-2">Results to include</h2>
+    <v-checkbox
+      v-for="(items, index) in allItems"
+      :key="index"
+      v-model="includedResults"
+      :dense="true"
+      :disabled="items.length === 0"
+      :label="'Data block ' + index"
+      :value="[index, JSON.stringify(items)]"
+    ></v-checkbox>
+    <base-button text="Generate ZIP" @click="generateZIP" />
+    <base-data-download-button
+      :data="zipFile"
+      extension="zip"
+      text="Download plaintext"
+      :disabled="!success"
+    />
+    <base-data-download-button
+      :data="encryptedZipFile"
+      extension="zip"
+      text="Download encrypted"
+      :disabled="!success"
+    />
+    <base-button text="Send encrypted" :disabled="!success" @click="sendForm" />
+  </v-form>
 </template>
 
 <script>
@@ -69,7 +57,6 @@ export default {
   },
   data() {
     return {
-      showForm: false,
       consent: null,
       includedResults: [],
       zipFile: [],
