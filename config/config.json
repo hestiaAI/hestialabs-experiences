@@ -16,5 +16,12 @@
     "playground"
   ],
   "saveFiles": true,
-  "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626"
+  "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
+  "consent": {
+    "scope": {
+      "title": "Scope of the report",
+      "options": ["Share only with Paul-Olivier and Alex", "Share publicly"],
+      "selected": "Share only with Paul-Olivier and Alex"
+    }
+  }
 }

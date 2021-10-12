@@ -6,13 +6,21 @@
       </v-col>
     </v-row>
     <v-form v-if="showForm">
-      <v-row>
-        <v-col> <h2>Scope of the report</h2> </v-col>
-      </v-row>
-      <v-radio-group v-model="scope">
-        <v-radio :label="radio1" :value="radio1"></v-radio>
-        <v-radio :label="radio2" :value="radio2"></v-radio>
-      </v-radio-group>
+      <template v-for="(section, name, i) in $store.state.config.consent">
+        <h2 :key="`${i}-1`">{{ section.title }}</h2>
+        <v-radio-group
+          :key="`${i}-2`"
+          :value="section.selected"
+          @change="option => updateConsent(option, name)"
+        >
+          <v-radio
+            v-for="(option, j) in section.options"
+            :key="j"
+            :label="option"
+            :value="option"
+          ></v-radio>
+        </v-radio-group>
+      </template>
       <v-row>
         <v-col> <h2 class="mb-2 mt-2">Results to include</h2> </v-col>
       </v-row>
@@ -20,7 +28,7 @@
         v-for="(items, index) in allItems"
         :key="index"
         v-model="includedResults"
-        dense="true"
+        :dense="true"
         :disabled="items.length === 0"
         :label="'Data block ' + index"
         :value="[index, JSON.stringify(items)]"
@@ -62,13 +70,22 @@ export default {
   data() {
     return {
       showForm: false,
-      radio1: 'Share only with PO and Alex',
-      radio2: 'Share publicly',
-      scope: '',
+      consent: null,
       includedResults: [],
       zipFile: [],
       encryptedZipFile: [],
       success: false
+    }
+  },
+  watch: {
+    consent: {
+      immediate: true,
+      handler(consent) {
+        // Initialize
+        if (!consent) {
+          this.consent = this.$store.state.config.consent
+        }
+      }
     }
   },
   methods: {
@@ -80,7 +97,7 @@ export default {
 
       const zip = new JSZip()
 
-      zip.file('scope.txt', this.scope)
+      zip.file('consent.json', JSON.stringify(this.consent))
 
       this.includedResults.forEach(result =>
         zip.file(`block${result[0]}.json`, result[1])
@@ -103,6 +120,9 @@ export default {
     },
     sendForm() {
       throw new Error('not implemented')
+    },
+    updateConsent(option, name) {
+      this.consent[name].selected = option
     }
   }
 }
