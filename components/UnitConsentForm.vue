@@ -55,7 +55,7 @@ export default {
       required: true
     },
     defaultView: {
-      type: Object,
+      type: Array,
       required: true
     }
   },
@@ -77,8 +77,18 @@ export default {
 
       const zip = new JSZip()
 
+      // Add info about the experience, and which preprocessors must be used to re-create the viz
+      const manifest = this.$store.getters.manifest(this.$route)
+      const experience = {
+        key: manifest.key,
+        visualizations: manifest.visualizations
+      }
+      zip.file('experience.json', JSON.stringify(experience))
+
+      // Add consent log
       zip.file('consent.json', JSON.stringify(this.consent))
 
+      // Add included data
       this.includedResults.forEach(i => {
         const content = JSON.parse(JSON.stringify(this.defaultView[i]))
         content.items = this.allItems[i]
