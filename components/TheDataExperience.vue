@@ -28,6 +28,10 @@ import { validExtensions } from '@/manifests/utils'
 // https://github.com/nuxt/components/issues/13#issuecomment-902590143
 const TheDataExperienceDefault = () =>
   import('@/components/TheDataExperienceDefault.vue')
+
+const TheDataExperienceDefaultQueryShortcutHack = () =>
+  import('@/components/TheDataExperienceDefaultQueryShortcutHack.vue')
+
 const TheDataExperiencePower = () =>
   import('@/components/TheDataExperiencePower.vue')
 
@@ -79,6 +83,10 @@ export default {
     allowMissingFiles: {
       type: Boolean,
       default: false
+    },
+    queryShortcutHack: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -102,6 +110,9 @@ export default {
     isComponent() {
       if (this.$store.state.power) {
         return TheDataExperiencePower
+      }
+      if (this.queryShortcutHack) {
+        return TheDataExperienceDefaultQueryShortcutHack
       }
       return TheDataExperienceDefault
     }
