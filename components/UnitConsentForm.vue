@@ -23,8 +23,8 @@
       v-model="includedResults"
       :dense="true"
       :disabled="items.length === 0"
-      :label="'Data block ' + index"
-      :value="[index, JSON.stringify(items)]"
+      :label="defaultView[index].title"
+      :value="index"
     ></v-checkbox>
     <base-button text="Generate ZIP" @click="generateZIP" />
     <base-data-download-button
@@ -53,6 +53,10 @@ export default {
     allItems: {
       type: Object,
       required: true
+    },
+    defaultView: {
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -75,9 +79,11 @@ export default {
 
       zip.file('consent.json', JSON.stringify(this.consent))
 
-      this.includedResults.forEach(result =>
-        zip.file(`block${result[0]}.json`, result[1])
-      )
+      this.includedResults.forEach(i => {
+        const content = JSON.parse(JSON.stringify(this.defaultView[i]))
+        content.items = this.allItems[i]
+        zip.file(`block${i}.json`, JSON.stringify(content))
+      })
 
       const content = await zip.generateAsync({ type: 'uint8array' })
       this.zipFile = content

@@ -41,7 +41,7 @@
       </v-row>
       <v-row>
         <v-col cols="6 mx-auto">
-          <unit-consent-form v-bind="{ allItems }" />
+          <unit-consent-form v-bind="{ allItems, defaultView }" />
         </v-col>
       </v-row>
     </template>
@@ -74,18 +74,14 @@ export default {
       success: false,
       message: '',
       rml: '',
-      rdf: ''
+      rdf: '',
+      allItems: null
     }
   },
   computed: {
     queries() {
       return this.defaultView.map(o =>
         this.selectedExample.sparql.find(s => s.name === o.query)
-      )
-    },
-    allItems() {
-      return Object.fromEntries(
-        Object.keys(this.defaultView).map((x, i) => [i, []])
       )
     }
   },
@@ -95,6 +91,16 @@ export default {
       async handler(selectedExample) {
         // this should be quick ...
         this.rml = await parseYarrrml(selectedExample.yarrrml)
+      }
+    },
+    allItems: {
+      immediate: true,
+      handler(allItems) {
+        if (!allItems) {
+          this.allItems = Object.fromEntries(
+            Object.keys(this.defaultView).map((x, i) => [i, ''])
+          )
+        }
       }
     }
   },
@@ -148,7 +154,7 @@ export default {
       }
     },
     onQueryUpdate({ i, headers, items }) {
-      this.allItems[i] = items
+      this.allItems[i] = JSON.stringify(items)
     }
   }
 }
