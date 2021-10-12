@@ -57,22 +57,11 @@ export default {
   },
   data() {
     return {
-      consent: null,
+      consent: JSON.parse(JSON.stringify(this.$store.state.config.consent)),
       includedResults: [],
       zipFile: [],
       encryptedZipFile: [],
       success: false
-    }
-  },
-  watch: {
-    consent: {
-      immediate: true,
-      handler(consent) {
-        // Initialize
-        if (!consent) {
-          this.consent = this.$store.state.config.consent
-        }
-      }
     }
   },
   methods: {
