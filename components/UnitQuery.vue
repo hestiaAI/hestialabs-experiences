@@ -32,6 +32,9 @@
 
     <template v-else>
       <v-card class="pa-2 my-6">
+        <v-card-title class="justify-center">{{
+          defaultViewElements.title
+        }}</v-card-title>
         <v-row>
           <v-col cols="8" class="mx-auto">
             {{ defaultViewElements.text }}
