@@ -81,7 +81,8 @@ export default {
       const manifest = this.$store.getters.manifest(this.$route)
       const experience = {
         key: manifest.key,
-        visualizations: manifest.visualizations
+        visualizations: manifest.visualizations,
+        timestamp: Date.now()
       }
       zip.file('experience.json', JSON.stringify(experience))
 
