@@ -8,23 +8,27 @@
     <base-button text="Generate keys" @click="generateKeys" />
 
     <h2 class="mt-6">Import</h2>
+    <p>
+      Either provide a plaintext ZIP, or an encrypted ZIP along with the
+      corresponding secret key.
+    </p>
     <v-file-input
       v-model="inputZIP"
       accept="application/zip"
       label="Encrypted or plaintext ZIP file"
     ></v-file-input>
     <v-checkbox v-model="decrypt" label="Decrypt"></v-checkbox>
-    <v-text-field
+    <v-file-input
       v-model="secretKey"
       label="Secret Key"
       :disabled="!decrypt"
-    ></v-text-field>
+    ></v-file-input>
     <base-button text="Import" :disabled="!inputZIP" @click="importZIP" />
     <base-data-download-button
       :data="outputZIP"
       extension="zip"
       text="Download plaintext"
-      :disabled="!success"
+      :disabled="!success || (decrypt && !secretKey)"
     />
     <template v-if="success">
       <v-card class="pa-2 my-6">
@@ -104,7 +108,7 @@ const _sodium = require('libsodium-wrappers')
 export default {
   data() {
     return {
-      secretKey: '',
+      secretKey: null,
       inputZIP: null,
       decrypt: false,
       outputZIP: null,
@@ -161,7 +165,8 @@ export default {
 
       // Decrypt
       if (this.decrypt) {
-        const sk = sodium.from_hex(this.secretKey)
+        const secretKey = await this.secretKey.text()
+        const sk = sodium.from_hex(secretKey)
         const pk = sodium.from_hex(this.$store.state.config.publicKey)
         const buf = await this.inputZIP.arrayBuffer()
         const ciphertext = new Uint8Array(buf)
