@@ -37,6 +37,24 @@
         </v-list-item>
       </v-card>
 
+      <v-card class="pa-2 my-6">
+        <v-card-title class="justify-center">Consent Log</v-card-title>
+        <v-card-text>
+          <template v-for="(section, name, i) in consent">
+            <h2 :key="`${i}-1`">{{ section.title }}</h2>
+            <v-radio-group :key="`${i}-2`" :value="section.selected">
+              <v-radio
+                v-for="(option, j) in section.options"
+                :key="j"
+                readonly
+                :label="option"
+                :value="option"
+              ></v-radio>
+            </v-radio-group>
+          </template>
+        </v-card-text>
+      </v-card>
+
       <v-card v-for="(result, i) in results" :key="i" class="pa-2 my-6">
         <v-card-title class="justify-center">{{ result.title }}</v-card-title>
         <v-row>
@@ -83,7 +101,8 @@ export default {
       outputZIP: [],
       success: false,
       experience: null,
-      results: null
+      results: null,
+      consent: null
     }
   },
   computed: {
@@ -144,6 +163,7 @@ export default {
       this.experience = JSON.parse(
         await zip.file('experience.json').async('string')
       )
+      this.consent = JSON.parse(await zip.file('consent.json').async('string'))
       const files = zip.file(/block[0-9]+.json/)
       const res = await Promise.all(files.map(r => r.async('string')))
       this.results = res.map(JSON.parse)
