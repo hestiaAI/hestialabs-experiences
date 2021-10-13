@@ -3,5 +3,6 @@
   "subtitle": "Tracking data",
   "icon": "tracker-control.png",
   "ext": "csv",
+  "queryShortcutHack": true,
   "data": ["tracker-control.csv"]
 }

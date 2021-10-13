@@ -29,6 +29,11 @@ Note: All files and folders should match the following regular expression: [`^(?
     */
   "icon": "twittr.png",
   /**
+    * Link to the data portal or the instructions for downloading the data (optional, recommended)
+    * @type String
+    */
+  "dataPortal": "https://example.com/data-portal",
+  /**
     * Comma-separated list of allowed file extensions (required)
     * @type String
     */

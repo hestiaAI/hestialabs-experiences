@@ -1,6 +1,7 @@
 {
   "title": "Facebook",
   "icon": "facebk.png",
+  "dataPortal": "https://www.facebook.com/help/212802592074644",
   "ext": "zip",
   "preprocessor": "facebook",
   "files": [

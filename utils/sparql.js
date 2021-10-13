@@ -46,11 +46,9 @@ export async function queryHeadersItems(rdf, sparql) {
       keys.map((key, index) => {
         // map.get(k) returns an N3 Term
         // https://github.com/rdfjs/N3.js/blob/main/src/N3DataFactory.js
-        const v = map.get(key)
-        if (typeof v === 'undefined') {
-          return [headers[index], null]
-        }
-        return [headers[index], v.value]
+        // if value is undefined, fallback to null
+        const { value = null } = map.get(key)
+        return [headers[index], value]
       })
     )
   )

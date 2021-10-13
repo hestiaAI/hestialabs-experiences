@@ -12,7 +12,7 @@
 
     <v-row>
       <v-col>
-        <unit-introduction :company-name="title" />
+        <unit-introduction :company-name="title" :data-portal="dataPortal" />
       </v-col>
     </v-row>
 
@@ -49,7 +49,8 @@ export default {
   props: {
     examples: Array,
     visualizations: Object,
-    title: String
+    title: String,
+    dataPortal: String
   },
   data() {
     // main example is selected by default
