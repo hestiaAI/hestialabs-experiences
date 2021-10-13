@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- advanced view -->
     <template v-if="$store.state.power">
       <v-row>
         <v-col cols="12" lg="6">
@@ -30,6 +31,7 @@
       </v-row>
     </template>
 
+    <!-- default view -->
     <template v-else>
       <v-card class="pa-2 my-6">
         <v-row v-if="defaultViewElements">
@@ -51,7 +53,7 @@
             <v-row>
               <v-col
                 v-for="(specFile, index) in vegaFiles"
-                :key="index"
+                :key="'vega-' + index"
                 style="text-align: center"
               >
                 <unit-vega-viz
@@ -59,6 +61,13 @@
                   :values="processedItems[index]"
                   :div-id="`viz-${query.name}-${specFile.name}`"
                 />
+              </v-col>
+              <v-col
+                v-for="(d3File, index) in d3Files"
+                :key="'d3-' + index"
+                style="text-align: center"
+              >
+                {{ d3File.name }}
               </v-col>
             </v-row>
             <v-row v-if="showTable">
@@ -119,7 +128,7 @@ export default {
     showTable() {
       return this.headers.length !== 0 && this.defaultViewElements.showTable
     },
-    vegaFiles() {
+    vizNames() {
       if (!this.query) {
         return []
       }
@@ -131,7 +140,15 @@ export default {
           .filter(v => v.query === this.query.name)
           .map(v => v.vega)
       }
-      return this.selectedExample.vega.filter(s => vizNames?.includes(s.name))
+      return vizNames
+    },
+    d3Files() {
+      return this.selectedExample.d3.filter(s => this.vizNames.includes(s.name))
+    },
+    vegaFiles() {
+      return this.selectedExample.vega.filter(s =>
+        this.vizNames.includes(s.name)
+      )
     },
     processedItems() {
       // For each viz

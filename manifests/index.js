@@ -195,6 +195,7 @@ reqVEGA.keys().forEach(path => {
   const exampleObj = manifests[dir].examples.find(e => e.name === example)
   exampleObj.vega.push({
     name: vega,
+    type: 'vega',
     vega: reqVEGA(path)
   })
 })
@@ -203,13 +204,14 @@ reqD3.keys().forEach(path => {
   // Extract directory name of the experience
   const dir = extractFirstDirectory(path)
   // Extract example name and D3 query sample name
-  const match = path.match(/\/examples\/(?<example>.+)\/(?<d3>.+)\.d3.js/)
+  const match = path.match(/\/examples\/(?<example>.+)\/(?<d3>.+\.d3).js/)
   const { example, d3 } = match.groups
   // Add D3 sample
   const exampleObj = manifests[dir].examples.find(e => e.name === example)
   exampleObj.d3.push({
     name: d3,
-    d3: reqD3(path)
+    type: 'd3',
+    module: reqD3(path)
   })
 })
 

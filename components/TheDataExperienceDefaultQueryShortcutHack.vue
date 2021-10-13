@@ -97,9 +97,9 @@ export default {
     }
   },
   mounted() {
-    const d3Module = this.selectedExample.d3.find(d => d.name === 'bar-chart')
+    const d3File = this.selectedExample.d3.find(d => d.name === 'bar-chart.d3')
     const data = [44, 8, 15, 16, 23, 42]
-    const chart = d3Module.d3
+    const chart = d3File.module
       .default()
       .height(300)
       .width(this.$refs.graph.clientWidth)
