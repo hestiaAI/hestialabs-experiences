@@ -54,6 +54,10 @@ export default {
       type: Object,
       required: true
     },
+    allHeaders: {
+      type: Object,
+      required: true
+    },
     defaultView: {
       type: Array,
       required: true
@@ -93,6 +97,7 @@ export default {
       this.includedResults.forEach(i => {
         const content = JSON.parse(JSON.stringify(this.defaultView[i]))
         content.items = JSON.parse(this.allItems[i])
+        content.headers = JSON.parse(this.allHeaders[i])
         zip.file(`block${i}.json`, JSON.stringify(content))
       })
 

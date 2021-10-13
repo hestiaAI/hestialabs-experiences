@@ -41,7 +41,7 @@
       </v-row>
       <v-row>
         <v-col cols="6 mx-auto">
-          <unit-consent-form v-bind="{ allItems, defaultView }" />
+          <unit-consent-form v-bind="{ allItems, allHeaders, defaultView }" />
         </v-col>
       </v-row>
     </template>
@@ -75,7 +75,8 @@ export default {
       message: '',
       rml: '',
       rdf: '',
-      allItems: null
+      allItems: null,
+      allHeaders: null
     }
   },
   computed: {
@@ -98,6 +99,9 @@ export default {
       handler(allItems) {
         if (!allItems) {
           this.allItems = Object.fromEntries(
+            Object.keys(this.defaultView).map((x, i) => [i, ''])
+          )
+          this.allHeaders = Object.fromEntries(
             Object.keys(this.defaultView).map((x, i) => [i, ''])
           )
         }
@@ -154,6 +158,7 @@ export default {
       }
     },
     onQueryUpdate({ i, headers, items }) {
+      this.allHeaders[i] = JSON.stringify(headers)
       this.allItems[i] = JSON.stringify(items)
     }
   }
