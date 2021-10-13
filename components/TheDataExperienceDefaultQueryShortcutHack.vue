@@ -38,11 +38,17 @@
         </v-col>
       </v-row>
     </template>
+    <v-row>
+      <v-col class="col-sm-6 col-12 mx-auto">
+        <div ref="graph"></div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
 <script>
 /* eslint-disable vue/require-default-prop */
+import * as d3 from 'd3'
 import rdfUtils from '@/utils/rdf'
 import parseYarrrml from '@/utils/parse-yarrrml'
 
@@ -61,7 +67,6 @@ export default {
   data() {
     // main example is selected by default
     const selectedExample = this.examples[0]
-    console.log('d3', selectedExample.d3)
     return {
       selectedExample,
       progress: false,
@@ -90,6 +95,15 @@ export default {
         this.rml = await parseYarrrml(selectedExample.yarrrml)
       }
     }
+  },
+  mounted() {
+    const d3Module = this.selectedExample.d3.find(d => d.name === 'bar-chart')
+    const data = [44, 8, 15, 16, 23, 42]
+    const chart = d3Module.d3
+      .default()
+      .height(300)
+      .width(this.$refs.graph.clientWidth)
+    d3.select(this.$refs.graph).datum(data).call(chart)
   },
   methods: {
     initState() {
