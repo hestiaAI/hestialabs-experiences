@@ -105,9 +105,9 @@ export default {
   data() {
     return {
       secretKey: '',
-      inputZIP: new Blob(),
+      inputZIP: null,
       decrypt: false,
-      outputZIP: [],
+      outputZIP: null,
       success: false,
       experience: null,
       results: null,
@@ -152,6 +152,10 @@ export default {
   methods: {
     async importZIP() {
       this.success = false
+      if (!this.inputZIP) {
+        return
+      }
+
       await _sodium.ready
       const sodium = _sodium
 
@@ -161,14 +165,21 @@ export default {
         const pk = sodium.from_hex(this.$store.state.config.publicKey)
         const buf = await this.inputZIP.arrayBuffer()
         const ciphertext = new Uint8Array(buf)
-        this.outputZIP = sodium.crypto_box_seal_open(ciphertext, pk, sk)
+        this.outputZIP = new Blob([
+          sodium.crypto_box_seal_open(ciphertext, pk, sk)
+        ])
       } else {
         this.outputZIP = this.inputZIP
       }
 
       // Extract files
       const zip = new JSZip()
-      await zip.loadAsync(this.outputZIP)
+      try {
+        await zip.loadAsync(this.outputZIP)
+      } catch {
+        console.error('Error when loading zip file')
+        return
+      }
       this.experience = JSON.parse(
         await zip.file('experience.json').async('string')
       )

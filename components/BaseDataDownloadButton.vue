@@ -9,7 +9,7 @@ export default {
   props: {
     data: {
       type: [String, Blob, Uint8Array, Array],
-      required: true
+      default: ''
     },
     extension: {
       type: String,
