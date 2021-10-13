@@ -37,17 +37,17 @@
         </v-list-item>
       </v-card>
 
-      <v-card class="pa-2 my-6">
+      <v-card v-for="(result, i) in results" :key="i" class="pa-2 my-6">
         <v-card-title class="justify-center">{{ result.title }}</v-card-title>
         <v-row>
           <v-col
-            v-for="(specFile, index) in vegaFiles"
-            :key="index"
+            v-for="(specFile, j) in allVegaFiles[i]"
+            :key="j"
             style="text-align: center"
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="processedItems[index]"
+              :values="allProcessedItems[i][j]"
               :div-id="`viz-${result.query}-${specFile.name}`"
             />
           </v-col>
@@ -73,7 +73,7 @@ export default {
       outputZIP: [],
       success: false,
       experience: null,
-      result: null
+      results: null
     }
   },
   computed: {
@@ -88,27 +88,27 @@ export default {
     visualizations() {
       return this.manifest.visualizations.main
     },
-    vegaFiles() {
-      return this.example.vega.filter(s =>
-        this.result.visualizations.includes(s.name)
+    allVegaFiles() {
+      return this.results.map(r =>
+        this.example.vega.filter(s => r.visualizations.includes(s.name))
       )
     },
-    processedItems() {
-      // For each viz
-      return this.vegaFiles.map(spec => {
-        // Find the viz definition for this query
-        const def = this.visualizations.find(
-          v => this.result.query === v.query && spec.name === v.vega
-        )
-        // If it has a preprocessor defined, run it
-        if (def.preprocessor) {
-          return csvProcessors[def.preprocessor](
-            this.result.headers,
-            this.result.items
-          )[1]
-        }
-        return this.result.items
-      })
+    allProcessedItems() {
+      // For each block
+      return this.results.map((r, i) =>
+        // For each viz
+        this.allVegaFiles[i].map(spec => {
+          // Find the viz definition for this query
+          const def = this.visualizations.find(
+            v => r.query === v.query && spec.name === v.vega
+          )
+          // If it has a preprocessor defined, run it
+          if (def.preprocessor) {
+            return csvProcessors[def.preprocessor](r.headers, r.items)[1]
+          }
+          return r.items
+        })
+      )
     }
   },
   methods: {
@@ -134,7 +134,9 @@ export default {
       this.experience = JSON.parse(
         await zip.file('experience.json').async('string')
       )
-      this.result = JSON.parse(await zip.file('block1.json').async('string'))
+      const files = zip.file(/block[0-9]+.json/)
+      const res = await Promise.all(files.map(r => r.async('string')))
+      this.results = res.map(JSON.parse)
 
       this.success = true
     }
