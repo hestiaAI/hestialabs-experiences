@@ -19,7 +19,7 @@
       label="Secret Key"
       :disabled="!decrypt"
     ></v-text-field>
-    <base-button text="Import" @click="importZIP" />
+    <base-button text="Import" :disabled="!inputZIP" @click="importZIP" />
     <base-data-download-button
       :data="outputZIP"
       extension="zip"
