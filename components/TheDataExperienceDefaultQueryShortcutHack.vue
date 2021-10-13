@@ -59,9 +59,9 @@ export default {
     dataPortal: String
   },
   data() {
-    console.log('hack', this.queryShortcutHack)
     // main example is selected by default
     const selectedExample = this.examples[0]
+    console.log('d3', selectedExample.d3)
     return {
       selectedExample,
       progress: false,

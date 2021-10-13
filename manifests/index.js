@@ -26,6 +26,11 @@ const reqVEGA = require.context(
   true,
   /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.vega.json$/
 )
+const reqD3 = require.context(
+  './experiences/',
+  true,
+  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.d3.js$/
+)
 const reqParamSPARQL = require.context(
   './experiences/',
   true,
@@ -138,7 +143,9 @@ reqYARRRML.keys().forEach(path => {
     // empty Object for all SPARQL samples of the example
     sparql: [],
     // empty Object for all VEGA samples of the example
-    vega: []
+    vega: [],
+    // empty Object for all SPARQL samples of the example
+    d3: []
   }
   const { examples } = manifests[dir]
   if (name === 'main') {
@@ -189,6 +196,20 @@ reqVEGA.keys().forEach(path => {
   exampleObj.vega.push({
     name: vega,
     vega: reqVEGA(path)
+  })
+})
+
+reqD3.keys().forEach(path => {
+  // Extract directory name of the experience
+  const dir = extractFirstDirectory(path)
+  // Extract example name and D3 query sample name
+  const match = path.match(/\/examples\/(?<example>.+)\/(?<d3>.+)\.d3.js/)
+  const { example, d3 } = match.groups
+  // Add D3 sample
+  const exampleObj = manifests[dir].examples.find(e => e.name === example)
+  exampleObj.d3.push({
+    name: d3,
+    d3: reqD3(path)
   })
 })
 
