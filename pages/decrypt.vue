@@ -52,6 +52,16 @@
             />
           </v-col>
         </v-row>
+        <v-row>
+          <v-col>
+            <unit-query-results
+              v-bind="{
+                headers: result.headers.map(h => ({ text: h, value: h })),
+                items: result.items
+              }"
+            />
+          </v-col>
+        </v-row>
       </v-card>
     </template>
   </div>
