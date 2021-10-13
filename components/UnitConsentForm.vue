@@ -92,7 +92,7 @@ export default {
       // Add included data
       this.includedResults.forEach(i => {
         const content = JSON.parse(JSON.stringify(this.defaultView[i]))
-        content.items = this.allItems[i]
+        content.items = JSON.parse(this.allItems[i])
         zip.file(`block${i}.json`, JSON.stringify(content))
       })
 
