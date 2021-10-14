@@ -47,22 +47,22 @@ The file `config/config.json` contains parameters that can be changed for each d
     * - An array of options
     * - A pre-selected answer (or an array of pre-selected answers in the case of checkboxes).
     *   Use an empty string or empty array for no pre-selection.
-    * @type Object
+    * @type Array
     */
-  "consent": {
-    "section1": {
+  "consent": [
+    {
       "title": "Interesting title 1",
       "type": "radio",
       "options": ["A", "B", "C"],
       "selected": "A"
     },
-    "section2": {
+    {
       "title": "Interesting title 2",
       "type": "checkbox",
       "options": ["A", "B", "C"],
       "selected": []
     },
-  }
+  ]
 }
 ```
 

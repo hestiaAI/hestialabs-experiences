@@ -10,7 +10,7 @@
     >
       <v-radio
         v-for="(option, j) in section.options"
-        :key="`${name}-${j}`"
+        :key="`${index}-${j}`"
         :label="option"
         :value="option"
       ></v-radio>
@@ -19,7 +19,7 @@
     <template v-if="section.type === 'checkbox'">
       <v-checkbox
         v-for="(option, j) in section.options"
-        :key="`${name}-${j}`"
+        :key="`${index}-${j}`"
         v-model="selected"
         :label="option"
         :value="option"
@@ -38,8 +38,8 @@ export default {
       type: Object,
       required: true
     },
-    name: {
-      type: String,
+    index: {
+      type: Number,
       required: true
     },
     readonly: {
@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     updateConsent(event) {
-      this.$emit('change', { name: this.name, selected: this.selected })
+      this.$emit('change', { index: this.index, selected: this.selected })
     }
   }
 }

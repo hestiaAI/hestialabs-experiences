@@ -2,9 +2,9 @@
   <v-form v-if="$store.state.config.consent">
     <h1>Consent Form</h1>
     <unit-consent-form-section
-      v-for="(section, name, index) in $store.state.config.consent"
+      v-for="(section, index) in $store.state.config.consent"
       :key="`section-${index}`"
-      v-bind="{ section, name, index }"
+      v-bind="{ section, index }"
       @change="updateConsent"
     />
     <h2 class="mb-2 mt-2">Results to include</h2>
@@ -110,8 +110,8 @@ export default {
     sendForm() {
       throw new Error('not implemented')
     },
-    updateConsent({ name, selected }) {
-      this.consent[name].selected = selected
+    updateConsent({ index, selected }) {
+      this.consent[index].selected = selected
     }
   }
 }
