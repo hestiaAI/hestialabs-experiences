@@ -49,7 +49,7 @@ function computeFilePrefixes(fileDuplicateCounts) {
  * @param {Boolean} isSingleFileExperience
  * @returns {Object} {
  *  extractedFiles: {Object} key: archive name, value: Array of file paths extracted
- *  inputFilesRocketRML: {Object} corresponds to inputFiles parameter of RocketRML.parseFileLive()
+ *  inputFiles: {Object} corresponds to inputFiles parameter of RocketRML.parseFileLive()
  * }
  */
 export function getInputFiles(
@@ -61,20 +61,20 @@ export function getInputFiles(
   const fileDuplicateCounts = countDuplicateFiles(results)
   const filePrefixes = computeFilePrefixes(fileDuplicateCounts)
 
-  let inputFilesRocketRML = null
+  let inputFiles = null
   let extractedFiles = null
 
   if (isSingleFileExperience) {
     // the data experience involves a single file input so the name is irrelevant
     // -> input.<ext>
     const filename = `input${extensions[0]}`
-    inputFilesRocketRML = { [filename]: preprocessorFunc(results[0][2]) || '' }
+    inputFiles = { [filename]: preprocessorFunc(results[0][2]) || '' }
   } else {
     // user can submit multiple files or an archive
     const inputFilesEntries = results.map(
       ([archiveName, filepath, content]) => {
         const contentProcessed = preprocessorFunc(content)
-        // filename is a key in inputFilesRocketRML object
+        // filename is a key in inputFiles object
 
         // multiple files share this file name (which can be a path)
         const prefix = filePrefixes[filepath][fileDuplicateCounts[filepath]--]
@@ -94,13 +94,13 @@ export function getInputFiles(
       return acc
     }, {})
 
-    inputFilesRocketRML = Object.fromEntries(
+    inputFiles = Object.fromEntries(
       inputFilesEntries.map(([a, f, c]) => [f, c])
     )
   }
   return {
     extractedFiles,
-    inputFilesRocketRML
+    inputFiles
   }
 }
 
@@ -145,8 +145,8 @@ export default async function processFiles(
   // If some files are missing in the archive, they still need to be included in the result
   // Otherwise RocketRML will fail
   filesToExtract.forEach(file => {
-    if (!Object.keys(res.inputFilesRocketRML).includes(file)) {
-      res.inputFilesRocketRML[file] = '{}'
+    if (!Object.keys(res.inputFiles).includes(file)) {
+      res.inputFiles[file] = '{}'
     }
   })
 

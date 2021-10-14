@@ -29,9 +29,6 @@ import { validExtensions } from '@/manifests/utils'
 const TheDataExperienceDefault = () =>
   import('@/components/TheDataExperienceDefault.vue')
 
-const TheDataExperienceDefaultQueryShortcutHack = () =>
-  import('@/components/TheDataExperienceDefaultQueryShortcutHack.vue')
-
 const TheDataExperiencePower = () =>
   import('@/components/TheDataExperiencePower.vue')
 
@@ -84,7 +81,7 @@ export default {
       type: Boolean,
       default: false
     },
-    queryShortcutHack: {
+    queryShortcut: {
       type: Boolean,
       default: false
     }
@@ -102,7 +99,8 @@ export default {
         'dataPortal',
         'examples',
         'visualizations',
-        'defaultView'
+        'defaultView',
+        'queryShortcut'
       ]
       const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
       return props
@@ -110,9 +108,6 @@ export default {
     isComponent() {
       if (this.$store.state.power) {
         return TheDataExperiencePower
-      }
-      if (this.queryShortcutHack) {
-        return TheDataExperienceDefaultQueryShortcutHack
       }
       return TheDataExperienceDefault
     }
