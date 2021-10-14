@@ -20,6 +20,7 @@
   "consent": {
     "scope": {
       "title": "Scope of the report",
+      "type": "radio",
       "options": ["Share only with Paul-Olivier and Alex", "Share publicly"],
       "selected": "Share only with Paul-Olivier and Alex"
     }

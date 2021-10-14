@@ -32,6 +32,7 @@
     />
     <template v-if="success">
       <v-card class="pa-2 my-6">
+        <!-- Experience details -->
         <v-card-title class="justify-center">Experience Details</v-card-title>
         <v-list-item two-line>
           <v-list-item-content>
@@ -49,24 +50,19 @@
         </v-list-item>
       </v-card>
 
+      <!-- Consent log -->
       <v-card class="pa-2 my-6">
         <v-card-title class="justify-center">Consent Log</v-card-title>
         <v-card-text>
-          <template v-for="(section, name, i) in consent">
-            <h2 :key="`${i}-1`">{{ section.title }}</h2>
-            <v-radio-group :key="`${i}-2`" :value="section.selected">
-              <v-radio
-                v-for="(option, j) in section.options"
-                :key="j"
-                readonly
-                :label="option"
-                :value="option"
-              ></v-radio>
-            </v-radio-group>
-          </template>
+          <unit-consent-form-section
+            v-for="(section, name, index) in consent"
+            :key="`section-${index}`"
+            v-bind="{ section, name, index, readonly: true }"
+          />
         </v-card-text>
       </v-card>
 
+      <!-- Results -->
       <v-card v-for="(result, i) in results" :key="i" class="pa-2 my-6">
         <v-card-title class="justify-center">{{ result.title }}</v-card-title>
         <v-row>

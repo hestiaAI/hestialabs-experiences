@@ -1,25 +1,16 @@
 <template>
   <v-form v-if="$store.state.config.consent">
     <h1>Consent Form</h1>
-    <template v-for="(section, name, i) in $store.state.config.consent">
-      <h2 :key="`${i}-1`">{{ section.title }}</h2>
-      <v-radio-group
-        :key="`${i}-2`"
-        :value="section.selected"
-        @change="option => updateConsent(option, name)"
-      >
-        <v-radio
-          v-for="(option, j) in section.options"
-          :key="j"
-          :label="option"
-          :value="option"
-        ></v-radio>
-      </v-radio-group>
-    </template>
+    <unit-consent-form-section
+      v-for="(section, name, index) in $store.state.config.consent"
+      :key="`section-${index}`"
+      v-bind="{ section, name, index }"
+      @change="updateConsent"
+    />
     <h2 class="mb-2 mt-2">Results to include</h2>
     <v-checkbox
       v-for="(items, index) in allItems"
-      :key="index"
+      :key="`data-${index}`"
       v-model="includedResults"
       :dense="true"
       :disabled="items.length === 0"
@@ -119,8 +110,8 @@ export default {
     sendForm() {
       throw new Error('not implemented')
     },
-    updateConsent(option, name) {
-      this.consent[name].selected = option
+    updateConsent({ name, selected }) {
+      this.consent[name].selected = selected
     }
   }
 }
