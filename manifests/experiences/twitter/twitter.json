@@ -34,7 +34,7 @@
   "defaultView": [
     {
       "query": "advertisers-per-day",
-      "visualizations": ["top-k-advertisers", "bar-chart.d3"],
+      "visualizations": ["top-k-advertisers"],
       "showTable": false,
       "text": "See the ranking of advertisers that have shown you the most ads."
     },

@@ -62,12 +62,13 @@
                   :div-id="`viz-${query.name}-${specFile.name}`"
                 />
               </v-col>
-              <v-col
-                v-for="(d3File, index) in d3Files"
-                :key="'d3-' + index"
-                style="text-align: center"
-              >
-                {{ d3File.name }}
+            </v-row>
+            <v-row v-for="(d3File, index) in d3Files" :key="'d3-' + index">
+              <v-col>
+                <unit-d3-viz
+                  :d3-file="d3File"
+                  :values="[44, 8, 15, 16, 23, 42]"
+                />
               </v-col>
             </v-row>
             <v-row v-if="showTable">

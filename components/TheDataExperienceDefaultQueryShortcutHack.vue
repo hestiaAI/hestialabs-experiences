@@ -48,7 +48,6 @@
 
 <script>
 /* eslint-disable vue/require-default-prop */
-import * as d3 from 'd3'
 import rdfUtils from '@/utils/rdf'
 import parseYarrrml from '@/utils/parse-yarrrml'
 
@@ -95,15 +94,6 @@ export default {
         this.rml = await parseYarrrml(selectedExample.yarrrml)
       }
     }
-  },
-  mounted() {
-    const d3File = this.selectedExample.d3.find(d => d.name === 'bar-chart.d3')
-    const data = [44, 8, 15, 16, 23, 42]
-    const chart = d3File.module
-      .default()
-      .height(300)
-      .width(this.$refs.graph.clientWidth)
-    d3.select(this.$refs.graph).datum(data).call(chart)
   },
   methods: {
     initState() {
