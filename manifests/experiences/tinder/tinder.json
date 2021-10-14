@@ -67,7 +67,7 @@
   "defaultView": [
     {
       "query": "likes-dislikes",
-      "visualizations": ["daily-likes-passes", "bar-chart.d3"],
+      "visualizations": ["daily-likes-passes", "bar-chart.d3", "BarChart.vue"],
       "showTable": false,
       "text": "See the number of likes and dislikes that you made over time."
     },

@@ -1,6 +1,4 @@
 <template>
-  <!--
-TODO The ridiculous name of this component is supposed to remind us to find a better solution for handling the shortcut. The switch between shortcut or not should be used further down in the component hierarchy to avoid code duplication between this new file and the one I copied it from. -->
   <div>
     <v-row>
       <v-col cols="12 mx-auto" sm="6">

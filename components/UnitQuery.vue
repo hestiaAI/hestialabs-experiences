@@ -83,6 +83,17 @@
                 />
               </v-col>
             </v-row>
+            <v-row
+              v-for="(graphName, index) in vueGraphNames"
+              :key="'vue-' + index"
+            >
+              <v-col>
+                <vue-graph-by-name
+                  :graph-name="graphName"
+                  :values="[44, 8, 15, 16, 23, 42]"
+                />
+              </v-col>
+            </v-row>
             <v-row v-if="showTable">
               <v-col>
                 <unit-query-results v-bind="{ headers, items }" />
@@ -162,6 +173,9 @@ export default {
           .map(v => v.vega)
       }
       return vizNames
+    },
+    vueGraphNames() {
+      return this.vizNames.filter(n => n.endsWith('.vue'))
     },
     d3Files() {
       return this.selectedExample.d3.filter(s => this.vizNames.includes(s.name))

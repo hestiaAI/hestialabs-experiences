@@ -1,9 +1,13 @@
-// https://github.com/d3/d3
+<template>
+  <div ref="graph"></div>
+</template>
+
+<script>
 import * as d3 from 'd3'
 
 // somewhat inspired by
 // https://bost.ocks.org/mike/chart/
-export default function barChart() {
+function barChart() {
   let width = 440
   let height = 120
   function chart(selection) {
@@ -26,7 +30,7 @@ export default function barChart() {
         .attr('y', (_, i) => i * barHeight)
         .attr('width', d => d * scale + 'px')
         .attr('height', barHeight)
-        .attr('fill', 'teal')
+        .attr('fill', 'peru')
       svg
         .selectAll('text')
         .data(data)
@@ -52,3 +56,18 @@ export default function barChart() {
 
   return chart
 }
+
+export default {
+  props: {
+    values: {
+      type: Array,
+      default: () => []
+    }
+  },
+  mounted() {
+    // const values = [44, 8, 15, 16, 23, 42]
+    const chart = barChart().height(200).width(this.$refs.graph.clientWidth)
+    d3.select(this.$refs.graph).datum(this.values).call(chart)
+  }
+}
+</script>
