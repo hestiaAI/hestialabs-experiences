@@ -1,44 +1,46 @@
 <template>
   <v-container>
-    <v-row class="text-center">
-      <v-col cols="8">
-        <div id="volume-chart">
-          <strong>Number of tracking over time</strong>
-          <span class="reset" style="display: none">
-            <p>range:</p>
-            <span class="filter"></span>
-          </span>
-          <a class="reset" href="" style="display: none">reset</a>
-          <div class="clearfix"></div>
-        </div>
+    <v-row>
+      <v-col cols="9">
+        <v-row>
+          <v-col cols="12">
+            <div id="volume-chart">
+              <strong>Number of tracking over time</strong>
+              <span class="reset" style="display: none">
+                range:
+                <span class="filter"></span>
+              </span>
+              <a class="reset" href="" style="display: none">reset</a>
+              <div class="clearfix"></div>
+            </div>
 
-        <div id="range-chart">
-          <p class="muted pull-right" style="margin-right: 15px">
-            select a time range to zoom in
-          </p>
-        </div>
+            <div id="range-chart">
+              <p class="muted pull-right" style="margin-right: 15px">
+                select a time range to zoom in
+              </p>
+            </div>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="7">
+            <div id="category-chart">
+              <strong>Purposes of tracking</strong>
+              <a class="reset" href="" style="display: none">reset</a>
+              <div class="clearfix"></div>
+            </div>
+          </v-col>
+          <v-col cols="5">
+            <div id="app-chart">
+              <strong>Applications that use trackers</strong>
+              <a class="reset" href="" style="display: none">reset</a>
+              <div class="clearfix"></div>
+            </div>
+          </v-col>
+        </v-row>
       </v-col>
-      <v-col cols="4">
+      <v-col cols="3">
         <div id="advertiser-chart">
           <strong>Companies behind tracking</strong>
-          <a class="reset" href="" style="display: none">reset</a>
-          <div class="clearfix"></div>
-        </div>
-      </v-col>
-    </v-row>
-    <v-row class="text-center">
-      <v-col cols="8">
-        <div id="category-chart">
-          <center>
-            <strong>Purposes of tracking</strong>
-            <a class="reset" href="" style="display: none">reset</a>
-            <div class="clearfix"></div>
-          </center>
-        </div>
-      </v-col>
-      <v-col cols="4">
-        <div id="app-chart">
-          <strong>Applications that use trackers</strong>
           <a class="reset" href="" style="display: none">reset</a>
           <div class="clearfix"></div>
         </div>
@@ -259,13 +261,14 @@ export default {
 
       // Render category pie chart
       width = d3.select('#category-chart').node().getBoundingClientRect().width
-      height = 250
+      height = 300
+      const scale = Math.min(width, height)
       categoryChart
         .width(width)
         .height(height)
         .slicesCap(10)
-        .radius(width / 6)
-        .innerRadius(width / 10)
+        .radius(scale / 4)
+        .innerRadius(scale / 8)
         .externalLabels(50)
         .dimension(categoryDimension)
         .group(categoryGroup)
@@ -307,7 +310,7 @@ export default {
         .select('#advertiser-chart')
         .node()
         .getBoundingClientRect().width
-      height = 250
+      height = 600
       advertiserChart
         .width(width)
         .height(height)
