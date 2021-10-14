@@ -23,6 +23,12 @@
       "type": "radio",
       "options": ["Share only with Paul-Olivier and Alex", "Share publicly"],
       "selected": "Share only with Paul-Olivier and Alex"
+    },
+    "specific": {
+      "title": "Specific information that can be included in the report",
+      "type": "checkbox",
+      "options": ["Your affiliation", "Your age range", "Your motivations for using our service"],
+      "selected": []
     }
   }
 }

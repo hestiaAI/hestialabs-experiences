@@ -1,6 +1,7 @@
 <template>
   <div>
     <h2>{{ section.title }}</h2>
+
     <v-radio-group
       v-if="section.type === 'radio'"
       v-model="selected"
@@ -14,6 +15,19 @@
         :value="option"
       ></v-radio>
     </v-radio-group>
+
+    <template v-if="section.type === 'checkbox'">
+      <v-checkbox
+        v-for="(option, j) in section.options"
+        :key="`${name}-${j}`"
+        v-model="selected"
+        :label="option"
+        :value="option"
+        dense
+        :readonly="readonly"
+        @change="updateConsent"
+      />
+    </template>
   </div>
 </template>
 
@@ -35,8 +49,7 @@ export default {
   },
   data() {
     return {
-      selected: this.section.selected,
-      checked: []
+      selected: this.section.selected
     }
   },
   methods: {
