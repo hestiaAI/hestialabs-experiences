@@ -38,6 +38,10 @@
         </v-col>
       </v-row>
     </template>
+    <ADyn
+      :componentName="Math.random() < 0.5 ? 'A0' : 'A1'"
+      :title="Math.random()"
+    ></ADyn>
     <v-row>
       <v-col class="col-sm-6 col-12 mx-auto">
         <div ref="graph"></div>
