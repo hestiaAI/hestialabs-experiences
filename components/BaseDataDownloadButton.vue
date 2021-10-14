@@ -8,8 +8,8 @@ import { createObjectURL, defaultExtension, mimeTypes } from '@/utils/utils'
 export default {
   props: {
     data: {
-      type: String,
-      required: true
+      type: [String, Blob, Uint8Array, Array],
+      default: ''
     },
     extension: {
       type: String,

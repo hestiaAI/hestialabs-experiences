@@ -37,8 +37,11 @@
     </template>
 
     <template v-else>
-      <v-card class="pa-2 my-6">
-        <v-row v-if="defaultViewElements">
+      <v-card v-if="defaultViewElements" class="pa-2 my-6">
+        <v-card-title class="justify-center">{{
+          defaultViewElements.title
+        }}</v-card-title>
+        <v-row>
           <v-col cols="8" class="mx-auto">
             {{ defaultViewElements.text }}
           </v-col>
@@ -115,6 +118,10 @@ export default {
       type: Object,
       default: null
     },
+    i: {
+      type: Number,
+      default: 0
+    },
     queryShortcut: {
       type: Boolean,
       default: false
@@ -177,6 +184,7 @@ export default {
       this.headers = headers.map(h => ({ text: h, value: h }))
       this.items = items
       this.finished = true
+      this.$emit('update', { i: this.i, headers, items })
     },
     onChangeSelector(query) {
       this.$emit('change', query)

@@ -93,6 +93,7 @@ Note: All files and folders should match the following regular expression: [`^(?
       "query": "query_filename",
       "visualizations": ["chart_filename1", "chart_filename2"],
       "showTable": false,
+      "title": "An interesting title",
       "text": "Lorem ipsum."
     }
   ]

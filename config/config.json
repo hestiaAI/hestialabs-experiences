@@ -1,5 +1,4 @@
 {
-  "saveFiles": true,
   "experiences": [
     "amazon",
     "apple",
@@ -15,5 +14,21 @@
     "twitter-targeting-information",
     "youtube",
     "playground"
+  ],
+  "saveFiles": true,
+  "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
+  "consent": [
+    {
+      "title": "Scope of the report",
+      "type": "radio",
+      "options": ["Share only with Paul-Olivier and Alex", "Share publicly"],
+      "selected": "Share only with Paul-Olivier and Alex"
+    },
+    {
+      "title": "Specific information that can be included in the report",
+      "type": "checkbox",
+      "options": ["Your affiliation", "Your age range", "Your motivations for using our service"],
+      "selected": []
+    }
   ]
 }
