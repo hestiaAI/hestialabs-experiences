@@ -50,7 +50,8 @@ export default {
     examples: Array,
     visualizations: Object,
     title: String,
-    dataPortal: String
+    dataPortal: String,
+    queryShortcut: Boolean
   },
   data() {
     // main example is selected by default

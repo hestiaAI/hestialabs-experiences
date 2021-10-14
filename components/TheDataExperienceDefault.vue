@@ -12,7 +12,7 @@ TODO The ridiculous name of this component is supposed to remind us to find a be
         <slot name="unit-files" :update="onUnitFilesUpdate" />
         <template v-if="progress">
           <base-progress-circular class="mr-2" />
-          <span>Generating Linked Data...</span>
+          <span>Processing files...</span>
         </template>
         <template v-else-if="error || success">
           <v-alert
@@ -29,12 +29,24 @@ TODO The ridiculous name of this component is supposed to remind us to find a be
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
-            :query="queries[index]"
+            v-if="queryShortcut"
             v-bind="{
+              data,
+              visualizations,
+              defaultViewElements,
+              selectedExample,
+              queryShortcut
+            }"
+          />
+          <unit-query
+            v-else
+            v-bind="{
+              query: queries[index],
               selectedExample,
               rdf,
               visualizations,
-              defaultViewElements
+              defaultViewElements,
+              queryShortcut
             }"
           />
         </v-col>
@@ -58,7 +70,8 @@ export default {
     visualizations: Object,
     defaultView: Array,
     title: String,
-    dataPortal: String
+    dataPortal: String,
+    queryShortcut: Boolean
   },
   data() {
     // main example is selected by default
@@ -70,7 +83,8 @@ export default {
       success: false,
       message: '',
       rml: '',
-      rdf: ''
+      rdf: '',
+      data: ''
     }
   },
   computed: {
@@ -112,9 +126,9 @@ export default {
     handleRdfEnd() {
       this.progress = false
     },
-    async onUnitFilesUpdate({ inputFilesRocketRML, error }) {
+    async onUnitFilesUpdate({ inputFiles, error }) {
       this.initState()
-      if (Object.keys(inputFilesRocketRML).length === 0) {
+      if (Object.keys(inputFiles).length === 0) {
         this.error = true
         this.message = 'No relevant files were found'
         this.progress = false
@@ -122,6 +136,11 @@ export default {
         this.error = true
         this.message = error
         this.progress = false
+      } else if (this.queryShortcut) {
+        // TODO extend for multiple files
+        this.data = Object.values(inputFiles)[0]
+        this.progress = false
+        this.success = true
       } else if (!this.rml) {
         throw new Error('RML not ready')
       } else {
@@ -131,7 +150,7 @@ export default {
             this.handleRdfError,
             this.handleRdfEnd,
             this.rml,
-            inputFilesRocketRML
+            inputFiles
           )
         } catch (error) {
           console.error(error)
