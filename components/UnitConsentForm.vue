@@ -1,5 +1,5 @@
 <template>
-  <v-form v-if="$store.state.config.consent">
+  <v-form>
     <h1>Consent Form</h1>
     <unit-consent-form-section
       v-for="(section, index) in $store.state.config.consent"

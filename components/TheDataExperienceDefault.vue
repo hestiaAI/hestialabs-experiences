@@ -41,7 +41,7 @@ TODO The ridiculous name of this component is supposed to remind us to find a be
           />
         </v-col>
       </v-row>
-      <v-row>
+      <v-row v-if="$store.state.config.consent">
         <v-col cols="6 mx-auto">
           <unit-consent-form v-bind="{ allItems, allHeaders, defaultView }" />
         </v-col>
