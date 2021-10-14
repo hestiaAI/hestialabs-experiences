@@ -27,8 +27,8 @@ export default {
       switch (this.graphName) {
         case 'BarChart.vue':
           return () => import('@/components/graphs/BarChart.vue')
-        case 'A1':
-          return () => import('@/components/graphs/A1.vue')
+        case 'TrackerGraph.vue':
+          return () => import('@/components/graphs/TrackerGraph.vue')
         default:
           return undefined
       }

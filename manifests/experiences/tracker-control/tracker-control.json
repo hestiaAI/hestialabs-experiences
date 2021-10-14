@@ -8,6 +8,7 @@
   "defaultView": [
     {
       "query": "",
+      "visualizations": ["TrackerGraph.vue"],
       "showTable": true,
       "text": "Data"
     }
