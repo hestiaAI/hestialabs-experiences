@@ -3,7 +3,13 @@
     <template v-if="$store.state.power">
       <v-row>
         <v-col cols="12" lg="6">
+          <unit-sql
+            v-if="queryShortcut"
+            v-bind="{ data }"
+            @update="onUnitResultsUpdate"
+          />
           <unit-sparql
+            v-else
             v-bind="{ rdf, selectedExample, query }"
             class="mr-lg-6"
             @update="onUnitSparqlUpdate"
@@ -39,10 +45,16 @@
         </v-row>
         <v-row>
           <v-col>
+            <unit-sql
+              v-if="queryShortcut"
+              v-bind="{ data }"
+              @update="onUnitResultsUpdate"
+            />
             <unit-sparql
+              v-else
               v-bind="{ rdf, selectedExample, query }"
               class="mr-lg-6"
-              @update="onUnitSparqlUpdate"
+              @update="onUnitResultsUpdate"
             />
           </v-col>
         </v-row>
@@ -93,7 +105,7 @@ export default {
     },
     rdf: {
       type: String,
-      required: true
+      default: ''
     },
     query: {
       type: Object,
@@ -102,6 +114,14 @@ export default {
     defaultViewElements: {
       type: Object,
       default: null
+    },
+    queryShortcut: {
+      type: Boolean,
+      default: false
+    },
+    data: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -152,7 +172,7 @@ export default {
     }
   },
   methods: {
-    onUnitSparqlUpdate({ headers = [], items = [], error }) {
+    onUnitResultsUpdate({ headers = [], items = [], error }) {
       // Vuetify DataTable component expects text and value properties
       this.headers = headers.map(h => ({ text: h, value: h }))
       this.items = items
