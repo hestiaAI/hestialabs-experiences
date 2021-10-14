@@ -72,11 +72,10 @@ export default {
 
       const zip = new JSZip()
 
-      // Add info about the experience, and which preprocessors must be used to re-create the viz
+      // Add info about the experience
       const manifest = this.$store.getters.manifest(this.$route)
       const experience = {
         key: manifest.key,
-        visualizations: manifest.visualizations,
         timestamp: Date.now()
       }
       zip.file('experience.json', JSON.stringify(experience))
