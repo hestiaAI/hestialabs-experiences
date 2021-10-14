@@ -1,6 +1,4 @@
 <template>
-  <!--
-TODO The ridiculous name of this component is supposed to remind us to find a better solution for handling the shortcut. The switch between shortcut or not should be used further down in the component hierarchy to avoid code duplication between this new file and the one I copied it from. -->
   <div>
     <v-row>
       <v-col cols="12 mx-auto" sm="6">
@@ -12,7 +10,7 @@ TODO The ridiculous name of this component is supposed to remind us to find a be
         <slot name="unit-files" :update="onUnitFilesUpdate" />
         <template v-if="progress">
           <base-progress-circular class="mr-2" />
-          <span>Generating Linked Data...</span>
+          <span>Processing files...</span>
         </template>
         <template v-else-if="error || success">
           <v-alert
@@ -29,13 +27,26 @@ TODO The ridiculous name of this component is supposed to remind us to find a be
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
+            v-if="queryShortcut"
+            v-bind="{
+              data,
+              visualizations,
+              defaultViewElements,
+              selectedExample,
+              queryShortcut
+            }"
+            @update="onQueryUpdate"
+          />
+          <unit-query
+            v-else
             v-bind="{
               selectedExample,
               rdf,
               visualizations,
               defaultViewElements,
               query: queries[index],
-              i: index
+              i: index,
+              queryShortcut
             }"
             @update="onQueryUpdate"
           />
@@ -65,7 +76,8 @@ export default {
     visualizations: Object,
     defaultView: Array,
     title: String,
-    dataPortal: String
+    dataPortal: String,
+    queryShortcut: Boolean
   },
   data() {
     // main example is selected by default
@@ -79,7 +91,8 @@ export default {
       rml: '',
       rdf: '',
       allItems: null,
-      allHeaders: null
+      allHeaders: null,
+      data: ''
     }
   },
   computed: {
@@ -131,9 +144,9 @@ export default {
     handleRdfEnd() {
       this.progress = false
     },
-    async onUnitFilesUpdate({ inputFilesRocketRML, error }) {
+    async onUnitFilesUpdate({ inputFiles, error }) {
       this.initState()
-      if (Object.keys(inputFilesRocketRML).length === 0) {
+      if (Object.keys(inputFiles).length === 0) {
         this.error = true
         this.message = 'No relevant files were found'
         this.progress = false
@@ -141,6 +154,11 @@ export default {
         this.error = true
         this.message = error
         this.progress = false
+      } else if (this.queryShortcut) {
+        // TODO extend for multiple files
+        this.data = Object.values(inputFiles)[0]
+        this.progress = false
+        this.success = true
       } else if (!this.rml) {
         throw new Error('RML not ready')
       } else {
@@ -150,7 +168,7 @@ export default {
             this.handleRdfError,
             this.handleRdfEnd,
             this.rml,
-            inputFilesRocketRML
+            inputFiles
           )
         } catch (error) {
           console.error(error)
