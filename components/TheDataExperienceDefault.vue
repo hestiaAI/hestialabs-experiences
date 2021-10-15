@@ -53,7 +53,7 @@
         </v-col>
       </v-row>
       <v-row v-if="$store.state.config.consent">
-        <v-col cols="6 mx-auto">
+        <v-col cols="8 mx-auto">
           <unit-consent-form v-bind="{ allItems, allHeaders, defaultView }" />
         </v-col>
       </v-row>
