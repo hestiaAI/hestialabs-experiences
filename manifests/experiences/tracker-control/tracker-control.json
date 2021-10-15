@@ -8,6 +8,7 @@
   "defaultView": [
     {
       "query": "",
+      "visualizations": ["TrackerGraph.vue"],
       "showTable": true,
       "title": "Tracker control experience",
       "text": "Tracker control experience"

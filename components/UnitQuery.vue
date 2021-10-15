@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- advanced view -->
     <template v-if="$store.state.power">
       <v-row>
         <v-col cols="12" lg="6">
@@ -36,6 +37,7 @@
       </v-row>
     </template>
 
+    <!-- default view -->
     <template v-else>
       <v-card v-if="defaultViewElements" class="pa-2 my-6">
         <v-card-title class="justify-center">{{
@@ -66,7 +68,7 @@
             <v-row>
               <v-col
                 v-for="(specFile, index) in vegaFiles"
-                :key="index"
+                :key="'vega-' + index"
                 style="text-align: center"
               >
                 <unit-vega-viz
@@ -74,6 +76,22 @@
                   :values="processedItems[index]"
                   :div-id="`viz-${query.name}-${specFile.name}`"
                 />
+              </v-col>
+            </v-row>
+            <v-row v-for="(d3File, index) in d3Files" :key="'d3-' + index">
+              <v-col>
+                <unit-d3-viz
+                  :d3-file="d3File"
+                  :values="[44, 8, 15, 16, 23, 42]"
+                />
+              </v-col>
+            </v-row>
+            <v-row
+              v-for="(graphName, index) in vueGraphNames"
+              :key="'vue-' + index"
+            >
+              <v-col>
+                <vue-graph-by-name :graph-name="graphName" :values="items" />
               </v-col>
             </v-row>
             <v-row v-if="showTable">
@@ -146,19 +164,27 @@ export default {
     showTable() {
       return this.headers.length !== 0 && this.defaultViewElements.showTable
     },
-    vegaFiles() {
-      if (!this.query) {
-        return []
-      }
+    vizNames() {
       let vizNames
       if (this.defaultViewElements) {
         vizNames = this.defaultViewElements?.visualizations || []
       } else {
         vizNames = this.exampleVisualizations
-          .filter(v => v.query === this.query.name)
+          .filter(v => v.query === this.query?.name)
           .map(v => v.vega)
       }
-      return this.selectedExample.vega.filter(s => vizNames?.includes(s.name))
+      return vizNames
+    },
+    vueGraphNames() {
+      return this.vizNames.filter(n => n.endsWith('.vue'))
+    },
+    d3Files() {
+      return this.selectedExample.d3.filter(s => this.vizNames.includes(s.name))
+    },
+    vegaFiles() {
+      return this.selectedExample.vega.filter(s =>
+        this.vizNames.includes(s.name)
+      )
     },
     processedItems() {
       // For each viz

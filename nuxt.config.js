@@ -43,8 +43,12 @@ export default {
   plugins: ['@/plugins/vuex-persistedstate.client.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
-
+  // components: true,
+  components: [
+    // Equivalent to { path: '~/components' }
+    '~/components',
+    { path: '~/components/graphs', extensions: ['vue'] }
+  ],
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/eslint
