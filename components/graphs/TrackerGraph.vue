@@ -10,7 +10,7 @@
                 range:
                 <span class="filter"></span>
               </span>
-              <a class="reset" href="" style="display: none">reset</a>
+              <a class="reset" style="display: none">reset</a>
               <div class="clearfix"></div>
             </div>
 
@@ -25,14 +25,14 @@
           <v-col cols="7">
             <div id="category-chart">
               <strong>Purposes of tracking</strong>
-              <a class="reset" href="" style="display: none">reset</a>
+              <a class="reset" style="display: none">reset</a>
               <div class="clearfix"></div>
             </div>
           </v-col>
           <v-col cols="5">
             <div id="app-chart">
               <strong>Applications that use trackers</strong>
-              <a class="reset" href="" style="display: none">reset</a>
+              <a class="reset" style="display: none">reset</a>
               <div class="clearfix"></div>
             </div>
           </v-col>
@@ -41,7 +41,7 @@
       <v-col cols="3">
         <div id="advertiser-chart">
           <strong>Companies behind tracking</strong>
-          <a class="reset" href="" style="display: none">reset</a>
+          <a class="reset" style="display: none">reset</a>
           <div class="clearfix"></div>
         </div>
       </v-col>
@@ -56,36 +56,6 @@ import crossfilter from 'crossfilter2'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
-
-// const exampleData = [
-//   {
-//     uid: 10275,
-//     daddr: 'ajax.googleapis.com',
-//     time: 1626862433338,
-//     Tracker: 'Google',
-//     Category: 'Content',
-//     Package: 'ru.bnice.asolver',
-//     App: 'ASolver'
-//   },
-//   {
-//     uid: 10276,
-//     daddr: '3p.ampproject.net',
-//     time: 1626781735641,
-//     Tracker: 'Amazon',
-//     Category: 'Test',
-//     Package: 'com.google.android.apps.docs',
-//     App: 'Drive'
-//   },
-//   {
-//     uid: 10276,
-//     daddr: 'ajax.googleapis.com',
-//     time: 1626910581735,
-//     Tracker: 'Google',
-//     Category: 'Content',
-//     Package: 'com.google.android.apps.docs',
-//     App: 'Drive'
-//   }
-// ]
 
 export default {
   name: 'TrackerGraph',
@@ -125,11 +95,10 @@ export default {
         appChart.filterAll()
         dc.redrawAll()
       })
-      console.log('vals', this.values)
-      const data = this.values
+
       // Format data to correct types
       const dateFormatParser = d3.timeParse('%Q')
-      data.forEach(d => {
+      this.values.forEach(d => {
         d.date = dateFormatParser(d.time)
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
         d.Category = d.Category === '' ? 'Unknown' : d.Category
@@ -137,8 +106,7 @@ export default {
         d.Tracker = d.Tracker === '' ? 'Unknown' : d.Tracker
       })
 
-      console.log(data)
-      const ndx = crossfilter(data)
+      const ndx = crossfilter(this.values)
 
       // Create dimensions
       const dayDimension = ndx.dimension(d => d.day)
@@ -153,10 +121,10 @@ export default {
       const appGroup = appDimension.group().reduceCount()
 
       // Render volume line chart
-      const minDate = d3.min(data, function (d) {
+      const minDate = d3.min(this.values, function (d) {
         return d.day
       })
-      const maxDate = d3.max(data, function (d) {
+      const maxDate = d3.max(this.values, function (d) {
         return d.day
       })
       const maxValue = dayGroup.top(1)[0].value + 2
