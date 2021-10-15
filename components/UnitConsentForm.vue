@@ -19,12 +19,6 @@
     ></v-checkbox>
     <base-button text="Generate ZIP" @click="generateZIP" />
     <base-data-download-button
-      :data="zipFile"
-      extension="zip"
-      text="Download plaintext"
-      :disabled="!success"
-    />
-    <base-data-download-button
       :data="encryptedZipFile"
       extension="zip"
       text="Download encrypted"
