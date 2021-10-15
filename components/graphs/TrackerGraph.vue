@@ -10,7 +10,7 @@
                 range:
                 <span class="filter"></span>
               </span>
-              <a class="reset" href="" style="display: none">reset</a>
+              <a class="reset" style="display: none">reset</a>
               <div class="clearfix"></div>
             </div>
 
@@ -25,14 +25,14 @@
           <v-col cols="7">
             <div id="category-chart">
               <strong>Purposes of tracking</strong>
-              <a class="reset" href="" style="display: none">reset</a>
+              <a class="reset" style="display: none">reset</a>
               <div class="clearfix"></div>
             </div>
           </v-col>
           <v-col cols="5">
             <div id="app-chart">
               <strong>Applications that use trackers</strong>
-              <a class="reset" href="" style="display: none">reset</a>
+              <a class="reset" style="display: none">reset</a>
               <div class="clearfix"></div>
             </div>
           </v-col>
@@ -41,7 +41,7 @@
       <v-col cols="3">
         <div id="advertiser-chart">
           <strong>Companies behind tracking</strong>
-          <a class="reset" href="" style="display: none">reset</a>
+          <a class="reset" style="display: none">reset</a>
           <div class="clearfix"></div>
         </div>
       </v-col>
