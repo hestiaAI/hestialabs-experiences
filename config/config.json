@@ -20,8 +20,7 @@
   "consent": [
     {
       "title": "Introduction",
-      "description": "Filling this form will generate an encrypted ZIP file that the people in charge of this project can use to reproduce your results.",
-      "type": "text"
+      "description": "Filling this form will generate an encrypted ZIP file that the people in charge of this project can use to reproduce your results."
     },
     {
       "title": "Scope of the report",
