@@ -57,45 +57,42 @@ import crossfilter from 'crossfilter2'
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
 
+// const exampleData = [
+//   {
+//     uid: 10275,
+//     daddr: 'ajax.googleapis.com',
+//     time: 1626862433338,
+//     Tracker: 'Google',
+//     Category: 'Content',
+//     Package: 'ru.bnice.asolver',
+//     App: 'ASolver'
+//   },
+//   {
+//     uid: 10276,
+//     daddr: '3p.ampproject.net',
+//     time: 1626781735641,
+//     Tracker: 'Amazon',
+//     Category: 'Test',
+//     Package: 'com.google.android.apps.docs',
+//     App: 'Drive'
+//   },
+//   {
+//     uid: 10276,
+//     daddr: 'ajax.googleapis.com',
+//     time: 1626910581735,
+//     Tracker: 'Google',
+//     Category: 'Content',
+//     Package: 'com.google.android.apps.docs',
+//     App: 'Drive'
+//   }
+// ]
+
 export default {
   name: 'TrackerGraph',
   props: {
     values: {
       type: Array,
       default: () => []
-    }
-  },
-  data() {
-    return {
-      data: [
-        {
-          uid: 10275,
-          daddr: 'ajax.googleapis.com',
-          time: 1626862433338,
-          Tracker: 'Google',
-          Category: 'Content',
-          Package: 'ru.bnice.asolver',
-          App: 'ASolver'
-        },
-        {
-          uid: 10276,
-          daddr: '3p.ampproject.net',
-          time: 1626781735641,
-          Tracker: 'Amazon',
-          Category: 'Test',
-          Package: 'com.google.android.apps.docs',
-          App: 'Drive'
-        },
-        {
-          uid: 10276,
-          daddr: 'ajax.googleapis.com',
-          time: 1626910581735,
-          Tracker: 'Google',
-          Category: 'Content',
-          Package: 'com.google.android.apps.docs',
-          App: 'Drive'
-        }
-      ]
     }
   },
   mounted() {
@@ -128,35 +125,8 @@ export default {
         appChart.filterAll()
         dc.redrawAll()
       })
-      const data = [
-        {
-          uid: 10275,
-          daddr: 'ajax.googleapis.com',
-          time: 1626862433338,
-          Tracker: 'Google',
-          Category: 'Content',
-          Package: 'ru.bnice.asolver',
-          App: 'ASolver'
-        },
-        {
-          uid: 10276,
-          daddr: '3p.ampproject.net',
-          time: 1626781735641,
-          Tracker: 'Amazon',
-          Category: 'Test',
-          Package: 'com.google.android.apps.docs',
-          App: 'Drive'
-        },
-        {
-          uid: 10276,
-          daddr: 'ajax.googleapis.com',
-          time: 1626910581735,
-          Tracker: 'Google',
-          Category: 'Content',
-          Package: 'com.google.android.apps.docs',
-          App: 'Drive'
-        }
-      ]
+      console.log('vals', this.values)
+      const data = this.values
       // Format data to correct types
       const dateFormatParser = d3.timeParse('%Q')
       data.forEach(d => {

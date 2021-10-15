@@ -91,10 +91,7 @@
               :key="'vue-' + index"
             >
               <v-col>
-                <vue-graph-by-name
-                  :graph-name="graphName"
-                  :values="[44, 8, 15, 16, 23, 42]"
-                />
+                <vue-graph-by-name :graph-name="graphName" :values="items" />
               </v-col>
             </v-row>
             <v-row v-if="showTable">
@@ -168,15 +165,12 @@ export default {
       return this.headers.length !== 0 && this.defaultViewElements.showTable
     },
     vizNames() {
-      if (!this.query) {
-        return []
-      }
       let vizNames
       if (this.defaultViewElements) {
         vizNames = this.defaultViewElements?.visualizations || []
       } else {
         vizNames = this.exampleVisualizations
-          .filter(v => v.query === this.query.name)
+          .filter(v => v.query === this.query?.name)
           .map(v => v.vega)
       }
       return vizNames
