@@ -2,6 +2,10 @@
   <div>
     <h2>{{ section.title }}</h2>
 
+    <p>
+      {{ section.description }}
+    </p>
+
     <v-radio-group
       v-if="section.type === 'radio'"
       v-model="selected"

@@ -19,13 +19,19 @@
   "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
   "consent": [
     {
+      "title": "Introduction",
+      "description": "Filling this form will generate an encrypted ZIP file that the people in charge of this project can use to reproduce your results."
+    },
+    {
       "title": "Scope of the report",
+      "description": "To whom the report will be made available.",
       "type": "radio",
       "options": ["Share only with Paul-Olivier and Alex", "Share publicly"],
       "selected": "Share only with Paul-Olivier and Alex"
     },
     {
-      "title": "Specific information that can be included in the report",
+      "title": "Specific information",
+      "description": "Check these boxes if you agree to include this information to the report.",
       "type": "checkbox",
       "options": ["Your affiliation", "Your age range", "Your motivations for using our service"],
       "selected": []
