@@ -11,7 +11,7 @@
       "visualizations": ["TrackerGraph.vue"],
       "showTable": true,
       "title": "Tracker control experience",
-      "text": "Tracker control experience"
+      "text": "Monitor below all the tracking done on your smartphone applications. You can filter the results by selecting a time range or clicking on each graph."
     }
   ]
 }

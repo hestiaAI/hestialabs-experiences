@@ -1,17 +1,18 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="9">
+      <v-col cols="12" md="9">
         <v-row>
           <v-col cols="12">
             <div id="volume-chart">
               <strong>Number of tracking over time</strong>
-              <span class="reset" style="display: none">
-                range:
-                <span class="filter"></span>
-              </span>
               <a class="reset" style="display: none">reset</a>
-              <div class="clearfix"></div>
+              <p class="filters">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
             </div>
 
             <div id="range-chart">
@@ -22,27 +23,42 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="7">
+          <v-col cols="12" md="6">
             <div id="category-chart">
               <strong>Purposes of tracking</strong>
               <a class="reset" style="display: none">reset</a>
-              <div class="clearfix"></div>
+              <p class="filters">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
             </div>
           </v-col>
-          <v-col cols="5">
+          <v-col cols="12" md="6">
             <div id="app-chart">
               <strong>Applications that use trackers</strong>
               <a class="reset" style="display: none">reset</a>
-              <div class="clearfix"></div>
+              <p class="filters">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
             </div>
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="3">
+      <v-col cols="12" md="3">
         <div id="advertiser-chart">
           <strong>Companies behind tracking</strong>
           <a class="reset" style="display: none">reset</a>
-          <div class="clearfix"></div>
+          <p class="filters">
+            <span>
+              Current filter:
+              <span class="filter"></span>
+            </span>
+          </p>
         </div>
       </v-col>
     </v-row>
@@ -158,7 +174,7 @@ export default {
         .elasticX(false)
         .elasticY(true)
         .xyTipsOn(true)
-        .mouseZoomable(false)
+        .mouseZoomable(true)
         .rangeChart(rangeChart)
         .renderHorizontalGridLines(false)
         // .dashStyle([3,1,1,1])
@@ -243,12 +259,11 @@ export default {
         })
       })
       // Render advertiser row chart
-      const topK = 10
       width = d3
         .select('#advertiser-chart')
         .node()
         .getBoundingClientRect().width
-      height = 600
+      height = 625
       advertiserChart
         .width(width)
         .height(height)
@@ -257,7 +272,7 @@ export default {
         .dimension(advertiserDimension)
         .ordinalColors(['#58539E', '#847CEB', '#605BAB', '#4A4685', '#35325E'])
         .label(d => d.key)
-        .data(group => group.top(topK))
+        .data(group => group.top(20))
         // .labelOffsetX(0)
         .title(d => d.value)
         .elasticX(true)
@@ -275,7 +290,7 @@ export default {
         .dimension(appDimension)
         .ordinalColors(['#58539E', '#847CEB', '#605BAB', '#4A4685', '#35325E'])
         .label(d => d.key)
-        .data(group => group.top(topK))
+        .data(group => group.top(10))
         // .labelOffsetX(0)
         .title(d => d.value)
         .elasticX(true)
@@ -303,7 +318,17 @@ body {
 #range-chart g.y {
   display: none;
 }
+
 .reset {
   margin-left: 1rem;
+}
+
+.v-application a.reset {
+  color: rgb(85, 3, 30);
+}
+
+p.filters {
+  font-size: 0.8rem;
+  font-style: italic;
 }
 </style>
