@@ -65,9 +65,12 @@ export default {
     }
   },
   mounted() {
-    // const values = [44, 8, 15, 16, 23, 42]
+    // another chart should be using this.values
+    // but let's ignore it so we can use this one
+    // anywhere regardless of the input
+    const values = [44, 8, 15, 16, 23, 42]
     const chart = barChart().height(200).width(this.$refs.graph.clientWidth)
-    d3.select(this.$refs.graph).datum(this.values).call(chart)
+    d3.select(this.$refs.graph).datum(values).call(chart)
   }
 }
 </script>
