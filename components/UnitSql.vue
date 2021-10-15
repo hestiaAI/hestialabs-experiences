@@ -21,8 +21,8 @@
 </template>
 
 <script>
+import * as csv from '@fast-csv/parse'
 import { processError } from '@/utils/utils'
-import { csvToItems } from '@/utils/sql'
 
 export default {
   props: {
@@ -48,10 +48,16 @@ export default {
   methods: {
     async runQuery() {
       try {
+        const { headers, items } = await new Promise(resolve => {
+          const items = []
+          csv
+            .parseString(this.data, { headers: true })
+            .on('data', row => items.push(row))
+            .on('end', () => resolve({ headers: Object.keys(items[0]), items }))
+        })
         this.message = ''
         this.error = false
         this.progress = true
-        const [headers, items] = await csvToItems(this.data)
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)

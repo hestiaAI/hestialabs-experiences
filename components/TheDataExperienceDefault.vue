@@ -35,18 +35,26 @@
               selectedExample,
               queryShortcut
             }"
+            @update="onQueryUpdate"
           />
           <unit-query
             v-else
             v-bind="{
-              query: queries[index],
               selectedExample,
               rdf,
               visualizations,
               defaultViewElements,
+              query: queries[index],
+              i: index,
               queryShortcut
             }"
+            @update="onQueryUpdate"
           />
+        </v-col>
+      </v-row>
+      <v-row v-if="$store.state.config.consent">
+        <v-col cols="6 mx-auto">
+          <unit-consent-form v-bind="{ allItems, allHeaders, defaultView }" />
         </v-col>
       </v-row>
     </template>
@@ -82,6 +90,8 @@ export default {
       message: '',
       rml: '',
       rdf: '',
+      allItems: null,
+      allHeaders: null,
       data: ''
     }
   },
@@ -90,9 +100,6 @@ export default {
       return this.defaultView.map(o =>
         this.selectedExample.sparql.find(s => s.name === o.query)
       )
-      // return this.selectedExample.sparql.filter(s =>
-      //   Object.keys(this.defaultView).includes(s.name)
-      // )
     }
   },
   watch: {
@@ -101,6 +108,19 @@ export default {
       async handler(selectedExample) {
         // this should be quick ...
         this.rml = await parseYarrrml(selectedExample.yarrrml)
+      }
+    },
+    allItems: {
+      immediate: true,
+      handler(allItems) {
+        if (!allItems) {
+          this.allItems = Object.fromEntries(
+            Object.keys(this.defaultView).map((x, i) => [i, ''])
+          )
+          this.allHeaders = Object.fromEntries(
+            Object.keys(this.defaultView).map((x, i) => [i, ''])
+          )
+        }
       }
     }
   },
@@ -157,6 +177,10 @@ export default {
           this.progress = false
         }
       }
+    },
+    onQueryUpdate({ i, headers, items }) {
+      this.allHeaders[i] = JSON.stringify(headers)
+      this.allItems[i] = JSON.stringify(items)
     }
   }
 }

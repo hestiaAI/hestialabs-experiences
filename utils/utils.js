@@ -11,11 +11,12 @@ export const mimeTypes = {
   yml: 'application/x-yaml',
   png: 'image/png',
   jpeg: 'image/jpeg',
+  zip: 'application/zip',
   [defaultExtension]: 'text/plain;charset=UTF-8'
 }
 
-export function createObjectURL(text, type = 'text/plain') {
-  return window.URL.createObjectURL(new Blob([text], { type }))
+export function createObjectURL(data, type = 'text/plain') {
+  return window.URL.createObjectURL(new Blob([data], { type }))
 }
 
 export function revokeObjectURL(objectURL) {
