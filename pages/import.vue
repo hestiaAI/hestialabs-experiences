@@ -55,9 +55,9 @@
         <v-card-title class="justify-center">Consent Log</v-card-title>
         <v-card-text>
           <unit-consent-form-section
-            v-for="(section, name, index) in consent"
+            v-for="(section, index) in consent"
             :key="`section-${index}`"
-            v-bind="{ section, name, index, readonly: true }"
+            v-bind="{ section, index, readonly: true }"
           />
         </v-card-text>
       </v-card>
@@ -76,6 +76,14 @@
               :values="allProcessedItems[i][j]"
               :div-id="`viz-${result.query}-${specFile.name}`"
             />
+          </v-col>
+        </v-row>
+        <v-row
+          v-for="(graphName, index) in allVueGraphNames[i]"
+          :key="`viz-${i}-${index}`"
+        >
+          <v-col>
+            <vue-graph-by-name :graph-name="graphName" :values="allItems[i]" />
           </v-col>
         </v-row>
         <v-row>
@@ -130,6 +138,14 @@ export default {
       return this.results.map(r =>
         this.example.vega.filter(s => r.visualizations.includes(s.name))
       )
+    },
+    allVueGraphNames() {
+      return this.results.map(r =>
+        r.visualizations.filter(n => n.endsWith('.vue'))
+      )
+    },
+    allItems() {
+      return this.results.map(r => r.items)
     },
     allProcessedItems() {
       // For each block

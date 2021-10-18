@@ -1,4 +1,6 @@
 {
   "experiences": ["tracker-control"],
-  "saveFiles": false
+  "hashtags": ["dataprivacy", "hestialabs", "digipower"],
+  "saveFiles": false,
+  "publicKey": "710decd4e26312d3e7b02854fefe53cc1ef8d7b25e8f99bc6df956c1a526e144"
 }

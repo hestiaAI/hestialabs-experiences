@@ -43,7 +43,8 @@ The file `config/config.json` contains parameters that can be changed for each d
   /**
     * The content of the consent form. Each section has:
     * - A title
-    * - A type (Either 'radio' or 'checkbox')
+    * - A description
+    * - A type (Either 'radio' or 'checkbox' or nothing)
     * - An array of options
     * - A pre-selected answer (or an array of pre-selected answers in the case of checkboxes).
     *   Use an empty string or empty array for no pre-selection.
@@ -52,12 +53,18 @@ The file `config/config.json` contains parameters that can be changed for each d
   "consent": [
     {
       "title": "Interesting title 1",
+      "description": "Lorem ipsum"
+    },
+    {
+      "title": "Interesting title 2",
+      "description": "Lorem ipsum",
       "type": "radio",
       "options": ["A", "B", "C"],
       "selected": "A"
     },
     {
-      "title": "Interesting title 2",
+      "title": "Interesting title 3",
+      "description": "Lorem ipsum",
       "type": "checkbox",
       "options": ["A", "B", "C"],
       "selected": []
