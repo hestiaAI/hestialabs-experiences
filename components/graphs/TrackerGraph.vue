@@ -342,7 +342,6 @@ export default {
         .on('pretransition', (chart, filter) => {
           this.results = dayDimension.top(all.value())
           d3.select('#dc-data-count a.reset').on('click', function () {
-            console.log('test')
             dc.filterAll()
             dc.renderAll()
           })

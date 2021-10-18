@@ -34,6 +34,13 @@
   "defaultView": [
     {
       "query": "advertisers-per-day",
+      "visualizations": ["TwitterOverview.vue"],
+      "showTable": false,
+      "title": "Title",
+      "text": "Description"
+    },
+    {
+      "query": "advertisers-per-day",
       "visualizations": ["top-k-advertisers"],
       "showTable": false,
       "title": "Top advertisers",
