@@ -5,17 +5,10 @@
     </template>
 
     <template v-else>
-      <v-row>
-        <v-col align="center">
-          <base-button
-            v-bind="{ progress, status, error, disabled }"
-            text="Run"
-            icon="mdiStepForward"
-            class="ma-sm-2"
-            @click="runQuery"
-          />
-        </v-col>
-      </v-row>
+      <div v-if="progress" align="center">
+        <base-progress-circular class="mr-2" />
+        <span>Processing...</span>
+      </div>
     </template>
   </div>
 </template>
@@ -45,8 +38,19 @@ export default {
       return !this.data
     }
   },
+  watch: {
+    data: {
+      immediate: true,
+      handler(data) {
+        this.runQuery()
+      }
+    }
+  },
   methods: {
     async runQuery() {
+      this.message = ''
+      this.error = false
+      this.progress = true
       try {
         const { headers, items } = await new Promise(resolve => {
           const items = []
@@ -55,9 +59,6 @@ export default {
             .on('data', row => items.push(row))
             .on('end', () => resolve({ headers: Object.keys(items[0]), items }))
         })
-        this.message = ''
-        this.error = false
-        this.progress = true
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)
