@@ -62,6 +62,16 @@
         </div>
       </v-col>
     </v-row>
+    <v-row>
+      <div id="#dc-data-count" class="dc-data-count">
+        <span class="filter-count"></span>
+        selected out of
+        <span class="total-count"></span>
+        records |
+        <a class="reset">Reset All</a>
+      </div>
+    </v-row>
+    <unit-query-results v-bind="{ headers: header, items: results }" />
   </v-container>
 </template>
 
@@ -81,6 +91,20 @@ export default {
       default: () => []
     }
   },
+  data() {
+    return {
+      header: [
+        { text: 'App', value: 'App' },
+        { text: 'Uid', value: 'uid' },
+        { text: 'More Info', value: 'Package' },
+        { text: 'Date', value: 'dateStr' },
+        { text: 'Tracker', value: 'Tracker' },
+        { text: 'daddr', value: 'daddr' },
+        { text: 'Category', value: 'Category' }
+      ],
+      results: []
+    }
+  },
   mounted() {
     this.drawViz()
   },
@@ -92,6 +116,7 @@ export default {
       const categoryChart = new dc.PieChart('#category-chart')
       const advertiserChart = new dc.RowChart('#advertiser-chart')
       const appChart = new dc.RowChart('#app-chart')
+      const tableCount = new dc.DataCount('.dc-data-count')
 
       // Bind reset filters links
       d3.select('#volume-chart a.reset').on('click', function () {
@@ -111,18 +136,30 @@ export default {
         appChart.filterAll()
         dc.redrawAll()
       })
+      d3.select('#dc-data-count a.reset').on('click', function () {
+        console.log('test')
+        // dc.filterAll()
+        // dc.renderAll()
+      })
 
       // Format data to correct types
       const dateFormatParser = d3.timeParse('%Q')
+      const formatTime = d3.timeFormat('%B %d, %Y')
       this.values.forEach(d => {
         d.date = dateFormatParser(d.time)
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
+        d.Package =
+          'https://reports.exodus-privacy.eu.org/en/reports/' +
+          d.Package +
+          '/latest/'
+        d.dateStr = formatTime(d.day)
         d.Category = d.Category === '' ? 'Unknown' : d.Category
         d.App = d.App === '' ? 'Unknown' : d.App
         d.Tracker = d.Tracker === '' ? 'Unknown' : d.Tracker
       })
 
       const ndx = crossfilter(this.values)
+      const all = ndx.groupAll()
 
       // Create dimensions
       const dayDimension = ndx.dimension(d => d.day)
@@ -297,6 +334,20 @@ export default {
         .xAxis()
         .ticks(4)
 
+      // Render counter and table
+      tableCount
+        .crossfilter(ndx)
+        .groupAll(all)
+        .html({
+          some:
+            '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
+            " | <a href='javascript:dc.filterAll(); dc.renderAll();'>Reset All</a>",
+          all: 'All records selected. Please click on the graph to apply filters.'
+        })
+        .on(
+          'pretransition',
+          (chart, filter) => (this.results = dayDimension.top(all.value()))
+        )
       dc.renderAll()
     }
   }
