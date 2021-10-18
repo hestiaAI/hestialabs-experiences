@@ -80,7 +80,7 @@ export default {
     onUnitRmlUpdate({ rml = '', error }) {
       this.rml = rml
     },
-    onUnitFilesUpdate({ inputFilesRocketRML: i, error }) {
+    onUnitFilesUpdate({ inputFiles: i, error }) {
       this.inputFiles = i
     },
     onUnitRdfUpdate({ rdf = '', toRDF = this.toRDF, error }) {

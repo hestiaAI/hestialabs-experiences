@@ -13,7 +13,7 @@
             v-else
             v-bind="{ rdf, selectedExample, query }"
             class="mr-lg-6"
-            @update="onUnitSparqlUpdate"
+            @update="onUnitResultsUpdate"
             @change="onChangeSelector"
           />
         </v-col>
