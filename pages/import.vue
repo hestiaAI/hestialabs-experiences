@@ -78,6 +78,14 @@
             />
           </v-col>
         </v-row>
+        <v-row
+          v-for="(graphName, index) in allVueGraphNames[i]"
+          :key="`viz-${i}-${index}`"
+        >
+          <v-col>
+            <vue-graph-by-name :graph-name="graphName" :values="allItems[i]" />
+          </v-col>
+        </v-row>
         <v-row>
           <v-col>
             <unit-query-results
@@ -130,6 +138,14 @@ export default {
       return this.results.map(r =>
         this.example.vega.filter(s => r.visualizations.includes(s.name))
       )
+    },
+    allVueGraphNames() {
+      return this.results.map(r =>
+        r.visualizations.filter(n => n.endsWith('.vue'))
+      )
+    },
+    allItems() {
+      return this.results.map(r => r.items)
     },
     allProcessedItems() {
       // For each block
