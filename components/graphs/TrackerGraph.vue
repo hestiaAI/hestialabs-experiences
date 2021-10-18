@@ -63,7 +63,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <div id="#dc-data-count" class="dc-data-count">
+      <div id="dc-data-count" class="dc-data-count">
         <span class="filter-count"></span>
         selected out of
         <span class="total-count"></span>
@@ -135,11 +135,6 @@ export default {
       d3.select('#app-chart a.reset').on('click', function () {
         appChart.filterAll()
         dc.redrawAll()
-      })
-      d3.select('#dc-data-count a.reset').on('click', function () {
-        console.log('test')
-        // dc.filterAll()
-        // dc.renderAll()
       })
 
       // Format data to correct types
@@ -341,13 +336,17 @@ export default {
         .html({
           some:
             '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
-            " | <a href='javascript:dc.filterAll(); dc.renderAll();'>Reset All</a>",
+            " | <a class='reset'>Reset All</a>",
           all: 'All records selected. Please click on the graph to apply filters.'
         })
-        .on(
-          'pretransition',
-          (chart, filter) => (this.results = dayDimension.top(all.value()))
-        )
+        .on('pretransition', (chart, filter) => {
+          this.results = dayDimension.top(all.value())
+          d3.select('#dc-data-count a.reset').on('click', function () {
+            console.log('test')
+            dc.filterAll()
+            dc.renderAll()
+          })
+        })
       dc.renderAll()
     }
   }
