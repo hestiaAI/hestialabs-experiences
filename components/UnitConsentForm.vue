@@ -62,7 +62,8 @@ export default {
       includedResults: [],
       zipFile: [],
       encryptedZipFile: [],
-      success: false
+      success: false,
+      sent: true
     }
   },
   methods: {
@@ -109,7 +110,16 @@ export default {
       this.success = true
     },
     sendForm() {
-      throw new Error('not implemented')
+      const formData = new FormData()
+      formData.append('form-name', this.formName)
+      const zipBlob = new Blob([this.encryptedZipFile], 'application/zip')
+      formData.append('file', zipBlob)
+      fetch('/', {
+        method: 'POST',
+        body: formData
+      })
+        .then(() => (this.sent = true))
+        .catch(error => console.error(error))
     },
     updateConsent({ index, selected }) {
       this.consent[index].selected = selected
