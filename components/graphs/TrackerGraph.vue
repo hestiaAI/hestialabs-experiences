@@ -96,7 +96,7 @@ export default {
       header: [
         { text: 'App', value: 'App' },
         { text: 'Uid', value: 'uid' },
-        { text: 'More Info', value: 'Package' },
+        { text: 'More Info', value: 'url' },
         { text: 'Date', value: 'dateStr' },
         { text: 'Tracker', value: 'Tracker' },
         { text: 'daddr', value: 'daddr' },
@@ -148,7 +148,7 @@ export default {
       this.values.forEach(d => {
         d.date = dateFormatParser(d.time)
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
-        d.Package =
+        d.url =
           'https://reports.exodus-privacy.eu.org/en/reports/' +
           d.Package +
           '/latest/'

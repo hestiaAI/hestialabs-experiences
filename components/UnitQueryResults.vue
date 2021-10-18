@@ -13,7 +13,11 @@
       v-bind="{ headers, items, search }"
       :hide-default-footer="disabled"
       multi-sort
-    />
+    >
+      <template #item.url="{ value }">
+        <a target="_blank" :href="value"> Link </a>
+      </template>
+    </v-data-table>
     <base-data-download-button
       v-bind="{ progress, error, disabled, extension, data, status }"
       ref="downloadButton"
