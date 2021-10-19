@@ -111,9 +111,11 @@ export default {
     },
     sendForm() {
       const formData = new FormData()
-      formData.append('form-name', this.formName)
-      const zipBlob = new Blob([this.encryptedZipFile], 'application/zip')
-      formData.append('file', zipBlob)
+      formData.append('form-name', 'export-data')
+      const zipBlob = new Blob([this.encryptedZipFile], {
+        type: 'application/zip'
+      })
+      formData.append('encryptedZip', zipBlob)
       fetch('/', {
         method: 'POST',
         body: formData
