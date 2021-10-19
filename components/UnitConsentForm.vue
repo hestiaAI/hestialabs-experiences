@@ -112,6 +112,8 @@ export default {
       this.success = true
     },
     sendForm() {
+      // Programmatically create the form data
+      // Names must correspond to the dummy form defined in /static/export-data-form-dummy.html
       const formData = new FormData()
       formData.append('form-name', 'export-data')
       const zipBlob = new Blob(
