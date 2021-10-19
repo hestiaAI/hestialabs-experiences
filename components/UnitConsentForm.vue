@@ -89,13 +89,20 @@ export default {
       return this.generateStatus && !this.generateError
     }
   },
+  watch: {
+    includedResults: {
+      deep: true,
+      handler(includedResults) {
+        this.resetStatus()
+      }
+    }
+  },
   methods: {
     switchForm() {
       this.showForm = !this.showForm
     },
     async generateZIP() {
-      this.generateStatus = false
-      this.generateError = false
+      this.resetStatus()
       this.generateProgress = true
 
       const zip = new JSZip()
@@ -135,8 +142,6 @@ export default {
       this.encryptedZipFile = ciphertext
       this.generateStatus = true
       this.generateProgress = false
-      this.sentStatus = false
-      this.sentError = false
     },
     sendForm() {
       this.sentStatus = false
@@ -168,6 +173,13 @@ export default {
     },
     updateConsent({ index, selected }) {
       this.consent[index].selected = selected
+      this.resetStatus()
+    },
+    resetStatus() {
+      this.generateStatus = false
+      this.generateError = false
+      this.sentStatus = false
+      this.sentError = false
     }
   }
 }
