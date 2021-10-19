@@ -1,45 +1,39 @@
 <template>
-  <div>
-    <v-form>
-      <v-card class="pa-2 my-6">
-        <v-card-title class="justify-center">Export Results</v-card-title>
-        <v-card-text>
-          <unit-consent-form-section
-            v-for="(section, index) in $store.state.config.consent"
-            :key="`section-${index}`"
-            v-bind="{ section, index }"
-            @change="updateConsent"
-          />
-          <h2 class="mb-2 mt-2">Results to include</h2>
-          <v-checkbox
-            v-for="(items, index) in allItems"
-            :key="`data-${index}`"
-            v-model="includedResults"
-            :dense="true"
-            :disabled="items.length === 0"
-            :label="defaultView[index].title"
-            :value="index"
-          ></v-checkbox>
-          <base-button text="Generate ZIP" @click="generateZIP" />
-          <base-data-download-button
-            :data="encryptedZipFile"
-            extension="zip"
-            text="Download encrypted"
-            :disabled="!success"
-          />
-          <base-button
-            text="Send encrypted"
-            :disabled="!success"
-            @click="sendForm"
-          />
-        </v-card-text>
-      </v-card>
-    </v-form>
-    <!-- Dummy form for netlify -->
-    <form name="export-data" data-netlify="true" hidden>
-      <input type="file" name="encrypted-zip" />
-    </form>
-  </div>
+  <v-form>
+    <v-card class="pa-2 my-6">
+      <v-card-title class="justify-center">Export Results</v-card-title>
+      <v-card-text>
+        <unit-consent-form-section
+          v-for="(section, index) in $store.state.config.consent"
+          :key="`section-${index}`"
+          v-bind="{ section, index }"
+          @change="updateConsent"
+        />
+        <h2 class="mb-2 mt-2">Results to include</h2>
+        <v-checkbox
+          v-for="(items, index) in allItems"
+          :key="`data-${index}`"
+          v-model="includedResults"
+          :dense="true"
+          :disabled="items.length === 0"
+          :label="defaultView[index].title"
+          :value="index"
+        ></v-checkbox>
+        <base-button text="Generate ZIP" @click="generateZIP" />
+        <base-data-download-button
+          :data="encryptedZipFile"
+          extension="zip"
+          text="Download encrypted"
+          :disabled="!success"
+        />
+        <base-button
+          text="Send encrypted"
+          :disabled="!success"
+          @click="sendForm"
+        />
+      </v-card-text>
+    </v-card>
+  </v-form>
 </template>
 
 <script>
