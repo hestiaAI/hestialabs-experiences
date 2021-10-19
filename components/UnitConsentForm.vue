@@ -36,8 +36,8 @@
       </v-card>
     </v-form>
     <!-- Dummy form for netlify -->
-    <form :name="formName" data-netlify="true" hidden>
-      <input type="file" :name="inputName" />
+    <form name="export-data" data-netlify="true" hidden>
+      <input type="file" name="encrypted-zip" />
     </form>
   </div>
 </template>
@@ -70,9 +70,7 @@ export default {
       encryptedZipFile: [],
       success: false,
       sent: true,
-      timestamp: 0,
-      formName: 'export-data',
-      inputName: 'encrypted-zip'
+      timestamp: 0
     }
   },
   methods: {
@@ -127,7 +125,7 @@ export default {
         { type: 'application/zip' },
         `exported-data-${this.timestamp}.zip`
       )
-      formData.append(this.inputName, zipBlob)
+      formData.append('encrypted-zip', zipBlob)
       fetch('/', {
         method: 'POST',
         body: formData
