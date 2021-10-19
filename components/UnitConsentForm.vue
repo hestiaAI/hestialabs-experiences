@@ -19,18 +19,31 @@
           :label="defaultView[index].title"
           :value="index"
         ></v-checkbox>
-        <base-button text="Generate ZIP" @click="generateZIP" />
+        <base-button
+          text="Generate ZIP"
+          :status="generateStatus"
+          :error="generateError"
+          :progress="generateProgress"
+          @click="generateZIP"
+        />
         <base-data-download-button
           :data="encryptedZipFile"
           extension="zip"
           text="Download encrypted"
-          :disabled="!success"
+          :disabled="!zipReady"
         />
         <base-button
           text="Send encrypted"
-          :disabled="!success"
+          :status="sentStatus"
+          :error="sentError"
+          :progress="sentProgress"
+          :disabled="!zipReady || (sentStatus && !sentError)"
           @click="sendForm"
         />
+        <p v-if="sentError">
+          Sending failed. Please download the file and send it by email.
+        </p>
+        <p v-if="sentStatus && !sentError">Form successfully submitted.</p>
       </v-card-text>
     </v-card>
   </v-form>
@@ -62,9 +75,18 @@ export default {
       includedResults: [],
       zipFile: [],
       encryptedZipFile: [],
-      success: false,
-      sent: true,
+      generateStatus: false,
+      generateError: false,
+      generateProgress: false,
+      sentStatus: false,
+      sentError: false,
+      sentProgress: false,
       timestamp: 0
+    }
+  },
+  computed: {
+    zipReady() {
+      return this.generateStatus && !this.generateError
     }
   },
   methods: {
@@ -72,7 +94,9 @@ export default {
       this.showForm = !this.showForm
     },
     async generateZIP() {
-      this.success = false
+      this.generateStatus = false
+      this.generateError = false
+      this.generateProgress = true
 
       const zip = new JSZip()
 
@@ -109,9 +133,16 @@ export default {
       )
 
       this.encryptedZipFile = ciphertext
-      this.success = true
+      this.generateStatus = true
+      this.generateProgress = false
+      this.sentStatus = false
+      this.sentError = false
     },
     sendForm() {
+      this.sentStatus = false
+      this.sentError = false
+      this.sentProgress = true
+
       // Programmatically create the form data
       // Names must correspond to the dummy form defined in /static/export-data-form-dummy.html
       const formData = new FormData()
@@ -126,8 +157,14 @@ export default {
         method: 'POST',
         body: formData
       })
-        .then(() => (this.sent = true))
-        .catch(error => console.error(error))
+        .then(() => {
+          this.sentStatus = true
+          this.sentProgress = false
+        })
+        .catch(error => {
+          console.error(error)
+          this.sentError = true
+        })
     },
     updateConsent({ index, selected }) {
       this.consent[index].selected = selected
