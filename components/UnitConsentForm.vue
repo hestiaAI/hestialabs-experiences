@@ -63,7 +63,8 @@ export default {
       zipFile: [],
       encryptedZipFile: [],
       success: false,
-      sent: true
+      sent: true,
+      timestamp: null
     }
   },
   methods: {
@@ -77,9 +78,10 @@ export default {
 
       // Add info about the experience
       const manifest = this.$store.getters.manifest(this.$route)
+      this.timestamp = Date.now()
       const experience = {
         key: manifest.key,
-        timestamp: Date.now()
+        timestamp: this.timestamp
       }
       zip.file('experience.json', JSON.stringify(experience))
 
@@ -112,9 +114,11 @@ export default {
     sendForm() {
       const formData = new FormData()
       formData.append('form-name', 'export-data')
-      const zipBlob = new Blob([this.encryptedZipFile], {
-        type: 'application/zip'
-      })
+      const zipBlob = new Blob(
+        [this.encryptedZipFile],
+        { type: 'application/zip' },
+        `exported-data-${this.timestamp}.zip`
+      )
       formData.append('encryptedZip', zipBlob)
       fetch('/', {
         method: 'POST',
