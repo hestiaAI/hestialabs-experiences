@@ -121,9 +121,7 @@ export default {
         // because we may need to wait for the config
         // Is there a better way to do this?
 
-        // $nuxt.error is apparently an undocumented feature.
-        // that works only on the client side
-        // https://github.com/nuxt/nuxt.js/issues/555
+        // https://nuxtjs.org/docs/internals-glossary/context#error
         this.$nuxt.error({ statusCode: 404 })
       }
     }
