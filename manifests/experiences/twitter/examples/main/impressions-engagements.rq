@@ -3,23 +3,10 @@ PREFIX h: <http://hestia.ai/>
 SELECT ?tweet_id ?companyName ?engagement ?date ?targetingType ?targetingValue WHERE
 {
   ?criterion a h:Criterion .
+  ?criterion h:tweetId ?tweet_id .
+  ?criterion h:advertiserName ?companyName .
+  ?criterion h:engagement ?engagement .
+  ?criterion h:impressionTime ?date .
   ?criterion h:targetingType ?targetingType .
   ?criterion h:targetingValue ?targetingValue .
-  { 
-    ?criterion h:engagement ?eng .
-    ?eng a h:Engagement .
-    ?eng h:tweetId ?tweet_id .
-    ?eng h:advertiserName ?companyName .
-    ?eng h:engagement ?engagement .
-    ?eng h:impressionTime ?date .
-  }
-  UNION 
-  {
-    ?criterion h:impression ?imp .
-    ?imp a h:Impression .
-    ?imp h:tweetId ?tweet_id .
-    ?imp h:advertiserName ?companyName .
-    ?imp h:engagement ?engagement .
-    ?imp h:impressionTime ?date .
-  }
 }

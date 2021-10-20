@@ -7,10 +7,6 @@ sources:
     access: data/ad-impressions.js
     referenceFormulation: jsonpath
     iterator: $.*.ad.adsUserData.adImpressions.impressions[*]
-  eng-impressions:
-    access: data/ad-engagements.js
-    referenceFormulation: jsonpath
-    iterator: $.*.ad.adsUserData.adEngagements.engagements[*].impressionAttributes
   imp-criteria:
     access: data/ad-impressions.js
     referenceFormulation: jsonpath
@@ -28,19 +24,12 @@ mappings:
     po:
       - [a, h:Impression]
       - [h:advertiserName, $(advertiserInfo.advertiserName)]
-      - [h:tweetId, $(promotedTweetInfo.tweetId)]
-      - [h:impressionTime, $(impressionTime)]
-      - [h:engagement, 'false', xsd:boolean]
-  engagement:
-    sources:
-      - eng-impressions
-    s: h:Engagement/$(advertiserInfo.screenName)/$(impressionTime)
-    po:
-      - [a, h:Engagement]
-      - [h:advertiserName, $(advertiserInfo.advertiserName)]
-      - [h:tweetId, $(promotedTweetInfo.tweetId)]
-      - [h:impressionTime, $(impressionTime)]
-      - [h:engagement, 'true', xsd:boolean]
+      - p: h:impressionTime
+        o:
+          function: ex:dateTimeAddTimeChar
+          parameters:
+            - [ex:input, $(impressionTime)]
+          datatype: xsd:dateTime
   imp-criterion:
     sources:
       - imp-criteria
@@ -49,18 +38,10 @@ mappings:
       - [a, h:Criterion]
       - [h:targetingType, $(targetingType)]
       - [h:targetingValue, $(targetingValue)]
-      - p: h:impression
-        o:
-          mapping: impression
-          condition:
-            - function: equal
-              parameters:
-                - [str1, $(^^.advertiserInfo.screenName), s]
-                - [str2, $(advertiserInfo.screenName), o]
-            - function: equal
-              parameters:
-                - [str1, $(^^.impressionTime), s]
-                - [str2, $(impressionTime), o]
+      - [h:advertiserName, $(^^.advertiserInfo.advertiserName)]
+      - [h:tweetId, $(^^.promotedTweetInfo.tweetId)]
+      - [h:impressionTime, $(^^.impressionTime)]
+      - [h:engagement, 'false', xsd:boolean]
   eng-criterion:
     sources:
       - eng-criteria
@@ -69,15 +50,7 @@ mappings:
       - [a, h:Criterion]
       - [h:targetingType, $(targetingType)]
       - [h:targetingValue, $(targetingValue)]
-      - p: h:engagement
-        o:
-          mapping: engagement
-          condition:
-            - function: equal
-              parameters:
-                - [str1, $(^^.advertiserInfo.screenName), s]
-                - [str2, $(advertiserInfo.screenName), o]
-            - function: equal
-              parameters:
-                - [str1, $(^^.impressionTime), s]
-                - [str2, $(impressionTime), o]
+      - [h:advertiserName, $(^^.advertiserInfo.advertiserName)]
+      - [h:tweetId, $(^^.promotedTweetInfo.tweetId)]
+      - [h:impressionTime, $(^^.impressionTime)]
+      - [h:engagement, 'true', xsd:boolean]
