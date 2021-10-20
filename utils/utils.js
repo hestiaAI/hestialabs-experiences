@@ -1,3 +1,5 @@
+import { Parser } from 'n3'
+
 export const defaultExtension = 'txt'
 
 export const mimeTypes = {
@@ -39,4 +41,34 @@ export function processError(v) {
   }
 
   return v
+}
+
+export async function objectToArrayBuffer(obj) {
+  // Create ArrayBuffer (Transferable object)
+  // https://stackoverflow.com/a/55204517/8238129
+  // Transfer ArrayBuffer to main thread as transferable object
+  // --> zero-copy, much faster
+  const data = JSON.stringify(obj)
+  return await new Response(new Blob([data])).arrayBuffer()
+}
+
+export async function arrayBufferToObject(arrayBuffer) {
+  // Worker returns ArrayBuffer
+  // We create a Blob from it
+  // and then use Blob.text() that resolves with a string
+  const blob = new Blob([arrayBuffer])
+  const text = await blob.text()
+  return JSON.parse(text)
+}
+
+/**
+ * Converts an rdf string to N3 quads
+ * @param {String} rdf the input RDF data
+ * @param {String} format
+ * @returns {Array} N3 quads
+ */
+export function rdfToQuads(rdf, format = 'N3') {
+  const parser = new Parser({ format })
+  const quads = parser.parse(rdf)
+  return quads
 }

@@ -4,7 +4,7 @@
       <v-row>
         <v-col cols="12" lg="6">
           <unit-sparql
-            v-bind="{ rdf, selectedExample, query }"
+            v-bind="{ selectedExample, query, queryDisabled }"
             class="mr-lg-6"
             @update="onUnitSparqlUpdate"
             @change="onChangeSelector"
@@ -40,7 +40,7 @@
         <v-row>
           <v-col>
             <unit-sparql
-              v-bind="{ rdf, selectedExample, query }"
+              v-bind="{ selectedExample, query, queryDisabled }"
               class="mr-lg-6"
               @update="onUnitSparqlUpdate"
             />
@@ -91,10 +91,6 @@ export default {
       type: Object,
       required: true
     },
-    rdf: {
-      type: String,
-      required: true
-    },
     query: {
       type: Object,
       default: null
@@ -102,6 +98,10 @@ export default {
     defaultViewElements: {
       type: Object,
       default: null
+    },
+    queryDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

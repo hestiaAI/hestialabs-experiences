@@ -1,15 +1,13 @@
 import mapToRDF from '@/utils/map-to-rdf'
+import { objectToArrayBuffer } from '@/utils/utils'
 
 onmessage = async function ({ data: { toRDF = true, ...rest } }) {
   try {
+    // rdf is either in triples or JSON-LD
     const result = await mapToRDF({ toRDF, ...rest })
-    // We need to stringify JSON-LD before
-    const data = toRDF ? result : JSON.stringify(result)
-    // Create ArrayBuffer (Transferable object)
-    // https://stackoverflow.com/a/55204517/8238129
-    const buffer = await new Response(new Blob([data])).arrayBuffer()
-    // Transfer ArrayBuffer to main thread as transferable object
-    // --> zero-copy, much faster
+    // Need to stringify JSON-LD
+    const data = toRDF ? { rdf: result } : { jsonld: JSON.stringify(result) }
+    const buffer = await objectToArrayBuffer(data)
     postMessage(buffer, [buffer])
   } catch (error) {
     // RocketRML sometimes throws strings instead of Error objects.

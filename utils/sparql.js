@@ -1,55 +1,57 @@
 import { newEngine } from '@comunica/actor-init-sparql-rdfjs'
-import { Store, Parser } from 'n3'
-// import { LoggerPretty } from '@comunica/logger-pretty'
 import { translate } from 'sparqlalgebrajs'
+import { Store as N3Store } from 'n3'
 
-/**
- * Execute a SPARQL SELECT query
- * @param {String} rdf the input RDF data
- * @param {String} sparql the SELECT query
- * @returns the output data as bindings
- */
-async function selectBindings(rdf, sparql) {
-  const parser = new Parser({ format: 'N3' })
-  const quads = parser.parse(rdf)
-  const store = new Store(quads)
-  const myEngine = newEngine()
-  const result = await myEngine.query(sparql, {
-    sources: [store]
-    // log: new LoggerPretty({ level: 'debug' })
-  })
-  const bindings = await result.bindings()
-  return bindings
-}
+class Store {
+  constructor() {
+    this.engine = newEngine()
+    this.store = new N3Store()
+  }
 
-/**
- * Execute a SPARQL SELECT query
- * @param {String} rdf the input RDF data
- * @param {String} sparql the SELECT query
- * @returns the headers and items as an array: [headers, items]
- */
-export async function select(rdf, sparql) {
-  const bindings = await selectBindings(rdf, sparql)
-  // get all the variables
-  const { variables } = translate(sparql)
-  // headers are selected variable names name without the '?'
-  const headers = variables.map(v => v.value)
+  async replaceQuads(quads) {
+    this.store = await Promise.resolve(new N3Store(quads))
+  }
 
-  // Transform bindings to a list of objects having the headers as keys
-  const items = bindings.map(map =>
-    Object.fromEntries(
-      headers.map(header => {
-        // map.get(k) returns an N3 Term
-        // https://github.com/rdfjs/N3.js/blob/main/src/N3DataFactory.js
-        // if value is undefined, fallback to null
-        const { value = null } = map.get(`?${header}`)
-        return [header, value]
-      })
+  /**
+   * Execute a SPARQL query
+   * @param {String} query
+   * @returns {Object} results
+   */
+  async sparql(query) {
+    const result = await this.engine.query(query, {
+      sources: [this.store]
+    })
+    return result
+  }
+
+  /**
+   * Execute a SPARQL SELECT query
+   * @param {String} query the SPARQL query
+   * @returns {Object} headers and items
+   */
+  async select(query) {
+    const result = await this.sparql(query)
+    const bindings = await result.bindings()
+    const { variables: vars } = translate(query)
+
+    // headers are selected variable names name without the '?'
+    const headers = vars.map(v => v.value)
+    const variables = headers.map(v => `?${v}`)
+
+    // Transform bindings to a list of objects having the headers as keys
+    const items = bindings.map(map =>
+      Object.fromEntries(
+        variables.map((variable, index) => {
+          // map.get(k) returns an N3 Term
+          // https://github.com/rdfjs/N3.js/blob/main/src/N3DataFactory.js
+          // if value is undefined, fallback to null
+          const { value = null } = map.get(variable)
+          return [headers[index], value]
+        })
+      )
     )
-  )
-  return { headers, items }
+    return { headers, items }
+  }
 }
 
-export default {
-  select
-}
+export default new Store()

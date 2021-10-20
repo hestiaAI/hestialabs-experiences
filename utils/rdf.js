@@ -1,9 +1,8 @@
-import mapToRDF from '@/utils/map-to-rdf'
 import RDFWorker from '@/utils/rdf.worker.js'
+import { arrayBufferToObject, rdfToQuads } from '@/utils/utils'
+import quadstore from '@/utils/sparql'
 
-const noDataError = new Error('No data found')
-
-export async function generateRDF(
+export function generateRDF(
   handleData,
   handleError,
   handleEnd,
@@ -13,46 +12,33 @@ export async function generateRDF(
 ) {
   const start = new Date()
   const rocketRMLParams = { rml, inputFiles, toRDF }
-  if (window.Worker) {
-    const worker = new RDFWorker()
+  const worker = new RDFWorker()
 
-    worker.postMessage(rocketRMLParams)
+  worker.postMessage(rocketRMLParams)
 
-    worker.addEventListener('message', async ({ data }) => {
-      if (data instanceof Error) {
-        handleError(data)
-      } else {
-        // Worker returns ArrayBuffer
-        // We create a Blob from it
-        // and then use Blob.text() that resolves with a string
-        const blob = new Blob([data])
-        const text = await blob.text()
-        if (!text) {
-          handleError(noDataError)
-        } else {
-          const elapsed = new Date() - start
-          handleData({ data: text, elapsed })
-        }
-      }
-
-      handleEnd()
-    })
-  } else {
-    console.warn('Your browser does not support web workers.')
-    try {
-      const data = await mapToRDF(rocketRMLParams)
-      if (!data) {
-        handleError(noDataError)
-      } else {
-        const elapsed = new Date() - start
-        handleData({ data, elapsed })
-      }
-    } catch (error) {
-      handleError(error)
-    } finally {
-      handleEnd()
+  worker.addEventListener('message', async ({ data }) => {
+    if (data instanceof Error) {
+      return handleError(data)
     }
-  }
+
+    const { rdf, jsonld } = await arrayBufferToObject(data)
+
+    if (!rdf && !jsonld) {
+      return handleError(new Error('No data found'))
+    }
+
+    if (rdf) {
+      const quads = rdfToQuads(rdf)
+      await quadstore.replaceQuads(quads)
+    } else {
+      // json-ld
+      await quadstore.replaceQuads([])
+    }
+    const elapsed = new Date() - start
+    handleData({ rdf, jsonld, elapsed })
+
+    handleEnd()
+  })
 }
 
 export default {

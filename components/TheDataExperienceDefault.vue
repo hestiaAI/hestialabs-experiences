@@ -30,7 +30,6 @@
             :query="queries[index]"
             v-bind="{
               selectedExample,
-              rdf,
               visualizations,
               defaultViewElements
             }"
@@ -66,8 +65,7 @@ export default {
       error: false,
       success: false,
       message: '',
-      rml: '',
-      rdf: ''
+      rml: ''
     }
   },
   computed: {
@@ -96,8 +94,7 @@ export default {
       this.success = false
       this.progress = true
     },
-    handleRdfData({ data, elapsed }) {
-      this.rdf = data
+    handleRdfData({ elapsed }) {
       this.success = true
       this.message = `Successfully processed in ${elapsed / 1000} sec.`
     },
@@ -109,7 +106,7 @@ export default {
     handleRdfEnd() {
       this.progress = false
     },
-    async onUnitFilesUpdate({ inputFilesRocketRML, error }) {
+    onUnitFilesUpdate({ inputFilesRocketRML, error }) {
       this.initState()
       if (Object.keys(inputFilesRocketRML).length === 0) {
         this.error = true
@@ -123,7 +120,7 @@ export default {
         throw new Error('RML not ready')
       } else {
         try {
-          await rdfUtils.generateRDF(
+          rdfUtils.generateRDF(
             this.handleRdfData,
             this.handleRdfError,
             this.handleRdfEnd,
@@ -133,7 +130,7 @@ export default {
         } catch (error) {
           console.error(error)
           this.error = true
-          this.message = error instanceof Error ? error.message : error
+          this.message = error.message
           this.progress = false
         }
       }
