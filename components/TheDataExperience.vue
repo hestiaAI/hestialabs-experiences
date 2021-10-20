@@ -28,6 +28,7 @@ import { validExtensions } from '@/manifests/utils'
 // https://github.com/nuxt/components/issues/13#issuecomment-902590143
 const TheDataExperienceDefault = () =>
   import('@/components/TheDataExperienceDefault.vue')
+
 const TheDataExperiencePower = () =>
   import('@/components/TheDataExperiencePower.vue')
 
@@ -35,7 +36,11 @@ export default {
   props: {
     title: {
       type: String,
-      default: undefined
+      required: true
+    },
+    dataPortal: {
+      type: String,
+      default: ''
     },
     data: {
       type: Array,
@@ -75,6 +80,10 @@ export default {
     allowMissingFiles: {
       type: Boolean,
       default: false
+    },
+    queryShortcut: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -85,7 +94,14 @@ export default {
         .map(ext => `.${ext}`)
     },
     props() {
-      const propNames = ['title', 'examples', 'visualizations', 'defaultView']
+      const propNames = [
+        'title',
+        'dataPortal',
+        'examples',
+        'visualizations',
+        'defaultView',
+        'queryShortcut'
+      ]
       const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
       return props
     },

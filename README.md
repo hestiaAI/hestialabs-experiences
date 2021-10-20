@@ -23,24 +23,70 @@ For detailed explanation on how things work, check out the [documentation](https
 
 The file `config/config.json` contains parameters that can be changed for each deployment:
 
-- `experiences` (Array): the name of the experiences to display (as defined in `/manifests/experiences/`)
-- `saveFiles` (Boolean): Activate/deactivate the automatic local saving of data files, and show/hide the "cache" buttons
+```js
+{
+  /**
+    * The name of the experiences to display (as defined in `/manifests/experiences/`).
+    * @type Array
+    */
+  "experiences": ["facebook", "google", "twitter"],
+  /**
+    * Activate/deactivate the automatic local saving of data files, and show/hide the "cache" buttons.
+    * @type Boolean
+    */
+  "saveFiles": false,
+  /**
+    * The public key used to encrypt the zip containing the consent log and results.
+    * @type String
+    */
+  "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
+  /**
+    * The content of the consent form. Each section has:
+    * - A title
+    * - A description
+    * - A type (Either 'radio' or 'checkbox' or nothing)
+    * - An array of options
+    * - A pre-selected answer (or an array of pre-selected answers in the case of checkboxes).
+    *   Use an empty string or empty array for no pre-selection.
+    * @type Array
+    */
+  "consent": [
+    {
+      "title": "Interesting title 1",
+      "description": "Lorem ipsum"
+    },
+    {
+      "title": "Interesting title 2",
+      "description": "Lorem ipsum",
+      "type": "radio",
+      "options": ["A", "B", "C"],
+      "selected": "A"
+    },
+    {
+      "title": "Interesting title 3",
+      "description": "Lorem ipsum",
+      "type": "checkbox",
+      "options": ["A", "B", "C"],
+      "selected": []
+    },
+  ]
+}
+```
 
 If you want to use another configuration like `config/workshop.json` set the environment variable **CONFIG_NAME**
 
-
-``` bash
+```bash
 # for development
 $ CONFIG_NAME=workshop npm run dev
 ```
 
-
-``` bash
+```bash
 # for production
 CONFIG_NAME=workshop BASE_URL=experiences.hestialabs.org npm run build
 # launch server
 npm run start
 ```
+
 ## Special Directories
 
 You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.

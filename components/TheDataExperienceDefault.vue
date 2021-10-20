@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="12 mx-auto" sm="6">
-        <unit-introduction :company-name="title" />
+        <unit-introduction :company-name="title" :data-portal="dataPortal" />
       </v-col>
     </v-row>
     <v-row>
@@ -10,7 +10,7 @@
         <slot name="unit-files" :update="onUnitFilesUpdate" />
         <template v-if="progress">
           <base-progress-circular class="mr-2" />
-          <span>Generating Linked Data...</span>
+          <span>Processing files...</span>
         </template>
         <template v-else-if="error || success">
           <v-alert
@@ -27,13 +27,33 @@
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
-            :query="queries[index]"
+            v-if="queryShortcut"
+            v-bind="{
+              data,
+              visualizations,
+              defaultViewElements,
+              selectedExample,
+              queryShortcut
+            }"
+            @update="onQueryUpdate"
+          />
+          <unit-query
+            v-else
             v-bind="{
               selectedExample,
               visualizations,
-              defaultViewElements
+              defaultViewElements,
+              query: queries[index],
+              i: index,
+              queryShortcut
             }"
+            @update="onQueryUpdate"
           />
+        </v-col>
+      </v-row>
+      <v-row v-if="$store.state.config.consent">
+        <v-col cols="8 mx-auto">
+          <unit-consent-form v-bind="{ allItems, allHeaders, defaultView }" />
         </v-col>
       </v-row>
     </template>
@@ -54,7 +74,9 @@ export default {
     examples: Array,
     visualizations: Object,
     defaultView: Array,
-    title: String
+    title: String,
+    dataPortal: String,
+    queryShortcut: Boolean
   },
   data() {
     // main example is selected by default
@@ -65,7 +87,10 @@ export default {
       error: false,
       success: false,
       message: '',
-      rml: ''
+      rml: '',
+      allItems: null,
+      allHeaders: null,
+      data: ''
     }
   },
   computed: {
@@ -73,9 +98,6 @@ export default {
       return this.defaultView.map(o =>
         this.selectedExample.sparql.find(s => s.name === o.query)
       )
-      // return this.selectedExample.sparql.filter(s =>
-      //   Object.keys(this.defaultView).includes(s.name)
-      // )
     }
   },
   watch: {
@@ -84,6 +106,19 @@ export default {
       async handler(selectedExample) {
         // this should be quick ...
         this.rml = await parseYarrrml(selectedExample.yarrrml)
+      }
+    },
+    allItems: {
+      immediate: true,
+      handler(allItems) {
+        if (!allItems) {
+          this.allItems = Object.fromEntries(
+            Object.keys(this.defaultView).map((x, i) => [i, ''])
+          )
+          this.allHeaders = Object.fromEntries(
+            Object.keys(this.defaultView).map((x, i) => [i, ''])
+          )
+        }
       }
     }
   },
@@ -106,9 +141,9 @@ export default {
     handleRdfEnd() {
       this.progress = false
     },
-    onUnitFilesUpdate({ inputFilesRocketRML, error }) {
+    onUnitFilesUpdate({ inputFiles, error }) {
       this.initState()
-      if (Object.keys(inputFilesRocketRML).length === 0) {
+      if (Object.keys(inputFiles).length === 0) {
         this.error = true
         this.message = 'No relevant files were found'
         this.progress = false
@@ -116,6 +151,11 @@ export default {
         this.error = true
         this.message = error
         this.progress = false
+      } else if (this.queryShortcut) {
+        // TODO extend for multiple files
+        this.data = Object.values(inputFiles)[0]
+        this.progress = false
+        this.success = true
       } else if (!this.rml) {
         throw new Error('RML not ready')
       } else {
@@ -125,7 +165,7 @@ export default {
             this.handleRdfError,
             this.handleRdfEnd,
             this.rml,
-            inputFilesRocketRML
+            inputFiles
           )
         } catch (error) {
           console.error(error)
@@ -134,6 +174,10 @@ export default {
           this.progress = false
         }
       }
+    },
+    onQueryUpdate({ i, headers, items }) {
+      this.allHeaders[i] = JSON.stringify(headers)
+      this.allItems[i] = JSON.stringify(items)
     }
   }
 }

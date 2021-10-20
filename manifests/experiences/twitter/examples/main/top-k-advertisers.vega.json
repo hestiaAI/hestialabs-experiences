@@ -1,7 +1,7 @@
 {
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "width": 500,
-  "height": 510,
+  "height": 550,
   "padding": 25,
   "autosize": "fit",
 
@@ -16,7 +16,11 @@
     },
     {
       "name": "k", "value": 20,
-      "bind": {"input": "range", "name": " ", "min": 1, "max": 50, "step": 1}
+      "bind": {"input": "range", "name": "N° of advertisers: ", "min": 1, "max": 50, "step": 1}
+    },
+    {
+      "name": "othersDisplay", "value": 20,
+      "bind": { "input": "checkbox", "name": "Display Others: " }
     },
     {
       "name": "op", "value": "sum",
@@ -29,7 +33,7 @@
   ],
 
   "title": {
-    "text": {"signal": "'Advertiser targetting you ' + label[op]"},
+    "text": {"signal": "'Advertisers targeting you ' + label[op]"},
     "anchor": "start",
     "frame": "group",
     "subtitle": {"signal": "'between ' + timeFormat(extent[0], \"%d/%m/%Y\") + ' and ' + timeFormat(extent[1], \"%d/%m/%Y\")"},
@@ -109,6 +113,7 @@
           "as": "value",
           "expr": "toNumber(format(datum.value, '.2f'))"
         },
+        {"type": "filter", "expr": "if(othersDisplay, true, datum.key !== 'All Others')"},
         {
           "type": "collect",
           "sort": {"field": "value"}
@@ -176,6 +181,7 @@
 
   "axes": [
     {
+      "title": "Number of times targeted",
       "scale": "x",
       "orient": "bottom",
       "format": "d",

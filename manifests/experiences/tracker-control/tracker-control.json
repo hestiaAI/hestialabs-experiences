@@ -3,5 +3,15 @@
   "subtitle": "Tracking data",
   "icon": "tracker-control.png",
   "ext": "csv",
-  "data": ["tracker-control.csv"]
+  "queryShortcut": true,
+  "data": ["tracker-control.csv"],
+  "defaultView": [
+    {
+      "query": "",
+      "visualizations": ["TrackerGraph.vue"],
+      "showTable": false,
+      "title": "Tracker control experience",
+      "text": "Monitor below all the tracking done on your smartphone applications. You can filter the results by selecting a time range or clicking on each graph."
+    }
+  ]
 }

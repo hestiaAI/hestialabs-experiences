@@ -20,7 +20,7 @@
           <TwitterShareButton
             :url="baseUrl + $route.path"
             :title="description"
-            :hashtags="'dataprivacy,hestialabs,' + m.title"
+            :hashtags="hashtags"
             twitter-user="HestiaLabs"
             class="my-2 ml-2"
           />
@@ -103,6 +103,13 @@ export default {
       const title = manifest.title
       const { subtitle, icon, ...rest } = manifest
       return { title, subtitle, icon, rest }
+    },
+    hashtags() {
+      const hashtags = [this.m.title]
+      if (this.$store.state.config.hashtags) {
+        hashtags.push(...this.$store.state.config.hashtags)
+      }
+      return hashtags.join(',')
     }
   },
   watch: {
@@ -114,9 +121,7 @@ export default {
         // because we may need to wait for the config
         // Is there a better way to do this?
 
-        // $nuxt.error is apparently an undocumented feature.
-        // that works only on the client side
-        // https://github.com/nuxt/nuxt.js/issues/555
+        // https://nuxtjs.org/docs/internals-glossary/context#error
         this.$nuxt.error({ statusCode: 404 })
       }
     }
