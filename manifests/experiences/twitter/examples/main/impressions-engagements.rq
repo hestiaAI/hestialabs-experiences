@@ -1,0 +1,12 @@
+PREFIX h: <http://hestia.ai/>
+
+SELECT ?tweet_id ?companyName ?engagement ?date ?targetingType ?targetingValue WHERE
+{
+  ?criterion a h:Criterion .
+  ?criterion h:tweetId ?tweet_id .
+  ?criterion h:advertiserName ?companyName .
+  ?criterion h:engagement ?engagement .
+  ?criterion h:impressionTime ?date .
+  ?criterion h:targetingType ?targetingType .
+  ?criterion h:targetingValue ?targetingValue .
+}
