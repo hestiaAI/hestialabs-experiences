@@ -33,7 +33,7 @@
   ]},
   "defaultView": [
     {
-      "query": "advertisers-per-day",
+      "query": "impressions-engagements",
       "visualizations": ["TwitterOverview.vue"],
       "showTable": false,
       "title": "Twitter advertising overview",

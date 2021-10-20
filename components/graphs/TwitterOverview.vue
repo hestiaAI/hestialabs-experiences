@@ -101,10 +101,13 @@ export default {
   data() {
     return {
       header: [
+        { text: 'Tweet ID', value: 'tweet_id' },
         { text: 'Company', value: 'companyName' },
         { text: 'Date', value: 'dateStr' },
+        { text: 'Promoted Tweet', value: 'url' },
         { text: 'Engagement', value: 'engagement' },
-        { text: 'Targeting Criteria', value: 'targetingCriteria' }
+        { text: 'Targeting Type', value: 'targetingType' },
+        { text: 'Targeting Value', value: 'targetingValue' }
       ],
       results: []
     }
@@ -114,6 +117,8 @@ export default {
   },
   methods: {
     drawViz() {
+      this.results = this.values
+      /*
       this.results = [
         {
           tweet_id: '1234567890',
@@ -348,8 +353,9 @@ export default {
           targetingValue: 'Cat'
         }
       ]
-
+      */
       // Define a color palette for the viz
+      /*
       const colorPalette = [
         '#58539E',
         '#371D52',
@@ -361,7 +367,14 @@ export default {
         '#6F36BF',
         '#3F1973'
       ]
-
+      */
+      const colorPalette = [
+        '#0D4B7A',
+        '#0B2B38',
+        '#248EB8',
+        '#7FCEF0',
+        '#4A659E'
+      ]
       // Create and bind charts to their respective divs
       const volumeChart = new dc.LineChart('#volume-chart')
       const rangeChart = new dc.BarChart('#range-chart')
@@ -395,12 +408,15 @@ export default {
       })
 
       // Format data to correct types
-      const dateFormatParser = d3.timeParse('%Q')
+      // const dateFormatParser = d3.timeParse('%Q')
+      // 2021-06-04 21:08:08
+      const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S')
       const formatTime = d3.timeFormat('%B %d, %Y')
       this.results.forEach(d => {
         d.date = dateFormatParser(d.date)
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
         d.dateStr = formatTime(d.day)
+        d.url = 'https://twitter.com/x/status/' + d.tweet_id
       })
       const minDate = d3.min(this.results, function (d) {
         return d.day
@@ -417,7 +433,7 @@ export default {
       const adPerDayDimension = ndx.dimension(d => d.day)
       const companyDimension = ndx.dimension(d => d.companyName)
       const engagementDimension = ndx.dimension(d =>
-        d.engagement ? 'True' : 'False'
+        d.engagement === 'true' ? 'True' : 'False'
       )
       const targetingTypeDimension = ndx.dimension(d => d.targetingType)
       const targetingValueDimension = ndx.dimension(d => d.targetingValue)
@@ -460,7 +476,7 @@ export default {
       volumeChart
         .renderArea(true)
         .width(d3.select('#volume-chart').node().getBoundingClientRect().width)
-        .height(150)
+        .height(200)
         .transitionDuration(1000)
         .margins({ top: 30, right: 10, bottom: 25, left: 40 })
         .group(adPerDayGroup)
@@ -512,17 +528,14 @@ export default {
       // Render advertiser row chart
       companyChart
         .width(d3.select('#company-chart').node().getBoundingClientRect().width)
-        .height(250)
+        .height(263)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(companyGroup)
         .dimension(companyDimension)
         .ordinalColors(colorPalette)
         .label(d => d.key)
         .valueAccessor(d => d.value.count)
-        .data(group => group.top(50))
-        // .sortBy(d => d.value.count)
-        // .order(d3.descending)
-        // .labelOffsetX(0)
+        .data(group => group.top(10))
         .title(d => d.value)
         .elasticX(true)
         .xAxis()
@@ -564,7 +577,7 @@ export default {
         .dimension(targetingTypeDimension)
         .ordinalColors(colorPalette)
         .label(d => d.key)
-        .data(group => group.top(20))
+        .data(group => group.top(10))
         // .labelOffsetX(0)
         .title(d => d.value)
         .elasticX(true)
@@ -580,7 +593,7 @@ export default {
         .dimension(targetingValueDimension)
         .ordinalColors(colorPalette)
         .label(d => d.key)
-        .data(group => group.top(20))
+        .data(group => group.top(10))
         // .labelOffsetX(0)
         .title(d => d.value)
         .elasticX(true)
