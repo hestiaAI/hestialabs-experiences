@@ -2,20 +2,14 @@
   <div>
     <h2 v-if="$store.state.power" class="my-3">Query Results</h2>
     <v-alert v-if="error" type="error">{{ message }}</v-alert>
-    <v-text-field
-      v-model="search"
-      append-icon="mdi-magnify"
-      label="Search"
-      single-line
-      hide-details
-    ></v-text-field>
+    <the-query-results-filter :headers="headers" @update="onFilterUpdate" />
     <v-data-table
-      v-bind="{ headers, items, search }"
+      v-bind="{ headers: tableHeaders, items, search }"
       :hide-default-footer="disabled"
       multi-sort
     >
       <template #item.url="{ value }">
-        <a target="_blank" :href="value"> Link </a>
+        <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
       </template>
     </v-data-table>
     <base-data-download-button
@@ -50,7 +44,8 @@ export default {
       data: '',
       message: '',
       extension: 'csv',
-      search: ''
+      search: '',
+      tableHeaders: this.headers
     }
   },
   computed: {
@@ -86,6 +81,13 @@ export default {
           this.status = true
         }
       }
+    },
+    onFilterUpdate(selectedHeaders, searchValue) {
+      this.tableHeaders = this.headers.map(h => ({
+        ...h,
+        filterable: selectedHeaders.includes(h.value)
+      }))
+      this.search = searchValue
     }
   }
 }
