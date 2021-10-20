@@ -7,3 +7,23 @@ SELECT ?targetingType ?targetingValue (COUNT(?criterion) AS ?count) WHERE
   ?criterion h:targetingValue ?targetingValue .
 }
 GROUP BY ?targetingType ?targetingValue
+
+PREFIX h: <http://hestia.ai/>
+
+SELECT ?targetingType ?targetingValue (COUNT(?criterion) AS ?count) WHERE
+{
+  {
+    SELECT ?targetingType (COUNT(?criterion) AS ?countImpressions) WHERE 
+    {
+      ?criterion a h:Criterion .
+      ?criterion h:targetingType ?targetingType .
+    }
+    GROUP BY ?targetingType
+    ORDER BY DESC(?countImpressions)
+    LIMIT 5
+  }
+  ?criterion a h:Criterion .
+  ?criterion h:targetingType ?targetingType .
+  ?criterion h:targetingValue ?targetingValue .
+}
+GROUP BY ?targetingType ?targetingValue

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12">
+      <v-col cols="12" sm="9">
         <div id="volume-chart">
           <strong>Number of ads over time</strong>
           <a class="reset" style="display: none">reset</a>
@@ -15,6 +15,56 @@
         <div id="range-chart">
           <p class="muted pull-right" style="margin-right: 15px">
             select a time range to zoom in
+          </p>
+        </div>
+      </v-col>
+      <v-col cols="12" sm="3">
+        <div id="company-chart">
+          <strong>Top 10 Companies targeting you</strong>
+          <a class="reset" style="display: none">reset</a>
+          <p class="filters">
+            <span>
+              Current filter:
+              <span class="filter"></span>
+            </span>
+          </p>
+        </div>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" sm="4">
+        <div id="engagement-chart">
+          <strong>Interactions with ads</strong>
+          <a class="reset" style="display: none">reset</a>
+          <p class="filters">
+            <span>
+              Current filter:
+              <span class="filter"></span>
+            </span>
+          </p>
+        </div>
+      </v-col>
+      <v-col cols="12" sm="4">
+        <div id="type-chart">
+          <strong>Type of targeting</strong>
+          <a class="reset" style="display: none">reset</a>
+          <p class="filters">
+            <span>
+              Current filter:
+              <span class="filter"></span>
+            </span>
+          </p>
+        </div>
+      </v-col>
+      <v-col cols="12" sm="4">
+        <div id="value-chart">
+          <strong>Value of targeting</strong>
+          <a class="reset" style="display: none">reset</a>
+          <p class="filters">
+            <span>
+              Current filter:
+              <span class="filter"></span>
+            </span>
           </p>
         </div>
       </v-col>
@@ -51,12 +101,10 @@ export default {
   data() {
     return {
       header: [
-        { text: 'Ad Id', value: 'adId' },
         { text: 'Company', value: 'companyName' },
-        { text: 'Targeting Type', value: 'targetingType' },
-        { text: 'Targeting Value', value: 'targetingValue' },
         { text: 'Date', value: 'dateStr' },
-        { text: 'Impression', value: 'impression' }
+        { text: 'Engagement', value: 'engagement' },
+        { text: 'Targeting Criteria', value: 'targetingCriteria' }
       ],
       results: []
     }
@@ -68,79 +116,281 @@ export default {
     drawViz() {
       this.results = [
         {
-          adId: 1,
+          tweet_id: '1234567890',
           companyName: 'Apple',
+          engagement: true,
+          date: '1626862433338',
           targetingType: 'Age',
-          targetingValue: '13 and up',
-          impression: true,
-          date: '1626862433338'
+          targetingValue: '13 and up'
         },
         {
-          adId: 2,
+          tweet_id: '1234567890',
           companyName: 'Apple',
+          engagement: true,
+          date: '1626862433338',
           targetingType: 'Follower',
-          targetingValue: '@technews',
-          impression: false,
-          date: '1626781735641'
+          targetingValue: '@FBI'
         },
         {
-          adId: 3,
+          tweet_id: '1234567890',
+          companyName: 'Apple',
+          engagement: true,
+          date: '1626862433338',
+          targetingType: 'Interest',
+          targetingValue: 'Yoga'
+        },
+        {
+          tweet_id: '234567890',
+          companyName: 'Apple',
+          engagement: false,
+          date: '1626781735641',
+          targetingType: 'Follower',
+          targetingValue: '@technews'
+        },
+        {
+          tweet_id: '234567890',
+          companyName: 'Apple',
+          engagement: false,
+          date: '1626781735641',
+          targetingType: 'Follower',
+          targetingValue: '@FBI'
+        },
+        {
+          tweet_id: '234567890',
+          companyName: 'Apple',
+          engagement: false,
+          date: '1626781735641',
+          targetingType: 'Interest',
+          targetingValue: 'Pool'
+        },
+        {
+          tweet_id: '34567890',
           companyName: 'Amazon',
+          engagement: true,
+          date: '1626910581735',
           targetingType: 'Age',
-          targetingValue: '13 and up',
-          impression: true,
-          date: '1626910581735'
+          targetingValue: '13 and up'
         },
         {
-          adId: 3,
+          tweet_id: '34567890',
           companyName: 'Amazon',
-          targetingType: 'Age',
-          targetingValue: '13 and up',
-          impression: true,
-          date: '1626909674359'
+          engagement: true,
+          date: '1626910581735',
+          targetingType: 'Follower',
+          targetingValue: '@technews'
         },
         {
-          adId: 3,
+          tweet_id: '34567890',
           companyName: 'Amazon',
-          targetingType: 'Age',
-          targetingValue: '15 and up',
-          impression: true,
-          date: '1626814506143'
+          engagement: true,
+          date: '1626910581735',
+          targetingType: 'Follower',
+          targetingValue: '@FBI'
         },
         {
-          adId: 3,
+          tweet_id: '34567890',
           companyName: 'Amazon',
-          targetingType: 'Age',
-          targetingValue: '15 and up',
-          impression: false,
-          date: '1625818719435'
+          engagement: true,
+          date: '1626910581735',
+          targetingType: 'Interest',
+          targetingValue: 'Pool'
         },
         {
-          adId: 4,
+          tweet_id: '4567890',
+          companyName: 'Amazon',
+          engagement: true,
+          date: '1626909674359',
+          targetingType: 'Age',
+          targetingValue: '18 and up'
+        },
+        {
+          tweet_id: '4567890',
+          companyName: 'Amazon',
+          engagement: true,
+          date: '1626909674359',
+          targetingType: 'Follower',
+          targetingValue: '@fquellec'
+        },
+        {
+          tweet_id: '4567890',
+          companyName: 'Amazon',
+          engagement: true,
+          date: '1626909674359',
+          targetingType: 'Follower',
+          targetingValue: '@Word'
+        },
+        {
+          tweet_id: '4567890',
+          companyName: 'Amazon',
+          engagement: true,
+          date: '1626909674359',
+          targetingType: 'Interest',
+          targetingValue: 'Dog'
+        },
+        {
+          tweet_id: '567890',
+          companyName: 'Amazon',
+          engagement: true,
+          date: '1626814506143',
+          targetingType: 'Age',
+          targetingValue: '15 and up'
+        },
+        {
+          tweet_id: '567890',
+          companyName: 'Amazon',
+          engagement: true,
+          date: '1626814506143',
+          targetingType: 'Follower',
+          targetingValue: '@test'
+        },
+        {
+          tweet_id: '567890',
+          companyName: 'Amazon',
+          engagement: true,
+          date: '1626814506143',
+          targetingType: 'Follower',
+          targetingValue: '@Pirate'
+        },
+        {
+          tweet_id: '67890',
+          companyName: 'Amazon',
+          engagement: false,
+          date: '1625818719435',
+          targetingType: 'Age',
+          targetingValue: '15 and up'
+        },
+        {
+          tweet_id: '67890',
+          companyName: 'Amazon',
+          engagement: false,
+          date: '1625818719435',
+          targetingType: 'Follower',
+          targetingValue: '@test'
+        },
+        {
+          tweet_id: '67890',
+          companyName: 'Amazon',
+          engagement: false,
+          date: '1625818719435',
+          targetingType: 'Follower',
+          targetingValue: '@Pirate'
+        },
+        {
+          tweet_id: '67890',
+          companyName: 'Amazon',
+          engagement: false,
+          date: '1625818719435',
+          targetingType: 'Interest',
+          targetingValue: 'Cat'
+        },
+        {
+          tweet_id: '7890',
           companyName: 'Uber',
+          engagement: false,
+          date: '1626867676012',
           targetingType: 'Device',
-          targetingValue: 'Iphone 18',
-          impression: false,
-          date: '1625694058677'
+          targetingValue: 'Iphone 18'
         },
         {
-          adId: 4,
+          tweet_id: '7890',
           companyName: 'Uber',
-          targetingType: 'Age',
-          targetingValue: '18 and up',
-          impression: false,
-          date: '1626867676012'
+          engagement: false,
+          date: '1626867676012',
+          targetingType: 'Follower',
+          targetingValue: '@test'
+        },
+        {
+          tweet_id: '7890',
+          companyName: 'Uber',
+          engagement: false,
+          date: '1626867676012',
+          targetingType: 'Follower',
+          targetingValue: '@Pirate'
+        },
+        {
+          tweet_id: '7890',
+          companyName: 'Uber',
+          engagement: false,
+          date: '1626867676012',
+          targetingType: 'Interest',
+          targetingValue: 'Cat'
+        },
+        {
+          tweet_id: '890',
+          companyName: 'Uber',
+          engagement: false,
+          date: '1626867676012',
+          targetingType: 'Device',
+          targetingValue: 'Iphone 18'
+        },
+        {
+          tweet_id: '890',
+          companyName: 'Uber',
+          engagement: false,
+          date: '1626867676012',
+          targetingType: 'Follower',
+          targetingValue: '@test'
+        },
+        {
+          tweet_id: '890',
+          companyName: 'Uber',
+          engagement: false,
+          date: '1626867676012',
+          targetingType: 'Follower',
+          targetingValue: '@Pirate'
+        },
+        {
+          tweet_id: '890',
+          companyName: 'Uber',
+          engagement: false,
+          date: '1626867676012',
+          targetingType: 'Interest',
+          targetingValue: 'Cat'
         }
       ]
+
+      // Define a color palette for the viz
+      const colorPalette = [
+        '#58539E',
+        '#371D52',
+        '#6652A1',
+        '#35334A',
+        '#859ED5',
+        '#CC94F2',
+        '#9A5BD9',
+        '#6F36BF',
+        '#3F1973'
+      ]
+
       // Create and bind charts to their respective divs
       const volumeChart = new dc.LineChart('#volume-chart')
       const rangeChart = new dc.BarChart('#range-chart')
       const tableCount = new dc.DataCount('.dc-data-count')
+      const companyChart = new dc.RowChart('#company-chart')
+      const engagementChart = new dc.PieChart('#engagement-chart')
+      const typeChart = new dc.RowChart('#type-chart')
+      const valueChart = new dc.RowChart('#value-chart')
 
       // Bind reset filters links
       d3.select('#volume-chart a.reset').on('click', function () {
         rangeChart.filterAll()
         volumeChart.filterAll()
+        dc.redrawAll()
+      })
+      d3.select('#company-chart a.reset').on('click', function () {
+        companyChart.filterAll()
+        dc.redrawAll()
+      })
+      d3.select('#engagement-chart a.reset').on('click', function () {
+        engagementChart.filterAll()
+        dc.redrawAll()
+      })
+      d3.select('#type-chart a.reset').on('click', function () {
+        typeChart.filterAll()
+        dc.redrawAll()
+      })
+      d3.select('#value-chart a.reset').on('click', function () {
+        valueChart.filterAll()
         dc.redrawAll()
       })
 
@@ -152,53 +402,74 @@ export default {
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
         d.dateStr = formatTime(d.day)
       })
-      console.log(this.results)
-      console.log(dateFormatParser(1626867676012))
-      const ndx = crossfilter(this.results)
-      const all = ndx.groupAll()
-
-      // Create dimensions
-      const dayDimension = ndx.dimension(d => d.day)
-
-      // Create groups from dimension
-      const dayGroup = dayDimension.group().reduceCount()
-
-      // Render volume line chart
       const minDate = d3.min(this.results, function (d) {
         return d.day
       })
       const maxDate = d3.max(this.results, function (d) {
         return d.day
       })
-      const maxValue = dayGroup.top(1)[0].value + 2
-      const width = d3
-        .select('#volume-chart')
-        .node()
-        .getBoundingClientRect().width
-      const height = 200
 
-      console.log(minDate, maxDate, maxValue, width, height)
+      // Build index crossfilter
+      const ndx = crossfilter(this.results)
+      const all = ndx.groupAll()
 
+      // Create dimensions
+      const adPerDayDimension = ndx.dimension(d => d.day)
+      const companyDimension = ndx.dimension(d => d.companyName)
+      const engagementDimension = ndx.dimension(d =>
+        d.engagement ? 'True' : 'False'
+      )
+      const targetingTypeDimension = ndx.dimension(d => d.targetingType)
+      const targetingValueDimension = ndx.dimension(d => d.targetingValue)
+
+      // custom reduce function for grouping by ad and not targeting criteria
+      const init = () => ({
+        // initial
+        count: 0,
+        dict: {}
+      })
+      const addRecord = (p, v) => {
+        // add
+        p.dict[v.tweet_id] = (p.dict[v.tweet_id] || 0) + 1
+        if (p.dict[v.tweet_id] === 1) p.count++
+        return p
+      }
+      const removeRecord = (p, v) => {
+        // remove
+        p.dict[v.tweet_id] -= 1
+        if (p.dict[v.tweet_id] === 0) p.count--
+        return p
+      }
+      function orderValue(p) {
+        return p.count
+      }
+      // Create groups from dimension
+      const adPerDayGroup = adPerDayDimension
+        .group()
+        .reduce(addRecord, removeRecord, init)
+        .order(orderValue)
+      const companyGroup = companyDimension
+        .group()
+        .reduce(addRecord, removeRecord, init)
+        .order(orderValue)
+      const engagementGroup = engagementDimension.group().reduceCount()
+      const targetingTypeGroup = targetingTypeDimension.group().reduceCount()
+      const targetingValueGroup = targetingValueDimension.group().reduceCount()
+
+      // Render volume line chart
       volumeChart
         .renderArea(true)
-        .width(width)
-        .height(height)
+        .width(d3.select('#volume-chart').node().getBoundingClientRect().width)
+        .height(150)
         .transitionDuration(1000)
-        .margins({ top: 30, right: 50, bottom: 25, left: 40 })
-        .group(dayGroup)
-        .dimension(dayDimension)
-        .curve(d3.curveCardinal.tension(0.6))
-        .x(
-          d3
-            .scaleTime()
-            .domain([
-              d3.timeHour.offset(minDate, 0),
-              d3.timeHour.offset(maxDate, 2)
-            ])
-        )
-        .y(d3.scaleLinear().domain([0, maxValue]))
-        .ordinalColors(['#58539E'])
-        .xUnits(d3.timeHour)
+        .margins({ top: 30, right: 10, bottom: 25, left: 40 })
+        .group(adPerDayGroup)
+        .dimension(adPerDayDimension)
+        // .curve(d3.curveCardinal.tension(0.6))
+        .x(d3.scaleTime().domain([minDate, maxDate]))
+        .valueAccessor(d => d.value.count)
+        .ordinalColors(colorPalette)
+        // .xUnits(d3.timeHour)
         .brushOn(false)
         .elasticX(false)
         .elasticY(true)
@@ -206,41 +477,115 @@ export default {
         .mouseZoomable(true)
         .rangeChart(rangeChart)
         .renderHorizontalGridLines(false)
-        // .dashStyle([3,1,1,1])
         .renderDataPoints({
           radius: 3,
           fillOpacity: 0.8,
           strokeOpacity: 0.0
         })
-        .yAxisLabel('N° of tracker reach')
+        .yAxisLabel('N° of ads')
         .clipPadding(10)
-        // .xAxisLabel("Date")
+        .title(d => {
+          return `${formatTime(d.key)}: ${d.value.count}`
+        })
         .yAxis()
         .ticks(5)
 
       // volume chart date picker
       rangeChart
-        .width(width)
+        .width(d3.select('#volume-chart').node().getBoundingClientRect().width)
         .height(40)
-        .margins({ top: 0, right: 50, bottom: 20, left: 40 })
-        .dimension(dayDimension)
-        .group(dayGroup)
+        .margins({ top: 0, right: 10, bottom: 20, left: 40 })
+        .dimension(adPerDayDimension)
+        .group(adPerDayGroup)
         .centerBar(true)
         .gap(1)
-        .x(
-          d3
-            .scaleTime()
-            .domain([
-              d3.timeHour.offset(minDate, 0),
-              d3.timeHour.offset(maxDate, 2)
-            ])
-        )
+        .x(d3.scaleTime().domain([minDate, maxDate]))
+        .valueAccessor(d => d.value.count)
+        .label(d => d.key)
         .round(d3.timeDay.round)
         .alwaysUseRounding(true)
         .xUnits(d3.timeDays)
-        .ordinalColors(['#58539E'])
+        .ordinalColors(colorPalette)
         .yAxis()
         .ticks(0)
+
+      // Render advertiser row chart
+      companyChart
+        .width(d3.select('#company-chart').node().getBoundingClientRect().width)
+        .height(250)
+        .margins({ top: 20, left: 10, right: 10, bottom: 20 })
+        .group(companyGroup)
+        .dimension(companyDimension)
+        .ordinalColors(colorPalette)
+        .label(d => d.key)
+        .valueAccessor(d => d.value.count)
+        .data(group => group.top(50))
+        // .sortBy(d => d.value.count)
+        // .order(d3.descending)
+        // .labelOffsetX(0)
+        .title(d => d.value)
+        .elasticX(true)
+        .xAxis()
+        .ticks(4)
+
+      // Render targeting value row chart
+      const width = d3
+        .select('#engagement-chart')
+        .node()
+        .getBoundingClientRect().width
+
+      engagementChart
+        .width(width)
+        .height(300)
+        .radius(width / 2.5)
+        .innerRadius(width / 8)
+        .dimension(engagementDimension)
+        .group(engagementGroup)
+        .ordinalColors(colorPalette)
+        .label(d => {
+          if (
+            engagementChart.hasFilter() &&
+            !engagementChart.hasFilter(d.key)
+          ) {
+            return `${d.key} (0%)`
+          }
+          let label = d.key
+          if (all.value()) {
+            label += ` (${Math.floor((d.value / all.value()) * 100)}%)`
+          }
+          return label
+        })
+      // Render targeting type row chart
+      typeChart
+        .width(d3.select('#type-chart').node().getBoundingClientRect().width)
+        .height(300)
+        .margins({ top: 20, left: 10, right: 10, bottom: 20 })
+        .group(targetingTypeGroup)
+        .dimension(targetingTypeDimension)
+        .ordinalColors(colorPalette)
+        .label(d => d.key)
+        .data(group => group.top(20))
+        // .labelOffsetX(0)
+        .title(d => d.value)
+        .elasticX(true)
+        .xAxis()
+        .ticks(4)
+
+      // Render targeting value row chart
+      valueChart
+        .width(d3.select('#value-chart').node().getBoundingClientRect().width)
+        .height(300)
+        .margins({ top: 20, left: 10, right: 10, bottom: 20 })
+        .group(targetingValueGroup)
+        .dimension(targetingValueDimension)
+        .ordinalColors(colorPalette)
+        .label(d => d.key)
+        .data(group => group.top(20))
+        // .labelOffsetX(0)
+        .title(d => d.value)
+        .elasticX(true)
+        .xAxis()
+        .ticks(4)
 
       // Render counter and table
       tableCount
@@ -253,7 +598,7 @@ export default {
           all: 'All records selected. Please click on the graph to apply filters.'
         })
         .on('pretransition', (chart, filter) => {
-          this.results = dayDimension.top(all.value())
+          this.results = ndx.allFiltered()
           d3.select('#dc-data-count a.reset').on('click', function () {
             dc.filterAll()
             dc.renderAll()
