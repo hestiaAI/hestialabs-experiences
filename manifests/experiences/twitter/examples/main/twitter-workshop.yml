@@ -11,6 +11,10 @@ sources:
     access: data/ad-impressions.js
     referenceFormulation: jsonpath
     iterator: $.*.ad.adsUserData.adImpressions.impressions[*].matchedTargetingCriteria[*]
+  eng-criteria:
+    access: data/ad-engagements.js
+    referenceFormulation: jsonpath
+    iterator: $.*.ad.adsUserData.adEngagements.engagements[*].impressionAttributes.matchedTargetingCriteria[*]
 
 mappings:
   impression:
@@ -26,7 +30,7 @@ mappings:
           parameters:
             - [ex:input, $(impressionTime)]
           datatype: xsd:dateTime
-  criterion:
+  imp-criterion:
     sources:
       - imp-criteria
     s: h:Criterion/$(targetingType)/$(targetingValue)/$(^^.advertiserInfo.screenName)/$(^^.impressionTime)
@@ -35,3 +39,18 @@ mappings:
       - [h:targetingType, $(targetingType)]
       - [h:targetingValue, $(targetingValue)]
       - [h:advertiserName, $(^^.advertiserInfo.advertiserName)]
+      - [h:tweetId, $(^^.promotedTweetInfo.tweetId)]
+      - [h:impressionTime, $(^^.impressionTime)]
+      - [h:engagement, 'false', xsd:boolean]
+  eng-criterion:
+    sources:
+      - eng-criteria
+    s: h:Criterion/$(targetingType)/$(targetingValue)/$(^^.advertiserInfo.screenName)/$(^^.impressionTime)
+    po:
+      - [a, h:Criterion]
+      - [h:targetingType, $(targetingType)]
+      - [h:targetingValue, $(targetingValue)]
+      - [h:advertiserName, $(^^.advertiserInfo.advertiserName)]
+      - [h:tweetId, $(^^.promotedTweetInfo.tweetId)]
+      - [h:impressionTime, $(^^.impressionTime)]
+      - [h:engagement, 'true', xsd:boolean]

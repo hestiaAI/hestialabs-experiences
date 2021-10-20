@@ -19,18 +19,31 @@
           :label="defaultView[index].title"
           :value="index"
         ></v-checkbox>
-        <base-button text="Generate ZIP" @click="generateZIP" />
+        <base-button
+          text="Generate ZIP"
+          :status="generateStatus"
+          :error="generateError"
+          :progress="generateProgress"
+          @click="generateZIP"
+        />
         <base-data-download-button
           :data="encryptedZipFile"
           extension="zip"
           text="Download encrypted"
-          :disabled="!success"
+          :disabled="!zipReady"
         />
         <base-button
           text="Send encrypted"
-          :disabled="!success"
+          :status="sentStatus"
+          :error="sentError"
+          :progress="sentProgress"
+          :disabled="!zipReady || (sentStatus && !sentError)"
           @click="sendForm"
         />
+        <p v-if="sentError">
+          Sending failed. Please download the file and send it by email.
+        </p>
+        <p v-if="sentStatus && !sentError">Form successfully submitted.</p>
       </v-card-text>
     </v-card>
   </v-form>
@@ -62,7 +75,26 @@ export default {
       includedResults: [],
       zipFile: [],
       encryptedZipFile: [],
-      success: false
+      generateStatus: false,
+      generateError: false,
+      generateProgress: false,
+      sentStatus: false,
+      sentError: false,
+      sentProgress: false,
+      timestamp: 0
+    }
+  },
+  computed: {
+    zipReady() {
+      return this.generateStatus && !this.generateError
+    }
+  },
+  watch: {
+    includedResults: {
+      deep: true,
+      handler(includedResults) {
+        this.resetStatus()
+      }
     }
   },
   methods: {
@@ -70,15 +102,17 @@ export default {
       this.showForm = !this.showForm
     },
     async generateZIP() {
-      this.success = false
+      this.resetStatus()
+      this.generateProgress = true
 
       const zip = new JSZip()
 
       // Add info about the experience
       const manifest = this.$store.getters.manifest(this.$route)
+      this.timestamp = Date.now()
       const experience = {
         key: manifest.key,
-        timestamp: Date.now()
+        timestamp: this.timestamp
       }
       zip.file('experience.json', JSON.stringify(experience))
 
@@ -106,13 +140,46 @@ export default {
       )
 
       this.encryptedZipFile = ciphertext
-      this.success = true
+      this.generateStatus = true
+      this.generateProgress = false
     },
     sendForm() {
-      throw new Error('not implemented')
+      this.sentStatus = false
+      this.sentError = false
+      this.sentProgress = true
+
+      // Programmatically create the form data
+      // Names must correspond to the dummy form defined in /static/export-data-form-dummy.html
+      const formData = new FormData()
+      formData.append('form-name', 'export-data')
+      const zipBlob = new Blob(
+        [this.encryptedZipFile],
+        { type: 'application/zip' },
+        `exported-data-${this.timestamp}.zip`
+      )
+      formData.append('encrypted-zip', zipBlob)
+      fetch('/', {
+        method: 'POST',
+        body: formData
+      })
+        .then(() => {
+          this.sentStatus = true
+          this.sentProgress = false
+        })
+        .catch(error => {
+          console.error(error)
+          this.sentError = true
+        })
     },
     updateConsent({ index, selected }) {
       this.consent[index].selected = selected
+      this.resetStatus()
+    },
+    resetStatus() {
+      this.generateStatus = false
+      this.generateError = false
+      this.sentStatus = false
+      this.sentError = false
     }
   }
 }
