@@ -62,6 +62,14 @@ export default {
   },
   beforeCreate() {
     this.$store.dispatch('loadConfig')
+  },
+  mounted() {
+    if (!window.Worker) {
+      this.$nuxt.error({
+        statusCode: 500,
+        message: 'Web Workers are not supported by this browser'
+      })
+    }
   }
 }
 </script>

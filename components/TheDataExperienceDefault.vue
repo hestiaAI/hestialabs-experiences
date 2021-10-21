@@ -41,7 +41,6 @@
             v-else
             v-bind="{
               selectedExample,
-              rdf,
               visualizations,
               defaultViewElements,
               query: queries[index],
@@ -89,7 +88,6 @@ export default {
       success: false,
       message: '',
       rml: '',
-      rdf: '',
       allItems: null,
       allHeaders: null,
       data: ''
@@ -131,8 +129,7 @@ export default {
       this.success = false
       this.progress = true
     },
-    handleRdfData({ data, elapsed }) {
-      this.rdf = data
+    handleRdfData({ elapsed }) {
       this.success = true
       this.message = `Successfully processed in ${elapsed / 1000} sec.`
     },
@@ -144,7 +141,7 @@ export default {
     handleRdfEnd() {
       this.progress = false
     },
-    async onUnitFilesUpdate({ inputFiles, error }) {
+    onUnitFilesUpdate({ inputFiles, error }) {
       this.initState()
       if (Object.keys(inputFiles).length === 0) {
         this.error = true
@@ -163,7 +160,7 @@ export default {
         throw new Error('RML not ready')
       } else {
         try {
-          await rdfUtils.generateRDF(
+          rdfUtils.generateRDF(
             this.handleRdfData,
             this.handleRdfError,
             this.handleRdfEnd,
@@ -173,7 +170,7 @@ export default {
         } catch (error) {
           console.error(error)
           this.error = true
-          this.message = error instanceof Error ? error.message : error
+          this.message = error.message
           this.progress = false
         }
       }

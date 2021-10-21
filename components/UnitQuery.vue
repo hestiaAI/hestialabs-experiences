@@ -11,7 +11,7 @@
           />
           <unit-sparql
             v-else
-            v-bind="{ rdf, selectedExample, query }"
+            v-bind="{ selectedExample, query, queryDisabled }"
             class="mr-lg-6"
             @update="onUnitResultsUpdate"
             @change="onChangeSelector"
@@ -57,7 +57,7 @@
             />
             <unit-sparql
               v-else
-              v-bind="{ rdf, selectedExample, query }"
+              v-bind="{ rdf, selectedExample, query, queryDisabled }"
               class="mr-lg-6"
               @update="onUnitResultsUpdate"
             />
@@ -124,10 +124,6 @@ export default {
       type: Object,
       required: true
     },
-    rdf: {
-      type: String,
-      default: ''
-    },
     query: {
       type: Object,
       default: null
@@ -135,6 +131,10 @@ export default {
     defaultViewElements: {
       type: Object,
       default: null
+    },
+    queryDisabled: {
+      type: Boolean,
+      default: false
     },
     i: {
       type: Number,

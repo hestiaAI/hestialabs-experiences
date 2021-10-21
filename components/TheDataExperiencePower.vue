@@ -39,9 +39,9 @@
       <unit-query
         v-bind="{
           selectedExample,
-          rdf,
           visualizations,
-          query
+          query,
+          queryDisabled
         }"
         @change="onQueryChange"
       />
@@ -66,14 +66,8 @@ export default {
       selectedExample,
       inputFiles: undefined,
       rml: '',
-      rdf: '',
-      toRDF: true,
-      query: null
-    }
-  },
-  computed: {
-    runQueryDisabled() {
-      return !this.rdf
+      query: null,
+      queryDisabled: false
     }
   },
   methods: {
@@ -83,9 +77,15 @@ export default {
     onUnitFilesUpdate({ inputFiles: i, error }) {
       this.inputFiles = i
     },
-    onUnitRdfUpdate({ rdf = '', toRDF = this.toRDF, error }) {
-      this.rdf = rdf
-      this.toRDF = toRDF
+    onUnitRdfUpdate({ toRDF, elapsed, error }) {
+      if (!error) {
+        console.info(`RDF updated. Time elapsed: ${elapsed}`)
+        // disable query if output is JSON-LD
+        this.queryDisabled = !toRDF
+      } else {
+        // disabled query if an error occurred
+        this.queryDisabled = true
+      }
     },
     onQueryChange(query) {
       this.query = query

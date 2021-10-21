@@ -45,7 +45,7 @@ export default {
       status: false,
       error: false,
       progress: false,
-      rdf: ''
+      output: ''
     }
   },
   computed: {
@@ -65,18 +65,19 @@ export default {
       return this.format.ext
     },
     data() {
-      // if there is an error, download the message, o/w the RDF
-      return this.error ? this.message : this.rdf
+      // if there is an error, download the message, o/w the N-QUADS/JSON-lD
+      return this.error ? this.message : this.output
     }
   },
   methods: {
-    handleRdfData({ data: rdf, elapsed }) {
+    handleRdfData({ rdf, jsonld, elapsed }) {
       this.error = false
-      this.rdf = rdf
+      // output is either RDF (N-QUADS) or JSON-LD
+      this.output = rdf || jsonld
       const secs = elapsed / 1000
       const { text, toRDF } = this.format
       this.message = `RDF generated successfully in ${secs} sec. (Format: ${text})`
-      this.$emit('update', { rdf, toRDF })
+      this.$emit('update', { elapsed, toRDF })
     },
     handleRdfError(error) {
       console.error(error)
@@ -88,20 +89,20 @@ export default {
       this.progress = false
       this.status = true
     },
-    async generateRDF() {
+    generateRDF() {
       // let parent know generation started
       this.$emit('update', {})
       this.rdf = ''
       this.message = ''
       this.progress = true
       this.status = false
-      await rdfUtils.generateRDF(
+      rdfUtils.generateRDF(
         this.handleRdfData,
         this.handleRdfError,
         this.handleRdfEnd,
         this.rml,
         this.inputFiles,
-        this.toRDF
+        this.format.toRDF
       )
     }
   }

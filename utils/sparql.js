@@ -1,56 +1,57 @@
 import { newEngine } from '@comunica/actor-init-sparql-rdfjs'
-import { Store, Parser } from 'n3'
-// import { LoggerPretty } from '@comunica/logger-pretty'
+import { translate } from 'sparqlalgebrajs'
+import { Store as N3Store } from 'n3'
 
-/**
- * Execute a SPARQL SELECT query
- * @param {String} rdf the input RDF data
- * @param {String} sparql the SELECT query
- * @returns the output data as bindings
- */
-export async function queryBindings(rdf, sparql) {
-  const parser = new Parser({ format: 'N3' })
-  const quads = parser.parse(rdf)
-  const store = new Store(quads)
-  const myEngine = newEngine()
-  const result = await myEngine.query(sparql, {
-    sources: [store]
-    // log: new LoggerPretty({ level: 'debug' })
-  })
-  const bindings = await result.bindings()
-  return bindings
-}
-
-/**
- * Execute a SPARQL SELECT query
- * @param {String} rdf the input RDF data
- * @param {String} sparql the SELECT query
- * @returns the headers and items as an array: [headers, items]
- */
-export async function queryHeadersItems(rdf, sparql) {
-  const bindings = await queryBindings(rdf, sparql)
-  // const keys = Array.from((bindings[0] || new Map()).keys())
-  // Find all the keys
-  let keys = new Set()
-  for (const binding of bindings) {
-    for (const key of binding) {
-      keys.add(key[0])
-    }
+class Store {
+  constructor() {
+    this.engine = newEngine()
+    this.store = new N3Store()
   }
-  keys = Array.from(keys)
-  // Headers are key name without the '?'
-  const headers = keys.map(k => k.substring(1))
-  // Transform bindings to a list of objects having the headers as keys
-  const items = bindings.map(map =>
-    Object.fromEntries(
-      keys.map((key, index) => {
-        // map.get(k) returns an N3 Term
-        // https://github.com/rdfjs/N3.js/blob/main/src/N3DataFactory.js
-        // if value is undefined, fallback to null
-        const { value = null } = map.get(key)
-        return [headers[index], value]
-      })
+
+  async replaceQuads(quads) {
+    this.store = await Promise.resolve(new N3Store(quads))
+  }
+
+  /**
+   * Execute a SPARQL query
+   * @param {String} query
+   * @returns {Object} results
+   */
+  async sparql(query) {
+    const result = await this.engine.query(query, {
+      sources: [this.store]
+    })
+    return result
+  }
+
+  /**
+   * Execute a SPARQL SELECT query
+   * @param {String} query the SPARQL query
+   * @returns {Object} headers and items
+   */
+  async select(query) {
+    const result = await this.sparql(query)
+    const bindings = await result.bindings()
+    const { variables: vars } = translate(query)
+
+    // headers are selected variable names name without the '?'
+    const headers = vars.map(v => v.value)
+    const variables = headers.map(v => `?${v}`)
+
+    // Transform bindings to a list of objects having the headers as keys
+    const items = bindings.map(map =>
+      Object.fromEntries(
+        variables.map((variable, index) => {
+          // map.get(k) returns an N3 Term
+          // https://github.com/rdfjs/N3.js/blob/main/src/N3DataFactory.js
+          // if value is undefined, fallback to null
+          const { value = null } = map.get(variable)
+          return [headers[index], value]
+        })
+      )
     )
-  )
-  return [headers, items]
+    return { headers, items }
+  }
 }
+
+export default new Store()

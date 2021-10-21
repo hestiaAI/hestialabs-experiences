@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { queryHeadersItems } from '@/utils/sparql'
+import quadstore from '@/utils/sparql'
 import { processError } from '@/utils/utils'
 
 export default {
@@ -75,13 +75,13 @@ export default {
       type: Object,
       default: null
     },
-    rdf: {
-      type: String,
-      default: ''
-    },
     query: {
       type: Object,
       default: null
+    },
+    queryDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -96,7 +96,7 @@ export default {
   },
   computed: {
     disabled() {
-      return !this.rdf || !this.sparql
+      return !this.sparql || this.queryDisabled
     },
     queryParameterName() {
       return this.sparql.match(/\$[^$]+\$/)[0].slice(1, -1)
@@ -128,8 +128,9 @@ export default {
         if (this.parametrized) {
           sparql = sparql.replace(/\$[^$]+\$/, this.queryParameter)
         }
-        const [headers, items] = await queryHeadersItems(this.rdf, sparql)
-        this.$emit('update', { headers, items })
+
+        const results = await quadstore.select(sparql)
+        this.$emit('update', results)
       } catch (error) {
         console.error(error)
         this.error = true
