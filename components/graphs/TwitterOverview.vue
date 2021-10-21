@@ -118,8 +118,21 @@ export default {
   methods: {
     drawViz() {
       this.results = this.values
-      console.log(this.values[0])
+      console.log(this.values.slice(450, 500))
       // Define a color palette for the viz
+      /*
+      const colorPalette = [
+        '#58539E',
+        '#371D52',
+        '#6652A1',
+        '#35334A',
+        '#859ED5',
+        '#CC94F2',
+        '#9A5BD9',
+        '#6F36BF',
+        '#3F1973'
+      ]
+      */
       const colorPalette = [
         '#0D4B7A',
         '#0B2B38',
@@ -165,6 +178,8 @@ export default {
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S')
       const formatTime = d3.timeFormat('%B %d, %Y')
       this.results.forEach(d => {
+        d.targetingType = d.targetingType ? d.targetingType : 'Unknown'
+        d.targetingValue = d.targetingValue ? d.targetingValue : 'Unknown'
         d.date = dateFormatParser(d.date)
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
         d.dateStr = formatTime(d.day)
