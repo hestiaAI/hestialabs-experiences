@@ -120,21 +120,7 @@ export default {
   methods: {
     drawViz() {
       this.results = this.values
-      console.log(this.values.slice(450, 500))
       // Define a color palette for the viz
-      /*
-      const colorPalette = [
-        '#58539E',
-        '#371D52',
-        '#6652A1',
-        '#35334A',
-        '#859ED5',
-        '#CC94F2',
-        '#9A5BD9',
-        '#6F36BF',
-        '#3F1973'
-      ]
-      */
       const colorPalette = [
         '#0D4B7A',
         // '#0B2B38',
