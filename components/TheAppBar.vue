@@ -5,33 +5,58 @@
         aria-label="Open navigation menu"
         @click.stop="drawer = !drawer"
       />
-      <v-toolbar-title class="d-flex align-center">
-        <nuxt-link
-          to="/"
-          class="d-flex align-center"
-          style="text-decoration: none; color: inherit"
-        >
-          <logo-img class="mr-5" width="100" />
-        </nuxt-link>
-        <template v-if="collaborator">
+      <v-col>
+        <v-toolbar-title class="d-flex align-center">
+          <v-btn icon to="/" class="v-btn__home mr-0 mr-sm-4" color="primary">
+            <v-icon>$vuetify.icons.mdiHome</v-icon>
+          </v-btn>
           <a
-            :href="collaborator.url"
+            href="https://hestialabs.org/"
             target="_blank"
             rel="noreferrer noopener"
             class="ml-2"
           >
-            <v-img
-              :src="collaborator.icon"
-              :lazy-src="collaborator.icon"
-              :alt="collaborator.title"
-              contain
-              width="100"
-            />
+            <logo-img class="mr-5" width="100" />
           </a>
-        </template>
-      </v-toolbar-title>
-      <v-spacer />
-      <mode-switch v-if="$vuetify.breakpoint.smAndUp" />
+
+          <template v-if="collaborator">
+            <a
+              :href="collaborator.url"
+              target="_blank"
+              rel="noreferrer noopener"
+              class="ml-2"
+            >
+              <v-img
+                :src="collaborator.icon"
+                :lazy-src="collaborator.icon"
+                :alt="collaborator.title"
+                contain
+                width="100"
+              />
+            </a>
+          </template>
+        </v-toolbar-title>
+      </v-col>
+      <v-col align="center">
+        <a
+          :href="`${
+            collaborator ? collaborator.url : 'https://hestialabs.org/'
+          }#newsletter`"
+          target="_blank"
+          rel="noreferrer noopener"
+          class="text-lg-h5"
+        >
+          Subscribe to the
+          <template v-if="collaborator"> {{ collaborator.title }} </template>
+          <template v-else> HestiaLabs </template>
+          newsletter!
+        </a>
+      </v-col>
+      <v-col align="right">
+        <v-layout column align-end>
+          <mode-switch v-if="$vuetify.breakpoint.smAndUp" />
+        </v-layout>
+      </v-col>
     </v-app-bar>
     <v-navigation-drawer
       v-model="drawer"
@@ -83,3 +108,10 @@ export default {
   }
 }
 </script>
+
+<style>
+.v-btn__home.theme--light.v-btn--router.v-btn--active::before {
+  /* Override default style for active nav router link element */
+  opacity: 0 !important;
+}
+</style>
