@@ -20,7 +20,7 @@
       </v-col>
       <v-col cols="12" sm="3">
         <div id="company-chart">
-          <strong>Top 10 Companies targeting you</strong>
+          <strong>Top 10 Companies</strong>
           <a class="reset" style="display: none">reset</a>
           <p class="filters">
             <span>
@@ -78,7 +78,9 @@
         <a class="reset">Reset All</a>
       </div>
     </v-row>
-    <unit-query-results v-bind="{ headers: header, items: results }" />
+    <v-row>
+      <unit-query-results v-bind="{ headers: header, items: results }" />
+    </v-row>
   </v-container>
 </template>
 
@@ -135,7 +137,7 @@ export default {
       */
       const colorPalette = [
         '#0D4B7A',
-        '#0B2B38',
+        // '#0B2B38',
         '#248EB8',
         '#7FCEF0',
         '#4A659E'
