@@ -4,9 +4,9 @@
     <template v-if="$store.state.power">
       <v-row>
         <v-col cols="12" lg="6">
-          <unit-sql
-            v-if="queryShortcut"
-            v-bind="{ data }"
+          <unit-custom-pipeline
+            v-if="customPipeline"
+            v-bind="{ inputFiles, customPipeline }"
             @update="onUnitResultsUpdate"
           />
           <unit-sparql
@@ -50,9 +50,9 @@
         </v-row>
         <v-row>
           <v-col>
-            <unit-sql
-              v-if="queryShortcut"
-              v-bind="{ data }"
+            <unit-custom-pipeline
+              v-if="customPipeline"
+              v-bind="{ inputFiles, customPipeline }"
               @update="onUnitResultsUpdate"
             />
             <unit-sparql
@@ -140,13 +140,13 @@ export default {
       type: Number,
       default: 0
     },
-    queryShortcut: {
-      type: Boolean,
-      default: false
-    },
-    data: {
+    customPipeline: {
       type: String,
       default: ''
+    },
+    inputFiles: {
+      type: Object,
+      default: null
     }
   },
   data() {

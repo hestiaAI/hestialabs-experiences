@@ -3,7 +3,7 @@
   "subtitle": "Tracking data",
   "icon": "tracker-control.png",
   "ext": "csv",
-  "queryShortcut": true,
+  "customPipeline": "trackerControl",
   "data": ["tracker-control.csv"],
   "defaultView": [
     {
