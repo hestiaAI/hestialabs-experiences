@@ -27,13 +27,13 @@
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
-            v-if="queryShortcut"
+            v-if="customPipeline"
             v-bind="{
-              data,
               visualizations,
               defaultViewElements,
               selectedExample,
-              queryShortcut
+              customPipeline,
+              inputFiles
             }"
             @update="onQueryUpdate"
           />
@@ -44,8 +44,7 @@
               visualizations,
               defaultViewElements,
               query: queries[index],
-              i: index,
-              queryShortcut
+              i: index
             }"
             @update="onQueryUpdate"
           />
@@ -76,7 +75,7 @@ export default {
     defaultView: Array,
     title: String,
     dataPortal: String,
-    queryShortcut: Boolean
+    customPipeline: String
   },
   data() {
     // main example is selected by default
@@ -90,7 +89,7 @@ export default {
       rml: '',
       allItems: null,
       allHeaders: null,
-      data: ''
+      inputFiles: null
     }
   },
   computed: {
@@ -151,9 +150,8 @@ export default {
         this.error = true
         this.message = error
         this.progress = false
-      } else if (this.queryShortcut) {
-        // TODO extend for multiple files
-        this.data = Object.values(inputFiles)[0]
+      } else if (this.customPipeline) {
+        this.inputFiles = inputFiles
         this.progress = false
         this.success = true
       } else if (!this.rml) {

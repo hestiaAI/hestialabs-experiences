@@ -81,9 +81,9 @@ export default {
       type: Boolean,
       default: false
     },
-    queryShortcut: {
-      type: Boolean,
-      default: false
+    customPipeline: {
+      type: String,
+      default: ''
     }
   },
   computed: {
@@ -100,7 +100,7 @@ export default {
         'examples',
         'visualizations',
         'defaultView',
-        'queryShortcut'
+        'customPipeline'
       ]
       const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
       return props

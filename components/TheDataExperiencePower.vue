@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="queryShortcut">
+    <template v-if="customPipeline">
       <p>Advanced view not supported for this experience</p>
     </template>
 
@@ -57,7 +57,7 @@ export default {
     visualizations: Object,
     title: String,
     dataPortal: String,
-    queryShortcut: Boolean
+    customPipeline: String
   },
   data() {
     // main example is selected by default
