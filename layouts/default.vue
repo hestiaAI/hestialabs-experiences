@@ -18,11 +18,12 @@
       </v-container>
     </v-main>
     <v-footer app absolute color="primary">
-      <div class="lighten-2 py-2 ma-auto white--text">
-        <span
-          >Educational material developed by
-          <span class="font-bold">Hestia.ai</span></span
+      <div class="lighten-2 py-2 ma-auto white--text" align="center">
+        Educational material developed by
+        <a href="https://hestia.ai" target="_blank" style="color: white"
+          >Hestia.ai</a
         >
+        <br />Currently in development
       </div>
     </v-footer>
   </v-app>
