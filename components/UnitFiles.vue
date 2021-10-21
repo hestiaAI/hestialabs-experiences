@@ -260,7 +260,7 @@ export default {
       }
     },
     getMessagePowerUser({
-      inputFilesRocketRML: inputFiles,
+      inputFiles,
       extractedFiles: xfiles,
       filesProcessingTime: ms = 0
     }) {
