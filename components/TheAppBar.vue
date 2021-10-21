@@ -5,7 +5,7 @@
         aria-label="Open navigation menu"
         @click.stop="drawer = !drawer"
       />
-      <v-col>
+      <v-col cols="3">
         <v-toolbar-title class="d-flex align-center">
           <v-btn icon to="/" class="v-btn__home mr-0 mr-sm-4" color="primary">
             <v-icon>$vuetify.icons.mdiHome</v-icon>
@@ -37,7 +37,7 @@
           </template>
         </v-toolbar-title>
       </v-col>
-      <v-col align="center">
+      <v-col align="center" class="ml-auto mr-auto" cols="6">
         <a
           :href="`${
             collaborator ? collaborator.url : 'https://hestialabs.org/'
@@ -46,13 +46,12 @@
           rel="noreferrer noopener"
           class="text-lg-h5"
         >
-          Subscribe to the
-          <template v-if="collaborator"> {{ collaborator.title }} </template>
-          <template v-else> HestiaLabs </template>
-          newsletter!
+          Subscribe to the newsletter of
+          <template v-if="collaborator"> {{ collaborator.title }}! </template>
+          <template v-else> HestiaLabs! </template>
         </a>
       </v-col>
-      <v-col align="right">
+      <v-col cols="3">
         <v-layout column align-end>
           <mode-switch v-if="$vuetify.breakpoint.smAndUp" />
         </v-layout>

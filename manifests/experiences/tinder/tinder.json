@@ -6,7 +6,7 @@
   "data": ["tinder-synthetic.json"],
   "preprocessor": "tinder",
   "collaborator": {
-    "title": "Dating Privacy Collective",
+    "title": "The Dating Privacy Collective",
     "icon": "dating-privacy-collective.svg",
     "url": "https://dating-privacy.hestialabs.org/"
   },
