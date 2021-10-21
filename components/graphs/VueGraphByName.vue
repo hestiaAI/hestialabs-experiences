@@ -25,6 +25,8 @@ export default {
   computed: {
     isComponent() {
       switch (this.graphName) {
+        case 'TwitterOverview.vue':
+          return () => import('@/components/graphs/TwitterOverview.vue')
         case 'BarChart.vue':
           return () => import('@/components/graphs/BarChart.vue')
         case 'TrackerGraph.vue':
@@ -38,7 +40,6 @@ export default {
     toVueFileName(componentName) {
       const camelCase = toPascalCase(componentName)
       const fileName = camelCase + '.vue'
-      console.log(componentName, fileName)
       return fileName
     }
   }
