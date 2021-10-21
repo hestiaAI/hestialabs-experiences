@@ -18,10 +18,11 @@
       </v-container>
     </v-main>
     <v-footer app absolute color="primary">
-      <div class="lighten-2 py-2 ma-auto white--text">
+      <div class="lighten-2 py-2 ma-auto white--text" align="center">
         <span
           >Educational material developed by
-          <span class="font-bold">Hestia.ai</span></span
+          <span class="font-bold">Hestia.ai</span>
+          <br />Currently in development</span
         >
       </div>
     </v-footer>
