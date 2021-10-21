@@ -1,0 +1,24 @@
+{
+  "title": "Twitter",
+  "subtitle": "Dashboard",
+  "icon": "twittr.png",
+  "ext": "zip",
+  "files": ["data/ad-impressions.js", "data/ad-engagements.js"],
+  "preprocessor": "twitter",
+  "customPipeline": "twitterDashboard",
+  "data": ["twitter.zip", "twitter-sample.zip"],
+  "collaborator": {
+    "title": "The Eyeballs Collective",
+    "icon": "the-eyeballs.svg",
+    "url": "https://eyeballs.hestialabs.org/"
+  },
+  "defaultView": [
+    {
+      "query": "",
+      "visualizations": [],
+      "showTable": false,
+      "title": "Twitter advertising dashboard",
+      "text": "Explore the different advertisers and criteria used to target you on Twitter."
+    }
+  ]
+}
