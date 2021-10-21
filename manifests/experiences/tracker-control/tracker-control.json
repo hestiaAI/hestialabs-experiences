@@ -3,11 +3,10 @@
   "subtitle": "Tracking data",
   "icon": "tracker-control.png",
   "ext": "csv",
-  "customPipeline": "trackerControl",
   "data": ["tracker-control.csv"],
   "defaultView": [
     {
-      "query": "",
+      "customPipeline": "trackerControl",
       "visualizations": ["TrackerGraph.vue"],
       "showTable": false,
       "title": "Tracker control experience",

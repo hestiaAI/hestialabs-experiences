@@ -27,12 +27,12 @@
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
-            v-if="customPipeline"
+            v-if="defaultViewElements.customPipeline"
             v-bind="{
               visualizations,
               defaultViewElements,
               selectedExample,
-              customPipeline,
+              customPipeline: defaultViewElements.customPipeline,
               inputFiles
             }"
             @update="onQueryUpdate"
@@ -74,8 +74,7 @@ export default {
     visualizations: Object,
     defaultView: Array,
     title: String,
-    dataPortal: String,
-    customPipeline: String
+    dataPortal: String
   },
   data() {
     // main example is selected by default
@@ -100,13 +99,6 @@ export default {
     }
   },
   watch: {
-    selectedExample: {
-      immediate: true,
-      async handler(selectedExample) {
-        // this should be quick ...
-        this.rml = await parseYarrrml(selectedExample.yarrrml)
-      }
-    },
     allItems: {
       immediate: true,
       handler(allItems) {
@@ -140,8 +132,10 @@ export default {
     handleRdfEnd() {
       this.progress = false
     },
-    onUnitFilesUpdate({ inputFiles, error }) {
+    async onUnitFilesUpdate({ inputFiles, error }) {
       this.initState()
+      this.inputFiles = inputFiles
+      this.rml = await parseYarrrml(this.selectedExample.yarrrml)
       if (Object.keys(inputFiles).length === 0) {
         this.error = true
         this.message = 'No relevant files were found'
@@ -150,13 +144,7 @@ export default {
         this.error = true
         this.message = error
         this.progress = false
-      } else if (this.customPipeline) {
-        this.inputFiles = inputFiles
-        this.progress = false
-        this.success = true
-      } else if (!this.rml) {
-        throw new Error('RML not ready')
-      } else {
+      } else if (this.rml) {
         try {
           rdfUtils.generateRDF(
             this.handleRdfData,

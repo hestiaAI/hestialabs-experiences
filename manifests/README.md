@@ -82,15 +82,20 @@ Note: All files and folders should match the following regular expression: [`^(?
     }
   ]},
   /**
-    * Array defining the blocks to show in the default view.
-    * Each block is tied to one query, can show multiple visualizations,
-    * can show/hide a table containing the results, and can display some introduction text.
+    * Array defining the blocks to show in the default view. Each section section can have:
+    * - A SPARQL query (optional)
+    * - A function used as the custom pipeline
+    * - An array of visualizations to show
+    * - A data table
+    * - A title
+    * - A text description
     * The files referenced should be in the 'main' example.
     * @type Array[Object]
     */
   "defaultView": [
     {
       "query": "query_filename",
+      "customPipeline": "pipeline_function_name",
       "visualizations": ["chart_filename1", "chart_filename2"],
       "showTable": false,
       "title": "An interesting title",
