@@ -37,7 +37,7 @@
           </template>
         </v-toolbar-title>
       </v-col>
-      <v-col align="center" class="ml-auto mr-auto" cols="6">
+      <v-col align="center" class="ml-auto mr-auto">
         <a
           :href="`${
             collaborator ? collaborator.url : 'https://hestialabs.org/'
