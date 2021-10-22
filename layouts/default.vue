@@ -8,16 +8,13 @@
             <h2>
               <a
                 :href="`${
-                  collaborator ? collaborator.url : 'https://hestialabs.org/'
+                  collaborator.url || 'https://hestialabs.org/'
                 }#newsletter`"
                 target="_blank"
                 rel="noreferrer noopener"
               >
                 Subscribe to the newsletter of
-                <template v-if="collaborator">
-                  {{ collaborator.title }}!
-                </template>
-                <template v-else> HestiaLabs! </template>
+                {{ collaborator.title || 'HestiaLabs' }}!
               </a>
             </h2>
           </v-col>
@@ -81,7 +78,7 @@ export default {
         const { collaborator } = this.manifest(this.$route) || {}
         return collaborator
       }
-      return null
+      return {}
     }
   },
   watch: {
