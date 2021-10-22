@@ -37,7 +37,7 @@
         <v-row>
           <v-col cols="12" sm="4">
             <div id="engagement-chart">
-              <strong>Interactions with ads</strong>
+              <strong>Interactions with ads (click, video viewing)</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
@@ -332,7 +332,7 @@ export default {
 
       engagementChart
         .width(width)
-        .height(240)
+        .height(220)
         .radius(width / 2.5)
         .innerRadius(width / 8)
         .dimension(engagementDimension)
@@ -405,7 +405,7 @@ export default {
           some:
             '<strong>%filter-count</strong> selected out of <strong>' +
             total +
-            '</strong> ads displayed on your timeline' +
+            '</strong> ads displayed on your Twitter feed' +
             " | <a class='reset'>Reset All</a>",
           all: 'All ads selected. Please click on the graph to apply filters.'
         })
