@@ -1,85 +1,95 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" sm="9">
-        <div id="volume-chart">
-          <strong>Number of ads over time</strong>
-          <a class="reset" style="display: none">reset</a>
-          <p class="filters">
-            <span>
-              Current filter:
-              <span class="filter"></span>
-            </span>
-          </p>
-        </div>
-        <div id="range-chart">
-          <p class="muted pull-right" style="margin-right: 15px">
-            select a time range to zoom in
-          </p>
-        </div>
+      <v-col cols="12" sm="1"></v-col>
+      <v-col cols="12" sm="10">
+        <v-row>
+          <v-col cols="12" sm="8">
+            <div id="volume-chart">
+              <strong>Number of ads over time</strong>
+              <a class="reset" style="display: none">reset</a>
+              <p class="filters">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
+            </div>
+            <div id="range-chart">
+              <p class="muted pull-right" style="margin-right: 15px">
+                select a time range to zoom in
+              </p>
+            </div>
+          </v-col>
+          <v-col cols="12" sm="4">
+            <div id="company-chart">
+              <strong>Top 10 Companies</strong>
+              <a class="reset" style="display: none">reset</a>
+              <p class="filters">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
+            </div>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" sm="4">
+            <div id="engagement-chart">
+              <strong>Interactions with ads</strong>
+              <a class="reset" style="display: none">reset</a>
+              <p class="filters">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
+            </div>
+          </v-col>
+          <v-col cols="12" sm="4">
+            <div id="type-chart">
+              <strong>Type of targeting</strong>
+              <a class="reset" style="display: none">reset</a>
+              <p class="filters">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
+            </div>
+          </v-col>
+          <v-col cols="12" sm="4">
+            <div id="value-chart">
+              <strong>Targeting criteria</strong>
+              <a class="reset" style="display: none">reset</a>
+              <p class="filters">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
+            </div>
+          </v-col>
+        </v-row>
+        <v-row>
+          <div id="dc-data-count" class="dc-data-count">
+            <span class="filter-count"></span>
+            selected out of
+            <span class="total-count"></span>
+            records |
+            <a class="reset">Reset All</a>
+          </div>
+        </v-row>
       </v-col>
-      <v-col cols="12" sm="3">
-        <div id="company-chart">
-          <strong>Top 10 Companies</strong>
-          <a class="reset" style="display: none">reset</a>
-          <p class="filters">
-            <span>
-              Current filter:
-              <span class="filter"></span>
-            </span>
-          </p>
-        </div>
-      </v-col>
+      <v-col cols="12" sm="1"></v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="4">
-        <div id="engagement-chart">
-          <strong>Interactions with ads</strong>
-          <a class="reset" style="display: none">reset</a>
-          <p class="filters">
-            <span>
-              Current filter:
-              <span class="filter"></span>
-            </span>
-          </p>
-        </div>
+      <v-col cols="12" sm="1"></v-col>
+      <v-col cols="12" sm="10">
+        <unit-query-results v-bind="{ headers: header, items: results }" />
       </v-col>
-      <v-col cols="12" sm="4">
-        <div id="type-chart">
-          <strong>Type of targeting</strong>
-          <a class="reset" style="display: none">reset</a>
-          <p class="filters">
-            <span>
-              Current filter:
-              <span class="filter"></span>
-            </span>
-          </p>
-        </div>
-      </v-col>
-      <v-col cols="12" sm="4">
-        <div id="value-chart">
-          <strong>Value of targeting</strong>
-          <a class="reset" style="display: none">reset</a>
-          <p class="filters">
-            <span>
-              Current filter:
-              <span class="filter"></span>
-            </span>
-          </p>
-        </div>
-      </v-col>
-    </v-row>
-    <v-row>
-      <div id="dc-data-count" class="dc-data-count">
-        <span class="filter-count"></span>
-        selected out of
-        <span class="total-count"></span>
-        records |
-        <a class="reset">Reset All</a>
-      </div>
-    </v-row>
-    <v-row>
-      <unit-query-results v-bind="{ headers: header, items: results }" />
+      <v-col cols="12" sm="1"></v-col>
     </v-row>
   </v-container>
 </template>
@@ -231,7 +241,7 @@ export default {
       volumeChart
         .renderArea(true)
         .width(d3.select('#volume-chart').node().getBoundingClientRect().width)
-        .height(200)
+        .height(150)
         .transitionDuration(1000)
         .margins({ top: 30, right: 10, bottom: 25, left: 40 })
         .group(adPerDayGroup)
@@ -283,7 +293,7 @@ export default {
       // Render advertiser row chart
       companyChart
         .width(d3.select('#company-chart').node().getBoundingClientRect().width)
-        .height(263)
+        .height(240)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(companyGroup)
         .dimension(companyDimension)
@@ -304,7 +314,7 @@ export default {
 
       engagementChart
         .width(width)
-        .height(300)
+        .height(240)
         .radius(width / 2.5)
         .innerRadius(width / 8)
         .dimension(engagementDimension)
@@ -326,7 +336,7 @@ export default {
       // Render targeting type row chart
       typeChart
         .width(d3.select('#type-chart').node().getBoundingClientRect().width)
-        .height(300)
+        .height(240)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(targetingTypeGroup)
         .dimension(targetingTypeDimension)
@@ -342,7 +352,7 @@ export default {
       // Render targeting value row chart
       valueChart
         .width(d3.select('#value-chart').node().getBoundingClientRect().width)
-        .height(300)
+        .height(240)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(targetingValueGroup)
         .dimension(targetingValueDimension)
