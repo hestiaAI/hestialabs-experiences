@@ -24,6 +24,11 @@
       </v-col>
     </v-row>
     <template v-if="success">
+      <v-row>
+        <v-col>
+          <unit-json-viewer />
+        </v-col>
+      </v-row>
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
@@ -63,12 +68,14 @@
 /* eslint-disable vue/require-default-prop */
 import rdfUtils from '@/utils/rdf'
 import parseYarrrml from '@/utils/parse-yarrrml'
+import UnitJsonViewer from '~/components/UnitJsonViewer'
 
 function getErrorMessage(error) {
   return error instanceof Error ? error.message : error
 }
 
 export default {
+  components: { UnitJsonViewer },
   props: {
     examples: Array,
     visualizations: Object,
