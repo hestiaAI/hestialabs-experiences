@@ -5,7 +5,7 @@
   "dataPortal": "https://help.uber.com/ubereats/article/request-a-copy-of-your-uber-data",
   "ext": "csv",
   "customPipeline": "trackerControl",
-  "data": ["tracker-control.csv"],
+  "data": ["uber-trips.csv"],
   "collaborator": {
     "title": "The Eyeballs Collective",
     "icon": "the-eyeballs.svg",
@@ -13,10 +13,11 @@
   },
   "defaultView": [
     {
+      "query": "",
       "visualizations": ["UberOverview.vue"],
-      "showTable": true,
+      "showTable": false,
       "title": "Uber Trips overview",
-      "text": "Understand ..."
+      "text": "Understand the world <3"
     }
   ]
 }
