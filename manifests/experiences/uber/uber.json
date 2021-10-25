@@ -1,0 +1,22 @@
+{
+  "title": "Uber",
+  "subtitle": "Customer data",
+  "icon": "uber.png",
+  "dataPortal": "https://help.uber.com/ubereats/article/request-a-copy-of-your-uber-data",
+  "ext": "csv",
+  "customPipeline": "trackerControl",
+  "data": ["tracker-control.csv"],
+  "collaborator": {
+    "title": "The Eyeballs Collective",
+    "icon": "the-eyeballs.svg",
+    "url": "https://eyeballs.hestialabs.org/"
+  },
+  "defaultView": [
+    {
+      "visualizations": ["UberOverview.vue"],
+      "showTable": true,
+      "title": "Uber Trips overview",
+      "text": "Understand ..."
+    }
+  ]
+}
