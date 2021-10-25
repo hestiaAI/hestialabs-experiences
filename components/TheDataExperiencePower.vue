@@ -57,7 +57,7 @@ export default {
     visualizations: Object,
     title: String,
     dataPortal: String,
-    customPipeline: String
+    customPipeline: Function
   },
   data() {
     // main example is selected by default
