@@ -75,8 +75,8 @@ export default {
     ...mapGetters(['manifest']),
     collaborator() {
       if (this.$route.params.key) {
-        const { collaborator } = this.manifest(this.$route) || {}
-        return collaborator
+        const { collaborator } = this.manifest(this.$route)
+        return collaborator || {}
       }
       return {}
     }
