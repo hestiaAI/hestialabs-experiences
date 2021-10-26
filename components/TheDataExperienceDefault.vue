@@ -18,15 +18,15 @@
             border="top"
             colored-border
             max-width="600"
-            >{{ message }}</v-alert
-          >
+            >{{ message }}
+          </v-alert>
         </template>
       </v-col>
     </v-row>
     <template v-if="success">
-      <v-row>
+      <v-row v-if="inputFiles && extractedFiles">
         <v-col>
-          <unit-json-viewer />
+          <unit-file-explorer v-bind="{ inputFiles, extractedFiles }" />
         </v-col>
       </v-row>
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
@@ -68,14 +68,14 @@
 /* eslint-disable vue/require-default-prop */
 import rdfUtils from '@/utils/rdf'
 import parseYarrrml from '@/utils/parse-yarrrml'
-import UnitJsonViewer from '~/components/UnitJsonViewer'
+import UnitFileExplorer from '~/components/UnitFileExplorer'
 
 function getErrorMessage(error) {
   return error instanceof Error ? error.message : error
 }
 
 export default {
-  components: { UnitJsonViewer },
+  components: { UnitFileExplorer },
   props: {
     examples: Array,
     visualizations: Object,
@@ -96,7 +96,8 @@ export default {
       rml: '',
       allItems: null,
       allHeaders: null,
-      inputFiles: null
+      inputFiles: null,
+      extractedFiles: null
     }
   },
   computed: {
@@ -147,8 +148,9 @@ export default {
     handleRdfEnd() {
       this.progress = false
     },
-    onUnitFilesUpdate({ inputFiles, error }) {
+    onUnitFilesUpdate({ inputFiles, error, extractedFiles }) {
       this.initState()
+      this.extractedFiles = extractedFiles
       if (Object.keys(inputFiles).length === 0) {
         this.error = true
         this.message = 'No relevant files were found'
