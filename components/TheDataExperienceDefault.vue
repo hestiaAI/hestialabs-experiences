@@ -167,6 +167,7 @@ export default {
         throw new Error('RML not ready')
       } else {
         try {
+          this.inputFiles = inputFiles
           rdfUtils.generateRDF(
             this.handleRdfData,
             this.handleRdfError,

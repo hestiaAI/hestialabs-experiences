@@ -10,14 +10,16 @@
               <v-treeview
                 dense
                 open-on-click
+                open-all
                 activatable
+                rounded
                 return-object
                 transition
                 :items="fileTree"
                 @update:active="setSelectedItem"
               >
                 <template #prepend="{ item }">
-                  <v-icon v-if="item.type !== undefined">
+                  <v-icon v-if="typeof item.type !== 'undefined'">
                     {{ filetype2icon[item.type] }}
                   </v-icon>
                 </template>
@@ -31,11 +33,13 @@
             <v-card-text>
               <template v-if="selectedItem">
                 <template v-if="/js(on)?/.test(selectedItem.type)">
-                  <v-treeview dense open-on-click :items="selectedItemTree">
-                    <template #append="{ item }">
-                      <p v-if="item.value !== undefined">{{ item.value }}</p>
-                    </template>
-                  </v-treeview>
+                  <unit-json-viewer :json="inputFiles[selectedItem.name]" />
+                </template>
+                <template v-else-if="/[ct]sv/.test(selectedItem.type)">
+                  <unit-csv-viewer :csv="inputFiles[selectedItem.name]" />
+                </template>
+                <template v-else-if="/pdf/.test(selectedItem.type)">
+                  <unit-pdf-viewer :pdf="selectedItem.name" />
                 </template>
                 <template v-else>
                   <p>Cannot open file type</p>
@@ -60,10 +64,13 @@ import {
   mdiFolderZip,
   mdiTable
 } from '@mdi/js'
-import lodash from 'lodash'
+import UnitJsonViewer from '~/components/UnitJsonViewer'
+import UnitCsvViewer from '~/components/UnitCsvViewer'
+import UnitPdfViewer from '~/components/UnitPdfViewer'
 
 export default {
   name: 'UnitFileExplorer',
+  components: { UnitPdfViewer, UnitJsonViewer, UnitCsvViewer },
   props: {
     inputFiles: {
       type: Object,
@@ -71,12 +78,13 @@ export default {
     },
     extractedFiles: {
       type: Object,
-      required: true
+      default: () => {}
     }
   },
   data() {
     return {
       selectedItem: null,
+      openItems: [],
       filetype2icon: {
         folder: mdiFolder,
         zip: mdiFolderZip,
@@ -85,72 +93,40 @@ export default {
         csv: mdiTable,
         pdf: mdiFilePdfBox
       },
-      idSpaceOne: 0,
-      idSpaceTwo: 0
+      idSpace: 0
     }
   },
   computed: {
     fileTree() {
       return this.itemifyFiles(this.extractedFiles)
-    },
-    selectedItemTree() {
-      const res = [
-        this.itemify(JSON.parse(this.inputFiles[this.selectedItem.name]))
-      ]
-      console.log(res)
-      return res
     }
   },
   methods: {
     setSelectedItem(array) {
       const item = array[0]
-      console.log('selected item')
-      console.log(item)
       const containers = new Set(['folder', 'zip'])
-      if (!containers.has(item.type)) {
+      if (!containers.has(item?.type)) {
         this.selectedItem = item
       }
     },
     itemifyFiles(tree) {
       if (typeof tree !== 'object') {
         return {
-          id: this.idSpaceOne++,
+          id: this.idSpace++,
           name: tree,
           type: tree.match(/\.([\S]+)/)[1]
         }
-      } else if (tree.length) {
+      } else if (typeof tree.length !== 'undefined') {
         return tree.flatMap(this.itemifyFiles)
       } else {
         return Object.entries(tree).flatMap(([key, v]) => {
           return {
-            id: this.idSpaceOne++,
+            id: this.idSpace++,
             name: key,
             children: this.itemifyFiles(v),
             type: key.match(/\.([\S]+)/)[1] ?? 'folder'
           }
         })
-      }
-    },
-    itemify(tree) {
-      if (typeof tree !== 'object') return { value: tree }
-      else if (tree.length) {
-        const array = tree.flatMap(el => {
-          return this.itemify(el)
-        })
-        return {
-          id: this.idSpaceTwo++,
-          name: `list with ${array.length} items`,
-          children: array
-        }
-      } else {
-        const obj = Object.entries(tree).flatMap(([key, v]) => {
-          return { ...this.itemify(v), name: lodash.startCase(key) }
-        })
-        return {
-          id: this.idSpaceTwo++,
-          name: `object with ${obj.length} keys`,
-          children: obj
-        }
       }
     }
   }
