@@ -2,17 +2,19 @@
   <v-container>
     <v-row>
       <v-col cols="12" md="7" lg="8">
-        <div id="bubble-chart">
-          <strong
-            >Compute how much you spent depending on the time and distance of of
-            of your trips</strong
-          >
+        <div id="scatter-chart">
+          <strong>Price versus Distance</strong>
           <a class="reset" style="display: none">reset</a>
           <p class="filters">
             <span>
               Current filter:
               <span class="filter"></span>
             </span>
+          </p>
+        </div>
+        <div id="hour-chart">
+          <p class="muted pull-right" style="margin-right: 15px">
+            select a time range to zoom in
           </p>
         </div>
       </v-col>
@@ -113,7 +115,9 @@
             </v-row>
           </v-card-text>
           <v-card-actions>
-            <v-btn elevation="2" block> Reset all filters </v-btn>
+            <v-btn elevation="2" block @click="resetAll()">
+              Reset all filters
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -168,15 +172,6 @@
         </div>
       </v-col>
     </v-row>
-    <v-row>
-      <div id="dc-data-count" class="dc-data-count">
-        <span class="filter-count"></span>
-        selected out of
-        <span class="total-count"></span>
-        records |
-        <a class="reset">Reset All</a>
-      </div>
-    </v-row>
     <unit-query-results v-bind="{ headers: header, items: results }" />
   </v-container>
 </template>
@@ -219,26 +214,25 @@ export default {
     this.drawViz()
   },
   methods: {
+    resetAll() {
+      dc.filterAll()
+      dc.renderAll()
+    },
     drawViz() {
       // Add data to table
       this.results = this.values
 
       // Define color palette for the graphs
-      /*
       const colorPalette = [
-        '#0D4B7A',
-        // '#0B2B38',
-        '#248EB8',
-        '#7FCEF0',
-        '#4A659E'
-      ]
-      */
-      const colorPalette = [
-        '#0D4B7A',
-        // '#0B2B38',
-        '#248EB8',
-        '#7FCEF0',
-        '#4A659E'
+        // '#371D52',
+        '#6652A1',
+        '#35334A',
+        '#859ED5',
+        '#CC94F2',
+        '#9A5BD9',
+        '#6F36BF',
+        '#3F1973',
+        '#58539E'
       ]
 
       // Parse and format data
@@ -262,7 +256,8 @@ export default {
       })
 
       // Create and bind charts to their respective divs
-      const bubbleChart = new dc.ScatterPlot('#bubble-chart')
+      const scatterChart = new dc.ScatterPlot('#scatter-chart')
+      const hourChart = new dc.BarChart('#hour-chart')
       const serviceChart = new dc.PieChart('#service-chart')
       const weekChart = new dc.RowChart('#week-chart')
       const priceChart = new dc.LineChart('#price-chart')
@@ -279,9 +274,12 @@ export default {
       const waitingAvgNumber = new dc.NumberDisplay('#number-waiting-avg')
 
       // Bind reset filters links
-
-      d3.select('#bubble-chart a.reset').on('click', function () {
-        bubbleChart.filterAll()
+      d3.select('#scatter-chart a.reset').on('click', function () {
+        scatterChart.filterAll()
+        dc.redrawAll()
+      })
+      d3.select('#hour-chart a.reset').on('click', function () {
+        hourChart.filterAll()
         dc.redrawAll()
       })
       d3.select('#service-chart a.reset').on('click', function () {
@@ -312,10 +310,8 @@ export default {
       const serviceDimension = ndx.dimension(d => d['Product Type'])
       const cityDimension = ndx.dimension(d => d.city)
       const dayDimension = ndx.dimension(d => d.day)
-      // const hourlyDimension = ndx.dimension(d => d.hour)
-      // const distanceDimension = ndx.dimension(d => d.distance)
-      // const durationDimension = ndx.dimension(d => d.duration)
-      // const waitingDimension = ndx.dimension(d => d.waiting_time)
+      const scatterDimension = ndx.dimension(d => [d.distance, d.price])
+      const hourDimension = ndx.dimension(d => d.hour)
 
       // Create groups
       const allGroup = allDimension.reduce(
@@ -350,51 +346,17 @@ export default {
       const serviceGroup = serviceDimension.group().reduceCount()
       const priceGroup = dayDimension.group().reduceSum(d => d.price)
       const cityGroup = cityDimension.group().reduceCount()
-      /*
-      const hourlyGroup = hourlyDimension.group().reduce(
-        (p, v) => {
-          ++p.count
-          p.distanceTotal += v.distance
-          p.distanceAvg = p.count ? p.distanceTotal / p.count : 0
-          p.waitingTotal += v.waiting_time
-          p.waitingAvg = p.count ? p.waitingTotal / p.count : 0
-          p.priceTotal += v.price
-          p.priceAvg = p.count ? p.priceTotal / p.count : 0
-          p.durationTotal += v.duration
-          p.durationAvg = p.count ? p.durationAvg / p.count : 0
-          return p
-        },
+      const scatterGroup = scatterDimension.group()
+      const hourGroup = hourDimension.group().reduceCount()
 
-        (p, v) => {
-          --p.count
-          p.distanceTotal -= v.distance
-          p.distanceAvg = p.count ? p.distanceTotal / p.count : 0
-          p.waitingTotal -= v.waiting_time
-          p.waitingAvg = p.count ? p.waitingTotal / p.count : 0
-          p.priceTotal -= v.price
-          p.priceAvg = p.count ? p.priceTotal / p.count : 0
-          p.durationTotal -= v.duration
-          p.durationAvg = p.count ? p.durationAvg / p.count : 0
-          return p
-        },
-        () => ({
-          count: 0,
-          distanceTotal: 0,
-          distanceAvg: 0,
-          waitingTotal: 0,
-          waitingAvg: 0,
-          durationTotal: 0,
-          durationAvg: 0,
-          priceTotal: 0,
-          priceAvg: 0
-        })
-      )
-      */
       // Render general Information numbers
       tripNumber
         .group(allGroup)
         .valueAccessor(p => p.count)
         .formatNumber(d3.format('.0'))
+        .on('pretransition', (chart, filter) => {
+          this.results = serviceDimension.top(Infinity)
+        })
       speedNumber
         .group(allGroup)
         .valueAccessor(p => {
@@ -436,59 +398,11 @@ export default {
         .valueAccessor(p => (p.count ? p.waitingTotal / p.count : 0))
         .formatNumber(d3.format('.1f'))
 
-      // Render bubble chart
-      // const hourTimeFormat = d3.timeFormat.utc('%H:%M')
-      /*
-      bubbleChart
-        .width(d3.select('#bubble-chart').node().getBoundingClientRect().width)
-        .height(300)
-        .transitionDuration(1500)
+      // Render scatter chart
+      scatterChart
+        .width(d3.select('#scatter-chart').node().getBoundingClientRect().width)
+        .height(220)
         .margins({ top: 10, right: 50, bottom: 30, left: 40 })
-        .dimension(hourlyDimension)
-        .group(hourlyGroup)
-        .colors(d3.schemeRdYlGn[9])
-        .colorDomain([0, 500])
-        .colorAccessor(p =>
-          p.value.count ? p.value.priceTotal / p.value.count : 0
-        )
-        .keyAccessor(p => {
-          return p.value.count ? p.value.priceTotal / p.value.count : 0
-        })
-        .valueAccessor(p =>
-          p.value.count ? p.value.distanceTotal / p.value.count : 0
-        )
-        .radiusValueAccessor(p => p.value.count)
-        .maxBubbleRelativeSize(0.03)
-        .x(d3.scaleLinear().domain([0, 24]))
-        .y(d3.scaleLinear().domain([0, 10]))
-        .r(d3.scaleLinear().domain([0, 10]))
-        .elasticY(true)
-        .elasticX(true)
-        .yAxisPadding(100)
-        .xAxisPadding(500)
-        .renderHorizontalGridLines(false)
-        .renderVerticalGridLines(false)
-        .xAxisLabel('Pickup time')
-        .yAxisLabel('Mean distance')
-        .renderLabel(false)
-        // .label(p => p.key)
-        .renderTitle(true)
-        .title(p =>
-          [
-            p.key,
-            `Number of trip: ${p.value.count}`,
-            `Mean distance travelled: ${p.value.distanceAvg} miles`,
-            `Mean price: ${p.value.priceAvg} GDP`
-          ].join('\n')
-        )
-        .xAxis()
-      // .tickFormat(v => hourTimeFormat(v))
-      */
-      const testDimension = ndx.dimension(d => [d.distance, d.price])
-      const testGroup = testDimension.group()
-      bubbleChart
-        .width(d3.select('#bubble-chart').node().getBoundingClientRect().width)
-        .height(300)
         .x(d3.scaleLinear().domain([6, 20]))
         .brushOn(true)
         .elasticY(true)
@@ -498,44 +412,67 @@ export default {
         .clipPadding(10)
         .xAxisLabel('Distance (miles)')
         .yAxisLabel('Price')
-        .dimension(testDimension)
-        .group(testGroup)
+        .dimension(scatterDimension)
+        .group(scatterGroup)
         .xAxis()
         .ticks(5)
 
-      bubbleChart.on('pretransition', () => {
+      scatterChart.on('pretransition', () => {
         const r = regression.linear(
-          bubbleChart
+          scatterChart
             .group()
             .all()
             .map(kv => [kv.key[0], kv.key[1]])
         )
         const m = r.equation[0]
         const b = r.equation[1]
-        const [x1, x2] = bubbleChart.x().domain()
+        const [x1, x2] = scatterChart.x().domain()
         const points = [[x1, m * x1 + b], [[x2, m * x2 + b]]]
-        const xScale = bubbleChart.x()
-        const yScale = bubbleChart.y()
-        const margins = bubbleChart.margins()
-        let line = bubbleChart.g().selectAll('line.regression').data([points])
+        const xScale = scatterChart.x()
+        const yScale = scatterChart.y()
+        const margins = scatterChart.margins()
+
+        let line = scatterChart.g().selectAll('line.regression').data([points])
         function doPoints(line) {
           line
             .attr('x1', d => xScale(d[0][0]) + margins.left)
             .attr('y1', d => yScale(d[0][1]) + margins.top)
-            .attr('x2', d => xScale(d[1][0]) + margins.left)
-            .attr('y2', d => yScale(d[1][1]) + margins.top)
+            .attr('x2', d => xScale(d[1][0][0]) + margins.left)
+            .attr('y2', d => yScale(d[1][0][1]) + margins.top)
         }
         line = line
           .enter()
           .append('line')
           .attr('class', 'regression')
+          .style('z-index', -1)
           .call(doPoints)
           .merge(line)
+          .attr('stroke', 'red')
+          .attr('stroke-width', 1.5)
+          .attr('stroke-opacity', 0.5)
+          .attr('stroke-dasharray', '8,8')
+          .text('test')
+
         line
           .transition()
-          .duration(bubbleChart.transitionDuration())
+          .duration(scatterChart.transitionDuration())
           .call(doPoints)
       })
+
+      // Render hour bar chart
+      hourChart
+        .width(d3.select('#hour-chart').node().getBoundingClientRect().width)
+        .height(40)
+        .margins({ top: 0, right: 50, bottom: 20, left: 40 })
+        .dimension(hourDimension)
+        .group(hourGroup)
+        .centerBar(true)
+        .gap(1)
+        .x(d3.scaleLinear().domain([0, 23]))
+        .ordinalColors(['#58539E'])
+        .yAxis()
+        .ticks(0)
+      hourChart.xAxis().tickFormat(d => d + ':00')
 
       // Render days of week row chart
       weekChart
@@ -599,7 +536,7 @@ export default {
         .margins({ top: 20, left: 40, right: 20, bottom: 20 })
         .width(d3.select('#price-chart').node().getBoundingClientRect().width)
         .turnOnControls(false)
-        .curve(d3.curveCardinal.tension(0.6))
+        .curve(d3.curveCardinal.tension(0.96))
         .xyTipsOn(true)
         .height(180)
         .brushOn(false)
