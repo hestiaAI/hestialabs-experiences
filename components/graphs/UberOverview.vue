@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12" md="7" lg="8">
         <div id="scatter-chart">
-          <strong>Price versus Distance</strong>
+          <strong>Price vs Distance</strong>
           <a class="reset" style="display: none">reset</a>
           <p class="filters">
             <span>
@@ -224,15 +224,11 @@ export default {
 
       // Define color palette for the graphs
       const colorPalette = [
-        // '#371D52',
-        '#6652A1',
-        '#35334A',
-        '#859ED5',
-        '#CC94F2',
-        '#9A5BD9',
-        '#6F36BF',
-        '#3F1973',
-        '#58539E'
+        '#AABFB9',
+        '#86A68E',
+        '#547353',
+        '#688C5E',
+        '#7BA66F'
       ]
 
       // Parse and format data
@@ -398,6 +394,8 @@ export default {
         .valueAccessor(p => (p.count ? p.waitingTotal / p.count : 0))
         .formatNumber(d3.format('.1f'))
 
+      // d3.selectAll('.stat-number').style('color', 'black')
+
       // Render scatter chart
       scatterChart
         .width(d3.select('#scatter-chart').node().getBoundingClientRect().width)
@@ -447,7 +445,7 @@ export default {
           .style('z-index', -1)
           .call(doPoints)
           .merge(line)
-          .attr('stroke', 'red')
+          .attr('stroke', colorPalette[colorPalette.length - 1])
           .attr('stroke-width', 1.5)
           .attr('stroke-opacity', 0.5)
           .attr('stroke-dasharray', '8,8')
@@ -469,7 +467,7 @@ export default {
         .centerBar(true)
         .gap(1)
         .x(d3.scaleLinear().domain([0, 23]))
-        .ordinalColors(['#58539E'])
+        .ordinalColors(colorPalette)
         .yAxis()
         .ticks(0)
       hourChart.xAxis().tickFormat(d => d + ':00')
@@ -557,6 +555,8 @@ export default {
         .xAxis()
         .ticks(4)
 
+      priceChart.filterAll()
+
       // Render city row chart
       cityChart
         .width(d3.select('#city-chart').node().getBoundingClientRect().width)
@@ -589,7 +589,7 @@ body {
   font-weight: bold;
 }
 
-#range-chart g.y {
+#hour-chart g.y {
   display: none;
 }
 
@@ -626,9 +626,6 @@ li.border-right {
   padding-right: 1.5rem;
 }
 
-h2.stat-number {
-  color: #22313f;
-}
 .stat-info {
   font-style: italic;
   font-size: 0.8em;
