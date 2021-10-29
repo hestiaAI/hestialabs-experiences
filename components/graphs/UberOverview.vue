@@ -1,118 +1,172 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" md="7" lg="8">
-        <div id="scatter-chart">
-          <strong>Price vs Distance</strong>
-          <a class="reset" style="display: none">reset</a>
-          <p class="filters">
-            <span>
-              Current filter:
-              <span class="filter"></span>
-            </span>
-          </p>
-        </div>
-        <div id="hour-chart">
-          <p class="muted pull-right" style="margin-right: 15px">
-            select a time range to zoom in
-          </p>
-        </div>
+      <v-col cols="12" md="8">
+        <v-row>
+          <v-col cols="12" md="8">
+            <div id="scatter-chart">
+              <strong>Price vs Distance</strong>
+              <a class="reset" style="display: none">reset</a>
+              <p class="filters">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
+            </div>
+            <div id="hour-chart">
+              <p
+                class="muted pull-right text-subtitle-2"
+                style="margin-right: 15px; margin-bottom: 5px"
+              >
+                select a time range to zoom in
+              </p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="4">
+            <div id="week-chart">
+              <strong>Day of week</strong>
+              <a class="reset" style="display: none">reset</a>
+              <p class="filters">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
+            </div>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="4">
+            <div id="service-chart">
+              <strong>Service used</strong>
+              <a class="reset" style="display: none">reset</a>
+              <p class="filters">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="4">
+            <div id="price-chart">
+              <strong>Cumulative price</strong>
+              <a class="reset" style="display: none">reset</a>
+              <p class="filters">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="4">
+            <div id="city-chart">
+              <strong>Cities</strong>
+              <a class="reset" style="display: none">reset</a>
+              <p class="filters">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
+            </div>
+          </v-col>
+        </v-row>
       </v-col>
-      <v-col cols="12" md="5" lg="4">
-        <v-card class="general-info">
+      <v-col cols="12" md="4">
+        <v-card class="general-info" height="600px">
           <v-card-title>General information</v-card-title>
           <v-card-subtitle></v-card-subtitle>
           <v-card-text>
-            <v-row>
-              <v-col cols="12" md="6" class="stat-elem">
-                <v-row justify="center">
-                  <p class="stat-title">N° of trip</p>
-                </v-row>
-                <v-row justify="center">
-                  <h2 id="number-trip" class="stat-number"></h2>
-                </v-row>
-              </v-col>
-              <v-col cols="12" md="6" class="stat-elem">
-                <v-row justify="center">
-                  <p class="stat-title">Average Speed</p>
-                </v-row>
-                <v-row justify="center">
-                  <h2 id="number-speed-avg" class="stat-number"></h2>
-                </v-row>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" md="6" class="stat-elem">
-                <v-row align="center" justify="center">
-                  <p class="stat-title">Distance</p>
-                </v-row>
-                <v-row class="stat-numbers" align="center" justify="center">
-                  <ul class="list-inline">
-                    <li class="pr-2 border-right">
-                      <h2 id="number-distance-total" class="stat-number"></h2>
-                      <span class="stat-info">Total</span>
-                    </li>
-                    <li class="pl-2">
-                      <h2 id="number-distance-avg" class="stat-number"></h2>
-                      <span class="stat-info">Average</span>
-                    </li>
-                  </ul>
-                </v-row>
-              </v-col>
-              <v-col cols="12" md="6" class="stat-elem">
-                <v-row align="center" justify="center">
-                  <p class="stat-title">Duration</p>
-                </v-row>
-                <v-row class="stat-numbers" align="center" justify="center">
-                  <ul class="list-inline">
-                    <li class="pr-2 border-right">
-                      <h2 id="number-duration-total" class="stat-number"></h2>
-                      <span class="stat-info">Total</span>
-                    </li>
-                    <li class="pl-2">
-                      <h2 id="number-duration-avg" class="stat-number"></h2>
-                      <span class="stat-info">Average</span>
-                    </li>
-                  </ul>
-                </v-row>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12" md="6" class="stat-elem">
-                <v-row align="center" justify="center">
-                  <p class="stat-title">Price</p>
-                </v-row>
-                <v-row class="stat-numbers" align="center" justify="center">
-                  <ul class="list-inline">
-                    <li class="pr-2 border-right">
-                      <h2 id="number-price-total" class="stat-number" />
-                      <span class="stat-info">Total</span>
-                    </li>
-                    <li class="pl-2">
-                      <h2 id="number-price-avg" class="stat-number"></h2>
-                      <span class="stat-info">Average</span>
-                    </li>
-                  </ul>
-                </v-row>
-              </v-col>
-              <v-col cols="12" md="6" class="stat-elem">
-                <v-row align="center" justify="center">
-                  <p class="stat-title">Waiting Time</p>
-                </v-row>
-                <v-row class="stat-numbers" align="center" justify="center">
-                  <ul class="list-inline">
-                    <li class="pr-2 border-right">
-                      <h2 id="number-waiting-total" class="stat-number"></h2>
-                      <span class="stat-info">Total</span>
-                    </li>
-                    <li class="pl-2">
-                      <h2 id="number-waiting-avg" class="stat-number"></h2>
-                      <span class="stat-info">Average</span>
-                    </li>
-                  </ul>
-                </v-row>
-              </v-col>
-            </v-row>
+            <v-container>
+              <v-row dense>
+                <v-col cols="12" md="6">
+                  <v-card color="#385F73" dark>
+                    <v-card-title class="text-h5">Records</v-card-title>
+                    <v-card-subtitle></v-card-subtitle>
+                    <v-card-text class="text-h4 text-center">
+                      <div id="number-trip" />
+                      <span class="text-subtitle-1">trips</span>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-card color="#385F73" dark>
+                    <v-card-title class="text-h5">Speed</v-card-title>
+                    <v-card-subtitle></v-card-subtitle>
+                    <v-card-text class="text-h4 text-center">
+                      <div id="number-speed-avg" />
+                      <span class="text-subtitle-1">mph</span>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
+            <v-simple-table>
+              <thead>
+                <tr>
+                  <th class="text-left"></th>
+                  <th class="text-left">Total</th>
+                  <th class="text-left">Average</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Price</td>
+                  <td>
+                    <span id="number-price-total" class="text-h6"></span>
+                    <br />
+                    <span class="text-subtitle-2">GBP</span>
+                  </td>
+                  <td>
+                    <span id="number-price-avg" class="text-h6"></span>
+                    <br />
+                    <span class="text-subtitle-2">GBP</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Distance</td>
+                  <td>
+                    <span id="number-distance-total" class="text-h6"></span>
+                    <br />
+                    <span class="text-subtitle-2">miles</span>
+                  </td>
+                  <td>
+                    <span id="number-distance-avg" class="text-h6"></span>
+                    <br />
+                    <span class="text-subtitle-2">miles</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Duration</td>
+                  <td>
+                    <span id="number-duration-total" class="text-h6"></span>
+                    <br />
+                    <span class="text-subtitle-2">min</span>
+                  </td>
+                  <td>
+                    <span id="number-duration-avg" class="text-h6"></span>
+                    <br />
+                    <span class="text-subtitle-2">min</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Waiting time</td>
+                  <td>
+                    <span id="number-waiting-total" class="text-h6"></span>
+                    <br />
+                    <span class="text-subtitle-2">min</span>
+                  </td>
+                  <td>
+                    <span id="number-waiting-avg" class="text-h6"></span>
+                    <br />
+                    <span class="text-subtitle-2">min</span>
+                  </td>
+                </tr>
+              </tbody>
+            </v-simple-table>
           </v-card-text>
           <v-card-actions>
             <v-btn elevation="2" block @click="resetAll()">
@@ -120,56 +174,6 @@
             </v-btn>
           </v-card-actions>
         </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="6" md="3">
-        <div id="service-chart">
-          <strong>Service used</strong>
-          <a class="reset" style="display: none">reset</a>
-          <p class="filters">
-            <span>
-              Current filter:
-              <span class="filter"></span>
-            </span>
-          </p>
-        </div>
-      </v-col>
-      <v-col cols="6" md="3">
-        <div id="week-chart">
-          <strong>Day of week</strong>
-          <a class="reset" style="display: none">reset</a>
-          <p class="filters">
-            <span>
-              Current filter:
-              <span class="filter"></span>
-            </span>
-          </p>
-        </div>
-      </v-col>
-      <v-col cols="6" md="3">
-        <div id="price-chart">
-          <strong>Cumulative price</strong>
-          <a class="reset" style="display: none">reset</a>
-          <p class="filters">
-            <span>
-              Current filter:
-              <span class="filter"></span>
-            </span>
-          </p>
-        </div>
-      </v-col>
-      <v-col cols="6" md="3">
-        <div id="city-chart">
-          <strong>Cities</strong>
-          <a class="reset" style="display: none">reset</a>
-          <p class="filters">
-            <span>
-              Current filter:
-              <span class="filter"></span>
-            </span>
-          </p>
-        </div>
       </v-col>
     </v-row>
     <unit-query-results v-bind="{ headers: header, items: results }" />
@@ -224,13 +228,23 @@ export default {
 
       // Define color palette for the graphs
       const colorPalette = [
-        '#AABFB9',
-        '#86A68E',
-        '#547353',
-        '#688C5E',
-        '#7BA66F'
+        '#254b7f',
+        '#1c6488',
+        '#287a8c',
+        '#40908e',
+        '#59a590',
+        '#7dba91'
       ]
-
+      /*
+      const colorPalette = [
+        '#46327e',
+        '#365c8d',
+        '#277f8e',
+        '#1fa187',
+        '#4ac16d',
+        '#a0da39'
+      ]
+      */
       // Parse and format data
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC')
       const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
@@ -399,8 +413,8 @@ export default {
       // Render scatter chart
       scatterChart
         .width(d3.select('#scatter-chart').node().getBoundingClientRect().width)
-        .height(220)
-        .margins({ top: 10, right: 50, bottom: 30, left: 40 })
+        .height(200)
+        .margins({ top: 10, right: 10, bottom: 40, left: 40 })
         .x(d3.scaleLinear().domain([6, 20]))
         .brushOn(true)
         .elasticY(true)
@@ -445,7 +459,7 @@ export default {
           .style('z-index', -1)
           .call(doPoints)
           .merge(line)
-          .attr('stroke', colorPalette[colorPalette.length - 1])
+          .attr('stroke', 'black')
           .attr('stroke-width', 1.5)
           .attr('stroke-opacity', 0.5)
           .attr('stroke-dasharray', '8,8')
@@ -461,7 +475,7 @@ export default {
       hourChart
         .width(d3.select('#hour-chart').node().getBoundingClientRect().width)
         .height(40)
-        .margins({ top: 0, right: 50, bottom: 20, left: 40 })
+        .margins({ top: 0, right: 10, bottom: 20, left: 40 })
         .dimension(hourDimension)
         .group(hourGroup)
         .centerBar(true)
@@ -475,7 +489,7 @@ export default {
       // Render days of week row chart
       weekChart
         .width(d3.select('#week-chart').node().getBoundingClientRect().width)
-        .height(180)
+        .height(275)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(dayOfWeekGroup)
         .dimension(dayOfWeekDimension)
