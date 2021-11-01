@@ -26,6 +26,7 @@ import { writeToString } from '@fast-csv/format'
 import { processError } from '@/utils/utils'
 
 export default {
+  name: 'UnitFilterableTable',
   props: {
     headers: {
       type: Array,

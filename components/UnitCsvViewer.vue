@@ -1,13 +1,15 @@
 <template>
   <div v-if="loading">Loading</div>
-  <v-data-table v-else v-bind="{ ...csvContent }" multi-sort />
+  <unit-filterable-table v-else v-bind="{ ...csvContent }" />
 </template>
 
 <script>
 import * as csv from '@fast-csv/parse'
+import UnitFilterableTable from '~/components/UnitFilterableTable'
 
 export default {
   name: 'UnitCsvViewer',
+  components: { UnitFilterableTable },
   props: {
     file: {
       type: File,
