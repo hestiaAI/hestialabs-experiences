@@ -82,8 +82,8 @@ export default {
       default: false
     },
     customPipeline: {
-      type: String,
-      default: ''
+      type: Function,
+      default: undefined
     }
   },
   computed: {
