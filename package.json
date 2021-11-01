@@ -45,6 +45,7 @@
     "localforage": "^1.10.0",
     "n3": "^1.11.1",
     "nuxt": "^2.15.8",
+    "regression": "^2.0.1",
     "rocketrml": "^1.11.2",
     "sha1": "^1.1.1",
     "sparqlalgebrajs": "^3.0.3",
