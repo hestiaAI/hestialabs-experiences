@@ -5,7 +5,7 @@
     "dataPortal": "https://support.google.com/accounts/answer/3024190",
     "ext": "csv",
     "customPipeline": "trackerControl",
-    "data": ["uber-trips.csv"],
+    "data": ["test.csv"],
     "defaultView": [
       {
         "query": "",
