@@ -1,10 +1,10 @@
 <template>
-  <iframe :src="pdfPath" width="100%" height="500px" />
+  <iframe :src="htmlPath" width="100%" height="500px" />
 </template>
 
 <script>
 export default {
-  name: 'UnitPdfViewer',
+  name: 'UnitHtmlViewer',
   props: {
     file: {
       type: File,
@@ -12,7 +12,7 @@ export default {
     }
   },
   computed: {
-    pdfPath() {
+    htmlPath() {
       return URL.createObjectURL(this.file)
     }
   }

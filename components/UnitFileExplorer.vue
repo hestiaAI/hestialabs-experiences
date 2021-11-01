@@ -19,8 +19,8 @@
                 @update:active="setSelectedItem"
               >
                 <template #prepend="{ item }">
-                  <v-icon v-if="typeof item.type !== 'undefined'">
-                    {{ filetype2icon[item.type] }}
+                  <v-icon>
+                    {{ filetype2icon[item.type] || filetype2icon.file }}
                   </v-icon>
                 </template>
               </v-treeview>
@@ -32,14 +32,27 @@
             <v-card-title class="justify-center">File details</v-card-title>
             <v-card-text>
               <template v-if="selectedItem">
-                <template v-if="/js(on)?/.test(selectedItem.type)">
-                  <unit-json-viewer :json="inputFiles[selectedItem.name]" />
+                <template v-if="selectedItem.type === 'json'">
+                  <unit-json-viewer
+                    v-bind="{ file: selectedItem.file, preprocessorFunc }"
+                  />
                 </template>
-                <template v-else-if="/[ct]sv/.test(selectedItem.type)">
-                  <unit-csv-viewer :csv="inputFiles[selectedItem.name]" />
+                <template v-else-if="selectedItem.type === 'csv'">
+                  <unit-csv-viewer
+                    v-bind="{ file: selectedItem.file, preprocessorFunc }"
+                  />
                 </template>
-                <template v-else-if="/pdf/.test(selectedItem.type)">
-                  <unit-pdf-viewer :pdf="selectedItem.name" />
+                <template v-else-if="selectedItem.type === 'pdf'">
+                  <unit-pdf-viewer v-bind="{ file: selectedItem.file }" />
+                </template>
+                <template v-else-if="selectedItem.type === 'img'">
+                  <unit-image-viewer v-bind="{ file: selectedItem.file }" />
+                </template>
+                <template v-else-if="selectedItem.type === 'html'">
+                  <unit-html-viewer v-bind="{ file: selectedItem.file }" />
+                </template>
+                <template v-else-if="selectedItem.type === 'txt'">
+                  <unit-text-viewer v-bind="{ file: selectedItem.file }" />
                 </template>
                 <template v-else>
                   <p>Cannot open file type</p>
@@ -59,26 +72,49 @@
 <script>
 import {
   mdiCodeJson,
+  mdiFile,
+  mdiFileImage,
   mdiFilePdfBox,
   mdiFolder,
   mdiFolderZip,
-  mdiTable
+  mdiTable,
+  mdiTextBoxOutline,
+  mdiXml
 } from '@mdi/js'
+import { unzip, setOptions } from 'unzipit'
+import workerURL from 'unzipit/dist/unzipit-worker.module.js'
+import { cloneDeep } from 'lodash'
 import UnitJsonViewer from '~/components/UnitJsonViewer'
 import UnitCsvViewer from '~/components/UnitCsvViewer'
 import UnitPdfViewer from '~/components/UnitPdfViewer'
+import preprocessors from '~/manifests/preprocessors'
+import UnitImageViewer from '~/components/UnitImageViewer'
+import UnitHtmlViewer from '~/components/UnitHtmlViewer'
+import UnitTextViewer from '~/components/UnitTextViewer'
+
+setOptions({
+  workerURL,
+  numWorkers: 2
+})
 
 export default {
   name: 'UnitFileExplorer',
-  components: { UnitPdfViewer, UnitJsonViewer, UnitCsvViewer },
+  components: {
+    UnitTextViewer,
+    UnitHtmlViewer,
+    UnitImageViewer,
+    UnitPdfViewer,
+    UnitJsonViewer,
+    UnitCsvViewer
+  },
   props: {
-    inputFiles: {
-      type: Object,
+    allFiles: {
+      type: Array,
       required: true
     },
-    extractedFiles: {
-      type: Object,
-      default: () => {}
+    preprocessor: {
+      type: String,
+      default: undefined
     }
   },
   data() {
@@ -89,17 +125,46 @@ export default {
         folder: mdiFolder,
         zip: mdiFolderZip,
         json: mdiCodeJson,
-        js: mdiCodeJson,
         csv: mdiTable,
-        pdf: mdiFilePdfBox
+        pdf: mdiFilePdfBox,
+        img: mdiFileImage,
+        file: mdiFile,
+        txt: mdiTextBoxOutline,
+        html: mdiXml
       },
-      idSpace: 0
+      extension2filetype: {
+        tar: 'zip',
+        js: 'json',
+        png: 'img',
+        jpeg: 'img',
+        jpg: 'img',
+        gif: 'img',
+        bmp: 'img',
+        webp: 'img',
+        pdf: 'pdf',
+        zip: 'zip',
+        json: 'json',
+        txt: 'txt',
+        html: 'html',
+        csv: 'csv',
+        tsv: 'csv'
+      },
+      idSpace: 0,
+      fileTree: []
     }
   },
   computed: {
-    fileTree() {
-      return this.itemifyFiles(this.extractedFiles)
+    preprocessorFunc() {
+      if (!this.preprocessor) {
+        // identity
+        return val => val
+      }
+      return preprocessors[this.preprocessor]
     }
+  },
+  async created() {
+    const result = await this.fileListToTree(this.allFiles)
+    this.fileTree = this.itemifyFiles(result)
   },
   methods: {
     setSelectedItem(array) {
@@ -109,22 +174,93 @@ export default {
         this.selectedItem = item
       }
     },
+    async zipEntriesToTree(entryList) {
+      const folders = entryList.filter(node => node.isDirectory)
+      const folderContents = Object.fromEntries(
+        folders.map(folder => [
+          folder.name,
+          entryList.filter(f => new RegExp(`^${folder.name}.`).test(f.name))
+        ])
+      )
+      const innerNodes = new Set(
+        Object.values(folderContents)
+          .flat()
+          .map(f => f.name)
+      )
+      const foldersResult = await Promise.all(
+        Object.entries(folderContents)
+          .filter(([folderName, _]) => !innerNodes.has(folderName))
+          .map(async ([folderName, contents]) => [
+            folderName,
+            await this.zipEntriesToTree(
+              contents.map(node => {
+                const copy = cloneDeep(node)
+                copy.name = node.name.replace(new RegExp(`${folderName}`), '')
+                return copy
+              })
+            )
+          ])
+      )
+      const topLevelFiles = await Promise.all(
+        entryList
+          .filter(file => !file.isDirectory && !innerNodes.has(file.name))
+          .map(async node => new File([await node.blob()], node.name))
+      )
+      const filesResult = topLevelFiles
+        .filter(file => !/\.zip$/.test(file.name))
+        .map(file => [file.name, [file]])
+      const topLevelZips = topLevelFiles.filter(file =>
+        /\.zip$/.test(file.name)
+      )
+      const zipResult = topLevelZips.map(async node => {
+        const { entries } = await unzip(node)
+        const entryList = Object.values(entries)
+        return [node.name, await this.zipEntriesToTree(entryList)]
+      })
+      return Object.fromEntries([
+        ...filesResult,
+        ...zipResult,
+        ...foldersResult
+      ])
+    },
+    async fileListToTree(files) {
+      return Object.fromEntries(
+        await Promise.all(
+          files.map(async node => {
+            if (/\.zip$/.test(node.name)) {
+              const { entries } = await unzip(node)
+              const entryList = Object.values(entries)
+              console.log(entries)
+              return [node.name, await this.zipEntriesToTree(entryList)]
+            } else {
+              return [node.name, [node]]
+            }
+          })
+        )
+      )
+    },
     itemifyFiles(tree) {
-      if (typeof tree !== 'object') {
-        return {
-          id: this.idSpace++,
-          name: tree,
-          type: tree.match(/\.([\S]+)/)[1]
-        }
-      } else if (typeof tree.length !== 'undefined') {
-        return tree.flatMap(this.itemifyFiles)
+      if (Array.isArray(tree)) {
+        return tree
       } else {
-        return Object.entries(tree).flatMap(([key, v]) => {
-          return {
-            id: this.idSpace++,
-            name: key,
-            children: this.itemifyFiles(v),
-            type: key.match(/\.([\S]+)/)[1] ?? 'folder'
+        return Object.entries(tree).flatMap(([file, node]) => {
+          if (Array.isArray(node)) {
+            const extension = file.match(/\.([\S]+)/)?.[1]
+            return {
+              id: this.idSpace++,
+              name: file,
+              file: node[0],
+              type: this.extension2filetype[extension] ?? 'file'
+            }
+          } else {
+            const inner = this.itemifyFiles(node)
+            const extension = file.match(/\.([\S]+)/)?.[1]
+            return {
+              id: this.idSpace++,
+              name: file,
+              children: inner,
+              type: this.extension2filetype[extension] ?? 'folder'
+            }
           }
         })
       }

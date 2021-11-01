@@ -1,5 +1,6 @@
 <template>
-  <v-treeview dense open-on-click transition :items="items">
+  <div v-if="loading">Loading</div>
+  <v-treeview v-else dense open-on-click transition :items="items">
     <template #prepend="{ item }">
       <v-icon v-if="typeof item.icon !== 'undefined'">
         {{ item.icon }}
@@ -28,30 +29,46 @@ import lodash from 'lodash'
 export default {
   name: 'UnitJsonViewer',
   props: {
-    json: {
-      type: String,
+    file: {
+      type: File,
+      required: true
+    },
+    preprocessorFunc: {
+      type: Function,
       required: true
     }
   },
   data() {
     return {
-      idSpace: 0
+      idSpace: 0,
+      jsonText: '',
+      items: [],
+      loading: true
     }
   },
-  computed: {
-    items() {
-      return [this.itemify(JSON.parse(this.json))]
+  watch: {
+    async file(newFile) {
+      await this.getItemsFromFile(newFile)
     }
+  },
+  async created() {
+    await this.getItemsFromFile(this.file)
   },
   methods: {
+    async getItemsFromFile(file) {
+      this.loading = true
+      this.jsonText = this.preprocessorFunc(await file.text())
+      this.items = [this.itemify(JSON.parse(this.jsonText))]
+      this.loading = false
+    },
     itemify(tree) {
       if (typeof tree !== 'object')
         return { value: tree, icon: mdiInformationOutline }
-      else if (typeof tree.length !== 'undefined') {
+      else if (Array.isArray(tree)) {
         const list = tree.flatMap(el => {
           return this.itemify(el)
         })
-        if (list.length === 1) {
+        if (list.length === 1 && list[0].name) {
           return {
             id: this.idSpace++,
             name: `[list with ${list.length} item] / ${list[0].name}`,

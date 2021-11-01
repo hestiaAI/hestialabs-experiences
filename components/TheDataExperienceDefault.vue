@@ -24,9 +24,9 @@
       </v-col>
     </v-row>
     <template v-if="success">
-      <v-row v-if="inputFiles && extractedFiles">
+      <v-row>
         <v-col>
-          <unit-file-explorer v-bind="{ inputFiles, extractedFiles }" />
+          <unit-file-explorer v-bind="{ allFiles, preprocessor }" />
         </v-col>
       </v-row>
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
@@ -82,7 +82,8 @@ export default {
     defaultView: Array,
     title: String,
     dataPortal: String,
-    customPipeline: String
+    customPipeline: String,
+    preprocessor: String
   },
   data() {
     // main example is selected by default
@@ -97,7 +98,7 @@ export default {
       allItems: null,
       allHeaders: null,
       inputFiles: null,
-      extractedFiles: null
+      allFiles: null
     }
   },
   computed: {
@@ -148,9 +149,9 @@ export default {
     handleRdfEnd() {
       this.progress = false
     },
-    onUnitFilesUpdate({ inputFiles, error, extractedFiles }) {
+    onUnitFilesUpdate({ inputFiles, error, allFiles }) {
       this.initState()
-      this.extractedFiles = extractedFiles
+      this.allFiles = allFiles
       if (Object.keys(inputFiles).length === 0) {
         this.error = true
         this.message = 'No relevant files were found'
