@@ -1,0 +1,18 @@
+{
+    "title": "Google Map",
+    "subtitle": "Location history",
+    "icon": "google-maps.png",
+    "dataPortal": "https://support.google.com/accounts/answer/3024190",
+    "ext": "csv",
+    "customPipeline": "trackerControl",
+    "data": ["uber-trips.csv"],
+    "defaultView": [
+      {
+        "query": "",
+        "visualizations": ["GoogleMapOverview.vue"],
+        "showTable": true,
+        "title": "Location history overview",
+        "text": ""
+      }
+    ]
+  }
