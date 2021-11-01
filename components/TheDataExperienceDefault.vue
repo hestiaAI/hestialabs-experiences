@@ -82,7 +82,7 @@ export default {
     defaultView: Array,
     title: String,
     dataPortal: String,
-    customPipeline: String,
+    customPipeline: Function,
     preprocessor: String
   },
   data() {
