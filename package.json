@@ -43,6 +43,7 @@
     "jszip": "^3.7.1",
     "libsodium-wrappers": "^0.7.9",
     "localforage": "^1.10.0",
+    "lodash": "^4.17.21",
     "n3": "^1.11.1",
     "nuxt": "^2.15.8",
     "regression": "^2.0.1",

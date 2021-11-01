@@ -18,12 +18,17 @@
             border="top"
             colored-border
             max-width="600"
-            >{{ message }}</v-alert
-          >
+            >{{ message }}
+          </v-alert>
         </template>
       </v-col>
     </v-row>
     <template v-if="success">
+      <v-row>
+        <v-col>
+          <unit-file-explorer v-bind="{ allFiles, preprocessor }" />
+        </v-col>
+      </v-row>
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
@@ -63,19 +68,22 @@
 /* eslint-disable vue/require-default-prop */
 import rdfUtils from '@/utils/rdf'
 import parseYarrrml from '@/utils/parse-yarrrml'
+import UnitFileExplorer from '~/components/UnitFileExplorer'
 
 function getErrorMessage(error) {
   return error instanceof Error ? error.message : error
 }
 
 export default {
+  components: { UnitFileExplorer },
   props: {
     examples: Array,
     visualizations: Object,
     defaultView: Array,
     title: String,
     dataPortal: String,
-    customPipeline: String
+    customPipeline: String,
+    preprocessor: String
   },
   data() {
     // main example is selected by default
@@ -89,7 +97,8 @@ export default {
       rml: '',
       allItems: null,
       allHeaders: null,
-      inputFiles: null
+      inputFiles: null,
+      allFiles: null
     }
   },
   computed: {
@@ -140,8 +149,9 @@ export default {
     handleRdfEnd() {
       this.progress = false
     },
-    onUnitFilesUpdate({ inputFiles, error }) {
+    onUnitFilesUpdate({ inputFiles, error, allFiles }) {
       this.initState()
+      this.allFiles = allFiles
       if (Object.keys(inputFiles).length === 0) {
         this.error = true
         this.message = 'No relevant files were found'
@@ -158,6 +168,7 @@ export default {
         throw new Error('RML not ready')
       } else {
         try {
+          this.inputFiles = inputFiles
           rdfUtils.generateRDF(
             this.handleRdfData,
             this.handleRdfError,
