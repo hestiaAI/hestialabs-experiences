@@ -15,7 +15,6 @@
 
 <script>
 import { processError } from '@/utils/utils'
-import customPipelines from '~/manifests/custom-pipeline'
 
 export default {
   props: {
@@ -24,7 +23,7 @@ export default {
       required: true
     },
     customPipeline: {
-      type: String,
+      type: Function,
       required: true
     }
   },
@@ -56,9 +55,7 @@ export default {
       this.error = false
       this.progress = true
       try {
-        const { headers, items } = await customPipelines[this.customPipeline](
-          this.inputFiles
-        )
+        const { headers, items } = await this.customPipeline(this.inputFiles)
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)

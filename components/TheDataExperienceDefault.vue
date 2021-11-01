@@ -18,12 +18,17 @@
             border="top"
             colored-border
             max-width="600"
-            >{{ message }}</v-alert
-          >
+            >{{ message }}
+          </v-alert>
         </template>
       </v-col>
     </v-row>
     <template v-if="success">
+      <v-row>
+        <v-col>
+          <unit-file-explorer v-bind="{ allFiles, preprocessor }" />
+        </v-col>
+      </v-row>
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
@@ -32,7 +37,7 @@
               visualizations,
               defaultViewElements,
               selectedExample,
-              customPipeline: defaultViewElements.customPipeline,
+              customPipeline: customPipeline,
               inputFiles
             }"
             @update="onQueryUpdate"
@@ -63,18 +68,22 @@
 /* eslint-disable vue/require-default-prop */
 import rdfUtils from '@/utils/rdf'
 import parseYarrrml from '@/utils/parse-yarrrml'
+import UnitFileExplorer from '~/components/UnitFileExplorer'
 
 function getErrorMessage(error) {
   return error instanceof Error ? error.message : error
 }
 
 export default {
+  components: { UnitFileExplorer },
   props: {
     examples: Array,
     visualizations: Object,
     defaultView: Array,
     title: String,
-    dataPortal: String
+    dataPortal: String,
+    customPipeline: Function,
+    preprocessor: String
   },
   data() {
     // main example is selected by default
@@ -88,7 +97,8 @@ export default {
       rml: '',
       allItems: null,
       allHeaders: null,
-      inputFiles: null
+      inputFiles: null,
+      allFiles: null
     }
   },
   computed: {
@@ -132,10 +142,13 @@ export default {
     handleRdfEnd() {
       this.progress = false
     },
-    async onUnitFilesUpdate({ inputFiles, error }) {
+    async onUnitFilesUpdate({ inputFiles, error, allFiles }) {
       this.initState()
       this.inputFiles = inputFiles
-      this.rml = await parseYarrrml(this.selectedExample.yarrrml)
+      this.allFiles = allFiles
+      if (this.selectedExample.yarrrml) {
+        this.rml = await parseYarrrml(this.selectedExample.yarrrml)
+      }
       if (Object.keys(inputFiles).length === 0) {
         this.error = true
         this.message = 'No relevant files were found'

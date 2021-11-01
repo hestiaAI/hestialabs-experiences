@@ -3,6 +3,22 @@
     <the-app-bar />
     <v-main>
       <v-container class="mt-5">
+        <v-row>
+          <v-col align="center">
+            <h2>
+              <a
+                :href="`${
+                  collaborator.url || 'https://hestialabs.org/'
+                }#newsletter`"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                Subscribe to the newsletter of
+                {{ collaborator.title || 'HestiaLabs' }}!
+              </a>
+            </h2>
+          </v-col>
+        </v-row>
         <nuxt />
         <v-snackbar
           v-model="snackbar"
@@ -30,6 +46,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -52,6 +69,16 @@ export default {
           content: `${process.env.baseUrl}/ogimg.png`
         }
       ]
+    }
+  },
+  computed: {
+    ...mapGetters(['manifest']),
+    collaborator() {
+      if (this.$route.params.key) {
+        const { collaborator } = this.manifest(this.$route)
+        return collaborator || {}
+      }
+      return {}
     }
   },
   watch: {

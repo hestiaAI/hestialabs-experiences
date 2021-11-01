@@ -18,7 +18,7 @@
           />
         </v-col>
         <v-col cols="12" lg="6">
-          <unit-query-results v-bind="{ headers, items }" />
+          <unit-filterable-table v-bind="{ headers, items }" />
         </v-col>
         <template v-if="items.length">
           <v-col
@@ -51,7 +51,7 @@
         <v-row>
           <v-col>
             <unit-custom-pipeline
-              v-if="customPipeline"
+              v-if="customPipeline !== undefined"
               v-bind="{ inputFiles, customPipeline }"
               @update="onUnitResultsUpdate"
             />
@@ -96,7 +96,7 @@
             </v-row>
             <v-row v-if="showTable">
               <v-col>
-                <unit-query-results v-bind="{ headers, items }" />
+                <unit-filterable-table v-bind="{ headers, items }" />
               </v-col>
             </v-row>
           </template>
@@ -116,8 +116,10 @@
 <script>
 /* eslint-disable vue/require-default-prop */
 import csvProcessors from '@/manifests/csv-processors'
+import UnitFilterableTable from '~/components/UnitFilterableTable'
 
 export default {
+  components: { UnitFilterableTable },
   props: {
     visualizations: Object,
     selectedExample: {
@@ -141,8 +143,8 @@ export default {
       default: 0
     },
     customPipeline: {
-      type: String,
-      default: ''
+      type: Function,
+      default: undefined
     },
     inputFiles: {
       type: Object,

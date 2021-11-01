@@ -13,7 +13,8 @@
     "twitter-advertisers-sha",
     "twitter-targeting-information",
     "youtube",
-    "playground"
+    "playground",
+    "uber"
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
   "saveFiles": true,

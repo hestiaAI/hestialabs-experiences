@@ -80,6 +80,10 @@ export default {
     allowMissingFiles: {
       type: Boolean,
       default: false
+    },
+    customPipeline: {
+      type: Function,
+      default: undefined
     }
   },
   computed: {
@@ -95,7 +99,9 @@ export default {
         'dataPortal',
         'examples',
         'visualizations',
-        'defaultView'
+        'defaultView',
+        'customPipeline',
+        'preprocessor'
       ]
       const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
       return props

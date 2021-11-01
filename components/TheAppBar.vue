@@ -6,13 +6,18 @@
         @click.stop="drawer = !drawer"
       />
       <v-toolbar-title class="d-flex align-center">
-        <nuxt-link
-          to="/"
-          class="d-flex align-center"
-          style="text-decoration: none; color: inherit"
+        <v-btn icon to="/" class="v-btn__home mr-0 mr-sm-4" color="primary">
+          <v-icon>$vuetify.icons.mdiHome</v-icon>
+        </v-btn>
+        <a
+          href="https://hestialabs.org/"
+          target="_blank"
+          rel="noreferrer noopener"
+          class="ml-2"
         >
           <logo-img class="mr-5" width="100" />
-        </nuxt-link>
+        </a>
+
         <template v-if="collaborator">
           <a
             :href="collaborator.url"
@@ -30,8 +35,6 @@
           </a>
         </template>
       </v-toolbar-title>
-      <v-spacer />
-      <mode-switch v-if="$vuetify.breakpoint.smAndUp" />
     </v-app-bar>
     <v-navigation-drawer
       v-model="drawer"
@@ -83,3 +86,10 @@ export default {
   }
 }
 </script>
+
+<style>
+.v-btn__home.theme--light.v-btn--router.v-btn--active::before {
+  /* Override default style for active nav router link element */
+  opacity: 0 !important;
+}
+</style>

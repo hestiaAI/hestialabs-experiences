@@ -1,0 +1,18 @@
+{
+  "title": "Uber",
+  "subtitle": "Customer data",
+  "icon": "uber.png",
+  "dataPortal": "https://help.uber.com/ubereats/article/request-a-copy-of-your-uber-data",
+  "ext": "zip",
+  "files": ["Rider/trips_data.csv"],
+  "data": ["uber-trips.zip"],
+  "defaultView": [
+    {
+      "customPipeline": true,
+      "visualizations": ["UberOverview.vue"],
+      "showTable": false,
+      "title": "Uber Trips overview",
+      "text": "Understand the world <3"
+    }
+  ]
+}
