@@ -105,6 +105,11 @@ export default {
       results: []
     }
   },
+  watch: {
+    values(oldValues) {
+      this.drawViz()
+    }
+  },
   mounted() {
     this.drawViz()
   },
