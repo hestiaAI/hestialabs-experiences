@@ -88,7 +88,7 @@
         </v-row>
         <v-row>
           <v-col>
-            <unit-query-results
+            <unit-filterable-table
               v-bind="{
                 headers: result.headers.map(h => ({ text: h, value: h })),
                 items: result.items
@@ -106,10 +106,12 @@ import JSZip from 'jszip'
 import FileSaver from 'file-saver'
 
 import csvProcessors from '@/manifests/csv-processors'
+import UnitFilterableTable from '~/components/UnitFilterableTable'
 
 const _sodium = require('libsodium-wrappers')
 
 export default {
+  components: { UnitFilterableTable },
   data() {
     return {
       secretKey: null,
