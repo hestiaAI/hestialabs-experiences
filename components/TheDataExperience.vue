@@ -100,7 +100,8 @@ export default {
         'examples',
         'visualizations',
         'defaultView',
-        'customPipeline'
+        'customPipeline',
+        'preprocessor'
       ]
       const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
       return props

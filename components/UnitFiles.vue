@@ -329,7 +329,7 @@ export default {
               'Your files were processed successfully and saved in your browser'
           }
           this.uppy.info(infoMessage)
-          this.$emit('update', result)
+          this.$emit('update', { ...result, allFiles: files })
         } catch (err) {
           console.error(err)
           this.error = true
