@@ -76,7 +76,7 @@
         </v-row>
       </v-col>
       <v-col cols="12" md="4">
-        <v-card class="general-info" height="600px">
+        <v-card class="general-info">
           <v-card-title>General information</v-card-title>
           <v-card-subtitle></v-card-subtitle>
           <v-card-text>
@@ -84,9 +84,9 @@
               <v-row dense>
                 <v-col cols="12" md="6">
                   <v-card color="#385F73" dark>
-                    <v-card-title class="text-h5">Records</v-card-title>
+                    <v-card-title class="text-h6">Orders</v-card-title>
                     <v-card-subtitle></v-card-subtitle>
-                    <v-card-text class="text-h4 text-center">
+                    <v-card-text class="text-h5 text-center">
                       <div id="number-trip" />
                       <span class="text-subtitle-1">trips</span>
                     </v-card-text>
@@ -94,9 +94,9 @@
                 </v-col>
                 <v-col cols="12" md="6">
                   <v-card color="#385F73" dark>
-                    <v-card-title class="text-h5">Speed</v-card-title>
+                    <v-card-title class="text-h6">Speed</v-card-title>
                     <v-card-subtitle></v-card-subtitle>
-                    <v-card-text class="text-h4 text-center">
+                    <v-card-text class="text-h5 text-center">
                       <div id="number-speed-avg" />
                       <span class="text-subtitle-1">mph</span>
                     </v-card-text>
@@ -176,7 +176,11 @@
         </v-card>
       </v-col>
     </v-row>
-    <unit-query-results v-bind="{ headers: header, items: results }" />
+    <v-row>
+      <v-col cols="12">
+        <unit-query-results v-bind="{ headers: header, items: results }" />
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -235,16 +239,7 @@ export default {
         '#59a590',
         '#7dba91'
       ]
-      /*
-      const colorPalette = [
-        '#46327e',
-        '#365c8d',
-        '#277f8e',
-        '#1fa187',
-        '#4ac16d',
-        '#a0da39'
-      ]
-      */
+
       // Parse and format data
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC')
       const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
@@ -408,8 +403,6 @@ export default {
         .valueAccessor(p => (p.count ? p.waitingTotal / p.count : 0))
         .formatNumber(d3.format('.1f'))
 
-      // d3.selectAll('.stat-number').style('color', 'black')
-
       // Render scatter chart
       scatterChart
         .width(d3.select('#scatter-chart').node().getBoundingClientRect().width)
@@ -484,7 +477,10 @@ export default {
         .ordinalColors(colorPalette)
         .yAxis()
         .ticks(0)
-      hourChart.xAxis().tickFormat(d => d + ':00')
+      hourChart
+        .xAxis()
+        .tickFormat(d => d + ':00')
+        .ticks(7)
 
       // Render days of week row chart
       weekChart
