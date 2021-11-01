@@ -164,6 +164,7 @@ export default {
   },
   async created() {
     const result = await this.fileListToTree(this.allFiles)
+    console.log(result)
     this.fileTree = this.itemifyFiles(result)
   },
   methods: {
@@ -191,7 +192,7 @@ export default {
         Object.entries(folderContents)
           .filter(([folderName, _]) => !innerNodes.has(folderName))
           .map(async ([folderName, contents]) => [
-            folderName,
+            folderName.replace('/', ''),
             await this.zipEntriesToTree(
               contents.map(node => {
                 const copy = cloneDeep(node)
@@ -212,11 +213,13 @@ export default {
       const topLevelZips = topLevelFiles.filter(file =>
         /\.zip$/.test(file.name)
       )
-      const zipResult = topLevelZips.map(async node => {
-        const { entries } = await unzip(node)
-        const entryList = Object.values(entries)
-        return [node.name, await this.zipEntriesToTree(entryList)]
-      })
+      const zipResult = await Promise.all(
+        topLevelZips.map(async node => {
+          const { entries } = await unzip(node)
+          const newEntryList = Object.values(entries)
+          return [node.name, await this.zipEntriesToTree(newEntryList)]
+        })
+      )
       return Object.fromEntries([
         ...filesResult,
         ...zipResult,
@@ -230,7 +233,6 @@ export default {
             if (/\.zip$/.test(node.name)) {
               const { entries } = await unzip(node)
               const entryList = Object.values(entries)
-              console.log(entries)
               return [node.name, await this.zipEntriesToTree(entryList)]
             } else {
               return [node.name, [node]]
