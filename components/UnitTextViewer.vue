@@ -19,12 +19,12 @@ export default {
     }
   },
   watch: {
-    async file(newFile) {
-      await this.getFileText(newFile)
+    file: {
+      async handler(newFile) {
+        await this.getFileText(newFile)
+      },
+      immediate: true
     }
-  },
-  async created() {
-    await this.getFileText(this.file)
   },
   methods: {
     async getFileText(file) {

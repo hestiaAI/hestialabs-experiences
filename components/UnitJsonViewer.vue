@@ -47,12 +47,12 @@ export default {
     }
   },
   watch: {
-    async file(newFile) {
-      await this.getItemsFromFile(newFile)
+    file: {
+      async handler(newFile) {
+        await this.getItemsFromFile(newFile)
+      },
+      immediate: true
     }
-  },
-  async created() {
-    await this.getItemsFromFile(this.file)
   },
   methods: {
     async getItemsFromFile(file) {
