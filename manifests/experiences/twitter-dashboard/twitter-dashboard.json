@@ -6,7 +6,6 @@
   "ext": "zip",
   "files": ["data/ad-impressions.js", "data/ad-engagements.js"],
   "preprocessor": "twitter",
-  "customPipeline": "twitterDashboard",
   "data": ["twitter.zip", "twitter-sample.zip"],
   "collaborator": {
     "title": "The Eyeballs Collective",

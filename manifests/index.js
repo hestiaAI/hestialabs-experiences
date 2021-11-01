@@ -111,6 +111,8 @@ const manifests = Object.fromEntries(
       throw new Error(`[${dir}] Preprocessor ${preprocessor} does not exist`)
     }
 
+    const module = require(`./experiences/${dir}/`)
+
     return [
       dir,
       {
@@ -124,6 +126,7 @@ const manifests = Object.fromEntries(
         preprocessor,
         collaborator,
         ...rest,
+        ...module.default,
         examples: []
       }
     ]

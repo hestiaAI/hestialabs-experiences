@@ -141,8 +141,8 @@ export default {
       default: 0
     },
     customPipeline: {
-      type: String,
-      default: ''
+      type: Function,
+      default: undefined
     },
     inputFiles: {
       type: Object,
