@@ -5,7 +5,8 @@
     <template v-if="$vuetify.breakpoint.smAndUp">
       <v-row class="mt-6">
         <v-col
-          v-for="{ key, title, subtitle, icon } in $store.getters.manifests"
+          v-for="{ key, title, subtitle, icon, url } in $store.getters
+            .manifests"
           :key="key"
           cols="12"
           sm="6"
@@ -13,7 +14,13 @@
           lg="3"
           xl="2"
         >
-          <v-card class="d-flex flex-column" nuxt :to="`/${key}`" hover shaped>
+          <v-card
+            class="d-flex flex-column"
+            nuxt
+            v-bind="link(url, key)"
+            hover
+            shaped
+          >
             <v-img max-height="250" contain :src="icon" :lazy-src="icon" />
 
             <v-card-title v-text="title" />
@@ -27,3 +34,12 @@
     </template>
   </div>
 </template>
+<script>
+export default {
+  methods: {
+    link(url, key) {
+      return url ? { href: url } : { to: `/${key}` }
+    }
+  }
+}
+</script>
