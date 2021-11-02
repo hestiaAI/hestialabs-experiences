@@ -38,7 +38,8 @@
               defaultViewElements,
               selectedExample,
               customPipeline: customPipeline,
-              inputFiles
+              inputFiles,
+              i: index
             }"
             @update="onQueryUpdate"
           />
