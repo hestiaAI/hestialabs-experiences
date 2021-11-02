@@ -11,6 +11,7 @@
               preprocessor,
               allowMissingFiles,
               samples: data,
+              isGenericViewer,
               ...slotProps
             }"
             @update="update"
@@ -54,7 +55,10 @@ export default {
       type: String,
       required: true,
       validator(val) {
-        return val.split(',').every(v => validExtensions.includes(v))
+        return (
+          val === 'all' ||
+          val.split(',').every(v => validExtensions.includes(v))
+        )
       }
     },
     files: {
@@ -84,14 +88,20 @@ export default {
     customPipeline: {
       type: Function,
       default: undefined
+    },
+    isGenericViewer: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     extensions() {
-      return this.ext
-        .replace(/\s/g, '')
-        .split(',')
-        .map(ext => `.${ext}`)
+      return this.ext === 'all'
+        ? []
+        : this.ext
+            .replace(/\s/g, '')
+            .split(',')
+            .map(ext => `.${ext}`)
     },
     props() {
       const propNames = [
@@ -101,7 +111,8 @@ export default {
         'visualizations',
         'defaultView',
         'customPipeline',
-        'preprocessor'
+        'preprocessor',
+        'isGenericViewer'
       ]
       const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
       return props

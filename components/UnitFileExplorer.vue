@@ -164,7 +164,6 @@ export default {
   },
   async created() {
     const result = await this.fileListToTree(this.allFiles)
-    console.log(result)
     this.fileTree = this.itemifyFiles(result)
   },
   methods: {

@@ -1,5 +1,9 @@
 <template>
   <div v-if="loading">Loading</div>
+  <div v-else-if="error">
+    <p>Could not parse file. Showing content instead</p>
+    <div>{{ jsonText }}</div>
+  </div>
   <v-treeview v-else dense open-on-click transition :items="items">
     <template #prepend="{ item }">
       <v-icon v-if="typeof item.icon !== 'undefined'">
@@ -43,7 +47,8 @@ export default {
       idSpace: 0,
       jsonText: '',
       items: [],
-      loading: true
+      loading: true,
+      error: false
     }
   },
   watch: {
@@ -58,8 +63,14 @@ export default {
     async getItemsFromFile(file) {
       this.loading = true
       this.jsonText = this.preprocessorFunc(await file.text())
-      this.items = [this.itemify(JSON.parse(this.jsonText))]
+      try {
+        this.items = [this.itemify(JSON.parse(this.jsonText))]
+        this.error = false
+      } catch (error) {
+        this.error = true
+      }
       this.loading = false
+      this.error = false
     },
     itemify(tree) {
       if (typeof tree !== 'object')

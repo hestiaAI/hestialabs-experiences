@@ -1,5 +1,9 @@
 <template>
   <div v-if="loading">Loading</div>
+  <div v-else-if="error">
+    <p>Could not parse file. Showing content instead</p>
+    <div>{{ csvText }}</div>
+  </div>
   <unit-filterable-table v-else v-bind="{ ...csvContent }" />
 </template>
 
@@ -24,7 +28,8 @@ export default {
     return {
       csvText: '',
       csvContent: {},
-      loading: true
+      loading: true,
+      error: false
     }
   },
   watch: {
@@ -39,8 +44,13 @@ export default {
     async getContentFromFile(file) {
       this.loading = true
       this.csvText = this.preprocessorFunc(await file.text())
-      this.csvContent = await this.csvToItems(this.csvText)
+      try {
+        this.csvContent = await this.csvToItems(this.csvText)
+      } catch (error) {
+        this.error = true
+      }
       this.loading = false
+      this.error = false
     },
     async csvToItems(csvText) {
       return await new Promise(resolve => {

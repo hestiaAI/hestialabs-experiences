@@ -2,7 +2,9 @@
   <div>
     <v-row>
       <v-col cols="12 mx-auto" sm="6">
-        <unit-introduction :company-name="title" :data-portal="dataPortal" />
+        <unit-introduction
+          v-bind="{ companyName: title, dataPortal, isGenericViewer }"
+        />
       </v-col>
     </v-row>
     <v-row>
@@ -24,11 +26,6 @@
       </v-col>
     </v-row>
     <template v-if="success">
-      <v-row>
-        <v-col>
-          <unit-file-explorer v-bind="{ allFiles, preprocessor }" />
-        </v-col>
-      </v-row>
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
@@ -56,6 +53,11 @@
           />
         </v-col>
       </v-row>
+      <v-row>
+        <v-col>
+          <unit-file-explorer v-bind="{ allFiles, preprocessor }" />
+        </v-col>
+      </v-row>
       <v-row v-if="$store.state.config.consent">
         <v-col cols="8 mx-auto">
           <unit-consent-form v-bind="{ allItems, allHeaders, defaultView }" />
@@ -68,8 +70,8 @@
 <script>
 /* eslint-disable vue/require-default-prop */
 import rdfUtils from '@/utils/rdf'
-import parseYarrrml from '@/utils/parse-yarrrml'
 import UnitFileExplorer from '~/components/UnitFileExplorer'
+import parseYarrrml from '@/utils/parse-yarrrml'
 
 function getErrorMessage(error) {
   return error instanceof Error ? error.message : error
@@ -84,7 +86,8 @@ export default {
     title: String,
     dataPortal: String,
     customPipeline: Function,
-    preprocessor: String
+    preprocessor: String,
+    isGenericViewer: Boolean
   },
   data() {
     // main example is selected by default
@@ -147,6 +150,11 @@ export default {
       this.initState()
       this.inputFiles = inputFiles
       this.allFiles = allFiles
+      if (this.isGenericViewer) {
+        this.progress = false
+        this.success = true
+        return
+      }
       if (this.selectedExample.yarrrml) {
         this.rml = await parseYarrrml(this.selectedExample.yarrrml)
       }

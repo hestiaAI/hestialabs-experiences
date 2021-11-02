@@ -70,6 +70,7 @@ const manifests = Object.fromEntries(
       data: dataFiles = [],
       preprocessor,
       collaborator,
+      isGenericViewer,
       ...rest
     } = reqJSON(path)
 
@@ -88,25 +89,24 @@ const manifests = Object.fromEntries(
       // All extensions are allowed in the playground
       ext = validExtensions.join(',')
     }
-
     // Validate config
     const requiredParams = { title, icon, ext }
-    Object.entries(requiredParams).forEach(([name, param]) => {
-      if (!param) {
-        throw new Error(`[${dir}] ${name} is required`)
+    if (!isGenericViewer) {
+      Object.entries(requiredParams).forEach(([name, param]) => {
+        if (!param) {
+          throw new Error(`[${dir}] ${name} is required`)
+        }
+      })
+      if (ext.split(',').some(v => !validExtensions.includes(v))) {
+        throw new Error(`[${dir}] parameter ext is invalid`)
       }
-    })
 
-    if (ext.split(',').some(v => !validExtensions.includes(v))) {
-      throw new Error(`[${dir}] parameter ext is invalid`)
+      if (dir !== 'playground' && ext.includes('zip') && !files.length) {
+        throw new Error(
+          `[${dir}] extension zip specified but list of files to extract is empty`
+        )
+      }
     }
-
-    if (dir !== 'playground' && ext.includes('zip') && !files.length) {
-      throw new Error(
-        `[${dir}] extension zip specified but list of files to extract is empty`
-      )
-    }
-
     if (preprocessor && !(preprocessor in preprocessors)) {
       throw new Error(`[${dir}] Preprocessor ${preprocessor} does not exist`)
     }
@@ -125,6 +125,7 @@ const manifests = Object.fromEntries(
         data,
         preprocessor,
         collaborator,
+        isGenericViewer,
         ...rest,
         ...module.default,
         examples: []
