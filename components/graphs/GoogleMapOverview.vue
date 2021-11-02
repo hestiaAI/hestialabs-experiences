@@ -1,9 +1,13 @@
 <template>
   <v-container>
     <v-row>
-      <div id="map"></div>
-      <div id="#cluster-map-anchor"></div>
-      <div id="pie"></div>
+      <div id="holder">
+        <div id="demo1">
+          <div id="map"></div>
+          <div id="#cluster-map-anchor"></div>
+          <div id="pie"></div>
+        </div>
+      </div>
     </v-row>
   </v-container>
 </template>
@@ -13,7 +17,8 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import L from 'leaflet'
-// import leafletMarkerCluster from 'leaflet.markercluster'
+// eslint-disable-next-line camelcase
+import dc_leaflet from 'dc.leaflet'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -61,21 +66,16 @@ export default {
 
       const ndx = crossfilter(this.results)
       const groupname = 'marker-select'
-      /*
+
       const facilities = ndx.dimension(d => [d.lat, d.lon])
       const facilitiesGroup = facilities.group().reduceCount()
-      
-      leafletMarkerCluster
+
+      dc_leaflet
         .markerChart('#cluster-map-anchor', groupname)
         .dimension(facilities)
         .group(facilitiesGroup)
         .map(clusterMap)
-        .showMarkerTitle(false)
-        .fitOnRender(true)
-        .fitOnRedraw(true)
-        .filterByArea(true)
-        .cluster(true)
-      */
+
       const types = ndx.dimension(function (d) {
         return d.type
       })
@@ -125,5 +125,19 @@ body {
 p.filters {
   font-size: 0.8rem;
   font-style: italic;
+}
+
+.map {
+  width: 600px;
+  height: 400px;
+}
+
+#holder {
+  width: 850px;
+  margin: 20px auto;
+}
+#holder > div {
+  padding: 30px 0;
+  clear: both;
 }
 </style>
