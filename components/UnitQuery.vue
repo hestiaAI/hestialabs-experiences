@@ -57,7 +57,7 @@
             />
             <unit-sparql
               v-else
-              v-bind="{ rdf, selectedExample, query, queryDisabled }"
+              v-bind="{ selectedExample, query, queryDisabled }"
               class="mr-lg-6"
               @update="onUnitResultsUpdate"
             />
