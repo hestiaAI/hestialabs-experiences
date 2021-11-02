@@ -1,0 +1,6 @@
+{
+  "title": "Data Explorer",
+  "icon": "clipboard-search-outline.png",
+  "isGenericViewer": true,
+  "ext": "all"
+}

@@ -6,7 +6,7 @@
         text="Process files"
         icon="mdiStepForward"
         class="my-sm-2 mr-sm-2"
-        @click="processFiles"
+        @click="buttonBehaviour"
       />
       <base-button
         v-if="saveFiles"
@@ -99,16 +99,19 @@ export default {
     allowMissingFiles: {
       type: Boolean,
       default: false
-    }
+    },
+    isGenericViewer: Boolean
   },
   data() {
     const config = {
       debug: false,
       allowMultipleUploads: this.multiple,
-      restrictions: {
-        maxNumberOfFiles: this.multiple ? null : 1,
-        allowedFileTypes: this.extensions
-      }
+      restrictions: this.extensions
+        ? {}
+        : {
+            maxNumberOfFiles: this.multiple ? null : 1,
+            allowedFileTypes: this.extensions
+          }
     }
     return {
       uppy: new Uppy(config),
@@ -243,13 +246,8 @@ export default {
   },
   methods: {
     validateProps() {
-      if (
-        this.extensions.includes('.zip') &&
-        !this.filesToExtract.length &&
-        // Does not apply to the playground since there
-        // we allow to list the files to extract
-        !this.isPlayground
-      ) {
+      if (this.isPlayground || this.isGenericViewer) return
+      if (this.extensions.includes('.zip') && !this.filesToExtract.length) {
         throw new TypeError('Extension `zip` requires `files` to be specified')
       }
 
@@ -297,6 +295,17 @@ export default {
       })
 
       return msg.slice(0, -2)
+    },
+    buttonBehaviour() {
+      if (this.isGenericViewer) this.returnFiles()
+      else this.processFiles()
+    },
+    returnFiles() {
+      const files = this.uppy.getFiles().map(f => f.data)
+      this.$emit('update', { allFiles: files })
+
+      this.status = true
+      this.progress = false
     },
     async processFiles() {
       this.progress = true

@@ -2,7 +2,9 @@
   <div>
     <v-row>
       <v-col cols="12 mx-auto" sm="6">
-        <unit-introduction :company-name="title" :data-portal="dataPortal" />
+        <unit-introduction
+          v-bind="{ companyName: title, dataPortal, isGenericViewer }"
+        />
       </v-col>
     </v-row>
     <v-row>
@@ -24,11 +26,6 @@
       </v-col>
     </v-row>
     <template v-if="success">
-      <v-row>
-        <v-col>
-          <unit-file-explorer v-bind="{ allFiles, preprocessor }" />
-        </v-col>
-      </v-row>
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
@@ -53,6 +50,11 @@
             }"
             @update="onQueryUpdate"
           />
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <unit-file-explorer v-bind="{ allFiles, preprocessor }" />
         </v-col>
       </v-row>
       <v-row v-if="$store.state.config.consent">
@@ -83,7 +85,8 @@ export default {
     title: String,
     dataPortal: String,
     customPipeline: Function,
-    preprocessor: String
+    preprocessor: String,
+    isGenericViewer: Boolean
   },
   data() {
     // main example is selected by default
@@ -152,6 +155,11 @@ export default {
     onUnitFilesUpdate({ inputFiles, error, allFiles }) {
       this.initState()
       this.allFiles = allFiles
+      if (this.isGenericViewer) {
+        this.progress = false
+        this.success = true
+        return
+      }
       if (Object.keys(inputFiles).length === 0) {
         this.error = true
         this.message = 'No relevant files were found'

@@ -15,7 +15,8 @@
     "twitter-targeting-information",
     "youtube",
     "playground",
-    "uber"
+    "uber",
+    "explorer"
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
   "saveFiles": true,
