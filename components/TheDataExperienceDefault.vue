@@ -154,13 +154,11 @@ export default {
         this.error = true
         this.message = 'No relevant files were found'
         this.progress = false
-        return
       } else if (error) {
         console.error(error)
         this.error = true
         this.message = error.message
         this.progress = false
-        return
       } else if (this.rml) {
         try {
           rdfUtils.generateRDF(
@@ -175,11 +173,11 @@ export default {
           this.error = true
           this.message = error.message
           this.progress = false
-          return
         }
+      } else {
+        this.progress = false
+        this.success = true
       }
-      this.progress = false
-      this.success = true
     },
     onQueryUpdate({ i, headers, items }) {
       this.allHeaders[i] = JSON.stringify(headers)
