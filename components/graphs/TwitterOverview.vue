@@ -23,7 +23,7 @@
           </v-col>
           <v-col cols="12" sm="4">
             <div id="company-chart">
-              <strong>Top 10 Companies</strong>
+              <strong>Top 10 advertisers</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
