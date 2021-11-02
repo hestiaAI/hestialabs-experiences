@@ -71,6 +71,7 @@
 /* eslint-disable vue/require-default-prop */
 import rdfUtils from '@/utils/rdf'
 import UnitFileExplorer from '~/components/UnitFileExplorer'
+import parseYarrrml from '@/utils/parse-yarrrml'
 
 function getErrorMessage(error) {
   return error instanceof Error ? error.message : error
@@ -145,7 +146,7 @@ export default {
     handleRdfEnd() {
       this.progress = false
     },
-    onUnitFilesUpdate({ inputFiles, error, allFiles }) {
+    async onUnitFilesUpdate({ inputFiles, error, allFiles }) {
       this.initState()
       this.inputFiles = inputFiles
       this.allFiles = allFiles
@@ -153,6 +154,9 @@ export default {
         this.progress = false
         this.success = true
         return
+      }
+      if (this.selectedExample.yarrrml) {
+        this.rml = await parseYarrrml(this.selectedExample.yarrrml)
       }
       if (Object.keys(inputFiles).length === 0) {
         this.error = true
