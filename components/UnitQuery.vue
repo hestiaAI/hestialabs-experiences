@@ -51,7 +51,7 @@
         <v-row>
           <v-col>
             <unit-custom-pipeline
-              v-if="customPipeline"
+              v-if="customPipeline !== undefined"
               v-bind="{ inputFiles, customPipeline }"
               @update="onUnitResultsUpdate"
             />

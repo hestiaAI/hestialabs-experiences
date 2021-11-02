@@ -32,13 +32,14 @@
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
-            v-if="customPipeline"
+            v-if="defaultViewElements.customPipeline"
             v-bind="{
               visualizations,
               defaultViewElements,
               selectedExample,
-              customPipeline,
-              inputFiles
+              customPipeline: customPipeline,
+              inputFiles,
+              i: index
             }"
             @update="onQueryUpdate"
           />
@@ -109,13 +110,6 @@ export default {
     }
   },
   watch: {
-    selectedExample: {
-      immediate: true,
-      async handler(selectedExample) {
-        // this should be quick ...
-        this.rml = await parseYarrrml(selectedExample.yarrrml)
-      }
-    },
     allItems: {
       immediate: true,
       handler(allItems) {
@@ -149,26 +143,26 @@ export default {
     handleRdfEnd() {
       this.progress = false
     },
-    onUnitFilesUpdate({ inputFiles, error, allFiles }) {
+    async onUnitFilesUpdate({ inputFiles, error, allFiles }) {
       this.initState()
+      this.inputFiles = inputFiles
       this.allFiles = allFiles
+      if (this.selectedExample.yarrrml) {
+        this.rml = await parseYarrrml(this.selectedExample.yarrrml)
+      }
       if (Object.keys(inputFiles).length === 0) {
         this.error = true
         this.message = 'No relevant files were found'
         this.progress = false
+        return
       } else if (error) {
+        console.error(error)
         this.error = true
-        this.message = error
+        this.message = error.message
         this.progress = false
-      } else if (this.customPipeline) {
-        this.inputFiles = inputFiles
-        this.progress = false
-        this.success = true
-      } else if (!this.rml) {
-        throw new Error('RML not ready')
-      } else {
+        return
+      } else if (this.rml) {
         try {
-          this.inputFiles = inputFiles
           rdfUtils.generateRDF(
             this.handleRdfData,
             this.handleRdfError,
@@ -181,8 +175,11 @@ export default {
           this.error = true
           this.message = error.message
           this.progress = false
+          return
         }
       }
+      this.progress = false
+      this.success = true
     },
     onQueryUpdate({ i, headers, items }) {
       this.allHeaders[i] = JSON.stringify(headers)

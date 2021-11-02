@@ -65,6 +65,13 @@
       "showTable": false,
       "title": "Targeting criteria by advertiser",
       "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the names in the table above and write it in the text field below."
+    },
+    {
+      "customPipeline": true,
+      "visualizations": ["TwitterOverview.vue"],
+      "showTable": false,
+      "title": "Twitter advertising overview",
+      "text": "Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results."
     }
   ]
 }
