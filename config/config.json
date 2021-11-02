@@ -23,20 +23,20 @@
   "consent": [
     {
       "title": "Introduction",
-      "description": "Filling this form will generate an encrypted ZIP file that the people in charge of this project can use to reproduce your results."
+      "description": "This is an example consent form."
     },
     {
-      "title": "Scope of the report",
-      "description": "To whom the report will be made available.",
+      "title": "Radio buttons",
+      "description": "Please select one option.",
       "type": "radio",
-      "options": ["Share only with Paul-Olivier and Alex", "Share publicly"],
-      "selected": "Share only with Paul-Olivier and Alex"
+      "options": ["A", "B"],
+      "selected": "A"
     },
     {
-      "title": "Specific information",
-      "description": "Check these boxes if you agree to include this information to the report.",
+      "title": "Checkboxes",
+      "description": "Please select all options that apply.",
       "type": "checkbox",
-      "options": ["Your affiliation", "Your age range", "Your motivations for using our service"],
+      "options": ["X", "Y", "Z"],
       "selected": []
     }
   ]
