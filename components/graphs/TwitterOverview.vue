@@ -87,7 +87,7 @@
     <v-row>
       <v-col cols="12" sm="1"></v-col>
       <v-col cols="12" sm="10">
-        <unit-query-results v-bind="{ headers: header, items: results }" />
+        <unit-filterable-table v-bind="{ headers: header, items: results }" />
       </v-col>
       <v-col cols="12" sm="1"></v-col>
     </v-row>
@@ -98,12 +98,14 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
+import UnitFilterableTable from '~/components/UnitFilterableTable'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
   name: 'TwitterOverview',
+  components: { UnitFilterableTable },
   props: {
     values: {
       type: Array,
@@ -121,6 +123,11 @@ export default {
         { text: 'Targeting Criteria', value: 'count' }
       ],
       results: []
+    }
+  },
+  watch: {
+    values(oldValues) {
+      this.drawViz()
     }
   },
   mounted() {

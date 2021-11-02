@@ -4,14 +4,16 @@
     <p>Could not parse file. Showing content instead</p>
     <div>{{ csvText }}</div>
   </div>
-  <v-data-table v-else v-bind="{ ...csvContent }" multi-sort />
+  <unit-filterable-table v-else v-bind="{ ...csvContent }" />
 </template>
 
 <script>
 import * as csv from '@fast-csv/parse'
+import UnitFilterableTable from '~/components/UnitFilterableTable'
 
 export default {
   name: 'UnitCsvViewer',
+  components: { UnitFilterableTable },
   props: {
     file: {
       type: File,

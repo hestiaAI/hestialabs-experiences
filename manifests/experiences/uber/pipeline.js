@@ -1,7 +1,7 @@
 import * as csv from '@fast-csv/parse'
 
 export default async function (inputFiles) {
-  const data = Object.values(inputFiles)[0]
+  const data = inputFiles['Rider/trips_data.csv']
   return await new Promise(resolve => {
     const items = []
     csv

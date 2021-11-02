@@ -29,13 +29,14 @@
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
-            v-if="customPipeline"
+            v-if="defaultViewElements.customPipeline"
             v-bind="{
               visualizations,
               defaultViewElements,
               selectedExample,
-              customPipeline,
-              inputFiles
+              customPipeline: customPipeline,
+              inputFiles,
+              i: index
             }"
             @update="onQueryUpdate"
           />
@@ -69,7 +70,6 @@
 <script>
 /* eslint-disable vue/require-default-prop */
 import rdfUtils from '@/utils/rdf'
-import parseYarrrml from '@/utils/parse-yarrrml'
 import UnitFileExplorer from '~/components/UnitFileExplorer'
 
 function getErrorMessage(error) {
@@ -112,13 +112,6 @@ export default {
     }
   },
   watch: {
-    selectedExample: {
-      immediate: true,
-      async handler(selectedExample) {
-        // this should be quick ...
-        this.rml = await parseYarrrml(selectedExample.yarrrml)
-      }
-    },
     allItems: {
       immediate: true,
       handler(allItems) {
@@ -154,6 +147,7 @@ export default {
     },
     onUnitFilesUpdate({ inputFiles, error, allFiles }) {
       this.initState()
+      this.inputFiles = inputFiles
       this.allFiles = allFiles
       if (this.isGenericViewer) {
         this.progress = false
@@ -165,18 +159,12 @@ export default {
         this.message = 'No relevant files were found'
         this.progress = false
       } else if (error) {
+        console.error(error)
         this.error = true
-        this.message = error
+        this.message = error.message
         this.progress = false
-      } else if (this.customPipeline) {
-        this.inputFiles = inputFiles
-        this.progress = false
-        this.success = true
-      } else if (!this.rml) {
-        throw new Error('RML not ready')
-      } else {
+      } else if (this.rml) {
         try {
-          this.inputFiles = inputFiles
           rdfUtils.generateRDF(
             this.handleRdfData,
             this.handleRdfError,
@@ -190,6 +178,9 @@ export default {
           this.message = error.message
           this.progress = false
         }
+      } else {
+        this.progress = false
+        this.success = true
       }
     },
     onQueryUpdate({ i, headers, items }) {

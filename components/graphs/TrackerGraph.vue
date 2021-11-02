@@ -71,7 +71,7 @@
         <a class="reset">Reset All</a>
       </div>
     </v-row>
-    <unit-query-results v-bind="{ headers: header, items: results }" />
+    <unit-filterable-table v-bind="{ headers: header, items: results }" />
   </v-container>
 </template>
 
@@ -79,12 +79,14 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
+import UnitFilterableTable from '~/components/UnitFilterableTable'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
   name: 'TrackerGraph',
+  components: { UnitFilterableTable },
   props: {
     values: {
       type: Array,
@@ -103,6 +105,11 @@ export default {
         { text: 'Category', value: 'Category' }
       ],
       results: []
+    }
+  },
+  watch: {
+    values(oldValues) {
+      this.drawViz()
     }
   },
   mounted() {
