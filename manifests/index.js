@@ -71,6 +71,7 @@ const manifests = Object.fromEntries(
       preprocessor,
       collaborator,
       isGenericViewer,
+      url,
       showDataExplorer,
       ...rest
     } = reqJSON(path)
@@ -92,7 +93,7 @@ const manifests = Object.fromEntries(
     }
     // Validate config
     const requiredParams = { title, icon, ext }
-    if (!isGenericViewer) {
+    if (!isGenericViewer && !url) {
       Object.entries(requiredParams).forEach(([name, param]) => {
         if (!param) {
           throw new Error(`[${dir}] ${name} is required`)
@@ -131,6 +132,7 @@ const manifests = Object.fromEntries(
         preprocessor,
         collaborator,
         isGenericViewer,
+        url,
         showDataExplorer,
         ...rest,
         ...module.default,
