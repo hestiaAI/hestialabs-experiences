@@ -1,5 +1,15 @@
 # HestiaLabs Experiences
 
+## Instances
+
+The instances are deployed on [netlify](https://app.netlify.com/teams/hestia/overview), where you can see a log of their [build](https://app.netlify.com/teams/hestia/builds/). They each point to a different branch of this repo.
+
+|   | [test.hestialabs.org](https://test.hestialabs.org/)  | [experiences.hestialabs.org](https://experiences.hestialabs.org/)  | [digipower.hestialabs.org](https://digipower.hestialabs.org/)  |
+|:--|:--|:--|:--|
+| branch   |  [netlify-test](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-test) | [netlify](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify)  |  [netlify-digipower](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-digipower) |
+| netlify name  | test-experiences  | hestia-experiences  | digipower  |
+| purpose | testing, typically with all features and experiences enabled  | our public showcase  | the sitra project  |
+
 ## Build Setup
 
 ```bash
