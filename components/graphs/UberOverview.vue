@@ -386,10 +386,10 @@ export default {
       const currencyGroup = this.currencyDimension.group()
 
       this.currentCurrency = currencyGroup.top(1)[0].key
+      this.currencyDimension.filter(this.currentCurrency)
       currencyGroup.top(Infinity).forEach(d => {
         this.currencies.push(d.key)
       })
-      this.currencyDimension.filter('EUR')
 
       // Render general Information numbers
       tripNumber
@@ -573,8 +573,10 @@ export default {
         })
 
       // Render CumPrice line chart
-      const minDate = dayDimension.bottom(1)[0].day
-      const maxDate = dayDimension.top(1)[0].day
+      const minDate =
+        dayDimension.bottom(1).length > 0 ? dayDimension.bottom(1)[0].day : null
+      const maxDate =
+        dayDimension.top(1).length > 0 ? dayDimension.top(1)[0].day : null
       function createCumulativeGroup(group) {
         return {
           all() {
