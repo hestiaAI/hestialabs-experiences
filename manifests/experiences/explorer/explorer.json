@@ -2,5 +2,6 @@
   "title": "Data Explorer",
   "icon": "clipboard-search-outline.png",
   "isGenericViewer": true,
+  "showDataExplorer": true,
   "ext": "all"
 }

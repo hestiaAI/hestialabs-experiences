@@ -92,6 +92,10 @@ export default {
     isGenericViewer: {
       type: Boolean,
       default: false
+    },
+    showDataExplorer: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -112,7 +116,8 @@ export default {
         'defaultView',
         'customPipeline',
         'preprocessor',
-        'isGenericViewer'
+        'isGenericViewer',
+        'showDataExplorer'
       ]
       const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
       return props

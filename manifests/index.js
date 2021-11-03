@@ -71,6 +71,7 @@ const manifests = Object.fromEntries(
       preprocessor,
       collaborator,
       isGenericViewer,
+      showDataExplorer,
       ...rest
     } = reqJSON(path)
 
@@ -111,6 +112,10 @@ const manifests = Object.fromEntries(
       throw new Error(`[${dir}] Preprocessor ${preprocessor} does not exist`)
     }
 
+    if (isGenericViewer && !showDataExplorer) {
+      throw new Error('the explorer experience must show the data explorer')
+    }
+
     const module = require(`./experiences/${dir}/`)
 
     return [
@@ -126,6 +131,7 @@ const manifests = Object.fromEntries(
         preprocessor,
         collaborator,
         isGenericViewer,
+        showDataExplorer,
         ...rest,
         ...module.default,
         examples: []
