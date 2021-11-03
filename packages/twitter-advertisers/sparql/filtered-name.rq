@@ -1,0 +1,8 @@
+# authors: Valentin Oliver Loftsson <valentin@hestia.ai>
+PREFIX :  <http://schema.org/>
+
+SELECT ?name
+WHERE {
+    ?advertiser :name ?name
+    FILTER(contains(lcase(?name), "group"))
+}

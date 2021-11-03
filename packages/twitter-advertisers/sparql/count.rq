@@ -1,0 +1,7 @@
+# authors: Valentin Oliver Loftsson <valentin@hestia.ai>
+PREFIX :  <http://schema.org/>
+
+SELECT (COUNT(*) AS ?count)
+WHERE {
+    ?advertiser a :Organization
+}
