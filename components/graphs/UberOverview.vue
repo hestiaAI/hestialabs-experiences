@@ -286,7 +286,8 @@ export default {
         d.priceStr = d['Fare Amount'] + d['Fare Currency']
         d.price = +d['Fare Amount']
         d.distance = +d['Distance (miles)']
-        d.city = d.City // d['Begin Trip Address'].split(',')[1].split(' ')[2]
+        const addr = d['Begin Trip Address'].split(',')
+        d.city = addr[addr.length - 2].split(' ').pop()
       })
 
       // Create and bind charts to their respective divs
