@@ -1,7 +1,7 @@
 import * as csv from '@fast-csv/parse'
 
 async function tripsData(inputFiles) {
-  const data = inputFiles['Rider/trips_data.csv']
+  const data = inputFiles['Uber Data/Rider/trips_data.csv']
   return await new Promise(resolve => {
     const items = []
     csv
