@@ -16,8 +16,7 @@
         >
           <v-card
             class="d-flex flex-column"
-            nuxt
-            v-bind="link(url, key)"
+            v-bind="linkAttributes(url, key)"
             hover
             shaped
           >
@@ -37,9 +36,16 @@
 <script>
 export default {
   methods: {
-    link(url, key) {
-      return url ? { href: url } : { to: `/${key}` }
+    linkAttributes(url, key) {
+      return url
+        ? { href: url, target: '_blank', rel: 'noopener noreferrer' }
+        : { nuxt: true, to: `/${key}` }
     }
   }
 }
 </script>
+<style>
+.v-card--link:before {
+  background: none;
+}
+</style>
