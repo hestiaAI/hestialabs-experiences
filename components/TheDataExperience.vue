@@ -85,9 +85,9 @@ export default {
       type: Boolean,
       default: false
     },
-    customPipeline: {
-      type: Function,
-      default: undefined
+    customPipelines: {
+      type: Object,
+      default: () => {}
     },
     isGenericViewer: {
       type: Boolean,
@@ -114,7 +114,7 @@ export default {
         'examples',
         'visualizations',
         'defaultView',
-        'customPipeline',
+        'customPipelines',
         'preprocessor',
         'isGenericViewer',
         'showDataExplorer'

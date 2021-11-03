@@ -84,7 +84,7 @@ Note: All files and folders should match the following regular expression: [`^(?
   /**
     * Array defining the blocks to show in the default view. Each section section can have:
     * - A SPARQL query (optional)
-    * - A function used as the custom pipeline
+    * - A function used as the custom pipeline (defined in pipeline.js) (optional)
     * - An array of visualizations to show
     * - A data table
     * - A title

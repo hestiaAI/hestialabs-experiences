@@ -21,7 +21,7 @@ function fillItems(items, impressionAttributes, isEngagement) {
   })
 }
 
-export default async function (inputFiles) {
+async function twitterTargeting(inputFiles) {
   const engagementsFile = JSON.parse(inputFiles['data/ad-engagements.js'])
   const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
   const engagements = JSONPath({
@@ -45,4 +45,8 @@ export default async function (inputFiles) {
   fillItems(items, engagements, true)
 
   return await Promise.resolve({ headers, items })
+}
+
+export default {
+  twitterTargeting
 }
