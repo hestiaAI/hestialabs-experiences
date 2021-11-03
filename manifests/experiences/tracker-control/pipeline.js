@@ -1,6 +1,6 @@
 import * as csv from '@fast-csv/parse'
 
-export default async function (inputFiles) {
+async function trackerControl(inputFiles) {
   const data = Object.values(inputFiles)[0]
   return await new Promise(resolve => {
     const items = []
@@ -9,4 +9,8 @@ export default async function (inputFiles) {
       .on('data', row => items.push(row))
       .on('end', () => resolve({ headers: Object.keys(items[0]), items }))
   })
+}
+
+export default {
+  trackerControl
 }

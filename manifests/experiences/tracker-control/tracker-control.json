@@ -6,7 +6,7 @@
   "data": ["tracker-control.csv"],
   "defaultView": [
     {
-      "customPipeline": true,
+      "customPipeline": "trackerControl",
       "visualizations": ["TrackerGraph.vue"],
       "showTable": false,
       "title": "Tracker control experience",

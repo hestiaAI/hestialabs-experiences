@@ -34,7 +34,8 @@
               visualizations,
               defaultViewElements,
               selectedExample,
-              customPipeline: customPipeline,
+              customPipeline:
+                customPipelines[defaultViewElements.customPipeline],
               inputFiles,
               i: index
             }"
@@ -53,7 +54,7 @@
           />
         </v-col>
       </v-row>
-      <v-row>
+      <v-row v-if="showDataExplorer">
         <v-col>
           <unit-file-explorer v-bind="{ allFiles, preprocessor }" />
         </v-col>
@@ -85,9 +86,10 @@ export default {
     defaultView: Array,
     title: String,
     dataPortal: String,
-    customPipeline: Function,
+    customPipelines: Object,
     preprocessor: String,
-    isGenericViewer: Boolean
+    isGenericViewer: Boolean,
+    showDataExplorer: Boolean
   },
   data() {
     // main example is selected by default

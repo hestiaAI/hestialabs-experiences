@@ -1,5 +1,5 @@
-import customPipeline from './pipeline'
+import customPipelines from './pipeline'
 
 export default {
-  customPipeline
+  customPipelines
 }

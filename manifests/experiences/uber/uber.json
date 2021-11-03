@@ -8,7 +8,7 @@
   "data": ["uber-trips.zip"],
   "defaultView": [
     {
-      "customPipeline": true,
+      "customPipeline": "tripsData",
       "visualizations": ["UberOverview.vue"],
       "showTable": false,
       "title": "Uber Trips overview",
