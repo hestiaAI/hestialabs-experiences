@@ -12,7 +12,7 @@
       "visualizations": ["UberOverview.vue"],
       "showTable": false,
       "title": "Uber Trips overview",
-      "text": "Understand the world <3"
+      "text": "Compare the prices of your Uber rides according to several factors ( Your data is grouped by currency)."
     }
   ]
 }
