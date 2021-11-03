@@ -34,7 +34,8 @@
               visualizations,
               defaultViewElements,
               selectedExample,
-              customPipeline: customPipeline,
+              customPipeline:
+                customPipelines[defaultViewElements.customPipeline],
               inputFiles,
               i: index
             }"
@@ -85,7 +86,7 @@ export default {
     defaultView: Array,
     title: String,
     dataPortal: String,
-    customPipeline: Function,
+    customPipelines: Object,
     preprocessor: String,
     isGenericViewer: Boolean
   },
