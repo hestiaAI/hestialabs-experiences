@@ -1,5 +1,15 @@
 <template>
   <v-container>
+    <v-row class="justify-center">
+      <p>
+        Select data depending on the currency
+        <v-select
+          v-model="currentCurrency"
+          :items="currencies"
+          @input="filterCurrency"
+        ></v-select>
+      </p>
+    </v-row>
     <v-row>
       <v-col cols="12" md="8">
         <v-row>
@@ -8,10 +18,7 @@
               <strong>Price vs Distance</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
-                <span>
-                  Current filter:
-                  <span class="filter"></span>
-                </span>
+                <span></span>
               </p>
             </div>
             <div id="hour-chart">
@@ -20,6 +27,7 @@
                 style="margin-right: 15px; margin-bottom: 5px"
               >
                 select a time range to zoom in
+                <a class="reset" style="display: none">reset</a>
               </p>
             </div>
           </v-col>
@@ -63,7 +71,7 @@
           </v-col>
           <v-col cols="12" md="4">
             <div id="city-chart">
-              <strong>Cities</strong>
+              <strong>Begin trip cities</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
@@ -118,12 +126,12 @@
                   <td>
                     <span id="number-price-total" class="text-h6"></span>
                     <br />
-                    <span class="text-subtitle-2">GBP</span>
+                    <span class="text-subtitle-2">{{ currentCurrency }}</span>
                   </td>
                   <td>
                     <span id="number-price-avg" class="text-h6"></span>
                     <br />
-                    <span class="text-subtitle-2">GBP</span>
+                    <span class="text-subtitle-2">{{ currentCurrency }}</span>
                   </td>
                 </tr>
                 <tr>
@@ -188,7 +196,7 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
-import regression from 'regression'
+// import regression from 'regression'
 import UnitFilterableTable from '~/components/UnitFilterableTable'
 
 // Remove warning on default colorscheme, even if not used..
@@ -207,7 +215,7 @@ export default {
     return {
       header: [
         { text: 'City', value: 'City' },
-        { text: 'Service', value: 'Product Type' },
+        { text: 'Service', value: 'service' },
         { text: 'Status', value: 'Trip or Order Status' },
         { text: 'Request Time', value: 'dateRequestStr' },
         { text: 'From', value: 'Begin Trip Address' },
@@ -217,7 +225,10 @@ export default {
         { text: 'Duration (min)', value: 'duration' },
         { text: 'Price', value: 'priceStr' }
       ],
-      results: []
+      results: [],
+      currencies: [],
+      currentCurrency: null,
+      currencyDimension: null
     }
   },
   watch: {
@@ -229,13 +240,22 @@ export default {
     this.drawViz()
   },
   methods: {
+    filterCurrency(newCurr) {
+      this.currencyDimension.filter(newCurr)
+      this.currentCurrency = newCurr
+      this.resetAll()
+    },
     resetAll() {
       dc.filterAll()
       dc.renderAll()
     },
     drawViz() {
       // Add data to table
-      this.results = this.values
+      this.results = this.values.filter(
+        d =>
+          d['Trip or Order Status'] === 'COMPLETED' &&
+          d['Product Type'] !== 'UberEATS Marketplace'
+      )
 
       // Define color palette for the graphs
       const colorPalette = [
@@ -251,6 +271,8 @@ export default {
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC')
       const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
       this.results.forEach(d => {
+        d.service =
+          d['Product Type'].charAt(0).toUpperCase() + d['Product Type'].slice(1)
         d.dateRequest = dateFormatParser(d['Request Time'])
         d.dateStart = dateFormatParser(d['Begin Trip Time'])
         d.dateEnd = dateFormatParser(d['Dropoff Time'])
@@ -264,7 +286,7 @@ export default {
         d.priceStr = d['Fare Amount'] + d['Fare Currency']
         d.price = +d['Fare Amount']
         d.distance = +d['Distance (miles)']
-        d.city = d.City
+        d.city = d.City // d['Begin Trip Address'].split(',')[1].split(' ')[2]
       })
 
       // Create and bind charts to their respective divs
@@ -317,13 +339,14 @@ export default {
       const dayOfWeekDimension = ndx.dimension(d => {
         const day = d.dateStart.getDay()
         const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-        return `${day}.${name[day]}`
+        return `${name[day]}`
       })
-      const serviceDimension = ndx.dimension(d => d['Product Type'])
+      const serviceDimension = ndx.dimension(d => d.service)
       const cityDimension = ndx.dimension(d => d.city)
       const dayDimension = ndx.dimension(d => d.day)
       const scatterDimension = ndx.dimension(d => [d.distance, d.price])
       const hourDimension = ndx.dimension(d => d.hour)
+      this.currencyDimension = ndx.dimension(d => d['Fare Currency'])
 
       // Create groups
       const allGroup = allDimension.reduce(
@@ -360,12 +383,19 @@ export default {
       const cityGroup = cityDimension.group().reduceCount()
       const scatterGroup = scatterDimension.group()
       const hourGroup = hourDimension.group().reduceCount()
+      const currencyGroup = this.currencyDimension.group()
+
+      this.currentCurrency = currencyGroup.top(1)[0].key
+      currencyGroup.top(Infinity).forEach(d => {
+        this.currencies.push(d.key)
+      })
+      this.currencyDimension.filter('EUR')
 
       // Render general Information numbers
       tripNumber
         .group(allGroup)
         .valueAccessor(p => p.count)
-        .formatNumber(d3.format('.0'))
+        .formatNumber(d3.format('~s'))
         .on('pretransition', (chart, filter) => {
           this.results = serviceDimension.top(Infinity)
         })
@@ -384,7 +414,7 @@ export default {
       priceTotalNumber
         .group(allGroup)
         .valueAccessor(p => p.priceTotal)
-        .formatNumber(d3.format('~s'))
+        .formatNumber(d3.format('.3s'))
       distanceAvgNumber
         .group(allGroup)
         .valueAccessor(p => (p.count ? p.distanceTotal / p.count : 0))
@@ -392,11 +422,11 @@ export default {
       distanceTotalNumber
         .group(allGroup)
         .valueAccessor(p => p.distanceTotal)
-        .formatNumber(d3.format('~s'))
+        .formatNumber(d3.format('.3s'))
       durationTotalNumber
         .group(allGroup)
         .valueAccessor(p => p.durationTotal)
-        .formatNumber(d3.format('~s'))
+        .formatNumber(d3.format('.3s'))
       durationAvgNumber
         .group(allGroup)
         .valueAccessor(p => (p.durationTotal ? p.durationTotal / p.count : 0))
@@ -404,7 +434,7 @@ export default {
       waitingTotalNumber
         .group(allGroup)
         .valueAccessor(p => p.waitingTotal)
-        .formatNumber(d3.format('~s'))
+        .formatNumber(d3.format('.3s'))
       waitingAvgNumber
         .group(allGroup)
         .valueAccessor(p => (p.count ? p.waitingTotal / p.count : 0))
@@ -415,8 +445,8 @@ export default {
         .width(d3.select('#scatter-chart').node().getBoundingClientRect().width)
         .height(200)
         .margins({ top: 10, right: 10, bottom: 40, left: 40 })
-        .x(d3.scaleLinear().domain([6, 20]))
-        .brushOn(true)
+        .x(d3.scaleLinear())
+        .brushOn(false)
         .elasticY(true)
         .elasticX(true)
         .ordinalColors(colorPalette)
@@ -426,9 +456,8 @@ export default {
         .yAxisLabel('Price')
         .dimension(scatterDimension)
         .group(scatterGroup)
-        .xAxis()
-        .ticks(5)
 
+      /* Add a regression line
       scatterChart.on('pretransition', () => {
         const r = regression.linear(
           scatterChart
@@ -470,6 +499,7 @@ export default {
           .duration(scatterChart.transitionDuration())
           .call(doPoints)
       })
+      */
 
       // Render hour bar chart
       hourChart
@@ -490,15 +520,28 @@ export default {
         .ticks(7)
 
       // Render days of week row chart
+      function removeEmptyBins(group) {
+        return {
+          top(n) {
+            return group
+              .top(Infinity)
+              .filter(function (d) {
+                return d.value.count !== 0 && d.value !== 0
+              })
+              .slice(0, n)
+          }
+        }
+      }
       weekChart
         .width(d3.select('#week-chart').node().getBoundingClientRect().width)
         .height(275)
-        .margins({ top: 20, left: 10, right: 10, bottom: 20 })
-        .group(dayOfWeekGroup)
+        .margins({ top: 10, left: 10, right: 10, bottom: 20 })
+        .group(removeEmptyBins(dayOfWeekGroup))
         .dimension(dayOfWeekDimension)
         .ordinalColors(colorPalette)
-        .label(d => d.key.split('.')[1])
+        .label(d => d.key)
         .title(d => d.value)
+        .data(group => group.top(10))
         .elasticX(true)
         .xAxis()
         .ticks(4)
@@ -569,9 +612,7 @@ export default {
         .yAxisLabel('Total price')
         .brushOn(true)
         .ordinalColors(colorPalette)
-        .xAxis()
-        .ticks(4)
-
+      priceChart.xAxis().ticks(4)
       priceChart.filterAll()
 
       // Render city row chart
@@ -579,11 +620,12 @@ export default {
         .width(d3.select('#city-chart').node().getBoundingClientRect().width)
         .height(180)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
-        .group(cityGroup)
+        .group(removeEmptyBins(cityGroup))
         .dimension(cityDimension)
         .ordinalColors(colorPalette)
         .label(d => d.key)
         .title(d => d.value)
+        .data(group => group.top(10))
         .elasticX(true)
         .xAxis()
         .ticks(4)
