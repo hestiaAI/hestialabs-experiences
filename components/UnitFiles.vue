@@ -65,7 +65,6 @@ import '@uppy/drop-target/dist/style.css'
 import preprocessors from '@/manifests/preprocessors'
 import processFiles from '@/utils/process-files'
 import localforage from '@/utils/localforage'
-import { processError } from '@/utils/utils'
 
 async function fetchSampleFile({ path, filename }) {
   const response = await window.fetch(path)
@@ -339,11 +338,10 @@ export default {
           }
           this.uppy.info(infoMessage)
           this.$emit('update', { ...result, allFiles: files })
-        } catch (err) {
-          console.error(err)
+        } catch (error) {
+          console.error(error)
           this.error = true
-          const error = processError(err)
-          this.messagePowerUser = error
+          this.messagePowerUser = error.message
           this.$emit('update', { error })
         } finally {
           this.status = true

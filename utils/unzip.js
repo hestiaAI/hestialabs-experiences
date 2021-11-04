@@ -27,7 +27,6 @@ export async function extractFiles(blob, whitelist = [], strict = true) {
         const msg = `${filepath} is not present in the archive ${blob.name}`
         if (strict) {
           // the file is required to be present in the archive in strict mode
-          console.error(msg)
           throw new Error(msg)
         }
         console.warn(msg)
