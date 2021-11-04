@@ -2,5 +2,32 @@
   "title": "Google",
   "icon": "google.png",
   "ext": "json",
-  "data": []
+  "data": [],
+  "timedObservationsViewer": {
+    "files": [],
+    "fileMatchers": [
+      {
+        "regex": "Takeout/(.+?)/(.+?)/(?1)\\.json",
+        "dateField": {
+          "name": "time",
+          "format": "ISO8601"
+        },
+        "otherFields": [
+          {
+            "title": {
+
+            },
+            "products": {
+              "extractor": "TODO"
+            }
+          }
+        ]
+      }
+    ],
+    "fields": [
+      {
+
+      }
+    ]
+  }
 }
