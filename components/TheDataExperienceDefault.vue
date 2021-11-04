@@ -150,6 +150,14 @@ export default {
     },
     async onUnitFilesUpdate({ inputFiles, error, allFiles }) {
       this.initState()
+      if (error) {
+        console.error(error)
+        this.error = true
+        this.message = error.message
+        this.progress = false
+        return
+      }
+
       this.inputFiles = inputFiles
       this.allFiles = allFiles
       if (this.isGenericViewer) {
@@ -163,11 +171,6 @@ export default {
       if (Object.keys(inputFiles).length === 0) {
         this.error = true
         this.message = 'No relevant files were found'
-        this.progress = false
-      } else if (error) {
-        console.error(error)
-        this.error = true
-        this.message = error.message
         this.progress = false
       } else if (this.rml) {
         try {
