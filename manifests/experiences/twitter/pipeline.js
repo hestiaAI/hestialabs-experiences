@@ -1,6 +1,6 @@
 import { JSONPath } from 'jsonpath-plus'
 
-function fillItems(items, impressionAttributes, isEngagement) {
+function dashboardFillItems(items, impressionAttributes, isEngagement) {
   impressionAttributes.forEach(v => {
     const criteria = JSONPath({
       path: '$.matchedTargetingCriteria[*]',
@@ -21,7 +21,7 @@ function fillItems(items, impressionAttributes, isEngagement) {
   })
 }
 
-async function twitterTargeting(inputFiles) {
+async function dashboard(inputFiles) {
   const engagementsFile = JSON.parse(inputFiles['data/ad-engagements.js'])
   const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
   const engagements = JSONPath({
@@ -41,12 +41,47 @@ async function twitterTargeting(inputFiles) {
     'targetingValue'
   ]
   const items = []
-  fillItems(items, impressions, false)
-  fillItems(items, engagements, true)
+  dashboardFillItems(items, impressions, false)
+  dashboardFillItems(items, engagements, true)
+
+  return await Promise.resolve({ headers, items })
+}
+
+async function advertisersPerDay(inputFiles) {
+  // JSON iterator
+  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  let impressions = JSONPath({
+    path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
+    json: impressionsFile
+  })
+  const headers = ['advertiserName', 'date', 'count']
+  // Select relevant fields
+  impressions = impressions.map(v => ({
+    advertiserName: v.advertiserInfo.advertiserName,
+    date: v.impressionTime.substring(0, 10)
+  }))
+  // GroupBy and count, using a tree
+  impressions = impressions.reduce((acc, { advertiserName, date }) => {
+    if (!acc[advertiserName]) {
+      acc[advertiserName] = {}
+    }
+    const group = acc[advertiserName]
+    if (!group[date]) {
+      group[date] = { advertiserName, date, count: 0 }
+    }
+    group[date].count++
+    return acc
+  }, Object.create(null))
+  // Flatten
+  const items = []
+  Object.entries(impressions).forEach(([k1, v1]) =>
+    Object.entries(v1).forEach(([k2, v2]) => items.push(v2))
+  )
 
   return await Promise.resolve({ headers, items })
 }
 
 export default {
-  twitterTargeting
+  dashboard,
+  advertisersPerDay
 }

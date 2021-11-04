@@ -33,7 +33,7 @@
   ]},
   "defaultView": [
     {
-      "query": "advertisers-per-day",
+      "customPipeline": "advertisersPerDay",
       "visualizations": ["top-k-advertisers"],
       "showTable": false,
       "title": "Top advertisers",
@@ -67,7 +67,7 @@
       "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the names in the table above and write it in the text field below."
     },
     {
-      "customPipeline": "twitterTargeting",
+      "customPipeline": "dashboard",
       "visualizations": ["TwitterOverview.vue"],
       "showTable": false,
       "title": "Twitter advertising overview",
