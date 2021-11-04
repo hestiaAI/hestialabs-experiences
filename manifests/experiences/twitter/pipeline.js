@@ -1,4 +1,5 @@
 import { JSONPath } from 'jsonpath-plus'
+import { aggregate, countReducer } from '@/utils/aggregate'
 
 function dashboardFillItems(items, impressionAttributes, isEngagement) {
   impressionAttributes.forEach(v => {
@@ -54,28 +55,17 @@ async function advertisersPerDay(inputFiles) {
     path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
     json: impressionsFile
   })
-  const headers = ['advertiserName', 'date', 'count']
   // Select relevant fields
+  const headers = ['advertiserName', 'date', 'count']
   impressions = impressions.map(v => ({
     advertiserName: v.advertiserInfo.advertiserName,
     date: v.impressionTime.substring(0, 10)
   }))
-  // GroupBy and count, using a tree
-  impressions = impressions.reduce((acc, { advertiserName, date }) => {
-    if (!acc[advertiserName]) {
-      acc[advertiserName] = {}
-    }
-    const group = acc[advertiserName]
-    if (!group[date]) {
-      group[date] = { advertiserName, date, count: 0 }
-    }
-    group[date].count++
-    return acc
-  }, Object.create(null))
-  // Flatten
-  const items = []
-  Object.entries(impressions).forEach(([k1, v1]) =>
-    Object.entries(v1).forEach(([k2, v2]) => items.push(v2))
+  // GroupBy and count
+  const items = aggregate(
+    impressions,
+    ['advertiserName', 'date'],
+    countReducer('count')
   )
 
   return await Promise.resolve({ headers, items })
