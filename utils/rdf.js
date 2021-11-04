@@ -24,7 +24,13 @@ export function generateRDF(
     const { rdf, jsonld } = await arrayBufferToObject(data)
 
     if (!rdf && !jsonld) {
-      return handleError(new Error('No data found'))
+      handleError(
+        new Error(
+          'No data found. Check that the file hierarchy has not been modified after downloading it from the data portal.'
+        )
+      )
+      handleEnd()
+      return
     }
 
     if (rdf) {
