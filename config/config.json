@@ -16,7 +16,8 @@
     "playground",
     "uber",
     "ad-radar",
-    "explorer"
+    "explorer",
+    "google-my-activity"
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
   "saveFiles": true,

@@ -25,6 +25,8 @@ export default {
   computed: {
     isComponent() {
       switch (this.graphName) {
+        case 'GenericDateViewer.vue':
+          return () => import('@/components/graphs/GenericDateViewer.vue')
         case 'UberOverview.vue':
           return () => import('@/components/graphs/UberOverview.vue')
         case 'TwitterOverview.vue':
