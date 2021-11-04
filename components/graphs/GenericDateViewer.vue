@@ -18,6 +18,19 @@
         </v-tabs-items>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col cols="12">
+        <v-radio-group v-model="timeRange" row mandatory>
+          <v-radio label="ALL" value="ALL"></v-radio>
+          <v-radio label="1D" value="1D"></v-radio>
+          <v-radio label="7D" value="7D"></v-radio>
+          <v-radio label="1M" value="1M"></v-radio>
+          <v-radio label="3M" value="3M"></v-radio>
+          <v-radio label="1Y" value="1Y"></v-radio>
+          <v-radio label="Custom" value="Custom"></v-radio>
+        </v-radio-group>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -40,6 +53,8 @@ export default {
   },
   data() {
     return {
+      dateRange: null,
+      tab: null,
       header: [
         { text: 'Date', value: 'date' },
         { text: 'Event type', value: 'event_type' },

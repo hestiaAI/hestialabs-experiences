@@ -12,7 +12,7 @@
       "visualizations": ["GenericDateViewer.vue"],
       "showTable": false,
       "title": "Overview of what google knows about you",
-      "text": "You can filter by event type and date blablabla.."
+      "text": ""
     }
   ]
 }
