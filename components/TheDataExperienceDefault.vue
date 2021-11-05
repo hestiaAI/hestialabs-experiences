@@ -144,7 +144,10 @@ export default {
 
       if (error) {
         this.handleError(error)
-      } else if (Object.keys(inputFiles).length === 0) {
+      } else if (
+        !this.isGenericViewer &&
+        Object.keys(inputFiles).length === 0
+      ) {
         this.handleError('No relevant files were found')
       } else if (this.isRdfNeeded && this.selectedExample.yarrrml) {
         try {
