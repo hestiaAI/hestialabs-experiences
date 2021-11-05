@@ -15,12 +15,12 @@
                 rounded
                 return-object
                 transition
-                :items="fileTree"
+                :items="fileItems"
                 @update:active="setSelectedItem"
               >
                 <template #prepend="{ item }">
                   <v-icon>
-                    {{ filetype2icon[item.type] || filetype2icon.file }}
+                    {{ item.icon }}
                   </v-icon>
                 </template>
               </v-treeview>
@@ -70,20 +70,7 @@
 </template>
 
 <script>
-import {
-  mdiCodeJson,
-  mdiFile,
-  mdiFileImage,
-  mdiFilePdfBox,
-  mdiFolder,
-  mdiFolderZip,
-  mdiTable,
-  mdiTextBoxOutline,
-  mdiXml
-} from '@mdi/js'
-import { unzip, setOptions } from 'unzipit'
-import workerURL from 'unzipit/dist/unzipit-worker.module.js'
-import { cloneDeep } from 'lodash'
+import FileManager from '~/utils/file.js'
 import UnitJsonViewer from '~/components/UnitJsonViewer'
 import UnitCsvViewer from '~/components/UnitCsvViewer'
 import UnitPdfViewer from '~/components/UnitPdfViewer'
@@ -91,11 +78,6 @@ import preprocessors from '~/manifests/preprocessors'
 import UnitImageViewer from '~/components/UnitImageViewer'
 import UnitHtmlViewer from '~/components/UnitHtmlViewer'
 import UnitTextViewer from '~/components/UnitTextViewer'
-
-setOptions({
-  workerURL,
-  numWorkers: 2
-})
 
 export default {
   name: 'UnitFileExplorer',
@@ -121,36 +103,9 @@ export default {
     return {
       selectedItem: null,
       openItems: [],
-      filetype2icon: {
-        folder: mdiFolder,
-        zip: mdiFolderZip,
-        json: mdiCodeJson,
-        csv: mdiTable,
-        pdf: mdiFilePdfBox,
-        img: mdiFileImage,
-        file: mdiFile,
-        txt: mdiTextBoxOutline,
-        html: mdiXml
-      },
-      extension2filetype: {
-        tar: 'zip',
-        js: 'json',
-        png: 'img',
-        jpeg: 'img',
-        jpg: 'img',
-        gif: 'img',
-        bmp: 'img',
-        webp: 'img',
-        pdf: 'pdf',
-        zip: 'zip',
-        json: 'json',
-        txt: 'txt',
-        html: 'html',
-        csv: 'csv',
-        tsv: 'csv'
-      },
       idSpace: 0,
-      fileTree: []
+      fileManager: null,
+      fileItems: []
     }
   },
   computed: {
@@ -163,8 +118,9 @@ export default {
     }
   },
   async created() {
-    const result = await this.fileListToTree(this.allFiles)
-    this.fileTree = this.itemifyFiles(result)
+    this.fileManager = await new FileManager(this.allFiles)
+    const fileTree = this.fileManager.makeTree(this.fileManager.fileList)
+    this.fileItems = this.fileManager.makeItems(fileTree)
   },
   methods: {
     setSelectedItem(array) {
@@ -172,98 +128,6 @@ export default {
       const containers = new Set(['folder', 'zip'])
       if (!containers.has(item?.type)) {
         this.selectedItem = item
-      }
-    },
-    async zipEntriesToTree(entryList) {
-      const folders = entryList.filter(node => node.isDirectory)
-      const folderContents = Object.fromEntries(
-        folders.map(folder => [
-          folder.name,
-          entryList.filter(f => new RegExp(`^${folder.name}.`).test(f.name))
-        ])
-      )
-      const innerNodes = new Set(
-        Object.values(folderContents)
-          .flat()
-          .map(f => f.name)
-      )
-      const foldersResult = await Promise.all(
-        Object.entries(folderContents)
-          .filter(([folderName, _]) => !innerNodes.has(folderName))
-          .map(async ([folderName, contents]) => [
-            folderName.replace('/', ''),
-            await this.zipEntriesToTree(
-              contents.map(node => {
-                const copy = cloneDeep(node)
-                copy.name = node.name.replace(new RegExp(`${folderName}`), '')
-                return copy
-              })
-            )
-          ])
-      )
-      const topLevelFiles = await Promise.all(
-        entryList
-          .filter(file => !file.isDirectory && !innerNodes.has(file.name))
-          .map(async node => new File([await node.blob()], node.name))
-      )
-      const filesResult = topLevelFiles
-        .filter(file => !/\.zip$/.test(file.name))
-        .map(file => [file.name, [file]])
-      const topLevelZips = topLevelFiles.filter(file =>
-        /\.zip$/.test(file.name)
-      )
-      const zipResult = await Promise.all(
-        topLevelZips.map(async node => {
-          const { entries } = await unzip(node)
-          const newEntryList = Object.values(entries)
-          return [node.name, await this.zipEntriesToTree(newEntryList)]
-        })
-      )
-      return Object.fromEntries([
-        ...filesResult,
-        ...zipResult,
-        ...foldersResult
-      ])
-    },
-    async fileListToTree(files) {
-      return Object.fromEntries(
-        await Promise.all(
-          files.map(async node => {
-            if (/\.zip$/.test(node.name)) {
-              const { entries } = await unzip(node)
-              const entryList = Object.values(entries)
-              return [node.name, await this.zipEntriesToTree(entryList)]
-            } else {
-              return [node.name, [node]]
-            }
-          })
-        )
-      )
-    },
-    itemifyFiles(tree) {
-      if (Array.isArray(tree)) {
-        return tree
-      } else {
-        return Object.entries(tree).flatMap(([file, node]) => {
-          if (Array.isArray(node)) {
-            const extension = file.match(/\.([\S]+)/)?.[1]
-            return {
-              id: this.idSpace++,
-              name: file,
-              file: node[0],
-              type: this.extension2filetype[extension] ?? 'file'
-            }
-          } else {
-            const inner = this.itemifyFiles(node)
-            const extension = file.match(/\.([\S]+)/)?.[1]
-            return {
-              id: this.idSpace++,
-              name: file,
-              children: inner,
-              type: this.extension2filetype[extension] ?? 'folder'
-            }
-          }
-        })
       }
     }
   }
