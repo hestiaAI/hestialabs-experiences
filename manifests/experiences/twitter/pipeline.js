@@ -170,10 +170,50 @@ async function allAdvertisers(inputFiles) {
   return await Promise.resolve({ headers, items })
 }
 
+async function selectTargetingTree(inputFiles, parameter) {
+  // JSON iterator on impressions
+  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  const impressions = JSONPath({
+    path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
+    json: impressionsFile
+  })
+  // Iterator on targeting criteria
+  let items = []
+  parameter = parameter.toLowerCase()
+  impressions.forEach(v => {
+    // Only take the relevant advertiser
+    if (v.advertiserInfo.advertiserName.toLowerCase() === parameter) {
+      const criteria = JSONPath({
+        path: '$.matchedTargetingCriteria[*]',
+        json: v
+      })
+      criteria.forEach(criterion => {
+        // Select relevant fields
+        items.push({
+          targetingType: criterion.targetingType,
+          targetingValue: criterion.targetingValue
+        })
+      })
+    }
+  })
+  let headers = ['targetingType', 'targetingValue', 'count']
+  // GroupBy and count
+  items = aggregate(
+    items,
+    ['targetingType', 'targetingValue'],
+    countReducer('count')
+  )
+  // Transform to tree
+  ;[headers, items] = csvProcessors.sunburstTargetingAdvertiser(headers, items)
+
+  return await Promise.resolve({ headers, items })
+}
+
 export default {
   dashboard,
   advertisersPerDay,
   targetingTree,
   targetingTypesAndValues,
-  allAdvertisers
+  allAdvertisers,
+  selectTargetingTree
 }

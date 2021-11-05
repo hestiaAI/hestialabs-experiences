@@ -60,7 +60,8 @@
       "text": "Get more details with a table containing all the advertisers that have shown you ads, and how many times they did. Click on the headers to sort the values differently."
     },
     {
-      "query": "select-targeting-criteria",
+      "customPipeline": "selectTargetingTree",
+      "parameter": "Advertiser",
       "visualizations": ["sunburst-targeting"],
       "showTable": false,
       "title": "Targeting criteria (1 advertiser)",

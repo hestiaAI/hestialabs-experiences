@@ -5,6 +5,28 @@
     </template>
 
     <template v-else>
+      <template v-if="parameterName">
+        <v-row>
+          <v-col cols="4" class="mx-auto">
+            <v-text-field
+              v-model="parameter"
+              :label="parameterName"
+              class="my-sm-2 mr-sm-2"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col align="center">
+            <base-button
+              text="Run"
+              icon="mdiStepForward"
+              class="ma-sm-2"
+              @click="runQuery"
+            />
+          </v-col>
+        </v-row>
+      </template>
+
       <div v-if="progress" align="center">
         <base-progress-circular class="mr-2" />
         <span>Processing...</span>
@@ -25,6 +47,10 @@ export default {
     customPipeline: {
       type: Function,
       required: true
+    },
+    parameterName: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -33,7 +59,8 @@ export default {
       status: false,
       error: false,
       progress: false,
-      code: ''
+      code: '',
+      parameter: ''
     }
   },
   computed: {
@@ -45,7 +72,9 @@ export default {
     inputFiles: {
       immediate: true,
       handler(inputFiles) {
-        this.runQuery()
+        if (!this.parameterName) {
+          this.runQuery()
+        }
       }
     }
   },
@@ -55,7 +84,10 @@ export default {
       this.error = false
       this.progress = true
       try {
-        const { headers, items } = await this.customPipeline(this.inputFiles)
+        const { headers, items } = await this.customPipeline(
+          this.inputFiles,
+          this.parameter
+        )
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)

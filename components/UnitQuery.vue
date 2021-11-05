@@ -52,7 +52,11 @@
           <v-col>
             <unit-custom-pipeline
               v-if="customPipeline !== undefined"
-              v-bind="{ inputFiles, customPipeline }"
+              v-bind="{
+                inputFiles,
+                customPipeline,
+                parameterName: defaultViewElements.parameter
+              }"
               @update="onUnitResultsUpdate"
             />
             <unit-sparql
