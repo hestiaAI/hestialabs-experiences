@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import FileTree from '~/utils/file.js'
+import FileManager from '~/utils/file.js'
 import UnitJsonViewer from '~/components/UnitJsonViewer'
 import UnitCsvViewer from '~/components/UnitCsvViewer'
 import UnitPdfViewer from '~/components/UnitPdfViewer'
@@ -104,7 +104,7 @@ export default {
       selectedItem: null,
       openItems: [],
       idSpace: 0,
-      fileTree: null,
+      fileManager: null,
       fileItems: []
     }
   },
@@ -118,8 +118,9 @@ export default {
     }
   },
   async created() {
-    this.fileTree = await new FileTree(this.allFiles)
-    this.fileItems = this.fileTree.makeItems(this.fileTree.tree)
+    this.fileManager = await new FileManager(this.allFiles)
+    const fileTree = this.fileManager.makeTree(this.fileManager.fileList)
+    this.fileItems = this.fileManager.makeItems(fileTree)
   },
   methods: {
     setSelectedItem(array) {

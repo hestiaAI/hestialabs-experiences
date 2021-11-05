@@ -50,7 +50,7 @@ setOptions({
  * A class that allows to extract the contents of zips, and allows building file trees and items for v-treeview.
  * Note that it doesn't actually load the content of the files, it just creates File objects that can than be read.
  */
-export default class FileTree {
+export default class FileManager {
   constructor(uppyFiles, options) {
     this.sortFiles = options?.sortFiles ?? true
     return this.init(uppyFiles)
@@ -59,7 +59,6 @@ export default class FileTree {
   async init(uppyFiles) {
     this.nNodes = 0
     this.fileList = await this.extractZips(uppyFiles)
-    this.tree = this.makeTree(this.fileList)
     return this
   }
 
