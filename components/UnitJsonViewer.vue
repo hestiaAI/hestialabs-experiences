@@ -70,7 +70,6 @@ export default {
         this.error = true
       }
       this.loading = false
-      this.error = false
     },
     itemify(tree) {
       if (typeof tree !== 'object')
@@ -87,9 +86,10 @@ export default {
             icon: list[0].icon
           }
         } else {
+          const plural = list.length !== 1
           return {
             id: this.idSpace++,
-            name: `[list with ${list.length} items]`,
+            name: `[list with ${list.length} item${plural ? 's' : ''}]`,
             children: list,
             icon: mdiFormatListBulletedSquare
           }
