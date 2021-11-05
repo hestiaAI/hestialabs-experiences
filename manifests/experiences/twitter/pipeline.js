@@ -121,8 +121,41 @@ async function targetingTree(inputFiles) {
   return await Promise.resolve({ headers, items })
 }
 
+async function targetingTypesAndValues(inputFiles) {
+  // JSON iterator on impressions
+  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  const impressions = JSONPath({
+    path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
+    json: impressionsFile
+  })
+  let items = []
+  impressions.forEach(v => {
+    const criteria = JSONPath({
+      path: '$.matchedTargetingCriteria[*]',
+      json: v
+    })
+    criteria.forEach(criterion => {
+      // Select relevant fields
+      items.push({
+        targetingType: criterion.targetingType,
+        targetingValue: criterion.targetingValue
+      })
+    })
+  })
+  const headers = ['targetingType', 'targetingValue', 'count']
+  // GroupBy and count
+  items = aggregate(
+    items,
+    ['targetingType', 'targetingValue'],
+    countReducer('count')
+  )
+
+  return await Promise.resolve({ headers, items })
+}
+
 export default {
   dashboard,
   advertisersPerDay,
-  targetingTree
+  targetingTree,
+  targetingTypesAndValues
 }
