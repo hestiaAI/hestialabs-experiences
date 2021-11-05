@@ -74,10 +74,6 @@ import rdfUtils from '@/utils/rdf'
 import UnitFileExplorer from '~/components/UnitFileExplorer'
 import parseYarrrml from '@/utils/parse-yarrrml'
 
-function getErrorMessage(error) {
-  return error instanceof Error ? error.message : error
-}
-
 export default {
   components: { UnitFileExplorer },
   props: {
@@ -112,6 +108,9 @@ export default {
       return this.defaultView.map(o =>
         this.selectedExample.sparql.find(s => s.name === o.query)
       )
+    },
+    isRdfNeeded() {
+      return this.defaultView.filter(v => 'query' in v).length > 0
     }
   },
   watch: {
@@ -130,67 +129,42 @@ export default {
     }
   },
   methods: {
-    initState() {
+    handleError(error) {
+      console.error(error)
+      this.error = true
+      this.message = error instanceof Error ? error.message : error
+    },
+    async onUnitFilesUpdate({ inputFiles, error, allFiles }) {
       this.message = ''
       this.error = false
       this.success = false
       this.progress = true
-    },
-    handleRdfData({ elapsed }) {
-      this.success = true
-      this.message = `Successfully processed in ${elapsed / 1000} sec.`
-    },
-    handleRdfError(error) {
-      console.error(error)
-      this.error = true
-      this.message = getErrorMessage(error)
-    },
-    handleRdfEnd() {
-      this.progress = false
-    },
-    async onUnitFilesUpdate({ inputFiles, error, allFiles }) {
-      this.initState()
-      if (error) {
-        console.error(error)
-        this.error = true
-        this.message = error.message
-        this.progress = false
-        return
-      }
-
       this.inputFiles = inputFiles
       this.allFiles = allFiles
-      if (this.isGenericViewer) {
-        this.progress = false
-        this.success = true
-        return
-      }
-      if (this.selectedExample.yarrrml) {
-        this.rml = await parseYarrrml(this.selectedExample.yarrrml)
-      }
-      if (Object.keys(inputFiles).length === 0) {
-        this.error = true
-        this.message = 'No relevant files were found'
-        this.progress = false
-      } else if (this.rml) {
+
+      if (error) {
+        this.handleError(error)
+      } else if (Object.keys(inputFiles).length === 0) {
+        this.handleError('No relevant files were found')
+      } else if (this.isRdfNeeded && this.selectedExample.yarrrml) {
         try {
-          rdfUtils.generateRDF(
-            this.handleRdfData,
-            this.handleRdfError,
-            this.handleRdfEnd,
-            this.rml,
-            inputFiles
-          )
+          const start = new Date()
+
+          this.rml = await parseYarrrml(this.selectedExample.yarrrml)
+          rdfUtils.generateRDF(this.rml, inputFiles)
+          this.success = true
+
+          const elapsed = new Date() - start
+          this.message = `Successfully processed in ${elapsed / 1000} sec.`
         } catch (error) {
-          console.error(error)
-          this.error = true
-          this.message = error.message
-          this.progress = false
+          this.handleError(error)
         }
       } else {
-        this.progress = false
         this.success = true
+        this.message = 'Successfully processed'
       }
+
+      this.progress = false
     },
     onQueryUpdate({ i, headers, items }) {
       this.allHeaders[i] = JSON.stringify(headers)
