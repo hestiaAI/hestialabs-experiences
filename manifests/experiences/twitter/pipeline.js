@@ -153,9 +153,27 @@ async function targetingTypesAndValues(inputFiles) {
   return await Promise.resolve({ headers, items })
 }
 
+async function allAdvertisers(inputFiles) {
+  // JSON iterator on impressions
+  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  const impressions = JSONPath({
+    path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
+    json: impressionsFile
+  })
+  const items = _.chain(impressions)
+    .map(v => ({ advertiserName: v.advertiserInfo.advertiserName }))
+    .groupBy(v => v.advertiserName)
+    .map((v, k) => ({ advertiserName: k, adsShown: v.length }))
+    .value()
+  const headers = ['advertiserName', 'adsShown']
+
+  return await Promise.resolve({ headers, items })
+}
+
 export default {
   dashboard,
   advertisersPerDay,
   targetingTree,
-  targetingTypesAndValues
+  targetingTypesAndValues,
+  allAdvertisers
 }
