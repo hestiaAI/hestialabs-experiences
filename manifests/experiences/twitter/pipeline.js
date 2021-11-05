@@ -24,7 +24,7 @@ function dashboardFillItems(items, impressionAttributes, isEngagement) {
   })
 }
 
-async function dashboard(inputFiles) {
+function dashboard(inputFiles) {
   const engagementsFile = JSON.parse(inputFiles['data/ad-engagements.js'])
   const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
   const engagements = JSONPath({
@@ -47,10 +47,10 @@ async function dashboard(inputFiles) {
   dashboardFillItems(items, impressions, false)
   dashboardFillItems(items, engagements, true)
 
-  return await Promise.resolve({ headers, items })
+  return { headers, items }
 }
 
-async function advertisersPerDay(inputFiles) {
+function advertisersPerDay(inputFiles) {
   // JSON iterator
   const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
   let impressions = JSONPath({
@@ -70,10 +70,10 @@ async function advertisersPerDay(inputFiles) {
     countReducer('count')
   )
 
-  return await Promise.resolve({ headers, items })
+  return { headers, items }
 }
 
-async function targetingTree(inputFiles) {
+function targetingTree(inputFiles) {
   // JSON iterator on impressions
   const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
   const impressions = JSONPath({
@@ -118,10 +118,10 @@ async function targetingTree(inputFiles) {
   // Transform to tree
   ;[headers, items] = csvProcessors.sunburstTargeting(headers, items)
 
-  return await Promise.resolve({ headers, items })
+  return { headers, items }
 }
 
-async function targetingTypesAndValues(inputFiles) {
+function targetingTypesAndValues(inputFiles) {
   // JSON iterator on impressions
   const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
   const impressions = JSONPath({
@@ -150,10 +150,10 @@ async function targetingTypesAndValues(inputFiles) {
     countReducer('count')
   )
 
-  return await Promise.resolve({ headers, items })
+  return { headers, items }
 }
 
-async function allAdvertisers(inputFiles) {
+function allAdvertisers(inputFiles) {
   // JSON iterator on impressions
   const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
   const impressions = JSONPath({
@@ -167,10 +167,10 @@ async function allAdvertisers(inputFiles) {
     .value()
   const headers = ['advertiserName', 'adsShown']
 
-  return await Promise.resolve({ headers, items })
+  return { headers, items }
 }
 
-async function selectTargetingTree(inputFiles, parameter) {
+function selectTargetingTree(inputFiles, parameter) {
   // JSON iterator on impressions
   const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
   const impressions = JSONPath({
@@ -206,7 +206,7 @@ async function selectTargetingTree(inputFiles, parameter) {
   // Transform to tree
   ;[headers, items] = csvProcessors.sunburstTargetingAdvertiser(headers, items)
 
-  return await Promise.resolve({ headers, items })
+  return { headers, items }
 }
 
 export default {
