@@ -40,7 +40,7 @@
       "text": "See the ranking of advertisers that have shown you the most ads."
     },
     {
-      "query": "targeting-criteria",
+      "customPipeline": "targetingTree",
       "visualizations": ["sunburst-targeting"],
       "showTable": false,
       "title": "Targeting criteria (sunburst)",
