@@ -81,16 +81,11 @@ async function targetingTree(inputFiles) {
     json: impressionsFile
   })
   // Find 10 most present advertisers
-  const advertisers = impressions.map(v => ({
-    advertiserName: v.advertiserInfo.advertiserName
-  }))
-  const advertisersCount = aggregate(
-    advertisers,
-    ['advertiserName'],
-    countReducer('count')
-  )
-  const topAdvertisers = _.chain(advertisersCount)
-    .sortBy(x => -x.count)
+  const topAdvertisers = _.chain(impressions)
+    .map(v => ({ advertiserName: v.advertiserInfo.advertiserName }))
+    .groupBy(v => v.advertiserName)
+    .map((v, k) => ({ advertiserName: k, count: v.length }))
+    .sortBy(v => -v.count)
     .take(10)
     .map('advertiserName')
     .value()
