@@ -14,11 +14,13 @@
     "pub": "lerna publish",
     "prepare": "husky install",
     "lint": "eslint . --ext .ts",
-    "lint:fix": "npm run lint -- --fix",
+    "lint:fix": "npm run lint -- --cache --fix",
     "format": "prettier --config .prettierrc '*.ts'"
   },
   "lint-staged": {
-    "*.ts": "npm run lint"
+    "*.ts": [
+      "npm run lint:fix"
+    ]
   },
   "repository": {
     "type": "git",
@@ -38,6 +40,7 @@
     "eslint-plugin-prettier": "~4.0.0",
     "husky": "~7.0.4",
     "lerna": "~4.0.0",
+    "lint-staged": "^11.2.6",
     "rimraf": "~3.0.2",
     "ts": "~0.2.2",
     "ts-loader": "~9.2.6",
