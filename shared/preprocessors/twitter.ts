@@ -1,4 +1,4 @@
-import { PreprocessorFunction } from '../../types'
+import { PreprocessorFunction } from 'shared/types'
 
 const twitter: PreprocessorFunction = string =>
   // replace variable assignment in JS file from Twitter

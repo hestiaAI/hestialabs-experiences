@@ -3,7 +3,6 @@ export { ExperienceOptions } from './types'
 
 const defaultOptions: Partial<ExperienceOptions> = {
   allowMissingFiles: false,
-  dataSamples: [],
   multiple: false,
   preprocessor: (input: string) => input,
   subtitle: 'Data Experience'

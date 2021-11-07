@@ -2,12 +2,6 @@
   "extends": "./tsconfig.build.json",
 
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@hestialabs/*": ["packages/*/src"],
-      "icons/*": ["icons/*"],
-      "preprocessors/*": ["preprocessors/*"]
-    },
     "noEmit": true
   }
 }

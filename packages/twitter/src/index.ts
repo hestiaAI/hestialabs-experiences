@@ -1,17 +1,15 @@
-import { Experience, ExperienceOptions } from '../../index'
+import { Experience, ExperienceOptions } from 'shared/index'
+import { theEyeballs } from 'collaborators/index'
 import preprocessor from 'preprocessors/twitter'
 import icon from 'icons/twitter.png'
 
-const filename = new URL(import.meta.url).pathname.split('/').slice(-3, -2)[0]
-
 const options: ExperienceOptions = {
+  collaborator: theEyeballs,
   dataSamples: ['twitter.zip', 'twitter-sample.zip'],
   fileExtensions: ['zip'],
-  icon,
+  icon: icon,
   preprocessor,
-  // slug: 'twitter-advertisers-sha',
-  slug: filename,
-  subtitle: 'SHA’d Advertisers',
+  slug: 'twitter',
   title: 'Twitter',
   zipFilePaths: ['data/ad-impressions.js', 'data/ad-engagements.js']
 }

@@ -1,0 +1,12 @@
+{
+  "name": "@hestialabs/twitter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index",
+  "types": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "author": "",
+  "license": "ISC"
+}

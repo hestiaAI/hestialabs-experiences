@@ -2,14 +2,26 @@
   "compilerOptions": {
     "module": "es2020",
     "target": "es2016",
-    "explainFiles": true,
-    "sourceMap": true,
-    "declaration": true,
-    "declarationMap": true,
+    "allowJs": false,
+    "lib": ["dom", "es2017"],
+    // TS v4.2
+    // "explainFiles": true,
+    "sourceMap": false,
+    "declaration": false,
+    "declarationMap": false,
     "noEmitOnError": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "types": []
+    "allowSyntheticDefaultImports": true,
+    "types": [],
+    "baseUrl": ".",
+    "paths": {
+      "@hestialabs/*": ["packages/*/src"],
+      "shared/*": ["shared/*"],
+      "collaborators/*": ["shared/collaborators/*"],
+      "icons/*": ["shared/icons/*"],
+      "preprocessors/*": ["shared/preprocessors/*"]
+    }
   },
   "exclude": ["node_modules", "dist"]
 }

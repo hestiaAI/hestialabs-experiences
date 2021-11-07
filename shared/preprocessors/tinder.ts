@@ -1,4 +1,4 @@
-import { PreprocessorFunction } from '../../types'
+import { PreprocessorFunction } from 'shared/types'
 
 const tinder: PreprocessorFunction = (string: string) => {
   const json = JSON.parse(string)
