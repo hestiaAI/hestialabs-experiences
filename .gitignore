@@ -1,2 +1,5 @@
 node_modules
 dist
+
+#https://github.com/eslint/eslint/issues/13897
+.eslintcache
