@@ -276,7 +276,7 @@ export default {
         .margins({ top: 20, right: 10, bottom: 20, left: 20 })
         .group(volumeGroup)
         .dimension(this.volumeDimension)
-        .curve(d3.curveCardinal.tension(0.6))
+        .curve(d3.curveCardinal.tension(0.05))
         .x(d3.scaleTime())
         .y(d3.scaleLinear().domain([0, 10]))
         .ordinalColors(['#58539E'])
@@ -292,6 +292,27 @@ export default {
         .xAxis()
         .ticks(5)
 
+      // When no data available for a specific time period, show an empty message
+      function showEmptyMessage(chart) {
+        const isEmpty =
+          d3.sum(chart.group().all().map(chart.valueAccessor())) === 0
+        const data = isEmpty ? [1] : []
+        const empty = chart
+          .svg()
+          .selectAll('.empty-message')
+          .data(data)
+          .enter()
+          .append('text')
+          .text('No data during this time period')
+          .attr('text-anchor', 'middle')
+          .attr('alignment-baseline', 'middle')
+          .attr('x', chart.margins().left + chart.effectiveWidth() / 2)
+          .attr('y', chart.margins().top + chart.effectiveHeight() / 2)
+          .attr('class', 'empty-message')
+          .style('opacity', 0)
+        empty.transition().duration(1000).style('opacity', 1)
+        empty.exit().remove()
+      }
       // Compute and draw row chart
       const rowChart = new dc.RowChart('#row-chart')
       const typeDimension = ndx.dimension(d => d.event_type)
@@ -308,9 +329,13 @@ export default {
                 return d.value.count !== 0 && d.value !== 0
               })
               .slice(0, n)
+          },
+          all() {
+            return group.all()
           }
         }
       }
+
       rowChart
         .width(width)
         .height(height)
@@ -325,6 +350,7 @@ export default {
         .xAxis()
         .ticks(4)
 
+      rowChart.on('pretransition', showEmptyMessage)
       // Render all graphs
       dc.renderAll()
     }
