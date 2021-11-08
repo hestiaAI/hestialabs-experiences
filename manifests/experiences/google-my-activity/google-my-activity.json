@@ -3,12 +3,11 @@
   "subtitle": "My Activity",
   "icon": "google.png",
   "dataPortal": "https://takeout.google.com/settings/takeout",
-  "ext": "zip",
-  "files": ["Uber Data/Rider/trips_data.csv"],
-  "data": ["uber-trips.zip"],
+  "ext": "csv",
+  "data": ["my-activity.csv"],
   "defaultView": [
     {
-      "customPipeline": "tripsData",
+      "customPipeline": "googleMyActivity",
       "visualizations": ["GenericDateViewer.vue"],
       "showTable": false,
       "title": "Overview of what google knows about you",

@@ -1,19 +1,43 @@
 <template>
   <v-container>
     <v-row>
+      <v-col cols="12" md="7">
+        <p>Number of informations collected</p>
+        <div id="line-chart"></div>
+      </v-col>
+      <v-col cols="12" md="5">
+        <p>Information Type</p>
+        <div id="pie-chart"></div>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <v-radio-group v-model="timeRange" row mandatory>
+          <v-radio label="ALL" value="ALL"></v-radio>
+          <v-radio label="1Y" value="1Y"></v-radio>
+          <v-radio label="3M" value="3M"></v-radio>
+          <v-radio label="1M" value="1M"></v-radio>
+          <v-radio label="7D" value="7D"></v-radio>
+          <v-radio label="1D" value="1D"></v-radio>
+          <v-radio label="Custom" value="Custom"></v-radio>
+        </v-radio-group>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="12">
         <v-tabs v-model="tab">
-          <v-tab key="overview">Overview</v-tab>
-          <v-tab key="details">Details</v-tab>
-          <v-tab key="visualisation">Visualisation</v-tab>
+          <v-tab href="#overview">Overview</v-tab>
+          <v-tab href="#details">Details</v-tab>
         </v-tabs>
         <v-tabs-items v-model="tab">
-          <v-tab-item key="overview">
+          <v-tab-item value="overview">
             <p class="text-subtitle-1">
               <strong>{{ title }}</strong> knows about
               <strong>{{ total }}</strong> things that happened during this time
               period.
-              <v-btn class="ma-2" outlined color="indigo"> See All </v-btn>
+              <v-btn class="ma-2" outlined color="indigo" @click="tabDetails()">
+                See All
+              </v-btn>
             </p>
             <v-list>
               <v-list-group
@@ -47,26 +71,12 @@
               </v-list-group>
             </v-list>
           </v-tab-item>
-          <v-tab-item key="details">
+          <v-tab-item value="details">
             <unit-filterable-table
               v-bind="{ headers: header, items: results }"
             />
           </v-tab-item>
-          <v-tab-item key="visualisation"></v-tab-item>
         </v-tabs-items>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-radio-group v-model="timeRange" row mandatory>
-          <v-radio label="ALL" value="ALL"></v-radio>
-          <v-radio label="1Y" value="1Y"></v-radio>
-          <v-radio label="3M" value="3M"></v-radio>
-          <v-radio label="1M" value="1M"></v-radio>
-          <v-radio label="7D" value="7D"></v-radio>
-          <v-radio label="1D" value="1D"></v-radio>
-          <v-radio label="Custom" value="Custom"></v-radio>
-        </v-radio-group>
       </v-col>
     </v-row>
   </v-container>
@@ -88,6 +98,10 @@ export default {
     values: {
       type: Array,
       default: () => []
+    },
+    dateFormat: {
+      type: String,
+      default: () => '%Y-%m-%dT%H:%M:%S.%L%Z'
     }
   },
   data() {
@@ -98,40 +112,12 @@ export default {
       tab: null,
       items: [],
       header: [
-        { text: 'Date', value: 'date' },
+        { text: 'Date', value: 'dateStr' },
+        { text: 'App', value: 'event_source' },
         { text: 'Event type', value: 'event_type' },
         { text: 'Event value', value: 'event_value' }
       ],
-      results: [
-        {
-          date: '2019-08-06T18:20:45.829Z',
-          icon: '',
-          event_source: 'Youtube',
-          event_type: 'Search',
-          event_value: 'patate'
-        },
-        {
-          date: '2019-08-06T18:20:45.829Z',
-          icon: '',
-          event_source: 'Maps',
-          event_type: 'View',
-          event_value: 'link youtube'
-        },
-        {
-          date: '2019-09-06T18:20:45.829Z',
-          icon: '',
-          event_source: 'Youtube',
-          event_type: 'Search',
-          event_value: 'patate'
-        },
-        {
-          date: '2019-08-07T18:20:45.829Z',
-          icon: '',
-          event_source: 'Youtube',
-          event_type: 'VIEW',
-          event_value: 'patate2'
-        }
-      ]
+      results: []
     }
   },
   watch: {
@@ -143,17 +129,34 @@ export default {
     this.drawViz()
   },
   methods: {
+    tabDetails() {
+      this.tab = 'details'
+    },
     drawViz() {
+      this.results = this.values
+
+      // Format dates
+      const dateFormatParser = d3.timeParse(this.dateFormat)
+      const formatTime = d3.timeFormat('%Y-%m-%d')
+      this.results.forEach(d => {
+        d.date = dateFormatParser(d.date)
+        d.dateStr = formatTime(d.date)
+        d.day = d3.timeDay(d.date) // pre-calculate days for better performance
+        d.hour = d3.timeHour(d.date).getHours() // pre-calculate hours for better performance
+      })
+
       const ndx = crossfilter(this.results)
       const all = ndx.groupAll()
-      const typeDimension = ndx.dimension(d => [
+
+      // Compute groupby Count for overview
+      const overviewDimension = ndx.dimension(d => [
         d.event_source,
         d.event_type,
         d.icon
       ])
-      const typeGroup = typeDimension.group().reduceCount()
+      const overviewGroup = overviewDimension.group().reduceCount()
 
-      const counts = typeGroup.top(Infinity).reduce((p, c) => {
+      const counts = overviewGroup.top(Infinity).reduce((p, c) => {
         if (!Object.prototype.hasOwnProperty.call(p, c.key[0])) {
           p[c.key[0]] = {}
           p[c.key[0]].count = 0
@@ -168,6 +171,86 @@ export default {
 
       this.items = Object.values(counts)
       this.total = all.value()
+
+      // Compute and draw line chart
+      const lineChart = new dc.LineChart('#line-chart')
+      const volumeDimension = ndx.dimension(d => d.day)
+      const volumeGroup = volumeDimension.group().reduceCount()
+      lineChart
+        .renderArea(true)
+        .width(d3.select('#line-chart').node().getBoundingClientRect().width)
+        .height(240)
+        .transitionDuration(1000)
+        .margins({ top: 30, right: 10, bottom: 30, left: 50 })
+        .group(volumeGroup)
+        .dimension(volumeDimension)
+        .curve(d3.curveCardinal.tension(0.6))
+        .x(d3.scaleTime())
+        .y(d3.scaleLinear().domain([0, 10]))
+        .ordinalColors(['#58539E'])
+        .elasticX(true)
+        .elasticY(true)
+        .brushOn(false)
+        .xyTipsOn(true)
+        .mouseZoomable(false)
+        .renderHorizontalGridLines(false)
+        .clipPadding(10)
+        .title(d => formatTime(+d.key) + ': ' + d.value)
+        .yAxisLabel('')
+        .xAxis()
+        .ticks(5)
+
+      console.log(this.values)
+
+      // Compute and draw pie chart
+      const pieChart = new dc.PieChart('#pie-chart')
+      const typeDimension = ndx.dimension(d => d.event_type)
+      const typeGroup = typeDimension.group().reduceCount()
+      const width = d3.select('#pie-chart').node().getBoundingClientRect().width
+      pieChart
+        .width(width)
+        .height(240)
+        .slicesCap(10)
+        .radius(width / 5)
+        .innerRadius(width / 10)
+        .externalLabels(50)
+        .dimension(typeDimension)
+        .group(typeGroup)
+        .drawPaths(true)
+        .minAngleForLabel(0.1)
+        .ordinalColors([
+          '#371D52',
+          '#6652A1',
+          '#35334A',
+          '#859ED5',
+          '#CC94F2',
+          '#9A5BD9',
+          '#6F36BF',
+          '#3F1973',
+          '#58539E'
+        ])
+
+      pieChart.on('pretransition', function (chart) {
+        chart.selectAll('text.pie-slice.pie-label').call(function (t) {
+          t.each(function (d) {
+            const self = d3.select(this)
+            let text = self.text()
+            if (text.length > 14) text = text.substring(0, 14) + '.. '
+            if (text.length > 0)
+              text =
+                text +
+                ' (' +
+                dc.utils.printSingleValue(
+                  ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
+                ) +
+                '%)'
+            self.text(text)
+          })
+        })
+      })
+
+      // Render all graphs
+      dc.renderAll()
     }
   }
 }

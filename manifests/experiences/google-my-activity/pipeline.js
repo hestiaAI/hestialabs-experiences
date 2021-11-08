@@ -1,7 +1,7 @@
 import * as csv from '@fast-csv/parse'
 
-async function tripsData(inputFiles) {
-  const data = inputFiles['Uber Data/Rider/trips_data.csv']
+async function googleMyActivity(inputFiles) {
+  const data = Object.values(inputFiles)[0]
   return await new Promise(resolve => {
     const items = []
     csv
@@ -12,5 +12,5 @@ async function tripsData(inputFiles) {
 }
 
 export default {
-  tripsData
+  googleMyActivity
 }
