@@ -46,11 +46,11 @@ export default {
       this.csvText = this.preprocessorFunc(await file.text())
       try {
         this.csvContent = await this.csvToItems(this.csvText)
+        this.error = false
       } catch (error) {
         this.error = true
       }
       this.loading = false
-      this.error = false
     },
     async csvToItems(csvText) {
       return await new Promise(resolve => {
