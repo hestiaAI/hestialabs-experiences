@@ -74,7 +74,7 @@
             <unit-vega-viz
               :spec-file="specFile"
               :values="allProcessedItems[i][j]"
-              :div-id="`viz-${result.query}-${specFile.name}`"
+              :div-id="`viz-${i}-${specFile.name}`"
             />
           </v-col>
         </v-row>

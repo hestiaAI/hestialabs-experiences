@@ -52,7 +52,11 @@
           <v-col>
             <unit-custom-pipeline
               v-if="customPipeline !== undefined"
-              v-bind="{ inputFiles, customPipeline }"
+              v-bind="{
+                inputFiles,
+                customPipeline,
+                parameterName: defaultViewElements.parameter
+              }"
               @update="onUnitResultsUpdate"
             />
             <unit-sparql
@@ -74,7 +78,7 @@
                 <unit-vega-viz
                   :spec-file="specFile"
                   :values="processedItems[index]"
-                  :div-id="`viz-${query.name}-${specFile.name}`"
+                  :div-id="`viz-${i}-${specFile.name}`"
                 />
               </v-col>
             </v-row>
@@ -191,16 +195,18 @@ export default {
     processedItems() {
       // For each viz
       return this.vegaFiles.map(spec => {
-        // Find the viz definition for this query
-        const preprocessor = this.exampleVisualizations.filter(
-          v => this.query.name === v.query && spec.name === v.vega
-        )
-        // If it has a preprocessor defined, run it
-        if (preprocessor.length === 1 && preprocessor[0].preprocessor) {
-          return csvProcessors[preprocessor[0].preprocessor](
-            this.headers,
-            this.items
-          )[1]
+        if (this.customPipeline === undefined) {
+          // Find the viz definition for this query
+          const preprocessor = this.exampleVisualizations.filter(
+            v => this.query.name === v.query && spec.name === v.vega
+          )
+          // If it has a preprocessor defined, run it
+          if (preprocessor.length === 1 && preprocessor[0].preprocessor) {
+            return csvProcessors[preprocessor[0].preprocessor](
+              this.headers,
+              this.items
+            )[1]
+          }
         }
         return this.items
       })

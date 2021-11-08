@@ -33,41 +33,42 @@
   ]},
   "defaultView": [
     {
-      "query": "advertisers-per-day",
+      "customPipeline": "advertisersPerDay",
       "visualizations": ["top-k-advertisers"],
       "showTable": false,
       "title": "Top advertisers",
       "text": "See the ranking of advertisers that have shown you the most ads."
     },
     {
-      "query": "targeting-criteria",
+      "customPipeline": "targetingTree",
       "visualizations": ["sunburst-targeting"],
       "showTable": false,
-      "title": "Targeting criteria (sunburst)",
+      "title": "Targeting criteria (Top 10 advertisers)",
       "text": "Understand why you have been targeted by these advertisers. The chart shows the 10 most present advertisers in the inner circle, the targeting types (location, language, ...) in the middle circle, and the targeting values (Switzerland, French, ...) in the outer circle."
     },
     {
-      "query": "targeting-values-all-advertisers",
+      "customPipeline": "targetingTypesAndValues",
       "visualizations": ["wordcloud-targeting-criteria"],
       "showTable": false,
-      "title": "Targeting criteria (wordcloud)",
+      "title": "Targeting criteria (All advertisers)",
       "text": "Get more details on how you are targeted by these advertisers. This graph shows the number of times you have been targeted by different advertisers using a specific criterion. You can change the type of criterion and get information about the meaning of each criterion's type at the bottom of the graph."
     },
     {
-      "query": "all-advertisers",
+      "customPipeline": "allAdvertisers",
       "showTable": true,
       "title": "All advertisers",
       "text": "Get more details with a table containing all the advertisers that have shown you ads, and how many times they did. Click on the headers to sort the values differently."
     },
     {
-      "query": "select-targeting-criteria",
+      "customPipeline": "selectTargetingTree",
+      "parameter": "Advertiser",
       "visualizations": ["sunburst-targeting"],
       "showTable": false,
-      "title": "Targeting criteria by advertiser",
+      "title": "Targeting criteria (1 advertiser)",
       "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the names in the table above and write it in the text field below."
     },
     {
-      "customPipeline": "twitterTargeting",
+      "customPipeline": "dashboard",
       "visualizations": ["TwitterOverview.vue"],
       "showTable": false,
       "title": "Twitter advertising overview",
