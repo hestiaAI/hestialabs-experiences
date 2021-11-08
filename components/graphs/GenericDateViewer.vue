@@ -40,8 +40,9 @@
           <v-tab-item value="overview">
             <p class="text-subtitle-1">
               <strong>{{ title }}</strong> knows about
-              <strong>{{ total }}</strong> things that happened during this time
-              period.
+              <strong>{{ total }}</strong> things that happened between
+              <strong>{{ currMinDateStr }}</strong> and
+              <strong>{{ currMaxDateStr }}</strong>
               <v-btn class="ma-2" outlined color="indigo" @click="tabDetails()">
                 See All
               </v-btn>
@@ -113,14 +114,16 @@ export default {
   },
   data() {
     return {
-      title: 'Google My Activity',
+      title: 'Google',
       total: null,
       timeRange: null,
       tab: null,
       lineChart: null,
       volumeDimension: null,
-      startDate: new Date(),
-      endDate: new Date(),
+      minDate: null,
+      maxDate: null,
+      currMinDateStr: 'NaN',
+      currMaxDateStr: 'NaN',
       items: [],
       header: [
         { text: 'Date', value: 'dateStr' },
@@ -154,8 +157,8 @@ export default {
           this.lineChart.filter(null)
           this.lineChart.filter(
             dc.filters.RangedFilter(
-              d3.max([d3.timeYear.offset(this.startDate, -1), this.endDate]),
-              this.startDate
+              d3.max([d3.timeYear.offset(this.maxDate, -1), this.minDate]),
+              this.maxDate
             )
           )
           break
@@ -168,8 +171,8 @@ export default {
           this.lineChart.filter(null)
           this.lineChart.filter(
             dc.filters.RangedFilter(
-              d3.max([d3.timeMonth.offset(this.startDate, -3), this.endDate]),
-              this.startDate
+              d3.max([d3.timeMonth.offset(this.maxDate, -3), this.minDate]),
+              this.maxDate
             )
           )
           break
@@ -182,8 +185,8 @@ export default {
           this.lineChart.filter(null)
           this.lineChart.filter(
             dc.filters.RangedFilter(
-              d3.max([d3.timeMonth.offset(this.startDate, -1), this.endDate]),
-              this.startDate
+              d3.max([d3.timeMonth.offset(this.maxDate, -1), this.minDate]),
+              this.maxDate
             )
           )
           break
@@ -196,8 +199,8 @@ export default {
           this.lineChart.filter(null)
           this.lineChart.filter(
             dc.filters.RangedFilter(
-              d3.max([d3.timeDay.offset(this.startDate, -7), this.endDate]),
-              this.startDate
+              d3.max([d3.timeDay.offset(this.maxDate, -7), this.minDate]),
+              this.maxDate
             )
           )
           break
@@ -210,8 +213,8 @@ export default {
           this.lineChart.filter(null)
           this.lineChart.filter(
             dc.filters.RangedFilter(
-              d3.max([d3.timeDay.offset(this.startDate, -1), this.endDate]),
-              this.startDate
+              d3.max([d3.timeDay.offset(this.maxDate, -1), this.minDate]),
+              this.maxDate
             )
           )
           break
@@ -227,6 +230,7 @@ export default {
       // Format dates
       const dateFormatParser = d3.timeParse(this.dateFormat)
       const formatTime = d3.timeFormat('%Y-%m-%d')
+      const formatTimeS = d3.timeFormat('%d %B %Y')
       this.results.forEach(d => {
         d.date = dateFormatParser(d.date)
         d.dateStr = formatTime(d.date)
@@ -244,7 +248,6 @@ export default {
         d.icon
       ])
       const overviewGroup = overviewDimension.group().reduceCount()
-
       const counts = overviewGroup.top(Infinity).reduce((p, c) => {
         if (!Object.prototype.hasOwnProperty.call(p, c.key[0])) {
           p[c.key[0]] = {}
@@ -257,7 +260,6 @@ export default {
         p[c.key[0]].items.push({ title: c.key[1], count: c.value })
         return p
       }, {})
-
       this.items = Object.values(counts)
       this.total = all.value()
 
@@ -265,8 +267,10 @@ export default {
       this.lineChart = new dc.LineChart('#line-chart')
       this.volumeDimension = ndx.dimension(d => d.day)
       const volumeGroup = this.volumeDimension.group().reduceCount()
-      this.startDate = this.volumeDimension.top(1)[0].day
-      this.endDate = this.volumeDimension.bottom(1)[0].day
+      this.maxDate = this.volumeDimension.top(1)[0].day
+      this.currMaxDateStr = formatTimeS(this.maxDate)
+      this.minDate = this.volumeDimension.bottom(1)[0].day
+      this.currMinDateStr = formatTimeS(this.minDate)
       const height = 240
       this.lineChart
         .renderArea(true)
@@ -291,6 +295,14 @@ export default {
         .yAxisLabel('')
         .xAxis()
         .ticks(5)
+
+      this.lineChart.on('filtered', () => {
+        const filters = this.volumeDimension.currentFilter()
+        if (filters) {
+          this.currMinDateStr = formatTimeS(filters[0])
+          this.currMaxDateStr = formatTimeS(filters[1])
+        }
+      })
 
       // When no data available for a specific time period, show an empty message
       function showEmptyMessage(chart) {
