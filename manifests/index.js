@@ -26,11 +26,6 @@ const reqVEGA = require.context(
   true,
   /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.vega.json$/
 )
-const reqD3 = require.context(
-  './experiences/',
-  true,
-  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.d3.js$/
-)
 const reqParamSPARQL = require.context(
   './experiences/',
   true,
@@ -209,21 +204,6 @@ reqVEGA.keys().forEach(path => {
     name: vega,
     type: 'vega',
     vega: reqVEGA(path)
-  })
-})
-
-reqD3.keys().forEach(path => {
-  // Extract directory name of the experience
-  const dir = extractFirstDirectory(path)
-  // Extract example name and D3 query sample name
-  const match = path.match(/\/examples\/(?<example>.+)\/(?<d3>.+\.d3).js/)
-  const { example, d3 } = match.groups
-  // Add D3 sample
-  const exampleObj = manifests[dir].examples.find(e => e.name === example)
-  exampleObj.d3.push({
-    name: d3,
-    type: 'd3',
-    module: reqD3(path)
   })
 })
 

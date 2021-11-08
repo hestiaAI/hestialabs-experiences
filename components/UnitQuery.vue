@@ -82,14 +82,6 @@
                 />
               </v-col>
             </v-row>
-            <v-row v-for="(d3File, index) in d3Files" :key="'d3-' + index">
-              <v-col>
-                <unit-d3-viz
-                  :d3-file="d3File"
-                  :values="[44, 8, 15, 16, 23, 42]"
-                />
-              </v-col>
-            </v-row>
             <v-row
               v-for="(graphName, index) in vueGraphNames"
               :key="'vue-' + index"
@@ -183,9 +175,6 @@ export default {
     },
     vueGraphNames() {
       return this.vizNames.filter(n => n.endsWith('.vue'))
-    },
-    d3Files() {
-      return this.selectedExample.d3.filter(s => this.vizNames.includes(s.name))
     },
     vegaFiles() {
       return this.selectedExample.vega.filter(s =>
