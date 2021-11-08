@@ -8,8 +8,9 @@
 </template>
 
 <script>
-import * as csv from '@fast-csv/parse'
 import UnitFilterableTable from '~/components/UnitFilterableTable'
+import getCsvHeadersAndItems from '~/utils/csv'
+import FileManager from '~/utils/file-manager'
 
 export default {
   name: 'UnitCsvViewer',
@@ -19,9 +20,9 @@ export default {
       type: File,
       required: true
     },
-    preprocessorFunc: {
-      type: Function,
-      default: () => a => a
+    fileManager: {
+      type: FileManager,
+      required: true
     }
   },
   data() {
@@ -43,28 +44,14 @@ export default {
   methods: {
     async getContentFromFile(file) {
       this.loading = true
-      this.csvText = this.preprocessorFunc(await file.text())
+      this.csvText = await this.fileManager.getPreprocessedText(file.name)
       try {
-        this.csvContent = await this.csvToItems(this.csvText)
+        this.csvContent = await getCsvHeadersAndItems(this.csvText)
         this.error = false
       } catch (error) {
         this.error = true
       }
       this.loading = false
-    },
-    async csvToItems(csvText) {
-      return await new Promise(resolve => {
-        const items = []
-        csv
-          .parseString(csvText, { headers: true })
-          .on('data', row => items.push(row))
-          .on('end', () =>
-            resolve({
-              headers: Object.keys(items[0]).map(h => ({ text: h, value: h })),
-              items
-            })
-          )
-      })
     }
   }
 }

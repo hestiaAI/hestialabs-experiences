@@ -29,6 +29,7 @@ import {
   mdiInformationOutline
 } from '@mdi/js'
 import lodash from 'lodash'
+import FileManager from '~/utils/file-manager'
 
 export default {
   name: 'UnitJsonViewer',
@@ -37,8 +38,8 @@ export default {
       type: File,
       required: true
     },
-    preprocessorFunc: {
-      type: Function,
+    fileManager: {
+      type: FileManager,
       required: true
     }
   },
@@ -62,7 +63,7 @@ export default {
   methods: {
     async getItemsFromFile(file) {
       this.loading = true
-      this.jsonText = this.preprocessorFunc(await file.text())
+      this.jsonText = await this.fileManager.getPreprocessedText(file.name)
       try {
         this.items = [this.itemify(JSON.parse(this.jsonText))]
         this.error = false

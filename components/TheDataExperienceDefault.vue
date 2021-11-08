@@ -56,7 +56,7 @@
       </v-row>
       <v-row v-if="showDataExplorer">
         <v-col>
-          <unit-file-explorer v-bind="{ allFiles, preprocessor }" />
+          <unit-file-explorer v-bind="{ fileManager, preprocessor }" />
         </v-col>
       </v-row>
       <v-row v-if="$store.state.config.consent">
@@ -73,6 +73,7 @@
 import rdfUtils from '@/utils/rdf'
 import UnitFileExplorer from '~/components/UnitFileExplorer'
 import parseYarrrml from '@/utils/parse-yarrrml'
+import FileManager from '~/utils/file-manager'
 
 export default {
   components: { UnitFileExplorer },
@@ -100,7 +101,8 @@ export default {
       allItems: null,
       allHeaders: null,
       inputFiles: null,
-      allFiles: null
+      allFiles: null,
+      fileManager: new FileManager()
     }
   },
   computed: {
@@ -134,13 +136,14 @@ export default {
       this.error = true
       this.message = error instanceof Error ? error.message : error
     },
-    async onUnitFilesUpdate({ inputFiles, error, allFiles }) {
+    async onUnitFilesUpdate({ inputFiles, error, uppyFiles }) {
       this.message = ''
       this.error = false
       this.success = false
       this.progress = true
       this.inputFiles = inputFiles
-      this.allFiles = allFiles
+
+      await this.fileManager.init(uppyFiles)
 
       if (error) {
         this.handleError(error)

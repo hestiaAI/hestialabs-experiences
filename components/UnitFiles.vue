@@ -301,7 +301,7 @@ export default {
     },
     returnFiles() {
       const files = this.uppy.getFiles().map(f => f.data)
-      this.$emit('update', { allFiles: files })
+      this.$emit('update', { uppyFiles: files })
 
       this.status = true
       this.progress = false
@@ -337,7 +337,7 @@ export default {
               'Your files were processed successfully and saved in your browser'
           }
           this.uppy.info(infoMessage)
-          this.$emit('update', { ...result, allFiles: files })
+          this.$emit('update', { ...result, uppyFiles: files })
         } catch (error) {
           console.error(error)
           this.error = true
