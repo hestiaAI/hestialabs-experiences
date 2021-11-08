@@ -1,6 +1,9 @@
 import { JSONPath } from 'jsonpath-plus'
+import _ from 'lodash'
+import { aggregate, countReducer } from '@/utils/aggregate'
+import csvProcessors from '@/manifests/csv-processors'
 
-function fillItems(items, impressionAttributes, isEngagement) {
+function dashboardFillItems(items, impressionAttributes, isEngagement) {
   impressionAttributes.forEach(v => {
     const criteria = JSONPath({
       path: '$.matchedTargetingCriteria[*]',
@@ -21,7 +24,7 @@ function fillItems(items, impressionAttributes, isEngagement) {
   })
 }
 
-async function twitterTargeting(inputFiles) {
+function dashboard(inputFiles) {
   const engagementsFile = JSON.parse(inputFiles['data/ad-engagements.js'])
   const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
   const engagements = JSONPath({
@@ -41,12 +44,176 @@ async function twitterTargeting(inputFiles) {
     'targetingValue'
   ]
   const items = []
-  fillItems(items, impressions, false)
-  fillItems(items, engagements, true)
+  dashboardFillItems(items, impressions, false)
+  dashboardFillItems(items, engagements, true)
 
-  return await Promise.resolve({ headers, items })
+  return { headers, items }
+}
+
+function advertisersPerDay(inputFiles) {
+  // JSON iterator
+  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  let impressions = JSONPath({
+    path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
+    json: impressionsFile
+  })
+  // Select relevant fields
+  const headers = ['advertiserName', 'date', 'count']
+  impressions = impressions.map(v => ({
+    advertiserName: v.advertiserInfo.advertiserName,
+    date: v.impressionTime.substring(0, 10)
+  }))
+  // GroupBy and count
+  const items = aggregate(
+    impressions,
+    ['advertiserName', 'date'],
+    countReducer('count')
+  )
+
+  return { headers, items }
+}
+
+function targetingTree(inputFiles) {
+  // JSON iterator on impressions
+  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  const impressions = JSONPath({
+    path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
+    json: impressionsFile
+  })
+  // Find 10 most present advertisers
+  const topAdvertisers = _.chain(impressions)
+    .map(v => ({ advertiserName: v.advertiserInfo.advertiserName }))
+    .groupBy(v => v.advertiserName)
+    .map((v, k) => ({ advertiserName: k, count: v.length }))
+    .sortBy(v => -v.count)
+    .take(10)
+    .map('advertiserName')
+    .value()
+  // Iterator on targeting criteria
+  let items = []
+  impressions.forEach(v => {
+    // Filter top advertisers
+    if (topAdvertisers.includes(v.advertiserInfo.advertiserName)) {
+      const criteria = JSONPath({
+        path: '$.matchedTargetingCriteria[*]',
+        json: v
+      })
+      criteria.forEach(criterion => {
+        // Select relevant fields
+        items.push({
+          advertiserName: v.advertiserInfo.advertiserName,
+          targetingType: criterion.targetingType,
+          targetingValue: criterion.targetingValue
+        })
+      })
+    }
+  })
+  let headers = ['advertiserName', 'targetingType', 'targetingValue', 'count']
+  // GroupBy and count
+  items = aggregate(
+    items,
+    ['advertiserName', 'targetingType', 'targetingValue'],
+    countReducer('count')
+  )
+  // Transform to tree
+  ;[headers, items] = csvProcessors.sunburstTargeting(headers, items)
+
+  return { headers, items }
+}
+
+function targetingTypesAndValues(inputFiles) {
+  // JSON iterator on impressions
+  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  const impressions = JSONPath({
+    path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
+    json: impressionsFile
+  })
+  let items = []
+  impressions.forEach(v => {
+    const criteria = JSONPath({
+      path: '$.matchedTargetingCriteria[*]',
+      json: v
+    })
+    criteria.forEach(criterion => {
+      // Select relevant fields
+      items.push({
+        targetingType: criterion.targetingType,
+        targetingValue: criterion.targetingValue
+      })
+    })
+  })
+  const headers = ['targetingType', 'targetingValue', 'count']
+  // GroupBy and count
+  items = aggregate(
+    items,
+    ['targetingType', 'targetingValue'],
+    countReducer('count')
+  )
+
+  return { headers, items }
+}
+
+function allAdvertisers(inputFiles) {
+  // JSON iterator on impressions
+  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  const impressions = JSONPath({
+    path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
+    json: impressionsFile
+  })
+  const items = _.chain(impressions)
+    .map(v => ({ advertiserName: v.advertiserInfo.advertiserName }))
+    .groupBy(v => v.advertiserName)
+    .map((v, k) => ({ advertiserName: k, adsShown: v.length }))
+    .value()
+  const headers = ['advertiserName', 'adsShown']
+
+  return { headers, items }
+}
+
+function selectTargetingTree(inputFiles, parameter) {
+  // JSON iterator on impressions
+  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  const impressions = JSONPath({
+    path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
+    json: impressionsFile
+  })
+  // Iterator on targeting criteria
+  let items = []
+  parameter = parameter.toLowerCase()
+  impressions.forEach(v => {
+    // Only take the relevant advertiser
+    if (v.advertiserInfo.advertiserName.toLowerCase() === parameter) {
+      const criteria = JSONPath({
+        path: '$.matchedTargetingCriteria[*]',
+        json: v
+      })
+      criteria.forEach(criterion => {
+        // Select relevant fields
+        items.push({
+          targetingType: criterion.targetingType,
+          targetingValue: criterion.targetingValue
+        })
+      })
+    }
+  })
+  let headers = ['targetingType', 'targetingValue', 'count']
+  // GroupBy and count
+  items = aggregate(
+    items,
+    ['targetingType', 'targetingValue'],
+    countReducer('count')
+  )
+  // Transform to tree
+  ;[headers, items] = csvProcessors.sunburstTargetingAdvertiser(headers, items)
+
+  return { headers, items }
 }
 
 export default {
-  twitterTargeting
+  dashboard,
+  advertisersPerDay,
+  targetingTree,
+  targetingTypesAndValues,
+  allAdvertisers,
+  selectTargetingTree
 }
