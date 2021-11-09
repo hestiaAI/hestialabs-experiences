@@ -33,7 +33,7 @@
     <v-row>
       <v-col cols="12">
         <v-tabs v-model="tab">
-          <v-tab href="#overview">Overview</v-tab>
+          <v-tab href="#overview" @click="resetFilters">Overview</v-tab>
           <v-tab href="#details">Details</v-tab>
         </v-tabs>
         <v-tabs-items v-model="tab">
@@ -81,7 +81,7 @@
                     class="ma-1"
                     outlined
                     color="indigo"
-                    @click="tabDetails()"
+                    @click="filterActivity(item.title)"
                   >
                     See All {{ item.title }} activity
                   </v-btn>
@@ -90,10 +90,10 @@
             </v-list>
           </v-tab-item>
           <v-tab-item value="details">
-            <p class="text-subtitle-1 text-right">
+            <p v-if="currentFilter" class="text-subtitle-1 text-right">
               Current Filter:
-              <v-btn small elevation="2">
-                <strong>Youtube</strong>
+              <v-btn small elevation="2" @click="resetFilters">
+                <strong>{{ currentFilter }}</strong>
                 <v-icon x-small> $vuetify.icons.mdiClose </v-icon>
               </v-btn>
             </p>
@@ -137,10 +137,12 @@ export default {
       tab: null,
       lineChart: null,
       volumeDimension: null,
+      overviewDimension: null,
       minDate: null,
       maxDate: null,
       currMinDateStr: 'NaN',
       currMaxDateStr: 'NaN',
+      currentFilter: null,
       items: [],
       header: [
         { text: 'Date', value: 'dateStr' },
@@ -244,6 +246,17 @@ export default {
     tabDetails() {
       this.tab = 'details'
     },
+    filterActivity(title) {
+      this.currentFilter = title
+      this.activityDimension.filter(title)
+      dc.redrawAll()
+      this.tabDetails()
+    },
+    resetFilters() {
+      this.currentFilter = null
+      this.activityDimension.filter(null)
+      dc.redrawAll()
+    },
     updateItems(overviewGroup) {
       const counts = overviewGroup.top(Infinity).reduce((p, c) => {
         if (!Object.prototype.hasOwnProperty.call(p, c.key[0])) {
@@ -264,7 +277,6 @@ export default {
       const isEmpty =
         d3.sum(chart.group().all().map(chart.valueAccessor())) === 0
       const data = isEmpty ? [1] : []
-      console.log(isEmpty)
       const empty = chart
         .svg()
         .selectAll('.empty-message')
@@ -327,10 +339,14 @@ export default {
       this.updateItems(overviewGroup)
       this.total = all.value()
 
+      // To filter by source
+      this.activityDimension = ndx.dimension(d => d.event_source)
+
       // Update items on each change of crossfilter
       ndx.onChange(() => {
         this.updateItems(overviewGroup)
         this.total = all.value()
+        this.results = ndx.allFiltered()
       })
 
       // Compute and draw line chart
