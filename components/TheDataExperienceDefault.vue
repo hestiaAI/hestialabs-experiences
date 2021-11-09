@@ -36,7 +36,7 @@
               selectedExample,
               customPipeline:
                 customPipelines[defaultViewElements.customPipeline],
-              inputFiles,
+              fileManager,
               i: index
             }"
             @update="onQueryUpdate"
@@ -48,6 +48,7 @@
               visualizations,
               defaultViewElements,
               query: queries[index],
+              fileManager,
               i: index
             }"
             @update="onQueryUpdate"
@@ -86,7 +87,8 @@ export default {
     customPipelines: Object,
     preprocessor: String,
     isGenericViewer: Boolean,
-    showDataExplorer: Boolean
+    showDataExplorer: Boolean,
+    files: Array
   },
   data() {
     // main example is selected by default
@@ -100,7 +102,6 @@ export default {
       rml: '',
       allItems: null,
       allHeaders: null,
-      inputFiles: null,
       allFiles: null,
       fileManager: new FileManager()
     }
@@ -136,41 +137,33 @@ export default {
       this.error = true
       this.message = error instanceof Error ? error.message : error
     },
-    async onUnitFilesUpdate({ inputFiles, error, uppyFiles }) {
+    async onUnitFilesUpdate(uppyFiles) {
       this.message = ''
       this.error = false
       this.success = false
       this.progress = true
-      this.inputFiles = inputFiles
+      const start = new Date()
 
       await this.fileManager.init(uppyFiles)
 
-      if (error) {
-        this.handleError(error)
-      } else if (
-        !this.isGenericViewer &&
-        Object.keys(inputFiles).length === 0
-      ) {
-        this.handleError('No relevant files were found')
-      } else if (this.isRdfNeeded && this.selectedExample.yarrrml) {
+      if (this.isRdfNeeded && this.selectedExample.yarrrml) {
         try {
-          const start = new Date()
-
           this.rml = await parseYarrrml(this.selectedExample.yarrrml)
-          rdfUtils.generateRDF(this.rml, inputFiles)
-          this.success = true
-
-          const elapsed = new Date() - start
-          this.message = `Successfully processed in ${elapsed / 1000} sec.`
+          rdfUtils.generateRDF(
+            this.rml,
+            await this.fileManager.preprocessFiles(this.files)
+          )
         } catch (error) {
           this.handleError(error)
+          return
         }
-      } else {
-        this.success = true
-        this.message = 'Successfully processed'
       }
 
       this.progress = false
+      this.success = true
+
+      const elapsed = new Date() - start
+      this.message = `Successfully processed in ${elapsed / 1000} sec.`
     },
     onQueryUpdate({ i, headers, items }) {
       this.allHeaders[i] = JSON.stringify(headers)

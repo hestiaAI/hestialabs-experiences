@@ -6,23 +6,7 @@
         text="Process files"
         icon="mdiStepForward"
         class="my-sm-2 mr-sm-2"
-        @click="buttonBehaviour"
-      />
-      <base-button
-        v-if="saveFiles"
-        :disabled="!cachedResult"
-        text="Use cached"
-        icon="mdiDatabase"
-        class="ma-sm-2"
-        @click="useCached"
-      />
-      <base-button
-        v-if="saveFiles"
-        :disabled="!cachedResult"
-        text="Clear cache"
-        icon="mdiDatabaseRemove"
-        class="ma-sm-2"
-        @click="clearCache"
+        @click="returnFiles"
       />
     </div>
 
@@ -63,17 +47,16 @@ import '@uppy/dashboard/dist/style.css'
 import '@uppy/drop-target/dist/style.css'
 
 import preprocessors from '@/manifests/preprocessors'
-import processFiles from '@/utils/process-files'
-import localforage from '@/utils/localforage'
-
+import BaseButton from '~/components/BaseButton'
 async function fetchSampleFile({ path, filename }) {
   const response = await window.fetch(path)
   const blob = await response.blob()
-  const file = new File([blob], filename)
-  return file
+  return new File([blob], filename)
 }
 
 export default {
+  name: 'UnitFiles',
+  components: { BaseButton },
   props: {
     extensions: {
       type: Array,
@@ -86,10 +69,6 @@ export default {
     multiple: {
       type: Boolean,
       default: false
-    },
-    preprocessor: {
-      type: String,
-      default: undefined
     },
     samples: {
       type: Array,
@@ -196,7 +175,7 @@ export default {
       }
     }
   },
-  async mounted() {
+  mounted() {
     this.uppy
       .use(Dashboard, {
         target: this.$refs.dashboard,
@@ -232,13 +211,6 @@ export default {
 
         this.enableStatus = false
       })
-
-    if (this.saveFiles) {
-      this.cachedResult = await localforage.getItem(
-        localforage.keys.processFilesResult,
-        this.key
-      )
-    }
   },
   beforeDestroy() {
     this.uppy.close()
@@ -256,113 +228,9 @@ export default {
         )
       }
     },
-    getMessagePowerUser({
-      inputFiles,
-      extractedFiles: xfiles,
-      filesProcessingTime: ms = 0
-    }) {
-      if (!this.$store.state.power || !inputFiles) {
-        return ''
-      }
-
-      const secs = ms / 1000
-
-      if (this.isSingleFileExperience) {
-        // Single file input.<ext>
-        return `Success! File registered: ${
-          Object.keys(inputFiles)[0]
-        }\nTime elapsed: ${secs}`
-      }
-
-      if (!xfiles) {
-        return 'Unexpected result'
-      }
-
-      if (Object.keys(xfiles).length === 0) {
-        return 'No relevant files were found.'
-      }
-
-      let msg = `Success! Time elapsed: ${secs} sec.\n`
-      Object.entries(xfiles).forEach(([archive, filelist]) => {
-        if (!archive) {
-          // archive is empty string
-          msg += 'Files submitted:'
-        } else {
-          msg += `Files extracted from ${archive}:`
-        }
-        msg += `\n${filelist.join('\n')}\n\n`
-      })
-
-      return msg.slice(0, -2)
-    },
-    buttonBehaviour() {
-      if (this.isGenericViewer) this.returnFiles()
-      else this.processFiles()
-    },
     returnFiles() {
       const files = this.uppy.getFiles().map(f => f.data)
-      this.$emit('update', { uppyFiles: files })
-
-      this.status = true
-      this.progress = false
-    },
-    async processFiles() {
-      this.progress = true
-      this.error = false
-      this.status = false
-
-      const files = this.uppy.getFiles().map(f => f.data)
-      if (files.length) {
-        try {
-          const result = await processFiles(
-            files,
-            this.filesToExtract,
-            !this.allowMissingFiles,
-            this.extensions,
-            this.preprocessorFunc,
-            this.isSingleFileExperience
-          )
-          this.messagePowerUser = this.getMessagePowerUser(result)
-          let infoMessage = 'Your files were processed successfully'
-          if (this.saveFiles) {
-            // do not cache processing time
-            delete result.filesProcessingTime
-            await localforage.setItem(
-              localforage.keys.processFilesResult,
-              result,
-              this.key
-            )
-            this.cachedResult = result
-            infoMessage =
-              'Your files were processed successfully and saved in your browser'
-          }
-          this.uppy.info(infoMessage)
-          this.$emit('update', { ...result, uppyFiles: files })
-        } catch (error) {
-          console.error(error)
-          this.error = true
-          this.messagePowerUser = error.message
-          this.$emit('update', { error })
-        } finally {
-          this.status = true
-          this.progress = false
-        }
-      }
-    },
-    useCached() {
-      const { cachedResult } = this
-      this.messagePowerUser = this.getMessagePowerUser(cachedResult)
-      this.$emit('update', cachedResult)
-    },
-    async clearCache() {
-      try {
-        await localforage.clear(this.key)
-        this.uppy.info('Cache cleared successfully')
-        this.cachedResult = null
-      } catch (error) {
-        console.error(error)
-        this.uppy.info('Unable to clear cache. Some error occurred.')
-      }
+      this.$emit('update', files)
     }
   }
 }

@@ -24,9 +24,12 @@
 <script>
 import { writeToString } from '@fast-csv/format'
 import { processError } from '@/utils/utils'
+import BaseDataDownloadButton from '~/components/BaseDataDownloadButton'
+import TheQueryResultsFilter from '~/components/TheQueryResultsFilter'
 
 export default {
   name: 'UnitFilterableTable',
+  components: { BaseDataDownloadButton, TheQueryResultsFilter },
   props: {
     headers: {
       type: Array,

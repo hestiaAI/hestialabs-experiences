@@ -16,6 +16,7 @@
 
 <script>
 export default {
+  name: 'TheSampleSelector',
   props: {
     value: {
       type: Array,

@@ -32,10 +32,14 @@
             <v-card-text>
               <template v-if="selectedItem">
                 <template v-if="selectedItem.type === 'json'">
-                  <unit-json-viewer v-bind="{ file: selectedItem.file }" />
+                  <unit-json-viewer
+                    v-bind="{ fileManager, filename: selectedItem.filename }"
+                  />
                 </template>
                 <template v-else-if="selectedItem.type === 'csv'">
-                  <unit-csv-viewer v-bind="{ file: selectedItem.file }" />
+                  <unit-csv-viewer
+                    v-bind="{ fileManager, filename: selectedItem.filename }"
+                  />
                 </template>
                 <template v-else-if="selectedItem.type === 'pdf'">
                   <unit-pdf-viewer v-bind="{ file: selectedItem.file }" />

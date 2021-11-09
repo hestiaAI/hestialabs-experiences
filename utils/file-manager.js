@@ -11,6 +11,7 @@ import {
   mdiTextBoxOutline,
   mdiXml
 } from '@mdi/js'
+import { identity } from 'lodash/util'
 
 const filetype2icon = {
   folder: mdiFolder,
@@ -51,10 +52,20 @@ setOptions({
  * It includes zip extraction, preprocessing of text, and building of trees and items for v-treeview.
  */
 export default class FileManager {
+  /**
+   * Builds a FileManager object without any files, just setting the configuration.
+   * @param {object} preprocessors maps file name to preprocessor function
+   */
   constructor(preprocessors) {
-    this.preprocessors = preprocessors
+    this.preprocessors = preprocessors ?? {}
   }
 
+  /**
+   * Fills the FileManager with the given files and creates helper structures.
+   * To be called once the files are available.
+   * @param {File[]} uppyFiles
+   * @returns {Promise<FileManager>}
+   */
   async init(uppyFiles) {
     this.fileList = await FileManager.extractZips(uppyFiles)
     this.fileDict = Object.fromEntries(this.fileList.map(f => [f.name, f]))
@@ -65,17 +76,32 @@ export default class FileManager {
     return this
   }
 
-  hasFile(filePath) {
-    return this.fileDict.hasOwn(filePath)
+  static removeTopmostFilename(filepath) {
+    const parts = filepath.split('/')
+    if (parts.length > 1) {
+      return parts.slice(1, parts.length).join('/')
+    }
+    return filepath.replace(/.+\.(.+)/, 'input.$1')
   }
 
-  async preprocessFiles() {
-    await Promise.all(
-      this.fileList.map(async file => {
-        if (this.preprocessors.hasOwn(file.name)) {
-          return [file.name, await this.getPreprocessedText(file.name)]
-        }
-      })
+  hasFile(filePath) {
+    return Object.hasOwn(this.fileDict, filePath)
+  }
+
+  getPreprocessor(filepath) {
+    if (Object.hasOwn(this.preprocessors, filepath)) {
+      return this.preprocessors[filepath]
+    } else {
+      return identity
+    }
+  }
+
+  async preprocessFiles(filenames) {
+    return await Promise.all(
+      filenames.map(async filename => [
+        filename,
+        await this.getPreprocessedText(filename)
+      ])
     )
   }
 
@@ -83,24 +109,22 @@ export default class FileManager {
     if (!this.hasFile(filePath)) {
       throw new Error(`${filePath} doesn't exist in the file manager`)
     }
-    if (!this.fileTexts.hasOwn(filePath)) {
+    if (!Object.hasOwn(this.fileTexts, filePath)) {
       this.fileTexts[filePath] = await this.fileDict[filePath].text()
     }
     return this.fileTexts[filePath]
   }
 
   async getPreprocessedText(filePath) {
-    if (!this.preprocessedTexts.hasOwn(filePath)) {
+    if (!Object.hasOwn(this.preprocessedTexts, filePath)) {
       const text = await this.getText(filePath)
-      if (this.preprocessors.hasOwn(filePath)) {
-        this.preprocessedTexts[filePath] = this.preprocessors[filePath](text)
-      }
+      this.preprocessedTexts[filePath] = this.getPreprocessor(filePath)(text)
     }
     return this.preprocessedTexts[filePath]
   }
 
   freeFileText(filePath) {
-    if (this.fileTexts.hasOwn(filePath)) {
+    if (Object.hasOwn(this.fileTexts, filePath)) {
       delete this.fileTexts[filePath]
     }
   }
@@ -198,7 +222,7 @@ export default class FileManager {
         if (typeof node === 'string') {
           type = extension2filetype[extension] ?? 'file'
           icon = filetype2icon[type] || mdiFile
-          Object.assign(res, { file: node })
+          Object.assign(res, { filename: node })
         } else {
           const children = makeItemsRec(node)
           type = extension2filetype[extension] ?? 'folder'

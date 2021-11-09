@@ -16,8 +16,8 @@ export default {
   name: 'UnitCsvViewer',
   components: { UnitFilterableTable },
   props: {
-    file: {
-      type: File,
+    filename: {
+      type: String,
       required: true
     },
     fileManager: {
@@ -34,17 +34,17 @@ export default {
     }
   },
   watch: {
-    file: {
-      async handler(newFile) {
-        await this.getContentFromFile(newFile)
+    filename: {
+      async handler(filename) {
+        await this.getContentFromFilename(filename)
       },
       immediate: true
     }
   },
   methods: {
-    async getContentFromFile(file) {
+    async getContentFromFilename(filename) {
       this.loading = true
-      this.csvText = await this.fileManager.getPreprocessedText(file.name)
+      this.csvText = await this.fileManager.getPreprocessedText(filename)
       try {
         this.csvContent = await getCsvHeadersAndItems(this.csvText)
         this.error = false

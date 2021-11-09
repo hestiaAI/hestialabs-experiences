@@ -117,7 +117,8 @@ export default {
         'customPipelines',
         'preprocessor',
         'isGenericViewer',
-        'showDataExplorer'
+        'showDataExplorer',
+        'files'
       ]
       const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
       return props

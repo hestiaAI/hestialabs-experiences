@@ -34,8 +34,8 @@ import FileManager from '~/utils/file-manager'
 export default {
   name: 'UnitJsonViewer',
   props: {
-    file: {
-      type: File,
+    filename: {
+      type: String,
       required: true
     },
     fileManager: {
@@ -45,7 +45,6 @@ export default {
   },
   data() {
     return {
-      idSpace: 0,
       jsonText: '',
       items: [],
       loading: true,
@@ -53,19 +52,19 @@ export default {
     }
   },
   watch: {
-    file: {
-      async handler(newFile) {
-        await this.getItemsFromFile(newFile)
+    filename: {
+      async handler(filename) {
+        await this.getContentFromFilename(filename)
       },
       immediate: true
     }
   },
   methods: {
-    async getItemsFromFile(file) {
+    async getContentFromFilename(filename) {
       this.loading = true
-      this.jsonText = await this.fileManager.getPreprocessedText(file.name)
+      this.jsonText = await this.fileManager.getPreprocessedText(filename)
       try {
-        this.items = [this.itemify(JSON.parse(this.jsonText))]
+        this.items = this.itemify(JSON.parse(this.jsonText))
         this.error = false
       } catch (error) {
         this.error = true
@@ -73,51 +72,53 @@ export default {
       this.loading = false
     },
     itemify(tree) {
-      if (typeof tree !== 'object')
-        return { value: tree, icon: mdiInformationOutline }
-      else if (Array.isArray(tree)) {
-        const list = tree.flatMap(el => {
-          return this.itemify(el)
-        })
-        if (list.length === 1 && list[0].name) {
-          return {
-            id: this.idSpace++,
-            name: `[list with ${list.length} item] / ${list[0].name}`,
-            children: list[0].children,
-            icon: list[0].icon
-          }
-        } else {
-          const plural = list.length !== 1
-          return {
-            id: this.idSpace++,
-            name: `[list with ${list.length} item${plural ? 's' : ''}]`,
-            children: list,
-            icon: mdiFormatListBulletedSquare
-          }
-        }
-      } else {
-        const obj = Object.entries(tree).flatMap(([key, v]) => {
-          const inner = this.itemify(v)
-          if (typeof inner.name === 'undefined') {
-            return { ...inner, name: lodash.startCase(key) }
+      let id = 0
+      function itemifyRec(tree) {
+        id++
+        if (typeof tree !== 'object') {
+          return { value: tree, icon: mdiInformationOutline }
+        } else if (Array.isArray(tree)) {
+          const children = tree.flatMap(el => itemifyRec(el))
+          const plural = children.length !== 1
+          const name = `[list with ${children.length} item${plural ? 's' : ''}]`
+          if (!plural && children[0].name) {
+            return {
+              id,
+              name: `${name} / ${children[0].name}`,
+              children: children[0].children,
+              icon: children[0].icon
+            }
           } else {
             return {
-              ...inner,
-              name: `${lodash.startCase(key)} / ${inner.name}`
+              id,
+              name,
+              children,
+              icon: mdiFormatListBulletedSquare
             }
           }
-        })
-        if (obj.length === 1) {
-          return obj[0]
         } else {
-          return {
-            id: this.idSpace++,
-            name: `{object with ${obj.length} keys}`,
-            children: obj,
-            icon: mdiCodeJson
+          const children = Object.entries(tree).flatMap(([key, v]) => {
+            const inner = itemifyRec(v)
+            const name = lodash.startCase(key)
+            if (typeof inner.name === 'undefined') {
+              return { ...inner, name }
+            } else {
+              return { ...inner, name: `${name} / ${inner.name}` }
+            }
+          })
+          if (children.length === 1) {
+            return children[0]
+          } else {
+            return {
+              id,
+              name: `{object with ${children.length} keys}`,
+              children,
+              icon: mdiCodeJson
+            }
           }
         }
       }
+      return [itemifyRec(tree)]
     }
   }
 }

@@ -37,11 +37,12 @@
 
 <script>
 import { processError } from '@/utils/utils'
+import FileManager from '~/utils/file-manager'
 
 export default {
   props: {
-    inputFiles: {
-      type: Object,
+    fileManager: {
+      type: FileManager,
       required: true
     },
     customPipeline: {
@@ -65,13 +66,13 @@ export default {
   },
   computed: {
     disabled() {
-      return !this.inputFiles
+      return !this.fileManager.preprocessedTexts
     }
   },
   watch: {
-    inputFiles: {
+    fileManager: {
       immediate: true,
-      handler(inputFiles) {
+      handler(fileManager) {
         if (!this.parameterName) {
           this.runQuery()
         }
@@ -85,7 +86,7 @@ export default {
       this.progress = true
       try {
         const { headers, items } = this.customPipeline(
-          this.inputFiles,
+          this.fileManager.preprocessedTexts,
           this.parameter
         )
         this.$emit('update', { headers, items })
