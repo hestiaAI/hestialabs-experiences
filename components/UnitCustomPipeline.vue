@@ -79,12 +79,12 @@ export default {
     }
   },
   methods: {
-    runQuery() {
+    async runQuery() {
       this.message = ''
       this.error = false
       this.progress = true
       try {
-        const { headers, items } = this.customPipeline(
+        const { headers, items } = await this.customPipeline(
           this.inputFiles,
           this.parameter
         )
