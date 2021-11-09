@@ -76,10 +76,27 @@
                     </v-list-item-title>
                   </v-list-item-content>
                 </v-list-item>
+                <v-list-item key="child.showMore">
+                  <v-btn
+                    class="ma-1"
+                    outlined
+                    color="indigo"
+                    @click="tabDetails()"
+                  >
+                    See All {{ item.title }} activity
+                  </v-btn>
+                </v-list-item>
               </v-list-group>
             </v-list>
           </v-tab-item>
           <v-tab-item value="details">
+            <p class="text-subtitle-1 text-right">
+              Current Filter:
+              <v-btn small elevation="2">
+                <strong>Youtube</strong>
+                <v-icon x-small> $vuetify.icons.mdiClose </v-icon>
+              </v-btn>
+            </p>
             <unit-filterable-table
               v-bind="{ headers: header, items: results }"
             />
@@ -146,7 +163,10 @@ export default {
     timeRangeChange(newValue) {
       switch (newValue) {
         case 'ALL':
-          if (this.lineChart !== null) this.lineChart.brushOn(false)
+          if (this.lineChart !== null) {
+            this.lineChart.filter(null)
+            this.lineChart.brushOn(false)
+          }
           break
         case '1Y':
           this.lineChart.brushOn(true)
@@ -224,6 +244,62 @@ export default {
     tabDetails() {
       this.tab = 'details'
     },
+    updateItems(overviewGroup) {
+      const counts = overviewGroup.top(Infinity).reduce((p, c) => {
+        if (!Object.prototype.hasOwnProperty.call(p, c.key[0])) {
+          p[c.key[0]] = {}
+          p[c.key[0]].count = 0
+          p[c.key[0]].title = c.key[0]
+          p[c.key[0]].action = c.key[2]
+          p[c.key[0]].items = []
+        }
+        p[c.key[0]].count += c.value
+        p[c.key[0]].items.push({ title: c.key[1], count: c.value })
+        return p
+      }, {})
+      this.items = Object.values(counts)
+    },
+    // When no data available for a specific time period, show an empty message
+    showEmptyMessage(chart) {
+      const isEmpty =
+        d3.sum(chart.group().all().map(chart.valueAccessor())) === 0
+      const data = isEmpty ? [1] : []
+      console.log(isEmpty)
+      const empty = chart
+        .svg()
+        .selectAll('.empty-message')
+        .data(data)
+        .enter()
+        .append('text')
+        .text('No data during this time period')
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'middle')
+        .attr('x', chart.margins().left + chart.effectiveWidth() / 2)
+        .attr('y', chart.margins().top + chart.effectiveHeight() / 2)
+        .attr('class', 'empty-message')
+        .style('opacity', 0)
+      if (!isEmpty) {
+        chart.svg().selectAll('.empty-message').remove()
+      } else {
+        empty.transition().duration(1000).style('opacity', 1)
+      }
+    },
+    // Make a Fake group to display only value above 0 on the row graphs
+    removeEmptyBins(group) {
+      return {
+        top(n) {
+          return group
+            .top(Infinity)
+            .filter(function (d) {
+              return d.value.count !== 0 && d.value !== 0
+            })
+            .slice(0, n)
+        },
+        all() {
+          return group.all()
+        }
+      }
+    },
     drawViz() {
       this.results = this.values
 
@@ -248,20 +324,14 @@ export default {
         d.icon
       ])
       const overviewGroup = overviewDimension.group().reduceCount()
-      const counts = overviewGroup.top(Infinity).reduce((p, c) => {
-        if (!Object.prototype.hasOwnProperty.call(p, c.key[0])) {
-          p[c.key[0]] = {}
-          p[c.key[0]].count = 0
-          p[c.key[0]].title = c.key[0]
-          p[c.key[0]].action = c.key[2]
-          p[c.key[0]].items = []
-        }
-        p[c.key[0]].count += c.value
-        p[c.key[0]].items.push({ title: c.key[1], count: c.value })
-        return p
-      }, {})
-      this.items = Object.values(counts)
+      this.updateItems(overviewGroup)
       this.total = all.value()
+
+      // Update items on each change of crossfilter
+      ndx.onChange(() => {
+        this.updateItems(overviewGroup)
+        this.total = all.value()
+      })
 
       // Compute and draw line chart
       this.lineChart = new dc.LineChart('#line-chart')
@@ -304,55 +374,17 @@ export default {
         }
       })
 
-      // When no data available for a specific time period, show an empty message
-      function showEmptyMessage(chart) {
-        const isEmpty =
-          d3.sum(chart.group().all().map(chart.valueAccessor())) === 0
-        const data = isEmpty ? [1] : []
-        const empty = chart
-          .svg()
-          .selectAll('.empty-message')
-          .data(data)
-          .enter()
-          .append('text')
-          .text('No data during this time period')
-          .attr('text-anchor', 'middle')
-          .attr('alignment-baseline', 'middle')
-          .attr('x', chart.margins().left + chart.effectiveWidth() / 2)
-          .attr('y', chart.margins().top + chart.effectiveHeight() / 2)
-          .attr('class', 'empty-message')
-          .style('opacity', 0)
-        empty.transition().duration(1000).style('opacity', 1)
-        empty.exit().remove()
-      }
       // Compute and draw row chart
       const rowChart = new dc.RowChart('#row-chart')
       const typeDimension = ndx.dimension(d => d.event_type)
       const typeGroup = typeDimension.group().reduceCount()
       const width = d3.select('#row-chart').node().getBoundingClientRect().width
 
-      // Make a Fake group to display only value above 0 on the row graphs
-      function removeEmptyBins(group) {
-        return {
-          top(n) {
-            return group
-              .top(Infinity)
-              .filter(function (d) {
-                return d.value.count !== 0 && d.value !== 0
-              })
-              .slice(0, n)
-          },
-          all() {
-            return group.all()
-          }
-        }
-      }
-
       rowChart
         .width(width)
         .height(height)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
-        .group(removeEmptyBins(typeGroup))
+        .group(this.removeEmptyBins(typeGroup))
         .dimension(typeDimension)
         .ordinalColors(['#58539E', '#847CEB', '#605BAB', '#4A4685', '#35325E'])
         .label(d => d.key)
@@ -362,7 +394,7 @@ export default {
         .xAxis()
         .ticks(4)
 
-      rowChart.on('pretransition', showEmptyMessage)
+      rowChart.on('pretransition', this.showEmptyMessage)
       // Render all graphs
       dc.renderAll()
     }
