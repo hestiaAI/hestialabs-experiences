@@ -2,7 +2,9 @@
   <v-container>
     <v-row>
       <v-col cols="12" md="12">
-        <div id="viz" />
+        <div id="sunburst">
+          <v-breadcrumbs :items="bcItems" class="breadCrumb"></v-breadcrumbs>
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -21,7 +23,13 @@ export default {
   },
   data() {
     return {
-      test: []
+      bcItems: [
+        {
+          text: 'Swisscom Business',
+          disabled: true,
+          href: 'test'
+        }
+      ]
     }
   },
   mounted() {
@@ -46,15 +54,16 @@ export default {
         .sum(d => d.size)
         .sort((a, b) => b.value - a.value)
 
+      const totalSize = tree.value
       // Compute arcs partitons/positions
       const root = d3.partition().size([2 * Math.PI, tree.height + 1])(tree)
       root.each(d => (d.current = d))
 
       // Global Variables
-      const width = d3.select('#viz').node().getBoundingClientRect().width
+      const width = d3.select('#sunburst').node().getBoundingClientRect().width
       const radius = width / 8 - 10
       const color = d3.scaleOrdinal().domain(colorDomain).range(d3.schemeDark2)
-      const format = d3.format(',d')
+      // const format = d3.format(',d')
 
       const arc = d3
         .arc()
@@ -66,12 +75,37 @@ export default {
         .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1))
 
       const svg = d3
-        .select('#viz')
+        .select('#sunburst')
         .append('svg')
         .attr('width', width)
         .attr('height', width)
         .append('g')
         .attr('transform', 'translate(' + width / 2 + ',' + width / 2 + ')')
+
+      const infoPercent = svg
+        .append('text')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('id', 'infoPercent')
+        .attr('text-anchor', 'middle')
+        .style('font-size', '2.5rem')
+        .style('font-weight', 'bold')
+        .style('fill', 'grey')
+        .attr('font-family', 'Roboto')
+        .text('100%')
+        .attr('opacity', 0)
+
+      const infoNumber = svg
+        .append('text')
+        .attr('x', 0)
+        .attr('y', 30)
+        .attr('id', 'infoNumber')
+        .style('font-size', '1rem')
+        .style('font-weight', 'light')
+        .attr('text-anchor', 'middle')
+        .style('fill', 'grey')
+        .text(totalSize)
+        .attr('opacity', 0)
 
       const path = svg
         .append('g')
@@ -91,7 +125,7 @@ export default {
         .filter(d => d.children)
         .style('cursor', 'pointer')
         .on('click', clicked)
-
+      /*
       path.append('title').text(
         d =>
           `${d
@@ -100,10 +134,8 @@ export default {
             .reverse()
             .join(' / ')}\n${format(d.value)}`
       )
+      */
 
-      // attach event actions
-      path.on('mouseover', mouseover)
-      path.on('mouseleave', mouseleave)
       const label = svg
         .append('g')
         .attr('pointer-events', 'none')
@@ -196,10 +228,28 @@ export default {
         })`
       }
 
-      function mouseover(e, d) {
+      const mouseover = (e, d) => {
         // Find all ancestors of current overred element
         const ancestors = getAncestors(d)
-        console.log(ancestors)
+
+        // Update labels
+        const percentage = ((100 * d.value) / totalSize).toPrecision(3)
+        let percentageString = percentage + '%'
+        if (percentage < 0.1) {
+          percentageString = '< 0.1%'
+        }
+        // infoLabel.text(ancestors.map(d => d.data.name).join('/'))
+        this.bcItems = ancestors.map(d => {
+          return {
+            text: d.data.name,
+            disabled: true,
+            href: 'test'
+          }
+        })
+        infoPercent.text(percentageString)
+        infoNumber.text(`${d.value} out of ${totalSize}`)
+        infoPercent.attr('opacity', 1)
+        infoNumber.attr('opacity', 1)
 
         // Fade all the segments.
         d3.selectAll('path').style('opacity', 0.3)
@@ -211,26 +261,19 @@ export default {
           .style('opacity', 1)
       }
 
-      function mouseleave(d) {
-        // Deactivate all segments during transition.
-        // d3.selectAll('path').on('mouseover', null)
+      const mouseleave = (e, d) => {
+        this.bcItems = []
+        infoPercent.attr('opacity', 0)
+        infoNumber.attr('opacity', 0)
         d3.selectAll('path').style('opacity', 1)
-        // Transition each segment to full opacity and then reactivate it.
-        /*
-        d3.selectAll('path')
-          .transition()
-          .duration(1000)
-          .style('opacity', 1)
-          .on('end', () => {
-            d3.select(this).on('mouseover', mouseover)
-          })
-        */
       }
+      // attach event actions
+      path.on('mouseover', mouseover)
+      path.on('mouseleave', mouseleave)
 
       function getAncestors(node) {
         const path = []
         let current = node
-        console.log(current)
         while (current.parent) {
           path.unshift(current)
           current = current.parent
@@ -245,5 +288,8 @@ export default {
 body {
   font-family: 'Roboto';
   color: #22313f;
+}
+.breadCrumb.v-breadcrumbs li {
+  font-size: 1.5rem;
 }
 </style>
