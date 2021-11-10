@@ -46,7 +46,6 @@ import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/drop-target/dist/style.css'
 
-import preprocessors from '@/manifests/preprocessors'
 import BaseButton from '~/components/BaseButton'
 async function fetchSampleFile({ path, filename }) {
   const response = await window.fetch(path)
@@ -119,13 +118,6 @@ export default {
     },
     disabled() {
       return this.filesEmpty
-    },
-    preprocessorFunc() {
-      if (!this.preprocessor) {
-        // identity
-        return val => val
-      }
-      return preprocessors[this.preprocessor]
     },
     saveFiles() {
       return this.$store.state.config.saveFiles
