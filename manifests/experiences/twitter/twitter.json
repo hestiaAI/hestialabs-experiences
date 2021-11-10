@@ -41,7 +41,7 @@
     },
     {
       "customPipeline": "targetingTree",
-      "visualizations": ["sunburst-targeting"],
+      "visualizations": ["Sunburst.vue"],
       "showTable": false,
       "title": "Targeting criteria (Top 10 advertisers)",
       "text": "Understand why you have been targeted by these advertisers. The chart shows the 10 most present advertisers in the inner circle, the targeting types (location, language, ...) in the middle circle, and the targeting values (Switzerland, French, ...) in the outer circle."
