@@ -159,7 +159,7 @@ export default {
             v => r.query === v.query && spec.name === v.vega
           )
           // If it has a preprocessor defined, run it
-          if (def.preprocessor) {
+          if (def?.preprocessor) {
             return csvProcessors[def.preprocessor](r.headers, r.items)[1]
           }
           return r.items
