@@ -1,12 +1,15 @@
 {
   "name": "@hestialabs/twitter",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
   "main": "dist/index",
-  "types": "dist/index",
   "files": [
     "dist"
   ],
+  "repository": "https://github.com/hestiaAI/hestialabs",
+  "publishConfig": {
+    "@hestiaAI:registry": "https://npm.pkg.github.com/hestiaAI"
+  },
   "author": "",
   "license": "ISC"
 }

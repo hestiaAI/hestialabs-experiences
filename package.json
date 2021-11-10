@@ -8,14 +8,19 @@
     "node": "14.x"
   },
   "type": "module",
+  "workspaces": [
+    "./packages/*"
+  ],
   "scripts": {
     "clean": "lerna run clean",
     "build:old": "lerna run build",
     "build": "webpack",
     "test": "lerna run test",
     "pub": "lerna publish",
-    "publish": "lerna version --conventional-commits && lerna publish from-package --conventional-commits",
-    "prepublishOnly": "webpack",
+    "version": "lerna version --conventional-commits --no-changelog",
+    "publish:from-package": "lerna publish from-package --conventional-commits",
+    "publish": "npm run version && npm run publish:from-package",
+    "prepublishOnly": "npm run build",
     "prepare": "husky install",
     "lint": "eslint . --ext .ts",
     "lint:fix": "npm run lint -- --cache --fix",
