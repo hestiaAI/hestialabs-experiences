@@ -191,26 +191,29 @@ export default {
       )
     },
     processedItems() {
-      // For each viz
-      return this.vegaFiles.map(spec => {
-        if (this.customPipeline === undefined) {
-          // Find the viz definition for this query
-          const preprocessor = this.exampleVisualizations.filter(
-            v => this.query.name === v.query && spec.name === v.vega
-          )
-          // If it has a preprocessor defined, run it
-          if (preprocessor.length === 1 && preprocessor[0].preprocessor) {
-            return csvProcessors[preprocessor[0].preprocessor](
-              this.headers,
-              this.items
-            )[1]
-          }
+      return this.vegaFiles.map(specFile => {
+        const processor = this.findProcessor(specFile)
+        if (processor) {
+          return processor(this.headers, this.items)[1]
         }
         return this.items
       })
     }
   },
   methods: {
+    findProcessor(specFile) {
+      if (this.customPipeline === undefined) {
+        // Find the viz definition for this query
+        const preprocessor = this.exampleVisualizations.filter(
+          v => this.query.name === v.query && specFile.name === v.vega
+        )
+        // Does it have a preprocessor?
+        if (preprocessor.length === 1) {
+          return csvProcessors[preprocessor[0]?.preprocessor]
+        }
+      }
+      return undefined
+    },
     onUnitResultsUpdate({ headers = [], items = [], error }) {
       // Vuetify DataTable component expects text and value properties
       this.headers = headers.map(h => ({ text: h, value: h }))

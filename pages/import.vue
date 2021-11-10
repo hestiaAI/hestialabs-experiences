@@ -63,27 +63,31 @@
       </v-card>
 
       <!-- Results -->
-      <v-card v-for="(result, i) in results" :key="i" class="pa-2 my-6">
+      <v-card
+        v-for="(result, resultIndex) in results"
+        :key="resultIndex"
+        class="pa-2 my-6"
+      >
         <v-card-title class="justify-center">{{ result.title }}</v-card-title>
         <v-row>
           <v-col
-            v-for="(specFile, j) in allVegaFiles[i]"
-            :key="j"
+            v-for="(specFile, vegaIndex) in allVegaFiles[resultIndex]"
+            :key="vegaIndex"
             style="text-align: center"
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="allProcessedItems[i][j]"
-              :div-id="`viz-${i}-${specFile.name}`"
+              :values="allProcessedItems[resultIndex][vegaIndex]"
+              :div-id="`viz-${resultIndex}-${specFile.name}`"
             />
           </v-col>
         </v-row>
         <v-row
-          v-for="(graphName, index) in allVueGraphNames[i]"
-          :key="`viz-${i}-${index}`"
+          v-for="(graphName, vizVueIndex) in allVueGraphNames[resultIndex]"
+          :key="`viz-${resultIndex}-${vizVueIndex}`"
         >
           <v-col>
-            <vue-graph-by-name :graph-name="graphName" :values="allItems[i]" />
+            <vue-graph-by-name :graph-name="graphName" :values="result.items" />
           </v-col>
         </v-row>
         <v-row>
@@ -138,36 +142,35 @@ export default {
     },
     allVegaFiles() {
       return this.results.map(r =>
-        this.example.vega.filter(s => r.visualizations.includes(s.name))
+        this.example.vega.filter(s => r.visualizations?.includes(s.name))
       )
     },
     allVueGraphNames() {
       return this.results.map(r =>
-        r.visualizations.filter(n => n.endsWith('.vue'))
+        r.visualizations?.filter(n => n.endsWith('.vue'))
       )
-    },
-    allItems() {
-      return this.results.map(r => r.items)
     },
     allProcessedItems() {
       // For each block
-      return this.results.map((r, i) =>
+      return this.results.map((result, resultIndex) =>
         // For each viz
-        this.allVegaFiles[i].map(spec => {
-          // Find the viz definition for this query
-          const def = this.visualizations.find(
-            v => r.query === v.query && spec.name === v.vega
-          )
-          // If it has a preprocessor defined, run it
-          if (def?.preprocessor) {
-            return csvProcessors[def.preprocessor](r.headers, r.items)[1]
+        this.allVegaFiles[resultIndex].map(specFile => {
+          const processor = this.findProcessor(result, specFile)
+          if (processor) {
+            return process(result.headers, result.items)
           }
-          return r.items
+          return result.items
         })
       )
     }
   },
   methods: {
+    findProcessor(result, specFile) {
+      const def = this.visualizations.find(
+        v => result.query === v.query && specFile.name === v.vega
+      )
+      return csvProcessors[def?.preprocessor]
+    },
     async importZIP() {
       this.success = false
       if (!this.inputZIP) {
@@ -206,7 +209,6 @@ export default {
       const files = zip.file(/block[0-9]+.json/)
       const res = await Promise.all(files.map(r => r.async('string')))
       this.results = res.map(JSON.parse)
-
       this.success = true
     },
     async generateKeys() {
