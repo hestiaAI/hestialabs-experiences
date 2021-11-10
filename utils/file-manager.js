@@ -51,7 +51,11 @@ setOptions({
 
 /**
  * A class that allows to manage the pipeline of files.
- * It includes zip extraction, preprocessing of text, and building of trees and items for v-treeview.
+ * It includes:
+ * - zip extraction
+ * - preprocessing of text
+ * - csv items extraction
+ * - building of trees and items for v-treeview
  */
 export default class FileManager {
   // Private attributes that should only be accessed through the methods of FileManager
@@ -95,6 +99,16 @@ export default class FileManager {
     return this
   }
 
+  /**
+   * This functions abstracts away the name of the topmost file.
+   * For instance, if the experience supports a single file that must be a json,
+   *   and the user inputs the file 'custom.json', its name is replaced by 'input.json'.
+   * If the experience supports a zip as input, the name of the zip is removed from the path of all the files inside:
+   *   'my-zip.zip/folder/file.txt' becomes 'folder/file.txt'
+   * Note that it only changes the name by which we index the file, and not the actual name of the File object.
+   * @param {Tuple<String, File>[]} filePairs
+   * @returns {{[p: String]: File}}
+   */
   static removeTopmostFilenames(filePairs) {
     if (filePairs.length === 1) {
       const [filename, file] = filePairs[0]
@@ -117,6 +131,12 @@ export default class FileManager {
     }
   }
 
+  /**
+   * Given a list of file names, fills the FileManager entries for preprocessed text and returns an
+   * object mapping file name to preprocessed text (similarly to the inputFiles object that existed before).
+   * @param {String[]} filenames
+   * @returns {Promise<{[p: String]: String}>}
+   */
   async preprocessFiles(filenames) {
     const entries = await Promise.all(
       filenames.map(async filename => [
@@ -127,6 +147,11 @@ export default class FileManager {
     return Object.fromEntries(entries)
   }
 
+  /**
+   * Returns the preprocessor function to be used for the given file name, defaulting to the identity.
+   * @param {String} filePath
+   * @returns {*|(function(*): *)}
+   */
   getPreprocessor(filePath) {
     return Object.hasOwn(this.preprocessors, filePath)
       ? this.preprocessors[filePath]
@@ -137,6 +162,11 @@ export default class FileManager {
     return Object.hasOwn(this.fileDict, filePath)
   }
 
+  /**
+   * Loads and returns the content of a text file if it has not already been loaded.
+   * @param {String} filePath
+   * @returns {Promise<String>}
+   */
   async getText(filePath) {
     if (!this.hasFile(filePath)) {
       throw new Error(`${filePath} doesn't exist in the file manager`)
@@ -147,6 +177,11 @@ export default class FileManager {
     return this.#fileTexts[filePath]
   }
 
+  /**
+   * Preprocessed and returns the content of a text file if it has not already been preprocessed.
+   * @param {String} filePath
+   * @returns {Promise<String>}
+   */
   async getPreprocessedText(filePath) {
     if (!Object.hasOwn(this.#preprocessedTexts, filePath)) {
       const text = await this.getText(filePath)
@@ -156,6 +191,11 @@ export default class FileManager {
     return this.#preprocessedTexts[filePath]
   }
 
+  /**
+   * Parses and returns the content of a csv file if it has not already been parsed.
+   * @param {String} filePath
+   * @returns {Promise<String>}
+   */
   async getCsvItems(filePath) {
     if (!Object.hasOwn(this.#csvItems, filePath)) {
       const text = await this.getPreprocessedText(filePath)
@@ -164,6 +204,11 @@ export default class FileManager {
     return this.#csvItems[filePath]
   }
 
+  /**
+   * Creates and returns an item tree of a JSON file if it has not already been created.
+   * @param {String} filePath
+   * @returns {Promise<String>}
+   */
   async getJsonItems(filePath) {
     if (!Object.hasOwn(this.#jsonItems, filePath)) {
       const text = await this.getPreprocessedText(filePath)
@@ -172,12 +217,29 @@ export default class FileManager {
     return this.#jsonItems[filePath]
   }
 
-  freeFileText(filePath) {
+  /**
+   * Frees memory by erasing all loaded content associated to the given file path.
+   * @param {String} filePath
+   */
+  freeFile(filePath) {
     if (Object.hasOwn(this.#fileTexts, filePath)) {
       delete this.#fileTexts[filePath]
     }
+    if (Object.hasOwn(this.#preprocessedTexts, filePath)) {
+      delete this.#preprocessedTexts[filePath]
+    }
+    if (Object.hasOwn(this.#csvItems, filePath)) {
+      delete this.#csvItems[filePath]
+    }
+    if (Object.hasOwn(this.#jsonItems, filePath)) {
+      delete this.#jsonItems[filePath]
+    }
   }
 
+  /**
+   * Creates a hierarchical object representing the tree of files in the File Manager, only if it has not already been created.
+   * @returns {Object}
+   */
   getFileTree() {
     if (typeof this.#fileTree === 'undefined') {
       this.#fileTree = FileManager.makeTree(this.fileDict)
@@ -185,6 +247,10 @@ export default class FileManager {
     return this.#fileTree
   }
 
+  /**
+   * Creates an array of items to be given to a v-treeview component, only if not already created.
+   * @returns {*}
+   */
   getTreeItems() {
     if (typeof this.#treeItems === 'undefined') {
       this.#treeItems = FileManager.makeItems(this.getFileTree())
