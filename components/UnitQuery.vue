@@ -83,11 +83,16 @@
               </v-col>
             </v-row>
             <v-row
-              v-for="(graphName, index) in vueGraphNames"
-              :key="'vue-' + index"
+              v-for="(graphName, index) in vizVueGraphs"
+              :key="'viz-vue-' + index"
             >
               <v-col>
                 <vue-graph-by-name :graph-name="graphName" :values="items" />
+              </v-col>
+            </v-row>
+            <v-row v-for="(src, index) in vizUrls" :key="'viz-url-' + index">
+              <v-col>
+                <unit-iframe :src="src" :values="items" />
               </v-col>
             </v-row>
             <v-row v-if="showTable">
@@ -112,10 +117,8 @@
 <script>
 /* eslint-disable vue/require-default-prop */
 import csvProcessors from '@/manifests/csv-processors'
-import UnitFilterableTable from '~/components/UnitFilterableTable'
 
 export default {
-  components: { UnitFilterableTable },
   props: {
     visualizations: Object,
     selectedExample: {
@@ -173,7 +176,10 @@ export default {
       }
       return vizNames
     },
-    vueGraphNames() {
+    vizUrls() {
+      return this.vizNames.filter(n => n.startsWith('/'))
+    },
+    vizVueGraphs() {
       return this.vizNames.filter(n => n.endsWith('.vue'))
     },
     vegaFiles() {

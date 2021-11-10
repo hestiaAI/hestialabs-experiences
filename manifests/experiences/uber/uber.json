@@ -13,6 +13,13 @@
       "showTable": false,
       "title": "Uber Trips overview",
       "text": "Compare the prices of your Uber rides according to several factors ( Your data is grouped by currency)."
+    },
+    {
+      "customPipeline": "tripsData",
+      "visualizations": ["/kepler"],
+      "showTable": false,
+      "title": "Uber Trips in Kepler",
+      "text": "A cool visualization project"
     }
   ]
 }
