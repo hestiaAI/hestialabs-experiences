@@ -9,7 +9,6 @@
 
 <script>
 import UnitFilterableTable from '~/components/UnitFilterableTable'
-import getCsvHeadersAndItems from '~/utils/csv'
 import FileManager from '~/utils/file-manager'
 
 export default {
@@ -46,7 +45,14 @@ export default {
       this.loading = true
       this.csvText = await this.fileManager.getPreprocessedText(filename)
       try {
-        this.csvContent = await getCsvHeadersAndItems(this.csvText)
+        const { headers, items } = await this.fileManager.getCsvItems(filename)
+        this.csvContent = {
+          items,
+          headers: headers.map(h => ({
+            text: h,
+            value: h
+          }))
+        }
         this.error = false
       } catch (error) {
         this.error = true

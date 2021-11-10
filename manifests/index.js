@@ -1,4 +1,4 @@
-import preprocessors from './preprocessors'
+import allPreprocessors from './preprocessors'
 import { validExtensions, extractFirstDirectory } from './utils'
 
 // require all modules on the path and with the pattern defined
@@ -63,11 +63,11 @@ const manifests = Object.fromEntries(
       files = [],
       multiple = false,
       data: dataFiles = [],
-      preprocessor,
       collaborator,
       isGenericViewer,
       url,
       showDataExplorer,
+      preprocessors = {},
       ...rest
     } = reqJSON(path)
 
@@ -104,9 +104,17 @@ const manifests = Object.fromEntries(
         )
       }
     }
-    if (preprocessor && !(preprocessor in preprocessors)) {
-      throw new Error(`[${dir}] Preprocessor ${preprocessor} does not exist`)
-    }
+    Object.values(preprocessors).forEach(preprocessor => {
+      if (!(preprocessor in allPreprocessors)) {
+        throw new Error(`[${dir}] Preprocessor ${preprocessor} does not exist`)
+      }
+    })
+    const preprocessorFuncs = Object.fromEntries(
+      Object.entries(preprocessors).map(([filename, preprocessorName]) => [
+        filename,
+        allPreprocessors[preprocessorName]
+      ])
+    )
 
     if (isGenericViewer && !showDataExplorer) {
       throw new Error('the explorer experience must show the data explorer')
@@ -124,7 +132,7 @@ const manifests = Object.fromEntries(
         files,
         multiple,
         data,
-        preprocessor,
+        preprocessors: preprocessorFuncs,
         collaborator,
         isGenericViewer,
         url,

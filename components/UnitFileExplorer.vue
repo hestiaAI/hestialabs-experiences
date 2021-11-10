@@ -31,31 +31,12 @@
             <v-card-title class="justify-center">File details</v-card-title>
             <v-card-text>
               <template v-if="selectedItem">
-                <template v-if="selectedItem.type === 'json'">
-                  <unit-json-viewer
-                    v-bind="{ fileManager, filename: selectedItem.filename }"
-                  />
-                </template>
-                <template v-else-if="selectedItem.type === 'csv'">
-                  <unit-csv-viewer
-                    v-bind="{ fileManager, filename: selectedItem.filename }"
-                  />
-                </template>
-                <template v-else-if="selectedItem.type === 'pdf'">
-                  <unit-pdf-viewer v-bind="{ file: selectedItem.file }" />
-                </template>
-                <template v-else-if="selectedItem.type === 'img'">
-                  <unit-image-viewer v-bind="{ file: selectedItem.file }" />
-                </template>
-                <template v-else-if="selectedItem.type === 'html'">
-                  <unit-html-viewer v-bind="{ file: selectedItem.file }" />
-                </template>
-                <template v-else-if="selectedItem.type === 'txt'">
-                  <unit-text-viewer v-bind="{ file: selectedItem.file }" />
-                </template>
-                <template v-else>
-                  <p>Cannot open file type</p>
-                </template>
+                <component
+                  :is="componentForType(selectedItem.type)"
+                  v-bind="{ fileManager, filename: selectedItem.filename }"
+                  v-if="supportedTypes.has(selectedItem.type)"
+                />
+                <p v-else>Cannot open file type</p>
               </template>
               <template v-else>
                 <p>Select a file to see it in more details here</p>
@@ -95,7 +76,8 @@ export default {
   },
   data() {
     return {
-      selectedItem: null
+      selectedItem: null,
+      supportedTypes: new Set(['json', 'csv', 'pdf', 'img', 'html', 'txt'])
     }
   },
   methods: {
@@ -105,6 +87,14 @@ export default {
       if (!containers.has(item?.type)) {
         this.selectedItem = item
       }
+    },
+    componentForType(type) {
+      if (type === 'json') return UnitJsonViewer
+      else if (type === 'csv') return UnitCsvViewer
+      else if (type === 'pdf') return UnitPdfViewer
+      else if (type === 'img') return UnitImageViewer
+      else if (type === 'html') return UnitHtmlViewer
+      else return UnitTextViewer
     }
   }
 }

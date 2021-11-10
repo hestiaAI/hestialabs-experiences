@@ -1,8 +1,5 @@
-import getCsvHeadersAndItems from '~/utils/csv'
-
-async function trackerControl(inputFiles) {
-  const data = Object.values(inputFiles)[0]
-  return await getCsvHeadersAndItems(data)
+async function trackerControl(fileManager) {
+  return await fileManager.getCsvItems('input.csv')
 }
 
 export default {

@@ -5,9 +5,6 @@
   "ext": "csv",
   "data": ["tracker-control.csv"],
   "files": ["input.csv"],
-  "preprocessors": {
-    "input.csv": "tinder"
-  },
   "defaultView": [
     {
       "customPipeline": "trackerControl",

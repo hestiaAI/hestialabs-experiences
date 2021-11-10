@@ -72,7 +72,7 @@ export default {
   watch: {
     fileManager: {
       immediate: true,
-      handler(fileManager) {
+      handler(_) {
         if (!this.parameterName) {
           this.runQuery()
         }
@@ -86,7 +86,7 @@ export default {
       this.progress = true
       try {
         const { headers, items } = await this.customPipeline(
-          this.fileManager.preprocessedTexts,
+          this.fileManager,
           this.parameter
         )
         this.$emit('update', { headers, items })

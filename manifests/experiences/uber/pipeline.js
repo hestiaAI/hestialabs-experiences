@@ -1,8 +1,5 @@
-import getCsvHeadersAndItems from '~/utils/csv'
-
-async function tripsData(inputFiles) {
-  const data = inputFiles['Uber Data/Rider/trips_data.csv']
-  return await getCsvHeadersAndItems(data)
+async function tripsData(fileManager) {
+  return await fileManager.getCsvItems('Uber Data/Rider/trips_data.csv')
 }
 
 export default {

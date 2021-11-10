@@ -110,7 +110,6 @@
 </template>
 
 <script>
-/* eslint-disable vue/require-default-prop */
 import csvProcessors from '@/manifests/csv-processors'
 import UnitFilterableTable from '~/components/UnitFilterableTable'
 import FileManager from '~/utils/file-manager'
@@ -118,7 +117,10 @@ import FileManager from '~/utils/file-manager'
 export default {
   components: { UnitFilterableTable },
   props: {
-    visualizations: Object,
+    visualizations: {
+      type: Object,
+      default: () => {}
+    },
     selectedExample: {
       type: Object,
       required: true

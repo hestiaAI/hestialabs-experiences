@@ -57,7 +57,7 @@
       </v-row>
       <v-row v-if="showDataExplorer">
         <v-col>
-          <unit-file-explorer v-bind="{ fileManager, preprocessor }" />
+          <unit-file-explorer v-bind="{ fileManager }" />
         </v-col>
       </v-row>
       <v-row v-if="$store.state.config.consent">
@@ -85,10 +85,10 @@ export default {
     title: String,
     dataPortal: String,
     customPipelines: Object,
-    preprocessor: String,
     isGenericViewer: Boolean,
     showDataExplorer: Boolean,
-    files: Array
+    files: Array,
+    preprocessors: Object
   },
   data() {
     // main example is selected by default
@@ -103,7 +103,7 @@ export default {
       allItems: null,
       allHeaders: null,
       allFiles: null,
-      fileManager: new FileManager()
+      fileManager: new FileManager(this.preprocessors)
     }
   },
   computed: {
@@ -145,14 +145,12 @@ export default {
       const start = new Date()
 
       await this.fileManager.init(uppyFiles)
+      const processedFiles = await this.fileManager.preprocessFiles(this.files)
 
       if (this.isRdfNeeded && this.selectedExample.yarrrml) {
         try {
           this.rml = await parseYarrrml(this.selectedExample.yarrrml)
-          rdfUtils.generateRDF(
-            this.rml,
-            await this.fileManager.preprocessFiles(this.files)
-          )
+          rdfUtils.generateRDF(this.rml, processedFiles)
         } catch (error) {
           this.handleError(error)
           return
