@@ -22,14 +22,14 @@
         </v-col>
         <template v-if="items.length">
           <v-col
-            v-for="(specFile, index) in vegaFiles"
-            :key="index"
+            v-for="(specFile, vegaIndex) in vegaFiles"
+            :key="vegaIndex"
             cols="12"
             style="text-align: center"
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="processedItems[index]"
+              :values="processedItems[vegaIndex]"
               :div-id="`viz-${query.name}-${specFile.name}`"
             />
           </v-col>
@@ -71,26 +71,29 @@
           <template v-if="items.length">
             <v-row>
               <v-col
-                v-for="(specFile, index) in vegaFiles"
-                :key="'vega-' + index"
+                v-for="(specFile, vegaIndex) in vegaFiles"
+                :key="'vega-' + vegaIndex"
                 style="text-align: center"
               >
                 <unit-vega-viz
                   :spec-file="specFile"
-                  :values="processedItems[index]"
-                  :div-id="`viz-${i}-${specFile.name}`"
+                  :values="processedItems[vegaIndex]"
+                  :div-id="`viz-${index}-${specFile.name}`"
                 />
               </v-col>
             </v-row>
             <v-row
-              v-for="(graphName, index) in vizVueGraphs"
-              :key="'viz-vue-' + index"
+              v-for="(graphName, vizVueIndex) in vizVueGraphs"
+              :key="'viz-vue-' + vizVueIndex"
             >
               <v-col>
                 <vue-graph-by-name :graph-name="graphName" :values="items" />
               </v-col>
             </v-row>
-            <v-row v-for="(src, index) in vizUrls" :key="'viz-url-' + index">
+            <v-row
+              v-for="(src, vizUrlIndex) in vizUrls"
+              :key="'viz-url-' + vizUrlIndex"
+            >
               <v-col>
                 <unit-iframe :src="src" :values="items" />
               </v-col>
@@ -137,7 +140,7 @@ export default {
       type: Boolean,
       default: false
     },
-    i: {
+    index: {
       type: Number,
       default: 0
     },
@@ -213,7 +216,7 @@ export default {
       this.headers = headers.map(h => ({ text: h, value: h }))
       this.items = items
       this.finished = true
-      this.$emit('update', { i: this.i, headers, items })
+      this.$emit('update', { index: this.index, headers, items })
     },
     onChangeSelector(query) {
       this.$emit('change', query)

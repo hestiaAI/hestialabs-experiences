@@ -37,7 +37,7 @@
               customPipeline:
                 customPipelines[defaultViewElements.customPipeline],
               inputFiles,
-              i: index
+              index
             }"
             @update="onQueryUpdate"
           />
@@ -48,7 +48,7 @@
               visualizations,
               defaultViewElements,
               query: queries[index],
-              i: index
+              index
             }"
             @update="onQueryUpdate"
           />
@@ -169,9 +169,11 @@ export default {
 
       this.progress = false
     },
-    onQueryUpdate({ i, headers, items }) {
-      this.allHeaders[i] = JSON.stringify(headers)
-      this.allItems[i] = JSON.stringify(items)
+    onQueryUpdate({ index, headers, items }) {
+      this.allHeaders[index] = JSON.stringify(headers)
+
+      // console.log('allhit', JSON.stringify(this.allHeaders), this.allItems)
+      this.allItems[index] = JSON.stringify(items)
     }
   }
 }
