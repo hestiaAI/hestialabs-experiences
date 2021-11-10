@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" md="12">
+      <v-col cols="12" md="12" class="text-center">
         <div id="sunburst">
           <v-breadcrumbs :items="bcItems" class="breadCrumb"></v-breadcrumbs>
         </div>
@@ -25,9 +25,8 @@ export default {
     return {
       bcItems: [
         {
-          text: 'Swisscom Business',
-          disabled: true,
-          href: 'test'
+          text: 'All',
+          disabled: true
         }
       ]
     }
@@ -60,8 +59,11 @@ export default {
       root.each(d => (d.current = d))
 
       // Global Variables
-      const width = d3.select('#sunburst').node().getBoundingClientRect().width
-      const radius = width / 8 - 10
+      const width = Math.min(
+        d3.select('#sunburst').node().getBoundingClientRect().width,
+        600
+      )
+      const radius = width / 6
       const color = d3.scaleOrdinal().domain(colorDomain).range(d3.schemeDark2)
       // const format = d3.format(',d')
 
@@ -246,6 +248,7 @@ export default {
             href: 'test'
           }
         })
+        this.bcItems.unshift({ text: 'All', disabled: true })
         infoPercent.text(percentageString)
         infoNumber.text(`${d.value} out of ${totalSize}`)
         infoPercent.attr('opacity', 1)
@@ -262,7 +265,7 @@ export default {
       }
 
       const mouseleave = (e, d) => {
-        this.bcItems = []
+        this.bcItems = [{ text: 'All', disabled: true }]
         infoPercent.attr('opacity', 0)
         infoNumber.attr('opacity', 0)
         d3.selectAll('path').style('opacity', 1)
