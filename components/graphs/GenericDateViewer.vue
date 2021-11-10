@@ -16,7 +16,7 @@
           v-model="timeRange"
           row
           mandatory
-          @change="timeRangeChange"
+          @change="filterTimeRange"
         >
           <template #label>
             <div>Select a <strong>time range</strong></div>
@@ -33,7 +33,7 @@
     <v-row>
       <v-col cols="12">
         <v-tabs v-model="tab">
-          <v-tab href="#overview" @click="resetFilters">Overview</v-tab>
+          <v-tab href="#overview" @click="resetSourceFilter">Overview</v-tab>
           <v-tab href="#details">Details</v-tab>
         </v-tabs>
         <v-tabs-items v-model="tab">
@@ -81,7 +81,7 @@
                     class="ma-1"
                     outlined
                     color="indigo"
-                    @click="filterActivity(item.title)"
+                    @click="filterSource(item.title)"
                   >
                     See All {{ item.title }} activity
                   </v-btn>
@@ -90,10 +90,10 @@
             </v-list>
           </v-tab-item>
           <v-tab-item value="details">
-            <p v-if="currentFilter" class="text-subtitle-1 text-right">
+            <p v-if="currSourceFilter" class="text-subtitle-1 text-right">
               Current Filter:
-              <v-btn small elevation="2" @click="resetFilters">
-                <strong>{{ currentFilter }}</strong>
+              <v-btn small elevation="2" @click="resetSourceFilter">
+                <strong>{{ currSourceFilter }}</strong>
                 <v-icon x-small> $vuetify.icons.mdiClose </v-icon>
               </v-btn>
             </p>
@@ -120,6 +120,10 @@ export default {
   name: 'GenericDateViewer',
   components: { UnitFilterableTable },
   props: {
+    title: {
+      type: String,
+      default: () => 'Google'
+    },
     values: {
       type: Array,
       default: () => []
@@ -131,7 +135,6 @@ export default {
   },
   data() {
     return {
-      title: 'Google',
       total: null,
       timeRange: null,
       tab: null,
@@ -142,7 +145,7 @@ export default {
       maxDate: null,
       currMinDateStr: 'NaN',
       currMaxDateStr: 'NaN',
-      currentFilter: null,
+      currSourceFilter: null,
       items: [],
       header: [
         { text: 'Date', value: 'dateStr' },
@@ -162,7 +165,155 @@ export default {
     this.drawViz()
   },
   methods: {
-    timeRangeChange(newValue) {
+    // Change tab
+    tabDetails() {
+      this.tab = 'details'
+    },
+    // When no data available for a specific time period, show an empty message
+    showEmptyMessage(chart) {
+      const isEmpty =
+        d3.sum(chart.group().all().map(chart.valueAccessor())) === 0
+      const data = isEmpty ? [1] : []
+      const empty = chart
+        .svg()
+        .selectAll('.empty-message')
+        .data(data)
+        .enter()
+        .append('text')
+        .text('No data during this time period')
+        .attr('text-anchor', 'middle')
+        .attr('alignment-baseline', 'middle')
+        .attr('x', chart.margins().left + chart.effectiveWidth() / 2)
+        .attr('y', chart.margins().top + chart.effectiveHeight() / 2)
+        .attr('class', 'empty-message')
+        .style('opacity', 0)
+      if (!isEmpty) {
+        chart.svg().selectAll('.empty-message').remove()
+      } else {
+        empty.transition().duration(1000).style('opacity', 1)
+      }
+    },
+    // Make a Fake group to display only value above 0 on the row graphs
+    removeEmptyBins(group) {
+      return {
+        top(n) {
+          return group
+            .top(Infinity)
+            .filter(function (d) {
+              return d.value.count !== 0 && d.value !== 0
+            })
+            .slice(0, n)
+        },
+        all() {
+          return group.all()
+        }
+      }
+    },
+    // Main function to init component
+    drawViz() {
+      // Init table values
+      this.results = this.values
+
+      // Format dates
+      const dateFormatParser = d3.timeParse(this.dateFormat)
+      const formatTime = d3.timeFormat('%Y-%m-%d')
+      const formatTimeS = d3.timeFormat('%d %B %Y')
+      this.results.forEach(d => {
+        d.date = dateFormatParser(d.date)
+        d.dateStr = formatTime(d.date)
+        d.day = d3.timeDay(d.date) // pre-calculate days for better performance
+        d.hour = d3.timeHour(d.date).getHours() // pre-calculate hours for better performance
+      })
+
+      // Build index for crossfiltering
+      const ndx = crossfilter(this.results)
+      const all = ndx.groupAll()
+
+      // Compute groupby Count for overview
+      const overviewDimension = ndx.dimension(d => [
+        d.event_source,
+        d.event_type,
+        d.icon
+      ])
+      const overviewGroup = overviewDimension.group().reduceCount()
+      this.filterItems(overviewGroup)
+      this.total = all.value()
+
+      // Dimension to filter by source
+      this.activityDimension = ndx.dimension(d => d.event_source)
+
+      // Update items on each change of crossfilter
+      ndx.onChange(() => {
+        this.filterItems(overviewGroup)
+        this.total = all.value()
+        this.results = ndx.allFiltered()
+      })
+
+      // Compute and draw line chart
+      this.lineChart = new dc.LineChart('#line-chart')
+      this.volumeDimension = ndx.dimension(d => d.day)
+      const volumeGroup = this.volumeDimension.group().reduceCount()
+      this.maxDate = this.volumeDimension.top(1)[0].day
+      this.currMaxDateStr = formatTimeS(this.maxDate)
+      this.minDate = this.volumeDimension.bottom(1)[0].day
+      this.currMinDateStr = formatTimeS(this.minDate)
+      const height = 240
+      this.lineChart
+        .renderArea(true)
+        .width(d3.select('#line-chart').node().getBoundingClientRect().width)
+        .height(height)
+        .transitionDuration(1000)
+        .margins({ top: 20, right: 10, bottom: 20, left: 20 })
+        .group(volumeGroup)
+        .dimension(this.volumeDimension)
+        .curve(d3.curveCardinal.tension(0.05))
+        .x(d3.scaleTime())
+        .y(d3.scaleLinear().domain([0, 10]))
+        .ordinalColors(['#58539E'])
+        .elasticX(true)
+        .elasticY(true)
+        .brushOn(false)
+        .xyTipsOn(true)
+        .mouseZoomable(false)
+        .renderHorizontalGridLines(false)
+        .clipPadding(10)
+        .title(d => formatTime(+d.key) + ': ' + d.value)
+        .yAxisLabel('')
+        .xAxis()
+        .ticks(5)
+
+      this.lineChart.on('filtered', () => {
+        const filters = this.volumeDimension.currentFilter()
+        if (filters) {
+          this.currMinDateStr = formatTimeS(filters[0])
+          this.currMaxDateStr = formatTimeS(filters[1])
+        }
+      })
+
+      // Compute and draw row chart
+      const rowChart = new dc.RowChart('#row-chart')
+      const typeDimension = ndx.dimension(d => d.event_type)
+      const typeGroup = typeDimension.group().reduceCount()
+      const width = d3.select('#row-chart').node().getBoundingClientRect().width
+      rowChart
+        .width(width)
+        .height(height)
+        .margins({ top: 20, left: 10, right: 10, bottom: 20 })
+        .group(this.removeEmptyBins(typeGroup))
+        .dimension(typeDimension)
+        .ordinalColors(['#58539E', '#847CEB', '#605BAB', '#4A4685', '#35325E'])
+        .label(d => d.key)
+        .data(group => group.top(10))
+        .title(d => d.value)
+        .elasticX(true)
+        .xAxis()
+        .ticks(4)
+
+      rowChart.on('pretransition', this.showEmptyMessage)
+      // Render all graphs
+      dc.renderAll()
+    },
+    filterTimeRange(newValue) {
       switch (newValue) {
         case 'ALL':
           if (this.lineChart !== null) {
@@ -243,21 +394,7 @@ export default {
       }
       dc.renderAll()
     },
-    tabDetails() {
-      this.tab = 'details'
-    },
-    filterActivity(title) {
-      this.currentFilter = title
-      this.activityDimension.filter(title)
-      dc.redrawAll()
-      this.tabDetails()
-    },
-    resetFilters() {
-      this.currentFilter = null
-      this.activityDimension.filter(null)
-      dc.redrawAll()
-    },
-    updateItems(overviewGroup) {
+    filterItems(overviewGroup) {
       const counts = overviewGroup.top(Infinity).reduce((p, c) => {
         if (!Object.prototype.hasOwnProperty.call(p, c.key[0])) {
           p[c.key[0]] = {}
@@ -272,147 +409,16 @@ export default {
       }, {})
       this.items = Object.values(counts)
     },
-    // When no data available for a specific time period, show an empty message
-    showEmptyMessage(chart) {
-      const isEmpty =
-        d3.sum(chart.group().all().map(chart.valueAccessor())) === 0
-      const data = isEmpty ? [1] : []
-      const empty = chart
-        .svg()
-        .selectAll('.empty-message')
-        .data(data)
-        .enter()
-        .append('text')
-        .text('No data during this time period')
-        .attr('text-anchor', 'middle')
-        .attr('alignment-baseline', 'middle')
-        .attr('x', chart.margins().left + chart.effectiveWidth() / 2)
-        .attr('y', chart.margins().top + chart.effectiveHeight() / 2)
-        .attr('class', 'empty-message')
-        .style('opacity', 0)
-      if (!isEmpty) {
-        chart.svg().selectAll('.empty-message').remove()
-      } else {
-        empty.transition().duration(1000).style('opacity', 1)
-      }
+    filterSource(title) {
+      this.currSourceFilter = title
+      this.activityDimension.filter(title)
+      dc.redrawAll()
+      this.tabDetails()
     },
-    // Make a Fake group to display only value above 0 on the row graphs
-    removeEmptyBins(group) {
-      return {
-        top(n) {
-          return group
-            .top(Infinity)
-            .filter(function (d) {
-              return d.value.count !== 0 && d.value !== 0
-            })
-            .slice(0, n)
-        },
-        all() {
-          return group.all()
-        }
-      }
-    },
-    drawViz() {
-      this.results = this.values
-
-      // Format dates
-      const dateFormatParser = d3.timeParse(this.dateFormat)
-      const formatTime = d3.timeFormat('%Y-%m-%d')
-      const formatTimeS = d3.timeFormat('%d %B %Y')
-      this.results.forEach(d => {
-        d.date = dateFormatParser(d.date)
-        d.dateStr = formatTime(d.date)
-        d.day = d3.timeDay(d.date) // pre-calculate days for better performance
-        d.hour = d3.timeHour(d.date).getHours() // pre-calculate hours for better performance
-      })
-
-      const ndx = crossfilter(this.results)
-      const all = ndx.groupAll()
-
-      // Compute groupby Count for overview
-      const overviewDimension = ndx.dimension(d => [
-        d.event_source,
-        d.event_type,
-        d.icon
-      ])
-      const overviewGroup = overviewDimension.group().reduceCount()
-      this.updateItems(overviewGroup)
-      this.total = all.value()
-
-      // To filter by source
-      this.activityDimension = ndx.dimension(d => d.event_source)
-
-      // Update items on each change of crossfilter
-      ndx.onChange(() => {
-        this.updateItems(overviewGroup)
-        this.total = all.value()
-        this.results = ndx.allFiltered()
-      })
-
-      // Compute and draw line chart
-      this.lineChart = new dc.LineChart('#line-chart')
-      this.volumeDimension = ndx.dimension(d => d.day)
-      const volumeGroup = this.volumeDimension.group().reduceCount()
-      this.maxDate = this.volumeDimension.top(1)[0].day
-      this.currMaxDateStr = formatTimeS(this.maxDate)
-      this.minDate = this.volumeDimension.bottom(1)[0].day
-      this.currMinDateStr = formatTimeS(this.minDate)
-      const height = 240
-      this.lineChart
-        .renderArea(true)
-        .width(d3.select('#line-chart').node().getBoundingClientRect().width)
-        .height(height)
-        .transitionDuration(1000)
-        .margins({ top: 20, right: 10, bottom: 20, left: 20 })
-        .group(volumeGroup)
-        .dimension(this.volumeDimension)
-        .curve(d3.curveCardinal.tension(0.05))
-        .x(d3.scaleTime())
-        .y(d3.scaleLinear().domain([0, 10]))
-        .ordinalColors(['#58539E'])
-        .elasticX(true)
-        .elasticY(true)
-        .brushOn(false)
-        .xyTipsOn(true)
-        .mouseZoomable(false)
-        .renderHorizontalGridLines(false)
-        .clipPadding(10)
-        .title(d => formatTime(+d.key) + ': ' + d.value)
-        .yAxisLabel('')
-        .xAxis()
-        .ticks(5)
-
-      this.lineChart.on('filtered', () => {
-        const filters = this.volumeDimension.currentFilter()
-        if (filters) {
-          this.currMinDateStr = formatTimeS(filters[0])
-          this.currMaxDateStr = formatTimeS(filters[1])
-        }
-      })
-
-      // Compute and draw row chart
-      const rowChart = new dc.RowChart('#row-chart')
-      const typeDimension = ndx.dimension(d => d.event_type)
-      const typeGroup = typeDimension.group().reduceCount()
-      const width = d3.select('#row-chart').node().getBoundingClientRect().width
-
-      rowChart
-        .width(width)
-        .height(height)
-        .margins({ top: 20, left: 10, right: 10, bottom: 20 })
-        .group(this.removeEmptyBins(typeGroup))
-        .dimension(typeDimension)
-        .ordinalColors(['#58539E', '#847CEB', '#605BAB', '#4A4685', '#35325E'])
-        .label(d => d.key)
-        .data(group => group.top(10))
-        .title(d => d.value)
-        .elasticX(true)
-        .xAxis()
-        .ticks(4)
-
-      rowChart.on('pretransition', this.showEmptyMessage)
-      // Render all graphs
-      dc.renderAll()
+    resetSourceFilter() {
+      this.currSourceFilter = null
+      this.activityDimension.filter(null)
+      dc.redrawAll()
     }
   }
 }
