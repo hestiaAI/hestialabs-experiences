@@ -7,7 +7,7 @@
     "files": [],
     "fileMatchers": [
       {
-        "regex": "Takeout/(.+?)/(.+?)/(?1)\\.json",
+        "regex": "Takeout/(.+?)/(.+?)/(.+?)\\.json",
         "dateField": {
           "name": "time",
           "format": "ISO8601"

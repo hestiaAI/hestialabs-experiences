@@ -134,6 +134,14 @@ export default class FileManager {
   }
 
   /**
+   * Returns an array with all the (potentially modified by {@link removeTopmostFilenames}) file names in the File Manager.
+   * @returns {String[]}
+   */
+  getFilenames() {
+    return Object.keys(this.fileDict)
+  }
+
+  /**
    * Given a list of file names, fills the FileManager entries for preprocessed text and returns an
    * object mapping file name to preprocessed text (similarly to the inputFiles object that existed before).
    * @param {String[]} filenames

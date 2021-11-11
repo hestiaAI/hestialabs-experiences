@@ -1,14 +1,25 @@
-import * as csv from '@fast-csv/parse'
-
-async function googleMyActivity(inputFiles) {
-  const data = Object.values(inputFiles)[0]
-  return await new Promise(resolve => {
-    const items = []
-    csv
-      .parseString(data, { headers: true })
-      .on('data', row => items.push(row))
-      .on('end', () => resolve({ headers: Object.keys(items[0]), items }))
+async function googleMyActivity(fileManager) {
+  const regex = /Takeout\/(.+?)\/(.+?)\/(.+?)\.json/
+  const matchingFilenames = fileManager.getFilenames().filter(name => {
+    console.log(name)
+    return regex.test(name)
   })
+  console.log(matchingFilenames)
+  const files = await fileManager.preprocessFiles(matchingFilenames)
+  const items = Object.entries(files).flatMap(([name, text]) => {
+    try {
+      return JSON.parse(text).map(obj => ({
+        date: obj.time,
+        event_source: obj.header,
+        event_type: obj.title
+      }))
+    } catch (error) {
+      return []
+    }
+  })
+  console.log(items)
+  const headers = ['date', 'event_source', 'event_type', 'event_value']
+  return { items, headers }
 }
 
 export default {
