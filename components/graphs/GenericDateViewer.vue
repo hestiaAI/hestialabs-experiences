@@ -128,9 +128,9 @@ export default {
       type: Array,
       default: () => []
     },
-    dateFormat: {
-      type: String,
-      default: () => '%Y-%m-%dT%H:%M:%S.%L%Z'
+    dateFormats: {
+      type: Array,
+      default: () => ['%Y-%m-%dT%H:%M:%S%Z', '%Y-%m-%dT%H:%M:%S.%L%Z']
     }
   },
   data() {
@@ -215,11 +215,15 @@ export default {
       this.results = this.values
 
       // Format dates
-      const dateFormatParser = d3.timeParse(this.dateFormat)
+      const dateFormatParsers = this.dateFormats.map(d => d3.timeParse(d))
       const formatTime = d3.timeFormat('%Y-%m-%d')
       const formatTimeS = d3.timeFormat('%d %B %Y')
       this.results.forEach(d => {
-        d.date = dateFormatParser(d.date)
+        d.dateSrc = d.date
+        dateFormatParsers.some(parser => {
+          d.date = parser(d.dateSrc)
+          return d.date != null
+        })
         d.dateStr = formatTime(d.date)
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
         d.hour = d3.timeHour(d.date).getHours() // pre-calculate hours for better performance
