@@ -268,6 +268,7 @@ export default {
       }
 
       const mouseover = (e, d) => {
+        if (d.depth - currentLevel.length > 1) return
         // Find all ancestors of current overred element
         const ancestors = getAncestors(d)
 
@@ -335,6 +336,6 @@ body {
   color: #22313f;
 }
 .breadCrumb.v-breadcrumbs li {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 </style>
