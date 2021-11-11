@@ -77,10 +77,12 @@ export default class FileManager {
 
   /**
    * Builds a FileManager object without any files, just setting the configuration.
-   * @param {object} preprocessors maps file name to preprocessor function
+   * @param {Object} preprocessors maps file name to preprocessor function
+   * @param {Boolean} allowMissingFiles
    */
-  constructor(preprocessors) {
+  constructor(preprocessors, allowMissingFiles = false) {
     this.preprocessors = preprocessors ?? {}
+    this.allowMissingFiles = allowMissingFiles
     this.setInitialValues()
   }
 
@@ -106,7 +108,7 @@ export default class FileManager {
    * If the experience supports a zip as input, the name of the zip is removed from the path of all the files inside:
    *   'my-zip.zip/folder/file.txt' becomes 'folder/file.txt'
    * Note that it only changes the name by which we index the file, and not the actual name of the File object.
-   * @param {Tuple<String, File>[]} filePairs
+   * @param {[String, File][]} filePairs
    * @returns {{[p: String]: File}}
    */
   static removeTopmostFilenames(filePairs) {
@@ -169,7 +171,10 @@ export default class FileManager {
    */
   async getText(filePath) {
     if (!this.hasFile(filePath)) {
-      throw new Error(`${filePath} doesn't exist in the file manager`)
+      if (this.allowMissingFiles) {
+        return '{}'
+      }
+      throw new Error(`The file ${filePath} was not provided.`)
     }
     if (!Object.hasOwn(this.#fileTexts, filePath)) {
       this.#fileTexts[filePath] = await this.fileDict[filePath].text()
@@ -185,8 +190,12 @@ export default class FileManager {
   async getPreprocessedText(filePath) {
     if (!Object.hasOwn(this.#preprocessedTexts, filePath)) {
       const text = await this.getText(filePath)
-      const preprocess = this.getPreprocessor(filePath)
-      this.#preprocessedTexts[filePath] = preprocess(text)
+      if (text === '' && this.allowMissingFiles) {
+        this.#preprocessedTexts[filePath] = text
+      } else {
+        const preprocess = this.getPreprocessor(filePath)
+        this.#preprocessedTexts[filePath] = preprocess(text)
+      }
     }
     return this.#preprocessedTexts[filePath]
   }

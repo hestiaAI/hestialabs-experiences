@@ -222,6 +222,7 @@ export default {
     },
     returnFiles() {
       const files = this.uppy.getFiles().map(f => f.data)
+      this.status = true
       this.$emit('update', files)
     }
   }

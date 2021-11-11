@@ -120,10 +120,10 @@ export default {
         'preprocessors',
         'isGenericViewer',
         'showDataExplorer',
-        'files'
+        'files',
+        'allowMissingFiles'
       ]
-      const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
-      return props
+      return Object.fromEntries(propNames.map(k => [k, this[k]]))
     },
     isComponent() {
       if (this.$store.state.power) {

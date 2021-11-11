@@ -88,7 +88,8 @@ export default {
     isGenericViewer: Boolean,
     showDataExplorer: Boolean,
     files: Array,
-    preprocessors: Object
+    preprocessors: Object,
+    allowMissingFiles: Boolean
   },
   data() {
     // main example is selected by default
@@ -103,7 +104,7 @@ export default {
       allItems: null,
       allHeaders: null,
       allFiles: null,
-      fileManager: new FileManager(this.preprocessors)
+      fileManager: new FileManager(this.preprocessors, this.allowMissingFiles)
     }
   },
   computed: {
@@ -136,6 +137,7 @@ export default {
       console.error(error)
       this.error = true
       this.message = error instanceof Error ? error.message : error
+      this.progress = false
     },
     async onUnitFilesUpdate(uppyFiles) {
       this.message = ''
@@ -145,12 +147,18 @@ export default {
       const start = new Date()
 
       await this.fileManager.init(uppyFiles)
-      const processedFiles = await this.fileManager.preprocessFiles(this.files)
+      let processedFiles
+      try {
+        processedFiles = await this.fileManager.preprocessFiles(this.files)
+      } catch (error) {
+        this.handleError(error)
+        return
+      }
 
       if (this.isRdfNeeded && this.selectedExample.yarrrml) {
         try {
           this.rml = await parseYarrrml(this.selectedExample.yarrrml)
-          rdfUtils.generateRDF(this.rml, processedFiles)
+          await rdfUtils.generateRDF(this.rml, processedFiles)
         } catch (error) {
           this.handleError(error)
           return

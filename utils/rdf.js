@@ -8,26 +8,29 @@ export function generateRDF(rml, inputFiles, toRDF = true) {
 
   worker.postMessage(rocketRMLParams)
 
-  worker.addEventListener('message', async ({ data }) => {
-    if (data instanceof Error) {
-      throw data
-    }
+  return new Promise(resolve => {
+    worker.addEventListener('message', async ({ data }) => {
+      if (data instanceof Error) {
+        throw data
+      }
 
-    const { rdf, jsonld } = await arrayBufferToObject(data)
+      const { rdf, jsonld } = await arrayBufferToObject(data)
 
-    if (!rdf && !jsonld) {
-      throw new Error(
-        'No data found. Check that the file hierarchy has not been modified after downloading it from the data portal.'
-      )
-    }
+      if (!rdf && !jsonld) {
+        throw new Error(
+          'No data found. Check that the file hierarchy has not been modified after downloading it from the data portal.'
+        )
+      }
 
-    if (rdf) {
-      const quads = rdfToQuads(rdf)
-      await quadstore.replaceQuads(quads)
-    } else {
-      // json-ld
-      await quadstore.replaceQuads([])
-    }
+      if (rdf) {
+        const quads = rdfToQuads(rdf)
+        await quadstore.replaceQuads(quads)
+      } else {
+        // json-ld
+        await quadstore.replaceQuads([])
+      }
+      resolve()
+    })
   })
 }
 

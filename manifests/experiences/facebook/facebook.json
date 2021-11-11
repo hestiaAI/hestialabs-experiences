@@ -22,17 +22,19 @@
     "icon": "the-eyeballs.svg",
     "url": "https://eyeballs.hestialabs.org/"
   },
-  "visualizations": {"main": [
-    {
-      "vega": "top-k-advertisers",
-      "query": "off-facebook-activity-count"
-    },
-    {
-      "vega": "sunburst-off-facebook-activity",
-      "query": "off-facebook-activity-type-count",
-      "preprocessor": "sunburstTargetingAdvertiser"
-    }
-  ]},
+  "visualizations": {
+    "main": [
+      {
+        "vega": "top-k-advertisers",
+        "query": "off-facebook-activity-count"
+      },
+      {
+        "vega": "sunburst-off-facebook-activity",
+        "query": "off-facebook-activity-type-count",
+        "preprocessor": "sunburstTargetingAdvertiser"
+      }
+    ]
+  },
   "defaultView": [
     {
       "query": "off-facebook-activity-count",
