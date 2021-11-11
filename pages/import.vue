@@ -77,7 +77,7 @@
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="allProcessedItems[resultIndex][vegaIndex]"
+              :values="allProcessedVegaItems[resultIndex][vegaIndex]"
               :div-id="`viz-${resultIndex}-${specFile.name}`"
             />
           </v-col>
@@ -150,14 +150,14 @@ export default {
         r.visualizations?.filter(n => n.endsWith('.vue'))
       )
     },
-    allProcessedItems() {
+    allProcessedVegaItems() {
       // For each block
       return this.results.map((result, resultIndex) =>
         // For each viz
         this.allVegaFiles[resultIndex].map(specFile => {
           const processor = this.findProcessor(result, specFile)
           if (processor) {
-            return process(result.headers, result.items)
+            return processor(result.headers, result.items)
           }
           return result.items
         })

@@ -20,7 +20,7 @@
         <v-col cols="12" lg="6">
           <unit-filterable-table v-bind="{ headers, items }" />
         </v-col>
-        <template v-if="items.length">
+        <template v-if="result">
           <v-col
             v-for="(specFile, vegaIndex) in vegaFiles"
             :key="vegaIndex"
@@ -29,7 +29,7 @@
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="processedItems[vegaIndex]"
+              :values="processedVegaItems[vegaIndex]"
               :div-id="`viz-${query.name}-${specFile.name}`"
             />
           </v-col>
@@ -68,7 +68,7 @@
           </v-col>
         </v-row>
         <template v-if="finished">
-          <template v-if="items.length">
+          <template v-if="result">
             <v-row>
               <v-col
                 v-for="(specFile, vegaIndex) in vegaFiles"
@@ -77,7 +77,7 @@
               >
                 <unit-vega-viz
                   :spec-file="specFile"
-                  :values="processedItems[vegaIndex]"
+                  :values="processedVegaItems[vegaIndex]"
                   :div-id="`viz-${index}-${specFile.name}`"
                 />
               </v-col>
@@ -87,7 +87,10 @@
               :key="'viz-vue-' + vizVueIndex"
             >
               <v-col>
-                <vue-graph-by-name :graph-name="graphName" :values="items" />
+                <vue-graph-by-name
+                  :graph-name="graphName"
+                  :values="result.items"
+                />
               </v-col>
             </v-row>
             <v-row
@@ -120,7 +123,6 @@
 <script>
 /* eslint-disable vue/require-default-prop */
 import csvProcessors from '@/manifests/csv-processors'
-
 export default {
   props: {
     visualizations: Object,
@@ -155,12 +157,19 @@ export default {
   },
   data() {
     return {
-      headers: [],
-      items: [],
+      result: undefined,
       finished: false
     }
   },
   computed: {
+    headers() {
+      const headers = this.result?.headers ? this.result?.headers : []
+      const headersForTable = headers.map(h => ({ text: h, value: h }))
+      return headersForTable
+    },
+    items() {
+      return this.result?.items ? this.result?.items : []
+    },
     exampleVisualizations() {
       const { name } = this.selectedExample
       return this.visualizations?.[name] || []
@@ -190,7 +199,7 @@ export default {
         this.vizNames.includes(s.name)
       )
     },
-    processedItems() {
+    processedVegaItems() {
       return this.vegaFiles.map(specFile => {
         const processor = this.findProcessor(specFile)
         if (processor) {
@@ -214,10 +223,10 @@ export default {
       }
       return undefined
     },
-    onUnitResultsUpdate({ headers = [], items = [], error }) {
+    onUnitResultsUpdate(result) {
+      this.result = result
+      const { headers = [], items = [] } = result
       // Vuetify DataTable component expects text and value properties
-      this.headers = headers.map(h => ({ text: h, value: h }))
-      this.items = items
       this.finished = true
       this.$emit('update', { index: this.index, headers, items })
     },
