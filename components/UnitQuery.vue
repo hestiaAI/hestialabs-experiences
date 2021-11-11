@@ -18,7 +18,7 @@
           />
         </v-col>
         <v-col cols="12" lg="6">
-          <unit-filterable-table v-bind="{ headers, items }" />
+          <unit-filterable-table v-bind="tableData" />
         </v-col>
         <template v-if="result">
           <v-col
@@ -29,7 +29,7 @@
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="processedVegaItems[vegaIndex]"
+              :data="processResultForVega(result, specFile)"
               :div-id="`viz-${query.name}-${specFile.name}`"
             />
           </v-col>
@@ -77,7 +77,7 @@
               >
                 <unit-vega-viz
                   :spec-file="specFile"
-                  :values="processedVegaItems[vegaIndex]"
+                  :data="processResultForVega(result, specFile)"
                   :div-id="`viz-${index}-${specFile.name}`"
                 />
               </v-col>
@@ -103,7 +103,7 @@
             </v-row>
             <v-row v-if="showTable">
               <v-col>
-                <unit-filterable-table v-bind="{ headers, items }" />
+                <unit-filterable-table v-bind="tableData" />
               </v-col>
             </v-row>
           </template>
@@ -162,20 +162,20 @@ export default {
     }
   },
   computed: {
-    headers() {
-      const headers = this.result?.headers ? this.result?.headers : []
-      const headersForTable = headers.map(h => ({ text: h, value: h }))
-      return headersForTable
-    },
-    items() {
-      return this.result?.items ? this.result?.items : []
+    tableData() {
+      return {
+        headers: this.makeTableHeaders(this.result),
+        items: this.extractItems(this.result)
+      }
     },
     exampleVisualizations() {
       const { name } = this.selectedExample
       return this.visualizations?.[name] || []
     },
     showTable() {
-      return this.headers.length !== 0 && this.defaultViewElements.showTable
+      return (
+        this.result?.headers?.length !== 0 && this.defaultViewElements.showTable
+      )
     },
     vizNames() {
       let vizNames
@@ -198,18 +198,28 @@ export default {
       return this.selectedExample.vega.filter(s =>
         this.vizNames.includes(s.name)
       )
-    },
-    processedVegaItems() {
-      return this.vegaFiles.map(specFile => {
-        const processor = this.findProcessor(specFile)
-        if (processor) {
-          return processor(this.headers, this.items)[1]
-        }
-        return this.items
-      })
     }
   },
   methods: {
+    makeTableHeaders(result) {
+      const headers = result?.headers ? result?.headers : []
+      const headersForTable = headers.map(h => ({ text: h, value: h }))
+      return headersForTable
+    },
+    extractItems(result) {
+      return result?.items ? result?.items : []
+    },
+    processResultForVega(result, specFile) {
+      const headers = this.makeTableHeaders(result)
+      const items = this.extractItems(result)
+      const processor = this.findProcessor(specFile)
+      if (processor) {
+        const processedItems = processor(headers, items)[1]
+        return { headers, items: processedItems }
+      }
+      const data = { headers, items }
+      return data
+    },
     findProcessor(specFile) {
       if (this.customPipeline === undefined) {
         // Find the viz definition for this query

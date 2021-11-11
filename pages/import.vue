@@ -77,7 +77,7 @@
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="allProcessedVegaItems[resultIndex][vegaIndex]"
+              :data="processResultForVega(result, specFile)"
               :div-id="`viz-${resultIndex}-${specFile.name}`"
             />
           </v-col>
@@ -165,6 +165,15 @@ export default {
     }
   },
   methods: {
+    processResultForVega(result, specFile) {
+      const { headers, items } = result
+      const processor = this.findProcessor(specFile)
+      if (processor) {
+        const processedItems = processor(headers, items)[1]
+        return { headers, items: processedItems }
+      }
+      return { headers, items }
+    },
     findProcessor(result, specFile) {
       const def = this.visualizations.find(
         v => result.query === v.query && specFile.name === v.vega
