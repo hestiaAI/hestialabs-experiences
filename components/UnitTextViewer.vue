@@ -1,34 +1,41 @@
 <template>
   <div>
-    {{ fileText }}
+    {{ text }}
   </div>
 </template>
 
 <script>
+import FileManager from '~/utils/file-manager'
+
 export default {
   name: 'UnitTextViewer',
   props: {
-    file: {
-      type: File,
+    fileManager: {
+      type: FileManager,
+      required: true
+    },
+    filename: {
+      type: String,
       required: true
     }
   },
   data() {
     return {
-      fileText: ''
+      text: ''
     }
   },
   watch: {
-    file: {
-      async handler(newFile) {
-        await this.getFileText(newFile)
+    fileManager: {
+      async handler(_) {
+        this.text = await this.fileManager.getPreprocessedText(this.filename)
       },
       immediate: true
-    }
-  },
-  methods: {
-    async getFileText(file) {
-      this.fileText = await file.text()
+    },
+    filename: {
+      async handler(_) {
+        this.text = await this.fileManager.getPreprocessedText(this.filename)
+      },
+      immediate: true
     }
   }
 }

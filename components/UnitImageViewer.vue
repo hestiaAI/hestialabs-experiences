@@ -3,17 +3,23 @@
 </template>
 
 <script>
+import FileManager from '~/utils/file-manager'
+
 export default {
   name: 'UnitImageViewer',
   props: {
-    file: {
-      type: File,
+    fileManager: {
+      type: FileManager,
+      required: true
+    },
+    filename: {
+      type: String,
       required: true
     }
   },
   computed: {
     imagePath() {
-      return URL.createObjectURL(this.file)
+      return URL.createObjectURL(this.fileManager.fileDict[this.filename])
     }
   }
 }

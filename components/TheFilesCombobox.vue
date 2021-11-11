@@ -22,6 +22,7 @@
 import filesComboboxItems from '@/utils/files-combobox-items'
 
 export default {
+  name: 'TheFilesCombobox',
   data() {
     return {
       filesCombobox: [],

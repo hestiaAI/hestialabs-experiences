@@ -10,6 +10,7 @@ The instances are deployed on [netlify](https://app.netlify.com/teams/hestia/ove
 | netlify name | test-experiences                                                                     | hestia-experiences                                                         | digipower                                                                                      |
 | purpose      | testing, typically with all features and experiences enabled                         | our public showcase                                                        | the sitra project                                                                              |
 | config       | `config/config.json`                                                                 | `config/workshop.json`                                                     | `config/digipower.json`                                                                        |
+| running it locally       | `npm run dev`                                                                 | `CONFIG_NAME=workshop npm run dev`                                                     | `CONFIG_NAME=digipower npm run dev`                                                                        |
 
 ## Build Setup
 

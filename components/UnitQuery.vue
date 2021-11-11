@@ -6,7 +6,7 @@
         <v-col cols="12" lg="6">
           <unit-custom-pipeline
             v-if="customPipeline"
-            v-bind="{ inputFiles, customPipeline }"
+            v-bind="{ fileManager, customPipeline }"
             @update="onUnitResultsUpdate"
           />
           <unit-sparql
@@ -53,7 +53,7 @@
             <unit-custom-pipeline
               v-if="customPipeline !== undefined"
               v-bind="{
-                inputFiles,
+                fileManager,
                 customPipeline,
                 parameterName: defaultViewElements.parameter
               }"
@@ -79,14 +79,6 @@
                   :spec-file="specFile"
                   :values="processedItems[index]"
                   :div-id="`viz-${i}-${specFile.name}`"
-                />
-              </v-col>
-            </v-row>
-            <v-row v-for="(d3File, index) in d3Files" :key="'d3-' + index">
-              <v-col>
-                <unit-d3-viz
-                  :d3-file="d3File"
-                  :values="[44, 8, 15, 16, 23, 42]"
                 />
               </v-col>
             </v-row>
@@ -118,14 +110,17 @@
 </template>
 
 <script>
-/* eslint-disable vue/require-default-prop */
 import csvProcessors from '@/manifests/csv-processors'
 import UnitFilterableTable from '~/components/UnitFilterableTable'
+import FileManager from '~/utils/file-manager'
 
 export default {
   components: { UnitFilterableTable },
   props: {
-    visualizations: Object,
+    visualizations: {
+      type: Object,
+      default: () => {}
+    },
     selectedExample: {
       type: Object,
       required: true
@@ -150,9 +145,9 @@ export default {
       type: Function,
       default: undefined
     },
-    inputFiles: {
-      type: Object,
-      default: null
+    fileManager: {
+      type: FileManager,
+      required: true
     }
   },
   data() {
@@ -183,9 +178,6 @@ export default {
     },
     vueGraphNames() {
       return this.vizNames.filter(n => n.endsWith('.vue'))
-    },
-    d3Files() {
-      return this.selectedExample.d3.filter(s => this.vizNames.includes(s.name))
     },
     vegaFiles() {
       return this.selectedExample.vega.filter(s =>

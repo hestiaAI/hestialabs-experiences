@@ -1,4 +1,4 @@
-import preprocessors from './preprocessors'
+import allPreprocessors from './preprocessors'
 import { validExtensions, extractFirstDirectory } from './utils'
 
 // require all modules on the path and with the pattern defined
@@ -25,11 +25,6 @@ const reqVEGA = require.context(
   './experiences/',
   true,
   /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.vega.json$/
-)
-const reqD3 = require.context(
-  './experiences/',
-  true,
-  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.d3.js$/
 )
 const reqParamSPARQL = require.context(
   './experiences/',
@@ -68,11 +63,11 @@ const manifests = Object.fromEntries(
       files = [],
       multiple = false,
       data: dataFiles = [],
-      preprocessor,
       collaborator,
       isGenericViewer,
       url,
       showDataExplorer,
+      preprocessors = {},
       ...rest
     } = reqJSON(path)
 
@@ -109,9 +104,17 @@ const manifests = Object.fromEntries(
         )
       }
     }
-    if (preprocessor && !(preprocessor in preprocessors)) {
-      throw new Error(`[${dir}] Preprocessor ${preprocessor} does not exist`)
-    }
+    Object.values(preprocessors).forEach(preprocessor => {
+      if (!(preprocessor in allPreprocessors)) {
+        throw new Error(`[${dir}] Preprocessor ${preprocessor} does not exist`)
+      }
+    })
+    const preprocessorFuncs = Object.fromEntries(
+      Object.entries(preprocessors).map(([filename, preprocessorName]) => [
+        filename,
+        allPreprocessors[preprocessorName]
+      ])
+    )
 
     if (isGenericViewer && !showDataExplorer) {
       throw new Error('the explorer experience must show the data explorer')
@@ -129,7 +132,7 @@ const manifests = Object.fromEntries(
         files,
         multiple,
         data,
-        preprocessor,
+        preprocessors: preprocessorFuncs,
         collaborator,
         isGenericViewer,
         url,
@@ -209,21 +212,6 @@ reqVEGA.keys().forEach(path => {
     name: vega,
     type: 'vega',
     vega: reqVEGA(path)
-  })
-})
-
-reqD3.keys().forEach(path => {
-  // Extract directory name of the experience
-  const dir = extractFirstDirectory(path)
-  // Extract example name and D3 query sample name
-  const match = path.match(/\/examples\/(?<example>.+)\/(?<d3>.+\.d3).js/)
-  const { example, d3 } = match.groups
-  // Add D3 sample
-  const exampleObj = manifests[dir].examples.find(e => e.name === example)
-  exampleObj.d3.push({
-    name: d3,
-    type: 'd3',
-    module: reqD3(path)
   })
 })
 

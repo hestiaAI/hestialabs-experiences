@@ -5,15 +5,11 @@ const twitter = string => {
 
 const tinder = string => {
   const json = JSON.parse(string)
-  Object.keys(json.Usage).forEach(function (key, _) {
-    const dates = []
-    Object.keys(json.Usage[key]).forEach(function (date, _) {
-      dates.push({
-        date,
-        value: json.Usage[key][date]
-      })
-    })
-    json.Usage[key] = dates
+  Object.keys(json?.Usage ?? {}).forEach(key => {
+    json.Usage[key] = Object.keys(json.Usage[key]).map(date => ({
+      date,
+      value: json.Usage[key][date]
+    }))
   })
   return JSON.stringify(json)
 }

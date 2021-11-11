@@ -8,7 +8,6 @@
               extensions,
               files,
               multiple,
-              preprocessor,
               allowMissingFiles,
               samples: data,
               isGenericViewer,
@@ -25,6 +24,7 @@
 
 <script>
 import { validExtensions } from '@/manifests/utils'
+import UnitFiles from '~/components/UnitFiles'
 
 // https://github.com/nuxt/components/issues/13#issuecomment-902590143
 const TheDataExperienceDefault = () =>
@@ -34,6 +34,8 @@ const TheDataExperiencePower = () =>
   import('@/components/TheDataExperiencePower.vue')
 
 export default {
+  name: 'TheDataExperience',
+  components: { UnitFiles },
   props: {
     title: {
       type: String,
@@ -77,9 +79,9 @@ export default {
       type: Boolean,
       default: false
     },
-    preprocessor: {
-      type: String,
-      default: undefined
+    preprocessors: {
+      type: Object,
+      default: () => {}
     },
     allowMissingFiles: {
       type: Boolean,
@@ -115,12 +117,13 @@ export default {
         'visualizations',
         'defaultView',
         'customPipelines',
-        'preprocessor',
+        'preprocessors',
         'isGenericViewer',
-        'showDataExplorer'
+        'showDataExplorer',
+        'files',
+        'allowMissingFiles'
       ]
-      const props = Object.fromEntries(propNames.map(k => [k, this[k]]))
-      return props
+      return Object.fromEntries(propNames.map(k => [k, this[k]]))
     },
     isComponent() {
       if (this.$store.state.power) {
