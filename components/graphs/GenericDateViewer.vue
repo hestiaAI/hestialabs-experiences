@@ -251,6 +251,8 @@ export default {
         this.filterItems(overviewGroup)
         this.total = all.value()
         this.results = ndx.allFiltered()
+        this.currMaxDateStr = formatTimeS(this.maxDate)
+        this.currMaxDateStr = formatTimeS(this.maxDate)
       })
 
       // Compute and draw line chart
@@ -291,6 +293,9 @@ export default {
         if (filters) {
           this.currMinDateStr = formatTimeS(filters[0])
           this.currMaxDateStr = formatTimeS(filters[1])
+        } else {
+          this.currMinDateStr = formatTimeS(this.minDate)
+          this.currMaxDateStr = formatTimeS(this.maxDate)
         }
       })
 
