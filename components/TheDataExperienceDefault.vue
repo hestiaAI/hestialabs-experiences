@@ -36,7 +36,7 @@
               selectedExample,
               customPipeline:
                 customPipelines[defaultViewElements.customPipeline],
-              inputFiles,
+              fileManager,
               i: index
             }"
             @update="onQueryUpdate"
@@ -48,6 +48,7 @@
               visualizations,
               defaultViewElements,
               query: queries[index],
+              fileManager,
               i: index
             }"
             @update="onQueryUpdate"
@@ -56,7 +57,7 @@
       </v-row>
       <v-row v-if="showDataExplorer">
         <v-col>
-          <unit-file-explorer v-bind="{ allFiles, preprocessor }" />
+          <unit-file-explorer v-bind="{ fileManager }" />
         </v-col>
       </v-row>
       <v-row v-if="$store.state.config.consent">
@@ -73,6 +74,7 @@
 import rdfUtils from '@/utils/rdf'
 import UnitFileExplorer from '~/components/UnitFileExplorer'
 import parseYarrrml from '@/utils/parse-yarrrml'
+import FileManager from '~/utils/file-manager'
 
 export default {
   components: { UnitFileExplorer },
@@ -83,9 +85,11 @@ export default {
     title: String,
     dataPortal: String,
     customPipelines: Object,
-    preprocessor: String,
     isGenericViewer: Boolean,
-    showDataExplorer: Boolean
+    showDataExplorer: Boolean,
+    files: Array,
+    preprocessors: Object,
+    allowMissingFiles: Boolean
   },
   data() {
     // main example is selected by default
@@ -99,8 +103,8 @@ export default {
       rml: '',
       allItems: null,
       allHeaders: null,
-      inputFiles: null,
-      allFiles: null
+      allFiles: null,
+      fileManager: new FileManager(this.preprocessors, this.allowMissingFiles)
     }
   },
   computed: {
@@ -133,41 +137,39 @@ export default {
       console.error(error)
       this.error = true
       this.message = error instanceof Error ? error.message : error
+      this.progress = false
     },
-    async onUnitFilesUpdate({ inputFiles, error, allFiles }) {
+    async onUnitFilesUpdate(uppyFiles) {
       this.message = ''
       this.error = false
       this.success = false
       this.progress = true
-      this.inputFiles = inputFiles
-      this.allFiles = allFiles
+      const start = new Date()
 
-      if (error) {
+      await this.fileManager.init(uppyFiles)
+      let processedFiles
+      try {
+        processedFiles = await this.fileManager.preprocessFiles(this.files)
+      } catch (error) {
         this.handleError(error)
-      } else if (
-        !this.isGenericViewer &&
-        Object.keys(inputFiles).length === 0
-      ) {
-        this.handleError('No relevant files were found')
-      } else if (this.isRdfNeeded && this.selectedExample.yarrrml) {
+        return
+      }
+
+      if (this.isRdfNeeded && this.selectedExample.yarrrml) {
         try {
-          const start = new Date()
-
           this.rml = await parseYarrrml(this.selectedExample.yarrrml)
-          rdfUtils.generateRDF(this.rml, inputFiles)
-          this.success = true
-
-          const elapsed = new Date() - start
-          this.message = `Successfully processed in ${elapsed / 1000} sec.`
+          await rdfUtils.generateRDF(this.rml, processedFiles)
         } catch (error) {
           this.handleError(error)
+          return
         }
-      } else {
-        this.success = true
-        this.message = 'Successfully processed'
       }
 
       this.progress = false
+      this.success = true
+
+      const elapsed = new Date() - start
+      this.message = `Successfully processed in ${elapsed / 1000} sec.`
     },
     onQueryUpdate({ i, headers, items }) {
       this.allHeaders[i] = JSON.stringify(headers)

@@ -8,20 +8,20 @@
 </template>
 
 <script>
-import * as csv from '@fast-csv/parse'
 import UnitFilterableTable from '~/components/UnitFilterableTable'
+import FileManager from '~/utils/file-manager'
 
 export default {
   name: 'UnitCsvViewer',
   components: { UnitFilterableTable },
   props: {
-    file: {
-      type: File,
+    filename: {
+      type: String,
       required: true
     },
-    preprocessorFunc: {
-      type: Function,
-      default: () => a => a
+    fileManager: {
+      type: FileManager,
+      required: true
     }
   },
   data() {
@@ -33,38 +33,31 @@ export default {
     }
   },
   watch: {
-    file: {
-      async handler(newFile) {
-        await this.getContentFromFile(newFile)
+    filename: {
+      async handler(filename) {
+        await this.getContentFromFilename(filename)
       },
       immediate: true
     }
   },
   methods: {
-    async getContentFromFile(file) {
+    async getContentFromFilename(filename) {
       this.loading = true
-      this.csvText = this.preprocessorFunc(await file.text())
+      this.csvText = await this.fileManager.getPreprocessedText(filename)
       try {
-        this.csvContent = await this.csvToItems(this.csvText)
+        const { headers, items } = await this.fileManager.getCsvItems(filename)
+        this.csvContent = {
+          items,
+          headers: headers.map(h => ({
+            text: h,
+            value: h
+          }))
+        }
         this.error = false
       } catch (error) {
         this.error = true
       }
       this.loading = false
-    },
-    async csvToItems(csvText) {
-      return await new Promise(resolve => {
-        const items = []
-        csv
-          .parseString(csvText, { headers: true })
-          .on('data', row => items.push(row))
-          .on('end', () =>
-            resolve({
-              headers: Object.keys(items[0]).map(h => ({ text: h, value: h })),
-              items
-            })
-          )
-      })
     }
   }
 }
