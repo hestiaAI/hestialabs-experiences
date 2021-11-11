@@ -1,14 +1,19 @@
 {
-  "name": "@hestialabs/facebook",
+  "name": "@hestiaai/facebook",
   "version": "0.0.0",
   "description": "",
   "main": "dist/index",
   "files": [
     "dist"
   ],
-  "repository": "https://github.com/hestiaAI/hestialabs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs",
+    "directory": "packages/facebook"
+  },
   "publishConfig": {
-    "@hestiaAI:registry": "https://npm.pkg.github.com/hestiaAI"
+    "access": "public",
+    "@hestiaai:registry": "https://npm.pkg.github.com/"
   },
   "author": "",
   "license": "ISC"
