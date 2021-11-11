@@ -84,6 +84,19 @@ export default {
         .append('g')
         .attr('transform', 'translate(' + width / 2 + ',' + width / 2 + ')')
 
+      const infoLabel = svg
+        .append('text')
+        .attr('x', 0)
+        .attr('y', -50)
+        .attr('id', 'infoLabel')
+        .style('font-size', '1rem')
+        .style('font-weight', 'light')
+        .attr('text-anchor', 'middle')
+        .style('cursor', 'default')
+        .style('fill', 'grey')
+        .text('')
+        .attr('opacity', 0)
+
       const infoPercent = svg
         .append('text')
         .attr('x', 0)
@@ -94,6 +107,7 @@ export default {
         .style('font-weight', 'bold')
         .style('fill', 'grey')
         .attr('font-family', 'Roboto')
+        .style('cursor', 'default')
         .text('100%')
         .attr('opacity', 0)
 
@@ -105,6 +119,7 @@ export default {
         .style('font-size', '1rem')
         .style('font-weight', 'light')
         .attr('text-anchor', 'middle')
+        .style('cursor', 'default')
         .style('fill', 'grey')
         .text(totalSize)
         .attr('opacity', 0)
@@ -161,14 +176,27 @@ export default {
         .attr('font-family', 'Roboto')
 
       const parent = svg
-        .append('circle')
+        .append('text')
         .datum(root)
-        .attr('r', radius)
-        .attr('fill', 'none')
-        .attr('pointer-events', 'all')
+        .attr('x', 0)
+        .attr('y', 50)
+        .style('font-size', '1rem')
+        .style('font-weight', 'light')
+        .attr('text-anchor', 'middle')
+        .attr('text-decoration', 'underline')
+        .text('zoom out')
+        .attr('opacity', 0)
+        .style('cursor', 'pointer')
         .on('click', clicked)
 
       function clicked(event, p) {
+        if (!p.parent) {
+          parent.attr('opacity', 0)
+          parent.style('cursor', 'default')
+        } else {
+          parent.attr('opacity', 1)
+          parent.style('cursor', 'pointer')
+        }
         parent.datum(p.parent || root)
         root.each(
           d =>
@@ -240,7 +268,11 @@ export default {
         if (percentage < 0.1) {
           percentageString = '< 0.1%'
         }
-        // infoLabel.text(ancestors.map(d => d.data.name).join('/'))
+        infoLabel.text(
+          d.data.name.length > 15
+            ? d.data.name.slice(0, 15) + '..'
+            : d.data.name
+        )
         this.bcItems = ancestors.map(d => {
           return {
             text: d.data.name,
@@ -253,6 +285,7 @@ export default {
         infoNumber.text(`${d.value} out of ${totalSize}`)
         infoPercent.attr('opacity', 1)
         infoNumber.attr('opacity', 1)
+        infoLabel.attr('opacity', 1)
 
         // Fade all the segments.
         d3.selectAll('path').style('opacity', 0.3)
@@ -268,6 +301,7 @@ export default {
         this.bcItems = [{ text: 'All', disabled: true }]
         infoPercent.attr('opacity', 0)
         infoNumber.attr('opacity', 0)
+        infoLabel.attr('opacity', 0)
         d3.selectAll('path').style('opacity', 1)
       }
       // attach event actions
