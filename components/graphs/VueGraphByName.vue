@@ -1,5 +1,5 @@
 <template>
-  <component :is="isComponent" :values="values" :graph-id="graphId"></component>
+  <component :is="isComponent" :values="values"></component>
 </template>
 
 <script>
@@ -20,10 +20,6 @@ export default {
     graphName: {
       type: String,
       required: true
-    },
-    graphId: {
-      type: String,
-      default: () => 'viz'
     }
   },
   computed: {

@@ -19,15 +19,12 @@ export default {
     values: {
       type: Array,
       default: () => []
-    },
-    graphId: {
-      type: String,
-      required: true
     }
   },
   data() {
     return {
-      bcItems: []
+      bcItems: [],
+      graphId: 'graph_' + this._uid
     }
   },
   mounted() {
