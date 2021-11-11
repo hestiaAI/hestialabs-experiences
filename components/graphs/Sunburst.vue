@@ -23,12 +23,7 @@ export default {
   },
   data() {
     return {
-      bcItems: [
-        {
-          text: 'All',
-          disabled: true
-        }
-      ]
+      bcItems: []
     }
   },
   mounted() {
@@ -54,6 +49,9 @@ export default {
         .sort((a, b) => b.value - a.value)
 
       const totalSize = tree.value
+      const rootName = tree.data.name
+      this.bcItems = [{ text: rootName, disabled: true }]
+
       // Compute arcs partitons/positions
       const root = d3.partition().size([2 * Math.PI, tree.height + 1])(tree)
       root.each(d => (d.current = d))
@@ -187,9 +185,20 @@ export default {
         .text('zoom out')
         .attr('opacity', 0)
         .style('cursor', 'pointer')
+        .attr('pointer-events', 'all')
         .on('click', clicked)
 
+      let currentLevel = [{ text: rootName, disabled: true }]
       function clicked(event, p) {
+        const ancestors = getAncestors(p)
+        currentLevel = ancestors.map(d => {
+          return {
+            text: d.data.name,
+            disabled: true
+          }
+        })
+        currentLevel.unshift({ text: rootName, disabled: true })
+        this.bcItems = currentLevel
         if (!p.parent) {
           parent.attr('opacity', 0)
           parent.style('cursor', 'default')
@@ -276,8 +285,7 @@ export default {
         this.bcItems = ancestors.map(d => {
           return {
             text: d.data.name,
-            disabled: true,
-            href: 'test'
+            disabled: true
           }
         })
         this.bcItems.unshift({ text: 'All', disabled: true })
@@ -298,7 +306,7 @@ export default {
       }
 
       const mouseleave = (e, d) => {
-        this.bcItems = [{ text: 'All', disabled: true }]
+        this.bcItems = currentLevel
         infoPercent.attr('opacity', 0)
         infoNumber.attr('opacity', 0)
         infoLabel.attr('opacity', 0)
