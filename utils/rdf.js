@@ -8,7 +8,7 @@ export function generateRDF(rml, inputFiles, toRDF = true) {
 
   worker.postMessage(rocketRMLParams)
 
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     worker.addEventListener('message', async ({ data }) => {
       if (data instanceof Error) {
         throw data
@@ -17,8 +17,10 @@ export function generateRDF(rml, inputFiles, toRDF = true) {
       const { rdf, jsonld } = await arrayBufferToObject(data)
 
       if (!rdf && !jsonld) {
-        throw new Error(
-          'No data found. Check that the file hierarchy has not been modified after downloading it from the data portal.'
+        reject(
+          new Error(
+            'No data found. Check that the file hierarchy has not been modified after downloading it from the data portal.'
+          )
         )
       }
 
