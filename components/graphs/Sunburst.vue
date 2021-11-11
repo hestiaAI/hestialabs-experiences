@@ -99,6 +99,19 @@ export default {
         .text('')
         .attr('opacity', 0)
 
+      const clickLabel = svg
+        .append('text')
+        .attr('x', width / 2)
+        .attr('y', -width / 2 + 20)
+        .attr('id', 'infoLabel')
+        .style('font-size', '1rem')
+        .style('font-weight', 'bold')
+        .attr('text-anchor', 'end')
+        .style('cursor', 'default')
+        .style('fill', 'grey')
+        .text('Click to expand!')
+        .attr('opacity', 0)
+
       const infoPercent = svg
         .append('text')
         .attr('x', 0)
@@ -299,6 +312,7 @@ export default {
         infoPercent.attr('opacity', 1)
         infoNumber.attr('opacity', 1)
         infoLabel.attr('opacity', 1)
+        if (currentLevel.length <= 1) clickLabel.attr('opacity', 1)
 
         // Fade all the segments.
         d3.selectAll('path').style('opacity', 0.3)
@@ -315,6 +329,7 @@ export default {
         infoPercent.attr('opacity', 0)
         infoNumber.attr('opacity', 0)
         infoLabel.attr('opacity', 0)
+        clickLabel.attr('opacity', 0)
         d3.selectAll('path').style('opacity', 1)
       }
       // attach event actions
