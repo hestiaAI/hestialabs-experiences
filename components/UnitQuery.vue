@@ -87,7 +87,11 @@
               :key="'vue-' + index"
             >
               <v-col>
-                <vue-graph-by-name :graph-name="graphName" :values="items" />
+                <vue-graph-by-name
+                  :graph-name="graphName"
+                  :values="items"
+                  :graph-id="defaultViewElements.graphId"
+                />
               </v-col>
             </v-row>
             <v-row v-if="showTable">

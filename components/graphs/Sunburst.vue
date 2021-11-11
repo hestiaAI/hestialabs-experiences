@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="12" md="12" class="text-center">
-        <div id="sunburst">
+        <div :id="graphId">
           <v-breadcrumbs :items="bcItems" class="breadCrumb"></v-breadcrumbs>
         </div>
       </v-col>
@@ -19,6 +19,10 @@ export default {
     values: {
       type: Array,
       default: () => []
+    },
+    graphId: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -58,7 +62,10 @@ export default {
 
       // Global Variables
       const width = Math.min(
-        d3.select('#sunburst').node().getBoundingClientRect().width,
+        d3
+          .select('#' + this.graphId)
+          .node()
+          .getBoundingClientRect().width,
         600
       )
       const radius = width / 6
@@ -75,7 +82,7 @@ export default {
         .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1))
 
       const svg = d3
-        .select('#sunburst')
+        .select('#' + this.graphId)
         .append('svg')
         .attr('width', width)
         .attr('height', width)
