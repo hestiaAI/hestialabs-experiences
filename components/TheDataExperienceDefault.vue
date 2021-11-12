@@ -29,25 +29,14 @@
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
-            v-if="defaultViewElements.customPipeline"
             v-bind="{
               visualizations,
               defaultViewElements,
               selectedExample,
               customPipeline:
                 customPipelines[defaultViewElements.customPipeline],
-              fileManager,
-              i: index
-            }"
-            @update="onQueryUpdate"
-          />
-          <unit-query
-            v-else
-            v-bind="{
-              selectedExample,
-              visualizations,
-              defaultViewElements,
               query: queries[index],
+              sql: sqlQueries[index],
               fileManager,
               i: index
             }"
@@ -89,7 +78,8 @@ export default {
     showDataExplorer: Boolean,
     files: Array,
     preprocessors: Object,
-    allowMissingFiles: Boolean
+    allowMissingFiles: Boolean,
+    databaseBuilder: Function
   },
   data() {
     // main example is selected by default
@@ -104,7 +94,8 @@ export default {
       allItems: null,
       allHeaders: null,
       allFiles: null,
-      fileManager: new FileManager(this.preprocessors, this.allowMissingFiles)
+      fileManager: new FileManager(this.preprocessors, this.allowMissingFiles),
+      db: null
     }
   },
   computed: {
@@ -112,6 +103,12 @@ export default {
       return this.defaultView.map(o =>
         this.selectedExample.sparql.find(s => s.name === o.query)
       )
+    },
+    sqlQueries() {
+      return this.defaultView.map(o => {
+        const sql = this.selectedExample.sql.find(s => s.name === o.sql)
+        return sql === undefined ? '' : sql.query
+      })
     },
     isRdfNeeded() {
       return this.defaultView.filter(v => 'query' in v).length > 0
@@ -154,6 +151,9 @@ export default {
         this.handleError(error)
         return
       }
+
+      // Populate database
+      await this.databaseBuilder(this.fileManager)
 
       if (this.isRdfNeeded && this.selectedExample.yarrrml) {
         try {

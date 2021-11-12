@@ -59,6 +59,11 @@
               }"
               @update="onUnitResultsUpdate"
             />
+            <unit-sql
+              v-else-if="sql"
+              v-bind="{ sql }"
+              @update="onUnitResultsUpdate"
+            />
             <unit-sparql
               v-else
               v-bind="{ selectedExample, query, queryDisabled }"
@@ -145,6 +150,10 @@ export default {
       type: Function,
       default: undefined
     },
+    sql: {
+      type: String,
+      default: ''
+    },
     fileManager: {
       type: FileManager,
       required: true
@@ -187,7 +196,7 @@ export default {
     processedItems() {
       // For each viz
       return this.vegaFiles.map(spec => {
-        if (this.customPipeline === undefined) {
+        if (this.customPipeline === undefined && !this.sql) {
           // Find the viz definition for this query
           const preprocessor = this.exampleVisualizations.filter(
             v => this.query.name === v.query && spec.name === v.vega

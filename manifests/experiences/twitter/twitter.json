@@ -37,7 +37,7 @@
   ]},
   "defaultView": [
     {
-      "customPipeline": "advertisersPerDay",
+      "sql": "advertisers-per-day",
       "visualizations": ["top-k-advertisers"],
       "showTable": false,
       "title": "Top advertisers",

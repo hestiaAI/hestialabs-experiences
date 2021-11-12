@@ -98,6 +98,10 @@ export default {
     showDataExplorer: {
       type: Boolean,
       default: true
+    },
+    databaseBuilder: {
+      type: Function,
+      default: undefined
     }
   },
   computed: {
@@ -121,7 +125,8 @@ export default {
         'isGenericViewer',
         'showDataExplorer',
         'files',
-        'allowMissingFiles'
+        'allowMissingFiles',
+        'databaseBuilder'
       ]
       return Object.fromEntries(propNames.map(k => [k, this[k]]))
     },

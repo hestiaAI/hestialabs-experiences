@@ -31,6 +31,11 @@ const reqParamSPARQL = require.context(
   true,
   /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.rqx$/
 )
+const reqSQL = require.context(
+  './experiences/',
+  true,
+  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.sql$/
+)
 
 // files in assets/data/ are loaded only with file-loader
 const reqData = require.context('../assets/data/', true, /.*/)
@@ -156,11 +161,7 @@ reqYARRRML.keys().forEach(path => {
     // assume single YARRRML file per example
     yarrrml: reqYARRRML(path).default,
     // empty Object for all SPARQL samples of the example
-    sparql: [],
-    // empty Object for all VEGA samples of the example
-    vega: [],
-    // empty Object for all SPARQL samples of the example
-    d3: []
+    sparql: []
   }
   const { examples } = manifests[dir]
   if (name === 'main') {
@@ -208,10 +209,30 @@ reqVEGA.keys().forEach(path => {
   const { example, vega } = match.groups
   // Add VEGA sample
   const exampleObj = manifests[dir].examples.find(e => e.name === example)
+  if (exampleObj.vega === undefined) {
+    exampleObj.vega = []
+  }
   exampleObj.vega.push({
     name: vega,
     type: 'vega',
     vega: reqVEGA(path)
+  })
+})
+
+reqSQL.keys().forEach(path => {
+  // Extract directory name of the experience
+  const dir = extractFirstDirectory(path)
+  // Extract example name and SQL query sample name
+  const match = path.match(/\/examples\/(?<example>.+)\/(?<sql>.+)\.sql/)
+  const { example, sql } = match.groups
+  // Add SQL sample
+  const exampleObj = manifests[dir].examples.find(e => e.name === example)
+  if (exampleObj.sql === undefined) {
+    exampleObj.sql = []
+  }
+  exampleObj.sql.push({
+    name: sql,
+    query: reqSQL(path).default
   })
 })
 
