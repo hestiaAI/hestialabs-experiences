@@ -117,7 +117,7 @@ import UnitFilterableTable from '~/components/UnitFilterableTable'
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
-  name: 'GenericDateViewer',
+  name: 'TimedObservationsViewer',
   components: { UnitFilterableTable },
   props: {
     title: {
@@ -149,9 +149,9 @@ export default {
       items: [],
       header: [
         { text: 'Date', value: 'dateStr' },
-        { text: 'App', value: 'event_source' },
-        { text: 'Event type', value: 'event_type' },
-        { text: 'Event value', value: 'event_value' }
+        { text: 'App', value: 'eventSource' },
+        { text: 'Event type', value: 'eventType' },
+        { text: 'Event value', value: 'eventValue' }
       ],
       results: []
     }
@@ -235,8 +235,8 @@ export default {
 
       // Compute groupby Count for overview
       const overviewDimension = ndx.dimension(d => [
-        d.event_source,
-        d.event_type,
+        d.eventSource,
+        d.eventType,
         d.icon
       ])
       const overviewGroup = overviewDimension.group().reduceCount()
@@ -244,7 +244,7 @@ export default {
       this.total = all.value()
 
       // Dimension to filter by source
-      this.activityDimension = ndx.dimension(d => d.event_source)
+      this.activityDimension = ndx.dimension(d => d.eventSource)
 
       // Update items on each change of crossfilter
       ndx.onChange(() => {
@@ -301,7 +301,7 @@ export default {
 
       // Compute and draw row chart
       const rowChart = new dc.RowChart('#row-chart')
-      const typeDimension = ndx.dimension(d => d.event_type)
+      const typeDimension = ndx.dimension(d => d.eventType)
       const typeGroup = typeDimension.group().reduceCount()
       const width = d3.select('#row-chart').node().getBoundingClientRect().width
       rowChart

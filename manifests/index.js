@@ -1,4 +1,6 @@
 import allPreprocessors from './preprocessors'
+import allParsers from './parsers'
+
 import { validExtensions, extractFirstDirectory } from './utils'
 
 // require all modules on the path and with the pattern defined
@@ -68,6 +70,7 @@ const manifests = Object.fromEntries(
       url,
       showDataExplorer,
       preprocessors = {},
+      timedObservationsViewer = {},
       ...rest
     } = reqJSON(path)
 
@@ -97,12 +100,6 @@ const manifests = Object.fromEntries(
       if (ext.split(',').some(v => !validExtensions.includes(v))) {
         throw new Error(`[${dir}] parameter ext is invalid`)
       }
-
-      if (dir !== 'playground' && ext.includes('zip') && !files.length) {
-        throw new Error(
-          `[${dir}] extension zip specified but list of files to extract is empty`
-        )
-      }
     }
     Object.values(preprocessors).forEach(preprocessor => {
       if (!(preprocessor in allPreprocessors)) {
@@ -120,6 +117,23 @@ const manifests = Object.fromEntries(
       throw new Error('the explorer experience must show the data explorer')
     }
 
+    if (Object.hasOwn(timedObservationsViewer, 'fileMatchers')) {
+      timedObservationsViewer.fileMatchers.forEach(m => {
+        try {
+          m.regex = new RegExp(m.regex)
+        } catch (error) {
+          throw new Error(`The regex '${m.regex}' is not valid`)
+        }
+      })
+    }
+    if (Object.hasOwn(timedObservationsViewer, 'parser')) {
+      const parser = timedObservationsViewer.parser
+      if (parser in allParsers) {
+        timedObservationsViewer.parser = allParsers[parser]
+      } else {
+        throw new Error(`The parser ${parser} doesn't exist`)
+      }
+    }
     const module = require(`./experiences/${dir}/`)
 
     return [
@@ -137,6 +151,7 @@ const manifests = Object.fromEntries(
         isGenericViewer,
         url,
         showDataExplorer,
+        timedObservationsViewer,
         ...rest,
         ...module.default,
         examples: []

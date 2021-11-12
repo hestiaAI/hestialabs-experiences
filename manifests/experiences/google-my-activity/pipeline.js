@@ -1,24 +1,5 @@
-async function googleMyActivity(fileManager) {
-  const regex = /Takeout\/(.+?)\/(.+?)\/(.+?)\.json/
-  const matchingFilenames = fileManager
-    .getFilenames()
-    .filter(name => regex.test(name))
-  const files = await fileManager.preprocessFiles(matchingFilenames)
-  const items = Object.entries(files).flatMap(([name, text]) => {
-    try {
-      return JSON.parse(text).map(obj => ({
-        date: obj.time,
-        event_source: obj.header,
-        event_type: obj.title
-      }))
-    } catch (error) {
-      return []
-    }
-  })
-  const headers = ['date', 'event_source', 'event_type', 'event_value']
-  return { items, headers }
-}
+import { timedObservationViewer } from '~/manifests/generic-pipelines'
 
 export default {
-  googleMyActivity
+  timedObservationViewer
 }

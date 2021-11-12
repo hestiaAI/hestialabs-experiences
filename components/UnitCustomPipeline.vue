@@ -52,6 +52,10 @@ export default {
     parameterName: {
       type: String,
       default: ''
+    },
+    manifest: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -87,6 +91,7 @@ export default {
       try {
         const { headers, items } = await this.customPipeline(
           this.fileManager,
+          this.$store.getters.manifest(this.$route),
           this.parameter
         )
         this.$emit('update', { headers, items })
