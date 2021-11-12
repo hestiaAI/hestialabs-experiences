@@ -1,9 +1,11 @@
 import initSqlJs from 'sql.js'
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import sqlWasm from '!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/sql-wasm.wasm'
 
 class DB {
   async init() {
     const SQL = await initSqlJs({
-      locateFile: file => `https://sql.js.org/dist/${file}`
+      locateFile: () => sqlWasm
     })
     this.db = new SQL.Database()
   }

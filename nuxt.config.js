@@ -174,6 +174,12 @@ export default {
               }
             }
           ]
+        },
+        // For sql.js
+        // https://github.com/sql-js/react-sqljs-demo
+        {
+          test: /\.wasm$/,
+          type: 'javascript/auto'
         }
       )
     },
