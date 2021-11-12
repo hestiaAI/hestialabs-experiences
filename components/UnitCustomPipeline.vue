@@ -32,8 +32,11 @@
 <script>
 import { processError } from '@/utils/utils'
 import FileManager from '~/utils/file-manager'
+import BaseButton from '~/components/BaseButton'
 
 export default {
+  name: 'UnitCustomPipeline',
+  components: { BaseButton },
   props: {
     fileManager: {
       type: FileManager,
@@ -59,25 +62,27 @@ export default {
     }
   },
   methods: {
-    async runPipeline() {
+    runPipeline() {
       this.message = ''
       this.error = false
       this.progress = true
-      try {
-        const { headers, items } = await this.customPipeline(
-          this.fileManager,
-          this.parameter
-        )
-        this.$emit('update', { headers, items })
-      } catch (error) {
-        console.error(error)
-        this.error = true
-        this.message = processError(error)
-        this.$emit('update', { error })
-      } finally {
-        this.status = true
-        this.progress = false
-      }
+      setTimeout(async () => {
+        try {
+          const { headers, items } = await this.customPipeline(
+            this.fileManager,
+            this.parameter
+          )
+          this.$emit('update', { headers, items })
+        } catch (error) {
+          console.error(error)
+          this.error = true
+          this.message = processError(error)
+          this.$emit('update', { error })
+        } finally {
+          this.status = true
+          this.progress = false
+        }
+      }, 1)
     }
   }
 }
