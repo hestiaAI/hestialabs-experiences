@@ -14,7 +14,6 @@
     </p>
     <v-file-input
       v-model="inputZIP"
-      accept="application/zip"
       label="Encrypted or plaintext ZIP file"
     ></v-file-input>
     <v-checkbox v-model="decrypt" label="Decrypt"></v-checkbox>
