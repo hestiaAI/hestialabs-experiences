@@ -1,3 +1,5 @@
+import { identity } from 'lodash'
+
 import allPreprocessors from './preprocessors'
 import allParsers from './parsers'
 
@@ -133,6 +135,8 @@ const manifests = Object.fromEntries(
       } else {
         throw new Error(`The parser ${parser} doesn't exist`)
       }
+    } else {
+      timedObservationsViewer.parser = identity
     }
     const module = require(`./experiences/${dir}/`)
 
