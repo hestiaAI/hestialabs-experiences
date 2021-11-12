@@ -9,32 +9,34 @@ async function timedObservationViewer(fileManager, manifest) {
 
   const headers = params.fields
   const items = Object.entries(files).flatMap(([name, text]) =>
-    params.fileMatchers
-      .filter(matcher => matcher.regex.test(name))
-      .flatMap(matcher => {
-        try {
-          const entries = JSONPath({
-            path: matcher.entryPath,
-            json: JSON.parse(text)
-          })
-          return entries.map(entry => {
-            return Object.fromEntries(
-              headers.map(field => [
-                field,
-                JSONPath({
-                  json: entry,
-                  path: matcher.paths[field],
-                  wrap: false
-                })
-              ])
-            )
-          })
-        } catch (error) {
-          return []
-        }
-      })
+    params.parser(
+      params.fileMatchers
+        .filter(matcher => matcher.regex.test(name))
+        .flatMap(matcher => {
+          try {
+            const entries = JSONPath({
+              path: matcher.entryPath,
+              json: JSON.parse(text)
+            })
+            return entries.map(entry => {
+              return Object.fromEntries(
+                headers.map(field => [
+                  field,
+                  JSONPath({
+                    json: entry,
+                    path: matcher.paths[field],
+                    wrap: false
+                  })
+                ])
+              )
+            })
+          } catch (error) {
+            return []
+          }
+        })
+    )
   )
-  return { headers, items: params.parser(items) }
+  return { headers, items }
 }
 
 export { timedObservationViewer }
