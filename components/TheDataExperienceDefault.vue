@@ -61,7 +61,9 @@
       </v-row>
       <v-row v-if="$store.state.config.consent">
         <v-col cols="8 mx-auto">
-          <unit-consent-form v-bind="{ allItems, allHeaders, defaultView }" />
+          <unit-consent-form
+            v-bind="{ allItems, allHeaders, allResults, defaultView }"
+          />
         </v-col>
       </v-row>
     </template>
@@ -99,6 +101,7 @@ export default {
       rml: '',
       allItems: null,
       allHeaders: null,
+      allResults: null,
       inputFiles: null,
       allFiles: null
     }
@@ -123,6 +126,12 @@ export default {
           )
           this.allHeaders = Object.fromEntries(
             Object.keys(this.defaultView).map((x, i) => [i, ''])
+          )
+          this.allResults = Object.fromEntries(
+            Object.keys(this.defaultView).map((x, i) => [
+              i,
+              { header: '', itmes: '' }
+            ])
           )
         }
       }
@@ -169,8 +178,9 @@ export default {
 
       this.progress = false
     },
-    onQueryUpdate({ index, headers, items }) {
+    onQueryUpdate({ index, headers, items, result }) {
       this.allHeaders[index] = JSON.stringify(headers)
+      this.allResults[index] = JSON.stringify(result)
 
       // console.log('allhit', JSON.stringify(this.allHeaders), this.allItems)
       this.allItems[index] = JSON.stringify(items)

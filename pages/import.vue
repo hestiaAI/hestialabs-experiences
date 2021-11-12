@@ -77,7 +77,7 @@
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :data="processResultForVega(result, specFile)"
+              :data="processResultForVega(result.result, specFile)"
               :div-id="`viz-${resultIndex}-${specFile.name}`"
             />
           </v-col>
@@ -87,12 +87,12 @@
           :key="`viz-${resultIndex}-${vizVueIndex}`"
         >
           <v-col>
-            <vue-graph-by-name :graph-name="graphName" :data="result" />
+            <vue-graph-by-name :graph-name="graphName" :data="result.result" />
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <unit-filterable-table :data="result" />
+            <unit-filterable-table :data="result.result" />
           </v-col>
         </v-row>
       </v-card>

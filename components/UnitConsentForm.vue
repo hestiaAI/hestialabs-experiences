@@ -56,6 +56,10 @@ const _sodium = require('libsodium-wrappers')
 
 export default {
   props: {
+    allResults: {
+      type: Object,
+      required: true
+    },
     allItems: {
       type: Object,
       required: true
@@ -124,6 +128,7 @@ export default {
         const content = JSON.parse(JSON.stringify(this.defaultView[i]))
         content.items = JSON.parse(this.allItems[i])
         content.headers = JSON.parse(this.allHeaders[i])
+        content.result = JSON.parse(this.allResults[i])
         zip.file(`block${i}.json`, JSON.stringify(content))
       })
 

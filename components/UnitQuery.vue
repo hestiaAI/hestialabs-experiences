@@ -218,7 +218,7 @@ export default {
       const { headers = [], items = [] } = result
       // Vuetify DataTable component expects text and value properties
       this.finished = true
-      this.$emit('update', { index: this.index, headers, items })
+      this.$emit('update', { index: this.index, headers, items, result })
     },
     onChangeSelector(query) {
       this.$emit('change', query)
