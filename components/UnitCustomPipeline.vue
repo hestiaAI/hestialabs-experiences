@@ -5,32 +5,26 @@
     </template>
 
     <template v-else>
-      <template v-if="parameterName">
-        <v-row>
-          <v-col cols="4" class="mx-auto">
-            <v-text-field
-              v-model="parameter"
-              :label="parameterName"
-              class="my-sm-2 mr-sm-2"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col align="center">
-            <base-button
-              text="Run"
-              icon="mdiStepForward"
-              class="ma-sm-2"
-              @click="runQuery"
-            />
-          </v-col>
-        </v-row>
-      </template>
-
-      <div v-if="progress" align="center">
-        <base-progress-circular class="mr-2" />
-        <span>Processing...</span>
-      </div>
+      <v-row v-if="parameterName">
+        <v-col cols="4" class="mx-auto">
+          <v-text-field
+            v-model="parameter"
+            :label="parameterName"
+            class="my-sm-2 mr-sm-2"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col align="center">
+          <base-button
+            v-bind="{ progress, status, error }"
+            text="Run"
+            icon="mdiStepForward"
+            class="ma-sm-2"
+            @click="runPipeline"
+          />
+        </v-col>
+      </v-row>
     </template>
   </div>
 </template>
@@ -64,23 +58,8 @@ export default {
       parameter: ''
     }
   },
-  computed: {
-    disabled() {
-      return !this.fileManager.preprocessedTexts
-    }
-  },
-  watch: {
-    fileManager: {
-      immediate: true,
-      handler(_) {
-        if (!this.parameterName) {
-          this.runQuery()
-        }
-      }
-    }
-  },
   methods: {
-    async runQuery() {
+    async runPipeline() {
       this.message = ''
       this.error = false
       this.progress = true
