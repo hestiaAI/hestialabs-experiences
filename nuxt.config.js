@@ -175,11 +175,19 @@ export default {
             }
           ]
         },
-        // For sql.js
+        // for importing wasm files
         // https://github.com/sql-js/react-sqljs-demo
         {
           test: /\.wasm$/,
-          type: 'javascript/auto'
+          type: 'javascript/auto',
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                name: '[path][name].[contenthash:7].[ext]'
+              }
+            }
+          ]
         }
       )
     },
