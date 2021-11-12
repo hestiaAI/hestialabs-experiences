@@ -25,6 +25,8 @@ export default {
   computed: {
     isComponent() {
       switch (this.graphName) {
+        case 'Sankey.vue':
+          return () => import('@/components/graphs/Sankey.vue')
         case 'Sunburst.vue':
           return () => import('@/components/graphs/Sunburst.vue')
         case 'UberOverview.vue':
