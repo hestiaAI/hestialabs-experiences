@@ -27,6 +27,8 @@ export default {
       switch (this.graphName) {
         case 'TimedObservationsViewer.vue':
           return () => import('@/components/graphs/TimedObservationsViewer.vue')
+        case 'Sunburst.vue':
+          return () => import('@/components/graphs/Sunburst.vue')
         case 'UberOverview.vue':
           return () => import('@/components/graphs/UberOverview.vue')
         case 'TwitterOverview.vue':

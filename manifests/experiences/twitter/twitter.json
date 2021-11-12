@@ -45,10 +45,10 @@
     },
     {
       "customPipeline": "targetingTree",
-      "visualizations": ["sunburst-targeting"],
+      "visualizations": ["Sunburst.vue"],
       "showTable": false,
       "title": "Targeting criteria (Top 10 advertisers)",
-      "text": "Understand why you have been targeted by these advertisers. The chart shows the 10 most present advertisers in the inner circle, the targeting types (location, language, ...) in the middle circle, and the targeting values (Switzerland, French, ...) in the outer circle."
+      "text": "Understand why you have been targeted by these advertisers. The graph shows the 10 advertisers who use the most targeting criteria on you. In the first ring you will find the different advertisers, in the second ring the types of targeting used (location, language, ...). And finally, if you click on a ring, the graph will enlarge to show you the targeting values (Swiss, French, ...) in the outer ring."
     },
     {
       "customPipeline": "targetingTypesAndValues",
@@ -66,7 +66,7 @@
     {
       "customPipeline": "selectTargetingTree",
       "parameter": "Advertiser",
-      "visualizations": ["sunburst-targeting"],
+      "visualizations": ["Sunburst.vue"],
       "showTable": false,
       "title": "Targeting criteria (1 advertiser)",
       "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the names in the table above and write it in the text field below."
