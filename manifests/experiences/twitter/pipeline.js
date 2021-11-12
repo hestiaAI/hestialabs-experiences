@@ -116,7 +116,7 @@ function targetingTree(inputFiles) {
     countReducer('count')
   )
   // Transform to tree
-  ;[headers, items] = csvProcessors.sunburstTargeting(headers, items)
+  ;[headers, items] = csvProcessors.sunburstTargeting({ headers, items })
 
   return { headers, items }
 }

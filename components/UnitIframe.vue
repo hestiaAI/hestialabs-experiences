@@ -12,9 +12,9 @@
 // add custom pipeline for kepler data (no processing, so we delegate to kepler's method?)
 export default {
   props: {
-    values: {
-      type: Array,
-      default: () => []
+    data: {
+      type: Object,
+      default: () => {}
     },
     src: {
       type: String,
@@ -26,7 +26,7 @@ export default {
     }
   },
   mounted() {
-    console.log('mounted', this.values)
+    console.log('mounted', this.data)
   },
   methods: {
     onload() {

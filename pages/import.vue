@@ -87,17 +87,12 @@
           :key="`viz-${resultIndex}-${vizVueIndex}`"
         >
           <v-col>
-            <vue-graph-by-name :graph-name="graphName" :values="result.items" />
+            <vue-graph-by-name :graph-name="graphName" :data="result" />
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <unit-filterable-table
-              v-bind="{
-                headers: result.headers.map(h => ({ text: h, value: h })),
-                items: result.items
-              }"
-            />
+            <unit-filterable-table :data="result" />
           </v-col>
         </v-row>
       </v-card>
@@ -149,30 +144,16 @@ export default {
       return this.results.map(r =>
         r.visualizations?.filter(n => n.endsWith('.vue'))
       )
-    },
-    allProcessedVegaItems() {
-      // For each block
-      return this.results.map((result, resultIndex) =>
-        // For each viz
-        this.allVegaFiles[resultIndex].map(specFile => {
-          const processor = this.findProcessor(result, specFile)
-          if (processor) {
-            return processor(result.headers, result.items)
-          }
-          return result.items
-        })
-      )
     }
   },
   methods: {
     processResultForVega(result, specFile) {
-      const { headers, items } = result
       const processor = this.findProcessor(specFile)
       if (processor) {
-        const processedItems = processor(headers, items)[1]
-        return { headers, items: processedItems }
+        const items = processor(result)[1]
+        return { items }
       }
-      return { headers, items }
+      return result
     },
     findProcessor(result, specFile) {
       const def = this.visualizations.find(

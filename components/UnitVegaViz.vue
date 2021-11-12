@@ -16,7 +16,7 @@
     <template v-else>
       <v-row>
         <v-col>
-          <i>the data does not have the correct format</i>
+          <i>data in this format cannot be displayed by this visualization</i>
         </v-col>
       </v-row>
     </template>

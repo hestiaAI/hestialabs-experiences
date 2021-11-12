@@ -18,7 +18,7 @@
           />
         </v-col>
         <v-col cols="12" lg="6">
-          <unit-filterable-table v-bind="tableData" />
+          <unit-filterable-table :data="result" />
         </v-col>
         <template v-if="result">
           <v-col
@@ -87,10 +87,7 @@
               :key="'viz-vue-' + vizVueIndex"
             >
               <v-col>
-                <vue-graph-by-name
-                  :graph-name="graphName"
-                  :values="result.items"
-                />
+                <vue-graph-by-name :graph-name="graphName" :data="result" />
               </v-col>
             </v-row>
             <v-row
@@ -98,12 +95,12 @@
               :key="'viz-url-' + vizUrlIndex"
             >
               <v-col>
-                <unit-iframe :src="src" :values="items" />
+                <unit-iframe :src="src" :data="result" />
               </v-col>
             </v-row>
             <v-row v-if="showTable">
               <v-col>
-                <unit-filterable-table v-bind="tableData" />
+                <unit-filterable-table :data="result" />
               </v-col>
             </v-row>
           </template>
@@ -162,12 +159,6 @@ export default {
     }
   },
   computed: {
-    tableData() {
-      return {
-        headers: this.makeTableHeaders(this.result),
-        items: this.extractItems(this.result)
-      }
-    },
     exampleVisualizations() {
       const { name } = this.selectedExample
       return this.visualizations?.[name] || []
@@ -201,24 +192,13 @@ export default {
     }
   },
   methods: {
-    makeTableHeaders(result) {
-      const headers = result?.headers ? result?.headers : []
-      const headersForTable = headers.map(h => ({ text: h, value: h }))
-      return headersForTable
-    },
-    extractItems(result) {
-      return result?.items ? result?.items : []
-    },
     processResultForVega(result, specFile) {
-      const headers = this.makeTableHeaders(result)
-      const items = this.extractItems(result)
       const processor = this.findProcessor(specFile)
       if (processor) {
-        const processedItems = processor(headers, items)[1]
-        return { headers, items: processedItems }
+        const items = processor(result)[1]
+        return { items }
       }
-      const data = { headers, items }
-      return data
+      return result
     },
     findProcessor(specFile) {
       if (this.customPipeline === undefined) {
