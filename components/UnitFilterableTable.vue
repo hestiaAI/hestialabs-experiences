@@ -3,7 +3,7 @@
     <div v-if="isValid">
       <h2 v-if="$store.state.power" class="my-3">Query Results</h2>
       <v-alert v-if="error" type="error">{{ message }}</v-alert>
-      <the-query-results-filter :headers="headers" @update="onFilterUpdate" />
+      <the-table-filter :headers="headers" @update="onFilterUpdate" />
       <v-data-table
         v-bind="{ headers: tableHeaders, items, search }"
         :hide-default-footer="disabled"
@@ -27,6 +27,8 @@
 <script>
 import { writeToString } from '@fast-csv/format'
 import { processError } from '@/utils/utils'
+import BaseDataDownloadButton from '~/components/BaseDataDownloadButton'
+import TheTableFilter from '~/components/TheTableFilter'
 
 function isDataValid(data) {
   return !!data.items && !!(data.headers?.length > 0)
@@ -34,6 +36,7 @@ function isDataValid(data) {
 
 export default {
   name: 'UnitFilterableTable',
+  components: { BaseDataDownloadButton, TheTableFilter },
   props: {
     data: {
       default: undefined,

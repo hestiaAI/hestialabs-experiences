@@ -1,6 +1,6 @@
 <template>
   <div>
-    <component v-if="isValid" :is="isComponent" :values="values"></component>
+    <component :is="isComponent" v-if="isValid" :values="values"></component>
     <i v-else>data in this format cannot be displayed by this visualization</i>
   </div>
 </template>
@@ -38,6 +38,8 @@ export default {
     },
     isComponent() {
       switch (this.graphName) {
+        case 'Sunburst.vue':
+          return () => import('@/components/graphs/Sunburst.vue')
         case 'UberOverview.vue':
           return () => import('@/components/graphs/UberOverview.vue')
         case 'TwitterOverview.vue':

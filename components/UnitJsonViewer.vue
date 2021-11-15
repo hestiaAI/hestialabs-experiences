@@ -23,28 +23,22 @@
 </template>
 
 <script>
-import {
-  mdiCodeJson,
-  mdiFormatListBulletedSquare,
-  mdiInformationOutline
-} from '@mdi/js'
-import lodash from 'lodash'
+import FileManager from '~/utils/file-manager'
 
 export default {
   name: 'UnitJsonViewer',
   props: {
-    file: {
-      type: File,
+    filename: {
+      type: String,
       required: true
     },
-    preprocessorFunc: {
-      type: Function,
+    fileManager: {
+      type: FileManager,
       required: true
     }
   },
   data() {
     return {
-      idSpace: 0,
       jsonText: '',
       items: [],
       loading: true,
@@ -52,71 +46,24 @@ export default {
     }
   },
   watch: {
-    file: {
-      async handler(newFile) {
-        await this.getItemsFromFile(newFile)
+    filename: {
+      async handler(filename) {
+        await this.getContentFromFilename(filename)
       },
       immediate: true
     }
   },
   methods: {
-    async getItemsFromFile(file) {
+    async getContentFromFilename(filename) {
       this.loading = true
-      this.jsonText = this.preprocessorFunc(await file.text())
+      this.jsonText = await this.fileManager.getPreprocessedText(filename)
       try {
-        this.items = [this.itemify(JSON.parse(this.jsonText))]
+        this.items = await this.fileManager.getJsonItems(filename)
         this.error = false
       } catch (error) {
         this.error = true
       }
       this.loading = false
-    },
-    itemify(tree) {
-      if (typeof tree !== 'object')
-        return { value: tree, icon: mdiInformationOutline }
-      else if (Array.isArray(tree)) {
-        const list = tree.flatMap(el => {
-          return this.itemify(el)
-        })
-        if (list.length === 1 && list[0].name) {
-          return {
-            id: this.idSpace++,
-            name: `[list with ${list.length} item] / ${list[0].name}`,
-            children: list[0].children,
-            icon: list[0].icon
-          }
-        } else {
-          const plural = list.length !== 1
-          return {
-            id: this.idSpace++,
-            name: `[list with ${list.length} item${plural ? 's' : ''}]`,
-            children: list,
-            icon: mdiFormatListBulletedSquare
-          }
-        }
-      } else {
-        const obj = Object.entries(tree).flatMap(([key, v]) => {
-          const inner = this.itemify(v)
-          if (typeof inner.name === 'undefined') {
-            return { ...inner, name: lodash.startCase(key) }
-          } else {
-            return {
-              ...inner,
-              name: `${lodash.startCase(key)} / ${inner.name}`
-            }
-          }
-        })
-        if (obj.length === 1) {
-          return obj[0]
-        } else {
-          return {
-            id: this.idSpace++,
-            name: `{object with ${obj.length} keys}`,
-            children: obj,
-            icon: mdiCodeJson
-          }
-        }
-      }
     }
   }
 }

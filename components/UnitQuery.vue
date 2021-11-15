@@ -6,7 +6,7 @@
         <v-col cols="12" lg="6">
           <unit-custom-pipeline
             v-if="customPipeline"
-            v-bind="{ inputFiles, customPipeline }"
+            v-bind="{ fileManager, customPipeline }"
             @update="onUnitResultsUpdate"
           />
           <unit-sparql
@@ -53,7 +53,7 @@
             <unit-custom-pipeline
               v-if="customPipeline !== undefined"
               v-bind="{
-                inputFiles,
+                fileManager,
                 customPipeline,
                 parameterName: defaultViewElements.parameter
               }"
@@ -118,11 +118,15 @@
 </template>
 
 <script>
-/* eslint-disable vue/require-default-prop */
 import csvProcessors from '@/manifests/csv-processors'
+import FileManager from '~/utils/file-manager'
+
 export default {
   props: {
-    visualizations: Object,
+    visualizations: {
+      type: Object,
+      default: () => {}
+    },
     selectedExample: {
       type: Object,
       required: true
@@ -147,9 +151,9 @@ export default {
       type: Function,
       default: undefined
     },
-    inputFiles: {
-      type: Object,
-      default: null
+    fileManager: {
+      type: FileManager,
+      required: true
     }
   },
   data() {

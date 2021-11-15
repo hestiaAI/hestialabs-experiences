@@ -155,7 +155,7 @@ export default {
     },
     allVueGraphNames() {
       return this.results.map(r =>
-        r.visualizations?.filter(n => n.endsWith('.vue'))
+        r.visualizations?.filter(n => n.endsWith('.vue')).filter(n => n)
       )
     }
   },

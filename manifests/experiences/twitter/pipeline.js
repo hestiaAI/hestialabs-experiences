@@ -24,9 +24,13 @@ function dashboardFillItems(items, impressionAttributes, isEngagement) {
   })
 }
 
-function dashboard(inputFiles) {
-  const engagementsFile = JSON.parse(inputFiles['data/ad-engagements.js'])
-  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+async function dashboard(fileManager) {
+  const engagementsFile = JSON.parse(
+    await fileManager.getPreprocessedText('data/ad-engagements.js')
+  )
+  const impressionsFile = JSON.parse(
+    await fileManager.getPreprocessedText('data/ad-impressions.js')
+  )
   const engagements = JSONPath({
     path: '$.*.ad.adsUserData.adEngagements.engagements[*].impressionAttributes',
     json: engagementsFile
@@ -50,9 +54,11 @@ function dashboard(inputFiles) {
   return { headers, items }
 }
 
-function advertisersPerDay(inputFiles) {
+async function advertisersPerDay(fileManager) {
   // JSON iterator
-  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  const impressionsFile = JSON.parse(
+    await fileManager.getPreprocessedText('data/ad-impressions.js')
+  )
   let impressions = JSONPath({
     path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
     json: impressionsFile
@@ -73,9 +79,11 @@ function advertisersPerDay(inputFiles) {
   return { headers, items }
 }
 
-function targetingTree(inputFiles) {
+async function targetingTree(fileManager) {
   // JSON iterator on impressions
-  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  const impressionsFile = JSON.parse(
+    await fileManager.getPreprocessedText('data/ad-impressions.js')
+  )
   const impressions = JSONPath({
     path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
     json: impressionsFile
@@ -121,9 +129,11 @@ function targetingTree(inputFiles) {
   return { headers, items }
 }
 
-function targetingTypesAndValues(inputFiles) {
+async function targetingTypesAndValues(fileManager) {
   // JSON iterator on impressions
-  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  const impressionsFile = JSON.parse(
+    await fileManager.getPreprocessedText('data/ad-impressions.js')
+  )
   const impressions = JSONPath({
     path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
     json: impressionsFile
@@ -153,9 +163,11 @@ function targetingTypesAndValues(inputFiles) {
   return { headers, items }
 }
 
-function allAdvertisers(inputFiles) {
+async function allAdvertisers(fileManager) {
   // JSON iterator on impressions
-  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  const impressionsFile = JSON.parse(
+    await fileManager.getPreprocessedText('data/ad-impressions.js')
+  )
   const impressions = JSONPath({
     path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
     json: impressionsFile
@@ -170,9 +182,11 @@ function allAdvertisers(inputFiles) {
   return { headers, items }
 }
 
-function selectTargetingTree(inputFiles, parameter) {
+async function selectTargetingTree(fileManager, parameter) {
   // JSON iterator on impressions
-  const impressionsFile = JSON.parse(inputFiles['data/ad-impressions.js'])
+  const impressionsFile = JSON.parse(
+    await fileManager.getPreprocessedText('data/ad-impressions.js')
+  )
   const impressions = JSONPath({
     path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
     json: impressionsFile
