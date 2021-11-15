@@ -6,8 +6,10 @@ export default async function databaseBuilder(fileManager) {
 
   db.create('twitterAds', [
     ['id', 'INTEGER'],
+    ['tweetId', 'INTEGER'],
     ['advertiserName', 'TEXT'],
-    ['date', 'TEXT']
+    ['time', 'DATE'],
+    ['engagement', 'INTEGER']
   ])
 
   const impressionsFile = JSON.parse(
@@ -19,8 +21,10 @@ export default async function databaseBuilder(fileManager) {
   })
   const items = impressions.map((v, i) => ({
     id: i,
+    tweetId: v.promotedTweetInfo?.tweetId ?? null,
     advertiserName: v.advertiserInfo.advertiserName,
-    date: v.impressionTime.substring(0, 10)
+    time: v.impressionTime,
+    engagement: 0
   }))
   db.insert('twitterAds', items)
 }

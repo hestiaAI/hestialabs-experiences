@@ -12,7 +12,7 @@ function dashboardFillItems(items, impressionAttributes, isEngagement) {
     criteria.forEach(criterion => {
       if (v.promotedTweetInfo) {
         items.push({
-          tweet_id: v.promotedTweetInfo.tweetId,
+          tweetId: v.promotedTweetInfo.tweetId,
           companyName: v.advertiserInfo.advertiserName,
           engagement: isEngagement,
           date: v.impressionTime,
@@ -40,7 +40,7 @@ async function dashboard(fileManager) {
     json: impressionsFile
   })
   const headers = [
-    'tweet_id',
+    'tweetId',
     'companyName',
     'engagement',
     'date',
