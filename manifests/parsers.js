@@ -21,16 +21,20 @@ function groupSimilarEventValues(events) {
   )
   commonPatterns.forEach(([json, array]) => {
     const { suffix, prefix } = JSON.parse(json)
-    const regex = new RegExp(`${prefix}(.+)${suffix}`)
-    events
-      .filter(e => !Object.hasOwn(e, 'matched'))
-      .forEach(e => {
-        if (regex.test(e.eventValue)) {
-          e.eventValue = e.eventValue.match(regex)[1]
-          e.eventType = `${prefix}...${suffix}`
-          e.matched = true
-        }
-      })
+    const regex = new RegExp(
+      `${_.escapeRegExp(prefix)}(.+)${_.escapeRegExp(suffix)}`
+    )
+    if (suffix.includes(' ') || prefix.includes(' ')) {
+      events
+        .filter(e => !Object.hasOwn(e, 'matched'))
+        .forEach(e => {
+          if (regex.test(e.eventValue)) {
+            e.eventValue = e.eventValue.match(regex)[1]
+            e.eventType = `${prefix}...${suffix}`
+            e.matched = true
+          }
+        })
+    }
   })
   events.forEach(e => delete e.matched)
   return events
