@@ -51,7 +51,7 @@
       "text": "Understand why you have been targeted by these advertisers. The graph shows the 10 advertisers who use the most targeting criteria on you. In the first ring you will find the different advertisers, in the second ring the types of targeting used (location, language, ...). And finally, if you click on a ring, the graph will enlarge to show you the targeting values (Swiss, French, ...) in the outer ring."
     },
     {
-      "customPipeline": "targetingTypesAndValues",
+      "sql": "targeting-criteria-all-advertisers",
       "visualizations": ["wordcloud-targeting-criteria"],
       "showTable": false,
       "title": "Targeting criteria (All advertisers)",
