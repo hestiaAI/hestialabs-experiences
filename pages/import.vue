@@ -14,7 +14,6 @@
     </p>
     <v-file-input
       v-model="inputZIP"
-      accept="application/zip"
       label="Encrypted or plaintext ZIP file"
     ></v-file-input>
     <v-checkbox v-model="decrypt" label="Decrypt"></v-checkbox>
@@ -23,14 +22,19 @@
       label="Secret Key"
       :disabled="!decrypt"
     ></v-file-input>
-    <base-button text="Import" :disabled="!inputZIP" @click="importZIP" />
+    <base-button
+      text="Import"
+      v-bind="{ status, error, progress, disabled: !inputZIP }"
+      @click="importZIP"
+    />
     <base-data-download-button
       :data="outputZIP"
       extension="zip"
       text="Download plaintext"
-      :disabled="!success || (decrypt && !secretKey)"
+      :disabled="!status || error"
     />
-    <template v-if="success">
+    <p v-if="error">{{ message }}</p>
+    <template v-if="status && !error">
       <v-card class="pa-2 my-6">
         <!-- Experience details -->
         <v-card-title class="justify-center">Experience Details</v-card-title>
@@ -118,7 +122,10 @@ export default {
       inputZIP: null,
       decrypt: false,
       outputZIP: null,
-      success: false,
+      status: false,
+      error: false,
+      progress: false,
+      message: '',
       experience: null,
       results: null,
       consent: null
@@ -168,9 +175,24 @@ export default {
     }
   },
   methods: {
+    handleError(error, message) {
+      console.error(error)
+      this.error = true
+      this.message = message === undefined ? error.message : message
+      this.handleEnd()
+    },
+    handleEnd() {
+      this.status = true
+      this.progress = false
+    },
     async importZIP() {
-      this.success = false
+      this.status = false
+      this.error = false
+      this.message = ''
+      this.progress = true
       if (!this.inputZIP) {
+        const message = 'No ZIP provided'
+        this.handleError(new Error(message))
         return
       }
 
@@ -179,35 +201,61 @@ export default {
 
       // Decrypt
       if (this.decrypt) {
-        const secretKey = await this.secretKey.text()
-        const sk = sodium.from_hex(secretKey)
-        const pk = sodium.from_hex(this.$store.state.config.publicKey)
-        const buf = await this.inputZIP.arrayBuffer()
-        const ciphertext = new Uint8Array(buf)
-        this.outputZIP = new Blob([
-          sodium.crypto_box_seal_open(ciphertext, pk, sk)
-        ])
+        try {
+          const secretKey = await this.secretKey.text()
+          const sk = sodium.from_hex(secretKey)
+          const pk = sodium.from_hex(this.$store.state.config.publicKey)
+          const buf = await this.inputZIP.arrayBuffer()
+          const ciphertext = new Uint8Array(buf)
+          this.outputZIP = new Blob([
+            sodium.crypto_box_seal_open(ciphertext, pk, sk)
+          ])
+        } catch (error) {
+          this.handleError(
+            error,
+            'An error occurred during decryption. Check that the secret key is correct.'
+          )
+          return
+        }
       } else {
         this.outputZIP = this.inputZIP
       }
 
-      // Extract files
+      // Load ZIP
       const zip = new JSZip()
       try {
         await zip.loadAsync(this.outputZIP)
-      } catch {
-        console.error('Error when loading zip file')
+      } catch (error) {
+        if (this.decrypt) {
+          this.handleError(error, 'An error occurred while loading the ZIP.')
+        } else {
+          this.handleError(
+            error,
+            'An error occurred while loading the ZIP. If it is encrypted, please provide the secret key.'
+          )
+        }
         return
       }
-      this.experience = JSON.parse(
-        await zip.file('experience.json').async('string')
-      )
-      this.consent = JSON.parse(await zip.file('consent.json').async('string'))
-      const files = zip.file(/block[0-9]+.json/)
-      const res = await Promise.all(files.map(r => r.async('string')))
-      this.results = res.map(JSON.parse)
+      // Extract files
+      try {
+        this.experience = JSON.parse(
+          await zip.file('experience.json').async('string')
+        )
+        this.consent = JSON.parse(
+          await zip.file('consent.json').async('string')
+        )
+        const files = zip.file(/block[0-9]+.json/)
+        const res = await Promise.all(files.map(r => r.async('string')))
+        this.results = res.map(JSON.parse)
+      } catch (error) {
+        this.handleError(
+          error,
+          'An error occurred while processing the files. Check that the content of the ZIP has not been modified.'
+        )
+        return
+      }
 
-      this.success = true
+      this.handleEnd()
     },
     async generateKeys() {
       await _sodium.ready
