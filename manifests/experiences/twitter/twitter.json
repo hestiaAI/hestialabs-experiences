@@ -58,7 +58,7 @@
       "text": "Get more details on how you are targeted by these advertisers. This graph shows the number of times you have been targeted by different advertisers using a specific criterion. You can change the type of criterion and get information about the meaning of each criterion's type at the bottom of the graph."
     },
     {
-      "customPipeline": "allAdvertisers",
+      "sql": "all-advertisers",
       "showTable": true,
       "title": "All advertisers",
       "text": "Get more details with a table containing all the advertisers that have shown you ads, and how many times they did. Click on the headers to sort the values differently."
