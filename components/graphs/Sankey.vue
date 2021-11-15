@@ -20,36 +20,22 @@ export default {
       type: Array,
       default: () => []
     },
-    circular: {
-      type: Boolean,
-      default: () => false
-    },
     topN: {
       type: Number,
       default: () => 10
+    },
+    labelLeft: {
+      type: String,
+      default: () => 'Pickup places'
+    },
+    labelRight: {
+      type: String,
+      default: () => 'Dropoff places'
     }
   },
   data() {
     return {
-      graphId: 'graph_' + this._uid,
-      test: {
-        nodes: [
-          { node: 0, name: 'node0' },
-          { node: 1, name: 'node1' },
-          { node: 2, name: 'node2' },
-          { node: 3, name: 'node3' },
-          { node: 4, name: 'node4' }
-        ],
-        links: [
-          { source: 0, target: 2, value: 2 },
-          { source: 1, target: 2, value: 2 },
-          { source: 1, target: 3, value: 2 },
-          { source: 0, target: 4, value: 2 },
-          { source: 2, target: 3, value: 2 },
-          { source: 2, target: 4, value: 2 },
-          { source: 3, target: 4, value: 4 }
-        ]
-      }
+      graphId: 'graph_' + this._uid
     }
   },
   mounted() {
@@ -57,7 +43,7 @@ export default {
   },
   methods: {
     toJSONGraph(data) {
-      // group and count each similar links
+      // group, count each similar links and limit to top n links
       const groupedData = d3
         .flatRollup(
           data,
@@ -80,18 +66,21 @@ export default {
 
       const graph = { nodes: [], links: [] }
 
-      const avoidCircular = !this.circular
       groupedData.forEach(function (d) {
-        // Avoid circular graphs
-        if (avoidCircular) {
-          d.source = d.source + 's'
-          d.target = d.target + 't'
-        }
-        graph.nodes.push({ name: d.source })
-        graph.nodes.push({ name: d.target })
+        d.sourceName = d.source
+        d.targetName = d.target
+
+        // Avoid circular links
+        d.source = d.source + 's'
+        d.target = d.target + 't'
+
+        graph.nodes.push({ id: d.source })
+        graph.nodes.push({ id: d.target })
         graph.links.push({
           source: d.source,
           target: d.target,
+          sourceName: d.sourceName,
+          targetName: d.targetName,
           value: d.value
         })
       })
@@ -99,7 +88,7 @@ export default {
       // return only the distinct / unique nodes
       graph.nodes = keys(
         nest()
-          .key(d => d.name)
+          .key(d => d.id)
           .object(graph.nodes)
       )
 
@@ -109,12 +98,10 @@ export default {
         graph.links[i].target = graph.nodes.indexOf(graph.links[i].target)
       })
 
-      // now loop through each nodes to make nodes an array of objects
-      // rather than an array of strings
+      // make nodes an array of objects instead than an array of strings
       graph.nodes.forEach(function (d, i) {
         graph.nodes[i] = { name: d }
       })
-
       return graph
     },
     drawViz() {
@@ -140,10 +127,19 @@ export default {
       // format variables
       const color = d3
         .scaleOrdinal()
-        .domain(linksData.nodes.map(d => d.name))
+        .domain(linksData.nodes.map(d => d.name.slice(0, -1)))
         .range(d3.schemeDark2)
 
-      // append the svg object to the body of the page
+      // create a tooltip for the links and append it to the viz
+      const linkTooltip = d3
+        .select('#' + this.graphId)
+        .append('div')
+        .style('opacity', 1)
+        .text('(hover on the links or nodes to get more information)')
+        .style('left', width / 2 + margin.left + 'px')
+        .style('top', 0 + 'px')
+
+      // append the svg object to the viz
       const svg = d3
         .select('#' + this.graphId)
         .append('svg')
@@ -159,22 +155,22 @@ export default {
         .style('opacity', 0)
         .attr('class', 'tooltip')
 
-      // Add Label source addresses
+      // Add Label left
       svg
         .append('text')
         .attr('class', 'label')
         .attr('x', 0)
         .attr('y', -margin.top / 2)
-        .text('Pickup places')
+        .text(this.labelLeft)
 
-      // Add Label target addresses
+      // Add Label right
       svg
         .append('text')
         .attr('class', 'label')
         .attr('x', width)
         .attr('y', -margin.top / 2)
         .attr('text-anchor', 'end')
-        .text('Dropoff places')
+        .text(this.labelRight)
 
       // Set the sankey diagram properties
       const sankey = d3Sankey
@@ -186,7 +182,7 @@ export default {
 
       // set up graph in same style as original example but empty
       const graph = sankey(linksData)
-      const link = svg
+      svg
         .append('g')
         .selectAll('.link')
         .data(graph.links)
@@ -195,14 +191,21 @@ export default {
         .attr('class', 'link')
         .attr('d', d3Sankey.sankeyLinkHorizontal())
         .attr('stroke-width', d => d.width)
+        .attr('opacity', 0.2)
         .on('mouseover', function (evt, d) {
+          const textToDisplay = `<b>${d.sourceName}</b>  → <b>
+            ${d.targetName}</b><br><center><b>
+            ${d.value}</b> trips.</center>`
+
+          linkTooltip.html(textToDisplay).style('opacity', 1)
+
+          // highlight current one
           d3.select(this).attr('opacity', 0.7)
         })
-
-      // add the link titles
-      link.append('title').text(function (d) {
-        return d.source.name + ' → ' + d.target.name + '\n'
-      })
+        .on('mouseleave', function (d) {
+          d3.select(this).attr('opacity', 0.2)
+          linkTooltip.style('opacity', 0)
+        })
 
       // add in the nodes
       const node = svg
@@ -220,27 +223,29 @@ export default {
         .attr('y', d => d.y0)
         .attr('height', d => d.y1 - d.y0)
         .attr('width', sankey.nodeWidth())
-        .style('fill', d => (d.color = color(d.name)))
+        .style('fill', d => (d.color = color(d.name.slice(0, -1))))
         .style('stroke', function (d) {
           return d3.rgb(d.color).darker(1)
         })
-      node.append('title').text(function (d) {
-        return d.name
-      })
 
       node
         .on('mouseover', function (evt, d) {
-          const textToDisplay = `<b>${d.name}</b><br><center><b>${d.value}</b> trips from this place</center>`
+          const textToDisplay = `<b>${d.name.slice(0, -1)}</b><br><center><b>${
+            d.value
+          }</b> trips <b>${
+            d.name.slice(-1) === 's' ? 'from' : 'to'
+          }</b> this place</center>`
+          // const x = d.x1 // (d.x0 + d.x1) / 2
           tooltip
             .html(textToDisplay)
-            .style('left', margin.left - (d.x0 + d.x1) / 2 + 'px')
-            .style('top', d.y0 + margin.top + 100 + 'px')
+            .style('left', d.x1 + margin.left + 28 + 'px')
+            .style('top', d.y0 + margin.top + 165 + 'px')
           tooltip.style('opacity', 1)
 
           d3.select(this).attr('opacity', 0.7)
 
           // Fade all the links.
-          d3.selectAll('path').style('opacity', 0.3)
+          d3.selectAll('path').style('opacity', 0.2)
 
           // Then highlight only those that are linked to the current node.
           svg
@@ -252,7 +257,7 @@ export default {
             .style('opacity', 1)
         })
         .on('mouseleave', function (d) {
-          d3.selectAll('path').style('opacity', 1)
+          d3.selectAll('path').style('opacity', 0.2)
           tooltip.style('opacity', 0)
         })
 
@@ -291,8 +296,7 @@ body {
 
 .link {
   fill: none;
-  stroke: #000;
-  stroke-opacity: 0.2;
+  stroke: rgb(87, 86, 87);
 }
 
 .tooltip {
@@ -301,6 +305,7 @@ body {
   border: solid white;
   border-width: 2px;
   border-radius: 5px;
+  text-align: left;
   padding: 5px;
   position: absolute;
   width: 150px;
@@ -308,5 +313,22 @@ body {
   webkit-box-shadow: 0px 0px 10px grey;
   moz-box-shadow: 0px 0px 10px grey;
   box-shadow: 0px 0px 10px grey;
+}
+.tooltip:before {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid white;
+  left: -9px;
+  top: 7px;
+}
+
+.label {
+  font-size: 1.1rem;
+  font-weight: bold;
 }
 </style>
