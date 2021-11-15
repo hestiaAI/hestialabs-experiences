@@ -29,10 +29,27 @@
     "parser": "identifyTypeFromManifestList",
     "eventTypes": {
       "en": {
-        "Drive": ["bulk download"],
+        "YouTube": ["Liked", "Disliked", "Subscribed to", "Watched", "Searched", "Saved", "Visited"],
+        "Search": ["Searched", "Visited", "Defined", "Viewed", "Used"],
+        "Maps": ["Viewed", "Directions", "Opened My Maps", "Searched", "Used Maps", "Viewed area", "Explored", "Used"],
+        "Image Search": ["Searched", "Viewed", "Used"],
+        "Google Play Store": ["Visited", "Uninstalled", "Searched", "Installed", "Used"],
+        "Ads": ["Visited"],
+        "Video Search": ["Watched", "Searched"],
+        "Help": ["Visited", "Viewed", "Searched", "Interacted"],
+        "Google Play Games": ["Played"],
+        "Google Apps": ["Searched", "Selected"],
+        "Google Lens": ["Searched"],
+        "Google Cloud": ["Searched", "Visited"],
+        "Shopping": ["Viewed"],
+        "Books": ["Viewed"],
+        "Developers": ["Visited", "Viewed"],
+        "Discover": [],
+        "News": ["Visited", "Searched"],
+        "Gmail": ["Searched"],
+        "Drive": ["bulk download", "Searched"],
         "Google Pay": ["contactless payment that failed", "contactless payment", "Used Google Pay"],
-        "Takeout": ["Downloaded a Takeout archive", "Initiated a Takeout"],
-        "YouTube": ["Liked", "Disliked", "Subscribed to"]
+        "Takeout": ["Downloaded a Takeout archive", "Initiated a Takeout"]
       },
       "fr": {
         "Drive": ["téléchargement groupé"],
