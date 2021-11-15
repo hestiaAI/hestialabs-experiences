@@ -32,7 +32,7 @@ export default {
     onload() {
       const update = this.$refs.iframe.contentWindow?.update
       if (update) {
-        update(this.values)
+        update(this.data)
       } else {
         console.log('iframe does not have an update function')
       }

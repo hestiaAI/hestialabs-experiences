@@ -20,7 +20,7 @@
         @click.native="onDownload"
       />
     </div>
-    <i v-else>data in this format cannot be displayed by this visualization</i>
+    <i v-else>data in this format cannot be displayed in a table</i>
   </div>
 </template>
 

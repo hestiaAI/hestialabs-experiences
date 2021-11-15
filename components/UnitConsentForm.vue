@@ -11,11 +11,11 @@
         />
         <h2 class="mb-2 mt-2">Results to include</h2>
         <v-checkbox
-          v-for="(items, index) in allItems"
+          v-for="(result, index) in allResults"
           :key="`data-${index}`"
           v-model="includedResults"
           :dense="true"
-          :disabled="items.length === 0"
+          :disabled="!result"
           :label="defaultView[index].title"
           :value="index"
         ></v-checkbox>
@@ -57,15 +57,7 @@ const _sodium = require('libsodium-wrappers')
 export default {
   props: {
     allResults: {
-      type: Object,
-      required: true
-    },
-    allItems: {
-      type: Object,
-      required: true
-    },
-    allHeaders: {
-      type: Object,
+      type: Array,
       required: true
     },
     defaultView: {
@@ -126,8 +118,6 @@ export default {
       // Add included data
       this.includedResults.forEach(i => {
         const content = JSON.parse(JSON.stringify(this.defaultView[i]))
-        content.items = JSON.parse(this.allItems[i])
-        content.headers = JSON.parse(this.allHeaders[i])
         content.result = JSON.parse(this.allResults[i])
         zip.file(`block${i}.json`, JSON.stringify(content))
       })

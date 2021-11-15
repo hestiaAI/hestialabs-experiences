@@ -9,7 +9,6 @@ async function tripsData(inputFiles) {
       .on('data', row => items.push(row))
       .on('end', () => resolve({ headers: Object.keys(items[0]), items }))
   })
-  console.log('after pip', result)
   return result
 }
 

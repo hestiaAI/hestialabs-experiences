@@ -164,9 +164,7 @@ export default {
       return this.visualizations?.[name] || []
     },
     showTable() {
-      return (
-        this.result?.headers?.length !== 0 && this.defaultViewElements.showTable
-      )
+      return this.defaultViewElements.showTable
     },
     vizNames() {
       let vizNames
@@ -215,10 +213,8 @@ export default {
     },
     onUnitResultsUpdate(result) {
       this.result = result
-      const { headers = [], items = [] } = result
-      // Vuetify DataTable component expects text and value properties
       this.finished = true
-      this.$emit('update', { index: this.index, headers, items, result })
+      this.$emit('update', { index: this.index, result })
     },
     onChangeSelector(query) {
       this.$emit('change', query)

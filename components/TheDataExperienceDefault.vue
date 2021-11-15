@@ -61,9 +61,7 @@
       </v-row>
       <v-row v-if="$store.state.config.consent">
         <v-col cols="8 mx-auto">
-          <unit-consent-form
-            v-bind="{ allItems, allHeaders, allResults, defaultView }"
-          />
+          <unit-consent-form v-bind="{ allResults, defaultView }" />
         </v-col>
       </v-row>
     </template>
@@ -99,9 +97,7 @@ export default {
       success: false,
       message: '',
       rml: '',
-      allItems: null,
-      allHeaders: null,
-      allResults: null,
+      allResults: [...Array(this.defaultView.length)],
       inputFiles: null,
       allFiles: null
     }
@@ -114,27 +110,6 @@ export default {
     },
     isRdfNeeded() {
       return this.defaultView.filter(v => 'query' in v).length > 0
-    }
-  },
-  watch: {
-    allItems: {
-      immediate: true,
-      handler(allItems) {
-        if (!allItems) {
-          this.allItems = Object.fromEntries(
-            Object.keys(this.defaultView).map((x, i) => [i, ''])
-          )
-          this.allHeaders = Object.fromEntries(
-            Object.keys(this.defaultView).map((x, i) => [i, ''])
-          )
-          this.allResults = Object.fromEntries(
-            Object.keys(this.defaultView).map((x, i) => [
-              i,
-              { header: '', itmes: '' }
-            ])
-          )
-        }
-      }
     }
   },
   methods: {
@@ -178,12 +153,11 @@ export default {
 
       this.progress = false
     },
-    onQueryUpdate({ index, headers, items, result }) {
-      this.allHeaders[index] = JSON.stringify(headers)
-      this.allResults[index] = JSON.stringify(result)
-
-      // console.log('allhit', JSON.stringify(this.allHeaders), this.allItems)
-      this.allItems[index] = JSON.stringify(items)
+    onQueryUpdate({ index, result }) {
+      // we need to change the object or vue won't see the change
+      const newResults = this.allResults.slice()
+      newResults[index] = JSON.stringify(result)
+      this.allResults = newResults
     }
   }
 }
