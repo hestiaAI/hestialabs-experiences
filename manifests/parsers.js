@@ -40,6 +40,20 @@ function groupSimilarEventValues(events) {
   return events
 }
 
+function identifyTypeFromManifestList(events, params, match) {
+  const types = Object.values(params.eventTypes).flatMap(obj =>
+    Object.entries(obj)
+      .filter(([folder]) => folder === match[1])
+      .flatMap(([folder, types]) => types)
+  )
+  events.forEach(event => {
+    event.eventType =
+      _.find(types, t => event.eventValue.includes(t)) ?? 'unknown'
+  })
+  return events
+}
+
 export default {
-  groupSimilarEventValues
+  groupSimilarEventValues,
+  identifyTypeFromManifestList
 }

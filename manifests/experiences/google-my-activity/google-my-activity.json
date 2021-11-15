@@ -8,18 +8,42 @@
   "timedObservationsViewer": {
     "fileMatchers": [
       {
-        "regex": "Takeout/(.+?)/(.+?)/(.+?)\\.json",
+        "regex": "Takeout/(?:.+?)/(.+?)/(?:.+?)\\.json",
         "entryPath": "$[*]",
-        "paths": {
-          "date": "$.time",
-          "eventSource": "$.products[0]",
-          "eventType": "$.title",
-          "eventValue": "$.title"
+        "fields": {
+          "date": {
+            "source": "entry",
+            "path": "$.time"
+          },
+          "eventValue": {
+            "source": "entry",
+            "path": "$.title"
+          },
+          "eventSource": {
+            "source": "regex",
+            "path": "1"
+          }
         }
       }
     ],
-    "fields": ["date", "eventSource", "eventType", "eventValue"],
-    "parser": "groupSimilarEventValues"
+    "parser": "identifyTypeFromManifestList",
+    "eventTypes": {
+      "en": {
+        "Drive": ["bulk download"],
+        "Google Pay": ["contactless payment that failed", "contactless payment", "Used Google Pay"],
+        "Takeout": ["Downloaded a Takeout archive", "Initiated a Takeout"],
+        "YouTube": ["Liked", "Disliked", "Subscribed to"]
+      },
+      "fr": {
+        "Drive": ["téléchargement groupé"],
+        "Google Pay": ["paiement sans contact qui a échoué", "paiement sans contact", "Application utilisée"],
+        "Takeout": ["lancé une opération", "téléchargé une archive"],
+        "YouTube": ["A aimé", "N'a pas aimé", "Vous vous êtes abonné à"]
+      },
+      "fi": {
+
+      }
+    }
   },
   "defaultView": [
     {

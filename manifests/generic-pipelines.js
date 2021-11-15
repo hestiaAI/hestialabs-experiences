@@ -1,4 +1,5 @@
 import { JSONPath } from 'jsonpath-plus'
+import _ from 'lodash'
 
 async function timedObservationViewer(fileManager, manifest) {
   const params = manifest.timedObservationsViewer
@@ -8,34 +9,32 @@ async function timedObservationViewer(fileManager, manifest) {
   const files = await fileManager.preprocessFiles(matchingFilenames)
 
   const headers = params.fields
-  const items = Object.entries(files).flatMap(([name, text]) =>
-    params.parser(
-      params.fileMatchers
-        .filter(matcher => matcher.regex.test(name))
-        .flatMap(matcher => {
-          try {
-            const entries = JSONPath({
-              path: matcher.entryPath,
-              json: JSON.parse(text)
-            })
-            return entries.map(entry => {
-              return Object.fromEntries(
-                headers.map(field => [
-                  field,
-                  JSONPath({
-                    json: entry,
-                    path: matcher.paths[field],
-                    wrap: false
-                  })
-                ])
-              )
-            })
-          } catch (error) {
-            return []
-          }
-        })
-    )
-  )
+  const items = Object.entries(files).flatMap(([name, text]) => {
+    const matcher = _.find(params.fileMatchers, m => m.regex.test(name))
+    let events
+    try {
+      const entries = JSONPath({
+        path: matcher.entryPath,
+        json: JSON.parse(text)
+      })
+      events = entries.map(entry =>
+        Object.fromEntries(
+          Object.entries(matcher.fields).map(([field, { source, path }]) => {
+            if (source === 'entry') {
+              return [field, JSONPath({ path, json: entry, wrap: false })]
+            } else if (source === 'regex') {
+              return [field, name.match(matcher.regex)[path]]
+            } else {
+              return []
+            }
+          })
+        )
+      )
+    } catch (error) {
+      events = []
+    }
+    return params.parser(events, params, name.match(matcher.regex))
+  })
   return { headers, items }
 }
 
