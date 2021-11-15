@@ -1,12 +1,9 @@
 /* global React, ReactDOM, ReactRedux, Redux, KeplerGl */
 /* eslint no-undef: "error" */
-import trips from './someones-trips-data.js'
+// based on the example at https://github.com/keplergl/kepler.gl/blob/master/examples/umd-client/index.html
 
 const MAPBOX_TOKEN =
   'pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA'
-
-// console.log('p', keplerGl.processors)
-const exampleCsvData = trips[0]
 
 /** STORE **/
 const reducers = (function createReducers(redux, keplerGl) {
@@ -74,29 +71,17 @@ const app = (function createReactReduxProvider(
   reactDOM.render(app, document.getElementById('app'))
 })(React, ReactDOM, app)
 
-/**
- * Customize map.
- * Interact with map store to customize data and behavior
- */
-;(function customize(keplerGl, store) {
+function update(values) {
   const dataset = {
-    info: { id: 'someones data', label: "Someone's trips" },
-    data: keplerGl.processCsvData(exampleCsvData)
+    info: { id: 'trips-id', label: 'trips' },
+    data: KeplerGl.processCsvData(values)
   }
-
-  console.log('dataset', dataset)
-
   store.dispatch(
-    keplerGl.addDataToMap({
+    KeplerGl.addDataToMap({
       datasets: [dataset],
       options: { centerMap: true, readOnly: true }
     })
   )
-  // store.dispatch(keplerGl.toggleSplitMap());
-})(KeplerGl, store)
-
-function update(values) {
-  console.log('update received', values)
 }
 
 if (window) {

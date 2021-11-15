@@ -12,10 +12,7 @@
 // add custom pipeline for kepler data (no processing, so we delegate to kepler's method?)
 export default {
   props: {
-    data: {
-      type: Object,
-      default: () => {}
-    },
+    data: undefined,
     src: {
       type: String,
       required: true
@@ -25,16 +22,17 @@ export default {
       default: '500px'
     }
   },
-  mounted() {
-    console.log('mounted', this.data)
-  },
   methods: {
     onload() {
       const update = this.$refs.iframe.contentWindow?.update
       if (update) {
-        update(this.data)
+        try {
+          update(this.data)
+        } catch (error) {
+          console.error('problem in iframe', error)
+        }
       } else {
-        console.log('iframe does not have an update function')
+        console.error('iframe does not have an update function')
       }
     }
   }

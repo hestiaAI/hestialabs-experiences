@@ -90,6 +90,14 @@
             <vue-graph-by-name :graph-name="graphName" :data="result.result" />
           </v-col>
         </v-row>
+        <v-row
+          v-for="(src, vizUrlIndex) in vizUrls[resultIndex]"
+          :key="'viz-url-' + vizUrlIndex"
+        >
+          <v-col>
+            <unit-iframe :src="src" :data="result.result" />
+          </v-col>
+        </v-row>
         <v-row>
           <v-col>
             <unit-filterable-table :data="result.result" />
@@ -138,6 +146,11 @@ export default {
     allVegaFiles() {
       return this.results.map(r =>
         this.example.vega.filter(s => r.visualizations?.includes(s.name))
+      )
+    },
+    vizUrls() {
+      return this.results.map(r =>
+        r.visualizations?.filter(n => n.startsWith('/'))
       )
     },
     allVueGraphNames() {

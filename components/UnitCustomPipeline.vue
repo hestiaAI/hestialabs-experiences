@@ -84,11 +84,11 @@ export default {
       this.error = false
       this.progress = true
       try {
-        const { headers, items } = await this.customPipeline(
+        const result = await this.customPipeline(
           this.inputFiles,
           this.parameter
         )
-        this.$emit('update', { headers, items })
+        this.$emit('update', result)
       } catch (error) {
         console.error(error)
         this.error = true

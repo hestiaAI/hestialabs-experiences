@@ -1,6 +1,6 @@
 {
   "title": "Uber",
-  "subtitle": "Customer data",
+  "subtitle": "Kepler",
   "icon": "uber.png",
   "dataPortal": "https://help.uber.com/ubereats/article/request-a-copy-of-your-uber-data",
   "ext": "zip",
@@ -13,6 +13,13 @@
       "showTable": false,
       "title": "Uber Trips overview",
       "text": "Compare the prices of your Uber rides according to several factors ( Your data is grouped by currency)."
+    },
+    {
+      "customPipeline": "rawTripsData",
+      "visualizations": ["/kepler"],
+      "showTable": false,
+      "title": "Uber Trips in Kepler",
+      "text": "A cool visualization project"
     }
   ]
 }
