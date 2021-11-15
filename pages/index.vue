@@ -5,7 +5,7 @@
     <template v-if="$vuetify.breakpoint.smAndUp">
       <v-row class="mt-6">
         <v-col
-          v-for="{ key, title, subtitle, icon, url } in $store.getters
+          v-for="{ key, title, subtitle, icon, url, disabled } in $store.getters
             .manifests"
           :key="key"
           cols="12"
@@ -16,14 +16,17 @@
         >
           <v-card
             class="d-flex flex-column"
-            v-bind="linkAttributes(url, key)"
+            v-bind="cardAttributes(url, disabled, key)"
             hover
             shaped
           >
             <v-img max-height="250" contain :src="icon" :lazy-src="icon" />
 
             <v-card-title v-text="title" />
-            <v-card-subtitle class="subtitle-1" v-text="subtitle" />
+            <v-card-subtitle
+              class="subtitle-1"
+              v-text="disabled ? 'Contact us' : subtitle"
+            />
           </v-card>
         </v-col>
       </v-row>
@@ -36,8 +39,10 @@
 <script>
 export default {
   methods: {
-    linkAttributes(url, key) {
-      return url
+    cardAttributes(url, disabled, key) {
+      return disabled
+        ? { disabled }
+        : url
         ? { href: url, target: '_blank', rel: 'noopener noreferrer' }
         : { nuxt: true, to: `/${key}` }
     }
