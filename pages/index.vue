@@ -1,50 +1,31 @@
 <template>
   <div>
-    <h1>Understand your data</h1>
-
-    <template v-if="$vuetify.breakpoint.smAndUp">
-      <v-row class="mt-6">
-        <v-col
-          v-for="{ key, title, subtitle, icon, url, disabled } in $store.getters
-            .manifests"
-          :key="key"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          xl="2"
-        >
-          <v-card
-            class="d-flex flex-column"
-            v-bind="cardAttributes(url, disabled, key)"
-            hover
-            shaped
-          >
-            <v-img max-height="250" contain :src="icon" :lazy-src="icon" />
-
-            <v-card-title v-text="title" />
-            <v-card-subtitle
-              class="subtitle-1"
-              v-text="disabled ? 'Contact us' : subtitle"
-            />
-          </v-card>
-        </v-col>
-      </v-row>
+    <template v-if="enabledExperiences.length > 0">
+      <h1>Discover our experiences!</h1>
+      <the-data-experience-list :experiences="enabledExperiences" />
     </template>
-    <template v-else>
-      <the-data-experience-list class="mt-4" />
+    <br /><br /><br />
+    <template v-if="disabledExperiences.length > 0">
+      <h1>
+        Future experiences (<a href="mailto:contact@hestialabs.org"
+          >Contact us</a
+        >)
+      </h1>
+      <the-data-experience-list :experiences="disabledExperiences" />
     </template>
   </div>
 </template>
 <script>
+import TheDataExperienceList from '~/components/TheDataExperienceList'
+
 export default {
-  methods: {
-    cardAttributes(url, disabled, key) {
-      return disabled
-        ? { disabled }
-        : url
-        ? { href: url, target: '_blank', rel: 'noopener noreferrer' }
-        : { nuxt: true, to: `/${key}` }
+  components: { TheDataExperienceList },
+  computed: {
+    enabledExperiences() {
+      return this.$store.getters.manifests.filter(({ disabled }) => !disabled)
+    },
+    disabledExperiences() {
+      return this.$store.getters.manifests.filter(({ disabled }) => disabled)
     }
   }
 }
