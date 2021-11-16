@@ -148,9 +148,9 @@ export default {
       )
     },
     allVueGraphNames() {
-      return this.results
-        .map(r => r.visualizations?.filter(n => n.endsWith('.vue')))
-        .filter(n => n)
+      return this.results.map(r =>
+        r.visualizations?.filter(n => n.endsWith('.vue'))
+      )
     },
     allItems() {
       return this.results.map(r => r.items)
