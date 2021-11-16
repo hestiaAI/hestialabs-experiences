@@ -27,6 +27,11 @@ export default {
       graphId: 'graph_' + this._uid
     }
   },
+  watch: {
+    values(oldValues) {
+      this.drawViz()
+    }
+  },
   mounted() {
     this.drawViz()
   },
