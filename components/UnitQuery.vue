@@ -55,13 +55,17 @@
               v-bind="{
                 fileManager,
                 customPipeline,
-                parameterName: defaultViewElements.parameter
+                parameterName: defaultViewElements.parameterName
               }"
               @update="onUnitResultsUpdate"
             />
             <unit-sql
               v-else-if="sql"
-              v-bind="{ sql }"
+              v-bind="{
+                sql,
+                parameterName: defaultViewElements.parameterName,
+                parameterKey: defaultViewElements.parameterKey
+              }"
               @update="onUnitResultsUpdate"
             />
             <unit-sparql

@@ -55,8 +55,10 @@
       "text": "Get more details with a table containing all the advertisers that have shown you ads, and how many times they did. Click on the headers to sort the values differently."
     },
     {
-      "customPipeline": "selectTargetingTree",
-      "parameter": "Advertiser",
+      "sql": "targeting-criteria-one-advertiser",
+      "postprocessor": "sunburstTargetingAdvertiser",
+      "parameterName": "Advertiser",
+      "parameterKey": ":advertiser",
       "visualizations": ["Sunburst.vue"],
       "showTable": false,
       "title": "Targeting criteria (1 advertiser)",

@@ -1,5 +1,14 @@
 <template>
   <v-container>
+    <v-row v-if="parameterName">
+      <v-col cols="4" class="mx-auto">
+        <v-text-field
+          v-model="parameter"
+          :label="parameterName"
+          class="my-sm-2 mr-sm-2"
+        ></v-text-field>
+      </v-col>
+    </v-row>
     <v-row>
       <v-col align="center">
         <base-button
@@ -23,6 +32,14 @@ export default {
     sql: {
       type: String,
       required: true
+    },
+    parameterName: {
+      type: String,
+      default: ''
+    },
+    parameterKey: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -30,7 +47,8 @@ export default {
       message: '',
       status: false,
       error: false,
-      progress: false
+      progress: false,
+      parameter: ''
     }
   },
   computed: {
@@ -44,7 +62,8 @@ export default {
       this.error = false
       this.progress = true
       try {
-        const { headers, items } = db.select(this.sql)
+        const params = { [this.parameterKey]: this.parameter }
+        const { headers, items } = db.select(this.sql, params)
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)

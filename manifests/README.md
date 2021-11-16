@@ -84,6 +84,7 @@ Note: All files and folders should match the following regular expression: [`^(?
     * - A function used as the custom pipeline (defined in pipeline.js)
     * - A SQL query
     * - A postprocessor (defined in postprocessors.js)
+    * - A parameter name (if necessary), and for sql pipelines a parameter key used in the query (prefixed with :)
     * - An array of visualizations to show
     * - A data table
     * - A title
@@ -97,6 +98,8 @@ Note: All files and folders should match the following regular expression: [`^(?
       "customPipeline": "pipeline_function_name",
       "sql": "sql_query_filename",
       "postprocessor": "postprocessor_function_name",
+      "parameterName": "Example",
+      "parameterKey": ":example",
       "visualizations": ["chart_filename1", "chart_filename2"],
       "showTable": false,
       "title": "An interesting title",
