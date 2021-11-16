@@ -59,27 +59,9 @@
       </template>
       <div class="mt-6">
         <logo-img width="250" />
-        <template v-if="enabledExperiences.length > 0">
-          <h1>Public experiences</h1>
-          <the-data-experience-list
-            class="mt-6"
-            :small="true"
-            :experiences="enabledExperiences"
-          />
-        </template>
-        <br /><br />
-        <template v-if="disabledExperiences.length > 0">
-          <h1>
-            Available on-demand (<a href="mailto:contact@hestialabs.org"
-              >Contact us</a
-            >)
-          </h1>
-          <the-data-experience-list
-            class="mt-6"
-            :small="true"
-            :experiences="disabledExperiences"
-          />
-        </template>
+        <the-data-experience-list
+          v-bind="{ enabledExperiences, disabledExperiences, small: true }"
+        />
       </div>
     </v-navigation-drawer>
   </div>
@@ -91,28 +73,27 @@ import TheDataExperienceList from '~/components/TheDataExperienceList'
 
 export default {
   components: { TheDataExperienceList },
+  props: {
+    enabledExperiences: {
+      type: Array,
+      required: true
+    },
+    disabledExperiences: {
+      type: Array,
+      required: true
+    },
+    collaborator: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
       drawer: false
     }
   },
   computed: {
-    ...mapGetters(['manifest']),
-    collaborator() {
-      if (this.$route.params.key) {
-        const { collaborator } = this.manifest(this.$route) || {}
-        return collaborator
-      }
-      return null
-    },
-    enabledExperiences() {
-      return this.$store.getters.manifests.filter(({ disabled }) => !disabled)
-    },
-    disabledExperiences() {
-      return this.$store.getters.manifests
-        .filter(({ disabled }) => disabled)
-        .map(o => (o.key === 'other' ? { ...o, disabled: false } : o))
-    }
+    ...mapGetters(['manifest'])
   }
 }
 </script>
