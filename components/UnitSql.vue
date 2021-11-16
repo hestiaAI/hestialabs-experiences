@@ -61,19 +61,21 @@ export default {
       this.message = ''
       this.error = false
       this.progress = true
-      try {
-        const params = { [this.parameterKey]: this.parameter }
-        const { headers, items } = db.select(this.sql, params)
-        this.$emit('update', { headers, items })
-      } catch (error) {
-        console.error(error)
-        this.error = true
-        this.message = processError(error)
-        this.$emit('update', { error })
-      } finally {
-        this.status = true
-        this.progress = false
-      }
+      setTimeout(() => {
+        try {
+          const params = { [this.parameterKey]: this.parameter }
+          const { headers, items } = db.select(this.sql, params)
+          this.$emit('update', { headers, items })
+        } catch (error) {
+          console.error(error)
+          this.error = true
+          this.message = processError(error)
+          this.$emit('update', { error })
+        } finally {
+          this.status = true
+          this.progress = false
+        }
+      }, 1)
     }
   }
 }
