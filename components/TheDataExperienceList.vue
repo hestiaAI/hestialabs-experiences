@@ -8,9 +8,9 @@
     <template v-else> <br /> </template>
     <template v-if="disabledExperiences.length > 0">
       <h1>
-        Available on-demand (
-        <a href="mailto:contact@hestialabs.org"> Contact us </a>
-        )
+        Available on-demand (<a href="mailto:contact@hestialabs.org"
+          >Contact us</a
+        >)
       </h1>
       <card-or-item-list :big="big" :experiences="disabledExperiences" />
     </template>

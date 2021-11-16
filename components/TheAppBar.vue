@@ -60,7 +60,7 @@
       <div class="mt-6">
         <logo-img width="250" />
         <the-data-experience-list
-          v-bind="{ enabledExperiences, disabledExperiences, small: true }"
+          v-bind="{ enabledExperiences, disabledExperiences, big: false }"
         />
       </div>
     </v-navigation-drawer>
