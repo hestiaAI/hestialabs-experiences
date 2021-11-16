@@ -1,8 +1,6 @@
 <template>
   <div>
-    <template
-      v-if="typeof small === 'undefined' ? $vuetify.breakpoint.smAndUp : !small"
-    >
+    <template v-if="big">
       <v-row class="mt-6">
         <v-col
           v-for="{ key, title, subtitle, icon, url, disabled } in experiences"
@@ -50,9 +48,9 @@
 export default {
   name: 'CardOrItemList',
   props: {
-    small: {
+    big: {
       type: Boolean,
-      default: undefined
+      required: true
     },
     experiences: {
       type: Array,

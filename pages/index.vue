@@ -1,6 +1,10 @@
 <template>
   <the-data-experience-list
-    v-bind="{ enabledExperiences, disabledExperiences }"
+    v-bind="{
+      enabledExperiences,
+      disabledExperiences,
+      big: $vuetify.breakpoint.smAndUp
+    }"
   />
 </template>
 <script>
