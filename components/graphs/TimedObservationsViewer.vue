@@ -413,10 +413,11 @@ export default {
           p[c.key[0]].items = []
         }
         p[c.key[0]].count += c.value
-        p[c.key[0]].items.push({ title: c.key[1], count: c.value })
+        if (c.value > 0)
+          p[c.key[0]].items.push({ title: c.key[1], count: c.value })
         return p
       }, {})
-      this.items = Object.values(counts)
+      this.items = Object.values(counts).filter(d => d.count > 0)
     },
     filterSource(title) {
       this.currSourceFilter = title
