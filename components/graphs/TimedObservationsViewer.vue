@@ -225,6 +225,7 @@ export default {
           return d.date != null
         })
         d.dateStr = formatTime(d.date)
+        d.month = d3.timeMonth(d.date)
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
         d.hour = d3.timeHour(d.date).getHours() // pre-calculate hours for better performance
       })
@@ -257,11 +258,11 @@ export default {
 
       // Compute and draw line chart
       this.lineChart = new dc.LineChart('#line-chart')
-      this.volumeDimension = ndx.dimension(d => d.day)
+      this.volumeDimension = ndx.dimension(d => d.month)
       const volumeGroup = this.volumeDimension.group().reduceCount()
-      this.maxDate = this.volumeDimension.top(1)[0].day
+      this.maxDate = this.volumeDimension.top(1)[0].month
       this.currMaxDateStr = formatTimeS(this.maxDate)
-      this.minDate = this.volumeDimension.bottom(1)[0].day
+      this.minDate = this.volumeDimension.bottom(1)[0].month
       this.currMinDateStr = formatTimeS(this.minDate)
       const height = 240
       this.lineChart
