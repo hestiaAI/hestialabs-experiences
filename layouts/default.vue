@@ -13,8 +13,15 @@
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                Subscribe to the newsletter of
-                {{ collaborator.title || 'HestiaLabs' }}!
+                Subscribe to
+                {{
+                  collaborator.title
+                    ? `${collaborator.title}${
+                        collaborator.title.endsWith('s') ? "'" : "'s"
+                      }`
+                    : "HestiaLabs'"
+                }}
+                newsletter!
               </a>
             </h2>
           </v-col>
