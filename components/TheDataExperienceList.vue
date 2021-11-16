@@ -21,10 +21,7 @@
           >
             <v-img max-height="250" contain :src="icon" :lazy-src="icon" />
             <v-card-title v-text="title" />
-            <v-card-subtitle
-              class="subtitle-1"
-              v-text="disabled ? 'Not ready' : subtitle"
-            />
+            <v-card-subtitle class="subtitle-1" v-text="subtitle" />
           </v-card>
         </v-col>
       </v-row>
@@ -41,7 +38,7 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title v-text="title" />
-            <v-list-item-subtitle v-text="disabled ? 'Not ready' : subtitle" />
+            <v-list-item-subtitle v-text="subtitle" />
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -63,10 +60,10 @@ export default {
   },
   methods: {
     cardAttributes(url, key, disabled) {
-      return disabled
+      return url
+        ? { href: url, target: '_blank', rel: 'noopener noreferrer', disabled }
+        : disabled
         ? { disabled }
-        : url
-        ? { href: url, target: '_blank', rel: 'noopener noreferrer' }
         : { nuxt: true, to: `/${key}` }
     }
   }
