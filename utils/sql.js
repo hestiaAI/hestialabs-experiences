@@ -70,10 +70,9 @@ class DB {
    * Asynchronously initialize the database.
    */
   async init() {
+    // If a database already exists, close it.
     if (this.#db) {
-      throw new Error(
-        'A database already exists. It must be closed before initializing a new one.'
-      )
+      this.close()
     }
     const SQL = await initSqlJs({
       locateFile: () => sqlWasm
@@ -148,6 +147,7 @@ class DB {
     if (this.#db) {
       this.#db.close()
       this.#db = null
+      this.#tables = new Map()
     }
   }
 }
