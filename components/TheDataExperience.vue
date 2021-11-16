@@ -83,6 +83,10 @@ export default {
       type: Object,
       default: () => {}
     },
+    postprocessors: {
+      type: Object,
+      default: () => {}
+    },
     allowMissingFiles: {
       type: Boolean,
       default: false
@@ -122,6 +126,7 @@ export default {
         'defaultView',
         'customPipelines',
         'preprocessors',
+        'postprocessors',
         'isGenericViewer',
         'showDataExplorer',
         'files',

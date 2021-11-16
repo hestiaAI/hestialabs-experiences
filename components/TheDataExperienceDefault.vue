@@ -38,6 +38,7 @@
               query: queries[index],
               sql: sqlQueries[index],
               fileManager,
+              postprocessors,
               i: index
             }"
             @update="onQueryUpdate"
@@ -78,6 +79,7 @@ export default {
     showDataExplorer: Boolean,
     files: Array,
     preprocessors: Object,
+    postprocessors: Object,
     allowMissingFiles: Boolean,
     databaseBuilder: Function
   },

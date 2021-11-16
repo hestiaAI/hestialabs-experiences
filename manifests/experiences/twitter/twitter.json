@@ -23,16 +23,6 @@
     {
       "vega": "wordcloud-targeting-criteria",
       "query": "targeting-values-all-advertisers"
-    },
-    {
-      "vega": "sunburst-targeting",
-      "query": "targeting-criteria",
-      "preprocessor": "sunburstTargeting"
-    },
-    {
-      "vega": "sunburst-targeting",
-      "query": "select-targeting-criteria",
-      "preprocessor": "sunburstTargetingAdvertiser"
     }
   ]},
   "defaultView": [
@@ -44,7 +34,8 @@
       "text": "See the ranking of advertisers that have shown you the most ads."
     },
     {
-      "customPipeline": "targetingTree",
+      "sql": "targeting-criteria-by-advertiser",
+      "postprocessor": "sunburstTargeting",
       "visualizations": ["Sunburst.vue"],
       "showTable": false,
       "title": "Targeting criteria (Top 10 advertisers)",

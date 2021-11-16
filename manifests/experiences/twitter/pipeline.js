@@ -1,7 +1,7 @@
 import { JSONPath } from 'jsonpath-plus'
 import _ from 'lodash'
+import postprocessors from './postprocessors'
 import { aggregate, countReducer } from '@/utils/aggregate'
-import csvProcessors from '@/manifests/csv-processors'
 
 function dashboardFillItems(items, impressionAttributes, isEngagement) {
   impressionAttributes.forEach(v => {
@@ -124,7 +124,7 @@ async function targetingTree(fileManager) {
     countReducer('count')
   )
   // Transform to tree
-  ;[headers, items] = csvProcessors.sunburstTargeting(headers, items)
+  ;({ headers, items } = postprocessors.sunburstTargeting(headers, items))
 
   return { headers, items }
 }
@@ -218,7 +218,10 @@ async function selectTargetingTree(fileManager, parameter) {
     countReducer('count')
   )
   // Transform to tree
-  ;[headers, items] = csvProcessors.sunburstTargetingAdvertiser(headers, items)
+  ;({ headers, items } = postprocessors.sunburstTargetingAdvertiser(
+    headers,
+    items
+  ))
 
   return { headers, items }
 }

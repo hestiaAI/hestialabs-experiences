@@ -77,7 +77,7 @@
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="allProcessedItems[i][j]"
+              :values="allItems[i]"
               :div-id="`viz-${i}-${specFile.name}`"
             />
           </v-col>
@@ -109,7 +109,6 @@
 import JSZip from 'jszip'
 import FileSaver from 'file-saver'
 
-import csvProcessors from '@/manifests/csv-processors'
 import UnitFilterableTable from '~/components/UnitFilterableTable'
 
 const _sodium = require('libsodium-wrappers')
@@ -155,23 +154,6 @@ export default {
     },
     allItems() {
       return this.results.map(r => r.items)
-    },
-    allProcessedItems() {
-      // For each block
-      return this.results.map((r, i) =>
-        // For each viz
-        this.allVegaFiles[i].map(spec => {
-          // Find the viz definition for this query
-          const def = this.visualizations.find(
-            v => r.query === v.query && spec.name === v.vega
-          )
-          // If it has a preprocessor defined, run it
-          if (def?.preprocessor) {
-            return csvProcessors[def.preprocessor](r.headers, r.items)[1]
-          }
-          return r.items
-        })
-      )
     }
   },
   methods: {

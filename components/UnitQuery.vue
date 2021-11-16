@@ -29,7 +29,7 @@
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="processedItems[index]"
+              :values="items[index]"
               :div-id="`viz-${query.name}-${specFile.name}`"
             />
           </v-col>
@@ -82,7 +82,7 @@
               >
                 <unit-vega-viz
                   :spec-file="specFile"
-                  :values="processedItems[index]"
+                  :values="items"
                   :div-id="`viz-${i}-${specFile.name}`"
                 />
               </v-col>
@@ -115,7 +115,6 @@
 </template>
 
 <script>
-import csvProcessors from '@/manifests/csv-processors'
 import UnitFilterableTable from '~/components/UnitFilterableTable'
 import FileManager from '~/utils/file-manager'
 
@@ -157,6 +156,10 @@ export default {
     fileManager: {
       type: FileManager,
       required: true
+    },
+    postprocessors: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -192,29 +195,16 @@ export default {
       return this.selectedExample.vega.filter(s =>
         this.vizNames.includes(s.name)
       )
-    },
-    processedItems() {
-      // For each viz
-      return this.vegaFiles.map(spec => {
-        if (this.customPipeline === undefined && !this.sql) {
-          // Find the viz definition for this query
-          const preprocessor = this.exampleVisualizations.filter(
-            v => this.query.name === v.query && spec.name === v.vega
-          )
-          // If it has a preprocessor defined, run it
-          if (preprocessor.length === 1 && preprocessor[0].preprocessor) {
-            return csvProcessors[preprocessor[0].preprocessor](
-              this.headers,
-              this.items
-            )[1]
-          }
-        }
-        return this.items
-      })
     }
   },
   methods: {
     onUnitResultsUpdate({ headers = [], items = [], error }) {
+      // Postprocessing
+      if (this.defaultViewElements.postprocessor !== undefined) {
+        ;({ headers, items } = this.postprocessors[
+          this.defaultViewElements.postprocessor
+        ](headers, items))
+      }
       // Vuetify DataTable component expects text and value properties
       this.headers = headers.map(h => ({ text: h, value: h }))
       this.items = items
