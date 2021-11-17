@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12" md="8">
         <v-row>
-          <v-col cols="8"><p>Number of information collected</p></v-col>
+          <v-col cols="8"><p>Amount of information collected</p></v-col>
           <spacer />
           <v-col cols="4" class="text-right">
             <v-checkbox
