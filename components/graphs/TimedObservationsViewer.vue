@@ -42,7 +42,7 @@
         </v-radio-group>
       </v-col>
       <v-col cols="3">
-        <v-btn class="ma-2" outlined color="indigo" @click="tabDetails()">
+        <v-btn class="ma-2" outlined color="indigo" @click="resetAll()">
           Reset all filters
         </v-btn>
       </v-col>
@@ -166,7 +166,9 @@ export default {
       currSourceFilter: null,
       checkbox: false,
       timelineGroup: null,
-      volumeGroup: null,
+      formatTimeDay: null,
+      formatTimeMonth: null,
+      formatTimeHour: null,
       items: [],
       header: [
         { text: 'Date', value: 'dateStr' },
@@ -186,6 +188,11 @@ export default {
     this.drawViz()
   },
   methods: {
+    resetAll() {
+      dc.filterAll()
+      dc.redrawAll()
+      this.resetSourceFilter()
+    },
     // Change tab
     tabDetails() {
       this.tab = 'details'
@@ -230,8 +237,21 @@ export default {
         }
       }
     },
+    createCumulativeGroup(sourceGroup) {
+      return {
+        all() {
+          let cumulate = 0
+          return sourceGroup.all().map(function (d) {
+            cumulate += d.value
+
+            return { key: d.key, value: cumulate }
+          })
+        }
+      }
+    },
     changeAgg() {
-      if (this.checkbox) this.lineChart.group(this.volumeGroup)
+      if (this.checkbox)
+        this.lineChart.group(this.createCumulativeGroup(this.timelineGroup))
       else this.lineChart.group(this.timelineGroup)
       dc.redrawAll()
     },
@@ -242,7 +262,9 @@ export default {
 
       // Format dates
       const dateFormatParsers = this.dateFormats.map(d => d3.timeParse(d))
-      const formatTime = d3.timeFormat('%Y-%m-%d')
+      this.formatTimeDay = d3.timeFormat('%Y-%m-%d')
+      this.formatTimeMonth = d3.timeFormat('%B %Y')
+      this.formatTimeHour = d3.timeFormat('%H:%M:%S')
       const formatTimeS = d3.timeFormat('%d %B %Y')
       this.results.forEach(d => {
         d.dateSrc = d.date
@@ -250,12 +272,11 @@ export default {
           d.date = parser(d.dateSrc)
           return d.date != null
         })
-        d.dateStr = formatTime(d.date)
-        d.month = d3.timeMonth(d.date)
+        d.dateStr = this.formatTimeDay(d.date)
+        d.month = d3.timeMonth(d.date) // pre-calculate months for better performance
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
-        d.hour = d3.timeHour(d.date).getHours() // pre-calculate hours for better performance
+        d.hour = d3.timeHour(d.date) // pre-calculate hours for better performance
       })
-
       // Build index for crossfiltering
       const ndx = crossfilter(this.results)
       const all = ndx.groupAll()
@@ -278,28 +299,17 @@ export default {
         this.filterItems(overviewGroup)
         this.total = all.value()
         this.results = ndx.allFiltered()
-        this.currMaxDateStr = formatTimeS(this.maxDate)
+        this.currMinDateStr = formatTimeS(this.minDate)
         this.currMaxDateStr = formatTimeS(this.maxDate)
       })
 
       // Compute and draw line chart
       this.lineChart = new dc.LineChart('#line-chart')
       this.rangeChart = new dc.BarChart('#range-chart')
-      this.timeDimension = ndx.dimension(d => d.month)
-      this.timelineGroup = this.timeDimension.group().reduceCount()
-      function createCumulativeGroup(sourceGroup) {
-        return {
-          all() {
-            let cumulate = 0
-            return sourceGroup.all().map(function (d) {
-              cumulate += d.value
-
-              return { key: d.key, value: cumulate }
-            })
-          }
-        }
-      }
-      this.volumeGroup = createCumulativeGroup(this.timelineGroup)
+      this.timeDimension = ndx.dimension(d => d.date)
+      this.timelineGroup = this.timeDimension
+        .group(d => d3.timeMonth(d))
+        .reduceCount()
       this.maxDate = this.timeDimension.top(1)[0].month
       this.currMaxDateStr = formatTimeS(this.maxDate)
       this.minDate = this.timeDimension.bottom(1)[0].month
@@ -310,10 +320,10 @@ export default {
         .width(d3.select('#line-chart').node().getBoundingClientRect().width)
         .height(height)
         .transitionDuration(1000)
-        .margins({ top: 20, right: 10, bottom: 20, left: 50 })
+        .margins({ top: 20, right: 20, bottom: 20, left: 50 })
         .group(this.timelineGroup)
         .dimension(this.timeDimension)
-        .curve(d3.curveBasis)
+        .curve(d3.curveMonotoneX)
         .x(d3.scaleTime().domain([this.minDate, this.maxDate]))
         .y(d3.scaleLinear())
         .ordinalColors(['#58539E'])
@@ -325,8 +335,13 @@ export default {
         .rangeChart(this.rangeChart)
         .renderHorizontalGridLines(false)
         .clipPadding(10)
-        .title(d => formatTime(+d.key) + ': ' + d.value)
+        .title(d => this.formatTimeMonth(+d.key) + ': ' + d.value)
         .yAxisLabel('')
+        .renderDataPoints({
+          radius: 3,
+          fillOpacity: 0.8,
+          strokeOpacity: 0.0
+        })
         .xAxis()
         .ticks(5)
 
@@ -345,12 +360,17 @@ export default {
       this.rangeChart
         .width(d3.select('#range-chart').node().getBoundingClientRect().width)
         .height(40)
-        .margins({ top: 0, right: 10, bottom: 20, left: 50 })
+        .margins({ top: 0, right: 20, bottom: 20, left: 50 })
         .dimension(this.timeDimension)
         .group(this.timelineGroup)
         .centerBar(true)
+        .brushOn(false)
         .gap(1)
-        .x(d3.scaleTime().domain([this.minDate, this.maxDate]))
+        .x(
+          d3
+            .scaleTime()
+            .domain([this.minDate, d3.timeDay.offset(this.maxDate, 1)])
+        )
         // .round(d3.timeDay.round)
         // .alwaysUseRounding(true)
         // .xUnits(d3.timeDays)
@@ -365,8 +385,8 @@ export default {
       const width = d3.select('#row-chart').node().getBoundingClientRect().width
       rowChart
         .width(width)
-        .height(height)
-        .margins({ top: 20, left: 10, right: 10, bottom: 20 })
+        .height(height + 55)
+        .margins({ top: 20, left: 10, right: 30, bottom: 20 })
         .group(this.removeEmptyBins(typeGroup))
         .dimension(typeDimension)
         .ordinalColors(['#58539E', '#847CEB', '#605BAB', '#4A4685', '#35325E'])
@@ -387,43 +407,62 @@ export default {
       this.rangeChart.filter(null)
       let minDate = null
       const maxDate = d3.timeDay.offset(this.maxDate, 1)
+      let dateFormat = null
       switch (newValue) {
+        case 'ALL':
+          this.timelineGroup = this.timeDimension.group(d => d3.timeMonth(d))
+          dateFormat = this.formatTimeMonth
+          break
         case '1Y':
-          minDate = d3.max([
-            d3.timeYear.offset(this.maxDate, -1),
-            this.minDate + 1
-          ])
+          minDate = d3.max([d3.timeYear.offset(this.maxDate, -1), this.minDate])
+          this.timelineGroup = this.timeDimension.group(d => d3.timeMonth(d))
+          dateFormat = this.formatTimeMonth
           break
         case '3M':
           minDate = d3.max([
             d3.timeMonth.offset(this.maxDate, -3),
-            this.minDate + 1
+            this.minDate
           ])
+          this.timelineGroup = this.timeDimension.group(d => d3.timeDay(d))
+          dateFormat = this.formatTimeDay
           break
         case '1M':
           minDate = d3.max([
             d3.timeMonth.offset(this.maxDate, -1),
-            this.minDate + 1
+            this.minDate
           ])
+          this.timelineGroup = this.timeDimension.group(d => d3.timeDay(d))
+          dateFormat = this.formatTimeDay
           break
         case '7D':
-          minDate = d3.max([
-            d3.timeDay.offset(this.maxDate, -7),
-            this.minDate + 1
-          ])
+          minDate = d3.max([d3.timeDay.offset(this.maxDate, -7), this.minDate])
+          this.timelineGroup = this.timeDimension.group(d => d3.timeDay(d))
+          dateFormat = this.formatTimeDay
           break
         case '1D':
-          minDate = d3.max([
-            d3.timeDay.offset(this.maxDate, -1),
-            this.minDate + 1
-          ])
+          minDate = d3.max([d3.timeDay.offset(this.maxDate, -1), this.minDate])
+          this.timelineGroup = this.timeDimension.group(d => d3.timeHour(d))
+          dateFormat = this.formatTimeHour
           break
       }
       if (minDate !== null)
         this.rangeChart.filter(dc.filters.RangedFilter(minDate, maxDate))
 
-      // this.lineChart.x().domain([minDate, maxDate])
+      this.lineChart
+        .dimension(this.timeDimension)
+        .group(this.timelineGroup)
+        .title(d => dateFormat(+d.key) + ': ' + d.value)
+        .transitionDuration(1000)
+        .render()
       dc.redrawAll()
+
+      /*
+      this.lineChart
+        .dimension()
+        .group(postsGroup)
+        .transitionDuration(1000)
+        .render()
+      */
     },
     filterItems(overviewGroup) {
       const counts = overviewGroup.top(Infinity).reduce((p, c) => {
