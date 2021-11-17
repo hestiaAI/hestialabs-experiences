@@ -37,7 +37,7 @@
               customPipeline:
                 customPipelines[defaultViewElements.customPipeline],
               fileManager,
-              i: index
+              index
             }"
             @update="onQueryUpdate"
           />
@@ -49,7 +49,7 @@
               defaultViewElements,
               query: queries[index],
               fileManager,
-              i: index
+              index
             }"
             @update="onQueryUpdate"
           />
@@ -62,7 +62,7 @@
       </v-row>
       <v-row v-if="$store.state.config.consent">
         <v-col cols="8 mx-auto">
-          <unit-consent-form v-bind="{ allItems, allHeaders, defaultView }" />
+          <unit-consent-form v-bind="{ allResults, defaultView }" />
         </v-col>
       </v-row>
     </template>
@@ -101,8 +101,7 @@ export default {
       success: false,
       message: '',
       rml: '',
-      allItems: null,
-      allHeaders: null,
+      allResults: [...Array(this.defaultView.length)],
       allFiles: null,
       fileManager: new FileManager(this.preprocessors, this.allowMissingFiles)
     }
@@ -115,21 +114,6 @@ export default {
     },
     isRdfNeeded() {
       return this.defaultView.filter(v => 'query' in v).length > 0
-    }
-  },
-  watch: {
-    allItems: {
-      immediate: true,
-      handler(allItems) {
-        if (!allItems) {
-          this.allItems = Object.fromEntries(
-            Object.keys(this.defaultView).map((x, i) => [i, ''])
-          )
-          this.allHeaders = Object.fromEntries(
-            Object.keys(this.defaultView).map((x, i) => [i, ''])
-          )
-        }
-      }
     }
   },
   methods: {
@@ -171,9 +155,11 @@ export default {
       const elapsed = new Date() - start
       this.message = `Successfully processed in ${elapsed / 1000} sec.`
     },
-    onQueryUpdate({ i, headers, items }) {
-      this.allHeaders[i] = JSON.stringify(headers)
-      this.allItems[i] = JSON.stringify(items)
+    onQueryUpdate({ index, result }) {
+      // we need to change the object or vue won't see the change
+      const newResults = this.allResults.slice()
+      newResults[index] = JSON.stringify(result)
+      this.allResults = newResults
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <the-app-bar />
+    <the-app-bar v-bind="{ enabledExperiences, disabledExperiences }" />
     <v-main>
       <v-container class="mt-5">
         <v-row>
@@ -13,13 +13,20 @@
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                Subscribe to the newsletter of
-                {{ collaborator.title || 'HestiaLabs' }}!
+                Subscribe to
+                {{
+                  collaborator.title
+                    ? `${collaborator.title}${
+                        collaborator.title.endsWith('s') ? "'" : "'s"
+                      }`
+                    : "HestiaLabs'"
+                }}
+                newsletter!
               </a>
             </h2>
           </v-col>
         </v-row>
-        <nuxt />
+        <NuxtChild v-bind="{ enabledExperiences, disabledExperiences }" />
         <v-snackbar
           v-model="snackbar"
           content-class="v-snack__content-online-status"
@@ -47,7 +54,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import TheAppBar from '~/components/TheAppBar'
 export default {
+  components: { TheAppBar },
   data() {
     return {
       // Display offline message if user opens app when offline
@@ -79,6 +88,14 @@ export default {
         return collaborator || {}
       }
       return {}
+    },
+    enabledExperiences() {
+      return this.$store.getters.manifests.filter(({ disabled }) => !disabled)
+    },
+    disabledExperiences() {
+      return this.$store.getters.manifests
+        .filter(({ disabled }) => disabled)
+        .map(o => (o.key === 'other' ? { ...o, disabled: false } : o))
     }
   },
   watch: {
