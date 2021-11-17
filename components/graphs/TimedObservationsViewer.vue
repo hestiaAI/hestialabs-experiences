@@ -3,7 +3,12 @@
     <v-row>
       <v-col cols="12" md="8">
         <v-row>
-          <v-col cols="8"><p>Number of information collected</p></v-col>
+          <v-col cols="8"
+            ><p>
+              Number of information collected per
+              <strong>{{ timeInterval }}</strong>
+            </p></v-col
+          >
           <v-col cols="4" class="text-right">
             <v-checkbox
               v-model="checkbox"
@@ -153,6 +158,7 @@ export default {
     return {
       total: null,
       timeRange: null,
+      timeInterval: 'month',
       tab: null,
       lineChart: null,
       rangeChart: null,
@@ -188,6 +194,8 @@ export default {
   },
   methods: {
     resetAll() {
+      this.timeRange = 'ALL'
+      this.filterTimeRange(this.timeRange)
       dc.filterAll()
       dc.redrawAll()
       this.resetSourceFilter()
@@ -272,10 +280,8 @@ export default {
           return d.date != null
         })
         d.dateStr = this.formatTimeDay(d.date)
-        d.month = d3.timeMonth(d.date) // pre-calculate months for better performance
-        d.day = d3.timeDay(d.date) // pre-calculate days for better performance
-        d.hour = d3.timeHour(d.date) // pre-calculate hours for better performance
       })
+      console.log(this.results)
       // Build index for crossfiltering
       const ndx = crossfilter(this.results)
       const all = ndx.groupAll()
@@ -309,9 +315,9 @@ export default {
       this.timelineGroup = this.timeDimension
         .group(d => d3.timeMonth(d))
         .reduceCount()
-      this.maxDate = this.timeDimension.top(1)[0].month
+      this.maxDate = this.timeDimension.top(1)[0].date
       this.currMaxDateStr = formatTimeS(this.maxDate)
-      this.minDate = this.timeDimension.bottom(1)[0].month
+      this.minDate = this.timeDimension.bottom(1)[0].date
       this.currMinDateStr = formatTimeS(this.minDate)
       const height = 240
       this.lineChart
@@ -411,11 +417,13 @@ export default {
         case 'ALL':
           this.timelineGroup = this.timeDimension.group(d => d3.timeMonth(d))
           dateFormat = this.formatTimeMonth
+          this.timeInterval = 'month'
           break
         case '1Y':
           minDate = d3.max([d3.timeYear.offset(this.maxDate, -1), this.minDate])
           this.timelineGroup = this.timeDimension.group(d => d3.timeMonth(d))
           dateFormat = this.formatTimeMonth
+          this.timeInterval = 'month'
           break
         case '3M':
           minDate = d3.max([
@@ -424,6 +432,7 @@ export default {
           ])
           this.timelineGroup = this.timeDimension.group(d => d3.timeDay(d))
           dateFormat = this.formatTimeDay
+          this.timeInterval = 'day'
           break
         case '1M':
           minDate = d3.max([
@@ -432,16 +441,19 @@ export default {
           ])
           this.timelineGroup = this.timeDimension.group(d => d3.timeDay(d))
           dateFormat = this.formatTimeDay
+          this.timeInterval = 'day'
           break
         case '7D':
           minDate = d3.max([d3.timeDay.offset(this.maxDate, -7), this.minDate])
           this.timelineGroup = this.timeDimension.group(d => d3.timeDay(d))
           dateFormat = this.formatTimeDay
+          this.timeInterval = 'day'
           break
         case '1D':
           minDate = d3.max([d3.timeDay.offset(this.maxDate, -1), this.minDate])
           this.timelineGroup = this.timeDimension.group(d => d3.timeHour(d))
           dateFormat = this.formatTimeHour
+          this.timeInterval = 'hour'
           break
       }
       if (minDate !== null)
