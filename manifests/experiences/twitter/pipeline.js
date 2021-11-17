@@ -218,7 +218,10 @@ async function selectTargetingTree(fileManager, parameter) {
     countReducer('count')
   )
   // Transform to tree
-  ;[headers, items] = csvProcessors.sunburstTargetingAdvertiser(headers, items)
+  ;[headers, items] = csvProcessors.sunburstTargetingAdvertiser({
+    headers,
+    items
+  })
 
   return { headers, items }
 }
