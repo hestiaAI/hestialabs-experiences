@@ -68,11 +68,11 @@ export default {
       this.progress = true
       setTimeout(async () => {
         try {
-          const { headers, items } = await this.customPipeline(
+          const result = await this.customPipeline(
             this.fileManager,
             this.parameter
           )
-          this.$emit('update', { headers, items })
+          this.$emit('update', result)
         } catch (error) {
           console.error(error)
           this.error = true

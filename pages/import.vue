@@ -67,37 +67,44 @@
       </v-card>
 
       <!-- Results -->
-      <v-card v-for="(result, i) in results" :key="i" class="pa-2 my-6">
+      <v-card
+        v-for="(result, resultIndex) in results"
+        :key="resultIndex"
+        class="pa-2 my-6"
+      >
         <v-card-title class="justify-center">{{ result.title }}</v-card-title>
         <v-row>
           <v-col
-            v-for="(specFile, j) in allVegaFiles[i]"
-            :key="j"
+            v-for="(specFile, vegaIndex) in allVegaFiles[resultIndex]"
+            :key="vegaIndex"
             style="text-align: center"
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="allProcessedItems[i][j]"
-              :div-id="`viz-${i}-${specFile.name}`"
+              :data="processResultForVega(result.result, specFile)"
+              :div-id="`viz-${resultIndex}-${specFile.name}`"
             />
           </v-col>
         </v-row>
         <v-row
-          v-for="(graphName, index) in allVueGraphNames[i]"
-          :key="`viz-${i}-${index}`"
+          v-for="(graphName, vizVueIndex) in allVueGraphNames[resultIndex]"
+          :key="`viz-${resultIndex}-${vizVueIndex}`"
         >
           <v-col>
-            <vue-graph-by-name :graph-name="graphName" :values="allItems[i]" />
+            <vue-graph-by-name :graph-name="graphName" :data="result.result" />
+          </v-col>
+        </v-row>
+        <v-row
+          v-for="(src, vizUrlIndex) in vizUrls[resultIndex]"
+          :key="'viz-url-' + vizUrlIndex"
+        >
+          <v-col>
+            <unit-iframe :src="src" :data="result.result" />
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <unit-filterable-table
-              v-bind="{
-                headers: result.headers.map(h => ({ text: h, value: h })),
-                items: result.items
-              }"
-            />
+            <unit-filterable-table :data="result.result" />
           </v-col>
         </v-row>
       </v-card>
@@ -148,33 +155,32 @@ export default {
         this.example.vega.filter(s => r.visualizations?.includes(s.name))
       )
     },
+    vizUrls() {
+      return this.results.map(r =>
+        r.visualizations?.filter(n => n.startsWith('/'))
+      )
+    },
     allVueGraphNames() {
-      return this.results
-        .map(r => r.visualizations?.filter(n => n.endsWith('.vue')))
-        .filter(n => n)
-    },
-    allItems() {
-      return this.results.map(r => r.items)
-    },
-    allProcessedItems() {
-      // For each block
-      return this.results.map((r, i) =>
-        // For each viz
-        this.allVegaFiles[i].map(spec => {
-          // Find the viz definition for this query
-          const def = this.visualizations.find(
-            v => r.query === v.query && spec.name === v.vega
-          )
-          // If it has a preprocessor defined, run it
-          if (def?.preprocessor) {
-            return csvProcessors[def.preprocessor](r.headers, r.items)[1]
-          }
-          return r.items
-        })
+      return this.results.map(r =>
+        r.visualizations?.filter(n => n.endsWith('.vue')).filter(n => n)
       )
     }
   },
   methods: {
+    processResultForVega(result, specFile) {
+      const processor = this.findProcessor(specFile)
+      if (processor) {
+        const items = processor(result)[1]
+        return { items }
+      }
+      return result
+    },
+    findProcessor(result, specFile) {
+      const def = this.visualizations.find(
+        v => result.query === v.query && specFile.name === v.vega
+      )
+      return csvProcessors[def?.preprocessor]
+    },
     handleError(error, message) {
       console.error(error)
       this.error = true

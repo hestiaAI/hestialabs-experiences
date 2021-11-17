@@ -1,23 +1,26 @@
 <template>
   <div>
-    <h2 v-if="$store.state.power" class="my-3">Query Results</h2>
-    <v-alert v-if="error" type="error">{{ message }}</v-alert>
-    <the-table-filter :headers="headers" @update="onFilterUpdate" />
-    <v-data-table
-      v-bind="{ headers: tableHeaders, items, search }"
-      :hide-default-footer="disabled"
-      multi-sort
-    >
-      <template #item.url="{ value }">
-        <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
-      </template>
-    </v-data-table>
-    <base-data-download-button
-      v-bind="{ progress, error, disabled, extension, data, status }"
-      ref="downloadButton"
-      text="Download"
-      @click.native="onDownload"
-    />
+    <div v-if="isValid">
+      <h2 v-if="$store.state.power" class="my-3">Query Results</h2>
+      <v-alert v-if="error" type="error">{{ message }}</v-alert>
+      <the-table-filter :headers="headers" @update="onFilterUpdate" />
+      <v-data-table
+        v-bind="{ headers: tableHeaders, items, search }"
+        :hide-default-footer="disabled"
+        multi-sort
+      >
+        <template #item.url="{ value }">
+          <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
+        </template>
+      </v-data-table>
+      <base-data-download-button
+        v-bind="{ progress, error, disabled, extension, data: csvData, status }"
+        ref="downloadButton"
+        text="Download"
+        @click.native="onDownload"
+      />
+    </div>
+    <i v-else>data in this format cannot be displayed in a table</i>
   </div>
 </template>
 
@@ -27,17 +30,17 @@ import { processError } from '@/utils/utils'
 import BaseDataDownloadButton from '~/components/BaseDataDownloadButton'
 import TheTableFilter from '~/components/TheTableFilter'
 
+function isDataValid(data) {
+  return !!data.items && !!(data.headers?.length > 0)
+}
+
 export default {
   name: 'UnitFilterableTable',
   components: { BaseDataDownloadButton, TheTableFilter },
   props: {
-    headers: {
-      type: Array,
-      default: () => []
-    },
-    items: {
-      type: Array,
-      default: () => []
+    data: {
+      default: undefined,
+      validator: isDataValid
     }
   },
   data() {
@@ -45,7 +48,7 @@ export default {
       status: false,
       error: false,
       progress: false,
-      data: '',
+      csvData: '',
       message: '',
       extension: 'csv',
       search: '',
@@ -53,6 +56,20 @@ export default {
     }
   },
   computed: {
+    isValid() {
+      return isDataValid(this.data)
+    },
+    headers() {
+      const rawHeaders = this.data?.headers || []
+      if (typeof rawHeaders[0] === 'string') {
+        // allow headers to be an array of strings
+        return rawHeaders.map(h => ({ text: h, value: h }))
+      }
+      return rawHeaders
+    },
+    items() {
+      return this.data?.items || []
+    },
     disabled() {
       return !this.headers.length
     }
@@ -71,7 +88,7 @@ export default {
         try {
           const headers = this.headers.map(h => h.text)
           // update the data
-          this.data = await writeToString(this.items, { headers })
+          this.csvData = await writeToString(this.items, { headers })
           // wait until DOM is updated, i.e. the href attribute (see BaseDownloadButton.vue)
           await this.$nextTick()
           // click the anchor manually -> event.isTrusted === false
