@@ -281,7 +281,6 @@ export default {
         })
         d.dateStr = this.formatTimeDay(d.date)
       })
-      console.log(this.results)
       // Build index for crossfiltering
       const ndx = crossfilter(this.results)
       const all = ndx.groupAll()
