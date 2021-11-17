@@ -12,14 +12,10 @@
     "./packages/*"
   ],
   "scripts": {
-    "clean": "lerna run clean",
-    "build:old": "lerna run build",
     "build": "webpack",
+    "clean": "lerna run clean",
     "test": "lerna run test",
-    "pub": "lerna publish",
-    "version": "lerna version --conventional-commits --no-changelog",
-    "publish:from-package": "lerna publish from-package --conventional-commits",
-    "publish": "npm run version && npm run publish:from-package",
+    "pub": "lerna version && lerna publish from-package",
     "prepublishOnly": "npm run build",
     "prepare": "husky install",
     "lint": "eslint . --ext .ts",
