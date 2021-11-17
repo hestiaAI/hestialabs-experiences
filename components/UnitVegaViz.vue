@@ -1,21 +1,33 @@
-<template v-if="hasValidSpec">
+<template>
   <div>
-    <div :id="divId" ref="graph"></div>
-    <v-row>
-      <v-col cols="6 mx-auto">
-        <base-button text="Export" @click="exportViz" />
-        <base-download-button
-          :href="dataURL"
-          :extension="exportExtension"
-          :disabled="!dataURL"
-        />
-      </v-col>
-    </v-row>
+    <template v-if="isValid">
+      <div :id="divId" ref="graph"></div>
+      <v-row>
+        <v-col cols="6 mx-auto">
+          <base-button text="Export" @click="exportViz" />
+          <base-download-button
+            :href="dataURL"
+            :extension="exportExtension"
+            :disabled="!dataURL"
+          />
+        </v-col>
+      </v-row>
+    </template>
+    <template v-else>
+      <v-row>
+        <v-col>
+          <i>data in this format cannot be displayed by this visualization</i>
+        </v-col>
+      </v-row>
+    </template>
   </div>
 </template>
-
 <script>
 import embed from 'vega-embed'
+
+function isDataValid(data) {
+  return !data || !!(data.items?.length > 0)
+}
 
 export default {
   props: {
@@ -23,9 +35,9 @@ export default {
       type: Object,
       default: () => {}
     },
-    values: {
-      type: Array,
-      default: () => []
+    data: {
+      default: undefined,
+      validator: isDataValid
     },
     exportExtension: {
       type: String,
@@ -43,20 +55,29 @@ export default {
     }
   },
   computed: {
+    isValid() {
+      return isDataValid(this.data)
+    },
+    items() {
+      if (!this.isValid) {
+        return []
+      }
+      return this.data.items
+    },
     jsonSpec() {
       return this.specFile?.vega || {}
     },
-    clonedValues() {
+    clonedItems() {
       // Vega happens to modify values,
       // so we clone them to avoid affecting
       // other graphs that could
       // possibly use the same values
-      if (!this.values.length) {
+      if (!this.items.length) {
         return []
       }
-      return JSON.parse(JSON.stringify(this.values))
+      return JSON.parse(JSON.stringify(this.items))
     },
-    specWithValues() {
+    specWithItems() {
       // Changing the values involves
       // stuffing them into a spec.
       // We'll keep an original spec
@@ -67,7 +88,7 @@ export default {
         // invalid data
         return {}
       }
-      const values = this.clonedValues
+      const values = this.clonedItems
       const spec = this.jsonSpec
       // we only change spec.data[0].values
       const clonedSpec = Object.assign({}, spec, {
@@ -80,7 +101,7 @@ export default {
     }
   },
   watch: {
-    specWithValues(v) {
+    specWithItems(v) {
       this.draw()
     }
   },
@@ -94,7 +115,7 @@ export default {
       // put something like autosize in the spec
       // "autosize": {"type": "fit", "contains": "padding"},
       // see https://vega.github.io/vega/docs/specification/
-      const spec = this.specWithValues
+      const spec = this.specWithItems
       // const width = this.width
       // const scaling = width / (spec.width + spec.padding * 2)
       // const height = spec.height * scaling

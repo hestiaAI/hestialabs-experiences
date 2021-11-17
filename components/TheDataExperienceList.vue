@@ -1,27 +1,38 @@
 <template>
-  <v-list rounded>
-    <v-list-item
-      v-for="{ key, title, subtitle, icon, url } in $store.getters.manifests"
-      :key="key"
-      v-bind="linkAttributes(url, key)"
-    >
-      <v-list-item-avatar tile>
-        <v-img :src="icon" :lazy-src="icon" />
-      </v-list-item-avatar>
-      <v-list-item-content>
-        <v-list-item-title v-text="title"></v-list-item-title>
-        <v-list-item-subtitle v-text="subtitle"></v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
-  </v-list>
+  <div>
+    <template v-if="enabledExperiences.length > 0">
+      <h1>Public experiences</h1>
+      <card-or-item-list :big="big" :experiences="enabledExperiences" />
+    </template>
+    <template v-if="big"> <br /><br /> </template>
+    <template v-else> <br /> </template>
+    <template v-if="disabledExperiences.length > 0">
+      <h1>
+        Available on-demand (<a href="mailto:contact@hestialabs.org"
+          >Contact us</a
+        >)
+      </h1>
+      <card-or-item-list :big="big" :experiences="disabledExperiences" />
+    </template>
+  </div>
 </template>
 <script>
+import CardOrItemList from '~/components/CardOrItemList'
 export default {
-  methods: {
-    linkAttributes(url, key) {
-      return url
-        ? { href: url, target: '_blank', rel: 'noopener noreferrer' }
-        : { nuxt: true, to: `/${key}` }
+  name: 'TheDataExperienceList',
+  components: { CardOrItemList },
+  props: {
+    big: {
+      type: Boolean,
+      required: true
+    },
+    enabledExperiences: {
+      type: Array,
+      required: true
+    },
+    disabledExperiences: {
+      type: Array,
+      required: true
     }
   }
 }

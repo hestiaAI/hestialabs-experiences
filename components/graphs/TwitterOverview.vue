@@ -87,7 +87,7 @@
     <v-row>
       <v-col cols="12" sm="1"></v-col>
       <v-col cols="12" sm="10">
-        <unit-filterable-table v-bind="{ headers: header, items: results }" />
+        <unit-filterable-table :data="{ headers: header, items: results }" />
       </v-col>
       <v-col cols="12" sm="1"></v-col>
     </v-row>

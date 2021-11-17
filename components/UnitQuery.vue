@@ -18,19 +18,19 @@
           />
         </v-col>
         <v-col cols="12" lg="6">
-          <unit-filterable-table v-bind="{ headers, items }" />
+          <unit-filterable-table :data="result" />
         </v-col>
-        <template v-if="items.length">
+        <template v-if="result">
           <v-col
-            v-for="(specFile, index) in vegaFiles"
-            :key="index"
+            v-for="(specFile, vegaIndex) in vegaFiles"
+            :key="vegaIndex"
             cols="12"
             style="text-align: center"
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="items[index]"
-              :div-id="`viz-${query.name}-${specFile.name}`"
+              :data="result"
+              :div-id="`viz-${index}-${specFile.name}`"
             />
           </v-col>
         </template>
@@ -77,31 +77,39 @@
           </v-col>
         </v-row>
         <template v-if="finished">
-          <template v-if="items.length">
+          <template v-if="result">
             <v-row>
               <v-col
-                v-for="(specFile, index) in vegaFiles"
-                :key="'vega-' + index"
+                v-for="(specFile, vegaIndex) in vegaFiles"
+                :key="'vega-' + vegaIndex"
                 style="text-align: center"
               >
                 <unit-vega-viz
                   :spec-file="specFile"
-                  :values="items"
-                  :div-id="`viz-${i}-${specFile.name}`"
+                  :data="result"
+                  :div-id="`viz-${index}-${specFile.name}`"
                 />
               </v-col>
             </v-row>
             <v-row
-              v-for="(graphName, index) in vueGraphNames"
-              :key="'vue-' + index"
+              v-for="(graphName, vizVueIndex) in vizVueGraphs"
+              :key="'viz-vue-' + vizVueIndex"
             >
               <v-col>
-                <vue-graph-by-name :graph-name="graphName" :values="items" />
+                <vue-graph-by-name :graph-name="graphName" :data="result" />
+              </v-col>
+            </v-row>
+            <v-row
+              v-for="(src, vizUrlIndex) in vizUrls"
+              :key="'viz-url-' + vizUrlIndex"
+            >
+              <v-col>
+                <unit-iframe :src="src" :data="result" />
               </v-col>
             </v-row>
             <v-row v-if="showTable">
               <v-col>
-                <unit-filterable-table v-bind="{ headers, items }" />
+                <unit-filterable-table :data="result" />
               </v-col>
             </v-row>
           </template>
@@ -119,11 +127,9 @@
 </template>
 
 <script>
-import UnitFilterableTable from '~/components/UnitFilterableTable'
 import FileManager from '~/utils/file-manager'
 
 export default {
-  components: { UnitFilterableTable },
   props: {
     visualizations: {
       type: Object,
@@ -145,7 +151,7 @@ export default {
       type: Boolean,
       default: false
     },
-    i: {
+    index: {
       type: Number,
       default: 0
     },
@@ -168,8 +174,7 @@ export default {
   },
   data() {
     return {
-      headers: [],
-      items: [],
+      result: undefined,
       finished: false
     }
   },
@@ -179,7 +184,7 @@ export default {
       return this.visualizations?.[name] || []
     },
     showTable() {
-      return this.headers.length !== 0 && this.defaultViewElements.showTable
+      return this.defaultViewElements.showTable
     },
     vizNames() {
       let vizNames
@@ -192,7 +197,10 @@ export default {
       }
       return vizNames
     },
-    vueGraphNames() {
+    vizUrls() {
+      return this.vizNames.filter(n => n.startsWith('/'))
+    },
+    vizVueGraphs() {
       return this.vizNames.filter(n => n.endsWith('.vue'))
     },
     vegaFiles() {
@@ -204,18 +212,15 @@ export default {
     }
   },
   methods: {
-    onUnitResultsUpdate({ headers = [], items = [], error }) {
+    onUnitResultsUpdate(result) {
       // Postprocessing
       if (this.defaultViewElements.postprocessor !== undefined) {
-        ;({ headers, items } = this.postprocessors[
-          this.defaultViewElements.postprocessor
-        ](headers, items))
+        result =
+          this.postprocessors[this.defaultViewElements.postprocessor](result)
       }
-      // Vuetify DataTable component expects text and value properties
-      this.headers = headers.map(h => ({ text: h, value: h }))
-      this.items = items
+      this.result = result
       this.finished = true
-      this.$emit('update', { i: this.i, headers, items })
+      this.$emit('update', { index: this.index, result })
     },
     onChangeSelector(query) {
       this.$emit('change', query)

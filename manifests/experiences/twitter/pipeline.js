@@ -124,7 +124,7 @@ async function targetingTree(fileManager) {
     countReducer('count')
   )
   // Transform to tree
-  ;({ headers, items } = postprocessors.sunburstTargeting(headers, items))
+  ;({ headers, items } = postprocessors.sunburstTargeting({ headers, items }))
 
   return { headers, items }
 }
@@ -218,10 +218,10 @@ async function selectTargetingTree(fileManager, parameter) {
     countReducer('count')
   )
   // Transform to tree
-  ;({ headers, items } = postprocessors.sunburstTargetingAdvertiser(
+  ;({ headers, items } = postprocessors.sunburstTargetingAdvertiser({
     headers,
     items
-  ))
+  }))
 
   return { headers, items }
 }

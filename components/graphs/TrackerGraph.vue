@@ -71,7 +71,7 @@
         <a class="reset">Reset All</a>
       </div>
     </v-row>
-    <unit-filterable-table v-bind="{ headers: header, items: results }" />
+    <unit-filterable-table :data="{ headers: header, items: results }" />
   </v-container>
 </template>
 
