@@ -42,7 +42,7 @@
         "Google Lens": ["Searched"],
         "Google Cloud": ["Searched", "Visited"],
         "Shopping": ["Viewed"],
-        "Books": ["Viewed"],
+        "Books": ["Viewed", "Searched"],
         "Developers": ["Visited", "Viewed"],
         "Discover": [],
         "News": ["Visited", "Searched"],

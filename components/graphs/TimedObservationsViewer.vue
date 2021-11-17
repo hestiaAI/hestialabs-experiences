@@ -2,8 +2,20 @@
   <v-container>
     <v-row>
       <v-col cols="12" md="8">
-        <p>Number of information collected</p>
+        <v-row>
+          <v-col cols="8"><p>Number of information collected</p></v-col>
+          <spacer />
+          <v-col cols="4" class="text-right">
+            <v-checkbox
+              v-model="checkbox"
+              dense
+              :label="`Cumulative`"
+              @change="changeAgg"
+            ></v-checkbox>
+          </v-col>
+        </v-row>
         <div id="line-chart"></div>
+        <div id="range-chart"></div>
       </v-col>
       <v-col cols="12" md="4">
         <p>Information Type</p>
@@ -11,7 +23,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12">
+      <v-col cols="9">
         <v-radio-group
           v-model="timeRange"
           row
@@ -28,6 +40,11 @@
           <v-radio label="7D" value="7D"></v-radio>
           <v-radio label="1D" value="1D"></v-radio>
         </v-radio-group>
+      </v-col>
+      <v-col cols="3">
+        <v-btn class="ma-2" outlined color="indigo" @click="tabDetails()">
+          Reset all filters
+        </v-btn>
       </v-col>
     </v-row>
     <v-row>
@@ -139,13 +156,17 @@ export default {
       timeRange: null,
       tab: null,
       lineChart: null,
-      volumeDimension: null,
+      rangeChart: null,
+      timeDimension: null,
       overviewDimension: null,
       minDate: null,
       maxDate: null,
       currMinDateStr: 'NaN',
       currMaxDateStr: 'NaN',
       currSourceFilter: null,
+      checkbox: false,
+      timelineGroup: null,
+      volumeGroup: null,
       items: [],
       header: [
         { text: 'Date', value: 'dateStr' },
@@ -209,6 +230,11 @@ export default {
         }
       }
     },
+    changeAgg() {
+      if (this.checkbox) this.lineChart.group(this.volumeGroup)
+      else this.lineChart.group(this.timelineGroup)
+      dc.redrawAll()
+    },
     // Main function to init component
     drawViz() {
       // Init table values
@@ -258,11 +284,25 @@ export default {
 
       // Compute and draw line chart
       this.lineChart = new dc.LineChart('#line-chart')
-      this.volumeDimension = ndx.dimension(d => d.month)
-      const volumeGroup = this.volumeDimension.group().reduceCount()
-      this.maxDate = this.volumeDimension.top(1)[0].month
+      this.rangeChart = new dc.BarChart('#range-chart')
+      this.timeDimension = ndx.dimension(d => d.month)
+      this.timelineGroup = this.timeDimension.group().reduceCount()
+      function createCumulativeGroup(sourceGroup) {
+        return {
+          all() {
+            let cumulate = 0
+            return sourceGroup.all().map(function (d) {
+              cumulate += d.value
+
+              return { key: d.key, value: cumulate }
+            })
+          }
+        }
+      }
+      this.volumeGroup = createCumulativeGroup(this.timelineGroup)
+      this.maxDate = this.timeDimension.top(1)[0].month
       this.currMaxDateStr = formatTimeS(this.maxDate)
-      this.minDate = this.volumeDimension.bottom(1)[0].month
+      this.minDate = this.timeDimension.bottom(1)[0].month
       this.currMinDateStr = formatTimeS(this.minDate)
       const height = 240
       this.lineChart
@@ -271,17 +311,18 @@ export default {
         .height(height)
         .transitionDuration(1000)
         .margins({ top: 20, right: 10, bottom: 20, left: 50 })
-        .group(volumeGroup)
-        .dimension(this.volumeDimension)
+        .group(this.timelineGroup)
+        .dimension(this.timeDimension)
         .curve(d3.curveBasis)
-        .x(d3.scaleTime())
-        .y(d3.scaleLinear().domain([0, 10]))
+        .x(d3.scaleTime().domain([this.minDate, this.maxDate]))
+        .y(d3.scaleLinear())
         .ordinalColors(['#58539E'])
-        .elasticX(true)
-        .elasticY(true)
         .brushOn(false)
+        .elasticX(false)
+        .elasticY(true)
         .xyTipsOn(true)
         .mouseZoomable(false)
+        .rangeChart(this.rangeChart)
         .renderHorizontalGridLines(false)
         .clipPadding(10)
         .title(d => formatTime(+d.key) + ': ' + d.value)
@@ -289,8 +330,8 @@ export default {
         .xAxis()
         .ticks(5)
 
-      this.lineChart.on('filtered', () => {
-        const filters = this.volumeDimension.currentFilter()
+      this.rangeChart.on('filtered', () => {
+        const filters = this.timeDimension.currentFilter()
         if (filters) {
           this.currMinDateStr = formatTimeS(filters[0])
           this.currMaxDateStr = formatTimeS(filters[1])
@@ -299,6 +340,23 @@ export default {
           this.currMaxDateStr = formatTimeS(this.maxDate)
         }
       })
+
+      // Compute and draw range chart
+      this.rangeChart
+        .width(d3.select('#range-chart').node().getBoundingClientRect().width)
+        .height(40)
+        .margins({ top: 0, right: 10, bottom: 20, left: 50 })
+        .dimension(this.timeDimension)
+        .group(this.timelineGroup)
+        .centerBar(true)
+        .gap(1)
+        .x(d3.scaleTime().domain([this.minDate, this.maxDate]))
+        // .round(d3.timeDay.round)
+        // .alwaysUseRounding(true)
+        // .xUnits(d3.timeDays)
+        .ordinalColors(['#58539E'])
+        .yAxis()
+        .ticks(0)
 
       // Compute and draw row chart
       const rowChart = new dc.RowChart('#row-chart')
@@ -324,85 +382,48 @@ export default {
       dc.renderAll()
     },
     filterTimeRange(newValue) {
+      if (this.rangeChart === null) return
+
+      this.rangeChart.filter(null)
+      let minDate = null
+      const maxDate = d3.timeDay.offset(this.maxDate, 1)
       switch (newValue) {
-        case 'ALL':
-          if (this.lineChart !== null) {
-            this.lineChart.filter(null)
-            this.lineChart.brushOn(false)
-          }
-          break
         case '1Y':
-          this.lineChart.brushOn(true)
-          this.lineChart.extendBrush = function (brushSelection) {
-            brushSelection[1] = d3.timeYear.offset(brushSelection[0], 1)
-            return brushSelection
-          }
-          this.lineChart.filter(null)
-          this.lineChart.filter(
-            dc.filters.RangedFilter(
-              d3.max([d3.timeYear.offset(this.maxDate, -1), this.minDate]),
-              this.maxDate
-            )
-          )
+          minDate = d3.max([
+            d3.timeYear.offset(this.maxDate, -1),
+            this.minDate + 1
+          ])
           break
         case '3M':
-          this.lineChart.brushOn(true)
-          this.lineChart.extendBrush = function (brushSelection) {
-            brushSelection[1] = d3.timeMonth.offset(brushSelection[0], 3)
-            return brushSelection
-          }
-          this.lineChart.filter(null)
-          this.lineChart.filter(
-            dc.filters.RangedFilter(
-              d3.max([d3.timeMonth.offset(this.maxDate, -3), this.minDate]),
-              this.maxDate
-            )
-          )
+          minDate = d3.max([
+            d3.timeMonth.offset(this.maxDate, -3),
+            this.minDate + 1
+          ])
           break
         case '1M':
-          this.lineChart.brushOn(true)
-          this.lineChart.extendBrush = function (brushSelection) {
-            brushSelection[1] = d3.timeMonth.offset(brushSelection[0], 1)
-            return brushSelection
-          }
-          this.lineChart.filter(null)
-          this.lineChart.filter(
-            dc.filters.RangedFilter(
-              d3.max([d3.timeMonth.offset(this.maxDate, -1), this.minDate]),
-              this.maxDate
-            )
-          )
+          minDate = d3.max([
+            d3.timeMonth.offset(this.maxDate, -1),
+            this.minDate + 1
+          ])
           break
         case '7D':
-          this.lineChart.brushOn(true)
-          this.lineChart.extendBrush = function (brushSelection) {
-            brushSelection[1] = d3.timeDay.offset(brushSelection[0], 7)
-            return brushSelection
-          }
-          this.lineChart.filter(null)
-          this.lineChart.filter(
-            dc.filters.RangedFilter(
-              d3.max([d3.timeDay.offset(this.maxDate, -7), this.minDate]),
-              this.maxDate
-            )
-          )
+          minDate = d3.max([
+            d3.timeDay.offset(this.maxDate, -7),
+            this.minDate + 1
+          ])
           break
         case '1D':
-          this.lineChart.brushOn(true)
-          this.lineChart.extendBrush = function (brushSelection) {
-            brushSelection[1] = d3.timeDay.offset(brushSelection[0], 1)
-            return brushSelection
-          }
-          this.lineChart.filter(null)
-          this.lineChart.filter(
-            dc.filters.RangedFilter(
-              d3.max([d3.timeDay.offset(this.maxDate, -1), this.minDate]),
-              this.maxDate
-            )
-          )
+          minDate = d3.max([
+            d3.timeDay.offset(this.maxDate, -1),
+            this.minDate + 1
+          ])
           break
       }
-      dc.renderAll()
+      if (minDate !== null)
+        this.rangeChart.filter(dc.filters.RangedFilter(minDate, maxDate))
+
+      // this.lineChart.x().domain([minDate, maxDate])
+      dc.redrawAll()
     },
     filterItems(overviewGroup) {
       const counts = overviewGroup.top(Infinity).reduce((p, c) => {
@@ -435,7 +456,10 @@ export default {
 }
 </script>
 <style>
-.brush .custom-brush-handle {
+#range-chart g.y {
   display: none;
+}
+.brush .custom-brush-handle {
+  display: auto;
 }
 </style>
