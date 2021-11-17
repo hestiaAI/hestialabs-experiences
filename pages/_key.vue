@@ -32,9 +32,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
+  middleware({ store, params, error }) {
+    if (!store.state.config.experiences.includes(params.key)) {
+      return error({ statusCode: 404, message: 'Experience Not Found' })
+    }
+  },
   data() {
     return {
       baseUrl: process.env.baseUrl,
@@ -87,6 +92,8 @@ export default {
     }
   },
   computed: {
+    ...mapState(['config']),
+    ...mapGetters(['manifest', 'keys']),
     description() {
       const title = this.m.title
       if (title) {
@@ -94,7 +101,6 @@ export default {
       }
       return 'Analyze the data collected on you.'
     },
-    ...mapGetters(['manifest', 'config', 'keys']),
     m() {
       const manifest = this.manifest(this.$route)
       if (!manifest) {
@@ -106,24 +112,10 @@ export default {
     },
     hashtags() {
       const hashtags = [this.m.title]
-      if (this.$store.state.config.hashtags) {
-        hashtags.push(...this.$store.state.config.hashtags)
+      if (this.config.hashtags) {
+        hashtags.push(...this.config.hashtags)
       }
       return hashtags.join(',')
-    }
-  },
-  watch: {
-    config(config) {
-      const key = this.$route.params.key
-      const configHasLoaded = !config.notLoaded
-      if (configHasLoaded && !this.keys.includes(key)) {
-        // Redirection to 404 cannot be done in a middleware
-        // because we may need to wait for the config
-        // Is there a better way to do this?
-
-        // https://nuxtjs.org/docs/internals-glossary/context#error
-        this.$nuxt.error({ statusCode: 404 })
-      }
     }
   }
 }
