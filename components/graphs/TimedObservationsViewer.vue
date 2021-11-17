@@ -42,7 +42,7 @@
         </v-radio-group>
       </v-col>
       <v-col cols="3">
-        <v-btn class="ma-2" outlined color="indigo" @click="tabDetails()">
+        <v-btn class="ma-2" outlined color="indigo" @click="resetAll()">
           Reset all filters
         </v-btn>
       </v-col>
@@ -186,6 +186,11 @@ export default {
     this.drawViz()
   },
   methods: {
+    resetAll() {
+      dc.filterAll()
+      dc.redrawAll()
+      this.resetSourceFilter()
+    },
     // Change tab
     tabDetails() {
       this.tab = 'details'
@@ -365,7 +370,7 @@ export default {
       const width = d3.select('#row-chart').node().getBoundingClientRect().width
       rowChart
         .width(width)
-        .height(height)
+        .height(height + 55)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(this.removeEmptyBins(typeGroup))
         .dimension(typeDimension)
@@ -389,34 +394,25 @@ export default {
       const maxDate = d3.timeDay.offset(this.maxDate, 1)
       switch (newValue) {
         case '1Y':
-          minDate = d3.max([
-            d3.timeYear.offset(this.maxDate, -1),
-            this.minDate + 1
-          ])
+          minDate = d3.max([d3.timeYear.offset(this.maxDate, -1), this.minDate])
           break
         case '3M':
           minDate = d3.max([
             d3.timeMonth.offset(this.maxDate, -3),
-            this.minDate + 1
+            this.minDate
           ])
           break
         case '1M':
           minDate = d3.max([
             d3.timeMonth.offset(this.maxDate, -1),
-            this.minDate + 1
+            this.minDate
           ])
           break
         case '7D':
-          minDate = d3.max([
-            d3.timeDay.offset(this.maxDate, -7),
-            this.minDate + 1
-          ])
+          minDate = d3.max([d3.timeDay.offset(this.maxDate, -7), this.minDate])
           break
         case '1D':
-          minDate = d3.max([
-            d3.timeDay.offset(this.maxDate, -1),
-            this.minDate + 1
-          ])
+          minDate = d3.max([d3.timeDay.offset(this.maxDate, -1), this.minDate])
           break
       }
       if (minDate !== null)
