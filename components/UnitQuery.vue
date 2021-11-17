@@ -196,8 +196,10 @@ export default {
       return this.vizNames.filter(n => n.endsWith('.vue'))
     },
     vegaFiles() {
-      return this.selectedExample.vega.filter(s =>
-        this.vizNames.includes(s.name)
+      return (
+        this.selectedExample.vega?.filter(s =>
+          this.vizNames.includes(s.name)
+        ) ?? []
       )
     }
   },

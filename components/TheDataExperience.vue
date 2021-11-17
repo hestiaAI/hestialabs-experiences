@@ -85,7 +85,7 @@ export default {
     },
     postprocessors: {
       type: Object,
-      default: () => {}
+      default: undefined
     },
     allowMissingFiles: {
       type: Boolean,
@@ -93,7 +93,7 @@ export default {
     },
     customPipelines: {
       type: Object,
-      default: () => {}
+      default: undefined
     },
     isGenericViewer: {
       type: Boolean,

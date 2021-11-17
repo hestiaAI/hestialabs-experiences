@@ -144,7 +144,7 @@ export default {
     },
     allVegaFiles() {
       return this.results.map(r =>
-        this.example.vega.filter(s => r.visualizations?.includes(s.name))
+        this.example.vega?.filter(s => r.visualizations?.includes(s.name))
       )
     },
     allVueGraphNames() {

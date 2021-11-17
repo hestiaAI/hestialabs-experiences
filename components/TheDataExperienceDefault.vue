@@ -34,7 +34,9 @@
               defaultViewElements,
               selectedExample,
               customPipeline:
-                customPipelines[defaultViewElements.customPipeline],
+                customPipelines !== undefined
+                  ? customPipelines[defaultViewElements.customPipeline]
+                  : undefined,
               query: queries[index],
               sql: sqlQueries[index],
               fileManager,
@@ -103,12 +105,12 @@ export default {
   computed: {
     queries() {
       return this.defaultView.map(o =>
-        this.selectedExample.sparql.find(s => s.name === o.query)
+        this.selectedExample.sparql?.find(s => s.name === o.query)
       )
     },
     sqlQueries() {
       return this.defaultView.map(o => {
-        const sql = this.selectedExample.sql.find(s => s.name === o.sql)
+        const sql = this.selectedExample.sql?.find(s => s.name === o.sql)
         return sql === undefined ? '' : sql.query
       })
     },
@@ -155,7 +157,9 @@ export default {
       }
 
       // Populate database
-      await this.databaseBuilder(this.fileManager)
+      if (this.databaseBuilder !== undefined) {
+        await this.databaseBuilder(this.fileManager)
+      }
 
       if (this.isRdfNeeded && this.selectedExample.yarrrml) {
         try {
