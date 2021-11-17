@@ -296,13 +296,13 @@ export default {
           percentageString = '< 0.1%'
         }
         infoLabel.text(
-          d.data.name.length > 15
+          d.data.name?.length > 15
             ? d.data.name.slice(0, 15) + '..'
-            : d.data.name
+            : d.data.name ?? 'undefined'
         )
         this.bcItems = ancestors.map(d => {
           return {
-            text: d.data.name,
+            text: d.data.name ?? 'undefined',
             disabled: true
           }
         })

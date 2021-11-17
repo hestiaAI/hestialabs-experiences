@@ -15,9 +15,11 @@
     "youtube",
     "playground",
     "uber",
+    "uber-kepler",
     "ad-radar",
     "explorer",
     "google-my-activity"
+    "other"
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
   "saveFiles": true,

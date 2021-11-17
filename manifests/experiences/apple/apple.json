@@ -2,5 +2,6 @@
   "title": "Apple",
   "icon": "apple.png",
   "ext": "json",
-  "data": []
+  "data": [],
+  "disabled": true
 }

@@ -1,8 +1,15 @@
 <template>
-  <component :is="isComponent" :values="values"></component>
+  <div>
+    <component :is="isComponent" v-if="isValid" :values="values"></component>
+    <i v-else>data in this format cannot be displayed by this visualization</i>
+  </div>
 </template>
 
 <script>
+function isDataValid(data) {
+  return !data || !!(data.items?.length > 0)
+}
+
 function toPascalCase(text) {
   return text.replace(/(^\w|-\w)/g, clearAndUpper)
 }
@@ -13,9 +20,9 @@ function clearAndUpper(text) {
 
 export default {
   props: {
-    values: {
-      type: Array,
-      default: () => []
+    data: {
+      default: undefined,
+      validator: isDataValid
     },
     graphName: {
       type: String,
@@ -23,6 +30,12 @@ export default {
     }
   },
   computed: {
+    isValid() {
+      return isDataValid(this.data)
+    },
+    values() {
+      return this.data.items || {}
+    },
     isComponent() {
       switch (this.graphName) {
         case 'TimedObservationsViewer.vue':

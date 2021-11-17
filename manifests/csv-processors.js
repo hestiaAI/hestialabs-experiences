@@ -1,5 +1,6 @@
-const sunburstTargeting = (headers, items) => {
+const sunburstTargeting = result => {
   // TODO generalize this...
+  const items = result?.items || []
   const results = []
   const tree = new Map()
   // Construct tree: Root -> AdvertiserName -> TargetingType -> [TargetingValue, count]
@@ -74,8 +75,9 @@ const sunburstTargeting = (headers, items) => {
   return [Object.keys(root), results]
 }
 
-const sunburstTargetingAdvertiser = (headers, items) => {
+const sunburstTargetingAdvertiser = result => {
   // TODO refactor with previous function
+  const items = result?.items || []
   const results = []
   const tree = new Map()
   // Construct tree: Root -> TargetingType -> [TargetingValue, count]
