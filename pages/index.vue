@@ -1,45 +1,25 @@
 <template>
-  <div>
-    <h1>Understand your data</h1>
-
-    <template v-if="$vuetify.breakpoint.smAndUp">
-      <v-row class="mt-6">
-        <v-col
-          v-for="{ key, title, subtitle, icon, url } in $store.getters
-            .manifests"
-          :key="key"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          xl="2"
-        >
-          <v-card
-            class="d-flex flex-column"
-            v-bind="linkAttributes(url, key)"
-            hover
-            shaped
-          >
-            <v-img max-height="250" contain :src="icon" :lazy-src="icon" />
-
-            <v-card-title v-text="title" />
-            <v-card-subtitle class="subtitle-1" v-text="subtitle" />
-          </v-card>
-        </v-col>
-      </v-row>
-    </template>
-    <template v-else>
-      <the-data-experience-list class="mt-4" />
-    </template>
-  </div>
+  <the-data-experience-list
+    v-bind="{
+      enabledExperiences,
+      disabledExperiences,
+      big: $vuetify.breakpoint.smAndUp
+    }"
+  />
 </template>
 <script>
+import TheDataExperienceList from '~/components/TheDataExperienceList'
+
 export default {
-  methods: {
-    linkAttributes(url, key) {
-      return url
-        ? { href: url, target: '_blank', rel: 'noopener noreferrer' }
-        : { nuxt: true, to: `/${key}` }
+  components: { TheDataExperienceList },
+  props: {
+    enabledExperiences: {
+      type: Array,
+      required: true
+    },
+    disabledExperiences: {
+      type: Array,
+      required: true
     }
   }
 }

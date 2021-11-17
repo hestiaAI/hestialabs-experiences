@@ -2,5 +2,6 @@
   "title": "Google",
   "icon": "google.png",
   "ext": "json",
-  "data": []
+  "data": [],
+  "disabled": true
 }
