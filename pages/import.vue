@@ -117,12 +117,10 @@ import JSZip from 'jszip'
 import FileSaver from 'file-saver'
 
 import csvProcessors from '@/manifests/csv-processors'
-import UnitFilterableTable from '~/components/UnitFilterableTable'
 
 const _sodium = require('libsodium-wrappers')
 
 export default {
-  components: { UnitFilterableTable },
   data() {
     return {
       secretKey: null,

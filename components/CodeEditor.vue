@@ -14,7 +14,7 @@
 <script>
 export default {
   components: {
-    AceEditor: require('vue2-ace-editor')
+    AceEditor: () => import('vue2-ace-editor')
   },
   inheritAttrs: false,
   props: {

@@ -46,7 +46,6 @@ import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/drop-target/dist/style.css'
 
-import BaseButton from '~/components/BaseButton'
 async function fetchSampleFile({ path, filename }) {
   const response = await window.fetch(path)
   const blob = await response.blob()
@@ -55,7 +54,6 @@ async function fetchSampleFile({ path, filename }) {
 
 export default {
   name: 'UnitFiles',
-  components: { BaseButton },
   props: {
     extensions: {
       type: Array,

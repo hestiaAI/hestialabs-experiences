@@ -54,9 +54,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import TheAppBar from '~/components/TheAppBar'
+
 export default {
-  components: { TheAppBar },
   data() {
     return {
       // Display offline message if user opens app when offline

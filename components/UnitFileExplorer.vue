@@ -51,23 +51,17 @@
 
 <script>
 import FileManager from '~/utils/file-manager.js'
-import UnitJsonViewer from '~/components/UnitJsonViewer'
-import UnitCsvViewer from '~/components/UnitCsvViewer'
-import UnitPdfViewer from '~/components/UnitPdfViewer'
-import UnitImageViewer from '~/components/UnitImageViewer'
-import UnitHtmlViewer from '~/components/UnitHtmlViewer'
-import UnitTextViewer from '~/components/UnitTextViewer'
+
+// https://github.com/nuxt/components/issues/13#issuecomment-902590143
+const UnitJsonViewer = () => import('~/components/UnitJsonViewer')
+const UnitCsvViewer = () => import('~/components/UnitCsvViewer')
+const UnitPdfViewer = () => import('~/components/UnitPdfViewer')
+const UnitImageViewer = () => import('~/components/UnitImageViewer')
+const UnitHtmlViewer = () => import('~/components/UnitHtmlViewer')
+const UnitTextViewer = () => import('~/components/UnitTextViewer')
 
 export default {
   name: 'UnitFileExplorer',
-  components: {
-    UnitTextViewer,
-    UnitHtmlViewer,
-    UnitImageViewer,
-    UnitPdfViewer,
-    UnitJsonViewer,
-    UnitCsvViewer
-  },
   props: {
     fileManager: {
       type: FileManager,
@@ -89,12 +83,20 @@ export default {
       }
     },
     componentForType(type) {
-      if (type === 'json') return UnitJsonViewer
-      else if (type === 'csv') return UnitCsvViewer
-      else if (type === 'pdf') return UnitPdfViewer
-      else if (type === 'img') return UnitImageViewer
-      else if (type === 'html') return UnitHtmlViewer
-      else return UnitTextViewer
+      switch (type) {
+        case 'json':
+          return UnitJsonViewer
+        case 'csv':
+          return UnitCsvViewer
+        case 'pdf':
+          return UnitPdfViewer
+        case 'img':
+          return UnitImageViewer
+        case 'html':
+          return UnitHtmlViewer
+        default:
+          return UnitTextViewer
+      }
     }
   }
 }

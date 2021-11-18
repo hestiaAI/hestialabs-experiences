@@ -8,10 +8,7 @@
   />
 </template>
 <script>
-import TheDataExperienceList from '~/components/TheDataExperienceList'
-
 export default {
-  components: { TheDataExperienceList },
   props: {
     enabledExperiences: {
       type: Array,

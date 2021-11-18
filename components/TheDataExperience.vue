@@ -24,7 +24,6 @@
 
 <script>
 import { validExtensions } from '@/manifests/utils'
-import UnitFiles from '~/components/UnitFiles'
 
 // https://github.com/nuxt/components/issues/13#issuecomment-902590143
 const TheDataExperienceDefault = () =>
@@ -35,7 +34,6 @@ const TheDataExperiencePower = () =>
 
 export default {
   name: 'TheDataExperience',
-  components: { UnitFiles },
   props: {
     title: {
       type: String,

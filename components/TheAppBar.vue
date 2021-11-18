@@ -69,10 +69,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import TheDataExperienceList from '~/components/TheDataExperienceList'
 
 export default {
-  components: { TheDataExperienceList },
   props: {
     enabledExperiences: {
       type: Array,

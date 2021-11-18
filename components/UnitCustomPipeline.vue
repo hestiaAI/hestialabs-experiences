@@ -32,11 +32,9 @@
 <script>
 import { processError } from '@/utils/utils'
 import FileManager from '~/utils/file-manager'
-import BaseButton from '~/components/BaseButton'
 
 export default {
   name: 'UnitCustomPipeline',
-  components: { BaseButton },
   props: {
     fileManager: {
       type: FileManager,

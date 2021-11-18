@@ -72,12 +72,10 @@
 <script>
 /* eslint-disable vue/require-default-prop */
 import rdfUtils from '@/utils/rdf'
-import UnitFileExplorer from '~/components/UnitFileExplorer'
 import parseYarrrml from '@/utils/parse-yarrrml'
 import FileManager from '~/utils/file-manager'
 
 export default {
-  components: { UnitFileExplorer },
   props: {
     examples: Array,
     visualizations: Object,

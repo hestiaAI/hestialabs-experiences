@@ -16,11 +16,10 @@
     </template>
   </div>
 </template>
+
 <script>
-import CardOrItemList from '~/components/CardOrItemList'
 export default {
   name: 'TheDataExperienceList',
-  components: { CardOrItemList },
   props: {
     big: {
       type: Boolean,

@@ -8,12 +8,10 @@
 </template>
 
 <script>
-import UnitFilterableTable from '~/components/UnitFilterableTable'
 import FileManager from '~/utils/file-manager'
 
 export default {
   name: 'UnitCsvViewer',
-  components: { UnitFilterableTable },
   props: {
     filename: {
       type: String,

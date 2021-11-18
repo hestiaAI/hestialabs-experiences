@@ -4,11 +4,9 @@
 
 <script>
 import { createObjectURL, defaultExtension, mimeTypes } from '@/utils/utils'
-import BaseDownloadButton from '~/components/BaseDownloadButton'
 
 export default {
   name: 'BaseDataDownloadButton',
-  components: { BaseDownloadButton },
   props: {
     data: {
       type: [String, Blob, Uint8Array, Array],
