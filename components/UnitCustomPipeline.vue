@@ -49,10 +49,6 @@ export default {
     parameterName: {
       type: String,
       default: ''
-    },
-    manifest: {
-      type: Object,
-      default: () => {}
     }
   },
   data() {
