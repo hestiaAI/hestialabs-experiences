@@ -42,7 +42,15 @@ export default {
     },
     displayLinksLabels: {
       type: Boolean,
-      default: () => false
+      default: () => true
+    },
+    nodeWidth: {
+      type: Number,
+      default: () => 40
+    },
+    nodePadding: {
+      type: Number,
+      default: () => 40
     }
   },
   data() {
@@ -119,16 +127,29 @@ export default {
     },
     drawViz() {
       // Format data
-      this.values.forEach(d => {
-        d.source = d['Begin Trip Address']
-        d.target = d['Dropoff Address']
-        d.value = 1
-      })
-      this.total = this.values.length
-      const linksData = this.toJSONGraph(this.values)
+      const filteredValues = this.values.reduce((acc, d) => {
+        // filter non trips data
+        if (
+          (d['Product Type'] &&
+            String(d['Product Type']).toLowerCase().includes('ubereats')) ||
+          d['Trip or Order Status'] !== 'COMPLETED'
+        )
+          return acc
+        // remove street numbers to aggregate
+        acc.push({
+          source: d['Begin Trip Address'].replace(/[0-9]/g, ''),
+          target: d['Dropoff Address'].replace(/[0-9]/g, ''),
+          value: 1
+        })
+        return acc
+      }, [])
+      this.total = filteredValues.length
+
+      // transform to graph format
+      const linksData = this.toJSONGraph(filteredValues)
 
       // set the dimensions and margins of the graph
-      const margin = { top: 50, right: 150, bottom: 10, left: 150 }
+      const margin = { top: 50, right: 250, bottom: 10, left: 250 }
       const width =
         d3
           .select('#' + this.graphId)
@@ -191,8 +212,8 @@ export default {
       // Set the sankey diagram properties
       const sankey = d3Sankey
         .sankey()
-        .nodeWidth(36)
-        .nodePadding(40)
+        .nodeWidth(this.nodeWidth)
+        .nodePadding(this.nodePadding)
         .size([width, height])
       sankey.links()
 
@@ -286,14 +307,18 @@ export default {
       if (this.displayLinksLabels)
         node
           .append('text')
-          .attr('x', d => d.x0 - 6)
+          .attr('x', d => d.x1 + 6)
           .attr('y', d => (d.y1 + d.y0) / 2)
           .attr('dy', '0.35em')
-          .attr('text-anchor', 'end')
-          .text(d => d.name)
-          .filter(d => d.x0 < width / 2)
-          .attr('x', d => d.x1 + 6)
           .attr('text-anchor', 'start')
+          .text(d => {
+            let name = d.name.split(',')[0]
+            if (name.length > 20) name = name.slice(0, 20) + '..'
+            return name
+          })
+          .filter(d => d.x0 < width / 2)
+          .attr('x', d => d.x0 - 6)
+          .attr('text-anchor', 'end')
     }
   }
 }
