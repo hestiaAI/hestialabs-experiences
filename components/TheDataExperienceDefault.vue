@@ -33,23 +33,24 @@
             v-bind="{
               visualizations,
               defaultViewElements,
-              selectedExample,
               customPipeline:
                 customPipelines[defaultViewElements.customPipeline],
               fileManager,
-              index
+              index,
+              vega
             }"
             @update="onQueryUpdate"
           />
           <unit-query
             v-else
             v-bind="{
-              selectedExample,
               visualizations,
               defaultViewElements,
-              query: queries[index],
+              sparqlQuery: queries[index],
               fileManager,
-              index
+              index,
+              vega,
+              allSparql: sparql
             }"
             @update="onQueryUpdate"
           />
@@ -79,8 +80,7 @@ import FileManager from '~/utils/file-manager'
 export default {
   components: { UnitFileExplorer },
   props: {
-    examples: Array,
-    visualizations: Object,
+    visualizations: Array,
     defaultView: Array,
     title: String,
     dataPortal: String,
@@ -89,13 +89,13 @@ export default {
     showDataExplorer: Boolean,
     files: Array,
     preprocessors: Object,
-    allowMissingFiles: Boolean
+    allowMissingFiles: Boolean,
+    sparql: Object,
+    vega: Object,
+    yarrrml: String
   },
   data() {
-    // main example is selected by default
-    const selectedExample = this.examples[0]
     return {
-      selectedExample,
       progress: false,
       error: false,
       success: false,
@@ -108,9 +108,7 @@ export default {
   },
   computed: {
     queries() {
-      return this.defaultView.map(o =>
-        this.selectedExample.sparql.find(s => s.name === o.query)
-      )
+      return this.defaultView.map(o => this.sparql[o.query])
     },
     isRdfNeeded() {
       return this.defaultView.filter(v => 'query' in v).length > 0
@@ -139,9 +137,9 @@ export default {
         return
       }
 
-      if (this.isRdfNeeded && this.selectedExample.yarrrml) {
+      if (this.isRdfNeeded && this.yarrrml) {
         try {
-          this.rml = await parseYarrrml(this.selectedExample.yarrrml)
+          this.rml = await parseYarrrml(this.yarrrml)
           await rdfUtils.generateRDF(this.rml, processedFiles)
         } catch (error) {
           this.handleError(error)

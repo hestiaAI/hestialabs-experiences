@@ -61,7 +61,7 @@
             />
             <unit-sparql
               v-else
-              v-bind="{ selectedExample, query, queryDisabled }"
+              v-bind="{ allSparql, sparqlQuery, queryDisabled }"
               class="mr-lg-6"
               @update="onUnitResultsUpdate"
             />
@@ -71,14 +71,14 @@
           <template v-if="result">
             <v-row>
               <v-col
-                v-for="(specFile, vegaIndex) in vegaFiles"
+                v-for="(specFile, name, vegaIndex) in vegaFiles"
                 :key="'vega-' + vegaIndex"
                 style="text-align: center"
               >
                 <unit-vega-viz
                   :spec-file="specFile"
-                  :data="processResultForVega(result, specFile)"
-                  :div-id="`viz-${index}-${specFile.name}`"
+                  :data="processResultForVega(result, name)"
+                  :div-id="`viz-${index}-${vegaIndex}`"
                 />
               </v-col>
             </v-row>
@@ -124,15 +124,11 @@ import FileManager from '~/utils/file-manager'
 export default {
   props: {
     visualizations: {
-      type: Object,
-      default: () => {}
+      type: Array,
+      default: () => []
     },
-    selectedExample: {
-      type: Object,
-      required: true
-    },
-    query: {
-      type: Object,
+    sparqlQuery: {
+      type: String,
       default: null
     },
     defaultViewElements: {
@@ -154,6 +150,15 @@ export default {
     fileManager: {
       type: FileManager,
       required: true
+    },
+    vega: {
+      type: Object,
+      default: () => {}
+    },
+    allSparql: {
+      // Only used by the advanced view
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -164,8 +169,7 @@ export default {
   },
   computed: {
     exampleVisualizations() {
-      const { name } = this.selectedExample
-      return this.visualizations?.[name] || []
+      return this.visualizations ?? []
     },
     showTable() {
       return this.defaultViewElements.showTable
@@ -188,25 +192,25 @@ export default {
       return this.vizNames.filter(n => n.endsWith('.vue'))
     },
     vegaFiles() {
-      return this.selectedExample.vega.filter(s =>
-        this.vizNames.includes(s.name)
+      return Object.fromEntries(
+        this.vizNames.map(n => [n, this.vega[n]]).filter(n => n[1])
       )
     }
   },
   methods: {
-    processResultForVega(result, specFile) {
-      const processor = this.findProcessor(specFile)
+    processResultForVega(result, name) {
+      const processor = this.findProcessor(name)
       if (processor) {
         const items = processor(result)[1]
         return { items }
       }
       return result
     },
-    findProcessor(specFile) {
+    findProcessor(name) {
       if (this.customPipeline === undefined) {
         // Find the viz definition for this query
         const preprocessor = this.exampleVisualizations.filter(
-          v => this.query.name === v.query && specFile.name === v.vega
+          v => this.defaultViewElements.query === v.query && name === v.vega
         )
         // Does it have a preprocessor?
         if (preprocessor.length === 1) {

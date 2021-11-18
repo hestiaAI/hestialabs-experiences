@@ -14,22 +14,17 @@ const reqJSON = require.context(
 const reqYARRRML = require.context(
   './experiences/',
   true,
-  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.ya?ml$/
+  /^\.\/[a-z-]+\/[a-z0-9-]+.ya?ml$/
 )
 const reqSPARQL = require.context(
   './experiences/',
   true,
-  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.rq$/
+  /^\.\/[a-z-]+\/queries\/[a-z0-9-]+.rq$/
 )
 const reqVEGA = require.context(
   './experiences/',
   true,
-  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.vega.json$/
-)
-const reqParamSPARQL = require.context(
-  './experiences/',
-  true,
-  /^\.\/[a-z-]+\/examples\/[a-z0-9-]+\/[a-z0-9-]+.rqx$/
+  /^\.\/[a-z-]+\/visualizations\/[a-z0-9-]+.vega.json$/
 )
 
 // files in assets/data/ are loaded only with file-loader
@@ -137,9 +132,10 @@ const manifests = Object.fromEntries(
         isGenericViewer,
         url,
         showDataExplorer,
+        sparql: {},
+        vega: {},
         ...rest,
-        ...module.default,
-        examples: []
+        ...module.default
       }
     ]
   })
@@ -148,81 +144,41 @@ const manifests = Object.fromEntries(
 reqYARRRML.keys().forEach(path => {
   // Extract directory name of the experience
   const dir = extractFirstDirectory(path)
-  // Extract example name
-  const name = path.match(/\/examples\/(.+)\//)[1]
-  // Add example
-  const example = {
-    name,
-    // assume single YARRRML file per example
-    yarrrml: reqYARRRML(path).default,
-    // empty Object for all SPARQL samples of the example
-    sparql: [],
-    // empty Object for all VEGA samples of the example
-    vega: [],
-    // empty Object for all SPARQL samples of the example
-    d3: []
+  // Take corresponding manifest
+  const manifest = manifests[dir]
+  // Add YARRRML
+  if (manifest.yarrrml !== undefined) {
+    throw new Error(`[${dir}] Only one YARRRML file should be defined`)
   }
-  const { examples } = manifests[dir]
-  if (name === 'main') {
-    // Add main example to the beginning of the Array
-    examples.unshift(example)
-  } else {
-    examples.push(example)
-  }
+  manifest.yarrrml = reqYARRRML(path).default
 })
 
 reqSPARQL.keys().forEach(path => {
   // Extract directory name of the experience
   const dir = extractFirstDirectory(path)
-  // Extract example name and SPARQL query sample name
-  const match = path.match(/\/examples\/(?<example>.+)\/(?<sparql>.+)\.rq/)
-  const { example, sparql } = match.groups
-  // Add SPARQL sample
-  const exampleObj = manifests[dir].examples.find(e => e.name === example)
-  exampleObj.sparql.push({
-    name: sparql,
-    parametrized: false,
-    sparql: reqSPARQL(path).default
-  })
-})
-
-reqParamSPARQL.keys().forEach(path => {
-  const dir = extractFirstDirectory(path)
-  const match = path.match(
-    /\/examples\/(?<example>.+)\/(?<paramSparql>.+)\.rqx/
-  )
-  const { example, paramSparql } = match.groups
-  const exampleObj = manifests[dir].examples.find(e => e.name === example)
-  exampleObj.sparql.push({
-    name: paramSparql,
-    parametrized: true,
-    sparql: reqParamSPARQL(path).default
-  })
+  // Take corresponding manifest
+  const manifest = manifests[dir]
+  // Extract query name
+  const match = path.match(/\/queries\/(?<name>.+)\.rq/)
+  const { name } = match.groups
+  // Add SPARQL
+  manifest.sparql[name] = reqSPARQL(path).default
 })
 
 reqVEGA.keys().forEach(path => {
   // Extract directory name of the experience
   const dir = extractFirstDirectory(path)
-  // Extract example name and VEGA query sample name
-  const match = path.match(/\/examples\/(?<example>.+)\/(?<vega>.+)\.vega.json/)
-  const { example, vega } = match.groups
-  // Add VEGA sample
-  const exampleObj = manifests[dir].examples.find(e => e.name === example)
-  exampleObj.vega.push({
-    name: vega,
-    type: 'vega',
-    vega: reqVEGA(path)
-  })
+  // Take corresponding manifest
+  const manifest = manifests[dir]
+  // Extract viz name
+  const match = path.match(/\/visualizations\/(?<name>.+)\.vega.json/)
+  const { name } = match.groups
+  // Add Vega
+  manifest.vega[name] = reqVEGA(path)
 })
 
 Object.entries(manifests).forEach(([key, val]) => {
   val.key = key
-  if (key !== 'playground') {
-    // Add examples from other experiences to playground Array.
-    manifests.playground.examples.push(
-      ...val.examples.map(ex => ({ ...ex, name: `${key}-${ex.name}` }))
-    )
-  }
 })
 
 export default manifests

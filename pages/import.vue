@@ -75,14 +75,14 @@
         <v-card-title class="justify-center">{{ result.title }}</v-card-title>
         <v-row>
           <v-col
-            v-for="(specFile, vegaIndex) in allVegaFiles[resultIndex]"
+            v-for="(specFile, name, vegaIndex) in allVegaFiles[resultIndex]"
             :key="vegaIndex"
             style="text-align: center"
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :data="processResultForVega(result.result, specFile)"
-              :div-id="`viz-${resultIndex}-${specFile.name}`"
+              :data="processResultForVega(result, specFile)"
+              :div-id="`viz-${resultIndex}-${vegaIndex}`"
             />
           </v-col>
         </v-row>
@@ -144,15 +144,16 @@ export default {
         params: { key: this.experience.key }
       })
     },
-    example() {
-      return this.manifest.examples.find(ex => ex.name === 'main')
-    },
     visualizations() {
-      return this.manifest.visualizations.main
+      return this.manifest.visualizations
     },
     allVegaFiles() {
       return this.results.map(r =>
-        this.example.vega.filter(s => r.visualizations?.includes(s.name))
+        Object.fromEntries(
+          r.visualizations
+            ?.map(n => [n, this.manifest.vega[n]])
+            .filter(n => n[1]) ?? []
+        )
       )
     },
     vizUrls() {
@@ -167,17 +168,17 @@ export default {
     }
   },
   methods: {
-    processResultForVega(result, specFile) {
-      const processor = this.findProcessor(specFile)
+    processResultForVega(result, name) {
+      const processor = this.findProcessor(result, name)
       if (processor) {
-        const items = processor(result)[1]
+        const items = processor(result.result)[1]
         return { items }
       }
-      return result
+      return result.result
     },
-    findProcessor(result, specFile) {
+    findProcessor(result, name) {
       const def = this.visualizations.find(
-        v => result.query === v.query && specFile.name === v.vega
+        v => result.query === v.query && name === v.vega
       )
       return csvProcessors[def?.preprocessor]
     },
