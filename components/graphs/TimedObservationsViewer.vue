@@ -119,7 +119,7 @@
               </v-btn>
             </p>
             <unit-filterable-table
-              v-bind="{ headers: header, items: results }"
+              v-bind="{ data: { headers: header, items: results } }"
             />
           </v-tab-item>
         </v-tabs-items>
