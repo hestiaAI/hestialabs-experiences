@@ -8,7 +8,7 @@
   "data": ["uber-trips.zip"],
   "defaultView": [
     {
-      "customPipeline": "tripsData",
+      "customPipeline": "tripsGraphData",
       "visualizations": ["Sankey.vue"],
       "showTable": false,
       "title": "Uber Trips",

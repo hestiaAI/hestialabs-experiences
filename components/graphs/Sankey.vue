@@ -126,27 +126,10 @@ export default {
       return graph
     },
     drawViz() {
-      // Format data
-      const filteredValues = this.values.reduce((acc, d) => {
-        // filter non trips data
-        if (
-          (d['Product Type'] &&
-            String(d['Product Type']).toLowerCase().includes('ubereats')) ||
-          d['Trip or Order Status'] !== 'COMPLETED'
-        )
-          return acc
-        // remove street numbers to aggregate
-        acc.push({
-          source: d['Begin Trip Address'].replace(/[0-9]/g, ''),
-          target: d['Dropoff Address'].replace(/[0-9]/g, ''),
-          value: 1
-        })
-        return acc
-      }, [])
-      this.total = filteredValues.length
+      this.total = this.values.length
 
       // transform to graph format
-      const linksData = this.toJSONGraph(filteredValues)
+      const linksData = this.toJSONGraph(this.values)
 
       // set the dimensions and margins of the graph
       const margin = { top: 50, right: 250, bottom: 10, left: 250 }
