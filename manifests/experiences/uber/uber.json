@@ -10,7 +10,7 @@
     {
       "customPipeline": "tripsData",
       "visualizations": ["Sankey.vue"],
-      "showTable": true,
+      "showTable": false,
       "title": "Uber Trips",
       "text": "Get information about the places you have visited the most or from which you originate the most."
     },

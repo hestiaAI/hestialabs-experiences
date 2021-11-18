@@ -2,7 +2,11 @@
   <v-container>
     <v-row>
       <v-col cols="12" md="12" class="text-center">
-        <div :id="graphId"></div>
+        <p>
+          In total there is <strong>{{ total }}</strong> records
+          {{ labelTotal }}
+        </p>
+        <div :id="graphId" style="position: relative"></div>
       </v-col>
     </v-row>
   </v-container>
@@ -31,11 +35,20 @@ export default {
     labelRight: {
       type: String,
       default: () => 'Dropoff places'
+    },
+    labelTotal: {
+      type: String,
+      default: () => 'of trips you have made with Uber'
+    },
+    displayLinksLabels: {
+      type: Boolean,
+      default: () => false
     }
   },
   data() {
     return {
-      graphId: 'graph_' + this._uid
+      graphId: 'graph_' + this._uid,
+      total: 0
     }
   },
   mounted() {
@@ -111,6 +124,7 @@ export default {
         d.target = d['Dropoff Address']
         d.value = 1
       })
+      this.total = this.values.length
       const linksData = this.toJSONGraph(this.values)
 
       // set the dimensions and margins of the graph
@@ -135,7 +149,9 @@ export default {
         .select('#' + this.graphId)
         .append('div')
         .style('opacity', 1)
-        .text('(hover on the links or nodes to get more information)')
+        .html(
+          '(hover on the links or nodes to get more information<br> about the most frequent ones)'
+        )
         .style('left', width / 2 + margin.left + 'px')
         .style('top', 0 + 'px')
 
@@ -236,16 +252,21 @@ export default {
             d.name.slice(-1) === 's' ? 'from' : 'to'
           }</b> this place</center>`
           // const x = d.x1 // (d.x0 + d.x1) / 2
+          // const tooltipWidth = tooltip.node().getBoundingClientRect().width
+          // const tooltipHeight = tooltip.node().getBoundingClientRect().height
+          // const mapWidth = svg.node().getBoundingClientRect().width
+          const labelHeight = linkTooltip.node().getBoundingClientRect().height
           tooltip
             .html(textToDisplay)
-            .style('left', d.x1 + margin.left + 28 + 'px')
-            .style('top', d.y0 + margin.top + 165 + 'px')
+            .style('left', d.x1 + margin.left + 8 + 'px')
+            .style('top', d.y0 + labelHeight + 35 + 'px')
           tooltip.style('opacity', 1)
 
+          // highlight current node
           d3.select(this).attr('opacity', 0.7)
 
           // Fade all the links.
-          d3.selectAll('path').style('opacity', 0.2)
+          d3.selectAll('path').attr('opacity', 0.2)
 
           // Then highlight only those that are linked to the current node.
           svg
@@ -254,26 +275,25 @@ export default {
               link =>
                 d.index === link.source.index || d.index === link.target.index
             )
-            .style('opacity', 1)
+            .attr('opacity', 0.7)
         })
         .on('mouseleave', function (d) {
-          d3.selectAll('path').style('opacity', 0.2)
+          d3.selectAll('path').attr('opacity', 0.2)
           tooltip.style('opacity', 0)
         })
 
       // add in the title for the nodes
-      /*
-      node
-        .append('text')
-        .attr('x', d => d.x0 - 6)
-        .attr('y', d => (d.y1 + d.y0) / 2)
-        .attr('dy', '0.35em')
-        .attr('text-anchor', 'end')
-        .text(d => d.name)
-        .filter(d => d.x0 < width / 2)
-        .attr('x', d => d.x1 + 6)
-        .attr('text-anchor', 'start')
-        */
+      if (this.displayLinksLabels)
+        node
+          .append('text')
+          .attr('x', d => d.x0 - 6)
+          .attr('y', d => (d.y1 + d.y0) / 2)
+          .attr('dy', '0.35em')
+          .attr('text-anchor', 'end')
+          .text(d => d.name)
+          .filter(d => d.x0 < width / 2)
+          .attr('x', d => d.x1 + 6)
+          .attr('text-anchor', 'start')
     }
   }
 }
