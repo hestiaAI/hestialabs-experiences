@@ -1,0 +1,16 @@
+{
+  "title": "K-Ryhmä",
+  "icon": "k-ryhma.png",
+  "ext": "all",
+  "isGenericViewer": true,
+  "showDataExplorer": true,
+  "defaultView": [
+    {
+      "customPipeline": "genericDateViewer",
+      "visualizations": ["GenericDateViewer.vue"],
+      "showTable": true,
+      "title": "TODO",
+      "text": "TODO"
+    }
+  ]
+}

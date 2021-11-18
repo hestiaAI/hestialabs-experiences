@@ -1,6 +1,73 @@
 {
   "title": "Google",
   "icon": "google.png",
-  "ext": "json",
-  "data": []
+  "dataPortal": "https://takeout.google.com/settings/takeout",
+  "ext": "zip",
+  "data": [],
+  "timedObservationsViewer": {
+    "fileMatchers": [
+      {
+        "regex": "Takeout/(?:.+?)/(.+?)/(?:.+?)\\.json",
+        "entryPath": "$[*]",
+        "fields": {
+          "date": {
+            "source": "entry",
+            "path": "$.time"
+          },
+          "eventValue": {
+            "source": "entry",
+            "path": "$.title"
+          },
+          "eventSource": {
+            "source": "regex",
+            "path": "1"
+          }
+        }
+      }
+    ],
+    "parser": "identifyTypeFromManifestList",
+    "eventTypes": {
+      "en": {
+        "YouTube": ["Liked", "Disliked", "Subscribed to", "Watched", "Searched", "Saved", "Visited"],
+        "Search": ["Searched", "Visited", "Defined", "Viewed", "Used"],
+        "Maps": ["Viewed", "Directions", "Opened My Maps", "Searched", "Used Maps", "Viewed area", "Explored", "Used"],
+        "Image Search": ["Searched", "Viewed", "Used"],
+        "Google Play Store": ["Visited", "Uninstalled", "Searched", "Installed", "Used"],
+        "Ads": ["Visited"],
+        "Video Search": ["Watched", "Searched"],
+        "Help": ["Visited", "Viewed", "Searched", "Interacted"],
+        "Google Play Games": ["Played"],
+        "Google Apps": ["Searched", "Selected"],
+        "Google Lens": ["Searched"],
+        "Google Cloud": ["Searched", "Visited"],
+        "Shopping": ["Viewed"],
+        "Books": ["Viewed", "Searched"],
+        "Developers": ["Visited", "Viewed"],
+        "Discover": [],
+        "News": ["Visited", "Searched"],
+        "Gmail": ["Searched"],
+        "Drive": ["bulk download", "Searched"],
+        "Google Pay": ["contactless payment that failed", "contactless payment", "Used Google Pay"],
+        "Takeout": ["Downloaded a Takeout archive", "Initiated a Takeout"]
+      },
+      "fr": {
+        "Drive": ["téléchargement groupé"],
+        "Google Pay": ["paiement sans contact qui a échoué", "paiement sans contact", "Application utilisée"],
+        "Takeout": ["lancé une opération", "téléchargé une archive"],
+        "YouTube": ["A aimé", "N'a pas aimé", "Vous vous êtes abonné à"]
+      },
+      "fi": {
+
+      }
+    }
+  },
+  "defaultView": [
+    {
+      "customPipeline": "timedObservationViewer",
+      "visualizations": ["TimedObservationsViewer.vue"],
+      "showTable": false,
+      "title": "Overview of what google knows about you",
+      "text": ""
+    }
+  ]
 }

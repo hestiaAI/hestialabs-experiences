@@ -1,0 +1,16 @@
+{
+  "title": "FinnAir",
+  "icon": "finnair.jpg",
+  "ext": "all",
+  "isGenericViewer": true,
+  "showDataExplorer": true,
+  "defaultView": [
+    {
+      "customPipeline": "genericDateViewer",
+      "visualizations": ["GenericDateViewer.vue"],
+      "showTable": true,
+      "title": "TODO",
+      "text": "TODO"
+    }
+  ]
+}

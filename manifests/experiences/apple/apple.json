@@ -1,6 +1,16 @@
 {
   "title": "Apple",
   "icon": "apple.png",
-  "ext": "json",
-  "data": []
+  "ext": "all",
+  "isGenericViewer": true,
+  "showDataExplorer": true,
+  "defaultView": [
+    {
+      "customPipeline": "genericDateViewer",
+      "visualizations": ["GenericDateViewer.vue"],
+      "showTable": true,
+      "title": "TODO",
+      "text": "TODO"
+    }
+  ]
 }

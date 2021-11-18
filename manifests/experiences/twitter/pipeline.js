@@ -2,6 +2,7 @@ import { JSONPath } from 'jsonpath-plus'
 import _ from 'lodash'
 import { aggregate, countReducer } from '@/utils/aggregate'
 import csvProcessors from '@/manifests/csv-processors'
+import { genericDateViewer } from '~/manifests/generic-pipelines'
 
 function dashboardFillItems(items, impressionAttributes, isEngagement) {
   impressionAttributes.forEach(v => {
@@ -229,5 +230,6 @@ export default {
   targetingTree,
   targetingTypesAndValues,
   allAdvertisers,
-  selectTargetingTree
+  selectTargetingTree,
+  genericDateViewer
 }

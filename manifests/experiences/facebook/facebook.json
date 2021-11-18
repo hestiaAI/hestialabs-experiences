@@ -67,6 +67,13 @@
       "showTable": true,
       "title": "Contact list",
       "text": "Get a list of advertisers that have uploaded a contact list containing you."
+    },
+    {
+      "customPipeline": "genericDateViewer",
+      "visualizations": ["GenericDateViewer.vue"],
+      "showTable": true,
+      "title": "TODO",
+      "text": "TODO"
     }
   ]
 }

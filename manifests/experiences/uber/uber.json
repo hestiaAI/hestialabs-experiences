@@ -13,6 +13,13 @@
       "showTable": false,
       "title": "Uber Trips overview",
       "text": "Compare the prices of your Uber rides according to several factors ( Your data is grouped by currency)."
+    },
+    {
+      "customPipeline": "genericDateViewer",
+      "visualizations": ["GenericDateViewer.vue"],
+      "showTable": true,
+      "title": "TODO",
+      "text": "TODO"
     }
   ]
 }

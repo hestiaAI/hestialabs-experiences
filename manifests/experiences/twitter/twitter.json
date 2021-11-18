@@ -15,26 +15,28 @@
     "icon": "the-eyeballs.svg",
     "url": "https://eyeballs.hestialabs.org/"
   },
-  "visualizations": {"main": [
-    {
-      "vega": "top-k-advertisers",
-      "query": "advertisers-per-day"
-    },
-    {
-      "vega": "wordcloud-targeting-criteria",
-      "query": "targeting-values-all-advertisers"
-    },
-    {
-      "vega": "sunburst-targeting",
-      "query": "targeting-criteria",
-      "preprocessor": "sunburstTargeting"
-    },
-    {
-      "vega": "sunburst-targeting",
-      "query": "select-targeting-criteria",
-      "preprocessor": "sunburstTargetingAdvertiser"
-    }
-  ]},
+  "visualizations": {
+    "main": [
+      {
+        "vega": "top-k-advertisers",
+        "query": "advertisers-per-day"
+      },
+      {
+        "vega": "wordcloud-targeting-criteria",
+        "query": "targeting-values-all-advertisers"
+      },
+      {
+        "vega": "sunburst-targeting",
+        "query": "targeting-criteria",
+        "preprocessor": "sunburstTargeting"
+      },
+      {
+        "vega": "sunburst-targeting",
+        "query": "select-targeting-criteria",
+        "preprocessor": "sunburstTargetingAdvertiser"
+      }
+    ]
+  },
   "defaultView": [
     {
       "customPipeline": "advertisersPerDay",
@@ -77,6 +79,13 @@
       "showTable": false,
       "title": "Twitter advertising overview",
       "text": "Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results."
+    },
+    {
+      "customPipeline": "genericDateViewer",
+      "visualizations": ["GenericDateViewer.vue"],
+      "showTable": true,
+      "title": "TODO",
+      "text": "TODO"
     }
   ]
 }
