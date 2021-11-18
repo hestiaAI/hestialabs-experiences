@@ -14,7 +14,6 @@
     </p>
     <v-file-input
       v-model="inputZIP"
-      accept="application/zip"
       label="Encrypted or plaintext ZIP file"
     ></v-file-input>
     <v-checkbox v-model="decrypt" label="Decrypt"></v-checkbox>
@@ -23,14 +22,19 @@
       label="Secret Key"
       :disabled="!decrypt"
     ></v-file-input>
-    <base-button text="Import" :disabled="!inputZIP" @click="importZIP" />
+    <base-button
+      text="Import"
+      v-bind="{ status, error, progress, disabled: !inputZIP }"
+      @click="importZIP"
+    />
     <base-data-download-button
       :data="outputZIP"
       extension="zip"
       text="Download plaintext"
-      :disabled="!success || (decrypt && !secretKey)"
+      :disabled="!status || error"
     />
-    <template v-if="success">
+    <p v-if="error">{{ message }}</p>
+    <template v-if="status && !error">
       <v-card class="pa-2 my-6">
         <!-- Experience details -->
         <v-card-title class="justify-center">Experience Details</v-card-title>
@@ -63,37 +67,44 @@
       </v-card>
 
       <!-- Results -->
-      <v-card v-for="(result, i) in results" :key="i" class="pa-2 my-6">
+      <v-card
+        v-for="(result, resultIndex) in results"
+        :key="resultIndex"
+        class="pa-2 my-6"
+      >
         <v-card-title class="justify-center">{{ result.title }}</v-card-title>
         <v-row>
           <v-col
-            v-for="(specFile, j) in allVegaFiles[i]"
-            :key="j"
+            v-for="(specFile, vegaIndex) in allVegaFiles[resultIndex]"
+            :key="vegaIndex"
             style="text-align: center"
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="allProcessedItems[i][j]"
-              :div-id="`viz-${i}-${specFile.name}`"
+              :data="processResultForVega(result.result, specFile)"
+              :div-id="`viz-${resultIndex}-${specFile.name}`"
             />
           </v-col>
         </v-row>
         <v-row
-          v-for="(graphName, index) in allVueGraphNames[i]"
-          :key="`viz-${i}-${index}`"
+          v-for="(graphName, vizVueIndex) in allVueGraphNames[resultIndex]"
+          :key="`viz-${resultIndex}-${vizVueIndex}`"
         >
           <v-col>
-            <vue-graph-by-name :graph-name="graphName" :values="allItems[i]" />
+            <vue-graph-by-name :graph-name="graphName" :data="result.result" />
+          </v-col>
+        </v-row>
+        <v-row
+          v-for="(src, vizUrlIndex) in vizUrls[resultIndex]"
+          :key="'viz-url-' + vizUrlIndex"
+        >
+          <v-col>
+            <unit-iframe :src="src" :data="result.result" />
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <unit-filterable-table
-              v-bind="{
-                headers: result.headers.map(h => ({ text: h, value: h })),
-                items: result.items
-              }"
-            />
+            <unit-filterable-table :data="result.result" />
           </v-col>
         </v-row>
       </v-card>
@@ -118,7 +129,10 @@ export default {
       inputZIP: null,
       decrypt: false,
       outputZIP: null,
-      success: false,
+      status: false,
+      error: false,
+      progress: false,
+      message: '',
       experience: null,
       results: null,
       consent: null
@@ -141,36 +155,50 @@ export default {
         this.example.vega.filter(s => r.visualizations?.includes(s.name))
       )
     },
+    vizUrls() {
+      return this.results.map(r =>
+        r.visualizations?.filter(n => n.startsWith('/'))
+      )
+    },
     allVueGraphNames() {
-      return this.results
-        .map(r => r.visualizations?.filter(n => n.endsWith('.vue')))
-        .filter(n => n)
-    },
-    allItems() {
-      return this.results.map(r => r.items)
-    },
-    allProcessedItems() {
-      // For each block
-      return this.results.map((r, i) =>
-        // For each viz
-        this.allVegaFiles[i].map(spec => {
-          // Find the viz definition for this query
-          const def = this.visualizations.find(
-            v => r.query === v.query && spec.name === v.vega
-          )
-          // If it has a preprocessor defined, run it
-          if (def?.preprocessor) {
-            return csvProcessors[def.preprocessor](r.headers, r.items)[1]
-          }
-          return r.items
-        })
+      return this.results.map(r =>
+        r.visualizations?.filter(n => n.endsWith('.vue')).filter(n => n)
       )
     }
   },
   methods: {
+    processResultForVega(result, specFile) {
+      const processor = this.findProcessor(specFile)
+      if (processor) {
+        const items = processor(result)[1]
+        return { items }
+      }
+      return result
+    },
+    findProcessor(result, specFile) {
+      const def = this.visualizations.find(
+        v => result.query === v.query && specFile.name === v.vega
+      )
+      return csvProcessors[def?.preprocessor]
+    },
+    handleError(error, message) {
+      console.error(error)
+      this.error = true
+      this.message = message === undefined ? error.message : message
+      this.handleEnd()
+    },
+    handleEnd() {
+      this.status = true
+      this.progress = false
+    },
     async importZIP() {
-      this.success = false
+      this.status = false
+      this.error = false
+      this.message = ''
+      this.progress = true
       if (!this.inputZIP) {
+        const message = 'No ZIP provided'
+        this.handleError(new Error(message))
         return
       }
 
@@ -179,35 +207,61 @@ export default {
 
       // Decrypt
       if (this.decrypt) {
-        const secretKey = await this.secretKey.text()
-        const sk = sodium.from_hex(secretKey)
-        const pk = sodium.from_hex(this.$store.state.config.publicKey)
-        const buf = await this.inputZIP.arrayBuffer()
-        const ciphertext = new Uint8Array(buf)
-        this.outputZIP = new Blob([
-          sodium.crypto_box_seal_open(ciphertext, pk, sk)
-        ])
+        try {
+          const secretKey = await this.secretKey.text()
+          const sk = sodium.from_hex(secretKey)
+          const pk = sodium.from_hex(this.$store.state.config.publicKey)
+          const buf = await this.inputZIP.arrayBuffer()
+          const ciphertext = new Uint8Array(buf)
+          this.outputZIP = new Blob([
+            sodium.crypto_box_seal_open(ciphertext, pk, sk)
+          ])
+        } catch (error) {
+          this.handleError(
+            error,
+            'An error occurred during decryption. Check that the secret key is correct.'
+          )
+          return
+        }
       } else {
         this.outputZIP = this.inputZIP
       }
 
-      // Extract files
+      // Load ZIP
       const zip = new JSZip()
       try {
         await zip.loadAsync(this.outputZIP)
-      } catch {
-        console.error('Error when loading zip file')
+      } catch (error) {
+        if (this.decrypt) {
+          this.handleError(error, 'An error occurred while loading the ZIP.')
+        } else {
+          this.handleError(
+            error,
+            'An error occurred while loading the ZIP. If it is encrypted, please provide the secret key.'
+          )
+        }
         return
       }
-      this.experience = JSON.parse(
-        await zip.file('experience.json').async('string')
-      )
-      this.consent = JSON.parse(await zip.file('consent.json').async('string'))
-      const files = zip.file(/block[0-9]+.json/)
-      const res = await Promise.all(files.map(r => r.async('string')))
-      this.results = res.map(JSON.parse)
+      // Extract files
+      try {
+        this.experience = JSON.parse(
+          await zip.file('experience.json').async('string')
+        )
+        this.consent = JSON.parse(
+          await zip.file('consent.json').async('string')
+        )
+        const files = zip.file(/block[0-9]+.json/)
+        const res = await Promise.all(files.map(r => r.async('string')))
+        this.results = res.map(JSON.parse)
+      } catch (error) {
+        this.handleError(
+          error,
+          'An error occurred while processing the files. Check that the content of the ZIP has not been modified.'
+        )
+        return
+      }
 
-      this.success = true
+      this.handleEnd()
     },
     async generateKeys() {
       await _sodium.ready
