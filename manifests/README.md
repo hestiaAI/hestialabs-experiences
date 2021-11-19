@@ -69,16 +69,6 @@ Note: All files and folders should match the following regular expression: [`^(?
     */
   "allowMissingFiles": true,
   /**
-    * Array of visualizations defined for a specific example.
-    * @type Object
-    */
-  "visualizations": {"main": [
-    {
-      "vega": "chart_filename",
-      "query": "query_filename",
-    }
-  ]},
-  /**
     * Array defining the blocks to show in the default view. Each section section can have:
     * - A SPARQL query
     * - A function used as the custom pipeline (defined in pipeline.js)
@@ -100,7 +90,7 @@ Note: All files and folders should match the following regular expression: [`^(?
       "postprocessor": "postprocessor_function_name",
       "parameterName": "Example",
       "parameterKey": ":example",
-      "visualizations": ["chart_filename1", "chart_filename2"],
+      "visualizations": ["viz_name_1", "viz_name_2"],
       "showTable": false,
       "title": "An interesting title",
       "text": "Lorem ipsum."
@@ -109,16 +99,22 @@ Note: All files and folders should match the following regular expression: [`^(?
 }
 ```
 
-3. Create a subfolder `examples/`. This directory will contain all YARRRML and SPARQL examples, and needs to contain at the bare minimum a `main` example directory including the main YARRRML file. Selecting examples is only available to power users for development and testing purposes. When a general user uses the app, the `main` mapping is used.
-
-4. Add a subdirectory `examples/main/` and add to it the main `.yml` (or `.yaml`) file containing [YARRRML mappings](https://rml.io/yarrrml/).
+3. For the SPARQL pipeline: add a single YARRRML file at the root (a `.yml` or `.yaml` file containing [YARRRML mappings](https://rml.io/yarrrml/)), and the SPARQL queries in a subfolder `queries`. If needed, add custom RML functions to `manifests/functions.js`
 
 **Note**
 If the data experience involves a single non-zip file input, use the name `input.<ext>` in the YARRRML `access` field of the source definition.
 
-5. If needed, add custom functions to [`functions.js`](https://github.com/hestiaAI/hestia-rml-demo/edit/master/manifests/functions.js)
+4. For the SQL pipeline: add a `databaseBuilder` function in a file `database.js`, and the SQL queries in a subfolder `queries`.
 
-6. If the icon is not there yet, add the image file to `manifests/icons/`
+5. For the custom pipeline: add the functions in a file `pipeline.js`.
+
+6. If needed, add postprocessor functions in a file `postprocessors.js`.
+
+7. If needed, add Vega configurations in a subfolder `visualizations`.
+
+8. Import the all the functions from `*.js` files in a file `index.js` and export them as an object.
+
+9. If the icon is not there yet, add the image file to `manifests/icons/`
 
 ## Adding sample data
 
