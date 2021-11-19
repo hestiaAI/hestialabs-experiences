@@ -56,7 +56,7 @@
     "vega-lite": "^5.1.1",
     "vue-social-sharing": "^3.0.8",
     "vuetify": "^2.5.8",
-    "vuex-persistedstate": "^4.0.0"
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.15.4",
