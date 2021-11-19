@@ -22,16 +22,6 @@
     "icon": "the-eyeballs.svg",
     "url": "https://eyeballs.hestialabs.org/"
   },
-  "visualizations": [
-    {
-      "vega": "top-k-advertisers",
-      "query": "off-facebook-activity-count"
-    },
-    {
-      "vega": "sunburst-off-facebook-activity",
-      "query": "off-facebook-activity-type-count"
-    }
-  ],
   "defaultView": [
     {
       "query": "off-facebook-activity-count",

@@ -131,10 +131,6 @@ import FileManager from '~/utils/file-manager'
 
 export default {
   props: {
-    visualizations: {
-      type: Array,
-      default: () => []
-    },
     sparqlQuery: {
       type: String,
       default: null
@@ -184,9 +180,6 @@ export default {
     }
   },
   computed: {
-    exampleVisualizations() {
-      return this.visualizations ?? []
-    },
     showTable() {
       return this.defaultViewElements.showTable
     },

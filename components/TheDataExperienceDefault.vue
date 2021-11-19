@@ -30,7 +30,6 @@
         <v-col>
           <unit-query
             v-bind="{
-              visualizations,
               defaultViewElements,
               customPipeline:
                 customPipelines !== undefined
@@ -72,7 +71,6 @@ import FileManager from '~/utils/file-manager'
 export default {
   components: { UnitFileExplorer },
   props: {
-    visualizations: Array,
     defaultView: Array,
     title: String,
     dataPortal: String,

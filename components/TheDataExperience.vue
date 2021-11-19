@@ -63,10 +63,6 @@ export default {
       type: Array,
       default: () => []
     },
-    visualizations: {
-      type: Array,
-      default: () => []
-    },
     defaultView: {
       type: Array,
       default: () => []
@@ -133,7 +129,6 @@ export default {
       const propNames = [
         'title',
         'dataPortal',
-        'visualizations',
         'defaultView',
         'customPipelines',
         'preprocessors',
