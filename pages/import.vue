@@ -143,9 +143,6 @@ export default {
         params: { key: this.experience.key }
       })
     },
-    visualizations() {
-      return this.manifest.visualizations
-    },
     allVegaFiles() {
       return this.results.map(
         r =>
