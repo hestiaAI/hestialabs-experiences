@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
-      <base-button
+      <BaseButton
         v-bind="{ disabled, progress, status, error }"
         text="Process files"
         icon="mdiStepForward"
@@ -10,13 +10,13 @@
       />
     </div>
 
-    <lazy-the-files-combobox
+    <LazyTheFilesCombobox
       v-if="isPlayground"
       class="mb-4"
       @update="filesToExtract = $event"
     />
 
-    <lazy-the-sample-selector
+    <LazyTheSampleSelector
       v-if="samples.length"
       :value.sync="selectedSamples"
       :items="samples"
@@ -27,7 +27,7 @@
 
     <div ref="dashboard" />
 
-    <lazy-code-editor
+    <LazyCodeEditor
       v-if="$store.state.power"
       :value="messagePowerUser"
       :error="error"

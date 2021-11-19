@@ -4,8 +4,8 @@
     <slot>
       <span>{{ text }}</span>
     </slot>
-    <base-progress-circular v-if="progress" class="ml-2" />
-    <status-indicator v-else-if="status" :error="error" />
+    <BaseProgressCircular v-if="progress" class="ml-2" />
+    <StatusIndicator v-else-if="status" :error="error" />
   </v-btn>
 </template>
 

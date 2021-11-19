@@ -3,7 +3,7 @@
     <keep-alive>
       <component :is="isComponent" v-bind="props">
         <template #unit-files="{ update, ...slotProps }">
-          <unit-files
+          <UnitFiles
             v-bind="{
               extensions,
               files,
@@ -15,7 +15,7 @@
             }"
             @update="update"
           >
-          </unit-files>
+          </UnitFiles>
         </template>
       </component>
     </keep-alive>

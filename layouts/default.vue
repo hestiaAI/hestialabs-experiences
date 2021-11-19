@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <the-app-bar v-bind="{ enabledExperiences, disabledExperiences }" />
+    <TheAppBar v-bind="{ enabledExperiences, disabledExperiences }" />
     <v-main>
       <v-container class="mt-5">
         <v-row>

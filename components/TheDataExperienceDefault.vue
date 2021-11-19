@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="12 mx-auto" sm="6">
-        <unit-introduction
+        <UnitIntroduction
           v-bind="{ companyName: title, dataPortal, isGenericViewer }"
         />
       </v-col>
@@ -11,7 +11,7 @@
       <v-col cols="12 mx-auto" sm="6">
         <slot name="unit-files" :update="onUnitFilesUpdate" />
         <template v-if="progress">
-          <base-progress-circular class="mr-2" />
+          <BaseProgressCircular class="mr-2" />
           <span>Processing files...</span>
         </template>
         <template v-else-if="error || success">
@@ -28,7 +28,7 @@
     <template v-if="success">
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
-          <unit-query
+          <UnitQuery
             v-if="defaultViewElements.customPipeline"
             v-bind="{
               visualizations,
@@ -41,7 +41,7 @@
             }"
             @update="onQueryUpdate"
           />
-          <unit-query
+          <UnitQuery
             v-else
             v-bind="{
               selectedExample,
@@ -57,12 +57,12 @@
       </v-row>
       <v-row v-if="showDataExplorer">
         <v-col>
-          <unit-file-explorer v-bind="{ fileManager }" />
+          <UnitFileExplorer v-bind="{ fileManager }" />
         </v-col>
       </v-row>
       <v-row v-if="$store.state.config.consent">
         <v-col cols="8 mx-auto">
-          <unit-consent-form v-bind="{ allResults, defaultView }" />
+          <UnitConsentForm v-bind="{ allResults, defaultView }" />
         </v-col>
       </v-row>
     </template>

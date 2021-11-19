@@ -3,7 +3,7 @@
     <v-card class="pa-2 my-6">
       <v-card-title class="justify-center">Export Results</v-card-title>
       <v-card-text>
-        <unit-consent-form-section
+        <UnitConsentFormSection
           v-for="(section, index) in $store.state.config.consent"
           :key="`section-${index}`"
           v-bind="{ section, index }"
@@ -19,20 +19,20 @@
           :label="defaultView[index].title"
           :value="index"
         ></v-checkbox>
-        <base-button
+        <BaseButton
           text="Generate ZIP"
           :status="generateStatus"
           :error="generateError"
           :progress="generateProgress"
           @click="generateZIP"
         />
-        <base-data-download-button
+        <BaseDataDownloadButton
           :data="encryptedZipFile"
           extension="zip"
           text="Download encrypted"
           :disabled="!zipReady"
         />
-        <base-button
+        <BaseButton
           text="Send encrypted"
           :status="sentStatus"
           :error="sentError"

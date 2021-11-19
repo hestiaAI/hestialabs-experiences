@@ -1,5 +1,5 @@
 <template>
-  <base-download-button v-bind="{ extension, href, ...$attrs }" />
+  <BaseDownloadButton v-bind="{ extension, href, ...$attrs }" />
 </template>
 
 <script>

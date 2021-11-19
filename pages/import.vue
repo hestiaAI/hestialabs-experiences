@@ -5,7 +5,7 @@
       This step only needs to be done once. Copy the public key in the config
       and store the secret key in a safe place.
     </p>
-    <base-button text="Generate keys" @click="generateKeys" />
+    <BaseButton text="Generate keys" @click="generateKeys" />
 
     <h2 class="mt-6">Import</h2>
     <p>
@@ -22,12 +22,12 @@
       label="Secret Key"
       :disabled="!decrypt"
     ></v-file-input>
-    <base-button
+    <BaseButton
       text="Import"
       v-bind="{ status, error, progress, disabled: !inputZIP }"
       @click="importZIP"
     />
-    <base-data-download-button
+    <BaseDataDownloadButton
       :data="outputZIP"
       extension="zip"
       text="Download plaintext"
@@ -58,7 +58,7 @@
       <v-card class="pa-2 my-6">
         <v-card-title class="justify-center">Consent Log</v-card-title>
         <v-card-text>
-          <unit-consent-form-section
+          <UnitConsentFormSection
             v-for="(section, index) in consent"
             :key="`section-${index}`"
             v-bind="{ section, index, readonly: true }"
@@ -79,7 +79,7 @@
             :key="vegaIndex"
             style="text-align: center"
           >
-            <unit-vega-viz
+            <UnitVegaViz
               :spec-file="specFile"
               :data="processResultForVega(result.result, specFile)"
               :div-id="`viz-${resultIndex}-${specFile.name}`"
@@ -99,12 +99,12 @@
           :key="'viz-url-' + vizUrlIndex"
         >
           <v-col>
-            <unit-iframe :src="src" :data="result.result" />
+            <UnitIframe :src="src" :data="result.result" />
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <unit-filterable-table :data="result.result" />
+            <UnitFilterableTable :data="result.result" />
           </v-col>
         </v-row>
       </v-card>

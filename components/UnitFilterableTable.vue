@@ -3,7 +3,7 @@
     <div v-if="isValid">
       <h2 v-if="$store.state.power" class="my-3">Query Results</h2>
       <v-alert v-if="error" type="error">{{ message }}</v-alert>
-      <the-table-filter :headers="headers" @update="onFilterUpdate" />
+      <TheTableFilter :headers="headers" @update="onFilterUpdate" />
       <v-data-table
         v-bind="{ headers: tableHeaders, items, search }"
         :hide-default-footer="disabled"
@@ -13,7 +13,7 @@
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
         </template>
       </v-data-table>
-      <base-data-download-button
+      <BaseDataDownloadButton
         v-bind="{ progress, error, disabled, extension, data: csvData, status }"
         ref="downloadButton"
         text="Download"

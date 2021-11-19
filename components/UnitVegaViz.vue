@@ -4,8 +4,8 @@
       <div :id="divId" ref="graph"></div>
       <v-row>
         <v-col cols="6 mx-auto">
-          <base-button text="Export" @click="exportViz" />
-          <base-download-button
+          <BaseButton text="Export" @click="exportViz" />
+          <BaseDownloadButton
             :href="dataURL"
             :extension="exportExtension"
             :disabled="!dataURL"

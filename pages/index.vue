@@ -1,5 +1,5 @@
 <template>
-  <the-data-experience-list
+  <TheDataExperienceList
     v-bind="{
       enabledExperiences,
       disabledExperiences,

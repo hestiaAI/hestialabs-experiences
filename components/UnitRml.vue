@@ -2,8 +2,8 @@
   <v-row>
     <v-col cols="12" lg="6">
       <h2 class="my-3">YARRRML</h2>
-      <base-data-download-button extension="yml" :data="yarrrml" />
-      <code-editor
+      <BaseDataDownloadButton extension="yml" :data="yarrrml" />
+      <CodeEditor
         :value.sync="yarrrml"
         class="mt-6"
         language="yaml"
@@ -12,19 +12,19 @@
     </v-col>
     <v-col>
       <h2 class="my-3">RML</h2>
-      <base-button
+      <BaseButton
         v-bind="{ progress, status, error }"
         text="Generate RML"
         icon="mdiStepForward"
         class="mr-sm-2 my-sm-2"
         @click="generateRML"
       />
-      <base-data-download-button
+      <BaseDataDownloadButton
         v-bind="{ data, extension }"
         :disabled="!rml"
         class="ma-sm-2"
       />
-      <code-editor
+      <CodeEditor
         :value="data"
         :error="error"
         class="mt-6"

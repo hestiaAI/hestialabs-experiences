@@ -7,7 +7,7 @@
     <template v-else>
       <v-row class="no-gutters">
         <v-col>
-          <the-example-selector
+          <TheExampleSelector
             :value.sync="selectedExample"
             :items="examples"
             :disabled="examples.length === 1"
@@ -17,11 +17,11 @@
 
       <v-row>
         <v-col>
-          <unit-introduction :company-name="title" :data-portal="dataPortal" />
+          <UnitIntroduction :company-name="title" :data-portal="dataPortal" />
         </v-col>
       </v-row>
 
-      <unit-rml
+      <UnitRml
         :yarrrml-example="selectedExample.yarrrml"
         @update="onUnitRmlUpdate"
       />
@@ -32,11 +32,11 @@
           <slot name="unit-files" :update="onUnitFilesUpdate" />
         </v-col>
         <v-col cols="12" lg="6">
-          <unit-rdf v-bind="{ rml, inputFiles }" @update="onUnitRdfUpdate" />
+          <UnitRdf v-bind="{ rml, inputFiles }" @update="onUnitRdfUpdate" />
         </v-col>
       </v-row>
 
-      <unit-query
+      <UnitQuery
         v-bind="{
           selectedExample,
           visualizations,

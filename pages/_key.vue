@@ -27,7 +27,7 @@
         </p>
       </v-col>
     </v-row>
-    <the-data-experience v-if="m.rest" v-bind="m.rest" />
+    <TheDataExperience v-if="m.rest" v-bind="m.rest" />
   </v-container>
 </template>
 

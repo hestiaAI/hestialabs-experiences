@@ -4,12 +4,12 @@
     <template v-if="$store.state.power">
       <v-row>
         <v-col cols="12" lg="6">
-          <unit-custom-pipeline
+          <UnitCustomPipeline
             v-if="customPipeline"
             v-bind="{ fileManager, customPipeline }"
             @update="onUnitResultsUpdate"
           />
-          <unit-sparql
+          <UnitSparql
             v-else
             v-bind="{ selectedExample, query, queryDisabled }"
             class="mr-lg-6"
@@ -18,7 +18,7 @@
           />
         </v-col>
         <v-col cols="12" lg="6">
-          <unit-filterable-table :data="result" />
+          <UnitFilterableTable :data="result" />
         </v-col>
         <template v-if="result">
           <v-col
@@ -27,7 +27,7 @@
             cols="12"
             style="text-align: center"
           >
-            <unit-vega-viz
+            <UnitVegaViz
               :spec-file="specFile"
               :data="processResultForVega(result, specFile)"
               :div-id="`viz-${query.name}-${specFile.name}`"
@@ -50,7 +50,7 @@
         </v-row>
         <v-row>
           <v-col>
-            <unit-custom-pipeline
+            <UnitCustomPipeline
               v-if="customPipeline !== undefined"
               v-bind="{
                 fileManager,
@@ -59,7 +59,7 @@
               }"
               @update="onUnitResultsUpdate"
             />
-            <unit-sparql
+            <UnitSparql
               v-else
               v-bind="{ selectedExample, query, queryDisabled }"
               class="mr-lg-6"
@@ -75,7 +75,7 @@
                 :key="'vega-' + vegaIndex"
                 style="text-align: center"
               >
-                <unit-vega-viz
+                <UnitVegaViz
                   :spec-file="specFile"
                   :data="processResultForVega(result, specFile)"
                   :div-id="`viz-${index}-${specFile.name}`"
@@ -95,12 +95,12 @@
               :key="'viz-url-' + vizUrlIndex"
             >
               <v-col>
-                <unit-iframe :src="src" :data="result" />
+                <UnitIframe :src="src" :data="result" />
               </v-col>
             </v-row>
             <v-row v-if="showTable">
               <v-col>
-                <unit-filterable-table :data="result" />
+                <UnitFilterableTable :data="result" />
               </v-col>
             </v-row>
           </template>

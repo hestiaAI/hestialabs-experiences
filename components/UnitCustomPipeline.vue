@@ -16,7 +16,7 @@
       </v-row>
       <v-row>
         <v-col align="center">
-          <base-button
+          <BaseButton
             v-bind="{ progress, status, error }"
             text="Run"
             icon="mdiStepForward"

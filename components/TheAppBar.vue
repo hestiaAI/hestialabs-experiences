@@ -15,7 +15,7 @@
           rel="noreferrer noopener"
           class="ml-2"
         >
-          <logo-img class="mr-5" width="100" />
+          <LogoImg class="mr-5" width="100" />
         </a>
 
         <template v-if="collaborator">
@@ -55,11 +55,11 @@
         </div>
       </template>
       <template #append>
-        <mode-switch />
+        <ModeSwitch />
       </template>
       <div class="mt-6">
-        <logo-img width="250" />
-        <the-data-experience-list
+        <LogoImg width="250" />
+        <TheDataExperienceList
           v-bind="{ enabledExperiences, disabledExperiences, big: false }"
         />
       </div>

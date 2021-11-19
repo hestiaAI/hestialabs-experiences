@@ -1,5 +1,5 @@
 <template>
-  <base-button
+  <BaseButton
     v-bind="{ progress, status, error, disabled, text, icon }"
     @click="run"
   />

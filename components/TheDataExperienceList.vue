@@ -2,7 +2,7 @@
   <div>
     <template v-if="enabledExperiences.length > 0">
       <h1>Public experiences</h1>
-      <card-or-item-list :big="big" :experiences="enabledExperiences" />
+      <CardOrItemList :big="big" :experiences="enabledExperiences" />
     </template>
     <template v-if="big"> <br /><br /> </template>
     <template v-else> <br /> </template>
@@ -12,7 +12,7 @@
           >Contact us</a
         >)
       </h1>
-      <card-or-item-list :big="big" :experiences="disabledExperiences" />
+      <CardOrItemList :big="big" :experiences="disabledExperiences" />
     </template>
   </div>
 </template>
