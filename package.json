@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev": "nuxt --open",
+    "test": "jest",
     "start": "nuxt start",
     "build": "npm run build:static",
     "build:static": "nuxt generate",
@@ -18,6 +19,11 @@
     "lint:fix": "npm run lint:js -- --fix",
     "pre-commit": "lint-staged && node validate-yarrrml",
     "prepare": "husky install"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    }
   },
   "lint-staged": {
     "*.{js,vue}": "npm run lint"
@@ -60,6 +66,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.15.4",
+    "@babel/preset-env": "^7.16.4",
     "@mdi/js": "^6.1.95",
     "@nuxtjs/eslint-config": "^6.0.1",
     "@nuxtjs/eslint-module": "^3.0.2",
@@ -73,6 +80,7 @@
     "eslint-plugin-vue": "^7.17.0",
     "file-loader": "^6.2.0",
     "husky": "^7.0.2",
+    "jest": "^27.3.1",
     "lint-staged": "^11.1.2",
     "prettier": "^2.3.2",
     "raw-loader": "^4.0.2",
