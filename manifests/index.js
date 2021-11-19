@@ -26,6 +26,11 @@ const reqVEGA = require.context(
   true,
   /^\.\/[a-z-]+\/visualizations\/[a-z0-9-]+.vega.json$/
 )
+const reqSQL = require.context(
+  './experiences/',
+  true,
+  /^\.\/[a-z-]+\/queries\/[a-z0-9-]+.sql$/
+)
 
 // files in assets/data/ are loaded only with file-loader
 const reqData = require.context('../assets/data/', true, /.*/)
@@ -134,6 +139,7 @@ const manifests = Object.fromEntries(
         showDataExplorer,
         sparql: {},
         vega: {},
+        sql: {},
         ...rest,
         ...module.default
       }
@@ -175,6 +181,18 @@ reqVEGA.keys().forEach(path => {
   const { name } = match.groups
   // Add Vega
   manifest.vega[name] = reqVEGA(path)
+})
+
+reqSQL.keys().forEach(path => {
+  // Extract directory name of the experience
+  const dir = extractFirstDirectory(path)
+  // Take corresponding manifest
+  const manifest = manifests[dir]
+  // Extract query name
+  const match = path.match(/\/queries\/(?<name>.+)\.sql/)
+  const { name } = match.groups
+  // Add SPARQL
+  manifest.sql[name] = reqSQL(path).default
 })
 
 Object.entries(manifests).forEach(([key, val]) => {

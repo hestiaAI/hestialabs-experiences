@@ -23,56 +23,49 @@
     {
       "vega": "wordcloud-targeting-criteria",
       "query": "targeting-values-all-advertisers"
-    },
-    {
-      "vega": "sunburst-targeting",
-      "query": "targeting-criteria",
-      "preprocessor": "sunburstTargeting"
-    },
-    {
-      "vega": "sunburst-targeting",
-      "query": "select-targeting-criteria",
-      "preprocessor": "sunburstTargetingAdvertiser"
     }
   ],
   "defaultView": [
     {
-      "customPipeline": "advertisersPerDay",
+      "sql": "advertisers-per-day",
       "visualizations": ["top-k-advertisers"],
       "showTable": false,
       "title": "Top advertisers",
       "text": "See the ranking of advertisers that have shown you the most ads."
     },
     {
-      "customPipeline": "targetingTree",
+      "sql": "targeting-criteria-by-advertiser",
+      "postprocessor": "sunburstTargeting",
       "visualizations": ["Sunburst.vue"],
       "showTable": false,
       "title": "Targeting criteria (Top 10 advertisers)",
       "text": "Understand why you have been targeted by these advertisers. The graph shows the 10 advertisers who use the most targeting criteria on you. In the first ring you will find the different advertisers, in the second ring the types of targeting used (location, language, ...). And finally, if you click on a ring, the graph will enlarge to show you the targeting values (Swiss, French, ...) in the outer ring."
     },
     {
-      "customPipeline": "targetingTypesAndValues",
+      "sql": "targeting-criteria-all-advertisers",
       "visualizations": ["wordcloud-targeting-criteria"],
       "showTable": false,
       "title": "Targeting criteria (All advertisers)",
       "text": "Get more details on how you are targeted by these advertisers. This graph shows the number of times you have been targeted by different advertisers using a specific criterion. You can change the type of criterion and get information about the meaning of each criterion's type at the bottom of the graph."
     },
     {
-      "customPipeline": "allAdvertisers",
+      "sql": "all-advertisers",
       "showTable": true,
       "title": "All advertisers",
       "text": "Get more details with a table containing all the advertisers that have shown you ads, and how many times they did. Click on the headers to sort the values differently."
     },
     {
-      "customPipeline": "selectTargetingTree",
-      "parameter": "Advertiser",
+      "sql": "targeting-criteria-one-advertiser",
+      "postprocessor": "sunburstTargetingAdvertiser",
+      "parameterName": "Advertiser",
+      "parameterKey": ":advertiser",
       "visualizations": ["Sunburst.vue"],
       "showTable": false,
       "title": "Targeting criteria (1 advertiser)",
       "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the names in the table above and write it in the text field below."
     },
     {
-      "customPipeline": "dashboard",
+      "sql": "overview",
       "visualizations": ["TwitterOverview.vue"],
       "showTable": false,
       "title": "Twitter advertising overview",

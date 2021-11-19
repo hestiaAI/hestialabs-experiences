@@ -79,13 +79,17 @@ export default {
       type: Object,
       default: () => {}
     },
+    postprocessors: {
+      type: Object,
+      default: undefined
+    },
     allowMissingFiles: {
       type: Boolean,
       default: false
     },
     customPipelines: {
       type: Object,
-      default: () => {}
+      default: undefined
     },
     isGenericViewer: {
       type: Boolean,
@@ -99,6 +103,10 @@ export default {
       type: Object,
       default: () => {}
     },
+    sql: {
+      type: Object,
+      default: () => {}
+    },
     vega: {
       type: Object,
       default: () => {}
@@ -106,6 +114,10 @@ export default {
     yarrrml: {
       type: String,
       default: ''
+    },
+    databaseBuilder: {
+      type: Function,
+      default: undefined
     }
   },
   computed: {
@@ -125,13 +137,16 @@ export default {
         'defaultView',
         'customPipelines',
         'preprocessors',
+        'postprocessors',
         'isGenericViewer',
         'showDataExplorer',
         'files',
         'allowMissingFiles',
         'sparql',
+        'sql',
         'vega',
-        'yarrrml'
+        'yarrrml',
+        'databaseBuilder'
       ]
       return Object.fromEntries(propNames.map(k => [k, this[k]]))
     },

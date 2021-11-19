@@ -29,8 +29,7 @@
     },
     {
       "vega": "sunburst-off-facebook-activity",
-      "query": "off-facebook-activity-type-count",
-      "preprocessor": "sunburstTargetingAdvertiser"
+      "query": "off-facebook-activity-type-count"
     }
   ],
   "defaultView": [
@@ -43,6 +42,7 @@
     },
     {
       "query": "off-facebook-activity-type-count",
+      "postprocessor": "sunburstTargetingAdvertiser",
       "visualizations": ["sunburst-off-facebook-activity"],
       "showTable": false,
       "title": "Off Facebook activity type",

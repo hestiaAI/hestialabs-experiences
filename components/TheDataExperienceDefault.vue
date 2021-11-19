@@ -29,25 +29,17 @@
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
-            v-if="defaultViewElements.customPipeline"
             v-bind="{
               visualizations,
               defaultViewElements,
               customPipeline:
-                customPipelines[defaultViewElements.customPipeline],
-              fileManager,
-              index,
-              vega
-            }"
-            @update="onQueryUpdate"
-          />
-          <unit-query
-            v-else
-            v-bind="{
-              visualizations,
-              defaultViewElements,
+                customPipelines !== undefined
+                  ? customPipelines[defaultViewElements.customPipeline]
+                  : undefined,
               sparqlQuery: queries[index],
+              sql: sqlQueries[index],
               fileManager,
+              postprocessors,
               index,
               vega,
               allSparql: sparql
@@ -92,7 +84,10 @@ export default {
     allowMissingFiles: Boolean,
     sparql: Object,
     vega: Object,
-    yarrrml: String
+    sql: Object,
+    yarrrml: String,
+    postprocessors: Object,
+    databaseBuilder: Function
   },
   data() {
     return {
@@ -103,12 +98,16 @@ export default {
       rml: '',
       allResults: [...Array(this.defaultView.length)],
       allFiles: null,
-      fileManager: new FileManager(this.preprocessors, this.allowMissingFiles)
+      fileManager: new FileManager(this.preprocessors, this.allowMissingFiles),
+      db: null
     }
   },
   computed: {
     queries() {
       return this.defaultView.map(o => this.sparql[o.query])
+    },
+    sqlQueries() {
+      return this.defaultView.map(o => this.sql[o.sql])
     },
     isRdfNeeded() {
       return this.defaultView.filter(v => 'query' in v).length > 0
@@ -135,6 +134,11 @@ export default {
       } catch (error) {
         this.handleError(error)
         return
+      }
+
+      // Populate database
+      if (this.databaseBuilder !== undefined) {
+        await this.databaseBuilder(this.fileManager)
       }
 
       if (this.isRdfNeeded && this.yarrrml) {

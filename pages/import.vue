@@ -75,13 +75,13 @@
         <v-card-title class="justify-center">{{ result.title }}</v-card-title>
         <v-row>
           <v-col
-            v-for="(specFile, name, vegaIndex) in allVegaFiles[resultIndex]"
+            v-for="(specFile, vegaIndex) in allVegaFiles[resultIndex]"
             :key="vegaIndex"
             style="text-align: center"
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :data="processResultForVega(result, specFile)"
+              :data="result.result"
               :div-id="`viz-${resultIndex}-${vegaIndex}`"
             />
           </v-col>
@@ -95,7 +95,7 @@
           </v-col>
         </v-row>
         <v-row
-          v-for="(src, vizUrlIndex) in vizUrls[resultIndex]"
+          v-for="(src, vizUrlIndex) in allVizUrls[resultIndex]"
           :key="'viz-url-' + vizUrlIndex"
         >
           <v-col>
@@ -116,7 +116,6 @@
 import JSZip from 'jszip'
 import FileSaver from 'file-saver'
 
-import csvProcessors from '@/manifests/csv-processors'
 import UnitFilterableTable from '~/components/UnitFilterableTable'
 
 const _sodium = require('libsodium-wrappers')
@@ -148,40 +147,23 @@ export default {
       return this.manifest.visualizations
     },
     allVegaFiles() {
-      return this.results.map(r =>
-        Object.fromEntries(
-          r.visualizations
-            ?.map(n => [n, this.manifest.vega[n]])
-            .filter(n => n[1]) ?? []
-        )
+      return this.results.map(
+        r =>
+          r.visualizations?.map(n => this.manifest.vega[n]).filter(n => n) ?? []
       )
     },
-    vizUrls() {
+    allVizUrls() {
       return this.results.map(r =>
         r.visualizations?.filter(n => n.startsWith('/'))
       )
     },
     allVueGraphNames() {
       return this.results.map(r =>
-        r.visualizations?.filter(n => n.endsWith('.vue')).filter(n => n)
+        r.visualizations?.filter(n => n.endsWith('.vue'))
       )
     }
   },
   methods: {
-    processResultForVega(result, name) {
-      const processor = this.findProcessor(result, name)
-      if (processor) {
-        const items = processor(result.result)[1]
-        return { items }
-      }
-      return result.result
-    },
-    findProcessor(result, name) {
-      const def = this.visualizations.find(
-        v => result.query === v.query && name === v.vega
-      )
-      return csvProcessors[def?.preprocessor]
-    },
     handleError(error, message) {
       console.error(error)
       this.error = true
