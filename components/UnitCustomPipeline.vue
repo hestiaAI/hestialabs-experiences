@@ -5,32 +5,26 @@
     </template>
 
     <template v-else>
-      <template v-if="parameterName">
-        <v-row>
-          <v-col cols="4" class="mx-auto">
-            <v-text-field
-              v-model="parameter"
-              :label="parameterName"
-              class="my-sm-2 mr-sm-2"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col align="center">
-            <base-button
-              text="Run"
-              icon="mdiStepForward"
-              class="ma-sm-2"
-              @click="runQuery"
-            />
-          </v-col>
-        </v-row>
-      </template>
-
-      <div v-if="progress" align="center">
-        <base-progress-circular class="mr-2" />
-        <span>Processing...</span>
-      </div>
+      <v-row v-if="parameterName">
+        <v-col cols="4" class="mx-auto">
+          <v-text-field
+            v-model="parameter"
+            :label="parameterName"
+            class="my-sm-2 mr-sm-2"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col align="center">
+          <base-button
+            v-bind="{ progress, status, error }"
+            text="Run"
+            icon="mdiStepForward"
+            class="ma-sm-2"
+            @click="runPipeline"
+          />
+        </v-col>
+      </v-row>
     </template>
   </div>
 </template>
@@ -38,8 +32,11 @@
 <script>
 import { processError } from '@/utils/utils'
 import FileManager from '~/utils/file-manager'
+import BaseButton from '~/components/BaseButton'
 
 export default {
+  name: 'UnitCustomPipeline',
+  components: { BaseButton },
   props: {
     fileManager: {
       type: FileManager,
@@ -64,41 +61,29 @@ export default {
       parameter: ''
     }
   },
-  computed: {
-    disabled() {
-      return !this.fileManager.preprocessedTexts
-    }
-  },
-  watch: {
-    fileManager: {
-      immediate: true,
-      handler(_) {
-        if (!this.parameterName) {
-          this.runQuery()
-        }
-      }
-    }
-  },
   methods: {
-    async runQuery() {
+    runPipeline() {
       this.message = ''
       this.error = false
       this.progress = true
-      try {
-        const { headers, items } = await this.customPipeline(
-          this.fileManager,
-          this.parameter
-        )
-        this.$emit('update', { headers, items })
-      } catch (error) {
-        console.error(error)
-        this.error = true
-        this.message = processError(error)
-        this.$emit('update', { error })
-      } finally {
-        this.status = true
-        this.progress = false
-      }
+      setTimeout(async () => {
+        try {
+          const result = await this.customPipeline(
+            this.fileManager,
+            this.$store.getters.manifest(this.$route),
+            this.parameter
+          )
+          this.$emit('update', result)
+        } catch (error) {
+          console.error(error)
+          this.error = true
+          this.message = processError(error)
+          this.$emit('update', { error })
+        } finally {
+          this.status = true
+          this.progress = false
+        }
+      }, 1)
     }
   }
 }

@@ -18,18 +18,18 @@
           />
         </v-col>
         <v-col cols="12" lg="6">
-          <unit-filterable-table v-bind="{ headers, items }" />
+          <unit-filterable-table :data="result" />
         </v-col>
-        <template v-if="items.length">
+        <template v-if="result">
           <v-col
-            v-for="(specFile, index) in vegaFiles"
-            :key="index"
+            v-for="(specFile, vegaIndex) in vegaFiles"
+            :key="vegaIndex"
             cols="12"
             style="text-align: center"
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :values="processedItems[index]"
+              :data="processResultForVega(result, specFile)"
               :div-id="`viz-${query.name}-${specFile.name}`"
             />
           </v-col>
@@ -68,31 +68,39 @@
           </v-col>
         </v-row>
         <template v-if="finished">
-          <template v-if="items.length">
+          <template v-if="result">
             <v-row>
               <v-col
-                v-for="(specFile, index) in vegaFiles"
-                :key="'vega-' + index"
+                v-for="(specFile, vegaIndex) in vegaFiles"
+                :key="'vega-' + vegaIndex"
                 style="text-align: center"
               >
                 <unit-vega-viz
                   :spec-file="specFile"
-                  :values="processedItems[index]"
-                  :div-id="`viz-${i}-${specFile.name}`"
+                  :data="processResultForVega(result, specFile)"
+                  :div-id="`viz-${index}-${specFile.name}`"
                 />
               </v-col>
             </v-row>
             <v-row
-              v-for="(graphName, index) in vueGraphNames"
-              :key="'vue-' + index"
+              v-for="(graphName, vizVueIndex) in vizVueGraphs"
+              :key="'viz-vue-' + vizVueIndex"
             >
               <v-col>
-                <vue-graph-by-name :graph-name="graphName" :values="items" />
+                <vue-graph-by-name :graph-name="graphName" :data="result" />
+              </v-col>
+            </v-row>
+            <v-row
+              v-for="(src, vizUrlIndex) in vizUrls"
+              :key="'viz-url-' + vizUrlIndex"
+            >
+              <v-col>
+                <unit-iframe :src="src" :data="result" />
               </v-col>
             </v-row>
             <v-row v-if="showTable">
               <v-col>
-                <unit-filterable-table v-bind="{ headers, items }" />
+                <unit-filterable-table :data="result" />
               </v-col>
             </v-row>
           </template>
@@ -111,11 +119,9 @@
 
 <script>
 import csvProcessors from '@/manifests/csv-processors'
-import UnitFilterableTable from '~/components/UnitFilterableTable'
 import FileManager from '~/utils/file-manager'
 
 export default {
-  components: { UnitFilterableTable },
   props: {
     visualizations: {
       type: Object,
@@ -137,7 +143,7 @@ export default {
       type: Boolean,
       default: false
     },
-    i: {
+    index: {
       type: Number,
       default: 0
     },
@@ -152,8 +158,7 @@ export default {
   },
   data() {
     return {
-      headers: [],
-      items: [],
+      result: undefined,
       finished: false
     }
   },
@@ -163,7 +168,7 @@ export default {
       return this.visualizations?.[name] || []
     },
     showTable() {
-      return this.headers.length !== 0 && this.defaultViewElements.showTable
+      return this.defaultViewElements.showTable
     },
     vizNames() {
       let vizNames
@@ -176,41 +181,44 @@ export default {
       }
       return vizNames
     },
-    vueGraphNames() {
+    vizUrls() {
+      return this.vizNames.filter(n => n.startsWith('/'))
+    },
+    vizVueGraphs() {
       return this.vizNames.filter(n => n.endsWith('.vue'))
     },
     vegaFiles() {
       return this.selectedExample.vega.filter(s =>
         this.vizNames.includes(s.name)
       )
-    },
-    processedItems() {
-      // For each viz
-      return this.vegaFiles.map(spec => {
-        if (this.customPipeline === undefined) {
-          // Find the viz definition for this query
-          const preprocessor = this.exampleVisualizations.filter(
-            v => this.query.name === v.query && spec.name === v.vega
-          )
-          // If it has a preprocessor defined, run it
-          if (preprocessor.length === 1 && preprocessor[0].preprocessor) {
-            return csvProcessors[preprocessor[0].preprocessor](
-              this.headers,
-              this.items
-            )[1]
-          }
-        }
-        return this.items
-      })
     }
   },
   methods: {
-    onUnitResultsUpdate({ headers = [], items = [], error }) {
-      // Vuetify DataTable component expects text and value properties
-      this.headers = headers.map(h => ({ text: h, value: h }))
-      this.items = items
+    processResultForVega(result, specFile) {
+      const processor = this.findProcessor(specFile)
+      if (processor) {
+        const items = processor(result)[1]
+        return { items }
+      }
+      return result
+    },
+    findProcessor(specFile) {
+      if (this.customPipeline === undefined) {
+        // Find the viz definition for this query
+        const preprocessor = this.exampleVisualizations.filter(
+          v => this.query.name === v.query && specFile.name === v.vega
+        )
+        // Does it have a preprocessor?
+        if (preprocessor.length === 1) {
+          return csvProcessors[preprocessor[0]?.preprocessor]
+        }
+      }
+      return undefined
+    },
+    onUnitResultsUpdate(result) {
+      this.result = result
       this.finished = true
-      this.$emit('update', { i: this.i, headers, items })
+      this.$emit('update', { index: this.index, result })
     },
     onChangeSelector(query) {
       this.$emit('change', query)

@@ -124,7 +124,7 @@ async function targetingTree(fileManager) {
     countReducer('count')
   )
   // Transform to tree
-  ;[headers, items] = csvProcessors.sunburstTargeting(headers, items)
+  ;[headers, items] = csvProcessors.sunburstTargeting({ headers, items })
 
   return { headers, items }
 }
@@ -182,7 +182,7 @@ async function allAdvertisers(fileManager) {
   return { headers, items }
 }
 
-async function selectTargetingTree(fileManager, parameter) {
+async function selectTargetingTree(fileManager, _, parameter) {
   // JSON iterator on impressions
   const impressionsFile = JSON.parse(
     await fileManager.getPreprocessedText('data/ad-impressions.js')
@@ -218,7 +218,10 @@ async function selectTargetingTree(fileManager, parameter) {
     countReducer('count')
   )
   // Transform to tree
-  ;[headers, items] = csvProcessors.sunburstTargetingAdvertiser(headers, items)
+  ;[headers, items] = csvProcessors.sunburstTargetingAdvertiser({
+    headers,
+    items
+  })
 
   return { headers, items }
 }

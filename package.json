@@ -8,7 +8,7 @@
     "node": "14.x"
   },
   "scripts": {
-    "dev": "nuxt",
+    "dev": "nuxt --open",
     "start": "nuxt start",
     "build": "npm run build:static",
     "build:static": "nuxt generate",
