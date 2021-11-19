@@ -119,7 +119,3 @@ If the data experience involves a single non-zip file input, use the name `input
 ## Adding sample data
 
 Add sample data to the `/assets/data/` folder. Update the `data` array in the JSON config file of the relevant data experiences to make the new data file available. Additionally, the data sample is automatically added to the Playground.
-
-## Adding new examples for power users
-
-Add a folder to the `examples` folder of the experience. The name of the folder corresponds to the name of the example. Add a single `yml`/`yaml` file with the example YARRRML. Add zero or more `.rq` files containing SPARQL query samples.
