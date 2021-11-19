@@ -1,90 +1,100 @@
+/* eslint-disable no-unused-vars */
 import { JSONPath } from 'jsonpath-plus'
 import _ from 'lodash'
+import * as d3 from 'd3'
 
-function representsInt(field) {
-  return (
-    !isNaN(field) &&
-    parseInt(Number(field)) === field &&
-    !isNaN(parseInt(field, 10))
-  )
-}
+// Define all accepted date formats
+const timeParsers = [
+  d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ'),
+  d3.timeParse('%Y-%m-%d'),
+  d3.timeParse('%s'), // Unix seconds
+  d3.timeParse('%Q') // Unix milliseconds
+]
 
-function isValidDate(date) {
-  return (
-    date.toString() !== 'Invalid Date' &&
-    date.getFullYear() >= 1980 &&
-    date.getFullYear() <= 2038
-  )
-}
+// Define range of valid year, in case of timestamp date format
+// the will accept any number so need to filter.
+const validYearMin = 1990
+const validYearMax = new Date().getFullYear() + 1
 
-function tryGetDate(field) {
-  if (representsInt(field)) {
-    const int = parseInt(field, 10)
-    // The timestamp can be in seconds or milliseconds
-    for (const i in [int * 1000, int]) {
-      const date = new Date(i)
-      if (isValidDate(date)) {
-        return date
-      }
+// Try to transform {{ value }} into a Date object,
+// return the date or null if not a valid date
+function getValidDate(value) {
+  let date = null
+  const findDate = timeParsers.some(parser => {
+    date = parser(value)
+    if (
+      date !== null &&
+      date.getFullYear() > validYearMin &&
+      date.getFullYear() < validYearMax
+    ) {
+      return true
     }
-  }
-  if (typeof field === 'string') {
-    const date = new Date(field)
-    if (isValidDate(date)) {
-      return date
+    return false
+  })
+  return findDate ? date : null
+}
+
+/*
+function isNumber(str) {
+  if (typeof str !== 'string') return false
+  return !isNaN(str) && !isNaN(parseFloat(str))
+}
+*/
+// Traverse all the json tree and keep tracks of each path from root to leaf
+function traverseAllTree(node) {
+  function traverse(n, acc) {
+    if (n && typeof n === 'object') {
+      Object.keys(n).forEach(function (k) {
+        traverse(n[k], acc.concat(k))
+      })
+      return
     }
+    console.log(acc)
+    path[acc.join(' -> ')] = n
   }
-  return null
+  const path = {}
+  traverse(node, [])
+  return path
 }
 
-function isObject(obj) {
-  return Object.prototype.toString.call(obj) === '[object Object]'
+// Try to extract a valid date from a list of values,
+// starting from end of list
+function extractLastDate(list) {
+  const description = list.reverse()
+  let date = null
+  const idx = description.findIndex(p => {
+    date = getValidDate(p)
+    return date !== null
+  })
+  description.splice(idx, 1)
+  return [date, description.reverse()]
 }
 
+// Transform a json object to a list of dated events
 function extractJsonEntries(node) {
-  if (Array.isArray(node)) {
-    // Array
-    return node.flatMap(el => extractJsonEntries(el))
-  } else if (isObject(node)) {
-    // Object
-    const entries = Object.entries(node).flatMap(([k, v]) => {
-      const dateInKey = tryGetDate(k)
-      const inner = extractJsonEntries(v)
-      if (dateInKey !== null && _.some(inner, o => Object.hasOwn(o, 'date'))) {
-        return inner.map(o => ({ ...o, date: dateInKey }))
-      } else {
-        return inner.map(o => ({
-          ...o,
-          description: `${_.startCase(k)} > ${o.description}`
-        }))
+  const allPath = traverseAllTree(node)
+  console.log(allPath)
+  const result = []
+  Object.entries(allPath).forEach(([path, value]) => {
+    const leafDate = getValidDate(value)
+    if (leafDate !== null) {
+      result.push({ date: leafDate, description: path })
+    } else {
+      const pathDate = extractLastDate(path.split(' -> '))
+      if (pathDate[0] !== null) {
+        pathDate[1].push(value)
+        result.push({
+          date: pathDate[0],
+          description: pathDate[1].join(' -> ')
+        })
       }
-    })
-    console.log(entries)
-    const [dates, others] = _.partition(entries, o => Object.hasOwn(o, 'date'))
-    const description = `[${others
-      .map(({ description }) => description)
-      .join(', ')}]`
-
-    return dates.map(({ date }) => ({
-      date,
-      description: `${description}`
-    }))
-  } else {
-    // Leaf
-    const date = tryGetDate(node)
-    if (date !== null) {
-      console.log(`found date: ${node}`)
-      return [{ date }]
     }
-    if (typeof node === 'string') {
-      return [{ description: _.startCase(node) }]
-    }
-    return [{ description: node }]
-  }
+  })
+  return result
 }
 
 function extractCsvEntries({ items }) {
-  // TODO
+  console.log(items) // TODO
   return { items }
 }
 
@@ -99,7 +109,6 @@ async function genericDateViewer(fileManager) {
   const jsonFilenames = filenames.filter(name => name.endsWith('.json'))
   const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
 
-  console.log(jsonTexts)
   const items = [
     ...Object.entries(jsonTexts).flatMap(([name, json]) => {
       try {
