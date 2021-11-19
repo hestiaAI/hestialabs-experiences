@@ -37,7 +37,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
   middleware({ store, params, error }) {
     if (
-      !store.getters.enabledExperiences.map(x => x.key).includes(params.key)
+      !store.getters.enabledExperiences.find(x => x.key === params.key)
     ) {
       return error({ statusCode: 404, message: 'Experience Not Found' })
     }
