@@ -59,7 +59,7 @@
       </template>
       <div class="mt-6">
         <LogoImg width="250" />
-        <TheDataExperienceList />
+        <TheExperienceMenu />
       </div>
     </v-navigation-drawer>
   </div>
@@ -75,7 +75,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['manifest', 'enabledExperiences', 'disabledExperiences']),
+    ...mapGetters(['manifest']),
     collaborator() {
       return this.manifest(this.$route).collaborator
     }

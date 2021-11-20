@@ -1,5 +1,5 @@
 <template>
-  <TheDataExperienceList :big="$vuetify.breakpoint.smAndUp" />
+  <TheExperienceMenu :cards="$vuetify.breakpoint.smAndUp" />
 </template>
 
 <style>
