@@ -2,7 +2,7 @@
   <v-row>
     <v-col cols="12" lg="6">
       <h2 class="my-3">YARRRML</h2>
-      <BaseDataDownloadButton extension="yml" :data="yarrrml" />
+      <BaseButtonDownloadData extension="yml" :data="yarrrml" />
       <CodeEditor
         :value.sync="yarrrml"
         class="mt-6"
@@ -19,7 +19,7 @@
         class="mr-sm-2 my-sm-2"
         @click="generateRML"
       />
-      <BaseDataDownloadButton
+      <BaseButtonDownloadData
         v-bind="{ data, extension }"
         :disabled="!rml"
         class="ma-sm-2"

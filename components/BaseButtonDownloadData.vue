@@ -1,12 +1,12 @@
 <template>
-  <BaseDownloadButton v-bind="{ extension, href, ...$attrs }" />
+  <BaseButtonDownload v-bind="{ extension, href, ...$attrs }" />
 </template>
 
 <script>
 import { createObjectURL, defaultExtension, mimeTypes } from '@/utils/utils'
 
 export default {
-  name: 'BaseDataDownloadButton',
+  name: 'BaseButtonDownloadData',
   props: {
     data: {
       type: [String, Blob, Uint8Array, Array],

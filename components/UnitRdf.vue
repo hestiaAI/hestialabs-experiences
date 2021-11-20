@@ -2,7 +2,7 @@
   <div>
     <h2 class="my-3">RDF</h2>
     <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
-      <TheRdfFormatSelector class="my-sm-2 mr-sm-2 mb-2" :value.sync="format" />
+      <TheSelectorRdfFormat class="my-sm-2 mr-sm-2 mb-2" :value.sync="format" />
       <BaseButton
         v-bind="{ progress, status, error, disabled }"
         text="Generate RDF"
@@ -10,7 +10,7 @@
         class="ma-sm-2"
         @click="generateRDF"
       />
-      <BaseDataDownloadButton
+      <BaseButtonDownloadData
         v-bind="{ data, extension }"
         :disabled="!message"
         class="ma-sm-2"

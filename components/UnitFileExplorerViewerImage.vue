@@ -1,12 +1,12 @@
 <template>
-  <iframe :src="pdfPath" width="100%" height="500px" />
+  <img width="100%" :src="imagePath" alt="problem" />
 </template>
 
 <script>
 import FileManager from '~/utils/file-manager'
 
 export default {
-  name: 'UnitPdfViewer',
+  name: 'UnitFileExplorerViewerImage',
   props: {
     fileManager: {
       type: FileManager,
@@ -18,7 +18,7 @@ export default {
     }
   },
   computed: {
-    pdfPath() {
+    imagePath() {
       return URL.createObjectURL(this.fileManager.fileDict[this.filename])
     }
   }

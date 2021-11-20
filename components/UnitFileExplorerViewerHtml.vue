@@ -6,7 +6,7 @@
 import FileManager from '~/utils/file-manager'
 
 export default {
-  name: 'UnitHtmlViewer',
+  name: 'UnitFileExplorerViewerHtml',
   props: {
     fileManager: {
       type: FileManager,

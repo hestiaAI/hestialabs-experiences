@@ -7,7 +7,7 @@
     <template v-else>
       <v-row class="no-gutters">
         <v-col>
-          <TheExampleSelector
+          <TheSelectorExample
             :value.sync="selectedExample"
             :items="examples"
             :disabled="examples.length === 1"

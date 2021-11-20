@@ -16,7 +16,7 @@
       @update="filesToExtract = $event"
     />
 
-    <LazyTheSampleSelector
+    <LazyTheSelectorSample
       v-if="samples.length"
       :value.sync="selectedSamples"
       :items="samples"

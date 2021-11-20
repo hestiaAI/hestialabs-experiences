@@ -4,7 +4,7 @@
     <template v-if="$store.state.power">
       <h2 class="my-3">SPARQL</h2>
       <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
-        <TheSparqlSelector
+        <TheSelectorSparql
           :items="selectedExample.sparql"
           :disabled="!selectedExample.sparql.length"
           class="my-sm-2 mr-sm-2 mb-2"
@@ -17,7 +17,7 @@
           class="ma-sm-2"
           @click="runQuery"
         />
-        <BaseDataDownloadButton
+        <BaseButtonDownloadData
           extension="rq"
           :data="sparql"
           class="ma-sm-2"

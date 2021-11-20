@@ -8,7 +8,7 @@
 import FileManager from '~/utils/file-manager'
 
 export default {
-  name: 'UnitTextViewer',
+  name: 'UnitFileExplorerViewerText',
   props: {
     fileManager: {
       type: FileManager,

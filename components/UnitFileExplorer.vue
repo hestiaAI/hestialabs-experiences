@@ -53,12 +53,18 @@
 import FileManager from '~/utils/file-manager.js'
 
 // https://github.com/nuxt/components/issues/13#issuecomment-902590143
-const UnitJsonViewer = () => import('~/components/UnitJsonViewer')
-const UnitCsvViewer = () => import('~/components/UnitCsvViewer')
-const UnitPdfViewer = () => import('~/components/UnitPdfViewer')
-const UnitImageViewer = () => import('~/components/UnitImageViewer')
-const UnitHtmlViewer = () => import('~/components/UnitHtmlViewer')
-const UnitTextViewer = () => import('~/components/UnitTextViewer')
+const UnitFileExplorerViewerJson = () =>
+  import('~/components/UnitFileExplorerViewerJson')
+const UnitFileExplorerViewerCsv = () =>
+  import('~/components/UnitFileExplorerViewerCsv')
+const UnitFileExplorerViewerPdf = () =>
+  import('~/components/UnitFileExplorerViewerPdf')
+const UnitFileExplorerViewerImage = () =>
+  import('~/components/UnitFileExplorerViewerImage')
+const UnitFileExplorerViewerHtml = () =>
+  import('~/components/UnitFileExplorerViewerHtml')
+const UnitFileExplorerViewerText = () =>
+  import('~/components/UnitFileExplorerViewerText')
 
 export default {
   name: 'UnitFileExplorer',
@@ -85,17 +91,17 @@ export default {
     componentForType(type) {
       switch (type) {
         case 'json':
-          return UnitJsonViewer
+          return UnitFileExplorerViewerJson
         case 'csv':
-          return UnitCsvViewer
+          return UnitFileExplorerViewerCsv
         case 'pdf':
-          return UnitPdfViewer
+          return UnitFileExplorerViewerPdf
         case 'img':
-          return UnitImageViewer
+          return UnitFileExplorerViewerImage
         case 'html':
-          return UnitHtmlViewer
+          return UnitFileExplorerViewerHtml
         default:
-          return UnitTextViewer
+          return UnitFileExplorerViewerText
       }
     }
   }

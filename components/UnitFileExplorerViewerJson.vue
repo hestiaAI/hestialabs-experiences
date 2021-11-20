@@ -6,13 +6,13 @@
   </div>
   <v-treeview v-else dense open-on-click transition :items="items">
     <template #prepend="{ item }">
-      <v-icon v-if="typeof item.icon !== 'undefined'">
+      <v-icon v-if="!isUndef(item.icon)">
         {{ item.icon }}
       </v-icon>
     </template>
     <template #append="{ item }">
       <div
-        v-if="typeof item.value !== 'undefined'"
+        v-if="!isUndef(item.value)"
         :title="item.value"
         class="hestia-treeview-json-value"
       >
@@ -26,7 +26,7 @@
 import FileManager from '~/utils/file-manager'
 
 export default {
-  name: 'UnitJsonViewer',
+  name: 'UnitFileExplorerViewerJson',
   props: {
     filename: {
       type: String,
@@ -54,6 +54,9 @@ export default {
     }
   },
   methods: {
+    isUndef(val) {
+      return typeof val === 'undefined'
+    },
     async getContentFromFilename(filename) {
       this.loading = true
       this.jsonText = await this.fileManager.getPreprocessedText(filename)

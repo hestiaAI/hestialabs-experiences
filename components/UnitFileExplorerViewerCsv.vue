@@ -11,7 +11,7 @@
 import FileManager from '~/utils/file-manager'
 
 export default {
-  name: 'UnitCsvViewer',
+  name: 'UnitFileExplorerViewerCsv',
   props: {
     filename: {
       type: String,

@@ -9,7 +9,7 @@
         </div>
         <p class="subtitle-1 mt-4">
           {{ m.subtitle }}
-          <FacebookShareButton
+          <ShareButtonFacebook
             :url="baseUrl + $route.path"
             :title="`${appName}: ${m.title}`"
             :quote="description"
@@ -17,7 +17,7 @@
             hashtags="hestialabs"
             class="my-2 ml-4"
           />
-          <TwitterShareButton
+          <ShareButtonTwitter
             :url="baseUrl + $route.path"
             :title="description"
             :hashtags="hashtags"

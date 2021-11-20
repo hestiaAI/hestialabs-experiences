@@ -26,7 +26,7 @@
           :progress="generateProgress"
           @click="generateZIP"
         />
-        <BaseDataDownloadButton
+        <BaseButtonDownloadData
           :data="encryptedZipFile"
           extension="zip"
           text="Download encrypted"

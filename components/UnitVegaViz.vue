@@ -5,7 +5,7 @@
       <v-row>
         <v-col cols="6 mx-auto">
           <BaseButton text="Export" @click="exportViz" />
-          <BaseDownloadButton
+          <BaseButtonDownload
             :href="dataURL"
             :extension="exportExtension"
             :disabled="!dataURL"

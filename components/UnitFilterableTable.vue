@@ -13,7 +13,7 @@
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
         </template>
       </v-data-table>
-      <BaseDataDownloadButton
+      <BaseButtonDownloadData
         v-bind="{ progress, error, disabled, extension, data: csvData, status }"
         ref="downloadButton"
         text="Download"
@@ -86,7 +86,7 @@ export default {
           const headers = this.headers.map(h => h.text)
           // update the data
           this.csvData = await writeToString(this.items, { headers })
-          // wait until DOM is updated, i.e. the href attribute (see BaseDownloadButton.vue)
+          // wait until DOM is updated, i.e. the href attribute (see BaseButtonDownload.vue)
           await this.$nextTick()
           // click the anchor manually -> event.isTrusted === false
           this.$refs.downloadButton.$el.click()

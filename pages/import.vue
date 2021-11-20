@@ -27,7 +27,7 @@
       v-bind="{ status, error, progress, disabled: !inputZIP }"
       @click="importZIP"
     />
-    <BaseDataDownloadButton
+    <BaseButtonDownloadData
       :data="outputZIP"
       extension="zip"
       text="Download plaintext"
