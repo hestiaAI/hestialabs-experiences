@@ -59,9 +59,7 @@
       </template>
       <div class="mt-6">
         <LogoImg width="250" />
-        <TheDataExperienceList
-          v-bind="{ enabledExperiences, disabledExperiences, big: false }"
-        />
+        <TheDataExperienceList />
       </div>
     </v-navigation-drawer>
   </div>
@@ -71,27 +69,16 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  props: {
-    enabledExperiences: {
-      type: Array,
-      required: true
-    },
-    disabledExperiences: {
-      type: Array,
-      required: true
-    },
-    collaborator: {
-      type: Object,
-      default: () => {}
-    }
-  },
   data() {
     return {
       drawer: false
     }
   },
   computed: {
-    ...mapGetters(['manifest'])
+    ...mapGetters(['manifest', 'enabledExperiences', 'disabledExperiences']),
+    collaborator() {
+      return this.manifest(this.$route).collaborator
+    }
   }
 }
 </script>

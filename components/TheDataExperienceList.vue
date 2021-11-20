@@ -18,21 +18,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'TheDataExperienceList',
   props: {
     big: {
       type: Boolean,
-      required: true
-    },
-    enabledExperiences: {
-      type: Array,
-      required: true
-    },
-    disabledExperiences: {
-      type: Array,
-      required: true
+      default: false
     }
-  }
+  },
+  computed: mapGetters(['enabledExperiences', 'disabledExperiences'])
 }
 </script>

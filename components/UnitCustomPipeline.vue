@@ -68,6 +68,7 @@ export default {
         try {
           const result = await this.customPipeline(
             this.fileManager,
+            this.$store.getters.manifest(this.$route),
             this.parameter
           )
           this.$emit('update', result)

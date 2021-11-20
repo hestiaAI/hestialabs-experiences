@@ -15,7 +15,7 @@ export default {
   props: {
     error: {
       type: Object,
-      default: null
+      default: () => ({})
     }
   },
   head() {
@@ -25,9 +25,10 @@ export default {
   },
   computed: {
     title() {
-      return this.error.statusCode === 404
-        ? '404 Not Found'
-        : 'An error occurred'
+      return (
+        this.error.message ||
+        (this.error.statusCode === 404 ? '404 Not Found' : 'An error occurred')
+      )
     }
   }
 }

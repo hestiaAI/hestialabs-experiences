@@ -104,9 +104,6 @@ export default {
     key() {
       return this.$route.params.key
     },
-    isSingleFileExperience() {
-      return !this.filesToExtract.length && !this.multiple
-    },
     isPlayground() {
       return this.key === 'playground'
     },
@@ -122,12 +119,6 @@ export default {
     }
   },
   watch: {
-    $props: {
-      immediate: true,
-      handler() {
-        this.validateProps()
-      }
-    },
     async selectedSamples(newSamples, oldSamples) {
       if (newSamples.length > oldSamples.length) {
         // some sample was added
@@ -206,18 +197,6 @@ export default {
     this.uppy.close()
   },
   methods: {
-    validateProps() {
-      if (this.isPlayground || this.isGenericViewer) return
-      if (this.extensions.includes('.zip') && !this.filesToExtract.length) {
-        throw new TypeError('Extension `zip` requires `files` to be specified')
-      }
-
-      if (this.isSingleFileExperience && this.extensions.length !== 1) {
-        throw new Error(
-          'Single file is expected but multiple extensions are specified.'
-        )
-      }
-    },
     returnFiles() {
       const files = this.uppy.getFiles().map(f => f.data)
       this.status = true
