@@ -244,4 +244,11 @@ Object.entries(manifests).forEach(([key, val]) => {
   }
 })
 
-export default manifests
+export const config = require(`@/config/${process.env.configName}.json`)
+
+// keep only experiences declared in the config
+const manifestsFiltered = Object.fromEntries(
+  Object.entries(manifests).filter(([k, v]) => config.experiences.includes(k))
+)
+
+export default manifestsFiltered
