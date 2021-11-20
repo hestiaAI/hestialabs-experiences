@@ -10,13 +10,13 @@
       />
     </div>
 
-    <LazyTheFilesCombobox
+    <LazyUnitFilesCombobox
       v-if="isPlayground"
       class="mb-4"
       @update="filesToExtract = $event"
     />
 
-    <LazyTheSelectorSample
+    <LazyUnitFilesSampleSelector
       v-if="samples.length"
       :value.sync="selectedSamples"
       :items="samples"

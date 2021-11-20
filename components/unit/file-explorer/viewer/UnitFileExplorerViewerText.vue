@@ -5,20 +5,11 @@
 </template>
 
 <script>
-import FileManager from '~/utils/file-manager'
+import mixin from './mixin'
 
 export default {
   name: 'UnitFileExplorerViewerText',
-  props: {
-    fileManager: {
-      type: FileManager,
-      required: true
-    },
-    filename: {
-      type: String,
-      required: true
-    }
-  },
+  mixins: [mixin],
   data() {
     return {
       text: ''

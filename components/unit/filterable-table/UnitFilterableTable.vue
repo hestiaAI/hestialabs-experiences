@@ -3,7 +3,7 @@
     <div v-if="isValid">
       <h2 v-if="$store.state.power" class="my-3">Query Results</h2>
       <v-alert v-if="error" type="error">{{ message }}</v-alert>
-      <TheTableFilter :headers="headers" @update="onFilterUpdate" />
+      <UnitFilterableTableFilter :headers="headers" @update="onFilterUpdate" />
       <v-data-table
         v-bind="{ headers: tableHeaders, items, search }"
         :hide-default-footer="disabled"

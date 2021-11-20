@@ -39,17 +39,17 @@ export default {
     isComponent() {
       switch (this.graphName) {
         case 'TimedObservationsViewer.vue':
-          return () => import('@/components/graphs/TimedObservationsViewer.vue')
+          return () => import('@/components/chart/TimedObservationsViewer.vue')
         case 'Sunburst.vue':
-          return () => import('@/components/graphs/Sunburst.vue')
+          return () => import('@/components/chart/Sunburst.vue')
         case 'UberOverview.vue':
-          return () => import('@/components/graphs/UberOverview.vue')
+          return () => import('@/components/chart/UberOverview.vue')
         case 'TwitterOverview.vue':
-          return () => import('@/components/graphs/TwitterOverview.vue')
+          return () => import('@/components/chart/TwitterOverview.vue')
         case 'BarChart.vue':
-          return () => import('@/components/graphs/BarChart.vue')
+          return () => import('@/components/chart/BarChart.vue')
         case 'TrackerGraph.vue':
-          return () => import('@/components/graphs/TrackerGraph.vue')
+          return () => import('@/components/chart/TrackerGraph.vue')
         default:
           return undefined
       }

@@ -54,17 +54,17 @@ import FileManager from '~/utils/file-manager.js'
 
 // https://github.com/nuxt/components/issues/13#issuecomment-902590143
 const UnitFileExplorerViewerJson = () =>
-  import('~/components/UnitFileExplorerViewerJson')
+  import('~/components/unit/file-explorer/viewer/UnitFileExplorerViewerJson')
 const UnitFileExplorerViewerCsv = () =>
-  import('~/components/UnitFileExplorerViewerCsv')
+  import('~/components/unit/file-explorer/viewer/UnitFileExplorerViewerCsv')
 const UnitFileExplorerViewerPdf = () =>
-  import('~/components/UnitFileExplorerViewerPdf')
+  import('~/components/unit/file-explorer/viewer/UnitFileExplorerViewerPdf')
 const UnitFileExplorerViewerImage = () =>
-  import('~/components/UnitFileExplorerViewerImage')
+  import('~/components/unit/file-explorer/viewer/UnitFileExplorerViewerImage')
 const UnitFileExplorerViewerHtml = () =>
-  import('~/components/UnitFileExplorerViewerHtml')
+  import('~/components/unit/file-explorer/viewer/UnitFileExplorerViewerHtml')
 const UnitFileExplorerViewerText = () =>
-  import('~/components/UnitFileExplorerViewerText')
+  import('~/components/unit/file-explorer/viewer/UnitFileExplorerViewerText')
 
 export default {
   name: 'UnitFileExplorer',

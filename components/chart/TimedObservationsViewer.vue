@@ -132,14 +132,12 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
-import UnitFilterableTable from '~/components/UnitFilterableTable'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
   name: 'TimedObservationsViewer',
-  components: { UnitFilterableTable },
   props: {
     title: {
       type: String,

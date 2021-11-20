@@ -27,10 +27,10 @@ import { validExtensions } from '@/manifests/utils'
 
 // https://github.com/nuxt/components/issues/13#issuecomment-902590143
 const TheDataExperienceDefault = () =>
-  import('@/components/TheDataExperienceDefault.vue')
+  import('~/components/the-data-experience/TheDataExperienceDefault.vue')
 
 const TheDataExperiencePower = () =>
-  import('@/components/TheDataExperiencePower.vue')
+  import('~/components/the-data-experience/TheDataExperiencePower.vue')
 
 export default {
   name: 'TheDataExperience',

@@ -23,20 +23,11 @@
 </template>
 
 <script>
-import FileManager from '~/utils/file-manager'
+import mixin from './mixin'
 
 export default {
   name: 'UnitFileExplorerViewerJson',
-  props: {
-    filename: {
-      type: String,
-      required: true
-    },
-    fileManager: {
-      type: FileManager,
-      required: true
-    }
-  },
+  mixins: [mixin],
   data() {
     return {
       jsonText: '',
