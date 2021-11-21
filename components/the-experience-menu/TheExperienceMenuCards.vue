@@ -1,7 +1,7 @@
 <template>
   <div>
-    <v-row class="mt-6">
-      <v-col
+    <VRow class="mt-6">
+      <VCol
         v-for="{ key, title, subtitle, icon, url, disabled } in experiences"
         :key="key"
         cols="12"
@@ -10,18 +10,18 @@
         lg="3"
         xl="2"
       >
-        <v-card
+        <VCard
           class="d-flex flex-column"
           v-bind="menuItemAttrs(url, key, disabled)"
           hover
           shaped
         >
-          <v-img max-height="250" contain :src="icon" :lazy-src="icon" />
-          <v-card-title v-text="title" />
-          <v-card-subtitle class="subtitle-1" v-text="subtitle" />
-        </v-card>
-      </v-col>
-    </v-row>
+          <VImg max-height="250" contain :src="icon" :lazy-src="icon" />
+          <VCardTitle v-text="title" />
+          <VCardSubtitle class="subtitle-1" v-text="subtitle" />
+        </VCard>
+      </VCol>
+    </VRow>
   </div>
 </template>
 

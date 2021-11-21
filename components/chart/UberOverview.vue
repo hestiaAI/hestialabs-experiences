@@ -1,19 +1,19 @@
 <template>
-  <v-container>
-    <v-row class="justify-center">
+  <VContainer>
+    <VRow class="justify-center">
       <p>
         Select data depending on the currency
-        <v-select
+        <VSelect
           v-model="currentCurrency"
           :items="currencies"
           @input="filterCurrency"
-        ></v-select>
+        ></VSelect>
       </p>
-    </v-row>
-    <v-row>
-      <v-col cols="12" md="8">
-        <v-row>
-          <v-col cols="12" md="8">
+    </VRow>
+    <VRow>
+      <VCol cols="12" md="8">
+        <VRow>
+          <VCol cols="12" md="8">
             <div id="scatter-chart">
               <strong>Price vs Distance</strong>
               <a class="reset" style="display: none">reset</a>
@@ -30,8 +30,8 @@
                 <a class="reset" style="display: none">reset</a>
               </p>
             </div>
-          </v-col>
-          <v-col cols="12" md="4">
+          </VCol>
+          <VCol cols="12" md="4">
             <div id="week-chart">
               <strong>Day of week</strong>
               <a class="reset" style="display: none">reset</a>
@@ -42,10 +42,10 @@
                 </span>
               </p>
             </div>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" md="4">
+          </VCol>
+        </VRow>
+        <VRow>
+          <VCol cols="12" md="4">
             <div id="service-chart">
               <strong>Service used</strong>
               <a class="reset" style="display: none">reset</a>
@@ -56,8 +56,8 @@
                 </span>
               </p>
             </div>
-          </v-col>
-          <v-col cols="12" md="4">
+          </VCol>
+          <VCol cols="12" md="4">
             <div id="price-chart">
               <strong>Cumulative price</strong>
               <a class="reset" style="display: none">reset</a>
@@ -68,8 +68,8 @@
                 </span>
               </p>
             </div>
-          </v-col>
-          <v-col cols="12" md="4">
+          </VCol>
+          <VCol cols="12" md="4">
             <div id="city-chart">
               <strong>Begin trip cities</strong>
               <a class="reset" style="display: none">reset</a>
@@ -80,39 +80,39 @@
                 </span>
               </p>
             </div>
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card class="general-info">
-          <v-card-title>General information</v-card-title>
-          <v-card-subtitle></v-card-subtitle>
-          <v-card-text>
-            <v-container>
-              <v-row dense>
-                <v-col cols="12" md="6">
-                  <v-card color="#385F73" dark>
-                    <v-card-title class="text-h6">Orders</v-card-title>
-                    <v-card-subtitle></v-card-subtitle>
-                    <v-card-text class="text-h5 text-center">
+          </VCol>
+        </VRow>
+      </VCol>
+      <VCol cols="12" md="4">
+        <VCard class="general-info">
+          <VCardTitle>General information</VCardTitle>
+          <VCardSubtitle></VCardSubtitle>
+          <VCardText>
+            <VContainer>
+              <VRow dense>
+                <VCol cols="12" md="6">
+                  <VCard color="#385F73" dark>
+                    <VCardTitle class="text-h6">Orders</VCardTitle>
+                    <VCardSubtitle></VCardSubtitle>
+                    <VCardText class="text-h5 text-center">
                       <div id="number-trip" />
                       <span class="text-subtitle-1">trips</span>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-                <v-col cols="12" md="6">
-                  <v-card color="#385F73" dark>
-                    <v-card-title class="text-h6">Speed</v-card-title>
-                    <v-card-subtitle></v-card-subtitle>
-                    <v-card-text class="text-h5 text-center">
+                    </VCardText>
+                  </VCard>
+                </VCol>
+                <VCol cols="12" md="6">
+                  <VCard color="#385F73" dark>
+                    <VCardTitle class="text-h6">Speed</VCardTitle>
+                    <VCardSubtitle></VCardSubtitle>
+                    <VCardText class="text-h5 text-center">
                       <div id="number-speed-avg" />
                       <span class="text-subtitle-1">mph</span>
-                    </v-card-text>
-                  </v-card>
-                </v-col>
-              </v-row>
-            </v-container>
-            <v-simple-table>
+                    </VCardText>
+                  </VCard>
+                </VCol>
+              </VRow>
+            </VContainer>
+            <VSimpleTable>
               <thead>
                 <tr>
                   <th class="text-left"></th>
@@ -174,22 +174,22 @@
                   </td>
                 </tr>
               </tbody>
-            </v-simple-table>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn elevation="2" block @click="resetAll()">
+            </VSimpleTable>
+          </VCardText>
+          <VCardActions>
+            <VBtn elevation="2" block @click="resetAll()">
               Reset all filters
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12">
+            </VBtn>
+          </VCardActions>
+        </VCard>
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol cols="12">
         <UnitFilterableTable :data="{ headers: header, items: results }" />
-      </v-col>
-    </v-row>
-  </v-container>
+      </VCol>
+    </VRow>
+  </VContainer>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <v-img
+  <VImg
     v-bind="$attrs"
     src="/hestialabs-logo.svg"
     lazy-src="/hestialabs-logo.svg"

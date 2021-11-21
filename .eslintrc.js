@@ -29,6 +29,18 @@ module.exports = {
         allowModifiers: true
       }
     ],
-    'vue/no-unregistered-components': ['off', {}]
+    // Turn off no-unregistered-components rule since
+    // Nuxt auto-imports components
+    'vue/no-unregistered-components': ['off', {}],
+    // Enforce PascalCase component names
+    // https://vuejs.org/v2/style-guide/#Component-name-casing-in-templates-strongly-recommended
+    'vue/component-name-in-template-casing': [
+      'error',
+      'PascalCase',
+      {
+        registeredComponentsOnly: false,
+        ignores: ['/^component|client-only|keep-alive$/']
+      }
+    ]
   }
 }

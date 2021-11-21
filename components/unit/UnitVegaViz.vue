@@ -2,23 +2,23 @@
   <div>
     <template v-if="isValid">
       <div :id="divId" ref="graph"></div>
-      <v-row>
-        <v-col cols="6 mx-auto">
+      <VRow>
+        <VCol cols="6 mx-auto">
           <BaseButton text="Export" @click="exportViz" />
           <BaseButtonDownload
             :href="dataURL"
             :extension="exportExtension"
             :disabled="!dataURL"
           />
-        </v-col>
-      </v-row>
+        </VCol>
+      </VRow>
     </template>
     <template v-else>
-      <v-row>
-        <v-col>
+      <VRow>
+        <VCol>
           <i>data in this format cannot be displayed by this visualization</i>
-        </v-col>
-      </v-row>
+        </VCol>
+      </VRow>
     </template>
   </div>
 </template>

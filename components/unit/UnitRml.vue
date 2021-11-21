@@ -1,6 +1,6 @@
 <template>
-  <v-row>
-    <v-col cols="12" lg="6">
+  <VRow>
+    <VCol cols="12" lg="6">
       <h2 class="my-3">YARRRML</h2>
       <BaseButtonDownloadData extension="yml" :data="yarrrml" />
       <CodeEditor
@@ -9,8 +9,8 @@
         language="yaml"
         line-numbers
       />
-    </v-col>
-    <v-col>
+    </VCol>
+    <VCol>
       <h2 class="my-3">RML</h2>
       <BaseButton
         v-bind="{ progress, status, error }"
@@ -32,8 +32,8 @@
         line-numbers
         language="turtle"
       />
-    </v-col>
-  </v-row>
+    </VCol>
+  </VRow>
 </template>
 
 <script>

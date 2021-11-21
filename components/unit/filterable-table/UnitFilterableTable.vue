@@ -2,9 +2,9 @@
   <div>
     <div v-if="isValid">
       <h2 v-if="$store.state.power" class="my-3">Query Results</h2>
-      <v-alert v-if="error" type="error">{{ message }}</v-alert>
+      <VAlert v-if="error" type="error">{{ message }}</VAlert>
       <UnitFilterableTableFilter :headers="headers" @update="onFilterUpdate" />
-      <v-data-table
+      <VDataTable
         v-bind="{ headers: tableHeaders, items, search }"
         :hide-default-footer="disabled"
         multi-sort
@@ -12,7 +12,7 @@
         <template #item.url="{ value }">
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
         </template>
-      </v-data-table>
+      </VDataTable>
       <BaseButtonDownloadData
         v-bind="{ progress, error, disabled, extension, data: csvData, status }"
         ref="downloadButton"

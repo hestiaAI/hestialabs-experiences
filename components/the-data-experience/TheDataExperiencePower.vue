@@ -5,36 +5,36 @@
     </template>
 
     <template v-else>
-      <v-row class="no-gutters">
-        <v-col>
+      <VRow class="no-gutters">
+        <VCol>
           <TheSelectorExample
             :value.sync="selectedExample"
             :items="examples"
             :disabled="examples.length === 1"
           />
-        </v-col>
-      </v-row>
+        </VCol>
+      </VRow>
 
-      <v-row>
-        <v-col>
+      <VRow>
+        <VCol>
           <UnitIntroduction :company-name="title" :data-portal="dataPortal" />
-        </v-col>
-      </v-row>
+        </VCol>
+      </VRow>
 
       <UnitRml
         :yarrrml-example="selectedExample.yarrrml"
         @update="onUnitRmlUpdate"
       />
 
-      <v-row>
-        <v-col cols="12" lg="6">
+      <VRow>
+        <VCol cols="12" lg="6">
           <h2 class="my-3">Files</h2>
           <slot name="unit-files" :update="onUnitFilesUpdate" />
-        </v-col>
-        <v-col cols="12" lg="6">
+        </VCol>
+        <VCol cols="12" lg="6">
           <UnitRdf v-bind="{ rml, inputFiles }" @update="onUnitRdfUpdate" />
-        </v-col>
-      </v-row>
+        </VCol>
+      </VRow>
 
       <UnitQuery
         v-bind="{

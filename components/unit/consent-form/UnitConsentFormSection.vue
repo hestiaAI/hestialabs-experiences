@@ -6,22 +6,22 @@
       {{ section.description }}
     </p>
 
-    <v-radio-group
+    <VRadioGroup
       v-if="section.type === 'radio'"
       v-model="selected"
       :readonly="readonly"
       @change="updateConsent"
     >
-      <v-radio
+      <VRadio
         v-for="(option, j) in section.options"
         :key="`${index}-${j}`"
         :label="option"
         :value="option"
-      ></v-radio>
-    </v-radio-group>
+      ></VRadio>
+    </VRadioGroup>
 
     <template v-if="section.type === 'checkbox'">
-      <v-checkbox
+      <VCheckbox
         v-for="(option, j) in section.options"
         :key="`${index}-${j}`"
         v-model="selected"

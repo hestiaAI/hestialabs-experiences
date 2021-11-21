@@ -1,9 +1,9 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12" md="9">
-        <v-row>
-          <v-col cols="12">
+  <VContainer>
+    <VRow>
+      <VCol cols="12" md="9">
+        <VRow>
+          <VCol cols="12">
             <div id="volume-chart">
               <strong>Number of tracking over time</strong>
               <a class="reset" style="display: none">reset</a>
@@ -20,10 +20,10 @@
                 select a time range to zoom in
               </p>
             </div>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" md="6">
+          </VCol>
+        </VRow>
+        <VRow>
+          <VCol cols="12" md="6">
             <div id="category-chart">
               <strong>Purposes of tracking</strong>
               <a class="reset" style="display: none">reset</a>
@@ -34,8 +34,8 @@
                 </span>
               </p>
             </div>
-          </v-col>
-          <v-col cols="12" md="6">
+          </VCol>
+          <VCol cols="12" md="6">
             <div id="app-chart">
               <strong>Applications that use trackers</strong>
               <a class="reset" style="display: none">reset</a>
@@ -46,10 +46,10 @@
                 </span>
               </p>
             </div>
-          </v-col>
-        </v-row>
-      </v-col>
-      <v-col cols="12" md="3">
+          </VCol>
+        </VRow>
+      </VCol>
+      <VCol cols="12" md="3">
         <div id="advertiser-chart">
           <strong>Companies behind tracking</strong>
           <a class="reset" style="display: none">reset</a>
@@ -60,9 +60,9 @@
             </span>
           </p>
         </div>
-      </v-col>
-    </v-row>
-    <v-row>
+      </VCol>
+    </VRow>
+    <VRow>
       <div id="dc-data-count" class="dc-data-count">
         <span class="filter-count"></span>
         selected out of
@@ -70,9 +70,9 @@
         records |
         <a class="reset">Reset All</a>
       </div>
-    </v-row>
+    </VRow>
     <UnitFilterableTable :data="{ headers: header, items: results }" />
-  </v-container>
+  </VContainer>
 </template>
 
 <script>

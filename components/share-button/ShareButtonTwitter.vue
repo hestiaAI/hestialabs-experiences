@@ -6,10 +6,10 @@
     :hashtags="hashtags"
     :twitter-user="twitterUser"
   >
-    <v-btn outlined small>
-      <v-icon left>$vuetify.icons.mdiTwitter</v-icon>
+    <VBtn outlined small>
+      <VIcon left>$vuetify.icons.mdiTwitter</VIcon>
       Share
-    </v-btn>
+    </VBtn>
   </ShareNetwork>
 </template>
 

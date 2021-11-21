@@ -2,8 +2,8 @@
   <div>
     <!-- advanced view -->
     <template v-if="$store.state.power">
-      <v-row>
-        <v-col cols="12" lg="6">
+      <VRow>
+        <VCol cols="12" lg="6">
           <UnitCustomPipeline
             v-if="customPipeline"
             v-bind="{ fileManager, customPipeline }"
@@ -16,12 +16,12 @@
             @update="onUnitResultsUpdate"
             @change="onChangeSelector"
           />
-        </v-col>
-        <v-col cols="12" lg="6">
+        </VCol>
+        <VCol cols="12" lg="6">
           <UnitFilterableTable :data="result" />
-        </v-col>
+        </VCol>
         <template v-if="result">
-          <v-col
+          <VCol
             v-for="(specFile, vegaIndex) in vegaFiles"
             :key="vegaIndex"
             cols="12"
@@ -32,24 +32,24 @@
               :data="processResultForVega(result, specFile)"
               :div-id="`viz-${query.name}-${specFile.name}`"
             />
-          </v-col>
+          </VCol>
         </template>
-      </v-row>
+      </VRow>
     </template>
 
     <!-- default view -->
     <template v-else>
-      <v-card v-if="defaultViewElements" class="pa-2 my-6">
-        <v-card-title class="justify-center">{{
+      <VCard v-if="defaultViewElements" class="pa-2 my-6">
+        <VCardTitle class="justify-center">{{
           defaultViewElements.title
-        }}</v-card-title>
-        <v-row>
-          <v-col cols="8" class="mx-auto">
+        }}</VCardTitle>
+        <VRow>
+          <VCol cols="8" class="mx-auto">
             {{ defaultViewElements.text }}
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
+          </VCol>
+        </VRow>
+        <VRow>
+          <VCol>
             <UnitCustomPipeline
               v-if="customPipeline !== undefined"
               v-bind="{
@@ -65,12 +65,12 @@
               class="mr-lg-6"
               @update="onUnitResultsUpdate"
             />
-          </v-col>
-        </v-row>
+          </VCol>
+        </VRow>
         <template v-if="finished">
           <template v-if="result">
-            <v-row>
-              <v-col
+            <VRow>
+              <VCol
                 v-for="(specFile, vegaIndex) in vegaFiles"
                 :key="'vega-' + vegaIndex"
                 style="text-align: center"
@@ -80,39 +80,39 @@
                   :data="processResultForVega(result, specFile)"
                   :div-id="`viz-${index}-${specFile.name}`"
                 />
-              </v-col>
-            </v-row>
-            <v-row
+              </VCol>
+            </VRow>
+            <VRow
               v-for="(graphName, vizVueIndex) in vizVueGraphs"
               :key="'viz-vue-' + vizVueIndex"
             >
-              <v-col>
-                <vue-graph-by-name :graph-name="graphName" :data="result" />
-              </v-col>
-            </v-row>
-            <v-row
+              <VCol>
+                <VueGraphByName :graph-name="graphName" :data="result" />
+              </VCol>
+            </VRow>
+            <VRow
               v-for="(src, vizUrlIndex) in vizUrls"
               :key="'viz-url-' + vizUrlIndex"
             >
-              <v-col>
+              <VCol>
                 <UnitIframe :src="src" :data="result" />
-              </v-col>
-            </v-row>
-            <v-row v-if="showTable">
-              <v-col>
+              </VCol>
+            </VRow>
+            <VRow v-if="showTable">
+              <VCol>
                 <UnitFilterableTable :data="result" />
-              </v-col>
-            </v-row>
+              </VCol>
+            </VRow>
           </template>
           <template v-else>
-            <v-row>
-              <v-col>
+            <VRow>
+              <VCol>
                 <p><i>No relevant data found</i></p>
-              </v-col>
-            </v-row>
+              </VCol>
+            </VRow>
           </template>
         </template>
-      </v-card>
+      </VCard>
     </template>
   </div>
 </template>

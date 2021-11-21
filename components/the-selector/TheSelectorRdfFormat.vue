@@ -1,5 +1,5 @@
 <template>
-  <v-select
+  <VSelect
     v-model="model"
     :items="items"
     item-value="toRDF"

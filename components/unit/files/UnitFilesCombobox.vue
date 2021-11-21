@@ -1,5 +1,5 @@
 <template>
-  <v-combobox
+  <VCombobox
     v-model="filesCombobox"
     :items="filesComboboxItems"
     clearable

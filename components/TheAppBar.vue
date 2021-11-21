@@ -1,14 +1,14 @@
 <template>
   <div>
-    <v-app-bar fixed app color="white" height="75" style="z-index: 2000">
-      <v-app-bar-nav-icon
+    <VAppBar fixed app color="white" height="75" style="z-index: 2000">
+      <VAppBarNavIcon
         aria-label="Open navigation menu"
         @click.stop="drawer = !drawer"
       />
-      <v-toolbar-title class="d-flex align-center">
-        <v-btn icon to="/" class="v-btn__home mr-0 mr-sm-4" color="primary">
-          <v-icon>$vuetify.icons.mdiHome</v-icon>
-        </v-btn>
+      <VToolbarTitle class="d-flex align-center">
+        <VBtn icon to="/" class="v-btn__home mr-0 mr-sm-4" color="primary">
+          <VIcon>$vuetify.icons.mdiHome</VIcon>
+        </VBtn>
         <a
           href="https://hestialabs.org/"
           target="_blank"
@@ -25,7 +25,7 @@
             rel="noreferrer noopener"
             class="ml-2"
           >
-            <v-img
+            <VImg
               :src="collaborator.icon"
               :lazy-src="collaborator.icon"
               :alt="collaborator.title"
@@ -34,9 +34,9 @@
             />
           </a>
         </template>
-      </v-toolbar-title>
-    </v-app-bar>
-    <v-navigation-drawer
+      </VToolbarTitle>
+    </VAppBar>
+    <VNavigationDrawer
       v-model="drawer"
       app
       temporary
@@ -46,12 +46,12 @@
     >
       <template #prepend>
         <div class="d-flex justify-space-between align-center">
-          <v-btn icon to="/">
-            <v-icon>$vuetify.icons.mdiHome</v-icon>
-          </v-btn>
-          <v-btn icon @click="drawer = false">
-            <v-icon>$vuetify.icons.mdiClose</v-icon>
-          </v-btn>
+          <VBtn icon to="/">
+            <VIcon>$vuetify.icons.mdiHome</VIcon>
+          </VBtn>
+          <VBtn icon @click="drawer = false">
+            <VIcon>$vuetify.icons.mdiClose</VIcon>
+          </VBtn>
         </div>
       </template>
       <template #append>
@@ -61,7 +61,7 @@
         <LogoImg width="250" />
         <TheExperienceMenu />
       </div>
-    </v-navigation-drawer>
+    </VNavigationDrawer>
   </div>
 </template>
 

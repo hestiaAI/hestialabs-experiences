@@ -1,12 +1,12 @@
 <template>
-  <v-btn outlined v-bind="$attrs" class="my-2" @click="$emit('click', $event)">
-    <v-icon v-if="icon" left>{{ mdiIcon }}</v-icon>
+  <VBtn outlined v-bind="$attrs" class="my-2" @click="$emit('click', $event)">
+    <VIcon v-if="icon" left>{{ mdiIcon }}</VIcon>
     <slot>
       <span>{{ text }}</span>
     </slot>
     <BaseProgressCircular v-if="progress" class="ml-2" />
     <StatusIndicator v-else-if="status" :error="error" />
-  </v-btn>
+  </VBtn>
 </template>
 
 <script>

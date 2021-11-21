@@ -4,11 +4,11 @@
     <p>Could not parse file. Showing content instead</p>
     <div>{{ jsonText }}</div>
   </div>
-  <v-treeview v-else dense open-on-click transition :items="items">
+  <VTreeview v-else dense open-on-click transition :items="items">
     <template #prepend="{ item }">
-      <v-icon v-if="!isUndef(item.icon)">
+      <VIcon v-if="!isUndef(item.icon)">
         {{ item.icon }}
-      </v-icon>
+      </VIcon>
     </template>
     <template #append="{ item }">
       <div
@@ -19,7 +19,7 @@
         {{ item.value }}
       </div>
     </template>
-  </v-treeview>
+  </VTreeview>
 </template>
 
 <script>

@@ -1,10 +1,10 @@
 <template>
-  <v-app>
+  <VApp>
     <TheAppBar />
-    <v-main>
-      <v-container class="mt-5">
-        <v-row>
-          <v-col align="center">
+    <VMain>
+      <VContainer class="mt-5">
+        <VRow>
+          <VCol align="center">
             <h2>
               <a
                 :href="newsletterURL"
@@ -14,10 +14,10 @@
                 {{ newsletterMessage }}
               </a>
             </h2>
-          </v-col>
-        </v-row>
+          </VCol>
+        </VRow>
         <Nuxt />
-        <v-snackbar
+        <VSnackbar
           v-model="snackbar"
           content-class="v-snack__content-online-status"
           color="info"
@@ -27,10 +27,10 @@
             The app is running in offline mode
           </template>
           <template v-else> You are online again! </template>
-        </v-snackbar>
-      </v-container>
-    </v-main>
-    <v-footer app absolute color="primary">
+        </VSnackbar>
+      </VContainer>
+    </VMain>
+    <VFooter app absolute color="primary">
       <div class="lighten-2 py-2 ma-auto white--text" align="center">
         Educational material developed by
         <a href="https://hestia.ai" target="_blank" style="color: white"
@@ -38,8 +38,8 @@
         >
         <br />Currently in development
       </div>
-    </v-footer>
-  </v-app>
+    </VFooter>
+  </VApp>
 </template>
 
 <script>

@@ -7,10 +7,10 @@
     :quote="quote"
     :hashtags="hashtags"
   >
-    <v-btn outlined small>
-      <v-icon left>$vuetify.icons.mdiFacebook</v-icon>
+    <VBtn outlined small>
+      <VIcon left>$vuetify.icons.mdiFacebook</VIcon>
       Share
-    </v-btn>
+    </VBtn>
   </ShareNetwork>
 </template>
 

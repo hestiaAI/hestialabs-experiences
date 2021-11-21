@@ -13,9 +13,8 @@
     "build": "npm run build:static",
     "build:static": "nuxt generate",
     "build:server": "nuxt build",
-    "lint": "npm run lint:js",
-    "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
-    "lint:fix": "npm run lint:js -- --fix",
+    "lint": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
+    "lint:fix": "npm run lint -- --fix",
     "pre-commit": "lint-staged && node validate-yarrrml",
     "prepare": "husky install"
   },

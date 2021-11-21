@@ -1,13 +1,13 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12" md="12" class="text-center">
+  <VContainer>
+    <VRow>
+      <VCol cols="12" md="12" class="text-center">
         <div :id="graphId">
-          <v-breadcrumbs :items="bcItems" class="breadCrumb"></v-breadcrumbs>
+          <VBreadcrumbs :items="bcItems" class="breadCrumb" />
         </div>
-      </v-col>
-    </v-row>
-  </v-container>
+      </VCol>
+    </VRow>
+  </VContainer>
 </template>
 
 <script>

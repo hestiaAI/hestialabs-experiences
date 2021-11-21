@@ -24,34 +24,34 @@
           :disabled="!sparql"
         />
       </div>
-      <v-text-field
+      <VTextField
         v-if="parametrized"
         v-model="queryParameter"
         :label="queryParameterName"
         class="my-sm-2 mr-sm-2"
-      ></v-text-field>
+      ></VTextField>
       <CodeEditor
         :value.sync="code"
         class="mt-6"
         line-numbers
         language="sparql"
       />
-      <v-alert v-if="message" type="error">{{ message }}</v-alert>
+      <VAlert v-if="message" type="error">{{ message }}</VAlert>
     </template>
 
     <template v-else>
-      <v-row>
-        <v-col cols="4" class="mx-auto">
-          <v-text-field
+      <VRow>
+        <VCol cols="4" class="mx-auto">
+          <VTextField
             v-if="parametrized"
             v-model="queryParameter"
             :label="queryParameterName"
             class="my-sm-2 mr-sm-2"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col align="center">
+          ></VTextField>
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol align="center">
           <BaseButton
             v-bind="{ progress, status, error, disabled }"
             text="Run"
@@ -59,8 +59,8 @@
             class="ma-sm-2"
             @click="runQuery"
           />
-        </v-col>
-      </v-row>
+        </VCol>
+      </VRow>
     </template>
   </div>
 </template>

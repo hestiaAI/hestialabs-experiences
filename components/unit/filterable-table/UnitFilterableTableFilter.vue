@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-select
+    <VSelect
       v-model="selectedHeaders"
       :items="headers"
       label="Select columns to search"
@@ -13,7 +13,7 @@
       hide-details
       menu-props="auto, overflowY, offsetY, top"
     />
-    <v-text-field
+    <VTextField
       v-model="searchValue"
       append-icon="mdi-magnify"
       label="Search"
@@ -22,7 +22,7 @@
       hide-details
       clearable
       class="mb-6 mt-3"
-    ></v-text-field>
+    ></VTextField>
   </div>
 </template>
 

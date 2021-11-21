@@ -1,33 +1,33 @@
 <template>
   <div>
-    <v-row>
-      <v-col cols="12 mx-auto" sm="6">
+    <VRow>
+      <VCol cols="12 mx-auto" sm="6">
         <UnitIntroduction
           v-bind="{ companyName: title, dataPortal, isGenericViewer }"
         />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12 mx-auto" sm="6">
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol cols="12 mx-auto" sm="6">
         <slot name="unit-files" :update="onUnitFilesUpdate" />
         <template v-if="progress">
           <BaseProgressCircular class="mr-2" />
           <span>Processing files...</span>
         </template>
         <template v-else-if="error || success">
-          <v-alert
+          <VAlert
             :type="error ? 'error' : 'success'"
             border="top"
             colored-border
             max-width="600"
             >{{ message }}
-          </v-alert>
+          </VAlert>
         </template>
-      </v-col>
-    </v-row>
+      </VCol>
+    </VRow>
     <template v-if="success">
-      <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
-        <v-col>
+      <VRow v-for="(defaultViewElements, index) in defaultView" :key="index">
+        <VCol>
           <UnitQuery
             v-if="defaultViewElements.customPipeline"
             v-bind="{
@@ -53,18 +53,18 @@
             }"
             @update="onQueryUpdate"
           />
-        </v-col>
-      </v-row>
-      <v-row v-if="showDataExplorer">
-        <v-col>
+        </VCol>
+      </VRow>
+      <VRow v-if="showDataExplorer">
+        <VCol>
           <UnitFileExplorer v-bind="{ fileManager }" />
-        </v-col>
-      </v-row>
-      <v-row v-if="$store.state.config.consent">
-        <v-col cols="8 mx-auto">
+        </VCol>
+      </VRow>
+      <VRow v-if="$store.state.config.consent">
+        <VCol cols="8 mx-auto">
           <UnitConsentForm v-bind="{ allResults, defaultView }" />
-        </v-col>
-      </v-row>
+        </VCol>
+      </VRow>
     </template>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <v-progress-circular v-bind="{ size, width }" indeterminate />
+  <VProgressCircular v-bind="{ size, width }" indeterminate />
 </template>
 
 <script>

@@ -1,10 +1,10 @@
 <template>
   <div>
-    <v-icon v-if="error" :right="right" color="red"
-      >$vuetify.icons.mdiAlert</v-icon
+    <VIcon v-if="error" :right="right" color="red"
+      >$vuetify.icons.mdiAlert</VIcon
     >
-    <v-icon v-else :right="right" color="green"
-      >$vuetify.icons.mdiCheckCircle</v-icon
+    <VIcon v-else :right="right" color="green"
+      >$vuetify.icons.mdiCheckCircle</VIcon
     >
   </div>
 </template>

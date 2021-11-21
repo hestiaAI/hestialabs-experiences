@@ -1,34 +1,34 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12" md="8">
-        <v-row>
-          <v-col cols="8"
-            ><p>
+  <VContainer>
+    <VRow>
+      <VCol cols="12" md="8">
+        <VRow>
+          <VCol cols="8">
+            <p>
               Number of information collected per
               <strong>{{ timeInterval }}</strong>
-            </p></v-col
-          >
-          <v-col cols="4" class="text-right">
-            <v-checkbox
+            </p>
+          </VCol>
+          <VCol cols="4" class="text-right">
+            <VCheckbox
               v-model="checkbox"
               dense
               :label="`Cumulative`"
               @change="changeAgg"
-            ></v-checkbox>
-          </v-col>
-        </v-row>
+            ></VCheckbox>
+          </VCol>
+        </VRow>
         <div id="line-chart"></div>
         <div id="range-chart"></div>
-      </v-col>
-      <v-col cols="12" md="4">
+      </VCol>
+      <VCol cols="12" md="4">
         <p>Information Type</p>
         <div id="row-chart"></div>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="9">
-        <v-radio-group
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol cols="9">
+        <VRadioGroup
           v-model="timeRange"
           row
           mandatory
@@ -37,39 +37,39 @@
           <template #label>
             <div>Select a <strong>time range</strong></div>
           </template>
-          <v-radio label="ALL" value="ALL"></v-radio>
-          <v-radio label="1Y" value="1Y"></v-radio>
-          <v-radio label="3M" value="3M"></v-radio>
-          <v-radio label="1M" value="1M"></v-radio>
-          <v-radio label="7D" value="7D"></v-radio>
-          <v-radio label="1D" value="1D"></v-radio>
-        </v-radio-group>
-      </v-col>
-      <v-col cols="3">
-        <v-btn class="ma-2" outlined color="indigo" @click="resetAll()">
+          <VRadio label="ALL" value="ALL"></VRadio>
+          <VRadio label="1Y" value="1Y"></VRadio>
+          <VRadio label="3M" value="3M"></VRadio>
+          <VRadio label="1M" value="1M"></VRadio>
+          <VRadio label="7D" value="7D"></VRadio>
+          <VRadio label="1D" value="1D"></VRadio>
+        </VRadioGroup>
+      </VCol>
+      <VCol cols="3">
+        <VBtn class="ma-2" outlined color="indigo" @click="resetAll()">
           Reset all filters
-        </v-btn>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-tabs v-model="tab">
-          <v-tab href="#overview" @click="resetSourceFilter">Overview</v-tab>
-          <v-tab href="#details">Details</v-tab>
-        </v-tabs>
-        <v-tabs-items v-model="tab">
-          <v-tab-item value="overview">
+        </VBtn>
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol cols="12">
+        <VTabs v-model="tab">
+          <VTab href="#overview" @click="resetSourceFilter">Overview</VTab>
+          <VTab href="#details">Details</VTab>
+        </VTabs>
+        <VTabsItems v-model="tab">
+          <VTabItem value="overview">
             <p class="text-subtitle-1">
               <strong>{{ title }}</strong> knows about
               <strong>{{ total }}</strong> things that happened between
               <strong>{{ currMinDateStr }}</strong> and
               <strong>{{ currMaxDateStr }}</strong>
-              <v-btn class="ma-2" outlined color="indigo" @click="tabDetails()">
+              <VBtn class="ma-2" outlined color="indigo" @click="tabDetails()">
                 See All
-              </v-btn>
+              </VBtn>
             </p>
-            <v-list>
-              <v-list-group
+            <VList>
+              <VListGroup
                 v-for="item in items"
                 :key="item.title"
                 v-model="item.active"
@@ -77,55 +77,55 @@
                 no-action
               >
                 <template #activator>
-                  <v-list-item-content>
-                    <v-list-item-title>
+                  <VListItemContent>
+                    <VListItemTitle>
                       <strong>{{ item.count }}</strong>
                       were regarding your
                       <strong>{{ item.title }}</strong>
                       activity.
-                    </v-list-item-title>
-                  </v-list-item-content>
+                    </VListItemTitle>
+                  </VListItemContent>
                 </template>
 
-                <v-list-item v-for="child in item.items" :key="child.title">
-                  <v-list-item-content>
-                    <v-list-item-title>
+                <VListItem v-for="child in item.items" :key="child.title">
+                  <VListItemContent>
+                    <VListItemTitle>
                       <strong>{{ child.count }}</strong>
                       records of
                       <strong>{{ child.title }}</strong>
                       .
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item key="child.showMore">
-                  <v-btn
+                    </VListItemTitle>
+                  </VListItemContent>
+                </VListItem>
+                <VListItem key="child.showMore">
+                  <VBtn
                     class="ma-1"
                     outlined
                     color="indigo"
                     @click="filterSource(item.title)"
                   >
                     See All {{ item.title }} activity
-                  </v-btn>
-                </v-list-item>
-              </v-list-group>
-            </v-list>
-          </v-tab-item>
-          <v-tab-item value="details">
+                  </VBtn>
+                </VListItem>
+              </VListGroup>
+            </VList>
+          </VTabItem>
+          <VTabItem value="details">
             <p v-if="currSourceFilter" class="text-subtitle-1 text-right">
               Current Filter:
-              <v-btn small elevation="2" @click="resetSourceFilter">
+              <VBtn small elevation="2" @click="resetSourceFilter">
                 <strong>{{ currSourceFilter }}</strong>
-                <v-icon x-small> $vuetify.icons.mdiClose </v-icon>
-              </v-btn>
+                <VIcon x-small> $vuetify.icons.mdiClose </VIcon>
+              </VBtn>
             </p>
-            <unit-filterable-table
+            <UnitFilterableTable
               v-bind="{ data: { headers: header, items: results } }"
             />
-          </v-tab-item>
-        </v-tabs-items>
-      </v-col>
-    </v-row>
-  </v-container>
+          </VTabItem>
+        </VTabsItems>
+      </VCol>
+    </VRow>
+  </VContainer>
 </template>
 
 <script>

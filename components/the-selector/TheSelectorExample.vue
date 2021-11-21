@@ -1,5 +1,5 @@
 <template>
-  <v-select
+  <VSelect
     v-model="selected"
     v-bind="$attrs"
     item-text="name"
@@ -8,7 +8,7 @@
     hide-details
     style="max-width: 200px"
     @change="$emit('update:value', $event)"
-  ></v-select>
+  ></VSelect>
 </template>
 
 <script>

@@ -1,13 +1,13 @@
 <template>
-  <v-card class="pa-2 my-6">
-    <v-card-title class="justify-center">Explore your files</v-card-title>
-    <v-card-text>
-      <v-row>
-        <v-col cols="3">
-          <v-card class="pa-2 my-6">
-            <v-card-title class="justify-center">File hierarchy</v-card-title>
-            <v-card-text>
-              <v-treeview
+  <VCard class="pa-2 my-6">
+    <VCardTitle class="justify-center">Explore your files</VCardTitle>
+    <VCardText>
+      <VRow>
+        <VCol cols="3">
+          <VCard class="pa-2 my-6">
+            <VCardTitle class="justify-center">File hierarchy</VCardTitle>
+            <VCardText>
+              <VTreeview
                 dense
                 open-on-click
                 activatable
@@ -18,18 +18,18 @@
                 @update:active="setSelectedItem"
               >
                 <template #prepend="{ item }">
-                  <v-icon>
+                  <VIcon>
                     {{ item.icon }}
-                  </v-icon>
+                  </VIcon>
                 </template>
-              </v-treeview>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-col cols="9">
-          <v-card class="pa-2 my-6">
-            <v-card-title class="justify-center">File details</v-card-title>
-            <v-card-text>
+              </VTreeview>
+            </VCardText>
+          </VCard>
+        </VCol>
+        <VCol cols="9">
+          <VCard class="pa-2 my-6">
+            <VCardTitle class="justify-center">File details</VCardTitle>
+            <VCardText>
               <template v-if="selectedItem">
                 <component
                   :is="componentForType(selectedItem.type)"
@@ -41,12 +41,12 @@
               <template v-else>
                 <p>Select a file to see it in more details here</p>
               </template>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-card-text>
-  </v-card>
+            </VCardText>
+          </VCard>
+        </VCol>
+      </VRow>
+    </VCardText>
+  </VCard>
 </template>
 
 <script>

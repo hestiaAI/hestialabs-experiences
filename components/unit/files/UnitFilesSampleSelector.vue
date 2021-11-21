@@ -1,5 +1,5 @@
 <template>
-  <v-select
+  <VSelect
     v-model="selectedSamples"
     v-bind="$attrs"
     item-text="filename"

@@ -1,8 +1,8 @@
 <template>
-  <v-form>
-    <v-card class="pa-2 my-6">
-      <v-card-title class="justify-center">Export Results</v-card-title>
-      <v-card-text>
+  <VForm>
+    <VCard class="pa-2 my-6">
+      <VCardTitle class="justify-center">Export Results</VCardTitle>
+      <VCardText>
         <UnitConsentFormSection
           v-for="(section, index) in $store.state.config.consent"
           :key="`section-${index}`"
@@ -10,7 +10,7 @@
           @change="updateConsent"
         />
         <h2 class="mb-2 mt-2">Results to include</h2>
-        <v-checkbox
+        <VCheckbox
           v-for="(result, index) in allResults"
           :key="`data-${index}`"
           v-model="includedResults"
@@ -18,7 +18,7 @@
           :disabled="!result"
           :label="defaultView[index].title"
           :value="index"
-        ></v-checkbox>
+        ></VCheckbox>
         <BaseButton
           text="Generate ZIP"
           :status="generateStatus"
@@ -44,9 +44,9 @@
           Sending failed. Please download the file and send it by email.
         </p>
         <p v-if="sentStatus && !sentError">Form successfully submitted.</p>
-      </v-card-text>
-    </v-card>
-  </v-form>
+      </VCardText>
+    </VCard>
+  </VForm>
 </template>
 
 <script>

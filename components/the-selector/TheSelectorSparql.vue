@@ -1,5 +1,5 @@
 <template>
-  <v-select
+  <VSelect
     v-bind="$attrs"
     item-text="name"
     item-value="name"

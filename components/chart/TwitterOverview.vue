@@ -1,10 +1,10 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12" sm="1"></v-col>
-      <v-col cols="12" sm="10">
-        <v-row>
-          <v-col cols="12" sm="8">
+  <VContainer>
+    <VRow>
+      <VCol cols="12" sm="1"></VCol>
+      <VCol cols="12" sm="10">
+        <VRow>
+          <VCol cols="12" sm="8">
             <div id="volume-chart">
               <strong>Number of ads over time</strong>
               <a class="reset" style="display: none">reset</a>
@@ -20,8 +20,8 @@
                 select a time range to zoom in
               </p>
             </div>
-          </v-col>
-          <v-col cols="12" sm="4">
+          </VCol>
+          <VCol cols="12" sm="4">
             <div id="company-chart">
               <strong>Top 10 advertisers</strong>
               <a class="reset" style="display: none">reset</a>
@@ -32,10 +32,10 @@
                 </span>
               </p>
             </div>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" sm="4">
+          </VCol>
+        </VRow>
+        <VRow>
+          <VCol cols="12" sm="4">
             <div id="engagement-chart">
               <strong>Interactions with ads (click, video viewing)</strong>
               <a class="reset" style="display: none">reset</a>
@@ -46,8 +46,8 @@
                 </span>
               </p>
             </div>
-          </v-col>
-          <v-col cols="12" sm="4">
+          </VCol>
+          <VCol cols="12" sm="4">
             <div id="type-chart">
               <strong>Type of targeting</strong>
               <a class="reset" style="display: none">reset</a>
@@ -58,8 +58,8 @@
                 </span>
               </p>
             </div>
-          </v-col>
-          <v-col cols="12" sm="4">
+          </VCol>
+          <VCol cols="12" sm="4">
             <div id="value-chart">
               <strong>Targeting criteria</strong>
               <a class="reset" style="display: none">reset</a>
@@ -70,9 +70,9 @@
                 </span>
               </p>
             </div>
-          </v-col>
-        </v-row>
-        <v-row>
+          </VCol>
+        </VRow>
+        <VRow>
           <div id="dc-data-count" class="dc-data-count">
             <span class="filter-count"></span>
             selected out of
@@ -80,18 +80,18 @@
             records |
             <a class="reset">Reset All</a>
           </div>
-        </v-row>
-      </v-col>
-      <v-col cols="12" sm="1"></v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12" sm="1"></v-col>
-      <v-col cols="12" sm="10">
+        </VRow>
+      </VCol>
+      <VCol cols="12" sm="1"></VCol>
+    </VRow>
+    <VRow>
+      <VCol cols="12" sm="1"></VCol>
+      <VCol cols="12" sm="10">
         <UnitFilterableTable :data="{ headers: header, items: results }" />
-      </v-col>
-      <v-col cols="12" sm="1"></v-col>
-    </v-row>
-  </v-container>
+      </VCol>
+      <VCol cols="12" sm="1"></VCol>
+    </VRow>
+  </VContainer>
 </template>
 
 <script>
