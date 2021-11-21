@@ -102,7 +102,7 @@
   "defaultView": [
     {
       "customPipeline": "timedObservationViewer",
-      "visualizations": ["TimedObservationsViewer.vue"],
+      "visualizations": ["ChartViewTimedObservationsViewer.vue"],
       "showTable": false,
       "title": "Overview of what google knows about you",
       "text": ""

@@ -9,7 +9,7 @@
   "defaultView": [
     {
       "customPipeline": "tripsData",
-      "visualizations": ["UberOverview.vue"],
+      "visualizations": ["ChartViewOverviewUber.vue"],
       "showTable": false,
       "title": "Uber Trips overview",
       "text": "Compare the prices of your Uber rides according to several factors ( Your data is grouped by currency)."

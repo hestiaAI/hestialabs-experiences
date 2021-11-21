@@ -87,7 +87,7 @@
               :key="'viz-vue-' + vizVueIndex"
             >
               <VCol>
-                <VueGraphByName :graph-name="graphName" :data="result" />
+                <ChartView :graph-name="graphName" :data="result" />
               </VCol>
             </VRow>
             <VRow

@@ -12,23 +12,15 @@
 
 <script>
 import * as d3 from 'd3'
+import mixin from './mixin'
 
 export default {
-  name: 'Sunburst',
-  props: {
-    values: {
-      type: Array,
-      default: () => []
-    }
-  },
+  mixins: [mixin],
   data() {
     return {
       bcItems: [],
       graphId: 'graph_' + this._uid
     }
-  },
-  mounted() {
-    this.drawViz()
   },
   methods: {
     drawViz() {

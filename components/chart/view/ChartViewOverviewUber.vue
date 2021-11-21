@@ -196,19 +196,14 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
+import mixin from './mixin'
 // import regression from 'regression'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
-  name: 'UberOverview',
-  props: {
-    values: {
-      type: Array,
-      default: () => []
-    }
-  },
+  mixins: [mixin],
   data() {
     return {
       header: [
@@ -228,14 +223,6 @@ export default {
       currentCurrency: null,
       currencyDimension: null
     }
-  },
-  watch: {
-    values(oldValues) {
-      this.drawViz()
-    }
-  },
-  mounted() {
-    this.drawViz()
   },
   methods: {
     filterCurrency(newCurr) {

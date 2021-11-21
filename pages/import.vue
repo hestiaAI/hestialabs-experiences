@@ -91,7 +91,7 @@
           :key="`viz-${resultIndex}-${vizVueIndex}`"
         >
           <VCol>
-            <VueGraphByName :graph-name="graphName" :data="result.result" />
+            <ChartView :graph-name="graphName" :data="result.result" />
           </VCol>
         </VRow>
         <VRow

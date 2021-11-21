@@ -132,20 +132,17 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
+import mixin from './mixin'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
-  name: 'TimedObservationsViewer',
+  mixins: [mixin],
   props: {
     title: {
       type: String,
       default: () => 'Google'
-    },
-    values: {
-      type: Array,
-      default: () => []
     },
     dateFormats: {
       type: Array,
@@ -181,14 +178,6 @@ export default {
       ],
       results: []
     }
-  },
-  watch: {
-    values(oldValues) {
-      this.drawViz()
-    }
-  },
-  mounted() {
-    this.drawViz()
   },
   methods: {
     resetAll() {
