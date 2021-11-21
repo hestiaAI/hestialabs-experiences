@@ -39,6 +39,7 @@ module.exports = {
       'PascalCase',
       {
         registeredComponentsOnly: false,
+        // https://github.com/vuejs/eslint-plugin-vue/issues/1722
         ignores: ['/^component|client-only|keep-alive$/']
       }
     ]
