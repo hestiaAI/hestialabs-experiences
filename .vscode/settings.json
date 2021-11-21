@@ -7,5 +7,7 @@
   ],
   // https://stackoverflow.com/a/64573900/8238129
   "vetur.validation.template": false,
-  "javascript.validate.enable": false
+  "javascript.validate.enable": false,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true
 }
