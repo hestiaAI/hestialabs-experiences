@@ -49,10 +49,6 @@ export default {
       type: Array,
       default: () => []
     },
-    examples: {
-      type: Array,
-      required: true
-    },
     ext: {
       type: String,
       required: true,
@@ -66,10 +62,6 @@ export default {
     files: {
       type: Array,
       default: () => []
-    },
-    visualizations: {
-      type: Object,
-      default: () => {}
     },
     defaultView: {
       type: Array,
@@ -103,6 +95,22 @@ export default {
       type: Boolean,
       default: true
     },
+    sparql: {
+      type: Object,
+      default: () => {}
+    },
+    sql: {
+      type: Object,
+      default: () => {}
+    },
+    vega: {
+      type: Object,
+      default: () => {}
+    },
+    yarrrml: {
+      type: String,
+      default: ''
+    },
     databaseBuilder: {
       type: Function,
       default: undefined
@@ -121,8 +129,6 @@ export default {
       const propNames = [
         'title',
         'dataPortal',
-        'examples',
-        'visualizations',
         'defaultView',
         'customPipelines',
         'preprocessors',
@@ -131,6 +137,10 @@ export default {
         'showDataExplorer',
         'files',
         'allowMissingFiles',
+        'sparql',
+        'sql',
+        'vega',
+        'yarrrml',
         'databaseBuilder'
       ]
       return Object.fromEntries(propNames.map(k => [k, this[k]]))

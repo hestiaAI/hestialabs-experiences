@@ -70,7 +70,7 @@
             />
             <unit-sparql
               v-else
-              v-bind="{ selectedExample, query, queryDisabled }"
+              v-bind="{ allSparql, sparqlQuery, queryDisabled }"
               class="mr-lg-6"
               @update="onUnitResultsUpdate"
             />
@@ -87,7 +87,7 @@
                 <unit-vega-viz
                   :spec-file="specFile"
                   :data="result"
-                  :div-id="`viz-${index}-${specFile.name}`"
+                  :div-id="`viz-${index}-${vegaIndex}`"
                 />
               </v-col>
             </v-row>
@@ -131,16 +131,8 @@ import FileManager from '~/utils/file-manager'
 
 export default {
   props: {
-    visualizations: {
-      type: Object,
-      default: () => {}
-    },
-    selectedExample: {
-      type: Object,
-      required: true
-    },
-    query: {
-      type: Object,
+    sparqlQuery: {
+      type: String,
       default: null
     },
     defaultViewElements: {
@@ -167,6 +159,15 @@ export default {
       type: FileManager,
       required: true
     },
+    vega: {
+      type: Object,
+      default: () => {}
+    },
+    allSparql: {
+      // Only used by the advanced view
+      type: Object,
+      default: () => {}
+    },
     postprocessors: {
       type: Object,
       default: () => {}
@@ -179,23 +180,11 @@ export default {
     }
   },
   computed: {
-    exampleVisualizations() {
-      const { name } = this.selectedExample
-      return this.visualizations?.[name] || []
-    },
     showTable() {
       return this.defaultViewElements.showTable
     },
     vizNames() {
-      let vizNames
-      if (this.defaultViewElements) {
-        vizNames = this.defaultViewElements?.visualizations || []
-      } else {
-        vizNames = this.exampleVisualizations
-          .filter(v => v.query === this.query?.name)
-          .map(v => v.vega)
-      }
-      return vizNames
+      return this.defaultViewElements.visualizations ?? []
     },
     vizUrls() {
       return this.vizNames.filter(n => n.startsWith('/'))
@@ -204,11 +193,7 @@ export default {
       return this.vizNames.filter(n => n.endsWith('.vue'))
     },
     vegaFiles() {
-      return (
-        this.selectedExample.vega?.filter(s =>
-          this.vizNames.includes(s.name)
-        ) ?? []
-      )
+      return this.vizNames.map(n => this.vega[n]).filter(n => n)
     }
   },
   methods: {

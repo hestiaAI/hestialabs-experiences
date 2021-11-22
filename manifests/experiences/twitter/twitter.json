@@ -15,16 +15,6 @@
     "icon": "the-eyeballs.svg",
     "url": "https://eyeballs.hestialabs.org/"
   },
-  "visualizations": {"main": [
-    {
-      "vega": "top-k-advertisers",
-      "query": "advertisers-per-day"
-    },
-    {
-      "vega": "wordcloud-targeting-criteria",
-      "query": "targeting-values-all-advertisers"
-    }
-  ]},
   "defaultView": [
     {
       "sql": "advertisers-per-day",

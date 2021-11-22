@@ -82,7 +82,7 @@
             <unit-vega-viz
               :spec-file="specFile"
               :data="result.result"
-              :div-id="`viz-${resultIndex}-${specFile.name}`"
+              :div-id="`viz-${resultIndex}-${vegaIndex}`"
             />
           </v-col>
         </v-row>
@@ -143,15 +143,10 @@ export default {
         params: { key: this.experience.key }
       })
     },
-    example() {
-      return this.manifest.examples.find(ex => ex.name === 'main')
-    },
-    visualizations() {
-      return this.manifest.visualizations.main
-    },
     allVegaFiles() {
-      return this.results.map(r =>
-        this.example.vega?.filter(s => r.visualizations?.includes(s.name))
+      return this.results.map(
+        r =>
+          r.visualizations?.map(n => this.manifest.vega[n]).filter(n => n) ?? []
       )
     },
     allVizUrls() {

@@ -30,18 +30,18 @@
         <v-col>
           <unit-query
             v-bind="{
-              visualizations,
               defaultViewElements,
-              selectedExample,
               customPipeline:
                 customPipelines !== undefined
                   ? customPipelines[defaultViewElements.customPipeline]
                   : undefined,
-              query: queries[index],
+              sparqlQuery: queries[index],
               sql: sqlQueries[index],
               fileManager,
               postprocessors,
-              index
+              index,
+              vega,
+              allSparql: sparql
             }"
             @update="onQueryUpdate"
           />
@@ -71,8 +71,6 @@ import FileManager from '~/utils/file-manager'
 export default {
   components: { UnitFileExplorer },
   props: {
-    examples: Array,
-    visualizations: Object,
     defaultView: Array,
     title: String,
     dataPortal: String,
@@ -81,15 +79,16 @@ export default {
     showDataExplorer: Boolean,
     files: Array,
     preprocessors: Object,
-    postprocessors: Object,
     allowMissingFiles: Boolean,
+    sparql: Object,
+    vega: Object,
+    sql: Object,
+    yarrrml: String,
+    postprocessors: Object,
     databaseBuilder: Function
   },
   data() {
-    // main example is selected by default
-    const selectedExample = this.examples[0]
     return {
-      selectedExample,
       progress: false,
       error: false,
       success: false,
@@ -103,15 +102,10 @@ export default {
   },
   computed: {
     queries() {
-      return this.defaultView.map(o =>
-        this.selectedExample.sparql?.find(s => s.name === o.query)
-      )
+      return this.defaultView.map(o => this.sparql[o.query])
     },
     sqlQueries() {
-      return this.defaultView.map(o => {
-        const sql = this.selectedExample.sql?.find(s => s.name === o.sql)
-        return sql === undefined ? '' : sql.query
-      })
+      return this.defaultView.map(o => this.sql[o.sql])
     },
     isRdfNeeded() {
       return this.defaultView.filter(v => 'query' in v).length > 0
@@ -145,9 +139,9 @@ export default {
         await this.databaseBuilder(this.fileManager)
       }
 
-      if (this.isRdfNeeded && this.selectedExample.yarrrml) {
+      if (this.isRdfNeeded && this.yarrrml) {
         try {
-          this.rml = await parseYarrrml(this.selectedExample.yarrrml)
+          this.rml = await parseYarrrml(this.yarrrml)
           await rdfUtils.generateRDF(this.rml, processedFiles)
         } catch (error) {
           this.handleError(error)
