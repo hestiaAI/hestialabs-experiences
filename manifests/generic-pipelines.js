@@ -13,20 +13,25 @@ const timeParsers = [
 
 // Define range of valid year, in case of timestamp date format
 // the will accept any number so need to filter.
-const validYearMin = 1990
-const validYearMax = new Date().getFullYear() + 1
+const validYearMin = 1980
+const validYearMax = 2038
 
 // Try to transform {{ value }} into a Date object,
 // return the date or null if not a valid date
 function getValidDate(value) {
   let date = null
-  const findDate = timeParsers.some(parser => {
+  const findDate = timeParsers.some((parser, idx) => {
     date = parser(value)
     if (
       date !== null &&
       date.getFullYear() > validYearMin &&
       date.getFullYear() < validYearMax
     ) {
+      // Reorder timeParsers array to save complexity
+      if (!idx !== 0) {
+        timeParsers.splice(idx, 1)
+        timeParsers.splice(0, 0, parser)
+      }
       return true
     }
     return false
@@ -34,12 +39,6 @@ function getValidDate(value) {
   return findDate ? date : null
 }
 
-/*
-function isNumber(str) {
-  if (typeof str !== 'string') return false
-  return !isNaN(str) && !isNaN(parseFloat(str))
-}
-*/
 // Traverse all the json tree and keep tracks of each path from root to leaf
 function traverseAllTree(node) {
   function traverse(n, acc) {
@@ -49,7 +48,6 @@ function traverseAllTree(node) {
       })
       return
     }
-    console.log(acc)
     path[acc.join(' -> ')] = n
   }
   const path = {}
