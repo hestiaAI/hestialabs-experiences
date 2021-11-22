@@ -17,23 +17,18 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import CardOrItemList from '~/components/CardOrItemList'
+
 export default {
   name: 'TheDataExperienceList',
   components: { CardOrItemList },
   props: {
     big: {
       type: Boolean,
-      required: true
-    },
-    enabledExperiences: {
-      type: Array,
-      required: true
-    },
-    disabledExperiences: {
-      type: Array,
-      required: true
+      default: false
     }
-  }
+  },
+  computed: mapGetters(['enabledExperiences', 'disabledExperiences'])
 }
 </script>

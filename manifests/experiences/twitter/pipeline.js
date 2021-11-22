@@ -1,7 +1,8 @@
 import { JSONPath } from 'jsonpath-plus'
 import _ from 'lodash'
+import postprocessors from './postprocessors'
 import { aggregate, countReducer } from '@/utils/aggregate'
-import csvProcessors from '@/manifests/csv-processors'
+import { genericDateViewer } from '~/manifests/generic-pipelines'
 
 function dashboardFillItems(items, impressionAttributes, isEngagement) {
   impressionAttributes.forEach(v => {
@@ -12,7 +13,7 @@ function dashboardFillItems(items, impressionAttributes, isEngagement) {
     criteria.forEach(criterion => {
       if (v.promotedTweetInfo) {
         items.push({
-          tweet_id: v.promotedTweetInfo.tweetId,
+          tweetId: v.promotedTweetInfo.tweetId,
           companyName: v.advertiserInfo.advertiserName,
           engagement: isEngagement,
           date: v.impressionTime,
@@ -40,7 +41,7 @@ async function dashboard(fileManager) {
     json: impressionsFile
   })
   const headers = [
-    'tweet_id',
+    'tweetId',
     'companyName',
     'engagement',
     'date',
@@ -124,7 +125,7 @@ async function targetingTree(fileManager) {
     countReducer('count')
   )
   // Transform to tree
-  ;[headers, items] = csvProcessors.sunburstTargeting({ headers, items })
+  ;({ headers, items } = postprocessors.sunburstTargeting({ headers, items }))
 
   return { headers, items }
 }
@@ -218,10 +219,10 @@ async function selectTargetingTree(fileManager, _, parameter) {
     countReducer('count')
   )
   // Transform to tree
-  ;[headers, items] = csvProcessors.sunburstTargetingAdvertiser({
+  ;({ headers, items } = postprocessors.sunburstTargetingAdvertiser({
     headers,
     items
-  })
+  }))
 
   return { headers, items }
 }
@@ -232,5 +233,6 @@ export default {
   targetingTree,
   targetingTypesAndValues,
   allAdvertisers,
-  selectTargetingTree
+  selectTargetingTree,
+  genericDateViewer
 }

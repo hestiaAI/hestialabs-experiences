@@ -52,6 +52,8 @@ export default {
           return () => import('@/components/graphs/BarChart.vue')
         case 'TrackerGraph.vue':
           return () => import('@/components/graphs/TrackerGraph.vue')
+        case 'GenericDateViewer.vue':
+          return () => import('@/components/graphs/GenericDateViewer.vue')
         default:
           return undefined
       }
