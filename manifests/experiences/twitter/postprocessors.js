@@ -72,7 +72,7 @@ const sunburstTargeting = result => {
     size: null
   }
   results.push(root)
-  return [Object.keys(root), results]
+  return { headers: Object.keys(root), items: results }
 }
 
 const sunburstTargetingAdvertiser = result => {
@@ -130,7 +130,7 @@ const sunburstTargetingAdvertiser = result => {
     size: null
   }
   results.push(root)
-  return [Object.keys(root), results]
+  return { headers: Object.keys(root), items: results }
 }
 
 export default {

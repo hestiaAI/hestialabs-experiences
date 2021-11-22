@@ -29,8 +29,8 @@
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :data="processResultForVega(result, specFile)"
-              :div-id="`viz-${query.name}-${specFile.name}`"
+              :data="result"
+              :div-id="`viz-${index}-${specFile.name}`"
             />
           </v-col>
         </template>
@@ -55,7 +55,16 @@
               v-bind="{
                 fileManager,
                 customPipeline,
-                parameterName: defaultViewElements.parameter
+                parameterName: defaultViewElements.parameterName
+              }"
+              @update="onUnitResultsUpdate"
+            />
+            <unit-sql
+              v-else-if="sql"
+              v-bind="{
+                sql,
+                parameterName: defaultViewElements.parameterName,
+                parameterKey: defaultViewElements.parameterKey
               }"
               @update="onUnitResultsUpdate"
             />
@@ -77,7 +86,7 @@
               >
                 <unit-vega-viz
                   :spec-file="specFile"
-                  :data="processResultForVega(result, specFile)"
+                  :data="result"
                   :div-id="`viz-${index}-${specFile.name}`"
                 />
               </v-col>
@@ -118,7 +127,6 @@
 </template>
 
 <script>
-import csvProcessors from '@/manifests/csv-processors'
 import FileManager from '~/utils/file-manager'
 
 export default {
@@ -151,9 +159,17 @@ export default {
       type: Function,
       default: undefined
     },
+    sql: {
+      type: String,
+      default: ''
+    },
     fileManager: {
       type: FileManager,
       required: true
+    },
+    postprocessors: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -188,34 +204,20 @@ export default {
       return this.vizNames.filter(n => n.endsWith('.vue'))
     },
     vegaFiles() {
-      return this.selectedExample.vega.filter(s =>
-        this.vizNames.includes(s.name)
+      return (
+        this.selectedExample.vega?.filter(s =>
+          this.vizNames.includes(s.name)
+        ) ?? []
       )
     }
   },
   methods: {
-    processResultForVega(result, specFile) {
-      const processor = this.findProcessor(specFile)
-      if (processor) {
-        const items = processor(result)[1]
-        return { items }
-      }
-      return result
-    },
-    findProcessor(specFile) {
-      if (this.customPipeline === undefined) {
-        // Find the viz definition for this query
-        const preprocessor = this.exampleVisualizations.filter(
-          v => this.query.name === v.query && specFile.name === v.vega
-        )
-        // Does it have a preprocessor?
-        if (preprocessor.length === 1) {
-          return csvProcessors[preprocessor[0]?.preprocessor]
-        }
-      }
-      return undefined
-    },
     onUnitResultsUpdate(result) {
+      // Postprocessing
+      if (this.defaultViewElements.postprocessor !== undefined) {
+        result =
+          this.postprocessors[this.defaultViewElements.postprocessor](result)
+      }
       this.result = result
       this.finished = true
       this.$emit('update', { index: this.index, result })

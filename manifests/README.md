@@ -70,21 +70,21 @@ Note: All files and folders should match the following regular expression: [`^(?
   "allowMissingFiles": true,
   /**
     * Array of visualizations defined for a specific example.
-    * It is necessary to specify the vega file and the query file,
-    * and optionally a preprocessor from csv-processors.js.
     * @type Object
     */
   "visualizations": {"main": [
     {
       "vega": "chart_filename",
       "query": "query_filename",
-      "preprocessor": "csv_processor"
     }
   ]},
   /**
     * Array defining the blocks to show in the default view. Each section section can have:
-    * - A SPARQL query (optional)
-    * - A function used as the custom pipeline (defined in pipeline.js) (optional)
+    * - A SPARQL query
+    * - A function used as the custom pipeline (defined in pipeline.js)
+    * - A SQL query
+    * - A postprocessor (defined in postprocessors.js)
+    * - A parameter name (if necessary), and for sql pipelines a parameter key used in the query (prefixed with :)
     * - An array of visualizations to show
     * - A data table
     * - A title
@@ -94,8 +94,12 @@ Note: All files and folders should match the following regular expression: [`^(?
     */
   "defaultView": [
     {
-      "query": "query_filename",
+      "query": "sparql_query_filename",
       "customPipeline": "pipeline_function_name",
+      "sql": "sql_query_filename",
+      "postprocessor": "postprocessor_function_name",
+      "parameterName": "Example",
+      "parameterKey": ":example",
       "visualizations": ["chart_filename1", "chart_filename2"],
       "showTable": false,
       "title": "An interesting title",

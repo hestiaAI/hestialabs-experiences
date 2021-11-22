@@ -83,13 +83,17 @@ export default {
       type: Object,
       default: () => {}
     },
+    postprocessors: {
+      type: Object,
+      default: undefined
+    },
     allowMissingFiles: {
       type: Boolean,
       default: false
     },
     customPipelines: {
       type: Object,
-      default: () => {}
+      default: undefined
     },
     isGenericViewer: {
       type: Boolean,
@@ -98,6 +102,10 @@ export default {
     showDataExplorer: {
       type: Boolean,
       default: true
+    },
+    databaseBuilder: {
+      type: Function,
+      default: undefined
     }
   },
   computed: {
@@ -118,10 +126,12 @@ export default {
         'defaultView',
         'customPipelines',
         'preprocessors',
+        'postprocessors',
         'isGenericViewer',
         'showDataExplorer',
         'files',
-        'allowMissingFiles'
+        'allowMissingFiles',
+        'databaseBuilder'
       ]
       return Object.fromEntries(propNames.map(k => [k, this[k]]))
     },
