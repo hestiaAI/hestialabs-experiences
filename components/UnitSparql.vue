@@ -5,8 +5,8 @@
       <h2 class="my-3">SPARQL</h2>
       <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
         <the-sparql-selector
-          :items="selectedExample.sparql"
-          :disabled="!selectedExample.sparql.length"
+          :items="allSparql"
+          :disabled="!Object.keys(allSparql).length"
           class="my-sm-2 mr-sm-2 mb-2"
           @change="onChangeSelector"
         />
@@ -24,12 +24,6 @@
           :disabled="!sparql"
         />
       </div>
-      <v-text-field
-        v-if="parametrized"
-        v-model="queryParameter"
-        :label="queryParameterName"
-        class="my-sm-2 mr-sm-2"
-      ></v-text-field>
       <code-editor
         :value.sync="code"
         class="mt-6"
@@ -40,16 +34,6 @@
     </template>
 
     <template v-else>
-      <v-row>
-        <v-col cols="4" class="mx-auto">
-          <v-text-field
-            v-if="parametrized"
-            v-model="queryParameter"
-            :label="queryParameterName"
-            class="my-sm-2 mr-sm-2"
-          ></v-text-field>
-        </v-col>
-      </v-row>
       <v-row>
         <v-col align="center">
           <base-button
@@ -71,12 +55,13 @@ import { processError } from '@/utils/utils'
 
 export default {
   props: {
-    selectedExample: {
+    allSparql: {
+      // Only used by the advanced view
       type: Object,
-      default: null
+      default: () => {}
     },
-    query: {
-      type: Object,
+    sparqlQuery: {
+      type: String,
       default: null
     },
     queryDisabled: {
@@ -96,16 +81,7 @@ export default {
   },
   computed: {
     disabled() {
-      return !this.sparql || this.queryDisabled
-    },
-    queryParameterName() {
-      return this.sparql.match(/\$[^$]+\$/)[0].slice(1, -1)
-    },
-    sparql() {
-      return this.query?.sparql || ''
-    },
-    parametrized() {
-      return this.query?.parametrized || false
+      return !this.sparqlQuery || this.queryDisabled
     }
   },
   watch: {
@@ -124,12 +100,8 @@ export default {
         this.message = ''
         this.error = false
         this.progress = true
-        let sparql = this.sparql
-        if (this.parametrized) {
-          sparql = sparql.replace(/\$[^$]+\$/, this.queryParameter)
-        }
 
-        const results = await quadstore.select(sparql)
+        const results = await quadstore.select(this.sparqlQuery)
         this.$emit('update', results)
       } catch (error) {
         console.error(error)

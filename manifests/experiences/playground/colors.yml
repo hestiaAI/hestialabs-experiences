@@ -1,0 +1,19 @@
+authors: Valentin Oliver Loftsson <valentin@hestia.ai>
+
+prefixes:
+  h: http://hestia.ai/
+
+mappings:
+  color:
+    sources:
+      - [colors.csv~csv]
+    s: h:color/$(code)
+    po:
+      - [a, h:Color]
+      - [h:code, $(code)]
+      - [h:name, $(name)]
+      - [h:hex, $(hex)]
+      - [h:r, $(r), xsd:int]
+      - [h:g, $(g), xsd:int]
+      - [h:b, $(b), xsd:int]
+      - [h:rgb, "rgb($(r), $(g), $(b))"]
