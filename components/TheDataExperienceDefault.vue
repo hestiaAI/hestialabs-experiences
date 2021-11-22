@@ -29,27 +29,19 @@
       <v-row v-for="(defaultViewElements, index) in defaultView" :key="index">
         <v-col>
           <unit-query
-            v-if="defaultViewElements.customPipeline"
             v-bind="{
-              visualizations,
               defaultViewElements,
-              selectedExample,
               customPipeline:
-                customPipelines[defaultViewElements.customPipeline],
+                customPipelines !== undefined
+                  ? customPipelines[defaultViewElements.customPipeline]
+                  : undefined,
+              sparqlQuery: queries[index],
+              sql: sqlQueries[index],
               fileManager,
-              index
-            }"
-            @update="onQueryUpdate"
-          />
-          <unit-query
-            v-else
-            v-bind="{
-              selectedExample,
-              visualizations,
-              defaultViewElements,
-              query: queries[index],
-              fileManager,
-              index
+              postprocessors,
+              index,
+              vega,
+              allSparql: sparql
             }"
             @update="onQueryUpdate"
           />
@@ -79,8 +71,6 @@ import FileManager from '~/utils/file-manager'
 export default {
   components: { UnitFileExplorer },
   props: {
-    examples: Array,
-    visualizations: Object,
     defaultView: Array,
     title: String,
     dataPortal: String,
@@ -89,13 +79,16 @@ export default {
     showDataExplorer: Boolean,
     files: Array,
     preprocessors: Object,
-    allowMissingFiles: Boolean
+    allowMissingFiles: Boolean,
+    sparql: Object,
+    vega: Object,
+    sql: Object,
+    yarrrml: String,
+    postprocessors: Object,
+    databaseBuilder: Function
   },
   data() {
-    // main example is selected by default
-    const selectedExample = this.examples[0]
     return {
-      selectedExample,
       progress: false,
       error: false,
       success: false,
@@ -103,14 +96,16 @@ export default {
       rml: '',
       allResults: [...Array(this.defaultView.length)],
       allFiles: null,
-      fileManager: new FileManager(this.preprocessors, this.allowMissingFiles)
+      fileManager: new FileManager(this.preprocessors, this.allowMissingFiles),
+      db: null
     }
   },
   computed: {
     queries() {
-      return this.defaultView.map(o =>
-        this.selectedExample.sparql.find(s => s.name === o.query)
-      )
+      return this.defaultView.map(o => this.sparql[o.query])
+    },
+    sqlQueries() {
+      return this.defaultView.map(o => this.sql[o.sql])
     },
     isRdfNeeded() {
       return this.defaultView.filter(v => 'query' in v).length > 0
@@ -139,9 +134,14 @@ export default {
         return
       }
 
-      if (this.isRdfNeeded && this.selectedExample.yarrrml) {
+      // Populate database
+      if (this.databaseBuilder !== undefined) {
+        await this.databaseBuilder(this.fileManager)
+      }
+
+      if (this.isRdfNeeded && this.yarrrml) {
         try {
-          this.rml = await parseYarrrml(this.selectedExample.yarrrml)
+          this.rml = await parseYarrrml(this.yarrrml)
           await rdfUtils.generateRDF(this.rml, processedFiles)
         } catch (error) {
           this.handleError(error)

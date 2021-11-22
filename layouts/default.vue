@@ -1,32 +1,22 @@
 <template>
   <v-app>
-    <the-app-bar v-bind="{ enabledExperiences, disabledExperiences }" />
+    <the-app-bar />
     <v-main>
       <v-container class="mt-5">
         <v-row>
           <v-col align="center">
             <h2>
               <a
-                :href="`${
-                  collaborator.url || 'https://hestialabs.org/'
-                }#newsletter`"
+                :href="newsletterURL"
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                Subscribe to
-                {{
-                  collaborator.title
-                    ? `${collaborator.title}${
-                        collaborator.title.endsWith('s') ? "'" : "'s"
-                      }`
-                    : "HestiaLabs'"
-                }}
-                newsletter!
+                {{ newsletterMessage }}
               </a>
             </h2>
           </v-col>
         </v-row>
-        <NuxtChild v-bind="{ enabledExperiences, disabledExperiences }" />
+        <Nuxt />
         <v-snackbar
           v-model="snackbar"
           content-class="v-snack__content-online-status"
@@ -83,19 +73,17 @@ export default {
   computed: {
     ...mapGetters(['manifest']),
     collaborator() {
-      if (this.$route.params.key) {
-        const { collaborator } = this.manifest(this.$route)
-        return collaborator || {}
-      }
-      return {}
+      const { collaborator = {} } = this.manifest(this.$route)
+      return collaborator
     },
-    enabledExperiences() {
-      return this.$store.getters.manifests.filter(({ disabled }) => !disabled)
+    newsletterURL() {
+      const { url = 'https://hestialabs.org/' } = this.collaborator
+      return `${url}#newsletter`
     },
-    disabledExperiences() {
-      return this.$store.getters.manifests
-        .filter(({ disabled }) => disabled)
-        .map(o => (o.key === 'other' ? { ...o, disabled: false } : o))
+    newsletterMessage() {
+      const { title = 'HestiaLabs' } = this.collaborator
+      const genitiveCaseEnding = title.endsWith('s') ? '’' : '’s'
+      return `Subscribe to ${title}${genitiveCaseEnding} newsletter!`
     }
   },
   watch: {
@@ -104,9 +92,6 @@ export default {
       // changing timeout property resets the timeout
       this.timeout = isOffline ? 5001 : 5000
     }
-  },
-  beforeCreate() {
-    this.$store.dispatch('loadConfig')
   },
   mounted() {
     if (!window.Worker) {

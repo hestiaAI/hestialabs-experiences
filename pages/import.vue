@@ -81,8 +81,8 @@
           >
             <unit-vega-viz
               :spec-file="specFile"
-              :data="processResultForVega(result.result, specFile)"
-              :div-id="`viz-${resultIndex}-${specFile.name}`"
+              :data="result.result"
+              :div-id="`viz-${resultIndex}-${vegaIndex}`"
             />
           </v-col>
         </v-row>
@@ -95,7 +95,7 @@
           </v-col>
         </v-row>
         <v-row
-          v-for="(src, vizUrlIndex) in vizUrls[resultIndex]"
+          v-for="(src, vizUrlIndex) in allVizUrls[resultIndex]"
           :key="'viz-url-' + vizUrlIndex"
         >
           <v-col>
@@ -116,7 +116,6 @@
 import JSZip from 'jszip'
 import FileSaver from 'file-saver'
 
-import csvProcessors from '@/manifests/csv-processors'
 import UnitFilterableTable from '~/components/UnitFilterableTable'
 
 const _sodium = require('libsodium-wrappers')
@@ -144,43 +143,24 @@ export default {
         params: { key: this.experience.key }
       })
     },
-    example() {
-      return this.manifest.examples.find(ex => ex.name === 'main')
-    },
-    visualizations() {
-      return this.manifest.visualizations.main
-    },
     allVegaFiles() {
-      return this.results.map(r =>
-        this.example.vega.filter(s => r.visualizations?.includes(s.name))
+      return this.results.map(
+        r =>
+          r.visualizations?.map(n => this.manifest.vega[n]).filter(n => n) ?? []
       )
     },
-    vizUrls() {
+    allVizUrls() {
       return this.results.map(r =>
         r.visualizations?.filter(n => n.startsWith('/'))
       )
     },
     allVueGraphNames() {
       return this.results.map(r =>
-        r.visualizations?.filter(n => n.endsWith('.vue')).filter(n => n)
+        r.visualizations?.filter(n => n.endsWith('.vue'))
       )
     }
   },
   methods: {
-    processResultForVega(result, specFile) {
-      const processor = this.findProcessor(specFile)
-      if (processor) {
-        const items = processor(result)[1]
-        return { items }
-      }
-      return result
-    },
-    findProcessor(result, specFile) {
-      const def = this.visualizations.find(
-        v => result.query === v.query && specFile.name === v.vega
-      )
-      return csvProcessors[def?.preprocessor]
-    },
     handleError(error, message) {
       console.error(error)
       this.error = true
