@@ -102,7 +102,11 @@ export default {
       this.maxDate = this.dateDimension.top(1)[0].date
       this.currMaxDate = formatDate(this.maxDate)
       this.total = this.dateDimension.top(Infinity).length
-      this.select = 'Months'
+      const diffDays = d3.timeDay.count(this.minDate, this.maxDate)
+      if (diffDays < 100) this.select = 'Days'
+      else if (diffDays < 1000) this.select = 'Weeks'
+      else if (diffDays < 5000) this.select = 'Months'
+      else this.select = 'Years'
 
       this.barChart
         .width(
@@ -118,6 +122,8 @@ export default {
         .margins({ left: 50, top: 20, right: 50, bottom: 20 })
         .elasticY(true)
         .clipPadding(10)
+        .gap(this.select === 'Months' ? 10 : 0)
+
       this.barChart.yAxis().tickFormat(d3.format('.3s'))
       this.drawBarChart()
       this.barChart.on('preRender', this.calcDomain)
@@ -144,6 +150,7 @@ export default {
       this.barChart
         .dimension(this.dateDimension)
         .group(this.volumeGroup)
+        .gap(this.select === 'Months' ? 10 : 0)
         .transitionDuration(1000)
         .render()
     },
