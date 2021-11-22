@@ -204,7 +204,7 @@ export default {
       const graph = sankey(linksData)
       svg
         .append('g')
-        .selectAll('.link')
+        .selectAll('#' + this.graphId + '.link')
         .data(graph.links)
         .enter()
         .append('path')
@@ -230,7 +230,7 @@ export default {
       // add in the nodes
       const node = svg
         .append('g')
-        .selectAll('.node')
+        .selectAll('#' + this.graphId + '.node')
         .data(graph.nodes)
         .enter()
         .append('g')
@@ -270,11 +270,11 @@ export default {
           d3.select(this).attr('opacity', 0.7)
 
           // Fade all the links.
-          d3.selectAll('path').attr('opacity', 0.2)
+          d3.selectAll('#' + this.graphId + '.link').attr('opacity', 0.2)
 
           // Then highlight only those that are linked to the current node.
           svg
-            .selectAll('path')
+            .selectAll('#' + this.graphId + '.link')
             .filter(
               link =>
                 d.index === link.source.index || d.index === link.target.index
@@ -282,7 +282,8 @@ export default {
             .attr('opacity', 0.7)
         })
         .on('mouseleave', function (d) {
-          d3.selectAll('path').attr('opacity', 0.2)
+          d3.selectAll('#' + this.graphId + '.link').attr('opacity', 0.2)
+          d3.select(this).attr('opacity', 1)
           tooltip.style('opacity', 0)
         })
 
