@@ -26,6 +26,7 @@
     <v-row>
       <unit-filterable-table
         v-bind="{ data: { headers: header, items: values } }"
+        @current-items="onTableFilter"
       />
     </v-row>
   </v-container>
@@ -129,6 +130,9 @@ export default {
       })
       max = d3.timeMonth.offset(max, 1)
       chart.x().domain([min, max])
+    },
+    onTableFilter(items) {
+      console.log(items)
     }
   }
 }
