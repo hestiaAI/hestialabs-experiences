@@ -3,8 +3,9 @@
     <v-row>
       <p>
         From
-        <strong>{{ minDate }}</strong> to <strong>{{ maxDate }}</strong> we
-        found <strong>{{ total }}</strong> dated events in your file(s).
+        <strong>{{ currMinDate }}</strong> to
+        <strong>{{ currMaxDate }}</strong> we found
+        <strong>{{ total }}</strong> dated events in your file(s).
       </p>
     </v-row>
     <v-row>
@@ -65,6 +66,8 @@ export default {
       aggregate: true,
       minDate: null,
       maxDate: null,
+      currMinDate: null,
+      currMaxDate: null,
       total: 0,
       barChart: null,
       dateDimension: null,
@@ -94,8 +97,10 @@ export default {
       const ndx = crossfilter(this.values)
       this.dateDimension = ndx.dimension(d => d.date)
       this.barChart = new dc.BarChart('#' + this.graphId)
-      this.minDate = formatDate(this.dateDimension.bottom(1)[0].date)
-      this.maxDate = formatDate(this.dateDimension.top(1)[0].date)
+      this.minDate = this.dateDimension.bottom(1)[0].date
+      this.currMinDate = formatDate(this.minDate)
+      this.maxDate = this.dateDimension.top(1)[0].date
+      this.currMaxDate = formatDate(this.maxDate)
       this.total = this.dateDimension.top(Infinity).length
       this.select = 'Months'
 
@@ -117,7 +122,18 @@ export default {
       this.drawBarChart()
       this.barChart.on('preRender', this.calcDomain)
       this.barChart.on('preRedraw', this.calcDomain)
-      ndx.onChange(() => (this.results = ndx.allFiltered()))
+      ndx.onChange(() => {
+        this.results = ndx.allFiltered()
+        const filters = this.dateDimension.currentFilter()
+        this.total = this.results.length
+        if (filters) {
+          this.currMinDate = formatDate(filters[0])
+          this.currMaxDate = formatDate(filters[1])
+        } else {
+          this.currMinDate = formatDate(this.minDate)
+          this.currMaxDate = formatDate(this.maxDate)
+        }
+      })
       dc.renderAll()
     },
     drawBarChart() {
