@@ -1,6 +1,6 @@
 {
-  "title": "Spotify",
-  "icon": "spotify.png",
+  "title": "Netflix",
+  "icon": "netflix.png",
   "ext": "all",
   "isGenericViewer": true,
   "showDataExplorer": true,

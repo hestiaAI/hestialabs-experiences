@@ -3,11 +3,17 @@
     <div v-if="isValid">
       <h2 v-if="$store.state.power" class="my-3">Query Results</h2>
       <v-alert v-if="error" type="error">{{ message }}</v-alert>
-      <the-table-filter :headers="headers" @update="onFilterUpdate" />
+      <the-table-filter
+        :display-filters="displayFilters"
+        :headers="headers"
+        @update="onFilterUpdate"
+      />
       <v-data-table
         v-bind="{ headers: tableHeaders, items, search }"
+        ref="tableRef"
         :hide-default-footer="disabled"
         multi-sort
+        @current-items="onItemsUpdate"
       >
         <template #item.url="{ value }">
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
@@ -38,6 +44,10 @@ export default {
   name: 'UnitFilterableTable',
   components: { BaseDataDownloadButton, TheTableFilter },
   props: {
+    displayFilters: {
+      type: Boolean,
+      default: () => false
+    },
     data: {
       default: undefined,
       validator: isDataValid
@@ -109,6 +119,17 @@ export default {
         filterable: selectedHeaders.includes(h.value)
       }))
       this.search = searchValue
+    },
+    onItemsUpdate() {
+      // wait until the DOM has completely updated
+      this.$nextTick(() => {
+        // emit the current filtered items
+        this.$emit(
+          'current-items',
+          // workaround to get the filtered items https://github.com/vuetifyjs/vuetify/issues/8731#issuecomment-617399086
+          this.$refs.tableRef.$children[0].filteredItems
+        )
+      })
     }
   }
 }

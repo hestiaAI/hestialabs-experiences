@@ -1,6 +1,6 @@
 {
-  "title": "Spotify",
-  "icon": "spotify.png",
+  "title": "Signal",
+  "icon": "signal.svg",
   "ext": "all",
   "isGenericViewer": true,
   "showDataExplorer": true,

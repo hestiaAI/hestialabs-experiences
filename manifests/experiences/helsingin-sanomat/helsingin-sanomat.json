@@ -1,6 +1,6 @@
 {
-  "title": "Spotify",
-  "icon": "spotify.png",
+  "title": "Helsingin Sanomat",
+  "icon": "helsingin-sanomat.png",
   "ext": "all",
   "isGenericViewer": true,
   "showDataExplorer": true,

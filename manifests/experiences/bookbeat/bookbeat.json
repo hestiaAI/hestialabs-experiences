@@ -1,6 +1,6 @@
 {
-  "title": "Spotify",
-  "icon": "spotify.png",
+  "title": "BookBeat",
+  "icon": "bookbeat.png",
   "ext": "all",
   "isGenericViewer": true,
   "showDataExplorer": true,

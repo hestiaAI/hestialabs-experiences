@@ -1,6 +1,6 @@
 {
-  "title": "Spotify",
-  "icon": "spotify.png",
+  "title": "S-Ryhmä",
+  "icon": "s-ryhma.png",
   "ext": "all",
   "isGenericViewer": true,
   "showDataExplorer": true,

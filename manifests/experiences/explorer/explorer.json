@@ -1,5 +1,6 @@
 {
-  "title": "Data Explorer",
+  "title": "Other",
+  "subtitle": "Explore data from anywhere!",
   "icon": "clipboard-search-outline.png",
   "isGenericViewer": true,
   "showDataExplorer": true,

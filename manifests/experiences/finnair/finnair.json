@@ -1,6 +1,6 @@
 {
-  "title": "Spotify",
-  "icon": "spotify.png",
+  "title": "FinnAir",
+  "icon": "finnair.jpg",
   "ext": "all",
   "isGenericViewer": true,
   "showDataExplorer": true,
