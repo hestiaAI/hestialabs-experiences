@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12" md="12" class="text-center">
         <p>
-          In total there is <strong>{{ total }}</strong> records
+          In total there are <strong>{{ total }}</strong> records
           {{ labelTotal }}
         </p>
         <div :id="graphId" style="position: relative"></div>
