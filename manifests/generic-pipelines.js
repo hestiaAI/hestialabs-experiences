@@ -13,20 +13,25 @@ const timeParsers = [
 
 // Define range of valid year, in case of timestamp date format
 // the will accept any number so need to filter.
-const validYearMin = 1990
-const validYearMax = new Date().getFullYear() + 1
+const validYearMin = 1980
+const validYearMax = 2038
 
 // Try to transform {{ value }} into a Date object,
 // return the date or null if not a valid date
 function getValidDate(value) {
   let date = null
-  const findDate = timeParsers.some(parser => {
+  const findDate = timeParsers.some((parser, idx) => {
     date = parser(value)
     if (
       date !== null &&
       date.getFullYear() > validYearMin &&
       date.getFullYear() < validYearMax
     ) {
+      // Reorder timeParsers array to save complexity
+      if (!idx !== 0) {
+        timeParsers.splice(idx, 1)
+        timeParsers.splice(0, 0, parser)
+      }
       return true
     }
     return false
@@ -34,12 +39,6 @@ function getValidDate(value) {
   return findDate ? date : null
 }
 
-/*
-function isNumber(str) {
-  if (typeof str !== 'string') return false
-  return !isNaN(str) && !isNaN(parseFloat(str))
-}
-*/
 // Traverse all the json tree and keep tracks of each path from root to leaf
 function traverseAllTree(node) {
   function traverse(n, acc) {
@@ -49,7 +48,6 @@ function traverseAllTree(node) {
       })
       return
     }
-    console.log(acc)
     path[acc.join(' -> ')] = n
   }
   const path = {}
@@ -70,22 +68,30 @@ function extractLastDate(list) {
   return [date, description.reverse()]
 }
 
+function prettyfyPath(pathList) {
+  return pathList
+    .map(e => {
+      const ep = e.replaceAll('_', ' ')
+      return ep.charAt(0).toUpperCase() + ep.slice(1)
+    })
+    .join(' -> ')
+}
 // Transform a json object to a list of dated events
 function extractJsonEntries(node) {
   const allPath = traverseAllTree(node)
-  console.log(allPath)
   const result = []
   Object.entries(allPath).forEach(([path, value]) => {
+    const pathList = path.split(' -> ')
     const leafDate = getValidDate(value)
     if (leafDate !== null) {
-      result.push({ date: leafDate, description: path })
+      result.push({ date: leafDate, description: prettyfyPath(pathList) })
     } else {
-      const pathDate = extractLastDate(path.split(' -> '))
+      const pathDate = extractLastDate(pathList)
       if (pathDate[0] !== null) {
         pathDate[1].push(value)
         result.push({
           date: pathDate[0],
-          description: pathDate[1].join(' -> ')
+          description: prettyfyPath(pathDate[1])
         })
       }
     }
@@ -94,7 +100,7 @@ function extractJsonEntries(node) {
 }
 
 function extractCsvEntries({ items }) {
-  console.log(items) // TODO
+  // TODO
   return { items }
 }
 
@@ -124,7 +130,6 @@ async function genericDateViewer(fileManager) {
     }),
     ...csvItems.map(csv => extractCsvEntries(csv))
   ]
-  console.log(items)
   const headers = ['date', 'description']
   return { headers, items }
 }
