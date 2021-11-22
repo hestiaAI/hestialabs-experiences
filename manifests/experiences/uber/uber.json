@@ -8,10 +8,17 @@
   "data": ["uber-trips.zip"],
   "defaultView": [
     {
+      "customPipeline": "tripsGraphData",
+      "visualizations": ["Sankey.vue"],
+      "showTable": false,
+      "title": "Uber Trips",
+      "text": "Get information about the places you have visited the most or from which you originate the most."
+    },
+    {
       "customPipeline": "tripsData",
       "visualizations": ["UberOverview.vue"],
       "showTable": false,
-      "title": "Uber Trips overview",
+      "title": "Uber overview",
       "text": "Compare the prices of your Uber rides according to several factors ( Your data is grouped by currency)."
     },
     {

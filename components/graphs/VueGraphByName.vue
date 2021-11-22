@@ -38,6 +38,8 @@ export default {
     },
     isComponent() {
       switch (this.graphName) {
+        case 'Sankey.vue':
+          return () => import('@/components/graphs/Sankey.vue')
         case 'TimedObservationsViewer.vue':
           return () => import('@/components/graphs/TimedObservationsViewer.vue')
         case 'Sunburst.vue':
