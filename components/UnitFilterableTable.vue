@@ -8,6 +8,7 @@
         v-bind="{ headers: tableHeaders, items, search }"
         :hide-default-footer="disabled"
         multi-sort
+        data-testid="data-table"
       >
         <template #item.url="{ value }">
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
@@ -20,7 +21,9 @@
         @click.native="onDownload"
       />
     </div>
-    <i v-else>data in this format cannot be displayed in a table</i>
+    <i v-else data-testid="data-error"
+      >data in this format cannot be displayed in a table</i
+    >
   </div>
 </template>
 
