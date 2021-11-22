@@ -4,12 +4,15 @@
       <p>
         From
         <strong>{{ minDate }}</strong> to <strong>{{ maxDate }}</strong> we
-        <strong>{{ total }}</strong> dated events in your file(s).
+        found <strong>{{ total }}</strong> dated events in your file(s).
       </p>
     </v-row>
     <v-row>
       <v-col cols="9">
-        <p><strong>Number of dated event in your files</strong></p>
+        <p class="text-h6">Number of dated event in your files</p>
+        <p class="text-subtitle-2">
+          click and drag on the graph to select a time range
+        </p>
       </v-col>
       <v-col cols="3">
         <v-select
@@ -21,13 +24,15 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12"> <div :id="graphId"></div></v-col>
+      <v-col cols="12"><div :id="graphId"></div></v-col>
     </v-row>
     <v-row>
-      <unit-filterable-table
-        v-bind="{ data: { headers: header, items: values } }"
-        @current-items="onTableFilter"
-      />
+      <v-col cols="12">
+        <unit-filterable-table
+          v-bind="{ data: { headers: header, items: results } }"
+          @current-items="onTableFilter"
+        />
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -48,6 +53,7 @@ export default {
   },
   data() {
     return {
+      results: [],
       select: null,
       intervals: {
         Days: d3.timeDay,
@@ -65,7 +71,7 @@ export default {
       volumeGroup: null,
       graphId: 'graph_' + this._uid,
       header: [
-        { text: 'Date', value: 'date' },
+        { text: 'Date', value: 'dateStr' },
         { text: 'Description', value: 'description' }
       ]
     }
@@ -80,12 +86,14 @@ export default {
   },
   methods: {
     drawViz() {
+      const formatDate = d3.timeFormat('%B %d, %Y')
+      const formatFullDate = d3.timeFormat('%Y/%m/%d %H:%M:%S')
+      this.values.forEach(d => (d.dateStr = formatFullDate(d.date)))
+      this.results = this.values
       // Build index for crossfiltering
       const ndx = crossfilter(this.values)
       this.dateDimension = ndx.dimension(d => d.date)
       this.barChart = new dc.BarChart('#' + this.graphId)
-
-      const formatDate = d3.timeFormat('%B %d, %Y')
       this.minDate = formatDate(this.dateDimension.bottom(1)[0].date)
       this.maxDate = formatDate(this.dateDimension.top(1)[0].date)
       this.total = this.dateDimension.top(Infinity).length
@@ -99,6 +107,7 @@ export default {
             .getBoundingClientRect().width
         )
         .height(200)
+        .ordinalColors(['#58539E'])
         .x(d3.scaleTime())
         .xUnits(this.intervals[this.select].range)
         .margins({ left: 50, top: 20, right: 50, bottom: 20 })
@@ -108,6 +117,7 @@ export default {
       this.drawBarChart()
       this.barChart.on('preRender', this.calcDomain)
       this.barChart.on('preRedraw', this.calcDomain)
+      ndx.onChange(() => (this.results = ndx.allFiltered()))
       dc.renderAll()
     },
     drawBarChart() {
@@ -132,7 +142,8 @@ export default {
       chart.x().domain([min, max])
     },
     onTableFilter(items) {
-      console.log(items)
+      // TODO: Update graph
+      // console.log(items)
     }
   }
 }
