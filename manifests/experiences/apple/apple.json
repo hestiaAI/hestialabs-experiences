@@ -8,9 +8,9 @@
     {
       "customPipeline": "genericDateViewer",
       "visualizations": ["GenericDateViewer.vue"],
-      "showTable": true,
-      "title": "TODO",
-      "text": "TODO"
+      "showTable": false,
+      "title": "Explore the data collected on you",
+      "text": "In this tool you can see all the dated events that we find in your files, these dated events correspond to data that has been collected on you at or concerning a specific date."
     }
   ]
 }
