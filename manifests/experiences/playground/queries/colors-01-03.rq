@@ -1,0 +1,9 @@
+# authors: Valentin Oliver Loftsson <valentin@hestia.ai>
+PREFIX :  <http://hestia.ai/>
+
+SELECT ?name ?hex WHERE {
+    ?color a :Color .
+    ?color :name ?name .
+    ?color :hex ?hex
+    FILTER(contains(lcase(?name), "blue"))
+}

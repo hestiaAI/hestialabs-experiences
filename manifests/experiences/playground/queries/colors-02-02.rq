@@ -1,0 +1,10 @@
+# authors: Valentin Oliver Loftsson <valentin@hestia.ai>
+PREFIX :  <http://hestia.ai/>
+
+SELECT ?name ?rgb
+WHERE {
+		?color :name ?name .
+    ?color :rgb ?rgb .
+    ?color :r ?r
+    FILTER(?r > 200)
+}
