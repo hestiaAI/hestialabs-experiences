@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-select
+      v-if="displayFilters"
       v-model="selectedHeaders"
       :items="headers"
       label="Select columns to search"
@@ -29,6 +30,10 @@
 <script>
 export default {
   props: {
+    displayFilters: {
+      type: Boolean,
+      default: () => true
+    },
     headers: {
       type: Array,
       default: () => []
