@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { JSONPath } from 'jsonpath-plus'
 import _ from 'lodash'
 import * as d3 from 'd3'
@@ -6,6 +5,7 @@ import * as d3 from 'd3'
 // Define all accepted date formats
 const timeParsers = [
   d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ'),
+  d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC'),
   d3.timeParse('%Y-%m-%d'),
   d3.timeParse('%s'), // Unix seconds
   d3.timeParse('%Q') // Unix milliseconds
@@ -37,35 +37,6 @@ function getValidDate(value) {
     return false
   })
   return findDate ? date : null
-}
-
-// Traverse all the json tree and keep tracks of each path from root to leaf
-function traverseAllTree(node) {
-  function traverse(n, acc) {
-    if (n && typeof n === 'object') {
-      Object.keys(n).forEach(function (k) {
-        traverse(n[k], acc.concat(k))
-      })
-      return
-    }
-    path[acc.join(' -> ')] = n
-  }
-  const path = {}
-  traverse(node, [])
-  return path
-}
-
-// Try to extract a valid date from a list of values,
-// starting from end of list
-function extractLastDate(list) {
-  const description = list.reverse()
-  let date = null
-  const idx = description.findIndex(p => {
-    date = getValidDate(p)
-    return date !== null
-  })
-  description.splice(idx, 1)
-  return [date, description.reverse()]
 }
 
 function isObject(obj) {
@@ -127,15 +98,18 @@ function extractCsvEntries({ items }) {
   return items.flatMap(item => {
     const entries = Object.entries(item).map(([k, v]) => {
       const date = getValidDate(v)
-      return date ? { date } : { description: `${_.startCase(k)} : ${v}` }
+      return date
+        ? { date, description: `${_.startCase(k)}` }
+        : { description: `${_.startCase(k)} : ${v}` }
     })
-    console.log(entries)
     const [dates, rest] = _.partition(entries, o => Object.hasOwn(o, 'date'))
-    const rowDescription = `[${rest
-      .map(({ description }) => description)
-      .join(', ')}]`
-    console.log(dates)
-    return dates.map(o => ({ ...o, description: rowDescription }))
+    return dates.map((obj, i) => {
+      const otherDates = dates.filter((_, j) => j !== i)
+      const description = `${obj.description} : [${[...rest, ...otherDates]
+        .map(({ description }) => description)
+        .join(', ')}]`
+      return { ...obj, description }
+    })
   })
 }
 
@@ -144,13 +118,18 @@ async function genericDateViewer(fileManager) {
 
   const csvFilenames = filenames.filter(name => name.endsWith('.csv'))
   const csvItems = await Promise.all(
-    csvFilenames.map(async name => await fileManager.getCsvItems(name))
+    csvFilenames.map(async name => [name, await fileManager.getCsvItems(name)])
   )
 
   const jsonFilenames = filenames.filter(name => name.endsWith('.json'))
   const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
 
-  const csvEntries = csvItems.map(csv => extractCsvEntries(csv))
+  const csvEntries = csvItems.flatMap(([name, csv]) =>
+    extractCsvEntries(csv).map(o => ({
+      ...o,
+      description: `${name} > ${o.description}`
+    }))
+  )
   const jsonEntries = Object.entries(jsonTexts).flatMap(([name, json]) => {
     try {
       return extractJsonEntries(JSON.parse(json)).map(o => ({
