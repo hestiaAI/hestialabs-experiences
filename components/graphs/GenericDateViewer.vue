@@ -1,18 +1,17 @@
 <template>
   <v-container>
-    <v-row>
-      <p>
-        From
-        <strong>{{ currMinDate }}</strong> to
-        <strong>{{ currMaxDate }}</strong> we found
-        <strong>{{ total }}</strong> dated events in your file(s).
-      </p>
-    </v-row>
+    <p v-if="total !== 0">
+      From
+      <strong>{{ currMinDate }}</strong> to
+      <strong>{{ currMaxDate }}</strong> we found
+      <strong>{{ total }}</strong> dated events in your file(s).
+    </p>
+    <p v-if="total === 0">No dated events were found in your file(s).</p>
     <v-row>
       <v-col cols="9">
         <p class="text-h6">Number of dated event in your files</p>
         <p class="text-subtitle-2">
-          click and drag on the graph to select a time range
+          (click and drag on the graph to select a time range)
         </p>
       </v-col>
       <v-col cols="3">
