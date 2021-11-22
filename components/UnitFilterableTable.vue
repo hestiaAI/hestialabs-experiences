@@ -10,6 +10,7 @@
       />
       <v-data-table
         v-bind="{ headers: tableHeaders, items, search }"
+        ref="tableRef"
         :hide-default-footer="disabled"
         multi-sort
         @current-items="onItemsUpdate"
@@ -119,8 +120,16 @@ export default {
       }))
       this.search = searchValue
     },
-    onItemsUpdate(currentItems) {
-      this.$emit('current-items', currentItems)
+    onItemsUpdate() {
+      // wait until the DOM has completely updated
+      this.$nextTick(() => {
+        // emit the current filtered items
+        this.$emit(
+          'current-items',
+          // workaround to get the filtered items https://github.com/vuetifyjs/vuetify/issues/8731#issuecomment-617399086
+          this.$refs.tableRef.$children[0].filteredItems
+        )
+      })
     }
   }
 }
