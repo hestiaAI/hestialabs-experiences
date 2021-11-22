@@ -68,40 +68,75 @@ function extractLastDate(list) {
   return [date, description.reverse()]
 }
 
-function prettyfyPath(pathList) {
-  return pathList
-    .map(e => {
-      const ep = e.replaceAll('_', ' ')
-      return ep.charAt(0).toUpperCase() + ep.slice(1)
-    })
-    .join(' -> ')
+function isObject(obj) {
+  return Object.prototype.toString.call(obj) === '[object Object]'
 }
 // Transform a json object to a list of dated events
-function extractJsonEntries(node) {
-  const allPath = traverseAllTree(node)
-  const result = []
-  Object.entries(allPath).forEach(([path, value]) => {
-    const pathList = path.split(' -> ')
-    const leafDate = getValidDate(value)
-    if (leafDate !== null) {
-      result.push({ date: leafDate, description: prettyfyPath(pathList) })
+function extractJsonEntries(json) {
+  function recurse(node) {
+    if (isObject(node)) {
+      const entries = Object.entries(node).flatMap(([k, v]) => {
+        const kDate = getValidDate(k)
+        const kPretty = _.startCase(k)
+        // The value is not a leaf node
+        if (typeof v === 'object') {
+          const inner = recurse(v)
+          if (!kDate) {
+            return inner.map(o =>
+              o.description
+                ? { ...o, description: `${kPretty} > ${o.description}` }
+                : o
+            )
+          } else {
+            return inner.map(o => (o.date ? o : { ...o, date: kDate }))
+          }
+        } else {
+          const vDate = getValidDate(v)
+          // If both key and value contain dates, use key date as description
+          if (kDate && vDate) return [{ date: vDate, description: `${k}` }]
+          if (!kDate && vDate) return [{ date: vDate }]
+          if (kDate && !vDate) return [{ date: kDate, description: `${v}` }]
+          return [{ description: `${kPretty} : ${v}` }]
+        }
+      })
+      const [dates, rest] = _.partition(entries, o => Object.hasOwn(o, 'date'))
+      const [describedDates, undescribedDates] = _.partition(dates, o =>
+        Object.hasOwn(o, 'description')
+      )
+      const levelDescription = `[${rest
+        .map(({ description }) => description)
+        .join(', ')}]`
+      const possiblyDescribedDates =
+        rest.length > 0
+          ? undescribedDates.map(o => ({ ...o, description: levelDescription }))
+          : undescribedDates
+      return [...describedDates, ...possiblyDescribedDates]
+    } else if (Array.isArray(node)) {
+      // Array
+      return node.flatMap(el => recurse(el))
     } else {
-      const pathDate = extractLastDate(pathList)
-      if (pathDate[0] !== null) {
-        pathDate[1].push(value)
-        result.push({
-          date: pathDate[0],
-          description: prettyfyPath(pathDate[1])
-        })
-      }
+      // we should never enter here
+      console.log('Error: found leaf in JSON date extractor')
+      return []
     }
-  })
-  return result
+  }
+  return recurse(json).filter(o => Object.hasOwn(o, 'date'))
 }
 
 function extractCsvEntries({ items }) {
-  // TODO
-  return { items }
+  return items.flatMap(item => {
+    const entries = Object.entries(item).map(([k, v]) => {
+      const date = getValidDate(v)
+      return date ? { date } : { description: `${_.startCase(k)} : ${v}` }
+    })
+    console.log(entries)
+    const [dates, rest] = _.partition(entries, o => Object.hasOwn(o, 'date'))
+    const rowDescription = `[${rest
+      .map(({ description }) => description)
+      .join(', ')}]`
+    console.log(dates)
+    return dates.map(o => ({ ...o, description: rowDescription }))
+  })
 }
 
 async function genericDateViewer(fileManager) {
@@ -115,21 +150,20 @@ async function genericDateViewer(fileManager) {
   const jsonFilenames = filenames.filter(name => name.endsWith('.json'))
   const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
 
-  const items = [
-    ...Object.entries(jsonTexts).flatMap(([name, json]) => {
-      try {
-        return extractJsonEntries(JSON.parse(json)).map(o => ({
-          ...o,
-          description: `${name} -> ${o.description}`
-        }))
-      } catch (e) {
-        console.error(e)
-        // TODO
-        return []
-      }
-    }),
-    ...csvItems.map(csv => extractCsvEntries(csv))
-  ]
+  const csvEntries = csvItems.map(csv => extractCsvEntries(csv))
+  const jsonEntries = Object.entries(jsonTexts).flatMap(([name, json]) => {
+    try {
+      return extractJsonEntries(JSON.parse(json)).map(o => ({
+        ...o,
+        description: `${name} > ${o.description}`
+      }))
+    } catch (e) {
+      console.error(e)
+      // TODO
+      return []
+    }
+  })
+  const items = [...jsonEntries, ...csvEntries]
   const headers = ['date', 'description']
   return { headers, items }
 }
