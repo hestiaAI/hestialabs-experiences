@@ -8,5 +8,17 @@
       "@@/*": ["./*"]
     }
   },
-  "exclude": ["node_modules", ".nuxt", "dist"]
+  "exclude": [
+    ".github",
+    ".husky",
+    ".nuxt",
+    ".vscode",
+    "assets",
+    "config",
+    "dist",
+    "manifests/icons",
+    "node_modules",
+    "static",
+    "vega-examples",
+  ]
 }

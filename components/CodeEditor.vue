@@ -1,20 +1,20 @@
 <template>
   <client-only placeholder="Loading...">
-    <ace-editor
+    <AceEditor
       v-model="code"
       :lang="editorLanguage"
       theme="monokai"
       height="500"
       class="my-ace-editor my-6"
       @init="initEditor"
-    ></ace-editor>
+    ></AceEditor>
   </client-only>
 </template>
 
 <script>
 export default {
   components: {
-    AceEditor: require('vue2-ace-editor')
+    AceEditor: () => import('vue2-ace-editor')
   },
   inheritAttrs: false,
   props: {

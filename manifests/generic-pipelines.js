@@ -87,7 +87,7 @@ function extractJsonEntries(json) {
       return node.flatMap(el => recurse(el))
     } else {
       // we should never enter here
-      console.log('Error: found leaf in JSON date extractor')
+      console.error('Error: found leaf in JSON date extractor')
       return []
     }
   }

@@ -1,5 +1,5 @@
 <template>
-  <v-switch v-model="model" inset label="Advanced view" hide-details />
+  <VSwitch v-model="model" inset label="Advanced view" hide-details />
 </template>
 
 <script>

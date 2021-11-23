@@ -1,12 +1,12 @@
 <template>
-  <v-container fluid>
-    <v-row align="center" justify="center" class="flex-column">
+  <VContainer fluid>
+    <VRow align="center" justify="center" class="flex-column">
       <h1 class="h1">{{ title }}</h1>
-      <logo-img max-width="300" class="my-12" />
+      <LogoImg max-width="300" class="my-12" />
 
-      <base-button nuxt to="/" icon="mdiHome" text="Home page" />
-    </v-row>
-  </v-container>
+      <BaseButton nuxt to="/" icon="mdiHome" text="Home page" />
+    </VRow>
+  </VContainer>
 </template>
 
 <script>

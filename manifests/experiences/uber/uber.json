@@ -9,21 +9,21 @@
   "defaultView": [
     {
       "customPipeline": "tripsGraphData",
-      "visualizations": ["Sankey.vue"],
+      "visualizations": ["ChartViewSankey.vue"],
       "showTable": false,
       "title": "Uber Trips",
       "text": "Get information about the places you have visited the most or from which you originate the most."
     },
     {
       "customPipeline": "tripsData",
-      "visualizations": ["UberOverview.vue"],
+      "visualizations": ["ChartViewOverviewUber.vue"],
       "showTable": false,
       "title": "Uber overview",
       "text": "Compare the prices of your Uber rides according to several factors ( Your data is grouped by currency)."
     },
     {
       "customPipeline": "genericDateViewer",
-      "visualizations": ["GenericDateViewer.vue"],
+      "visualizations": ["ChartViewGenericDateViewer.vue"],
       "showTable": false,
       "title": "Dated observations",
       "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."

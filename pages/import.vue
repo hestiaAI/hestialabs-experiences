@@ -5,29 +5,29 @@
       This step only needs to be done once. Copy the public key in the config
       and store the secret key in a safe place.
     </p>
-    <base-button text="Generate keys" @click="generateKeys" />
+    <BaseButton text="Generate keys" @click="generateKeys" />
 
     <h2 class="mt-6">Import</h2>
     <p>
       Either provide a plaintext ZIP, or an encrypted ZIP along with the
       corresponding secret key.
     </p>
-    <v-file-input
+    <VFileInput
       v-model="inputZIP"
       label="Encrypted or plaintext ZIP file"
-    ></v-file-input>
-    <v-checkbox v-model="decrypt" label="Decrypt"></v-checkbox>
-    <v-file-input
+    ></VFileInput>
+    <VCheckbox v-model="decrypt" label="Decrypt"></VCheckbox>
+    <VFileInput
       v-model="secretKey"
       label="Secret Key"
       :disabled="!decrypt"
-    ></v-file-input>
-    <base-button
+    ></VFileInput>
+    <BaseButton
       text="Import"
       v-bind="{ status, error, progress, disabled: !inputZIP }"
       @click="importZIP"
     />
-    <base-data-download-button
+    <BaseButtonDownloadData
       :data="outputZIP"
       extension="zip"
       text="Download plaintext"
@@ -35,79 +35,79 @@
     />
     <p v-if="error">{{ message }}</p>
     <template v-if="status && !error">
-      <v-card class="pa-2 my-6">
+      <VCard class="pa-2 my-6">
         <!-- Experience details -->
-        <v-card-title class="justify-center">Experience Details</v-card-title>
-        <v-list-item two-line>
-          <v-list-item-content>
-            <v-list-item-title>Experience</v-list-item-title>
-            <v-list-item-subtitle>{{ experience.key }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item two-line>
-          <v-list-item-content>
-            <v-list-item-title>Date</v-list-item-title>
-            <v-list-item-subtitle>{{
+        <VCardTitle class="justify-center">Experience Details</VCardTitle>
+        <VListItem two-line>
+          <VListItemContent>
+            <VListItemTitle>Experience</VListItemTitle>
+            <VListItemSubtitle>{{ experience.key }}</VListItemSubtitle>
+          </VListItemContent>
+        </VListItem>
+        <VListItem two-line>
+          <VListItemContent>
+            <VListItemTitle>Date</VListItemTitle>
+            <VListItemSubtitle>{{
               new Date(experience.timestamp)
-            }}</v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-      </v-card>
+            }}</VListItemSubtitle>
+          </VListItemContent>
+        </VListItem>
+      </VCard>
 
       <!-- Consent log -->
-      <v-card class="pa-2 my-6">
-        <v-card-title class="justify-center">Consent Log</v-card-title>
-        <v-card-text>
-          <unit-consent-form-section
+      <VCard class="pa-2 my-6">
+        <VCardTitle class="justify-center">Consent Log</VCardTitle>
+        <VCardText>
+          <UnitConsentFormSection
             v-for="(section, index) in consent"
             :key="`section-${index}`"
             v-bind="{ section, index, readonly: true }"
           />
-        </v-card-text>
-      </v-card>
+        </VCardText>
+      </VCard>
 
       <!-- Results -->
-      <v-card
+      <VCard
         v-for="(result, resultIndex) in results"
         :key="resultIndex"
         class="pa-2 my-6"
       >
-        <v-card-title class="justify-center">{{ result.title }}</v-card-title>
-        <v-row>
-          <v-col
+        <VCardTitle class="justify-center">{{ result.title }}</VCardTitle>
+        <VRow>
+          <VCol
             v-for="(specFile, vegaIndex) in allVegaFiles[resultIndex]"
             :key="vegaIndex"
             style="text-align: center"
           >
-            <unit-vega-viz
+            <UnitVegaViz
               :spec-file="specFile"
               :data="result.result"
               :div-id="`viz-${resultIndex}-${vegaIndex}`"
             />
-          </v-col>
-        </v-row>
-        <v-row
+          </VCol>
+        </VRow>
+        <VRow
           v-for="(graphName, vizVueIndex) in allVueGraphNames[resultIndex]"
           :key="`viz-${resultIndex}-${vizVueIndex}`"
         >
-          <v-col>
-            <vue-graph-by-name :graph-name="graphName" :data="result.result" />
-          </v-col>
-        </v-row>
-        <v-row
+          <VCol>
+            <ChartView :graph-name="graphName" :data="result.result" />
+          </VCol>
+        </VRow>
+        <VRow
           v-for="(src, vizUrlIndex) in allVizUrls[resultIndex]"
           :key="'viz-url-' + vizUrlIndex"
         >
-          <v-col>
-            <unit-iframe :src="src" :data="result.result" />
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <unit-filterable-table :data="result.result" />
-          </v-col>
-        </v-row>
-      </v-card>
+          <VCol>
+            <UnitIframe :src="src" :data="result.result" />
+          </VCol>
+        </VRow>
+        <VRow>
+          <VCol>
+            <UnitFilterableTable :data="result.result" />
+          </VCol>
+        </VRow>
+      </VCard>
     </template>
   </div>
 </template>
@@ -116,12 +116,9 @@
 import JSZip from 'jszip'
 import FileSaver from 'file-saver'
 
-import UnitFilterableTable from '~/components/UnitFilterableTable'
-
 const _sodium = require('libsodium-wrappers')
 
 export default {
-  components: { UnitFilterableTable },
   data() {
     return {
       secretKey: null,

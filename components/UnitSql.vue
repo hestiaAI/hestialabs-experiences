@@ -1,26 +1,26 @@
 <template>
-  <v-container>
-    <v-row v-if="parameterName">
-      <v-col cols="4" class="mx-auto">
-        <v-text-field
+  <VContainer>
+    <VRow v-if="parameterName">
+      <VCol cols="4" class="mx-auto">
+        <VTextField
           v-model="parameter"
           :label="parameterName"
           class="my-sm-2 mr-sm-2"
-        ></v-text-field>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col align="center">
-        <base-button
+        ></VTextField>
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol align="center">
+        <BaseButton
           v-bind="{ progress, status, error, disabled }"
           text="Run"
           icon="mdiStepForward"
           class="ma-sm-2"
           @click="runQuery"
         />
-      </v-col>
-    </v-row>
-  </v-container>
+      </VCol>
+    </VRow>
+  </VContainer>
 </template>
 
 <script>

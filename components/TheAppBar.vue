@@ -1,21 +1,21 @@
 <template>
   <div>
-    <v-app-bar fixed app color="white" height="75" style="z-index: 2000">
-      <v-app-bar-nav-icon
+    <VAppBar fixed app color="white" height="75" style="z-index: 2000">
+      <VAppBarNavIcon
         aria-label="Open navigation menu"
         @click.stop="drawer = !drawer"
       />
-      <v-toolbar-title class="d-flex align-center">
-        <v-btn icon to="/" class="v-btn__home mr-0 mr-sm-4" color="primary">
-          <v-icon>$vuetify.icons.mdiHome</v-icon>
-        </v-btn>
+      <VToolbarTitle class="d-flex align-center">
+        <VBtn icon to="/" class="v-btn__home mr-0 mr-sm-4" color="primary">
+          <VIcon>$vuetify.icons.mdiHome</VIcon>
+        </VBtn>
         <a
           href="https://hestialabs.org/"
           target="_blank"
           rel="noreferrer noopener"
           class="ml-2"
         >
-          <logo-img class="mr-5" width="100" />
+          <LogoImg class="mr-5" width="100" />
         </a>
 
         <template v-if="collaborator">
@@ -25,7 +25,7 @@
             rel="noreferrer noopener"
             class="ml-2"
           >
-            <v-img
+            <VImg
               :src="collaborator.icon"
               :lazy-src="collaborator.icon"
               :alt="collaborator.title"
@@ -34,9 +34,9 @@
             />
           </a>
         </template>
-      </v-toolbar-title>
-    </v-app-bar>
-    <v-navigation-drawer
+      </VToolbarTitle>
+    </VAppBar>
+    <VNavigationDrawer
       v-model="drawer"
       app
       temporary
@@ -46,38 +46,36 @@
     >
       <template #prepend>
         <div class="d-flex justify-space-between align-center">
-          <v-btn icon to="/">
-            <v-icon>$vuetify.icons.mdiHome</v-icon>
-          </v-btn>
-          <v-btn icon @click="drawer = false">
-            <v-icon>$vuetify.icons.mdiClose</v-icon>
-          </v-btn>
+          <VBtn icon to="/">
+            <VIcon>$vuetify.icons.mdiHome</VIcon>
+          </VBtn>
+          <VBtn icon @click="drawer = false">
+            <VIcon>$vuetify.icons.mdiClose</VIcon>
+          </VBtn>
         </div>
       </template>
       <template #append>
-        <mode-switch />
+        <ModeSwitch />
       </template>
       <div class="mt-6">
-        <logo-img width="250" />
-        <the-data-experience-list />
+        <LogoImg width="250" />
+        <TheExperienceMenu />
       </div>
-    </v-navigation-drawer>
+    </VNavigationDrawer>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import TheDataExperienceList from '~/components/TheDataExperienceList'
 
 export default {
-  components: { TheDataExperienceList },
   data() {
     return {
       drawer: false
     }
   },
   computed: {
-    ...mapGetters(['manifest', 'enabledExperiences', 'disabledExperiences']),
+    ...mapGetters(['manifest']),
     collaborator() {
       return this.manifest(this.$route).collaborator
     }

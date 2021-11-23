@@ -1,15 +1,15 @@
 <template>
   <!-- avoid double margin: we're already in a container -->
-  <v-container class="ma-n3">
-    <v-row class="no-gutters">
-      <v-col>
+  <VContainer class="ma-n3">
+    <VRow class="no-gutters">
+      <VCol>
         <div class="d-flex">
-          <v-img max-width="50" :src="m.icon" :lazy-src="m.icon" contain />
+          <VImg max-width="50" :src="m.icon" :lazy-src="m.icon" contain />
           <h1 class="ml-3">{{ m.title }}</h1>
         </div>
         <p class="subtitle-1 mt-4">
           {{ m.subtitle }}
-          <FacebookShareButton
+          <ShareButtonFacebook
             :url="baseUrl + $route.path"
             :title="`${appName}: ${m.title}`"
             :quote="description"
@@ -17,7 +17,7 @@
             hashtags="hestialabs"
             class="my-2 ml-4"
           />
-          <TwitterShareButton
+          <ShareButtonTwitter
             :url="baseUrl + $route.path"
             :title="description"
             :hashtags="hashtags"
@@ -25,10 +25,10 @@
             class="my-2 ml-2"
           />
         </p>
-      </v-col>
-    </v-row>
-    <the-data-experience v-if="m.rest" v-bind="m.rest" />
-  </v-container>
+      </VCol>
+    </VRow>
+    <TheDataExperience v-if="m.rest" v-bind="m.rest" />
+  </VContainer>
 </template>
 
 <script>
