@@ -78,7 +78,7 @@ export default {
     }
   },
   watch: {
-    values(oldValues) {
+    values() {
       this.drawViz()
     }
   },

@@ -6,8 +6,17 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 function isDataValid(data) {
-  return !data || !!(data.items?.length > 0)
+  return (
+    _.each(
+      ['items', 'headers'],
+      field => _.has(data, field) && Array.isArray(data[field])
+    ) &&
+    data.headers.length > 0 &&
+    _.each(data.items, i => _.each(data.headers, h => _.has(i, h)))
+  )
 }
 
 export default {
