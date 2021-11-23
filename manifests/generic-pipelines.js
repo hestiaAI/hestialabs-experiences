@@ -6,6 +6,7 @@ import * as d3 from 'd3'
 const timeParsers = [
   d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ'),
   d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC'),
+  d3.timeParse('%Y-%m-%d %H:%M:%S'),
   d3.timeParse('%Y-%m-%d'),
   d3.timeParse('%s'), // Unix seconds
   d3.timeParse('%Q') // Unix milliseconds
@@ -121,7 +122,7 @@ async function genericDateViewer(fileManager) {
     csvFilenames.map(async name => [name, await fileManager.getCsvItems(name)])
   )
 
-  const jsonFilenames = filenames.filter(name => name.endsWith('.json'))
+  const jsonFilenames = filenames.filter(name => /\.js(:?on)?$/.test(name))
   const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
 
   const csvEntries = csvItems.flatMap(([name, csv]) =>
