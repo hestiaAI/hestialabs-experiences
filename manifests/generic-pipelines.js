@@ -56,11 +56,12 @@ function extractJsonEntries(json) {
         if (typeof v === 'object') {
           const inner = recurse(v)
           if (!kDate) {
-            return inner.map(o =>
-              o.description
-                ? { ...o, description: `${kPretty} > ${o.description}` }
-                : o
-            )
+            return inner.map(o => ({
+              ...o,
+              description: `${kPretty}${
+                o.description ? ` > ${o.description}` : ''
+              }`
+            }))
           } else {
             return inner.map(o => (o.date ? o : { ...o, date: kDate }))
           }
@@ -68,14 +69,15 @@ function extractJsonEntries(json) {
           const vDate = getValidDate(v)
           // If both key and value contain dates, use key date as description
           if (kDate && vDate) return [{ date: vDate, description: `${k}` }]
-          if (!kDate && vDate) return [{ date: vDate }]
+          if (!kDate && vDate) return [{ date: vDate, description: '' }]
           if (kDate && !vDate) return [{ date: kDate, description: `${v}` }]
           return [{ description: `${kPretty} : ${v}` }]
         }
       })
       const [dates, rest] = _.partition(entries, o => _.has(o, 'date'))
-      const [describedDates, undescribedDates] = _.partition(dates, o =>
-        _.has(o, 'description')
+      const [describedDates, undescribedDates] = _.partition(
+        dates,
+        ({ description }) => description
       )
       const levelDescription = `[${rest
         .map(({ description }) => description)
@@ -140,7 +142,6 @@ async function genericDateViewer(fileManager) {
       }))
     } catch (e) {
       console.error(e)
-      // TODO
       return []
     }
   })
