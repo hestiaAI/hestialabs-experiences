@@ -70,7 +70,7 @@
         "Google Actualités": ["consulté", "recherché"],
         "Gmail" : ["recherché"],
         "Drive" : ["téléchargement groupé", "recherché"],
-        "Google Pay" : ["paiement sans contact qui a échoué", "paiement sans contact", "utilisé"],
+        "Google Pay" : ["paiement sans contact qui a échoué", "paiement sans contact", "utilisé"],
         "Takeout": ["téléchargé une archive Takeout", "lancé une opération"]
       },
       "fi": {

@@ -26,7 +26,7 @@ function groupSimilarEventValues(events) {
     )
     if (suffix.includes(' ') || prefix.includes(' ')) {
       events
-        .filter(e => !Object.hasOwn(e, 'matched'))
+        .filter(e => !_.has(e, 'matched'))
         .forEach(e => {
           if (regex.test(e.eventValue)) {
             e.eventValue = e.eventValue.match(regex)[1]

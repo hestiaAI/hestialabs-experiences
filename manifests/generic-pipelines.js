@@ -70,9 +70,9 @@ function extractJsonEntries(json) {
           return [{ description: `${kPretty} : ${v}` }]
         }
       })
-      const [dates, rest] = _.partition(entries, o => Object.hasOwn(o, 'date'))
+      const [dates, rest] = _.partition(entries, o => _.has(o, 'date'))
       const [describedDates, undescribedDates] = _.partition(dates, o =>
-        Object.hasOwn(o, 'description')
+        _.has(o, 'description')
       )
       const levelDescription = `[${rest
         .map(({ description }) => description)
@@ -91,7 +91,7 @@ function extractJsonEntries(json) {
       return []
     }
   }
-  return recurse(json).filter(o => Object.hasOwn(o, 'date'))
+  return recurse(json).filter(o => _.has(o, 'date'))
 }
 
 function extractCsvEntries({ items }) {
@@ -102,7 +102,7 @@ function extractCsvEntries({ items }) {
         ? { date, description: `${_.startCase(k)}` }
         : { description: `${_.startCase(k)} : ${v}` }
     })
-    const [dates, rest] = _.partition(entries, o => Object.hasOwn(o, 'date'))
+    const [dates, rest] = _.partition(entries, o => _.has(o, 'date'))
     return dates.map((obj, i) => {
       const otherDates = dates.filter((_, j) => j !== i)
       const description = `${obj.description} : [${[...rest, ...otherDates]
