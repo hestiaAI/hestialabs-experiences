@@ -30,7 +30,7 @@ function getValidDate(value) {
       date.getFullYear() < validYearMax
     ) {
       // Reorder timeParsers array to save complexity
-      if (!idx !== 0) {
+      if (idx !== 0) {
         timeParsers.splice(idx, 1)
         timeParsers.splice(0, 0, parser)
       }

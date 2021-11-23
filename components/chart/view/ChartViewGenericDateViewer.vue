@@ -99,7 +99,7 @@ export default {
       const diffDays = d3.timeDay.count(this.minDate, this.maxDate)
       if (diffDays < 100) this.select = 'Days'
       else if (diffDays < 1000) this.select = 'Weeks'
-      else if (diffDays < 5000) this.select = 'Months'
+      else if (diffDays < 3600) this.select = 'Months'
       else this.select = 'Years'
 
       this.barChart
