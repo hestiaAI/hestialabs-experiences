@@ -1,4 +1,4 @@
-import { identity } from 'lodash'
+import _ from 'lodash'
 
 import allPreprocessors from './preprocessors'
 import allParsers from './parsers'
@@ -119,7 +119,7 @@ const manifests = Object.fromEntries(
       throw new Error('the explorer experience must show the data explorer')
     }
 
-    if (Object.hasOwn(timedObservationsViewer, 'fileMatchers')) {
+    if (_.has(timedObservationsViewer, 'fileMatchers')) {
       timedObservationsViewer.fileMatchers.forEach(m => {
         try {
           m.regex = new RegExp(m.regex)
@@ -128,7 +128,7 @@ const manifests = Object.fromEntries(
         }
       })
     }
-    if (Object.hasOwn(timedObservationsViewer, 'parser')) {
+    if (_.has(timedObservationsViewer, 'parser')) {
       const parser = timedObservationsViewer.parser
       if (parser in allParsers) {
         timedObservationsViewer.parser = allParsers[parser]
@@ -136,7 +136,7 @@ const manifests = Object.fromEntries(
         throw new Error(`The parser ${parser} doesn't exist`)
       }
     } else {
-      timedObservationsViewer.parser = identity
+      timedObservationsViewer.parser = _.identity
     }
     const module = require(`./experiences/${dir}/`)
 

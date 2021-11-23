@@ -11,7 +11,7 @@ import {
   mdiTextBoxOutline,
   mdiXml
 } from '@mdi/js'
-import { identity } from 'lodash/util'
+import _ from 'lodash'
 import getCsvHeadersAndItems from '~/utils/csv'
 import itemifyJSON from '~/utils/json'
 
@@ -163,13 +163,13 @@ export default class FileManager {
    * @returns {*|(function(*): *)}
    */
   getPreprocessor(filePath) {
-    return Object.hasOwn(this.preprocessors, filePath)
+    return _.has(this.preprocessors, filePath)
       ? this.preprocessors[filePath]
-      : identity
+      : _.identity
   }
 
   hasFile(filePath) {
-    return Object.hasOwn(this.fileDict, filePath)
+    return _.has(this.fileDict, filePath)
   }
 
   /**
@@ -184,7 +184,7 @@ export default class FileManager {
       }
       throw new Error(`The file ${filePath} was not provided.`)
     }
-    if (!Object.hasOwn(this.#fileTexts, filePath)) {
+    if (!_.has(this.#fileTexts, filePath)) {
       this.#fileTexts[filePath] = await this.fileDict[filePath].text()
     }
     return this.#fileTexts[filePath]
@@ -196,7 +196,7 @@ export default class FileManager {
    * @returns {Promise<String>}
    */
   async getPreprocessedText(filePath) {
-    if (!Object.hasOwn(this.#preprocessedTexts, filePath)) {
+    if (!_.has(this.#preprocessedTexts, filePath)) {
       const text = await this.getText(filePath)
       if (text === '' && this.allowMissingFiles) {
         this.#preprocessedTexts[filePath] = text
@@ -214,7 +214,7 @@ export default class FileManager {
    * @returns {Promise<String>}
    */
   async getCsvItems(filePath) {
-    if (!Object.hasOwn(this.#csvItems, filePath)) {
+    if (!_.has(this.#csvItems, filePath)) {
       const text = await this.getPreprocessedText(filePath)
       this.#csvItems[filePath] = await getCsvHeadersAndItems(text)
     }
@@ -227,7 +227,7 @@ export default class FileManager {
    * @returns {Promise<String>}
    */
   async getJsonItems(filePath) {
-    if (!Object.hasOwn(this.#jsonItems, filePath)) {
+    if (!_.has(this.#jsonItems, filePath)) {
       const text = await this.getPreprocessedText(filePath)
       this.#jsonItems[filePath] = itemifyJSON(text)
     }
@@ -239,16 +239,16 @@ export default class FileManager {
    * @param {String} filePath
    */
   freeFile(filePath) {
-    if (Object.hasOwn(this.#fileTexts, filePath)) {
+    if (_.has(this.#fileTexts, filePath)) {
       delete this.#fileTexts[filePath]
     }
-    if (Object.hasOwn(this.#preprocessedTexts, filePath)) {
+    if (_.has(this.#preprocessedTexts, filePath)) {
       delete this.#preprocessedTexts[filePath]
     }
-    if (Object.hasOwn(this.#csvItems, filePath)) {
+    if (_.has(this.#csvItems, filePath)) {
       delete this.#csvItems[filePath]
     }
-    if (Object.hasOwn(this.#jsonItems, filePath)) {
+    if (_.has(this.#jsonItems, filePath)) {
       delete this.#jsonItems[filePath]
     }
   }
