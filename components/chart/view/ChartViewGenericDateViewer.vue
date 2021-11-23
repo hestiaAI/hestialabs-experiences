@@ -72,6 +72,7 @@ export default {
       volumeGroup: null,
       graphId: 'graph_' + this._uid,
       header: [
+        { text: 'File name', value: 'filename' },
         { text: 'Date', value: 'dateStr' },
         { text: 'Description', value: 'description' }
       ]

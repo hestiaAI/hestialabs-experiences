@@ -39,7 +39,6 @@ function getValidDate(value) {
   })
   return findDate ? date : null
 }
-
 function isObject(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]'
 }
@@ -85,7 +84,9 @@ function extractJsonEntries(json) {
       return [...describedDates, ...possiblyDescribedDates]
     } else if (Array.isArray(node)) {
       // Array
-      return node.flatMap(el => (typeof el === 'object' ? recurse(el) : el))
+      return node.flatMap(el =>
+        typeof el === 'object' ? recurse(el) : { description: `${el}` }
+      )
     } else {
       // we should never enter here
       console.error('Error: found leaf in JSON date extractor')
@@ -126,16 +127,13 @@ async function genericDateViewer(fileManager) {
   const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
 
   const csvEntries = csvItems.flatMap(([name, csv]) =>
-    extractCsvEntries(csv).map(o => ({
-      ...o,
-      description: `${name} > ${o.description}`
-    }))
+    extractCsvEntries(csv).map(o => ({ ...o, filename: name }))
   )
   const jsonEntries = Object.entries(jsonTexts).flatMap(([name, json]) => {
     try {
       return extractJsonEntries(JSON.parse(json)).map(o => ({
         ...o,
-        description: `${name} > ${o.description}`
+        filename: name
       }))
     } catch (e) {
       console.error(e)
@@ -144,7 +142,7 @@ async function genericDateViewer(fileManager) {
     }
   })
   const items = [...jsonEntries, ...csvEntries]
-  const headers = ['date', 'description']
+  const headers = ['date', 'description', 'filename']
   return { headers, items }
 }
 
