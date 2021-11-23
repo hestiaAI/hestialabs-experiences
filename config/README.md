@@ -8,11 +8,6 @@ This directory contains the configuration files linked to each deployement. They
     */
   "experiences": ["facebook", "google", "twitter"],
   /**
-    * Activate/deactivate the automatic local saving of data files, and show/hide the "cache" buttons.
-    * @type Boolean
-    */
-  "saveFiles": false,
-  /**
     * The public key used to encrypt the zip containing the consent log and results.
     * @type String
     */
