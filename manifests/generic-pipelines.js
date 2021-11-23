@@ -4,9 +4,11 @@ import * as d3 from 'd3'
 
 // Define all accepted date formats
 const timeParsers = [
+  d3.timeParse('%Y-%m-%dT%H:%M:%SZ'),
   d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ'),
   d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC'),
   d3.timeParse('%Y-%m-%d'),
+  d3.timeParse('%Y/%m/%d %H:%M:%S'),
   d3.timeParse('%s'), // Unix seconds
   d3.timeParse('%Q') // Unix milliseconds
 ]
@@ -87,7 +89,7 @@ function extractJsonEntries(json) {
       return node.flatMap(el => recurse(el))
     } else {
       // we should never enter here
-      console.error('Error: found leaf in JSON date extractor')
+      console.error('Error: found leaf in JSON date extractor: ', node)
       return []
     }
   }

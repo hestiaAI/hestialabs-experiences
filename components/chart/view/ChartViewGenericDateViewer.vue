@@ -1,12 +1,14 @@
 <template>
-  <VContainer>
-    <p v-if="total !== 0">
+  <VContainer v-if="values.length > 0">
+    <p v-if="total === 0 && !currMinDate && !currMaxDate">
+      No dated events were found in your file(s).
+    </p>
+    <p v-else>
       From
       <strong>{{ currMinDate }}</strong> to
       <strong>{{ currMaxDate }}</strong> we found
       <strong>{{ total }}</strong> dated events in your file(s).
     </p>
-    <p v-if="total === 0">No dated events were found in your file(s).</p>
     <VRow>
       <VCol cols="9">
         <p class="text-h6">Number of dated event in your files</p>
@@ -35,21 +37,19 @@
       </VCol>
     </VRow>
   </VContainer>
+  <VContainer v-else>
+    <p class="text-center">No relevant data found</p>
+  </VContainer>
 </template>
 
 <script>
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
+import mixin from './mixin'
 
 export default {
-  name: 'ChartViewGenericDateViewer',
-  props: {
-    values: {
-      type: Array,
-      default: () => []
-    }
-  },
+  mixins: [mixin],
   data() {
     return {
       results: [],
@@ -77,20 +77,16 @@ export default {
       ]
     }
   },
-  watch: {
-    values(oldValues) {
-      this.drawViz()
-    }
-  },
-  mounted() {
-    this.drawViz()
-  },
   methods: {
     drawViz() {
+      if (this.values.length === 0) return
+
+      // Format dates
       const formatDate = d3.timeFormat('%B %d, %Y')
       const formatFullDate = d3.timeFormat('%Y/%m/%d %H:%M:%S')
       this.values.forEach(d => (d.dateStr = formatFullDate(d.date)))
       this.results = this.values
+
       // Build index for crossfiltering
       const ndx = crossfilter(this.values)
       this.dateDimension = ndx.dimension(d => d.date)
