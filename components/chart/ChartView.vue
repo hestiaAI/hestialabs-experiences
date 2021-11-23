@@ -10,12 +10,12 @@ import _ from 'lodash'
 
 function isDataValid(data) {
   return (
-    _.each(
+    _.every(
       ['items', 'headers'],
       field => _.has(data, field) && Array.isArray(data[field])
     ) &&
     data.headers.length > 0 &&
-    _.each(data.items, i => _.each(data.headers, h => _.has(i, h)))
+    _.every(data.items, i => _.every(data.headers, h => _.has(i, h)))
   )
 }
 
