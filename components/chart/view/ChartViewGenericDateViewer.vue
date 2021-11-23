@@ -81,11 +81,13 @@ export default {
   methods: {
     drawViz() {
       if (this.values.length === 0) return
-
       // Format dates
       const formatDate = d3.timeFormat('%B %d, %Y')
       const formatFullDate = d3.timeFormat('%Y/%m/%d %H:%M:%S')
-      this.values.forEach(d => (d.dateStr = formatFullDate(d.date)))
+      this.values.forEach(d => {
+        d.date = new Date(d.date)
+        d.dateStr = formatFullDate(d.date)
+      })
       this.results = this.values
 
       // Build index for crossfiltering
