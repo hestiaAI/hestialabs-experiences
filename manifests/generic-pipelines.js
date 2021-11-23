@@ -85,7 +85,7 @@ function extractJsonEntries(json) {
       return [...describedDates, ...possiblyDescribedDates]
     } else if (Array.isArray(node)) {
       // Array
-      return node.flatMap(el => recurse(el))
+      return node.flatMap(el => (typeof el === 'object' ? recurse(el) : el))
     } else {
       // we should never enter here
       console.error('Error: found leaf in JSON date extractor')
