@@ -29,6 +29,11 @@
       "description": "This is an example consent form."
     },
     {
+      "description": "Please input some information.",
+      "type": "input",
+      "name": "e-mail"
+    },
+    {
       "title": "Radio buttons",
       "description": "Please select one option.",
       "type": "radio",
