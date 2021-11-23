@@ -47,10 +47,6 @@ export default {
       type: Array,
       default: () => []
     },
-    examples: {
-      type: Array,
-      required: true
-    },
     ext: {
       type: String,
       required: true,
@@ -65,10 +61,6 @@ export default {
       type: Array,
       default: () => []
     },
-    visualizations: {
-      type: Object,
-      default: () => {}
-    },
     defaultView: {
       type: Array,
       default: () => []
@@ -81,13 +73,17 @@ export default {
       type: Object,
       default: () => {}
     },
+    postprocessors: {
+      type: Object,
+      default: undefined
+    },
     allowMissingFiles: {
       type: Boolean,
       default: false
     },
     customPipelines: {
       type: Object,
-      default: () => {}
+      default: undefined
     },
     isGenericViewer: {
       type: Boolean,
@@ -96,6 +92,26 @@ export default {
     showDataExplorer: {
       type: Boolean,
       default: true
+    },
+    sparql: {
+      type: Object,
+      default: () => {}
+    },
+    sql: {
+      type: Object,
+      default: () => {}
+    },
+    vega: {
+      type: Object,
+      default: () => {}
+    },
+    yarrrml: {
+      type: String,
+      default: ''
+    },
+    databaseBuilder: {
+      type: Function,
+      default: undefined
     }
   },
   computed: {
@@ -111,15 +127,19 @@ export default {
       const propNames = [
         'title',
         'dataPortal',
-        'examples',
-        'visualizations',
         'defaultView',
         'customPipelines',
         'preprocessors',
+        'postprocessors',
         'isGenericViewer',
         'showDataExplorer',
         'files',
-        'allowMissingFiles'
+        'allowMissingFiles',
+        'sparql',
+        'sql',
+        'vega',
+        'yarrrml',
+        'databaseBuilder'
       ]
       return Object.fromEntries(propNames.map(k => [k, this[k]]))
     },

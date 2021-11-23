@@ -1,5 +1,26 @@
 {
-  "experiences": ["tracker-control"],
+  "experiences": [
+    "apple",
+    "bookbeat",
+    "facebook",
+    "finnair",
+    "gigantti",
+    "google",
+    "helsingin-sanomat",
+    "k-ryhma",
+    "lime",
+    "netflix",
+    "s-ryhma",
+    "signal",
+    "spotify",
+    "tracker-control",
+    "twitter",
+    "uber",
+    "voi",
+    "whatsapp",
+    "wolt",
+    "explorer"
+  ],
   "hashtags": ["dataprivacy", "hestialabs", "digipower"],
   "saveFiles": false,
   "publicKey": "710decd4e26312d3e7b02854fefe53cc1ef8d7b25e8f99bc6df956c1a526e144"

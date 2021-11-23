@@ -32,9 +32,9 @@
             <VCardText>
               <template v-if="selectedItem">
                 <component
-                  :is="componentForType(selectedItem.type)"
+                  :is="componentForType"
                   v-bind="{ fileManager, filename: selectedItem.filename }"
-                  v-if="supportedTypes.has(selectedItem.type)"
+                  v-if="supportedTypes.has(fileType)"
                 />
                 <p v-else>Cannot open file type</p>
               </template>
@@ -52,20 +52,6 @@
 <script>
 import FileManager from '~/utils/file-manager.js'
 
-// https://github.com/nuxt/components/issues/13#issuecomment-902590143
-const UnitFileExplorerViewerJson = () =>
-  import('~/components/unit/file-explorer/viewer/UnitFileExplorerViewerJson')
-const UnitFileExplorerViewerCsv = () =>
-  import('~/components/unit/file-explorer/viewer/UnitFileExplorerViewerCsv')
-const UnitFileExplorerViewerPdf = () =>
-  import('~/components/unit/file-explorer/viewer/UnitFileExplorerViewerPdf')
-const UnitFileExplorerViewerImage = () =>
-  import('~/components/unit/file-explorer/viewer/UnitFileExplorerViewerImage')
-const UnitFileExplorerViewerHtml = () =>
-  import('~/components/unit/file-explorer/viewer/UnitFileExplorerViewerHtml')
-const UnitFileExplorerViewerText = () =>
-  import('~/components/unit/file-explorer/viewer/UnitFileExplorerViewerText')
-
 export default {
   name: 'UnitFileExplorer',
   props: {
@@ -80,28 +66,29 @@ export default {
       supportedTypes: new Set(['json', 'csv', 'pdf', 'img', 'html', 'txt'])
     }
   },
+  computed: {
+    fileType() {
+      // @fileType should match the postfix of the Vue component name
+      return this.selectedItem?.type
+    },
+    componentForType() {
+      const { fileType } = this
+      if (!fileType) {
+        return
+      }
+      const postfix = fileType[0].toUpperCase() + fileType.substring(1)
+      return () =>
+        import(
+          `~/components/unit/file-explorer/viewer/UnitFileExplorerViewer${postfix}`
+        )
+    }
+  },
   methods: {
     setSelectedItem(array) {
       const item = array[0]
       const containers = new Set(['folder', 'zip'])
       if (!containers.has(item?.type)) {
         this.selectedItem = item
-      }
-    },
-    componentForType(type) {
-      switch (type) {
-        case 'json':
-          return UnitFileExplorerViewerJson
-        case 'csv':
-          return UnitFileExplorerViewerCsv
-        case 'pdf':
-          return UnitFileExplorerViewerPdf
-        case 'img':
-          return UnitFileExplorerViewerImage
-        case 'html':
-          return UnitFileExplorerViewerHtml
-        default:
-          return UnitFileExplorerViewerText
       }
     }
   }

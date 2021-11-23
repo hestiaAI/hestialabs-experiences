@@ -108,7 +108,7 @@ export default {
   data() {
     return {
       header: [
-        { text: 'Tweet ID', value: 'tweet_id' },
+        { text: 'Tweet ID', value: 'tweetId' },
         { text: 'Company', value: 'companyName' },
         { text: 'Date', value: 'date' },
         { text: 'Promoted Tweet', value: 'url' },
@@ -172,7 +172,7 @@ export default {
         d.dateParsed = dateFormatParser(d.date)
         d.day = d3.timeDay(d.dateParsed) // pre-calculate days for better performance
         d.dateStr = formatTime(d.dateParsed)
-        d.url = 'https://twitter.com/x/status/' + d.tweet_id
+        d.url = 'https://twitter.com/x/status/' + d.tweetId
       })
       const minDate = d3.min(this.results, function (d) {
         return d.day
@@ -202,14 +202,14 @@ export default {
       })
       const addRecord = (p, v) => {
         // add
-        p.dict[v.tweet_id + v.date] = (p.dict[v.tweet_id + v.date] || 0) + 1
-        if (p.dict[v.tweet_id + v.date] === 1) p.count++
+        p.dict[v.tweetId + v.date] = (p.dict[v.tweetId + v.date] || 0) + 1
+        if (p.dict[v.tweetId + v.date] === 1) p.count++
         return p
       }
       const removeRecord = (p, v) => {
         // remove
-        p.dict[v.tweet_id + v.date] -= 1
-        if (p.dict[v.tweet_id + v.date] === 0) p.count--
+        p.dict[v.tweetId + v.date] -= 1
+        if (p.dict[v.tweetId + v.date] === 0) p.count--
         return p
       }
       function orderValue(p) {
@@ -405,14 +405,14 @@ export default {
           const newData = d3.flatRollup(
             ndx.allFiltered(),
             v => v.length,
-            d => d.tweet_id,
+            d => d.tweetId,
             d => d.companyName,
             d => d.date,
             d => d.url,
             d => d.engagement
           )
           this.results = newData.map(x => ({
-            tweet_id: x[0],
+            tweetId: x[0],
             companyName: x[1],
             date: x[2],
             url: x[3],

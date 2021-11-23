@@ -64,9 +64,6 @@ export default {
       }
       return this.data.items
     },
-    jsonSpec() {
-      return this.specFile?.vega || {}
-    },
     clonedItems() {
       // Vega happens to modify values,
       // so we clone them to avoid affecting
@@ -84,12 +81,12 @@ export default {
       // that we clone whenever values change.
       // That's not entirely necessary
       // but keeps the linter happy.
-      if (!this.jsonSpec?.data) {
+      if (!this.specFile?.data) {
         // invalid data
         return {}
       }
       const values = this.clonedItems
-      const spec = this.jsonSpec
+      const spec = this.specFile
       // we only change spec.data[0].values
       const clonedSpec = Object.assign({}, spec, {
         data: [

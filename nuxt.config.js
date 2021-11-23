@@ -143,7 +143,7 @@ export default {
         },
         // enable raw importing of .yaml, .rq and .vega.json files
         {
-          test: /\.(ya?ml|rq|vega|rqx)$/i,
+          test: /\.(ya?ml|rq|vega|rqx|sql)$/i,
           use: 'raw-loader'
         },
         {
@@ -167,6 +167,20 @@ export default {
         },
         {
           test: /unzipit-worker.module.js$/,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                name: '[path][name].[contenthash:7].[ext]'
+              }
+            }
+          ]
+        },
+        // for importing wasm files
+        // https://github.com/sql-js/react-sqljs-demo
+        {
+          test: /\.wasm$/,
+          type: 'javascript/auto',
           use: [
             {
               loader: 'file-loader',
