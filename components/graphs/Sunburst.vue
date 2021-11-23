@@ -27,6 +27,11 @@ export default {
       graphId: 'graph_' + this._uid
     }
   },
+  watch: {
+    values() {
+      this.drawViz()
+    }
+  },
   mounted() {
     this.drawViz()
   },
@@ -78,6 +83,7 @@ export default {
         .innerRadius(d => d.y0 * radius)
         .outerRadius(d => Math.max(d.y0 * radius, d.y1 * radius - 1))
 
+      d3.select('#' + this.graphId + ' svg').remove()
       const svg = d3
         .select('#' + this.graphId)
         .append('svg')
