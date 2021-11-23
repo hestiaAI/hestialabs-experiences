@@ -7,6 +7,7 @@ const timeParsers = [
   d3.timeParse('%Y-%m-%dT%H:%M:%SZ'),
   d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ'),
   d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC'),
+  d3.timeParse('%Y-%m-%d %H:%M:%S'),
   d3.timeParse('%Y-%m-%d'),
   d3.timeParse('%Y/%m/%d %H:%M:%S'),
   d3.timeParse('%s'), // Unix seconds
@@ -40,7 +41,6 @@ function getValidDate(value) {
   })
   return findDate ? date : null
 }
-
 function isObject(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]'
 }
@@ -86,7 +86,9 @@ function extractJsonEntries(json) {
       return [...describedDates, ...possiblyDescribedDates]
     } else if (Array.isArray(node)) {
       // Array
-      return node.flatMap(el => recurse(el))
+      return node.flatMap(el =>
+        typeof el === 'object' ? recurse(el) : { description: `${el}` }
+      )
     } else {
       // we should never enter here
       console.error('Error: found leaf in JSON date extractor: ', node)
@@ -123,20 +125,17 @@ async function genericDateViewer(fileManager) {
     csvFilenames.map(async name => [name, await fileManager.getCsvItems(name)])
   )
 
-  const jsonFilenames = filenames.filter(name => name.endsWith('.json'))
+  const jsonFilenames = filenames.filter(name => /\.js(:?on)?$/.test(name))
   const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
 
   const csvEntries = csvItems.flatMap(([name, csv]) =>
-    extractCsvEntries(csv).map(o => ({
-      ...o,
-      description: `${name} > ${o.description}`
-    }))
+    extractCsvEntries(csv).map(o => ({ ...o, filename: name }))
   )
   const jsonEntries = Object.entries(jsonTexts).flatMap(([name, json]) => {
     try {
       return extractJsonEntries(JSON.parse(json)).map(o => ({
         ...o,
-        description: `${name} > ${o.description}`
+        filename: name
       }))
     } catch (e) {
       console.error(e)
@@ -145,7 +144,7 @@ async function genericDateViewer(fileManager) {
     }
   })
   const items = [...jsonEntries, ...csvEntries]
-  const headers = ['date', 'description']
+  const headers = ['date', 'description', 'filename']
   return { headers, items }
 }
 
