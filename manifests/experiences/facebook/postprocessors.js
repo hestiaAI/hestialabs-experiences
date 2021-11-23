@@ -2,6 +2,9 @@
 // We are facing a trade-off between having independent experiences and sharing some components.
 const sunburstTargetingAdvertiser = result => {
   const items = result?.items || []
+  if (items.length === 0) {
+    return { headers: [], items: [] }
+  }
   const results = []
   const tree = new Map()
   // Construct tree: Root -> TargetingType -> [TargetingValue, count]
