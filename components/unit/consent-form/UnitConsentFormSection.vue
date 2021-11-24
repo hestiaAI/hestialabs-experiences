@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h2>{{ section.title }}</h2>
+    <h2 v-if="section.title">{{ section.title }}</h2>
 
-    <p>
+    <p v-if="section.description">
       {{ section.description }}
     </p>
 
@@ -32,6 +32,23 @@
         @change="updateConsent"
       />
     </template>
+
+    <template v-if="section.type === 'input'">
+      <VTextField
+        v-if="readonly"
+        dense
+        :readonly="readonly"
+        :value="section.value"
+        :label="section.name"
+      ></VTextField>
+      <VTextField
+        v-else
+        v-model="value"
+        dense
+        :label="section.name"
+        @change="updateConsent"
+      ></VTextField>
+    </template>
   </div>
 </template>
 
@@ -53,12 +70,17 @@ export default {
   },
   data() {
     return {
-      selected: this.section.selected
+      selected: this.section.selected,
+      value: ''
     }
   },
   methods: {
-    updateConsent(event) {
-      this.$emit('change', { index: this.index, selected: this.selected })
+    updateConsent() {
+      this.$emit('change', {
+        index: this.index,
+        selected: this.selected,
+        value: this.value
+      })
     }
   }
 }

@@ -113,9 +113,6 @@ export default {
     },
     disabled() {
       return this.filesEmpty
-    },
-    saveFiles() {
-      return this.$store.state.config.saveFiles
     }
   },
   watch: {
