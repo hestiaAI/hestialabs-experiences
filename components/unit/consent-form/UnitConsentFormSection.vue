@@ -2,9 +2,14 @@
   <div>
     <h2 v-if="section.title">{{ section.title }}</h2>
 
-    <p v-if="section.description">
-      {{ section.description }}
-    </p>
+    <template v-if="section.description">
+      <!-- For security reasons, HTML is not rendered on zip import -->
+      <p v-if="readonly">
+        {{ section.description }}
+      </p>
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <p v-else v-html="section.description"></p>
+    </template>
 
     <VRadioGroup
       v-if="section.type === 'radio'"
