@@ -25,7 +25,7 @@
             v-for="(specFile, vegaIndex) in vegaFiles"
             :key="vegaIndex"
             cols="12"
-            style="text-align: center"
+            class="text-center"
           >
             <UnitVegaViz
               :spec-file="specFile"
@@ -82,7 +82,7 @@
               <VCol
                 v-for="(specFile, vegaIndex) in vegaFiles"
                 :key="'vega-' + vegaIndex"
-                style="text-align: center"
+                class="text-center"
               >
                 <UnitVegaViz
                   :spec-file="specFile"
@@ -115,7 +115,7 @@
           </template>
           <template v-else>
             <VRow>
-              <VCol style="text-align: center">
+              <VCol class="text-center">
                 <p><i>No relevant data found</i></p>
               </VCol>
             </VRow>

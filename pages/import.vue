@@ -77,7 +77,7 @@
           <VCol
             v-for="(specFile, vegaIndex) in allVegaFiles[resultIndex]"
             :key="vegaIndex"
-            style="text-align: center"
+            class="text-center"
           >
             <UnitVegaViz
               :spec-file="specFile"
