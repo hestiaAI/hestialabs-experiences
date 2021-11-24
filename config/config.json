@@ -22,12 +22,16 @@
     "other"
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
-  "saveFiles": true,
   "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
   "consent": [
     {
       "title": "Introduction",
       "description": "This is an example consent form."
+    },
+    {
+      "description": "Please input some information.",
+      "type": "input",
+      "name": "e-mail"
     },
     {
       "title": "Radio buttons",

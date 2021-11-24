@@ -88,7 +88,7 @@ export default {
   watch: {
     includedResults: {
       deep: true,
-      handler(includedResults) {
+      handler() {
         this.resetStatus()
       }
     }
@@ -166,8 +166,13 @@ export default {
           this.sentError = true
         })
     },
-    updateConsent({ index, selected }) {
-      this.consent[index].selected = selected
+    updateConsent({ index, selected, value }) {
+      const section = this.consent[index]
+      if (section.type === 'checkbox' || section.type === 'radio') {
+        section.selected = selected
+      } else if (section.type === 'input') {
+        section.value = value
+      }
       this.resetStatus()
     },
     resetStatus() {
