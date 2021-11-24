@@ -52,24 +52,20 @@ const KeplerElement = (function (react, keplerGl, mapboxToken) {
     )
   }
 })(React, KeplerGl, MAPBOX_TOKEN)
-
-const app = (function createReactReduxProvider(
-  react,
-  reactRedux,
-  KeplerElement
-) {
-  return react.createElement(
-    reactRedux.Provider,
-    { store },
-    react.createElement(KeplerElement, null)
-  )
-})(React, ReactRedux, KeplerElement)
 /** END COMPONENTS **/
 
-/** Render **/
-;(function render(react, reactDOM, app) {
-  reactDOM.render(app, document.getElementById('app'))
-})(React, ReactDOM, app)
+const renderApp = function () {
+  const app = React.createElement(
+    ReactRedux.Provider,
+    { store },
+    React.createElement(KeplerElement, null)
+  )
+  ReactDOM.render(app, document.getElementById('app'))
+}
+
+function init() {
+  renderApp()
+}
 
 function update(values) {
   const dataset = {
@@ -85,5 +81,6 @@ function update(values) {
 }
 
 if (window) {
+  window.init = init
   window.update = update
 }

@@ -22,17 +22,26 @@ export default {
       default: '500px'
     }
   },
+  watch: {
+    data(data) {
+      this.callIframeFunction('update', [data])
+    }
+  },
   methods: {
     onload() {
-      const update = this.$refs.iframe.contentWindow?.update
-      if (update) {
+      this.callIframeFunction('init')
+      this.callIframeFunction('update', [this.data])
+    },
+    callIframeFunction(functionName, args = []) {
+      const func = this.$refs.iframe.contentWindow?.[functionName]
+      if (func) {
         try {
-          update(this.data)
+          func(...args)
         } catch (error) {
           console.error('problem in iframe', error)
         }
       } else {
-        console.error('iframe does not have an update function')
+        console.error('iframe does not have a function called ' + functionName)
       }
     }
   }
