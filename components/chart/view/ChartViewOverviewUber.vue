@@ -458,19 +458,20 @@ export default {
         .width(d3.select('#service-chart').node().getBoundingClientRect().width)
         .height(180)
         .radius(180 / 2)
-        .innerRadius(20)
+        .innerRadius(0)
         .dimension(serviceDimension)
         .group(serviceGroup)
         .valueAccessor(d => {
           return d.value
         })
-        .title(d => d.value + ' trips')
+        .title(d => d.key + ': ' + d.value + ' trips')
         .ordinalColors(colorPalette)
         .label(d => {
-          if (serviceChart.hasFilter() && !serviceChart.hasFilter(d.key)) {
-            return `${d.key} (0%)`
-          }
           let label = d.key
+          if (label.length > 8) label = label.substring(0, 8) + '.. '
+          if (serviceChart.hasFilter() && !serviceChart.hasFilter(d.key)) {
+            return `${label} (0%)`
+          }
           if (allDimension.value()) {
             label += ` (${Math.round(
               (d.value / allGroup.value().count) * 100
@@ -521,7 +522,8 @@ export default {
         .yAxisLabel('Total price')
         .brushOn(true)
         .ordinalColors(colorPalette)
-      priceChart.xAxis().ticks(4)
+      priceChart.xAxis().ticks(10)
+      priceChart.yAxis().ticks(6)
       priceChart.filterAll()
 
       // Render city row chart
