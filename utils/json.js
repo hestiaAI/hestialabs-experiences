@@ -10,7 +10,7 @@ export default function itemifyJSON(jsonText) {
   function itemifyRec(tree) {
     id++
     if (typeof tree !== 'object') {
-      return { value: tree, icon: mdiInformationOutline }
+      return { id, value: tree, icon: mdiInformationOutline }
     } else if (Array.isArray(tree)) {
       const children = tree.flatMap(el => itemifyRec(el))
       const plural = children.length !== 1
@@ -30,7 +30,7 @@ export default function itemifyJSON(jsonText) {
           icon: mdiFormatListBulletedSquare
         }
       }
-    } else {
+    } else if (tree !== null) {
       const children = Object.entries(tree).flatMap(([key, v]) => {
         const inner = itemifyRec(v)
         const name = lodash.startCase(key)
@@ -50,6 +50,8 @@ export default function itemifyJSON(jsonText) {
           icon: mdiCodeJson
         }
       }
+    } else {
+      return { id, value: 'null', icon: mdiInformationOutline }
     }
   }
   return [itemifyRec(JSON.parse(jsonText))]

@@ -4,9 +4,13 @@ import * as d3 from 'd3'
 
 // Define all accepted date formats
 const timeParsers = [
+  d3.timeParse('%Y-%m-%dT%H:%M:%SZ'),
   d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ'),
   d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC'),
+  d3.timeParse('%Y-%m-%d %H:%M:%S UTC'),
+  d3.timeParse('%Y-%m-%d %H:%M:%S'),
   d3.timeParse('%Y-%m-%d'),
+  d3.timeParse('%Y/%m/%d %H:%M:%S'),
   d3.timeParse('%s'), // Unix seconds
   d3.timeParse('%Q') // Unix milliseconds
 ]
@@ -28,7 +32,7 @@ function getValidDate(value) {
       date.getFullYear() < validYearMax
     ) {
       // Reorder timeParsers array to save complexity
-      if (!idx !== 0) {
+      if (idx !== 0) {
         timeParsers.splice(idx, 1)
         timeParsers.splice(0, 0, parser)
       }
@@ -38,7 +42,6 @@ function getValidDate(value) {
   })
   return findDate ? date : null
 }
-
 function isObject(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]'
 }
@@ -53,11 +56,12 @@ function extractJsonEntries(json) {
         if (typeof v === 'object') {
           const inner = recurse(v)
           if (!kDate) {
-            return inner.map(o =>
-              o.description
-                ? { ...o, description: `${kPretty} > ${o.description}` }
-                : o
-            )
+            return inner.map(o => ({
+              ...o,
+              description: `${kPretty}${
+                o.description ? ` > ${o.description}` : ''
+              }`
+            }))
           } else {
             return inner.map(o => (o.date ? o : { ...o, date: kDate }))
           }
@@ -65,14 +69,15 @@ function extractJsonEntries(json) {
           const vDate = getValidDate(v)
           // If both key and value contain dates, use key date as description
           if (kDate && vDate) return [{ date: vDate, description: `${k}` }]
-          if (!kDate && vDate) return [{ date: vDate }]
+          if (!kDate && vDate) return [{ date: vDate, description: '' }]
           if (kDate && !vDate) return [{ date: kDate, description: `${v}` }]
           return [{ description: `${kPretty} : ${v}` }]
         }
       })
       const [dates, rest] = _.partition(entries, o => _.has(o, 'date'))
-      const [describedDates, undescribedDates] = _.partition(dates, o =>
-        _.has(o, 'description')
+      const [describedDates, undescribedDates] = _.partition(
+        dates,
+        ({ description }) => description
       )
       const levelDescription = `[${rest
         .map(({ description }) => description)
@@ -84,10 +89,11 @@ function extractJsonEntries(json) {
       return [...describedDates, ...possiblyDescribedDates]
     } else if (Array.isArray(node)) {
       // Array
-      return node.flatMap(el => recurse(el))
+      return node.flatMap(el =>
+        typeof el === 'object' ? recurse(el) : { description: `${el}` }
+      )
     } else {
-      // we should never enter here
-      console.error('Error: found leaf in JSON date extractor')
+      // We might find something like { key: null }
       return []
     }
   }
@@ -121,29 +127,25 @@ async function genericDateViewer(fileManager) {
     csvFilenames.map(async name => [name, await fileManager.getCsvItems(name)])
   )
 
-  const jsonFilenames = filenames.filter(name => name.endsWith('.json'))
+  const jsonFilenames = filenames.filter(name => /\.js(:?on)?$/.test(name))
   const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
 
   const csvEntries = csvItems.flatMap(([name, csv]) =>
-    extractCsvEntries(csv).map(o => ({
-      ...o,
-      description: `${name} > ${o.description}`
-    }))
+    extractCsvEntries(csv).map(o => ({ ...o, filename: name }))
   )
   const jsonEntries = Object.entries(jsonTexts).flatMap(([name, json]) => {
     try {
       return extractJsonEntries(JSON.parse(json)).map(o => ({
         ...o,
-        description: `${name} > ${o.description}`
+        filename: name
       }))
     } catch (e) {
       console.error(e)
-      // TODO
       return []
     }
   })
   const items = [...jsonEntries, ...csvEntries]
-  const headers = ['date', 'description']
+  const headers = ['date', 'description', 'filename']
   return { headers, items }
 }
 
@@ -154,7 +156,7 @@ async function timedObservationViewer(fileManager, manifest) {
     .filter(name => params.fileMatchers.some(_ => _.regex.test(name)))
   const files = await fileManager.preprocessFiles(matchingFilenames)
 
-  const headers = params.fields
+  const headers = ['date', 'eventSource', 'eventType', 'eventValue']
   const items = Object.entries(files).flatMap(([name, text]) => {
     const matcher = _.find(params.fileMatchers, m => m.regex.test(name))
     let events
