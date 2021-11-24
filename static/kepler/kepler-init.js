@@ -30,6 +30,8 @@ const store = (function createStore(redux, enhancers) {
 })(Redux, enhancers)
 /** END STORE **/
 
+window.store = store
+
 /** COMPONENTS **/
 const KeplerElement = (function (react, keplerGl, mapboxToken) {
   return function (props) {
@@ -68,17 +70,32 @@ function init(args = {}) {
   renderApp(args)
 }
 
-function update(values) {
+function extractDataId(config) {
+  let dataId = config?.config?.visState?.filters?.[0]?.dataId?.[0]
+  if (!dataId) {
+    dataId = config?.config?.visState?.layers?.[0]?.config?.dataId
+  }
+  return dataId || 'the-data-id'
+}
+
+function update(data) {
+  const { config, rawCsv } = data
   const dataset = {
-    info: { id: 'trips-id', label: 'trips' },
-    data: KeplerGl.processCsvData(values)
+    info: { id: extractDataId(config), label: 'trips' },
+    data: KeplerGl.processCsvData(rawCsv)
+  }
+  let parsedConfig = {}
+  if (config) {
+    parsedConfig = KeplerGl.KeplerGlSchema.parseSavedConfig(config)
   }
   store.dispatch(
     KeplerGl.addDataToMap({
       datasets: [dataset],
-      options: { centerMap: true, readOnly: true }
+      options: { centerMap: true, readOnly: true },
+      config: parsedConfig
     })
   )
+  // console.log('layers', store.getState().keplerGl.map.visState.layers)
 }
 
 if (window) {
