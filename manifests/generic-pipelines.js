@@ -157,7 +157,7 @@ async function timedObservationViewer(fileManager, manifest) {
     .filter(name => params.fileMatchers.some(_ => _.regex.test(name)))
   const files = await fileManager.preprocessFiles(matchingFilenames)
 
-  const headers = params.fields
+  const headers = ['date', 'eventSource', 'eventType', 'eventValue']
   const items = Object.entries(files).flatMap(([name, text]) => {
     const matcher = _.find(params.fileMatchers, m => m.regex.test(name))
     let events
