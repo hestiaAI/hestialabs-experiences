@@ -93,8 +93,7 @@ function extractJsonEntries(json) {
         typeof el === 'object' ? recurse(el) : { description: `${el}` }
       )
     } else {
-      // we should never enter here
-      console.error('Error: found leaf in JSON date extractor: ', node)
+      // We might find something like { key: null }
       return []
     }
   }
