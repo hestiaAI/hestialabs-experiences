@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-for="({ experiences, heading }, index) in sections">
-      <div :key="index">
+      <div v-if="experiences.length > 0" :key="index">
         <!-- eslint-disable-next-line vue/no-v-html -->
         <h1 class="mt-6 mb-4" v-html="heading"></h1>
         <component :is="component" v-bind="{ experiences }" />
