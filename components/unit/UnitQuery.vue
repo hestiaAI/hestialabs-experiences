@@ -25,7 +25,7 @@
             v-for="(specFile, vegaIndex) in vegaFiles"
             :key="vegaIndex"
             cols="12"
-            style="text-align: center"
+            class="text-center"
           >
             <UnitVegaViz
               :spec-file="specFile"
@@ -77,12 +77,12 @@
           </VCol>
         </VRow>
         <template v-if="finished">
-          <template v-if="result">
+          <template v-if="hasData">
             <VRow>
               <VCol
                 v-for="(specFile, vegaIndex) in vegaFiles"
                 :key="'vega-' + vegaIndex"
-                style="text-align: center"
+                class="text-center"
               >
                 <UnitVegaViz
                   :spec-file="specFile"
@@ -115,7 +115,7 @@
           </template>
           <template v-else>
             <VRow>
-              <VCol>
+              <VCol class="text-center">
                 <p><i>No relevant data found</i></p>
               </VCol>
             </VRow>
@@ -194,6 +194,9 @@ export default {
     },
     vegaFiles() {
       return this.vizNames.map(n => this.vega[n]).filter(n => n)
+    },
+    hasData() {
+      return this.result && (this.result.headers?.length ?? 1) > 0
     }
   },
   methods: {
