@@ -121,7 +121,9 @@ export default {
         .clipPadding(10)
         .gap(this.select === 'Months' ? 10 : 0)
 
-      this.barChart.yAxis().tickFormat(d3.format('~s'))
+      this.barChart
+        .yAxis()
+        .tickFormat(v => d3.format(Number.isInteger(v) ? '~s' : '.2~f')(v))
       this.drawBarChart()
       this.barChart.on('preRender', this.calcDomain)
       this.barChart.on('preRedraw', this.calcDomain)
