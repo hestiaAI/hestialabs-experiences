@@ -443,15 +443,34 @@ export default {
         .width(d3.select('#week-chart').node().getBoundingClientRect().width)
         .height(180)
         .margins({ top: 10, left: 10, right: 10, bottom: 20 })
-        .group(removeEmptyBins(dayOfWeekGroup))
+        .group(dayOfWeekGroup)
         .dimension(dayOfWeekDimension)
         .ordinalColors(colorPalette)
         .label(d => d.key)
         .title(d => d.value)
-        .data(group => group.top(10))
         .elasticX(true)
         .xAxis()
         .ticks(4)
+      weekChart.ordering(function (d) {
+        switch (d.key) {
+          case 'Mon':
+            return 0
+          case 'Tue':
+            return 1
+          case 'Wed':
+            return 2
+          case 'Thu':
+            return 3
+          case 'Fri':
+            return 4
+          case 'Sat':
+            return 5
+          case 'Sun':
+            return 6
+          default:
+            return 0
+        }
+      })
 
       // Render service pie chart
       serviceChart
