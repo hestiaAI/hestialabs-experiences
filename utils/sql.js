@@ -126,15 +126,25 @@ class DB {
    * @param {String} sql the SQL SELECT query to run. There should be only **one** statement (subqueries are ok).
    * @param {Object} params When the SQL statement contains placeholders, you can pass them in here.
    * They will be bound to the statement before it is executed.
-   * @returns an array containing each resulting row in the format {col1: val1, col2: val2, ...}.
+   * @returns an object containing the resulting headers (format: ['col1', 'col2'])
+   * and items (format: [{col1: val1, col2: val2, ...}, ...]).
    */
   select(sql, params = null) {
     this.#checkState()
 
     // exec returns an array because it accepts multiple statements, but we don't.
-    const res = this.#db.exec(sql, params)[0]
-    const headers = res.columns
-    const items = res.values.map(line =>
+    const res = this.#db.exec(sql, params)
+    if (res.length > 1) {
+      throw new Error(
+        'Queries with multiple select statements are not supported'
+      )
+    } else if (res.length === 0) {
+      // sql.js returns an empty array if no data is found,
+      // but we return empty headers and items instead
+      return { headers: [], items: [] }
+    }
+    const headers = res[0].columns
+    const items = res[0].values.map(line =>
       Object.fromEntries(line.map((v, i) => [headers[i], v]))
     )
     return { headers, items }
