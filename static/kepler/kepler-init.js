@@ -54,17 +54,18 @@ const KeplerElement = (function (react, keplerGl, mapboxToken) {
 })(React, KeplerGl, MAPBOX_TOKEN)
 /** END COMPONENTS **/
 
-const renderApp = function () {
+const renderApp = function (props) {
   const app = React.createElement(
     ReactRedux.Provider,
     { store },
-    React.createElement(KeplerElement, null)
+    React.createElement(KeplerElement, props)
   )
   ReactDOM.render(app, document.getElementById('app'))
 }
 
-function init() {
-  renderApp()
+function init(args = {}) {
+  console.log('init', args)
+  renderApp(args)
 }
 
 function update(values) {
