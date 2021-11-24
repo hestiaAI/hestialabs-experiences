@@ -182,7 +182,7 @@ export default {
         .margins({ top: 30, right: 50, bottom: 25, left: 40 })
         .group(dayGroup)
         .dimension(dayDimension)
-        .curve(d3.curveCardinal.tension(0.6))
+        .curve(d3.curveMonotoneX)
         .x(
           d3
             .scaleTime()

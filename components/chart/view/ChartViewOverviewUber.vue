@@ -85,8 +85,8 @@
                   <VCard color="#385F73" dark>
                     <VCardTitle class="text-h6">Orders</VCardTitle>
                     <VCardSubtitle></VCardSubtitle>
-                    <VCardText class="text-h5 text-center">
-                      <div id="number-trip" />
+                    <VCardText class="text-h4 text-center">
+                      <div><strong id="number-trip"></strong></div>
                       <span class="text-subtitle-1">trips</span>
                     </VCardText>
                   </VCard>
@@ -95,8 +95,8 @@
                   <VCard color="#385F73" dark>
                     <VCardTitle class="text-h6">Speed</VCardTitle>
                     <VCardSubtitle></VCardSubtitle>
-                    <VCardText class="text-h5 text-center">
-                      <div id="number-speed-avg" />
+                    <VCardText class="text-h4 text-center">
+                      <div><strong id="number-speed-avg" /></div>
                       <span class="text-subtitle-1">mph</span>
                     </VCardText>
                   </VCard>
@@ -504,7 +504,7 @@ export default {
         .margins({ top: 20, left: 40, right: 20, bottom: 20 })
         .width(d3.select('#price-chart').node().getBoundingClientRect().width)
         .turnOnControls(false)
-        .curve(d3.curveCardinal.tension(0.96))
+        .curve(d3.curveMonotoneX)
         .xyTipsOn(true)
         .height(180)
         .brushOn(false)
