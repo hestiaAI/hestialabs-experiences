@@ -13,12 +13,15 @@
     <VRow>
       <VCol cols="12" md="8">
         <VRow>
-          <VCol cols="12" md="8">
-            <div id="scatter-chart">
-              <strong>Price vs Distance</strong>
+          <VCol cols="12" md="12">
+            <div id="price-chart">
+              <strong>Cumulative expenses</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
-                <span></span>
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
               </p>
             </div>
             <div id="hour-chart">
@@ -28,18 +31,6 @@
               >
                 select a time range to zoom in
                 <a class="reset" style="display: none">reset</a>
-              </p>
-            </div>
-          </VCol>
-          <VCol cols="12" md="4">
-            <div id="week-chart">
-              <strong>Day of week</strong>
-              <a class="reset" style="display: none">reset</a>
-              <p class="filters">
-                <span>
-                  Current filter:
-                  <span class="filter"></span>
-                </span>
               </p>
             </div>
           </VCol>
@@ -58,8 +49,8 @@
             </div>
           </VCol>
           <VCol cols="12" md="4">
-            <div id="price-chart">
-              <strong>Cumulative price</strong>
+            <div id="week-chart">
+              <strong>Day of week</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
@@ -122,7 +113,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>Price</td>
+                  <td><strong>Price</strong></td>
                   <td>
                     <span id="number-price-total" class="text-h6"></span>
                     <br />
@@ -135,7 +126,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Distance</td>
+                  <td><strong>Distance</strong></td>
                   <td>
                     <span id="number-distance-total" class="text-h6"></span>
                     <br />
@@ -148,7 +139,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Duration</td>
+                  <td><strong>Duration</strong></td>
                   <td>
                     <span id="number-duration-total" class="text-h6"></span>
                     <br />
@@ -161,7 +152,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Waiting time</td>
+                  <td><strong>Waiting time</strong></td>
                   <td>
                     <span id="number-waiting-total" class="text-h6"></span>
                     <br />
@@ -237,9 +228,7 @@ export default {
     drawViz() {
       // Add data to table
       this.results = this.values.filter(
-        d =>
-          d['Trip or Order Status'] === 'COMPLETED' &&
-          d['Product Type'] !== 'UberEATS Marketplace'
+        d => d['Trip or Order Status'] === 'COMPLETED'
       )
 
       // Define color palette for the graphs
@@ -276,7 +265,6 @@ export default {
       })
 
       // Create and bind charts to their respective divs
-      const scatterChart = new dc.ScatterPlot('#scatter-chart')
       const hourChart = new dc.BarChart('#hour-chart')
       const serviceChart = new dc.PieChart('#service-chart')
       const weekChart = new dc.RowChart('#week-chart')
@@ -294,10 +282,6 @@ export default {
       const waitingAvgNumber = new dc.NumberDisplay('#number-waiting-avg')
 
       // Bind reset filters links
-      d3.select('#scatter-chart a.reset').on('click', function () {
-        scatterChart.filterAll()
-        dc.redrawAll()
-      })
       d3.select('#hour-chart a.reset').on('click', function () {
         hourChart.filterAll()
         dc.redrawAll()
@@ -330,7 +314,6 @@ export default {
       const serviceDimension = ndx.dimension(d => d.service)
       const cityDimension = ndx.dimension(d => d.city)
       const dayDimension = ndx.dimension(d => d.day)
-      const scatterDimension = ndx.dimension(d => [d.distance, d.price])
       const hourDimension = ndx.dimension(d => d.hour)
       this.currencyDimension = ndx.dimension(d => d['Fare Currency'])
 
@@ -367,7 +350,6 @@ export default {
       const serviceGroup = serviceDimension.group().reduceCount()
       const priceGroup = dayDimension.group().reduceSum(d => d.price)
       const cityGroup = cityDimension.group().reduceCount()
-      const scatterGroup = scatterDimension.group()
       const hourGroup = hourDimension.group().reduceCount()
       const currencyGroup = this.currencyDimension.group()
 
@@ -426,67 +408,6 @@ export default {
         .valueAccessor(p => (p.count ? p.waitingTotal / p.count : 0))
         .formatNumber(d3.format('.1f'))
 
-      // Render scatter chart
-      scatterChart
-        .width(d3.select('#scatter-chart').node().getBoundingClientRect().width)
-        .height(200)
-        .margins({ top: 10, right: 10, bottom: 40, left: 40 })
-        .x(d3.scaleLinear())
-        .brushOn(false)
-        .elasticY(true)
-        .elasticX(true)
-        .ordinalColors(colorPalette)
-        .symbolSize(8)
-        .clipPadding(10)
-        .xAxisLabel('Distance (miles)')
-        .yAxisLabel('Price')
-        .dimension(scatterDimension)
-        .group(scatterGroup)
-
-      /* Add a regression line
-      scatterChart.on('pretransition', () => {
-        const r = regression.linear(
-          scatterChart
-            .group()
-            .all()
-            .map(kv => [kv.key[0], kv.key[1]])
-        )
-        const m = r.equation[0]
-        const b = r.equation[1]
-        const [x1, x2] = scatterChart.x().domain()
-        const points = [[x1, m * x1 + b], [[x2, m * x2 + b]]]
-        const xScale = scatterChart.x()
-        const yScale = scatterChart.y()
-        const margins = scatterChart.margins()
-
-        let line = scatterChart.g().selectAll('line.regression').data([points])
-        function doPoints(line) {
-          line
-            .attr('x1', d => xScale(d[0][0]) + margins.left)
-            .attr('y1', d => yScale(d[0][1]) + margins.top)
-            .attr('x2', d => xScale(d[1][0][0]) + margins.left)
-            .attr('y2', d => yScale(d[1][0][1]) + margins.top)
-        }
-        line = line
-          .enter()
-          .append('line')
-          .attr('class', 'regression')
-          .style('z-index', -1)
-          .call(doPoints)
-          .merge(line)
-          .attr('stroke', 'black')
-          .attr('stroke-width', 1.5)
-          .attr('stroke-opacity', 0.5)
-          .attr('stroke-dasharray', '8,8')
-          .text('test')
-
-        line
-          .transition()
-          .duration(scatterChart.transitionDuration())
-          .call(doPoints)
-      })
-      */
-
       // Render hour bar chart
       hourChart
         .width(d3.select('#hour-chart').node().getBoundingClientRect().width)
@@ -520,7 +441,7 @@ export default {
       }
       weekChart
         .width(d3.select('#week-chart').node().getBoundingClientRect().width)
-        .height(275)
+        .height(180)
         .margins({ top: 10, left: 10, right: 10, bottom: 20 })
         .group(removeEmptyBins(dayOfWeekGroup))
         .dimension(dayOfWeekDimension)
