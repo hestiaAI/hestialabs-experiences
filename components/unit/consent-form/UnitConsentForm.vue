@@ -24,6 +24,7 @@
           :status="generateStatus"
           :error="generateError"
           :progress="generateProgress"
+          :disabled="missingRequired"
           @click="generateZIP"
         />
         <BaseButtonDownloadData
@@ -83,6 +84,24 @@ export default {
   computed: {
     zipReady() {
       return this.generateStatus && !this.generateError
+    },
+    missingRequired() {
+      // If one section with attribute required has not been filled
+      return !this.consent.every(section => {
+        if ('required' in section || section.required) {
+          if (section.type === 'checkbox') {
+            // At least one checkbox must be selected
+            return section.selected.length > 0
+          } else if (section.type === 'radio') {
+            // A radio button must be selected
+            return section.selected !== ''
+          } else if (section.type === 'input') {
+            // Some text must be given
+            return 'value' in section && section.value !== ''
+          }
+        }
+        return true
+      })
     }
   },
   watch: {
@@ -173,6 +192,9 @@ export default {
       } else if (section.type === 'input') {
         section.value = value
       }
+      // For reactivity
+      this.$set(this.consent, index, section)
+
       this.resetStatus()
     },
     resetStatus() {

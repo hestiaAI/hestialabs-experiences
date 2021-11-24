@@ -42,10 +42,11 @@
     },
     {
       "title": "Checkboxes",
-      "description": "Please select all options that apply.",
+      "description": "Please select all options that apply (at least one required).",
       "type": "checkbox",
       "options": ["X", "Y", "Z"],
-      "selected": []
+      "selected": [],
+      "required": true
     }
   ]
 }
