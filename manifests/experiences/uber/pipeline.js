@@ -24,7 +24,7 @@ async function tripsGraphData(fileManager) {
     })
     return acc
   }, [])
-  return { headers: tripsData.headers, items: filteredValues }
+  return { headers: ['source', 'target', 'value'], items: filteredValues }
 }
 export default {
   tripsData,
