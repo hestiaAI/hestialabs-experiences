@@ -17,6 +17,13 @@
   },
   "defaultView": [
     {
+      "sql": "all-advertisers",
+      "showTable": false,
+      "title": "Targeting criteria (1 advertisers)",
+      "visualizations": ["ChartViewSearchSunburst.vue"],
+      "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the advertiser in the table below and click on it to visualise them."
+    },
+    {
       "sql": "advertisers-per-day",
       "visualizations": ["top-k-advertisers"],
       "showTable": false,
