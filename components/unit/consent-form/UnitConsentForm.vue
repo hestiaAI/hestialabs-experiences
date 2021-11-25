@@ -1,10 +1,10 @@
 <template>
-  <VForm>
+  <VForm v-if="consent">
     <VCard class="pa-2 my-6">
       <VCardTitle class="justify-center">Export Results</VCardTitle>
       <VCardText>
         <UnitConsentFormSection
-          v-for="(section, index) in $store.state.config.consent"
+          v-for="(section, index) in consent"
           :key="`section-${index}`"
           v-bind="{ section, index }"
           @change="updateConsent"
@@ -65,10 +65,14 @@ export default {
       type: Array,
       required: true
     }
+    // consentForm: {
+    //   type: Array,
+    //   required: true
+    // }
   },
   data() {
     return {
-      consent: JSON.parse(JSON.stringify(this.$store.state.config.consent)),
+      consent: null,
       includedResults: [],
       zipFile: [],
       encryptedZipFile: [],
@@ -86,6 +90,9 @@ export default {
       return this.generateStatus && !this.generateError
     },
     missingRequired() {
+      if (!this.consent) {
+        return false
+      }
       // If one section with attribute required has not been filled
       return !this.consent.every(section => {
         if ('required' in section || section.required) {
@@ -112,7 +119,19 @@ export default {
       }
     }
   },
+  created() {
+    this.initConsent()
+  },
   methods: {
+    initConsent() {
+      const consent = this.$store.state.config.consent
+      const key = this.$route.params.key
+      if (key in consent) {
+        this.consent = JSON.parse(JSON.stringify(consent[key]))
+      } else if ('default' in consent) {
+        this.consent = JSON.parse(JSON.stringify(consent.default))
+      }
+    },
     switchForm() {
       this.showForm = !this.showForm
     },
