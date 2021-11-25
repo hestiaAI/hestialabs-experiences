@@ -1,7 +1,7 @@
 <template>
   <VContainer>
     <VRow>
-      <VCol cols="5">
+      <VCol cols="12" md="4">
         <VCard>
           <VCardTitle>
             Advertisers
@@ -23,9 +23,13 @@
             item-key="name"
             show-select
             class="elevation-1"
+            @item-selected="drawSunburst"
           >
           </VDataTable>
         </VCard>
+      </VCol>
+      <VCol cols="12" md="8">
+        <ChartViewSunburst :values="selectedValues"></ChartViewSunburst>
       </VCol>
     </VRow>
   </VContainer>
@@ -39,22 +43,35 @@ export default {
   data() {
     return {
       search: '',
-      selected: [{ name: 'Apple', value: 12 }],
+      selected: [],
+      selectedValues: [],
       headers: [
         { text: 'Advertiser', value: 'name' },
-        { text: 'Impressions', value: 'value' }
+        { text: 'Targeting criteria', value: 'value' }
       ],
-      items: [
-        { name: 'Apple', value: 12 },
-        { name: 'Samsung', value: 11 },
-        { name: 'Android', value: 10 },
-        { name: 'Sony', value: 9 }
-      ]
+      items: []
     }
   },
   methods: {
     drawViz() {
-      console.log(this.values)
+      this.items = this.values
+        .filter(d => d.parent === 0)
+        .sort((a, b) => b.value - a.value)
+
+      this.values.forEach(element => {
+        if (element.parent === 0) element.parent = null
+      })
+
+      this.selected = [this.items[0]]
+      this.selectedValues = this.values.filter(d => {
+        return d.group === this.items[0].name
+      })
+    },
+    drawSunburst(selection) {
+      if (selection.value)
+        this.selectedValues = this.values.filter(
+          d => d.group === selection.item.name
+        )
     }
   }
 }

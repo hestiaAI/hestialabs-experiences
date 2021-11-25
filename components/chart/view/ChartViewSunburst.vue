@@ -32,6 +32,7 @@ export default {
   },
   methods: {
     drawViz() {
+      if (!this.values || this.values.length === 0) return
       // Transform list to hierarchical object
       const colorDomain = []
       const hierarchicalData = d3
@@ -307,7 +308,7 @@ export default {
             disabled: true
           }
         })
-        this.bcItems.unshift({ text: 'All', disabled: true })
+        this.bcItems.unshift({ text: rootName, disabled: true })
         infoPercent.text(percentageString)
         infoNumber.text(`${d.value} out of ${totalSize}`)
         infoPercent.attr('opacity', 1)
