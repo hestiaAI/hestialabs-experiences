@@ -22,5 +22,8 @@
         "required": true
       }
     ]
+  },
+  "includedResults": {
+    "twitter": [3, 4]
   }
 }
