@@ -1,30 +1,32 @@
 <template>
-  <VForm>
+  <VForm v-if="consent">
     <VCard class="pa-2 my-6">
       <VCardTitle class="justify-center">Export Results</VCardTitle>
       <VCardText>
         <UnitConsentFormSection
-          v-for="(section, index) in $store.state.config.consent"
+          v-for="(section, index) in consent"
           :key="`section-${index}`"
           v-bind="{ section, index }"
           @change="updateConsent"
         />
-        <h2 class="mb-2 mt-2">Results to include</h2>
-        <VCheckbox
-          v-for="(result, index) in allResults"
-          :key="`data-${index}`"
-          v-model="includedResults"
-          :dense="true"
-          :disabled="!result"
-          :label="defaultView[index].title"
-          :value="index"
-        ></VCheckbox>
+        <template v-if="showExport">
+          <h2 class="mb-2 mt-2">Results to include</h2>
+          <VCheckbox
+            v-for="(result, index) in allResults"
+            :key="`data-${index}`"
+            v-model="includedResults"
+            :dense="true"
+            :disabled="!result"
+            :label="defaultView[index].title"
+            :value="index"
+          ></VCheckbox>
+        </template>
         <BaseButton
           text="Generate ZIP"
           :status="generateStatus"
           :error="generateError"
           :progress="generateProgress"
-          :disabled="missingRequired"
+          :disabled="missingRequired || missingIncludedData"
           @click="generateZIP"
         />
         <BaseButtonDownloadData
@@ -45,6 +47,10 @@
           Sending failed. Please download the file and send it by email.
         </p>
         <p v-if="sentStatus && !sentError">Form successfully submitted.</p>
+        <p v-if="missingRequired">Some required fields are not filled in.</p>
+        <p v-if="missingIncludedData">
+          Some data required for sending this form has not been processed.
+        </p>
       </VCardText>
     </VCard>
   </VForm>
@@ -68,7 +74,8 @@ export default {
   },
   data() {
     return {
-      consent: JSON.parse(JSON.stringify(this.$store.state.config.consent)),
+      consent: null,
+      showExport: true,
       includedResults: [],
       zipFile: [],
       encryptedZipFile: [],
@@ -86,6 +93,9 @@ export default {
       return this.generateStatus && !this.generateError
     },
     missingRequired() {
+      if (!this.consent) {
+        return false
+      }
       // If one section with attribute required has not been filled
       return !this.consent.every(section => {
         if ('required' in section || section.required) {
@@ -102,6 +112,17 @@ export default {
         }
         return true
       })
+    },
+    missingIncludedData() {
+      // If the included data has been defined through the config, it must be in the export
+      if (!this.showExport) {
+        for (const index of this.includedResults) {
+          if (typeof this.allResults[index] === 'undefined') {
+            return true
+          }
+        }
+      }
+      return false
     }
   },
   watch: {
@@ -112,7 +133,26 @@ export default {
       }
     }
   },
+  created() {
+    this.init()
+  },
   methods: {
+    init() {
+      const key = this.$route.params.key
+      // Get the relevant consent form
+      const consent = this.$store.state.config.consent
+      if (key in consent) {
+        this.consent = JSON.parse(JSON.stringify(consent[key]))
+      } else if ('default' in consent) {
+        this.consent = JSON.parse(JSON.stringify(consent.default))
+      }
+      // Do we have the included results defined in the config ?
+      const config = this.$store.state.config
+      if ('includedResults' in config && key in config.includedResults) {
+        this.showExport = false
+        this.includedResults = config.includedResults[key]
+      }
+    },
     switchForm() {
       this.showForm = !this.showForm
     },

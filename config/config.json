@@ -20,30 +20,39 @@
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
   "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
-  "consent": [
-    {
-      "title": "Introduction",
-      "description": "This is an example consent form."
-    },
-    {
-      "description": "Please input some information.",
-      "type": "input",
-      "name": "e-mail"
-    },
-    {
-      "title": "Radio buttons",
-      "description": "Please select one option.",
-      "type": "radio",
-      "options": ["A", "B"],
-      "selected": "A"
-    },
-    {
-      "title": "Checkboxes",
-      "description": "Please select all options that apply (at least one required).",
-      "type": "checkbox",
-      "options": ["X", "Y", "Z"],
-      "selected": [],
-      "required": true
-    }
-  ]
+  "consent": {
+    "default": [
+      {
+        "title": "Introduction",
+        "description": "This is an example consent form."
+      },
+      {
+        "description": "Please input some information.",
+        "type": "input",
+        "name": "e-mail"
+      },
+      {
+        "title": "Radio buttons",
+        "description": "Please select one option.",
+        "type": "radio",
+        "options": ["A", "B"],
+        "selected": "A"
+      },
+      {
+        "title": "Checkboxes",
+        "description": "Please select all options that apply (at least one required).",
+        "type": "checkbox",
+        "options": ["X", "Y", "Z"],
+        "selected": [],
+        "required": true
+      }
+    ],
+    "twitter": [
+      {
+        "title": "Twitter export",
+        "description": "This is a special consent form for twitter."
+      }
+    ],
+    "facebook": null
+  }
 }

@@ -32,6 +32,7 @@ export default {
   },
   methods: {
     drawViz() {
+      if (!this.values || this.values.length === 0) return
       // Transform list to hierarchical object
       const colorDomain = []
       const hierarchicalData = d3
@@ -142,7 +143,7 @@ export default {
 
       const path = svg
         .append('g')
-        .selectAll('path')
+        .selectAll('#' + this.graphId + ' path')
         .data(root.descendants().slice(1))
         .join('path')
         .attr('fill', d => {
@@ -307,7 +308,7 @@ export default {
             disabled: true
           }
         })
-        this.bcItems.unshift({ text: 'All', disabled: true })
+        this.bcItems.unshift({ text: rootName, disabled: true })
         infoPercent.text(percentageString)
         infoNumber.text(`${d.value} out of ${totalSize}`)
         infoPercent.attr('opacity', 1)
@@ -316,11 +317,11 @@ export default {
         if (currentLevel.length <= 1) clickLabel.attr('opacity', 1)
 
         // Fade all the segments.
-        d3.selectAll('path').style('opacity', 0.3)
+        d3.selectAll('#' + this.graphId + ' path').style('opacity', 0.3)
 
         // Then highlight only those that are an ancestor of the current segment.
         svg
-          .selectAll('path')
+          .selectAll('#' + this.graphId + ' path')
           .filter(node => ancestors.includes(node))
           .style('opacity', 1)
       }
@@ -331,7 +332,7 @@ export default {
         infoNumber.attr('opacity', 0)
         infoLabel.attr('opacity', 0)
         clickLabel.attr('opacity', 0)
-        d3.selectAll('path').style('opacity', 1)
+        d3.selectAll('#' + this.graphId + ' path').style('opacity', 1)
       }
       // attach event actions
       path.on('mouseover', mouseover)
