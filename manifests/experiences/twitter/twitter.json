@@ -42,7 +42,7 @@
       "sql": "all-criteria-all-advertisers",
       "postprocessor": "sunburstTargeting",
       "showTable": false,
-      "title": "Targeting criteria (1 advertisers)",
+      "title": "Targeting criteria (1 advertiser)",
       "visualizations": ["ChartViewSearchSunburst.vue"],
       "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the advertiser in the table below and click on it to visualise them."
     },
