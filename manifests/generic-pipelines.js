@@ -9,6 +9,7 @@ const timeParsers = [
   d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC'),
   d3.timeParse('%Y-%m-%d %H:%M:%S UTC'),
   d3.timeParse('%Y-%m-%d %H:%M:%S'),
+  d3.timeParse('%Y-%m-%d %H:%M'),
   d3.timeParse('%Y-%m-%d'),
   d3.timeParse('%Y/%m/%d %H:%M:%S'),
   d3.timeParse('%s'), // Unix seconds

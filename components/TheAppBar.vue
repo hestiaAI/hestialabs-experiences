@@ -5,35 +5,40 @@
         aria-label="Open navigation menu"
         @click.stop="drawer = !drawer"
       />
-      <VToolbarTitle class="d-flex align-center">
-        <VBtn icon to="/" class="v-btn__home mr-0 mr-sm-4" color="primary">
+      <VToolbarTitle class="d-flex align-center" style="width: 100%">
+        <VBtn
+          v-if="$nuxt.$route.path !== '/'"
+          icon
+          to="/"
+          class="v-btn__home mr-0 mr-sm-4"
+          color="primary"
+        >
           <VIcon>$vuetify.icons.mdiHome</VIcon>
         </VBtn>
+        <VSpacer />
+        <a
+          v-if="collaborator"
+          :href="collaborator.url"
+          target="_blank"
+          rel="noreferrer noopener"
+          class="ml-2 mr-5"
+        >
+          <VImg
+            :src="collaborator.icon"
+            :lazy-src="collaborator.icon"
+            :alt="collaborator.title"
+            contain
+            width="100"
+          />
+        </a>
         <a
           href="https://hestialabs.org/"
           target="_blank"
           rel="noreferrer noopener"
           class="ml-2"
         >
-          <LogoImg class="mr-5" width="100" />
+          <LogoImg width="100" />
         </a>
-
-        <template v-if="collaborator">
-          <a
-            :href="collaborator.url"
-            target="_blank"
-            rel="noreferrer noopener"
-            class="ml-2"
-          >
-            <VImg
-              :src="collaborator.icon"
-              :lazy-src="collaborator.icon"
-              :alt="collaborator.title"
-              contain
-              width="100"
-            />
-          </a>
-        </template>
       </VToolbarTitle>
     </VAppBar>
     <VNavigationDrawer

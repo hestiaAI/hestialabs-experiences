@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VRow class="mt-6">
+    <VRow class="mt-3 mb-6">
       <VCol
         v-for="{ key, title, subtitle, icon, url, disabled } in experiences"
         :key="key"
@@ -14,9 +14,14 @@
           class="d-flex flex-column"
           v-bind="menuItemAttrs(url, key, disabled)"
           hover
-          shaped
         >
-          <VImg max-height="250" contain :src="icon" :lazy-src="icon" />
+          <VImg
+            max-height="250"
+            contain
+            :src="icon"
+            :lazy-src="icon"
+            class="mt-3"
+          />
           <VCardTitle v-text="title" />
           <VCardSubtitle class="subtitle-1" v-text="subtitle" />
         </VCard>
