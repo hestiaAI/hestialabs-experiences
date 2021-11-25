@@ -59,9 +59,6 @@
           </VBtn>
         </div>
       </template>
-      <template #append>
-        <ModeSwitch />
-      </template>
       <div class="mt-6">
         <LogoImg width="250" />
         <TheExperienceMenu />
