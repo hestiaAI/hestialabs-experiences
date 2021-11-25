@@ -39,20 +39,12 @@
       "text": "Get more details on how you are targeted by these advertisers. This graph shows the number of times you have been targeted by different advertisers using a specific criterion. You can change the type of criterion and get information about the meaning of each criterion's type at the bottom of the graph."
     },
     {
-      "sql": "all-advertisers",
-      "showTable": true,
-      "title": "All advertisers",
-      "text": "Get more details with a table containing all the advertisers that have shown you ads, and how many times they did. Click on the headers to sort the values differently."
-    },
-    {
-      "sql": "targeting-criteria-one-advertiser",
-      "postprocessor": "sunburstTargetingAdvertiser",
-      "parameterName": "Advertiser",
-      "parameterKey": ":advertiser",
-      "visualizations": ["ChartViewSunburst.vue"],
+      "sql": "all-criteria-all-advertisers",
+      "postprocessor": "sunburstTargeting",
       "showTable": false,
       "title": "Targeting criteria (1 advertiser)",
-      "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the names in the table above and write it in the text field below."
+      "visualizations": ["ChartViewSearchSunburst.vue"],
+      "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the advertiser in the table below and click on it to visualise them."
     },
     {
       "sql": "overview",

@@ -30,6 +30,8 @@ const store = (function createStore(redux, enhancers) {
 })(Redux, enhancers)
 /** END STORE **/
 
+window.store = store
+
 /** COMPONENTS **/
 const KeplerElement = (function (react, keplerGl, mapboxToken) {
   return function (props) {
@@ -52,38 +54,51 @@ const KeplerElement = (function (react, keplerGl, mapboxToken) {
     )
   }
 })(React, KeplerGl, MAPBOX_TOKEN)
-
-const app = (function createReactReduxProvider(
-  react,
-  reactRedux,
-  KeplerElement
-) {
-  return react.createElement(
-    reactRedux.Provider,
-    { store },
-    react.createElement(KeplerElement, null)
-  )
-})(React, ReactRedux, KeplerElement)
 /** END COMPONENTS **/
 
-/** Render **/
-;(function render(react, reactDOM, app) {
-  reactDOM.render(app, document.getElementById('app'))
-})(React, ReactDOM, app)
+const renderApp = function (props) {
+  const app = React.createElement(
+    ReactRedux.Provider,
+    { store },
+    React.createElement(KeplerElement, props)
+  )
+  ReactDOM.render(app, document.getElementById('app'))
+}
 
-function update(values) {
+function init(args = {}) {
+  console.log('init', args)
+  renderApp(args)
+}
+
+function extractDataId(config) {
+  let dataId = config?.config?.visState?.filters?.[0]?.dataId?.[0]
+  if (!dataId) {
+    dataId = config?.config?.visState?.layers?.[0]?.config?.dataId
+  }
+  return dataId || 'the-data-id'
+}
+
+function update(data) {
+  const { config, rawCsv } = data
   const dataset = {
-    info: { id: 'trips-id', label: 'trips' },
-    data: KeplerGl.processCsvData(values)
+    info: { id: extractDataId(config), label: 'trips' },
+    data: KeplerGl.processCsvData(rawCsv)
+  }
+  let parsedConfig = {}
+  if (config) {
+    parsedConfig = KeplerGl.KeplerGlSchema.parseSavedConfig(config)
   }
   store.dispatch(
     KeplerGl.addDataToMap({
       datasets: [dataset],
-      options: { centerMap: true, readOnly: true }
+      options: { centerMap: true, readOnly: true },
+      config: parsedConfig
     })
   )
+  // console.log('layers', store.getState().keplerGl.map.visState.layers)
 }
 
 if (window) {
+  window.init = init
   window.update = update
 }

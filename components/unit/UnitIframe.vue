@@ -2,7 +2,7 @@
   <iframe
     ref="iframe"
     :src="src"
-    :style="`width: 100%; height: ${height}`"
+    :style="`width: 100%; height: ${height}px`"
     @load="onload"
   ></iframe>
 </template>
@@ -18,21 +18,34 @@ export default {
       required: true
     },
     height: {
-      type: String,
-      default: '500px'
+      type: Number,
+      default: 500
+    }
+  },
+  watch: {
+    data(data) {
+      this.callIframeFunction('update', data)
     }
   },
   methods: {
     onload() {
-      const update = this.$refs.iframe.contentWindow?.update
-      if (update) {
+      const initArgs = {
+        height: this.height,
+        width: (this.width = this.$refs.iframe.offsetWidth)
+      }
+      this.callIframeFunction('init', initArgs)
+      this.callIframeFunction('update', this.data)
+    },
+    callIframeFunction(functionName, ...args) {
+      const func = this.$refs.iframe.contentWindow?.[functionName]
+      if (func) {
         try {
-          update(this.data)
+          func(...args)
         } catch (error) {
           console.error('problem in iframe', error)
         }
       } else {
-        console.error('iframe does not have an update function')
+        console.error('iframe does not have a function called ' + functionName)
       }
     }
   }
