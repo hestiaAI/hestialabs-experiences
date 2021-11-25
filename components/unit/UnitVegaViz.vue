@@ -110,9 +110,11 @@ export default {
       this.draw()
     }
   },
-  async mounted() {
-    if (this.$refs.graph) this.width = this.$refs.graph.offsetWidth
-    if (this.isValid && !this.isEmpty) await this.draw()
+  mounted() {
+    this.width = this.$refs.graph?.offsetWidth ?? 0
+    if (this.isValid && !this.isEmpty) {
+      this.draw()
+    }
   },
   methods: {
     async draw() {
