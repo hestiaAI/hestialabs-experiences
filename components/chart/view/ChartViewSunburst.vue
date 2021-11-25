@@ -143,7 +143,7 @@ export default {
 
       const path = svg
         .append('g')
-        .selectAll('path')
+        .selectAll('#' + this.graphId + ' path')
         .data(root.descendants().slice(1))
         .join('path')
         .attr('fill', d => {
@@ -317,11 +317,11 @@ export default {
         if (currentLevel.length <= 1) clickLabel.attr('opacity', 1)
 
         // Fade all the segments.
-        d3.selectAll('path').style('opacity', 0.3)
+        d3.selectAll('#' + this.graphId + ' path').style('opacity', 0.3)
 
         // Then highlight only those that are an ancestor of the current segment.
         svg
-          .selectAll('path')
+          .selectAll('#' + this.graphId + ' path')
           .filter(node => ancestors.includes(node))
           .style('opacity', 1)
       }
@@ -332,7 +332,7 @@ export default {
         infoNumber.attr('opacity', 0)
         infoLabel.attr('opacity', 0)
         clickLabel.attr('opacity', 0)
-        d3.selectAll('path').style('opacity', 1)
+        d3.selectAll('#' + this.graphId + ' path').style('opacity', 1)
       }
       // attach event actions
       path.on('mouseover', mouseover)
