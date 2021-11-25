@@ -1,7 +1,8 @@
 <template>
   <div>
-    <component :is="component" v-if="isValid" :values="values" />
-    <i v-else>data in this format cannot be displayed by this visualization</i>
+    <component :is="component" v-if="isValid && !isEmpty" :values="values" />
+    <i v-else-if="isValid">No data found</i>
+    <i v-else>Data in this format cannot be displayed by this visualization</i>
   </div>
 </template>
 
@@ -19,6 +20,10 @@ function isDataValid(data) {
   )
 }
 
+function isDataEmpty(data) {
+  return data.items.length === 0
+}
+
 export default {
   props: {
     data: {
@@ -33,6 +38,9 @@ export default {
   computed: {
     isValid() {
       return isDataValid(this.data)
+    },
+    isEmpty() {
+      return isDataEmpty(this.data)
     },
     values() {
       return this.data.items || {}

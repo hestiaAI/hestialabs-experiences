@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="isValid">
+    <template v-if="isValid && !isEmpty">
       <div :id="divId" ref="graph"></div>
       <VRow>
         <VCol cols="6 mx-auto">
@@ -13,22 +13,27 @@
         </VCol>
       </VRow>
     </template>
-    <template v-else>
-      <VRow>
-        <VCol>
-          <i>data in this format cannot be displayed by this visualization</i>
-        </VCol>
-      </VRow>
-    </template>
+    <i v-else-if="isValid">No data found</i>
+    <i v-else>Data in this format cannot be displayed by this visualization</i>
   </div>
 </template>
 <script>
 import embed from 'vega-embed'
+import _ from 'lodash'
 
 function isDataValid(data) {
-  return !data || !!(data.items?.length > 0)
+  return (
+    _.every(
+      ['items', 'headers'],
+      field => _.has(data, field) && Array.isArray(data[field])
+    ) &&
+    data.headers.length > 0 &&
+    _.every(data.items, i => _.every(data.headers, h => _.has(i, h)))
+  )
 }
-
+function isDataEmpty(data) {
+  return data.items.length === 0
+}
 export default {
   props: {
     specFile: {
@@ -57,6 +62,9 @@ export default {
   computed: {
     isValid() {
       return isDataValid(this.data)
+    },
+    isEmpty() {
+      return isDataEmpty(this.data)
     },
     items() {
       if (!this.isValid) {
@@ -98,13 +106,13 @@ export default {
     }
   },
   watch: {
-    specWithItems(v) {
+    specWithItems() {
       this.draw()
     }
   },
   async mounted() {
-    this.width = this.$refs.graph.offsetWidth
-    await this.draw()
+    if (this.$refs.graph) this.width = this.$refs.graph.offsetWidth
+    if (this.isValid && !this.isEmpty) await this.draw()
   },
   methods: {
     async draw() {
