@@ -1,12 +1,18 @@
 import manifestMap, { config } from '@/manifests'
 
 export const state = () => ({
-  config,
+  config: {
+    appName: 'HestiaLabs Experiences',
+    ...config
+  },
   manifestMap,
   power: false
 })
 
 export const getters = {
+  appName(state) {
+    return state.config.appName
+  },
   manifests(state) {
     const experiences = state.config?.experiences || []
     const activeManifests = experiences
