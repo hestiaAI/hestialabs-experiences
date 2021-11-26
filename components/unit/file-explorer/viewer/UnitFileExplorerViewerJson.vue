@@ -4,7 +4,7 @@
     <p>Could not parse file. Showing content instead</p>
     <div>{{ jsonText }}</div>
   </div>
-  <VTreeview v-else dense open-on-click transition :items="items">
+  <VTreeview v-else dense transition :items="items">
     <template #prepend="{ item }">
       <VIcon v-if="!isUndef(item.icon)">
         {{ item.icon }}
