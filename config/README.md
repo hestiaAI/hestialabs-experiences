@@ -8,6 +8,11 @@ This directory contains the configuration files linked to each deployement. They
     */
   "experiences": ["facebook", "google", "twitter"],
   /**
+    * The hashtags that are pre-written when using the Twitter "Share" button.
+    * @type Array
+    */
+  "hashtags": ["dataprivacy", "hestialabs"],
+  /**
     * The public key used to encrypt the zip containing the consent log and results.
     * @type String
     */
@@ -59,7 +64,7 @@ This directory contains the configuration files linked to each deployement. They
       }
     ],
     "facebook": null
-  }
+  },
   /**
     * If we want to hide the section "Results to include" to the user,
     * the data included in the export can be defined through this field.
