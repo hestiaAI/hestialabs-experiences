@@ -99,9 +99,34 @@ export default {
   },
   data() {
     return {
-      selected: this.section.selected,
-      value: this.section.value,
-      includedResults: this.section.includedResults
+      selected: null,
+      value: null,
+      includedResults: null
+    }
+  },
+  created() {
+    if ('selected' in this.section) {
+      this.selected = this.section.selected
+    } else if (this.section.type === 'checkbox') {
+      this.selected = []
+    } else if (this.section.type === 'radio') {
+      this.selected = ''
+    }
+
+    if ('value' in this.section) {
+      this.value = this.section.value
+    } else if (
+      this.section.type === 'input' ||
+      this.section.type === 'multiline'
+    ) {
+      this.value = ''
+    }
+
+    if ('includedResults' in this.section) {
+      this.includedResults = this.section.includedResults
+    }
+    if (this.section.type === 'data') {
+      this.includedResults = []
     }
   },
   methods: {
