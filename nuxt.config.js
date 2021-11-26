@@ -22,18 +22,14 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate(title) {
-      const appName = 'HestiaLabs Experiences'
-      return title ? `${title} | ${appName}` : appName
+      if (this && this.context) {
+        const { appName } = this.context.store.getters
+        return title ? `${title} | ${appName}` : appName
+      }
+      return 'HestiaLabs'
     },
     title: '',
-    meta: [
-      { name: 'format-detection', content: 'telephone=no' },
-      {
-        hid: 'og:title',
-        property: 'og:title',
-        content: name
-      }
-    ]
+    meta: [{ name: 'format-detection', content: 'telephone=no' }]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -117,8 +113,7 @@ export default {
 
   env: {
     baseUrl,
-    configName,
-    appName: name
+    configName
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
