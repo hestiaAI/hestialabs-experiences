@@ -45,6 +45,12 @@
         "options": ["X", "Y", "Z"],
         "selected": [],
         "required": true
+      },
+      {
+        "title": "Multi-line text area",
+        "description": "Any comment ?",
+        "type": "multiline",
+        "name": "Comment"
       }
     ],
     "twitter": [

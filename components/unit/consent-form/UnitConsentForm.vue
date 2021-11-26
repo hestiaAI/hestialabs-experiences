@@ -105,7 +105,7 @@ export default {
           } else if (section.type === 'radio') {
             // A radio button must be selected
             return section.selected !== ''
-          } else if (section.type === 'input') {
+          } else if (section.type === 'input' || section.type === 'multiline') {
             // Some text must be given
             return 'value' in section && section.value !== ''
           }
@@ -229,7 +229,7 @@ export default {
       const section = this.consent[index]
       if (section.type === 'checkbox' || section.type === 'radio') {
         section.selected = selected
-      } else if (section.type === 'input') {
+      } else if (section.type === 'input' || section.type === 'multiline') {
         section.value = value
       }
       // For reactivity

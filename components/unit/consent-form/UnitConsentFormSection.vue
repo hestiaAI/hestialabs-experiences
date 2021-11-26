@@ -54,6 +54,29 @@
         @change="updateConsent"
       ></VTextField>
     </template>
+
+    <template v-if="section.type === 'multiline'">
+      <VTextarea
+        v-if="readonly"
+        dense
+        auto-grow
+        outlined
+        rows="3"
+        :readonly="readonly"
+        :value="section.value"
+        :label="section.name"
+      ></VTextarea>
+      <VTextarea
+        v-else
+        v-model="value"
+        dense
+        auto-grow
+        outlined
+        rows="3"
+        :label="section.name"
+        @change="updateConsent"
+      ></VTextarea>
+    </template>
   </div>
 </template>
 

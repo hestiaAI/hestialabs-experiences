@@ -23,10 +23,10 @@ This directory contains the configuration files linked to each deployement. They
     * Each section can have:
     * - A title
     * - A description
-    * - A type (Either 'radio' or 'checkbox' or 'input')
+    * - A type (Either 'radio' or 'checkbox', 'input' or 'multiline')
     *   - For type 'radio': an array of options and a pre-selected answer (use the empty string for no pre-selection)
     *   - For type 'checkbox': an array of options and an array of pre-selected answers (use the empty array for no pre-selection)
-    *   - For type 'input': the name (label) of the input field
+    *   - For type 'input' and 'multiline': the name (label) of the text field
     * - Whether or not an answer is required (works for all types).
     * @type Object
     */
@@ -55,6 +55,12 @@ This directory contains the configuration files linked to each deployement. They
         "options": ["X", "Y", "Z"],
         "selected": [],
         "required": true
+      },
+      {
+        "title": "Multi-line text area",
+        "description": "Any comment ?",
+        "type": "multiline",
+        "name": "Comment"
       }
     ],
     "twitter": [
