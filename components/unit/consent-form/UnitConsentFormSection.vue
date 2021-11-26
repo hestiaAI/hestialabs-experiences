@@ -11,6 +11,20 @@
       <p v-else v-html="section.description"></p>
     </template>
 
+    <template v-if="section.type === 'data' && !section.hide">
+      <VCheckbox
+        v-for="(title, j) in section.titles"
+        :key="`data-${j}`"
+        v-model="includedResults"
+        :readonly="readonly"
+        dense
+        :disabled="dataCheckboxDisabled[j]"
+        :label="title"
+        :value="j"
+        @change="updateConsent"
+      ></VCheckbox>
+    </template>
+
     <VRadioGroup
       v-if="section.type === 'radio'"
       v-model="selected"
@@ -94,12 +108,17 @@ export default {
     readonly: {
       type: Boolean,
       default: false
+    },
+    dataCheckboxDisabled: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
       selected: this.section.selected,
-      value: ''
+      value: '',
+      includedResults: this.section.includedResults
     }
   },
   methods: {
@@ -107,7 +126,8 @@ export default {
       this.$emit('change', {
         index: this.index,
         selected: this.selected,
-        value: this.value
+        value: this.value,
+        includedResults: this.includedResults
       })
     }
   }
