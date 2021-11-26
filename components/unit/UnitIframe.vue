@@ -8,8 +8,6 @@
 </template>
 
 <script>
-// TODO add  manifest.defaultView with iframe field
-// add custom pipeline for kepler data (no processing, so we delegate to kepler's method?)
 export default {
   props: {
     data: undefined,
