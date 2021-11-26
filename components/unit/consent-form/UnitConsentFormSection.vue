@@ -124,8 +124,7 @@ export default {
 
     if ('includedResults' in this.section) {
       this.includedResults = this.section.includedResults
-    }
-    if (this.section.type === 'data') {
+    } else if (this.section.type === 'data') {
       this.includedResults = []
     }
   },
