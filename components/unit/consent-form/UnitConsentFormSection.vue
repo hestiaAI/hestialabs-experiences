@@ -52,49 +52,28 @@
       />
     </template>
 
-    <template v-if="section.type === 'input'">
-      <VTextField
-        v-if="readonly"
-        dense
-        :readonly="readonly"
-        :value="section.value"
-        :label="section.name"
-        :placeholder="section.placeholder"
-      ></VTextField>
-      <VTextField
-        v-else
-        v-model="value"
-        dense
-        :label="section.name"
-        :placeholder="section.placeholder"
-        @change="updateConsent"
-      ></VTextField>
-    </template>
+    <VTextField
+      v-if="section.type === 'input'"
+      v-model="value"
+      dense
+      :readonly="readonly"
+      :label="section.name"
+      :placeholder="section.placeholder"
+      @change="updateConsent"
+    ></VTextField>
 
-    <template v-if="section.type === 'multiline'">
-      <VTextarea
-        v-if="readonly"
-        dense
-        auto-grow
-        outlined
-        rows="3"
-        :readonly="readonly"
-        :value="section.value"
-        :label="section.name"
-        :placeholder="section.placeholder"
-      ></VTextarea>
-      <VTextarea
-        v-else
-        v-model="value"
-        dense
-        auto-grow
-        outlined
-        rows="3"
-        :label="section.name"
-        :placeholder="section.placeholder"
-        @change="updateConsent"
-      ></VTextarea>
-    </template>
+    <VTextarea
+      v-if="section.type === 'multiline'"
+      v-model="value"
+      dense
+      auto-grow
+      outlined
+      rows="3"
+      :readonly="readonly"
+      :label="section.name"
+      :placeholder="section.placeholder"
+      @change="updateConsent"
+    ></VTextarea>
   </div>
 </template>
 
@@ -121,7 +100,7 @@ export default {
   data() {
     return {
       selected: this.section.selected,
-      value: '',
+      value: this.section.value,
       includedResults: this.section.includedResults
     }
   },
