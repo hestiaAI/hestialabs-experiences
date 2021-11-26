@@ -25,5 +25,35 @@
     "explorer"
   ],
   "hashtags": ["dataprivacy", "hestialabs", "digipower"],
-  "publicKey": "710decd4e26312d3e7b02854fefe53cc1ef8d7b25e8f99bc6df956c1a526e144"
+  "publicKey": "710decd4e26312d3e7b02854fefe53cc1ef8d7b25e8f99bc6df956c1a526e144",
+  "consent": {
+    "default": [
+      {
+        "title": "SHARE MY #DIGIPOWER DATA",
+        "description": "With this form, you can register your consent, and optionally share additional data, in line with the SITRA #digipower contract."
+      },
+      {
+        "title": "WHICH DATA SHOULD BE SHARED?",
+        "description": "Data underlying the following visualisations will be shared. Select all that you want to share.",
+        "type": "data"
+      },
+      {
+        "type": "checkbox",
+        "options": ["Whole file (which I will provide separately)"],
+        "selected": ["Whole file (which I will provide separately)"]
+      },
+      {
+        "title": "FOR WHAT PURPOSE?",
+        "description": "On a strictly need-to-know basis, I consent to sharing this data for the following purposes. Select all that apply:",
+        "type": "checkbox",
+        "options": ["To help analyse/understand the data", "For help with producing screenshots, tweets, videos or summaries (add details below if needed)", "Within my #digipower bubble, for drafting #digipower reports which I can approve/review later", "Outside of my #digipower bubble, to improve the #digipower experience of other participants, in the precise ways defined below", "To report a bug or issue with data extraction, display or visualisation", "To help Hestia.AI developers to improve the data viewing experience", "Other reason (add details below)"]
+      },
+      {
+        "title": "ADDITIONAL DETAILS & COMMENTS",
+        "description": "If you have anything to add, please type it here:",
+        "type": "multiline",
+        "placeholder": "e.g. particular requirements about how the data should be handled (which data, what specific purpose, any sensitivities, who should/should not be able to access it)."
+      }
+    ]
+  }
 }
