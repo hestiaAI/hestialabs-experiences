@@ -53,9 +53,8 @@
       },
       {
         "title": "Multi-line text area",
-        "description": "Any comment ?",
         "type": "multiline",
-        "name": "Comment"
+        "placeholder": "Please type your comment"
       }
     ],
     "tracker-control": [

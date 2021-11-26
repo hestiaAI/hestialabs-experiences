@@ -59,12 +59,14 @@
         :readonly="readonly"
         :value="section.value"
         :label="section.name"
+        :placeholder="section.placeholder"
       ></VTextField>
       <VTextField
         v-else
         v-model="value"
         dense
         :label="section.name"
+        :placeholder="section.placeholder"
         @change="updateConsent"
       ></VTextField>
     </template>
@@ -79,6 +81,7 @@
         :readonly="readonly"
         :value="section.value"
         :label="section.name"
+        :placeholder="section.placeholder"
       ></VTextarea>
       <VTextarea
         v-else
@@ -88,6 +91,7 @@
         outlined
         rows="3"
         :label="section.name"
+        :placeholder="section.placeholder"
         @change="updateConsent"
       ></VTextarea>
     </template>

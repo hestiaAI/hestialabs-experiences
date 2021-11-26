@@ -28,7 +28,7 @@ This directory contains the configuration files linked to each deployement. They
     *     and an array of implicitly added data (referenced by the index of the sub-experience (starting from 0)).
     *   - For type 'radio': an array of options and a pre-selected answer (use the empty string for no pre-selection)
     *   - For type 'checkbox': an array of options and an array of pre-selected answers (use the empty array for no pre-selection)
-    *   - For type 'input' and 'multiline': the name (label) of the text field
+    *   - For type 'input' and 'multiline': the name (label) of the text field, and some placeholder text.
     * - Whether or not an answer is required (Boolean for most types, array for data section).
     * @type Object
     */
@@ -65,9 +65,8 @@ This directory contains the configuration files linked to each deployement. They
       },
       {
         "title": "Multi-line text area",
-        "description": "Any comment ?",
         "type": "multiline",
-        "name": "Comment"
+        "placeholder": "Please type your comment",
       }
     ],
     "tracker-control": [
