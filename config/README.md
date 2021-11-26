@@ -68,12 +68,12 @@ This directory contains the configuration files linked to each deployement. They
   /**
     * If we want to hide the section "Results to include" to the user,
     * the data included in the export can be defined through this field.
-    * It is defined for a specific experience, as an array corresponding to the index of the sub-experience (starting from 0).
+    * It is defined for a specific experience, as an array of keys (as defined in the config of the experience).
     * Note that all the included sub-experiences must have been run by the user for the send button to be enabled.
     * @type Object
     */
   "includedResults": {
-    "twitter": [2, 3]
+    "twitter": ["key1", "key2"]
   }
 }
 ```

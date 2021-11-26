@@ -18,7 +18,7 @@
             :dense="true"
             :disabled="!result"
             :label="defaultView[index].title"
-            :value="index"
+            :value="defaultView[index].key"
           ></VCheckbox>
         </template>
         <BaseButton
@@ -115,8 +115,12 @@ export default {
     },
     missingIncludedData() {
       // If the included data has been defined through the config, it must be in the export
+      const keys = this.defaultView.map(block => block.key)
+      const includedResultsIndex = this.includedResults.map(key =>
+        keys.indexOf(key)
+      )
       if (!this.showExport) {
-        for (const index of this.includedResults) {
+        for (const index of includedResultsIndex) {
           if (typeof this.allResults[index] === 'undefined') {
             return true
           }
@@ -175,11 +179,18 @@ export default {
       zip.file('consent.json', JSON.stringify(this.consent))
 
       // Add included data
-      this.includedResults.forEach(i => {
-        const content = JSON.parse(JSON.stringify(this.defaultView[i]))
-        content.result = JSON.parse(this.allResults[i])
-        zip.file(`block${i}.json`, JSON.stringify(content))
-      })
+      const keys = this.defaultView.map(block => block.key)
+      this.includedResults
+        .map(key => keys.indexOf(key))
+        .forEach(i => {
+          const content = JSON.parse(JSON.stringify(this.defaultView[i]))
+          content.result = JSON.parse(this.allResults[i])
+          content.index = i
+          zip.file(
+            `block${i.toString().padStart(2, '0')}.json`,
+            JSON.stringify(content)
+          )
+        })
 
       const content = await zip.generateAsync({ type: 'uint8array' })
       this.zipFile = content
