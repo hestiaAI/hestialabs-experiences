@@ -11,6 +11,8 @@ const timeParsers = [
   d3.timeParse('%Y-%m-%d %H:%M:%S'),
   d3.timeParse('%Y-%m-%d'),
   d3.timeParse('%Y/%m/%d %H:%M:%S'),
+  d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ[UTC]'),
+  d3.timeParse('%Y-%m-%d %H:%M'),
   d3.timeParse('%s'), // Unix seconds
   d3.timeParse('%Q') // Unix milliseconds
 ]
@@ -23,6 +25,9 @@ const validYearMax = 2038
 // Try to transform {{ value }} into a Date object,
 // return the date or null if not a valid date
 function getValidDate(value) {
+  // Check if it is a phone number
+  if (value.length === 0 || value[0] === '0' || value[0] === '+') return null
+
   let date = null
   const findDate = timeParsers.some((parser, idx) => {
     date = parser(value)
