@@ -1,4 +1,5 @@
 {
+  "appName": "#digipower Data Experiences",
   "experiences": [
     "apple",
     "bookbeat",
@@ -7,8 +8,10 @@
     "gigantti",
     "google",
     "helsingin-sanomat",
+    "hsl",
     "k-ryhma",
     "lime",
+    "linkedin",
     "netflix",
     "s-ryhma",
     "signal",
