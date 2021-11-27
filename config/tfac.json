@@ -20,10 +20,13 @@
         "options": ["I understand and I agree"],
         "selected": [],
         "required": true
+      },
+      {
+        "type": "data",
+        "hide": true,
+        "includedResults": [3],
+        "required": [3]
       }
     ]
-  },
-  "includedResults": {
-    "twitter": [3]
   }
 }
