@@ -31,7 +31,16 @@
             <VCardTitle class="justify-center">File details</VCardTitle>
             <VCardText>
               <template v-if="selectedItem">
-                <p>Exploring file {{ selectedItem.filename }}</p>
+                <p>
+                  <span class="mr-2">
+                    Exploring file <strong>{{ selectedItem.filename }}</strong>
+                  </span>
+                  <BaseButtonDownload
+                    small
+                    :href="path"
+                    :filename="selectedItem.filename"
+                  />
+                </p>
                 <component
                   :is="componentForType"
                   v-bind="{ fileManager, filename: selectedItem.filename }"
@@ -71,6 +80,13 @@ export default {
     }
   },
   computed: {
+    path() {
+      // TODO avoid code duplication with viewer/mixin-path
+      // maybe by setting path as an attribute on every viewer
+      return URL.createObjectURL(
+        this.fileManager.fileDict[this.selectedItem.filename]
+      )
+    },
     fileType() {
       // @fileType should match the postfix of the Vue component name
       return this.selectedItem?.type
