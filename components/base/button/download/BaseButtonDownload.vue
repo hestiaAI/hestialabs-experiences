@@ -11,6 +11,10 @@ export default {
       type: String,
       required: true
     },
+    filename: {
+      type: String,
+      default: undefined
+    },
     extension: {
       type: String,
       default: defaultExtension,
@@ -25,7 +29,7 @@ export default {
   },
   computed: {
     download() {
-      return `results.${this.extension}`
+      return this.filename ?? `results.${this.extension}`
     }
   },
   watch: {
