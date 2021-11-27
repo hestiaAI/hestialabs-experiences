@@ -10,7 +10,7 @@
         <p class="subtitle-1 mt-4">
           {{ m.subtitle }}
           <ShareButtonFacebook
-            :url="baseUrl + $route.path"
+            :url="url"
             :title="`${appName}: ${m.title}`"
             :quote="description"
             :description="description"
@@ -18,7 +18,7 @@
             class="my-2 ml-4"
           />
           <ShareButtonTwitter
-            :url="baseUrl + $route.path"
+            :url="url"
             :title="description"
             :hashtags="hashtags"
             twitter-user="HestiaLabs"
@@ -41,13 +41,13 @@ export default {
     }
   },
   data() {
-    return {
-      baseUrl: process.env.baseUrl,
-      appName: process.env.appName
-    }
+    return {}
   },
   head() {
-    const { title: t, subtitle: s } = this.m
+    const {
+      description,
+      m: { title: t, subtitle: s }
+    } = this
     const title = `${t}: ${s}`
     const longTitle = `${title} | ${this.appName}`
     return {
@@ -56,7 +56,7 @@ export default {
         {
           hid: 'description',
           property: 'description',
-          content: `${this.description}`
+          content: description
         },
         {
           hid: 'og:title',
@@ -66,17 +66,7 @@ export default {
         {
           hid: 'og:description',
           property: 'og:description',
-          content: `${this.description}`
-        },
-        {
-          hid: 'twitter:card',
-          property: 'twitter:card',
-          content: 'summary'
-        },
-        {
-          hid: 'twitter:site',
-          property: 'twitter:site',
-          content: '@HestiaLabs'
+          content: description
         },
         {
           hid: 'twitter:title',
@@ -86,14 +76,14 @@ export default {
         {
           hid: 'twitter:description',
           property: 'twitter:description',
-          content: `${this.description}`
+          content: description
         }
       ]
     }
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['manifest', 'keys']),
+    ...mapGetters(['manifest', 'keys', 'appName']),
     description() {
       const title = this.m.title
       if (title) {
@@ -116,6 +106,9 @@ export default {
         hashtags.push(...this.config.hashtags)
       }
       return hashtags.join(',')
+    },
+    url() {
+      return process.env.baseUrl + this.$route.path
     }
   }
 }

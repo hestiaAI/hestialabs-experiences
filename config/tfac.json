@@ -20,10 +20,13 @@
         "options": ["I understand and I agree"],
         "selected": [],
         "required": true
+      },
+      {
+        "type": "data",
+        "hide": true,
+        "includedResults": ["all-criteria-all-advertisers"],
+        "required": ["all-criteria-all-advertisers"]
       }
     ]
-  },
-  "includedResults": {
-    "twitter": ["all-criteria-all-advertisers"]
   }
 }

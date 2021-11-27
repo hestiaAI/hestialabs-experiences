@@ -6,21 +6,9 @@
         <UnitConsentFormSection
           v-for="(section, index) in consent"
           :key="`section-${index}`"
-          v-bind="{ section, index }"
+          v-bind="{ section, index, dataCheckboxDisabled }"
           @change="updateConsent"
         />
-        <template v-if="showExport">
-          <h2 class="mb-2 mt-2">Results to include</h2>
-          <VCheckbox
-            v-for="(result, index) in allResults"
-            :key="`data-${index}`"
-            v-model="includedResults"
-            :dense="true"
-            :disabled="!result"
-            :label="defaultView[index].title"
-            :value="defaultView[index].key"
-          ></VCheckbox>
-        </template>
         <BaseButton
           text="Generate ZIP"
           :status="generateStatus"
@@ -75,7 +63,6 @@ export default {
   data() {
     return {
       consent: null,
-      showExport: true,
       includedResults: [],
       zipFile: [],
       encryptedZipFile: [],
@@ -98,14 +85,14 @@ export default {
       }
       // If one section with attribute required has not been filled
       return !this.consent.every(section => {
-        if ('required' in section || section.required) {
+        if ('required' in section) {
           if (section.type === 'checkbox') {
             // At least one checkbox must be selected
             return section.selected.length > 0
           } else if (section.type === 'radio') {
             // A radio button must be selected
             return section.selected !== ''
-          } else if (section.type === 'input') {
+          } else if (section.type === 'input' || section.type === 'multiline') {
             // Some text must be given
             return 'value' in section && section.value !== ''
           }
@@ -114,19 +101,18 @@ export default {
       })
     },
     missingIncludedData() {
-      // If the included data has been defined through the config, it must be in the export
       const keys = this.defaultView.map(block => block.key)
-      const includedResultsIndex = this.includedResults.map(key =>
-        keys.indexOf(key)
-      )
-      if (!this.showExport) {
-        for (const index of includedResultsIndex) {
-          if (typeof this.allResults[index] === 'undefined') {
-            return true
-          }
+      const section = this.consent.find(section => section.type === 'data')
+      for (const key of section.required ?? []) {
+        const index = keys.indexOf(key)
+        if (typeof this.allResults[index] === 'undefined') {
+          return true
         }
       }
       return false
+    },
+    dataCheckboxDisabled() {
+      return this.allResults.map(r => typeof r === 'undefined')
     }
   },
   watch: {
@@ -150,12 +136,16 @@ export default {
       } else if ('default' in consent) {
         this.consent = JSON.parse(JSON.stringify(consent.default))
       }
-      // Do we have the included results defined in the config ?
-      const config = this.$store.state.config
-      if ('includedResults' in config && key in config.includedResults) {
-        this.showExport = false
-        this.includedResults = config.includedResults[key]
+      if (!this.consent) {
+        return
       }
+      // Add titles and keys to the data section
+      const section = this.consent.find(section => section.type === 'data')
+      section.titles = this.defaultView.map(e => e.title)
+      section.keys = this.defaultView.map(e => e.key)
+      // Copy included results preset
+      section.includedResults = section.includedResults ?? []
+      this.includedResults = section.includedResults ?? []
     },
     switchForm() {
       this.showForm = !this.showForm
@@ -236,12 +226,15 @@ export default {
           this.sentError = true
         })
     },
-    updateConsent({ index, selected, value }) {
+    updateConsent({ index, selected, value, includedResults }) {
       const section = this.consent[index]
       if (section.type === 'checkbox' || section.type === 'radio') {
         section.selected = selected
-      } else if (section.type === 'input') {
+      } else if (section.type === 'input' || section.type === 'multiline') {
         section.value = value
+      } else if (section.type === 'data') {
+        section.includedResults = includedResults
+        this.includedResults = includedResults
       }
       // For reactivity
       this.$set(this.consent, index, section)

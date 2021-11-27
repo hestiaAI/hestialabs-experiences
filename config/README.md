@@ -23,11 +23,13 @@ This directory contains the configuration files linked to each deployement. They
     * Each section can have:
     * - A title
     * - A description
-    * - A type (Either 'radio' or 'checkbox' or 'input')
+    * - A type (Either 'data', 'radio' or 'checkbox', 'input' or 'multiline')
+    *   - For type 'data': a boolean indicating if we hide the checkboxes with all sub-experiences,
+    *     and an array of implicitly added data (referenced by the key of the sub-experience).
     *   - For type 'radio': an array of options and a pre-selected answer (use the empty string for no pre-selection)
     *   - For type 'checkbox': an array of options and an array of pre-selected answers (use the empty array for no pre-selection)
-    *   - For type 'input': the name (label) of the input field
-    * - Whether or not an answer is required (works for all types).
+    *   - For type 'input' and 'multiline': the name (label) of the text field, and some placeholder text.
+    * - Whether or not an answer is required (Boolean for most types, array for data section).
     * @type Object
     */
   "consent": {
@@ -55,25 +57,31 @@ This directory contains the configuration files linked to each deployement. They
         "options": ["X", "Y", "Z"],
         "selected": [],
         "required": true
+      },
+      {
+        "title": "Which data should be shared ?",
+        "description": "The visualizations of every checked section will be reproducible and the underlying data will be available to the receiver.",
+        "type": "data"
+      },
+      {
+        "title": "Multi-line text area",
+        "type": "multiline",
+        "placeholder": "Please type your comment",
       }
     ],
-    "twitter": [
+    "tracker-control": [
       {
-        "title": "Twitter export",
-        "description": "This is a special consent form for twitter."
+        "title": "Tracker control export",
+        "description": "This is a special consent form for tracker-control. The data must be included."
+      },
+      {
+        "type": "data",
+        "hide": true,
+        "includedResults": ["trackerControl"],
+        "required": ["trackerControl"]
       }
     ],
     "facebook": null
-  },
-  /**
-    * If we want to hide the section "Results to include" to the user,
-    * the data included in the export can be defined through this field.
-    * It is defined for a specific experience, as an array of keys (as defined in the config of the experience).
-    * Note that all the included sub-experiences must have been run by the user for the send button to be enabled.
-    * @type Object
-    */
-  "includedResults": {
-    "twitter": ["key1", "key2"]
   }
 }
 ```

@@ -57,9 +57,29 @@ export default {
     return {
       meta: [
         {
+          hid: 'og:title',
+          property: 'og:title',
+          content: this.appName
+        },
+        {
           hid: 'og:url',
           property: 'og:url',
           content: `${process.env.baseUrl}${this.$route.path}`
+        },
+        {
+          hid: 'twitter:card',
+          property: 'twitter:card',
+          content: 'summary'
+        },
+        {
+          hid: 'twitter:site',
+          property: 'twitter:site',
+          content: '@HestiaLabs'
+        },
+        {
+          hid: 'twitter:title',
+          property: 'twitter:title',
+          content: this.appName
         },
         {
           hid: 'twitter:image',
@@ -70,7 +90,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['manifest']),
+    ...mapGetters(['manifest', 'appName']),
     collaborator() {
       const { collaborator = {} } = this.manifest(this.$route)
       return collaborator

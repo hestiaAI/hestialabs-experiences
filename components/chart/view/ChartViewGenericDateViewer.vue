@@ -1,22 +1,22 @@
 <template>
   <VContainer v-if="values.length > 0">
-    <p v-if="total === 0 && !currMinDate && !currMaxDate">
-      No dated events were found in your file(s).
-    </p>
-    <p v-else>
-      From
-      <strong>{{ currMinDate }}</strong> to
-      <strong>{{ currMaxDate }}</strong> we found
-      <strong>{{ total }}</strong> dated events in your file(s).
-    </p>
     <VRow>
-      <VCol cols="9">
-        <p class="text-h6">Number of dated event in your files</p>
-        <p class="text-subtitle-2">
-          (click and drag on the graph to select a time range)
+      <VCol cols="10">
+        <p class="text-h6">Number of dated events in your files</p>
+        <p
+          v-if="total === 0 && !currMinDate && !currMaxDate"
+          class="text-subtitle-2"
+        >
+          No dated events were found in your file(s).
+        </p>
+        <p v-else class="text-subtitle-2">
+          From
+          <strong>{{ currMinDate }}</strong> to
+          <strong>{{ currMaxDate }}</strong> we found
+          <strong>{{ total }}</strong> dated events in your file(s).
         </p>
       </VCol>
-      <VCol cols="3">
+      <VCol cols="2">
         <VSelect
           v-model="select"
           :items="intervalNames"
@@ -26,7 +26,23 @@
       </VCol>
     </VRow>
     <VRow>
-      <VCol cols="12"><div :id="graphId"></div></VCol>
+      <VCol cols="12">
+        <div :id="graphId"></div>
+        <p class="text-subtitle-2">
+          Select a <strong>time range</strong> below
+          <VBtn
+            x-small
+            class="ma-1"
+            :class="{ hide: !filtered }"
+            outlined
+            color="indigo"
+            @click="resetFilter"
+          >
+            Reset
+          </VBtn>
+        </p>
+        <div id="range-chart"></div>
+      </VCol>
     </VRow>
     <VRow>
       <VCol cols="12">
@@ -54,6 +70,7 @@ export default {
     return {
       results: [],
       select: null,
+      filtered: false,
       intervals: {
         Days: d3.timeDay,
         Weeks: d3.timeWeek,
@@ -86,6 +103,7 @@ export default {
       const formatFullDate = d3.timeFormat('%Y/%m/%d %H:%M:%S')
       this.values.forEach(d => {
         d.date = new Date(d.date)
+        d.day = d3.timeDay(d.date)
         d.dateStr = formatFullDate(d.date)
       })
       this.results = this.values
@@ -94,7 +112,12 @@ export default {
       const ndx = crossfilter(this.values)
       this.dateDimension = ndx.dimension(d => d.date)
       this.barChart = new dc.BarChart('#' + this.graphId)
-      this.minDate = this.dateDimension.bottom(1)[0].date
+      this.rangeChart = new dc.BarChart('#range-chart')
+
+      this.minDate = d3.timeDay.offset(
+        this.dateDimension.bottom(1)[0].date,
+        -12
+      )
       this.currMinDate = formatDate(this.minDate)
       this.maxDate = this.dateDimension.top(1)[0].date
       this.currMaxDate = formatDate(this.maxDate)
@@ -102,39 +125,72 @@ export default {
       const diffDays = d3.timeDay.count(this.minDate, this.maxDate)
       if (diffDays < 100) this.select = 'Days'
       else if (diffDays < 1000) this.select = 'Weeks'
-      else if (diffDays < 3600) this.select = 'Months'
-      else this.select = 'Years'
+      // else if (diffDays < 3600) this.select = 'Months'
+      else this.select = 'Months'
 
+      const width = d3
+        .select('#' + this.graphId)
+        .node()
+        .getBoundingClientRect().width
       this.barChart
-        .width(
-          d3
-            .select('#' + this.graphId)
-            .node()
-            .getBoundingClientRect().width
-        )
-        .height(200)
+        .width(width)
+        .height(180)
         .ordinalColors(['#58539E'])
-        .x(d3.scaleTime())
+        .x(
+          d3
+            .scaleTime()
+            .domain([
+              d3.timeHour.offset(this.minDate, 0),
+              d3.timeHour.offset(this.maxDate, 2)
+            ])
+        )
         .xUnits(this.intervals[this.select].range)
         .margins({ left: 50, top: 20, right: 50, bottom: 20 })
+        .dimension(this.dateDimension)
+        .group(this.dateDimension.group(k => this.intervals[this.select](k)))
+        .rangeChart(this.rangeChart)
+        .brushOn(false)
+        .elasticX(false)
         .elasticY(true)
+        .mouseZoomable(false)
         .clipPadding(10)
-        .gap(this.select === 'Months' ? 10 : 0)
+        .gap(this.select === 'Months' ? 20 : 0)
 
       this.barChart
         .yAxis()
         .tickFormat(v => d3.format(Number.isInteger(v) ? '~s' : '.2~f')(v))
-      this.drawBarChart()
-      this.barChart.on('preRender', this.calcDomain)
-      this.barChart.on('preRedraw', this.calcDomain)
+
+      // volume chart date picker
+      this.rangeChart
+        .width(width)
+        .height(40)
+        .margins({ top: 0, right: 50, bottom: 20, left: 50 })
+        .dimension(this.dateDimension)
+        .group(this.dateDimension.group(k => this.intervals.Days(k)))
+        .ordinalColors(['#58539E'])
+        .x(
+          d3
+            .scaleTime()
+            .domain([
+              d3.timeDay.offset(this.minDate, -12),
+              d3.timeHour.offset(this.maxDate, 12)
+            ])
+        )
+        .xUnits(d3.timeDays)
+        .brushOn(true)
+        .clipPadding(10)
+        .gap(0)
+
       ndx.onChange(() => {
         this.results = ndx.allFiltered()
         const filters = this.dateDimension.currentFilter()
         this.total = this.results.length
         if (filters) {
+          this.filtered = true
           this.currMinDate = formatDate(filters[0])
           this.currMaxDate = formatDate(filters[1])
         } else {
+          this.filtered = false
           this.currMinDate = formatDate(this.minDate)
           this.currMaxDate = formatDate(this.maxDate)
         }
@@ -166,7 +222,19 @@ export default {
     onTableFilter(items) {
       // TODO: Update graph
       // console.log(items)
+    },
+    resetFilter() {
+      dc.filterAll()
+      dc.redrawAll()
     }
   }
 }
 </script>
+<style scoped>
+#range-chart g.y {
+  display: none;
+}
+.hide {
+  display: none;
+}
+</style>

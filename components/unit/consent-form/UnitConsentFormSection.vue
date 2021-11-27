@@ -11,6 +11,20 @@
       <p v-else v-html="section.description"></p>
     </template>
 
+    <template v-if="section.type === 'data' && !section.hide">
+      <VCheckbox
+        v-for="(title, j) in section.titles"
+        :key="`data-${j}`"
+        v-model="includedResults"
+        :readonly="readonly"
+        dense
+        :disabled="dataCheckboxDisabled[j]"
+        :label="title"
+        :value="section.keys[j]"
+        @change="updateConsent"
+      ></VCheckbox>
+    </template>
+
     <VRadioGroup
       v-if="section.type === 'radio'"
       v-model="selected"
@@ -38,22 +52,28 @@
       />
     </template>
 
-    <template v-if="section.type === 'input'">
-      <VTextField
-        v-if="readonly"
-        dense
-        :readonly="readonly"
-        :value="section.value"
-        :label="section.name"
-      ></VTextField>
-      <VTextField
-        v-else
-        v-model="value"
-        dense
-        :label="section.name"
-        @change="updateConsent"
-      ></VTextField>
-    </template>
+    <VTextField
+      v-if="section.type === 'input'"
+      v-model="value"
+      dense
+      :readonly="readonly"
+      :label="section.name"
+      :placeholder="section.placeholder"
+      @change="updateConsent"
+    ></VTextField>
+
+    <VTextarea
+      v-if="section.type === 'multiline'"
+      v-model="value"
+      dense
+      auto-grow
+      outlined
+      rows="3"
+      :readonly="readonly"
+      :label="section.name"
+      :placeholder="section.placeholder"
+      @change="updateConsent"
+    ></VTextarea>
   </div>
 </template>
 
@@ -71,12 +91,41 @@ export default {
     readonly: {
       type: Boolean,
       default: false
+    },
+    dataCheckboxDisabled: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
-      selected: this.section.selected,
-      value: ''
+      selected: null,
+      value: null,
+      includedResults: null
+    }
+  },
+  created() {
+    if ('selected' in this.section) {
+      this.selected = this.section.selected
+    } else if (this.section.type === 'checkbox') {
+      this.selected = []
+    } else if (this.section.type === 'radio') {
+      this.selected = ''
+    }
+
+    if ('value' in this.section) {
+      this.value = this.section.value
+    } else if (
+      this.section.type === 'input' ||
+      this.section.type === 'multiline'
+    ) {
+      this.value = ''
+    }
+
+    if ('includedResults' in this.section) {
+      this.includedResults = this.section.includedResults
+    } else if (this.section.type === 'data') {
+      this.includedResults = []
     }
   },
   methods: {
@@ -84,7 +133,8 @@ export default {
       this.$emit('change', {
         index: this.index,
         selected: this.selected,
-        value: this.value
+        value: this.value,
+        includedResults: this.includedResults
       })
     }
   }

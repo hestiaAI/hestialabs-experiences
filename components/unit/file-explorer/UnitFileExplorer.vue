@@ -31,12 +31,16 @@
             <VCardTitle class="justify-center">File details</VCardTitle>
             <VCardText>
               <template v-if="selectedItem">
+                <p>Exploring file {{ selectedItem.filename }}</p>
                 <component
                   :is="componentForType"
                   v-bind="{ fileManager, filename: selectedItem.filename }"
                   v-if="supportedTypes.has(fileType)"
                 />
-                <p v-else>Cannot open file type</p>
+                <UnitFileExplorerViewerUnknown
+                  v-else
+                  v-bind="{ fileManager, filename: selectedItem.filename }"
+                />
               </template>
               <template v-else>
                 <p>Select a file to see it in more details here</p>
