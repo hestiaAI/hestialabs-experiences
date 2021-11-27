@@ -118,6 +118,7 @@
   },
   "defaultView": [
     {
+      "key": "timedObservationViewer",
       "customPipeline": "timedObservationViewer",
       "visualizations": ["ChartViewTimedObservationsViewer.vue"],
       "showTable": false,

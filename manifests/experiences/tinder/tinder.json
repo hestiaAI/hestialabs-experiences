@@ -15,6 +15,7 @@
   },
   "defaultView": [
     {
+      "key": "likes-dislikes",
       "query": "likes-dislikes",
       "visualizations": ["daily-likes-passes"],
       "showTable": false,
@@ -22,6 +23,7 @@
       "text": "See the number of likes and dislikes that you made over time."
     },
     {
+      "key": "app-opens",
       "query": "app-opens",
       "visualizations": ["daily-usage", "monthly-usage"],
       "showTable": false,
@@ -29,6 +31,7 @@
       "text": "See the number of times that you opened the app (per day or per month)."
     },
     {
+      "key": "monthly-history",
       "query": "all",
       "visualizations": ["monthly-history"],
       "showTable": false,
@@ -36,6 +39,7 @@
       "text": "Compare the number of likes, passes, messages sent and messages received."
     },
     {
+      "key": "donut",
       "query": "all",
       "visualizations": ["donut-multiple-comparisons"],
       "showTable": false,
@@ -43,6 +47,7 @@
       "text": "Compare different pairs of values in a donut chart."
     },
     {
+      "key": "likes-dislikes-open",
       "query": "likes-dislikes-open",
       "visualizations": ["scatter-likes-passes-correlation"],
       "showTable": false,
@@ -50,6 +55,7 @@
       "text": "Observe the possible correlation between the number of likes/passes and the number of times you open the app."
     },
     {
+      "key": "all",
       "query": "all",
       "showTable": true,
       "title": "All data",

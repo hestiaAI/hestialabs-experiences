@@ -65,8 +65,8 @@
       {
         "type": "data",
         "hide": true,
-        "includedResults": [0],
-        "required": [0]
+        "includedResults": ["trackerControl"],
+        "required": ["trackerControl"]
       }
     ],
     "facebook": null

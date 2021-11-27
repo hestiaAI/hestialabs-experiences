@@ -20,7 +20,7 @@
         dense
         :disabled="dataCheckboxDisabled[j]"
         :label="title"
-        :value="j"
+        :value="section.keys[j]"
         @change="updateConsent"
       ></VCheckbox>
     </template>

@@ -25,7 +25,7 @@ This directory contains the configuration files linked to each deployement. They
     * - A description
     * - A type (Either 'data', 'radio' or 'checkbox', 'input' or 'multiline')
     *   - For type 'data': a boolean indicating if we hide the checkboxes with all sub-experiences,
-    *     and an array of implicitly added data (referenced by the index of the sub-experience (starting from 0)).
+    *     and an array of implicitly added data (referenced by the key of the sub-experience).
     *   - For type 'radio': an array of options and a pre-selected answer (use the empty string for no pre-selection)
     *   - For type 'checkbox': an array of options and an array of pre-selected answers (use the empty array for no pre-selection)
     *   - For type 'input' and 'multiline': the name (label) of the text field, and some placeholder text.
@@ -77,8 +77,8 @@ This directory contains the configuration files linked to each deployement. They
       {
         "type": "data",
         "hide": true,
-        "includedResults": [0],
-        "required": [0]
+        "includedResults": ["trackerControl"],
+        "required": ["trackerControl"]
       }
     ],
     "facebook": null

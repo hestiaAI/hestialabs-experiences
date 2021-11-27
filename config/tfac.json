@@ -24,8 +24,8 @@
       {
         "type": "data",
         "hide": true,
-        "includedResults": [3],
-        "required": [3]
+        "includedResults": ["all-criteria-all-advertisers"],
+        "required": ["all-criteria-all-advertisers"]
       }
     ]
   }

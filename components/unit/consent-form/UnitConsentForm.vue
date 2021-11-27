@@ -101,8 +101,10 @@ export default {
       })
     },
     missingIncludedData() {
+      const keys = this.defaultView.map(block => block.key)
       const section = this.consent.find(section => section.type === 'data')
-      for (const index of section.required ?? []) {
+      for (const key of section.required ?? []) {
+        const index = keys.indexOf(key)
         if (typeof this.allResults[index] === 'undefined') {
           return true
         }
@@ -134,9 +136,13 @@ export default {
       } else if ('default' in consent) {
         this.consent = JSON.parse(JSON.stringify(consent.default))
       }
-      // Add titles to the data section
+      if (!this.consent) {
+        return
+      }
+      // Add titles and keys to the data section
       const section = this.consent.find(section => section.type === 'data')
       section.titles = this.defaultView.map(e => e.title)
+      section.keys = this.defaultView.map(e => e.key)
       // Copy included results preset
       section.includedResults = section.includedResults ?? []
       this.includedResults = section.includedResults ?? []
@@ -163,11 +169,18 @@ export default {
       zip.file('consent.json', JSON.stringify(this.consent))
 
       // Add included data
-      this.includedResults.forEach(i => {
-        const content = JSON.parse(JSON.stringify(this.defaultView[i]))
-        content.result = JSON.parse(this.allResults[i])
-        zip.file(`block${i}.json`, JSON.stringify(content))
-      })
+      const keys = this.defaultView.map(block => block.key)
+      this.includedResults
+        .map(key => keys.indexOf(key))
+        .forEach(i => {
+          const content = JSON.parse(JSON.stringify(this.defaultView[i]))
+          content.result = JSON.parse(this.allResults[i])
+          content.index = i
+          zip.file(
+            `block${i.toString().padStart(2, '0')}.json`,
+            JSON.stringify(content)
+          )
+        })
 
       const content = await zip.generateAsync({ type: 'uint8array' })
       this.zipFile = content

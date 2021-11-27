@@ -68,7 +68,7 @@
 
       <!-- Results -->
       <VCard
-        v-for="(result, resultIndex) in results"
+        v-for="(result, resultIndex) in sortedResults"
         :key="resultIndex"
         class="pa-2 my-6"
       >
@@ -141,20 +141,23 @@ export default {
       })
     },
     allVegaFiles() {
-      return this.results.map(
+      return this.sortedResults.map(
         r =>
           r.visualizations?.map(n => this.manifest.vega[n]).filter(n => n) ?? []
       )
     },
     allVizUrls() {
-      return this.results.map(r =>
+      return this.sortedResults.map(r =>
         r.visualizations?.filter(n => n.startsWith('/'))
       )
     },
     allVueGraphNames() {
-      return this.results.map(r =>
+      return this.sortedResults.map(r =>
         r.visualizations?.filter(n => n.endsWith('.vue'))
       )
+    },
+    sortedResults() {
+      return this.results.slice(0).sort((a, b) => a.index - b.index)
     }
   },
   methods: {
