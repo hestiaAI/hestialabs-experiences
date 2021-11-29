@@ -25,7 +25,7 @@
         <VRow>
           <VCol cols="12" md="6">
             <div id="category-chart">
-              <strong>Purposes of tracking</strong>
+              <strong>Purposes of third party</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
