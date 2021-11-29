@@ -283,7 +283,7 @@ export default class FileManager {
   static async extractZips(files) {
     return (
       await Promise.all(
-        files.map(async file => {
+        files.flatMap(async file => {
           if (file.name.endsWith('.zip')) {
             const { entries } = await unzip(file)
             const innerFiles = await Promise.all(
@@ -298,8 +298,10 @@ export default class FileManager {
                 )
             )
             return await this.extractZips(innerFiles)
+          } else if (file.name.endsWith('/')) {
+            return []
           } else {
-            return file
+            return [file]
           }
         })
       )
