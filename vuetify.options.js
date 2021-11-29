@@ -9,7 +9,10 @@ import {
   mdiHome,
   mdiFacebook,
   mdiTwitter,
-  mdiStepForward
+  mdiStepForward,
+  mdiCloseBox,
+  mdiMinusBox,
+  mdiCheckboxBlankOutline
 } from '@mdi/js'
 
 export default {
@@ -25,7 +28,10 @@ export default {
       mdiHome,
       mdiFacebook,
       mdiTwitter,
-      mdiStepForward
+      mdiStepForward,
+      mdiCloseBox,
+      mdiMinusBox,
+      mdiCheckboxBlankOutline
     }
   },
   theme: {
