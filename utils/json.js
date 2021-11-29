@@ -3,7 +3,9 @@ import {
   mdiFormatListBulletedSquare,
   mdiInformationOutline
 } from '@mdi/js'
-import lodash from 'lodash'
+import _ from 'lodash'
+
+const groupSize = 50
 
 export default function itemifyJSON(jsonText) {
   let id = 0
@@ -22,6 +24,22 @@ export default function itemifyJSON(jsonText) {
           children: children[0].children,
           icon: children[0].icon
         }
+      } else if (children.length > groupSize) {
+        const groups = _.chunk(children, groupSize).map((group, i) => ({
+          id: id++,
+          name: `[group ${i + 1} with elements ${groupSize * i + 1} - ${
+            groupSize * i + group.length
+          }]`,
+          children: group,
+          icon: mdiFormatListBulletedSquare
+        }))
+        id++
+        return {
+          id,
+          name,
+          children: groups,
+          icon: mdiFormatListBulletedSquare
+        }
       } else {
         return {
           id,
@@ -33,7 +51,7 @@ export default function itemifyJSON(jsonText) {
     } else if (tree !== null) {
       const children = Object.entries(tree).flatMap(([key, v]) => {
         const inner = itemifyRec(v)
-        const name = lodash.startCase(key)
+        const name = _.startCase(key)
         if (typeof inner.name === 'undefined') {
           return { ...inner, name }
         } else {
