@@ -6,6 +6,7 @@
   "showDataExplorer": true,
   "defaultView": [
     {
+      "key": "genericDateViewer",
       "customPipeline": "genericDateViewer",
       "visualizations": ["ChartViewGenericDateViewer.vue"],
       "showTable": false,

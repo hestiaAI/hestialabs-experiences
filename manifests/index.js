@@ -73,6 +73,7 @@ const manifests = Object.fromEntries(
       showDataExplorer,
       preprocessors = {},
       timedObservationsViewer = {},
+      defaultView = [],
       ...rest
     } = reqJSON(path)
 
@@ -138,6 +139,15 @@ const manifests = Object.fromEntries(
     } else {
       timedObservationsViewer.parser = _.identity
     }
+
+    const firstNoKey = _.find(defaultView, v => !_.has(v, 'key'))
+    if (firstNoKey != null) {
+      throw new Error(
+        `${title}: Property 'key' not found for the defaultView element ${JSON.stringify(
+          firstNoKey
+        )}`
+      )
+    }
     const module = require(`./experiences/${dir}/`)
 
     return [
@@ -159,6 +169,7 @@ const manifests = Object.fromEntries(
         sparql: {},
         vega: {},
         sql: {},
+        defaultView,
         ...rest,
         ...module.default
       }
