@@ -2,6 +2,7 @@
   "title": "HSL",
   "icon": "hsl.png",
   "ext": "all",
+  "multiple": true,
   "isGenericViewer": true,
   "showDataExplorer": true,
   "defaultView": [

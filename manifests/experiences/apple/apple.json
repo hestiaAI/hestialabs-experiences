@@ -2,6 +2,7 @@
   "title": "Apple",
   "icon": "apple.png",
   "ext": "all",
+  "multiple": true,
   "isGenericViewer": true,
   "showDataExplorer": true,
   "defaultView": [

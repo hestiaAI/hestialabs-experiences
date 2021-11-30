@@ -2,6 +2,7 @@
   "title": "BookBeat",
   "icon": "bookbeat.png",
   "ext": "all",
+  "multiple": true,
   "isGenericViewer": true,
   "showDataExplorer": true,
   "defaultView": [

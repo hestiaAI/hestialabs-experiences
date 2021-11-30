@@ -94,9 +94,12 @@ export default class FileManager {
    */
   async init(uppyFiles) {
     this.fileList = await FileManager.extractZips(uppyFiles)
-    this.fileDict = FileManager.removeTopmostFilenames(
-      this.fileList.map(f => [f.name, f])
-    )
+    const filePairs = this.fileList.map(f => [f.name, f])
+    if (filePairs.length === 1) {
+      this.fileDict = FileManager.removeTopmostFilenames(filePairs)
+    } else {
+      this.fileDict = Object.fromEntries(filePairs)
+    }
     this.setInitialValues()
     return this
   }

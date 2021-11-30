@@ -2,6 +2,7 @@
   "title": "S-Ryhmä",
   "icon": "s-ryhma.png",
   "ext": "all",
+  "multiple": true,
   "isGenericViewer": true,
   "showDataExplorer": true,
   "defaultView": [
