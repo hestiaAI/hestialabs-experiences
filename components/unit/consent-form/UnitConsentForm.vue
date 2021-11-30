@@ -14,7 +14,11 @@
           :status="generateStatus"
           :error="generateError"
           :progress="generateProgress"
-          :disabled="missingRequired || missingRequiredData.length > 0"
+          :disabled="
+            missingRequired ||
+            missingRequiredDataProcessing.length > 0 ||
+            missingRequiredData.length > 0
+          "
           @click="generateZIP"
         />
         <BaseButtonDownloadData
@@ -36,8 +40,13 @@
         </p>
         <p v-if="sentStatus && !sentError">Form successfully submitted.</p>
         <p v-if="missingRequired">Some required fields are not filled in.</p>
-        <p v-if="missingRequiredData.length > 0">
+        <p v-if="missingRequiredDataProcessing.length > 0">
           Some data required for sending this form has not been processed ({{
+            missingRequiredDataProcessing.join(', ')
+          }}).
+        </p>
+        <p v-if="missingRequiredData.length > 0">
+          Some data required for sending this form has not been included ({{
             missingRequiredData.join(', ')
           }}).
         </p>
@@ -102,13 +111,23 @@ export default {
         return true
       })
     },
-    missingRequiredData() {
+    missingRequiredDataProcessing() {
       const section = this.consent.find(section => section.type === 'data')
       return this.defaultView
         .filter(
           (block, i) =>
             section.required?.includes(block.key) &&
             typeof this.allResults[i] === 'undefined'
+        )
+        .map(block => block.title)
+    },
+    missingRequiredData() {
+      const section = this.consent.find(section => section.type === 'data')
+      return this.defaultView
+        .filter(
+          block =>
+            section.required?.includes(block.key) &&
+            !section.includedResults.includes(block.key)
         )
         .map(block => block.title)
     },
