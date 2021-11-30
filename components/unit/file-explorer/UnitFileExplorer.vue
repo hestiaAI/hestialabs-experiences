@@ -1,63 +1,64 @@
 <template>
-  <VCard class="pa-2 my-6">
-    <VCardTitle class="justify-center">Explore your files</VCardTitle>
-    <VCardText>
-      <VRow>
-        <VCol cols="3">
-          <VCard class="pa-2 my-6">
-            <VCardTitle class="justify-center">File hierarchy</VCardTitle>
-            <VCardText>
-              <VTreeview
-                dense
-                open-on-click
-                activatable
-                rounded
-                return-object
-                transition
-                :items="fileManager.getTreeItems()"
-                @update:active="setSelectedItem"
-              >
-                <template #prepend="{ item }">
-                  <VIcon>
-                    {{ item.icon }}
-                  </VIcon>
-                </template>
-              </VTreeview>
-            </VCardText>
-          </VCard>
-        </VCol>
-        <VCol cols="9">
-          <VCard class="pa-2 my-6">
-            <VCardTitle class="justify-center">File details</VCardTitle>
-            <VCardText>
-              <template v-if="selectedItem">
-                <p>
-                  <span class="mr-2">
-                    Exploring file <strong>{{ selectedItem.filename }}</strong>
-                  </span>
-                  <BaseButtonDownload
-                    small
-                    :href="path"
-                    :filename="selectedItem.filename"
-                  />
-                </p>
-                <component
-                  :is="componentForType"
-                  v-bind="{ fileManager, filename: selectedItem.filename }"
-                  v-if="supportedTypes.has(fileType)"
-                />
-                <UnitFileExplorerViewerUnknown
-                  v-else
-                  v-bind="{ fileManager, filename: selectedItem.filename }"
-                />
+  <VCard class="pa-2 my-6" min-height="500px" height="auto">
+    <VCardTitle class="justify-center"> Explore your files </VCardTitle>
+    <VCardText class="align-center">
+      <VNavigationDrawer
+        expand-on-hover
+        permanent
+        absolute
+        :mini-variant-width="drawerWidth"
+        width="auto"
+      >
+        <VList>
+          <VListItem>
+            <VListItemTitle class="py-2">File hierarchy</VListItemTitle>
+          </VListItem>
+          <VListItem>
+            <VTreeview
+              dense
+              open-on-click
+              activatable
+              return-object
+              transition
+              rounded
+              :items="fileManager.getTreeItems()"
+              @update:active="setSelectedItem"
+            >
+              <template #prepend="{ item }">
+                <VIcon>
+                  {{ item.icon }}
+                </VIcon>
               </template>
-              <template v-else>
-                <p>Select a file to see it in more details here</p>
-              </template>
-            </VCardText>
-          </VCard>
-        </VCol>
-      </VRow>
+            </VTreeview>
+          </VListItem>
+        </VList>
+      </VNavigationDrawer>
+      <div :style="{ 'margin-left': drawerWidth }">
+        <template v-if="selectedItem">
+          <p>
+            <span class="mr-2">
+              Exploring file <strong>{{ selectedItem.filename }}</strong>
+            </span>
+            <BaseButtonDownload
+              small
+              :href="path"
+              :filename="selectedItem.filename"
+            />
+          </p>
+          <component
+            :is="componentForType"
+            v-bind="{ fileManager, filename: selectedItem.filename }"
+            v-if="supportedTypes.has(fileType)"
+          />
+          <UnitFileExplorerViewerUnknown
+            v-else
+            v-bind="{ fileManager, filename: selectedItem.filename }"
+          />
+        </template>
+        <template v-else>
+          <p>Select a file on the left panel to see it in more details here</p>
+        </template>
+      </div>
     </VCardText>
   </VCard>
 </template>
@@ -76,7 +77,9 @@ export default {
   data() {
     return {
       selectedItem: null,
-      supportedTypes: new Set(['json', 'csv', 'pdf', 'img', 'html', 'txt'])
+      supportedTypes: new Set(['json', 'csv', 'pdf', 'img', 'html', 'txt']),
+      drawer: true,
+      drawerWidth: '150px'
     }
   },
   computed: {

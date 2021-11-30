@@ -10,14 +10,14 @@
         {{ item.icon }}
       </VIcon>
     </template>
-    <template #append="{ item }">
-      <div
-        v-if="!isUndef(item.value)"
-        :title="item.value"
-        class="hestia-treeview-json-value"
-      >
-        {{ item.value }}
+    <template #label="{ item, leaf }">
+      <div v-if="leaf" :title="item.value">
+        <span v-if="!isUndef(item.name)">
+          {{ `${item.name}:` }}
+        </span>
+        <span class="font-italic">{{ item.value }}</span>
       </div>
+      <div v-else>{{ item.name }}</div>
     </template>
   </VTreeview>
 </template>
