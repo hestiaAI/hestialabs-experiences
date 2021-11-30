@@ -2,6 +2,7 @@
   "title": "Spotify",
   "icon": "spotify.png",
   "ext": "all",
+  "multiple": true,
   "isGenericViewer": true,
   "showDataExplorer": true,
   "defaultView": [

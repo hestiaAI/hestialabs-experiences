@@ -81,12 +81,10 @@ export default {
     const config = {
       debug: false,
       allowMultipleUploads: this.multiple,
-      restrictions: this.extensions
-        ? {}
-        : {
-            maxNumberOfFiles: this.multiple ? null : 1,
-            allowedFileTypes: this.extensions
-          }
+      restrictions: {
+        maxNumberOfFiles: this.multiple ? null : 1,
+        allowedFileTypes: this.extensions.length > 0 ? this.extensions : null
+      }
     }
     return {
       uppy: new Uppy(config),
@@ -109,7 +107,9 @@ export default {
     },
     extensionsMessage() {
       const exts = this.extensions.join(', ')
-      return `Allowed file types: ${exts}`
+      return `${this.multiple ? 'Multiple files' : 'One file'} allowed (${
+        exts.length > 0 ? exts : 'any extension'
+      })`
     },
     disabled() {
       return this.filesEmpty
@@ -163,7 +163,7 @@ export default {
         proudlyDisplayPoweredByUppy: false,
         theme: 'light',
         width: 550,
-        height: 400
+        height: 200
       })
       // allow dropping files anywhere on the page
       .use(DropTarget, { target: document.body })

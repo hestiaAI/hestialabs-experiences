@@ -2,6 +2,7 @@
   "title": "Voi",
   "icon": "voi.jpg",
   "ext": "all",
+  "multiple": true,
   "isGenericViewer": true,
   "showDataExplorer": true,
   "defaultView": [
