@@ -4,5 +4,6 @@
   "icon": "clipboard-search-outline.png",
   "isGenericViewer": true,
   "showDataExplorer": true,
-  "ext": "all"
+  "ext": "all",
+  "multiple": true
 }
