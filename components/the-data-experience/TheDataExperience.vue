@@ -134,6 +134,7 @@ export default {
         'isGenericViewer',
         'showDataExplorer',
         'files',
+        'multiple',
         'allowMissingFiles',
         'sparql',
         'sql',
