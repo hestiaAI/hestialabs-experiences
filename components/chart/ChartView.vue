@@ -1,6 +1,11 @@
 <template>
   <div>
-    <component :is="component" v-if="isValid && !isEmpty" :values="values" />
+    <component
+      :is="component"
+      v-if="isValid && !isEmpty"
+      :values="values"
+      :headers="data.headers"
+    />
     <i v-else-if="isValid">No data found</i>
     <i v-else>Data in this format cannot be displayed by this visualization</i>
   </div>

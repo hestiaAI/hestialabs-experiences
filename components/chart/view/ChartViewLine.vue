@@ -1,0 +1,287 @@
+<template>
+  <VRow>
+    <VCol cols="12" md="8" offset-md="2">
+      <VRow dense>
+        <VCol cols="9">
+          <p class="text-h6">{{ title }}</p>
+        </VCol>
+        <VCol cols="3">
+          <VSelect
+            v-model="selectedInterval"
+            :items="namesInterval"
+            label="Time interval"
+            dense
+            @change="redrawViz"
+          ></VSelect>
+        </VCol>
+      </VRow>
+      <VRow dense>
+        <VCol cols="12">
+          <div :id="graphId"></div>
+        </VCol>
+      </VRow>
+    </VCol>
+  </VRow>
+</template>
+
+<script>
+import * as d3 from 'd3'
+import { nest } from 'd3-collection'
+import mixin from './mixin'
+
+// Inspired by
+// https://datawanderings.com/2019/10/28/tutorial-making-a-line-chart-in-d3-js-v-5/
+export default {
+  mixins: [mixin],
+  props: {
+    yLabel: {
+      type: String,
+      default: () => 'Count'
+    },
+    lineWidth: {
+      type: Number,
+      default: () => 2
+    },
+    dotWidth: {
+      type: Number,
+      default: () => 2
+    },
+    dotRadius: {
+      type: Number,
+      default: () => 4
+    },
+    padding: {
+      type: Number,
+      default: () => 5
+    },
+    margin: {
+      type: Number,
+      default: () => 5
+    },
+    title: {
+      type: String,
+      default: () => 'Title of the Graph'
+    }
+  },
+  data() {
+    return {
+      selectedInterval: null,
+      intervals: {
+        Days: d3.timeDay,
+        Weeks: d3.timeWeek,
+        Months: d3.timeMonth,
+        Years: d3.timeYear
+      },
+      namesInterval: ['Days', 'Weeks', 'Months', 'Years']
+    }
+  },
+  methods: {
+    drawViz() {
+      const width = 800
+      const height = 300
+      const adj = 50
+
+      /* Pivot the data */
+      const slices = this.headers.slice(1).map(id => {
+        return {
+          id,
+          values: this.values.map(function (d) {
+            return {
+              date: new Date(d.date),
+              value: +d[id]
+            }
+          })
+        }
+      })
+
+      /* PreCompute aggregation per day, month, etc... */
+      Object.entries(this.intervals).forEach(([intervalName, interval]) => {
+        slices.forEach(lineData => {
+          lineData[intervalName] = nest()
+            .key(function (d) {
+              return interval(new Date(d.date))
+            })
+            .rollup(leaves => d3.sum(leaves, l => l.value))
+            .entries(lineData.values)
+        })
+      })
+
+      /* create svg element */
+      d3.select('#' + this.graphId + ' svg').remove()
+      const svg = d3
+        .select('#' + this.graphId)
+        .append('svg')
+        .attr('preserveAspectRatio', 'xMinYMin meet')
+        .attr(
+          'viewBox',
+          '-' +
+            adj +
+            ' -' +
+            adj +
+            ' ' +
+            (width + adj * 2) +
+            ' ' +
+            (height + adj * 2)
+        )
+        .style('padding', this.padding)
+        .style('margin', this.margin)
+        .classed('svg-content', true)
+
+      /* Scales */
+      const xScale = d3.scaleTime().range([0, width])
+      const yScale = d3.scaleLinear().rangeRound([height, 0])
+      xScale.domain(
+        d3.extent(this.values, function (d) {
+          return new Date(d.date)
+        })
+      )
+      yScale.domain([
+        0,
+        d3.max(slices, function (c) {
+          return d3.max(c.values, function (d) {
+            return d.value + 4
+          })
+        })
+      ])
+
+      /* Axis */
+      const yAxis = d3.axisLeft().ticks(5).scale(yScale) // .ticks(slices[0].values.length)
+      const xAxis = d3
+        .axisBottom()
+        // .ticks(d3.timeDay.every(1))
+        // .tickFormat(d3.timeFormat('%b %d'))
+        .scale(xScale)
+
+      svg
+        .append('g')
+        .attr('class', 'xAxis')
+        .attr('transform', 'translate(0,' + height + ')')
+        .call(xAxis)
+      svg
+        .append('g')
+        .attr('class', 'yAxis')
+        .call(yAxis)
+        .append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('dy', '.75em')
+        .attr('y', -50)
+        .style('text-anchor', 'end')
+        .text(this.yLabel)
+
+      /* GridLayout */
+      d3.selectAll('g.yAxis g.tick')
+        .append('line')
+        .attr('class', 'gridline')
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('x2', width)
+        .attr('y2', 0)
+      /*
+      d3.selectAll('g.xAxis g.tick')
+        .append('line')
+        .attr('class', 'gridline')
+        .attr('x1', 0)
+        .attr('y1', -height)
+        .attr('x2', 0)
+        .attr('y2', 0)
+      */
+      /* Color Scale */
+      const color = d3.scaleOrdinal().domain(slices).range(d3.schemeDark2)
+
+      /* Line */
+      const line = d3
+        .line()
+        .curve(d3.curveMonotoneX)
+        .x(d => xScale(d.date))
+        .y(d => yScale(d.value))
+
+      /* Draw lines */
+      const lines = svg.selectAll('lines').data(slices).enter().append('g')
+      const path = lines
+        .append('path')
+        .attr('fill', 'none')
+        .attr('stroke', d => color(d))
+        .attr('stroke-width', this.lineWidth)
+        .attr('d', d => line(d.values))
+
+      path
+        .attr('stroke-dashoffset', function () {
+          return d3.select(this).node().getTotalLength()
+        })
+        .attr('stroke-dasharray', function () {
+          return d3.select(this).node().getTotalLength()
+        })
+        .transition()
+        .duration(5000)
+        .ease(d3.easeSin)
+        .attr('stroke-dashoffset', 0)
+
+      /* Draw points */
+      const points = lines
+        .selectAll('circle')
+        .data(d =>
+          d.values.map(v => {
+            v.color = color(d)
+            return v
+          })
+        )
+        .enter()
+        .append('circle')
+
+      points
+        .attr('stroke', d => d.color)
+        .attr('fill', 'white')
+        .attr('stroke-width', this.dotWidth)
+        .attr('cy', d => yScale(d.value))
+        .attr('cx', d => xScale(d.date))
+        .transition()
+        .duration(1500)
+        .delay((d, i) => i * 100 + 500)
+        .ease(d3.easeSin)
+        .attr('cy', d => yScale(d.value))
+        .attr('cx', d => xScale(d.date))
+        .attr('r', this.dotRadius)
+        .attr('class', 'datapoint')
+        .attr('id', (d, i) => i)
+        .style('opacity', 1)
+    }
+  }
+}
+</script>
+<style>
+/* AXES */
+/* ticks */
+.xAxis line,
+.yAxis line {
+  stroke: #706f6f;
+  stroke-width: 0.5;
+  shape-rendering: crispEdges;
+}
+
+/* axis contour */
+.xAxis path,
+.yAxis path {
+  stroke: #706f6f;
+  stroke-width: 0.7;
+  shape-rendering: crispEdges;
+}
+
+.yAxis path {
+  display: none;
+}
+
+/* axis text */
+.xAxis text,
+.yAxis text {
+  fill: #2b2929;
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+.gridline {
+  stroke: lightgray;
+  shape-rendering: crispEdges;
+  stroke-opacity: 0.5;
+  stroke-width: 10;
+}
+</style>
