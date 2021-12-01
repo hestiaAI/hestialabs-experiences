@@ -62,14 +62,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.v-treeview-node__append {
-  max-width: calc(50%);
-}
-.hestia-treeview-json-value {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-</style>
