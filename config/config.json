@@ -40,16 +40,17 @@
       },
       {
         "title": "Checkboxes",
-        "description": "Please select all options that apply (at least one required).",
+        "description": "Please select all options that apply.",
         "type": "checkbox",
         "options": ["X", "Y", "Z"],
-        "selected": [],
-        "required": true
+        "selected": []
       },
       {
         "title": "Which data should be shared ?",
-        "description": "The visualizations of every checked section will be reproducible and the underlying data will be available to the receiver.",
-        "type": "data"
+        "description": "The visualizations of every checked section will be reproducible and the underlying data will be available to the receiver (at least one required).",
+        "type": "data",
+        "additional": ["Whole file (which I will provide separately)"],
+        "required": true
       },
       {
         "title": "Multi-line text area",

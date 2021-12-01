@@ -1,7 +1,6 @@
 <template>
   <VForm v-if="consent">
     <VCard class="pa-2 my-6">
-      <VCardTitle class="justify-center">Export Results</VCardTitle>
       <VCardText>
         <UnitConsentFormSection
           v-for="(section, index) in consent"
@@ -110,6 +109,12 @@ export default {
           } else if (section.type === 'input' || section.type === 'multiline') {
             // Some text must be given
             return 'value' in section && section.value !== ''
+          } else if (
+            section.type === 'data' &&
+            typeof section.required === 'boolean'
+          ) {
+            // Some data must be given
+            return section.includedResults.length > 0
           }
         }
         return true
@@ -120,7 +125,8 @@ export default {
       return this.defaultView
         .filter(
           (block, i) =>
-            section.required?.includes(block.key) &&
+            typeof section.required === 'object' &&
+            section.required.includes(block.key) &&
             typeof this.allResults[i] === 'undefined'
         )
         .map(block => block.title)
@@ -130,7 +136,8 @@ export default {
       return this.defaultView
         .filter(
           block =>
-            section.required?.includes(block.key) &&
+            typeof section.required === 'object' &&
+            section.required.includes(block.key) &&
             !section.includedResults.includes(block.key)
         )
         .map(block => block.title)
@@ -197,6 +204,7 @@ export default {
       const keys = this.defaultView.map(block => block.key)
       this.includedResults
         .map(key => keys.indexOf(key))
+        .filter(i => i !== -1)
         .forEach(i => {
           const content = JSON.parse(JSON.stringify(this.defaultView[i]))
           content.result = JSON.parse(this.allResults[i])

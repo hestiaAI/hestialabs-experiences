@@ -25,11 +25,12 @@ This directory contains the configuration files linked to each deployement. They
     * - A description
     * - A type (Either 'data', 'radio' or 'checkbox', 'input' or 'multiline')
     *   - For type 'data': a boolean indicating if we hide the checkboxes with all sub-experiences,
-    *     and an array of implicitly added data (referenced by the key of the sub-experience).
+    *     an array of implicitly added data (referenced by the key of the sub-experience),
+    *     and an array of additional checkboxes.
     *   - For type 'radio': an array of options and a pre-selected answer (use the empty string for no pre-selection)
     *   - For type 'checkbox': an array of options and an array of pre-selected answers (use the empty array for no pre-selection)
     *   - For type 'input' and 'multiline': the name (label) of the text field, and some placeholder text.
-    * - Whether or not an answer is required (Boolean for most types, array for data section).
+    * - Whether or not an answer is required (Boolean, but can also be an array for the data section).
     * @type Object
     */
   "consent": {
@@ -52,21 +53,22 @@ This directory contains the configuration files linked to each deployement. They
       },
       {
         "title": "Checkboxes",
-        "description": "Please select all options that apply (at least one required).",
+        "description": "Please select all options that apply.",
         "type": "checkbox",
         "options": ["X", "Y", "Z"],
-        "selected": [],
-        "required": true
+        "selected": []
       },
       {
         "title": "Which data should be shared ?",
-        "description": "The visualizations of every checked section will be reproducible and the underlying data will be available to the receiver.",
-        "type": "data"
+        "description": "The visualizations of every checked section will be reproducible and the underlying data will be available to the receiver (at least one required).",
+        "type": "data",
+        "additional": ["Whole file (which I will provide separately)"],
+        "required": true
       },
       {
         "title": "Multi-line text area",
         "type": "multiline",
-        "placeholder": "Please type your comment",
+        "placeholder": "Please type your comment"
       }
     ],
     "tracker-control": [
