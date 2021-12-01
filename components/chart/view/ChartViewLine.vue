@@ -11,7 +11,7 @@
             :items="namesInterval"
             label="Time interval"
             dense
-            @change="redrawViz"
+            @change="draw"
           ></VSelect>
         </VCol>
       </VRow>
@@ -65,24 +65,25 @@ export default {
   },
   data() {
     return {
+      slices: [],
       selectedInterval: null,
-      intervals: {
-        Days: d3.timeDay,
-        Weeks: d3.timeWeek,
-        Months: d3.timeMonth,
-        Years: d3.timeYear
-      },
-      namesInterval: ['Days', 'Weeks', 'Months', 'Years']
+      intervals: {},
+      namesInterval: []
     }
   },
   methods: {
     drawViz() {
-      const width = 800
-      const height = 300
-      const adj = 50
+      /* Init the possible aggregations dpending on dates extent */
+      const extent = d3.extent(this.values, d => new Date(d.date))
+      const diffDays = d3.timeDay.count(extent[0], extent[1])
+      if (diffDays > 2) this.intervals.Days = d3.timeDay
+      if (diffDays > 14) this.intervals.Weeks = d3.timeWeek
+      if (diffDays > 62) this.intervals.Months = d3.timeMonth
+      if (diffDays > 730) this.intervals.Years = d3.timeYear
+      this.namesInterval = Object.keys(this.intervals)
 
       /* Pivot the data */
-      const slices = this.headers.slice(1).map(id => {
+      this.slices = this.headers.slice(1).map(id => {
         return {
           id,
           values: this.values.map(function (d) {
@@ -96,7 +97,7 @@ export default {
 
       /* PreCompute aggregation per day, month, etc... */
       Object.entries(this.intervals).forEach(([intervalName, interval]) => {
-        slices.forEach(lineData => {
+        this.slices.forEach(lineData => {
           lineData[intervalName] = nest()
             .key(function (d) {
               return interval(new Date(d.date))
@@ -105,6 +106,13 @@ export default {
             .entries(lineData.values)
         })
       })
+      this.selectedInterval = this.namesInterval.at(-1)
+      this.draw(this.selectedInterval)
+    },
+    draw(intervalName) {
+      const width = 800
+      const height = 300
+      const adj = 50
 
       /* create svg element */
       d3.select('#' + this.graphId + ' svg').remove()
@@ -126,22 +134,27 @@ export default {
         .style('padding', this.padding)
         .style('margin', this.margin)
         .classed('svg-content', true)
+      function nestedExtent(data, dataAccessor, valueAccessor) {
+        return d3.extent(
+          data.reduce(function (prevArr, currArr) {
+            const extentArr = d3.extent(currArr[dataAccessor], valueAccessor)
+            prevArr.push(extentArr[0])
+            prevArr.push(extentArr[1])
+            return prevArr
+          }, [])
+        )
+      }
 
       /* Scales */
       const xScale = d3.scaleTime().range([0, width])
       const yScale = d3.scaleLinear().rangeRound([height, 0])
+
       xScale.domain(
-        d3.extent(this.values, function (d) {
-          return new Date(d.date)
-        })
+        nestedExtent(this.slices, intervalName, d => new Date(d.key))
       )
       yScale.domain([
         0,
-        d3.max(slices, function (c) {
-          return d3.max(c.values, function (d) {
-            return d.value + 4
-          })
-        })
+        nestedExtent(this.slices, intervalName, d => d.value)[1]
       ])
 
       /* Axis */
@@ -186,23 +199,23 @@ export default {
         .attr('y2', 0)
       */
       /* Color Scale */
-      const color = d3.scaleOrdinal().domain(slices).range(d3.schemeDark2)
+      const color = d3.scaleOrdinal().domain(this.slices).range(d3.schemeDark2)
 
       /* Line */
       const line = d3
         .line()
         .curve(d3.curveMonotoneX)
-        .x(d => xScale(d.date))
+        .x(d => xScale(new Date(d.key)))
         .y(d => yScale(d.value))
 
       /* Draw lines */
-      const lines = svg.selectAll('lines').data(slices).enter().append('g')
+      const lines = svg.selectAll('lines').data(this.slices).enter().append('g')
       const path = lines
         .append('path')
         .attr('fill', 'none')
         .attr('stroke', d => color(d))
         .attr('stroke-width', this.lineWidth)
-        .attr('d', d => line(d.values))
+        .attr('d', d => line(d[intervalName]))
 
       path
         .attr('stroke-dashoffset', function () {
@@ -220,7 +233,7 @@ export default {
       const points = lines
         .selectAll('circle')
         .data(d =>
-          d.values.map(v => {
+          d[intervalName].map(v => {
             v.color = color(d)
             return v
           })
@@ -233,13 +246,13 @@ export default {
         .attr('fill', 'white')
         .attr('stroke-width', this.dotWidth)
         .attr('cy', d => yScale(d.value))
-        .attr('cx', d => xScale(d.date))
+        .attr('cx', d => xScale(new Date(d.key)))
         .transition()
         .duration(1500)
         .delay((d, i) => i * 100 + 500)
         .ease(d3.easeSin)
         .attr('cy', d => yScale(d.value))
-        .attr('cx', d => xScale(d.date))
+        .attr('cx', d => xScale(new Date(d.key)))
         .attr('r', this.dotRadius)
         .attr('class', 'datapoint')
         .attr('id', (d, i) => i)
