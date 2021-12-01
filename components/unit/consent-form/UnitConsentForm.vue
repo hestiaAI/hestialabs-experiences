@@ -1,7 +1,6 @@
 <template>
   <VForm v-if="consent">
     <VCard class="pa-2 my-6">
-      <VCardTitle class="justify-center">Export Results</VCardTitle>
       <VCardText>
         <UnitConsentFormSection
           v-for="(section, index) in consent"
