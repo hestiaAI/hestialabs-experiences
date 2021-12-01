@@ -49,6 +49,10 @@ import JSZip from 'jszip'
 
 const _sodium = require('libsodium-wrappers')
 
+// In the case of changes that would break the import, this version number must be incremented
+// and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
+const VERSION = 1
+
 export default {
   props: {
     allResults: {
@@ -161,7 +165,8 @@ export default {
       this.timestamp = Date.now()
       const experience = {
         key: manifest.key,
-        timestamp: this.timestamp
+        timestamp: this.timestamp,
+        version: VERSION
       }
       zip.file('experience.json', JSON.stringify(experience))
 
