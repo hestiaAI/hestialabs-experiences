@@ -35,12 +35,9 @@
       {
         "title": "WHICH DATA SHOULD BE SHARED?",
         "description": "Data underlying the following visualisations will be shared. Select all that you want to share.",
-        "type": "data"
-      },
-      {
-        "type": "checkbox",
-        "options": ["Whole file (which I will provide separately)"],
-        "selected": ["Whole file (which I will provide separately)"]
+        "type": "data",
+        "additional": ["Whole file (which I will provide separately)"],
+        "required": true
       },
       {
         "title": "FOR WHAT PURPOSE?",
