@@ -1,0 +1,28 @@
+PREFIX :   <http://schema.org/>
+PREFIX ex: <http://www.example.com/>
+
+SELECT ?date ?Passes ?Likes ?Messages_received ?Messages_sent
+WHERE {
+    ?appOpen a ex:AppOpen .
+    ?appOpen ex:date ?date .
+    OPTIONAL {
+        ?swipePass a ex:SwipePass .
+        ?swipePass ex:date ?date .
+        ?swipePass ex:value ?Passes .
+    }
+    OPTIONAL {
+        ?swipeLike a ex:SwipeLike .
+        ?swipeLike ex:date ?date .
+        ?swipeLike ex:value ?Likes .
+    }
+    OPTIONAL {
+        ?message_received a ex:message_received .
+        ?message_received ex:date ?date .
+        ?message_received ex:value ?Messages_received .
+    }
+    OPTIONAL {
+        ?message_sent a ex:message_sent .
+        ?message_sent ex:date ?date .
+        ?message_sent ex:value ?Messages_sent .
+    }
+}

@@ -215,7 +215,7 @@ export default {
         .attr('transform', function (d, i) {
           return (
             'translate(' +
-            ((i % n) * itemWidth + width / 2 - (itemWidth * itemPerRow) / 2) +
+            ((i % n) * itemWidth + width / 2 - (itemWidth * n) / 2) +
             ',' +
             Math.floor(i / n) * itemHeight +
             ')'
@@ -238,6 +238,32 @@ export default {
           return d
         })
 
+      /* Tooltip */
+      const tooltip = d3
+        .select('body')
+        .append('div')
+        .attr('class', 'tooltip')
+        .style('opacity', 0)
+      const formatDate = d3.timeFormat('%B %d, %Y')
+      function showTooltip(evt, d) {
+        console.log(d)
+        tooltip.transition().duration(60).style('opacity', 0.98)
+        tooltip
+          .html(
+            '<b>' +
+              formatDate(new Date(d.key)) +
+              '<br/>' +
+              d.value +
+              '</b> ' +
+              d.name
+          )
+          .style('left', evt.pageX - 55 + 'px') // (d3.event.pageX) + "px"
+          .style('top', evt.pageY - 45 + 'px') // (d3.event.pageY - 28) + "px"
+      }
+
+      function hideTooltip() {
+        tooltip.transition().duration(60).style('opacity', 0)
+      }
       /* Line */
       const line = d3
         .line()
@@ -272,6 +298,7 @@ export default {
         .data(d =>
           d[intervalName].map(v => {
             v.color = color(d.id)
+            v.name = d.id
             return v
           })
         )
@@ -294,6 +321,24 @@ export default {
         .attr('class', 'datapoint')
         .attr('id', (d, i) => i)
         .style('opacity', 1)
+
+      const radius = this.dotRadius
+      points.on('mouseover', function (evt, d) {
+        d3.select(this)
+          .attr('fill', d => d.color)
+          .transition()
+          .duration(60)
+          .attr('r', radius + 5)
+        showTooltip(evt, d)
+      })
+      points.on('mouseleave', function () {
+        d3.select(this)
+          .attr('fill', 'white')
+          .transition()
+          .duration(60)
+          .attr('r', radius)
+        hideTooltip()
+      })
     }
   }
 }
@@ -333,5 +378,20 @@ export default {
   shape-rendering: crispEdges;
   stroke-opacity: 0.5;
   stroke-width: 10;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 120px;
+  height: 30px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: white;
+  color: #565656;
+  border: 0px;
+  border-radius: 2px;
+  pointer-events: none;
+  box-shadow: 0 0px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 </style>
