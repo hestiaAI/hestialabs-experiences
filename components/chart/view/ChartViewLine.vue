@@ -199,7 +199,44 @@ export default {
         .attr('y2', 0)
       */
       /* Color Scale */
-      const color = d3.scaleOrdinal().domain(this.slices).range(d3.schemeDark2)
+      const keys = this.slices.map(d => d.id)
+      const color = d3.scaleOrdinal().domain(keys).range(d3.schemeDark2)
+
+      /* Legend */
+      const itemPerRow = 1
+      const n = keys.length / itemPerRow
+      const itemWidth = 80
+      const itemHeight = 18
+      const legend = svg
+        .selectAll('.legend')
+        .data(keys)
+        .enter()
+        .append('g')
+        .attr('transform', function (d, i) {
+          return (
+            'translate(' +
+            ((i % n) * itemWidth + width / 2 - (itemWidth * itemPerRow) / 2) +
+            ',' +
+            Math.floor(i / n) * itemHeight +
+            ')'
+          )
+        })
+        .attr('class', 'legend')
+      // add rect
+      legend
+        .append('circle')
+        .attr('r', 7)
+        .attr('cx', -20)
+        .attr('cy', -40)
+        .attr('fill', d => color(d))
+      // add text
+      legend
+        .append('text')
+        .attr('x', -5)
+        .attr('y', -37)
+        .text(function (d) {
+          return d
+        })
 
       /* Line */
       const line = d3
@@ -213,7 +250,7 @@ export default {
       const path = lines
         .append('path')
         .attr('fill', 'none')
-        .attr('stroke', d => color(d))
+        .attr('stroke', d => color(d.id))
         .attr('stroke-width', this.lineWidth)
         .attr('d', d => line(d[intervalName]))
 
@@ -234,7 +271,7 @@ export default {
         .selectAll('circle')
         .data(d =>
           d[intervalName].map(v => {
-            v.color = color(d)
+            v.color = color(d.id)
             return v
           })
         )
