@@ -52,6 +52,12 @@
             }}</VListItemSubtitle>
           </VListItemContent>
         </VListItem>
+        <VListItem two-line>
+          <VListItemContent>
+            <VListItemTitle>Version</VListItemTitle>
+            <VListItemSubtitle>{{ experience.version }}</VListItemSubtitle>
+          </VListItemContent>
+        </VListItem>
       </VCard>
 
       <!-- Consent log -->
@@ -241,6 +247,9 @@ export default {
         return
       }
 
+      // Version compatibility
+      this.versionCompatibilityHandler()
+
       this.handleEnd()
     },
     async generateKeys() {
@@ -255,6 +264,16 @@ export default {
       zip.file('secret-key.txt', sk)
       const content = await zip.generateAsync({ type: 'blob' })
       FileSaver.saveAs(content, 'keys.zip')
+    },
+    /* Transform the imported zip to make it compatible with the current version */
+    versionCompatibilityHandler() {
+      if (!('version' in this.experience)) {
+        this.experience.version = 1
+      }
+      const version = this.experience.version
+      if (version === 1) {
+        // Nothing to do for now
+      }
     }
   }
 }
