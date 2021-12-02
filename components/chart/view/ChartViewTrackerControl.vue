@@ -27,12 +27,13 @@
             <VDivider class="mt-2"></VDivider>
           </template>
           <template #selection="{ item, index }">
-            <span v-if="index === 0">{{
-              item.length > 13 ? item.slice(0, 13) + '..' : item
-            }}</span>
-            <span v-if="index === 1" class="grey--text text-caption">
-              (+{{ selectedApps.length - 1 }} others)
+            <span v-if="index < 3"
+              >{{ item.length > 13 ? item.slice(0, 13) + '..' : item }}
             </span>
+            <span v-if="index < 2">, </span>
+            <div v-if="index === 3" class="grey--text text-caption">
+              (+{{ selectedApps.length - 3 }} others)
+            </div>
           </template>
         </VSelect>
       </VCol>
