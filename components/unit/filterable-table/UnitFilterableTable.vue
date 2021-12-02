@@ -97,8 +97,9 @@ export default {
         this.error = false
         try {
           const headers = this.headers.map(h => h.text)
+          const filteredItems = this.$refs.tableRef.$children[0].filteredItems
           // Change the items keys to match the headers
-          const itemsWithHeader = this.items.map(i =>
+          const itemsWithHeader = filteredItems.map(i =>
             this.headers.reduce((o, h) => ({ ...o, [h.text]: i[h.value] }), {})
           )
           // update the data
