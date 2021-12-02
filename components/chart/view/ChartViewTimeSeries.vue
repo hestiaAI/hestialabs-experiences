@@ -34,6 +34,10 @@ import mixin from './mixin'
 export default {
   mixins: [mixin],
   props: {
+    accessor: {
+      type: Array,
+      default: () => []
+    },
     yLabel: {
       type: String,
       default: () => 'Count'
@@ -81,8 +85,6 @@ export default {
   },
   methods: {
     drawViz() {
-      console.log(this.values)
-      console.log(this.vizProps)
       /* Init the possible aggregations dpending on dates extent */
       const extent = d3.extent(this.values, d => new Date(d.date))
       const diffDays = d3.timeDay.count(extent[0], extent[1])
@@ -109,13 +111,19 @@ export default {
       this.namesInterval = Object.keys(this.intervals)
 
       /* Pivot the data */
-      this.slices = this.headers.slice(1).map(id => {
+      let accessor = this.accessor
+      if (this.accessor.length === 0) {
+        accessor = this.headers.slice(1).map(h => {
+          return { text: h, value: h }
+        })
+      }
+      this.slices = accessor.map(a => {
         return {
-          id,
+          id: a.text,
           values: this.values.map(function (d) {
             return {
               date: new Date(d.date),
-              value: +d[id]
+              value: +d[a.value]
             }
           })
         }

@@ -3,7 +3,7 @@
     <component
       :is="component"
       v-if="isValid && !isEmpty"
-      v-bind="{ values, ...vizProps }"
+      v-bind="{ values, headers, ...vizProps }"
     />
     <i v-else-if="isValid">No data found</i>
     <i v-else>Data in this format cannot be displayed by this visualization</i>
@@ -49,6 +49,9 @@ export default {
     },
     values() {
       return this.data.items || {}
+    },
+    headers() {
+      return this.data.headers || []
     },
     component() {
       return () => import(`@/components/chart/view/${this.graphName}`)
