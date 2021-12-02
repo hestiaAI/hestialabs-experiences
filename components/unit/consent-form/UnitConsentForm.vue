@@ -56,6 +56,7 @@
 
 <script>
 import JSZip from 'jszip'
+import FileManager from '~/utils/file-manager.js'
 
 const _sodium = require('libsodium-wrappers')
 
@@ -71,6 +72,10 @@ export default {
     },
     defaultView: {
       type: Array,
+      required: true
+    },
+    fileManager: {
+      type: FileManager,
       required: true
     }
   },
@@ -214,6 +219,18 @@ export default {
             JSON.stringify(content)
           )
         })
+
+      // Add whole files
+      if (this.includedResults.includes('file-explorer')) {
+        const zipFilesFolder = zip.folder('files')
+        const files = this.$store.state.selectedFiles
+        for (const file of files) {
+          zipFilesFolder.file(
+            file.filename,
+            await this.fileManager.getText(file.filename)
+          )
+        }
+      }
 
       const content = await zip.generateAsync({ type: 'uint8array' })
       this.zipFile = content

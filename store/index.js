@@ -6,7 +6,8 @@ export const state = () => ({
     ...config
   },
   manifestMap,
-  power: false
+  power: false,
+  selectedFiles: []
 })
 
 export const getters = {
@@ -48,5 +49,8 @@ export const getters = {
 export const mutations = {
   updatePower(state, power) {
     state.power = power
+  },
+  setSelectedFiles(state, selectedFiles) {
+    state.selectedFiles = selectedFiles
   }
 }

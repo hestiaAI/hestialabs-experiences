@@ -49,12 +49,12 @@
       </VRow>
       <VRow v-if="showDataExplorer">
         <VCol>
-          <UnitFileExplorer v-bind="{ fileManager }" />
+          <UnitFileExplorer v-bind="{ fileManager, selectable: true }" />
         </VCol>
       </VRow>
       <VRow v-if="$store.state.config.consent">
         <VCol cols="8 mx-auto">
-          <UnitConsentForm v-bind="{ allResults, defaultView }" />
+          <UnitConsentForm v-bind="{ allResults, defaultView, fileManager }" />
         </VCol>
       </VRow>
     </template>

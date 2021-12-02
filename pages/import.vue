@@ -107,6 +107,13 @@
           </VCol>
         </VRow>
       </VCard>
+
+      <!-- File explorer -->
+      <VRow v-if="hasFileExplorer">
+        <VCol>
+          <UnitFileExplorer v-bind="{ fileManager, selectable: false }" />
+        </VCol>
+      </VRow>
     </template>
   </div>
 </template>
@@ -114,6 +121,7 @@
 <script>
 import JSZip from 'jszip'
 import FileSaver from 'file-saver'
+import FileManager from '~/utils/file-manager'
 
 const _sodium = require('libsodium-wrappers')
 
@@ -130,7 +138,8 @@ export default {
       message: '',
       experience: null,
       results: null,
-      consent: null
+      consent: null,
+      fileManager: null
     }
   },
   computed: {
@@ -154,6 +163,9 @@ export default {
     },
     sortedResults() {
       return this.results.slice(0).sort((a, b) => a.index - b.index)
+    },
+    hasFileExplorer() {
+      return this.fileManager?.fileList.length > 0
     }
   },
   methods: {
@@ -220,15 +232,28 @@ export default {
       }
       // Extract files
       try {
+        // Experience details
         this.experience = JSON.parse(
           await zip.file('experience.json').async('string')
         )
+        // Consent log
         this.consent = JSON.parse(
           await zip.file('consent.json').async('string')
         )
-        const files = zip.file(/block[0-9]+.json/)
-        const res = await Promise.all(files.map(r => r.async('string')))
-        this.results = res.map(JSON.parse)
+        // Included results
+        const resultFiles = zip.file(/block[0-9]+.json/)
+        const results = await Promise.all(
+          resultFiles.map(r => r.async('string'))
+        )
+        this.results = results.map(JSON.parse)
+        // Included whole files
+        const folderContent = zip.file(/files\/.*/)
+        const blobs = await Promise.all(folderContent.map(r => r.async('blob')))
+        const files = folderContent.map(
+          (r, i) => new File([blobs[i]], r.name.substr(6))
+        )
+        this.fileManager = new FileManager(this.manifest.preprocessors)
+        await this.fileManager.init(files, true)
       } catch (error) {
         this.handleError(
           error,

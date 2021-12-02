@@ -24,6 +24,14 @@
         @change="updateConsent"
       ></VCheckbox>
       <VCheckbox
+        v-model="includedResults"
+        :readonly="readonly"
+        dense
+        label="Selected files in file explorer"
+        value="file-explorer"
+        @change="updateConsent"
+      ></VCheckbox>
+      <VCheckbox
         v-for="(title, j) in section.additional"
         :key="`data-additional-${j}`"
         v-model="includedResults"
