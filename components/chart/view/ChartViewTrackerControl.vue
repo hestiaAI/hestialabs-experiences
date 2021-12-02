@@ -1,6 +1,44 @@
 <template>
   <VContainer>
     <VRow>
+      <VCol cols="4" offset="4">
+        <VSelect
+          v-model="selectedApps"
+          :items="apps"
+          label="Applications"
+          hint="Select the applications you want to include in the visualisation"
+          persistent-hint
+          multiple
+          @change="filterApps"
+        >
+          <template #prepend-item>
+            <VListItem ripple @click="toggle">
+              <VListItemAction>
+                <VIcon
+                  :color="selectedApps.length > 0 ? 'indigo darken-4' : ''"
+                >
+                  {{ icon }}
+                </VIcon>
+              </VListItemAction>
+              <VListItemContent>
+                <VListItemTitle> Select All </VListItemTitle>
+              </VListItemContent>
+            </VListItem>
+            <VDivider class="mt-2"></VDivider>
+          </template>
+          <template #selection="{ item, index }">
+            <span v-if="index < 3"
+              >{{ item.length > 13 ? item.slice(0, 13) + '..' : item }}
+            </span>
+            <span v-if="index < 2">, </span>
+            <div v-if="index === 3" class="grey--text text-caption">
+              (+{{ selectedApps.length - 3 }} others)
+            </div>
+          </template>
+        </VSelect>
+      </VCol>
+    </VRow>
+    <VRow>
       <VCol cols="12" md="9">
         <VRow>
           <VCol cols="12">
@@ -17,7 +55,7 @@
 
             <div id="range-chart">
               <p class="muted pull-right" style="margin-right: 15px">
-                select a time range to zoom in
+                select a <strong>time range</strong> below to zoom in
               </p>
             </div>
           </VCol>
@@ -88,6 +126,9 @@ export default {
   mixins: [mixin],
   data() {
     return {
+      apps: [],
+      selectedApps: [],
+      selectAppDimension: null,
       header: [
         { text: 'App', value: 'App' },
         { text: 'Uid', value: 'uid' },
@@ -100,7 +141,52 @@ export default {
       results: []
     }
   },
+  computed: {
+    selectAll() {
+      return this.selectedApps.length === this.apps.length
+    },
+    selectSome() {
+      return this.selectedApps.length > 0 && !this.selectAll
+    },
+    icon() {
+      if (this.selectAll) return '$vuetify.icons.mdiCloseBox'
+      if (this.selectSome) return '$vuetify.icons.mdiMinusBox'
+      return '$vuetify.icons.mdiCheckboxBlankOutline'
+    }
+  },
   methods: {
+    toggle() {
+      this.$nextTick(() => {
+        if (this.selectAll) {
+          this.selectedApps = []
+        } else {
+          this.selectedApps = this.apps.slice()
+        }
+        this.filterApps(this.selectedApps)
+      })
+    },
+    filterApps(items) {
+      this.selectAppDimension.filter(null)
+      this.selectAppDimension.filterFunction(function (d) {
+        return items.includes(d)
+      })
+      dc.redrawAll()
+    },
+    removeEmptyBins(group) {
+      return {
+        top(n) {
+          return group
+            .top(Infinity)
+            .filter(function (d) {
+              return d.value.count !== 0 && d.value !== 0
+            })
+            .slice(0, n)
+        },
+        all() {
+          return group.all()
+        }
+      }
+    },
     drawViz() {
       // Create and bind charts to their respective divs
       const volumeChart = new dc.LineChart('#volume-chart')
@@ -154,6 +240,14 @@ export default {
       const advertiserDimension = ndx.dimension(d => d.Tracker)
       const appDimension = ndx.dimension(d => d.App)
 
+      // Dimension for the app selector (has to be different from appDimension)
+      this.selectAppDimension = ndx.dimension(d => d.App)
+      this.apps = this.selectAppDimension
+        .group()
+        .top(Infinity)
+        .map(e => e.key)
+      this.toggle()
+
       // Create groups from dimension
       const dayGroup = dayDimension.group().reduceCount()
       const categoryGroup = categoryDimension.group().reduceCount()
@@ -198,7 +292,7 @@ export default {
         .elasticX(false)
         .elasticY(true)
         .xyTipsOn(true)
-        .mouseZoomable(true)
+        .mouseZoomable(false)
         .rangeChart(rangeChart)
         .renderHorizontalGridLines(false)
         // .dashStyle([3,1,1,1])
@@ -221,6 +315,7 @@ export default {
         .dimension(dayDimension)
         .group(dayGroup)
         .centerBar(true)
+        .elasticY(true)
         .gap(1)
         .x(
           d3
@@ -310,7 +405,7 @@ export default {
         .width(width)
         .height(height)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
-        .group(appGroup)
+        .group(this.removeEmptyBins(appGroup))
         .dimension(appDimension)
         .ordinalColors(['#58539E', '#847CEB', '#605BAB', '#4A4685', '#35325E'])
         .label(d => d.key)
@@ -333,7 +428,8 @@ export default {
         })
         .on('pretransition', (chart, filter) => {
           this.results = dayDimension.top(all.value())
-          d3.select('#dc-data-count a.reset').on('click', function () {
+          d3.select('#dc-data-count a.reset').on('click', () => {
+            this.toggle()
             dc.filterAll()
             dc.renderAll()
           })
