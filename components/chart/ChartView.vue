@@ -3,7 +3,7 @@
     <component
       :is="component"
       v-if="isValid && !isEmpty"
-      v-bind="{ values, ...vizProps }"
+      v-bind="{ values, headers, ...vizProps }"
     />
     <i v-else-if="isValid">No data found</i>
     <i v-else>Data in this format cannot be displayed by this visualization</i>
@@ -12,7 +12,6 @@
 
 <script>
 import _ from 'lodash'
-
 function isDataValid(data) {
   return (
     _.every(
@@ -23,11 +22,9 @@ function isDataValid(data) {
     _.every(data.items, i => _.every(data.headers, h => _.has(i, h)))
   )
 }
-
 function isDataEmpty(data) {
   return data.items.length === 0
 }
-
 export default {
   props: {
     data: {
@@ -52,6 +49,9 @@ export default {
     },
     values() {
       return this.data.items || {}
+    },
+    headers() {
+      return this.data.headers || []
     },
     component() {
       return () => import(`@/components/chart/view/${this.graphName}`)
