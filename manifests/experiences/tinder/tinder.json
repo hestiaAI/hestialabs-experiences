@@ -17,7 +17,7 @@
     {
       "key": "likes-dislikes-vue",
       "query": "likes-dislikes",
-      "visualizations": ["ChartViewLine.vue"],
+      "visualizations": ["ChartViewTimeSeries.vue"],
       "showTable": false,
       "title": "Likes and passes",
       "text": "See the number of likes and dislikes that you made over time."
@@ -25,7 +25,7 @@
     {
       "key": "app-opens-vue",
       "query": "app-opens",
-      "visualizations": ["ChartViewLine.vue"],
+      "visualizations": ["ChartViewTimeSeries.vue"],
       "showTable": false,
       "title": "App openings",
       "text": "See the number of times that you opened the app (per day or per month)."
@@ -33,7 +33,7 @@
     {
       "key": "monthly-history-vue",
       "query": "likes-dislikes-messages",
-      "visualizations": ["ChartViewLine.vue"],
+      "visualizations": ["ChartViewTimeSeries.vue"],
       "showTable": false,
       "title": "Likes, passes, messages",
       "text": "Compare the number of likes, passes, messages sent and messages received."

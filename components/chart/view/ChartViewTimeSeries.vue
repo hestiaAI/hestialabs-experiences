@@ -61,6 +61,14 @@ export default {
     title: {
       type: String,
       default: () => 'Title of the Graph'
+    },
+    legendOffset: {
+      type: Number,
+      default: () => 0
+    },
+    legendPadding: {
+      type: Number,
+      default: () => 10
     }
   },
   data() {
@@ -203,26 +211,8 @@ export default {
       const color = d3.scaleOrdinal().domain(keys).range(d3.schemeDark2)
 
       /* Legend */
-      const itemPerRow = 1
-      const n = keys.length / itemPerRow
-      const itemWidth = 80
-      const itemHeight = 18
-      const legend = svg
-        .selectAll('.legend')
-        .data(keys)
-        .enter()
-        .append('g')
-        .attr('transform', function (d, i) {
-          return (
-            'translate(' +
-            ((i % n) * itemWidth + width / 2 - (itemWidth * n) / 2) +
-            ',' +
-            Math.floor(i / n) * itemHeight +
-            ')'
-          )
-        })
-        .attr('class', 'legend')
-      // add rect
+      const legend = svg.selectAll('.legend').data(keys).enter().append('g')
+      // add circles
       legend
         .append('circle')
         .attr('r', 7)
@@ -237,6 +227,17 @@ export default {
         .text(function (d) {
           return d
         })
+      // space the groups depending on their size
+      legend.attr('transform', (d, i) => {
+        const x = d3.sum(keys, (e, j) =>
+          j < i ? legend.nodes()[j].getBBox().width : 0
+        )
+        return (
+          'translate(' +
+          (x + this.legendOffset + this.legendPadding * i) +
+          ',0)'
+        )
+      })
 
       /* Tooltip */
       const tooltip = d3
@@ -246,7 +247,6 @@ export default {
         .style('opacity', 0)
       const formatDate = d3.timeFormat('%B %d, %Y')
       function showTooltip(evt, d) {
-        console.log(d)
         tooltip.transition().duration(60).style('opacity', 0.98)
         tooltip
           .html(
@@ -383,7 +383,7 @@ export default {
 div.tooltip {
   position: absolute;
   text-align: center;
-  width: 120px;
+  width: 120%;
   height: 30px;
   padding: 2px;
   font: 12px sans-serif;
