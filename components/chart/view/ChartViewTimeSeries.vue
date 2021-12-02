@@ -140,7 +140,7 @@ export default {
             .entries(lineData.values)
         })
       })
-      this.selectedInterval = this.namesInterval.at(-1)
+      this.selectedInterval = this.namesInterval[this.namesInterval.length - 1]
       this.draw(this.selectedInterval)
     },
     draw(intervalName) {
@@ -377,7 +377,7 @@ export default {
 .yAxis line {
   stroke: #706f6f;
   stroke-width: 0.5;
-  shape-rendering: crispEdges;
+  shape-rendering: geometricPrecision;
 }
 
 /* axis contour */
@@ -385,7 +385,7 @@ export default {
 .yAxis path {
   stroke: #706f6f;
   stroke-width: 0.7;
-  shape-rendering: crispEdges;
+  shape-rendering: geometricPrecision;
 }
 
 .yAxis path {
@@ -402,7 +402,7 @@ export default {
 
 .gridline {
   stroke: lightgray;
-  shape-rendering: crispEdges;
+  shape-rendering: geometricPrecision;
   stroke-opacity: 0.5;
   stroke-width: 10;
 }
