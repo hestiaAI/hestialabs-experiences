@@ -19,7 +19,7 @@
     {
       "key": "advertisers-per-day",
       "sql": "advertisers-per-day",
-      "visualizations": ["top-k-advertisers"],
+      "visualization": "top-k-advertisers",
       "showTable": false,
       "title": "Top advertisers",
       "text": "See the ranking of advertisers that have shown you the most ads."
@@ -28,7 +28,7 @@
       "key": "targeting-criteria-by-advertiser",
       "sql": "targeting-criteria-by-advertiser",
       "postprocessor": "sunburstTargeting",
-      "visualizations": ["ChartViewSunburst.vue"],
+      "visualization": "ChartViewSunburst.vue",
       "showTable": false,
       "title": "Targeting criteria (Top 10 advertisers)",
       "text": "Understand why you have been targeted by these advertisers. The graph shows the 10 advertisers who use the most targeting criteria on you. In the first ring you will find the different advertisers, in the second ring the types of targeting used (location, language, ...). And finally, if you click on a ring, the graph will enlarge to show you the targeting values (Swiss, French, ...) in the outer ring."
@@ -36,7 +36,7 @@
     {
       "key": "targeting-criteria-all-advertisers",
       "sql": "targeting-criteria-all-advertisers",
-      "visualizations": ["wordcloud-targeting-criteria"],
+      "visualization": "wordcloud-targeting-criteria",
       "showTable": false,
       "title": "Targeting criteria (All advertisers)",
       "text": "Get more details on how you are targeted by these advertisers. This graph shows the number of times you have been targeted by different advertisers using a specific criterion. You can change the type of criterion and get information about the meaning of each criterion's type at the bottom of the graph."
@@ -47,13 +47,13 @@
       "postprocessor": "sunburstTargeting",
       "showTable": false,
       "title": "Targeting criteria (1 advertiser)",
-      "visualizations": ["ChartViewSearchSunburst.vue"],
+      "visualization": "ChartViewSearchSunburst.vue",
       "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the advertiser in the table below and click on it to visualise them."
     },
     {
       "key": "overview",
       "sql": "overview",
-      "visualizations": ["ChartViewOverviewTwitter.vue"],
+      "visualization": "ChartViewOverviewTwitter.vue",
       "showTable": false,
       "title": "Twitter advertising overview",
       "text": "Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results."
@@ -61,7 +61,7 @@
     {
       "key": "genericDateViewer",
       "customPipeline": "genericDateViewer",
-      "visualizations": ["ChartViewGenericDateViewer.vue"],
+      "visualization": "ChartViewGenericDateViewer.vue",
       "showTable": false,
       "title": "Dated observations",
       "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
