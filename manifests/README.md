@@ -75,7 +75,7 @@ Note: All files and folders should match the following regular expression: [`^(?
     * - A SQL query
     * - A postprocessor (defined in postprocessors.js)
     * - A parameter name (if necessary), and for sql pipelines a parameter key used in the query (prefixed with :)
-    * - An array of visualizations to show
+    * - A visualization name
     * - A data table
     * - A title
     * - A text description
@@ -90,7 +90,7 @@ Note: All files and folders should match the following regular expression: [`^(?
       "postprocessor": "postprocessor_function_name",
       "parameterName": "Example",
       "parameterKey": ":example",
-      "visualizations": ["viz_name_1", "viz_name_2"],
+      "visualization": "viz_name",
       "showTable": false,
       "title": "An interesting title",
       "text": "Lorem ipsum."

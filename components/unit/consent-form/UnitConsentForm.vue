@@ -61,7 +61,7 @@ const _sodium = require('libsodium-wrappers')
 
 // In the case of changes that would break the import, this version number must be incremented
 // and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
-const VERSION = 1
+const VERSION = 2
 
 export default {
   props: {
