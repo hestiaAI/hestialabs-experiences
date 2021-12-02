@@ -91,6 +91,7 @@
                   v-else-if="vizVue"
                   :graph-name="vizVue"
                   :data="result"
+                  :viz-props="defaultViewElements.vizProps"
                 />
                 <UnitIframe v-else-if="vizUrl" :src="vizUrl" :data="result" />
               </VCol>

@@ -92,6 +92,7 @@
               v-else-if="allVizVue[resultIndex]"
               :graph-name="allVizVue[resultIndex]"
               :data="result.result"
+              :viz-props="result.vizProps"
             />
             <UnitIframe
               v-else-if="allVizUrl[resultIndex]"
