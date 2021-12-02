@@ -1,11 +1,19 @@
 {
   "title": "Netflix",
   "icon": "netflix.png",
-  "ext": "all",
-  "multiple": true,
+  "ext": "zip",
+  "multiple": false,
   "isGenericViewer": true,
   "showDataExplorer": true,
   "defaultView": [
+    {
+      "key": "usage",
+      "customPipeline": "viewingData",
+      "postprocessor": "usagePerDay",
+      "showTable": true,
+      "title": "Viewing activity",
+      "text": "See the time you spent watching shows on Netflix"
+    },
     {
       "key": "genericDateViewer",
       "customPipeline": "genericDateViewer",
