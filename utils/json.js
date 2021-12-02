@@ -5,10 +5,24 @@ import {
 } from '@mdi/js'
 import _ from 'lodash'
 
-const groupSize = 50
-
 export default function itemifyJSON(jsonText) {
+  const groupsPerLevel = 10
   let id = 0
+  function minifyList(list, base = 0) {
+    if (list.length <= groupsPerLevel) return list
+    const groupSize = Math.pow(
+      groupsPerLevel,
+      Math.floor(Math.log(list.length - 1) / Math.log(groupsPerLevel))
+    )
+    return _.chunk(list, groupSize).map((group, i) => ({
+      id: ++id,
+      name: `[elements ${base + groupSize * i + 1} - ${
+        base + groupSize * i + group.length
+      }]`,
+      children: minifyList(group, base + i * groupSize),
+      icon: mdiFormatListBulletedSquare
+    }))
+  }
   function itemifyRec(tree) {
     id++
     if (typeof tree !== 'object') {
@@ -24,27 +38,11 @@ export default function itemifyJSON(jsonText) {
           children: children[0].children,
           icon: children[0].icon
         }
-      } else if (children.length > groupSize) {
-        const groups = _.chunk(children, groupSize).map((group, i) => ({
-          id: id++,
-          name: `[group ${i + 1} with elements ${groupSize * i + 1} - ${
-            groupSize * i + group.length
-          }]`,
-          children: group,
-          icon: mdiFormatListBulletedSquare
-        }))
-        id++
-        return {
-          id,
-          name,
-          children: groups,
-          icon: mdiFormatListBulletedSquare
-        }
       } else {
         return {
           id,
           name,
-          children,
+          children: minifyList(children),
           icon: mdiFormatListBulletedSquare
         }
       }
