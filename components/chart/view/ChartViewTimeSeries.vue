@@ -84,10 +84,26 @@ export default {
       /* Init the possible aggregations dpending on dates extent */
       const extent = d3.extent(this.values, d => new Date(d.date))
       const diffDays = d3.timeDay.count(extent[0], extent[1])
-      if (diffDays > 2) this.intervals.Days = d3.timeDay
-      if (diffDays > 14) this.intervals.Weeks = d3.timeWeek
-      if (diffDays > 62) this.intervals.Months = d3.timeMonth
-      if (diffDays > 730) this.intervals.Years = d3.timeYear
+      if (diffDays > 2)
+        this.intervals.Days = {
+          parser: d3.timeDay,
+          format: d3.timeFormat('%B %d, %Y')
+        }
+      if (diffDays > 14)
+        this.intervals.Weeks = {
+          parser: d3.timeWeek,
+          format: d3.timeFormat('%B %d, %Y')
+        }
+      if (diffDays > 62)
+        this.intervals.Months = {
+          parser: d3.timeMonth,
+          format: d3.timeFormat('%B %Y')
+        }
+      if (diffDays > 730)
+        this.intervals.Years = {
+          parser: d3.timeYear,
+          format: d3.timeFormat('%Y')
+        }
       this.namesInterval = Object.keys(this.intervals)
 
       /* Pivot the data */
@@ -108,7 +124,7 @@ export default {
         this.slices.forEach(lineData => {
           lineData[intervalName] = nest()
             .key(function (d) {
-              return interval(new Date(d.date))
+              return interval.parser(new Date(d.date))
             })
             .rollup(leaves => d3.sum(leaves, l => l.value))
             .entries(lineData.values)
@@ -240,25 +256,26 @@ export default {
       })
 
       /* Tooltip */
+      d3.select('#' + this.graphId + '.tooltip').remove()
       const tooltip = d3
         .select('body')
         .append('div')
         .attr('class', 'tooltip')
+        .attr('id', this.graphId)
         .style('opacity', 0)
-      const formatDate = d3.timeFormat('%B %d, %Y')
+
+      const that = this
       function showTooltip(evt, d) {
         tooltip.transition().duration(60).style('opacity', 0.98)
         tooltip
           .html(
             '<b>' +
-              formatDate(new Date(d.key)) +
-              '<br/>' +
-              d.value +
-              '</b> ' +
-              d.name
-          )
-          .style('left', evt.pageX - 55 + 'px') // (d3.event.pageX) + "px"
-          .style('top', evt.pageY - 45 + 'px') // (d3.event.pageY - 28) + "px"
+              that.intervals[intervalName].format(new Date(d.key)) +
+              '</b><br/>' +
+              d.value
+          ) // d.name
+          .style('left', evt.pageX - 55 + 'px')
+          .style('top', evt.pageY - 45 + 'px')
       }
 
       function hideTooltip() {
@@ -383,7 +400,7 @@ export default {
 div.tooltip {
   position: absolute;
   text-align: center;
-  width: 120%;
+  width: 110px;
   height: 30px;
   padding: 2px;
   font: 12px sans-serif;
