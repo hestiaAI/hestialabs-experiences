@@ -35,18 +35,47 @@
       {
         "title": "WHICH DATA SHOULD BE SHARED?",
         "description": "Data underlying the following visualisations will be shared. Select all that you want to share.",
-        "type": "data"
-      },
-      {
-        "type": "checkbox",
-        "options": ["Whole file (which I will provide separately)"],
-        "selected": ["Whole file (which I will provide separately)"]
+        "type": "data",
+        "additional": ["Whole file (which I will provide separately)"],
+        "required": true
       },
       {
         "title": "FOR WHAT PURPOSE?",
-        "description": "On a strictly need-to-know basis, I consent to sharing this data for the following purposes. Select all that apply:",
+        "description": "On a strictly need-to-know basis, I consent to sharing this data for the following purposes. Select all that apply:"
+      },
+      {
+        "description": "<b>Within your individual bubble (Paul and Alex only):</b>",
         "type": "checkbox",
-        "options": ["To help analyse/understand the data", "For help with producing screenshots, tweets, videos or summaries (add details below if needed)", "Within my #digipower bubble, for drafting #digipower reports which I can approve/review later", "Outside of my #digipower bubble, to improve the #digipower experience of other participants, in the precise ways defined below", "To report a bug or issue with data extraction, display or visualisation", "To help Hestia.AI developers to improve the data viewing experience", "Other reason (add details below)"]
+        "options": [
+          "To help analyse/understand the data",
+          "For help with producing screenshots, tweets, videos or summaries (add details below if needed)",
+          "Other reason (add details below)"
+        ]
+      },
+      {
+        "description": "<b>With Hestia.AI but not SITRA (my data will be deleted within two weeks):</b>",
+        "type": "checkbox",
+        "options": [
+          "To report a bug or issue with data extraction, display or visualisation",
+          "To help Hestia.AI developers to improve the data viewing experience",
+          "Other reason (add details below)"
+        ]
+      },
+      {
+        "description": "<b>With other Participants:</b>",
+        "type": "checkbox",
+        "options": [
+          "To enable conversations and co-ordinated actions with other participants, in the precise ways I define below",
+          "Other reason (add details below)"
+        ]
+      },
+      {
+        "description": "<b>Within the wider bubble between Alex, Paul and SITRA:</b>",
+        "type": "checkbox",
+        "options": [
+          "For reference by Paul and Alex while drafting public #digipower reports which I can approve/review later before they become public",
+          "Other reason (add details below)"
+        ]
       },
       {
         "title": "ADDITIONAL DETAILS & COMMENTS",

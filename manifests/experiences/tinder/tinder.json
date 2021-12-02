@@ -17,7 +17,7 @@
     {
       "key": "likes-dislikes-vue",
       "query": "likes-dislikes",
-      "visualizations": ["ChartViewTimeSeries.vue"],
+      "visualizations": "ChartViewTimeSeries.vue",
       "showTable": false,
       "title": "Likes and passes",
       "text": "See the number of likes and dislikes that you made over time."
@@ -25,7 +25,7 @@
     {
       "key": "app-opens-vue",
       "query": "app-opens",
-      "visualizations": ["ChartViewTimeSeries.vue"],
+      "visualizations": "ChartViewTimeSeries.vue",
       "showTable": false,
       "title": "App openings",
       "text": "See the number of times that you opened the app (per day or per month)."
@@ -33,7 +33,7 @@
     {
       "key": "monthly-history-vue",
       "query": "likes-dislikes-messages",
-      "visualizations": ["ChartViewTimeSeries.vue"],
+      "visualizations": "ChartViewTimeSeries.vue",
       "showTable": false,
       "title": "Likes, passes, messages",
       "text": "Compare the number of likes, passes, messages sent and messages received."
@@ -41,7 +41,7 @@
     {
       "key": "likes-dislikes",
       "query": "likes-dislikes",
-      "visualizations": ["daily-likes-passes"],
+      "visualization": "daily-likes-passes",
       "showTable": false,
       "title": "Likes and passes",
       "text": "See the number of likes and dislikes that you made over time."
@@ -49,7 +49,7 @@
     {
       "key": "app-opens",
       "query": "app-opens",
-      "visualizations": ["daily-usage", "monthly-usage"],
+      "visualization": "daily-usage",
       "showTable": false,
       "title": "App openings",
       "text": "See the number of times that you opened the app (per day or per month)."
@@ -57,7 +57,7 @@
     {
       "key": "monthly-history",
       "query": "all",
-      "visualizations": ["monthly-history"],
+      "visualization": "monthly-history",
       "showTable": false,
       "title": "Likes, passes, messages",
       "text": "Compare the number of likes, passes, messages sent and messages received."
@@ -65,7 +65,7 @@
     {
       "key": "donut",
       "query": "all",
-      "visualizations": ["donut-multiple-comparisons"],
+      "visualization": "donut-multiple-comparisons",
       "showTable": false,
       "title": "Pairs",
       "text": "Compare different pairs of values in a donut chart."
@@ -73,7 +73,7 @@
     {
       "key": "likes-dislikes-open",
       "query": "likes-dislikes-open",
-      "visualizations": ["scatter-likes-passes-correlation"],
+      "visualization": "scatter-likes-passes-correlation",
       "showTable": false,
       "title": "Likes and passes correlation",
       "text": "Observe the possible correlation between the number of likes/passes and the number of times you open the app."

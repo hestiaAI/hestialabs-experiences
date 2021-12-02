@@ -52,6 +52,12 @@
             }}</VListItemSubtitle>
           </VListItemContent>
         </VListItem>
+        <VListItem two-line>
+          <VListItemContent>
+            <VListItemTitle>Version</VListItemTitle>
+            <VListItemSubtitle>{{ experience.version }}</VListItemSubtitle>
+          </VListItemContent>
+        </VListItem>
       </VCard>
 
       <!-- Consent log -->
@@ -74,32 +80,25 @@
       >
         <VCardTitle class="justify-center">{{ result.title }}</VCardTitle>
         <VRow>
-          <VCol
-            v-for="(specFile, vegaIndex) in allVegaFiles[resultIndex]"
-            :key="vegaIndex"
-            class="text-center"
-          >
+          <VCol>
             <UnitVegaViz
-              :spec-file="specFile"
+              v-if="allVizVega[resultIndex]"
+              :spec-file="allVizVega[resultIndex]"
               :data="result.result"
-              :div-id="`viz-${resultIndex}-${vegaIndex}`"
+              :div-id="`viz-${resultIndex}`"
+              class="text-center"
             />
-          </VCol>
-        </VRow>
-        <VRow
-          v-for="(graphName, vizVueIndex) in allVueGraphNames[resultIndex]"
-          :key="`viz-${resultIndex}-${vizVueIndex}`"
-        >
-          <VCol>
-            <ChartView :graph-name="graphName" :data="result.result" />
-          </VCol>
-        </VRow>
-        <VRow
-          v-for="(src, vizUrlIndex) in allVizUrls[resultIndex]"
-          :key="'viz-url-' + vizUrlIndex"
-        >
-          <VCol>
-            <UnitIframe :src="src" :data="result.result" />
+            <ChartView
+              v-else-if="allVizVue[resultIndex]"
+              :graph-name="allVizVue[resultIndex]"
+              :data="result.result"
+              :viz-props="result.vizProps"
+            />
+            <UnitIframe
+              v-else-if="allVizUrl[resultIndex]"
+              :src="allVizUrl[resultIndex]"
+              :data="result.result"
+            />
           </VCol>
         </VRow>
         <VRow>
@@ -140,20 +139,17 @@ export default {
         params: { key: this.experience.key }
       })
     },
-    allVegaFiles() {
-      return this.sortedResults.map(
-        r =>
-          r.visualizations?.map(n => this.manifest.vega[n]).filter(n => n) ?? []
+    allVizVega() {
+      return this.sortedResults.map(r => this.manifest.vega[r.visualization])
+    },
+    allVizUrl() {
+      return this.sortedResults.map(r =>
+        r.visualization?.startsWith('/') ? r.visualization : undefined
       )
     },
-    allVizUrls() {
+    allVizVue() {
       return this.sortedResults.map(r =>
-        r.visualizations?.filter(n => n.startsWith('/'))
-      )
-    },
-    allVueGraphNames() {
-      return this.sortedResults.map(r =>
-        r.visualizations?.filter(n => n.endsWith('.vue'))
+        r.visualization?.endsWith('.vue') ? r.visualization : undefined
       )
     },
     sortedResults() {
@@ -241,6 +237,9 @@ export default {
         return
       }
 
+      // Version compatibility
+      this.versionCompatibilityHandler()
+
       this.handleEnd()
     },
     async generateKeys() {
@@ -255,6 +254,22 @@ export default {
       zip.file('secret-key.txt', sk)
       const content = await zip.generateAsync({ type: 'blob' })
       FileSaver.saveAs(content, 'keys.zip')
+    },
+    /* Transform the imported zip to make it compatible with the current version */
+    versionCompatibilityHandler() {
+      if (!('version' in this.experience)) {
+        this.experience.version = 1
+      }
+      const version = this.experience.version
+      if (version === 1) {
+        // Convert the array of viz to a single viz
+        // Note: this feature was only used for one tinder block
+        for (const r of this.results) {
+          if ('visualizations' in r) {
+            r.visualization = r.visualizations[0]
+          }
+        }
+      }
     }
   }
 }

@@ -61,14 +61,6 @@ export default {
     title: {
       type: String,
       default: () => 'Title of the Graph'
-    },
-    legendOffset: {
-      type: Number,
-      default: () => 0
-    },
-    legendPadding: {
-      type: Number,
-      default: () => 10
     }
   },
   data() {
@@ -81,31 +73,13 @@ export default {
   },
   methods: {
     drawViz() {
-      console.log(this.values)
-      console.log(this.vizProps)
       /* Init the possible aggregations dpending on dates extent */
       const extent = d3.extent(this.values, d => new Date(d.date))
       const diffDays = d3.timeDay.count(extent[0], extent[1])
-      if (diffDays > 2)
-        this.intervals.Days = {
-          parser: d3.timeDay,
-          format: d3.timeFormat('%B %d, %Y')
-        }
-      if (diffDays > 14)
-        this.intervals.Weeks = {
-          parser: d3.timeWeek,
-          format: d3.timeFormat('%B %d, %Y')
-        }
-      if (diffDays > 62)
-        this.intervals.Months = {
-          parser: d3.timeMonth,
-          format: d3.timeFormat('%B %Y')
-        }
-      if (diffDays > 730)
-        this.intervals.Years = {
-          parser: d3.timeYear,
-          format: d3.timeFormat('%Y')
-        }
+      if (diffDays > 2) this.intervals.Days = d3.timeDay
+      if (diffDays > 14) this.intervals.Weeks = d3.timeWeek
+      if (diffDays > 62) this.intervals.Months = d3.timeMonth
+      if (diffDays > 730) this.intervals.Years = d3.timeYear
       this.namesInterval = Object.keys(this.intervals)
 
       /* Pivot the data */
@@ -126,7 +100,7 @@ export default {
         this.slices.forEach(lineData => {
           lineData[intervalName] = nest()
             .key(function (d) {
-              return interval.parser(new Date(d.date))
+              return interval(new Date(d.date))
             })
             .rollup(leaves => d3.sum(leaves, l => l.value))
             .entries(lineData.values)
@@ -229,8 +203,26 @@ export default {
       const color = d3.scaleOrdinal().domain(keys).range(d3.schemeDark2)
 
       /* Legend */
-      const legend = svg.selectAll('.legend').data(keys).enter().append('g')
-      // add circles
+      const itemPerRow = 1
+      const n = keys.length / itemPerRow
+      const itemWidth = 80
+      const itemHeight = 18
+      const legend = svg
+        .selectAll('.legend')
+        .data(keys)
+        .enter()
+        .append('g')
+        .attr('transform', function (d, i) {
+          return (
+            'translate(' +
+            ((i % n) * itemWidth + width / 2 - (itemWidth * n) / 2) +
+            ',' +
+            Math.floor(i / n) * itemHeight +
+            ')'
+          )
+        })
+        .attr('class', 'legend')
+      // add rect
       legend
         .append('circle')
         .attr('r', 7)
@@ -245,39 +237,28 @@ export default {
         .text(function (d) {
           return d
         })
-      // space the groups depending on their size
-      legend.attr('transform', (d, i) => {
-        const x = d3.sum(keys, (e, j) =>
-          j < i ? legend.nodes()[j].getBBox().width : 0
-        )
-        return (
-          'translate(' +
-          (x + this.legendOffset + this.legendPadding * i) +
-          ',0)'
-        )
-      })
 
       /* Tooltip */
-      d3.select('#' + this.graphId + '.tooltip').remove()
       const tooltip = d3
         .select('body')
         .append('div')
         .attr('class', 'tooltip')
-        .attr('id', this.graphId)
         .style('opacity', 0)
-
-      const that = this
+      const formatDate = d3.timeFormat('%B %d, %Y')
       function showTooltip(evt, d) {
+        console.log(d)
         tooltip.transition().duration(60).style('opacity', 0.98)
         tooltip
           .html(
             '<b>' +
-              that.intervals[intervalName].format(new Date(d.key)) +
-              '</b><br/>' +
-              d.value
-          ) // d.name
-          .style('left', evt.pageX - 55 + 'px')
-          .style('top', evt.pageY - 45 + 'px')
+              formatDate(new Date(d.key)) +
+              '<br/>' +
+              d.value +
+              '</b> ' +
+              d.name
+          )
+          .style('left', evt.pageX - 55 + 'px') // (d3.event.pageX) + "px"
+          .style('top', evt.pageY - 45 + 'px') // (d3.event.pageY - 28) + "px"
       }
 
       function hideTooltip() {
@@ -402,7 +383,7 @@ export default {
 div.tooltip {
   position: absolute;
   text-align: center;
-  width: 110px;
+  width: 120px;
   height: 30px;
   padding: 2px;
   font: 12px sans-serif;

@@ -76,6 +76,7 @@ export default {
     isGenericViewer: Boolean,
     showDataExplorer: Boolean,
     files: Array,
+    multiple: Boolean,
     preprocessors: Object,
     allowMissingFiles: Boolean,
     sparql: Object,
@@ -123,7 +124,7 @@ export default {
       this.progress = true
       const start = new Date()
 
-      await this.fileManager.init(uppyFiles)
+      await this.fileManager.init(uppyFiles, this.multiple)
       let processedFiles
       try {
         processedFiles = await this.fileManager.preprocessFiles(this.files)

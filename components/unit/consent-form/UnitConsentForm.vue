@@ -1,7 +1,6 @@
 <template>
   <VForm v-if="consent">
     <VCard class="pa-2 my-6">
-      <VCardTitle class="justify-center">Export Results</VCardTitle>
       <VCardText>
         <UnitConsentFormSection
           v-for="(section, index) in consent"
@@ -14,7 +13,11 @@
           :status="generateStatus"
           :error="generateError"
           :progress="generateProgress"
-          :disabled="missingRequired || missingIncludedData"
+          :disabled="
+            missingRequired ||
+            missingRequiredDataProcessing.length > 0 ||
+            missingRequiredData.length > 0
+          "
           @click="generateZIP"
         />
         <BaseButtonDownloadData
@@ -36,8 +39,15 @@
         </p>
         <p v-if="sentStatus && !sentError">Form successfully submitted.</p>
         <p v-if="missingRequired">Some required fields are not filled in.</p>
-        <p v-if="missingIncludedData">
-          Some data required for sending this form has not been processed.
+        <p v-if="missingRequiredDataProcessing.length > 0">
+          Some data required for sending this form has not been processed ({{
+            missingRequiredDataProcessing.join(', ')
+          }}).
+        </p>
+        <p v-if="missingRequiredData.length > 0">
+          Some data required for sending this form has not been included ({{
+            missingRequiredData.join(', ')
+          }}).
         </p>
       </VCardText>
     </VCard>
@@ -48,6 +58,10 @@
 import JSZip from 'jszip'
 
 const _sodium = require('libsodium-wrappers')
+
+// In the case of changes that would break the import, this version number must be incremented
+// and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
+const VERSION = 2
 
 export default {
   props: {
@@ -95,21 +109,38 @@ export default {
           } else if (section.type === 'input' || section.type === 'multiline') {
             // Some text must be given
             return 'value' in section && section.value !== ''
+          } else if (
+            section.type === 'data' &&
+            typeof section.required === 'boolean'
+          ) {
+            // Some data must be given
+            return section.includedResults.length > 0
           }
         }
         return true
       })
     },
-    missingIncludedData() {
-      const keys = this.defaultView.map(block => block.key)
+    missingRequiredDataProcessing() {
       const section = this.consent.find(section => section.type === 'data')
-      for (const key of section.required ?? []) {
-        const index = keys.indexOf(key)
-        if (typeof this.allResults[index] === 'undefined') {
-          return true
-        }
-      }
-      return false
+      return this.defaultView
+        .filter(
+          (block, i) =>
+            typeof section.required === 'object' &&
+            section.required.includes(block.key) &&
+            typeof this.allResults[i] === 'undefined'
+        )
+        .map(block => block.title)
+    },
+    missingRequiredData() {
+      const section = this.consent.find(section => section.type === 'data')
+      return this.defaultView
+        .filter(
+          block =>
+            typeof section.required === 'object' &&
+            section.required.includes(block.key) &&
+            !section.includedResults.includes(block.key)
+        )
+        .map(block => block.title)
     },
     dataCheckboxDisabled() {
       return this.allResults.map(r => typeof r === 'undefined')
@@ -161,7 +192,8 @@ export default {
       this.timestamp = Date.now()
       const experience = {
         key: manifest.key,
-        timestamp: this.timestamp
+        timestamp: this.timestamp,
+        version: VERSION
       }
       zip.file('experience.json', JSON.stringify(experience))
 
@@ -172,6 +204,7 @@ export default {
       const keys = this.defaultView.map(block => block.key)
       this.includedResults
         .map(key => keys.indexOf(key))
+        .filter(i => i !== -1)
         .forEach(i => {
           const content = JSON.parse(JSON.stringify(this.defaultView[i]))
           content.result = JSON.parse(this.allResults[i])

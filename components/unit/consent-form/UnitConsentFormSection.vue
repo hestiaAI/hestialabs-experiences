@@ -23,6 +23,16 @@
         :value="section.keys[j]"
         @change="updateConsent"
       ></VCheckbox>
+      <VCheckbox
+        v-for="(title, j) in section.additional"
+        :key="`data-additional-${j}`"
+        v-model="includedResults"
+        :readonly="readonly"
+        dense
+        :label="title"
+        :value="title"
+        @change="updateConsent"
+      ></VCheckbox>
     </template>
 
     <VRadioGroup

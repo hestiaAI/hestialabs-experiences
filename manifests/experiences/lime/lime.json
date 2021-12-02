@@ -2,13 +2,14 @@
   "title": "Lime",
   "icon": "lime.jpg",
   "ext": "all",
+  "multiple": true,
   "isGenericViewer": true,
   "showDataExplorer": true,
   "defaultView": [
     {
       "key": "genericDateViewer",
       "customPipeline": "genericDateViewer",
-      "visualizations": ["ChartViewGenericDateViewer.vue"],
+      "visualization": "ChartViewGenericDateViewer.vue",
       "showTable": false,
       "title": "Dated observations",
       "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."

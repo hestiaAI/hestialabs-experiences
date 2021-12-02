@@ -97,8 +97,13 @@ export default {
         this.error = false
         try {
           const headers = this.headers.map(h => h.text)
+          const filteredItems = this.$refs.tableRef.$children[0].filteredItems
+          // Change the items keys to match the headers
+          const itemsWithHeader = filteredItems.map(i =>
+            this.headers.reduce((o, h) => ({ ...o, [h.text]: i[h.value] }), {})
+          )
           // update the data
-          this.csvData = await writeToString(this.items, { headers })
+          this.csvData = await writeToString(itemsWithHeader, { headers })
           // wait until DOM is updated, i.e. the href attribute (see BaseButtonDownload.vue)
           await this.$nextTick()
           // click the anchor manually -> event.isTrusted === false
