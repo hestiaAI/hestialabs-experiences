@@ -76,6 +76,7 @@ Note: All files and folders should match the following regular expression: [`^(?
     * - A postprocessor (defined in postprocessors.js)
     * - A parameter name (if necessary), and for sql pipelines a parameter key used in the query (prefixed with :)
     * - A visualization name
+    * - Some props that will be passed to a vue viz
     * - A data table
     * - A title
     * - A text description
@@ -91,6 +92,10 @@ Note: All files and folders should match the following regular expression: [`^(?
       "parameterName": "Example",
       "parameterKey": ":example",
       "visualization": "viz_name",
+      "vizProps": {
+        "example_1": "hello world",
+        "example_2": 42
+      },
       "showTable": false,
       "title": "An interesting title",
       "text": "Lorem ipsum."
