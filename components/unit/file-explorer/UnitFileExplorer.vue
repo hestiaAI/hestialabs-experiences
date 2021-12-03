@@ -8,12 +8,14 @@
             <VCardTitle class="justify-center">File hierarchy</VCardTitle>
             <VCardText>
               <VTreeview
+                v-model="selectedFiles"
                 dense
                 open-on-click
                 activatable
                 rounded
                 return-object
                 transition
+                :selectable="selectable"
                 :items="fileManager.getTreeItems()"
                 @update:active="setSelectedItem"
               >
@@ -71,6 +73,10 @@ export default {
     fileManager: {
       type: FileManager,
       required: true
+    },
+    selectable: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -101,6 +107,17 @@ export default {
         import(
           `~/components/unit/file-explorer/viewer/UnitFileExplorerViewer${postfix}`
         )
+    },
+    key() {
+      return this.$route.params.key
+    },
+    selectedFiles: {
+      get() {
+        return this.$store.state.selectedFiles[this.key]
+      },
+      set(value) {
+        this.$store.commit('setSelectedFiles', { key: this.key, value })
+      }
     }
   },
   methods: {

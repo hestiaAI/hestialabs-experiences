@@ -49,12 +49,22 @@
       </VRow>
       <VRow v-if="showDataExplorer">
         <VCol>
-          <UnitFileExplorer v-bind="{ fileManager }" />
+          <UnitFileExplorer
+            v-bind="{ fileManager, selectable: consentForm !== null }"
+          />
         </VCol>
       </VRow>
-      <VRow v-if="$store.state.config.consent">
+      <VRow v-if="consentForm">
         <VCol cols="8 mx-auto">
-          <UnitConsentForm v-bind="{ allResults, defaultView }" />
+          <UnitConsentForm
+            v-bind="{
+              consentForm,
+              allResults,
+              defaultView,
+              fileManager,
+              showDataExplorer
+            }"
+          />
         </VCol>
       </VRow>
     </template>
@@ -108,6 +118,16 @@ export default {
     },
     isRdfNeeded() {
       return this.defaultView.filter(v => 'query' in v).length > 0
+    },
+    consentForm() {
+      const consent = this.$store.state.config.consent
+      const key = this.$route.params.key
+      if (key in consent) {
+        return consent[key]
+      } else if ('default' in consent) {
+        return consent.default
+      }
+      return null
     }
   },
   methods: {

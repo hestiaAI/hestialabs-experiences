@@ -1,11 +1,11 @@
 <template>
-  <VForm v-if="consent">
+  <VForm>
     <VCard class="pa-2 my-6">
       <VCardText>
         <UnitConsentFormSection
           v-for="(section, index) in consent"
           :key="`section-${index}`"
-          v-bind="{ section, index, dataCheckboxDisabled }"
+          v-bind="{ section, index, dataCheckboxDisabled, showDataExplorer }"
           @change="updateConsent"
         />
         <BaseButton
@@ -34,6 +34,7 @@
           :disabled="!zipReady || (sentStatus && !sentError)"
           @click="sendForm"
         />
+        <p v-if="zipReady">ZIP size: {{ humanReadablefileSize }}</p>
         <p v-if="sentError">
           Sending failed. Please download the file and send it by email.
         </p>
@@ -56,6 +57,7 @@
 
 <script>
 import JSZip from 'jszip'
+import FileManager from '~/utils/file-manager.js'
 
 const _sodium = require('libsodium-wrappers')
 
@@ -65,6 +67,10 @@ const VERSION = 2
 
 export default {
   props: {
+    consentForm: {
+      type: Array,
+      required: true
+    },
     allResults: {
       type: Array,
       required: true
@@ -72,11 +78,19 @@ export default {
     defaultView: {
       type: Array,
       required: true
+    },
+    fileManager: {
+      type: FileManager,
+      required: true
+    },
+    showDataExplorer: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
     return {
-      consent: null,
+      consent: JSON.parse(JSON.stringify(this.consentForm)),
       includedResults: [],
       zipFile: [],
       encryptedZipFile: [],
@@ -94,9 +108,6 @@ export default {
       return this.generateStatus && !this.generateError
     },
     missingRequired() {
-      if (!this.consent) {
-        return false
-      }
       // If one section with attribute required has not been filled
       return !this.consent.every(section => {
         if ('required' in section) {
@@ -144,6 +155,18 @@ export default {
     },
     dataCheckboxDisabled() {
       return this.allResults.map(r => typeof r === 'undefined')
+    },
+    key() {
+      return this.$route.params.key
+    },
+    humanReadablefileSize() {
+      const bytes = this.encryptedZipFile.length
+      const i = Math.floor(Math.log(bytes) / Math.log(1024))
+      return (
+        (bytes / Math.pow(1024, i)).toFixed(2) * 1 +
+        ' ' +
+        ['B', 'kB', 'MB', 'GB', 'TB'][i]
+      )
     }
   },
   watch: {
@@ -159,17 +182,6 @@ export default {
   },
   methods: {
     init() {
-      const key = this.$route.params.key
-      // Get the relevant consent form
-      const consent = this.$store.state.config.consent
-      if (key in consent) {
-        this.consent = JSON.parse(JSON.stringify(consent[key]))
-      } else if ('default' in consent) {
-        this.consent = JSON.parse(JSON.stringify(consent.default))
-      }
-      if (!this.consent) {
-        return
-      }
       // Add titles and keys to the data section
       const section = this.consent.find(section => section.type === 'data')
       section.titles = this.defaultView.map(e => e.title)
@@ -214,6 +226,18 @@ export default {
             JSON.stringify(content)
           )
         })
+
+      // Add whole files
+      if (this.includedResults.includes('file-explorer')) {
+        const zipFilesFolder = zip.folder('files')
+        const files = this.$store.state.selectedFiles[this.key] ?? []
+        for (const file of files) {
+          zipFilesFolder.file(
+            file.filename,
+            this.fileManager.fileDict[file.filename]
+          )
+        }
+      }
 
       const content = await zip.generateAsync({ type: 'uint8array' })
       this.zipFile = content
