@@ -24,6 +24,7 @@
         @change="updateConsent"
       ></VCheckbox>
       <VCheckbox
+        v-if="showDataExplorer"
         v-model="includedResults"
         :readonly="readonly"
         dense
@@ -113,6 +114,10 @@ export default {
     dataCheckboxDisabled: {
       type: Array,
       default: () => []
+    },
+    showDataExplorer: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

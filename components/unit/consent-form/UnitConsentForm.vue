@@ -1,11 +1,11 @@
 <template>
-  <VForm v-if="consent">
+  <VForm>
     <VCard class="pa-2 my-6">
       <VCardText>
         <UnitConsentFormSection
           v-for="(section, index) in consent"
           :key="`section-${index}`"
-          v-bind="{ section, index, dataCheckboxDisabled }"
+          v-bind="{ section, index, dataCheckboxDisabled, showDataExplorer }"
           @change="updateConsent"
         />
         <BaseButton
@@ -66,6 +66,10 @@ const VERSION = 2
 
 export default {
   props: {
+    consentForm: {
+      type: Array,
+      required: true
+    },
     allResults: {
       type: Array,
       required: true
@@ -77,11 +81,15 @@ export default {
     fileManager: {
       type: FileManager,
       required: true
+    },
+    showDataExplorer: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
-      consent: null,
+      consent: JSON.parse(JSON.stringify(this.consentForm)),
       includedResults: [],
       zipFile: [],
       encryptedZipFile: [],
@@ -99,9 +107,6 @@ export default {
       return this.generateStatus && !this.generateError
     },
     missingRequired() {
-      if (!this.consent) {
-        return false
-      }
       // If one section with attribute required has not been filled
       return !this.consent.every(section => {
         if ('required' in section) {
@@ -167,16 +172,6 @@ export default {
   },
   methods: {
     init() {
-      // Get the relevant consent form
-      const consent = this.$store.state.config.consent
-      if (this.key in consent) {
-        this.consent = JSON.parse(JSON.stringify(consent[this.key]))
-      } else if ('default' in consent) {
-        this.consent = JSON.parse(JSON.stringify(consent.default))
-      }
-      if (!this.consent) {
-        return
-      }
       // Add titles and keys to the data section
       const section = this.consent.find(section => section.type === 'data')
       section.titles = this.defaultView.map(e => e.title)
