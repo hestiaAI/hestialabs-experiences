@@ -224,7 +224,7 @@ export default {
         for (const file of files) {
           zipFilesFolder.file(
             file.filename,
-            await this.fileManager.getText(file.filename)
+            this.fileManager.fileDict[file.filename]
           )
         }
       }
