@@ -7,12 +7,25 @@
   "showDataExplorer": true,
   "defaultView": [
     {
-      "key": "usage",
+      "key": "watchOverview",
       "customPipeline": "viewingData",
-      "postprocessor": "usagePerDay",
-      "showTable": true,
+      "visualization": "ChartViewOverviewNetflix.vue",
+      "showTable": false,
       "title": "Viewing activity",
-      "text": "See the time you spent watching shows on Netflix"
+      "text": "Get an overview of how you use Netflix and what informations are store about you"
+    },
+    {
+      "key": "notifications",
+      "customPipeline": "messagesData",
+      "postprocessor": "notifsPerDay",
+      "visualization": "ChartViewTimeSeries.vue",
+      "vizProps": {
+        "title": "Notification sent by Netflix",
+        "yLabel": "count"
+      },
+      "showTable": false,
+      "title": "Notifications",
+      "text": "See how many times Netflix send you notifications"
     },
     {
       "key": "genericDateViewer",
