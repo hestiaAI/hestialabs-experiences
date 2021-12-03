@@ -2,7 +2,7 @@
   <div v-if="loading">Loading</div>
   <div v-else-if="error">
     <p>Could not parse file. Showing content instead</p>
-    <div>{{ jsonText }}</div>
+    <div class="explorer__content">{{ jsonText }}</div>
   </div>
   <VTreeview v-else dense transition :items="items">
     <template #prepend="{ item }">

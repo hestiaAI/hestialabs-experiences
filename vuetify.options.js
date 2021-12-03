@@ -1,18 +1,21 @@
 import colors from 'vuetify/es5/util/colors'
 import {
   mdiAlert,
+  mdiCheckboxBlankOutline,
   mdiCheckCircle,
+  mdiChevronLeft,
   mdiClose,
+  mdiCloseBox,
   mdiDatabase,
   mdiDatabaseRemove,
   mdiDownload,
-  mdiHome,
   mdiFacebook,
-  mdiTwitter,
-  mdiStepForward,
-  mdiCloseBox,
+  mdiFileSearch,
+  mdiHome,
+  mdiMagnify,
   mdiMinusBox,
-  mdiCheckboxBlankOutline
+  mdiStepForward,
+  mdiTwitter
 } from '@mdi/js'
 
 export default {
@@ -20,18 +23,21 @@ export default {
     iconfont: 'mdiSvg',
     values: {
       mdiAlert,
+      mdiCheckboxBlankOutline,
       mdiCheckCircle,
+      mdiChevronLeft,
       mdiClose,
+      mdiCloseBox,
       mdiDatabase,
       mdiDatabaseRemove,
       mdiDownload,
-      mdiHome,
       mdiFacebook,
-      mdiTwitter,
-      mdiStepForward,
-      mdiCloseBox,
+      mdiFileSearch,
+      mdiHome,
+      mdiMagnify,
       mdiMinusBox,
-      mdiCheckboxBlankOutline
+      mdiStepForward,
+      mdiTwitter
     }
   },
   theme: {
