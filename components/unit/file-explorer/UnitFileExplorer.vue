@@ -108,12 +108,15 @@ export default {
           `~/components/unit/file-explorer/viewer/UnitFileExplorerViewer${postfix}`
         )
     },
+    key() {
+      return this.$route.params.key
+    },
     selectedFiles: {
       get() {
-        return this.$store.state.selectedFiles
+        return this.$store.state.selectedFiles[this.key]
       },
       set(value) {
-        this.$store.commit('setSelectedFiles', value)
+        this.$store.commit('setSelectedFiles', { key: this.key, value })
       }
     }
   },

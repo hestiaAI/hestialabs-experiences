@@ -7,7 +7,7 @@ export const state = () => ({
   },
   manifestMap,
   power: false,
-  selectedFiles: []
+  selectedFiles: {}
 })
 
 export const getters = {
@@ -50,7 +50,7 @@ export const mutations = {
   updatePower(state, power) {
     state.power = power
   },
-  setSelectedFiles(state, selectedFiles) {
-    state.selectedFiles = selectedFiles
+  setSelectedFiles(state, { key, value }) {
+    state.selectedFiles[key] = value
   }
 }

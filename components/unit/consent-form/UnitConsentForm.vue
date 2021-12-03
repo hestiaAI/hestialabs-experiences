@@ -149,6 +149,9 @@ export default {
     },
     dataCheckboxDisabled() {
       return this.allResults.map(r => typeof r === 'undefined')
+    },
+    key() {
+      return this.$route.params.key
     }
   },
   watch: {
@@ -164,11 +167,10 @@ export default {
   },
   methods: {
     init() {
-      const key = this.$route.params.key
       // Get the relevant consent form
       const consent = this.$store.state.config.consent
-      if (key in consent) {
-        this.consent = JSON.parse(JSON.stringify(consent[key]))
+      if (this.key in consent) {
+        this.consent = JSON.parse(JSON.stringify(consent[this.key]))
       } else if ('default' in consent) {
         this.consent = JSON.parse(JSON.stringify(consent.default))
       }
@@ -223,7 +225,7 @@ export default {
       // Add whole files
       if (this.includedResults.includes('file-explorer')) {
         const zipFilesFolder = zip.folder('files')
-        const files = this.$store.state.selectedFiles
+        const files = this.$store.state.selectedFiles[this.key] ?? []
         for (const file of files) {
           zipFilesFolder.file(
             file.filename,
