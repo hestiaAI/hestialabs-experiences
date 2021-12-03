@@ -2,6 +2,10 @@
   <VCard class="pa-2 my-6">
     <VCardTitle class="justify-center">Explore your files</VCardTitle>
     <VCardText>
+      <VRow class="justify-center">
+        We found {{ nFiles }} {{ nFiles === 1 ? 'file' : 'files' }} (including
+        {{ fileExtensionsString }}) having a total size of {{ dataSizeString }}.
+      </VRow>
       <VRow>
         <VCol cols="3">
           <VCard class="pa-2 my-6">
@@ -65,7 +69,9 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import FileManager from '~/utils/file-manager.js'
+import { humanReadableFileSize } from '~/manifests/utils'
 
 export default {
   name: 'UnitFileExplorer',
@@ -117,6 +123,45 @@ export default {
       },
       set(value) {
         this.$store.commit('setSelectedFiles', { key: this.key, value })
+      }
+    },
+    nFiles() {
+      return this.fileManager.fileList.length
+    },
+    totalSize() {
+      return _.sumBy(this.fileManager.fileList, f => f.size)
+    },
+    dataSizeString() {
+      return humanReadableFileSize(this.totalSize)
+    },
+    fileExtensionsString() {
+      const extensions = this.fileManager.fileList
+        .map(f => f.name.match(/^.+\.(.+?)$/)?.[1])
+        .filter(m => !_.isUndefined(m))
+
+      const occurrences = _.mapValues(
+        _.groupBy(extensions, _.identity),
+        v => v.length
+      )
+      const orderedCounts = _.sortBy(
+        Object.entries(occurrences),
+        ([_ext, count]) => -count
+      )
+      const showAtMost = 2
+      const topExtensions = _.take(orderedCounts, showAtMost)
+      const descriptions = topExtensions.map(
+        ([ext, count]) => `${count} ${ext}${count === 1 ? '' : 's'}`
+      )
+      if (orderedCounts.length > showAtMost) {
+        const nOthers = _.sumBy(
+          _.drop(orderedCounts, showAtMost),
+          ([_ext, count]) => count
+        )
+        return `${descriptions.join(', ')}, and ${nOthers} other${
+          nOthers === 1 ? '' : 's'
+        }`
+      } else {
+        return descriptions.join(' and ')
       }
     }
   },
