@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 v-if="section.title">{{ section.title }}</h2>
+    <h2 v-if="section.title" class="mb-4">{{ section.title }}</h2>
 
     <template v-if="section.description">
       <!-- For security reasons, HTML is not rendered on zip import -->
@@ -21,6 +21,15 @@
         :disabled="dataCheckboxDisabled[j]"
         :label="title"
         :value="section.keys[j]"
+        @change="updateConsent"
+      ></VCheckbox>
+      <VCheckbox
+        v-if="showDataExplorer"
+        v-model="includedResults"
+        :readonly="readonly"
+        dense
+        label="Selected files in file explorer"
+        value="file-explorer"
         @change="updateConsent"
       ></VCheckbox>
       <VCheckbox
@@ -105,6 +114,10 @@ export default {
     dataCheckboxDisabled: {
       type: Array,
       default: () => []
+    },
+    showDataExplorer: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
