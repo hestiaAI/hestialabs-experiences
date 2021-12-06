@@ -93,6 +93,10 @@ export default {
     fileManager: {
       type: FileManager,
       required: true
+    },
+    selectable: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

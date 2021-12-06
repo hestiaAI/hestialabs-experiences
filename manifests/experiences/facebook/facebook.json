@@ -26,7 +26,7 @@
     {
       "key": "off-facebook-activity-count",
       "query": "off-facebook-activity-count",
-      "visualizations": ["top-k-advertisers"],
+      "visualization": "top-k-advertisers",
       "showTable": false,
       "title": "Off Facebook activity ranking",
       "text": "See how many times advertisers have informed Facebook of your activity outside of Facebook."
@@ -35,7 +35,7 @@
       "key": "off-facebook-activity-type-count",
       "query": "off-facebook-activity-type-count",
       "postprocessor": "sunburstTargetingAdvertiser",
-      "visualizations": ["sunburst-off-facebook-activity"],
+      "visualization": "sunburst-off-facebook-activity",
       "showTable": false,
       "title": "Off Facebook activity type",
       "text": "See which kind of information advertisers have shared with Facebook of your activity outside of Facebook."
@@ -64,7 +64,7 @@
     {
       "key": "genericDateViewer",
       "customPipeline": "genericDateViewer",
-      "visualizations": ["ChartViewGenericDateViewer.vue"],
+      "visualization": "ChartViewGenericDateViewer.vue",
       "showTable": false,
       "title": "Dated observations",
       "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."

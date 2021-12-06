@@ -79,32 +79,21 @@
         <template v-if="finished">
           <template v-if="hasData">
             <VRow>
-              <VCol
-                v-for="(specFile, vegaIndex) in vegaFiles"
-                :key="'vega-' + vegaIndex"
-                class="text-center"
-              >
+              <VCol>
                 <UnitVegaViz
-                  :spec-file="specFile"
+                  v-if="vizVega"
+                  :spec-file="vizVega"
                   :data="result"
-                  :div-id="`viz-${index}-${vegaIndex}`"
+                  :div-id="`viz-${index}`"
+                  class="text-center"
                 />
-              </VCol>
-            </VRow>
-            <VRow
-              v-for="(graphName, vizVueIndex) in vizVueGraphs"
-              :key="'viz-vue-' + vizVueIndex"
-            >
-              <VCol>
-                <ChartView :graph-name="graphName" :data="result" />
-              </VCol>
-            </VRow>
-            <VRow
-              v-for="(src, vizUrlIndex) in vizUrls"
-              :key="'viz-url-' + vizUrlIndex"
-            >
-              <VCol>
-                <UnitIframe :src="src" :data="result" />
+                <ChartView
+                  v-else-if="vizVue"
+                  :graph-name="vizVue"
+                  :data="result"
+                  :viz-props="defaultViewElements.vizProps"
+                />
+                <UnitIframe v-else-if="vizUrl" :src="vizUrl" :data="result" />
               </VCol>
             </VRow>
             <VRow v-if="showTable">
@@ -183,17 +172,17 @@ export default {
     showTable() {
       return this.defaultViewElements.showTable
     },
-    vizNames() {
-      return this.defaultViewElements.visualizations ?? []
+    vizName() {
+      return this.defaultViewElements.visualization
     },
-    vizUrls() {
-      return this.vizNames.filter(n => n.startsWith('/'))
+    vizUrl() {
+      return this.vizName?.startsWith('/') ? this.vizName : undefined
     },
-    vizVueGraphs() {
-      return this.vizNames.filter(n => n.endsWith('.vue'))
+    vizVue() {
+      return this.vizName?.endsWith('.vue') ? this.vizName : undefined
     },
-    vegaFiles() {
-      return this.vizNames.map(n => this.vega[n]).filter(n => n)
+    vizVega() {
+      return this.vega[this.vizName]
     },
     hasData() {
       return this.result && (this.result.headers?.length ?? 1) > 0

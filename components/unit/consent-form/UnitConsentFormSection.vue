@@ -23,6 +23,25 @@
         :value="section.keys[j]"
         @change="updateConsent"
       ></VCheckbox>
+      <VCheckbox
+        v-if="showDataExplorer"
+        v-model="includedResults"
+        :readonly="readonly"
+        dense
+        label="Selected files in file explorer"
+        value="file-explorer"
+        @change="updateConsent"
+      ></VCheckbox>
+      <VCheckbox
+        v-for="(title, j) in section.additional"
+        :key="`data-additional-${j}`"
+        v-model="includedResults"
+        :readonly="readonly"
+        dense
+        :label="title"
+        :value="title"
+        @change="updateConsent"
+      ></VCheckbox>
     </template>
 
     <VRadioGroup
@@ -95,6 +114,10 @@ export default {
     dataCheckboxDisabled: {
       type: Array,
       default: () => []
+    },
+    showDataExplorer: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

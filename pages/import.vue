@@ -80,32 +80,25 @@
       >
         <VCardTitle class="justify-center">{{ result.title }}</VCardTitle>
         <VRow>
-          <VCol
-            v-for="(specFile, vegaIndex) in allVegaFiles[resultIndex]"
-            :key="vegaIndex"
-            class="text-center"
-          >
+          <VCol>
             <UnitVegaViz
-              :spec-file="specFile"
+              v-if="allVizVega[resultIndex]"
+              :spec-file="allVizVega[resultIndex]"
               :data="result.result"
-              :div-id="`viz-${resultIndex}-${vegaIndex}`"
+              :div-id="`viz-${resultIndex}`"
+              class="text-center"
             />
-          </VCol>
-        </VRow>
-        <VRow
-          v-for="(graphName, vizVueIndex) in allVueGraphNames[resultIndex]"
-          :key="`viz-${resultIndex}-${vizVueIndex}`"
-        >
-          <VCol>
-            <ChartView :graph-name="graphName" :data="result.result" />
-          </VCol>
-        </VRow>
-        <VRow
-          v-for="(src, vizUrlIndex) in allVizUrls[resultIndex]"
-          :key="'viz-url-' + vizUrlIndex"
-        >
-          <VCol>
-            <UnitIframe :src="src" :data="result.result" />
+            <ChartView
+              v-else-if="allVizVue[resultIndex]"
+              :graph-name="allVizVue[resultIndex]"
+              :data="result.result"
+              :viz-props="result.vizProps"
+            />
+            <UnitIframe
+              v-else-if="allVizUrl[resultIndex]"
+              :src="allVizUrl[resultIndex]"
+              :data="result.result"
+            />
           </VCol>
         </VRow>
         <VRow>
@@ -114,6 +107,13 @@
           </VCol>
         </VRow>
       </VCard>
+
+      <!-- File explorer -->
+      <VRow v-if="hasFileExplorer">
+        <VCol>
+          <UnitFileExplorer v-bind="{ fileManager, selectable: false }" />
+        </VCol>
+      </VRow>
     </template>
   </div>
 </template>
@@ -121,6 +121,7 @@
 <script>
 import JSZip from 'jszip'
 import FileSaver from 'file-saver'
+import FileManager from '~/utils/file-manager'
 
 const _sodium = require('libsodium-wrappers')
 
@@ -137,7 +138,8 @@ export default {
       message: '',
       experience: null,
       results: null,
-      consent: null
+      consent: null,
+      fileManager: null
     }
   },
   computed: {
@@ -146,24 +148,24 @@ export default {
         params: { key: this.experience.key }
       })
     },
-    allVegaFiles() {
-      return this.sortedResults.map(
-        r =>
-          r.visualizations?.map(n => this.manifest.vega[n]).filter(n => n) ?? []
+    allVizVega() {
+      return this.sortedResults.map(r => this.manifest.vega[r.visualization])
+    },
+    allVizUrl() {
+      return this.sortedResults.map(r =>
+        r.visualization?.startsWith('/') ? r.visualization : undefined
       )
     },
-    allVizUrls() {
+    allVizVue() {
       return this.sortedResults.map(r =>
-        r.visualizations?.filter(n => n.startsWith('/'))
-      )
-    },
-    allVueGraphNames() {
-      return this.sortedResults.map(r =>
-        r.visualizations?.filter(n => n.endsWith('.vue'))
+        r.visualization?.endsWith('.vue') ? r.visualization : undefined
       )
     },
     sortedResults() {
       return this.results.slice(0).sort((a, b) => a.index - b.index)
+    },
+    hasFileExplorer() {
+      return this.fileManager?.fileList.length > 0
     }
   },
   methods: {
@@ -230,15 +232,28 @@ export default {
       }
       // Extract files
       try {
+        // Experience details
         this.experience = JSON.parse(
           await zip.file('experience.json').async('string')
         )
+        // Consent log
         this.consent = JSON.parse(
           await zip.file('consent.json').async('string')
         )
-        const files = zip.file(/block[0-9]+.json/)
-        const res = await Promise.all(files.map(r => r.async('string')))
-        this.results = res.map(JSON.parse)
+        // Included results
+        const resultFiles = zip.file(/block[0-9]+.json/)
+        const results = await Promise.all(
+          resultFiles.map(r => r.async('string'))
+        )
+        this.results = results.map(JSON.parse)
+        // Included whole files
+        const folderContent = zip.file(/files\/.*/)
+        const blobs = await Promise.all(folderContent.map(r => r.async('blob')))
+        const files = folderContent.map(
+          (r, i) => new File([blobs[i]], r.name.substr(6))
+        )
+        this.fileManager = new FileManager(this.manifest.preprocessors)
+        await this.fileManager.init(files, true)
       } catch (error) {
         this.handleError(
           error,
@@ -272,7 +287,13 @@ export default {
       }
       const version = this.experience.version
       if (version === 1) {
-        // Nothing to do for now
+        // Convert the array of viz to a single viz
+        // Note: this feature was only used for one tinder block
+        for (const r of this.results) {
+          if ('visualizations' in r) {
+            r.visualization = r.visualizations[0]
+          }
+        }
       }
     }
   }
