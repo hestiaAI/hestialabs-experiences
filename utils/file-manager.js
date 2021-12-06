@@ -13,7 +13,7 @@ import {
 } from '@mdi/js'
 import _ from 'lodash'
 import getCsvHeadersAndItems from '~/utils/csv'
-import itemifyJSON from '~/utils/json'
+import itemifyJSON, { nJsonPoints } from '~/utils/json'
 
 const filetype2icon = {
   folder: mdiFolder,
@@ -63,6 +63,7 @@ export default class FileManager {
   #preprocessedTexts
   #csvItems
   #jsonItems
+  #nDataPoints
   #fileTree
   #treeItems
 
@@ -71,6 +72,7 @@ export default class FileManager {
     this.#preprocessedTexts = {}
     this.#csvItems = {}
     this.#jsonItems = {}
+    this.#nDataPoints = {}
     this.#fileTree = undefined
     this.#treeItems = undefined
   }
@@ -81,6 +83,10 @@ export default class FileManager {
    * @param {Boolean} allowMissingFiles
    */
   constructor(preprocessors, allowMissingFiles = false) {
+    this.supportedExtensions = new Set([
+      ...Object.keys(extension2filetype),
+      ...Object.values(extension2filetype)
+    ])
     this.preprocessors = preprocessors ?? {}
     this.allowMissingFiles = allowMissingFiles
     this.setInitialValues()
@@ -235,6 +241,30 @@ export default class FileManager {
       this.#jsonItems[filePath] = itemifyJSON(text)
     }
     return this.#jsonItems[filePath]
+  }
+
+  /**
+   * Computes and returns the number of "data points" in a file if not already computed.
+   * @param {String} filePath
+   * @returns {Promise<String>}
+   */
+  async getNumberOfDataPoints(filePath) {
+    if (!_.has(this.#nDataPoints, filePath)) {
+      try {
+        const json = await this.getJsonItems(filePath)
+        this.#nDataPoints[filePath] = nJsonPoints(json)
+      } catch (error) {
+        try {
+          const text = await this.getPreprocessedText(filePath)
+          this.#nDataPoints[filePath] = text
+            .split('\n')
+            .filter(_.identity).length
+        } catch (error) {
+          this.#nDataPoints[filePath] = 0
+        }
+      }
+    }
+    return this.#nDataPoints[filePath]
   }
 
   /**

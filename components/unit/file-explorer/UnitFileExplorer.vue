@@ -20,6 +20,9 @@
             <VIcon>$vuetify.icons.mdiChevronLeft</VIcon>
           </VBtn>
         </VListItem>
+        <VListItem v-if="selectable && !mini">
+          Size of selected files: {{ selectionSizeString }}
+        </VListItem>
       </template>
 
       <div :style="drawerMiniFileLabelStyle" class="drawer-mini-file-label">
@@ -40,14 +43,16 @@
           dense
         />
         <VTreeview
+          v-model="selectedFiles"
           dense
           open-on-click
           activatable
           return-object
           transition
           rounded
+          :selectable="selectable"
           :search="search"
-          :items="fileManager.getTreeItems()"
+          :items="treeItems"
           @update:active="setSelectedItem"
         >
           <template #prepend="{ item }">
@@ -61,8 +66,17 @@
     <VCardTitle class="justify-center">Explore your files</VCardTitle>
     <div :class="miniWidthPaddingLeftClass">
       <VCardText>
-        We found {{ nFiles }} {{ nFiles === 1 ? 'file' : 'files' }} (including
-        {{ fileExtensionsString }}) having a total size of {{ dataSizeString }}.
+        Analysed {{ nFiles }} {{ nFiles === 1 ? 'file' : 'files' }} ({{
+          dataSizeString
+        }})
+        <template v-if="nDataPoints">
+          and found {{ nDataPoints }} data points:
+        </template>
+        <VList v-if="sortedExtensionTexts" :dense="true">
+          <VListItem v-for="(text, i) in sortedExtensionTexts" :key="i">
+            {{ text }}
+          </VListItem>
+        </VList>
       </VCardText>
       <VCardText>
         <template v-if="filename">
@@ -108,11 +122,14 @@ export default {
   data() {
     return {
       selectedItem: {},
+      selectedFiles: [],
       supportedTypes: new Set(['json', 'csv', 'pdf', 'img', 'html', 'txt']),
       mini: true,
       miniWidth: 48,
       search: '',
-      height: 500
+      height: 500,
+      nDataPoints: null,
+      sortedExtensionTexts: []
     }
   },
   computed: {
@@ -122,6 +139,18 @@ export default {
     },
     filename() {
       return this.selectedItem?.filename || ''
+    },
+    treeItems() {
+      return this.fileManager.getTreeItems()
+    },
+    selectionSize() {
+      return _.sumBy(
+        this.selectedFiles,
+        ({ filename }) => this.fileManager.fileDict[filename]?.size ?? 0
+      )
+    },
+    selectionSizeString() {
+      return humanReadableFileSize(this.selectionSize)
     },
     path() {
       // TODO avoid code duplication with viewer/mixin-path
@@ -161,35 +190,19 @@ export default {
     dataSizeString() {
       return humanReadableFileSize(this.totalSize)
     },
-    fileExtensionsString() {
+    sortedExtensionCounts() {
       const extensions = this.fileManager.fileList
         .map(f => f.name.match(/^.+\.(.+?)$/)?.[1])
         .filter(m => !_.isUndefined(m))
+        .map(ext =>
+          this.fileManager.supportedExtensions.has(ext) ? ext : 'other'
+        )
 
       const occurrences = _.mapValues(
         _.groupBy(extensions, _.identity),
         v => v.length
       )
-      const orderedCounts = _.sortBy(
-        Object.entries(occurrences),
-        ([_ext, count]) => -count
-      )
-      const showAtMost = 2
-      const topExtensions = _.take(orderedCounts, showAtMost)
-      const descriptions = topExtensions.map(
-        ([ext, count]) => `${count} ${ext}${count === 1 ? '' : 's'}`
-      )
-      if (orderedCounts.length > showAtMost) {
-        const nOthers = _.sumBy(
-          _.drop(orderedCounts, showAtMost),
-          ([_ext, count]) => count
-        )
-        return `${descriptions.join(', ')}, and ${nOthers} other${
-          nOthers === 1 ? '' : 's'
-        }`
-      } else {
-        return descriptions.join(' and ')
-      }
+      return _.sortBy(Object.entries(occurrences), ([_ext, count]) => -count)
     }
   },
   watch: {
@@ -197,6 +210,13 @@ export default {
       // hide scrollbar in mini variant of drawer
       const overflowY = mini ? 'hidden' : 'visible'
       this.$refs.drawer.$el.children[1].style.overflowY = overflowY
+    },
+    fileManager: {
+      immediate: true,
+      handler() {
+        this.setExtensionTexts()
+        this.setNumberOfDataPoints()
+      }
     }
   },
   methods: {
@@ -210,6 +230,43 @@ export default {
           this.selectedItem = item
         }
       }
+    },
+    async setNumberOfDataPoints() {
+      this.nDataPoints = _.sum(
+        await Promise.all(
+          this.fileManager
+            .getFilenames()
+            .map(async f => await this.fileManager.getNumberOfDataPoints(f))
+        )
+      )
+    },
+    async setExtensionTexts() {
+      const showAtMost = 3
+      const pointsPerFile = await Promise.all(
+        this.fileManager
+          .getFilenames()
+          .map(async f => [f, await this.fileManager.getNumberOfDataPoints(f)])
+      )
+      this.sortedExtensionTexts = this.sortedExtensionCounts.map(([ext]) => {
+        const re = new RegExp(`.+\\.${ext}`)
+        const shownFiles = _.take(
+          _.sortBy(
+            pointsPerFile.filter(([f, _n]) => re.test(f)),
+            ([_f, n]) => -n
+          ),
+          showAtMost
+        )
+        return shownFiles
+          .map(
+            ([f, nPoints]) =>
+              `${f.split('/').at(-1)} ${
+                nPoints === 0
+                  ? ''
+                  : `(${nPoints} data point${nPoints === 1 ? '' : 's'})`
+              }`
+          )
+          .join(', ')
+      })
     }
   }
 }
