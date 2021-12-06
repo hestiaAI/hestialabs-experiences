@@ -4,50 +4,50 @@
       <VCol cols="8">
         <VRow dense>
           <VCol cols="12">
-            <div id="watch-time-chart">
+            <div :id="'watch-time-chart' + graphId">
               <strong>Watch time (in hours per month)</strong>
             </div>
-            <div id="range-chart"></div>
+            <div :id="'range-chart' + graphId" class="range-chart"></div>
           </VCol>
         </VRow>
         <VRow dense>
           <VCol cols="8">
-            <div id="hour-chart">
+            <div :id="'hour-chart' + graphId">
               <strong>Time of the day</strong>
             </div>
           </VCol>
           <VCol cols="4">
-            <div id="week-chart">
+            <div :id="'week-chart' + graphId">
               <strong>Day of week</strong>
             </div>
           </VCol>
         </VRow>
       </VCol>
       <VCol cols="4">
-        <div id="content-chart">
+        <div :id="'content-chart' + graphId">
           <strong>Top title</strong>
         </div>
       </VCol>
     </VRow>
     <VRow dense>
       <VCol cols="4">
-        <div id="user-chart">
+        <div :id="'user-chart' + graphId">
           <strong>Users</strong>
         </div>
       </VCol>
       <VCol cols="4">
-        <div id="country-chart">
+        <div :id="'country-chart' + graphId">
           <strong>Country</strong>
         </div>
       </VCol>
       <VCol cols="4">
-        <div id="device-chart">
+        <div :id="'device-chart' + graphId">
           <strong>Device used</strong>
         </div>
       </VCol>
     </VRow>
     <VRow>
-      <div id="dc-data-count" class="dc-data-count">
+      <div :id="'dc-data-count' + graphId" class="dc-data-count">
         <span class="filter-count"></span>
         selected out of
         <span class="total-count"></span>
@@ -135,15 +135,15 @@ export default {
       const all = ndx.groupAll()
 
       // Create and bind charts to their respective divs
-      const watchChart = new dc.LineChart('#watch-time-chart')
-      const rangeChart = new dc.BarChart('#range-chart')
-      const userChart = new dc.PieChart('#user-chart')
-      const countryChart = new dc.RowChart('#country-chart')
-      const contentChart = new dc.RowChart('#content-chart')
-      const weekChart = new dc.RowChart('#week-chart')
-      const deviceChart = new dc.RowChart('#device-chart')
-      const hourChart = new dc.BarChart('#hour-chart')
-      const tableCount = new dc.DataCount('.dc-data-count')
+      const watchChart = new dc.LineChart('#watch-time-chart' + this.graphId)
+      const rangeChart = new dc.BarChart('#range-chart' + this.graphId)
+      const userChart = new dc.PieChart('#user-chart' + this.graphId)
+      const countryChart = new dc.RowChart('#country-chart' + this.graphId)
+      const contentChart = new dc.RowChart('#content-chart' + this.graphId)
+      const weekChart = new dc.RowChart('#week-chart' + this.graphId)
+      const deviceChart = new dc.RowChart('#device-chart' + this.graphId)
+      const hourChart = new dc.BarChart('#hour-chart' + this.graphId)
+      const tableCount = new dc.DataCount('#dc-data-count' + this.graphId)
 
       // Create dimensions
       const monthDimension = ndx.dimension(d => d.month)
@@ -174,7 +174,7 @@ export default {
       const maxDate = monthDimension.top(1)[0].date
       const maxValue = monthGroup.top(1)[0].value + 2
       let width = d3
-        .select('#watch-time-chart')
+        .select('#watch-time-chart' + this.graphId)
         .node()
         .getBoundingClientRect().width
       let height = 150
@@ -197,7 +197,7 @@ export default {
             ])
         )
         .y(d3.scaleLinear().domain([0, maxValue]))
-        .ordinalColors(['#58539E'])
+        .ordinalColors(colorPalette)
         .xUnits(d3.timeHour)
         .brushOn(false)
         .elasticX(false)
@@ -239,12 +239,15 @@ export default {
         .round(d3.timeDay.round)
         .alwaysUseRounding(true)
         .xUnits(d3.timeDays)
-        .ordinalColors(['#58539E'])
+        .ordinalColors(colorPalette)
         .yAxis()
         .ticks(0)
 
       // Render user pie chart
-      width = d3.select('#user-chart').node().getBoundingClientRect().width
+      width = d3
+        .select('#user-chart' + this.graphId)
+        .node()
+        .getBoundingClientRect().width
       height = 250
       const scale = Math.min(width, height)
       userChart
@@ -258,17 +261,7 @@ export default {
         .group(userGroup)
         .drawPaths(true)
         .minAngleForLabel(0.1)
-        .ordinalColors([
-          '#371D52',
-          '#6652A1',
-          '#35334A',
-          '#859ED5',
-          '#CC94F2',
-          '#9A5BD9',
-          '#6F36BF',
-          '#3F1973',
-          '#58539E'
-        ])
+        .ordinalColors(colorPalette)
 
       userChart.on('pretransition', function (chart) {
         chart.selectAll('text.pie-slice.pie-label').call(function (t) {
@@ -290,7 +283,10 @@ export default {
       })
 
       // Render country row chart
-      width = d3.select('#country-chart').node().getBoundingClientRect().width
+      width = d3
+        .select('#country-chart' + this.graphId)
+        .node()
+        .getBoundingClientRect().width
       height = 200
       countryChart
         .width(width)
@@ -308,7 +304,10 @@ export default {
         .ticks(4)
 
       // Render day of week row chart
-      width = d3.select('#week-chart').node().getBoundingClientRect().width
+      width = d3
+        .select('#week-chart' + this.graphId)
+        .node()
+        .getBoundingClientRect().width
       height = 200
       weekChart
         .width(width)
@@ -323,7 +322,6 @@ export default {
         .xAxis()
         .ticks(4)
       weekChart.ordering(function (d) {
-        console.log(d)
         switch (d.key) {
           case 'Mon':
             return 0
@@ -346,24 +344,32 @@ export default {
 
       // Render hour bar chart
       hourChart
-        .width(d3.select('#hour-chart').node().getBoundingClientRect().width)
+        .width(
+          d3
+            .select('#hour-chart' + this.graphId)
+            .node()
+            .getBoundingClientRect().width
+        )
         .height(200)
         .margins({ top: 0, right: 10, bottom: 20, left: 40 })
         .dimension(hourDimension)
         .group(hourGroup)
-        .centerBar(true)
+        .centerBar(false)
         .gap(1)
-        .x(d3.scaleLinear().domain([0, 23]))
+        .x(d3.scaleLinear().domain([0, 24]))
         .ordinalColors(colorPalette)
         .yAxis()
-        .ticks(0)
+        .ticks(5)
       hourChart
         .xAxis()
         .tickFormat(d => d + ':00')
         .ticks(7)
 
       // Render content row chart
-      width = d3.select('#content-chart').node().getBoundingClientRect().width
+      width = d3
+        .select('#content-chart' + this.graphId)
+        .node()
+        .getBoundingClientRect().width
       height = 450
       contentChart
         .width(width)
@@ -381,7 +387,10 @@ export default {
         .ticks(4)
 
       // Render device row chart
-      width = d3.select('#device-chart').node().getBoundingClientRect().width
+      width = d3
+        .select('#device-chart' + this.graphId)
+        .node()
+        .getBoundingClientRect().width
       height = 200
       deviceChart
         .width(width)
@@ -434,7 +443,7 @@ body {
   font-weight: bold;
 }
 
-#range-chart g.y {
+.range-chart > svg > g > g.axis.y {
   display: none;
 }
 
