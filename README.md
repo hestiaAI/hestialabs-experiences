@@ -88,6 +88,8 @@ Please follow the same naming convention: create a `__tests__` folder at the sam
 
 Snapshot tests can be written to check that the HTML content of a component hasn't changed, by comparing it to a string saved in the `__snapshots__` folder. If the changes are intentional, snapshots can be updated with the command above.
 
+An example is available in [components/unit/filterable-table/\_\_tests\_\_/UnitFilterableTable.test.js](https://github.com/hestiaAI/hestialabs-experiences/blob/master/components/unit/filterable-table/__tests__/UnitFilterableTable.test.js)
+
 Note that snapshots do not include Vue props or data, and that child components are not recursively rendered as HTML (e.g. a component `BaseButton` will appear as an HTML tag `<basebutton>`).
 
 ### Upgrading npm on Windows
