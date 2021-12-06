@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 v-if="section.title">{{ section.title }}</h2>
+    <h2 v-if="section.title" class="mb-4">{{ section.title }}</h2>
 
     <template v-if="section.description">
       <!-- For security reasons, HTML is not rendered on zip import -->

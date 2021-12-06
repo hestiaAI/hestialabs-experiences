@@ -41,14 +41,12 @@
         <p v-if="sentStatus && !sentError">Form successfully submitted.</p>
         <p v-if="missingRequired">Some required fields are not filled in.</p>
         <p v-if="missingRequiredDataProcessing.length > 0">
-          Some data required for sending this form has not been processed ({{
-            missingRequiredDataProcessing.join(', ')
-          }}).
+          Some experience required for sending this form has not been ran:
+          {{ missingRequiredDataProcessing.join(', ') }}.
         </p>
         <p v-if="missingRequiredData.length > 0">
-          Some data required for sending this form has not been included ({{
-            missingRequiredData.join(', ')
-          }}).
+          Some data required for sending this form has not been included:
+          {{ missingRequiredData.join(', ') }}.
         </p>
       </VCardText>
     </VCard>
