@@ -32,7 +32,7 @@ export default async function getCsvHeadersAndItems(csvText) {
         _.every(
           items,
           i =>
-            Object.keys(i).length > 1 &&
+            Object.keys(i).length > 0 &&
             Object.keys(i).length === headers.length
         )
       ) {
