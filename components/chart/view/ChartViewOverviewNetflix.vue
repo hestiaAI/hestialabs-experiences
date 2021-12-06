@@ -6,19 +6,47 @@
           <VCol cols="12">
             <div :id="'watch-time-chart' + graphId">
               <strong>Watch time (in hours per month)</strong>
+              <a class="reset" style="display: none">reset</a>
+              <p class="filters ma-0">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
             </div>
-            <div :id="'range-chart' + graphId" class="range-chart"></div>
+            <div :id="'range-chart' + graphId" class="range-chart">
+              <p
+                class="muted pull-right text-subtitle-2"
+                style="margin-right: 15px; margin-bottom: 5px"
+              >
+                select a <strong>time range</strong> to zoom in
+              </p>
+            </div>
           </VCol>
         </VRow>
         <VRow dense>
           <VCol cols="8">
             <div :id="'hour-chart' + graphId">
               <strong>Time of the day</strong>
+              <a class="reset" style="display: none">reset</a>
+              <p class="filters ma-0">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
             </div>
           </VCol>
           <VCol cols="4">
             <div :id="'week-chart' + graphId">
               <strong>Day of week</strong>
+              <a class="reset" style="display: none">reset</a>
+              <p class="filters ma-0">
+                <span>
+                  Current filter:
+                  <span class="filter"></span>
+                </span>
+              </p>
             </div>
           </VCol>
         </VRow>
@@ -26,6 +54,13 @@
       <VCol cols="4">
         <div :id="'content-chart' + graphId">
           <strong>Top title</strong>
+          <a class="reset" style="display: none">reset</a>
+          <p class="filters ma-0">
+            <span>
+              Current filter:
+              <span class="filter"></span>
+            </span>
+          </p>
         </div>
       </VCol>
     </VRow>
@@ -33,16 +68,37 @@
       <VCol cols="4">
         <div :id="'user-chart' + graphId">
           <strong>Users</strong>
+          <a class="reset" style="display: none">reset</a>
+          <p class="filters ma-0">
+            <span>
+              Current filter:
+              <span class="filter"></span>
+            </span>
+          </p>
         </div>
       </VCol>
       <VCol cols="4">
         <div :id="'country-chart' + graphId">
           <strong>Country</strong>
+          <a class="reset" style="display: none">reset</a>
+          <p class="filters ma-0">
+            <span>
+              Current filter:
+              <span class="filter"></span>
+            </span>
+          </p>
         </div>
       </VCol>
       <VCol cols="4">
         <div :id="'device-chart' + graphId">
           <strong>Device used</strong>
+          <a class="reset" style="display: none">reset</a>
+          <p class="filters ma-0">
+            <span>
+              Current filter:
+              <span class="filter"></span>
+            </span>
+          </p>
         </div>
       </VCol>
     </VRow>
@@ -100,9 +156,10 @@ export default {
     },
     drawViz() {
       const colorPalette = [
-        '#371D52',
+        '#7570b3',
+        // '#371D52',
+        // '#35334A',
         '#6652A1',
-        '#35334A',
         '#859ED5',
         '#CC94F2',
         '#9A5BD9',
@@ -110,9 +167,11 @@ export default {
         '#3F1973',
         '#58539E'
       ]
+
       // Format data to correct types 2021-09-19 22:58:12
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S')
       const formatTime = d3.timeFormat('%B %d, %Y')
+      const formatNumber = d3.format('.1f')
 
       // Keeps only movies and tv shows (not trailer etc..)
       this.results = this.values.filter(
@@ -144,6 +203,58 @@ export default {
       const deviceChart = new dc.RowChart('#device-chart' + this.graphId)
       const hourChart = new dc.BarChart('#hour-chart' + this.graphId)
       const tableCount = new dc.DataCount('#dc-data-count' + this.graphId)
+
+      // Bind reset filters links
+      d3.select('#watch-time-chart' + this.graphId + ' a.reset').on(
+        'click',
+        function () {
+          rangeChart.filterAll()
+          watchChart.filterAll()
+          dc.redrawAll()
+        }
+      )
+      d3.select('#user-chart' + this.graphId + ' a.reset').on(
+        'click',
+        function () {
+          userChart.filterAll()
+          dc.redrawAll()
+        }
+      )
+      d3.select('#country-chart' + this.graphId + ' a.reset').on(
+        'click',
+        function () {
+          countryChart.filterAll()
+          dc.redrawAll()
+        }
+      )
+      d3.select('#content-chart' + this.graphId + ' a.reset').on(
+        'click',
+        function () {
+          contentChart.filterAll()
+          dc.redrawAll()
+        }
+      )
+      d3.select('#week-chart' + this.graphId + ' a.reset').on(
+        'click',
+        function () {
+          weekChart.filterAll()
+          dc.redrawAll()
+        }
+      )
+      d3.select('#device-chart' + this.graphId + ' a.reset').on(
+        'click',
+        function () {
+          deviceChart.filterAll()
+          dc.redrawAll()
+        }
+      )
+      d3.select('#hour-chart' + this.graphId + ' a.reset').on(
+        'click',
+        function () {
+          hourChart.filterAll()
+          dc.redrawAll()
+        }
+      )
 
       // Create dimensions
       const monthDimension = ndx.dimension(d => d.month)
@@ -184,7 +295,7 @@ export default {
         .width(width)
         .height(height)
         .transitionDuration(1000)
-        .margins({ top: 30, right: 50, bottom: 25, left: 40 })
+        .margins({ top: 20, right: 50, bottom: 25, left: 40 })
         .group(monthGroup)
         .dimension(monthDimension)
         .curve(d3.curveMonotoneX)
@@ -197,7 +308,12 @@ export default {
             ])
         )
         .y(d3.scaleLinear().domain([0, maxValue]))
-        .ordinalColors(colorPalette)
+        .ordinalColors([colorPalette[1]])
+        .valueAccessor(d => d.value)
+        .title(
+          d =>
+            formatTime(d.key) + ': ' + formatNumber(d.value) + ' hours watched'
+        )
         .xUnits(d3.timeHour)
         .brushOn(false)
         .elasticX(false)
@@ -212,11 +328,12 @@ export default {
           fillOpacity: 0.8,
           strokeOpacity: 0.0
         })
-        .yAxisLabel('N° of tracker reach')
+        .yAxisLabel('Hours watched')
         .clipPadding(10)
         // .xAxisLabel("Date")
         .yAxis()
         .ticks(5)
+      watchChart.xAxis().ticks(5)
 
       // range chart date picker
       rangeChart
@@ -237,6 +354,7 @@ export default {
             ])
         )
         .round(d3.timeDay.round)
+        .valueAccessor(d => d.value)
         .alwaysUseRounding(true)
         .xUnits(d3.timeDays)
         .ordinalColors(colorPalette)
@@ -259,6 +377,8 @@ export default {
         .externalLabels(50)
         .dimension(userDimension)
         .group(userGroup)
+        .valueAccessor(d => d.value)
+        .title(d => d.key + ': ' + formatNumber(d.value) + ' hours watched')
         .drawPaths(true)
         .minAngleForLabel(0.1)
         .ordinalColors(colorPalette)
@@ -295,10 +415,11 @@ export default {
         .group(countryGroup)
         .dimension(countryDimension)
         .ordinalColors(colorPalette)
+        .valueAccessor(d => d.value)
         .label(d => d.key)
         .data(group => group.top(10))
         // .labelOffsetX(0)
-        .title(d => d.value)
+        .title(d => d.key + ': ' + formatNumber(d.value) + ' hours watched')
         .elasticX(true)
         .xAxis()
         .ticks(4)
@@ -308,16 +429,17 @@ export default {
         .select('#week-chart' + this.graphId)
         .node()
         .getBoundingClientRect().width
-      height = 200
+      height = 150
       weekChart
         .width(width)
         .height(height)
-        .margins({ top: 10, left: 10, right: 10, bottom: 20 })
+        .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(weekGroup)
         .dimension(weekDimension)
+        .valueAccessor(d => d.value)
         .ordinalColors(colorPalette)
         .label(d => d.key)
-        .title(d => d.value)
+        .title(d => formatNumber(d.value) + ' hours watched')
         .elasticX(true)
         .xAxis()
         .ticks(4)
@@ -350,10 +472,11 @@ export default {
             .node()
             .getBoundingClientRect().width
         )
-        .height(200)
-        .margins({ top: 0, right: 10, bottom: 20, left: 40 })
+        .height(150)
+        .margins({ top: 20, right: 10, bottom: 20, left: 40 })
         .dimension(hourDimension)
         .group(hourGroup)
+        .valueAccessor(d => d.value)
         .centerBar(false)
         .gap(1)
         .x(d3.scaleLinear().domain([0, 24]))
@@ -370,18 +493,22 @@ export default {
         .select('#content-chart' + this.graphId)
         .node()
         .getBoundingClientRect().width
-      height = 450
+      height = 420
       contentChart
         .width(width)
         .height(height)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(contentGroup)
         .dimension(contentDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors([colorPalette[0]])
+        .valueAccessor(d => d.value)
+        .title(
+          d =>
+            formatTime(d.key) + ': ' + formatNumber(d.value) + ' hours watched'
+        )
         .label(d => d.key)
         .data(group => group.top(20))
         // .labelOffsetX(0)
-        .title(d => d.value)
         .elasticX(true)
         .xAxis()
         .ticks(4)
@@ -398,11 +525,16 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(this.removeEmptyBins(deviceGroup))
         .dimension(deviceDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors([colorPalette[2]])
+        .valueAccessor(d => d.value)
+        .title(
+          d =>
+            formatTime(d.key) + ': ' + formatNumber(d.value) + ' hours watched'
+        )
         .label(d => d.key)
         .data(group => group.top(10))
         // .labelOffsetX(0)
-        .title(d => d.value)
+        .title(d => d.key + ': ' + formatNumber(d.value) + ' hours watched')
         .elasticX(true)
         .xAxis()
         .ticks(4)
@@ -419,11 +551,13 @@ export default {
         })
         .on('pretransition', (chart, filter) => {
           this.results = monthDimension.top(all.value())
-          d3.select('#dc-data-count a.reset').on('click', () => {
-            this.toggle()
-            dc.filterAll()
-            dc.renderAll()
-          })
+          d3.select('#dc-data-count' + this.graphId + ' a.reset').on(
+            'click',
+            () => {
+              dc.filterAll()
+              dc.renderAll()
+            }
+          )
         })
       dc.renderAll()
     }
