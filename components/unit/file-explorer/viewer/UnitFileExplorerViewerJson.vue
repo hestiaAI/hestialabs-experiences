@@ -2,7 +2,7 @@
   <div v-if="loading">Loading</div>
   <div v-else-if="error">
     <p>Could not parse file. Showing content instead</p>
-    <div>{{ jsonText }}</div>
+    <div class="explorer__content">{{ jsonText }}</div>
   </div>
   <VTreeview v-else dense transition :items="items">
     <template #prepend="{ item }">
@@ -10,14 +10,14 @@
         {{ item.icon }}
       </VIcon>
     </template>
-    <template #append="{ item }">
-      <div
-        v-if="!isUndef(item.value)"
-        :title="item.value"
-        class="hestia-treeview-json-value"
-      >
-        {{ item.value }}
+    <template #label="{ item, leaf }">
+      <div v-if="leaf" :title="item.value">
+        <span v-if="!isUndef(item.name)">
+          {{ `${item.name}:` }}
+        </span>
+        <span class="font-italic">{{ item.value }}</span>
       </div>
+      <div v-else>{{ item.name }}</div>
     </template>
   </VTreeview>
 </template>
@@ -62,14 +62,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.v-treeview-node__append {
-  max-width: calc(50%);
-}
-.hestia-treeview-json-value {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-</style>
