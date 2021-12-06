@@ -250,18 +250,15 @@ export default class FileManager {
    */
   async getNumberOfDataPoints(filePath) {
     if (!_.has(this.#nDataPoints, filePath)) {
-      try {
+      const ext = filePath.match(/.+\.(.+?)/)[1] ?? 'other'
+      if (ext === 'json') {
         const json = await this.getJsonItems(filePath)
         this.#nDataPoints[filePath] = nJsonPoints(json)
-      } catch (error) {
-        try {
-          const text = await this.getPreprocessedText(filePath)
-          this.#nDataPoints[filePath] = text
-            .split('\n')
-            .filter(_.identity).length
-        } catch (error) {
-          this.#nDataPoints[filePath] = 0
-        }
+      } else if (ext === 'csv' || ext === 'tsv' || ext === 'txt') {
+        const text = await this.getPreprocessedText(filePath)
+        this.#nDataPoints[filePath] = text.split('\n').filter(_.identity).length
+      } else {
+        this.#nDataPoints[filePath] = 0
       }
     }
     return this.#nDataPoints[filePath]
