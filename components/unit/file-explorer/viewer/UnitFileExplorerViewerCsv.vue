@@ -2,7 +2,7 @@
   <div v-if="loading">Loading</div>
   <div v-else-if="error">
     <p>Could not parse file. Showing content instead</p>
-    <div>{{ csvText }}</div>
+    <div class="explorer__content">{{ csvText }}</div>
   </div>
   <UnitFilterableTable v-else :data="csvContent" />
 </template>
