@@ -34,7 +34,7 @@
           :disabled="!zipReady || (sentStatus && !sentError)"
           @click="sendForm"
         />
-        <p v-if="zipReady">ZIP size: {{ humanReadablefileSize }}</p>
+        <p v-if="zipReady">ZIP size: {{ zipSizeString }}</p>
         <p v-if="sentError">
           Sending failed. Please download the file and send it by email.
         </p>
@@ -56,6 +56,7 @@
 <script>
 import JSZip from 'jszip'
 import FileManager from '~/utils/file-manager.js'
+import { humanReadableFileSize } from '~/manifests/utils'
 import { padNumber } from '~/utils/utils'
 
 const _sodium = require('libsodium-wrappers')
@@ -158,14 +159,8 @@ export default {
     key() {
       return this.$route.params.key
     },
-    humanReadablefileSize() {
-      const bytes = this.encryptedZipFile.length
-      const i = Math.floor(Math.log(bytes) / Math.log(1024))
-      return (
-        (bytes / Math.pow(1024, i)).toFixed(2) * 1 +
-        ' ' +
-        ['B', 'kB', 'MB', 'GB', 'TB'][i]
-      )
+    zipSizeString() {
+      return humanReadableFileSize(this.encryptedZipFile.length)
     }
   },
   watch: {

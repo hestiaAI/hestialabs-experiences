@@ -20,6 +20,9 @@
             <VIcon>$vuetify.icons.mdiChevronLeft</VIcon>
           </VBtn>
         </VListItem>
+        <VListItem v-if="selectable && !mini">
+          Size of selected files: {{ selectionSizeString }}
+        </VListItem>
       </template>
 
       <div :style="drawerMiniFileLabelStyle" class="drawer-mini-file-label">
@@ -40,14 +43,16 @@
           dense
         />
         <VTreeview
+          v-model="selectedFiles"
           dense
           open-on-click
           activatable
           return-object
           transition
           rounded
+          :selectable="selectable"
           :search="search"
-          :items="fileManager.getTreeItems()"
+          :items="treeItems"
           @update:active="setSelectedItem"
         >
           <template #prepend="{ item }">
@@ -58,9 +63,25 @@
         </VTreeview>
       </div>
     </VNavigationDrawer>
-    <VCardTitle class="justify-center"> Explore your files </VCardTitle>
-    <VCardText class="align-center">
-      <div :class="miniWidthPaddingLeftClass">
+    <VCardTitle class="justify-center">Explore your files</VCardTitle>
+    <div :class="miniWidthPaddingLeftClass">
+      <VCardText>
+        Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (
+        <b>{{ dataSizeString }} </b>)
+        <template v-if="nDataPoints">
+          and found <b>{{ nDataPoints.toLocaleString() }}</b> data points
+        </template>
+        :
+        <VList v-if="sortedExtensionTexts" :dense="true">
+          <VListItem v-for="(text, i) in sortedExtensionTexts" :key="i">
+            <VListItemIcon>
+              <VIcon>$vuetify.icons.mdiMinus</VIcon>
+            </VListItemIcon>
+            <VListItemContent>{{ text }}</VListItemContent>
+          </VListItem>
+        </VList>
+      </VCardText>
+      <VCardText>
         <template v-if="filename">
           <div class="mr-2">
             Exploring file <strong>{{ filename }}</strong>
@@ -79,13 +100,15 @@
         <template v-else>
           <p>Select a file on the left panel to see it in more details here</p>
         </template>
-      </div>
-    </VCardText>
+      </VCardText>
+    </div>
   </VCard>
 </template>
 
 <script>
+import _ from 'lodash'
 import FileManager from '~/utils/file-manager.js'
+import { humanReadableFileSize, plurify } from '~/manifests/utils'
 
 export default {
   name: 'UnitFileExplorer',
@@ -106,7 +129,10 @@ export default {
       mini: true,
       miniWidth: 48,
       search: '',
-      height: 500
+      height: 500,
+      nDataPoints: null,
+      sortedExtensionTexts: [],
+      selectionSize: 0
     }
   },
   computed: {
@@ -116,6 +142,12 @@ export default {
     },
     filename() {
       return this.selectedItem?.filename || ''
+    },
+    treeItems() {
+      return this.fileManager.getTreeItems()
+    },
+    selectionSizeString() {
+      return humanReadableFileSize(this.selectionSize)
     },
     path() {
       // TODO avoid code duplication with viewer/mixin-path
@@ -145,6 +177,46 @@ export default {
         bottom: `-${w - 18}px`,
         maxWidth: `${h - w - 20}px`
       }
+    },
+    nFiles() {
+      return this.fileManager.fileList.length
+    },
+    totalSize() {
+      return _.sumBy(this.fileManager.fileList, f => f.size)
+    },
+    dataSizeString() {
+      return humanReadableFileSize(this.totalSize)
+    },
+    sortedExtensionCounts() {
+      const extensions = this.fileManager.fileList
+        .map(f => f.name.match(/^.+\.(.+?)$/)?.[1])
+        .filter(m => !_.isUndefined(m))
+        .map(ext =>
+          this.fileManager.supportedExtensions.has(ext) ? ext : 'other'
+        )
+
+      const occurrences = _.mapValues(
+        _.groupBy(extensions, _.identity),
+        v => v.length
+      )
+      return _.sortBy(Object.entries(occurrences), ([ext, count]) =>
+        ext === 'other' ? 1 : -count
+      )
+    },
+    key() {
+      return this.$route.params.key
+    },
+    selectedFiles: {
+      get() {
+        return this.$store.state.selectedFiles[this.key]
+      },
+      set(value) {
+        this.$store.commit('setSelectedFiles', { key: this.key, value })
+        this.selectionSize = _.sumBy(
+          value,
+          ({ filename }) => this.fileManager.fileDict[filename]?.size ?? 0
+        )
+      }
     }
   },
   watch: {
@@ -152,9 +224,17 @@ export default {
       // hide scrollbar in mini variant of drawer
       const overflowY = mini ? 'hidden' : 'visible'
       this.$refs.drawer.$el.children[1].style.overflowY = overflowY
+    },
+    fileManager: {
+      immediate: true,
+      handler() {
+        this.setExtensionTexts()
+        this.setNumberOfDataPoints()
+      }
     }
   },
   methods: {
+    plurify,
     setSelectedItem([item]) {
       // item might be undefined (when unselecting)
       if (item) {
@@ -165,6 +245,54 @@ export default {
           this.selectedItem = item
         }
       }
+    },
+    async setNumberOfDataPoints() {
+      this.nDataPoints = _.sum(
+        await Promise.all(
+          this.fileManager
+            .getFilenames()
+            .map(async f => await this.fileManager.getNumberOfDataPoints(f))
+        )
+      )
+    },
+    async setExtensionTexts() {
+      const showAtMost = 3
+      const pointsPerFile = await Promise.all(
+        this.fileManager
+          .getFilenames()
+          .map(async f => [f, await this.fileManager.getNumberOfDataPoints(f)])
+      )
+      this.sortedExtensionTexts = this.sortedExtensionCounts.map(([ext, c]) => {
+        const re = new RegExp(`.+\\.${ext}`)
+        const files = pointsPerFile.filter(([f, _n]) => re.test(f))
+        const shownFiles = _.take(
+          _.sortBy(files, ([_f, n]) => -n),
+          showAtMost
+        )
+        const nPointsExt = _.sumBy(files, ([_f, n]) => n)
+        const topFilesDescription = shownFiles
+          .map(
+            ([f, nPoints]) =>
+              `${f} ${
+                nPoints === 0
+                  ? ''
+                  : `(${nPoints.toLocaleString()} data ${plurify(
+                      'point',
+                      nPoints
+                    )})`
+              }`
+          )
+          .join(', ')
+        return ` ${c} ${ext === 'other' ? '' : '.'}${ext}${
+          nPointsExt > 0 ? ` (${nPointsExt.toLocaleString()} data points)` : ''
+        }${
+          files.length > showAtMost
+            ? ' including: '
+            : ext !== 'other'
+            ? ':'
+            : ` ${plurify('format', c)}`
+        } ${topFilesDescription}`
+      })
     }
   }
 }
