@@ -73,3 +73,8 @@ export function rdfToQuads(rdf, format = 'N3') {
   const quads = parser.parse(rdf)
   return quads
 }
+
+/* Transform integer x to a string of length n, left-padded with zeros. */
+export function padNumber(x, n) {
+  return x.toString().padStart(n, '0')
+}
