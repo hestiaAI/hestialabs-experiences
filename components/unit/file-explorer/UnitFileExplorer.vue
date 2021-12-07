@@ -70,7 +70,7 @@
           dataSizeString
         }})
         <template v-if="nDataPoints">
-          and found {{ nDataPoints }} data points
+          and found {{ nDataPoints.toLocaleString() }} data points
         </template>
         :
         <VList v-if="sortedExtensionTexts" :dense="true">
