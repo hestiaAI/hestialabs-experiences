@@ -24,9 +24,10 @@ const store = new Store({
   state
 })
 
+// Mock createObjectURL because it is not implemented in jsdom
+global.URL.createObjectURL = () => {}
+
 test('data table contains passed items', () => {
-  // Mock createObjectURL because it is not implemented in jsdom
-  global.URL.createObjectURL = () => {}
   // Mount the vue component, pass some data and a mocked vuex store
   const wrapper = mount(UnitFilterableTable, {
     propsData: {
@@ -40,8 +41,6 @@ test('data table contains passed items', () => {
 })
 
 test('data table shows error message when data is malformed', () => {
-  // Mock createObjectURL because it is not implemented in jsdom
-  global.URL.createObjectURL = () => {}
   // Mount the vue component, pass some data and a mocked vuex store
   const wrapper = mount(UnitFilterableTable, {
     propsData: {
@@ -52,4 +51,17 @@ test('data table shows error message when data is malformed', () => {
   })
   // Check that the child component exists
   expect(wrapper.find('[data-testid="data-error"]').exists()).toBe(true)
+})
+
+test('data table html corresponds to snapshot', () => {
+  // Mount the vue component, pass some data and a mocked vuex store
+  const wrapper = mount(UnitFilterableTable, {
+    propsData: {
+      data
+    },
+    store,
+    localVue
+  })
+  // Check that the html is the same as in the snapshot
+  expect(wrapper.html()).toMatchSnapshot()
 })
