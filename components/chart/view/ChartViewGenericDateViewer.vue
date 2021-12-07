@@ -220,7 +220,8 @@ export default {
         .elasticY(true)
         .mouseZoomable(false)
         .clipPadding(10)
-        .gap(this.selectTimeInt === 'Months' ? 20 : 0)
+      // .barPadding(0)
+      // .gap(this.selectTimeInt === 'Months' ? 20 : 0)
 
       this.barChart
         .yAxis()
@@ -246,7 +247,7 @@ export default {
         .xUnits(d3.timeDays)
         .brushOn(true)
         .clipPadding(10)
-        .gap(0)
+      // .gap(0)
 
       ndx.onChange(() => {
         this.results = ndx.allFiltered()
@@ -273,7 +274,7 @@ export default {
       this.barChart
         .dimension(this.dateDimension)
         .group(this.volumeGroup)
-        .gap(this.selectTimeInt === 'Months' ? 10 : 0)
+        // .gap(this.selectTimeInt === 'Months' ? 10 : 0)
         .transitionDuration(1000)
         .render()
     },
