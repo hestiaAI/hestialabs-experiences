@@ -9,21 +9,7 @@
         </div>
         <p class="subtitle-1 mt-4">
           {{ m.subtitle }}
-          <ShareButtonFacebook
-            :url="url"
-            :title="`${appName}: ${m.title}`"
-            :quote="description"
-            :description="description"
-            hashtags="hestialabs"
-            class="my-2 ml-4"
-          />
-          <ShareButtonTwitter
-            :url="url"
-            :title="description"
-            :hashtags="hashtags"
-            twitter-user="HestiaLabs"
-            class="my-2 ml-2"
-          />
+          <BaseButtonShare />
         </p>
       </VCol>
     </VRow>
@@ -84,13 +70,6 @@ export default {
   computed: {
     ...mapState(['config']),
     ...mapGetters(['manifest', 'keys', 'appName']),
-    description() {
-      const title = this.m.title
-      if (title) {
-        return `Analyze the data collected on you by ${title}.`
-      }
-      return 'Analyze the data collected on you.'
-    },
     m() {
       const manifest = this.manifest(this.$route)
       if (!manifest) {
@@ -99,16 +78,6 @@ export default {
       const title = manifest.title
       const { subtitle, icon, ...rest } = manifest
       return { title, subtitle, icon, rest }
-    },
-    hashtags() {
-      const hashtags = [this.m.title]
-      if (this.config.hashtags) {
-        hashtags.push(...this.config.hashtags)
-      }
-      return hashtags.join(',')
-    },
-    url() {
-      return process.env.baseUrl + this.$route.path
     }
   }
 }

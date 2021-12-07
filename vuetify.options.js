@@ -14,6 +14,7 @@ import {
   mdiHome,
   mdiMagnify,
   mdiMinusBox,
+  mdiShare,
   mdiStepForward,
   mdiTwitter,
   mdiMinus
@@ -37,6 +38,7 @@ export default {
       mdiHome,
       mdiMagnify,
       mdiMinusBox,
+      mdiShare,
       mdiStepForward,
       mdiTwitter,
       mdiMinus
