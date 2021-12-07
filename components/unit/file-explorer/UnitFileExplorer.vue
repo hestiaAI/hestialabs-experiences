@@ -123,14 +123,14 @@ export default {
   data() {
     return {
       selectedItem: {},
-      selectedFiles: [],
       supportedTypes: new Set(['json', 'csv', 'pdf', 'img', 'html', 'txt']),
       mini: true,
       miniWidth: 48,
       search: '',
       height: 500,
       nDataPoints: null,
-      sortedExtensionTexts: []
+      sortedExtensionTexts: [],
+      selectionSize: 0
     }
   },
   computed: {
@@ -143,12 +143,6 @@ export default {
     },
     treeItems() {
       return this.fileManager.getTreeItems()
-    },
-    selectionSize() {
-      return _.sumBy(
-        this.selectedFiles,
-        ({ filename }) => this.fileManager.fileDict[filename]?.size ?? 0
-      )
     },
     selectionSizeString() {
       return humanReadableFileSize(this.selectionSize)
@@ -204,6 +198,21 @@ export default {
         v => v.length
       )
       return _.sortBy(Object.entries(occurrences), ([_ext, count]) => -count)
+    },
+    key() {
+      return this.$route.params.key
+    },
+    selectedFiles: {
+      get() {
+        return this.$store.state.selectedFiles[this.key]
+      },
+      set(value) {
+        this.$store.commit('setSelectedFiles', { key: this.key, value })
+        this.selectionSize = _.sumBy(
+          value,
+          ({ filename }) => this.fileManager.fileDict[filename]?.size ?? 0
+        )
+      }
     }
   },
   watch: {
