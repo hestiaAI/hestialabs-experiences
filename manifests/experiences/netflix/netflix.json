@@ -17,7 +17,6 @@
     {
       "key": "notifications",
       "customPipeline": "messagesData",
-      "postprocessor": "notifsPerDay",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
         "title": "Notification sent by Netflix",
