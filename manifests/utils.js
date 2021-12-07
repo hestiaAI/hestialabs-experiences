@@ -11,3 +11,7 @@ export function humanReadableFileSize(sizeInBytes) {
   const units = ['B', 'kB', 'MB', 'GB', 'TB']
   return `${(sizeInBytes / Math.pow(1024, i)).toFixed(2)} ${units[i]}`
 }
+
+export function plurify(word, n) {
+  return n === 1 ? word : `${word}s`
+}

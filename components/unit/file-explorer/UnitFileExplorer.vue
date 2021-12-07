@@ -66,18 +66,16 @@
     <VCardTitle class="justify-center">Explore your files</VCardTitle>
     <div :class="miniWidthPaddingLeftClass">
       <VCardText>
-        Analysed <b>{{ nFiles }}</b> {{ nFiles === 1 ? 'file' : 'files' }}(<b>{{
-          dataSizeString
-        }}</b
-        >)
+        Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (
+        <b>{{ dataSizeString }} </b>)
         <template v-if="nDataPoints">
           and found <b>{{ nDataPoints.toLocaleString() }}</b> data points
         </template>
         :
         <VList v-if="sortedExtensionTexts" :dense="true">
           <VListItem v-for="(text, i) in sortedExtensionTexts" :key="i">
-            <VListItemIcon
-              ><VIcon>$vuetify.icons.mdiMinus</VIcon>
+            <VListItemIcon>
+              <VIcon>$vuetify.icons.mdiMinus</VIcon>
             </VListItemIcon>
             <VListItemContent>{{ text }}</VListItemContent>
           </VListItem>
@@ -110,7 +108,7 @@
 <script>
 import _ from 'lodash'
 import FileManager from '~/utils/file-manager.js'
-import { humanReadableFileSize } from '~/manifests/utils'
+import { humanReadableFileSize, plurify } from '~/manifests/utils'
 
 export default {
   name: 'UnitFileExplorer',
@@ -234,6 +232,7 @@ export default {
     }
   },
   methods: {
+    plurify,
     setSelectedItem([item]) {
       // item might be undefined (when unselecting)
       if (item) {
@@ -275,16 +274,21 @@ export default {
               `${f} ${
                 nPoints === 0
                   ? ''
-                  : `(${nPoints.toLocaleString()} data point${
-                      nPoints === 1 ? '' : 's'
-                    })`
+                  : `(${nPoints.toLocaleString()} data ${plurify(
+                      'point',
+                      nPoints
+                    )})`
               }`
           )
           .join(', ')
-        return ` ${c} ${ext === 'other' ? '' : '.'}${ext} ${
-          nPointsExt > 0 ? `(${nPointsExt.toLocaleString()} data points)` : ''
+        return ` ${c} ${ext === 'other' ? '' : '.'}${ext}${
+          nPointsExt > 0 ? ` (${nPointsExt.toLocaleString()} data points)` : ''
         }${
-          files.length > showAtMost ? ' including: ' : ':'
+          files.length > showAtMost
+            ? ' including: '
+            : ext !== 'other'
+            ? ':'
+            : ` ${plurify('format', c)}`
         } ${topFilesDescription}`
       })
     }
