@@ -36,7 +36,6 @@
         "title": "WHICH DATA SHOULD BE SHARED?",
         "description": "Data underlying the following visualisations will be shared. Select all that you want to share.",
         "type": "data",
-        "additional": ["Whole file (which I will provide separately)"],
         "required": true
       },
       {
