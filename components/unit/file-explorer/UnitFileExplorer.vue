@@ -199,7 +199,9 @@ export default {
         _.groupBy(extensions, _.identity),
         v => v.length
       )
-      return _.sortBy(Object.entries(occurrences), ([_ext, count]) => -count)
+      return _.sortBy(Object.entries(occurrences), ([ext, count]) =>
+        ext === 'other' ? 1 : -count
+      )
     },
     key() {
       return this.$route.params.key
