@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`data table html corresponds to snapshot 1`] = `
+"<div>
+  <div>
+    <!---->
+    <!---->
+    <unitfilterabletablefilter headers=\\"[object Object],[object Object],[object Object]\\"></unitfilterabletablefilter>
+    <vdatatable multi-sort=\\"\\" data-testid=\\"data-table\\" items=\\"[object Object]\\" search=\\"\\"></vdatatable>
+    <basebuttondownloaddata text=\\"Download\\" extension=\\"csv\\" data=\\"\\"></basebuttondownloaddata>
+  </div>
+</div>"
+`;

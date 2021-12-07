@@ -72,3 +72,10 @@ export default function itemifyJSON(jsonText) {
   }
   return [itemifyRec(JSON.parse(jsonText))]
 }
+
+export function nJsonPoints(json) {
+  if (json === null) return 0
+  else if (Array.isArray(json)) return json.length + _.sumBy(json, nJsonPoints)
+  else if (_.isObject(json)) return nJsonPoints(Object.values(json))
+  else return 1
+}

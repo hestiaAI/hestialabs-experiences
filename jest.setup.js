@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { config } from '@vue/test-utils'
+import 'regenerator-runtime/runtime'
 
 Vue.config.silent = true
 

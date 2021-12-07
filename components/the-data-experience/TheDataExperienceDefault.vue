@@ -26,6 +26,13 @@
       </VCol>
     </VRow>
     <template v-if="success">
+      <VRow v-if="showDataExplorer">
+        <VCol>
+          <UnitFileExplorer
+            v-bind="{ fileManager, selectable: consentForm !== null }"
+          />
+        </VCol>
+      </VRow>
       <VRow v-for="(defaultViewElements, index) in defaultView" :key="index">
         <VCol>
           <UnitQuery
@@ -44,13 +51,6 @@
               allSparql: sparql
             }"
             @update="onQueryUpdate"
-          />
-        </VCol>
-      </VRow>
-      <VRow v-if="showDataExplorer">
-        <VCol>
-          <UnitFileExplorer
-            v-bind="{ fileManager, selectable: consentForm !== null }"
           />
         </VCol>
       </VRow>

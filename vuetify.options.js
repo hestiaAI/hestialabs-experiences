@@ -15,7 +15,8 @@ import {
   mdiMagnify,
   mdiMinusBox,
   mdiStepForward,
-  mdiTwitter
+  mdiTwitter,
+  mdiMinus
 } from '@mdi/js'
 
 export default {
@@ -37,7 +38,8 @@ export default {
       mdiMagnify,
       mdiMinusBox,
       mdiStepForward,
-      mdiTwitter
+      mdiTwitter,
+      mdiMinus
     }
   },
   theme: {
