@@ -16,7 +16,7 @@
           </VCardTitle>
           <VDataTable
             v-model="selected"
-            :headers="headers"
+            :headers="headersTable"
             :items="items"
             :single-select="true"
             :search="search"
@@ -45,7 +45,7 @@ export default {
       search: '',
       selected: [],
       selectedValues: [],
-      headers: [
+      headersTable: [
         { text: 'Advertiser', value: 'name' },
         { text: 'Targeting criteria', value: 'value' }
       ],
