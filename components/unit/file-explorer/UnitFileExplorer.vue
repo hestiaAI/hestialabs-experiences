@@ -8,6 +8,11 @@
     :min-height="height"
     height="auto"
   >
+    <style v-if="isFileLoading">
+      :root {
+        --cursor-style: wait !important;
+      }
+    </style>
     <VNavigationDrawer
       ref="drawer"
       :mini-variant.sync="mini"
@@ -102,10 +107,12 @@
             :is="componentForType"
             v-bind="{ fileManager, filename }"
             v-if="supportedTypes.has(fileType)"
+            @loading="onLoading"
           />
           <UnitFileExplorerViewerUnknown
             v-else
             v-bind="{ fileManager, filename }"
+            @loading="onLoading"
           />
         </template>
         <template v-else>
@@ -140,6 +147,7 @@ export default {
       mini: true,
       miniWidth: 48,
       search: '',
+      isFileLoading: false,
       height: 500,
       nDataPoints: null,
       sortedExtensionTexts: [],
@@ -246,6 +254,9 @@ export default {
   },
   methods: {
     plurify,
+    onLoading(loading) {
+      this.isFileLoading = loading
+    },
     setSelectedItem([item]) {
       // item might be undefined (when unselecting)
       if (item) {
@@ -332,6 +343,13 @@ export default {
   overflow: hidden;
 
   color: rgba(0, 0, 0, 0.87);
+}
+
+.explorer,
+.explorer .v-icon,
+.explorer .v-treeview-node__root,
+.explorer .v-treeview-node__root > .v-treeview-node__content > * {
+  cursor: var(--cursor-style);
 }
 
 .explorer__content {

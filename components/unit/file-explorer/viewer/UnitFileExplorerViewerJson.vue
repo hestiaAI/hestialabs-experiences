@@ -24,22 +24,22 @@
 
 <script>
 import mixin from './mixin'
+import mixinLoading from './mixin-loading'
 
 export default {
   name: 'UnitFileExplorerViewerJson',
-  mixins: [mixin],
+  mixins: [mixin, mixinLoading],
   data() {
     return {
       jsonText: '',
       items: [],
-      loading: true,
       error: false
     }
   },
   watch: {
     filename: {
-      async handler(filename) {
-        await this.getContentFromFilename(filename)
+      handler(filename) {
+        this.getContentFromFilename(filename)
       },
       immediate: true
     }
@@ -49,7 +49,7 @@ export default {
       return typeof val === 'undefined'
     },
     async getContentFromFilename(filename) {
-      this.loading = true
+      this.setLoading(true)
       this.jsonText = await this.fileManager.getPreprocessedText(filename)
       try {
         this.items = await this.fileManager.getJsonItems(filename)
@@ -57,7 +57,7 @@ export default {
       } catch (error) {
         this.error = true
       }
-      this.loading = false
+      this.setLoading(false)
     }
   }
 }

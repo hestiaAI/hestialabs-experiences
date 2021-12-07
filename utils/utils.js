@@ -78,3 +78,16 @@ export function rdfToQuads(rdf, format = 'N3') {
 export function padNumber(x, n) {
   return x.toString().padStart(n, '0')
 }
+
+/**
+ * Allows calling setTimeout without callback
+ * <pre>
+ *   await setTimeoutPromise(1000)
+ *   toExecuteAfterDelay()
+ * </pre>
+ */
+export function setTimeoutPromise(delay) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, delay)
+  })
+}
