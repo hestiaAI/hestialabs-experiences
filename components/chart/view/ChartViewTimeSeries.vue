@@ -38,6 +38,10 @@ export default {
       type: Array,
       default: () => []
     },
+    valueFormat: {
+      type: String,
+      default: () => '~s'
+    },
     yLabel: {
       type: String,
       default: () => 'Count'
@@ -88,17 +92,17 @@ export default {
       /* Init the possible aggregations dpending on dates extent */
       const extent = d3.extent(this.values, d => new Date(d.date))
       const diffDays = d3.timeDay.count(extent[0], extent[1])
-      if (diffDays > 2)
+      if (diffDays > 2 && diffDays < 93)
         this.intervals.Days = {
           parser: d3.timeDay,
           format: d3.timeFormat('%B %d, %Y')
         }
-      if (diffDays > 14)
+      if (diffDays > 14 && diffDays < 651)
         this.intervals.Weeks = {
           parser: d3.timeWeek,
           format: d3.timeFormat('%B %d, %Y')
         }
-      if (diffDays > 62)
+      if (diffDays > 62 && diffDays < 1800)
         this.intervals.Months = {
           parser: d3.timeMonth,
           format: d3.timeFormat('%B %Y')
@@ -195,6 +199,7 @@ export default {
       const yAxis = d3.axisLeft().ticks(5).scale(yScale) // .ticks(slices[0].values.length)
       const xAxis = d3
         .axisBottom()
+        .ticks(8)
         // .ticks(d3.timeDay.every(1))
         // .tickFormat(d3.timeFormat('%b %d'))
         .scale(xScale)
@@ -275,6 +280,7 @@ export default {
         .style('opacity', 0)
 
       const that = this
+      const f = d3.format(this.valueFormat)
       function showTooltip(evt, d) {
         tooltip.transition().duration(60).style('opacity', 0.98)
         tooltip
@@ -282,7 +288,7 @@ export default {
             '<b>' +
               that.intervals[intervalName].format(new Date(d.key)) +
               '</b><br/>' +
-              d.value
+              f(d.value)
           ) // d.name
           .style('left', evt.pageX - 55 + 'px')
           .style('top', evt.pageY - 45 + 'px')
