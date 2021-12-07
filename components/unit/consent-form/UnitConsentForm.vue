@@ -256,7 +256,7 @@ export default {
       const formData = new FormData()
       const date = new Date(this.timestamp)
       const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
-        date.getUTCMonth(),
+        date.getUTCMonth() + 1,
         2
       )}-${padNumber(date.getUTCDate(), 2)}`
       const filename = `${this.key}_${yearMonthDay}_${padNumber(
