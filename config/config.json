@@ -6,6 +6,7 @@
     "facebook-test",
     "google",
     "spotify",
+    "netflix",
     "tinder",
     "tracker-control",
     "twitter",
@@ -49,7 +50,6 @@
         "title": "Which data should be shared ?",
         "description": "The visualizations of every checked section will be reproducible and the underlying data will be available to the receiver (at least one required).",
         "type": "data",
-        "additional": ["Whole file (which I will provide separately)"],
         "required": true
       },
       {

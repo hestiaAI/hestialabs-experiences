@@ -1,11 +1,31 @@
 {
   "title": "Netflix",
   "icon": "netflix.png",
-  "ext": "all",
-  "multiple": true,
+  "ext": "zip",
+  "multiple": false,
   "isGenericViewer": true,
   "showDataExplorer": true,
   "defaultView": [
+    {
+      "key": "watchOverview",
+      "customPipeline": "viewingData",
+      "visualization": "ChartViewOverviewNetflix.vue",
+      "showTable": false,
+      "title": "Viewing activity",
+      "text": "Get an overview of how you use Netflix and what informations are store about you"
+    },
+    {
+      "key": "notifications",
+      "customPipeline": "messagesData",
+      "visualization": "ChartViewTimeSeries.vue",
+      "vizProps": {
+        "title": "Notification sent by Netflix",
+        "yLabel": "count"
+      },
+      "showTable": false,
+      "title": "Notifications",
+      "text": "See how many times Netflix send you notifications"
+    },
     {
       "key": "genericDateViewer",
       "customPipeline": "genericDateViewer",

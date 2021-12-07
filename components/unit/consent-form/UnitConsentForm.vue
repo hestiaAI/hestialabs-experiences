@@ -41,14 +41,12 @@
         <p v-if="sentStatus && !sentError">Form successfully submitted.</p>
         <p v-if="missingRequired">Some required fields are not filled in.</p>
         <p v-if="missingRequiredDataProcessing.length > 0">
-          Some data required for sending this form has not been processed ({{
-            missingRequiredDataProcessing.join(', ')
-          }}).
+          Some experience required for sending this form has not been ran:
+          {{ missingRequiredDataProcessing.join(', ') }}.
         </p>
         <p v-if="missingRequiredData.length > 0">
-          Some data required for sending this form has not been included ({{
-            missingRequiredData.join(', ')
-          }}).
+          Some data required for sending this form has not been included:
+          {{ missingRequiredData.join(', ') }}.
         </p>
       </VCardText>
     </VCard>
@@ -59,6 +57,7 @@
 import JSZip from 'jszip'
 import FileManager from '~/utils/file-manager.js'
 import { humanReadableFileSize } from '~/manifests/utils'
+import { padNumber } from '~/utils/utils'
 
 const _sodium = require('libsodium-wrappers')
 
@@ -216,10 +215,7 @@ export default {
           const content = JSON.parse(JSON.stringify(this.defaultView[i]))
           content.result = JSON.parse(this.allResults[i])
           content.index = i
-          zip.file(
-            `block${i.toString().padStart(2, '0')}.json`,
-            JSON.stringify(content)
-          )
+          zip.file(`block${padNumber(i, 2)}.json`, JSON.stringify(content))
         })
 
       // Add whole files
@@ -258,13 +254,20 @@ export default {
       // Programmatically create the form data
       // Names must correspond to the dummy form defined in /static/export-data-form-dummy.html
       const formData = new FormData()
+      const date = new Date(this.timestamp)
+      const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
+        date.getUTCMonth(),
+        2
+      )}-${padNumber(date.getUTCDate(), 2)}`
+      const filename = `${this.key}_${yearMonthDay}_${padNumber(
+        date.getUTCHours(),
+        2
+      )}:${padNumber(date.getUTCMinutes(), 2)}.zip`
       formData.append('form-name', 'export-data')
-      const zipBlob = new Blob(
-        [this.encryptedZipFile],
-        { type: 'application/zip' },
-        `exported-data-${this.timestamp}.zip`
-      )
-      formData.append('encrypted-zip', zipBlob)
+      const zip = new File([this.encryptedZipFile], filename, {
+        type: 'application/zip'
+      })
+      formData.append('encrypted-zip', zip, filename)
       fetch('/', {
         method: 'POST',
         body: formData
