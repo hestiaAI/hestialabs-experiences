@@ -256,20 +256,23 @@ export default {
           showAtMost
         )
         const nPointsExt = _.sumBy(files, ([_f, n]) => n)
-        let text = `- ${c} ${ext === 'other' ? '' : '.'}${ext} `
-        text += nPointsExt > 0 ? `(${nPointsExt} data points) ` : ''
-        text += files.length > showAtMost ? 'including ' : ''
-        text += shownFiles
+        const topFilesDescription = shownFiles
           .map(
             ([f, nPoints]) =>
-              `${f.split('/').at(-1)} ${
+              `${f} ${
                 nPoints === 0
                   ? ''
-                  : `(${nPoints} data point${nPoints === 1 ? '' : 's'})`
+                  : `(${nPoints.toLocaleString()} data point${
+                      nPoints === 1 ? '' : 's'
+                    })`
               }`
           )
           .join(', ')
-        return text
+        return `- ${c} ${ext === 'other' ? '' : '.'}${ext} ${
+          nPointsExt > 0 ? `(${nPointsExt.toLocaleString()} data points)` : ''
+        }${
+          files.length > showAtMost ? ' including' : ':'
+        } ${topFilesDescription}`
       })
     }
   }
