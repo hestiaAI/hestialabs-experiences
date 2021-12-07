@@ -96,6 +96,7 @@ export default class FileManager {
    * Fills the FileManager with the given files and creates helper structures.
    * To be called once the files are available.
    * @param {File[]} uppyFiles
+   * @param {boolean} multiple
    * @returns {Promise<FileManager>}
    */
   async init(uppyFiles, multiple) {
@@ -250,7 +251,7 @@ export default class FileManager {
    */
   async getNumberOfDataPoints(filePath) {
     if (!_.has(this.#nDataPoints, filePath)) {
-      const ext = filePath.match(/.+\.(.+?)/)[1] ?? 'other'
+      const ext = filePath.match(/^.+\.(.+?)$/)?.[1] ?? 'other'
       if (ext === 'json') {
         const json = await this.getJsonItems(filePath)
         this.#nDataPoints[filePath] = nJsonPoints(json)

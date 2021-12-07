@@ -70,8 +70,9 @@
           dataSizeString
         }})
         <template v-if="nDataPoints">
-          and found {{ nDataPoints }} data points:
+          and found {{ nDataPoints }} data points
         </template>
+        :
         <VList v-if="sortedExtensionTexts" :dense="true">
           <VListItem v-for="(text, i) in sortedExtensionTexts" :key="i">
             {{ text }}
@@ -247,16 +248,18 @@ export default {
           .getFilenames()
           .map(async f => [f, await this.fileManager.getNumberOfDataPoints(f)])
       )
-      this.sortedExtensionTexts = this.sortedExtensionCounts.map(([ext]) => {
+      this.sortedExtensionTexts = this.sortedExtensionCounts.map(([ext, c]) => {
         const re = new RegExp(`.+\\.${ext}`)
+        const files = pointsPerFile.filter(([f, _n]) => re.test(f))
         const shownFiles = _.take(
-          _.sortBy(
-            pointsPerFile.filter(([f, _n]) => re.test(f)),
-            ([_f, n]) => -n
-          ),
+          _.sortBy(files, ([_f, n]) => -n),
           showAtMost
         )
-        return shownFiles
+        const nPointsExt = _.sumBy(files, ([_f, n]) => n)
+        let text = `- ${c} ${ext === 'other' ? '' : '.'}${ext} `
+        text += nPointsExt > 0 ? `(${nPointsExt} data points) ` : ''
+        text += files.length > showAtMost ? 'including ' : ''
+        text += shownFiles
           .map(
             ([f, nPoints]) =>
               `${f.split('/').at(-1)} ${
@@ -266,6 +269,7 @@ export default {
               }`
           )
           .join(', ')
+        return text
       })
     }
   }
