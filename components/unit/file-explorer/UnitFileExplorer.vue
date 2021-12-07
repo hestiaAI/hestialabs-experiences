@@ -66,16 +66,20 @@
     <VCardTitle class="justify-center">Explore your files</VCardTitle>
     <div :class="miniWidthPaddingLeftClass">
       <VCardText>
-        Analysed {{ nFiles }} {{ nFiles === 1 ? 'file' : 'files' }} ({{
+        Analysed <b>{{ nFiles }}</b> {{ nFiles === 1 ? 'file' : 'files' }}(<b>{{
           dataSizeString
-        }})
+        }}</b
+        >)
         <template v-if="nDataPoints">
-          and found {{ nDataPoints.toLocaleString() }} data points
+          and found <b>{{ nDataPoints.toLocaleString() }}</b> data points
         </template>
         :
         <VList v-if="sortedExtensionTexts" :dense="true">
           <VListItem v-for="(text, i) in sortedExtensionTexts" :key="i">
-            {{ text }}
+            <VListItemIcon
+              ><VIcon>$vuetify.icons.mdiMinus</VIcon>
+            </VListItemIcon>
+            <VListItemContent>{{ text }}</VListItemContent>
           </VListItem>
         </VList>
       </VCardText>
@@ -268,10 +272,10 @@ export default {
               }`
           )
           .join(', ')
-        return `- ${c} ${ext === 'other' ? '' : '.'}${ext} ${
+        return ` ${c} ${ext === 'other' ? '' : '.'}${ext} ${
           nPointsExt > 0 ? `(${nPointsExt.toLocaleString()} data points)` : ''
         }${
-          files.length > showAtMost ? ' including' : ':'
+          files.length > showAtMost ? ' including: ' : ':'
         } ${topFilesDescription}`
       })
     }
