@@ -1,5 +1,8 @@
 import { JSONPath } from 'jsonpath-plus'
+// eslint-disable-next-line import/default
+import ItemsWorker from './database.worker.js'
 import db from '@/utils/sql'
+import { runWorker } from '@/utils/utils'
 
 export default async function databaseBuilder(fileManager) {
   await db.init()
@@ -32,37 +35,9 @@ export default async function databaseBuilder(fileManager) {
     path: '$.*.ad.adsUserData.adEngagements.engagements[*].impressionAttributes',
     json: engagementsFile
   })
-
-  const adsItems = []
-  const targetingItems = []
-  let j = 0
-  const files = [
-    { values: impressions, engagement: 0 },
-    { values: engagements, engagement: 1 }
-  ]
-  for (const file of files) {
-    file.values.forEach((v, i) => {
-      adsItems.push({
-        id: i,
-        tweetId: v.promotedTweetInfo?.tweetId ?? null,
-        advertiserName: v.advertiserInfo?.advertiserName ?? null,
-        time: v.impressionTime,
-        engagement: file.engagement
-      })
-      const criteria = JSONPath({
-        path: '$.matchedTargetingCriteria[*]',
-        json: v
-      })
-      criteria.forEach(criterion => {
-        targetingItems.push({
-          id: j++,
-          adId: i,
-          targetingType: criterion?.targetingType ?? null,
-          targetingValue: criterion?.targetingValue ?? null
-        })
-      })
-    })
-  }
+  const workerInput = { impressions, engagements }
+  const workerOutput = await runWorker(new ItemsWorker(), workerInput)
+  const { adsItems, targetingItems } = workerOutput
   db.insert('twitterAds', adsItems)
   db.insert('twitterCriteria', targetingItems)
 }
