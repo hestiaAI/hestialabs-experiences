@@ -71,7 +71,7 @@
     "regression": "^2.0.1",
     "rocketrml": "^1.11.2",
     "sha1": "^1.1.1",
-    "sparqlalgebrajs": "^3.0.3",
+    "sparqlalgebrajs": "^4.0.1",
     "sql.js": "^1.6.2",
     "unzipit": "^1.3.5",
     "vega": "^5.20.2",
