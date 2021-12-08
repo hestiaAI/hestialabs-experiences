@@ -42,7 +42,7 @@
     "*.{js,vue}": "npm run lint"
   },
   "dependencies": {
-    "@comunica/actor-init-sparql-rdfjs": "^1.22.0",
+    "@comunica/actor-init-sparql-rdfjs": "^1.22.3",
     "@comunica/logger-pretty": "^1.22.0",
     "@fast-csv/format": "^4.3.5",
     "@fast-csv/parse": "^4.3.6",
@@ -73,7 +73,7 @@
     "sha1": "^1.1.1",
     "sparqlalgebrajs": "^3.0.3",
     "sql.js": "^1.6.2",
-    "unzipit": "^1.3.5",
+    "unzipit": "^1.3.6",
     "vega": "^5.20.2",
     "vega-embed": "^6.18.2",
     "vega-lite": "^5.1.1",
