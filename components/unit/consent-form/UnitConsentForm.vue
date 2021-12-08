@@ -22,6 +22,7 @@
         />
         <BaseButtonDownloadData
           :data="encryptedZipFile"
+          :filename="filename"
           extension="zip"
           text="Download encrypted"
           :disabled="!zipReady"
@@ -161,6 +162,18 @@ export default {
     },
     zipSizeString() {
       return humanReadableFileSize(this.encryptedZipFile.length)
+    },
+    filename() {
+      const date = new Date(this.timestamp)
+      const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
+        date.getUTCMonth() + 1,
+        2
+      )}-${padNumber(date.getUTCDate(), 2)}`
+      const filename = `${this.key}_${yearMonthDay}_${padNumber(
+        date.getUTCHours(),
+        2
+      )}:${padNumber(date.getUTCMinutes(), 2)}_UTC.zip`
+      return filename
     }
   },
   watch: {
@@ -254,20 +267,11 @@ export default {
       // Programmatically create the form data
       // Names must correspond to the dummy form defined in /static/export-data-form-dummy.html
       const formData = new FormData()
-      const date = new Date(this.timestamp)
-      const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
-        date.getUTCMonth() + 1,
-        2
-      )}-${padNumber(date.getUTCDate(), 2)}`
-      const filename = `${this.key}_${yearMonthDay}_${padNumber(
-        date.getUTCHours(),
-        2
-      )}:${padNumber(date.getUTCMinutes(), 2)}.zip`
       formData.append('form-name', 'export-data')
-      const zip = new File([this.encryptedZipFile], filename, {
+      const zip = new File([this.encryptedZipFile], this.filename, {
         type: 'application/zip'
       })
-      formData.append('encrypted-zip', zip, filename)
+      formData.append('encrypted-zip', zip, this.filename)
       fetch('/', {
         method: 'POST',
         body: formData
