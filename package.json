@@ -52,7 +52,7 @@
     "@uppy/core": "^2.0.2",
     "@uppy/dashboard": "^2.0.2",
     "@uppy/drop-target": "^1.0.1",
-    "core-js": "^3.19.1",
+    "core-js": "^3.19.3",
     "crossfilter2": "^1.5.4",
     "d3": "^7.1.1",
     "d3-axis": "^3.0.0",
