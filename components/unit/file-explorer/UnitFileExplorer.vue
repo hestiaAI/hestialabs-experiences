@@ -6,7 +6,7 @@
       :mini-variant-width="miniWidth"
       absolute
       permanent
-      width="100%"
+      width="80%"
     >
       <template #prepend>
         <VListItem class="px-2">
@@ -23,6 +23,20 @@
         <VListItem v-if="selectable && !mini">
           Size of selected files: {{ selectionSizeString }}
         </VListItem>
+        <VListItem v-if="!mini">
+          <VTextField
+            v-model="search"
+            label="Search for files"
+            placeholder="Enter part of a file name..."
+            clearable
+            hide-details
+            prepend-icon="$vuetify.icons.mdiMagnify"
+            class="my-4 pr-3"
+            style="max-width: 500px"
+            outlined
+            dense
+          />
+        </VListItem>
       </template>
 
       <div :style="drawerMiniFileLabelStyle" class="drawer-mini-file-label">
@@ -30,18 +44,6 @@
       </div>
 
       <div :class="miniWidthPaddingLeftClass">
-        <VTextField
-          v-model="search"
-          label="Search files"
-          placeholder="Type..."
-          clearable
-          hide-details
-          prepend-icon="$vuetify.icons.mdiMagnify"
-          class="my-4 pr-3"
-          style="max-width: 500px"
-          outlined
-          dense
-        />
         <VTreeview
           v-model="selectedFiles"
           dense
@@ -66,20 +68,21 @@
     <VCardTitle class="justify-center">Explore your files</VCardTitle>
     <div :class="miniWidthPaddingLeftClass">
       <VCardText>
-        Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (
-        <b>{{ dataSizeString }} </b>)
+        Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (<b>{{
+          dataSizeString
+        }}</b
+        >)
         <template v-if="nDataPoints">
-          and found <b>{{ nDataPoints.toLocaleString() }}</b> data points
+          and found <b>{{ nDataPoints.toLocaleString() }}</b> datapoints
         </template>
         :
-        <VList v-if="sortedExtensionTexts" :dense="true">
-          <VListItem v-for="(text, i) in sortedExtensionTexts" :key="i">
-            <VListItemIcon>
-              <VIcon>$vuetify.icons.mdiMinus</VIcon>
-            </VListItemIcon>
-            <VListItemContent>{{ text }}</VListItemContent>
-          </VListItem>
-        </VList>
+        <ul v-if="sortedExtensionTexts">
+          <li
+            v-for="(text, i) in sortedExtensionTexts"
+            :key="i"
+            v-html="text"
+          />
+        </ul>
       </VCardText>
       <VCardText>
         <template v-if="filename">
@@ -244,6 +247,8 @@ export default {
         if (!containers.has(item?.type)) {
           this.selectedItem = item
         }
+      } else {
+        this.selectedItem = {}
       }
     },
     async setNumberOfDataPoints() {
@@ -273,24 +278,28 @@ export default {
         const topFilesDescription = shownFiles
           .map(
             ([f, nPoints]) =>
-              `${f} ${
+              `<em>${f}</em>${
                 nPoints === 0
                   ? ''
-                  : `(${nPoints.toLocaleString()} data ${plurify(
-                      'point',
+                  : ` (${nPoints.toLocaleString()} ${plurify(
+                      ext === 'txt' ? 'line' : 'datapoint',
                       nPoints
                     )})`
               }`
           )
           .join(', ')
-        return ` ${c} ${ext === 'other' ? '' : '.'}${ext}${
-          nPointsExt > 0 ? ` (${nPointsExt.toLocaleString()} data points)` : ''
+        return `<b>${c} ${plurify(
+          ext === 'other' ? 'other format' : ext.toUpperCase(),
+          c
+        )}</b>${
+          nPointsExt > 0
+            ? ` (${nPointsExt.toLocaleString()} ${plurify(
+                ext === 'txt' ? 'line' : 'datapoint',
+                nPointsExt
+              )})`
+            : ':'
         }${
-          files.length > showAtMost
-            ? ' including: '
-            : ext !== 'other'
-            ? ':'
-            : ` ${plurify('format', c)}`
+          files.length > showAtMost ? ' including: ' : ''
         } ${topFilesDescription}`
       })
     }
