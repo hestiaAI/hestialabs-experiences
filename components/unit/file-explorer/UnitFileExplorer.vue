@@ -1,16 +1,24 @@
 <template>
-  <VCard class="pa-2 my-6 explorer" :min-height="height" height="auto">
+  <VCard
+    v-click-outside="{
+      handler: () => (mini = true),
+      closeConditional: () => !mini
+    }"
+    class="pa-2 my-6 explorer"
+    :min-height="height"
+    height="auto"
+  >
     <VNavigationDrawer
       ref="drawer"
       :mini-variant.sync="mini"
       :mini-variant-width="miniWidth"
       absolute
       permanent
-      width="80%"
+      width="100%"
     >
       <template #prepend>
         <VListItem class="px-2">
-          <VBtn icon @click.stop="mini = !mini">
+          <VBtn icon @click="mini = !mini">
             <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
           </VBtn>
 
