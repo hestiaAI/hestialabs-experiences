@@ -21,6 +21,7 @@
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
   "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
+  "formSizeLimitMegaBytes": 30,
   "consent": {
     "default": [
       {

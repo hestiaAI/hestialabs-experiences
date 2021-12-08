@@ -13,6 +13,17 @@ This directory contains the configuration files linked to each deployement. They
     */
   "hashtags": ["dataprivacy", "hestialabs"],
   /**
+    * The maximum size in MB authorized for sending the form.
+    * @type Number
+    */
+  "formSizeLimitMegaBytes": 30,
+  /**
+    * A link to a filedrop service. In case the size limit is exceeded,
+    * the user is invited to download the ZIP and use this link.
+    * @type String
+    */
+  "filedrop": "https://example.com/filedrop",
+  /**
     * The public key used to encrypt the zip containing the consent log and results.
     * @type String
     */

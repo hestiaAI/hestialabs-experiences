@@ -32,12 +32,19 @@
           :status="sentStatus"
           :error="sentError"
           :progress="sentProgress"
-          :disabled="!zipReady || (sentStatus && !sentError)"
+          :disabled="!zipReady || (sentStatus && !sentError) || tooBig"
           @click="sendForm"
         />
         <p v-if="zipReady">ZIP size: {{ zipSizeString }}</p>
-        <p v-if="sentError">
-          Sending failed. Please download the file and send it by email.
+        <p v-if="(zipReady && tooBig) || sentError">
+          <template v-if="sentError">Sending failed. Please</template>
+          <template v-else>Since this is a large file, please</template>
+          download it and
+          <a v-if="config.filedrop" :href="config.filedrop" target="_blank"
+            >drop it here</a
+          >
+          <template v-else>send it by email</template>
+          instead.
         </p>
         <p v-if="sentStatus && !sentError">Form successfully submitted.</p>
         <p v-if="missingRequired">Some required fields are not filled in.</p>
@@ -55,6 +62,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import JSZip from 'jszip'
 import FileManager from '~/utils/file-manager.js'
 import { humanReadableFileSize } from '~/manifests/utils'
@@ -105,6 +113,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['config']),
     zipReady() {
       return this.generateStatus && !this.generateError
     },
@@ -174,6 +183,14 @@ export default {
         2
       )}:${padNumber(date.getUTCMinutes(), 2)}_UTC.zip`
       return filename
+    },
+    tooBig() {
+      const limit = this.config.formSizeLimitMegaBytes
+      if (!limit) {
+        return false
+      }
+      const megabyte = 1048576
+      return this.encryptedZipFile.length > limit * megabyte
     }
   },
   watch: {
