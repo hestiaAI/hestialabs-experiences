@@ -78,7 +78,7 @@
     "vega-embed": "^6.18.2",
     "vega-lite": "^5.1.1",
     "vue-social-sharing": "^3.0.8",
-    "vuetify": "^2.5.8",
+    "vuetify": "^2.6.1",
     "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
