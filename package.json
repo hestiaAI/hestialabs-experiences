@@ -82,7 +82,7 @@
     "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.15.4",
+    "@babel/eslint-parser": "^7.16.3",
     "@babel/preset-env": "^7.16.4",
     "@mdi/js": "^6.1.95",
     "@nuxtjs/eslint-config": "^7.0.0",
