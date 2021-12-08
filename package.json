@@ -42,7 +42,7 @@
     "*.{js,vue}": "npm run lint"
   },
   "dependencies": {
-    "@comunica/actor-init-sparql-rdfjs": "^1.22.0",
+    "@comunica/actor-init-sparql-rdfjs": "^1.22.3",
     "@comunica/logger-pretty": "^1.22.0",
     "@fast-csv/format": "^4.3.5",
     "@fast-csv/parse": "^4.3.6",
