@@ -194,4 +194,79 @@ async function timedObservationViewer(fileManager, manifest) {
   return { headers, items }
 }
 
-export { genericDateViewer, timedObservationViewer }
+const isValidLat = num => isFinite(num) && Math.abs(num) <= 90
+const isValidLon = num => isFinite(num) && Math.abs(num) <= 180
+const namesLat = ['lat', 'latitude']
+const namesLon = ['lon', 'lng', 'longitude']
+function extractJsonLocations({ items }) {
+  console.log(items)
+  return []
+}
+function extractCsvLocations({ items }) {
+  if (items.length === 0) return []
+  let latHeader = null
+  let lonHeader = null
+  Object.keys(items[0]).forEach(h => {
+    // For each header, check if the name include a name associated with latitude
+    // and if a subset (here first 100) of data points are all valid Latitude
+    // Start verification with latitude since it is less permissive
+    const sample = items.slice(0, 100)
+    const hLw = h.toLowerCase()
+    if (sample.every(i => i[h] === '')) {
+      // continue to next iteration if all sample values are empty string
+    } else if (
+      namesLat.some(name => hLw.includes(name)) &&
+      sample.every(i => isValidLat(i[h]))
+    ) {
+      latHeader = h
+    } else if (
+      namesLon.some(name => hLw.includes(name)) &&
+      sample.every(i => isValidLon(i[h]))
+    ) {
+      lonHeader = h
+    }
+  })
+
+  // If we didnt find a column for lat and lon return empty
+  if (latHeader === null || lonHeader === null) return []
+  console.log(latHeader, lonHeader)
+  return items.map(i => {
+    return {
+      latitude: i[latHeader],
+      longitude: i[lonHeader],
+      infos: (({ latHeader, lonHeader, ...rest }) => rest)(i)
+    }
+  })
+}
+
+async function genericLocationViewer(fileManager) {
+  const filenames = fileManager.getFilenames()
+
+  const csvFilenames = filenames.filter(name => name.endsWith('.csv'))
+  const csvItems = await Promise.all(
+    csvFilenames.map(async name => [name, await fileManager.getCsvItems(name)])
+  )
+
+  const jsonFilenames = filenames.filter(name => /\.js(:?on)?$/.test(name))
+  const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
+
+  const csvEntries = csvItems.flatMap(([name, csv]) =>
+    extractCsvLocations(csv).map(o => ({ ...o, filename: name }))
+  )
+  const jsonEntries = Object.entries(jsonTexts).flatMap(([name, json]) => {
+    try {
+      return extractJsonLocations(JSON.parse(json)).map(o => ({
+        ...o,
+        filename: name
+      }))
+    } catch (e) {
+      console.error(e)
+      return []
+    }
+  })
+  const items = [...jsonEntries, ...csvEntries]
+  const headers = ['latitude', 'longitude', 'infos']
+  return { headers, items }
+}
+
+export { genericDateViewer, timedObservationViewer, genericLocationViewer }
