@@ -12,8 +12,10 @@ import {
   mdiXml
 } from '@mdi/js'
 import _ from 'lodash'
-import getCsvHeadersAndItems from '~/utils/csv'
-import itemifyJSON, { nJsonPoints } from '~/utils/json'
+import CsvWorker from '~/utils/csv.worker.js'
+import { nJsonPoints } from '~/utils/json'
+import JsonWorker from '~/utils/json.worker.js'
+import { runWorker } from '@/utils/utils'
 
 const filetype2icon = {
   folder: mdiFolder,
@@ -226,7 +228,9 @@ export default class FileManager {
   async getCsvItems(filePath) {
     if (!_.has(this.#csvItems, filePath)) {
       const text = await this.getPreprocessedText(filePath)
-      this.#csvItems[filePath] = await getCsvHeadersAndItems(text)
+      const items = await runWorker(new CsvWorker(), text)
+      // const items = await getCsvHeadersAndItems(text)
+      this.#csvItems[filePath] = items
     }
     return this.#csvItems[filePath]
   }
@@ -239,7 +243,9 @@ export default class FileManager {
   async getJsonItems(filePath) {
     if (!_.has(this.#jsonItems, filePath)) {
       const text = await this.getPreprocessedText(filePath)
-      this.#jsonItems[filePath] = itemifyJSON(text)
+      const items = await runWorker(new JsonWorker(), text)
+      this.#jsonItems[filePath] = items
+      // this.#jsonItems[filePath] = itemifyJSON(text)
     }
     return this.#jsonItems[filePath]
   }
