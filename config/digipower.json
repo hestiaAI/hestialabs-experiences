@@ -32,7 +32,9 @@
     "default": [
       {
         "title": "SHARE MY #DIGIPOWER DATA",
-        "description": "With this form, you can register your consent, and optionally share additional data, in line with the SITRA #digipower contract."
+        "description": "With this form, you can register your consent, and optionally share additional data, in line with the SITRA #digipower contract. Please enter your name:",
+        "type": "input",
+        "name": "Name"
       },
       {
         "title": "WHICH DATA SHOULD BE SHARED?",
