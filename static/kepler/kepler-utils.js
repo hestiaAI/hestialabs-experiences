@@ -62,11 +62,37 @@ function extractDataId(config) {
   return dataId || 'the-data-id'
 }
 
+/**
+ * Add data to the map and configure it.
+ *
+ * @param store the redux store
+ * @param {Object} data the config and data to display
+ *
+ * Data has the type:
+ *
+ *  {config?: Object, rawCsv?: String, keplerData?: Object}
+ *
+ * config:
+ * The configuration of layers and filters.
+ * A config can be obtained from a map at https://kepler.gl/demo
+ * by exporting it as json.
+ *
+ * keplerData:
+ * Locations in the format kepler accepts:
+ *   {data: {fields: Array<{name: String}>, rows: Array<Array>}}
+ * According to the doc at https://docs.kepler.gl/docs/api-reference/actions/actions#adddatatomap
+ *
+ *
+ * rawCsv:
+ * A csv string, for example the trips from your uber data.
+ * This argument is only used if there is no keplerData.
+ */
 export function update(data, store) {
-  const { config, rawCsv } = data
+  const { config, rawCsv, keplerData } = data
+  const inputData = keplerData || KeplerGl.processCsvData(rawCsv)
   const dataset = {
     info: { id: extractDataId(config), label: 'trips' },
-    data: KeplerGl.processCsvData(rawCsv)
+    data: inputData
   }
   let parsedConfig = {}
   if (config) {
