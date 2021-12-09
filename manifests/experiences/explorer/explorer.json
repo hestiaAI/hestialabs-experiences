@@ -19,7 +19,7 @@
       "key": "genericLocationViewer",
       "customPipeline": "genericLocationViewer",
       "visualization": "ChartViewGenericLocationViewer.vue",
-      "showTable": true,
+      "showTable": false,
       "title": "Location observations",
       "text": "See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location."
     }
