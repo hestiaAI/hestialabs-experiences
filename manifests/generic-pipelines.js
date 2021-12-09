@@ -196,21 +196,67 @@ async function timedObservationViewer(fileManager, manifest) {
 
 const isValidLat = num => isFinite(num) && Math.abs(num) <= 90
 const isValidLon = num => isFinite(num) && Math.abs(num) <= 180
-const namesLat = ['lat', 'latitude']
-const namesLon = ['lon', 'lng', 'longitude']
-function extractJsonLocations({ items }) {
-  console.log(items)
-  return []
+const namesLat = ['lat']
+const namesLon = ['lon', 'lng']
+
+function extractJsonLocations(items) {
+  function recurse(node, path) {
+    if (isObject(node)) {
+      // Object
+
+      // First check if there is possible lat and lon at this level
+      let latHeader = null
+      let lonHeader = null
+      Object.entries(node).forEach(([k, v]) => {
+        const kLw = k.toLowerCase()
+        // Specific to Google format, lat and lon are multiplied by 1e7
+        if (kLw.includes('e7')) node[k] = v = v * 1e-7
+        if (namesLat.some(name => kLw.includes(name)) && isValidLat(v))
+          latHeader = k
+        else if (namesLon.some(name => kLw.includes(name)) && isValidLon(v))
+          lonHeader = k
+      })
+
+      // If there is not a lat and lon at this level
+      // continue to recurse and add current leaf to description
+      if (latHeader === null || lonHeader === null) {
+        return Object.entries(node).flatMap(([k, v]) => {
+          return recurse(v, path.concat(k))
+        })
+      }
+      // If there is a lat and lon at this level
+      // return current object with lat lon and description
+      // We do not search for lat lon further down as in most case
+      // the highest level location is the most important one
+      return [
+        {
+          latitude: node[latHeader],
+          longitude: node[lonHeader],
+          path: path.join('/'),
+          description: _.omit(node, [latHeader, lonHeader])
+        }
+      ]
+    } else if (Array.isArray(node)) {
+      // Array
+      return node.flatMap(el => recurse(el, path))
+    } else {
+      // It's a leaf
+      return []
+    }
+  }
+  const result = recurse(items, [])
+  return result
 }
+
 function extractCsvLocations({ items }) {
   if (items.length === 0) return []
   let latHeader = null
   let lonHeader = null
+  const sample = items.slice(0, 100)
   Object.keys(items[0]).forEach(h => {
     // For each header, check if the name include a name associated with latitude
     // and if a subset (here first 100) of data points are all valid Latitude
     // Start verification with latitude since it is less permissive
-    const sample = items.slice(0, 100)
     const hLw = h.toLowerCase()
     if (sample.every(i => i[h] === '')) {
       // continue to next iteration if all sample values are empty string
@@ -229,12 +275,13 @@ function extractCsvLocations({ items }) {
 
   // If we didnt find a column for lat and lon return empty
   if (latHeader === null || lonHeader === null) return []
-  console.log(latHeader, lonHeader)
+
   return items.map(i => {
     return {
       latitude: i[latHeader],
       longitude: i[lonHeader],
-      infos: (({ latHeader, lonHeader, ...rest }) => rest)(i)
+      path: '',
+      description: _.omit(i, [latHeader, lonHeader]) // This can be slow, consider to remove it if not needed
     }
   })
 }
@@ -249,7 +296,6 @@ async function genericLocationViewer(fileManager) {
 
   const jsonFilenames = filenames.filter(name => /\.js(:?on)?$/.test(name))
   const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
-
   const csvEntries = csvItems.flatMap(([name, csv]) =>
     extractCsvLocations(csv).map(o => ({ ...o, filename: name }))
   )
@@ -265,7 +311,7 @@ async function genericLocationViewer(fileManager) {
     }
   })
   const items = [...jsonEntries, ...csvEntries]
-  const headers = ['latitude', 'longitude', 'infos']
+  const headers = ['filename', 'latitude', 'longitude', 'path', 'description']
   return { headers, items }
 }
 

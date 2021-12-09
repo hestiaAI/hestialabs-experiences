@@ -19,17 +19,17 @@ export default {
       results: [],
       header: [
         { text: 'File', value: 'filename' },
+        { text: 'Path', value: 'path' },
         { text: 'Latitude', value: 'latitude' },
         { text: 'Longitude', value: 'longitude' },
-        { text: 'Description', value: 'infos' }
+        { text: 'Description', value: 'description' }
       ]
     }
   },
   methods: {
     drawViz() {
       this.results = this.values
-      this.results.forEach(i => (i.infos = JSON.stringify(i.infos)))
-      console.log(this.values)
+      this.results.forEach(i => (i.description = JSON.stringify(i.description)))
     }
   }
 }
