@@ -63,7 +63,15 @@ export default {
       message: '',
       extension: 'csv',
       search: '',
-      tableHeaders: this.headers
+      tableHeaders: []
+    }
+  },
+  watch: {
+    data: {
+      immediate: true,
+      handler(data) {
+        this.tableHeaders = this.headers
+      }
     }
   },
   computed: {
