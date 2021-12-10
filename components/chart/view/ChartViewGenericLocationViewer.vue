@@ -65,7 +65,6 @@ export default {
         },
         config: keplerConfig
       }
-      console.log(this.myKeplerInput)
     }
   }
 }
