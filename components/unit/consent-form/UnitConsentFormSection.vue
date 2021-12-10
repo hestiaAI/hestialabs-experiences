@@ -43,10 +43,7 @@
         <VCard>
           <VCardTitle class="text-h5 grey lighten-2"> Select files </VCardTitle>
 
-          <UnitFileExplorer
-            v-bind="{ fileManager, selectable: true }"
-            style="height: 300px"
-          />
+          <UnitFileExplorer v-bind="{ fileManager, selectable: true }" />
 
           <VDivider></VDivider>
 

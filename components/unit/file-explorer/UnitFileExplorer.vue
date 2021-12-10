@@ -13,6 +13,7 @@
         --cursor-style: wait !important;
       }
     </style>
+    <!-- https://github.com/vuetifyjs/vuetify/issues/5617 -->
     <VNavigationDrawer
       ref="drawer"
       :mini-variant.sync="mini"
@@ -20,6 +21,10 @@
       absolute
       permanent
       width="100%"
+      style="
+        transform: translateX(0) !important;
+        visibility: visible !important;
+      "
     >
       <template #prepend>
         <VListItem class="px-2">
