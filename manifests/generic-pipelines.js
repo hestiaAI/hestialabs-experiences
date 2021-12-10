@@ -230,8 +230,8 @@ function extractJsonLocations(items) {
       // the highest level location is the most important one
       return [
         {
-          latitude: node[latHeader],
-          longitude: node[lonHeader],
+          latitude: +node[latHeader],
+          longitude: +node[lonHeader],
           path: path.join('/'),
           description: _.omit(node, [latHeader, lonHeader])
         }
@@ -278,8 +278,8 @@ function extractCsvLocations({ items }) {
 
   return items.map(i => {
     return {
-      latitude: i[latHeader],
-      longitude: i[lonHeader],
+      latitude: +i[latHeader],
+      longitude: +i[lonHeader],
       path: '',
       description: _.omit(i, [latHeader, lonHeader]) // This can be slow, consider to remove it if not needed
     }
