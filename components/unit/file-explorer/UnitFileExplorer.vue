@@ -287,7 +287,7 @@ export default {
           .map(async f => [f, await this.fileManager.getNumberOfDataPoints(f)])
       )
       this.sortedExtensionTexts = this.sortedExtensionCounts.map(([ext, c]) => {
-        const re = new RegExp(`.+\\.${ext}`)
+        const re = new RegExp(`.+\\.${ext}$`)
         const files = pointsPerFile.filter(([f, _n]) => re.test(f))
         const shownFiles = _.take(
           _.sortBy(files, ([_f, n]) => -n),
