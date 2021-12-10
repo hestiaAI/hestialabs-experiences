@@ -4,9 +4,9 @@
 
 <script>
 import 'share-api-polyfill'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
-async function share(shareData, polyfillOptions) {
+async function navigatorShare(shareData, polyfillOptions) {
   try {
     await navigator.share(shareData, polyfillOptions)
   } catch (err) {
@@ -27,30 +27,103 @@ export default {
     text: {
       type: String,
       default: ''
+    },
+    files: {
+      type: Array[File],
+      default: () => []
     }
   },
-  computed: mapGetters(),
+  computed: {
+    ...mapState(['config']),
+    ...mapGetters(['appName', 'manifest']),
+    manifestTitle() {
+      const { title } = this.manifest(this.$route)
+      return title
+    },
+    hashtags() {
+      const { manifestTitle } = this
+      const hashtags = [...(this.config.hashtags || ['hestialabs'])]
+      if (manifestTitle) {
+        hashtags.push(manifestTitle)
+      }
+      return hashtags
+    },
+    titleToShare() {
+      const { title, manifestTitle } = this
+      if (title) {
+        // use prop when provided
+        return title
+      }
+      if (manifestTitle) {
+        return `${this.appName}: ${manifestTitle}`
+      }
+      return this.appName
+    },
+    quoteToShare() {
+      const { text, manifestTitle } = this
+      if (text) {
+        // use prop when provided
+        return text
+      }
+      let textToShare = 'Analyze the data collected on you'
+      if (manifestTitle) {
+        textToShare += ` by ${manifestTitle}`
+      }
+      return `${textToShare}.`
+    },
+    textToShare() {
+      return `${this.quoteToShare} ${this.hashtags.map(h => `#${h}`).join(' ')}`
+    }
+  },
   methods: {
     async share() {
-      const { title, text, hashtags, via } = this
+      const {
+        hashtags,
+        titleToShare: title,
+        quoteToShare,
+        textToShare,
+        files
+      } = this
 
-      const url = this.$url()
+      if (
+        files.length &&
+        !(navigator.canShare && navigator.canShare({ files }))
+      ) {
+        throw new Error('Your system does not support sharing files')
+      }
 
-      await share(
+      let text = quoteToShare
+      if (navigator.canShare && navigator.canShare({ text })) {
+        // include hashtags for Web Share API
+        text = textToShare
+      }
+
+      let url = this.$url()
+      if (process.env.NODE_ENV === 'development') {
+        url = `https://experiences.hestialabs.org${this.$route.path}`
+      }
+
+      const webShareData = {
+        title,
+        text,
+        url,
+        files
+      }
+
+      await navigatorShare(
         {
-          title,
-          text,
-          quote: text,
-          url,
-          // options for share-api-polyfill:
+          // Web Share Api options
+          ...webShareData,
+
+          // share-api-polyfill options
+          hashtag: 'hestialabs',
           hashtags,
-          via
+          via: 'HestiaLabs'
           // fbId enables sharing with Facebook Messenger
           // fbId: '?'
         },
         {
-          // disable email, copy, sms, and messenger sharing
-          // if no text to share is provided
+          // disable text sharing with email, copy, sms, and messenger
           // since polyfill does not support text for these types
           email: !text,
           sms: !text,
