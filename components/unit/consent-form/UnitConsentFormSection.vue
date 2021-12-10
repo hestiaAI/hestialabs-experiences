@@ -23,15 +23,40 @@
         :value="section.keys[j]"
         @change="updateConsent"
       ></VCheckbox>
-      <VCheckbox
-        v-if="showDataExplorer"
-        v-model="includedResults"
-        :readonly="readonly"
-        dense
-        label="Selected files in file explorer"
-        value="file-explorer"
-        @change="updateConsent"
-      ></VCheckbox>
+
+      <p v-if="readonly" class="mb-4">
+        Individual files (<b>{{ selectedFiles.length }}</b> selected)
+      </p>
+      <VDialog v-else v-model="dialog" width="80%">
+        <template #activator="{ on }">
+          <div>
+            <span class="mr-2"
+              >Individual files (<b>{{ selectedFiles.length }}</b>
+              selected):</span
+            >
+            <BaseButton class="mb-4" text="Select files" v-on="on" />
+          </div>
+        </template>
+
+        <VDivider></VDivider>
+
+        <VCard>
+          <VCardTitle class="text-h5 grey lighten-2"> Select files </VCardTitle>
+
+          <UnitFileExplorer
+            v-bind="{ fileManager, selectable: true }"
+            style="height: 300px"
+          />
+
+          <VDivider></VDivider>
+
+          <VCardActions>
+            <VSpacer></VSpacer>
+            <VBtn color="primary" text @click="dialog = false"> Save </VBtn>
+          </VCardActions>
+        </VCard>
+      </VDialog>
+
       <VCheckbox
         v-for="(title, j) in section.additional"
         :key="`data-additional-${j}`"
@@ -97,6 +122,8 @@
 </template>
 
 <script>
+import FileManager from '~/utils/file-manager.js'
+
 export default {
   props: {
     section: {
@@ -118,13 +145,29 @@ export default {
     showDataExplorer: {
       type: Boolean,
       default: true
+    },
+    fileManager: {
+      type: FileManager,
+      required: true
     }
   },
   data() {
     return {
       selected: null,
       value: null,
-      includedResults: null
+      includedResults: null,
+      dialog: false
+    }
+  },
+  computed: {
+    key() {
+      return this.$route.params.key
+    },
+    selectedFiles() {
+      if (this.readonly) {
+        return Object.keys(this.fileManager.fileDict)
+      }
+      return this.$store.state.selectedFiles[this.key]
     }
   },
   created() {

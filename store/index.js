@@ -7,7 +7,7 @@ export const state = () => ({
   },
   manifestMap,
   power: false,
-  selectedFiles: {}
+  selectedFiles: Object.fromEntries(Object.keys(manifestMap).map(k => [k, []]))
 })
 
 export const getters = {
