@@ -2,54 +2,21 @@ import { posix } from 'path'
 import { JSONPath } from 'jsonpath-plus'
 import minimatch from 'minimatch'
 import Ajv from 'ajv'
+import { matchNormalized, findMatches } from './accessor'
+
 const ajv = new Ajv()
 const path = posix
 
 function findObjects(fileDict, accessor) {
   return Object.entries(fileDict)
-    .flatMap(([name, content]) => matchObjects(name, content, accessor))
+    .flatMap(([name, content]) => findMatches(name, content, accessor))
     .filter(found => !!found)
-}
-
-function matchObjects(fileName, fileContent, accessor) {
-  const { filePath, jsonPath, jsonSchema } = accessor
-  if (!filePath) {
-    throw new Error('filePath missing')
-  }
-  if (!jsonPath && jsonSchema) {
-    throw new Error('jsonPath missing')
-  }
-  if (jsonPath && typeof fileContent !== 'object') {
-    throw new Error('jsonPath requires fileContent of type object')
-  }
-  const fileMatches = matchNormalized(fileName, filePath)
-  if (!fileMatches) {
-    return null
-  }
-  if (!jsonPath) {
-    return [fileContent]
-  }
-  const found = JSONPath({ path: jsonPath, json: fileContent })
-  if (found.length === 0) {
-    return null
-  }
-  // TODO test jsonSchema validation
-  if (jsonSchema) {
-    const validate = ajv.compile(jsonSchema)
-    return found.filter(f => validate(f))
-  }
-  return found
 }
 
 function matchFiles(files, pattern) {
   return Object.entries(files).filter(([name]) =>
     matchNormalized(name, pattern)
   )
-}
-
-function matchNormalized(name, pattern) {
-  const normalizedPattern = path.normalize(pattern)
-  return minimatch(name, normalizedPattern)
 }
 
 test('normalize and match', () => {
@@ -75,21 +42,42 @@ test('find files', () => {
   expect(found[1][0]).toBe('/bambalam/rototo/woo.csv')
 })
 
-const mkA = (filePath, jsonPath) => ({ filePath, jsonPath })
+const mkA = (filePath, jsonPath, jsonSchema) => ({
+  filePath,
+  jsonPath,
+  jsonSchema
+})
 
 test('match objects', () => {
   const content = { fur: [{ s: 5 }, { s: 4 }] }
 
-  let found = matchObjects('/bo.c', content, mkA('**/bo.c'))
+  const schema = {
+    type: 'object',
+    properties: { s: { type: 'integer' } },
+    required: ['s']
+  }
+
+  let found = findMatches('/bo.c', content, mkA('**/bo.c'))
   expect(found[0]).toStrictEqual(content)
 
-  found = matchObjects('/bo.c', content, mkA('**/bo.c', '$.fur[0]'))
+  found = findMatches('/bo.c', content, mkA('**/bo.c', '$.fur[0]'))
   expect(found[0]).toStrictEqual({ s: 5 })
 
-  found = matchObjects('/ob.c', content, mkA('**/bo.c', '$.furn[0]'))
+  found = findMatches('/bo.c', content, mkA('**/bo.c', '$.fur[0]', schema))
+  expect(found[0]).toStrictEqual({ s: 5 })
+
+  const wrongSchema = {
+    type: 'object',
+    properties: { s: { type: 'string' } },
+    required: ['s']
+  }
+  found = findMatches('/bo.c', content, mkA('**/bo.c', '$.fur[0]', wrongSchema))
   expect(found).toStrictEqual(null)
 
-  found = matchObjects('/bo.c', content, mkA('**/bo.c', '$.furni[0]'))
+  found = findMatches('/ob.c', content, mkA('**/bo.c', '$.furn[0]'))
+  expect(found).toStrictEqual(null)
+
+  found = findMatches('/bo.c', content, mkA('**/bo.c', '$.furni[0]'))
   expect(found).toStrictEqual(null)
 })
 
@@ -119,7 +107,7 @@ test('jsonpath examples', () => {
 })
 
 test('ajv examples', () => {
-  const schema = {
+  const schema1 = {
     type: 'object',
     properties: {
       foo: { type: 'integer' },
@@ -129,10 +117,26 @@ test('ajv examples', () => {
     // additionalProperties: true
   }
 
-  const validate = ajv.compile(schema)
+  const validate1 = ajv.compile(schema1)
+  expect(validate1({ foo: 1, bul: 'tt', bar: 'abc' })).toBe(true)
+  expect(validate1({ foo: 1, bar: 'ABC' })).toBe(true)
+  expect(validate1({ foo: 1 })).toBe(true)
+  expect(validate1({ bar: 'ABC' })).toBe(false)
 
-  expect(validate({ foo: 1, bul: 'tt', bar: 'abc' })).toBe(true)
-  expect(validate({ foo: 1, bar: 'ABC' })).toBe(true)
-  expect(validate({ foo: 1 })).toBe(true)
-  expect(validate({ bar: 'ABC' })).toBe(false)
+  const schema2 = {
+    type: 'object',
+    properties: {
+      fur: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: { s: { type: 'integer' } },
+          required: ['s']
+        }
+      }
+    },
+    required: ['fur']
+  }
+  const validate2 = ajv.compile(schema2)
+  expect(validate2({ fur: [{ s: 5 }, { s: 4 }] })).toBe(true)
 })
