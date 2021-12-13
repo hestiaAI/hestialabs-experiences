@@ -25,9 +25,7 @@
     "explorer"
   ],
   "hashtags": ["dataprivacy", "hestialabs", "digipower"],
-  "formSizeLimitMegaBytes": 30,
   "filedrop": "https://drive.infomaniak.com/app/collaborate/193995/ca7c15c9-266c-4776-a319-b30514d57c00",
-  "publicKey": "710decd4e26312d3e7b02854fefe53cc1ef8d7b25e8f99bc6df956c1a526e144",
   "consent": {
     "default": [
       {
