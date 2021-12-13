@@ -49,7 +49,7 @@
 
           <VCardActions>
             <VSpacer></VSpacer>
-            <VBtn color="primary" text @click="dialog = false"> Save </VBtn>
+            <VBtn color="primary" text @click="dialog = false"> Close </VBtn>
           </VCardActions>
         </VCard>
       </VDialog>
