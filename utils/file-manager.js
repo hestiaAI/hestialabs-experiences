@@ -258,7 +258,7 @@ export default class FileManager {
   async findMatchingObjects(accessor) {
     const fileContentPromises = Object.keys(this.fileDict)
       .filter(filePath => matchNormalized(filePath, accessor.filePath))
-      .map(this.getJsonItems)
+      .map(filePath => this.getJsonItems(filePath))
     const fileContents = await Promise.all(fileContentPromises)
     return fileContents
       .map(content => findMatchesInContent(content, accessor))
