@@ -12,6 +12,7 @@ import {
   mdiXml
 } from '@mdi/js'
 import _ from 'lodash'
+import { matchNormalized, findMatchesInContent } from './accessor'
 import CsvWorker from '~/utils/csv.worker.js'
 import { nJsonPoints } from '~/utils/json'
 import JsonWorker from '~/utils/json.worker.js'
@@ -248,6 +249,21 @@ export default class FileManager {
       // this.#jsonItems[filePath] = itemifyJSON(text)
     }
     return this.#jsonItems[filePath]
+  }
+
+  /**
+   * Return all matching objects from json files.
+   * @param {Object} accessor
+   */
+  async findMatchingObjects(accessor) {
+    const fileContentPromises = Object.keys(this.fileDict)
+      .filter(filePath => matchNormalized(filePath, accessor.filePath))
+      .map(this.getJsonItems)
+    const fileContents = await Promise.all(fileContentPromises)
+    return fileContents
+      .map(content => findMatchesInContent(content, accessor))
+      .filter(m => m)
+      .flatMap()
   }
 
   /**
