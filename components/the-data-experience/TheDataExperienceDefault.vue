@@ -121,11 +121,13 @@ export default {
     },
     consentForm() {
       const consent = this.$store.state.config.consent
-      const key = this.$route.params.key
-      if (key in consent) {
-        return consent[key]
-      } else if ('default' in consent) {
-        return consent.default
+      if (consent) {
+        const key = this.$route.params.key
+        if (key in consent) {
+          return consent[key]
+        } else if ('default' in consent) {
+          return consent.default
+        }
       }
       return null
     }
