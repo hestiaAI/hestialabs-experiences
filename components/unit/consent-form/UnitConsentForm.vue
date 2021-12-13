@@ -21,32 +21,12 @@
           @click="generateZIP"
         />
         <BaseButtonDownloadData
-          :data="encryptedZipFile"
+          :data="zipFile"
           :filename="filename"
           extension="zip"
-          text="Download encrypted"
+          text="Download"
           :disabled="!zipReady"
         />
-        <BaseButton
-          text="Send encrypted"
-          :status="sentStatus"
-          :error="sentError"
-          :progress="sentProgress"
-          :disabled="!zipReady || (sentStatus && !sentError) || tooBig"
-          @click="sendForm"
-        />
-        <p v-if="zipReady">ZIP size: {{ zipSizeString }}</p>
-        <p v-if="(zipReady && tooBig) || sentError">
-          <template v-if="sentError">Sending failed. Please</template>
-          <template v-else>Since this is a large file, please</template>
-          download it and
-          <a v-if="config.filedrop" :href="config.filedrop" target="_blank"
-            >drop it here</a
-          >
-          <template v-else>send it by email</template>
-          instead.
-        </p>
-        <p v-if="sentStatus && !sentError">Form successfully submitted.</p>
         <p v-if="missingRequired">Some required fields are not filled in.</p>
         <p v-if="missingRequiredDataProcessing.length > 0">
           Some experience required for sending this form has not been ran:
@@ -55,6 +35,13 @@
         <p v-if="missingRequiredData.length > 0">
           Some data required for sending this form has not been included:
           {{ missingRequiredData.join(', ') }}.
+        </p>
+        <p v-if="zipReady">
+          Please download the ZIP file containing the results and
+          <a v-if="config.filedrop" :href="config.filedrop" target="_blank"
+            >drop it here</a
+          >
+          <template v-else>send it by email</template>.
         </p>
       </VCardText>
     </VCard>
@@ -65,10 +52,7 @@
 import { mapState } from 'vuex'
 import JSZip from 'jszip'
 import FileManager from '~/utils/file-manager.js'
-import { humanReadableFileSize } from '~/manifests/utils'
 import { padNumber } from '~/utils/utils'
-
-const _sodium = require('libsodium-wrappers')
 
 // In the case of changes that would break the import, this version number must be incremented
 // and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
@@ -102,13 +86,9 @@ export default {
       consent: JSON.parse(JSON.stringify(this.consentForm)),
       includedResults: [],
       zipFile: [],
-      encryptedZipFile: [],
       generateStatus: false,
       generateError: false,
       generateProgress: false,
-      sentStatus: false,
-      sentError: false,
-      sentProgress: false,
       timestamp: 0
     }
   },
@@ -169,9 +149,6 @@ export default {
     key() {
       return this.$route.params.key
     },
-    zipSizeString() {
-      return humanReadableFileSize(this.encryptedZipFile.length)
-    },
     filename() {
       const date = new Date(this.timestamp)
       const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
@@ -213,9 +190,6 @@ export default {
       // Copy included results preset
       section.includedResults = section.includedResults ?? []
       this.includedResults = section.includedResults ?? []
-    },
-    switchForm() {
-      this.showForm = !this.showForm
     },
     async generateZIP() {
       this.resetStatus()
@@ -263,44 +237,8 @@ export default {
       const content = await zip.generateAsync({ type: 'uint8array' })
       this.zipFile = content
 
-      // Encrypt the zip
-      await _sodium.ready
-      const sodium = _sodium
-
-      const ciphertext = sodium.crypto_box_seal(
-        content,
-        sodium.from_hex(this.$store.state.config.publicKey)
-      )
-
-      this.encryptedZipFile = ciphertext
       this.generateStatus = true
       this.generateProgress = false
-    },
-    sendForm() {
-      this.sentStatus = false
-      this.sentError = false
-      this.sentProgress = true
-
-      // Programmatically create the form data
-      // Names must correspond to the dummy form defined in /static/export-data-form-dummy.html
-      const formData = new FormData()
-      formData.append('form-name', 'export-data')
-      const zip = new File([this.encryptedZipFile], this.filename, {
-        type: 'application/zip'
-      })
-      formData.append('encrypted-zip', zip, this.filename)
-      fetch('/', {
-        method: 'POST',
-        body: formData
-      })
-        .then(() => {
-          this.sentStatus = true
-          this.sentProgress = false
-        })
-        .catch(error => {
-          console.error(error)
-          this.sentError = true
-        })
     },
     updateConsent({ index, selected, value, includedResults }) {
       const section = this.consent[index]

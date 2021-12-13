@@ -60,7 +60,6 @@
     "d3-sankey": "^0.12.3",
     "d3-shape": "^3.0.1",
     "dc": "^4.2.7",
-    "file-saver": "^2.0.5",
     "jsonpath-plus": "^6.0.1",
     "jszip": "^3.7.1",
     "libsodium-wrappers": "^0.7.9",
