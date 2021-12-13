@@ -1,37 +1,15 @@
 <template>
   <div>
-    <h2>Key Generation</h2>
-    <p>
-      This step only needs to be done once. Copy the public key in the config
-      and store the secret key in a safe place.
-    </p>
-    <BaseButton text="Generate keys" @click="generateKeys" />
-
     <h2 class="mt-6">Import</h2>
     <p>
-      Either provide a plaintext ZIP, or an encrypted ZIP along with the
-      corresponding secret key.
+      Please provide a ZIP file containing exported results and the associated
+      consent form.
     </p>
-    <VFileInput
-      v-model="inputZIP"
-      label="Encrypted or plaintext ZIP file"
-    ></VFileInput>
-    <VCheckbox v-model="decrypt" label="Decrypt"></VCheckbox>
-    <VFileInput
-      v-model="secretKey"
-      label="Secret Key"
-      :disabled="!decrypt"
-    ></VFileInput>
+    <VFileInput v-model="inputZIP" label="ZIP file"></VFileInput>
     <BaseButton
       text="Import"
       v-bind="{ status, error, progress, disabled: !inputZIP }"
       @click="importZIP"
-    />
-    <BaseButtonDownloadData
-      :data="outputZIP"
-      extension="zip"
-      text="Download plaintext"
-      :disabled="!status || error"
     />
     <p v-if="error">{{ message }}</p>
     <template v-if="status && !error">
@@ -120,18 +98,12 @@
 
 <script>
 import JSZip from 'jszip'
-import FileSaver from 'file-saver'
 import FileManager from '~/utils/file-manager'
-
-const _sodium = require('libsodium-wrappers')
 
 export default {
   data() {
     return {
-      secretKey: null,
       inputZIP: null,
-      decrypt: false,
-      outputZIP: null,
       status: false,
       error: false,
       progress: false,
@@ -185,49 +157,16 @@ export default {
       this.message = ''
       this.progress = true
       if (!this.inputZIP) {
-        const message = 'No ZIP provided'
-        this.handleError(new Error(message))
+        this.handleError(new Error('No ZIP provided'))
         return
-      }
-
-      await _sodium.ready
-      const sodium = _sodium
-
-      // Decrypt
-      if (this.decrypt) {
-        try {
-          const secretKey = await this.secretKey.text()
-          const sk = sodium.from_hex(secretKey)
-          const pk = sodium.from_hex(this.$store.state.config.publicKey)
-          const buf = await this.inputZIP.arrayBuffer()
-          const ciphertext = new Uint8Array(buf)
-          this.outputZIP = new Blob([
-            sodium.crypto_box_seal_open(ciphertext, pk, sk)
-          ])
-        } catch (error) {
-          this.handleError(
-            error,
-            'An error occurred during decryption. Check that the secret key is correct.'
-          )
-          return
-        }
-      } else {
-        this.outputZIP = this.inputZIP
       }
 
       // Load ZIP
       const zip = new JSZip()
       try {
-        await zip.loadAsync(this.outputZIP)
+        await zip.loadAsync(this.inputZIP)
       } catch (error) {
-        if (this.decrypt) {
-          this.handleError(error, 'An error occurred while loading the ZIP.')
-        } else {
-          this.handleError(
-            error,
-            'An error occurred while loading the ZIP. If it is encrypted, please provide the secret key.'
-          )
-        }
+        this.handleError(error, 'An error occurred while loading the ZIP.')
         return
       }
       // Extract files
@@ -266,19 +205,6 @@ export default {
       this.versionCompatibilityHandler()
 
       this.handleEnd()
-    },
-    async generateKeys() {
-      await _sodium.ready
-      const sodium = _sodium
-
-      const key = sodium.crypto_box_keypair()
-      const pk = sodium.to_hex(key.publicKey)
-      const sk = sodium.to_hex(key.privateKey)
-      const zip = new JSZip()
-      zip.file('public-key.txt', pk)
-      zip.file('secret-key.txt', sk)
-      const content = await zip.generateAsync({ type: 'blob' })
-      FileSaver.saveAs(content, 'keys.zip')
     },
     /* Transform the imported zip to make it compatible with the current version */
     versionCompatibilityHandler() {

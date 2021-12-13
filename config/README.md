@@ -13,10 +13,11 @@ This directory contains the configuration files linked to each deployement. They
     */
   "hashtags": ["dataprivacy", "hestialabs"],
   /**
-    * The public key used to encrypt the zip containing the consent log and results.
+    * A link to a filedrop service. In case the size limit is exceeded,
+    * the user is invited to download the ZIP and use this link.
     * @type String
     */
-  "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
+  "filedrop": "https://example.com/filedrop",
   /**
     * The content of the consent form. A default form can be defined, but it can be overriden for a specific experience.
     * We can also hide this section for a specific experience by setting it to null.
