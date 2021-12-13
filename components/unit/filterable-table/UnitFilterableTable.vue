@@ -13,6 +13,9 @@
         ref="tableRef"
         :hide-default-footer="disabled"
         multi-sort
+        fixed-header
+        height="500"
+        :footer-props="{ itemsPerPageOptions: [5, 10, 15, 500, 1000] }"
         data-testid="data-table"
         @current-items="onItemsUpdate"
       >
@@ -62,7 +65,15 @@ export default {
       message: '',
       extension: 'csv',
       search: '',
-      tableHeaders: this.headers
+      tableHeaders: []
+    }
+  },
+  watch: {
+    data: {
+      immediate: true,
+      handler(data) {
+        this.tableHeaders = this.headers
+      }
     }
   },
   computed: {

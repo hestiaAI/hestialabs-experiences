@@ -1,4 +1,20 @@
 {
-  "experiences": ["facebook", "twitter", "tinder", "ad-radar", "amazon", "apple", "google", "spotify", "youtube", "other"],
+  "experiences": [
+    "facebook",
+    "twitter",
+    "tinder",
+    "ad-radar",
+    "amazon",
+    "apple",
+    "google",
+    "spotify",
+    "youtube",
+    "linkedin",
+    "netflix",
+    "signal",
+    "whatsapp",
+    "uber",
+    "explorer"
+  ],
   "hashtags": ["dataprivacy", "hestialabs"]
 }

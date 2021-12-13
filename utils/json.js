@@ -61,7 +61,9 @@ export default function itemifyJSON(jsonText) {
       } else {
         return {
           id,
-          name: `{object with ${children.length} keys}`,
+          name: `{attributes ${Object.keys(tree)
+            .map(k => _.startCase(k))
+            .join(', ')}}`,
           children,
           icon: mdiCodeJson
         }
