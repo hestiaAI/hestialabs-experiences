@@ -90,11 +90,10 @@
         </template>
         :
         <ul v-if="sortedExtensionTexts">
-          <li
-            v-for="(text, i) in sortedExtensionTexts"
-            :key="i"
-            v-html="text"
-          />
+          <li v-for="(text, i) in sortedExtensionTexts" :key="i">
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div v-html="text"></div>
+          </li>
         </ul>
       </VCardText>
       <VCardText>
