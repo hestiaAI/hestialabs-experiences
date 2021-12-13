@@ -28,9 +28,7 @@
     <template v-if="success">
       <VRow v-if="showDataExplorer">
         <VCol>
-          <UnitFileExplorer
-            v-bind="{ fileManager, selectable: consentForm !== null }"
-          />
+          <UnitFileExplorer v-bind="{ fileManager, selectable: false }" />
         </VCol>
       </VRow>
       <VRow v-for="(defaultViewElements, index) in defaultView" :key="index">

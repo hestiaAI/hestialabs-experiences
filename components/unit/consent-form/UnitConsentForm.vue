@@ -5,7 +5,13 @@
         <UnitConsentFormSection
           v-for="(section, index) in consent"
           :key="`section-${index}`"
-          v-bind="{ section, index, dataCheckboxDisabled, showDataExplorer }"
+          v-bind="{
+            section,
+            index,
+            dataCheckboxDisabled,
+            showDataExplorer,
+            fileManager
+          }"
           @change="updateConsent"
         />
         <p>
@@ -118,7 +124,10 @@ export default {
             typeof section.required === 'boolean'
           ) {
             // Some data must be given
-            return section.includedResults.length > 0
+            return (
+              section.includedResults.length > 0 ||
+              this.$store.state.selectedFiles[this.key].length > 0
+            )
           }
         }
         return true
@@ -226,15 +235,13 @@ export default {
         })
 
       // Add whole files
-      if (this.includedResults.includes('file-explorer')) {
-        const zipFilesFolder = zip.folder('files')
-        const files = this.$store.state.selectedFiles[this.key] ?? []
-        for (const file of files) {
-          zipFilesFolder.file(
-            file.filename,
-            this.fileManager.fileDict[file.filename]
-          )
-        }
+      const zipFilesFolder = zip.folder('files')
+      const files = this.$store.state.selectedFiles[this.key]
+      for (const file of files) {
+        zipFilesFolder.file(
+          file.filename,
+          this.fileManager.fileDict[file.filename]
+        )
       }
 
       const content = await zip.generateAsync({ type: 'uint8array' })
