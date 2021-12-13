@@ -13,6 +13,8 @@
         ref="tableRef"
         :hide-default-footer="disabled"
         multi-sort
+        fixed-header
+        height="500"
         :footer-props="{ itemsPerPageOptions: [5, 10, 15, 500, 1000] }"
         data-testid="data-table"
         @current-items="onItemsUpdate"
