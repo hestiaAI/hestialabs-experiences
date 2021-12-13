@@ -8,8 +8,26 @@
           v-bind="{ section, index, dataCheckboxDisabled, showDataExplorer }"
           @change="updateConsent"
         />
+        <p>
+          Please download the ZIP file containing the results and
+          <a v-if="config.filedrop" :href="config.filedrop" target="_blank"
+            >drop it here</a
+          >
+          <template v-else>send it by email</template>.
+        </p>
+        <p v-if="missingRequired" style="color: red">
+          Some required fields are not filled in.
+        </p>
+        <p v-if="missingRequiredDataProcessing.length > 0" style="color: red">
+          Some experience required for sending this form has not been ran:
+          {{ missingRequiredDataProcessing.join(', ') }}.
+        </p>
+        <p v-if="missingRequiredData.length > 0" style="color: red">
+          Some data required for sending this form has not been included:
+          {{ missingRequiredData.join(', ') }}.
+        </p>
         <BaseButton
-          text="Generate ZIP"
+          text="Download results"
           :status="generateStatus"
           :error="generateError"
           :progress="generateProgress"
@@ -21,28 +39,13 @@
           @click="generateZIP"
         />
         <BaseButtonDownloadData
+          v-show="false"
+          ref="downloadBtn"
           :data="zipFile"
           :filename="filename"
           extension="zip"
           text="Download"
-          :disabled="!zipReady"
         />
-        <p v-if="missingRequired">Some required fields are not filled in.</p>
-        <p v-if="missingRequiredDataProcessing.length > 0">
-          Some experience required for sending this form has not been ran:
-          {{ missingRequiredDataProcessing.join(', ') }}.
-        </p>
-        <p v-if="missingRequiredData.length > 0">
-          Some data required for sending this form has not been included:
-          {{ missingRequiredData.join(', ') }}.
-        </p>
-        <p v-if="zipReady">
-          Please download the ZIP file containing the results and
-          <a v-if="config.filedrop" :href="config.filedrop" target="_blank"
-            >drop it here</a
-          >
-          <template v-else>send it by email</template>.
-        </p>
       </VCardText>
     </VCard>
   </VForm>
@@ -158,7 +161,7 @@ export default {
       const filename = `${this.key}_${yearMonthDay}_${padNumber(
         date.getUTCHours(),
         2
-      )}:${padNumber(date.getUTCMinutes(), 2)}_UTC.zip`
+      )}${padNumber(date.getUTCMinutes(), 2)}_UTC.zip`
       return filename
     },
     tooBig() {
@@ -239,6 +242,10 @@ export default {
 
       this.generateStatus = true
       this.generateProgress = false
+
+      await this.$nextTick()
+
+      this.$refs.downloadBtn.$el.click()
     },
     updateConsent({ index, selected, value, includedResults }) {
       const section = this.consent[index]
