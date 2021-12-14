@@ -16,7 +16,8 @@ import {
   mdiMinusBox,
   mdiStepForward,
   mdiTwitter,
-  mdiMinus
+  mdiMinus,
+  mdiCalendar
 } from '@mdi/js'
 
 export default {
@@ -39,7 +40,8 @@ export default {
       mdiMinusBox,
       mdiStepForward,
       mdiTwitter,
-      mdiMinus
+      mdiMinus,
+      mdiCalendar
     }
   },
   theme: {

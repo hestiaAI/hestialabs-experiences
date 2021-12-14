@@ -58,6 +58,12 @@
     </VRow>
     <VRow>
       <VCol cols="12">
+        <DatePicker
+          v-if="minDate !== null && maxDate !== null"
+          class="d-flex justify-end mr-3"
+          :min-date="minDate"
+          :max-date="maxDate"
+        ></DatePicker>
         <div :id="graphId"></div>
         <p class="text-subtitle-2">
           Select a <strong>time range</strong> below
