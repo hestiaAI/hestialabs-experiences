@@ -1,5 +1,6 @@
-import { unzip, setOptions } from 'unzipit'
+import { setOptions } from 'unzipit'
 import workerURL from 'unzipit/dist/unzipit-worker.module.js'
+import JSZip from 'jszip'
 import {
   mdiCodeJson,
   mdiFile,
@@ -338,17 +339,14 @@ export default class FileManager {
       await Promise.all(
         files.flatMap(async file => {
           if (file.name.endsWith('.zip')) {
-            const { entries } = await unzip(file)
-            const innerFiles = await Promise.all(
-              Object.values(entries)
-                .filter(node => !node.isDirectory)
-                .map(
-                  async innerFile =>
-                    new File(
-                      [await innerFile.blob()],
-                      `${file.name}/${innerFile.name}`
-                    )
-                )
+            const zip = new JSZip()
+            await zip.loadAsync(file)
+            const folderContent = zip.file(/.*/)
+            const blobs = await Promise.all(
+              folderContent.map(r => r.async('blob'))
+            )
+            const innerFiles = folderContent.map(
+              (r, i) => new File([blobs[i]], file.name + '/' + r.name)
             )
             return await this.extractZips(innerFiles)
           } else if (file.name.endsWith('/')) {
