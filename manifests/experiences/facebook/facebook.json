@@ -29,7 +29,7 @@
       "visualization": "top-k-advertisers",
       "showTable": false,
       "title": "Off Facebook activity ranking",
-      "text": "See how many times advertisers have informed Facebook of your activity outside of Facebook."
+      "text": "See how many times third parties have informed Facebook of your activity outside of Facebook."
     },
     {
       "key": "off-facebook-activity-type-count",
