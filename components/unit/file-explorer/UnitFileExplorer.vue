@@ -153,6 +153,7 @@ export default {
       search: '',
       isFileLoading: false,
       height: 500,
+      computeNPoints: false,
       nDataPoints: null,
       sortedExtensionTexts: [],
       selectionSize: 0
@@ -252,7 +253,9 @@ export default {
       immediate: true,
       handler() {
         this.setExtensionTexts()
-        this.setNumberOfDataPoints()
+        if (this.computeNPoints) {
+          this.setNumberOfDataPoints()
+        }
       }
     }
   },
@@ -288,7 +291,12 @@ export default {
       const pointsPerFile = await Promise.all(
         this.fileManager
           .getFilenames()
-          .map(async f => [f, await this.fileManager.getNumberOfDataPoints(f)])
+          .map(async f => [
+            f,
+            this.computeNPoints
+              ? await this.fileManager.getNumberOfDataPoints(f)
+              : 0
+          ])
       )
       this.sortedExtensionTexts = this.sortedExtensionCounts.map(([ext, c]) => {
         const re = new RegExp(`.+\\.${ext}$`)
