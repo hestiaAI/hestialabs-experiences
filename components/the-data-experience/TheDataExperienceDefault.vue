@@ -45,8 +45,7 @@
               fileManager,
               postprocessors,
               index,
-              vega,
-              allSparql: sparql
+              vega
             }"
             @update="onQueryUpdate"
           />

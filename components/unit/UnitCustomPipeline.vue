@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import { processError } from '@/utils/utils'
 import FileManager from '~/utils/file-manager'
 
 export default {
@@ -45,7 +44,6 @@ export default {
   },
   data() {
     return {
-      message: '',
       status: false,
       error: false,
       progress: false,
@@ -55,7 +53,6 @@ export default {
   },
   methods: {
     runPipeline() {
-      this.message = ''
       this.error = false
       this.progress = true
       setTimeout(async () => {
@@ -69,7 +66,6 @@ export default {
         } catch (error) {
           console.error(error)
           this.error = true
-          this.message = processError(error)
           this.$emit('update', { error })
         } finally {
           this.status = true

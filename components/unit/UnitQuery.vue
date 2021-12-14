@@ -31,7 +31,7 @@
           />
           <UnitSparql
             v-else
-            v-bind="{ allSparql, sparqlQuery, queryDisabled }"
+            v-bind="{ sparqlQuery, queryDisabled }"
             class="mr-lg-6"
             @update="onUnitResultsUpdate"
           />
@@ -109,11 +109,6 @@ export default {
       required: true
     },
     vega: {
-      type: Object,
-      default: () => {}
-    },
-    allSparql: {
-      // Only used by the advanced view
       type: Object,
       default: () => {}
     },

@@ -1,4 +1,3 @@
-<!-- :change="v => (sparql = v)" -->
 <template>
   <div>
     <VRow>
@@ -17,15 +16,9 @@
 
 <script>
 import quadstore from '@/utils/sparql'
-import { processError } from '@/utils/utils'
 
 export default {
   props: {
-    allSparql: {
-      // Only used by the advanced view
-      type: Object,
-      default: () => {}
-    },
     sparqlQuery: {
       type: String,
       default: null
@@ -38,11 +31,9 @@ export default {
   data() {
     return {
       queryParameter: '',
-      message: '',
       status: false,
       error: false,
-      progress: false,
-      code: ''
+      progress: false
     }
   },
   computed: {
@@ -50,20 +41,9 @@ export default {
       return !this.sparqlQuery || this.queryDisabled
     }
   },
-  watch: {
-    code(c) {
-      const query = JSON.parse(JSON.stringify(this.query))
-      query.sparql = c
-      this.$emit('change', query)
-    },
-    query(q) {
-      this.code = q.sparql
-    }
-  },
   methods: {
     async runQuery() {
       try {
-        this.message = ''
         this.error = false
         this.progress = true
 
@@ -72,15 +52,11 @@ export default {
       } catch (error) {
         console.error(error)
         this.error = true
-        this.message = processError(error)
         this.$emit('update', { error })
       } finally {
         this.status = true
         this.progress = false
       }
-    },
-    onChangeSelector(query) {
-      this.$emit('change', query)
     }
   }
 }
