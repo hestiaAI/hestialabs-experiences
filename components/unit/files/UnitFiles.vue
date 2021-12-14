@@ -86,7 +86,6 @@ export default {
       error: false,
       progress: false,
       filesToExtract: this.files,
-      messagePowerUser: '',
       cachedResult: null
     }
   },

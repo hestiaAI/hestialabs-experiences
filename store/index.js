@@ -6,7 +6,6 @@ export const state = () => ({
     ...config
   },
   manifestMap,
-  power: false,
   selectedFiles: Object.fromEntries(Object.keys(manifestMap).map(k => [k, []]))
 })
 
