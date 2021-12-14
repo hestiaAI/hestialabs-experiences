@@ -25,7 +25,7 @@
   "defaultView": [
     {
       "key": "off-facebook-activity-count",
-      "query": "off-facebook-activity-count",
+      "sql": "off-facebook-activity-count",
       "visualization": "top-k-advertisers",
       "showTable": false,
       "title": "Off Facebook activity ranking",
@@ -33,9 +33,9 @@
     },
     {
       "key": "off-facebook-activity-type-count",
-      "query": "off-facebook-activity-type-count",
+      "sql": "off-facebook-activity-type-count",
       "postprocessor": "sunburstTargetingAdvertiser",
-      "visualization": "sunburst-off-facebook-activity",
+      "visualization": "ChartViewSunburst.vue",
       "showTable": false,
       "title": "Off Facebook activity type",
       "text": "See which kind of information advertisers have shared with Facebook of your activity outside of Facebook."
@@ -49,14 +49,14 @@
     },
     {
       "key": "your-topics",
-      "query": "your-topics",
+      "sql": "your-topics",
       "showTable": true,
       "title": "Inferred interests",
       "text": "Get a list of topics that Facebook thinks you're interested in."
     },
     {
       "key": "advertisers-contact-list",
-      "query": "advertisers-contact-list",
+      "sql": "advertisers-contact-list",
       "showTable": true,
       "title": "Contact list",
       "text": "Get a list of advertisers that have uploaded a contact list containing you."
