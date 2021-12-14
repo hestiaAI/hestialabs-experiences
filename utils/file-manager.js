@@ -346,7 +346,7 @@ export default class FileManager {
               folderContent.map(r => r.async('blob'))
             )
             const innerFiles = folderContent.map(
-              (r, i) => new File([blobs[i]], r.name)
+              (r, i) => new File([blobs[i]], file.name + '/' + r.name)
             )
             return await this.extractZips(innerFiles)
           } else if (file.name.endsWith('/')) {
