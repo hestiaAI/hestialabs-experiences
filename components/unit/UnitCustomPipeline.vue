@@ -1,31 +1,25 @@
 <template>
   <div>
-    <template v-if="$store.state.power">
-      <h2 class="my-3">Custom Pipeline</h2>
-    </template>
-
-    <template v-else>
-      <VRow v-if="parameterName">
-        <VCol cols="4" class="mx-auto">
-          <VTextField
-            v-model="parameter"
-            :label="parameterName"
-            class="my-sm-2 mr-sm-2"
-          ></VTextField>
-        </VCol>
-      </VRow>
-      <VRow>
-        <VCol align="center">
-          <BaseButton
-            v-bind="{ progress, status, error }"
-            text="Run"
-            icon="mdiStepForward"
-            class="ma-sm-2"
-            @click="runPipeline"
-          />
-        </VCol>
-      </VRow>
-    </template>
+    <VRow v-if="parameterName">
+      <VCol cols="4" class="mx-auto">
+        <VTextField
+          v-model="parameter"
+          :label="parameterName"
+          class="my-sm-2 mr-sm-2"
+        ></VTextField>
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol align="center">
+        <BaseButton
+          v-bind="{ progress, status, error }"
+          text="Run"
+          icon="mdiStepForward"
+          class="ma-sm-2"
+          @click="runPipeline"
+        />
+      </VCol>
+    </VRow>
   </div>
 </template>
 

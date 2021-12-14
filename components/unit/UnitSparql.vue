@@ -1,51 +1,17 @@
 <!-- :change="v => (sparql = v)" -->
 <template>
   <div>
-    <template v-if="$store.state.power">
-      <h2 class="my-3">SPARQL</h2>
-      <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
-        <TheSelectorSparql
-          :items="allSparql"
-          :disabled="!Object.keys(allSparql).length"
-          class="my-sm-2 mr-sm-2 mb-2"
-          @change="onChangeSelector"
-        />
+    <VRow>
+      <VCol align="center">
         <BaseButton
           v-bind="{ progress, status, error, disabled }"
-          text="Run Query"
+          text="Run"
           icon="mdiStepForward"
           class="ma-sm-2"
           @click="runQuery"
         />
-        <BaseButtonDownloadData
-          extension="rq"
-          :data="sparql"
-          class="ma-sm-2"
-          :disabled="!sparql"
-        />
-      </div>
-      <CodeEditor
-        :value.sync="code"
-        class="mt-6"
-        line-numbers
-        language="sparql"
-      />
-      <VAlert v-if="message" type="error">{{ message }}</VAlert>
-    </template>
-
-    <template v-else>
-      <VRow>
-        <VCol align="center">
-          <BaseButton
-            v-bind="{ progress, status, error, disabled }"
-            text="Run"
-            icon="mdiStepForward"
-            class="ma-sm-2"
-            @click="runQuery"
-          />
-        </VCol>
-      </VRow>
-    </template>
+      </VCol>
+    </VRow>
   </div>
 </template>
 

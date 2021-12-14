@@ -1,7 +1,7 @@
 <template>
   <client-only placeholder="Loading...">
     <keep-alive>
-      <component :is="isComponent" v-bind="props">
+      <TheDataExperienceDefault v-bind="props">
         <template #unit-files="{ update, ...slotProps }">
           <UnitFiles
             v-bind="{
@@ -17,20 +17,13 @@
           >
           </UnitFiles>
         </template>
-      </component>
+      </TheDataExperienceDefault>
     </keep-alive>
   </client-only>
 </template>
 
 <script>
 import { validExtensions } from '@/manifests/utils'
-
-// https://github.com/nuxt/components/issues/13#issuecomment-902590143
-const TheDataExperienceDefault = () =>
-  import('~/components/the-data-experience/TheDataExperienceDefault.vue')
-
-const TheDataExperiencePower = () =>
-  import('~/components/the-data-experience/TheDataExperiencePower.vue')
 
 export default {
   name: 'TheDataExperience',
@@ -143,12 +136,6 @@ export default {
         'databaseBuilder'
       ]
       return Object.fromEntries(propNames.map(k => [k, this[k]]))
-    },
-    isComponent() {
-      if (this.$store.state.power) {
-        return TheDataExperiencePower
-      }
-      return TheDataExperienceDefault
     }
   }
 }

@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="isValid">
-      <h2 v-if="$store.state.power" class="my-3">Query Results</h2>
       <VAlert v-if="error" type="error">{{ message }}</VAlert>
       <UnitFilterableTableFilter
         :display-filters="displayFilters"
