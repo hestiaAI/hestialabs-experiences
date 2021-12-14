@@ -22,7 +22,7 @@ const timeParsers = [
 
 // Define range of valid year, in case of timestamp date format
 // the will accept any number so need to filter.
-const validYearMin = 1980
+const validYearMin = 2000
 const validYearMax = 2038
 
 // Try to transform {{ value }} into a Date object,
@@ -55,6 +55,12 @@ function isObject(obj) {
 }
 // Transform a json object to a list of dated events
 function extractJsonEntries(json) {
+  // small trick to avoid recognizing coodinates as date (issue need to be addressed later)
+  const unallowedNames = ['lat', 'lon', 'lng']
+  const validDateName = name =>
+    unallowedNames.every(
+      unallowedName => !name.toLowerCase().includes(unallowedName)
+    )
   function recurse(node) {
     if (isObject(node)) {
       const entries = Object.entries(node).flatMap(([k, v]) => {
@@ -77,7 +83,8 @@ function extractJsonEntries(json) {
           const vDate = getValidDate(v)
           // If both key and value contain dates, use key date as description
           if (kDate && vDate) return [{ date: vDate, description: `${k}` }]
-          if (!kDate && vDate) return [{ date: vDate, description: '' }]
+          if (!kDate && vDate && validDateName(k))
+            return [{ date: vDate, description: '' }]
           if (kDate && !vDate) return [{ date: kDate, description: `${v}` }]
           return [{ description: `${kPretty} : ${v}` }]
         }
@@ -294,7 +301,9 @@ async function genericLocationViewer(fileManager) {
     csvFilenames.map(async name => [name, await fileManager.getCsvItems(name)])
   )
 
-  const jsonFilenames = filenames.filter(name => /\.js(:?on)?$/.test(name))
+  const jsonFilenames = filenames.filter(
+    name => /\.js(:?on)?$/.test(name) && name !== 'Location History.json'
+  )
   const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
   const csvEntries = csvItems.flatMap(([name, csv]) =>
     extractCsvLocations(csv).map(o => ({ ...o, filename: name }))
