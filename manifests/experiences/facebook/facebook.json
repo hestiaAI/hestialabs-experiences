@@ -42,7 +42,7 @@
     },
     {
       "key": "ad-interactions",
-      "query": "ad-interactions",
+      "sql": "ad-interactions",
       "showTable": true,
       "title": "Ad interactions",
       "text": "See the list of ads with which you have interacted."
