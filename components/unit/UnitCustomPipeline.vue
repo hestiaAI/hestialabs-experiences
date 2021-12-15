@@ -40,6 +40,10 @@ export default {
     parameterName: {
       type: String,
       default: ''
+    },
+    defaultViewElements: {
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -60,7 +64,8 @@ export default {
           const result = await this.customPipeline(
             this.fileManager,
             this.$store.getters.manifest(this.$route),
-            this.parameter
+            this.parameter,
+            this.defaultViewElements.customPipelineOptions
           )
           this.$emit('update', result)
         } catch (error) {

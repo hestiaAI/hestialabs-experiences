@@ -16,7 +16,8 @@
             v-bind="{
               fileManager,
               customPipeline,
-              parameterName: defaultViewElements.parameterName
+              parameterName: defaultViewElements.parameterName,
+              defaultViewElements
             }"
             @update="onUnitResultsUpdate"
           />
@@ -31,7 +32,7 @@
           />
           <UnitSparql
             v-else
-            v-bind="{ sparqlQuery, queryDisabled }"
+            v-bind="{ allSparql, sparqlQuery, queryDisabled }"
             class="mr-lg-6"
             @update="onUnitResultsUpdate"
           />

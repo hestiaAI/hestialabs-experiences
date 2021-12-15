@@ -153,6 +153,7 @@ export default {
       search: '',
       isFileLoading: false,
       height: 500,
+      computeNPoints: false,
       nDataPoints: null,
       sortedExtensionTexts: [],
       selectionSize: 0
@@ -252,7 +253,9 @@ export default {
       immediate: true,
       handler() {
         this.setExtensionTexts()
-        this.setNumberOfDataPoints()
+        if (this.computeNPoints) {
+          this.setNumberOfDataPoints()
+        }
       }
     }
   },
@@ -288,11 +291,21 @@ export default {
       const pointsPerFile = await Promise.all(
         this.fileManager
           .getFilenames()
-          .map(async f => [f, await this.fileManager.getNumberOfDataPoints(f)])
+          .map(async f => [
+            f,
+            this.computeNPoints
+              ? await this.fileManager.getNumberOfDataPoints(f)
+              : 0
+          ])
       )
       this.sortedExtensionTexts = this.sortedExtensionCounts.map(([ext, c]) => {
         const re = new RegExp(`.+\\.${ext}$`)
-        const files = pointsPerFile.filter(([f, _n]) => re.test(f))
+        const filterFunc =
+          ext === 'other'
+            ? ([f, _n]) =>
+                !this.fileManager.supportedExtensions.has(f.split('.').at(-1))
+            : ([f, _n]) => re.test(f)
+        const files = pointsPerFile.filter(filterFunc)
         const shownFiles = _.take(
           _.sortBy(files, ([_f, n]) => -n),
           showAtMost
@@ -320,9 +333,9 @@ export default {
                 ext === 'txt' ? 'line' : 'datapoint',
                 nPointsExt
               )})`
-            : ':'
+            : ''
         }${
-          files.length > showAtMost ? ' including: ' : ''
+          files.length > showAtMost ? ' including: ' : ':'
         } ${topFilesDescription}`
       })
     }
