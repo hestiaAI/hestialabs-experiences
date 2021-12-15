@@ -61,12 +61,12 @@ export default {
       this.progress = true
       setTimeout(async () => {
         try {
-          const result = await this.customPipeline(
-            this.fileManager,
-            this.$store.getters.manifest(this.$route),
-            this.parameter,
-            this.defaultViewElements.customPipelineOptions
-          )
+          const result = await this.customPipeline({
+            fileManager: this.fileManager,
+            manifest: this.$store.getters.manifest(this.$route),
+            parameter: this.parameter,
+            options: this.defaultViewElements.customPipelineOptions
+          })
           this.$emit('update', result)
         } catch (error) {
           console.error(error)
