@@ -55,7 +55,8 @@
               v-bind="{
                 fileManager,
                 customPipeline,
-                parameterName: defaultViewElements.parameterName
+                parameterName: defaultViewElements.parameterName,
+                defaultViewElements
               }"
               @update="onUnitResultsUpdate"
             />
