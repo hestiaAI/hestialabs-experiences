@@ -134,7 +134,7 @@ function extractCsvEntries({ items }) {
   })
 }
 
-async function genericDateViewer(fileManager) {
+async function genericDateViewer({ fileManager }) {
   const filenames = fileManager.getFilenames()
 
   const csvFilenames = filenames.filter(name => name.endsWith('.csv'))
@@ -164,7 +164,7 @@ async function genericDateViewer(fileManager) {
   return { headers, items }
 }
 
-async function timedObservationViewer(fileManager, manifest) {
+async function timedObservationViewer({ fileManager, manifest }) {
   const params = manifest.timedObservationsViewer
   const matchingFilenames = fileManager
     .getFilenames()
@@ -293,7 +293,7 @@ function extractCsvLocations({ items }) {
   })
 }
 
-async function genericLocationViewer(fileManager) {
+async function genericLocationViewer({ fileManager }) {
   const filenames = fileManager.getFilenames()
 
   const csvFilenames = filenames.filter(name => name.endsWith('.csv'))

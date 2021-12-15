@@ -25,7 +25,7 @@ function dashboardFillItems(items, impressionAttributes, isEngagement) {
   })
 }
 
-async function dashboard(fileManager) {
+async function dashboard({ fileManager }) {
   const engagementsFile = JSON.parse(
     await fileManager.getPreprocessedText('data/ad-engagements.js')
   )
@@ -55,7 +55,7 @@ async function dashboard(fileManager) {
   return { headers, items }
 }
 
-async function advertisersPerDay(fileManager) {
+async function advertisersPerDay({ fileManager }) {
   // JSON iterator
   const impressionsFile = JSON.parse(
     await fileManager.getPreprocessedText('data/ad-impressions.js')
@@ -80,7 +80,7 @@ async function advertisersPerDay(fileManager) {
   return { headers, items }
 }
 
-async function targetingTree(fileManager) {
+async function targetingTree({ fileManager }) {
   // JSON iterator on impressions
   const impressionsFile = JSON.parse(
     await fileManager.getPreprocessedText('data/ad-impressions.js')
@@ -130,7 +130,7 @@ async function targetingTree(fileManager) {
   return { headers, items }
 }
 
-async function targetingTypesAndValues(fileManager) {
+async function targetingTypesAndValues({ fileManager }) {
   // JSON iterator on impressions
   const impressionsFile = JSON.parse(
     await fileManager.getPreprocessedText('data/ad-impressions.js')
@@ -164,7 +164,7 @@ async function targetingTypesAndValues(fileManager) {
   return { headers, items }
 }
 
-async function allAdvertisers(fileManager) {
+async function allAdvertisers({ fileManager }) {
   // JSON iterator on impressions
   const impressionsFile = JSON.parse(
     await fileManager.getPreprocessedText('data/ad-impressions.js')
@@ -183,7 +183,7 @@ async function allAdvertisers(fileManager) {
   return { headers, items }
 }
 
-async function selectTargetingTree(fileManager, _, parameter) {
+async function selectTargetingTree({ fileManager, parameter }) {
   // JSON iterator on impressions
   const impressionsFile = JSON.parse(
     await fileManager.getPreprocessedText('data/ad-impressions.js')

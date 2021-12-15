@@ -1,4 +1,4 @@
-async function trackerControl(fileManager) {
+async function trackerControl({ fileManager }) {
   return await fileManager.getCsvItems('input.csv')
 }
 
