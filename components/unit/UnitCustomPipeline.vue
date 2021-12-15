@@ -1,36 +1,29 @@
 <template>
   <div>
-    <template v-if="$store.state.power">
-      <h2 class="my-3">Custom Pipeline</h2>
-    </template>
-
-    <template v-else>
-      <VRow v-if="parameterName">
-        <VCol cols="4" class="mx-auto">
-          <VTextField
-            v-model="parameter"
-            :label="parameterName"
-            class="my-sm-2 mr-sm-2"
-          ></VTextField>
-        </VCol>
-      </VRow>
-      <VRow>
-        <VCol align="center">
-          <BaseButton
-            v-bind="{ progress, status, error }"
-            text="Run"
-            icon="mdiStepForward"
-            class="ma-sm-2"
-            @click="runPipeline"
-          />
-        </VCol>
-      </VRow>
-    </template>
+    <VRow v-if="parameterName">
+      <VCol cols="4" class="mx-auto">
+        <VTextField
+          v-model="parameter"
+          :label="parameterName"
+          class="my-sm-2 mr-sm-2"
+        ></VTextField>
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol align="center">
+        <BaseButton
+          v-bind="{ progress, status, error }"
+          text="Run"
+          icon="mdiStepForward"
+          class="ma-sm-2"
+          @click="runPipeline"
+        />
+      </VCol>
+    </VRow>
   </div>
 </template>
 
 <script>
-import { processError } from '@/utils/utils'
 import FileManager from '~/utils/file-manager'
 
 export default {
@@ -55,7 +48,6 @@ export default {
   },
   data() {
     return {
-      message: '',
       status: false,
       error: false,
       progress: false,
@@ -65,7 +57,6 @@ export default {
   },
   methods: {
     runPipeline() {
-      this.message = ''
       this.error = false
       this.progress = true
       setTimeout(async () => {
@@ -80,7 +71,6 @@ export default {
         } catch (error) {
           console.error(error)
           this.error = true
-          this.message = processError(error)
           this.$emit('update', { error })
         } finally {
           this.status = true

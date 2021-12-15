@@ -79,8 +79,7 @@
     "vega-embed": "^6.18.2",
     "vega-lite": "^5.1.1",
     "vue-social-sharing": "^3.0.8",
-    "vuetify": "^2.6.1",
-    "vuex-persistedstate": "^4.1.0"
+    "vuetify": "^2.6.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.3",
