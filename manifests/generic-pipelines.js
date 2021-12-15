@@ -293,32 +293,43 @@ function extractCsvLocations({ items }) {
   })
 }
 
-async function genericLocationViewer(fileManager) {
+async function genericLocationViewer(fileManager, manifest) {
+  console.log(manifest)
   const filenames = fileManager.getFilenames()
 
   const csvFilenames = filenames.filter(name => name.endsWith('.csv'))
   const csvItems = await Promise.all(
-    csvFilenames.map(async name => [name, await fileManager.getCsvItems(name)])
+    csvFilenames.map(async name => {
+      const csvItems = await fileManager.getCsvItems(name)
+      fileManager.freeFile(name) // Clear file from memory
+      return [name, csvItems]
+    })
   )
-
-  const jsonFilenames = filenames.filter(
-    name => /\.js(:?on)?$/.test(name) && name !== 'Location History.json'
-  )
-  const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
   const csvEntries = csvItems.flatMap(([name, csv]) =>
     extractCsvLocations(csv).map(o => ({ ...o, filename: name }))
   )
-  const jsonEntries = Object.entries(jsonTexts).flatMap(([name, json]) => {
-    try {
-      return extractJsonLocations(JSON.parse(json)).map(o => ({
-        ...o,
-        filename: name
-      }))
-    } catch (e) {
-      console.error(e)
-      return []
-    }
-  })
+
+  const jsonFilenames = filenames.filter(name => /\.js(:?on)?$/.test(name))
+  const jsonEntries = (
+    await Promise.all(
+      jsonFilenames.flatMap(async jsonFilename => {
+        const [filename, json] = Object.entries(
+          await fileManager.preprocessFiles([jsonFilename])
+        )[0]
+        fileManager.freeFile(jsonFilename) // Clear file from memory
+        try {
+          return extractJsonLocations(JSON.parse(json)).map(o => ({
+            ...o,
+            filename
+          }))
+        } catch (e) {
+          console.error(e)
+          return []
+        }
+      })
+    )
+  ).flat()
+
   const items = [...jsonEntries, ...csvEntries]
   const headers = ['filename', 'latitude', 'longitude', 'path', 'description']
   return { headers, items }
