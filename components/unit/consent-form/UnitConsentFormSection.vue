@@ -24,35 +24,23 @@
         @change="updateConsent"
       ></VCheckbox>
 
-      <p v-if="readonly" class="mb-4">
-        Individual files (<b>{{ selectedFiles.length }}</b> selected)
-      </p>
-      <VDialog v-else v-model="dialog" width="80%">
-        <template #activator="{ on }">
-          <div>
-            <span class="mr-2"
-              >Individual files (<b>{{ selectedFiles.length }}</b>
-              selected):</span
-            >
-            <BaseButton class="mb-4" text="Select files" v-on="on" />
-          </div>
+      <VCheckbox
+        v-model="includedResults"
+        :readonly="readonly"
+        dense
+        value="file-explorer"
+        @change="updateConsent"
+      >
+        <template #label>
+          <span class="mr-2"
+            >Individual files (<b>{{ selectedFiles.length }}</b> selected)</span
+          >
+          <SelectFilesDialog
+            :file-manager="fileManager"
+            @return="returnDialog"
+          />
         </template>
-
-        <VDivider></VDivider>
-
-        <VCard>
-          <VCardTitle class="text-h5 grey lighten-2"> Select files </VCardTitle>
-
-          <UnitFileExplorer v-bind="{ fileManager, selectable: true }" />
-
-          <VDivider></VDivider>
-
-          <VCardActions>
-            <VSpacer></VSpacer>
-            <VBtn color="primary" text @click="dialog = false"> OK </VBtn>
-          </VCardActions>
-        </VCard>
-      </VDialog>
+      </VCheckbox>
 
       <VCheckbox
         v-for="(title, j) in section.additional"
@@ -152,8 +140,7 @@ export default {
     return {
       selected: null,
       value: null,
-      includedResults: null,
-      dialog: false
+      includedResults: null
     }
   },
   computed: {
@@ -199,6 +186,15 @@ export default {
         value: this.value,
         includedResults: this.includedResults
       })
+    },
+    returnDialog({ clear }) {
+      if (clear) {
+        this.includedResults = this.includedResults.filter(
+          x => x !== 'file-explorer'
+        )
+      } else if (!this.includedResults.includes('file-explorer')) {
+        this.includedResults.push('file-explorer')
+      }
     }
   }
 }
