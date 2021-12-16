@@ -10,7 +10,7 @@
   "timedObservationsViewer": {
     "fileMatchers": [
       {
-        "regex": "Takeout/(?:.+?)/(.+?)/(?:.+?)\\.json",
+        "regex": "(?:.*/)?(.+?)/(?:OmatTapahtumat|MonActivité|My Activity)\\.json",
         "entryPath": "$[*]",
         "fields": {
           "date": {
@@ -126,15 +126,24 @@
       "visualization": "ChartViewTimedObservationsViewer.vue",
       "showTable": false,
       "title": "Overview of what google knows about you",
-      "text": ""
+      "text": "See all dated observations we found in your Google My Activity folder."
     },
     {
       "key": "genericLocationViewer",
       "customPipeline": "genericLocationViewer",
+      "customPipelineOptions": { "acceptedPaths": ".*" },
       "visualization": "ChartViewGenericLocationViewer.vue",
       "showTable": false,
       "title": "Location observations",
       "text": "See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location."
+    },
+    {
+      "key": "genericDateViewer",
+      "customPipeline": "genericDateViewer",
+      "visualization": "ChartViewGenericDateViewer.vue",
+      "showTable": false,
+      "title": "Dated observations",
+      "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
     }
   ]
 }

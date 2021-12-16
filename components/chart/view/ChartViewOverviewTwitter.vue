@@ -15,7 +15,7 @@
                 </span>
               </p>
             </div>
-            <div id="range-chart">
+            <div :id="'range-chart' + graphId" class="range-chart">
               <p class="muted pull-right" style="margin-right: 15px">
                 select a time range to zoom in
               </p>
@@ -131,7 +131,7 @@ export default {
       ]
       // Create and bind charts to their respective divs
       const volumeChart = new dc.LineChart('#volume-chart')
-      const rangeChart = new dc.BarChart('#range-chart')
+      const rangeChart = new dc.BarChart('#range-chart' + this.graphId)
       const tableCount = new dc.DataCount('.dc-data-count')
       const companyChart = new dc.RowChart('#company-chart')
       const engagementChart = new dc.PieChart('#engagement-chart')
@@ -443,7 +443,7 @@ body {
   font-weight: bold;
 }
 
-#range-chart g.y {
+.range-chart > svg > g > g.axis.y {
   display: none;
 }
 

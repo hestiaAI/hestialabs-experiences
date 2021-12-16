@@ -72,7 +72,7 @@
             Reset
           </VBtn>
         </p>
-        <div id="range-chart"></div>
+        <div :id="'range-chart' + graphId" class="range-chart"></div>
       </VCol>
     </VRow>
     <VRow>
@@ -176,7 +176,7 @@ export default {
         .map(e => e.key)
       this.dateDimension = ndx.dimension(d => d.date)
       this.barChart = new dc.BarChart('#' + this.graphId)
-      this.rangeChart = new dc.BarChart('#range-chart')
+      this.rangeChart = new dc.BarChart('#range-chart' + this.graphId)
 
       this.minDate = d3.timeDay.offset(
         this.dateDimension.bottom(1)[0].date,
@@ -309,8 +309,8 @@ export default {
   }
 }
 </script>
-<style scoped>
-#range-chart g.y {
+<style>
+.range-chart > svg > g > g.axis.y {
   display: none;
 }
 .hide {
