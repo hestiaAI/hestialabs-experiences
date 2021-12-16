@@ -16,7 +16,7 @@
     "build:server": "nuxt build",
     "lint": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint:fix": "npm run lint -- --fix",
-    "pre-commit": "lint-staged && node validate-yarrrml",
+    "pre-commit": "lint-staged",
     "prepare": "husky install"
   },
   "jest": {
