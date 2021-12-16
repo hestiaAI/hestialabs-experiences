@@ -36,6 +36,7 @@
             >Individual files (<b>{{ selectedFiles.length }}</b> selected)</span
           >
           <SelectFilesDialog
+            v-if="!readonly"
             :file-manager="fileManager"
             @return="returnDialog"
           />
