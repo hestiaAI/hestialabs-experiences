@@ -1,5 +1,18 @@
 <template>
-  <VCard class="pa-2 my-6 explorer" :min-height="height" height="auto">
+  <VCard
+    v-click-outside="{
+      handler: () => (mini = true),
+      closeConditional: () => !mini
+    }"
+    class="pa-2 my-6 explorer"
+    :min-height="height"
+    height="auto"
+  >
+    <style v-if="isFileLoading">
+      :root {
+        --cursor-style: wait !important;
+      }
+    </style>
     <VNavigationDrawer
       ref="drawer"
       :mini-variant.sync="mini"
@@ -10,7 +23,7 @@
     >
       <template #prepend>
         <VListItem class="px-2">
-          <VBtn icon @click.stop="mini = !mini">
+          <VBtn icon @click="mini = !mini">
             <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
           </VBtn>
 
@@ -23,6 +36,20 @@
         <VListItem v-if="selectable && !mini">
           Size of selected files: {{ selectionSizeString }}
         </VListItem>
+        <VListItem v-if="!mini">
+          <VTextField
+            v-model="search"
+            label="Search for files"
+            placeholder="Enter part of a file name..."
+            clearable
+            hide-details
+            prepend-icon="$vuetify.icons.mdiMagnify"
+            class="my-4 pr-3"
+            style="max-width: 500px"
+            outlined
+            dense
+          />
+        </VListItem>
       </template>
 
       <div :style="drawerMiniFileLabelStyle" class="drawer-mini-file-label">
@@ -30,18 +57,6 @@
       </div>
 
       <div :class="miniWidthPaddingLeftClass">
-        <VTextField
-          v-model="search"
-          label="Search files"
-          placeholder="Type..."
-          clearable
-          hide-details
-          prepend-icon="$vuetify.icons.mdiMagnify"
-          class="my-4 pr-3"
-          style="max-width: 500px"
-          outlined
-          dense
-        />
         <VTreeview
           v-model="selectedFiles"
           dense
@@ -66,20 +81,21 @@
     <VCardTitle class="justify-center">Explore your files</VCardTitle>
     <div :class="miniWidthPaddingLeftClass">
       <VCardText>
-        Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (
-        <b>{{ dataSizeString }} </b>)
+        Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (<b>{{
+          dataSizeString
+        }}</b
+        >)
         <template v-if="nDataPoints">
-          and found <b>{{ nDataPoints.toLocaleString() }}</b> data points
+          and found <b>{{ nDataPoints.toLocaleString() }}</b> datapoints
         </template>
         :
-        <VList v-if="sortedExtensionTexts" :dense="true">
-          <VListItem v-for="(text, i) in sortedExtensionTexts" :key="i">
-            <VListItemIcon>
-              <VIcon>$vuetify.icons.mdiMinus</VIcon>
-            </VListItemIcon>
-            <VListItemContent>{{ text }}</VListItemContent>
-          </VListItem>
-        </VList>
+        <ul v-if="sortedExtensionTexts">
+          <li
+            v-for="(text, i) in sortedExtensionTexts"
+            :key="i"
+            v-html="text"
+          />
+        </ul>
       </VCardText>
       <VCardText>
         <template v-if="filename">
@@ -91,10 +107,12 @@
             :is="componentForType"
             v-bind="{ fileManager, filename }"
             v-if="supportedTypes.has(fileType)"
+            @loading="onLoading"
           />
           <UnitFileExplorerViewerUnknown
             v-else
             v-bind="{ fileManager, filename }"
+            @loading="onLoading"
           />
         </template>
         <template v-else>
@@ -129,6 +147,7 @@ export default {
       mini: true,
       miniWidth: 48,
       search: '',
+      isFileLoading: false,
       height: 500,
       nDataPoints: null,
       sortedExtensionTexts: [],
@@ -235,6 +254,9 @@ export default {
   },
   methods: {
     plurify,
+    onLoading(loading) {
+      this.isFileLoading = loading
+    },
     setSelectedItem([item]) {
       // item might be undefined (when unselecting)
       if (item) {
@@ -244,6 +266,8 @@ export default {
         if (!containers.has(item?.type)) {
           this.selectedItem = item
         }
+      } else {
+        this.selectedItem = {}
       }
     },
     async setNumberOfDataPoints() {
@@ -273,24 +297,28 @@ export default {
         const topFilesDescription = shownFiles
           .map(
             ([f, nPoints]) =>
-              `${f} ${
+              `<em>${f}</em>${
                 nPoints === 0
                   ? ''
-                  : `(${nPoints.toLocaleString()} data ${plurify(
-                      'point',
+                  : ` (${nPoints.toLocaleString()} ${plurify(
+                      ext === 'txt' ? 'line' : 'datapoint',
                       nPoints
                     )})`
               }`
           )
           .join(', ')
-        return ` ${c} ${ext === 'other' ? '' : '.'}${ext}${
-          nPointsExt > 0 ? ` (${nPointsExt.toLocaleString()} data points)` : ''
+        return `<b>${c} ${plurify(
+          ext === 'other' ? 'other format' : ext.toUpperCase(),
+          c
+        )}</b>${
+          nPointsExt > 0
+            ? ` (${nPointsExt.toLocaleString()} ${plurify(
+                ext === 'txt' ? 'line' : 'datapoint',
+                nPointsExt
+              )})`
+            : ':'
         }${
-          files.length > showAtMost
-            ? ' including: '
-            : ext !== 'other'
-            ? ':'
-            : ` ${plurify('format', c)}`
+          files.length > showAtMost ? ' including: ' : ''
         } ${topFilesDescription}`
       })
     }
@@ -315,6 +343,13 @@ export default {
   overflow: hidden;
 
   color: rgba(0, 0, 0, 0.87);
+}
+
+.explorer,
+.explorer .v-icon,
+.explorer .v-treeview-node__root,
+.explorer .v-treeview-node__root > .v-treeview-node__content > * {
+  cursor: var(--cursor-style);
 }
 
 .explorer__content {

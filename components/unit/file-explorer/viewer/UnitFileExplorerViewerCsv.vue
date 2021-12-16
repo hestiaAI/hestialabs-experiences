@@ -9,10 +9,11 @@
 
 <script>
 import mixin from './mixin'
+import mixinLoading from './mixin-loading'
 
 export default {
   name: 'UnitFileExplorerViewerCsv',
-  mixins: [mixin],
+  mixins: [mixin, mixinLoading],
   data() {
     return {
       csvText: '',
@@ -31,7 +32,7 @@ export default {
   },
   methods: {
     async getContentFromFilename(filename) {
-      this.loading = true
+      this.setLoading(true)
       this.csvText = await this.fileManager.getPreprocessedText(filename)
       try {
         const { headers, items } = await this.fileManager.getCsvItems(filename)
@@ -46,7 +47,7 @@ export default {
       } catch (error) {
         this.error = true
       }
-      this.loading = false
+      this.setLoading(false)
     }
   }
 }
