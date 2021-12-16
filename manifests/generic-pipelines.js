@@ -177,7 +177,7 @@ async function genericDateViewer(fileManager, manifest, parameter, options) {
   return { headers, items }
 }
 
-async function timedObservationViewer(fileManager, manifest) {
+async function timedObservationViewer({ fileManager, manifest }) {
   const params = manifest.timedObservationsViewer
   const matchingFilenames = fileManager
     .getFilenames()

@@ -6,7 +6,6 @@ export const state = () => ({
     ...config
   },
   manifestMap,
-  power: false,
   selectedFiles: Object.fromEntries(Object.keys(manifestMap).map(k => [k, []]))
 })
 
@@ -19,10 +18,6 @@ export const getters = {
     const activeManifests = experiences
       .map(key => state.manifestMap[key])
       .filter(m => m)
-
-    if (state.power) {
-      return activeManifests
-    }
 
     // playground is not available in default mode
     return activeManifests.filter(m => m.key !== 'playground')
@@ -47,9 +42,6 @@ export const getters = {
 }
 
 export const mutations = {
-  updatePower(state, power) {
-    state.power = power
-  },
   setSelectedFiles(state, { key, value }) {
     state.selectedFiles[key] = value
   }
