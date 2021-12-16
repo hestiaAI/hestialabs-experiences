@@ -5,11 +5,35 @@
         <UnitConsentFormSection
           v-for="(section, index) in consent"
           :key="`section-${index}`"
-          v-bind="{ section, index, dataCheckboxDisabled, showDataExplorer }"
+          v-bind="{
+            section,
+            index,
+            dataCheckboxDisabled,
+            showDataExplorer,
+            fileManager
+          }"
           @change="updateConsent"
         />
+        <p>
+          Please download the ZIP file containing the results and
+          <a v-if="config.filedrop" :href="config.filedrop" target="_blank"
+            >drop it here</a
+          >
+          <template v-else>send it by email</template>.
+        </p>
+        <p v-if="missingRequired" style="color: red">
+          Some required fields are not filled in.
+        </p>
+        <p v-if="missingRequiredDataProcessing.length > 0" style="color: red">
+          Some experience required for sending this form has not been ran:
+          {{ missingRequiredDataProcessing.join(', ') }}.
+        </p>
+        <p v-if="missingRequiredData.length > 0" style="color: red">
+          Some data required for sending this form has not been included:
+          {{ missingRequiredData.join(', ') }}.
+        </p>
         <BaseButton
-          text="Generate ZIP"
+          text="Download results"
           :status="generateStatus"
           :error="generateError"
           :progress="generateProgress"
@@ -21,45 +45,23 @@
           @click="generateZIP"
         />
         <BaseButtonDownloadData
-          :data="encryptedZipFile"
+          v-show="false"
+          ref="downloadBtn"
+          :data="zipFile"
+          :filename="filename"
           extension="zip"
-          text="Download encrypted"
-          :disabled="!zipReady"
+          text="Download"
         />
-        <BaseButton
-          text="Send encrypted"
-          :status="sentStatus"
-          :error="sentError"
-          :progress="sentProgress"
-          :disabled="!zipReady || (sentStatus && !sentError)"
-          @click="sendForm"
-        />
-        <p v-if="zipReady">ZIP size: {{ zipSizeString }}</p>
-        <p v-if="sentError">
-          Sending failed. Please download the file and send it by email.
-        </p>
-        <p v-if="sentStatus && !sentError">Form successfully submitted.</p>
-        <p v-if="missingRequired">Some required fields are not filled in.</p>
-        <p v-if="missingRequiredDataProcessing.length > 0">
-          Some experience required for sending this form has not been ran:
-          {{ missingRequiredDataProcessing.join(', ') }}.
-        </p>
-        <p v-if="missingRequiredData.length > 0">
-          Some data required for sending this form has not been included:
-          {{ missingRequiredData.join(', ') }}.
-        </p>
       </VCardText>
     </VCard>
   </VForm>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import JSZip from 'jszip'
 import FileManager from '~/utils/file-manager.js'
-import { humanReadableFileSize } from '~/manifests/utils'
 import { padNumber } from '~/utils/utils'
-
-const _sodium = require('libsodium-wrappers')
 
 // In the case of changes that would break the import, this version number must be incremented
 // and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
@@ -93,17 +95,14 @@ export default {
       consent: JSON.parse(JSON.stringify(this.consentForm)),
       includedResults: [],
       zipFile: [],
-      encryptedZipFile: [],
       generateStatus: false,
       generateError: false,
       generateProgress: false,
-      sentStatus: false,
-      sentError: false,
-      sentProgress: false,
       timestamp: 0
     }
   },
   computed: {
+    ...mapState(['config']),
     zipReady() {
       return this.generateStatus && !this.generateError
     },
@@ -125,7 +124,10 @@ export default {
             typeof section.required === 'boolean'
           ) {
             // Some data must be given
-            return section.includedResults.length > 0
+            return (
+              section.includedResults.length > 0 ||
+              this.$store.state.selectedFiles[this.key].length > 0
+            )
           }
         }
         return true
@@ -159,8 +161,25 @@ export default {
     key() {
       return this.$route.params.key
     },
-    zipSizeString() {
-      return humanReadableFileSize(this.encryptedZipFile.length)
+    filename() {
+      const date = new Date(this.timestamp)
+      const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
+        date.getUTCMonth() + 1,
+        2
+      )}-${padNumber(date.getUTCDate(), 2)}`
+      const filename = `${this.key}_${yearMonthDay}_${padNumber(
+        date.getUTCHours(),
+        2
+      )}${padNumber(date.getUTCMinutes(), 2)}_UTC.zip`
+      return filename
+    },
+    tooBig() {
+      const limit = this.config.formSizeLimitMegaBytes
+      if (!limit) {
+        return false
+      }
+      const megabyte = 1048576
+      return this.encryptedZipFile.length > limit * megabyte
     }
   },
   watch: {
@@ -183,9 +202,6 @@ export default {
       // Copy included results preset
       section.includedResults = section.includedResults ?? []
       this.includedResults = section.includedResults ?? []
-    },
-    switchForm() {
-      this.showForm = !this.showForm
     },
     async generateZIP() {
       this.resetStatus()
@@ -219,67 +235,24 @@ export default {
         })
 
       // Add whole files
-      if (this.includedResults.includes('file-explorer')) {
-        const zipFilesFolder = zip.folder('files')
-        const files = this.$store.state.selectedFiles[this.key] ?? []
-        for (const file of files) {
-          zipFilesFolder.file(
-            file.filename,
-            this.fileManager.fileDict[file.filename]
-          )
-        }
+      const zipFilesFolder = zip.folder('files')
+      const files = this.$store.state.selectedFiles[this.key]
+      for (const file of files) {
+        zipFilesFolder.file(
+          file.filename,
+          this.fileManager.fileDict[file.filename]
+        )
       }
 
       const content = await zip.generateAsync({ type: 'uint8array' })
       this.zipFile = content
 
-      // Encrypt the zip
-      await _sodium.ready
-      const sodium = _sodium
-
-      const ciphertext = sodium.crypto_box_seal(
-        content,
-        sodium.from_hex(this.$store.state.config.publicKey)
-      )
-
-      this.encryptedZipFile = ciphertext
       this.generateStatus = true
       this.generateProgress = false
-    },
-    sendForm() {
-      this.sentStatus = false
-      this.sentError = false
-      this.sentProgress = true
 
-      // Programmatically create the form data
-      // Names must correspond to the dummy form defined in /static/export-data-form-dummy.html
-      const formData = new FormData()
-      const date = new Date(this.timestamp)
-      const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
-        date.getUTCMonth() + 1,
-        2
-      )}-${padNumber(date.getUTCDate(), 2)}`
-      const filename = `${this.key}_${yearMonthDay}_${padNumber(
-        date.getUTCHours(),
-        2
-      )}:${padNumber(date.getUTCMinutes(), 2)}.zip`
-      formData.append('form-name', 'export-data')
-      const zip = new File([this.encryptedZipFile], filename, {
-        type: 'application/zip'
-      })
-      formData.append('encrypted-zip', zip, filename)
-      fetch('/', {
-        method: 'POST',
-        body: formData
-      })
-        .then(() => {
-          this.sentStatus = true
-          this.sentProgress = false
-        })
-        .catch(error => {
-          console.error(error)
-          this.sentError = true
-        })
+      await this.$nextTick()
+
+      this.$refs.downloadBtn.$el.click()
     },
     updateConsent({ index, selected, value, includedResults }) {
       const section = this.consent[index]

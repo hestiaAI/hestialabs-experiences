@@ -52,6 +52,7 @@
     "@uppy/core": "^2.0.2",
     "@uppy/dashboard": "^2.0.2",
     "@uppy/drop-target": "^1.0.1",
+    "ajv": "^6.12.6",
     "core-js": "^3.19.3",
     "crossfilter2": "^1.5.4",
     "d3": "^7.1.1",
@@ -60,12 +61,11 @@
     "d3-sankey": "^0.12.3",
     "d3-shape": "^3.0.1",
     "dc": "^4.2.7",
-    "file-saver": "^2.0.5",
     "jsonpath-plus": "^6.0.1",
     "jszip": "^3.7.1",
-    "libsodium-wrappers": "^0.7.9",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
+    "minimatch": "^3.0.4",
     "n3": "^1.12.1",
     "nuxt": "^2.15.8",
     "regression": "^2.0.1",
@@ -79,8 +79,7 @@
     "vega": "^5.20.2",
     "vega-embed": "^6.18.2",
     "vega-lite": "^5.1.1",
-    "vuetify": "^2.6.1",
-    "vuex-persistedstate": "^4.1.0"
+    "vuetify": "^2.6.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.3",

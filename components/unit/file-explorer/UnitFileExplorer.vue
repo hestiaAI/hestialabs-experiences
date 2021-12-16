@@ -13,6 +13,7 @@
         --cursor-style: wait !important;
       }
     </style>
+    <!-- https://github.com/vuetifyjs/vuetify/issues/5617 -->
     <VNavigationDrawer
       ref="drawer"
       :mini-variant.sync="mini"
@@ -20,6 +21,10 @@
       absolute
       permanent
       width="100%"
+      style="
+        transform: translateX(0) !important;
+        visibility: visible !important;
+      "
     >
       <template #prepend>
         <VListItem class="px-2">
@@ -90,11 +95,10 @@
         </template>
         :
         <ul v-if="sortedExtensionTexts">
-          <li
-            v-for="(text, i) in sortedExtensionTexts"
-            :key="i"
-            v-html="text"
-          />
+          <li v-for="(text, i) in sortedExtensionTexts" :key="i">
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div v-html="text"></div>
+          </li>
         </ul>
       </VCardText>
       <VCardText>
@@ -149,6 +153,7 @@ export default {
       search: '',
       isFileLoading: false,
       height: 500,
+      computeNPoints: false,
       nDataPoints: null,
       sortedExtensionTexts: [],
       selectionSize: 0
@@ -248,7 +253,9 @@ export default {
       immediate: true,
       handler() {
         this.setExtensionTexts()
-        this.setNumberOfDataPoints()
+        if (this.computeNPoints) {
+          this.setNumberOfDataPoints()
+        }
       }
     }
   },
@@ -284,11 +291,21 @@ export default {
       const pointsPerFile = await Promise.all(
         this.fileManager
           .getFilenames()
-          .map(async f => [f, await this.fileManager.getNumberOfDataPoints(f)])
+          .map(async f => [
+            f,
+            this.computeNPoints
+              ? await this.fileManager.getNumberOfDataPoints(f)
+              : 0
+          ])
       )
       this.sortedExtensionTexts = this.sortedExtensionCounts.map(([ext, c]) => {
-        const re = new RegExp(`.+\\.${ext}`)
-        const files = pointsPerFile.filter(([f, _n]) => re.test(f))
+        const re = new RegExp(`.+\\.${ext}$`)
+        const filterFunc =
+          ext === 'other'
+            ? ([f, _n]) =>
+                !this.fileManager.supportedExtensions.has(f.split('.').at(-1))
+            : ([f, _n]) => re.test(f)
+        const files = pointsPerFile.filter(filterFunc)
         const shownFiles = _.take(
           _.sortBy(files, ([_f, n]) => -n),
           showAtMost
@@ -316,9 +333,9 @@ export default {
                 ext === 'txt' ? 'line' : 'datapoint',
                 nPointsExt
               )})`
-            : ':'
+            : ''
         }${
-          files.length > showAtMost ? ' including: ' : ''
+          files.length > showAtMost ? ' including: ' : ':'
         } ${topFilesDescription}`
       })
     }

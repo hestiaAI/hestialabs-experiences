@@ -1,5 +1,6 @@
-import { unzip, setOptions } from 'unzipit'
+import { setOptions } from 'unzipit'
 import workerURL from 'unzipit/dist/unzipit-worker.module.js'
+import JSZip from 'jszip'
 import {
   mdiCodeJson,
   mdiFile,
@@ -12,6 +13,7 @@ import {
   mdiXml
 } from '@mdi/js'
 import _ from 'lodash'
+import { matchNormalized, findMatchesInContent } from './accessor'
 import CsvWorker from '~/utils/csv.worker.js'
 import { nJsonPoints } from '~/utils/json'
 import JsonWorker from '~/utils/json.worker.js'
@@ -251,6 +253,21 @@ export default class FileManager {
   }
 
   /**
+   * Return all matching objects from json files.
+   * @param {Object} accessor
+   */
+  async findMatchingObjects(accessor) {
+    const fileContentPromises = Object.keys(this.fileDict)
+      .filter(filePath => matchNormalized(filePath, accessor.filePath))
+      .map(filePath => this.getJsonItems(filePath))
+    const fileContents = await Promise.all(fileContentPromises)
+    return fileContents
+      .map(content => findMatchesInContent(content, accessor))
+      .filter(m => m)
+      .flatMap()
+  }
+
+  /**
    * Computes and returns the number of "data points" in a file if not already computed.
    * @param {String} filePath
    * @returns {Promise<String>}
@@ -322,17 +339,14 @@ export default class FileManager {
       await Promise.all(
         files.flatMap(async file => {
           if (file.name.endsWith('.zip')) {
-            const { entries } = await unzip(file)
-            const innerFiles = await Promise.all(
-              Object.values(entries)
-                .filter(node => !node.isDirectory)
-                .map(
-                  async innerFile =>
-                    new File(
-                      [await innerFile.blob()],
-                      `${file.name}/${innerFile.name}`
-                    )
-                )
+            const zip = new JSZip()
+            await zip.loadAsync(file)
+            const folderContent = zip.file(/.*/)
+            const blobs = await Promise.all(
+              folderContent.map(r => r.async('blob'))
+            )
+            const innerFiles = folderContent.map(
+              (r, i) => new File([blobs[i]], file.name + '/' + r.name)
             )
             return await this.extractZips(innerFiles)
           } else if (file.name.endsWith('/')) {

@@ -22,7 +22,7 @@ const timeParsers = [
 
 // Define range of valid year, in case of timestamp date format
 // the will accept any number so need to filter.
-const validYearMin = 1980
+const validYearMin = 2000
 const validYearMax = 2038
 
 // Try to transform {{ value }} into a Date object,
@@ -55,6 +55,12 @@ function isObject(obj) {
 }
 // Transform a json object to a list of dated events
 function extractJsonEntries(json) {
+  // small trick to avoid recognizing coodinates as date (issue need to be addressed later)
+  const unallowedNames = ['lat', 'lon', 'lng']
+  const validDateName = name =>
+    unallowedNames.every(
+      unallowedName => !name.toLowerCase().includes(unallowedName)
+    )
   function recurse(node) {
     if (isObject(node)) {
       const entries = Object.entries(node).flatMap(([k, v]) => {
@@ -77,7 +83,8 @@ function extractJsonEntries(json) {
           const vDate = getValidDate(v)
           // If both key and value contain dates, use key date as description
           if (kDate && vDate) return [{ date: vDate, description: `${k}` }]
-          if (!kDate && vDate) return [{ date: vDate, description: '' }]
+          if (!kDate && vDate && validDateName(k))
+            return [{ date: vDate, description: '' }]
           if (kDate && !vDate) return [{ date: kDate, description: `${v}` }]
           return [{ description: `${kPretty} : ${v}` }]
         }
@@ -127,7 +134,7 @@ function extractCsvEntries({ items }) {
   })
 }
 
-async function genericDateViewer(fileManager) {
+async function genericDateViewer({ fileManager }) {
   const filenames = fileManager.getFilenames()
 
   const csvFilenames = filenames.filter(name => name.endsWith('.csv'))
@@ -157,7 +164,7 @@ async function genericDateViewer(fileManager) {
   return { headers, items }
 }
 
-async function timedObservationViewer(fileManager, manifest) {
+async function timedObservationViewer({ fileManager, manifest }) {
   const params = manifest.timedObservationsViewer
   const matchingFilenames = fileManager
     .getFilenames()
@@ -194,4 +201,127 @@ async function timedObservationViewer(fileManager, manifest) {
   return { headers, items }
 }
 
-export { genericDateViewer, timedObservationViewer }
+const isValidLat = num => isFinite(num) && Math.abs(num) <= 90
+const isValidLon = num => isFinite(num) && Math.abs(num) <= 180
+const namesLat = ['lat']
+const namesLon = ['lon', 'lng']
+
+function extractJsonLocations(items) {
+  function recurse(node, path) {
+    if (isObject(node)) {
+      // Object
+
+      // First check if there is possible lat and lon at this level
+      let latHeader = null
+      let lonHeader = null
+      Object.entries(node).forEach(([k, v]) => {
+        const kLw = k.toLowerCase()
+        // Specific to Google format, lat and lon are multiplied by 1e7
+        if (kLw.includes('e7')) node[k] = v = v * 1e-7
+        if (namesLat.some(name => kLw.includes(name)) && isValidLat(v))
+          latHeader = k
+        else if (namesLon.some(name => kLw.includes(name)) && isValidLon(v))
+          lonHeader = k
+      })
+
+      // If there is not a lat and lon at this level
+      // continue to recurse and add current leaf to description
+      if (latHeader === null || lonHeader === null) {
+        return Object.entries(node).flatMap(([k, v]) => {
+          return recurse(v, path.concat(k))
+        })
+      }
+      // If there is a lat and lon at this level
+      // return current object with lat lon and description
+      // We do not search for lat lon further down as in most case
+      // the highest level location is the most important one
+      return [
+        {
+          latitude: +node[latHeader],
+          longitude: +node[lonHeader],
+          path: path.join('/'),
+          description: _.omit(node, [latHeader, lonHeader])
+        }
+      ]
+    } else if (Array.isArray(node)) {
+      // Array
+      return node.flatMap(el => recurse(el, path))
+    } else {
+      // It's a leaf
+      return []
+    }
+  }
+  const result = recurse(items, [])
+  return result
+}
+
+function extractCsvLocations({ items }) {
+  if (items.length === 0) return []
+  let latHeader = null
+  let lonHeader = null
+  const sample = items.slice(0, 100)
+  Object.keys(items[0]).forEach(h => {
+    // For each header, check if the name include a name associated with latitude
+    // and if a subset (here first 100) of data points are all valid Latitude
+    // Start verification with latitude since it is less permissive
+    const hLw = h.toLowerCase()
+    if (sample.every(i => i[h] === '')) {
+      // continue to next iteration if all sample values are empty string
+    } else if (
+      namesLat.some(name => hLw.includes(name)) &&
+      sample.every(i => isValidLat(i[h]))
+    ) {
+      latHeader = h
+    } else if (
+      namesLon.some(name => hLw.includes(name)) &&
+      sample.every(i => isValidLon(i[h]))
+    ) {
+      lonHeader = h
+    }
+  })
+
+  // If we didnt find a column for lat and lon return empty
+  if (latHeader === null || lonHeader === null) return []
+
+  return items.map(i => {
+    return {
+      latitude: +i[latHeader],
+      longitude: +i[lonHeader],
+      path: '',
+      description: _.omit(i, [latHeader, lonHeader]) // This can be slow, consider to remove it if not needed
+    }
+  })
+}
+
+async function genericLocationViewer({ fileManager }) {
+  const filenames = fileManager.getFilenames()
+
+  const csvFilenames = filenames.filter(name => name.endsWith('.csv'))
+  const csvItems = await Promise.all(
+    csvFilenames.map(async name => [name, await fileManager.getCsvItems(name)])
+  )
+
+  const jsonFilenames = filenames.filter(
+    name => /\.js(:?on)?$/.test(name) && name !== 'Location History.json'
+  )
+  const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
+  const csvEntries = csvItems.flatMap(([name, csv]) =>
+    extractCsvLocations(csv).map(o => ({ ...o, filename: name }))
+  )
+  const jsonEntries = Object.entries(jsonTexts).flatMap(([name, json]) => {
+    try {
+      return extractJsonLocations(JSON.parse(json)).map(o => ({
+        ...o,
+        filename: name
+      }))
+    } catch (e) {
+      console.error(e)
+      return []
+    }
+  })
+  const items = [...jsonEntries, ...csvEntries]
+  const headers = ['filename', 'latitude', 'longitude', 'path', 'description']
+  return { headers, items }
+}
+
+export { genericDateViewer, timedObservationViewer, genericLocationViewer }

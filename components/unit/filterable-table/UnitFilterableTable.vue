@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="isValid">
-      <h2 v-if="$store.state.power" class="my-3">Query Results</h2>
       <VAlert v-if="error" type="error">{{ message }}</VAlert>
       <UnitFilterableTableFilter
         :display-filters="displayFilters"
@@ -13,6 +12,8 @@
         ref="tableRef"
         :hide-default-footer="disabled"
         multi-sort
+        fixed-header
+        height="500"
         :footer-props="{ itemsPerPageOptions: [5, 10, 15, 500, 1000] }"
         data-testid="data-table"
         @current-items="onItemsUpdate"
@@ -63,7 +64,15 @@ export default {
       message: '',
       extension: 'csv',
       search: '',
-      tableHeaders: this.headers
+      tableHeaders: []
+    }
+  },
+  watch: {
+    data: {
+      immediate: true,
+      handler(data) {
+        this.tableHeaders = this.headers
+      }
     }
   },
   computed: {

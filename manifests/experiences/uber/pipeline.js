@@ -1,15 +1,18 @@
 import keplerConfig from './kepler-config'
-import { genericDateViewer } from '~/manifests/generic-pipelines'
+import {
+  genericDateViewer,
+  genericLocationViewer
+} from '~/manifests/generic-pipelines'
 
-async function tripsData(fileManager) {
+async function tripsData({ fileManager }) {
   return await fileManager.getCsvItems('Uber Data/Rider/trips_data.csv')
 }
 
-async function tripsRawData(fileManager) {
+async function tripsRawData({ fileManager }) {
   return await fileManager.getText('Uber Data/Rider/trips_data.csv')
 }
 
-async function tripsGraphData(fileManager) {
+async function tripsGraphData({ fileManager }) {
   const tripsData = await fileManager.getCsvItems(
     'Uber Data/Rider/trips_data.csv'
   )
@@ -32,8 +35,8 @@ async function tripsGraphData(fileManager) {
   return { headers: ['source', 'target', 'value'], items: filteredValues }
 }
 
-async function tripsKeplerData(fileManager) {
-  return { rawCsv: await tripsRawData(fileManager), config: keplerConfig }
+async function tripsKeplerData({ fileManager }) {
+  return { rawCsv: await tripsRawData({ fileManager }), config: keplerConfig }
 }
 
 export default {
@@ -41,5 +44,6 @@ export default {
   tripsRawData,
   tripsKeplerData,
   tripsGraphData,
-  genericDateViewer
+  genericDateViewer,
+  genericLocationViewer
 }

@@ -26,14 +26,6 @@
     <div class="caption my-2">{{ extensionsMessage }}</div>
 
     <div ref="dashboard" />
-
-    <LazyCodeEditor
-      v-if="$store.state.power"
-      :value="messagePowerUser"
-      :error="error"
-      class="mt-6"
-      readonly
-    />
   </div>
 </template>
 
@@ -94,7 +86,6 @@ export default {
       error: false,
       progress: false,
       filesToExtract: this.files,
-      messagePowerUser: '',
       cachedResult: null
     }
   },
