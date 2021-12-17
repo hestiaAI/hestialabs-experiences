@@ -134,7 +134,7 @@ function extractCsvEntries({ items }) {
   })
 }
 
-async function genericDateViewer(fileManager, manifest, parameter, options) {
+async function genericDateViewer({ fileManager, options }) {
   let filenames = fileManager.getFilenames()
   if (_.has(options, 'acceptedPaths'))
     filenames = filenames.filter(name =>
