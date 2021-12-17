@@ -2,6 +2,7 @@ import { JSONPath } from 'jsonpath-plus'
 import _ from 'lodash'
 import * as d3 from 'd3'
 import Ajv from 'ajv'
+import jsonToTableSchema from './jsonToTableSchema'
 const ajv = new Ajv()
 
 // Define all accepted date formats
@@ -326,46 +327,32 @@ async function genericLocationViewer({ fileManager }) {
   return { headers, items }
 }
 
-const schema = {
-  type: 'object',
-  properties: {
-    rootAccessor: {
-      type: 'object',
-      properties: {
-        fileAccessorRegex: {
-          type: 'string'
-        },
-        nodeAccessor: {
-          type: 'string'
-        }
-      },
-      required: ['fileAccessorRegex', 'nodeAccessor']
-    },
-    properties: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          name: {
-            type: 'string'
-          },
-          field: {
-            type: 'string'
-          },
-          type: {
-            type: 'string'
-          },
-          required: {
-            type: 'boolean'
-          }
-        },
-        required: ['name', 'field', 'type', 'required']
-      }
-    }
-  },
-  required: ['rootAccessor', 'properties']
-}
-
+/**
+ * Build a table from JSON data given a set of JSONPath accessors
+ * The options are passed with "customPipelineOptions" in the manifest and must
+ * follow the JsonShema defined in jsonToTableSchema.js, e.g:
+ *  "customPipelineOptions": {
+ *      "rootAccessor": {
+ *        "fileAccessorRegex": "...", // A regex
+ *        "nodeAccessor": "..." // A JsonPath
+ *      },
+ *      "properties": [
+ *        {
+ *          "name": "Advertiser",
+ *          "field": "name",
+ *          "type": "string",
+ *          "required": true
+ *        },
+ *        ...
+ *      ]
+ *    }
+ * jsonPath uses the normal jsonPath syntax.
+ * see https://github.com/JSONPath-Plus/JSONPath
+ *
+ * jsonSchema is a parsed json object in the JsonSchema syntax.
+ * We're using the default syntax of https://ajv.js.org/
+ *
+ */
 async function jsonToTableConverter({
   fileManager,
   manifest,
@@ -373,10 +360,13 @@ async function jsonToTableConverter({
   options
 }) {
   // Validate that the given options use the correct format
-  const validate = ajv.compile(schema)
+  const validate = ajv.compile(jsonToTableSchema)
   const valid = validate(options)
   if (!valid) {
-    console.error(validate.errors)
+    console.error(
+      'The validation of the options you gave in the manifest failed: ',
+      validate.errors
+    )
     return {}
   }
 
@@ -391,7 +381,6 @@ async function jsonToTableConverter({
 
   // retreive the headers names
   const headers = options.properties.map(p => p.name)
-  console.log(headers)
   // iterate through all files matched
   const items = (
     await Promise.all(
@@ -402,28 +391,37 @@ async function jsonToTableConverter({
         )[0]
         // Clear file from memory
         fileManager.freeFile(filename)
-        console.log(text)
         try {
           // get all entries that satisfy the given root JSONPATH
           const entries = JSONPath({
             path: options.rootAccessor.nodeAccessor,
             json: JSON.parse(text)
           })
-          console.log(options.rootAccessor.nodeAccessor, entries)
+          if (entries.length === 0)
+            console.error(
+              'value not found for node accessor',
+              options.rootAccessor.nodeAccessor
+            )
           // build
           return entries.map(e => {
             const item = {}
             options.properties.forEach(p => {
-              console.log(e, p.field)
+              // get all entries that satisfy the given field JSONPATH
               const value = JSONPath({
                 path: p.field,
-                json: e
+                json: e,
+                wrap: true
               })
-              console.log(value)
-              if (value.length === 0 && p.required) {
-                console.error('value not found for ', p.field)
-              } else if (p.type.toLowerCase() === 'date') {
-                item[p.name] = new Date(value)
+
+              // Cast value to specified format, may need to handle errors
+              if (value.length === 0) {
+                if (p.required)
+                  console.error('value not found for field accessor', p.field)
+                item[p.name] = null
+              } else if (p.type === 'date') {
+                item[p.name] = d3.timeParse(p.format)(value)
+              } else if (p.type === 'number') {
+                item[p.name] = +value
               } else {
                 item[p.name] = value
               }
@@ -437,7 +435,6 @@ async function jsonToTableConverter({
       })
     )
   ).flat()
-  console.log(items)
   return { headers, items }
 }
 export {

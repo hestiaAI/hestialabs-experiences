@@ -62,14 +62,6 @@
       "text": "Get a list of advertisers that have uploaded a contact list containing you."
     },
     {
-      "key": "genericDateViewer",
-      "customPipeline": "genericDateViewer",
-      "visualization": "ChartViewGenericDateViewer.vue",
-      "showTable": false,
-      "title": "Dated observations",
-      "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
-    },
-    {
       "key": "customAudience",
       "customPipeline": "jsonToTableConverter",
       "customPipelineOptions": { 
@@ -107,6 +99,14 @@
       "showTable": true,
       "title": "Advertisers using your activity or information",
       "text": "See all advertisers that use Facebook to get information about you"
+    },
+    {
+      "key": "genericDateViewer",
+      "customPipeline": "genericDateViewer",
+      "visualization": "ChartViewGenericDateViewer.vue",
+      "showTable": false,
+      "title": "Dated observations",
+      "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
     }
   ]
 }
