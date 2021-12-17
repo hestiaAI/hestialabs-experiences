@@ -196,6 +196,7 @@ export default {
       } else if (!this.includedResults.includes('file-explorer')) {
         this.includedResults.push('file-explorer')
       }
+      this.updateConsent()
     }
   }
 }

@@ -124,10 +124,13 @@ export default {
             typeof section.required === 'boolean'
           ) {
             // Some data must be given
-            return (
-              section.includedResults.length > 0 ||
-              this.$store.state.selectedFiles[this.key].length > 0
-            )
+            if (
+              section.includedResults.length === 1 &&
+              section.includedResults[0] === 'file-explorer'
+            ) {
+              return this.$store.state.selectedFiles[this.key].length > 0
+            }
+            return section.includedResults.length > 0
           }
         }
         return true
