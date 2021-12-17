@@ -67,7 +67,7 @@
         <template v-else>
           <VRow>
             <VCol class="text-center">
-              <p><i>No relevant data found</i></p>
+              <BaseAlert>No relevant data found</BaseAlert>
             </VCol>
           </VRow>
         </template>
