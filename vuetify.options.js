@@ -16,7 +16,9 @@ import {
   mdiMinusBox,
   mdiStepForward,
   mdiTwitter,
-  mdiMinus
+  mdiMinus,
+  mdiNumeric1CircleOutline,
+  mdiNumeric2CircleOutline
 } from '@mdi/js'
 
 export default {
@@ -39,7 +41,9 @@ export default {
       mdiMinusBox,
       mdiStepForward,
       mdiTwitter,
-      mdiMinus
+      mdiMinus,
+      mdiNumeric1CircleOutline,
+      mdiNumeric2CircleOutline
     }
   },
   theme: {

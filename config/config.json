@@ -20,6 +20,7 @@
     "other"
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
+  "filedrop": "https://example.com",
   "consent": {
     "default": [
       {

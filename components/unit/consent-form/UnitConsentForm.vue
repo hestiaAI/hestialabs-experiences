@@ -14,13 +14,6 @@
           }"
           @change="updateConsent"
         />
-        <p>
-          Please download the ZIP file containing the results and
-          <a v-if="config.filedrop" :href="config.filedrop" target="_blank"
-            >drop it here</a
-          >
-          <template v-else>send it by email</template>.
-        </p>
         <p v-if="missingRequired" style="color: red">
           Some required fields are not filled in.
         </p>
@@ -32,26 +25,42 @@
           Some data required for sending this form has not been included:
           {{ missingRequiredData.join(', ') }}.
         </p>
-        <BaseButton
-          text="Download results"
-          :status="generateStatus"
-          :error="generateError"
-          :progress="generateProgress"
-          :disabled="
-            missingRequired ||
-            missingRequiredDataProcessing.length > 0 ||
-            missingRequiredData.length > 0
-          "
-          @click="generateZIP"
-        />
-        <BaseButtonDownloadData
-          v-show="false"
-          ref="downloadBtn"
-          :data="zipFile"
-          :filename="filename"
-          extension="zip"
-          text="Download"
-        />
+        <VRow>
+          <VCol>
+            <VIcon v-if="config.filedrop" class="mr-2" color="#424242"
+              >$vuetify.icons.mdiNumeric1CircleOutline</VIcon
+            >
+            <BaseButton
+              text="Download results"
+              :status="generateStatus"
+              :error="generateError"
+              :progress="generateProgress"
+              :disabled="
+                missingRequired ||
+                missingRequiredDataProcessing.length > 0 ||
+                missingRequiredData.length > 0
+              "
+              @click="generateZIP"
+            />
+            <BaseButtonDownloadData
+              v-show="false"
+              ref="downloadBtn"
+              :data="zipFile"
+              :filename="filename"
+              extension="zip"
+              text="Download"
+            />
+          </VCol>
+          <VCol v-if="config.filedrop">
+            <VIcon class="mr-2" color="#424242"
+              >$vuetify.icons.mdiNumeric2CircleOutline</VIcon
+            >
+            <a :href="config.filedrop" target="_blank">
+              <BaseButton text="Drop file here" />
+            </a>
+          </VCol>
+        </VRow>
+        <VRow> </VRow>
       </VCardText>
     </VCard>
   </VForm>
