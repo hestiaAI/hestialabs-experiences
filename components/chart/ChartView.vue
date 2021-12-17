@@ -5,8 +5,10 @@
       v-if="isValid && !isEmpty"
       v-bind="{ values, headers, ...vizProps }"
     />
-    <i v-else-if="isValid">No data found</i>
-    <i v-else>Data in this format cannot be displayed by this visualization</i>
+    <BaseAlert v-else-if="isValid">No data found</BaseAlert>
+    <BaseAlert v-else type="warning">
+      Data in this format cannot be displayed by this visualization
+    </BaseAlert>
   </div>
 </template>
 
