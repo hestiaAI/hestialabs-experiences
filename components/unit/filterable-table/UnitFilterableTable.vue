@@ -33,9 +33,11 @@
       />
       <BaseButtonShare v-bind="{ disabled: !files, files }" file-share />
     </div>
-    <i v-else data-testid="data-error"
-      >data in this format cannot be displayed in a table</i
-    >
+    <BaseAlert v-else type="warning">
+      <span data-testid="data-error">
+        Data in this format cannot be displayed in a table
+      </span>
+    </BaseAlert>
   </div>
 </template>
 

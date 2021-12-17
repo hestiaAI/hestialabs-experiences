@@ -3,8 +3,10 @@
     <div v-if="isValid && !isEmpty" ref="view">
       <component :is="component" v-bind="{ values, headers, ...vizProps }" />
     </div>
-    <i v-else-if="isValid">No data found</i>
-    <i v-else>Data in this format cannot be displayed by this visualization</i>
+    <BaseAlert v-else-if="isValid">No data found</BaseAlert>
+    <BaseAlert v-else type="warning">
+      Data in this format cannot be displayed by this visualization
+    </BaseAlert>
     <BaseButton icon="mdiExport" text="Export" @click="exportFiles" />
     <BaseButtonShare file-share :disabled="!files" :files="files" />
   </div>

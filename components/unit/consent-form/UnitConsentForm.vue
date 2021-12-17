@@ -21,17 +21,17 @@
           >
           <template v-else>send it by email</template>.
         </p>
-        <p v-if="missingRequired" style="color: red">
+        <BaseAlert v-if="missingRequired">
           Some required fields are not filled in.
-        </p>
-        <p v-if="missingRequiredDataProcessing.length > 0" style="color: red">
+        </BaseAlert>
+        <BaseAlert v-if="missingRequiredDataProcessing.length > 0">
           Some experience required for sending this form has not been ran:
           {{ missingRequiredDataProcessing.join(', ') }}.
-        </p>
-        <p v-if="missingRequiredData.length > 0" style="color: red">
+        </BaseAlert>
+        <BaseAlert v-if="missingRequiredData.length > 0">
           Some data required for sending this form has not been included:
           {{ missingRequiredData.join(', ') }}.
-        </p>
+        </BaseAlert>
         <BaseButton
           text="Download results"
           :status="generateStatus"
