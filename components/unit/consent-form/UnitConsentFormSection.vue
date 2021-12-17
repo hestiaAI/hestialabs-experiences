@@ -29,7 +29,7 @@
         :readonly="readonly"
         dense
         value="file-explorer"
-        @change="updateConsent"
+        @change="updateFilesCheckbox"
       >
         <template #label>
           <span class="mr-2"
@@ -37,7 +37,9 @@
           >
           <SelectFilesDialog
             v-if="!readonly"
+            ref="selectFilesDialog"
             :file-manager="fileManager"
+            :button-ref="buttonRef"
             @return="returnDialog"
           />
         </template>
@@ -141,7 +143,8 @@ export default {
     return {
       selected: null,
       value: null,
-      includedResults: null
+      includedResults: null,
+      buttonRef: 'selectFilesDialogButton'
     }
   },
   computed: {
@@ -197,6 +200,11 @@ export default {
         this.includedResults.push('file-explorer')
       }
       this.updateConsent()
+    },
+    updateFilesCheckbox() {
+      if (this.includedResults.includes('file-explorer')) {
+        this.$refs.selectFilesDialog.$refs[this.buttonRef].$el.click()
+      }
     }
   }
 }

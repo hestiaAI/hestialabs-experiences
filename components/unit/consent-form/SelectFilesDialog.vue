@@ -2,7 +2,12 @@
   <div>
     <VDialog v-model="dialog" width="80%" persistent scrollable>
       <template #activator="{ on }">
-        <BaseButton class="mb-4" text="Select files" v-on="on" />
+        <BaseButton
+          :ref="buttonRef"
+          class="mb-4"
+          text="Select files"
+          v-on="on"
+        />
       </template>
 
       <VDivider></VDivider>
@@ -34,6 +39,10 @@ export default {
     fileManager: {
       type: FileManager,
       required: true
+    },
+    buttonRef: {
+      type: String,
+      default: 'selectFilesDialogButton'
     }
   },
   data() {
