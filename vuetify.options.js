@@ -16,8 +16,7 @@ import {
   mdiMinus,
   mdiMinusBox,
   mdiShare,
-  mdiStepForward,
-  mdiTableArrowRight
+  mdiStepForward
 } from '@mdi/js'
 
 export default {
@@ -40,8 +39,7 @@ export default {
       mdiMinus,
       mdiMinusBox,
       mdiShare,
-      mdiStepForward,
-      mdiTableArrowRight
+      mdiStepForward
     }
   },
   theme: {
