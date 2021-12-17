@@ -1,6 +1,8 @@
 import { JSONPath } from 'jsonpath-plus'
 import _ from 'lodash'
 import * as d3 from 'd3'
+import Ajv from 'ajv'
+const ajv = new Ajv()
 
 // Define all accepted date formats
 const timeParsers = [
@@ -324,4 +326,123 @@ async function genericLocationViewer({ fileManager }) {
   return { headers, items }
 }
 
-export { genericDateViewer, timedObservationViewer, genericLocationViewer }
+const schema = {
+  type: 'object',
+  properties: {
+    rootAccessor: {
+      type: 'object',
+      properties: {
+        fileAccessorRegex: {
+          type: 'string'
+        },
+        nodeAccessor: {
+          type: 'string'
+        }
+      },
+      required: ['fileAccessorRegex', 'nodeAccessor']
+    },
+    properties: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string'
+          },
+          field: {
+            type: 'string'
+          },
+          type: {
+            type: 'string'
+          },
+          required: {
+            type: 'boolean'
+          }
+        },
+        required: ['name', 'field', 'type', 'required']
+      }
+    }
+  },
+  required: ['rootAccessor', 'properties']
+}
+
+async function jsonToTableConverter({
+  fileManager,
+  manifest,
+  params,
+  options
+}) {
+  // Validate that the given options use the correct format
+  const validate = ajv.compile(schema)
+  const valid = validate(options)
+  if (!valid) {
+    console.error(validate.errors)
+    return {}
+  }
+
+  // Get the filenames matching the rootAccessor
+  const filenames = fileManager
+    .getFilenames()
+    .filter(f => new RegExp(options.rootAccessor.fileAccessorRegex).test(f))
+  if (filenames.length === 0) {
+    console.error('no matching files for regex:', options.rootAccessor)
+    return {}
+  }
+
+  // retreive the headers names
+  const headers = options.properties.map(p => p.name)
+  console.log(headers)
+  // iterate through all files matched
+  const items = (
+    await Promise.all(
+      filenames.flatMap(async filename => {
+        // read the file
+        const text = Object.values(
+          await fileManager.preprocessFiles([filename])
+        )[0]
+        // Clear file from memory
+        fileManager.freeFile(filename)
+        console.log(text)
+        try {
+          // get all entries that satisfy the given root JSONPATH
+          const entries = JSONPath({
+            path: options.rootAccessor.nodeAccessor,
+            json: JSON.parse(text)
+          })
+          console.log(options.rootAccessor.nodeAccessor, entries)
+          // build
+          return entries.map(e => {
+            const item = {}
+            options.properties.forEach(p => {
+              console.log(e, p.field)
+              const value = JSONPath({
+                path: p.field,
+                json: e
+              })
+              console.log(value)
+              if (value.length === 0 && p.required) {
+                console.error('value not found for ', p.field)
+              } else if (p.type.toLowerCase() === 'date') {
+                item[p.name] = new Date(value)
+              } else {
+                item[p.name] = value
+              }
+            })
+            return item
+          })
+        } catch (e) {
+          console.error(e)
+          return []
+        }
+      })
+    )
+  ).flat()
+  console.log(items)
+  return { headers, items }
+}
+export {
+  genericDateViewer,
+  timedObservationViewer,
+  genericLocationViewer,
+  jsonToTableConverter
+}
