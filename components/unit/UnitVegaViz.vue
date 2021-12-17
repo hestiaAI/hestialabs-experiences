@@ -31,9 +31,11 @@ function isDataValid(data) {
     _.every(data.items, i => _.every(data.headers, h => _.has(i, h)))
   )
 }
+
 function isDataEmpty(data) {
   return data.items.length === 0
 }
+
 export default {
   props: {
     specFile: {
