@@ -238,13 +238,15 @@ export default {
         })
 
       // Add whole files
-      const zipFilesFolder = zip.folder('files')
-      const files = this.$store.state.selectedFiles[this.key]
-      for (const file of files) {
-        zipFilesFolder.file(
-          file.filename,
-          this.fileManager.fileDict[file.filename]
-        )
+      if (this.includedResults.includes('file-explorer')) {
+        const zipFilesFolder = zip.folder('files')
+        const files = this.$store.state.selectedFiles[this.key]
+        for (const file of files) {
+          zipFilesFolder.file(
+            file.filename,
+            this.fileManager.fileDict[file.filename]
+          )
+        }
       }
 
       const content = await zip.generateAsync({ type: 'uint8array' })
