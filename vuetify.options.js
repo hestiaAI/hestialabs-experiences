@@ -9,15 +9,15 @@ import {
   mdiDatabase,
   mdiDatabaseRemove,
   mdiDownload,
-  mdiFacebook,
+  mdiExport,
   mdiFileSearch,
   mdiHome,
   mdiMagnify,
+  mdiMinus,
   mdiMinusBox,
   mdiShare,
   mdiStepForward,
-  mdiTwitter,
-  mdiMinus
+  mdiTableArrowRight
 } from '@mdi/js'
 
 export default {
@@ -33,15 +33,15 @@ export default {
       mdiDatabase,
       mdiDatabaseRemove,
       mdiDownload,
-      mdiFacebook,
+      mdiExport,
       mdiFileSearch,
       mdiHome,
       mdiMagnify,
+      mdiMinus,
       mdiMinusBox,
       mdiShare,
       mdiStepForward,
-      mdiTwitter,
-      mdiMinus
+      mdiTableArrowRight
     }
   },
   theme: {

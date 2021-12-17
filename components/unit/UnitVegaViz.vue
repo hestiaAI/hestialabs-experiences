@@ -1,15 +1,15 @@
 <template>
   <div>
     <template v-if="isValid && !isEmpty">
-      <div :id="divId" ref="graph"></div>
+      <div ref="graph"></div>
       <VRow>
         <VCol cols="6 mx-auto">
-          <BaseButton text="Export" @click="exportViz" />
           <BaseButtonDownload
             :href="dataURL"
             :extension="exportExtension"
             :disabled="!dataURL"
           />
+          <BaseButtonShare file-share :disabled="!files" :files="files" />
         </VCol>
       </VRow>
     </template>
@@ -47,16 +47,13 @@ export default {
     exportExtension: {
       type: String,
       default: 'png'
-    },
-    divId: {
-      type: String,
-      required: true
     }
   },
   data() {
     return {
       width: 0,
-      dataURL: ''
+      dataURL: '',
+      files: null
     }
   },
   computed: {
@@ -126,16 +123,21 @@ export default {
       // const width = this.width
       // const scaling = width / (spec.width + spec.padding * 2)
       // const height = spec.height * scaling
-      await embed(`#${this.divId}`, spec, {
+      await embed(this.$refs.graph, spec, {
         // width,
         // height,
         // renderer: 'svg',
         actions: false
       })
-    },
-    exportViz() {
-      const canvas = document.getElementById(this.divId).firstChild
-      this.dataURL = canvas.toDataURL(`image/${this.exportExtension}`)
+
+      const ext = this.exportExtension
+
+      const canvas = this.$refs.graph.firstChild
+      const type = `image/${ext}`
+      this.dataURL = canvas.toDataURL(type)
+      canvas.toBlob(blob => {
+        this.files = [new File([blob], `export.${ext}`, { type })]
+      }, type)
     }
   }
 }

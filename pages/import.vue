@@ -63,7 +63,6 @@
               v-if="allVizVega[resultIndex]"
               :spec-file="allVizVega[resultIndex]"
               :data="result.result"
-              :div-id="`viz-${resultIndex}`"
               class="text-center"
             />
             <ChartView

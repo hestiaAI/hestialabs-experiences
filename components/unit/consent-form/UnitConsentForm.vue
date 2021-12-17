@@ -50,7 +50,6 @@
           :data="zipFile"
           :filename="filename"
           extension="zip"
-          text="Download"
         />
       </VCardText>
     </VCard>

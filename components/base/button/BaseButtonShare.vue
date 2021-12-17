@@ -1,5 +1,11 @@
 <template>
-  <BaseButton icon="mdiShare" :text="buttonText" @click.stop="share" />
+  <BaseButton
+    v-if="condition"
+    icon="mdiShare"
+    :text="buttonText"
+    v-bind="$attrs"
+    @click="share"
+  />
 </template>
 
 <script>
@@ -31,6 +37,21 @@ export default {
     files: {
       type: Array[File],
       default: () => []
+    },
+    fileShare: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    const condition =
+      !this.fileShare ||
+      (navigator.canShare &&
+        navigator.canShare({
+          files: [new File(['test'], 'test.txt')]
+        }))
+    return {
+      condition
     }
   },
   computed: {

@@ -7,7 +7,7 @@
           <VImg max-width="50" :src="m.icon" :lazy-src="m.icon" contain />
           <h1 class="ml-3">{{ m.title }}</h1>
           <VSpacer />
-          <BaseButtonShare />
+          <BaseButtonShare color="primary" :outlined="false" />
         </div>
         <p class="subtitle-1 mt-4">
           {{ m.subtitle }}
