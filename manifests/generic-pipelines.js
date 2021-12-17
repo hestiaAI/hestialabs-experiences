@@ -306,12 +306,7 @@ function extractCsvLocations({ items }) {
   })
 }
 
-async function genericLocationViewer(
-  fileManager,
-  manifest,
-  parameter,
-  options
-) {
+async function genericLocationViewer({ fileManager, options }) {
   let filenames = fileManager.getFilenames()
   if (_.has(options, 'acceptedPaths'))
     filenames = filenames.filter(name =>
