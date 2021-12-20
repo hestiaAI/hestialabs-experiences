@@ -12,19 +12,19 @@
       "visualization": "ChartViewOverviewNetflix.vue",
       "showTable": false,
       "title": "Viewing activity",
-      "text": "Get an overview of how you use Netflix and what informations are store about you"
+      "text": "Get an overview of how you use Netflix and what information is stored about you"
     },
     {
       "key": "notifications",
       "customPipeline": "messagesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
-        "title": "Notification sent by Netflix",
+        "title": "Notifications sent by Netflix",
         "yLabel": "count"
       },
       "showTable": false,
       "title": "Notifications",
-      "text": "See how many times Netflix send you notifications"
+      "text": "See how many times Netflix sent you notifications"
     },
     {
       "key": "genericDateViewer",
