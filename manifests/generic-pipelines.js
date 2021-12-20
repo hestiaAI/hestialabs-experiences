@@ -413,17 +413,28 @@ async function jsonToTableConverter({
                 wrap: true
               })
 
-              // Cast value to specified format, may need to handle errors
               if (value.length === 0) {
                 if (p.required)
                   console.error('value not found for field accessor', p.field)
                 item[p.name] = null
-              } else if (p.type === 'date') {
-                item[p.name] = d3.timeParse(p.format)(value)
-              } else if (p.type === 'number') {
-                item[p.name] = +value
-              } else {
-                item[p.name] = value
+              }
+
+              // Cast value to specified format, may need to handle errors
+              switch (p.type) {
+                case 'date':
+                  item[p.name] = d3.timeParse(p.format)(value)
+                  break
+                case 'string':
+                  item[p.name] = String(value)
+                  break
+                case 'number':
+                  item[p.name] = Number(value)
+                  break
+                case 'boolean':
+                  item[p.name] = Boolean(value)
+                  break
+                default:
+                  item[p.name] = value
               }
             })
             return item

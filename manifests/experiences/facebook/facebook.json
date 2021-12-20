@@ -66,7 +66,7 @@
       "customPipeline": "jsonToTableConverter",
       "customPipelineOptions": { 
         "rootAccessor": {
-          "fileAccessorRegex": "/ads_information/advertisers_using_your_activity_or_information.json",
+          "fileAccessorRegex": "ads_information/advertisers_using_your_activity_or_information.json",
           "nodeAccessor": "$.custom_audiences_all_types_v2[*]"
         },
         "properties": [
@@ -85,13 +85,13 @@
           {
             "name": "has_remarketing_custom_audience",
             "field": "has_remarketing_custom_audience",
-            "type": "string",
+            "type": "boolean",
             "required": true
           },
           {
             "name": "has_in_person_store_visit",
             "field": "has_in_person_store_visit",
-            "type": "string",
+            "type": "boolean",
             "required": true
           }
         ]
