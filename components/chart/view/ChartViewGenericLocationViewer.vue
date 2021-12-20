@@ -53,7 +53,6 @@ export default {
     drawViz() {
       this.total = this.values.length
       this.results = this.values
-      this.results.forEach(i => (i.description = JSON.stringify(i.description)))
       this.myKeplerInput = {
         keplerData: {
           fields: this.headers.map(h => {
@@ -61,7 +60,10 @@ export default {
               name: h
             }
           }),
-          rows: this.results.map(i => this.headers.map(h => i[h]))
+          rows: this.results.map(i => {
+            i.description = JSON.stringify(i.description)
+            return this.headers.map(h => i[h])
+          })
         },
         config: keplerConfig
       }
