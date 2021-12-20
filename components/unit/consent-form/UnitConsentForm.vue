@@ -14,17 +14,17 @@
           }"
           @change="updateConsent"
         />
-        <p v-if="missingRequired" style="color: red">
+        <BaseAlert v-if="missingRequired">
           Some required fields are not filled in.
-        </p>
-        <p v-if="missingRequiredDataProcessing.length > 0" style="color: red">
+        </BaseAlert>
+        <BaseAlert v-if="missingRequiredDataProcessing.length > 0">
           Some experience required for sending this form has not been ran:
           {{ missingRequiredDataProcessing.join(', ') }}.
-        </p>
-        <p v-if="missingRequiredData.length > 0" style="color: red">
+        </BaseAlert>
+        <BaseAlert v-if="missingRequiredData.length > 0">
           Some data required for sending this form has not been included:
           {{ missingRequiredData.join(', ') }}.
-        </p>
+        </BaseAlert>
         <VRow>
           <VCol>
             <VIcon v-if="config.filedrop" class="mr-2" color="#424242"
@@ -60,7 +60,6 @@
             </a>
           </VCol>
         </VRow>
-        <VRow> </VRow>
       </VCardText>
     </VCard>
   </VForm>

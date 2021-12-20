@@ -1,4 +1,3 @@
-import colors from 'vuetify/es5/util/colors'
 import {
   mdiAlert,
   mdiCheckboxBlankOutline,
@@ -51,12 +50,12 @@ export default {
     themes: {
       light: {
         primary: '#58539e',
-        accent: colors.grey.darken3,
-        secondary: colors.amber.darken3,
-        info: colors.teal.lighten1,
-        warning: colors.amber.base,
-        error: colors.deepOrange.accent4,
-        success: colors.green.accent3
+        // Following colors are from the MUI default dark palette
+        // https://mui.com/customization/palette/#default-values
+        info: '#0288d1',
+        warning: '#f57c00',
+        error: '#d32f2f',
+        success: '#388e3c'
       }
     }
   }
