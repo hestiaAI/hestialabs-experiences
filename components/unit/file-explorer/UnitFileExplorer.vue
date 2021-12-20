@@ -1,7 +1,9 @@
 <template>
   <VCard
     v-click-outside="{
-      handler: () => (mini = true),
+      handler: () => {
+        if (!selectable) mini = true
+      },
       closeConditional: () => !mini
     }"
     class="pa-2 my-6 explorer"
@@ -73,6 +75,7 @@
           :selectable="selectable"
           :search="search"
           :items="treeItems"
+          :open.sync="openItems"
           @update:active="setSelectedItem"
         >
           <template #prepend="{ item }">
@@ -83,9 +86,11 @@
         </VTreeview>
       </div>
     </VNavigationDrawer>
-    <VCardTitle class="justify-center">Explore your files</VCardTitle>
+    <VCardTitle v-if="!selectable" class="justify-center"
+      >Explore your files</VCardTitle
+    >
     <div :class="miniWidthPaddingLeftClass">
-      <VCardText>
+      <VCardText v-if="!selectable">
         Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (<b>{{
           dataSizeString
         }}</b
@@ -148,7 +153,7 @@ export default {
     return {
       selectedItem: {},
       supportedTypes: new Set(['json', 'csv', 'pdf', 'img', 'html', 'txt']),
-      mini: true,
+      mini: !this.selectable,
       miniWidth: 48,
       search: '',
       isFileLoading: false,
@@ -156,7 +161,8 @@ export default {
       computeNPoints: false,
       nDataPoints: null,
       sortedExtensionTexts: [],
-      selectionSize: 0
+      selectionSize: 0,
+      openItems: []
     }
   },
   computed: {
@@ -256,6 +262,7 @@ export default {
         if (this.computeNPoints) {
           this.setNumberOfDataPoints()
         }
+        this.setInitOpen()
       }
     }
   },
@@ -267,8 +274,10 @@ export default {
     setSelectedItem([item]) {
       // item might be undefined (when unselecting)
       if (item) {
-        // close drawer when file is selected
-        this.mini = true
+        if (!this.selectable) {
+          // close drawer when file is selected
+          this.mini = true
+        }
         const containers = new Set(['folder', 'zip'])
         if (!containers.has(item?.type)) {
           this.selectedItem = item
@@ -338,6 +347,16 @@ export default {
           files.length > showAtMost ? ' including: ' : ':'
         } ${topFilesDescription}`
       })
+    },
+    setInitOpen() {
+      // If the root has a sequence of nodes with 1 children, pre-open them
+      const open = []
+      let tree = this.treeItems
+      while (tree.length === 1) {
+        open.push(tree[0])
+        tree = tree[0].children ?? []
+      }
+      this.openItems = open
     }
   }
 }
