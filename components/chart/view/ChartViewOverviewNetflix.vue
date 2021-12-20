@@ -503,10 +503,7 @@ export default {
         .dimension(contentDimension)
         .ordinalColors([colorPalette[0]])
         .valueAccessor(d => d.value)
-        .title(
-          d =>
-            formatTime(d.key) + ': ' + formatNumber(d.value) + ' hours watched'
-        )
+        .title(d => d.key + ': ' + formatNumber(d.value) + ' hours watched')
         .label(d => d.key)
         .data(group => group.top(20))
         // .labelOffsetX(0)
