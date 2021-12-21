@@ -7,7 +7,8 @@ function createItems(data) {
   const { impressions, engagements } = data
   const adsItems = []
   const targetingItems = []
-  let j = 0
+  let targetingItemsId = 0
+  let adsId = 0
   const files = [
     { values: impressions, engagement: 0 },
     { values: engagements, engagement: 1 }
@@ -23,7 +24,7 @@ function createItems(data) {
         advertiserName = v.advertiserInfo.advertiserName || null
       }
       adsItems.push({
-        id: i,
+        id: adsId,
         tweetId,
         advertiserName,
         time: v.impressionTime,
@@ -41,12 +42,13 @@ function createItems(data) {
           targetingValue = criterion.targetingValue || null
         }
         targetingItems.push({
-          id: j++,
-          adId: i,
+          id: targetingItemsId++,
+          adId: adsId,
           targetingType,
           targetingValue
         })
       })
+      adsId++
     })
   }
   return { adsItems, targetingItems }
