@@ -9,14 +9,14 @@ export default async function databaseBuilder(fileManager) {
 
   db.create('twitterAds', [
     ['id', 'INTEGER'],
-    ['tweetId', 'INTEGER'],
+    ['tweetId', 'TEXT'],
     ['advertiserName', 'TEXT'],
     ['time', 'DATE'],
     ['engagement', 'INTEGER']
   ])
   db.create('twitterCriteria', [
     ['id', 'INTEGER'],
-    ['adId', 'INTEGER'],
+    ['adId', 'TEXT'],
     ['targetingType', 'TEXT'],
     ['targetingValue', 'TEXT']
   ])
