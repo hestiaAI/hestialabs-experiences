@@ -14,15 +14,11 @@ function createItems(data) {
     { values: engagements, engagement: 1 }
   ]
   for (const file of files) {
-    file.values.forEach((v, i) => {
-      let tweetId = null
-      if (v.promotedTweetInfo) {
-        tweetId = v.promotedTweetInfo.tweetId || null
-      }
-      let advertiserName = null
-      if (v.advertiserInfo) {
-        advertiserName = v.advertiserInfo.advertiserName || null
-      }
+    file.values.forEach(v => {
+      const tweetId = v.promotedTweetInfo ? v.promotedTweetInfo.tweetId : null
+      const advertiserName = v.advertiserInfo
+        ? v.advertiserInfo.advertiserName
+        : null
       adsItems.push({
         id: adsId,
         tweetId,
