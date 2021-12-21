@@ -66,6 +66,10 @@ export default {
       type: Number,
       default: () => 5
     },
+    adj: {
+      type: Number,
+      default: () => 70
+    },
     title: {
       type: String,
       default: () => 'Title of the Graph'
@@ -150,7 +154,6 @@ export default {
     draw(intervalName) {
       const width = 800
       const height = 300
-      const adj = 50
 
       /* create svg element */
       d3.select('#' + this.graphId + ' svg').remove()
@@ -161,13 +164,13 @@ export default {
         .attr(
           'viewBox',
           '-' +
-            adj +
+            this.adj +
             ' -' +
-            adj +
+            this.adj +
             ' ' +
-            (width + adj * 2) +
+            (width + this.adj * 2) +
             ' ' +
-            (height + adj * 2)
+            (height + this.adj * 2)
         )
         .style('padding', this.padding)
         .style('margin', this.margin)
@@ -216,7 +219,7 @@ export default {
         .append('text')
         .attr('transform', 'rotate(-90)')
         .attr('dy', '.75em')
-        .attr('y', -50)
+        .attr('y', -60)
         .style('text-anchor', 'end')
         .text(this.yLabel)
 
