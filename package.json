@@ -36,8 +36,21 @@
     "transform": {
       "^.+\\.[t|j]sx?$": "babel-jest",
       "^.+\\.vue$": "@vue/vue2-jest"
-    }
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!d3)",
+      "\\.pnp\\.[^\\/]+$"
+    ]
   },
+  "_transformIgnorePatterns": [
+    "/node_modules/(?!robust-predicates)",
+    "/node_modules/(?!d3)",
+    "/node_modules/",
+    "node_modules/(?!(d3.*|robust-predicates)/)",
+    "node_modules/(?!(robust-predicates)/)",
+    "node_modules/(?!(d3.*)/)",
+    "\\.pnp\\.[^\\/]+$"
+  ],
   "lint-staged": {
     "*.{js,vue}": "npm run lint"
   },
@@ -60,6 +73,7 @@
     "d3-collection": "^1.0.7",
     "d3-sankey": "^0.12.3",
     "d3-shape": "^3.0.1",
+    "d3-time-format": "^4.1.0",
     "dc": "^4.2.7",
     "debounce": "^1.2.1",
     "jsonpath-plus": "^6.0.1",

@@ -1,16 +1,23 @@
 import FileManager from '~/utils/file-manager'
 
+function mockFile(fileName, content) {
+  // browser files are different from node files
+  return { name: fileName, text: () => Promise.resolve(content) }
+}
+
+export async function mockFileManager(fileName, content) {
+  const fileManager = new FileManager({}, true)
+  const file = mockFile(fileName, content)
+  await fileManager.init([file], true)
+  return fileManager
+}
+
 test('an empty file manager', async () => {
   const fileManager = new FileManager({}, true)
   fileManager.init([], false)
   const bobo = await fileManager.getText('bobo.json')
   expect(bobo).toStrictEqual('{}')
 })
-
-function mockFile(fileName, content) {
-  // browser files are different from node files
-  return { name: fileName, text: () => Promise.resolve(content) }
-}
 
 test('a json file in file manager', async () => {
   const fileManager = new FileManager({}, true)

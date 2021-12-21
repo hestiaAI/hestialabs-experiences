@@ -258,6 +258,10 @@ export default class FileManager {
   /**
    * Return all matching objects from json files.
    * @param {Object} accessor
+   * @param {Object} options
+   *
+   * Options can have the following attributes:
+   * - freeFiles: true means files are freed after reading
    */
   async findMatchingObjects(accessor, options = {}) {
     const objectPromises = this.getFilenames()
