@@ -19,6 +19,7 @@
         <VTreeview
           v-model="selectedFiles"
           dense
+          activatable
           open-on-click
           return-object
           transition
@@ -26,8 +27,10 @@
           selectable
           selected-color="primary"
           :open.sync="openItems"
+          :active.sync="activeItems"
           :search="search"
           :items="treeItems"
+          @update:active="clickOnLabel"
         >
           <template #prepend="{ item }">
             <VIcon>
@@ -64,7 +67,8 @@ export default {
   },
   data() {
     return {
-      search: ''
+      search: '',
+      activeItems: []
     }
   },
   computed: {
@@ -118,6 +122,16 @@ export default {
         tree = tree[0].children ?? []
       }
       this.openItems = open
+    },
+    clickOnLabel(event) {
+      // vuetify doesn't have an option to check/uncheck when clicking the label, this is a workaround
+      const item = event[0]
+      if (this.selectedFiles.includes(item)) {
+        this.selectedFiles = this.selectedFiles.filter(x => x !== item)
+      } else {
+        this.selectedFiles = this.selectedFiles.concat([item])
+      }
+      this.activeItems = []
     }
   }
 }
