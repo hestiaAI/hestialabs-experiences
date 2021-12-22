@@ -14,16 +14,7 @@
       hide-details
       menu-props="auto, overflowY, offsetY, top"
     />
-    <VTextField
-      v-model="searchValue"
-      append-icon="mdi-magnify"
-      label="Search"
-      placeholder="Type..."
-      single-line
-      hide-details
-      clearable
-      class="mb-6 mt-3"
-    ></VTextField>
+    <BaseSearchBar v-model="searchValue"></BaseSearchBar>
   </div>
 </template>
 
