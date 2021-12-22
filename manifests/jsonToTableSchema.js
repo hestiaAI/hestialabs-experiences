@@ -61,5 +61,5 @@ export default {
       }
     }
   },
-  required: ['accessor', 'properties']
+  required: ['accessor']
 }

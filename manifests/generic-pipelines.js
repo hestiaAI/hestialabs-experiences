@@ -402,40 +402,58 @@ async function jsonToTableConverter({
     freeFiles: true
   })
 
-  const headers = options.properties.map(p => p.name)
-
-  const items = entries.map(e => {
-    const item = {}
-    options.properties.forEach(p => {
-      // get all entries that satisfy the given field JSONPATH
-      const value = JSONPath({
-        path: p.field,
-        json: e,
-        wrap: true
-      })
-
-      // Cast value to specified format, may need to handle errors
-      switch (p.type) {
-        case 'date':
-          item[p.name] = timeParse(p.format)(value)
-          break
-        case 'string':
-          item[p.name] = String(value)
-          break
-        case 'number':
-          item[p.name] = Number(value)
-          break
-        case 'boolean':
-          item[p.name] = Boolean(value)
-          break
-        default:
-          item[p.name] = value
-      }
-    })
-    return item
-  })
-  return { headers, items }
+  return makeTableData(entries, options)
 }
+
+function makeTableData(objects, options) {
+  const { properties } = options
+  if (properties) {
+    const headers = options.properties.map(p => p.name)
+    const items = objects.map(e => makeTableItem(e, options))
+    return { headers, items }
+  }
+  const firstObject = objects[0]
+  if (firstObject) {
+    const headerSet = objects.reduce((hSet, obj) => {
+      Object.keys(obj).forEach(k => hSet.add(k))
+      return hSet
+    }, new Set())
+    return { headers: [...headerSet], items: objects }
+  }
+  return {}
+}
+
+function makeTableItem(object, options) {
+  const item = {}
+  options.properties.forEach(p => {
+    // get all entries that satisfy the given field JSONPATH
+    const value = JSONPath({
+      path: p.field,
+      json: object,
+      wrap: true
+    })
+
+    // Cast value to specified format, may need to handle errors
+    switch (p.type) {
+      case 'date':
+        item[p.name] = timeParse(p.format)(value)
+        break
+      case 'string':
+        item[p.name] = String(value)
+        break
+      case 'number':
+        item[p.name] = Number(value)
+        break
+      case 'boolean':
+        item[p.name] = Boolean(value)
+        break
+      default:
+        item[p.name] = value
+    }
+  })
+  return item
+}
+
 export {
   genericDateViewer,
   timedObservationViewer,
