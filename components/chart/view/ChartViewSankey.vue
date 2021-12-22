@@ -307,27 +307,33 @@ export default {
   }
 }
 </script>
-<style>
-body {
+<style scoped>
+::v-deep body {
   font-family: 'Roboto';
   color: #22313f;
 }
 
-.node rect {
+::v-deep .node rect {
   fill-opacity: 0.9;
   shape-rendering: crispEdges;
 }
 
-.node text {
+::v-deep .node text {
   pointer-events: none;
   text-shadow: 0 1px 0 #fff;
 }
 
-.link {
+::v-deep .link {
   fill: none;
   stroke: rgb(87, 86, 87);
 }
 
+::v-deep .label {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+</style>
+<style>
 .tooltip {
   font-size: 0.7rem;
   background-color: white;
@@ -354,10 +360,5 @@ body {
   border-right: 8px solid white;
   left: -9px;
   top: 7px;
-}
-
-.label {
-  font-size: 1.1rem;
-  font-weight: bold;
 }
 </style>

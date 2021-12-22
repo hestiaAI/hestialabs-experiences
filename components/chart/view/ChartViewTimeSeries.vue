@@ -376,43 +376,44 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 /* AXES */
 /* ticks */
-.xAxis line,
-.yAxis line {
+::v-deep .xAxis line,
+::v-deep .yAxis line {
   stroke: #706f6f;
   stroke-width: 0.5;
   shape-rendering: geometricPrecision;
 }
 
 /* axis contour */
-.xAxis path,
-.yAxis path {
+::v-deep .xAxis path,
+::v-deep .yAxis path {
   stroke: #706f6f;
   stroke-width: 0.7;
   shape-rendering: geometricPrecision;
 }
 
-.yAxis path {
+::v-deep .yAxis path {
   display: none;
 }
 
 /* axis text */
-.xAxis text,
-.yAxis text {
+::v-deep .xAxis text,
+::v-deep .yAxis text {
   fill: #2b2929;
   font-size: 1rem;
   font-weight: 300;
 }
 
-.gridline {
+::v-deep .gridline {
   stroke: lightgray;
   shape-rendering: geometricPrecision;
   stroke-opacity: 0.5;
   stroke-width: 10;
 }
-
+</style>
+<style>
 div.tooltip {
   position: absolute;
   text-align: center;

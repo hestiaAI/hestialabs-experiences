@@ -4,8 +4,48 @@
       <VCol cols="12" md="12" class="text-center">
         <p>
           You have been targeted by <strong>{{ total }}</strong> ads between
-          15/04/2021 and 13/06/2021
+          <strong>{{ minDate }}</strong> and <strong>{{ maxDate }}</strong>
         </p>
+      </VCol>
+    </VRow>
+    <VRow dense justify="center" class="mt-3">
+      <VCol cols="12" md="4">
+        <VSlider
+          v-model="topKSlider"
+          label="N° of advertisers"
+          thumb-color="primary"
+          thumb-label="always"
+          min="5"
+          :max="Math.min(total, 50)"
+          hide-details
+          dense
+          @change="draw"
+        ></VSlider>
+      </VCol>
+    </VRow>
+    <VRow dense justify="center">
+      <VCol cols="6" md="2">
+        <VCheckbox
+          v-model="othersCheck"
+          dense
+          label="Display Others"
+          hide-details
+          @change="draw"
+        ></VCheckbox>
+      </VCol>
+      <VCol cols="6" md="2">
+        <VSelect
+          v-model="agg"
+          :items="aggList"
+          label="Aggregation"
+          dense
+          hide-details
+          @change="draw"
+        ></VSelect>
+      </VCol>
+    </VRow>
+    <VRow justify="center">
+      <VCol cols="12" md="7">
         <div :id="graphId"></div>
       </VCol>
     </VRow>
@@ -13,30 +53,232 @@
 </template>
 
 <script>
+import * as d3 from 'd3'
+import { nest } from 'd3-collection'
 import mixin from './mixin'
-// import * as d3 from 'd3'
 
 export default {
   mixins: [mixin],
   props: {
-    dateFormat: {
+    accessor: {
+      type: Array,
+      default: () => []
+    },
+    valueFormat: {
       type: String,
-      default: () => '%Y-%m-%d'
+      default: () => '~s'
+    },
+    yLabel: {
+      type: String,
+      default: () => 'Count'
+    },
+    yAxisMaxTickLength: {
+      type: Number,
+      default: () => 20
+    },
+    padding: {
+      type: Number,
+      default: () => 5
+    },
+    margin: {
+      type: Number,
+      default: () => 5
     }
   },
   data() {
     return {
-      total: 0
+      total: 0,
+      nbDay: 1,
+      minDate: null,
+      maxDate: null,
+      records: [],
+      agg: 'total',
+      aggList: ['total', 'average'],
+      topKSlider: 0,
+      othersCheck: true
     }
   },
-  mounted() {
-    this.drawViz()
-  },
   methods: {
+    draw() {
+      const newData = this.records[this.agg].slice(
+        0,
+        this.othersCheck ? this.topKSlider - 1 : this.topKSlider
+      )
+      if (this.othersCheck) {
+        newData.push({
+          key: 'Others',
+          value: d3.sum(
+            this.records[this.agg].slice(this.topKSlider),
+            d => d.value
+          )
+        })
+        newData.sort(function (a, b) {
+          return d3.descending(a.value, b.value)
+        })
+      }
+
+      this.xScale.domain(d3.extent(newData, d => d.value))
+      this.yScale.domain(
+        newData.map(function (d) {
+          return d.key
+        })
+      )
+
+      const bars = this.svg.selectAll('.bars').data(newData, d => d.key)
+      bars
+        .enter()
+        .append('rect')
+        .attr('class', 'bars')
+        .attr('x', 5)
+        .attr('y', d => this.yScale(d.key))
+        .attr('width', 0)
+        .attr('height', this.yScale.bandwidth())
+        .attr('fill', '#69b3a2')
+        .merge(bars)
+        .transition()
+        .duration(1000)
+        .delay(200)
+        .attr('y', d => this.yScale(d.key))
+        .attr('width', d => this.xScale(d.value) + 5)
+        .attr('height', this.yScale.bandwidth())
+
+      bars.exit().transition().duration(1000).attr('width', 0).remove()
+
+      d3.select('.yAxis')
+        .transition()
+        .duration(1000)
+        .delay(200)
+        .style('font-size', 2 / Math.log(this.topKSlider) + 'rem')
+        .call(this.yAxis)
+
+      d3.select('.xAxis')
+        .transition()
+        .duration(1000)
+        .delay(200)
+        .call(this.xAxis)
+    },
     drawViz() {
-      console.log(this.values)
+      // Compute date range
+      const formatDate = d3.timeFormat('%B %d, %Y')
+      const extent = d3.extent(this.values, d => new Date(d.date))
+      this.minDate = formatDate(extent[0])
+      this.maxDate = formatDate(extent[1])
+      this.nbDay = d3.timeDay.count(extent[0], extent[1])
+
+      // Add number of samples
+      this.total = this.values.length
+
+      // set default number of samples
+      this.topKSlider = 20
+
+      // Precompute aggregation
+      this.records = {
+        total: nest()
+          .key(d => d.advertiserName)
+          .rollup(d => d3.sum(d, l => l.count))
+          .entries(this.values)
+          .sort(function (a, b) {
+            return d3.descending(a.value, b.value)
+          }),
+        average: nest()
+          .key(d => d.advertiserName)
+          .rollup(d => d3.sum(d, l => l.count) / this.nbDay)
+          .entries(this.values)
+          .sort(function (a, b) {
+            return d3.descending(a.value, b.value)
+          })
+      }
+
+      /* create svg element */
+      const width = 300
+      const height = 500
+      const adjVertical = 60
+      const adjHorizontal = 150
+      d3.select('#' + this.graphId + ' svg').remove()
+      this.svg = d3
+        .select('#' + this.graphId)
+        .append('svg')
+        .attr('preserveAspectRatio', 'xMinYMin meet')
+        .attr(
+          'viewBox',
+          '-' +
+            adjHorizontal +
+            ' -' +
+            adjVertical +
+            ' ' +
+            (width + adjHorizontal * 2) +
+            ' ' +
+            (height + adjVertical * 2)
+        )
+        .style('padding', this.padding)
+        .style('margin', this.margin)
+        .classed('svg-content', true)
+
+      /* Scales */
+      this.xScale = d3.scaleLinear().range([0, width])
+      this.yScale = d3.scaleBand().range([0, height]).paddingInner(0.1)
+
+      /* Axis */
+      function cutLongNames(name, maxLength) {
+        if (name.length > maxLength) return name.slice(0, maxLength) + '..'
+        else return name
+      }
+      const yAxis = d3
+        .axisLeft(this.yScale)
+        .tickFormat(x => cutLongNames(x, this.yAxisMaxTickLength))
+        .tickSizeOuter(0)
+      const xAxis = d3.axisBottom(this.xScale).ticks(4)
+      this.xAxis = xAxis
+      this.yAxis = yAxis
+
+      this.svg
+        .append('g')
+        .attr('class', 'xAxis')
+        .attr('transform', 'translate(0,' + (height + 10) + ')')
+        .call(xAxis)
+        .append('text')
+        .attr('dy', '.75em')
+        .attr('y', 30)
+        .attr('x', width / 2)
+        .style('text-anchor', 'middle')
+        .text(this.yLabel)
+      this.svg.append('g').attr('class', 'yAxis').call(yAxis)
+      this.draw()
     }
   }
 }
 </script>
-<style scoped></style>
+<style scoped>
+/* AXES */
+/* ticks */
+::v-deep .xAxis line,
+::v-deep .yAxis line {
+  stroke: #706f6f;
+  stroke-width: 0.5;
+  shape-rendering: geometricPrecision;
+}
+
+/* axis contour */
+::v-deep .xAxis path,
+::v-deep .yAxis path {
+  stroke: #706f6f;
+  stroke-width: 0.7;
+  shape-rendering: geometricPrecision;
+}
+
+::v-deep .yAxis path {
+  display: none;
+}
+
+/* axis text */
+::v-deep .xAxis text,
+::v-deep .yAxis text {
+  fill: #2b2929;
+  font-weight: 300;
+}
+::v-deep .xAxis text {
+  fill: #2b2929;
+  font-weight: 300;
+  font-size: 1rem;
+}
+</style>
