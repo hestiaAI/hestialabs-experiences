@@ -40,7 +40,7 @@
         <template v-if="success">
           <VRow v-if="showDataExplorer">
             <VCol>
-              <UnitFileExplorer v-bind="{ fileManager, selectable: false }" />
+              <UnitFileExplorer v-bind="{ fileManager }" />
             </VCol>
           </VRow>
           <VRow
