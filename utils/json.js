@@ -5,6 +5,14 @@ import {
 } from '@mdi/js'
 import _ from 'lodash'
 
+function filterCondition(item, filter) {
+  filter = filter.toLowerCase()
+  return (
+    (item.name && `${item.name}`.toLowerCase().includes(filter)) ||
+    (item.value && `${item.value}`.toLowerCase().includes(filter))
+  )
+}
+
 /**
  * itemifyJSON transforms some JSON into a tree, suitable for a Vuetify VTreeview component.
  * @param {String} jsonText
@@ -12,7 +20,7 @@ import _ from 'lodash'
  * and returning true if the node satifisfies the desired filter condition
  * @returns {Array} the tree
  */
-export default function itemifyJSON(jsonText, filterCondition) {
+export default function itemifyJSON(jsonText, filter) {
   const groupsPerLevel = 10
   let id = 0
   function minifyList(list, base = 0) {
@@ -41,7 +49,7 @@ export default function itemifyJSON(jsonText, filterCondition) {
         const inner = itemifyRec(el)
         if (typeof inner.name === 'undefined') {
           // Leaf node (second part)
-          if (filterCondition && !filterCondition(inner)) {
+          if (filter && !filterCondition(inner, filter)) {
             return []
           }
         }
@@ -66,7 +74,7 @@ export default function itemifyJSON(jsonText, filterCondition) {
         if (typeof inner.name === 'undefined') {
           // Leaf node (second part)
           const leaf = { ...inner, name }
-          if (filterCondition && !filterCondition(leaf)) {
+          if (filter && !filterCondition(leaf, filter)) {
             return []
           }
           return leaf

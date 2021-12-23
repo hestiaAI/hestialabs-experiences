@@ -245,7 +245,7 @@ export default class FileManager {
   async getJsonItems(filePath) {
     if (!_.has(this.#jsonItems, filePath)) {
       const text = await this.getPreprocessedText(filePath)
-      const items = await runWorker(new JsonWorker(), text)
+      const items = await runWorker(new JsonWorker(), { jsonText: text })
       this.#jsonItems[filePath] = items
       // this.#jsonItems[filePath] = itemifyJSON(text)
     }

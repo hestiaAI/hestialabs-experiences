@@ -30,7 +30,8 @@ import { debounce } from 'debounce'
 
 import mixin from './mixin'
 import mixinLoading from './mixin-loading'
-import itemifyJSON from '~/utils/json'
+import JsonWorker from '~/utils/json.worker.js'
+import { runWorker } from '@/utils/utils'
 
 export default {
   name: 'UnitFileExplorerViewerJson',
@@ -79,20 +80,12 @@ export default {
       }
       this.setLoading(false)
     },
-    filterCondition() {
-      // Returns a function with closure
-      const search = this.search
-      return item => {
-        const searchValue = search.toLowerCase()
-        return (
-          (item.name && `${item.name}`.toLowerCase().includes(searchValue)) ||
-          (item.value && `${item.value}`.toLowerCase().includes(searchValue))
-        )
-      }
-    },
-    updateFilteredItems() {
+    async updateFilteredItems() {
       if (this.search) {
-        this.filteredItems = itemifyJSON(this.jsonText, this.filterCondition())
+        this.filteredItems = await runWorker(new JsonWorker(), {
+          jsonText: this.jsonText,
+          filter: this.search
+        })
       } else {
         this.filteredItems = this.items
       }
