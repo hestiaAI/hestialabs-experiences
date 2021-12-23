@@ -32,18 +32,21 @@
         @change="updateFilesCheckbox"
       >
         <template #label>
-          <span class="mr-2"
-            >Individual files (<b>{{ selectedFiles.length }}</b> selected)</span
+          <span
+            >Individual files (<a
+              style="text-decoration: underline"
+              @click="showDialog = true"
+              ><b>{{ selectedFiles.length }}</b> selected</a
+            >)</span
           >
-          <SelectFilesDialog
-            v-if="!readonly"
-            ref="selectFilesDialog"
-            :file-manager="fileManager"
-            :button-ref="buttonRef"
-            @return="returnDialog"
-          />
         </template>
       </VCheckbox>
+      <SelectFilesDialog
+        v-if="!readonly"
+        v-model="showDialog"
+        :file-manager="fileManager"
+        @return="returnDialog"
+      />
 
       <VCheckbox
         v-for="(title, j) in section.additional"
@@ -144,7 +147,7 @@ export default {
       selected: null,
       value: null,
       includedResults: null,
-      buttonRef: 'selectFilesDialogButton'
+      showDialog: false
     }
   },
   computed: {
@@ -203,7 +206,7 @@ export default {
     },
     updateFilesCheckbox() {
       if (this.includedResults.includes('file-explorer')) {
-        this.$refs.selectFilesDialog.$refs[this.buttonRef].$el.click()
+        this.showDialog = true
       }
     }
   }

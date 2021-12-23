@@ -89,7 +89,7 @@
       <!-- File explorer -->
       <VRow v-if="hasFileExplorer">
         <VCol>
-          <UnitFileExplorer v-bind="{ fileManager, selectable: false }" />
+          <UnitFileExplorer v-bind="{ fileManager }" />
         </VCol>
       </VRow>
     </template>

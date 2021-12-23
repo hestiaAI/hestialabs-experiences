@@ -2,7 +2,7 @@
   <VCard
     v-click-outside="{
       handler: () => {
-        if (!selectable) mini = true
+        mini = true
       },
       closeConditional: () => !mini
     }"
@@ -15,7 +15,6 @@
         --cursor-style: wait !important;
       }
     </style>
-    <!-- https://github.com/vuetifyjs/vuetify/issues/5617 -->
     <VNavigationDrawer
       ref="drawer"
       :mini-variant.sync="mini"
@@ -23,10 +22,6 @@
       absolute
       permanent
       width="100%"
-      style="
-        transform: translateX(0) !important;
-        visibility: visible !important;
-      "
     >
       <template #prepend>
         <VListItem class="px-2">
@@ -39,9 +34,6 @@
           <VBtn icon @click.stop="mini = !mini">
             <VIcon>$vuetify.icons.mdiChevronLeft</VIcon>
           </VBtn>
-        </VListItem>
-        <VListItem v-if="selectable && !mini">
-          Size of selected files: {{ selectionSizeString }}
         </VListItem>
         <VListItem v-if="!mini">
           <VTextField
@@ -65,17 +57,14 @@
 
       <div :class="miniWidthPaddingLeftClass">
         <VTreeview
-          v-model="selectedFiles"
           dense
           open-on-click
           activatable
           return-object
           transition
           rounded
-          :selectable="selectable"
           :search="search"
           :items="treeItems"
-          :open.sync="openItems"
           @update:active="setSelectedItem"
         >
           <template #prepend="{ item }">
@@ -86,11 +75,9 @@
         </VTreeview>
       </div>
     </VNavigationDrawer>
-    <VCardTitle v-if="!selectable" class="justify-center"
-      >Explore your files</VCardTitle
-    >
+    <VCardTitle class="justify-center">Explore your files</VCardTitle>
     <div :class="miniWidthPaddingLeftClass">
-      <VCardText v-if="!selectable">
+      <VCardText>
         Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (<b>{{
           dataSizeString
         }}</b
@@ -143,10 +130,6 @@ export default {
     fileManager: {
       type: FileManager,
       required: true
-    },
-    selectable: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
@@ -160,9 +143,7 @@ export default {
       height: 500,
       computeNPoints: false,
       nDataPoints: null,
-      sortedExtensionTexts: [],
-      selectionSize: 0,
-      openItems: []
+      sortedExtensionTexts: []
     }
   },
   computed: {
@@ -175,9 +156,6 @@ export default {
     },
     treeItems() {
       return this.fileManager.getTreeItems()
-    },
-    selectionSizeString() {
-      return humanReadableFileSize(this.selectionSize)
     },
     path() {
       // TODO avoid code duplication with viewer/mixin-path
@@ -232,21 +210,6 @@ export default {
       return _.sortBy(Object.entries(occurrences), ([ext, count]) =>
         ext === 'other' ? 1 : -count
       )
-    },
-    key() {
-      return this.$route.params.key
-    },
-    selectedFiles: {
-      get() {
-        return this.$store.state.selectedFiles[this.key]
-      },
-      set(value) {
-        this.$store.commit('setSelectedFiles', { key: this.key, value })
-        this.selectionSize = _.sumBy(
-          value,
-          ({ filename }) => this.fileManager.fileDict[filename]?.size ?? 0
-        )
-      }
     }
   },
   watch: {
@@ -262,7 +225,6 @@ export default {
         if (this.computeNPoints) {
           this.setNumberOfDataPoints()
         }
-        this.setInitOpen()
       }
     }
   },
@@ -347,16 +309,6 @@ export default {
           files.length > showAtMost ? ' including: ' : ':'
         } ${topFilesDescription}`
       })
-    },
-    setInitOpen() {
-      // If the root has a sequence of nodes with 1 children, pre-open them
-      const open = []
-      let tree = this.treeItems
-      while (tree.length === 1) {
-        open.push(tree[0])
-        tree = tree[0].children ?? []
-      }
-      this.openItems = open
     }
   }
 }
