@@ -57,13 +57,10 @@ export default {
       },
       immediate: true
     },
-    search: {
-      handler() {
-        // The search starts some time after the user stops typing, not after every character typed
-        this.delayedUpdateFilteredItems.clear()
-        this.delayedUpdateFilteredItems()
-      },
-      immediate: true
+    search() {
+      // The search starts some time after the user stops typing, not after every character typed
+      this.delayedUpdateFilteredItems.clear()
+      this.delayedUpdateFilteredItems()
     }
   },
   methods: {
