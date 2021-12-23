@@ -5,7 +5,14 @@ import {
 } from '@mdi/js'
 import _ from 'lodash'
 
-export default function itemifyJSON(jsonText) {
+/**
+ * itemifyJSON transforms some JSON into a tree, suitable for a Vuetify VTreeview component.
+ * @param {String} jsonText
+ * @param {Function} filterCondition (optional) a function taking a leaf node as argument
+ * and returning true if the node satifisfies the desired filter condition
+ * @returns {Array} the tree
+ */
+export default function itemifyJSON(jsonText, filterCondition) {
   const groupsPerLevel = 10
   let id = 0
   function minifyList(list, base = 0) {
@@ -26,38 +33,49 @@ export default function itemifyJSON(jsonText) {
   function itemifyRec(tree) {
     id++
     if (typeof tree !== 'object') {
+      // Leaf node (first part)
       return { id, value: tree, icon: mdiInformationOutline }
     } else if (Array.isArray(tree)) {
-      const children = tree.flatMap(el => itemifyRec(el))
-      const plural = children.length !== 1
+      // Array node
+      const children = tree.flatMap(el => {
+        const inner = itemifyRec(el)
+        if (typeof inner.name === 'undefined') {
+          // Leaf node (second part)
+          if (filterCondition && !filterCondition(inner)) {
+            return []
+          }
+        }
+        return inner
+      })
+      if (!children.length) {
+        return []
+      }
+      const plural = children.length > 1
       const name = `[list with ${children.length} item${plural ? 's' : ''}]`
-      if (!plural && children[0].name) {
-        return {
-          id,
-          name: `${name} / ${children[0].name}`,
-          children: children[0].children,
-          icon: children[0].icon
-        }
-      } else {
-        return {
-          id,
-          name,
-          children: minifyList(children),
-          icon: mdiFormatListBulletedSquare
-        }
+      return {
+        id,
+        name,
+        children: minifyList(children),
+        icon: mdiFormatListBulletedSquare
       }
     } else if (tree !== null) {
+      // Object node
       const children = Object.entries(tree).flatMap(([key, v]) => {
         const inner = itemifyRec(v)
         const name = _.startCase(key)
         if (typeof inner.name === 'undefined') {
-          return { ...inner, name }
+          // Leaf node (second part)
+          const leaf = { ...inner, name }
+          if (filterCondition && !filterCondition(leaf)) {
+            return []
+          }
+          return leaf
         } else {
           return { ...inner, name: `${name} / ${inner.name}` }
         }
       })
-      if (children.length === 1) {
-        return children[0]
+      if (!children.length) {
+        return []
       } else {
         return {
           id,
