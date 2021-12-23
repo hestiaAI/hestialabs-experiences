@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import { debounce } from 'debounce'
+
 import mixin from './mixin'
 import mixinLoading from './mixin-loading'
 import itemifyJSON from '~/utils/json'
@@ -38,21 +40,28 @@ export default {
       jsonText: '',
       items: [],
       error: false,
-      search: ''
+      search: '',
+      searchCooldownTime: 1000,
+      filteredItems: []
     }
   },
   computed: {
-    filteredItems() {
-      if (this.search) {
-        return itemifyJSON(this.jsonText, this.filterCondition())
-      }
-      return this.items
+    delayedUpdateFilteredItems() {
+      return debounce(this.updateFilteredItems, this.searchCooldownTime)
     }
   },
   watch: {
     filename: {
       handler(filename) {
         this.getContentFromFilename(filename)
+      },
+      immediate: true
+    },
+    search: {
+      handler() {
+        // The search starts some time after the user stops typing, not after every character typed
+        this.delayedUpdateFilteredItems.clear()
+        this.delayedUpdateFilteredItems()
       },
       immediate: true
     }
@@ -66,6 +75,7 @@ export default {
       this.jsonText = await this.fileManager.getPreprocessedText(filename)
       try {
         this.items = await this.fileManager.getJsonItems(filename)
+        this.filteredItems = this.items
         this.error = false
       } catch (error) {
         this.error = true
@@ -81,6 +91,13 @@ export default {
           (item.name && `${item.name}`.toLowerCase().includes(searchValue)) ||
           (item.value && `${item.value}`.toLowerCase().includes(searchValue))
         )
+      }
+    },
+    updateFilteredItems() {
+      if (this.search) {
+        this.filteredItems = itemifyJSON(this.jsonText, this.filterCondition())
+      } else {
+        this.filteredItems = this.items
       }
     }
   }
