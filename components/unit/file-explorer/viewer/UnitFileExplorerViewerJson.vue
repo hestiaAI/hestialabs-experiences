@@ -82,10 +82,10 @@ export default {
     },
     async updateFilteredItems() {
       if (this.search) {
-        this.filteredItems = await runWorker(new JsonWorker(), {
-          jsonText: this.jsonText,
-          filter: this.search
-        })
+        this.filteredItems = await runWorker(new JsonWorker(), [
+          this.jsonText,
+          this.search
+        ])
       } else {
         this.filteredItems = this.items
       }
