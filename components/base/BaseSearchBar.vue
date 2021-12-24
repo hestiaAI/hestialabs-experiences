@@ -1,6 +1,6 @@
 <template>
   <VTextField
-    :value="search"
+    :value="value"
     prepend-icon="$vuetify.icons.mdiMagnify"
     :label="label"
     :placeholder="placeholder"
@@ -15,7 +15,7 @@
 <script>
 export default {
   props: {
-    search: {
+    value: {
       type: String,
       default: ''
     },
