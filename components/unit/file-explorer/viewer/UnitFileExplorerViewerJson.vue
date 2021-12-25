@@ -76,6 +76,7 @@ export default {
         this.filteredItems = this.items
         this.error = false
       } catch (error) {
+        console.error(error)
         this.error = true
       }
       this.setLoading(false)

@@ -23,7 +23,7 @@ function filterCondition(item, filter) {
 export default function itemifyJSON(jsonText, filter) {
   const groupsPerLevel = 10
   let id = 0
-  function minifyList(list, base = 0) {
+  function minifyList(list, jsonPath, base = 0) {
     if (list.length <= groupsPerLevel) return list
     const groupSize = Math.pow(
       groupsPerLevel,
@@ -34,19 +34,20 @@ export default function itemifyJSON(jsonText, filter) {
       name: `[elements ${base + groupSize * i + 1} - ${
         base + groupSize * i + group.length
       }]`,
-      children: minifyList(group, base + i * groupSize),
+      jsonPath,
+      children: minifyList(group, jsonPath, base + i * groupSize),
       icon: mdiFormatListBulletedSquare
     }))
   }
-  function itemifyRec(tree) {
+  function itemifyRec(tree, jsonPath) {
     id++
     if (typeof tree !== 'object') {
       // Leaf node (first part)
-      return { id, value: tree, icon: mdiInformationOutline }
+      return { id, value: tree, icon: mdiInformationOutline, jsonPath }
     } else if (Array.isArray(tree)) {
       // Array node
-      const children = tree.flatMap(el => {
-        const inner = itemifyRec(el)
+      const children = tree.flatMap((el, ci) => {
+        const inner = itemifyRec(el, `${jsonPath}[${ci}]`)
         if (typeof inner.name === 'undefined') {
           // Leaf node (second part)
           if (filter && !filterCondition(inner, filter)) {
@@ -63,13 +64,14 @@ export default function itemifyJSON(jsonText, filter) {
       return {
         id,
         name,
-        children: minifyList(children),
+        jsonPath,
+        children: minifyList(children, jsonPath),
         icon: mdiFormatListBulletedSquare
       }
     } else if (tree !== null) {
       // Object node
       const children = Object.entries(tree).flatMap(([key, v]) => {
-        const inner = itemifyRec(v)
+        const inner = itemifyRec(v, `${jsonPath}['${key}']`)
         const name = _.startCase(key)
         if (typeof inner.name === 'undefined') {
           // Leaf node (second part)
@@ -91,14 +93,15 @@ export default function itemifyJSON(jsonText, filter) {
             .map(k => _.startCase(k))
             .join(', ')}}`,
           children,
+          jsonPath,
           icon: mdiCodeJson
         }
       }
     } else {
-      return { id, value: 'null', icon: mdiInformationOutline }
+      return { id, value: 'null', icon: mdiInformationOutline, jsonPath }
     }
   }
-  return [itemifyRec(JSON.parse(jsonText))]
+  return [itemifyRec(JSON.parse(jsonText), '$')]
 }
 
 export function nJsonPoints(json) {

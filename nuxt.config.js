@@ -157,17 +157,6 @@ export default {
             }
           ]
         },
-        {
-          test: /unzipit-worker.module.js$/,
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                name: '[path][name].[contenthash:7].[ext]'
-              }
-            }
-          ]
-        },
         // for importing wasm files
         // https://github.com/sql-js/react-sqljs-demo
         {

@@ -65,9 +65,9 @@
       "key": "customAudience",
       "customPipeline": "jsonToTableConverter",
       "customPipelineOptions": { 
-        "rootAccessor": {
-          "fileAccessorRegex": "ads_information/advertisers_using_your_activity_or_information.json",
-          "nodeAccessor": "$.custom_audiences_all_types_v2[*]"
+        "accessor": {
+          "filePath": "ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json",
+          "jsonPath": "$.custom_audiences_all_types_v2[*]"
         },
         "properties": [
           {
