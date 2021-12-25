@@ -7,14 +7,11 @@
     <BaseAlert v-else type="warning">
       Data in this format cannot be displayed by this visualization
     </BaseAlert>
-    <BaseButton icon="mdiExport" text="Export" @click="exportFiles" />
-    <BaseButtonShare file-share :disabled="!files" :files="files" />
   </div>
 </template>
 
 <script>
 import _ from 'lodash'
-import { processError } from '@/utils/utils'
 
 function isDataValid(data) {
   return (
@@ -29,48 +26,6 @@ function isDataValid(data) {
 
 function isDataEmpty(data) {
   return data.items.length === 0
-}
-
-// inspired by https://github.com/JuanIrache/d3-svg-to-png
-function svgToFile(
-  svgElement,
-  filename,
-  { scale = 1, format = 'png', quality = 1 }
-) {
-  const svgData = new XMLSerializer().serializeToString(svgElement)
-  const canvas = document.createElement('canvas')
-  const svgSize = svgElement.getBoundingClientRect()
-
-  // Resize can break shadows
-  canvas.width = svgSize.width * scale
-  canvas.height = svgSize.height * scale
-  canvas.style.width = svgSize.width
-  canvas.style.height = svgSize.height
-
-  const ctx = canvas.getContext('2d')
-  ctx.scale(scale, scale)
-
-  const img = document.createElement('img')
-  img.setAttribute(
-    'src',
-    'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)))
-  )
-
-  const type = `image/${format}`
-
-  return new Promise(resolve => {
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0)
-      canvas.toBlob(
-        blob => {
-          img.onload = null
-          resolve(new File([blob], `${filename}.${format}`, { type }))
-        },
-        type,
-        quality
-      )
-    }
-  })
 }
 
 export default {
@@ -88,14 +43,6 @@ export default {
       default: () => {}
     }
   },
-  data() {
-    return {
-      files: null,
-      progress: false,
-      status: false,
-      error: false
-    }
-  },
   computed: {
     isValid() {
       return isDataValid(this.data)
@@ -111,34 +58,6 @@ export default {
     },
     component() {
       return () => import(`@/components/chart/view/${this.graphName}`)
-    }
-  },
-  methods: {
-    async exportFiles() {
-      this.progress = true
-      this.status = false
-      this.error = false
-      try {
-        const format = 'png'
-
-        const svgs = [...this.$refs.view.querySelectorAll('svg')].filter(
-          // avoid including Vuetify icons
-          el => !el.classList.contains('v-icon__svg')
-        )
-        this.files = await Promise.all(
-          svgs.map((svg, index) => {
-            const filename = `chart-${index}`
-            return svgToFile(svg, filename, { format })
-          })
-        )
-      } catch (error) {
-        console.error(error)
-        this.error = true
-        this.message = processError(error)
-      } finally {
-        this.progress = false
-        this.status = true
-      }
     }
   }
 }

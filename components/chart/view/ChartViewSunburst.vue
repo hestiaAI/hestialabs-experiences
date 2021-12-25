@@ -1,5 +1,5 @@
 <template>
-  <VContainer>
+  <VContainer class="hestia-shareable">
     <VRow>
       <VCol cols="12" md="12" class="text-center">
         <div :id="graphId">

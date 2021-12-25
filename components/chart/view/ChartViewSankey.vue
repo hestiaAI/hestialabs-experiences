@@ -1,6 +1,6 @@
 <template>
-  <VContainer>
-    <VRow>
+  <VContainer class="hestia-shareable">
+    <ChartViewVRowWebShare>
       <VCol cols="12" md="12" class="text-center">
         <p>
           In total there are <strong>{{ total }}</strong> records
@@ -8,7 +8,7 @@
         </p>
         <div :id="graphId" style="position: relative"></div>
       </VCol>
-    </VRow>
+    </ChartViewVRowWebShare>
   </VContainer>
 </template>
 

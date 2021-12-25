@@ -4,12 +4,10 @@
       <div ref="graph"></div>
       <VRow>
         <VCol cols="6 mx-auto">
-          <BaseButtonDownload
-            :href="dataURL"
-            :extension="exportExtension"
-            :disabled="!dataURL"
+          <BaseButtonDownloadData
+            v-bind="{ disabled: !blob, extension, filename, data: blob }"
           />
-          <BaseButtonShare file-share :disabled="!files" :files="files" />
+          <BaseButtonShare file-share v-bind="{ files, disabled: !files }" />
         </VCol>
       </VRow>
     </template>
@@ -23,6 +21,7 @@
 <script>
 import embed from 'vega-embed'
 import _ from 'lodash'
+import exportImageMixinFactory from '@/mixins/export-image-mixin-factory'
 
 function isDataValid(data) {
   return (
@@ -40,6 +39,7 @@ function isDataEmpty(data) {
 }
 
 export default {
+  mixins: [exportImageMixinFactory({ refName: 'graph' })],
   props: {
     specFile: {
       type: Object,
@@ -48,17 +48,11 @@ export default {
     data: {
       default: undefined,
       validator: isDataValid
-    },
-    exportExtension: {
-      type: String,
-      default: 'png'
     }
   },
   data() {
     return {
-      width: 0,
-      dataURL: '',
-      files: null
+      width: 0
     }
   },
   computed: {
@@ -135,14 +129,7 @@ export default {
         actions: false
       })
 
-      const ext = this.exportExtension
-
-      const canvas = this.$refs.graph.firstChild
-      const type = `image/${ext}`
-      this.dataURL = canvas.toDataURL(type)
-      canvas.toBlob(blob => {
-        this.files = [new File([blob], `export.${ext}`, { type })]
-      }, type)
+      await this.exportImage()
     }
   }
 }
