@@ -50,6 +50,7 @@ export default {
     themes: {
       light: {
         primary: '#58539e',
+        secondary: '#f39506',
         // Following colors are from the MUI default dark palette
         // https://mui.com/customization/palette/#default-values
         info: '#0288d1',
