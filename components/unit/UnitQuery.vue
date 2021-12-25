@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VCard v-if="defaultViewElements" class="pa-2 my-6">
+    <VCard v-if="defaultViewElements" class="px-4 px-sm-8 py-4 my-6">
       <VCardTitle class="justify-center">{{
         defaultViewElements.title
       }}</VCardTitle>
