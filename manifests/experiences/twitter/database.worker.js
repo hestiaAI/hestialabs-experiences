@@ -7,23 +7,20 @@ function createItems(data) {
   const { impressions, engagements } = data
   const adsItems = []
   const targetingItems = []
-  let j = 0
+  let targetingItemsId = 0
+  let adsId = 0
   const files = [
     { values: impressions, engagement: 0 },
     { values: engagements, engagement: 1 }
   ]
   for (const file of files) {
-    file.values.forEach((v, i) => {
-      let tweetId = null
-      if (v.promotedTweetInfo) {
-        tweetId = v.promotedTweetInfo.tweetId || null
-      }
-      let advertiserName = null
-      if (v.advertiserInfo) {
-        advertiserName = v.advertiserInfo.advertiserName || null
-      }
+    file.values.forEach(v => {
+      const tweetId = v.promotedTweetInfo ? v.promotedTweetInfo.tweetId : null
+      const advertiserName = v.advertiserInfo
+        ? v.advertiserInfo.advertiserName
+        : null
       adsItems.push({
-        id: i,
+        id: adsId,
         tweetId,
         advertiserName,
         time: v.impressionTime,
@@ -41,12 +38,13 @@ function createItems(data) {
           targetingValue = criterion.targetingValue || null
         }
         targetingItems.push({
-          id: j++,
-          adId: i,
+          id: targetingItemsId++,
+          adId: adsId,
           targetingType,
           targetingValue
         })
       })
+      adsId++
     })
   }
   return { adsItems, targetingItems }

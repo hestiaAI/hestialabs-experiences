@@ -1,11 +1,11 @@
 import { posix } from 'path'
 import { JSONPath } from 'jsonpath-plus'
-import minimatch from 'minimatch'
+import micromatch from 'micromatch'
 import Ajv from 'ajv'
 import { matchNormalized, findMatches } from './accessor'
 
 const ajv = new Ajv()
-const path = posix
+const posixPath = posix
 
 function findObjects(fileDict, accessor) {
   return Object.entries(fileDict)
@@ -20,12 +20,18 @@ function matchFiles(files, pattern) {
 }
 
 test('normalize and match', () => {
-  expect(minimatch('bar.foo', '*.foo')).toBe(true)
-  expect(path.normalize('/foo//baz/asdf/quux/..')).toBe('/foo/baz/asdf')
-  expect(path.normalize('/foo//**/asdf/quux/..')).toBe('/foo/**/asdf')
-  expect(path.normalize('foo/**//asdf/quux/..')).toBe('foo/**/asdf')
+  expect(micromatch.isMatch('bar.foo', '*.foo')).toBe(true)
+  expect(posixPath.normalize('/a/b/../bar.foo')).toBe('/a/bar.foo')
+  expect(posixPath.normalize('/foo//baz/asdf/quux/..')).toBe('/foo/baz/asdf')
+  expect(posixPath.normalize('/foo//**/asdf/quux/..')).toBe('/foo/**/asdf')
+  expect(posixPath.normalize('foo/**//asdf/quux/..')).toBe('foo/**/asdf')
+  expect(posixPath.normalize('/foo//**/{a,s}f/quux/..')).toBe('/foo/**/{a,s}f')
+  expect(posixPath.normalize('/foo//**/[:]}f/quux/..')).toBe('/foo/**/[:]}f')
 
+  expect(matchNormalized('/a/bar.foo', '/a/b/../bar.foo')).toBe(true)
   expect(matchNormalized('bar.foo', '*.foo')).toBe(true)
+  expect(matchNormalized('bar.foo', '*.fo{o,a}')).toBe(true)
+  expect(matchNormalized('bar.fo{o,a}', '*.fo\\{o,a\\}')).toBe(true)
   expect(matchNormalized('/foo/asdf', '/foo//asdf/quux/..')).toBe(true)
   expect(matchNormalized('/foo/bar.foo', '/foo//asdf/../*.foo')).toBe(true)
 })

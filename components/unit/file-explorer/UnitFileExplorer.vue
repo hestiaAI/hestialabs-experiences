@@ -1,7 +1,9 @@
 <template>
   <VCard
     v-click-outside="{
-      handler: () => (mini = true),
+      handler: () => {
+        mini = true
+      },
       closeConditional: () => !mini
     }"
     class="pa-2 my-6 explorer"
@@ -13,7 +15,6 @@
         --cursor-style: wait !important;
       }
     </style>
-    <!-- https://github.com/vuetifyjs/vuetify/issues/5617 -->
     <VNavigationDrawer
       ref="drawer"
       :mini-variant.sync="mini"
@@ -21,10 +22,6 @@
       absolute
       permanent
       width="100%"
-      style="
-        transform: translateX(0) !important;
-        visibility: visible !important;
-      "
     >
       <template #prepend>
         <VListItem class="px-2">
@@ -37,9 +34,6 @@
           <VBtn icon @click.stop="mini = !mini">
             <VIcon>$vuetify.icons.mdiChevronLeft</VIcon>
           </VBtn>
-        </VListItem>
-        <VListItem v-if="selectable && !mini">
-          Size of selected files: {{ selectionSizeString }}
         </VListItem>
         <VListItem v-if="!mini">
           <VTextField
@@ -63,14 +57,12 @@
 
       <div :class="miniWidthPaddingLeftClass">
         <VTreeview
-          v-model="selectedFiles"
           dense
           open-on-click
           activatable
           return-object
           transition
           rounded
-          :selectable="selectable"
           :search="search"
           :items="treeItems"
           @update:active="setSelectedItem"
@@ -138,25 +130,20 @@ export default {
     fileManager: {
       type: FileManager,
       required: true
-    },
-    selectable: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
     return {
       selectedItem: {},
       supportedTypes: new Set(['json', 'csv', 'pdf', 'img', 'html', 'txt']),
-      mini: true,
+      mini: !this.selectable,
       miniWidth: 48,
       search: '',
       isFileLoading: false,
       height: 500,
       computeNPoints: false,
       nDataPoints: null,
-      sortedExtensionTexts: [],
-      selectionSize: 0
+      sortedExtensionTexts: []
     }
   },
   computed: {
@@ -169,9 +156,6 @@ export default {
     },
     treeItems() {
       return this.fileManager.getTreeItems()
-    },
-    selectionSizeString() {
-      return humanReadableFileSize(this.selectionSize)
     },
     path() {
       // TODO avoid code duplication with viewer/mixin-path
@@ -226,21 +210,6 @@ export default {
       return _.sortBy(Object.entries(occurrences), ([ext, count]) =>
         ext === 'other' ? 1 : -count
       )
-    },
-    key() {
-      return this.$route.params.key
-    },
-    selectedFiles: {
-      get() {
-        return this.$store.state.selectedFiles[this.key]
-      },
-      set(value) {
-        this.$store.commit('setSelectedFiles', { key: this.key, value })
-        this.selectionSize = _.sumBy(
-          value,
-          ({ filename }) => this.fileManager.fileDict[filename]?.size ?? 0
-        )
-      }
     }
   },
   watch: {
@@ -267,8 +236,10 @@ export default {
     setSelectedItem([item]) {
       // item might be undefined (when unselecting)
       if (item) {
-        // close drawer when file is selected
-        this.mini = true
+        if (!this.selectable) {
+          // close drawer when file is selected
+          this.mini = true
+        }
         const containers = new Set(['folder', 'zip'])
         if (!containers.has(item?.type)) {
           this.selectedItem = item

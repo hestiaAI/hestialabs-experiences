@@ -104,3 +104,6 @@ export function runWorker(worker, args) {
     })
   })
 }
+
+export const setTimeoutPromise = (delay, value) =>
+  new Promise(resolve => setTimeout(resolve, delay, value))

@@ -1,13 +1,13 @@
-import { posix } from 'path'
+import path from 'path'
 import { JSONPath } from 'jsonpath-plus'
-import minimatch from 'minimatch'
+import micromatch from 'micromatch'
 import Ajv from 'ajv'
 const ajv = new Ajv()
-const path = posix
+const posixPath = path.posix || path
 
 export function matchNormalized(name, pattern) {
-  const normalizedPattern = path.normalize(pattern)
-  return minimatch(name, normalizedPattern)
+  const normalizedPattern = posixPath.normalize(pattern)
+  return micromatch.isMatch(name, normalizedPattern)
 }
 
 /**

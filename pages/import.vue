@@ -88,7 +88,7 @@
       <!-- File explorer -->
       <VRow v-if="hasFileExplorer">
         <VCol>
-          <UnitFileExplorer v-bind="{ fileManager, selectable: false }" />
+          <UnitFileExplorer v-bind="{ fileManager }" />
         </VCol>
       </VRow>
     </template>
@@ -98,6 +98,7 @@
 <script>
 import JSZip from 'jszip'
 import FileManager from '~/utils/file-manager'
+import fileManagerWorkers from '~/utils/file-manager-workers'
 
 export default {
   data() {
@@ -190,7 +191,11 @@ export default {
         const files = folderContent.map(
           (r, i) => new File([blobs[i]], r.name.substr(6))
         )
-        this.fileManager = new FileManager(this.manifest.preprocessors)
+        this.fileManager = new FileManager(
+          this.manifest.preprocessors,
+          false,
+          fileManagerWorkers
+        )
         await this.fileManager.init(files, true)
       } catch (error) {
         this.handleError(

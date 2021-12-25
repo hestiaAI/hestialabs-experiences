@@ -40,7 +40,7 @@
         <template v-if="success">
           <VRow v-if="showDataExplorer">
             <VCol>
-              <UnitFileExplorer v-bind="{ fileManager, selectable: false }" />
+              <UnitFileExplorer v-bind="{ fileManager }" />
             </VCol>
           </VRow>
           <VRow
@@ -88,6 +88,7 @@
 <script>
 import { validExtensions } from '~/manifests/utils'
 import FileManager from '~/utils/file-manager'
+import fileManagerWorkers from '~/utils/file-manager-workers'
 import parseYarrrml from '~/utils/parse-yarrrml'
 import rdfUtils from '~/utils/rdf'
 
@@ -182,7 +183,11 @@ export default {
       rml: '',
       allResults: [...Array(this.defaultView.length)],
       allFiles: null,
-      fileManager: new FileManager(this.preprocessors, this.allowMissingFiles),
+      fileManager: new FileManager(
+        this.preprocessors,
+        this.allowMissingFiles,
+        fileManagerWorkers
+      ),
       db: null
     }
   },

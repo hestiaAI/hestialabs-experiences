@@ -62,6 +62,45 @@
       "text": "Get a list of advertisers that have uploaded a contact list containing you."
     },
     {
+      "key": "customAudience",
+      "customPipeline": "jsonToTableConverter",
+      "customPipelineOptions": { 
+        "accessor": {
+          "filePath": "ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json",
+          "jsonPath": "$.custom_audiences_all_types_v2[*]"
+        },
+        "properties": [
+          {
+            "name": "Advertiser",
+            "field": "advertiser_name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "has_data_file_custom_audience",
+            "field": "has_data_file_custom_audience",
+            "type": "boolean",
+            "required": true
+          },
+          {
+            "name": "has_remarketing_custom_audience",
+            "field": "has_remarketing_custom_audience",
+            "type": "boolean",
+            "required": true
+          },
+          {
+            "name": "has_in_person_store_visit",
+            "field": "has_in_person_store_visit",
+            "type": "boolean",
+            "required": true
+          }
+        ]
+      },
+      "showTable": true,
+      "title": "Advertisers using your activity or information",
+      "text": "See all advertisers that use Facebook to get information about you"
+    },
+    {
       "key": "genericDateViewer",
       "customPipeline": "genericDateViewer",
       "visualization": "ChartViewGenericDateViewer.vue",

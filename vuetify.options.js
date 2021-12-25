@@ -14,8 +14,11 @@ import {
   mdiMagnify,
   mdiMinus,
   mdiMinusBox,
+  mdiNumeric1CircleOutline,
+  mdiNumeric2CircleOutline,
   mdiShare,
-  mdiStepForward
+  mdiStepForward,
+  mdiTwitter
 } from '@mdi/js'
 
 export default {
@@ -37,8 +40,11 @@ export default {
       mdiMagnify,
       mdiMinus,
       mdiMinusBox,
+      mdiNumeric1CircleOutline,
+      mdiNumeric2CircleOutline,
       mdiShare,
-      mdiStepForward
+      mdiStepForward,
+      mdiTwitter
     }
   },
   theme: {

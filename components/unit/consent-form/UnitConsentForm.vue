@@ -14,13 +14,6 @@
           }"
           @change="updateConsent"
         />
-        <p>
-          Please download the ZIP file containing the results and
-          <a v-if="config.filedrop" :href="config.filedrop" target="_blank"
-            >drop it here</a
-          >
-          <template v-else>send it by email</template>.
-        </p>
         <BaseAlert v-if="missingRequired">
           Some required fields are not filled in.
         </BaseAlert>
@@ -32,25 +25,40 @@
           Some data required for sending this form has not been included:
           {{ missingRequiredData.join(', ') }}.
         </BaseAlert>
-        <BaseButton
-          text="Download results"
-          :status="generateStatus"
-          :error="generateError"
-          :progress="generateProgress"
-          :disabled="
-            missingRequired ||
-            missingRequiredDataProcessing.length > 0 ||
-            missingRequiredData.length > 0
-          "
-          @click="generateZIP"
-        />
-        <BaseButtonDownloadData
-          v-show="false"
-          ref="downloadBtn"
-          :data="zipFile"
-          :filename="filename"
-          extension="zip"
-        />
+        <VRow>
+          <VCol>
+            <VIcon v-if="config.filedrop" class="mr-2" color="#424242"
+              >$vuetify.icons.mdiNumeric1CircleOutline</VIcon
+            >
+            <BaseButton
+              text="Download results"
+              :status="generateStatus"
+              :error="generateError"
+              :progress="generateProgress"
+              :disabled="
+                missingRequired ||
+                missingRequiredDataProcessing.length > 0 ||
+                missingRequiredData.length > 0
+              "
+              @click="generateZIP"
+            />
+            <BaseButtonDownloadData
+              v-show="false"
+              ref="downloadBtn"
+              :data="zipFile"
+              :filename="filename"
+              extension="zip"
+            />
+          </VCol>
+          <VCol v-if="config.filedrop">
+            <VIcon class="mr-2" color="#424242"
+              >$vuetify.icons.mdiNumeric2CircleOutline</VIcon
+            >
+            <a :href="config.filedrop" target="_blank">
+              <BaseButton text="Drop file here" />
+            </a>
+          </VCol>
+        </VRow>
       </VCardText>
     </VCard>
   </VForm>
@@ -123,10 +131,13 @@ export default {
             typeof section.required === 'boolean'
           ) {
             // Some data must be given
-            return (
-              section.includedResults.length > 0 ||
-              this.$store.state.selectedFiles[this.key].length > 0
-            )
+            if (
+              section.includedResults.length === 1 &&
+              section.includedResults[0] === 'file-explorer'
+            ) {
+              return this.$store.state.selectedFiles[this.key].length > 0
+            }
+            return section.includedResults.length > 0
           }
         }
         return true
@@ -234,13 +245,15 @@ export default {
         })
 
       // Add whole files
-      const zipFilesFolder = zip.folder('files')
-      const files = this.$store.state.selectedFiles[this.key]
-      for (const file of files) {
-        zipFilesFolder.file(
-          file.filename,
-          this.fileManager.fileDict[file.filename]
-        )
+      if (this.includedResults.includes('file-explorer')) {
+        const zipFilesFolder = zip.folder('files')
+        const files = this.$store.state.selectedFiles[this.key]
+        for (const file of files) {
+          zipFilesFolder.file(
+            file.filename,
+            this.fileManager.fileDict[file.filename]
+          )
+        }
       }
 
       const content = await zip.generateAsync({ type: 'uint8array' })
