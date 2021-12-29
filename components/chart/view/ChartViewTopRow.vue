@@ -46,7 +46,7 @@
     </VRow>
     <VRow justify="center">
       <VCol cols="12" md="7">
-        <div :id="graphId"></div>
+        <div :id="graphId" style="position: relative"></div>
       </VCol>
     </VRow>
   </VContainer>
@@ -83,6 +83,14 @@ export default {
     margin: {
       type: Number,
       default: () => 5
+    },
+    adjVertical: {
+      type: Number,
+      default: () => 60
+    },
+    adjHorizontal: {
+      type: Number,
+      default: () => 150
     }
   },
   data() {
@@ -99,6 +107,7 @@ export default {
     }
   },
   methods: {
+    // Update data depending on the current states of the buttons
     draw() {
       const newData = this.records[this.agg].slice(
         0,
@@ -123,7 +132,7 @@ export default {
           return d.key
         })
       )
-
+      // Create/update bars
       const bars = this.svg.selectAll('.bars').data(newData, d => d.key)
       bars
         .enter()
@@ -134,6 +143,35 @@ export default {
         .attr('width', 0)
         .attr('height', this.yScale.bandwidth())
         .attr('fill', '#69b3a2')
+        .on('mouseover', (evt, d) => {
+          d3.select(evt.currentTarget).style('opacity', 0.7)
+          // d3.select(evt.currentTarget).append('text').text('test')
+          this.tooltip
+            .html('<div>' + d.value + '</div>')
+            .style('opacity', 1)
+            .style('font-size', 3 / Math.log(this.topKSlider) + 'rem')
+            .style(
+              'top',
+              this.yScale(d.key) +
+                this.adjVertical +
+                this.padding +
+                this.margin +
+                'px'
+            )
+            .style(
+              'left',
+              this.xScale(d.value) +
+                this.adjHorizontal +
+                this.padding +
+                this.margin +
+                25 +
+                'px'
+            )
+        })
+        .on('mouseleave', (evt, d) => {
+          d3.select(evt.currentTarget).style('opacity', 1)
+          this.tooltip.style('opacity', 0)
+        })
         .merge(bars)
         .transition()
         .duration(1000)
@@ -142,13 +180,15 @@ export default {
         .attr('width', d => this.xScale(d.value) + 5)
         .attr('height', this.yScale.bandwidth())
 
+      // Animate bars when removing
       bars.exit().transition().duration(1000).attr('width', 0).remove()
 
       d3.select('.yAxis')
         .transition()
         .duration(1000)
         .delay(200)
-        .style('font-size', 2 / Math.log(this.topKSlider) + 'rem')
+        .style('font-size', 1.8 / Math.log(this.topKSlider) + 'rem')
+        .attr('title', 'test')
         .call(this.yAxis)
 
       d3.select('.xAxis')
@@ -191,9 +231,7 @@ export default {
 
       /* create svg element */
       const width = 300
-      const height = 500
-      const adjVertical = 60
-      const adjHorizontal = 150
+      const height = 480
       d3.select('#' + this.graphId + ' svg').remove()
       this.svg = d3
         .select('#' + this.graphId)
@@ -202,13 +240,13 @@ export default {
         .attr(
           'viewBox',
           '-' +
-            adjHorizontal +
+            this.adjHorizontal +
             ' -' +
-            adjVertical +
+            this.adjVertical +
             ' ' +
-            (width + adjHorizontal * 2) +
+            (width + this.adjHorizontal * 2) +
             ' ' +
-            (height + adjVertical * 2)
+            (height + this.adjVertical * 2)
         )
         .style('padding', this.padding)
         .style('margin', this.margin)
@@ -234,7 +272,7 @@ export default {
       this.svg
         .append('g')
         .attr('class', 'xAxis')
-        .attr('transform', 'translate(0,' + (height + 10) + ')')
+        .attr('transform', 'translate(0,' + height + ')')
         .call(xAxis)
         .append('text')
         .attr('dy', '.75em')
@@ -243,6 +281,13 @@ export default {
         .style('text-anchor', 'middle')
         .text(this.yLabel)
       this.svg.append('g').attr('class', 'yAxis').call(yAxis)
+
+      // Tooltip
+      this.tooltip = d3
+        .select('#' + this.graphId)
+        .append('div')
+        .attr('class', 'tooltipLabel')
+        .style('opacity', 0)
       this.draw()
     }
   }
@@ -280,5 +325,8 @@ export default {
   fill: #2b2929;
   font-weight: 300;
   font-size: 1rem;
+}
+::v-deep .tooltipLabel {
+  position: absolute;
 }
 </style>
