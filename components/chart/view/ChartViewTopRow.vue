@@ -134,6 +134,7 @@ export default {
       )
       // Create/update bars
       const bars = this.svg.selectAll('.bars').data(newData, d => d.key)
+      const that = this
       bars
         .enter()
         .append('rect')
@@ -143,34 +144,22 @@ export default {
         .attr('width', 0)
         .attr('height', this.yScale.bandwidth())
         .attr('fill', '#69b3a2')
-        .on('mouseover', (evt, d) => {
-          d3.select(evt.currentTarget).style('opacity', 0.7)
-          // d3.select(evt.currentTarget).append('text').text('test')
-          this.tooltip
-            .html('<div>' + d.value + '</div>')
-            .style('opacity', 1)
-            .style('font-size', 3 / Math.log(this.topKSlider) + 'rem')
-            .style(
-              'top',
-              this.yScale(d.key) +
-                this.adjVertical +
-                this.padding +
-                this.margin +
-                'px'
-            )
-            .style(
-              'left',
-              this.xScale(d.value) +
-                this.adjHorizontal +
-                this.padding +
-                this.margin +
-                25 +
-                'px'
-            )
+        .on('mouseover', function (evt, d) {
+          d3.select(this).style('opacity', 0.7)
+          d3.select(this.parentNode)
+            .append('text')
+            .attr('class', 'barsLabel')
+            .text(d.value)
+            .attr('text-anchor', 'start')
+            .attr('alignment-baseline', 'middle')
+            .attr('x', that.xScale(d.value) + 15)
+            .attr('y', that.yScale(d.key) + that.yScale.bandwidth() / 2)
+            .style('font-size', '0.8rem')
+            .style('font-weight', 'bold')
         })
-        .on('mouseleave', (evt, d) => {
-          d3.select(evt.currentTarget).style('opacity', 1)
-          this.tooltip.style('opacity', 0)
+        .on('mouseleave', function (evt, d) {
+          d3.select(this).style('opacity', 1)
+          d3.select('.barsLabel').remove()
         })
         .merge(bars)
         .transition()
@@ -281,13 +270,6 @@ export default {
         .style('text-anchor', 'middle')
         .text(this.yLabel)
       this.svg.append('g').attr('class', 'yAxis').call(yAxis)
-
-      // Tooltip
-      this.tooltip = d3
-        .select('#' + this.graphId)
-        .append('div')
-        .attr('class', 'tooltipLabel')
-        .style('opacity', 0)
       this.draw()
     }
   }
@@ -325,8 +307,5 @@ export default {
   fill: #2b2929;
   font-weight: 300;
   font-size: 1rem;
-}
-::v-deep .tooltipLabel {
-  position: absolute;
 }
 </style>
