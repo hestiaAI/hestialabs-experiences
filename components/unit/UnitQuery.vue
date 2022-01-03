@@ -39,38 +39,29 @@
         </VCol>
       </VRow>
       <template v-if="finished">
-        <template v-if="hasData">
-          <VRow>
-            <VCol>
-              <UnitVegaViz
-                v-if="vizVega"
-                :spec-file="vizVega"
-                :data="result"
-                :div-id="`viz-${index}`"
-                class="text-center"
-              />
-              <ChartView
-                v-else-if="vizVue"
-                :graph-name="vizVue"
-                :data="result"
-                :viz-props="defaultViewElements.vizProps"
-              />
-              <UnitIframe v-else-if="vizUrl" :src="vizUrl" :data="result" />
-            </VCol>
-          </VRow>
-          <VRow v-if="showTable">
-            <VCol>
-              <UnitFilterableTable :data="result" />
-            </VCol>
-          </VRow>
-        </template>
-        <template v-else>
-          <VRow>
-            <VCol class="text-center">
-              <BaseAlert>No relevant data found</BaseAlert>
-            </VCol>
-          </VRow>
-        </template>
+        <VRow>
+          <VCol>
+            <UnitVegaViz
+              v-if="vizVega"
+              :spec-file="vizVega"
+              :data="result"
+              :div-id="`viz-${index}`"
+              class="text-center"
+            />
+            <ChartView
+              v-else-if="vizVue"
+              :graph-name="vizVue"
+              :data="result"
+              :viz-props="defaultViewElements.vizProps"
+            />
+            <UnitIframe v-else-if="vizUrl" :src="vizUrl" :data="result" />
+          </VCol>
+        </VRow>
+        <VRow v-if="showTable">
+          <VCol>
+            <UnitFilterableTable :data="result" />
+          </VCol>
+        </VRow>
       </template>
     </VCard>
   </div>
@@ -139,9 +130,6 @@ export default {
     },
     vizVega() {
       return this.vega[this.vizName]
-    },
-    hasData() {
-      return this.result && (this.result.headers?.length ?? 1) > 0
     }
   },
   methods: {

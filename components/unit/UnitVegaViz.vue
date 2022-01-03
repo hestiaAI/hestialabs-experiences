@@ -1,42 +1,22 @@
 <template>
-  <div>
-    <template v-if="isValid && !isEmpty">
-      <div :id="divId" ref="graph"></div>
-      <VRow>
-        <VCol cols="6 mx-auto">
-          <BaseButton text="Export" @click="exportViz" />
-          <BaseButtonDownload
-            :href="dataURL"
-            :extension="exportExtension"
-            :disabled="!dataURL"
-          />
-        </VCol>
-      </VRow>
-    </template>
-    <BaseAlert v-else-if="!isValid">No data found</BaseAlert>
-    <BaseAlert v-else type="warning">
-      Data in this format cannot be displayed by this visualization
-    </BaseAlert>
-  </div>
+  <DataValidator :data="data">
+    <div :id="divId" ref="graph"></div>
+    <VRow>
+      <VCol cols="6 mx-auto">
+        <BaseButton text="Export" @click="exportViz" />
+        <BaseButtonDownload
+          :href="dataURL"
+          :extension="exportExtension"
+          :disabled="!dataURL"
+        />
+      </VCol>
+    </VRow>
+  </DataValidator>
 </template>
 
 <script>
 import embed from 'vega-embed'
-import _ from 'lodash'
 
-function isDataValid(data) {
-  return (
-    _.every(
-      ['items', 'headers'],
-      field => _.has(data, field) && Array.isArray(data[field])
-    ) &&
-    data.headers.length > 0 &&
-    _.every(data.items, i => _.every(data.headers, h => _.has(i, h)))
-  )
-}
-function isDataEmpty(data) {
-  return data.items.length === 0
-}
 export default {
   props: {
     specFile: {
@@ -44,8 +24,8 @@ export default {
       default: () => {}
     },
     data: {
-      default: undefined,
-      validator: isDataValid
+      type: Object,
+      required: true
     },
     exportExtension: {
       type: String,
@@ -63,16 +43,7 @@ export default {
     }
   },
   computed: {
-    isValid() {
-      return isDataValid(this.data)
-    },
-    isEmpty() {
-      return isDataEmpty(this.data)
-    },
     items() {
-      if (!this.isValid) {
-        return []
-      }
       return this.data.items
     },
     clonedItems() {
@@ -80,7 +51,7 @@ export default {
       // so we clone them to avoid affecting
       // other graphs that could
       // possibly use the same values
-      if (!this.items.length) {
+      if (!this.items?.length) {
         return []
       }
       return JSON.parse(JSON.stringify(this.items))
@@ -115,9 +86,7 @@ export default {
   },
   mounted() {
     this.width = this.$refs.graph?.offsetWidth ?? 0
-    if (this.isValid && !this.isEmpty) {
-      this.draw()
-    }
+    this.draw()
   },
   methods: {
     async draw() {

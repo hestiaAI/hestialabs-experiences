@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="isValid">
+    <DataValidator :data="data">
       <VAlert v-if="error" type="error">{{ message }}</VAlert>
       <UnitFilterableTableFilter
         :display-filters="displayFilters"
@@ -10,7 +10,6 @@
       <VDataTable
         v-bind="{ headers: tableHeaders, items, search }"
         ref="tableRef"
-        :hide-default-footer="disabled"
         multi-sort
         fixed-header
         height="500"
@@ -23,27 +22,18 @@
         </template>
       </VDataTable>
       <BaseButtonDownloadData
-        v-bind="{ progress, error, disabled, extension, data: csvData, status }"
+        v-bind="{ progress, error, extension, data: csvData, status }"
         ref="downloadButton"
         text="Download"
         @click.native="onDownload"
       />
-    </div>
-    <BaseAlert v-else type="warning">
-      <span data-testid="data-error">
-        Data in this format cannot be displayed in a table
-      </span>
-    </BaseAlert>
+    </DataValidator>
   </div>
 </template>
 
 <script>
 import { writeToString } from '@fast-csv/format'
 import { processError } from '@/utils/utils'
-
-function isDataValid(data) {
-  return !!data.items && !!(data.headers?.length > 0)
-}
 
 export default {
   name: 'UnitFilterableTable',
@@ -53,8 +43,8 @@ export default {
       default: () => false
     },
     data: {
-      default: undefined,
-      validator: isDataValid
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -70,9 +60,6 @@ export default {
     }
   },
   computed: {
-    isValid() {
-      return isDataValid(this.data)
-    },
     headers() {
       const rawHeaders = this.data?.headers || []
       if (typeof rawHeaders[0] === 'string') {
@@ -83,9 +70,6 @@ export default {
     },
     items() {
       return this.data?.items || []
-    },
-    disabled() {
-      return !this.headers.length
     }
   },
   watch: {
