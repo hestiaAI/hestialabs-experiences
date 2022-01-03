@@ -66,7 +66,7 @@ export default {
       progress: false,
       code: '',
       parameter: '',
-      options: '',
+      options: '{}',
       optionsVisible: false
     }
   },
