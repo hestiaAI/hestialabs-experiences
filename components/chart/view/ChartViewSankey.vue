@@ -1,5 +1,5 @@
 <template>
-  <VContainer class="hestia-shareable">
+  <VContainer>
     <ChartViewVRowWebShare>
       <VCol cols="12" md="12" class="text-center">
         <p>
