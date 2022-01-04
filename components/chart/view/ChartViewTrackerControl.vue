@@ -38,7 +38,7 @@
         </VSelect>
       </VCol>
     </VRow>
-    <VRow>
+    <ChartViewVRowWebShare>
       <VCol cols="12" md="9">
         <VRow>
           <VCol cols="12">
@@ -99,7 +99,7 @@
           </p>
         </div>
       </VCol>
-    </VRow>
+    </ChartViewVRowWebShare>
     <VRow>
       <div id="dc-data-count" class="dc-data-count">
         <span class="filter-count"></span>

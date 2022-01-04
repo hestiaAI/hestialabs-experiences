@@ -64,7 +64,7 @@ export default {
         {
           hid: 'og:url',
           property: 'og:url',
-          content: `${process.env.baseUrl}${this.$route.path}`
+          content: this.$url(this.$route)
         },
         {
           hid: 'twitter:card',

@@ -63,7 +63,6 @@
               v-if="allVizVega[resultIndex]"
               :spec-file="allVizVega[resultIndex]"
               :data="result.result"
-              :div-id="`viz-${resultIndex}`"
               class="text-center"
             />
             <ChartView
@@ -224,6 +223,15 @@ export default {
           if ('visualizations' in r) {
             r.visualization = r.visualizations[0]
           }
+        }
+      }
+      // If individual files are included, the user gave consent for these.
+      // But in older zips, it wasn't presented as a checkbox.
+      // This change is unfortunately not tied to a version number
+      if (this.fileManager.fileList.length !== 0) {
+        const section = this.consent.find(section => section.type === 'data')
+        if (!('file-explorer' in section.includedResults)) {
+          section.includedResults.push('file-explorer')
         }
       }
     }

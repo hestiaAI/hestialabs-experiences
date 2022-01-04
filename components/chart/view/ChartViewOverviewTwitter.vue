@@ -1,8 +1,7 @@
 <template>
   <VContainer>
-    <VRow>
-      <VCol cols="12" sm="1"></VCol>
-      <VCol cols="12" sm="10">
+    <ChartViewVRowWebShare>
+      <VCol cols="12">
         <VRow>
           <VCol cols="12" sm="8">
             <div id="volume-chart">
@@ -82,14 +81,11 @@
           </div>
         </VRow>
       </VCol>
-      <VCol cols="12" sm="1"></VCol>
-    </VRow>
+    </ChartViewVRowWebShare>
     <VRow>
-      <VCol cols="12" sm="1"></VCol>
-      <VCol cols="12" sm="10">
+      <VCol cols="12">
         <UnitFilterableTable :data="{ headers: header, items: results }" />
       </VCol>
-      <VCol cols="12" sm="1"></VCol>
     </VRow>
   </VContainer>
 </template>

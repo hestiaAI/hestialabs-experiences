@@ -46,7 +46,6 @@
                 v-if="vizVega"
                 :spec-file="vizVega"
                 :data="result"
-                :div-id="`viz-${index}`"
                 class="text-center"
               />
               <ChartView
