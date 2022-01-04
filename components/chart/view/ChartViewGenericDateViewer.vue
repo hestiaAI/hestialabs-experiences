@@ -309,11 +309,11 @@ export default {
   }
 }
 </script>
-<style>
-.range-chart > svg > g > g.axis.y {
+<style scoped>
+::v-deep .range-chart > svg > g > g.axis.y {
   display: none;
 }
-.hide {
+::v-deep .hide {
   display: none;
 }
 </style>

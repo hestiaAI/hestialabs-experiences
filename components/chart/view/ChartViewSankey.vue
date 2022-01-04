@@ -332,9 +332,8 @@ export default {
   font-size: 1.1rem;
   font-weight: bold;
 }
-</style>
-<style>
-.tooltip {
+
+::v-deep .tooltip {
   font-size: 0.7rem;
   background-color: white;
   border: solid white;
@@ -349,7 +348,7 @@ export default {
   moz-box-shadow: 0px 0px 10px grey;
   box-shadow: 0px 0px 10px grey;
 }
-.tooltip:before {
+::v-deep .tooltip:before {
   content: '';
   display: block;
   width: 0;
