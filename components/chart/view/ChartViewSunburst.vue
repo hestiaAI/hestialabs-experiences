@@ -1,12 +1,12 @@
 <template>
   <VContainer>
-    <VRow>
+    <ChartViewVRowWebShare>
       <VCol cols="12" md="12" class="text-center">
         <div :id="graphId">
           <VBreadcrumbs :items="bcItems" class="breadCrumb" />
         </div>
       </VCol>
-    </VRow>
+    </ChartViewVRowWebShare>
   </VContainer>
 </template>
 

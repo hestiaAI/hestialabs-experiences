@@ -48,7 +48,6 @@
               :data="zipFile"
               :filename="filename"
               extension="zip"
-              text="Download"
             />
           </VCol>
           <VCol v-if="config.filedrop">

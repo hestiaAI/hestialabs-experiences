@@ -1,10 +1,8 @@
 <template>
   <div>
-    <component
-      :is="component"
-      v-if="isValid && !isEmpty"
-      v-bind="{ values, headers, ...vizProps }"
-    />
+    <div v-if="isValid && !isEmpty" ref="view">
+      <component :is="component" v-bind="{ values, headers, ...vizProps }" />
+    </div>
     <BaseAlert v-else-if="isValid">No data found</BaseAlert>
     <BaseAlert v-else type="warning">
       Data in this format cannot be displayed by this visualization
@@ -14,6 +12,7 @@
 
 <script>
 import _ from 'lodash'
+
 function isDataValid(data) {
   return (
     _.every(
@@ -24,9 +23,11 @@ function isDataValid(data) {
     _.every(data.items, i => _.every(data.headers, h => _.has(i, h)))
   )
 }
+
 function isDataEmpty(data) {
   return data.items.length === 0
 }
+
 export default {
   props: {
     data: {

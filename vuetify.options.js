@@ -8,16 +8,17 @@ import {
   mdiDatabase,
   mdiDatabaseRemove,
   mdiDownload,
-  mdiFacebook,
+  mdiExport,
   mdiFileSearch,
   mdiHome,
   mdiMagnify,
-  mdiMinusBox,
-  mdiStepForward,
-  mdiTwitter,
   mdiMinus,
+  mdiMinusBox,
   mdiNumeric1CircleOutline,
-  mdiNumeric2CircleOutline
+  mdiNumeric2CircleOutline,
+  mdiShare,
+  mdiStepForward,
+  mdiTwitter
 } from '@mdi/js'
 
 export default {
@@ -33,16 +34,17 @@ export default {
       mdiDatabase,
       mdiDatabaseRemove,
       mdiDownload,
-      mdiFacebook,
+      mdiExport,
       mdiFileSearch,
       mdiHome,
       mdiMagnify,
-      mdiMinusBox,
-      mdiStepForward,
-      mdiTwitter,
       mdiMinus,
+      mdiMinusBox,
       mdiNumeric1CircleOutline,
-      mdiNumeric2CircleOutline
+      mdiNumeric2CircleOutline,
+      mdiShare,
+      mdiStepForward,
+      mdiTwitter
     }
   },
   theme: {

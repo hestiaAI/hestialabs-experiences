@@ -3,9 +3,11 @@
 </template>
 
 <script>
-import { revokeObjectURL, defaultExtension, mimeTypes } from '@/utils/utils'
+import mixin from './mixin'
+import { revokeObjectURL } from '@/utils/utils'
 
 export default {
+  mixins: [mixin],
   props: {
     href: {
       type: String,
@@ -14,13 +16,6 @@ export default {
     filename: {
       type: String,
       default: undefined
-    },
-    extension: {
-      type: String,
-      default: defaultExtension,
-      validator(val) {
-        return Object.keys(mimeTypes).includes(val)
-      }
     },
     text: {
       type: String,

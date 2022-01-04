@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <VRow dense>
+    <ChartViewVRowWebShare dense>
       <VCol cols="8">
         <VRow dense>
           <VCol cols="12">
@@ -63,8 +63,8 @@
           </p>
         </div>
       </VCol>
-    </VRow>
-    <VRow dense>
+    </ChartViewVRowWebShare>
+    <ChartViewVRowWebShare dense>
       <VCol cols="4">
         <div :id="'user-chart' + graphId">
           <strong>Users</strong>
@@ -101,7 +101,7 @@
           </p>
         </div>
       </VCol>
-    </VRow>
+    </ChartViewVRowWebShare>
     <VRow>
       <div :id="'dc-data-count' + graphId" class="dc-data-count">
         <span class="filter-count"></span>
