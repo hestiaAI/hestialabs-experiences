@@ -3,7 +3,15 @@
   <div v-else-if="error">
     <p>Could not parse file.</p>
   </div>
-  <UnitFilterableTable v-else :data="{ headers, items }" display-filters />
+  <div v-else>
+    <BaseButton
+      v-for="(_, name, i) in sheets"
+      :key="i"
+      :text="name"
+      @click="v => setSheet(name)"
+    />
+    <UnitFilterableTable :data="{ headers, items }" display-filters />
+  </div>
 </template>
 
 <script>
@@ -19,7 +27,7 @@ export default {
       loading: true,
       error: false,
       file: null,
-      rows: [],
+      sheets: {},
       headers: [],
       items: []
     }
@@ -37,20 +45,37 @@ export default {
       this.setLoading(true)
       this.file = this.fileManager.fileDict[filename]
       try {
-        // TODO implement
-        this.rows = await readXlsxFile(this.file)
-        this.headers = Array.from(
-          { length: Math.max(...this.rows.map(r => r.length)) },
-          (_, i) => 'Column ' + (i + 1)
+        // Get the names of the sheets
+        const sheets = (await readXlsxFile(this.file, { getSheets: true })).map(
+          s => s.name
         )
-        this.items = this.rows.map(row => {
-          return Object.fromEntries(this.headers.map((h, i) => [h, row[i]]))
-        })
+        // Read the content of all sheets
+        const sheetsContent = await Promise.all(
+          sheets.map(s => readXlsxFile(this.file, { sheet: s }))
+        )
+        this.sheets = Object.fromEntries(
+          sheetsContent.map((rows, i) => {
+            const headers = Array.from(
+              { length: Math.max(...rows.map(r => r.length)) },
+              (_, j) => 'Column ' + (j + 1)
+            )
+            const items = rows.map(row => {
+              return Object.fromEntries(headers.map((h, j) => [h, row[j]]))
+            })
+            return [sheets[i], { headers, items }]
+          })
+        )
+        // Set the first sheet as visible
+        this.setSheet(sheets[0])
         this.error = false
       } catch (error) {
         this.error = true
       }
       this.setLoading(false)
+    },
+    setSheet(name) {
+      this.headers = this.sheets[name].headers
+      this.items = this.sheets[name].items
     }
   }
 }
