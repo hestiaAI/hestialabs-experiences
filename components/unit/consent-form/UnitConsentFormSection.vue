@@ -47,6 +47,11 @@
         :file-manager="fileManager"
         @return="returnDialog"
       />
+      <ShowFilesDialog
+        v-else
+        v-model="showDialog"
+        :file-manager="fileManager"
+      />
 
       <VCheckbox
         v-for="(title, j) in section.additional"
