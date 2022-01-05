@@ -136,7 +136,7 @@ export default {
     return {
       selectedItem: {},
       supportedTypes: new Set(['json', 'csv', 'pdf', 'img', 'html', 'txt']),
-      mini: !this.selectable,
+      mini: true,
       miniWidth: 48,
       search: '',
       isFileLoading: false,
@@ -236,10 +236,8 @@ export default {
     setSelectedItem([item]) {
       // item might be undefined (when unselecting)
       if (item) {
-        if (!this.selectable) {
-          // close drawer when file is selected
-          this.mini = true
-        }
+        // close drawer when file is selected
+        this.mini = true
         const containers = new Set(['folder', 'zip'])
         if (!containers.has(item?.type)) {
           this.selectedItem = item
