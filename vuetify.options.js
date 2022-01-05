@@ -18,7 +18,8 @@ import {
   mdiTwitter,
   mdiMinus,
   mdiNumeric1CircleOutline,
-  mdiNumeric2CircleOutline
+  mdiNumeric2CircleOutline,
+  mdiTuneVariant
 } from '@mdi/js'
 
 export default {
@@ -43,7 +44,8 @@ export default {
       mdiTwitter,
       mdiMinus,
       mdiNumeric1CircleOutline,
-      mdiNumeric2CircleOutline
+      mdiNumeric2CircleOutline,
+      mdiTuneVariant
     }
   },
   theme: {

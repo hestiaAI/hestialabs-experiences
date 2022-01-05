@@ -5,14 +5,58 @@
         <VCol cols="9">
           <p class="text-h6">{{ title }}</p>
         </VCol>
-        <VCol cols="3">
+        <VSpacer></VSpacer>
+        <VCol cols="3" class="text-right">
           <VSelect
+            v-if="false"
             v-model="selectedInterval"
             :items="namesInterval"
             label="Time interval"
             dense
             @change="draw"
           ></VSelect>
+          <VDialog v-model="settingDialog" persistent max-width="600px">
+            <template #activator="{ on, attrs }">
+              <VBtn color="primary" dark small fab v-bind="attrs" v-on="on">
+                <VIcon small>$vuetify.icons.mdiTuneVariant</VIcon>
+              </VBtn>
+            </template>
+            <VCard>
+              <VCardTitle>
+                <span class="text-h5">Settings/Filters</span>
+              </VCardTitle>
+              <VCardText>
+                <VContainer>
+                  <VRow>
+                    <VCol cols="12" sm="6">
+                      <VSelect
+                        v-model="selectedInterval"
+                        :items="namesInterval"
+                        label="Time interval"
+                        dense
+                      ></VSelect>
+                    </VCol>
+                  </VRow>
+                </VContainer>
+              </VCardText>
+              <VCardActions>
+                <VSpacer></VSpacer>
+                <VBtn color="blue darken-1" text @click="settingDialog = false">
+                  Close
+                </VBtn>
+                <VBtn
+                  color="blue darken-1"
+                  text
+                  @click="
+                    settingDialog = false
+                    draw()
+                  "
+                >
+                  Save
+                </VBtn>
+              </VCardActions>
+            </VCard>
+          </VDialog>
         </VCol>
       </VRow>
       <VRow dense>
@@ -88,11 +132,13 @@ export default {
       slices: [],
       selectedInterval: null,
       intervals: {},
-      namesInterval: []
+      namesInterval: [],
+      settingDialog: false
     }
   },
   methods: {
     drawViz() {
+      console.log(this.values)
       /* Init the possible aggregations dpending on dates extent */
       const extent = d3.extent(this.values, d => new Date(d.date))
       const diffDays = d3.timeDay.count(extent[0], extent[1])
@@ -149,9 +195,9 @@ export default {
         })
       })
       this.selectedInterval = this.namesInterval[this.namesInterval.length - 1]
-      this.draw(this.selectedInterval)
+      this.draw()
     },
-    draw(intervalName) {
+    draw() {
       const width = 800
       const height = 300
 
@@ -191,11 +237,11 @@ export default {
       const yScale = d3.scaleLinear().rangeRound([height, 0])
 
       xScale.domain(
-        nestedExtent(this.slices, intervalName, d => new Date(d.key))
+        nestedExtent(this.slices, this.selectedInterval, d => new Date(d.key))
       )
       yScale.domain([
         0,
-        nestedExtent(this.slices, intervalName, d => d.value)[1]
+        nestedExtent(this.slices, this.selectedInterval, d => d.value)[1]
       ])
 
       /* Axis */
@@ -289,7 +335,7 @@ export default {
         tooltip
           .html(
             '<b>' +
-              that.intervals[intervalName].format(new Date(d.key)) +
+              that.intervals[that.selectedInterval].format(new Date(d.key)) +
               '</b><br/>' +
               f(d.value)
           ) // d.name
@@ -314,7 +360,7 @@ export default {
         .attr('fill', 'none')
         .attr('stroke', d => color(d.id))
         .attr('stroke-width', this.lineWidth)
-        .attr('d', d => line(d[intervalName]))
+        .attr('d', d => line(d[this.selectedInterval]))
 
       path
         .attr('stroke-dashoffset', function () {
@@ -332,7 +378,7 @@ export default {
       const points = lines
         .selectAll('circle')
         .data(d =>
-          d[intervalName].map(v => {
+          d[this.selectedInterval].map(v => {
             v.color = color(d.id)
             v.name = d.id
             return v
