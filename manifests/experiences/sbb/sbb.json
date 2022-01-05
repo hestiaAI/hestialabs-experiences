@@ -1,6 +1,6 @@
 {
-  "title": "FinnAir",
-  "icon": "finnair.jpg",
+  "title": "SBB/CFF",
+  "icon": "sbb.png",
   "ext": "all",
   "multiple": true,
   "isGenericViewer": true,

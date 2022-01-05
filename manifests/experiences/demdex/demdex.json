@@ -1,6 +1,6 @@
 {
-  "title": "FinnAir",
-  "icon": "finnair.jpg",
+  "title": "Demdex",
+  "icon": "demdex.jpg",
   "ext": "all",
   "multiple": true,
   "isGenericViewer": true,

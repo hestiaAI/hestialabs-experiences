@@ -29,9 +29,11 @@
         @click.native="onDownload"
       />
     </div>
-    <i v-else data-testid="data-error"
-      >data in this format cannot be displayed in a table</i
-    >
+    <BaseAlert v-else type="warning">
+      <span data-testid="data-error">
+        Data in this format cannot be displayed in a table
+      </span>
+    </BaseAlert>
   </div>
 </template>
 
@@ -67,14 +69,6 @@ export default {
       tableHeaders: []
     }
   },
-  watch: {
-    data: {
-      immediate: true,
-      handler(data) {
-        this.tableHeaders = this.headers
-      }
-    }
-  },
   computed: {
     isValid() {
       return isDataValid(this.data)
@@ -92,6 +86,14 @@ export default {
     },
     disabled() {
       return !this.headers.length
+    }
+  },
+  watch: {
+    data: {
+      immediate: true,
+      handler(data) {
+        this.tableHeaders = this.headers
+      }
     }
   },
   methods: {
