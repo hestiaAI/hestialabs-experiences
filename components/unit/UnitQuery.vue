@@ -32,7 +32,7 @@
           />
           <UnitSparql
             v-else
-            v-bind="{ allSparql, sparqlQuery, queryDisabled }"
+            v-bind="{ sparqlQuery, queryDisabled }"
             class="mr-lg-6"
             @update="onUnitResultsUpdate"
           />
