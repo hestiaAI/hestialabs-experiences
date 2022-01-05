@@ -22,6 +22,7 @@
       absolute
       permanent
       width="100%"
+      style="z-index: 1000"
     >
       <template #prepend>
         <VListItem class="px-2">
