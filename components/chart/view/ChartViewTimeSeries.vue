@@ -94,6 +94,7 @@
 <script>
 import * as d3 from 'd3'
 import { nest } from 'd3-collection'
+import { addMissingDate } from './utils/D3Helpers'
 import mixin from './mixin'
 
 // Inspired by
@@ -171,7 +172,8 @@ export default {
       namesInterval: [],
       settingDialog: false,
       filterItems: {},
-      filterModel: {}
+      filterModel: {},
+      extentDate: null
     }
   },
   methods: {
@@ -204,33 +206,32 @@ export default {
           })
           .rollup(leaves => d3.sum(leaves, l => l.value))
           .entries(serie.current)
-        /*
-        serie.current = d3.flatRollup(
-          serie.values,
-          v => d3.sum(v, l => l.value),
-          d => interval.parser(new Date(d.date)),
-          ...filters.map(f => d => d[f])
+
+        // Add missing datapoints
+        serie.current = addMissingDate(
+          serie.current,
+          'key',
+          'value',
+          interval.parser,
+          0,
+          this.extentDate[0],
+          this.extentDate[1]
         )
 
-        serie.current = serie.current.map(([key, ...rest]) => ({
-          key,
-          value: rest[rest.length - 1],
-          ...filters.reduce((obj, f, i) => {
-            obj[f] = rest[i]
-            return obj
-          }, {})
-        }))
-        */
+        console.log(serie.current)
+        // Sort the result
+        serie.current = serie.current.sort(
+          (e1, e2) => new Date(e1.key) - new Date(e2.key)
+        )
       })
-      console.log(this.slices)
     },
     drawViz() {
       /* Init the possible aggregations dpending on dates extent */
-      const extent = d3.extent(
+      this.extentDate = d3.extent(
         this.values,
         d => new Date(d[this.dateAccessor.value])
       )
-      const diffDays = d3.timeDay.count(extent[0], extent[1])
+      const diffDays = d3.timeDay.count(this.extentDate[0], this.extentDate[1])
       if (diffDays > 2 && diffDays < 93)
         this.intervals.Days = {
           parser: d3.timeDay,
