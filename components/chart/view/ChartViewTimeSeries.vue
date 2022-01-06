@@ -8,14 +8,19 @@
         <VSpacer></VSpacer>
         <VCol cols="3" class="text-right">
           <VSelect
-            v-if="false"
+            v-if="filters.length === 0"
             v-model="selectedInterval"
             :items="namesInterval"
             label="Time interval"
             dense
             @change="draw"
           ></VSelect>
-          <VDialog v-model="settingDialog" persistent max-width="600px">
+          <VDialog
+            v-if="filters.length > 0"
+            v-model="settingDialog"
+            persistent
+            max-width="300px"
+          >
             <template #activator="{ on, attrs }">
               <VBtn color="primary" dark small fab v-bind="attrs" v-on="on">
                 <VIcon small>$vuetify.icons.mdiTuneVariant</VIcon>
@@ -28,11 +33,28 @@
               <VCardText>
                 <VContainer>
                   <VRow>
-                    <VCol cols="12" sm="6">
+                    <VCol cols="6" sm="12">
                       <VSelect
                         v-model="selectedInterval"
                         :items="namesInterval"
                         label="Time interval"
+                        dense
+                      ></VSelect>
+                    </VCol>
+                    <VCol
+                      v-for="filter in filters"
+                      :key="filter.value"
+                      cols="6"
+                      sm="12"
+                    >
+                      <VSelect
+                        v-model="filterModel[filter.value]"
+                        :items="
+                          filterItems[filter.value]
+                            ? filterItems[filter.value]
+                            : []
+                        "
+                        :label="filter.text"
                         dense
                       ></VSelect>
                     </VCol>
@@ -49,6 +71,7 @@
                   text
                   @click="
                     settingDialog = false
+                    applyFilters()
                     draw()
                   "
                 >
@@ -78,9 +101,18 @@ import mixin from './mixin'
 export default {
   mixins: [mixin],
   props: {
-    accessor: {
-      type: Array,
-      default: () => []
+    dateAccessor: {
+      type: Object,
+      required: true
+    },
+    seriesAccessor: {
+      type: Object,
+      required: true
+    },
+    // if not set will just count the rows
+    valueAccessor: {
+      type: Object,
+      default: () => null
     },
     valueFormat: {
       type: String,
@@ -89,6 +121,10 @@ export default {
     yLabel: {
       type: String,
       default: () => 'Count'
+    },
+    filters: {
+      type: Array,
+      default: () => []
     },
     lineWidth: {
       type: Number,
@@ -133,14 +169,67 @@ export default {
       selectedInterval: null,
       intervals: {},
       namesInterval: [],
-      settingDialog: false
+      settingDialog: false,
+      filterItems: {},
+      filterModel: {}
     }
   },
   methods: {
+    initFilters() {
+      this.filters.forEach((filter, i) => {
+        this.filterItems[filter.value] = []
+        // get unique ids and set items for each filter select
+        this.filterItems[filter.value] = this.values
+          .map(i => i[filter.value])
+          .filter((value, index, self) => self.indexOf(value) === index)
+      })
+    },
+    applyFilters() {
+      this.slices.forEach(serie => {
+        // aggregate per selected time interval and other filters
+        const interval = this.intervals[this.selectedInterval]
+        const filters = Object.keys(this.filterModel).filter(
+          k => this.filterModel[k] != null
+        )
+
+        // filter according to selection
+        serie.current = serie.values.filter(d => {
+          return filters.every(f => this.filterModel[f] === d[f])
+        })
+
+        // Aggregate per time period
+        serie.current = nest()
+          .key(function (d) {
+            return interval.parser(new Date(d.date))
+          })
+          .rollup(leaves => d3.sum(leaves, l => l.value))
+          .entries(serie.current)
+        /*
+        serie.current = d3.flatRollup(
+          serie.values,
+          v => d3.sum(v, l => l.value),
+          d => interval.parser(new Date(d.date)),
+          ...filters.map(f => d => d[f])
+        )
+
+        serie.current = serie.current.map(([key, ...rest]) => ({
+          key,
+          value: rest[rest.length - 1],
+          ...filters.reduce((obj, f, i) => {
+            obj[f] = rest[i]
+            return obj
+          }, {})
+        }))
+        */
+      })
+      console.log(this.slices)
+    },
     drawViz() {
-      console.log(this.values)
       /* Init the possible aggregations dpending on dates extent */
-      const extent = d3.extent(this.values, d => new Date(d.date))
+      const extent = d3.extent(
+        this.values,
+        d => new Date(d[this.dateAccessor.value])
+      )
       const diffDays = d3.timeDay.count(extent[0], extent[1])
       if (diffDays > 2 && diffDays < 93)
         this.intervals.Days = {
@@ -164,37 +253,34 @@ export default {
         }
       this.namesInterval = Object.keys(this.intervals)
 
-      /* Pivot the data */
-      let accessor = this.accessor
-      if (this.accessor.length === 0) {
-        accessor = this.headers.slice(1).map(h => {
-          return { text: h, value: h }
-        })
-      }
-      this.slices = accessor.map(a => {
+      // get unique series ids
+      const ids = this.values
+        .map(i => i[this.seriesAccessor.value])
+        .filter((value, index, self) => self.indexOf(value) === index)
+
+      // group by series ids and sort values
+      this.slices = ids.map(a => {
         return {
-          id: a.text,
-          values: this.values.map(function (d) {
-            return {
-              date: new Date(d.date),
-              value: +d[a.value]
-            }
-          })
+          id: a,
+          values: this.values
+            .filter(v => a === v[this.seriesAccessor.value])
+            .map(d => {
+              const ret = {
+                date: new Date(d[this.dateAccessor.value]),
+                value: this.valueAccessor ? +d[this.valueAccessor] : 1
+              }
+              this.filters.forEach(f => {
+                ret[f.value] = d[f.value]
+              })
+              return ret
+            })
+            .sort((e1, e2) => e1.date - e2.date)
         }
       })
 
-      /* PreCompute aggregation per day, month, etc... */
-      Object.entries(this.intervals).forEach(([intervalName, interval]) => {
-        this.slices.forEach(lineData => {
-          lineData[intervalName] = nest()
-            .key(function (d) {
-              return interval.parser(new Date(d.date))
-            })
-            .rollup(leaves => d3.sum(leaves, l => l.value))
-            .entries(lineData.values)
-        })
-      })
       this.selectedInterval = this.namesInterval[this.namesInterval.length - 1]
+      this.initFilters()
+      this.applyFilters()
       this.draw()
     },
     draw() {
@@ -236,13 +322,8 @@ export default {
       const xScale = d3.scaleTime().range([0, width])
       const yScale = d3.scaleLinear().rangeRound([height, 0])
 
-      xScale.domain(
-        nestedExtent(this.slices, this.selectedInterval, d => new Date(d.key))
-      )
-      yScale.domain([
-        0,
-        nestedExtent(this.slices, this.selectedInterval, d => d.value)[1]
-      ])
+      xScale.domain(nestedExtent(this.slices, 'current', d => new Date(d.key)))
+      yScale.domain([0, nestedExtent(this.slices, 'current', d => d.value)[1]])
 
       /* Axis */
       const yAxis = d3.axisLeft().ticks(5).scale(yScale) // .ticks(slices[0].values.length)
@@ -360,7 +441,7 @@ export default {
         .attr('fill', 'none')
         .attr('stroke', d => color(d.id))
         .attr('stroke-width', this.lineWidth)
-        .attr('d', d => line(d[this.selectedInterval]))
+        .attr('d', d => line(d.current))
 
       path
         .attr('stroke-dashoffset', function () {
@@ -378,7 +459,7 @@ export default {
       const points = lines
         .selectAll('circle')
         .data(d =>
-          d[this.selectedInterval].map(v => {
+          d.current.map(v => {
             v.color = color(d.id)
             v.name = d.id
             return v

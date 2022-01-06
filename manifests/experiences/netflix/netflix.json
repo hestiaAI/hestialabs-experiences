@@ -20,7 +20,14 @@
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
         "title": "Notifications sent by Netflix",
-        "yLabel": "count"
+        "yLabel": "count",
+        "filters": [
+          { "text": "Interacted with", "value": "Click Cnt", "type": "Boolean" },
+          { "text": "Device Model", "value": "Device Model", "type": "List" }
+        ],
+        "dateAccessor": { "text": "Date", "value": "Sent Utc Ts" },
+        "seriesAccessor": { "text": "Profile", "value": "Profile Name" }
+        
       },
       "showTable": false,
       "title": "Notifications",
