@@ -1,5 +1,7 @@
 <template>
   <div>
+    <b>Text file content:</b>
+    <hr class="mb-4" />
     {{ text }}
   </div>
 </template>
