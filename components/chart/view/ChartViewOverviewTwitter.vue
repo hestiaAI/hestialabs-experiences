@@ -36,7 +36,7 @@
         <VRow>
           <VCol cols="12" sm="4">
             <div id="engagement-chart">
-              <strong>Interactions with ads (click, video viewing)</strong>
+              <strong>Interactions with ads (clicks, video views)</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
@@ -185,7 +185,7 @@ export default {
       const adPerDayDimension = ndx.dimension(d => d.day)
       const companyDimension = ndx.dimension(d => d.companyName)
       const engagementDimension = ndx.dimension(d =>
-        d.engagement ? 'True' : 'False'
+        d.engagement ? 'Yes' : 'No'
       )
       const targetingTypeDimension = ndx.dimension(d => d.targetingType)
       const targetingValueDimension = ndx.dimension(d => d.targetingValue)
