@@ -63,6 +63,9 @@
               </VCardText>
               <VCardActions>
                 <VSpacer></VSpacer>
+                <VBtn color="red darken-1" text @click="resetFilters()">
+                  Reset
+                </VBtn>
                 <VBtn color="blue darken-1" text @click="settingDialog = false">
                   Close
                 </VBtn>
@@ -186,6 +189,11 @@ export default {
           .filter((value, index, self) => self.indexOf(value) === index)
       })
     },
+    resetFilters() {
+      this.filters.forEach(filter => {
+        this.filterModel[filter.value] = null
+      })
+    },
     applyFilters() {
       this.slices.forEach(serie => {
         // aggregate per selected time interval and other filters
@@ -218,7 +226,6 @@ export default {
           this.extentDate[1]
         )
 
-        console.log(serie.current)
         // Sort the result
         serie.current = serie.current.sort(
           (e1, e2) => new Date(e1.key) - new Date(e2.key)
