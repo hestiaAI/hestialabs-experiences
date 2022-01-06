@@ -13,7 +13,10 @@
             :items="namesInterval"
             label="Time interval"
             dense
-            @change="draw"
+            @change="
+              applyFilters()
+              draw()
+            "
           ></VSelect>
           <VDialog
             v-if="filters.length > 0"
@@ -115,7 +118,7 @@ export default {
     },
     // if not set will just count the rows
     valueAccessor: {
-      type: Object,
+      type: String,
       default: () => null
     },
     valueFormat: {
