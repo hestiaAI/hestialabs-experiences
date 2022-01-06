@@ -32,7 +32,7 @@
           />
           <UnitSparql
             v-else
-            v-bind="{ sparqlQuery, queryDisabled }"
+            v-bind="{ sparqlQuery }"
             class="mr-lg-6"
             @update="onUnitResultsUpdate"
           />
@@ -87,10 +87,6 @@ export default {
     defaultViewElements: {
       type: Object,
       default: null
-    },
-    queryDisabled: {
-      type: Boolean,
-      default: false
     },
     index: {
       type: Number,

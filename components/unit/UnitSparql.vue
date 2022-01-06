@@ -21,16 +21,11 @@ export default {
   props: {
     sparqlQuery: {
       type: String,
-      default: null
-    },
-    queryDisabled: {
-      type: Boolean,
-      default: false
+      default: ''
     }
   },
   data() {
     return {
-      queryParameter: '',
       status: false,
       error: false,
       progress: false
@@ -38,7 +33,7 @@ export default {
   },
   computed: {
     disabled() {
-      return !this.sparqlQuery || this.queryDisabled
+      return !this.sparqlQuery
     }
   },
   methods: {
