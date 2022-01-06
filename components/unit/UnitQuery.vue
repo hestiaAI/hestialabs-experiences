@@ -45,16 +45,20 @@
               <UnitVegaViz
                 v-if="vizVega"
                 :spec-file="vizVega"
-                :data="result"
+                :data="clonedResult"
                 class="text-center"
               />
               <ChartView
                 v-else-if="vizVue"
                 :graph-name="vizVue"
-                :data="result"
+                :data="clonedResult"
                 :viz-props="defaultViewElements.vizProps"
               />
-              <UnitIframe v-else-if="vizUrl" :src="vizUrl" :data="result" />
+              <UnitIframe
+                v-else-if="vizUrl"
+                :src="vizUrl"
+                :data="clonedResult"
+              />
             </VCol>
           </VRow>
           <VRow v-if="showTable">
@@ -115,7 +119,6 @@ export default {
   },
   data() {
     return {
-      result: undefined,
       finished: false
     }
   },
@@ -135,6 +138,23 @@ export default {
     vizVega() {
       return this.vega[this.vizName]
     },
+    result: {
+      get() {
+        return this.$store.state.results[this.$route.params.key][
+          this.defaultViewElements.key
+        ]
+      },
+      set(result) {
+        this.$store.commit('setResult', {
+          company: this.$route.params.key,
+          experience: this.defaultViewElements.key,
+          result
+        })
+      }
+    },
+    clonedResult() {
+      return JSON.parse(JSON.stringify(this.result))
+    },
     hasData() {
       return this.result && (this.result.headers?.length ?? 1) > 0
     }
@@ -148,10 +168,6 @@ export default {
       }
       this.result = result
       this.finished = true
-      this.$emit('update', { index: this.index, result })
-    },
-    onChangeSelector(query) {
-      this.$emit('change', query)
     }
   }
 }

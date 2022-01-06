@@ -45,7 +45,11 @@
           <UnitConsentFormSection
             v-for="(section, index) in consent"
             :key="`section-${index}`"
-            v-bind="{ section, index, readonly: true, fileManager }"
+            :section="section"
+            :index="index"
+            readonly
+            :file-manager="fileManager"
+            :data-checkbox-disabled="{}"
           />
         </VCardText>
       </VCard>

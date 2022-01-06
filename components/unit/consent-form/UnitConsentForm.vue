@@ -80,10 +80,6 @@ export default {
       type: Array,
       required: true
     },
-    allResults: {
-      type: Array,
-      required: true
-    },
     defaultView: {
       type: Array,
       required: true
@@ -109,7 +105,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config']),
+    ...mapState(['config', 'results']),
+    resultMap() {
+      return this.results[this.key]
+    },
     zipReady() {
       return this.generateStatus && !this.generateError
     },
@@ -147,10 +146,10 @@ export default {
       const section = this.consent.find(section => section.type === 'data')
       return this.defaultView
         .filter(
-          (block, i) =>
+          block =>
             typeof section.required === 'object' &&
             section.required.includes(block.key) &&
-            typeof this.allResults[i] === 'undefined'
+            !this.resultMap[block.key]
         )
         .map(block => block.title)
     },
@@ -166,7 +165,9 @@ export default {
         .map(block => block.title)
     },
     dataCheckboxDisabled() {
-      return this.allResults.map(r => typeof r === 'undefined')
+      return Object.fromEntries(
+        Object.entries(this.resultMap).map(([k, r]) => [k, !r])
+      )
     },
     key() {
       return this.$route.params.key
@@ -235,11 +236,11 @@ export default {
       // Add included data
       const keys = this.defaultView.map(block => block.key)
       this.includedResults
-        .map(key => keys.indexOf(key))
-        .filter(i => i !== -1)
-        .forEach(i => {
+        .map(key => [key, keys.indexOf(key)])
+        .filter(([key, i]) => i !== -1)
+        .forEach(([key, i]) => {
           const content = JSON.parse(JSON.stringify(this.defaultView[i]))
-          content.result = JSON.parse(this.allResults[i])
+          content.result = this.resultMap[key]
           content.index = i
           zip.file(
             `block${padNumber(i, 2)}.json`,
