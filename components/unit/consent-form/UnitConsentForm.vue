@@ -1,6 +1,6 @@
 <template>
   <VForm>
-    <VCard class="pa-2 my-6">
+    <VCard class="pa-2 mb-6">
       <VCardText>
         <UnitConsentFormSection
           v-for="(section, index) in consent"
@@ -48,7 +48,6 @@
               :data="zipFile"
               :filename="filename"
               extension="zip"
-              text="Download"
             />
           </VCol>
           <VCol v-if="config.filedrop">
@@ -81,10 +80,6 @@ export default {
       type: Array,
       required: true
     },
-    allResults: {
-      type: Array,
-      required: true
-    },
     defaultView: {
       type: Array,
       required: true
@@ -110,7 +105,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config']),
+    ...mapState(['config', 'results']),
+    resultMap() {
+      return this.results[this.key]
+    },
     zipReady() {
       return this.generateStatus && !this.generateError
     },
@@ -148,10 +146,10 @@ export default {
       const section = this.consent.find(section => section.type === 'data')
       return this.defaultView
         .filter(
-          (block, i) =>
+          block =>
             typeof section.required === 'object' &&
             section.required.includes(block.key) &&
-            typeof this.allResults[i] === 'undefined'
+            !this.resultMap[block.key]
         )
         .map(block => block.title)
     },
@@ -167,7 +165,9 @@ export default {
         .map(block => block.title)
     },
     dataCheckboxDisabled() {
-      return this.allResults.map(r => typeof r === 'undefined')
+      return Object.fromEntries(
+        Object.entries(this.resultMap).map(([k, r]) => [k, !r])
+      )
     },
     key() {
       return this.$route.params.key
@@ -183,14 +183,6 @@ export default {
         2
       )}${padNumber(date.getUTCMinutes(), 2)}_UTC.zip`
       return filename
-    },
-    tooBig() {
-      const limit = this.config.formSizeLimitMegaBytes
-      if (!limit) {
-        return false
-      }
-      const megabyte = 1048576
-      return this.encryptedZipFile.length > limit * megabyte
     }
   },
   watch: {
@@ -228,21 +220,24 @@ export default {
         timestamp: this.timestamp,
         version: VERSION
       }
-      zip.file('experience.json', JSON.stringify(experience))
+      zip.file('experience.json', JSON.stringify(experience, null, 2))
 
       // Add consent log
-      zip.file('consent.json', JSON.stringify(this.consent))
+      zip.file('consent.json', JSON.stringify(this.consent, null, 2))
 
       // Add included data
       const keys = this.defaultView.map(block => block.key)
       this.includedResults
-        .map(key => keys.indexOf(key))
-        .filter(i => i !== -1)
-        .forEach(i => {
+        .map(key => [key, keys.indexOf(key)])
+        .filter(([key, i]) => i !== -1)
+        .forEach(([key, i]) => {
           const content = JSON.parse(JSON.stringify(this.defaultView[i]))
-          content.result = JSON.parse(this.allResults[i])
+          content.result = this.resultMap[key]
           content.index = i
-          zip.file(`block${padNumber(i, 2)}.json`, JSON.stringify(content))
+          zip.file(
+            `block${padNumber(i, 2)}.json`,
+            JSON.stringify(content, null, 2)
+          )
         })
 
       // Add whole files

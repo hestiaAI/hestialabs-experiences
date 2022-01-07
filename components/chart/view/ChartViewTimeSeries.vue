@@ -15,11 +15,11 @@
           ></VSelect>
         </VCol>
       </VRow>
-      <VRow dense>
+      <ChartViewVRowWebShare dense>
         <VCol cols="12">
           <div :id="graphId"></div>
         </VCol>
-      </VRow>
+      </ChartViewVRowWebShare>
     </VCol>
   </VRow>
 </template>

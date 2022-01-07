@@ -21,12 +21,16 @@
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
         </template>
       </VDataTable>
-      <BaseButtonDownloadData
-        v-bind="{ progress, error, extension, data: csvData, status }"
-        ref="downloadButton"
-        text="Download"
-        @click.native="onDownload"
+      <BaseButton
+        v-bind="{ error, progress, status }"
+        text="Export"
+        icon="mdiExport"
+        @click="exportCSV"
       />
+      <BaseButtonDownloadData
+        v-bind="{ disabled: !csvString, extension, data: csvString }"
+      />
+      <BaseButtonShare v-bind="{ disabled: !files, files }" file-share />
     </DataValidator>
   </div>
 </template>
@@ -52,11 +56,12 @@ export default {
       status: false,
       error: false,
       progress: false,
-      csvData: '',
+      csvString: '',
       message: '',
       extension: 'csv',
       search: '',
-      tableHeaders: []
+      tableHeaders: [],
+      files: null
     }
   },
   computed: {
@@ -81,37 +86,28 @@ export default {
     }
   },
   methods: {
-    async onDownload(event) {
-      // only if the event is trusted (i.e. triggered by user interaction)
-      if (event.isTrusted) {
-        // prevent default anchor behavior,
-        // i.e. prevent triggering the download
-        // since we want to generate the file contents first
-        event.preventDefault()
-        this.progress = true
-        this.status = false
-        this.error = false
-        try {
-          const headers = this.headers.map(h => h.text)
-          const filteredItems = this.$refs.tableRef.$children[0].filteredItems
-          // Change the items keys to match the headers
-          const itemsWithHeader = filteredItems.map(i =>
-            this.headers.reduce((o, h) => ({ ...o, [h.text]: i[h.value] }), {})
-          )
-          // update the data
-          this.csvData = await writeToString(itemsWithHeader, { headers })
-          // wait until DOM is updated, i.e. the href attribute (see BaseButtonDownload.vue)
-          await this.$nextTick()
-          // click the anchor manually -> event.isTrusted === false
-          this.$refs.downloadButton.$el.click()
-        } catch (error) {
-          console.error(error)
-          this.error = true
-          this.message = processError(error)
-        } finally {
-          this.progress = false
-          this.status = true
-        }
+    async exportCSV() {
+      this.progress = true
+      this.status = false
+      this.error = false
+      try {
+        const headers = this.headers.map(h => h.text)
+        const filteredItems = this.$refs.tableRef.$children[0].filteredItems
+        // Change the items keys to match the headers
+        const itemsWithHeader = filteredItems.map(i =>
+          this.headers.reduce((o, h) => ({ ...o, [h.text]: i[h.value] }), {})
+        )
+        // update the data
+        const csv = await writeToString(itemsWithHeader, { headers })
+        this.csvString = csv
+        this.files = [new File([csv], 'results.csv', { type: 'text/csv' })]
+      } catch (error) {
+        console.error(error)
+        this.error = true
+        this.message = processError(error)
+      } finally {
+        this.progress = false
+        this.status = true
       }
     },
     onFilterUpdate(selectedHeaders, searchValue) {

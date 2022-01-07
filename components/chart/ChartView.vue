@@ -1,9 +1,11 @@
 <template>
   <DataValidator :data="data">
-    <component
-      :is="component"
-      v-bind="{ values: data.items, headers: data.headers, ...vizProps }"
-    />
+    <div ref="view">
+      <component
+        :is="component"
+        v-bind="{ values: data.items, headers: data.headers, ...vizProps }"
+      />
+    </div>
   </DataValidator>
 </template>
 

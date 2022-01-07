@@ -3,21 +3,16 @@
 </template>
 
 <script>
-import { createObjectURL, defaultExtension, mimeTypes } from '@/utils/utils'
+import mixin from './mixin'
+import { createObjectURL, mimeTypes } from '@/utils/utils'
 
 export default {
   name: 'BaseButtonDownloadData',
+  mixins: [mixin],
   props: {
     data: {
       type: [String, Blob, Uint8Array, Array],
       default: ''
-    },
-    extension: {
-      type: String,
-      default: defaultExtension,
-      validator(val) {
-        return Object.keys(mimeTypes).includes(val)
-      }
     }
   },
   computed: {

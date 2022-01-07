@@ -1,14 +1,12 @@
 <template>
   <DataValidator :data="data">
-    <div :id="divId" ref="graph"></div>
+    <div ref="graph"></div>
     <VRow>
       <VCol cols="6 mx-auto">
-        <BaseButton text="Export" @click="exportViz" />
-        <BaseButtonDownload
-          :href="dataURL"
-          :extension="exportExtension"
-          :disabled="!dataURL"
+        <BaseButtonDownloadData
+          v-bind="{ disabled: !blob, extension, filename, data: blob }"
         />
+        <BaseButtonShare file-share v-bind="{ files, disabled: !files }" />
       </VCol>
     </VRow>
   </DataValidator>
@@ -16,8 +14,10 @@
 
 <script>
 import embed from 'vega-embed'
+import exportImageMixinFactory from '@/mixins/export-image-mixin-factory'
 
 export default {
+  mixins: [exportImageMixinFactory({ refName: 'graph' })],
   props: {
     specFile: {
       type: Object,
@@ -26,20 +26,11 @@ export default {
     data: {
       type: Object,
       required: true
-    },
-    exportExtension: {
-      type: String,
-      default: 'png'
-    },
-    divId: {
-      type: String,
-      required: true
     }
   },
   data() {
     return {
-      width: 0,
-      dataURL: ''
+      width: 0
     }
   },
   computed: {
@@ -98,16 +89,14 @@ export default {
       // const width = this.width
       // const scaling = width / (spec.width + spec.padding * 2)
       // const height = spec.height * scaling
-      await embed(`#${this.divId}`, spec, {
+      await embed(this.$refs.graph, spec, {
         // width,
         // height,
         // renderer: 'svg',
         actions: false
       })
-    },
-    exportViz() {
-      const canvas = document.getElementById(this.divId).firstChild
-      this.dataURL = canvas.toDataURL(`image/${this.exportExtension}`)
+
+      await this.exportImage()
     }
   }
 }

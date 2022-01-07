@@ -6,7 +6,15 @@ export const state = () => ({
     ...config
   },
   manifestMap,
-  selectedFiles: Object.fromEntries(Object.keys(manifestMap).map(k => [k, []]))
+  selectedFiles: Object.fromEntries(config.experiences.map(k => [k, []])),
+  results: Object.fromEntries(
+    config.experiences.map(k => [
+      k,
+      Object.fromEntries(
+        manifestMap[k].defaultView?.map(b => [b.key, null]) ?? []
+      )
+    ])
+  )
 })
 
 export const getters = {
@@ -44,5 +52,8 @@ export const getters = {
 export const mutations = {
   setSelectedFiles(state, { key, value }) {
     state.selectedFiles[key] = value
+  },
+  setResult(state, { company, experience, result }) {
+    state.results[company][experience] = result
   }
 }

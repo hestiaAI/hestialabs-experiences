@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <VRow>
+    <ChartViewVRowWebShare>
       <VCol cols="12" md="8">
         <VRow>
           <VCol cols="8">
@@ -25,7 +25,7 @@
         <p>Information Type</p>
         <div id="row-chart"></div>
       </VCol>
-    </VRow>
+    </ChartViewVRowWebShare>
     <VRow>
       <VCol cols="9">
         <VRadioGroup
@@ -37,12 +37,11 @@
           <template #label>
             <div>Select a <strong>time range</strong></div>
           </template>
-          <VRadio label="ALL" value="ALL"></VRadio>
-          <VRadio label="1Y" value="1Y"></VRadio>
-          <VRadio label="3M" value="3M"></VRadio>
-          <VRadio label="1M" value="1M"></VRadio>
-          <VRadio label="7D" value="7D"></VRadio>
-          <VRadio label="1D" value="1D"></VRadio>
+          <VRadio
+            v-for="value in ['ALL', '1Y', '3M', '1M', '7D', '1D']"
+            :key="value"
+            v-bind="{ value, label: value }"
+          />
         </VRadioGroup>
       </VCol>
       <VCol cols="3">

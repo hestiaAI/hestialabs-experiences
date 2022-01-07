@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VCard v-if="defaultViewElements" class="pa-2 my-6">
+    <VCard v-if="defaultViewElements" class="pa-2 mb-6">
       <VCardTitle class="justify-center">{{
         defaultViewElements.title
       }}</VCardTitle>
@@ -32,7 +32,7 @@
           />
           <UnitSparql
             v-else
-            v-bind="{ allSparql, sparqlQuery, queryDisabled }"
+            v-bind="{ sparqlQuery }"
             class="mr-lg-6"
             @update="onUnitResultsUpdate"
           />
@@ -44,17 +44,16 @@
             <UnitVegaViz
               v-if="vizVega"
               :spec-file="vizVega"
-              :data="result"
-              :div-id="`viz-${index}`"
+              :data="clonedResult"
               class="text-center"
             />
             <ChartView
               v-else-if="vizVue"
               :graph-name="vizVue"
-              :data="result"
+              :data="clonedResult"
               :viz-props="defaultViewElements.vizProps"
             />
-            <UnitIframe v-else-if="vizUrl" :src="vizUrl" :data="result" />
+            <UnitIframe v-else-if="vizUrl" :src="vizUrl" :data="clonedResult" />
           </VCol>
         </VRow>
         <VRow v-if="showTable">
@@ -79,10 +78,6 @@ export default {
     defaultViewElements: {
       type: Object,
       default: null
-    },
-    queryDisabled: {
-      type: Boolean,
-      default: false
     },
     index: {
       type: Number,
@@ -111,7 +106,6 @@ export default {
   },
   data() {
     return {
-      result: undefined,
       finished: false
     }
   },
@@ -130,6 +124,23 @@ export default {
     },
     vizVega() {
       return this.vega[this.vizName]
+    },
+    result: {
+      get() {
+        return this.$store.state.results[this.$route.params.key][
+          this.defaultViewElements.key
+        ]
+      },
+      set(result) {
+        this.$store.commit('setResult', {
+          company: this.$route.params.key,
+          experience: this.defaultViewElements.key,
+          result
+        })
+      }
+    },
+    clonedResult() {
+      return JSON.parse(JSON.stringify(this.result))
     }
   },
   methods: {
@@ -141,10 +152,6 @@ export default {
       }
       this.result = result
       this.finished = true
-      this.$emit('update', { index: this.index, result })
-    },
-    onChangeSelector(query) {
-      this.$emit('change', query)
     }
   }
 }

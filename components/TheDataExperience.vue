@@ -1,53 +1,68 @@
 <template>
-  <client-only placeholder="Loading...">
-    <keep-alive>
-      <div>
-        <VRow>
-          <VCol cols="12 mx-auto" sm="6">
-            <UnitIntroduction
-              v-bind="{ companyName: title, dataPortal, isGenericViewer }"
-            />
-          </VCol>
-        </VRow>
-        <VRow>
-          <VCol cols="12 mx-auto" sm="6">
-            <UnitFiles
-              v-bind="{
-                extensions,
-                files,
-                multiple,
-                allowMissingFiles,
-                samples: data,
-                isGenericViewer
-              }"
-              @update="onUnitFilesUpdate"
-            />
-            <template v-if="progress">
-              <BaseProgressCircular class="mr-2" />
-              <span>Processing files...</span>
-            </template>
-            <template v-else-if="error || success">
-              <VAlert
-                :type="error ? 'error' : 'success'"
-                border="top"
-                colored-border
-                max-width="600"
-                >{{ message }}
-              </VAlert>
-            </template>
-          </VCol>
-        </VRow>
-        <template v-if="success">
-          <VRow v-if="showDataExplorer">
-            <VCol>
-              <UnitFileExplorer v-bind="{ fileManager }" />
-            </VCol>
-          </VRow>
-          <VRow
-            v-for="(defaultViewElements, index) in defaultView"
-            :key="index"
+  <div>
+    <VRow>
+      <VCol cols="12 mx-auto" sm="6">
+        <UnitIntroduction
+          v-bind="{ companyName: title, dataPortal, isGenericViewer }"
+        />
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol cols="12 mx-auto" sm="6">
+        <UnitFiles
+          v-bind="{
+            extensions,
+            files,
+            multiple,
+            allowMissingFiles,
+            samples: data,
+            isGenericViewer
+          }"
+          @update="onUnitFilesUpdate"
+        />
+        <template v-if="progress">
+          <BaseProgressCircular class="mr-2" />
+          <span>Processing files...</span>
+        </template>
+        <template v-else-if="error || success">
+          <VAlert
+            :type="error ? 'error' : 'success'"
+            border="top"
+            colored-border
+            max-width="600"
+            >{{ message }}
+          </VAlert>
+        </template>
+      </VCol>
+    </VRow>
+    <template v-if="success">
+      <VRow>
+        <VCol>
+          <VTabs
+            v-model="tab"
+            dark
+            background-color="primary"
+            slider-color="secondary"
+            slider-size="4"
+            show-arrows
+            center-active
+            centered
+            fixed-tabs
           >
-            <VCol>
+            <VTab>Files</VTab>
+            <VTab v-for="(el, index) in defaultView" :key="index">
+              {{ el.title }}
+            </VTab>
+            <VTab v-if="consentForm">Share my data</VTab>
+          </VTabs>
+          <VTabsItems v-model="tab">
+            <VTabItem>
+              <UnitFileExplorer v-bind="{ fileManager }" />
+            </VTabItem>
+            <VTabItem
+              v-for="(defaultViewElements, index) in defaultView"
+              :key="index"
+            >
               <UnitQuery
                 v-bind="{
                   defaultViewElements,
@@ -62,27 +77,23 @@
                   index,
                   vega
                 }"
-                @update="onQueryUpdate"
               />
-            </VCol>
-          </VRow>
-          <VRow v-if="consentForm">
-            <VCol cols="8 mx-auto">
+            </VTabItem>
+            <VTabItem v-if="consentForm">
               <UnitConsentForm
                 v-bind="{
                   consentForm,
-                  allResults,
                   defaultView,
                   fileManager,
                   showDataExplorer
                 }"
               />
-            </VCol>
-          </VRow>
-        </template>
-      </div>
-    </keep-alive>
-  </client-only>
+            </VTabItem>
+          </VTabsItems>
+        </VCol>
+      </VRow>
+    </template>
+  </div>
 </template>
 
 <script>
@@ -176,13 +187,12 @@ export default {
   },
   data() {
     return {
+      tab: null,
       progress: false,
       error: false,
       success: false,
       message: '',
       rml: '',
-      allResults: [...Array(this.defaultView.length)],
-      allFiles: null,
       fileManager: new FileManager(
         this.preprocessors,
         this.allowMissingFiles,
@@ -265,12 +275,6 @@ export default {
 
       const elapsed = new Date() - start
       this.message = `Successfully processed in ${elapsed / 1000} sec.`
-    },
-    onQueryUpdate({ index, result }) {
-      // we need to change the object or vue won't see the change
-      const newResults = this.allResults.slice()
-      newResults[index] = JSON.stringify(result)
-      this.allResults = newResults
     }
   }
 }
