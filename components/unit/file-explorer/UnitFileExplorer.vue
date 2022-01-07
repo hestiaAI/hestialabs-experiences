@@ -141,7 +141,15 @@ export default {
   data() {
     return {
       selectedItem: {},
-      supportedTypes: new Set(['json', 'csv', 'pdf', 'img', 'html', 'txt']),
+      supportedTypes: new Set([
+        'json',
+        'csv',
+        'pdf',
+        'img',
+        'html',
+        'txt',
+        'xlsx'
+      ]),
       mini: true,
       miniWidth: 48,
       summaryPanelActive: [0],
