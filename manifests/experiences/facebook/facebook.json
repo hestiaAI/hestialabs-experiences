@@ -26,7 +26,10 @@
     {
       "key": "off-facebook-activity-count",
       "sql": "off-facebook-activity-count",
-      "visualization": "top-k-advertisers",
+      "visualization": "ChartViewTopRow.vue",
+      "vizProps": {
+        "dateFormat": "%s"
+      },
       "showTable": false,
       "title": "Off Facebook activity ranking",
       "text": "See how many times third parties have informed Facebook of your activity outside of Facebook."

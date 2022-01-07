@@ -20,7 +20,10 @@
       "key": "advertisers-per-day",
       "sql": "advertisers-per-day",
       "visualization": "ChartViewTopRow.vue",
-      "showTable": true,
+      "vizProps": {
+        "xLabel": "ads"
+      },
+      "showTable": false,
       "title": "Top advertisers",
       "text": "See the ranking of advertisers that have shown you the most ads."
     },

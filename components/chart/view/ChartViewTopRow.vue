@@ -3,7 +3,7 @@
     <VRow>
       <VCol cols="12" md="12" class="text-center">
         <p>
-          You have been targeted by <strong>{{ total }}</strong> ads between
+          We found <strong>{{ total }}</strong> {{ xLabel }} between
           <strong>{{ minDate }}</strong> and <strong>{{ maxDate }}</strong>
         </p>
       </VCol>
@@ -67,10 +67,6 @@ export default {
       type: String,
       default: () => '~s'
     },
-    yLabel: {
-      type: String,
-      default: () => 'Count'
-    },
     yAxisMaxTickLength: {
       type: Number,
       default: () => 20
@@ -94,6 +90,14 @@ export default {
     averageButton: {
       type: Boolean,
       default: () => false
+    },
+    dateFormat: {
+      type: String,
+      default: () => '%Y-%m-%d'
+    },
+    xLabel: {
+      type: String,
+      default: () => 'records'
     }
   },
   data() {
@@ -193,7 +197,13 @@ export default {
     drawViz() {
       // Compute date range
       const formatDate = d3.timeFormat('%B %d, %Y')
-      const extent = d3.extent(this.values, d => new Date(d.date))
+      const parseDate = d3.timeParse(this.dateFormat)
+      const extent = d3.extent(this.values, d => {
+        console.log(d.date)
+        console.log(this.dateFormat)
+        console.log(parseDate(d.date))
+        return parseDate(d.date)
+      })
       this.minDate = formatDate(extent[0])
       this.maxDate = formatDate(extent[1])
       this.nbDay = d3.timeDay.count(extent[0], extent[1])
@@ -272,7 +282,7 @@ export default {
         .attr('y', 30)
         .attr('x', width / 2)
         .style('text-anchor', 'middle')
-        .text(this.yLabel)
+        .text(this.xLabel)
       this.svg.append('g').attr('class', 'yAxis').call(yAxis)
       this.draw()
     }
