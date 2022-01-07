@@ -22,6 +22,7 @@
       absolute
       permanent
       width="100%"
+      style="z-index: 1000"
     >
       <template #prepend>
         <VListItem class="px-2">
@@ -77,22 +78,27 @@
     </VNavigationDrawer>
     <VCardTitle class="justify-center">Explore your files</VCardTitle>
     <div :class="miniWidthPaddingLeftClass">
-      <VCardText>
-        Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (<b>{{
-          dataSizeString
-        }}</b
-        >)
-        <template v-if="nDataPoints">
-          and found <b>{{ nDataPoints.toLocaleString() }}</b> datapoints
-        </template>
-        :
-        <ul v-if="sortedGroupTexts">
-          <li v-for="(text, i) in sortedGroupTexts" :key="i">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <div v-html="text"></div>
-          </li>
-        </ul>
-      </VCardText>
+      <VExpansionPanels v-model="summaryPanelActive" multiple>
+        <VExpansionPanel>
+          <VExpansionPanelHeader> Summary </VExpansionPanelHeader>
+          <VExpansionPanelContent>
+            Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (<b>{{
+              dataSizeString
+            }}</b
+            >)
+            <template v-if="nDataPoints">
+              and found <b>{{ nDataPoints.toLocaleString() }}</b> datapoints
+            </template>
+            :
+            <ul v-if="sortedGroupTexts">
+              <li v-for="(text, i) in sortedGroupTexts" :key="i">
+                <!-- eslint-disable-next-line vue/no-v-html -->
+                <div v-html="text"></div>
+              </li>
+            </ul>
+          </VExpansionPanelContent>
+        </VExpansionPanel>
+      </VExpansionPanels>
       <VCardText>
         <template v-if="filename">
           <div class="mr-2">
@@ -138,6 +144,7 @@ export default {
       supportedTypes: new Set(['json', 'csv', 'pdf', 'img', 'html', 'txt']),
       mini: true,
       miniWidth: 48,
+      summaryPanelActive: [0],
       search: '',
       isFileLoading: false,
       height: 500,
