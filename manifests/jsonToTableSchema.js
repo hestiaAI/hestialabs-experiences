@@ -7,17 +7,17 @@
 export default {
   type: 'object',
   properties: {
-    rootAccessor: {
+    accessor: {
       type: 'object',
       properties: {
-        fileAccessorRegex: {
+        filePath: {
           type: 'string' // Regex that match a set of files to scan
         },
-        nodeAccessor: {
+        jsonPath: {
           type: 'string' // JSONPath to access a list of object in those files
         }
       },
-      required: ['fileAccessorRegex', 'nodeAccessor']
+      required: ['filePath', 'jsonPath']
     },
     // here we define the properties of each column
     properties: {
@@ -61,5 +61,5 @@ export default {
       }
     }
   },
-  required: ['rootAccessor', 'properties']
+  required: ['accessor']
 }

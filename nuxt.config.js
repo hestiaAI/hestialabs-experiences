@@ -35,6 +35,9 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
+  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
+  plugins: ['@/plugins/injected.js'],
+
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: [
     // pathPrefix: false
@@ -50,9 +53,7 @@ export default {
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
     // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa',
-    // https://github.com/nicolasbeauvais/vue-social-sharing
-    'vue-social-sharing/nuxt'
+    '@nuxtjs/pwa'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -152,17 +153,6 @@ export default {
               loader: 'file-loader',
               options: {
                 esModule: false,
-                name: '[path][name].[contenthash:7].[ext]'
-              }
-            }
-          ]
-        },
-        {
-          test: /unzipit-worker.module.js$/,
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
                 name: '[path][name].[contenthash:7].[ext]'
               }
             }

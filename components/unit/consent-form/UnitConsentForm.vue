@@ -1,6 +1,6 @@
 <template>
   <VForm>
-    <VCard class="pa-2 my-6">
+    <VCard class="pa-2 mb-6">
       <VCardText>
         <UnitConsentFormSection
           v-for="(section, index) in consent"
@@ -48,7 +48,6 @@
               :data="zipFile"
               :filename="filename"
               extension="zip"
-              text="Download"
             />
           </VCol>
           <VCol v-if="config.filedrop">
@@ -228,10 +227,10 @@ export default {
         timestamp: this.timestamp,
         version: VERSION
       }
-      zip.file('experience.json', JSON.stringify(experience))
+      zip.file('experience.json', JSON.stringify(experience, null, 2))
 
       // Add consent log
-      zip.file('consent.json', JSON.stringify(this.consent))
+      zip.file('consent.json', JSON.stringify(this.consent, null, 2))
 
       // Add included data
       const keys = this.defaultView.map(block => block.key)
@@ -242,7 +241,10 @@ export default {
           const content = JSON.parse(JSON.stringify(this.defaultView[i]))
           content.result = JSON.parse(this.allResults[i])
           content.index = i
-          zip.file(`block${padNumber(i, 2)}.json`, JSON.stringify(content))
+          zip.file(
+            `block${padNumber(i, 2)}.json`,
+            JSON.stringify(content, null, 2)
+          )
         })
 
       // Add whole files

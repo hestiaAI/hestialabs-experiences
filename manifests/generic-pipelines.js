@@ -1,26 +1,27 @@
 import { JSONPath } from 'jsonpath-plus'
 import _ from 'lodash'
-import * as d3 from 'd3'
+// don't import the whole of d3 or tests fail
+import { timeParse } from 'd3-time-format'
 import Ajv from 'ajv'
 import jsonToTableSchema from './jsonToTableSchema'
 const ajv = new Ajv()
 
 // Define all accepted date formats
 const timeParsers = [
-  d3.timeParse('%Y-%m-%dT%H:%M:%SZ'),
-  d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ'),
-  d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC'),
-  d3.timeParse('%Y-%m-%d %H:%M:%S.%L%Z'),
-  d3.timeParse('%Y-%m-%d %H:%M:%S UTC'),
-  d3.timeParse('%Y-%m-%d %H:%M:%S'),
-  d3.timeParse('%Y-%m-%d %H:%M'),
-  d3.timeParse('%Y-%m-%d %H:%M'),
-  d3.timeParse('%Y-%m-%d'),
-  d3.timeParse('%Y/%m/%d %H:%M:%S'),
-  d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ[UTC]'),
-  d3.timeParse('%Y-%m-%d %H:%M'),
-  d3.timeParse('%s'), // Unix seconds
-  d3.timeParse('%Q') // Unix milliseconds
+  timeParse('%Y-%m-%dT%H:%M:%SZ'),
+  timeParse('%Y-%m-%dT%H:%M:%S.%LZ'),
+  timeParse('%Y-%m-%d %H:%M:%S %Z UTC'),
+  timeParse('%Y-%m-%d %H:%M:%S.%L%Z'),
+  timeParse('%Y-%m-%d %H:%M:%S UTC'),
+  timeParse('%Y-%m-%d %H:%M:%S'),
+  timeParse('%Y-%m-%d %H:%M'),
+  timeParse('%Y-%m-%d %H:%M'),
+  timeParse('%Y-%m-%d'),
+  timeParse('%Y/%m/%d %H:%M:%S'),
+  timeParse('%Y-%m-%dT%H:%M:%S.%LZ[UTC]'),
+  timeParse('%Y-%m-%d %H:%M'),
+  timeParse('%s'), // Unix seconds
+  timeParse('%Q') // Unix milliseconds
 ]
 
 // Define range of valid year, in case of timestamp date format
@@ -359,9 +360,9 @@ async function genericLocationViewer({ fileManager, options }) {
  * The options are passed with "customPipelineOptions" in the manifest and must
  * follow the JsonShema defined in jsonToTableSchema.js, e.g:
  *  "customPipelineOptions": {
- *      "rootAccessor": {
- *        "fileAccessorRegex": "...", // A regex
- *        "nodeAccessor": "..." // A JsonPath
+ *      "accessor": {
+ *        "filePath": "...", // A file path or glob
+ *        "jsonPath": "..." // A JsonPath
  *      },
  *      "properties": [
  *        {
@@ -397,84 +398,62 @@ async function jsonToTableConverter({
     return {}
   }
 
-  // Get the filenames matching the rootAccessor
-  const filenames = fileManager
-    .getFilenames()
-    .filter(f => new RegExp(options.rootAccessor.fileAccessorRegex).test(f))
-  if (filenames.length === 0) {
-    console.error('no matching files for regex:', options.rootAccessor)
-    return {}
-  }
+  const entries = await fileManager.findMatchingObjects(options.accessor, {
+    freeFiles: true
+  })
 
-  // retreive the headers names
-  const headers = options.properties.map(p => p.name)
-  // iterate through all files matched
-  const items = (
-    await Promise.all(
-      filenames.flatMap(async filename => {
-        // read the file
-        const text = Object.values(
-          await fileManager.preprocessFiles([filename])
-        )[0]
-        // Clear file from memory
-        fileManager.freeFile(filename)
-        try {
-          // get all entries that satisfy the given root JSONPATH
-          const entries = JSONPath({
-            path: options.rootAccessor.nodeAccessor,
-            json: JSON.parse(text)
-          })
-          if (entries.length === 0)
-            console.error(
-              'value not found for node accessor',
-              options.rootAccessor.nodeAccessor
-            )
-          // build
-          return entries.map(e => {
-            const item = {}
-            options.properties.forEach(p => {
-              // get all entries that satisfy the given field JSONPATH
-              const value = JSONPath({
-                path: p.field,
-                json: e,
-                wrap: true
-              })
-
-              if (value.length === 0) {
-                if (p.required)
-                  console.error('value not found for field accessor', p.field)
-                item[p.name] = null
-              }
-
-              // Cast value to specified format, may need to handle errors
-              switch (p.type) {
-                case 'date':
-                  item[p.name] = d3.timeParse(p.format)(value)
-                  break
-                case 'string':
-                  item[p.name] = String(value)
-                  break
-                case 'number':
-                  item[p.name] = Number(value)
-                  break
-                case 'boolean':
-                  item[p.name] = Boolean(value)
-                  break
-                default:
-                  item[p.name] = value
-              }
-            })
-            return item
-          })
-        } catch (e) {
-          console.error(e)
-          return []
-        }
-      })
-    )
-  ).flat()
-  return { headers, items }
+  return makeTableData(entries, options)
 }
+
+function makeTableData(objects, options) {
+  const { properties } = options
+  if (properties) {
+    const headers = options.properties.map(p => p.name)
+    const items = objects.map(e => makeTableItem(e, options))
+    return { headers, items }
+  }
+  const firstObject = objects[0]
+  if (firstObject) {
+    const headerSet = objects.reduce((hSet, obj) => {
+      Object.keys(obj).forEach(k => hSet.add(k))
+      return hSet
+    }, new Set())
+    return { headers: [...headerSet], items: objects }
+  }
+  return {}
+}
+
+function makeTableItem(object, options) {
+  const item = {}
+  options.properties.forEach(p => {
+    // get all entries that satisfy the given field JSONPATH
+    const value = JSONPath({
+      path: p.field,
+      json: object,
+      wrap: true
+    })
+
+    // Cast value to specified format, may need to handle errors
+    switch (p.type) {
+      case 'date':
+        item[p.name] = timeParse(p.format)(value)
+        break
+      case 'string':
+        item[p.name] = String(value)
+        break
+      case 'number':
+        item[p.name] = Number(value)
+        break
+      case 'boolean':
+        item[p.name] = Boolean(value)
+        break
+      default:
+        item[p.name] = value
+    }
+  })
+  return item
+}
+
 export {
   genericDateViewer,
   timedObservationViewer,

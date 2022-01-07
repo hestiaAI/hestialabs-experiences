@@ -63,7 +63,6 @@
               v-if="allVizVega[resultIndex]"
               :spec-file="allVizVega[resultIndex]"
               :data="result.result"
-              :div-id="`viz-${resultIndex}`"
               class="text-center"
             />
             <ChartView
@@ -89,7 +88,7 @@
       <!-- File explorer -->
       <VRow v-if="hasFileExplorer">
         <VCol>
-          <UnitFileExplorer v-bind="{ fileManager, selectable: false }" />
+          <UnitFileExplorer v-bind="{ fileManager }" />
         </VCol>
       </VRow>
     </template>
@@ -99,6 +98,7 @@
 <script>
 import JSZip from 'jszip'
 import FileManager from '~/utils/file-manager'
+import fileManagerWorkers from '~/utils/file-manager-workers'
 
 export default {
   data() {
@@ -191,7 +191,11 @@ export default {
         const files = folderContent.map(
           (r, i) => new File([blobs[i]], r.name.substr(6))
         )
-        this.fileManager = new FileManager(this.manifest.preprocessors)
+        this.fileManager = new FileManager(
+          this.manifest.preprocessors,
+          false,
+          fileManagerWorkers
+        )
         await this.fileManager.init(files, true)
       } catch (error) {
         this.handleError(
@@ -219,6 +223,15 @@ export default {
           if ('visualizations' in r) {
             r.visualization = r.visualizations[0]
           }
+        }
+      }
+      // If individual files are included, the user gave consent for these.
+      // But in older zips, it wasn't presented as a checkbox.
+      // This change is unfortunately not tied to a version number
+      if (this.fileManager.fileList.length !== 0) {
+        const section = this.consent.find(section => section.type === 'data')
+        if (!('file-explorer' in section.includedResults)) {
+          section.includedResults.push('file-explorer')
         }
       }
     }

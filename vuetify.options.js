@@ -8,17 +8,18 @@ import {
   mdiDatabase,
   mdiDatabaseRemove,
   mdiDownload,
-  mdiFacebook,
+  mdiExport,
   mdiFileSearch,
   mdiHome,
   mdiMagnify,
-  mdiMinusBox,
-  mdiStepForward,
-  mdiTwitter,
   mdiMinus,
+  mdiMinusBox,
   mdiNumeric1CircleOutline,
   mdiNumeric2CircleOutline,
   mdiTuneVariant
+  mdiShare,
+  mdiStepForward,
+  mdiTwitter
 } from '@mdi/js'
 
 export default {
@@ -34,17 +35,18 @@ export default {
       mdiDatabase,
       mdiDatabaseRemove,
       mdiDownload,
-      mdiFacebook,
+      mdiExport,
       mdiFileSearch,
       mdiHome,
       mdiMagnify,
-      mdiMinusBox,
-      mdiStepForward,
-      mdiTwitter,
       mdiMinus,
+      mdiMinusBox,
       mdiNumeric1CircleOutline,
       mdiNumeric2CircleOutline,
       mdiTuneVariant
+      mdiShare,
+      mdiStepForward,
+      mdiTwitter
     }
   },
   theme: {
@@ -52,6 +54,7 @@ export default {
     themes: {
       light: {
         primary: '#58539e',
+        secondary: '#f39506',
         // Following colors are from the MUI default dark palette
         // https://mui.com/customization/palette/#default-values
         info: '#0288d1',

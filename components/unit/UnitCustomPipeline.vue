@@ -10,6 +10,7 @@
       </VCol>
     </VRow>
     <VRow>
+      <VSpacer />
       <VCol align="center">
         <BaseButton
           v-bind="{ progress, status, error }"
@@ -19,12 +20,24 @@
           @click="runPipeline"
         />
       </VCol>
+      <VCol v-if="options">
+        <VSwitch v-model="optionsVisible" label="Edit options" />
+      </VCol>
+      <VSpacer />
     </VRow>
+    <VExpandTransition>
+      <VRow v-show="optionsVisible">
+        <VCol>
+          <CodeEditor :value.sync="options" language="json" />
+        </VCol>
+      </VRow>
+    </VExpandTransition>
   </div>
 </template>
 
 <script>
 import FileManager from '~/utils/file-manager'
+import { setTimeoutPromise } from '@/utils/utils'
 
 export default {
   name: 'UnitCustomPipeline',
@@ -52,31 +65,44 @@ export default {
       error: false,
       progress: false,
       code: '',
-      parameter: ''
+      parameter: '',
+      options: '{}',
+      optionsVisible: false
+    }
+  },
+  watch: {
+    options() {
+      this.status = false
+    }
+  },
+  mounted() {
+    const optionsObject = this.defaultViewElements.customPipelineOptions
+    if (optionsObject) {
+      this.options = JSON.stringify(optionsObject, null, 2)
     }
   },
   methods: {
-    runPipeline() {
+    async runPipeline() {
       this.error = false
       this.progress = true
-      setTimeout(async () => {
-        try {
-          const result = await this.customPipeline({
-            fileManager: this.fileManager,
-            manifest: this.$store.getters.manifest(this.$route),
-            parameter: this.parameter,
-            options: this.defaultViewElements.customPipelineOptions
-          })
-          this.$emit('update', result)
-        } catch (error) {
-          console.error(error)
-          this.error = true
-          this.$emit('update', { error })
-        } finally {
-          this.status = true
-          this.progress = false
-        }
-      }, 1)
+      await setTimeoutPromise(1)
+      try {
+        const optionsObject = JSON.parse(this.options)
+        const result = await this.customPipeline({
+          fileManager: this.fileManager,
+          manifest: this.$store.getters.manifest(this.$route),
+          parameter: this.parameter,
+          options: optionsObject
+        })
+        this.$emit('update', result)
+      } catch (error) {
+        console.error(error)
+        this.error = true
+        this.$emit('update', { error })
+      } finally {
+        this.status = true
+        this.progress = false
+      }
     }
   }
 }

@@ -10,7 +10,7 @@
         ></VSelect>
       </p>
     </VRow>
-    <VRow>
+    <ChartViewVRowWebShare>
       <VCol cols="12" md="8">
         <VRow>
           <VCol cols="12" md="12">
@@ -174,7 +174,7 @@
           </VCardActions>
         </VCard>
       </VCol>
-    </VRow>
+    </ChartViewVRowWebShare>
     <VRow>
       <VCol cols="12">
         <UnitFilterableTable :data="{ headers: header, items: results }" />

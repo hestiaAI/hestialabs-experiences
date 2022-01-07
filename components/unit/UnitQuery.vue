@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VCard v-if="defaultViewElements" class="pa-2 my-6">
+    <VCard v-if="defaultViewElements" class="pa-2 mb-6">
       <VCardTitle class="justify-center">{{
         defaultViewElements.title
       }}</VCardTitle>
@@ -32,7 +32,7 @@
           />
           <UnitSparql
             v-else
-            v-bind="{ allSparql, sparqlQuery, queryDisabled }"
+            v-bind="{ sparqlQuery, queryDisabled }"
             class="mr-lg-6"
             @update="onUnitResultsUpdate"
           />
@@ -46,7 +46,6 @@
                 v-if="vizVega"
                 :spec-file="vizVega"
                 :data="result"
-                :div-id="`viz-${index}`"
                 class="text-center"
               />
               <ChartView

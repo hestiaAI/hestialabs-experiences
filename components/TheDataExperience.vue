@@ -1,53 +1,68 @@
 <template>
-  <client-only placeholder="Loading...">
-    <keep-alive>
-      <div>
-        <VRow>
-          <VCol cols="12 mx-auto" sm="6">
-            <UnitIntroduction
-              v-bind="{ companyName: title, dataPortal, isGenericViewer }"
-            />
-          </VCol>
-        </VRow>
-        <VRow>
-          <VCol cols="12 mx-auto" sm="6">
-            <UnitFiles
-              v-bind="{
-                extensions,
-                files,
-                multiple,
-                allowMissingFiles,
-                samples: data,
-                isGenericViewer
-              }"
-              @update="onUnitFilesUpdate"
-            />
-            <template v-if="progress">
-              <BaseProgressCircular class="mr-2" />
-              <span>Processing files...</span>
-            </template>
-            <template v-else-if="error || success">
-              <VAlert
-                :type="error ? 'error' : 'success'"
-                border="top"
-                colored-border
-                max-width="600"
-                >{{ message }}
-              </VAlert>
-            </template>
-          </VCol>
-        </VRow>
-        <template v-if="success">
-          <VRow v-if="showDataExplorer">
-            <VCol>
-              <UnitFileExplorer v-bind="{ fileManager, selectable: false }" />
-            </VCol>
-          </VRow>
-          <VRow
-            v-for="(defaultViewElements, index) in defaultView"
-            :key="index"
+  <div>
+    <VRow>
+      <VCol cols="12 mx-auto" sm="6">
+        <UnitIntroduction
+          v-bind="{ companyName: title, dataPortal, isGenericViewer }"
+        />
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol cols="12 mx-auto" sm="6">
+        <UnitFiles
+          v-bind="{
+            extensions,
+            files,
+            multiple,
+            allowMissingFiles,
+            samples: data,
+            isGenericViewer
+          }"
+          @update="onUnitFilesUpdate"
+        />
+        <template v-if="progress">
+          <BaseProgressCircular class="mr-2" />
+          <span>Processing files...</span>
+        </template>
+        <template v-else-if="error || success">
+          <VAlert
+            :type="error ? 'error' : 'success'"
+            border="top"
+            colored-border
+            max-width="600"
+            >{{ message }}
+          </VAlert>
+        </template>
+      </VCol>
+    </VRow>
+    <template v-if="success">
+      <VRow>
+        <VCol>
+          <VTabs
+            v-model="tab"
+            dark
+            background-color="primary"
+            slider-color="secondary"
+            slider-size="4"
+            show-arrows
+            center-active
+            centered
+            fixed-tabs
           >
-            <VCol>
+            <VTab>Files</VTab>
+            <VTab v-for="(el, index) in defaultView" :key="index">
+              {{ el.title }}
+            </VTab>
+            <VTab v-if="consentForm">Share my data</VTab>
+          </VTabs>
+          <VTabsItems v-model="tab">
+            <VTabItem>
+              <UnitFileExplorer v-bind="{ fileManager }" />
+            </VTabItem>
+            <VTabItem
+              v-for="(defaultViewElements, index) in defaultView"
+              :key="index"
+            >
               <UnitQuery
                 v-bind="{
                   defaultViewElements,
@@ -64,10 +79,8 @@
                 }"
                 @update="onQueryUpdate"
               />
-            </VCol>
-          </VRow>
-          <VRow v-if="consentForm">
-            <VCol cols="8 mx-auto">
+            </VTabItem>
+            <VTabItem v-if="consentForm">
               <UnitConsentForm
                 v-bind="{
                   consentForm,
@@ -77,17 +90,18 @@
                   showDataExplorer
                 }"
               />
-            </VCol>
-          </VRow>
-        </template>
-      </div>
-    </keep-alive>
-  </client-only>
+            </VTabItem>
+          </VTabsItems>
+        </VCol>
+      </VRow>
+    </template>
+  </div>
 </template>
 
 <script>
 import { validExtensions } from '~/manifests/utils'
 import FileManager from '~/utils/file-manager'
+import fileManagerWorkers from '~/utils/file-manager-workers'
 import parseYarrrml from '~/utils/parse-yarrrml'
 import rdfUtils from '~/utils/rdf'
 
@@ -175,6 +189,7 @@ export default {
   },
   data() {
     return {
+      tab: null,
       progress: false,
       error: false,
       success: false,
@@ -182,7 +197,11 @@ export default {
       rml: '',
       allResults: [...Array(this.defaultView.length)],
       allFiles: null,
-      fileManager: new FileManager(this.preprocessors, this.allowMissingFiles),
+      fileManager: new FileManager(
+        this.preprocessors,
+        this.allowMissingFiles,
+        fileManagerWorkers
+      ),
       db: null
     }
   },
