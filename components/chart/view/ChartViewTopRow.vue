@@ -199,9 +199,6 @@ export default {
       const formatDate = d3.timeFormat('%B %d, %Y')
       const parseDate = d3.timeParse(this.dateFormat)
       const extent = d3.extent(this.values, d => {
-        console.log(d.date)
-        console.log(this.dateFormat)
-        console.log(parseDate(d.date))
         return parseDate(d.date)
       })
       this.minDate = formatDate(extent[0])
