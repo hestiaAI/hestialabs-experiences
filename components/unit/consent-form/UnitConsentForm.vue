@@ -183,14 +183,6 @@ export default {
         2
       )}${padNumber(date.getUTCMinutes(), 2)}_UTC.zip`
       return filename
-    },
-    tooBig() {
-      const limit = this.config.formSizeLimitMegaBytes
-      if (!limit) {
-        return false
-      }
-      const megabyte = 1048576
-      return this.encryptedZipFile.length > limit * megabyte
     }
   },
   watch: {
