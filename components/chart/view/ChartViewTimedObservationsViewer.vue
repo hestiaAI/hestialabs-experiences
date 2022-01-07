@@ -495,11 +495,11 @@ export default {
   }
 }
 </script>
-<style>
-.range-chart > svg > g > g.axis.y {
+<style scoped>
+::v-deep .range-chart > svg > g > g.axis.y {
   display: none;
 }
-.brush .custom-brush-handle {
+::v-deep .brush .custom-brush-handle {
   display: auto;
 }
 </style>

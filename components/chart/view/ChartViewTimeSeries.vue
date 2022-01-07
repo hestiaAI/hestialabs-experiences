@@ -17,7 +17,7 @@
       </VRow>
       <ChartViewVRowWebShare dense>
         <VCol cols="12">
-          <div :id="graphId"></div>
+          <div :id="graphId" style="position: relative"></div>
         </VCol>
       </ChartViewVRowWebShare>
     </VCol>
@@ -271,17 +271,17 @@ export default {
       })
 
       /* Tooltip */
-      d3.select('#' + this.graphId + '.tooltip').remove()
+      d3.select('#' + this.graphId + ' div.tooltip').remove()
       const tooltip = d3
-        .select('body')
+        .select('#' + this.graphId)
         .append('div')
         .attr('class', 'tooltip')
-        .attr('id', this.graphId)
         .style('opacity', 0)
 
       const that = this
       const f = d3.format(this.valueFormat)
       function showTooltip(evt, d) {
+        const svgDim = svg.node().getBoundingClientRect()
         tooltip.transition().duration(60).style('opacity', 0.98)
         tooltip
           .html(
@@ -290,8 +290,17 @@ export default {
               '</b><br/>' +
               f(d.value)
           ) // d.name
-          .style('left', evt.pageX - 55 + 'px')
-          .style('top', evt.pageY - 45 + 'px')
+          .style(
+            'left',
+            (xScale(new Date(d.key)) - 10) *
+              (svgDim.width / (width + 2 * adj)) +
+              'px'
+          )
+          .style(
+            'top',
+            yScale(d.value) * (svgDim.height / (height + 2 * adj)) + 'px'
+          )
+        console.log(d)
       }
 
       function hideTooltip() {
@@ -376,44 +385,43 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 /* AXES */
 /* ticks */
-.xAxis line,
-.yAxis line {
+::v-deep .xAxis line,
+::v-deep .yAxis line {
   stroke: #706f6f;
   stroke-width: 0.5;
   shape-rendering: geometricPrecision;
 }
 
 /* axis contour */
-.xAxis path,
-.yAxis path {
+::v-deep .xAxis path,
+::v-deep .yAxis path {
   stroke: #706f6f;
   stroke-width: 0.7;
   shape-rendering: geometricPrecision;
 }
 
-.yAxis path {
+::v-deep .yAxis path {
   display: none;
 }
 
 /* axis text */
-.xAxis text,
-.yAxis text {
+::v-deep .xAxis text,
+::v-deep .yAxis text {
   fill: #2b2929;
   font-size: 1rem;
   font-weight: 300;
 }
 
-.gridline {
+::v-deep .gridline {
   stroke: lightgray;
   shape-rendering: geometricPrecision;
   stroke-opacity: 0.5;
   stroke-width: 10;
 }
-
-div.tooltip {
+::v-deep div.tooltip {
   position: absolute;
   text-align: center;
   width: 110px;

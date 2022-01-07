@@ -565,66 +565,66 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 @import 'assets/styles/dc.css';
 
-body {
+::v-deep body {
   font-family: sans-serif;
   color: #22313f;
 }
 
-.dc-chart g.row text {
+::v-deep .dc-chart g.row text {
   fill: #22313f;
   font-weight: bold;
 }
 
-#hour-chart g.y {
+::v-deep #hour-chart g.y {
   display: none;
 }
 
-.reset {
+::v-deep .reset {
   margin-left: 1rem;
 }
 
-.v-application a.reset {
+::v-deep .v-application a.reset {
   color: rgb(85, 3, 30);
 }
 
-p.filters {
+::v-deep p.filters {
   font-size: 0.8rem;
   font-style: italic;
 }
 
-ul.list-inline {
+::v-deep ul.list-inline {
   list-style: none;
   padding-left: 0;
 }
 
-ul.list-inline > li {
+::v-deep ul.list-inline > li {
   display: inline-block;
 }
 
-li.border-right {
+::v-deep li.border-right {
   border-right: 1px solid #90a4ae;
 }
 
-.pl-2 {
+::v-deep .pl-2 {
   padding-left: 1.5rem;
 }
-.pr-2 {
+::v-deep .pr-2 {
   padding-right: 1.5rem;
 }
 
-.stat-info {
+::v-deep .stat-info {
   font-style: italic;
   font-size: 0.8em;
 }
-p.stat-title {
+::v-deep p.stat-title {
   margin: 0.5rem;
   padding: 0;
 }
 
-.stat-elem {
+::v-deep .stat-elem {
   padding: 1rem;
 }
 </style>

@@ -307,28 +307,33 @@ export default {
   }
 }
 </script>
-<style>
-body {
+<style scoped>
+::v-deep body {
   font-family: 'Roboto';
   color: #22313f;
 }
 
-.node rect {
+::v-deep .node rect {
   fill-opacity: 0.9;
   shape-rendering: crispEdges;
 }
 
-.node text {
+::v-deep .node text {
   pointer-events: none;
   text-shadow: 0 1px 0 #fff;
 }
 
-.link {
+::v-deep .link {
   fill: none;
   stroke: rgb(87, 86, 87);
 }
 
-.tooltip {
+::v-deep .label {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+::v-deep .tooltip {
   font-size: 0.7rem;
   background-color: white;
   border: solid white;
@@ -343,7 +348,7 @@ body {
   moz-box-shadow: 0px 0px 10px grey;
   box-shadow: 0px 0px 10px grey;
 }
-.tooltip:before {
+::v-deep .tooltip:before {
   content: '';
   display: block;
   width: 0;
@@ -354,10 +359,5 @@ body {
   border-right: 8px solid white;
   left: -9px;
   top: 7px;
-}
-
-.label {
-  font-size: 1.1rem;
-  font-weight: bold;
 }
 </style>

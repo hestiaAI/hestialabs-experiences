@@ -32,3 +32,6 @@ export default {
   }
 }
 </script>
+<style>
+@import 'assets/styles/dc.css';
+</style>
