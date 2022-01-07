@@ -9,7 +9,7 @@
       </VCol>
     </VRow>
     <VRow dense justify="center" class="mt-3">
-      <VCol cols="12" md="4">
+      <VCol cols="12" md="3">
         <VSlider
           v-model="topKSlider"
           label="N° of advertisers"
@@ -29,11 +29,10 @@
           v-model="othersCheck"
           dense
           label="Display Others"
-          hide-details
           @change="draw"
         ></VCheckbox>
       </VCol>
-      <VCol cols="6" md="2">
+      <VCol v-if="averageButton" cols="6" md="2">
         <VSelect
           v-model="agg"
           :items="aggList"
@@ -85,12 +84,16 @@ export default {
       default: () => 5
     },
     adjVertical: {
-      type: Number,
-      default: () => 60
+      type: Array,
+      default: () => [20, 50]
     },
     adjHorizontal: {
-      type: Number,
-      default: () => 150
+      type: Array,
+      default: () => [150, 150]
+    },
+    averageButton: {
+      type: Boolean,
+      default: () => false
     }
   },
   data() {
@@ -156,6 +159,7 @@ export default {
             .attr('y', that.yScale(d.key) + that.yScale.bandwidth() / 2)
             .style('font-size', '0.8rem')
             .style('font-weight', 'bold')
+            .style('fill', '#0A0A0A')
         })
         .on('mouseleave', function (evt, d) {
           d3.select(this).style('opacity', 1)
@@ -220,7 +224,7 @@ export default {
 
       /* create svg element */
       const width = 300
-      const height = 480
+      const height = 380
       d3.select('#' + this.graphId + ' svg').remove()
       this.svg = d3
         .select('#' + this.graphId)
@@ -229,13 +233,13 @@ export default {
         .attr(
           'viewBox',
           '-' +
-            this.adjHorizontal +
+            this.adjHorizontal[0] +
             ' -' +
-            this.adjVertical +
+            this.adjVertical[0] +
             ' ' +
-            (width + this.adjHorizontal * 2) +
+            (width + d3.sum(this.adjHorizontal)) +
             ' ' +
-            (height + this.adjVertical * 2)
+            (height + d3.sum(this.adjVertical))
         )
         .style('padding', this.padding)
         .style('margin', this.margin)
