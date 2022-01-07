@@ -90,8 +90,8 @@
               and found <b>{{ nDataPoints.toLocaleString() }}</b> datapoints
             </template>
             :
-            <ul v-if="sortedExtensionTexts">
-              <li v-for="(text, i) in sortedExtensionTexts" :key="i">
+            <ul v-if="sortedGroupTexts">
+              <li v-for="(text, i) in sortedGroupTexts" :key="i">
                 <!-- eslint-disable-next-line vue/no-v-html -->
                 <div v-html="text"></div>
               </li>
@@ -150,7 +150,18 @@ export default {
       height: 500,
       computeNPoints: false,
       nDataPoints: null,
-      sortedExtensionTexts: []
+      sortedGroupTexts: [],
+      group2ext: {
+        'audio file': ['mp3', 'm4a', 'wav', 'aac', 'webp'],
+        'image file': ['jpg', 'jpeg', 'png', 'gif', 'bnp'],
+        'video file': ['avi', 'mov', 'mp4', 'mpg'],
+        document: ['pdf', 'html', 'doc', 'docx', 'rtf', 'odt'],
+        spreadsheet: ['xls', 'xlsx', 'ods'],
+        'archive file': ['zip', '7z', 'rar', 'gz'],
+        'data file': ['json', 'csv', 'tsv', 'xml'],
+        'text file': ['txt', 'md'],
+        other: []
+      }
     }
   },
   computed: {
@@ -202,20 +213,26 @@ export default {
     dataSizeString() {
       return humanReadableFileSize(this.totalSize)
     },
-    sortedExtensionCounts() {
-      const extensions = this.fileManager.fileList
+    fileExts() {
+      return this.fileManager.fileList
         .map(f => f.name.match(/^.+\.(.+?)$/)?.[1])
         .filter(m => !_.isUndefined(m))
-        .map(ext =>
-          this.fileManager.supportedExtensions.has(ext) ? ext : 'other'
-        )
-
+    },
+    sortedGroupCounts() {
+      const groups = this.fileExts.map(ext => this.ext2group[ext])
       const occurrences = _.mapValues(
-        _.groupBy(extensions, _.identity),
+        _.groupBy(groups, _.identity),
         v => v.length
       )
-      return _.sortBy(Object.entries(occurrences), ([ext, count]) =>
-        ext === 'other' ? 1 : -count
+      return _.sortBy(Object.entries(occurrences), ([group, count]) =>
+        group === 'other' ? 1 : -count
+      )
+    },
+    ext2group() {
+      return Object.fromEntries(
+        Object.entries(this.group2ext).flatMap(entry =>
+          entry[1].map(ext => [ext, entry[0]])
+        )
       )
     }
   },
@@ -228,6 +245,7 @@ export default {
     fileManager: {
       immediate: true,
       handler() {
+        this.completeGroupsTable()
         this.setExtensionTexts()
         if (this.computeNPoints) {
           this.setNumberOfDataPoints()
@@ -239,6 +257,14 @@ export default {
     plurify,
     onLoading(loading) {
       this.isFileLoading = loading
+    },
+    completeGroupsTable() {
+      // Add unknown extensions to the 'other' group
+      for (const ext of this.fileExts) {
+        if (!(ext in this.ext2group) && !this.group2ext.other.includes(ext)) {
+          this.group2ext.other.push(ext)
+        }
+      }
     },
     setSelectedItem([item]) {
       // item might be undefined (when unselecting)
@@ -274,19 +300,15 @@ export default {
               : 0
           ])
       )
-      this.sortedExtensionTexts = this.sortedExtensionCounts.map(([ext, c]) => {
-        const re = new RegExp(`.+\\.${ext}$`)
-        const filterFunc =
-          ext === 'other'
-            ? ([f, _n]) =>
-                !this.fileManager.supportedExtensions.has(f.split('.').at(-1))
-            : ([f, _n]) => re.test(f)
+      this.sortedGroupTexts = this.sortedGroupCounts.map(([group, c]) => {
+        const re = new RegExp(`.+\\.${this.group2ext[group].join('|')}$`)
+        const filterFunc = ([f, _n]) => re.test(f)
         const files = pointsPerFile.filter(filterFunc)
         const shownFiles = _.take(
           _.sortBy(files, ([_f, n]) => -n),
           showAtMost
         )
-        const nPointsExt = _.sumBy(files, ([_f, n]) => n)
+        const nPointsGroup = _.sumBy(files, ([_f, n]) => n)
         const topFilesDescription = shownFiles
           .map(
             ([f, nPoints]) =>
@@ -294,20 +316,20 @@ export default {
                 nPoints === 0
                   ? ''
                   : ` (${nPoints.toLocaleString()} ${plurify(
-                      ext === 'txt' ? 'line' : 'datapoint',
+                      group === 'text file' ? 'line' : 'datapoint',
                       nPoints
                     )})`
               }`
           )
           .join(', ')
         return `<b>${c} ${plurify(
-          ext === 'other' ? 'other format' : ext.toUpperCase(),
+          group === 'other' ? 'other file' : group,
           c
         )}</b>${
-          nPointsExt > 0
-            ? ` (${nPointsExt.toLocaleString()} ${plurify(
-                ext === 'txt' ? 'line' : 'datapoint',
-                nPointsExt
+          nPointsGroup > 0
+            ? ` (${nPointsGroup.toLocaleString()} ${plurify(
+                group === 'text file' ? 'line' : 'datapoint',
+                nPointsGroup
               )})`
             : ''
         }${
