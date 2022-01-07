@@ -37,7 +37,7 @@ test('data table contains passed items', () => {
   expect(wrapper.find('[data-testid="data-table"]').exists()).toBe(true)
 })
 
-test('data table shows error message when data is malformed', () => {
+test('data table is not rendered when data is malformed', () => {
   // Mount the vue component, pass some data and a mocked vuex store
   const wrapper = mount(UnitFilterableTable, {
     propsData: {
@@ -47,7 +47,7 @@ test('data table shows error message when data is malformed', () => {
     localVue
   })
   // Check that the child component exists
-  expect(wrapper.find('[data-testid="data-error"]').exists()).toBe(true)
+  expect(wrapper.find('[data-testid="data-error"]').exists()).toBe(false)
 })
 
 test('data table html corresponds to snapshot', () => {

@@ -16,7 +16,7 @@
     "build:server": "nuxt build",
     "lint": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint:fix": "npm run lint -- --fix",
-    "pre-commit": "lint-staged && node validate-yarrrml",
+    "pre-commit": "lint-staged",
     "prepare": "husky install"
   },
   "jest": {
@@ -76,6 +76,7 @@
     "d3-time-format": "^4.1.0",
     "dc": "^4.2.7",
     "debounce": "^1.2.1",
+    "dom-to-image-more": "^2.9.5",
     "jsonpath-plus": "^6.0.1",
     "jszip": "^3.7.1",
     "localforage": "^1.10.0",
@@ -88,12 +89,12 @@
     "rocketrml": "^1.12.0",
     "sass-loader": "^10",
     "sha1": "^1.1.1",
+    "share-api-polyfill": "^1.0.21",
     "sparqlalgebrajs": "^4.0.1",
     "sql.js": "^1.6.2",
     "vega": "^5.20.2",
     "vega-embed": "^6.18.2",
     "vega-lite": "^5.1.1",
-    "vue-social-sharing": "^3.0.8",
     "vuetify": "^2.6.1"
   },
   "devDependencies": {
@@ -112,7 +113,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-nuxt": "^3.1.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-vue": "^8.2.0",
+    "eslint-plugin-vue": "^7.17.0",
     "file-loader": "^6.2.0",
     "husky": "^7.0.4",
     "jest": "^27.3.1",

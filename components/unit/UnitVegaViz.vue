@@ -1,78 +1,40 @@
 <template>
-  <div>
-    <template v-if="isValid && !isEmpty">
-      <div :id="divId" ref="graph"></div>
-      <VRow>
-        <VCol cols="6 mx-auto">
-          <BaseButton text="Export" @click="exportViz" />
-          <BaseButtonDownload
-            :href="dataURL"
-            :extension="exportExtension"
-            :disabled="!dataURL"
-          />
-        </VCol>
-      </VRow>
-    </template>
-    <BaseAlert v-else-if="!isValid">No data found</BaseAlert>
-    <BaseAlert v-else type="warning">
-      Data in this format cannot be displayed by this visualization
-    </BaseAlert>
-  </div>
+  <DataValidator :data="data">
+    <div ref="graph"></div>
+    <VRow>
+      <VCol cols="6 mx-auto">
+        <BaseButtonDownloadData
+          v-bind="{ disabled: !blob, extension, filename, data: blob }"
+        />
+        <BaseButtonShare file-share v-bind="{ files, disabled: !files }" />
+      </VCol>
+    </VRow>
+  </DataValidator>
 </template>
 
 <script>
 import embed from 'vega-embed'
-import _ from 'lodash'
+import exportImageMixinFactory from '@/mixins/export-image-mixin-factory'
 
-function isDataValid(data) {
-  return (
-    _.every(
-      ['items', 'headers'],
-      field => _.has(data, field) && Array.isArray(data[field])
-    ) &&
-    data.headers.length > 0 &&
-    _.every(data.items, i => _.every(data.headers, h => _.has(i, h)))
-  )
-}
-function isDataEmpty(data) {
-  return data.items.length === 0
-}
 export default {
+  mixins: [exportImageMixinFactory({ refName: 'graph' })],
   props: {
     specFile: {
       type: Object,
       default: () => {}
     },
     data: {
-      default: undefined,
-      validator: isDataValid
-    },
-    exportExtension: {
-      type: String,
-      default: 'png'
-    },
-    divId: {
-      type: String,
+      type: Object,
       required: true
     }
   },
   data() {
     return {
-      width: 0,
-      dataURL: ''
+      width: 0
     }
   },
   computed: {
-    isValid() {
-      return isDataValid(this.data)
-    },
-    isEmpty() {
-      return isDataEmpty(this.data)
-    },
     items() {
-      if (!this.isValid) {
-        return []
-      }
       return this.data.items
     },
     clonedItems() {
@@ -80,7 +42,7 @@ export default {
       // so we clone them to avoid affecting
       // other graphs that could
       // possibly use the same values
-      if (!this.items.length) {
+      if (!this.items?.length) {
         return []
       }
       return JSON.parse(JSON.stringify(this.items))
@@ -115,9 +77,7 @@ export default {
   },
   mounted() {
     this.width = this.$refs.graph?.offsetWidth ?? 0
-    if (this.isValid && !this.isEmpty) {
-      this.draw()
-    }
+    this.draw()
   },
   methods: {
     async draw() {
@@ -129,16 +89,14 @@ export default {
       // const width = this.width
       // const scaling = width / (spec.width + spec.padding * 2)
       // const height = spec.height * scaling
-      await embed(`#${this.divId}`, spec, {
+      await embed(this.$refs.graph, spec, {
         // width,
         // height,
         // renderer: 'svg',
         actions: false
       })
-    },
-    exportViz() {
-      const canvas = document.getElementById(this.divId).firstChild
-      this.dataURL = canvas.toDataURL(`image/${this.exportExtension}`)
+
+      await this.exportImage()
     }
   }
 }

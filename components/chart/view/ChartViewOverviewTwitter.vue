@@ -1,8 +1,7 @@
 <template>
   <VContainer>
-    <VRow>
-      <VCol cols="12" sm="1"></VCol>
-      <VCol cols="12" sm="10">
+    <ChartViewVRowWebShare>
+      <VCol cols="12">
         <VRow>
           <VCol cols="12" sm="8">
             <div id="volume-chart">
@@ -37,7 +36,7 @@
         <VRow>
           <VCol cols="12" sm="4">
             <div id="engagement-chart">
-              <strong>Interactions with ads (click, video viewing)</strong>
+              <strong>Interactions with ads (clicks, video views)</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
@@ -82,14 +81,11 @@
           </div>
         </VRow>
       </VCol>
-      <VCol cols="12" sm="1"></VCol>
-    </VRow>
+    </ChartViewVRowWebShare>
     <VRow>
-      <VCol cols="12" sm="1"></VCol>
-      <VCol cols="12" sm="10">
+      <VCol cols="12">
         <UnitFilterableTable :data="{ headers: header, items: results }" />
       </VCol>
-      <VCol cols="12" sm="1"></VCol>
     </VRow>
   </VContainer>
 </template>
@@ -189,7 +185,7 @@ export default {
       const adPerDayDimension = ndx.dimension(d => d.day)
       const companyDimension = ndx.dimension(d => d.companyName)
       const engagementDimension = ndx.dimension(d =>
-        d.engagement ? 'True' : 'False'
+        d.engagement ? 'Yes' : 'No'
       )
       const targetingTypeDimension = ndx.dimension(d => d.targetingType)
       const targetingValueDimension = ndx.dimension(d => d.targetingValue)

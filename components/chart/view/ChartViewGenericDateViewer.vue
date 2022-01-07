@@ -56,7 +56,7 @@
         </VSelect>
       </VCol>
     </VRow>
-    <VRow>
+    <ChartViewVRowWebShare>
       <VCol cols="12">
         <div :id="graphId"></div>
         <p class="text-subtitle-2">
@@ -74,7 +74,7 @@
         </p>
         <div :id="'range-chart' + graphId" class="range-chart"></div>
       </VCol>
-    </VRow>
+    </ChartViewVRowWebShare>
     <VRow>
       <VCol cols="12">
         <UnitFilterableTable
