@@ -9,22 +9,9 @@
         ></VTextField>
       </VCol>
     </VRow>
-    <VRow>
-      <VSpacer />
-      <VCol align="center">
-        <BaseButton
-          v-bind="{ progress, status, error }"
-          text="Run"
-          icon="mdiStepForward"
-          class="ma-sm-2"
-          @click="runPipeline"
-        />
-      </VCol>
-      <VCol v-if="options">
-        <VSwitch v-model="optionsVisible" label="Edit options" />
-      </VCol>
-      <VSpacer />
-    </VRow>
+    <div v-if="options" class="d-flex justify-center">
+      <VSwitch v-model="optionsVisible" label="Edit options" />
+    </div>
     <VExpandTransition>
       <VRow v-show="optionsVisible">
         <VCol>
@@ -36,11 +23,13 @@
 </template>
 
 <script>
+import mixin from './mixin-pipeline'
 import FileManager from '~/utils/file-manager'
 import { setTimeoutPromise } from '@/utils/utils'
 
 export default {
   name: 'UnitCustomPipeline',
+  mixins: [mixin],
   props: {
     fileManager: {
       type: FileManager,
@@ -61,13 +50,11 @@ export default {
   },
   data() {
     return {
-      status: false,
-      error: false,
       progress: false,
       code: '',
       parameter: '',
       options: '{}',
-      optionsVisible: false
+      optionsVisible: true
     }
   },
   watch: {
@@ -75,15 +62,14 @@ export default {
       this.status = false
     }
   },
-  mounted() {
+  created() {
     const optionsObject = this.defaultViewElements.customPipelineOptions
     if (optionsObject) {
       this.options = JSON.stringify(optionsObject, null, 2)
     }
   },
   methods: {
-    async runPipeline() {
-      this.error = false
+    async run() {
       this.progress = true
       await setTimeoutPromise(1)
       try {
@@ -97,10 +83,8 @@ export default {
         this.$emit('update', result)
       } catch (error) {
         console.error(error)
-        this.error = true
         this.$emit('update', { error })
       } finally {
-        this.status = true
         this.progress = false
       }
     }

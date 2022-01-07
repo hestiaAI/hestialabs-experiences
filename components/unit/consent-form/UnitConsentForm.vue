@@ -1,6 +1,6 @@
 <template>
   <VForm>
-    <VCard class="pa-2 mb-6">
+    <VCard>
       <VCardText>
         <UnitConsentFormSection
           v-for="(section, index) in consent"
