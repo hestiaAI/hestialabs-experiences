@@ -3,7 +3,6 @@
     "amazon",
     "apple",
     "facebook",
-    "facebook-test",
     "google",
     "spotify",
     "netflix",
@@ -13,10 +12,8 @@
     "youtube",
     "playground",
     "uber",
-    "uber-kepler",
     "ad-radar",
     "explorer",
-    "google-my-activity",
     "other"
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
