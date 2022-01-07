@@ -5,7 +5,7 @@
     <div class="explorer__content">{{ jsonText }}</div>
   </div>
   <div v-else>
-    <BaseSearchBar v-model="search"></BaseSearchBar>
+    <BaseSearchBar v-model="search" :loading="searching" />
     <VTreeview dense transition :items="filteredItems">
       <template #prepend="{ item }">
         <VIcon v-if="!isUndef(item.icon)">
@@ -43,12 +43,17 @@ export default {
       error: false,
       search: '',
       searchCooldownTime: 1000,
-      filteredItems: []
+      filteredItems: [],
+      searching: false
     }
   },
   computed: {
     delayedUpdateFilteredItems() {
-      return debounce(this.updateFilteredItems, this.searchCooldownTime)
+      return debounce(async function () {
+        this.searching = true
+        await this.updateFilteredItems()
+        this.searching = false
+      }, this.searchCooldownTime)
     }
   },
   watch: {

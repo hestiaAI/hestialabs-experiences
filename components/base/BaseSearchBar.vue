@@ -8,6 +8,7 @@
     hide-details
     clearable
     class="mb-6 mt-3"
+    v-bind="$attrs"
     @input="$emit('input', $event)"
   ></VTextField>
 </template>
