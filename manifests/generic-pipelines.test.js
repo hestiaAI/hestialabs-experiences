@@ -1,5 +1,5 @@
 import { jsonToTableConverter } from '~/manifests/generic-pipelines'
-import { mockFileManager } from '~/utils/file-manager-mock'
+import { mockFileManager } from '~/utils/__mocks__/file-manager-mock'
 
 test('jsonToTableConverter with properties', async () => {
   const fileName = 'comments_and_reactions/comments.json'

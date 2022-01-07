@@ -1,5 +1,5 @@
 import FileManager from '~/utils/file-manager'
-import { mockFile } from '~/utils/file-manager-mock'
+import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 
 test('an empty file manager', async () => {
   const fileManager = new FileManager({}, true)
