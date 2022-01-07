@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { debounce } from 'debounce'
+import debounce from 'lodash/debounce'
 
 import mixin from './mixin'
 import mixinLoading from './mixin-loading'
@@ -65,7 +65,7 @@ export default {
     },
     search() {
       // The search starts some time after the user stops typing, not after every character typed
-      this.delayedUpdateFilteredItems.clear()
+      this.delayedUpdateFilteredItems.cancel()
       this.delayedUpdateFilteredItems()
     }
   },
