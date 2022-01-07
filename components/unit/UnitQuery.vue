@@ -39,41 +39,28 @@
         </VCol>
       </VRow>
       <template v-if="finished">
-        <template v-if="hasData">
-          <VRow>
-            <VCol>
-              <UnitVegaViz
-                v-if="vizVega"
-                :spec-file="vizVega"
-                :data="clonedResult"
-                class="text-center"
-              />
-              <ChartView
-                v-else-if="vizVue"
-                :graph-name="vizVue"
-                :data="clonedResult"
-                :viz-props="defaultViewElements.vizProps"
-              />
-              <UnitIframe
-                v-else-if="vizUrl"
-                :src="vizUrl"
-                :data="clonedResult"
-              />
-            </VCol>
-          </VRow>
-          <VRow v-if="showTable">
-            <VCol>
-              <UnitFilterableTable :data="result" />
-            </VCol>
-          </VRow>
-        </template>
-        <template v-else>
-          <VRow>
-            <VCol class="text-center">
-              <BaseAlert>No relevant data found</BaseAlert>
-            </VCol>
-          </VRow>
-        </template>
+        <VRow>
+          <VCol>
+            <UnitVegaViz
+              v-if="vizVega"
+              :spec-file="vizVega"
+              :data="clonedResult"
+              class="text-center"
+            />
+            <ChartView
+              v-else-if="vizVue"
+              :graph-name="vizVue"
+              :data="clonedResult"
+              :viz-props="defaultViewElements.vizProps"
+            />
+            <UnitIframe v-else-if="vizUrl" :src="vizUrl" :data="clonedResult" />
+          </VCol>
+        </VRow>
+        <VRow v-if="showTable">
+          <VCol>
+            <UnitFilterableTable :data="result" />
+          </VCol>
+        </VRow>
       </template>
     </VCard>
   </div>
@@ -154,9 +141,6 @@ export default {
     },
     clonedResult() {
       return JSON.parse(JSON.stringify(this.result))
-    },
-    hasData() {
-      return this.result && (this.result.headers?.length ?? 1) > 0
     }
   },
   methods: {
