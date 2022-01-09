@@ -7,7 +7,7 @@ const options: ExperienceOptions = {
   allowMissingFiles: true,
   collaborator: theEyeballs,
   dataPortal: 'https://www.facebook.com/help/212802592074644',
-  fileExtensions: ['zip'],
+  defaultView: [],
   icon: icon,
   preprocessor,
   slug: 'facebook',

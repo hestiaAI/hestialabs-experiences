@@ -1,6 +1,6 @@
-import { PreprocessorFunction } from 'shared/types'
+import { Preprocessor } from 'shared/types'
 
-const tinder: PreprocessorFunction = (string: string) => {
+const tinder: Preprocessor = (string: string) => {
   const json = JSON.parse(string)
   Object.keys(json?.Usage ?? {}).forEach(key => {
     json.Usage[key] = Object.keys(json.Usage[key]).map(date => ({

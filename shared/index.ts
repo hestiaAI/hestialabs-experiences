@@ -1,8 +1,11 @@
+import { createViewBlock } from './view-block'
 import { ExperienceOptions } from './types'
 export { ExperienceOptions } from './types'
 
 const defaultOptions: Partial<ExperienceOptions> = {
   allowMissingFiles: false,
+  fileExtensions: ['zip'],
+  isGenericViewer: false,
   multiple: false,
   preprocessor: (input: string) => input,
   subtitle: 'Data Experience'
@@ -21,6 +24,9 @@ export class Experience {
         `[${slug}] zip extension was specified but zipFilePaths[] is empty`
       )
     }
+
+    options.defaultView = options.defaultView.map(createViewBlock)
+
     // spread default options first, and then provided options
     this.options = { ...defaultOptions, ...options }
   }

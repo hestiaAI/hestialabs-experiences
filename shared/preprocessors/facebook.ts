@@ -1,4 +1,4 @@
-import { PreprocessorFunction } from 'shared/types'
+import { Preprocessor } from 'shared/types'
 
 // https://stackoverflow.com/q/17057407/8238129
 function convertHexToString(input: string) {
@@ -14,7 +14,7 @@ function convertHexToString(input: string) {
   return output
 }
 
-const facebook: PreprocessorFunction = s => {
+const facebook: Preprocessor = s => {
   // Facebook gives us messed up files (https://stackoverflow.com/q/52747566/8238129)
   // For instance the "é" character is encoded in UTF-8 as 0xc3 0xa9
   // But they give it as \u00c3\u00a9

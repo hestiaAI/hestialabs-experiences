@@ -1,7 +1,13 @@
+import { ViewBlock } from './view-block'
+
 type NonEmptyArray<T> = T[] & { 0: T }
 type FileExtension = 'csv' | 'js' | 'json' | 'xml' | 'zip'
 
-export type PreprocessorFunction = (input: string) => string
+type PreprocessorFunction = (input: string) => string
+export type Preprocessor =
+  | PreprocessorFunction
+  | { [key: string]: PreprocessorFunction }
+
 export type Collaborator = {
   icon: string
   title: string
@@ -13,12 +19,16 @@ export interface ExperienceOptions {
   collaborator?: Collaborator
   dataPortal?: string
   dataSamples?: string[]
-  fileExtensions: NonEmptyArray<FileExtension>
+  defaultView: ViewBlock[]
+  fileExtensions?: NonEmptyArray<FileExtension>
   icon: string
+  isGenericViewer?: boolean
   multiple?: boolean
-  preprocessor?: PreprocessorFunction
+  preprocessor?: Preprocessor
   slug: string
   subtitle?: string
   title: string
+  url?: string
+  yarrrml?: string
   zipFilePaths?: string[]
 }

@@ -6,7 +6,7 @@ import icon from 'icons/twitter.png'
 const options: ExperienceOptions = {
   collaborator: theEyeballs,
   dataSamples: ['twitter.zip', 'twitter-sample.zip'],
-  fileExtensions: ['zip'],
+  defaultView: [],
   icon: icon,
   preprocessor,
   slug: 'twitter',

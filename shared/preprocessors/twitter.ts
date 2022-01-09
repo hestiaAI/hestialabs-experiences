@@ -1,6 +1,6 @@
-import { PreprocessorFunction } from 'shared/types'
+import { Preprocessor } from 'shared/types'
 
-const twitter: PreprocessorFunction = string =>
+const twitter: Preprocessor = string =>
   // replace variable assignment in JS file from Twitter
   string.replace(/^[0-9a-zA-Z_.]+\s+=/, '')
 

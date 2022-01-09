@@ -15,7 +15,8 @@ export default {
     'twitter/dist/index': path.resolve(
       __dirname,
       'packages/twitter/src/index.ts'
-    )
+    ),
+    'tinder/dist/index': path.resolve(__dirname, 'packages/tinder/src/index.ts')
   },
   devtool: 'inline-source-map',
   module: {
@@ -26,10 +27,14 @@ export default {
         exclude: /node_modules/,
         options: { configFile: 'tsconfig.build.json' }
       },
+      // https://webpack.js.org/guides/asset-modules/
       {
-        // https://webpack.js.org/guides/asset-modules/#inlining-assets
         test: /\.(?:png|svg)$/,
         type: 'asset/inline'
+      },
+      {
+        test: /\.(?:rq|vega|yml)$/,
+        type: 'asset/source'
       }
     ]
   },
@@ -37,9 +42,7 @@ export default {
     extensions: ['.tsx', '.ts'],
     plugins: [
       // https://www.npmjs.com/package/tsconfig-paths-webpack-plugin
-      new TsconfigPathsPlugin({
-        /* options: see below */
-      })
+      new TsconfigPathsPlugin({})
     ]
   },
   output: {
