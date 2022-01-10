@@ -1,7 +1,7 @@
 <template>
   <div>
     <DataValidator :data="data">
-      <BaseAlert v-if="error" type="error">{{ message }}</BaseAlert>
+      <VAlert v-if="error" type="error">{{ message }}</VAlert>
       <UnitFilterableTableFilter
         :display-filters="displayFilters"
         :headers="headers"

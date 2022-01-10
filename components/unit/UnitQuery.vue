@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VCard v-if="defaultViewElements">
+    <VCard v-if="defaultViewElements" class="pa-2 mb-6">
       <VCardTitle class="justify-center">{{
         defaultViewElements.title
       }}</VCardTitle>
@@ -62,9 +62,6 @@
           </VCol>
         </VRow>
       </template>
-      <template v-else-if="error">
-        <BaseAlert type="error">{{ error }}</BaseAlert>
-      </template>
     </VCard>
   </div>
 </template>
@@ -109,7 +106,6 @@ export default {
   },
   data() {
     return {
-      error: false,
       finished: false
     }
   },
@@ -149,19 +145,13 @@ export default {
   },
   methods: {
     onUnitResultsUpdate(result) {
-      if (result.error) {
-        this.finished = false
-        this.error = result.error
-      } else {
-        // Postprocessing
-        if (this.defaultViewElements.postprocessor !== undefined) {
-          result =
-            this.postprocessors[this.defaultViewElements.postprocessor](result)
-        }
-        this.result = result
-        this.finished = true
-        this.error = false
+      // Postprocessing
+      if (this.defaultViewElements.postprocessor !== undefined) {
+        result =
+          this.postprocessors[this.defaultViewElements.postprocessor](result)
       }
+      this.result = result
+      this.finished = true
     }
   }
 }

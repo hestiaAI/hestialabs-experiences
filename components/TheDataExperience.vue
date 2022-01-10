@@ -25,13 +25,13 @@
           <span>Processing files...</span>
         </template>
         <template v-else-if="error || success">
-          <BaseAlert
+          <VAlert
             :type="error ? 'error' : 'success'"
             border="top"
             colored-border
             max-width="600"
             >{{ message }}
-          </BaseAlert>
+          </VAlert>
         </template>
       </VCol>
     </VRow>
@@ -49,13 +49,11 @@
             centered
             fixed-tabs
           >
-            <VTab
-              v-for="(el, index) in tabs"
-              :key="index"
-              :disabled="experienceProgress"
-            >
+            <VTab>Files</VTab>
+            <VTab v-for="(el, index) in defaultView" :key="index">
               {{ el.title }}
             </VTab>
+            <VTab v-if="consentForm">Share my data</VTab>
           </VTabs>
           <VTabsItems v-model="tab">
             <VTabItem>
@@ -65,15 +63,6 @@
               v-for="(defaultViewElements, index) in defaultView"
               :key="index"
             >
-              <VOverlay :value="overlay" absolute opacity="0.8">
-                <div
-                  class="d-flex flex-column align-center"
-                  style="width: 100%; height: 100%"
-                >
-                  <div class="mb-3">This might take a moment</div>
-                  <BaseProgressCircular size="64" width="4" />
-                </div>
-              </VOverlay>
               <UnitQuery
                 v-bind="{
                   defaultViewElements,
@@ -108,10 +97,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
-import debounce from 'lodash/debounce'
-
 import { validExtensions } from '~/manifests/utils'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
@@ -213,19 +198,10 @@ export default {
         this.allowMissingFiles,
         fileManagerWorkers
       ),
-      db: null,
-      overlay: false
+      db: null
     }
   },
   computed: {
-    ...mapState('experience', { experienceProgress: 'progress' }),
-    tabs() {
-      const tabs = [{ title: 'Files' }, ...this.defaultView]
-      if (this.consentForm) {
-        return [...tabs, { title: 'Share my data' }]
-      }
-      return tabs
-    },
     queries() {
       return this.defaultView.map(o => this.sparql[o.query])
     },
@@ -254,15 +230,6 @@ export default {
             .replace(/\s/g, '')
             .split(',')
             .map(ext => `.${ext}`)
-    }
-  },
-  watch: {
-    // debounce overlay
-    experienceProgress: {
-      immediate: true,
-      handler: debounce(function (value) {
-        this.overlay = value
-      }, 200)
     }
   },
   methods: {
