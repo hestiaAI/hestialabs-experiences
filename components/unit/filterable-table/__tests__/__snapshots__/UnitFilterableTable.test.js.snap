@@ -2,7 +2,7 @@
 
 exports[`data table html corresponds to snapshot 1`] = `
 "<div>
-  <datavalidator data=\\"[object Object]\\">
+  <datavalidator data=\\"[object Object]\\" allow-missing-columns=\\"true\\">
     <!---->
     <unitfilterabletablefilter headers=\\"[object Object],[object Object],[object Object]\\"></unitfilterabletablefilter>
     <vdatatable multi-sort=\\"\\" fixed-header=\\"\\" height=\\"500\\" footer-props=\\"[object Object]\\" data-testid=\\"data-table\\" headers=\\"[object Object],[object Object],[object Object]\\" items=\\"[object Object]\\" search=\\"\\"></vdatatable>
