@@ -53,8 +53,8 @@ export default {
       progress: false,
       code: '',
       parameter: '',
-      options: '{}',
-      optionsVisible: true
+      options: '',
+      optionsVisible: false
     }
   },
   watch: {
@@ -73,7 +73,7 @@ export default {
       this.progress = true
       await setTimeoutPromise(1)
       try {
-        const optionsObject = JSON.parse(this.options)
+        const optionsObject = JSON.parse(this.options || 'null')
         const result = await this.customPipeline({
           fileManager: this.fileManager,
           manifest: this.$store.getters.manifest(this.$route),
