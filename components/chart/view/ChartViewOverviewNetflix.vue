@@ -563,26 +563,29 @@ export default {
 }
 </script>
 <style scoped>
-@import 'assets/styles/dc.css';
-
-body {
+::v-deep body {
   font-family: sans-serif;
   color: #22313f;
 }
 
-.dc-chart g.row text {
+::v-deep .dc-chart g.row text {
   fill: #22313f;
   font-weight: bold;
 }
-.range-chart > svg > g > g.axis.y {
+
+::v-deep .range-chart > svg > g > g.axis.y {
   display: none;
 }
 
-a.reset {
+::v-deep .reset {
   margin-left: 1rem;
 }
 
-p.filters {
+::v-deep .v-application a.reset {
+  color: rgb(85, 3, 30);
+}
+
+::v-deep p.filters {
   font-size: 0.8rem;
   font-style: italic;
 }

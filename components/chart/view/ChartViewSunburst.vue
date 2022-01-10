@@ -3,7 +3,7 @@
     <ChartViewVRowWebShare>
       <VCol cols="12" md="12" class="text-center">
         <div :id="graphId">
-          <VBreadcrumbs :items="bcItems" class="breadCrumb" />
+          <VBreadcrumbs :items="bcItems" large />
         </div>
       </VCol>
     </ChartViewVRowWebShare>
@@ -351,12 +351,9 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 body {
   font-family: 'Roboto';
   color: #22313f;
-}
-.breadCrumb.v-breadcrumbs li {
-  font-size: 1.2rem;
 }
 </style>

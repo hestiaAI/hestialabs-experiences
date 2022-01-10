@@ -77,14 +77,12 @@
                   index,
                   vega
                 }"
-                @update="onQueryUpdate"
               />
             </VTabItem>
             <VTabItem v-if="consentForm">
               <UnitConsentForm
                 v-bind="{
                   consentForm,
-                  allResults,
                   defaultView,
                   fileManager,
                   showDataExplorer
@@ -195,8 +193,6 @@ export default {
       success: false,
       message: '',
       rml: '',
-      allResults: [...Array(this.defaultView.length)],
-      allFiles: null,
       fileManager: new FileManager(
         this.preprocessors,
         this.allowMissingFiles,
@@ -279,12 +275,6 @@ export default {
 
       const elapsed = new Date() - start
       this.message = `Successfully processed in ${elapsed / 1000} sec.`
-    },
-    onQueryUpdate({ index, result }) {
-      // we need to change the object or vue won't see the change
-      const newResults = this.allResults.slice()
-      newResults[index] = JSON.stringify(result)
-      this.allResults = newResults
     }
   }
 }

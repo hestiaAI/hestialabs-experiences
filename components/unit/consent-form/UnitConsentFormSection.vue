@@ -13,14 +13,14 @@
 
     <template v-if="section.type === 'data' && !section.hide">
       <VCheckbox
-        v-for="(title, j) in section.titles"
+        v-for="(k, j) in section.keys"
         :key="`data-${j}`"
         v-model="includedResults"
         :readonly="readonly"
         dense
-        :disabled="dataCheckboxDisabled[j]"
-        :label="title"
-        :value="section.keys[j]"
+        :disabled="!!dataCheckboxDisabled[k]"
+        :label="section.titles[j]"
+        :value="k"
         @change="updateConsent"
       ></VCheckbox>
 
@@ -135,8 +135,8 @@ export default {
       default: false
     },
     dataCheckboxDisabled: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     },
     showDataExplorer: {
       type: Boolean,

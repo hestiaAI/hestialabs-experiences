@@ -8,7 +8,8 @@ import {
   mdiFolderZip,
   mdiTable,
   mdiTextBoxOutline,
-  mdiXml
+  mdiXml,
+  mdiMicrosoftExcel
 } from '@mdi/js'
 import _ from 'lodash'
 import { matchNormalized, findMatchesInContent } from './accessor'
@@ -25,7 +26,8 @@ const filetype2icon = {
   img: mdiFileImage,
   file: mdiFile,
   txt: mdiTextBoxOutline,
-  html: mdiXml
+  html: mdiXml,
+  xlsx: mdiMicrosoftExcel
 }
 const extension2filetype = {
   tar: 'zip',
@@ -42,7 +44,8 @@ const extension2filetype = {
   txt: 'txt',
   html: 'html',
   csv: 'csv',
-  tsv: 'csv'
+  tsv: 'csv',
+  xlsx: 'xlsx'
 }
 
 /**

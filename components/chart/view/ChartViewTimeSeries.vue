@@ -102,7 +102,6 @@ import * as d3 from 'd3'
 import { nest } from 'd3-collection'
 import { addMissingDate } from './utils/D3Helpers'
 import mixin from './mixin'
-
 // Inspired by
 // https://datawanderings.com/2019/10/28/tutorial-making-a-line-chart-in-d3-js-v-5/
 export default {
@@ -204,12 +203,10 @@ export default {
         const filters = Object.keys(this.filterModel).filter(
           k => this.filterModel[k] != null
         )
-
         // filter according to selection
         serie.current = serie.values.filter(d => {
           return filters.every(f => this.filterModel[f] === d[f])
         })
-
         // Aggregate per time period
         serie.current = nest()
           .key(function (d) {
@@ -217,7 +214,6 @@ export default {
           })
           .rollup(leaves => d3.sum(leaves, l => l.value))
           .entries(serie.current)
-
         // Add missing datapoints
         serie.current = addMissingDate(
           serie.current,
@@ -228,7 +224,6 @@ export default {
           this.extentDate[0],
           this.extentDate[1]
         )
-
         // Sort the result
         serie.current = serie.current.sort(
           (e1, e2) => new Date(e1.key) - new Date(e2.key)
@@ -263,12 +258,10 @@ export default {
           format: d3.timeFormat('%Y')
         }
       this.namesInterval = Object.keys(this.intervals)
-
       // get unique series ids
       const ids = this.values
         .map(i => i[this.seriesAccessor.value])
         .filter((value, index, self) => self.indexOf(value) === index)
-
       // group by series ids and sort values
       this.slices = ids.map(a => {
         return {
@@ -288,7 +281,6 @@ export default {
             .sort((e1, e2) => e1.date - e2.date)
         }
       })
-
       this.selectedInterval = this.namesInterval[this.namesInterval.length - 1]
       this.initFilters()
       this.applyFilters()
@@ -297,7 +289,6 @@ export default {
     draw() {
       const width = 800
       const height = 300
-
       /* create svg element */
       d3.select('#' + this.graphId + ' svg').remove()
       const svg = d3
@@ -328,14 +319,11 @@ export default {
           }, [])
         )
       }
-
       /* Scales */
       const xScale = d3.scaleTime().range([0, width])
       const yScale = d3.scaleLinear().rangeRound([height, 0])
-
       xScale.domain(nestedExtent(this.slices, 'current', d => new Date(d.key)))
       yScale.domain([0, nestedExtent(this.slices, 'current', d => d.value)[1]])
-
       /* Axis */
       const yAxis = d3.axisLeft().ticks(5).scale(yScale) // .ticks(slices[0].values.length)
       const xAxis = d3
@@ -344,7 +332,6 @@ export default {
         // .ticks(d3.timeDay.every(1))
         // .tickFormat(d3.timeFormat('%b %d'))
         .scale(xScale)
-
       svg
         .append('g')
         .attr('class', 'xAxis')
@@ -360,7 +347,6 @@ export default {
         .attr('y', -60)
         .style('text-anchor', 'end')
         .text(this.yLabel)
-
       /* GridLayout */
       d3.selectAll('g.yAxis g.tick')
         .append('line')
@@ -381,7 +367,6 @@ export default {
       /* Color Scale */
       const keys = this.slices.map(d => d.id)
       const color = d3.scaleOrdinal().domain(keys).range(d3.schemeDark2)
-
       /* Legend */
       const legend = svg.selectAll('.legend').data(keys).enter().append('g')
       // add circles
@@ -410,7 +395,6 @@ export default {
           ',0)'
         )
       })
-
       /* Tooltip */
       d3.select('#' + this.graphId + '.tooltip').remove()
       const tooltip = d3
@@ -419,7 +403,6 @@ export default {
         .attr('class', 'tooltip')
         .attr('id', this.graphId)
         .style('opacity', 0)
-
       const that = this
       const f = d3.format(this.valueFormat)
       function showTooltip(evt, d) {
@@ -434,7 +417,6 @@ export default {
           .style('left', evt.pageX - 55 + 'px')
           .style('top', evt.pageY - 45 + 'px')
       }
-
       function hideTooltip() {
         tooltip.transition().duration(60).style('opacity', 0)
       }
@@ -444,7 +426,6 @@ export default {
         .curve(d3.curveMonotoneX)
         .x(d => xScale(new Date(d.key)))
         .y(d => yScale(d.value))
-
       /* Draw lines */
       const lines = svg.selectAll('lines').data(this.slices).enter().append('g')
       const path = lines
@@ -453,7 +434,6 @@ export default {
         .attr('stroke', d => color(d.id))
         .attr('stroke-width', this.lineWidth)
         .attr('d', d => line(d.current))
-
       path
         .attr('stroke-dashoffset', function () {
           return d3.select(this).node().getTotalLength()
@@ -465,7 +445,6 @@ export default {
         .duration(5000)
         .ease(d3.easeSin)
         .attr('stroke-dashoffset', 0)
-
       /* Draw points */
       const points = lines
         .selectAll('circle')
@@ -478,7 +457,6 @@ export default {
         )
         .enter()
         .append('circle')
-
       points
         .attr('stroke', d => d.color)
         .attr('fill', 'white')
@@ -495,7 +473,6 @@ export default {
         .attr('class', 'datapoint')
         .attr('id', (d, i) => i)
         .style('opacity', 1)
-
       const radius = this.dotRadius
       points.on('mouseover', function (evt, d) {
         d3.select(this)
@@ -526,7 +503,6 @@ export default {
   stroke-width: 0.5;
   shape-rendering: geometricPrecision;
 }
-
 /* axis contour */
 .xAxis path,
 .yAxis path {
@@ -534,11 +510,9 @@ export default {
   stroke-width: 0.7;
   shape-rendering: geometricPrecision;
 }
-
 .yAxis path {
   display: none;
 }
-
 /* axis text */
 .xAxis text,
 .yAxis text {
@@ -546,14 +520,12 @@ export default {
   font-size: 1rem;
   font-weight: 300;
 }
-
 .gridline {
   stroke: lightgray;
   shape-rendering: geometricPrecision;
   stroke-opacity: 0.5;
   stroke-width: 10;
 }
-
 div.tooltip {
   position: absolute;
   text-align: center;
