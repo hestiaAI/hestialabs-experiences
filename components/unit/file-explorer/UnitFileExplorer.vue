@@ -6,7 +6,7 @@
       },
       closeConditional: () => !mini
     }"
-    class="pa-2 mb-6 explorer"
+    class="explorer"
     :min-height="height"
     height="auto"
   >
