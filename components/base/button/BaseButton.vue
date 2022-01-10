@@ -1,5 +1,10 @@
 <template>
-  <VBtn outlined v-bind="$attrs" class="my-2" @click="$emit('click', $event)">
+  <VBtn
+    :outlined="outlined"
+    v-bind="$attrs"
+    class="my-2"
+    @click="$emit('click', $event)"
+  >
     <VIcon v-if="icon" left>{{ mdiIcon }}</VIcon>
     <slot>
       <span>{{ text }}</span>
@@ -31,6 +36,10 @@ export default {
     icon: {
       type: String,
       default: null
+    },
+    outlined: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {

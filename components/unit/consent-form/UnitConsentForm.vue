@@ -1,65 +1,74 @@
 <template>
   <VForm>
-    <VCard class="pa-2 my-6">
+    <VCard class="pa-2 mb-6">
       <VCardText>
         <UnitConsentFormSection
           v-for="(section, index) in consent"
           :key="`section-${index}`"
-          v-bind="{ section, index, dataCheckboxDisabled, showDataExplorer }"
+          v-bind="{
+            section,
+            index,
+            dataCheckboxDisabled,
+            showDataExplorer,
+            fileManager
+          }"
           @change="updateConsent"
         />
-        <BaseButton
-          text="Generate ZIP"
-          :status="generateStatus"
-          :error="generateError"
-          :progress="generateProgress"
-          :disabled="
-            missingRequired ||
-            missingRequiredDataProcessing.length > 0 ||
-            missingRequiredData.length > 0
-          "
-          @click="generateZIP"
-        />
-        <BaseButtonDownloadData
-          :data="encryptedZipFile"
-          extension="zip"
-          text="Download encrypted"
-          :disabled="!zipReady"
-        />
-        <BaseButton
-          text="Send encrypted"
-          :status="sentStatus"
-          :error="sentError"
-          :progress="sentProgress"
-          :disabled="!zipReady || (sentStatus && !sentError)"
-          @click="sendForm"
-        />
-        <p v-if="zipReady">ZIP size: {{ zipSizeString }}</p>
-        <p v-if="sentError">
-          Sending failed. Please download the file and send it by email.
-        </p>
-        <p v-if="sentStatus && !sentError">Form successfully submitted.</p>
-        <p v-if="missingRequired">Some required fields are not filled in.</p>
-        <p v-if="missingRequiredDataProcessing.length > 0">
+        <BaseAlert v-if="missingRequired">
+          Some required fields are not filled in.
+        </BaseAlert>
+        <BaseAlert v-if="missingRequiredDataProcessing.length > 0">
           Some experience required for sending this form has not been ran:
           {{ missingRequiredDataProcessing.join(', ') }}.
-        </p>
-        <p v-if="missingRequiredData.length > 0">
+        </BaseAlert>
+        <BaseAlert v-if="missingRequiredData.length > 0">
           Some data required for sending this form has not been included:
           {{ missingRequiredData.join(', ') }}.
-        </p>
+        </BaseAlert>
+        <VRow>
+          <VCol>
+            <VIcon v-if="config.filedrop" class="mr-2" color="#424242"
+              >$vuetify.icons.mdiNumeric1CircleOutline</VIcon
+            >
+            <BaseButton
+              text="Download results"
+              :status="generateStatus"
+              :error="generateError"
+              :progress="generateProgress"
+              :disabled="
+                missingRequired ||
+                missingRequiredDataProcessing.length > 0 ||
+                missingRequiredData.length > 0
+              "
+              @click="generateZIP"
+            />
+            <BaseButtonDownloadData
+              v-show="false"
+              ref="downloadBtn"
+              :data="zipFile"
+              :filename="filename"
+              extension="zip"
+            />
+          </VCol>
+          <VCol v-if="config.filedrop">
+            <VIcon class="mr-2" color="#424242"
+              >$vuetify.icons.mdiNumeric2CircleOutline</VIcon
+            >
+            <a :href="config.filedrop" target="_blank">
+              <BaseButton text="Drop file here" />
+            </a>
+          </VCol>
+        </VRow>
       </VCardText>
     </VCard>
   </VForm>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import JSZip from 'jszip'
 import FileManager from '~/utils/file-manager.js'
-import { humanReadableFileSize } from '~/manifests/utils'
 import { padNumber } from '~/utils/utils'
-
-const _sodium = require('libsodium-wrappers')
 
 // In the case of changes that would break the import, this version number must be incremented
 // and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
@@ -68,10 +77,6 @@ const VERSION = 2
 export default {
   props: {
     consentForm: {
-      type: Array,
-      required: true
-    },
-    allResults: {
       type: Array,
       required: true
     },
@@ -93,17 +98,17 @@ export default {
       consent: JSON.parse(JSON.stringify(this.consentForm)),
       includedResults: [],
       zipFile: [],
-      encryptedZipFile: [],
       generateStatus: false,
       generateError: false,
       generateProgress: false,
-      sentStatus: false,
-      sentError: false,
-      sentProgress: false,
       timestamp: 0
     }
   },
   computed: {
+    ...mapState(['config', 'results']),
+    resultMap() {
+      return this.results[this.key]
+    },
     zipReady() {
       return this.generateStatus && !this.generateError
     },
@@ -125,6 +130,12 @@ export default {
             typeof section.required === 'boolean'
           ) {
             // Some data must be given
+            if (
+              section.includedResults.length === 1 &&
+              section.includedResults[0] === 'file-explorer'
+            ) {
+              return this.$store.state.selectedFiles[this.key].length > 0
+            }
             return section.includedResults.length > 0
           }
         }
@@ -135,10 +146,10 @@ export default {
       const section = this.consent.find(section => section.type === 'data')
       return this.defaultView
         .filter(
-          (block, i) =>
+          block =>
             typeof section.required === 'object' &&
             section.required.includes(block.key) &&
-            typeof this.allResults[i] === 'undefined'
+            !this.resultMap[block.key]
         )
         .map(block => block.title)
     },
@@ -154,13 +165,24 @@ export default {
         .map(block => block.title)
     },
     dataCheckboxDisabled() {
-      return this.allResults.map(r => typeof r === 'undefined')
+      return Object.fromEntries(
+        Object.entries(this.resultMap).map(([k, r]) => [k, !r])
+      )
     },
     key() {
       return this.$route.params.key
     },
-    zipSizeString() {
-      return humanReadableFileSize(this.encryptedZipFile.length)
+    filename() {
+      const date = new Date(this.timestamp)
+      const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
+        date.getUTCMonth() + 1,
+        2
+      )}-${padNumber(date.getUTCDate(), 2)}`
+      const filename = `${this.key}_${yearMonthDay}_${padNumber(
+        date.getUTCHours(),
+        2
+      )}${padNumber(date.getUTCMinutes(), 2)}_UTC.zip`
+      return filename
     }
   },
   watch: {
@@ -184,9 +206,6 @@ export default {
       section.includedResults = section.includedResults ?? []
       this.includedResults = section.includedResults ?? []
     },
-    switchForm() {
-      this.showForm = !this.showForm
-    },
     async generateZIP() {
       this.resetStatus()
       this.generateProgress = true
@@ -201,27 +220,30 @@ export default {
         timestamp: this.timestamp,
         version: VERSION
       }
-      zip.file('experience.json', JSON.stringify(experience))
+      zip.file('experience.json', JSON.stringify(experience, null, 2))
 
       // Add consent log
-      zip.file('consent.json', JSON.stringify(this.consent))
+      zip.file('consent.json', JSON.stringify(this.consent, null, 2))
 
       // Add included data
       const keys = this.defaultView.map(block => block.key)
       this.includedResults
-        .map(key => keys.indexOf(key))
-        .filter(i => i !== -1)
-        .forEach(i => {
+        .map(key => [key, keys.indexOf(key)])
+        .filter(([key, i]) => i !== -1)
+        .forEach(([key, i]) => {
           const content = JSON.parse(JSON.stringify(this.defaultView[i]))
-          content.result = JSON.parse(this.allResults[i])
+          content.result = this.resultMap[key]
           content.index = i
-          zip.file(`block${padNumber(i, 2)}.json`, JSON.stringify(content))
+          zip.file(
+            `block${padNumber(i, 2)}.json`,
+            JSON.stringify(content, null, 2)
+          )
         })
 
       // Add whole files
       if (this.includedResults.includes('file-explorer')) {
         const zipFilesFolder = zip.folder('files')
-        const files = this.$store.state.selectedFiles[this.key] ?? []
+        const files = this.$store.state.selectedFiles[this.key]
         for (const file of files) {
           zipFilesFolder.file(
             file.filename,
@@ -233,53 +255,12 @@ export default {
       const content = await zip.generateAsync({ type: 'uint8array' })
       this.zipFile = content
 
-      // Encrypt the zip
-      await _sodium.ready
-      const sodium = _sodium
-
-      const ciphertext = sodium.crypto_box_seal(
-        content,
-        sodium.from_hex(this.$store.state.config.publicKey)
-      )
-
-      this.encryptedZipFile = ciphertext
       this.generateStatus = true
       this.generateProgress = false
-    },
-    sendForm() {
-      this.sentStatus = false
-      this.sentError = false
-      this.sentProgress = true
 
-      // Programmatically create the form data
-      // Names must correspond to the dummy form defined in /static/export-data-form-dummy.html
-      const formData = new FormData()
-      const date = new Date(this.timestamp)
-      const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
-        date.getUTCMonth() + 1,
-        2
-      )}-${padNumber(date.getUTCDate(), 2)}`
-      const filename = `${this.key}_${yearMonthDay}_${padNumber(
-        date.getUTCHours(),
-        2
-      )}:${padNumber(date.getUTCMinutes(), 2)}.zip`
-      formData.append('form-name', 'export-data')
-      const zip = new File([this.encryptedZipFile], filename, {
-        type: 'application/zip'
-      })
-      formData.append('encrypted-zip', zip, filename)
-      fetch('/', {
-        method: 'POST',
-        body: formData
-      })
-        .then(() => {
-          this.sentStatus = true
-          this.sentProgress = false
-        })
-        .catch(error => {
-          console.error(error)
-          this.sentError = true
-        })
+      await this.$nextTick()
+
+      this.$refs.downloadBtn.$el.click()
     },
     updateConsent({ index, selected, value, includedResults }) {
       const section = this.consent[index]

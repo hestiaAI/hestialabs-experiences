@@ -25,41 +25,83 @@
   "defaultView": [
     {
       "key": "off-facebook-activity-count",
-      "query": "off-facebook-activity-count",
-      "visualization": "top-k-advertisers",
+      "sql": "off-facebook-activity-count",
+      "visualization": "ChartViewTopRow.vue",
+      "vizProps": {
+        "dateFormat": "%s"
+      },
       "showTable": false,
       "title": "Off Facebook activity ranking",
-      "text": "See how many times advertisers have informed Facebook of your activity outside of Facebook."
+      "text": "See how many times third parties have informed Facebook of your activity outside of Facebook."
     },
     {
       "key": "off-facebook-activity-type-count",
-      "query": "off-facebook-activity-type-count",
+      "sql": "off-facebook-activity-type-count",
       "postprocessor": "sunburstTargetingAdvertiser",
-      "visualization": "sunburst-off-facebook-activity",
+      "visualization": "ChartViewSunburst.vue",
       "showTable": false,
       "title": "Off Facebook activity type",
       "text": "See which kind of information advertisers have shared with Facebook of your activity outside of Facebook."
     },
     {
       "key": "ad-interactions",
-      "query": "ad-interactions",
+      "sql": "ad-interactions",
       "showTable": true,
       "title": "Ad interactions",
       "text": "See the list of ads with which you have interacted."
     },
     {
       "key": "your-topics",
-      "query": "your-topics",
+      "sql": "your-topics",
       "showTable": true,
       "title": "Inferred interests",
       "text": "Get a list of topics that Facebook thinks you're interested in."
     },
     {
       "key": "advertisers-contact-list",
-      "query": "advertisers-contact-list",
+      "sql": "advertisers-contact-list",
       "showTable": true,
       "title": "Contact list",
       "text": "Get a list of advertisers that have uploaded a contact list containing you."
+    },
+    {
+      "key": "customAudience",
+      "customPipeline": "jsonToTableConverter",
+      "customPipelineOptions": { 
+        "accessor": {
+          "filePath": "ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json",
+          "jsonPath": "$.custom_audiences_all_types_v2[*]"
+        },
+        "properties": [
+          {
+            "name": "Advertiser",
+            "field": "advertiser_name",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "has_data_file_custom_audience",
+            "field": "has_data_file_custom_audience",
+            "type": "boolean",
+            "required": true
+          },
+          {
+            "name": "has_remarketing_custom_audience",
+            "field": "has_remarketing_custom_audience",
+            "type": "boolean",
+            "required": true
+          },
+          {
+            "name": "has_in_person_store_visit",
+            "field": "has_in_person_store_visit",
+            "type": "boolean",
+            "required": true
+          }
+        ]
+      },
+      "showTable": true,
+      "title": "Advertisers using your activity or information",
+      "text": "See all advertisers that use Facebook to get information about you"
     },
     {
       "key": "genericDateViewer",
@@ -68,6 +110,15 @@
       "showTable": false,
       "title": "Dated observations",
       "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
+    },
+    {
+      "key": "genericLocationViewer",
+      "customPipeline": "genericLocationViewer",
+      "customPipelineOptions": { "acceptedPaths": ".*" },
+      "visualization": "ChartViewGenericLocationViewer.vue",
+      "showTable": false,
+      "title": "Location observations",
+      "text": "See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location."
     }
   ]
 }

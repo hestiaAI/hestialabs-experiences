@@ -1,10 +1,12 @@
 <template>
   <VCard
     v-click-outside="{
-      handler: () => (mini = true),
+      handler: () => {
+        mini = true
+      },
       closeConditional: () => !mini
     }"
-    class="pa-2 my-6 explorer"
+    class="pa-2 mb-6 explorer"
     :min-height="height"
     height="auto"
   >
@@ -20,6 +22,7 @@
       absolute
       permanent
       width="100%"
+      style="z-index: 1000"
     >
       <template #prepend>
         <VListItem class="px-2">
@@ -32,9 +35,6 @@
           <VBtn icon @click.stop="mini = !mini">
             <VIcon>$vuetify.icons.mdiChevronLeft</VIcon>
           </VBtn>
-        </VListItem>
-        <VListItem v-if="selectable && !mini">
-          Size of selected files: {{ selectionSizeString }}
         </VListItem>
         <VListItem v-if="!mini">
           <VTextField
@@ -58,14 +58,12 @@
 
       <div :class="miniWidthPaddingLeftClass">
         <VTreeview
-          v-model="selectedFiles"
           dense
           open-on-click
           activatable
           return-object
           transition
           rounded
-          :selectable="selectable"
           :search="search"
           :items="treeItems"
           @update:active="setSelectedItem"
@@ -80,22 +78,27 @@
     </VNavigationDrawer>
     <VCardTitle class="justify-center">Explore your files</VCardTitle>
     <div :class="miniWidthPaddingLeftClass">
-      <VCardText>
-        Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (<b>{{
-          dataSizeString
-        }}</b
-        >)
-        <template v-if="nDataPoints">
-          and found <b>{{ nDataPoints.toLocaleString() }}</b> datapoints
-        </template>
-        :
-        <ul v-if="sortedExtensionTexts">
-          <li v-for="(text, i) in sortedExtensionTexts" :key="i">
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <div v-html="text"></div>
-          </li>
-        </ul>
-      </VCardText>
+      <VExpansionPanels v-model="summaryPanelActive" multiple>
+        <VExpansionPanel>
+          <VExpansionPanelHeader> Summary </VExpansionPanelHeader>
+          <VExpansionPanelContent>
+            Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (<b>{{
+              dataSizeString
+            }}</b
+            >)
+            <template v-if="nDataPoints">
+              and found <b>{{ nDataPoints.toLocaleString() }}</b> datapoints
+            </template>
+            :
+            <ul v-if="sortedGroupTexts">
+              <li v-for="(text, i) in sortedGroupTexts" :key="i">
+                <!-- eslint-disable-next-line vue/no-v-html -->
+                <div v-html="text"></div>
+              </li>
+            </ul>
+          </VExpansionPanelContent>
+        </VExpansionPanel>
+      </VExpansionPanels>
       <VCardText>
         <template v-if="filename">
           <div class="mr-2">
@@ -133,24 +136,40 @@ export default {
     fileManager: {
       type: FileManager,
       required: true
-    },
-    selectable: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
     return {
       selectedItem: {},
-      supportedTypes: new Set(['json', 'csv', 'pdf', 'img', 'html', 'txt']),
+      supportedTypes: new Set([
+        'json',
+        'csv',
+        'pdf',
+        'img',
+        'html',
+        'txt',
+        'xlsx'
+      ]),
       mini: true,
       miniWidth: 48,
+      summaryPanelActive: [0],
       search: '',
       isFileLoading: false,
       height: 500,
+      computeNPoints: false,
       nDataPoints: null,
-      sortedExtensionTexts: [],
-      selectionSize: 0
+      sortedGroupTexts: [],
+      group2ext: {
+        'audio file': ['mp3', 'm4a', 'wav', 'aac', 'webp'],
+        'image file': ['jpg', 'jpeg', 'png', 'gif', 'bnp'],
+        'video file': ['avi', 'mov', 'mp4', 'mpg'],
+        document: ['pdf', 'html', 'doc', 'docx', 'rtf', 'odt'],
+        spreadsheet: ['xls', 'xlsx', 'ods'],
+        'archive file': ['zip', '7z', 'rar', 'gz'],
+        'data file': ['json', 'csv', 'tsv', 'xml'],
+        'text file': ['txt', 'md'],
+        other: []
+      }
     }
   },
   computed: {
@@ -163,9 +182,6 @@ export default {
     },
     treeItems() {
       return this.fileManager.getTreeItems()
-    },
-    selectionSizeString() {
-      return humanReadableFileSize(this.selectionSize)
     },
     path() {
       // TODO avoid code duplication with viewer/mixin-path
@@ -205,36 +221,27 @@ export default {
     dataSizeString() {
       return humanReadableFileSize(this.totalSize)
     },
-    sortedExtensionCounts() {
-      const extensions = this.fileManager.fileList
+    fileExts() {
+      return this.fileManager.fileList
         .map(f => f.name.match(/^.+\.(.+?)$/)?.[1])
         .filter(m => !_.isUndefined(m))
-        .map(ext =>
-          this.fileManager.supportedExtensions.has(ext) ? ext : 'other'
-        )
-
+    },
+    sortedGroupCounts() {
+      const groups = this.fileExts.map(ext => this.ext2group[ext])
       const occurrences = _.mapValues(
-        _.groupBy(extensions, _.identity),
+        _.groupBy(groups, _.identity),
         v => v.length
       )
-      return _.sortBy(Object.entries(occurrences), ([ext, count]) =>
-        ext === 'other' ? 1 : -count
+      return _.sortBy(Object.entries(occurrences), ([group, count]) =>
+        group === 'other' ? 1 : -count
       )
     },
-    key() {
-      return this.$route.params.key
-    },
-    selectedFiles: {
-      get() {
-        return this.$store.state.selectedFiles[this.key]
-      },
-      set(value) {
-        this.$store.commit('setSelectedFiles', { key: this.key, value })
-        this.selectionSize = _.sumBy(
-          value,
-          ({ filename }) => this.fileManager.fileDict[filename]?.size ?? 0
+    ext2group() {
+      return Object.fromEntries(
+        Object.entries(this.group2ext).flatMap(entry =>
+          entry[1].map(ext => [ext, entry[0]])
         )
-      }
+      )
     }
   },
   watch: {
@@ -246,8 +253,11 @@ export default {
     fileManager: {
       immediate: true,
       handler() {
+        this.completeGroupsTable()
         this.setExtensionTexts()
-        this.setNumberOfDataPoints()
+        if (this.computeNPoints) {
+          this.setNumberOfDataPoints()
+        }
       }
     }
   },
@@ -255,6 +265,14 @@ export default {
     plurify,
     onLoading(loading) {
       this.isFileLoading = loading
+    },
+    completeGroupsTable() {
+      // Add unknown extensions to the 'other' group
+      for (const ext of this.fileExts) {
+        if (!(ext in this.ext2group) && !this.group2ext.other.includes(ext)) {
+          this.group2ext.other.push(ext)
+        }
+      }
     },
     setSelectedItem([item]) {
       // item might be undefined (when unselecting)
@@ -283,16 +301,22 @@ export default {
       const pointsPerFile = await Promise.all(
         this.fileManager
           .getFilenames()
-          .map(async f => [f, await this.fileManager.getNumberOfDataPoints(f)])
+          .map(async f => [
+            f,
+            this.computeNPoints
+              ? await this.fileManager.getNumberOfDataPoints(f)
+              : 0
+          ])
       )
-      this.sortedExtensionTexts = this.sortedExtensionCounts.map(([ext, c]) => {
-        const re = new RegExp(`.+\\.${ext}$`)
-        const files = pointsPerFile.filter(([f, _n]) => re.test(f))
+      this.sortedGroupTexts = this.sortedGroupCounts.map(([group, c]) => {
+        const re = new RegExp(`.+\\.${this.group2ext[group].join('|')}$`)
+        const filterFunc = ([f, _n]) => re.test(f)
+        const files = pointsPerFile.filter(filterFunc)
         const shownFiles = _.take(
           _.sortBy(files, ([_f, n]) => -n),
           showAtMost
         )
-        const nPointsExt = _.sumBy(files, ([_f, n]) => n)
+        const nPointsGroup = _.sumBy(files, ([_f, n]) => n)
         const topFilesDescription = shownFiles
           .map(
             ([f, nPoints]) =>
@@ -300,24 +324,24 @@ export default {
                 nPoints === 0
                   ? ''
                   : ` (${nPoints.toLocaleString()} ${plurify(
-                      ext === 'txt' ? 'line' : 'datapoint',
+                      group === 'text file' ? 'line' : 'datapoint',
                       nPoints
                     )})`
               }`
           )
           .join(', ')
         return `<b>${c} ${plurify(
-          ext === 'other' ? 'other format' : ext.toUpperCase(),
+          group === 'other' ? 'other file' : group,
           c
         )}</b>${
-          nPointsExt > 0
-            ? ` (${nPointsExt.toLocaleString()} ${plurify(
-                ext === 'txt' ? 'line' : 'datapoint',
-                nPointsExt
+          nPointsGroup > 0
+            ? ` (${nPointsGroup.toLocaleString()} ${plurify(
+                group === 'text file' ? 'line' : 'datapoint',
+                nPointsGroup
               )})`
-            : ':'
+            : ''
         }${
-          files.length > showAtMost ? ' including: ' : ''
+          files.length > showAtMost ? ' including: ' : ':'
         } ${topFilesDescription}`
       })
     }

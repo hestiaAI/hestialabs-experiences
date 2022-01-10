@@ -1,5 +1,4 @@
-import { unzip, setOptions } from 'unzipit'
-import workerURL from 'unzipit/dist/unzipit-worker.module.js'
+import JSZip from 'jszip'
 import {
   mdiCodeJson,
   mdiFile,
@@ -9,12 +8,13 @@ import {
   mdiFolderZip,
   mdiTable,
   mdiTextBoxOutline,
-  mdiXml
+  mdiXml,
+  mdiMicrosoftExcel
 } from '@mdi/js'
 import _ from 'lodash'
-import CsvWorker from '~/utils/csv.worker.js'
-import { nJsonPoints } from '~/utils/json'
-import JsonWorker from '~/utils/json.worker.js'
+import { matchNormalized, findMatchesInContent } from './accessor'
+import itemifyJSON, { nJsonPoints } from '~/utils/json'
+import getCsvHeadersAndItems from '~/utils/csv'
 import { runWorker } from '@/utils/utils'
 
 const filetype2icon = {
@@ -26,7 +26,8 @@ const filetype2icon = {
   img: mdiFileImage,
   file: mdiFile,
   txt: mdiTextBoxOutline,
-  html: mdiXml
+  html: mdiXml,
+  xlsx: mdiMicrosoftExcel
 }
 const extension2filetype = {
   tar: 'zip',
@@ -43,13 +44,9 @@ const extension2filetype = {
   txt: 'txt',
   html: 'html',
   csv: 'csv',
-  tsv: 'csv'
+  tsv: 'csv',
+  xlsx: 'xlsx'
 }
-
-setOptions({
-  workerURL,
-  numWorkers: 2
-})
 
 /**
  * A class that allows to manage the pipeline of files.
@@ -84,7 +81,7 @@ export default class FileManager {
    * @param {Object} preprocessors maps file name to preprocessor function
    * @param {Boolean} allowMissingFiles
    */
-  constructor(preprocessors, allowMissingFiles = false) {
+  constructor(preprocessors, allowMissingFiles = false, workers) {
     this.supportedExtensions = new Set([
       ...Object.keys(extension2filetype),
       ...Object.values(extension2filetype)
@@ -92,6 +89,7 @@ export default class FileManager {
     this.preprocessors = preprocessors ?? {}
     this.allowMissingFiles = allowMissingFiles
     this.setInitialValues()
+    this.workers = workers
   }
 
   /**
@@ -228,8 +226,13 @@ export default class FileManager {
   async getCsvItems(filePath) {
     if (!_.has(this.#csvItems, filePath)) {
       const text = await this.getPreprocessedText(filePath)
-      const items = await runWorker(new CsvWorker(), text)
-      // const items = await getCsvHeadersAndItems(text)
+      const CsvWorker = this.workers?.CsvWorker
+      let items
+      if (CsvWorker) {
+        items = await runWorker(new CsvWorker(), text)
+      } else {
+        items = await getCsvHeadersAndItems(text)
+      }
       this.#csvItems[filePath] = items
     }
     return this.#csvItems[filePath]
@@ -243,11 +246,44 @@ export default class FileManager {
   async getJsonItems(filePath) {
     if (!_.has(this.#jsonItems, filePath)) {
       const text = await this.getPreprocessedText(filePath)
-      const items = await runWorker(new JsonWorker(), text)
+      const JsonWorker = this.workers?.JsonWorker
+      let items
+      if (JsonWorker) {
+        items = await runWorker(new JsonWorker(), [text])
+      } else {
+        items = itemifyJSON(text)
+      }
       this.#jsonItems[filePath] = items
-      // this.#jsonItems[filePath] = itemifyJSON(text)
     }
     return this.#jsonItems[filePath]
+  }
+
+  /**
+   * Return all matching objects from json files.
+   * @param {Object} accessor
+   * @param {Object} options
+   *
+   * Options can have the following attributes:
+   * - freeFiles: true means files are freed after reading
+   */
+  async findMatchingObjects(accessor, options = {}) {
+    const objectPromises = this.getFilenames()
+      .filter(filePath => matchNormalized(filePath, accessor.filePath))
+      .flatMap(async fileName => {
+        try {
+          const text = await this.getPreprocessedText(fileName)
+          const content = JSON.parse(text)
+          if (options?.freeFiles) {
+            this.freeFile(fileName)
+          }
+          const found = findMatchesInContent(content, accessor)
+          return found
+        } catch (error) {
+          console.error('error during matching', error)
+        }
+      })
+    const objects = await Promise.all(objectPromises)
+    return objects.filter(m => m).flat()
   }
 
   /**
@@ -322,17 +358,14 @@ export default class FileManager {
       await Promise.all(
         files.flatMap(async file => {
           if (file.name.endsWith('.zip')) {
-            const { entries } = await unzip(file)
-            const innerFiles = await Promise.all(
-              Object.values(entries)
-                .filter(node => !node.isDirectory)
-                .map(
-                  async innerFile =>
-                    new File(
-                      [await innerFile.blob()],
-                      `${file.name}/${innerFile.name}`
-                    )
-                )
+            const zip = new JSZip()
+            await zip.loadAsync(file)
+            const folderContent = zip.file(/.*/)
+            const blobs = await Promise.all(
+              folderContent.map(r => r.async('blob'))
+            )
+            const innerFiles = folderContent.map(
+              (r, i) => new File([blobs[i]], file.name + '/' + r.name)
             )
             return await this.extractZips(innerFiles)
           } else if (file.name.endsWith('/')) {

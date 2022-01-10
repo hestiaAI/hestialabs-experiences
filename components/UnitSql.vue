@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import { processError } from '@/utils/utils'
 import db from '@/utils/sql'
 
 export default {
@@ -44,7 +43,6 @@ export default {
   },
   data() {
     return {
-      message: '',
       status: false,
       error: false,
       progress: false,
@@ -58,7 +56,6 @@ export default {
   },
   methods: {
     runQuery() {
-      this.message = ''
       this.error = false
       this.progress = true
       setTimeout(() => {
@@ -69,7 +66,6 @@ export default {
         } catch (error) {
           console.error(error)
           this.error = true
-          this.message = processError(error)
           this.$emit('update', { error })
         } finally {
           this.status = true

@@ -1,28 +1,32 @@
 import { JSONPath } from 'jsonpath-plus'
 import _ from 'lodash'
-import * as d3 from 'd3'
+// don't import the whole of d3 or tests fail
+import { timeParse } from 'd3-time-format'
+import Ajv from 'ajv'
+import jsonToTableSchema from './jsonToTableSchema'
+const ajv = new Ajv()
 
 // Define all accepted date formats
 const timeParsers = [
-  d3.timeParse('%Y-%m-%dT%H:%M:%SZ'),
-  d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ'),
-  d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC'),
-  d3.timeParse('%Y-%m-%d %H:%M:%S.%L%Z'),
-  d3.timeParse('%Y-%m-%d %H:%M:%S UTC'),
-  d3.timeParse('%Y-%m-%d %H:%M:%S'),
-  d3.timeParse('%Y-%m-%d %H:%M'),
-  d3.timeParse('%Y-%m-%d %H:%M'),
-  d3.timeParse('%Y-%m-%d'),
-  d3.timeParse('%Y/%m/%d %H:%M:%S'),
-  d3.timeParse('%Y-%m-%dT%H:%M:%S.%LZ[UTC]'),
-  d3.timeParse('%Y-%m-%d %H:%M'),
-  d3.timeParse('%s'), // Unix seconds
-  d3.timeParse('%Q') // Unix milliseconds
+  timeParse('%Y-%m-%dT%H:%M:%SZ'),
+  timeParse('%Y-%m-%dT%H:%M:%S.%LZ'),
+  timeParse('%Y-%m-%d %H:%M:%S %Z UTC'),
+  timeParse('%Y-%m-%d %H:%M:%S.%L%Z'),
+  timeParse('%Y-%m-%d %H:%M:%S UTC'),
+  timeParse('%Y-%m-%d %H:%M:%S'),
+  timeParse('%Y-%m-%d %H:%M'),
+  timeParse('%Y-%m-%d %H:%M'),
+  timeParse('%Y-%m-%d'),
+  timeParse('%Y/%m/%d %H:%M:%S'),
+  timeParse('%Y-%m-%dT%H:%M:%S.%LZ[UTC]'),
+  timeParse('%Y-%m-%d %H:%M'),
+  timeParse('%s'), // Unix seconds
+  timeParse('%Q') // Unix milliseconds
 ]
 
 // Define range of valid year, in case of timestamp date format
 // the will accept any number so need to filter.
-const validYearMin = 1980
+const validYearMin = 2000
 const validYearMax = 2038
 
 // Try to transform {{ value }} into a Date object,
@@ -55,6 +59,12 @@ function isObject(obj) {
 }
 // Transform a json object to a list of dated events
 function extractJsonEntries(json) {
+  // small trick to avoid recognizing coodinates as date (issue need to be addressed later)
+  const unallowedNames = ['lat', 'lon', 'lng']
+  const validDateName = name =>
+    unallowedNames.every(
+      unallowedName => !name.toLowerCase().includes(unallowedName)
+    )
   function recurse(node) {
     if (isObject(node)) {
       const entries = Object.entries(node).flatMap(([k, v]) => {
@@ -77,7 +87,8 @@ function extractJsonEntries(json) {
           const vDate = getValidDate(v)
           // If both key and value contain dates, use key date as description
           if (kDate && vDate) return [{ date: vDate, description: `${k}` }]
-          if (!kDate && vDate) return [{ date: vDate, description: '' }]
+          if (!kDate && vDate && validDateName(k))
+            return [{ date: vDate, description: '' }]
           if (kDate && !vDate) return [{ date: kDate, description: `${v}` }]
           return [{ description: `${kPretty} : ${v}` }]
         }
@@ -127,37 +138,50 @@ function extractCsvEntries({ items }) {
   })
 }
 
-async function genericDateViewer(fileManager) {
-  const filenames = fileManager.getFilenames()
+async function genericDateViewer({ fileManager, options }) {
+  let filenames = fileManager.getFilenames()
+  if (_.has(options, 'acceptedPaths'))
+    filenames = filenames.filter(name =>
+      new RegExp(options.acceptedPaths).test(name)
+    )
 
   const csvFilenames = filenames.filter(name => name.endsWith('.csv'))
   const csvItems = await Promise.all(
-    csvFilenames.map(async name => [name, await fileManager.getCsvItems(name)])
+    csvFilenames.map(async name => {
+      const items = await fileManager.getCsvItems(name)
+      fileManager.freeFile(name) // Clear file from memory
+      return [name, items]
+    })
   )
-
-  const jsonFilenames = filenames.filter(name => /\.js(:?on)?$/.test(name))
-  const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
-
   const csvEntries = csvItems.flatMap(([name, csv]) =>
     extractCsvEntries(csv).map(o => ({ ...o, filename: name }))
   )
-  const jsonEntries = Object.entries(jsonTexts).flatMap(([name, json]) => {
-    try {
-      return extractJsonEntries(JSON.parse(json)).map(o => ({
-        ...o,
-        filename: name
-      }))
-    } catch (e) {
-      console.error(e)
-      return []
-    }
-  })
+  const jsonFilenames = filenames.filter(name => /\.js(:?on)?$/.test(name))
+  const jsonEntries = (
+    await Promise.all(
+      jsonFilenames.flatMap(async jsonFilename => {
+        const [filename, json] = Object.entries(
+          await fileManager.preprocessFiles([jsonFilename])
+        )[0]
+        fileManager.freeFile(jsonFilename) // Clear file from memory
+        try {
+          return extractJsonEntries(JSON.parse(json)).map(o => ({
+            ...o,
+            filename
+          }))
+        } catch (e) {
+          console.error(e)
+          return []
+        }
+      })
+    )
+  ).flat()
   const items = [...jsonEntries, ...csvEntries]
   const headers = ['date', 'description', 'filename']
   return { headers, items }
 }
 
-async function timedObservationViewer(fileManager, manifest) {
+async function timedObservationViewer({ fileManager, manifest }) {
   const params = manifest.timedObservationsViewer
   const matchingFilenames = fileManager
     .getFilenames()
@@ -286,33 +310,153 @@ function extractCsvLocations({ items }) {
   })
 }
 
-async function genericLocationViewer(fileManager) {
-  const filenames = fileManager.getFilenames()
+async function genericLocationViewer({ fileManager, options }) {
+  let filenames = fileManager.getFilenames()
+  if (_.has(options, 'acceptedPaths'))
+    filenames = filenames.filter(name =>
+      new RegExp(options.acceptedPaths).test(name)
+    )
 
   const csvFilenames = filenames.filter(name => name.endsWith('.csv'))
   const csvItems = await Promise.all(
-    csvFilenames.map(async name => [name, await fileManager.getCsvItems(name)])
+    csvFilenames.map(async name => {
+      const csvItems = await fileManager.getCsvItems(name)
+      fileManager.freeFile(name) // Clear file from memory
+      return [name, csvItems]
+    })
   )
-
-  const jsonFilenames = filenames.filter(name => /\.js(:?on)?$/.test(name))
-  const jsonTexts = await fileManager.preprocessFiles(jsonFilenames)
   const csvEntries = csvItems.flatMap(([name, csv]) =>
     extractCsvLocations(csv).map(o => ({ ...o, filename: name }))
   )
-  const jsonEntries = Object.entries(jsonTexts).flatMap(([name, json]) => {
-    try {
-      return extractJsonLocations(JSON.parse(json)).map(o => ({
-        ...o,
-        filename: name
-      }))
-    } catch (e) {
-      console.error(e)
-      return []
-    }
-  })
+
+  const jsonFilenames = filenames.filter(name => /\.js(:?on)?$/.test(name))
+  const jsonEntries = (
+    await Promise.all(
+      jsonFilenames.flatMap(async jsonFilename => {
+        const [filename, json] = Object.entries(
+          await fileManager.preprocessFiles([jsonFilename])
+        )[0]
+        fileManager.freeFile(jsonFilename) // Clear file from memory
+        try {
+          return extractJsonLocations(JSON.parse(json)).map(o => ({
+            ...o,
+            filename
+          }))
+        } catch (e) {
+          console.error(e)
+          return []
+        }
+      })
+    )
+  ).flat()
+
   const items = [...jsonEntries, ...csvEntries]
   const headers = ['filename', 'latitude', 'longitude', 'path', 'description']
   return { headers, items }
 }
 
-export { genericDateViewer, timedObservationViewer, genericLocationViewer }
+/**
+ * Build a table from JSON data given a set of JSONPath accessors
+ * The options are passed with "customPipelineOptions" in the manifest and must
+ * follow the JsonShema defined in jsonToTableSchema.js, e.g:
+ *  "customPipelineOptions": {
+ *      "accessor": {
+ *        "filePath": "...", // A file path or glob
+ *        "jsonPath": "..." // A JsonPath
+ *      },
+ *      "properties": [
+ *        {
+ *          "name": "Advertiser",
+ *          "field": "name",
+ *          "type": "string",
+ *          "required": true
+ *        },
+ *        ...
+ *      ]
+ *    }
+ * jsonPath uses the normal jsonPath syntax.
+ * see https://github.com/JSONPath-Plus/JSONPath
+ *
+ * jsonSchema is a parsed json object in the JsonSchema syntax.
+ * We're using the default syntax of https://ajv.js.org/
+ *
+ */
+async function jsonToTableConverter({
+  fileManager,
+  manifest,
+  params,
+  options
+}) {
+  // Validate that the given options use the correct format
+  const validate = ajv.compile(jsonToTableSchema)
+  const valid = validate(options)
+  if (!valid) {
+    console.error(
+      'The validation of the options you gave in the manifest failed: ',
+      validate.errors
+    )
+    return {}
+  }
+
+  const entries = await fileManager.findMatchingObjects(options.accessor, {
+    freeFiles: true
+  })
+
+  return makeTableData(entries, options)
+}
+
+function makeTableData(objects, options) {
+  const { properties } = options
+  if (properties) {
+    const headers = options.properties.map(p => p.name)
+    const items = objects.map(e => makeTableItem(e, options))
+    return { headers, items }
+  }
+  const firstObject = objects[0]
+  if (firstObject) {
+    const headerSet = objects.reduce((hSet, obj) => {
+      Object.keys(obj).forEach(k => hSet.add(k))
+      return hSet
+    }, new Set())
+    return { headers: [...headerSet], items: objects }
+  }
+  return {}
+}
+
+function makeTableItem(object, options) {
+  const item = {}
+  options.properties.forEach(p => {
+    // get all entries that satisfy the given field JSONPATH
+    const value = JSONPath({
+      path: p.field,
+      json: object,
+      wrap: true
+    })
+
+    // Cast value to specified format, may need to handle errors
+    switch (p.type) {
+      case 'date':
+        item[p.name] = timeParse(p.format)(value)
+        break
+      case 'string':
+        item[p.name] = String(value)
+        break
+      case 'number':
+        item[p.name] = Number(value)
+        break
+      case 'boolean':
+        item[p.name] = Boolean(value)
+        break
+      default:
+        item[p.name] = value
+    }
+  })
+  return item
+}
+
+export {
+  genericDateViewer,
+  timedObservationViewer,
+  genericLocationViewer,
+  jsonToTableConverter
+}

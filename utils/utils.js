@@ -18,6 +18,9 @@ export const mimeTypes = {
 }
 
 export function createObjectURL(data, type = 'text/plain') {
+  if (data instanceof Blob) {
+    return window.URL.createObjectURL(data)
+  }
   return window.URL.createObjectURL(new Blob([data], { type }))
 }
 
@@ -101,3 +104,6 @@ export function runWorker(worker, args) {
     })
   })
 }
+
+export const setTimeoutPromise = (delay, value) =>
+  new Promise(resolve => setTimeout(resolve, delay, value))

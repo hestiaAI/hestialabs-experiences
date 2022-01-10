@@ -11,22 +11,24 @@
         </p>
       </VCol>
     </VRow>
-    <VRow v-if="total > 0">
-      <VCol cols="12">
-        <UnitIframe
-          v-if="myKeplerInput !== null"
-          src="/kepler"
-          :data="myKeplerInput"
-        />
-      </VCol>
-    </VRow>
-    <VRow v-if="total > 0">
-      <VCol cols="12">
-        <UnitFilterableTable
-          v-bind="{ data: { headers: header, items: results } }"
-        />
-      </VCol>
-    </VRow>
+    <template v-if="total > 0">
+      <VRow>
+        <VCol cols="12">
+          <UnitIframe
+            v-if="myKeplerInput !== null"
+            src="/kepler"
+            :data="myKeplerInput"
+          />
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol cols="12">
+          <UnitFilterableTable
+            v-bind="{ data: { headers: header, items: results } }"
+          />
+        </VCol>
+      </VRow>
+    </template>
   </VContainer>
 </template>
 <script>
@@ -53,7 +55,6 @@ export default {
     drawViz() {
       this.total = this.values.length
       this.results = this.values
-      this.results.forEach(i => (i.description = JSON.stringify(i.description)))
       this.myKeplerInput = {
         keplerData: {
           fields: this.headers.map(h => {
@@ -61,7 +62,10 @@ export default {
               name: h
             }
           }),
-          rows: this.results.map(i => this.headers.map(h => i[h]))
+          rows: this.results.map(i => {
+            i.description = JSON.stringify(i.description)
+            return this.headers.map(h => i[h])
+          })
         },
         config: keplerConfig
       }
