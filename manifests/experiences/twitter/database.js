@@ -1,4 +1,3 @@
-import { JSONPath } from 'jsonpath-plus'
 // eslint-disable-next-line import/default
 import ItemsWorker from './database.worker.js'
 import db from '@/utils/sql'
@@ -24,18 +23,10 @@ export default async function databaseBuilder(fileManager) {
   const impressionsFile = JSON.parse(
     await fileManager.getPreprocessedText('data/ad-impressions.js')
   )
-  const impressions = JSONPath({
-    path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
-    json: impressionsFile
-  })
   const engagementsFile = JSON.parse(
     await fileManager.getPreprocessedText('data/ad-engagements.js')
   )
-  const engagements = JSONPath({
-    path: '$.*.ad.adsUserData.adEngagements.engagements[*].impressionAttributes',
-    json: engagementsFile
-  })
-  const workerInput = { impressions, engagements }
+  const workerInput = { impressionsFile, engagementsFile }
   const workerOutput = await runWorker(new ItemsWorker(), workerInput)
   const { adsItems, targetingItems } = workerOutput
   db.insert('twitterAds', adsItems)
