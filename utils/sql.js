@@ -51,7 +51,7 @@ class Table {
  * Class DB is a wrapper around a sql.js database.
  * It provides functions for interacting with the database and processing the results into objects.
  */
-class DB {
+export class DB {
   #db
   #tables
 
