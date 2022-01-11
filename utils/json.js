@@ -23,7 +23,7 @@ function filterCondition(item, filter) {
 export default function itemifyJSON(jsonText, filter) {
   const groupsPerLevel = 10
   let id = 0
-  function minifyList(list, jsonPath, base = 0) {
+  function minifyList(list, path, base = 0) {
     if (list.length <= groupsPerLevel) return list
     const groupSize = Math.pow(
       groupsPerLevel,
@@ -34,20 +34,20 @@ export default function itemifyJSON(jsonText, filter) {
       name: `[elements ${base + groupSize * i + 1} - ${
         base + groupSize * i + group.length
       }]`,
-      jsonPath,
-      children: minifyList(group, jsonPath, base + i * groupSize),
+      path,
+      children: minifyList(group, path, base + i * groupSize),
       icon: mdiFormatListBulletedSquare
     }))
   }
-  function itemifyRec(tree, jsonPath) {
+  function itemifyRec(tree, path) {
     id++
     if (typeof tree !== 'object') {
       // Leaf node (first part)
-      return { id, value: tree, icon: mdiInformationOutline, jsonPath }
+      return { id, value: tree, icon: mdiInformationOutline, path }
     } else if (Array.isArray(tree)) {
       // Array node
       const children = tree.flatMap((el, ci) => {
-        const inner = itemifyRec(el, `${jsonPath}[${ci}]`)
+        const inner = itemifyRec(el, [...path, ci])
         if (typeof inner.name === 'undefined') {
           // Leaf node (second part)
           if (filter && !filterCondition(inner, filter)) {
@@ -64,14 +64,14 @@ export default function itemifyJSON(jsonText, filter) {
       return {
         id,
         name,
-        jsonPath,
-        children: minifyList(children, jsonPath),
+        path,
+        children: minifyList(children, path),
         icon: mdiFormatListBulletedSquare
       }
     } else if (tree !== null) {
       // Object node
       const children = Object.entries(tree).flatMap(([key, v]) => {
-        const inner = itemifyRec(v, `${jsonPath}['${key}']`)
+        const inner = itemifyRec(v, [...path, key])
         const name = _.startCase(key)
         if (typeof inner.name === 'undefined') {
           // Leaf node (second part)
@@ -93,15 +93,25 @@ export default function itemifyJSON(jsonText, filter) {
             .map(k => _.startCase(k))
             .join(', ')}}`,
           children,
-          jsonPath,
+          path,
           icon: mdiCodeJson
         }
       }
     } else {
-      return { id, value: 'null', icon: mdiInformationOutline, jsonPath }
+      return { id, value: 'null', icon: mdiInformationOutline, path }
     }
   }
-  return [itemifyRec(JSON.parse(jsonText), '$')]
+  return [itemifyRec(JSON.parse(jsonText), [])]
+}
+
+export function pathArrayToJsonPath(pathArray) {
+  return (
+    '$' +
+    pathArray.reduce((path, el) => {
+      path += isNaN(el) ? `['${el}']` : `[${el}]`
+      return path
+    }, '')
+  )
 }
 
 export function nJsonPoints(json) {
