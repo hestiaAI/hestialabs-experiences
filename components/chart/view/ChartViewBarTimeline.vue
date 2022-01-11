@@ -286,7 +286,6 @@ export default {
         )
         .call(brush)
         .call(brush.move, x.range())
-
       /*
       svg
         .append('rect')
@@ -296,9 +295,8 @@ export default {
         .call(zoom)
       */
       function brushed(evt) {
-        if (evt.sourceEvent && evt.sourceEvent.type === 'zoom') return // ignore brush-by-zoom
+        if (!evt.sourceEvent) return // ignore brush-by-zoom
         const s = evt.selection || xBrush.range()
-        console.log(s.map(xBrush.invert, xBrush))
         x.domain(s.map(xBrush.invert, xBrush))
         focus.select('.area').attr('d', area)
         focus.select('.xAxis').call(xAxis)
@@ -313,7 +311,7 @@ export default {
       }
 
       function zoomed(evt) {
-        if (evt.sourceEvent && evt.sourceEvent.type === 'brush') return // ignore zoom-by-brush
+        if (!evt.sourceEvent) return // ignore zoom-by-brush
         const t = evt.transform
         x.domain(t.rescaleX(xBrush).domain())
         focus.select('.area').attr('d', area)
