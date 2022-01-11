@@ -1,7 +1,7 @@
 import { JSONPath } from 'jsonpath-plus'
 import { DB } from '~/utils/sql'
 
-export async function databaseBuilder(fileManager) {
+export default async function databaseBuilder(fileManager) {
   const db = new DB()
   await db.init()
 
@@ -14,7 +14,7 @@ export async function databaseBuilder(fileManager) {
   ])
   db.create('twitterCriteria', [
     ['id', 'INTEGER'],
-    ['adId', 'TEXT'],
+    ['adId', 'INTEGER'],
     ['targetingType', 'TEXT'],
     ['targetingValue', 'TEXT']
   ])
@@ -25,16 +25,6 @@ export async function databaseBuilder(fileManager) {
   const engagementsFile = JSON.parse(
     await fileManager.getPreprocessedText('data/ad-engagements.js')
   )
-  const { adsItems, targetingItems } = createItems({
-    impressionsFile,
-    engagementsFile
-  })
-  db.insert('twitterAds', adsItems)
-  db.insert('twitterCriteria', targetingItems)
-  return db
-}
-
-export function createItems({ impressionsFile, engagementsFile }) {
   const impressions = JSONPath({
     path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
     json: impressionsFile
@@ -43,6 +33,7 @@ export function createItems({ impressionsFile, engagementsFile }) {
     path: '$.*.ad.adsUserData.adEngagements.engagements[*].impressionAttributes',
     json: engagementsFile
   })
+
   const adsItems = []
   const targetingItems = []
   let targetingItemsId = 0
@@ -85,5 +76,8 @@ export function createItems({ impressionsFile, engagementsFile }) {
       adsId++
     })
   }
-  return { adsItems, targetingItems }
+
+  db.insert('twitterAds', adsItems)
+  db.insert('twitterCriteria', targetingItems)
+  return db
 }
