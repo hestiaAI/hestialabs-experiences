@@ -87,6 +87,8 @@ test('the database builder creates the tables correctly', async () => {
     ]
   }
   expect(result).toEqual(expected)
+
+  db.close()
 })
 
 test('query advertisers-per-day returns the correct items', async () => {
@@ -96,6 +98,7 @@ test('query advertisers-per-day returns the correct items', async () => {
     path.resolve(__dirname, '../queries/advertisers-per-day.sql'),
     'utf8'
   )
+
   const result = db.select(sql)
   const expected = {
     headers: ['advertiserName', 'date', 'count'],
@@ -105,4 +108,6 @@ test('query advertisers-per-day returns the correct items', async () => {
     ]
   }
   expect(result).toEqual(expected)
+
+  db.close()
 })
