@@ -26,6 +26,34 @@ test('simple itemifyJSON', () => {
   expect(items).toStrictEqual(correctItems)
 })
 
+test('itemifyJSON with empty array/object', () => {
+  const json = { n: [], o: {} }
+  const correctItems = [
+    {
+      icon: ic,
+      id: 3,
+      path: [],
+      name: '{attributes N, O}',
+      children: [
+        {
+          id: 2,
+          path: ['n'],
+          icon: is,
+          name: 'N / [empty list]'
+        },
+        {
+          id: 3,
+          path: ['o'],
+          icon: ic,
+          name: 'O / {no attributes}'
+        }
+      ]
+    }
+  ]
+  const items = itemifyJSON(JSON.stringify(json))
+
+  expect(items).toStrictEqual(correctItems)
+})
 test('complex itemifyJSON', () => {
   const json = {
     n: 'root',

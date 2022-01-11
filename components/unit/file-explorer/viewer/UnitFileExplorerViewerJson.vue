@@ -75,10 +75,14 @@ export default {
   },
   methods: {
     onNodeClick(item) {
-      const filePath = filePathToGlob(this.filename)
-      const jsonPath = pathArrayToJsonPath(item.path)
-      const accessor = createAccessor(filePath, jsonPath)
-      this.$emit('select-accessor', accessor)
+      try {
+        const filePath = filePathToGlob(this.filename)
+        const jsonPath = pathArrayToJsonPath(item.path)
+        const accessor = createAccessor(filePath, jsonPath)
+        this.$emit('select-accessor', accessor)
+      } catch (error) {
+        console.error(error)
+      }
     },
     isUndef(val) {
       return typeof val === 'undefined'

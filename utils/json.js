@@ -57,7 +57,12 @@ export default function itemifyJSON(jsonText, filter) {
         return inner
       })
       if (!children.length) {
-        return []
+        return {
+          id,
+          path,
+          name: '[empty list]',
+          icon: mdiFormatListBulletedSquare
+        }
       }
       const plural = children.length > 1
       const name = `[list with ${children.length} item${plural ? 's' : ''}]`
@@ -85,7 +90,7 @@ export default function itemifyJSON(jsonText, filter) {
         }
       })
       if (!children.length) {
-        return []
+        return { id, path, name: '{no attributes}', icon: mdiCodeJson }
       } else {
         return {
           id,
