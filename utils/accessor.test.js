@@ -2,7 +2,7 @@ import { posix } from 'path'
 import { JSONPath } from 'jsonpath-plus'
 import micromatch from 'micromatch'
 import Ajv from 'ajv'
-import { matchNormalized, findMatches } from './accessor'
+import { matchNormalized, findMatches, convertPathToGlob } from './accessor'
 
 const ajv = new Ajv()
 const posixPath = posix
@@ -21,6 +21,14 @@ function matchFiles(files, pattern) {
 
 test('normalize and match', () => {
   expect(micromatch.isMatch('bar.foo', '*.foo')).toBe(true)
+  expect(micromatch.isMatch('ba[r].foo', '*.foo')).toBe(true)
+  expect(micromatch.isMatch('bar.foo', 'ba[r].foo')).toBe(true)
+  expect(micromatch.isMatch('bar.foo', 'ba[ra].foo')).toBe(true)
+  expect(micromatch.isMatch('baa.foo', 'ba[ra].foo')).toBe(true)
+  expect(micromatch.isMatch('ba[r].foo', 'ba[r].foo')).toBe(true)
+  expect(micromatch.isMatch('ba[r].foo', 'ba\\[r\\].foo')).toBe(true)
+  expect(micromatch.isMatch('ba[r].foo', 'ba[ra].foo')).toBe(false)
+
   expect(posixPath.normalize('/a/b/../bar.foo')).toBe('/a/bar.foo')
   expect(posixPath.normalize('/foo//baz/asdf/quux/..')).toBe('/foo/baz/asdf')
   expect(posixPath.normalize('/foo//**/asdf/quux/..')).toBe('/foo/**/asdf')
@@ -34,6 +42,32 @@ test('normalize and match', () => {
   expect(matchNormalized('bar.fo{o,a}', '*.fo\\{o,a\\}')).toBe(true)
   expect(matchNormalized('/foo/asdf', '/foo//asdf/quux/..')).toBe(true)
   expect(matchNormalized('/foo/bar.foo', '/foo//asdf/../*.foo')).toBe(true)
+})
+
+test('convertPathToGlob', () => {
+  const testConversion = (path, glob, shouldNotMatch) => {
+    expect(convertPathToGlob(path)).toBe(glob)
+    expect(micromatch.isMatch(path, glob)).toBe(true)
+    expect(micromatch.isMatch(path, convertPathToGlob(path))).toBe(true)
+    expect(micromatch.isMatch(shouldNotMatch, glob)).toBe(false)
+    expect(micromatch.isMatch(shouldNotMatch, path)).toBe(true)
+  }
+  testConversion('ba[r].foo', 'ba\\[r\\].foo', 'bar.foo')
+  testConversion('ba[r-t].foo', 'ba\\[r-t\\].foo', 'bas.foo')
+  testConversion('ba*.foo', 'ba\\*.foo', 'bar.foo')
+  testConversion('!baa.foo', '\\!baa.foo', 'bar.foo')
+  testConversion('*.!(a)', '\\*.\\!\\(a\\)', 'a.b')
+  testConversion('foo/{a,b,c}/bar', 'foo/\\{a,b,c\\}/bar', 'foo/a/bar')
+  testConversion('ba?(a).foo', 'ba?\\(a\\).foo', 'baa.foo')
+  testConversion('ba*(a).foo', 'ba\\*\\(a\\).foo', 'baa.foo')
+  testConversion('ba@(a).foo', 'ba@\\(a\\).foo', 'baa.foo')
+  testConversion('ba+(a).foo', 'ba+\\(a\\).foo', 'baa.foo')
+  testConversion('ba[[:alpha:]]', 'ba\\[\\[:alpha:\\]\\]', 'baa')
+  testConversion(
+    '{f,b}*/{1..3}/{b,q}*',
+    '\\{f,b\\}\\*/\\{1..3\\}/\\{b,q\\}\\*',
+    'foo/2/qux'
+  )
 })
 
 test('find files', () => {

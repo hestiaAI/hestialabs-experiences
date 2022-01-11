@@ -10,6 +10,14 @@ export function matchNormalized(name, pattern) {
   return micromatch.isMatch(name, normalizedPattern)
 }
 
+// https://github.com/micromatch/micromatch/issues/227
+export function convertPathToGlob(filePath) {
+  if (!filePath) {
+    throw new Error(`cannot create glob for file path "${filePath}"`)
+  }
+  return filePath.replace(/([[\]{}*!()])/g, '\\$1')
+}
+
 /**
  * Find objects in a file that match an accessor
  * Returns an array containing all of the matches,
