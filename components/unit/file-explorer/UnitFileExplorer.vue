@@ -110,6 +110,7 @@
             v-bind="{ fileManager, filename }"
             v-if="supportedTypes.has(fileType)"
             @loading="onLoading"
+            @select-accessor="onSelectAccessor"
           />
           <UnitFileExplorerViewerUnknown
             v-else
@@ -265,6 +266,9 @@ export default {
     plurify,
     onLoading(loading) {
       this.isFileLoading = loading
+    },
+    onSelectAccessor(accessor) {
+      // console.log('acc', accessor)
     },
     completeGroupsTable() {
       // Add unknown extensions to the 'other' group

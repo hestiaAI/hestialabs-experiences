@@ -5,13 +5,27 @@ import Ajv from 'ajv'
 const ajv = new Ajv()
 const posixPath = path.posix || path
 
+export function createAccessor(filePath, jsonPath, jsonSchema) {
+  const accessor = {}
+  if (filePath) {
+    accessor.filePath = filePath
+  }
+  if (jsonPath) {
+    accessor.jsonPath = jsonPath
+  }
+  if (jsonSchema) {
+    accessor.jsonSchema = jsonSchema
+  }
+  return accessor
+}
+
 export function matchNormalized(name, pattern) {
   const normalizedPattern = posixPath.normalize(pattern)
   return micromatch.isMatch(name, normalizedPattern)
 }
 
 // https://github.com/micromatch/micromatch/issues/227
-export function convertPathToGlob(filePath) {
+export function filePathToGlob(filePath) {
   if (!filePath) {
     throw new Error(`cannot create glob for file path "${filePath}"`)
   }

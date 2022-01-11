@@ -2,7 +2,12 @@ import { posix } from 'path'
 import { JSONPath } from 'jsonpath-plus'
 import micromatch from 'micromatch'
 import Ajv from 'ajv'
-import { matchNormalized, findMatches, convertPathToGlob } from './accessor'
+import {
+  matchNormalized,
+  findMatches,
+  filePathToGlob,
+  createAccessor
+} from './accessor'
 
 const ajv = new Ajv()
 const posixPath = posix
@@ -44,11 +49,11 @@ test('normalize and match', () => {
   expect(matchNormalized('/foo/bar.foo', '/foo//asdf/../*.foo')).toBe(true)
 })
 
-test('convertPathToGlob', () => {
+test('filePathToGlob', () => {
   const testConversion = (path, glob, shouldNotMatch) => {
-    expect(convertPathToGlob(path)).toBe(glob)
+    expect(filePathToGlob(path)).toBe(glob)
     expect(micromatch.isMatch(path, glob)).toBe(true)
-    expect(micromatch.isMatch(path, convertPathToGlob(path))).toBe(true)
+    expect(micromatch.isMatch(path, filePathToGlob(path))).toBe(true)
     expect(micromatch.isMatch(shouldNotMatch, glob)).toBe(false)
     expect(micromatch.isMatch(shouldNotMatch, path)).toBe(true)
   }
@@ -82,11 +87,7 @@ test('find files', () => {
   expect(found[1][0]).toBe('/bambalam/rototo/woo.csv')
 })
 
-const mkA = (filePath, jsonPath, jsonSchema) => ({
-  filePath,
-  jsonPath,
-  jsonSchema
-})
+const mkA = createAccessor
 
 test('match objects', () => {
   const content = { fur: [{ s: 5 }, { s: 4 }] }
