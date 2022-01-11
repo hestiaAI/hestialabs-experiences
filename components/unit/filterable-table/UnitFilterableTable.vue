@@ -20,6 +20,16 @@
         <template #item.url="{ value }">
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
         </template>
+        <template
+          v-for="header in headers.filter(
+            h =>
+              h.value.toLowerCase().includes('time') ||
+              h.value.toLowerCase().includes('date')
+          )"
+          #[`item.${header.value}`]="{ value }"
+        >
+          {{ new Date(value).toLocaleString() }}
+        </template>
       </VDataTable>
       <BaseButton
         v-bind="{ error, progress, status }"
