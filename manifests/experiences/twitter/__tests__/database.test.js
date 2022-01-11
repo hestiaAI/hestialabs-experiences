@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path from 'path'
 import { createItems, databaseBuilder } from '../database'
 import {
   adImpressions,
@@ -47,11 +49,10 @@ test('the twitter file parser returns the correct items for the database', async
 test('the advertisers-per-day query returns the correct items', async () => {
   const fileManager = await getFileManager()
   const db = await databaseBuilder(fileManager)
-  const sql = `
-    SELECT advertiserName, DATE(time) AS date, COUNT(*) AS count
-    FROM twitterAds
-    GROUP BY advertiserName, DATE(time);
-  `
+  const sql = fs.readFileSync(
+    path.resolve(__dirname, '../queries/advertisers-per-day.sql'),
+    'utf8'
+  )
   const result = db.select(sql)
   const expected = {
     headers: ['advertiserName', 'date', 'count'],
