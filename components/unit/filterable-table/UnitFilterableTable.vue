@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DataValidator :data="data">
+    <DataValidator :data="data" :allow-missing-columns="true">
       <VAlert v-if="error" type="error">{{ message }}</VAlert>
       <UnitFilterableTableFilter
         :display-filters="displayFilters"
