@@ -25,8 +25,8 @@ export function addMissingDate(
 
   // Get the list of dates between this extent
   const dates = interval.range(
-    minDate !== null ? minDate : extent[0],
-    maxDate !== null ? maxDate : extent[1],
+    minDate !== null ? interval.floor(minDate) : interval.floor(extent[0]),
+    maxDate !== null ? interval.ceil(maxDate) : interval.ceil(extent[1]),
     1
   )
 
@@ -35,6 +35,7 @@ export function addMissingDate(
     value => !data.map(d => d[dateAccessor]).includes(value.toString())
   )
 
+  // Add and fill missing dates
   missingDates.forEach(date => {
     const obj = { ...data[0] }
     obj[dateAccessor] = date
