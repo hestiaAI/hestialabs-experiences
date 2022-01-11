@@ -17,14 +17,14 @@
     {
       "key": "likes-dislikes-vue",
       "query": "likes-dislikes",
+      "postprocessor": "likesDislikesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
         "title": "Likes vs Passes over time",
         "legendOffset": 350,
-        "accessor": [
-          {"text": "Likes", "value": "likes"},
-          {"text": "Passes", "value": "pass"}
-        ]
+        "dateAccessor": { "text": "Date", "value": "date" },
+        "seriesAccessor": { "text": "Action", "value": "action" },
+        "valueAccessor": "value"
       },
       "showTable": false,
       "title": "Likes and passes",
@@ -33,13 +33,14 @@
     {
       "key": "app-opens-vue",
       "query": "app-opens",
+      "postprocessor": "appOpensData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
         "title": "Application usage over time",
         "legendOffset": 360,
-        "accessor": [
-          {"text": "App opened", "value": "open"}
-        ]
+        "dateAccessor": { "text": "Date", "value": "date" },
+        "seriesAccessor": { "text": "Action", "value": "action" },
+        "valueAccessor": "value"
       },
       "showTable": false,
       "title": "App openings",
@@ -48,16 +49,14 @@
     {
       "key": "monthly-history-vue",
       "query": "likes-dislikes-messages",
+      "postprocessor": "likesDislikesMessagesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
         "title": "Activity history",
         "legendOffset": 200,
-        "accessor": [
-          {"text": "Likes", "value": "likes"},
-          {"text": "Passes", "value": "pass"},
-          {"text": "Messages received", "value": "msg_rcv"},
-          {"text": "Messages sent", "value": "msg_sent"}
-        ]
+        "dateAccessor": { "text": "Date", "value": "date" },
+        "seriesAccessor": { "text": "Action", "value": "action" },
+        "valueAccessor": "value"
       },
       "showTable": false,
       "title": "Likes, passes, messages",

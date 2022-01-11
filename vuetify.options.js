@@ -16,6 +16,7 @@ import {
   mdiMinusBox,
   mdiNumeric1CircleOutline,
   mdiNumeric2CircleOutline,
+  mdiTuneVariant,
   mdiShare,
   mdiStepForward,
   mdiTwitter
@@ -42,6 +43,7 @@ export default {
       mdiMinusBox,
       mdiNumeric1CircleOutline,
       mdiNumeric2CircleOutline,
+      mdiTuneVariant,
       mdiShare,
       mdiStepForward,
       mdiTwitter

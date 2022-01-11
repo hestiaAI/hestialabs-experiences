@@ -7,6 +7,8 @@ async function viewingData({ fileManager }) {
 }
 
 async function messagesData({ fileManager }) {
+  return await fileManager.getCsvItems('MESSAGES/MessagesSentByNetflix.csv')
+  /*
   const result = await fileManager.getCsvItems(
     'MESSAGES/MessagesSentByNetflix.csv'
   )
@@ -14,6 +16,7 @@ async function messagesData({ fileManager }) {
   if (items.length === 0) {
     return { headers: [], items: [] }
   }
+ 
   const results = []
   // get unique users
   const users = items
@@ -34,6 +37,8 @@ async function messagesData({ fileManager }) {
   })
   // sort by date
   results.sort((e1, e2) => e1.date - e2.date)
+  
   return { headers: ['date', users].flat(), items: results }
+  */
 }
 export default { genericDateViewer, viewingData, messagesData }
