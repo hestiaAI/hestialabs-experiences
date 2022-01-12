@@ -4,7 +4,7 @@
       <VCol cols="12" md="7">
         <p class="text-h6">Number of dated events in your files</p>
         <p
-          v-if="currValues.length === 0 && !currMinDate && !currMaxDate"
+          v-if="nbDataPoints === 0 && !currMinDate && !currMaxDate"
           class="text-subtitle-2"
         >
           No dated events were found in your file(s).
@@ -13,7 +13,7 @@
           From
           <strong>{{ currMinDate }}</strong> to
           <strong>{{ currMaxDate }}</strong> we found
-          <strong>{{ currValues.length }}</strong> dated events in your file(s).
+          <strong>{{ nbDataPoints }}</strong> dated events in your file(s).
         </p>
       </VCol>
     </VRow>
@@ -34,6 +34,7 @@
 <script>
 import * as d3 from 'd3'
 import { nest } from 'd3-collection'
+import { addMissingDate } from './utils/D3Helpers'
 import mixin from './mixin'
 
 export default {
@@ -78,7 +79,7 @@ export default {
       type: Number,
       default: () => 30
     },
-    maxNumBars: {
+    maxDots: {
       type: Number,
       default: () => 50
     }
@@ -111,6 +112,11 @@ export default {
       }
     }
   },
+  computed: {
+    nbDataPoints() {
+      return d3.sum(this.currValues, d => d.value)
+    }
+  },
   methods: {
     aggPerTimePeriod() {
       // Filter data for curr interval
@@ -123,19 +129,34 @@ export default {
       // Choose interval aggregator
       const diffDays = d3.timeDay.count(this.currMinDate, this.currMaxDate)
       let interval = null
-      if (diffDays < this.maxNumBars) interval = this.intervals.Days
-      else if (diffDays < 7 * this.maxNumBars) interval = this.intervals.Weeks
-      else if (diffDays < 31 * this.maxNumBars) interval = this.intervals.Months
-      else if (diffDays < 360 * this.maxNumBars) interval = this.intervals.Years
+      if (diffDays < this.maxDots) interval = this.intervals.Days
+      else if (diffDays < 7 * this.maxDots) interval = this.intervals.Weeks
+      else if (diffDays < 31 * this.maxDots) interval = this.intervals.Months
+      else if (diffDays < 360 * this.maxDots) interval = this.intervals.Years
 
       // Aggregate data
       this.currValues = nest()
-        .key(d => interval.parser(this.dateParser(d[this.dateAccessor])))
+        .key(d => interval.parser.floor(this.dateParser(d[this.dateAccessor])))
         .rollup(leaves => leaves.length) // count nb rows
         .entries(this.currValues)
         .sort((a, b) =>
           d3.descending(this.dateParser(a.key), this.dateParser(b.key))
         )
+      // Fill missing values
+      this.currValues = addMissingDate(
+        this.currValues,
+        'key',
+        'value',
+        interval.parser,
+        0,
+        this.currMinDate,
+        this.currMaxDate
+      )
+
+      // Sort the result
+      this.currValues = this.currValues.sort(
+        (e1, e2) => new Date(e1.key) - new Date(e2.key)
+      )
     },
     drawViz() {
       // Use either a predefined date format or Javascript date constructor
@@ -193,9 +214,47 @@ export default {
           [0, 0],
           [this.width, this.brushHeight]
         ])
-        .on('brush end', brushed)
+        .on('brush end', evt => {
+          const s = evt.selection || xBrush.range()
+          const domain = s.map(xBrush.invert, xBrush)
+          this.currMinDate = domain[0]
+          this.currMaxDate = domain[1]
+          this.aggPerTimePeriod()
+
+          x.domain(domain)
+          focus.select('.xAxis').call(xAxis)
+          y.domain([
+            0,
+            d3.max(this.currValues, function (d) {
+              return d.value
+            }) + 10
+          ])
+          focus.select('.yAxis').call(yAxis)
+          const areaPath = focus.select('path.area')
+          areaPath.data([this.currValues])
+          areaPath.attr('d', area)
+          const linePath = focus.select('path.line')
+          linePath.data([this.currValues])
+          linePath.attr('d', line)
+
+          const circles = focus.selectAll('.point').data(this.currValues)
+          circles.exit().remove()
+          circles.enter().append('circle').attr('class', 'point').attr('r', 2.5)
+          circles
+            .attr(
+              'cy',
+              d =>
+                this.height -
+                this.brushHeight -
+                this.brushTopMargin -
+                y(d.value)
+            )
+            .attr('cx', d => x(new Date(d.key)))
+          d3.select('.brush').call(brushHandle, evt.selection)
+        })
 
       // init zoom
+      /*
       const zoom = d3
         .zoom()
         .scaleExtent([1, Infinity])
@@ -208,7 +267,7 @@ export default {
           [this.width, this.height]
         ])
         .on('zoom', zoomed)
-
+      */
       // init both graphs
       const line = d3
         .line()
@@ -273,7 +332,7 @@ export default {
         .datum(this.currValues)
         .attr('class', 'line')
         .attr('d', line)
-
+      /*
       focus
         .selectAll('.point')
         .data(this.currValues)
@@ -286,7 +345,7 @@ export default {
         )
         .attr('cx', d => x(new Date(d.key)))
         .attr('r', d => 2.5)
-
+      */
       context
         .append('path')
         .datum(this.currValues)
@@ -354,41 +413,6 @@ export default {
           )
       }
       gBrush.call(brush.move, x.range())
-      /*
-      svg
-        .append('rect')
-        .attr('class', 'zoom')
-        .attr('width', this.width)
-        .attr('height', this.height)
-        .call(zoom)
-      */
-      function brushed(evt) {
-        d3.select(this).call(brushHandle, evt.selection)
-        if (!evt.sourceEvent) return // ignore brush-by-zoom
-        const s = evt.selection || xBrush.range()
-        x.domain(s.map(xBrush.invert, xBrush))
-        focus.select('.area').attr('d', area)
-        focus.select('.line').attr('d', line)
-        focus.selectAll('.point').attr('cx', d => x(new Date(d.key)))
-        focus.select('.xAxis').call(xAxis)
-        svg
-          .select('.zoom')
-          .call(
-            zoom.transform,
-            d3.zoomIdentity
-              .scale(this.width / (s[1] - s[0]))
-              .translate(-s[0], 0)
-          )
-      }
-
-      function zoomed(evt) {
-        if (!evt.sourceEvent) return // ignore zoom-by-brush
-        const t = evt.transform
-        x.domain(t.rescaleX(xBrush).domain())
-        focus.select('.area').attr('d', area)
-        focus.select('.xAxis').call(xAxis)
-        context.select('.brush').call(brush.move, x.range().map(t.invertX, t))
-      }
     }
   }
 }
@@ -428,7 +452,6 @@ export default {
 ::v-deep .zoom {
   cursor: move;
   fill: none;
-  pointer-events: all;
 }
 
 ::v-deep .xAxis line,
