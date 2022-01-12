@@ -405,20 +405,22 @@ async function jsonToTableConverter({
   return makeTableData(entries, options)
 }
 
-function makeTableData(objects, options) {
-  const { properties } = options
-  if (properties) {
+export function makeTableData(objects, options) {
+  if (options?.properties) {
     const headers = options.properties.map(p => p.name)
     const items = objects.map(e => makeTableItem(e, options))
     return { headers, items }
   }
-  const firstObject = objects[0]
+  const singleArray = objects.length === 1 && Array.isArray(objects[0])
+  const objectsToDisplay = singleArray ? objects[0] : objects
+  const firstObject = objectsToDisplay[0]
   if (firstObject) {
-    const headerSet = objects.reduce((hSet, obj) => {
+    const headerSet = objectsToDisplay.reduce((hSet, obj) => {
       Object.keys(obj).forEach(k => hSet.add(k))
       return hSet
     }, new Set())
-    return { headers: [...headerSet], items: objects }
+    const tableData = { headers: [...headerSet], items: objectsToDisplay }
+    return tableData
   }
   return {}
 }
