@@ -56,23 +56,16 @@ export default function itemifyJSON(jsonText, filter) {
         }
         return inner
       })
-      if (!children.length) {
-        return {
-          id,
-          path,
-          name: '[empty list]',
-          icon: mdiFormatListBulletedSquare
-        }
-      }
-      const plural = children.length > 1
-      const name = `[list with ${children.length} item${plural ? 's' : ''}]`
-      return {
+      const arrayItem = {
         id,
-        name,
         path,
-        children: minifyList(children, path),
+        name: formatArray(children),
         icon: mdiFormatListBulletedSquare
       }
+      if (children.length) {
+        arrayItem.children = minifyList(children, path)
+      }
+      return arrayItem
     } else if (tree !== null) {
       // Object node
       const children = Object.entries(tree).flatMap(([key, v]) => {
@@ -89,24 +82,37 @@ export default function itemifyJSON(jsonText, filter) {
           return { ...inner, name: `${name} / ${inner.name}` }
         }
       })
-      if (!children.length) {
-        return { id, path, name: '{no attributes}', icon: mdiCodeJson }
-      } else {
-        return {
-          id,
-          name: `{attributes ${Object.keys(tree)
-            .map(k => _.startCase(k))
-            .join(', ')}}`,
-          children,
-          path,
-          icon: mdiCodeJson
-        }
+      const objectItem = {
+        id,
+        name: formatObject(tree),
+        path,
+        icon: mdiCodeJson
       }
+      if (children.length) {
+        objectItem.children = children
+      }
+      return objectItem
     } else {
       return { id, value: 'null', icon: mdiInformationOutline, path }
     }
   }
   return [itemifyRec(JSON.parse(jsonText), [])]
+}
+
+export function formatObject(object) {
+  const keys = Object.keys(object)
+  if (keys.length === 0) {
+    return '{no attributes}'
+  }
+  return `{attributes ${keys.map(k => _.startCase(k)).join(', ')}}`
+}
+
+export function formatArray(array) {
+  if (array.length === 0) {
+    return '[empty list]'
+  }
+  const plural = array.length > 1
+  return `[list with ${array.length} item${plural ? 's' : ''}]`
 }
 
 export function pathArrayToJsonPath(pathArray) {

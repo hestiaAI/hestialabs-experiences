@@ -21,18 +21,10 @@
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
         </template>
         <template
-          v-for="header in headers.filter(
-            h =>
-              h.value.toLowerCase().includes('time') ||
-              h.value.toLowerCase().includes('date')
-          )"
-          #[`item.${header.value}`]="{ value }"
+          v-for="header in headers.filter(h => h.value !== 'url')"
+          #[`item.${header.value}`]="slotProps"
         >
-          {{
-            new Date(value).getFullYear() > 1980
-              ? new Date(value).toLocaleString()
-              : new Date(value * 1000).toLocaleString()
-          }}
+          {{ formatItemAsString(slotProps) }}
         </template>
       </VDataTable>
       <BaseButton
@@ -52,6 +44,7 @@
 <script>
 import { writeToString } from '@fast-csv/format'
 import { processError } from '@/utils/utils'
+import { formatObject, formatArray } from '@/utils/json'
 
 export default {
   name: 'UnitFilterableTable',
@@ -100,6 +93,24 @@ export default {
     }
   },
   methods: {
+    formatItemAsString(itemProps) {
+      const { header, value } = itemProps
+      const assumeDate = ['date', 'time'].find(d =>
+        header.value.toLowerCase().includes(d)
+      )
+      if (assumeDate) {
+        return new Date(value).getFullYear() > 1980
+          ? new Date(value).toLocaleString()
+          : new Date(value * 1000).toLocaleString()
+      }
+      if (Array.isArray(value)) {
+        return formatArray(value)
+      }
+      if (typeof value === 'object') {
+        return formatObject(value)
+      }
+      return value
+    },
     async exportCSV() {
       this.progress = true
       this.status = false
