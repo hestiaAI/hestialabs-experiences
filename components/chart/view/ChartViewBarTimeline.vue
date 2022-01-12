@@ -26,7 +26,6 @@
           :max-date="maxDate"
         ></DatePicker>
         <div :id="graphId"></div>
-        <div :id="graphId + '_brush'"></div>
       </VCol>
     </ChartViewVRowWebShare>
   </VContainer>
@@ -211,6 +210,13 @@ export default {
         .on('zoom', zoomed)
 
       // init both graphs
+      const line = d3
+        .line()
+        .curve(d3.curveMonotoneX)
+        .x(d => x(new Date(d.key)))
+        .y(
+          d => this.height - this.brushHeight - this.brushTopMargin - y(d.value)
+        )
       const area = d3
         .area()
         .curve(d3.curveMonotoneX)
@@ -226,7 +232,6 @@ export default {
         .x(d => xBrush(new Date(d.key)))
         .y0(this.height)
         .y1(d => this.height - yBrush(d.value))
-      console.log(xAxisBrush, yAxis, area2)
       // init brush
       svg
         .append('defs')
@@ -246,12 +251,6 @@ export default {
       yBrush.domain(y.domain())
 
       focus
-        .append('path')
-        .datum(this.currValues)
-        .attr('class', 'area')
-        .attr('d', area)
-
-      focus
         .append('g')
         .attr('class', 'axis xAxis')
         .attr(
@@ -261,9 +260,32 @@ export default {
             ')'
         )
         .call(xAxis)
-      console.log(this.height - this.brushHeight - this.brushTopMargin)
 
       focus.append('g').attr('class', 'axis yAxis').call(yAxis)
+      focus
+        .append('path')
+        .datum(this.currValues)
+        .attr('class', 'area')
+        .attr('d', area)
+
+      focus
+        .append('path')
+        .datum(this.currValues)
+        .attr('class', 'line')
+        .attr('d', line)
+
+      focus
+        .selectAll('.point')
+        .data(this.currValues)
+        .enter()
+        .append('circle')
+        .attr('class', 'point')
+        .attr(
+          'cy',
+          d => this.height - this.brushHeight - this.brushTopMargin - y(d.value)
+        )
+        .attr('cx', d => x(new Date(d.key)))
+        .attr('r', d => 2.5)
 
       context
         .append('path')
@@ -277,7 +299,7 @@ export default {
         .attr('transform', 'translate(0,' + this.height + ')')
         .call(xAxisBrush)
 
-      context
+      const gBrush = context
         .append('g')
         .attr('class', 'brush')
         .attr(
@@ -285,7 +307,53 @@ export default {
           'translate(0,' + (this.height - this.brushHeight) + ')'
         )
         .call(brush)
-        .call(brush.move, x.range())
+
+      const brushHandle = (g, selection) => {
+        const s = selection || xBrush.range()
+        g.selectAll('.handle--custom-max')
+          .data([{ type: 'w' }, { type: 'e' }])
+          .join(enter =>
+            enter
+              .append('rect')
+              .attr('class', 'handle--custom-max')
+              .attr('fill', '#666')
+              .attr('cursor', 'ew-resize')
+              .attr('transform', 'translate(-2,8)')
+              .attr('rx', 2)
+              .attr('ry', 2)
+              .attr('height', this.brushHeight)
+              .attr('width', 3)
+          )
+          .attr('display', s === null ? 'none' : null)
+          .attr(
+            'transform',
+            s === null ? null : (d, i) => `translate(${s[i] - 1.5},0)`
+          )
+        g.selectAll('.handle--custom-min')
+          .data([{ type: 'w' }, { type: 'e' }])
+          .join(enter =>
+            enter
+              .append('rect')
+              .attr('class', 'handle--custom-min')
+              .attr('fill', '#ffff')
+              .attr('fill-opacity', 1)
+              .attr('stroke', '#666')
+              .attr('cursor', 'ew-resize')
+              .attr('transform', 'translate(-2,8)')
+              .attr('rx', 3)
+              .attr('ry', 3)
+              .attr('height', this.brushHeight / 3)
+              .attr('width', 6)
+          )
+          .attr('display', s === null ? 'none' : null)
+          .attr(
+            'transform',
+            s === null
+              ? null
+              : (d, i) => `translate(${s[i] - 3},${this.brushHeight / 3})`
+          )
+      }
+      gBrush.call(brush.move, x.range())
       /*
       svg
         .append('rect')
@@ -295,10 +363,13 @@ export default {
         .call(zoom)
       */
       function brushed(evt) {
+        d3.select(this).call(brushHandle, evt.selection)
         if (!evt.sourceEvent) return // ignore brush-by-zoom
         const s = evt.selection || xBrush.range()
         x.domain(s.map(xBrush.invert, xBrush))
         focus.select('.area').attr('d', area)
+        focus.select('.line').attr('d', line)
+        focus.selectAll('.point').attr('cx', d => x(new Date(d.key)))
         focus.select('.xAxis').call(xAxis)
         svg
           .select('.zoom')
@@ -323,9 +394,34 @@ export default {
 }
 </script>
 <style scoped>
+::v-deep .point {
+  stroke: #5f5ba2;
+  fill: white;
+  stroke-width: 1.5px;
+  clip-path: url(#clip);
+}
+::v-deep .line {
+  fill: none;
+  stroke: #5f5ba2;
+  stroke-width: 1.5px;
+  clip-path: url(#clip);
+}
+::v-deep .selection {
+  stroke: none;
+  fill: #5f5ba2;
+  fill-opacity: 0.1;
+}
+::v-deep .handle--custom-min {
+  stroke: #5f5ba2;
+  fill: white;
+}
+
+::v-deep .handle--custom-max {
+  fill: #5f5ba2;
+}
 ::v-deep .area {
-  fill: steelblue;
-  opacity: 0.5;
+  fill: #5f5ba2;
+  opacity: 0.15;
   clip-path: url(#clip);
 }
 
