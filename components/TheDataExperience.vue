@@ -75,7 +75,8 @@
                   fileManager,
                   postprocessors,
                   index,
-                  vega
+                  vega,
+                  db
                 }"
               />
             </VTabItem>
@@ -257,7 +258,7 @@ export default {
 
       // Populate database
       if (this.databaseBuilder !== undefined) {
-        await this.databaseBuilder(this.fileManager)
+        this.db = await this.databaseBuilder(this.fileManager)
       }
 
       if (this.isRdfNeeded && this.yarrrml) {

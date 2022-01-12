@@ -24,12 +24,16 @@
 </template>
 
 <script>
-import db from '@/utils/sql'
+import { DB } from '@/utils/sql'
 
 export default {
   props: {
     sql: {
       type: String,
+      required: true
+    },
+    db: {
+      type: DB,
       required: true
     },
     parameterName: {
@@ -61,7 +65,7 @@ export default {
       setTimeout(() => {
         try {
           const params = { [this.parameterKey]: this.parameter }
-          const { headers, items } = db.select(this.sql, params)
+          const { headers, items } = this.db.select(this.sql, params)
           this.$emit('update', { headers, items })
         } catch (error) {
           console.error(error)

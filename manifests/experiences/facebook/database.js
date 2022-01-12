@@ -1,9 +1,10 @@
 // Facebook
 
 import { JSONPath } from 'jsonpath-plus'
-import db from '@/utils/sql'
+import { DB } from '@/utils/sql'
 
 export default async function databaseBuilder(fileManager) {
+  const db = new DB()
   await db.init()
 
   /// Advertisters interacted with ////////////////////////////////////////////////////////////////////////////////
@@ -107,4 +108,6 @@ export default async function databaseBuilder(fileManager) {
     })
   })
   db.insert('inferredInterestsDatabase', inferredInterestsItems)
+
+  return db
 }
