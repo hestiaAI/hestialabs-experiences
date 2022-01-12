@@ -8,16 +8,14 @@ import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { arrayEqualNoOrder } from '~/utils/test-utils'
 
-async function runQuery(sqlFilePath) {
-  const fileManager = await getFileManager()
-  const db = await databaseBuilder(fileManager)
+let db
+
+function runQuery(sqlFilePath) {
   const sql = fs.readFileSync(path.resolve(__dirname, sqlFilePath), 'utf8')
-  const result = db.select(sql)
-  db.close()
-  return result
+  return db.select(sql)
 }
 
-async function getFileManager() {
+beforeAll(async () => {
   const fileManager = new FileManager(
     {
       'data/ad-impressions.js': preprocessors.twitter,
@@ -35,12 +33,14 @@ async function getFileManager() {
   )
   await fileManager.init([fileImpressions, fileEngagements], true)
 
-  return fileManager
-}
+  db = await databaseBuilder(fileManager)
+})
 
-test('the database builder creates the tables correctly', async () => {
-  const fileManager = await getFileManager()
-  const db = await databaseBuilder(fileManager)
+afterAll(() => {
+  db.close()
+})
+
+test('the database builder creates the tables correctly', () => {
   let result, expected
 
   // Table twitterAds
@@ -100,12 +100,10 @@ test('the database builder creates the tables correctly', async () => {
   }
   arrayEqualNoOrder(result.headers, expected.headers)
   arrayEqualNoOrder(result.items, expected.items)
-
-  db.close()
 })
 
-test('query advertisers-per-day returns the correct items', async () => {
-  const result = await runQuery('../queries/advertisers-per-day.sql')
+test('query advertisers-per-day returns the correct items', () => {
+  const result = runQuery('../queries/advertisers-per-day.sql')
   const expected = {
     headers: ['advertiserName', 'date', 'count'],
     items: [
@@ -117,8 +115,8 @@ test('query advertisers-per-day returns the correct items', async () => {
   arrayEqualNoOrder(result.items, expected.items)
 })
 
-test('query all-advertisers returns the correct items', async () => {
-  const result = await runQuery('../queries/all-advertisers.sql')
+test('query all-advertisers returns the correct items', () => {
+  const result = runQuery('../queries/all-advertisers.sql')
   const expected = {
     headers: ['advertiserName', 'count'],
     items: [
@@ -130,8 +128,8 @@ test('query all-advertisers returns the correct items', async () => {
   arrayEqualNoOrder(result.items, expected.items)
 })
 
-test('query all-criteria-all-advertisers returns the correct items', async () => {
-  const result = await runQuery('../queries/all-criteria-all-advertisers.sql')
+test('query all-criteria-all-advertisers returns the correct items', () => {
+  const result = runQuery('../queries/all-criteria-all-advertisers.sql')
   const expected = {
     headers: ['advertiserName', 'targetingType', 'targetingValue', 'count'],
     items: [
@@ -165,8 +163,8 @@ test('query all-criteria-all-advertisers returns the correct items', async () =>
   arrayEqualNoOrder(result.items, expected.items)
 })
 
-test('query overview returns the correct items', async () => {
-  const result = await runQuery('../queries/overview.sql')
+test('query overview returns the correct items', () => {
+  const result = runQuery('../queries/overview.sql')
   const expected = {
     headers: [
       'tweetId',
@@ -215,10 +213,8 @@ test('query overview returns the correct items', async () => {
   arrayEqualNoOrder(result.items, expected.items)
 })
 
-test('query targeting-criteria-all-advertisers returns the correct items', async () => {
-  const result = await runQuery(
-    '../queries/targeting-criteria-all-advertisers.sql'
-  )
+test('query targeting-criteria-all-advertisers returns the correct items', () => {
+  const result = runQuery('../queries/targeting-criteria-all-advertisers.sql')
   const expected = {
     headers: ['targetingType', 'targetingValue', 'count'],
     items: [
@@ -248,10 +244,8 @@ test('query targeting-criteria-all-advertisers returns the correct items', async
   arrayEqualNoOrder(result.items, expected.items)
 })
 
-test('query targeting-criteria-by-advertiser returns the correct items', async () => {
-  const result = await runQuery(
-    '../queries/targeting-criteria-by-advertiser.sql'
-  )
+test('query targeting-criteria-by-advertiser returns the correct items', () => {
+  const result = runQuery('../queries/targeting-criteria-by-advertiser.sql')
   const expected = {
     headers: ['advertiserName', 'targetingType', 'targetingValue', 'count'],
     items: [
