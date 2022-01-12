@@ -40,7 +40,6 @@ import FileManager from '~/utils/file-manager'
 import { setTimeoutPromise } from '@/utils/utils'
 
 export default {
-  name: 'UnitCustomPipeline',
   props: {
     fileManager: {
       type: FileManager,

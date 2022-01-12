@@ -11,7 +11,7 @@
       </VRow>
       <VRow>
         <VCol>
-          <UnitCustomPipeline
+          <UnitPipelineCustom
             v-if="customPipeline !== undefined"
             v-bind="{
               fileManager,
@@ -21,7 +21,7 @@
             }"
             @update="onUnitResultsUpdate"
           />
-          <UnitSql
+          <UnitPipelineSql
             v-else-if="sql"
             v-bind="{
               sql,
@@ -31,7 +31,7 @@
             }"
             @update="onUnitResultsUpdate"
           />
-          <UnitSparql
+          <UnitPipelineSparql
             v-else
             v-bind="{ sparqlQuery }"
             class="mr-lg-6"
