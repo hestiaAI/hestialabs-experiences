@@ -11,6 +11,7 @@ function differentiateDuplicates(strings) {
   )
 }
 export default async function getCsvHeadersAndItems(csvText) {
+  let best = { items: [], headers: [] }
   for (const delimiter of acceptedDelimiters) {
     try {
       const { headers, items } = await new Promise((resolve, reject) => {
@@ -27,20 +28,16 @@ export default async function getCsvHeadersAndItems(csvText) {
           .on('error', error => reject(error))
           .on('end', () => resolve({ headers, items }))
       })
-      if (
-        items.length > 0 &&
-        _.every(
-          items,
-          i =>
-            Object.keys(i).length > 0 &&
-            Object.keys(i).length === headers.length
-        )
-      ) {
-        return { headers, items }
+      if (_.every(items, i => Object.keys(i).length === headers.length)) {
+        if (headers.length >= 2) {
+          return { headers, items }
+        } else if (headers.length === 1) {
+          best = { headers, items }
+        }
       }
     } catch (error) {
       console.error(error)
     }
   }
-  return { items: [], headers: [] }
+  return best
 }
