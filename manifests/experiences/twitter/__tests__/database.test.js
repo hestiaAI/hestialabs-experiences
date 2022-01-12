@@ -1,10 +1,21 @@
 import fs from 'fs'
 import path from 'path'
+
 import databaseBuilder from '../database'
 import { adImpressions, adEngagements } from './samples.helpers'
 import preprocessors from '~/manifests/preprocessors'
 import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
+import { arrayEqualNoOrder } from '~/utils/test-utils'
+
+async function runQuery(sqlFilePath) {
+  const fileManager = await getFileManager()
+  const db = await databaseBuilder(fileManager)
+  const sql = fs.readFileSync(path.resolve(__dirname, sqlFilePath), 'utf8')
+  const result = db.select(sql)
+  db.close()
+  return result
+}
 
 async function getFileManager() {
   const fileManager = new FileManager(
@@ -53,7 +64,8 @@ test('the database builder creates the tables correctly', async () => {
       }
     ]
   }
-  expect(result).toEqual(expected)
+  arrayEqualNoOrder(result.headers, expected.headers)
+  arrayEqualNoOrder(result.items, expected.items)
 
   // Table twitterCriteria
   result = db.select('SELECT * FROM twitterCriteria')
@@ -86,20 +98,14 @@ test('the database builder creates the tables correctly', async () => {
       }
     ]
   }
-  expect(result).toEqual(expected)
+  arrayEqualNoOrder(result.headers, expected.headers)
+  arrayEqualNoOrder(result.items, expected.items)
 
   db.close()
 })
 
 test('query advertisers-per-day returns the correct items', async () => {
-  const fileManager = await getFileManager()
-  const db = await databaseBuilder(fileManager)
-  const sql = fs.readFileSync(
-    path.resolve(__dirname, '../queries/advertisers-per-day.sql'),
-    'utf8'
-  )
-
-  const result = db.select(sql)
+  const result = await runQuery('../queries/advertisers-per-day.sql')
   const expected = {
     headers: ['advertiserName', 'date', 'count'],
     items: [
@@ -107,7 +113,174 @@ test('query advertisers-per-day returns the correct items', async () => {
       { advertiserName: 'PwC Switzerland', date: '2021-04-15', count: 1 }
     ]
   }
-  expect(result).toEqual(expected)
+  arrayEqualNoOrder(result.headers, expected.headers)
+  arrayEqualNoOrder(result.items, expected.items)
+})
 
-  db.close()
+test('query all-advertisers returns the correct items', async () => {
+  const result = await runQuery('../queries/all-advertisers.sql')
+  const expected = {
+    headers: ['advertiserName', 'count'],
+    items: [
+      { advertiserName: 'Illumeably', count: 1 },
+      { advertiserName: 'PwC Switzerland', count: 1 }
+    ]
+  }
+  arrayEqualNoOrder(result.headers, expected.headers)
+  arrayEqualNoOrder(result.items, expected.items)
+})
+
+test('query all-criteria-all-advertisers returns the correct items', async () => {
+  const result = await runQuery('../queries/all-criteria-all-advertisers.sql')
+  const expected = {
+    headers: ['advertiserName', 'targetingType', 'targetingValue', 'count'],
+    items: [
+      {
+        advertiserName: 'Illumeably',
+        targetingType: 'Platforms',
+        targetingValue: 'Desktop',
+        count: 1
+      },
+      {
+        advertiserName: 'Illumeably',
+        targetingType: 'Languages',
+        targetingValue: 'English',
+        count: 1
+      },
+      {
+        advertiserName: 'PwC Switzerland',
+        targetingType: 'Locations',
+        targetingValue: 'Switzerland',
+        count: 1
+      },
+      {
+        advertiserName: 'PwC Switzerland',
+        targetingType: 'Age',
+        targetingValue: '35 and up',
+        count: 1
+      }
+    ]
+  }
+  arrayEqualNoOrder(result.headers, expected.headers)
+  arrayEqualNoOrder(result.items, expected.items)
+})
+
+test('query overview returns the correct items', async () => {
+  const result = await runQuery('../queries/overview.sql')
+  const expected = {
+    headers: [
+      'tweetId',
+      'companyName',
+      'engagement',
+      'date',
+      'targetingType',
+      'targetingValue'
+    ],
+    items: [
+      {
+        tweetId: '1369584490276741122',
+        companyName: 'Illumeably',
+        engagement: 0,
+        date: '2021-04-15 19:51:50',
+        targetingType: 'Platforms',
+        targetingValue: 'Desktop'
+      },
+      {
+        tweetId: '1369584490276741122',
+        companyName: 'Illumeably',
+        engagement: 0,
+        date: '2021-04-15 19:51:50',
+        targetingType: 'Languages',
+        targetingValue: 'English'
+      },
+      {
+        tweetId: '1381646278988292098',
+        companyName: 'PwC Switzerland',
+        engagement: 1,
+        date: '2021-04-15 19:43:20',
+        targetingType: 'Locations',
+        targetingValue: 'Switzerland'
+      },
+      {
+        tweetId: '1381646278988292098',
+        companyName: 'PwC Switzerland',
+        engagement: 1,
+        date: '2021-04-15 19:43:20',
+        targetingType: 'Age',
+        targetingValue: '35 and up'
+      }
+    ]
+  }
+  arrayEqualNoOrder(result.headers, expected.headers)
+  arrayEqualNoOrder(result.items, expected.items)
+})
+
+test('query targeting-criteria-all-advertisers returns the correct items', async () => {
+  const result = await runQuery(
+    '../queries/targeting-criteria-all-advertisers.sql'
+  )
+  const expected = {
+    headers: ['targetingType', 'targetingValue', 'count'],
+    items: [
+      {
+        targetingType: 'Platforms',
+        targetingValue: 'Desktop',
+        count: 1
+      },
+      {
+        targetingType: 'Languages',
+        targetingValue: 'English',
+        count: 1
+      },
+      {
+        targetingType: 'Locations',
+        targetingValue: 'Switzerland',
+        count: 1
+      },
+      {
+        targetingType: 'Age',
+        targetingValue: '35 and up',
+        count: 1
+      }
+    ]
+  }
+  arrayEqualNoOrder(result.headers, expected.headers)
+  arrayEqualNoOrder(result.items, expected.items)
+})
+
+test('query targeting-criteria-by-advertiser returns the correct items', async () => {
+  const result = await runQuery(
+    '../queries/targeting-criteria-by-advertiser.sql'
+  )
+  const expected = {
+    headers: ['advertiserName', 'targetingType', 'targetingValue', 'count'],
+    items: [
+      {
+        advertiserName: 'Illumeably',
+        targetingType: 'Platforms',
+        targetingValue: 'Desktop',
+        count: 1
+      },
+      {
+        advertiserName: 'Illumeably',
+        targetingType: 'Languages',
+        targetingValue: 'English',
+        count: 1
+      },
+      {
+        advertiserName: 'PwC Switzerland',
+        targetingType: 'Locations',
+        targetingValue: 'Switzerland',
+        count: 1
+      },
+      {
+        advertiserName: 'PwC Switzerland',
+        targetingType: 'Age',
+        targetingValue: '35 and up',
+        count: 1
+      }
+    ]
+  }
+  arrayEqualNoOrder(result.headers, expected.headers)
+  arrayEqualNoOrder(result.items, expected.items)
 })
