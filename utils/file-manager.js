@@ -65,6 +65,7 @@ export default class FileManager {
   #nDataPoints
   #fileTree
   #treeItems
+  #shortFilenameDict
 
   setInitialValues() {
     this.#fileTexts = {}
@@ -74,6 +75,7 @@ export default class FileManager {
     this.#nDataPoints = {}
     this.#fileTree = undefined
     this.#treeItems = undefined
+    this.#shortFilenameDict = {}
   }
 
   /**
@@ -108,6 +110,7 @@ export default class FileManager {
       this.fileDict = FileManager.removeTopmostFilenames(filePairs)
     }
     this.setInitialValues()
+    this.setShortFilenames()
     return this
   }
 
@@ -346,6 +349,53 @@ export default class FileManager {
       this.#treeItems = FileManager.makeItems(this.getFileTree())
     }
     return this.#treeItems
+  }
+
+  /**
+   * Transforms the filenames to a shorter version without the path, or with minimal path in case of non-uniqueness.
+   */
+  setShortFilenames() {
+    const files = Object.keys(this.fileDict).map(f => {
+      const parts = f.split('/')
+      return {
+        filename: f,
+        parts,
+        n: 1,
+        short: parts[parts.length - 1]
+      }
+    })
+    while (true) {
+      // Group by short name
+      const groups = _.groupBy(files, f => f.short)
+      if (Object.keys(groups).length === files.length) {
+        // All the names are unique, we can stop
+        this.#shortFilenameDict = Object.fromEntries(
+          files.map(f => [f.filename, f.short])
+        )
+        return
+      }
+      for (const group of Object.values(groups)) {
+        if (group.length > 1) {
+          // Extend the short name of each non-unique names by one parent
+          for (const file of group) {
+            if (file.n !== file.parts.length) {
+              file.n += 1
+              file.short =
+                file.parts[file.parts.length - file.n] + '/' + file.short
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Get the short filename associated to a given filename
+   * @param {*} filename
+   * @returns the short filename
+   */
+  getShortFilename(filename) {
+    return this.#shortFilenameDict[filename]
   }
 
   /**

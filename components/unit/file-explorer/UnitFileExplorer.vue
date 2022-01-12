@@ -320,7 +320,7 @@ export default {
         const topFilesDescription = shownFiles
           .map(
             ([f, nPoints]) =>
-              `<em>${f}</em>${
+              `<em>${this.fileManager.getShortFilename(f)}</em>${
                 nPoints === 0
                   ? ''
                   : ` (${nPoints.toLocaleString()} ${plurify(
