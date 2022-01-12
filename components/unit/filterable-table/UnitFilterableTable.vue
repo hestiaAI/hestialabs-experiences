@@ -28,7 +28,11 @@
           )"
           #[`item.${header.value}`]="{ value }"
         >
-          {{ new Date(value).toLocaleString() }}
+          {{
+            new Date(value).getFullYear() > 1980
+              ? new Date(value).toLocaleString()
+              : new Date(value * 1000).toLocaleString()
+          }}
         </template>
       </VDataTable>
       <BaseButton
