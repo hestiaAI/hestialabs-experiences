@@ -9,7 +9,7 @@ test('an empty file manager', async () => {
 })
 
 test('a json file in file manager', async () => {
-  const fileManager = new FileManager({}, true)
+  const fileManager = new FileManager(null, true)
   const fileName = 'bibi/bobo.json'
   const file = mockFile(fileName, '{"hello": 1}')
   await fileManager.init([file], true)
@@ -20,7 +20,7 @@ test('a json file in file manager', async () => {
 })
 
 test('findMatchingObjects', async () => {
-  const fileManager = new FileManager({}, true)
+  const fileManager = new FileManager(null, true)
   const fileName = 'bibi/bubo.json'
   const fileContent = '{"hello": [11,22,33]}'
   const file = mockFile(fileName, fileContent)
@@ -41,7 +41,7 @@ test('findMatchingObjects', async () => {
 })
 
 test('short filenames', async () => {
-  const fileManager = new FileManager({}, true)
+  const fileManager = new FileManager(null, true)
   const f1 = 'foo/bar.txt'
   const f2 = 'foo/toc.txt'
   const f3 = 'bar.txt'

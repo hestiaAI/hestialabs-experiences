@@ -16,13 +16,7 @@ function runQuery(sqlFilePath) {
 }
 
 beforeAll(async () => {
-  const fileManager = new FileManager(
-    {
-      'data/ad-impressions.js': preprocessors.twitter,
-      'data/ad-engagements.js': preprocessors.twitter
-    },
-    true
-  )
+  const fileManager = new FileManager(preprocessors.twitter, true)
   const fileImpressions = mockFile(
     'data/ad-impressions.js',
     JSON.stringify(adImpressions)

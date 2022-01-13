@@ -6,7 +6,7 @@ export function mockFile(fileName, content) {
 }
 
 export async function mockFileManager(fileName, content) {
-  const fileManager = new FileManager({}, true)
+  const fileManager = new FileManager(null, true)
   const file = mockFile(fileName, content)
   await fileManager.init([file], true)
   return fileManager
