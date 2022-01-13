@@ -80,15 +80,15 @@ export default class FileManager {
 
   /**
    * Builds a FileManager object without any files, just setting the configuration.
-   * @param {Object} preprocessors maps file name to preprocessor function
+   * @param {Function} preprocessor a function that transforms each file
    * @param {Boolean} allowMissingFiles
    */
-  constructor(preprocessors, allowMissingFiles = false, workers) {
+  constructor(preprocessor, allowMissingFiles = false, workers) {
     this.supportedExtensions = new Set([
       ...Object.keys(extension2filetype),
       ...Object.values(extension2filetype)
     ])
-    this.preprocessors = preprocessors ?? {}
+    this.preprocessor = preprocessor
     this.allowMissingFiles = allowMissingFiles
     this.setInitialValues()
     this.workers = workers
@@ -170,17 +170,6 @@ export default class FileManager {
     return Object.fromEntries(entries)
   }
 
-  /**
-   * Returns the preprocessor function to be used for the given file name, defaulting to the identity.
-   * @param {String} filePath
-   * @returns {*|(function(*): *)}
-   */
-  getPreprocessor(filePath) {
-    return _.has(this.preprocessors, filePath)
-      ? this.preprocessors[filePath]
-      : _.identity
-  }
-
   hasFile(filePath) {
     return _.has(this.fileDict, filePath)
   }
@@ -211,11 +200,10 @@ export default class FileManager {
   async getPreprocessedText(filePath) {
     if (!_.has(this.#preprocessedTexts, filePath)) {
       const text = await this.getText(filePath)
-      if (text === '' && this.allowMissingFiles) {
+      if (!this.preprocessor || (text === '' && this.allowMissingFiles)) {
         this.#preprocessedTexts[filePath] = text
       } else {
-        const preprocess = this.getPreprocessor(filePath)
-        this.#preprocessedTexts[filePath] = preprocess(text)
+        this.#preprocessedTexts[filePath] = this.preprocessor(filePath, text)
       }
     }
     return this.#preprocessedTexts[filePath]

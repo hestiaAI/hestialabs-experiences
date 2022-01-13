@@ -10,12 +10,7 @@
     "ads_information/advertisers_you've_interacted_with.json",
     "ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json"
   ],
-  "preprocessors": {
-    "apps_and_websites_off_of_facebook/your_off-facebook_activity.json": "facebook",
-    "your_topics/your_topics.json": "facebook",
-    "ads_information/advertisers_you've_interacted_with.json": "facebook",
-    "ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json": "facebook"
-  },
+  "preprocessor": "facebook",
   "allowMissingFiles": true,
   "collaborator": {
     "title": "The Eyeballs Collective",

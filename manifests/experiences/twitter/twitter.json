@@ -5,11 +5,7 @@
   "ext": "zip",
   "data": ["twitter.zip", "twitter-sample.zip"],
   "files": ["data/ad-impressions.js", "data/ad-engagements.js"],
-  "preprocessors": {
-    "data/ad-impressions.js": "twitter",
-    "data/ad-engagements.js": "twitter",
-    "data/personalization.js": "twitter"
-  },
+  "preprocessor": "twitter",
   "collaborator": {
     "title": "The Eyeballs Collective",
     "icon": "the-eyeballs.svg",

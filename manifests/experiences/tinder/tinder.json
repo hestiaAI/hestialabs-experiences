@@ -5,9 +5,7 @@
   "ext": "json",
   "data": ["tinder-synthetic.json"],
   "files": ["input.json"],
-  "preprocessors": {
-    "input.json": "tinder"
-  },
+  "preprocessor": "tinder",
   "collaborator": {
     "title": "The Dating Privacy Collective",
     "icon": "dating-privacy-collective.svg",

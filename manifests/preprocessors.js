@@ -1,10 +1,13 @@
-const twitter = string => {
+const twitter = (filePath, content) => {
   // replace variable assignment in JS file from Twitter
-  return string.replace(/^[0-9a-zA-Z_.]+\s+=/, '')
+  if (/\.js$/.test(filePath)) {
+    return content.replace(/^[0-9a-zA-Z_.]+\s+=/, '')
+  }
+  return content
 }
 
-const tinder = string => {
-  const json = JSON.parse(string)
+const tinder = (filePath, content) => {
+  const json = JSON.parse(content)
   Object.keys(json?.Usage ?? {}).forEach(key => {
     json.Usage[key] = Object.keys(json.Usage[key]).map(date => ({
       date,
@@ -28,7 +31,7 @@ function convertHexToString(input) {
   return output
 }
 
-const facebook = s => {
+const facebook = (filePath, content) => {
   // Facebook gives us messed up files (https://stackoverflow.com/questions/52747566/what-encoding-facebook-uses-in-json-files-from-data-export)
   // For instance the "é" character is encoded in UTF-8 as 0xc3 0xa9
   // But they give it as \u00c3\u00a9
@@ -36,41 +39,57 @@ const facebook = s => {
   const r = '\\\\u00([0-9a-f]{2})'
   // Successively try to replace characters with 2, 3, and 4 bytes
   // Can't use a loop because the number of arguments is variable
-  s = s.replace(new RegExp(r + r, 'g'), (match, p1, p2) => {
+  content = content.replace(new RegExp(r + r, 'g'), (match, p1, p2) => {
     try {
       return convertHexToString(p1 + p2)
     } catch {}
     return match
   })
-  s = s.replace(new RegExp(r + r + r, 'g'), (match, p1, p2, p3) => {
+  content = content.replace(new RegExp(r + r + r, 'g'), (match, p1, p2, p3) => {
     try {
       return convertHexToString(p1 + p2 + p3)
     } catch {}
     return match
   })
-  s = s.replace(new RegExp(r + r + r + r, 'g'), (match, p1, p2, p3, p4) => {
-    try {
-      return convertHexToString(p1 + p2 + p3 + p4)
-    } catch {}
-    return match
-  })
+  content = content.replace(
+    new RegExp(r + r + r + r, 'g'),
+    (match, p1, p2, p3, p4) => {
+      try {
+        return convertHexToString(p1 + p2 + p3 + p4)
+      } catch {}
+      return match
+    }
+  )
 
   // In your_topics/your_topics.json, we have to replace the list of strings
   // by a list of objects, otherwise yarrrml is unable to get the values.
-  const json = JSON.parse(s)
-  if (Object.keys(json).includes('inferred_topics_v2')) {
-    const topics = json.inferred_topics_v2.map(topic => {
-      return { topic }
-    })
-    json.inferred_topics_v2 = topics
-  } else if (Object.keys(json).includes('custom_audiences_v2')) {
-    // Same for ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json
-    const advertisers = json.custom_audiences_v2.map(advertiser => {
-      return { advertiser }
-    })
-    json.custom_audiences_v2 = advertisers
+  if (/your_topics\/your_topics\.json$/.test(filePath)) {
+    try {
+      const json = JSON.parse(content)
+      const topics = json.inferred_topics_v2.map(topic => {
+        return { topic }
+      })
+      json.inferred_topics_v2 = topics
+      return JSON.stringify(json)
+    } catch {}
   }
-  return JSON.stringify(json)
+  // Same for ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json
+  if (
+    /ads_information\/advertisers_who_uploaded_a_contact_list_with_your_information\.json$/.test(
+      filePath
+    )
+  ) {
+    try {
+      const json = JSON.parse(content)
+      const advertisers = json.custom_audiences_v2.map(advertiser => {
+        return { advertiser }
+      })
+      json.custom_audiences_v2 = advertisers
+      return JSON.stringify(json)
+    } catch {}
+  }
+
+  return content
 }
 
 export default {

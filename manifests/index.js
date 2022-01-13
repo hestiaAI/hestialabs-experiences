@@ -71,7 +71,7 @@ const manifests = Object.fromEntries(
       isGenericViewer,
       url,
       showDataExplorer,
-      preprocessors = {},
+      preprocessor,
       timedObservationsViewer = {},
       defaultView = [],
       ...rest
@@ -104,17 +104,10 @@ const manifests = Object.fromEntries(
         throw new Error(`[${dir}] parameter ext is invalid`)
       }
     }
-    Object.values(preprocessors).forEach(preprocessor => {
-      if (!(preprocessor in allPreprocessors)) {
-        throw new Error(`[${dir}] Preprocessor ${preprocessor} does not exist`)
-      }
-    })
-    const preprocessorFuncs = Object.fromEntries(
-      Object.entries(preprocessors).map(([filename, preprocessorName]) => [
-        filename,
-        allPreprocessors[preprocessorName]
-      ])
-    )
+    if (preprocessor && !(preprocessor in allPreprocessors)) {
+      throw new Error(`[${dir}] Preprocessor ${preprocessor} does not exist`)
+    }
+    const preprocessorFunc = allPreprocessors[preprocessor]
 
     if (isGenericViewer && !showDataExplorer) {
       throw new Error('the explorer experience must show the data explorer')
@@ -160,7 +153,7 @@ const manifests = Object.fromEntries(
         files,
         multiple,
         data,
-        preprocessors: preprocessorFuncs,
+        preprocessor: preprocessorFunc,
         collaborator,
         isGenericViewer,
         url,

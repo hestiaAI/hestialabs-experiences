@@ -196,7 +196,7 @@ export default {
           (r, i) => new File([blobs[i]], r.name.substr(6))
         )
         this.fileManager = new FileManager(
-          this.manifest.preprocessors,
+          this.manifest.preprocessor,
           false,
           fileManagerWorkers
         )

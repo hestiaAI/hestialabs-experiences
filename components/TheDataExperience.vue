@@ -141,9 +141,9 @@ export default {
       type: Boolean,
       default: false
     },
-    preprocessors: {
-      type: Object,
-      default: () => {}
+    preprocessor: {
+      type: Function,
+      default: undefined
     },
     postprocessors: {
       type: Object,
@@ -195,7 +195,7 @@ export default {
       message: '',
       rml: '',
       fileManager: new FileManager(
-        this.preprocessors,
+        this.preprocessor,
         this.allowMissingFiles,
         fileManagerWorkers
       ),
