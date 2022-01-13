@@ -91,11 +91,11 @@ export default {
     },
     iconForNode(type) {
       switch (type) {
-        case nodeTypes.tree:
+        case nodeTypes.TREE:
           return mdiCodeJson
-        case nodeTypes.list:
+        case nodeTypes.LIST:
           return mdiFormatListBulletedSquare
-        case nodeTypes.leaf:
+        case nodeTypes.LEAF:
           return mdiInformationOutline
       }
     },
