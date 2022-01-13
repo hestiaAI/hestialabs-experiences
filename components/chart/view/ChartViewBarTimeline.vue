@@ -3,16 +3,13 @@
     <VRow>
       <VCol cols="12" md="7">
         <p class="text-h6">Number of dated events in your files</p>
-        <p
-          v-if="nbDataPoints === 0 && !currMinDate && !currMaxDate"
-          class="text-subtitle-2"
-        >
+        <p v-if="nbDataPoints === 0 && !chartDomain" class="text-subtitle-2">
           No dated events were found in your file(s).
         </p>
         <p v-else class="text-subtitle-2">
           From
-          <strong>{{ currMinDate }}</strong> to
-          <strong>{{ currMaxDate }}</strong> we found
+          <strong>{{ interval.format(chartDomain[0]) }}</strong> to
+          <strong>{{ interval.format(chartDomain[1]) }}</strong> we found
           <strong>{{ nbDataPoints }}</strong> dated events in your file(s).
         </p>
       </VCol>
@@ -20,10 +17,11 @@
     <ChartViewVRowWebShare>
       <VCol cols="12">
         <DatePicker
-          v-if="minDate !== null && maxDate !== null"
+          v-if="dataDomain !== null"
+          v-model="brushDomain"
           class="d-flex justify-end mr-3"
-          :min-date="minDate"
-          :max-date="maxDate"
+          :min-date="dataDomain[0]"
+          :max-date="dataDomain[1]"
         ></DatePicker>
         <div :id="graphId"></div>
       </VCol>
@@ -40,45 +38,77 @@ import mixin from './mixin'
 export default {
   mixins: [mixin],
   props: {
+    /*
+     * Optional d3 format for the values, see: https://github.com/d3/d3-format
+     */
     valueFormat: {
       type: String,
       default: () => '~s'
     },
+    /*
+     * Optional date format of the data, see: https://github.com/d3/d3-time-format
+     * if not specify, will use Javascript Date contructor
+     */
     dateFormat: {
       type: String,
       default: () => null
     },
+    /*
+     * Name of the field where there is the dates, default 'date'
+     */
     dateAccessor: {
       type: String,
       default: () => 'date'
     },
-    // if not set will just count the rows
+    /*
+     * Name of the field where there is the values to sum up
+     * if not specify, will count the rows
+     */
     valueAccessor: {
       type: String,
       default: () => null
     },
+    /*
+     * Margin to apply on the graph, expect a dict of the form
+     * { left: 50, right: 50, top: 10, bottom: 50 }
+     */
     margin: {
       type: Object,
       default() {
         return { left: 50, right: 50, top: 10, bottom: 50 }
       }
     },
+    /*
+     * Width of the graph, we use a viewbox so it will only change the width/height ratio
+     */
     width: {
       type: Number,
       default: () => 600
     },
+    /*
+     * Height of the graph, we use a viewbox so it will only change the width/height ratio
+     */
     height: {
       type: Number,
       default: () => 150
     },
+    /*
+     * Height of the brush in respect to total height
+     */
     brushHeight: {
       type: Number,
       default: () => 30
     },
+    /*
+     * Margin between focus and context (brush) graph
+     */
     brushTopMargin: {
       type: Number,
       default: () => 30
     },
+    /*
+     * Max number of datapoints before we aggregate the data
+     */
     maxDots: {
       type: Number,
       default: () => 50
@@ -86,78 +116,99 @@ export default {
   },
   data() {
     return {
-      currValues: [],
-      currMinDate: null,
-      currMaxDate: null,
-      minDate: null,
-      maxDate: null,
-      dateParser: null,
+      currValues: [], // The values used by the graphs
+      chartDomain: null, // The date range of the focus graph
+      brushDomain: null, // The date range of the context (brush) graph
+      dataDomain: null, // The initial date range of the data
+      dateParser: null, // a Parser for converting date string to dates
+      // Supported time aggregations
       intervals: {
         Days: {
           parser: d3.timeDay,
-          format: d3.timeFormat('%B %d, %Y')
+          format: d3.timeFormat('%B %d, %Y'),
+          name: 'days'
         },
         Weeks: {
           parser: d3.timeWeek,
-          format: d3.timeFormat('%B %d, %Y')
+          format: d3.timeFormat('%B %d, %Y'),
+          name: 'weeks'
         },
         Months: {
           parser: d3.timeMonth,
-          format: d3.timeFormat('%B %Y')
+          format: d3.timeFormat('%B %Y'),
+          name: 'months'
         },
         Years: {
           parser: d3.timeYear,
-          format: d3.timeFormat('%Y')
+          format: d3.timeFormat('%Y'),
+          name: 'years'
         }
       }
     }
   },
   computed: {
+    // Compute new interval each time curr date range change
+    interval() {
+      if (this.chartDomain === null) return
+      // Choose interval aggregator
+      const diffDays = d3.timeDay.count(...this.chartDomain)
+      if (diffDays < this.maxDots) {
+        return this.intervals.Days
+      } else if (diffDays < 7 * this.maxDots) {
+        return this.intervals.Weeks
+      } else if (diffDays < 31 * this.maxDots) {
+        return this.intervals.Months
+      } else {
+        return this.intervals.Years
+      }
+    },
     nbDataPoints() {
       return d3.sum(this.currValues, d => d.value)
     }
   },
-  methods: {
-    aggPerTimePeriod() {
+  watch: {
+    // whenever interval changes, aggregate data with new interval
+    interval(newInterval, oldInterval) {
+      // if (newInterval === oldInterval || this.chartDomain === null) return
       // Filter data for curr interval
       this.currValues = this.values.filter(
         d =>
-          this.dateParser(d[this.dateAccessor]) > this.currMinDate &&
-          this.dateParser(d[this.dateAccessor]) < this.currMaxDate
+          this.dateParser(d[this.dateAccessor]) > this.chartDomain[0] &&
+          this.dateParser(d[this.dateAccessor]) < this.chartDomain[1]
       )
-
-      // Choose interval aggregator
-      const diffDays = d3.timeDay.count(this.currMinDate, this.currMaxDate)
-      let interval = null
-      if (diffDays < this.maxDots) interval = this.intervals.Days
-      else if (diffDays < 7 * this.maxDots) interval = this.intervals.Weeks
-      else if (diffDays < 31 * this.maxDots) interval = this.intervals.Months
-      else if (diffDays < 360 * this.maxDots) interval = this.intervals.Years
 
       // Aggregate data
       this.currValues = nest()
-        .key(d => interval.parser.floor(this.dateParser(d[this.dateAccessor])))
+        .key(d =>
+          newInterval.parser.floor(this.dateParser(d[this.dateAccessor]))
+        )
         .rollup(leaves => leaves.length) // count nb rows
         .entries(this.currValues)
         .sort((a, b) =>
           d3.descending(this.dateParser(a.key), this.dateParser(b.key))
         )
+
       // Fill missing values
       this.currValues = addMissingDate(
         this.currValues,
         'key',
         'value',
-        interval.parser,
+        newInterval.parser,
         0,
-        this.currMinDate,
-        this.currMaxDate
+        this.chartDomain[0],
+        this.chartDomain[0]
       )
 
       // Sort the result
       this.currValues = this.currValues.sort(
         (e1, e2) => new Date(e1.key) - new Date(e2.key)
       )
-    },
+
+      this.draw()
+    }
+  },
+  methods: {
+    // init method should change name
     drawViz() {
       // Use either a predefined date format or Javascript date constructor
       this.dateParser =
@@ -169,10 +220,9 @@ export default {
       )
 
       // Init date ranges
-      this.minDate = extent[0]
-      this.maxDate = extent[1]
-      this.currMinDate = extent[0]
-      this.currMaxDate = extent[1]
+      this.dataDomain = extent
+      this.chartDomain = extent
+      console.log('initiated')
 
       // Create svg container
       d3.select('#' + this.graphId + ' svg').remove()
@@ -217,9 +267,7 @@ export default {
         .on('brush end', evt => {
           const s = evt.selection || xBrush.range()
           const domain = s.map(xBrush.invert, xBrush)
-          this.currMinDate = domain[0]
-          this.currMaxDate = domain[1]
-          this.aggPerTimePeriod()
+          this.chartDomain = domain
 
           x.domain(domain)
           focus.select('.xAxis').call(xAxis)
@@ -303,8 +351,7 @@ export default {
       const focus = svg.append('g').attr('class', 'focus')
       const context = svg.append('g').attr('class', 'context')
 
-      this.aggPerTimePeriod()
-      x.domain([this.currMinDate, this.currMaxDate])
+      x.domain(this.chartDomain)
       y.domain([0, d3.max(this.currValues, d => d.value)])
       xBrush.domain(x.domain())
       yBrush.domain(y.domain())
@@ -413,6 +460,9 @@ export default {
           )
       }
       gBrush.call(brush.move, x.range())
+    },
+    draw() {
+      console.log(this.currValues)
     }
   }
 }
