@@ -39,3 +39,27 @@ test('findMatchingObjects', async () => {
   matching = await fileManager.findMatchingObjects(accessor)
   expect(matching[0]).toStrictEqual(22)
 })
+
+test('short filenames', async () => {
+  const fileManager = new FileManager({}, true)
+  const f1 = 'foo/bar.txt'
+  const f2 = 'foo/toc.txt'
+  const f3 = 'bar.txt'
+  const f4 = 'test/hello/bar.txt'
+  const f5 = 'zip.zip/toc.json'
+  await fileManager.init(
+    [
+      mockFile(f1, ''),
+      mockFile(f2, ''),
+      mockFile(f3, ''),
+      mockFile(f4, ''),
+      mockFile(f5, '')
+    ],
+    true
+  )
+  expect(fileManager.getShortFilename(f1)).toMatch('foo/bar.txt')
+  expect(fileManager.getShortFilename(f2)).toMatch('toc.txt')
+  expect(fileManager.getShortFilename(f3)).toMatch('bar.txt')
+  expect(fileManager.getShortFilename(f4)).toMatch('hello/bar.txt')
+  expect(fileManager.getShortFilename(f5)).toMatch('toc.json')
+})
