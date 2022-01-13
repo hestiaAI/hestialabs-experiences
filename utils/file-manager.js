@@ -103,6 +103,7 @@ export default class FileManager {
    */
   async init(uppyFiles, multiple) {
     this.fileList = await FileManager.extractZips(uppyFiles)
+    this.fileList = FileManager.filterFiles(this.fileList)
     const filePairs = this.fileList.map(f => [f.name, f])
     if (multiple) {
       this.fileDict = Object.fromEntries(filePairs)
@@ -112,6 +113,16 @@ export default class FileManager {
     this.setInitialValues()
     this.setShortFilenames()
     return this
+  }
+
+  /**
+   * Remove all files that should be ignored, such as MacOS-specific files.
+   * @param {File[]} fileList
+   * @returns filtered file list
+   */
+  static filterFiles(fileList) {
+    const filterOut = /__MACOSX|\.DS_STORE/
+    return fileList.filter(f => !filterOut.test(f.name))
   }
 
   /**
