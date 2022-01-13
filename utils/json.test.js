@@ -114,6 +114,70 @@ test('complex itemifyJSON', () => {
   expect(items).toStrictEqual(correctItems)
 })
 
+test('complex itemifyJSON with filter that matches', () => {
+  const json = {
+    n: 'root',
+    a: { n: 'child', b: [{ c: 1, d: 'roro' }, { c: 2 }, 'meuh'] }
+  }
+  const correctItems = [
+    {
+      icon: ic,
+      id: 11,
+      name: '{attributes N, A}',
+      jsonPath: '$',
+      children: [
+        {
+          icon: ic,
+          id: 11,
+          name: 'A / {attributes N, B}',
+          jsonPath: "$['a']",
+          children: [
+            {
+              icon: is,
+              id: 11,
+              name: 'B / [list with 1 item]',
+              jsonPath: "$['a']['b']",
+              children: [
+                {
+                  children: [
+                    {
+                      icon: ii,
+                      id: 8,
+                      jsonPath: "$['a']['b'][0]['d']",
+                      name: 'D',
+                      value: 'roro'
+                    }
+                  ],
+                  icon: ic,
+                  id: 8,
+                  jsonPath: "$['a']['b'][0]",
+                  name: '{attributes C, D}'
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+  let items = itemifyJSON(JSON.stringify(json), 'roro')
+  expect(items).toStrictEqual(correctItems)
+  items = itemifyJSON(JSON.stringify(json), 'ror')
+  expect(items).toStrictEqual(correctItems)
+  items = itemifyJSON(JSON.stringify(json), 'ROR')
+  expect(items).toStrictEqual(correctItems)
+})
+
+test('complex itemifyJSON with filter that does not match', () => {
+  const json = {
+    n: 'root',
+    a: { n: 'child', b: [{ c: 1, d: 'roro' }, { c: 2 }, 'meuh'] }
+  }
+  const correctItems = [[]]
+  const items = itemifyJSON(JSON.stringify(json), 'XXX')
+  expect(items).toStrictEqual(correctItems)
+})
+
 test('item JsonPath for object', () => {
   const json = { a: { b: 'roro' } }
   const correctItems = [
