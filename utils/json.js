@@ -1,8 +1,3 @@
-import {
-  mdiCodeJson,
-  mdiFormatListBulletedSquare,
-  mdiInformationOutline
-} from '@mdi/js'
 import _ from 'lodash'
 
 function filterCondition(item, filter) {
@@ -12,6 +7,8 @@ function filterCondition(item, filter) {
     (item.value && `${item.value}`.toLowerCase().includes(filter))
   )
 }
+
+export const nodeTypes = { tree: 'tree', list: 'list', leaf: 'leaf' }
 
 /**
  * itemifyJSON transforms some JSON into a tree, suitable for a Vuetify VTreeview component.
@@ -36,14 +33,19 @@ export default function itemifyJSON(jsonText, filter) {
       }]`,
       path,
       children: minifyList(group, path, base + i * groupSize),
-      icon: mdiFormatListBulletedSquare
+      type: nodeTypes.list
     }))
   }
   function itemifyRec(tree, path) {
     id++
     if (typeof tree !== 'object') {
       // Leaf node (first part)
-      return { id, value: tree, icon: mdiInformationOutline, path }
+      return {
+        id,
+        value: tree,
+        type: nodeTypes.leaf,
+        path
+      }
     } else if (Array.isArray(tree)) {
       // Array node
       const children = tree.flatMap((el, ci) => {
@@ -56,11 +58,15 @@ export default function itemifyJSON(jsonText, filter) {
         }
         return inner
       })
+      if (!children.length && filter) {
+        // hide empty arrays when filtering
+        return []
+      }
       const arrayItem = {
         id,
         path,
         name: formatArray(children),
-        icon: mdiFormatListBulletedSquare
+        type: nodeTypes.list
       }
       if (children.length) {
         arrayItem.children = minifyList(children, path)
@@ -82,18 +88,22 @@ export default function itemifyJSON(jsonText, filter) {
           return { ...inner, name: `${name} / ${inner.name}` }
         }
       })
+      if (!children.length && filter) {
+        // hide empty objects when filtering
+        return []
+      }
       const objectItem = {
         id,
         name: formatObject(tree),
         path,
-        icon: mdiCodeJson
+        type: nodeTypes.tree
       }
       if (children.length) {
         objectItem.children = children
       }
       return objectItem
     } else {
-      return { id, value: 'null', icon: mdiInformationOutline, path }
+      return { id, value: 'null', type: nodeTypes.leaf, path }
     }
   }
   return [itemifyRec(JSON.parse(jsonText), [])]

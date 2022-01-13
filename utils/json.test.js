@@ -1,24 +1,17 @@
 import { JSONPath } from 'jsonpath-plus'
-import {
-  mdiCodeJson,
-  mdiFormatListBulletedSquare,
-  mdiInformationOutline
-} from '@mdi/js'
-import itemifyJSON, { pathArrayToJsonPath } from '~/utils/json'
+import itemifyJSON, { pathArrayToJsonPath, nodeTypes } from '~/utils/json'
 
-const ic = mdiCodeJson
-const is = mdiFormatListBulletedSquare
-const ii = mdiInformationOutline
+const { tree, list, leaf } = nodeTypes
 
 test('simple itemifyJSON', () => {
   const json = { n: 'root' }
   const correctItems = [
     {
-      icon: ic,
+      type: tree,
       id: 2,
       path: [],
       name: '{attributes N}',
-      children: [{ id: 2, path: ['n'], value: 'root', icon: ii, name: 'N' }]
+      children: [{ id: 2, path: ['n'], value: 'root', type: leaf, name: 'N' }]
     }
   ]
   const items = itemifyJSON(JSON.stringify(json))
@@ -30,7 +23,7 @@ test('itemifyJSON with empty array/object', () => {
   const json = { n: [], o: {} }
   const correctItems = [
     {
-      icon: ic,
+      type: tree,
       id: 3,
       path: [],
       name: '{attributes N, O}',
@@ -38,13 +31,13 @@ test('itemifyJSON with empty array/object', () => {
         {
           id: 2,
           path: ['n'],
-          icon: is,
+          type: list,
           name: 'N / [empty list]'
         },
         {
           id: 3,
           path: ['o'],
-          icon: ic,
+          type: tree,
           name: 'O / {no attributes}'
         }
       ]
@@ -61,27 +54,27 @@ test('complex itemifyJSON', () => {
   }
   const correctItems = [
     {
-      icon: ic,
+      type: tree,
       id: 11,
       name: '{attributes N, A}',
       path: [],
       children: [
-        { id: 2, path: ['n'], value: 'root', icon: ii, name: 'N' },
+        { id: 2, path: ['n'], value: 'root', type: leaf, name: 'N' },
         {
-          icon: ic,
+          type: tree,
           id: 11,
           name: 'A / {attributes N, B}',
           path: ['a'],
           children: [
             {
-              icon: ii,
+              type: leaf,
               id: 4,
               path: ['a', 'n'],
               name: 'N',
               value: 'child'
             },
             {
-              icon: is,
+              type: list,
               id: 11,
               name: 'B / [list with 3 items]',
               path: ['a', 'b'],
@@ -89,21 +82,21 @@ test('complex itemifyJSON', () => {
                 {
                   children: [
                     {
-                      icon: ii,
+                      type: leaf,
                       id: 7,
                       path: ['a', 'b', 0, 'c'],
                       name: 'C',
                       value: 1
                     },
                     {
-                      icon: ii,
+                      type: leaf,
                       id: 8,
                       path: ['a', 'b', 0, 'd'],
                       name: 'D',
                       value: 'roro'
                     }
                   ],
-                  icon: ic,
+                  type: tree,
                   id: 8,
                   path: ['a', 'b', 0],
                   name: '{attributes C, D}'
@@ -111,20 +104,20 @@ test('complex itemifyJSON', () => {
                 {
                   children: [
                     {
-                      icon: ii,
+                      type: leaf,
                       id: 10,
                       path: ['a', 'b', 1, 'c'],
                       name: 'C',
                       value: 2
                     }
                   ],
-                  icon: ic,
+                  type: tree,
                   id: 10,
                   path: ['a', 'b', 1],
                   name: '{attributes C}'
                 },
                 {
-                  icon: ii,
+                  type: leaf,
                   id: 11,
                   path: ['a', 'b', 2],
                   value: 'meuh'
@@ -147,36 +140,36 @@ test('complex itemifyJSON with filter that matches', () => {
   }
   const correctItems = [
     {
-      icon: ic,
+      type: tree,
       id: 11,
       name: '{attributes N, A}',
-      jsonPath: '$',
+      path: [],
       children: [
         {
-          icon: ic,
+          type: tree,
           id: 11,
           name: 'A / {attributes N, B}',
-          jsonPath: "$['a']",
+          path: ['a'],
           children: [
             {
-              icon: is,
+              type: list,
               id: 11,
               name: 'B / [list with 1 item]',
-              jsonPath: "$['a']['b']",
+              path: ['a', 'b'],
               children: [
                 {
                   children: [
                     {
-                      icon: ii,
+                      type: leaf,
                       id: 8,
-                      jsonPath: "$['a']['b'][0]['d']",
+                      path: ['a', 'b', 0, 'd'],
                       name: 'D',
                       value: 'roro'
                     }
                   ],
-                  icon: ic,
+                  type: tree,
                   id: 8,
-                  jsonPath: "$['a']['b'][0]",
+                  path: ['a', 'b', 0],
                   name: '{attributes C, D}'
                 }
               ]
@@ -208,19 +201,19 @@ test('item JsonPath for object', () => {
   const json = { a: { b: 'roro' } }
   const correctItems = [
     {
-      icon: ic,
+      type: tree,
       id: 3,
       name: '{attributes A}',
       path: [],
       children: [
         {
-          icon: ic,
+          type: tree,
           id: 3,
           path: ['a'],
           name: 'A / {attributes B}',
           children: [
             {
-              icon: ii,
+              type: leaf,
               id: 3,
               name: 'B',
               path: ['a', 'b'],
@@ -245,19 +238,19 @@ test('item JsonPath for array element', () => {
   const json = { c: ['toto'] }
   const correctItems = [
     {
-      icon: ic,
+      type: tree,
       id: 3,
       name: '{attributes C}',
       path: [],
       children: [
         {
-          icon: is,
+          type: list,
           id: 3,
           name: 'C / [list with 1 item]',
           path: ['c'],
           children: [
             {
-              icon: ii,
+              type: leaf,
               id: 3,
               path: ['c', 0],
               value: 'toto'
@@ -282,43 +275,43 @@ test('item JsonPath for big array element', () => {
   }
   const correctItems = [
     {
-      icon: ic,
+      type: tree,
       id: 16,
       name: '{attributes C}',
       path: [],
       children: [
         {
           id: 14,
-          icon: is,
+          type: list,
           path: ['c'],
           name: 'C / [list with 12 items]',
           children: [
             {
               id: 15,
-              icon: is,
+              type: list,
               name: '[elements 1 - 10]',
               path: ['c'],
               children: [
-                { id: 3, value: 1, icon: ii, path: ['c', 0] },
-                { id: 4, value: 2, icon: ii, path: ['c', 1] },
-                { id: 5, value: 3, icon: ii, path: ['c', 2] },
-                { id: 6, value: 4, icon: ii, path: ['c', 3] },
-                { id: 7, value: 5, icon: ii, path: ['c', 4] },
-                { id: 8, value: 6, icon: ii, path: ['c', 5] },
-                { id: 9, value: 7, icon: ii, path: ['c', 6] },
-                { id: 10, value: 8, icon: ii, path: ['c', 7] },
-                { id: 11, value: 9, icon: ii, path: ['c', 8] },
-                { id: 12, value: 10, icon: ii, path: ['c', 9] }
+                { id: 3, value: 1, type: leaf, path: ['c', 0] },
+                { id: 4, value: 2, type: leaf, path: ['c', 1] },
+                { id: 5, value: 3, type: leaf, path: ['c', 2] },
+                { id: 6, value: 4, type: leaf, path: ['c', 3] },
+                { id: 7, value: 5, type: leaf, path: ['c', 4] },
+                { id: 8, value: 6, type: leaf, path: ['c', 5] },
+                { id: 9, value: 7, type: leaf, path: ['c', 6] },
+                { id: 10, value: 8, type: leaf, path: ['c', 7] },
+                { id: 11, value: 9, type: leaf, path: ['c', 8] },
+                { id: 12, value: 10, type: leaf, path: ['c', 9] }
               ]
             },
             {
               id: 16,
-              icon: is,
+              type: list,
               name: '[elements 11 - 12]',
               path: ['c'],
               children: [
-                { id: 13, value: 11, icon: ii, path: ['c', 10] },
-                { id: 14, value: 12, icon: ii, path: ['c', 11] }
+                { id: 13, value: 11, type: leaf, path: ['c', 10] },
+                { id: 14, value: 12, type: leaf, path: ['c', 11] }
               ]
             }
           ]

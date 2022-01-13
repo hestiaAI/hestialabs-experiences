@@ -8,8 +8,8 @@
     <BaseSearchBar v-model="search" :loading="searching" />
     <VTreeview dense transition :items="filteredItems">
       <template #prepend="{ item }">
-        <VIcon v-if="!isUndef(item.icon)">
-          {{ item.icon }}
+        <VIcon v-if="!isUndef(item.type)">
+          {{ iconForNode(item.type) }}
         </VIcon>
       </template>
       <template #label="{ item, leaf }">
@@ -29,13 +29,18 @@
 
 <script>
 import debounce from 'lodash/debounce'
+import {
+  mdiCodeJson,
+  mdiFormatListBulletedSquare,
+  mdiInformationOutline
+} from '@mdi/js'
 
 import mixin from './mixin'
 import mixinLoading from './mixin-loading'
 import JsonWorker from '~/utils/json.worker.js'
 import { runWorker } from '@/utils/utils'
 import { filePathToGlob, createAccessor } from '@/utils/accessor'
-import { pathArrayToJsonPath } from '@/utils/json'
+import { pathArrayToJsonPath, nodeTypes } from '@/utils/json'
 
 export default {
   name: 'UnitFileExplorerViewerJson',
@@ -82,6 +87,16 @@ export default {
         this.$emit('select-accessor', accessor)
       } catch (error) {
         console.error(error)
+      }
+    },
+    iconForNode(type) {
+      switch (type) {
+        case nodeTypes.tree:
+          return mdiCodeJson
+        case nodeTypes.list:
+          return mdiFormatListBulletedSquare
+        case nodeTypes.leaf:
+          return mdiInformationOutline
       }
     },
     isUndef(val) {
