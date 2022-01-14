@@ -1,8 +1,3 @@
-import {
-  mdiCodeJson,
-  mdiFormatListBulletedSquare,
-  mdiInformationOutline
-} from '@mdi/js'
 import _ from 'lodash'
 
 function filterCondition(item, filter) {
@@ -12,6 +7,8 @@ function filterCondition(item, filter) {
     (item.value && `${item.value}`.toLowerCase().includes(filter))
   )
 }
+
+export const nodeTypes = { tree: 'tree', list: 'list', leaf: 'leaf' }
 
 /**
  * itemifyJSON transforms some JSON into a tree, suitable for a Vuetify VTreeview component.
@@ -23,7 +20,7 @@ function filterCondition(item, filter) {
 export default function itemifyJSON(jsonText, filter) {
   const groupsPerLevel = 10
   let id = 0
-  function minifyList(list, jsonPath, base = 0) {
+  function minifyList(list, path, base = 0) {
     if (list.length <= groupsPerLevel) return list
     const groupSize = Math.pow(
       groupsPerLevel,
@@ -34,20 +31,25 @@ export default function itemifyJSON(jsonText, filter) {
       name: `[elements ${base + groupSize * i + 1} - ${
         base + groupSize * i + group.length
       }]`,
-      jsonPath,
-      children: minifyList(group, jsonPath, base + i * groupSize),
-      icon: mdiFormatListBulletedSquare
+      path,
+      children: minifyList(group, path, base + i * groupSize),
+      type: nodeTypes.list
     }))
   }
-  function itemifyRec(tree, jsonPath) {
+  function itemifyRec(tree, path) {
     id++
     if (typeof tree !== 'object') {
       // Leaf node (first part)
-      return { id, value: tree, icon: mdiInformationOutline, jsonPath }
+      return {
+        id,
+        value: tree,
+        type: nodeTypes.leaf,
+        path
+      }
     } else if (Array.isArray(tree)) {
       // Array node
       const children = tree.flatMap((el, ci) => {
-        const inner = itemifyRec(el, `${jsonPath}[${ci}]`)
+        const inner = itemifyRec(el, [...path, ci])
         if (typeof inner.name === 'undefined') {
           // Leaf node (second part)
           if (filter && !filterCondition(inner, filter)) {
@@ -56,22 +58,24 @@ export default function itemifyJSON(jsonText, filter) {
         }
         return inner
       })
-      if (!children.length) {
+      if (!children.length && filter) {
+        // hide empty arrays when filtering
         return []
       }
-      const plural = children.length > 1
-      const name = `[list with ${children.length} item${plural ? 's' : ''}]`
-      return {
+      const arrayItem = {
         id,
-        name,
-        jsonPath,
-        children: minifyList(children, jsonPath),
-        icon: mdiFormatListBulletedSquare
+        path,
+        name: formatArray(children),
+        type: nodeTypes.list
       }
+      if (children.length) {
+        arrayItem.children = minifyList(children, path)
+      }
+      return arrayItem
     } else if (tree !== null) {
       // Object node
       const children = Object.entries(tree).flatMap(([key, v]) => {
-        const inner = itemifyRec(v, `${jsonPath}['${key}']`)
+        const inner = itemifyRec(v, [...path, key])
         const name = _.startCase(key)
         if (typeof inner.name === 'undefined') {
           // Leaf node (second part)
@@ -84,24 +88,51 @@ export default function itemifyJSON(jsonText, filter) {
           return { ...inner, name: `${name} / ${inner.name}` }
         }
       })
-      if (!children.length) {
+      if (!children.length && filter) {
+        // hide empty objects when filtering
         return []
-      } else {
-        return {
-          id,
-          name: `{attributes ${Object.keys(tree)
-            .map(k => _.startCase(k))
-            .join(', ')}}`,
-          children,
-          jsonPath,
-          icon: mdiCodeJson
-        }
       }
+      const objectItem = {
+        id,
+        name: formatObject(tree),
+        path,
+        type: nodeTypes.tree
+      }
+      if (children.length) {
+        objectItem.children = children
+      }
+      return objectItem
     } else {
-      return { id, value: 'null', icon: mdiInformationOutline, jsonPath }
+      return { id, value: 'null', type: nodeTypes.leaf, path }
     }
   }
-  return [itemifyRec(JSON.parse(jsonText), '$')]
+  return [itemifyRec(JSON.parse(jsonText), [])]
+}
+
+export function formatObject(object) {
+  const keys = Object.keys(object)
+  if (keys.length === 0) {
+    return '{no attributes}'
+  }
+  return `{attributes ${keys.map(k => _.startCase(k)).join(', ')}}`
+}
+
+export function formatArray(array) {
+  if (array.length === 0) {
+    return '[empty list]'
+  }
+  const plural = array.length > 1
+  return `[list with ${array.length} item${plural ? 's' : ''}]`
+}
+
+export function pathArrayToJsonPath(pathArray) {
+  return (
+    '$' +
+    pathArray.reduce((path, el) => {
+      path += isNaN(el) ? `['${el}']` : `[${el}]`
+      return path
+    }, '')
+  )
 }
 
 export function nJsonPoints(json) {

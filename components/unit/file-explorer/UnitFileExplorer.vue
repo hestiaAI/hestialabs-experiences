@@ -1,134 +1,143 @@
 <template>
-  <VCard
-    v-click-outside="{
-      handler: () => {
-        mini = true
-      },
-      closeConditional: () => !mini
-    }"
-    class="pa-2 mb-6 explorer"
-    :min-height="height"
-    height="auto"
-  >
-    <style v-if="isFileLoading">
-      :root {
-        --cursor-style: wait !important;
-      }
-    </style>
-    <VNavigationDrawer
-      ref="drawer"
-      :mini-variant.sync="mini"
-      :mini-variant-width="miniWidth"
-      absolute
-      permanent
-      width="100%"
-      style="z-index: 1000"
+  <div>
+    <VCard
+      v-click-outside="{
+        handler: () => {
+          mini = true
+        },
+        closeConditional: () => !mini
+      }"
+      class="pa-2 mb-6 explorer"
+      :min-height="height"
+      height="auto"
     >
-      <template #prepend>
-        <VListItem class="px-2">
-          <VBtn icon @click="mini = !mini">
-            <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
-          </VBtn>
+      <style v-if="isFileLoading">
+        :root {
+          --cursor-style: wait !important;
+        }
+      </style>
+      <VNavigationDrawer
+        ref="drawer"
+        :mini-variant.sync="mini"
+        :mini-variant-width="miniWidth"
+        absolute
+        permanent
+        width="100%"
+        style="z-index: 1000"
+      >
+        <template #prepend>
+          <VListItem class="px-2">
+            <VBtn icon @click="mini = !mini">
+              <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
+            </VBtn>
 
-          <VListItemTitle class="mx-4">File Explorer</VListItemTitle>
+            <VListItemTitle class="mx-4">File Explorer</VListItemTitle>
 
-          <VBtn icon @click.stop="mini = !mini">
-            <VIcon>$vuetify.icons.mdiChevronLeft</VIcon>
-          </VBtn>
-        </VListItem>
-        <VListItem v-if="!mini">
-          <VTextField
-            v-model="search"
-            label="Search for files"
-            placeholder="Enter part of a file name..."
-            clearable
-            hide-details
-            prepend-icon="$vuetify.icons.mdiMagnify"
-            class="my-4 pr-3"
-            style="max-width: 500px"
-            outlined
+            <VBtn icon @click.stop="mini = !mini">
+              <VIcon>$vuetify.icons.mdiChevronLeft</VIcon>
+            </VBtn>
+          </VListItem>
+          <VListItem v-if="!mini">
+            <VTextField
+              v-model="search"
+              label="Search for files"
+              placeholder="Enter part of a file name..."
+              clearable
+              hide-details
+              prepend-icon="$vuetify.icons.mdiMagnify"
+              class="my-4 pr-3"
+              style="max-width: 500px"
+              outlined
+              dense
+            />
+          </VListItem>
+        </template>
+
+        <div :style="drawerMiniFileLabelStyle" class="drawer-mini-file-label">
+          <div>{{ selectedItem.name }}</div>
+        </div>
+
+        <div :class="miniWidthPaddingLeftClass">
+          <VTreeview
             dense
-          />
-        </VListItem>
-      </template>
-
-      <div :style="drawerMiniFileLabelStyle" class="drawer-mini-file-label">
-        <div>{{ selectedItem.name }}</div>
-      </div>
-
-      <div :class="miniWidthPaddingLeftClass">
-        <VTreeview
-          dense
-          open-on-click
-          activatable
-          return-object
-          transition
-          rounded
-          :search="search"
-          :items="treeItems"
-          @update:active="setSelectedItem"
-        >
-          <template #prepend="{ item }">
-            <VIcon>
-              {{ item.icon }}
-            </VIcon>
-          </template>
-        </VTreeview>
-      </div>
-    </VNavigationDrawer>
-    <VCardTitle class="justify-center">Explore your files</VCardTitle>
-    <div :class="miniWidthPaddingLeftClass">
-      <VExpansionPanels v-model="summaryPanelActive" multiple>
-        <VExpansionPanel>
-          <VExpansionPanelHeader> Summary </VExpansionPanelHeader>
-          <VExpansionPanelContent>
-            Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (<b>{{
-              dataSizeString
-            }}</b
-            >)
-            <template v-if="nDataPoints">
-              and found <b>{{ nDataPoints.toLocaleString() }}</b> datapoints
+            open-on-click
+            activatable
+            return-object
+            transition
+            rounded
+            :search="search"
+            :items="treeItems"
+            @update:active="setSelectedItem"
+          >
+            <template #prepend="{ item }">
+              <VIcon>
+                {{ item.icon }}
+              </VIcon>
             </template>
-            :
-            <ul v-if="sortedGroupTexts">
-              <li v-for="(text, i) in sortedGroupTexts" :key="i">
-                <!-- eslint-disable-next-line vue/no-v-html -->
-                <div v-html="text"></div>
-              </li>
-            </ul>
-          </VExpansionPanelContent>
-        </VExpansionPanel>
-      </VExpansionPanels>
-      <VCardText>
-        <template v-if="filename">
-          <div class="mr-2">
-            Exploring file <strong>{{ filename }}</strong>
-          </div>
-          <BaseButtonDownload small :href="path" :filename="filename" />
-          <component
-            :is="componentForType"
-            v-bind="{ fileManager, filename }"
-            v-if="supportedTypes.has(fileType)"
-            @loading="onLoading"
-          />
-          <UnitFileExplorerViewerUnknown
-            v-else
-            v-bind="{ fileManager, filename }"
-            @loading="onLoading"
-          />
-        </template>
-        <template v-else>
-          <p>Select a file on the left panel to see it in more details here</p>
-        </template>
-      </VCardText>
+          </VTreeview>
+        </div>
+      </VNavigationDrawer>
+      <VCardTitle class="justify-center">Explore your files</VCardTitle>
+      <div :class="miniWidthPaddingLeftClass">
+        <VExpansionPanels v-model="summaryPanelActive" multiple>
+          <VExpansionPanel>
+            <VExpansionPanelHeader> Summary </VExpansionPanelHeader>
+            <VExpansionPanelContent>
+              Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (<b>{{
+                dataSizeString
+              }}</b
+              >)
+              <template v-if="nDataPoints">
+                and found <b>{{ nDataPoints.toLocaleString() }}</b> datapoints
+              </template>
+              :
+              <ul v-if="sortedGroupTexts">
+                <li v-for="(text, i) in sortedGroupTexts" :key="i">
+                  <!-- eslint-disable-next-line vue/no-v-html -->
+                  <div v-html="text"></div>
+                </li>
+              </ul>
+            </VExpansionPanelContent>
+          </VExpansionPanel>
+        </VExpansionPanels>
+        <VCardText>
+          <template v-if="filename">
+            <div class="mr-2">
+              Exploring file <strong>{{ filename }}</strong>
+            </div>
+            <BaseButtonDownload small :href="path" :filename="filename" />
+            <component
+              :is="componentForType"
+              v-bind="{ fileManager, filename }"
+              v-if="supportedTypes.has(fileType)"
+              @loading="onLoading"
+              @select-accessor="onSelectAccessor"
+            />
+            <UnitFileExplorerViewerUnknown
+              v-else
+              v-bind="{ fileManager, filename }"
+              @loading="onLoading"
+            />
+          </template>
+          <template v-else>
+            <p>
+              Select a file on the left panel to see it in more details here
+            </p>
+          </template>
+        </VCardText>
+      </div>
+    </VCard>
+    <div v-if="tableDataFromAccessor">
+      <UnitFilterableTable :data="tableDataFromAccessor" />
     </div>
-  </VCard>
+  </div>
 </template>
 
 <script>
 import _ from 'lodash'
 import FileManager from '~/utils/file-manager.js'
 import { humanReadableFileSize, plurify } from '~/manifests/utils'
+import { makeTableData } from '~/manifests/generic-pipelines'
 
 export default {
   name: 'UnitFileExplorer',
@@ -169,7 +178,9 @@ export default {
         'data file': ['json', 'csv', 'tsv', 'xml'],
         'text file': ['txt', 'md'],
         other: []
-      }
+      },
+      selectedAccessor: undefined,
+      tableDataFromAccessor: undefined
     }
   },
   computed: {
@@ -244,7 +255,24 @@ export default {
       )
     }
   },
+  asyncComputed: {
+    async tableDataFromAccessor() {
+      if (this.selectedAccessor) {
+        const found = await this.fileManager.findMatchingObjects(
+          this.selectedAccessor
+        )
+        return makeTableData(found)
+      }
+      return undefined
+    }
+  },
   watch: {
+    async selectedAccessor(accessor) {
+      if (accessor) {
+        const found = await this.fileManager.findMatchingObjects(accessor)
+        this.tableDataFromAccessor = makeTableData(found)
+      }
+    },
     mini(mini) {
       // hide scrollbar in mini variant of drawer
       const overflowY = mini ? 'hidden' : 'visible'
@@ -265,6 +293,9 @@ export default {
     plurify,
     onLoading(loading) {
       this.isFileLoading = loading
+    },
+    onSelectAccessor(accessor) {
+      this.selectedAccessor = accessor
     },
     completeGroupsTable() {
       // Add unknown extensions to the 'other' group
