@@ -67,6 +67,7 @@
             rounded
             :search="search"
             :items="treeItems"
+            :active.sync="active"
             @update:active="setSelectedItem"
           >
             <template #prepend="{ item }">
@@ -79,27 +80,6 @@
       </VNavigationDrawer>
       <VCardTitle class="justify-center">Explore your files</VCardTitle>
       <div :class="miniWidthPaddingLeftClass">
-        <VExpansionPanels v-model="summaryPanelActive" multiple>
-          <VExpansionPanel>
-            <VExpansionPanelHeader> Summary </VExpansionPanelHeader>
-            <VExpansionPanelContent>
-              Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (<b>{{
-                dataSizeString
-              }}</b
-              >)
-              <template v-if="nDataPoints">
-                and found <b>{{ nDataPoints.toLocaleString() }}</b> datapoints
-              </template>
-              :
-              <ul v-if="sortedGroupTexts">
-                <li v-for="(text, i) in sortedGroupTexts" :key="i">
-                  <!-- eslint-disable-next-line vue/no-v-html -->
-                  <div v-html="text"></div>
-                </li>
-              </ul>
-            </VExpansionPanelContent>
-          </VExpansionPanel>
-        </VExpansionPanels>
         <VCardText>
           <template v-if="filename">
             <div class="mr-2">
@@ -134,9 +114,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import FileManager from '~/utils/file-manager.js'
-import { humanReadableFileSize, plurify } from '~/manifests/utils'
 import { makeTableData } from '~/manifests/generic-pipelines'
 
 export default {
@@ -165,25 +143,14 @@ export default {
       search: '',
       isFileLoading: false,
       height: 500,
-      computeNPoints: false,
-      nDataPoints: null,
-      sortedGroupTexts: [],
-      group2ext: {
-        'audio file': ['mp3', 'm4a', 'wav', 'aac', 'webp'],
-        'image file': ['jpg', 'jpeg', 'png', 'gif', 'bnp'],
-        'video file': ['avi', 'mov', 'mp4', 'mpg'],
-        document: ['pdf', 'html', 'doc', 'docx', 'rtf', 'odt'],
-        spreadsheet: ['xls', 'xlsx', 'ods'],
-        'archive file': ['zip', '7z', 'rar', 'gz'],
-        'data file': ['json', 'csv', 'tsv', 'xml'],
-        'text file': ['txt', 'md'],
-        other: []
-      },
       selectedAccessor: undefined,
       tableDataFromAccessor: undefined
     }
   },
   computed: {
+    active() {
+      return this.selectedItem ? [this.selectedItem] : []
+    },
     fileType() {
       // @fileType should match the postfix of the Vue component name
       return this.selectedItem?.type
@@ -222,37 +189,6 @@ export default {
         bottom: `-${w - 18}px`,
         maxWidth: `${h - w - 20}px`
       }
-    },
-    nFiles() {
-      return this.fileManager.fileList.length
-    },
-    totalSize() {
-      return _.sumBy(this.fileManager.fileList, f => f.size)
-    },
-    dataSizeString() {
-      return humanReadableFileSize(this.totalSize)
-    },
-    fileExts() {
-      return this.fileManager.fileList
-        .map(f => f.name.match(/^.+\.(.+?)$/)?.[1])
-        .filter(m => !_.isUndefined(m))
-    },
-    sortedGroupCounts() {
-      const groups = this.fileExts.map(ext => this.ext2group[ext])
-      const occurrences = _.mapValues(
-        _.groupBy(groups, _.identity),
-        v => v.length
-      )
-      return _.sortBy(Object.entries(occurrences), ([group, count]) =>
-        group === 'other' ? 1 : -count
-      )
-    },
-    ext2group() {
-      return Object.fromEntries(
-        Object.entries(this.group2ext).flatMap(entry =>
-          entry[1].map(ext => [ext, entry[0]])
-        )
-      )
     }
   },
   asyncComputed: {
@@ -277,33 +213,41 @@ export default {
       // hide scrollbar in mini variant of drawer
       const overflowY = mini ? 'hidden' : 'visible'
       this.$refs.drawer.$el.children[1].style.overflowY = overflowY
-    },
-    fileManager: {
-      immediate: true,
-      handler() {
-        this.completeGroupsTable()
-        this.setExtensionTexts()
-        if (this.computeNPoints) {
-          this.setNumberOfDataPoints()
-        }
-      }
     }
   },
+  mounted() {
+    this.$root.$on('setFile', filename => {
+      const item = this.searchItemWithFilename(filename)
+      if (item !== null) {
+        this.setSelectedItem([item])
+      }
+    })
+  },
   methods: {
-    plurify,
     onLoading(loading) {
       this.isFileLoading = loading
     },
     onSelectAccessor(accessor) {
       this.selectedAccessor = accessor
     },
-    completeGroupsTable() {
-      // Add unknown extensions to the 'other' group
-      for (const ext of this.fileExts) {
-        if (!(ext in this.ext2group) && !this.group2ext.other.includes(ext)) {
-          this.group2ext.other.push(ext)
+    searchItemWithFilename(filename) {
+      function findItem(item) {
+        if (item.filename === filename) {
+          return item
+        } else if (Array.isArray(item)) {
+          for (const elem of item) {
+            const result = findItem(elem)
+            if (result) {
+              return result
+            }
+          }
+        } else if (item.children) {
+          return findItem(item.children)
+        } else {
+          return null
         }
       }
+      return findItem(this.treeItems)
     },
     setSelectedItem([item]) {
       // item might be undefined (when unselecting)
@@ -317,64 +261,6 @@ export default {
       } else {
         this.selectedItem = {}
       }
-    },
-    async setNumberOfDataPoints() {
-      this.nDataPoints = _.sum(
-        await Promise.all(
-          this.fileManager
-            .getFilenames()
-            .map(async f => await this.fileManager.getNumberOfDataPoints(f))
-        )
-      )
-    },
-    async setExtensionTexts() {
-      const showAtMost = 3
-      const pointsPerFile = await Promise.all(
-        this.fileManager
-          .getFilenames()
-          .map(async f => [
-            f,
-            this.computeNPoints
-              ? await this.fileManager.getNumberOfDataPoints(f)
-              : 0
-          ])
-      )
-      this.sortedGroupTexts = this.sortedGroupCounts.map(([group, c]) => {
-        const re = new RegExp(`.+\\.${this.group2ext[group].join('|')}$`)
-        const filterFunc = ([f, _n]) => re.test(f)
-        const files = pointsPerFile.filter(filterFunc)
-        const shownFiles = _.take(
-          _.sortBy(files, ([_f, n]) => -n),
-          showAtMost
-        )
-        const nPointsGroup = _.sumBy(files, ([_f, n]) => n)
-        const topFilesDescription = shownFiles
-          .map(
-            ([f, nPoints]) =>
-              `<em>${this.fileManager.getShortFilename(f)}</em>${
-                nPoints === 0
-                  ? ''
-                  : ` (${nPoints.toLocaleString()} ${plurify(
-                      group === 'text file' ? 'line' : 'datapoint',
-                      nPoints
-                    )})`
-              }`
-          )
-          .join(', ')
-        return `<b>${c} ${plurify(
-          group === 'other' ? 'other file' : group,
-          c
-        )}</b>${
-          nPointsGroup > 0
-            ? ` (${nPointsGroup.toLocaleString()} ${plurify(
-                group === 'text file' ? 'line' : 'datapoint',
-                nPointsGroup
-              )})`
-            : ''
-        }${
-          files.length > showAtMost ? ' including: ' : ':'
-        } ${topFilesDescription}`
-      })
     }
   }
 }

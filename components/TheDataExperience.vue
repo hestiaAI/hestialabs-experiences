@@ -49,6 +49,7 @@
             centered
             fixed-tabs
           >
+            <VTab>Summary</VTab>
             <VTab>Files</VTab>
             <VTab v-for="(el, index) in defaultView" :key="index">
               {{ el.title }}
@@ -56,6 +57,9 @@
             <VTab v-if="consentForm">Share my data</VTab>
           </VTabs>
           <VTabsItems v-model="tab">
+            <VTabItem>
+              <UnitSummary v-bind="{ fileManager }" />
+            </VTabItem>
             <VTabItem>
               <UnitFileExplorer v-bind="{ fileManager }" />
             </VTabItem>
@@ -103,9 +107,11 @@ import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 import parseYarrrml from '~/utils/parse-yarrrml'
 import rdfUtils from '~/utils/rdf'
+import UnitSummary from '~/components/unit/UnitSummary'
 
 export default {
   name: 'TheDataExperience',
+  components: { UnitSummary },
   props: {
     title: {
       type: String,
@@ -232,6 +238,11 @@ export default {
             .split(',')
             .map(ext => `.${ext}`)
     }
+  },
+  mounted() {
+    this.$root.$on('setFile', filename => {
+      this.tab = 1
+    })
   },
   methods: {
     handleError(error) {
