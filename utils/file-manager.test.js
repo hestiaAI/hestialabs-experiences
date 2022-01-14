@@ -19,6 +19,25 @@ test('a json file in file manager', async () => {
   expect(bobo).toStrictEqual('{"hello": 1}')
 })
 
+test('findMatchingFilePaths', async () => {
+  const fileManager = new FileManager({}, true)
+  const fileName1 = 'bibi/bubo.json'
+  const fileContent = '{"hello": [11,22,33]}'
+  const file1 = mockFile(fileName1, fileContent)
+  const fileName2 = 'bibi/bibo.json'
+  const file2 = mockFile(fileName2, fileContent)
+  await fileManager.init([file1, file2], true)
+
+  let paths = fileManager.findMatchingFilePaths('**/b*bo.json')
+  expect(paths).toStrictEqual([fileName1, fileName2])
+
+  paths = fileManager.findMatchingFilePaths('**/bi*.json')
+  expect(paths).toStrictEqual([fileName2])
+
+  paths = fileManager.findMatchingFilePaths('**/xx.json')
+  expect(paths).toStrictEqual([])
+})
+
 test('findMatchingObjects', async () => {
   const fileManager = new FileManager({}, true)
   const fileName = 'bibi/bubo.json'

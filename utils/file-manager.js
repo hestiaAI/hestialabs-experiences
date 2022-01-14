@@ -273,6 +273,16 @@ export default class FileManager {
   }
 
   /**
+   * Return the file paths that match the glob
+   * @param {String} filePathGlob (in the same format as accessor.filePath)
+   */
+  findMatchingFilePaths(filePathGlob) {
+    return this.getFilenames().filter(filePath =>
+      matchNormalized(filePath, filePathGlob)
+    )
+  }
+
+  /**
    * Return all matching objects from json files.
    * @param {Object} accessor
    * @param {Object} options
@@ -281,21 +291,21 @@ export default class FileManager {
    * - freeFiles: true means files are freed after reading
    */
   async findMatchingObjects(accessor, options = {}) {
-    const objectPromises = this.getFilenames()
-      .filter(filePath => matchNormalized(filePath, accessor.filePath))
-      .flatMap(async fileName => {
-        try {
-          const text = await this.getPreprocessedText(fileName)
-          const content = JSON.parse(text)
-          if (options?.freeFiles) {
-            this.freeFile(fileName)
-          }
-          const found = findMatchesInContent(content, accessor)
-          return found
-        } catch (error) {
-          console.error('error during matching', error)
+    const objectPromises = this.findMatchingFilePaths(
+      accessor.filePath
+    ).flatMap(async fileName => {
+      try {
+        const text = await this.getPreprocessedText(fileName)
+        const content = JSON.parse(text)
+        if (options?.freeFiles) {
+          this.freeFile(fileName)
         }
-      })
+        const found = findMatchesInContent(content, accessor)
+        return found
+      } catch (error) {
+        console.error('error during matching', error)
+      }
+    })
     const objects = await Promise.all(objectPromises)
     return objects.filter(m => m).flat()
   }
