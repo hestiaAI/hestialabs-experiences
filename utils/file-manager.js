@@ -121,7 +121,7 @@ export default class FileManager {
    * @returns filtered file list
    */
   static filterFiles(fileList) {
-    const filterOut = /__MACOSX|\.DS_STORE/
+    const filterOut = /__MACOSX|\.DS_STORE/i
     return fileList.filter(f => !filterOut.test(f.name))
   }
 
