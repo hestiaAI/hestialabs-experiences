@@ -212,13 +212,17 @@ export default {
 
       const zip = new JSZip()
 
+      const revResponse = await window.fetch('/git-revision.txt')
+      const revText = await revResponse.text()
+      const gitRevision = revText.replace(/[\n\r]/g, '')
       // Add info about the experience
       const manifest = this.$store.getters.manifest(this.$route)
       this.timestamp = Date.now()
       const experience = {
         key: manifest.key,
         timestamp: this.timestamp,
-        version: VERSION
+        version: VERSION,
+        gitRevision
       }
       zip.file('experience.json', JSON.stringify(experience, null, 2))
 
