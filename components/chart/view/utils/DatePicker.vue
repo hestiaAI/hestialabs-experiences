@@ -7,6 +7,7 @@
     <VBtn x-small value="1Y"> 1Y </VBtn>
     <VBtn x-small value="ALL"> ALL </VBtn>
     <VMenu
+      v-if="false"
       ref="menu"
       v-model="menu"
       :close-on-content-click="false"
@@ -77,19 +78,17 @@ export default {
   methods: {
     saveDate() {
       this.$refs.menu.save(this.dates)
-      console.log(this.selectedRange, this.prevSelectedRange)
       this.selectedRange = 'CUSTOM'
     },
     cancelDate() {
       this.menu = false
-      console.log(this.selectedRange, this.prevSelectedRange)
       // this.selectedRange = this.prevSelectedRange
     },
     init() {
       // console.log(this.dates)
+      this.selectedRange = 'ALL'
     },
     change(btnID) {
-      console.log(this.selectedRange, this.prevSelectedRange)
       switch (btnID) {
         case '1D':
           this.dates = [
@@ -145,7 +144,7 @@ export default {
       // wait until the DOM has completely updated
       this.$nextTick(() => {
         // emit the current date range
-        this.$emit('current-dates', this.dates)
+        this.$emit('change', this.dates)
       })
     }
   }

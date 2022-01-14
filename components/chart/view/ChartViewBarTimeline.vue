@@ -1,7 +1,7 @@
 <template>
   <VContainer>
-    <VRow>
-      <VCol cols="12" md="7">
+    <VRow justify="center">
+      <VCol cols="12" md="10">
         <p class="text-h6">Number of dated events in your files</p>
         <p v-if="nbDataPoints === 0 && !chartDomain" class="text-subtitle-2">
           No dated events were found in your file(s).
@@ -14,14 +14,14 @@
         </p>
       </VCol>
     </VRow>
-    <ChartViewVRowWebShare>
-      <VCol cols="12">
+    <ChartViewVRowWebShare justify="center">
+      <VCol cols="12" md="10">
         <DatePicker
           v-if="dataDomain !== null"
-          v-model="brushDomain"
           class="d-flex justify-end mr-3"
           :min-date="dataDomain[0]"
           :max-date="dataDomain[1]"
+          @change="updateBrush"
         ></DatePicker>
         <div :id="graphId"></div>
       </VCol>
@@ -32,7 +32,7 @@
 <script>
 import * as d3 from 'd3'
 import { nest } from 'd3-collection'
-import { addMissingDate } from './utils/D3Helpers'
+// import { addMissingDate } from './utils/D3Helpers'
 import mixin from './mixin'
 
 export default {
@@ -75,7 +75,7 @@ export default {
     margin: {
       type: Object,
       default() {
-        return { left: 50, right: 50, top: 10, bottom: 50 }
+        return { left: 40, right: 10, top: 10, bottom: 50 }
       }
     },
     /*
@@ -123,6 +123,11 @@ export default {
       dateParser: null, // a Parser for converting date string to dates
       // Supported time aggregations
       intervals: {
+        Hours: {
+          parser: d3.timeHour,
+          format: d3.timeFormat('%B %d, %Y at %H:00'),
+          name: 'hours'
+        },
         Days: {
           parser: d3.timeDay,
           format: d3.timeFormat('%B %d, %Y'),
@@ -152,7 +157,9 @@ export default {
       if (this.chartDomain === null) return
       // Choose interval aggregator
       const diffDays = d3.timeDay.count(...this.chartDomain)
-      if (diffDays < this.maxDots) {
+      if (diffDays * 24 < this.maxDots) {
+        return this.intervals.Hours
+      } else if (diffDays < this.maxDots) {
         return this.intervals.Days
       } else if (diffDays < 7 * this.maxDots) {
         return this.intervals.Weeks
@@ -163,52 +170,23 @@ export default {
       }
     },
     nbDataPoints() {
-      return d3.sum(this.currValues, d => d.value)
-    }
-  },
-  watch: {
-    // whenever interval changes, aggregate data with new interval
-    interval(newInterval, oldInterval) {
-      // if (newInterval === oldInterval || this.chartDomain === null) return
-      // Filter data for curr interval
-      this.currValues = this.values.filter(
-        d =>
-          this.dateParser(d[this.dateAccessor]) > this.chartDomain[0] &&
-          this.dateParser(d[this.dateAccessor]) < this.chartDomain[1]
-      )
-
-      // Aggregate data
-      this.currValues = nest()
-        .key(d =>
-          newInterval.parser.floor(this.dateParser(d[this.dateAccessor]))
-        )
-        .rollup(leaves => leaves.length) // count nb rows
-        .entries(this.currValues)
-        .sort((a, b) =>
-          d3.descending(this.dateParser(a.key), this.dateParser(b.key))
-        )
-
-      // Fill missing values
-      this.currValues = addMissingDate(
-        this.currValues,
-        'key',
-        'value',
-        newInterval.parser,
-        0,
-        this.chartDomain[0],
-        this.chartDomain[0]
-      )
-
-      // Sort the result
-      this.currValues = this.currValues.sort(
-        (e1, e2) => new Date(e1.key) - new Date(e2.key)
-      )
-
-      this.draw()
+      return this.interval === undefined
+        ? 0
+        : d3.sum(this.interval.values, d => d.value)
     }
   },
   methods: {
-    // init method should change name
+    // Aggregate per time interval
+    timeAggregate(interval) {
+      return nest()
+        .key(d => interval.parser.floor(this.dateParser(d[this.dateAccessor])))
+        .rollup(leaves => leaves.length) // count nb rows
+        .entries(this.values)
+        .sort((a, b) =>
+          d3.descending(this.dateParser(a.key), this.dateParser(b.key))
+        )
+    },
+    // Init TODO: method should change name
     drawViz() {
       // Use either a predefined date format or Javascript date constructor
       this.dateParser =
@@ -218,11 +196,16 @@ export default {
       const extent = d3.extent(this.values, d =>
         this.dateParser(d[this.dateAccessor])
       )
-
       // Init date ranges
       this.dataDomain = extent
-      this.chartDomain = extent
-      console.log('initiated')
+      this.chartDomain = this.dataDomain
+      this.brushDomain =
+        this.brushDomain === null ? this.dataDomain : this.brushDomain
+
+      // Precompute aggregation for each time period
+      Object.entries(this.intervals).forEach(([name, interval]) => {
+        this.intervals[name].values = this.timeAggregate(interval)
+      })
 
       // Create svg container
       d3.select('#' + this.graphId + ' svg').remove()
@@ -245,60 +228,34 @@ export default {
         .style('display', 'block')
         .classed('svg-content', true)
 
-      // Init scales and axis
-      const x = d3.scaleTime().range([0, this.width])
-      const xBrush = d3.scaleTime().range([0, this.width])
-      const y = d3
+      // Init scales,
+      // Focus is the main graph, Context is the date selector
+      this.xFocus = d3.scaleTime().range([0, this.width])
+      this.yFocus = d3
         .scaleLinear()
         .range([this.height - this.brushHeight - this.brushTopMargin, 0])
-      const yBrush = d3.scaleLinear().range([this.brushHeight, 0])
+      this.xContext = d3.scaleTime().range([0, this.width])
+      this.yContext = d3.scaleLinear().range([this.brushHeight, 0])
 
-      const xAxis = d3.axisBottom(x)
-      const xAxisBrush = d3.axisBottom(xBrush)
-      const yAxis = d3.axisLeft(y)
+      // Init axises
+      this.xAxisFocus = d3.axisBottom(this.xFocus)
+      this.yAxisFocus = d3.axisLeft(this.yFocus)
+      this.xAxisContext = d3.axisBottom(this.xContext)
 
-      // init brush
-      const brush = d3
+      // Init brush
+      this.brush = d3
         .brushX()
         .extent([
           [0, 0],
           [this.width, this.brushHeight]
         ])
         .on('brush end', evt => {
-          const s = evt.selection || xBrush.range()
-          const domain = s.map(xBrush.invert, xBrush)
+          d3.select('.brush').call(this.brushHandle, evt.selection)
+          const s = evt.selection || this.xContext.range()
+          const domain = s.map(this.xContext.invert, this.xContext)
+          // change chart domain, will trigger interval function then draw function
           this.chartDomain = domain
-
-          x.domain(domain)
-          focus.select('.xAxis').call(xAxis)
-          y.domain([
-            0,
-            d3.max(this.currValues, function (d) {
-              return d.value
-            }) + 10
-          ])
-          focus.select('.yAxis').call(yAxis)
-          const areaPath = focus.select('path.area')
-          areaPath.data([this.currValues])
-          areaPath.attr('d', area)
-          const linePath = focus.select('path.line')
-          linePath.data([this.currValues])
-          linePath.attr('d', line)
-
-          const circles = focus.selectAll('.point').data(this.currValues)
-          circles.exit().remove()
-          circles.enter().append('circle').attr('class', 'point').attr('r', 2.5)
-          circles
-            .attr(
-              'cy',
-              d =>
-                this.height -
-                this.brushHeight -
-                this.brushTopMargin -
-                y(d.value)
-            )
-            .attr('cx', d => x(new Date(d.key)))
-          d3.select('.brush').call(brushHandle, evt.selection)
+          this.draw()
         })
 
       // init zoom
@@ -316,30 +273,40 @@ export default {
         ])
         .on('zoom', zoomed)
       */
-      // init both graphs
-      const line = d3
+      // Init graphs functions
+      this.lineFocus = d3
         .line()
         .curve(d3.curveMonotoneX)
-        .x(d => x(new Date(d.key)))
+        .x(d => this.xFocus(new Date(d.key)))
         .y(
-          d => this.height - this.brushHeight - this.brushTopMargin - y(d.value)
-        )
-      const area = d3
-        .area()
-        .curve(d3.curveMonotoneX)
-        .x(d => x(new Date(d.key)))
-        .y0(this.height - this.brushHeight - this.brushTopMargin)
-        .y1(
-          d => this.height - this.brushHeight - this.brushTopMargin - y(d.value)
+          d =>
+            this.height -
+            this.brushHeight -
+            this.brushTopMargin -
+            this.yFocus(d.value)
         )
 
-      const area2 = d3
+      this.areaFocus = d3
         .area()
         .curve(d3.curveMonotoneX)
-        .x(d => xBrush(new Date(d.key)))
+        .x(d => this.xFocus(new Date(d.key)))
+        .y0(this.height - this.brushHeight - this.brushTopMargin)
+        .y1(
+          d =>
+            this.height -
+            this.brushHeight -
+            this.brushTopMargin -
+            this.yFocus(d.value)
+        )
+
+      this.areaContext = d3
+        .area()
+        .curve(d3.curveMonotoneX)
+        .x(d => this.xContext(new Date(d.key)))
         .y0(this.height)
-        .y1(d => this.height - yBrush(d.value))
-      // init brush
+        .y1(d => this.height - this.yContext(d.value))
+
+      // Init clip
       svg
         .append('defs')
         .append('clipPath')
@@ -348,15 +315,12 @@ export default {
         .attr('width', this.width)
         .attr('height', this.height)
 
-      const focus = svg.append('g').attr('class', 'focus')
-      const context = svg.append('g').attr('class', 'context')
+      // Create containers for focus and context graph
+      this.focus = svg.append('g').attr('class', 'focus')
+      this.context = svg.append('g').attr('class', 'context')
 
-      x.domain(this.chartDomain)
-      y.domain([0, d3.max(this.currValues, d => d.value)])
-      xBrush.domain(x.domain())
-      yBrush.domain(y.domain())
-
-      focus
+      // Containers for axises
+      this.focus
         .append('g')
         .attr('class', 'axis xAxis')
         .attr(
@@ -365,57 +329,28 @@ export default {
             (this.height - this.brushHeight - this.brushTopMargin) +
             ')'
         )
-        .call(xAxis)
-
-      focus.append('g').attr('class', 'axis yAxis').call(yAxis)
-      focus
-        .append('path')
-        .datum(this.currValues)
-        .attr('class', 'area')
-        .attr('d', area)
-
-      focus
-        .append('path')
-        .datum(this.currValues)
-        .attr('class', 'line')
-        .attr('d', line)
-      /*
-      focus
-        .selectAll('.point')
-        .data(this.currValues)
-        .enter()
-        .append('circle')
-        .attr('class', 'point')
-        .attr(
-          'cy',
-          d => this.height - this.brushHeight - this.brushTopMargin - y(d.value)
-        )
-        .attr('cx', d => x(new Date(d.key)))
-        .attr('r', d => 2.5)
-      */
-      context
-        .append('path')
-        .datum(this.currValues)
-        .attr('class', 'area')
-        .attr('d', area2)
-
-      context
+      this.focus.append('g').attr('class', 'axis yAxis')
+      this.context
         .append('g')
-        .attr('class', 'axis xAxis')
+        .attr('class', 'axis xAxis xAxisContext')
         .attr('transform', 'translate(0,' + this.height + ')')
-        .call(xAxisBrush)
 
-      const gBrush = context
+      // Containers for graphs
+      this.focus.append('path').attr('class', 'area')
+      this.focus.append('path').attr('class', 'line')
+      this.context.append('path').attr('class', 'area')
+
+      this.gBrush = this.context
         .append('g')
         .attr('class', 'brush')
         .attr(
           'transform',
           'translate(0,' + (this.height - this.brushHeight) + ')'
         )
-        .call(brush)
+        .call(this.brush)
 
-      const brushHandle = (g, selection) => {
-        const s = selection || xBrush.range()
+      this.brushHandle = (g, selection) => {
+        const s = selection || this.xBrush.range()
         g.selectAll('.handle--custom-max')
           .data([{ type: 'w' }, { type: 'e' }])
           .join(enter =>
@@ -459,10 +394,56 @@ export default {
               : (d, i) => `translate(${s[i] - 3},${this.brushHeight / 3})`
           )
       }
-      gBrush.call(brush.move, x.range())
+      this.gBrush.call(this.brush.move, this.xFocus.range())
     },
     draw() {
-      console.log(this.currValues)
+      // Updates charts scale domain
+      this.xFocus.domain(this.chartDomain)
+      this.yFocus.domain([0, d3.max(this.interval.values, d => d.value)])
+      this.xContext.domain(this.brushDomain)
+      this.yContext.domain([0, 100]) // TODO: Change that
+
+      // Update axis
+      this.focus.select('.xAxis').call(this.xAxisFocus)
+      this.focus.select('.yAxis').call(this.yAxisFocus)
+      this.context.select('.xAxisContext').call(this.xAxisContext)
+
+      // Update charts
+      this.focus.select('path.area').data([this.interval.values])
+      this.focus.select('path.area').attr('d', this.areaFocus)
+      this.focus.select('path.line').data([this.interval.values])
+      this.focus.select('path.line').attr('d', this.lineFocus)
+      this.context.select('path.area').data([this.intervals.Months.values])
+      this.context.select('path.area').attr('d', this.areaContext)
+      /*
+      this.focus
+        .selectAll('.point')
+        .data(
+          this.interval.values.filter(
+            d =>
+              this.dateParser(d[this.dateAccessor]) > this.chartDomain[0] &&
+              this.dateParser(d[this.dateAccessor]) < this.chartDomain[1]
+          )
+        )
+        .enter()
+        .append('circle')
+        .attr('class', 'point')
+        .attr(
+          'cy',
+          d =>
+            this.height -
+            this.brushHeight -
+            this.brushTopMargin -
+            this.yFocus(d.value)
+        )
+        .attr('cx', d => this.xFocus(new Date(d.key)))
+        .attr('r', d => 2.5)
+        */
+    },
+    updateBrush(dates) {
+      this.brushDomain = [new Date(dates[0]), new Date(dates[1])]
+      this.drawViz()
+      console.log(dates)
     }
   }
 }
