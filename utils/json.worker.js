@@ -1,3 +1,3 @@
 import itemifyJSON from '~/utils/json'
 
-onmessage = message => postMessage(itemifyJSON(...message.data))
+self.onmessage = message => self.postMessage(itemifyJSON(...message.data))
