@@ -87,3 +87,38 @@ export const adEngagements = [
     }
   }
 ]
+
+export const missingAttributesImpressions = [
+  {
+    ad: {
+      adsUserData: {
+        adImpressions: {
+          impressions: [
+            {
+              matchedTargetingCriteria: [{}]
+            }
+          ]
+        }
+      }
+    }
+  }
+]
+
+export const missingAttributesEngagements = [
+  {
+    ad: {
+      adsUserData: {
+        adEngagements: {
+          engagements: [
+            {
+              impressionAttributes: {
+                matchedTargetingCriteria: [{}]
+              },
+              engagementAttributes: [{}]
+            }
+          ]
+        }
+      }
+    }
+  }
+]

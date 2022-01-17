@@ -44,15 +44,13 @@ export default async function databaseBuilder(fileManager) {
   ]
   for (const file of files) {
     file.values.forEach(v => {
-      const tweetId = v.promotedTweetInfo ? v.promotedTweetInfo.tweetId : null
-      const advertiserName = v.advertiserInfo
-        ? v.advertiserInfo.advertiserName
-        : null
+      const tweetId = v.promotedTweetInfo?.tweetId ?? null
+      const advertiserName = v.advertiserInfo?.advertiserName ?? null
       adsItems.push({
         id: adsId,
         tweetId,
         advertiserName,
-        time: v.impressionTime,
+        time: v.impressionTime ?? null,
         engagement: file.engagement
       })
       const criteria = JSONPath({
