@@ -4,11 +4,11 @@
   "dataPortal": "https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive",
   "ext": "zip",
   "data": ["twitter.zip", "twitter-sample.zip"],
-  "files": ["data/ad-impressions.js", "data/ad-engagements.js"],
+  "files": ["**/ad-impressions.js", "**/ad-engagements.js"],
   "preprocessors": {
-    "data/ad-impressions.js": "twitter",
-    "data/ad-engagements.js": "twitter",
-    "data/personalization.js": "twitter"
+    "**/ad-impressions.js": "twitter",
+    "**/ad-engagements.js": "twitter",
+    "**/personalization.js": "twitter"
   },
   "collaborator": {
     "title": "The Eyeballs Collective",

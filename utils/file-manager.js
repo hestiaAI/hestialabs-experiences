@@ -186,10 +186,14 @@ export default class FileManager {
    * @param {String} filePath
    * @returns {*|(function(*): *)}
    */
-  getPreprocessor(filePath) {
-    return _.has(this.preprocessors, filePath)
-      ? this.preprocessors[filePath]
-      : _.identity
+  getPreprocessors(filePath) {
+    if (!this.preprocessors) {
+      return []
+    }
+    return Object.entries(this.preprocessors)
+      .map(([glob, f]) => [f, matchNormalized(filePath, glob)])
+      .filter(([f, matched]) => matched)
+      .map(([f, _]) => f)
   }
 
   hasFile(filePath) {
@@ -221,12 +225,14 @@ export default class FileManager {
    */
   async getPreprocessedText(filePath) {
     if (!_.has(this.#preprocessedTexts, filePath)) {
-      const text = await this.getText(filePath)
+      let text = await this.getText(filePath)
       if (text === '' && this.allowMissingFiles) {
         this.#preprocessedTexts[filePath] = text
       } else {
-        const preprocess = this.getPreprocessor(filePath)
-        this.#preprocessedTexts[filePath] = preprocess(text)
+        for (const preprocessor of this.getPreprocessors(filePath)) {
+          text = preprocessor(text)
+        }
+        this.#preprocessedTexts[filePath] = text
       }
     }
     return this.#preprocessedTexts[filePath]
