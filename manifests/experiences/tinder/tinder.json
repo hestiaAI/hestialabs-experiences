@@ -75,7 +75,7 @@
       "query": "likes-dislikes-open",
       "visualization": "scatter-likes-passes-correlation",
       "showTable": false,
-      "title": "Likes and passes correlation",
+      "title": "Likes / passes correlation",
       "text": "Observe the possible correlation between the number of likes/passes and the number of times you open the app."
     },
     {
