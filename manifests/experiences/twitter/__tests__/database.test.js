@@ -23,17 +23,17 @@ function runQuery(sqlFilePath) {
 async function getDatabase(adImpressions, adEngagements) {
   const fileManager = new FileManager(
     {
-      'data/ad-impressions.js': preprocessors.twitter,
-      'data/ad-engagements.js': preprocessors.twitter
+      'test/data/ad-impressions.js': preprocessors.twitter,
+      'test/data/ad-engagements.js': preprocessors.twitter
     },
     true
   )
   const fileImpressions = mockFile(
-    'data/ad-impressions.js',
+    'test/data/ad-impressions.js',
     JSON.stringify(adImpressions)
   )
   const fileEngagements = mockFile(
-    'data/ad-engagements.js',
+    'test/data/ad-engagements.js',
     JSON.stringify(adEngagements)
   )
   await fileManager.init([fileImpressions, fileEngagements], true)
