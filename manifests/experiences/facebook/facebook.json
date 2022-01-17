@@ -75,27 +75,19 @@
         "properties": [
           {
             "name": "Advertiser",
-            "field": "advertiser_name",
-            "type": "string",
-            "required": true
+            "jsonPath": "advertiser_name"
           },
           {
             "name": "has_data_file_custom_audience",
-            "field": "has_data_file_custom_audience",
-            "type": "boolean",
-            "required": true
+            "jsonPath": "has_data_file_custom_audience"
           },
           {
             "name": "has_remarketing_custom_audience",
-            "field": "has_remarketing_custom_audience",
-            "type": "boolean",
-            "required": true
+            "jsonPath": "has_remarketing_custom_audience"
           },
           {
             "name": "has_in_person_store_visit",
-            "field": "has_in_person_store_visit",
-            "type": "boolean",
-            "required": true
+            "jsonPath": "has_in_person_store_visit"
           }
         ]
       },

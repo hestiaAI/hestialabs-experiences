@@ -443,29 +443,13 @@ function makeTableItem(object, options) {
   const item = {}
   options.properties.forEach(p => {
     // get all entries that satisfy the given field JSONPATH
+    const path = p.jsonPath || p.name
     const value = JSONPath({
-      path: p.field,
+      path,
       json: object,
       wrap: true
     })
-
-    // Cast value to specified format, may need to handle errors
-    switch (p.type) {
-      case 'date':
-        item[p.name] = timeParse(p.format)(value)
-        break
-      case 'string':
-        item[p.name] = String(value)
-        break
-      case 'number':
-        item[p.name] = Number(value)
-        break
-      case 'boolean':
-        item[p.name] = Boolean(value)
-        break
-      default:
-        item[p.name] = value
-    }
+    item[p.name] = value
   })
   return item
 }
