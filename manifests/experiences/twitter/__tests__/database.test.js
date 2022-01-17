@@ -42,65 +42,12 @@ async function getDatabase(adImpressions, adEngagements) {
 }
 
 describe('with incomplete samples', () => {
-  beforeAll(async () => {
+  test('the database builder creates the tables without error', async () => {
     await getDatabase(
       missingAttributesImpressions,
       missingAttributesEngagements
     )
-  })
-
-  afterAll(() => {
     db.close()
-  })
-
-  test('the database builder creates the tables correctly', () => {
-    let result, expected
-
-    // Table twitterAds
-    result = db.select('SELECT * FROM twitterAds')
-    expected = {
-      headers: ['id', 'tweetId', 'advertiserName', 'time', 'engagement'],
-      items: [
-        {
-          id: 0,
-          tweetId: null,
-          advertiserName: null,
-          time: null,
-          engagement: 0
-        },
-        {
-          id: 1,
-          tweetId: null,
-          advertiserName: null,
-          time: null,
-          engagement: 1
-        }
-      ]
-    }
-    arrayEqualNoOrder(result.headers, expected.headers)
-    arrayEqualNoOrder(result.items, expected.items)
-
-    // Table twitterCriteria
-    result = db.select('SELECT * FROM twitterCriteria')
-    expected = {
-      headers: ['id', 'adId', 'targetingType', 'targetingValue'],
-      items: [
-        {
-          id: 0,
-          adId: 0,
-          targetingType: null,
-          targetingValue: null
-        },
-        {
-          id: 1,
-          adId: 1,
-          targetingType: null,
-          targetingValue: null
-        }
-      ]
-    }
-    arrayEqualNoOrder(result.headers, expected.headers)
-    arrayEqualNoOrder(result.items, expected.items)
   })
 })
 
