@@ -114,7 +114,7 @@ export default {
   methods: {
     plurify,
     onFileClick(filename) {
-      this.$store.commit('setFileExplorerCurrentFile', filename)
+      this.$store.commit('setFileExplorerCurrentItem', { filename })
       this.$root.$emit('goToFileExplorer')
     },
     async setNumberOfDataPoints() {

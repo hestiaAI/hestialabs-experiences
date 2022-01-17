@@ -15,7 +15,7 @@ export const state = () => ({
       )
     ])
   ),
-  fileExplorerCurrentFile: null
+  fileExplorerCurrentItem: {}
 })
 
 export const getters = {
@@ -48,8 +48,8 @@ export const getters = {
     ({ params: { key } }) => {
       return state.manifestMap[key] || {}
     },
-  fileExplorerCurrentFile(state) {
-    return state.fileExplorerCurrentFile
+  fileExplorerCurrentItem(state) {
+    return state.fileExplorerCurrentItem
   }
 }
 
@@ -60,7 +60,7 @@ export const mutations = {
   setResult(state, { company, experience, result }) {
     state.results[company][experience] = result
   },
-  setFileExplorerCurrentFile(state, filename) {
-    state.fileExplorerCurrentFile = filename
+  setFileExplorerCurrentItem(state, item) {
+    state.fileExplorerCurrentItem = item
   }
 }

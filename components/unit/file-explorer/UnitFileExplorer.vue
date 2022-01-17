@@ -113,6 +113,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import FileManager from '~/utils/file-manager.js'
 import { makeTableData } from '~/manifests/generic-pipelines'
 
@@ -149,24 +150,29 @@ export default {
   computed: {
     active: {
       get() {
-        return this.selectedItem ? [this.selectedItem] : []
+        return _.has(this.selectedItem, 'filename') ? [this.selectedItem] : []
       },
       set([item]) {
         // item might be undefined (when unselecting)
         if (item) {
           // close drawer when file is selected
           this.mini = true
-          if (!this.containers.has(item?.type)) {
-            this.$store.commit('setFileExplorerCurrentFile', item.filename)
+          if (!this.containers.has(item.type)) {
+            this.$store.commit('setFileExplorerCurrentItem', item)
           }
         } else {
-          this.$store.commit('setFileExplorerCurrentFile', null)
+          this.$store.commit('setFileExplorerCurrentItem', {})
         }
       }
     },
     selectedItem() {
-      if (this.filename) {
-        return this.searchItemWithFilename(this.filename)
+      const item = this.$store.getters.fileExplorerCurrentItem
+      if (_.has(item, 'filename')) {
+        if (!_.has(item, 'type')) {
+          return this.searchItemWithFilename(item.filename)
+        } else {
+          return item
+        }
       } else {
         return {}
       }
@@ -176,7 +182,7 @@ export default {
       return this.selectedItem?.type
     },
     filename() {
-      return this.$store.getters.fileExplorerCurrentFile
+      return this.selectedItem.filename
     },
     treeItems() {
       return this.fileManager.getTreeItems()
