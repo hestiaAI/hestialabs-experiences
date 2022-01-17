@@ -127,8 +127,17 @@
         </VCardText>
       </div>
     </VCard>
-    <div v-if="tableDataFromAccessor">
-      <UnitFilterableTable :data="tableDataFromAccessor" />
+    <div v-if="defaultViewElements.customPipelineOptions">
+      <UnitPipelineCustom
+        v-bind="{
+          fileManager,
+          customPipeline,
+          defaultViewElements,
+          autoRun: true
+        }"
+        @update="onUnitResultsUpdate"
+      />
+      <UnitFilterableTable v-if="tableData" :data="tableData" />
     </div>
   </div>
 </template>
@@ -137,8 +146,7 @@
 import _ from 'lodash'
 import FileManager from '~/utils/file-manager.js'
 import { humanReadableFileSize, plurify } from '~/manifests/utils'
-import { makeTableData } from '~/manifests/generic-pipelines'
-
+import { jsonToTableConverter } from '~/manifests/generic-pipelines'
 export default {
   name: 'UnitFileExplorer',
   props: {
@@ -179,8 +187,9 @@ export default {
         'text file': ['txt', 'md'],
         other: []
       },
-      selectedAccessor: undefined,
-      tableDataFromAccessor: undefined
+      tableData: undefined,
+      customPipeline: jsonToTableConverter,
+      defaultViewElements: {}
     }
   },
   computed: {
@@ -255,24 +264,7 @@ export default {
       )
     }
   },
-  asyncComputed: {
-    async tableDataFromAccessor() {
-      if (this.selectedAccessor) {
-        const found = await this.fileManager.findMatchingObjects(
-          this.selectedAccessor
-        )
-        return makeTableData(found)
-      }
-      return undefined
-    }
-  },
   watch: {
-    async selectedAccessor(accessor) {
-      if (accessor) {
-        const found = await this.fileManager.findMatchingObjects(accessor)
-        this.tableDataFromAccessor = makeTableData(found)
-      }
-    },
     mini(mini) {
       // hide scrollbar in mini variant of drawer
       const overflowY = mini ? 'hidden' : 'visible'
@@ -295,7 +287,11 @@ export default {
       this.isFileLoading = loading
     },
     onSelectAccessor(accessor) {
-      this.selectedAccessor = accessor
+      this.defaultViewElements = { customPipelineOptions: { accessor } }
+    },
+    onUnitResultsUpdate(result) {
+      console.log('res', result)
+      this.tableData = result
     },
     completeGroupsTable() {
       // Add unknown extensions to the 'other' group

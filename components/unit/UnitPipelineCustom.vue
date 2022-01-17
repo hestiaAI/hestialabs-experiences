@@ -56,6 +56,10 @@ export default {
     defaultViewElements: {
       type: Object,
       required: true
+    },
+    autoRun: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -72,12 +76,18 @@ export default {
   watch: {
     options() {
       this.status = false
-    }
-  },
-  mounted() {
-    const optionsObject = this.defaultViewElements.customPipelineOptions
-    if (optionsObject) {
-      this.options = JSON.stringify(optionsObject, null, 2)
+    },
+    defaultViewElements: {
+      handler() {
+        const optionsObject = this.defaultViewElements.customPipelineOptions
+        if (optionsObject) {
+          this.options = JSON.stringify(optionsObject, null, 2)
+        }
+        if (this.autoRun) {
+          this.runPipeline()
+        }
+      },
+      immediate: true
     }
   },
   methods: {
