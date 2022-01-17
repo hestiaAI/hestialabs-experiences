@@ -14,7 +14,8 @@ export const state = () => ({
         manifestMap[k].defaultView?.map(b => [b.key, null]) ?? []
       )
     ])
-  )
+  ),
+  fileExplorerCurrentFile: null
 })
 
 export const getters = {
@@ -46,7 +47,10 @@ export const getters = {
     state =>
     ({ params: { key } }) => {
       return state.manifestMap[key] || {}
-    }
+    },
+  fileExplorerCurrentFile(state) {
+    return state.fileExplorerCurrentFile
+  }
 }
 
 export const mutations = {
@@ -55,5 +59,8 @@ export const mutations = {
   },
   setResult(state, { company, experience, result }) {
     state.results[company][experience] = result
+  },
+  setFileExplorerCurrentFile(state, filename) {
+    state.fileExplorerCurrentFile = filename
   }
 }

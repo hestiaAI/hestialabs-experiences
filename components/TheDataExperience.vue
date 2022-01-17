@@ -107,11 +107,9 @@ import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 import parseYarrrml from '~/utils/parse-yarrrml'
 import rdfUtils from '~/utils/rdf'
-import UnitSummary from '~/components/unit/UnitSummary'
 
 export default {
   name: 'TheDataExperience',
-  components: { UnitSummary },
   props: {
     title: {
       type: String,
@@ -240,7 +238,7 @@ export default {
     }
   },
   mounted() {
-    this.$root.$on('setFile', filename => {
+    this.$root.$on('goToFileExplorer', () => {
       this.tab = 1
     })
   },

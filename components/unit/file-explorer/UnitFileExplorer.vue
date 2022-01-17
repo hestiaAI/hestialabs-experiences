@@ -68,7 +68,7 @@
             :search="search"
             :items="treeItems"
             :active.sync="active"
-            @update:active="setSelectedItem"
+            @update:active="onUpdateActive"
           >
             <template #prepend="{ item }">
               <VIcon>
@@ -127,7 +127,6 @@ export default {
   },
   data() {
     return {
-      selectedItem: {},
       supportedTypes: new Set([
         'json',
         'csv',
@@ -137,6 +136,7 @@ export default {
         'txt',
         'xlsx'
       ]),
+      containers: new Set(['folder', 'zip']),
       mini: true,
       miniWidth: 48,
       summaryPanelActive: [0],
@@ -148,15 +148,27 @@ export default {
     }
   },
   computed: {
-    active() {
-      return this.selectedItem ? [this.selectedItem] : []
+    active: {
+      get() {
+        return this.selectedItem ? [this.selectedItem] : []
+      },
+      set(value) {
+        this.$store.commit('setFileExplorerCurrentFile', value.filename)
+      }
+    },
+    selectedItem() {
+      if (this.filename) {
+        return this.searchItemWithFilename(this.filename)
+      } else {
+        return {}
+      }
     },
     fileType() {
       // @fileType should match the postfix of the Vue component name
       return this.selectedItem?.type
     },
     filename() {
-      return this.selectedItem?.filename || ''
+      return this.$store.getters.fileExplorerCurrentFile
     },
     treeItems() {
       return this.fileManager.getTreeItems()
@@ -215,14 +227,6 @@ export default {
       this.$refs.drawer.$el.children[1].style.overflowY = overflowY
     }
   },
-  mounted() {
-    this.$root.$on('setFile', filename => {
-      const item = this.searchItemWithFilename(filename)
-      if (item !== null) {
-        this.setSelectedItem([item])
-      }
-    })
-  },
   methods: {
     onLoading(loading) {
       this.isFileLoading = loading
@@ -249,17 +253,16 @@ export default {
       }
       return findItem(this.treeItems)
     },
-    setSelectedItem([item]) {
+    onUpdateActive([item]) {
       // item might be undefined (when unselecting)
       if (item) {
         // close drawer when file is selected
         this.mini = true
-        const containers = new Set(['folder', 'zip'])
-        if (!containers.has(item?.type)) {
-          this.selectedItem = item
+        if (!this.containers.has(item?.type)) {
+          this.$store.commit('setFileExplorerCurrentFile', item.filename)
         }
       } else {
-        this.selectedItem = {}
+        this.$store.commit('setFileExplorerCurrentFile', null)
       }
     }
   }

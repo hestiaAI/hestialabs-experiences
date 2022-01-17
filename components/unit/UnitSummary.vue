@@ -10,7 +10,8 @@
         }}</b
         >)
         <template v-if="nDataPoints">
-          and found <b>{{ nDataPoints.toLocaleString() }}</b> datapoints
+          and found <b>{{ nDataPoints.toLocaleString() }}</b>
+          {{ plurify('datapoint') }}
         </template>
         :
         <ul v-if="filesInformation">
@@ -21,9 +22,11 @@
             <!-- eslint-disable-next-line vue/no-v-html -->
             <span v-html="globalDescription"></span>
             <span v-for="({ filename, description }, j) in topFiles" :key="j">
-              <BaseButton @click="$root.$emit('setFile', filename)">
-                {{ fileManager.getShortFilename(filename) }}
-              </BaseButton>
+              <u>
+                <a @click="onFileClick(filename)">
+                  {{ fileManager.getShortFilename(filename) }}
+                </a>
+              </u>
               <span>{{ description }}</span>
             </span>
           </li>
@@ -36,11 +39,9 @@
 import _ from 'lodash'
 import FileManager from '~/utils/file-manager'
 import { humanReadableFileSize, plurify } from '~/manifests/utils'
-import BaseButton from '~/components/base/button/BaseButton'
 
 export default {
   name: 'UnitSummary',
-  components: { BaseButton },
   props: {
     fileManager: {
       type: FileManager,
@@ -112,6 +113,10 @@ export default {
   },
   methods: {
     plurify,
+    onFileClick(filename) {
+      this.$store.commit('setFileExplorerCurrentFile', filename)
+      this.$root.$emit('goToFileExplorer')
+    },
     async setNumberOfDataPoints() {
       this.nDataPoints = _.sum(
         await Promise.all(
