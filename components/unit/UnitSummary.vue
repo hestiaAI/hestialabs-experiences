@@ -22,12 +22,10 @@
             <!-- eslint-disable-next-line vue/no-v-html -->
             <span v-html="globalDescription"></span>
             <span v-for="({ filename, description }, j) in topFiles" :key="j">
-              <u>
-                <a @click="onFileClick(filename)">
-                  {{ fileManager.getShortFilename(filename) }}
-                </a>
-              </u>
-              <span>{{ description }}</span>
+              <a @click="onFileClick(filename)"
+                ><u>{{ fileManager.getShortFilename(filename) }}</u></a
+              ><span>{{ description }}</span
+              ><span v-if="j < topFiles.length - 1">, </span>
             </span>
           </li>
         </ul>
