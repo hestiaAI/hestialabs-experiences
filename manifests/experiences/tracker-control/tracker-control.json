@@ -11,7 +11,7 @@
       "customPipeline": "trackerControl",
       "visualization": "ChartViewTrackerControl.vue",
       "showTable": false,
-      "title": "Tracker control experience",
+      "title": "Dashboard",
       "text": "Monitor below all the tracking done on your smartphone applications. You can filter the results by selecting a time range or clicking on each graph."
     }
   ]
