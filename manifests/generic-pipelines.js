@@ -406,8 +406,8 @@ async function jsonToTableConverter({
 }
 
 export function makeTableData(objects, options) {
-  if (options?.properties) {
-    const headers = options.properties.map(p => p.name)
+  if (options?.columns) {
+    const headers = options.columns.map(p => p.name)
     const items = objects.map(e => makeTableItem(e, options))
     return { headers, items }
   }
@@ -441,7 +441,7 @@ export function makeTableData(objects, options) {
 
 function makeTableItem(object, options) {
   const item = {}
-  options.properties.forEach(p => {
+  options.columns.forEach(p => {
     // get all entries that satisfy the given field JSONPATH
     const path = p.jsonPath || p.name
     const value = JSONPath({
@@ -449,7 +449,7 @@ function makeTableItem(object, options) {
       json: object,
       wrap: true
     })
-    item[p.name] = value
+    item[p.name] = value[0] || ''
   })
   return item
 }

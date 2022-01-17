@@ -5,8 +5,19 @@ test('jsonToTableConverter with properties', async () => {
   const fileName = 'comments_and_reactions/comments.json'
   const content = {
     comments_v2: [
-      { timestamp: 1000000000, comment: 'one comment', name: 'hello' },
-      { timestamp: 1000000001, comment: 'another comment', name: 'toto' }
+      {
+        timestamp: 1000000000,
+        comment: 'one comment',
+        name: 'hello',
+        ne: { foo: 'boo' },
+        list: ['one', 'two']
+      },
+      {
+        timestamp: 1000000001,
+        comment: 'another comment',
+        name: 'toto',
+        list: ['three', 'four']
+      }
     ]
   }
   const fileManager = await mockFileManager(fileName, JSON.stringify(content))
@@ -16,18 +27,21 @@ test('jsonToTableConverter with properties', async () => {
       filePath: 'comments_and_reactions/comments.json',
       jsonPath: '$.comments_v2[*]'
     },
-    properties: [
+    columns: [
       {
         name: 'Timestamp',
-        field: 'timestamp',
-        type: 'number',
-        required: true
+        jsonPath: 'timestamp'
       },
       {
-        name: 'First comment',
-        field: 'comment',
-        type: 'string',
-        required: true
+        name: 'comment'
+      },
+      {
+        name: 'Nested',
+        jsonPath: 'ne.foo'
+      },
+      {
+        name: 'list0',
+        jsonPath: 'list[0]'
       }
     ]
   }
@@ -38,10 +52,20 @@ test('jsonToTableConverter with properties', async () => {
 
   const tableData = await jsonToTableConverter({ fileManager, options })
   const correct = {
-    headers: ['Timestamp', 'First comment'],
+    headers: ['Timestamp', 'comment', 'Nested', 'list0'],
     items: [
-      { Timestamp: 1000000000, 'First comment': 'one comment' },
-      { Timestamp: 1000000001, 'First comment': 'another comment' }
+      {
+        Timestamp: 1000000000,
+        comment: 'one comment',
+        Nested: 'boo',
+        list0: 'one'
+      },
+      {
+        Timestamp: 1000000001,
+        comment: 'another comment',
+        Nested: '',
+        list0: 'three'
+      }
     ]
   }
   expect(tableData).toStrictEqual(correct)
