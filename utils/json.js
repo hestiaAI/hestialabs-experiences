@@ -110,6 +110,10 @@ export default function itemifyJSON(jsonText, filter) {
 }
 
 export function formatObject(object) {
+  if (!object) {
+    // null is of type object
+    return object
+  }
   const keys = Object.keys(object)
   if (keys.length === 0) {
     return '{no attributes}'
