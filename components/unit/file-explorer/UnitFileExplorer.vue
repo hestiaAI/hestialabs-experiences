@@ -68,7 +68,6 @@
             :search="search"
             :items="treeItems"
             :active.sync="active"
-            @update:active="onUpdateActive"
           >
             <template #prepend="{ item }">
               <VIcon>
@@ -152,8 +151,17 @@ export default {
       get() {
         return this.selectedItem ? [this.selectedItem] : []
       },
-      set(value) {
-        this.$store.commit('setFileExplorerCurrentFile', value.filename)
+      set([item]) {
+        // item might be undefined (when unselecting)
+        if (item) {
+          // close drawer when file is selected
+          this.mini = true
+          if (!this.containers.has(item?.type)) {
+            this.$store.commit('setFileExplorerCurrentFile', item.filename)
+          }
+        } else {
+          this.$store.commit('setFileExplorerCurrentFile', null)
+        }
       }
     },
     selectedItem() {
@@ -252,18 +260,6 @@ export default {
         }
       }
       return findItem(this.treeItems)
-    },
-    onUpdateActive([item]) {
-      // item might be undefined (when unselecting)
-      if (item) {
-        // close drawer when file is selected
-        this.mini = true
-        if (!this.containers.has(item?.type)) {
-          this.$store.commit('setFileExplorerCurrentFile', item.filename)
-        }
-      } else {
-        this.$store.commit('setFileExplorerCurrentFile', null)
-      }
     }
   }
 }
