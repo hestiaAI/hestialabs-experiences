@@ -71,17 +71,11 @@ export default async function databaseBuilder(fileManager) {
       json: v
     })
     criteria.forEach(criterion => {
-      let targetingType = null
-      let targetingValue = null
-      if (criterion) {
-        targetingType = criterion.targetingType || null
-        targetingValue = criterion.targetingValue || null
-      }
       targetingItems.push({
         id: targetingItemsId++,
         adId: adsId,
-        targetingType,
-        targetingValue
+        targetingType: criterion.targetingType ?? null,
+        targetingValue: criterion.targetingValue ?? null
       })
     })
     adsId++
