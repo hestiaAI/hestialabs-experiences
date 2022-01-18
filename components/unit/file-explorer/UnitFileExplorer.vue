@@ -290,7 +290,6 @@ export default {
       this.defaultViewElements = { customPipelineOptions: { accessor } }
     },
     onUnitResultsUpdate(result) {
-      console.log('res', result)
       this.tableData = result
     },
     completeGroupsTable() {
