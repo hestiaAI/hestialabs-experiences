@@ -21,6 +21,7 @@ export default async function databaseBuilder(fileManager) {
     ['id', 'INTEGER'],
     ['tweetId', 'TEXT'],
     ['advertiserName', 'TEXT'],
+    ['displayLocation', 'TEXT'],
     ['time', 'DATE'],
     ['engagement', 'INTEGER']
   ])
