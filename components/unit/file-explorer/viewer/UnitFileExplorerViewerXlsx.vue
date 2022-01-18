@@ -10,7 +10,7 @@
       :text="name"
       @click="v => setSheet(name)"
     />
-    <UnitFilterableTable :data="{ headers, items }" display-filters />
+    <UnitFilterableTable :data="{ headers, items }" />
   </div>
 </template>
 

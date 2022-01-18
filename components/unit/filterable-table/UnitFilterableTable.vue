@@ -82,10 +82,6 @@ import { formatObject, formatArray } from '@/utils/json'
 export default {
   name: 'UnitFilterableTable',
   props: {
-    displayFilters: {
-      type: Boolean,
-      default: () => false
-    },
     data: {
       type: Object,
       required: true
