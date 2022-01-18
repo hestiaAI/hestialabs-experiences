@@ -49,6 +49,7 @@
             centered
             fixed-tabs
           >
+            <VTab>Summary</VTab>
             <VTab>Files</VTab>
             <VTab v-for="(el, index) in defaultView" :key="index">
               {{ el.title }}
@@ -56,6 +57,9 @@
             <VTab v-if="consentForm">Share my data</VTab>
           </VTabs>
           <VTabsItems v-model="tab">
+            <VTabItem>
+              <UnitSummary v-bind="{ fileManager }" />
+            </VTabItem>
             <VTabItem>
               <UnitFileExplorer v-bind="{ fileManager }" />
             </VTabItem>
@@ -232,6 +236,11 @@ export default {
             .split(',')
             .map(ext => `.${ext}`)
     }
+  },
+  mounted() {
+    this.$root.$on('goToFileExplorer', () => {
+      this.tab = 1
+    })
   },
   methods: {
     handleError(error) {
