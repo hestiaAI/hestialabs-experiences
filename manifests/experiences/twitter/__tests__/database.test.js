@@ -66,20 +66,21 @@ describe('with complete samples', () => {
     // Table twitterAds
     result = db.select('SELECT * FROM twitterAds')
     expected = {
-      headers: ['id', 'tweetId', 'advertiserName', 'time', 'engagement'],
+      headers: [
+        'id',
+        'tweetId',
+        'advertiserName',
+        'time',
+        'engagement',
+        'displayLocation'
+      ],
       items: [
         {
           id: 0,
-          tweetId: '1369584490276741122',
-          advertiserName: 'Illumeably',
-          time: '2021-04-15 19:51:50',
-          engagement: 0
-        },
-        {
-          id: 1,
           tweetId: '1381646278988292098',
           advertiserName: 'PwC Switzerland',
-          time: '2021-04-15 19:43:20',
+          displayLocation: 'TimelineHome',
+          time: '2021-04-15 19:43:25',
           engagement: 1
         }
       ]
@@ -95,24 +96,12 @@ describe('with complete samples', () => {
         {
           id: 0,
           adId: 0,
-          targetingType: 'Platforms',
-          targetingValue: 'Desktop'
-        },
-        {
-          id: 1,
-          adId: 0,
-          targetingType: 'Languages',
-          targetingValue: 'English'
-        },
-        {
-          id: 2,
-          adId: 1,
           targetingType: 'Locations',
           targetingValue: 'Switzerland'
         },
         {
-          id: 3,
-          adId: 1,
+          id: 1,
+          adId: 0,
           targetingType: 'Age',
           targetingValue: '35 and up'
         }
@@ -127,7 +116,6 @@ describe('with complete samples', () => {
     const expected = {
       headers: ['advertiserName', 'date', 'count'],
       items: [
-        { advertiserName: 'Illumeably', date: '2021-04-15', count: 1 },
         { advertiserName: 'PwC Switzerland', date: '2021-04-15', count: 1 }
       ]
     }
@@ -139,10 +127,7 @@ describe('with complete samples', () => {
     const result = runQuery('../queries/all-advertisers.sql')
     const expected = {
       headers: ['advertiserName', 'count'],
-      items: [
-        { advertiserName: 'Illumeably', count: 1 },
-        { advertiserName: 'PwC Switzerland', count: 1 }
-      ]
+      items: [{ advertiserName: 'PwC Switzerland', count: 1 }]
     }
     arrayEqualNoOrder(result.headers, expected.headers)
     arrayEqualNoOrder(result.items, expected.items)
@@ -153,18 +138,6 @@ describe('with complete samples', () => {
     const expected = {
       headers: ['advertiserName', 'targetingType', 'targetingValue', 'count'],
       items: [
-        {
-          advertiserName: 'Illumeably',
-          targetingType: 'Platforms',
-          targetingValue: 'Desktop',
-          count: 1
-        },
-        {
-          advertiserName: 'Illumeably',
-          targetingType: 'Languages',
-          targetingValue: 'English',
-          count: 1
-        },
         {
           advertiserName: 'PwC Switzerland',
           targetingType: 'Locations',
@@ -196,26 +169,10 @@ describe('with complete samples', () => {
       ],
       items: [
         {
-          tweetId: '1369584490276741122',
-          companyName: 'Illumeably',
-          engagement: 0,
-          date: '2021-04-15 19:51:50',
-          targetingType: 'Platforms',
-          targetingValue: 'Desktop'
-        },
-        {
-          tweetId: '1369584490276741122',
-          companyName: 'Illumeably',
-          engagement: 0,
-          date: '2021-04-15 19:51:50',
-          targetingType: 'Languages',
-          targetingValue: 'English'
-        },
-        {
           tweetId: '1381646278988292098',
           companyName: 'PwC Switzerland',
           engagement: 1,
-          date: '2021-04-15 19:43:20',
+          date: '2021-04-15 19:43:25',
           targetingType: 'Locations',
           targetingValue: 'Switzerland'
         },
@@ -223,7 +180,7 @@ describe('with complete samples', () => {
           tweetId: '1381646278988292098',
           companyName: 'PwC Switzerland',
           engagement: 1,
-          date: '2021-04-15 19:43:20',
+          date: '2021-04-15 19:43:25',
           targetingType: 'Age',
           targetingValue: '35 and up'
         }
@@ -238,16 +195,6 @@ describe('with complete samples', () => {
     const expected = {
       headers: ['targetingType', 'targetingValue', 'count'],
       items: [
-        {
-          targetingType: 'Platforms',
-          targetingValue: 'Desktop',
-          count: 1
-        },
-        {
-          targetingType: 'Languages',
-          targetingValue: 'English',
-          count: 1
-        },
         {
           targetingType: 'Locations',
           targetingValue: 'Switzerland',
@@ -269,18 +216,6 @@ describe('with complete samples', () => {
     const expected = {
       headers: ['advertiserName', 'targetingType', 'targetingValue', 'count'],
       items: [
-        {
-          advertiserName: 'Illumeably',
-          targetingType: 'Platforms',
-          targetingValue: 'Desktop',
-          count: 1
-        },
-        {
-          advertiserName: 'Illumeably',
-          targetingType: 'Languages',
-          targetingValue: 'English',
-          count: 1
-        },
         {
           advertiserName: 'PwC Switzerland',
           targetingType: 'Locations',
