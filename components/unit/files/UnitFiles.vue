@@ -1,15 +1,5 @@
 <template>
   <div>
-    <div class="d-flex flex-column flex-sm-row align-start align-sm-end">
-      <BaseButton
-        v-bind="{ disabled, progress, status, error }"
-        text="Process files"
-        icon="mdiStepForward"
-        class="my-sm-2 mr-sm-2"
-        @click="returnFiles"
-      />
-    </div>
-
     <LazyUnitFilesCombobox
       v-if="isPlayground"
       class="mb-4"
@@ -20,12 +10,21 @@
       v-if="samples.length"
       :value.sync="selectedSamples"
       :items="samples"
-      class="my-sm-2 mr-sm-2 mb-2"
+      class="mb-4"
     />
 
     <div class="caption my-2">{{ extensionsMessage }}</div>
 
     <div ref="dashboard" />
+
+    <BaseButton
+      v-bind="{ disabled, progress, status, error }"
+      text="Process files"
+      icon="mdiStepForward"
+      class="my-sm-2 mr-sm-4"
+      @click="returnFiles"
+    />
+    <UnitFilesDialog :files="files" />
   </div>
 </template>
 
