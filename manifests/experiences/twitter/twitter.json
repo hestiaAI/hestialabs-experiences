@@ -4,7 +4,10 @@
   "dataPortal": "https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive",
   "ext": "zip",
   "data": ["twitter.zip", "twitter-sample.zip"],
-  "files": ["**/ad-impressions.js", "**/ad-engagements.js"],
+  "files": {
+    "impressions": "**/ad-impressions.js", 
+    "engagements": "**/ad-engagements.js"
+  },
   "preprocessors": {
     "**/ad-impressions.js": "twitter",
     "**/ad-engagements.js": "twitter",
@@ -19,6 +22,7 @@
     {
       "key": "advertisers-per-day",
       "sql": "advertisers-per-day",
+      "files": ["impressions", "engagements"],
       "visualization": "ChartViewTopRow.vue",
       "vizProps": {
         "xLabel": "ads"
@@ -30,6 +34,7 @@
     {
       "key": "targeting-criteria-by-advertiser",
       "sql": "targeting-criteria-by-advertiser",
+      "files": ["impressions", "engagements"],
       "postprocessor": "sunburstTargeting",
       "visualization": "ChartViewSunburst.vue",
       "showTable": false,
@@ -39,6 +44,7 @@
     {
       "key": "targeting-criteria-all-advertisers",
       "sql": "targeting-criteria-all-advertisers",
+      "files": ["impressions", "engagements"],
       "visualization": "wordcloud-targeting-criteria",
       "showTable": false,
       "title": "Targeting criteria (All advertisers)",
@@ -47,6 +53,7 @@
     {
       "key": "all-criteria-all-advertisers",
       "sql": "all-criteria-all-advertisers",
+      "files": ["impressions", "engagements"],
       "postprocessor": "sunburstTargeting",
       "showTable": false,
       "title": "Targeting criteria (1 advertiser)",
@@ -56,6 +63,7 @@
     {
       "key": "overview",
       "sql": "overview",
+      "files": ["impressions", "engagements"],
       "visualization": "ChartViewOverviewTwitter.vue",
       "showTable": false,
       "title": "Twitter advertising overview",

@@ -14,16 +14,16 @@
       <VCardTitle>Expected files</VCardTitle>
       <VDivider></VDivider>
       <VCardText>
-        <template v-if="files && files.length > 0">
+        <template v-if="fileGlobs && fileGlobs.length > 0">
           <p class="mt-4">Required:</p>
           <ul>
-            <li v-for="file in files" :key="file">
+            <li v-for="file in fileGlobs" :key="file">
               {{ file }}
             </li>
           </ul>
         </template>
         <p v-else class="mt-4">No specific files required.</p>
-        <p class="mt-4">
+        <p v-if="main" class="mt-4">
           All JSON/CSV files provided are analysed for dates and geographical
           coordinates. The related experiences will be more interesting the more
           files you include.
@@ -43,9 +43,13 @@
 <script>
 export default {
   props: {
-    files: {
+    fileGlobs: {
       type: Array,
       required: true
+    },
+    main: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

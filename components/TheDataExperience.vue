@@ -134,8 +134,8 @@ export default {
       }
     },
     files: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     },
     defaultView: {
       type: Array,
@@ -256,10 +256,10 @@ export default {
       this.progress = true
       const start = new Date()
 
-      await this.fileManager.init(uppyFiles, this.multiple)
+      await this.fileManager.init(uppyFiles, this.multiple, this.files)
 
       // Check that the required files are present in the archive
-      const missing = this.files
+      const missing = Object.values(this.files)
         .map(filePathGlob => [
           filePathGlob,
           this.fileManager.findMatchingFilePaths(filePathGlob).length

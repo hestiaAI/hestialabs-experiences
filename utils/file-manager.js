@@ -99,9 +99,10 @@ export default class FileManager {
    * To be called once the files are available.
    * @param {File[]} uppyFiles
    * @param {boolean} multiple
+   * @param {Object} idToGlob an object mapping IDs to globs
    * @returns {Promise<FileManager>}
    */
-  async init(uppyFiles, multiple) {
+  async init(uppyFiles, multiple, idToGlob) {
     this.fileList = await FileManager.extractZips(uppyFiles)
     this.fileList = FileManager.filterFiles(this.fileList)
     const filePairs = this.fileList.map(f => [f.name, f])
@@ -110,6 +111,7 @@ export default class FileManager {
     } else {
       this.fileDict = FileManager.removeTopmostFilenames(filePairs)
     }
+    this.idToGlob = idToGlob
     this.setInitialValues()
     this.setShortFilenames()
     return this
@@ -286,6 +288,27 @@ export default class FileManager {
     return this.getFilenames().filter(filePath =>
       matchNormalized(filePath, filePathGlob)
     )
+  }
+
+  /**
+   * Return the file that matches the ID.
+   * If multiple files are found, print a warning and return the first one.
+   * If no file is found, return null.
+   * @param {String} id
+   */
+  async getPreprocessedTextFromId(id) {
+    if (!(id in this.idToGlob)) {
+      return null
+    }
+    const glob = this.idToGlob[id]
+    const paths = this.findMatchingFilePaths(glob)
+    if (paths.length === 0) {
+      return null
+    } else if (paths.length > 1) {
+      console.warn(`Multiple files were found for id="${id}", glob="${glob}"`)
+    }
+    const file = await this.getPreprocessedText(paths[0])
+    return file
   }
 
   /**

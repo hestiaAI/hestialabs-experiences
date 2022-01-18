@@ -24,7 +24,7 @@
       class="my-sm-2 mr-sm-4"
       @click="returnFiles"
     />
-    <UnitFilesDialog :files="files" />
+    <UnitFilesDialog :file-globs="Object.values(files)" main />
   </div>
 </template>
 
@@ -51,7 +51,7 @@ export default {
       required: true
     },
     files: {
-      type: Array,
+      type: Object,
       required: true
     },
     multiple: {

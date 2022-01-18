@@ -39,6 +39,9 @@
           />
         </VCol>
       </VRow>
+      <VRow>
+        <VCol> <UnitFilesDialog :file-globs="fileGlobs" /></VCol>
+      </VRow>
       <template v-if="finished">
         <VRow>
           <VCol>
@@ -147,6 +150,10 @@ export default {
     },
     clonedResult() {
       return JSON.parse(JSON.stringify(this.result))
+    },
+    fileGlobs() {
+      const fileIds = this.defaultViewElements.files ?? []
+      return fileIds.map(id => this.fileManager.idToGlob[id])
     }
   },
   methods: {

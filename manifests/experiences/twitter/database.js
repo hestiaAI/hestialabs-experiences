@@ -1,17 +1,6 @@
 import { JSONPath } from 'jsonpath-plus'
 import { DB } from '~/utils/sql'
 
-async function getFileFromGlob(glob, fileManager) {
-  const matches = fileManager.findMatchingFilePaths(glob)
-  if (matches.length === 0) {
-    throw new Error(`Missing file: ${glob}`)
-  } else if (matches.length > 1) {
-    console.warn(`File ${glob} was found multiple times`)
-  }
-  const file = await fileManager.getPreprocessedText(matches[0])
-  return JSON.parse(file)
-}
-
 export default async function databaseBuilder(fileManager) {
   const db = new DB()
   await db.init()
@@ -30,14 +19,13 @@ export default async function databaseBuilder(fileManager) {
     ['targetingValue', 'TEXT']
   ])
 
-  const impressionsFile = await getFileFromGlob(
-    '**/ad-impressions.js',
-    fileManager
+  const impressionsFile = JSON.parse(
+    await fileManager.getPreprocessedTextFromId('impressions')
   )
-  const engagementsFile = await getFileFromGlob(
-    '**/ad-engagements.js',
-    fileManager
+  const engagementsFile = JSON.parse(
+    await fileManager.getPreprocessedTextFromId('engagements')
   )
+
   const impressions = JSONPath({
     path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
     json: impressionsFile
