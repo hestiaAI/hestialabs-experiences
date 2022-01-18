@@ -19,7 +19,8 @@ import {
   mdiTuneVariant,
   mdiShare,
   mdiStepForward,
-  mdiTwitter
+  mdiTwitter,
+  mdiFilter
 } from '@mdi/js'
 
 export default {
@@ -46,7 +47,8 @@ export default {
       mdiTuneVariant,
       mdiShare,
       mdiStepForward,
-      mdiTwitter
+      mdiTwitter,
+      mdiFilter
     }
   },
   theme: {

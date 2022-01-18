@@ -2,9 +2,13 @@
   <div>
     <DataValidator :data="data" :allow-missing-columns="true">
       <VAlert v-if="error" type="error">{{ message }}</VAlert>
-      <VRow>
+      <VRow align="center">
         <BaseSearchBar v-model="search"></BaseSearchBar>
-        <VSwitch v-model="advancedSearch" label="Advanced search"></VSwitch>
+        <VBtn class="ml-2" icon @click="advancedSearch = !advancedSearch">
+          <VIcon :color="advancedSearch ? 'primary' : ''">
+            $vuetify.icons.mdiFilter
+          </VIcon>
+        </VBtn>
       </VRow>
       <VDataTable
         v-bind="{ headers: tableHeaders, search }"
@@ -12,12 +16,12 @@
         :items="filteredItems"
         multi-sort
         fixed-header
-        height="600"
+        max-height="610"
         :footer-props="{ itemsPerPageOptions: [5, 10, 15, 500, 1000] }"
         data-testid="data-table"
         @current-items="onItemsUpdate"
       >
-        <template v-if="advancedSearch" #body.prepend>
+        <template v-if="advancedSearch" #header>
           <tr class="grey lighten-3">
             <td v-for="header in headers" :key="header.value">
               <VAutocomplete
@@ -29,6 +33,7 @@
                 chips
                 dense
                 clearable
+                class="pa-4"
                 label="Search ..."
                 :items="columnValues(header.value)"
               >
