@@ -257,11 +257,19 @@ export default {
       const start = new Date()
 
       await this.fileManager.init(uppyFiles, this.multiple)
-      let processedFiles
-      try {
-        processedFiles = await this.fileManager.preprocessFiles(this.files)
-      } catch (error) {
-        this.handleError(error)
+
+      // Check that the required files are present in the archive
+      const missing = this.files
+        .map(filePathGlob => [
+          filePathGlob,
+          this.fileManager.findMatchingFilePaths(filePathGlob).length
+        ])
+        .filter(([_, n]) => n === 0)
+        .map(([filePathGlob, _]) => filePathGlob)
+      if (missing.length > 0) {
+        this.message = `Missing file(s): ${missing.join(', ')}`
+        this.error = true
+        this.progress = false
         return
       }
 
@@ -272,6 +280,9 @@ export default {
 
       if (this.isRdfNeeded && this.yarrrml) {
         try {
+          const processedFiles = await this.fileManager.preprocessFiles(
+            this.files
+          )
           this.rml = await parseYarrrml(this.yarrrml)
           await rdfUtils.generateRDF(this.rml, processedFiles)
         } catch (error) {

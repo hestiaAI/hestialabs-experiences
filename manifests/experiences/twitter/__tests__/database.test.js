@@ -23,17 +23,17 @@ function runQuery(sqlFilePath) {
 async function getDatabase(adImpressions, adEngagements) {
   const fileManager = new FileManager(
     {
-      'data/ad-impressions.js': preprocessors.twitter,
-      'data/ad-engagements.js': preprocessors.twitter
+      'test/data/ad-impressions.js': preprocessors.twitter,
+      'test/data/ad-engagements.js': preprocessors.twitter
     },
     true
   )
   const fileImpressions = mockFile(
-    'data/ad-impressions.js',
+    'test/data/ad-impressions.js',
     JSON.stringify(adImpressions)
   )
   const fileEngagements = mockFile(
-    'data/ad-engagements.js',
+    'test/data/ad-engagements.js',
     JSON.stringify(adEngagements)
   )
   await fileManager.init([fileImpressions, fileEngagements], true)
@@ -42,65 +42,12 @@ async function getDatabase(adImpressions, adEngagements) {
 }
 
 describe('with incomplete samples', () => {
-  beforeAll(async () => {
+  test('the database builder creates the tables without error', async () => {
     await getDatabase(
       missingAttributesImpressions,
       missingAttributesEngagements
     )
-  })
-
-  afterAll(() => {
     db.close()
-  })
-
-  test('the database builder creates the tables correctly', () => {
-    let result, expected
-
-    // Table twitterAds
-    result = db.select('SELECT * FROM twitterAds')
-    expected = {
-      headers: ['id', 'tweetId', 'advertiserName', 'time', 'engagement'],
-      items: [
-        {
-          id: 0,
-          tweetId: null,
-          advertiserName: null,
-          time: null,
-          engagement: 0
-        },
-        {
-          id: 1,
-          tweetId: null,
-          advertiserName: null,
-          time: null,
-          engagement: 1
-        }
-      ]
-    }
-    arrayEqualNoOrder(result.headers, expected.headers)
-    arrayEqualNoOrder(result.items, expected.items)
-
-    // Table twitterCriteria
-    result = db.select('SELECT * FROM twitterCriteria')
-    expected = {
-      headers: ['id', 'adId', 'targetingType', 'targetingValue'],
-      items: [
-        {
-          id: 0,
-          adId: 0,
-          targetingType: null,
-          targetingValue: null
-        },
-        {
-          id: 1,
-          adId: 1,
-          targetingType: null,
-          targetingValue: null
-        }
-      ]
-    }
-    arrayEqualNoOrder(result.headers, expected.headers)
-    arrayEqualNoOrder(result.items, expected.items)
   })
 })
 

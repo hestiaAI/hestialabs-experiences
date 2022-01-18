@@ -3,6 +3,17 @@
 import { JSONPath } from 'jsonpath-plus'
 import { DB } from '@/utils/sql'
 
+async function getFileFromGlob(glob, fileManager) {
+  const matches = fileManager.findMatchingFilePaths(glob)
+  if (matches.length === 0) {
+    return '{}'
+  } else if (matches.length > 1) {
+    console.warn(`File ${glob} was found multiple times`)
+  }
+  const file = await fileManager.getPreprocessedText(matches[0])
+  return JSON.parse(file)
+}
+
 export default async function databaseBuilder(fileManager) {
   const db = new DB()
   await db.init()
@@ -13,10 +24,9 @@ export default async function databaseBuilder(fileManager) {
     ['action', 'TEXT'],
     ['timestamp', 'INTEGER']
   ])
-  const advertisersInteractedWithFile = JSON.parse(
-    await fileManager.getPreprocessedText(
-      "ads_information/advertisers_you've_interacted_with.json"
-    )
+  const advertisersInteractedWithFile = await getFileFromGlob(
+    "**/ads_information/advertisers_you've_interacted_with.json",
+    fileManager
   )
   const advertisersInteracted = JSONPath({
     path: '$.history_v2[*]',
@@ -35,10 +45,9 @@ export default async function databaseBuilder(fileManager) {
 
   /// Advertisers who purchased your contact ////////////////////////////////////////////////////////////////////////////////
   db.create('advertisersContactInformation', [['name', 'TEXT']])
-  const advertisersContactInformationFile = JSON.parse(
-    await fileManager.getPreprocessedText(
-      'ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json'
-    )
+  const advertisersContactInformationFile = await getFileFromGlob(
+    '**/ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json',
+    fileManager
   )
   const advertisersContact = JSONPath({
     path: '$.custom_audiences_v2[*]',
@@ -61,10 +70,9 @@ export default async function databaseBuilder(fileManager) {
     ['timestamp', 'INTEGER']
   ])
 
-  const offFacebookActivityFile = JSON.parse(
-    await fileManager.getPreprocessedText(
-      'apps_and_websites_off_of_facebook/your_off-facebook_activity.json'
-    )
+  const offFacebookActivityFile = await getFileFromGlob(
+    '**/apps_and_websites_off_of_facebook/your_off-facebook_activity.json',
+    fileManager
   )
 
   const offFacebookActivityJSON = JSONPath({
@@ -91,10 +99,9 @@ export default async function databaseBuilder(fileManager) {
 
   /// Inferred interests ////////////////////////////////////////////////////////////////////////////////
   db.create('inferredInterestsDatabase', [['name', 'TEXT']])
-  const inferredInterestsFile = JSON.parse(
-    await fileManager.getPreprocessedText(
-      'other_logged_information/ads_interests.json'
-    )
+  const inferredInterestsFile = await getFileFromGlob(
+    '**/other_logged_information/ads_interests.json',
+    fileManager
   )
   const inferredInterestsJSON = JSONPath({
     path: '$.topics_v2[*]',
