@@ -106,8 +106,17 @@
         </VCardText>
       </div>
     </VCard>
-    <div v-if="tableDataFromAccessor">
-      <UnitFilterableTable :data="tableDataFromAccessor" />
+    <div v-if="defaultViewElements.customPipelineOptions">
+      <UnitPipelineCustom
+        v-bind="{
+          fileManager,
+          customPipeline,
+          defaultViewElements,
+          autoRun: true
+        }"
+        @update="onUnitResultsUpdate"
+      />
+      <UnitFilterableTable v-if="tableData" :data="tableData" />
     </div>
   </div>
 </template>
@@ -115,7 +124,7 @@
 <script>
 import _ from 'lodash'
 import FileManager from '~/utils/file-manager.js'
-import { makeTableData } from '~/manifests/generic-pipelines'
+import { jsonToTableConverter } from '~/manifests/generic-pipelines'
 
 export default {
   name: 'UnitFileExplorer',
@@ -143,6 +152,9 @@ export default {
       search: '',
       isFileLoading: false,
       height: 500,
+      tableData: undefined,
+      customPipeline: jsonToTableConverter,
+      defaultViewElements: {},
       selectedAccessor: undefined,
       tableDataFromAccessor: undefined
     }
@@ -217,24 +229,7 @@ export default {
       }
     }
   },
-  asyncComputed: {
-    async tableDataFromAccessor() {
-      if (this.selectedAccessor) {
-        const found = await this.fileManager.findMatchingObjects(
-          this.selectedAccessor
-        )
-        return makeTableData(found)
-      }
-      return undefined
-    }
-  },
   watch: {
-    async selectedAccessor(accessor) {
-      if (accessor) {
-        const found = await this.fileManager.findMatchingObjects(accessor)
-        this.tableDataFromAccessor = makeTableData(found)
-      }
-    },
     mini(mini) {
       // hide scrollbar in mini variant of drawer
       const overflowY = mini ? 'hidden' : 'visible'
@@ -246,7 +241,10 @@ export default {
       this.isFileLoading = loading
     },
     onSelectAccessor(accessor) {
-      this.selectedAccessor = accessor
+      this.defaultViewElements = { customPipelineOptions: { accessor } }
+    },
+    onUnitResultsUpdate(result) {
+      this.tableData = result
     },
     searchItemWithFilename(filename) {
       function findItem(item) {
