@@ -15,6 +15,11 @@
       the private data that {{ companyName }} collected on you. Once you receive
       it, analyze it here.
     </p>
+    <p>
+      No data is transmitted to HestiaLabs or anyone else. The whole experience
+      takes place locally in the browser and nothing is left behind as soon as
+      you close the tab.
+    </p>
   </div>
 </template>
 
