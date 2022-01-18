@@ -15,7 +15,8 @@
       <VDivider></VDivider>
       <VCardText>
         <template v-if="fileGlobs && fileGlobs.length > 0">
-          <p class="mt-4">Required:</p>
+          <p v-if="main" class="mt-4">Files used in the experiences:</p>
+          <p v-else class="mt-4">Files required:</p>
           <ul>
             <li v-for="file in fileGlobs" :key="file">
               {{ file }}
