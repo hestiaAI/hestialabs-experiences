@@ -28,14 +28,16 @@ export default async function databaseBuilder(fileManager) {
     await fileManager.getPreprocessedTextFromId('engagements')
   )
 
-  const impressions = JSONPath({
-    path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
-    json: impressionsFile
-  })
-  const engagements = JSONPath({
-    path: '$.*.ad.adsUserData.adEngagements.engagements[*].impressionAttributes',
-    json: engagementsFile
-  })
+  const impressions =
+    JSONPath({
+      path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
+      json: impressionsFile
+    }) ?? []
+  const engagements =
+    JSONPath({
+      path: '$.*.ad.adsUserData.adEngagements.engagements[*].impressionAttributes',
+      json: engagementsFile
+    }) ?? []
 
   const adsItems = []
   const targetingItems = []

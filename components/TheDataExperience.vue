@@ -258,21 +258,6 @@ export default {
 
       await this.fileManager.init(uppyFiles, this.multiple, this.files)
 
-      // Check that the required files are present in the archive
-      const missing = Object.values(this.files)
-        .map(filePathGlob => [
-          filePathGlob,
-          this.fileManager.findMatchingFilePaths(filePathGlob).length
-        ])
-        .filter(([_, n]) => n === 0)
-        .map(([filePathGlob, _]) => filePathGlob)
-      if (missing.length > 0) {
-        this.message = `Missing file(s): ${missing.join(', ')}`
-        this.error = true
-        this.progress = false
-        return
-      }
-
       // Populate database
       if (this.databaseBuilder !== undefined) {
         this.db = await this.databaseBuilder(this.fileManager)
