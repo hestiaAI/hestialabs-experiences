@@ -13,7 +13,7 @@ import {
 } from '@mdi/js'
 import _ from 'lodash'
 import { matchNormalized, findMatchesInContent } from './accessor'
-import itemifyJSON, { nJsonPoints } from '~/utils/json'
+import { itemifyJSON, nJsonPoints } from '~/utils/json'
 import getCsvHeadersAndItems from '~/utils/csv'
 import { runWorker } from '@/utils/utils'
 
