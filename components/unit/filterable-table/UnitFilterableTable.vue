@@ -24,7 +24,14 @@
           >
             <template #activator="{ on, attrs }">
               <VBtn icon v-bind="attrs" v-on="on">
-                <VIcon small :color="filters[header.value] ? 'primary' : ''">
+                <VIcon
+                  small
+                  :color="
+                    filters[header.value] && filters[header.value].length
+                      ? 'primary'
+                      : ''
+                  "
+                >
                   $vuetify.icons.mdiFilter
                 </VIcon>
               </VBtn>
@@ -38,23 +45,30 @@
                 multiple
                 chips
                 dense
-                clearable
                 class="pa-4"
                 label="Search ..."
                 :items="columnValues(header.value)"
                 :menu-props="{ closeOnClick: true }"
               >
                 <template #selection="{ item, index }">
-                  <VChip v-if="index < 5">
+                  <VChip v-if="index < 3">
                     <span>
                       {{ item }}
                     </span>
                   </VChip>
-                  <span v-if="index === 5" class="grey--text caption">
-                    (+{{ filters[header.value].length - 5 }} others)
+                  <span v-if="index === 3" class="grey--text caption">
+                    (+{{ filters[header.value].length - 3 }} others)
                   </span>
                 </template>
               </VAutocomplete>
+              <VBtn
+                small
+                text
+                color="primary"
+                class="ml-2 mb-2"
+                @click="filters[header.value] = []"
+                >Clean</VBtn
+              >
             </div>
           </VMenu>
         </template>
