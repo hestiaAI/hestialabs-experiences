@@ -123,6 +123,8 @@ export default {
       return headers.map(h => ({
         ...h,
         align: 'left',
+        // class: 'header',
+        // width: 6 + 0.35 * h.text.length + 'rem',
         sortable: true
       }))
     },
@@ -205,3 +207,8 @@ export default {
   }
 }
 </script>
+<style>
+.v-data-table-header th {
+  white-space: nowrap;
+}
+</style>
