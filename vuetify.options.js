@@ -20,7 +20,8 @@ import {
   mdiShare,
   mdiStepForward,
   mdiTwitter,
-  mdiFolderInformationOutline
+  mdiFolderInformationOutline,
+  mdiFilter
 } from '@mdi/js'
 
 export default {
@@ -48,7 +49,8 @@ export default {
       mdiShare,
       mdiStepForward,
       mdiTwitter,
-      mdiFolderInformationOutline
+      mdiFolderInformationOutline,
+      mdiFilter
     }
   },
   theme: {

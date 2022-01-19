@@ -2,21 +2,76 @@
   <div>
     <DataValidator :data="data" :allow-missing-columns="true">
       <VAlert v-if="error" type="error">{{ message }}</VAlert>
-      <UnitFilterableTableFilter
-        :display-filters="displayFilters"
-        :headers="headers"
-        @update="onFilterUpdate"
-      />
+      <BaseSearchBar v-model="search"></BaseSearchBar>
       <VDataTable
-        v-bind="{ headers: tableHeaders, items, search }"
+        v-bind="{ headers: tableHeaders, search }"
         ref="tableRef"
+        :items="filteredItems"
         multi-sort
         fixed-header
-        height="500"
+        height="530"
         :footer-props="{ itemsPerPageOptions: [5, 10, 15, 500, 1000] }"
         data-testid="data-table"
         @current-items="onItemsUpdate"
       >
+        <template v-for="header in headers" #[`header.${header.value}`]>
+          {{ header.text }}
+          <VMenu
+            :id="header.value"
+            :key="header.value"
+            offset-y
+            :close-on-content-click="false"
+          >
+            <template #activator="{ on, attrs }">
+              <VBtn icon v-bind="attrs" v-on="on">
+                <VIcon
+                  small
+                  :color="
+                    filters[header.value] && filters[header.value].length
+                      ? 'success'
+                      : ''
+                  "
+                >
+                  $vuetify.icons.mdiFilter
+                </VIcon>
+              </VBtn>
+            </template>
+            <div style="background-color: white; width: 280px">
+              <VAutocomplete
+                v-model="filters[header.value]"
+                flat
+                hide-details
+                full-width
+                multiple
+                chips
+                dense
+                class="pa-4"
+                label="Search ..."
+                :items="columnValues(header.value)"
+                :menu-props="{ closeOnClick: true }"
+              >
+                <template #selection="{ item, index }">
+                  <VChip v-if="index < 3" class="ma-1">
+                    <span>
+                      {{ item }}
+                    </span>
+                  </VChip>
+                  <span v-if="index === 3" class="grey--text caption">
+                    (+{{ filters[header.value].length - 3 }} others)
+                  </span>
+                </template>
+              </VAutocomplete>
+              <VBtn
+                small
+                text
+                color="primary"
+                class="ml-2 mb-2"
+                @click="filters[header.value] = []"
+                >Clear</VBtn
+              >
+            </div>
+          </VMenu>
+        </template>
         <template #item.url="{ value }">
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
         </template>
@@ -45,14 +100,9 @@
 import { writeToString } from '@fast-csv/format'
 import { processError } from '@/utils/utils'
 import { formatObject, formatArray } from '@/utils/json'
-
 export default {
   name: 'UnitFilterableTable',
   props: {
-    displayFilters: {
-      type: Boolean,
-      default: () => false
-    },
     data: {
       type: Object,
       required: true
@@ -60,6 +110,7 @@ export default {
   },
   data() {
     return {
+      advancedSearch: false,
       status: false,
       error: false,
       progress: false,
@@ -68,20 +119,38 @@ export default {
       extension: 'csv',
       search: '',
       tableHeaders: [],
-      files: null
+      files: null,
+      filters: {}
     }
   },
   computed: {
     headers() {
-      const rawHeaders = this.data?.headers || []
-      if (typeof rawHeaders[0] === 'string') {
+      let headers = this.data?.headers || []
+      if (typeof headers[0] === 'string') {
         // allow headers to be an array of strings
-        return rawHeaders.map(h => ({ text: h, value: h }))
+        headers = headers.map(h => ({
+          text: h,
+          value: h
+        }))
       }
-      return rawHeaders
+      // add column attributes
+      return headers.map(h => ({
+        ...h,
+        align: 'left',
+        // class: 'header',
+        // width: 6 + 0.35 * h.text.length + 'rem',
+        sortable: true
+      }))
     },
     items() {
       return this.data?.items || []
+    },
+    filteredItems() {
+      return this.items.filter(d => {
+        return Object.keys(this.filters).every(f => {
+          return this.filters[f].length < 1 || this.filters[f].includes(d[f])
+        })
+      })
     }
   },
   watch: {
@@ -135,12 +204,8 @@ export default {
         this.status = true
       }
     },
-    onFilterUpdate(selectedHeaders, searchValue) {
-      this.tableHeaders = this.headers.map(h => ({
-        ...h,
-        filterable: selectedHeaders.includes(h.value)
-      }))
-      this.search = searchValue
+    columnValues(val) {
+      return this.items.map(d => d[val])
     },
     onItemsUpdate() {
       // wait until the DOM has completely updated
@@ -156,3 +221,8 @@ export default {
   }
 }
 </script>
+<style>
+.v-data-table-header th {
+  white-space: nowrap;
+}
+</style>
