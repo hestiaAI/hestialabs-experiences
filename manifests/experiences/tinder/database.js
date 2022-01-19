@@ -1,9 +1,10 @@
 // Tinder
 
 import { JSONPath } from 'jsonpath-plus'
-import db from '@/utils/sql'
+import { DB } from '~/utils/sql'
 
 export default async function databaseBuilder(fileManager) {
+  const db = new DB()
   await db.init()
 
   /// Likes ////////////////////
@@ -118,6 +119,8 @@ export default async function databaseBuilder(fileManager) {
     })
   })
   db.insert('TinderDB', matchesItems)
+
+  return db
 
   /*
   /// Advertisters interacted with ////////////////////////////////////////////////////////////////////////////////
