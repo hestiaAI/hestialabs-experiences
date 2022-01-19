@@ -198,11 +198,7 @@ export default {
       success: false,
       message: '',
       rml: '',
-      fileManager: new FileManager(
-        this.preprocessors,
-        this.allowMissingFiles,
-        fileManagerWorkers
-      ),
+      fileManager: null,
       db: null
     }
   },
@@ -256,6 +252,14 @@ export default {
       this.progress = true
       const start = new Date()
 
+      // Clean vuex state before changing the filemanager
+      this.$store.commit('setFileExplorerCurrentItem', {})
+
+      this.fileManager = new FileManager(
+        this.preprocessors,
+        this.allowMissingFiles,
+        fileManagerWorkers
+      )
       await this.fileManager.init(uppyFiles, this.multiple, this.files)
 
       // Populate database
