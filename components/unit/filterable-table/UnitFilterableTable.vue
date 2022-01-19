@@ -51,7 +51,7 @@
                 :menu-props="{ closeOnClick: true }"
               >
                 <template #selection="{ item, index }">
-                  <VChip v-if="index < 3">
+                  <VChip v-if="index < 3" class="ma-1">
                     <span>
                       {{ item }}
                     </span>
