@@ -2,6 +2,10 @@
   "title": "Netflix",
   "icon": "netflix.png",
   "ext": "zip",
+  "files": {
+    "viewing-activity": "**/CONTENT_INTERACTION/ViewingActivity.csv",
+    "messages-by-netflix": "**/MESSAGES/MessagesSentByNetflix.csv"
+  },
   "multiple": false,
   "isGenericViewer": true,
   "showDataExplorer": true,
@@ -9,6 +13,7 @@
     {
       "key": "watchOverview",
       "customPipeline": "viewingData",
+      "files": ["viewing-activity"],
       "visualization": "ChartViewOverviewNetflix.vue",
       "showTable": false,
       "title": "Viewing activity",
@@ -17,6 +22,7 @@
     {
       "key": "notifications",
       "customPipeline": "messagesData",
+      "files": ["messages-by-netflix"],
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
         "title": "Notifications sent by Netflix",
