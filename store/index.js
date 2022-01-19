@@ -6,8 +6,16 @@ export const state = () => ({
     ...config
   },
   manifestMap,
-  power: false,
-  selectedFiles: {}
+  selectedFiles: Object.fromEntries(config.experiences.map(k => [k, []])),
+  results: Object.fromEntries(
+    config.experiences.map(k => [
+      k,
+      Object.fromEntries(
+        manifestMap[k].defaultView?.map(b => [b.key, null]) ?? []
+      )
+    ])
+  ),
+  fileExplorerCurrentItem: {}
 })
 
 export const getters = {
@@ -19,10 +27,6 @@ export const getters = {
     const activeManifests = experiences
       .map(key => state.manifestMap[key])
       .filter(m => m)
-
-    if (state.power) {
-      return activeManifests
-    }
 
     // playground is not available in default mode
     return activeManifests.filter(m => m.key !== 'playground')
@@ -47,10 +51,13 @@ export const getters = {
 }
 
 export const mutations = {
-  updatePower(state, power) {
-    state.power = power
-  },
   setSelectedFiles(state, { key, value }) {
     state.selectedFiles[key] = value
+  },
+  setResult(state, { company, experience, result }) {
+    state.results[company][experience] = result
+  },
+  setFileExplorerCurrentItem(state, item) {
+    state.fileExplorerCurrentItem = item
   }
 }

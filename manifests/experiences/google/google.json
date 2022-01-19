@@ -2,12 +2,15 @@
   "title": "Google",
   "icon": "google.png",
   "dataPortal": "https://takeout.google.com/settings/takeout",
-  "ext": "zip",
+  "ext": "all",
+  "multiple": true,
+  "isGenericViewer": true,
+  "showDataExplorer": true,
   "data": [],
   "timedObservationsViewer": {
     "fileMatchers": [
       {
-        "regex": "Takeout/(?:.+?)/(.+?)/(?:.+?)\\.json",
+        "regex": "(?:.*/)?(.+?)/(?:OmatTapahtumat|MonActivité|My Activity)\\.json",
         "entryPath": "$[*]",
         "fields": {
           "date": {
@@ -122,8 +125,17 @@
       "customPipeline": "timedObservationViewer",
       "visualization": "ChartViewTimedObservationsViewer.vue",
       "showTable": false,
-      "title": "Overview of what google knows about you",
-      "text": ""
+      "title": "My activity information",
+      "text": "Overview of what google knows about you, get all the dated observations we found in your Google My Activity folder."
+    },
+    {
+      "key": "genericLocationViewer",
+      "customPipeline": "genericLocationViewer",
+      "customPipelineOptions": { "acceptedPaths": ".*" },
+      "visualization": "ChartViewGenericLocationViewer.vue",
+      "showTable": false,
+      "title": "Location observations",
+      "text": "See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location."
     }
   ]
 }

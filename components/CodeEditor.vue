@@ -5,7 +5,7 @@
       :lang="editorLanguage"
       theme="monokai"
       height="500"
-      class="my-ace-editor my-6"
+      class="my-ace-editor"
       @init="initEditor"
     ></AceEditor>
   </client-only>
@@ -83,11 +83,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .my-ace-editor {
   /* you can provide font-family font-size line-height. Example: */
   font-family: Fira code, Fira Mono, Consolas, Menlo, Courier, monospace;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.5;
 }
 </style>

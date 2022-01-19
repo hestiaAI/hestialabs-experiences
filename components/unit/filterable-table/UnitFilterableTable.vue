@@ -1,129 +1,211 @@
 <template>
   <div>
-    <div v-if="isValid">
-      <h2 v-if="$store.state.power" class="my-3">Query Results</h2>
+    <DataValidator :data="data" :allow-missing-columns="true">
       <VAlert v-if="error" type="error">{{ message }}</VAlert>
-      <UnitFilterableTableFilter
-        :display-filters="displayFilters"
-        :headers="headers"
-        @update="onFilterUpdate"
-      />
+      <BaseSearchBar v-model="search"></BaseSearchBar>
       <VDataTable
-        v-bind="{ headers: tableHeaders, items, search }"
+        v-bind="{ headers: tableHeaders, search }"
         ref="tableRef"
-        :hide-default-footer="disabled"
+        :items="filteredItems"
         multi-sort
+        fixed-header
+        height="530"
+        :footer-props="{ itemsPerPageOptions: [5, 10, 15, 500, 1000] }"
         data-testid="data-table"
         @current-items="onItemsUpdate"
       >
+        <template v-for="header in headers" #[`header.${header.value}`]>
+          {{ header.text }}
+          <VMenu
+            :id="header.value"
+            :key="header.value"
+            offset-y
+            :close-on-content-click="false"
+          >
+            <template #activator="{ on, attrs }">
+              <VBtn icon v-bind="attrs" v-on="on">
+                <VIcon
+                  small
+                  :color="
+                    filters[header.value] && filters[header.value].length
+                      ? 'success'
+                      : ''
+                  "
+                >
+                  $vuetify.icons.mdiFilter
+                </VIcon>
+              </VBtn>
+            </template>
+            <div style="background-color: white; width: 280px">
+              <VAutocomplete
+                v-model="filters[header.value]"
+                flat
+                hide-details
+                full-width
+                multiple
+                chips
+                dense
+                class="pa-4"
+                label="Search ..."
+                :items="columnValues(header.value)"
+                :menu-props="{ closeOnClick: true }"
+              >
+                <template #selection="{ item, index }">
+                  <VChip v-if="index < 3" class="ma-1">
+                    <span>
+                      {{ item }}
+                    </span>
+                  </VChip>
+                  <span v-if="index === 3" class="grey--text caption">
+                    (+{{ filters[header.value].length - 3 }} others)
+                  </span>
+                </template>
+              </VAutocomplete>
+              <VBtn
+                small
+                text
+                color="primary"
+                class="ml-2 mb-2"
+                @click="filters[header.value] = []"
+                >Clear</VBtn
+              >
+            </div>
+          </VMenu>
+        </template>
         <template #item.url="{ value }">
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
         </template>
+        <template
+          v-for="header in headers.filter(h => h.value !== 'url')"
+          #[`item.${header.value}`]="slotProps"
+        >
+          {{ formatItemAsString(slotProps) }}
+        </template>
       </VDataTable>
-      <BaseButtonDownloadData
-        v-bind="{ progress, error, disabled, extension, data: csvData, status }"
-        ref="downloadButton"
-        text="Download"
-        @click.native="onDownload"
+      <BaseButton
+        v-bind="{ error, progress, status }"
+        text="Export"
+        icon="mdiExport"
+        @click="exportCSV"
       />
-    </div>
-    <i v-else data-testid="data-error"
-      >data in this format cannot be displayed in a table</i
-    >
+      <BaseButtonDownloadData
+        v-bind="{ disabled: !csvString, extension, data: csvString }"
+      />
+      <BaseButtonShare v-bind="{ disabled: !files, files }" file-share />
+    </DataValidator>
   </div>
 </template>
 
 <script>
 import { writeToString } from '@fast-csv/format'
 import { processError } from '@/utils/utils'
-
-function isDataValid(data) {
-  return !!data.items && !!(data.headers?.length > 0)
-}
-
+import { formatObject, formatArray } from '@/utils/json'
 export default {
   name: 'UnitFilterableTable',
   props: {
-    displayFilters: {
-      type: Boolean,
-      default: () => false
-    },
     data: {
-      default: undefined,
-      validator: isDataValid
+      type: Object,
+      required: true
     }
   },
   data() {
     return {
+      advancedSearch: false,
       status: false,
       error: false,
       progress: false,
-      csvData: '',
+      csvString: '',
       message: '',
       extension: 'csv',
       search: '',
-      tableHeaders: this.headers
+      tableHeaders: [],
+      files: null,
+      filters: {}
     }
   },
   computed: {
-    isValid() {
-      return isDataValid(this.data)
-    },
     headers() {
-      const rawHeaders = this.data?.headers || []
-      if (typeof rawHeaders[0] === 'string') {
+      let headers = this.data?.headers || []
+      if (typeof headers[0] === 'string') {
         // allow headers to be an array of strings
-        return rawHeaders.map(h => ({ text: h, value: h }))
+        headers = headers.map(h => ({
+          text: h,
+          value: h
+        }))
       }
-      return rawHeaders
+      // add column attributes
+      return headers.map(h => ({
+        ...h,
+        align: 'left',
+        // class: 'header',
+        // width: 6 + 0.35 * h.text.length + 'rem',
+        sortable: true
+      }))
     },
     items() {
       return this.data?.items || []
     },
-    disabled() {
-      return !this.headers.length
+    filteredItems() {
+      return this.items.filter(d => {
+        return Object.keys(this.filters).every(f => {
+          return this.filters[f].length < 1 || this.filters[f].includes(d[f])
+        })
+      })
+    }
+  },
+  watch: {
+    data: {
+      immediate: true,
+      handler(data) {
+        this.tableHeaders = this.headers
+      }
     }
   },
   methods: {
-    async onDownload(event) {
-      // only if the event is trusted (i.e. triggered by user interaction)
-      if (event.isTrusted) {
-        // prevent default anchor behavior,
-        // i.e. prevent triggering the download
-        // since we want to generate the file contents first
-        event.preventDefault()
-        this.progress = true
-        this.status = false
-        this.error = false
-        try {
-          const headers = this.headers.map(h => h.text)
-          const filteredItems = this.$refs.tableRef.$children[0].filteredItems
-          // Change the items keys to match the headers
-          const itemsWithHeader = filteredItems.map(i =>
-            this.headers.reduce((o, h) => ({ ...o, [h.text]: i[h.value] }), {})
-          )
-          // update the data
-          this.csvData = await writeToString(itemsWithHeader, { headers })
-          // wait until DOM is updated, i.e. the href attribute (see BaseButtonDownload.vue)
-          await this.$nextTick()
-          // click the anchor manually -> event.isTrusted === false
-          this.$refs.downloadButton.$el.click()
-        } catch (error) {
-          console.error(error)
-          this.error = true
-          this.message = processError(error)
-        } finally {
-          this.progress = false
-          this.status = true
-        }
+    formatItemAsString(itemProps) {
+      const { header, value } = itemProps
+      const assumeDate = ['date', 'time'].find(d =>
+        header.value.toLowerCase().includes(d)
+      )
+      if (assumeDate) {
+        return new Date(value).getFullYear() > 1980
+          ? new Date(value).toLocaleString()
+          : new Date(value * 1000).toLocaleString()
+      }
+      if (Array.isArray(value)) {
+        return formatArray(value)
+      }
+      if (typeof value === 'object') {
+        return formatObject(value)
+      }
+      return value
+    },
+    async exportCSV() {
+      this.progress = true
+      this.status = false
+      this.error = false
+      try {
+        const headers = this.headers.map(h => h.text)
+        const filteredItems = this.$refs.tableRef.$children[0].filteredItems
+        // Change the items keys to match the headers
+        const itemsWithHeader = filteredItems.map(i =>
+          this.headers.reduce((o, h) => ({ ...o, [h.text]: i[h.value] }), {})
+        )
+        // update the data
+        const csv = await writeToString(itemsWithHeader, { headers })
+        this.csvString = csv
+        this.files = [new File([csv], 'results.csv', { type: 'text/csv' })]
+      } catch (error) {
+        console.error(error)
+        this.error = true
+        this.message = processError(error)
+      } finally {
+        this.progress = false
+        this.status = true
       }
     },
-    onFilterUpdate(selectedHeaders, searchValue) {
-      this.tableHeaders = this.headers.map(h => ({
-        ...h,
-        filterable: selectedHeaders.includes(h.value)
-      }))
-      this.search = searchValue
+    columnValues(val) {
+      return this.items.map(d => d[val])
     },
     onItemsUpdate() {
       // wait until the DOM has completely updated
@@ -139,3 +221,8 @@ export default {
   }
 }
 </script>
+<style>
+.v-data-table-header th {
+  white-space: nowrap;
+}
+</style>

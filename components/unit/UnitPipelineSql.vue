@@ -24,13 +24,16 @@
 </template>
 
 <script>
-import { processError } from '@/utils/utils'
-import db from '@/utils/sql'
+import { DB } from '@/utils/sql'
 
 export default {
   props: {
     sql: {
       type: String,
+      required: true
+    },
+    db: {
+      type: DB,
       required: true
     },
     parameterName: {
@@ -44,7 +47,6 @@ export default {
   },
   data() {
     return {
-      message: '',
       status: false,
       error: false,
       progress: false,
@@ -58,18 +60,16 @@ export default {
   },
   methods: {
     runQuery() {
-      this.message = ''
       this.error = false
       this.progress = true
       setTimeout(() => {
         try {
           const params = { [this.parameterKey]: this.parameter }
-          const { headers, items } = db.select(this.sql, params)
+          const { headers, items } = this.db.select(this.sql, params)
           this.$emit('update', { headers, items })
         } catch (error) {
           console.error(error)
           this.error = true
-          this.message = processError(error)
           this.$emit('update', { error })
         } finally {
           this.status = true

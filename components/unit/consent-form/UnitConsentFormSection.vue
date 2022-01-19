@@ -13,25 +13,46 @@
 
     <template v-if="section.type === 'data' && !section.hide">
       <VCheckbox
-        v-for="(title, j) in section.titles"
+        v-for="(k, j) in section.keys"
         :key="`data-${j}`"
         v-model="includedResults"
         :readonly="readonly"
         dense
-        :disabled="dataCheckboxDisabled[j]"
-        :label="title"
-        :value="section.keys[j]"
+        :disabled="!!dataCheckboxDisabled[k]"
+        :label="section.titles[j]"
+        :value="k"
         @change="updateConsent"
       ></VCheckbox>
+
       <VCheckbox
-        v-if="showDataExplorer"
         v-model="includedResults"
         :readonly="readonly"
         dense
-        label="Selected files in file explorer"
         value="file-explorer"
-        @change="updateConsent"
-      ></VCheckbox>
+        @change="updateFilesCheckbox"
+      >
+        <template #label>
+          <span
+            >Individual files (<a
+              style="text-decoration: underline"
+              @click="showDialog = true"
+              ><b>{{ selectedFiles.length }}</b> selected</a
+            >)</span
+          >
+        </template>
+      </VCheckbox>
+      <SelectFilesDialog
+        v-if="!readonly"
+        v-model="showDialog"
+        :file-manager="fileManager"
+        @return="returnDialog"
+      />
+      <ShowFilesDialog
+        v-else
+        v-model="showDialog"
+        :file-manager="fileManager"
+      />
+
       <VCheckbox
         v-for="(title, j) in section.additional"
         :key="`data-additional-${j}`"
@@ -97,6 +118,8 @@
 </template>
 
 <script>
+import FileManager from '~/utils/file-manager.js'
+
 export default {
   props: {
     section: {
@@ -112,19 +135,35 @@ export default {
       default: false
     },
     dataCheckboxDisabled: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     },
     showDataExplorer: {
       type: Boolean,
       default: true
+    },
+    fileManager: {
+      type: FileManager,
+      required: true
     }
   },
   data() {
     return {
       selected: null,
       value: null,
-      includedResults: null
+      includedResults: null,
+      showDialog: false
+    }
+  },
+  computed: {
+    key() {
+      return this.$route.params.key
+    },
+    selectedFiles() {
+      if (this.readonly) {
+        return Object.keys(this.fileManager.fileDict)
+      }
+      return this.$store.state.selectedFiles[this.key]
     }
   },
   created() {
@@ -159,6 +198,21 @@ export default {
         value: this.value,
         includedResults: this.includedResults
       })
+    },
+    returnDialog({ clear }) {
+      if (clear) {
+        this.includedResults = this.includedResults.filter(
+          x => x !== 'file-explorer'
+        )
+      } else if (!this.includedResults.includes('file-explorer')) {
+        this.includedResults.push('file-explorer')
+      }
+      this.updateConsent()
+    },
+    updateFilesCheckbox() {
+      if (this.includedResults.includes('file-explorer')) {
+        this.showDialog = true
+      }
     }
   }
 }

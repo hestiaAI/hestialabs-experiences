@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VAppBar fixed app color="white" height="75" style="z-index: 2000">
+    <VAppBar fixed app color="white" height="75" style="z-index: 2500">
       <VAppBarNavIcon
         aria-label="Open navigation menu"
         @click.stop="drawer = !drawer"

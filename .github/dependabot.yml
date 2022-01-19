@@ -6,11 +6,7 @@ updates:
   schedule:
     interval: weekly
     time: '00:00'
-  open-pull-requests-limit: 10
-  reviewers:
-    - valentinoli
-  assignees:
-    - valentinoli
+  open-pull-requests-limit: 20
   commit-message:
     prefix: fix
     prefix-development: chore

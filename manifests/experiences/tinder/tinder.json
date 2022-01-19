@@ -17,15 +17,14 @@
     {
       "key": "likes-dislikes-vue",
       "sql": "likes-dislikes",
-      "showTable": true,
+      "postprocessor": "likesDislikesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
         "title": "Likes vs Passes over time",
         "legendOffset": 350,
-        "accessor": [
-          {"text": "Likes", "value": "likes"},
-          {"text": "Passes", "value": "pass"}
-        ]
+        "dateAccessor": { "text": "Date", "value": "date" },
+        "seriesAccessor": { "text": "Action", "value": "action" },
+        "valueAccessor": "value"
       },
       "showTable": false,
       "title": "Likes and passes",
@@ -34,13 +33,14 @@
     {
       "key": "app-opens-vue",
       "sql": "app-opens",
+      "postprocessor": "appOpensData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
         "title": "Application usage over time",
         "legendOffset": 360,
-        "accessor": [
-          {"text": "App opened", "value": "open"}
-        ]
+        "dateAccessor": { "text": "Date", "value": "date" },
+        "seriesAccessor": { "text": "Action", "value": "action" },
+        "valueAccessor": "value"
       },
       "showTable": false,
       "title": "App openings",
@@ -49,16 +49,14 @@
     {
       "key": "monthly-history-vue",
       "sql": "likes-dislikes-messages",
+      "postprocessor": "likesDislikesMessagesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
         "title": "Activity history",
         "legendOffset": 200,
-        "accessor": [
-          {"text": "Likes", "value": "likes"},
-          {"text": "Passes", "value": "pass"},
-          {"text": "Messages received", "value": "msg_rcv"},
-          {"text": "Messages sent", "value": "msg_sent"}
-        ]
+        "dateAccessor": { "text": "Date", "value": "date" },
+        "seriesAccessor": { "text": "Action", "value": "action" },
+        "valueAccessor": "value"
       },
       "showTable": false,
       "title": "Likes, passes, messages",
@@ -77,7 +75,7 @@
       "sql": "likes-dislikes-open",
       "visualization": "scatter-likes-passes-correlation",
       "showTable": false,
-      "title": "Likes and passes correlation",
+      "title": "Likes / passes correlation",
       "text": "Observe the possible correlation between the number of likes/passes and the number of times you open the app."
     },
     {

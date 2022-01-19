@@ -8,9 +8,9 @@
       ref="iframe"
       :class="iframeClass"
       :src="href"
-      @load="onIframeLoad"
       width="100%"
       height="500px"
+      @load="onIframeLoad"
     />
   </div>
 </template>
@@ -21,6 +21,7 @@ import mixinPath from './mixin-path'
 
 export default {
   name: 'UnitFileExplorerViewerUnknown',
+  mixins: [mixin, mixinPath],
   data() {
     return {
       showIframe: false,
@@ -32,7 +33,6 @@ export default {
       return this.showIframe ? '' : 'd-none'
     }
   },
-  mixins: [mixin, mixinPath],
   watch: {
     filename() {
       this.showIframe = false

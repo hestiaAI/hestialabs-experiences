@@ -1,5 +1,11 @@
-import { timedObservationViewer } from '~/manifests/generic-pipelines'
+import {
+  timedObservationViewer,
+  genericDateViewer,
+  genericLocationViewer
+} from '~/manifests/generic-pipelines'
 
 export default {
-  timedObservationViewer
+  timedObservationViewer,
+  genericDateViewer,
+  genericLocationViewer
 }

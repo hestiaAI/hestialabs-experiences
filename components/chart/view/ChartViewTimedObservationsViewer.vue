@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <VRow>
+    <ChartViewVRowWebShare>
       <VCol cols="12" md="8">
         <VRow>
           <VCol cols="8">
@@ -19,13 +19,13 @@
           </VCol>
         </VRow>
         <div id="line-chart"></div>
-        <div id="range-chart"></div>
+        <div :id="'range-chart' + graphId" class="range-chart"></div>
       </VCol>
       <VCol cols="12" md="4">
         <p>Information Type</p>
         <div id="row-chart"></div>
       </VCol>
-    </VRow>
+    </ChartViewVRowWebShare>
     <VRow>
       <VCol cols="9">
         <VRadioGroup
@@ -37,12 +37,11 @@
           <template #label>
             <div>Select a <strong>time range</strong></div>
           </template>
-          <VRadio label="ALL" value="ALL"></VRadio>
-          <VRadio label="1Y" value="1Y"></VRadio>
-          <VRadio label="3M" value="3M"></VRadio>
-          <VRadio label="1M" value="1M"></VRadio>
-          <VRadio label="7D" value="7D"></VRadio>
-          <VRadio label="1D" value="1D"></VRadio>
+          <VRadio
+            v-for="value in ['ALL', '1Y', '3M', '1M', '7D', '1D']"
+            :key="value"
+            v-bind="{ value, label: value }"
+          />
         </VRadioGroup>
       </VCol>
       <VCol cols="3">
@@ -296,7 +295,7 @@ export default {
 
       // Compute and draw line chart
       this.lineChart = new dc.LineChart('#line-chart')
-      this.rangeChart = new dc.BarChart('#range-chart')
+      this.rangeChart = new dc.BarChart('#range-chart' + this.graphId)
       this.timeDimension = ndx.dimension(d => d.date)
       this.timelineGroup = this.timeDimension
         .group(d => d3.timeMonth(d))
@@ -349,7 +348,12 @@ export default {
 
       // Compute and draw range chart
       this.rangeChart
-        .width(d3.select('#range-chart').node().getBoundingClientRect().width)
+        .width(
+          d3
+            .select('#range-chart' + this.graphId)
+            .node()
+            .getBoundingClientRect().width
+        )
         .height(40)
         .margins({ top: 0, right: 20, bottom: 20, left: 50 })
         .dimension(this.timeDimension)
@@ -491,11 +495,11 @@ export default {
   }
 }
 </script>
-<style>
-#range-chart g.y {
+<style scoped>
+::v-deep .range-chart > svg > g > g.axis.y {
   display: none;
 }
-.brush .custom-brush-handle {
+::v-deep .brush .custom-brush-handle {
   display: auto;
 }
 </style>

@@ -1,8 +1,7 @@
 <template>
   <VContainer>
-    <VRow>
-      <VCol cols="12" sm="1"></VCol>
-      <VCol cols="12" sm="10">
+    <ChartViewVRowWebShare>
+      <VCol cols="12">
         <VRow>
           <VCol cols="12" sm="8">
             <div id="volume-chart">
@@ -15,7 +14,7 @@
                 </span>
               </p>
             </div>
-            <div id="range-chart">
+            <div :id="'range-chart' + graphId" class="range-chart">
               <p class="muted pull-right" style="margin-right: 15px">
                 select a time range to zoom in
               </p>
@@ -37,7 +36,7 @@
         <VRow>
           <VCol cols="12" sm="4">
             <div id="engagement-chart">
-              <strong>Interactions with ads (click, video viewing)</strong>
+              <strong>Interactions with ads (clicks, video views)</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
@@ -82,14 +81,11 @@
           </div>
         </VRow>
       </VCol>
-      <VCol cols="12" sm="1"></VCol>
-    </VRow>
+    </ChartViewVRowWebShare>
     <VRow>
-      <VCol cols="12" sm="1"></VCol>
-      <VCol cols="12" sm="10">
+      <VCol cols="12">
         <UnitFilterableTable :data="{ headers: header, items: results }" />
       </VCol>
-      <VCol cols="12" sm="1"></VCol>
     </VRow>
   </VContainer>
 </template>
@@ -131,7 +127,7 @@ export default {
       ]
       // Create and bind charts to their respective divs
       const volumeChart = new dc.LineChart('#volume-chart')
-      const rangeChart = new dc.BarChart('#range-chart')
+      const rangeChart = new dc.BarChart('#range-chart' + this.graphId)
       const tableCount = new dc.DataCount('.dc-data-count')
       const companyChart = new dc.RowChart('#company-chart')
       const engagementChart = new dc.PieChart('#engagement-chart')
@@ -189,7 +185,7 @@ export default {
       const adPerDayDimension = ndx.dimension(d => d.day)
       const companyDimension = ndx.dimension(d => d.companyName)
       const engagementDimension = ndx.dimension(d =>
-        d.engagement ? 'True' : 'False'
+        d.engagement ? 'Yes' : 'No'
       )
       const targetingTypeDimension = ndx.dimension(d => d.targetingType)
       const targetingValueDimension = ndx.dimension(d => d.targetingValue)
@@ -430,32 +426,32 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 @import 'assets/styles/dc.css';
 
-body {
+::v-deep body {
   font-family: sans-serif;
   color: #22313f;
 }
 
-.dc-chart g.row text {
+::v-deep .dc-chart g.row text {
   fill: #22313f;
   font-weight: bold;
 }
 
-#range-chart g.y {
+::v-deep .range-chart > svg > g > g.axis.y {
   display: none;
 }
 
-.reset {
+::v-deep .reset {
   margin-left: 1rem;
 }
 
-.v-application a.reset {
+::v-deep .v-application a.reset {
   color: rgb(85, 3, 30);
 }
 
-p.filters {
+::v-deep p.filters {
   font-size: 0.8rem;
   font-style: italic;
 }

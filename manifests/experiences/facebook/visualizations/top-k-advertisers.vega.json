@@ -21,7 +21,7 @@
   ],
 
   "title": {
-    "text": "Advertiser informing Facebook in total",
+    "text": "Third paties reporting your activity to Facebook (in total)",
     "anchor": "start",
     "frame": "group",
     "subtitle": {"signal": "'between ' + timeFormat(extent[0], \"%d/%m/%Y\") + ' and ' + timeFormat(extent[1], \"%d/%m/%Y\")"},

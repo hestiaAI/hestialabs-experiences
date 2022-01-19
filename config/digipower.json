@@ -3,8 +3,10 @@
   "experiences": [
     "apple",
     "bookbeat",
+    "demdex",
     "facebook",
     "finnair",
+    "full-contact",
     "gigantti",
     "google",
     "helsingin-sanomat",
@@ -14,6 +16,7 @@
     "linkedin",
     "netflix",
     "s-ryhma",
+    "sbb",
     "signal",
     "spotify",
     "tracker-control",
@@ -25,12 +28,14 @@
     "explorer"
   ],
   "hashtags": ["dataprivacy", "hestialabs", "digipower"],
-  "publicKey": "710decd4e26312d3e7b02854fefe53cc1ef8d7b25e8f99bc6df956c1a526e144",
+  "filedrop": "https://drive.infomaniak.com/app/collaborate/193995/ca7c15c9-266c-4776-a319-b30514d57c00",
   "consent": {
     "default": [
       {
         "title": "SHARE MY #DIGIPOWER DATA",
-        "description": "With this form, you can register your consent, and optionally share additional data, in line with the SITRA #digipower contract."
+        "description": "With this form, you can register your consent, and optionally share additional data, in line with the SITRA #digipower contract. Please enter your name:",
+        "type": "input",
+        "name": "Name"
       },
       {
         "title": "WHICH DATA SHOULD BE SHARED?",

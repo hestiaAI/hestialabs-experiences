@@ -1,3 +1,11 @@
-import { genericDateViewer } from '~/manifests/generic-pipelines'
+import {
+  genericDateViewer,
+  jsonToTableConverter,
+  genericLocationViewer
+} from '~/manifests/generic-pipelines'
 
-export default { genericDateViewer }
+export default {
+  genericDateViewer,
+  jsonToTableConverter,
+  genericLocationViewer
+}

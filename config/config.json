@@ -3,7 +3,6 @@
     "amazon",
     "apple",
     "facebook",
-    "facebook-test",
     "google",
     "spotify",
     "netflix",
@@ -13,14 +12,12 @@
     "youtube",
     "playground",
     "uber",
-    "uber-kepler",
     "ad-radar",
     "explorer",
-    "google-my-activity",
     "other"
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
-  "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
+  "filedrop": "https://example.com",
   "consent": {
     "default": [
       {
