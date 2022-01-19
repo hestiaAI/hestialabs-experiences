@@ -63,12 +63,6 @@ Note: All files and folders should match the following regular expression: [`^(?
     */
   "data": ["twitter.zip"],
   /**
-    * If the input is a zip and a file is missing, the extraction will fail if this parameter is false.
-    * @type Boolean
-    * @default false
-    */
-  "allowMissingFiles": true,
-  /**
     * Array defining the blocks to show in the default view. Each section section can have:
     * - A SPARQL query
     * - A function used as the custom pipeline (defined in pipeline.js)

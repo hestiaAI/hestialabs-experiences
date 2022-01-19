@@ -14,7 +14,6 @@
             extensions,
             files,
             multiple,
-            allowMissingFiles,
             samples: data,
             isGenericViewer
           }"
@@ -153,10 +152,6 @@ export default {
       type: Object,
       default: undefined
     },
-    allowMissingFiles: {
-      type: Boolean,
-      default: false
-    },
     customPipelines: {
       type: Object,
       default: undefined
@@ -255,11 +250,7 @@ export default {
       // Clean vuex state before changing the filemanager
       this.$store.commit('setFileExplorerCurrentItem', {})
 
-      this.fileManager = new FileManager(
-        this.preprocessors,
-        this.allowMissingFiles,
-        fileManagerWorkers
-      )
+      this.fileManager = new FileManager(this.preprocessors, fileManagerWorkers)
       await this.fileManager.init(uppyFiles, this.multiple, this.files)
 
       // Populate database

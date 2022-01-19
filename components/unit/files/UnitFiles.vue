@@ -62,10 +62,6 @@ export default {
       type: Array,
       default: () => []
     },
-    allowMissingFiles: {
-      type: Boolean,
-      default: false
-    },
     isGenericViewer: Boolean
   },
   data() {

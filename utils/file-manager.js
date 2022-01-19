@@ -81,15 +81,13 @@ export default class FileManager {
   /**
    * Builds a FileManager object without any files, just setting the configuration.
    * @param {Object} preprocessors maps file name to preprocessor function
-   * @param {Boolean} allowMissingFiles
    */
-  constructor(preprocessors, allowMissingFiles = false, workers) {
+  constructor(preprocessors, workers) {
     this.supportedExtensions = new Set([
       ...Object.keys(extension2filetype),
       ...Object.values(extension2filetype)
     ])
     this.preprocessors = preprocessors ?? {}
-    this.allowMissingFiles = allowMissingFiles
     this.setInitialValues()
     this.workers = workers
   }
@@ -206,12 +204,10 @@ export default class FileManager {
    * Loads and returns the content of a text file if it has not already been loaded.
    * @param {String} filePath
    * @returns {Promise<String>}
+   * @throws an error if the file does not exist
    */
   async getText(filePath) {
     if (!this.hasFile(filePath)) {
-      if (this.allowMissingFiles) {
-        return '{}'
-      }
       throw new Error(`The file ${filePath} was not provided.`)
     }
     if (!_.has(this.#fileTexts, filePath)) {
@@ -228,7 +224,7 @@ export default class FileManager {
   async getPreprocessedText(filePath) {
     if (!_.has(this.#preprocessedTexts, filePath)) {
       let text = await this.getText(filePath)
-      if (text === '' && this.allowMissingFiles) {
+      if (text === '') {
         this.#preprocessedTexts[filePath] = text
       } else {
         for (const preprocessor of this.getPreprocessors(filePath)) {

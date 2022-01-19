@@ -2,14 +2,13 @@ import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 
 test('an empty file manager', async () => {
-  const fileManager = new FileManager({}, true)
+  const fileManager = new FileManager({})
   fileManager.init([], false)
-  const bobo = await fileManager.getText('bobo.json')
-  expect(bobo).toStrictEqual('{}')
+  await expect(() => fileManager.getText('bobo.json')).rejects.toThrow()
 })
 
 test('a json file in file manager', async () => {
-  const fileManager = new FileManager({}, true)
+  const fileManager = new FileManager({})
   const fileName = 'bibi/bobo.json'
   const file = mockFile(fileName, '{"hello": 1}')
   await fileManager.init([file], true)
@@ -20,7 +19,7 @@ test('a json file in file manager', async () => {
 })
 
 test('findMatchingFilePaths', async () => {
-  const fileManager = new FileManager({}, true)
+  const fileManager = new FileManager({})
   const fileName1 = 'bibi/bubo.json'
   const fileContent = '{"hello": [11,22,33]}'
   const file1 = mockFile(fileName1, fileContent)
@@ -39,7 +38,7 @@ test('findMatchingFilePaths', async () => {
 })
 
 test('findMatchingObjects', async () => {
-  const fileManager = new FileManager({}, true)
+  const fileManager = new FileManager({})
   const fileName = 'bibi/bubo.json'
   const fileContent = '{"hello": [11,22,33]}'
   const file = mockFile(fileName, fileContent)
@@ -60,7 +59,7 @@ test('findMatchingObjects', async () => {
 })
 
 test('short filenames', async () => {
-  const fileManager = new FileManager({}, true)
+  const fileManager = new FileManager({})
   const f1 = 'foo/bar.txt'
   const f2 = 'foo/toc.txt'
   const f3 = 'bar.txt'
@@ -84,7 +83,7 @@ test('short filenames', async () => {
 })
 
 test('files are filtered', async () => {
-  const fileManager = new FileManager({}, true)
+  const fileManager = new FileManager({})
   const f1 = mockFile('__MACOSX/ignored.txt', '')
   const f2 = mockFile('test/.DS_STORE', '')
   const f3 = mockFile('test/.DS_Store', '')

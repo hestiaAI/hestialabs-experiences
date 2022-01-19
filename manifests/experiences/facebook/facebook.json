@@ -14,7 +14,6 @@
   "preprocessors": {
     "**/*.json": "facebook"
   },
-  "allowMissingFiles": true,
   "collaborator": {
     "title": "The Eyeballs Collective",
     "icon": "the-eyeballs.svg",
