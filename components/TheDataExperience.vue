@@ -261,7 +261,7 @@ export default {
       if (this.isRdfNeeded && this.yarrrml) {
         try {
           const processedFiles = await this.fileManager.preprocessFiles(
-            this.files
+            Object.values(this.files)
           )
           this.rml = await parseYarrrml(this.yarrrml)
           await rdfUtils.generateRDF(this.rml, processedFiles)

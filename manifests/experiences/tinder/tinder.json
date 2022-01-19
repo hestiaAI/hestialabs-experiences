@@ -4,7 +4,9 @@
   "dataPortal": "https://account.gotinder.com/data",
   "ext": "json",
   "data": ["tinder-synthetic.json"],
-  "files": ["input.json"],
+  "files": {
+    "tinder": "input.json"
+  },
   "preprocessors": {
     "input.json": "tinder"
   },
