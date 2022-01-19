@@ -204,7 +204,10 @@ export default {
     path() {
       // TODO avoid code duplication with viewer/mixin-path
       // maybe by setting path as an attribute on every viewer
-      return URL.createObjectURL(this.fileManager.fileDict[this.filename])
+      if (this.fileManager.fileDict[this.filename]) {
+        return URL.createObjectURL(this.fileManager.fileDict[this.filename])
+      }
+      return ''
     },
     componentForType() {
       const { fileType } = this
