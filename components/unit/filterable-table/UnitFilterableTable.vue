@@ -2,40 +2,47 @@
   <div>
     <DataValidator :data="data" :allow-missing-columns="true">
       <VAlert v-if="error" type="error">{{ message }}</VAlert>
-      <VRow align="center">
-        <BaseSearchBar v-model="search"></BaseSearchBar>
-        <VBtn class="ml-2" icon @click="advancedSearch = !advancedSearch">
-          <VIcon :color="advancedSearch ? 'primary' : ''">
-            $vuetify.icons.mdiFilter
-          </VIcon>
-        </VBtn>
-      </VRow>
+      <BaseSearchBar v-model="search"></BaseSearchBar>
       <VDataTable
         v-bind="{ headers: tableHeaders, search }"
         ref="tableRef"
         :items="filteredItems"
         multi-sort
         fixed-header
-        max-height="610"
+        height="530"
         :footer-props="{ itemsPerPageOptions: [5, 10, 15, 500, 1000] }"
         data-testid="data-table"
         @current-items="onItemsUpdate"
       >
-        <template v-if="advancedSearch" #header>
-          <tr class="grey lighten-3">
-            <td v-for="header in headers" :key="header.value">
+        <template v-for="header in headers" #[`header.${header.value}`]>
+          {{ header.text }}
+          <VMenu
+            :id="header.value"
+            :key="header.value"
+            offset-y
+            :close-on-content-click="false"
+          >
+            <template #activator="{ on, attrs }">
+              <VBtn icon v-bind="attrs" v-on="on">
+                <VIcon small :color="filters[header.value] ? 'primary' : ''">
+                  $vuetify.icons.mdiFilter
+                </VIcon>
+              </VBtn>
+            </template>
+            <div style="background-color: white; width: 280px">
               <VAutocomplete
                 v-model="filters[header.value]"
                 flat
                 hide-details
+                full-width
                 multiple
-                attach
                 chips
                 dense
                 clearable
                 class="pa-4"
                 label="Search ..."
                 :items="columnValues(header.value)"
+                :menu-props="{ closeOnClick: true }"
               >
                 <template #selection="{ item, index }">
                   <VChip v-if="index < 5">
@@ -48,8 +55,8 @@
                   </span>
                 </template>
               </VAutocomplete>
-            </td>
-          </tr>
+            </div>
+          </VMenu>
         </template>
         <template #item.url="{ value }">
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
