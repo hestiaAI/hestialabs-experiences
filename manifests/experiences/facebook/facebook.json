@@ -4,6 +4,12 @@
   "dataPortal": "https://www.facebook.com/help/212802592074644",
   "ext": "zip",
   "data": [],
+  "files": {
+    "advertisers-interacted": "**/ads_information/advertisers_you've_interacted_with.json",
+    "advertisers-contact-list": "**/ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json",
+    "off-facebook-activity": "**/apps_and_websites_off_of_facebook/your_off-facebook_activity.json",
+    "ads-interests": "**/other_logged_information/ads_interests.json"
+  },
   "preprocessors": {
     "**/*.json": "facebook"
   },
@@ -17,6 +23,7 @@
     {
       "key": "off-facebook-activity-count",
       "sql": "off-facebook-activity-count",
+      "files": ["off-facebook-activity"],
       "visualization": "ChartViewTopRow.vue",
       "vizProps": {
         "dateFormat": "%s"
@@ -28,6 +35,7 @@
     {
       "key": "off-facebook-activity-type-count",
       "sql": "off-facebook-activity-type-count",
+      "files": ["off-facebook-activity"],
       "postprocessor": "sunburstTargetingAdvertiser",
       "visualization": "ChartViewSunburst.vue",
       "showTable": false,
@@ -37,6 +45,7 @@
     {
       "key": "ad-interactions",
       "sql": "ad-interactions",
+      "files": ["advertisers-interacted"],
       "showTable": true,
       "title": "Ad interactions",
       "text": "See the list of ads with which you have interacted."
@@ -44,6 +53,7 @@
     {
       "key": "your-topics",
       "sql": "your-topics",
+      "files": ["ads-interests"],
       "showTable": true,
       "title": "Inferred interests",
       "text": "Get a list of topics that Facebook thinks you're interested in."
@@ -51,6 +61,7 @@
     {
       "key": "advertisers-contact-list",
       "sql": "advertisers-contact-list",
+      "files": ["advertisers-contact-list"],
       "showTable": true,
       "title": "Contact list",
       "text": "Get a list of advertisers that have uploaded a contact list containing you."
@@ -90,6 +101,7 @@
           }
         ]
       },
+      "files": ["advertisers-contact-list"],
       "showTable": true,
       "title": "Advertisers using your data",
       "text": "See all advertisers that use Facebook to get information about you"
