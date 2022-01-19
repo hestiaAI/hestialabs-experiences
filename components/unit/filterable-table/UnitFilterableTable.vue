@@ -100,6 +100,7 @@
 import { writeToString } from '@fast-csv/format'
 import { processError } from '@/utils/utils'
 import { formatObject, formatArray } from '@/utils/json'
+import { toDateString } from '@/utils/dates'
 export default {
   name: 'UnitFilterableTable',
   props: {
@@ -164,21 +165,13 @@ export default {
   methods: {
     formatItemAsString(itemProps) {
       const { header, value } = itemProps
-      const assumeDate = ['date', 'time'].find(d =>
-        header.value.toLowerCase().includes(d)
-      )
-      if (assumeDate) {
-        return new Date(value).getFullYear() > 1980
-          ? new Date(value).toLocaleString()
-          : new Date(value * 1000).toLocaleString()
-      }
       if (Array.isArray(value)) {
         return formatArray(value)
       }
       if (typeof value === 'object') {
         return formatObject(value)
       }
-      return value
+      return toDateString(header.value, value)
     },
     async exportCSV() {
       this.progress = true

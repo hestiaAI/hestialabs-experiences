@@ -1,5 +1,5 @@
 import _ from 'lodash'
-
+import { toDateString } from '@/utils/dates'
 export function filterCondition(item, filter) {
   filter = filter.toLowerCase()
   return (
@@ -189,7 +189,7 @@ export function processJsonNode(json, path, type, processedChildren) {
     if (attrName) {
       item.name = attrName
     }
-    item.value = json
+    item.value = toDateString(attrName, json)
   } else if (type === LIST) {
     const description = formatArray(json)
     item.name = attrName ? `${attrName} / ${description}` : description
