@@ -39,12 +39,11 @@ Note: All files and folders should match the following regular expression: [`^(?
     */
   "ext": "json,csv,zip",
   /**
-    * Array of relative paths to files to extract from a zip archive
-    * (required when "ext" includes "zip", except the playground)
-    * @type Array[String]
-    * @default []
+    * The list of specific files that are used in the experiences. They are defined by an ID and a glob.
+    * In the experiences, we should always refer to the ID of the files.
+    * @type Object
     */
-  "files": ["data/ad-impressions.js"],
+  "files": {"impressions": "**/data/ad-impressions.js"},
   /**
     * Can the user input multiple files?
     * @type Boolean
@@ -67,6 +66,7 @@ Note: All files and folders should match the following regular expression: [`^(?
     * - A SPARQL query
     * - A function used as the custom pipeline (defined in pipeline.js)
     * - A SQL query
+    * - A list of files required to run the experience. Refer to the IDs defined above.
     * - A postprocessor (defined in postprocessors.js)
     * - A parameter name (if necessary), and for sql pipelines a parameter key used in the query (prefixed with :)
     * - Additional arguments to pass to a custom pipeline
@@ -83,6 +83,7 @@ Note: All files and folders should match the following regular expression: [`^(?
       "query": "sparql_query_filename",
       "customPipeline": "pipeline_function_name",
       "sql": "sql_query_filename",
+      "files": ["file_id_1", "file_id_2"]
       "postprocessor": "postprocessor_function_name",
       "parameterName": "Example",
       "parameterKey": ":example",
