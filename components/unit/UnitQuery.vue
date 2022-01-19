@@ -1,9 +1,18 @@
 <template>
   <div>
     <VCard v-if="defaultViewElements" class="pa-2 mb-6">
-      <VCardTitle class="justify-center">{{
-        defaultViewElements.title
-      }}</VCardTitle>
+      <VRow v-if="fileGlobs.length > 0">
+        <VCol cols="1"></VCol>
+        <VCol cols="10"
+          ><VCardTitle class="justify-center">{{
+            defaultViewElements.title
+          }}</VCardTitle></VCol
+        >
+        <VCol cols="1" align-self="center" class="full-height text-center">
+          <UnitFilesDialog :file-globs="fileGlobs"
+        /></VCol>
+      </VRow>
+
       <VRow>
         <VCol cols="8" class="mx-auto">
           {{ defaultViewElements.text }}
@@ -45,9 +54,6 @@
               @update="onUnitResultsUpdate"
             />
           </VCol>
-        </VRow>
-        <VRow v-if="fileGlobs.length > 0">
-          <VCol> <UnitFilesDialog :file-globs="fileGlobs" /></VCol>
         </VRow>
         <template v-if="finished">
           <VRow>

@@ -1,7 +1,7 @@
 <template>
   <VDialog v-model="show" width="500" style="z-index: 2000" scrollable>
     <template #activator="{ on }">
-      <VTooltip right>
+      <VTooltip :right="main" :left="!main">
         <template #activator="{ on: onTooltip }">
           <span v-on="onTooltip">
             <VIcon v-on="on">$vuetify.icons.mdiFolderInformationOutline</VIcon>
@@ -23,7 +23,9 @@
             </li>
           </ul>
         </template>
-        <p v-else class="mt-4">No specific files required.</p>
+        <p v-else class="mt-4">
+          No specific files are used in these experiences.
+        </p>
         <p v-if="main" class="mt-4">
           All JSON/CSV files provided are analysed for dates and geographical
           coordinates. The related experiences will be more interesting the more
