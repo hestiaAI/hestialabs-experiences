@@ -1,5 +1,6 @@
 import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
+import { arrayEqualNoOrder } from '~/utils/test-utils'
 
 test('an empty file manager', async () => {
   const fileManager = new FileManager({})
@@ -92,4 +93,41 @@ test('files are filtered', async () => {
   expect(fileManager.hasFile(f1)).toBeFalsy()
   expect(fileManager.hasFile(f2)).toBeFalsy()
   expect(fileManager.hasFile(f3)).toBeFalsy()
+})
+
+test('files from IDs', async () => {
+  const fileManager = new FileManager({})
+  const content = 'hello world'
+
+  const id1 = 'foobar'
+  const path1 = 'foo/bar.txt'
+  const file1 = mockFile(path1, content)
+
+  const id2 = 'hello'
+  const path2 = 'test/hello.txt'
+  const file2 = mockFile(path2, content)
+
+  const id3 = 'all'
+  const ids = {
+    [id1]: '**/bar.txt',
+    [id2]: '**/hello.txt',
+    [id3]: '**/*.txt'
+  }
+  await fileManager.init([file1, file2], true, ids)
+
+  let path, text
+  path = fileManager.getFilePathsFromId(id1, true)
+  expect(path).toStrictEqual(path1)
+  text = await fileManager.getPreprocessedTextFromId(id1, true)
+  expect(text).toStrictEqual(content)
+
+  path = fileManager.getFilePathsFromId(id2, true)
+  expect(path).toStrictEqual(path2)
+  text = await fileManager.getPreprocessedTextFromId(id2, true)
+  expect(text).toStrictEqual(content)
+
+  const paths = fileManager.getFilePathsFromId(id3, false)
+  arrayEqualNoOrder(paths, [path1, path2])
+
+  expect(fileManager.getFilePathsFromId('wrong-id', true)).toBe(null)
 })
