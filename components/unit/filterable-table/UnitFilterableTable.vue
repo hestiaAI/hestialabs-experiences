@@ -28,7 +28,7 @@
                   small
                   :color="
                     filters[header.value] && filters[header.value].length
-                      ? 'primary'
+                      ? 'success'
                       : ''
                   "
                 >
@@ -67,7 +67,7 @@
                 color="primary"
                 class="ml-2 mb-2"
                 @click="filters[header.value] = []"
-                >Clean</VBtn
+                >Clear</VBtn
               >
             </div>
           </VMenu>
