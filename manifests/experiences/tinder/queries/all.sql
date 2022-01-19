@@ -8,15 +8,3 @@ SELECT  date,
         MAX(CASE WHEN action='app_open'THEN amount ELSE NULL END) open
 FROM TinderDB
 GROUP BY date;
-
-
-/*
-  ?date 
-  ?pass 
-  ?like 
-  ?open 
-?number_of_match 
-  ?number_of_messages_received 
-  ?number_of_messages_sent 
-?number_of_superlike
-*/
