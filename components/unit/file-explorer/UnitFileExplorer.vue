@@ -123,6 +123,7 @@
 
 <script>
 import _ from 'lodash'
+import { mapState } from 'vuex'
 import FileManager from '~/utils/file-manager.js'
 import { jsonToTableConverter } from '~/manifests/generic-pipelines'
 
@@ -160,6 +161,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['fileExplorerCurrentItem']),
     active: {
       get() {
         return _.has(this.selectedItem, 'filename') ? [this.selectedItem] : []
@@ -178,7 +180,7 @@ export default {
       }
     },
     selectedItem() {
-      const item = this.$store.getters.fileExplorerCurrentItem
+      const item = this.fileExplorerCurrentItem
       if (_.has(item, 'filename')) {
         if (!_.has(item, 'type')) {
           return this.searchItemWithFilename(item.filename)

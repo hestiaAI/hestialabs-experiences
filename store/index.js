@@ -47,10 +47,7 @@ export const getters = {
     state =>
     ({ params: { key } }) => {
       return state.manifestMap[key] || {}
-    },
-  fileExplorerCurrentItem(state) {
-    return state.fileExplorerCurrentItem
-  }
+    }
 }
 
 export const mutations = {
