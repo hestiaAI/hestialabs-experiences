@@ -291,12 +291,15 @@ export default class FileManager {
   }
 
   /**
-   * Return the file that matches the ID.
-   * If multiple files are found, print a warning and return the first one.
+   * Return the file path(s) that match the ID.
+   * If multiple files are found and `unique` is set to true,
+   * print a warning and return only the first one.
    * If no file is found, return null.
    * @param {String} id
+   * @param {Boolean} unique return a single result
+   * @returns a String (unique=true), an array (unique=false), or null
    */
-  async getPreprocessedTextFromId(id) {
+  getFilePathsFromId(id, unique = true) {
     if (!(id in this.idToGlob)) {
       return null
     }
@@ -305,10 +308,55 @@ export default class FileManager {
     if (paths.length === 0) {
       return null
     } else if (paths.length > 1) {
-      console.warn(`Multiple files were found for id="${id}", glob="${glob}"`)
+      if (unique) {
+        console.warn(`Multiple files were found for id="${id}", glob="${glob}"`)
+      } else {
+        return paths
+      }
     }
-    const file = await this.getPreprocessedText(paths[0])
-    return file
+    return paths[0]
+  }
+
+  /**
+   * Return the preprocessed text of the file(s) that match the ID.
+   * If multiple files are found and `unique` is set to true,
+   * print a warning and return only the first one.
+   * If no file is found, return null.
+   * @param {String} id
+   * @param {Boolean} unique return a single result
+   * @returns a String (unique=true), an array (unique=false), or null
+   */
+  async getPreprocessedTextFromId(id, unique = true) {
+    const paths = this.getFilePathsFromId(id, unique)
+    if (paths === null) {
+      return null
+    }
+    if (unique) {
+      return await this.getPreprocessedText(paths)
+    } else {
+      return await Promise.all(paths.map(p => this.getPreprocessedText(p)))
+    }
+  }
+
+  /**
+   * Return the CSV items of the file(s) that match the ID.
+   * If multiple files are found and `unique` is set to true,
+   * print a warning and return only the first one.
+   * If no file is found, return null.
+   * @param {String} id
+   * @param {Boolean} unique return a single result
+   * @returns a String (unique=true), an array (unique=false), or null
+   */
+  async getCsvItemsFromId(id, unique = true) {
+    const paths = this.getFilePathsFromId(id, unique)
+    if (paths === null) {
+      return null
+    }
+    if (unique) {
+      return await this.getCsvItems(paths)
+    } else {
+      return await Promise.all(paths.map(p => this.getCsvItems(p)))
+    }
   }
 
   /**
