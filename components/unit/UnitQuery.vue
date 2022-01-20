@@ -1,7 +1,7 @@
 <template>
   <div>
     <VCard v-if="defaultViewElements" class="pa-2 mb-6">
-      <VRow v-if="fileGlobs.length > 0">
+      <VRow>
         <VCol cols="1"></VCol>
         <VCol cols="10"
           ><VCardTitle class="justify-center">{{
@@ -9,7 +9,22 @@
           }}</VCardTitle></VCol
         >
         <VCol cols="1" align-self="center" class="full-height text-center">
-          <UnitFilesDialog :file-globs="fileGlobs"
+          <VTooltip
+            v-if="
+              ['genericDateViewer', 'genericLocationViewer'].includes(
+                defaultViewElements.key
+              )
+            "
+            left
+          >
+            <template #activator="{ on }">
+              <VIcon v-on="on">$vuetify.icons.mdiFileMultipleOutline</VIcon>
+            </template>
+            <span>All files are used</span>
+          </VTooltip>
+          <UnitFilesDialog
+            v-else-if="fileGlobs.length > 0"
+            :file-globs="fileGlobs"
         /></VCol>
       </VRow>
 

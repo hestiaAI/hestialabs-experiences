@@ -21,6 +21,7 @@ import {
   mdiStepForward,
   mdiTwitter,
   mdiFolderInformationOutline,
+  mdiFileMultipleOutline,
   mdiFilter
 } from '@mdi/js'
 
@@ -50,6 +51,7 @@ export default {
       mdiStepForward,
       mdiTwitter,
       mdiFolderInformationOutline,
+      mdiFileMultipleOutline,
       mdiFilter
     }
   },

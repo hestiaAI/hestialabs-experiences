@@ -27,9 +27,11 @@
           No specific files are used in these experiences.
         </p>
         <p v-if="main" class="mt-4">
-          All JSON/CSV files provided are analysed for dates and geographical
-          coordinates. The related experiences will be more interesting the more
-          files you include.
+          For the experiences marked with
+          <VIcon>$vuetify.icons.mdiFileMultipleOutline</VIcon>, all JSON/CSV
+          files provided will be analysed for dates and geographical
+          coordinates. These experiences will be more interesting the more files
+          you include.
         </p>
       </VCardText>
 
