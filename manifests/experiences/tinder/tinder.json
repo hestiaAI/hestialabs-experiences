@@ -18,7 +18,7 @@
   "defaultView": [
     {
       "key": "likes-dislikes-vue",
-      "query": "likes-dislikes",
+      "sql": "likes-dislikes",
       "postprocessor": "likesDislikesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
@@ -34,7 +34,7 @@
     },
     {
       "key": "app-opens-vue",
-      "query": "app-opens",
+      "sql": "app-opens",
       "postprocessor": "appOpensData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
@@ -50,7 +50,7 @@
     },
     {
       "key": "monthly-history-vue",
-      "query": "likes-dislikes-messages",
+      "sql": "likes-dislikes-messages",
       "postprocessor": "likesDislikesMessagesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
@@ -66,7 +66,7 @@
     },
     {
       "key": "donut",
-      "query": "all",
+      "sql": "all",
       "visualization": "donut-multiple-comparisons",
       "showTable": false,
       "title": "Pairs",
@@ -74,7 +74,7 @@
     },
     {
       "key": "likes-dislikes-open",
-      "query": "likes-dislikes-open",
+      "sql": "likes-dislikes-open",
       "visualization": "scatter-likes-passes-correlation",
       "showTable": false,
       "title": "Likes / passes correlation",
@@ -82,7 +82,7 @@
     },
     {
       "key": "all",
-      "query": "all",
+      "sql": "all",
       "showTable": true,
       "title": "All data",
       "text": "If you want to inspect precisely the values for each day, all the data can be summarized in a table."
