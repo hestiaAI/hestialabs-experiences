@@ -251,7 +251,12 @@ export default {
       this.$store.commit('setFileExplorerCurrentItem', {})
 
       this.fileManager = new FileManager(this.preprocessors, fileManagerWorkers)
-      await this.fileManager.init(uppyFiles, this.multiple, this.files)
+      try {
+        await this.fileManager.init(uppyFiles, this.multiple, this.files)
+      } catch (e) {
+        this.handleError(e)
+        return
+      }
 
       // Populate database
       if (this.databaseBuilder !== undefined) {
