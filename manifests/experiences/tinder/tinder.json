@@ -19,6 +19,7 @@
     {
       "key": "likes-dislikes-vue",
       "sql": "likes-dislikes",
+      "files": ["tinder"],
       "postprocessor": "likesDislikesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
@@ -35,6 +36,7 @@
     {
       "key": "app-opens-vue",
       "sql": "app-opens",
+      "files": ["tinder"],
       "postprocessor": "appOpensData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
@@ -51,6 +53,7 @@
     {
       "key": "monthly-history-vue",
       "sql": "likes-dislikes-messages",
+      "files": ["tinder"],
       "postprocessor": "likesDislikesMessagesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
@@ -67,6 +70,7 @@
     {
       "key": "donut",
       "sql": "all",
+      "files": ["tinder"],
       "visualization": "donut-multiple-comparisons",
       "showTable": false,
       "title": "Pairs",
@@ -75,6 +79,7 @@
     {
       "key": "likes-dislikes-open",
       "sql": "likes-dislikes-open",
+      "files": ["tinder"],
       "visualization": "scatter-likes-passes-correlation",
       "showTable": false,
       "title": "Likes / passes correlation",
@@ -83,6 +88,7 @@
     {
       "key": "all",
       "sql": "all",
+      "files": ["tinder"],
       "showTable": true,
       "title": "All data",
       "text": "If you want to inspect precisely the values for each day, all the data can be summarized in a table."
