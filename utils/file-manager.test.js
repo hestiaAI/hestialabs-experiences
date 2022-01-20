@@ -1,6 +1,8 @@
 import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { arrayEqualNoOrder } from '~/utils/test-utils'
+import { itemifyJSON } from '~/utils/json'
+import getCsvHeadersAndItems from '~/utils/csv'
 
 test('an empty file manager', async () => {
   const fileManager = new FileManager({})
@@ -11,12 +13,42 @@ test('an empty file manager', async () => {
 test('a json file in file manager', async () => {
   const fileManager = new FileManager({})
   const fileName = 'bibi/bobo.json'
-  const file = mockFile(fileName, '{"hello": 1}')
+  const content = '{"hello": 1}'
+  const file = mockFile(fileName, content)
   await fileManager.init([file], true)
 
-  expect(fileManager.hasFile(fileName)).toBe(true)
-  const bobo = await fileManager.getText(fileName)
-  expect(bobo).toStrictEqual('{"hello": 1}')
+  expect(fileManager.hasFile(fileName)).toBeTruthy()
+
+  const text = await fileManager.getText(fileName)
+  expect(text).toStrictEqual(content)
+
+  const processedText = await fileManager.getPreprocessedText(fileName)
+  expect(processedText).toStrictEqual(content)
+
+  const result = await fileManager.getJsonItems(fileName)
+  const expected = itemifyJSON(content)
+  expect(result).toEqual(expected)
+})
+
+test('a csv file in file manager', async () => {
+  const fileManager = new FileManager({}, true)
+  const fileName = 'test.csv'
+  const content = 'col1,col2\nhello,world\nfoo,bar'
+  const file = mockFile(fileName, content)
+  await fileManager.init([file], true)
+
+  expect(fileManager.hasFile(fileName)).toBeTruthy()
+
+  const text = await fileManager.getText(fileName)
+  expect(text).toStrictEqual(content)
+
+  const processedText = await fileManager.getPreprocessedText(fileName)
+  expect(processedText).toStrictEqual(content)
+
+  const result = await fileManager.getCsvItems(fileName)
+  const expected = await getCsvHeadersAndItems(content)
+  arrayEqualNoOrder(result.headers, expected.headers)
+  arrayEqualNoOrder(result.items, expected.items)
 })
 
 test('findMatchingFilePaths', async () => {
@@ -45,7 +77,7 @@ test('findMatchingObjects', async () => {
   const file = mockFile(fileName, fileContent)
   await fileManager.init([file], true)
 
-  expect(fileManager.hasFile(fileName)).toBe(true)
+  expect(fileManager.hasFile(fileName)).toBeTruthy()
   const bobo = await fileManager.getText(fileName)
   expect(bobo).toStrictEqual(fileContent)
 

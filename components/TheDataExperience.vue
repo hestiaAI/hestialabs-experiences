@@ -4,6 +4,7 @@
       <VCol cols="12 mx-auto" sm="6">
         <UnitIntroduction
           v-bind="{ companyName: title, dataPortal, isGenericViewer }"
+          ref="unit-introduction"
         />
       </VCol>
     </VRow>
@@ -17,6 +18,7 @@
             samples: data,
             isGenericViewer
           }"
+          ref="unit-files"
           @update="onUnitFilesUpdate"
         />
         <template v-if="progress">
@@ -240,7 +242,7 @@ export default {
       this.message = error instanceof Error ? error.message : error
       this.progress = false
     },
-    async onUnitFilesUpdate(uppyFiles) {
+    async onUnitFilesUpdate({ uppyFiles }) {
       this.message = ''
       this.error = false
       this.success = false
