@@ -1,7 +1,7 @@
 import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { arrayEqualNoOrder } from '~/utils/test-utils'
-import itemifyJSON from '~/utils/json'
+import { itemifyJSON } from '~/utils/json'
 import getCsvHeadersAndItems from '~/utils/csv'
 
 test('an empty file manager', async () => {

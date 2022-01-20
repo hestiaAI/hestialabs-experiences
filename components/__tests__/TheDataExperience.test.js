@@ -6,6 +6,9 @@ import path from 'path'
 import { mount } from '@vue/test-utils'
 import TheDataExperience from '~/components/TheDataExperience'
 
+// We need to disable workers for these tests
+jest.mock('~/utils/file-manager-workers', () => {})
+
 test('mounts without error', () => {
   const wrapper = mount(TheDataExperience, {
     propsData: {
@@ -31,12 +34,11 @@ test('process simple text file', async () => {
       $store: {
         state: {
           config: {}
-        }
+        },
+        commit: () => {}
       }
     }
   })
-  // We need to disable workers for these tests
-  wrapper.vm.$data.fileManager.workers = {}
 
   const fileContent = fs.readFileSync(
     path.resolve(__dirname, 'data/test.txt'),
