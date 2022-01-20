@@ -260,7 +260,12 @@ export default {
         this.allowMissingFiles,
         fileManagerWorkers
       )
-      await this.fileManager.init(uppyFiles, this.multiple)
+      try {
+        await this.fileManager.init(uppyFiles, this.multiple)
+      } catch (e) {
+        this.handleError(e)
+        return
+      }
 
       // Check that the required files are present in the archive
       const missing = this.files
