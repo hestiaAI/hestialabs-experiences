@@ -21,7 +21,7 @@ test('mounts without error', () => {
   expect(wrapper.findComponent({ ref: 'unit-files' }).exists()).toBeTruthy()
 })
 
-test('process simple test file', async () => {
+test('process simple text file', async () => {
   const wrapper = mount(TheDataExperience, {
     propsData: {
       title: 'Test',
@@ -52,5 +52,6 @@ test('process simple test file', async () => {
   await wrapper.vm.$nextTick()
   await wrapper.vm.$nextTick()
   await wrapper.vm.$nextTick()
+  expect(wrapper.vm.$data.error).toBeFalsy()
   expect(wrapper.vm.$data.success).toBeTruthy()
 })
