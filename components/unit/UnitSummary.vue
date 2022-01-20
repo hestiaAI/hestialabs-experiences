@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VCard>
+    <VCard class="pa-2 mb-6" flat>
       <VCardTitle class="justify-center">
         Here's a summary of what we have found
       </VCardTitle>

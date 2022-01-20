@@ -16,7 +16,7 @@
           class="fixed-tabs-bar"
         >
           <VTab>Upload</VTab>
-          <VTab :disabled="!success">Summary</VTab>
+          <VTab :disabled="!success" href="#summary">Summary</VTab>
           <VTab :disabled="!success">Files</VTab>
           <VTab
             v-for="(el, index) in defaultView"
@@ -29,42 +29,40 @@
         </VTabs>
         <VTabsItems v-model="tab">
           <VTabItem>
-            <div class="tabItem">
-              <VCol cols="12 mx-auto" sm="6">
-                <UnitIntroduction
-                  v-bind="{ companyName: title, dataPortal, isGenericViewer }"
-                />
-                <UnitFiles
-                  v-bind="{
-                    extensions,
-                    files,
-                    multiple,
-                    allowMissingFiles,
-                    samples: data,
-                    isGenericViewer
-                  }"
-                  @update="onUnitFilesUpdate"
-                />
-                <template v-if="progress">
-                  <BaseProgressCircular class="mr-2" />
-                  <span>Processing files...</span>
-                </template>
-                <template v-else-if="error || success">
-                  <VAlert
-                    :type="error ? 'error' : 'success'"
-                    border="top"
-                    colored-border
-                    max-width="600"
-                    >{{ message }}
-                  </VAlert>
-                </template>
-              </VCol>
-            </div>
+            <VCol cols="12 mx-auto" sm="6" class="tabItem pa-5">
+              <UnitIntroduction
+                v-bind="{ companyName: title, dataPortal, isGenericViewer }"
+              />
+              <UnitFiles
+                v-bind="{
+                  extensions,
+                  files,
+                  multiple,
+                  allowMissingFiles,
+                  samples: data,
+                  isGenericViewer
+                }"
+                @update="onUnitFilesUpdate"
+              />
+              <template v-if="progress">
+                <BaseProgressCircular class="mr-2" />
+                <span>Processing files...</span>
+              </template>
+              <template v-else-if="error || success">
+                <VAlert
+                  :type="error ? 'error' : 'success'"
+                  border="top"
+                  colored-border
+                  max-width="600"
+                  >{{ message }}
+                </VAlert>
+              </template>
+            </VCol>
           </VTabItem>
-          <VTabItem>
-            <div class="tabItem">
+          <VTabItem value="summary">
+            <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitSummary v-bind="{ fileManager }" />
-            </div>
+            </VCol>
           </VTabItem>
           <VTabItem>
             <div class="tabItem">
@@ -75,7 +73,7 @@
             v-for="(defaultViewElements, index) in defaultView"
             :key="index"
           >
-            <div class="tabItem">
+            <VCol cols="12 mx-auto" class="tabItem">
               <UnitQuery
                 v-bind="{
                   defaultViewElements,
@@ -92,10 +90,10 @@
                   db
                 }"
               />
-            </div>
+            </VCol>
           </VTabItem>
           <VTabItem v-if="consentForm">
-            <div class="tabItem">
+            <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitConsentForm
                 v-bind="{
                   consentForm,
@@ -104,7 +102,7 @@
                   showDataExplorer
                 }"
               />
-            </div>
+            </VCol>
           </VTabItem>
         </VTabsItems>
       </VCol>
@@ -308,6 +306,7 @@ export default {
 
       this.progress = false
       this.success = true
+      this.tab = 'summary'
 
       const elapsed = new Date() - start
       this.message = `Successfully processed in ${elapsed / 1000} sec.`
@@ -322,7 +321,7 @@ export default {
 .fixed-tabs-bar {
   position: -webkit-sticky;
   position: sticky;
-  top: 75px;
-  z-index: 200;
+  top: 60px;
+  z-index: 2500;
 }
 </style>

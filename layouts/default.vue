@@ -27,7 +27,7 @@
         bottom
         left
       >
-        Wants to know more about BLABLABLA ?
+        Wants to know more about attention economy ?
         <br />
         <a :href="newsletterURL" target="_blank" rel="noreferrer noopener">
           {{ newsletterMessage }}
@@ -50,21 +50,6 @@
 </template>
 
 <script>
-/*
-<VRow>
-          <VCol align="center">
-            <h2>
-              <a
-                :href="newsletterURL"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                {{ newsletterMessage }}
-              </a>
-            </h2>
-          </VCol>
-        </VRow>
-        */
 import { mapGetters } from 'vuex'
 
 export default {
@@ -155,6 +140,6 @@ export default {
 .fixedAlert {
   position: fixed;
   bottom: 0px;
-  z-index: 4;
+  z-index: 2500;
 }
 </style>

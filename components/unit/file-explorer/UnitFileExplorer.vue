@@ -10,6 +10,7 @@
       class="pa-2 mb-6 explorer"
       :min-height="height"
       height="auto"
+      flat
     >
       <style v-if="isFileLoading">
         :root {
