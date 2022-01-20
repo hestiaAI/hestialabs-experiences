@@ -1,6 +1,11 @@
 <template>
   <VBtn
     :outlined="outlined"
+    :fixed="fixed"
+    :right="right"
+    :bottom="bottom"
+    :top="top"
+    :left="left"
     v-bind="$attrs"
     class="my-2"
     @click="$emit('click', $event)"
@@ -20,6 +25,26 @@ export default {
     text: {
       type: String,
       default: ''
+    },
+    fixed: {
+      type: Boolean,
+      default: false
+    },
+    right: {
+      type: Boolean,
+      default: false
+    },
+    left: {
+      type: Boolean,
+      default: false
+    },
+    top: {
+      type: Boolean,
+      default: false
+    },
+    bottom: {
+      type: Boolean,
+      default: false
     },
     progress: {
       type: Boolean,
@@ -49,3 +74,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.v-btn {
+  z-index: 4;
+}
+</style>

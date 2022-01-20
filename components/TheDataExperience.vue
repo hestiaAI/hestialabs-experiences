@@ -1,72 +1,81 @@
 <template>
   <div>
+    <BaseButtonShare color="primary" :outlined="false" />
     <VRow>
-      <VCol cols="12 mx-auto" sm="6">
-        <UnitIntroduction
-          v-bind="{ companyName: title, dataPortal, isGenericViewer }"
-        />
-      </VCol>
-    </VRow>
-    <VRow>
-      <VCol cols="12 mx-auto" sm="6">
-        <UnitFiles
-          v-bind="{
-            extensions,
-            files,
-            multiple,
-            allowMissingFiles,
-            samples: data,
-            isGenericViewer
-          }"
-          @update="onUnitFilesUpdate"
-        />
-        <template v-if="progress">
-          <BaseProgressCircular class="mr-2" />
-          <span>Processing files...</span>
-        </template>
-        <template v-else-if="error || success">
-          <VAlert
-            :type="error ? 'error' : 'success'"
-            border="top"
-            colored-border
-            max-width="600"
-            >{{ message }}
-          </VAlert>
-        </template>
-      </VCol>
-    </VRow>
-    <template v-if="success">
-      <VRow>
-        <VCol>
-          <VTabs
-            v-model="tab"
-            dark
-            background-color="primary"
-            slider-color="secondary"
-            slider-size="4"
-            show-arrows
-            center-active
-            centered
-            fixed-tabs
+      <VCol>
+        <VTabs
+          v-model="tab"
+          dark
+          background-color="primary"
+          slider-color="secondary"
+          slider-size="4"
+          show-arrows
+          center-active
+          centered
+          fixed-tabs
+          class="fixed-tabs-bar"
+        >
+          <VTab>Upload</VTab>
+          <VTab :disabled="!success">Summary</VTab>
+          <VTab :disabled="!success">Files</VTab>
+          <VTab
+            v-for="(el, index) in defaultView"
+            :key="index"
+            :disabled="!success"
           >
-            <VTab>Summary</VTab>
-            <VTab>Files</VTab>
-            <VTab v-for="(el, index) in defaultView" :key="index">
-              {{ el.title }}
-            </VTab>
-            <VTab v-if="consentForm">Share my data</VTab>
-          </VTabs>
-          <VTabsItems v-model="tab">
-            <VTabItem>
+            {{ el.title }}
+          </VTab>
+          <VTab v-if="consentForm" :disabled="!success">Share my data</VTab>
+        </VTabs>
+        <VTabsItems v-model="tab">
+          <VTabItem>
+            <div class="tabItem">
+              <VCol cols="12 mx-auto" sm="6">
+                <UnitIntroduction
+                  v-bind="{ companyName: title, dataPortal, isGenericViewer }"
+                />
+                <UnitFiles
+                  v-bind="{
+                    extensions,
+                    files,
+                    multiple,
+                    allowMissingFiles,
+                    samples: data,
+                    isGenericViewer
+                  }"
+                  @update="onUnitFilesUpdate"
+                />
+                <template v-if="progress">
+                  <BaseProgressCircular class="mr-2" />
+                  <span>Processing files...</span>
+                </template>
+                <template v-else-if="error || success">
+                  <VAlert
+                    :type="error ? 'error' : 'success'"
+                    border="top"
+                    colored-border
+                    max-width="600"
+                    >{{ message }}
+                  </VAlert>
+                </template>
+              </VCol>
+            </div>
+          </VTabItem>
+          <VTabItem>
+            <div class="tabItem">
               <UnitSummary v-bind="{ fileManager }" />
-            </VTabItem>
-            <VTabItem>
+            </div>
+          </VTabItem>
+          <VTabItem>
+            <div class="tabItem">
               <UnitFileExplorer v-bind="{ fileManager }" />
-            </VTabItem>
-            <VTabItem
-              v-for="(defaultViewElements, index) in defaultView"
-              :key="index"
-            >
+            </div>
+          </VTabItem>
+          <VTabItem
+            v-for="(defaultViewElements, index) in defaultView"
+            :key="index"
+          >
+            <div class="tabItem">
               <UnitQuery
                 v-bind="{
                   defaultViewElements,
@@ -83,8 +92,10 @@
                   db
                 }"
               />
-            </VTabItem>
-            <VTabItem v-if="consentForm">
+            </div>
+          </VTabItem>
+          <VTabItem v-if="consentForm">
+            <div class="tabItem">
               <UnitConsentForm
                 v-bind="{
                   consentForm,
@@ -93,11 +104,11 @@
                   showDataExplorer
                 }"
               />
-            </VTabItem>
-          </VTabsItems>
-        </VCol>
-      </VRow>
-    </template>
+            </div>
+          </VTabItem>
+        </VTabsItems>
+      </VCol>
+    </VRow>
   </div>
 </template>
 
@@ -304,3 +315,14 @@ export default {
   }
 }
 </script>
+<style>
+.tabItem {
+  min-height: calc(100vh - 48px);
+}
+.fixed-tabs-bar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 75px;
+  z-index: 200;
+}
+</style>

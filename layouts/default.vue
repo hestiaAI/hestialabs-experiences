@@ -2,8 +2,56 @@
   <VApp>
     <TheAppBar />
     <VMain>
-      <VContainer class="mt-5">
-        <VRow>
+      <Nuxt />
+      <VSnackbar
+        v-model="snackbar"
+        content-class="v-snack__content-online-status"
+        color="info"
+        :timeout="timeout"
+      >
+        <template v-if="$nuxt.isOffline">
+          The app is running in offline mode
+        </template>
+        <template v-else> You are online again! </template>
+      </VSnackbar>
+      <VAlert
+        border="right"
+        colored-border
+        color="primary"
+        elevation="2"
+        close-text="Not now"
+        dismissible
+        max-width="20%"
+        class="fixedAlert"
+        fixed
+        bottom
+        left
+      >
+        Wants to know more about BLABLABLA ?
+        <br />
+        <a :href="newsletterURL" target="_blank" rel="noreferrer noopener">
+          {{ newsletterMessage }}
+        </a>
+      </VAlert>
+    </VMain>
+    <VFooter app absolute color="primary">
+      <div class="lighten-2 py-2 ma-auto white--text" align="center">
+        Educational material developed by
+        <a href="https://hestia.ai" target="_blank" style="color: white"
+          >Hestia.ai</a
+        >
+        <br />Currently in development | Subscribe to our
+        <a :href="newsletterURL" target="_blank" style="color: white">
+          Newsletter
+        </a>
+      </div>
+    </VFooter>
+  </VApp>
+</template>
+
+<script>
+/*
+<VRow>
           <VCol align="center">
             <h2>
               <a
@@ -16,33 +64,7 @@
             </h2>
           </VCol>
         </VRow>
-        <Nuxt />
-        <VSnackbar
-          v-model="snackbar"
-          content-class="v-snack__content-online-status"
-          color="info"
-          :timeout="timeout"
-        >
-          <template v-if="$nuxt.isOffline">
-            The app is running in offline mode
-          </template>
-          <template v-else> You are online again! </template>
-        </VSnackbar>
-      </VContainer>
-    </VMain>
-    <VFooter app absolute color="primary">
-      <div class="lighten-2 py-2 ma-auto white--text" align="center">
-        Educational material developed by
-        <a href="https://hestia.ai" target="_blank" style="color: white"
-          >Hestia.ai</a
-        >
-        <br />Currently in development
-      </div>
-    </VFooter>
-  </VApp>
-</template>
-
-<script>
+        */
 import { mapGetters } from 'vuex'
 
 export default {
@@ -128,4 +150,11 @@ export default {
 
 .v-snack__content.v-snack__content-online-status
   text-align: center
+</style>
+<style scoped>
+.fixedAlert {
+  position: fixed;
+  bottom: 0px;
+  z-index: 4;
+}
 </style>

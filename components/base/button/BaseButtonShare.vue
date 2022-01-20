@@ -3,6 +3,9 @@
     v-if="condition"
     icon="mdiShare"
     :text="buttonText"
+    bottom
+    right
+    fixed
     v-bind="$attrs"
     @click="share"
   />
