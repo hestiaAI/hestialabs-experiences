@@ -3,17 +3,6 @@
 import { JSONPath } from 'jsonpath-plus'
 import { DB } from '@/utils/sql'
 
-async function getFileFromGlob(glob, fileManager) {
-  const matches = fileManager.findMatchingFilePaths(glob)
-  if (matches.length === 0) {
-    return '{}'
-  } else if (matches.length > 1) {
-    console.warn(`File ${glob} was found multiple times`)
-  }
-  const file = await fileManager.getPreprocessedText(matches[0])
-  return JSON.parse(file)
-}
-
 export default async function databaseBuilder(fileManager) {
   const db = new DB()
   await db.init()
@@ -24,14 +13,14 @@ export default async function databaseBuilder(fileManager) {
     ['action', 'TEXT'],
     ['timestamp', 'INTEGER']
   ])
-  const advertisersInteractedWithFile = await getFileFromGlob(
-    "**/ads_information/advertisers_you've_interacted_with.json",
-    fileManager
+  const advertisersInteractedWithFile = JSON.parse(
+    await fileManager.getPreprocessedTextFromId('advertisers-interacted')
   )
-  const advertisersInteracted = JSONPath({
-    path: '$.history_v2[*]',
-    json: advertisersInteractedWithFile
-  })
+  const advertisersInteracted =
+    JSONPath({
+      path: '$.history_v2[*]',
+      json: advertisersInteractedWithFile
+    }) ?? []
   const advertisersInteractedItems = []
   advertisersInteracted.forEach((v, i) => {
     advertisersInteractedItems.push({
@@ -45,14 +34,14 @@ export default async function databaseBuilder(fileManager) {
 
   /// Advertisers who purchased your contact ////////////////////////////////////////////////////////////////////////////////
   db.create('advertisersContactInformation', [['name', 'TEXT']])
-  const advertisersContactInformationFile = await getFileFromGlob(
-    '**/ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json',
-    fileManager
+  const advertisersContactInformationFile = JSON.parse(
+    await fileManager.getPreprocessedTextFromId('advertisers-contact-list')
   )
-  const advertisersContact = JSONPath({
-    path: '$.custom_audiences_v2[*]',
-    json: advertisersContactInformationFile
-  })
+  const advertisersContact =
+    JSONPath({
+      path: '$.custom_audiences_v2[*]',
+      json: advertisersContactInformationFile
+    }) ?? []
   const advertisersContactInformationItems = []
   advertisersContact.forEach((v, i) => {
     advertisersContactInformationItems.push({
@@ -70,15 +59,15 @@ export default async function databaseBuilder(fileManager) {
     ['timestamp', 'INTEGER']
   ])
 
-  const offFacebookActivityFile = await getFileFromGlob(
-    '**/apps_and_websites_off_of_facebook/your_off-facebook_activity.json',
-    fileManager
+  const offFacebookActivityFile = JSON.parse(
+    await fileManager.getPreprocessedTextFromId('off-facebook-activity')
   )
 
-  const offFacebookActivityJSON = JSONPath({
-    path: '$.off_facebook_activity_v2[*]',
-    json: offFacebookActivityFile
-  })
+  const offFacebookActivityJSON =
+    JSONPath({
+      path: '$.off_facebook_activity_v2[*]',
+      json: offFacebookActivityFile
+    }) ?? []
   const offFacebookActivityItems = []
   offFacebookActivityJSON.forEach((v, i) => {
     const name = v.name
@@ -99,10 +88,9 @@ export default async function databaseBuilder(fileManager) {
 
   /// Inferred interests ////////////////////////////////////////////////////////////////////////////////
   db.create('inferredInterestsDatabase', [['name', 'TEXT']])
-  const inferredInterestsFile = await getFileFromGlob(
-    '**/other_logged_information/ads_interests.json',
-    fileManager
-  )
+  const inferredInterestsFile =
+    JSON.parse(await fileManager.getPreprocessedTextFromId('ads-interests')) ??
+    []
   const inferredInterestsJSON = JSONPath({
     path: '$.topics_v2[*]',
     json: inferredInterestsFile

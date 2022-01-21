@@ -15,7 +15,6 @@
             extensions,
             files,
             multiple,
-            allowMissingFiles,
             samples: data,
             isGenericViewer
           }"
@@ -136,8 +135,8 @@ export default {
       }
     },
     files: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     },
     defaultView: {
       type: Array,
@@ -154,10 +153,6 @@ export default {
     postprocessors: {
       type: Object,
       default: undefined
-    },
-    allowMissingFiles: {
-      type: Boolean,
-      default: false
     },
     customPipelines: {
       type: Object,
@@ -257,30 +252,11 @@ export default {
       // Clean vuex state before changing the filemanager
       this.$store.commit('setFileExplorerCurrentItem', {})
 
-      this.fileManager = new FileManager(
-        this.preprocessors,
-        this.allowMissingFiles,
-        fileManagerWorkers
-      )
+      this.fileManager = new FileManager(this.preprocessors, fileManagerWorkers)
       try {
-        await this.fileManager.init(uppyFiles, this.multiple)
+        await this.fileManager.init(uppyFiles, this.multiple, this.files)
       } catch (e) {
         this.handleError(e)
-        return
-      }
-
-      // Check that the required files are present in the archive
-      const missing = this.files
-        .map(filePathGlob => [
-          filePathGlob,
-          this.fileManager.findMatchingFilePaths(filePathGlob).length
-        ])
-        .filter(([_, n]) => n === 0)
-        .map(([filePathGlob, _]) => filePathGlob)
-      if (missing.length > 0) {
-        this.message = `Missing file(s): ${missing.join(', ')}`
-        this.error = true
-        this.progress = false
         return
       }
 
@@ -292,7 +268,7 @@ export default {
       if (this.isRdfNeeded && this.yarrrml) {
         try {
           const processedFiles = await this.fileManager.preprocessFiles(
-            this.files
+            Object.values(this.files)
           )
           this.rml = await parseYarrrml(this.yarrrml)
           await rdfUtils.generateRDF(this.rml, processedFiles)

@@ -21,13 +21,10 @@ function runQuery(sqlFilePath) {
 }
 
 async function getDatabase(adImpressions, adEngagements) {
-  const fileManager = new FileManager(
-    {
-      'test/data/ad-impressions.js': preprocessors.twitter,
-      'test/data/ad-engagements.js': preprocessors.twitter
-    },
-    true
-  )
+  const fileManager = new FileManager({
+    'test/data/ad-impressions.js': preprocessors.twitter,
+    'test/data/ad-engagements.js': preprocessors.twitter
+  })
   const fileImpressions = mockFile(
     'test/data/ad-impressions.js',
     JSON.stringify(adImpressions)
@@ -36,7 +33,11 @@ async function getDatabase(adImpressions, adEngagements) {
     'test/data/ad-engagements.js',
     JSON.stringify(adEngagements)
   )
-  await fileManager.init([fileImpressions, fileEngagements], true)
+  const files = {
+    impressions: '**/ad-impressions.js',
+    engagements: '**/ad-engagements.js'
+  }
+  await fileManager.init([fileImpressions, fileEngagements], true, files)
 
   db = await databaseBuilder(fileManager)
 }

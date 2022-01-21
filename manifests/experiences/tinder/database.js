@@ -14,7 +14,7 @@ export default async function databaseBuilder(fileManager) {
     ['amount', 'INTEGER']
   ])
   const TinderFile = JSON.parse(
-    await fileManager.getPreprocessedText('input.json')
+    await fileManager.getPreprocessedTextFromId('tinder')
   )
   const likesJSON = JSONPath({
     path: '$.Usage.swipes_likes[*]',

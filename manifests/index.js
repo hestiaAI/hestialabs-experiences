@@ -64,7 +64,7 @@ const manifests = Object.fromEntries(
       subtitle = 'Data Experience',
       icon,
       ext: extensions,
-      files = [],
+      files = {},
       multiple = false,
       data: dataFiles = [],
       collaborator,
