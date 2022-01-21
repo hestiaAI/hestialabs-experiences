@@ -1,73 +1,80 @@
 <template>
   <div>
+    <BaseButtonShare color="primary" :outlined="false" />
     <VRow>
-      <VCol cols="12 mx-auto" sm="6">
-        <UnitIntroduction
-          v-bind="{ companyName: title, dataPortal, isGenericViewer }"
-          ref="unit-introduction"
-        />
-      </VCol>
-    </VRow>
-    <VRow>
-      <VCol cols="12 mx-auto" sm="6">
-        <UnitFiles
-          v-bind="{
-            extensions,
-            files,
-            multiple,
-            samples: data,
-            isGenericViewer
-          }"
-          ref="unit-files"
-          @update="onUnitFilesUpdate"
-        />
-        <template v-if="progress">
-          <BaseProgressCircular class="mr-2" />
-          <span>Processing files...</span>
-        </template>
-        <template v-else-if="error || success">
-          <VAlert
-            :type="error ? 'error' : 'success'"
-            border="top"
-            colored-border
-            max-width="600"
-            >{{ message }}
-          </VAlert>
-        </template>
-      </VCol>
-    </VRow>
-    <template v-if="success">
-      <VRow>
-        <VCol>
-          <VTabs
-            v-model="tab"
-            dark
-            background-color="primary"
-            slider-color="secondary"
-            slider-size="4"
-            show-arrows
-            center-active
-            centered
-            fixed-tabs
+      <VCol>
+        <VTabs
+          v-model="tab"
+          dark
+          background-color="primary"
+          slider-color="secondary"
+          slider-size="4"
+          show-arrows
+          center-active
+          centered
+          fixed-tabs
+          class="fixed-tabs-bar"
+        >
+          <VTab>Load your Data</VTab>
+          <VTab :disabled="!success" href="#summary">Summary</VTab>
+          <VTab :disabled="!success" href="#file-explorer">Files</VTab>
+          <VTab
+            v-for="(el, index) in defaultView"
+            :key="index"
+            :disabled="!success"
           >
-            <VTab>Summary</VTab>
-            <VTab>Files</VTab>
-            <VTab v-for="(el, index) in defaultView" :key="index">
-              {{ el.title }}
-            </VTab>
-            <VTab v-if="consentForm">Share my data</VTab>
-          </VTabs>
-          <VTabsItems v-model="tab">
-            <VTabItem>
+            {{ el.title }}
+          </VTab>
+          <VTab v-if="consentForm" :disabled="!success">Share my data</VTab>
+        </VTabs>
+        <VTabsItems v-model="tab">
+          <VTabItem>
+            <VCol cols="12 mx-auto" sm="6" class="tabItem pa-5">
+              <UnitIntroduction
+                v-bind="{ companyName: title, dataPortal, isGenericViewer }"
+                ref="unit-introduction"
+              />
+              <UnitFiles
+                v-bind="{
+                  extensions,
+                  files,
+                  multiple,
+                  samples: data,
+                  isGenericViewer
+                }"
+                ref="unit-files"
+                @update="onUnitFilesUpdate"
+              />
+              <template v-if="progress">
+                <BaseProgressCircular class="mr-2" />
+                <span>Processing files...</span>
+              </template>
+              <template v-else-if="error || success">
+                <VAlert
+                  :type="error ? 'error' : 'success'"
+                  border="top"
+                  colored-border
+                  max-width="600"
+                  >{{ message }}
+                </VAlert>
+              </template>
+            </VCol>
+          </VTabItem>
+          <VTabItem value="summary">
+            <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitSummary v-bind="{ fileManager }" />
-            </VTabItem>
-            <VTabItem>
+            </VCol>
+          </VTabItem>
+          <VTabItem value="file-explorer">
+            <div class="tabItem">
               <UnitFileExplorer v-bind="{ fileManager }" />
-            </VTabItem>
-            <VTabItem
-              v-for="(defaultViewElements, index) in defaultView"
-              :key="index"
-            >
+            </div>
+          </VTabItem>
+          <VTabItem
+            v-for="(defaultViewElements, index) in defaultView"
+            :key="index"
+          >
+            <VCol cols="12 mx-auto" class="tabItem">
               <UnitQuery
                 v-bind="{
                   defaultViewElements,
@@ -84,8 +91,10 @@
                   db
                 }"
               />
-            </VTabItem>
-            <VTabItem v-if="consentForm">
+            </VCol>
+          </VTabItem>
+          <VTabItem v-if="consentForm">
+            <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitConsentForm
                 v-bind="{
                   consentForm,
@@ -94,11 +103,11 @@
                   showDataExplorer
                 }"
               />
-            </VTabItem>
-          </VTabsItems>
-        </VCol>
-      </VRow>
-    </template>
+            </VCol>
+          </VTabItem>
+        </VTabsItems>
+      </VCol>
+    </VRow>
   </div>
 </template>
 
@@ -232,7 +241,7 @@ export default {
   },
   mounted() {
     this.$root.$on('goToFileExplorer', () => {
-      this.tab = 1
+      this.tab = 'file-explorer'
     })
   },
   methods: {
@@ -252,13 +261,17 @@ export default {
       // Clean vuex state before changing the filemanager
       this.$store.commit('setFileExplorerCurrentItem', {})
 
-      this.fileManager = new FileManager(this.preprocessors, fileManagerWorkers)
+      const fileManager = new FileManager(
+        this.preprocessors,
+        fileManagerWorkers
+      )
       try {
-        await this.fileManager.init(uppyFiles, this.multiple, this.files)
+        await fileManager.init(uppyFiles, this.multiple, this.files)
       } catch (e) {
         this.handleError(e)
         return
       }
+      this.fileManager = fileManager
 
       // Populate database
       if (this.databaseBuilder !== undefined) {
@@ -280,6 +293,7 @@ export default {
 
       this.progress = false
       this.success = true
+      this.tab = 'summary'
 
       const elapsed = new Date() - start
       this.message = `Successfully processed in ${elapsed / 1000} sec.`
@@ -287,3 +301,14 @@ export default {
   }
 }
 </script>
+<style>
+.tabItem {
+  min-height: calc(100vh - 48px);
+}
+.fixed-tabs-bar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 60px;
+  z-index: 2500;
+}
+</style>

@@ -14,6 +14,13 @@ test('mounts without error', () => {
     propsData: {
       title: 'Test',
       ext: 'all'
+    },
+    mocks: {
+      $store: {
+        state: {
+          config: {}
+        }
+      }
     }
   })
   expect(wrapper.exists()).toBeTruthy()

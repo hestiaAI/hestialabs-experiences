@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VCard v-if="defaultViewElements" class="pa-2 mb-6">
+    <VCard v-if="defaultViewElements" class="pa-2 mb-6" flat>
       <VRow>
         <VCol cols="1"></VCol>
         <VCol cols="10"
@@ -193,6 +193,12 @@ export default {
         .map(glob => [glob, this.fileManager.findMatchingFilePaths(glob)])
         .filter(([_, files]) => files.length === 0)
         .map(([glob, _]) => glob)
+    }
+  },
+  watch: {
+    fileManager() {
+      this.finished = false
+      this.result = null
     }
   },
   methods: {
