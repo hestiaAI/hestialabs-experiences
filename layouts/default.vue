@@ -27,7 +27,7 @@
         bottom
         left
       >
-        Wants to know more about attention economy ?
+        Want to know more about the attention economy ?
         <br />
         <a :href="newsletterURL" target="_blank" rel="noreferrer noopener">
           {{ newsletterMessage }}
