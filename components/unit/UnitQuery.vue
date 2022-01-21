@@ -195,6 +195,12 @@ export default {
         .map(([glob, _]) => glob)
     }
   },
+  watch: {
+    fileManager() {
+      this.finished = false
+      this.result = null
+    }
+  },
   methods: {
     onUnitResultsUpdate(result) {
       // Postprocessing
