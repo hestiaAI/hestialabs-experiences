@@ -40,9 +40,9 @@
         <a href="https://hestia.ai" target="_blank" style="color: white"
           >Hestia.ai</a
         >
-        <br />Currently in development | Subscribe to our
+        <br />Currently in development |
         <a :href="newsletterURL" target="_blank" style="color: white">
-          Newsletter
+          {{ newsletterMessage }}
         </a>
       </div>
     </VFooter>

@@ -16,6 +16,18 @@
           <VIcon>$vuetify.icons.mdiHome</VIcon>
         </VBtn>
         <VSpacer />
+        <div class="d-flex">
+          <VImg
+            max-width="30"
+            :src="company.icon"
+            :lazy-src="company.icon"
+            contain
+          />
+          <h3 class="ml-3">
+            {{ company.title }}
+          </h3>
+        </div>
+        <VSpacer />
         <a
           v-if="collaborator"
           :href="collaborator.url"
@@ -69,17 +81,23 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
 export default {
   data() {
     return {
-      drawer: false
+      drawer: false,
+      selected: ''
     }
   },
   computed: {
-    ...mapGetters(['manifest']),
+    ...mapGetters(['manifest', 'enabledExperiences']),
     collaborator() {
       return this.manifest(this.$route).collaborator
+    },
+    company() {
+      return {
+        title: this.manifest(this.$route).title,
+        icon: this.manifest(this.$route).icon
+      }
     }
   }
 }

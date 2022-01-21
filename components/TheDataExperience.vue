@@ -15,9 +15,9 @@
           fixed-tabs
           class="fixed-tabs-bar"
         >
-          <VTab>Upload</VTab>
+          <VTab>Load your Data</VTab>
           <VTab :disabled="!success" href="#summary">Summary</VTab>
-          <VTab :disabled="!success">Files</VTab>
+          <VTab :disabled="!success" href="#file-explorer">Files</VTab>
           <VTab
             v-for="(el, index) in defaultView"
             :key="index"
@@ -64,7 +64,7 @@
               <UnitSummary v-bind="{ fileManager }" />
             </VCol>
           </VTabItem>
-          <VTabItem>
+          <VTabItem value="file-explorer">
             <div class="tabItem">
               <UnitFileExplorer v-bind="{ fileManager }" />
             </div>
@@ -244,7 +244,7 @@ export default {
   },
   mounted() {
     this.$root.$on('goToFileExplorer', () => {
-      this.tab = 1
+      this.tab = 'file-explorer'
     })
   },
   methods: {
