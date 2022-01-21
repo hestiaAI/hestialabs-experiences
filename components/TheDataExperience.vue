@@ -32,16 +32,17 @@
             <VCol cols="12 mx-auto" sm="6" class="tabItem pa-5">
               <UnitIntroduction
                 v-bind="{ companyName: title, dataPortal, isGenericViewer }"
+                ref="unit-introduction"
               />
               <UnitFiles
                 v-bind="{
                   extensions,
                   files,
                   multiple,
-                  allowMissingFiles,
                   samples: data,
                   isGenericViewer
                 }"
+                ref="unit-files"
                 @update="onUnitFilesUpdate"
               />
               <template v-if="progress">
@@ -143,8 +144,8 @@ export default {
       }
     },
     files: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     },
     defaultView: {
       type: Array,
@@ -161,10 +162,6 @@ export default {
     postprocessors: {
       type: Object,
       default: undefined
-    },
-    allowMissingFiles: {
-      type: Boolean,
-      default: false
     },
     customPipelines: {
       type: Object,
@@ -254,7 +251,7 @@ export default {
       this.message = error instanceof Error ? error.message : error
       this.progress = false
     },
-    async onUnitFilesUpdate(uppyFiles) {
+    async onUnitFilesUpdate({ uppyFiles }) {
       this.message = ''
       this.error = false
       this.success = false
@@ -266,26 +263,15 @@ export default {
 
       const fileManager = new FileManager(
         this.preprocessors,
-        this.allowMissingFiles,
         fileManagerWorkers
       )
-      await fileManager.init(uppyFiles, this.multiple)
-      this.fileManager = fileManager
-
-      // Check that the required files are present in the archive
-      const missing = this.files
-        .map(filePathGlob => [
-          filePathGlob,
-          this.fileManager.findMatchingFilePaths(filePathGlob).length
-        ])
-        .filter(([_, n]) => n === 0)
-        .map(([filePathGlob, _]) => filePathGlob)
-      if (missing.length > 0) {
-        this.message = `Missing file(s): ${missing.join(', ')}`
-        this.error = true
-        this.progress = false
+      try {
+        await fileManager.init(uppyFiles, this.multiple, this.files)
+      } catch (e) {
+        this.handleError(e)
         return
       }
+      this.fileManager = fileManager
 
       // Populate database
       if (this.databaseBuilder !== undefined) {
@@ -295,7 +281,7 @@ export default {
       if (this.isRdfNeeded && this.yarrrml) {
         try {
           const processedFiles = await this.fileManager.preprocessFiles(
-            this.files
+            Object.values(this.files)
           )
           this.rml = await parseYarrrml(this.yarrrml)
           await rdfUtils.generateRDF(this.rml, processedFiles)

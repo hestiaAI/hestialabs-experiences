@@ -1,67 +1,103 @@
 <template>
   <div>
     <VCard v-if="defaultViewElements" class="pa-2 mb-6" flat>
-      <VCardTitle class="justify-center">{{
-        defaultViewElements.title
-      }}</VCardTitle>
+      <VRow>
+        <VCol cols="1"></VCol>
+        <VCol cols="10"
+          ><VCardTitle class="justify-center">{{
+            defaultViewElements.title
+          }}</VCardTitle></VCol
+        >
+        <VCol cols="1" align-self="center" class="full-height text-center">
+          <VTooltip
+            v-if="
+              ['genericDateViewer', 'genericLocationViewer'].includes(
+                defaultViewElements.key
+              )
+            "
+            left
+          >
+            <template #activator="{ on }">
+              <VIcon v-on="on">$vuetify.icons.mdiFileMultipleOutline</VIcon>
+            </template>
+            <span>All files are used</span>
+          </VTooltip>
+          <UnitFilesDialog
+            v-else-if="fileGlobs.length > 0"
+            :file-globs="fileGlobs"
+        /></VCol>
+      </VRow>
+
       <VRow>
         <VCol cols="8" class="mx-auto">
           {{ defaultViewElements.text }}
         </VCol>
       </VRow>
-      <VRow>
-        <VCol>
-          <UnitPipelineCustom
-            v-if="customPipeline !== undefined"
-            v-bind="{
-              fileManager,
-              customPipeline,
-              parameterName: defaultViewElements.parameterName,
-              defaultViewElements
-            }"
-            @update="onUnitResultsUpdate"
-          />
-          <UnitPipelineSql
-            v-else-if="sql"
-            v-bind="{
-              sql,
-              db,
-              parameterName: defaultViewElements.parameterName,
-              parameterKey: defaultViewElements.parameterKey
-            }"
-            @update="onUnitResultsUpdate"
-          />
-          <UnitPipelineSparql
-            v-else
-            v-bind="{ sparqlQuery }"
-            class="mr-lg-6"
-            @update="onUnitResultsUpdate"
-          />
-        </VCol>
-      </VRow>
-      <template v-if="finished">
+      <template v-if="missingFiles.length > 0">
+        <BaseAlert class="mt-4"
+          >{{ missingFiles.length === 1 ? 'File' : 'Files' }} not found:
+          {{ missingFiles.join(', ') }}</BaseAlert
+        >
+      </template>
+      <template v-else>
         <VRow>
           <VCol>
-            <UnitVegaViz
-              v-if="vizVega"
-              :spec-file="vizVega"
-              :data="clonedResult"
-              class="text-center"
+            <UnitPipelineCustom
+              v-if="customPipeline !== undefined"
+              v-bind="{
+                fileManager,
+                customPipeline,
+                parameterName: defaultViewElements.parameterName,
+                defaultViewElements
+              }"
+              @update="onUnitResultsUpdate"
             />
-            <ChartView
-              v-else-if="vizVue"
-              :graph-name="vizVue"
-              :data="clonedResult"
-              :viz-props="defaultViewElements.vizProps"
+            <UnitPipelineSql
+              v-else-if="sql"
+              v-bind="{
+                sql,
+                db,
+                parameterName: defaultViewElements.parameterName,
+                parameterKey: defaultViewElements.parameterKey
+              }"
+              @update="onUnitResultsUpdate"
             />
-            <UnitIframe v-else-if="vizUrl" :src="vizUrl" :data="clonedResult" />
+            <UnitPipelineSparql
+              v-else
+              v-bind="{ sparqlQuery }"
+              class="mr-lg-6"
+              @update="onUnitResultsUpdate"
+            />
           </VCol>
         </VRow>
-        <VRow v-if="showTable">
-          <VCol>
-            <UnitFilterableTable :data="result" />
-          </VCol>
-        </VRow>
+        <template v-if="finished">
+          <VRow>
+            <VCol>
+              <UnitVegaViz
+                v-if="vizVega"
+                :spec-file="vizVega"
+                :data="clonedResult"
+                class="text-center"
+              />
+              <ChartView
+                v-else-if="vizVue"
+                :graph-name="vizVue"
+                :data="clonedResult"
+                :viz-props="defaultViewElements.vizProps"
+              />
+              <UnitIframe
+                v-else-if="vizUrl"
+                :src="vizUrl"
+                :data="clonedResult"
+              />
+            </VCol>
+          </VRow>
+          <VRow v-if="showTable">
+            <VCol>
+              <UnitFilterableTable :data="result" />
+            </VCol>
+          </VRow>
+        </template>
       </template>
     </VCard>
   </div>
@@ -147,6 +183,16 @@ export default {
     },
     clonedResult() {
       return JSON.parse(JSON.stringify(this.result))
+    },
+    fileGlobs() {
+      const fileIds = this.defaultViewElements.files ?? []
+      return fileIds.map(id => this.fileManager.idToGlob[id])
+    },
+    missingFiles() {
+      return this.fileGlobs
+        .map(glob => [glob, this.fileManager.findMatchingFilePaths(glob)])
+        .filter(([_, files]) => files.length === 0)
+        .map(([glob, _]) => glob)
     }
   },
   methods: {

@@ -4,7 +4,9 @@
   "icon": "tracker-control.png",
   "ext": "csv",
   "data": ["tracker-control.csv"],
-  "files": ["input.csv"],
+  "files": {
+    "tracker-control": "input.csv"
+  },
   "defaultView": [
     {
       "key": "trackerControl",

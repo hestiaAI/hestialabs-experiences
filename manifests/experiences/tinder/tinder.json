@@ -4,7 +4,9 @@
   "dataPortal": "https://account.gotinder.com/data",
   "ext": "json",
   "data": ["tinder-synthetic.json"],
-  "files": ["input.json"],
+  "files": {
+    "tinder": "input.json"
+  },
   "preprocessors": {
     "input.json": "tinder"
   },
@@ -16,7 +18,8 @@
   "defaultView": [
     {
       "key": "likes-dislikes-vue",
-      "query": "likes-dislikes",
+      "sql": "likes-dislikes",
+      "files": ["tinder"],
       "postprocessor": "likesDislikesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
@@ -32,7 +35,8 @@
     },
     {
       "key": "app-opens-vue",
-      "query": "app-opens",
+      "sql": "app-opens",
+      "files": ["tinder"],
       "postprocessor": "appOpensData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
@@ -48,7 +52,8 @@
     },
     {
       "key": "monthly-history-vue",
-      "query": "likes-dislikes-messages",
+      "sql": "likes-dislikes-messages",
+      "files": ["tinder"],
       "postprocessor": "likesDislikesMessagesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
@@ -64,7 +69,8 @@
     },
     {
       "key": "donut",
-      "query": "all",
+      "sql": "all",
+      "files": ["tinder"],
       "visualization": "donut-multiple-comparisons",
       "showTable": false,
       "title": "Pairs",
@@ -72,7 +78,8 @@
     },
     {
       "key": "likes-dislikes-open",
-      "query": "likes-dislikes-open",
+      "sql": "likes-dislikes-open",
+      "files": ["tinder"],
       "visualization": "scatter-likes-passes-correlation",
       "showTable": false,
       "title": "Likes / passes correlation",
@@ -80,7 +87,8 @@
     },
     {
       "key": "all",
-      "query": "all",
+      "sql": "all",
+      "files": ["tinder"],
       "showTable": true,
       "title": "All data",
       "text": "If you want to inspect precisely the values for each day, all the data can be summarized in a table."
