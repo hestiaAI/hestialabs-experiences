@@ -15,6 +15,7 @@
         <template v-else> You are online again! </template>
       </VSnackbar>
       <VAlert
+        :value="alert"
         border="right"
         colored-border
         color="primary"
@@ -23,11 +24,13 @@
         dismissible
         max-width="20%"
         class="fixedAlert"
+        transition="slide-x-transition"
         fixed
         bottom
         left
+        @input="alertClosed"
       >
-        Want to know more about the attention economy ?
+        Want to know more about our work ?
         <br />
         <a :href="newsletterURL" target="_blank" rel="noreferrer noopener">
           {{ newsletterMessage }}
@@ -57,7 +60,8 @@ export default {
     return {
       // Display offline message if user opens app when offline
       snackbar: this.$nuxt.isOffline,
-      timeout: 5000
+      timeout: 5000,
+      alert: false
     }
   },
   head() {
@@ -125,6 +129,23 @@ export default {
         statusCode: 500,
         message: 'Web Workers are not supported by this browser'
       })
+    }
+    // Show the newsletter alert once a day
+    if (
+      !this.alert &&
+      (!localStorage.alertNewsletterDismissed ||
+        new Date().getTime() -
+          new Date(localStorage.alertNewsletterDismissed).getTime() >
+          1000 * 3600 * 24) // one day in milliseconds
+    ) {
+      window.setInterval(() => {
+        this.alert = true
+      }, 3000)
+    }
+  },
+  methods: {
+    alertClosed() {
+      localStorage.alertNewsletterDismissed = new Date()
     }
   }
 }
