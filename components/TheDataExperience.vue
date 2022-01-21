@@ -264,12 +264,13 @@ export default {
       // Clean vuex state before changing the filemanager
       this.$store.commit('setFileExplorerCurrentItem', {})
 
-      this.fileManager = new FileManager(
+      const fileManager = new FileManager(
         this.preprocessors,
         this.allowMissingFiles,
         fileManagerWorkers
       )
-      await this.fileManager.init(uppyFiles, this.multiple)
+      await fileManager.init(uppyFiles, this.multiple)
+      this.fileManager = fileManager
 
       // Check that the required files are present in the archive
       const missing = this.files
