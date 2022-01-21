@@ -76,10 +76,20 @@
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
         </template>
         <template
-          v-for="header in headers.filter(h => h.value !== 'url')"
+          v-for="header in headers.filter(
+            h => h.value !== 'url' && !header.hasOwnProperty('formatter')
+          )"
           #[`item.${header.value}`]="slotProps"
         >
           {{ formatItemAsString(slotProps) }}
+        </template>
+        <template
+          v-for="header in headers.filter(header =>
+            header.hasOwnProperty('formatter')
+          )"
+          #[`item.${header.value}`]
+        >
+          {{ header.formatter(value) }}
         </template>
       </VDataTable>
       <BaseButton
