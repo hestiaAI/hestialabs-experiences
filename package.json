@@ -16,7 +16,7 @@
     "build": "webpack",
     "clean": "lerna run clean",
     "test": "lerna run test",
-    "lerna:version": "lerna version prerelease",
+    "lerna:version": "lerna version prerelease --no-changelog",
     "lerna:publish": "lerna publish from-package",
     "prepublishOnly": "npm run build",
     "prepare": "husky install",
