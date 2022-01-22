@@ -18,15 +18,23 @@ export default {
     data: {
       type: Object,
       required: true
+    },
+    allowMissingColumns: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     hasValidFormat() {
+      const weHaveArrays = _.every(
+        ['items', 'headers'],
+        field => _.has(this.data, field) && Array.isArray(this.data[field])
+      )
+      if (this.allowMissingColumns) {
+        return weHaveArrays
+      }
       return (
-        _.every(
-          ['items', 'headers'],
-          field => _.has(this.data, field) && Array.isArray(this.data[field])
-        ) &&
+        weHaveArrays &&
         _.every(this.data.items, i =>
           _.every(this.data.headers, h => _.has(i, h) || _.has(i, h.value))
         )

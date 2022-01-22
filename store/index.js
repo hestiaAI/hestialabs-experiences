@@ -14,7 +14,8 @@ export const state = () => ({
         manifestMap[k].defaultView?.map(b => [b.key, null]) ?? []
       )
     ])
-  )
+  ),
+  fileExplorerCurrentItem: {}
 })
 
 export const getters = {
@@ -55,5 +56,8 @@ export const mutations = {
   },
   setResult(state, { company, experience, result }) {
     state.results[company][experience] = result
+  },
+  setFileExplorerCurrentItem(state, item) {
+    state.fileExplorerCurrentItem = item
   }
 }

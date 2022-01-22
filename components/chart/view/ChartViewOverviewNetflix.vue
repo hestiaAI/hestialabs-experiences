@@ -27,7 +27,7 @@
         <VRow dense>
           <VCol cols="8">
             <div :id="'hour-chart' + graphId">
-              <strong>Time of the day</strong>
+              <strong>Time of day</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters ma-0">
                 <span>
@@ -39,7 +39,7 @@
           </VCol>
           <VCol cols="4">
             <div :id="'week-chart' + graphId">
-              <strong>Day of week</strong>
+              <strong>Day</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters ma-0">
                 <span>
@@ -53,7 +53,7 @@
       </VCol>
       <VCol cols="4">
         <div :id="'content-chart' + graphId">
-          <strong>Top title</strong>
+          <strong>Most watched titles</strong>
           <a class="reset" style="display: none">reset</a>
           <p class="filters ma-0">
             <span>
@@ -67,7 +67,7 @@
     <ChartViewVRowWebShare dense>
       <VCol cols="4">
         <div :id="'user-chart' + graphId">
-          <strong>Users</strong>
+          <strong>Profiles</strong>
           <a class="reset" style="display: none">reset</a>
           <p class="filters ma-0">
             <span>
@@ -107,8 +107,8 @@
         <span class="filter-count"></span>
         selected out of
         <span class="total-count"></span>
-        records |
-        <a class="reset">Reset All</a>
+        views |
+        <a class="resetAll">Reset All</a>
       </div>
     </VRow>
     <UnitFilterableTable :data="{ headers: header, items: results }" />
@@ -481,6 +481,7 @@ export default {
         .gap(1)
         .x(d3.scaleLinear().domain([0, 24]))
         .ordinalColors(colorPalette)
+        .yAxisLabel('Hours watched')
         .yAxis()
         .ticks(5)
       hourChart
@@ -502,10 +503,7 @@ export default {
         .dimension(contentDimension)
         .ordinalColors([colorPalette[0]])
         .valueAccessor(d => d.value)
-        .title(
-          d =>
-            formatTime(d.key) + ': ' + formatNumber(d.value) + ' hours watched'
-        )
+        .title(d => d.key + ': ' + formatNumber(d.value) + ' hours watched')
         .label(d => d.key)
         .data(group => group.top(20))
         // .labelOffsetX(0)
@@ -545,13 +543,13 @@ export default {
         .groupAll(all)
         .html({
           some:
-            '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
-            " | <a class='reset'>Reset All</a>",
-          all: 'All <strong>%total-count</strong> records selected. Please click on the graph to apply filters.'
+            '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> views' +
+            " | <a class='resetAll'>Reset All</a>",
+          all: 'All <strong>%total-count</strong> views selected. Please click on the graph to apply filters.'
         })
         .on('pretransition', (chart, filter) => {
           this.results = monthDimension.top(all.value())
-          d3.select('#dc-data-count' + this.graphId + ' a.reset').on(
+          d3.select('#dc-data-count' + this.graphId + ' a.resetAll').on(
             'click',
             () => {
               dc.filterAll()

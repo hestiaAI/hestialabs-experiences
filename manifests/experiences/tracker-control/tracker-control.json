@@ -4,14 +4,16 @@
   "icon": "tracker-control.png",
   "ext": "csv",
   "data": ["tracker-control.csv"],
-  "files": ["input.csv"],
+  "files": {
+    "tracker-control": "input.csv"
+  },
   "defaultView": [
     {
       "key": "trackerControl",
       "customPipeline": "trackerControl",
       "visualization": "ChartViewTrackerControl.vue",
       "showTable": false,
-      "title": "Tracker control experience",
+      "title": "Dashboard",
       "text": "Monitor below all the tracking done on your smartphone applications. You can filter the results by selecting a time range or clicking on each graph."
     }
   ]

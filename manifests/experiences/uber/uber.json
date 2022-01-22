@@ -4,12 +4,15 @@
   "icon": "uber.png",
   "dataPortal": "https://help.uber.com/ubereats/article/request-a-copy-of-your-uber-data",
   "ext": "zip",
-  "files": ["Uber Data/Rider/trips_data.csv"],
+  "files": {
+    "trips": "**/Uber Data/Rider/trips_data.csv"
+  },
   "data": ["uber-trips.zip"],
   "defaultView": [
     {
       "key": "tripsData",
       "customPipeline": "tripsData",
+      "files": ["trips"],
       "visualization": "ChartViewOverviewUber.vue",
       "showTable": false,
       "title": "Uber overview",
@@ -18,6 +21,7 @@
     {
       "key": "tripsGraphData",
       "customPipeline": "tripsGraphData",
+      "files": ["trips"],
       "visualization": "ChartViewSankey.vue",
       "showTable": false,
       "title": "Uber Trips",
@@ -28,12 +32,13 @@
       "customPipeline": "genericDateViewer",
       "visualization": "ChartViewGenericDateViewer.vue",
       "showTable": false,
-      "title": "Dated observations",
+      "title": "Timeline",
       "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
     },
     {
       "key": "tripsKeplerData",
       "customPipeline": "tripsKeplerData",
+      "files": ["trips"],
       "visualization": "/kepler",
       "showTable": false,
       "title": "Map of trips",

@@ -1,5 +1,6 @@
 import {
   mdiAlert,
+  mdiAutorenew,
   mdiCheckboxBlankOutline,
   mdiCheckCircle,
   mdiChevronLeft,
@@ -10,15 +11,19 @@ import {
   mdiDownload,
   mdiExport,
   mdiFileSearch,
+  mdiFilter,
   mdiHome,
   mdiMagnify,
   mdiMinus,
   mdiMinusBox,
   mdiNumeric1CircleOutline,
   mdiNumeric2CircleOutline,
+  mdiTuneVariant,
   mdiShare,
   mdiStepForward,
-  mdiTwitter
+  mdiTwitter,
+  mdiFolderInformationOutline,
+  mdiFileMultipleOutline
 } from '@mdi/js'
 
 export default {
@@ -26,6 +31,7 @@ export default {
     iconfont: 'mdiSvg',
     values: {
       mdiAlert,
+      mdiAutorenew,
       mdiCheckboxBlankOutline,
       mdiCheckCircle,
       mdiChevronLeft,
@@ -36,15 +42,19 @@ export default {
       mdiDownload,
       mdiExport,
       mdiFileSearch,
+      mdiFilter,
       mdiHome,
       mdiMagnify,
       mdiMinus,
       mdiMinusBox,
       mdiNumeric1CircleOutline,
       mdiNumeric2CircleOutline,
+      mdiTuneVariant,
       mdiShare,
       mdiStepForward,
-      mdiTwitter
+      mdiTwitter,
+      mdiFolderInformationOutline,
+      mdiFileMultipleOutline
     }
   },
   theme: {

@@ -8,18 +8,20 @@
     <BaseSearchBar v-model="search" :loading="searching" />
     <VTreeview dense transition :items="filteredItems">
       <template #prepend="{ item }">
-        <VIcon v-if="!isUndef(item.icon)">
-          {{ item.icon }}
+        <VIcon v-if="!isUndef(item.type)">
+          {{ iconForNode(item.type) }}
         </VIcon>
       </template>
       <template #label="{ item, leaf }">
-        <div v-if="leaf" :title="item.value">
-          <span v-if="!isUndef(item.name)">
-            {{ `${item.name}:` }}
+        <span class="clickable-node" @click="onNodeClick(item)">
+          <span v-if="leaf" :title="item.value">
+            <span v-if="!isUndef(item.name)">
+              {{ `${item.name}:` }}
+            </span>
+            <span class="font-italic">{{ item.value }}</span>
           </span>
-          <span class="font-italic">{{ item.value }}</span>
-        </div>
-        <div v-else>{{ item.name }}</div>
+          <span v-else>{{ item.name }}</span>
+        </span>
       </template>
     </VTreeview>
   </div>
@@ -27,11 +29,18 @@
 
 <script>
 import debounce from 'lodash/debounce'
+import {
+  mdiCodeJson,
+  mdiFormatListBulletedSquare,
+  mdiInformationOutline
+} from '@mdi/js'
 
 import mixin from './mixin'
 import mixinLoading from './mixin-loading'
 import JsonWorker from '~/utils/json.worker.js'
 import { runWorker } from '@/utils/utils'
+import { filePathToGlob, createAccessor } from '@/utils/accessor'
+import { pathArrayToJsonPath, nodeTypes } from '@/utils/json'
 
 export default {
   name: 'UnitFileExplorerViewerJson',
@@ -70,6 +79,26 @@ export default {
     }
   },
   methods: {
+    onNodeClick(item) {
+      try {
+        const filePath = filePathToGlob(this.filename)
+        const jsonPath = pathArrayToJsonPath(item.path)
+        const accessor = createAccessor(filePath, jsonPath)
+        this.$emit('select-accessor', accessor)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    iconForNode(type) {
+      switch (type) {
+        case nodeTypes.TREE:
+          return mdiCodeJson
+        case nodeTypes.LIST:
+          return mdiFormatListBulletedSquare
+        case nodeTypes.LEAF:
+          return mdiInformationOutline
+      }
+    },
     isUndef(val) {
       return typeof val === 'undefined'
     },
@@ -99,3 +128,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.clickable-node {
+  cursor: pointer;
+}
+</style>

@@ -1,7 +1,10 @@
 <template>
-  <!-- avoid double margin: we're already in a container -->
-  <VContainer class="ma-n3">
-    <VRow class="no-gutters">
+  <TheDataExperience v-if="m.rest" v-bind="m.rest" />
+</template>
+
+<script>
+/*
+<VRow class="no-gutters">
       <VCol>
         <div class="d-flex">
           <VImg max-width="50" :src="m.icon" :lazy-src="m.icon" contain />
@@ -14,11 +17,7 @@
         </p>
       </VCol>
     </VRow>
-    <TheDataExperience v-if="m.rest" v-bind="m.rest" />
-  </VContainer>
-</template>
-
-<script>
+    */
 import { mapState, mapGetters } from 'vuex'
 
 export default {

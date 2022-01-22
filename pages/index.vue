@@ -1,5 +1,7 @@
 <template>
-  <TheExperienceMenu :cards="$vuetify.breakpoint.smAndUp" />
+  <VContainer>
+    <TheExperienceMenu :cards="$vuetify.breakpoint.smAndUp" />
+  </VContainer>
 </template>
 
 <style>

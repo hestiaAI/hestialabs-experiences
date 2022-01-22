@@ -2,33 +2,40 @@
   <VApp>
     <TheAppBar />
     <VMain>
-      <VContainer class="mt-5">
-        <VRow>
-          <VCol align="center">
-            <h2>
-              <a
-                :href="newsletterURL"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                {{ newsletterMessage }}
-              </a>
-            </h2>
-          </VCol>
-        </VRow>
-        <Nuxt />
-        <VSnackbar
-          v-model="snackbar"
-          content-class="v-snack__content-online-status"
-          color="info"
-          :timeout="timeout"
-        >
-          <template v-if="$nuxt.isOffline">
-            The app is running in offline mode
-          </template>
-          <template v-else> You are online again! </template>
-        </VSnackbar>
-      </VContainer>
+      <Nuxt />
+      <VSnackbar
+        v-model="snackbar"
+        content-class="v-snack__content-online-status"
+        color="info"
+        :timeout="timeout"
+      >
+        <template v-if="$nuxt.isOffline">
+          The app is running in offline mode
+        </template>
+        <template v-else> You are online again! </template>
+      </VSnackbar>
+      <VAlert
+        :value="alert"
+        border="right"
+        colored-border
+        color="primary"
+        elevation="2"
+        close-text="Not now"
+        dismissible
+        max-width="20%"
+        class="fixedAlert"
+        transition="slide-x-transition"
+        fixed
+        bottom
+        left
+        @input="alertClosed"
+      >
+        Want to know more about our work ?
+        <br />
+        <a :href="newsletterURL" target="_blank" rel="noreferrer noopener">
+          {{ newsletterMessage }}
+        </a>
+      </VAlert>
     </VMain>
     <VFooter app absolute color="primary">
       <div class="lighten-2 py-2 ma-auto white--text" align="center">
@@ -36,7 +43,10 @@
         <a href="https://hestia.ai" target="_blank" style="color: white"
           >Hestia.ai</a
         >
-        <br />Currently in development
+        <br />Currently in development |
+        <a :href="newsletterURL" target="_blank" style="color: white">
+          {{ newsletterMessage }}
+        </a>
       </div>
     </VFooter>
   </VApp>
@@ -50,7 +60,8 @@ export default {
     return {
       // Display offline message if user opens app when offline
       snackbar: this.$nuxt.isOffline,
-      timeout: 5000
+      timeout: 5000,
+      alert: false
     }
   },
   head() {
@@ -119,6 +130,23 @@ export default {
         message: 'Web Workers are not supported by this browser'
       })
     }
+    // Show the newsletter alert once a day
+    if (
+      !this.alert &&
+      (!localStorage.alertNewsletterDismissed ||
+        new Date().getTime() -
+          new Date(localStorage.alertNewsletterDismissed).getTime() >
+          1000 * 3600 * 24) // one day in milliseconds
+    ) {
+      window.setInterval(() => {
+        this.alert = true
+      }, 3000)
+    }
+  },
+  methods: {
+    alertClosed() {
+      localStorage.alertNewsletterDismissed = new Date()
+    }
   }
 }
 </script>
@@ -128,4 +156,11 @@ export default {
 
 .v-snack__content.v-snack__content-online-status
   text-align: center
+</style>
+<style scoped>
+.fixedAlert {
+  position: fixed;
+  bottom: 0px;
+  z-index: 2500;
+}
 </style>

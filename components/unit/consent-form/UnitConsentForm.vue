@@ -1,66 +1,62 @@
 <template>
   <VForm>
-    <VCard class="pa-2 mb-6">
-      <VCardText>
-        <UnitConsentFormSection
-          v-for="(section, index) in consent"
-          :key="`section-${index}`"
-          v-bind="{
-            section,
-            index,
-            dataCheckboxDisabled,
-            showDataExplorer,
-            fileManager
-          }"
-          @change="updateConsent"
+    <UnitConsentFormSection
+      v-for="(section, index) in consent"
+      :key="`section-${index}`"
+      v-bind="{
+        section,
+        index,
+        dataCheckboxDisabled,
+        showDataExplorer,
+        fileManager
+      }"
+      @change="updateConsent"
+    />
+    <BaseAlert v-if="missingRequired">
+      Some required fields are not filled in.
+    </BaseAlert>
+    <BaseAlert v-if="missingRequiredDataProcessing.length > 0">
+      Some experience required for sending this form has not been ran:
+      {{ missingRequiredDataProcessing.join(', ') }}.
+    </BaseAlert>
+    <BaseAlert v-if="missingRequiredData.length > 0">
+      Some data required for sending this form has not been included:
+      {{ missingRequiredData.join(', ') }}.
+    </BaseAlert>
+    <VRow>
+      <VCol>
+        <VIcon v-if="config.filedrop" class="mr-2" color="#424242"
+          >$vuetify.icons.mdiNumeric1CircleOutline</VIcon
+        >
+        <BaseButton
+          text="Download results"
+          :status="generateStatus"
+          :error="generateError"
+          :progress="generateProgress"
+          :disabled="
+            missingRequired ||
+            missingRequiredDataProcessing.length > 0 ||
+            missingRequiredData.length > 0
+          "
+          @click="generateZIP"
         />
-        <BaseAlert v-if="missingRequired">
-          Some required fields are not filled in.
-        </BaseAlert>
-        <BaseAlert v-if="missingRequiredDataProcessing.length > 0">
-          Some experience required for sending this form has not been ran:
-          {{ missingRequiredDataProcessing.join(', ') }}.
-        </BaseAlert>
-        <BaseAlert v-if="missingRequiredData.length > 0">
-          Some data required for sending this form has not been included:
-          {{ missingRequiredData.join(', ') }}.
-        </BaseAlert>
-        <VRow>
-          <VCol>
-            <VIcon v-if="config.filedrop" class="mr-2" color="#424242"
-              >$vuetify.icons.mdiNumeric1CircleOutline</VIcon
-            >
-            <BaseButton
-              text="Download results"
-              :status="generateStatus"
-              :error="generateError"
-              :progress="generateProgress"
-              :disabled="
-                missingRequired ||
-                missingRequiredDataProcessing.length > 0 ||
-                missingRequiredData.length > 0
-              "
-              @click="generateZIP"
-            />
-            <BaseButtonDownloadData
-              v-show="false"
-              ref="downloadBtn"
-              :data="zipFile"
-              :filename="filename"
-              extension="zip"
-            />
-          </VCol>
-          <VCol v-if="config.filedrop">
-            <VIcon class="mr-2" color="#424242"
-              >$vuetify.icons.mdiNumeric2CircleOutline</VIcon
-            >
-            <a :href="config.filedrop" target="_blank">
-              <BaseButton text="Drop file here" />
-            </a>
-          </VCol>
-        </VRow>
-      </VCardText>
-    </VCard>
+        <BaseButtonDownloadData
+          v-show="false"
+          ref="downloadBtn"
+          :data="zipFile"
+          :filename="filename"
+          extension="zip"
+        />
+      </VCol>
+      <VCol v-if="config.filedrop">
+        <VIcon class="mr-2" color="#424242"
+          >$vuetify.icons.mdiNumeric2CircleOutline</VIcon
+        >
+        <a :href="config.filedrop" target="_blank">
+          <BaseButton text="Drop file here" />
+        </a>
+      </VCol>
+    </VRow>
   </VForm>
 </template>
 
@@ -212,13 +208,17 @@ export default {
 
       const zip = new JSZip()
 
+      const revResponse = await window.fetch('/git-revision.txt')
+      const revText = await revResponse.text()
+      const gitRevision = revText.replace(/[\n\r]/g, '')
       // Add info about the experience
       const manifest = this.$store.getters.manifest(this.$route)
       this.timestamp = Date.now()
       const experience = {
         key: manifest.key,
         timestamp: this.timestamp,
-        version: VERSION
+        version: VERSION,
+        gitRevision
       }
       zip.file('experience.json', JSON.stringify(experience, null, 2))
 
