@@ -12,6 +12,7 @@
     "./packages/*"
   ],
   "scripts": {
+    "dev": "webpack --watch",
     "build": "webpack",
     "clean": "lerna run clean",
     "test": "lerna run test",
