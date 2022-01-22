@@ -119,9 +119,9 @@ If the data experience involves a single non-zip file input, use the name `input
 
 7. If needed, add Vega configurations in a subfolder `visualizations`.
 
-8. Import the all the functions from `*.js` files in a file `index.js` and export them as an object.
+8. Import all the functions from `*.js` files in a file `index.js` and export them as an object.
 
-9. If the icon is not there yet, add the image file to `manifests/icons/`
+9. If the icon is missing add the image file to `manifests/icons/`
 
 ## Adding sample data
 
