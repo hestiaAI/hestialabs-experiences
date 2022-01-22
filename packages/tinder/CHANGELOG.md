@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.1-alpha.1](https://github.com/hestiaai/hestialabs/compare/@hestiaai/tinder@0.0.1-alpha.0...@hestiaai/tinder@0.0.1-alpha.1) (2022-01-22)
+
+**Note:** Version bump only for package @hestiaai/tinder
+
+
+
+
+
 ## 0.0.1-alpha.0 (2022-01-22)
 
 
