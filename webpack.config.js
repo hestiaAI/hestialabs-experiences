@@ -1,23 +1,24 @@
 import path from 'path'
+import { readdirSync } from 'fs'
 import { fileURLToPath } from 'url'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+const packages = readdirSync(path.resolve(__dirname, 'packages'))
+
 export default {
   mode: 'production',
-  entry: {
-    'facebook/dist/index': path.resolve(
-      __dirname,
-      'packages/facebook/src/index.ts'
-    ),
-    'twitter/dist/index': path.resolve(
-      __dirname,
-      'packages/twitter/src/index.ts'
-    ),
-    'tinder/dist/index': path.resolve(__dirname, 'packages/tinder/src/index.ts')
-  },
+  // https://webpack.js.org/concepts/entry-points/#object-syntax
+  entry: Object.fromEntries(
+    packages.map(name => [
+      // entry chunk name
+      `${name}/dist/index`,
+      // module that is loaded upon startup
+      `packages/${name}/src/index.ts`
+    ])
+  ),
   devtool: 'inline-source-map',
   module: {
     rules: [
