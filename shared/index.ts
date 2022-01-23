@@ -1,6 +1,7 @@
 import { createViewBlock } from './view-block'
-import { ExperienceOptions } from './types'
-export { ExperienceOptions } from './types'
+// https://javascript.plainenglish.io/leveraging-type-only-imports-and-exports-with-typescript-3-8-5c1be8bd17fb
+import type { ExperienceOptions } from './types'
+export type { ExperienceOptions } from './types'
 
 const defaultOptions: Partial<ExperienceOptions> = {
   allowMissingFiles: false,
