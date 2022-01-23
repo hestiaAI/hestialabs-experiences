@@ -3,6 +3,7 @@
   "version": "0.0.1-alpha.3",
   "description": "",
   "main": "dist/index",
+  "type": "module",
   "files": [
     "dist"
   ],

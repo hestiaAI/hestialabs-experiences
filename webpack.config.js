@@ -24,9 +24,11 @@ export default {
     rules: [
       {
         test: /\.tsx?$/,
-        loader: 'ts-loader',
         exclude: /node_modules/,
-        options: { configFile: 'tsconfig.build.json' }
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env', '@babel/preset-typescript']
+        }
       },
       // https://webpack.js.org/guides/asset-modules/
       {
@@ -46,7 +48,18 @@ export default {
       new TsconfigPathsPlugin({})
     ]
   },
+  experiments: {
+    outputModule: true
+  },
   output: {
-    path: path.resolve(__dirname, 'packages')
+    path: path.resolve(__dirname, 'packages'),
+    library: {
+      // https://github.com/webpack/webpack/issues/2933
+      // https://webpack.js.org/configuration/output/#type-module
+      type: 'module'
+    }
+  },
+  watchOptions: {
+    ignored: /node_modules/
   }
 }
