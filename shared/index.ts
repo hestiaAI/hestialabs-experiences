@@ -14,8 +14,14 @@ const defaultOptions: Partial<ExperienceOptions> = {
 export class Experience {
   options: ExperienceOptions
   constructor(options: ExperienceOptions) {
-    const { fileExtensions, zipFilePaths, slug } = options
+    // spread default options first, and then provided options
+    this.options = { ...defaultOptions, ...options }
+
+    // construct default view Array
+    this.options.defaultView = options.defaultView.map(createViewBlock)
+
     // runtime validation of zipFilePaths
+    const { fileExtensions, zipFilePaths, slug } = this.options
     if (
       fileExtensions.includes('zip') &&
       (!zipFilePaths || !zipFilePaths.length)
@@ -24,10 +30,5 @@ export class Experience {
         `[${slug}] zip extension was specified but zipFilePaths[] is empty`
       )
     }
-
-    options.defaultView = options.defaultView.map(createViewBlock)
-
-    // spread default options first, and then provided options
-    this.options = { ...defaultOptions, ...options }
   }
 }
