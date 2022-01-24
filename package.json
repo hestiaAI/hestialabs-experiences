@@ -90,7 +90,7 @@
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "micromatch": "^4.0.4",
-    "n3": "^1.12.1",
+    "n3": "^1.13.0",
     "nuxt": "^2.15.8",
     "read-excel-file": "^5.2.25",
     "regression": "^2.0.1",
