@@ -80,4 +80,87 @@ describe('with complete samples', () => {
     arrayEqualNoOrder(result.headers, expected.headers)
     arrayEqualNoOrder(result.items, expected.items)
   })
+
+  test('query off-facebook-activity-count returns the correct items', () => {
+    const result = runQuery('../queries/off-facebook-activity-count.sql')
+    const expected = {
+      headers: ['advertiserName', 'date', 'count'],
+      items: [
+        {
+          advertiserName: 'App01',
+          date: 1615460377,
+          count: 1
+        },
+        {
+          advertiserName: 'App02',
+          date: 1600622182,
+          count: 1
+        }
+      ]
+    }
+    arrayEqualNoOrder(result.headers, expected.headers)
+    arrayEqualNoOrder(result.items, expected.items)
+  })
+
+  test('query off-facebook-activity-type-count returns the correct items', () => {
+    const result = runQuery('../queries/off-facebook-activity-type-count.sql')
+    const expected = {
+      headers: ['targetingType', 'targetingValue', 'count'],
+      items: [
+        {
+          targetingType: 'App01',
+          targetingValue: 'CUSTOM',
+          count: 1
+        },
+        {
+          targetingType: 'App02',
+          targetingValue: 'CUSTOM',
+          count: 1
+        }
+      ]
+    }
+    arrayEqualNoOrder(result.headers, expected.headers)
+    arrayEqualNoOrder(result.items, expected.items)
+  })
+
+  test('query ad-interactions returns the correct items', () => {
+    const result = runQuery('../queries/ad-interactions.sql')
+    const expected = {
+      headers: ['title', 'action', 'timestamp'],
+      items: [
+        {
+          title: 'SALE',
+          action: 'Closed ad',
+          timestamp: 1629695476
+        },
+        {
+          title: 'How to get 10000$ with this one simple trick',
+          action: 'Clicked ad',
+          timestamp: 1629440065
+        }
+      ]
+    }
+    arrayEqualNoOrder(result.headers, expected.headers)
+    arrayEqualNoOrder(result.items, expected.items)
+  })
+
+  test('query advertisers-contact-list returns the correct items', () => {
+    const result = runQuery('../queries/advertisers-contact-list.sql')
+    const expected = {
+      headers: ['name'],
+      items: [
+        {
+          name: 'Apple'
+        },
+        {
+          name: 'Google'
+        },
+        {
+          name: 'Microsoft'
+        }
+      ]
+    }
+    arrayEqualNoOrder(result.headers, expected.headers)
+    arrayEqualNoOrder(result.items, expected.items)
+  })
 })

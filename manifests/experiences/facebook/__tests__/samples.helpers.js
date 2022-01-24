@@ -16,7 +16,7 @@ export const advertisersUsingYourActivity = {
 }
 
 export const advertisersWhoUploadedAContactList = {
-  custom_audiences_v2: ['Apple', 'Google', 'Microsoft', 'Amazon.fr']
+  custom_audiences_v2: ['Apple', 'Google', 'Microsoft']
 }
 
 export const advertisersInteractedWith = {
