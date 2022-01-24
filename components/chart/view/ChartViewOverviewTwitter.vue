@@ -6,29 +6,33 @@
           <VCol cols="12" sm="8">
             <div id="volume-chart">
               <strong>Number of ads over time</strong>
-              <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
                   Current filter:
                   <span class="filter"></span>
                 </span>
+                <a class="reset" style="display: none">reset</a>
               </p>
             </div>
             <div :id="'range-chart' + graphId" class="range-chart">
               <p class="muted pull-right" style="margin-right: 15px">
-                select a time range to zoom in
+                select a <strong>time range</strong> to zoom in
               </p>
             </div>
           </VCol>
           <VCol cols="12" sm="4">
             <div id="company-chart">
-              <strong>Top 10 advertisers</strong>
-              <a class="reset" style="display: none">reset</a>
+              <div style="display: flex">
+                <strong>Top 10 advertisers</strong>
+                <VSpacer />
+                <div id="company-search"></div>
+              </div>
               <p class="filters">
                 <span>
                   Current filter:
                   <span class="filter"></span>
                 </span>
+                <a class="reset" style="display: none">reset</a>
               </p>
             </div>
           </VCol>
@@ -37,36 +41,44 @@
           <VCol cols="12" sm="4">
             <div id="engagement-chart">
               <strong>Interactions with ads (clicks, video views)</strong>
-              <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
                   Current filter:
                   <span class="filter"></span>
                 </span>
+                <a class="reset" style="display: none">reset</a>
               </p>
             </div>
           </VCol>
           <VCol cols="12" sm="4">
             <div id="type-chart">
-              <strong>Type of targeting</strong>
-              <a class="reset" style="display: none">reset</a>
+              <div style="display: flex">
+                <strong>Type of targeting</strong>
+                <VSpacer />
+                <div id="type-search"></div>
+              </div>
               <p class="filters">
                 <span>
                   Current filter:
                   <span class="filter"></span>
                 </span>
+                <a class="reset" style="display: none">reset</a>
               </p>
             </div>
           </VCol>
           <VCol cols="12" sm="4">
             <div id="value-chart">
-              <strong>Targeting criteria</strong>
-              <a class="reset" style="display: none">reset</a>
+              <div style="display: flex">
+                <strong>Targeting criteria</strong>
+                <VSpacer />
+                <div id="value-search"></div>
+              </div>
               <p class="filters">
                 <span>
                   Current filter:
                   <span class="filter"></span>
                 </span>
+                <a class="reset" style="display: none">reset</a>
               </p>
             </div>
           </VCol>
@@ -108,7 +120,11 @@ export default {
         { text: 'Company', value: 'companyName' },
         { text: 'Date', value: 'date' },
         { text: 'Promoted Tweet', value: 'url' },
-        { text: 'Engagement', value: 'engagement' },
+        {
+          text: 'Engagement',
+          value: 'engagement',
+          formatter: d => (d === 0 ? 'No' : 'Yes')
+        },
         { text: 'Targeting Criteria', value: 'count' }
       ],
       results: []
@@ -133,26 +149,29 @@ export default {
       const engagementChart = new dc.PieChart('#engagement-chart')
       const typeChart = new dc.RowChart('#type-chart')
       const valueChart = new dc.RowChart('#value-chart')
+      const companySearch = new dc.TextFilterWidget('#company-search')
+      const typeSearch = new dc.TextFilterWidget('#type-search')
+      const valueSearch = new dc.TextFilterWidget('#value-search')
 
       // Bind reset filters links
-      d3.select('#volume-chart a.reset').on('click', function () {
+      d3.select('#volume-chart p a.reset').on('click', function () {
         rangeChart.filterAll()
         volumeChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#company-chart a.reset').on('click', function () {
+      d3.select('#company-chart p a.reset').on('click', function () {
         companyChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#engagement-chart a.reset').on('click', function () {
+      d3.select('#engagement-chart p a.reset').on('click', function () {
         engagementChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#type-chart a.reset').on('click', function () {
+      d3.select('#type-chart p a.reset').on('click', function () {
         typeChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#value-chart a.reset').on('click', function () {
+      d3.select('#value-chart p a.reset').on('click', function () {
         valueChart.filterAll()
         dc.redrawAll()
       })
@@ -189,7 +208,9 @@ export default {
       )
       const targetingTypeDimension = ndx.dimension(d => d.targetingType)
       const targetingValueDimension = ndx.dimension(d => d.targetingValue)
-
+      companySearch.dimension(ndx.dimension(d => d.companyName.toLowerCase()))
+      typeSearch.dimension(ndx.dimension(d => d.targetingType.toLowerCase()))
+      valueSearch.dimension(ndx.dimension(d => d.targetingValue.toLowerCase()))
       // custom reduce function for grouping by ad and not targeting criteria
       const init = () => ({
         // initial
@@ -261,7 +282,7 @@ export default {
         .elasticX(false)
         .elasticY(true)
         .xyTipsOn(true)
-        .mouseZoomable(true)
+        .mouseZoomable(false)
         .rangeChart(rangeChart)
         .renderHorizontalGridLines(false)
         .renderDataPoints({
@@ -454,5 +475,12 @@ export default {
 ::v-deep p.filters {
   font-size: 0.8rem;
   font-style: italic;
+}
+::v-deep .dc-text-filter-input {
+  font-family: inherit;
+  border: 0;
+  border-bottom: 1px solid gray;
+  outline: 0;
+  background: transparent;
 }
 </style>

@@ -47,7 +47,7 @@
                 dense
                 class="pa-4"
                 label="Search ..."
-                :items="columnValues(header.value)"
+                :items="columnValues(header)"
                 :menu-props="{ closeOnClick: true }"
               >
                 <template #selection="{ item, index }">
@@ -138,8 +138,6 @@ export default {
       return headers.map(h => ({
         ...h,
         align: 'left',
-        // class: 'header',
-        // width: 6 + 0.35 * h.text.length + 'rem',
         sortable: true
       }))
     },
@@ -165,6 +163,10 @@ export default {
   methods: {
     formatItemAsString(itemProps) {
       const { header, value } = itemProps
+      // eslint-disable-next-line no-prototype-builtins
+      if (header.hasOwnProperty('formatter')) {
+        return header.formatter(value)
+      }
       if (Array.isArray(value)) {
         return formatArray(value)
       }
@@ -197,8 +199,10 @@ export default {
         this.status = true
       }
     },
-    columnValues(val) {
-      return this.items.map(d => d[val])
+    columnValues(header) {
+      return this.items.map(d =>
+        this.formatItemAsString({ header, value: d[header.value] })
+      )
     },
     onItemsUpdate() {
       // wait until the DOM has completely updated
