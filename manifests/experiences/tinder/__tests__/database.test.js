@@ -37,17 +37,38 @@ describe('with complete samples', () => {
     db.close()
   })
 
-  test('query app-opens returns the correct items', () => {
-    const result = runQuery('../queries/app-opens.sql')
+  test('query all returns the correct items', () => {
+    const result = runQuery('../queries/all.sql')
     const expected = {
-      headers: ['date', 'open'],
+      headers: [
+        'date',
+        'likes',
+        'number_of_superlikes',
+        'passes',
+        'number_of_messages_sent',
+        'number_of_messages_received',
+        'number_of_matches',
+        'open'
+      ],
       items: [
         {
           date: '2019-01-01',
+          likes: 10,
+          number_of_superlikes: 0,
+          passes: 23,
+          number_of_messages_sent: 2,
+          number_of_messages_received: 0,
+          number_of_matches: 0,
           open: 5
         },
         {
           date: '2020-01-01',
+          likes: null,
+          number_of_superlikes: 0,
+          passes: 42,
+          number_of_messages_sent: 3,
+          number_of_messages_received: 1,
+          number_of_matches: 1,
           open: 1
         }
       ]
