@@ -87,7 +87,10 @@ export default async function databaseBuilder(fileManager) {
   db.insert('offFacebookActivityDatabase', offFacebookActivityItems)
 
   /// Inferred interests ////////////////////////////////////////////////////////////////////////////////
-  db.create('inferredInterestsDatabase', [['name', 'TEXT']])
+  db.create('inferredInterestsDatabase', [
+    ['id', 'INTEGER'],
+    ['name', 'TEXT']
+  ])
   const inferredInterestsFile =
     JSON.parse(await fileManager.getPreprocessedTextFromId('ads-interests')) ??
     []
