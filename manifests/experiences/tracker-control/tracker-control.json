@@ -2,15 +2,17 @@
   "title": "TrackerControl",
   "subtitle": "Tracking data",
   "icon": "tracker-control.png",
-  "ext": "csv",
+  "ext": "all",
+  "multiple": true,
   "data": ["tracker-control.csv"],
   "files": {
-    "tracker-control": "input.csv"
+    "tracker-control": "**/*.csv"
   },
   "defaultView": [
     {
       "key": "trackerControl",
       "customPipeline": "trackerControl",
+      "files": ["tracker-control"],
       "visualization": "ChartViewTrackerControl.vue",
       "showTable": false,
       "title": "Dashboard",

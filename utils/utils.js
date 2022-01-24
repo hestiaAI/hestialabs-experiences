@@ -107,3 +107,8 @@ export function runWorker(worker, args) {
 
 export const setTimeoutPromise = (delay, value) =>
   new Promise(resolve => setTimeout(resolve, delay, value))
+
+/* Shallow equality test on sets */
+export function setsEqual(s1, s2) {
+  return s1.size === s2.size && [...s1].every(value => s2.has(value))
+}

@@ -93,16 +93,13 @@ const manifests = Object.fromEntries(
       ext = validExtensions.join(',')
     }
     // Validate config
-    const requiredParams = { title, icon, ext }
+    const requiredParams = { title, icon }
     if (!isGenericViewer && !url) {
       Object.entries(requiredParams).forEach(([name, param]) => {
         if (!param) {
           throw new Error(`[${dir}] ${name} is required`)
         }
       })
-      if (ext.split(',').some(v => !validExtensions.includes(v))) {
-        throw new Error(`[${dir}] parameter ext is invalid`)
-      }
     }
     Object.values(preprocessors).forEach(preprocessor => {
       if (!(preprocessor in allPreprocessors)) {
