@@ -140,10 +140,12 @@ test('files from IDs', async () => {
   const file2 = mockFile(path2, content)
 
   const id3 = 'all'
+  const id4 = 'not-found'
   const ids = {
     [id1]: '**/bar.txt',
     [id2]: '**/hello.txt',
-    [id3]: '**/*.txt'
+    [id3]: '**/*.txt',
+    [id4]: '*.unknown'
   }
   await fileManager.init([file1, file2], true, ids)
 
@@ -161,5 +163,8 @@ test('files from IDs', async () => {
   const paths = fileManager.getFilePathsFromId(id3, false)
   arrayEqualNoOrder(paths, [path1, path2])
 
-  expect(fileManager.getFilePathsFromId('wrong-id', true)).toBe(null)
+  expect(() => fileManager.getFilePathsFromId('wrong-id', true)).toThrow()
+
+  expect(fileManager.getFilePathsFromId(id4, true)).toBe(null)
+  expect(fileManager.getFilePathsFromId(id4, false)).toEqual([])
 })
