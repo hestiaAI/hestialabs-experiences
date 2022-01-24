@@ -5,7 +5,7 @@
   "dataPortal": "https://help.uber.com/ubereats/article/request-a-copy-of-your-uber-data",
   "ext": "zip",
   "files": {
-    "trips": "**/Uber Data/Rider/trips_data.csv"
+    "trips": "**/Rider/trips_data.csv"
   },
   "data": ["uber-trips.zip"],
   "defaultView": [
