@@ -102,6 +102,12 @@ export default {
     }
   },
   watch: {
+    // Watch files, if user empty all files we reset the store and delete all files
+    filesEmpty() {
+      if (this.filesEmpty) {
+        this.$store.commit('clearStore')
+      }
+    },
     async selectedSamples(newSamples, oldSamples) {
       if (newSamples.length > oldSamples.length) {
         // some sample was added
@@ -160,6 +166,7 @@ export default {
       .on('cancel-all', () => {
         this.filesEmpty = true
         this.enableStatus = false
+        this.returnFiles()
       })
       .on('file-removed', (file, reason) => {
         if (reason === 'removed-by-user') {
@@ -183,7 +190,7 @@ export default {
     returnFiles() {
       const uppyFiles = this.uppy.getFiles().map(f => f.data)
       this.status = true
-      this.$emit('update', { uppyFiles })
+      this.$emit('update', { uppyFiles, filesEmpty: this.filesEmpty })
     }
   }
 }

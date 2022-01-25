@@ -3,7 +3,11 @@
     <div ref="view">
       <component
         :is="component"
-        v-bind="{ values: data.items, headers: data.headers, ...vizProps }"
+        v-bind="{
+          values: data ? data.items : [],
+          headers: data ? data.headers : [],
+          ...vizProps
+        }"
       />
     </div>
   </DataValidator>

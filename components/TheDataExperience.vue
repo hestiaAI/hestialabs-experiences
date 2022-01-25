@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BaseButtonShare color="primary" :outlined="false" />
+    <SettingsSpeedDial />
     <VRow>
       <VCol>
         <VTabs
@@ -15,7 +15,7 @@
           fixed-tabs
           class="fixed-tabs-bar"
         >
-          <VTab>Load your Data</VTab>
+          <VTab href="#load-data">Load your Data</VTab>
           <VTab :disabled="!success" href="#summary">Summary</VTab>
           <VTab :disabled="!success" href="#file-explorer">Files</VTab>
           <VTab
@@ -28,7 +28,7 @@
           <VTab v-if="consentForm" :disabled="!success">Share my data</VTab>
         </VTabs>
         <VTabsItems v-model="tab">
-          <VTabItem>
+          <VTabItem value="load-data">
             <VCol cols="12 mx-auto" sm="6" class="tabItem pa-5">
               <UnitIntroduction
                 v-bind="{ companyName: title, dataPortal, isGenericViewer }"
@@ -87,8 +87,7 @@
                   fileManager,
                   postprocessors,
                   index,
-                  vega,
-                  db
+                  vega
                 }"
               />
             </VCol>
@@ -112,6 +111,7 @@
 </template>
 
 <script>
+import SettingsSpeedDial from './SettingsSpeedDial.vue'
 import { validExtensions } from '~/manifests/utils'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
@@ -120,6 +120,7 @@ import rdfUtils from '~/utils/rdf'
 
 export default {
   name: 'TheDataExperience',
+  components: { SettingsSpeedDial },
   props: {
     title: {
       type: String,
@@ -199,13 +200,13 @@ export default {
   data() {
     return {
       tab: null,
+      fab: false,
       progress: false,
       error: false,
       success: false,
       message: '',
       rml: '',
-      fileManager: null,
-      db: null
+      fileManager: null
     }
   },
   computed: {
@@ -251,6 +252,9 @@ export default {
       this.message = error instanceof Error ? error.message : error
       this.progress = false
     },
+    onClearAll() {
+      this.tab = 'load-data'
+    },
     async onUnitFilesUpdate({ uppyFiles }) {
       this.message = ''
       this.error = false
@@ -275,7 +279,8 @@ export default {
 
       // Populate database
       if (this.databaseBuilder !== undefined) {
-        this.db = await this.databaseBuilder(this.fileManager)
+        const db = await this.databaseBuilder(this.fileManager)
+        this.$store.commit('setCurrentDB', db)
       }
 
       if (this.isRdfNeeded && this.yarrrml) {
@@ -290,7 +295,6 @@ export default {
           return
         }
       }
-
       this.progress = false
       this.success = true
       this.tab = 'summary'

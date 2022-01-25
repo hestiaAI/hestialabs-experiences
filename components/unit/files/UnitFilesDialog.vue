@@ -4,7 +4,9 @@
       <VTooltip :right="main" :left="!main">
         <template #activator="{ on: onTooltip }">
           <span v-on="onTooltip">
-            <VIcon v-on="on">$vuetify.icons.mdiFolderInformationOutline</VIcon>
+            <VIcon class="ml-2" v-on="on"
+              >$vuetify.icons.mdiFolderInformationOutline</VIcon
+            >
           </span>
         </template>
         <span>Show expected files</span>

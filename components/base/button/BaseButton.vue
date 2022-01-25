@@ -1,27 +1,37 @@
 <template>
-  <VBtn
-    :outlined="outlined"
-    :fixed="fixed"
-    :right="right"
-    :bottom="bottom"
-    :top="top"
-    :left="left"
-    v-bind="$attrs"
-    class="my-2"
-    @click="$emit('click', $event)"
-  >
-    <VIcon v-if="icon" left>{{ mdiIcon }}</VIcon>
-    <slot>
-      <span>{{ text }}</span>
-    </slot>
-    <BaseProgressCircular v-if="progress" class="ml-2" />
-    <StatusIndicator v-else-if="status" :error="error" />
-  </VBtn>
+  <VTooltip left :disabled="tooltip.length === 0">
+    <template #activator="{ on, attrs }">
+      <VBtn
+        :outlined="outlined"
+        :fixed="fixed"
+        :right="right"
+        :bottom="bottom"
+        :top="top"
+        :left="left"
+        v-bind="[attrs, $attrs]"
+        class="my-2"
+        v-on="on"
+        @click="$emit('click', $event)"
+      >
+        <VIcon v-if="icon" :left="text !== ''">{{ mdiIcon }}</VIcon>
+        <slot>
+          <span>{{ text }}</span>
+        </slot>
+        <BaseProgressCircular v-if="progress" class="ml-2" />
+        <StatusIndicator v-else-if="status" :error="error" />
+      </VBtn>
+    </template>
+    <span>{{ tooltip }}</span>
+  </VTooltip>
 </template>
 
 <script>
 export default {
   props: {
+    tooltip: {
+      type: String,
+      default: ''
+    },
     text: {
       type: String,
       default: ''

@@ -56,7 +56,6 @@
               v-else-if="sql"
               v-bind="{
                 sql,
-                db,
                 parameterName: defaultViewElements.parameterName,
                 parameterKey: defaultViewElements.parameterKey
               }"
@@ -105,8 +104,6 @@
 
 <script>
 import FileManager from '~/utils/file-manager'
-import { DB } from '@/utils/sql'
-
 export default {
   props: {
     sparqlQuery: {
@@ -140,10 +137,6 @@ export default {
     postprocessors: {
       type: Object,
       default: () => {}
-    },
-    db: {
-      type: DB,
-      default: null
     }
   },
   data() {
