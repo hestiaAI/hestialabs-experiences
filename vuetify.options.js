@@ -21,6 +21,7 @@ import {
   mdiTuneVariant,
   mdiShare,
   mdiStepForward,
+  mdiTable,
   mdiTwitter,
   mdiFolderInformationOutline,
   mdiFileMultipleOutline
@@ -52,6 +53,7 @@ export default {
       mdiTuneVariant,
       mdiShare,
       mdiStepForward,
+      mdiTable,
       mdiTwitter,
       mdiFolderInformationOutline,
       mdiFileMultipleOutline

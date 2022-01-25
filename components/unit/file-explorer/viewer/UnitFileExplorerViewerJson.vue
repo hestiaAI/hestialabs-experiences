@@ -13,7 +13,7 @@
         </VIcon>
       </template>
       <template #label="{ item, leaf }">
-        <span class="clickable-node" @click="onNodeClick(item)">
+        <span>
           <span v-if="leaf" :title="item.value">
             <span v-if="!isUndef(item.name)">
               {{ `${item.name}:` }}
@@ -21,6 +21,18 @@
             <span class="font-italic">{{ item.value }}</span>
           </span>
           <span v-else>{{ item.name }}</span>
+          <VTooltip bottom open-delay="200">
+            <template #activator="{ on }">
+              <VIcon
+                class="clickable-node"
+                v-on="on"
+                @click="onNodeClick(item)"
+              >
+                $vuetify.icons.mdiTable
+              </VIcon>
+            </template>
+            <span>Show as table</span>
+          </VTooltip>
         </span>
       </template>
     </VTreeview>
