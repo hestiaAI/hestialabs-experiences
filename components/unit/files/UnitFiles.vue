@@ -72,7 +72,8 @@ export default {
       restrictions: {
         maxNumberOfFiles: this.multiple ? null : 1,
         allowedFileTypes: this.extensions.length > 0 ? this.extensions : null
-      }
+      },
+      locale: { strings: { cancel: 'Clear all' } }
     }
     return {
       uppy: new Uppy(config),
