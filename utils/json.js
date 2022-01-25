@@ -1,35 +1,8 @@
 import _ from 'lodash'
 import { toDateString } from '@/utils/dates'
-export function filterCondition(item, filter) {
-  filter = filter.toLowerCase()
-  return (
-    (item.name && `${item.name}`.toLowerCase().includes(filter)) ||
-    (item.value && `${item.value}`.toLowerCase().includes(filter))
-  )
-}
 
 export const nodeTypes = { TREE: 'tree', LIST: 'list', LEAF: 'leaf' }
 const { TREE, LIST, LEAF } = nodeTypes
-
-export function minifyList(list, path, base = 0) {
-  const groupsPerLevel = 10
-  if (list.length <= groupsPerLevel) return list
-  const groupSize = Math.pow(
-    groupsPerLevel,
-    Math.floor(Math.log(list.length - 1) / Math.log(groupsPerLevel))
-  )
-  return _.chunk(list, groupSize).map((group, i) => {
-    const from = base + groupSize * i + 1
-    const to = base + groupSize * i + group.length
-    return {
-      id: `${path.join('.')}[${from - 1}:${to}]`,
-      name: `[elements ${from} - ${to}]`,
-      path,
-      children: minifyList(group, path, base + i * groupSize),
-      type: nodeTypes.LIST
-    }
-  })
-}
 
 /**
  * itemifyJSON transforms some JSON into a tree, suitable for a Vuetify VTreeview component.
@@ -75,13 +48,8 @@ export function traverseJson(json, process, path = []) {
   }
 }
 
-function attributeNameFromPath(path) {
-  const key = path[path.length - 1]
-  return key && isNaN(key) ? key : undefined
-}
-
 export function processJsonNode(json, path, type, processedChildren) {
-  const item = { id: path.join('.'), path, type }
+  const item = { id: pathToId(path), path, type }
   const attrName = formatAttributeName(attributeNameFromPath(path))
   if (type === LEAF) {
     if (attrName) {
@@ -105,22 +73,98 @@ export function processJsonNode(json, path, type, processedChildren) {
   return item
 }
 
+export function minifyList(list, path, base = 0, groupsPerLevel = 10) {
+  if (list.length <= groupsPerLevel) return list
+  const groupSize = Math.pow(
+    groupsPerLevel,
+    Math.floor(Math.log(list.length - 1) / Math.log(groupsPerLevel))
+  )
+  return _.chunk(list, groupSize).map((group, i) => {
+    const from = base + groupSize * i + 1
+    const to = base + groupSize * i + group.length
+    return {
+      id: pathToId(path, `[${from - 1}:${to}]`),
+      name: `[elements ${from} - ${to}]`,
+      path,
+      children: minifyList(group, path, base + i * groupSize),
+      type: nodeTypes.LIST
+    }
+  })
+}
+
+export function findMatchingItems(searchTerm, rootItem) {
+  if (!searchTerm) {
+    return []
+  }
+  const foundIds = reduceItems([], rootItem, undefined, (acc, item, trail) => {
+    if (filterMatchesItem(searchTerm, item)) {
+      acc.push(Object.assign({ trail }, item))
+    }
+    return acc
+  })
+  return foundIds
+}
+
+export function reduceItems(
+  initialAccumulator,
+  rootItem,
+  idTrail = [],
+  reducer
+) {
+  if (Array.isArray(rootItem)) {
+    return rootItem.reduce((acc, item) => {
+      const newAcc = reduceItems(acc, item, idTrail, reducer)
+      return newAcc === undefined ? acc : newAcc
+    }, initialAccumulator)
+  }
+  // the id trails allow displaying an item in the treeview
+  // where all the nodes leading to it have to be open
+  const newIdTrail = idTrail.concat(rootItem.id)
+  const newAccumulator = reducer(initialAccumulator, rootItem, newIdTrail)
+  if (rootItem.children?.length > 0) {
+    return reduceItems(newAccumulator, rootItem.children, newIdTrail, reducer)
+  }
+  return newAccumulator
+}
+
+export function attributeNameFromPath(path) {
+  const key = path?.[path.length - 1]
+  return key && isNaN(key) ? key : undefined
+}
+
+export function pathToId(path, suffix) {
+  return path.join('.') + (suffix ?? '')
+}
+
 export function makePruningPredicateToMatch(filter) {
   if (!filter) {
     return () => true
   }
-  const lowerCaseFilter = filter.toLowerCase()
   return item => {
     const name = attributeNameFromPath(item.path)
-    if (name && name.toLowerCase().includes(lowerCaseFilter)) {
-      return true
-    }
     const value = item.value && '' + item.value
-    if (value && value.toLowerCase().includes(lowerCaseFilter)) {
+    if (filterMatchesNameOrValue(filter, name, value)) {
       return true
     }
     return item.children && item.children.length > 0
   }
+}
+
+export function filterMatchesItem(filter, item) {
+  const name = attributeNameFromPath(item?.path)
+  const value = item?.value
+  return filterMatchesNameOrValue(filter, name, value)
+}
+
+export function filterMatchesNameOrValue(filter, name, value) {
+  const lowerCaseFilter = filter?.toLowerCase()
+  if (name?.toLowerCase().includes(lowerCaseFilter)) {
+    return true
+  }
+  if (_.isString(value) && value.toLowerCase().includes(lowerCaseFilter)) {
+    return true
+  }
+  return false
 }
 
 export function formatObject(object) {
