@@ -1,14 +1,10 @@
 {
   "title": "Netflix",
   "icon": "netflix.png",
-  "ext": "zip",
   "files": {
     "viewing-activity": "**/CONTENT_INTERACTION/ViewingActivity.csv",
     "messages-by-netflix": "**/MESSAGES/MessagesSentByNetflix.csv"
   },
-  "multiple": false,
-  "isGenericViewer": true,
-  "showDataExplorer": true,
   "defaultView": [
     {
       "key": "watchOverview",

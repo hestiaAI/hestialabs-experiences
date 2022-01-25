@@ -2,7 +2,6 @@
   "title": "Facebook",
   "icon": "facebk.png",
   "dataPortal": "https://www.facebook.com/help/212802592074644",
-  "ext": "zip",
   "data": [],
   "files": {
     "advertisers-interacted": "**/ads_information/advertisers_you've_interacted_with.json",

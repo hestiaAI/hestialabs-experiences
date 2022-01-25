@@ -1,10 +1,6 @@
 {
   "title": "SBB/CFF",
   "icon": "sbb.png",
-  "ext": "all",
-  "multiple": true,
-  "isGenericViewer": true,
-  "showDataExplorer": true,
   "defaultView": [
     {
       "key": "genericDateViewer",

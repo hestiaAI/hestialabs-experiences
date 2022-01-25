@@ -31,16 +31,13 @@
           <VTabItem>
             <VCol cols="12 mx-auto" sm="6" class="tabItem pa-5">
               <UnitIntroduction
-                v-bind="{ companyName: title, dataPortal, isGenericViewer }"
+                v-bind="{ companyName: title, dataPortal }"
                 ref="unit-introduction"
               />
               <UnitFiles
                 v-bind="{
-                  extensions,
                   files,
-                  multiple,
-                  samples: data,
-                  isGenericViewer
+                  samples: data
                 }"
                 ref="unit-files"
                 @update="onUnitFilesUpdate"
@@ -99,8 +96,7 @@
                 v-bind="{
                   consentForm,
                   defaultView,
-                  fileManager,
-                  showDataExplorer
+                  fileManager
                 }"
               />
             </VCol>
@@ -112,7 +108,6 @@
 </template>
 
 <script>
-import { validExtensions } from '~/manifests/utils'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 import parseYarrrml from '~/utils/parse-yarrrml'
@@ -133,16 +128,6 @@ export default {
       type: Array,
       default: () => []
     },
-    ext: {
-      type: String,
-      required: true,
-      validator(val) {
-        return (
-          val === 'all' ||
-          val.split(',').every(v => validExtensions.includes(v))
-        )
-      }
-    },
     files: {
       type: Object,
       default: () => {}
@@ -150,10 +135,6 @@ export default {
     defaultView: {
       type: Array,
       default: () => []
-    },
-    multiple: {
-      type: Boolean,
-      default: false
     },
     preprocessors: {
       type: Object,
@@ -166,14 +147,6 @@ export default {
     customPipelines: {
       type: Object,
       default: undefined
-    },
-    isGenericViewer: {
-      type: Boolean,
-      default: false
-    },
-    showDataExplorer: {
-      type: Boolean,
-      default: true
     },
     sparql: {
       type: Object,
@@ -229,14 +202,6 @@ export default {
         }
       }
       return null
-    },
-    extensions() {
-      return this.ext === 'all'
-        ? []
-        : this.ext
-            .replace(/\s/g, '')
-            .split(',')
-            .map(ext => `.${ext}`)
     }
   },
   mounted() {
@@ -266,7 +231,7 @@ export default {
         fileManagerWorkers
       )
       try {
-        await fileManager.init(uppyFiles, this.multiple, this.files)
+        await fileManager.init(uppyFiles, true, this.files)
       } catch (e) {
         this.handleError(e)
         return

@@ -1,7 +1,6 @@
 {
   "title": "Amazon",
   "icon": "amazon.png",
-  "ext": "json",
   "data": [],
   "disabled": true
 }

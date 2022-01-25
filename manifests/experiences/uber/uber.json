@@ -3,7 +3,6 @@
   "subtitle": "Customer data",
   "icon": "uber.png",
   "dataPortal": "https://help.uber.com/ubereats/article/request-a-copy-of-your-uber-data",
-  "ext": "zip",
   "files": {
     "trips": "**/Rider/trips_data.csv"
   },

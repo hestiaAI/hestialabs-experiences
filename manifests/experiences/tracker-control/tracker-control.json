@@ -2,8 +2,6 @@
   "title": "TrackerControl",
   "subtitle": "Tracking data",
   "icon": "tracker-control.png",
-  "ext": "all",
-  "multiple": true,
   "data": ["tracker-control.csv"],
   "files": {
     "tracker-control": "**/*.csv"

@@ -2,7 +2,6 @@
   "title": "Twitter",
   "icon": "twittr.png",
   "dataPortal": "https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive",
-  "ext": "zip",
   "data": ["twitter.zip", "twitter-sample.zip"],
   "files": {
     "impressions": "**/ad-impressions.js", 

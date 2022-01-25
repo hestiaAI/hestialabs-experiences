@@ -138,10 +138,6 @@ export default {
       type: Object,
       default: () => {}
     },
-    showDataExplorer: {
-      type: Boolean,
-      default: true
-    },
     fileManager: {
       type: FileManager,
       required: true

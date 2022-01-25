@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Analyze your private data</h1>
-    <p v-if="isGenericViewer" class="body-1">
+    <p v-if="$route.params.key === 'explorer'" class="body-1">
       Explore the structure and contents of any file.
     </p>
     <p v-else class="body-1">
@@ -33,8 +33,7 @@ export default {
     dataPortal: {
       type: String,
       default: ''
-    },
-    isGenericViewer: Boolean
+    }
   }
 }
 </script>

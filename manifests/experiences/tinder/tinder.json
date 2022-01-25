@@ -2,14 +2,12 @@
   "title": "Tinder",
   "icon": "tinder.png",
   "dataPortal": "https://account.gotinder.com/data",
-  "ext": "all",
-  "multiple": true,
   "data": ["tinder-synthetic.json"],
   "files": {
     "tinder": "**/*.json"
   },
   "preprocessors": {
-    "input.json": "tinder"
+    "**/*.json": "tinder"
   },
   "collaborator": {
     "title": "The Dating Privacy Collective",

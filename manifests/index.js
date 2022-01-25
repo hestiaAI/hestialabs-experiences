@@ -63,14 +63,10 @@ const manifests = Object.fromEntries(
       title,
       subtitle = 'Data Experience',
       icon,
-      ext: extensions,
       files = {},
-      multiple = false,
       data: dataFiles = [],
       collaborator,
-      isGenericViewer,
       url,
-      showDataExplorer,
       preprocessors = {},
       timedObservationsViewer = {},
       defaultView = [],
@@ -84,23 +80,18 @@ const manifests = Object.fromEntries(
     let data = dataSamples.filter(({ filename }) =>
       dataFiles.includes(filename)
     )
-    let ext = extensions
 
     if (dir === 'playground') {
       // Add all data samples to playground
       data = dataSamples
-      // All extensions are allowed in the playground
-      ext = validExtensions.join(',')
     }
     // Validate config
     const requiredParams = { title, icon }
-    if (!isGenericViewer && !url) {
-      Object.entries(requiredParams).forEach(([name, param]) => {
-        if (!param) {
-          throw new Error(`[${dir}] ${name} is required`)
-        }
-      })
-    }
+    Object.entries(requiredParams).forEach(([name, param]) => {
+      if (!param) {
+        throw new Error(`[${dir}] ${name} is required`)
+      }
+    })
     Object.values(preprocessors).forEach(preprocessor => {
       if (!(preprocessor in allPreprocessors)) {
         throw new Error(`[${dir}] Preprocessor ${preprocessor} does not exist`)
@@ -112,10 +103,6 @@ const manifests = Object.fromEntries(
         allPreprocessors[preprocessorName]
       ])
     )
-
-    if (isGenericViewer && !showDataExplorer) {
-      throw new Error('the explorer experience must show the data explorer')
-    }
 
     if (_.has(timedObservationsViewer, 'fileMatchers')) {
       timedObservationsViewer.fileMatchers.forEach(m => {
@@ -153,15 +140,11 @@ const manifests = Object.fromEntries(
         title,
         subtitle,
         icon: require(`@/manifests/icons/${icon}`),
-        ext,
         files,
-        multiple,
         data,
         preprocessors: preprocessorFuncs,
         collaborator,
-        isGenericViewer,
         url,
-        showDataExplorer,
         timedObservationsViewer,
         sparql: {},
         vega: {},
