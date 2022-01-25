@@ -40,13 +40,12 @@
           "
           @click="generateZIP"
         />
-        <BaseButtonDownloadData
+        <a
           v-show="false"
-          ref="downloadBtn"
-          :data="zipFile"
-          :filename="filename"
-          extension="zip"
-        />
+          ref="downloadLink"
+          :href="href"
+          :download="filename"
+        ></a>
       </VCol>
       <VCol v-if="config.filedrop">
         <VIcon class="mr-2" color="#424242"
@@ -64,6 +63,7 @@
 import { mapState } from 'vuex'
 import JSZip from 'jszip'
 import { padNumber } from '~/utils/utils'
+import { createObjectURL, mimeTypes } from '@/utils/utils'
 
 // In the case of changes that would break the import, this version number must be incremented
 // and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
@@ -92,7 +92,8 @@ export default {
       generateStatus: false,
       generateError: false,
       generateProgress: false,
-      timestamp: 0
+      timestamp: 0,
+      href: null
     }
   },
   computed: {
@@ -253,9 +254,9 @@ export default {
       this.generateStatus = true
       this.generateProgress = false
 
+      this.href = createObjectURL(this.zipFile, mimeTypes.zip)
       await this.$nextTick()
-
-      this.$refs.downloadBtn.$el.click()
+      this.$refs.downloadLink.click()
     },
     updateConsent({ index, selected, value, includedResults }) {
       const section = this.consent[index]
