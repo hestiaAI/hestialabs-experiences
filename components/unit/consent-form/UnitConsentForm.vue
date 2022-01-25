@@ -1,5 +1,5 @@
 <template>
-  <VForm>
+  <VForm v-if="fileManager !== null">
     <UnitConsentFormSection
       v-for="(section, index) in consent"
       :key="`section-${index}`"
@@ -63,7 +63,6 @@
 <script>
 import { mapState } from 'vuex'
 import JSZip from 'jszip'
-import FileManager from '~/utils/file-manager.js'
 import { padNumber } from '~/utils/utils'
 
 // In the case of changes that would break the import, this version number must be incremented
@@ -78,10 +77,6 @@ export default {
     },
     defaultView: {
       type: Array,
-      required: true
-    },
-    fileManager: {
-      type: FileManager,
       required: true
     },
     showDataExplorer: {
@@ -101,7 +96,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config', 'results']),
+    ...mapState(['config', 'results', 'fileManager']),
     resultMap() {
       return this.results[this.key]
     },

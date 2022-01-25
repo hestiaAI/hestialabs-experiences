@@ -14,6 +14,7 @@
           centered
           fixed-tabs
           class="fixed-tabs-bar"
+          @change="scrollToTop()"
         >
           <VTab href="#load-data">Load your Data</VTab>
           <VTab :disabled="!success" href="#summary">Summary</VTab>
@@ -109,6 +110,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import SettingsSpeedDial from './SettingsSpeedDial.vue'
 import { validExtensions } from '~/manifests/utils'
 import FileManager from '~/utils/file-manager'
@@ -207,6 +209,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['fileManager']),
     queries() {
       return this.defaultView.map(o => this.sparql[o.query])
     },
@@ -237,20 +240,31 @@ export default {
             .map(ext => `.${ext}`)
     }
   },
+  watch: {
+    fileManager() {
+      if (this.fileManager === null) {
+        this.tab = 'load-data'
+        this.scrollToTop()
+        this.success = false
+        this.progress = false
+        this.error = false
+      }
+    }
+  },
   mounted() {
     this.$root.$on('goToFileExplorer', () => {
       this.tab = 'file-explorer'
     })
   },
   methods: {
+    scrollToTop() {
+      window.scrollTo(0, 0)
+    },
     handleError(error) {
       console.error(error)
       this.error = true
       this.message = error instanceof Error ? error.message : error
       this.progress = false
-    },
-    onClearAll() {
-      this.tab = 'load-data'
     },
     async onUnitFilesUpdate({ uppyFiles }) {
       this.message = ''
@@ -295,6 +309,7 @@ export default {
       this.progress = false
       this.success = true
       this.tab = 'summary'
+      this.scrollToTop()
       const elapsed = new Date() - start
       this.message = `Successfully processed in ${elapsed / 1000} sec.`
     }
