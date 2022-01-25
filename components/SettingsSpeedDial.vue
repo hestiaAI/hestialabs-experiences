@@ -24,16 +24,6 @@
       tooltip="Share"
     />
     <BaseButton
-      icon="mdiAutorenew"
-      text=""
-      fab
-      dark
-      small
-      tooltip="Reset all"
-      color="green"
-      :outlined="false"
-    />
-    <BaseButton
       icon="mdiClose"
       text=""
       fab
