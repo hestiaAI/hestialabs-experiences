@@ -90,27 +90,24 @@ export default class FileManager {
       ...Object.values(extension2filetype)
     ])
     this.preprocessors = preprocessors ?? {}
-    this.setInitialValues()
     this.workers = workers ?? {}
     this.idToGlob = idToGlob ?? {}
+    this.setInitialValues()
   }
 
   /**
    * Fills the FileManager with the given files and creates helper structures.
    * To be called once the files are available.
    * @param {File[]} uppyFiles
-   * @param {boolean} multiple
    * @returns {Promise<FileManager>}
    */
-  async init(uppyFiles, multiple) {
+  async init(uppyFiles) {
     this.fileList = await FileManager.extractZips(uppyFiles)
     this.fileList = FileManager.filterFiles(this.fileList)
-    const filePairs = this.fileList.map(f => [f.name, f])
-    if (multiple) {
-      this.fileDict = Object.fromEntries(filePairs)
-    } else {
-      this.fileDict = FileManager.removeTopmostFilenames(filePairs)
-    }
+    this.fileList = FileManager.removeZipName(this.fileList)
+    this.fileDict = Object.fromEntries(
+      this.fileList.map(file => [file.name, file])
+    )
     this.setInitialValues()
     this.setShortFilenames()
     return this
@@ -127,39 +124,28 @@ export default class FileManager {
   }
 
   /**
-   * This functions abstracts away the name of the topmost file.
-   * For instance, if the experience supports a single file that must be a json,
-   *   and the user inputs the file 'custom.json', its name is replaced by 'input.json'.
-   * If the experience supports a zip as input, the name of the zip is removed from the path of all the files inside:
-   *   'my-zip.zip/folder/file.txt' becomes 'folder/file.txt'
-   * Note that it only changes the name by which we index the file, and not the actual name of the File object.
+   * If the root consists of a single zip, remove the zip name from all files.
+   * E.g. 'my-zip.zip/folder/file.txt' becomes 'folder/file.txt'
+   * But ['zip1.zip/foo.txt', 'zip2.zip/bar.txt'] stay the same.
    * @param {[String, File][]} filePairs
    * @returns {{[p: String]: File}}
    */
-  static removeTopmostFilenames(filePairs) {
-    if (filePairs.length === 1) {
-      const [filename, file] = filePairs[0]
-      const parts = filename.split('/')
-      let newFilename
-      if (parts.length > 1) {
-        newFilename = parts.slice(1, parts.length).join('/')
-      } else {
-        newFilename = filename.replace(/.+\.(.+)/, 'input.$1')
-      }
-      return Object.fromEntries([[newFilename, file]])
-    } else {
-      return Object.fromEntries(
-        filePairs.map(([filename, file]) => {
-          const parts = filename.split('/')
-          const newFilename = parts.slice(1, parts.length).join('/')
-          return [newFilename, file]
-        })
-      )
+  static removeZipName(fileList) {
+    const rootSet = new Set(fileList.map(f => f.name.split('/')[0]))
+    const roots = [...rootSet]
+    if (roots.length === 1 && roots[0].endsWith('.zip')) {
+      return fileList.map(file => {
+        const parts = file.name.split('/')
+        const blob = file.slice(0, file.size)
+        const name = parts.slice(1, parts.length).join('/')
+        return new File([blob], name)
+      })
     }
+    return fileList
   }
 
   /**
-   * Returns an array with all the (potentially modified by {@link removeTopmostFilenames}) file names in the File Manager.
+   * Returns an array with all the file names in the File Manager.
    * @returns {String[]}
    */
   getFilenames() {

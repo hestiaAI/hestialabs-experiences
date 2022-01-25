@@ -232,7 +232,7 @@ export default {
         this.files
       )
       try {
-        await fileManager.init(uppyFiles, true)
+        await fileManager.init(uppyFiles)
       } catch (e) {
         this.handleError(e)
         return

@@ -40,7 +40,7 @@ async function getDatabase(adImpressions, adEngagements) {
     'test/data/ad-engagements.js',
     JSON.stringify(adEngagements)
   )
-  await fileManager.init([fileImpressions, fileEngagements], true)
+  await fileManager.init([fileImpressions, fileEngagements])
 
   db = await databaseBuilder(fileManager)
 }

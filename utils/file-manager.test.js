@@ -6,7 +6,7 @@ import getCsvHeadersAndItems from '~/utils/csv'
 
 test('an empty file manager', async () => {
   const fileManager = new FileManager()
-  fileManager.init([], false)
+  fileManager.init([])
   await expect(() => fileManager.getText('bobo.json')).rejects.toThrow()
 })
 
@@ -15,7 +15,7 @@ test('a json file in file manager', async () => {
   const fileName = 'bibi/bobo.json'
   const content = '{"hello": 1}'
   const file = mockFile(fileName, content)
-  await fileManager.init([file], true)
+  await fileManager.init([file])
 
   expect(fileManager.hasFile(fileName)).toBeTruthy()
 
@@ -35,7 +35,7 @@ test('a csv file in file manager', async () => {
   const fileName = 'test.csv'
   const content = 'col1,col2\nhello,world\nfoo,bar'
   const file = mockFile(fileName, content)
-  await fileManager.init([file], true)
+  await fileManager.init([file])
 
   expect(fileManager.hasFile(fileName)).toBeTruthy()
 
@@ -58,7 +58,7 @@ test('findMatchingFilePaths', async () => {
   const file1 = mockFile(fileName1, fileContent)
   const fileName2 = 'bibi/bibo.json'
   const file2 = mockFile(fileName2, fileContent)
-  await fileManager.init([file1, file2], true)
+  await fileManager.init([file1, file2])
 
   let paths = fileManager.findMatchingFilePaths('**/b*bo.json')
   expect(paths).toStrictEqual([fileName1, fileName2])
@@ -75,7 +75,7 @@ test('findMatchingObjects', async () => {
   const fileName = 'bibi/bubo.json'
   const fileContent = '{"hello": [11,22,33]}'
   const file = mockFile(fileName, fileContent)
-  await fileManager.init([file], true)
+  await fileManager.init([file])
 
   expect(fileManager.hasFile(fileName)).toBeTruthy()
   const bobo = await fileManager.getText(fileName)
@@ -98,16 +98,13 @@ test('short filenames', async () => {
   const f3 = 'bar.txt'
   const f4 = 'test/hello/bar.txt'
   const f5 = 'zip.zip/toc.json'
-  await fileManager.init(
-    [
-      mockFile(f1, ''),
-      mockFile(f2, ''),
-      mockFile(f3, ''),
-      mockFile(f4, ''),
-      mockFile(f5, '')
-    ],
-    true
-  )
+  await fileManager.init([
+    mockFile(f1, ''),
+    mockFile(f2, ''),
+    mockFile(f3, ''),
+    mockFile(f4, ''),
+    mockFile(f5, '')
+  ])
   expect(fileManager.getShortFilename(f1)).toMatch('foo/bar.txt')
   expect(fileManager.getShortFilename(f2)).toMatch('toc.txt')
   expect(fileManager.getShortFilename(f3)).toMatch('bar.txt')
@@ -120,7 +117,7 @@ test('files are filtered', async () => {
   const f1 = mockFile('__MACOSX/ignored.txt', '')
   const f2 = mockFile('test/.DS_STORE', '')
   const f3 = mockFile('test/.DS_Store', '')
-  await fileManager.init([f1, f2, f3], true)
+  await fileManager.init([f1, f2, f3])
 
   expect(fileManager.hasFile(f1)).toBeFalsy()
   expect(fileManager.hasFile(f2)).toBeFalsy()
@@ -147,7 +144,7 @@ test('files from IDs', async () => {
     [id4]: '*.unknown'
   }
   const fileManager = new FileManager(null, null, ids)
-  await fileManager.init([file1, file2], true)
+  await fileManager.init([file1, file2])
 
   let path, text
   path = fileManager.getFilePathsFromId(id1, true)

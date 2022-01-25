@@ -33,7 +33,7 @@ async function getDatabase(mockedFiles) {
     null,
     manifest.files
   )
-  await fileManager.init(mockedFiles, true)
+  await fileManager.init(mockedFiles)
   db = await databaseBuilder(fileManager)
 }
 

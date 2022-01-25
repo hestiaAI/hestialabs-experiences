@@ -200,7 +200,7 @@ export default {
           fileManagerWorkers,
           this.manifest.files
         )
-        await this.fileManager.init(files, true)
+        await this.fileManager.init(files)
       } catch (error) {
         this.handleError(
           error,
