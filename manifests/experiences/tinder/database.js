@@ -9,7 +9,7 @@ export default async function databaseBuilder(fileManager) {
 
   // There should be only one json file in a tinder export
   const TinderFile = JSON.parse(
-    await fileManager.getPreprocessedTextFromId('tinder')
+    (await fileManager.getPreprocessedTextFromId('tinder'))[0] ?? null
   )
 
   /// Likes ////////////////////
@@ -18,10 +18,11 @@ export default async function databaseBuilder(fileManager) {
     ['date', 'TEXT'],
     ['amount', 'INTEGER']
   ])
-  const likesJSON = JSONPath({
-    path: '$.Usage.swipes_likes[*]',
-    json: TinderFile
-  })
+  const likesJSON =
+    JSONPath({
+      path: '$.Usage.swipes_likes[*]',
+      json: TinderFile
+    }) ?? []
   const likesItems = []
   likesJSON.forEach((v, i) => {
     likesItems.push({

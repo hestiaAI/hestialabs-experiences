@@ -147,21 +147,20 @@ test('files from IDs', async () => {
   await fileManager.init([file1, file2])
 
   let path, text
-  path = fileManager.getFilePathsFromId(id1, true)
-  expect(path).toStrictEqual(path1)
-  text = await fileManager.getPreprocessedTextFromId(id1, true)
-  expect(text).toStrictEqual(content)
+  path = fileManager.getFilePathsFromId(id1)
+  expect(path).toEqual([path1])
+  text = await fileManager.getPreprocessedTextFromId(id1)
+  expect(text).toEqual([content])
 
-  path = fileManager.getFilePathsFromId(id2, true)
-  expect(path).toStrictEqual(path2)
-  text = await fileManager.getPreprocessedTextFromId(id2, true)
-  expect(text).toStrictEqual(content)
+  path = fileManager.getFilePathsFromId(id2)
+  expect(path).toEqual([path2])
+  text = await fileManager.getPreprocessedTextFromId(id2)
+  expect(text).toEqual([content])
 
-  const paths = fileManager.getFilePathsFromId(id3, false)
+  const paths = fileManager.getFilePathsFromId(id3)
   arrayEqualNoOrder(paths, [path1, path2])
 
-  expect(() => fileManager.getFilePathsFromId('wrong-id', true)).toThrow()
+  expect(() => fileManager.getFilePathsFromId('wrong-id')).toThrow()
 
-  expect(fileManager.getFilePathsFromId(id4, true)).toBe(null)
-  expect(fileManager.getFilePathsFromId(id4, false)).toEqual([])
+  expect(fileManager.getFilePathsFromId(id4)).toEqual([])
 })

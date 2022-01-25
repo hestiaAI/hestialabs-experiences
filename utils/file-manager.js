@@ -276,60 +276,34 @@ export default class FileManager {
   /**
    * Return the file path(s) that match the ID.
    * @param {String} id
-   * @param {Boolean} unique return a single result
-   * @returns a String / null (unique=true), or an array (unique=false)
+   * @returns an array
    */
-  getFilePathsFromId(id, unique = true) {
+  getFilePathsFromId(id) {
     if (!(id in this.idToGlob)) {
       throw new Error('ID is not defined')
     }
     const glob = this.idToGlob[id]
-    const paths = this.findMatchingFilePaths(glob)
-    if (unique) {
-      if (paths.length === 0) {
-        return null
-      } else if (paths.length > 1) {
-        console.warn(`Multiple files were found for id="${id}", glob="${glob}"`)
-      }
-      return paths[0]
-    }
-    return paths
+    return this.findMatchingFilePaths(glob)
   }
 
   /**
    * Return the preprocessed text of the file(s) that match the ID.
    * @param {String} id
-   * @param {Boolean} unique return a single result
-   * @returns a String / null (unique=true), or an array (unique=false)
+   * @returns an array
    */
-  async getPreprocessedTextFromId(id, unique = true) {
-    const paths = this.getFilePathsFromId(id, unique)
-    if (unique) {
-      if (paths === null) {
-        return null
-      }
-      return await this.getPreprocessedText(paths)
-    } else {
-      return await Promise.all(paths.map(p => this.getPreprocessedText(p)))
-    }
+  async getPreprocessedTextFromId(id) {
+    const paths = this.getFilePathsFromId(id)
+    return await Promise.all(paths.map(p => this.getPreprocessedText(p)))
   }
 
   /**
    * Return the CSV items of the file(s) that match the ID.
    * @param {String} id
-   * @param {Boolean} unique return a single result
-   * @returns a String / null (unique=true), or an array (unique=false)
+   * @returns an array
    */
-  async getCsvItemsFromId(id, unique = true) {
-    const paths = this.getFilePathsFromId(id, unique)
-    if (unique) {
-      if (paths === null) {
-        return null
-      }
-      return await this.getCsvItems(paths)
-    } else {
-      return await Promise.all(paths.map(p => this.getCsvItems(p)))
-    }
+  async getCsvItemsFromId(id) {
+    const paths = this.getFilePathsFromId(id)
+    return await Promise.all(paths.map(p => this.getCsvItems(p)))
   }
 
   /**

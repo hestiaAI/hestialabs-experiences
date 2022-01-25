@@ -1,7 +1,7 @@
 import { setsEqual } from '~/utils/utils'
 
 async function trackerControl({ fileManager }) {
-  const tcFiles = await fileManager.getCsvItemsFromId('tracker-control', false)
+  const tcFiles = await fileManager.getCsvItemsFromId('tracker-control')
 
   // Merge the files that have the same headers as the first file
   const tcFile = tcFiles.reduce((prev, curr) => {

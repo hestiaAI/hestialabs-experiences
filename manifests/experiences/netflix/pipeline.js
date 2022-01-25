@@ -1,11 +1,11 @@
 import { genericDateViewer } from '~/manifests/generic-pipelines'
 
 async function viewingData({ fileManager }) {
-  return await fileManager.getCsvItemsFromId('viewing-activity')
+  return (await fileManager.getCsvItemsFromId('viewing-activity'))[0]
 }
 
 async function messagesData({ fileManager }) {
-  return await fileManager.getCsvItemsFromId('messages-by-netflix')
+  return (await fileManager.getCsvItemsFromId('messages-by-netflix'))[0]
   /*
   const result = await fileManager.getCsvItems(
     'MESSAGES/MessagesSentByNetflix.csv'
