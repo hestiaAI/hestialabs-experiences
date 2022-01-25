@@ -197,7 +197,8 @@ export default {
         )
         this.fileManager = new FileManager(
           this.manifest.preprocessors,
-          fileManagerWorkers
+          fileManagerWorkers,
+          this.manifest.files
         )
         await this.fileManager.init(files, true)
       } catch (error) {

@@ -27,7 +27,11 @@ function runQuery(sqlFilePath) {
 }
 
 async function getDatabase(adImpressions, adEngagements) {
-  const fileManager = new FileManager(manifest.preprocessors)
+  const fileManager = new FileManager(
+    manifest.preprocessors,
+    null,
+    manifest.files
+  )
   const fileImpressions = mockFile(
     'test/data/ad-impressions.js',
     JSON.stringify(adImpressions)
@@ -36,11 +40,7 @@ async function getDatabase(adImpressions, adEngagements) {
     'test/data/ad-engagements.js',
     JSON.stringify(adEngagements)
   )
-  await fileManager.init(
-    [fileImpressions, fileEngagements],
-    true,
-    manifest.files
-  )
+  await fileManager.init([fileImpressions, fileEngagements], true)
 
   db = await databaseBuilder(fileManager)
 }

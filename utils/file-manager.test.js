@@ -5,13 +5,13 @@ import { itemifyJSON } from '~/utils/json'
 import getCsvHeadersAndItems from '~/utils/csv'
 
 test('an empty file manager', async () => {
-  const fileManager = new FileManager({})
+  const fileManager = new FileManager()
   fileManager.init([], false)
   await expect(() => fileManager.getText('bobo.json')).rejects.toThrow()
 })
 
 test('a json file in file manager', async () => {
-  const fileManager = new FileManager({})
+  const fileManager = new FileManager()
   const fileName = 'bibi/bobo.json'
   const content = '{"hello": 1}'
   const file = mockFile(fileName, content)
@@ -31,7 +31,7 @@ test('a json file in file manager', async () => {
 })
 
 test('a csv file in file manager', async () => {
-  const fileManager = new FileManager({}, true)
+  const fileManager = new FileManager()
   const fileName = 'test.csv'
   const content = 'col1,col2\nhello,world\nfoo,bar'
   const file = mockFile(fileName, content)
@@ -52,7 +52,7 @@ test('a csv file in file manager', async () => {
 })
 
 test('findMatchingFilePaths', async () => {
-  const fileManager = new FileManager({})
+  const fileManager = new FileManager()
   const fileName1 = 'bibi/bubo.json'
   const fileContent = '{"hello": [11,22,33]}'
   const file1 = mockFile(fileName1, fileContent)
@@ -71,7 +71,7 @@ test('findMatchingFilePaths', async () => {
 })
 
 test('findMatchingObjects', async () => {
-  const fileManager = new FileManager({})
+  const fileManager = new FileManager()
   const fileName = 'bibi/bubo.json'
   const fileContent = '{"hello": [11,22,33]}'
   const file = mockFile(fileName, fileContent)
@@ -92,7 +92,7 @@ test('findMatchingObjects', async () => {
 })
 
 test('short filenames', async () => {
-  const fileManager = new FileManager({})
+  const fileManager = new FileManager()
   const f1 = 'foo/bar.txt'
   const f2 = 'foo/toc.txt'
   const f3 = 'bar.txt'
@@ -116,7 +116,7 @@ test('short filenames', async () => {
 })
 
 test('files are filtered', async () => {
-  const fileManager = new FileManager({})
+  const fileManager = new FileManager()
   const f1 = mockFile('__MACOSX/ignored.txt', '')
   const f2 = mockFile('test/.DS_STORE', '')
   const f3 = mockFile('test/.DS_Store', '')
@@ -128,7 +128,6 @@ test('files are filtered', async () => {
 })
 
 test('files from IDs', async () => {
-  const fileManager = new FileManager({})
   const content = 'hello world'
 
   const id1 = 'foobar'
@@ -147,7 +146,8 @@ test('files from IDs', async () => {
     [id3]: '**/*.txt',
     [id4]: '*.unknown'
   }
-  await fileManager.init([file1, file2], true, ids)
+  const fileManager = new FileManager(null, null, ids)
+  await fileManager.init([file1, file2], true)
 
   let path, text
   path = fileManager.getFilePathsFromId(id1, true)

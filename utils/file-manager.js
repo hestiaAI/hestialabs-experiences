@@ -81,15 +81,18 @@ export default class FileManager {
   /**
    * Builds a FileManager object without any files, just setting the configuration.
    * @param {Object} preprocessors maps file name to preprocessor function
+   * @param {Object} workers the workers that this file manager should use
+   * @param {Object} idToGlob an object mapping IDs to globs
    */
-  constructor(preprocessors, workers) {
+  constructor(preprocessors, workers, idToGlob) {
     this.supportedExtensions = new Set([
       ...Object.keys(extension2filetype),
       ...Object.values(extension2filetype)
     ])
     this.preprocessors = preprocessors ?? {}
     this.setInitialValues()
-    this.workers = workers
+    this.workers = workers ?? {}
+    this.idToGlob = idToGlob ?? {}
   }
 
   /**
@@ -97,10 +100,9 @@ export default class FileManager {
    * To be called once the files are available.
    * @param {File[]} uppyFiles
    * @param {boolean} multiple
-   * @param {Object} idToGlob an object mapping IDs to globs
    * @returns {Promise<FileManager>}
    */
-  async init(uppyFiles, multiple, idToGlob) {
+  async init(uppyFiles, multiple) {
     this.fileList = await FileManager.extractZips(uppyFiles)
     this.fileList = FileManager.filterFiles(this.fileList)
     const filePairs = this.fileList.map(f => [f.name, f])
@@ -109,7 +111,6 @@ export default class FileManager {
     } else {
       this.fileDict = FileManager.removeTopmostFilenames(filePairs)
     }
-    this.idToGlob = idToGlob
     this.setInitialValues()
     this.setShortFilenames()
     return this

@@ -228,10 +228,11 @@ export default {
 
       const fileManager = new FileManager(
         this.preprocessors,
-        fileManagerWorkers
+        fileManagerWorkers,
+        this.files
       )
       try {
-        await fileManager.init(uppyFiles, true, this.files)
+        await fileManager.init(uppyFiles, true)
       } catch (e) {
         this.handleError(e)
         return

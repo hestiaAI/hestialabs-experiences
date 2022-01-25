@@ -22,8 +22,12 @@ function runQuery(sqlFilePath) {
 }
 
 async function getDatabase(mockedFiles) {
-  const fileManager = new FileManager(manifest.preprocessors)
-  await fileManager.init(mockedFiles, true, manifest.files)
+  const fileManager = new FileManager(
+    manifest.preprocessors,
+    null,
+    manifest.files
+  )
+  await fileManager.init(mockedFiles, true)
   db = await databaseBuilder(fileManager)
 }
 
