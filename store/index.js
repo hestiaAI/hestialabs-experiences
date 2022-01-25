@@ -16,10 +16,14 @@ export const state = () => ({
     ])
   ),
   currentDB: null,
+  fileManager: null,
   fileExplorerCurrentItem: {}
 })
 
 export const getters = {
+  fileManager(state) {
+    return state.fileManager
+  },
   currentDB(state) {
     return state.currentDB
   },
@@ -58,6 +62,9 @@ export const mutations = {
   setCurrentDB(state, db) {
     state.currentDB = db
   },
+  setFileManager(state, fileManager) {
+    state.fileManager = fileManager
+  },
   setSelectedFiles(state, { key, value }) {
     state.selectedFiles[key] = value
   },
@@ -79,6 +86,7 @@ export const mutations = {
     state.fileExplorerCurrentItem = {}
     if (state.currentDB !== null) state.currentDB.close()
     state.currentDB = null
+    state.fileManager = null
   },
   setFileExplorerCurrentItem(state, item) {
     state.fileExplorerCurrentItem = item

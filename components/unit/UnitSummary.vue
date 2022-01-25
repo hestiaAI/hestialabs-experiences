@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="fileManager !== null">
     <VCard class="pa-2 mb-6" flat>
       <VCardTitle class="justify-center">
         Here's a summary of what we have found
@@ -34,18 +34,12 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 import _ from 'lodash'
-import FileManager from '~/utils/file-manager'
 import { humanReadableFileSize, plurify } from '~/manifests/utils'
 
 export default {
   name: 'UnitSummary',
-  props: {
-    fileManager: {
-      type: FileManager,
-      required: true
-    }
-  },
   data() {
     return {
       group2ext: {
@@ -65,6 +59,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['fileManager']),
     ext2group() {
       return Object.fromEntries(
         Object.entries(this.group2ext).flatMap(entry =>
@@ -101,6 +96,7 @@ export default {
     fileManager: {
       immediate: true,
       handler() {
+        if (!this.fileManager) return
         this.completeGroupsTable()
         this.setExtensionTexts()
         if (this.computeNPoints) {

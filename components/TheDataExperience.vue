@@ -62,12 +62,12 @@
           </VTabItem>
           <VTabItem value="summary">
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
-              <UnitSummary v-bind="{ fileManager }" />
+              <UnitSummary />
             </VCol>
           </VTabItem>
           <VTabItem value="file-explorer">
             <div class="tabItem">
-              <UnitFileExplorer v-bind="{ fileManager }" />
+              <UnitFileExplorer />
             </div>
           </VTabItem>
           <VTabItem
@@ -84,7 +84,6 @@
                       : undefined,
                   sparqlQuery: queries[index],
                   sql: sqlQueries[index],
-                  fileManager,
                   postprocessors,
                   index,
                   vega
@@ -98,7 +97,6 @@
                 v-bind="{
                   consentForm,
                   defaultView,
-                  fileManager,
                   showDataExplorer
                 }"
               />
@@ -205,8 +203,7 @@ export default {
       error: false,
       success: false,
       message: '',
-      rml: '',
-      fileManager: null
+      rml: ''
     }
   },
   computed: {
@@ -271,21 +268,21 @@ export default {
       )
       try {
         await fileManager.init(uppyFiles, this.multiple, this.files)
+        this.$store.commit('setFileManager', fileManager)
       } catch (e) {
         this.handleError(e)
         return
       }
-      this.fileManager = fileManager
 
       // Populate database
       if (this.databaseBuilder !== undefined) {
-        const db = await this.databaseBuilder(this.fileManager)
+        const db = await this.databaseBuilder(fileManager)
         this.$store.commit('setCurrentDB', db)
       }
 
       if (this.isRdfNeeded && this.yarrrml) {
         try {
-          const processedFiles = await this.fileManager.preprocessFiles(
+          const processedFiles = await fileManager.preprocessFiles(
             Object.values(this.files)
           )
           this.rml = await parseYarrrml(this.yarrrml)
@@ -298,7 +295,6 @@ export default {
       this.progress = false
       this.success = true
       this.tab = 'summary'
-
       const elapsed = new Date() - start
       this.message = `Successfully processed in ${elapsed / 1000} sec.`
     }

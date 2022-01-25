@@ -1,6 +1,10 @@
 <template>
   <div>
-    <VCard v-if="defaultViewElements" class="pa-2 mb-6" flat>
+    <VCard
+      v-if="defaultViewElements && fileManager !== null"
+      class="pa-2 mb-6"
+      flat
+    >
       <VRow>
         <VCol cols="1"></VCol>
         <VCol cols="10"
@@ -103,7 +107,7 @@
 </template>
 
 <script>
-import FileManager from '~/utils/file-manager'
+import { mapGetters } from 'vuex'
 export default {
   props: {
     sparqlQuery: {
@@ -126,10 +130,6 @@ export default {
       type: String,
       default: ''
     },
-    fileManager: {
-      type: FileManager,
-      required: true
-    },
     vega: {
       type: Object,
       default: () => {}
@@ -145,6 +145,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['fileManager']),
     showTable() {
       return this.defaultViewElements.showTable
     },
