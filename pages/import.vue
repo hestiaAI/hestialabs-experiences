@@ -92,7 +92,7 @@
       <!-- File explorer -->
       <VRow v-if="hasFileExplorer">
         <VCol>
-          <UnitFileExplorer v-bind="{ fileManager }" />
+          <UnitFileExplorer />
         </VCol>
       </VRow>
     </template>
@@ -200,6 +200,7 @@ export default {
           fileManagerWorkers
         )
         await this.fileManager.init(files, true)
+        this.$store.commit('setFileManager', this.fileManager)
       } catch (error) {
         this.handleError(
           error,
