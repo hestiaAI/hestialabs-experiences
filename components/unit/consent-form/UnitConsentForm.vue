@@ -1,7 +1,7 @@
 <template>
   <VForm v-if="fileManager !== null">
     <UnitConsentFormSection
-      v-for="(section, index) in consent"
+      v-for="(section, index) in consentForm"
       :key="`section-${index}`"
       v-bind="{
         section,
@@ -71,10 +71,6 @@ const VERSION = 2
 
 export default {
   props: {
-    consentForm: {
-      type: Array,
-      required: true
-    },
     defaultView: {
       type: Array,
       required: true
@@ -86,8 +82,6 @@ export default {
   },
   data() {
     return {
-      consent: JSON.parse(JSON.stringify(this.consentForm)),
-      includedResults: [],
       zipFile: [],
       generateStatus: false,
       generateError: false,
@@ -97,16 +91,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config', 'results', 'fileManager']),
+    ...mapState(['config', 'results', 'fileManager', 'consentForm']),
     resultMap() {
       return this.results[this.key]
     },
-    zipReady() {
-      return this.generateStatus && !this.generateError
-    },
     missingRequired() {
       // If one section with attribute required has not been filled
-      return !this.consent.every(section => {
+      return !this.consentForm.every(section => {
         if ('required' in section) {
           if (section.type === 'checkbox') {
             // At least one checkbox must be selected
@@ -135,7 +126,7 @@ export default {
       })
     },
     missingRequiredDataProcessing() {
-      const section = this.consent.find(section => section.type === 'data')
+      const section = this.consentForm.find(section => section.type === 'data')
       return this.defaultView
         .filter(
           block =>
@@ -146,7 +137,7 @@ export default {
         .map(block => block.title)
     },
     missingRequiredData() {
-      const section = this.consent.find(section => section.type === 'data')
+      const section = this.consentForm.find(section => section.type === 'data')
       return this.defaultView
         .filter(
           block =>
@@ -177,29 +168,9 @@ export default {
       return filename
     }
   },
-  watch: {
-    includedResults: {
-      deep: true,
-      handler() {
-        this.resetStatus()
-      }
-    }
-  },
-  created() {
-    this.init()
-  },
   methods: {
-    init() {
-      // Add titles and keys to the data section
-      const section = this.consent.find(section => section.type === 'data')
-      section.titles = this.defaultView.map(e => e.title)
-      section.keys = this.defaultView.map(e => e.key)
-      // Copy included results preset
-      section.includedResults = section.includedResults ?? []
-      this.includedResults = section.includedResults ?? []
-    },
     async generateZIP() {
-      this.resetStatus()
+      this.generateStatus = false
       this.generateProgress = true
 
       const zip = new JSZip()
@@ -219,11 +190,12 @@ export default {
       zip.file('experience.json', JSON.stringify(experience, null, 2))
 
       // Add consent log
-      zip.file('consent.json', JSON.stringify(this.consent, null, 2))
+      zip.file('consent.json', JSON.stringify(this.consentForm, null, 2))
 
       // Add included data
+      const data = this.consentForm.find(section => section.type === 'data')
       const keys = this.defaultView.map(block => block.key)
-      this.includedResults
+      data.includedResults
         .map(key => [key, keys.indexOf(key)])
         .filter(([key, i]) => i !== -1)
         .forEach(([key, i]) => {
@@ -237,7 +209,7 @@ export default {
         })
 
       // Add whole files
-      if (this.includedResults.includes('file-explorer')) {
+      if (data.includedResults.includes('file-explorer')) {
         const zipFilesFolder = zip.folder('files')
         const files = this.$store.state.selectedFiles[this.key]
         for (const file of files) {
@@ -259,25 +231,16 @@ export default {
       this.$refs.downloadLink.click()
     },
     updateConsent({ index, selected, value, includedResults }) {
-      const section = this.consent[index]
+      const newConsentForm = JSON.parse(JSON.stringify(this.consentForm))
+      const section = newConsentForm[index]
       if (section.type === 'checkbox' || section.type === 'radio') {
         section.selected = selected
       } else if (section.type === 'input' || section.type === 'multiline') {
         section.value = value
       } else if (section.type === 'data') {
         section.includedResults = includedResults
-        this.includedResults = includedResults
       }
-      // For reactivity
-      this.$set(this.consent, index, section)
-
-      this.resetStatus()
-    },
-    resetStatus() {
-      this.generateStatus = false
-      this.generateError = false
-      this.sentStatus = false
-      this.sentError = false
+      this.$store.commit('setConsentForm', newConsentForm)
     }
   }
 }

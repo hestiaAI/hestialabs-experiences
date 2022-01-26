@@ -17,7 +17,8 @@ export const state = () => ({
   ),
   currentDB: null,
   fileManager: null,
-  fileExplorerCurrentItem: {}
+  fileExplorerCurrentItem: {},
+  consentForm: null
 })
 
 export const getters = {
@@ -71,6 +72,9 @@ export const mutations = {
   setResult(state, { company, experience, result }) {
     state.results[company][experience] = result
   },
+  setConsentForm(state, consentForm) {
+    state.consentForm = consentForm
+  },
   clearStore(state) {
     state.selectedFiles = Object.fromEntries(
       config.experiences.map(k => [k, []])
@@ -87,6 +91,7 @@ export const mutations = {
     if (state.currentDB !== null) state.currentDB.close()
     state.currentDB = null
     state.fileManager = null
+    state.consentForm = null
   },
   setFileExplorerCurrentItem(state, item) {
     state.fileExplorerCurrentItem = item

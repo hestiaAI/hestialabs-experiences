@@ -26,7 +26,9 @@
           >
             {{ el.title }}
           </VTab>
-          <VTab v-if="consentForm" :disabled="!success">Share my data</VTab>
+          <VTab v-if="consentFormTemplate" :disabled="!success"
+            >Share my data</VTab
+          >
         </VTabs>
         <VTabsItems v-model="tab">
           <VTabItem value="load-data">
@@ -92,11 +94,10 @@
               />
             </VCol>
           </VTabItem>
-          <VTabItem v-if="consentForm">
+          <VTabItem v-if="consentFormTemplate">
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitConsentForm
                 v-bind="{
-                  consentForm,
                   defaultView,
                   showDataExplorer
                 }"
@@ -219,7 +220,7 @@ export default {
     isRdfNeeded() {
       return this.defaultView.filter(v => 'query' in v).length > 0
     },
-    consentForm() {
+    consentFormTemplate() {
       const consent = this.$store.state.config.consent
       if (consent) {
         const key = this.$route.params.key
@@ -275,6 +276,15 @@ export default {
 
       // Clean vuex state before changing the filemanager
       this.$store.commit('setFileExplorerCurrentItem', {})
+      // Reset the consent form
+      const consentForm = JSON.parse(JSON.stringify(this.consentFormTemplate))
+      if (consentForm) {
+        const section = consentForm.find(section => section.type === 'data')
+        section.titles = this.defaultView.map(e => e.title)
+        section.keys = this.defaultView.map(e => e.key)
+        section.includedResults = section.includedResults ?? []
+      }
+      this.$store.commit('setConsentForm', consentForm)
 
       const fileManager = new FileManager(
         this.preprocessors,
