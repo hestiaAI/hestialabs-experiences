@@ -18,7 +18,7 @@
         v-model="value"
         :readonly="readonly"
         dense
-        :disabled="!!dataCheckboxDisabled[k]"
+        :disabled="!readonly && !Object.keys(results).includes(k)"
         :label="section.titles[j]"
         :value="k"
       ></VCheckbox>
@@ -104,10 +104,6 @@ export default {
     readonly: {
       type: Boolean,
       default: false
-    },
-    dataCheckboxDisabled: {
-      type: Object,
-      default: () => {}
     }
   },
   data() {
@@ -116,7 +112,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['consentForm']),
+    ...mapState(['consentForm', 'results']),
     ...mapGetters(['fileManager']),
     key() {
       return this.$route.params.key
@@ -125,7 +121,7 @@ export default {
       if (this.readonly) {
         return Object.keys(this.fileManager.fileDict)
       }
-      return this.$store.state.selectedFiles[this.key]
+      return this.$store.state.selectedFiles
     },
     section() {
       return this.consentForm[this.index]

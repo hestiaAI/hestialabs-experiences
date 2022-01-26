@@ -88,10 +88,10 @@ export default {
     },
     selectedFiles: {
       get() {
-        return this.$store.state.selectedFiles[this.key]
+        return this.$store.state.selectedFiles
       },
       set(value) {
-        this.$store.commit('setSelectedFiles', { key: this.key, value })
+        this.$store.commit('setSelectedFiles', value)
       }
     },
     key() {

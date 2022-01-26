@@ -3,10 +3,7 @@
     <UnitConsentFormSection
       v-for="(section, index) in consentForm"
       :key="`section-${index}`"
-      v-bind="{
-        index,
-        dataCheckboxDisabled
-      }"
+      :index="index"
     />
     <BaseAlert v-if="missingRequired">
       Some required fields are not filled in.
@@ -83,10 +80,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config', 'results', 'fileManager', 'consentForm']),
-    resultMap() {
-      return this.results[this.key]
-    },
+    ...mapState([
+      'config',
+      'results',
+      'fileManager',
+      'consentForm',
+      'selectedFiles'
+    ]),
     missingRequired() {
       // FIXME
       return false
@@ -145,11 +145,6 @@ export default {
       //   )
       //   .map(block => block.title)
     },
-    dataCheckboxDisabled() {
-      return Object.fromEntries(
-        Object.entries(this.resultMap).map(([k, r]) => [k, !r])
-      )
-    },
     key() {
       return this.$route.params.key
     },
@@ -200,7 +195,7 @@ export default {
         .filter(([key, i]) => i !== -1)
         .forEach(([key, i]) => {
           const content = JSON.parse(JSON.stringify(this.defaultView[i]))
-          content.result = this.resultMap[key]
+          content.result = this.results[key]
           content.index = i
           zip.file(
             `block${padNumber(i, 2)}.json`,
@@ -211,8 +206,7 @@ export default {
       // Add whole files
       if (dataSection.value.includes('file-explorer')) {
         const zipFilesFolder = zip.folder('files')
-        const files = this.$store.state.selectedFiles[this.key]
-        for (const file of files) {
+        for (const file of this.selectedFiles) {
           zipFilesFolder.file(
             file.filename,
             this.fileManager.fileDict[file.filename]

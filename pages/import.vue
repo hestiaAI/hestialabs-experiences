@@ -47,7 +47,6 @@
             :key="`section-${index}`"
             :index="index"
             readonly
-            :data-checkbox-disabled="{}"
           />
         </VCardText>
       </VCard>

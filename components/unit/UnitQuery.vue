@@ -164,13 +164,10 @@ export default {
     },
     result: {
       get() {
-        return this.$store.state.results[this.$route.params.key][
-          this.defaultViewElements.key
-        ]
+        return this.$store.state.results[this.defaultViewElements.key]
       },
       set(result) {
         this.$store.commit('setResult', {
-          company: this.$route.params.key,
           experience: this.defaultViewElements.key,
           result
         })

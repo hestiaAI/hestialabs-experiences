@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import manifestMap, { config } from '@/manifests'
 
 export const state = () => ({
@@ -6,15 +7,8 @@ export const state = () => ({
     ...config
   },
   manifestMap,
-  selectedFiles: Object.fromEntries(config.experiences.map(k => [k, []])),
-  results: Object.fromEntries(
-    config.experiences.map(k => [
-      k,
-      Object.fromEntries(
-        manifestMap[k].defaultView?.map(b => [b.key, null]) ?? []
-      )
-    ])
-  ),
+  selectedFiles: [],
+  results: {},
   currentDB: null,
   fileManager: null,
   fileExplorerCurrentItem: {},
@@ -66,14 +60,14 @@ export const mutations = {
   setFileManager(state, fileManager) {
     state.fileManager = fileManager
   },
-  setSelectedFiles(state, { key, value }) {
-    state.selectedFiles[key] = value
+  setSelectedFiles(state, selectedFiles) {
+    state.selectedFiles = selectedFiles
   },
-  setResult(state, { company, experience, result }) {
-    state.results[company][experience] = result
+  setResult(state, { experience, result }) {
+    Vue.set(state.results, experience, result)
   },
   setConsentForm(state, consentForm) {
-    // Initialize missing properties
+    // Initialize missing values
     for (const section of consentForm) {
       if (typeof section.value === 'undefined') {
         // The value hasn't been initialized
@@ -90,17 +84,8 @@ export const mutations = {
     state.consentForm[index].value = value
   },
   clearStore(state) {
-    state.selectedFiles = Object.fromEntries(
-      config.experiences.map(k => [k, []])
-    )
-    state.results = Object.fromEntries(
-      config.experiences.map(k => [
-        k,
-        Object.fromEntries(
-          manifestMap[k].defaultView?.map(b => [b.key, null]) ?? []
-        )
-      ])
-    )
+    state.selectedFiles = []
+    state.results = {}
     state.fileExplorerCurrentItem = {}
     if (state.currentDB !== null) state.currentDB.close()
     state.currentDB = null
