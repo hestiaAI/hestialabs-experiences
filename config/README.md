@@ -22,16 +22,24 @@ This directory contains the configuration files linked to each deployement. They
     * The content of the consent form. A default form can be defined, but it can be overriden for a specific experience.
     * We can also hide this section for a specific experience by setting it to null.
     * Each section can have:
-    * - A title
-    * - A description
-    * - A type (Either 'data', 'radio' or 'checkbox', 'input' or 'multiline')
-    *   - For type 'data': a boolean indicating if we hide the checkboxes with all sub-experiences,
-    *     an array of implicitly added data (referenced by the key of the sub-experience),
-    *     and an array of additional checkboxes.
-    *   - For type 'radio': an array of options and a pre-selected answer (use the empty string for no pre-selection)
-    *   - For type 'checkbox': an array of options and an array of pre-selected answers (use the empty array for no pre-selection)
-    *   - For type 'input' and 'multiline': the name (label) of the text field, and some placeholder text.
-    * - Whether or not an answer is required (Boolean, but can also be an array for the data section).
+    * - "title"
+    * - "description"
+    * - "type" (optional):
+    *   - type "data" (exactly one required):
+    *     - "hide": do we hide the checkboxes ?
+    *     - "value": an array of pre-selected results (or implicitly added data if the checkboxes are hidden),
+    *       where results are addressed using the key of the sub-experience
+    *   - type "radio":
+    *     - "options": an array of options
+    *     - "value": a pre-selected answer (as a string)
+    *   - type "checkbox":
+    *     - "options": an array of options
+    *     - "value": an array of pre-selected answers
+    *   - type "input" and "multiline":
+    *     - "name": the label of the text field
+    *     - "placeholder" (optional): some placeholder text
+    *     - "value" (optional): some initial text
+    * - "required" (optional): whether or not an answer is required (Boolean, but can also be an array of keys for the data section).
     * @type Object
     */
   "consent": {
@@ -50,20 +58,19 @@ This directory contains the configuration files linked to each deployement. They
         "description": "Please select one option.",
         "type": "radio",
         "options": ["A", "B"],
-        "selected": "A"
+        "value": "A"
       },
       {
         "title": "Checkboxes",
         "description": "Please select all options that apply.",
         "type": "checkbox",
         "options": ["X", "Y", "Z"],
-        "selected": []
+        "value": ["X"]
       },
       {
         "title": "Which data should be shared ?",
         "description": "The visualizations of every checked section will be reproducible and the underlying data will be available to the receiver (at least one required).",
         "type": "data",
-        "additional": ["Whole file (which I will provide separately)"],
         "required": true
       },
       {
@@ -80,7 +87,7 @@ This directory contains the configuration files linked to each deployement. They
       {
         "type": "data",
         "hide": true,
-        "includedResults": ["trackerControl"],
+        "value": ["trackerControl"],
         "required": ["trackerControl"]
       }
     ],

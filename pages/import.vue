@@ -43,12 +43,10 @@
         <VCardTitle class="justify-center">Consent Log</VCardTitle>
         <VCardText>
           <UnitConsentFormSection
-            v-for="(section, index) in consent"
+            v-for="(section, index) in consentForm"
             :key="`section-${index}`"
-            :section="section"
             :index="index"
             readonly
-            :file-manager="fileManager"
             :data-checkbox-disabled="{}"
           />
         </VCardText>
@@ -100,6 +98,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import JSZip from 'jszip'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
@@ -113,12 +112,11 @@ export default {
       progress: false,
       message: '',
       experience: null,
-      results: null,
-      consent: null,
-      fileManager: null
+      results: null
     }
   },
   computed: {
+    ...mapState(['fileManager', 'consentForm']),
     manifest() {
       return this.$store.getters.manifest({
         params: { key: this.experience.key }
@@ -180,9 +178,10 @@ export default {
           await zip.file('experience.json').async('string')
         )
         // Consent log
-        this.consent = JSON.parse(
+        const consentForm = JSON.parse(
           await zip.file('consent.json').async('string')
         )
+        this.$store.commit('setConsentForm', consentForm)
         // Included results
         const resultFiles = zip.file(/block[0-9]+.json/)
         const results = await Promise.all(
@@ -195,13 +194,13 @@ export default {
         const files = folderContent.map(
           (r, i) => new File([blobs[i]], r.name.substr(6))
         )
-        this.fileManager = new FileManager(
+        const fileManager = new FileManager(
           this.manifest.preprocessors,
           fileManagerWorkers,
           this.manifest.files
         )
-        await this.fileManager.init(files)
-        this.$store.commit('setFileManager', this.fileManager)
+        await fileManager.init(files)
+        this.$store.commit('setFileManager', fileManager)
       } catch (error) {
         this.handleError(
           error,
@@ -230,13 +229,32 @@ export default {
           }
         }
       }
+      if (version < 3) {
+        // Rename "selected" and "includedResults" to "value"
+        const newConsentForm = JSON.parse(JSON.stringify(this.consentForm))
+        for (const section of newConsentForm) {
+          if ('selected' in section) {
+            section.value = section.selected
+            delete section.selected
+          } else if ('includedResults' in section) {
+            section.value = section.includedResults
+            delete section.includedResults
+          }
+        }
+        this.$store.commit('setConsentForm', newConsentForm)
+      }
       // If individual files are included, the user gave consent for these.
       // But in older zips, it wasn't presented as a checkbox.
       // This change is unfortunately not tied to a version number
       if (this.fileManager.fileList.length !== 0) {
-        const section = this.consent.find(section => section.type === 'data')
-        if (!('file-explorer' in section.includedResults)) {
-          section.includedResults.push('file-explorer')
+        const index = this.consentForm.findIndex(
+          section => section.type === 'data'
+        )
+        const includedResults = this.consentForm[index].value ?? []
+        if (!('file-explorer' in includedResults)) {
+          const value = [...includedResults]
+          value.push('file-explorer')
+          this.$store.commit('setConsentFormValue', { index, value })
         }
       }
     }

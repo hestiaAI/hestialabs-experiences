@@ -4,12 +4,9 @@
       v-for="(section, index) in consentForm"
       :key="`section-${index}`"
       v-bind="{
-        section,
         index,
-        dataCheckboxDisabled,
-        fileManager
+        dataCheckboxDisabled
       }"
-      @change="updateConsent"
     />
     <BaseAlert v-if="missingRequired">
       Some required fields are not filled in.
@@ -66,7 +63,7 @@ import { createObjectURL, mimeTypes } from '@/utils/utils'
 
 // In the case of changes that would break the import, this version number must be incremented
 // and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
-const VERSION = 2
+const VERSION = 3
 
 export default {
   props: {
@@ -91,56 +88,62 @@ export default {
       return this.results[this.key]
     },
     missingRequired() {
-      // If one section with attribute required has not been filled
-      return !this.consentForm.every(section => {
-        if ('required' in section) {
-          if (section.type === 'checkbox') {
-            // At least one checkbox must be selected
-            return section.selected.length > 0
-          } else if (section.type === 'radio') {
-            // A radio button must be selected
-            return section.selected !== ''
-          } else if (section.type === 'input' || section.type === 'multiline') {
-            // Some text must be given
-            return 'value' in section && section.value !== ''
-          } else if (
-            section.type === 'data' &&
-            typeof section.required === 'boolean'
-          ) {
-            // Some data must be given
-            if (
-              section.includedResults.length === 1 &&
-              section.includedResults[0] === 'file-explorer'
-            ) {
-              return this.$store.state.selectedFiles[this.key].length > 0
-            }
-            return section.includedResults.length > 0
-          }
-        }
-        return true
-      })
+      // FIXME
+      return false
+      // // If one section with attribute required has not been filled
+      // return !this.consentForm.every(section => {
+      //   if ('required' in section) {
+      //     if (section.type === 'checkbox') {
+      //       // At least one checkbox must be selected
+      //       return section.selected.length > 0
+      //     } else if (section.type === 'radio') {
+      //       // A radio button must be selected
+      //       return section.selected !== ''
+      //     } else if (section.type === 'input' || section.type === 'multiline') {
+      //       // Some text must be given
+      //       return 'value' in section && section.value !== ''
+      //     } else if (
+      //       section.type === 'data' &&
+      //       typeof section.required === 'boolean'
+      //     ) {
+      //       // Some data must be given
+      //       if (
+      //         section.includedResults.length === 1 &&
+      //         section.includedResults[0] === 'file-explorer'
+      //       ) {
+      //         return this.$store.state.selectedFiles[this.key].length > 0
+      //       }
+      //       return section.includedResults.length > 0
+      //     }
+      //   }
+      //   return true
+      // })
     },
     missingRequiredDataProcessing() {
-      const section = this.consentForm.find(section => section.type === 'data')
-      return this.defaultView
-        .filter(
-          block =>
-            typeof section.required === 'object' &&
-            section.required.includes(block.key) &&
-            !this.resultMap[block.key]
-        )
-        .map(block => block.title)
+      // FIXME
+      return false
+      // const section = this.consentForm.find(section => section.type === 'data')
+      // return this.defaultView
+      //   .filter(
+      //     block =>
+      //       typeof section.required === 'object' &&
+      //       section.required.includes(block.key) &&
+      //       !this.resultMap[block.key]
+      //   )
+      //   .map(block => block.title)
     },
     missingRequiredData() {
-      const section = this.consentForm.find(section => section.type === 'data')
-      return this.defaultView
-        .filter(
-          block =>
-            typeof section.required === 'object' &&
-            section.required.includes(block.key) &&
-            !section.includedResults.includes(block.key)
-        )
-        .map(block => block.title)
+      // FIXME
+      return false
+      // const section = this.consentForm.find(section => section.type === 'data')
+      // return this.defaultView
+      //   .filter(
+      //     block =>
+      //       typeof section.required === 'object' &&
+      //       section.required.includes(block.key) &&
+      //       !section.includedResults.includes(block.key)
+      //   )
+      //   .map(block => block.title)
     },
     dataCheckboxDisabled() {
       return Object.fromEntries(
@@ -188,9 +191,11 @@ export default {
       zip.file('consent.json', JSON.stringify(this.consentForm, null, 2))
 
       // Add included data
-      const data = this.consentForm.find(section => section.type === 'data')
+      const dataSection = this.consentForm.find(
+        section => section.type === 'data'
+      )
       const keys = this.defaultView.map(block => block.key)
-      data.includedResults
+      dataSection.value
         .map(key => [key, keys.indexOf(key)])
         .filter(([key, i]) => i !== -1)
         .forEach(([key, i]) => {
@@ -204,7 +209,7 @@ export default {
         })
 
       // Add whole files
-      if (data.includedResults.includes('file-explorer')) {
+      if (dataSection.value.includes('file-explorer')) {
         const zipFilesFolder = zip.folder('files')
         const files = this.$store.state.selectedFiles[this.key]
         for (const file of files) {
@@ -224,18 +229,6 @@ export default {
       this.href = createObjectURL(this.zipFile, mimeTypes.zip)
       await this.$nextTick()
       this.$refs.downloadLink.click()
-    },
-    updateConsent({ index, selected, value, includedResults }) {
-      const newConsentForm = JSON.parse(JSON.stringify(this.consentForm))
-      const section = newConsentForm[index]
-      if (section.type === 'checkbox' || section.type === 'radio') {
-        section.selected = selected
-      } else if (section.type === 'input' || section.type === 'multiline') {
-        section.value = value
-      } else if (section.type === 'data') {
-        section.includedResults = includedResults
-      }
-      this.$store.commit('setConsentForm', newConsentForm)
     }
   }
 }

@@ -73,7 +73,21 @@ export const mutations = {
     state.results[company][experience] = result
   },
   setConsentForm(state, consentForm) {
+    // Initialize missing properties
+    for (const section of consentForm) {
+      if (typeof section.value === 'undefined') {
+        // The value hasn't been initialized
+        if (['checkbox', 'data'].includes(section.type)) {
+          section.value = []
+        } else if (['radio', 'input', 'multiline'].includes(section.type)) {
+          section.value = ''
+        }
+      }
+    }
     state.consentForm = consentForm
+  },
+  setConsentFormValue(state, { index, value }) {
+    state.consentForm[index].value = value
   },
   clearStore(state) {
     state.selectedFiles = Object.fromEntries(
