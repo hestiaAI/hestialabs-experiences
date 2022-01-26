@@ -81,35 +81,33 @@ export default class FileManager {
   /**
    * Builds a FileManager object without any files, just setting the configuration.
    * @param {Object} preprocessors maps file name to preprocessor function
+   * @param {Object} workers the workers that this file manager should use
+   * @param {Object} idToGlob an object mapping IDs to globs
    */
-  constructor(preprocessors, workers) {
+  constructor(preprocessors, workers, idToGlob) {
     this.supportedExtensions = new Set([
       ...Object.keys(extension2filetype),
       ...Object.values(extension2filetype)
     ])
     this.preprocessors = preprocessors ?? {}
+    this.workers = workers ?? {}
+    this.idToGlob = idToGlob ?? {}
     this.setInitialValues()
-    this.workers = workers
   }
 
   /**
    * Fills the FileManager with the given files and creates helper structures.
    * To be called once the files are available.
    * @param {File[]} uppyFiles
-   * @param {boolean} multiple
-   * @param {Object} idToGlob an object mapping IDs to globs
    * @returns {Promise<FileManager>}
    */
-  async init(uppyFiles, multiple, idToGlob) {
+  async init(uppyFiles) {
     this.fileList = await FileManager.extractZips(uppyFiles)
     this.fileList = FileManager.filterFiles(this.fileList)
-    const filePairs = this.fileList.map(f => [f.name, f])
-    if (multiple) {
-      this.fileDict = Object.fromEntries(filePairs)
-    } else {
-      this.fileDict = FileManager.removeTopmostFilenames(filePairs)
-    }
-    this.idToGlob = idToGlob
+    this.fileList = FileManager.removeZipName(this.fileList)
+    this.fileDict = Object.fromEntries(
+      this.fileList.map(file => [file.name, file])
+    )
     this.setInitialValues()
     this.setShortFilenames()
     return this
@@ -126,39 +124,28 @@ export default class FileManager {
   }
 
   /**
-   * This functions abstracts away the name of the topmost file.
-   * For instance, if the experience supports a single file that must be a json,
-   *   and the user inputs the file 'custom.json', its name is replaced by 'input.json'.
-   * If the experience supports a zip as input, the name of the zip is removed from the path of all the files inside:
-   *   'my-zip.zip/folder/file.txt' becomes 'folder/file.txt'
-   * Note that it only changes the name by which we index the file, and not the actual name of the File object.
+   * If the root consists of a single zip, remove the zip name from all files.
+   * E.g. 'my-zip.zip/folder/file.txt' becomes 'folder/file.txt'
+   * But ['zip1.zip/foo.txt', 'zip2.zip/bar.txt'] stay the same.
    * @param {[String, File][]} filePairs
    * @returns {{[p: String]: File}}
    */
-  static removeTopmostFilenames(filePairs) {
-    if (filePairs.length === 1) {
-      const [filename, file] = filePairs[0]
-      const parts = filename.split('/')
-      let newFilename
-      if (parts.length > 1) {
-        newFilename = parts.slice(1, parts.length).join('/')
-      } else {
-        newFilename = filename.replace(/.+\.(.+)/, 'input.$1')
-      }
-      return Object.fromEntries([[newFilename, file]])
-    } else {
-      return Object.fromEntries(
-        filePairs.map(([filename, file]) => {
-          const parts = filename.split('/')
-          const newFilename = parts.slice(1, parts.length).join('/')
-          return [newFilename, file]
-        })
-      )
+  static removeZipName(fileList) {
+    const rootSet = new Set(fileList.map(f => f.name.split('/')[0]))
+    const roots = [...rootSet]
+    if (roots.length === 1 && roots[0].endsWith('.zip')) {
+      return fileList.map(file => {
+        const parts = file.name.split('/')
+        const blob = file.slice(0, file.size)
+        const name = parts.slice(1, parts.length).join('/')
+        return new File([blob], name)
+      })
     }
+    return fileList
   }
 
   /**
-   * Returns an array with all the (potentially modified by {@link removeTopmostFilenames}) file names in the File Manager.
+   * Returns an array with all the file names in the File Manager.
    * @returns {String[]}
    */
   getFilenames() {
@@ -288,71 +275,35 @@ export default class FileManager {
 
   /**
    * Return the file path(s) that match the ID.
-   * If multiple files are found and `unique` is set to true,
-   * print a warning and return only the first one.
-   * If no file is found, return null.
    * @param {String} id
-   * @param {Boolean} unique return a single result
-   * @returns a String (unique=true), an array (unique=false), or null
+   * @returns an array
    */
-  getFilePathsFromId(id, unique = true) {
+  getFilePathsFromId(id) {
     if (!(id in this.idToGlob)) {
-      return null
+      throw new Error('ID is not defined')
     }
     const glob = this.idToGlob[id]
-    const paths = this.findMatchingFilePaths(glob)
-    if (paths.length === 0) {
-      return null
-    } else if (paths.length > 1) {
-      if (unique) {
-        console.warn(`Multiple files were found for id="${id}", glob="${glob}"`)
-      } else {
-        return paths
-      }
-    }
-    return paths[0]
+    return this.findMatchingFilePaths(glob)
   }
 
   /**
    * Return the preprocessed text of the file(s) that match the ID.
-   * If multiple files are found and `unique` is set to true,
-   * print a warning and return only the first one.
-   * If no file is found, return null.
    * @param {String} id
-   * @param {Boolean} unique return a single result
-   * @returns a String (unique=true), an array (unique=false), or null
+   * @returns an array
    */
-  async getPreprocessedTextFromId(id, unique = true) {
-    const paths = this.getFilePathsFromId(id, unique)
-    if (paths === null) {
-      return null
-    }
-    if (unique) {
-      return await this.getPreprocessedText(paths)
-    } else {
-      return await Promise.all(paths.map(p => this.getPreprocessedText(p)))
-    }
+  async getPreprocessedTextFromId(id) {
+    const paths = this.getFilePathsFromId(id)
+    return await Promise.all(paths.map(p => this.getPreprocessedText(p)))
   }
 
   /**
    * Return the CSV items of the file(s) that match the ID.
-   * If multiple files are found and `unique` is set to true,
-   * print a warning and return only the first one.
-   * If no file is found, return null.
    * @param {String} id
-   * @param {Boolean} unique return a single result
-   * @returns a String (unique=true), an array (unique=false), or null
+   * @returns an array
    */
-  async getCsvItemsFromId(id, unique = true) {
-    const paths = this.getFilePathsFromId(id, unique)
-    if (paths === null) {
-      return null
-    }
-    if (unique) {
-      return await this.getCsvItems(paths)
-    } else {
-      return await Promise.all(paths.map(p => this.getCsvItems(p)))
-    }
+  async getCsvItemsFromId(id) {
+    const paths = this.getFilePathsFromId(id)
+    return await Promise.all(paths.map(p => this.getCsvItems(p)))
   }
 
   /**

@@ -1,10 +1,6 @@
 {
   "title": "Helsingin Sanomat",
   "icon": "helsingin-sanomat.png",
-  "ext": "all",
-  "multiple": true,
-  "isGenericViewer": true,
-  "showDataExplorer": true,
   "defaultView": [
     {
       "key": "genericDateViewer",

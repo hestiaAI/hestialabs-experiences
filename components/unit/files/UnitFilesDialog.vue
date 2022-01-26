@@ -18,10 +18,23 @@
           <p v-if="main" class="mt-4">Files used in the experiences:</p>
           <p v-else class="mt-4">Files required:</p>
           <ul>
-            <li v-for="file in fileGlobs" :key="file">
-              {{ file }}
+            <li v-for="glob in fileGlobs" :key="glob">
+              {{ glob }}
             </li>
           </ul>
+          <template v-if="!main && fileManager">
+            <p class="mt-4">Files found:</p>
+            <ul>
+              <template v-for="glob in fileGlobs">
+                <li
+                  v-for="file in fileManager.findMatchingFilePaths(glob)"
+                  :key="file"
+                >
+                  {{ file }}
+                </li>
+              </template>
+            </ul>
+          </template>
         </template>
         <p v-else class="mt-4">
           No specific files are used in these experiences.
@@ -46,6 +59,8 @@
 </template>
 
 <script>
+import FileManager from '~/utils/file-manager'
+
 export default {
   props: {
     fileGlobs: {
@@ -55,6 +70,10 @@ export default {
     main: {
       type: Boolean,
       default: false
+    },
+    fileManager: {
+      type: FileManager,
+      default: null
     }
   },
   data() {

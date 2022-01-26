@@ -13,8 +13,6 @@
       class="mb-4"
     />
 
-    <div class="caption my-2">{{ extensionsMessage }}</div>
-
     <div ref="dashboard" />
 
     <BaseButton
@@ -46,32 +44,19 @@ async function fetchSampleFile({ path, filename }) {
 export default {
   name: 'UnitFiles',
   props: {
-    extensions: {
-      type: Array,
-      required: true
-    },
     files: {
       type: Object,
       required: true
     },
-    multiple: {
-      type: Boolean,
-      default: false
-    },
     samples: {
       type: Array,
       default: () => []
-    },
-    isGenericViewer: Boolean
+    }
   },
   data() {
     const config = {
       debug: false,
-      allowMultipleUploads: this.multiple,
-      restrictions: {
-        maxNumberOfFiles: this.multiple ? null : 1,
-        allowedFileTypes: this.extensions.length > 0 ? this.extensions : null
-      }
+      allowMultipleUploads: true
     }
     return {
       uppy: new Uppy(config),
@@ -80,8 +65,7 @@ export default {
       status: false,
       error: false,
       progress: false,
-      filesToExtract: this.files,
-      cachedResult: null
+      filesToExtract: this.files
     }
   },
   computed: {
@@ -90,12 +74,6 @@ export default {
     },
     isPlayground() {
       return this.key === 'playground'
-    },
-    extensionsMessage() {
-      const exts = this.extensions.join(', ')
-      return `${this.multiple ? 'Multiple files' : 'One file'} allowed (${
-        exts.length > 0 ? exts : 'any extension'
-      })`
     },
     disabled() {
       return this.filesEmpty

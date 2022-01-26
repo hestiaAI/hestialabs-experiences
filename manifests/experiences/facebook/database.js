@@ -14,7 +14,9 @@ export default async function databaseBuilder(fileManager) {
     ['timestamp', 'INTEGER']
   ])
   const advertisersInteractedWithFile = JSON.parse(
-    await fileManager.getPreprocessedTextFromId('advertisers-interacted')
+    (
+      await fileManager.getPreprocessedTextFromId('advertisers-interacted')
+    )[0] ?? null
   )
   const advertisersInteracted =
     JSONPath({
@@ -35,7 +37,9 @@ export default async function databaseBuilder(fileManager) {
   /// Advertisers who purchased your contact ////////////////////////////////////////////////////////////////////////////////
   db.create('advertisersContactInformation', [['name', 'TEXT']])
   const advertisersContactInformationFile = JSON.parse(
-    await fileManager.getPreprocessedTextFromId('advertisers-contact-list')
+    (
+      await fileManager.getPreprocessedTextFromId('advertisers-contact-list')
+    )[0] ?? null
   )
   const advertisersContact =
     JSONPath({
@@ -60,7 +64,8 @@ export default async function databaseBuilder(fileManager) {
   ])
 
   const offFacebookActivityFile = JSON.parse(
-    await fileManager.getPreprocessedTextFromId('off-facebook-activity')
+    (await fileManager.getPreprocessedTextFromId('off-facebook-activity'))[0] ??
+      null
   )
 
   const offFacebookActivityJSON =
@@ -91,13 +96,14 @@ export default async function databaseBuilder(fileManager) {
     ['id', 'INTEGER'],
     ['name', 'TEXT']
   ])
-  const inferredInterestsFile =
-    JSON.parse(await fileManager.getPreprocessedTextFromId('ads-interests')) ??
-    []
-  const inferredInterestsJSON = JSONPath({
-    path: '$.topics_v2[*]',
-    json: inferredInterestsFile
-  })
+  const inferredInterestsFile = JSON.parse(
+    (await fileManager.getPreprocessedTextFromId('ads-interests'))[0] ?? null
+  )
+  const inferredInterestsJSON =
+    JSONPath({
+      path: '$.topics_v2[*]',
+      json: inferredInterestsFile
+    }) ?? []
   const inferredInterestsItems = []
   inferredInterestsJSON.forEach((v, i) => {
     inferredInterestsItems.push({

@@ -7,7 +7,6 @@
         section,
         index,
         dataCheckboxDisabled,
-        showDataExplorer,
         fileManager
       }"
       @change="updateConsent"
@@ -83,10 +82,6 @@ export default {
     fileManager: {
       type: FileManager,
       required: true
-    },
-    showDataExplorer: {
-      type: Boolean,
-      default: true
     }
   },
   data() {
