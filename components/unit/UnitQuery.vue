@@ -29,6 +29,7 @@
           <UnitFilesDialog
             v-else-if="fileGlobs.length > 0"
             :file-globs="fileGlobs"
+            :file-manager="fileManager"
         /></VCol>
       </VRow>
 

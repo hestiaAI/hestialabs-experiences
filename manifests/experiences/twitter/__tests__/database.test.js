@@ -14,6 +14,12 @@ import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { arrayEqualNoOrder } from '~/utils/test-utils'
 
 let db
+const manifest = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, '../twitter.json'), 'utf8')
+)
+Object.entries(manifest.preprocessors).forEach(
+  ([path, pre]) => (manifest.preprocessors[path] = preprocessors[pre])
+)
 
 function runQuery(sqlFilePath) {
   const sql = fs.readFileSync(path.resolve(__dirname, sqlFilePath), 'utf8')
@@ -21,10 +27,11 @@ function runQuery(sqlFilePath) {
 }
 
 async function getDatabase(adImpressions, adEngagements) {
-  const fileManager = new FileManager({
-    'test/data/ad-impressions.js': preprocessors.twitter,
-    'test/data/ad-engagements.js': preprocessors.twitter
-  })
+  const fileManager = new FileManager(
+    manifest.preprocessors,
+    null,
+    manifest.files
+  )
   const fileImpressions = mockFile(
     'test/data/ad-impressions.js',
     JSON.stringify(adImpressions)
@@ -33,11 +40,7 @@ async function getDatabase(adImpressions, adEngagements) {
     'test/data/ad-engagements.js',
     JSON.stringify(adEngagements)
   )
-  const files = {
-    impressions: '**/ad-impressions.js',
-    engagements: '**/ad-engagements.js'
-  }
-  await fileManager.init([fileImpressions, fileEngagements], true, files)
+  await fileManager.init([fileImpressions, fileEngagements])
 
   db = await databaseBuilder(fileManager)
 }

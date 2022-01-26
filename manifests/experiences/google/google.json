@@ -2,10 +2,6 @@
   "title": "Google",
   "icon": "google.png",
   "dataPortal": "https://takeout.google.com/settings/takeout",
-  "ext": "all",
-  "multiple": true,
-  "isGenericViewer": true,
-  "showDataExplorer": true,
   "data": [],
   "timedObservationsViewer": {
     "fileMatchers": [

@@ -1,10 +1,6 @@
 {
   "title": "Spotify",
   "icon": "spotify.png",
-  "ext": "all",
-  "multiple": false,
-  "isGenericViewer": true,
-  "showDataExplorer": true,
   "defaultView": [
     {
       "key": "genericDateViewer",

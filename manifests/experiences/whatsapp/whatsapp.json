@@ -1,10 +1,6 @@
 {
   "title": "Whatsapp",
   "icon": "whatsapp.png",
-  "ext": "all",
-  "multiple": true,
-  "isGenericViewer": true,
-  "showDataExplorer": true,
   "defaultView": [
     {
       "key": "genericDateViewer",

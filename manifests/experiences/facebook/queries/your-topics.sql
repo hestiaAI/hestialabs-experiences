@@ -1,1 +1,1 @@
-SELECT * FROM inferredInterestsDatabase
+SELECT name FROM inferredInterestsDatabase
