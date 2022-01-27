@@ -107,8 +107,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import SettingsSpeedDial from './SettingsSpeedDial.vue'
+import { mapState } from 'vuex'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 import parseYarrrml from '~/utils/parse-yarrrml'
@@ -116,7 +115,6 @@ import rdfUtils from '~/utils/rdf'
 
 export default {
   name: 'TheDataExperience',
-  components: { SettingsSpeedDial },
   props: {
     title: {
       type: String,
@@ -183,7 +181,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['fileManager']),
+    ...mapState(['fileManager']),
     queries() {
       return this.defaultView.map(o => this.sparql[o.query])
     },
@@ -239,18 +237,19 @@ export default {
       this.progress = true
       const start = new Date()
 
-      // Clean vuex state before changing the filemanager
-      this.$store.commit('setFileExplorerCurrentItem', {})
-      // Reset the consent form
+      // Clean vuex state
+      this.$store.commit('clearStore', {})
+
+      // Set consent form
       const consentForm = JSON.parse(JSON.stringify(this.consentFormTemplate))
       if (consentForm) {
         const section = consentForm.find(section => section.type === 'data')
         section.titles = this.defaultView.map(e => e.title)
         section.keys = this.defaultView.map(e => e.key)
-        section.includedResults = section.includedResults ?? []
       }
       this.$store.commit('setConsentForm', consentForm)
 
+      // Set file manager
       const fileManager = new FileManager(
         this.preprocessors,
         fileManagerWorkers,
@@ -266,10 +265,16 @@ export default {
 
       // Populate database
       if (this.databaseBuilder !== undefined) {
-        const db = await this.databaseBuilder(fileManager)
-        this.$store.commit('setCurrentDB', db)
+        try {
+          const db = await this.databaseBuilder(fileManager)
+          this.$store.commit('setCurrentDB', db)
+        } catch (e) {
+          this.handleError(e)
+          return
+        }
       }
 
+      // Generate RDF
       if (this.isRdfNeeded && this.yarrrml) {
         try {
           const processedFiles = await fileManager.preprocessFiles(

@@ -34,14 +34,13 @@
         "description": "Please select one option.",
         "type": "radio",
         "options": ["A", "B"],
-        "selected": "A"
+        "value": "A"
       },
       {
         "title": "Checkboxes",
         "description": "Please select all options that apply.",
         "type": "checkbox",
-        "options": ["X", "Y", "Z"],
-        "selected": []
+        "options": ["X", "Y", "Z"]
       },
       {
         "title": "Which data should be shared ?",
@@ -63,7 +62,7 @@
       {
         "type": "data",
         "hide": true,
-        "includedResults": ["trackerControl"],
+        "value": ["trackerControl"],
         "required": ["trackerControl"]
       }
     ],

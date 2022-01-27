@@ -74,7 +74,7 @@
             />
           </VCol>
         </VRow>
-        <template v-if="finished">
+        <template v-if="clonedResult">
           <VRow>
             <VCol>
               <UnitVegaViz
@@ -98,7 +98,7 @@
           </VRow>
           <VRow v-if="showTable">
             <VCol>
-              <UnitFilterableTable :data="result" />
+              <UnitFilterableTable :data="clonedResult" />
             </VCol>
           </VRow>
         </template>
@@ -140,11 +140,6 @@ export default {
       default: () => {}
     }
   },
-  data() {
-    return {
-      finished: false
-    }
-  },
   computed: {
     ...mapGetters(['fileManager']),
     showTable() {
@@ -164,13 +159,10 @@ export default {
     },
     result: {
       get() {
-        return this.$store.state.results[this.$route.params.key][
-          this.defaultViewElements.key
-        ]
+        return this.$store.state.results[this.defaultViewElements.key] ?? null
       },
       set(result) {
         this.$store.commit('setResult', {
-          company: this.$route.params.key,
           experience: this.defaultViewElements.key,
           result
         })
@@ -190,12 +182,6 @@ export default {
         .map(([glob, _]) => glob)
     }
   },
-  watch: {
-    fileManager() {
-      this.finished = false
-      this.result = null
-    }
-  },
   methods: {
     onUnitResultsUpdate(result) {
       // Postprocessing
@@ -204,7 +190,6 @@ export default {
           this.postprocessors[this.defaultViewElements.postprocessor](result)
       }
       this.result = result
-      this.finished = true
     }
   }
 }

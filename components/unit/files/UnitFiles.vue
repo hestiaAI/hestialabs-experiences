@@ -92,7 +92,7 @@ export default {
     },
     // Watch files, if user empty all files we reset the store and delete all files
     filesEmpty() {
-      if (this.filesEmpty) {
+      if (this.filesEmpty && this.fileManager) {
         this.$store.commit('clearStore')
       }
     },
@@ -149,11 +149,9 @@ export default {
       .use(DropTarget, { target: document.body })
       .on('files-added', () => {
         this.filesEmpty = false
-        this.enableStatus = false
       })
       .on('cancel-all', () => {
         this.filesEmpty = true
-        this.enableStatus = false
         this.selectedSamples = []
       })
       .on('file-removed', (file, reason) => {
@@ -167,8 +165,6 @@ export default {
         if (reason !== 'cancel-all' && !this.uppy.getFiles().length) {
           this.filesEmpty = true
         }
-
-        this.enableStatus = false
       })
   },
   beforeDestroy() {
@@ -178,7 +174,7 @@ export default {
     returnFiles() {
       const uppyFiles = this.uppy.getFiles().map(f => f.data)
       this.status = true
-      this.$emit('update', { uppyFiles, filesEmpty: this.filesEmpty })
+      this.$emit('update', { uppyFiles })
     }
   }
 }

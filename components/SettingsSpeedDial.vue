@@ -39,19 +39,9 @@
 
 <script>
 export default {
-  name: 'SettingsSpeedDial',
-  props: {},
   data() {
     return {
       fab: false
-    }
-  },
-  methods: {
-    handleError(error) {
-      console.error(error)
-      this.error = true
-      this.message = error instanceof Error ? error.message : error
-      this.progress = false
     }
   }
 }
