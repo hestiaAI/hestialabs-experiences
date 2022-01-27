@@ -108,7 +108,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import SettingsSpeedDial from './SettingsSpeedDial.vue'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 import parseYarrrml from '~/utils/parse-yarrrml'
@@ -116,7 +115,6 @@ import rdfUtils from '~/utils/rdf'
 
 export default {
   name: 'TheDataExperience',
-  components: { SettingsSpeedDial },
   props: {
     title: {
       type: String,
