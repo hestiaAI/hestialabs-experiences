@@ -29,6 +29,11 @@
               iisque percipit, an vim zril disputando voluptatibus, vix an
               salutandi sententiae. Lorem ipsum dolor sit amet, no nam oblique
             </div>
+            <QuoteBlock
+              text="Lorem ipsum dolor sit amet, no nam oblique veritus. Commune
+              imperdiet nec ut, sed euismod convenire principes at."
+              author="François Quellec"
+            />
           </div>
         </template>
       </FlowItem>
@@ -133,8 +138,9 @@
 <script>
 import LeaderLine from 'leader-line-new'
 import FlowItem from './FlowItem.vue'
+import QuoteBlock from './base/QuoteBlock.vue'
 export default {
-  components: { FlowItem },
+  components: { FlowItem, QuoteBlock },
   data: () => ({
     chapters: [
       {
