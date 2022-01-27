@@ -19,6 +19,7 @@
           >$vuetify.icons.mdiNumeric1CircleOutline</VIcon
         >
         <BaseButton
+          ref="downloadButton"
           text="Download results"
           :status="generateStatus"
           :error="generateError"
@@ -131,10 +132,9 @@ export default {
       const revText = await revResponse.text()
       const gitRevision = revText.replace(/[\n\r]/g, '')
       // Add info about the experience
-      const manifest = this.$store.getters.manifest(this.$route)
       this.timestamp = Date.now()
       const experience = {
-        key: manifest.key,
+        key: this.$route.params.key,
         timestamp: this.timestamp,
         version: VERSION,
         gitRevision
