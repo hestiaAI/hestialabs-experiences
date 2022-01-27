@@ -1,6 +1,10 @@
 <template>
   <div>
-    <VCard v-if="defaultViewElements" class="pa-2 mb-6" flat>
+    <VCard
+      v-if="defaultViewElements && fileManager !== null"
+      class="pa-2 mb-6"
+      flat
+    >
       <VRow>
         <VCol cols="1"></VCol>
         <VCol cols="10"
@@ -57,7 +61,6 @@
               v-else-if="sql"
               v-bind="{
                 sql,
-                db,
                 parameterName: defaultViewElements.parameterName,
                 parameterKey: defaultViewElements.parameterKey
               }"
@@ -105,9 +108,7 @@
 </template>
 
 <script>
-import FileManager from '~/utils/file-manager'
-import { DB } from '@/utils/sql'
-
+import { mapGetters } from 'vuex'
 export default {
   props: {
     sparqlQuery: {
@@ -130,10 +131,6 @@ export default {
       type: String,
       default: ''
     },
-    fileManager: {
-      type: FileManager,
-      required: true
-    },
     vega: {
       type: Object,
       default: () => {}
@@ -141,10 +138,6 @@ export default {
     postprocessors: {
       type: Object,
       default: () => {}
-    },
-    db: {
-      type: DB,
-      default: null
     }
   },
   data() {
@@ -153,6 +146,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['fileManager']),
     showTable() {
       return this.defaultViewElements.showTable
     },

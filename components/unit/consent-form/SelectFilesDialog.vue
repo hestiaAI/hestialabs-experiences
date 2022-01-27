@@ -1,5 +1,11 @@
 <template>
-  <VDialog v-model="show" width="500" persistent scrollable>
+  <VDialog
+    v-if="fileManager !== null"
+    v-model="show"
+    width="500"
+    persistent
+    scrollable
+  >
     <VCard>
       <VCardTitle class="text-h5 grey lighten-2"> Select files </VCardTitle>
 
@@ -52,14 +58,9 @@
 </template>
 
 <script>
-import FileManager from '~/utils/file-manager.js'
-
+import { mapGetters } from 'vuex'
 export default {
   props: {
-    fileManager: {
-      type: FileManager,
-      required: true
-    },
     value: {
       type: Boolean,
       required: true
@@ -72,6 +73,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['fileManager']),
     treeItems() {
       return this.fileManager.getTreeItems()
     },

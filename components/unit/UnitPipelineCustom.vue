@@ -17,6 +17,7 @@
           text="Run"
           icon="mdiStepForward"
           class="ma-sm-2"
+          :disabled="disabled"
           @click="runPipeline"
         />
       </VCol>
@@ -36,15 +37,11 @@
 </template>
 
 <script>
-import FileManager from '~/utils/file-manager'
+import { mapGetters } from 'vuex'
 import { setTimeoutPromise } from '@/utils/utils'
 
 export default {
   props: {
-    fileManager: {
-      type: FileManager,
-      required: true
-    },
     customPipeline: {
       type: Function,
       required: true
@@ -70,12 +67,19 @@ export default {
       code: '',
       parameter: '',
       options: '',
-      optionsVisible: false
+      optionsVisible: false,
+      disabled: false
     }
+  },
+  computed: {
+    ...mapGetters(['fileManager'])
   },
   watch: {
     options() {
       this.status = false
+    },
+    fileManager() {
+      this.disabled = this.fileManager === null
     },
     defaultViewElements: {
       handler() {

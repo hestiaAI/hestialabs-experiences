@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Uppy from '@uppy/core'
 import Dashboard from '@uppy/dashboard'
 import DropTarget from '@uppy/drop-target'
@@ -56,7 +57,8 @@ export default {
   data() {
     const config = {
       debug: false,
-      allowMultipleUploads: true
+      allowMultipleUploads: true,
+      locale: { strings: { cancel: 'Clear all' } }
     }
     return {
       uppy: new Uppy(config),
@@ -69,6 +71,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['fileManager']),
     key() {
       return this.$route.params.key
     },
@@ -80,6 +83,19 @@ export default {
     }
   },
   watch: {
+    // Watch filemanager to detect a reset of the store, if it is null
+    // we also delete files in the Uppy dashboard
+    fileManager() {
+      if (this.fileManager === null && this.uppy) {
+        this.uppy.reset()
+      }
+    },
+    // Watch files, if user empty all files we reset the store and delete all files
+    filesEmpty() {
+      if (this.filesEmpty) {
+        this.$store.commit('clearStore')
+      }
+    },
     async selectedSamples(newSamples, oldSamples) {
       if (newSamples.length > oldSamples.length) {
         // some sample was added
@@ -138,6 +154,7 @@ export default {
       .on('cancel-all', () => {
         this.filesEmpty = true
         this.enableStatus = false
+        this.selectedSamples = []
       })
       .on('file-removed', (file, reason) => {
         if (reason === 'removed-by-user') {
@@ -161,7 +178,7 @@ export default {
     returnFiles() {
       const uppyFiles = this.uppy.getFiles().map(f => f.data)
       this.status = true
-      this.$emit('update', { uppyFiles })
+      this.$emit('update', { uppyFiles, filesEmpty: this.filesEmpty })
     }
   }
 }

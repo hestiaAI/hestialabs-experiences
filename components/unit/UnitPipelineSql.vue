@@ -24,16 +24,11 @@
 </template>
 
 <script>
-import { DB } from '@/utils/sql'
-
+import { mapGetters } from 'vuex'
 export default {
   props: {
     sql: {
       type: String,
-      required: true
-    },
-    db: {
-      type: DB,
       required: true
     },
     parameterName: {
@@ -54,8 +49,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['currentDB']),
     disabled() {
-      return !this.sql
+      return !this.currentDB || !this.sql
     }
   },
   methods: {
@@ -65,7 +61,7 @@ export default {
       setTimeout(() => {
         try {
           const params = { [this.parameterKey]: this.parameter }
-          const { headers, items } = this.db.select(this.sql, params)
+          const { headers, items } = this.currentDB.select(this.sql, params)
           this.$emit('update', { headers, items })
         } catch (error) {
           console.error(error)

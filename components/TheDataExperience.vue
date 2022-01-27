@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BaseButtonShare color="primary" :outlined="false" />
+    <SettingsSpeedDial />
     <VRow>
       <VCol>
         <VTabs
@@ -14,8 +14,9 @@
           centered
           fixed-tabs
           class="fixed-tabs-bar"
+          @change="scrollToTop()"
         >
-          <VTab>Load your Data</VTab>
+          <VTab href="#load-data">Load your Data</VTab>
           <VTab :disabled="!success" href="#summary">Summary</VTab>
           <VTab :disabled="!success" href="#file-explorer">Files</VTab>
           <VTab
@@ -25,10 +26,12 @@
           >
             {{ el.title }}
           </VTab>
-          <VTab v-if="consentForm" :disabled="!success">Share my data</VTab>
+          <VTab v-if="consentFormTemplate" :disabled="!success"
+            >Share my data</VTab
+          >
         </VTabs>
         <VTabsItems v-model="tab">
-          <VTabItem>
+          <VTabItem value="load-data">
             <VCol cols="12 mx-auto" sm="6" class="tabItem pa-5">
               <UnitIntroduction
                 v-bind="{ companyName: title, dataPortal }"
@@ -59,12 +62,12 @@
           </VTabItem>
           <VTabItem value="summary">
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
-              <UnitSummary v-bind="{ fileManager }" />
+              <UnitSummary />
             </VCol>
           </VTabItem>
           <VTabItem value="file-explorer">
             <div class="tabItem">
-              <UnitFileExplorer v-bind="{ fileManager }" />
+              <UnitFileExplorer />
             </div>
           </VTabItem>
           <VTabItem
@@ -81,22 +84,18 @@
                       : undefined,
                   sparqlQuery: queries[index],
                   sql: sqlQueries[index],
-                  fileManager,
                   postprocessors,
                   index,
-                  vega,
-                  db
+                  vega
                 }"
               />
             </VCol>
           </VTabItem>
-          <VTabItem v-if="consentForm">
+          <VTabItem v-if="consentFormTemplate">
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitConsentForm
                 v-bind="{
-                  consentForm,
-                  defaultView,
-                  fileManager
+                  defaultView
                 }"
               />
             </VCol>
@@ -108,6 +107,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import SettingsSpeedDial from './SettingsSpeedDial.vue'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 import parseYarrrml from '~/utils/parse-yarrrml'
@@ -115,6 +116,7 @@ import rdfUtils from '~/utils/rdf'
 
 export default {
   name: 'TheDataExperience',
+  components: { SettingsSpeedDial },
   props: {
     title: {
       type: String,
@@ -172,16 +174,16 @@ export default {
   data() {
     return {
       tab: null,
+      fab: false,
       progress: false,
       error: false,
       success: false,
       message: '',
-      rml: '',
-      fileManager: null,
-      db: null
+      rml: ''
     }
   },
   computed: {
+    ...mapGetters(['fileManager']),
     queries() {
       return this.defaultView.map(o => this.sparql[o.query])
     },
@@ -191,7 +193,7 @@ export default {
     isRdfNeeded() {
       return this.defaultView.filter(v => 'query' in v).length > 0
     },
-    consentForm() {
+    consentFormTemplate() {
       const consent = this.$store.state.config.consent
       if (consent) {
         const key = this.$route.params.key
@@ -204,12 +206,26 @@ export default {
       return null
     }
   },
+  watch: {
+    fileManager() {
+      if (this.fileManager === null) {
+        this.tab = 'load-data'
+        this.scrollToTop()
+        this.success = false
+        this.progress = false
+        this.error = false
+      }
+    }
+  },
   mounted() {
     this.$root.$on('goToFileExplorer', () => {
       this.tab = 'file-explorer'
     })
   },
   methods: {
+    scrollToTop() {
+      window.scrollTo(0, 0)
+    },
     handleError(error) {
       console.error(error)
       this.error = true
@@ -225,6 +241,15 @@ export default {
 
       // Clean vuex state before changing the filemanager
       this.$store.commit('setFileExplorerCurrentItem', {})
+      // Reset the consent form
+      const consentForm = JSON.parse(JSON.stringify(this.consentFormTemplate))
+      if (consentForm) {
+        const section = consentForm.find(section => section.type === 'data')
+        section.titles = this.defaultView.map(e => e.title)
+        section.keys = this.defaultView.map(e => e.key)
+        section.includedResults = section.includedResults ?? []
+      }
+      this.$store.commit('setConsentForm', consentForm)
 
       const fileManager = new FileManager(
         this.preprocessors,
@@ -233,20 +258,21 @@ export default {
       )
       try {
         await fileManager.init(uppyFiles)
+        this.$store.commit('setFileManager', fileManager)
       } catch (e) {
         this.handleError(e)
         return
       }
-      this.fileManager = fileManager
 
       // Populate database
       if (this.databaseBuilder !== undefined) {
-        this.db = await this.databaseBuilder(this.fileManager)
+        const db = await this.databaseBuilder(fileManager)
+        this.$store.commit('setCurrentDB', db)
       }
 
       if (this.isRdfNeeded && this.yarrrml) {
         try {
-          const processedFiles = await this.fileManager.preprocessFiles(
+          const processedFiles = await fileManager.preprocessFiles(
             Object.values(this.files)
           )
           this.rml = await parseYarrrml(this.yarrrml)
@@ -256,11 +282,10 @@ export default {
           return
         }
       }
-
       this.progress = false
       this.success = true
       this.tab = 'summary'
-
+      this.scrollToTop()
       const elapsed = new Date() - start
       this.message = `Successfully processed in ${elapsed / 1000} sec.`
     }

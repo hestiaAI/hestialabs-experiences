@@ -15,10 +15,19 @@ export const state = () => ({
       )
     ])
   ),
-  fileExplorerCurrentItem: {}
+  currentDB: null,
+  fileManager: null,
+  fileExplorerCurrentItem: {},
+  consentForm: null
 })
 
 export const getters = {
+  fileManager(state) {
+    return state.fileManager
+  },
+  currentDB(state) {
+    return state.currentDB
+  },
   appName(state) {
     return state.config.appName
   },
@@ -51,11 +60,38 @@ export const getters = {
 }
 
 export const mutations = {
+  setCurrentDB(state, db) {
+    state.currentDB = db
+  },
+  setFileManager(state, fileManager) {
+    state.fileManager = fileManager
+  },
   setSelectedFiles(state, { key, value }) {
     state.selectedFiles[key] = value
   },
   setResult(state, { company, experience, result }) {
     state.results[company][experience] = result
+  },
+  setConsentForm(state, consentForm) {
+    state.consentForm = consentForm
+  },
+  clearStore(state) {
+    state.selectedFiles = Object.fromEntries(
+      config.experiences.map(k => [k, []])
+    )
+    state.results = Object.fromEntries(
+      config.experiences.map(k => [
+        k,
+        Object.fromEntries(
+          manifestMap[k].defaultView?.map(b => [b.key, null]) ?? []
+        )
+      ])
+    )
+    state.fileExplorerCurrentItem = {}
+    if (state.currentDB !== null) state.currentDB.close()
+    state.currentDB = null
+    state.fileManager = null
+    state.consentForm = null
   },
   setFileExplorerCurrentItem(state, item) {
     state.fileExplorerCurrentItem = item
