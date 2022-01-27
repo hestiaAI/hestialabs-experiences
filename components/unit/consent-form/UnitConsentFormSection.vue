@@ -114,9 +114,6 @@ export default {
   computed: {
     ...mapState(['consentForm', 'results']),
     ...mapGetters(['fileManager']),
-    key() {
-      return this.$route.params.key
-    },
     selectedFiles() {
       if (this.readonly) {
         return Object.keys(this.fileManager.fileDict)
