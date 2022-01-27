@@ -8,12 +8,9 @@
     <BaseAlert v-if="missingRequired">
       Some required fields are not filled in.
     </BaseAlert>
-    <BaseAlert v-if="missingRequiredDataProcessing.length > 0">
-      Some experience required for sending this form has not been ran:
-      {{ missingRequiredDataProcessing.join(', ') }}.
-    </BaseAlert>
     <BaseAlert v-if="missingRequiredData.length > 0">
-      Some data required for sending this form has not been included:
+      Some data required for sending this form has not been processed or
+      included:
       {{ missingRequiredData.join(', ') }}.
     </BaseAlert>
     <VRow>
@@ -26,11 +23,7 @@
           :status="generateStatus"
           :error="generateError"
           :progress="generateProgress"
-          :disabled="
-            missingRequired ||
-            missingRequiredDataProcessing.length > 0 ||
-            missingRequiredData.length > 0
-          "
+          :disabled="missingRequired || missingRequiredData.length > 0"
           @click="generateZIP"
         />
         <a
@@ -88,65 +81,30 @@ export default {
       'selectedFiles'
     ]),
     missingRequired() {
-      // FIXME
-      return false
-      // // If one section with attribute required has not been filled
-      // return !this.consentForm.every(section => {
-      //   if ('required' in section) {
-      //     if (section.type === 'checkbox') {
-      //       // At least one checkbox must be selected
-      //       return section.selected.length > 0
-      //     } else if (section.type === 'radio') {
-      //       // A radio button must be selected
-      //       return section.selected !== ''
-      //     } else if (section.type === 'input' || section.type === 'multiline') {
-      //       // Some text must be given
-      //       return 'value' in section && section.value !== ''
-      //     } else if (
-      //       section.type === 'data' &&
-      //       typeof section.required === 'boolean'
-      //     ) {
-      //       // Some data must be given
-      //       if (
-      //         section.includedResults.length === 1 &&
-      //         section.includedResults[0] === 'file-explorer'
-      //       ) {
-      //         return this.$store.state.selectedFiles[this.key].length > 0
-      //       }
-      //       return section.includedResults.length > 0
-      //     }
-      //   }
-      //   return true
-      // })
-    },
-    missingRequiredDataProcessing() {
-      // FIXME
-      return false
-      // const section = this.consentForm.find(section => section.type === 'data')
-      // return this.defaultView
-      //   .filter(
-      //     block =>
-      //       typeof section.required === 'object' &&
-      //       section.required.includes(block.key) &&
-      //       !this.resultMap[block.key]
-      //   )
-      //   .map(block => block.title)
+      return !this.consentForm.every(section => {
+        if ('required' in section) {
+          if (
+            section.type === 'data' &&
+            section.value.length === 1 &&
+            section.value[0] === 'file-explorer'
+          ) {
+            return this.selectedFiles.length > 0
+          }
+          return section.value.length > 0
+        }
+        return true
+      })
     },
     missingRequiredData() {
-      // FIXME
-      return false
-      // const section = this.consentForm.find(section => section.type === 'data')
-      // return this.defaultView
-      //   .filter(
-      //     block =>
-      //       typeof section.required === 'object' &&
-      //       section.required.includes(block.key) &&
-      //       !section.includedResults.includes(block.key)
-      //   )
-      //   .map(block => block.title)
-    },
-    key() {
-      return this.$route.params.key
+      const section = this.consentForm.find(section => section.type === 'data')
+      return this.defaultView
+        .filter(
+          block =>
+            typeof section.required === 'object' &&
+            section.required.includes(block.key) &&
+            !section.value.includes(block.key)
+        )
+        .map(block => block.title)
     },
     filename() {
       const date = new Date(this.timestamp)
@@ -154,7 +112,7 @@ export default {
         date.getUTCMonth() + 1,
         2
       )}-${padNumber(date.getUTCDate(), 2)}`
-      const filename = `${this.key}_${yearMonthDay}_${padNumber(
+      const filename = `${this.$route.params.key}_${yearMonthDay}_${padNumber(
         date.getUTCHours(),
         2
       )}${padNumber(date.getUTCMinutes(), 2)}_UTC.zip`
