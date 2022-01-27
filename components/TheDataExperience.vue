@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 import parseYarrrml from '~/utils/parse-yarrrml'
@@ -181,7 +181,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['fileManager']),
+    ...mapState(['fileManager']),
     queries() {
       return this.defaultView.map(o => this.sparql[o.query])
     },

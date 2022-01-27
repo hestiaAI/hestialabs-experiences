@@ -8,6 +8,7 @@ import TheDataExperience from '~/components/TheDataExperience'
 
 // We need to disable workers for these tests
 jest.mock('~/utils/file-manager-workers', () => {})
+window.scrollTo = jest.fn()
 
 test('mounts without error', () => {
   const wrapper = mount(TheDataExperience, {
@@ -40,7 +41,8 @@ test('process simple text file', async () => {
     mocks: {
       $store: {
         state: {
-          config: {}
+          config: {},
+          fileManager: null
         },
         commit: () => {}
       }
