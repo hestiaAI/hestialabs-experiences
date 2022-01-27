@@ -247,7 +247,6 @@ export default {
         const section = consentForm.find(section => section.type === 'data')
         section.titles = this.defaultView.map(e => e.title)
         section.keys = this.defaultView.map(e => e.key)
-        section.includedResults = section.includedResults ?? []
       }
       this.$store.commit('setConsentForm', consentForm)
 

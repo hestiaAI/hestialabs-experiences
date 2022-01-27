@@ -102,7 +102,8 @@ export default {
           block =>
             typeof section.required === 'object' &&
             section.required.includes(block.key) &&
-            !section.value.includes(block.key)
+            (!Object.keys(this.results).includes(block.key) ||
+              !section.value.includes(block.key))
         )
         .map(block => block.title)
     },
