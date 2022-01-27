@@ -178,7 +178,7 @@ export default {
     returnFiles() {
       const uppyFiles = this.uppy.getFiles().map(f => f.data)
       this.status = true
-      this.$emit('update', { uppyFiles, filesEmpty: this.filesEmpty })
+      this.$emit('update', { uppyFiles })
     }
   }
 }

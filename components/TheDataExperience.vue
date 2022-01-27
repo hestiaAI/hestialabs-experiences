@@ -239,9 +239,10 @@ export default {
       this.progress = true
       const start = new Date()
 
-      // Clean vuex state before changing the filemanager
-      this.$store.commit('setFileExplorerCurrentItem', {})
-      // Reset the consent form
+      // Clean vuex state
+      this.$store.commit('clearStore', {})
+
+      // Set consent form
       const consentForm = JSON.parse(JSON.stringify(this.consentFormTemplate))
       if (consentForm) {
         const section = consentForm.find(section => section.type === 'data')
@@ -250,6 +251,7 @@ export default {
       }
       this.$store.commit('setConsentForm', consentForm)
 
+      // Set file manager
       const fileManager = new FileManager(
         this.preprocessors,
         fileManagerWorkers,
@@ -265,10 +267,16 @@ export default {
 
       // Populate database
       if (this.databaseBuilder !== undefined) {
-        const db = await this.databaseBuilder(fileManager)
-        this.$store.commit('setCurrentDB', db)
+        try {
+          const db = await this.databaseBuilder(fileManager)
+          this.$store.commit('setCurrentDB', db)
+        } catch (e) {
+          this.handleError(e)
+          return
+        }
       }
 
+      // Generate RDF
       if (this.isRdfNeeded && this.yarrrml) {
         try {
           const processedFiles = await fileManager.preprocessFiles(
