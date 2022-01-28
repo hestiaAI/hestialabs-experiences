@@ -226,7 +226,7 @@ export default {
       endPlugSize: 0.5,
       outline: false,
       outlineColor: '#fff',
-      dash: { animation: true },
+      dash: false, // { animation: true },
       dropShadow: false
     }
     this.$nextTick(() => {
@@ -273,6 +273,8 @@ export default {
         )
       )
     })
+    this.lines.forEach(l => l.hide())
+    // this.lines.forEach(l => l.show('draw'))
   },
   destroyed() {
     this.lines.forEach(l => l.remove())
