@@ -4,6 +4,7 @@ import _ from 'lodash'
 import { timeParse } from 'd3-time-format'
 import Ajv from 'ajv'
 import jsonToTableSchema from './jsonToTableSchema'
+import allParsers from './parsers'
 const ajv = new Ajv()
 
 // Define all accepted date formats
@@ -181,16 +182,36 @@ async function genericDateViewer({ fileManager, options }) {
   return { headers, items }
 }
 
-async function timedObservationViewer({ fileManager, manifest }) {
-  const params = manifest.timedObservationsViewer
+async function timedObservationViewer({ fileManager, options }) {
+  // Process options
+  options.fileMatchers.forEach(m => {
+    try {
+      m.regex = new RegExp(m.regex)
+    } catch (error) {
+      throw new Error(`The regex '${m.regex}' is not valid`)
+    }
+  })
+  if (_.has(options, 'parser')) {
+    const parser = options.parser
+    if (parser in allParsers) {
+      options.parser = allParsers[parser]
+    } else {
+      throw new Error(`The parser ${parser} doesn't exist`)
+    }
+  } else {
+    options.parser = _.identity
+  }
+
+  // Get files
   const matchingFilenames = fileManager
     .getFilenames()
-    .filter(name => params.fileMatchers.some(_ => _.regex.test(name)))
+    .filter(name => options.fileMatchers.some(_ => _.regex.test(name)))
   const files = await fileManager.preprocessFiles(matchingFilenames)
 
+  // Process files
   const headers = ['date', 'eventSource', 'eventType', 'eventValue']
   const items = Object.entries(files).flatMap(([name, text]) => {
-    const matcher = _.find(params.fileMatchers, m => m.regex.test(name))
+    const matcher = _.find(options.fileMatchers, m => m.regex.test(name))
     let events
     try {
       const entries = JSONPath({
@@ -213,7 +234,7 @@ async function timedObservationViewer({ fileManager, manifest }) {
     } catch (error) {
       events = []
     }
-    return params.parser(events, params, name.match(matcher.regex))
+    return options.parser(events, options, name.match(matcher.regex))
   })
   return { headers, items }
 }
@@ -381,12 +402,7 @@ async function genericLocationViewer({ fileManager, options }) {
  * We're using the default syntax of https://ajv.js.org/
  *
  */
-async function jsonToTableConverter({
-  fileManager,
-  manifest,
-  params,
-  options
-}) {
+async function jsonToTableConverter({ fileManager, options }) {
   // Validate that the given options use the correct format
   const validate = ajv.compile(jsonToTableSchema)
   const valid = validate(options)
