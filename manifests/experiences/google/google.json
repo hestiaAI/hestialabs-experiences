@@ -3,10 +3,14 @@
   "icon": "google.png",
   "dataPortal": "https://takeout.google.com/settings/takeout",
   "data": [],
+  "files": {
+    "my-activity": "**/*/+(OmatTapahtumat|MonActivité|My Activity).json"
+  },
   "defaultView": [
     {
       "key": "timedObservationViewer",
       "customPipeline": "timedObservationViewer",
+      "files": ["my-activity"],
       "customPipelineOptions": {
         "fileMatchers": [
           {
