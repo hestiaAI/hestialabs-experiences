@@ -182,60 +182,65 @@ async function genericDateViewer({ fileManager, options }) {
   return { headers, items }
 }
 
-async function timedObservationViewer({ fileManager, options }) {
+/**
+ * A generic JSON parser.
+ * It expects the following customPipelineOptions:
+ * ```
+ * "headers": [...],
+ * "fileMatchers": [
+ *   {
+ *     "files": <ID>
+ *     "entryPath": <JSONPath>
+ *     "fields": {
+ *       <field_1>: <JSONPath>
+ *       ...
+ *     }
+ *   }
+ * ],
+ * "parser": {
+ *   "name": <functionName>
+ *   "options": {
+ *     ...
+ *   }
+ * }
+ * ```
+ * The parser is optional, but if specified the function must correspond
+ * to a function defined in manifests/parsers.js
+ */
+async function genericJSONParser({ fileManager, options }) {
   // Process options
-  options.fileMatchers.forEach(m => {
-    try {
-      m.regex = new RegExp(m.regex)
-    } catch (error) {
-      throw new Error(`The regex '${m.regex}' is not valid`)
-    }
-  })
-  if (_.has(options, 'parser')) {
-    const parser = options.parser
-    if (parser in allParsers) {
-      options.parser = allParsers[parser]
+  const parser = options.parser
+  let parserFunction
+  if (parser) {
+    if (parser.name in allParsers) {
+      parserFunction = allParsers[parser.name]
     } else {
-      throw new Error(`The parser ${parser} doesn't exist`)
+      throw new Error(`The parser ${parser.name} doesn't exist`)
     }
   } else {
-    options.parser = _.identity
+    parserFunction = _.identity
   }
 
-  // Get files
-  const matchingFilenames = fileManager
-    .getFilenames()
-    .filter(name => options.fileMatchers.some(_ => _.regex.test(name)))
-  const files = await fileManager.preprocessFiles(matchingFilenames)
-
   // Process files
-  const headers = ['date', 'eventSource', 'eventType', 'eventValue']
-  const items = Object.entries(files).flatMap(([name, text]) => {
-    const matcher = _.find(options.fileMatchers, m => m.regex.test(name))
-    let events
-    try {
+  const headers = options.headers
+  const items = []
+  for (const matcher of options.fileMatchers) {
+    const paths = fileManager.getFilePathsFromId(matcher.files)
+    for (const path of paths) {
+      const text = await fileManager.getPreprocessedText(path)
       const entries = JSONPath({
         path: matcher.entryPath,
         json: JSON.parse(text)
       })
-      events = entries.map(entry =>
-        Object.fromEntries(
-          Object.entries(matcher.fields).map(([field, { source, path }]) => {
-            if (source === 'entry') {
-              return [field, JSONPath({ path, json: entry, wrap: false })]
-            } else if (source === 'regex') {
-              return [field, name.match(matcher.regex)[path]]
-            } else {
-              return []
-            }
-          })
-        )
-      )
-    } catch (error) {
-      events = []
+      for (const entry of entries) {
+        const item = {}
+        for (const [field, path] of Object.entries(matcher.fields)) {
+          item[field] = JSONPath({ path, json: entry, wrap: false })
+        }
+        items.push(parserFunction(item, parser.options, path))
+      }
     }
-    return options.parser(events, options, name.match(matcher.regex))
-  })
+  }
   return { headers, items }
 }
 
@@ -488,7 +493,7 @@ function makeTableItem(object, options) {
 
 export {
   genericDateViewer,
-  timedObservationViewer,
+  genericJSONParser,
   genericLocationViewer,
   jsonToTableConverter
 }
