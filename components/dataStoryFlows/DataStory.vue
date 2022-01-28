@@ -2,13 +2,16 @@
   <VContainer>
     <VRow>
       <VContainer>
-        <div class="py-4">
+        <div class="py-4 mt-4">
           <h2 class="headline font-weight-light mb-4 primary--text">Title</h2>
           <div>
             Lorem ipsum dolor sit amet, no nam oblique veritus. Commune
             imperdiet nec ut, sed euismod convenire principes at. Est et nobis
             iisque percipit, an vim zril disputando voluptatibus, vix an
-            salutandi sententiae.
+            salutandi sententiae. Lorem ipsum dolor sit amet, no nam oblique
+            veritus. Commune imperdiet nec ut, sed euismod convenire principes
+            at. Est et nobis iisque percipit, an vim zril disputando
+            voluptatibus, vix an salutandi sententiae.
           </div>
         </div>
       </VContainer>
@@ -16,7 +19,9 @@
     <VRow>
       <FlowItem :inputs="[{ id: 'S', name: 'test5', logo: 'mdiClose' }]">
         <template #opposite>
-          <span class="headline font-weight-bold primary--text">test</span>
+          <span class="overline font-weight-bold primary--text"
+            >July 18, 2021</span
+          >
         </template>
         <template #content>
           <div class="py-4">
@@ -44,7 +49,9 @@
         ]"
       >
         <template #opposite>
-          <span class="headline font-weight-bold primary--text">test</span>
+          <span class="overline font-weight-bold primary--text"
+            >August 8, 2021</span
+          >
         </template>
         <template #content>
           <div class="py-4">
@@ -77,7 +84,9 @@
         ]"
       >
         <template #opposite>
-          <span class="headline font-weight-bold primary--text">test</span>
+          <span class="overline font-weight-bold primary--text"
+            >October 30, 2021</span
+          >
         </template>
         <template #content>
           <div class="py-4">
@@ -102,7 +111,9 @@
       </FlowItem>
       <FlowItem :inputs="[{ id: 'E', name: 'test4', logo: 'mdiClose' }]">
         <template #opposite>
-          <span class="headline font-weight-bold primary--text">test</span>
+          <span class="overline font-weight-bold primary--text"
+            >December 11, 2021</span
+          >
         </template>
         <template #content>
           <div class="py-4">
@@ -207,8 +218,16 @@ export default {
   mounted() {
     // Draw arrows
     const config = {
-      color: 'purple',
-      size: 8
+      color: '#58539e',
+      size: 8,
+      path: 'grid',
+      startPlug: 'behind',
+      endPlug: 'arrow',
+      endPlugSize: 0.5,
+      outline: false,
+      outlineColor: '#fff',
+      dash: { animation: true },
+      dropShadow: false
     }
     this.$nextTick(() => {
       this.lines.push(
