@@ -57,12 +57,16 @@
               iisque percipit, an vim zril disputando voluptatibus, vix an
               salutandi sententiae. Lorem ipsum dolor sit amet, no nam oblique
               veritus. Commune imperdiet nec ut, sed euismod convenire principes
-              at. Est et nobis iisque percipit, an vim zril disputando
-              voluptatibus, vix an salutandi sententiae. Lorem ipsum dolor sit
-              amet, no nam oblique veritus. Commune imperdiet nec ut, sed
-              euismod convenire principes at. Est et nobis iisque percipit, an
-              vim zril disputando voluptatibus, vix an salutandi sententiae.
             </div>
+            <CodeBlock
+              title="Example of code"
+              :value="code"
+              language="javascript"
+              source-text="Source: "
+              source-link-text="HestiaLabs"
+              source-link-u-r-l="https://digipower.hestialabs.org/"
+              readonly
+            />
           </div>
         </template>
       </FlowItem>
@@ -139,8 +143,9 @@
 import LeaderLine from 'leader-line-new'
 import FlowItem from './FlowItem.vue'
 import QuoteBlock from './base/QuoteBlock.vue'
+import CodeBlock from './base/CodeBlock.vue'
 export default {
-  components: { FlowItem, QuoteBlock },
+  components: { FlowItem, QuoteBlock, CodeBlock },
   data: () => ({
     chapters: [
       {
@@ -164,7 +169,8 @@ export default {
         year: '2000'
       }
     ],
-    lines: []
+    lines: [],
+    code: 'console.log("Hello World");\nconst test = true\nconsole.log("Test: ", test)'
   }),
   mounted() {
     const config = {
