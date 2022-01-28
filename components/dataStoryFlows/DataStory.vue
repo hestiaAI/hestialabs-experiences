@@ -90,6 +90,13 @@
               iisque percipit, an vim zril disputando voluptatibus, vix an
               salutandi sententiae.
             </div>
+            <HozizontalBarChart
+              title="Top 10 advertisers"
+              :values="graphTestValues"
+              x-accessor="value"
+              y-accessor="company"
+              bars-color="#A4A8D0"
+            />
           </div>
         </template>
       </FlowItem>
@@ -144,35 +151,61 @@ import LeaderLine from 'leader-line-new'
 import FlowItem from './FlowItem.vue'
 import QuoteBlock from './base/QuoteBlock.vue'
 import CodeBlock from './base/CodeBlock.vue'
+import HozizontalBarChart from './charts/HozizontalBarChart.vue'
 export default {
-  components: { FlowItem, QuoteBlock, CodeBlock },
+  components: { FlowItem, QuoteBlock, CodeBlock, HozizontalBarChart },
   data: () => ({
-    chapters: [
+    graphTestValues: [
       {
-        color: 'cyan',
-        year: '1960'
+        company: 'Apple',
+        value: 1960
       },
       {
-        color: 'green',
-        year: '1970'
+        company: 'Facebook',
+        value: 1360
       },
       {
-        color: 'pink',
-        year: '1980'
+        company: 'Google',
+        value: 1060
       },
       {
-        color: 'amber',
-        year: '1990'
+        company: 'Boeing',
+        value: 960
       },
       {
-        color: 'orange',
-        year: '2000'
+        company: 'Amazon',
+        value: 800
+      },
+      {
+        company: 'Orange',
+        value: 500
+      },
+      {
+        company: 'Bouygue',
+        value: 480
+      },
+      {
+        company: 'Twitter',
+        value: 300
+      },
+      {
+        company: 'Reddit',
+        value: 280
+      },
+      {
+        company: 'Swisscom',
+        value: 100
       }
     ],
     lines: [],
     code: 'console.log("Hello World");\nconst test = true\nconsole.log("Test: ", test)'
   }),
+  updated() {
+    // update arrows position
+    this.lines.forEach(l => l.position())
+  },
   mounted() {
+    // Draw arrows
     const config = {
       color: 'purple',
       size: 8
