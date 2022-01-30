@@ -13,27 +13,30 @@
       <VSwitch v-model="optionsVisible" label="Edit options" />
     </div>
     <VExpandTransition>
-      <VRow v-show="optionsVisible">
-        <VCol>
-          <CodeEditor :value.sync="options" language="json" />
-        </VCol>
-      </VRow>
+      <div
+        v-if="optionsVisible"
+        class="d-flex flex-column justify-center align-center"
+      >
+        <CodeEditor :value.sync="options" language="json" />
+        <BaseButton
+          v-bind="{ progress, status, error, disabled }"
+          text="Run"
+          icon="mdiStepForward"
+          @click="run"
+        />
+      </div>
     </VExpandTransition>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import mixin from './mixin-pipeline'
-import FileManager from '~/utils/file-manager'
 import { setTimeoutPromise } from '@/utils/utils'
 
 export default {
   mixins: [mixin],
   props: {
-    fileManager: {
-      type: FileManager,
-      required: true
-    },
     customPipeline: {
       type: Function,
       required: true
@@ -49,6 +52,8 @@ export default {
   },
   data() {
     return {
+      status: false,
+      error: false,
       progress: false,
       code: '',
       parameter: '',
@@ -56,17 +61,24 @@ export default {
       optionsVisible: false
     }
   },
-  watch: {
-    async options() {
-      // auto-run pipeline if options are edited
-      await this.run()
-    },
-    'defaultViewElements.customPipelineOptions'() {
-      this.updateOptions()
+  computed: {
+    ...mapGetters(['fileManager']),
+    disabled() {
+      return this.fileManager === null
     }
   },
-  beforeMount() {
+  watch: {
+    options() {
+      this.status = false
+    },
+    async 'defaultViewElements.customPipelineOptions'() {
+      this.updateOptions()
+      await this.run()
+    }
+  },
+  async beforeMount() {
     this.updateOptions()
+    await this.run()
   },
   methods: {
     updateOptions() {
@@ -76,6 +88,7 @@ export default {
       }
     },
     async run() {
+      this.error = false
       this.progress = true
       await setTimeoutPromise(1)
       try {
@@ -89,8 +102,10 @@ export default {
         this.$emit('update', result)
       } catch (error) {
         console.error(error)
+        this.error = true
         this.$emit('update', { error })
       } finally {
+        this.status = true
         this.progress = false
       }
     }

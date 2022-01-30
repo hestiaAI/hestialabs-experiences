@@ -1,10 +1,6 @@
 {
   "title": "Signal",
   "icon": "signal.svg",
-  "ext": "all",
-  "multiple": true,
-  "isGenericViewer": true,
-  "showDataExplorer": true,
   "defaultView": [
     {
       "key": "genericDateViewer",

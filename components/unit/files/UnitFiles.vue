@@ -13,8 +13,6 @@
       class="mb-4"
     />
 
-    <div class="caption my-2">{{ extensionsMessage }}</div>
-
     <div ref="dashboard" />
 
     <BaseButton
@@ -29,6 +27,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Uppy from '@uppy/core'
 import Dashboard from '@uppy/dashboard'
 import DropTarget from '@uppy/drop-target'
@@ -46,32 +45,20 @@ async function fetchSampleFile({ path, filename }) {
 export default {
   name: 'UnitFiles',
   props: {
-    extensions: {
-      type: Array,
-      required: true
-    },
     files: {
       type: Object,
       required: true
     },
-    multiple: {
-      type: Boolean,
-      default: false
-    },
     samples: {
       type: Array,
       default: () => []
-    },
-    isGenericViewer: Boolean
+    }
   },
   data() {
     const config = {
       debug: false,
-      allowMultipleUploads: this.multiple,
-      restrictions: {
-        maxNumberOfFiles: this.multiple ? null : 1,
-        allowedFileTypes: this.extensions.length > 0 ? this.extensions : null
-      }
+      allowMultipleUploads: true,
+      locale: { strings: { cancel: 'Clear all' } }
     }
     return {
       uppy: new Uppy(config),
@@ -80,28 +67,35 @@ export default {
       status: false,
       error: false,
       progress: false,
-      filesToExtract: this.files,
-      cachedResult: null
+      filesToExtract: this.files
     }
   },
   computed: {
+    ...mapGetters(['fileManager']),
     key() {
       return this.$route.params.key
     },
     isPlayground() {
       return this.key === 'playground'
     },
-    extensionsMessage() {
-      const exts = this.extensions.join(', ')
-      return `${this.multiple ? 'Multiple files' : 'One file'} allowed (${
-        exts.length > 0 ? exts : 'any extension'
-      })`
-    },
     disabled() {
       return this.filesEmpty
     }
   },
   watch: {
+    // Watch filemanager to detect a reset of the store, if it is null
+    // we also delete files in the Uppy dashboard
+    fileManager() {
+      if (this.fileManager === null && this.uppy) {
+        this.uppy.reset()
+      }
+    },
+    // Watch files, if user empty all files we reset the store and delete all files
+    filesEmpty() {
+      if (this.filesEmpty && this.fileManager) {
+        this.$store.commit('clearStore')
+      }
+    },
     async selectedSamples(newSamples, oldSamples) {
       if (newSamples.length > oldSamples.length) {
         // some sample was added
@@ -155,11 +149,10 @@ export default {
       .use(DropTarget, { target: document.body })
       .on('files-added', () => {
         this.filesEmpty = false
-        this.enableStatus = false
       })
       .on('cancel-all', () => {
         this.filesEmpty = true
-        this.enableStatus = false
+        this.selectedSamples = []
       })
       .on('file-removed', (file, reason) => {
         if (reason === 'removed-by-user') {
@@ -172,8 +165,6 @@ export default {
         if (reason !== 'cancel-all' && !this.uppy.getFiles().length) {
           this.filesEmpty = true
         }
-
-        this.enableStatus = false
       })
   },
   beforeDestroy() {

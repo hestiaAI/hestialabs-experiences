@@ -22,10 +22,10 @@ export default async function databaseBuilder(fileManager) {
   ])
 
   const impressionsFile = JSON.parse(
-    await fileManager.getPreprocessedTextFromId('impressions')
+    (await fileManager.getPreprocessedTextFromId('impressions'))[0] ?? null
   )
   const engagementsFile = JSON.parse(
-    await fileManager.getPreprocessedTextFromId('engagements')
+    (await fileManager.getPreprocessedTextFromId('engagements'))[0] ?? null
   )
 
   const impressions =

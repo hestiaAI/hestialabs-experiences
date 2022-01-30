@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BaseButtonShare color="primary" :outlined="false" />
+    <SettingsSpeedDial />
     <VRow>
       <VCol>
         <VTabs
@@ -14,6 +14,7 @@
           centered
           fixed-tabs
           class="fixed-tabs-bar"
+          @change="scrollToTop()"
         >
           <VTab
             v-for="(t, index) in tabs"
@@ -29,16 +30,13 @@
           <VTabItem value="load-data">
             <VCol cols="12 mx-auto" sm="6" class="tabItem pa-5">
               <UnitIntroduction
-                v-bind="{ companyName: title, dataPortal, isGenericViewer }"
+                v-bind="{ companyName: title, dataPortal }"
                 ref="unit-introduction"
               />
               <UnitFiles
                 v-bind="{
-                  extensions,
                   files,
-                  multiple,
-                  samples: data,
-                  isGenericViewer
+                  samples: data
                 }"
                 ref="unit-files"
                 @update="onUnitFilesUpdate"
@@ -60,12 +58,12 @@
           </VTabItem>
           <VTabItem value="summary">
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
-              <UnitSummary v-bind="{ fileManager }" @switch-tab="switchTab" />
+              <UnitSummary @switch-tab="switchTab" />
             </VCol>
           </VTabItem>
           <VTabItem value="file-explorer">
             <div class="tabItem">
-              <UnitFileExplorer v-bind="{ fileManager }" />
+              <UnitFileExplorer />
             </div>
           </VTabItem>
           <VTabItem
@@ -92,23 +90,18 @@
                       : undefined,
                   sparqlQuery: queries[index],
                   sql: sqlQueries[index],
-                  fileManager,
                   postprocessors,
                   index,
-                  vega,
-                  db
+                  vega
                 }"
               />
             </VCol>
           </VTabItem>
-          <VTabItem v-if="consentForm" value="share-data">
+          <VTabItem v-if="consentFormTemplate" value="share-data">
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitConsentForm
                 v-bind="{
-                  consentForm,
-                  defaultView,
-                  fileManager,
-                  showDataExplorer
+                  defaultView
                 }"
               />
             </VCol>
@@ -124,7 +117,6 @@ import { mapState } from 'vuex'
 
 import debounce from 'lodash/debounce'
 
-import { validExtensions } from '~/manifests/utils'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 import parseYarrrml from '~/utils/parse-yarrrml'
@@ -145,16 +137,6 @@ export default {
       type: Array,
       default: () => []
     },
-    ext: {
-      type: String,
-      required: true,
-      validator(val) {
-        return (
-          val === 'all' ||
-          val.split(',').every(v => validExtensions.includes(v))
-        )
-      }
-    },
     files: {
       type: Object,
       default: () => {}
@@ -162,10 +144,6 @@ export default {
     defaultView: {
       type: Array,
       default: () => []
-    },
-    multiple: {
-      type: Boolean,
-      default: false
     },
     preprocessors: {
       type: Object,
@@ -178,14 +156,6 @@ export default {
     customPipelines: {
       type: Object,
       default: undefined
-    },
-    isGenericViewer: {
-      type: Boolean,
-      default: false
-    },
-    showDataExplorer: {
-      type: Boolean,
-      default: true
     },
     sparql: {
       type: Object,
@@ -211,18 +181,18 @@ export default {
   data() {
     return {
       tab: null,
+      fab: false,
       progress: false,
       error: false,
       success: false,
       message: '',
       rml: '',
-      fileManager: null,
-      db: null,
       overlay: false
     }
   },
   computed: {
     ...mapState('experience', { experienceProgress: 'progress' }),
+    ...mapState(['fileManager']),
     tabs() {
       const disabled = !this.success || this.experienceProgress
       const tabs = [
@@ -265,7 +235,7 @@ export default {
     isRdfNeeded() {
       return this.defaultView.filter(v => 'query' in v).length > 0
     },
-    consentForm() {
+    consentFormTemplate() {
       const consent = this.$store.state.config.consent
       if (consent) {
         const key = this.$route.params.key
@@ -276,17 +246,17 @@ export default {
         }
       }
       return null
-    },
-    extensions() {
-      return this.ext === 'all'
-        ? []
-        : this.ext
-            .replace(/\s/g, '')
-            .split(',')
-            .map(ext => `.${ext}`)
     }
   },
   watch: {
+    fileManager(value) {
+      if (value === null) {
+        this.switchTab('load-data')
+        this.success = false
+        this.progress = false
+        this.error = false
+      }
+    },
     // debounce overlay
     experienceProgress: {
       immediate: true,
@@ -297,11 +267,14 @@ export default {
   },
   mounted() {
     this.switchTab('load-data')
-    this.$root.$on('goToFileExplorer', () => this.switchTab('file-explorer'))
   },
   methods: {
     switchTab(value) {
       this.$router.push(`#${value}`)
+      this.scrollToTop()
+    },
+    scrollToTop() {
+      window.scrollTo(0, 0)
     },
     handleError(error) {
       console.error(error)
@@ -316,29 +289,47 @@ export default {
       this.progress = true
       const start = new Date()
 
-      // Clean vuex state before changing the filemanager
-      this.$store.commit('setFileExplorerCurrentItem', {})
+      // Clean vuex state
+      this.$store.commit('clearStore', {})
 
+      // Set consent form
+      const consentForm = JSON.parse(JSON.stringify(this.consentFormTemplate))
+      if (consentForm) {
+        const section = consentForm.find(section => section.type === 'data')
+        section.titles = this.defaultView.map(e => e.title)
+        section.keys = this.defaultView.map(e => e.key)
+      }
+      this.$store.commit('setConsentForm', consentForm)
+
+      // Set file manager
       const fileManager = new FileManager(
         this.preprocessors,
-        fileManagerWorkers
+        fileManagerWorkers,
+        this.files
       )
       try {
-        await fileManager.init(uppyFiles, this.multiple, this.files)
+        await fileManager.init(uppyFiles)
+        this.$store.commit('setFileManager', fileManager)
       } catch (e) {
         this.handleError(e)
         return
       }
-      this.fileManager = fileManager
 
       // Populate database
       if (this.databaseBuilder !== undefined) {
-        this.db = await this.databaseBuilder(this.fileManager)
+        try {
+          const db = await this.databaseBuilder(fileManager)
+          this.$store.commit('setCurrentDB', db)
+        } catch (e) {
+          this.handleError(e)
+          return
+        }
       }
 
+      // Generate RDF
       if (this.isRdfNeeded && this.yarrrml) {
         try {
-          const processedFiles = await this.fileManager.preprocessFiles(
+          const processedFiles = await fileManager.preprocessFiles(
             Object.values(this.files)
           )
           this.rml = await parseYarrrml(this.yarrrml)
@@ -348,7 +339,6 @@ export default {
           return
         }
       }
-
       this.progress = false
       this.success = true
       setTimeout(() => this.switchTab('summary'), 500)

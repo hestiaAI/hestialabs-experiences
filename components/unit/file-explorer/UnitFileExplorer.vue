@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="fileManager !== null">
     <VCard
       v-click-outside="{
         handler: () => {
@@ -124,17 +124,10 @@
 <script>
 import _ from 'lodash'
 import { mapState } from 'vuex'
-import FileManager from '~/utils/file-manager.js'
 import { jsonToTableConverter } from '~/manifests/generic-pipelines'
 
 export default {
   name: 'UnitFileExplorer',
-  props: {
-    fileManager: {
-      type: FileManager,
-      required: true
-    }
-  },
   data() {
     return {
       supportedTypes: new Set([
@@ -161,7 +154,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileExplorerCurrentItem']),
+    ...mapState(['fileExplorerCurrentItem', 'fileManager']),
     active: {
       get() {
         return _.has(this.selectedItem, 'filename') ? [this.selectedItem] : []

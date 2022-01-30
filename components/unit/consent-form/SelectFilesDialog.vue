@@ -1,5 +1,11 @@
 <template>
-  <VDialog v-model="show" width="500" persistent scrollable>
+  <VDialog
+    v-if="fileManager !== null"
+    v-model="show"
+    width="500"
+    persistent
+    scrollable
+  >
     <VCard>
       <VCardTitle class="text-h5 grey lighten-2"> Select files </VCardTitle>
 
@@ -52,14 +58,9 @@
 </template>
 
 <script>
-import FileManager from '~/utils/file-manager.js'
-
+import { mapState, mapGetters } from 'vuex'
 export default {
   props: {
-    fileManager: {
-      type: FileManager,
-      required: true
-    },
     value: {
       type: Boolean,
       required: true
@@ -72,6 +73,8 @@ export default {
     }
   },
   computed: {
+    ...mapState(['consentForm']),
+    ...mapGetters(['fileManager']),
     treeItems() {
       return this.fileManager.getTreeItems()
     },
@@ -85,10 +88,10 @@ export default {
     },
     selectedFiles: {
       get() {
-        return this.$store.state.selectedFiles[this.key]
+        return this.$store.state.selectedFiles
       },
       set(value) {
-        this.$store.commit('setSelectedFiles', { key: this.key, value })
+        this.$store.commit('setSelectedFiles', value)
       }
     },
     key() {
@@ -106,12 +109,12 @@ export default {
   methods: {
     ok() {
       this.show = false
-      this.$emit('return', { clear: false })
+      this.updateCheckboxOnReturn(false)
     },
     clear() {
       this.$store.commit('setSelectedFiles', { key: this.key, value: [] })
+      this.updateCheckboxOnReturn(true)
       this.show = false
-      this.$emit('return', { clear: true })
     },
     setInitOpen() {
       // If the root has a sequence of nodes with 1 children, pre-open them
@@ -132,6 +135,19 @@ export default {
         this.selectedFiles = this.selectedFiles.concat([item])
       }
       this.activeItems = []
+    },
+    updateCheckboxOnReturn(clear) {
+      // Unselect when user clears, select when user confirms
+      const index = this.consentForm.findIndex(
+        section => section.type === 'data'
+      )
+      let value = this.consentForm[index].value
+      if (clear) {
+        value = value.filter(x => x !== 'file-explorer')
+      } else if (!value.includes('file-explorer')) {
+        value.push('file-explorer')
+      }
+      this.$store.commit('setConsentFormValue', { index, value })
     }
   }
 }

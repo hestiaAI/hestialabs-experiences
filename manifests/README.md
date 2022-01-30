@@ -34,22 +34,11 @@ Note: All files and folders should match the following regular expression: [`^(?
     */
   "dataPortal": "https://example.com/data-portal",
   /**
-    * Comma-separated list of allowed file extensions (required)
-    * @type String
-    */
-  "ext": "json,csv,zip",
-  /**
     * The list of specific files that are used in the experiences. They are defined by an ID and a glob.
     * In the experiences, we should always refer to the ID of the files.
     * @type Object
     */
   "files": {"impressions": "**/data/ad-impressions.js"},
-  /**
-    * Can the user input multiple files?
-    * @type Boolean
-    * @default false
-    */
-  "multiple": false,
   /**
     * Reference to a preprocessor (optional, see preprocessors.js)
     * @type String

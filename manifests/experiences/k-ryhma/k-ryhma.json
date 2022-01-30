@@ -1,10 +1,6 @@
 {
   "title": "K-Ryhmä",
   "icon": "k-ryhma.png",
-  "ext": "all",
-  "multiple": true,
-  "isGenericViewer": true,
-  "showDataExplorer": true,
   "defaultView": [
     {
       "key": "genericDateViewer",
