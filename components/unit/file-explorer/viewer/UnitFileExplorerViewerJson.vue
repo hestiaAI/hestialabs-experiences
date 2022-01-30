@@ -5,33 +5,54 @@
     <div class="explorer__content">{{ jsonText }}</div>
   </div>
   <div v-else>
-    <BaseSearchBar v-model="search"></BaseSearchBar>
+    <BaseSearchBar v-model="search" :loading="searching" />
     <VTreeview dense transition :items="filteredItems">
       <template #prepend="{ item }">
-        <VIcon v-if="!isUndef(item.icon)">
-          {{ item.icon }}
+        <VIcon v-if="!isUndef(item.type)">
+          {{ iconForNode(item.type) }}
         </VIcon>
       </template>
       <template #label="{ item, leaf }">
-        <div v-if="leaf" :title="item.value">
-          <span v-if="!isUndef(item.name)">
-            {{ `${item.name}:` }}
+        <span>
+          <span v-if="leaf" :title="item.value">
+            <span v-if="!isUndef(item.name)">
+              {{ `${item.name}:` }}
+            </span>
+            <span class="font-italic">{{ item.value }}</span>
           </span>
-          <span class="font-italic">{{ item.value }}</span>
-        </div>
-        <div v-else>{{ item.name }}</div>
+          <span v-else>{{ item.name }}</span>
+          <VTooltip bottom open-delay="200">
+            <template #activator="{ on }">
+              <VIcon
+                class="clickable-node"
+                v-on="on"
+                @click="onNodeClick(item)"
+              >
+                $vuetify.icons.mdiTable
+              </VIcon>
+            </template>
+            <span>Show as table</span>
+          </VTooltip>
+        </span>
       </template>
     </VTreeview>
   </div>
 </template>
 
 <script>
-import { debounce } from 'debounce'
+import debounce from 'lodash/debounce'
+import {
+  mdiCodeJson,
+  mdiFormatListBulletedSquare,
+  mdiInformationOutline
+} from '@mdi/js'
 
 import mixin from './mixin'
 import mixinLoading from './mixin-loading'
 import JsonWorker from '~/utils/json.worker.js'
 import { runWorker } from '@/utils/utils'
+import { filePathToGlob, createAccessor } from '@/utils/accessor'
+import { pathArrayToJsonPath, nodeTypes } from '@/utils/json'
 
 export default {
   name: 'UnitFileExplorerViewerJson',
@@ -43,12 +64,17 @@ export default {
       error: false,
       search: '',
       searchCooldownTime: 1000,
-      filteredItems: []
+      filteredItems: [],
+      searching: false
     }
   },
   computed: {
     delayedUpdateFilteredItems() {
-      return debounce(this.updateFilteredItems, this.searchCooldownTime)
+      return debounce(async function () {
+        this.searching = true
+        await this.updateFilteredItems()
+        this.searching = false
+      }, this.searchCooldownTime)
     }
   },
   watch: {
@@ -60,11 +86,31 @@ export default {
     },
     search() {
       // The search starts some time after the user stops typing, not after every character typed
-      this.delayedUpdateFilteredItems.clear()
+      this.delayedUpdateFilteredItems.cancel()
       this.delayedUpdateFilteredItems()
     }
   },
   methods: {
+    onNodeClick(item) {
+      try {
+        const filePath = filePathToGlob(this.filename)
+        const jsonPath = pathArrayToJsonPath(item.path)
+        const accessor = createAccessor(filePath, jsonPath)
+        this.$emit('select-accessor', accessor)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    iconForNode(type) {
+      switch (type) {
+        case nodeTypes.TREE:
+          return mdiCodeJson
+        case nodeTypes.LIST:
+          return mdiFormatListBulletedSquare
+        case nodeTypes.LEAF:
+          return mdiInformationOutline
+      }
+    },
     isUndef(val) {
       return typeof val === 'undefined'
     },
@@ -94,3 +140,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+.clickable-node {
+  cursor: pointer;
+}
+</style>

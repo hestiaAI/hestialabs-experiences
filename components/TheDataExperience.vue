@@ -1,70 +1,79 @@
 <template>
   <div>
+    <BaseButtonShare color="primary" :outlined="false" />
     <VRow>
-      <VCol cols="12 mx-auto" sm="6">
-        <UnitIntroduction
-          v-bind="{ companyName: title, dataPortal, isGenericViewer }"
-        />
-      </VCol>
-    </VRow>
-    <VRow>
-      <VCol cols="12 mx-auto" sm="6">
-        <UnitFiles
-          v-bind="{
-            extensions,
-            files,
-            multiple,
-            allowMissingFiles,
-            samples: data,
-            isGenericViewer
-          }"
-          @update="onUnitFilesUpdate"
-        />
-        <template v-if="progress">
-          <BaseProgressCircular class="mr-2" />
-          <span>Processing files...</span>
-        </template>
-        <template v-else-if="error || success">
-          <BaseAlert
-            :type="error ? 'error' : 'success'"
-            border="top"
-            colored-border
-            max-width="600"
-            >{{ message }}
-          </BaseAlert>
-        </template>
-      </VCol>
-    </VRow>
-    <template v-if="success">
-      <VRow>
-        <VCol>
-          <VTabs
-            v-model="tab"
-            dark
-            background-color="primary"
-            slider-color="secondary"
-            slider-size="4"
-            show-arrows
-            center-active
-            centered
-            fixed-tabs
+      <VCol>
+        <VTabs
+          v-model="tab"
+          dark
+          background-color="primary"
+          slider-color="secondary"
+          slider-size="4"
+          show-arrows
+          center-active
+          centered
+          fixed-tabs
+          class="fixed-tabs-bar"
+        >
+          <VTab
+            v-for="(t, index) in tabs"
+            :key="index"
+            :disabled="t.disabled"
+            nuxt
+            :to="`#${t.value}`"
           >
-            <VTab
-              v-for="(el, index) in tabs"
-              :key="index"
-              :disabled="experienceProgress"
-            >
-              {{ el.title }}
-            </VTab>
-          </VTabs>
-          <VTabsItems v-model="tab">
-            <VTabItem>
+            {{ t.title }}
+          </VTab>
+        </VTabs>
+        <VTabsItems v-model="tab">
+          <VTabItem value="load-data">
+            <VCol cols="12 mx-auto" sm="6" class="tabItem pa-5">
+              <UnitIntroduction
+                v-bind="{ companyName: title, dataPortal, isGenericViewer }"
+                ref="unit-introduction"
+              />
+              <UnitFiles
+                v-bind="{
+                  extensions,
+                  files,
+                  multiple,
+                  samples: data,
+                  isGenericViewer
+                }"
+                ref="unit-files"
+                @update="onUnitFilesUpdate"
+              />
+              <template v-if="progress">
+                <BaseProgressCircular class="mr-2" />
+                <span>Processing files...</span>
+              </template>
+              <template v-else-if="error || success">
+                <BaseAlert
+                  :type="error ? 'error' : 'success'"
+                  border="top"
+                  colored-border
+                  max-width="600"
+                  >{{ message }}
+                </BaseAlert>
+              </template>
+            </VCol>
+          </VTabItem>
+          <VTabItem value="summary">
+            <VCol cols="12 mx-auto" sm="6" class="tabItem">
+              <UnitSummary v-bind="{ fileManager }" @switch-tab="switchTab" />
+            </VCol>
+          </VTabItem>
+          <VTabItem value="file-explorer">
+            <div class="tabItem">
               <UnitFileExplorer v-bind="{ fileManager }" />
-            </VTabItem>
-            <VTabItem
-              v-for="(defaultViewElements, index) in defaultView"
-              :key="index"
-            >
+            </div>
+          </VTabItem>
+          <VTabItem
+            v-for="(defaultViewElements, index) in defaultView"
+            :key="index"
+            :value="defaultViewElements.key"
+          >
+            <VCol cols="12 mx-auto" class="tabItem">
               <VOverlay :value="overlay" absolute opacity="0.8">
                 <div
                   class="d-flex flex-column align-center"
@@ -86,11 +95,14 @@
                   fileManager,
                   postprocessors,
                   index,
-                  vega
+                  vega,
+                  db
                 }"
               />
-            </VTabItem>
-            <VTabItem v-if="consentForm">
+            </VCol>
+          </VTabItem>
+          <VTabItem v-if="consentForm" value="share-data">
+            <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitConsentForm
                 v-bind="{
                   consentForm,
@@ -99,11 +111,11 @@
                   showDataExplorer
                 }"
               />
-            </VTabItem>
-          </VTabsItems>
-        </VCol>
-      </VRow>
-    </template>
+            </VCol>
+          </VTabItem>
+        </VTabsItems>
+      </VCol>
+    </VRow>
   </div>
 </template>
 
@@ -144,8 +156,8 @@ export default {
       }
     },
     files: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     },
     defaultView: {
       type: Array,
@@ -162,10 +174,6 @@ export default {
     postprocessors: {
       type: Object,
       default: undefined
-    },
-    allowMissingFiles: {
-      type: Boolean,
-      default: false
     },
     customPipelines: {
       type: Object,
@@ -208,11 +216,7 @@ export default {
       success: false,
       message: '',
       rml: '',
-      fileManager: new FileManager(
-        this.preprocessors,
-        this.allowMissingFiles,
-        fileManagerWorkers
-      ),
+      fileManager: null,
       db: null,
       overlay: false
     }
@@ -220,9 +224,35 @@ export default {
   computed: {
     ...mapState('experience', { experienceProgress: 'progress' }),
     tabs() {
-      const tabs = [{ title: 'Files' }, ...this.defaultView]
+      const disabled = !this.success || this.experienceProgress
+      const tabs = [
+        {
+          title: 'Load your Data',
+          value: 'load-data',
+          disabled: this.experienceProgress
+        },
+        {
+          title: 'Summary',
+          value: 'summary',
+          disabled
+        },
+        {
+          title: 'Files',
+          value: 'file-explorer',
+          disabled
+        },
+        ...this.defaultView.map(view => ({
+          ...view,
+          value: view.key,
+          disabled
+        }))
+      ]
       if (this.consentForm) {
-        return [...tabs, { title: 'Share my data' }]
+        tabs.push({
+          title: 'Share my data',
+          value: 'share-data',
+          disabled
+        })
       }
       return tabs
     },
@@ -265,36 +295,52 @@ export default {
       }, 200)
     }
   },
+  mounted() {
+    this.switchTab('load-data')
+    this.$root.$on('goToFileExplorer', () => this.switchTab('file-explorer'))
+  },
   methods: {
+    switchTab(value) {
+      this.$router.push(`#${value}`)
+    },
     handleError(error) {
       console.error(error)
       this.error = true
       this.message = error instanceof Error ? error.message : error
       this.progress = false
     },
-    async onUnitFilesUpdate(uppyFiles) {
+    async onUnitFilesUpdate({ uppyFiles }) {
       this.message = ''
       this.error = false
       this.success = false
       this.progress = true
       const start = new Date()
 
-      await this.fileManager.init(uppyFiles, this.multiple)
-      let processedFiles
+      // Clean vuex state before changing the filemanager
+      this.$store.commit('setFileExplorerCurrentItem', {})
+
+      const fileManager = new FileManager(
+        this.preprocessors,
+        fileManagerWorkers
+      )
       try {
-        processedFiles = await this.fileManager.preprocessFiles(this.files)
-      } catch (error) {
-        this.handleError(error)
+        await fileManager.init(uppyFiles, this.multiple, this.files)
+      } catch (e) {
+        this.handleError(e)
         return
       }
+      this.fileManager = fileManager
 
       // Populate database
       if (this.databaseBuilder !== undefined) {
-        await this.databaseBuilder(this.fileManager)
+        this.db = await this.databaseBuilder(this.fileManager)
       }
 
       if (this.isRdfNeeded && this.yarrrml) {
         try {
+          const processedFiles = await this.fileManager.preprocessFiles(
+            Object.values(this.files)
+          )
           this.rml = await parseYarrrml(this.yarrrml)
           await rdfUtils.generateRDF(this.rml, processedFiles)
         } catch (error) {
@@ -305,6 +351,7 @@ export default {
 
       this.progress = false
       this.success = true
+      setTimeout(() => this.switchTab('summary'), 500)
 
       const elapsed = new Date() - start
       this.message = `Successfully processed in ${elapsed / 1000} sec.`
@@ -312,3 +359,15 @@ export default {
   }
 }
 </script>
+
+<style>
+.tabItem {
+  min-height: calc(100vh - 48px);
+}
+.fixed-tabs-bar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 60px;
+  z-index: 2500;
+}
+</style>

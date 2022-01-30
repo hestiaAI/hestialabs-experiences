@@ -24,6 +24,9 @@ export default {
       return !this.sparqlQuery
     }
   },
+  async beforeMount() {
+    await this.run()
+  },
   methods: {
     async run() {
       try {

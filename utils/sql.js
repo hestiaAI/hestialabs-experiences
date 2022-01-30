@@ -51,7 +51,7 @@ class Table {
  * Class DB is a wrapper around a sql.js database.
  * It provides functions for interacting with the database and processing the results into objects.
  */
-class DB {
+export class DB {
   #db
   #tables
 
@@ -102,6 +102,7 @@ class DB {
 
   /**
    * Insert all the given items in the database.
+   * IMPORTANT: the items should NOT contain any 'undefined' value. Use null instead.
    * @param {String} table the table in which we insert the values.
    * @param {Array<Object>} items an array of rows to insert. Each row should contain the same attributes.
    */
@@ -161,5 +162,3 @@ class DB {
     }
   }
 }
-
-export default new DB()

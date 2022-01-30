@@ -5,19 +5,92 @@
         <VCol cols="9">
           <p class="text-h6">{{ title }}</p>
         </VCol>
-        <VCol cols="3">
+        <VSpacer></VSpacer>
+        <VCol cols="3" class="text-right">
           <VSelect
+            v-if="filters.length === 0"
             v-model="selectedInterval"
             :items="namesInterval"
             label="Time interval"
             dense
-            @change="draw"
+            @change="
+              applyFilters()
+              draw()
+            "
           ></VSelect>
+          <VDialog
+            v-if="filters.length > 0"
+            v-model="settingDialog"
+            persistent
+            max-width="300px"
+          >
+            <template #activator="{ on, attrs }">
+              <VBtn color="primary" dark small fab v-bind="attrs" v-on="on">
+                <VIcon small>$vuetify.icons.mdiTuneVariant</VIcon>
+              </VBtn>
+            </template>
+            <VCard>
+              <VCardTitle>
+                <span class="text-h5">Settings/Filters</span>
+              </VCardTitle>
+              <VCardText>
+                <VContainer>
+                  <VRow>
+                    <VCol cols="6" sm="12">
+                      <VSelect
+                        v-model="selectedInterval"
+                        :items="namesInterval"
+                        label="Time interval"
+                        dense
+                      ></VSelect>
+                    </VCol>
+                    <VCol
+                      v-for="filter in filters"
+                      :key="filter.value"
+                      cols="6"
+                      sm="12"
+                    >
+                      <VSelect
+                        v-model="filterModel[filter.value]"
+                        :items="
+                          filterItems[filter.value]
+                            ? filterItems[filter.value]
+                            : []
+                        "
+                        :label="filter.text"
+                        dense
+                      ></VSelect>
+                    </VCol>
+                  </VRow>
+                </VContainer>
+              </VCardText>
+              <VCardActions>
+                <VSpacer></VSpacer>
+                <VBtn color="red darken-1" text @click="resetFilters()">
+                  Reset
+                </VBtn>
+                <VBtn color="blue darken-1" text @click="settingDialog = false">
+                  Close
+                </VBtn>
+                <VBtn
+                  color="blue darken-1"
+                  text
+                  @click="
+                    settingDialog = false
+                    applyFilters()
+                    draw()
+                  "
+                >
+                  Save
+                </VBtn>
+              </VCardActions>
+            </VCard>
+          </VDialog>
         </VCol>
       </VRow>
       <ChartViewVRowWebShare dense>
         <VCol cols="12">
-          <div :id="graphId" style="position: relative"></div>
+          <div :id="graphId"></div>
         </VCol>
       </ChartViewVRowWebShare>
     </VCol>
@@ -27,16 +100,25 @@
 <script>
 import * as d3 from 'd3'
 import { nest } from 'd3-collection'
+import { addMissingDate } from './utils/D3Helpers'
 import mixin from './mixin'
-
 // Inspired by
 // https://datawanderings.com/2019/10/28/tutorial-making-a-line-chart-in-d3-js-v-5/
 export default {
   mixins: [mixin],
   props: {
-    accessor: {
-      type: Array,
-      default: () => []
+    dateAccessor: {
+      type: Object,
+      required: true
+    },
+    seriesAccessor: {
+      type: Object,
+      required: true
+    },
+    // if not set will just count the rows
+    valueAccessor: {
+      type: String,
+      default: () => null
     },
     valueFormat: {
       type: String,
@@ -45,6 +127,10 @@ export default {
     yLabel: {
       type: String,
       default: () => 'Count'
+    },
+    filters: {
+      type: Array,
+      default: () => []
     },
     lineWidth: {
       type: Number,
@@ -66,6 +152,10 @@ export default {
       type: Number,
       default: () => 5
     },
+    adj: {
+      type: Number,
+      default: () => 70
+    },
     title: {
       type: String,
       default: () => 'Title of the Graph'
@@ -84,14 +174,69 @@ export default {
       slices: [],
       selectedInterval: null,
       intervals: {},
-      namesInterval: []
+      namesInterval: [],
+      settingDialog: false,
+      filterItems: {},
+      filterModel: {},
+      extentDate: null
     }
   },
   methods: {
+    initFilters() {
+      this.filters.forEach((filter, i) => {
+        this.filterItems[filter.value] = []
+        // get unique ids and set items for each filter select
+        this.filterItems[filter.value] = this.values
+          .map(i => i[filter.value])
+          .filter((value, index, self) => self.indexOf(value) === index)
+      })
+    },
+    resetFilters() {
+      this.filters.forEach(filter => {
+        this.filterModel[filter.value] = null
+      })
+    },
+    applyFilters() {
+      this.slices.forEach(serie => {
+        // aggregate per selected time interval and other filters
+        const interval = this.intervals[this.selectedInterval]
+        const filters = Object.keys(this.filterModel).filter(
+          k => this.filterModel[k] != null
+        )
+        // filter according to selection
+        serie.current = serie.values.filter(d => {
+          return filters.every(f => this.filterModel[f] === d[f])
+        })
+        // Aggregate per time period
+        serie.current = nest()
+          .key(function (d) {
+            return interval.parser(new Date(d.date))
+          })
+          .rollup(leaves => d3.sum(leaves, l => l.value))
+          .entries(serie.current)
+        // Add missing datapoints
+        serie.current = addMissingDate(
+          serie.current,
+          'key',
+          'value',
+          interval.parser,
+          0,
+          this.extentDate[0],
+          this.extentDate[1]
+        )
+        // Sort the result
+        serie.current = serie.current.sort(
+          (e1, e2) => new Date(e1.key) - new Date(e2.key)
+        )
+      })
+    },
     drawViz() {
       /* Init the possible aggregations dpending on dates extent */
-      const extent = d3.extent(this.values, d => new Date(d.date))
-      const diffDays = d3.timeDay.count(extent[0], extent[1])
+      this.extentDate = d3.extent(
+        this.values,
+        d => new Date(d[this.dateAccessor.value])
+      )
+      const diffDays = d3.timeDay.count(this.extentDate[0], this.extentDate[1])
       if (diffDays > 2 && diffDays < 93)
         this.intervals.Days = {
           parser: d3.timeDay,
@@ -113,45 +258,37 @@ export default {
           format: d3.timeFormat('%Y')
         }
       this.namesInterval = Object.keys(this.intervals)
-
-      /* Pivot the data */
-      let accessor = this.accessor
-      if (this.accessor.length === 0) {
-        accessor = this.headers.slice(1).map(h => {
-          return { text: h, value: h }
-        })
-      }
-      this.slices = accessor.map(a => {
+      // get unique series ids
+      const ids = this.values
+        .map(i => i[this.seriesAccessor.value])
+        .filter((value, index, self) => self.indexOf(value) === index)
+      // group by series ids and sort values
+      this.slices = ids.map(a => {
         return {
-          id: a.text,
-          values: this.values.map(function (d) {
-            return {
-              date: new Date(d.date),
-              value: +d[a.value]
-            }
-          })
+          id: a,
+          values: this.values
+            .filter(v => a === v[this.seriesAccessor.value])
+            .map(d => {
+              const ret = {
+                date: new Date(d[this.dateAccessor.value]),
+                value: this.valueAccessor ? +d[this.valueAccessor] : 1
+              }
+              this.filters.forEach(f => {
+                ret[f.value] = d[f.value]
+              })
+              return ret
+            })
+            .sort((e1, e2) => e1.date - e2.date)
         }
       })
-
-      /* PreCompute aggregation per day, month, etc... */
-      Object.entries(this.intervals).forEach(([intervalName, interval]) => {
-        this.slices.forEach(lineData => {
-          lineData[intervalName] = nest()
-            .key(function (d) {
-              return interval.parser(new Date(d.date))
-            })
-            .rollup(leaves => d3.sum(leaves, l => l.value))
-            .entries(lineData.values)
-        })
-      })
       this.selectedInterval = this.namesInterval[this.namesInterval.length - 1]
-      this.draw(this.selectedInterval)
+      this.initFilters()
+      this.applyFilters()
+      this.draw()
     },
-    draw(intervalName) {
+    draw() {
       const width = 800
       const height = 300
-      const adj = 50
-
       /* create svg element */
       d3.select('#' + this.graphId + ' svg').remove()
       const svg = d3
@@ -161,13 +298,13 @@ export default {
         .attr(
           'viewBox',
           '-' +
-            adj +
+            this.adj +
             ' -' +
-            adj +
+            this.adj +
             ' ' +
-            (width + adj * 2) +
+            (width + this.adj * 2) +
             ' ' +
-            (height + adj * 2)
+            (height + this.adj * 2)
         )
         .style('padding', this.padding)
         .style('margin', this.margin)
@@ -182,19 +319,11 @@ export default {
           }, [])
         )
       }
-
       /* Scales */
       const xScale = d3.scaleTime().range([0, width])
       const yScale = d3.scaleLinear().rangeRound([height, 0])
-
-      xScale.domain(
-        nestedExtent(this.slices, intervalName, d => new Date(d.key))
-      )
-      yScale.domain([
-        0,
-        nestedExtent(this.slices, intervalName, d => d.value)[1]
-      ])
-
+      xScale.domain(nestedExtent(this.slices, 'current', d => new Date(d.key)))
+      yScale.domain([0, nestedExtent(this.slices, 'current', d => d.value)[1]])
       /* Axis */
       const yAxis = d3.axisLeft().ticks(5).scale(yScale) // .ticks(slices[0].values.length)
       const xAxis = d3
@@ -203,7 +332,6 @@ export default {
         // .ticks(d3.timeDay.every(1))
         // .tickFormat(d3.timeFormat('%b %d'))
         .scale(xScale)
-
       svg
         .append('g')
         .attr('class', 'xAxis')
@@ -216,10 +344,9 @@ export default {
         .append('text')
         .attr('transform', 'rotate(-90)')
         .attr('dy', '.75em')
-        .attr('y', -50)
+        .attr('y', -60)
         .style('text-anchor', 'end')
         .text(this.yLabel)
-
       /* GridLayout */
       d3.selectAll('g.yAxis g.tick')
         .append('line')
@@ -240,7 +367,6 @@ export default {
       /* Color Scale */
       const keys = this.slices.map(d => d.id)
       const color = d3.scaleOrdinal().domain(keys).range(d3.schemeDark2)
-
       /* Legend */
       const legend = svg.selectAll('.legend').data(keys).enter().append('g')
       // add circles
@@ -269,40 +395,28 @@ export default {
           ',0)'
         )
       })
-
       /* Tooltip */
-      d3.select('#' + this.graphId + ' div.tooltip').remove()
+      d3.select('#' + this.graphId + '.tooltip').remove()
       const tooltip = d3
-        .select('#' + this.graphId)
+        .select('body')
         .append('div')
         .attr('class', 'tooltip')
+        .attr('id', this.graphId)
         .style('opacity', 0)
-
       const that = this
       const f = d3.format(this.valueFormat)
       function showTooltip(evt, d) {
-        const svgDim = svg.node().getBoundingClientRect()
         tooltip.transition().duration(60).style('opacity', 0.98)
         tooltip
           .html(
             '<b>' +
-              that.intervals[intervalName].format(new Date(d.key)) +
+              that.intervals[that.selectedInterval].format(new Date(d.key)) +
               '</b><br/>' +
               f(d.value)
           ) // d.name
-          .style(
-            'left',
-            (xScale(new Date(d.key)) - 10) *
-              (svgDim.width / (width + 2 * adj)) +
-              'px'
-          )
-          .style(
-            'top',
-            yScale(d.value) * (svgDim.height / (height + 2 * adj)) + 'px'
-          )
-        console.log(d)
+          .style('left', evt.pageX - 55 + 'px')
+          .style('top', evt.pageY - 45 + 'px')
       }
-
       function hideTooltip() {
         tooltip.transition().duration(60).style('opacity', 0)
       }
@@ -312,7 +426,6 @@ export default {
         .curve(d3.curveMonotoneX)
         .x(d => xScale(new Date(d.key)))
         .y(d => yScale(d.value))
-
       /* Draw lines */
       const lines = svg.selectAll('lines').data(this.slices).enter().append('g')
       const path = lines
@@ -320,8 +433,7 @@ export default {
         .attr('fill', 'none')
         .attr('stroke', d => color(d.id))
         .attr('stroke-width', this.lineWidth)
-        .attr('d', d => line(d[intervalName]))
-
+        .attr('d', d => line(d.current))
       path
         .attr('stroke-dashoffset', function () {
           return d3.select(this).node().getTotalLength()
@@ -333,12 +445,11 @@ export default {
         .duration(5000)
         .ease(d3.easeSin)
         .attr('stroke-dashoffset', 0)
-
       /* Draw points */
       const points = lines
         .selectAll('circle')
         .data(d =>
-          d[intervalName].map(v => {
+          d.current.map(v => {
             v.color = color(d.id)
             v.name = d.id
             return v
@@ -346,7 +457,6 @@ export default {
         )
         .enter()
         .append('circle')
-
       points
         .attr('stroke', d => d.color)
         .attr('fill', 'white')
@@ -363,7 +473,6 @@ export default {
         .attr('class', 'datapoint')
         .attr('id', (d, i) => i)
         .style('opacity', 1)
-
       const radius = this.dotRadius
       points.on('mouseover', function (evt, d) {
         d3.select(this)
@@ -385,43 +494,39 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
 /* AXES */
 /* ticks */
-::v-deep .xAxis line,
-::v-deep .yAxis line {
+.xAxis line,
+.yAxis line {
   stroke: #706f6f;
   stroke-width: 0.5;
   shape-rendering: geometricPrecision;
 }
-
 /* axis contour */
-::v-deep .xAxis path,
-::v-deep .yAxis path {
+.xAxis path,
+.yAxis path {
   stroke: #706f6f;
   stroke-width: 0.7;
   shape-rendering: geometricPrecision;
 }
-
-::v-deep .yAxis path {
+.yAxis path {
   display: none;
 }
-
 /* axis text */
-::v-deep .xAxis text,
-::v-deep .yAxis text {
+.xAxis text,
+.yAxis text {
   fill: #2b2929;
   font-size: 1rem;
   font-weight: 300;
 }
-
-::v-deep .gridline {
+.gridline {
   stroke: lightgray;
   shape-rendering: geometricPrecision;
   stroke-opacity: 0.5;
   stroke-width: 10;
 }
-::v-deep div.tooltip {
+div.tooltip {
   position: absolute;
   text-align: center;
   width: 110px;

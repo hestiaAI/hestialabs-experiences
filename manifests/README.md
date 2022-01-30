@@ -39,12 +39,11 @@ Note: All files and folders should match the following regular expression: [`^(?
     */
   "ext": "json,csv,zip",
   /**
-    * Array of relative paths to files to extract from a zip archive
-    * (required when "ext" includes "zip", except the playground)
-    * @type Array[String]
-    * @default []
+    * The list of specific files that are used in the experiences. They are defined by an ID and a glob.
+    * In the experiences, we should always refer to the ID of the files.
+    * @type Object
     */
-  "files": ["data/ad-impressions.js"],
+  "files": {"impressions": "**/data/ad-impressions.js"},
   /**
     * Can the user input multiple files?
     * @type Boolean
@@ -63,16 +62,11 @@ Note: All files and folders should match the following regular expression: [`^(?
     */
   "data": ["twitter.zip"],
   /**
-    * If the input is a zip and a file is missing, the extraction will fail if this parameter is false.
-    * @type Boolean
-    * @default false
-    */
-  "allowMissingFiles": true,
-  /**
     * Array defining the blocks to show in the default view. Each section section can have:
     * - A SPARQL query
     * - A function used as the custom pipeline (defined in pipeline.js)
     * - A SQL query
+    * - A list of files required to run the experience. Refer to the IDs defined above.
     * - A postprocessor (defined in postprocessors.js)
     * - A parameter name (if necessary), and for sql pipelines a parameter key used in the query (prefixed with :)
     * - Additional arguments to pass to a custom pipeline
@@ -89,6 +83,7 @@ Note: All files and folders should match the following regular expression: [`^(?
       "query": "sparql_query_filename",
       "customPipeline": "pipeline_function_name",
       "sql": "sql_query_filename",
+      "files": ["file_id_1", "file_id_2"]
       "postprocessor": "postprocessor_function_name",
       "parameterName": "Example",
       "parameterKey": ":example",
@@ -119,9 +114,9 @@ If the data experience involves a single non-zip file input, use the name `input
 
 7. If needed, add Vega configurations in a subfolder `visualizations`.
 
-8. Import the all the functions from `*.js` files in a file `index.js` and export them as an object.
+8. Import all the functions from `*.js` files in a file `index.js` and export them as an object.
 
-9. If the icon is not there yet, add the image file to `manifests/icons/`
+9. If the icon is missing add the image file to `manifests/icons/`
 
 ## Adding sample data
 

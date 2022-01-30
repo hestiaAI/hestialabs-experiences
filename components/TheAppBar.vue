@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VAppBar fixed app color="white" height="75" style="z-index: 2500">
+    <VAppBar fixed app color="white" height="60" style="z-index: 2500">
       <VAppBarNavIcon
         aria-label="Open navigation menu"
         @click.stop="drawer = !drawer"
@@ -15,6 +15,18 @@
         >
           <VIcon>$vuetify.icons.mdiHome</VIcon>
         </VBtn>
+        <VSpacer />
+        <div class="d-flex">
+          <VImg
+            max-width="30"
+            :src="company.icon"
+            :lazy-src="company.icon"
+            contain
+          />
+          <h3 class="ml-3">
+            {{ company.title }}
+          </h3>
+        </div>
         <VSpacer />
         <a
           v-if="collaborator"
@@ -69,17 +81,23 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
 export default {
   data() {
     return {
-      drawer: false
+      drawer: false,
+      selected: ''
     }
   },
   computed: {
-    ...mapGetters(['manifest']),
+    ...mapGetters(['manifest', 'enabledExperiences']),
     collaborator() {
       return this.manifest(this.$route).collaborator
+    },
+    company() {
+      return {
+        title: this.manifest(this.$route).title,
+        icon: this.manifest(this.$route).icon
+      }
     }
   }
 }

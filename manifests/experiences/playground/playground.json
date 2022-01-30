@@ -3,6 +3,5 @@
   "subtitle": "For experimentation",
   "icon": "hestia.png",
   "multiple": true,
-  "preprocessor": "twitter",
-  "allowMissingFiles": true
+  "preprocessor": "twitter"
 }

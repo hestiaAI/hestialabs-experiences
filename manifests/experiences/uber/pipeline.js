@@ -5,17 +5,15 @@ import {
 } from '~/manifests/generic-pipelines'
 
 async function tripsData({ fileManager }) {
-  return await fileManager.getCsvItems('Uber Data/Rider/trips_data.csv')
+  return await fileManager.getCsvItemsFromId('trips')
 }
 
 async function tripsRawData({ fileManager }) {
-  return await fileManager.getText('Uber Data/Rider/trips_data.csv')
+  return await fileManager.getPreprocessedTextFromId('trips')
 }
 
 async function tripsGraphData({ fileManager }) {
-  const tripsData = await fileManager.getCsvItems(
-    'Uber Data/Rider/trips_data.csv'
-  )
+  const tripsData = await fileManager.getCsvItemsFromId('trips')
   const filteredValues = tripsData.items.reduce((acc, d) => {
     // filter non trips data
     if (

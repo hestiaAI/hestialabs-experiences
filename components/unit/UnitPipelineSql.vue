@@ -13,15 +13,19 @@
 </template>
 
 <script>
-import mixin from './unit/mixin-pipeline'
-import db from '@/utils/sql'
+import mixin from './mixin-pipeline'
 import { setTimeoutPromise } from '@/utils/utils'
+import { DB } from '@/utils/sql'
 
 export default {
   mixins: [mixin],
   props: {
     sql: {
       type: String,
+      required: true
+    },
+    db: {
+      type: DB,
       required: true
     },
     parameterName: {
@@ -44,13 +48,16 @@ export default {
       return !this.sql
     }
   },
+  async beforeMount() {
+    await this.run()
+  },
   methods: {
     async run() {
       this.progress = true
       await setTimeoutPromise(1)
       try {
         const params = { [this.parameterKey]: this.parameter }
-        const { headers, items } = db.select(this.sql, params)
+        const { headers, items } = this.db.select(this.sql, params)
         this.$emit('update', { headers, items })
       } catch (error) {
         console.error(error)

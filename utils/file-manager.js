@@ -13,7 +13,7 @@ import {
 } from '@mdi/js'
 import _ from 'lodash'
 import { matchNormalized, findMatchesInContent } from './accessor'
-import itemifyJSON, { nJsonPoints } from '~/utils/json'
+import { itemifyJSON, nJsonPoints } from '~/utils/json'
 import getCsvHeadersAndItems from '~/utils/csv'
 import { runWorker } from '@/utils/utils'
 
@@ -65,6 +65,7 @@ export default class FileManager {
   #nDataPoints
   #fileTree
   #treeItems
+  #shortFilenameDict
 
   setInitialValues() {
     this.#fileTexts = {}
@@ -74,20 +75,19 @@ export default class FileManager {
     this.#nDataPoints = {}
     this.#fileTree = undefined
     this.#treeItems = undefined
+    this.#shortFilenameDict = {}
   }
 
   /**
    * Builds a FileManager object without any files, just setting the configuration.
    * @param {Object} preprocessors maps file name to preprocessor function
-   * @param {Boolean} allowMissingFiles
    */
-  constructor(preprocessors, allowMissingFiles = false, workers) {
+  constructor(preprocessors, workers) {
     this.supportedExtensions = new Set([
       ...Object.keys(extension2filetype),
       ...Object.values(extension2filetype)
     ])
     this.preprocessors = preprocessors ?? {}
-    this.allowMissingFiles = allowMissingFiles
     this.setInitialValues()
     this.workers = workers
   }
@@ -97,18 +97,32 @@ export default class FileManager {
    * To be called once the files are available.
    * @param {File[]} uppyFiles
    * @param {boolean} multiple
+   * @param {Object} idToGlob an object mapping IDs to globs
    * @returns {Promise<FileManager>}
    */
-  async init(uppyFiles, multiple) {
+  async init(uppyFiles, multiple, idToGlob) {
     this.fileList = await FileManager.extractZips(uppyFiles)
+    this.fileList = FileManager.filterFiles(this.fileList)
     const filePairs = this.fileList.map(f => [f.name, f])
     if (multiple) {
       this.fileDict = Object.fromEntries(filePairs)
     } else {
       this.fileDict = FileManager.removeTopmostFilenames(filePairs)
     }
+    this.idToGlob = idToGlob
     this.setInitialValues()
+    this.setShortFilenames()
     return this
+  }
+
+  /**
+   * Remove all files that should be ignored, such as MacOS-specific files.
+   * @param {File[]} fileList
+   * @returns filtered file list
+   */
+  static filterFiles(fileList) {
+    const filterOut = /__MACOSX|\.DS_STORE/i
+    return fileList.filter(f => !filterOut.test(f.name))
   }
 
   /**
@@ -172,10 +186,14 @@ export default class FileManager {
    * @param {String} filePath
    * @returns {*|(function(*): *)}
    */
-  getPreprocessor(filePath) {
-    return _.has(this.preprocessors, filePath)
-      ? this.preprocessors[filePath]
-      : _.identity
+  getPreprocessors(filePath) {
+    if (!this.preprocessors) {
+      return []
+    }
+    return Object.entries(this.preprocessors)
+      .map(([glob, f]) => [f, matchNormalized(filePath, glob)])
+      .filter(([f, matched]) => matched)
+      .map(([f, _]) => f)
   }
 
   hasFile(filePath) {
@@ -186,12 +204,10 @@ export default class FileManager {
    * Loads and returns the content of a text file if it has not already been loaded.
    * @param {String} filePath
    * @returns {Promise<String>}
+   * @throws an error if the file does not exist
    */
   async getText(filePath) {
     if (!this.hasFile(filePath)) {
-      if (this.allowMissingFiles) {
-        return '{}'
-      }
       throw new Error(`The file ${filePath} was not provided.`)
     }
     if (!_.has(this.#fileTexts, filePath)) {
@@ -207,12 +223,14 @@ export default class FileManager {
    */
   async getPreprocessedText(filePath) {
     if (!_.has(this.#preprocessedTexts, filePath)) {
-      const text = await this.getText(filePath)
-      if (text === '' && this.allowMissingFiles) {
+      let text = await this.getText(filePath)
+      if (text === '') {
         this.#preprocessedTexts[filePath] = text
       } else {
-        const preprocess = this.getPreprocessor(filePath)
-        this.#preprocessedTexts[filePath] = preprocess(text)
+        for (const preprocessor of this.getPreprocessors(filePath)) {
+          text = preprocessor(text)
+        }
+        this.#preprocessedTexts[filePath] = text
       }
     }
     return this.#preprocessedTexts[filePath]
@@ -259,6 +277,85 @@ export default class FileManager {
   }
 
   /**
+   * Return the file paths that match the glob
+   * @param {String} filePathGlob (in the same format as accessor.filePath)
+   */
+  findMatchingFilePaths(filePathGlob) {
+    return this.getFilenames().filter(filePath =>
+      matchNormalized(filePath, filePathGlob)
+    )
+  }
+
+  /**
+   * Return the file path(s) that match the ID.
+   * If multiple files are found and `unique` is set to true,
+   * print a warning and return only the first one.
+   * If no file is found, return null.
+   * @param {String} id
+   * @param {Boolean} unique return a single result
+   * @returns a String (unique=true), an array (unique=false), or null
+   */
+  getFilePathsFromId(id, unique = true) {
+    if (!(id in this.idToGlob)) {
+      return null
+    }
+    const glob = this.idToGlob[id]
+    const paths = this.findMatchingFilePaths(glob)
+    if (paths.length === 0) {
+      return null
+    } else if (paths.length > 1) {
+      if (unique) {
+        console.warn(`Multiple files were found for id="${id}", glob="${glob}"`)
+      } else {
+        return paths
+      }
+    }
+    return paths[0]
+  }
+
+  /**
+   * Return the preprocessed text of the file(s) that match the ID.
+   * If multiple files are found and `unique` is set to true,
+   * print a warning and return only the first one.
+   * If no file is found, return null.
+   * @param {String} id
+   * @param {Boolean} unique return a single result
+   * @returns a String (unique=true), an array (unique=false), or null
+   */
+  async getPreprocessedTextFromId(id, unique = true) {
+    const paths = this.getFilePathsFromId(id, unique)
+    if (paths === null) {
+      return null
+    }
+    if (unique) {
+      return await this.getPreprocessedText(paths)
+    } else {
+      return await Promise.all(paths.map(p => this.getPreprocessedText(p)))
+    }
+  }
+
+  /**
+   * Return the CSV items of the file(s) that match the ID.
+   * If multiple files are found and `unique` is set to true,
+   * print a warning and return only the first one.
+   * If no file is found, return null.
+   * @param {String} id
+   * @param {Boolean} unique return a single result
+   * @returns a String (unique=true), an array (unique=false), or null
+   */
+  async getCsvItemsFromId(id, unique = true) {
+    const paths = this.getFilePathsFromId(id, unique)
+    if (paths === null) {
+      return null
+    }
+    if (unique) {
+      return await this.getCsvItems(paths)
+    } else {
+      return await Promise.all(paths.map(p => this.getCsvItems(p)))
+    }
+  }
+
+  /**
    * Return all matching objects from json files.
    * @param {Object} accessor
    * @param {Object} options
@@ -267,21 +364,21 @@ export default class FileManager {
    * - freeFiles: true means files are freed after reading
    */
   async findMatchingObjects(accessor, options = {}) {
-    const objectPromises = this.getFilenames()
-      .filter(filePath => matchNormalized(filePath, accessor.filePath))
-      .flatMap(async fileName => {
-        try {
-          const text = await this.getPreprocessedText(fileName)
-          const content = JSON.parse(text)
-          if (options?.freeFiles) {
-            this.freeFile(fileName)
-          }
-          const found = findMatchesInContent(content, accessor)
-          return found
-        } catch (error) {
-          console.error('error during matching', error)
+    const objectPromises = this.findMatchingFilePaths(
+      accessor.filePath
+    ).flatMap(async fileName => {
+      try {
+        const text = await this.getPreprocessedText(fileName)
+        const content = JSON.parse(text)
+        if (options?.freeFiles) {
+          this.freeFile(fileName)
         }
-      })
+        const found = findMatchesInContent(content, accessor)
+        return found
+      } catch (error) {
+        console.error('error during matching', error)
+      }
+    })
     const objects = await Promise.all(objectPromises)
     return objects.filter(m => m).flat()
   }
@@ -346,6 +443,53 @@ export default class FileManager {
       this.#treeItems = FileManager.makeItems(this.getFileTree())
     }
     return this.#treeItems
+  }
+
+  /**
+   * Transforms the filenames to a shorter version without the path, or with minimal path in case of non-uniqueness.
+   */
+  setShortFilenames() {
+    const files = Object.keys(this.fileDict).map(f => {
+      const parts = f.split('/')
+      return {
+        filename: f,
+        parts,
+        n: 1,
+        short: parts[parts.length - 1]
+      }
+    })
+    while (true) {
+      // Group by short name
+      const groups = _.groupBy(files, f => f.short)
+      if (Object.keys(groups).length === files.length) {
+        // All the names are unique, we can stop
+        this.#shortFilenameDict = Object.fromEntries(
+          files.map(f => [f.filename, f.short])
+        )
+        return
+      }
+      for (const group of Object.values(groups)) {
+        if (group.length > 1) {
+          // Extend the short name of each non-unique names by one parent
+          for (const file of group) {
+            if (file.n !== file.parts.length) {
+              file.n += 1
+              file.short =
+                file.parts[file.parts.length - file.n] + '/' + file.short
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Get the short filename associated to a given filename
+   * @param {*} filename
+   * @returns the short filename
+   */
+  getShortFilename(filename) {
+    return this.#shortFilenameDict[filename]
   }
 
   /**

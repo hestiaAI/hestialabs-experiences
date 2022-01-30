@@ -28,7 +28,6 @@ import FileManager from '~/utils/file-manager'
 import { setTimeoutPromise } from '@/utils/utils'
 
 export default {
-  name: 'UnitCustomPipeline',
   mixins: [mixin],
   props: {
     fileManager: {
@@ -53,27 +52,34 @@ export default {
       progress: false,
       code: '',
       parameter: '',
-      options: '{}',
-      optionsVisible: true
+      options: '',
+      optionsVisible: false
     }
   },
   watch: {
-    options() {
-      this.status = false
+    async options() {
+      // auto-run pipeline if options are edited
+      await this.run()
+    },
+    'defaultViewElements.customPipelineOptions'() {
+      this.updateOptions()
     }
   },
-  created() {
-    const optionsObject = this.defaultViewElements.customPipelineOptions
-    if (optionsObject) {
-      this.options = JSON.stringify(optionsObject, null, 2)
-    }
+  beforeMount() {
+    this.updateOptions()
   },
   methods: {
+    updateOptions() {
+      const optionsObject = this.defaultViewElements.customPipelineOptions
+      if (optionsObject) {
+        this.options = JSON.stringify(optionsObject, null, 2)
+      }
+    },
     async run() {
       this.progress = true
       await setTimeoutPromise(1)
       try {
-        const optionsObject = JSON.parse(this.options)
+        const optionsObject = JSON.parse(this.options || 'null')
         const result = await this.customPipeline({
           fileManager: this.fileManager,
           manifest: this.$store.getters.manifest(this.$route),
