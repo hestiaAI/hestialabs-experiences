@@ -98,7 +98,7 @@
     "sass-loader": "^10",
     "sha1": "^1.1.1",
     "share-api-polyfill": "^1.0.21",
-    "sparqlalgebrajs": "^4.0.1",
+    "sparqlalgebrajs": "^4.0.2",
     "sql.js": "^1.6.2",
     "vega": "^5.20.2",
     "vega-embed": "^6.18.2",
