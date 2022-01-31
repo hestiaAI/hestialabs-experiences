@@ -61,10 +61,9 @@ export default {
       setTimeout(() => {
         try {
           const params = { [this.parameterKey]: this.parameter }
-          const { headers, items } = this.currentDB.select(this.sql, params)
-          this.$emit('update', { headers, items })
+          const result = this.currentDB.select(this.sql, params)
+          this.$emit('update', { result })
         } catch (error) {
-          console.error(error)
           this.error = true
           this.$emit('update', { error })
         } finally {
