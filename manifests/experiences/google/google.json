@@ -4,7 +4,7 @@
   "dataPortal": "https://takeout.google.com/settings/takeout",
   "data": [],
   "files": {
-    "my-activity": "**/*/+(OmatTapahtumat|MonActivité|My Activity).json"
+    "my-activity": "**/*/+(MyActivity|My Activity|MonActivité|Mon Activité|OmatTapahtumat|Omat Tapahtumat).json"
   },
   "defaultView": [
     {
@@ -14,7 +14,7 @@
       "customPipelineOptions": {
         "fileMatchers": [
           {
-            "regex": "(?:.*/)?(.+?)/(?:OmatTapahtumat|MonActivité|My Activity)\\.json",
+            "regex": "(?:.*/)?(.+?)/(?:MyActivity|My Activity|MonActivité|Mon Activité|OmatTapahtumat|Omat Tapahtumat)\\.json",
             "entryPath": "$[*]",
             "fields": {
               "date": {
