@@ -1,23 +1,13 @@
 <template>
-  <div>
-    <VRow>
-      <VCol align="center">
-        <BaseButton
-          v-bind="{ progress, status, error, disabled }"
-          text="Run"
-          icon="mdiStepForward"
-          class="ma-sm-2"
-          @click="runQuery"
-        />
-      </VCol>
-    </VRow>
-  </div>
+  <div></div>
 </template>
 
 <script>
+import mixin from './mixin-pipeline'
 import quadstore from '@/utils/sparql'
 
 export default {
+  mixins: [mixin],
   props: {
     sparqlQuery: {
       type: String,
@@ -26,8 +16,6 @@ export default {
   },
   data() {
     return {
-      status: false,
-      error: false,
       progress: false
     }
   },
@@ -36,19 +24,18 @@ export default {
       return !this.sparqlQuery
     }
   },
+  async beforeMount() {
+    await this.run()
+  },
   methods: {
-    async runQuery() {
+    async run() {
       try {
-        this.error = false
         this.progress = true
-
         const result = await quadstore.select(this.sparqlQuery)
         this.$emit('update', { result })
       } catch (error) {
-        this.error = true
         this.$emit('update', { error })
       } finally {
-        this.status = true
         this.progress = false
       }
     }

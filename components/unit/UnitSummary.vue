@@ -109,7 +109,7 @@ export default {
     plurify,
     onFileClick(filename) {
       this.$store.commit('setFileExplorerCurrentItem', { filename })
-      this.$root.$emit('goToFileExplorer')
+      this.$emit('switch-tab', 'file-explorer')
     },
     async setNumberOfDataPoints() {
       this.nDataPoints = _.sum(

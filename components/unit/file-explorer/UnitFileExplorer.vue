@@ -112,8 +112,7 @@
         v-bind="{
           fileManager,
           customPipeline,
-          defaultViewElements,
-          autoRun: true
+          defaultViewElements
         }"
         @update="onUnitResultsUpdate"
       />

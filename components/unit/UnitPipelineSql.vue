@@ -6,17 +6,6 @@
           v-model="parameter"
           :label="parameterName"
           class="my-sm-2 mr-sm-2"
-        ></VTextField>
-      </VCol>
-    </VRow>
-    <VRow>
-      <VCol align="center">
-        <BaseButton
-          v-bind="{ progress, status, error, disabled }"
-          text="Run"
-          icon="mdiStepForward"
-          class="ma-sm-2"
-          @click="runQuery"
         />
       </VCol>
     </VRow>
@@ -25,7 +14,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import mixin from './mixin-pipeline'
+import { setTimeoutPromise } from '@/utils/utils'
+
 export default {
+  mixins: [mixin],
   props: {
     sql: {
       type: String,
@@ -42,8 +35,6 @@ export default {
   },
   data() {
     return {
-      status: false,
-      error: false,
       progress: false,
       parameter: ''
     }
@@ -54,23 +45,22 @@ export default {
       return !this.currentDB || !this.sql
     }
   },
+  async beforeMount() {
+    await this.run()
+  },
   methods: {
-    runQuery() {
-      this.error = false
+    async run() {
       this.progress = true
-      setTimeout(() => {
-        try {
-          const params = { [this.parameterKey]: this.parameter }
-          const result = this.currentDB.select(this.sql, params)
-          this.$emit('update', { result })
-        } catch (error) {
-          this.error = true
-          this.$emit('update', { error })
-        } finally {
-          this.status = true
-          this.progress = false
-        }
-      }, 1)
+      await setTimeoutPromise(1)
+      try {
+        const params = { [this.parameterKey]: this.parameter }
+        const result = this.currentDB.select(this.sql, params)
+        this.$emit('update', { result })
+      } catch (error) {
+        this.$emit('update', { error })
+      } finally {
+        this.progress = false
+      }
     }
   }
 }

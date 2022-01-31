@@ -16,19 +16,15 @@
           class="fixed-tabs-bar"
           @change="scrollToTop()"
         >
-          <VTab href="#load-data">Load your Data</VTab>
-          <VTab :disabled="!success" href="#summary">Summary</VTab>
-          <VTab :disabled="!success" href="#file-explorer">Files</VTab>
           <VTab
-            v-for="(el, index) in defaultView"
+            v-for="(t, index) in tabs"
             :key="index"
-            :disabled="!success"
+            :disabled="t.disabled"
+            nuxt
+            :to="`#${t.value}`"
           >
-            {{ el.title }}
+            {{ t.title }}
           </VTab>
-          <VTab v-if="consentFormTemplate" :disabled="!success"
-            >Share my data</VTab
-          >
         </VTabs>
         <VTabsItems v-model="tab">
           <VTabItem value="load-data">
@@ -50,19 +46,19 @@
                 <span>Processing files...</span>
               </template>
               <template v-else-if="error || success">
-                <VAlert
+                <BaseAlert
                   :type="error ? 'error' : 'success'"
                   border="top"
                   colored-border
                   max-width="600"
                   >{{ message }}
-                </VAlert>
+                </BaseAlert>
               </template>
             </VCol>
           </VTabItem>
           <VTabItem value="summary">
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
-              <UnitSummary />
+              <UnitSummary @switch-tab="switchTab" />
             </VCol>
           </VTabItem>
           <VTabItem value="file-explorer">
@@ -73,8 +69,18 @@
           <VTabItem
             v-for="(defaultViewElements, index) in defaultView"
             :key="index"
+            :value="defaultViewElements.key"
           >
             <VCol cols="12 mx-auto" class="tabItem">
+              <VOverlay :value="overlay" absolute opacity="0.8">
+                <div
+                  class="d-flex flex-column align-center"
+                  style="width: 100%; height: 100%"
+                >
+                  <div class="mb-3">This might take a moment</div>
+                  <BaseProgressCircular size="64" width="4" />
+                </div>
+              </VOverlay>
               <UnitQuery
                 v-bind="{
                   defaultViewElements,
@@ -91,7 +97,7 @@
               />
             </VCol>
           </VTabItem>
-          <VTabItem v-if="consentFormTemplate">
+          <VTabItem v-if="consentFormTemplate" value="share-data">
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitConsentForm
                 v-bind="{
@@ -108,6 +114,9 @@
 
 <script>
 import { mapState } from 'vuex'
+
+import debounce from 'lodash/debounce'
+
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 import parseYarrrml from '~/utils/parse-yarrrml'
@@ -177,11 +186,46 @@ export default {
       error: false,
       success: false,
       message: '',
-      rml: ''
+      rml: '',
+      overlay: false
     }
   },
   computed: {
+    ...mapState('experience', { experienceProgress: 'progress' }),
     ...mapState(['fileManager']),
+    tabs() {
+      const disabled = !this.success || this.experienceProgress
+      const tabs = [
+        {
+          title: 'Load your Data',
+          value: 'load-data',
+          disabled: this.experienceProgress
+        },
+        {
+          title: 'Summary',
+          value: 'summary',
+          disabled
+        },
+        {
+          title: 'Files',
+          value: 'file-explorer',
+          disabled
+        },
+        ...this.defaultView.map(view => ({
+          ...view,
+          value: view.key,
+          disabled
+        }))
+      ]
+      if (this.consentForm) {
+        tabs.push({
+          title: 'Share my data',
+          value: 'share-data',
+          disabled
+        })
+      }
+      return tabs
+    },
     queries() {
       return this.defaultView.map(o => this.sparql[o.query])
     },
@@ -205,22 +249,30 @@ export default {
     }
   },
   watch: {
-    fileManager() {
-      if (this.fileManager === null) {
-        this.tab = 'load-data'
-        this.scrollToTop()
+    fileManager(value) {
+      if (value === null) {
+        this.switchTab('load-data')
         this.success = false
         this.progress = false
         this.error = false
       }
+    },
+    // debounce overlay
+    experienceProgress: {
+      immediate: true,
+      handler: debounce(function (value) {
+        this.overlay = value
+      }, 200)
     }
   },
   mounted() {
-    this.$root.$on('goToFileExplorer', () => {
-      this.tab = 'file-explorer'
-    })
+    this.switchTab('load-data')
   },
   methods: {
+    switchTab(value) {
+      this.$router.push(`#${value}`)
+      this.scrollToTop()
+    },
     scrollToTop() {
       window.scrollTo(0, 0)
     },
@@ -289,14 +341,15 @@ export default {
       }
       this.progress = false
       this.success = true
-      this.tab = 'summary'
-      this.scrollToTop()
+      setTimeout(() => this.switchTab('summary'), 500)
+
       const elapsed = new Date() - start
       this.message = `Successfully processed in ${elapsed / 1000} sec.`
     }
   }
 }
 </script>
+
 <style>
 .tabItem {
   min-height: calc(100vh - 48px);

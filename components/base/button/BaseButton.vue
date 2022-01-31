@@ -1,5 +1,5 @@
 <template>
-  <VTooltip left :disabled="tooltip.length === 0">
+  <VTooltip left :disabled="!tooltip">
     <template #activator="{ on, attrs }">
       <VBtn
         :outlined="outlined"

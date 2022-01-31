@@ -1,7 +1,7 @@
 <template>
   <div>
-    <DataValidator :data="data" :allow-missing-columns="true">
-      <VAlert v-if="error" type="error">{{ message }}</VAlert>
+    <DataValidator :data="data" allow-missing-columns>
+      <BaseAlert v-if="error" type="error">{{ message }}</BaseAlert>
       <BaseSearchBar v-model="search"></BaseSearchBar>
       <VDataTable
         v-bind="{ headers: tableHeaders, search }"

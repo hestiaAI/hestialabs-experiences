@@ -9,38 +9,33 @@
         ></VTextField>
       </VCol>
     </VRow>
-    <VRow>
-      <VSpacer />
-      <VCol align="center">
+    <div v-if="options" class="d-flex justify-center">
+      <VSwitch v-model="optionsVisible" label="Edit options" />
+    </div>
+    <VExpandTransition>
+      <div
+        v-if="optionsVisible"
+        class="d-flex flex-column justify-center align-center"
+      >
+        <CodeEditor :value.sync="options" language="json" />
         <BaseButton
-          v-bind="{ progress, status, error }"
+          v-bind="{ progress, status, error, disabled }"
           text="Run"
           icon="mdiStepForward"
-          class="ma-sm-2"
-          :disabled="disabled"
-          @click="runPipeline"
+          @click="run"
         />
-      </VCol>
-      <VCol v-if="options">
-        <VSwitch v-model="optionsVisible" label="Edit options" />
-      </VCol>
-      <VSpacer />
-    </VRow>
-    <VExpandTransition>
-      <VRow v-show="optionsVisible">
-        <VCol>
-          <CodeEditor :value.sync="options" language="json" />
-        </VCol>
-      </VRow>
+      </div>
     </VExpandTransition>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import mixin from './mixin-pipeline'
 import { setTimeoutPromise } from '@/utils/utils'
 
 export default {
+  mixins: [mixin],
   props: {
     customPipeline: {
       type: Function,
@@ -53,10 +48,6 @@ export default {
     defaultViewElements: {
       type: Object,
       required: true
-    },
-    autoRun: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
@@ -67,35 +58,36 @@ export default {
       code: '',
       parameter: '',
       options: '',
-      optionsVisible: false,
-      disabled: false
+      optionsVisible: false
     }
   },
   computed: {
-    ...mapGetters(['fileManager'])
+    ...mapGetters(['fileManager']),
+    disabled() {
+      return this.fileManager === null
+    }
   },
   watch: {
     options() {
       this.status = false
     },
-    fileManager() {
-      this.disabled = this.fileManager === null
-    },
-    defaultViewElements: {
-      handler() {
-        const optionsObject = this.defaultViewElements.customPipelineOptions
-        if (optionsObject) {
-          this.options = JSON.stringify(optionsObject, null, 2)
-        }
-        if (this.autoRun) {
-          this.runPipeline()
-        }
-      },
-      immediate: true
+    async 'defaultViewElements.customPipelineOptions'() {
+      this.updateOptions()
+      await this.run()
     }
   },
+  async beforeMount() {
+    this.updateOptions()
+    await this.run()
+  },
   methods: {
-    async runPipeline() {
+    updateOptions() {
+      const optionsObject = this.defaultViewElements.customPipelineOptions
+      if (optionsObject) {
+        this.options = JSON.stringify(optionsObject, null, 2)
+      }
+    },
+    async run() {
       this.error = false
       this.progress = true
       await setTimeoutPromise(1)
