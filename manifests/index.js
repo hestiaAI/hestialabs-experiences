@@ -1,7 +1,6 @@
 import _ from 'lodash'
 
 import allPreprocessors from './preprocessors'
-import allParsers from './parsers'
 
 import { validExtensions, extractFirstDirectory } from './utils'
 
@@ -68,7 +67,6 @@ const manifests = Object.fromEntries(
       collaborator,
       url,
       preprocessors = {},
-      timedObservationsViewer = {},
       defaultView = [],
       ...rest
     } = reqJSON(path)
@@ -104,26 +102,6 @@ const manifests = Object.fromEntries(
       ])
     )
 
-    if (_.has(timedObservationsViewer, 'fileMatchers')) {
-      timedObservationsViewer.fileMatchers.forEach(m => {
-        try {
-          m.regex = new RegExp(m.regex)
-        } catch (error) {
-          throw new Error(`The regex '${m.regex}' is not valid`)
-        }
-      })
-    }
-    if (_.has(timedObservationsViewer, 'parser')) {
-      const parser = timedObservationsViewer.parser
-      if (parser in allParsers) {
-        timedObservationsViewer.parser = allParsers[parser]
-      } else {
-        throw new Error(`The parser ${parser} doesn't exist`)
-      }
-    } else {
-      timedObservationsViewer.parser = _.identity
-    }
-
     const firstNoKey = _.find(defaultView, v => !_.has(v, 'key'))
     if (firstNoKey != null) {
       throw new Error(
@@ -145,7 +123,6 @@ const manifests = Object.fromEntries(
         preprocessors: preprocessorFuncs,
         collaborator,
         url,
-        timedObservationsViewer,
         sparql: {},
         vega: {},
         sql: {},

@@ -74,6 +74,13 @@
             />
           </VCol>
         </VRow>
+        <VRow v-if="errorMessage">
+          <VCol>
+            <BaseAlert type="error">
+              {{ errorMessage }}
+            </BaseAlert>
+          </VCol>
+        </VRow>
         <template v-if="clonedResult">
           <VRow>
             <VCol>
@@ -140,6 +147,11 @@ export default {
       default: () => {}
     }
   },
+  data() {
+    return {
+      errorMessage: ''
+    }
+  },
   computed: {
     ...mapGetters(['fileManager']),
     showTable() {
@@ -183,7 +195,12 @@ export default {
     }
   },
   methods: {
-    onUnitResultsUpdate(result) {
+    onUnitResultsUpdate({ result, error }) {
+      if (error) {
+        console.error(error)
+        this.errorMessage = error instanceof Error ? error.message : error
+        return
+      }
       // Postprocessing
       if (this.defaultViewElements.postprocessor !== undefined) {
         result =

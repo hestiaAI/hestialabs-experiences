@@ -31,10 +31,9 @@ export default {
     async run() {
       try {
         this.progress = true
-        const results = await quadstore.select(this.sparqlQuery)
-        this.$emit('update', results)
+        const result = await quadstore.select(this.sparqlQuery)
+        this.$emit('update', { result })
       } catch (error) {
-        console.error(error)
         this.$emit('update', { error })
       } finally {
         this.progress = false

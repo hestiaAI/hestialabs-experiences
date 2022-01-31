@@ -54,10 +54,9 @@ export default {
       await setTimeoutPromise(1)
       try {
         const params = { [this.parameterKey]: this.parameter }
-        const { headers, items } = this.currentDB.select(this.sql, params)
-        this.$emit('update', { headers, items })
+        const result = this.currentDB.select(this.sql, params)
+        this.$emit('update', { result })
       } catch (error) {
-        console.error(error)
         this.$emit('update', { error })
       } finally {
         this.progress = false

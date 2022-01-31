@@ -95,13 +95,11 @@ export default {
         const optionsObject = JSON.parse(this.options || 'null')
         const result = await this.customPipeline({
           fileManager: this.fileManager,
-          manifest: this.$store.getters.manifest(this.$route),
           parameter: this.parameter,
           options: optionsObject
         })
-        this.$emit('update', result)
+        this.$emit('update', { result })
       } catch (error) {
-        console.error(error)
         this.error = true
         this.$emit('update', { error })
       } finally {
