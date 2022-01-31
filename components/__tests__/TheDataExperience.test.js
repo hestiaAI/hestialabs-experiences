@@ -3,8 +3,14 @@
  */
 import fs from 'fs'
 import path from 'path'
-import { mount } from '@vue/test-utils'
+import { mount, createLocalVue } from '@vue/test-utils'
+import Vuex from 'vuex'
 import TheDataExperience from '~/components/TheDataExperience'
+
+// Mock the Vuex store
+const localVue = createLocalVue()
+localVue.use(Vuex)
+let store
 
 // We need to disable workers for these tests
 jest.mock('~/utils/file-manager-workers', () => {})
@@ -12,6 +18,29 @@ const originalScrollTo = window.scrollTo
 
 beforeAll(() => {
   window.scrollTo = jest.fn()
+})
+
+beforeEach(() => {
+  // eslint-disable-next-line import/no-named-as-default-member
+  store = new Vuex.Store({
+    state: () => ({
+      config: {},
+      fileManager: null
+    }),
+    mutations: {
+      clearStore: () => {},
+      setFileManager: () => {},
+      setConsentForm: () => {}
+    },
+    modules: {
+      experience: {
+        namespaced: true,
+        state: () => ({
+          progress: false
+        })
+      }
+    }
+  })
 })
 
 afterAll(() => {
@@ -24,11 +53,11 @@ test('mounts without error', () => {
       title: 'Test',
       ext: 'all'
     },
+    store,
+    localVue,
     mocks: {
-      $store: {
-        state: {
-          config: {}
-        }
+      $router: {
+        push: () => {}
       }
     }
   })
@@ -46,13 +75,11 @@ test('process simple text file', async () => {
       title: 'Test',
       ext: 'all'
     },
+    store,
+    localVue,
     mocks: {
-      $store: {
-        state: {
-          config: {},
-          fileManager: null
-        },
-        commit: () => {}
+      $router: {
+        push: () => {}
       }
     }
   })
