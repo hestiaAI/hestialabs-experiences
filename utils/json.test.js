@@ -1,10 +1,11 @@
 import { JSONPath } from 'jsonpath-plus'
 import {
-  itemifyJSONOld,
   itemifyJSON,
   traverseJson,
   processJsonNode,
   makePruningPredicateToMatch,
+  findMatchingItems,
+  reduceItems,
   nodeTypes,
   pathArrayToJsonPath
 } from '~/utils/json'
@@ -268,6 +269,323 @@ test('traverseJson', () => {
   expect(list).toStrictEqual(correctList)
 })
 
+test('simple reduceItems to collect ids', () => {
+  // const srcJson = {
+  //   r: 'roro',
+  //   a: { n: 'nono', b: [{ d: 'xono' }] }
+  // }
+  // const items = traverseJson(srcJson, processJsonNode)
+  // console.log('asdf', JSON.stringify(items))
+  const rootItem = {
+    id: '',
+    path: [],
+    type: 'tree',
+    name: '{attributes R, A}',
+    children: [
+      { id: 'r', path: ['r'], type: 'leaf', name: 'R', value: 'roro' },
+      {
+        id: 'a',
+        path: ['a'],
+        type: 'tree',
+        name: 'A / {attributes N, B}',
+        children: [
+          {
+            id: 'a.n',
+            path: ['a', 'n'],
+            type: 'leaf',
+            name: 'N',
+            value: 'nono'
+          },
+          {
+            id: 'a.b',
+            path: ['a', 'b'],
+            type: 'list',
+            name: 'B / [list with 1 item]',
+            children: [
+              {
+                id: 'a.b.0',
+                path: ['a', 'b', 0],
+                type: 'tree',
+                name: '{attributes D}',
+                children: [
+                  {
+                    id: 'a.b.0.d',
+                    path: ['a', 'b', 0, 'd'],
+                    type: 'leaf',
+                    name: 'D',
+                    value: 'xono'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  const allIds = ['', 'r', 'a', 'a.n', 'a.b', 'a.b.0', 'a.b.0.d']
+  const ids = reduceItems([], rootItem, undefined, (acc, item) => {
+    acc.push(item.id)
+    return acc
+  })
+  expect(ids).toStrictEqual(allIds)
+  expect(true).toStrictEqual(true)
+})
+
+test('reduceItems to collect ids', () => {
+  // const srcJson = {
+  //   r: 'roro',
+  //   g: [{ nono: 0 }],
+  //   a: { n: 'nono', o: 'nono', b: [{ c: 1, d: 'nono' }, { d: 'xono' }, 'nono'] }
+  // }
+  // const items = traverseJson(srcJson, processJsonNode)
+  const rootItem = {
+    id: '',
+    path: [],
+    type: 'tree',
+    name: '{attributes R, G, A}',
+    children: [
+      { id: 'r', path: ['r'], type: 'leaf', name: 'R', value: 'roro' },
+      {
+        id: 'g',
+        path: ['g'],
+        type: 'list',
+        name: 'G / [list with 1 item]',
+        children: [
+          {
+            id: 'g.0',
+            path: ['g', 0],
+            type: 'tree',
+            name: '{attributes Nono}',
+            children: [
+              {
+                id: 'g.0.nono',
+                path: ['g', 0, 'nono'],
+                type: 'leaf',
+                name: 'Nono',
+                value: 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'a',
+        path: ['a'],
+        type: 'tree',
+        name: 'A / {attributes N, O, B}',
+        children: [
+          {
+            id: 'a.n',
+            path: ['a', 'n'],
+            type: 'leaf',
+            name: 'N',
+            value: 'nono'
+          },
+          {
+            id: 'a.o',
+            path: ['a', 'o'],
+            type: 'leaf',
+            name: 'O',
+            value: 'nono'
+          },
+          {
+            id: 'a.b',
+            path: ['a', 'b'],
+            type: 'list',
+            name: 'B / [list with 3 items]',
+            children: [
+              {
+                id: 'a.b.0',
+                path: ['a', 'b', 0],
+                type: 'tree',
+                name: '{attributes C, D}',
+                children: [
+                  {
+                    id: 'a.b.0.c',
+                    path: ['a', 'b', 0, 'c'],
+                    type: 'leaf',
+                    name: 'C',
+                    value: 1
+                  },
+                  {
+                    id: 'a.b.0.d',
+                    path: ['a', 'b', 0, 'd'],
+                    type: 'leaf',
+                    name: 'D',
+                    value: 'nono'
+                  }
+                ]
+              },
+              {
+                id: 'a.b.1',
+                path: ['a', 'b', 1],
+                type: 'tree',
+                name: '{attributes D}',
+                children: [
+                  {
+                    id: 'a.b.1.d',
+                    path: ['a', 'b', 1, 'd'],
+                    type: 'leaf',
+                    name: 'D',
+                    value: 'xono'
+                  }
+                ]
+              },
+              { id: 'a.b.2', path: ['a', 'b', 2], type: 'leaf', value: 'nono' }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  const allIds = [
+    '',
+    'r',
+    'g',
+    'g.0',
+    'g.0.nono',
+    'a',
+    'a.n',
+    'a.o',
+    'a.b',
+    'a.b.0',
+    'a.b.0.c',
+    'a.b.0.d',
+    'a.b.1',
+    'a.b.1.d',
+    'a.b.2'
+  ]
+  const ids = reduceItems([], rootItem, undefined, (acc, item) => {
+    acc.push(item.id)
+    return acc
+  })
+  expect(ids).toStrictEqual(allIds)
+  expect(true).toStrictEqual(true)
+})
+
+test('findMatchingItems', () => {
+  // const srcJson = {
+  //   r: 'roro',
+  //   g: [{ nono: 0 }],
+  //   a: { n: 'nono', o: 'nono', b: [{ c: 1, d: 'nono' }, { d: 'xono' }, 'nono'] }
+  // }
+  // const items = traverseJson(srcJson, processJsonNode)
+  const rootItem = {
+    id: '',
+    path: [],
+    type: 'tree',
+    name: '{attributes R, G, A}',
+    children: [
+      { id: 'r', path: ['r'], type: 'leaf', name: 'R', value: 'roro' },
+      {
+        id: 'g',
+        path: ['g'],
+        type: 'list',
+        name: 'G / [list with 1 item]',
+        children: [
+          {
+            id: 'g.0',
+            path: ['g', 0],
+            type: 'tree',
+            name: '{attributes Nono}',
+            children: [
+              {
+                id: 'g.0.nono',
+                path: ['g', 0, 'nono'],
+                type: 'leaf',
+                name: 'Nono',
+                value: 0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'a',
+        path: ['a'],
+        type: 'tree',
+        name: 'A / {attributes N, O, B}',
+        children: [
+          {
+            id: 'a.n',
+            path: ['a', 'n'],
+            type: 'leaf',
+            name: 'N',
+            value: 'nono-berg'
+          },
+          {
+            id: 'a.o',
+            path: ['a', 'o'],
+            type: 'leaf',
+            name: 'O',
+            value: 'nono-stadt'
+          },
+          {
+            id: 'a.b',
+            path: ['a', 'b'],
+            type: 'list',
+            name: 'B / [list with 3 items]',
+            children: [
+              {
+                id: 'a.b.0',
+                path: ['a', 'b', 0],
+                type: 'tree',
+                name: '{attributes C, D}',
+                children: [
+                  {
+                    id: 'a.b.0.c',
+                    path: ['a', 'b', 0, 'c'],
+                    type: 'leaf',
+                    name: 'C',
+                    value: 1
+                  },
+                  {
+                    id: 'a.b.0.d',
+                    path: ['a', 'b', 0, 'd'],
+                    type: 'leaf',
+                    name: 'D',
+                    value: 'nono-dorf'
+                  }
+                ]
+              },
+              {
+                id: 'a.b.1',
+                path: ['a', 'b', 1],
+                type: 'tree',
+                name: '{attributes D}',
+                children: [
+                  {
+                    id: 'a.b.1.d',
+                    path: ['a', 'b', 1, 'd'],
+                    type: 'leaf',
+                    name: 'D',
+                    value: 'xono'
+                  }
+                ]
+              },
+              { id: 'a.b.2', path: ['a', 'b', 2], type: 'leaf', value: 'nono' }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  const correctTrails = [
+    ['', 'g', 'g.0', 'g.0.nono'],
+    ['', 'a', 'a.n'],
+    ['', 'a', 'a.o'],
+    ['', 'a', 'a.b', 'a.b.0', 'a.b.0.d'],
+    ['', 'a', 'a.b', 'a.b.2']
+  ]
+  const toTrail = i => i.trail
+  let foundItems = findMatchingItems('nono', rootItem)
+  expect(foundItems.map(toTrail)).toStrictEqual(correctTrails)
+
+  foundItems = findMatchingItems('', rootItem)
+  expect(foundItems).toStrictEqual([])
+})
+
 test('simple itemifyJSON', () => {
   const json = { n: 'root' }
   const correctItems = [
@@ -484,221 +802,6 @@ test('complex itemifyJSON with filter that does not match', () => {
   expect(items).toStrictEqual(correctItems)
 })
 
-test('complex itemifyJSON old', () => {
-  const json = {
-    n: 'root',
-    a: { n: 'child', b: [{ c: 1, d: 'roro' }, { c: 2 }, 'meuh'] }
-  }
-  const correctItems = [
-    {
-      id: 11,
-      name: '{attributes N, A}',
-      path: [],
-      type: 'tree',
-      children: [
-        { id: 2, value: 'root', type: 'leaf', path: ['n'], name: 'N' },
-        {
-          id: 11,
-          name: 'A / {attributes N, B}',
-          path: ['a'],
-          type: 'tree',
-          children: [
-            {
-              id: 4,
-              value: 'child',
-              type: 'leaf',
-              path: ['a', 'n'],
-              name: 'N'
-            },
-            {
-              id: 11,
-              path: ['a', 'b'],
-              name: 'B / [list with 3 items]',
-              type: 'list',
-              children: [
-                {
-                  id: 8,
-                  name: '{attributes C, D}',
-                  path: ['a', 'b', 0],
-                  type: 'tree',
-                  children: [
-                    {
-                      id: 7,
-                      value: 1,
-                      type: 'leaf',
-                      path: ['a', 'b', 0, 'c'],
-                      name: 'C'
-                    },
-                    {
-                      id: 8,
-                      value: 'roro',
-                      type: 'leaf',
-                      path: ['a', 'b', 0, 'd'],
-                      name: 'D'
-                    }
-                  ]
-                },
-                {
-                  id: 10,
-                  name: '{attributes C}',
-                  path: ['a', 'b', 1],
-                  type: 'tree',
-                  children: [
-                    {
-                      id: 10,
-                      value: 2,
-                      type: 'leaf',
-                      path: ['a', 'b', 1, 'c'],
-                      name: 'C'
-                    }
-                  ]
-                },
-                { id: 11, value: 'meuh', type: 'leaf', path: ['a', 'b', 2] }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-  const items = itemifyJSONOld(JSON.stringify(json))
-  expect(items).toStrictEqual(correctItems)
-})
-
-test('simple itemifyJSON old', () => {
-  const json = { n: 'root' }
-  const correctItems = [
-    {
-      type: TREE,
-      id: 2,
-      path: [],
-      name: '{attributes N}',
-      children: [{ id: 2, path: ['n'], value: 'root', type: LEAF, name: 'N' }]
-    }
-  ]
-  const items = itemifyJSONOld(JSON.stringify(json))
-
-  expect(items).toStrictEqual(correctItems)
-})
-
-test('itemifyJSON with empty array/object old', () => {
-  const json = { n: [], o: {} }
-  const correctItems = [
-    {
-      type: TREE,
-      id: 3,
-      path: [],
-      name: '{attributes N, O}',
-      children: [
-        {
-          path: ['n'],
-          id: 2,
-          type: LIST,
-          name: 'N / [empty list]'
-        },
-        {
-          id: 3,
-          path: ['o'],
-          type: TREE,
-          name: 'O / {no attributes}'
-        }
-      ]
-    }
-  ]
-  const items = itemifyJSONOld(JSON.stringify(json))
-
-  expect(items).toStrictEqual(correctItems)
-})
-
-test('itemifyJSON with empty array/object and filter old', () => {
-  const json = { nono: [], o: {} }
-  const correctItems = [
-    {
-      type: TREE,
-      id: 3,
-      path: [],
-      name: '{attributes Nono, O}',
-      children: [
-        {
-          // TODO this is what we want:
-          //
-          // path: ['nono'],
-          // type: LIST,
-          // name: 'Nono / [empty list]'
-          name: 'Nono'
-        }
-      ]
-    }
-  ]
-  const items = itemifyJSONOld(JSON.stringify(json), 'no')
-
-  expect(items).toStrictEqual(correctItems)
-})
-
-test('complex itemifyJSON with filter that matches old', () => {
-  const json = {
-    n: 'root',
-    a: { n: 'child', b: [{ c: 1, d: 'roro' }, { c: 2 }, 'meuh'] }
-  }
-  const correctItems = [
-    {
-      id: 11,
-      name: '{attributes N, A}',
-      path: [],
-      type: 'tree',
-      children: [
-        {
-          id: 11,
-          name: 'A / {attributes N, B}',
-          path: ['a'],
-          type: 'tree',
-          children: [
-            {
-              id: 11,
-              path: ['a', 'b'],
-              name: 'B / [list with 1 item]',
-              type: 'list',
-              children: [
-                {
-                  id: 8,
-                  name: '{attributes C, D}',
-                  path: ['a', 'b', 0],
-                  type: 'tree',
-                  children: [
-                    {
-                      id: 8,
-                      value: 'roro',
-                      type: 'leaf',
-                      path: ['a', 'b', 0, 'd'],
-                      name: 'D'
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-  let items = itemifyJSONOld(JSON.stringify(json), 'roro')
-  expect(items).toStrictEqual(correctItems)
-  items = itemifyJSONOld(JSON.stringify(json), 'ror')
-  expect(items).toStrictEqual(correctItems)
-  items = itemifyJSONOld(JSON.stringify(json), 'ROR')
-  expect(items).toStrictEqual(correctItems)
-})
-
-test('complex itemifyJSON with filter that does not match old', () => {
-  const json = {
-    n: 'root',
-    a: { n: 'child', b: [{ c: 1, d: 'roro' }, { c: 2 }, 'meuh'] }
-  }
-  const correctItems = [[]]
-  const items = itemifyJSONOld(JSON.stringify(json), 'XXX')
-  expect(items).toStrictEqual(correctItems)
-})
-
 test('item JsonPath for object', () => {
   const json = { a: { b: 'roro' } }
   const correctItems = [
@@ -771,7 +874,7 @@ test('item JsonPath for array element', () => {
   expect(JSONPath({ path, json })).toStrictEqual([json.c[0]])
 })
 
-test('item JsonPath for big array element', () => {
+test('item JsonPath for minified array element', () => {
   const json = {
     c: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   }
@@ -838,4 +941,33 @@ test('item JsonPath for big array element', () => {
   expect(arrayPath1).toStrictEqual(['c', 11])
   const jsonPath1 = pathArrayToJsonPath(arrayPath1)
   expect(JSONPath({ path: jsonPath1, json })).toStrictEqual([json.c[11]])
+})
+
+test('itemifyJSON with huge array element', () => {
+  const json = { c: [...Array(201).keys()] }
+  const items = itemifyJSON(JSON.stringify(json))
+
+  let it = items[0].children[0].children[0].children[0].children[0]
+  expect(it.value).toStrictEqual(0)
+  expect(it.path[it.path.length - 1]).toStrictEqual(0)
+
+  it = items[0].children[0].children[0].children[0].children[1]
+  expect(it.value).toStrictEqual(1)
+  expect(it.path[it.path.length - 1]).toStrictEqual(1)
+
+  it = items[0].children[0].children[0].children[1].children[0]
+  expect(it.value).toStrictEqual(10)
+  expect(it.path[it.path.length - 1]).toStrictEqual(10)
+
+  it = items[0].children[0].children[0].children[2].children[0]
+  expect(it.value).toStrictEqual(20)
+  expect(it.path[it.path.length - 1]).toStrictEqual(20)
+
+  it = items[0].children[0].children[1].children[0].children[0]
+  expect(it.value).toStrictEqual(100)
+  expect(it.path[it.path.length - 1]).toStrictEqual(100)
+
+  it = items[0].children[0].children[1].children[2].children[3]
+  expect(it.value).toStrictEqual(123)
+  expect(it.path[it.path.length - 1]).toStrictEqual(123)
 })
