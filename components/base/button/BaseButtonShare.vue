@@ -150,6 +150,7 @@ export default {
           // fbId: '?'
         },
         {
+          skype: false,
           // disable text sharing with email, copy, sms, and messenger
           // since polyfill does not support text for these types
           email: !text,
