@@ -1,11 +1,11 @@
 import {
-  timedObservationViewer,
+  genericJSONParser,
   genericDateViewer,
   genericLocationViewer
 } from '~/manifests/generic-pipelines'
 
 export default {
-  timedObservationViewer,
+  genericJSONParser,
   genericDateViewer,
   genericLocationViewer
 }

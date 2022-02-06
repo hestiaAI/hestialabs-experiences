@@ -1,5 +1,7 @@
 import _ from 'lodash'
 
+// This isn't used anywhere
+/*
 function commonPrefixAndSuffix(s1, s2) {
   const prefix = _.takeWhile(s1, (e, i) => e === s2[i]).join('')
   const suffix = _.takeRightWhile(s1, (e, i) => e === s2[i]).join('')
@@ -39,21 +41,23 @@ function groupSimilarEventValues(events) {
   events.forEach(e => delete e.matched)
   return events
 }
+*/
 
-function identifyTypeFromManifestList(events, params, match) {
-  const types = Object.values(params.eventTypes).flatMap(obj =>
-    Object.entries(obj)
-      .filter(([folder]) => folder === match[1])
-      .flatMap(([folder, types]) => types)
-  )
-  events.forEach(event => {
-    event.eventType =
-      _.find(types, t => event.eventValue.includes(t)) ?? 'unknown'
-  })
-  return events
+function googleMyActivityParser(event, options, path) {
+  const parts = path.split('/')
+  const folder = parts[parts.length - 2]
+  const language = options.languages[parts[parts.length - 1]]
+  if (!language) {
+    throw new Error('Unknown language')
+  }
+  const types = options.eventTypes[language][folder] ?? []
+  event.eventSource = folder
+  event.eventType =
+    _.find(types, t => event.eventValue.includes(t)) ?? 'unknown'
+  return event
 }
 
 export default {
-  groupSimilarEventValues,
-  identifyTypeFromManifestList
+  // groupSimilarEventValues,
+  googleMyActivityParser
 }
