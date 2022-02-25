@@ -27,6 +27,7 @@
     "wolt",
     "explorer"
   ],
+  "banner": "These experiences were used as part of the <a href=\"https://www.sitra.fi/en/projects/digipower-investigation/\" >#digipower investigation</a >, funded by <a href=\"http://www.sitra.fi\">SITRA</a> and conducted by <a href=\"https://www.hestia.ai\">hestia.ai</a>.<br>To attend our Brussels webinar on the investigation, please register <a href=\" https://www.lyyti.fi/reg/The_Digipower_investigation__How_are_decisionmakers_influenced_7858\" >here</a>.",
   "hashtags": ["dataprivacy", "hestialabs", "digipower"],
   "filedrop": "https://drive.infomaniak.com/app/collaborate/193995/ca7c15c9-266c-4776-a319-b30514d57c00",
   "consent": {

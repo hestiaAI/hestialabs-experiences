@@ -1,6 +1,13 @@
 <template>
   <div>
     <SettingsSpeedDial />
+    <VBanner v-if="config.banner" color="secondary">
+      <VRow>
+        <VCol cols="12 mx-auto" sm="10">
+          <div v-html="config.banner"></div>
+        </VCol>
+      </VRow>
+    </VBanner>
     <VRow>
       <VCol>
         <VTabs
@@ -192,7 +199,7 @@ export default {
   },
   computed: {
     ...mapState('experience', { experienceProgress: 'progress' }),
-    ...mapState(['fileManager']),
+    ...mapState(['config', 'fileManager']),
     tabs() {
       const disabled = !this.success || this.experienceProgress
       const tabs = [
