@@ -266,6 +266,7 @@ export default {
         .select('#volume-chart')
         .node()
         .getBoundingClientRect().width
+      console.log(width)
       let height = 200
 
       volumeChart

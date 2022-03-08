@@ -348,7 +348,7 @@ export default {
         .style('text-anchor', 'end')
         .text(this.yLabel)
       /* GridLayout */
-      d3.selectAll('g.yAxis g.tick')
+      d3.selectAll('#' + this.graphId + ' g.yAxis g.tick')
         .append('line')
         .attr('class', 'gridline')
         .attr('x1', 0)
@@ -356,7 +356,7 @@ export default {
         .attr('x2', width)
         .attr('y2', 0)
       /*
-      d3.selectAll('g.xAxis g.tick')
+      d3.selectAll('#' + this.graphId + ' g.xAxis g.tick')
         .append('line')
         .attr('class', 'gridline')
         .attr('x1', 0)

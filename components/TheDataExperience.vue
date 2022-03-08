@@ -20,6 +20,7 @@
           center-active
           centered
           fixed-tabs
+          :eager="false"
           class="fixed-tabs-bar"
           @change="scrollToTop()"
         >

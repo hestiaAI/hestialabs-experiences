@@ -68,6 +68,9 @@ export const mutations = {
   },
   setConsentForm(state, consentForm) {
     // Initialize missing values
+    if (!consentForm) {
+      return
+    }
     for (const section of consentForm) {
       if (typeof section.value === 'undefined') {
         // The value hasn't been initialized
