@@ -116,7 +116,7 @@
         }"
         @update="onUnitResultsUpdate"
       />
-      <UnitFilterableTable v-if="tableData" :data="tableData" />
+      <UnitFilterableTable v-if="tableData" :data="tableData.result" />
     </div>
   </div>
 </template>
