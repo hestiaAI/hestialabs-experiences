@@ -26,6 +26,7 @@ export default {
   },
   computed: {
     hasValidFormat() {
+      console.log(this.data)
       const weHaveArrays = _.every(
         ['items', 'headers'],
         field => _.has(this.data, field) && Array.isArray(this.data[field])

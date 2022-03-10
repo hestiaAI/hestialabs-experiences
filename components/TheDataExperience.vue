@@ -12,16 +12,14 @@
       <VCol>
         <VTabs
           v-model="tab"
-          dark
-          background-color="primary"
-          slider-color="secondary"
+          slider-color="primary"
           slider-size="4"
           show-arrows
           center-active
           centered
           fixed-tabs
           :eager="false"
-          class="fixed-tabs-bar"
+          class="fixed-tabs-bar mb-10 experience-tabs"
           @change="scrollToTop()"
         >
           <VTab
@@ -367,5 +365,6 @@ export default {
   position: sticky;
   top: 60px;
   z-index: 2500;
+  border-bottom: thin solid #0000001f;
 }
 </style>

@@ -1,44 +1,24 @@
 <template>
-  <div v-if="fileManager !== null">
-    <VCard
-      v-click-outside="{
-        handler: () => {
-          mini = true
-        },
-        closeConditional: () => !mini
-      }"
-      class="pa-2 mb-6 explorer"
-      :min-height="height"
-      height="auto"
-      flat
-    >
+  <div v-if="fileManager">
+    <VCard class="pa-2 mb-6 explorer" min-height="100%" flat>
       <style v-if="isFileLoading">
         :root {
           --cursor-style: wait !important;
         }
       </style>
-      <VNavigationDrawer
-        ref="drawer"
-        :mini-variant.sync="mini"
-        :mini-variant-width="miniWidth"
-        absolute
-        permanent
-        width="100%"
-        style="z-index: 1000"
-      >
-        <template #prepend>
+      <VRow>
+        <VCol cols="12" :md="mini ? 2 : 6">
           <VListItem class="px-2">
-            <VBtn icon @click="mini = !mini">
-              <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
-            </VBtn>
-
+            <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
             <VListItemTitle class="mx-4">File Explorer</VListItemTitle>
-
-            <VBtn icon @click.stop="mini = !mini">
-              <VIcon>$vuetify.icons.mdiChevronLeft</VIcon>
+            <VSpacer />
+            <VBtn icon @click="mini = !mini">
+              <VIcon v-if="mini">$vuetify.icons.mdiChevronRight</VIcon>
+              <VIcon v-else>$vuetify.icons.mdiChevronLeft</VIcon>
             </VBtn>
           </VListItem>
-          <VListItem v-if="!mini">
+          <VDivider />
+          <VListItem>
             <VTextField
               v-model="search"
               label="Search for files"
@@ -47,18 +27,10 @@
               hide-details
               prepend-icon="$vuetify.icons.mdiMagnify"
               class="my-4 pr-3"
-              style="max-width: 500px"
               outlined
               dense
             />
           </VListItem>
-        </template>
-
-        <div :style="drawerMiniFileLabelStyle" class="drawer-mini-file-label">
-          <div>{{ selectedItem.name }}</div>
-        </div>
-
-        <div :class="miniWidthPaddingLeftClass">
           <VTreeview
             dense
             open-on-click
@@ -76,48 +48,57 @@
               </VIcon>
             </template>
           </VTreeview>
-        </div>
-      </VNavigationDrawer>
-      <VCardTitle class="justify-center">Explore your files</VCardTitle>
-      <div :class="miniWidthPaddingLeftClass">
-        <VCardText>
-          <template v-if="filename">
-            <div class="mr-2">
-              Exploring file <strong>{{ filename }}</strong>
-            </div>
-            <BaseButtonDownload small :href="path" :filename="filename" />
-            <component
-              :is="componentForType"
-              v-bind="{ fileManager, filename }"
-              v-if="supportedTypes.has(fileType)"
-              @loading="onLoading"
-              @select-accessor="onSelectAccessor"
-            />
-            <UnitFileExplorerViewerUnknown
-              v-else
-              v-bind="{ fileManager, filename }"
-              @loading="onLoading"
-            />
-          </template>
-          <template v-else>
-            <p>
-              Select a file on the left panel to see it in more details here
-            </p>
-          </template>
-        </VCardText>
-      </div>
+        </VCol>
+        <VDivider vertical></VDivider>
+        <VCol>
+          <VCardTitle class="justify-center">Explore your files</VCardTitle>
+          <VCardText>
+            <template v-if="filename">
+              <div class="mr-2">
+                Exploring file <strong>{{ filename }}</strong>
+              </div>
+              <BaseButtonDownload small :href="path" :filename="filename" />
+              <component
+                :is="componentForType"
+                v-bind="{ fileManager, filename }"
+                v-if="supportedTypes.has(fileType)"
+                @loading="onLoading"
+                @select-accessor="onSelectAccessor"
+              />
+              <UnitFileExplorerViewerUnknown
+                v-else
+                v-bind="{ fileManager, filename }"
+                @loading="onLoading"
+              />
+              <div v-if="defaultViewElements.customPipelineOptions">
+                <UnitPipelineCustom
+                  v-bind="{
+                    fileManager,
+                    customPipeline,
+                    defaultViewElements
+                  }"
+                  @update="onUnitResultsUpdate"
+                />
+                <UnitFilterableTable
+                  v-if="tableData"
+                  :data="tableData.result"
+                />
+                <VRow v-if="tableData">
+                  <VCol cols="12" md="">
+                    <FormAllChart />
+                  </VCol>
+                </VRow>
+              </div>
+            </template>
+            <template v-else>
+              <p>
+                Select a file on the left panel to see it in more details here
+              </p>
+            </template>
+          </VCardText>
+        </VCol>
+      </VRow>
     </VCard>
-    <div v-if="defaultViewElements.customPipelineOptions">
-      <UnitPipelineCustom
-        v-bind="{
-          fileManager,
-          customPipeline,
-          defaultViewElements
-        }"
-        @update="onUnitResultsUpdate"
-      />
-      <UnitFilterableTable v-if="tableData" :data="tableData" />
-    </div>
   </div>
 </template>
 
@@ -125,9 +106,11 @@
 import _ from 'lodash'
 import { mapState } from 'vuex'
 import { jsonToTableConverter } from '~/manifests/generic-pipelines'
+import FormAllChart from '~/components/chart/forms/FormAllChart.vue'
 
 export default {
   name: 'UnitFileExplorer',
+  components: { FormAllChart },
   data() {
     return {
       supportedTypes: new Set([
@@ -141,7 +124,6 @@ export default {
       ]),
       containers: new Set(['folder', 'zip']),
       mini: true,
-      miniWidth: 48,
       summaryPanelActive: [0],
       search: '',
       isFileLoading: false,
@@ -227,13 +209,6 @@ export default {
       }
     }
   },
-  watch: {
-    mini(mini) {
-      // hide scrollbar in mini variant of drawer
-      const overflowY = mini ? 'hidden' : 'visible'
-      this.$refs.drawer.$el.children[1].style.overflowY = overflowY
-    }
-  },
   methods: {
     onLoading(loading) {
       this.isFileLoading = loading
@@ -268,24 +243,6 @@ export default {
 </script>
 
 <style>
-.drawer-mini-file-label {
-  transform: rotate(270deg);
-  transform-origin: top left;
-
-  display: flex;
-  align-items: center;
-
-  position: absolute;
-}
-
-.drawer-mini-file-label > div {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-
-  color: rgba(0, 0, 0, 0.87);
-}
-
 .explorer,
 .explorer .v-icon,
 .explorer .v-treeview-node__root,
