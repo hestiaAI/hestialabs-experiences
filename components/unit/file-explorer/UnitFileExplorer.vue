@@ -239,7 +239,7 @@ export default {
       this.isFileLoading = loading
     },
     onSelectAccessor(accessor) {
-      this.customPipelineOptions = { accessor }
+      this.customPipelineOptions = [{ accessor }]
     },
     onUnitResultsUpdate(result) {
       this.tableData = result

@@ -1,5 +1,36 @@
-import { jsonToTableConverter } from '~/manifests/generic-pipelines'
+import {
+  jsonToTableConverter,
+  mergeTableData
+} from '~/manifests/generic-pipelines'
 import { mockFileManager } from '~/utils/__mocks__/file-manager-mock'
+
+test('mergeTableData', () => {
+  const t1 = {
+    headers: ['Timestamp', 'First'],
+    items: [
+      { Timestamp: 1000000000, First: 'one comment' },
+      { Timestamp: 1000000001, First: 'another comment' }
+    ]
+  }
+  const t2 = {
+    headers: ['Timestamp', 'Second'],
+    items: [
+      { Timestamp: 2000000000, Second: 'one sec comment' },
+      { Timestamp: 2000000001, Second: 'another sec comment' }
+    ]
+  }
+  const merged = mergeTableData([t1, t2])
+  const correct = {
+    headers: ['Timestamp', 'First', 'Second'],
+    items: [
+      { Timestamp: 1000000000, First: 'one comment' },
+      { Timestamp: 1000000001, First: 'another comment' },
+      { Timestamp: 2000000000, Second: 'one sec comment' },
+      { Timestamp: 2000000001, Second: 'another sec comment' }
+    ]
+  }
+  expect(merged).toStrictEqual(correct)
+})
 
 test('jsonToTableConverter with properties', async () => {
   const fileName = 'comments_and_reactions/comments.json'
@@ -11,26 +42,28 @@ test('jsonToTableConverter with properties', async () => {
   }
   const fileManager = await mockFileManager(fileName, JSON.stringify(content))
 
-  const options = {
-    accessor: {
-      filePath: 'comments_and_reactions/comments.json',
-      jsonPath: '$.comments_v2[*]'
-    },
-    properties: [
-      {
-        name: 'Timestamp',
-        field: 'timestamp',
-        type: 'number',
-        required: true
+  const options = [
+    {
+      accessor: {
+        filePath: 'comments_and_reactions/comments.json',
+        jsonPath: '$.comments_v2[*]'
       },
-      {
-        name: 'First comment',
-        field: 'comment',
-        type: 'string',
-        required: true
-      }
-    ]
-  }
+      properties: [
+        {
+          name: 'Timestamp',
+          field: 'timestamp',
+          type: 'number',
+          required: true
+        },
+        {
+          name: 'First comment',
+          field: 'comment',
+          type: 'string',
+          required: true
+        }
+      ]
+    }
+  ]
 
   expect(fileManager.hasFile(fileName)).toBe(true)
   const bobo = await fileManager.getText(fileName)
@@ -57,12 +90,14 @@ test('jsonToTableConverter without properties', async () => {
   }
   const fileManager = await mockFileManager(fileName, JSON.stringify(content))
 
-  const options = {
-    accessor: {
-      filePath: 'comments_and_reactions/comments.json',
-      jsonPath: '$.comments_v2[*]'
+  const options = [
+    {
+      accessor: {
+        filePath: 'comments_and_reactions/comments.json',
+        jsonPath: '$.comments_v2[*]'
+      }
     }
-  }
+  ]
 
   expect(fileManager.hasFile(fileName)).toBe(true)
   const bobo = await fileManager.getText(fileName)
@@ -86,12 +121,14 @@ test('jsonToTableConverter without properties and varying objects', async () => 
   }
   const fileManager = await mockFileManager(fileName, JSON.stringify(content))
 
-  const options = {
-    accessor: {
-      filePath: 'comments_and_reactions/comments.json',
-      jsonPath: '$.comments_v2[*]'
+  const options = [
+    {
+      accessor: {
+        filePath: 'comments_and_reactions/comments.json',
+        jsonPath: '$.comments_v2[*]'
+      }
     }
-  }
+  ]
 
   expect(fileManager.hasFile(fileName)).toBe(true)
   const bobo = await fileManager.getText(fileName)

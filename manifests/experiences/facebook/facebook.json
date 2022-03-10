@@ -68,7 +68,7 @@
     {
       "key": "customAudience",
       "customPipeline": "jsonToTableConverter",
-      "customPipelineOptions": { 
+      "customPipelineOptions": [{
         "accessor": {
           "filePath": "**/ads_information/advertisers_using_your_activity_or_information.json",
           "jsonPath": "$.custom_audiences_all_types_v2[*]"
@@ -99,7 +99,7 @@
             "required": true
           }
         ]
-      },
+      }],
       "files": ["advertisers-using-information"],
       "showTable": true,
       "title": "Advertisers using your data",

@@ -407,18 +407,24 @@ async function jsonToTableConverter({ fileManager, options }) {
   const validate = ajv.compile(jsonToTableSchema)
   const valid = validate(options)
   if (!valid) {
-    console.error(
-      'The validation of the options you gave in the manifest failed: ',
-      validate.errors
-    )
+    console.error('Invalid options: ', ajv.errorsText(validate.errors))
     return {}
   }
 
-  const entries = await fileManager.findMatchingObjects(options.accessor, {
-    freeFiles: true
+  const tableDatasPromises = options.map(async opts => {
+    const entries = await fileManager.findMatchingObjects(opts.accessor, {
+      freeFiles: true
+    })
+    return makeTableData(entries, opts)
   })
+  const tableDatas = await Promise.all(tableDatasPromises)
+  return mergeTableData(tableDatas)
+}
 
-  return makeTableData(entries, options)
+export function mergeTableData(tableDatas) {
+  const headers = [...new Set(tableDatas.flatMap(td => td.headers))]
+  const items = tableDatas.flatMap(td => td.items)
+  return { headers, items }
 }
 
 export function makeTableData(objects, options) {
