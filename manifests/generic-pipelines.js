@@ -418,19 +418,23 @@ async function jsonToTableConverter({ fileManager, options }) {
     return makeTableData(entries, opts)
   })
   const tableDatas = await Promise.all(tableDatasPromises)
-  return mergeTableData(tableDatas)
+  const mergedData = mergeTableData(tableDatas)
+  return mergedData
 }
 
 export function mergeTableData(tableDatas) {
-  const headers = [...new Set(tableDatas.flatMap(td => td.headers))]
-  const items = tableDatas.flatMap(td => td.items)
+  const nonEmpties = tableDatas.filter(
+    td => td.headers?.length && td.items?.length
+  )
+  const headers = [...new Set(nonEmpties.flatMap(td => td.headers))]
+  const items = nonEmpties.flatMap(td => td.items)
   return { headers, items }
 }
 
-export function makeTableData(objects, options) {
+export function makeTableData(entries, options) {
   if (options?.properties) {
     const headers = options.properties.map(p => p.name)
-    const items = objects.map(e => makeTableItem(e, options))
+    const items = entries.map(e => makeTableItem(e, options))
     return { headers, items }
   }
 
@@ -440,12 +444,11 @@ export function makeTableData(objects, options) {
   // as if it ended with '[*]'.
   // This solution seemed preferable to generating [*] json paths
   // from the json viewer.
-  const singleArray = objects.length === 1 && Array.isArray(objects[0])
-  const objectsToDisplay = singleArray ? objects[0] : objects
-
+  const singleArray = entries.length === 1 && Array.isArray(entries[0])
+  const objectsToDisplay = singleArray ? entries[0] : entries
   const firstObject = objectsToDisplay[0]
   if (firstObject === undefined) {
-    return {}
+    return { headers: [], items: [] }
   }
   if (typeof firstObject === 'object' && !Array.isArray(firstObject)) {
     const headerSet = objectsToDisplay.reduce((hSet, obj) => {

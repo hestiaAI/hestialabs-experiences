@@ -46,7 +46,7 @@ export default {
       default: ''
     },
     customPipelineOptions: {
-      type: Object,
+      type: [Object, Array],
       required: true
     }
   },
