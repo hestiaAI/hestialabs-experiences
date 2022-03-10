@@ -107,12 +107,12 @@
         </VCardText>
       </div>
     </VCard>
-    <div v-if="defaultViewElements.customPipelineOptions">
+    <div v-if="customPipelineOptions">
       <UnitPipelineCustom
         v-bind="{
           fileManager,
           customPipeline,
-          defaultViewElements
+          customPipelineOptions
         }"
         @update="onUnitResultsUpdate"
       />
@@ -148,7 +148,7 @@ export default {
       height: 500,
       tableData: undefined,
       customPipeline: jsonToTableConverter,
-      defaultViewElements: {},
+      customPipelineOptions: undefined,
       selectedAccessor: undefined,
       tableDataFromAccessor: undefined
     }
@@ -239,7 +239,7 @@ export default {
       this.isFileLoading = loading
     },
     onSelectAccessor(accessor) {
-      this.defaultViewElements = { customPipelineOptions: { accessor } }
+      this.customPipelineOptions = { accessor }
     },
     onUnitResultsUpdate(result) {
       this.tableData = result
