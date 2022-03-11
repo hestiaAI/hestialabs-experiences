@@ -430,9 +430,12 @@ export function mergeTableData(tableDatas) {
   return { headers, items }
 }
 
+function provideColumnName(column) {
+  return column.name || column.path
+}
 export function makeTableData(entries, options) {
   if (options?.columns) {
-    const headers = options.columns.map(p => p.name)
+    const headers = options.columns.map(provideColumnName)
     const items = entries.map(e => makeTableItem(e, options))
     return { headers, items }
   }
@@ -465,34 +468,34 @@ export function makeTableData(entries, options) {
 
 function makeTableItem(object, options) {
   const item = {}
-  options.columns.forEach(p => {
+  options.columns.forEach(c => {
     // get all entries that satisfy the given path
     const value = JSONPath({
-      path: p.path,
+      path: c.path,
       json: object,
       wrap: true
     })
-
+    const name = provideColumnName(c)
     // Cast value to specified format, may need to handle errors
-    switch (p.type) {
+    switch (c.type) {
       case 'date':
-        item[p.name] = timeParse(p.format)(value)
+        item[name] = timeParse(c.format)(value)
         break
       case 'object':
-        item[p.name] = value
+        item[name] = value
         break
       case 'string':
-        item[p.name] = String(value)
+        item[name] = String(value)
         break
       case 'number':
-        item[p.name] = Number(value)
+        item[name] = Number(value)
         break
       case 'boolean':
-        item[p.name] = Boolean(value)
+        item[name] = Boolean(value)
         break
       default:
         // consider it a string
-        item[p.name] = String(value)
+        item[name] = String(value)
     }
   })
   return item

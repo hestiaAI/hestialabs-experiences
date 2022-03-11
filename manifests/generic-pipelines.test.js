@@ -70,7 +70,6 @@ test('jsonToTableConverter with properties', async () => {
       },
       columns: [
         {
-          name: 'Timestamp',
           path: 'timestamp',
           type: 'number'
         },
@@ -88,10 +87,10 @@ test('jsonToTableConverter with properties', async () => {
 
   const tableData = await jsonToTableConverter({ fileManager, options })
   const correct = {
-    headers: ['Timestamp', 'First comment'],
+    headers: ['timestamp', 'First comment'],
     items: [
-      { Timestamp: 1000000000, 'First comment': 'one comment' },
-      { Timestamp: 1000000001, 'First comment': 'another comment' }
+      { timestamp: 1000000000, 'First comment': 'one comment' },
+      { timestamp: 1000000001, 'First comment': 'another comment' }
     ]
   }
   expect(tableData).toStrictEqual(correct)

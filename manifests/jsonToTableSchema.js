@@ -46,7 +46,7 @@ export default {
               type: 'string'
             }
           },
-          required: ['name', 'path'],
+          required: ['path'],
           anyOf: [
             // either you have another type than date
             {
