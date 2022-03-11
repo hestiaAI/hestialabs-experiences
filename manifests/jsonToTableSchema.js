@@ -21,8 +21,8 @@ export default {
         },
         required: ['filePath', 'jsonPath']
       },
-      // here we define the properties of each column
-      properties: {
+      // here we configure columns
+      columns: {
         type: 'array',
         items: {
           type: 'object',

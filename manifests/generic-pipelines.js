@@ -385,7 +385,7 @@ async function genericLocationViewer({ fileManager, options }) {
  *        "filePath": "...", // A file path or glob
  *        "jsonPath": "..." // A JsonPath
  *      },
- *      "properties": [
+ *      "columns": [
  *        {
  *          "name": "Advertiser",
  *          "field": "name",
@@ -432,8 +432,8 @@ export function mergeTableData(tableDatas) {
 }
 
 export function makeTableData(entries, options) {
-  if (options?.properties) {
-    const headers = options.properties.map(p => p.name)
+  if (options?.columns) {
+    const headers = options.columns.map(p => p.name)
     const items = entries.map(e => makeTableItem(e, options))
     return { headers, items }
   }
@@ -466,7 +466,7 @@ export function makeTableData(entries, options) {
 
 function makeTableItem(object, options) {
   const item = {}
-  options.properties.forEach(p => {
+  options.columns.forEach(p => {
     // get all entries that satisfy the given field JSONPATH
     const value = JSONPath({
       path: p.field,

@@ -51,6 +51,7 @@ test('mergeTableData empty', () => {
   }
   expect(merged).toStrictEqual(correct)
 })
+
 test('jsonToTableConverter with properties', async () => {
   const fileName = 'comments_and_reactions/comments.json'
   const content = {
@@ -67,7 +68,7 @@ test('jsonToTableConverter with properties', async () => {
         filePath: 'comments_and_reactions/comments.json',
         jsonPath: '$.comments_v2[*]'
       },
-      properties: [
+      columns: [
         {
           name: 'Timestamp',
           field: 'timestamp',

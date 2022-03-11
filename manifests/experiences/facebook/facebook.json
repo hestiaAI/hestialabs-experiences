@@ -73,7 +73,7 @@
           "filePath": "**/ads_information/advertisers_using_your_activity_or_information.json",
           "jsonPath": "$.custom_audiences_all_types_v2[*]"
         },
-        "properties": [
+        "columns": [
           {
             "name": "Advertiser",
             "field": "advertiser_name",
