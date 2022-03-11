@@ -478,6 +478,9 @@ function makeTableItem(object, options) {
       case 'date':
         item[p.name] = timeParse(p.format)(value)
         break
+      case 'object':
+        item[p.name] = value
+        break
       case 'string':
         item[p.name] = String(value)
         break
@@ -488,7 +491,8 @@ function makeTableItem(object, options) {
         item[p.name] = Boolean(value)
         break
       default:
-        item[p.name] = value
+        // consider it a string
+        item[p.name] = String(value)
     }
   })
   return item

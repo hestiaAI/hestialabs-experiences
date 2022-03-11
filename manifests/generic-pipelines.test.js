@@ -76,8 +76,7 @@ test('jsonToTableConverter with properties', async () => {
         },
         {
           name: 'First comment',
-          path: 'comment',
-          type: 'string'
+          path: 'comment'
         }
       ]
     }

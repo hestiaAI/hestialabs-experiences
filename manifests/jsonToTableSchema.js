@@ -46,13 +46,21 @@ export default {
               type: 'string'
             }
           },
-          required: ['name', 'path', 'type'],
+          required: ['name', 'path'],
           anyOf: [
+            // either you have another type than date
             {
               not: {
                 properties: { type: { const: 'date' } }
               }
             },
+            // or you have no type
+            {
+              not: {
+                required: ['type']
+              }
+            },
+            // or you have format
             { required: ['format'] }
           ]
         }
