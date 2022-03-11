@@ -32,7 +32,7 @@ export default {
               type: 'string'
             },
             // JSONPath to access the value (it can be nested or not)
-            field: {
+            path: {
               type: 'string'
             },
             // type of the value, allow to cast specific types
@@ -44,14 +44,9 @@ export default {
             // we use https://github.com/d3/d3-time-format to format dates
             format: {
               type: 'string'
-            },
-            // When required is set to true, an error message will be sent
-            // if a value is not found, in any case empty values are set to null
-            required: {
-              type: 'boolean'
             }
           },
-          required: ['name', 'field', 'type', 'required'],
+          required: ['name', 'path', 'type'],
           anyOf: [
             {
               not: {

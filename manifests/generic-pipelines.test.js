@@ -71,15 +71,13 @@ test('jsonToTableConverter with properties', async () => {
       columns: [
         {
           name: 'Timestamp',
-          field: 'timestamp',
-          type: 'number',
-          required: true
+          path: 'timestamp',
+          type: 'number'
         },
         {
           name: 'First comment',
-          field: 'comment',
-          type: 'string',
-          required: true
+          path: 'comment',
+          type: 'string'
         }
       ]
     }

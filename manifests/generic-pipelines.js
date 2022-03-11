@@ -388,9 +388,8 @@ async function genericLocationViewer({ fileManager, options }) {
  *      "columns": [
  *        {
  *          "name": "Advertiser",
- *          "field": "name",
+ *          "path": "name",
  *          "type": "string",
- *          "required": true
  *        },
  *        ...
  *      ]
@@ -467,9 +466,9 @@ export function makeTableData(entries, options) {
 function makeTableItem(object, options) {
   const item = {}
   options.columns.forEach(p => {
-    // get all entries that satisfy the given field JSONPATH
+    // get all entries that satisfy the given path
     const value = JSONPath({
-      path: p.field,
+      path: p.path,
       json: object,
       wrap: true
     })
