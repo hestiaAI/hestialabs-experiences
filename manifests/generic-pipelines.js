@@ -433,13 +433,16 @@ export function mergeTableData(tableDatas) {
 function provideColumnName(column) {
   return column.name || column.path
 }
-export function makeTableData(entries, options) {
-  if (options?.columns) {
-    const headers = options.columns.map(provideColumnName)
-    const items = entries.map(e => makeTableItem(e, options))
-    return { headers, items }
-  }
 
+function extractHeaders(entries) {
+  const headerSet = entries.reduce((hSet, obj) => {
+    Object.keys(obj).forEach(k => hSet.add(k))
+    return hSet
+  }, new Set())
+  return [...headerSet]
+}
+
+export function makeTableData(entries, options) {
   // If objects is an array of a single array
   // display the single array.
   // That way a jsonPath to an array is displayed the same way
@@ -447,22 +450,33 @@ export function makeTableData(entries, options) {
   // This solution seemed preferable to generating [*] json paths
   // from the json viewer.
   const singleArray = entries.length === 1 && Array.isArray(entries[0])
-  const objectsToDisplay = singleArray ? entries[0] : entries
-  const firstObject = objectsToDisplay[0]
+  const entriesToDisplay = singleArray ? entries[0] : entries
+
+  // TODO maybe display columns that are not configured in options
+  // by creating column configurations from headers
+  // add an ignoreColumns field in options
+  // in UnitFileExplorer, create a columns configuration from entries[0]
+  // so that an example configuration is displayed to the user
+  // this.customPipelineOptions = [{ accessor, columns }]
+
+  if (options?.columns) {
+    const headers = options.columns.map(provideColumnName)
+    const items = entriesToDisplay.map(e => makeTableItem(e, options))
+    return { headers, items }
+  }
+
+  const firstObject = entriesToDisplay[0]
   if (firstObject === undefined) {
     return { headers: [], items: [] }
   }
   if (typeof firstObject === 'object' && !Array.isArray(firstObject)) {
-    const headerSet = objectsToDisplay.reduce((hSet, obj) => {
-      Object.keys(obj).forEach(k => hSet.add(k))
-      return hSet
-    }, new Set())
-    const tableData = { headers: [...headerSet], items: objectsToDisplay }
+    const headers = extractHeaders(entriesToDisplay)
+    const tableData = { headers, items: entriesToDisplay }
     return tableData
   }
   return {
     headers: ['item'],
-    items: objectsToDisplay.map(s => ({ item: s }))
+    items: entriesToDisplay.map(s => ({ item: s }))
   }
 }
 
