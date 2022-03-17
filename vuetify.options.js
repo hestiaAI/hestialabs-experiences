@@ -1,6 +1,7 @@
 import {
   mdiAlert,
   mdiAutorenew,
+  mdiChartBar,
   mdiCheckboxBlankOutline,
   mdiCheckCircle,
   mdiChevronLeft,
@@ -36,6 +37,7 @@ export default {
     values: {
       mdiAlert,
       mdiAutorenew,
+      mdiChartBar,
       mdiCheckboxBlankOutline,
       mdiCheckCircle,
       mdiChevronLeft,

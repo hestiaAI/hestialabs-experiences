@@ -2,7 +2,10 @@
   <div>
     <DataValidator :data="data" allow-missing-columns>
       <BaseAlert v-if="error" type="error">{{ message }}</BaseAlert>
-      <BaseSearchBar v-model="search"></BaseSearchBar>
+      <div class="d-flex flex-row align-center">
+        <BaseSearchBar v-model="search" />
+        <FormDialog :headers="headers" :values="filteredItems" />
+      </div>
       <VDataTable
         v-bind="{ headers: tableHeaders, search }"
         ref="tableRef"
@@ -101,8 +104,10 @@ import { writeToString } from '@fast-csv/format'
 import { processError } from '@/utils/utils'
 import { formatObject, formatArray } from '@/utils/json'
 import { toDateString } from '@/utils/dates'
+import FormDialog from '~/components/chart/forms/FormDialog.vue'
 export default {
   name: 'UnitFilterableTable',
+  components: { FormDialog },
   props: {
     data: {
       type: Object,

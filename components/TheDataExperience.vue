@@ -364,7 +364,7 @@ export default {
   position: -webkit-sticky;
   position: sticky;
   top: 60px;
-  z-index: 2500;
+  z-index: 5;
   border-bottom: thin solid #0000001f;
 }
 </style>

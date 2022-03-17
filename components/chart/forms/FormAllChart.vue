@@ -1,75 +1,92 @@
 <template>
-  <VContainer>
+  <VContainer class="ma-3">
     <VForm ref="form" v-model="valid" lazy-validation>
-      <VTextField
-        v-model="name"
-        :counter="10"
-        :rules="nameRules"
-        label="Name"
-        required
-      ></VTextField>
+      <VRow>
+        <VCol>
+          <VSelect
+            v-model="select"
+            :items="items"
+            :rules="[v => !!v || 'Chart type is required']"
+            label="Chart type to display"
+            required
+          ></VSelect>
+        </VCol>
+      </VRow>
+      <VRow v-if="select">
+        <VCol
+          v-for="propName in Object.keys(props).filter(
+            p => !['headers', 'values'].includes(p)
+          )"
+          :key="propName"
+          cols="12"
+          md="6"
+        >
+          <FormInput
+            v-model="formValues[propName]"
+            :name="propName"
+            :prop-object="props[propName]"
+            :headers="headers"
+            @input="updateGraph"
+          />
+        </VCol>
+      </VRow>
+      <BaseButton
+        :disabled="!valid"
+        color="primary"
+        class="mr-4"
+        @click="updateGraph"
+      >
+        Draw Graph
+      </BaseButton>
 
-      <VTextField
-        v-model="email"
-        :rules="emailRules"
-        label="E-mail"
-        required
-      ></VTextField>
-
-      <VSelect
-        v-model="select"
-        :items="items"
-        :rules="[v => !!v || 'Item is required']"
-        label="Item"
-        required
-      ></VSelect>
-
-      <VCheckbox
-        v-model="checkbox"
-        :rules="[v => !!v || 'You must agree to continue!']"
-        label="Do you agree?"
-        required
-      ></VCheckbox>
-
-      <VBtn :disabled="!valid" color="success" class="mr-4" @click="validate">
-        Validate
-      </VBtn>
-
-      <VBtn color="error" class="mr-4" @click="reset"> Reset Form </VBtn>
-
-      <VBtn color="warning" @click="resetValidation"> Reset Validation </VBtn>
+      <BaseButton color="error" class="mr-4" @click="reset">
+        Reset Form
+      </BaseButton>
     </VForm>
   </VContainer>
 </template>
 
 <script>
 export default {
+  props: {
+    headers: {
+      type: Array,
+      required: true
+    }
+  },
   data: () => ({
-    valid: true,
-    name: '',
-    nameRules: [
-      v => !!v || 'Name is required',
-      v => (v && v.length <= 10) || 'Name must be less than 10 characters'
-    ],
-    email: '',
-    emailRules: [
-      v => !!v || 'E-mail is required',
-      v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
-    ],
+    formValues: {},
+    valid: false,
     select: null,
-    items: ['Item 1', 'Item 2', 'Item 3', 'Item 4'],
-    checkbox: false
+    items: []
   }),
-
+  computed: {
+    props() {
+      if (this.select)
+        return this.$root.$options.components[this.select].options.props
+      else return {}
+    }
+  },
+  mounted() {
+    const graphs = require.context(
+      '@/components/chart/view/base',
+      false,
+      /^\.\/(.*)\.vue$/
+    )
+    this.items = graphs.keys().map(g => g.substring(2, g.length - 4))
+  },
   methods: {
-    validate() {
-      this.$refs.form.validate()
+    updateGraph() {
+      if (this.$refs.form.validate()) {
+        this.$emit('submit', {
+          graphName: this.select,
+          graphProps: this.formValues
+        })
+      }
     },
     reset() {
       this.$refs.form.reset()
-    },
-    resetValidation() {
-      this.$refs.form.resetValidation()
+      this.$emit('submit', null)
     }
   }
 }

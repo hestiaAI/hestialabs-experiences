@@ -1,10 +1,14 @@
 <template>
-  <div ref="graph"></div>
+  <ChartFrame v-bind="{ title, subtitle }">
+    <div ref="graph"></div>
+  </ChartFrame>
 </template>
 
 <script>
 import * as d3 from 'd3'
-import mixin from './mixin'
+import { Orientation } from '../utils/types'
+import MixinBase from './MixinBase'
+import MixinCoordinateGrid from './MixinCoordinateGrid'
 
 // somewhat inspired by
 // https://bost.ocks.org/mike/chart/
@@ -57,17 +61,36 @@ function barChart() {
 
   return chart
 }
-
 export default {
-  mixins: [mixin],
+  mixins: [MixinBase, MixinCoordinateGrid],
+  props: {
+    barGap: {
+      type: Number,
+      default: () => 10,
+      placeHolder: 'Choose the gap size between the bars',
+      validator: v => {
+        return Number.isInteger(v) && v >= 0
+      }
+    },
+    barOrientation: {
+      type: Orientation,
+      default: () => new Orientation('Vertical'),
+      placeHolder: 'Choose the orientation of the graph'
+    }
+  },
   methods: {
-    drawViz() {
+    initViz() {
       // another chart should be using this.values
       // but let's ignore it so we can use this one
       // anywhere regardless of the input
       const values = [44, 8, 15, 16, 23, 42]
       const chart = barChart().height(200).width(this.$refs.graph.clientWidth)
+      this.$emit('error-messages', ['0 TEst error'])
       d3.select(this.$refs.graph).datum(values).call(chart)
+    },
+    updateViz() {},
+    validData() {
+      return true
     }
   }
 }

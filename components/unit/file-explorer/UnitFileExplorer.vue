@@ -7,48 +7,50 @@
         }
       </style>
       <VRow>
-        <VCol cols="12" :md="mini ? 2 : 6">
-          <VListItem class="px-2">
-            <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
-            <VListItemTitle class="mx-4">File Explorer</VListItemTitle>
-            <VSpacer />
-            <VBtn icon @click="mini = !mini">
-              <VIcon v-if="mini">$vuetify.icons.mdiChevronRight</VIcon>
-              <VIcon v-else>$vuetify.icons.mdiChevronLeft</VIcon>
-            </VBtn>
-          </VListItem>
-          <VDivider />
-          <VListItem>
-            <VTextField
-              v-model="search"
-              label="Search for files"
-              placeholder="Enter part of a file name..."
-              clearable
-              hide-details
-              prepend-icon="$vuetify.icons.mdiMagnify"
-              class="my-4 pr-3"
-              outlined
+        <VExpandTransition>
+          <VCol cols="12" :md="mini ? 2 : 6">
+            <VListItem class="px-2">
+              <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
+              <VListItemTitle class="mx-4">File Explorer</VListItemTitle>
+              <VSpacer />
+              <VBtn icon @click="mini = !mini">
+                <VIcon v-if="mini">$vuetify.icons.mdiChevronRight</VIcon>
+                <VIcon v-else>$vuetify.icons.mdiChevronLeft</VIcon>
+              </VBtn>
+            </VListItem>
+            <VDivider />
+            <VListItem>
+              <VTextField
+                v-model="search"
+                label="Search for files"
+                placeholder="Enter part of a file name..."
+                clearable
+                hide-details
+                prepend-icon="$vuetify.icons.mdiMagnify"
+                class="my-4 pr-3"
+                outlined
+                dense
+              />
+            </VListItem>
+            <VTreeview
               dense
-            />
-          </VListItem>
-          <VTreeview
-            dense
-            open-on-click
-            activatable
-            return-object
-            transition
-            rounded
-            :search="search"
-            :items="treeItems"
-            :active.sync="active"
-          >
-            <template #prepend="{ item }">
-              <VIcon>
-                {{ item.icon }}
-              </VIcon>
-            </template>
-          </VTreeview>
-        </VCol>
+              open-on-click
+              activatable
+              return-object
+              transition
+              rounded
+              :search="search"
+              :items="treeItems"
+              :active.sync="active"
+            >
+              <template #prepend="{ item }">
+                <VIcon>
+                  {{ item.icon }}
+                </VIcon>
+              </template>
+            </VTreeview>
+          </VCol>
+        </VExpandTransition>
         <VDivider vertical></VDivider>
         <VCol>
           <VCardTitle class="justify-center">Explore your files</VCardTitle>
@@ -83,11 +85,6 @@
                   v-if="tableData"
                   :data="tableData.result"
                 />
-                <VRow v-if="tableData">
-                  <VCol cols="12" md="">
-                    <FormAllChart />
-                  </VCol>
-                </VRow>
               </div>
             </template>
             <template v-else>
@@ -106,11 +103,9 @@
 import _ from 'lodash'
 import { mapState } from 'vuex'
 import { jsonToTableConverter } from '~/manifests/generic-pipelines'
-import FormAllChart from '~/components/chart/forms/FormAllChart.vue'
 
 export default {
   name: 'UnitFileExplorer',
-  components: { FormAllChart },
   data() {
     return {
       supportedTypes: new Set([

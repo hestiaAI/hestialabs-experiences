@@ -8,6 +8,7 @@
           headers: data ? data.headers : [],
           ...vizProps
         }"
+        ref="chart"
       />
     </div>
   </DataValidator>
@@ -32,6 +33,15 @@ export default {
   computed: {
     component() {
       return () => import(`@/components/chart/view/${this.graphName}`)
+    }
+  },
+  watch: {
+    vizProps: {
+      handler(val) {
+        console.log('Update props', val)
+        this.$refs.chart.updateViz()
+      },
+      deep: true
     }
   }
 }
