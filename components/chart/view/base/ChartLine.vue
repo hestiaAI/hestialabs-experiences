@@ -45,7 +45,7 @@ export default {
     updateData() {
       console.log('updateData', this.yColumn)
       // Set width and height depending on container size
-      this.width = this.$refs.graph.clientWidth * 0.9
+      this.width = this.$refs.graph.clientWidth
       this.height = this.width / 1.61803398875 // golden ratio
 
       // Use default Date loader or custom depending on props

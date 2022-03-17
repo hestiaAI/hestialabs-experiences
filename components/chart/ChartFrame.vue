@@ -1,7 +1,7 @@
 <template>
   <VCard>
-    <VCardTitle class="title"> {{ title }} </VCardTitle>
-    <VCardSubtitle class="subtitle"> {{ subtitle }} </VCardSubtitle>
+    <VCardTitle class="title ml-3"> {{ title }} </VCardTitle>
+    <VCardSubtitle class="subtitle ml-3"> {{ subtitle }} </VCardSubtitle>
     <VCardText><slot></slot></VCardText>
   </VCard>
 </template>
@@ -24,7 +24,7 @@ export default {
 <style scoped>
 .title {
   font-size: 1.2rem !important;
-  font-weight: 400;
+  font-weight: 600;
   color: #4d4b4b;
   letter-spacing: 0.1666666667em !important;
   line-height: 2rem;

@@ -22,19 +22,38 @@
         </VBtn>
         <VToolbarTitle>Convert to graph</VToolbarTitle>
       </VToolbar>
-      <VRow justify="center" class="pa-3 ma-3">
-        <VCol>
+      <VRow justify="center" class="pa-3">
+        <VCol cols="6" lg="4">
           <FormAllChart v-bind="{ headers, values }" @submit="submit" />
         </VCol>
         <VDivider vertical />
-        <VCol>
-          <VDataTable v-if="!formsInfo" v-bind="{ headers, items: values }" />
-          <ChartView
-            v-else
-            :data="{ headers, items: values }"
-            :viz-props="formsInfo.graphProps"
-            :graph-name="`base/${formsInfo.graphName}`"
-          />
+        <VCol cols="6" lg="8">
+          <VTabs v-model="tab">
+            <VTabsSlider color="primary"></VTabsSlider>
+            <VTab>Table</VTab>
+            <VTab>Graph</VTab>
+          </VTabs>
+          <VTabsItems v-model="tab" class="mt-10">
+            <VTabItem>
+              <VCard flat class="ma-3">
+                <VDataTable v-bind="{ headers, items: values }" />
+              </VCard>
+            </VTabItem>
+            <VTabItem>
+              <VCard flat class="ma-3">
+                <BaseAlert v-if="!formsInfo" type="warning"
+                  >Please fill in the form on the left to draw the
+                  graph</BaseAlert
+                >
+                <ChartView
+                  v-else
+                  :data="{ headers, items: values }"
+                  :viz-props="formsInfo.graphProps"
+                  :graph-name="`base/${formsInfo.graphName}`"
+                />
+              </VCard>
+            </VTabItem>
+          </VTabsItems>
         </VCol>
       </VRow>
     </VCard>
@@ -61,7 +80,8 @@ export default {
       notifications: false,
       sound: true,
       widgets: false,
-      formsInfo: null
+      formsInfo: null,
+      tab: 0
     }
   },
   methods: {
