@@ -1,6 +1,41 @@
 <template>
-  <ChartFrame v-bind="{ title, subtitle }">
-    <div ref="graph" align="center"></div>
+  <ChartFrame v-bind="{ title, subtitle }" class="chart">
+    <VContainer class="pr-10 pl-10">
+      <svg class="line-chart" :viewBox="viewBox">
+        <g>
+          <path
+            class="line"
+            :d="line"
+            :stroke="color"
+            :stroke-width="lineWidth"
+            fill="none"
+          />
+        </g>
+        <g
+          v-axis:x="xAxisGenerator"
+          class="xAxis"
+          :transform="`translate(0,${height - margin.bottom})`"
+        >
+          <text y="50" :x="width / 2" style="text-anchor: middle">
+            {{ xLabel }}
+          </text>
+        </g>
+        <g
+          v-axis:y="yAxisGenerator"
+          class="yAxis"
+          :transform="`translate(${margin.left}, 0)`"
+        >
+          <text
+            transform="rotate(-90)"
+            y="-50"
+            :x="-height / 2"
+            style="text-anchor: middle"
+          >
+            {{ yLabel }}
+          </text>
+        </g>
+      </svg>
+    </VContainer>
   </ChartFrame>
 </template>
 
@@ -10,27 +45,77 @@ import MixinBase from './MixinBase'
 import MixinCoordinateGrid from './MixinCoordinateGrid'
 
 export default {
+  directives: {
+    axis(el, binding) {
+      d3.select(el).call(binding.value)
+    }
+  },
   mixins: [MixinBase, MixinCoordinateGrid],
   props: {
     dateFormat: {
       type: String,
       default: () => '',
       placeHolder: 'Specify the format of the date'
+    },
+    color: {
+      type: String,
+      default: () => '#58539e',
+      placeHolder: 'Specify the color of the line'
+    },
+    lineWidth: {
+      type: Number,
+      default: () => 1.5,
+      placeHolder: 'Specify the width of the line'
     }
   },
   data() {
     return {
-      width: 600,
-      height: 300,
-      svg: null,
-      xScale: null,
-      yScale: null,
-      xAccessor: null,
-      yAccessor: null,
-      xAxisGenerator: null,
-      yAxisGenerator: null,
-      lineGenerator: null,
-      dateParser: null
+      width: 1600
+    }
+  },
+  computed: {
+    height() {
+      return this.width / 1.61803398875 // golden ratio
+    },
+    viewBox() {
+      return `0 0 ${this.width} ${this.height}`
+    },
+    dateParser() {
+      if (this.dateFormat !== '') return d3.timeParse(this.dateFormat)
+      else return d => new Date(d)
+    },
+    xAccessor() {
+      return d => this.dateParser(d[this.xColumn.columnName])
+    },
+    yAccessor() {
+      return d => parseInt(d[this.yColumn.columnName])
+    },
+    xScale() {
+      return d3
+        .scaleTime()
+        .domain(d3.extent(this.values, this.xAccessor))
+        .range([this.margin.left, this.width - this.margin.right])
+    },
+    yScale() {
+      return d3
+        .scaleLinear()
+        .domain(d3.extent(this.values, this.yAccessor))
+        .range([this.height - this.margin.bottom, this.margin.top])
+    },
+    xAxisGenerator() {
+      return d3.axisBottom().scale(this.xScale).ticks(5)
+    },
+    yAxisGenerator() {
+      return d3.axisLeft().scale(this.yScale).ticks(5)
+    },
+    lineGenerator() {
+      return d3
+        .line()
+        .x(d => this.xScale(this.xAccessor(d)))
+        .y(d => this.yScale(this.yAccessor(d)))
+    },
+    line() {
+      return this.lineGenerator(this.values)
     }
   },
   watch: {
@@ -41,46 +126,9 @@ export default {
     }
   },
   methods: {
-    // Define/Update the utility variables needeed for the chart
-    updateData() {
-      console.log('updateData', this.yColumn)
-      // Set width and height depending on container size
-      this.width = this.$refs.graph.clientWidth
-      this.height = this.width / 1.61803398875 // golden ratio
-
-      // Use default Date loader or custom depending on props
-      if (this.dateFormat !== '')
-        this.dateParser = d3.timeParse(this.dateFormat)
-      else this.dateParser = d => new Date(d)
-
-      // Define the accessors for the values array
-      this.xAccessor = d => this.dateParser(d[this.xColumn.columnName])
-      this.yAccessor = d => parseInt(d[this.yColumn.columnName])
-
-      // Define/update the xScale
-      this.xScale = d3
-        .scaleTime()
-        .domain(d3.extent(this.values, this.xAccessor))
-        .range([this.margin.left, this.width - this.margin.right])
-
-      // Define/update the yScale
-      this.yScale = d3
-        .scaleLinear()
-        .domain(d3.extent(this.values, this.yAccessor))
-        .range([this.height - this.margin.bottom, this.margin.top])
-
-      // function to create axis from scale
-      this.xAxisGenerator = d3.axisBottom().scale(this.xScale).ticks(5)
-      this.yAxisGenerator = d3.axisLeft().scale(this.yScale).ticks(5)
-
-      // function to calculate line positions
-      this.lineGenerator = d3
-        .line()
-        .x(d => this.xScale(this.xAccessor(d)))
-        .y(d => this.yScale(this.yAccessor(d)))
-    },
     initViz() {
-      this.updateData()
+      // this.updateData()
+      /*
       console.log('initViz')
       // Add a root SVG element to draw the chart
       d3.select(this.$refs.graph).select('svg').remove()
@@ -115,9 +163,11 @@ export default {
         .attr('class', 'xAxis')
         .call(this.xAxisGenerator)
         .style('transform', `translateY(${this.height - this.margin.bottom}px)`)
+      */
     },
     updateViz() {
-      this.updateData()
+      // this.updateData()
+      /*
       console.log('updateViz')
       // Update line data and position
       this.svg
@@ -150,6 +200,7 @@ export default {
         .delay(200)
         .call(this.xAxisGenerator)
         .style('transform', `translateY(${this.height - this.margin.bottom}px)`)
+        */
     },
     validData() {
       return true
@@ -157,3 +208,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+::v-deep g path.line {
+  fill: 'none';
+}
+</style>
