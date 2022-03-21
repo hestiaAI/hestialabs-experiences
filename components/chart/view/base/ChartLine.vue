@@ -4,8 +4,15 @@
       <svg class="line-chart" :viewBox="viewBox">
         <g>
           <path
+            v-if="area"
+            :d="areaPath"
+            stroke="none"
+            :stroke-width="0"
+            :fill="lighterColor"
+          />
+          <path
             class="line"
-            :d="line"
+            :d="linePath"
             :stroke="color.color"
             :stroke-width="lineWidth"
             fill="none"
@@ -80,6 +87,11 @@ export default {
     }
   },
   computed: {
+    lighterColor() {
+      const color = d3.color(this.color.color)
+      color.opacity = 0.15
+      return color
+    },
     dateParser() {
       if (this.dateFormat !== '') return d3.timeParse(this.dateFormat)
       else return d => new Date(d)
@@ -90,16 +102,22 @@ export default {
     yAccessor() {
       return d => parseInt(d[this.yColumn.columnName])
     },
+    xExtent() {
+      return d3.extent(this.values, this.xAccessor)
+    },
     xScale() {
       return d3
         .scaleTime()
-        .domain(d3.extent(this.values, this.xAccessor))
+        .domain(this.xExtent)
         .range([this.margin.left, this.width - this.margin.right])
+    },
+    yExtent() {
+      return d3.extent(this.values, this.yAccessor)
     },
     yScale() {
       return d3
         .scaleLinear()
-        .domain(d3.extent(this.values, this.yAccessor))
+        .domain(this.yExtent)
         .range([this.height - this.margin.bottom, this.margin.top])
     },
     xAxisGenerator() {
@@ -108,13 +126,23 @@ export default {
     yAxisGenerator() {
       return d3.axisLeft().scale(this.yScale).ticks(5)
     },
+    areaGenerator() {
+      return d3
+        .area()
+        .x(d => this.xScale(this.xAccessor(d)))
+        .y0(this.yScale(this.yExtent[0]))
+        .y1(d => this.yScale(this.yAccessor(d)))
+    },
     lineGenerator() {
       return d3
         .line()
         .x(d => this.xScale(this.xAccessor(d)))
         .y(d => this.yScale(this.yAccessor(d)))
     },
-    line() {
+    areaPath() {
+      return this.areaGenerator(this.values)
+    },
+    linePath() {
       return this.lineGenerator(this.values)
     }
   },

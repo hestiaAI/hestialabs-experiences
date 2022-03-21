@@ -18,7 +18,7 @@
         v-else-if="type === 'switch'"
         v-model="input"
         :label="`${input.toString()}`"
-        @input="change()"
+        @change="change()"
       ></VSwitch>
       <VTextField
         v-else-if="type === 'number' || type === 'text'"
@@ -96,7 +96,6 @@ export default {
         this.type = 'switch'
         break
       case Color:
-        console.log('default: ', this.propObject.default())
         this.type = 'color'
         break
       case ColumnAccessor:

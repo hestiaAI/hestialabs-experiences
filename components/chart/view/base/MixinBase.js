@@ -28,7 +28,7 @@ export default {
     svgScale: {
       type: Number,
       default: () => 10,
-      placeHolder: 'Specify the zoom of the graph'
+      placeHolder: 'Specify the resolution of the graph'
     }
   },
   data() {
