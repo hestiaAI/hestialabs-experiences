@@ -15,9 +15,9 @@
         @input="change()"
       ></VSelect>
       <VSwitch
-        v-else-if="type === 'boolean'"
+        v-else-if="type === 'switch'"
         v-model="input"
-        :label="`${placeHolder} : ${input.toString()}`"
+        :label="`${input.toString()}`"
         @input="change()"
       ></VSwitch>
       <VTextField
@@ -28,6 +28,11 @@
         :type="type"
         @input="change()"
       ></VTextField>
+      <ColorPicker
+        v-else-if="type === 'color'"
+        v-model="input"
+        @input="change()"
+      ></ColorPicker>
       <VRow v-else-if="type === 'object'" justify="center" dense>
         <VCol v-for="k in Object.keys(input)" :key="k" cols="3">
           <VTextField
@@ -43,7 +48,7 @@
 </template>
 
 <script>
-import { ColumnAccessor, Orientation } from '../view/utils/types'
+import { ColumnAccessor, Orientation, Color } from '../view/utils/types'
 export default {
   prop: ['value'], // Used for v-model property
   props: {
@@ -90,6 +95,10 @@ export default {
       case Boolean:
         this.type = 'switch'
         break
+      case Color:
+        console.log('default: ', this.propObject.default())
+        this.type = 'color'
+        break
       case ColumnAccessor:
         this.type = 'select'
         this.options = this.headers.map(h => {
@@ -108,7 +117,7 @@ export default {
   },
   methods: {
     change() {
-      console.log(this.input)
+      console.log('Change FormInput', this.input)
       this.$emit('input', this.input)
     }
   }

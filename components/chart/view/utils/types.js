@@ -31,3 +31,13 @@ export class Orientation {
     }
   }
 }
+
+/**
+ * Color provides a color selector in the chart form
+ */
+export class Color {
+  constructor(color) {
+    if (color) this.color = color
+    else this.color = '#58539e'
+  }
+}

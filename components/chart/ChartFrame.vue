@@ -1,7 +1,9 @@
 <template>
   <VCard>
-    <VCardTitle class="title ml-3"> {{ title }} </VCardTitle>
-    <VCardSubtitle class="subtitle ml-3"> {{ subtitle }} </VCardSubtitle>
+    <VCardTitle class="title justify-center"> {{ title }} </VCardTitle>
+    <VCardSubtitle class="subtitle text-center">
+      {{ subtitle }}
+    </VCardSubtitle>
     <VCardText><slot></slot></VCardText>
   </VCard>
 </template>

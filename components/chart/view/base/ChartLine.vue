@@ -6,7 +6,7 @@
           <path
             class="line"
             :d="line"
-            :stroke="color"
+            :stroke="color.color"
             :stroke-width="lineWidth"
             fill="none"
           />
@@ -41,6 +41,7 @@
 
 <script>
 import * as d3 from 'd3'
+import { Color } from '../utils/types'
 import MixinBase from './MixinBase'
 import MixinCoordinateGrid from './MixinCoordinateGrid'
 
@@ -58,28 +59,27 @@ export default {
       placeHolder: 'Specify the format of the date'
     },
     color: {
-      type: String,
-      default: () => '#58539e',
+      type: Color,
+      default: () => new Color(),
       placeHolder: 'Specify the color of the line'
     },
     lineWidth: {
       type: Number,
-      default: () => 1.5,
+      default: () => 2,
       placeHolder: 'Specify the width of the line'
-    }
-  },
-  data() {
-    return {
-      width: 1600
+    },
+    area: {
+      type: Boolean,
+      default: () => false,
+      placeHolder: ''
+    },
+    dot: {
+      type: Boolean,
+      default: () => false,
+      placeHolder: ''
     }
   },
   computed: {
-    height() {
-      return this.width / 1.61803398875 // golden ratio
-    },
-    viewBox() {
-      return `0 0 ${this.width} ${this.height}`
-    },
     dateParser() {
       if (this.dateFormat !== '') return d3.timeParse(this.dateFormat)
       else return d => new Date(d)

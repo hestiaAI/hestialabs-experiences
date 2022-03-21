@@ -223,7 +223,7 @@ export default {
           disabled
         }))
       ]
-      if (this.consentForm) {
+      if (this.consentFormTemplate) {
         tabs.push({
           title: 'Share my data',
           value: 'share-data',
