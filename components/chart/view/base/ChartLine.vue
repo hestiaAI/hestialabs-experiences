@@ -5,6 +5,7 @@
         <g>
           <path
             v-if="area"
+            class="area"
             :d="areaPath"
             stroke="none"
             :stroke-width="0"
@@ -17,6 +18,19 @@
             :stroke-width="lineWidth"
             fill="none"
           />
+          <g v-if="datapoint">
+            <circle
+              v-for="point in values"
+              :key="xScale(xAccessor(point))"
+              class="data-points"
+              :cx="xScale(xAccessor(point))"
+              :cy="yScale(yAccessor(point))"
+              r="5"
+              stroke="white"
+              stroke-width="1"
+              :fill="color.color"
+            />
+          </g>
         </g>
         <g
           v-axis:x="xAxisGenerator"
@@ -80,7 +94,7 @@ export default {
       default: () => false,
       placeHolder: ''
     },
-    dot: {
+    datapoint: {
       type: Boolean,
       default: () => false,
       placeHolder: ''
@@ -154,82 +168,8 @@ export default {
     }
   },
   methods: {
-    initViz() {
-      // this.updateData()
-      /*
-      console.log('initViz')
-      // Add a root SVG element to draw the chart
-      d3.select(this.$refs.graph).select('svg').remove()
-      this.svg = d3
-        .select(this.$refs.graph)
-        .append('svg')
-        .attr('width', this.width)
-        .attr('height', this.height)
-        .attr('preserveAspectRatio', 'xMinYMin meet')
-        .attr('viewBox', '0 0 ' + this.width + ' ' + this.height)
-        .classed('svg-content', true)
-
-      // Draw line
-      this.svg
-        .append('path')
-        .attr('class', 'line')
-        .attr('d', this.lineGenerator(this.values))
-        .attr('fill', 'none')
-        .attr('stroke', '#58539e')
-        .attr('stroke-width', 1.5)
-
-      // Draw xAxis
-      this.svg
-        .append('g')
-        .attr('class', 'yAxis')
-        .call(this.yAxisGenerator)
-        .style('transform', `translateX(${this.margin.left}px)`)
-
-      // Draw yAxis
-      this.svg
-        .append('g')
-        .attr('class', 'xAxis')
-        .call(this.xAxisGenerator)
-        .style('transform', `translateY(${this.height - this.margin.bottom}px)`)
-      */
-    },
-    updateViz() {
-      // this.updateData()
-      /*
-      console.log('updateViz')
-      // Update line data and position
-      this.svg
-        .select('path.line')
-        .transition()
-        .duration(1000)
-        .delay(200)
-        .attr('d', this.lineGenerator(this.values))
-        .attr('fill', 'none')
-        .attr('stroke', '#58539e')
-        .attr('stroke-width', 1.5)
-
-      // Update yAxis
-      this.svg
-        .select('g.yAxis')
-        .transition()
-        .duration(1000)
-        .delay(200)
-        .call(this.yAxisGenerator)
-        .style(
-          'transform',
-          `translateX(${this.margin.left ? this.margin.left : 0}px)`
-        )
-
-      // Update xAxis
-      this.svg
-        .select('g.xAxis')
-        .transition()
-        .duration(1000)
-        .delay(200)
-        .call(this.xAxisGenerator)
-        .style('transform', `translateY(${this.height - this.margin.bottom}px)`)
-        */
-    },
+    initViz() {},
+    updateViz() {},
     validData() {
       return true
     }
