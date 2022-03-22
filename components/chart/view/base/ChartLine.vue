@@ -1,7 +1,7 @@
 <template>
   <ChartFrame v-bind="{ title, subtitle }" class="chart">
     <VContainer class="pr-10 pl-10">
-      <svg class="line-chart" :viewBox="viewBox">
+      <svg ref="chart" class="line-chart" :viewBox="viewBox">
         <g>
           <path
             v-if="area"
@@ -34,7 +34,7 @@
         </g>
         <g
           v-axis:x="xAxisGenerator"
-          class="xAxis"
+          class="x-axis"
           :transform="`translate(0,${height - margin.bottom})`"
         >
           <text y="50" :x="width / 2" style="text-anchor: middle">
@@ -43,7 +43,7 @@
         </g>
         <g
           v-axis:y="yAxisGenerator"
-          class="yAxis"
+          class="y-axis"
           :transform="`translate(${margin.left}, 0)`"
         >
           <text
@@ -68,8 +68,17 @@ import MixinCoordinateGrid from './MixinCoordinateGrid'
 
 export default {
   directives: {
-    axis(el, binding) {
+    axis(el, binding, vnode) {
       d3.select(el).call(binding.value)
+      const component = vnode.context
+      d3.select(el)
+        .selectAll('g.y-axis g.tick')
+        .append('line')
+        .attr('class', 'gridline')
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('x2', component.width - component.margin.right)
+        .attr('y2', 0)
     }
   },
   mixins: [MixinBase, MixinCoordinateGrid],
@@ -160,13 +169,6 @@ export default {
       return this.lineGenerator(this.values)
     }
   },
-  watch: {
-    yColumn: {
-      handler(val) {
-        console.log('Update yColumn', val)
-      }
-    }
-  },
   methods: {
     initViz() {},
     updateViz() {},
@@ -177,7 +179,33 @@ export default {
 }
 </script>
 <style scoped>
-::v-deep g path.line {
-  fill: 'none';
+.x-axis ::v-deep line,
+.y-axis ::v-deep line {
+  stroke: #706f6f;
+  stroke-width: 0.5;
+  shape-rendering: geometricPrecision;
+}
+/* axis contour */
+.x-axis ::v-deep path,
+.y-axis ::v-deep path {
+  stroke: #706f6f;
+  stroke-width: 0.7;
+  shape-rendering: geometricPrecision;
+}
+.y-axis ::v-deep path {
+  display: none;
+}
+/* axis text */
+.x-axis ::v-deep text,
+.y-axis ::v-deep text {
+  fill: #2b2929;
+  font-size: 1rem;
+  font-weight: 300;
+}
+.gridline {
+  stroke: lightgray;
+  shape-rendering: geometricPrecision;
+  stroke-opacity: 0.5;
+  stroke-width: 10px;
 }
 </style>
