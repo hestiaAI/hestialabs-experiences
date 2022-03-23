@@ -1,7 +1,19 @@
 {
   "title": "LinkedIn",
   "icon": "linkedin.png",
+  "files": {
+    "inference": "**/Inferences_about_you.csv"
+  },
   "defaultView": [
+    {
+      "key": "inference",
+      "customPipeline": "inference",
+      "files": ["inference"],
+      "visualization": "ListLinkedinInference.vue",
+      "showTable": false,
+      "title": "Inference about you",
+      "text": "Each card below represents an inference that Linkedin has made about you, either positively or negatively, e.g. Am I a joob seeker -> true or false."
+    },
     {
       "key": "genericDateViewer",
       "customPipeline": "genericDateViewer",
