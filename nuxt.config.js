@@ -116,9 +116,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    // Transpile yarrrml-parser with Babel
-    // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
-    transpile: ['yarrrml-parser'],
     extend(config, { isDev, isClient }) {
       if (isClient) {
         config.devtool = 'source-map'
