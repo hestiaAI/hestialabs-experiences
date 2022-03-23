@@ -1,6 +1,7 @@
 {
   "title": "Spotify",
   "icon": "spotify.png",
+  "disabled": true,
   "defaultView": [
     {
       "key": "genericDateViewer",

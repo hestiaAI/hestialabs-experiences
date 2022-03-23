@@ -153,6 +153,14 @@ export default {
       type: Array,
       default: () => []
     },
+    hideSummary: {
+      type: Boolean,
+      default: () => false
+    },
+    hideFileExplorer: {
+      type: Boolean,
+      default: () => false
+    },
     preprocessors: {
       type: Object,
       default: () => {}
@@ -209,20 +217,29 @@ export default {
           value: 'load-data',
           disabled: this.experienceProgress
         },
-        {
-          title: 'Summary',
-          value: 'summary',
-          disabled
-        },
-        {
-          title: 'Files',
-          value: 'file-explorer',
-          disabled
-        },
+        ...(!this.hideSummary
+          ? [
+              {
+                title: 'Summary',
+                value: 'summary',
+                disabled
+              }
+            ]
+          : []),
+        ...(!this.hideFileExplorer
+          ? [
+              {
+                title: 'Files',
+                value: 'file-explorer',
+                disabled
+              }
+            ]
+          : []),
         ...this.defaultView.map(view => ({
           ...view,
           value: view.key,
-          disabled
+          disabled,
+          show: true
         }))
       ]
       if (this.consentFormTemplate) {
@@ -349,7 +366,7 @@ export default {
       }
       this.progress = false
       this.success = true
-      setTimeout(() => this.switchTab('summary'), 500)
+      setTimeout(() => this.switchTab(this.tabs[1].value), 500)
 
       const elapsed = new Date() - start
       this.message = `Successfully processed in ${elapsed / 1000} sec.`

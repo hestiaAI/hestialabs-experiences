@@ -7,6 +7,8 @@
     "trips": "**/Rider/trips_data.csv"
   },
   "data": ["uber-trips.zip"],
+  "hideSummary": true,
+  "hideFileExplorer": true,
   "defaultView": [
     {
       "key": "tripsData",
