@@ -16,14 +16,14 @@
           hover
         >
           <VImg
-            max-height="250"
+            max-height="150"
             contain
             :src="icon"
             :lazy-src="icon"
             class="mt-3"
           />
-          <VCardTitle v-text="title" />
-          <VCardSubtitle class="subtitle-1" v-text="subtitle" />
+          <VCardTitle class="justify-center" v-text="title" />
+          <VCardSubtitle class="subtitle-1 text-center" v-text="subtitle" />
         </VCard>
       </VCol>
     </VRow>

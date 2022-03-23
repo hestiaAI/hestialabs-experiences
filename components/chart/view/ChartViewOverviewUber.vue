@@ -527,6 +527,7 @@ export default {
         .xyTipsOn(true)
         .height(180)
         .brushOn(false)
+        .renderArea(true)
         .dimension(dayDimension)
         .group(createCumulativeGroup(priceGroup))
         .x(d3.scaleTime().domain([minDate, maxDate]))

@@ -1,6 +1,7 @@
 {
   "title": "Apple",
   "icon": "apple.png",
+  "disabled": true,
   "defaultView": [
     {
       "key": "genericDateViewer",

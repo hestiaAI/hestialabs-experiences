@@ -3,6 +3,8 @@
   "icon": "tinder.png",
   "dataPortal": "https://account.gotinder.com/data",
   "data": ["tinder-synthetic.json"],
+  "hideSummary": true,
+  "hideFileExplorer": true,
   "files": {
     "tinder": "**/*.json"
   },

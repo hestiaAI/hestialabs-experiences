@@ -3,6 +3,8 @@
   "icon": "facebk.png",
   "dataPortal": "https://www.facebook.com/help/212802592074644",
   "data": [],
+  "hideSummary": true,
+  "hideFileExplorer": true,
   "files": {
     "advertisers-interacted": "**/ads_information/advertisers_you've_interacted_with.json",
     "advertisers-contact-list": "**/ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json",

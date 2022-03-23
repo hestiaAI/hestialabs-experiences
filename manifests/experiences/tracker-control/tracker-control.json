@@ -3,6 +3,8 @@
   "subtitle": "Tracking data",
   "icon": "tracker-control.png",
   "data": ["tracker-control.csv"],
+  "hideSummary": true,
+  "hideFileExplorer": true,
   "files": {
     "tracker-control": "**/*.csv"
   },
@@ -13,7 +15,7 @@
       "files": ["tracker-control"],
       "visualization": "ChartViewTrackerControl.vue",
       "showTable": false,
-      "title": "Dashboard",
+      "title": "Overview",
       "text": "Monitor below all the tracking done on your smartphone applications. You can filter the results by selecting a time range or clicking on each graph."
     }
   ]
