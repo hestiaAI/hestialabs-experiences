@@ -14,7 +14,7 @@ import {
 import _ from 'lodash'
 import { matchNormalized, findMatchesInContent } from './accessor'
 import { itemifyJSON, nJsonPoints } from '~/utils/json'
-import getCsvHeadersAndItems from '~/utils/csv'
+import { getCsvHeadersAndItems } from '~/utils/csv'
 import { runWorker } from '@/utils/utils'
 
 const filetype2icon = {
