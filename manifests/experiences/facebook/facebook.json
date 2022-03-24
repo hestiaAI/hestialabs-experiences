@@ -70,38 +70,34 @@
     {
       "key": "customAudience",
       "customPipeline": "jsonToTableConverter",
-      "customPipelineOptions": { 
+      "customPipelineOptions": [{
         "accessor": {
           "filePath": "**/ads_information/advertisers_using_your_activity_or_information.json",
           "jsonPath": "$.custom_audiences_all_types_v2[*]"
         },
-        "properties": [
+        "columns": [
           {
             "name": "Advertiser",
-            "field": "advertiser_name",
-            "type": "string",
-            "required": true
+            "path": "advertiser_name",
+            "type": "string"
           },
           {
             "name": "has_data_file_custom_audience",
-            "field": "has_data_file_custom_audience",
-            "type": "boolean",
-            "required": true
+            "path": "has_data_file_custom_audience",
+            "type": "boolean"
           },
           {
             "name": "has_remarketing_custom_audience",
-            "field": "has_remarketing_custom_audience",
-            "type": "boolean",
-            "required": true
+            "path": "has_remarketing_custom_audience",
+            "type": "boolean"
           },
           {
             "name": "has_in_person_store_visit",
-            "field": "has_in_person_store_visit",
-            "type": "boolean",
-            "required": true
+            "path": "has_in_person_store_visit",
+            "type": "boolean"
           }
         ]
-      },
+      }],
       "files": ["advertisers-using-information"],
       "showTable": true,
       "title": "Advertisers using your data",

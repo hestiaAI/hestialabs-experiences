@@ -45,8 +45,8 @@ export default {
       type: String,
       default: ''
     },
-    defaultViewElements: {
-      type: Object,
+    customPipelineOptions: {
+      type: [Object, Array],
       required: true
     }
   },
@@ -71,7 +71,7 @@ export default {
     options() {
       this.status = false
     },
-    async 'defaultViewElements.customPipelineOptions'() {
+    async customPipelineOptions() {
       this.updateOptions()
       await this.run()
     }
@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     updateOptions() {
-      const optionsObject = this.defaultViewElements.customPipelineOptions
+      const optionsObject = this.customPipelineOptions
       if (optionsObject) {
         this.options = JSON.stringify(optionsObject, null, 2)
       }

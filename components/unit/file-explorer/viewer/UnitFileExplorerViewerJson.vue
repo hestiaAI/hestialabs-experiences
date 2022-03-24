@@ -49,6 +49,14 @@
           <span v-else>{{ item.name }}</span>
           <VTooltip bottom open-delay="200">
             <template #activator="{ on }">
+              <VIcon class="clickable" v-on="on" @click="copyAccessor(item)">
+                $vuetify.icons.mdiContentCopy
+              </VIcon>
+            </template>
+            <span>Copy accessor to clipboard</span>
+          </VTooltip>
+          <VTooltip bottom open-delay="200">
+            <template #activator="{ on }">
               <VIcon class="clickable" v-on="on" @click="onNodeClick(item)">
                 $vuetify.icons.mdiTable
               </VIcon>
@@ -122,12 +130,22 @@ export default {
     onFoundItemRowClick(item) {
       this.open = item.trail
     },
+    createItemAcessor(item) {
+      const filePath = filePathToGlob(this.filename)
+      const jsonPath = pathArrayToJsonPath(item.path)
+      return createAccessor(filePath, jsonPath)
+    },
+    copyAccessor(item) {
+      try {
+        const accessor = JSON.stringify(this.createItemAcessor(item))
+        navigator.clipboard.writeText(accessor)
+      } catch (error) {
+        console.error(error)
+      }
+    },
     onNodeClick(item) {
       try {
-        const filePath = filePathToGlob(this.filename)
-        const jsonPath = pathArrayToJsonPath(item.path)
-        const accessor = createAccessor(filePath, jsonPath)
-        this.$emit('select-accessor', accessor)
+        this.$emit('select-accessor', this.createItemAcessor(item))
       } catch (error) {
         console.error(error)
       }
