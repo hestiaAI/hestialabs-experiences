@@ -117,7 +117,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   props: {
     sparqlQuery: {
@@ -155,7 +155,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['fileManager']),
+    ...mapState(['fileManager']),
     showTable() {
       return this.defaultViewElements.showTable
     },
