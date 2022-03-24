@@ -1,0 +1,55 @@
+{
+  "title": "HER",
+  "subtitle": "Data experiences",
+  "icon": "herlogo.webp",
+  "dataPortal": "https://weareher.com/privacy/",
+  "files": {"impressions": "**/liked.csv"},
+  /**
+    * Reference to a preprocessor (optional, see preprocessors.js)
+    * @type String
+    */
+  "preprocessor": "twitter",
+	/**
+    * Array of paths to sample data files in /assets/data/ (optional)
+    * @type Array[String]
+    * @default []
+    */
+  "data": ["twitter.zip"],
+  /**
+    * Array defining the blocks to show in the default view. Each section section can have:
+    * - A SPARQL query
+    * - A function used as the custom pipeline (defined in pipeline.js)
+    * - A SQL query
+    * - A list of files required to run the experience. Refer to the IDs defined above.
+    * - A postprocessor (defined in postprocessors.js)
+    * - A parameter name (if necessary), and for sql pipelines a parameter key used in the query (prefixed with :)
+    * - Additional arguments to pass to a custom pipeline
+    * - A visualization name
+    * - Some props that will be passed to a vue viz
+    * - A data table
+    * - A title
+    * - A text description
+    * The files referenced should be in the 'main' example.
+    * @type Array[Object]
+    */
+  "defaultView": [
+    {
+      "query": "sparql_query_filename",
+      "customPipeline": "pipeline_function_name",
+      "sql": "sql_query_filename",
+      "files": ["file_id_1", "file_id_2"]
+      "postprocessor": "postprocessor_function_name",
+      "parameterName": "Example",
+      "parameterKey": ":example",
+      "customPipelineOptions": { "example_1": "hello", "example_2": 42 },
+      "visualization": "viz_name",
+      "vizProps": {
+        "example_1": "hello world",
+        "example_2": 42
+      },
+      "showTable": false,
+      "title": "An interesting title",
+      "text": "Lorem ipsum."
+    }
+  ]
+}
