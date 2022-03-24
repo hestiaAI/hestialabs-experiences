@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import mixin from './mixin-pipeline'
 import { setTimeoutPromise } from '@/utils/utils'
 
@@ -40,7 +40,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['currentDB']),
+    ...mapState(['currentDB']),
     disabled() {
       return !this.currentDB || !this.sql
     }
