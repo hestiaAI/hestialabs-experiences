@@ -127,8 +127,6 @@ import debounce from 'lodash/debounce'
 
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
-import parseYarrrml from '~/utils/parse-yarrrml'
-import rdfUtils from '~/utils/rdf'
 
 export default {
   name: 'TheDataExperience',
@@ -152,6 +150,14 @@ export default {
     defaultView: {
       type: Array,
       default: () => []
+    },
+    hideSummary: {
+      type: Boolean,
+      default: () => false
+    },
+    hideFileExplorer: {
+      type: Boolean,
+      default: () => false
     },
     preprocessors: {
       type: Object,
@@ -209,20 +215,29 @@ export default {
           value: 'load-data',
           disabled: this.experienceProgress
         },
-        {
-          title: 'Summary',
-          value: 'summary',
-          disabled
-        },
-        {
-          title: 'Files',
-          value: 'file-explorer',
-          disabled
-        },
+        ...(!this.hideSummary
+          ? [
+              {
+                title: 'Summary',
+                value: 'summary',
+                disabled
+              }
+            ]
+          : []),
+        ...(!this.hideFileExplorer
+          ? [
+              {
+                title: 'Files',
+                value: 'file-explorer',
+                disabled
+              }
+            ]
+          : []),
         ...this.defaultView.map(view => ({
           ...view,
           value: view.key,
-          disabled
+          disabled,
+          show: true
         }))
       ]
       if (this.consentFormTemplate) {
@@ -333,22 +348,9 @@ export default {
         }
       }
 
-      // Generate RDF
-      if (this.isRdfNeeded && this.yarrrml) {
-        try {
-          const processedFiles = await fileManager.preprocessFiles(
-            Object.values(this.files)
-          )
-          this.rml = await parseYarrrml(this.yarrrml)
-          await rdfUtils.generateRDF(this.rml, processedFiles)
-        } catch (error) {
-          this.handleError(error)
-          return
-        }
-      }
       this.progress = false
       this.success = true
-      setTimeout(() => this.switchTab('summary'), 500)
+      setTimeout(() => this.switchTab(this.tabs[1].value), 500)
 
       const elapsed = new Date() - start
       this.message = `Successfully processed in ${elapsed / 1000} sec.`

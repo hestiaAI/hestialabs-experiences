@@ -52,6 +52,8 @@
               v-bind="{
                 fileManager,
                 customPipeline,
+                customPipelineOptions:
+                  defaultViewElements.customPipelineOptions,
                 parameterName: defaultViewElements.parameterName,
                 defaultViewElements
               }"

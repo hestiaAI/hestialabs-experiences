@@ -17,7 +17,7 @@
 
     <BaseButton
       v-bind="{ disabled, progress, status, error }"
-      text="Process files"
+      text="Explore your data"
       icon="mdiStepForward"
       class="my-sm-2 mr-sm-4"
       @click="returnFiles"

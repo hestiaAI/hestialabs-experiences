@@ -494,38 +494,40 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 /* AXES */
 /* ticks */
-.xAxis line,
-.yAxis line {
+div ::v-deep .xAxis line,
+div ::v-deep .yAxis line {
   stroke: #706f6f;
   stroke-width: 0.5;
   shape-rendering: geometricPrecision;
 }
 /* axis contour */
-.xAxis path,
-.yAxis path {
+div ::v-deep .xAxis path,
+div ::v-deep .yAxis path {
   stroke: #706f6f;
   stroke-width: 0.7;
   shape-rendering: geometricPrecision;
 }
-.yAxis path {
+div ::v-deep .yAxis path {
   display: none;
 }
 /* axis text */
-.xAxis text,
-.yAxis text {
+div ::v-deep .xAxis text,
+div ::v-deep .yAxis text {
   fill: #2b2929;
   font-size: 1rem;
   font-weight: 300;
 }
-.gridline {
+div ::v-deep .gridline {
   stroke: lightgray;
   shape-rendering: geometricPrecision;
   stroke-opacity: 0.5;
   stroke-width: 10;
 }
+</style>
+<style>
 div.tooltip {
   position: absolute;
   text-align: center;
