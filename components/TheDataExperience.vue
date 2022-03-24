@@ -22,7 +22,7 @@
           fixed-tabs
           :eager="false"
           class="fixed-tabs-bar"
-          @change="scrollToTop()"
+          @change="scrollToTop"
         >
           <VTab
             v-for="(t, index) in tabs"
@@ -279,10 +279,9 @@ export default {
   methods: {
     switchTab(value) {
       this.$router.push(`#${value}`)
-      this.scrollToTop()
     },
     scrollToTop() {
-      window.scrollTo(0, 0)
+      window.setTimeout(() => window.scrollTo(0, 0), 10)
     },
     handleError(error) {
       console.error(error)
