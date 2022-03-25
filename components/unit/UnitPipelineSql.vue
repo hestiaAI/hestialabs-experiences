@@ -35,7 +35,6 @@ export default {
   },
   data() {
     return {
-      progress: false,
       parameter: ''
     }
   },
@@ -44,9 +43,6 @@ export default {
     disabled() {
       return !this.currentDB || !this.sql
     }
-  },
-  async beforeMount() {
-    await this.run()
   },
   methods: {
     async run() {
