@@ -416,7 +416,7 @@ export default {
             total +
             '</strong> ads displayed on your Twitter feed' +
             " | <a class='reset'>Reset All</a>",
-          all: 'All ads selected. Please click on the graph to apply filters.'
+          all: 'All <strong>%total-count</strong> ads selected. Please click on the graph to apply filters.'
         })
         .on('pretransition', (chart, filter) => {
           const newData = d3.flatRollup(

@@ -15,7 +15,7 @@
           label="N° of advertisers"
           thumb-color="primary"
           thumb-label="always"
-          min="5"
+          min="1"
           :max="Math.min(total, 50)"
           hide-details
           dense
@@ -209,7 +209,10 @@ export default {
       this.nbDay = d3.timeDay.count(extent[0], extent[1])
 
       // Add number of samples
-      this.total = this.values.length
+      this.total = this.values.reduce(
+        (partialSum, a) => partialSum + a.count,
+        0
+      )
 
       // set default number of samples
       this.topKSlider = 20
