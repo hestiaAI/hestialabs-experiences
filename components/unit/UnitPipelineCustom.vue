@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import mixin from './mixin-pipeline'
 import { setTimeoutPromise } from '@/utils/utils'
 
@@ -47,14 +47,13 @@ export default {
     },
     customPipelineOptions: {
       type: [Object, Array],
-      default: () => []
+      default: () => ({})
     }
   },
   data() {
     return {
       status: false,
       error: false,
-      progress: false,
       code: '',
       parameter: '',
       options: '',
@@ -62,7 +61,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['fileManager']),
+    ...mapState(['fileManager']),
     disabled() {
       return this.fileManager === null
     }
@@ -76,9 +75,8 @@ export default {
       await this.run()
     }
   },
-  async beforeMount() {
+  beforeMount() {
     this.updateOptions()
-    await this.run()
   },
   methods: {
     updateOptions() {
