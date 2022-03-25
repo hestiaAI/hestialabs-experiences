@@ -50,12 +50,11 @@
             <UnitPipelineCustom
               v-if="customPipeline !== undefined"
               v-bind="{
-                fileManager,
                 customPipeline,
                 customPipelineOptions:
                   defaultViewElements.customPipelineOptions,
                 parameterName: defaultViewElements.parameterName,
-                defaultViewElements
+                hash: defaultViewElements.key
               }"
               @update="onUnitResultsUpdate"
             />
@@ -64,7 +63,8 @@
               v-bind="{
                 sql,
                 parameterName: defaultViewElements.parameterName,
-                parameterKey: defaultViewElements.parameterKey
+                parameterKey: defaultViewElements.parameterKey,
+                hash: defaultViewElements.key
               }"
               @update="onUnitResultsUpdate"
             />
@@ -117,7 +117,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
+
 export default {
   props: {
     sparqlQuery: {
@@ -142,20 +143,25 @@ export default {
     },
     vega: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     },
     postprocessors: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   data() {
     return {
-      errorMessage: ''
+      errorMessage: '',
+      // `result` keeps track of the internal result from the pipeline.
+      // Note: we should not fetch the result from Vuex because
+      // then the UnitQuery component instance will react when
+      // other instances add to the results object in the store.
+      result: null
     }
   },
   computed: {
-    ...mapGetters(['fileManager']),
+    ...mapState(['fileManager']),
     showTable() {
       return this.defaultViewElements.showTable
     },
@@ -171,17 +177,6 @@ export default {
     vizVega() {
       return this.vega[this.vizName]
     },
-    result: {
-      get() {
-        return this.$store.state.results[this.defaultViewElements.key] ?? null
-      },
-      set(result) {
-        this.$store.commit('setResult', {
-          experience: this.defaultViewElements.key,
-          result
-        })
-      }
-    },
     clonedResult() {
       return JSON.parse(JSON.stringify(this.result))
     },
@@ -196,19 +191,38 @@ export default {
         .map(([glob, _]) => glob)
     }
   },
+  watch: {
+    fileManager(value) {
+      if (!value) {
+        // When fileManager is reset,
+        // we set result to null to ensure
+        // the viz component is not mounted
+        // before new results from the pipeline
+        // are available (see clonedResult)
+        this.result = null
+      }
+    }
+  },
   methods: {
     onUnitResultsUpdate({ result, error }) {
+      let finalResult = result
       if (error) {
         console.error(error)
         this.errorMessage = error instanceof Error ? error.message : error
         return
       }
       // Postprocessing
-      if (this.defaultViewElements.postprocessor !== undefined) {
-        result =
-          this.postprocessors[this.defaultViewElements.postprocessor](result)
+      if (this.defaultViewElements.postprocessor) {
+        finalResult =
+          this.postprocessors[this.defaultViewElements.postprocessor](
+            finalResult
+          )
       }
-      this.result = result
+      this.$store.commit('setResult', {
+        experience: this.defaultViewElements.key,
+        result: finalResult
+      })
+      this.result = finalResult
     }
   }
 }
