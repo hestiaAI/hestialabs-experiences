@@ -54,7 +54,6 @@ export default {
     return {
       status: false,
       error: false,
-      progress: false,
       code: '',
       parameter: '',
       options: '',
@@ -76,9 +75,8 @@ export default {
       await this.run()
     }
   },
-  async beforeMount() {
+  beforeMount() {
     this.updateOptions()
-    await this.run()
   },
   methods: {
     updateOptions() {

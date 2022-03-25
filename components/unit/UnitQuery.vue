@@ -50,12 +50,11 @@
             <UnitPipelineCustom
               v-if="customPipeline !== undefined"
               v-bind="{
-                fileManager,
                 customPipeline,
                 customPipelineOptions:
                   defaultViewElements.customPipelineOptions,
                 parameterName: defaultViewElements.parameterName,
-                defaultViewElements
+                hash: defaultViewElements.key
               }"
               @update="onUnitResultsUpdate"
             />
@@ -64,7 +63,8 @@
               v-bind="{
                 sql,
                 parameterName: defaultViewElements.parameterName,
-                parameterKey: defaultViewElements.parameterKey
+                parameterKey: defaultViewElements.parameterKey,
+                hash: defaultViewElements.key
               }"
               @update="onUnitResultsUpdate"
             />
@@ -156,7 +156,7 @@ export default {
       // `result` keeps track of the internal result from the pipeline.
       // Note: we should not fetch the result from Vuex because
       // then the UnitQuery component instance will react when
-      // other instances add to the results object in the store
+      // other instances add to the results object in the store.
       result: null
     }
   },
@@ -191,6 +191,18 @@ export default {
         .map(([glob, _]) => glob)
     }
   },
+  watch: {
+    fileManager(value) {
+      if (!value) {
+        // When fileManager is reset,
+        // we set result to null to ensure
+        // the viz component is not mounted
+        // before new results from the pipeline
+        // are available (see clonedResult)
+        this.result = null
+      }
+    }
+  },
   methods: {
     onUnitResultsUpdate({ result, error }) {
       let finalResult = result
@@ -200,7 +212,7 @@ export default {
         return
       }
       // Postprocessing
-      if (this.defaultViewElements.postprocessor !== undefined) {
+      if (this.defaultViewElements.postprocessor) {
         finalResult =
           this.postprocessors[this.defaultViewElements.postprocessor](
             finalResult
