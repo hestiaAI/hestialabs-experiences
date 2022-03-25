@@ -16,12 +16,6 @@ export const state = () => ({
 })
 
 export const getters = {
-  fileManager(state) {
-    return state.fileManager
-  },
-  currentDB(state) {
-    return state.currentDB
-  },
   appName(state) {
     return state.config.appName
   },

@@ -4,6 +4,7 @@
     <VBanner v-if="config.banner" color="secondary">
       <VRow>
         <VCol cols="12 mx-auto" sm="10">
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <div v-html="config.banner"></div>
         </VCol>
       </VRow>

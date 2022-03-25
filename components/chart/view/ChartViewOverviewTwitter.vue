@@ -405,7 +405,7 @@ export default {
             return total
           }
         })
-        .group({
+        .groupAll({
           value() {
             return allGroup.value().count
           }

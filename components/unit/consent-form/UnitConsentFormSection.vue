@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   props: {
@@ -112,8 +112,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['consentForm', 'results']),
-    ...mapGetters(['fileManager']),
+    ...mapState(['consentForm', 'fileManager', 'results']),
     selectedFiles() {
       if (this.readonly) {
         return Object.keys(this.fileManager.fileDict)
