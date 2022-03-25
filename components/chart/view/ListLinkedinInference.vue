@@ -134,9 +134,7 @@ export default {
     }
   },
   methods: {
-    drawViz() {
-      console.log(this.values)
-    }
+    drawViz() {}
   }
 }
 </script>

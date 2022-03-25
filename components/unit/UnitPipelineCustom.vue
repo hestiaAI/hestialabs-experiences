@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="customPipelineOptions.length">
     <VRow v-if="parameterName">
       <VCol cols="4" class="mx-auto">
         <VTextField
@@ -43,11 +43,11 @@ export default {
     },
     parameterName: {
       type: String,
-      default: ''
+      default: () => ''
     },
     customPipelineOptions: {
       type: [Object, Array],
-      required: true
+      default: () => []
     }
   },
   data() {
