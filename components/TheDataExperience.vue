@@ -35,7 +35,7 @@
           </VTab>
         </VTabs>
         <VTabsItems v-model="tab">
-          <VTabItem value="load-data">
+          <VTabItem value="load-data" :transition="false">
             <VCol cols="12 mx-auto" sm="6" class="tabItem pa-5">
               <UnitIntroduction
                 v-bind="{ companyName: title, dataPortal }"
@@ -64,12 +64,12 @@
               </template>
             </VCol>
           </VTabItem>
-          <VTabItem value="summary">
+          <VTabItem value="summary" :transition="false">
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitSummary @switch-tab="switchTab" />
             </VCol>
           </VTabItem>
-          <VTabItem value="file-explorer">
+          <VTabItem value="file-explorer" :transition="false">
             <div class="tabItem">
               <UnitFileExplorer />
             </div>
@@ -78,6 +78,7 @@
             v-for="(defaultViewElements, index) in defaultView"
             :key="index"
             :value="defaultViewElements.key"
+            :transition="false"
           >
             <VCol cols="12 mx-auto" class="tabItem">
               <VOverlay :value="overlay" absolute opacity="0.8">
@@ -105,7 +106,11 @@
               />
             </VCol>
           </VTabItem>
-          <VTabItem v-if="consentFormTemplate" value="share-data">
+          <VTabItem
+            v-if="consentFormTemplate"
+            value="share-data"
+            :transition="false"
+          >
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitConsentForm
                 v-bind="{
