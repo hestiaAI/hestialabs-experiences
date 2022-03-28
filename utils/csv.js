@@ -1,5 +1,6 @@
 import * as csv from '@fast-csv/parse'
 import _ from 'lodash'
+import { setsEqual } from '~/utils/utils'
 
 const acceptedDelimiters = [',', ';', '\t']
 
@@ -10,7 +11,8 @@ function differentiateDuplicates(strings) {
     occurrences[name] === 1 ? name : `${name}_${++counter[name]}`
   )
 }
-export default async function getCsvHeadersAndItems(csvText) {
+
+async function getCsvHeadersAndItems(csvText) {
   let best = { items: [], headers: [] }
   for (const delimiter of acceptedDelimiters) {
     try {
@@ -41,3 +43,25 @@ export default async function getCsvHeadersAndItems(csvText) {
   }
   return best
 }
+
+/**
+ * Retrieve the csvs that match the fileID and merge them into one array
+ * @param {*} fileManager The fileManager instance that store the files and files IDs
+ * @param {*} fileID The corresponding key that link to the globPath we seek, defined in the manifest under files.
+ * @returns the merged csvs array
+ */
+async function getCsvAndMergeFromID(fileManager, fileID) {
+  const files = await fileManager.getCsvItemsFromId(fileID)
+
+  // Merge the files that have the same headers as the first file
+  const file = files.reduce((prev, curr) => {
+    if (setsEqual(new Set(prev.headers), new Set(curr.headers))) {
+      return { headers: prev.headers, items: prev.items.concat(curr.items) }
+    } else {
+      return prev
+    }
+  })
+  return file
+}
+
+export { getCsvHeadersAndItems, getCsvAndMergeFromID }

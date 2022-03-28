@@ -1,7 +1,44 @@
 {
   "title": "LinkedIn",
   "icon": "linkedin.png",
+  "dataPortal": "https://www.linkedin.com/help/linkedin/answer/50191/downloading-your-account-data",
+  "files": {
+    "inference": "**/Inferences_about_you.csv",
+    "ad-targeting": "**/Ad_Targeting.csv",
+    "connections": "**/Connections.csv"
+  },
+  "hideSummary": true,
+  "preprocessors": {
+    "**/Connections.csv": "linkedinConnections"
+  },
   "defaultView": [
+    {
+      "key": "inference",
+      "customPipeline": "inference",
+      "files": ["inference"],
+      "visualization": "ListLinkedinInference.vue",
+      "showTable": false,
+      "title": "Inferences about you",
+      "text": "Each card below represents an inference that Linkedin has made about you, either positively or negatively, e.g. Am I a joob seeker -> true or false."
+    },
+    {
+      "key": "ad-targeting",
+      "customPipeline": "adTargeting",
+      "files": ["ad-targeting"],
+      "visualization": "LinkedinAdTargeting.vue",
+      "showTable": false,
+      "title": "Ad targeting",
+      "text": "This information is used by Linkedin to determine which ads to show you. Some of the targeting data may be derived from other information you have provided to them. For example, they may use your title as an indication of your seniority level."
+    },
+    {
+      "key": "connections",
+      "customPipeline": "connections",
+      "files": ["connections"],
+      "visualization":"ChartViewOverviewLinkedinConnection.vue",
+      "showTable": false,
+      "title": "Connections",
+      "text": "This tool allows you to track all the connections you have made with Linkedin, you can filter by date, day or by company and position in your address book."
+    },
     {
       "key": "genericDateViewer",
       "customPipeline": "genericDateViewer",

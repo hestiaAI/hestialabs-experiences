@@ -96,6 +96,17 @@
         </VCol>
       </VRow>
     </VCard>
+    <div v-if="customPipelineOptions">
+      <UnitPipelineCustom
+        v-bind="{
+          fileManager,
+          customPipeline,
+          customPipelineOptions
+        }"
+        @update="onUnitResultsUpdate"
+      />
+      <UnitFilterableTable v-if="tableData" :data="tableData.result" />
+    </div>
   </div>
 </template>
 
@@ -125,7 +136,7 @@ export default {
       height: 500,
       tableData: undefined,
       customPipeline: jsonToTableConverter,
-      defaultViewElements: {},
+      customPipelineOptions: undefined,
       selectedAccessor: undefined,
       tableDataFromAccessor: undefined
     }
@@ -209,7 +220,7 @@ export default {
       this.isFileLoading = loading
     },
     onSelectAccessor(accessor) {
-      this.defaultViewElements = { customPipelineOptions: { accessor } }
+      this.customPipelineOptions = [{ accessor }]
     },
     onUnitResultsUpdate(result) {
       this.tableData = result

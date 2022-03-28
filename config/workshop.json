@@ -3,7 +3,6 @@
     "facebook",
     "twitter",
     "tinder",
-    "ad-radar",
     "amazon",
     "apple",
     "google",
@@ -15,6 +14,7 @@
     "tracker-control",
     "whatsapp",
     "uber",
+    "ad-radar",
     "explorer"
   ],
   "hashtags": ["dataprivacy", "hestialabs"]

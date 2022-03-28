@@ -4,6 +4,7 @@
     <VBanner v-if="config.banner" color="secondary">
       <VRow>
         <VCol cols="12 mx-auto" sm="10">
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <div v-html="config.banner"></div>
         </VCol>
       </VRow>
@@ -19,8 +20,8 @@
           centered
           fixed-tabs
           :eager="false"
-          class="fixed-tabs-bar mb-10 experience-tabs"
-          @change="scrollToTop()"
+          class="fixed-tabs-bar"
+          @change="scrollToTop"
         >
           <VTab
             v-for="(t, index) in tabs"
@@ -33,7 +34,7 @@
           </VTab>
         </VTabs>
         <VTabsItems v-model="tab">
-          <VTabItem value="load-data">
+          <VTabItem value="load-data" :transition="false">
             <VCol cols="12 mx-auto" sm="6" class="tabItem pa-5">
               <UnitIntroduction
                 v-bind="{ companyName: title, dataPortal }"
@@ -62,12 +63,12 @@
               </template>
             </VCol>
           </VTabItem>
-          <VTabItem value="summary">
+          <VTabItem value="summary" :transition="false">
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitSummary @switch-tab="switchTab" />
             </VCol>
           </VTabItem>
-          <VTabItem value="file-explorer">
+          <VTabItem value="file-explorer" :transition="false">
             <div class="tabItem">
               <UnitFileExplorer />
             </div>
@@ -76,6 +77,7 @@
             v-for="(defaultViewElements, index) in defaultView"
             :key="index"
             :value="defaultViewElements.key"
+            :transition="false"
           >
             <VCol cols="12 mx-auto" class="tabItem">
               <VOverlay :value="overlay" absolute opacity="0.8">
@@ -103,7 +105,11 @@
               />
             </VCol>
           </VTabItem>
-          <VTabItem v-if="consentFormTemplate" value="share-data">
+          <VTabItem
+            v-if="consentFormTemplate"
+            value="share-data"
+            :transition="false"
+          >
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitConsentForm
                 v-bind="{
@@ -125,8 +131,6 @@ import debounce from 'lodash/debounce'
 
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
-import parseYarrrml from '~/utils/parse-yarrrml'
-import rdfUtils from '~/utils/rdf'
 
 export default {
   name: 'TheDataExperience',
@@ -150,6 +154,14 @@ export default {
     defaultView: {
       type: Array,
       default: () => []
+    },
+    hideSummary: {
+      type: Boolean,
+      default: () => false
+    },
+    hideFileExplorer: {
+      type: Boolean,
+      default: () => false
     },
     preprocessors: {
       type: Object,
@@ -207,20 +219,29 @@ export default {
           value: 'load-data',
           disabled: this.experienceProgress
         },
-        {
-          title: 'Summary',
-          value: 'summary',
-          disabled
-        },
-        {
-          title: 'Files',
-          value: 'file-explorer',
-          disabled
-        },
+        ...(!this.hideSummary
+          ? [
+              {
+                title: 'Summary',
+                value: 'summary',
+                disabled
+              }
+            ]
+          : []),
+        ...(!this.hideFileExplorer
+          ? [
+              {
+                title: 'Files',
+                value: 'file-explorer',
+                disabled
+              }
+            ]
+          : []),
         ...this.defaultView.map(view => ({
           ...view,
           value: view.key,
-          disabled
+          disabled,
+          show: true
         }))
       ]
       if (this.consentFormTemplate) {
@@ -277,10 +298,9 @@ export default {
   methods: {
     switchTab(value) {
       this.$router.push(`#${value}`)
-      this.scrollToTop()
     },
     scrollToTop() {
-      window.scrollTo(0, 0)
+      window.setTimeout(() => window.scrollTo(0, 0), 10)
     },
     handleError(error) {
       console.error(error)
@@ -332,22 +352,9 @@ export default {
         }
       }
 
-      // Generate RDF
-      if (this.isRdfNeeded && this.yarrrml) {
-        try {
-          const processedFiles = await fileManager.preprocessFiles(
-            Object.values(this.files)
-          )
-          this.rml = await parseYarrrml(this.yarrrml)
-          await rdfUtils.generateRDF(this.rml, processedFiles)
-        } catch (error) {
-          this.handleError(error)
-          return
-        }
-      }
       this.progress = false
       this.success = true
-      setTimeout(() => this.switchTab('summary'), 500)
+      setTimeout(() => this.switchTab(this.tabs[1].value), 500)
 
       const elapsed = new Date() - start
       this.message = `Successfully processed in ${elapsed / 1000} sec.`

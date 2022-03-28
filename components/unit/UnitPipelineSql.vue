@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import mixin from './mixin-pipeline'
 import { setTimeoutPromise } from '@/utils/utils'
 
@@ -35,18 +35,14 @@ export default {
   },
   data() {
     return {
-      progress: false,
       parameter: ''
     }
   },
   computed: {
-    ...mapGetters(['currentDB']),
+    ...mapState(['currentDB']),
     disabled() {
       return !this.currentDB || !this.sql
     }
-  },
-  async beforeMount() {
-    await this.run()
   },
   methods: {
     async run() {

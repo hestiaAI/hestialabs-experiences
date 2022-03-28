@@ -5,6 +5,8 @@
     "viewing-activity": "**/CONTENT_INTERACTION/ViewingActivity.csv",
     "messages-by-netflix": "**/MESSAGES/MessagesSentByNetflix.csv"
   },
+  "hideSummary": true,
+  "hideFileExplorer": true,
   "defaultView": [
     {
       "key": "watchOverview",

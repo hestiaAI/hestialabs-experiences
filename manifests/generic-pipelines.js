@@ -385,12 +385,11 @@ async function genericLocationViewer({ fileManager, options }) {
  *        "filePath": "...", // A file path or glob
  *        "jsonPath": "..." // A JsonPath
  *      },
- *      "properties": [
+ *      "columns": [
  *        {
  *          "name": "Advertiser",
- *          "field": "name",
+ *          "path": "name",
  *          "type": "string",
- *          "required": true
  *        },
  *        ...
  *      ]
@@ -407,80 +406,110 @@ async function jsonToTableConverter({ fileManager, options }) {
   const validate = ajv.compile(jsonToTableSchema)
   const valid = validate(options)
   if (!valid) {
-    console.error(
-      'The validation of the options you gave in the manifest failed: ',
-      validate.errors
-    )
+    console.error('Invalid options: ', ajv.errorsText(validate.errors))
     return {}
   }
 
-  const entries = await fileManager.findMatchingObjects(options.accessor, {
-    freeFiles: true
+  const tableDatasPromises = options.map(async opts => {
+    const entries = await fileManager.findMatchingObjects(opts.accessor, {
+      freeFiles: true
+    })
+    return makeTableData(entries, opts)
   })
-
-  return makeTableData(entries, options)
+  const tableDatas = await Promise.all(tableDatasPromises)
+  const mergedData = mergeTableData(tableDatas)
+  return mergedData
 }
 
-export function makeTableData(objects, options) {
-  if (options?.properties) {
-    const headers = options.properties.map(p => p.name)
-    const items = objects.map(e => makeTableItem(e, options))
-    return { headers, items }
-  }
+export function mergeTableData(tableDatas) {
+  const nonEmpties = tableDatas.filter(
+    td => td.headers?.length && td.items?.length
+  )
+  const headers = [...new Set(nonEmpties.flatMap(td => td.headers))]
+  const items = nonEmpties.flatMap(td => td.items)
+  return { headers, items }
+}
 
+function provideColumnName(column) {
+  return column.name || column.path
+}
+
+function extractHeaders(entries) {
+  const headerSet = entries.reduce((hSet, obj) => {
+    Object.keys(obj).forEach(k => hSet.add(k))
+    return hSet
+  }, new Set())
+  return [...headerSet]
+}
+
+export function makeTableData(entries, options) {
   // If objects is an array of a single array
   // display the single array.
   // That way a jsonPath to an array is displayed the same way
   // as if it ended with '[*]'.
   // This solution seemed preferable to generating [*] json paths
   // from the json viewer.
-  const singleArray = objects.length === 1 && Array.isArray(objects[0])
-  const objectsToDisplay = singleArray ? objects[0] : objects
+  const singleArray = entries.length === 1 && Array.isArray(entries[0])
+  const entriesToDisplay = singleArray ? entries[0] : entries
 
-  const firstObject = objectsToDisplay[0]
+  // TODO maybe display columns that are not configured in options
+  // by creating column configurations from headers
+  // add an ignoreColumns field in options
+  // in UnitFileExplorer, create a columns configuration from entries[0]
+  // so that an example configuration is displayed to the user
+  // this.customPipelineOptions = [{ accessor, columns }]
+
+  if (options?.columns) {
+    const headers = options.columns.map(provideColumnName)
+    const items = entriesToDisplay.map(e => makeTableItem(e, options))
+    return { headers, items }
+  }
+
+  const firstObject = entriesToDisplay[0]
   if (firstObject === undefined) {
-    return {}
+    return { headers: [], items: [] }
   }
   if (typeof firstObject === 'object' && !Array.isArray(firstObject)) {
-    const headerSet = objectsToDisplay.reduce((hSet, obj) => {
-      Object.keys(obj).forEach(k => hSet.add(k))
-      return hSet
-    }, new Set())
-    const tableData = { headers: [...headerSet], items: objectsToDisplay }
+    const headers = extractHeaders(entriesToDisplay)
+    const tableData = { headers, items: entriesToDisplay }
     return tableData
   }
   return {
     headers: ['item'],
-    items: objectsToDisplay.map(s => ({ item: s }))
+    items: entriesToDisplay.map(s => ({ item: s }))
   }
 }
 
 function makeTableItem(object, options) {
   const item = {}
-  options.properties.forEach(p => {
-    // get all entries that satisfy the given field JSONPATH
+  options.columns.forEach(c => {
+    // get all entries that satisfy the given path
     const value = JSONPath({
-      path: p.field,
+      path: c.path,
       json: object,
       wrap: true
     })
-
+    const name = provideColumnName(c)
     // Cast value to specified format, may need to handle errors
-    switch (p.type) {
+    switch (c.type) {
       case 'date':
-        item[p.name] = timeParse(p.format)(value)
+        item[name] = timeParse(c.format)(value)
+        break
+      case 'object':
+        item[name] = value
         break
       case 'string':
-        item[p.name] = String(value)
+        item[name] = String(value)
         break
       case 'number':
-        item[p.name] = Number(value)
+        item[name] = Number(value)
         break
       case 'boolean':
-        item[p.name] = Boolean(value)
+        item[name] = Boolean(value)
         break
       default:
-        item[p.name] = value
+        // consider it a string
+        item[name] = String(value)
     }
   })
   return item

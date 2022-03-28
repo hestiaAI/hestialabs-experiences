@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="customPipelineOptions.length">
     <VRow v-if="parameterName">
       <VCol cols="4" class="mx-auto">
         <VTextField
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import mixin from './mixin-pipeline'
 import { setTimeoutPromise } from '@/utils/utils'
 
@@ -43,18 +43,17 @@ export default {
     },
     parameterName: {
       type: String,
-      default: ''
+      default: () => ''
     },
-    defaultViewElements: {
-      type: Object,
-      required: true
+    customPipelineOptions: {
+      type: [Object, Array],
+      default: () => ({})
     }
   },
   data() {
     return {
       status: false,
       error: false,
-      progress: false,
       code: '',
       parameter: '',
       options: '',
@@ -62,7 +61,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['fileManager']),
+    ...mapState(['fileManager']),
     disabled() {
       return this.fileManager === null
     }
@@ -71,18 +70,17 @@ export default {
     options() {
       this.status = false
     },
-    async 'defaultViewElements.customPipelineOptions'() {
+    async customPipelineOptions() {
       this.updateOptions()
       await this.run()
     }
   },
-  async beforeMount() {
+  beforeMount() {
     this.updateOptions()
-    await this.run()
   },
   methods: {
     updateOptions() {
-      const optionsObject = this.defaultViewElements.customPipelineOptions
+      const optionsObject = this.customPipelineOptions
       if (optionsObject) {
         this.options = JSON.stringify(optionsObject, null, 2)
       }

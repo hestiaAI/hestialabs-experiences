@@ -5,61 +5,67 @@
  * jsonToTableConverter
  */
 export default {
-  type: 'object',
-  properties: {
-    accessor: {
-      type: 'object',
-      properties: {
-        filePath: {
-          type: 'string' // Regex that match a set of files to scan
-        },
-        jsonPath: {
-          type: 'string' // JSONPath to access a list of object in those files
-        }
-      },
-      required: ['filePath', 'jsonPath']
-    },
-    // here we define the properties of each column
+  type: 'array',
+  items: {
+    type: 'object',
     properties: {
-      type: 'array',
-      items: {
+      accessor: {
         type: 'object',
         properties: {
-          // name to display for the column
-          name: {
-            type: 'string'
+          filePath: {
+            type: 'string' // Regex that match a set of files to scan
           },
-          // JSONPath to access the value (it can be nested or not)
-          field: {
-            type: 'string'
-          },
-          // type of the value, allow to cast specific types
-          type: {
-            default: 'object',
-            enum: ['string', 'date', 'number', 'object', 'list', 'boolean']
-          },
-          // format is required when the type is "date",
-          // we use https://github.com/d3/d3-time-format to format dates
-          format: {
-            type: 'string'
-          },
-          // When required is set to true, an error message will be sent
-          // if a value is not found, in any case empty values are set to null
-          required: {
-            type: 'boolean'
+          jsonPath: {
+            type: 'string' // JSONPath to access a list of object in those files
           }
         },
-        required: ['name', 'field', 'type', 'required'],
-        anyOf: [
-          {
-            not: {
-              properties: { type: { const: 'date' } }
+        required: ['filePath', 'jsonPath']
+      },
+      // here we configure columns
+      columns: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            // name to display for the column
+            name: {
+              type: 'string'
+            },
+            // JSONPath to access the value (it can be nested or not)
+            path: {
+              type: 'string'
+            },
+            // type of the value, allow to cast specific types
+            type: {
+              default: 'object',
+              enum: ['string', 'date', 'number', 'object', 'list', 'boolean']
+            },
+            // format is required when the type is "date",
+            // we use https://github.com/d3/d3-time-format to format dates
+            format: {
+              type: 'string'
             }
           },
-          { required: ['format'] }
-        ]
+          required: ['path'],
+          anyOf: [
+            // either you have another type than date
+            {
+              not: {
+                properties: { type: { const: 'date' } }
+              }
+            },
+            // or you have no type
+            {
+              not: {
+                required: ['type']
+              }
+            },
+            // or you have format
+            { required: ['format'] }
+          ]
+        }
       }
-    }
-  },
-  required: ['accessor']
+    },
+    required: ['accessor']
+  }
 }

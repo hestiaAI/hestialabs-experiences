@@ -3,6 +3,11 @@ const twitter = string => {
   return string.replace(/^[0-9a-zA-Z_.]+\s+=/, '')
 }
 
+const linkedinConnections = string => {
+  // skip first 3 rows
+  return string.split('\n').slice(3).join('\n')
+}
+
 const tinder = string => {
   const json = JSON.parse(string)
   Object.keys(json?.Usage ?? {}).forEach(key => {
@@ -76,5 +81,6 @@ const facebook = s => {
 export default {
   twitter,
   tinder,
-  facebook
+  facebook,
+  linkedinConnections
 }

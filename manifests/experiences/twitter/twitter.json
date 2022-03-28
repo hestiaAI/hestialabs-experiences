@@ -3,8 +3,10 @@
   "icon": "twittr.png",
   "dataPortal": "https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive",
   "data": ["twitter.zip", "twitter-sample.zip"],
+  "hideSummary": true,
+  "hideFileExplorer": true,
   "files": {
-    "impressions": "**/ad-impressions.js", 
+    "impressions": "**/ad-impressions.js",
     "engagements": "**/ad-engagements.js"
   },
   "preprocessors": {
@@ -19,8 +21,17 @@
   },
   "defaultView": [
     {
-      "key": "advertisers-per-day",
-      "sql": "advertisers-per-day",
+      "key": "overview",
+      "sql": "overview",
+      "files": ["impressions", "engagements"],
+      "visualization": "ChartViewOverviewTwitter.vue",
+      "showTable": false,
+      "title": "Advertising overview",
+      "text": "Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results."
+    },
+    {
+      "key": "ads-per-advertiser",
+      "sql": "ads-per-advertiser",
       "files": ["impressions", "engagements"],
       "visualization": "ChartViewTopRow.vue",
       "vizProps": {
@@ -60,30 +71,12 @@
       "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the advertiser in the table below and click on it to visualise them."
     },
     {
-      "key": "overview",
-      "sql": "overview",
-      "files": ["impressions", "engagements"],
-      "visualization": "ChartViewOverviewTwitter.vue",
-      "showTable": false,
-      "title": "Twitter advertising overview",
-      "text": "Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results."
-    },
-    {
       "key": "genericDateViewer",
       "customPipeline": "genericDateViewer",
       "visualization": "ChartViewGenericDateViewer.vue",
       "showTable": false,
       "title": "Timeline",
       "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
-    },
-    {
-      "key": "genericLocationViewer",
-      "customPipeline": "genericLocationViewer",
-      "customPipelineOptions": { "acceptedPaths": ".*" },
-      "visualization": "ChartViewGenericLocationViewer.vue",
-      "showTable": false,
-      "title": "Location observations",
-      "text": "See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location."
     }
   ]
 }
