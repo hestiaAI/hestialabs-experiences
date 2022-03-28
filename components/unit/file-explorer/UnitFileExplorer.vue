@@ -8,7 +8,7 @@
       </style>
       <VRow>
         <VExpandTransition>
-          <VCol cols="12" :md="mini ? 2 : 6">
+          <VCol cols="12" :md="mini ? 4 : 6" :lg="mini ? 2 : 6">
             <VListItem class="px-2">
               <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
               <VListItemTitle class="mx-4">File Explorer</VListItemTitle>
@@ -52,7 +52,7 @@
           </VCol>
         </VExpandTransition>
         <VDivider vertical></VDivider>
-        <VCol>
+        <VCol cols="12" :md="mini ? 8 : 6" :lg="mini ? 10 : 6">
           <VCardTitle class="justify-center">Explore your files</VCardTitle>
           <VCardText>
             <template v-if="filename">
@@ -72,12 +72,12 @@
                 v-bind="{ fileManager, filename }"
                 @loading="onLoading"
               />
-              <div v-if="defaultViewElements.customPipelineOptions">
+              <div v-if="customPipelineOptions">
                 <UnitPipelineCustom
                   v-bind="{
                     fileManager,
                     customPipeline,
-                    defaultViewElements
+                    customPipelineOptions
                   }"
                   @update="onUnitResultsUpdate"
                 />
@@ -96,17 +96,6 @@
         </VCol>
       </VRow>
     </VCard>
-    <div v-if="customPipelineOptions">
-      <UnitPipelineCustom
-        v-bind="{
-          fileManager,
-          customPipeline,
-          customPipelineOptions
-        }"
-        @update="onUnitResultsUpdate"
-      />
-      <UnitFilterableTable v-if="tableData" :data="tableData.result" />
-    </div>
   </div>
 </template>
 
