@@ -6,7 +6,7 @@
   "hideSummary": true,
   "hideFileExplorer": true,
   "files": {
-    "impressions": "**/ad-impressions.js", 
+    "impressions": "**/ad-impressions.js",
     "engagements": "**/ad-engagements.js"
   },
   "preprocessors": {
@@ -30,8 +30,8 @@
       "text": "Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results."
     },
     {
-      "key": "advertisers-per-day",
-      "sql": "advertisers-per-day",
+      "key": "ads-per-advertiser",
+      "sql": "ads-per-advertiser",
       "files": ["impressions", "engagements"],
       "visualization": "ChartViewTopRow.vue",
       "vizProps": {

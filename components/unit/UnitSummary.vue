@@ -34,7 +34,7 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import _ from 'lodash'
 import { humanReadableFileSize, plurify } from '~/manifests/utils'
 
@@ -59,7 +59,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['fileManager']),
+    ...mapState(['fileManager']),
     ext2group() {
       return Object.fromEntries(
         Object.entries(this.group2ext).flatMap(entry =>

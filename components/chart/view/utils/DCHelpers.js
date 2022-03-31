@@ -53,3 +53,19 @@ export function addYLabel(chartToUpdate, displayText) {
       )
     )
 }
+
+export function createCumulativeGroup(group) {
+  return {
+    all() {
+      const cumulate = {}
+      return group.all().map(function (d) {
+        if (cumulate[d.key[0]]) {
+          cumulate[d.key[0]] += d.value
+        } else {
+          cumulate[d.key[0]] = d.value
+        }
+        return { key: d.key, value: cumulate[d.key[0]] }
+      })
+    }
+  }
+}
