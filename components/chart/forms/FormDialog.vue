@@ -24,7 +24,7 @@
       </VToolbar>
       <VRow justify="center" class="pa-3">
         <VCol cols="6" lg="4">
-          <FormAllChart v-bind="{ headers, values }" @submit="submit" />
+          <FormChart v-bind="{ headers, values }" @submit="submit" />
         </VCol>
         <VDivider vertical />
         <VCol cols="6" lg="8">
@@ -61,9 +61,9 @@
 </template>
 
 <script>
-import FormAllChart from './FormAllChart.vue'
+import FormChart from './FormChart.vue'
 export default {
-  components: { FormAllChart },
+  components: { FormChart },
   props: {
     headers: {
       type: Array,

@@ -27,7 +27,7 @@ export default {
   props: {
     value: {
       type: Color,
-      default: () => new Color('#000000')
+      default: () => new Color()
     }
   },
   data() {
