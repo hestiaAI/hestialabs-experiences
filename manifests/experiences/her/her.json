@@ -3,7 +3,7 @@
   "subtitle": "Data experiences",
   "icon": "herlogo.webp",
   "dataPortal": "https://weareher.com/privacy/",
-  "files": {"liked": "**/liked.csv", "notifications": "**/notifications.csv"},
+  "files": { "liked": "**/liked.csv", "notifications": "**/notifications.csv" },
   "defaultView": [
     {
       "key": "liked",
@@ -12,7 +12,7 @@
       "showTable": true,
       "title": "Liked",
       "text": "Number of likes that you made over time."
-    }, 
+    },
     {
       "key": "notifications",
       "sql": "notifications",
@@ -20,18 +20,18 @@
       "showTable": true,
       "title": "notifications",
       "text": "Number of notifications that you recieved over time."
-    }, 
+    },
     {
       "key": "likedNotifications",
-      "sql": "likedNotifications",
+      "sql": "liked-notifications",
       "files": ["notifications"],
       "showTable": true,
       "title": "Liked notifications",
       "text": "Number of Liked notifications that you recieved over time."
-    }, 
+    },
     {
       "key": "friendNotifications",
-      "sql": "friendNotifications",
+      "sql": "friend-notifications",
       "files": ["notifications"],
       "showTable": true,
       "title": "Friend notifications",
