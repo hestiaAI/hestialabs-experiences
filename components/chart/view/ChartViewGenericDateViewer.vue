@@ -223,9 +223,7 @@ export default {
       // .barPadding(0)
       // .gap(this.selectTimeInt === 'Months' ? 20 : 0)
 
-      this.barChart
-        .yAxis()
-        .tickFormat(v => d3.format(Number.isInteger(v) ? '~s' : '.2~f')(v))
+      this.barChart.yAxis().tickFormat(v => (Number.isInteger(v) ? v : ''))
 
       // volume chart date picker
       this.rangeChart
