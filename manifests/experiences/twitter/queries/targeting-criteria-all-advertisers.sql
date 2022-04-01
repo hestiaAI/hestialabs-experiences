@@ -1,3 +1,3 @@
 SELECT targetingType, targetingValue, COUNT(*) AS count
-FROM twitterCriteria
+FROM TwitterCriterion
 GROUP BY targetingType, targetingValue;

@@ -1,3 +1,3 @@
 SELECT advertiserName, COUNT(*) AS count
-FROM twitterAds
+FROM TwitterAd
 GROUP BY advertiserName;

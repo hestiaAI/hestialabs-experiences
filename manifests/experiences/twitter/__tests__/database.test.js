@@ -67,15 +67,15 @@ describe('with complete samples', () => {
   test('the database builder creates the tables correctly', () => {
     let result, expected
 
-    // Table twitterAds
-    result = db.select('SELECT * FROM twitterAds')
+    // Table TwitterAd
+    result = db.select('SELECT * FROM TwitterAd')
     expected = {
       headers: [
         'id',
         'tweetId',
         'advertiserName',
         'time',
-        'engagement',
+        'engagements',
         'displayLocation'
       ],
       items: [
@@ -92,8 +92,8 @@ describe('with complete samples', () => {
     arrayEqualNoOrder(result.headers, expected.headers)
     arrayEqualNoOrder(result.items, expected.items)
 
-    // Table twitterCriteria
-    result = db.select('SELECT * FROM twitterCriteria')
+    // Table TwitterCriterion
+    result = db.select('SELECT * FROM TwitterCriterion')
     expected = {
       headers: ['id', 'adId', 'targetingType', 'targetingValue'],
       items: [
@@ -166,7 +166,7 @@ describe('with complete samples', () => {
       headers: [
         'tweetId',
         'companyName',
-        'engagement',
+        'engagements',
         'date',
         'targetingType',
         'targetingValue'
@@ -175,7 +175,7 @@ describe('with complete samples', () => {
         {
           tweetId: '1381646278988292098',
           companyName: 'PwC Switzerland',
-          engagement: 1,
+          engagements: 1,
           date: '2021-04-15 19:43:25',
           targetingType: 'Locations',
           targetingValue: 'Switzerland'
@@ -183,7 +183,7 @@ describe('with complete samples', () => {
         {
           tweetId: '1381646278988292098',
           companyName: 'PwC Switzerland',
-          engagement: 1,
+          engagements: 1,
           date: '2021-04-15 19:43:25',
           targetingType: 'Age',
           targetingValue: '35 and up'

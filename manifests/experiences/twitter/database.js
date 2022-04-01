@@ -6,15 +6,14 @@ export default async function databaseBuilder(fileManager) {
   const db = new DB()
   await db.init()
 
-  db.create('twitterAds', [
+  db.create('TwitterAd', [
     ['id', 'INTEGER'],
     ['tweetId', 'TEXT'],
     ['advertiserName', 'TEXT'],
     ['displayLocation', 'TEXT'],
-    ['time', 'DATE'],
-    ['engagement', 'INTEGER']
+    ['time', 'DATE']
   ])
-  db.create('twitterCriteria', [
+  db.create('TwitterCriterion', [
     ['id', 'INTEGER'],
     ['adId', 'INTEGER'],
     ['targetingType', 'TEXT'],
@@ -43,7 +42,7 @@ export default async function databaseBuilder(fileManager) {
   const targetingItems = []
   let targetingItemsId = 0
   let adsId = 0
-  // add all impressions and targeting criterias
+  // add all impressions and targeting criteria
   impressions.forEach(v => {
     const tweetId = v.promotedTweetInfo?.tweetId ?? null
     const advertiserName = v.advertiserInfo?.advertiserName ?? null
@@ -92,7 +91,7 @@ export default async function databaseBuilder(fileManager) {
     })
   })
 
-  db.insert('twitterAds', adsItems)
-  db.insert('twitterCriteria', targetingItems)
+  db.insert('TwitterAd', adsItems)
+  db.insert('TwitterCriterion', targetingItems)
   return db
 }
