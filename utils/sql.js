@@ -194,26 +194,23 @@ export async function createDB({ tables }) {
 function generateRecordsRecursively(
   defaultValues,
   records,
-  table,
-  path,
   json,
-  accessors
+  { table, path, accessors = [], options = {} }
 ) {
-  const jsonPathOptions = { path, json }
+  const jsonPathOptions = {
+    ...options,
+    path,
+    json,
+    // eslint-disable-next-line no-eval
+    callback: eval(options.callback)
+  }
   const result = JSONPath(jsonPathOptions) ?? []
   result.forEach(item => {
     const record = { ...defaultValues[table] }
     records[table].push(record)
     accessors.forEach(a => {
       if (a.table && a.accessors.length && a.path && !a.column) {
-        generateRecordsRecursively(
-          defaultValues,
-          records,
-          a.table,
-          a.path,
-          item,
-          a.accessors
-        )
+        generateRecordsRecursively(defaultValues, records, item, a)
       } else if (a.column && a.reference && !a.path) {
         const referenceRecords = records[a.reference.table]
         const refId = referenceRecords.length
@@ -223,8 +220,15 @@ function generateRecordsRecursively(
           record[a.column] = referenceRecords[refId - 1][a.reference.column]
         }
       } else if (a.column && a.path) {
-        const value = JSONPath({ json: item, path: a.path, wrap: false })
+        const value = JSONPath({
+          ...(a.options || {}),
+          json: item,
+          path: a.path,
+          wrap: false
+        })
         record[a.column] = value || null
+      } else if (a.column && a.value) {
+        record[a.column] = a.value
       } else {
         throw new Error(`Invalid accessor: ${JSON.stringify(a)}`)
       }
@@ -250,19 +254,12 @@ export async function generateRecords(db, fileManager, { tables, files }) {
   // { "Table1": [], "Table2": [], ... }
   const records = Object.fromEntries(tables.map(({ name }) => [name, []]))
 
-  for (const { id, path, table, accessors } of files) {
+  for (const { id, ...rest } of files) {
     const matchedJSONFiles = await fileManager.getPreprocessedTextFromId(id)
     matchedJSONFiles
       .map(JSON.parse)
       .forEach(json =>
-        generateRecordsRecursively(
-          defaultValues,
-          records,
-          table,
-          path,
-          json,
-          accessors
-        )
+        generateRecordsRecursively(defaultValues, records, json, rest)
       )
   }
   return records

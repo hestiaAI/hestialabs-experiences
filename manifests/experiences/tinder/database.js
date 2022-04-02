@@ -13,7 +13,7 @@ export default async function databaseBuilder(fileManager) {
   )
 
   /// Likes ////////////////////
-  db.create('TinderDB', [
+  db.create('Tinder', [
     ['action', 'TEXT'],
     ['date', 'TEXT'],
     ['amount', 'INTEGER']
@@ -31,7 +31,7 @@ export default async function databaseBuilder(fileManager) {
       amount: v.value
     })
   })
-  db.insert('TinderDB', likesItems)
+  db.insert('Tinder', likesItems)
 
   /// Dislikes ////////////////////
   const passesJSON = JSONPath({
@@ -46,7 +46,7 @@ export default async function databaseBuilder(fileManager) {
       amount: v.value
     })
   })
-  db.insert('TinderDB', passesItems)
+  db.insert('Tinder', passesItems)
 
   /// Superlikes ////////////////////
   const superlikesJSON = JSONPath({
@@ -61,7 +61,7 @@ export default async function databaseBuilder(fileManager) {
       amount: v.value
     })
   })
-  db.insert('TinderDB', superlikesItems)
+  db.insert('Tinder', superlikesItems)
 
   /// App open ////////////////////
   const appOpenJSON = JSONPath({
@@ -76,7 +76,7 @@ export default async function databaseBuilder(fileManager) {
       amount: v.value
     })
   })
-  db.insert('TinderDB', appOpenItems)
+  db.insert('Tinder', appOpenItems)
 
   /// messages recieved ////////////////////
   const messagesReceivedJSON = JSONPath({
@@ -91,7 +91,7 @@ export default async function databaseBuilder(fileManager) {
       amount: v.value
     })
   })
-  db.insert('TinderDB', messagesReceivedItems)
+  db.insert('Tinder', messagesReceivedItems)
 
   /// messages sent ////////////////////
   const messagesSentJSON = JSONPath({
@@ -106,7 +106,7 @@ export default async function databaseBuilder(fileManager) {
       amount: v.value
     })
   })
-  db.insert('TinderDB', messagesSentItems)
+  db.insert('Tinder', messagesSentItems)
 
   /// matches ////////////////////
   const matchesJSON = JSONPath({
@@ -121,7 +121,7 @@ export default async function databaseBuilder(fileManager) {
       amount: v.value
     })
   })
-  db.insert('TinderDB', matchesItems)
+  db.insert('Tinder', matchesItems)
 
   return db
 }

@@ -8,9 +8,6 @@
   "files": {
     "tinder": "**/*.json"
   },
-  "preprocessors": {
-    "**/*.json": "tinder"
-  },
   "collaborator": {
     "title": "The Dating Privacy Collective",
     "icon": "dating-privacy-collective.svg",
@@ -94,5 +91,42 @@
       "title": "All data",
       "text": "If you want to inspect precisely the values for each day, all the data can be summarized in a table."
     }
-  ]
+  ],
+  "databaseConfig": {
+    "tables": [
+      {
+        "name": "Tinder",
+        "columns": [
+          ["action", "TEXT"],
+          ["date", "TEXT"],
+          ["amount", "INTEGER"]
+        ]
+      }
+    ],
+    "files": [
+      {
+        "id": "tinder",
+        "path": "$.Usage..[?(@property.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/))]",
+        "table": "Tinder",
+        "options": {
+          "resultType": "all",
+          "callback": "value => value.grandparentProperty = value.pointer.split('/')[2]"
+        },
+        "accessors": [
+          {
+            "column": "action",
+            "path": "$.grandparentProperty"
+          },
+          {
+            "column": "date",
+            "path": "$.parentProperty"
+          },
+          {
+            "column": "amount",
+            "path": "$.value"
+          }
+        ]
+      }
+    ]
+  }
 }
