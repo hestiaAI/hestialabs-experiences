@@ -70,7 +70,7 @@
     "@types/d3-collection": "^1.0.10",
     "@uppy/core": "^2.0.2",
     "@uppy/dashboard": "^2.0.2",
-    "@uppy/drop-target": "^1.0.1",
+    "@uppy/drop-target": "^1.1.2",
     "ajv": "^6.12.6",
     "core-js": "^3.19.3",
     "crossfilter2": "^1.5.4",
