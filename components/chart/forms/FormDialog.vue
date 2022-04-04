@@ -49,7 +49,7 @@
                   v-else
                   :data="{ headers, items: values }"
                   :viz-props="formsInfo.graphProps"
-                  :graph-name="`base/${formsInfo.graphName}`"
+                  :graph-name="`core/${formsInfo.graphName}`"
                 />
               </VCard>
             </VTabItem>
@@ -88,6 +88,7 @@ export default {
     submit(formsInfo) {
       console.log('submit', formsInfo)
       this.formsInfo = formsInfo
+      this.tab = 1
     }
   }
 }

@@ -5,7 +5,11 @@
     </VTabs>
     <VTabsItems v-model="selected">
       <VTabItem v-for="tab in tabs" :key="tab.name + 'content'">
-        <component :is="tab.component" v-bind="{ headers, values }"></component>
+        <component
+          :is="tab.component"
+          v-bind="{ headers, values }"
+          @change="change"
+        ></component>
       </VTabItem>
     </VTabsItems>
   </VContainer>
@@ -47,6 +51,11 @@ export default {
           component: 'FormChartFrameTab'
         }
       ]
+    }
+  },
+  methods: {
+    change(props) {
+      this.$emit('change', props)
     }
   }
 }

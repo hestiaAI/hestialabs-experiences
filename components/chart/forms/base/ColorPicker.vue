@@ -51,20 +51,20 @@ export default {
   },
   watch: {
     color(newVal, oldVal) {
-      console.log('color', newVal, oldVal)
+      // console.log('color', newVal, oldVal)
     },
     value(newVal, oldVal) {
-      console.log('value', newVal, oldVal)
+      // console.log('value', newVal, oldVal)
       // this.color = newVal.color || oldVal
     }
   },
   mounted() {
-    console.log(this.value)
-    console.log(this.color)
+    // console.log(this.value)
+    // console.log(this.color)
   },
   methods: {
     handleInput() {
-      console.log('res', this.color)
+      // console.log('res', this.color)
       this.$emit('input', new Color(this.color))
     }
   }

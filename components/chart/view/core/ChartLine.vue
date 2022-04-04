@@ -2,35 +2,10 @@
   <ChartFrame v-bind="{ title, subtitle }" class="chart">
     <VContainer class="pr-10 pl-10">
       <svg ref="chart" class="line-chart" :viewBox="viewBox">
-        <g>
-          <path
-            v-if="area"
-            class="area"
-            :d="areaPath"
-            stroke="none"
-            :stroke-width="0"
-            :fill="lighterColor"
+        <g v-for="(line, idx) in validLines" :key="'line_' + idx">
+          <LineComponent
+            v-bind="{ ...line, values, xScale, yScale, xAccessor, yExtent }"
           />
-          <path
-            class="line"
-            :d="linePath"
-            :stroke="color.color"
-            :stroke-width="lineWidth"
-            fill="none"
-          />
-          <g v-if="datapoint">
-            <circle
-              v-for="point in values"
-              :key="xScale(xAccessor(point))"
-              class="data-points"
-              :cx="xScale(xAccessor(point))"
-              :cy="yScale(yAccessor(point))"
-              r="5"
-              stroke="white"
-              stroke-width="1"
-              :fill="color.color"
-            />
-          </g>
         </g>
         <g
           v-axis:x="xAxisGenerator"
@@ -62,10 +37,10 @@
 
 <script>
 import * as d3 from 'd3'
-import { Color } from '../utils/types'
+import { ColumnAccessor } from '../utils/types'
 import MixinBase from './MixinBase'
 import MixinCoordinateGrid from './MixinCoordinateGrid'
-
+import LineComponent from './base/LineComponent.vue'
 export default {
   directives: {
     axis(el, binding, vnode) {
@@ -81,6 +56,7 @@ export default {
         .attr('y2', 0)
     }
   },
+  components: { LineComponent },
   mixins: [MixinBase, MixinCoordinateGrid],
   props: {
     dateFormat: {
@@ -88,44 +64,28 @@ export default {
       default: () => '',
       placeHolder: 'Specify the format of the date'
     },
-    color: {
-      type: Color,
-      default: () => new Color(),
-      placeHolder: 'Specify the color of the line'
+    xColumn: {
+      type: ColumnAccessor,
+      required: true
     },
-    lineWidth: {
-      type: Number,
-      default: () => 2,
-      placeHolder: 'Specify the width of the line'
-    },
-    area: {
-      type: Boolean,
-      default: () => false,
-      placeHolder: ''
-    },
-    datapoint: {
-      type: Boolean,
-      default: () => false,
-      placeHolder: ''
+    lines: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {
-    lighterColor() {
-      const color = d3.color(this.color.color)
-      color.opacity = 0.15
-      return color
+    validLines() {
+      return this.lines.filter(l => l.yColumn)
     },
     dateParser() {
-      if (this.dateFormat !== '') return d3.timeParse(this.dateFormat)
+      if (this.dateFormat) return d3.timeParse(this.dateFormat)
       else return d => new Date(d)
     },
     xAccessor() {
       return d => this.dateParser(d[this.xColumn.columnName])
     },
-    yAccessor() {
-      return d => parseInt(d[this.yColumn.columnName])
-    },
     xExtent() {
+      console.log(d3.extent(this.values, this.xAccessor))
       return d3.extent(this.values, this.xAccessor)
     },
     xScale() {
@@ -135,7 +95,14 @@ export default {
         .range([this.margin.left, this.width - this.margin.right])
     },
     yExtent() {
-      return d3.extent(this.values, this.yAccessor)
+      const extent = d3.extent(
+        this.validLines.flatMap(l =>
+          d3.extent(this.values, d => parseInt(d[l.yColumn.columnName]))
+        )
+      )
+
+      console.log(extent)
+      return extent
     },
     yScale() {
       return d3
@@ -148,25 +115,6 @@ export default {
     },
     yAxisGenerator() {
       return d3.axisLeft().scale(this.yScale).ticks(5)
-    },
-    areaGenerator() {
-      return d3
-        .area()
-        .x(d => this.xScale(this.xAccessor(d)))
-        .y0(this.yScale(this.yExtent[0]))
-        .y1(d => this.yScale(this.yAccessor(d)))
-    },
-    lineGenerator() {
-      return d3
-        .line()
-        .x(d => this.xScale(this.xAccessor(d)))
-        .y(d => this.yScale(this.yAccessor(d)))
-    },
-    areaPath() {
-      return this.areaGenerator(this.values)
-    },
-    linePath() {
-      return this.lineGenerator(this.values)
     }
   },
   methods: {

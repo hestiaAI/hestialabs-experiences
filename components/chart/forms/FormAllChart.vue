@@ -69,7 +69,7 @@ export default {
   },
   mounted() {
     const graphs = require.context(
-      '@/components/chart/view/base',
+      '@/components/chart/view/core',
       false,
       /^\.\/(.*)\.vue$/
     )

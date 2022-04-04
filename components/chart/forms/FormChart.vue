@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <VForm ref="form" v-model="valid" lazy-validation>
+    <VForm ref="form" v-model="valid">
       <VSelect
         v-model="selected"
         :items="items"
@@ -19,7 +19,15 @@
         </template>
       </VSelect>
       <div v-if="selected">
-        <component :is="selected" v-bind="{ headers, values }"></component>
+        <component
+          :is="selected"
+          v-bind="{ headers, values }"
+          @change="change"
+        ></component>
+      </div>
+      <div v-if="Object.keys(formValues).length">
+        <BaseButton color="error" @click="reset">Reset All</BaseButton>
+        <BaseButton color="primary">Export Config</BaseButton>
       </div>
     </VForm>
   </VContainer>
@@ -69,12 +77,18 @@ export default {
   }),
   methods: {
     updateGraph() {
+      console.log(this.$refs.form.validate())
       if (this.$refs.form.validate()) {
         this.$emit('submit', {
-          graphName: this.select,
+          graphName: this.selected.substring(4),
           graphProps: this.formValues
         })
       }
+    },
+    change(props) {
+      this.formValues = Object.assign({}, this.formValues, props)
+      console.log(this.formValues)
+      this.updateGraph()
     },
     reset() {
       this.$refs.form.reset()

@@ -39,7 +39,7 @@ export default {
     vizProps: {
       handler(val) {
         console.log('Update props', val)
-        this.$refs.chart.updateViz()
+        // this.$refs.chart.updateViz()
       },
       deep: true
     }
