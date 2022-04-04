@@ -49,9 +49,7 @@ function atob(data) {
 }
 
 async function streamToFileObject(filestream, filename) {
-  // const content = await streamToString(filestream)
   const content = await streamToBuffer(filestream)
-  console.log('buf', content)
   return { content, filename }
 }
 
@@ -83,7 +81,6 @@ exports.handler = async function (event, context) {
     )
     const files = await Promise.all(form.files)
     if (files.length !== 1) {
-      console.log('files', files.length)
       return {
         statusCode: 422,
         body: JSON.stringify('Please send exactly one file.')
