@@ -68,7 +68,7 @@
     "@fast-csv/parse": "^4.3.6",
     "@nuxtjs/axios": "^5.13.6",
     "@types/d3-collection": "^1.0.10",
-    "@uppy/core": "^2.0.2",
+    "@uppy/core": "^2.1.7",
     "@uppy/dashboard": "^2.0.2",
     "@uppy/drop-target": "^1.0.1",
     "ajv": "^6.12.6",
