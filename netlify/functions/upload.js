@@ -1,8 +1,9 @@
 const { createClient } = require('webdav')
 const busboy = require('busboy')
-// import * as Busboy from "busboy"
 
 const KDRIVE_URL = 'https:connect.drive.infomaniak.com/hestiaai'
+// https://functions.netlify.com/playground/#read-environment-variables
+const { WEBDAV_USERNAME, WEBDAV_PASSWORD } = process.env
 
 function streamToBuffer(stream) {
   const chunks = []
@@ -67,11 +68,10 @@ function makeSingleStreamFileConverter() {
 
 exports.handler = async function (event, context) {
   try {
-    const { WEBDAV_USERNAME: username, WEBDAV_PASSWORD: password } = process.env
     const destinationDir = '/ak-partage-test'
     const client = createClient(`${KDRIVE_URL} ${destinationDir}`, {
-      username,
-      password
+      WEBDAV_USERNAME,
+      WEBDAV_PASSWORD
     })
     const decodedBody = event.isBase64Encoded ? atob(event.body) : event.body
     const form = await parseForm(
@@ -91,6 +91,7 @@ exports.handler = async function (event, context) {
       overwrite: false
     })
     if (sent) {
+      console.log('sent file', file.filename)
       return { statusCode: 200 }
     } else {
       return {
@@ -101,7 +102,12 @@ exports.handler = async function (event, context) {
       }
     }
   } catch (err) {
-    console.error('error', err)
+    const message = `Error sending to ${KDRIVE_URL} as ${WEBDAV_USERNAME}`
+    if (err.response) {
+      console.error(message, err.response?.data || err.response)
+    } else {
+      console.error(message, err)
+    }
     return { statusCode: 500 }
   }
 }
