@@ -91,20 +91,18 @@ exports.handler = async function (event, context) {
       overwrite: false
     })
     if (sent) {
-      console.log('sent file', file.filename)
+      console.log('Sent file', file.filename)
       return { statusCode: 200 }
     } else {
-      return {
-        statusCode: 409,
-        body: JSON.stringify(
-          `The file '${file.filename}' could not be uploaded. It might already exist on the server.`
-        )
-      }
+      const message = `The file '${file.filename}' could not be uploaded. It might already exist on the server.`
+      console.log(message)
+      return { statusCode: 409, body: JSON.stringify(message) }
     }
   } catch (err) {
     const message = `Error sending to ${KDRIVE_URL} as ${WEBDAV_USERNAME}`
     if (err.response) {
-      console.error(message, err.response?.data || err.response)
+      console.error(message)
+      console.log(err.response?.data || err.response)
     } else {
       console.error(message, err)
     }
