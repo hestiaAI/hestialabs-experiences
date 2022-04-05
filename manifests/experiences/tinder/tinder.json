@@ -18,6 +18,14 @@
   },
   "defaultView": [
     {
+      "key": "user-infos",
+      "sql": "user-infos",
+      "files": ["tinder"],
+      "visualization": "TinderUserInfos.vue",
+      "showTable": false,
+      "title": "User infos"
+    },
+    {
       "key": "likes-dislikes-vue",
       "sql": "likes-dislikes",
       "files": ["tinder"],
