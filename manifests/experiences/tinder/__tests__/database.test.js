@@ -1,19 +1,15 @@
 import fs from 'fs'
 import path from 'path'
 
-import databaseBuilder from '../database'
 import { tinder } from './samples.helpers'
-import preprocessors from '~/manifests/preprocessors'
+import DBMS from '~/utils/sql'
 import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { arrayEqualNoOrder } from '~/utils/test-utils'
 
 let db
-const manifest = JSON.parse(
+const { files, databaseConfig } = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, '../tinder.json'), 'utf8')
-)
-Object.entries(manifest.preprocessors).forEach(
-  ([path, pre]) => (manifest.preprocessors[path] = preprocessors[pre])
 )
 
 function runQuery(sqlFilePath) {
@@ -22,13 +18,11 @@ function runQuery(sqlFilePath) {
 }
 
 async function getDatabase(mockedFiles) {
-  const fileManager = new FileManager(
-    manifest.preprocessors,
-    null,
-    manifest.files
-  )
+  const fileManager = new FileManager(null, null, files)
   await fileManager.init(mockedFiles)
-  db = await databaseBuilder(fileManager)
+  db = await DBMS.createDB(databaseConfig)
+  const records = await DBMS.generateRecords(db, fileManager, databaseConfig)
+  DBMS.insertRecords(db, records)
 }
 
 describe('with complete samples', () => {
@@ -43,6 +37,7 @@ describe('with complete samples', () => {
 
   test('query all returns the correct items', () => {
     const result = runQuery('../queries/all.sql')
+    console.log(result)
     const expected = {
       headers: [
         'date',
@@ -67,7 +62,7 @@ describe('with complete samples', () => {
         },
         {
           date: '2020-01-01',
-          likes: null,
+          likes: 0,
           number_of_superlikes: 0,
           passes: 42,
           number_of_messages_sent: 3,
