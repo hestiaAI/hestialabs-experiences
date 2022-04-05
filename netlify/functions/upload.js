@@ -70,8 +70,8 @@ exports.handler = async function (event, context) {
   try {
     const destinationDir = '/ak-partage-test'
     const client = createClient(`${KDRIVE_URL} ${destinationDir}`, {
-      WEBDAV_USERNAME,
-      WEBDAV_PASSWORD
+      username: WEBDAV_USERNAME,
+      password: WEBDAV_PASSWORD
     })
     const decodedBody = event.isBase64Encoded ? atob(event.body) : event.body
     const form = await parseForm(
