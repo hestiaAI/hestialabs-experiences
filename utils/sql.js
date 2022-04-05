@@ -195,6 +195,7 @@ function generateRecordsRecursively(
   defaultValues,
   records,
   json,
+  root,
   { table, path, accessors = [], options = {} }
 ) {
   const jsonPathOptions = {
@@ -210,7 +211,7 @@ function generateRecordsRecursively(
     records[table].push(record)
     accessors.forEach(a => {
       if (a.table && a.accessors.length && a.path && !a.column) {
-        generateRecordsRecursively(defaultValues, records, item, a)
+        generateRecordsRecursively(defaultValues, records, item, root, a)
       } else if (a.column && a.reference && !a.path) {
         const referenceRecords = records[a.reference.table]
         const refId = referenceRecords.length
@@ -219,11 +220,11 @@ function generateRecordsRecursively(
         } else {
           record[a.column] = referenceRecords[refId - 1][a.reference.column]
         }
-      } else if (a.column && a.path) {
+      } else if (a.column && (a.path || a.pathKey)) {
         const value = JSONPath({
           ...(a.options || {}),
-          json: item,
-          path: a.path,
+          json: a.queryRoot ? root : item,
+          path: a.pathKey ? item[a.pathKey] : a.path,
           wrap: false
         })
         record[a.column] = value || null
@@ -259,7 +260,7 @@ export async function generateRecords(db, fileManager, { tables, files }) {
     matchedJSONFiles
       .map(JSON.parse)
       .forEach(json =>
-        generateRecordsRecursively(defaultValues, records, json, rest)
+        generateRecordsRecursively(defaultValues, records, json, json, rest)
       )
   }
   return records
