@@ -5,7 +5,7 @@
       :key="`section-${index}`"
       :index="index"
     />
-    <BaseAlert v-if="missingRequired">
+    <BaseAlert v-if="missingRequiredFields">
       Some required fields are not filled in.
     </BaseAlert>
     <BaseAlert v-if="missingRequiredData.length > 0">
@@ -13,19 +13,34 @@
       included:
       {{ missingRequiredData.join(', ') }}.
     </BaseAlert>
+    <BaseAlert v-if="sentErrorMessage" type="error">
+      <p>Failed to upload results:</p>
+      <p>{{ sentErrorMessage }}</p>
+      <p>
+        Consider downloading the encrypted results and sending them by other
+        means.
+      </p>
+    </BaseAlert>
     <VRow>
       <VCol>
-        <VIcon v-if="config.filedrop" class="mr-2" color="#424242"
-          >$vuetify.icons.mdiNumeric1CircleOutline</VIcon
-        >
+        <BaseButton
+          text="Share results with hestia"
+          :status="sentStatus"
+          :error="!!sentErrorMessage"
+          :progress="sentProgress"
+          :disabled="missingRequiredFields || missingRequiredData.length > 0"
+          @click="sendForm"
+        />
+      </VCol>
+      <VCol>
         <BaseButton
           ref="downloadButton"
           text="Download results"
           :status="generateStatus"
           :error="generateError"
           :progress="generateProgress"
-          :disabled="missingRequired || missingRequiredData.length > 0"
-          @click="generateZIP"
+          :disabled="missingRequiredFields || missingRequiredData.length > 0"
+          @click="downloadZIP"
         />
         <a
           v-show="false"
@@ -33,14 +48,6 @@
           :href="href"
           :download="filename"
         ></a>
-      </VCol>
-      <VCol v-if="config.filedrop">
-        <VIcon class="mr-2" color="#424242"
-          >$vuetify.icons.mdiNumeric2CircleOutline</VIcon
-        >
-        <a :href="config.filedrop" target="_blank">
-          <BaseButton text="Drop file here" />
-        </a>
       </VCol>
     </VRow>
   </VForm>
@@ -65,10 +72,13 @@ export default {
   },
   data() {
     return {
-      zipFile: [],
+      zipFile: undefined,
       generateStatus: false,
       generateError: false,
       generateProgress: false,
+      sentStatus: false,
+      sentErrorMessage: undefined,
+      sentProgress: false,
       timestamp: 0,
       href: null
     }
@@ -81,7 +91,7 @@ export default {
       'consentForm',
       'selectedFiles'
     ]),
-    missingRequired() {
+    missingRequiredFields() {
       return !this.consentForm.every(section => {
         if ('required' in section) {
           if (
@@ -122,16 +132,26 @@ export default {
     }
   },
   methods: {
-    async generateZIP() {
+    async downloadZIP() {
       this.generateStatus = false
       this.generateProgress = true
+      const content = await this.generateZIP()
+      // this.zipFile = content
+      this.generateStatus = true
+      this.generateProgress = false
 
+      this.href = createObjectURL(content, mimeTypes.zip)
+      await this.$nextTick()
+      this.$refs.downloadLink.click()
+    },
+    async generateZIP() {
       const zip = new JSZip()
 
       const revResponse = await window.fetch('/git-revision.txt')
       const revText = await revResponse.text()
       const gitRevision = revText.replace(/[\n\r]/g, '')
       // Add info about the experience
+      // TODO return this next to content and filename
       this.timestamp = Date.now()
       const experience = {
         key: this.$route.params.key,
@@ -174,14 +194,45 @@ export default {
       }
 
       const content = await zip.generateAsync({ type: 'uint8array' })
-      this.zipFile = content
+      return content
+    },
+    async sendForm() {
+      this.sentStatus = false
+      this.sentErrorMessage = undefined
+      this.sentProgress = true
 
-      this.generateStatus = true
-      this.generateProgress = false
-
-      this.href = createObjectURL(this.zipFile, mimeTypes.zip)
-      await this.$nextTick()
-      this.$refs.downloadLink.click()
+      const content = await this.generateZIP()
+      // Programmatically create the form data
+      // Names must correspond to the dummy form defined in /static/export-data-form-dummy.html
+      const formData = new FormData()
+      formData.append('form-name', 'export-data')
+      const zip = new File([content], this.filename, {
+        type: 'application/zip'
+      })
+      formData.append('zip', zip, this.filename)
+      // formData.append('encrypted-zip', zip, this.filename)
+      let success = false
+      let errorMessage
+      try {
+        const resp = await fetch('/api/functions/upload', {
+          method: 'POST',
+          body: formData
+        })
+        if (resp.ok) {
+          success = true
+        } else {
+          console.error(resp)
+          // use http status text in cas json() fails
+          errorMessage = resp.statusText
+          errorMessage = await resp.json()
+        }
+      } catch (error) {
+        errorMessage = errorMessage || 'Error'
+        console.error(error)
+      }
+      this.sentStatus = success
+      this.sentErrorMessage = errorMessage
+      this.sentProgress = false
     }
   }
 }
