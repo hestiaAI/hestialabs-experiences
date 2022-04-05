@@ -184,6 +184,11 @@ export class DB {
   }
 }
 
+/**
+ * Create a database with tables
+ * @param {Object} - database config
+ * @returns {DB} new initialized database instance with tables
+ */
 export async function createDB({ tables }) {
   const db = new DB()
   await db.init()
@@ -191,6 +196,14 @@ export async function createDB({ tables }) {
   return db
 }
 
+/**
+ * Generate database records, (possibly) recursively
+ * @param {Object} defaultValues default values for every table
+ * @param {Object} records stores the database records for each table
+ * @param {} json current json
+ * @param {*} root root json
+ * @param {Object} - accessor config
+ */
 function generateRecordsRecursively(
   defaultValues,
   records,
@@ -207,12 +220,18 @@ function generateRecordsRecursively(
   }
   const result = JSONPath(jsonPathOptions) ?? []
   result.forEach(item => {
+    // initialize record with default values
     const record = { ...defaultValues[table] }
+    // push the record to the end of the array of records
+    // note: need to do that here because of recursion (*)
     records[table].push(record)
     accessors.forEach(a => {
       if (a.table && a.accessors.length && a.path && !a.column) {
+        // accessor configures records for a "sub-table"
         generateRecordsRecursively(defaultValues, records, item, root, a)
       } else if (a.column && a.reference && !a.path) {
+        // column is a foreign key reference
+        // (*) the reference record was pushed to the array by the caller
         const referenceRecords = records[a.reference.table]
         const refId = referenceRecords.length
         if (a.reference.autoincrementedId) {
@@ -221,6 +240,7 @@ function generateRecordsRecursively(
           record[a.column] = referenceRecords[refId - 1][a.reference.column]
         }
       } else if (a.column && (a.path || a.pathKey)) {
+        // column value can be found with JSONPath
         const value = JSONPath({
           ...(a.options || {}),
           json: a.queryRoot ? root : item,
@@ -229,6 +249,7 @@ function generateRecordsRecursively(
         })
         record[a.column] = value || null
       } else if (a.column && a.value) {
+        // hardcoded value
         record[a.column] = a.value
       } else {
         throw new Error(`Invalid accessor: ${JSON.stringify(a)}`)
@@ -237,7 +258,15 @@ function generateRecordsRecursively(
   })
 }
 
+/**
+ * Generate database records
+ * @param {DB} db database
+ * @param {FileManager} fileManager file manager instance
+ * @param {Object} - database config
+ * @returns {Object} database records for each table
+ */
 export async function generateRecords(db, fileManager, { tables, files }) {
+  // default values for every table
   // { "Table1": { "col1": null, "col2", null, ... }, "Table2": ... }
   const defaultValues = Object.fromEntries(
     tables.map(({ name, columns }) => [
@@ -252,11 +281,15 @@ export async function generateRecords(db, fileManager, { tables, files }) {
       )
     ])
   )
+  // object that stores the database records for each table
   // { "Table1": [], "Table2": [], ... }
   const records = Object.fromEntries(tables.map(({ name }) => [name, []]))
 
+  // iterate over data top level data accessors
   for (const { id, ...rest } of files) {
+    // get all files that match the glob
     const matchedJSONFiles = await fileManager.getPreprocessedTextFromId(id)
+    // iterate over matched files, parse, and generate records from each
     matchedJSONFiles
       .map(JSON.parse)
       .forEach(json =>
@@ -266,6 +299,11 @@ export async function generateRecords(db, fileManager, { tables, files }) {
   return records
 }
 
+/**
+ * Insert records into the database
+ * @param {DB} db database instance
+ * @param {Object} tableRecords contains the database records for each table
+ */
 export function insertRecords(db, tableRecords) {
   Object.entries(tableRecords).forEach(([table, records]) => {
     db.insert(table, records)

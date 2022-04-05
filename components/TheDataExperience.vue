@@ -340,11 +340,14 @@ export default {
       try {
         await fileManager.init(uppyFiles)
         this.$store.commit('setFileManager', fileManager)
-        // Populate database
         if (dbConfig) {
+          // create database
           const db = await DBMS.createDB(dbConfig)
+          // generate database records via the file manager
           const records = await DBMS.generateRecords(db, fileManager, dbConfig)
+          // insert the records into the database
           DBMS.insertRecords(db, records)
+          // commit the database to the Vuex store
           this.$store.commit('setCurrentDB', db)
         }
       } catch (e) {
