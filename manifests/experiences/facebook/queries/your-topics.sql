@@ -1,1 +1,1 @@
-SELECT name FROM inferredInterestsDatabase
+SELECT name FROM AdsInterest

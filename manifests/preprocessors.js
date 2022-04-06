@@ -8,17 +8,6 @@ const linkedinConnections = string => {
   return string.split('\n').slice(3).join('\n')
 }
 
-const tinder = string => {
-  const json = JSON.parse(string)
-  Object.keys(json?.Usage ?? {}).forEach(key => {
-    json.Usage[key] = Object.keys(json.Usage[key]).map(date => ({
-      date,
-      value: json.Usage[key][date]
-    }))
-  })
-  return JSON.stringify(json)
-}
-
 // https://stackoverflow.com/questions/17057407/javascript-create-a-string-or-char-from-an-utf-8-value
 function convertHexToString(input) {
   // split input into groups of two
@@ -80,7 +69,6 @@ const facebook = s => {
 
 export default {
   twitter,
-  tinder,
   facebook,
   linkedinConnections
 }

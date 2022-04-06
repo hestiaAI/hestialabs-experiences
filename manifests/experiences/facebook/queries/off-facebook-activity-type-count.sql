@@ -1,7 +1,7 @@
 SELECT name AS targetingType, type AS targetingValue, COUNT(*) as count
-FROM offFacebookActivityDatabase
+FROM OffFacebookActivityEvent
 WHERE targetingType in (SELECT name
-  FROM offFacebookActivityDatabase
+  FROM OffFacebookActivityEvent
   GROUP BY name
   ORDER BY COUNT(*) DESC
   LIMIT 10)

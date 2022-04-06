@@ -1,3 +1,3 @@
 SELECT title, action, timestamp
-FROM advertisersInteractedWith
+FROM AdvertiserInteraction
 GROUP BY title, timestamp;

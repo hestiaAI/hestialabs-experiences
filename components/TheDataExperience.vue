@@ -131,6 +131,7 @@ import { mapState } from 'vuex'
 
 import debounce from 'lodash/debounce'
 
+import DBMS from '~/utils/sql'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 
@@ -193,8 +194,8 @@ export default {
       type: String,
       default: ''
     },
-    databaseBuilder: {
-      type: Function,
+    databaseConfig: {
+      type: Object,
       default: undefined
     }
   },
@@ -311,6 +312,7 @@ export default {
       this.progress = false
     },
     async onUnitFilesUpdate({ uppyFiles }) {
+      const { databaseConfig: dbConfig } = this
       this.message = ''
       this.error = false
       this.success = false
@@ -338,20 +340,19 @@ export default {
       try {
         await fileManager.init(uppyFiles)
         this.$store.commit('setFileManager', fileManager)
+        if (dbConfig) {
+          // create database
+          const db = await DBMS.createDB(dbConfig)
+          // generate database records via the file manager
+          const records = await DBMS.generateRecords(fileManager, dbConfig)
+          // insert the records into the database
+          DBMS.insertRecords(db, records)
+          // commit the database to the Vuex store
+          this.$store.commit('setCurrentDB', db)
+        }
       } catch (e) {
         this.handleError(e)
         return
-      }
-
-      // Populate database
-      if (this.databaseBuilder !== undefined) {
-        try {
-          const db = await this.databaseBuilder(fileManager)
-          this.$store.commit('setCurrentDB', db)
-        } catch (e) {
-          this.handleError(e)
-          return
-        }
       }
 
       this.progress = false
