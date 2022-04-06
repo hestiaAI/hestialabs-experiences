@@ -344,7 +344,7 @@ export default {
           // create database
           const db = await DBMS.createDB(dbConfig)
           // generate database records via the file manager
-          const records = await DBMS.generateRecords(db, fileManager, dbConfig)
+          const records = await DBMS.generateRecords(fileManager, dbConfig)
           // insert the records into the database
           DBMS.insertRecords(db, records)
           // commit the database to the Vuex store

@@ -37,7 +37,6 @@ describe('with complete samples', () => {
 
   test('query all returns the correct items', () => {
     const result = runQuery('../queries/all.sql')
-    console.log(result)
     const expected = {
       headers: [
         'date',

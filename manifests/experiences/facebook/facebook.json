@@ -157,7 +157,7 @@
         "id": "advertisers-interacted",
         "path": "$.history_v2[*]",
         "table": "AdvertiserInteraction",
-        "accessors": [
+        "getters": [
           {
             "column": "title",
             "path": "$.title"
@@ -176,7 +176,7 @@
         "id": "advertisers-contact-list",
         "path": "$.custom_audiences_v2[*]",
         "table": "AdvertiserUploadedContactInformation",
-        "accessors": [
+        "getters": [
           {
             "column": "name",
             "path": "$.advertiser"
@@ -191,7 +191,7 @@
           "resultType": "all",
           "callback": "value => value.namePath = value.path.split(\"['events']\")[0] + \"['name']\""
         },
-        "accessors": [
+        "getters": [
           {
             "column": "name",
             "pathKey": "namePath",
@@ -211,7 +211,7 @@
         "id": "ads-interests",
         "path": "$.topics_v2[*]",
         "table": "AdsInterest",
-        "accessors": [
+        "getters": [
           {
             "column": "name",
             "path": "$"

@@ -125,7 +125,7 @@
         "id": "impressions",
         "path": "$.*.ad.adsUserData.adImpressions.impressions[*]",
         "table": "TwitterAd",
-        "accessors": [
+        "getters": [
           {
             "column": "tweetId",
             "path": "$.promotedTweetInfo.tweetId"
@@ -145,7 +145,7 @@
           {
             "path": "$.matchedTargetingCriteria[*]",
             "table": "TwitterCriterion",
-            "accessors": [
+            "getters": [
               {
                 "column": "adId",
                 "reference": {
@@ -170,7 +170,7 @@
         "id": "engagements",
         "path": "$.*.ad.adsUserData.adEngagements.engagements[*].impressionAttributes",
         "table": "TwitterEngagement",
-        "accessors": [
+        "getters": [
           {
             "column": "tweetId",
             "path": "$.promotedTweetInfo.tweetId"

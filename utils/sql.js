@@ -209,7 +209,7 @@ function generateRecordsRecursively(
   records,
   json,
   root,
-  { table, path, accessors = [], options = {} }
+  { table, path, getters = [], options = {} }
 ) {
   const jsonPathOptions = {
     ...options,
@@ -225,8 +225,8 @@ function generateRecordsRecursively(
     // push the record to the end of the array of records
     // note: need to do that here because of recursion (*)
     records[table].push(record)
-    accessors.forEach(a => {
-      if (a.table && a.accessors.length && a.path && !a.column) {
+    getters.forEach(a => {
+      if (a.table && a.getters.length && a.path && !a.column) {
         // accessor configures records for a "sub-table"
         generateRecordsRecursively(defaultValues, records, item, root, a)
       } else if (a.column && a.reference && !a.path) {
@@ -265,7 +265,7 @@ function generateRecordsRecursively(
  * @param {Object} - database config
  * @returns {Object} database records for each table
  */
-export async function generateRecords(db, fileManager, { tables, files }) {
+export async function generateRecords(fileManager, { tables, files }) {
   // default values for every table
   // { "Table1": { "col1": null, "col2", null, ... }, "Table2": ... }
   const defaultValues = Object.fromEntries(
@@ -285,7 +285,7 @@ export async function generateRecords(db, fileManager, { tables, files }) {
   // { "Table1": [], "Table2": [], ... }
   const records = Object.fromEntries(tables.map(({ name }) => [name, []]))
 
-  // iterate over data top level data accessors
+  // iterate over top level "file" getters
   for (const { id, ...rest } of files) {
     // get all files that match the glob
     const matchedJSONFiles = await fileManager.getPreprocessedTextFromId(id)
