@@ -59,6 +59,8 @@ import JSZip from 'jszip'
 import { padNumber } from '~/utils/utils'
 import { createObjectURL, mimeTypes } from '@/utils/utils'
 
+const _sodium = require('libsodium-wrappers')
+
 // In the case of changes that would break the import, this version number must be incremented
 // and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
 const VERSION = 3
@@ -194,7 +196,22 @@ export default {
       }
 
       const content = await zip.generateAsync({ type: 'uint8array' })
+      const publicKey = this.$store.state.config.publicKey
+      if (publicKey) {
+        return this.encryptFile(content, publicKey)
+      }
       return content
+    },
+    async encryptFile(content, publicKey) {
+      // Encrypt the zip
+      await _sodium.ready
+      const sodium = _sodium
+
+      const cipherText = sodium.crypto_box_seal(
+        content,
+        sodium.from_hex(publicKey)
+      )
+      return cipherText
     },
     async sendForm() {
       this.sentStatus = false

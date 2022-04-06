@@ -35,6 +35,13 @@ $ npm run generate
 
 For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
 
+### netlify functions
+
+Running netlify dev
+
+
+
+
 ### Global Configuration
 
 The files in `config` let us set parameters for each deployment. [See the README](https://github.com/hestiaAI/hestialabs-experiences/tree/master/config) for more details about the different parameters.
