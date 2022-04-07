@@ -25,7 +25,7 @@ Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-
 | WEBDAV_USERNAME      | Kdrive user email (for uploads)                                                  |
 | WEBDAV_PASSWORD      | Kdrive user password (for uploads)                                               |
 
-Documentation for the configuration file can be found in [config/README.md](tree/master/config)
+Documentation for the configuration file can be found in [config/README.md](config)
 
 ## For developers
 
@@ -48,7 +48,7 @@ $ npm run generate
 
 For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
 
-We have server code that runs as a [netlify function](https://docs.netlify.com/functions/build-with-javascript/). It can be run locally using [netlify-cli](https://docs.netlify.com/cli/get-started/). The code is in the folder [netlify/functions](tree/master/netlify/functions)
+We have server code that runs as a [netlify function](https://docs.netlify.com/functions/build-with-javascript/). It can be run locally using [netlify-cli](https://docs.netlify.com/cli/get-started/). The code is in the folder [netlify/functions](netlify/functions)
 
 ```bash
 # install netlify client
@@ -62,9 +62,9 @@ The `WEBDAV_` variables must match the credentials of a kdrive user with access 
 
 ### Global Configuration
 
-The files in `config` let us set parameters for each deployment. [See the README](https://github.com/hestiaAI/hestialabs-experiences/tree/master/config) for more details about the different parameters.
+The files in `config` let us set parameters for each deployment. [See the README](config) for more details about the different parameters.
 
-The default is [config/config.json](tree/master/config/config.json) (the test deployment), but if you want to use another configuration like `config/workshop.json`, set the environment variable **CONFIG_NAME**
+The default is [config/config.json](config/config.json) (the test deployment), but if you want to use another configuration like `config/workshop.json`, set the environment variable **CONFIG_NAME**
 
 ```bash
 # for development
@@ -104,11 +104,11 @@ Tests are run with the [Jest](https://jestjs.io/) framework. There are currently
 
 #### Unit tests
 
-Unit tests for `.js` files can be written using Jest. An example is available in [utils/csv.test.js](https://github.com/hestiaAI/hestialabs-experiences/blob/master/utils/csv.test.js).
+Unit tests for `.js` files can be written using Jest. An example is available in [utils/csv.test.js](utils/csv.test.js).
 
 #### Component unit tests
 
-Unit tests on components can be written with the help of Jest and [Vue test utils](https://vue-test-utils.vuejs.org/). An example is available in [components/unit/filterable-table/\_\_tests\_\_/UnitFilterableTable.test.js](https://github.com/hestiaAI/hestialabs-experiences/blob/master/components/unit/filterable-table/__tests__/UnitFilterableTable.test.js). It shows how to mount a component, mock the vuex store, and find specific HTML elements.
+Unit tests on components can be written with the help of Jest and [Vue test utils](https://vue-test-utils.vuejs.org/). An example is available in [components/unit/filterable-table/\_\_tests\_\_/UnitFilterableTable.test.js](components/unit/filterable-table/__tests__/UnitFilterableTable.test.js). It shows how to mount a component, mock the vuex store, and find specific HTML elements.
 
 Please follow the same naming convention: create a `__tests__` folder at the same level as the tested component, and name the test file `ComponentName.test.js`.
 
@@ -116,7 +116,7 @@ Please follow the same naming convention: create a `__tests__` folder at the sam
 
 Snapshot tests can be written to check that the HTML content of a component hasn't changed, by comparing it to a string saved in the `__snapshots__` folder. If the changes are intentional, snapshots can be updated with the command above.
 
-An example is available in [components/unit/filterable-table/\_\_tests\_\_/UnitFilterableTable.test.js](https://github.com/hestiaAI/hestialabs-experiences/blob/master/components/unit/filterable-table/__tests__/UnitFilterableTable.test.js)
+An example is available in [components/unit/filterable-table/\_\_tests\_\_/UnitFilterableTable.test.js](components/unit/filterable-table/__tests__/UnitFilterableTable.test.js)
 
 Note that snapshots do not include Vue props or data, and that child components are not recursively rendered as HTML (e.g. a component `BaseButton` will appear as an HTML tag `<basebutton>`).
 
