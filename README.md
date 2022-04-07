@@ -22,7 +22,7 @@ Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-
 |----------------------|----------------------------------------------------------------------------------|
 | CONFIG_NAME          | Name of the configuration file (without extension: "workshop", "digipower" ...)  |
 | BASE_URL             | Url where the website is deployed (with protocol: "https://test.hestialabs.org") |
-| WEBDAV_USERNAME      | Kdrive user email (for uploads)                                                  |
+| WEBDAV_USERNAME      | Kdrive user email (or else upload button is disabled)                                                  |
 | WEBDAV_PASSWORD      | Kdrive user password (for uploads)                                               |
 
 Documentation for the configuration file can be found in [config/README.md](config)

@@ -13,6 +13,10 @@
       included:
       {{ missingRequiredData.join(', ') }}.
     </BaseAlert>
+    <BaseAlert v-if="!$store.state.config.publicKey" type="info">
+      The results will not be encrypted because this instance has been
+      configured without public key.
+    </BaseAlert>
     <BaseAlert v-if="sentErrorMessage" type="error">
       <p>Failed to upload results:</p>
       <p>{{ sentErrorMessage }}</p>
@@ -21,7 +25,7 @@
         means.
       </p>
     </BaseAlert>
-    <VRow>
+    <VRow v-if="$uploadAvailable">
       <VCol>
         <BaseButton
           text="Share results with hestia"
@@ -32,6 +36,8 @@
           @click="sendForm"
         />
       </VCol>
+    </VRow>
+    <VRow>
       <VCol>
         <BaseButton
           ref="downloadButton"
@@ -48,6 +54,11 @@
           :href="href"
           :download="filename"
         ></a>
+      </VCol>
+      <VCol v-if="config.filedrop">
+        <a :href="config.filedrop" target="_blank">
+          <BaseButton text="Drop file here" />
+        </a>
       </VCol>
     </VRow>
   </VForm>
