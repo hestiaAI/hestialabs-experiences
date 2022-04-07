@@ -8,12 +8,12 @@ const description = 'We create a new relationship to personal data'
 
 const { NODE_ENV, BASE_URL, CONFIG_NAME } = process.env
 
-const baseUrl = NODE_ENV === 'production' ? BASE_URL : 'http://localhost:3000'
-const configName = CONFIG_NAME || 'config'
-
-if (!baseUrl) {
+if (!BASE_URL && NODE_ENV === 'production') {
   throw new Error('BASE_URL environment variable is missing')
 }
+
+const baseUrl = BASE_URL || 'http://localhost:3000'
+const configName = CONFIG_NAME || 'config'
 
 export default {
   ssr: false, // Disable Server-Side Rendering
