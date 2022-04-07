@@ -222,7 +222,8 @@ export default {
       // Programmatically create the form data
       // Names must correspond to the dummy form defined in /static/export-data-form-dummy.html
       const formData = new FormData()
-      formData.append('form-name', 'export-data')
+      const url = new URL(this.$url())
+      formData.append('experiencesHostName', url.hostname)
       const zip = new File([content], this.filename, {
         type: 'application/zip'
       })
