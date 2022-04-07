@@ -56,6 +56,7 @@
 <script>
 import { mapState } from 'vuex'
 import JSZip from 'jszip'
+import { nanoid } from 'nanoid'
 import { padNumber } from '~/utils/utils'
 import { createObjectURL, mimeTypes } from '@/utils/utils'
 
@@ -81,7 +82,7 @@ export default {
       sentStatus: false,
       sentErrorMessage: undefined,
       sentProgress: false,
-      timestamp: 0,
+      filename: '',
       href: null
     }
   },
@@ -119,18 +120,6 @@ export default {
               !section.value.includes(block.key))
         )
         .map(block => block.title)
-    },
-    filename() {
-      const date = new Date(this.timestamp)
-      const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
-        date.getUTCMonth() + 1,
-        2
-      )}-${padNumber(date.getUTCDate(), 2)}`
-      const filename = `${this.$route.params.key}_${yearMonthDay}_${padNumber(
-        date.getUTCHours(),
-        2
-      )}${padNumber(date.getUTCMinutes(), 2)}_UTC.zip`
-      return filename
     }
   },
   methods: {
@@ -146,18 +135,30 @@ export default {
       await this.$nextTick()
       this.$refs.downloadLink.click()
     },
+    makeFilename(timestamp) {
+      const date = new Date(timestamp)
+      const uniqueId = nanoid(10)
+      const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
+        date.getUTCMonth() + 1,
+        2
+      )}-${padNumber(date.getUTCDate(), 2)}`
+      const filename = `${this.$route.params.key}_${yearMonthDay}_${padNumber(
+        date.getUTCHours(),
+        2
+      )}${padNumber(date.getUTCMinutes(), 2)}_UTC_${uniqueId}.zip`
+      return filename
+    },
     async generateZIP() {
       const zip = new JSZip()
 
       const revResponse = await window.fetch('/git-revision.txt')
       const revText = await revResponse.text()
       const gitRevision = revText.replace(/[\n\r]/g, '')
-      // Add info about the experience
-      // TODO return this next to content and filename
-      this.timestamp = Date.now()
+      const timestamp = Date.now()
+      this.filename = this.makeFilename(timestamp)
       const experience = {
         key: this.$route.params.key,
-        timestamp: this.timestamp,
+        timestamp,
         version: VERSION,
         gitRevision
       }
