@@ -6,13 +6,26 @@ The experiences developed by HestiaLabs are targeted for any user willing to bet
 
 The instances are deployed on [netlify](https://app.netlify.com/teams/hestia/overview), where you can see a log of their [build](https://app.netlify.com/teams/hestia/builds/). They each point to a different branch of this repo.
 
-|                    | [test.hestialabs.org](https://test.hestialabs.org/)                                  | [experiences.hestialabs.org](https://experiences.hestialabs.org/)          | [digipower.hestialabs.org](https://digipower.hestialabs.org/)                                  | [tfac.hestialabs.org](https://tfac.hestialabs.org/)                                  |
-| :----------------- | :----------------------------------------------------------------------------------- | :------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------- |
+| Instance           | [test.hestialabs.org](https://test.hestialabs.org/)                                  | [experiences.hestialabs.org](https://experiences.hestialabs.org/)          | [digipower.hestialabs.org](https://digipower.hestialabs.org/)                                  | [tfac.hestialabs.org](https://tfac.hestialabs.org/)                                  |
+|:-------------------|:-------------------------------------------------------------------------------------|:---------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------|
 | branch             | [netlify-test](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-test) | [netlify](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify) | [netlify-digipower](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-digipower) | [netlify-tfac](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-tfac) |
 | netlify name       | test-experiences                                                                     | hestia-experiences                                                         | digipower                                                                                      | tfac                                                                                 |
 | purpose            | testing, typically with all features and experiences enabled                         | our public showcase                                                        | the sitra project                                                                              | a tool for the [Tracking-Free Ads Coalition](https://trackingfreeads.eu/)            |
 | config             | `config/config.json`                                                                 | `config/workshop.json`                                                     | `config/digipower.json`                                                                        | `config/tfac.json`                                                                   |
 | running it locally | `npm run dev`                                                                        | `CONFIG_NAME=workshop npm run dev`                                         | `CONFIG_NAME=digipower npm run dev`                                                            | `CONFIG_NAME=tfac npm run dev`                                                       |
+
+### Deployment configuration
+
+Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-experiences/settings/deploys#environment) 
+
+| Environment variable | Description                                                                      |
+|----------------------|----------------------------------------------------------------------------------|
+| CONFIG_NAME          | Name of the configuration file (without extension: "workshop", "digipower" ...)  |
+| BASE_URL             | Url where the website is deployed (with protocol: "https://test.hestialabs.org") |
+| WEBDAV_USERNAME      | Kdrive user email (for uploads)                                                  |
+| WEBDAV_PASSWORD      | Kdrive user password (for uploads)                                               |
+
+Documentation for the configuration file can be found in [config/README.md](tree/master/config)
 
 ## For developers
 
@@ -35,18 +48,23 @@ $ npm run generate
 
 For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
 
-### netlify functions
+We have server code that runs as a [netlify function](https://docs.netlify.com/functions/build-with-javascript/). It can be run locally using [netlify-cli](https://docs.netlify.com/cli/get-started/). The code is in the folder [netlify/functions](tree/master/netlify/functions)
 
-Running netlify dev
+```bash
+# install netlify client
+$ npm install netlify-cli -g
 
+# run everything with hot reload 
+$ BASE_URL=https://xxx.com WEBDAV_USERNAME=yyy@hestia.ai WEBDAV_PASSWORD=zzz netlify dev
+```
 
-
+The `WEBDAV_` variables must match the credentials of a kdrive user with access to Hestia.ai
 
 ### Global Configuration
 
 The files in `config` let us set parameters for each deployment. [See the README](https://github.com/hestiaAI/hestialabs-experiences/tree/master/config) for more details about the different parameters.
 
-The default is `config/config.json` (the test deployment), but if you want to use another configuration like `config/workshop.json`, set the environment variable **CONFIG_NAME**
+The default is [config/config.json](tree/master/config/config.json) (the test deployment), but if you want to use another configuration like `config/workshop.json`, set the environment variable **CONFIG_NAME**
 
 ```bash
 # for development
@@ -55,7 +73,7 @@ $ CONFIG_NAME=workshop npm run dev
 
 ```bash
 # for production
-$ CONFIG_NAME=workshop BASE_URL=experiences.hestialabs.org npm run build
+$ CONFIG_NAME=workshop BASE_URL=https://experiences.hestialabs.org npm run build
 # launch server
 $ npm run start
 ```
@@ -69,6 +87,9 @@ The app follows the default structure of Nuxt, [see the docs](https://nuxtjs.org
 ```bash
 # Run all the tests
 $ npm run test
+
+# Run tests interactively
+$ npm run test -- --watch
 
 # Update snapshots
 $ npm run test -- -u
