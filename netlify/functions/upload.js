@@ -84,7 +84,7 @@ async function sendFile(file, parentDir, client) {
   const sent = await client.putFileContents(path, content, options)
 
   if (sent) {
-    console.log(`Sent file ${parentDir}/${file.filename}`)
+    console.log(`Sent file ${path}`)
     return { statusCode: 200 }
   } else {
     const message = `The file '${file.filename}' could not be uploaded. It might already exist on the server.`

@@ -19,7 +19,7 @@ This directory contains the configuration files linked to each deployement. They
     */
   "filedrop": "https://example.com/filedrop",
   /**
-    * The public key used to encrypt the zip containing the consent log and results. Public and private key pairs can be generated at https://test.hestialabs.org/import/
+    * The public key used to encrypt the zip containing the consent log and results. Public and private key pairs can be generated at https://experiences.hestialabs.org/import/
     * @type String
     */
   "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
