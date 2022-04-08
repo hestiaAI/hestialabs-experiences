@@ -3,7 +3,7 @@ const busboy = require('busboy')
 
 const KDRIVE_URL = 'https:connect.drive.infomaniak.com/hestiaai'
 // https://functions.netlify.com/playground/#read-environment-variables
-const { WEBDAV_USERNAME, WEBDAV_PASSWORD } = process.env
+const { WEBDAV_USERNAME, WEBDAV_PASSWORD, BASE_URL } = process.env
 
 function streamToBuffer(stream) {
   const chunks = []
@@ -93,11 +93,17 @@ async function sendFile(file, parentDir, client) {
   }
 }
 
-async function createDirIfNeeded(dir, client) {
+async function createParentDirIfNeeded(client) {
+  if (!BASE_URL) {
+    return ''
+  }
+  const url = new URL(BASE_URL)
+  const dir = url.hostname
   if (dir && (await client.exists(dir)) === false) {
     console.log('create directory', dir)
     await client.createDirectory(dir)
   }
+  return dir
 }
 
 exports.handler = async function (event, context) {
@@ -116,8 +122,8 @@ exports.handler = async function (event, context) {
         body: JSON.stringify('Please send exactly one file.')
       }
     }
-    const parentDir = fields.experiencesHostName
-    await createDirIfNeeded(parentDir, client)
+    // const parentDir = fields.experiencesHostName
+    const parentDir = await createParentDirIfNeeded(client)
     return sendFile(files[0], parentDir, client)
   } catch (err) {
     const message = `Error sending to ${KDRIVE_URL} as ${WEBDAV_USERNAME}`
