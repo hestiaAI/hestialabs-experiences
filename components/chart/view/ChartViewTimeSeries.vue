@@ -328,7 +328,7 @@ export default {
       const yAxis = d3.axisLeft().ticks(5).scale(yScale) // .ticks(slices[0].values.length)
       const xAxis = d3
         .axisBottom()
-        .ticks(8)
+        .ticks(5)
         // .ticks(d3.timeDay.every(1))
         // .tickFormat(d3.timeFormat('%b %d'))
         .scale(xScale)

@@ -207,18 +207,13 @@ export default {
     },
     monthsPerYear() {
       const test = this.itemsPerDay.map(y => {
-        const dateExtent = d3.extent(y[1], i => {
-          console.log(y, i)
-          return new Date(y[0], i[0], i[1])
-        })
-        console.log(dateExtent)
+        const dateExtent = d3.extent(y[1], i => new Date(y[0], i[0], i[1]))
         return {
           year: y[0],
           months: d3.utcMonths(d3.utcMonth(dateExtent[0]), dateExtent[1])
         }
       })
 
-      console.log(test)
       return test
     },
     legendSquares() {

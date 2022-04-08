@@ -15,7 +15,7 @@
               >
                 Not mentioned
               </p>
-              <div v-if="item.list">
+              <div v-else-if="item.list">
                 <div class="d-flex flex-column flex-md-row flex-wrap">
                   <VChip v-for="l in item.value" :key="l" class="ma-2" label>
                     {{ l }}
@@ -39,7 +39,13 @@
               md="6"
             >
               <div class="overline">{{ item.title }}</div>
-              <div v-if="item.slider">
+              <p
+                v-if="!item.value || item.value.length === 0"
+                class="font-weight-bold"
+              >
+                Not mentioned
+              </p>
+              <div v-else-if="item.slider">
                 <VRangeSlider
                   v-model="item.value"
                   thumb-color="primary"
@@ -131,7 +137,7 @@ export default {
         {
           title: 'Descriptors',
           list: true,
-          value: JSON.parse(this.values[0].descriptors).map(v => v.name)
+          value: JSON.parse(this.values[0].descriptors)?.map(v => v.name) || []
         }
       ]
     }

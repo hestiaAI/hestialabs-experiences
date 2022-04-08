@@ -39,7 +39,6 @@ export default {
   },
   computed: {
     messageReceived() {
-      console.log(this.values.filter(v => v.receiver === 'You'))
       return this.values.filter(v => v.receiver === 'You')
     },
     messageSent() {
