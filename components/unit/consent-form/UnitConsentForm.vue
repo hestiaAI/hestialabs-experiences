@@ -25,7 +25,7 @@
         means.
       </p>
     </BaseAlert>
-    <VRow v-if="$uploadAvailable">
+    <VRow v-if="isSendingAvailable">
       <VCol>
         <BaseButton
           text="Share results with hestia"
@@ -33,8 +33,11 @@
           :error="!!sentErrorMessage"
           :progress="sentProgress"
           :disabled="missingRequiredFields || missingRequiredData.length > 0"
-          @click="sendForm"
+          @click="sendToNetlifyForm"
         />
+        <!--
+        @click="sendToUploadFunction"
+-->
       </VCol>
     </VRow>
     <VRow>
@@ -131,6 +134,9 @@ export default {
               !section.value.includes(block.key))
         )
         .map(block => block.title)
+    },
+    isSendingAvailable() {
+      return this.config.formSizeLimitMegaBytes || this.$uploadAvailable
     }
   },
   methods: {
@@ -225,7 +231,53 @@ export default {
       )
       return cipherText
     },
-    async sendForm() {
+    sendFile() {
+      if (this.config.formSizeLimitMegaBytes) {
+        this.sendToNetlifyForm()
+      } else if (this.$uploadAvailable) {
+        this.sendToUploadFunction()
+      }
+    },
+    isFileTooBig(fileContent) {
+      const limit = this.config.formSizeLimitMegaBytes
+      if (!limit) {
+        return false
+      }
+      const megabyte = 1048576
+      return fileContent.length > limit * megabyte
+    },
+    async sendToNetlifyForm() {
+      this.sentStatus = false
+      this.sentErrorMessage = undefined
+      this.sentProgress = true
+
+      // Programmatically create the form data
+      // Names must correspond to the dummy form defined in /static/export-data-form-dummy.html
+      const formData = new FormData()
+      formData.append('form-name', 'export-data')
+      const content = await this.generateZIP()
+      if (this.isFileTooBig(content)) {
+        this.sentErrorMessage = 'The file is too big to send.'
+        this.sentProgress = false
+        return
+      }
+      const zip = new File([content], this.filename, {
+        type: 'application/zip'
+      })
+      formData.append('encrypted-zip', zip, this.filename)
+      try {
+        await fetch('/', {
+          method: 'POST',
+          body: formData
+        })
+        this.sentStatus = true
+        this.sentProgress = false
+      } catch (error) {
+        console.error(error)
+        this.sentErrorMessage = 'Error'
+      }
+    },
+    async sendToUploadFunction() {
       this.sentStatus = false
       this.sentErrorMessage = undefined
       this.sentProgress = true
@@ -242,7 +294,13 @@ export default {
       let success = false
       let errorMessage
       try {
-        const resp = await fetch('/api/functions/upload-background', {
+        // Careful, upload fail for files as big as 4.5mb
+        // (We had size limits back in 1605c72)
+        // background functions are in beta,
+        // do not happen to accept bigger files than normal fnuctions,
+        // and don't return errors when they fail
+        // const resp = await fetch('/api/functions/upload-background', {
+        const resp = await fetch('/api/functions/upload', {
           method: 'POST',
           body: formData
         })

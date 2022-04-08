@@ -19,6 +19,12 @@ This directory contains the configuration files linked to each deployement. They
     */
   "filedrop": "https://example.com/filedrop",
   /**
+    * The maximum size in MB authorized for sending data by netlify form.
+    * Setting this field enables sending through netlify forms
+    * @type Number
+    */
+  "formSizeLimitMegaBytes": 30,
+  /**
     * The public key used to encrypt the zip containing the consent log and results. Public and private key pairs can be generated at https://experiences.hestialabs.org/import/
     * @type String
     */

@@ -17,6 +17,7 @@
     "ad-radar",
     "explorer"
   ],
+  "formSizeLimitMegaBytes": 30,
   "fileDrop": "https://drive.infomaniak.com/app/collaborate/193995/c41b3aac-cf1f-4ba7-a1ef-0d44fb45260e",
   "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
   "consent": {

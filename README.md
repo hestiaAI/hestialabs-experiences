@@ -14,7 +14,6 @@ The instances are deployed on [netlify](https://app.netlify.com/teams/hestia/ove
 | config             | `config/config.json`                                                                 | `config/workshop.json`                                                     | `config/digipower.json`                                                                        | `config/tfac.json`                                                                   |
 | running it locally | `npm run dev`                                                                        | `CONFIG_NAME=workshop npm run dev`                                         | `CONFIG_NAME=digipower npm run dev`                                                            | `CONFIG_NAME=tfac npm run dev`                                                       |
 
-Logs for the netlify functions are accessible in each site's netlify under Functions
 
 ### Deployment configuration
 
@@ -24,10 +23,21 @@ Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-
 |----------------------|----------------------------------------------------------------------------------|
 | CONFIG_NAME          | Name of the configuration file (without extension: "workshop", "digipower" ...)  |
 | BASE_URL             | Url where the website is deployed (with protocol: "https://test.hestialabs.org") |
-| WEBDAV_USERNAME      | Kdrive user email (or else upload button is disabled)                                                  |
-| WEBDAV_PASSWORD      | Kdrive user password (for uploads)                                               |
+| WEBDAV_USERNAME      | Kdrive user email (for upload with netlify functions)                                                  |
+| WEBDAV_PASSWORD      | Kdrive user password (for upload with netlify functions)                                               |
 
 Documentation for the configuration file can be found in [config/README.md](config)
+
+Logs for the netlify functions are accessible in each site's netlify under Functions
+
+#### Sending the data
+If sending is configured, the consent form has "Send results" button.
+
+Sending can be done either through netlify forms or netlify functions.
+
+Netlify forms uploads files to netlify. To enable it, set the field formSizeLimitMegaBytes in the config. 
+
+Netlify functions uploads the file to kdrive but fails for files as big as 4.5mb. To enable this, set the WEBDAV_USERNAME and WEBDAV_PASSWORD env variables, and make sure formSizeLimitMegaBytes is not set in the config.
 
 ## For developers
 
