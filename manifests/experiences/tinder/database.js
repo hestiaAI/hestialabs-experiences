@@ -14,17 +14,17 @@ export default async function databaseBuilder(fileManager) {
 
   /// User Infos ////////////////////
   db.create('UserInfos', [
-    ['fullName', 'TEXT'],
     ['ageFilterMax', 'INTEGER'],
     ['ageFilterMin', 'INTEGER'],
     ['birthDate', 'TEXT'],
     ['createDate', 'TEXT'],
-    ['description', 'TEXT'],
     ['gender', 'TEXT'],
     ['genderFilter', 'TEXT'],
     ['interestedIn', 'TEXT'],
     ['education', 'TEXT'],
-    ['college', 'TEXT']
+    ['college', 'TEXT'],
+    ['sexualOrientations', 'TEXT'],
+    ['descriptors', 'TEXT']
   ])
   const userInfosJSON =
     JSONPath({
@@ -34,17 +34,17 @@ export default async function databaseBuilder(fileManager) {
   const userInfosItems = []
   userInfosJSON.forEach((v, i) => {
     userInfosItems.push({
-      fullName: v.full_name || 'Not mentioned',
       ageFilterMax: v.age_filter_max || 'Not mentioned',
       ageFilterMin: v.age_filter_min || 'Not mentioned',
       birthDate: v.birth_date || 'Not mentioned',
       createDate: v.create_date || 'Not mentioned',
-      description: v.description || 'Not mentioned',
+      descriptors: JSON.stringify(v.descriptors) || 'Not mentioned',
       gender: v.gender || 'Not mentioned',
       genderFilter: v.gender_filter || 'Not mentioned',
       interestedIn: v.interested_in || 'Not mentioned',
       education: v.education || 'Not mentioned',
-      college: v.college.toString() || 'Not mentioned'
+      college: v.college.toString() || 'Not mentioned',
+      sexualOrientations: v.sexual_orientations.toString() || 'Not mentioned'
     })
   })
   db.insert('UserInfos', userInfosItems)

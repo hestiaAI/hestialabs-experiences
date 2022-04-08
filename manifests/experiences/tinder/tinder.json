@@ -22,7 +22,7 @@
       "sql": "user-infos",
       "files": ["tinder"],
       "visualization": "TinderUserInfos.vue",
-      "showTable": false,
+      "showTable": true,
       "title": "User infos"
     },
     {

@@ -3927,7 +3927,7 @@
       "app_version": 1234
     },
     "phone_id": "12345678912",
-    "sexual_orientations": ["test"],
+    "sexual_orientations": ["test", "test2ddddd", "test2222", "test 22 edw"],
     "education": "Has no high school or college education",
     "college": []
   },

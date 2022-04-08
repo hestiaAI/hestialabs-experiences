@@ -2,62 +2,60 @@
   <VRow>
     <VCol cols="12" align="center">
       <VCard max-width="600px">
-        <VCardTitle class="mt-8">
-          <VAvatar size="56">
-            <VIcon> $vuetify.icon.mdiAccount </VIcon>
-          </VAvatar>
-          <div class="ml-3">{{ values[0].fullName }}</div>
-        </VCardTitle>
         <VCardText>
           <VRow>
-            <VCol cols="12" md="6">
-              <VList subheader three-line>
-                <VSubheader>User infos</VSubheader>
-
-                <VListItem v-for="item in usersInfos" :key="item.title">
-                  <VListItemContent>
-                    <VListItemTitle class="overline">{{
-                      item.title
-                    }}</VListItemTitle>
-                    <VListItemSubtitle class="font-weight-bold">
-                      {{ item.value }}
-                    </VListItemSubtitle>
-                  </VListItemContent>
-                </VListItem>
-              </VList>
+            <VCol cols="12">
+              <span class="text-subtitle-1">User infos</span>
             </VCol>
-            <VDivider vertical></VDivider>
-            <VCol cols="12" md="6">
-              <VList subheader three-line>
-                <VSubheader>Application settings</VSubheader>
-
-                <VListItem v-for="item in appSettings" :key="item.title">
-                  <VListItemContent>
-                    <VListItemTitle class="overline">{{
-                      item.title
-                    }}</VListItemTitle>
-                    <VListItemSubtitle
-                      v-if="!item.slider"
-                      class="font-weight-bold"
-                    >
-                      {{ item.value }}
-                    </VListItemSubtitle>
-                    <VListItemSubtitle v-else>
-                      <VRangeSlider
-                        v-model="item.value"
-                        thumb-color="primary"
-                        thumb-label="always"
-                        thumb-size="25"
-                        color="primary"
-                        class="pt-10 pr-10 pl-10"
-                        :min="item.value[0] - 20"
-                        :max="item.value[1] + 20"
-                        readonly
-                      ></VRangeSlider>
-                    </VListItemSubtitle>
-                  </VListItemContent>
-                </VListItem>
-              </VList>
+            <VCol v-for="item in usersInfos" :key="item.title" cols="12" md="6">
+              <div class="overline">{{ item.title }}</div>
+              <div v-if="item.list">
+                <div class="d-flex flex-column flex-md-row flex-wrap">
+                  <VChip v-for="l in item.value" :key="l" class="ma-2" label>
+                    {{ l }}
+                  </VChip>
+                </div>
+              </div>
+              <p v-else class="font-weight-bold">
+                {{ item.value }}
+              </p>
+            </VCol>
+          </VRow>
+          <VDivider class="mt-4 mb-4"></VDivider>
+          <VRow class="">
+            <VCol cols="12">
+              <span class="text-subtitle-1">Application settings</span>
+            </VCol>
+            <VCol
+              v-for="item in appSettings"
+              :key="item.title"
+              cols="12"
+              md="6"
+            >
+              <div class="overline">{{ item.title }}</div>
+              <div v-if="item.slider">
+                <VRangeSlider
+                  v-model="item.value"
+                  thumb-color="primary"
+                  thumb-label="always"
+                  thumb-size="25"
+                  color="primary"
+                  class="pt-10 pr-10 pl-10"
+                  :min="item.value[0] - 20"
+                  :max="item.value[1] + 20"
+                  readonly
+                ></VRangeSlider>
+              </div>
+              <div v-else-if="item.list">
+                <div class="d-flex flex-column flex-md-row flex-wrap">
+                  <VChip v-for="l in item.value" :key="l" class="ma-2" label>
+                    {{ l }}
+                  </VChip>
+                </div>
+              </div>
+              <p v-else class="font-weight-bold">
+                {{ item.value }}
+              </p>
             </VCol>
           </VRow>
         </VCardText>
@@ -96,8 +94,13 @@ export default {
           value: this.values[0].college
         },
         {
-          title: 'Description',
-          value: this.values[0].description
+          title: 'Interested In',
+          value: this.values[0].interestedIn
+        },
+        {
+          title: 'Sexual Orientations',
+          list: true,
+          value: this.values[0].sexualOrientations.split(',')
         }
       ]
     },
@@ -108,8 +111,10 @@ export default {
           value: this.values[0].genderFilter
         },
         {
-          title: 'Interested In',
-          value: this.values[0].interestedIn
+          title: 'Account creation',
+          value: d3.timeFormat('%B %d, %Y at %H:%M:%S')(
+            new Date(this.values[0].createDate)
+          )
         },
         {
           title: 'Age filter',
@@ -117,10 +122,9 @@ export default {
           value: [this.values[0].ageFilterMin, this.values[0].ageFilterMax]
         },
         {
-          title: 'Account creation',
-          value: d3.timeFormat('%B %d, %Y at %H:%M:%S')(
-            new Date(this.values[0].createDate)
-          )
+          title: 'Descriptors',
+          list: true,
+          value: JSON.parse(this.values[0].descriptors).map(v => v.name)
         }
       ]
     }
