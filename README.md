@@ -51,11 +51,8 @@ For detailed explanation on how things work, check out the [documentation](https
 We have server code that runs as a [netlify function](https://docs.netlify.com/functions/build-with-javascript/). It can be run locally using [netlify-cli](https://docs.netlify.com/cli/get-started/). The code is in the folder [netlify/functions](netlify/functions)
 
 ```bash
-# install netlify client
-$ npm install netlify-cli -g
-
 # run everything with hot reload 
-$ BASE_URL=https://xxx.com WEBDAV_USERNAME=yyy@hestia.ai WEBDAV_PASSWORD=zzz netlify dev
+$ BASE_URL=https://xxx.com WEBDAV_USERNAME=yyy@hestia.ai WEBDAV_PASSWORD=zzz npx netlify dev
 ```
 
 The `WEBDAV_` variables must match the credentials of a kdrive user with access to Hestia.ai
