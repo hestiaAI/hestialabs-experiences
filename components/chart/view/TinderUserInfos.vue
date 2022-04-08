@@ -9,6 +9,12 @@
             </VCol>
             <VCol v-for="item in usersInfos" :key="item.title" cols="12" md="6">
               <div class="overline">{{ item.title }}</div>
+              <p
+                v-if="!item.value || item.value.length === 0"
+                class="font-weight-bold"
+              >
+                Not mentioned
+              </p>
               <div v-if="item.list">
                 <div class="d-flex flex-column flex-md-row flex-wrap">
                   <VChip v-for="l in item.value" :key="l" class="ma-2" label>
@@ -91,7 +97,8 @@ export default {
         },
         {
           title: 'College',
-          value: this.values[0].college
+          list: true,
+          value: JSON.parse(this.values[0].college)
         },
         {
           title: 'Interested In',
@@ -100,7 +107,7 @@ export default {
         {
           title: 'Sexual Orientations',
           list: true,
-          value: this.values[0].sexualOrientations.split(',')
+          value: JSON.parse(this.values[0].sexualOrientations)
         }
       ]
     },

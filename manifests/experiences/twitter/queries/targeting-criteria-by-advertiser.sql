@@ -1,9 +1,9 @@
 SELECT advertiserName, targetingType, targetingValue, COUNT(*) as count
-FROM twitterAds INNER JOIN twitterCriteria
-ON twitterAds.id = twitterCriteria.adId
-WHERE twitterAds.advertiserName IN (
+FROM TwitterAd INNER JOIN TwitterCriterion
+ON TwitterAd.id = TwitterCriterion.adId
+WHERE TwitterAd.advertiserName IN (
   SELECT advertiserName
-  FROM twitterAds
+  FROM TwitterAd
   GROUP BY advertiserName
   ORDER BY COUNT(*) DESC
   LIMIT 10

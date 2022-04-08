@@ -1,5 +1,5 @@
 SELECT  date,
-        MAX(CASE WHEN action='swipe_like'THEN amount ELSE NULL END) likes,
-        MAX(CASE WHEN action='swipe_pass'THEN amount ELSE NULL END) pass
-FROM TinderDB
+        MAX(CASE WHEN action='swipes_likes'THEN amount ELSE NULL END) likes,
+        MAX(CASE WHEN action='swipes_passes'THEN amount ELSE NULL END) pass
+FROM Tinder
 GROUP BY date;

@@ -1,8 +1,9 @@
 const { createClient } = require('webdav')
 const busboy = require('busboy')
-// import * as Busboy from "busboy"
 
 const KDRIVE_URL = 'https:connect.drive.infomaniak.com/hestiaai'
+// https://functions.netlify.com/playground/#read-environment-variables
+const { WEBDAV_USERNAME, WEBDAV_PASSWORD } = process.env
 
 function streamToBuffer(stream) {
   const chunks = []
@@ -44,6 +45,17 @@ function parseForm(headers, body, readFilestream) {
   })
 }
 
+async function parseEventForm(event) {
+  const decodedBody = event.isBase64Encoded ? atob(event.body) : event.body
+  const formWithFilePromises = await parseForm(
+    event.headers,
+    decodedBody,
+    makeSingleStreamFileConverter()
+  )
+  const files = await Promise.all(formWithFilePromises.files)
+  return Object.assign(formWithFilePromises, { files })
+}
+
 function atob(data) {
   return Buffer.from(data, 'base64')
 }
@@ -65,43 +77,56 @@ function makeSingleStreamFileConverter() {
   }
 }
 
+async function sendFile(file, parentDir, client) {
+  const { filename, content } = file
+  const path = parentDir ? `${parentDir}/${filename}` : filename
+  const options = { overwrite: false }
+  const sent = await client.putFileContents(path, content, options)
+
+  if (sent) {
+    console.log(`Sent file ${path}`)
+    return { statusCode: 200 }
+  } else {
+    const message = `The file '${file.filename}' could not be uploaded. It might already exist on the server.`
+    console.log(message)
+    return { statusCode: 409, body: JSON.stringify(message) }
+  }
+}
+
+async function createDirIfNeeded(dir, client) {
+  if (dir && (await client.exists(dir)) === false) {
+    console.log('create directory', dir)
+    await client.createDirectory(dir)
+  }
+}
+
 exports.handler = async function (event, context) {
   try {
-    const { WEBDAV_USERNAME: username, WEBDAV_PASSWORD: password } = process.env
-    const destinationDir = '/ak-partage-test'
+    const destinationDir = '/Common documents/experience-user-uploads'
     const client = createClient(`${KDRIVE_URL} ${destinationDir}`, {
-      username,
-      password
+      username: WEBDAV_USERNAME,
+      password: WEBDAV_PASSWORD
     })
-    const decodedBody = event.isBase64Encoded ? atob(event.body) : event.body
-    const form = await parseForm(
-      event.headers,
-      decodedBody,
-      makeSingleStreamFileConverter()
-    )
-    const files = await Promise.all(form.files)
+    const form = await parseEventForm(event)
+    const { fields, files } = form
+    console.log('fields', fields)
     if (files.length !== 1) {
       return {
         statusCode: 422,
         body: JSON.stringify('Please send exactly one file.')
       }
     }
-    const file = files[0]
-    const sent = await client.putFileContents(file.filename, file.content, {
-      overwrite: false
-    })
-    if (sent) {
-      return { statusCode: 200 }
-    } else {
-      return {
-        statusCode: 409,
-        body: JSON.stringify(
-          `The file '${file.filename}' could not be uploaded. It might already exist on the server.`
-        )
-      }
-    }
+    const parentDir = fields.experiencesHostName
+    await createDirIfNeeded(parentDir, client)
+    return sendFile(files[0], parentDir, client)
   } catch (err) {
-    console.error('error', err)
+    const message = `Error sending to ${KDRIVE_URL} as ${WEBDAV_USERNAME}`
+    if (err.response) {
+      console.error(message)
+      console.log(err.response?.data || err.response)
+    } else {
+      console.error(message, err)
+    }
     return { statusCode: 500 }
   }
 }

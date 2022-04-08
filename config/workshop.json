@@ -17,5 +17,22 @@
     "ad-radar",
     "explorer"
   ],
+  "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
+  "consent": {
+    "default": [
+      {
+        "title": "SHARE MY DATA",
+      "description": "With this form, you can register your consent, and optionally share additional data.",
+        "type": "checkbox",
+        "options": ["I agree to share the data selected below"]
+      },
+      {
+        "title": "Which data should be shared ?",
+        "description": "The visualizations of every checked section will be reproducible and the underlying data will be available to the receiver (at least one required).",
+        "type": "data",
+        "required": true
+      }
+    ]
+  },
   "hashtags": ["dataprivacy", "hestialabs"]
 }

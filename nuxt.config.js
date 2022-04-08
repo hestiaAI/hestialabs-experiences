@@ -6,14 +6,15 @@ import { validExtensions } from './manifests/utils'
 const name = 'HestiaLabs Experiences'
 const description = 'We create a new relationship to personal data'
 
-const { NODE_ENV, BASE_URL, CONFIG_NAME } = process.env
+const { NODE_ENV, BASE_URL, CONFIG_NAME, WEBDAV_USERNAME } = process.env
 
-const baseUrl = NODE_ENV === 'production' ? BASE_URL : 'http://localhost:3000'
-const configName = CONFIG_NAME || 'config'
-
-if (!baseUrl) {
+if (!BASE_URL && NODE_ENV === 'production') {
   throw new Error('BASE_URL environment variable is missing')
 }
+
+const baseUrl = BASE_URL || 'http://localhost:3000'
+const configName = CONFIG_NAME || 'config'
+const uploadAvailable = !!WEBDAV_USERNAME
 
 export default {
   ssr: false, // Disable Server-Side Rendering
@@ -111,7 +112,8 @@ export default {
 
   env: {
     baseUrl,
-    configName
+    configName,
+    uploadAvailable
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
