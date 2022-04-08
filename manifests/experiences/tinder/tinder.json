@@ -26,6 +26,23 @@
       "title": "User infos"
     },
     {
+      "key": "app-opens-vue",
+      "sql": "app-opens",
+      "files": ["tinder"],
+      "postprocessor": "appOpensData",
+      "visualization": "ChartViewHeatMapCalendar.vue",
+      "vizProps": {
+        "title": "Application usage over time",
+        "legendOffset": 360,
+        "dateAccessor": "date",
+        "valueAccessor": "value",
+        "legendLabel": "App Opened"
+      },
+      "showTable": false,
+      "title": "Usage",
+      "text": "See the number of times that you opened the app per day"
+    },
+    {
       "key": "likes-dislikes-vue",
       "sql": "likes-dislikes",
       "files": ["tinder"],
@@ -43,23 +60,6 @@
       "text": "See the number of likes and passes that you made over time."
     },
     {
-      "key": "app-opens-vue",
-      "sql": "app-opens",
-      "files": ["tinder"],
-      "postprocessor": "appOpensData",
-      "visualization": "ChartViewTimeSeries.vue",
-      "vizProps": {
-        "title": "Application usage over time",
-        "legendOffset": 360,
-        "dateAccessor": { "text": "Date", "value": "date" },
-        "seriesAccessor": { "text": "Action", "value": "action" },
-        "valueAccessor": "value"
-      },
-      "showTable": false,
-      "title": "App openings",
-      "text": "See the number of times that you opened the app (per day or per month)."
-    },
-    {
       "key": "messages-activity",
       "sql": "messages",
       "files": ["tinder"],
@@ -67,25 +67,8 @@
       "vizProps": {
         "dateAccessor": "sentDate"
       },
-      "title": "Messages Activity",
-      "text": ""
-    },
-    {
-      "key": "monthly-history-vue",
-      "sql": "likes-dislikes-messages",
-      "files": ["tinder"],
-      "postprocessor": "likesDislikesMessagesData",
-      "visualization": "ChartViewTimeSeries.vue",
-      "vizProps": {
-        "title": "Activity history",
-        "legendOffset": 200,
-        "dateAccessor": { "text": "Date", "value": "date" },
-        "seriesAccessor": { "text": "Action", "value": "action" },
-        "valueAccessor": "value"
-      },
-      "showTable": false,
-      "title": "Likes, passes, messages",
-      "text": "Compare the number of likes, passes, messages sent and messages received."
+      "title": "Messages",
+      "text": "See at what time of the day and week you receive/send the most messages"
     },
     {
       "key": "donut",
@@ -93,8 +76,8 @@
       "files": ["tinder"],
       "visualization": "donut-multiple-comparisons",
       "showTable": false,
-      "title": "Pairs",
-      "text": "Compare different pairs of values in a donut chart."
+      "title": "Comparison",
+      "text": "Compare the different actions you perform in the application."
     },
     {
       "key": "likes-dislikes-open",
@@ -104,14 +87,6 @@
       "showTable": false,
       "title": "Likes / passes correlation",
       "text": "Observe the possible correlation between the number of likes/passes and the number of times you open the app."
-    },
-    {
-      "key": "all",
-      "sql": "all",
-      "files": ["tinder"],
-      "showTable": true,
-      "title": "All data",
-      "text": "If you want to inspect precisely the values for each day, all the data can be summarized in a table."
     }
   ]
 }
