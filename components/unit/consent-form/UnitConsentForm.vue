@@ -242,7 +242,7 @@ export default {
       let success = false
       let errorMessage
       try {
-        const resp = await fetch('/api/functions/upload', {
+        const resp = await fetch('/api/functions/upload-background', {
           method: 'POST',
           body: formData
         })

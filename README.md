@@ -14,6 +14,8 @@ The instances are deployed on [netlify](https://app.netlify.com/teams/hestia/ove
 | config             | `config/config.json`                                                                 | `config/workshop.json`                                                     | `config/digipower.json`                                                                        | `config/tfac.json`                                                                   |
 | running it locally | `npm run dev`                                                                        | `CONFIG_NAME=workshop npm run dev`                                         | `CONFIG_NAME=digipower npm run dev`                                                            | `CONFIG_NAME=tfac npm run dev`                                                       |
 
+Logs for the netlify functions are accessible in each site's netlify under Functions
+
 ### Deployment configuration
 
 Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-experiences/settings/deploys#environment) 
