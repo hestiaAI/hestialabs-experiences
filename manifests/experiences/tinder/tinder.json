@@ -15,6 +15,31 @@
   },
   "defaultView": [
     {
+      "key": "user-infos",
+      "sql": "user-infos",
+      "files": ["tinder"],
+      "visualization": "TinderUserInfos.vue",
+      "showTable": false,
+      "title": "User infos"
+    },
+    {
+      "key": "app-opens-vue",
+      "sql": "app-opens",
+      "files": ["tinder"],
+      "postprocessor": "appOpensData",
+      "visualization": "ChartViewHeatMapCalendar.vue",
+      "vizProps": {
+        "title": "Application usage over time",
+        "legendOffset": 360,
+        "dateAccessor": "date",
+        "valueAccessor": "value",
+        "legendLabel": "App Opened"
+      },
+      "showTable": false,
+      "title": "Usage",
+      "text": "See the number of times that you opened the app per day"
+    },
+    {
       "key": "likes-dislikes-vue",
       "sql": "likes-dislikes",
       "files": ["tinder"],
@@ -32,38 +57,16 @@
       "text": "See the number of likes and passes that you made over time."
     },
     {
-      "key": "app-opens-vue",
-      "sql": "app-opens",
+      "key": "messages-activity",
+      "sql": "messages",
       "files": ["tinder"],
-      "postprocessor": "appOpensData",
-      "visualization": "ChartViewTimeSeries.vue",
+      "visualization": "TinderMessageActivity.vue",
       "vizProps": {
-        "title": "Application usage over time",
-        "legendOffset": 360,
-        "dateAccessor": { "text": "Date", "value": "date" },
-        "seriesAccessor": { "text": "Action", "value": "action" },
-        "valueAccessor": "value"
+        "dateAccessor": "sentDate"
       },
       "showTable": false,
-      "title": "App openings",
-      "text": "See the number of times that you opened the app (per day or per month)."
-    },
-    {
-      "key": "monthly-history-vue",
-      "sql": "likes-dislikes-messages",
-      "files": ["tinder"],
-      "postprocessor": "likesDislikesMessagesData",
-      "visualization": "ChartViewTimeSeries.vue",
-      "vizProps": {
-        "title": "Activity history",
-        "legendOffset": 200,
-        "dateAccessor": { "text": "Date", "value": "date" },
-        "seriesAccessor": { "text": "Action", "value": "action" },
-        "valueAccessor": "value"
-      },
-      "showTable": false,
-      "title": "Likes, passes, messages",
-      "text": "Compare the number of likes, passes, messages sent and messages received."
+      "title": "Messages",
+      "text": "See at what time of the day and week you receive/send the most messages"
     },
     {
       "key": "donut",
@@ -71,8 +74,8 @@
       "files": ["tinder"],
       "visualization": "donut-multiple-comparisons",
       "showTable": false,
-      "title": "Pairs",
-      "text": "Compare different pairs of values in a donut chart."
+      "title": "Comparison",
+      "text": "Compare the different actions you perform in the application."
     },
     {
       "key": "likes-dislikes-open",
@@ -82,14 +85,6 @@
       "showTable": false,
       "title": "Likes / passes correlation",
       "text": "Observe the possible correlation between the number of likes/passes and the number of times you open the app."
-    },
-    {
-      "key": "all",
-      "sql": "all",
-      "files": ["tinder"],
-      "showTable": true,
-      "title": "All data",
-      "text": "If you want to inspect precisely the values for each day, all the data can be summarized in a table."
     }
   ],
   "databaseConfig": {
@@ -100,6 +95,31 @@
           ["action", "TEXT"],
           ["date", "TEXT"],
           ["amount", "INTEGER"]
+        ]
+      },
+      {
+        "name": "UserInfos",
+        "columns": [
+          ["ageFilterMax", "INTEGER"],
+          ["ageFilterMin", "INTEGER"],
+          ["birthDate", "TEXT"],
+          ["createDate", "TEXT"],
+          ["gender", "TEXT"],
+          ["genderFilter", "TEXT"],
+          ["interestedIn", "TEXT"],
+          ["education", "TEXT"],
+          ["college", "TEXT"],
+          ["sexualOrientations", "TEXT"],
+          ["descriptors", "TEXT"]
+        ]
+      },
+      {
+        "name": "Messages",
+        "columns": [
+          ["sender", "TEXT"],
+          ["receiver", "TEXT"],
+          ["message", "TEXT"],
+          ["sentDate", "TEXT"]
         ]
       }
     ],
@@ -124,6 +144,80 @@
           {
             "column": "amount",
             "path": "$.value"
+          }
+        ]
+      },
+      {
+        "id": "tinder",
+        "path": "$.User",
+        "table": "UserInfos",
+        "getters": [
+          {
+            "column": "ageFilterMax",
+            "path": "$.age_filter_max"
+          },
+          {
+            "column": "ageFilterMin",
+            "path": "$.age_filter_min"
+          },
+          {
+            "column": "birthDate",
+            "path": "$.birth_date"
+          },
+          {
+            "column": "createDate",
+            "path": "$.create_date"
+          },
+          {
+            "column": "descriptors",
+            "path": "$.descriptors"
+          },
+          {
+            "column": "gender",
+            "path": "$.gender"
+          },
+          {
+            "column": "genderFilter",
+            "path": "$.gender_filter"
+          },
+          {
+            "column": "interestedIn",
+            "path": "$.interested_in"
+          },
+          {
+            "column": "education",
+            "path": "$.education"
+          },
+          {
+            "column": "college",
+            "path": "$.college"
+          },
+          {
+            "column": "sexualOrientations",
+            "path": "$.sexual_orientations"
+          }
+        ]
+      },
+      {
+        "id": "tinder",
+        "path": "$.Messages[*].messages[*]",
+        "table": "Messages",
+        "getters": [
+          {
+            "column": "sender",
+            "path": "$.from"
+          },
+          {
+            "column": "receiver",
+            "path": "$.to"
+          },
+          {
+            "column": "sentDate",
+            "path": "$.sent_date"
+          },
+          {
+            "column": "message",
+            "path": "$.message"
           }
         ]
       }

@@ -247,7 +247,8 @@ function generateRecordsRecursively(
           path: a.pathKey ? item[a.pathKey] : a.path,
           wrap: false
         })
-        record[a.column] = value || null
+        record[a.column] =
+          typeof value === 'object' ? JSON.stringify(value) : value || null
       } else if (a.column && a.value) {
         // hardcoded value
         record[a.column] = a.value
