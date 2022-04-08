@@ -49,6 +49,29 @@ export default async function databaseBuilder(fileManager) {
   })
   db.insert('UserInfos', userInfosItems)
 
+  /// Messages ////////////////////
+  db.create('Messages', [
+    ['sender', 'TEXT'],
+    ['receiver', 'TEXT'],
+    ['message', 'TEXT'],
+    ['sentDate', 'TEXT']
+  ])
+  const messagesJSON =
+    JSONPath({
+      path: '$.Messages[*].messages[*]',
+      json: TinderFile
+    }) ?? []
+  const messageItems = []
+  messagesJSON.forEach((v, i) => {
+    messageItems.push({
+      sender: v.from,
+      receiver: v.to,
+      message: v.message,
+      sentDate: v.sent_date
+    })
+  })
+  db.insert('Messages', messageItems)
+
   /// Likes ////////////////////
   db.create('TinderDB', [
     ['action', 'TEXT'],

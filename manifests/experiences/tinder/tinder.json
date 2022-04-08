@@ -60,6 +60,17 @@
       "text": "See the number of times that you opened the app (per day or per month)."
     },
     {
+      "key": "messages-activity",
+      "sql": "messages",
+      "files": ["tinder"],
+      "visualization": "TinderMessageActivity.vue",
+      "vizProps": {
+        "dateAccessor": "sentDate"
+      },
+      "title": "Messages Activity",
+      "text": ""
+    },
+    {
       "key": "monthly-history-vue",
       "sql": "likes-dislikes-messages",
       "files": ["tinder"],

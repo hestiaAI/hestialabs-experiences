@@ -1,0 +1,217 @@
+<template>
+  <VContainer>
+    <div class="overline">{{ title }}</div>
+    <svg class="graph" :viewBox="viewBox">
+      <g :transform="`translate(40.5,${cellSize * 1.5})`">
+        <g class="week-axis">
+          <text
+            v-for="(d, idx) in weekDays"
+            :key="`d_${idx}`"
+            x="-5"
+            :y="(idx + 0.5) * cellSize"
+            dy="0.35em"
+          >
+            {{ d }}
+          </text>
+        </g>
+
+        <g class="hour-axis">
+          <text y="-20" :x="(hours.length / 2 + 0.5) * cellSize">Hours</text>
+          <text
+            v-for="h in hours"
+            :key="`h_${h}`"
+            y="-5"
+            :x="(h + 0.5) * cellSize"
+          >
+            {{ h }}
+          </text>
+        </g>
+
+        <g class="calendar-hour">
+          <g v-for="(item, idx) in itemsPerHour" :key="idx">
+            <rect
+              :width="cellSize - cellSpacing"
+              :height="cellSize - cellSpacing"
+              :x="item[0] * cellSize + 0.5"
+              :y="item[1] * cellSize + 0.5"
+              :fill="color(item[2])"
+              :rx="borderRadius"
+              :ry="borderRadius"
+            ></rect>
+            <title>{{ generateTitle(item) }}</title>
+          </g>
+        </g>
+
+        <g class="legend">
+          <text
+            style="text-anchor: end"
+            :x="width - cellSize * legendNbItems * 3"
+            :y="height - cellSize * 2.5"
+            dy="-.20em"
+          >
+            {{ legendLabel }}
+          </text>
+          <g v-for="(square, idx) in legendSquares" :key="'legend_' + idx">
+            <rect
+              :width="(cellSize - cellSpacing) * 2"
+              :height="(cellSize - cellSpacing) / 2"
+              :x="
+                width -
+                cellSize * legendNbItems * 3 +
+                idx * cellSize * 2 +
+                cellSize
+              "
+              :y="height - cellSize * 3"
+              :fill="color(square)"
+              :rx="borderRadius"
+              :ry="borderRadius"
+            ></rect>
+            <text
+              style="text-anchor: middle"
+              :x="
+                width -
+                cellSize * legendNbItems * 3 +
+                idx * cellSize * 2 +
+                2 * cellSize +
+                0.5
+              "
+              :y="height - cellSize * 2"
+            >
+              {{ square }}
+            </text>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </VContainer>
+</template>
+
+<script>
+import * as d3 from 'd3'
+import mixin from './mixin'
+
+export default {
+  mixins: [mixin],
+  props: {
+    dateAccessor: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      default: () => ''
+    },
+    cellSize: {
+      type: Number,
+      default: () => 20
+    },
+    cellSpacing: {
+      type: Number,
+      default: () => 2
+    },
+    dateFormat: {
+      type: String,
+      default: () => ''
+    },
+    valueAccessor: {
+      type: String,
+      default: () => ''
+    },
+    borderRadius: {
+      type: Number,
+      default: () => 3
+    },
+    legendNbItems: {
+      type: Number,
+      default: () => 4
+    },
+    legendLabel: {
+      type: String,
+      default: () => ''
+    }
+  },
+  data() {
+    return {
+      weekDays: ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat'],
+      hours: d3.range(24),
+      colorPalette: d3.interpolateRdPu
+    }
+  },
+  computed: {
+    width() {
+      return this.cellSize * (this.hours.length + 3)
+    },
+    height() {
+      return this.cellSize * (this.weekDays.length + 4)
+    },
+    viewBox() {
+      return `0 0 ${this.width} ${this.height}`
+    },
+    dateParser() {
+      if (this.dateFormat) return d3.timeParse(this.dateFormat)
+      else return d => new Date(d)
+    },
+    items() {
+      return this.values.map(v => {
+        return {
+          date: this.dateParser(v[this.dateAccessor]),
+          value: this.valueAccessor ? v[this.valueAccessor] : 1
+        }
+      })
+    },
+    itemsPerHour() {
+      const hours = d3.flatRollup(
+        this.items,
+        v => d3.sum(v, d => d.value),
+        v => v.date.getHours(),
+        v => v.date.getDay()
+      )
+      return hours
+    },
+    extent() {
+      return d3.extent(this.itemsPerHour, v => v[2])
+    },
+    color() {
+      return d3
+        .scaleSequential()
+        .domain([this.extent[0], this.extent[1]])
+        .interpolator(this.colorPalette)
+    },
+    legendSquares() {
+      const legendFormat = d3.format('.2')
+      const step = this.extent[1] / (this.legendNbItems - 1)
+      return d3
+        .range(this.legendNbItems)
+        .map(n => (n ? legendFormat(n * step) : legendFormat(this.extent[0])))
+    }
+  },
+  mounted() {},
+  methods: {
+    generateTitle(item) {
+      return (
+        d3.timeFormat('%a at %H:00')(new Date(2000, 12, item[1], item[0])) +
+        ' - ' +
+        item[2] +
+        ' records'
+      )
+    },
+    drawViz() {}
+  }
+}
+</script>
+<style scoped>
+/* AXES */
+/* ticks */
+::v-deep .week-axis {
+  text-anchor: end;
+}
+::v-deep .hour-axis {
+  text-anchor: middle;
+}
+::v-deep .graph {
+  font-family: 'Assistant', sans-serif;
+  font-size: 8px;
+  max-width: 100%;
+  height: auto;
+}
+</style>
