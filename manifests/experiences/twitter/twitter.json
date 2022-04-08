@@ -120,9 +120,9 @@
         ]
       }
     ],
-    "files": [
+    "getters": [
       {
-        "id": "impressions",
+        "fileId": "impressions",
         "path": "$.*.ad.adsUserData.adImpressions.impressions[*]",
         "table": "TwitterAd",
         "getters": [
@@ -167,7 +167,7 @@
         ]
       },
       {
-        "id": "engagements",
+        "fileId": "engagements",
         "path": "$.*.ad.adsUserData.adEngagements.engagements[*].impressionAttributes",
         "table": "TwitterEngagement",
         "getters": [
