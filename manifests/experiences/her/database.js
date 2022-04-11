@@ -92,6 +92,59 @@ export default async function databaseBuilder(fileManager) {
       }
     })
   )
+  /// Skipped ////////////////////
+  // Name,Skipped at
+  const skippedFile = await getCsvAndMergeFromID(fileManager, 'skipped')
+  db.create('herSkippedDB', [
+    ['name', 'TEXT'],
+    ['skippedat', 'TEXT']
+  ])
+  db.insert(
+    'herSkippedDB',
+    skippedFile.items.map(i => {
+      return {
+        name: i.Name,
+        skippedat: i['Skipped at']
+      }
+    })
+  )
+  /// Profile ////////////////////
+  // Name,Full name,Birthday,Last online UTC,Registration_date UTC,Email,Push notifications enabled,Last used filters,Height in cm,Location,Custom Location,Status
+  const profilesFile = await getCsvAndMergeFromID(fileManager, 'profiles')
+  db.create('herProfilesDB', [
+    ['name', 'TEXT'],
+    ['fullname', 'TEXT'],
+    ['birthday', 'TEXT'],
+    ['lastonlineutc', 'TEXT'],
+    ['registrationdateutc', 'TEXT'],
+    ['email', 'TEXT'],
+    ['pushnotificationsenabled', 'TEXT'],
+    ['lastusedfilters', 'TEXT'],
+    ['heightincm', 'TEXT'],
+    ['location', 'TEXT'],
+    ['customlocation', 'TEXT'],
+    ['status', 'TEXT']
+  ])
+  db.insert(
+    'herProfilesDB',
+    profilesFile.items.map(i => {
+      return {
+        name: i.Name,
+        fullname: i['Full name'],
+        birthday: i.Birthday,
+        lastonlineutc: i['Last online UTC'],
+        registrationdateutc: i['Registration_date UTC'],
+        email: i.Email,
+        pushnotificationsenabled: i['Push notifications enabled'],
+        lastusedfilters: i['Last used filters'],
+        heightincm: i['Height in cm'],
+        location: i.Location,
+        customlocation: i['Custom Location'],
+        status: i.Status
+      }
+    })
+  )
+
   /// //////////////////
   return db
 }
