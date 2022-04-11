@@ -38,7 +38,7 @@ async function getDatabase(adImpressions, adEngagements) {
   )
   await fileManager.init([fileImpressions, fileEngagements])
   db = await DBMS.createDB(databaseConfig)
-  const records = await DBMS.generateRecords(db, fileManager, databaseConfig)
+  const records = await DBMS.generateRecords(fileManager, databaseConfig)
   DBMS.insertRecords(db, records)
 }
 
