@@ -138,7 +138,6 @@ export default {
       this.generateStatus = false
       this.generateProgress = true
       const content = await this.generateZIP()
-      // this.zipFile = content
       this.generateStatus = true
       this.generateProgress = false
 
