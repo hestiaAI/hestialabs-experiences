@@ -1,4 +1,5 @@
 import {
+  mdiAccount,
   mdiAlert,
   mdiAutorenew,
   mdiCheckboxBlankOutline,
@@ -34,6 +35,7 @@ export default {
   icons: {
     iconfont: 'mdiSvg',
     values: {
+      mdiAccount,
       mdiAlert,
       mdiAutorenew,
       mdiCheckboxBlankOutline,

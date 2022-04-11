@@ -96,6 +96,58 @@ test('jsonToTableConverter with properties', async () => {
   expect(tableData).toStrictEqual(correct)
 })
 
+test('jsonToTableConverter with nested properties', async () => {
+  const fileName = 'comments_and_reactions/comments.json'
+  const content = {
+    comments_v2: [
+      {
+        timestamp: 1000000000,
+        comment: { text: 'one comment' },
+        name: 'hello'
+      },
+      {
+        timestamp: 1000000001,
+        comment: { text: 'another comment' },
+        name: 'toto'
+      }
+    ]
+  }
+  const fileManager = await mockFileManager(fileName, JSON.stringify(content))
+
+  const options = [
+    {
+      accessor: {
+        filePath: 'comments_and_reactions/comments.json',
+        jsonPath: '$.comments_v2[*]'
+      },
+      columns: [
+        {
+          path: 'timestamp',
+          type: 'number'
+        },
+        {
+          name: 'First comment',
+          path: 'comment.text'
+        }
+      ]
+    }
+  ]
+
+  expect(fileManager.hasFile(fileName)).toBe(true)
+  const bobo = await fileManager.getText(fileName)
+  expect(bobo).toStrictEqual(JSON.stringify(content))
+
+  const tableData = await jsonToTableConverter({ fileManager, options })
+  const correct = {
+    headers: ['timestamp', 'First comment'],
+    items: [
+      { timestamp: 1000000000, 'First comment': 'one comment' },
+      { timestamp: 1000000001, 'First comment': 'another comment' }
+    ]
+  }
+  expect(tableData).toStrictEqual(correct)
+})
+
 test('jsonToTableConverter without properties', async () => {
   const fileName = 'comments_and_reactions/comments.json'
   const content = {

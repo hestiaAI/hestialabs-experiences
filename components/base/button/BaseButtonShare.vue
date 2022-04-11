@@ -125,11 +125,8 @@ export default {
         text = textToShare
       }
 
-      let url = this.$url()
-      if (process.env.NODE_ENV === 'development') {
-        url = `https://experiences.hestialabs.org${this.$route.path}`
-      }
-
+      const url = this.$url()
+      console.log('url', url)
       const webShareData = {
         title,
         text,
