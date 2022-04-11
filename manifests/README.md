@@ -8,7 +8,7 @@ Note: All files and folders should match the following regular expression: [`^(?
 
 1. Create a new folder in `/manifests/experiences/` and give it a unique name. Note that this name will also be the slug (URL identifier) of the data experience.
 
-2. Add `.json` config file
+2. Add `.json` config file (having the name of your experience, for example `some-company.json`)
 
 ```js
 {
@@ -52,7 +52,7 @@ Note: All files and folders should match the following regular expression: [`^(?
   "data": ["twitter.zip"],
   /**
     * Array defining the blocks to show in the default view. Each section section can have:
-    * - A SPARQL query
+    * - key: A unique identifier for the block
     * - A function used as the custom pipeline (defined in pipeline.js)
     * - A SQL query
     * - A list of files required to run the experience. Refer to the IDs defined above.
@@ -69,10 +69,10 @@ Note: All files and folders should match the following regular expression: [`^(?
     */
   "defaultView": [
     {
-      "query": "sparql_query_filename",
+      "key": "my-block",
       "customPipeline": "pipeline_function_name",
       "sql": "sql_query_filename",
-      "files": ["file_id_1", "file_id_2"]
+      "files": ["file_id_1", "file_id_2"],
       "postprocessor": "postprocessor_function_name",
       "parameterName": "Example",
       "parameterKey": ":example",
@@ -90,22 +90,20 @@ Note: All files and folders should match the following regular expression: [`^(?
 }
 ```
 
-3. For the SPARQL pipeline: add a single YARRRML file at the root (a `.yml` or `.yaml` file containing [YARRRML mappings](https://rml.io/yarrrml/)), and the SPARQL queries in a subfolder `queries`. If needed, add custom RML functions to `manifests/functions.js`
 
-**Note**
-If the data experience involves a single non-zip file input, use the name `input.<ext>` in the YARRRML `access` field of the source definition.
+3. For the SQL pipeline: add a `databaseBuilder` function in a file `database.js`, and the SQL queries in a subfolder `queries`.
 
-4. For the SQL pipeline: add a `databaseBuilder` function in a file `database.js`, and the SQL queries in a subfolder `queries`.
+4. For the custom pipeline: add the functions in a file `pipeline.js`. 
 
-5. For the custom pipeline: add the functions in a file `pipeline.js`.
+5. If needed, add postprocessor functions in a file `postprocessors.js`.
 
-6. If needed, add postprocessor functions in a file `postprocessors.js`.
+6. If needed, add Vega configurations in a subfolder `visualizations`.
 
-7. If needed, add Vega configurations in a subfolder `visualizations`.
+7. Import all the functions from `*.js` files in a file `index.js` and export them as an object.
 
-8. Import all the functions from `*.js` files in a file `index.js` and export them as an object.
+8. If the icon is missing add the image file to `manifests/icons/`
 
-9. If the icon is missing add the image file to `manifests/icons/`
+9. To display the experience on the website, its name needs to be added to the "experiences" array in the config you are using. Configs are found in folder `config`, by default `config/config.json` is used.
 
 ## Adding sample data
 

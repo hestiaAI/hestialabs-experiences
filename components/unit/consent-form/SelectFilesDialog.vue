@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   props: {
     value: {
@@ -73,8 +73,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['consentForm']),
-    ...mapGetters(['fileManager']),
+    ...mapState(['consentForm', 'fileManager']),
     treeItems() {
       return this.fileManager.getTreeItems()
     },

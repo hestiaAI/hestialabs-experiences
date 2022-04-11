@@ -1,18 +1,16 @@
 import { genericDateViewer } from '~/manifests/generic-pipelines'
-import { setsEqual } from '~/utils/utils'
+import { getCsvAndMergeFromID } from '~/utils/csv'
 
 async function inference({ fileManager }) {
-  const tcFiles = await fileManager.getCsvItemsFromId('inference')
-
-  // Merge the files that have the same headers as the first file
-  const tcFile = tcFiles.reduce((prev, curr) => {
-    if (setsEqual(new Set(prev.headers), new Set(curr.headers))) {
-      return { headers: prev.headers, items: prev.items.concat(curr.items) }
-    } else {
-      return prev
-    }
-  })
-  return tcFile
+  return await getCsvAndMergeFromID(fileManager, 'inference')
 }
 
-export default { inference, genericDateViewer }
+async function adTargeting({ fileManager }) {
+  return await getCsvAndMergeFromID(fileManager, 'ad-targeting')
+}
+
+async function connections({ fileManager }) {
+  return await getCsvAndMergeFromID(fileManager, 'connections')
+}
+
+export default { adTargeting, inference, connections, genericDateViewer }

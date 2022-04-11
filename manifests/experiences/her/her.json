@@ -12,7 +12,7 @@
       "showTable": true,
       "title": "Liked",
       "text": "Number of likes that you made over time."
-    }, 
+    },
     {
       "key": "notifications",
       "sql": "notifications",
@@ -20,7 +20,7 @@
       "showTable": true,
       "title": "notifications",
       "text": "Number of notifications that you recieved over time."
-    }, 
+    },
     {
       "key": "likednotifications",
       "sql": "likednotifications",
@@ -28,7 +28,7 @@
       "showTable": true,
       "title": "Liked notifications",
       "text": "Number of Liked notifications that you recieved over time."
-    }, 
+    },
     {
       "key": "friendnotifications",
       "sql": "friendnotifications",
