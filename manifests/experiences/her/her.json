@@ -3,7 +3,7 @@
   "subtitle": "Data experiences",
   "icon": "herlogo.webp",
   "dataPortal": "https://weareher.com/privacy/",
-  "files": {"liked": "**/liked.csv", "notifications": "**/notifications.csv"},
+  "files": {"liked": "**/liked.csv", "notifications": "**/notifications.csv", "blocked": "**/blocked.csv", "messages": "**/messages.csv", "reported": "**/reported.csv"},
   "defaultView": [
     {
       "key": "liked",
@@ -22,20 +22,44 @@
       "text": "Number of notifications that you recieved over time."
     }, 
     {
-      "key": "likedNotifications",
-      "sql": "likedNotifications",
+      "key": "likednotifications",
+      "sql": "likednotifications",
       "files": ["notifications"],
       "showTable": true,
       "title": "Liked notifications",
       "text": "Number of Liked notifications that you recieved over time."
     }, 
     {
-      "key": "friendNotifications",
-      "sql": "friendNotifications",
+      "key": "friendnotifications",
+      "sql": "friendnotifications",
       "files": ["notifications"],
       "showTable": true,
       "title": "Friend notifications",
       "text": "Number of Friend notifications that you recieved over time."
+    }, 
+    {
+      "key": "blocked",
+      "sql": "blocked",
+      "files": ["blocked"],
+      "showTable": true,
+      "title": "Blocks",
+      "text": "Blocks that you established over time."
+    }, 
+    {
+      "key": "messages",
+      "sql": "messages",
+      "files": ["messages"],
+      "showTable": true,
+      "title": "Messages",
+      "text": "Messages sent and recieved."
+    }, 
+    {
+      "key": "reported",
+      "sql": "reported",
+      "files": ["reported"],
+      "showTable": true,
+      "title": "Reported",
+      "text": "Users that you reported to the moderation."
     }
   ]
 }
