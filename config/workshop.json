@@ -27,8 +27,8 @@
       },
       {
         "title": "Terms",
-      "_docx_description": "Do you agree with the terms relevant to the queer bodies representation  study <a href=\"https://drive.infomaniak.com/app/share/193995/d608f311-e59b-4f55-8f0b-1db4b87942b0\">here</a> ?",
-      "description": "Do you agree with the terms relevant to the queer bodies representation  study <a href=\"https://drive.infomaniak.com/app/share/193995/19c76cbf-a28a-4c9b-a8dc-495d69243e1b\">here</a> ?",
+      "_docx_description": "Do you agree with the terms relevant to the queer bodies representation  study <a target=\"_blank\"  href=\"https://drive.infomaniak.com/app/share/193995/d608f311-e59b-4f55-8f0b-1db4b87942b0\">here</a> ?",
+      "description": "Do you agree with the terms relevant to the queer bodies representation  study <a target=\"_blank\"  href=\"https://drive.infomaniak.com/app/share/193995/19c76cbf-a28a-4c9b-a8dc-495d69243e1b\">here</a> ?",
         "type": "checkbox",
         "options": ["I agree"]
       },
