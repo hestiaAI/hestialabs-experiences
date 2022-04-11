@@ -111,7 +111,7 @@ export default {
       this.updateCheckboxOnReturn(false)
     },
     clear() {
-      this.$store.commit('setSelectedFiles', { key: this.key, value: [] })
+      this.$store.commit('setSelectedFiles', [])
       this.updateCheckboxOnReturn(true)
       this.show = false
     },
@@ -144,7 +144,7 @@ export default {
       if (clear) {
         value = value.filter(x => x !== 'file-explorer')
       } else if (!value.includes('file-explorer')) {
-        value.push('file-explorer')
+        value = value.concat('file-explorer')
       }
       this.$store.commit('setConsentFormValue', { index, value })
     }
