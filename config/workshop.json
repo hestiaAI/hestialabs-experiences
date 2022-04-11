@@ -23,23 +23,24 @@
     "default": [
       {
         "title": "SHARE MY DATA",
-      "description": "With this form, you can register your consent, and optionally share additional data, and agree to the terms"
+      "description": "With this form, you can register your consent, optionally share additional data, and agree to the terms."
       },
       {
         "title": "Terms",
-      "description": "Do you agree with the terms at <a href=\"https://wiki.personaldata.io\">personaldata.io</a> ?",
+      "_docx_description": "Do you agree with the terms relevant to the queer bodies representation  study <a href=\"https://drive.infomaniak.com/app/share/193995/d608f311-e59b-4f55-8f0b-1db4b87942b0\">here</a> ?",
+      "description": "Do you agree with the terms relevant to the queer bodies representation  study <a href=\"https://drive.infomaniak.com/app/share/193995/19c76cbf-a28a-4c9b-a8dc-495d69243e1b\">here</a> ?",
         "type": "checkbox",
         "options": ["I agree"]
       },
       {
         "title": "Identification",
-        "description": "Please choose a pseudonym",
+        "description": "Please choose a pseudonym.",
         "type": "input",
         "name": "pseudonym"
       },
       {
         "title": "Which data do you agree to share ?",
-        "description": "The visualizations and data of every checked section will be reproducible and the underlying data will be available to the receiver (at least one required).",
+        "description": "Please check all the boxes (enable them by visiting the corresponding tabs), and if you so wish, select pictures by clicking the <strong>Individual files</strong> checkbox.<br>Then click <strong>Download results</strong> to get your encrypted data, and click <strong>Drop file here</strong>, which takes you to the webpage where you can upload your data.",
         "type": "data",
         "required": true
       }
