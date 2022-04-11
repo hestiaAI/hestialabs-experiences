@@ -1,0 +1,104 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "A basic line chart example.",
+  "width": 500,
+  "height": 200,
+  "padding": 50,
+
+  "data": [
+    {
+      "name": "table",
+      "url": "data.json",
+      "format": {"type": "json", "parse": {"date": "date:'%Y-%m-%d'"}}
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "x",
+      "type": "time",
+      "range": "width",
+      "domain": {"data": "table", "field": "date"}
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "range": "height",
+      "nice": true,
+      "zero": true,
+      "domain": {"data": "table", "fields": ["like", "pass"]}
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "range": ["#414141", "#ff6a6e"],
+      "domain": ["Likes", "Passes"]
+    }
+  ],
+
+  "legends": [
+    {
+      "orient": "top-right",
+      "fill": "color",
+      "offset": 0,
+      "zindex": 1,
+      "symbolType": "square"
+    }
+  ],
+
+  "axes": [
+    {"orient": "bottom", "scale": "x", "offset":0, "labelAlign": "left", "labelAngle": 45},
+    {"orient": "left", "scale": "y",  "offset":10}
+  ],
+
+  "marks": [
+    {
+      "type": "line",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "field": "date"},
+          "y": {"scale": "y", "field": "like"},
+          "stroke":{"scale": "color", "value":"Likes"},
+          "strokeWidth": {"value": 2}
+        },
+        "update": {
+          "strokeOpacity": {"value": 1}
+        },
+        "hover": {
+          "strokeOpacity": {"value": 0.5}
+        }
+      }
+    },
+    {
+      "type": "line",
+      "from": {"data": "table"},
+      "encode": {
+        "enter": {
+          "x": {"scale": "x", "field": "date"},
+          "y": {"scale": "y", "field": "pass"},
+          "stroke":{"scale": "color", "value":"Passes"},
+          "strokeWidth": {"value": 2}
+        },
+        "update": {
+          "strokeOpacity": {"value": 1}
+        },
+        "hover": {
+          "strokeOpacity": {"value": 0.5}
+        }
+      }
+    }
+  ],
+  "title": {
+    "text": "History of likes and passes you have made",
+    "encode": {
+      "title": {
+        "enter": {
+          "fill": {"value": "#2e3131"},
+          "fontSize": {"value": 15},
+          "fontWeight": {"value": "bold"}
+        }
+      }
+    }
+  }
+}
