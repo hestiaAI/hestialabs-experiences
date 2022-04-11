@@ -1,24 +1,24 @@
 import fs from 'fs'
 import path from 'path'
 
-import databaseBuilder from '../database'
 import {
   adImpressions,
   adEngagements,
   missingAttributesImpressions,
   missingAttributesEngagements
 } from './samples.helpers'
-import preprocessors from '~/manifests/preprocessors'
+import preprocessorsModule from '~/manifests/preprocessors'
+import DBMS from '~/utils/sql'
 import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { arrayEqualNoOrder } from '~/utils/test-utils'
 
 let db
-const manifest = JSON.parse(
+const { files, preprocessors, databaseConfig } = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, '../twitter.json'), 'utf8')
 )
-Object.entries(manifest.preprocessors).forEach(
-  ([path, pre]) => (manifest.preprocessors[path] = preprocessors[pre])
+Object.entries(preprocessors).forEach(
+  ([path, pre]) => (preprocessors[path] = preprocessorsModule[pre])
 )
 
 function runQuery(sqlFilePath) {
@@ -27,11 +27,7 @@ function runQuery(sqlFilePath) {
 }
 
 async function getDatabase(adImpressions, adEngagements) {
-  const fileManager = new FileManager(
-    manifest.preprocessors,
-    null,
-    manifest.files
-  )
+  const fileManager = new FileManager(preprocessors, null, files)
   const fileImpressions = mockFile(
     'test/data/ad-impressions.js',
     JSON.stringify(adImpressions)
@@ -41,8 +37,9 @@ async function getDatabase(adImpressions, adEngagements) {
     JSON.stringify(adEngagements)
   )
   await fileManager.init([fileImpressions, fileEngagements])
-
-  db = await databaseBuilder(fileManager)
+  db = await DBMS.createDB(databaseConfig)
+  const records = await DBMS.generateRecords(fileManager, databaseConfig)
+  DBMS.insertRecords(db, records)
 }
 
 describe('with incomplete samples', () => {
@@ -67,45 +64,37 @@ describe('with complete samples', () => {
   test('the database builder creates the tables correctly', () => {
     let result, expected
 
-    // Table twitterAds
-    result = db.select('SELECT * FROM twitterAds')
+    // Table TwitterAd
+    result = db.select('SELECT * FROM TwitterAd')
     expected = {
-      headers: [
-        'id',
-        'tweetId',
-        'advertiserName',
-        'time',
-        'engagement',
-        'displayLocation'
-      ],
+      headers: ['id', 'tweetId', 'advertiserName', 'time', 'displayLocation'],
       items: [
         {
-          id: 0,
+          id: 1,
           tweetId: '1381646278988292098',
           advertiserName: 'PwC Switzerland',
           displayLocation: 'TimelineHome',
-          time: '2021-04-15 19:43:25',
-          engagement: 1
+          time: '2021-04-15 19:43:25'
         }
       ]
     }
     arrayEqualNoOrder(result.headers, expected.headers)
     arrayEqualNoOrder(result.items, expected.items)
 
-    // Table twitterCriteria
-    result = db.select('SELECT * FROM twitterCriteria')
+    // Table TwitterCriterion
+    result = db.select('SELECT * FROM TwitterCriterion')
     expected = {
       headers: ['id', 'adId', 'targetingType', 'targetingValue'],
       items: [
         {
-          id: 0,
-          adId: 0,
+          id: 1,
+          adId: 1,
           targetingType: 'Locations',
           targetingValue: 'Switzerland'
         },
         {
-          id: 1,
-          adId: 0,
+          id: 2,
+          adId: 1,
           targetingType: 'Age',
           targetingValue: '35 and up'
         }
@@ -115,8 +104,8 @@ describe('with complete samples', () => {
     arrayEqualNoOrder(result.items, expected.items)
   })
 
-  test('query advertisers-per-day returns the correct items', () => {
-    const result = runQuery('../queries/advertisers-per-day.sql')
+  test('query ads-per-advertiser returns the correct items', () => {
+    const result = runQuery('../queries/ads-per-advertiser.sql')
     const expected = {
       headers: ['advertiserName', 'date', 'count'],
       items: [
@@ -166,7 +155,7 @@ describe('with complete samples', () => {
       headers: [
         'tweetId',
         'companyName',
-        'engagement',
+        'engagements',
         'date',
         'targetingType',
         'targetingValue'
@@ -175,7 +164,7 @@ describe('with complete samples', () => {
         {
           tweetId: '1381646278988292098',
           companyName: 'PwC Switzerland',
-          engagement: 1,
+          engagements: 1,
           date: '2021-04-15 19:43:25',
           targetingType: 'Locations',
           targetingValue: 'Switzerland'
@@ -183,7 +172,7 @@ describe('with complete samples', () => {
         {
           tweetId: '1381646278988292098',
           companyName: 'PwC Switzerland',
-          engagement: 1,
+          engagements: 1,
           date: '2021-04-15 19:43:25',
           targetingType: 'Age',
           targetingValue: '35 and up'

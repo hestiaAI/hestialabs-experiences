@@ -9,4 +9,5 @@ export default ({ app }, inject) => {
     // otherwise, use router instance from app context
     return baseUrl + app.router.currentRoute.path
   })
+  inject('uploadAvailable', process.env.uploadAvailable)
 }

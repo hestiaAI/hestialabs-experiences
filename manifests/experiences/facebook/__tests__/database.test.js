@@ -1,7 +1,6 @@
 import fs from 'fs'
 import path from 'path'
 
-import databaseBuilder from '../database'
 import {
   advertisersUsingYourActivity,
   advertisersWhoUploadedAContactList,
@@ -9,17 +8,18 @@ import {
   yourOffFacebookActivity,
   adsInterests
 } from './samples.helpers'
-import preprocessors from '~/manifests/preprocessors'
+import preprocessorsModule from '~/manifests/preprocessors'
+import DBMS from '~/utils/sql'
 import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { arrayEqualNoOrder } from '~/utils/test-utils'
 
 let db
-const manifest = JSON.parse(
+const { files, preprocessors, databaseConfig } = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, '../facebook.json'), 'utf8')
 )
-Object.entries(manifest.preprocessors).forEach(
-  ([path, pre]) => (manifest.preprocessors[path] = preprocessors[pre])
+Object.entries(preprocessors).forEach(
+  ([path, pre]) => (preprocessors[path] = preprocessorsModule[pre])
 )
 
 function runQuery(sqlFilePath) {
@@ -28,13 +28,11 @@ function runQuery(sqlFilePath) {
 }
 
 async function getDatabase(mockedFiles) {
-  const fileManager = new FileManager(
-    manifest.preprocessors,
-    null,
-    manifest.files
-  )
+  const fileManager = new FileManager(preprocessors, null, files)
   await fileManager.init(mockedFiles)
-  db = await databaseBuilder(fileManager)
+  db = await DBMS.createDB(databaseConfig)
+  const records = await DBMS.generateRecords(fileManager, databaseConfig)
+  DBMS.insertRecords(db, records)
 }
 
 describe('with complete samples', () => {

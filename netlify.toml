@@ -22,10 +22,32 @@
   NODE_VERSION = "14"
   NPM_VERSION = "7"
 
+# https://github.com/netlify/cli/blob/main/docs/netlify-dev.md
+[dev]
+  # Command to start the dev server
+  # don't let nuxt open the browser, netlify dev will do it
+  command = "nuxt"
+
 [[redirects]]
   from = "/data/*"
   to = "/data/:splat"
   status = 302
+  force = true
+
+# This redirect is only necessary to make netlify dev work
+# but I suspect netlify configures something like this by default
+# when they detect a nuxt project
+[[redirects]]
+  from = "/_nuxt/*"
+  to = "/_nuxt/:splat"
+  status = 302
+  force = true
+
+# This is necessary for netlify dev, but maybe not in prod?
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/:splat"
+  status = 200
   force = true
 
 [[redirects]]

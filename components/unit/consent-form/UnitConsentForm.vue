@@ -5,7 +5,7 @@
       :key="`section-${index}`"
       :index="index"
     />
-    <BaseAlert v-if="missingRequired">
+    <BaseAlert v-if="missingRequiredFields">
       Some required fields are not filled in.
     </BaseAlert>
     <BaseAlert v-if="missingRequiredData.length > 0">
@@ -13,19 +13,40 @@
       included:
       {{ missingRequiredData.join(', ') }}.
     </BaseAlert>
+    <BaseAlert v-if="!$store.state.config.publicKey" type="info">
+      The results will not be encrypted because this instance has been
+      configured without public key.
+    </BaseAlert>
+    <BaseAlert v-if="sentErrorMessage" type="error">
+      <p>Failed to upload results:</p>
+      <p>{{ sentErrorMessage }}</p>
+      <p>
+        Consider downloading the encrypted results and sending them by other
+        means.
+      </p>
+    </BaseAlert>
+    <VRow v-if="$uploadAvailable">
+      <VCol>
+        <BaseButton
+          text="Share results with hestia"
+          :status="sentStatus"
+          :error="!!sentErrorMessage"
+          :progress="sentProgress"
+          :disabled="missingRequiredFields || missingRequiredData.length > 0"
+          @click="sendForm"
+        />
+      </VCol>
+    </VRow>
     <VRow>
       <VCol>
-        <VIcon v-if="config.filedrop" class="mr-2" color="#424242"
-          >$vuetify.icons.mdiNumeric1CircleOutline</VIcon
-        >
         <BaseButton
           ref="downloadButton"
           text="Download results"
           :status="generateStatus"
           :error="generateError"
           :progress="generateProgress"
-          :disabled="missingRequired || missingRequiredData.length > 0"
-          @click="generateZIP"
+          :disabled="missingRequiredFields || missingRequiredData.length > 0"
+          @click="downloadZIP"
         />
         <a
           v-show="false"
@@ -35,9 +56,6 @@
         ></a>
       </VCol>
       <VCol v-if="config.filedrop">
-        <VIcon class="mr-2" color="#424242"
-          >$vuetify.icons.mdiNumeric2CircleOutline</VIcon
-        >
         <a :href="config.filedrop" target="_blank">
           <BaseButton text="Drop file here" />
         </a>
@@ -49,8 +67,11 @@
 <script>
 import { mapState } from 'vuex'
 import JSZip from 'jszip'
+import { nanoid } from 'nanoid'
 import { padNumber } from '~/utils/utils'
 import { createObjectURL, mimeTypes } from '@/utils/utils'
+
+const _sodium = require('libsodium-wrappers')
 
 // In the case of changes that would break the import, this version number must be incremented
 // and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
@@ -65,11 +86,14 @@ export default {
   },
   data() {
     return {
-      zipFile: [],
+      zipFile: undefined,
       generateStatus: false,
       generateError: false,
       generateProgress: false,
-      timestamp: 0,
+      sentStatus: false,
+      sentErrorMessage: undefined,
+      sentProgress: false,
+      filename: '',
       href: null
     }
   },
@@ -81,7 +105,7 @@ export default {
       'consentForm',
       'selectedFiles'
     ]),
-    missingRequired() {
+    missingRequiredFields() {
       return !this.consentForm.every(section => {
         if ('required' in section) {
           if (
@@ -107,9 +131,24 @@ export default {
               !section.value.includes(block.key))
         )
         .map(block => block.title)
+    }
+  },
+  methods: {
+    async downloadZIP() {
+      this.generateStatus = false
+      this.generateProgress = true
+      const content = await this.generateZIP()
+      // this.zipFile = content
+      this.generateStatus = true
+      this.generateProgress = false
+
+      this.href = createObjectURL(content, mimeTypes.zip)
+      await this.$nextTick()
+      this.$refs.downloadLink.click()
     },
-    filename() {
-      const date = new Date(this.timestamp)
+    makeFilename(timestamp) {
+      const date = new Date(timestamp)
+      const uniqueId = nanoid(10)
       const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
         date.getUTCMonth() + 1,
         2
@@ -117,25 +156,20 @@ export default {
       const filename = `${this.$route.params.key}_${yearMonthDay}_${padNumber(
         date.getUTCHours(),
         2
-      )}${padNumber(date.getUTCMinutes(), 2)}_UTC.zip`
+      )}${padNumber(date.getUTCMinutes(), 2)}_UTC_${uniqueId}.zip`
       return filename
-    }
-  },
-  methods: {
+    },
     async generateZIP() {
-      this.generateStatus = false
-      this.generateProgress = true
-
       const zip = new JSZip()
 
       const revResponse = await window.fetch('/git-revision.txt')
       const revText = await revResponse.text()
       const gitRevision = revText.replace(/[\n\r]/g, '')
-      // Add info about the experience
-      this.timestamp = Date.now()
+      const timestamp = Date.now()
+      this.filename = this.makeFilename(timestamp)
       const experience = {
         key: this.$route.params.key,
-        timestamp: this.timestamp,
+        timestamp,
         version: VERSION,
         gitRevision
       }
@@ -174,14 +208,59 @@ export default {
       }
 
       const content = await zip.generateAsync({ type: 'uint8array' })
-      this.zipFile = content
+      const publicKey = this.$store.state.config.publicKey
+      if (publicKey) {
+        return this.encryptFile(content, publicKey)
+      }
+      return content
+    },
+    async encryptFile(content, publicKey) {
+      // Encrypt the zip
+      await _sodium.ready
+      const sodium = _sodium
 
-      this.generateStatus = true
-      this.generateProgress = false
+      const cipherText = sodium.crypto_box_seal(
+        content,
+        sodium.from_hex(publicKey)
+      )
+      return cipherText
+    },
+    async sendForm() {
+      this.sentStatus = false
+      this.sentErrorMessage = undefined
+      this.sentProgress = true
 
-      this.href = createObjectURL(this.zipFile, mimeTypes.zip)
-      await this.$nextTick()
-      this.$refs.downloadLink.click()
+      const content = await this.generateZIP()
+      // Programmatically create the form data
+      // Names must correspond to the dummy form defined in /static/export-data-form-dummy.html
+      const formData = new FormData()
+      const zip = new File([content], this.filename, {
+        type: 'application/zip'
+      })
+      formData.append('zip', zip, this.filename)
+      // formData.append('encrypted-zip', zip, this.filename)
+      let success = false
+      let errorMessage
+      try {
+        const resp = await fetch('/api/functions/upload-background', {
+          method: 'POST',
+          body: formData
+        })
+        if (resp.ok) {
+          success = true
+        } else {
+          console.error(resp)
+          // use http status text in cas json() fails
+          errorMessage = resp.statusText
+          errorMessage = await resp.json()
+        }
+      } catch (error) {
+        errorMessage = errorMessage || 'Error'
+        console.error(error)
+      }
+      this.sentStatus = success
+      this.sentErrorMessage = errorMessage
+      this.sentProgress = false
     }
   }
 }

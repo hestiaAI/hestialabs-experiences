@@ -1,5 +1,5 @@
 SELECT targetingType, targetingValue, COUNT(*) AS count
-FROM twitterAds INNER JOIN twitterCriteria
-ON twitterAds.id = twitterCriteria.adId
+FROM TwitterAd INNER JOIN TwitterCriterion
+ON TwitterAd.id = TwitterCriterion.adId
 WHERE advertiserName LIKE :advertiser
 GROUP BY targetingType, targetingValue;

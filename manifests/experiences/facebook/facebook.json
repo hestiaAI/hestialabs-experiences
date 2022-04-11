@@ -120,5 +120,104 @@
       "title": "Location observations",
       "text": "See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location."
     }
-  ]
+  ],
+  "databaseConfig": {
+    "tables": [
+      {
+        "name": "AdvertiserInteraction",
+        "columns": [
+          ["title", "TEXT"],
+          ["action", "TEXT"],
+          ["timestamp", "INTEGER"]
+        ]
+      },
+      {
+        "name": "AdvertiserUploadedContactInformation",
+        "columns": [
+          ["name", "TEXT"]
+        ]
+      },
+      {
+        "name": "OffFacebookActivityEvent",
+        "columns": [
+          ["name", "TEXT"],
+          ["type", "TEXT"],
+          ["timestamp", "INTEGER"]
+        ]
+      },
+      {
+        "name": "AdsInterest",
+        "columns": [
+          ["name", "TEXT"]
+        ]
+      }
+    ],
+    "getters": [
+      {
+        "fileId": "advertisers-interacted",
+        "path": "$.history_v2[*]",
+        "table": "AdvertiserInteraction",
+        "getters": [
+          {
+            "column": "title",
+            "path": "$.title"
+          },
+          {
+            "column": "action",
+            "path": "$.action"
+          },
+          {
+            "column": "timestamp",
+            "path": "$.timestamp"
+          }
+        ]
+      },
+      {
+        "fileId": "advertisers-contact-list",
+        "path": "$.custom_audiences_v2[*]",
+        "table": "AdvertiserUploadedContactInformation",
+        "getters": [
+          {
+            "column": "name",
+            "path": "$.advertiser"
+          }
+        ]
+      },
+      {
+        "fileId": "off-facebook-activity",
+        "path": "$.off_facebook_activity_v2[*].events[*]",
+        "table": "OffFacebookActivityEvent",
+        "options": {
+          "resultType": "all",
+          "callback": "value => value.namePath = value.path.split(\"['events']\")[0] + \"['name']\""
+        },
+        "getters": [
+          {
+            "column": "name",
+            "pathKey": "namePath",
+            "queryRoot": true
+          },
+          {
+            "column": "type",
+            "path": "$.value.type"
+          },
+          {
+            "column": "timestamp",
+            "path": "$.value.timestamp"
+          }
+        ]
+      },
+      {
+        "fileId": "ads-interests",
+        "path": "$.topics_v2[*]",
+        "table": "AdsInterest",
+        "getters": [
+          {
+            "column": "name",
+            "path": "$"
+          }
+        ]
+      }
+    ]
+  }
 }
