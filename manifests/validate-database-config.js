@@ -169,8 +169,6 @@ const ajv = new Ajv({
   schemas: [tableNameSchema, columnSchema, columnsSchema, gettersSchema, schema]
 })
 
-// const validate = ajv.getSchema(prefix)
-
 export default function validateConfig({ databaseConfig }, experience) {
   if (databaseConfig) {
     const valid = ajv.validate(prefix, databaseConfig)
