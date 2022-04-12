@@ -253,7 +253,7 @@ function generateRecordsRecursively(
         // hardcoded value
         record[a.column] = a.value
       } else {
-        throw new Error(`Invalid accessor: ${JSON.stringify(a)}`)
+        throw new Error(`Invalid getter: ${JSON.stringify(a)}`)
       }
     })
   })
@@ -266,7 +266,7 @@ function generateRecordsRecursively(
  * @param {Object} - database config
  * @returns {Object} database records for each table
  */
-export async function generateRecords(fileManager, { tables, files }) {
+export async function generateRecords(fileManager, { tables, getters }) {
   // default values for every table
   // { "Table1": { "col1": null, "col2", null, ... }, "Table2": ... }
   const defaultValues = Object.fromEntries(
@@ -287,9 +287,9 @@ export async function generateRecords(fileManager, { tables, files }) {
   const records = Object.fromEntries(tables.map(({ name }) => [name, []]))
 
   // iterate over top level "file" getters
-  for (const { id, ...rest } of files) {
+  for (const { fileId, ...rest } of getters) {
     // get all files that match the glob
-    const matchedJSONFiles = await fileManager.getPreprocessedTextFromId(id)
+    const matchedJSONFiles = await fileManager.getPreprocessedTextFromId(fileId)
     // iterate over matched files, parse, and generate records from each
     matchedJSONFiles
       .map(JSON.parse)

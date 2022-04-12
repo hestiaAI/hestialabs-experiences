@@ -3,6 +3,7 @@ import _ from 'lodash'
 import allPreprocessors from './preprocessors'
 
 import { validExtensions, extractFirstDirectory } from './utils'
+import validateDatabaseConfig from './validate-database-config'
 
 // require all modules on the path and with the pattern defined
 // Warning! The arguments passed to require.context must be literals!
@@ -111,6 +112,8 @@ const manifests = Object.fromEntries(
       )
     }
     const module = require(`./experiences/${dir}/`)
+
+    validateDatabaseConfig(rest, dir)
 
     return [
       dir,

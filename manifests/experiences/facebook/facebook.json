@@ -152,9 +152,9 @@
         ]
       }
     ],
-    "files": [
+    "getters": [
       {
-        "id": "advertisers-interacted",
+        "fileId": "advertisers-interacted",
         "path": "$.history_v2[*]",
         "table": "AdvertiserInteraction",
         "getters": [
@@ -173,7 +173,7 @@
         ]
       },
       {
-        "id": "advertisers-contact-list",
+        "fileId": "advertisers-contact-list",
         "path": "$.custom_audiences_v2[*]",
         "table": "AdvertiserUploadedContactInformation",
         "getters": [
@@ -184,7 +184,7 @@
         ]
       },
       {
-        "id": "off-facebook-activity",
+        "fileId": "off-facebook-activity",
         "path": "$.off_facebook_activity_v2[*].events[*]",
         "table": "OffFacebookActivityEvent",
         "options": {
@@ -208,7 +208,7 @@
         ]
       },
       {
-        "id": "ads-interests",
+        "fileId": "ads-interests",
         "path": "$.topics_v2[*]",
         "table": "AdsInterest",
         "getters": [
@@ -220,5 +220,4 @@
       }
     ]
   }
-
 }

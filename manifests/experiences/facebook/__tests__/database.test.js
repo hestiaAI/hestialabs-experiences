@@ -31,7 +31,7 @@ async function getDatabase(mockedFiles) {
   const fileManager = new FileManager(preprocessors, null, files)
   await fileManager.init(mockedFiles)
   db = await DBMS.createDB(databaseConfig)
-  const records = await DBMS.generateRecords(db, fileManager, databaseConfig)
+  const records = await DBMS.generateRecords(fileManager, databaseConfig)
   DBMS.insertRecords(db, records)
 }
 

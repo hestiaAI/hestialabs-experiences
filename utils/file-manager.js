@@ -280,7 +280,7 @@ export default class FileManager {
    */
   getFilePathsFromId(id) {
     if (!(id in this.idToGlob)) {
-      throw new Error('ID is not defined')
+      throw new Error(`ID ${id} is not defined`)
     }
     const glob = this.idToGlob[id]
     return this.findMatchingFilePaths(glob)

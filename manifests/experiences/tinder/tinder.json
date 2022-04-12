@@ -123,9 +123,9 @@
         ]
       }
     ],
-    "files": [
+    "getters": [
       {
-        "id": "tinder",
+        "fileId": "tinder",
         "path": "$.Usage..[?(@property.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/))]",
         "table": "Tinder",
         "options": {
@@ -148,7 +148,7 @@
         ]
       },
       {
-        "id": "tinder",
+        "fileId": "tinder",
         "path": "$.User",
         "table": "UserInfos",
         "getters": [
@@ -199,7 +199,7 @@
         ]
       },
       {
-        "id": "tinder",
+        "fileId": "tinder",
         "path": "$.Messages[*].messages[*]",
         "table": "Messages",
         "getters": [
