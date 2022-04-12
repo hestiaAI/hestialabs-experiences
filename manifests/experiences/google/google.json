@@ -1,6 +1,6 @@
 {
-  "title": "Google",
-  "icon": "google.png",
+  "title": "Google Takeout",
+  "icon": "googletakeout.png",
   "dataPortal": "https://takeout.google.com/settings/takeout",
   "data": [],
   "hideSummary": true,
