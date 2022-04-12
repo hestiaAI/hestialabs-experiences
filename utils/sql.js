@@ -2,6 +2,8 @@ import initSqlJs from 'sql.js'
 import sqlWasm from 'sql.js/dist/sql-wasm.wasm'
 import { JSONPath } from 'jsonpath-plus'
 
+import { getCsvAndMergeFromID } from '@/utils/csv'
+
 /**
  * An abstraction for an SQL table. Contains columns of a given datatype.
  */
@@ -288,14 +290,23 @@ export async function generateRecords(fileManager, { tables, getters }) {
 
   // iterate over top level "file" getters
   for (const { fileId, ...rest } of getters) {
-    // get all files that match the glob
-    const matchedJSONFiles = await fileManager.getPreprocessedTextFromId(fileId)
-    // iterate over matched files, parse, and generate records from each
-    matchedJSONFiles
-      .map(JSON.parse)
-      .forEach(json =>
-        generateRecordsRecursively(defaultValues, records, json, json, rest)
+    const isCSV = fileManager.idToGlob[fileId].endsWith('.csv')
+    if (isCSV) {
+      const json = await getCsvAndMergeFromID(fileManager, fileId)
+      generateRecordsRecursively(defaultValues, records, json, json, rest)
+    } else {
+      // ...otherwise we assume JSON format by default
+      // get all files that match the glob
+      const matchedJSONFiles = await fileManager.getPreprocessedTextFromId(
+        fileId
       )
+      // iterate over matched files, parse, and generate records from each
+      matchedJSONFiles
+        .map(JSON.parse)
+        .forEach(json =>
+          generateRecordsRecursively(defaultValues, records, json, json, rest)
+        )
+    }
   }
   return records
 }
