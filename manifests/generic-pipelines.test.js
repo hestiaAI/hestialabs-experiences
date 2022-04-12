@@ -1,5 +1,6 @@
 import {
   jsonToTableConverter,
+  createTableOptions,
   mergeTableData
 } from '~/manifests/generic-pipelines'
 import { mockFileManager } from '~/utils/__mocks__/file-manager-mock'
@@ -237,4 +238,66 @@ test('jsonToTableConverter without properties and incorrect accessor', async () 
   const correct = { headers: [], items: [] }
   // expect(true).toStrictEqual(false)
   expect(tableData).toStrictEqual(correct)
+})
+
+test('createPipelineOptions', async () => {
+  const fileName = 'comments_and_reactions/comments.json'
+  const content = {
+    comments_v2: [
+      {
+        timestamp: 1000000000,
+        comment: { text: 'one comment' },
+        name: 'hello'
+      },
+      {
+        timestamp: 1000000001,
+        comment: { text: 'another comment' },
+        name: 'toto'
+      }
+    ]
+  }
+  const fileManager = await mockFileManager(fileName, JSON.stringify(content))
+
+  const accessor = {
+    filePath: 'comments_and_reactions/comments.json',
+    jsonPath: '$.comments_v2[*]'
+  }
+  const correctOptions = [
+    {
+      accessor: {
+        filePath: 'comments_and_reactions/comments.json',
+        jsonPath: '$.comments_v2[*]'
+      },
+      columns: [
+        // { name: 'Timestamp', path: 'timestamp' },
+        { name: 'Timestamp', path: '$["timestamp"]' },
+        { name: 'Comment', path: '$["comment"]' },
+        { name: 'Name', path: '$["name"]' }
+      ]
+    }
+  ]
+  const options = await createTableOptions(fileManager, accessor)
+  expect(options).toStrictEqual(correctOptions)
+
+  const tableData = await jsonToTableConverter({
+    fileManager,
+    options: correctOptions
+  })
+  // const tableData = await jsonToTableConverter({ fileManager, options })
+  const correctTableData = {
+    headers: ['Timestamp', 'Comment', 'Name'],
+    items: [
+      {
+        Timestamp: '1000000000',
+        Comment: '[object Object]',
+        Name: 'hello'
+      },
+      {
+        Timestamp: '1000000001',
+        Comment: '[object Object]',
+        Name: 'toto'
+      }
+    ]
+  }
+  expect(tableData).toStrictEqual(correctTableData)
 })

@@ -515,9 +515,41 @@ function makeTableItem(object, options) {
   return item
 }
 
+function capitalize(str) {
+  if (!str) {
+    return str
+  }
+  let capitalized = str[0].toUpperCase()
+  if (str.length > 1) {
+    capitalized += str.substr(1)
+  }
+  return capitalized
+}
+
+async function createTableOptions(fileManager, accessor) {
+  const [found] = await fileManager.findMatchingObjects(accessor)
+  const firstEntry = Array.isArray(found) ? found[0] : found
+  if (!firstEntry || Array.isArray(firstEntry)) {
+    return { accessor }
+  }
+  const columns = Object.keys(firstEntry).map(key => {
+    const options = {
+      name: capitalize(key),
+      path: `$["${key}"]`
+    }
+    const value = firstEntry[key]
+    if (typeof value === 'object') {
+      options.type = 'object'
+    }
+    return options
+  })
+  return [{ accessor, columns }]
+}
+
 export {
   genericDateViewer,
   timedObservationViewer,
   genericLocationViewer,
-  jsonToTableConverter
+  jsonToTableConverter,
+  createTableOptions
 }

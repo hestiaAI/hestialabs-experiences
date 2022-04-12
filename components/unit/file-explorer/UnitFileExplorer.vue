@@ -148,9 +148,7 @@ export default {
       height: 500,
       tableData: undefined,
       customPipeline: jsonToTableConverter,
-      customPipelineOptions: undefined,
-      selectedAccessor: undefined,
-      tableDataFromAccessor: undefined
+      customPipelineOptions: undefined
     }
   },
   computed: {
@@ -239,6 +237,8 @@ export default {
       this.isFileLoading = loading
     },
     onSelectAccessor(accessor) {
+      // TODO make this work better
+      // const options = await createTableOptions(this.fileManager, accessor)
       this.customPipelineOptions = [{ accessor }]
     },
     onUnitResultsUpdate(result) {
