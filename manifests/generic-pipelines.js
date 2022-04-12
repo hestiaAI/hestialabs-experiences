@@ -487,7 +487,7 @@ function makeTableItem(object, options) {
     const value = JSONPath({
       path: c.path,
       json: object,
-      wrap: true
+      wrap: false
     })
     const name = provideColumnName(c)
     // Cast value to specified format, may need to handle errors
