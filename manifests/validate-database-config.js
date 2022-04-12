@@ -123,7 +123,7 @@ const schema = {
               type: 'array',
               minItems: 2,
               maxItems: 3,
-              prefixItems: [
+              items: [
                 { $ref: '#column' },
                 { enum: ['INTEGER', 'TEXT', 'FLOAT', 'DATE'] },
                 { type: 'string', pattern: '^[A-Z ]+$' }
@@ -169,15 +169,15 @@ const ajv = new Ajv({
   schemas: [tableNameSchema, columnSchema, columnsSchema, gettersSchema, schema]
 })
 
-const validate = ajv.getSchema(prefix)
+// const validate = ajv.getSchema(prefix)
 
 export default function validateConfig({ databaseConfig }, experience) {
   if (databaseConfig) {
-    const valid = validate(databaseConfig)
+    const valid = ajv.validate(prefix, databaseConfig)
     if (!valid) {
-      console.error(ajv.errors)
+      const errors = JSON.stringify(ajv.errors, null, 2)
       throw new Error(
-        `Invalid databaseConfig in ${experience} experience. Errors: ${ajv.errors}`
+        `Invalid databaseConfig in ${experience} experience. Errors: ${errors}`
       )
     }
   }

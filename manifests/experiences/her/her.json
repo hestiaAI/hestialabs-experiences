@@ -143,8 +143,8 @@
           ["name", "TEXT"],
           ["fullName", "TEXT"],
           ["birthday", "TEXT"],
-          ["lastOnlineUTC", "TEXT"],
-          ["registrationDateUTC", "TEXT"],
+          ["lastOnlineUtc", "TEXT"],
+          ["registrationDateUtc", "TEXT"],
           ["email", "TEXT"],
           ["pushNotificationsEnabled", "TEXT"],
           ["lastUsedFilters", "TEXT"],
@@ -265,6 +265,21 @@
             "path": "$.Name"
           },
           {
+            "column": "skippedAt",
+            "path": "$.['Skipped at']"
+          }
+        ]
+      },
+      {
+        "fileId": "profiles",
+        "path": "$.items[*]",
+        "table": "HerProfile",
+        "getters": [
+          {
+            "column": "name",
+            "path": "$.Name"
+          },
+          {
             "column": "fullName",
             "path": "$.['Full name']"
           },
@@ -273,11 +288,11 @@
             "path": "$.Birthday"
           },
           {
-            "column": "lastOnlineUTC",
+            "column": "lastOnlineUtc",
             "path": "$.['Last online UTC']"
           },
           {
-            "column": "registrationDateUTC",
+            "column": "registrationDateUtc",
             "path": "$.['Registration_date UTC']"
           },
           {
