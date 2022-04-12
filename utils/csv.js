@@ -53,14 +53,21 @@ async function getCsvHeadersAndItems(csvText) {
 async function getCsvAndMergeFromID(fileManager, fileID) {
   const files = await fileManager.getCsvItemsFromId(fileID)
 
+  if (!files.length) {
+    return {
+      headers: [],
+      items: []
+    }
+  }
+
   // Merge the files that have the same headers as the first file
-  const file = files.reduce((prev, curr) => {
+  const file = files.slice(1).reduce((prev, curr) => {
     if (setsEqual(new Set(prev.headers), new Set(curr.headers))) {
       return { headers: prev.headers, items: prev.items.concat(curr.items) }
     } else {
       return prev
     }
-  })
+  }, files[0])
   return file
 }
 
