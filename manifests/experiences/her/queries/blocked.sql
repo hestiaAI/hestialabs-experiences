@@ -1,1 +1,1 @@
-SELECT * FROM herBlockedDB;
+SELECT * FROM HerBlock;

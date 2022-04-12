@@ -1,1 +1,1 @@
-SELECT * FROM herNotificationsDB WHERE notificationType='friend';
+SELECT * FROM HerNotification WHERE notificationType='friend';

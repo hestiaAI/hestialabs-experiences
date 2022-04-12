@@ -1,9 +1,16 @@
 {
   "title": "HER",
-  "subtitle": "Data experiences",
   "icon": "herlogo.webp",
   "dataPortal": "https://weareher.com/privacy/",
-  "files": {"liked": "**/liked.csv", "notifications": "**/notifications.csv", "blocked": "**/blocked.csv", "messages": "**/messages.csv", "reported": "**/reported.csv"},
+  "hideSummary": true,
+  "hideFileExplorer": true,
+  "files": {
+    "liked": "**/liked.csv",
+    "notifications": "**/notifications.csv",
+    "blocked": "**/blocked.csv",
+    "messages": "**/messages.csv",
+    "reported": "**/reported.csv"
+  },
   "defaultView": [
     {
       "key": "liked",
@@ -18,25 +25,25 @@
       "sql": "notifications",
       "files": ["notifications"],
       "showTable": true,
-      "title": "notifications",
+      "title": "Notifications",
       "text": "Number of notifications that you recieved over time."
     },
     {
-      "key": "likednotifications",
-      "sql": "likednotifications",
+      "key": "liked-notifications",
+      "sql": "liked-notifications",
       "files": ["notifications"],
       "showTable": true,
       "title": "Liked notifications",
       "text": "Number of Liked notifications that you recieved over time."
     },
     {
-      "key": "friendnotifications",
-      "sql": "friendnotifications",
+      "key": "friend-notifications",
+      "sql": "friend-notifications",
       "files": ["notifications"],
       "showTable": true,
       "title": "Friend notifications",
       "text": "Number of Friend notifications that you recieved over time."
-    }, 
+    },
     {
       "key": "blocked",
       "sql": "blocked",
@@ -44,7 +51,7 @@
       "showTable": true,
       "title": "Blocks",
       "text": "Blocks that you established over time."
-    }, 
+    },
     {
       "key": "messages",
       "sql": "messages",
@@ -52,7 +59,7 @@
       "showTable": true,
       "title": "Messages",
       "text": "Messages sent and recieved."
-    }, 
+    },
     {
       "key": "reported",
       "sql": "reported",
@@ -61,5 +68,151 @@
       "title": "Reported",
       "text": "Users that you reported to the moderation."
     }
-  ]
+  ],
+  "databaseConfig": {
+    "tables": [
+      {
+        "name": "HerLike",
+        "columns": [
+          ["name", "TEXT"],
+          ["likedAt", "TEXT"],
+          ["matched", "TEXT"]
+        ]
+      },
+      {
+        "name": "HerNotification",
+        "columns": [
+          ["sender", "TEXT"],
+          ["notificationType", "TEXT"],
+          ["notificationSentAt", "TEXT"]
+        ]
+      },
+      {
+        "name": "HerBlock",
+        "columns": [
+          ["name", "TEXT"],
+          ["blockedAt", "TEXT"]
+        ]
+      },
+      {
+        "name": "HerMessage",
+        "columns": [
+          ["conversationId", "TEXT"],
+          ["message", "TEXT"],
+          ["messageType", "TEXT"],
+          ["sender", "TEXT"],
+          ["messageSentAt", "TEXT"]
+        ]
+      },
+      {
+        "name": "HerReport",
+        "columns": [
+          ["reportedType", "TEXT"],
+          ["reason", "TEXT"],
+          ["reportedAt", "TEXT"]
+        ]
+      }
+    ],
+    "getters": [
+      {
+        "fileId": "liked",
+        "path": "$.items[*]",
+        "table": "HerLike",
+        "getters": [
+          {
+            "column": "name",
+            "path": "$.Name"
+          },
+          {
+            "column": "likedAt",
+            "path": "$.['Liked at']"
+          },
+          {
+            "column": "matched",
+            "path": "$.Matched"
+          }
+        ]
+      },
+      {
+        "fileId": "notifications",
+        "path": "$.items[*]",
+        "table": "HerNotification",
+        "getters": [
+          {
+            "column": "sender",
+            "path": "$.Sender"
+          },
+          {
+            "column": "notificationType",
+            "path": "$.['Notification type']"
+          },
+          {
+            "column": "notificationSentAt",
+            "path": "$.['Notifcation sent at']"
+          }
+        ]
+      },
+      {
+        "fileId": "blocked",
+        "path": "$.items[*]",
+        "table": "HerBlock",
+        "getters": [
+          {
+            "column": "name",
+            "path": "$.Name"
+          },
+          {
+            "column": "blockedAt",
+            "path": "$.['Blocked at']"
+          }
+        ]
+      },
+      {
+        "fileId": "messages",
+        "path": "$.items[*]",
+        "table": "HerMessage",
+        "getters": [
+          {
+            "column": "conversationId",
+            "path": "$.Conversation"
+          },
+          {
+            "column": "message",
+            "path": "$.Message"
+          },
+          {
+            "column": "messageType",
+            "path": "$.['Message type']"
+          },
+          {
+            "column": "sender",
+            "path": "$.Sender"
+          },
+          {
+            "column": "messageSentAt",
+            "path": "$.['Message Sent At']"
+          }
+        ]
+      },
+      {
+        "fileId": "reported",
+        "path": "$.items[*]",
+        "table": "HerReport",
+        "getters": [
+          {
+            "column": "reportedType",
+            "path": "$.['Reported type']"
+          },
+          {
+            "column": "reason",
+            "path": "$.Reason"
+          },
+          {
+            "column": "reportedAt",
+            "path": "$.['Reported at']"
+          }
+        ]
+      }
+    ]
+  }
 }

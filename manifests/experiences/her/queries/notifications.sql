@@ -1,1 +1,1 @@
-SELECT * FROM herNotificationsDB;
+SELECT * FROM HerNotification;

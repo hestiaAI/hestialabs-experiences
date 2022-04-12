@@ -1,1 +1,1 @@
-SELECT * FROM herReportedDB;
+SELECT * FROM HerReport;

@@ -1,14 +1,14 @@
 import fs from 'fs'
 import path from 'path'
 
-import databaseBuilder from '../database'
 import { her } from './samples.helpers'
+import DBMS from '~/utils/sql'
 import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { arrayEqualNoOrder } from '~/utils/test-utils'
 
 let db
-const manifest = JSON.parse(
+const { files, databaseConfig } = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, '../her.json'), 'utf8')
 )
 
@@ -18,9 +18,11 @@ function runQuery(sqlFilePath) {
 }
 
 async function getDatabase(mockedFiles) {
-  const fileManager = new FileManager(null, null, manifest.files)
+  const fileManager = new FileManager(null, null, files)
   await fileManager.init(mockedFiles)
-  db = await databaseBuilder(fileManager)
+  db = await DBMS.createDB(databaseConfig)
+  const records = await DBMS.generateRecords(fileManager, databaseConfig)
+  DBMS.insertRecords(db, records)
 }
 
 describe('with complete samples', () => {
@@ -33,15 +35,15 @@ describe('with complete samples', () => {
     db.close()
   })
 
-  test('query all returns the correct items', () => {
+  test('query liked returns the correct items', () => {
     const result = runQuery('../queries/liked.sql')
     const expected = {
-      headers: ['name', 'likedat', 'matched'],
+      headers: ['name', 'likedAt', 'matched'],
       items: [
-        { likedat: '01/01/1970 12:00', matched: 'TRUE', name: 'Plif' },
-        { likedat: '01/01/1970 13:23', matched: 'TRUE', name: 'Plaf' },
-        { likedat: '02/01/1970 21:42', matched: 'FALSE', name: 'Plouf' },
-        { likedat: '02/01/1970 12:42', matched: 'FALSE', name: 'Plif' }
+        { likedAt: '01/01/1970 12:00', matched: 'TRUE', name: 'Plif' },
+        { likedAt: '01/01/1970 13:23', matched: 'TRUE', name: 'Plaf' },
+        { likedAt: '02/01/1970 21:42', matched: 'FALSE', name: 'Plouf' },
+        { likedAt: '02/01/1970 12:42', matched: 'FALSE', name: 'Plif' }
       ]
     }
     arrayEqualNoOrder(result.headers, expected.headers)
