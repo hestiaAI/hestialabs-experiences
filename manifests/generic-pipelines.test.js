@@ -269,9 +269,8 @@ test('createPipelineOptions', async () => {
         jsonPath: '$.comments_v2[*]'
       },
       columns: [
-        // { name: 'Timestamp', path: 'timestamp' },
         { name: 'Timestamp', path: '$["timestamp"]' },
-        { name: 'Comment', path: '$["comment"]' },
+        { name: 'Comment', path: '$["comment"]', type: 'object' },
         { name: 'Name', path: '$["name"]' }
       ]
     }
@@ -289,12 +288,12 @@ test('createPipelineOptions', async () => {
     items: [
       {
         Timestamp: '1000000000',
-        Comment: '[object Object]',
+        Comment: { text: 'one comment' },
         Name: 'hello'
       },
       {
         Timestamp: '1000000001',
-        Comment: '[object Object]',
+        Comment: { text: 'another comment' },
         Name: 'toto'
       }
     ]
