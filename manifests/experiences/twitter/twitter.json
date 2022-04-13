@@ -65,7 +65,7 @@
       "sql": "all-criteria-all-advertisers",
       "files": ["impressions", "engagements"],
       "postprocessor": "sunburstTargeting",
-      "showTable": false,
+      "showTable": true,
       "title": "Targeting criteria (1 advertiser)",
       "visualization": "ChartViewSearchSunburst.vue",
       "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the advertiser in the table below and click on it to visualise them."
