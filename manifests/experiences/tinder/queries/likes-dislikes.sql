@@ -1,5 +1,11 @@
-SELECT  date,
-        MAX(CASE WHEN action='swipes_likes'THEN amount ELSE NULL END) likes,
-        MAX(CASE WHEN action='swipes_passes'THEN amount ELSE NULL END) pass
+SELECT
+  dateValue,
+  amount,
+  CASE actionType
+    WHEN 'swipes_passes' THEN 'Passes'
+    WHEN 'swipes_likes' THEN 'Likes'
+    ELSE NULL
+  END AS actionType
 FROM TinderUsage
-GROUP BY date;
+WHERE actionType IN ('swipes_passes', 'swipes_likes')
+ORDER BY actionType DESC;

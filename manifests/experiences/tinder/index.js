@@ -1,5 +1,1 @@
-import postprocessors from './postprocessors'
-
-export default {
-  postprocessors
-}
+export default {}

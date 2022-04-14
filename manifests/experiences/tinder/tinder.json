@@ -26,13 +26,12 @@
       "key": "app-opens-vue",
       "sql": "app-opens",
       "files": ["tinder"],
-      "postprocessor": "appOpensData",
       "visualization": "ChartViewHeatMapCalendar.vue",
       "vizProps": {
         "title": "Application usage over time",
         "legendOffset": 360,
-        "dateAccessor": "date",
-        "valueAccessor": "value",
+        "dateAccessor": "dateValue",
+        "valueAccessor": "amount",
         "legendLabel": "App Opened"
       },
       "showTable": false,
@@ -43,14 +42,13 @@
       "key": "likes-dislikes-vue",
       "sql": "likes-dislikes",
       "files": ["tinder"],
-      "postprocessor": "likesDislikesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
         "title": "Likes vs Passes over time",
         "legendOffset": 350,
-        "dateAccessor": { "text": "Date", "value": "date" },
-        "seriesAccessor": { "text": "Action", "value": "action" },
-        "valueAccessor": "value"
+        "dateAccessor": { "text": "Date", "value": "dateValue" },
+        "seriesAccessor": { "text": "Action", "value": "actionType" },
+        "valueAccessor": "amount"
       },
       "showTable": false,
       "title": "Likes and passes",
@@ -92,8 +90,8 @@
       {
         "name": "TinderUsage",
         "columns": [
-          ["action", "TEXT"],
-          ["date", "TEXT"],
+          ["actionType", "TEXT"],
+          ["dateValue", "TEXT"],
           ["amount", "INTEGER"]
         ]
       },
@@ -134,11 +132,11 @@
         },
         "getters": [
           {
-            "column": "action",
+            "column": "actionType",
             "path": "$.grandparentProperty"
           },
           {
-            "column": "date",
+            "column": "dateValue",
             "path": "$.parentProperty"
           },
           {

@@ -1,4 +1,3 @@
-SELECT  date,
-        MAX(CASE WHEN action='app_opens'THEN amount ELSE NULL END) open
+SELECT dateValue, amount, 'App opened' AS actionType
 FROM TinderUsage
-GROUP BY date;
+WHERE actionType = 'app_opens';
