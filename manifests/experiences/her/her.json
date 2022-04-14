@@ -23,17 +23,16 @@
       "text": "Number of likes that you made over time."
     },
     {
-      "key": "liked-vue",
-      "sql": "liked",
+      "key": "likes-over-time",
+      "sql": "likes-over-time",
       "files": ["liked"],
-      "postprocessor": "likesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
         "title": "Likes over time",
         "legendOffset": 350,
-        "dateAccessor": { "text": "Date", "value": "date" },
-        "seriesAccessor": { "text": "Action", "value": "action" },
-        "valueAccessor": "value"
+        "dateAccessor": { "text": "Date", "value": "likedAtDate" },
+        "seriesAccessor": { "text": "Action", "value": "actionValue" },
+        "valueAccessor": "likesCount"
       },
       "showTable": false,
       "title": "Likes",
