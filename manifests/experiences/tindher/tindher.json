@@ -96,7 +96,7 @@
   "databaseConfig": {
     "tables": [
       {
-        "name": "Tinder",
+        "name": "TinderUsage",
         "columns": [
           ["action", "TEXT"],
           ["date", "TEXT"],
@@ -104,7 +104,7 @@
         ]
       },
       {
-        "name": "UserInfos",
+        "name": "TinderUser",
         "columns": [
           ["ageFilterMax", "INTEGER"],
           ["ageFilterMin", "INTEGER"],
@@ -120,7 +120,7 @@
         ]
       },
       {
-        "name": "Messages",
+        "name": "TinderMessage",
         "columns": [
           ["sender", "TEXT"],
           ["receiver", "TEXT"],
@@ -133,7 +133,7 @@
       {
         "fileId": "tinder",
         "path": "$.Usage..[?(@property.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/))]",
-        "table": "Tinder",
+        "table": "TinderUsage",
         "options": {
           "resultType": "all",
           "callback": "value => value.grandparentProperty = value.pointer.split('/')[2]"
@@ -156,7 +156,7 @@
       {
         "fileId": "tinder",
         "path": "$.User",
-        "table": "UserInfos",
+        "table": "TinderUser",
         "getters": [
           {
             "column": "ageFilterMax",
@@ -207,7 +207,7 @@
       {
         "fileId": "tinder",
         "path": "$.Messages[*].messages[*]",
-        "table": "Messages",
+        "table": "TinderMessage",
         "getters": [
           {
             "column": "sender",

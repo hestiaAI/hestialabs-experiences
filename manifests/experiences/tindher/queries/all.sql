@@ -6,5 +6,5 @@ SELECT  date,
         MAX(CASE WHEN action='messages_received'THEN amount ELSE 0 END) number_of_messages_received,
         MAX(CASE WHEN action='matches'THEN amount ELSE 0 END) number_of_matches,
         MAX(CASE WHEN action='app_opens'THEN amount ELSE 0 END) open
-FROM Tinder
+FROM TinderUsage
 GROUP BY date;

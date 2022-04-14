@@ -1,4 +1,4 @@
 SELECT  date,
         MAX(CASE WHEN action='app_opens'THEN amount ELSE NULL END) open
-FROM Tinder
+FROM TinderUsage
 GROUP BY date;
