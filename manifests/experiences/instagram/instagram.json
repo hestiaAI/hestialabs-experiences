@@ -2,6 +2,7 @@
   "title": "Instagram",
   "icon": "instagram.png",
   "dataPortal": "https://help.instagram.com/196883487377501",
+  "data": ["test-instagram.zip"],
   "hideSummary": true,
   "hideFileExplorer": true,
   "files": {
@@ -29,7 +30,7 @@
   "databaseConfig": {
     "tables": [
       {
-        "name": "Comments",
+        "name": "InstagramComment",
         "columns": [
           ["datetime", "TEXT"],
           ["text", "TEXT"],
@@ -41,7 +42,7 @@
       {
         "fileId": "comments",
         "path": "$.media_comments[*]",
-        "table": "Comments",
+        "table": "InstagramComment",
         "getters": [
           {
             "column": "datetime",
