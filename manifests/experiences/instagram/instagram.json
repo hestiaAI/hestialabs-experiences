@@ -123,7 +123,7 @@
       }, 
       {
         "fileId": "likes",
-        "path": "$..*[?(@property.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$/))]",
+        "path": "$.[*].[*]@array()",
         "table": "InstagramLike",
         "options": {
           "resultType": "all",
@@ -136,11 +136,11 @@
           },
           {
             "column": "name",
-            "path": "$.parentProperty"
+            "path": "$.value[1]"
           },
           {
             "column": "datetime",
-            "path": "$.value"
+            "path": "$.value[0]"
           }
         ]
       }
