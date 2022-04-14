@@ -25,6 +25,30 @@
       "showTable": true,
       "title": "Comments",
       "text": "Comments recieved"
+    }, 
+    {
+      "key": "connections",
+      "sql": "connections",
+      "files": ["connections"],
+      "showTable": true,
+      "title": "Connections",
+      "text": "Connections to other users or hashtags"
+    }, 
+    {
+      "key": "contacts",
+      "sql": "contacts",
+      "files": ["contacts"],
+      "showTable": true,
+      "title": "Contacts",
+      "text": "Not implemented for lack of test data"
+    }, 
+    {
+      "key": "likes",
+      "sql": "likes",
+      "files": ["likes"],
+      "showTable": true,
+      "title": "Likes",
+      "text": ""
     }
   ],
   "databaseConfig": {
@@ -36,7 +60,23 @@
           ["text", "TEXT"],
           ["sender", "TEXT"]
         ]
-      }
+      }, 
+      {
+        "name": "InstagramConnection",
+        "columns": [
+          ["datetime", "TEXT"],
+          ["name", "TEXT"],
+          ["type", "TEXT"]
+        ]
+      }, 
+      {
+        "name": "InstagramLike",
+        "columns": [
+          ["datetime", "TEXT"],
+          ["name", "TEXT"],
+          ["type", "TEXT"]
+        ]
+      }      
     ],
     "getters": [
       {
@@ -55,6 +95,52 @@
           {
             "column": "sender",
             "path": "$.[2]"
+          }
+        ]
+      }, 
+      {
+        "fileId": "connections",
+        "path": "$..*[?(@.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$/))]",
+        "table": "InstagramConnection",
+        "options": {
+          "resultType": "all",
+          "callback": "value => value.grandparentProperty = value.pointer.split('/')[1]"
+        },
+        "getters": [
+          {
+            "column": "type",
+            "path": "$.grandparentProperty"
+          },
+          {
+            "column": "name",
+            "path": "$.parentProperty"
+          },
+          {
+            "column": "datetime",
+            "path": "$.value"
+          }
+        ]
+      }, 
+      {
+        "fileId": "likes",
+        "path": "$..*[?(@property.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$/))]",
+        "table": "InstagramLike",
+        "options": {
+          "resultType": "all",
+          "callback": "value => value.grandparentProperty = value.pointer.split('/')[1]"
+        },
+        "getters": [
+          {
+            "column": "type",
+            "path": "$.grandparentProperty"
+          },
+          {
+            "column": "name",
+            "path": "$.parentProperty"
+          },
+          {
+            "column": "datetime",
+            "path": "$.value"
           }
         ]
       }
