@@ -4,10 +4,7 @@
       <VCard max-width="600px">
         <VCardText>
           <VRow>
-            <VCol cols="12">
-              <span class="text-subtitle-1">User infos</span>
-            </VCol>
-            <VCol v-for="item in usersInfos" :key="item.title" cols="12" md="6">
+            <VCol v-for="item in items" :key="item.title" cols="12" md="6">
               <div class="overline">{{ item.title }}</div>
               <p
                 v-if="!item.value || item.value.length === 0"
@@ -25,49 +22,52 @@
               <p v-else class="font-weight-bold">
                 {{ item.value }}
               </p>
-            </VCol>
-          </VRow>
-          <VDivider class="mt-4 mb-4"></VDivider>
-          <VRow class="">
-            <VCol cols="12">
-              <span class="text-subtitle-1">Application settings</span>
             </VCol>
             <VCol
-              v-for="item in appSettings"
-              :key="item.title"
+              v-if="values[0].ageFilterMin && values[0].ageFilterMax"
               cols="12"
-              md="6"
             >
-              <div class="overline">{{ item.title }}</div>
-              <p
-                v-if="!item.value || item.value.length === 0"
-                class="font-weight-bold"
-              >
-                Not mentioned
-              </p>
-              <div v-else-if="item.slider">
-                <VRangeSlider
-                  v-model="item.value"
-                  thumb-color="primary"
-                  thumb-label="always"
-                  thumb-size="25"
-                  color="primary"
-                  class="pt-10 pr-10 pl-10"
-                  :min="item.value[0] - 20"
-                  :max="item.value[1] + 20"
-                  readonly
-                ></VRangeSlider>
-              </div>
-              <div v-else-if="item.list">
-                <div class="d-flex flex-column flex-md-row flex-wrap">
-                  <VChip v-for="l in item.value" :key="l" class="ma-2" label>
-                    {{ l }}
-                  </VChip>
-                </div>
-              </div>
-              <p v-else class="font-weight-bold">
-                {{ item.value }}
-              </p>
+              <div class="overline">Age filter</div>
+              <VRangeSlider
+                v-model="slider"
+                thumb-color="primary"
+                thumb-label="always"
+                thumb-size="25"
+                color="primary"
+                class="pt-10 pr-10 pl-10"
+                :min="values[0].ageFilterMin - 20"
+                :max="values[0].ageFilterMax + 20"
+                readonly
+              ></VRangeSlider>
+            </VCol>
+
+            <VCol v-if="descriptors.length" cols="12">
+              <div class="overline">Descriptors</div>
+              <VRow v-for="(descriptor, idx) in descriptors" :key="idx">
+                <VCol cols="12">
+                  <VCard outlined>
+                    <VRow>
+                      <VCol cols="4">
+                        <VCardTitle>{{ descriptor.name }}</VCardTitle>
+                      </VCol>
+                      <VCol cols="8">
+                        <VCardText>
+                          <div class="d-flex flex-column flex-md-row flex-wrap">
+                            <VChip
+                              v-for="l in descriptor.choices"
+                              :key="l"
+                              class="ma-2"
+                              label
+                            >
+                              {{ l }}
+                            </VChip>
+                          </div>
+                        </VCardText>
+                      </VCol>
+                    </VRow>
+                  </VCard>
+                </VCol>
+              </VRow>
             </VCol>
           </VRow>
         </VCardText>
@@ -83,11 +83,11 @@ export default {
   mixins: [mixin],
   data() {
     return {
-      ageExtent: [20, 40]
+      slider: [this.values[0].ageFilterMin, this.values[0].ageFilterMax]
     }
   },
   computed: {
-    usersInfos() {
+    items() {
       return [
         {
           title: 'Birthdate',
@@ -114,11 +114,7 @@ export default {
           title: 'Sexual Orientations',
           list: true,
           value: JSON.parse(this.values[0].sexualOrientations)
-        }
-      ]
-    },
-    appSettings() {
-      return [
+        },
         {
           title: 'Gender filter',
           value: this.values[0].genderFilter
@@ -128,18 +124,11 @@ export default {
           value: d3.timeFormat('%B %d, %Y at %H:%M:%S')(
             new Date(this.values[0].createDate)
           )
-        },
-        {
-          title: 'Age filter',
-          slider: true,
-          value: [this.values[0].ageFilterMin, this.values[0].ageFilterMax]
-        },
-        {
-          title: 'Descriptors',
-          list: true,
-          value: JSON.parse(this.values[0].descriptors)?.map(v => v.name) || []
         }
       ]
+    },
+    descriptors() {
+      return JSON.parse(this.values[0].descriptors) || []
     }
   },
   methods: {
