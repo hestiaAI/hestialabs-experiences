@@ -49,6 +49,22 @@
       "showTable": true,
       "title": "Likes",
       "text": ""
+    }, 
+    {
+      "key": "photos",
+      "sql": "photos",
+      "files": ["media"],
+      "showTable": true,
+      "title": "Photos",
+      "text": ""
+    }, 
+    {
+      "key": "messages",
+      "sql": "messages",
+      "files": ["messages"],
+      "showTable": true,
+      "title": "Messages",
+      "text": ""
     }
   ],
   "databaseConfig": {
@@ -76,6 +92,23 @@
           ["name", "TEXT"],
           ["type", "TEXT"]
         ]
+      }, 
+      {
+        "name": "InstagramPhoto", 
+        "columns": [
+          ["caption", "TEXT"],
+          ["datetime", "TEXT"],
+          ["location", "TEXT"],
+          ["path", "TEXT"]
+        ]
+      }, 
+      {
+        "name": "InstagramMessage", 
+        "columns": [
+          ["sender", "TEXT"],
+          ["datetime", "TEXT"],
+          ["text", "TEXT"]
+        ]
       }      
     ],
     "getters": [
@@ -100,7 +133,7 @@
       }, 
       {
         "fileId": "connections",
-        "path": "$..*[?(@.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}$/))]",
+        "path": "$..[*]@string()",
         "table": "InstagramConnection",
         "options": {
           "resultType": "all",
@@ -141,6 +174,48 @@
           {
             "column": "datetime",
             "path": "$.value[0]"
+          }
+        ]
+      }, 
+      {
+        "fileId": "media",
+        "path": "$.photos[*]",
+        "table": "InstagramPhoto",
+        "getters": [
+          {
+            "column": "caption",
+            "path": "$.caption"
+          },
+          {
+            "column": "datetime",
+            "path": "$.['taken_at']"
+          },
+          {
+            "column": "location",
+            "path": "$.['location']"
+          },
+          {
+            "column": "path",
+            "path": "$.['path']"
+          }
+        ]
+      },
+      {
+        "fileId": "messages",
+        "path": "$[*].conversation[*]",
+        "table": "InstagramMessage",
+        "getters": [
+          {
+            "column": "sender",
+            "path": "$.sender"
+          },
+          {
+            "column": "datetime",
+            "path": "$.['created_at']"
+          },
+          {
+            "column": "text",
+            "path": "$.text"
           }
         ]
       }
