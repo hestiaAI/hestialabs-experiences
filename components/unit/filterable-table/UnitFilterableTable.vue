@@ -8,8 +8,9 @@
         ref="tableRef"
         :items="filteredItems"
         multi-sort
+        :items-per-page.sync="itemsPerPage"
         fixed-header
-        height="530"
+        :height="height"
         :footer-props="{ itemsPerPageOptions: [5, 10, 15, 500, 1000] }"
         data-testid="data-table"
         @current-items="onItemsUpdate"
@@ -43,7 +44,6 @@
                 hide-details
                 full-width
                 multiple
-                chips
                 dense
                 class="pa-4"
                 label="Search ..."
@@ -51,10 +51,24 @@
                 :menu-props="{ closeOnClick: true }"
               >
                 <template #selection="{ item, index }">
-                  <VChip v-if="index < 3" class="ma-1">
-                    <span>
+                  <VChip v-if="index < 3" class="ma-1 pr-1">
+                    <span
+                      style="
+                        overflow-x: hidden;
+                        whitespace: nowrap;
+                        text-overflow: ellipsis;
+                      "
+                    >
                       {{ item }}
                     </span>
+                    <VBtn
+                      icon
+                      small
+                      right
+                      @click="filters[header.value].splice(index, 1)"
+                    >
+                      <VIcon small>$vuetify.icon.mdiCloseCircle</VIcon>
+                    </VBtn>
                   </VChip>
                   <span v-if="index === 3" class="grey--text caption">
                     (+{{ filters[header.value].length - 3 }} others)
@@ -67,8 +81,8 @@
                 color="primary"
                 class="ml-2 mb-2"
                 @click="filters[header.value] = []"
-                >Clear</VBtn
-              >
+                v-text="`Clear`"
+              />
             </div>
           </VMenu>
         </template>
@@ -101,6 +115,11 @@ import { writeToString } from '@fast-csv/format'
 import { processError } from '@/utils/utils'
 import { formatObject, formatArray } from '@/utils/json'
 import { toDateString } from '@/utils/dates'
+
+const height5 = 290
+const height10 = 530
+const defaultItemsPerPage10 = window.innerHeight - 250 > 530
+
 export default {
   name: 'UnitFilterableTable',
   props: {
@@ -121,7 +140,9 @@ export default {
       search: '',
       tableHeaders: [],
       files: null,
-      filters: {}
+      filters: {},
+      itemsPerPage: defaultItemsPerPage10 ? 10 : 5,
+      height: defaultItemsPerPage10 ? height10 : height5
     }
   },
   computed: {
@@ -155,8 +176,18 @@ export default {
   watch: {
     data: {
       immediate: true,
-      handler(data) {
+      handler() {
         this.tableHeaders = this.headers
+      }
+    },
+    itemsPerPage: {
+      immediate: true,
+      handler(value) {
+        if (value === 5) {
+          this.height = height5
+        } else if (defaultItemsPerPage10) {
+          this.height = height10
+        }
       }
     }
   },
