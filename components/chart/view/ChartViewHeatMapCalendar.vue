@@ -62,7 +62,7 @@
         <g class="legend">
           <text
             style="text-anchor: end"
-            :x="width - cellSize * legendNbItems * 3"
+            :x="legendSquareXPos(0) - cellSize"
             :y="height - cellSize * 2.5"
             dy="-.20em"
           >
@@ -72,12 +72,7 @@
             <rect
               :width="(cellSize - cellSpacing) * 2"
               :height="(cellSize - cellSpacing) / 2"
-              :x="
-                width -
-                cellSize * legendNbItems * 3 +
-                idx * cellSize * 2 +
-                cellSize
-              "
+              :x="legendSquareXPos(idx)"
               :y="height - cellSize * 3"
               :fill="color(square)"
               :rx="borderRadius"
@@ -85,13 +80,7 @@
             ></rect>
             <text
               style="text-anchor: middle"
-              :x="
-                width -
-                cellSize * legendNbItems * 3 +
-                idx * cellSize * 2 +
-                2 * cellSize +
-                0.5
-              "
+              :x="legendSquareXPos(idx)"
               :y="height - cellSize * 2"
             >
               {{ square }}
@@ -138,7 +127,7 @@ export default {
       type: Number,
       default: () => 3
     },
-    legendNbItems: {
+    legendPrefNbItems: {
       type: Number,
       default: () => 4
     },
@@ -188,6 +177,7 @@ export default {
       return d3
         .scaleSequential()
         .domain([this.extent[0], this.extent[1]])
+        .nice()
         .interpolator(this.colorPalette)
     },
     itemsPerDay() {
@@ -217,11 +207,10 @@ export default {
       return test
     },
     legendSquares() {
-      const legendFormat = d3.format('.2')
-      const step = this.extent[1] / (this.legendNbItems - 1)
-      return d3
-        .range(this.legendNbItems)
-        .map(n => (n ? legendFormat(n * step) : legendFormat(this.extent[0])))
+      return this.color.ticks(this.legendPrefNbItems)
+    },
+    legendNbItems() {
+      return this.legendSquares.length
     }
   },
   mounted() {},
@@ -242,6 +231,10 @@ export default {
       return (
         d3.utcMonday.count(d3.utcYear(d), d3.utcMonday.ceil(d)) * this.cellSize
       )
+    },
+    legendSquareXPos(idx) {
+      const { width: w, cellSize: s, legendNbItems: n } = this
+      return w - s * 2 * n + idx * s * 2 - s * 2
     },
     drawViz() {}
   }
