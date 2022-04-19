@@ -25,7 +25,7 @@
     {
       "name": "colors",
       "value": {
-          "Likes": "#62D995", 
+          "Likes": "#62D995",
           "Passes": "#d24d57",
           "App opened":"#F2F2F2",
           "Messages sent":"#2994F2",
@@ -38,14 +38,14 @@
     {
       "name": "source",
       "values": [],
-      "format": {"type": "json", "parse": {"date": "date:'%Y-%m-%d'"}},
+      "format": {"type": "json", "parse": {"dateValue": "date:'%Y-%m-%d'"}},
       "transform": [
         {
-          "type": "extent", "field":"date", "signal": "extent"
+          "type": "extent", "field":"dateValue", "signal": "extent"
         },
         {
           "type": "aggregate",
-          "fields":["likes", "open", "number_of_superlikes", "passes", "number_of_messages_sent", "number_of_messages_received", "number_of_matches"],
+          "fields":["likes", "opens", "number_of_superlikes", "passes", "number_of_messages_sent", "number_of_messages_received", "number_of_matches"],
           "ops":["sum","sum","sum","sum","sum","sum", "sum"],
           "as":["Likes", "App opened", "Superlikes", "Passes", "Messages sent", "Messages received", "Matches"]
         },

@@ -26,13 +26,12 @@
       "key": "app-opens-vue",
       "sql": "app-opens",
       "files": ["tinder"],
-      "postprocessor": "appOpensData",
       "visualization": "ChartViewHeatMapCalendar.vue",
       "vizProps": {
         "title": "Application usage over time",
         "legendOffset": 360,
-        "dateAccessor": "date",
-        "valueAccessor": "value",
+        "dateAccessor": "dateValue",
+        "valueAccessor": "amount",
         "legendLabel": "App Opened"
       },
       "showTable": false,
@@ -43,14 +42,13 @@
       "key": "likes-dislikes-vue",
       "sql": "likes-dislikes",
       "files": ["tinder"],
-      "postprocessor": "likesDislikesData",
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
         "title": "Likes vs Passes over time",
         "legendOffset": 350,
-        "dateAccessor": { "text": "Date", "value": "date" },
-        "seriesAccessor": { "text": "Action", "value": "action" },
-        "valueAccessor": "value"
+        "dateAccessor": { "text": "Date", "value": "dateValue" },
+        "seriesAccessor": { "text": "Action", "value": "actionType" },
+        "valueAccessor": "amount"
       },
       "showTable": false,
       "title": "Likes and passes",
@@ -90,15 +88,15 @@
   "databaseConfig": {
     "tables": [
       {
-        "name": "Tinder",
+        "name": "TinderUsage",
         "columns": [
-          ["action", "TEXT"],
-          ["date", "TEXT"],
+          ["actionType", "TEXT"],
+          ["dateValue", "TEXT"],
           ["amount", "INTEGER"]
         ]
       },
       {
-        "name": "UserInfos",
+        "name": "TinderUser",
         "columns": [
           ["ageFilterMax", "INTEGER"],
           ["ageFilterMin", "INTEGER"],
@@ -114,7 +112,7 @@
         ]
       },
       {
-        "name": "Messages",
+        "name": "TinderMessage",
         "columns": [
           ["sender", "TEXT"],
           ["receiver", "TEXT"],
@@ -126,19 +124,19 @@
     "getters": [
       {
         "fileId": "tinder",
-        "path": "$.Usage..[?(@property.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/))]",
-        "table": "Tinder",
+        "path": "$.Usage.[*]@number()",
+        "table": "TinderUsage",
         "options": {
           "resultType": "all",
           "callback": "value => value.grandparentProperty = value.pointer.split('/')[2]"
         },
         "getters": [
           {
-            "column": "action",
+            "column": "actionType",
             "path": "$.grandparentProperty"
           },
           {
-            "column": "date",
+            "column": "dateValue",
             "path": "$.parentProperty"
           },
           {
@@ -150,7 +148,7 @@
       {
         "fileId": "tinder",
         "path": "$.User",
-        "table": "UserInfos",
+        "table": "TinderUser",
         "getters": [
           {
             "column": "ageFilterMax",
@@ -201,7 +199,7 @@
       {
         "fileId": "tinder",
         "path": "$.Messages[*].messages[*]",
-        "table": "Messages",
+        "table": "TinderMessage",
         "getters": [
           {
             "column": "sender",
