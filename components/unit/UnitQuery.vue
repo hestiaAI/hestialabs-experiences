@@ -33,7 +33,7 @@
         /></VCol>
       </VRow>
 
-      <VRow>
+      <VRow v-if="defaultViewElements.text">
         <VCol cols="8" class="mx-auto">
           {{ defaultViewElements.text }}
         </VCol>
@@ -45,37 +45,33 @@
         >
       </template>
       <template v-else>
-        <VRow>
-          <VCol>
-            <UnitPipelineCustom
-              v-if="customPipeline !== undefined"
-              v-bind="{
-                customPipeline,
-                customPipelineOptions:
-                  defaultViewElements.customPipelineOptions,
-                parameterName: defaultViewElements.parameterName,
-                hash: defaultViewElements.key
-              }"
-              @update="onUnitResultsUpdate"
-            />
-            <UnitPipelineSql
-              v-else-if="sql"
-              v-bind="{
-                sql,
-                parameterName: defaultViewElements.parameterName,
-                parameterKey: defaultViewElements.parameterKey,
-                hash: defaultViewElements.key
-              }"
-              @update="onUnitResultsUpdate"
-            />
-            <UnitPipelineSparql
-              v-else
-              v-bind="{ sparqlQuery }"
-              class="mr-lg-6"
-              @update="onUnitResultsUpdate"
-            />
-          </VCol>
-        </VRow>
+        <UnitPipelineCustom
+          v-if="customPipeline !== undefined"
+          v-bind="{
+            customPipeline,
+            customPipelineOptions: defaultViewElements.customPipelineOptions,
+            parameterName: defaultViewElements.parameterName,
+            hash: defaultViewElements.key
+          }"
+          @update="onUnitResultsUpdate"
+        />
+        <UnitPipelineSql
+          v-else-if="sql"
+          v-bind="{
+            sql,
+            parameterName: defaultViewElements.parameterName,
+            parameterKey: defaultViewElements.parameterKey,
+            hash: defaultViewElements.key
+          }"
+          @update="onUnitResultsUpdate"
+        />
+        <UnitPipelineSparql
+          v-else
+          v-bind="{ sparqlQuery }"
+          class="mr-lg-6"
+          @update="onUnitResultsUpdate"
+        />
+
         <VRow v-if="errorMessage">
           <VCol>
             <BaseAlert type="error">
