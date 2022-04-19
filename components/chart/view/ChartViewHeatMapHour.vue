@@ -55,12 +55,7 @@
             <rect
               :width="(cellSize - cellSpacing) * 2"
               :height="(cellSize - cellSpacing) / 2"
-              :x="
-                width -
-                cellSize * 2 * legendNbItems +
-                idx * cellSize * 2 -
-                cellSize * 2
-              "
+              :x="legendSquareXPos(idx)"
               :y="height - cellSize * 3"
               :fill="color(square)"
               :rx="borderRadius"
@@ -68,12 +63,7 @@
             ></rect>
             <text
               style="text-anchor: middle"
-              :x="
-                width -
-                cellSize * 2 * legendNbItems +
-                idx * cellSize * 2 -
-                cellSize
-              "
+              :x="legendSquareXPos(idx)"
               :y="height - cellSize * 2"
             >
               {{ square }}
@@ -194,7 +184,11 @@ export default {
         ' records'
       )
     },
-    drawViz() {}
+    drawViz() {},
+    legendSquareXPos(idx) {
+      const { width: w, cellSize: s, legendNbItems: n } = this
+      return w - s * 2 * n + idx * s * 2 - s * 2
+    }
   }
 }
 </script>
