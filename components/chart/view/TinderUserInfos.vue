@@ -77,6 +77,28 @@
 import * as d3 from 'd3'
 import mixin from './mixin'
 
+function genderIdentity(code) {
+  switch (code) {
+    case 'F':
+      return 'Female'
+    case 'M':
+      return 'Male'
+    default:
+      return code
+  }
+}
+
+function genderInterest(code) {
+  switch (code) {
+    case 'F':
+      return 'Women'
+    case 'M':
+      return 'Men'
+    default:
+      return code
+  }
+}
+
 export default {
   mixins: [mixin],
   data() {
@@ -90,7 +112,7 @@ export default {
         },
         {
           title: 'Gender',
-          value: v.gender
+          value: genderIdentity(v.gender)
         },
         {
           title: 'Education',
@@ -103,7 +125,7 @@ export default {
         },
         {
           title: 'Interested In',
-          value: v.interestedIn
+          value: genderInterest(v.interestedIn)
         },
         {
           title: 'Sexual Orientations',
@@ -112,7 +134,7 @@ export default {
         },
         {
           title: 'Gender filter',
-          value: v.genderFilter
+          value: genderIdentity(v.genderFilter)
         },
         {
           title: 'Account creation',
