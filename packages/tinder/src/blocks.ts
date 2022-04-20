@@ -1,10 +1,12 @@
 import { ViewBlock } from 'shared/view-block'
 
-import sparqlAll from './sparql/all.rq'
-import sparqlAppOpens from './sparql/app-opens.rq'
-import sparqlLikesDislikes from './sparql/likes-dislikes.rq'
-import sparqlLikesDislikesMessages from './sparql/likes-dislikes-messages.rq'
-import sparqlLikesDislikesOpen from './sparql/likes-dislikes-open.rq'
+import sqlAll from './sql/all.sql'
+import sqlAppOpens from './sql/app-opens.sql'
+import sqlLikesDislikesMessages from './sql/likes-dislikes-messages.sql'
+import sqlLikesDislikesOpen from './sql/likes-dislikes-open.sql'
+import sqlLikesDislikes from './sql/likes-dislikes.sql'
+import sqlMessages from './sql/messages.sql'
+import sqlUserInfos from './sql/user-infos.sql'
 
 import vegaDonutMultipleComparisons from './vega/donut-multiple-comparisons.vega'
 import vegaScatterLikesPassesCorrelation from './vega/scatter-likes-passes-correlation.vega'
@@ -12,7 +14,7 @@ import vegaScatterLikesPassesCorrelation from './vega/scatter-likes-passes-corre
 const blocks: ViewBlock[] = [
   {
     key: 'likes-dislikes-vue',
-    query: sparqlLikesDislikes,
+    sql: sqlLikesDislikes,
     text: 'See the number of likes and passes that you made over time.',
     title: 'Likes and passes',
     visualization: 'ChartViewTimeSeries.vue',
@@ -27,7 +29,7 @@ const blocks: ViewBlock[] = [
   },
   {
     key: 'app-opens-vue',
-    query: sparqlAppOpens,
+    sql: sqlAppOpens,
     text: 'See the number of times that you opened the app (per day or per month).',
     title: 'App openings',
     visualization: 'ChartViewTimeSeries.vue',
@@ -39,7 +41,7 @@ const blocks: ViewBlock[] = [
   },
   {
     key: 'monthly-history-vue',
-    query: sparqlLikesDislikesMessages,
+    sql: sqlLikesDislikesMessages,
     text: 'Compare the number of likes, passes, messages sent and messages received.',
     title: 'Likes, passes, messages',
     visualization: 'ChartViewTimeSeries.vue',
@@ -56,21 +58,21 @@ const blocks: ViewBlock[] = [
   },
   {
     key: 'donut',
-    query: sparqlAll,
+    sql: sqlAll,
     text: 'Compare different pairs of values in a donut chart.',
     title: 'Pairs',
     visualization: vegaDonutMultipleComparisons
   },
   {
     key: 'likes-dislikes-open',
-    query: sparqlLikesDislikesOpen,
+    sql: sqlLikesDislikesOpen,
     text: 'Observe the possible correlation between the number of likes/passes and the number of times you open the app.',
     title: 'Likes and passes correlation',
     visualization: vegaScatterLikesPassesCorrelation
   },
   {
     key: 'all',
-    query: sparqlAll,
+    sql: sqlAll,
     text: 'If you want to inspect precisely the values for each day, all the data can be summarized in a table.',
     title: 'All data',
     showTable: true
