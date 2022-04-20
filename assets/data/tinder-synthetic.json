@@ -4187,7 +4187,7 @@
     },
     "phone_id": "12345678912",
     "education": "Has no high school or college education",
-    "sexual_orientations": ["test", "test2ddddd", "test2222", "test 22 edw"],
+    "sexual_orientations": ["test", "test2ddddd"],
     "college": []
   },
   "Photos": ["photo_0.jpg"],

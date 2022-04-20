@@ -45,7 +45,7 @@
         <g class="legend">
           <text
             style="text-anchor: end"
-            :x="width - cellSize * 2 * legendNbItems - cellSize * 3"
+            :x="legendSquareXPos(0) - cellSize"
             :y="height - cellSize * 2.5"
             dy="-.20em"
           >
