@@ -36,7 +36,7 @@ export default {
         type: 'asset/inline'
       },
       {
-        test: /\.(?:rq|vega|yml)$/,
+        test: /\.(?:sql|vega)$/,
         type: 'asset/source'
       }
     ]
