@@ -1,20 +1,16 @@
-type CustomPipelineOptions = {
-  fileManager: object
-  parameter: string
-  options: object
-}
+type CustomPipelineOptions = object | object[]
 
 type PipelineOutput = {
-  headers: Array<string | object>
-  items: Array<object>
+  headers: (string | object)[]
+  items: object[]
 }
 
 export type ViewBlock = {
   customPipeline?(options: CustomPipelineOptions): PipelineOutput
-  customPipelineOptions?: object
+  customPipelineOptions?: CustomPipelineOptions
+  files?: string[]
   key: string
   postprocessor?(input: PipelineOutput): PipelineOutput
-  query?: string
   showTable?: boolean
   sql?: string
   text: string
