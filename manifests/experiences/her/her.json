@@ -24,51 +24,35 @@
     },
     {
       "key": "liked",
-      "sql": "liked",
-      "files": ["liked"],
-      "showTable": true,
-      "title": "Liked",
-      "text": "Number of likes that you made over time."
-    },
-    {
-      "key": "likes-over-time",
-      "sql": "likes-over-time",
-      "files": ["liked"],
+      "sql": "likes-passes",
+      "files": ["liked", "skipped"],
       "visualization": "ChartViewTimeSeries.vue",
       "vizProps": {
-        "title": "Likes over time",
+        "title": "Likes vs Passes over time",
         "legendOffset": 350,
-        "dateAccessor": { "text": "Date", "value": "likedAtDate" },
+        "dateAccessor": { "text": "Date", "value": "date" },
         "seriesAccessor": { "text": "Action", "value": "actionValue" },
-        "valueAccessor": "likesCount"
+        "valueAccessor": "actionCount"
       },
       "showTable": false,
-      "title": "Likes",
-      "text": "See the number of likes that you made over time."
+      "title": "Likes and Passes",
+      "text": "Number of likes and passes that you made over time."
     },
     {
       "key": "notifications",
       "sql": "notifications",
       "files": ["notifications"],
+      "visualization": "ChartViewTimeSeries.vue",
+      "vizProps": {
+        "title": "Notifications over time",
+        "legendOffset": 350,
+        "dateAccessor": { "text": "Date", "value": "notificationSentAt" },
+        "seriesAccessor": { "text": "Action", "value": "notificationType" },
+        "dateFormat": "%d/%m/%Y %H:%M"
+      },
       "showTable": true,
       "title": "Notifications",
       "text": "Number of notifications that you recieved over time."
-    },
-    {
-      "key": "liked-notifications",
-      "sql": "liked-notifications",
-      "files": ["notifications"],
-      "showTable": true,
-      "title": "Liked notifications",
-      "text": "Number of Liked notifications that you recieved over time."
-    },
-    {
-      "key": "friend-notifications",
-      "sql": "friend-notifications",
-      "files": ["notifications"],
-      "showTable": true,
-      "title": "Friend notifications",
-      "text": "Number of Friend notifications that you recieved over time."
     },
     {
       "key": "blocked",
