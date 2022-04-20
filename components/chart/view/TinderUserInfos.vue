@@ -23,10 +23,7 @@
                 {{ item.value }}
               </p>
             </VCol>
-            <VCol
-              v-if="values[0].ageFilterMin && values[0].ageFilterMax"
-              cols="12"
-            >
+            <VCol v-if="ageFilterMin && ageFilterMax" cols="12">
               <div class="overline">Age filter</div>
               <VRangeSlider
                 v-model="slider"
@@ -35,8 +32,8 @@
                 thumb-size="25"
                 color="primary"
                 class="pt-10 pr-10 pl-10"
-                :min="values[0].ageFilterMin - 20"
-                :max="values[0].ageFilterMax + 20"
+                :min="ageFilterMin - 20"
+                :max="ageFilterMax + 20"
                 readonly
               ></VRangeSlider>
             </VCol>
@@ -79,56 +76,51 @@
 <script>
 import * as d3 from 'd3'
 import mixin from './mixin'
+
 export default {
   mixins: [mixin],
   data() {
+    const [v] = this.values
     return {
-      slider: [this.values[0].ageFilterMin, this.values[0].ageFilterMax]
-    }
-  },
-  computed: {
-    items() {
-      return [
+      slider: [v.ageFilterMin, v.ageFilterMax],
+      items: [
         {
           title: 'Birthdate',
-          value: d3.timeFormat('%B %d, %Y')(new Date(this.values[0].birthDate))
+          value: d3.timeFormat('%B %d, %Y')(new Date(v.birthDate))
         },
         {
           title: 'Gender',
-          value: this.values[0].gender
+          value: v.gender
         },
         {
           title: 'Education',
-          value: this.values[0].education
+          value: v.education
         },
         {
           title: 'College',
           list: true,
-          value: JSON.parse(this.values[0].college)
+          value: JSON.parse(v.college)
         },
         {
           title: 'Interested In',
-          value: this.values[0].interestedIn
+          value: v.interestedIn
         },
         {
           title: 'Sexual Orientations',
           list: true,
-          value: JSON.parse(this.values[0].sexualOrientations)
+          value: JSON.parse(v.sexualOrientations)
         },
         {
           title: 'Gender filter',
-          value: this.values[0].genderFilter
+          value: v.genderFilter
         },
         {
           title: 'Account creation',
-          value: d3.timeFormat('%B %d, %Y at %H:%M:%S')(
-            new Date(this.values[0].createDate)
-          )
+          value: d3.timeFormat('%B %d, %Y at %H:%M:%S')(new Date(v.createDate))
         }
-      ]
-    },
-    descriptors() {
-      return JSON.parse(this.values[0].descriptors) || []
+      ],
+      ...v,
+      descriptors: JSON.parse(v.descriptors) || []
     }
   },
   methods: {
