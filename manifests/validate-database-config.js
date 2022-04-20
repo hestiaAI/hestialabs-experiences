@@ -19,10 +19,17 @@ const columnSchema = {
 
 const columnsSchema = {
   $id: `${prefix}columns`,
-  type: 'array',
-  items: {
-    $ref: '#column'
-  }
+  anyOf: [
+    {
+      $ref: '#column'
+    },
+    {
+      type: 'array',
+      items: {
+        $ref: '#column'
+      }
+    }
+  ]
 }
 
 const gettersSchema = {
@@ -136,14 +143,14 @@ const schema = {
               type: 'object',
               properties: {
                 columns: {
-                  anyOf: [{ $ref: '#column' }, { $ref: '#columns' }]
+                  $ref: '#columns'
                 },
                 reference: {
                   type: 'object',
                   properties: {
                     table: { $ref: '#tableName' },
                     columns: {
-                      anyOf: [{ $ref: '#column' }, { $ref: '#columns' }]
+                      $ref: '#columns'
                     }
                   },
                   required: ['table', 'columns']
@@ -151,6 +158,9 @@ const schema = {
               }
             },
             required: ['columns', 'reference']
+          },
+          primaryKey: {
+            $ref: '#columns'
           }
         },
         required: ['name', 'columns']
