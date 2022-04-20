@@ -50,9 +50,17 @@
         "seriesAccessor": { "text": "Action", "value": "notificationType" },
         "dateFormat": "%d/%m/%Y %H:%M"
       },
-      "showTable": true,
+      "showTable": false,
       "title": "Notifications",
       "text": "Number of notifications that you recieved over time."
+    },
+    {
+      "key": "matches",
+      "sql": "liked",
+      "files": ["liked"],
+      "showTable": true,
+      "title": "Matches",
+      "text": "Number of matches over time vs likes"
     },
     {
       "key": "blocked",
@@ -77,14 +85,6 @@
       "showTable": true,
       "title": "Reported",
       "text": "Users that you reported to the moderation."
-    },
-    {
-      "key": "skipped",
-      "sql": "skipped",
-      "files": ["skipped"],
-      "showTable": true,
-      "title": "Skipped",
-      "text": "Users that you skipped."
     }
   ],
   "databaseConfig": {
