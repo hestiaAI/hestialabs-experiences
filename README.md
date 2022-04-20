@@ -108,7 +108,9 @@ npm run lerna:publish
 
 # Sources
 
-- [Lerna documentation](https://github.com/lerna/lerna)
+- [Lerna docs](https://github.com/lerna/lerna)
+- [webpack docs](https://webpack.js.org/concepts/)
+- [TypeScript docs](https://www.typescriptlang.org/docs/)
 - [Working with the npm registry - GitHub Docs](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)
 
 # Caveats
