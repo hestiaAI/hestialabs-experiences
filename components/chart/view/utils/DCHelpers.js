@@ -69,3 +69,16 @@ export function createCumulativeGroup(group) {
     }
   }
 }
+
+export function removeEmptyBins(group) {
+  return {
+    top(n) {
+      return group
+        .top(Infinity)
+        .filter(function (d) {
+          return d.value.count !== 0 && d.value !== 0
+        })
+        .slice(0, n)
+    }
+  }
+}

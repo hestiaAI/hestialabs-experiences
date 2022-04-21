@@ -58,17 +58,10 @@
       "key": "matches",
       "sql": "liked",
       "files": ["liked"],
-      "showTable": true,
+      "visualization": "ChartViewOverviewHer.vue",
+      "showTable": false,
       "title": "Matches",
-      "text": "Number of matches over time vs likes"
-    },
-    {
-      "key": "blocked",
-      "sql": "blocked",
-      "files": ["blocked"],
-      "showTable": true,
-      "title": "Blocks",
-      "text": "Blocks that you established over time."
+      "text": "Look at the likes you've made that have become matches or not."
     },
     {
       "key": "messages",
@@ -77,6 +70,14 @@
       "showTable": true,
       "title": "Messages",
       "text": "Messages sent and recieved."
+    },
+    {
+      "key": "blocked",
+      "sql": "blocked",
+      "files": ["blocked"],
+      "showTable": true,
+      "title": "Blocks",
+      "text": "Blocks that you established over time."
     },
     {
       "key": "reported",
