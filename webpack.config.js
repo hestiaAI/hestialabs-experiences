@@ -2,6 +2,7 @@ import path from 'path'
 import { readdirSync } from 'fs'
 import { fileURLToPath } from 'url'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
+import nodeExternals from 'webpack-node-externals'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -10,6 +11,13 @@ const packages = readdirSync(path.resolve(__dirname, 'packages'))
 
 export default {
   mode: 'production',
+
+  // https://stackoverflow.com/a/35820388/8238129
+  externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
+  externalsPresets: {
+    node: true // in order to ignore built-in modules like path, fs, etc.
+  },
+
   // https://webpack.js.org/concepts/entry-points/#object-syntax
   entry: Object.fromEntries(
     packages.map(name => [
