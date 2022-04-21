@@ -1,4 +1,4 @@
-import { PreprocessorFunction } from 'shared/types'
+import { PreprocessorFunction } from '@/types/experience-options'
 
 // https://stackoverflow.com/q/17057407/8238129
 function convertHexToString(input: string) {

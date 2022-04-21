@@ -33,7 +33,7 @@
     "no-console": [
       "warn",
       {
-        "allow": ["warn", "error"]
+        "allow": ["info", "warn", "error"]
       }
     ],
     "prettier/prettier": 2

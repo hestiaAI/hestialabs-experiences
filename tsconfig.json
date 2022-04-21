@@ -16,12 +16,17 @@
     "allowSyntheticDefaultImports": true,
     "types": [],
     "baseUrl": ".",
+
+    // https://bobbyhadz.com/blog/typescript-cannot-find-module
+    "moduleResolution": "node",
+
     "paths": {
       "@hestialabs/*": ["packages/*/src"],
-      "shared/*": ["shared/*"],
       "collaborators/*": ["shared/collaborators/*"],
       "icons/*": ["shared/icons/*"],
-      "preprocessors/*": ["shared/preprocessors/*"]
+      "preprocessors/*": ["shared/preprocessors/*"],
+      "@/*": ["shared/*"],
+      "types/*": ["shared/types/*"]
     }
   },
   "exclude": ["node_modules"]

@@ -1,4 +1,4 @@
-import { ViewBlock } from 'shared/view-block'
+import { ViewBlock } from '@/types/view-block'
 
 import sqlAll from './sql/all.sql'
 import sqlAppOpens from './sql/app-opens.sql'

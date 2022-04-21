@@ -1,12 +1,4 @@
-import type { ViewBlock } from './view-block'
-
-export type NonEmptyArray<T> = T[] & { 0: T }
-
-export type Collaborator = {
-  icon: string
-  title: string
-  url: string
-}
+import type { NonEmptyArray } from './utils'
 
 export enum SQLType {
   INTEGER = 'INTEGER',
@@ -73,29 +65,7 @@ export type DatabaseTable = {
 
 export type DatabaseTables = NonEmptyArray<DatabaseTable>
 
-type DatabaseConfig = {
+export type DatabaseConfig = {
   tables: DatabaseTables
   getters: DatabaseGetters
-}
-
-export type Files = { [key: string]: string }
-
-export type PreprocessorFunction = (input: string) => string
-
-export interface ExperienceOptions {
-  collaborator?: Collaborator
-  databaseConfig?: DatabaseConfig
-  dataPortal?: string
-  dataSamples?: string[]
-  defaultView: ViewBlock[]
-  disabled?: boolean
-  files: Files
-  hideFileExplorer?: boolean
-  hideSummary?: boolean
-  icon: string
-  preprocessors?: { [key: string]: PreprocessorFunction }
-  slug: string
-  subtitle?: string
-  title: string
-  url?: string
 }

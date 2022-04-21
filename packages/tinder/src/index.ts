@@ -1,4 +1,4 @@
-import { Experience, ExperienceOptions } from 'shared/index'
+import { Experience, ExperienceOptions } from '@/index'
 import { theDatingPrivacyCollective } from 'collaborators/index'
 import defaultView from './blocks'
 import icon from 'icons/tinder.png'
