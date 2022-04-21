@@ -22,11 +22,11 @@
 
     "paths": {
       "@hestialabs/*": ["packages/*/src"],
-      "collaborators/*": ["shared/collaborators/*"],
-      "icons/*": ["shared/icons/*"],
-      "preprocessors/*": ["shared/preprocessors/*"],
-      "@/*": ["shared/*"],
-      "types/*": ["shared/types/*"]
+      "collaborators/*": ["lib/collaborators/*"],
+      "icons/*": ["lib/icons/*"],
+      "preprocessors/*": ["lib/preprocessors/*"],
+      "@/*": ["lib/*"],
+      "types/*": ["lib/types/*"]
     }
   },
   "exclude": ["node_modules"]

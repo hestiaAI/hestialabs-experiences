@@ -1,6 +1,6 @@
 import type { NonEmptyArray } from 'types/utils'
 import type { Files } from 'types/experience-options'
-import type DatabaseConfig from 'types/database-config'
+import type { DatabaseConfig } from 'types/database-config'
 import type {
   DatabaseGetterColumnReference,
   DatabaseGetter,

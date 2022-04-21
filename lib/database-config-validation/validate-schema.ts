@@ -1,7 +1,7 @@
 // https://ajv.js.org/json-schema.html
 import Ajv from 'ajv'
 
-import { DatabaseConfig } from '@/types/experience-options'
+import { DatabaseConfig } from '@/types/database-config'
 
 const prefix = 'http://hestia.ai/schemas/databaseConfig.json#'
 
