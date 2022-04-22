@@ -1,6 +1,12 @@
 <template>
   <VContainer>
-    <div class="overline">{{ title }}</div>
+    <div class="d-flex mb-3">
+      <div class="overline">{{ title }}</div>
+      <VSpacer></VSpacer>
+      <div v-if="includeTotal" class="overline">
+        total: <strong>{{ items.length }}</strong>
+      </div>
+    </div>
     <svg class="graph" :viewBox="viewBox">
       <g :transform="`translate(40.5,${cellSize * 1.5})`">
         <g class="week-axis">
@@ -117,6 +123,10 @@ export default {
     legendLabel: {
       type: String,
       default: () => ''
+    },
+    includeTotal: {
+      type: Boolean,
+      default: () => false
     }
   },
   data() {
@@ -138,15 +148,23 @@ export default {
     },
     dateParser() {
       if (this.dateFormat) return d3.timeParse(this.dateFormat)
-      else return d => new Date(d)
+      else
+        return d => {
+          const date = new Date(d)
+          // return null if the date is not recognized
+          if (isNaN(date.getTime())) return null
+          else return date
+        }
     },
     items() {
-      return this.values.map(v => {
-        return {
-          date: this.dateParser(v[this.dateAccessor]),
-          value: this.valueAccessor ? v[this.valueAccessor] : 1
-        }
-      })
+      return this.values
+        .map(v => {
+          return {
+            date: this.dateParser(v[this.dateAccessor]),
+            value: this.valueAccessor ? v[this.valueAccessor] : 1
+          }
+        })
+        .filter(v => v.date)
     },
     itemsPerHour() {
       const hours = d3.flatRollup(

@@ -1,6 +1,12 @@
 <template>
   <VContainer>
-    <div class="overline mb-3">{{ title }}</div>
+    <div class="d-flex">
+      <div class="overline mb-3">{{ title }}</div>
+      <VSpacer></VSpacer>
+      <div v-if="includeTotal" class="overline mb-3">
+        total: <strong>{{ items.length }}</strong>
+      </div>
+    </div>
     <svg class="graph" :viewBox="viewBox">
       <g :transform="`translate(40.5,${cellSize * 1.5})`">
         <g
@@ -134,6 +140,10 @@ export default {
     legendLabel: {
       type: String,
       default: () => ''
+    },
+    includeTotal: {
+      type: Boolean,
+      default: () => false
     }
   },
   data() {
@@ -158,15 +168,23 @@ export default {
     },
     dateParser() {
       if (this.dateFormat) return d3.timeParse(this.dateFormat)
-      else return d => new Date(d)
+      else
+        return d => {
+          const date = new Date(d)
+          // return null if the date is not recognized
+          if (isNaN(date.getTime())) return null
+          else return date
+        }
     },
     items() {
-      return this.values.map(v => {
-        return {
-          date: this.dateParser(v[this.dateAccessor]),
-          value: this.valueAccessor ? v[this.valueAccessor] : 1
-        }
-      })
+      return this.values
+        .map(v => {
+          return {
+            date: this.dateParser(v[this.dateAccessor]),
+            value: this.valueAccessor ? v[this.valueAccessor] : 1
+          }
+        })
+        .filter(v => v.date)
     },
     extent() {
       return d3.extent(
@@ -183,7 +201,7 @@ export default {
     itemsPerDay() {
       const years = d3
         .groups(this.items, v => v.date.getUTCFullYear())
-        .reverse()
+        .sort((a, b) => b[0] - a[0])
       return years.map(y => [
         y[0],
         d3.flatRollup(

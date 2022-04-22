@@ -120,6 +120,10 @@ export default {
       type: String,
       default: () => null
     },
+    dateFormat: {
+      type: String,
+      default: () => null
+    },
     valueFormat: {
       type: String,
       default: () => '~s'
@@ -178,10 +182,15 @@ export default {
       settingDialog: false,
       filterItems: {},
       filterModel: {},
-      extentDate: null
+      extentDate: null,
+      dateFormatter: d3.timeParse(this.dateFormat)
     }
   },
   methods: {
+    parseDate(d) {
+      if (this.dateFormat) return this.dateFormatter(d)
+      else return new Date(d)
+    },
     initFilters() {
       this.filters.forEach((filter, i) => {
         this.filterItems[filter.value] = []
@@ -209,9 +218,7 @@ export default {
         })
         // Aggregate per time period
         serie.current = nest()
-          .key(function (d) {
-            return interval.parser(new Date(d.date))
-          })
+          .key(d => interval.parser(d.date))
           .rollup(leaves => d3.sum(leaves, l => l.value))
           .entries(serie.current)
         // Add missing datapoints
@@ -232,9 +239,8 @@ export default {
     },
     drawViz() {
       /* Init the possible aggregations dpending on dates extent */
-      this.extentDate = d3.extent(
-        this.values,
-        d => new Date(d[this.dateAccessor.value])
+      this.extentDate = d3.extent(this.values, d =>
+        this.parseDate(d[this.dateAccessor.value])
       )
       const diffDays = d3.timeDay.count(this.extentDate[0], this.extentDate[1])
       if (diffDays > 2 && diffDays < 93)
@@ -270,14 +276,16 @@ export default {
             .filter(v => a === v[this.seriesAccessor.value])
             .map(d => {
               const ret = {
-                date: new Date(d[this.dateAccessor.value]),
+                date: this.parseDate(d[this.dateAccessor.value]),
                 value: this.valueAccessor ? +d[this.valueAccessor] : 1
               }
+
               this.filters.forEach(f => {
                 ret[f.value] = d[f.value]
               })
               return ret
             })
+            .filter(d => !isNaN(d.date.getTime()))
             .sort((e1, e2) => e1.date - e2.date)
         }
       })
