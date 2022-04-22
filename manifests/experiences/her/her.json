@@ -67,6 +67,10 @@
       "key": "messages",
       "sql": "messages",
       "files": ["messages"],
+      "visualization": "HerMessageActivity.vue",
+      "vizProps": {
+        "dateAccessor": "messageSentAt"
+      },
       "showTable": true,
       "title": "Messages",
       "text": "Messages sent and recieved."
