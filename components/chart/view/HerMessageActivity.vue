@@ -1,12 +1,12 @@
 <template>
   <VContainer>
-    <p>
-      In total you exchanged <strong>{{ nbMsg }}</strong> messages with
-      <strong>{{ nbUser }}</strong> users.
-    </p>
     <VRow>
       <VCol cols="12">
         <h3 class="text-h6">Messages exchanged per hour and day of week</h3>
+        <p>
+          In total you exchanged <strong>{{ nbMsg }}</strong> messages with
+          <strong>{{ nbUser }}</strong> users.
+        </p>
       </VCol>
       <VCol cols="12" md="6">
         <ChartViewHeatMapHour
@@ -15,6 +15,7 @@
           title="Messages Received"
           date-format="%d/%m/%Y %H:%M"
           legend-label="Messages"
+          include-total
         ></ChartViewHeatMapHour>
       </VCol>
       <VCol cols="12" md="6">
@@ -24,6 +25,7 @@
           title="Messages Sent"
           date-format="%d/%m/%Y %H:%M"
           legend-label="Messages"
+          include-total
         ></ChartViewHeatMapHour>
       </VCol>
     </VRow>
@@ -33,7 +35,6 @@
         <ChartViewHeatMapCalendar
           v-bind="{ headers, dateAccessor }"
           :values="messageReceived"
-          title="Messages exchanged"
           date-format="%d/%m/%Y %H:%M"
           legend-label="Messages"
         ></ChartViewHeatMapCalendar>

@@ -1,6 +1,12 @@
 <template>
   <VContainer>
-    <div class="overline">{{ title }}</div>
+    <div class="d-flex mb-3">
+      <div class="overline">{{ title }}</div>
+      <VSpacer></VSpacer>
+      <div v-if="includeTotal" class="overline">
+        total: <strong>{{ items.length }}</strong>
+      </div>
+    </div>
     <svg class="graph" :viewBox="viewBox">
       <g :transform="`translate(40.5,${cellSize * 1.5})`">
         <g class="week-axis">
@@ -117,6 +123,10 @@ export default {
     legendLabel: {
       type: String,
       default: () => ''
+    },
+    includeTotal: {
+      type: Boolean,
+      default: () => false
     }
   },
   data() {

@@ -1,6 +1,7 @@
 {
   "title": "HER",
   "icon": "herlogo.webp",
+  "data": ["her-fake-data.zip"],
   "dataPortal": "https://weareher.com/privacy/",
   "hideSummary": true,
   "hideFileExplorer": true,
@@ -71,9 +72,8 @@
       "vizProps": {
         "dateAccessor": "messageSentAt"
       },
-      "showTable": true,
-      "title": "Messages",
-      "text": "Messages sent and recieved."
+      "showTable": false,
+      "title": "Messages"
     },
     {
       "key": "blocked",

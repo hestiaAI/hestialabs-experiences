@@ -1,6 +1,12 @@
 <template>
   <VContainer>
-    <div class="overline mb-3">{{ title }}</div>
+    <div class="d-flex">
+      <div class="overline mb-3">{{ title }}</div>
+      <VSpacer></VSpacer>
+      <div v-if="includeTotal" class="overline mb-3">
+        total: <strong>{{ items.length }}</strong>
+      </div>
+    </div>
     <svg class="graph" :viewBox="viewBox">
       <g :transform="`translate(40.5,${cellSize * 1.5})`">
         <g
@@ -145,6 +151,10 @@ export default {
     legendLabel: {
       type: String,
       default: () => ''
+    },
+    includeTotal: {
+      type: Boolean,
+      default: () => false
     }
   },
   data() {
@@ -201,7 +211,7 @@ export default {
     itemsPerDay() {
       const years = d3
         .groups(this.items, v => v.date.getUTCFullYear())
-        .reverse()
+        .sort((a, b) => b[0] - a[0])
       return years.map(y => [
         y[0],
         d3.flatRollup(

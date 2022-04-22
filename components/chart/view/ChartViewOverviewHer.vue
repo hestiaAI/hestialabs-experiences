@@ -139,7 +139,8 @@ export default {
           matched: d.matched === 'TRUE',
           date,
           dateStr: formatTime(date),
-          day: d3.timeDay(date), // pre-calculate days for better performance
+          month: d3.timeMonth(date), // pre-calculate months for better performance
+          day: d3.timeDay(date), // pre-calculate months for better performance
           hour: d3.timeHour(date).getHours() // pre-calculate hours for better performance
         }
       })
@@ -181,6 +182,7 @@ export default {
         return `${name[day]}`
       })
       const matchedDimension = ndx.dimension(d => d.matched)
+      const monthDimension = ndx.dimension(d => d.month)
       const dayDimension = ndx.dimension(d => d.day)
       const hourDimension = ndx.dimension(d => d.hour)
 
@@ -188,6 +190,7 @@ export default {
       const dayOfWeekGroup = dayOfWeekDimension.group().reduceCount()
       const serviceGroup = matchedDimension.group().reduceCount()
       const hourGroup = hourDimension.group().reduceCount()
+      const monthGroup = monthDimension.group()
       const dayGroup = dayDimension.group()
 
       // Render hour bar chart
@@ -276,9 +279,11 @@ export default {
 
       // Render Likes line chart
       const minDate =
-        dayDimension.bottom(1).length > 0 ? dayDimension.bottom(1)[0].day : null
+        monthDimension.bottom(1).length > 0
+          ? monthDimension.bottom(1)[0].month
+          : null
       const maxDate =
-        dayDimension.top(1).length > 0 ? dayDimension.top(1)[0].day : null
+        monthDimension.top(1).length > 0 ? monthDimension.top(1)[0].day : null
       likeChart
         .margins({ top: 20, left: 40, right: 20, bottom: 20 })
         .width(d3.select('#like-chart').node().getBoundingClientRect().width)
@@ -288,8 +293,8 @@ export default {
         .height(180)
         .brushOn(false)
         .renderArea(true)
-        .dimension(dayDimension)
-        .group(dayGroup)
+        .dimension(monthDimension)
+        .group(monthGroup)
         .x(d3.scaleTime().domain([minDate, maxDate]))
         .title(d => formatDay(d.key) + ': ' + d.value + ' likes')
         .elasticX(true)
@@ -344,7 +349,7 @@ export default {
           all: 'All <strong>%total-count</strong> views selected. Please click on the graph to apply filters.'
         })
         .on('pretransition', (chart, filter) => {
-          this.results = dayDimension.top(all.value())
+          this.results = monthDimension.top(all.value())
           d3.select('#dc-data-count' + this.graphId + ' a.resetAll').on(
             'click',
             () => {
