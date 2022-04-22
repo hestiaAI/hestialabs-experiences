@@ -128,7 +128,7 @@
         "table": "TinderUsage",
         "options": {
           "resultType": "all",
-          "callback": "value => value.grandparentProperty = value.pointer.split('/')[2]"
+          "callback": "output => output.grandparentProperty = output.pointer.split('/')[2]"
         },
         "getters": [
           {

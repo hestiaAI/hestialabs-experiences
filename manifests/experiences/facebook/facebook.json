@@ -189,7 +189,7 @@
         "table": "OffFacebookActivityEvent",
         "options": {
           "resultType": "all",
-          "callback": "value => value.namePath = value.path.split(\"['events']\")[0] + \"['name']\""
+          "callback": "output => output.namePath = output.path.split(\"['events']\")[0] + \"['name']\""
         },
         "getters": [
           {
