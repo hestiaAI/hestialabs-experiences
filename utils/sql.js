@@ -4,6 +4,8 @@ import { JSONPath } from 'jsonpath-plus'
 
 import { getCsvAndMergeFromID } from '@/utils/csv'
 
+const enforceArray = value => (typeof value === 'string' ? [value] : value)
+
 /**
  * An abstraction for an SQL table. Contains columns of a given datatype.
  */
@@ -97,22 +99,26 @@ export class DB {
    * @param {String} table the name of the table to create.
    * @param {Array<Array<String>>} columns an array of columns, each column being an array containing the the name and the type.
    */
-  create(tableName, columns, foreignKeys = []) {
+  create({ name, columns, foreignKeys = [], primaryKey = [] }) {
     this.#checkState()
 
-    if (this.#tables.has(tableName)) {
+    if (this.#tables.has(name)) {
       throw new Error('A table with this name already exists.')
     }
-    const table = new Table(tableName, columns)
-    this.#tables.set(tableName, table)
+    const table = new Table(name, columns)
+    this.#tables.set(name, table)
     const cols = table
       .getColumnNames()
       .map((c, i) => `${c} ${table.datatype(c)}`)
-    let statement = `CREATE TABLE ${tableName} (${cols.join(', ')}`
-    foreignKeys.forEach(({ columns: c, reference: { table, columns: rc } }) => {
-      const cols = (typeof c === 'string' ? [c] : c).join(',')
-      const refCols = (typeof rc === 'string' ? [rc] : rc).join(',')
-      statement += `, FOREIGN KEY (${cols}) REFERENCES ${table}(${refCols})`
+    let statement = `CREATE TABLE ${name} (${cols.join(', ')}`
+    if (primaryKey.length) {
+      const cols = enforceArray(primaryKey).join(', ')
+      statement += `, PRIMARY KEY (${cols})`
+    }
+    foreignKeys.forEach(({ columns: c, reference: r }) => {
+      const cols = enforceArray(c).join(', ')
+      const refCols = enforceArray(r.columns).join(', ')
+      statement += `, FOREIGN KEY (${cols}) REFERENCES ${r.table}(${refCols})`
     })
     statement += ')'
     this.#db.run(statement)
@@ -135,8 +141,8 @@ export class DB {
       // disregard auto-incremented columns in INSERT statement
       name => !table.datatype(name).toLowerCase().includes('autoincrement')
     )
-    const columnsJoined = columns.join(',')
-    const placeholders = columns.map(_ => '?').join(',')
+    const columnsJoined = columns.join(', ')
+    const placeholders = columns.map(_ => '?').join(', ')
 
     const sql = `INSERT INTO ${tableName}(${columnsJoined}) VALUES (${placeholders});`
     items.forEach(item => {
@@ -194,7 +200,7 @@ export class DB {
 export async function createDB({ tables }) {
   const db = new DB()
   await db.init()
-  tables.forEach(t => db.create(t.name, t.columns, t.foreignKeys))
+  tables.forEach(t => db.create(t))
   return db
 }
 

@@ -84,16 +84,14 @@ describe('with complete samples', () => {
     // Table TwitterCriterion
     result = db.select('SELECT * FROM TwitterCriterion')
     expected = {
-      headers: ['id', 'adId', 'targetingType', 'targetingValue'],
+      headers: ['adId', 'targetingType', 'targetingValue'],
       items: [
         {
-          id: 1,
           adId: 1,
           targetingType: 'Locations',
           targetingValue: 'Switzerland'
         },
         {
-          id: 2,
           adId: 1,
           targetingType: 'Age',
           targetingValue: '35 and up'
