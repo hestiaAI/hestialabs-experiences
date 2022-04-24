@@ -21,12 +21,9 @@
     "moduleResolution": "node",
 
     "paths": {
-      "@hestialabs/*": ["packages/*/src"],
-      "collaborators/*": ["lib/collaborators/*"],
-      "icons/*": ["lib/icons/*"],
-      "preprocessors/*": ["lib/preprocessors/*"],
       "@/*": ["lib/*"],
-      "types/*": ["lib/types/*"]
+      "types/*": ["lib/types/*"],
+      "@hestialabs/*": ["packages/*/src/index"]
     }
   },
   "exclude": ["node_modules"]

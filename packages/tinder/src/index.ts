@@ -1,7 +1,8 @@
 import { Experience, ExperienceOptions } from '@/index'
-import { theDatingPrivacyCollective } from 'collaborators/index'
+import { theDatingPrivacyCollective } from '@/collaborators/index'
+import icon from '@/icons/tinder.png'
+
 import defaultView from './blocks'
-import icon from 'icons/tinder.png'
 
 const options: ExperienceOptions = {
   collaborator: theDatingPrivacyCollective,

@@ -33,10 +33,17 @@ export default {
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-env', '@babel/preset-typescript']
-        }
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env', '@babel/preset-typescript']
+            }
+          },
+          {
+            loader: 'ts-loader'
+          }
+        ]
       },
       // https://webpack.js.org/guides/asset-modules/
       {

@@ -1,12 +1,9 @@
 type CustomPipelineOptions = object | object[]
 
-export type PipelineOutput = {
-  headers: (string | object)[]
-  items: object[]
-}
+import type { PipelineOutput } from './utils'
 
 export type ViewBlock = {
-  customPipeline?(options: CustomPipelineOptions): PipelineOutput
+  customPipeline?: string | ((options: CustomPipelineOptions) => PipelineOutput)
   customPipelineOptions?: CustomPipelineOptions
   files?: string[]
   key: string

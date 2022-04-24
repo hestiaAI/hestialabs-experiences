@@ -1,7 +1,7 @@
-import theEyeballsIcon from 'icons/the-eyeballs.svg'
-import theDatingPrivacyCollectiveIcon from 'icons/dating-privacy-collective.svg'
+import theEyeballsIcon from '@/icons/the-eyeballs.svg'
+import theDatingPrivacyCollectiveIcon from '@/icons/dating-privacy-collective.svg'
 
-import { Collaborator } from '@/types/experience-options'
+import { Collaborator } from 'types/experience-options'
 
 export const theEyeballs: Collaborator = {
   title: 'The Eyeballs Collective',

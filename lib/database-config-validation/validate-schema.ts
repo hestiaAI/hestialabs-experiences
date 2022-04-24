@@ -55,10 +55,11 @@ const gettersSchema = {
               'parentProperty',
               'all'
             ]
-          },
-          callback: {
-            type: 'string'
           }
+          // Note: functions are not valid JSON types.
+          // For the sake of documentation, we keep a list
+          // of such properties here:
+          // * callback
         }
       },
       path: {
