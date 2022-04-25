@@ -35,7 +35,7 @@
         "seriesAccessor": { "text": "Action", "value": "actionValue" },
         "valueAccessor": "actionCount"
       },
-      "showTable": true,
+      "showTable": false,
       "title": "Likes and Passes",
       "text": "Number of likes and passes that you made over time."
     },

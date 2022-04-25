@@ -135,7 +135,7 @@ export default {
         const date = new Date(d.likedAt)
         return {
           name: d.name,
-          matched: d.matched === 'TRUE',
+          matched: d.matched.toUpperCase() === 'TRUE',
           date,
           dateStr: formatTime(date),
           month: d3.timeMonth(date), // pre-calculate months for better performance
