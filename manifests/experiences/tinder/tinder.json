@@ -58,13 +58,15 @@
       "key": "messages-activity",
       "sql": "messages",
       "files": ["tinder"],
-      "visualization": "TinderMessageActivity.vue",
+      "visualization": "ChartViewHeatMapHour.vue",
       "vizProps": {
-        "dateAccessor": "sentDate"
+        "dateAccessor": "sentDate",
+        "title": "Messages Sent",
+        "legendLabel": "Messages"
       },
       "showTable": false,
       "title": "Messages",
-      "text": "See at what time of the day and week you receive/send the most messages"
+      "text": "See at what time of the day and week you send the most messages"
     },
     {
       "key": "donut",

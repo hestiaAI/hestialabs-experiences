@@ -86,7 +86,7 @@
             ></rect>
             <text
               style="text-anchor: middle"
-              :x="legendSquareXPos(idx)"
+              :x="legendSquareXPos(idx) + cellSize"
               :y="height - cellSize * 2"
             >
               {{ square }}
