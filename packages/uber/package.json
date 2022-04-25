@@ -1,0 +1,19 @@
+{
+  "name": "@hestiaai/uber",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs",
+    "directory": "packages/uber"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "ISC"
+}

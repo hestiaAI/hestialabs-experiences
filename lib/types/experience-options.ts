@@ -16,7 +16,7 @@ export type ExperienceOptions = {
   dataSamples?: string[]
   defaultView: ViewBlock[]
   disabled?: boolean
-  files: Files
+  files?: Files
   hideFileExplorer?: boolean
   hideSummary?: boolean
   icon: string
