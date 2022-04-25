@@ -1,6 +1,6 @@
 import { Experience, ExperienceOptions } from '@/index'
 import { theEyeballs } from '@/collaborators/index'
-import preprocessor from '@/preprocessors/facebook'
+import preprocessor from './preprocessor'
 import icon from '@/icons/facebook.png'
 import defaultView from './blocks'
 import databaseConfig from './database'
