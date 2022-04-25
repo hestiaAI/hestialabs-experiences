@@ -8,7 +8,7 @@ import type {
   DatabaseTables
 } from 'types/database-config'
 
-import { error } from '@/utils'
+import { error, enforceArray } from '@/utils'
 
 function findAndValidateTable(
   tables: DatabaseTables,
@@ -30,13 +30,14 @@ function validateColumnReference(table: DatabaseTable, column: string): void {
   }
 }
 
-const enforceArray = (value: string | string[]) =>
-  typeof value === 'string' ? [value] : value
-
 function validatePrimaryKeys(tables: DatabaseTables): void {
-  tables.forEach(t =>
-    (t.primaryKey || []).forEach(c => validateColumnReference(t, c))
-  )
+  tables.forEach(t => {
+    const { primaryKey: k } = t
+    if (k) {
+      const cols = enforceArray(k)
+      cols.forEach(c => validateColumnReference(t, c))
+    }
+  })
 }
 
 function validateForeignKeys(tables: DatabaseTables): void {
