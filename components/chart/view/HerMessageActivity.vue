@@ -13,7 +13,6 @@
           v-bind="{ headers, dateAccessor }"
           :values="messageReceived"
           title="Messages Received"
-          date-format="%d/%m/%Y %H:%M"
           legend-label="Messages"
           include-total
         ></ChartViewHeatMapHour>
@@ -23,7 +22,6 @@
           v-bind="{ headers, dateAccessor }"
           :values="messageSent"
           title="Messages Sent"
-          date-format="%d/%m/%Y %H:%M"
           legend-label="Messages"
           include-total
         ></ChartViewHeatMapHour>
@@ -35,7 +33,6 @@
         <ChartViewHeatMapCalendar
           v-bind="{ headers, dateAccessor }"
           :values="messageReceived"
-          date-format="%d/%m/%Y %H:%M"
           legend-label="Messages"
         ></ChartViewHeatMapCalendar>
       </VCol>
@@ -61,24 +58,16 @@ export default {
   },
   computed: {
     messageReceived() {
-      return this.values.filter(
-        v =>
-          v.sender !== 'her the app, message sent by her (the app)' &&
-          v.sender !== 'User (myself)'
-      )
+      return this.values.filter(v => v.sender !== 'Her' && v.sender !== 'User')
     },
     messageSent() {
-      return this.values.filter(
-        v =>
-          v.sender !== 'her the app, message sent by her (the app)' &&
-          v.sender === 'User (myself)'
-      )
+      return this.values.filter(v => v.sender !== 'Her' && v.sender === 'User')
     },
     nbUser() {
       return new Set(this.values.map(v => v.sender)).size - 2 // Remove Her and the user
     },
     nbMsg() {
-      return this.values.length // Remove Her and the user
+      return this.values.filter(v => v.sender !== 'Her').length // Remove Her
     }
   },
   mounted() {},

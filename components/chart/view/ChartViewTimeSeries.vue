@@ -120,10 +120,6 @@ export default {
       type: String,
       default: () => null
     },
-    dateFormat: {
-      type: String,
-      default: () => null
-    },
     valueFormat: {
       type: String,
       default: () => '~s'
@@ -182,15 +178,10 @@ export default {
       settingDialog: false,
       filterItems: {},
       filterModel: {},
-      extentDate: null,
-      dateFormatter: d3.timeParse(this.dateFormat)
+      extentDate: null
     }
   },
   methods: {
-    parseDate(d) {
-      if (this.dateFormat) return this.dateFormatter(d)
-      else return new Date(d)
-    },
     initFilters() {
       this.filters.forEach((filter, i) => {
         this.filterItems[filter.value] = []
@@ -218,7 +209,9 @@ export default {
         })
         // Aggregate per time period
         serie.current = nest()
-          .key(d => interval.parser(d.date))
+          .key(function (d) {
+            return interval.parser(new Date(d.date))
+          })
           .rollup(leaves => d3.sum(leaves, l => l.value))
           .entries(serie.current)
         // Add missing datapoints
@@ -239,11 +232,16 @@ export default {
     },
     drawViz() {
       /* Init the possible aggregations dpending on dates extent */
-      this.extentDate = d3.extent(this.values, d =>
-        this.parseDate(d[this.dateAccessor.value])
+      this.extentDate = d3.extent(
+        this.values,
+        d => new Date(d[this.dateAccessor.value])
       )
       const diffDays = d3.timeDay.count(this.extentDate[0], this.extentDate[1])
-      if (diffDays > 2 && diffDays < 93)
+      if (!diffDays) {
+        console.error('Unrecognized Dates')
+        return
+      }
+      if (diffDays < 93)
         this.intervals.Days = {
           parser: d3.timeDay,
           format: d3.timeFormat('%B %d, %Y')
@@ -276,16 +274,14 @@ export default {
             .filter(v => a === v[this.seriesAccessor.value])
             .map(d => {
               const ret = {
-                date: this.parseDate(d[this.dateAccessor.value]),
+                date: new Date(d[this.dateAccessor.value]),
                 value: this.valueAccessor ? +d[this.valueAccessor] : 1
               }
-
               this.filters.forEach(f => {
                 ret[f.value] = d[f.value]
               })
               return ret
             })
-            .filter(d => !isNaN(d.date.getTime()))
             .sort((e1, e2) => e1.date - e2.date)
         }
       })
@@ -336,7 +332,7 @@ export default {
       const yAxis = d3.axisLeft().ticks(5).scale(yScale) // .ticks(slices[0].values.length)
       const xAxis = d3
         .axisBottom()
-        .ticks(5)
+        .ticks(8)
         // .ticks(d3.timeDay.every(1))
         // .tickFormat(d3.timeFormat('%b %d'))
         .scale(xScale)

@@ -129,11 +129,10 @@ export default {
       ]
 
       // Parse and format data
-      const dateFormatParser = d3.timeParse('%d/%m/%Y %H:%M')
-      const formatTime = d3.timeFormat('%B %d, %Y at %H:%M')
+      const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
       const formatDay = d3.timeFormat('%B %d, %Y')
       this.results = this.values.map(d => {
-        const date = dateFormatParser(d.likedAt)
+        const date = new Date(d.likedAt)
         return {
           name: d.name,
           matched: d.matched === 'TRUE',

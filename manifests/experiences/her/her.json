@@ -35,7 +35,7 @@
         "seriesAccessor": { "text": "Action", "value": "actionValue" },
         "valueAccessor": "actionCount"
       },
-      "showTable": false,
+      "showTable": true,
       "title": "Likes and Passes",
       "text": "Number of likes and passes that you made over time."
     },
@@ -48,8 +48,7 @@
         "title": "Notifications over time",
         "legendOffset": 350,
         "dateAccessor": { "text": "Date", "value": "notificationSentAt" },
-        "seriesAccessor": { "text": "Action", "value": "notificationType" },
-        "dateFormat": "%d/%m/%Y %H:%M"
+        "seriesAccessor": { "text": "Action", "value": "notificationType" }
       },
       "showTable": false,
       "title": "Notifications",
