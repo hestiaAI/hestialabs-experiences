@@ -2,7 +2,6 @@ import { ViewBlock } from '@/types/view-block'
 
 import sqlAll from './sql/all.sql'
 import sqlAppOpens from './sql/app-opens.sql'
-import sqlLikesDislikesMessages from './sql/likes-dislikes-messages.sql'
 import sqlLikesDislikesOpen from './sql/likes-dislikes-open.sql'
 import sqlLikesDislikes from './sql/likes-dislikes.sql'
 import sqlMessages from './sql/messages.sql'
@@ -11,7 +10,30 @@ import sqlUserInfos from './sql/user-infos.sql'
 import vegaDonutMultipleComparisons from './vega/donut-multiple-comparisons.vega'
 import vegaScatterLikesPassesCorrelation from './vega/scatter-likes-passes-correlation.vega'
 
+const files = ['tinder']
+
 const blocks: ViewBlock[] = [
+  {
+    key: 'user-infos',
+    sql: sqlUserInfos,
+    visualization: 'TinderUserInfos.vue',
+    title: 'User infos',
+    text: 'Tinder profile information'
+  },
+  {
+    key: 'app-opens-vue',
+    sql: sqlAppOpens,
+    text: 'See the number of times that you opened the app per day.',
+    title: 'Usage',
+    visualization: 'ChartViewHeatMapCalendar.vue',
+    vizProps: {
+      title: 'Application usage over time',
+      legendOffset: 360,
+      dateAccessor: 'dateValue',
+      valueAccessor: 'amount',
+      legendLabel: 'App Opened'
+    }
+  },
   {
     key: 'likes-dislikes-vue',
     sql: sqlLikesDislikes,
@@ -21,62 +43,35 @@ const blocks: ViewBlock[] = [
     vizProps: {
       title: 'Likes vs Passes over time',
       legendOffset: 350,
-      accessor: [
-        { text: 'Likes', value: 'likes' },
-        { text: 'Passes', value: 'pass' }
-      ]
+      dateAccessor: { text: 'Date', value: 'dateValue' },
+      seriesAccessor: { text: 'Action', value: 'actionType' },
+      valueAccessor: 'amount'
     }
   },
   {
-    key: 'app-opens-vue',
-    sql: sqlAppOpens,
-    text: 'See the number of times that you opened the app (per day or per month).',
-    title: 'App openings',
-    visualization: 'ChartViewTimeSeries.vue',
+    key: 'messages-activity',
+    sql: sqlMessages,
+    visualization: 'TinderMessageActivity.vue',
     vizProps: {
-      title: 'Application usage over time',
-      legendOffset: 360,
-      accessor: [{ text: 'App opened', value: 'open' }]
-    }
-  },
-  {
-    key: 'monthly-history-vue',
-    sql: sqlLikesDislikesMessages,
-    text: 'Compare the number of likes, passes, messages sent and messages received.',
-    title: 'Likes, passes, messages',
-    visualization: 'ChartViewTimeSeries.vue',
-    vizProps: {
-      title: 'Activity history',
-      legendOffset: 200,
-      accessor: [
-        { text: 'Likes', value: 'likes' },
-        { text: 'Passes', value: 'pass' },
-        { text: 'Messages received', value: 'msg_rcv' },
-        { text: 'Messages sent', value: 'msg_sent' }
-      ]
-    }
+      dateAccessor: 'sentDate'
+    },
+    title: 'Messages',
+    text: 'See at what time of the day and week you receive/send the most messages'
   },
   {
     key: 'donut',
     sql: sqlAll,
-    text: 'Compare different pairs of values in a donut chart.',
-    title: 'Pairs',
+    text: 'Compare the different actions you perform in the application.',
+    title: 'Comparison',
     visualization: vegaDonutMultipleComparisons
   },
   {
     key: 'likes-dislikes-open',
     sql: sqlLikesDislikesOpen,
     text: 'Observe the possible correlation between the number of likes/passes and the number of times you open the app.',
-    title: 'Likes and passes correlation',
+    title: 'Likes / passes correlation',
     visualization: vegaScatterLikesPassesCorrelation
-  },
-  {
-    key: 'all',
-    sql: sqlAll,
-    text: 'If you want to inspect precisely the values for each day, all the data can be summarized in a table.',
-    title: 'All data',
-    showTable: true
   }
-]
+].map(b => ({ ...b, files }))
 
 export default blocks
