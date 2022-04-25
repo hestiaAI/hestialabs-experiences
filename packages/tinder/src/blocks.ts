@@ -1,4 +1,4 @@
-import { ViewBlock } from '@/types/view-block'
+import type { ViewBlocks } from '@/types/view-block'
 
 import sqlAll from './sql/all.sql'
 import sqlAppOpens from './sql/app-opens.sql'
@@ -12,7 +12,7 @@ import vegaScatterLikesPassesCorrelation from './vega/scatter-likes-passes-corre
 
 const files = ['tinder']
 
-const blocks: ViewBlock[] = [
+const blocks: ViewBlocks = [
   {
     key: 'user-infos',
     sql: sqlUserInfos,

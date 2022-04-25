@@ -1,4 +1,4 @@
-import { ViewBlock } from '@/types/view-block'
+import type { ViewBlocks } from '@/types/view-block'
 
 import sqlOverview from './sql/overview.sql'
 import sqlAdsPerAdvertiser from './sql/ads-per-advertiser.sql'
@@ -7,8 +7,9 @@ import sqlTargetingCriteriaAllAdvertisers from './sql/targeting-criteria-all-adv
 import sqlAllCriteriaAllAdvertisers from './sql/all-criteria-all-advertisers.sql'
 
 import sunburstTargetingAdvertiser from '@/postprocessors/sunburst-targeting-advertiser'
+import { genericDateViewer } from '@/pipelines/generic'
 
-const blocks: ViewBlock[] = [
+const blocks: ViewBlocks = [
   {
     key: 'overview',
     sql: sqlOverview,
@@ -55,13 +56,7 @@ const blocks: ViewBlock[] = [
     visualization: 'ChartViewSearchSunburst.vue',
     text: 'Visualize the targeting criteria used by one specific advertiser. You can look up the advertiser in the table below and click on it to visualise them.'
   },
-  {
-    key: 'genericDateViewer',
-    customPipeline: 'genericDateViewer',
-    visualization: 'ChartViewGenericDateViewer.vue',
-    title: 'Timeline',
-    text: 'See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date.'
-  }
+  genericDateViewer
 ]
 
 export default blocks

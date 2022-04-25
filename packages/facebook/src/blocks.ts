@@ -1,4 +1,4 @@
-import { ViewBlock } from '@/types/view-block'
+import type { ViewBlocks } from '@/types/view-block'
 
 import sqlOffFacebookActivityCount from './sql/off-facebook-activity-count.sql'
 import sqlOffFacebookActivityTypeCount from './sql/off-facebook-activity-type-count.sql'
@@ -7,8 +7,9 @@ import sqlYourTopics from './sql/your-topics.sql'
 import sqlAdvertisersContactList from './sql/advertisers-contact-list.sql'
 
 import sunburstTargetingAdvertiser from '@/postprocessors/sunburst-targeting-advertiser'
+import { genericViewers } from '@/pipelines/generic'
 
-const blocks: ViewBlock[] = [
+const blocks: ViewBlocks = [
   {
     key: 'off-facebook-activity-count',
     sql: sqlOffFacebookActivityCount,
@@ -61,21 +62,7 @@ const blocks: ViewBlock[] = [
     title: 'Advertisers using your data',
     text: 'See all advertisers that use Facebook to get information about you'
   },
-  {
-    key: 'genericDateViewer',
-    customPipeline: 'genericDateViewer',
-    visualization: 'ChartViewGenericDateViewer.vue',
-    title: 'Timeline',
-    text: 'See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date.'
-  },
-  {
-    key: 'genericLocationViewer',
-    customPipeline: 'genericLocationViewer',
-    customPipelineOptions: { acceptedPaths: '.*' },
-    visualization: 'ChartViewGenericLocationViewer.vue',
-    title: 'Location observations',
-    text: 'See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location.'
-  }
+  ...genericViewers
 ]
 
 export default blocks
