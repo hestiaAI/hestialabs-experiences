@@ -2,6 +2,7 @@
 import Ajv from 'ajv'
 
 import { DatabaseConfig } from '@/types/database-config'
+import { error } from '@/utils'
 
 const prefix = 'http://hestia.ai/schemas/databaseConfig.json#'
 
@@ -177,7 +178,7 @@ export default function (experience: string, databaseConfig: DatabaseConfig) {
   const valid = ajv.validate(prefix, databaseConfig)
   if (!valid) {
     const errors = JSON.stringify(ajv.errors, null, 2)
-    throw new Error(
+    error(
       `Invalid databaseConfig in ${experience} experience. Errors: ${errors}`
     )
   }

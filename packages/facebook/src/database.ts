@@ -1,37 +1,42 @@
 import type { JSONPathReturnObject } from 'types/utils'
+import type { DatabaseConfig } from '@/types'
+import { SQLType, JSONPathResultType } from '@/types/database-config'
 
-export default {
+const { TEXT, INTEGER } = SQLType
+
+const config: DatabaseConfig = {
   tables: [
     {
+      name: 'AdvertiserInteraction',
       columns: [
-        ['title', 'TEXT'],
-        ['action', 'TEXT'],
-        ['timestamp', 'INTEGER']
+        ['title', TEXT],
+        ['action', TEXT],
+        ['timestamp', INTEGER]
       ]
     },
     {
       name: 'AdvertiserUploadedContactInformation',
-      columns: [['name', 'TEXT']]
+      columns: [['name', TEXT]]
     },
     {
       name: 'OffFacebookActivityEvent',
       columns: [
-        ['name', 'TEXT'],
-        ['type', 'TEXT'],
-        ['timestamp', 'INTEGER']
+        ['name', TEXT],
+        ['type', TEXT],
+        ['timestamp', INTEGER]
       ]
     },
     {
       name: 'AdsInterest',
-      columns: [['name', 'TEXT']]
+      columns: [['name', TEXT]]
     },
     {
       name: 'CustomAudience',
       columns: [
-        ['advertiserName', 'TEXT'],
-        ['hasDataFileCustomAudience', 'TEXT'],
-        ['hasRemarketingCustomAudience', 'TEXT'],
-        ['hasInPersonStoreVisit', 'TEXT']
+        ['advertiserName', TEXT],
+        ['hasDataFileCustomAudience', TEXT],
+        ['hasRemarketingCustomAudience', TEXT],
+        ['hasInPersonStoreVisit', TEXT]
       ]
     }
   ],
@@ -71,7 +76,7 @@ export default {
       path: '$.off_facebook_activity_v2[*].events[*]',
       table: 'OffFacebookActivityEvent',
       options: {
-        resultType: 'all',
+        resultType: JSONPathResultType.all,
         callback: (output: JSONPathReturnObject) =>
           (output['namePath'] = output.path.split("['events']")[0] + "['name']")
       },
@@ -136,3 +141,5 @@ export default {
     }
   ]
 }
+
+export default config

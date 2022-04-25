@@ -3,9 +3,11 @@ import { theEyeballs } from '@/collaborators/index'
 import preprocessor from '@/preprocessors/facebook'
 import icon from '@/icons/facebook.png'
 import defaultView from './blocks'
+import databaseConfig from './database'
 
 const options: ExperienceOptions = {
   collaborator: theEyeballs,
+  databaseConfig,
   dataPortal: 'https://www.facebook.com/help/212802592074644',
   defaultView,
   files: {

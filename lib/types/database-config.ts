@@ -60,7 +60,7 @@ export type DatabaseTable = {
   name: string
   columns: NonEmptyArray<[string, SQLType, string?]>
   foreignKeys?: DatabaseForeignKey[]
-  primaryKey: string[]
+  primaryKey?: string | string[]
 }
 
 export type DatabaseTables = NonEmptyArray<DatabaseTable>
