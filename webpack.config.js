@@ -47,7 +47,7 @@ export default {
       },
       // https://webpack.js.org/guides/asset-modules/
       {
-        test: /\.(?:png|svg)$/,
+        test: /\.(?:jpg|png|svg)$/,
         type: 'asset/inline'
       },
       {
