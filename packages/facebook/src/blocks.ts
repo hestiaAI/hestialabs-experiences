@@ -17,7 +17,6 @@ const blocks: ViewBlock[] = [
     vizProps: {
       dateFormat: '%s'
     },
-    showTable: false,
     title: 'Off Facebook activity ranking',
     text: 'See how many times third parties have informed Facebook of your activity outside of Facebook.'
   },
@@ -27,7 +26,6 @@ const blocks: ViewBlock[] = [
     files: ['off-facebook-activity'],
     postprocessor: sunburstTargetingAdvertiser,
     visualization: 'ChartViewSunburst.vue',
-    showTable: false,
     title: 'Off Facebook activity type',
     text: 'See which kind of information advertisers have shared with Facebook of your activity outside of Facebook.'
   },
@@ -67,7 +65,6 @@ const blocks: ViewBlock[] = [
     key: 'genericDateViewer',
     customPipeline: 'genericDateViewer',
     visualization: 'ChartViewGenericDateViewer.vue',
-    showTable: false,
     title: 'Timeline',
     text: 'See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date.'
   },
@@ -76,7 +73,6 @@ const blocks: ViewBlock[] = [
     customPipeline: 'genericLocationViewer',
     customPipelineOptions: { acceptedPaths: '.*' },
     visualization: 'ChartViewGenericLocationViewer.vue',
-    showTable: false,
     title: 'Location observations',
     text: 'See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location.'
   }
