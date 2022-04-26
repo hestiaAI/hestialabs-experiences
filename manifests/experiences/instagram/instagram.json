@@ -65,6 +65,22 @@
       "showTable": true,
       "title": "Messages",
       "text": ""
+    }, 
+    {
+      "key": "savedcollections",
+      "sql": "savedcollections",
+      "files": ["saved"],
+      "showTable": true,
+      "title": "Saved Collections",
+      "text": ""
+    }, 
+    {
+      "key": "searches",
+      "sql": "searches",
+      "files": ["searches"],
+      "showTable": true,
+      "title": "Searches",
+      "text": "Queries you have issued to the search engine of Instagram"
     }
   ],
   "databaseConfig": {
@@ -108,6 +124,22 @@
           ["sender", "TEXT"],
           ["datetime", "TEXT"],
           ["text", "TEXT"]
+        ]
+      }, 
+      {
+        "name": "InstagramSavedCollection", 
+        "columns": [
+          ["collectionName", "TEXT"],
+          ["mediaUserName", "TEXT"],
+          ["mediaDateTime", "TEXT"]
+        ]
+      }, 
+      {
+        "name": "InstagramSearch", 
+        "columns": [
+          ["searchClick", "TEXT"],
+          ["time", "TEXT"],
+          ["type", "TEXT"]
         ]
       }      
     ],
@@ -216,6 +248,49 @@
           {
             "column": "text",
             "path": "$.text"
+          }
+        ]
+      },
+      {
+        "fileId": "saved",
+        "path": "$.saved_collections[*].media[*]",
+        "table": "InstagramSavedCollection",
+        "options": {
+          "resultType": "all",
+          "callback": "output => output.namePath = output.path.split(\"['media']\")[0] + \"['name']\""
+          },
+        "getters": [
+          {
+            "column": "collectionName",
+            "pathKey": "namePath",
+            "queryRoot": true
+          },
+          {
+            "column": "mediaUserName",
+            "path": "$.value[1]"
+          },
+          {
+            "column": "mediaDateTime",
+            "path": "$.value[0]"
+          }
+        ]
+      }, 
+      {
+        "fileId": "searches",
+        "path": "$.[*]",
+        "table": "InstagramSearch",
+        "getters": [
+          {
+            "column": "searchClick",
+            "path": "$.['search_click']"
+          },
+          {
+            "column": "time",
+            "path": "$.time"
+          },
+          {
+            "column": "type",
+            "path": "$.type"
           }
         ]
       }
