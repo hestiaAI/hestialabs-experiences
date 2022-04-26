@@ -6,6 +6,7 @@
     return-object
     label="Select sample data"
     hide-details
+    style="max-width: 300px; justify-self: 'center'"
     menu-props="auto, overflowY, offsetY, top"
     multiple
     chips

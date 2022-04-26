@@ -1,23 +1,21 @@
 <template>
-  <div class="pa-3 ma-3 d-flex justify-center">
-    <div>
-      <div class="overline text-center">{{ title }}</div>
-      <VAlert v-if="!url" color="red" dense type="error">
-        The video link provided is not recognized
-      </VAlert>
-      <iframe
-        v-if="url"
-        :src="url"
-        :width="width"
-        :height="height"
-        frameborder="0"
-        allow="autoplay; fullscreen; picture-in-picture"
-        allowfullscreen
-        class="pa-3"
-      ></iframe>
-      <div style="text-align: end; margin-top: 0px; font-size: 12px">
-        <a target="_blank" :href="linkSrc">{{ linkTxt }}</a>
-      </div>
+  <div style="width: 100%">
+    <div class="overline text-center">{{ title }}</div>
+    <VAlert v-if="!url" color="red" dense type="error">
+      The video link provided is not recognized
+    </VAlert>
+    <iframe
+      v-if="url"
+      :src="url"
+      :width="width"
+      :height="height"
+      frameborder="0"
+      allow="autoplay; fullscreen; picture-in-picture"
+      allowfullscreen
+      class="pa-3 video"
+    ></iframe>
+    <div style="text-align: end; margin-top: 0px; font-size: 12px">
+      <a target="_blank" :href="linkSrc">{{ linkTxt }}</a>
     </div>
   </div>
 </template>
@@ -34,12 +32,12 @@ export default {
       required: true
     },
     width: {
-      type: Number,
-      default: () => 630
+      type: String,
+      default: () => '100%'
     },
     height: {
-      type: Number,
-      default: () => 360
+      type: String,
+      default: () => '250px'
     },
     linkSrc: {
       type: String,

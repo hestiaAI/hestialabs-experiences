@@ -1,12 +1,12 @@
 <template>
   <VContainer>
     <VCard class="pa-2" flat>
-      <VCardTitle class="text-h5 font-weight-bold justify-center">
+      <VCardTitle class="text-h5 font-weight-bold justify-center mb-3">
         Analyze your private data
       </VCardTitle>
       <VCardText>
         <VRow>
-          <VCol>
+          <VCol align="center">
             <p v-if="$route.params.key === 'explorer'" class="body-1">
               Explore the structure and contents of any file.
             </p>
@@ -29,42 +29,45 @@
           </VCol>
         </VRow>
         <VRow>
-          <VCol>
+          <VCol align="center">
             <UnitFiles
               v-bind="{
                 files,
-                samples
+                samples,
+                progress,
+                success,
+                error,
+                message
               }"
               ref="unit-files"
               @update="onUnitFilesUpdate"
             />
-            <template v-if="progress">
-              <BaseProgressCircular class="mr-2" />
-              <span>Processing files...</span>
-            </template>
-            <template v-else-if="error || success">
-              <BaseAlert
-                :type="error ? 'error' : 'success'"
-                border="left"
-                dense
-                text
-                >{{ message }}
-              </BaseAlert>
-            </template>
           </VCol>
         </VRow>
       </VCardText>
     </VCard>
-    <VCard class="" flat>
+    <VCard v-if="tutorialVideos.length" flat>
       <VCardTitle class="text-h5 font-weight-bold justify-center">
         Tutorial{{ tutorialVideos.length > 1 ? 's' : '' }}
       </VCardTitle>
       <VCardText>
-        <BaseVideo
-          v-for="(tutorialVideo, idx) in tutorialVideos"
-          :key="`video_${idx}`"
-          :video-src="tutorialVideo"
-        />
+        <VCarousel
+          :height="videoHeight + 25"
+          hide-delimiter-background
+          :hide-delimiters="tutorialVideos.length === 1"
+          :show-arrows="tutorialVideos.length > 1"
+          delimiter-icon="$vuetify.icons.mdiMinus"
+          light
+        >
+          <VCarouselItem
+            v-for="(tutorialVideo, idx) in tutorialVideos"
+            :key="idx"
+          >
+            <VRow align="center" justify="center">
+              <BaseVideo :video-src="tutorialVideo" :height="videoHeight" />
+            </VRow>
+          </VCarouselItem>
+        </VCarousel>
       </VCardText>
     </VCard>
   </VContainer>
@@ -110,6 +113,11 @@ export default {
     message: {
       type: String,
       default: () => ''
+    }
+  },
+  data() {
+    return {
+      videoHeight: 400
     }
   },
   methods: {

@@ -37,7 +37,7 @@
         </VTabs>
         <VTabsItems v-model="tab">
           <VTabItem value="load-data" :transition="false">
-            <VCol cols="12 mx-auto" sm="6" class="tabItem">
+            <VCol cols="12 mx-auto" md="6" class="tabItem">
               <UnitIntroduction
                 v-bind="{
                   companyName: title,
