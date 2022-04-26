@@ -34,6 +34,12 @@ Note: All files and folders should match the following regular expression: [`^(?
     */
   "dataPortal": "https://example.com/data-portal",
   /**
+    * Link to one ore several tutorial videos to display in the loading page
+    * @type Array[String]
+    * @default []
+    */
+  "tutorialVideos": ["https://vimeo.com/691109800"],
+  /**
     * The list of specific files that are used in the experiences. They are defined by an ID and a glob.
     * In the experiences, we should always refer to the ID of the files.
     * @type Object
@@ -90,10 +96,9 @@ Note: All files and folders should match the following regular expression: [`^(?
 }
 ```
 
-
 3. For the SQL pipeline: add a `databaseBuilder` function in a file `database.js`, and the SQL queries in a subfolder `queries`.
 
-4. For the custom pipeline: add the functions in a file `pipeline.js`. 
+4. For the custom pipeline: add the functions in a file `pipeline.js`.
 
 5. If needed, add postprocessor functions in a file `postprocessors.js`.
 
