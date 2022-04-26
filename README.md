@@ -6,6 +6,7 @@
 
 <p align="center">
   <a href="https://lerna.js.org/"><img alt="Lerna" src="https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg"></a>
+  <a href="https://www.typescriptlang.org/"><img alt="TypeScript" src="https://badgen.net/badge/-/TypeScript?icon=typescript&label&labelColor=blue&color=555555"></a>
 </p>
 
 # Instructions
