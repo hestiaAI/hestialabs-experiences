@@ -1,11 +1,5 @@
 <template>
   <div>
-    <LazyUnitFilesCombobox
-      v-if="isPlayground"
-      class="mb-4"
-      @update="filesToExtract = $event"
-    />
-
     <LazyUnitFilesSampleSelector
       v-if="samples.length"
       :value.sync="selectedSamples"
@@ -66,8 +60,7 @@ export default {
       filesEmpty: true,
       status: false,
       error: false,
-      progress: false,
-      filesToExtract: this.files
+      progress: false
     }
   },
   computed: {

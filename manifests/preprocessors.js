@@ -1,3 +1,14 @@
+const takeout = string => {
+  const regexp =
+    /data-english-name="([a-zA-ZÀ-ÿ-._]+)" data-folder-name="([a-zA-ZÀ-ÿ-._ ]+)/g
+  const matches = string.matchAll(regexp)
+  const idToGlob = {}
+  for (const match of matches) {
+    idToGlob[match[1]] = `**/${match[2]}/**/*.json`
+  }
+  return idToGlob
+}
+
 const twitter = string => {
   // replace variable assignment in JS file from Twitter
   return string.replace(/^[0-9a-zA-Z_.]+\s+=/, '')
@@ -68,6 +79,7 @@ const facebook = s => {
 }
 
 export default {
+  takeout,
   twitter,
   facebook,
   linkedinConnections
