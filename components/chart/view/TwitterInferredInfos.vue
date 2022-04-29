@@ -2,7 +2,7 @@
   <VContainer>
     <VRow>
       <VCol cols="12" md="6">
-        <h3>General Informations</h3>
+        <h3>General Information</h3>
         <VList>
           <VListItem v-for="item in items" :key="item.title">
             <VListItemContent>
