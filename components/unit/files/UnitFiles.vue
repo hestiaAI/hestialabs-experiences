@@ -1,28 +1,51 @@
 <template>
   <div>
-    <LazyUnitFilesCombobox
-      v-if="isPlayground"
-      class="mb-4"
-      @update="filesToExtract = $event"
-    />
-
-    <LazyUnitFilesSampleSelector
-      v-if="samples.length"
-      :value.sync="selectedSamples"
-      :items="samples"
-      class="mb-4"
-    />
-
-    <div ref="dashboard" />
-
-    <BaseButton
-      v-bind="{ disabled, progress, status, error }"
-      text="Explore your data"
-      icon="mdiStepForward"
-      class="my-sm-2 mr-sm-4"
-      @click="returnFiles"
-    />
-    <UnitFilesDialog :file-globs="Object.values(files)" main />
+    <VRow v-if="samples.length" justify="center" dense>
+      <VCol align="center">
+        <LazyUnitFilesSampleSelector
+          :value.sync="selectedSamples"
+          :items="samples"
+          class="mb-4"
+        />
+      </VCol>
+    </VRow>
+    <VRow v-if="samples.length">
+      <VCol align="center" class="font-weight-bold"> OR </VCol>
+    </VRow>
+    <VRow>
+      <VCol align="center">
+        <div ref="dashboard" />
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol align="center">
+        <BaseButton
+          v-bind="{ disabled, progress, status, error }"
+          text="Explore your data"
+          icon="mdiStepForward"
+          class="my-sm-2 mr-sm-4"
+          @click="returnFiles"
+        />
+        <UnitFilesDialog :file-globs="Object.values(files)" main />
+      </VCol>
+    </VRow>
+    <VRow>
+      <VCol>
+        <template v-if="progress">
+          <BaseProgressCircular class="mr-2" />
+          <span>Processing files...</span>
+        </template>
+        <template v-else-if="error || success">
+          <BaseAlert
+            :type="error ? 'error' : 'success'"
+            border="left"
+            dense
+            text
+            >{{ message }}
+          </BaseAlert>
+        </template>
+      </VCol>
+    </VRow>
   </div>
 </template>
 
@@ -52,6 +75,22 @@ export default {
     samples: {
       type: Array,
       default: () => []
+    },
+    progress: {
+      type: Boolean,
+      default: () => false
+    },
+    success: {
+      type: Boolean,
+      default: () => false
+    },
+    error: {
+      type: Boolean,
+      default: () => false
+    },
+    message: {
+      type: String,
+      default: () => ''
     }
   },
   data() {
@@ -65,8 +104,6 @@ export default {
       selectedSamples: [],
       filesEmpty: true,
       status: false,
-      error: false,
-      progress: false,
       filesToExtract: this.files
     }
   },
@@ -142,7 +179,6 @@ export default {
         hideUploadButton: true,
         proudlyDisplayPoweredByUppy: false,
         theme: 'light',
-        width: 550,
         height: 200
       })
       // allow dropping files anywhere on the page
@@ -179,3 +215,11 @@ export default {
   }
 }
 </script>
+<style scoped>
+::v-deep .uppy-Dashboard-AddFiles-title {
+  font-size: 1rem;
+}
+::v-deep .uppy-Dashboard-inner {
+  margin: auto;
+}
+</style>

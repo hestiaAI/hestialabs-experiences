@@ -5,6 +5,7 @@
   "data": ["twitter.zip", "twitter-sample.zip"],
   "hideSummary": true,
   "hideFileExplorer": true,
+  "tutorialVideos": ["https://vimeo.com/691109800"],
   "files": {
     "impressions": "**/ad-impressions.js",
     "engagements": "**/ad-engagements.js"
