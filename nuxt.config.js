@@ -1,7 +1,7 @@
 import webpack from 'webpack'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
-import { validExtensions } from './manifests/utils'
+import { extension2filetype } from './utils/file-manager'
 
 const name = 'HestiaLabs Experiences'
 const description = 'We create a new relationship to personal data'
@@ -130,7 +130,7 @@ export default {
         {
           // allow all valid extensions as sample data except JS files!
           test: new RegExp(
-            `data.+\\.(${validExtensions
+            `data.+\\.(${Object.keys(extension2filetype)
               .filter(ext => ext !== 'js')
               .join('|')})$`
           ),

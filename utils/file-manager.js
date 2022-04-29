@@ -29,7 +29,7 @@ const filetype2icon = {
   html: mdiXml,
   xlsx: mdiMicrosoftExcel
 }
-const extension2filetype = {
+export const extension2filetype = {
   tar: 'zip',
   js: 'json',
   png: 'img',
