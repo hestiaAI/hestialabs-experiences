@@ -117,7 +117,7 @@ export default {
   },
   data() {
     return {
-      videoHeight: 400
+      videoHeight: '400'
     }
   },
   methods: {
