@@ -239,10 +239,11 @@
       "title": "Travels"
     },
     {
-      "key": "donut",
+      "key": "PlaceVisited",
       "sql": "all-place-visit",
       "files": ["LOCATION_HISTORY"],
-      "showTable": true,
+      "visualization": "ChartViewGooglePlaces.vue",
+      "showTable": false,
       "title": "Places visited"
     }
   ],
