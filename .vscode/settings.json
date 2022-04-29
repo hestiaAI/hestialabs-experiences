@@ -7,8 +7,9 @@
   "editor.formatOnPaste": true,
   "editor.renderFinalNewline": true,
   "editor.tabSize": 2,
-  "files.associations": {
-    "*.vega": "json"
-  },
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "files.exclude": {
+    ".eslintcache": true,
+    "lerna-debug.log": true
+  }
 }
