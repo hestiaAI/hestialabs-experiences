@@ -8,7 +8,9 @@
     "node": "14.x"
   },
   "scripts": {
-    "dev": "nuxt --open",
+    "dev": "npm-run-all -p -r dev:api dev:app",
+    "dev:api": "cd ../hestialabs && npm run dev",
+    "dev:app": "nuxt --open",
     "test": "jest",
     "start": "nuxt start",
     "build": "npm run build:update-revision && npm run build:static",
@@ -66,7 +68,6 @@
   "dependencies": {
     "@fast-csv/format": "^4.3.5",
     "@fast-csv/parse": "^4.3.6",
-    "@nuxtjs/axios": "^5.13.6",
     "@types/d3-collection": "^1.0.10",
     "@uppy/core": "^2.0.2",
     "@uppy/dashboard": "^2.0.2",
@@ -122,10 +123,12 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^7.17.0",
     "file-loader": "^6.2.0",
+    "hestialabs": "file:../hestialabs",
     "husky": "^7.0.4",
     "jest": "^27.3.1",
     "lint-staged": "^12.1.2",
     "netlify-cli": "^9.13.4",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.5.1",
     "raw-loader": "^4.0.2",
     "regenerator-runtime": "^0.13.9",

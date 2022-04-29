@@ -1,12 +1,9 @@
 import Vue from 'vue'
-import manifestMap, { config } from '@/manifests'
 
 export const state = () => ({
-  config: {
-    appName: 'HestiaLabs Experiences',
-    ...config
-  },
-  manifestMap,
+  loaded: false,
+  config: {},
+  experiences: [],
   selectedFiles: [],
   results: {},
   currentDB: null,
@@ -19,35 +16,42 @@ export const getters = {
   appName(state) {
     return state.config.appName
   },
-  manifests(state) {
-    const experiences = state.config?.experiences || []
-    const activeManifests = experiences
-      .map(key => state.manifestMap[key])
-      .filter(m => m)
-
-    // playground is not available in default mode
-    return activeManifests.filter(m => m.key !== 'playground')
-  },
-  enabledExperiences(state, getters) {
-    return getters.manifests.filter(({ disabled }) => !disabled)
+  enabledExperiences(state) {
+    return state.experiences.filter(
+      ({ slug, disabled }) => !disabled && slug !== 'other'
+    )
   },
   disabledExperiences(state, getters) {
-    return getters.manifests
-      .filter(({ disabled }) => disabled)
-      .map(o => (o.key === 'other' ? { ...o, disabled: false } : o))
-  },
-  keys(state, getters) {
-    return getters.manifests.map(({ key }) => key)
+    const disabledExperiences = state.experiences.filter(
+      ({ slug }) => !getters.enabledExperiences.find(e => e.slug === slug)
+    )
+    // Add 'other' to the end of the Array
+    const otherIdx = disabledExperiences.findIndex(
+      ({ slug }) => slug === 'other'
+    )
+    const [other] = disabledExperiences.splice(otherIdx, 1)
+    if (other) {
+      disabledExperiences.push(other)
+    }
+    return disabledExperiences
   },
   // https://vuex.vuejs.org/guide/getters.html#method-style-access
-  manifest:
+  experience:
     state =>
-    ({ params: { key } }) => {
-      return state.manifestMap[key] || {}
-    }
+    ({ params: { key } }) =>
+      state.experiences.find(e => e.slug === key) || {}
 }
 
 export const mutations = {
+  setLoaded(state) {
+    state.loaded = true
+  },
+  setConfig(state, config) {
+    state.config = config
+  },
+  setExperiences(state, experiences) {
+    state.experiences = experiences
+  },
   setCurrentDB(state, db) {
     state.currentDB = db
   },
@@ -91,5 +95,40 @@ export const mutations = {
   },
   setFileExplorerCurrentItem(state, item) {
     state.fileExplorerCurrentItem = item
+  }
+}
+
+export const actions = {
+  async loadConfig({ commit, state }) {
+    if (!state.loaded) {
+      const config = (await import(`@/config/${process.env.configName}.json`))
+        .default
+      commit('setConfig', {
+        ...config,
+        appName: 'HestiaLabs Experiences'
+      })
+    }
+  },
+  async loadExperiences({ commit, state, dispatch }, { isDev }) {
+    if (!state.loaded) {
+      await dispatch('loadConfig')
+      let experiences = []
+      if (isDev) {
+        experiences = Object.values((await import('hestialabs')).default).map(
+          ({ options }) => ({ ...options })
+        )
+      } else {
+        experiences = (
+          await Promise.all(
+            state.config.experiences.map(packageNameAndTag =>
+              // https://webpack.js.org/api/module-methods/#magic-comments
+              import(/* webpackIgnore: true */ `@hestiaai/${packageNameAndTag}`)
+            )
+          )
+        ).map(module => module.default.options)
+      }
+      commit('setExperiences', experiences)
+      commit('setLoaded')
+    }
   }
 }

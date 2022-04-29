@@ -68,7 +68,7 @@ const manifests = Object.fromEntries(
       collaborator,
       url,
       preprocessors = {},
-      defaultView = [],
+      viewBlocks = [],
       ...rest
     } = reqJSON(path)
 
@@ -103,10 +103,10 @@ const manifests = Object.fromEntries(
       ])
     )
 
-    const firstNoKey = _.find(defaultView, v => !_.has(v, 'key'))
+    const firstNoKey = _.find(viewBlocks, v => !_.has(v, 'key'))
     if (firstNoKey != null) {
       throw new Error(
-        `${title}: Property 'key' not found for the defaultView element ${JSON.stringify(
+        `${title}: Property 'key' not found for the viewBlocks element ${JSON.stringify(
           firstNoKey
         )}`
       )
@@ -129,7 +129,7 @@ const manifests = Object.fromEntries(
         sparql: {},
         vega: {},
         sql: {},
-        defaultView,
+        viewBlocks,
         ...rest,
         ...module.default
       }

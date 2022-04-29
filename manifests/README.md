@@ -67,7 +67,7 @@ Note: All files and folders should match the following regular expression: [`^(?
     * The files referenced should be in the 'main' example.
     * @type Array[Object]
     */
-  "defaultView": [
+  "viewBlocks": [
     {
       "key": "my-block",
       "customPipeline": "pipeline_function_name",
@@ -90,10 +90,9 @@ Note: All files and folders should match the following regular expression: [`^(?
 }
 ```
 
-
 3. For the SQL pipeline: add a `databaseBuilder` function in a file `database.js`, and the SQL queries in a subfolder `queries`.
 
-4. For the custom pipeline: add the functions in a file `pipeline.js`. 
+4. For the custom pipeline: add the functions in a file `pipeline.js`.
 
 5. If needed, add postprocessor functions in a file `postprocessors.js`.
 

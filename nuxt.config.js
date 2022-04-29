@@ -58,13 +58,7 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-    // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios'
-  ],
-
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  modules: [],
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
@@ -133,11 +127,6 @@ export default {
           test: /\.worker\.js$/,
           use: 'worker-loader'
         },
-        // enable raw importing of .yaml, .rq and .vega.json files
-        {
-          test: /\.(ya?ml|rq|vega|rqx|sql)$/i,
-          use: 'raw-loader'
-        },
         {
           // allow all valid extensions as sample data except JS files!
           test: new RegExp(
@@ -151,7 +140,7 @@ export default {
             {
               loader: 'file-loader',
               options: {
-                esModule: false,
+                esModule: true,
                 name: '[path][name].[contenthash:7].[ext]'
               }
             }

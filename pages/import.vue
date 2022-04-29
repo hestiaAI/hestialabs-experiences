@@ -75,35 +75,37 @@
 
       <!-- Results -->
       <VCard
-        v-for="(result, resultIndex) in sortedResults"
+        v-for="(
+          { title, visualization: viz, vizProps, result }, resultIndex
+        ) in sortedResults"
         :key="resultIndex"
         class="pa-2 my-6"
       >
-        <VCardTitle class="justify-center">{{ result.title }}</VCardTitle>
+        <VCardTitle class="justify-center">{{ title }}</VCardTitle>
         <VRow>
           <VCol>
             <UnitVegaViz
-              v-if="allVizVega[resultIndex]"
-              :spec-file="allVizVega[resultIndex]"
-              :data="result.result"
+              v-if="typeof viz === 'object'"
+              :spec-file="viz"
+              :data="result"
               class="text-center"
             />
             <ChartView
-              v-else-if="allVizVue[resultIndex]"
-              :graph-name="allVizVue[resultIndex]"
-              :data="result.result"
-              :viz-props="result.vizProps"
+              v-else-if="viz.endsWith('.vue')"
+              :graph-name="viz"
+              :data="result"
+              :viz-props="vizProps"
             />
             <UnitIframe
-              v-else-if="allVizUrl[resultIndex]"
-              :src="allVizUrl[resultIndex]"
-              :data="result.result"
+              v-else-if="viz.startsWith('/')"
+              :src="viz"
+              :data="result"
             />
           </VCol>
         </VRow>
         <VRow>
           <VCol>
-            <UnitFilterableTable :data="result.result" />
+            <UnitFilterableTable :data="result" />
           </VCol>
         </VRow>
       </VCard>
@@ -143,23 +145,10 @@ export default {
   },
   computed: {
     ...mapState(['fileManager', 'consentForm']),
-    manifest() {
-      return this.$store.getters.manifest({
-        params: { key: this.experience.key }
+    experienceConfig() {
+      return this.$store.getters.experience({
+        params: { key: this.experience.slug }
       })
-    },
-    allVizVega() {
-      return this.sortedResults.map(r => this.manifest.vega[r.visualization])
-    },
-    allVizUrl() {
-      return this.sortedResults.map(r =>
-        r.visualization?.startsWith('/') ? r.visualization : undefined
-      )
-    },
-    allVizVue() {
-      return this.sortedResults.map(r =>
-        r.visualization?.endsWith('.vue') ? r.visualization : undefined
-      )
     },
     sortedResults() {
       return this.results.slice(0).sort((a, b) => a.index - b.index)
@@ -238,9 +227,9 @@ export default {
           (r, i) => new File([blobs[i]], r.name.substr(6))
         )
         const fileManager = new FileManager(
-          this.manifest.preprocessors,
+          this.experienceConfig.preprocessors,
           fileManagerWorkers,
-          this.manifest.files
+          this.experienceConfig.files
         )
         await fileManager.init(files)
         this.$store.commit('setFileManager', fileManager)
@@ -284,16 +273,7 @@ export default {
       if (!('version' in this.experience)) {
         this.experience.version = 1
       }
-      const version = this.experience.version
-      if (version === 1) {
-        // Convert the array of viz to a single viz
-        // Note: this feature was only used for one tinder block
-        for (const r of this.results) {
-          if ('visualizations' in r) {
-            r.visualization = r.visualizations[0]
-          }
-        }
-      }
+      const { version } = this.experience
       if (version < 3) {
         // Rename "selected" and "includedResults" to "value"
         const newConsentForm = JSON.parse(JSON.stringify(this.consentForm))

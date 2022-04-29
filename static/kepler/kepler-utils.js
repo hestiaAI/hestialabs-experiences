@@ -105,5 +105,4 @@ export function update(data, store) {
       config: parsedConfig
     })
   )
-  // console.log('layers', store.getState().keplerGl.map.visState.layers)
 }
