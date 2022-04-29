@@ -34,8 +34,10 @@
       </VRow>
 
       <VRow v-if="defaultViewElements.text">
-        <VCol cols="8" class="mx-auto">
-          {{ defaultViewElements.text }}
+        <VCol>
+          <VContainer>
+            {{ defaultViewElements.text }}
+          </VContainer>
         </VCol>
       </VRow>
       <template v-if="missingFiles.length > 0">
