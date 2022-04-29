@@ -37,32 +37,22 @@
         </VTabs>
         <VTabsItems v-model="tab">
           <VTabItem value="load-data" :transition="false">
-            <VCol cols="12 mx-auto" sm="6" class="tabItem pa-5">
+            <VCol cols="12 mx-auto" md="6" class="tabItem">
               <UnitIntroduction
-                v-bind="{ companyName: title, dataPortal }"
-                ref="unit-introduction"
-              />
-              <UnitFiles
                 v-bind="{
+                  companyName: title,
+                  dataPortal,
+                  tutorialVideos,
                   files,
-                  samples: data
+                  samples: data,
+                  progress,
+                  error,
+                  success,
+                  message
                 }"
-                ref="unit-files"
+                ref="unit-introduction"
                 @update="onUnitFilesUpdate"
               />
-              <template v-if="progress">
-                <BaseProgressCircular class="mr-2" />
-                <span>Processing files...</span>
-              </template>
-              <template v-else-if="error || success">
-                <BaseAlert
-                  :type="error ? 'error' : 'success'"
-                  border="top"
-                  colored-border
-                  max-width="600"
-                  >{{ message }}
-                </BaseAlert>
-              </template>
             </VCol>
           </VTabItem>
           <VTabItem value="summary" :transition="false">
@@ -145,6 +135,10 @@ export default {
     dataPortal: {
       type: String,
       default: ''
+    },
+    tutorialVideos: {
+      type: Array,
+      default: () => []
     },
     data: {
       type: Array,
