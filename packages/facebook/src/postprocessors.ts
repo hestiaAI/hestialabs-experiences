@@ -1,6 +1,6 @@
-import type { PipelineOutput } from 'types/utils'
+import type { PostprocessorFunction } from 'types/view-block'
 
-export default (result: PipelineOutput) => {
+export const sunburstTargetingAdvertiser: PostprocessorFunction = result => {
   const items = result?.items || []
   if (items.length === 0) {
     return { headers: [], items: [] }
@@ -56,5 +56,6 @@ export default (result: PipelineOutput) => {
     size: null
   }
   results.push(root)
+  console.log('sunburst-targeting!', results, Object.keys(root))
   return { headers: Object.keys(root), items: results }
 }
