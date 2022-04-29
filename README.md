@@ -11,7 +11,7 @@
   <a href="https://eslint.org"><img alt="ESLint" src="https://img.shields.io/badge/eslint-3A33D1?style=for-the-badge&logo=eslint&logoColor=white"></a>
   <a href="https://prettier.io/"><img alt="Prettier" src="https://img.shields.io/badge/prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E"></a>
   <a href="https://babeljs.io/"><img alt="Babel" src="https://img.shields.io/badge/Babel-F9DC3E?style=for-the-badge&logo=babel&logoColor=white"></a>
-    
+
 </p>
 
 # Instructions
@@ -77,6 +77,8 @@ This section explains how packages are created and updated
 ```
 
 Replace `<NAME>` with the name of the package.
+
+4. Add the package to [index.js](./index.js)
 
 ### Authenticate to GitHub Packages
 
