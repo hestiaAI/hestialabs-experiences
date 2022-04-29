@@ -63,6 +63,10 @@ export default {
       new TsconfigPathsPlugin({})
     ]
   },
+  performance: {
+    // temporarily disable performance hints
+    hints: false
+  },
   experiments: {
     outputModule: true
   },
