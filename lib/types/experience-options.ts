@@ -14,7 +14,6 @@ export type ExperienceOptions = {
   databaseConfig?: DatabaseConfig
   dataPortal?: string
   dataSamples?: string[]
-  defaultView: ViewBlock[]
   disabled?: boolean
   files?: Files
   hideFileExplorer?: boolean
@@ -25,4 +24,5 @@ export type ExperienceOptions = {
   subtitle?: string
   title: string
   url?: string
+  viewBlocks: ViewBlock[]
 }

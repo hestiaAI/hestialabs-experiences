@@ -34,7 +34,7 @@ async function tripsKeplerData({ fileManager }) {
 
 const blocks: ViewBlocks = [
   {
-    key: 'tripsData',
+    id: 'tripsData',
     customPipeline: customPipelineGetFirstCSV('trips'),
     files: ['trips'],
     visualization: 'ChartViewOverviewUber.vue',
@@ -42,7 +42,7 @@ const blocks: ViewBlocks = [
     text: 'This interactive visualisation shows your Uber habits, play with it to discover everything Uber knows on you. Your data is grouped by currency and every graph is filterable.'
   },
   {
-    key: 'tripsGraphData',
+    id: 'tripsGraphData',
     customPipeline: tripsGraphData,
     files: ['trips'],
     visualization: 'ChartViewSankey.vue',
@@ -51,7 +51,7 @@ const blocks: ViewBlocks = [
   },
   genericDateViewer,
   {
-    key: 'tripsKeplerData',
+    id: 'tripsKeplerData',
     customPipeline: tripsKeplerData,
     files: ['trips'],
     visualization: '/kepler',

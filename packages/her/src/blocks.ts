@@ -10,7 +10,7 @@ import sqlReported from './sql/reported.sql'
 
 const blocks: ViewBlocks = [
   {
-    key: 'profiles',
+    id: 'profiles',
     sql: sqlProfiles,
     files: ['profiles'],
     visualization: 'HerUserInfos.vue',
@@ -18,7 +18,7 @@ const blocks: ViewBlocks = [
     text: 'HER profile information'
   },
   {
-    key: 'liked',
+    id: 'liked',
     sql: sqlLikesPasses,
     files: ['liked', 'skipped'],
     visualization: 'ChartViewTimeSeries.vue',
@@ -33,7 +33,7 @@ const blocks: ViewBlocks = [
     text: 'Number of likes and passes that you made over time.'
   },
   {
-    key: 'notifications',
+    id: 'notifications',
     sql: sqlNotifications,
     files: ['notifications'],
     visualization: 'ChartViewTimeSeries.vue',
@@ -41,14 +41,13 @@ const blocks: ViewBlocks = [
       title: 'Notifications over time',
       legendOffset: 350,
       dateAccessor: { text: 'Date', value: 'notificationSentAt' },
-      seriesAccessor: { text: 'Action', value: 'notificationType' },
-      dateFormat: '%d/%m/%Y %H:%M'
+      seriesAccessor: { text: 'Action', value: 'notificationType' }
     },
     title: 'Notifications',
     text: 'Number of notifications that you recieved over time.'
   },
   {
-    key: 'matches',
+    id: 'matches',
     sql: sqlLiked,
     files: ['liked'],
     visualization: 'ChartViewOverviewHer.vue',
@@ -56,7 +55,7 @@ const blocks: ViewBlocks = [
     text: "Look at the likes you've made that have become matches or not."
   },
   {
-    key: 'messages',
+    id: 'messages',
     sql: sqlMessages,
     files: ['messages'],
     visualization: 'HerMessageActivity.vue',
@@ -67,7 +66,7 @@ const blocks: ViewBlocks = [
     text: 'Message Activity'
   },
   {
-    key: 'blocked',
+    id: 'blocked',
     sql: sqlBlocked,
     files: ['blocked'],
     showTable: true,
@@ -75,7 +74,7 @@ const blocks: ViewBlocks = [
     text: 'Blocks that you established over time.'
   },
   {
-    key: 'reported',
+    id: 'reported',
     sql: sqlReported,
     files: ['reported'],
     showTable: true,

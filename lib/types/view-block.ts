@@ -1,6 +1,7 @@
 type CustomPipelineOptions = object | object[]
 
 import type { PipelineOutput } from './utils'
+export type PostprocessorFunction = (input: PipelineOutput) => PipelineOutput
 
 export type ViewBlock = {
   customPipeline?:
@@ -12,13 +13,13 @@ export type ViewBlock = {
       }) => Promise<PipelineOutput>)
   customPipelineOptions?: CustomPipelineOptions
   files?: string[]
-  key: string
-  postprocessor?(input: PipelineOutput): PipelineOutput
+  id: string
+  postprocessor?: PostprocessorFunction
   showTable?: boolean
   sql?: string
   text: string
   title: string
-  visualization?: string
+  visualization?: string | object
   vizProps?: object
 }
 

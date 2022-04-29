@@ -67,7 +67,7 @@ const config: DatabaseConfig = {
       getters: [
         {
           column: 'name',
-          path: '$.advertiser'
+          path: '$'
         }
       ]
     },

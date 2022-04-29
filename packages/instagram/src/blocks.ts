@@ -4,7 +4,7 @@ import sqlComments from './sql/comments.sql'
 
 const blocks: ViewBlocks = [
   {
-    key: 'comments',
+    id: 'comments',
     sql: sqlComments,
     files: ['comments'],
     showTable: true,

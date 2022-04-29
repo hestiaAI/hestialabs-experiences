@@ -15,7 +15,7 @@ function findAndValidateTable(
   tableName: string
 ): DatabaseTable {
   if (tableName) {
-    const table = tables.find(t => t.name === table)
+    const table = tables.find(t => t.name === tableName)
     if (!table) {
       error(`Unknown table '${tableName}'`)
     }
@@ -83,10 +83,12 @@ function validateGetter(
     }
   }
   const table = findAndValidateTable(tables, tableName)
-  if (column && !currentTable) {
-    error(`Unknown`)
-  } else {
-    validateColumnReference(currentTable, column)
+  if (column) {
+    if (!currentTable) {
+      error(`Missing table reference for column ${column}`)
+    } else {
+      validateColumnReference(currentTable, column)
+    }
   }
   if (reference) {
     const referenceTable = findAndValidateTable(tables, reference.table)

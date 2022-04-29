@@ -2,7 +2,6 @@ import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/eyeballs.jpg'
 
 const options: ExperienceOptions = {
-  defaultView: [],
   disabled: true,
   hideSummary: false,
   hideFileExplorer: false,
@@ -10,7 +9,8 @@ const options: ExperienceOptions = {
   slug: 'ad-radar',
   subtitle: 'Browser extension',
   title: 'Ad Radar',
-  url: 'https://github.com/hestiaAI/ad-radar'
+  url: 'https://github.com/hestiaAI/ad-radar',
+  viewBlocks: []
 }
 
 export default new Experience(options)

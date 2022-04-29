@@ -1,13 +1,12 @@
 import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/instagram.png'
-import defaultView from './blocks'
+import viewBlocks from './blocks'
 import databaseConfig from './database'
 
 const options: ExperienceOptions = {
   databaseConfig,
   dataPortal: 'https://help.instagram.com/196883487377501',
   dataSamples: ['test-instagram.zip'],
-  defaultView,
   files: {
     comments: '**/comments.json',
     connections: '**/connections.json',
@@ -22,7 +21,8 @@ const options: ExperienceOptions = {
   },
   icon: icon,
   slug: 'instagram',
-  title: 'Instagram'
+  title: 'Instagram',
+  viewBlocks
 }
 
 export default new Experience(options)

@@ -1,16 +1,17 @@
 import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/tracker-control.png'
-import defaultView from './blocks'
+import viewBlocks from './blocks'
 
 const options: ExperienceOptions = {
-  defaultView,
+  dataSamples: ['tracker-control.csv'],
   files: {
     'tracker-control': '**/*.csv'
   },
   icon: icon,
   slug: 'tracker-control',
   subtitle: 'Tracking data',
-  title: 'TrackerControl'
+  title: 'TrackerControl',
+  viewBlocks
 }
 
 export default new Experience(options)

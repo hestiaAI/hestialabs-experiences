@@ -1,14 +1,14 @@
 import { Experience, ExperienceOptions } from '@/index'
 import { theDatingPrivacyCollective } from '@/collaborators/index'
 import icon from '@/icons/her.png'
-import defaultView from './blocks'
+import viewBlocks from './blocks'
 import databaseConfig from './database'
 
 const options: ExperienceOptions = {
   collaborator: theDatingPrivacyCollective,
   databaseConfig,
   dataPortal: 'https://weareher.com/privacy/',
-  defaultView,
+  dataSamples: ['her-fake-data.zip'],
   files: {
     liked: '**/liked.csv',
     notifications: '**/notifications.csv',
@@ -20,7 +20,8 @@ const options: ExperienceOptions = {
   },
   icon: icon,
   slug: 'her',
-  title: 'HER'
+  title: 'HER',
+  viewBlocks
 }
 
 export default new Experience(options)

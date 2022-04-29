@@ -3,12 +3,12 @@ import icon from '@/icons/bookbeat.png'
 import { genericDateViewer } from '@/pipelines/generic'
 
 const options: ExperienceOptions = {
-  defaultView: [genericDateViewer],
   hideSummary: false,
   hideFileExplorer: false,
   icon: icon,
   slug: 'bookbeat',
-  title: 'BookBeat'
+  title: 'BookBeat',
+  viewBlocks: [genericDateViewer]
 }
 
 export default new Experience(options)

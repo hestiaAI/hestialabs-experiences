@@ -4,7 +4,7 @@ import { customPipelineGetFirstCSV } from '@/pipelines/custom'
 
 const blocks: ViewBlocks = [
   {
-    key: 'watchOverview',
+    id: 'watchOverview',
     customPipeline: customPipelineGetFirstCSV('viewing-activity'),
     files: ['viewing-activity'],
     visualization: 'ChartViewOverviewNetflix.vue',
@@ -12,7 +12,7 @@ const blocks: ViewBlocks = [
     text: 'Get an overview of how you use Netflix and what information is stored about you'
   },
   {
-    key: 'notifications',
+    id: 'notifications',
     customPipeline: customPipelineGetFirstCSV('messages-by-netflix'),
     files: ['messages-by-netflix'],
     visualization: 'ChartViewTimeSeries.vue',

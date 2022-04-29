@@ -2,14 +2,13 @@ import { Experience, ExperienceOptions } from '@/index'
 import { theEyeballs } from '@/collaborators/index'
 import preprocessor from './preprocessor'
 import icon from '@/icons/twitter.png'
-import defaultView from './blocks'
+import viewBlocks from './blocks'
 import databaseConfig from './database'
 
 const options: ExperienceOptions = {
   collaborator: theEyeballs,
   databaseConfig,
   dataSamples: ['twitter.zip', 'twitter-sample.zip'],
-  defaultView,
   files: {
     impressions: '**/ad-impressions.js',
     engagements: '**/ad-engagements.js'
@@ -19,7 +18,8 @@ const options: ExperienceOptions = {
     '**/*.js': preprocessor
   },
   slug: 'twitter',
-  title: 'Twitter'
+  title: 'Twitter',
+  viewBlocks
 }
 
 export default new Experience(options)

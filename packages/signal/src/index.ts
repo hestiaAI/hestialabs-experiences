@@ -3,12 +3,12 @@ import icon from '@/icons/signal.svg'
 import { genericDateViewer } from '@/pipelines/generic'
 
 const options: ExperienceOptions = {
-  defaultView: [genericDateViewer],
   hideFileExplorer: false,
   hideSummary: false,
   icon: icon,
   slug: 'signal',
-  title: 'Signal'
+  title: 'Signal',
+  viewBlocks: [genericDateViewer]
 }
 
 export default new Experience(options)

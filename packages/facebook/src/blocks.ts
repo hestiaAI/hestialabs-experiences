@@ -5,13 +5,14 @@ import sqlOffFacebookActivityTypeCount from './sql/off-facebook-activity-type-co
 import sqlAdInteractions from './sql/ad-interactions.sql'
 import sqlYourTopics from './sql/your-topics.sql'
 import sqlAdvertisersContactList from './sql/advertisers-contact-list.sql'
+import sqlCustomAudiences from './sql/custom-audiences.sql'
 
-import sunburstTargetingAdvertiser from '@/postprocessors/sunburst-targeting-advertiser'
+import { sunburstTargetingAdvertiser } from './postprocessors'
 import { genericViewers } from '@/pipelines/generic'
 
 const blocks: ViewBlocks = [
   {
-    key: 'off-facebook-activity-count',
+    id: 'off-facebook-activity-count',
     sql: sqlOffFacebookActivityCount,
     files: ['off-facebook-activity'],
     visualization: 'ChartViewTopRow.vue',
@@ -22,7 +23,7 @@ const blocks: ViewBlocks = [
     text: 'See how many times third parties have informed Facebook of your activity outside of Facebook.'
   },
   {
-    key: 'off-facebook-activity-type-count',
+    id: 'off-facebook-activity-type-count',
     sql: sqlOffFacebookActivityTypeCount,
     files: ['off-facebook-activity'],
     postprocessor: sunburstTargetingAdvertiser,
@@ -31,7 +32,7 @@ const blocks: ViewBlocks = [
     text: 'See which kind of information advertisers have shared with Facebook of your activity outside of Facebook.'
   },
   {
-    key: 'ad-interactions',
+    id: 'ad-interactions',
     sql: sqlAdInteractions,
     files: ['advertisers-interacted'],
     showTable: true,
@@ -39,7 +40,7 @@ const blocks: ViewBlocks = [
     text: 'See the list of ads with which you have interacted.'
   },
   {
-    key: 'your-topics',
+    id: 'your-topics',
     sql: sqlYourTopics,
     files: ['ads-interests'],
     showTable: true,
@@ -47,7 +48,7 @@ const blocks: ViewBlocks = [
     text: "Get a list of topics that Facebook thinks you're interested in."
   },
   {
-    key: 'advertisers-contact-list',
+    id: 'advertisers-contact-list',
     sql: sqlAdvertisersContactList,
     files: ['advertisers-contact-list'],
     showTable: true,
@@ -55,8 +56,8 @@ const blocks: ViewBlocks = [
     text: 'Get a list of advertisers that have uploaded a contact list containing you.'
   },
   {
-    key: 'custom-audiences',
-    sql: 'custom-audiences',
+    id: 'custom-audiences',
+    sql: sqlCustomAudiences,
     files: ['advertisers-using-information'],
     showTable: true,
     title: 'Advertisers using your data',

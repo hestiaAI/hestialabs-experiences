@@ -1,8 +1,9 @@
 import type { ViewBlocks } from '@/types/view-block'
+import { genericViewers } from '@/pipelines/generic'
 
 const blocks: ViewBlocks = [
   {
-    key: 'timedObservationViewer',
+    id: 'timedObservationViewer',
     customPipeline: 'timedObservationViewer',
     files: ['my-activity'],
     customPipelineOptions: {
@@ -219,21 +220,7 @@ const blocks: ViewBlocks = [
     title: 'My activity information',
     text: 'Overview of what google knows about you, get all the dated observations we found in your Google My Activity folder.'
   },
-  {
-    key: 'genericLocationViewer',
-    customPipeline: 'genericLocationViewer',
-    customPipelineOptions: { acceptedPaths: '.*' },
-    visualization: 'ChartViewGenericLocationViewer.vue',
-    title: 'Location observations',
-    text: 'See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location.'
-  },
-  {
-    key: 'genericDateViewer',
-    customPipeline: 'genericDateViewer',
-    visualization: 'ChartViewGenericDateViewer.vue',
-    title: 'Timeline',
-    text: 'See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date.'
-  }
+  ...genericViewers
 ]
 
 export default blocks

@@ -45,4 +45,4 @@ export const customPipelineMergeCSV =
 export const customPipelineGetFirstCSV =
   (fileId: string) =>
   async ({ fileManager }) =>
-    await fileManager.getCsvItemsFromId(fileId)[0]
+    (await fileManager.getCsvItemsFromId(fileId))[0]

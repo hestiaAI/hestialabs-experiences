@@ -1,7 +1,7 @@
 import type { ViewBlock, ViewBlocks } from 'types/view-block'
 
 export const genericDateViewer: ViewBlock = {
-  key: 'genericDateViewer',
+  id: 'genericDateViewer',
   customPipeline: 'genericDateViewer',
   visualization: 'ChartViewGenericDateViewer.vue',
   title: 'Timeline',
@@ -9,7 +9,7 @@ export const genericDateViewer: ViewBlock = {
 }
 
 export const genericLocationViewer: ViewBlock = {
-  key: 'genericLocationViewer',
+  id: 'genericLocationViewer',
   customPipeline: 'genericLocationViewer',
   visualization: 'ChartViewGenericLocationViewer.vue',
   title: 'Location observations',
