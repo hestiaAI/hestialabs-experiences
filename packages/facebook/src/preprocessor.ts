@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 import { PreprocessorFunction } from '@/types/experience-options'
 
 // https://stackoverflow.com/q/17057407/8238129
@@ -25,43 +26,23 @@ const facebook: PreprocessorFunction = s => {
   s = s.replace(new RegExp(r + r, 'g'), (match, p1, p2) => {
     try {
       return convertHexToString(p1 + p2)
-    } catch (err) {
-      console.error(err)
-    }
+    } catch {}
     return match
   })
   s = s.replace(new RegExp(r + r + r, 'g'), (match, p1, p2, p3) => {
     try {
       return convertHexToString(p1 + p2 + p3)
-    } catch (err) {
-      console.error(err)
-    }
+    } catch {}
     return match
   })
   s = s.replace(new RegExp(r + r + r + r, 'g'), (match, p1, p2, p3, p4) => {
     try {
       return convertHexToString(p1 + p2 + p3 + p4)
-    } catch (err) {
-      console.error(err)
-    }
+    } catch {}
     return match
   })
 
-  // In your_topics/your_topics.json, we have to replace the list of strings
-  // by a list of objects, otherwise yarrrml is unable to get the values.
   const json = JSON.parse(s)
-  if (Object.keys(json).includes('inferred_topics_v2')) {
-    const topics = json.inferred_topics_v2.map(topic => {
-      return { topic }
-    })
-    json.inferred_topics_v2 = topics
-  } else if (Object.keys(json).includes('custom_audiences_v2')) {
-    // Same for ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json
-    const advertisers = json.custom_audiences_v2.map(advertiser => {
-      return { advertiser }
-    })
-    json.custom_audiences_v2 = advertisers
-  }
   return JSON.stringify(json)
 }
 
