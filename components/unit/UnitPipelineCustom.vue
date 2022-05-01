@@ -65,7 +65,7 @@ export default {
   async created() {
     const { customPipeline: pipe } = this
     if (typeof pipe === 'string') {
-      const { [pipe]: pipeline } = await import('@/manifests/generic-pipelines')
+      const { [pipe]: pipeline } = await import('~/utils/generic-pipelines')
       this.pipeline = pipeline
     }
   },

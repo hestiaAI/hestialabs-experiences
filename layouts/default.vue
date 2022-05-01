@@ -47,7 +47,6 @@
         <a :href="newsletterURL" target="_blank" style="color: white">
           {{ newsletterMessage }}
         </a>
-        <NuxtLink to="/boa">Click</NuxtLink>
       </div>
     </VFooter>
   </VApp>
