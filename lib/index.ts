@@ -42,20 +42,22 @@ export class Experience {
     if (!disabled && !url && !viewBlocks.length) {
       error(`[${slug}] viewBlocks should not be empty`)
     }
-    // validate file ids
-    viewBlocks.forEach(({ id, files: viewFiles }) => {
-      if (viewFiles) {
-        const fileId = viewFiles.find((f: string) => !(f in files))
-        if (fileId) {
-          error(
-            `[${slug}] ViewBlock ${id} has an unconfigured file id ${fileId}`
-          )
+    if (files) {
+      // validate file ids
+      viewBlocks.forEach(({ id, files: viewFiles }) => {
+        if (viewFiles) {
+          const fileId = viewFiles.find((f: string) => !(f in files))
+          if (fileId) {
+            error(
+              `[${slug}] ViewBlock ${id} has an unconfigured file id ${fileId}`
+            )
+          }
         }
+      })
+      if (databaseConfig) {
+        // validateDatabaseConfigSchema(slug, databaseConfig)
+        validateDatabaseConfigIntegrity(slug, databaseConfig, files)
       }
-    })
-    if (databaseConfig) {
-      // validateDatabaseConfigSchema(slug, databaseConfig)
-      validateDatabaseConfigIntegrity(slug, databaseConfig, files)
     }
     // construct default view Array
     this.options.viewBlocks = options.viewBlocks.map(createViewBlock)

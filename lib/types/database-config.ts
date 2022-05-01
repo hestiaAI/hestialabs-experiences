@@ -7,6 +7,22 @@ export enum SQLType {
   DATE = 'DATE'
 }
 
+type JSONType = null | boolean | number | string | object
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type JSONPathRecord = Record<any, any>
+export type JSONPathValue = JSONType | JSONType[]
+
+export type JSONPathReturnObject = {
+  parent: object | JSONType[]
+  parentProperty: string
+  path: string
+  pointer: string
+  value: JSONPathValue
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any
+}
+
 export enum JSONPathResultType {
   value = 'value',
   path = 'path',
@@ -38,9 +54,9 @@ export type DatabaseGetter = {
   options?: {
     resultType?: JSONPathResultType
     callback?: (
-      preferredOutput: string | object,
+      output: JSONPathRecord | JSONPathValue | JSONPathReturnObject,
       type?: string,
-      fullRetObj?: object
+      fullRetObj?: JSONPathReturnObject
     ) => void
   }
   path?: string

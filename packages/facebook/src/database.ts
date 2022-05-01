@@ -1,6 +1,10 @@
-import type { JSONPathReturnObject } from 'types/utils'
 import type { DatabaseConfig } from '@/types'
-import { SQLType, JSONPathResultType } from '@/types/database-config'
+import {
+  SQLType,
+  JSONPathResultType,
+  JSONPathReturnObject,
+  JSONPathRecord
+} from '@/types/database-config'
 
 const { TEXT, INTEGER } = SQLType
 
@@ -77,8 +81,10 @@ const config: DatabaseConfig = {
       table: 'OffFacebookActivityEvent',
       options: {
         resultType: JSONPathResultType.all,
-        callback: (output: JSONPathReturnObject) =>
-          (output['namePath'] = output.path.split("['events']")[0] + "['name']")
+        callback: output => {
+          const o = output as JSONPathReturnObject
+          o['namePath'] = o.path.split("['events']")[0] + "['name']"
+        }
       },
       getters: [
         {
@@ -112,10 +118,12 @@ const config: DatabaseConfig = {
       table: 'CustomAudience',
       path: '$.custom_audiences_all_types_v2[*]',
       options: {
-        callback: (output: object) => {
-          for (const key in output) {
-            if (typeof output[key] === 'boolean') {
-              output[key] = output[key] ? 'Yes' : 'No'
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        callback: output => {
+          const o = output as JSONPathRecord
+          for (const key in o) {
+            if (typeof o[key] === 'boolean') {
+              o[key] = o[key] ? 'Yes' : 'No'
             }
           }
         }

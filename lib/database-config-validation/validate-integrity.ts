@@ -13,11 +13,11 @@ import { error, enforceArray } from '@/utils'
 function findAndValidateTable(
   tables: DatabaseTables,
   tableName: string
-): DatabaseTable {
+): DatabaseTable | void {
   if (tableName) {
     const table = tables.find(t => t.name === tableName)
     if (!table) {
-      error(`Unknown table '${tableName}'`)
+      return error(`Unknown table '${tableName}'`)
     }
     return table
   }
@@ -52,7 +52,9 @@ function validateForeignKeys(tables: DatabaseTables): void {
       }
       const refTable = findAndValidateTable(tables, r.table)
       columns.forEach(c => validateColumnReference(t, c))
-      refColumns.forEach(c => validateColumnReference(refTable, c))
+      refColumns.forEach(c =>
+        validateColumnReference(refTable as DatabaseTable, c)
+      )
     })
   )
 }
@@ -72,8 +74,8 @@ function validateGetter(
     reference?: DatabaseGetterColumnReference
   },
   tables: DatabaseTables,
-  files: Files,
-  currentTable: DatabaseTable = null
+  files?: Files,
+  currentTable?: DatabaseTable
 ): void {
   if (fileId) {
     if (!files) {
@@ -82,7 +84,7 @@ function validateGetter(
       error(`Unknown fileId '${fileId}'`)
     }
   }
-  const table = findAndValidateTable(tables, tableName)
+  const table = findAndValidateTable(tables, tableName as string)
   if (column) {
     if (!currentTable) {
       error(`Missing table reference for column ${column}`)
@@ -92,10 +94,10 @@ function validateGetter(
   }
   if (reference) {
     const referenceTable = findAndValidateTable(tables, reference.table)
-    validateColumnReference(referenceTable, reference.column)
+    validateColumnReference(referenceTable as DatabaseTable, reference.column)
   }
   if (table && getters) {
-    getters.forEach(g => validateGetter(g, tables, null, table))
+    getters.forEach(g => validateGetter(g, tables, undefined, table))
   }
 }
 

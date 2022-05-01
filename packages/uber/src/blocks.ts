@@ -2,9 +2,12 @@ import keplerConfig from './kepler-config'
 import { customPipelineGetFirstCSV } from '@/pipelines/custom'
 import { genericDateViewer, genericLocationViewer } from '@/pipelines/generic'
 import type { ViewBlocks } from '@/types/view-block'
+import type { FileManager, PipelineOutputItems } from '@/types/utils'
 
-async function tripsGraphData({ fileManager }) {
-  const tripsData = (await fileManager.getCsvItemsFromId('trips'))[0] ?? {
+async function tripsGraphData(params: { fileManager: FileManager }) {
+  const tripsData = (
+    await params.fileManager.getCsvItemsFromId('trips')
+  )[0] ?? {
     headers: [],
     items: []
   }
@@ -14,8 +17,9 @@ async function tripsGraphData({ fileManager }) {
       (d['Product Type'] &&
         String(d['Product Type']).toLowerCase().includes('ubereats')) ||
       d['Trip or Order Status'] !== 'COMPLETED'
-    )
+    ) {
       return acc
+    }
     // remove street numbers to aggregate
     acc.push({
       source: d['Begin Trip Address'].replace(/[0-9]/g, ''),
@@ -23,12 +27,14 @@ async function tripsGraphData({ fileManager }) {
       value: 1
     })
     return acc
-  }, [])
+  }, []) as PipelineOutputItems
   return { headers: ['source', 'target', 'value'], items: filteredValues }
 }
 
-async function tripsKeplerData({ fileManager }) {
-  const rawCsv = (await fileManager.getPreprocessedTextFromId('trips'))[0]
+async function tripsKeplerData(params: { fileManager: FileManager }) {
+  const rawCsv = (
+    await params.fileManager.getPreprocessedTextFromId('trips')
+  )[0]
   return { rawCsv, config: keplerConfig }
 }
 

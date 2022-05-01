@@ -1,4 +1,4 @@
-import type { PipelineOutput } from 'types/utils'
+import type { FileManager, PipelineOutput } from 'types/utils'
 
 /* Shallow equality test on sets */
 function setsEqual<T>(s1: Set<T>, s2: Set<T>) {
@@ -12,7 +12,7 @@ function setsEqual<T>(s1: Set<T>, s2: Set<T>) {
  * @returns the merged csvs array
  */
 async function getCsvAndMergeFromID(
-  fileManager,
+  fileManager: FileManager,
   fileID: string
 ): Promise<PipelineOutput> {
   const files = await fileManager.getCsvItemsFromId(fileID)
@@ -38,11 +38,9 @@ async function getCsvAndMergeFromID(
 }
 
 export const customPipelineMergeCSV =
-  (fileId: string) =>
-  async ({ fileManager }) =>
-    await getCsvAndMergeFromID(fileManager, fileId)
+  (fileId: string) => async (params: { fileManager: FileManager }) =>
+    await getCsvAndMergeFromID(params.fileManager, fileId)
 
 export const customPipelineGetFirstCSV =
-  (fileId: string) =>
-  async ({ fileManager }) =>
-    (await fileManager.getCsvItemsFromId(fileId))[0]
+  (fileId: string) => async (params: { fileManager: FileManager }) =>
+    (await params.fileManager.getCsvItemsFromId(fileId))[0]

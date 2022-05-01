@@ -1,6 +1,9 @@
-import type { JSONPathReturnObject } from 'types/utils'
 import type { DatabaseConfig } from '@/types'
-import { SQLType, JSONPathResultType } from '@/types/database-config'
+import {
+  SQLType,
+  JSONPathResultType,
+  JSONPathReturnObject
+} from '@/types/database-config'
 
 const { TEXT, INTEGER } = SQLType
 
@@ -47,8 +50,10 @@ const config: DatabaseConfig = {
       table: 'TinderUsage',
       options: {
         resultType: JSONPathResultType.all,
-        callback: (output: JSONPathReturnObject) =>
-          (output['grandparentProperty'] = output.pointer.split('/')[2])
+        callback: output => {
+          const o = output as JSONPathReturnObject
+          o['grandparentProperty'] = o.pointer.split('/')[2]
+        }
       },
       getters: [
         {
