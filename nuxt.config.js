@@ -1,4 +1,3 @@
-import webpack from 'webpack'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
 import { extension2filetype } from './utils/file-manager'
@@ -90,8 +89,7 @@ export default {
 
   vue: {
     config: {
-      productionTip: false,
-      watch: ['~/manifests/']
+      productionTip: false
     }
   },
 
@@ -117,8 +115,7 @@ export default {
         config.devtool = 'source-map'
       }
       config.node = {
-        // ignore fs Node.js module (used in yarrrml-parser)
-        // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
+        // ignore fs Node.js module (used in some dependencies)
         fs: 'empty'
       }
       config.module.rules.push(
@@ -163,12 +160,6 @@ export default {
       )
     },
     plugins: [
-      // To ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
-      // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
-      new webpack.IgnorePlugin({
-        resourceRegExp: /^/u,
-        contextRegExp: /xpath-iterator/u
-      }),
       // preload fonts to avoid FOUT
       new PreloadWebpackPlugin({
         rel: 'preload',
@@ -178,6 +169,7 @@ export default {
         // crossorigin attribute added by plugin for as='font'
         as: 'font'
       })
-    ]
+    ],
+    watch: ['../hestialabs/packages/*/dist/*', '../hestialabs/index.js']
   }
 }

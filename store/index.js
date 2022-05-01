@@ -114,15 +114,19 @@ export const actions = {
       await dispatch('loadConfig')
       let experiences = []
       if (isDev) {
-        experiences = Object.values((await import('hestialabs')).default).map(
-          ({ options }) => ({ ...options })
-        )
+        const modules = (await import('hestialabs')).default
+        experiences = Object.values(modules).map(({ options }) => ({
+          ...options
+        }))
       } else {
         experiences = (
           await Promise.all(
             state.config.experiences.map(packageNameAndTag =>
-              // https://webpack.js.org/api/module-methods/#magic-comments
-              import(/* webpackIgnore: true */ `@hestiaai/${packageNameAndTag}`)
+              // We need to explicitly import dist (dist/index.mjs)
+              // and not just `@hestiaai/${packageNameAndTag}`
+              // since dynamic imports are not resolved by webpack
+              // during the build step
+              import(`@hestiaai/${packageNameAndTag}/dist`)
             )
           )
         ).map(module => module.default.options)
