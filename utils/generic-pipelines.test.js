@@ -2,7 +2,7 @@ import {
   jsonToTableConverter,
   createTableOptions,
   mergeTableData
-} from '~/manifests/generic-pipelines'
+} from '~/utils/generic-pipelines'
 import { mockFileManager } from '~/utils/__mocks__/file-manager-mock'
 
 test('mergeTableData', () => {
