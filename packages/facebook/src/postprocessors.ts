@@ -56,6 +56,5 @@ export const sunburstTargetingAdvertiser: PostprocessorFunction = result => {
     size: null
   }
   results.push(root)
-  console.log('sunburst-targeting!', results, Object.keys(root))
   return { headers: Object.keys(root), items: results }
 }
