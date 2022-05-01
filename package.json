@@ -7,14 +7,14 @@
     "npm": "7.x",
     "node": "14.x"
   },
-  "main": "index",
+  "browser": "index",
   "type": "module",
   "workspaces": [
     "./packages/*"
   ],
   "scripts": {
-    "dev": "webpack --watch",
-    "build": "webpack",
+    "dev": "webpack --watch --progress --mode=development",
+    "build": "webpack --mode=production",
     "clean": "lerna run clean",
     "test": "lerna run test",
     "lerna:version": "lerna version prerelease --no-changelog",

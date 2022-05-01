@@ -2,7 +2,8 @@
   "name": "@hestiaai/youtube",
   "version": "0.0.1-alpha.1",
   "description": "",
-  "main": "dist/index",
+  "browser": "dist/index",
+  "type": "module",
   "files": [
     "dist"
   ],

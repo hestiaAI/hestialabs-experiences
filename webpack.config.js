@@ -10,8 +10,6 @@ const __dirname = path.dirname(__filename)
 const packages = readdirSync(path.resolve(__dirname, 'packages'))
 
 export default {
-  mode: 'production',
-
   // https://stackoverflow.com/a/35820388/8238129
   externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
   externalsPresets: {
@@ -77,6 +75,11 @@ export default {
       // https://webpack.js.org/configuration/output/#type-module
       type: 'module'
     }
+  },
+  optimization: {
+    // turning off minimization in development mode does not work
+    // https://github.com/webpack/webpack/issues/15144
+    minimize: true
   },
   watchOptions: {
     ignored: /node_modules/
