@@ -83,6 +83,7 @@
     "dc": "^4.2.7",
     "dom-to-image-more": "^2.9.5",
     "file-saver": "^2.0.5",
+    "glob-to-regexp": "^0.4.1",
     "jsonpath-plus": "^6.0.1",
     "jszip": "^3.7.1",
     "libsodium-wrappers": "^0.7.10",

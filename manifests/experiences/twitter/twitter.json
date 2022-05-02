@@ -11,6 +11,7 @@
     "engagements": "**/ad-engagements.js",
     "personalization": "**/personalization.js"
   },
+  "keepOnlyFiles": true,
   "preprocessors": {
     "**/ad-impressions.js": "twitter",
     "**/ad-engagements.js": "twitter",
