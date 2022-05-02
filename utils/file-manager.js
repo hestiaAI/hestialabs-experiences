@@ -93,15 +93,16 @@ export default class FileManager {
     this.preprocessors = preprocessors ?? {}
     this.workers = workers ?? {}
     this.idToGlob = idToGlob ?? {}
-    this.keepOnlyFiles = keepOnlyFiles ?? false
+    this.keepOnlyFiles = keepOnlyFiles ?? true
 
     // Define the files filter regex, default to all
     this.filesRegex = /.*/
-    const globToRegExp = require('glob-to-regexp')
-    const options = { extended: true, globstar: true }
-    if (this.keepOnlyFiles) {
-      const globs = `**/{${Object.values(this.idToGlob).join(',')}}`
-      this.filesRegex = globToRegExp(globs, options)
+    const mm = require('micromatch')
+    if (this.keepOnlyFiles && Object.keys(this.idToGlob).length) {
+      const regexs = Object.values(this.idToGlob).map(
+        glob => mm.makeRe(glob).source
+      )
+      this.filesRegex = new RegExp(`(${regexs.join(')|(')})`)
     }
     this.setInitialValues()
   }
@@ -467,7 +468,6 @@ export default class FileManager {
           if (file.name.endsWith('.zip')) {
             const zip = new JSZip()
             await zip.loadAsync(file)
-            console.log(filesRegex)
             const folderContent = zip.file(filesRegex)
             const blobs = await Promise.all(
               folderContent.map(r => r.async('blob'))
@@ -477,7 +477,6 @@ export default class FileManager {
             )
             return await this.extractZips(innerFiles, filesRegex)
           } else if (file.name.endsWith('/') || !filesRegex.test(file.name)) {
-            console.log('reject', file.name, filesRegex.test(file.name))
             return []
           } else {
             return [file]

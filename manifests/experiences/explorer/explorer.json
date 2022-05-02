@@ -2,6 +2,7 @@
   "title": "Generic data experience",
   "subtitle": "Explore data from anywhere!",
   "icon": "clipboard-search-outline.png",
+  "keepOnlyFiles": false,
   "defaultView": [
     {
       "key": "genericDateViewer",
