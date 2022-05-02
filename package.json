@@ -8,6 +8,7 @@
     "node": "14.x"
   },
   "scripts": {
+    "postinstall": "node postinstall.js",
     "dev": "npm-run-all -p -r dev:api dev:app",
     "dev:api": "cd ../hestialabs && npm run dev",
     "dev:app": "nuxt --open",
@@ -84,6 +85,7 @@
     "dc": "^4.2.7",
     "dom-to-image-more": "^2.9.5",
     "file-saver": "^2.0.5",
+    "hestialabs": "file:../hestialabs",
     "jsonpath-plus": "^6.0.1",
     "jszip": "^3.7.1",
     "libsodium-wrappers": "^0.7.10",
