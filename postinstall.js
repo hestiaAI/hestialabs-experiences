@@ -14,8 +14,8 @@ if (process.env.NETLIFY) {
       packageNameAndTag => `@hestiaai/${packageNameAndTag}`
     )
     console.info(`
-  Installing the following packages from GitHub Package Registry:
-  ${packages.join('\n')}`)
+Installing the following packages from GitHub Package Registry:
+${packages.join('\n')}`)
     spawnSync('npm', ['install', ...packages], { shell: true })
   }
 }
