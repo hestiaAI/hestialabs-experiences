@@ -1,0 +1,54 @@
+{
+  "title": "Tiktok",
+  "icon": "TikTok_logo.svg.png",
+  "dataPortal": "https://support.tiktok.com/en/account-and-privacy/personalized-ads-and-data/requesting-your-data",
+  "data": [],
+  "hideSummary": true,
+  "hideFileExplorer": true,
+  "files": {
+    "userdata": "**/user_data.json"
+  },
+  "collaborator": {
+    "title": "The Eyeballs Collective",
+    "icon": "the-eyeballs.svg",
+    "url": "https://eyeballs.hestialabs.org/"
+  },
+  "defaultView": [
+    {
+      "key": "comments",
+      "sql": "comments",
+      "files": ["comments"],
+      "showTable": true,
+      "title": "Comments",
+      "text": "Comments recieved"
+    }
+  ],
+  "databaseConfig": {
+    "tables": [
+      {
+        "name": "TiktokComment",
+        "columns": [
+          ["date", "TEXT"],
+          ["comment", "TEXT"]
+        ]
+      }
+    ],
+    "getters": [
+      {
+        "fileId": "userdata",
+        "path": "$.Comment.Comments.CommentsList[*]",
+        "table": "TiktokComment",
+        "getters": [
+          {
+            "column": "date",
+            "path": "$.Date"
+          },
+          {
+            "column": "comment",
+            "path": "$.Comment"
+          }
+        ]
+      }
+    ]
+  }
+}
