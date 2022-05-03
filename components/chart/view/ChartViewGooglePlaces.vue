@@ -14,17 +14,13 @@
     <template v-if="total > 0">
       <VRow>
         <VCol cols="12">
-          <UnitIframe
-            v-if="myKeplerInput !== null"
-            src="/kepler"
-            :data="myKeplerInput"
-          />
+          <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
       </VRow>
       <VRow>
         <VCol cols="12">
           <UnitFilterableTable
-            v-bind="{ data: { headers: headers, items: results } }"
+            v-bind="{ headers, items: results }"
             @current-items="onTableFilter"
           />
         </VCol>
@@ -39,8 +35,7 @@ export default {
   mixins: [mixin],
   data() {
     return {
-      total: 0,
-      myKeplerInput: null
+      filteredRows: []
     }
   },
   computed: {
@@ -52,29 +47,34 @@ export default {
           latitude: v.latitude * 1e-7
         }
       })
+    },
+    total() {
+      return this.results.length
+    },
+    filtered() {
+      return this.filteredRows.length
+    },
+    keplerData() {
+      return {
+        fields: this.headers.map(h => {
+          return {
+            name: h
+          }
+        }),
+        rows: this.filteredRows.map(r => this.headers.map(h => r[h]))
+      }
+    },
+    keplerArgs() {
+      return {
+        keplerData: this.keplerData,
+        config: keplerConfig
+      }
     }
   },
   methods: {
-    drawViz() {
-      this.total = this.results.length
-      this.myKeplerInput = {
-        keplerData: {
-          fields: this.headers.map(h => {
-            return {
-              name: h
-            }
-          }),
-          rows: this.results.map(r => this.headers.map(h => r[h]))
-        },
-        config: keplerConfig
-      }
-    },
-    onTableFilter(items) {
-      console.log('Update table')
-      // this.myKeplerInput.rows = items.map(r => this.headers.map(h => r[h]))
-
-      // DeepClone to trigger update data
-      // this.myKeplerInput = JSON.parse(JSON.stringify(this.myKeplerInput))
+    drawViz() {},
+    onTableFilter(newItems) {
+      this.filteredRows = newItems
     }
   }
 }

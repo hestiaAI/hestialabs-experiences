@@ -1,10 +1,13 @@
 <template>
   <div>
-    <DataValidator :data="data" allow-missing-columns>
+    <DataValidator
+      :data="{ items: items, headers: headers }"
+      allow-missing-columns
+    >
       <BaseAlert v-if="error" type="error">{{ message }}</BaseAlert>
       <BaseSearchBar v-model="search"></BaseSearchBar>
       <VDataTable
-        v-bind="{ headers: tableHeaders, search }"
+        v-bind="{ headers: headersOptions, search }"
         ref="tableRef"
         :items="filteredItems"
         multi-sort
@@ -15,7 +18,7 @@
         data-testid="data-table"
         @current-items="onItemsUpdate"
       >
-        <template v-for="header in headers" #[`header.${header.value}`]>
+        <template v-for="header in headersOptions" #[`header.${header.value}`]>
           {{ header.text }}
           <VMenu
             :id="header.value"
@@ -90,7 +93,7 @@
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
         </template>
         <template
-          v-for="header in headers.filter(h => h.value !== 'url')"
+          v-for="header in headersOptions.filter(h => h.value !== 'url')"
           #[`item.${header.value}`]="slotProps"
         >
           {{ formatItemAsString(slotProps) }}
@@ -123,9 +126,13 @@ const defaultItemsPerPage10 = window.innerHeight - 250 > 530
 export default {
   name: 'UnitFilterableTable',
   props: {
-    data: {
-      type: Object,
-      required: true
+    headers: {
+      type: Array,
+      default: () => []
+    },
+    items: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -138,7 +145,6 @@ export default {
       message: '',
       extension: 'csv',
       search: '',
-      tableHeaders: [],
       files: null,
       filters: {},
       itemsPerPage: defaultItemsPerPage10 ? 10 : 5,
@@ -146,11 +152,11 @@ export default {
     }
   },
   computed: {
-    headers() {
-      let headers = this.data?.headers || []
-      if (typeof headers[0] === 'string') {
+    headersOptions() {
+      let headers = this.headers
+      if (typeof this.headers[0] === 'string') {
         // allow headers to be an array of strings
-        headers = headers.map(h => ({
+        headers = this.headers.map(h => ({
           text: h,
           value: h
         }))
@@ -162,9 +168,6 @@ export default {
         sortable: true
       }))
     },
-    items() {
-      return this.data?.items || []
-    },
     filteredItems() {
       return this.items.filter(d => {
         return Object.keys(this.filters).every(f => {
@@ -174,12 +177,6 @@ export default {
     }
   },
   watch: {
-    data: {
-      immediate: true,
-      handler() {
-        this.tableHeaders = this.headers
-      }
-    },
     itemsPerPage: {
       immediate: true,
       handler(value) {
@@ -211,11 +208,14 @@ export default {
       this.status = false
       this.error = false
       try {
-        const headers = this.headers.map(h => h.text)
+        const headers = this.headersOptions.map(h => h.text)
         const filteredItems = this.$refs.tableRef.$children[0].filteredItems
         // Change the items keys to match the headers
         const itemsWithHeader = filteredItems.map(i =>
-          this.headers.reduce((o, h) => ({ ...o, [h.text]: i[h.value] }), {})
+          this.headersOptions.reduce(
+            (o, h) => ({ ...o, [h.text]: i[h.value] }),
+            {}
+          )
         )
         // update the data
         const csv = await writeToString(itemsWithHeader, { headers })

@@ -117,9 +117,7 @@
                 <VIcon x-small> $vuetify.icons.mdiClose </VIcon>
               </VBtn>
             </p>
-            <UnitFilterableTable
-              v-bind="{ data: { headers: header, items: results } }"
-            />
+            <UnitFilterableTable v-bind="{ headers: header, items: results }" />
           </VTabItem>
         </VTabsItems>
       </VCol>
