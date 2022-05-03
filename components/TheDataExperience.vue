@@ -150,7 +150,7 @@ export default {
     },
     keepOnlyFiles: {
       type: Boolean,
-      default: () => true
+      default: true
     },
     defaultView: {
       type: Array,
