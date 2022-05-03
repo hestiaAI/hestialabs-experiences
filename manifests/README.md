@@ -46,6 +46,11 @@ Note: All files and folders should match the following regular expression: [`^(?
     */
   "files": {"impressions": "**/data/ad-impressions.js"},
   /**
+    * If set to false, upload and unzip all files, needed in generic viewers. Otherwise
+    * keeps only the files needed in the experience and specified in the `files` attribute.
+    */
+  "keepOnlyFiles": true,
+  /**
     * Reference to a preprocessor (optional, see preprocessors.js)
     * @type String
     */

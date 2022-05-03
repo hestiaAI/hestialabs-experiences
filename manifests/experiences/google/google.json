@@ -12,6 +12,7 @@
   "preprocessors": {
     "*/*.html": "takeout"
   },
+  "keepOnlyFiles": false,
   "defaultView": [
     {
       "key": "PlaceVisited",

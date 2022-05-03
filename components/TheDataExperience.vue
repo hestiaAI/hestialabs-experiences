@@ -148,6 +148,10 @@ export default {
       type: Object,
       default: () => {}
     },
+    keepOnlyFiles: {
+      type: Boolean,
+      default: true
+    },
     defaultView: {
       type: Array,
       default: () => []
@@ -329,7 +333,8 @@ export default {
       const fileManager = new FileManager(
         this.preprocessors,
         fileManagerWorkers,
-        this.files
+        this.files,
+        this.keepOnlyFiles
       )
       try {
         await fileManager.init(uppyFiles)
