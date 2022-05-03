@@ -9,6 +9,7 @@ const options: ExperienceOptions = {
       '**/*/+(MyActivity|My Activity|MonActivité|Mon Activité|OmatTapahtumat|Omat Tapahtumat).json'
   },
   icon: icon,
+  keepOnlyFiles: false,
   slug: 'google',
   title: 'Google Takeout',
   viewBlocks

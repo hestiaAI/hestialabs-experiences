@@ -28,6 +28,7 @@ const defaultOptions: Partial<ExperienceOptions> = {
   disabled: false,
   hideFileExplorer: true,
   hideSummary: true,
+  keepOnlyFiles: true,
   subtitle: 'Data Experience'
 }
 

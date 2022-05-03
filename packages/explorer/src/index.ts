@@ -6,6 +6,7 @@ const options: ExperienceOptions = {
   hideSummary: false,
   hideFileExplorer: false,
   icon: icon,
+  keepOnlyFiles: false,
   slug: 'explorer',
   subtitle: 'Explore data from anywhere!',
   title: 'Generic data experience',
