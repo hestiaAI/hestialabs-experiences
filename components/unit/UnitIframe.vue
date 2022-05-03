@@ -2,7 +2,9 @@
   <iframe
     ref="iframe"
     :src="src"
+    class="frame"
     :style="`width: 100%; height: ${height}px`"
+    frameborder="0"
     @load="onload"
   ></iframe>
 </template>

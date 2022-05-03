@@ -109,7 +109,7 @@ export default {
       isSplit: false
     },
     mapStyle: {
-      styleType: 'dark',
+      styleType: 'light',
       topLayerGroups: {},
       visibleLayerGroups: {
         label: true,
@@ -121,7 +121,7 @@ export default {
         '3d building': false
       },
       threeDBuildingColor: [
-        9.665468314072013, 17.18305478057247, 31.1442867897876
+        224.4071295378559, 224.4071295378559, 224.4071295378559
       ],
       mapStyles: {}
     }

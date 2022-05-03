@@ -14,6 +14,14 @@
   },
   "defaultView": [
     {
+      "key": "PlaceVisited",
+      "sql": "all-place-visit",
+      "files": ["LOCATION_HISTORY"],
+      "visualization": "ChartViewGooglePlaces.vue",
+      "showTable": false,
+      "title": "Places visited"
+    },
+    {
       "key": "timedObservationViewer",
       "customPipeline": "timedObservationViewer",
       "files": ["MY_ACTIVITY"],
@@ -237,14 +245,6 @@
       "files": ["LOCATION_HISTORY"],
       "showTable": true,
       "title": "Travels"
-    },
-    {
-      "key": "PlaceVisited",
-      "sql": "all-place-visit",
-      "files": ["LOCATION_HISTORY"],
-      "visualization": "ChartViewGooglePlaces.vue",
-      "showTable": false,
-      "title": "Places visited"
     }
   ],
   "databaseConfig": {

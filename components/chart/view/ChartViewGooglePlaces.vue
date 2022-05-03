@@ -25,6 +25,7 @@
         <VCol cols="12">
           <UnitFilterableTable
             v-bind="{ data: { headers: headers, items: results } }"
+            @current-items="onTableFilter"
           />
         </VCol>
       </VRow>
@@ -34,8 +35,6 @@
 <script>
 import mixin from './mixin'
 import keplerConfig from './kepler-googlePlaces.js'
-
-console.log(keplerConfig)
 export default {
   mixins: [mixin],
   data() {
@@ -65,10 +64,17 @@ export default {
               name: h
             }
           }),
-          rows: this.results
+          rows: this.results.map(r => this.headers.map(h => r[h]))
         },
         config: keplerConfig
       }
+    },
+    onTableFilter(items) {
+      console.log('Update table')
+      // this.myKeplerInput.rows = items.map(r => this.headers.map(h => r[h]))
+
+      // DeepClone to trigger update data
+      // this.myKeplerInput = JSON.parse(JSON.stringify(this.myKeplerInput))
     }
   }
 }
