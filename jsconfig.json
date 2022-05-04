@@ -19,6 +19,6 @@
     "manifests/icons",
     "node_modules",
     "static",
-    "vega-examples",
+    "vega-examples"
   ]
 }

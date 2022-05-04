@@ -4,7 +4,7 @@
   "icon": "twittr.png",
   "files": ["data/ad-impressions.js", "data/ad-engagements.js"],
   "preprocessor": "twitter",
-	"data": ["twitter.zip", "twitter-sample.zip"],
+  "data": ["twitter.zip", "twitter-sample.zip"],
   "visualizations": {
     "main": [
       {

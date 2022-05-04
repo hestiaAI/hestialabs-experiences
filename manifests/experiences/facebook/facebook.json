@@ -70,34 +70,36 @@
     {
       "key": "customAudience",
       "customPipeline": "jsonToTableConverter",
-      "customPipelineOptions": [{
-        "accessor": {
-          "filePath": "**/ads_information/advertisers_using_your_activity_or_information.json",
-          "jsonPath": "$.custom_audiences_all_types_v2[*]"
-        },
-        "columns": [
-          {
-            "name": "Advertiser",
-            "path": "advertiser_name",
-            "type": "string"
+      "customPipelineOptions": [
+        {
+          "accessor": {
+            "filePath": "**/ads_information/advertisers_using_your_activity_or_information.json",
+            "jsonPath": "$.custom_audiences_all_types_v2[*]"
           },
-          {
-            "name": "has_data_file_custom_audience",
-            "path": "has_data_file_custom_audience",
-            "type": "boolean"
-          },
-          {
-            "name": "has_remarketing_custom_audience",
-            "path": "has_remarketing_custom_audience",
-            "type": "boolean"
-          },
-          {
-            "name": "has_in_person_store_visit",
-            "path": "has_in_person_store_visit",
-            "type": "boolean"
-          }
-        ]
-      }],
+          "columns": [
+            {
+              "name": "Advertiser",
+              "path": "advertiser_name",
+              "type": "string"
+            },
+            {
+              "name": "has_data_file_custom_audience",
+              "path": "has_data_file_custom_audience",
+              "type": "boolean"
+            },
+            {
+              "name": "has_remarketing_custom_audience",
+              "path": "has_remarketing_custom_audience",
+              "type": "boolean"
+            },
+            {
+              "name": "has_in_person_store_visit",
+              "path": "has_in_person_store_visit",
+              "type": "boolean"
+            }
+          ]
+        }
+      ],
       "files": ["advertisers-using-information"],
       "showTable": true,
       "title": "Advertisers using your data",
@@ -133,9 +135,7 @@
       },
       {
         "name": "AdvertiserUploadedContactInformation",
-        "columns": [
-          ["name", "TEXT"]
-        ]
+        "columns": [["name", "TEXT"]]
       },
       {
         "name": "OffFacebookActivityEvent",
@@ -147,9 +147,7 @@
       },
       {
         "name": "AdsInterest",
-        "columns": [
-          ["name", "TEXT"]
-        ]
+        "columns": [["name", "TEXT"]]
       }
     ],
     "getters": [

@@ -6,7 +6,7 @@
   "data": [
     {
       "name": "table",
-      "format": {"type": "json", "parse": {"date": "date:'%Y-%m-%d'"}},
+      "format": { "type": "json", "parse": { "date": "date:'%Y-%m-%d'" } },
       "transform": [
         {
           "type": "formula",
@@ -21,7 +21,7 @@
       "name": "x",
       "type": "time",
       "range": "width",
-      "domain": {"data": "table", "field": "date"}
+      "domain": { "data": "table", "field": "date" }
     },
     {
       "name": "y",
@@ -29,7 +29,7 @@
       "range": "height",
       "nice": true,
       "zero": true,
-      "domain": {"data": "table", "field": "open"}
+      "domain": { "data": "table", "field": "open" }
     },
     {
       "name": "color",
@@ -44,27 +44,33 @@
       "symbolType": "circle",
       "encode": {
         "symbols": {
-          "update": {"fill": {"value": "white"}, "opacity": {"value": 1}}
+          "update": { "fill": { "value": "white" }, "opacity": { "value": 1 } }
         }
       }
     }
   ],
   "axes": [
-    {"orient": "bottom", "scale": "x", "offset": 10, "labelAlign": "left", "labelAngle": 45},
-    {"orient": "left", "scale": "y", "offset": 10}
+    {
+      "orient": "bottom",
+      "scale": "x",
+      "offset": 10,
+      "labelAlign": "left",
+      "labelAngle": 45
+    },
+    { "orient": "left", "scale": "y", "offset": 10 }
   ],
   "marks": [
     {
       "name": "open_line",
       "type": "line",
       "style": ["line"],
-      "from": {"data": "table"},
+      "from": { "data": "table" },
       "encode": {
         "enter": {
-          "x": {"scale": "x", "field": "date"},
-          "y": {"scale": "y", "field": "open"},
-          "stroke": {"scale": "color", "value": "App opened"},
-          "strokeWidth": {"value": 2}
+          "x": { "scale": "x", "field": "date" },
+          "y": { "scale": "y", "field": "open" },
+          "stroke": { "scale": "color", "value": "App opened" },
+          "strokeWidth": { "value": 2 }
         }
       }
     },
@@ -72,22 +78,22 @@
       "name": "open_marks",
       "type": "symbol",
       "style": ["point"],
-      "from": {"data": "table"},
+      "from": { "data": "table" },
       "encode": {
         "enter": {
-          "opacity": {"value": 1},
-          "fill": {"value": "white"},
-          "stroke": {"scale": "color", "value": "App opened"},
-          "strokeWidth": {"value": 2},
-          "ariaRoleDescription": {"value": "point"},
-          "x": {"scale": "x", "field": "date"},
-          "y": {"scale": "y", "field": "open"},
+          "opacity": { "value": 1 },
+          "fill": { "value": "white" },
+          "stroke": { "scale": "color", "value": "App opened" },
+          "strokeWidth": { "value": 2 },
+          "ariaRoleDescription": { "value": "point" },
+          "x": { "scale": "x", "field": "date" },
+          "y": { "scale": "y", "field": "open" },
           "tooltip": {
             "signal": "'App was opened ' + datum.open + ' times on ' + datum.dateStr"
           }
         },
-        "update": {"strokeOpacity": {"value": 1}},
-        "hover": {"strokeOpacity": {"value": 0.5}}
+        "update": { "strokeOpacity": { "value": 1 } },
+        "hover": { "strokeOpacity": { "value": 0.5 } }
       }
     }
   ],
@@ -96,9 +102,9 @@
     "encode": {
       "title": {
         "enter": {
-          "fill": {"value": "#2e3131"},
-          "fontSize": {"value": 15},
-          "fontWeight": {"value": "bold"}
+          "fill": { "value": "#2e3131" },
+          "fontSize": { "value": 15 },
+          "fontWeight": { "value": "bold" }
         }
       }
     }

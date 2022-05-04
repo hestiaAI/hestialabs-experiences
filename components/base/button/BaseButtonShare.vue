@@ -126,7 +126,6 @@ export default {
       }
 
       const url = this.$url()
-      console.log('url', url)
       const webShareData = {
         title,
         text,

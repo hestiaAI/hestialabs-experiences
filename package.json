@@ -15,10 +15,11 @@
     "build:update-revision": "git rev-parse HEAD > static/git-revision.txt",
     "build:static": "nuxt generate",
     "build:server": "nuxt build",
-    "lint": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
-    "lint:fix": "npm run lint -- --fix",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore",
+    "lint:fix": "npm run lint -- --fix .",
     "pre-commit": "lint-staged",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "prettier": "prettier"
   },
   "jest": {
     "setupFilesAfterEnv": [
@@ -60,9 +61,6 @@
     "node_modules/(?!(d3.*)/)",
     "\\.pnp\\.[^\\/]+$"
   ],
-  "lint-staged": {
-    "*.{js,vue}": "npm run lint"
-  },
   "dependencies": {
     "@fast-csv/format": "^4.3.5",
     "@fast-csv/parse": "^4.3.6",

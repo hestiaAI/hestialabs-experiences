@@ -1,5 +1,5 @@
 [
-	{
+  {
     "firstName": "Frodo",
     "lastName": "Button",
     "age": 25,
@@ -19,9 +19,7 @@
         "countryCode": "41"
       }
     ],
-    "emailAddresses": [
-      "FrodoButton@rhyta.com"
-    ]
+    "emailAddresses": ["FrodoButton@rhyta.com"]
   },
   {
     "firstName": "Tobold",
@@ -61,9 +59,7 @@
         "countryCode": "1"
       }
     ],
-    "emailAddresses": [
-      "CaramellaPuddifoot@dayrep.com"
-    ]
+    "emailAddresses": ["CaramellaPuddifoot@dayrep.com"]
   },
   {
     "firstName": "Marmaduc",

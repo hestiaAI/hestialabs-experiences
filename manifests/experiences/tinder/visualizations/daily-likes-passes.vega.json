@@ -9,7 +9,7 @@
     {
       "name": "table",
       "url": "data.json",
-      "format": {"type": "json", "parse": {"date": "date:'%Y-%m-%d'"}}
+      "format": { "type": "json", "parse": { "date": "date:'%Y-%m-%d'" } }
     }
   ],
 
@@ -18,7 +18,7 @@
       "name": "x",
       "type": "time",
       "range": "width",
-      "domain": {"data": "table", "field": "date"}
+      "domain": { "data": "table", "field": "date" }
     },
     {
       "name": "y",
@@ -26,7 +26,7 @@
       "range": "height",
       "nice": true,
       "zero": true,
-      "domain": {"data": "table", "fields": ["like", "pass"]}
+      "domain": { "data": "table", "fields": ["like", "pass"] }
     },
     {
       "name": "color",
@@ -47,44 +47,50 @@
   ],
 
   "axes": [
-    {"orient": "bottom", "scale": "x", "offset":0, "labelAlign": "left", "labelAngle": 45},
-    {"orient": "left", "scale": "y",  "offset":10}
+    {
+      "orient": "bottom",
+      "scale": "x",
+      "offset": 0,
+      "labelAlign": "left",
+      "labelAngle": 45
+    },
+    { "orient": "left", "scale": "y", "offset": 10 }
   ],
 
   "marks": [
     {
       "type": "line",
-      "from": {"data": "table"},
+      "from": { "data": "table" },
       "encode": {
         "enter": {
-          "x": {"scale": "x", "field": "date"},
-          "y": {"scale": "y", "field": "like"},
-          "stroke":{"scale": "color", "value":"Likes"},
-          "strokeWidth": {"value": 2}
+          "x": { "scale": "x", "field": "date" },
+          "y": { "scale": "y", "field": "like" },
+          "stroke": { "scale": "color", "value": "Likes" },
+          "strokeWidth": { "value": 2 }
         },
         "update": {
-          "strokeOpacity": {"value": 1}
+          "strokeOpacity": { "value": 1 }
         },
         "hover": {
-          "strokeOpacity": {"value": 0.5}
+          "strokeOpacity": { "value": 0.5 }
         }
       }
     },
     {
       "type": "line",
-      "from": {"data": "table"},
+      "from": { "data": "table" },
       "encode": {
         "enter": {
-          "x": {"scale": "x", "field": "date"},
-          "y": {"scale": "y", "field": "pass"},
-          "stroke":{"scale": "color", "value":"Passes"},
-          "strokeWidth": {"value": 2}
+          "x": { "scale": "x", "field": "date" },
+          "y": { "scale": "y", "field": "pass" },
+          "stroke": { "scale": "color", "value": "Passes" },
+          "strokeWidth": { "value": 2 }
         },
         "update": {
-          "strokeOpacity": {"value": 1}
+          "strokeOpacity": { "value": 1 }
         },
         "hover": {
-          "strokeOpacity": {"value": 0.5}
+          "strokeOpacity": { "value": 0.5 }
         }
       }
     }
@@ -94,9 +100,9 @@
     "encode": {
       "title": {
         "enter": {
-          "fill": {"value": "#2e3131"},
-          "fontSize": {"value": 15},
-          "fontWeight": {"value": "bold"}
+          "fill": { "value": "#2e3131" },
+          "fontSize": { "value": 15 },
+          "fontWeight": { "value": "bold" }
         }
       }
     }
