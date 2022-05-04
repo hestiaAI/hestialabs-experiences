@@ -112,25 +112,19 @@ export const actions = {
   async loadExperiences({ commit, state, dispatch }, { isDev }) {
     if (!state.loaded) {
       await dispatch('loadConfig')
-      let experiences = []
-      if (isDev) {
-        const modules = (await import('hestialabs')).default
-        experiences = Object.values(modules).map(({ options }) => ({
-          ...options
-        }))
-      } else {
-        experiences = (
-          await Promise.all(
-            state.config.experiences.map(packageNameAndTag =>
-              // We need to explicitly import dist (dist/index.mjs)
-              // and not just `@hestiaai/${packageNameAndTag}`
-              // since dynamic imports are not resolved by webpack
-              // during the build step
-              import(`@hestiaai/${packageNameAndTag}/dist`)
-            )
-          )
-        ).map(module => module.default.options)
-      }
+      const experiences = (
+        await Promise.all(
+          state.config.experiences.map(packageNameAndTag => {
+            // We need to explicitly import dist (dist/index.mjs)
+            // and not just `@hestiaai/${name}`
+            // since dynamic imports are not resolved by webpack
+            // during the build step
+            const [name] = packageNameAndTag.split('@')
+            return import(`@hestiaai/${name}/dist`)
+          })
+        )
+      ).map(module => module.default.options)
+
       commit('setExperiences', experiences)
       commit('setLoaded')
     }

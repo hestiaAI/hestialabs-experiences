@@ -1,0 +1,89 @@
+{
+  "experiences": [
+    "ad-radar",
+    "amazon",
+    "apple",
+    "bookbeat",
+    "demdex",
+    "explorer",
+    "facebook",
+    "finnair",
+    "full-contact",
+    "gigantti",
+    "google",
+    "helsingin-sanomat",
+    "her",
+    "hsl",
+    "instagram",
+    "k-ryhma",
+    "lime",
+    "linkedin",
+    "netflix",
+    "other",
+    "s-ryhma",
+    "sbb",
+    "signal",
+    "spotify",
+    "tinder",
+    "tracker-control",
+    "twitter",
+    "uber",
+    "voi",
+    "whatsapp",
+    "wolt",
+    "youtube"
+  ],
+  "hashtags": ["dataprivacy", "hestialabs"],
+  "filedrop": "https://example.com",
+  "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
+  "consent": {
+    "default": [
+      {
+        "title": "Introduction",
+        "description": "This is an example consent form."
+      },
+      {
+        "description": "Please input some information.",
+        "type": "input",
+        "name": "e-mail"
+      },
+      {
+        "title": "Radio buttons",
+        "description": "Please select one option.",
+        "type": "radio",
+        "options": ["A", "B"],
+        "value": "A"
+      },
+      {
+        "title": "Checkboxes",
+        "description": "Please select all options that apply.",
+        "type": "checkbox",
+        "options": ["X", "Y", "Z"]
+      },
+      {
+        "title": "Which data should be shared ?",
+        "description": "The visualizations of every checked section will be reproducible and the underlying data will be available to the receiver (at least one required).",
+        "type": "data",
+        "required": true
+      },
+      {
+        "title": "Multi-line text area",
+        "type": "multiline",
+        "placeholder": "Please type your comment"
+      }
+    ],
+    "tracker-control": [
+      {
+        "title": "Tracker control export",
+        "description": "This is a special consent form for tracker-control. The data must be included."
+      },
+      {
+        "type": "data",
+        "hide": true,
+        "value": ["trackerControl"],
+        "required": ["trackerControl"]
+      }
+    ],
+    "facebook": null
+  }
+}

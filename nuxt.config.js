@@ -5,14 +5,17 @@ import { extension2filetype } from './utils/file-manager'
 const name = 'HestiaLabs Experiences'
 const description = 'We create a new relationship to personal data'
 
-const { NODE_ENV, BASE_URL, CONFIG_NAME, WEBDAV_USERNAME } = process.env
+const {
+  NODE_ENV,
+  BASE_URL: baseUrl = 'http://localhost:3000',
+  CONFIG_NAME: configName = 'dev',
+  WEBDAV_USERNAME
+} = process.env
 
-if (!BASE_URL && NODE_ENV === 'production') {
+if (!baseUrl && NODE_ENV === 'production') {
   throw new Error('BASE_URL environment variable is missing')
 }
 
-const baseUrl = BASE_URL || 'http://localhost:3000'
-const configName = CONFIG_NAME || 'config'
 const uploadAvailable = !!WEBDAV_USERNAME
 
 export default {
