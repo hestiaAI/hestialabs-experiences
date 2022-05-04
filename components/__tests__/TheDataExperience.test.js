@@ -66,7 +66,6 @@ test('mounts without error', () => {
   expect(
     wrapper.findComponent({ ref: 'unit-introduction' }).exists()
   ).toBeTruthy()
-  expect(wrapper.findComponent({ ref: 'unit-files' }).exists()).toBeTruthy()
 })
 
 test('process simple text file', async () => {
@@ -91,7 +90,7 @@ test('process simple text file', async () => {
   const file = new File([fileContent], 'test.txt')
 
   // Trigger the data processing function
-  const unitFiles = wrapper.findComponent({ ref: 'unit-files' })
+  const unitFiles = wrapper.findComponent({ ref: 'unit-introduction' })
   await unitFiles.trigger('update', { uppyFiles: [file] })
 
   // I don't know why we need so many ticks
