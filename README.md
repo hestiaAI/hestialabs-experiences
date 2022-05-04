@@ -50,7 +50,7 @@ This section explains how packages are created and updated
 
 ### Create a new package
 
-1. Create a new folder in the `packages` directory. The folder name will be the package name.
+1. Create a new folder in the `packages` directory. By convention, the folder name is also the package name.
 
 2. Add a `src` folder with the required `index.ts` entry file.
 
@@ -77,21 +77,36 @@ This section explains how packages are created and updated
 }
 ```
 
-Replace `<NAME>` with the name of the package.
+Replace `<NAME>` with the package name.
 
-4. Add the package to [index.js](./index.js)
+4. Add the package name to the `experiences` Array in [dev.json](https://github.com/hestiaAI/hestialabs-experiences/blob/master/config/dev.json#L2).
+
+5. Link the package to the `hestialabs-experiences` repo:
+
+```sh
+cd packages/$NAME
+npm link
+cd ../../../hestialabs-experiences
+npm link @hestiaai/$NAME
+```
+
+Replace `$NAME` with the package name.
 
 ### Authenticate to GitHub Packages
 
 Follow these instructions to authenticate to GitHub Packages with a personal access token (PAT).
 
-1. [Create a PAT](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). Select the scopes (permissions) `write:packages` and `delete:packages`.
+1. [Create a PAT](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). Select the scopes (permissions) `write:packages` and `delete:packages`. Never share your PAT with anybody. You may also use the shared PAT for the organization.
 
-2. [Authenticate](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token). The simplest recommended way is to add your PAT to your `~/.npmrc` file:
+2. [Authenticate](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token). The simplest recommended way is to add your PAT to your `~/.npmrc` file in your **home directory**:
 
 ```
 //npm.pkg.github.com/:_authToken=TOKEN
 ```
+
+**IMPORTANT SECURITY NOTE**
+
+Your personal token is a secret that must not be shared with others. The shared organization token may be shared internally with relevant personnel. Never add the token to the `.npmrc` file in the repository. Tokens must never be pushed to GitHub.
 
 ### Bump version of packages changed since the last release
 

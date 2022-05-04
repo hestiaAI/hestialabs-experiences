@@ -7,7 +7,6 @@
     "npm": "7.x",
     "node": "14.x"
   },
-  "browser": "index",
   "type": "module",
   "workspaces": [
     "./packages/*"
