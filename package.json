@@ -18,7 +18,7 @@
     "lint": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint:fix": "npm run lint -- --fix",
     "pre-commit": "lint-staged",
-    "prepare": "husky install"
+    "prepare": "node prepare.js"
   },
   "jest": {
     "setupFilesAfterEnv": [
