@@ -1,7 +1,5 @@
 import type { ViewBlocks } from '@/types/view-block'
 
-const files = ['tinder']
-
 const blocks: ViewBlocks = [
   {
     id: 'comments',
