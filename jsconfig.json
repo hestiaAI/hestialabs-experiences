@@ -8,6 +8,9 @@
       "@@/*": ["./*"]
     }
   },
+  "vueCompilerOptions": {
+    "experimentalDisableTemplateSupport": true
+  },
   "exclude": [
     ".github",
     ".husky",
