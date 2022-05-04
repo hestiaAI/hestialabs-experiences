@@ -98,6 +98,7 @@
     "sha1": "^1.1.1",
     "share-api-polyfill": "^1.1.0",
     "sql.js": "^1.6.2",
+    "type-analyzer": "^0.4.0",
     "vega": "^5.20.2",
     "vega-embed": "^6.18.2",
     "vega-lite": "^5.1.1",
