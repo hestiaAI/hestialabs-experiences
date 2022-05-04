@@ -58,6 +58,14 @@ const blocks: ViewBlocks = [
     visualization: 'ChartViewSearchSunburst.vue',
     text: 'Visualize the targeting criteria used by one specific advertiser. You can look up the advertiser in the table below and click on it to visualise them.'
   },
+  {
+    id: 'personalization',
+    sql: 'personalization',
+    files: ['personalization'],
+    visualization: 'TwitterInferredInfos.vue',
+    title: 'Inferred Data',
+    text: 'Find out what information Twitter has deduced about you'
+  },
   genericDateViewer
 ]
 

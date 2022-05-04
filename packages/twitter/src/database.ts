@@ -42,6 +42,21 @@ const config: DatabaseConfig = {
           }
         }
       ]
+    },
+    {
+      name: 'TwitterPersonalization',
+      columns: [
+        ['languages', TEXT],
+        ['gender', TEXT],
+        ['interests', TEXT],
+        ['partnerInterests', TEXT],
+        ['numAudiences', INTEGER],
+        ['advertisers', TEXT],
+        ['lookalikeAdvertisers', TEXT],
+        ['shows', TEXT],
+        ['locationHistory', TEXT],
+        ['age', TEXT]
+      ]
     }
   ],
   getters: [
@@ -110,6 +125,53 @@ const config: DatabaseConfig = {
         {
           column: 'time',
           path: '$.impressionTime'
+        }
+      ]
+    },
+    {
+      fileId: 'personalization',
+      path: '$.*.p13nData',
+      table: 'TwitterPersonalization',
+      getters: [
+        {
+          column: 'languages',
+          path: '$.demographics.languages'
+        },
+        {
+          column: 'gender',
+          path: '$.demographics.genderInfo.gender'
+        },
+        {
+          column: 'interests',
+          path: '$.interests.interests'
+        },
+        {
+          column: 'partnerInterests',
+          path: '$.interests.partnerInterests'
+        },
+        {
+          column: 'numAudiences',
+          path: '$.interests.audienceAndAdvertisers.numAudiences'
+        },
+        {
+          column: 'advertisers',
+          path: '$.interests.audienceAndAdvertisers.advertisers'
+        },
+        {
+          column: 'lookalikeAdvertisers',
+          path: '$.interests.audienceAndAdvertisers.lookalikeAdvertisers'
+        },
+        {
+          column: 'shows',
+          path: '$.interests.shows'
+        },
+        {
+          column: 'locationHistory',
+          path: '$.locationHistory'
+        },
+        {
+          column: 'age',
+          path: '$.inferredAgeInfo.age'
         }
       ]
     }

@@ -24,6 +24,7 @@ export type ExperienceOptions = {
   slug: string
   subtitle?: string
   title: string
+  tutorialVideos?: string[]
   url?: string
   viewBlocks: ViewBlock[]
 }

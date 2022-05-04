@@ -11,7 +11,8 @@ const options: ExperienceOptions = {
   dataSamples: ['twitter.zip', 'twitter-sample.zip'],
   files: {
     impressions: '**/ad-impressions.js',
-    engagements: '**/ad-engagements.js'
+    engagements: '**/ad-engagements.js',
+    personalization: '**/personalization.js'
   },
   icon: icon,
   preprocessors: {
@@ -19,6 +20,7 @@ const options: ExperienceOptions = {
   },
   slug: 'twitter',
   title: 'Twitter',
+  tutorialVideos: ['https://vimeo.com/691109800'],
   viewBlocks
 }
 
