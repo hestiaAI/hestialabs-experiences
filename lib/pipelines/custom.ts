@@ -1,4 +1,4 @@
-import type { FileManager, PipelineOutput } from 'types/utils'
+import type { FileManager, PipelineOutput } from '@/types/utils'
 
 /* Shallow equality test on sets */
 function setsEqual<T>(s1: Set<T>, s2: Set<T>) {

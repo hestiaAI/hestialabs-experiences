@@ -1,4 +1,4 @@
-import type { PostprocessorFunction } from 'types/view-block'
+import type { PostprocessorFunction } from '@/types'
 
 export const sunburstTargetingAdvertiser: PostprocessorFunction = result => {
   const items = result?.items || []

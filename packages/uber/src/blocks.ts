@@ -1,7 +1,7 @@
 import keplerConfig from './kepler-config'
 import { customPipelineGetFirstCSV } from '@/pipelines/custom'
 import { genericDateViewer, genericLocationViewer } from '@/pipelines/generic'
-import type { ViewBlocks } from '@/types/view-block'
+import type { ViewBlocks } from '@/types'
 import type { FileManager, PipelineOutputItems } from '@/types/utils'
 
 async function tripsGraphData(params: { fileManager: FileManager }) {

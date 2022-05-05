@@ -1,4 +1,4 @@
-import type { ViewBlocks } from '@/types/view-block'
+import type { ViewBlocks } from '@/types'
 
 import sqlOffFacebookActivityCount from './sql/off-facebook-activity-count.sql'
 import sqlOffFacebookActivityTypeCount from './sql/off-facebook-activity-type-count.sql'

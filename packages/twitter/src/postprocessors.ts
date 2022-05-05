@@ -1,4 +1,4 @@
-import type { PostprocessorFunction } from 'types/view-block'
+import type { PostprocessorFunction } from '@/types'
 
 export const sunburstTargeting: PostprocessorFunction = result => {
   // TODO generalize this...

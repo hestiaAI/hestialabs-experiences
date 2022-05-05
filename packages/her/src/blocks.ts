@@ -1,4 +1,4 @@
-import type { ViewBlocks } from '@/types/view-block'
+import type { ViewBlocks } from '@/types'
 
 import sqlProfiles from './sql/profiles.sql'
 import sqlLikesPasses from './sql/likes-passes.sql'

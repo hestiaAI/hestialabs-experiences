@@ -1,4 +1,4 @@
-import type { ViewBlocks } from '@/types/view-block'
+import type { ViewBlocks } from '@/types'
 import { customPipelineMergeCSV } from '@/pipelines/custom'
 import { genericDateViewer } from '@/pipelines/generic'
 

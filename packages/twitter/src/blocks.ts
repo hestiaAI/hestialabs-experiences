@@ -1,4 +1,4 @@
-import type { ViewBlocks } from '@/types/view-block'
+import type { ViewBlocks } from '@/types'
 
 import sqlOverview from './sql/overview.sql'
 import sqlAdsPerAdvertiser from './sql/ads-per-advertiser.sql'

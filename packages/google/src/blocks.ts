@@ -1,4 +1,4 @@
-import type { ViewBlocks } from '@/types/view-block'
+import type { ViewBlocks } from '@/types'
 import { genericViewers } from '@/pipelines/generic'
 
 const blocks: ViewBlocks = [

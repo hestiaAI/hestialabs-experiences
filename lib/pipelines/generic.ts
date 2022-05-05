@@ -1,4 +1,4 @@
-import type { ViewBlock, ViewBlocks } from 'types/view-block'
+import type { ViewBlock, ViewBlocks } from '@/types'
 
 export const genericDateViewer: ViewBlock = {
   id: 'genericDateViewer',
