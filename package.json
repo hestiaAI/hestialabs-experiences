@@ -15,11 +15,11 @@
     "dev": "webpack --watch --progress --mode=development",
     "build": "webpack --mode=production",
     "clean": "lerna run clean",
-    "test": "node --experimental-specifier-resolution=node --loader ts-node/esm -r ts-node/register ./test.ts",
+    "test": "npm run build && node --experimental-specifier-resolution=node --loader ts-node/esm -r ts-node/register ./test.ts",
     "lerna:version": "lerna version prerelease --no-changelog",
     "lerna:publish": "lerna publish from-package",
     "preversion": "npm test",
-    "prepublishOnly": "npm run build && npm test",
+    "prepublishOnly": "npm test",
     "prepare": "husky install",
     "prettier": "prettier"
   },
