@@ -3,6 +3,8 @@
   "files.exclude": {
     ".eslintcache": true
   },
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
 
   "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.insertSpaces": true,
@@ -10,19 +12,13 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
 
-  "eslint.validate": [
-    "javascript",
-    "vue"
-  ],
+  "eslint.validate": ["javascript", "vue"],
+  "javascript.validate.enable": false,
 
   // https://eslint.vuejs.org/user-guide/#trouble-with-visual-studio-code
   // https://stackoverflow.com/a/64573900/8238129
-  "vetur.validation.template": false,
-
-  "javascript.validate.enable": false,
-
-  "files.insertFinalNewline": true,
-  "files.trimFinalNewlines": true,
-  "editor.formatOnSave": true
+  "vetur.validation.template": false
 }
