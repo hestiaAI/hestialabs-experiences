@@ -34,7 +34,7 @@
       "key": "connections",
       "customPipeline": "connections",
       "files": ["connections"],
-      "visualization":"ChartViewOverviewLinkedinConnection.vue",
+      "visualization": "ChartViewOverviewLinkedinConnection.vue",
       "showTable": false,
       "title": "Connections",
       "text": "This tool allows you to track all the connections you have made with Linkedin, you can filter by date, day or by company and position in your address book."

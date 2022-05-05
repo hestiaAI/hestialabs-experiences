@@ -7,7 +7,7 @@ The experiences developed by HestiaLabs are targeted for any user willing to bet
 The instances are deployed on [netlify](https://app.netlify.com/teams/hestia/overview), where you can see a log of their [build](https://app.netlify.com/teams/hestia/builds/). They each point to a different branch of this repo.
 
 | Instance           | [test.hestialabs.org](https://test.hestialabs.org/)                                  | [experiences.hestialabs.org](https://experiences.hestialabs.org/)          | [digipower.hestialabs.org](https://digipower.hestialabs.org/)                                  | [tfac.hestialabs.org](https://tfac.hestialabs.org/)                                  |
-|:-------------------|:-------------------------------------------------------------------------------------|:---------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------|
+| :----------------- | :----------------------------------------------------------------------------------- | :------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------- |
 | branch             | [netlify-test](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-test) | [netlify](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify) | [netlify-digipower](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-digipower) | [netlify-tfac](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-tfac) |
 | netlify name       | test-experiences                                                                     | hestia-experiences                                                         | digipower                                                                                      | tfac                                                                                 |
 | purpose            | testing, typically with all features and experiences enabled                         | our public showcase                                                        | the sitra project                                                                              | a tool for the [Tracking-Free Ads Coalition](https://trackingfreeads.eu/)            |
@@ -18,13 +18,13 @@ Logs for the netlify functions are accessible in each site's netlify under Funct
 
 ### Deployment configuration
 
-Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-experiences/settings/deploys#environment) 
+Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-experiences/settings/deploys#environment)
 
 | Environment variable | Description                                                                      |
-|----------------------|----------------------------------------------------------------------------------|
+| -------------------- | -------------------------------------------------------------------------------- |
 | CONFIG_NAME          | Name of the configuration file (without extension: "workshop", "digipower" ...)  |
 | BASE_URL             | Url where the website is deployed (with protocol: "https://test.hestialabs.org") |
-| WEBDAV_USERNAME      | Kdrive user email (or else upload button is disabled)                                                  |
+| WEBDAV_USERNAME      | Kdrive user email (or else upload button is disabled)                            |
 | WEBDAV_PASSWORD      | Kdrive user password (for uploads)                                               |
 
 Documentation for the configuration file can be found in [config/README.md](config)
@@ -53,7 +53,7 @@ For detailed explanation on how things work, check out the [documentation](https
 We have server code that runs as a [netlify function](https://docs.netlify.com/functions/build-with-javascript/). It can be run locally using [netlify-cli](https://docs.netlify.com/cli/get-started/). The code is in the folder [netlify/functions](netlify/functions)
 
 ```bash
-# run everything with hot reload 
+# run everything with hot reload
 $ BASE_URL=https://xxx.com WEBDAV_USERNAME=yyy@hestia.ai WEBDAV_PASSWORD=zzz npx netlify dev
 ```
 

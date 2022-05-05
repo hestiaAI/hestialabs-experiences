@@ -7,18 +7,14 @@
     {
       "name": "tooltip",
       "value": {},
-      "on": [
-        
-        {"events": "rect:mouseout",  "update": "{}"}
-       
-      ]
+      "on": [{ "events": "rect:mouseout", "update": "{}" }]
     }
   ],
   "data": [
     {
       "name": "source",
       "values": [],
-      "format": {"type": "json", "parse": {"date": "date:'%Y-%m-%d'"}},
+      "format": { "type": "json", "parse": { "date": "date:'%Y-%m-%d'" } },
       "transform": [
         {
           "type": "formula",
@@ -30,7 +26,7 @@
           "as": "dateStr",
           "expr": "utcFormat(datum.date,'%B %d, %Y')"
         },
-        {"type": "extent", "field": "max", "signal": "extent"}
+        { "type": "extent", "field": "max", "signal": "extent" }
       ]
     }
   ],
@@ -39,7 +35,7 @@
       "name": "x",
       "type": "time",
       "range": "width",
-      "domain": {"data": "source", "field": "date"}
+      "domain": { "data": "source", "field": "date" }
     },
     {
       "name": "y",
@@ -47,7 +43,7 @@
       "range": "height",
       "nice": true,
       "zero": true,
-      "domain": [0, {"signal": "extent[1]"}]
+      "domain": [0, { "signal": "extent[1]" }]
     },
     {
       "name": "color",
@@ -66,61 +62,61 @@
     }
   ],
   "axes": [
-    {"scale": "x", "orient": "bottom", "tickCount": 10, "offset": 5},
-    {"scale": "y", "orient": "left", "offset": 25}
+    { "scale": "x", "orient": "bottom", "tickCount": 10, "offset": 5 },
+    { "scale": "y", "orient": "left", "offset": 25 }
   ],
   "marks": [
     {
       "type": "rect",
-      "from": {"data": "source"},
+      "from": { "data": "source" },
       "encode": {
         "enter": {
-          "xc": {"scale": "x", "field": "date", "offset": -5},
-          "width": {"scale": "x", "band": 1, "offset": 10},
-          "y": {"scale": "y", "field": "like"},
-          "y2": {"scale": "y", "value": 0},
-          "fill": {"scale": "color", "value":"Likes"},
+          "xc": { "scale": "x", "field": "date", "offset": -5 },
+          "width": { "scale": "x", "band": 1, "offset": 10 },
+          "y": { "scale": "y", "field": "like" },
+          "y2": { "scale": "y", "value": 0 },
+          "fill": { "scale": "color", "value": "Likes" },
           "tooltip": {
             "signal": "datum.like + ' likes on ' + datum.dateStr"
           }
         },
-        "update": {"fillOpacity": {"value": 1}},
-        "hover": {"fillOpacity": {"value": 0.5}}
+        "update": { "fillOpacity": { "value": 1 } },
+        "hover": { "fillOpacity": { "value": 0.5 } }
       }
     },
     {
       "type": "rect",
-      "from": {"data": "source"},
+      "from": { "data": "source" },
       "encode": {
         "enter": {
-          "xc": {"scale": "x", "field": "date", "offset": 5},
-          "width": {"scale": "x", "band": 1, "offset": 10},
-          "y": {"scale": "y", "field": "dislike"},
-          "y2": {"scale": "y", "value": 0},
-          "fill": {"scale": "color", "value":"Dislikes"},
+          "xc": { "scale": "x", "field": "date", "offset": 5 },
+          "width": { "scale": "x", "band": 1, "offset": 10 },
+          "y": { "scale": "y", "field": "dislike" },
+          "y2": { "scale": "y", "value": 0 },
+          "fill": { "scale": "color", "value": "Dislikes" },
           "tooltip": {
             "signal": "datum.dislike + ' dislikes on ' + datum.dateStr"
           }
         },
-        "update": {"fillOpacity": {"value": 1}},
-        "hover": {"fillOpacity": {"value": 0.5}}
+        "update": { "fillOpacity": { "value": 1 } },
+        "hover": { "fillOpacity": { "value": 0.5 } }
       }
     },
     {
       "type": "text",
       "encode": {
         "enter": {
-          "align": {"value": "center"},
-          "baseline": {"value": "bottom"},
-          "fill": {"value": "#333"}
+          "align": { "value": "center" },
+          "baseline": { "value": "bottom" },
+          "fill": { "value": "#333" }
         },
         "update": {
-          "x": {"scale": "x", "signal": "tooltip.date", "band": 0.5},
-          "y": {"scale": "y", "signal": "tooltip.like", "offset": -2},
-          "text": {"signal": "tooltip.like"},
+          "x": { "scale": "x", "signal": "tooltip.date", "band": 0.5 },
+          "y": { "scale": "y", "signal": "tooltip.like", "offset": -2 },
+          "text": { "signal": "tooltip.like" },
           "fillOpacity": [
-            {"test": "datum === tooltip", "value": 0},
-            {"value": 1}
+            { "test": "datum === tooltip", "value": 0 },
+            { "value": 1 }
           ]
         }
       }
@@ -131,9 +127,9 @@
     "encode": {
       "title": {
         "enter": {
-          "fill": {"value": "#2e3131"},
-          "fontSize": {"value": 18},
-          "fontWeight": {"value": "bold"}
+          "fill": { "value": "#2e3131" },
+          "fontSize": { "value": 18 },
+          "fontWeight": { "value": "bold" }
         }
       }
     }
