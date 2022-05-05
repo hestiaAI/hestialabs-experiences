@@ -7,7 +7,7 @@
       <BaseAlert v-if="error" type="error">{{ message }}</BaseAlert>
       <BaseSearchBar v-model="search"></BaseSearchBar>
       <VDataTable
-        v-bind="{ headers: headersOptions, search }"
+        v-bind="{ headers: data.headers, search }"
         ref="tableRef"
         :items="filteredItems"
         multi-sort
@@ -18,7 +18,7 @@
         data-testid="data-table"
         @current-items="onItemsUpdate"
       >
-        <template v-for="header in headersOptions" #[`header.${header.value}`]>
+        <template v-for="header in data.headers" #[`header.${header.value}`]>
           {{ header.text }}
           <VMenu
             :id="header.value"
@@ -41,6 +41,16 @@
               </VBtn>
             </template>
             <div style="background-color: white; width: 280px">
+              <div class="d-flex justify-space-between">
+                <div class="overline ma-3">{{ header.text }}</div>
+                <VChip
+                  :color="typeColors[String(header.type).toLowerCase()]"
+                  small
+                  outlined
+                  class="ma-4"
+                  >{{ String(header.type).toLowerCase() }}</VChip
+                >
+              </div>
               <VAutocomplete
                 v-model="filters[header.value]"
                 flat
@@ -48,7 +58,7 @@
                 full-width
                 multiple
                 dense
-                class="pa-4"
+                class="pa-4 pt-0"
                 label="Search ..."
                 :items="columnValues(header)"
                 :menu-props="{ closeOnClick: true }"
@@ -93,7 +103,7 @@
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
         </template>
         <template
-          v-for="header in headersOptions.filter(h => h.value !== 'url')"
+          v-for="header in data.headers.filter(h => h.value !== 'url')"
           #[`item.${header.value}`]="slotProps"
         >
           {{ formatItemAsString(slotProps) }}
@@ -118,6 +128,7 @@ import { writeToString } from '@fast-csv/format'
 import { processError } from '@/utils/utils'
 import { formatObject, formatArray } from '@/utils/json'
 import { toDateString } from '@/utils/dates'
+import { detectTypes } from '@/utils/type-check'
 
 const height5 = 290
 const height10 = 530
@@ -148,25 +159,43 @@ export default {
       files: null,
       filters: {},
       itemsPerPage: defaultItemsPerPage10 ? 10 : 5,
-      height: defaultItemsPerPage10 ? height10 : height5
+      height: defaultItemsPerPage10 ? height10 : height5,
+      typeColors: {
+        boolean: '#F24535',
+        string: '#265918',
+        float: '#25B8D9',
+        int: '#8B278C',
+        date: '#F28322',
+        datetime: '#F28322',
+        time: '#F28322',
+        array: '#9FC131',
+        object: '#042940'
+      }
     }
   },
   computed: {
-    headersOptions() {
-      let headers = this.headers
+    data() {
+      let tempHeaders = this.headers
       if (typeof this.headers[0] === 'string') {
         // allow headers to be an array of strings
-        headers = this.headers.map(h => ({
+        tempHeaders = this.headers.map(h => ({
           text: h,
           value: h
         }))
       }
-      // add column attributes
-      return headers.map(h => ({
-        ...h,
-        align: 'left',
-        sortable: true
-      }))
+
+      // Type detection
+      const { headers, items } = detectTypes(tempHeaders, this.items)
+
+      // Add column style and options
+      return {
+        headers: headers.map(h => ({
+          ...h,
+          align: 'left',
+          sortable: true
+        })),
+        items
+      }
     },
     filteredItems() {
       return this.items.filter(d => {
@@ -208,11 +237,11 @@ export default {
       this.status = false
       this.error = false
       try {
-        const headers = this.headersOptions.map(h => h.text)
+        const headers = this.data.headers.map(h => h.text)
         const filteredItems = this.$refs.tableRef.$children[0].filteredItems
         // Change the items keys to match the headers
         const itemsWithHeader = filteredItems.map(i =>
-          this.headersOptions.reduce(
+          this.data.headers.reduce(
             (o, h) => ({ ...o, [h.text]: i[h.value] }),
             {}
           )

@@ -1,5 +1,6 @@
 import { Analyzer, DATA_TYPES } from 'type-analyzer'
 import _ from 'lodash'
+import * as d3 from 'd3'
 
 // Number of sample to use for the type analysis
 const NB_SAMPLE = 400
@@ -21,6 +22,8 @@ export const ACCEPTED_TYPES = [
 export const NULL_VALUES = /^(null|nan|none||)$/i
 
 // Define Formatters in order to format all columns with the given type
+export const dateFormatter = d3.timeFormat('%Y-%m-%d') // Specify Datetime and Date format to be sortable
+export const datetimeFormatter = d3.timeFormat('%Y-%m-%d %H:%M:%S') // Specify Datetime and Date format to be sortable
 export const TYPE_FORMATTER = {
   BOOLEAN: {
     validator: d =>
@@ -30,11 +33,11 @@ export const TYPE_FORMATTER = {
     formatter: d => (typeof d === 'undefined' ? null : Boolean(d))
   },
   FLOAT: {
-    validator: d => parseFloat(d) === d,
+    validator: d => !isNaN(parseFloat(d)),
     formatter: d => parseFloat(d)
   },
   INT: {
-    validator: d => parseInt(d) === d,
+    validator: d => Number.isInteger(Number(d)),
     formatter: d => parseInt(d)
   },
   OBJECT: {
@@ -49,26 +52,23 @@ export const TYPE_FORMATTER = {
     validator: d => !isNaN(new Date(d).getTime()),
     formatter: d => {
       const date = new Date(d)
-      return isNaN(date.getTime()) ? null : date
+      return isNaN(date.getTime()) ? null : dateFormatter(date)
     }
   },
   DATETIME: {
     validator: d => !isNaN(new Date(d).getTime()),
     formatter: d => {
       const date = new Date(d)
-      return isNaN(date.getTime()) ? null : date
+      return isNaN(date.getTime()) ? null : datetimeFormatter(date)
     }
   },
   TIME: {
-    validator: d => !isNaN(new Date(d).getTime()),
-    formatter: d => {
-      const date = new Date(d)
-      return isNaN(date.getTime()) ? null : date
-    }
+    validator: d => true, // TODO: validate time
+    formatter: d => (d ? String(d) : null)
   },
   STRING: {
     validator: d => true, // String is our fallback solution, so no validation here
-    formatter: d => String(d) ?? ''
+    formatter: d => (d ? String(d) : null)
   }
 }
 
@@ -131,7 +131,7 @@ export function objectToDataFrame(object) {
  * @param {*} items an array of rows object (e.g: [{key1: arr1[0], key2: arr2[0]}, {key1: arr1[1], key2: arr2[2]}, ... ])
  * @returns a list of headers with additional metadata about type of each column
  */
-export function getTypesFromData(items) {
+export function getTypesFromData(headers, items) {
   const ignoredDataTypes = Object.keys(DATA_TYPES).filter(
     type => !ACCEPTED_TYPES.includes(type)
   )
@@ -140,12 +140,13 @@ export function getTypesFromData(items) {
     ignoredDataTypes
   })
 
-  return meta.map(h => {
+  return meta.map(m => {
+    const header = headers.find(h => h.value === m.label)
     return {
-      value: h.label,
-      type: h.type,
-      format: h.format,
-      category: h.category
+      ...header,
+      value: m.label,
+      type: m.type,
+      category: m.category
     }
   })
 }
@@ -193,10 +194,10 @@ export function verifyTypes(headers, items) {
       }
 
       // else we assume that the type was falsy detected and set the type to default String
-      h.type = 'STRING'
+      h.type = 'string'
       break
     }
-    if (idxRow === items.length) h.type = 'STRING'
+    if (idxRow === items.length) h.type = 'string'
   })
   return headers
 }
@@ -208,8 +209,9 @@ export function verifyTypes(headers, items) {
  * @returns the headers array with metadata about inferred type and the items casted to the inferred type
  */
 export function detectTypes(headers, items) {
-  const samples = getNotNullSampleFromData(headers, items, NB_SAMPLE)
-  const metadata = getTypesFromData(objectToDataFrame(samples))
+  const columnNames = headers.map(h => h.value)
+  const samples = getNotNullSampleFromData(columnNames, items, NB_SAMPLE)
+  const metadata = getTypesFromData(headers, objectToDataFrame(samples))
   const typedHeaders = verifyTypes(metadata, items)
   const formattedItems = formatDataWithTypes(typedHeaders, items)
 
