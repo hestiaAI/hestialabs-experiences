@@ -7,22 +7,23 @@
 
   "title": {
     "text": "Likes/Passes correlation",
-    "anchor":"middle",
-    "dy":-10,
+    "anchor": "middle",
+    "dy": -10,
     "encode": {
       "title": {
         "enter": {
-          "fill": {"value": "#2e3131"},
-          "fontWeight":{"value": "lighter"},
-          "fontSize":{"value":16},
-          "font": {"value":"Tahoma"}
+          "fill": { "value": "#2e3131" },
+          "fontWeight": { "value": "lighter" },
+          "fontSize": { "value": 16 },
+          "font": { "value": "Tahoma" }
         }
       }
     }
   },
   "signals": [
     {
-      "name": "clear", "value": true,
+      "name": "clear",
+      "value": true,
       "on": [
         {
           "events": "mouseup[!event.item]",
@@ -32,30 +33,33 @@
       ]
     },
     {
-      "name": "shift", "value": false,
+      "name": "shift",
+      "value": false,
       "on": [
         {
           "events": "@legendSymbol:click, @legendLabel:click",
           "update": "event.shiftKey",
-          "force":  true
+          "force": true
         }
       ]
     },
     {
-      "name": "clicked", "value": null,
+      "name": "clicked",
+      "value": null,
       "on": [
         {
           "events": "@legendSymbol:click, @legendLabel:click",
           "update": "{value: datum.value}",
-          "force":  true
+          "force": true
         }
       ]
     },
     {
-      "name": "brush", "value": 0,
+      "name": "brush",
+      "value": 0,
       "on": [
         {
-          "events": {"signal": "clear"},
+          "events": { "signal": "clear" },
           "update": "clear ? [0, 0] : brush"
         },
         {
@@ -67,21 +71,24 @@
           "update": "[brush[0], clamp(x(), 0, width)]"
         },
         {
-          "events": {"signal": "delta"},
+          "events": { "signal": "delta" },
           "update": "clampRange([anchor[0] + delta, anchor[1] + delta], 0, width)"
         }
       ]
     },
     {
-      "name": "anchor", "value": null,
-      "on": [{"events": "@brush:mousedown", "update": "slice(brush)"}]
+      "name": "anchor",
+      "value": null,
+      "on": [{ "events": "@brush:mousedown", "update": "slice(brush)" }]
     },
     {
-      "name": "xdown", "value": 0,
-      "on": [{"events": "@brush:mousedown", "update": "x()"}]
+      "name": "xdown",
+      "value": 0,
+      "on": [{ "events": "@brush:mousedown", "update": "x()" }]
     },
     {
-      "name": "delta", "value": 0,
+      "name": "delta",
+      "value": 0,
       "on": [
         {
           "events": "[@brush:mousedown, window:mouseup] > window:mousemove!",
@@ -93,7 +100,7 @@
       "name": "domain",
       "on": [
         {
-          "events": {"signal": "brush"},
+          "events": { "signal": "brush" },
           "update": "span(brush) ? invert('x', brush) : null"
         }
       ]
@@ -103,16 +110,16 @@
   "data": [
     {
       "name": "source",
-      "values":[],
+      "values": [],
       "transform": [
         {
           "type": "aggregate",
-          "fields":["like", "pass", "open"],
-          "groupby":["date"],
-          "ops":["sum", "sum", "sum"],
-          "as":["Likes", "Passes", "open"]
+          "fields": ["like", "pass", "open"],
+          "groupby": ["date"],
+          "ops": ["sum", "sum", "sum"],
+          "as": ["Likes", "Passes", "open"]
         },
-        {"type": "fold", "fields": ["Likes", "Passes"]},
+        { "type": "fold", "fields": ["Likes", "Passes"] },
         {
           "type": "filter",
           "expr": "(datum['Passes'] != null || datum['Likes'] != null) && datum['open'] != null"
@@ -122,10 +129,10 @@
     {
       "name": "selected",
       "on": [
-        {"trigger": "clear", "remove": true},
-        {"trigger": "!shift", "remove": true},
-        {"trigger": "!shift && clicked", "insert": "clicked"},
-        {"trigger": "shift && clicked", "toggle": "clicked"}
+        { "trigger": "clear", "remove": true },
+        { "trigger": "!shift", "remove": true },
+        { "trigger": "!shift && clicked", "insert": "clicked" },
+        { "trigger": "shift && clicked", "toggle": "clicked" }
       ]
     }
   ],
@@ -137,7 +144,7 @@
       "round": true,
       "nice": true,
       "zero": true,
-      "domain": {"data": "source", "field": "open"},
+      "domain": { "data": "source", "field": "open" },
       "range": "width"
     },
     {
@@ -146,14 +153,14 @@
       "round": true,
       "nice": true,
       "zero": true,
-      "domain": {"data": "source", "field": "value"},
+      "domain": { "data": "source", "field": "value" },
       "range": "height"
     },
     {
       "name": "color",
       "type": "ordinal",
-      "range": ["#414141","#FF6A6E"],
-      "domain": {"data": "source", "field": "key"}
+      "range": ["#414141", "#FF6A6E"],
+      "domain": { "data": "source", "field": "key" }
     }
   ],
 
@@ -166,10 +173,10 @@
       "tickCount": 5,
       "titlePadding": 10,
       "title": "Number of times the application is opened per day",
-      "titleColor": {"value": "#2e3131"},
-      "titleFontWeight":{"value": "bold"},
-      "titleFontSize":{"value":10},
-      "titleFont": {"value":"Tahoma"}
+      "titleColor": { "value": "#2e3131" },
+      "titleFontWeight": { "value": "bold" },
+      "titleFontSize": { "value": 10 },
+      "titleFont": { "value": "Tahoma" }
     },
     {
       "scale": "y",
@@ -178,10 +185,10 @@
       "orient": "left",
       "titlePadding": 10,
       "title": "Number of likes/passes",
-      "titleColor": {"value": "#2e3131"},
-      "titleFontWeight":{"value": "bold"},
-      "titleFontSize":{"value":10},
-      "titleFont": {"value":"Tahoma"}      
+      "titleColor": { "value": "#2e3131" },
+      "titleFontWeight": { "value": "bold" },
+      "titleFontSize": { "value": 10 },
+      "titleFont": { "value": "Tahoma" }
     }
   ],
 
@@ -189,22 +196,25 @@
     {
       "stroke": "color",
       "title": "Action type",
-      "titleColor": {"value": "#2e3131"},
-      "titleFontWeight":{"value": "bold"},
-      "titleFontSize":{"value":10},
-      "titleFont": {"value":"Tahoma"},
+      "titleColor": { "value": "#2e3131" },
+      "titleFontWeight": { "value": "bold" },
+      "titleFontSize": { "value": 10 },
+      "titleFont": { "value": "Tahoma" },
       "encode": {
         "symbols": {
           "name": "legendSymbol",
           "interactive": true,
           "update": {
-            "fill": {"value": "transparent"},
-            "strokeWidth": {"value": 2},
+            "fill": { "value": "transparent" },
+            "strokeWidth": { "value": 2 },
             "opacity": [
-              {"test": "!length(data('selected')) || indata('selected', 'value', datum.value)", "value": 0.9},
-              {"value": 0.15}
+              {
+                "test": "!length(data('selected')) || indata('selected', 'value', datum.value)",
+                "value": 0.9
+              },
+              { "value": 0.15 }
             ],
-            "size": {"value": 64}
+            "size": { "value": 64 }
           }
         },
         "labels": {
@@ -212,8 +222,11 @@
           "interactive": true,
           "update": {
             "opacity": [
-              {"test": "!length(data('selected')) || indata('selected', 'value', datum.value)", "value": 1},
-              {"value": 0.25}
+              {
+                "test": "!length(data('selected')) || indata('selected', 'value', datum.value)",
+                "value": 1
+              },
+              { "value": 0.25 }
             ]
           }
         }
@@ -228,14 +241,14 @@
       "interactive": true,
       "encode": {
         "enter": {
-          "x": {"value": 0},
-          "height": {"value": 35},
-          "fill": {"value": "transparent"},
-          "cursor": {"value": "ew-resize"}
+          "x": { "value": 0 },
+          "height": { "value": 35 },
+          "fill": { "value": "transparent" },
+          "cursor": { "value": "ew-resize" }
         },
         "update": {
-          "y": {"signal": "height"},
-          "width": {"signal": "span(range('x'))"}
+          "y": { "signal": "height" },
+          "width": { "signal": "span(range('x'))" }
         }
       }
     },
@@ -244,42 +257,49 @@
       "interactive": false,
       "encode": {
         "enter": {
-          "y": {"value": 0},
-          "height": {"signal":"height"},
-          "fill": {"value": "#ddd"}
+          "y": { "value": 0 },
+          "height": { "signal": "height" },
+          "fill": { "value": "#ddd" }
         },
         "update": {
-          "x": {"signal": "brush[0]"},
-          "x2": {"signal": "brush[1]"},
-          "fillOpacity": {"signal": "domain ? 0.2 : 0"}
+          "x": { "signal": "brush[0]" },
+          "x2": { "signal": "brush[1]" },
+          "fillOpacity": { "signal": "domain ? 0.2 : 0" }
         }
       }
     },
     {
       "name": "marks",
       "type": "symbol",
-      "from": {"data": "source"},
+      "from": { "data": "source" },
       "interactive": false,
       "encode": {
-        "enter":{
+        "enter": {
           "tooltip": {
             "signal": "datum.value "
           }
         },
         "update": {
-          "x": {"scale": "x", "field": "open"},
-          "y": {"scale": "y", "field": "value"},
-          "shape": {"value": "circle"},
-          "strokeWidth": {"value": 2},
+          "x": { "scale": "x", "field": "open" },
+          "y": { "scale": "y", "field": "value" },
+          "shape": { "value": "circle" },
+          "strokeWidth": { "value": 2 },
           "opacity": [
-            {"test": "(!domain || inrange(datum.open, domain)) && (!length(data('selected')) || indata('selected', 'value', datum.key))", "value": 0.9 },
-            {"value": 0.15}
+            {
+              "test": "(!domain || inrange(datum.open, domain)) && (!length(data('selected')) || indata('selected', 'value', datum.key))",
+              "value": 0.9
+            },
+            { "value": 0.15 }
           ],
           "stroke": [
-            {"test": "(!domain || inrange(datum.open, domain)) && (!length(data('selected')) || indata('selected', 'value', datum.key))", "scale": "color", "field": "key"},
-            {"value": "#ccc"}
+            {
+              "test": "(!domain || inrange(datum.open, domain)) && (!length(data('selected')) || indata('selected', 'value', datum.key))",
+              "scale": "color",
+              "field": "key"
+            },
+            { "value": "#ccc" }
           ],
-          "fill": {"value": "transparent"}
+          "fill": { "value": "transparent" }
         }
       }
     },
@@ -288,13 +308,13 @@
       "name": "brush",
       "encode": {
         "enter": {
-          "y": {"value": 0},
-          "height": {"signal":"height"},
-          "fill": {"value": "transparent"}
+          "y": { "value": 0 },
+          "height": { "signal": "height" },
+          "fill": { "value": "transparent" }
         },
         "update": {
-          "x": {"signal": "brush[0]"},
-          "x2": {"signal": "brush[1]"}
+          "x": { "signal": "brush[0]" },
+          "x2": { "signal": "brush[1]" }
         }
       }
     },
@@ -303,14 +323,14 @@
       "interactive": false,
       "encode": {
         "enter": {
-          "y": {"value": 0},
-          "height": {"signal": "height"},
-          "width": {"value": 1},
-          "fill": {"value": "firebrick"}
+          "y": { "value": 0 },
+          "height": { "signal": "height" },
+          "width": { "value": 1 },
+          "fill": { "value": "firebrick" }
         },
         "update": {
-          "fillOpacity": {"signal": "domain ? 1 : 0"},
-          "x": {"signal": "brush[0]"}
+          "fillOpacity": { "signal": "domain ? 1 : 0" },
+          "x": { "signal": "brush[0]" }
         }
       }
     },
@@ -318,15 +338,15 @@
       "type": "rect",
       "interactive": false,
       "encode": {
-        "enter":{
-          "y": {"value": 0},
-          "height": {"signal": "height"},
-          "width": {"value": 1},
-          "fill": {"value": "firebrick"}
+        "enter": {
+          "y": { "value": 0 },
+          "height": { "signal": "height" },
+          "width": { "value": 1 },
+          "fill": { "value": "firebrick" }
         },
         "update": {
-          "fillOpacity": {"signal": "domain ? 1 : 0"},
-          "x": {"signal": "brush[1]"}
+          "fillOpacity": { "signal": "domain ? 1 : 0" },
+          "x": { "signal": "brush[1]" }
         }
       }
     }
