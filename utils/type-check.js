@@ -23,39 +23,51 @@ export const NULL_VALUES = /^(null|nan|none||)$/i
 // Define Formatters in order to format all columns with the given type
 export const TYPE_FORMATTER = {
   BOOLEAN: {
+    validator: d =>
+      String(d).toLowerCase() === 'true' ||
+      String(d).toLowerCase() === 'false' ||
+      [0, 1].includes(d),
     formatter: d => (typeof d === 'undefined' ? null : Boolean(d))
   },
   FLOAT: {
+    validator: d => parseFloat(d) === d,
     formatter: d => parseFloat(d)
   },
   INT: {
+    validator: d => parseInt(d) === d,
     formatter: d => parseInt(d)
   },
   OBJECT: {
+    validator: d => typeof d === 'object',
     formatter: d => JSON.stringify(d) ?? null
   },
   ARRAY: {
+    validator: d => Array.isArray(d),
     formatter: d => JSON.stringify(d) ?? null
   },
   DATE: {
+    validator: d => !isNaN(new Date(d).getTime()),
     formatter: d => {
       const date = new Date(d)
       return isNaN(date.getTime()) ? null : date
     }
   },
   DATETIME: {
+    validator: d => !isNaN(new Date(d).getTime()),
     formatter: d => {
       const date = new Date(d)
       return isNaN(date.getTime()) ? null : date
     }
   },
   TIME: {
+    validator: d => !isNaN(new Date(d).getTime()),
     formatter: d => {
       const date = new Date(d)
       return isNaN(date.getTime()) ? null : date
     }
   },
   STRING: {
+    validator: d => true, // String is our fallback solution, so no validation here
     formatter: d => String(d) ?? ''
   }
 }
@@ -138,6 +150,12 @@ export function getTypesFromData(items) {
   })
 }
 
+/**
+ * Apply a formatter to each columns with the type detected
+ * @param {Array[Object]} headers metadata for the headers, with type detected
+ * @param {Array[Object]} items rows to be formatted
+ * @returns the formatted rows with the correct type
+ */
 export function formatDataWithTypes(headers, items) {
   return items.map(r => {
     headers.forEach(h => {
@@ -149,6 +167,41 @@ export function formatDataWithTypes(headers, items) {
 }
 
 /**
+ * Verify that the inferred type is valid for the first non null value,
+ * otherwise fallback to string type
+ * @param {Array[Object]} headers metadata for the headers, with type detected
+ * @param {Array[Object]} items rows to be verify
+ * @returns the headers with types changed to  string when not validated
+ */
+export function verifyTypes(headers, items) {
+  headers.forEach(h => {
+    const validator = TYPE_FORMATTER[h.type].validator
+    let idxRow = 0
+
+    // Iterate through all rows to find the first non null value
+    while (idxRow < items.length) {
+      const value = items[idxRow][h.value]
+
+      // if the current value is null go to next row
+      if (NULL_VALUES.test(String(value))) {
+        idxRow++
+        continue
+      }
+      // else if the value is valid, we assume the type was correctly detected, stop iterations
+      if (validator(value)) {
+        break
+      }
+
+      // else we assume that the type was falsy detected and set the type to default String
+      h.type = 'STRING'
+      break
+    }
+    if (idxRow === items.length) h.type = 'STRING'
+  })
+  return headers
+}
+
+/**
  * Infer types of data and convert items to the proper type
  * @param {Array} headers a list of columns name to handle
  * @param {Array[Object]} items an array of objects representing rows
@@ -156,7 +209,8 @@ export function formatDataWithTypes(headers, items) {
  */
 export function detectTypes(headers, items) {
   const samples = getNotNullSampleFromData(headers, items, NB_SAMPLE)
-  const typedHeaders = getTypesFromData(objectToDataFrame(samples))
+  const metadata = getTypesFromData(objectToDataFrame(samples))
+  const typedHeaders = verifyTypes(metadata, items)
   const formattedItems = formatDataWithTypes(typedHeaders, items)
 
   return { headers: typedHeaders, items: formattedItems }
