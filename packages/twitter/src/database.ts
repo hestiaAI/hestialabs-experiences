@@ -83,7 +83,7 @@ const config: DatabaseConfig = {
         },
         {
           path: '$.matchedTargetingCriteria[*]',
-          table: 'TwitterCriterion',
+          table: 'TwitterCriterio',
           getters: [
             {
               column: 'adId',
