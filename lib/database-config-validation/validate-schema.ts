@@ -2,7 +2,7 @@
 import Ajv from 'ajv'
 
 import { DatabaseConfig } from '@/types/database-config'
-import { error } from '@/utils'
+import { error } from '../utils'
 
 const prefix = 'http://hestia.ai/schemas/databaseConfig.json#'
 
@@ -129,9 +129,9 @@ const schema = {
               maxItems: 3,
               items: [
                 { $ref: '#column' },
-                { enum: ['INTEGER', 'TEXT', 'FLOAT', 'DATE'] },
-                { type: 'string', pattern: '^[A-Z ]+$' }
-              ]
+                { enum: ['INTEGER', 'TEXT', 'FLOAT', 'DATE'] }
+              ],
+              additionalItems: { type: 'string', pattern: '^[A-Z ]+$' }
             }
           },
           foreignKeys: {
@@ -152,9 +152,9 @@ const schema = {
                   },
                   required: ['table', 'columns']
                 }
-              }
-            },
-            required: ['columns', 'reference']
+              },
+              required: ['columns', 'reference']
+            }
           }
         },
         required: ['name', 'columns']

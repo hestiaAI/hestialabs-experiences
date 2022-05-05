@@ -1,14 +1,14 @@
-import type { NonEmptyArray } from 'types/utils'
-import type { Files } from 'types/experience-options'
-import type { DatabaseConfig } from 'types/database-config'
+import type { DatabaseConfig } from '@/types'
+import type { NonEmptyArray } from '@/types/utils'
+import type { Files } from '@/types/experience-options'
 import type {
   DatabaseGetterColumnReference,
   DatabaseGetter,
   DatabaseTable,
   DatabaseTables
-} from 'types/database-config'
+} from '@/types/database-config'
 
-import { error, enforceArray } from '@/utils'
+import { error, enforceArray } from '../utils'
 
 function findAndValidateTable(
   tables: DatabaseTables,

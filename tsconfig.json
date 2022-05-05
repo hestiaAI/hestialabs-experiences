@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "es2020",
     "target": "es2016",
-    "allowJs": false,
+    "allowJs": true,
     "strict": true,
     "lib": ["dom", "es2017"],
     // TS v4.2
@@ -21,9 +21,9 @@
     "moduleResolution": "node",
 
     "paths": {
-      "@/*": ["lib/*"],
-      "types/*": ["lib/types/*"]
+      "@/*": ["lib/*"]
     }
   },
+  "ts-node": {},
   "exclude": ["node_modules"]
 }
