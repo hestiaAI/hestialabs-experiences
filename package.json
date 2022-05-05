@@ -18,6 +18,7 @@
     "test": "node --experimental-specifier-resolution=node --loader ts-node/esm -r ts-node/register ./test.ts",
     "lerna:version": "lerna version prerelease --no-changelog",
     "lerna:publish": "lerna publish from-package",
+    "preversion": "npm test",
     "prepublishOnly": "npm run build && npm test",
     "prepare": "husky install",
     "prettier": "prettier"
