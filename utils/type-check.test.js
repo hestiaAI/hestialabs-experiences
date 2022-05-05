@@ -3,7 +3,8 @@ import {
   getTypesFromData,
   objectToDataFrame,
   formatDataWithTypes,
-  detectTypes
+  detectTypes,
+  dateFormatter
 } from '~/utils/type-check'
 import { arrayEqualNoOrder } from '~/utils/test-utils'
 
@@ -80,23 +81,25 @@ test('getTypesFromData gives correct type', () => {
     ratio: [0, '0.5', 0.3, '0.5', 0.3],
     boolean: [true, 'False', 'FALSE', 'TRUE', 0]
   }
-
-  const types = getTypesFromData(objectToDataFrame(TEST_SAMPLE))
+  const TEST_HEADERS = Object.keys(TEST_SAMPLE).map(value => {
+    return { value }
+  })
+  const types = getTypesFromData(TEST_HEADERS, objectToDataFrame(TEST_SAMPLE))
 
   const expected = [
-    { value: 'id', type: 'INT', format: '', category: 'MEASURE' },
+    { value: 'id', type: 'INT', category: 'MEASURE' },
     {
       value: 'description',
       type: 'STRING',
-      format: '',
+
       category: 'DIMENSION'
     },
-    { value: 'time', type: 'DATE', format: 'YYYY-M-D', category: 'TIME' },
-    { value: 'ratio', type: 'FLOAT', format: '', category: 'MEASURE' },
+    { value: 'time', type: 'DATE', category: 'TIME' },
+    { value: 'ratio', type: 'FLOAT', category: 'MEASURE' },
     {
       value: 'boolean',
       type: 'BOOLEAN',
-      format: '',
+
       category: 'DIMENSION'
     }
   ]
@@ -105,19 +108,19 @@ test('getTypesFromData gives correct type', () => {
 
 test('formatDataWithTypes convert to valid format', () => {
   const TEST_HEADERS = [
-    { value: 'id', type: 'INT', format: '', category: 'MEASURE' },
+    { value: 'id', type: 'INT', category: 'MEASURE' },
     {
       value: 'description',
       type: 'STRING',
-      format: '',
+
       category: 'DIMENSION'
     },
-    { value: 'time', type: 'DATE', format: 'YYYY-M-D', category: 'TIME' },
-    { value: 'ratio', type: 'FLOAT', format: '', category: 'MEASURE' },
+    { value: 'time', type: 'DATE', category: 'TIME' },
+    { value: 'ratio', type: 'FLOAT', category: 'MEASURE' },
     {
       value: 'boolean',
       type: 'BOOLEAN',
-      format: '',
+
       category: 'DIMENSION'
     }
   ]
@@ -135,7 +138,7 @@ test('formatDataWithTypes convert to valid format', () => {
   const expected = [
     {
       id: 0,
-      description: '',
+      description: null,
       time: null,
       ratio: 0.5,
       boolean: true
@@ -163,15 +166,15 @@ test('formatDataWithTypes convert to valid format', () => {
     },
     {
       id: NaN,
-      description: '',
-      time: new Date('2021-12-31'),
+      description: null,
+      time: dateFormatter(new Date('2021-12-31')),
       ratio: NaN,
       boolean: null
     },
     {
       id: NaN,
-      description: '',
-      time: new Date('2022-01-01'),
+      description: null,
+      time: dateFormatter(new Date('2022-01-01')),
       ratio: NaN,
       boolean: null
     }
@@ -189,34 +192,33 @@ test('detectTypes return the correct headers and values', () => {
     { id: 'NaN', description: '', time: '2021-12-31', ratio: NaN },
     { id: null, description: '', time: '2022-01-01', ratio: NaN }
   ]
-  const TEST_HEADERS = Object.keys(TEST_SAMPLE[0])
+  const TEST_HEADERS = Object.keys(TEST_SAMPLE[0]).map(value => {
+    return { value }
+  })
   const result = detectTypes(TEST_HEADERS, TEST_SAMPLE)
 
   const expected = {
     headers: [
-      { value: 'id', type: 'INT', format: '', category: 'MEASURE' },
+      { value: 'id', type: 'INT', category: 'MEASURE' },
       {
         value: 'description',
         type: 'STRING',
-        format: '',
         category: 'DIMENSION'
       },
       {
         value: 'time',
         type: 'DATE',
-        format: 'YYYY-M-D',
         category: 'TIME'
       },
-      { value: 'ratio', type: 'FLOAT', format: '', category: 'MEASURE' },
+      { value: 'ratio', type: 'FLOAT', category: 'MEASURE' },
       {
         value: 'boolean',
         type: 'BOOLEAN',
-        format: '',
         category: 'DIMENSION'
       }
     ],
     items: [
-      { id: 0, description: '', time: null, ratio: 0.5, boolean: true },
+      { id: 0, description: null, time: null, ratio: 0.5, boolean: true },
       {
         description: 'hello 1',
         time: null,
@@ -240,15 +242,15 @@ test('detectTypes return the correct headers and values', () => {
       },
       {
         id: NaN,
-        description: '',
-        time: new Date('2021-12-31'),
+        description: null,
+        time: dateFormatter(new Date('2021-12-31')),
         ratio: NaN,
         boolean: null
       },
       {
         id: NaN,
-        description: '',
-        time: new Date('2022-01-01'),
+        description: null,
+        time: dateFormatter(new Date('2022-01-01')),
         ratio: NaN,
         boolean: null
       }
