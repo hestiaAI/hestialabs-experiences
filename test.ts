@@ -1,4 +1,4 @@
-import type { ExperienceOptions, ViewBlock } from '@/types'
+import type { ExperienceOptions, ViewBlock } from './lib/types'
 import { error } from './lib/utils'
 import {
   validateDatabaseConfigIntegrity,

@@ -12,8 +12,9 @@
     "./packages/*"
   ],
   "scripts": {
-    "dev": "webpack --watch --progress --mode=development",
-    "build": "webpack --mode=production",
+    "webpack": "webpack --progress",
+    "dev": "npm run webpack -- --mode=development --watch",
+    "build": "npm run webpack -- --mode=production",
     "clean": "lerna run clean",
     "test": "npm run build && node --experimental-specifier-resolution=node --loader ts-node/esm -r ts-node/register ./test.ts",
     "lerna:version": "lerna version prerelease --no-changelog",
