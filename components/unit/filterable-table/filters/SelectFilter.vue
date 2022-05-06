@@ -7,7 +7,7 @@
       full-width
       multiple
       dense
-      class="pa-4 pt-0"
+      class="pa-3"
       label="Search ..."
       :items="values"
       :menu-props="{ closeOnClick: true }"
@@ -33,14 +33,16 @@
         </span>
       </template>
     </VAutocomplete>
-    <VBtn
-      small
-      text
-      color="primary"
-      class="ml-2 mb-2"
-      @click="reset"
-      v-text="`Clear`"
-    />
+    <div class="d-flex justify-space-between align-end mt-5">
+      <VBtn
+        small
+        text
+        color="primary"
+        class=""
+        @click="reset"
+        v-text="`Clear`"
+      />
+    </div>
   </VContainer>
 </template>
 <script>

@@ -63,17 +63,18 @@ export default {
   },
   computed: {
     filterComponent() {
-      const filterName = 'SelectFilter.vue'
-      /*
+      let filterName = 'SelectFilter.vue' // default Filter
+
       switch (String(this.header.type)) {
-        case 'INT':
+        case 'INT' || 'FLOAT':
           filterName = 'NumberFilter.vue'
           break
+        /*
         case 'DATE' || 'DATETIME':
           filterName = 'DateFilter.vue'
           break
+          */
       }
-      */
       return () =>
         import(`@/components/unit/filterable-table/filters/${filterName}`)
     }
