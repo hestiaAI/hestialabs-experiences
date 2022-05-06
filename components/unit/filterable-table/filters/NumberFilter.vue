@@ -7,6 +7,7 @@
             v-model="filter"
             :max="extent[1]"
             :min="extent[0]"
+            :step="isFloat ? '0.1' : '1'"
             hide-details
             class="align-center"
             @change="filterChange"
@@ -22,6 +23,10 @@
             label="Min value"
             type="number"
             style="width: 60px"
+            :counter="false"
+            :step="isFloat ? '0.1' : '1'"
+            :max="extent[1]"
+            :min="extent[0]"
             @change="$set(filter, 0, $event)"
           ></VTextField>
         </VCol>
@@ -62,6 +67,10 @@ export default {
     values: {
       type: Array,
       default: () => []
+    },
+    isFloat: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

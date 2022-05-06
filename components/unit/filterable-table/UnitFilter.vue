@@ -24,8 +24,8 @@
         >
       </div>
       <component
-        :is="filterComponent"
-        v-bind="{ header, values }"
+        :is="component"
+        v-bind="{ header, values, ...filterOptions.args }"
         @filter-change="filterChange"
       />
     </div>
@@ -47,6 +47,7 @@ export default {
   },
   data() {
     return {
+      args: {},
       filter: null,
       typeColors: {
         BOOLEAN: '#F24535',
@@ -62,21 +63,21 @@ export default {
     }
   },
   computed: {
-    filterComponent() {
-      let filterName = 'SelectFilter.vue' // default Filter
-
+    filterOptions() {
       switch (String(this.header.type)) {
-        case 'INT' || 'FLOAT':
-          filterName = 'NumberFilter.vue'
-          break
-        /*
-        case 'DATE' || 'DATETIME':
-          filterName = 'DateFilter.vue'
-          break
-          */
+        case 'INT':
+          return { name: 'NumberFilter.vue', args: {} }
+        case 'FLOAT':
+          return { name: 'NumberFilter.vue', args: { isFloat: true } }
+        default:
+          return { name: 'SelectFilter.vue', args: {} }
       }
+    },
+    component() {
       return () =>
-        import(`@/components/unit/filterable-table/filters/${filterName}`)
+        import(
+          `@/components/unit/filterable-table/filters/${this.filterOptions.name}`
+        )
     }
   },
   methods: {
