@@ -20,84 +20,11 @@
       >
         <template v-for="header in data.headers" #[`header.${header.value}`]>
           {{ header.text }}
-          <VMenu
-            :id="header.value"
+          <UnitFilter
             :key="header.value"
-            offset-y
-            :close-on-content-click="false"
-          >
-            <template #activator="{ on, attrs }">
-              <VBtn icon v-bind="attrs" v-on="on">
-                <VIcon
-                  small
-                  :color="
-                    filters[header.value] && filters[header.value].length
-                      ? 'success'
-                      : ''
-                  "
-                >
-                  $vuetify.icons.mdiFilter
-                </VIcon>
-              </VBtn>
-            </template>
-            <div style="background-color: white; width: 280px">
-              <div class="d-flex justify-space-between">
-                <div class="overline ma-3">{{ header.text }}</div>
-                <VChip
-                  :color="typeColors[String(header.type).toLowerCase()]"
-                  small
-                  outlined
-                  class="ma-4"
-                  >{{ String(header.type).toLowerCase() }}</VChip
-                >
-              </div>
-              <VAutocomplete
-                v-model="filters[header.value]"
-                flat
-                hide-details
-                full-width
-                multiple
-                dense
-                class="pa-4 pt-0"
-                label="Search ..."
-                :items="columnValues(header)"
-                :menu-props="{ closeOnClick: true }"
-              >
-                <template #selection="{ item, index }">
-                  <VChip v-if="index < 3" class="ma-1 pr-1">
-                    <span
-                      style="
-                        overflow-x: hidden;
-                        whitespace: nowrap;
-                        text-overflow: ellipsis;
-                      "
-                    >
-                      {{ item }}
-                    </span>
-                    <VBtn
-                      icon
-                      small
-                      right
-                      @click="filters[header.value].splice(index, 1)"
-                    >
-                      <VIcon small>$vuetify.icon.mdiCloseCircle</VIcon>
-                    </VBtn>
-                  </VChip>
-                  <span v-if="index === 3" class="grey--text caption">
-                    (+{{ filters[header.value].length - 3 }} others)
-                  </span>
-                </template>
-              </VAutocomplete>
-              <VBtn
-                small
-                text
-                color="primary"
-                class="ml-2 mb-2"
-                @click="filters[header.value] = []"
-                v-text="`Clear`"
-              />
-            </div>
-          </VMenu>
+            v-bind="{ header, values: columnValues(header) }"
+            @filter-change="filterChange(header.value, $event)"
+          />
         </template>
         <template #item.url="{ value }">
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
@@ -158,19 +85,9 @@ export default {
       search: '',
       files: null,
       filters: {},
+      filteredItems: this.items,
       itemsPerPage: defaultItemsPerPage10 ? 10 : 5,
-      height: defaultItemsPerPage10 ? height10 : height5,
-      typeColors: {
-        boolean: '#F24535',
-        string: '#265918',
-        float: '#25B8D9',
-        int: '#8B278C',
-        date: '#F28322',
-        datetime: '#F28322',
-        time: '#F28322',
-        array: '#9FC131',
-        object: '#042940'
-      }
+      height: defaultItemsPerPage10 ? height10 : height5
     }
   },
   computed: {
@@ -196,13 +113,6 @@ export default {
         })),
         items
       }
-    },
-    filteredItems() {
-      return this.items.filter(d => {
-        return Object.keys(this.filters).every(f => {
-          return this.filters[f].length < 1 || this.filters[f].includes(d[f])
-        })
-      })
     }
   },
   watch: {
@@ -218,6 +128,14 @@ export default {
     }
   },
   methods: {
+    filterChange(header, filter) {
+      this.filters[header] = filter
+      this.filteredItems = this.items.filter(d => {
+        return Object.entries(this.filters).every(([header, filter]) => {
+          return filter === null || filter(d[header])
+        })
+      })
+    },
     formatItemAsString(itemProps) {
       const { header, value } = itemProps
       // eslint-disable-next-line no-prototype-builtins

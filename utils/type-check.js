@@ -20,17 +20,17 @@ export const ACCEPTED_TYPES = [
 
 // Define the possible null values we can encounter to exclude them from the type analysis
 export const NULL_VALUES = /^(null|nan|none||)$/i
+export const BOOLEAN_VALUES = /^(true|1|on|yes|false|0|off|no)/i
+export const TRUE_VALUES = /^(true|1|on|yes)/i
 
 // Define Formatters in order to format all columns with the given type
 export const dateFormatter = d3.timeFormat('%Y-%m-%d') // Specify Datetime and Date format to be sortable
 export const datetimeFormatter = d3.timeFormat('%Y-%m-%d %H:%M:%S') // Specify Datetime and Date format to be sortable
 export const TYPE_FORMATTER = {
   BOOLEAN: {
-    validator: d =>
-      String(d).toLowerCase() === 'true' ||
-      String(d).toLowerCase() === 'false' ||
-      [0, 1].includes(d),
-    formatter: d => (typeof d === 'undefined' ? null : Boolean(d))
+    validator: d => BOOLEAN_VALUES.test(String(d)),
+    formatter: d =>
+      typeof d === 'undefined' ? null : TRUE_VALUES.test(String(d))
   },
   FLOAT: {
     validator: d => !isNaN(parseFloat(d)),
