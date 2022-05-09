@@ -19,11 +19,20 @@ export function createViewBlock(viewBlock: ViewBlock) {
 }
 
 const defaultOptions: Partial<ExperienceOptions> = {
+  collaborator: undefined,
+  databaseConfig: undefined,
+  dataPortal: undefined,
+  dataPortalMessage: undefined,
+  dataSamples: [],
   disabled: false,
+  files: {},
   hideFileExplorer: true,
   hideSummary: true,
   keepOnlyFiles: true,
-  subtitle: 'Data Experience'
+  preprocessors: {},
+  subtitle: 'Data Experience',
+  tutorialVideos: [],
+  url: undefined
 }
 
 export class Experience {
