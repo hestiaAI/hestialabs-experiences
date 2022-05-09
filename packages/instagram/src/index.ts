@@ -5,7 +5,7 @@ import databaseConfig from './database'
 
 const options: ExperienceOptions = {
   databaseConfig,
-  dataPortal: 'https://help.instagram.com/196883487377501',
+  dataPortal: 'https://help.instagram.com/181231772500920',
   dataSamples: ['test-instagram.zip'],
   files: {
     comments: '**/comments.json',
