@@ -6,21 +6,25 @@ The experiences developed by HestiaLabs are targeted for any user willing to bet
 
 1. Clone this repo and name the directory `hestialabs-experiences`. Then clone the repo [hestialabs](https://github.com/hestiaAI/hestialabs) and name the directory `hestialabs`. These two directories should be siblings and share a parent directory.
 
-2. Navigate to `hestialabs` and create symlinks to all the packages in the global `node_modules/` folder (see [npm-link documentation](https://docs.npmjs.com/cli/v8/commands/npm-link)):
+2. In the `hestialabs` repo, install the root package:
 
 ```sh
 $ cd ../hestialabs
+$ npm install
+```
+
+3. Then, in `hestialabs`, create symlinks to all packages in the monorepo and save them in the global `node_modules/` folder (see [npm-link documentation](https://docs.npmjs.com/cli/v8/commands/npm-link)):
+
+```sh
 $ npm link --workspaces
 ```
 
-3. Navigate back to `hestialabs-experiences` and install all dependencies. This triggers the [`postinstall`](./postinstall.js) [post script](https://docs.npmjs.com/cli/v8/using-npm/scripts#pre--post-scripts) that creates symlinks from the previously globally-linked packages to the `node_modules/` of the current folder.
+4. Navigate back to `hestialabs-experiences` and install the root package. This triggers the [`postinstall`](./postinstall.js) [post script](https://docs.npmjs.com/cli/v8/using-npm/scripts#pre--post-scripts) that creates symlinks from the previously globally-linked packages to the `node_modules/` of the current folder.
 
 ```sh
 $ cd ../hestialabs-experiences
 $ npm install
 ```
-
-4. Set up the `hestialabs` repo by following the instructions in the README.
 
 ## Instances
 
