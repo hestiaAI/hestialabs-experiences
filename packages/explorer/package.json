@@ -1,7 +1,6 @@
 {
   "name": "@hestiaai/explorer",
   "version": "0.0.1-alpha.4",
-  "description": "",
   "browser": "dist/index",
   "type": "module",
   "files": [

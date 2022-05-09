@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "hestialabs",
-  "description": "HestiaLabs Experiences",
+  "description": "Monorepo for HestiaLabs Experiences",
   "version": "0.0.0",
   "engines": {
     "npm": "7.x",

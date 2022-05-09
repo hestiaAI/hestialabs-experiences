@@ -1,7 +1,6 @@
 {
   "name": "@hestiaai/tinder",
   "version": "0.0.1-alpha.11",
-  "description": "",
   "browser": "dist/index",
   "type": "module",
   "files": [
