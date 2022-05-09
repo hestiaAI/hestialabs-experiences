@@ -1,5 +1,3 @@
-import { Parser } from 'n3'
-
 export const defaultExtension = 'txt'
 
 export const mimeTypes = {
@@ -63,18 +61,6 @@ export async function arrayBufferToObject(arrayBuffer) {
   const blob = new Blob([arrayBuffer])
   const text = await blob.text()
   return JSON.parse(text)
-}
-
-/**
- * Converts an rdf string to N3 quads
- * @param {String} rdf the input RDF data
- * @param {String} format
- * @returns {Array} N3 quads
- */
-export function rdfToQuads(rdf, format = 'N3') {
-  const parser = new Parser({ format })
-  const quads = parser.parse(rdf)
-  return quads
 }
 
 /* Transform integer x to a string of length n, left-padded with zeros. */
