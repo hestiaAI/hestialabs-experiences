@@ -116,6 +116,7 @@ You can pass extra arguments to the npm script:
 
 ```sh
 npm run lerna:version -- --no-push
+npm run lerna:version -- --force-publish=*
 ```
 
 ### Publish packages
