@@ -81,16 +81,13 @@ Replace `<NAME>` with the package name.
 
 4. Add the package name to the `experiences` Array in [dev.json](https://github.com/hestiaAI/hestialabs-experiences/blob/master/config/dev.json#L2).
 
-5. Link the package to the `hestialabs-experiences` repo:
+5. Re-link the packages workspace to the `hestialabs-experiences` repo:
 
 ```sh
-cd packages/$NAME
-npm link
-cd ../../../hestialabs-experiences
-npm link @hestiaai/$NAME
+npm link --workspaces
+cd ../hestialabs-experiences
+npm install
 ```
-
-Replace `$NAME` with the package name.
 
 ### Authenticate to GitHub Packages
 
