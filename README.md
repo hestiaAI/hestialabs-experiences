@@ -60,7 +60,6 @@ This section explains how packages are created and updated
 {
   "name": "@hestiaai/<NAME>",
   "version": "0.0.0",
-  "description": "",
   "browser": "dist/index",
   "type": "module",
   "files": ["dist"],
@@ -117,6 +116,7 @@ You can pass extra arguments to the npm script:
 
 ```sh
 npm run lerna:version -- --no-push
+npm run lerna:version -- --force-publish=*
 ```
 
 ### Publish packages

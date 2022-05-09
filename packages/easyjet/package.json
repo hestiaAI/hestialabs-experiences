@@ -1,7 +1,6 @@
 {
   "name": "@hestiaai/easyjet",
-  "version": "0.0.1-alpha.0",
-  "description": "",
+  "version": "0.0.1-alpha.2",
   "browser": "dist/index",
   "type": "module",
   "files": [

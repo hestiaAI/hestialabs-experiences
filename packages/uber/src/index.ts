@@ -3,8 +3,7 @@ import icon from '@/icons/uber.png'
 import viewBlocks from './blocks'
 
 const options: ExperienceOptions = {
-  dataPortal:
-    'https://help.uber.com/ubereats/article/request-a-copy-of-your-uber-data',
+  dataPortal: 'https://myprivacy.uber.com/privacy/exploreyourdata/download',
   dataSamples: ['uber-trips.zip'],
   files: {
     trips: '**/Rider/trips_data.csv'

@@ -1,7 +1,6 @@
 {
   "name": "@hestiaai/google",
-  "version": "0.0.1-alpha.6",
-  "description": "",
+  "version": "0.0.1-alpha.8",
   "browser": "dist/index",
   "type": "module",
   "files": [

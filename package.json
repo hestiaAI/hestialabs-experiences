@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "hestialabs",
-  "description": "HestiaLabs Experiences",
+  "description": "Monorepo for HestiaLabs Experiences",
   "version": "0.0.0",
   "engines": {
     "npm": "7.x",
@@ -19,7 +19,6 @@
     "test": "npm run build && node --experimental-specifier-resolution=node --loader ts-node/esm -r ts-node/register ./test.ts",
     "lerna:version": "lerna version prerelease --no-changelog",
     "lerna:publish": "lerna publish from-package",
-    "preversion": "npm test",
     "prepublishOnly": "npm test",
     "prepare": "husky install",
     "prettier": "prettier"

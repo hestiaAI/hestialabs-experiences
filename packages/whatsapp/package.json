@@ -1,7 +1,6 @@
 {
   "name": "@hestiaai/whatsapp",
-  "version": "0.0.1-alpha.3",
-  "description": "",
+  "version": "0.0.1-alpha.5",
   "browser": "dist/index",
   "type": "module",
   "files": [
