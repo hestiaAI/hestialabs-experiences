@@ -7,7 +7,7 @@
       <VCardText>
         <VRow>
           <VCol align="center">
-            <p v-if="$route.params.key === 'explorer'" class="body-1">
+            <p v-if="$route.params.experience === 'explorer'" class="body-1">
               Explore the structure and contents of any file.
             </p>
             <p v-else class="body-1">

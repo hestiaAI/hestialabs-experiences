@@ -41,7 +41,7 @@
         <VListItem two-line>
           <VListItemContent>
             <VListItemTitle>Experience</VListItemTitle>
-            <VListItemSubtitle>{{ experience.key }}</VListItemSubtitle>
+            <VListItemSubtitle>{{ experience.experience }}</VListItemSubtitle>
           </VListItemContent>
         </VListItem>
         <VListItem two-line>
@@ -147,7 +147,7 @@ export default {
     ...mapState(['fileManager', 'consentForm']),
     experienceConfig() {
       return this.$store.getters.experience({
-        params: { key: this.experience.slug }
+        params: { experience: this.experience.slug }
       })
     },
     sortedResults() {

@@ -136,7 +136,7 @@ export default {
       // changing timeout property resets the timeout
       this.timeout = isOffline ? 5001 : 5000
     },
-    '$route.params.key'() {
+    '$route.params.experience'() {
       validateRoute(this.$nuxt.context)
     }
   },

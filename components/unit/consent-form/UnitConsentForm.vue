@@ -152,10 +152,12 @@ export default {
         date.getUTCMonth() + 1,
         2
       )}-${padNumber(date.getUTCDate(), 2)}`
-      const filename = `${this.$route.params.key}_${yearMonthDay}_${padNumber(
-        date.getUTCHours(),
+      const filename = `${
+        this.$route.params.experience
+      }_${yearMonthDay}_${padNumber(date.getUTCHours(), 2)}${padNumber(
+        date.getUTCMinutes(),
         2
-      )}${padNumber(date.getUTCMinutes(), 2)}_UTC_${uniqueId}.zip`
+      )}_UTC_${uniqueId}.zip`
       return filename
     },
     async generateZIP() {
@@ -167,7 +169,7 @@ export default {
       const timestamp = Date.now()
       this.filename = this.makeFilename(timestamp)
       const experience = {
-        key: this.$route.params.key,
+        experience: this.$route.params.experience,
         timestamp,
         version: VERSION,
         gitRevision

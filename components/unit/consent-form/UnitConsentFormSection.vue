@@ -13,7 +13,7 @@
 
     <template v-if="section.type === 'data' && !section.hide">
       <VCheckbox
-        v-for="(k, j) in section.keys"
+        v-for="(k, j) in section.ids"
         :key="`data-${j}`"
         v-model="value"
         :readonly="readonly"

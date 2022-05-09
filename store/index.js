@@ -38,8 +38,8 @@ export const getters = {
   // https://vuex.vuejs.org/guide/getters.html#method-style-access
   experience:
     state =>
-    ({ params: { key } }) =>
-      state.experiences.find(e => e.slug === key) || {}
+    ({ params: { experience } }) =>
+      state.experiences.find(e => e.slug === experience) || {}
 }
 
 export const mutations = {

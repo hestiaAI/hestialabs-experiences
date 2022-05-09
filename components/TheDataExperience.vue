@@ -226,11 +226,11 @@ export default {
       return this.viewBlocks.map(o => this.sql[o.sql])
     },
     consentFormTemplate() {
-      const consent = this.$store.state.config.consent
+      const { consent } = this.$store.state.config
       if (consent) {
-        const key = this.$route.params.key
-        if (key in consent) {
-          return consent[key]
+        const { experience } = this.$route.params
+        if (experience in consent) {
+          return consent[experience]
         } else if ('default' in consent) {
           return consent.default
         }
@@ -295,9 +295,9 @@ export default {
       // Set consent form
       const consentForm = JSON.parse(JSON.stringify(this.consentFormTemplate))
       if (consentForm) {
-        const section = consentForm.find(section => section.type === 'data')
+        const section = consentForm.find(({ type }) => type === 'data')
         section.titles = this.viewBlocks.map(e => e.title)
-        section.keys = this.viewBlocks.map(e => e.key)
+        section.ids = this.viewBlocks.map(e => e.id)
       }
       this.$store.commit('setConsentForm', consentForm)
 
