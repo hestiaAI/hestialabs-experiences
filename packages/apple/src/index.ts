@@ -7,7 +7,7 @@ const options: ExperienceOptions = {
   hideSummary: false,
   hideFileExplorer: false,
   icon: icon,
-  slug: 'apple',
+  slug: 'apples',
   title: 'Apple',
   viewBlocks
 }
