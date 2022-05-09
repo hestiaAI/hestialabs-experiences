@@ -5,12 +5,12 @@ export default {
       filters: [],
       layers: [
         {
-          id: 'xkafwbj',
+          id: '0dpan25',
           type: 'point',
           config: {
             dataId: 'data',
             label: 'Point',
-            color: [210, 0, 0],
+            color: [218, 0, 0],
             highlightColor: [252, 242, 26, 255],
             columns: {
               lat: 'latitude',
@@ -72,8 +72,8 @@ export default {
             strokeColorField: null,
             strokeColorScale: 'quantile',
             sizeField: {
-              name: 'duration',
-              type: 'real'
+              name: 'count',
+              type: 'integer'
             },
             sizeScale: 'sqrt'
           }
@@ -84,43 +84,11 @@ export default {
           fieldsToShow: {
             data: [
               {
-                name: 'address',
+                name: 'mac',
                 format: null
               },
               {
-                name: 'name',
-                format: null
-              },
-              {
-                name: 'startTimestamp',
-                format: null
-              },
-              {
-                name: 'endTimestamp',
-                format: null
-              },
-              {
-                name: 'placeVisitType',
-                format: null
-              },
-              {
-                name: 'placeVisitImportance',
-                format: null
-              },
-              {
-                name: 'visitConfidence',
-                format: null
-              },
-              {
-                name: 'locationConfidence',
-                format: null
-              },
-              {
-                name: 'editConfirmationStatus',
-                format: null
-              },
-              {
-                name: 'duration',
+                name: 'count',
                 format: null
               }
             ]
@@ -150,10 +118,10 @@ export default {
     mapState: {
       bearing: 0,
       dragRotate: false,
-      latitude: 46.37608976800299,
-      longitude: 6.801570415955495,
+      latitude: 46.41269271195032,
+      longitude: 6.560159114941752,
       pitch: 0,
-      zoom: 7.687731467318987,
+      zoom: 9,
       isSplit: false
     },
     mapStyle: {

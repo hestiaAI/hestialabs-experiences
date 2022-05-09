@@ -30,7 +30,7 @@
 </template>
 <script>
 import mixin from './mixin'
-import keplerConfig from './kepler_config_trip.js'
+import keplerConfig from './kepler_config_wifi.js'
 export default {
   mixins: [mixin],
   data() {
@@ -43,10 +43,9 @@ export default {
       return this.values.map(v => {
         return {
           ...v,
-          startLongitude: v.startLongitude * 1e-7,
-          startLatitude: v.startLatitude * 1e-7,
-          endLongitude: v.endLongitude * 1e-7,
-          endLatitude: v.endLatitude * 1e-7
+          longitude: v.longitude * 1e-7,
+          latitude: v.latitude * 1e-7,
+          mac: this.convert_mac(v.mac)
         }
       })
     },
@@ -74,6 +73,24 @@ export default {
     }
   },
   methods: {
+    convert_mac(address) {
+      let s = String(address.toString(16))
+      while (s.length < 12) {
+        s = '0' + s
+      }
+      return this.chunk(s, 2).join(':')
+    },
+    chunk(str, n) {
+      const ret = []
+      let i
+      let len
+
+      for (i = 0, len = str.length; i < len; i += n) {
+        ret.push(str.substr(i, n))
+      }
+
+      return ret
+    },
     drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems

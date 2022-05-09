@@ -1,7 +1,7 @@
 <template>
   <VContainer v-if="values.length > 0">
     <VRow>
-      <VCol cols="13">
+      <VCol cols="12">
         <p class="text-h6">Number of records in your files</p>
         <p v-if="total === 0" class="text-subtitle-2">
           No records were found in your file(s).
@@ -13,12 +13,12 @@
     </VRow>
     <template v-if="total > 0">
       <VRow>
-        <VCol cols="13">
+        <VCol cols="12">
           <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
       </VRow>
       <VRow>
-        <VCol cols="13">
+        <VCol cols="12">
           <UnitFilterableTable
             v-bind="{ headers, items: results }"
             @current-items="onTableFilter"
