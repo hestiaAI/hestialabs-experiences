@@ -21,6 +21,11 @@
               the private data that {{ companyName }} collected on you. Once you
               receive it, analyze it here.
             </p>
+            <p
+              v-if="dataPortalMessage"
+              class="body-1"
+              v-html="dataPortalMessage"
+            ></p>
             <p>
               No data is transmitted to HestiaLabs or anyone else. The whole
               experience takes place locally in the browser and nothing is left
@@ -83,6 +88,10 @@ export default {
       required: true
     },
     dataPortal: {
+      type: String,
+      default: ''
+    },
+    dataPortalMessage: {
       type: String,
       default: ''
     },
