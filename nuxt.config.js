@@ -32,7 +32,10 @@ export default {
       return 'HestiaLabs'
     },
     title: '',
-    meta: [{ name: 'format-detection', content: 'telephone=no' }]
+    meta: [
+      { name: 'format-detection', content: 'telephone=no' },
+      { property: 'twitter:description', content: description }
+    ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
