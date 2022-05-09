@@ -53,6 +53,9 @@
     "testPathIgnorePatterns": [
       "<rootDir>/node_modules/",
       "\\.helpers\\.js"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/deprecated-tests"
     ]
   },
   "_transformIgnorePatterns": [
