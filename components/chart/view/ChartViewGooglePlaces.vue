@@ -1,7 +1,7 @@
 <template>
   <VContainer v-if="values.length > 0">
     <VRow>
-      <VCol cols="12">
+      <VCol cols="13">
         <p class="text-h6">Number of records in your files</p>
         <p v-if="total === 0" class="text-subtitle-2">
           No records were found in your file(s).
@@ -13,12 +13,12 @@
     </VRow>
     <template v-if="total > 0">
       <VRow>
-        <VCol cols="12">
+        <VCol cols="13">
           <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
       </VRow>
       <VRow>
-        <VCol cols="12">
+        <VCol cols="13">
           <UnitFilterableTable
             v-bind="{ headers, items: results }"
             @current-items="onTableFilter"
@@ -30,7 +30,7 @@
 </template>
 <script>
 import mixin from './mixin'
-import keplerConfig from './kepler-googlePlaces.js'
+import keplerConfig from './kepler_config_places.js'
 export default {
   mixins: [mixin],
   data() {
@@ -44,7 +44,8 @@ export default {
         return {
           ...v,
           longitude: v.longitude * 1e-7,
-          latitude: v.latitude * 1e-7
+          latitude: v.latitude * 1e-7,
+          duration: this.compute_duration(v.startTimestamp, v.endTimestamp)
         }
       })
     },
@@ -72,6 +73,12 @@ export default {
     }
   },
   methods: {
+    compute_duration(d1, d2) {
+      const date1 = new Date(d1).getTime()
+      const date2 = new Date(d2).getTime()
+      const res = Math.floor(Math.abs(date1 - date2) / 1000)
+      return res
+    },
     drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems

@@ -285,7 +285,8 @@
           ["placeVisitImportance", "FLOAT"],
           ["visitConfidence", "FLOAT"],
           ["locationConfidence", "FLOAT"],
-          ["editConfirmationStatus", "TEXT"]
+          ["editConfirmationStatus", "TEXT"],
+          ["duration", "FLOAT"]
         ]
       }
     ],
@@ -409,6 +410,10 @@
           {
             "column": "editConfirmationStatus",
             "path": "$.editConfirmationStatus"
+          },
+          {
+            "column": "duration",
+            "path": "$.visitConfidence"
           }
         ]
       }
