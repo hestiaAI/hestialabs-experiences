@@ -1,8 +1,0 @@
-# authors: Valentin Oliver Loftsson <valentin@hestia.ai>
-PREFIX :  <http://schema.org/>
-
-SELECT *
-WHERE {
-    ?advertiser a :Organization
-}
-ORDER BY ?advertiser

@@ -1,19 +1,21 @@
-import webpack from 'webpack'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
-import { validExtensions } from './manifests/utils'
+import { extension2filetype } from './utils/file-manager'
 
 const name = 'HestiaLabs Experiences'
 const description = 'We create a new relationship to personal data'
 
-const { NODE_ENV, BASE_URL, CONFIG_NAME, WEBDAV_USERNAME } = process.env
+const {
+  NODE_ENV,
+  BASE_URL: baseUrl = 'http://localhost:3000',
+  CONFIG_NAME: configName = 'dev',
+  WEBDAV_USERNAME
+} = process.env
 
-if (!BASE_URL && NODE_ENV === 'production') {
+if (!baseUrl && NODE_ENV === 'production') {
   throw new Error('BASE_URL environment variable is missing')
 }
 
-const baseUrl = BASE_URL || 'http://localhost:3000'
-const configName = CONFIG_NAME || 'config'
 const uploadAvailable = !!WEBDAV_USERNAME
 
 export default {
@@ -64,13 +66,7 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-    // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios'
-  ],
-
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  modules: [],
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
@@ -102,8 +98,7 @@ export default {
 
   vue: {
     config: {
-      productionTip: false,
-      watch: ['~/manifests/']
+      productionTip: false
     }
   },
 
@@ -129,8 +124,7 @@ export default {
         config.devtool = 'source-map'
       }
       config.node = {
-        // ignore fs Node.js module (used in yarrrml-parser)
-        // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
+        // ignore fs Node.js module (used in some dependencies)
         fs: 'empty'
       }
       config.module.rules.push(
@@ -139,15 +133,10 @@ export default {
           test: /\.worker\.js$/,
           use: 'worker-loader'
         },
-        // enable raw importing of .yaml, .rq and .vega.json files
-        {
-          test: /\.(ya?ml|rq|vega|rqx|sql)$/i,
-          use: 'raw-loader'
-        },
         {
           // allow all valid extensions as sample data except JS files!
           test: new RegExp(
-            `data.+\\.(${validExtensions
+            `data.+\\.(${Object.keys(extension2filetype)
               .filter(ext => ext !== 'js')
               .join('|')})$`
           ),
@@ -157,7 +146,7 @@ export default {
             {
               loader: 'file-loader',
               options: {
-                esModule: false,
+                esModule: true,
                 name: '[path][name].[contenthash:7].[ext]'
               }
             }
@@ -180,12 +169,6 @@ export default {
       )
     },
     plugins: [
-      // To ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
-      // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
-      new webpack.IgnorePlugin({
-        resourceRegExp: /^/u,
-        contextRegExp: /xpath-iterator/u
-      }),
       // preload fonts to avoid FOUT
       new PreloadWebpackPlugin({
         rel: 'preload',
@@ -195,6 +178,7 @@ export default {
         // crossorigin attribute added by plugin for as='font'
         as: 'font'
       })
-    ]
+    ],
+    watch: ['../hestialabs/packages/*/dist/*', '../hestialabs/index.js']
   }
 }

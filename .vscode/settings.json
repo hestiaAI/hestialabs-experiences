@@ -1,5 +1,8 @@
 {
   "files.eol": "\n",
+  "files.exclude": {
+    ".eslintcache": true
+  },
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
 

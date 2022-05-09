@@ -17,14 +17,9 @@
         </VBtn>
         <VSpacer />
         <div class="d-flex">
-          <VImg
-            max-width="30"
-            :src="company.icon"
-            :lazy-src="company.icon"
-            contain
-          />
+          <VImg max-width="30" :src="e.icon" :lazy-src="e.icon" contain />
           <h3 class="ml-3">
-            {{ company.title }}
+            {{ e.title }}
           </h3>
         </div>
         <VSpacer />
@@ -89,15 +84,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['manifest', 'enabledExperiences']),
-    collaborator() {
-      return this.manifest(this.$route).collaborator
+    ...mapGetters(['experience', 'enabledExperiences']),
+    e() {
+      return this.experience(this.$route)
     },
-    company() {
-      return {
-        title: this.manifest(this.$route).title,
-        icon: this.manifest(this.$route).icon
-      }
+    collaborator() {
+      return this.e.collaborator
     }
   }
 }

@@ -1,15 +1,5 @@
 <template>
-  <VContainer>
-    <VRow v-if="parameterName">
-      <VCol cols="4" class="mx-auto">
-        <VTextField
-          v-model="parameter"
-          :label="parameterName"
-          class="my-sm-2 mr-sm-2"
-        />
-      </VCol>
-    </VRow>
-  </VContainer>
+  <div></div>
 </template>
 
 <script>
@@ -23,19 +13,6 @@ export default {
     sql: {
       type: String,
       required: true
-    },
-    parameterName: {
-      type: String,
-      default: ''
-    },
-    parameterKey: {
-      type: String,
-      default: ''
-    }
-  },
-  data() {
-    return {
-      parameter: ''
     }
   },
   computed: {
@@ -49,8 +26,7 @@ export default {
       this.progress = true
       await setTimeoutPromise(1)
       try {
-        const params = { [this.parameterKey]: this.parameter }
-        const result = this.currentDB.select(this.sql, params)
+        const result = this.currentDB.select(this.sql)
         this.$emit('update', { result })
       } catch (error) {
         this.$emit('update', { error })

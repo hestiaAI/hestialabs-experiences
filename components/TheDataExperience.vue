@@ -44,7 +44,7 @@
                   dataPortal,
                   tutorialVideos,
                   files,
-                  samples: data,
+                  samples,
                   progress,
                   error,
                   success,
@@ -66,9 +66,9 @@
             </div>
           </VTabItem>
           <VTabItem
-            v-for="(defaultViewElements, index) in defaultView"
+            v-for="(viewBlock, index) in viewBlocks"
             :key="index"
-            :value="defaultViewElements.key"
+            :value="viewBlock.id"
             :transition="false"
           >
             <VCol cols="12 mx-auto" class="tabItem">
@@ -81,20 +81,7 @@
                   <BaseProgressCircular size="64" width="4" />
                 </div>
               </VOverlay>
-              <UnitQuery
-                v-bind="{
-                  defaultViewElements,
-                  customPipeline:
-                    customPipelines !== undefined
-                      ? customPipelines[defaultViewElements.customPipeline]
-                      : undefined,
-                  sparqlQuery: queries[index],
-                  sql: sqlQueries[index],
-                  postprocessors,
-                  index,
-                  vega
-                }"
-              />
+              <UnitQuery v-bind="viewBlock" />
             </VCol>
           </VTabItem>
           <VTabItem
@@ -105,7 +92,7 @@
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
               <UnitConsentForm
                 v-bind="{
-                  defaultView
+                  viewBlocks
                 }"
               />
             </VCol>
@@ -140,57 +127,33 @@ export default {
       type: Array,
       default: () => []
     },
-    data: {
+    dataSamples: {
       type: Array,
       default: () => []
     },
     files: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     },
     keepOnlyFiles: {
       type: Boolean,
       default: true
     },
-    defaultView: {
+    viewBlocks: {
       type: Array,
       default: () => []
     },
     hideSummary: {
       type: Boolean,
-      default: () => false
+      default: false
     },
     hideFileExplorer: {
       type: Boolean,
-      default: () => false
+      default: false
     },
     preprocessors: {
       type: Object,
-      default: () => {}
-    },
-    postprocessors: {
-      type: Object,
-      default: undefined
-    },
-    customPipelines: {
-      type: Object,
-      default: undefined
-    },
-    sparql: {
-      type: Object,
-      default: () => {}
-    },
-    sql: {
-      type: Object,
-      default: () => {}
-    },
-    vega: {
-      type: Object,
-      default: () => {}
-    },
-    yarrrml: {
-      type: String,
-      default: ''
+      default: () => ({})
     },
     databaseConfig: {
       type: Object,
@@ -205,8 +168,8 @@ export default {
       error: false,
       success: false,
       message: '',
-      rml: '',
-      overlay: false
+      overlay: false,
+      samples: []
     }
   },
   computed: {
@@ -238,9 +201,9 @@ export default {
               }
             ]
           : []),
-        ...this.defaultView.map(view => ({
+        ...this.viewBlocks.map(view => ({
           ...view,
-          value: view.key,
+          value: view.id,
           disabled,
           show: true
         }))
@@ -254,14 +217,8 @@ export default {
       }
       return tabs
     },
-    queries() {
-      return this.defaultView.map(o => this.sparql[o.query])
-    },
     sqlQueries() {
-      return this.defaultView.map(o => this.sql[o.sql])
-    },
-    isRdfNeeded() {
-      return this.defaultView.filter(v => 'query' in v).length > 0
+      return this.viewBlocks.map(o => this.sql[o.sql])
     },
     consentFormTemplate() {
       const consent = this.$store.state.config.consent
@@ -291,6 +248,16 @@ export default {
       handler: debounce(function (value) {
         this.overlay = value
       }, 200)
+    }
+  },
+  async created() {
+    // files in assets/data/ are loaded with file-loader
+    this.samples = []
+    for (const filename of this.dataSamples) {
+      this.samples.push({
+        filename,
+        path: (await import(`@/assets/data/${filename}`)).default
+      })
     }
   },
   mounted() {
@@ -324,8 +291,8 @@ export default {
       const consentForm = JSON.parse(JSON.stringify(this.consentFormTemplate))
       if (consentForm) {
         const section = consentForm.find(section => section.type === 'data')
-        section.titles = this.defaultView.map(e => e.title)
-        section.keys = this.defaultView.map(e => e.key)
+        section.titles = this.viewBlocks.map(e => e.title)
+        section.keys = this.viewBlocks.map(e => e.key)
       }
       this.$store.commit('setConsentForm', consentForm)
 

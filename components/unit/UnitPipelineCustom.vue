@@ -1,14 +1,5 @@
 <template>
-  <div v-if="customPipelineOptions.length">
-    <VRow v-if="parameterName">
-      <VCol cols="4" class="mx-auto">
-        <VTextField
-          v-model="parameter"
-          :label="parameterName"
-          class="my-sm-2 mr-sm-2"
-        ></VTextField>
-      </VCol>
-    </VRow>
+  <div v-if="customPipelineOptions">
     <div v-if="options" class="d-flex justify-center">
       <VSwitch v-model="optionsVisible" label="Edit options" />
     </div>
@@ -38,16 +29,12 @@ export default {
   mixins: [mixin],
   props: {
     customPipeline: {
-      type: Function,
+      type: [String, Function],
       required: true
-    },
-    parameterName: {
-      type: String,
-      default: () => ''
     },
     customPipelineOptions: {
       type: [Object, Array],
-      default: () => ({})
+      default: undefined
     }
   },
   data() {
@@ -55,9 +42,9 @@ export default {
       status: false,
       error: false,
       code: '',
-      parameter: '',
       options: '',
-      optionsVisible: false
+      optionsVisible: false,
+      pipeline: this.customPipeline
     }
   },
   computed: {
@@ -73,6 +60,13 @@ export default {
     async customPipelineOptions() {
       this.updateOptions()
       await this.run()
+    }
+  },
+  async created() {
+    const { customPipeline: pipe } = this
+    if (typeof pipe === 'string') {
+      const { [pipe]: pipeline } = await import('~/utils/generic-pipelines')
+      this.pipeline = pipeline
     }
   },
   beforeMount() {
@@ -91,11 +85,15 @@ export default {
       await setTimeoutPromise(1)
       try {
         const optionsObject = JSON.parse(this.options || 'null')
-        const result = await this.customPipeline({
+        const result = await this.pipeline({
           fileManager: this.fileManager,
-          parameter: this.parameter,
           options: optionsObject
         })
+        if (!result) {
+          throw new Error(
+            `The pipeline returned an invalid result (${result}). We apologize for the inconvenience. We would greatly appreciate if you could report this error via e-mail to contact@hestialabs.org. Thank you :)`
+          )
+        }
         this.$emit('update', { result })
       } catch (error) {
         this.error = true

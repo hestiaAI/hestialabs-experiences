@@ -1,7 +1,0 @@
-PREFIX h: <http://hestia.ai/>
-
-SELECT ?advertiser_contact_list WHERE
-{
-    ?x a h:advertiser_contact_list .
-    ?x h:value ?advertiser_contact_list .
-}
