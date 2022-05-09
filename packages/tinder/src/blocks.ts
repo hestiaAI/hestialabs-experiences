@@ -5,7 +5,7 @@ import sqlAppOpens from './sql/app-opens.sql'
 import sqlLikesDislikesOpen from './sql/likes-dislikes-open.sql'
 import sqlLikesDislikes from './sql/likes-dislikes.sql'
 import sqlMessages from './sql/messages.sql'
-import sqlUserInfos from './sql/user-infos.sql'
+import sqlUser from './sql/user.sql'
 
 import vegaDonutMultipleComparisons from './vega/donut-multiple-comparisons'
 import vegaScatterLikesPassesCorrelation from './vega/scatter-likes-passes-correlation'
@@ -14,8 +14,8 @@ const files = ['tinder']
 
 const blocks: ViewBlocks = [
   {
-    id: 'user-infos',
-    sql: sqlUserInfos,
+    id: 'user',
+    sql: sqlUser,
     visualization: 'TinderUserInfos.vue',
     title: 'User infos',
     text: 'Tinder profile information'
