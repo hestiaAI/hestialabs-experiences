@@ -9,6 +9,8 @@ const options: ExperienceOptions = {
   databaseConfig,
   dataPortal:
     'https://support.tiktok.com/en/account-and-privacy/personalized-ads-and-data/requesting-your-data',
+  dataPortalMessage:
+    '<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format.',
   files: {
     userdata: '**/user_data.json'
   },

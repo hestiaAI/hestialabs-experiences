@@ -6,6 +6,8 @@ import databaseConfig from './database'
 const options: ExperienceOptions = {
   databaseConfig,
   dataPortal: 'https://help.instagram.com/181231772500920',
+  dataPortalMessage:
+    '<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format.',
   dataSamples: ['test-instagram.zip'],
   files: {
     comments: '**/comments.json',
