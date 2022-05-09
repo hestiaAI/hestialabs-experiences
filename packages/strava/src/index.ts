@@ -5,6 +5,7 @@ import { genericViewers } from '@/pipelines/generic'
 const options: ExperienceOptions = {
   dataPortal:
     'https://support.strava.com/hc/en-us/articles/216918437-Exporting-your-Data-and-Bulk-Export#Bulk',
+  hideFileExplorer: false,
   icon: icon,
   slug: 'strava',
   title: 'Strava',

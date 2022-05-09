@@ -4,6 +4,7 @@ import { genericViewers } from '@/pipelines/generic'
 
 const options: ExperienceOptions = {
   dataPortal: 'https://help.fitbit.com/articles/en_US/Help_article/1133.htm',
+  hideFileExplorer: false,
   icon: icon,
   slug: 'fitbit',
   title: 'Fitbit',
