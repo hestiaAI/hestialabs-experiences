@@ -79,7 +79,7 @@ const VERSION = 3
 
 export default {
   props: {
-    defaultView: {
+    viewBlocks: {
       type: Array,
       required: true
     }
@@ -122,15 +122,15 @@ export default {
     },
     missingRequiredData() {
       const section = this.consentForm.find(section => section.type === 'data')
-      return this.defaultView
+      return this.viewBlocks
         .filter(
-          block =>
+          ({ key }) =>
             typeof section.required === 'object' &&
-            section.required.includes(block.key) &&
-            (!Object.keys(this.results).includes(block.key) ||
-              !section.value.includes(block.key))
+            section.required.includes(key) &&
+            (!Object.keys(this.results).includes(key) ||
+              !section.value.includes(key))
         )
-        .map(block => block.title)
+        .map(({ title }) => title)
     }
   },
   methods: {
@@ -181,12 +181,12 @@ export default {
       const dataSection = this.consentForm.find(
         section => section.type === 'data'
       )
-      const keys = this.defaultView.map(block => block.key)
+      const keys = this.viewBlocks.map(block => block.key)
       dataSection.value
         .map(key => [key, keys.indexOf(key)])
         .filter(([key, i]) => i !== -1)
         .forEach(([key, i]) => {
-          const content = JSON.parse(JSON.stringify(this.defaultView[i]))
+          const content = JSON.parse(JSON.stringify(this.viewBlocks[i]))
           content.result = this.results[key]
           content.index = i
           zip.file(

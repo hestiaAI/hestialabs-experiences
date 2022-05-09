@@ -22,8 +22,9 @@
         },
         {
           "type": "window",
-          "sort": {"field": "count", "order": "descending"},
-          "ops": ["row_number"], "as": ["rank"]
+          "sort": { "field": "count", "order": "descending" },
+          "ops": ["row_number"],
+          "as": ["rank"]
         }
       ]
     },
@@ -37,9 +38,9 @@
           "ops": ["sum"],
           "as": ["total"]
         },
-        {"type": "extent", "field": "total", "signal": "extent"},        
-        {"type": "filter", "expr": "datum.rank <= 10"},
-        {"type": "pie", "field": "count", "sort": true}
+        { "type": "extent", "field": "total", "signal": "extent" },
+        { "type": "filter", "expr": "datum.rank <= 10" },
+        { "type": "pie", "field": "count", "sort": true }
       ]
     }
   ],
@@ -47,62 +48,62 @@
     {
       "name": "color",
       "type": "ordinal",
-      "domain": {"data": "table", "field": "companyName"},
-      "range": {"scheme": "category20"}
+      "domain": { "data": "table", "field": "companyName" },
+      "range": { "scheme": "category20" }
     }
   ],
   "marks": [
     {
       "type": "arc",
-      "from": {"data": "table"},
+      "from": { "data": "table" },
       "encode": {
         "enter": {
-          "fill": {"scale": "color", "field": "companyName"},
-          "x": {"signal": "width / 2"},
-          "y": {"signal": "height / 2"},
+          "fill": { "scale": "color", "field": "companyName" },
+          "x": { "signal": "width / 2" },
+          "y": { "signal": "height / 2" },
           "tooltip": {
             "signal": "datum.companyName + ' ' + (datum.count ? ': targeted you ' + format(datum.count, ',.0f') + ' times' : '')"
           }
         },
         "update": {
-          "startAngle": {"field": "startAngle"},
-          "endAngle": {"field": "endAngle"},
-          "padAngle": {"value": 0.02},
-          "innerRadius": {"signal": "width / 5"},
-          "outerRadius": {"signal": "width / 2.5"},
-          "cornerRadius": {"value": 7},
-          "opacity": {"value": 1},
-          "zindex": {"value": 0}
+          "startAngle": { "field": "startAngle" },
+          "endAngle": { "field": "endAngle" },
+          "padAngle": { "value": 0.02 },
+          "innerRadius": { "signal": "width / 5" },
+          "outerRadius": { "signal": "width / 2.5" },
+          "cornerRadius": { "value": 7 },
+          "opacity": { "value": 1 },
+          "zindex": { "value": 0 }
         },
-        "hover": {"opacity": {"value": 0.6}, "zindex": {"value": 1}}
+        "hover": { "opacity": { "value": 0.6 }, "zindex": { "value": 1 } }
       }
     },
     {
       "type": "text",
       "encode": {
         "enter": {
-          "x": {"signal": "width / 2"},
-          "y": {"signal": "height / 2"},
-          "fontSize": {"value": 54},
-          "fontWeight": {"value": "bold"},
-          "fill": {"value": "#2e3131"},
-          "align": {"value": "center"}
+          "x": { "signal": "width / 2" },
+          "y": { "signal": "height / 2" },
+          "fontSize": { "value": 54 },
+          "fontWeight": { "value": "bold" },
+          "fill": { "value": "#2e3131" },
+          "align": { "value": "center" }
         },
-        "update": {"text": {"signal": "extent[1]"}}
+        "update": { "text": { "signal": "extent[1]" } }
       }
     },
     {
       "type": "text",
       "encode": {
         "enter": {
-          "x": {"signal": "width / 2"},
-          "y": {"signal": "height / 1.8"},
-          "fontSize": {"value": 32},
-          "fontWeight": {"value": "bold"},
-          "fill": {"value": "#2e3131"},
-          "align": {"value": "center"}
+          "x": { "signal": "width / 2" },
+          "y": { "signal": "height / 1.8" },
+          "fontSize": { "value": 32 },
+          "fontWeight": { "value": "bold" },
+          "fill": { "value": "#2e3131" },
+          "align": { "value": "center" }
         },
-        "update": {"text": {"value": "ads"}}
+        "update": { "text": { "value": "ads" } }
       }
     }
   ],
@@ -111,9 +112,9 @@
     "encode": {
       "title": {
         "enter": {
-          "fill": {"value": "#2e3131"},
-          "fontSize": {"value": 22},
-          "fontWeight": {"value": "bold"}
+          "fill": { "value": "#2e3131" },
+          "fontSize": { "value": 22 },
+          "fontWeight": { "value": "bold" }
         }
       }
     }

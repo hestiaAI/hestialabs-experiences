@@ -1,7 +1,9 @@
 export default {
   props: {
-    hash: String,
-    required: true
+    hash: {
+      type: String,
+      required: true
+    }
   },
   data() {
     return {

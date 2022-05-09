@@ -124,7 +124,7 @@
 <script>
 import _ from 'lodash'
 import { mapState } from 'vuex'
-import { jsonToTableConverter } from '~/manifests/generic-pipelines'
+import { jsonToTableConverter } from '~/utils/generic-pipelines'
 
 export default {
   name: 'UnitFileExplorer',

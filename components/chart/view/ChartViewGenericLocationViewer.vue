@@ -23,9 +23,7 @@
       </VRow>
       <VRow>
         <VCol cols="12">
-          <UnitFilterableTable
-            v-bind="{ data: { headers: header, items: results } }"
-          />
+          <UnitFilterableTable :data="{ headers: header, items: results }" />
         </VCol>
       </VRow>
     </template>

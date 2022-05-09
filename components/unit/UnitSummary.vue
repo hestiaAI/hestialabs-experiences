@@ -36,7 +36,7 @@
 <script>
 import { mapState } from 'vuex'
 import _ from 'lodash'
-import { humanReadableFileSize, plurify } from '~/manifests/utils'
+import { humanReadableFileSize, plurify } from '~/utils/utils'
 
 export default {
   name: 'UnitSummary',

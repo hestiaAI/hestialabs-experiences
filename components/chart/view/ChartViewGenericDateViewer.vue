@@ -289,7 +289,6 @@ export default {
     },
     onTableFilter(items) {
       // TODO: Update graph
-      // console.log(items)
     },
     filterFiles(files) {
       this.fileDimension.filter(null)

@@ -2,8 +2,8 @@
   <div>
     <VRow class="mt-3 mb-6">
       <VCol
-        v-for="{ key, title, subtitle, icon, url, disabled } in experiences"
-        :key="key"
+        v-for="{ slug, title, subtitle, icon, url, disabled } in experiences"
+        :key="slug"
         cols="12"
         sm="6"
         md="4"
@@ -12,7 +12,7 @@
       >
         <VCard
           class="d-flex flex-column"
-          v-bind="menuItemAttrs(url, key, disabled)"
+          v-bind="menuItemAttrs(url, slug, disabled)"
           hover
         >
           <VImg
