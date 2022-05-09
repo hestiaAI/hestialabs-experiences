@@ -250,7 +250,7 @@
     },
     {
       "key": "WifiScan",
-      "sql": "all-records",
+      "sql": "records-linked-to-mac",
       "files": ["LOCATION_HISTORY"],
       "visualization": "ChartViewGoogleWifi.vue",
       "showTable": false,
