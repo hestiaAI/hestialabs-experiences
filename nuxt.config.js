@@ -51,13 +51,19 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
-    // https://go.nuxtjs.dev/eslint
-    '@nuxtjs/eslint-module',
+    // we need to add build modules to `dependencies`
+    // in package.json because NODE_ENV === 'production'
+    // on Netlify does not install `devDependencies`
+    // see: https://docs.netlify.com/configure-builds/manage-dependencies/#node-js-environment
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa'
-  ],
+  ].concat(
+    // eslint module is only needed for development
+    // https://go.nuxtjs.dev/eslint
+    NODE_ENV === 'production' ? [] : '@nuxtjs/eslint-module'
+  ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [],
