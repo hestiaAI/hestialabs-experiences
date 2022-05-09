@@ -244,7 +244,8 @@
       "key": "ActivitySegment",
       "sql": "all-activity-segment",
       "files": ["LOCATION_HISTORY"],
-      "showTable": true,
+      "visualization": "ChartViewGoogleTrips.vue",
+      "showTable": false,
       "title": "Travels"
     }
   ],
@@ -284,7 +285,8 @@
           ["placeVisitImportance", "FLOAT"],
           ["visitConfidence", "FLOAT"],
           ["locationConfidence", "FLOAT"],
-          ["editConfirmationStatus", "TEXT"]
+          ["editConfirmationStatus", "TEXT"],
+          ["duration", "FLOAT"]
         ]
       }
     ],
@@ -408,6 +410,10 @@
           {
             "column": "editConfirmationStatus",
             "path": "$.editConfirmationStatus"
+          },
+          {
+            "column": "duration",
+            "path": "$.visitConfidence"
           }
         ]
       }

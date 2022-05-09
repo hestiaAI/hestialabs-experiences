@@ -1,7 +1,7 @@
 <template>
   <VContainer v-if="values.length > 0">
     <VRow>
-      <VCol cols="13">
+      <VCol cols="17">
         <p class="text-h6">Number of records in your files</p>
         <p v-if="total === 0" class="text-subtitle-2">
           No records were found in your file(s).
@@ -13,12 +13,12 @@
     </VRow>
     <template v-if="total > 0">
       <VRow>
-        <VCol cols="13">
+        <VCol cols="17">
           <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
       </VRow>
       <VRow>
-        <VCol cols="13">
+        <VCol cols="17">
           <UnitFilterableTable
             v-bind="{ headers, items: results }"
             @current-items="onTableFilter"
@@ -30,7 +30,7 @@
 </template>
 <script>
 import mixin from './mixin'
-import keplerConfig from './kepler_config_places.js'
+import keplerConfig from './kepler_config_trip.js'
 export default {
   mixins: [mixin],
   data() {
@@ -43,9 +43,10 @@ export default {
       return this.values.map(v => {
         return {
           ...v,
-          longitude: v.longitude * 1e-7,
-          latitude: v.latitude * 1e-7,
-          duration: this.compute_duration(v.startTimestamp, v.endTimestamp)
+          startLongitude: v.startLongitude * 1e-7,
+          startLatitude: v.startLatitude * 1e-7,
+          endLongitude: v.endLongitude * 1e-7,
+          endLatitude: v.endLatitude * 1e-7
         }
       })
     },
@@ -73,12 +74,6 @@ export default {
     }
   },
   methods: {
-    compute_duration(d1, d2) {
-      const date1 = new Date(d1).getTime()
-      const date2 = new Date(d2).getTime()
-      const res = Math.floor(Math.abs(date1 - date2) / 1000)
-      return res
-    },
     drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems
