@@ -4,6 +4,7 @@
     :key="header.value"
     offset-y
     :close-on-content-click="false"
+    max-width="600"
   >
     <template #activator="{ on, attrs }">
       <VBtn icon v-bind="attrs" v-on="on">
@@ -69,6 +70,10 @@ export default {
           return { name: 'NumberFilter.vue', args: {} }
         case 'FLOAT':
           return { name: 'NumberFilter.vue', args: { isFloat: true } }
+        case 'DATE':
+          return { name: 'DateFilter.vue', args: {} }
+        case 'DATETIME':
+          return { name: 'DateFilter.vue', args: { pickTime: true } }
         default:
           return { name: 'SelectFilter.vue', args: {} }
       }
