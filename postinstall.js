@@ -22,7 +22,7 @@ function handleSpawnOutput({ status, stderr, stdout, error }) {
 }
 
 if (experiences) {
-  if (process.env.NETLIFY) {
+  if (process.env.NODE_ENV === 'production') {
     const { spawnSync, execSync } = require('child_process')
     const npmrcPath = resolve(__dirname, '.npmrc')
     const cmd = `echo "//npm.pkg.github.com/:_authToken=$\{HESTIA_OWNER_GITHUB_TOKEN}" >> ${npmrcPath}`
