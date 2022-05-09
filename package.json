@@ -28,7 +28,7 @@
     "type": "git",
     "url": "git+https://github.com/hestiaai/hestialabs.git"
   },
-  "license": "ISC",
+  "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/hestiaai/hestialabs/issues"
   },

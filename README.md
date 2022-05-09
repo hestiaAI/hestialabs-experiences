@@ -73,7 +73,7 @@ This section explains how packages are created and updated
     "access": "public"
   },
   "author": "",
-  "license": "ISC"
+  "license": "UNLICENSED"
 }
 ```
 
