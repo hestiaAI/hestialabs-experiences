@@ -15,6 +15,11 @@ $ npm link --workspaces
 
 3. Navigate back to `hestialabs-experiences` and install all dependencies. This triggers the [`postinstall`](./postinstall.js) [post script](https://docs.npmjs.com/cli/v8/using-npm/scripts#pre--post-scripts) that creates symlinks from the previously globally-linked packages to the `node_modules/` of the current folder.
 
+```sh
+$ cd ../hestialabs-experiences
+$ npm install
+```
+
 4. Set up the `hestialabs` repo by following the instructions in the README.
 
 ## Instances
