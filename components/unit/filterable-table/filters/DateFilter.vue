@@ -2,94 +2,68 @@
   <VContainer>
     <VRow>
       <VCol>
-        <VMenu
-          ref="dateMenu"
-          v-model="dateMenu"
-          :close-on-content-click="false"
-          :return-value.sync="datesIncluded"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template #activator="{ on, attrs }">
-            <VCombobox
-              v-model="datesIncluded"
-              multiple
-              chips
-              small-chips
-              label="Select dates you want to include"
-              prepend-icon="$vuetify.icon.mdiCalendar"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-            >
-              <template #selection="{ item, index }">
-                <VChip v-if="index < 1" class="ma-1 pr-1">
-                  <span
-                    style="
-                      overflow-x: hidden;
-                      whitespace: nowrap;
-                      text-overflow: ellipsis;
-                    "
-                  >
-                    {{ item }}
-                  </span>
-                  <VBtn
-                    icon
-                    small
-                    right
-                    @click="datesIncluded.splice(index, 1)"
-                  >
-                    <VIcon small>$vuetify.icon.mdiCloseCircle</VIcon>
-                  </VBtn>
-                </VChip>
-                <span v-if="index === 1" class="grey--text caption">
-                  (+{{ datesIncluded.length - 1 }} others)
-                </span>
-              </template>
-            </VCombobox>
-          </template>
-          <VDatePicker v-model="datesIncluded" multiple no-title scrollable>
-            <VSpacer></VSpacer>
-            <VBtn text color="primary" @click="dateMenu = false"> Cancel </VBtn>
-            <VBtn
-              text
-              color="primary"
-              @click="$refs.dateMenu.save(datesIncluded)"
-            >
-              OK
-            </VBtn>
-          </VDatePicker>
-        </VMenu>
+        <div class="d-flex justify-space-between">
+          <div>
+            <div class="subtitle-2">From:</div>
+            <VChip label outlined>{{ dateRange[0] }}</VChip>
+          </div>
+          <div>
+            <div class="subtitle-2">To:</div>
+            <VChip label outlined>{{ dateRange[1] }}</VChip>
+          </div>
+        </div>
+        <VRangeSlider
+          v-model="sliderRange"
+          :min="0"
+          :max="numberOfDays"
+          hide-details
+          dense
+          @change="filterChange"
+        ></VRangeSlider>
       </VCol>
     </VRow>
+    <div
+      class="d-flex justify-space-between align-center text-subtitle-1 mt-3 mb-3"
+    >
+      <span>Day of week</span>
+      <VBtn
+        class="ma-2"
+        outlined
+        color="indigo"
+        x-small
+        @click="selectAll"
+        v-text="allWeekDays ? `Unselect All` : `Select All`"
+      >
+      </VBtn>
+    </div>
     <VRow>
-      <VCol>
-        <BaseSelectMultiple
-          :items="weekDays"
-          label="Select allowed week days"
-        />
+      <VCol
+        v-for="(weekDay, idx) in weekDays"
+        :key="weekDay"
+        cols="12"
+        md="6"
+        class="pt-0 pb-0"
+      >
+        <VCheckbox
+          v-model="weekDayAuthorized[idx]"
+          :label="weekDay"
+          color="primary"
+          :value="true"
+          hide-details
+          dense
+          @change="filterChange"
+        ></VCheckbox>
       </VCol>
     </VRow>
     <div class="d-flex justify-space-between align-end mt-5">
-      <VBtn
-        small
-        text
-        color="primary"
-        class=""
-        @click="reset"
-        v-text="`Clear`"
-      />
+      <VBtn small text color="primary" @click="reset" v-text="`Clear`" />
     </div>
   </VContainer>
 </template>
 <script>
 import * as d3 from 'd3'
-import _ from 'lodash'
-import BaseSelectMultiple from '~/components/base/BaseSelectMultiple.vue'
 export default {
   name: 'UnitFilter',
-  components: { BaseSelectMultiple },
   props: {
     header: {
       type: Object,
@@ -101,40 +75,62 @@ export default {
     }
   },
   data() {
-    const extent = d3.extent(this.values, v => new Date(v))
+    const dateExtent = d3.extent(this.values, v => new Date(v))
     const dateFormatter = d3.timeFormat('%Y-%m-%d')
-    const allDays = d3.timeDay
-      .range(extent[0], extent[1])
-      .map(d => dateFormatter(d))
+    const numberOfDays = d3.timeDay.count(...dateExtent)
     return {
-      filter: [dateFormatter(extent[0]), dateFormatter(extent[1])],
       dateFormatter,
-      allDays,
-      datesIncluded: _.cloneDeep(allDays),
-      dateMenu: false,
-      weekDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      numberOfDays,
+      weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      weekDayAuthorized: Array(7).fill(true),
+      timeScale: d3.scaleTime().domain(dateExtent).range([0, numberOfDays]),
+      sliderRange: [0, numberOfDays]
     }
   },
   computed: {
     dates() {
       return this.values.map(v => new Date(v))
     },
-    extent() {
+    dateExtent() {
       return d3.extent(this.dates).map(d => this.dateFormatter(d))
     },
+    dateRange() {
+      return [
+        this.getDate(this.sliderRange[0]),
+        this.getDate(this.sliderRange[1])
+      ]
+    },
+    allWeekDays() {
+      return this.weekDayAuthorized.every(d => d === true)
+    },
     filterFunction() {
-      if (this.filter === this.extent || this.filter === [null, null])
-        return null
-      else return value => value >= this.filter[0] && value <= this.filter[1]
+      return value => {
+        const date = new Date(value)
+        return (
+          date >= new Date(this.dateRange[0]) &&
+          date <= new Date(this.dateRange[1]) &&
+          this.weekDayAuthorized[date.getDay()]
+        )
+      }
     }
   },
   methods: {
+    selectAll() {
+      if (this.allWeekDays) {
+        this.weekDayAuthorized.fill(null)
+      } else {
+        this.weekDayAuthorized.fill(true)
+      }
+    },
+    getDate(i) {
+      return this.dateFormatter(this.timeScale.invert(i))
+    },
     filterChange() {
       this.$emit('filter-change', this.filterFunction)
     },
     reset() {
-      console.log(this.allDays.length, this.datesIncluded.length)
-      this.datesIncluded = _.cloneDeep(this.allDays)
+      this.weekDayAuthorized = this.weekDayAuthorized.fill(true)
+      this.sliderRange = [0, this.numberOfDays]
       this.filterChange()
     }
   }
