@@ -13,6 +13,7 @@ export type ExperienceOptions = {
   collaborator?: Collaborator
   databaseConfig?: DatabaseConfig
   dataPortal?: string
+  dataPortalHtml?: string
   dataPortalMessage?: string
   dataSamples?: string[]
   disabled?: boolean
