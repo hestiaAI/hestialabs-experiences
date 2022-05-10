@@ -18,14 +18,16 @@
                 to request
               </template>
               <template v-else> Request </template>
-              the private data that {{ companyName }} collected on you. Once you
+              the private data that {{ title }} collected on you. Once you
               receive it, analyze it here.
             </p>
+            <!-- eslint-disable vue/no-v-html -->
             <p
               v-if="dataPortalMessage"
               class="body-1"
               v-html="dataPortalMessage"
             ></p>
+            <!-- eslint-enable vue/no-v-html -->
             <p>
               No data is transmitted to HestiaLabs or anyone else. The whole
               experience takes place locally in the browser and nothing is left
@@ -37,8 +39,6 @@
           <VCol align="center">
             <UnitFiles
               v-bind="{
-                files,
-                samples,
                 progress,
                 success,
                 error,
@@ -79,54 +79,39 @@
 </template>
 
 <script>
-import BaseVideo from '../base/BaseVideo.vue'
+import { pick } from 'lodash'
+
 export default {
-  components: { BaseVideo },
   props: {
-    companyName: {
-      type: String,
-      required: true
-    },
-    dataPortal: {
-      type: String,
-      default: ''
-    },
-    dataPortalMessage: {
-      type: String,
-      default: ''
-    },
-    tutorialVideos: {
-      type: Array,
-      default: () => []
-    },
-    files: {
-      type: Object,
-      required: true
-    },
-    samples: {
-      type: Array,
-      default: () => []
-    },
     success: {
       type: Boolean,
-      default: () => false
+      default: false
     },
     error: {
       type: Boolean,
-      default: () => false
+      default: false
     },
     progress: {
       type: Boolean,
-      default: () => false
+      default: false
     },
     message: {
       type: String,
-      default: () => ''
+      default: ''
     }
   },
   data() {
+    const experience = this.$store.getters.experience(this.$route)
+    const properties = pick(experience, [
+      'title',
+      'dataPortal',
+      'dataPortalMessage',
+      'tutorialVideos'
+    ])
+
     return {
-      videoHeight: '400'
+      videoHeight: '400',
+      ...properties
     }
   },
   methods: {

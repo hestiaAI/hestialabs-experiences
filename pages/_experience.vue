@@ -1,5 +1,5 @@
 <template>
-  <TheDataExperience v-bind="e" />
+  <TheDataExperience />
 </template>
 
 <script>
@@ -27,10 +27,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['experience', 'appName']),
-    e() {
-      return this.experience(this.$route)
-    }
+    ...mapGetters(['experience', 'appName'])
   }
 }
 </script>

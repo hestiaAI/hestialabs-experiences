@@ -40,12 +40,6 @@
             <VCol cols="12 mx-auto" md="6" class="tabItem">
               <UnitIntroduction
                 v-bind="{
-                  companyName: title,
-                  dataPortal,
-                  dataPortalMessage,
-                  tutorialVideos,
-                  files,
-                  samples,
                   progress,
                   error,
                   success,
@@ -91,11 +85,7 @@
             :transition="false"
           >
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
-              <UnitConsentForm
-                v-bind="{
-                  viewBlocks
-                }"
-              />
+              <UnitConsentForm />
             </VCol>
           </VTabItem>
         </VTabsItems>
@@ -115,57 +105,9 @@ import fileManagerWorkers from '~/utils/file-manager-workers'
 
 export default {
   name: 'TheDataExperience',
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    dataPortal: {
-      type: String,
-      default: ''
-    },
-    dataPortalMessage: {
-      type: String,
-      default: ''
-    },
-    tutorialVideos: {
-      type: Array,
-      default: () => []
-    },
-    dataSamples: {
-      type: Array,
-      default: () => []
-    },
-    files: {
-      type: Object,
-      default: () => ({})
-    },
-    keepOnlyFiles: {
-      type: Boolean,
-      default: true
-    },
-    viewBlocks: {
-      type: Array,
-      default: () => []
-    },
-    hideSummary: {
-      type: Boolean,
-      default: false
-    },
-    hideFileExplorer: {
-      type: Boolean,
-      default: false
-    },
-    preprocessors: {
-      type: Object,
-      default: () => ({})
-    },
-    databaseConfig: {
-      type: Object,
-      default: undefined
-    }
-  },
   data() {
+    const { viewBlocks } = this.$store.getters.experience(this.$route)
+
     return {
       tab: null,
       fab: false,
@@ -174,7 +116,7 @@ export default {
       success: false,
       message: '',
       overlay: false,
-      samples: []
+      viewBlocks
     }
   },
   computed: {
@@ -253,16 +195,6 @@ export default {
       handler: debounce(function (value) {
         this.overlay = value
       }, 200)
-    }
-  },
-  async created() {
-    // files in assets/data/ are loaded with file-loader
-    this.samples = []
-    for (const filename of this.dataSamples) {
-      this.samples.push({
-        filename,
-        path: (await import(`@/assets/data/${filename}`)).default
-      })
     }
   },
   mounted() {

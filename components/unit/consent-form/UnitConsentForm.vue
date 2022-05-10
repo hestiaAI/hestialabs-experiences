@@ -78,13 +78,9 @@ const _sodium = require('libsodium-wrappers')
 const VERSION = 3
 
 export default {
-  props: {
-    viewBlocks: {
-      type: Array,
-      required: true
-    }
-  },
   data() {
+    const { viewBlocks } = this.$store.getters.experience(this.$route)
+
     return {
       zipFile: undefined,
       generateStatus: false,
@@ -94,7 +90,8 @@ export default {
       sentErrorMessage: undefined,
       sentProgress: false,
       filename: '',
-      href: null
+      href: null,
+      viewBlocks
     }
   },
   computed: {
