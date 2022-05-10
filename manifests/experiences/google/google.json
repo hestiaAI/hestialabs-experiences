@@ -247,6 +247,14 @@
       "visualization": "ChartViewGoogleTrips.vue",
       "showTable": false,
       "title": "Travels"
+    },
+    {
+      "key": "WifiScan",
+      "sql": "records-linked-to-mac",
+      "files": ["LOCATION_HISTORY"],
+      "visualization": "ChartViewGoogleWifi.vue",
+      "showTable": false,
+      "title": "Wifi"
     }
   ],
   "databaseConfig": {
@@ -287,6 +295,32 @@
           ["locationConfidence", "FLOAT"],
           ["editConfirmationStatus", "TEXT"],
           ["duration", "FLOAT"]
+        ]
+      },
+      {
+        "name": "WifiScan",
+        "columns": [
+          ["id", "INTEGER"],
+          ["latitude", "INTEGER"],
+          ["longitude", "INTEGER"],
+          ["timestamp", "TEXT"]
+        ],
+        "primaryKey": "id"
+      },
+      {
+        "name": "MacAdresses",
+        "columns": [
+          ["macId", "INTEGER"],
+          ["mac", "INTEGER"]
+        ],
+        "foreignKeys": [
+          {
+            "columns": "macId",
+            "reference": {
+              "table": "WifiScan",
+              "columns": "id"
+            }
+          }
         ]
       }
     ],
@@ -414,6 +448,43 @@
           {
             "column": "duration",
             "path": "$.visitConfidence"
+          }
+        ]
+      },
+      {
+        "fileId": "LOCATION_HISTORY",
+        "path": "$.locations[*]",
+        "table": "WifiScan",
+        "getters": [
+          {
+            "column":"latitude",
+            "path": "$.latitudeE7"
+          },
+          {
+            "column":"longitude",
+            "path": "$.longitudeE7"
+          },
+          {
+            "column": "timestamp",
+            "path": "$.timestamp"
+          },
+          {
+            "path": "$.locationMetadata[*].wifiScan.accessPoints[*]",
+            "table": "MacAdresses",
+            "getters": [
+              {
+                "column": "macId",
+                "reference": {
+                  "table": "WifiScan",
+                  "column": "id",
+                  "autoincrementedId": true
+                }
+              },
+              {
+                "column": "mac",
+                "path": "$.mac"
+              }
+            ]
           }
         ]
       }
