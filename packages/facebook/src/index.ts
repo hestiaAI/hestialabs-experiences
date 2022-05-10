@@ -9,6 +9,8 @@ const options: ExperienceOptions = {
   collaborator: theEyeballs,
   databaseConfig,
   dataPortal: 'https://www.facebook.com/help/212802592074644',
+  dataPortalMessage:
+    '<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format.',
   files: {
     'advertisers-interacted':
       "**/ads_information/advertisers_you've_interacted_with.json",

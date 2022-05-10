@@ -5,7 +5,10 @@ import viewBlocks from './blocks'
 const options: ExperienceOptions = {
   dataPortal: 'https://takeout.google.com/settings/takeout',
   dataPortalMessage:
-    '<strong>Important:</strong> For the experiment to work, please click on <strong>"deselect all"</strong> and then select <strong>"Location History"</strong> and <strong>"My Activity"</strong>. For the latter click on the button at the bottom left to select the <strong>JSON</strong> format.',
+    '<strong>Important:</strong> For the experiment to work, please click on <strong>"deselect all"</strong> and then select the following:' +
+    '<div><ul style="display: inline-block;"><li align="left"><strong>"Location History"</strong> and Change format from KML to <strong>JSON</strong>' +
+    '<li><strong>"My Activity"</strong> and Change "Activity Records" format from HTML to <strong>JSON</strong></li></ul></div>' +
+    'Once done you can click the blue "Next Step" button at the bottom of the page. This should queue your download',
   files: {
     'my-activity':
       '**/*/+(MyActivity|My Activity|MonActivité|Mon Activité|OmatTapahtumat|Omat Tapahtumat).json'
