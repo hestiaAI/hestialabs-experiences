@@ -42,6 +42,7 @@
                 v-bind="{
                   companyName: title,
                   dataPortal,
+                  dataPortalHtml,
                   dataPortalMessage,
                   tutorialVideos,
                   files,
@@ -121,6 +122,10 @@ export default {
       required: true
     },
     dataPortal: {
+      type: String,
+      default: ''
+    },
+    dataPortalHtml: {
       type: String,
       default: ''
     },

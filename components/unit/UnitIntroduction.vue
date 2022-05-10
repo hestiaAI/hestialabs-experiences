@@ -10,6 +10,11 @@
             <p v-if="$route.params.key === 'explorer'" class="body-1">
               Explore the structure and contents of any file.
             </p>
+            <p
+              v-else-if="dataPortalHtml"
+              class="body-1"
+              v-html="dataPortalHtml"
+            ></p>
             <p v-else class="body-1">
               <template v-if="dataPortal">
                 <a :href="dataPortal" target="_blank" rel="noreferrer noopener"
@@ -88,6 +93,10 @@ export default {
       required: true
     },
     dataPortal: {
+      type: String,
+      default: ''
+    },
+    dataPortalHtml: {
       type: String,
       default: ''
     },
