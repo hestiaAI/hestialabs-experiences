@@ -3,9 +3,10 @@ import {
   getTypesFromData,
   objectToDataFrame,
   formatDataWithTypes,
-  detectTypes,
-  dateFormatter
+  detectTypes
 } from '~/utils/type-check'
+
+import { dateFormatter } from '@/utils/dates'
 import { arrayEqualNoOrder } from '~/utils/test-utils'
 
 test('getNotNullSampleFromData gives unique row samples', () => {
