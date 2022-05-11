@@ -2,12 +2,14 @@
   <VContainer v-if="values.length > 0">
     <VRow>
       <VCol cols="12">
-        <p class="text-h6">Number of records in your files</p>
         <p v-if="total === 0" class="text-subtitle-2">
           No records were found in your file(s).
         </p>
         <p v-else class="text-subtitle-2">
-          We found <strong>{{ total }}</strong> records in your file(s).
+          We found <strong>{{ total }}</strong> trips that were recorded in your
+          file. <br />
+          <br />
+          This map shows what trips Google think you did:
         </p>
       </VCol>
     </VRow>

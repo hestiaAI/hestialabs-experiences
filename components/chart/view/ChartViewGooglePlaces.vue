@@ -7,7 +7,11 @@
           No records were found in your file(s).
         </p>
         <p v-else class="text-subtitle-2">
-          We found <strong>{{ total }}</strong> records in your file(s).
+          We found <strong>{{ total }}</strong> visited places that were
+          recorded in your file. <br />
+          <br />
+          This map shows what places Google think you visited with the size
+          corresponding to the time you spent in this place:
         </p>
       </VCol>
     </VRow>
