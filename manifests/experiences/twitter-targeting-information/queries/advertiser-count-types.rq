@@ -1,9 +1,0 @@
-# authors: Valentin Oliver Loftsson <valentin.loftsson@hestia.ai>
-PREFIX : <http://hestia.ai/>
-
-SELECT ?advertiser ?type (count(?type) AS ?count)
-WHERE {
-  ?x :advertiser ?advertiser .
-  ?x :type ?type
-}
-GROUP BY ?advertiser ?type

@@ -4,6 +4,12 @@
     "twitter",
     "tinder",
     "amazon",
+    "easyjet",
+    "strava",
+    "tiktok",
+    "fitbit",
+    "instagram",
+    "uber",
     "apple",
     "google",
     "her",
@@ -14,7 +20,6 @@
     "signal",
     "tracker-control",
     "whatsapp",
-    "uber",
     "ad-radar",
     "explorer"
   ],
@@ -24,12 +29,12 @@
     "default": [
       {
         "title": "SHARE MY DATA",
-      "description": "With this form, you can register your consent, optionally share additional data, and agree to the terms."
+        "description": "With this form, you can register your consent, optionally share additional data, and agree to the terms."
       },
       {
         "title": "Terms",
-      "_docx_description": "Do you agree with the terms relevant to the queer bodies representation  study <a target=\"_blank\"  href=\"https://drive.infomaniak.com/app/share/193995/d608f311-e59b-4f55-8f0b-1db4b87942b0\">here</a> ?",
-      "description": "Do you agree with the terms relevant to the queer bodies representation  study <a target=\"_blank\"  href=\"https://drive.infomaniak.com/app/share/193995/19c76cbf-a28a-4c9b-a8dc-495d69243e1b\">here</a> ?",
+        "_docx_description": "Do you agree with the terms relevant to the queer bodies representation  study <a target=\"_blank\"  href=\"https://drive.infomaniak.com/app/share/193995/d608f311-e59b-4f55-8f0b-1db4b87942b0\">here</a> ?",
+        "description": "Do you agree with the terms relevant to the queer bodies representation  study <a target=\"_blank\"  href=\"https://drive.infomaniak.com/app/share/193995/19c76cbf-a28a-4c9b-a8dc-495d69243e1b\">here</a> ?",
         "type": "checkbox",
         "options": ["I agree"]
       },

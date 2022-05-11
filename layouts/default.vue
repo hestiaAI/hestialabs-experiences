@@ -2,7 +2,7 @@
   <VApp>
     <TheAppBar />
     <VMain>
-      <Nuxt />
+      <Nuxt v-if="!$fetchState.pending" />
       <VSnackbar
         v-model="snackbar"
         content-class="v-snack__content-online-status"
@@ -55,6 +55,12 @@
 <script>
 import { mapGetters } from 'vuex'
 
+function validateRoute({ store, error, params: { key } }) {
+  if (key && !store.getters.enabledExperiences.find(x => x.slug === key)) {
+    error({ statusCode: 404, message: 'Experience Not Found' })
+  }
+}
+
 export default {
   data() {
     return {
@@ -64,7 +70,15 @@ export default {
       alert: false
     }
   },
+  async fetch() {
+    const { context } = this.$nuxt
+    await context.store.dispatch('loadExperiences', context)
+    validateRoute(context)
+  },
   head() {
+    if (!this.appName) {
+      return
+    }
     return {
       meta: [
         {
@@ -101,9 +115,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['manifest', 'appName']),
+    ...mapGetters(['experience', 'appName']),
     collaborator() {
-      const { collaborator = {} } = this.manifest(this.$route)
+      const { collaborator = {} } = this.experience(this.$route)
       return collaborator
     },
     newsletterURL() {
@@ -121,6 +135,9 @@ export default {
       this.snackbar = true
       // changing timeout property resets the timeout
       this.timeout = isOffline ? 5001 : 5000
+    },
+    '$route.params.key'() {
+      validateRoute(this.$nuxt.context)
     }
   },
   mounted() {

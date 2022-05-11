@@ -13,9 +13,9 @@ import {
 } from '@mdi/js'
 import _ from 'lodash'
 import { matchNormalized, findMatchesInContent } from './accessor'
-import { itemifyJSON, nJsonPoints } from '~/utils/json'
-import { getCsvHeadersAndItems } from '~/utils/csv'
-import { runWorker } from '@/utils/utils'
+import { itemifyJSON, nJsonPoints } from './json'
+import { getCsvHeadersAndItems } from './csv'
+import { runWorker } from './utils'
 
 const filetype2icon = {
   folder: mdiFolder,
@@ -29,7 +29,7 @@ const filetype2icon = {
   html: mdiXml,
   xlsx: mdiMicrosoftExcel
 }
-const extension2filetype = {
+export const extension2filetype = {
   tar: 'zip',
   js: 'json',
   png: 'img',

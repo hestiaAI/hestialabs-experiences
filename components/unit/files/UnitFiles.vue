@@ -109,12 +109,6 @@ export default {
   },
   computed: {
     ...mapState(['fileManager']),
-    key() {
-      return this.$route.params.key
-    },
-    isPlayground() {
-      return this.key === 'playground'
-    },
     disabled() {
       return this.filesEmpty
     }
@@ -137,7 +131,7 @@ export default {
       if (newSamples.length > oldSamples.length) {
         // some sample was added
         const addedSamples = newSamples.filter(
-          ns => !oldSamples.find(os => os.key === ns.key)
+          ns => !oldSamples.find(os => os.filename === ns.filename)
         )
         const files = await Promise.all(addedSamples.map(fetchSampleFile))
         files.forEach(file => {
@@ -157,7 +151,7 @@ export default {
       } else {
         // some sample was removed
         const removedSamples = oldSamples.filter(
-          os => !newSamples.find(ns => ns.key === os.key)
+          os => !newSamples.find(ns => ns.filename === os.filename)
         )
         removedSamples.forEach(sample => {
           const file = this.uppy

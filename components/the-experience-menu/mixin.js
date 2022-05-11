@@ -6,12 +6,12 @@ export default {
     }
   },
   methods: {
-    menuItemAttrs(url, key, disabled) {
+    menuItemAttrs(url, slug, disabled) {
       return url
         ? { href: url, target: '_blank', rel: 'noopener noreferrer', disabled }
         : disabled
         ? { disabled }
-        : { nuxt: true, to: `/${key}` }
+        : { nuxt: true, to: `/${slug}` }
     }
   }
 }

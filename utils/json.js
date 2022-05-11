@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { toDateString } from '@/utils/dates'
+import { toDateString } from './dates'
 
 export const nodeTypes = { TREE: 'tree', LIST: 'list', LEAF: 'leaf' }
 const { TREE, LIST, LEAF } = nodeTypes

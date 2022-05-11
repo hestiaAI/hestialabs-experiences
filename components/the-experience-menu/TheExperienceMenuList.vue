@@ -2,9 +2,9 @@
   <div>
     <VList rounded>
       <VListItem
-        v-for="{ key, title, subtitle, icon, url, disabled } in experiences"
-        :key="key"
-        v-bind="menuItemAttrs(url, key, disabled)"
+        v-for="{ slug, title, subtitle, icon, url, disabled } in experiences"
+        :key="slug"
+        v-bind="menuItemAttrs(url, slug, disabled)"
       >
         <VListItemAvatar tile>
           <VImg :src="icon" :lazy-src="icon" />

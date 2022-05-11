@@ -5,13 +5,20 @@
   "padding": 5,
   "signals": [
     {
-      "name": "advertisers", "value": 1,
-      "bind": {"input": "range", "name": "Advertisers", "min": 1, "max": 10, "step": 1}
+      "name": "advertisers",
+      "value": 1,
+      "bind": {
+        "input": "range",
+        "name": "Advertisers",
+        "min": 1,
+        "max": 10,
+        "step": 1
+      }
     }
   ],
   "title": {
-    "text": {"signal": "'Advertiser targetting you per day'"},
-    "fontSize":{"value":18},
+    "text": { "signal": "'Advertiser targetting you per day'" },
+    "fontSize": { "value": 18 },
     "anchor": "start",
     "frame": "group"
   },
@@ -19,7 +26,7 @@
     {
       "name": "source",
       "values": [],
-      "format": {"type": "json", "parse": {"date": "date:'%d-%m-%Y'"}}
+      "format": { "type": "json", "parse": { "date": "date:'%d-%m-%Y'" } }
     },
     {
       "name": "ranks",
@@ -34,8 +41,9 @@
         },
         {
           "type": "window",
-          "sort": {"field": "count", "order": "descending"},
-          "ops": ["row_number"], "as": ["rank"]
+          "sort": { "field": "count", "order": "descending" },
+          "ops": ["row_number"],
+          "as": ["rank"]
         }
       ]
     },
@@ -65,16 +73,12 @@
         {
           "type": "stack",
           "groupby": ["date"],
-          "sort": {"field": "Category", "order":"descending"},
+          "sort": { "field": "Category", "order": "descending" },
           "field": "count",
-          "as": [
-            "y0",
-            "y1"
-          ]
+          "as": ["y0", "y1"]
         }
       ]
     }
-
   ],
 
   "scales": [
@@ -82,20 +86,21 @@
       "name": "x",
       "type": "time",
       "range": "width",
-      "domain": {"data": "companies", "field": "date"}
+      "domain": { "data": "companies", "field": "date" }
     },
     {
       "name": "y",
       "type": "linear",
       "range": "height",
-      "nice": true, "zero": true,
-      "domain": {"data": "companies", "field": "y1"}
+      "nice": true,
+      "zero": true,
+      "domain": { "data": "companies", "field": "y1" }
     },
     {
       "name": "color",
       "type": "ordinal",
       "range": "category",
-      "domain": {"data": "companies", "field": "Category"}
+      "domain": { "data": "companies", "field": "Category" }
     }
   ],
 
@@ -124,31 +129,31 @@
   "marks": [
     {
       "type": "rect",
-      "from": {"data": "companies"},
+      "from": { "data": "companies" },
       "encode": {
         "enter": {
-          "x": {"scale": "x", "field": "date"},
-          "width": {"scale": "x", "band": 1, "offset": 5},
-          "y": {"scale": "y", "field": "y0"},
-          "y2": {"scale": "y", "field": "y1"},
-          "fill": {"scale": "color", "field": "Category"},
+          "x": { "scale": "x", "field": "date" },
+          "width": { "scale": "x", "band": 1, "offset": 5 },
+          "y": { "scale": "y", "field": "y0" },
+          "y2": { "scale": "y", "field": "y1" },
+          "fill": { "scale": "color", "field": "Category" },
           "tooltip": {
             "signal": "datum.Category +': ' + datum.count + ' '"
           }
         },
         "update": {
-          "x": {"scale": "x", "field": "date"},
-          "width": {"scale": "x", "band": 1, "offset": 5},
-          "y": {"scale": "y", "field": "y0"},
-          "y2": {"scale": "y", "field": "y1"},
-          "fill": {"scale": "color", "field": "Category"},
+          "x": { "scale": "x", "field": "date" },
+          "width": { "scale": "x", "band": 1, "offset": 5 },
+          "y": { "scale": "y", "field": "y0" },
+          "y2": { "scale": "y", "field": "y1" },
+          "fill": { "scale": "color", "field": "Category" },
           "tooltip": {
             "signal": "datum.Category +': ' + datum.count + ' '"
           },
-          "fillOpacity": {"value": 1}
+          "fillOpacity": { "value": 1 }
         },
         "hover": {
-          "fillOpacity": {"value": 0.5}
+          "fillOpacity": { "value": 0.5 }
         }
       }
     }

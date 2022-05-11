@@ -1,6 +1,6 @@
 <template>
   <VContainer fluid>
-    <VRow align="center" justify="center" class="flex-column">
+    <VRow align="center" justify="center" class="flex-column pt-6">
       <h1 class="h1">{{ title }}</h1>
       <LogoImg max-width="300" class="my-12" />
 

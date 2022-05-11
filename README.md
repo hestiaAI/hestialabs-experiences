@@ -2,29 +2,58 @@
 
 The experiences developed by HestiaLabs are targeted for any user willing to better understand their personal data. It takes the form of an easy-to-use web app that locally processes the raw personal data downloaded from various sources (Twitter, Facebook, Uber, etc) and creates meaningful visualizations.
 
+## Setup
+
+0. Check that you have the correct versions for npm and node (see "engines" in package.json: node 14.x, npm 7.x) by running `npm version`
+
+1. Clone this repo and name the directory `hestialabs-experiences`. Then clone the repo [hestialabs](https://github.com/hestiaAI/hestialabs) and name the directory `hestialabs`. These two directories should be siblings and share a parent directory.
+
+2. In the `hestialabs` repo, install the root package:
+
+```sh
+$ cd ../hestialabs
+$ npm install
+```
+
+3. Then, in `hestialabs`, create symlinks to all packages in the monorepo and save them in the global `node_modules/` folder (see [npm-link documentation](https://docs.npmjs.com/cli/v8/commands/npm-link)):
+
+```sh
+$ npm link --workspaces
+```
+
+4. Navigate back to `hestialabs-experiences` and install the root package. This triggers the [`postinstall`](./postinstall.js) [post script](https://docs.npmjs.com/cli/v8/using-npm/scripts#pre--post-scripts) that creates symlinks from the previously globally-linked packages to the `node_modules/` of the current folder.
+
+```sh
+$ cd ../hestialabs-experiences
+$ npm install
+```
+
+5. to run experiences, open two console terminals, one in `hestialabs-experiences` and the other in `hestialabs`, and run `npm run dev` in both. A tab should open in your browser and allow you to run the experiences.
+
 ## Instances
 
 The instances are deployed on [netlify](https://app.netlify.com/teams/hestia/overview), where you can see a log of their [build](https://app.netlify.com/teams/hestia/builds/). They each point to a different branch of this repo.
 
-| Instance           | [test.hestialabs.org](https://test.hestialabs.org/)                                  | [experiences.hestialabs.org](https://experiences.hestialabs.org/)          | [digipower.hestialabs.org](https://digipower.hestialabs.org/)                                  | [tfac.hestialabs.org](https://tfac.hestialabs.org/)                                  |
-|:-------------------|:-------------------------------------------------------------------------------------|:---------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------|
-| branch             | [netlify-test](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-test) | [netlify](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify) | [netlify-digipower](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-digipower) | [netlify-tfac](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-tfac) |
-| netlify name       | test-experiences                                                                     | hestia-experiences                                                         | digipower                                                                                      | tfac                                                                                 |
-| purpose            | testing, typically with all features and experiences enabled                         | our public showcase                                                        | the sitra project                                                                              | a tool for the [Tracking-Free Ads Coalition](https://trackingfreeads.eu/)            |
-| config             | `config/config.json`                                                                 | `config/workshop.json`                                                     | `config/digipower.json`                                                                        | `config/tfac.json`                                                                   |
-| running it locally | `npm run dev`                                                                        | `CONFIG_NAME=workshop npm run dev`                                         | `CONFIG_NAME=digipower npm run dev`                                                            | `CONFIG_NAME=tfac npm run dev`                                                       |
+| Instance           | [test.hestialabs.org](https://test.hestialabs.org/)                                                                                                                   | [experiences.hestialabs.org](https://experiences.hestialabs.org/)                                                                                                       | [digipower.hestialabs.org](https://digipower.hestialabs.org/)                                                                                                  | [tfac.hestialabs.org](https://tfac.hestialabs.org/)                                                                                                       |
+| :----------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| branch             | [netlify-test](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-test)                                                                                  | [netlify](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify)                                                                                              | [netlify-digipower](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-digipower)                                                                 | [netlify-tfac](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-tfac)                                                                      |
+| netlify name       | test-experiences                                                                                                                                                      | hestia-experiences                                                                                                                                                      | digipower                                                                                                                                                      | tfac                                                                                                                                                      |
+| purpose            | testing, typically with all features and experiences enabled                                                                                                          | our public showcase                                                                                                                                                     | the sitra project                                                                                                                                              | a tool for the [Tracking-Free Ads Coalition](https://trackingfreeads.eu/)                                                                                 |
+| config             | `config/config.json`                                                                                                                                                  | `config/workshop.json`                                                                                                                                                  | `config/digipower.json`                                                                                                                                        | `config/tfac.json`                                                                                                                                        |
+| running it locally | `npm run dev`                                                                                                                                                         | `CONFIG_NAME=workshop npm run dev`                                                                                                                                      | `CONFIG_NAME=digipower npm run dev`                                                                                                                            | `CONFIG_NAME=tfac npm run dev`                                                                                                                            |
+| status             | [![Netlify Status](https://api.netlify.com/api/v1/badges/9449a6d8-d0a1-4432-8d24-aa0537a8976f/deploy-status)](https://app.netlify.com/sites/test-experiences/deploys) | [![Netlify Status](https://api.netlify.com/api/v1/badges/d333f584-0ec2-4180-ab28-1edfede952eb/deploy-status)](https://app.netlify.com/sites/hestia-experiences/deploys) | [![Netlify Status](https://api.netlify.com/api/v1/badges/6eaae950-17e0-4a98-a0be-d44aab17c2bf/deploy-status)](https://app.netlify.com/sites/digipower/deploys) | [![Netlify Status](https://api.netlify.com/api/v1/badges/4b4d37c9-a54b-4acd-aee6-877774ff51a5/deploy-status)](https://app.netlify.com/sites/tfac/deploys) |
 
 Logs for the netlify functions are accessible in each site's netlify under Functions
 
 ### Deployment configuration
 
-Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-experiences/settings/deploys#environment) 
+Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-experiences/settings/deploys#environment)
 
 | Environment variable | Description                                                                      |
-|----------------------|----------------------------------------------------------------------------------|
+| -------------------- | -------------------------------------------------------------------------------- |
 | CONFIG_NAME          | Name of the configuration file (without extension: "workshop", "digipower" ...)  |
 | BASE_URL             | Url where the website is deployed (with protocol: "https://test.hestialabs.org") |
-| WEBDAV_USERNAME      | Kdrive user email (or else upload button is disabled)                                                  |
+| WEBDAV_USERNAME      | Kdrive user email (or else upload button is disabled)                            |
 | WEBDAV_PASSWORD      | Kdrive user password (for uploads)                                               |
 
 Documentation for the configuration file can be found in [config/README.md](config)
@@ -53,7 +82,7 @@ For detailed explanation on how things work, check out the [documentation](https
 We have server code that runs as a [netlify function](https://docs.netlify.com/functions/build-with-javascript/). It can be run locally using [netlify-cli](https://docs.netlify.com/cli/get-started/). The code is in the folder [netlify/functions](netlify/functions)
 
 ```bash
-# run everything with hot reload 
+# run everything with hot reload
 $ BASE_URL=https://xxx.com WEBDAV_USERNAME=yyy@hestia.ai WEBDAV_PASSWORD=zzz npx netlify dev
 ```
 

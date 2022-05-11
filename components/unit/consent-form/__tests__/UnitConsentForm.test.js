@@ -29,7 +29,7 @@ test('generates a zip', async () => {
   const fileManager = new FileManager()
   const wrapper = mount(UnitConsentForm, {
     propsData: {
-      defaultView: []
+      viewBlocks: []
     },
     mocks: {
       $store: {

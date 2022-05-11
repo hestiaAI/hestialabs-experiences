@@ -10,6 +10,11 @@
             <p v-if="$route.params.key === 'explorer'" class="body-1">
               Explore the structure and contents of any file.
             </p>
+            <p
+              v-else-if="dataPortalHtml"
+              class="body-1"
+              v-html="dataPortalHtml"
+            ></p>
             <p v-else class="body-1">
               <template v-if="dataPortal">
                 <a :href="dataPortal" target="_blank" rel="noreferrer noopener"
@@ -21,6 +26,11 @@
               the private data that {{ companyName }} collected on you. Once you
               receive it, analyze it here.
             </p>
+            <p
+              v-if="dataPortalMessage"
+              class="body-1"
+              v-html="dataPortalMessage"
+            ></p>
             <p>
               No data is transmitted to HestiaLabs or anyone else. The whole
               experience takes place locally in the browser and nothing is left
@@ -83,6 +93,14 @@ export default {
       required: true
     },
     dataPortal: {
+      type: String,
+      default: ''
+    },
+    dataPortalHtml: {
+      type: String,
+      default: ''
+    },
+    dataPortalMessage: {
       type: String,
       default: ''
     },

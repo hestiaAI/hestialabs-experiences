@@ -1,6 +1,6 @@
 import * as csv from '@fast-csv/parse'
 import _ from 'lodash'
-import { setsEqual } from '~/utils/utils'
+import { setsEqual } from './utils'
 
 const acceptedDelimiters = [',', ';', '\t']
 
