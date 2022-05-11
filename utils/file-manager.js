@@ -137,7 +137,9 @@ export default class FileManager {
     const { $DYNAMIC_FILES, ...files } = this.idToGlob
     if ($DYNAMIC_FILES) {
       const matchedFiles = this.getFilePathsFromId('$DYNAMIC_FILES')
-      const idToGlob = await this.getPreprocessedText(matchedFiles[0])
+      const idToGlob = JSON.parse(
+        await this.getPreprocessedText(matchedFiles[0])
+      )
       return { ...files, ...idToGlob }
     }
     return this.idToGlob
