@@ -1,67 +1,74 @@
 <template>
   <VContainer>
-    <VRow>
-      <VCol>
-        <div class="d-flex justify-space-between">
-          <div>
-            <div class="subtitle-2">From:</div>
-            <VChip label outlined>{{ dateRange[0] }}</VChip>
+    <div v-if="dates.length">
+      <VRow>
+        <VCol>
+          <div class="d-flex justify-space-between">
+            <div>
+              <div class="subtitle-2">From:</div>
+              <VChip label outlined>{{ dateFormatter(dateRange[0]) }}</VChip>
+            </div>
+            <div>
+              <div class="subtitle-2">To:</div>
+              <VChip label outlined>{{ dateFormatter(dateRange[1]) }}</VChip>
+            </div>
           </div>
-          <div>
-            <div class="subtitle-2">To:</div>
-            <VChip label outlined>{{ dateRange[1] }}</VChip>
-          </div>
-        </div>
-        <VRangeSlider
-          v-model="sliderRange"
-          :min="0"
-          :max="numberOfDays"
-          hide-details
-          dense
-          @change="filterChange"
-        ></VRangeSlider>
-      </VCol>
-    </VRow>
-    <div
-      class="d-flex justify-space-between align-center text-subtitle-1 mt-3 mb-3"
-    >
-      <span>Day of week</span>
-      <VBtn
-        class="ma-2"
-        outlined
-        color="indigo"
-        x-small
-        @click="selectAll"
-        v-text="allWeekDays ? `Unselect All` : `Select All`"
+          <VRangeSlider
+            v-model="sliderRange"
+            :min="0"
+            :max="numberOfDays"
+            hide-details
+            dense
+            step="1"
+            @change="filterChange"
+          ></VRangeSlider>
+        </VCol>
+      </VRow>
+      <div
+        class="d-flex justify-space-between align-center text-subtitle-1 mt-3 mb-3"
       >
-      </VBtn>
+        <span>Day of week</span>
+        <VBtn
+          class="ma-2"
+          outlined
+          color="indigo"
+          x-small
+          @click="selectAll"
+          v-text="allWeekDays ? `Unselect All` : `Select All`"
+        >
+        </VBtn>
+      </div>
+      <VRow>
+        <VCol
+          v-for="(weekDay, idx) in weekDays"
+          :key="weekDay"
+          cols="12"
+          md="6"
+          class="pt-0 pb-0"
+        >
+          <VCheckbox
+            v-model="weekDayAuthorized[idx]"
+            :label="weekDay"
+            color="primary"
+            :value="true"
+            hide-details
+            dense
+            @change="filterChange"
+          ></VCheckbox>
+        </VCol>
+      </VRow>
+      <div class="d-flex justify-space-between align-end mt-5">
+        <VBtn small text color="primary" @click="reset" v-text="`Clear`" />
+      </div>
     </div>
-    <VRow>
-      <VCol
-        v-for="(weekDay, idx) in weekDays"
-        :key="weekDay"
-        cols="12"
-        md="6"
-        class="pt-0 pb-0"
-      >
-        <VCheckbox
-          v-model="weekDayAuthorized[idx]"
-          :label="weekDay"
-          color="primary"
-          :value="true"
-          hide-details
-          dense
-          @change="filterChange"
-        ></VCheckbox>
-      </VCol>
-    </VRow>
-    <div class="d-flex justify-space-between align-end mt-5">
-      <VBtn small text color="primary" @click="reset" v-text="`Clear`" />
+    <div v-else align="center">
+      <span class="caption">No valid dates found</span>
     </div>
   </VContainer>
 </template>
 <script>
 import * as d3 from 'd3'
+import { dateParser, datetimeParser } from '@/utils/dates'
 export default {
   name: 'UnitFilter',
   props: {
@@ -72,27 +79,42 @@ export default {
     values: {
       type: Array,
       default: () => []
+    },
+    isDatetime: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
-    const dateExtent = d3.extent(this.values, v => new Date(v))
-    const dateFormatter = d3.timeFormat('%Y-%m-%d')
-    const numberOfDays = d3.timeDay.count(...dateExtent)
     return {
-      dateFormatter,
-      numberOfDays,
+      dateFormatter: d3.timeFormat('%Y-%m-%d'),
       weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       weekDayAuthorized: Array(7).fill(true),
-      timeScale: d3.scaleTime().domain(dateExtent).range([0, numberOfDays]),
-      sliderRange: [0, numberOfDays]
+      sliderRange: []
     }
   },
   computed: {
+    parser() {
+      if (this.isDatetime) {
+        return datetimeParser
+      } else {
+        return dateParser
+      }
+    },
     dates() {
-      return this.values.map(v => new Date(v))
+      return this.values.map(v => this.parser(v)).filter(d => d !== null)
     },
     dateExtent() {
-      return d3.extent(this.dates).map(d => this.dateFormatter(d))
+      return d3.extent(this.dates)
+    },
+    numberOfDays() {
+      return d3.timeDay.count(...this.dateExtent)
+    },
+    timeScale() {
+      return d3
+        .scaleTime()
+        .domain(this.dateExtent)
+        .range([0, this.numberOfDays])
     },
     dateRange() {
       return [
@@ -105,14 +127,18 @@ export default {
     },
     filterFunction() {
       return value => {
-        const date = new Date(value)
+        const date = this.parser(value)
         return (
-          date >= new Date(this.dateRange[0]) &&
-          date <= new Date(this.dateRange[1]) &&
-          this.weekDayAuthorized[date.getDay()]
+          !value ||
+          (date >= this.dateRange[0] &&
+            date <= this.dateRange[1] &&
+            this.weekDayAuthorized[date.getDay()])
         )
       }
     }
+  },
+  mounted() {
+    this.sliderRange = [0, this.numberOfDays]
   },
   methods: {
     selectAll() {
@@ -123,7 +149,7 @@ export default {
       }
     },
     getDate(i) {
-      return this.dateFormatter(this.timeScale.invert(i))
+      return this.timeScale.invert(i)
     },
     filterChange() {
       this.$emit('filter-change', this.filterFunction)

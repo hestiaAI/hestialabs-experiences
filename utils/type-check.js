@@ -1,6 +1,6 @@
 import { Analyzer, DATA_TYPES } from 'type-analyzer'
 import _ from 'lodash'
-import * as d3 from 'd3'
+import { isValidDate, dateFormatter, datetimeFormatter } from '@/utils/dates'
 
 // Number of sample to use for the type analysis
 const NB_SAMPLE = 400
@@ -24,8 +24,6 @@ export const BOOLEAN_VALUES = /^(true|1|on|yes|false|0|off|no)/i
 export const TRUE_VALUES = /^(true|1|on|yes)/i
 
 // Define Formatters in order to format all columns with the given type
-export const dateFormatter = d3.timeFormat('%Y-%m-%d') // Specify Datetime and Date format to be sortable
-export const datetimeFormatter = d3.timeFormat('%Y-%m-%d %H:%M:%S') // Specify Datetime and Date format to be sortable
 export const TYPE_FORMATTER = {
   BOOLEAN: {
     validator: d => BOOLEAN_VALUES.test(String(d)),
@@ -52,14 +50,14 @@ export const TYPE_FORMATTER = {
     validator: d => !isNaN(new Date(d).getTime()),
     formatter: d => {
       const date = new Date(d)
-      return isNaN(date.getTime()) ? null : dateFormatter(date)
+      return isValidDate(date) ? dateFormatter(date) : null
     }
   },
   DATETIME: {
     validator: d => !isNaN(new Date(d).getTime()),
     formatter: d => {
       const date = new Date(d)
-      return isNaN(date.getTime()) ? null : datetimeFormatter(date)
+      return isValidDate(date) ? datetimeFormatter(date) : null
     }
   },
   TIME: {

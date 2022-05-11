@@ -54,7 +54,6 @@
 import { writeToString } from '@fast-csv/format'
 import { processError } from '@/utils/utils'
 import { formatObject, formatArray } from '@/utils/json'
-import { toDateString } from '@/utils/dates'
 import { detectTypes } from '@/utils/type-check'
 
 const height5 = 290
@@ -148,7 +147,7 @@ export default {
       if (typeof value === 'object') {
         return formatObject(value)
       }
-      return toDateString(header.value, value)
+      return value
     },
     async exportCSV() {
       this.progress = true
