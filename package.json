@@ -75,7 +75,7 @@
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/vuetify": "^1.12.3",
     "@types/d3-collection": "^1.0.10",
-    "@uppy/core": "^2.0.2",
+    "@uppy/core": "^2.1.10",
     "@uppy/dashboard": "^2.0.2",
     "@uppy/drop-target": "^1.0.1",
     "@vue/preload-webpack-plugin": "^2.0.0",
