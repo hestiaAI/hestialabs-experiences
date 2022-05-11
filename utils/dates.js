@@ -1,6 +1,17 @@
+import * as d3 from 'd3'
+
 export function isValidDate(d) {
   return d instanceof Date && !isNaN(d) && d.getFullYear() !== 1970
 }
+
+/**
+ * Here we define the date and time formats used in the app
+ */
+export const dateFormatter = d3.timeFormat('%Y-%m-%d') // Specify Datetime and Date format to be sortable
+export const datetimeFormatter = d3.timeFormat('%Y-%m-%d, %H:%M:%S') // Specify Datetime and Date format to be sortable
+export const dateParser = d3.timeParse('%Y-%m-%d') // Specify Datetime and Date format to be sortable
+export const datetimeParser = d3.timeParse('%Y-%m-%d, %H:%M:%S') // Specify Datetime and Date format to be sortable
+
 /**
  * Convert the given value to a formated date string depending on it's name
  * If the name include date or time we assume that we can convert it with

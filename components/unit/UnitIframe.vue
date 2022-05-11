@@ -2,7 +2,9 @@
   <iframe
     ref="iframe"
     :src="src"
+    class="frame"
     :style="`width: 100%; height: ${height}px`"
+    frameborder="0"
     @load="onload"
   ></iframe>
 </template>
@@ -10,7 +12,10 @@
 <script>
 export default {
   props: {
-    data: undefined,
+    args: {
+      type: Object,
+      default: () => {}
+    },
     src: {
       type: String,
       required: true
@@ -20,19 +25,27 @@ export default {
       default: 500
     }
   },
+  data() {
+    return {
+      loaded: false
+    }
+  },
   watch: {
-    data(data) {
-      this.callIframeFunction('update', data)
+    args(newArgs) {
+      if (this.loaded) {
+        this.callIframeFunction('update', newArgs)
+      }
     }
   },
   methods: {
     onload() {
-      const initArgs = {
+      const initParameters = {
         height: this.height,
         width: (this.width = this.$refs.iframe.offsetWidth)
       }
-      this.callIframeFunction('init', initArgs)
-      this.callIframeFunction('update', this.data)
+      this.callIframeFunction('init', initParameters)
+      this.callIframeFunction('update', this.args)
+      this.loaded = true
     },
     callIframeFunction(functionName, ...args) {
       const func = this.$refs.iframe.contentWindow?.[functionName]
