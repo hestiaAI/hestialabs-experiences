@@ -4,11 +4,7 @@ The experiences developed by HestiaLabs are targeted for any user willing to bet
 
 ## Setup
 
-0. Check that you have the correct versions for npm and node:
-```npm: '7.24.2',
-node: '14.19.2',
-```
-by running `npm version`
+0. Check that you have the correct versions for npm and node (npm: '7.24.2', node: '14.19.2') by running `npm version`
 
 1. Clone this repo and name the directory `hestialabs-experiences`. Then clone the repo [hestialabs](https://github.com/hestiaAI/hestialabs) and name the directory `hestialabs`. These two directories should be siblings and share a parent directory.
 
