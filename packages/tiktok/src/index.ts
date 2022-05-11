@@ -14,6 +14,7 @@ const options: ExperienceOptions = {
   files: {
     userdata: '**/user_data.json'
   },
+  hideFileExplorer: false,
   icon: icon,
   slug: 'tiktok',
   title: 'TikTok',
