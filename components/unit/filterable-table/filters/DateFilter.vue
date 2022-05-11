@@ -33,6 +33,7 @@
           outlined
           color="indigo"
           x-small
+          @mousedown.prevent
           @click="selectAll"
           v-text="allWeekDays ? `Unselect All` : `Select All`"
         >
@@ -40,17 +41,17 @@
       </div>
       <VRow>
         <VCol
-          v-for="(weekDay, idx) in weekDays"
+          v-for="weekDay in weekDays"
           :key="weekDay"
           cols="12"
           md="6"
           class="pt-0 pb-0"
         >
           <VCheckbox
-            v-model="weekDayAuthorized[idx]"
+            v-model="weekDayAuthorized"
             :label="weekDay"
             color="primary"
-            :value="true"
+            :value="weekDay"
             hide-details
             dense
             @change="filterChange"
@@ -89,7 +90,7 @@ export default {
     return {
       dateFormatter: d3.timeFormat('%Y-%m-%d'),
       weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      weekDayAuthorized: Array(7).fill(true),
+      weekDayAuthorized: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       sliderRange: []
     }
   },
@@ -123,7 +124,7 @@ export default {
       ]
     },
     allWeekDays() {
-      return this.weekDayAuthorized.every(d => d === true)
+      return this.weekDayAuthorized.length === this.weekDays.length
     },
     filterFunction() {
       return value => {
@@ -132,7 +133,7 @@ export default {
           !value ||
           (date >= this.dateRange[0] &&
             date <= this.dateRange[1] &&
-            this.weekDayAuthorized[date.getDay()])
+            this.weekDayAuthorized.includes(this.weekDays[date.getDay()]))
         )
       }
     }
@@ -142,20 +143,24 @@ export default {
   },
   methods: {
     selectAll() {
-      if (this.allWeekDays) {
-        this.weekDayAuthorized.fill(null)
-      } else {
-        this.weekDayAuthorized.fill(true)
-      }
+      this.$nextTick(() => {
+        if (this.allWeekDays) {
+          this.weekDayAuthorized = []
+        } else {
+          this.weekDayAuthorized = this.weekDays.slice()
+        }
+        this.filterChange()
+      })
     },
     getDate(i) {
       return this.timeScale.invert(i)
     },
     filterChange() {
+      console.log(this.weekDayAuthorized)
       this.$emit('filter-change', this.filterFunction)
     },
     reset() {
-      this.weekDayAuthorized = this.weekDayAuthorized.fill(true)
+      this.weekDayAuthorized = this.weekDays.slice()
       this.sliderRange = [0, this.numberOfDays]
       this.filterChange()
     }
