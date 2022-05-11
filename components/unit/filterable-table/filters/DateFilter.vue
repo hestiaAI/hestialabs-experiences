@@ -17,6 +17,9 @@
             v-model="sliderRange"
             :min="0"
             :max="numberOfDays"
+            track-color="primary"
+            thumb-color="#2c3e50"
+            tick-size="0"
             hide-details
             dense
             step="1"
@@ -156,7 +159,6 @@ export default {
       return this.timeScale.invert(i)
     },
     filterChange() {
-      console.log(this.weekDayAuthorized)
       this.$emit('filter-change', this.filterFunction)
     },
     reset() {
