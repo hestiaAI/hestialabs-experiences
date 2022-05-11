@@ -21,6 +21,7 @@ const options: ExperienceOptions = {
     searches: '**/searches.json',
     settings: '**/settings.json'
   },
+  hideFileExplorer: false,
   icon: icon,
   slug: 'instagram',
   title: 'Instagram',

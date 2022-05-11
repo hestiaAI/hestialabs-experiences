@@ -7,6 +7,7 @@ import searchhistory from './sql/searchhistory.sql'
 import sharehistory from './sql/sharehistory.sql'
 import comments from './sql/comments.sql'
 import chathistory from './sql/chathistory.sql'
+import { genericViewers } from '@/pipelines/generic'
 const blocks: ViewBlocks = [
   {
     id: 'fanlist',
@@ -72,6 +73,9 @@ const blocks: ViewBlocks = [
     title: 'Chat History',
     text: 'Private messages sent and received'
   }
+    text: 'Comments recieved'
+  },
+  ...genericViewers
 ]
 
 export default blocks

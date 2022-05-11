@@ -15,7 +15,7 @@ function test({
   if (!disabled && !url && !viewBlocks.length) {
     error(`[${slug}] viewBlocks should not be empty`)
   }
-  if (files) {
+  if (files && !('$DYNAMIC_FILES' in files)) {
     // validate file ids
     viewBlocks.forEach(({ id, files: viewFiles }: Partial<ViewBlock>) => {
       if (viewFiles) {

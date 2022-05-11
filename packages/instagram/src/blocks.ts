@@ -1,6 +1,7 @@
 import type { ViewBlocks } from '@/types'
 
 import sqlComments from './sql/comments.sql'
+import { genericViewers } from '@/pipelines/generic'
 
 const blocks: ViewBlocks = [
   {
@@ -10,7 +11,8 @@ const blocks: ViewBlocks = [
     showTable: true,
     title: 'Comments',
     text: 'Comments recieved'
-  }
+  },
+  ...genericViewers
 ]
 
 export default blocks

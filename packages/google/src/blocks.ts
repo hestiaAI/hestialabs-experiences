@@ -1,11 +1,13 @@
 import type { ViewBlocks } from '@/types'
-import { genericViewers } from '@/pipelines/generic'
+import allActivitySegment from './sql/all-activity-segment.sql'
+import allPlaceVisit from './sql/all-place-visit.sql'
+import recordsLinkedToMac from './sql/records-linked-to-mac.sql'
 
 const blocks: ViewBlocks = [
   {
     id: 'timedObservationViewer',
     customPipeline: 'timedObservationViewer',
-    files: ['my-activity'],
+    files: ['MY_ACTIVITY'],
     customPipelineOptions: {
       fileMatchers: [
         {
@@ -217,10 +219,37 @@ const blocks: ViewBlocks = [
       }
     },
     visualization: 'ChartViewTimedObservationsViewer.vue',
+    showTable: false,
     title: 'My activity information',
     text: 'Overview of what google knows about you, get all the dated observations we found in your Google My Activity folder.'
   },
-  ...genericViewers
+  {
+    id: 'PlaceVisited',
+    sql: allPlaceVisit,
+    files: ['LOCATION_HISTORY'],
+    visualization: 'ChartViewGooglePlaces.vue',
+    showTable: false,
+    title: 'Places visited',
+    text: ''
+  },
+  {
+    id: 'ActivitySegment',
+    sql: allActivitySegment,
+    files: ['LOCATION_HISTORY'],
+    visualization: 'ChartViewGoogleTrips.vue',
+    showTable: false,
+    title: 'Travels',
+    text: ''
+  },
+  {
+    id: 'WifiScan',
+    sql: recordsLinkedToMac,
+    files: ['LOCATION_HISTORY'],
+    visualization: 'ChartViewGoogleWifi.vue',
+    showTable: false,
+    title: 'Wifi',
+    text: ''
+  }
 ]
 
 export default blocks
