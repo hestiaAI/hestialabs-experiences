@@ -15,14 +15,6 @@
   "keepOnlyFiles": false,
   "defaultView": [
     {
-      "key": "PlaceVisited",
-      "sql": "all-place-visit",
-      "files": ["LOCATION_HISTORY"],
-      "visualization": "ChartViewGooglePlaces.vue",
-      "showTable": false,
-      "title": "Places visited"
-    },
-    {
       "key": "timedObservationViewer",
       "customPipeline": "timedObservationViewer",
       "files": ["MY_ACTIVITY"],
@@ -239,6 +231,14 @@
       "showTable": false,
       "title": "My activity information",
       "text": "Overview of what google knows about you, get all the dated observations we found in your Google My Activity folder."
+    },
+    {
+      "key": "PlaceVisited",
+      "sql": "all-place-visit",
+      "files": ["LOCATION_HISTORY"],
+      "visualization": "ChartViewGooglePlaces.vue",
+      "showTable": false,
+      "title": "Places visited"
     },
     {
       "key": "ActivitySegment",
