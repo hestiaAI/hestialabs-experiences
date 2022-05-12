@@ -8,7 +8,7 @@
   >
     <template #activator="{ on, attrs }">
       <VBtn icon v-bind="attrs" v-on="on">
-        <VIcon small :color="filter ? 'success' : ''">
+        <VIcon small :color="filter ? 'error' : ''">
           $vuetify.icons.mdiFilter
         </VIcon>
       </VBtn>
@@ -73,7 +73,7 @@ export default {
         case 'DATE':
           return { name: 'DateFilter.vue', args: {} }
         case 'DATETIME':
-          return { name: 'DateFilter.vue', args: { pickTime: true } }
+          return { name: 'DateFilter.vue', args: { isDatetime: true } }
         default:
           return { name: 'SelectFilter.vue', args: {} }
       }

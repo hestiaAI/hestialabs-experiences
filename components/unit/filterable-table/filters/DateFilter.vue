@@ -86,7 +86,7 @@ export default {
     },
     isDatetime: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   data() {
@@ -130,6 +130,12 @@ export default {
       return this.weekDayAuthorized.length === this.weekDays.length
     },
     filterFunction() {
+      if (
+        this.allWeekDays &&
+        JSON.stringify(this.sliderRange) ===
+          JSON.stringify([0, this.numberOfDays])
+      )
+        return null
       return value => {
         const date = this.parser(value)
         return (

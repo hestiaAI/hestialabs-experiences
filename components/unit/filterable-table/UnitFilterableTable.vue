@@ -84,7 +84,7 @@ export default {
       search: '',
       files: null,
       filters: {},
-      filteredItems: this.items,
+      filteredItems: [],
       itemsPerPage: defaultItemsPerPage10 ? 10 : 5,
       height: defaultItemsPerPage10 ? height10 : height5
     }
@@ -124,12 +124,21 @@ export default {
           this.height = height10
         }
       }
+    },
+    data: {
+      immediate: true,
+      handler() {
+        this.applyFilters()
+      }
     }
   },
   methods: {
     filterChange(header, filter) {
       this.filters[header] = filter
-      this.filteredItems = this.items.filter(d => {
+      this.applyFilters()
+    },
+    applyFilters() {
+      this.filteredItems = this.data.items.filter(d => {
         return Object.entries(this.filters).every(([header, filter]) => {
           return filter === null || filter(d[header])
         })
@@ -177,7 +186,7 @@ export default {
       }
     },
     columnValues(header) {
-      return this.items.map(d =>
+      return this.data.items.map(d =>
         this.formatItemAsString({ header, value: d[header.value] })
       )
     },

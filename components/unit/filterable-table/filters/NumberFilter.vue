@@ -27,7 +27,10 @@
             :step="isFloat ? '0.1' : '1'"
             :max="extent[1]"
             :min="extent[0]"
-            @change="$set(filter, 0, $event)"
+            @change="
+              $set(filter, 0, $event)
+              filterChange()
+            "
           ></VTextField>
         </VCol>
         <VCol cols="12" md="4" offset-md="4">
@@ -38,7 +41,10 @@
             hide-details
             type="number"
             style="width: 60px"
-            @change="$set(filter, 1, $event)"
+            @change="
+              $set(filter, 1, $event)
+              filterChange()
+            "
           ></VTextField>
         </VCol>
       </VRow>

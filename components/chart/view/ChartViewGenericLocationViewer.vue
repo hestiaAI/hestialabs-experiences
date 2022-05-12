@@ -14,16 +14,15 @@
     <template v-if="total > 0">
       <VRow>
         <VCol cols="12">
-          <UnitIframe
-            v-if="myKeplerInput !== null"
-            src="/kepler"
-            :data="myKeplerInput"
-          />
+          <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
       </VRow>
       <VRow>
         <VCol cols="12">
-          <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+          <UnitFilterableTable
+            v-bind="{ headers: header, items: values }"
+            @current-items="onTableFilter"
+          />
         </VCol>
       </VRow>
     </template>
@@ -37,36 +36,44 @@ export default {
   mixins: [mixin],
   data() {
     return {
-      total: 0,
-      results: [],
+      filteredRows: this.values,
       header: [
         { text: 'File', value: 'filename' },
         { text: 'Path', value: 'path' },
         { text: 'Latitude', value: 'latitude' },
         { text: 'Longitude', value: 'longitude' },
         { text: 'Description', value: 'description' }
-      ],
-      myKeplerInput: null
+      ]
+    }
+  },
+  computed: {
+    total() {
+      return this.values.length
+    },
+    filtered() {
+      return this.filteredRows.length
+    },
+    keplerData() {
+      return {
+        fields: this.header.map(h => {
+          return {
+            name: h.value
+          }
+        }),
+        rows: this.filteredRows.map(r => this.header.map(h => r[h.value]))
+      }
+    },
+    keplerArgs() {
+      return {
+        keplerData: this.keplerData,
+        config: keplerConfig
+      }
     }
   },
   methods: {
-    drawViz() {
-      this.total = this.values.length
-      this.results = this.values
-      this.myKeplerInput = {
-        keplerData: {
-          fields: this.headers.map(h => {
-            return {
-              name: h
-            }
-          }),
-          rows: this.results.map(i => {
-            i.description = JSON.stringify(i.description)
-            return this.headers.map(h => i[h])
-          })
-        },
-        config: keplerConfig
-      }
+    drawViz() {},
+    onTableFilter(newItems) {
+      this.filteredRows = newItems
     }
   }
 }
