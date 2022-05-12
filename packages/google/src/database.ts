@@ -40,7 +40,8 @@ const config: DatabaseConfig = {
         ['visitConfidence', FLOAT],
         ['locationConfidence', FLOAT],
         ['editConfirmationStatus', TEXT],
-        ['duration', FLOAT]
+        ['duration', FLOAT],
+        ['semanticType', TEXT]
       ]
     },
     {
@@ -194,6 +195,10 @@ const config: DatabaseConfig = {
         {
           column: 'duration',
           path: '$.visitConfidence'
+        },
+        {
+          column: 'semanticType',
+          path: '$.location.semanticType'
         }
       ]
     },
