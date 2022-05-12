@@ -5,12 +5,12 @@ export default {
       filters: [],
       layers: [
         {
-          id: 'xkafwbj',
+          id: 'yiawwh3',
           type: 'point',
           config: {
             dataId: 'data',
             label: 'Point',
-            color: [210, 0, 0],
+            color: [187, 0, 0],
             highlightColor: [252, 242, 26, 255],
             columns: {
               lat: 'latitude',
@@ -22,8 +22,8 @@ export default {
               radius: 10,
               fixedRadius: false,
               opacity: 0.8,
-              outline: false,
-              thickness: 2,
+              outline: true,
+              thickness: 1,
               strokeColor: null,
               colorRange: {
                 name: 'Global Warming',
@@ -39,16 +39,16 @@ export default {
                 ]
               },
               strokeColorRange: {
-                name: 'Global Warming',
-                type: 'sequential',
+                name: 'Uber Viz Qualitative 1.2',
+                type: 'qualitative',
                 category: 'Uber',
                 colors: [
-                  '#5A1846',
-                  '#900C3F',
-                  '#C70039',
-                  '#E3611C',
-                  '#F1920E',
-                  '#FFC300'
+                  '#12939A',
+                  '#DDB27C',
+                  '#88572C',
+                  '#FF991F',
+                  '#F15C17',
+                  '#223F9A'
                 ]
               },
               radiusRange: [10, 50],
@@ -69,8 +69,11 @@ export default {
           visualChannels: {
             colorField: null,
             colorScale: 'quantile',
-            strokeColorField: null,
-            strokeColorScale: 'quantile',
+            strokeColorField: {
+              name: 'semanticType',
+              type: 'string'
+            },
+            strokeColorScale: 'ordinal',
             sizeField: {
               name: 'duration',
               type: 'real'
@@ -104,6 +107,14 @@ export default {
                 format: null
               },
               {
+                name: 'semanticType',
+                format: null
+              },
+              {
+                name: 'duration',
+                format: null
+              },
+              {
                 name: 'placeVisitImportance',
                 format: null
               },
@@ -113,14 +124,6 @@ export default {
               },
               {
                 name: 'locationConfidence',
-                format: null
-              },
-              {
-                name: 'editConfirmationStatus',
-                format: null
-              },
-              {
-                name: 'duration',
                 format: null
               }
             ]
@@ -150,10 +153,10 @@ export default {
     mapState: {
       bearing: 0,
       dragRotate: false,
-      latitude: 46.37608976800299,
-      longitude: 6.801570415955495,
+      latitude: 46.38494014302197,
+      longitude: 6.571780257805701,
       pitch: 0,
-      zoom: 7.687731467318987,
+      zoom: 7.802552830838788,
       isSplit: false
     },
     mapStyle: {
