@@ -54,6 +54,18 @@ const config: DatabaseConfig = {
       ]
     },
     {
+      name: 'StatusList',
+      columns: [
+        ['resolution', TEXT],
+        ['appversion', TEXT],
+        ['idfa', TEXT],
+        ['gaid', TEXT], 
+        ['androidid', TEXT],
+        ['idfv', TEXT],
+        ['webid', TEXT]
+      ]
+    },
+    {
       name: 'TiktokComment',
       columns: [
         ['date', TEXT],
@@ -181,6 +193,41 @@ const config: DatabaseConfig = {
         {
           column: 'method',
           path: '$.Method'
+        }
+      ]
+    },
+    {
+      fileId: 'userdata',
+      path: '$.Activity.Status.Status List[*]',
+      table: 'StatusList',
+      getters: [
+        {
+          column: 'resolution',
+          path: '$.Resolution'
+        },
+        {
+          column: 'appversion',
+          path: '$[App Version]'
+        },
+        {
+          column: 'idfa',
+          path: '$.IDFA'
+        },
+        {
+          column: 'gaid',
+          path: '$.GAID'
+        },
+        {
+          column: 'androidid',
+          path: '$[Android ID]'
+        },
+        {
+          column: 'idfv',
+          path: '$.IDFV'
+        },
+        {
+          column: 'webid',
+          path: '$[Web ID]'
         }
       ]
     },

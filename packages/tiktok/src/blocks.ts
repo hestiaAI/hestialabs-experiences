@@ -5,6 +5,7 @@ import likelist from './sql/likelist.sql'
 import loginhistory from './sql/loginhistory.sql'
 import searchhistory from './sql/searchhistory.sql'
 import sharehistory from './sql/sharehistory.sql'
+import statuslist from './sql/statuslist.sql'
 import comments from './sql/comments.sql'
 import chathistory from './sql/chathistory.sql'
 import { genericViewers } from '@/pipelines/generic'
@@ -58,6 +59,14 @@ const blocks: ViewBlocks = [
     text: 'Items you shared'
   },
   {
+    id: 'statuslist',
+    sql: statuslist,
+    files: ['userdata'],
+    showTable: true,
+    title: 'Status list',
+    text: 'Technical data about your devices'
+  },
+  {
     id: 'comments',
     sql: comments,
     files: ['userdata'],
@@ -73,9 +82,6 @@ const blocks: ViewBlocks = [
     title: 'Chat History',
     text: 'Private messages sent and received'
   }
-    text: 'Comments recieved'
-  },
-  ...genericViewers
 ]
 
 export default blocks
