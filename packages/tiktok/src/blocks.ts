@@ -7,6 +7,7 @@ import searchhistory from './sql/searchhistory.sql'
 import sharehistory from './sql/sharehistory.sql'
 import statuslist from './sql/statuslist.sql'
 import comments from './sql/comments.sql'
+import videobrowsinghistory from './sql/videobrowsinghistory.sql'
 import chathistory from './sql/chathistory.sql'
 import { genericViewers } from '@/pipelines/generic'
 const blocks: ViewBlocks = [
@@ -65,6 +66,14 @@ const blocks: ViewBlocks = [
     showTable: true,
     title: 'Status list',
     text: 'Technical data about your devices'
+  },
+  {
+    id: 'videobrowsinghistory',
+    sql: videobrowsinghistory,
+    files: ['userdata'],
+    showTable: true,
+    title: 'Video Browsing History',
+    text: 'Videos you watched'
   },
   {
     id: 'comments',

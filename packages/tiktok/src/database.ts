@@ -66,6 +66,13 @@ const config: DatabaseConfig = {
       ]
     },
     {
+      name: 'VideoBrowsingHistory',
+      columns: [
+        ['date', TEXT],
+        ['videolink', TEXT]
+      ]
+    },
+    {
       name: 'TiktokComment',
       columns: [
         ['date', TEXT],
@@ -228,6 +235,21 @@ const config: DatabaseConfig = {
         {
           column: 'webid',
           path: '$[Web ID]'
+        }
+      ]
+    },
+    {
+      fileId: 'userdata',
+      path: '$.Activity.Video Browsing History.VideoList[*]',
+      table: 'VideoBrowsingHistory',
+      getters: [
+        {
+          column: 'date',
+          path: '$.Date'
+        },
+        {
+          column: 'videolink',
+          path: '$.VideoLink'
         }
       ]
     },
