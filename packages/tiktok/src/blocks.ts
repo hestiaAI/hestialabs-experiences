@@ -81,7 +81,8 @@ const blocks: ViewBlocks = [
     showTable: true,
     title: 'Chat History',
     text: 'Private messages sent and received'
-  }
+  },
+  ...genericViewers
 ]
 
 export default blocks
