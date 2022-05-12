@@ -73,6 +73,13 @@ const config: DatabaseConfig = {
       ]
     },
     {
+      name: 'BlockList',
+      columns: [
+        ['date', TEXT],
+        ['username', TEXT]
+      ]
+    },
+    {
       name: 'TiktokComment',
       columns: [
         ['date', TEXT],
@@ -250,6 +257,21 @@ const config: DatabaseConfig = {
         {
           column: 'videolink',
           path: '$.VideoLink'
+        }
+      ]
+    },
+    {
+      fileId: 'userdata',
+      path: '$.App Settings.Block.BlockList[*]',
+      table: 'BlockList',
+      getters: [
+        {
+          column: 'date',
+          path: '$.Date'
+        },
+        {
+          column: 'username',
+          path: '$.UserName'
         }
       ]
     },
