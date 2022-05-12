@@ -198,7 +198,7 @@ const config: DatabaseConfig = {
           path: '$.Comment'
         }
       ]
-    }  ,
+    },
     {
       fileId: 'userdata',
       path: '$.Direct Messages.Chat History.ChatHistory.*[*]',
