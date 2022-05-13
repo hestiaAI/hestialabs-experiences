@@ -10,18 +10,11 @@ const options: ExperienceOptions = {
     '<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format.',
   dataSamples: ['test-instagram.zip'],
   files: {
-    comments: '**/comments.json',
-    connections: '**/connections.json',
-    contacts: '**/contacts.json',
-    likes: '**/likes.json',
-    media: '**/media.json',
-    messages: '**/messages.json',
-    profile: '**/profile.json',
-    saved: '**/saved.json',
-    searches: '**/searches.json',
-    settings: '**/settings.json'
+    messages: '**/messages/inbox/**/message_*.json',
+    followers: '**/followers.json',
+    followings: '**/following.json'
   },
-  hideFileExplorer: false,
+  hideFileExplorer: true,
   icon: icon,
   slug: 'instagram',
   title: 'Instagram',
