@@ -141,10 +141,10 @@ export function getTypesFromData(headers, items) {
   return meta.map(m => {
     const header = headers.find(h => h.value === m.label)
     return {
-      ...header,
       value: m.label,
       type: m.type,
-      category: m.category
+      category: m.category,
+      ...header // if type is already defined in header, it overwrite the predicted one
     }
   })
 }
