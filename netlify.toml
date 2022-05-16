@@ -22,6 +22,7 @@
   NODE_VERSION = "14"
   NODE_OPTIONS = "--max-old-space-size=4096"
   NPM_VERSION = "7"
+  NODE_OPTIONS = "--max-old-space-size=4096"
   NODE_ENV = "production"
 
 # https://github.com/netlify/cli/blob/main/docs/netlify-dev.md
