@@ -8,7 +8,6 @@ const options: ExperienceOptions = {
   dataPortal: 'https://help.instagram.com/181231772500920',
   dataPortalMessage:
     '<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format.',
-  dataSamples: ['test-instagram.zip'],
   files: {
     messages: '**/messages/inbox/**/message_*.json',
     followers: '**/followers.json',
@@ -19,7 +18,7 @@ const options: ExperienceOptions = {
     likedComments: '**/liked_comments.json',
     likedPosts: '**/liked_posts.json'
   },
-  hideFileExplorer: true,
+  hideFileExplorer: false,
   icon: icon,
   slug: 'instagram',
   title: 'Instagram',

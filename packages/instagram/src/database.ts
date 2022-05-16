@@ -1,5 +1,9 @@
 import type { DatabaseConfig } from '@/types'
-import { SQLType } from '@/types/database-config'
+import {
+  SQLType,
+  JSONPathRecord,
+  JSONPathResultType
+} from '@/types/database-config'
 
 const { TEXT } = SQLType
 
@@ -127,14 +131,26 @@ const config: DatabaseConfig = {
       fileId: 'postsViewed',
       path: '$.impressions_history_posts_seen[*].string_map_data',
       table: 'InstagramPostViewed',
+      options: {
+        callback: output => {
+          const o = output as JSONPathRecord
+          for (const key in o) {
+            if (o[key].value !== '') {
+              o['accountName'] = o[key].value
+            } else if (o[key].timestamp !== 0) {
+              o['unixTimestamp'] = o[key].timestamp
+            }
+          }
+        }
+      },
       getters: [
         {
           column: 'accountName',
-          path: '$.Auteur.value'
+          path: 'accountName'
         },
         {
           column: 'unixTimestamp',
-          path: '$.Heure.timestamp'
+          path: 'unixTimestamp'
         }
       ]
     },
@@ -142,14 +158,26 @@ const config: DatabaseConfig = {
       fileId: 'videosWatched',
       path: '$.impressions_history_videos_watched[*].string_map_data',
       table: 'InstagramVideoWatched',
+      options: {
+        callback: output => {
+          const o = output as JSONPathRecord
+          for (const key in o) {
+            if (o[key].value !== '') {
+              o['accountName'] = o[key].value
+            } else if (o[key].timestamp !== 0) {
+              o['unixTimestamp'] = o[key].timestamp
+            }
+          }
+        }
+      },
       getters: [
         {
           column: 'accountName',
-          path: '$.Auteur.value'
+          path: 'accountName'
         },
         {
           column: 'unixTimestamp',
-          path: '$.Heure.timestamp'
+          path: 'unixTimestamp'
         }
       ]
     },
@@ -157,14 +185,26 @@ const config: DatabaseConfig = {
       fileId: 'adsViewed',
       path: '$.impressions_history_ads_seen[*].string_map_data',
       table: 'InstagramAdViewed',
+      options: {
+        callback: output => {
+          const o = output as JSONPathRecord
+          for (const key in o) {
+            if (o[key].value !== '') {
+              o['accountName'] = o[key].value
+            } else if (o[key].timestamp !== 0) {
+              o['unixTimestamp'] = o[key].timestamp
+            }
+          }
+        }
+      },
       getters: [
         {
           column: 'accountName',
-          path: '$.Auteur.value'
+          path: 'accountName'
         },
         {
           column: 'unixTimestamp',
-          path: '$.Heure.timestamp'
+          path: 'unixTimestamp'
         }
       ]
     },

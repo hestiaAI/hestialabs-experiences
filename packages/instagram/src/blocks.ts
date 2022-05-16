@@ -21,7 +21,7 @@ const blocks: ViewBlocks = [
       seriesAccessor: { text: 'Action', value: 'actionType' },
       topAccessor: { text: 'Action', value: 'accountName' }
     },
-    showTable: false,
+    showTable: true,
     title: 'Views',
     text: ''
   },
@@ -66,8 +66,7 @@ const blocks: ViewBlocks = [
     title: 'Follows',
     text: ''
   },
-
-  ...genericViewers
+  genericViewers[0]
 ]
 
 export default blocks
