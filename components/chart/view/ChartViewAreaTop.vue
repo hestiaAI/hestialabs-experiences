@@ -136,7 +136,7 @@ export default {
       ]
 
       // Parse and format data
-      const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
+      const formatTime = d3.timeFormat('%Y-%m-%d, %H:%M:%S')
       const formatDay = d3.timeFormat('%B %d, %Y')
       this.results = this.values.map(d => {
         const date = new Date(d[this.dateAccessor.value])
