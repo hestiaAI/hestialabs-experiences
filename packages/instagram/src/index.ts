@@ -12,7 +12,12 @@ const options: ExperienceOptions = {
   files: {
     messages: '**/messages/inbox/**/message_*.json',
     followers: '**/followers.json',
-    followings: '**/following.json'
+    followings: '**/following.json',
+    postsViewed: '**/posts_viewed.json',
+    videosWatched: '**/videos_watched.json',
+    adsViewed: '**/ads_viewed.json',
+    likedComments: '**/liked_comments.json',
+    likedPosts: '**/liked_posts.json'
   },
   hideFileExplorer: true,
   icon: icon,

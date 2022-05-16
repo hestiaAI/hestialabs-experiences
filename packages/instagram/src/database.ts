@@ -28,6 +28,41 @@ const config: DatabaseConfig = {
         ['timestampMS', TEXT],
         ['accountURL', TEXT]
       ]
+    },
+    {
+      name: 'InstagramPostViewed',
+      columns: [
+        ['accountName', TEXT],
+        ['unixTimestamp', TEXT]
+      ]
+    },
+    {
+      name: 'InstagramVideoWatched',
+      columns: [
+        ['accountName', TEXT],
+        ['unixTimestamp', TEXT]
+      ]
+    },
+    {
+      name: 'InstagramAdViewed',
+      columns: [
+        ['accountName', TEXT],
+        ['unixTimestamp', TEXT]
+      ]
+    },
+    {
+      name: 'InstagramCommentLiked',
+      columns: [
+        ['accountName', TEXT],
+        ['unixTimestamp', TEXT]
+      ]
+    },
+    {
+      name: 'InstagramPostLiked',
+      columns: [
+        ['accountName', TEXT],
+        ['unixTimestamp', TEXT]
+      ]
     }
   ],
   getters: [
@@ -85,6 +120,81 @@ const config: DatabaseConfig = {
         {
           column: 'accountURL',
           path: '$.href'
+        }
+      ]
+    },
+    {
+      fileId: 'postsViewed',
+      path: '$.impressions_history_posts_seen[*].string_map_data',
+      table: 'InstagramPostViewed',
+      getters: [
+        {
+          column: 'accountName',
+          path: '$.Auteur.value'
+        },
+        {
+          column: 'unixTimestamp',
+          path: '$.Heure.timestamp'
+        }
+      ]
+    },
+    {
+      fileId: 'videosWatched',
+      path: '$.impressions_history_videos_watched[*].string_map_data',
+      table: 'InstagramVideoWatched',
+      getters: [
+        {
+          column: 'accountName',
+          path: '$.Auteur.value'
+        },
+        {
+          column: 'unixTimestamp',
+          path: '$.Heure.timestamp'
+        }
+      ]
+    },
+    {
+      fileId: 'adsViewed',
+      path: '$.impressions_history_ads_seen[*].string_map_data',
+      table: 'InstagramAdViewed',
+      getters: [
+        {
+          column: 'accountName',
+          path: '$.Auteur.value'
+        },
+        {
+          column: 'unixTimestamp',
+          path: '$.Heure.timestamp'
+        }
+      ]
+    },
+    {
+      fileId: 'likedComments',
+      path: '$.likes_comment_likes[*]',
+      table: 'InstagramCommentLiked',
+      getters: [
+        {
+          column: 'accountName',
+          path: '$.title'
+        },
+        {
+          column: 'unixTimestamp',
+          path: '$.string_list_data[0].timestamp'
+        }
+      ]
+    },
+    {
+      fileId: 'likedPosts',
+      path: '$.likes_media_likes[*]',
+      table: 'InstagramPostLiked',
+      getters: [
+        {
+          column: 'accountName',
+          path: '$.title'
+        },
+        {
+          column: 'unixTimestamp',
+          path: '$.string_list_data[0].timestamp'
         }
       ]
     }
