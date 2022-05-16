@@ -1,81 +1,72 @@
 import type { ViewBlocks } from '@/types'
 
-import sqlComments from './sql/comments.sql'
-import sqlConnections from './sql/connections.sql'
-import sqlContacts from './sql/contacts.sql'
 import sqlLikes from './sql/likes.sql'
-import sqlPhotos from './sql/photos.sql'
+import sqlViews from './sql/views.sql'
+import sqlFollows from './sql/follows.sql'
 import sqlMessages from './sql/messages.sql'
-import sqlSavedcollections from './sql/saved-collections.sql'
-import sqlSearches from './sql/searches.sql'
 import { genericViewers } from '@/pipelines/generic'
 
 const blocks: ViewBlocks = [
   {
-    id: 'comments',
-    sql: sqlComments,
-    files: ['comments'],
+    id: 'views',
+    sql: sqlViews,
+    files: ['postsViewed', 'videosWatched', 'adsViewed'],
+    visualization: 'ChartViewLinePieTop.vue',
+    vizProps: {
+      titleTimeline: 'Content viewed',
+      titlePie: 'Type of content',
+      titleTop: 'Top Account',
+      rowLabel: 'views',
+      dateAccessor: { text: 'Date', value: 'actionDate' },
+      seriesAccessor: { text: 'Action', value: 'actionType' },
+      topAccessor: { text: 'Action', value: 'accountName' }
+    },
     showTable: true,
-    title: 'Comments',
-    text: 'Comments recieved'
-  },
-  {
-    id: 'connections',
-    sql: sqlConnections,
-    files: ['connections'],
-    showTable: true,
-    title: 'Connections',
-    text: 'Connections to other users or hashtags'
-  },
-  {
-    id: 'contacts',
-    sql: sqlContacts,
-    files: ['contacts'],
-    showTable: true,
-    title: 'Contacts',
-    text: 'Not implemented for lack of test data'
+    title: 'Views',
+    text: ''
   },
   {
     id: 'likes',
     sql: sqlLikes,
-    files: ['likes'],
-    showTable: true,
+    files: ['likedComments', 'likedPosts'],
+    visualization: 'ChartViewAreaTop.vue',
+    vizProps: {
+      titleArea: 'Likes given',
+      titleTop: 'Top User',
+      rowLabel: 'likes',
+      dateAccessor: { text: 'Date', value: 'actionDate' },
+      seriesAccessor: { text: 'Action', value: 'actionType' },
+      topAccessor: { text: 'Action', value: 'accountName' }
+    },
+    showTable: false,
     title: 'Likes',
-    text: ''
-  },
-  {
-    id: 'photos',
-    sql: sqlPhotos,
-    files: ['media'],
-    showTable: true,
-    title: 'Photos',
     text: ''
   },
   {
     id: 'messages',
     sql: sqlMessages,
     files: ['messages'],
-    showTable: true,
+    visualization: 'ChartViewOverviewInstagramMessage.vue',
+    showTable: false,
     title: 'Messages',
     text: ''
   },
   {
-    id: 'savedcollections',
-    sql: sqlSavedcollections,
-    files: ['saved'],
-    showTable: true,
-    title: 'Saved Collections',
+    id: 'follows',
+    sql: sqlFollows,
+    files: ['followers', 'followings'],
+    visualization: 'ChartViewTimeSeries.vue',
+    vizProps: {
+      title: 'Followers vs Followings over time',
+      legendOffset: 350,
+      dateAccessor: { text: 'Date', value: 'followDate' },
+      seriesAccessor: { text: 'Action', value: 'followType' }
+    },
+    showTable: false,
+    title: 'Follows',
     text: ''
   },
-  {
-    id: 'searches',
-    sql: sqlSearches,
-    files: ['searches'],
-    showTable: true,
-    title: 'Searches',
-    text: 'Queries you have issued to the search engine of Instagram'
-  },
-  ...genericViewers
+  genericViewers[0]
 ]
 
 export default blocks

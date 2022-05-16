@@ -1,8 +1,8 @@
 import type { DatabaseConfig } from '@/types'
 import {
   SQLType,
-  JSONPathResultType,
-  JSONPathReturnObject
+  JSONPathRecord,
+  JSONPathResultType
 } from '@/types/database-config'
 
 const { TEXT } = SQLType
@@ -10,220 +10,231 @@ const { TEXT } = SQLType
 const config: DatabaseConfig = {
   tables: [
     {
-      name: 'InstagramComment',
-      columns: [
-        ['datetime', TEXT],
-        ['text', TEXT],
-        ['sender', TEXT]
-      ]
-    },
-    {
-      name: 'InstagramConnection',
-      columns: [
-        ['datetime', TEXT],
-        ['name', TEXT],
-        ['type', TEXT]
-      ]
-    },
-    {
-      name: 'InstagramLike',
-      columns: [
-        ['datetime', TEXT],
-        ['name', TEXT],
-        ['type', TEXT]
-      ]
-    },
-    {
-      name: 'InstagramPhoto',
-      columns: [
-        ['caption', TEXT],
-        ['datetime', TEXT],
-        ['location', TEXT],
-        ['path', TEXT]
-      ]
-    },
-    {
       name: 'InstagramMessage',
       columns: [
-        ['sender', TEXT],
-        ['datetime', TEXT],
-        ['text', TEXT]
+        ['senderName', TEXT],
+        ['timestampMs', TEXT],
+        ['messageContent', TEXT]
       ]
     },
     {
-      name: 'InstagramSavedCollection',
+      name: 'InstagramFollower',
       columns: [
-        ['collectionName', TEXT],
-        ['mediaUserName', TEXT],
-        ['mediaDateTime', TEXT]
+        ['accountName', TEXT],
+        ['timestampMs', TEXT],
+        ['accountUrl', TEXT]
       ]
     },
     {
-      name: 'InstagramSearch',
+      name: 'InstagramFollowing',
       columns: [
-        ['searchClick', TEXT],
-        ['time', TEXT],
-        ['type', TEXT]
+        ['accountName', TEXT],
+        ['timestampMs', TEXT],
+        ['accountUrl', TEXT]
+      ]
+    },
+    {
+      name: 'InstagramPostViewed',
+      columns: [
+        ['accountName', TEXT],
+        ['unixTimestamp', TEXT]
+      ]
+    },
+    {
+      name: 'InstagramVideoWatched',
+      columns: [
+        ['accountName', TEXT],
+        ['unixTimestamp', TEXT]
+      ]
+    },
+    {
+      name: 'InstagramAdViewed',
+      columns: [
+        ['accountName', TEXT],
+        ['unixTimestamp', TEXT]
+      ]
+    },
+    {
+      name: 'InstagramCommentLiked',
+      columns: [
+        ['accountName', TEXT],
+        ['unixTimestamp', TEXT]
+      ]
+    },
+    {
+      name: 'InstagramPostLiked',
+      columns: [
+        ['accountName', TEXT],
+        ['unixTimestamp', TEXT]
       ]
     }
   ],
   getters: [
     {
-      fileId: 'comments',
-      table: 'InstagramComment',
-      path: '$.media_comments[*]',
-      getters: [
-        {
-          column: 'datetime',
-          path: '$.[0]'
-        },
-        {
-          column: 'text',
-          path: '$.[1]'
-        },
-        {
-          column: 'sender',
-          path: '$.[2]'
-        }
-      ]
-    },
-    {
-      fileId: 'connections',
-      path: '$..[*]@string()',
-      table: 'InstagramConnection',
-      options: {
-        resultType: JSONPathResultType.all,
-        callback: output => {
-          const o = output as JSONPathReturnObject
-          o['grandparentProperty'] = o.pointer.split('/')[1]
-        }
-      },
-      getters: [
-        {
-          column: 'type',
-          path: '$.grandparentProperty'
-        },
-        {
-          column: 'name',
-          path: '$.parentProperty'
-        },
-        {
-          column: 'datetime',
-          path: '$.value'
-        }
-      ]
-    },
-    {
-      fileId: 'likes',
-      path: '$.[*].[*]@array()',
-      table: 'InstagramLike',
-      options: {
-        resultType: JSONPathResultType.all,
-        callback: output => {
-          const o = output as JSONPathReturnObject
-          o['grandparentProperty'] = o.pointer.split('/')[1]
-        }
-      },
-      getters: [
-        {
-          column: 'type',
-          path: '$.grandparentProperty'
-        },
-        {
-          column: 'name',
-          path: '$.value[1]'
-        },
-        {
-          column: 'datetime',
-          path: '$.value[0]'
-        }
-      ]
-    },
-    {
-      fileId: 'media',
-      path: '$.photos[*]',
-      table: 'InstagramPhoto',
-      getters: [
-        {
-          column: 'caption',
-          path: '$.caption'
-        },
-        {
-          column: 'datetime',
-          path: "$.['taken_at']"
-        },
-        {
-          column: 'location',
-          path: "$.['location']"
-        },
-        {
-          column: 'path',
-          path: "$.['path']"
-        }
-      ]
-    },
-    {
       fileId: 'messages',
-      path: '$[*].conversation[*]',
+      path: '$.messages[*]',
       table: 'InstagramMessage',
       getters: [
         {
-          column: 'sender',
-          path: '$.sender'
+          column: 'senderName',
+          path: '$.sender_name'
         },
         {
-          column: 'datetime',
-          path: "$.['created_at']"
+          column: 'timestampMs',
+          path: '$.timestamp_ms'
         },
         {
-          column: 'text',
-          path: '$.text'
+          column: 'messageContent',
+          path: '$.content'
         }
       ]
     },
     {
-      fileId: 'saved',
-      path: '$.saved_collections[*].media[*]',
-      table: 'InstagramSavedCollection',
+      fileId: 'followers',
+      path: '$.relationships_followers[*].string_list_data[0]',
+      table: 'InstagramFollower',
+      getters: [
+        {
+          column: 'accountName',
+          path: '$.value'
+        },
+        {
+          column: 'timestampMs',
+          path: '$.timestamp'
+        },
+        {
+          column: 'accountUrl',
+          path: '$.href'
+        }
+      ]
+    },
+    {
+      fileId: 'followings',
+      path: '$.relationships_following[*].string_list_data[0]',
+      table: 'InstagramFollowing',
+      getters: [
+        {
+          column: 'accountName',
+          path: '$.value'
+        },
+        {
+          column: 'timestampMs',
+          path: '$.timestamp'
+        },
+        {
+          column: 'accountUrl',
+          path: '$.href'
+        }
+      ]
+    },
+    {
+      fileId: 'postsViewed',
+      path: '$.impressions_history_posts_seen[*].string_map_data',
+      table: 'InstagramPostViewed',
       options: {
-        resultType: JSONPathResultType.all,
         callback: output => {
-          const o = output as JSONPathReturnObject
-          o['namePath'] = o.path.split("['media']")[0] + "['name']"
+          const o = output as JSONPathRecord
+          for (const key in o) {
+            if (o[key].value !== '') {
+              o['accountName'] = o[key].value
+            } else if (o[key].timestamp !== 0) {
+              o['unixTimestamp'] = o[key].timestamp
+            }
+          }
         }
       },
       getters: [
         {
-          column: 'collectionName',
-          pathKey: 'namePath',
-          queryRoot: true
+          column: 'accountName',
+          path: 'accountName'
         },
         {
-          column: 'mediaUserName',
-          path: '$.value[1]'
-        },
-        {
-          column: 'mediaDateTime',
-          path: '$.value[0]'
+          column: 'unixTimestamp',
+          path: 'unixTimestamp'
         }
       ]
     },
     {
-      fileId: 'searches',
-      path: '$.[*]',
-      table: 'InstagramSearch',
+      fileId: 'videosWatched',
+      path: '$.impressions_history_videos_watched[*].string_map_data',
+      table: 'InstagramVideoWatched',
+      options: {
+        callback: output => {
+          const o = output as JSONPathRecord
+          for (const key in o) {
+            if (o[key].value !== '') {
+              o['accountName'] = o[key].value
+            } else if (o[key].timestamp !== 0) {
+              o['unixTimestamp'] = o[key].timestamp
+            }
+          }
+        }
+      },
       getters: [
         {
-          column: 'searchClick',
-          path: "$.['search_click']"
+          column: 'accountName',
+          path: 'accountName'
         },
         {
-          column: 'time',
-          path: '$.time'
+          column: 'unixTimestamp',
+          path: 'unixTimestamp'
+        }
+      ]
+    },
+    {
+      fileId: 'adsViewed',
+      path: '$.impressions_history_ads_seen[*].string_map_data',
+      table: 'InstagramAdViewed',
+      options: {
+        callback: output => {
+          const o = output as JSONPathRecord
+          for (const key in o) {
+            if (o[key].value !== '') {
+              o['accountName'] = o[key].value
+            } else if (o[key].timestamp !== 0) {
+              o['unixTimestamp'] = o[key].timestamp
+            }
+          }
+        }
+      },
+      getters: [
+        {
+          column: 'accountName',
+          path: 'accountName'
         },
         {
-          column: 'type',
-          path: '$.type'
+          column: 'unixTimestamp',
+          path: 'unixTimestamp'
+        }
+      ]
+    },
+    {
+      fileId: 'likedComments',
+      path: '$.likes_comment_likes[*]',
+      table: 'InstagramCommentLiked',
+      getters: [
+        {
+          column: 'accountName',
+          path: '$.title'
+        },
+        {
+          column: 'unixTimestamp',
+          path: '$.string_list_data[0].timestamp'
+        }
+      ]
+    },
+    {
+      fileId: 'likedPosts',
+      path: '$.likes_media_likes[*]',
+      table: 'InstagramPostLiked',
+      getters: [
+        {
+          column: 'accountName',
+          path: '$.title'
+        },
+        {
+          column: 'unixTimestamp',
+          path: '$.string_list_data[0].timestamp'
         }
       ]
     }

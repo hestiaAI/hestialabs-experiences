@@ -1,6 +1,7 @@
 import type { ViewBlocks } from '@/types'
 
 import sqlOverview from './sql/overview.sql'
+import sqlPersonalization from './sql/personalization.sql'
 import sqlAdsPerAdvertiser from './sql/ads-per-advertiser.sql'
 import sqlTargetingCriteriaByAdvertiser from './sql/targeting-criteria-by-advertiser.sql'
 import sqlTargetingCriteriaAllAdvertisers from './sql/targeting-criteria-all-advertisers.sql'
@@ -60,7 +61,7 @@ const blocks: ViewBlocks = [
   },
   {
     id: 'personalization',
-    sql: 'personalization',
+    sql: sqlPersonalization,
     files: ['personalization'],
     visualization: 'TwitterInferredInfos.vue',
     title: 'Inferred Data',
