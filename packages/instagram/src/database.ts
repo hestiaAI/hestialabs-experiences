@@ -13,7 +13,7 @@ const config: DatabaseConfig = {
       name: 'InstagramMessage',
       columns: [
         ['senderName', TEXT],
-        ['timestampMS', TEXT],
+        ['timestampMs', TEXT],
         ['messageContent', TEXT]
       ]
     },
@@ -21,16 +21,16 @@ const config: DatabaseConfig = {
       name: 'InstagramFollower',
       columns: [
         ['accountName', TEXT],
-        ['timestampMS', TEXT],
-        ['accountURL', TEXT]
+        ['timestampMs', TEXT],
+        ['accountUrl', TEXT]
       ]
     },
     {
       name: 'InstagramFollowing',
       columns: [
         ['accountName', TEXT],
-        ['timestampMS', TEXT],
-        ['accountURL', TEXT]
+        ['timestampMs', TEXT],
+        ['accountUrl', TEXT]
       ]
     },
     {
@@ -80,7 +80,7 @@ const config: DatabaseConfig = {
           path: '$.sender_name'
         },
         {
-          column: 'timestampMS',
+          column: 'timestampMs',
           path: '$.timestamp_ms'
         },
         {
@@ -99,11 +99,11 @@ const config: DatabaseConfig = {
           path: '$.value'
         },
         {
-          column: 'timestampMS',
+          column: 'timestampMs',
           path: '$.timestamp'
         },
         {
-          column: 'accountURL',
+          column: 'accountUrl',
           path: '$.href'
         }
       ]
@@ -118,11 +118,11 @@ const config: DatabaseConfig = {
           path: '$.value'
         },
         {
-          column: 'timestampMS',
+          column: 'timestampMs',
           path: '$.timestamp'
         },
         {
-          column: 'accountURL',
+          column: 'accountUrl',
           path: '$.href'
         }
       ]
