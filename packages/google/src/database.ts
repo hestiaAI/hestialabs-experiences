@@ -45,6 +45,41 @@ const config: DatabaseConfig = {
       ]
     },
     {
+      name: 'Winners',
+      columns: [
+        ['id', INTEGER],
+        ['winnerLatitude', INTEGER],
+        ['winnerLongitude', INTEGER],
+        ['winnerAddress', TEXT],
+        ['winnerName', TEXT],
+        ['winnerConfidence', FLOAT],
+        ['winnerSemanticType', TEXT],
+        ['timestamp', TEXT]
+      ],
+      primaryKey: 'id'
+    },
+    {
+      name: 'Losers',
+      columns: [
+        ['loserId', INTEGER],
+        ['loserLatitude', INTEGER],
+        ['loserLongitude', INTEGER],
+        ['loserAddress', TEXT],
+        ['loserName', TEXT],
+        ['loserConfidence', FLOAT],
+        ['loserSemanticType', TEXT]
+      ],
+      foreignKeys: [
+        {
+          columns: 'loserId',
+          reference: {
+            table: 'Winners',
+            columns: 'id'
+          }
+        }
+      ]
+    },
+    {
       name: 'WifiScan',
       columns: [
         ['id', INTEGER],
@@ -199,6 +234,61 @@ const config: DatabaseConfig = {
         {
           column: 'semanticType',
           path: '$.location.semanticType'
+        }
+      ]
+    },
+    {
+      fileId: 'LOCATION_HISTORY',
+      path: '$.timelineObjects.[*].placeVisit',
+      table: 'Winners',
+      getters: [
+        {
+          column: 'winnerLatitude',
+          path: '$.location.latitudeE7'
+        },
+        {
+          column: 'winnerLongitude',
+          path: '$.location.longitudeE7'
+        },
+        {
+          column: 'winnerAddress',
+          path: '$.location.address'
+        },
+        {
+          column: 'winnerName',
+          path: '$.location.name'
+        },
+        {
+          column: 'winnerConfidence',
+          path: '$.location.locationConfidence'
+        },
+        {
+          column: 'winnerSemanticType',
+          path: '$.location.semanticType'
+        },
+        {
+          column: 'timestamp',
+          path: '$.duration.startTimestamp'
+        },
+        {
+          path: '$.otherCandidateLocations[*]',
+          table: 'Losers',
+          getters: [
+            {
+              column: 'loserId',
+              reference: {
+                table: 'Winners',
+                column: 'id',
+                autoincrementedId: true
+              }
+            },
+            { column: 'loserLatitude', path: '$.latitudeE7' },
+            { column: 'loserLongitude', path: '$.longitudeE7' },
+            { column: 'loserAddress', path: '$.addres' },
+            { column: 'loserName', path: '$.name' },
+            { column: 'loserConfidence', path: '$.locationConfidence' },
+            { column: 'loserSemanticType', path: '$.semanticType' }
+          ]
         }
       ]
     },

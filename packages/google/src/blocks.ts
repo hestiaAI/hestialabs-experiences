@@ -2,6 +2,7 @@ import type { ViewBlocks } from '@/types'
 import allActivitySegment from './sql/all-activity-segment.sql'
 import allPlaceVisit from './sql/all-place-visit.sql'
 import recordsLinkedToMac from './sql/records-linked-to-mac.sql'
+import placeLinkedToCandidate from './sql/place-linked-to-candidate.sql'
 
 const blocks: ViewBlocks = [
   {
@@ -230,6 +231,15 @@ const blocks: ViewBlocks = [
     visualization: 'ChartViewGooglePlaces.vue',
     showTable: false,
     title: 'Places visited',
+    text: ''
+  },
+  {
+    id: 'OtherCandidates',
+    sql: placeLinkedToCandidate,
+    files: ['LOCATION_HISTORY'],
+    visualization: 'ChartViewGoogleCandidates.vue',
+    showTable: false,
+    title: 'Other Candidates',
     text: ''
   },
   {
