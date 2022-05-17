@@ -300,6 +300,7 @@ export default class FileManager {
    * @param {String} filePathGlob (in the same format as accessor.filePath)
    */
   findMatchingFilePaths(filePathGlob) {
+    if (!filePathGlob) return ['Dynamic files']
     return this.getFilenames().filter(filePath =>
       matchNormalized(filePath, filePathGlob)
     )
