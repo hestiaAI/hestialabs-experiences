@@ -277,7 +277,7 @@ export default {
       isSplit: false
     },
     mapStyle: {
-      styleType: 'dark',
+      styleType: 'light',
       topLayerGroups: {},
       visibleLayerGroups: {
         label: true,
