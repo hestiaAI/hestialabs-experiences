@@ -13,7 +13,7 @@
       included:
       {{ missingRequiredData.join(', ') }}.
     </BaseAlert>
-    <BaseAlert v-if="!$store.state.config.publicKey" type="info">
+    <BaseAlert v-if="!config.publicKey" type="info">
       The results will not be encrypted because this instance has been
       configured without public key.
     </BaseAlert>
@@ -95,13 +95,10 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'config',
-      'results',
-      'fileManager',
-      'consentForm',
-      'selectedFiles'
-    ]),
+    ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles']),
+    config() {
+      return this.$store.getters.config(this.$route)
+    },
     missingRequiredFields() {
       return !this.consentForm.every(section => {
         if ('required' in section) {
@@ -206,7 +203,7 @@ export default {
       }
 
       const content = await zip.generateAsync({ type: 'uint8array' })
-      const publicKey = this.$store.state.config.publicKey
+      const { publicKey } = this.config
       if (publicKey) {
         return this.encryptFile(content, publicKey)
       }

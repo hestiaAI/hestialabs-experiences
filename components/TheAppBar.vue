@@ -66,9 +66,11 @@
           </VBtn>
         </div>
       </template>
-      <div class="mt-6">
+      <div class="my-6">
         <LogoImg width="250" />
-        <TheExperienceMenu />
+        <TheExperienceMenu v-if="!$route.params.bubble" />
+        <h4 class="mt-6 mb-4 text-h4">Bubbles</h4>
+        <TheBubbleMenu />
       </div>
     </VNavigationDrawer>
   </div>

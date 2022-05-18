@@ -29,7 +29,7 @@ export default {
         const { appName } = this.context.store.getters
         return title ? `${title} | ${appName}` : appName
       }
-      return 'HestiaLabs'
+      return 'Booting 🚀'
     },
     title: '',
     meta: [

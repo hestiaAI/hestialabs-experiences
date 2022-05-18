@@ -1,8 +1,8 @@
 <template>
-  <VApp>
+  <VApp v-if="!$fetchState.pending">
     <TheAppBar />
     <VMain>
-      <Nuxt v-if="!$fetchState.pending" />
+      <Nuxt />
       <VSnackbar
         v-model="snackbar"
         content-class="v-snack__content-online-status"
@@ -55,9 +55,23 @@
 <script>
 import { mapGetters } from 'vuex'
 
-function validateRoute({ store, error, params: { key } }) {
-  if (key && !store.getters.enabledExperiences.find(x => x.slug === key)) {
-    error({ statusCode: 404, message: 'Experience Not Found' })
+function validateRoute({ store, error, params: { bubble, experience } }) {
+  // Validate `bubble` parameter
+  if (bubble && !store.state.config.bubbles.includes(bubble)) {
+    return error({ statusCode: 404, message: 'Bubble Not Found' })
+  }
+  // Validate `experience` parameter
+  // 1. /experience/:experience
+  // 2. /bubble/:bubble/experience/:experience
+  if (
+    experience &&
+    (!store.getters.enabledExperiences.find(x => x.slug === experience) ||
+      (bubble &&
+        !store.state.config.bubbleConfig[bubble].experiences.includes(
+          experience
+        )))
+  ) {
+    return error({ statusCode: 404, message: 'Experience Not Found' })
   }
 }
 
@@ -136,7 +150,7 @@ export default {
       // changing timeout property resets the timeout
       this.timeout = isOffline ? 5001 : 5000
     },
-    '$route.params.experience'() {
+    '$route.params'() {
       validateRoute(this.$nuxt.context)
     }
   },

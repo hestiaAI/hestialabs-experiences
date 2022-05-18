@@ -182,7 +182,7 @@ export default {
       if (this.decrypt) {
         try {
           const sk = await this.secretKey.text()
-          const pk = this.$store.state.config.publicKey
+          const pk = this.$store.getters.config(this.$route).publicKey
           this.outputZIP = await this.decryptZIP(sk, pk, this.inputZIP)
         } catch (error) {
           this.handleError(
@@ -223,15 +223,16 @@ export default {
         // Included whole files
         const folderContent = zip.file(/files\/.*/)
         const blobs = await Promise.all(folderContent.map(r => r.async('blob')))
-        const files = folderContent.map(
-          (r, i) => new File([blobs[i]], r.name.substr(6))
+        const fileObjects = folderContent.map(
+          (r, i) => new File([blobs[i]], r.name.substring(6))
         )
+        const { preprocessors, files } = this.experienceConfig
         const fileManager = new FileManager(
-          this.experienceConfig.preprocessors,
+          preprocessors,
           fileManagerWorkers,
-          this.experienceConfig.files
+          files
         )
-        await fileManager.init(files)
+        await fileManager.init(fileObjects)
         this.$store.commit('setFileManager', fileManager)
       } catch (error) {
         this.handleError(

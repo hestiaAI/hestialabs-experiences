@@ -108,3 +108,22 @@ export function humanReadableFileSize(sizeInBytes) {
 export function plurify(word, n) {
   return n === 1 ? word : `${word}s`
 }
+
+export const vueMeta = ($nuxt, title) => {
+  const content = `${title} | ${$nuxt.$store.state.config.appName}`
+  return {
+    title,
+    meta: [
+      {
+        hid: 'og:title',
+        property: 'og:title',
+        content
+      },
+      {
+        hid: 'twitter:title',
+        property: 'twitter:title',
+        content
+      }
+    ]
+  }
+}

@@ -35,6 +35,10 @@ export const getters = {
     }
     return disabledExperiences
   },
+  config:
+    state =>
+    ({ params: { bubble } }) =>
+      bubble ? state.config.bubbleConfig[bubble] : state.config,
   // https://vuex.vuejs.org/guide/getters.html#method-style-access
   experience:
     state =>
@@ -103,6 +107,14 @@ export const actions = {
     if (!state.loaded) {
       const config = (await import(`@/config/${process.env.configName}.json`))
         .default
+      if (config.bubbles) {
+        config.bubbleConfig = {}
+        for (const bubble of config.bubbles) {
+          config.bubbleConfig[bubble] = (
+            await import(`@/config/bubbles/${bubble}.json`)
+          ).default
+        }
+      }
       commit('setConfig', {
         ...config,
         appName: 'HestiaLabs Experiences'

@@ -168,7 +168,9 @@ export default {
       return this.viewBlocks.map(o => this.sql[o.sql])
     },
     consentFormTemplate() {
-      const { consent } = this.$store.state.config
+      const { config } = this.$store.state
+      const { bubble } = this.$route.params
+      const { consent } = bubble ? config.bubbleConfig[bubble] : config
       if (consent) {
         const { experience } = this.$route.params
         if (experience in consent) {
