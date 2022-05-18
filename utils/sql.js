@@ -308,11 +308,14 @@ export async function generateRecords(fileManager, { tables, getters }) {
           fileId
         )
         // iterate over matched files, parse, and generate records from each
-        matchedJSONFiles
-          .map(JSON.parse)
-          .forEach(json =>
+        matchedJSONFiles.forEach(file => {
+          try {
+            const json = JSON.parse(file)
             generateRecordsRecursively(defaultValues, records, json, json, rest)
-          )
+          } catch (error) {
+            console.error(error)
+          }
+        })
       }
     }
   }
