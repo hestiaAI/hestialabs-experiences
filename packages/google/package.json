@@ -1,6 +1,6 @@
 {
   "name": "@hestiaai/google",
-  "version": "0.0.1-alpha.18",
+  "version": "0.0.1-alpha.19",
   "browser": "dist/index",
   "type": "module",
   "files": [
