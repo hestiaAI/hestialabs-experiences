@@ -80,7 +80,6 @@ const VERSION = 3
 export default {
   data() {
     const { viewBlocks } = this.$store.getters.experience(this.$route)
-
     return {
       zipFile: undefined,
       generateStatus: false,
