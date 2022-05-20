@@ -80,13 +80,13 @@
               <UnitIframe
                 v-else-if="vizUrl"
                 :src="vizUrl"
-                :data="clonedResult"
+                :args="clonedResult"
               />
             </VCol>
           </VRow>
           <VRow v-if="showTable">
             <VCol>
-              <UnitFilterableTable :data="clonedResult" />
+              <UnitFilterableTable v-bind="{ ...clonedResult }" />
             </VCol>
           </VRow>
         </template>

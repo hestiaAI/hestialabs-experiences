@@ -4,6 +4,8 @@ The experiences developed by HestiaLabs are targeted for any user willing to bet
 
 ## Setup
 
+0. Check that you have the correct versions for npm and node (see "engines" in package.json: node 14.x, npm 7.x) by running `npm version`
+
 1. Clone this repo and name the directory `hestialabs-experiences`. Then clone the repo [hestialabs](https://github.com/hestiaAI/hestialabs) and name the directory `hestialabs`. These two directories should be siblings and share a parent directory.
 
 2. In the `hestialabs` repo, install the root package:
@@ -25,6 +27,8 @@ $ npm link --workspaces
 $ cd ../hestialabs-experiences
 $ npm install
 ```
+
+5. to run experiences, open two console terminals, one in `hestialabs-experiences` and the other in `hestialabs`, and run `npm run dev` in both. A tab should open in your browser and allow you to run the experiences.
 
 ## Instances
 

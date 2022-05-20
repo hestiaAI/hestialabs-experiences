@@ -1,93 +1,24 @@
 {
   "appName": "#digipower Data Experiences",
   "experiences": [
-    "apple",
-    "bookbeat",
-    "demdex",
     "facebook",
-    "finnair",
-    "full-contact",
-    "gigantti",
-    "google",
-    "helsingin-sanomat",
-    "hsl",
-    "k-ryhma",
-    "lime",
-    "linkedin",
-    "netflix",
-    "s-ryhma",
-    "sbb",
-    "signal",
-    "spotify",
-    "tracker-control",
     "twitter",
+    "instagram",
+    "tiktok",
+    "netflix",
     "uber",
-    "voi",
+    "linkedin",
+    "tracker-control",
+    "google",
+    "amazon",
+    "easyjet",
+    "strava",
+    "fitbit",
+    "apple",
+    "spotify",
+    "signal",
     "whatsapp",
-    "wolt",
     "explorer"
   ],
-  "banner": "These experiences were used as part of the <a href=\"https://www.sitra.fi/en/projects/digipower-investigation/\" >#digipower investigation</a >, funded by <a href=\"http://www.sitra.fi\">SITRA</a> and conducted by <a href=\"https://www.hestia.ai\">hestia.ai</a>.<br>To attend our Helsinki webinar on the investigation, please register <a href=\"https://www.sitra.fi/en/events/the-digipower-investigation-how-are-decision-makers-influenced/\" >here</a>.",
-  "hashtags": ["dataprivacy", "hestialabs", "digipower"],
-  "filedrop": "https://drive.infomaniak.com/app/collaborate/193995/ca7c15c9-266c-4776-a319-b30514d57c00",
-  "consent": {
-    "default": [
-      {
-        "title": "SHARE MY #DIGIPOWER DATA",
-        "description": "With this form, you can register your consent, and optionally share additional data, in line with the SITRA #digipower contract. Please enter your name:",
-        "type": "input",
-        "name": "Name"
-      },
-      {
-        "title": "WHICH DATA SHOULD BE SHARED?",
-        "description": "Data underlying the following visualisations will be shared. Select all that you want to share.",
-        "type": "data",
-        "required": true
-      },
-      {
-        "title": "FOR WHAT PURPOSE?",
-        "description": "On a strictly need-to-know basis, I consent to sharing this data for the following purposes. Select all that apply:"
-      },
-      {
-        "description": "<b>Within your individual bubble (Paul and Alex only):</b>",
-        "type": "checkbox",
-        "options": [
-          "To help analyse/understand the data",
-          "For help with producing screenshots, tweets, videos or summaries (add details below if needed)",
-          "Other reason (add details below)"
-        ]
-      },
-      {
-        "description": "<b>With Hestia.AI but not SITRA (my data will be deleted within two weeks):</b>",
-        "type": "checkbox",
-        "options": [
-          "To report a bug or issue with data extraction, display or visualisation",
-          "To help Hestia.AI developers to improve the data viewing experience",
-          "Other reason (add details below)"
-        ]
-      },
-      {
-        "description": "<b>With other Participants:</b>",
-        "type": "checkbox",
-        "options": [
-          "To enable conversations and co-ordinated actions with other participants, in the precise ways I define below",
-          "Other reason (add details below)"
-        ]
-      },
-      {
-        "description": "<b>Within the wider bubble between Alex, Paul and SITRA:</b>",
-        "type": "checkbox",
-        "options": [
-          "For reference by Paul and Alex while drafting public #digipower reports which I can approve/review later before they become public",
-          "Other reason (add details below)"
-        ]
-      },
-      {
-        "title": "ADDITIONAL DETAILS & COMMENTS",
-        "description": "If you have anything to add, please type it here:",
-        "type": "multiline",
-        "placeholder": "e.g. particular requirements about how the data should be handled (which data, what specific purpose, any sensitivities, who should/should not be able to access it)."
-      }
-    ]
-  }
+  "hashtags": ["dataprivacy", "hestialabs", "digipower"]
 }

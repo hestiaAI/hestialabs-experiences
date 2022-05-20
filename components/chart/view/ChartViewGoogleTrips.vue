@@ -2,12 +2,14 @@
   <VContainer v-if="values.length > 0">
     <VRow>
       <VCol cols="12">
-        <p class="text-h6">Number of location records in your files</p>
         <p v-if="total === 0" class="text-subtitle-2">
-          No location were found in your file(s).
+          No records were found in your file(s).
         </p>
         <p v-else class="text-subtitle-2">
-          We found <strong>{{ total }}</strong> locations in your file(s).
+          We found <strong>{{ total }}</strong> trips that were recorded in your
+          file. <br />
+          <br />
+          This map shows what trips Google think you did:
         </p>
       </VCol>
     </VRow>
@@ -20,7 +22,7 @@
       <VRow>
         <VCol cols="12">
           <UnitFilterableTable
-            v-bind="{ headers: header, items: values }"
+            v-bind="{ headers, items: results }"
             @current-items="onTableFilter"
           />
         </VCol>
@@ -30,37 +32,40 @@
 </template>
 <script>
 import mixin from './mixin'
-import keplerConfig from './kepler-config'
-
+import keplerConfig from './kepler_config_trip.js'
 export default {
   mixins: [mixin],
   data() {
     return {
-      filteredRows: this.values,
-      header: [
-        { text: 'File', value: 'filename' },
-        { text: 'Path', value: 'path' },
-        { text: 'Latitude', value: 'latitude' },
-        { text: 'Longitude', value: 'longitude' },
-        { text: 'Description', value: 'description' }
-      ]
+      filteredRows: []
     }
   },
   computed: {
+    results() {
+      return this.values.map(v => {
+        return {
+          ...v,
+          startLongitude: v.startLongitude * 1e-7,
+          startLatitude: v.startLatitude * 1e-7,
+          endLongitude: v.endLongitude * 1e-7,
+          endLatitude: v.endLatitude * 1e-7
+        }
+      })
+    },
     total() {
-      return this.values.length
+      return this.results.length
     },
     filtered() {
       return this.filteredRows.length
     },
     keplerData() {
       return {
-        fields: this.header.map(h => {
+        fields: this.headers.map(h => {
           return {
-            name: h.value
+            name: h
           }
         }),
-        rows: this.filteredRows.map(r => this.header.map(h => r[h.value]))
+        rows: this.filteredRows.map(r => this.headers.map(h => r[h]))
       }
     },
     keplerArgs() {

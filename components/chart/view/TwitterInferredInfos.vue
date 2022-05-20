@@ -73,7 +73,7 @@
           </VCardTitle>
           <VCardText
             ><UnitFilterableTable
-              :data="{ headers: table.headers, items: table.values }"
+              v-bind="{ headers: table.headers, items: table.values }"
           /></VCardText>
         </VCard>
       </VCol>

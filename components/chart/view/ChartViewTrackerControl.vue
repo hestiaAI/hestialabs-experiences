@@ -109,7 +109,7 @@
         <a class="reset">Reset All</a>
       </div>
     </VRow>
-    <UnitFilterableTable :data="{ headers: header, items: results }" />
+    <UnitFilterableTable v-bind="{ headers: header, items: results }" />
   </VContainer>
 </template>
 

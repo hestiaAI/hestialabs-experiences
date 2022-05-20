@@ -105,7 +105,7 @@
         </VRow>
         <VRow>
           <VCol>
-            <UnitFilterableTable :data="result" />
+            <UnitFilterableTable v-bind="{ ...result.result }" />
           </VCol>
         </VRow>
       </VCard>

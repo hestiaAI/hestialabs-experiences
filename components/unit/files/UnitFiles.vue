@@ -178,7 +178,7 @@ export default {
         hideUploadButton: true,
         proudlyDisplayPoweredByUppy: false,
         theme: 'light',
-        height: 200
+        height: 300
       })
       // allow dropping files anywhere on the page
       .use(DropTarget, { target: document.body })

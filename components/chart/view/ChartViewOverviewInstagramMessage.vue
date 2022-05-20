@@ -3,62 +3,69 @@
     <ChartViewVRowWebShare>
       <VCol cols="12">
         <VRow>
-          <VCol cols="12" md="12">
-            <div id="like-chart">
-              <strong>Likes you've made over time</strong>
-              <a class="reset" style="display: none">reset</a>
+          <VCol cols="12" md="8">
+            <VRow>
+              <VCol cols="12">
+                <div :id="`messages-chart-${graphId}`">
+                  <strong>Messages Exchanged over time</strong>
+                  <a class="reset" style="display: none">reset</a>
+                  <p class="filters">
+                    <span>
+                      Current filter:
+                      <span class="filter"></span>
+                    </span>
+                  </p>
+                </div>
+                <div :id="`range-chart-${graphId}`" class="range-chart">
+                  <p
+                    class="muted pull-right text-subtitle-2"
+                    style="margin-right: 15px; margin-bottom: 5px"
+                  >
+                    select a time range to zoom in
+                  </p>
+                </div>
+              </VCol>
+            </VRow>
+            <VRow>
+              <VCol cols="12" md="6">
+                <div :id="`hour-chart-${graphId}`">
+                  <strong>Time of day</strong>
+                  <a class="reset" style="display: none">reset</a>
+                  <p class="filters">
+                    <span>
+                      Current filter:
+                      <span class="filter"></span>
+                    </span>
+                  </p>
+                </div>
+              </VCol>
+              <VCol cols="12" md="6">
+                <div :id="`week-chart-${graphId}`">
+                  <strong>Day</strong>
+                  <a class="reset" style="display: none">reset</a>
+                  <p class="filters">
+                    <span>
+                      Current filter:
+                      <span class="filter"></span>
+                    </span>
+                  </p>
+                </div>
+              </VCol>
+            </VRow>
+          </VCol>
+          <VCol cols="12" md="4">
+            <div :id="`user-chart-${graphId}`">
+              <div style="display: flex">
+                <strong>Top Users</strong>
+                <VSpacer />
+                <div :id="`user-search-${graphId}`"></div>
+              </div>
               <p class="filters">
                 <span>
                   Current filter:
                   <span class="filter"></span>
                 </span>
-              </p>
-            </div>
-            <div id="range-chart">
-              <p
-                class="muted pull-right text-subtitle-2"
-                style="margin-right: 15px; margin-bottom: 5px"
-              >
-                select a time range to zoom in
                 <a class="reset" style="display: none">reset</a>
-              </p>
-            </div>
-          </VCol>
-        </VRow>
-        <VRow>
-          <VCol cols="12" md="4">
-            <div id="hour-chart">
-              <strong>Time of day</strong>
-              <a class="reset" style="display: none">reset</a>
-              <p class="filters">
-                <span>
-                  Current filter:
-                  <span class="filter"></span>
-                </span>
-              </p>
-            </div>
-          </VCol>
-          <VCol cols="12" md="4">
-            <div id="week-chart">
-              <strong>Day</strong>
-              <a class="reset" style="display: none">reset</a>
-              <p class="filters">
-                <span>
-                  Current filter:
-                  <span class="filter"></span>
-                </span>
-              </p>
-            </div>
-          </VCol>
-          <VCol cols="12" md="4">
-            <div id="matched-chart">
-              <strong>Matched</strong>
-              <a class="reset" style="display: none">reset</a>
-              <p class="filters">
-                <span>
-                  Current filter:
-                  <span class="filter"></span>
-                </span>
               </p>
             </div>
           </VCol>
@@ -66,11 +73,11 @@
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="'dc-data-count' + graphId" class="dc-data-count">
+      <div :id="`dc-data-count-${graphId}`" class="dc-data-count">
         <span class="filter-count"></span>
         selected out of
         <span class="total-count"></span>
-        views |
+        messages |
         <a class="resetAll">Reset All</a>
       </div>
     </VRow>
@@ -87,6 +94,7 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
+import { removeEmptyBins } from './utils/DCHelpers'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -96,9 +104,9 @@ export default {
   data() {
     return {
       header: [
-        { text: 'Name', value: 'name' },
-        { text: 'Liked at', value: 'dateStr' },
-        { text: 'Matched', value: 'matched' }
+        { text: 'Sender', value: 'senderName' },
+        { text: 'Message', value: 'messageContent' },
+        { text: 'Send At', value: 'dateStr' }
       ],
       results: []
     }
@@ -132,69 +140,79 @@ export default {
       const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
       const formatDay = d3.timeFormat('%B %d, %Y')
       this.results = this.values.map(d => {
-        const date = new Date(d.likedAt)
+        const date = new Date(d.sendDatetime)
         return {
-          name: d.name,
-          matched: d.matched.toUpperCase() === 'TRUE',
+          senderName: decodeURIComponent(escape(d.senderName)),
+          messageContent: decodeURIComponent(escape(d.messageContent)),
           date,
           dateStr: formatTime(date),
           month: d3.timeMonth(date), // pre-calculate months for better performance
-          day: d3.timeDay(date), // pre-calculate months for better performance
+          day: d3.timeDay(date),
+          weekDay: date.getDay(), // pre-calculate day of week for better performance
           hour: d3.timeHour(date).getHours() // pre-calculate hours for better performance
         }
       })
 
       // Create and bind charts to their respective divs
-      const hourChart = new dc.BarChart('#hour-chart')
-      const matchedChart = new dc.PieChart('#matched-chart')
-      const weekChart = new dc.RowChart('#week-chart')
-      const likeChart = new dc.LineChart('#like-chart')
-      const rangeChart = new dc.BarChart('#range-chart')
-      const tableCount = new dc.DataCount('#dc-data-count' + this.graphId)
+      const messageChart = new dc.LineChart(`#messages-chart-${this.graphId}`)
+      const rangeChart = new dc.BarChart(`#range-chart-${this.graphId}`)
+      const userChart = new dc.RowChart(`#user-chart-${this.graphId}`)
+      const hourChart = new dc.BarChart(`#hour-chart-${this.graphId}`)
+      const weekChart = new dc.RowChart(`#week-chart-${this.graphId}`)
+      const tableCount = new dc.DataCount(`#dc-data-count-${this.graphId}`)
+      const userSearch = new dc.TextFilterWidget(`#user-search-${this.graphId}`)
 
       // Bind reset filters links
-      d3.select('#hour-chart a.reset').on('click', function () {
+      d3.select(`#hour-chart-${this.graphId} a.reset`).on('click', function () {
         hourChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#matched-chart a.reset').on('click', function () {
-        matchedChart.filterAll()
+      d3.select(`#user-chart-${this.graphId} a.reset`).on('click', function () {
+        userChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#week-chart a.reset').on('click', function () {
+      d3.select(`#week-chart-${this.graphId} a.reset`).on('click', function () {
         weekChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#like-chart a.reset').on('click', function () {
-        likeChart.filterAll()
-        rangeChart.filterAll()
-        dc.redrawAll()
-      })
+      d3.select(`#messages-chart-${this.graphId} a.reset`).on(
+        'click',
+        function () {
+          messageChart.filterAll()
+          rangeChart.filterAll()
+          dc.redrawAll()
+        }
+      )
 
       const ndx = crossfilter(this.results)
 
       // Create dimensions
       const all = ndx.groupAll()
       const dayOfWeekDimension = ndx.dimension(d => {
-        const day = d.date.getDay()
         const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-        return `${name[day]}`
+        return `${name[d.weekDay]}`
       })
-      const matchedDimension = ndx.dimension(d => d.matched)
+      const userDimension = ndx.dimension(d => d.senderName)
       const monthDimension = ndx.dimension(d => d.month)
       const dayDimension = ndx.dimension(d => d.day)
       const hourDimension = ndx.dimension(d => d.hour)
+      userSearch.dimension(ndx.dimension(d => d.senderName.toLowerCase()))
 
       // Create groups
       const dayOfWeekGroup = dayOfWeekDimension.group().reduceCount()
-      const serviceGroup = matchedDimension.group().reduceCount()
+      const userGroup = userDimension.group().reduceCount()
       const hourGroup = hourDimension.group().reduceCount()
-      const monthGroup = monthDimension.group()
-      const dayGroup = dayDimension.group()
+      const monthGroup = monthDimension.group().reduceCount()
+      const dayGroup = dayDimension.group().reduceCount()
 
       // Render hour bar chart
       hourChart
-        .width(d3.select('#hour-chart').node().getBoundingClientRect().width)
+        .width(
+          d3
+            .select(`#hour-chart-${this.graphId}`)
+            .node()
+            .getBoundingClientRect().width
+        )
         .height(180)
         .margins({ top: 10, right: 10, bottom: 20, left: 40 })
         .dimension(hourDimension)
@@ -211,7 +229,12 @@ export default {
 
       // Render days of week row chart
       weekChart
-        .width(d3.select('#week-chart').node().getBoundingClientRect().width)
+        .width(
+          d3
+            .select(`#week-chart-${this.graphId}`)
+            .node()
+            .getBoundingClientRect().width
+        )
         .height(180)
         .margins({ top: 10, left: 10, right: 10, bottom: 20 })
         .group(dayOfWeekGroup)
@@ -243,38 +266,25 @@ export default {
         }
       })
 
-      // Render matched pie chart
-      matchedChart
-        .width(d3.select('#matched-chart').node().getBoundingClientRect().width)
-        .height(180)
-        .radius(180 / 2)
-        .innerRadius(0)
-        .dimension(matchedDimension)
-        .group(serviceGroup)
-        .valueAccessor(d => {
-          return d.value
-        })
-        .title(d => d.key + ': ' + d.value + ' matchs')
+      // Render user row chart
+      userChart
+        .width(
+          d3
+            .select(`#user-chart-${this.graphId}`)
+            .node()
+            .getBoundingClientRect().width
+        )
+        .height(525)
+        .margins({ top: 20, left: 10, right: 10, bottom: 20 })
+        .group(removeEmptyBins(userGroup))
+        .dimension(userDimension)
         .ordinalColors(colorPalette)
-
-      matchedChart.on('pretransition', function (chart) {
-        chart.selectAll('text.pie-slice.pie-label').call(function (t) {
-          t.each(function (d) {
-            const self = d3.select(this)
-            let text = self.text().toUpperCase()
-            if (text.length > 14) text = text.substring(0, 14) + '.. '
-            if (text.length > 0)
-              text =
-                text +
-                ' (' +
-                dc.utils.printSingleValue(
-                  ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
-                ) +
-                '%)'
-            self.text(text)
-          })
-        })
-      })
+        .label(d => d.key)
+        .data(group => group.top(20))
+        .title(d => d.value)
+        .elasticX(true)
+        .xAxis()
+        .ticks(4)
 
       // Render Likes line chart
       const minDate =
@@ -283,9 +293,14 @@ export default {
           : null
       const maxDate =
         monthDimension.top(1).length > 0 ? monthDimension.top(1)[0].day : null
-      likeChart
+      messageChart
         .margins({ top: 20, left: 40, right: 20, bottom: 20 })
-        .width(d3.select('#like-chart').node().getBoundingClientRect().width)
+        .width(
+          d3
+            .select(`#messages-chart-${this.graphId}`)
+            .node()
+            .getBoundingClientRect().width
+        )
         .turnOnControls(false)
         .curve(d3.curveMonotoneX)
         .xyTipsOn(true)
@@ -305,32 +320,30 @@ export default {
           strokeOpacity: 0
         })
         .clipPadding(10)
-        .yAxisLabel('Total likes')
+        .yAxisLabel('Total Messages')
         .ordinalColors(colorPalette)
-      likeChart.xAxis().ticks(10)
-      likeChart.yAxis().ticks(6)
-      likeChart.filterAll()
+      messageChart.xAxis().ticks(10)
+      messageChart.yAxis().ticks(6)
+      messageChart.filterAll()
 
       // range chart date picker
       rangeChart
-        .width(d3.select('#range-chart').node().getBoundingClientRect().width)
-        .height(30)
-        .margins({ top: 0, right: 50, bottom: 20, left: 40 })
+        .width(
+          d3
+            .select(`#range-chart-${this.graphId}`)
+            .node()
+            .getBoundingClientRect().width
+        )
+        .height(40)
+        .margins({ top: 0, right: 10, bottom: 20, left: 40 })
         .dimension(dayDimension)
         .group(dayGroup)
         .centerBar(true)
-        .elasticY(true)
         .gap(1)
-        .x(
-          d3
-            .scaleTime()
-            .domain([
-              d3.timeHour.offset(minDate, 0),
-              d3.timeHour.offset(maxDate, 2)
-            ])
-        )
+        .x(d3.scaleTime().domain([minDate, maxDate]))
+        .valueAccessor(d => d.value.count)
+        .label(d => d.key)
         .round(d3.timeDay.round)
-        .valueAccessor(d => d.value)
         .alwaysUseRounding(true)
         .xUnits(d3.timeDays)
         .ordinalColors(colorPalette)
@@ -343,13 +356,13 @@ export default {
         .groupAll(all)
         .html({
           some:
-            '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> views' +
+            '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> messages' +
             " | <a class='resetAll'>Reset All</a>",
-          all: 'All <strong>%total-count</strong> views selected. Please click on the graph to apply filters.'
+          all: 'All <strong>%total-count</strong> messages selected. Please click on the graph to apply filters.'
         })
         .on('pretransition', (chart, filter) => {
           this.results = monthDimension.top(all.value())
-          d3.select('#dc-data-count' + this.graphId + ' a.resetAll').on(
+          d3.select(`#dc-data-count-${this.graphId} a.resetAll`).on(
             'click',
             () => {
               dc.filterAll()

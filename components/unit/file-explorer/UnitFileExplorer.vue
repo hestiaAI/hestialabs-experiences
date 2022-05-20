@@ -115,7 +115,7 @@
         }"
         @update="onUnitResultsUpdate"
       />
-      <UnitFilterableTable v-if="tableData" :data="tableData.result" />
+      <UnitFilterableTable v-if="tableData" v-bind="{ ...tableData.result }" />
     </div>
   </div>
 </template>

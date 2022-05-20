@@ -4,7 +4,7 @@
     <p>Could not parse file. Showing content instead</p>
     <div class="explorer__content">{{ csvText }}</div>
   </div>
-  <UnitFilterableTable v-else :data="csvContent" />
+  <UnitFilterableTable v-else v-bind="{ ...csvContent }" />
 </template>
 
 <script>

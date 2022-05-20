@@ -296,22 +296,27 @@ export async function generateRecords(fileManager, { tables, getters }) {
 
   // iterate over top level "file" getters
   for (const { fileId, ...rest } of getters) {
-    const isCSV = fileManager.idToGlob[fileId].endsWith('.csv')
-    if (isCSV) {
-      const json = await getCsvAndMergeFromID(fileManager, fileId)
-      generateRecordsRecursively(defaultValues, records, json, json, rest)
-    } else {
-      // ...otherwise we assume JSON format by default
-      // get all files that match the glob
-      const matchedJSONFiles = await fileManager.getPreprocessedTextFromId(
-        fileId
-      )
-      // iterate over matched files, parse, and generate records from each
-      matchedJSONFiles
-        .map(JSON.parse)
-        .forEach(json =>
-          generateRecordsRecursively(defaultValues, records, json, json, rest)
+    if (fileId in fileManager.idToGlob) {
+      const isCSV = fileManager.idToGlob[fileId].endsWith('.csv')
+      if (isCSV) {
+        const json = await getCsvAndMergeFromID(fileManager, fileId)
+        generateRecordsRecursively(defaultValues, records, json, json, rest)
+      } else {
+        // ...otherwise we assume JSON format by default
+        // get all files that match the glob
+        const matchedJSONFiles = await fileManager.getPreprocessedTextFromId(
+          fileId
         )
+        // iterate over matched files, parse, and generate records from each
+        matchedJSONFiles.forEach(file => {
+          try {
+            const json = JSON.parse(file)
+            generateRecordsRecursively(defaultValues, records, json, json, rest)
+          } catch (error) {
+            console.error(error)
+          }
+        })
+      }
     }
   }
   return records

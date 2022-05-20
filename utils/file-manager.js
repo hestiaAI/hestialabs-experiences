@@ -121,10 +121,28 @@ export default class FileManager {
     this.fileDict = Object.fromEntries(
       this.fileList.map(file => [file.name, file])
     )
-
+    this.idToGlob = await this.fetchDynamicFiles()
     this.setInitialValues()
     this.setShortFilenames()
     return this
+  }
+
+  /**
+   * Fetch files Ids and globs from a file, given a preprocessor on that same file.
+   * Example: directories names change with languages in google takeout archive but
+   * can be retrieve from another file.
+   * @returns an object mapping IDs to globs
+   */
+  async fetchDynamicFiles() {
+    const { $DYNAMIC_FILES, ...files } = this.idToGlob
+    if ($DYNAMIC_FILES) {
+      const matchedFiles = this.getFilePathsFromId('$DYNAMIC_FILES')
+      const idToGlob = JSON.parse(
+        await this.getPreprocessedText(matchedFiles[0])
+      )
+      return { ...files, ...idToGlob }
+    }
+    return this.idToGlob
   }
 
   /**
@@ -282,6 +300,7 @@ export default class FileManager {
    * @param {String} filePathGlob (in the same format as accessor.filePath)
    */
   findMatchingFilePaths(filePathGlob) {
+    if (!filePathGlob) return ['Dynamic files']
     return this.getFilenames().filter(filePath =>
       matchNormalized(filePath, filePathGlob)
     )

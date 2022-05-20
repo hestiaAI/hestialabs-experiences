@@ -97,7 +97,7 @@
 <script>
 import { mapState } from 'vuex'
 
-import debounce from 'lodash/debounce'
+import { debounce, pick } from 'lodash'
 
 import DBMS from '~/utils/sql'
 import FileManager from '~/utils/file-manager'
@@ -106,7 +106,13 @@ import fileManagerWorkers from '~/utils/file-manager-workers'
 export default {
   name: 'TheDataExperience',
   data() {
-    const { viewBlocks } = this.$store.getters.experience(this.$route)
+    const experience = this.$store.getters.experience(this.$route)
+    const properties = pick(experience, [
+      'files',
+      'keepOnlyFiles',
+      'preprocessors',
+      'viewBlocks'
+    ])
 
     return {
       tab: null,
@@ -116,7 +122,7 @@ export default {
       success: false,
       message: '',
       overlay: false,
-      viewBlocks
+      ...properties
     }
   },
   computed: {
