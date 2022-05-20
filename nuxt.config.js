@@ -69,7 +69,18 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: ['@nuxtjs/axios'],
+
+  axios: {
+    proxy: true // Can be also an object with default options
+  },
+
+  proxy: {
+    '/bubble-server/': {
+      target: 'http://localhost:8000/',
+      pathRewrite: { '^/bubble-server/': '' }
+    }
+  },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {

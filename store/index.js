@@ -103,16 +103,24 @@ export const mutations = {
 }
 
 export const actions = {
-  async loadConfig({ commit, state }) {
+  async loadConfig({ commit, state }, $axios) {
     if (!state.loaded) {
       const config = (await import(`@/config/${process.env.configName}.json`))
         .default
       if (config.bubbles) {
         config.bubbleConfig = {}
         for (const bubble of config.bubbles) {
-          config.bubbleConfig[bubble] = (
-            await import(`@/config/bubbles/${bubble}.json`)
-          ).default
+          try {
+            const { status, data } = await $axios.get(
+              `http://localhost:3000/bubble-server/bubbles/${bubble}/config`
+            )
+            if (status >= 400) {
+              throw new Error(`Axios error, status: ${status}`)
+            }
+            config.bubbleConfig[bubble] = data
+          } catch (err) {
+            console.error(err)
+          }
         }
       }
       commit('setConfig', {
@@ -121,9 +129,9 @@ export const actions = {
       })
     }
   },
-  async loadExperiences({ commit, state, dispatch }, { isDev }) {
+  async loadExperiences({ commit, state, dispatch }, { isDev, $axios }) {
     if (!state.loaded) {
-      await dispatch('loadConfig')
+      await dispatch('loadConfig', $axios)
       const experiences = (
         await Promise.all(
           state.config.experiences.map(packageNameAndTag => {
