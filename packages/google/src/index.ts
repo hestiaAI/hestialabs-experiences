@@ -3,6 +3,7 @@ import icon from '@/icons/google-takeout.png'
 import preprocessor from './preprocessor'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
+import takeout from './preprocessor'
 
 const options: ExperienceOptions = {
   databaseConfig,
@@ -15,6 +16,7 @@ const options: ExperienceOptions = {
   files: {
     $DYNAMIC_FILES: '*/*.html'
   },
+  dataSamples: ['takeout.zip'],
   icon: icon,
   keepOnlyFiles: false,
   preprocessors: {
