@@ -1,5 +1,5 @@
 <template>
-  <VContainer>
+  <div>
     <div v-if="dates.length">
       <VRow>
         <VCol>
@@ -27,6 +27,7 @@
           ></VRangeSlider>
         </VCol>
       </VRow>
+      <TimeFilter v-bind="{ header }" />
       <div
         class="d-flex justify-space-between align-center text-subtitle-1 mt-3 mb-3"
       >
@@ -61,18 +62,15 @@
           ></VCheckbox>
         </VCol>
       </VRow>
-      <div class="d-flex justify-space-between align-end mt-5">
-        <VBtn small text color="primary" @click="reset" v-text="`Clear`" />
-      </div>
     </div>
     <div v-else align="center">
       <span class="caption">No valid dates found</span>
     </div>
-  </VContainer>
+  </div>
 </template>
 <script>
 import * as d3 from 'd3'
-import { dateParser, datetimeParser } from '@/utils/dates'
+import { dateParser, datetimeParser, dateFormatter } from '@/utils/dates'
 export default {
   name: 'UnitFilter',
   props: {
@@ -91,7 +89,7 @@ export default {
   },
   data() {
     return {
-      dateFormatter: d3.timeFormat('%Y-%m-%d'),
+      dateFormatter,
       weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       weekDayAuthorized: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       sliderRange: []
