@@ -23,6 +23,7 @@ const defaultOptions: Partial<ExperienceOptions> = {
   databaseConfig: undefined,
   dataPortal: undefined,
   dataPortalMessage: undefined,
+  dataPortalHtml: undefined,
   dataSamples: [],
   disabled: false,
   files: {},
