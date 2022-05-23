@@ -5,7 +5,7 @@ export default {
       filters: [],
       layers: [
         {
-          id: 'g405t2h',
+          id: 'g0vqe8g',
           type: 'point',
           config: {
             dataId: 'data',
@@ -76,7 +76,7 @@ export default {
           }
         },
         {
-          id: '2f0q1j',
+          id: 'c64x49g',
           type: 'point',
           config: {
             dataId: 'data',
@@ -147,12 +147,12 @@ export default {
           }
         },
         {
-          id: '6dwtvel',
+          id: 'xbdqwbb',
           type: 'line',
           config: {
             dataId: 'data',
             label: 'start -> end line',
-            color: [142, 207, 86],
+            color: [30, 150, 190],
             highlightColor: [252, 242, 26, 255],
             columns: {
               lat0: 'startLatitude',
@@ -167,16 +167,24 @@ export default {
               opacity: 0.8,
               thickness: 2,
               colorRange: {
-                name: 'Global Warming',
-                type: 'sequential',
-                category: 'Uber',
+                name: 'Custom Palette',
+                type: 'custom',
+                category: 'Custom',
                 colors: [
-                  '#5A1846',
-                  '#900C3F',
-                  '#C70039',
-                  '#E3611C',
-                  '#F1920E',
-                  '#FFC300'
+                  '#a6cee3',
+                  '#1f78b4',
+                  '#b2df8a',
+                  '#33a02c',
+                  '#fb9a99',
+                  '#e31a1c',
+                  '#fdbf6f',
+                  '#ff7f00',
+                  '#cab2d6',
+                  '#6a3d9a',
+                  '#ffff99',
+                  '#b15928',
+                  '#49493f',
+                  '#f800c0'
                 ]
               },
               sizeRange: [0, 10],
@@ -196,8 +204,11 @@ export default {
             ]
           },
           visualChannels: {
-            colorField: null,
-            colorScale: 'quantile',
+            colorField: {
+              name: 'activityType',
+              type: 'string'
+            },
+            colorScale: 'ordinal',
             sizeField: null,
             sizeScale: 'linear'
           }
@@ -220,11 +231,11 @@ export default {
                 format: null
               },
               {
-                name: 'endName',
+                name: 'endAddress',
                 format: null
               },
               {
-                name: 'endAddress',
+                name: 'endName',
                 format: null
               },
               {
@@ -236,11 +247,15 @@ export default {
                 format: null
               },
               {
+                name: 'transitPath',
+                format: null
+              },
+              {
                 name: 'distanceMeters',
                 format: null
               },
               {
-                name: 'travelMode',
+                name: 'activityType',
                 format: null
               }
             ]
@@ -270,10 +285,10 @@ export default {
     mapState: {
       bearing: 0,
       dragRotate: false,
-      latitude: 46.34654827650002,
-      longitude: 6.570458435921408,
+      latitude: 45.723304634494724,
+      longitude: 4.649325630519184,
       pitch: 0,
-      zoom: 9.622332098088771,
+      zoom: 5.807773337936039,
       isSplit: false
     },
     mapStyle: {

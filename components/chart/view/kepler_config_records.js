@@ -5,12 +5,12 @@ export default {
       filters: [],
       layers: [
         {
-          id: 'yiawwh3',
+          id: 'r9fyctw',
           type: 'point',
           config: {
             dataId: 'data',
             label: 'Point',
-            color: [187, 0, 0],
+            color: [18, 147, 154],
             highlightColor: [252, 242, 26, 255],
             columns: {
               lat: 'latitude',
@@ -19,13 +19,34 @@ export default {
             },
             isVisible: true,
             visConfig: {
-              radius: 10,
+              radius: 5,
               fixedRadius: false,
               opacity: 0.8,
-              outline: true,
-              thickness: 1,
+              outline: false,
+              thickness: 2,
               strokeColor: null,
               colorRange: {
+                name: 'Custom Palette',
+                type: 'custom',
+                category: 'Custom',
+                colors: [
+                  '#a6cee3',
+                  '#1f78b4',
+                  '#b2df8a',
+                  '#33a02c',
+                  '#fb9a99',
+                  '#e31a1c',
+                  '#fdbf6f',
+                  '#ff7f00',
+                  '#cab2d6',
+                  '#6a3d9a',
+                  '#ffff99',
+                  '#b15928',
+                  '#49493f',
+                  '#f800c0'
+                ]
+              },
+              strokeColorRange: {
                 name: 'Global Warming',
                 type: 'sequential',
                 category: 'Uber',
@@ -38,20 +59,7 @@ export default {
                   '#FFC300'
                 ]
               },
-              strokeColorRange: {
-                name: 'Uber Viz Qualitative 1.2',
-                type: 'qualitative',
-                category: 'Uber',
-                colors: [
-                  '#12939A',
-                  '#DDB27C',
-                  '#88572C',
-                  '#FF991F',
-                  '#F15C17',
-                  '#223F9A'
-                ]
-              },
-              radiusRange: [10, 30],
+              radiusRange: [0, 50],
               filled: true
             },
             hidden: false,
@@ -67,18 +75,15 @@ export default {
             ]
           },
           visualChannels: {
-            colorField: null,
-            colorScale: 'quantile',
-            strokeColorField: {
-              name: 'semanticType',
+            colorField: {
+              name: 'activityType',
               type: 'string'
             },
-            strokeColorScale: 'ordinal',
-            sizeField: {
-              name: 'duration',
-              type: 'real'
-            },
-            sizeScale: 'sqrt'
+            colorScale: 'ordinal',
+            strokeColorField: null,
+            strokeColorScale: 'quantile',
+            sizeField: null,
+            sizeScale: 'linear'
           }
         }
       ],
@@ -87,39 +92,19 @@ export default {
           fieldsToShow: {
             data: [
               {
-                name: 'address',
+                name: 'timestamp',
                 format: null
               },
               {
-                name: 'name',
+                name: 'accuracy',
                 format: null
               },
               {
-                name: 'startTimestamp',
+                name: 'source',
                 format: null
               },
               {
-                name: 'endTimestamp',
-                format: null
-              },
-              {
-                name: 'semanticType',
-                format: null
-              },
-              {
-                name: 'duration',
-                format: null
-              },
-              {
-                name: 'placeVisitImportance',
-                format: null
-              },
-              {
-                name: 'visitConfidence',
-                format: null
-              },
-              {
-                name: 'locationConfidence',
+                name: 'activityType',
                 format: null
               }
             ]
@@ -149,10 +134,10 @@ export default {
     mapState: {
       bearing: 0,
       dragRotate: false,
-      latitude: 46.38494014302197,
-      longitude: 6.571780257805701,
+      latitude: 46.3694608867237,
+      longitude: 6.506723131765135,
       pitch: 0,
-      zoom: 7.802552830838788,
+      zoom: 7.78697017968798,
       isSplit: false
     },
     mapStyle: {
