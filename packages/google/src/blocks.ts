@@ -3,6 +3,7 @@ import allActivitySegment from './sql/all-activity-segment.sql'
 import allPlaceVisit from './sql/all-place-visit.sql'
 import recordsLinkedToMac from './sql/records-linked-to-mac.sql'
 import placeLinkedToCandidate from './sql/place-linked-to-candidate.sql'
+import recordsLinkedToTrips from './sql/records-linked-to-trips.sql'
 
 const blocks: ViewBlocks = [
   {
@@ -249,6 +250,15 @@ const blocks: ViewBlocks = [
     visualization: 'ChartViewGoogleTrips.vue',
     showTable: false,
     title: 'Travels',
+    text: ''
+  },
+  {
+    id: 'Records',
+    sql: recordsLinkedToTrips,
+    files: ['LOCATION_HISTORY'],
+    visualization: 'ChartViewGoogleRecords.vue',
+    showTable: false,
+    title: 'Records',
     text: ''
   },
   {
