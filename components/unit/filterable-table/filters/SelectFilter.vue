@@ -37,10 +37,6 @@
 export default {
   name: 'UnitFilter',
   props: {
-    header: {
-      type: Object,
-      required: true
-    },
     values: {
       type: Array,
       default: () => []

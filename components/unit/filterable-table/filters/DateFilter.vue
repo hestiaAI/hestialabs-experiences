@@ -27,7 +27,12 @@
           ></VRangeSlider>
         </VCol>
       </VRow>
-      <TimeFilter v-bind="{ header }" />
+      <TimeFilter
+        v-if="isDatetime"
+        ref="timeFilter"
+        v-bind="{ isDatetime }"
+        @filter-change="timeFilterChange"
+      />
       <div
         class="d-flex justify-space-between align-center text-subtitle-1 mt-3 mb-3"
       >
@@ -74,10 +79,6 @@ import { dateParser, datetimeParser, dateFormatter } from '@/utils/dates'
 export default {
   name: 'UnitFilter',
   props: {
-    header: {
-      type: Object,
-      required: true
-    },
     values: {
       type: Array,
       default: () => []
@@ -92,7 +93,8 @@ export default {
       dateFormatter,
       weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       weekDayAuthorized: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      sliderRange: []
+      sliderRange: [],
+      timeFilterFunction: null
     }
   },
   computed: {
@@ -129,6 +131,7 @@ export default {
     },
     filterFunction() {
       if (
+        !this.timeFilterFunction &&
         this.allWeekDays &&
         JSON.stringify(this.sliderRange) ===
           JSON.stringify([0, this.numberOfDays])
@@ -137,10 +140,12 @@ export default {
       return value => {
         const date = this.parser(value)
         return (
-          !value ||
-          (date >= this.dateRange[0] &&
-            date <= this.dateRange[1] &&
-            this.weekDayAuthorized.includes(this.weekDays[date.getDay()]))
+          (!value ||
+            (date >= this.dateRange[0] &&
+              date <= this.dateRange[1] &&
+              this.weekDayAuthorized.includes(this.weekDays[date.getDay()]))) &&
+          this.isDatetime &&
+          this.timeFilterFunction(value)
         )
       }
     }
@@ -162,12 +167,17 @@ export default {
     getDate(i) {
       return this.timeScale.invert(i)
     },
+    timeFilterChange(filter) {
+      this.timeFilterFunction = filter
+      this.filterChange()
+    },
     filterChange() {
       this.$emit('filter-change', this.filterFunction)
     },
     reset() {
       this.weekDayAuthorized = this.weekDays.slice()
       this.sliderRange = [0, this.numberOfDays]
+      if (this.isDatetime) this.$refs.timeFilter.reset()
       this.filterChange()
     }
   }

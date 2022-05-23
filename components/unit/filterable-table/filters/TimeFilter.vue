@@ -10,6 +10,7 @@
           label="All Day"
           color="primary"
           hide-details
+          :disabled="allDay"
           dense
           @click="reset"
         ></VCheckbox>
@@ -41,9 +42,9 @@ import { timeParser, datetimeParser } from '@/utils/dates'
 export default {
   name: 'TimeFilter',
   props: {
-    header: {
-      type: Object,
-      required: true
+    isDatetime: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -55,12 +56,13 @@ export default {
   },
   computed: {
     parser() {
-      return this.header.type === 'TIME' ? timeParser : datetimeParser
+      return this.isDatetime ? datetimeParser : timeParser
     },
     filterFunction() {
+      if (this.allDay) return null
       return value => {
         const date = this.parser(value)
-        if (!value || this.allDay || !date) return true
+        if (!value || !date) return true
         const currentTime = this.toMilliseconds(
           `${date.getHours()}:${date.getMinutes()}`
         )
@@ -72,14 +74,13 @@ export default {
   },
   methods: {
     toMilliseconds(time) {
-      const [hours, minutes] = this.startTime.split(':').map(parseInt)
+      const [hours, minutes] = time.split(':').map(d => parseInt(d))
       return hours * 3600 * 1000 + minutes * 60 * 1000
     },
     filterChange() {
       if (this.startTime === '00:00' && this.endTime === '23:59')
         this.allDay = true
       else this.allDay = false
-      console.log(this.startTime, this.endTime)
       this.$emit('filter-change', this.filterFunction)
     },
     reset() {

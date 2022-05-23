@@ -28,7 +28,7 @@
         <component
           :is="component"
           ref="filter"
-          v-bind="{ header, values, ...filterOptions.args }"
+          v-bind="{ values, ...filterOptions.args }"
           @filter-change="filterChange"
         />
       </VContainer>

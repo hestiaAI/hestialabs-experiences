@@ -54,10 +54,6 @@ import * as d3 from 'd3'
 export default {
   name: 'UnitFilter',
   props: {
-    header: {
-      type: Object,
-      required: true
-    },
     values: {
       type: Array,
       default: () => []
