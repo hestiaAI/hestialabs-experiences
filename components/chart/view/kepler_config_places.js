@@ -51,7 +51,7 @@ export default {
                   '#223F9A'
                 ]
               },
-              radiusRange: [10, 50],
+              radiusRange: [10, 30],
               filled: true
             },
             hidden: false,

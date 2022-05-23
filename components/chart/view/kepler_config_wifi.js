@@ -51,7 +51,7 @@ export default {
                   '#FFC300'
                 ]
               },
-              radiusRange: [10, 50],
+              radiusRange: [10, 30],
               filled: true
             },
             hidden: false,
