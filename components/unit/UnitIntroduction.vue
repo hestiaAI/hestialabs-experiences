@@ -62,7 +62,7 @@
       </VCardTitle>
       <VCardText>
         <VCarousel
-          :height="videoHeight + 25"
+          height="100%"
           hide-delimiter-background
           :hide-delimiters="tutorialVideos.length === 1"
           :show-arrows="tutorialVideos.length > 1"
