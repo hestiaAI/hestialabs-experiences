@@ -27,6 +27,14 @@ beforeEach(() => {
       config: {},
       fileManager: null
     }),
+    getters: {
+      experience: () => () => ({
+        files: {},
+        keepOnlyFiles: true,
+        preprocessors: {},
+        viewBlocks: []
+      })
+    },
     mutations: {
       clearStore: () => {},
       setFileManager: () => {},
@@ -56,6 +64,7 @@ test('mounts without error', () => {
     store,
     localVue,
     mocks: {
+      $route: { params: {} },
       $router: {
         push: () => {}
       }
@@ -77,6 +86,7 @@ test('process simple text file', async () => {
     store,
     localVue,
     mocks: {
+      $route: { params: {} },
       $router: {
         push: () => {}
       }
