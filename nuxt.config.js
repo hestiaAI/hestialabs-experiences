@@ -12,11 +12,12 @@ const {
   WEBDAV_USERNAME
 } = process.env
 
-if (!baseUrl && NODE_ENV === 'production') {
+const isProduction = NODE_ENV === 'production'
+const uploadAvailable = !!WEBDAV_USERNAME
+
+if (!baseUrl && isProduction) {
   throw new Error('BASE_URL environment variable is missing')
 }
-
-const uploadAvailable = !!WEBDAV_USERNAME
 
 export default {
   ssr: false, // Disable Server-Side Rendering
@@ -77,7 +78,9 @@ export default {
 
   proxy: {
     '/bubble-server/': {
-      target: 'http://localhost:8000/',
+      target: isProduction
+        ? 'https://bubbles.hestialabs.org/'
+        : 'http://localhost:8000/',
       pathRewrite: { '^/bubble-server/': '' }
     }
   },
