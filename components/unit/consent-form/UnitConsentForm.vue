@@ -181,7 +181,7 @@ export default {
       const dataSection = this.consentForm.find(
         section => section.type === 'data'
       )
-      const keys = this.viewBlocks.map(block => block.key)
+      const keys = this.viewBlocks.map(block => block.id)
       dataSection.value
         .map(key => [key, keys.indexOf(key)])
         .filter(([key, i]) => i !== -1)

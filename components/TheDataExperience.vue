@@ -302,7 +302,7 @@ export default {
       if (consentForm) {
         const section = consentForm.find(section => section.type === 'data')
         section.titles = this.viewBlocks.map(e => e.title)
-        section.keys = this.viewBlocks.map(e => e.key)
+        section.keys = this.viewBlocks.map(e => e.id)
       }
       this.$store.commit('setConsentForm', consentForm)
 
