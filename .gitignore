@@ -5,5 +5,5 @@ dist
 .eslintcache
 
 *.log
- 
+
 .npmrc
