@@ -80,7 +80,7 @@ export default {
     '/bubble-server/': {
       target: isProduction
         ? 'https://bubbles.hestialabs.org/'
-        : 'http://localhost:8000/',
+        : 'http://127.0.0.1:8000/', // 'localhost' didn't work in one instance on macOS
       pathRewrite: { '^/bubble-server/': '' }
     }
   },
