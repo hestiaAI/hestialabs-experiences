@@ -1,6 +1,6 @@
 {
   "name": "@hestiaai/netflix",
-  "version": "0.0.1-alpha.13",
+  "version": "0.0.1-alpha.14",
   "browser": "dist/index",
   "type": "module",
   "files": [
