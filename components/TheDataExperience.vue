@@ -108,6 +108,7 @@ export default {
   data() {
     const experience = this.$store.getters.experience(this.$route)
     const properties = pick(experience, [
+      'databaseConfig',
       'files',
       'keepOnlyFiles',
       'preprocessors',
