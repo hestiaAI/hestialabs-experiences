@@ -6,11 +6,11 @@
           No records were found in your file(s).
         </p>
         <p v-else class="text-subtitle-2">
-          We found <strong>{{ total }}</strong> visited places that were
-          recorded in your file. <br />
+          We found <strong>{{ total }}</strong> records associated to a trip in
+          your file <br />
           <br />
-          This map shows what places Google think you visited with the size
-          corresponding to the time you spent in this place:
+          This map shows those records with the color corresponding to an
+          activity type:
         </p>
       </VCol>
     </VRow>
