@@ -84,9 +84,7 @@
       },
       {
         "type": "data",
-        "hide": true,
-        "value": ["trackerControl"],
-        "required": ["trackerControl"]
+        "required": true
       }
     ],
     "facebook": null

@@ -6,10 +6,11 @@
           No records were found in your file(s).
         </p>
         <p v-else class="text-subtitle-2">
-          We found <strong>{{ total }}</strong> trips that were recorded in your
-          file. <br />
+          We found <strong>{{ total }}</strong> records associated to a trip in
+          your file <br />
           <br />
-          This map shows what trips Google think you did:
+          This map shows those records with the color corresponding to an
+          activity type:
         </p>
       </VCol>
     </VRow>
@@ -32,7 +33,7 @@
 </template>
 <script>
 import mixin from './mixin'
-import keplerConfig from './kepler_config_trip.js'
+import keplerConfig from './kepler_config_records.js'
 export default {
   mixins: [mixin],
   data() {
@@ -45,11 +46,8 @@ export default {
       return this.values.map(v => {
         return {
           ...v,
-          startLongitude: v.startLongitude * 1e-7,
-          startLatitude: v.startLatitude * 1e-7,
-          endLongitude: v.endLongitude * 1e-7,
-          endLatitude: v.endLatitude * 1e-7,
-          transitPath: this.parseTransitPath(v.transitPath)
+          longitude: v.longitude * 1e-7,
+          latitude: v.latitude * 1e-7
         }
       })
     },
@@ -77,21 +75,6 @@ export default {
     }
   },
   methods: {
-    parseTransitPath(transitPath) {
-      if (transitPath != null) {
-        const dico = JSON.parse(transitPath)
-        const name = dico.name
-        return (
-          name +
-          ': ' +
-          dico.transitStops[0].name +
-          ' -> ' +
-          dico.transitStops[dico.transitStops.length - 1].name
-        )
-      } else {
-        return null
-      }
-    },
     drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems
