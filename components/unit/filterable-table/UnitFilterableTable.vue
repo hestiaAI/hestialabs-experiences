@@ -99,10 +99,9 @@ export default {
           value: h
         }))
       }
-      console.log(tempHeaders)
       // Type detection
       const { headers, items } = detectTypes(tempHeaders, this.items)
-      console.log(headers, items)
+
       // Add column style and options
       return {
         headers: headers.map(h => ({
