@@ -1,2 +1,2 @@
 SELECT *
-FROM Messages;
+FROM TinderMessage;

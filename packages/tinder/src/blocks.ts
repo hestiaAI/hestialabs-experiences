@@ -23,6 +23,7 @@ const blocks: ViewBlocks = [
   {
     id: 'app-opens-vue',
     sql: sqlAppOpens,
+    files: ['tinder'],
     text: 'See the number of times that you opened the app per day.',
     title: 'Usage',
     visualization: 'ChartViewHeatMapCalendar.vue',
