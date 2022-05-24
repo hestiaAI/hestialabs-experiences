@@ -1,6 +1,6 @@
 {
   "name": "@hestiaai/helsingin-sanomat",
-  "version": "0.0.1-alpha.10",
+  "version": "0.0.1-alpha.11",
   "browser": "dist/index",
   "type": "module",
   "files": [
@@ -15,6 +15,5 @@
     "access": "public"
   },
   "author": "",
-  "license": "UNLICENSED",
-  "gitHead": "3c27c4dbcf4dc8b604c49f75d708c22e4dbd0dfb"
+  "license": "UNLICENSED"
 }

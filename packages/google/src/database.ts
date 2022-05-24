@@ -19,11 +19,9 @@ const config: DatabaseConfig = {
         ['endName', TEXT],
         ['endTimestamp', TEXT],
         ['confidence', TEXT],
-        ['waypoints', TEXT],
-        ['source', TEXT],
+        ['transitPath', TEXT],
         ['distanceMeters', FLOAT],
-        ['travelMode', TEXT],
-        ['editConfirmationStatus', TEXT]
+        ['activityType', TEXT]
       ]
     },
     {
@@ -35,11 +33,9 @@ const config: DatabaseConfig = {
         ['name', TEXT],
         ['startTimestamp', TEXT],
         ['endTimestamp', TEXT],
-        ['placeVisitType', TEXT],
         ['placeVisitImportance', FLOAT],
         ['visitConfidence', FLOAT],
         ['locationConfidence', FLOAT],
-        ['editConfirmationStatus', TEXT],
         ['duration', FLOAT],
         ['semanticType', TEXT]
       ]
@@ -80,6 +76,18 @@ const config: DatabaseConfig = {
       ]
     },
     {
+      name: 'Records',
+      columns: [
+        ['latitude', INTEGER],
+        ['longitude', INTEGER],
+        ['timestamp', TEXT],
+        ['accuracy', INTEGER],
+        ['activityType', TEXT],
+        ['activityConfidence', INTEGER],
+        ['source', TEXT]
+      ]
+    },
+    {
       name: 'WifiScan',
       columns: [
         ['id', INTEGER],
@@ -109,7 +117,7 @@ const config: DatabaseConfig = {
   getters: [
     {
       fileId: 'LOCATION_HISTORY',
-      path: '$.timelineObjects.[*].activitySegment',
+      path: '$.timelineObjects[*].activitySegment',
       table: 'ActivitySegment',
       getters: [
         {
@@ -157,24 +165,16 @@ const config: DatabaseConfig = {
           path: '$.confidence'
         },
         {
-          column: 'waypoints',
-          path: '$.waypointPath.waypoints'
-        },
-        {
-          column: 'source',
-          path: '$.waypointPath.source'
+          column: 'transitPath',
+          path: '$.transitPath'
         },
         {
           column: 'distanceMeters',
-          path: '$.waypointPath.distanceMeters'
+          path: '$.distance'
         },
         {
-          column: 'travelMode',
-          path: '$.waypointPath.travelMode'
-        },
-        {
-          column: 'editConfirmationStatus',
-          path: '$.editConfirmationStatus'
+          column: 'activityType',
+          path: '$.activityType'
         }
       ]
     },
@@ -208,10 +208,6 @@ const config: DatabaseConfig = {
           path: '$.duration.endTimestamp'
         },
         {
-          column: 'placeVisitType',
-          path: '$.placeVisitType'
-        },
-        {
           column: 'placeVisitImportance',
           path: '$.placeVisitImportance'
         },
@@ -222,10 +218,6 @@ const config: DatabaseConfig = {
         {
           column: 'locationConfidence',
           path: '$.locationConfidence'
-        },
-        {
-          column: 'editConfirmationStatus',
-          path: '$.editConfirmationStatus'
         },
         {
           column: 'duration',
@@ -295,6 +287,23 @@ const config: DatabaseConfig = {
     {
       fileId: 'LOCATION_HISTORY',
       path: '$.locations[*]',
+      table: 'Records',
+      getters: [
+        { column: 'latitude', path: '$.latitudeE7' },
+        { column: 'longitude', path: '$.longitudeE7' },
+        { column: 'timestamp', path: '$.timestamp' },
+        { column: 'accuracy', path: '$.accuracy' },
+        { column: 'activityType', path: '$.activity[0].activity[0].type' },
+        {
+          column: 'activityConfidence',
+          path: '$.activity[0].activity[0].confidence'
+        },
+        { column: 'source', path: '$.source' }
+      ]
+    },
+    {
+      fileId: 'LOCATION_HISTORY',
+      path: '$.locations[*]',
       table: 'WifiScan',
       getters: [
         {
@@ -310,7 +319,7 @@ const config: DatabaseConfig = {
           path: '$.timestamp'
         },
         {
-          path: '$.locationMetadata[*].wifiScan.accessPoints[*]',
+          path: '$.activeWifiScan.accessPoints[*]',
           table: 'MacAdresses',
           getters: [
             {

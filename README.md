@@ -94,10 +94,11 @@ Follow these instructions to authenticate to GitHub Packages with a personal acc
 
 1. [Create a PAT](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). Select the scopes (permissions) `write:packages` and `delete:packages`. Never share your PAT with anybody. You may also use the shared PAT for the organization.
 
-2. [Authenticate](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token). The simplest recommended way is to add your PAT to your `~/.npmrc` file in your **home directory**:
+2. [Authenticate](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token). The simplest recommended way is to add your PAT to your `~/.npmrc` file in your **home directory**. Your `.npmrc` should look like this:
 
 ```
 //npm.pkg.github.com/:_authToken=TOKEN
+@hestiaai:registry=https://npm.pkg.github.com
 ```
 
 **IMPORTANT SECURITY NOTE**
