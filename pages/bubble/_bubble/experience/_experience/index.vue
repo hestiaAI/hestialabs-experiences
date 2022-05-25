@@ -6,6 +6,7 @@
 import { vueMeta } from '@/utils/utils'
 
 export default {
+  middleware: 'auth',
   head() {
     const { title: t, subtitle: s } = this.$store.getters.experience(
       this.$route

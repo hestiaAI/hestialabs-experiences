@@ -55,7 +55,12 @@
 <script>
 import { mapGetters } from 'vuex'
 
-function validateRoute({ store, error, params: { bubble, experience } }) {
+async function validateRoute({
+  $auth,
+  store,
+  error,
+  params: { bubble, experience }
+}) {
   // Validate `bubble` parameter
   if (bubble && !store.state.config.bubbles.includes(bubble)) {
     return error({ statusCode: 404, message: 'Bubble Not Found' })
@@ -73,6 +78,11 @@ function validateRoute({ store, error, params: { bubble, experience } }) {
   ) {
     return error({ statusCode: 404, message: 'Experience Not Found' })
   }
+
+  if (bubble && $auth.loggedIn && bubble !== $auth.user.username) {
+    // auto-logout if user tries to enter another bubble
+    await $auth.logout()
+  }
 }
 
 export default {
@@ -87,7 +97,7 @@ export default {
   async fetch() {
     const { context } = this.$nuxt
     await context.store.dispatch('loadExperiences', context)
-    validateRoute(context)
+    await validateRoute(context)
   },
   head() {
     if (!this.appName) {

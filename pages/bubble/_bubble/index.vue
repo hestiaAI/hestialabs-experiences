@@ -15,6 +15,7 @@
 import { vueMeta } from '@/utils/utils'
 
 export default {
+  middleware: 'auth',
   head() {
     const title = `${this.bubble.title} Bubble`
     return vueMeta(this, title)

@@ -70,7 +70,7 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/axios'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
 
   axios: {
     proxy: true // Can be also an object with default options
@@ -82,6 +82,31 @@ export default {
         ? 'https://bubbles.hestialabs.org/'
         : 'http://127.0.0.1:8000/', // 'localhost' didn't work in one instance on macOS
       pathRewrite: { '^/bubble-server/': '' }
+    }
+  },
+
+  auth: {
+    redirect: {
+      login: '/login',
+      logout: '/',
+      callback: '/login',
+      home: '/'
+    },
+    strategies: {
+      local: {
+        token: {
+          property: false,
+          global: false
+        },
+        user: {
+          autoFetch: false
+        },
+        endpoints: {
+          login: { url: '/bubble-server/login', method: 'get' },
+          logout: { url: '/bubble-server/logout', method: 'get' },
+          user: false
+        }
+      }
     }
   },
 
