@@ -35,11 +35,15 @@ export const getters = {
     }
     return disabledExperiences
   },
+  config:
+    state =>
+    ({ params: { bubble } }) =>
+      bubble ? state.config.bubbleConfig[bubble] : state.config,
   // https://vuex.vuejs.org/guide/getters.html#method-style-access
   experience:
     state =>
-    ({ params: { key } }) =>
-      state.experiences.find(e => e.slug === key) || {}
+    ({ params: { experience } }) =>
+      state.experiences.find(e => e.slug === experience) || {}
 }
 
 export const mutations = {
@@ -99,19 +103,35 @@ export const mutations = {
 }
 
 export const actions = {
-  async loadConfig({ commit, state }) {
+  async loadConfig({ commit, state }, $axios) {
     if (!state.loaded) {
       const config = (await import(`@/config/${process.env.configName}.json`))
         .default
+      if (config.bubbles) {
+        config.bubbleConfig = {}
+        for (const bubble of config.bubbles) {
+          try {
+            const { status, data } = await $axios.get(
+              `/bubble-server/bubbles/${bubble}/config`
+            )
+            if (status >= 400) {
+              throw new Error(`Axios error, status: ${status}`)
+            }
+            config.bubbleConfig[bubble] = data
+          } catch (err) {
+            console.error(err)
+          }
+        }
+      }
       commit('setConfig', {
         ...config,
         appName: 'HestiaLabs Experiences'
       })
     }
   },
-  async loadExperiences({ commit, state, dispatch }, { isDev }) {
+  async loadExperiences({ commit, state, dispatch }, { isDev, $axios }) {
     if (!state.loaded) {
-      await dispatch('loadConfig')
+      await dispatch('loadConfig', $axios)
       const experiences = (
         await Promise.all(
           state.config.experiences.map(packageNameAndTag => {

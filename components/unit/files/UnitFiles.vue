@@ -68,29 +68,21 @@ async function fetchSampleFile({ path, filename }) {
 export default {
   name: 'UnitFiles',
   props: {
-    files: {
-      type: Object,
-      required: true
-    },
-    samples: {
-      type: Array,
-      default: () => []
-    },
     progress: {
       type: Boolean,
-      default: () => false
+      default: false
     },
     success: {
       type: Boolean,
-      default: () => false
+      default: false
     },
     error: {
       type: Boolean,
-      default: () => false
+      default: false
     },
     message: {
       type: String,
-      default: () => ''
+      default: ''
     }
   },
   data() {
@@ -99,12 +91,15 @@ export default {
       allowMultipleUploads: true,
       locale: { strings: { cancel: 'Clear all' } }
     }
+    const { files, dataSamples } = this.$store.getters.experience(this.$route)
     return {
       uppy: new Uppy(config),
+      samples: [],
       selectedSamples: [],
       filesEmpty: true,
       status: false,
-      filesToExtract: this.files
+      files,
+      dataSamples
     }
   },
   computed: {
@@ -164,6 +159,16 @@ export default {
       }
     }
   },
+  async created() {
+    // files in assets/data/ are loaded with file-loader
+    this.samples = []
+    for (const filename of this.dataSamples) {
+      this.samples.push({
+        filename,
+        path: (await import(`@/assets/data/${filename}`)).default
+      })
+    }
+  },
   mounted() {
     this.uppy
       .use(Dashboard, {
@@ -209,6 +214,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 ::v-deep .uppy-Dashboard-AddFiles-title {
   font-size: 1rem;

@@ -12,11 +12,12 @@ const {
   WEBDAV_USERNAME
 } = process.env
 
-if (!baseUrl && NODE_ENV === 'production') {
+const isProduction = NODE_ENV === 'production'
+const uploadAvailable = !!WEBDAV_USERNAME
+
+if (!baseUrl && isProduction) {
   throw new Error('BASE_URL environment variable is missing')
 }
-
-const uploadAvailable = !!WEBDAV_USERNAME
 
 export default {
   ssr: false, // Disable Server-Side Rendering
@@ -29,10 +30,13 @@ export default {
         const { appName } = this.context.store.getters
         return title ? `${title} | ${appName}` : appName
       }
-      return 'HestiaLabs'
+      return 'Booting 🚀'
     },
     title: '',
-    meta: [{ name: 'format-detection', content: 'telephone=no' }]
+    meta: [
+      { name: 'format-detection', content: 'telephone=no' },
+      { property: 'twitter:description', content: description }
+    ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -66,7 +70,20 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: ['@nuxtjs/axios'],
+
+  axios: {
+    proxy: true // Can be also an object with default options
+  },
+
+  proxy: {
+    '/bubble-server/': {
+      target: isProduction
+        ? 'https://bubbles.hestialabs.org/'
+        : 'http://127.0.0.1:8000/', // 'localhost' didn't work in one instance on macOS
+      pathRewrite: { '^/bubble-server/': '' }
+    }
+  },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
