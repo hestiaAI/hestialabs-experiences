@@ -9,6 +9,7 @@ const {
   NODE_ENV,
   BASE_URL: baseUrl = 'http://localhost:3000',
   CONFIG_NAME: configName = 'dev',
+  API_URL: apiUrl = 'http://127.0.0.1:8000',
   WEBDAV_USERNAME
 } = process.env
 
@@ -76,15 +77,6 @@ export default {
     proxy: true // Can be also an object with default options
   },
 
-  proxy: {
-    '/bubble-server/': {
-      target: isProduction
-        ? 'https://bubbles.hestialabs.org/'
-        : 'http://127.0.0.1:8000/', // 'localhost' didn't work in one instance on macOS
-      pathRewrite: { '^/bubble-server/': '' }
-    }
-  },
-
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     icon: {
@@ -130,6 +122,7 @@ export default {
 
   env: {
     baseUrl,
+    apiUrl,
     configName,
     uploadAvailable
   },

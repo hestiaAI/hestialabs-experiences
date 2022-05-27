@@ -112,7 +112,7 @@ export const actions = {
         for (const bubble of config.bubbles) {
           try {
             const { status, data } = await $axios.get(
-              `/bubble-server/bubbles/${bubble}/config`
+              `${process.env.apiUrl}/bubbles/${bubble}/config`
             )
             if (status >= 400) {
               throw new Error(`Axios error, status: ${status}`)
