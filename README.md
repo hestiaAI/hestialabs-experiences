@@ -54,8 +54,6 @@ Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-
 | CONFIG_NAME          | Name of the configuration file (without extension: "workshop", "digipower" ...)  |
 | BASE_URL             | Url where the website is deployed (with protocol: "https://test.hestialabs.org") |
 | API_URL              | URL of the rest api (bubble server)                                              |
-| WEBDAV_USERNAME      | Kdrive user email (or else upload button is disabled)                            |
-| WEBDAV_PASSWORD      | Kdrive user password (for uploads)                                               |
 
 Documentation for the configuration file can be found in [config/README.md](config)
 
@@ -79,15 +77,6 @@ $ npm run generate
 ```
 
 For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
-
-We have server code that runs as a [netlify function](https://docs.netlify.com/functions/build-with-javascript/). It can be run locally using [netlify-cli](https://docs.netlify.com/cli/get-started/). The code is in the folder [netlify/functions](netlify/functions)
-
-```bash
-# run everything with hot reload
-$ BASE_URL=https://xxx.com API_URL=bubbles.hestialabs.org WEBDAV_USERNAME=yyy@hestia.ai WEBDAV_PASSWORD=zzz npx netlify dev
-```
-
-The `WEBDAV_` variables must match the credentials of a kdrive user with access to Hestia.ai
 
 ### Global Configuration
 

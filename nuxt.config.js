@@ -9,12 +9,10 @@ const {
   NODE_ENV,
   BASE_URL: baseUrl = 'http://localhost:3000',
   CONFIG_NAME: configName = 'dev',
-  API_URL: apiUrl = 'http://127.0.0.1:8000',
-  WEBDAV_USERNAME
+  API_URL: apiUrl = 'http://127.0.0.1:8000'
 } = process.env
 
 const isProduction = NODE_ENV === 'production'
-const uploadAvailable = !!WEBDAV_USERNAME
 
 if (!baseUrl && isProduction) {
   throw new Error('BASE_URL environment variable is missing')
@@ -123,8 +121,7 @@ export default {
   env: {
     baseUrl,
     apiUrl,
-    configName,
-    uploadAvailable
+    configName
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
