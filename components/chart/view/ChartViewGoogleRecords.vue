@@ -26,7 +26,14 @@
           <VBtn elevation="2" @click="clear">Clear</VBtn>
         </VCol>
         <VCol cols="2">
-          <VSlider :max="1" :min="0" :step="'0.1'" thumb-label="always">
+          <VSlider
+            v-model="sliderValue"
+            :max="100"
+            :min="0"
+            :step="'1'"
+            thumb-label="always"
+          >
+            Level
           </VSlider>
         </VCol>
       </VRow>
@@ -48,6 +55,7 @@ export default {
   mixins: [mixin],
   data() {
     return {
+      sliderValue: 0,
       filteredRows: [],
       results: this.values.map(v => {
         return {
@@ -84,6 +92,7 @@ export default {
   },
   methods: {
     addNoise() {
+      const level = this.sliderValue
       this.results = this.results.map(x => {
         return {
           ...x,
@@ -91,9 +100,11 @@ export default {
             x.longitude +
             ((0.5 - Math.random()) /
               ((40075 * 10 ** 3 * Math.cos(Math.radians(x.latitude))) / 360)) *
-              100,
+              2 *
+              level,
           latitude:
-            x.latitude + ((0.5 - Math.random()) / (111.32 * 10 ** 3)) * 100
+            x.latitude +
+            ((0.5 - Math.random()) / (111.32 * 10 ** 3)) * 2 * level
         }
       })
     },
@@ -105,6 +116,7 @@ export default {
           latitude: v.latitude * 1e-7
         }
       })
+      this.sliderValue = 0
     },
     drawViz() {},
     onTableFilter(newItems) {
