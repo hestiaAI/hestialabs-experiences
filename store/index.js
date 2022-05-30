@@ -111,6 +111,10 @@ export const actions = {
         config.bubbleConfig = {}
         for (const bubble of config.bubbles) {
           try {
+            console.log(
+              'get config',
+              `${process.env.apiUrl}/bubbles/${bubble}/config`
+            )
             const { status, data } = await $axios.get(
               `${process.env.apiUrl}/bubbles/${bubble}/config`
             )

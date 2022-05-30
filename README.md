@@ -53,7 +53,7 @@ Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-
 | -------------------- | -------------------------------------------------------------------------------- |
 | CONFIG_NAME          | Name of the configuration file (without extension: "workshop", "digipower" ...)  |
 | BASE_URL             | Url where the website is deployed (with protocol: "https://test.hestialabs.org") |
-| API_URL              | URL of the rest api (bubble server)                                              |
+| API_URL              | URL of the rest api (with protocol: "https://bubbles.hestialabs.com")            |
 
 Documentation for the configuration file can be found in [config/README.md](config)
 
