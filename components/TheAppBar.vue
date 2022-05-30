@@ -7,7 +7,7 @@
       />
       <VToolbarTitle class="d-flex align-center" style="width: 100%">
         <VBtn
-          v-if="$nuxt.$route.path !== '/'"
+          v-if="$route.path !== '/'"
           icon
           to="/"
           class="v-btn__home mr-0 mr-sm-4"
@@ -66,16 +66,17 @@
           </VBtn>
         </div>
       </template>
-      <div class="mt-6">
+      <div class="my-6">
         <LogoImg width="250" />
-        <TheExperienceMenu />
+        <TheExperienceMenu v-if="!$route.params.bubble" />
+        <h4 class="mt-6 mb-4 text-h4">Bubbles</h4>
+        <TheBubbleMenu />
       </div>
     </VNavigationDrawer>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -84,9 +85,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['experience', 'enabledExperiences']),
     e() {
-      return this.experience(this.$route)
+      return this.$store.getters.experience(this.$route)
     },
     collaborator() {
       return this.e.collaborator

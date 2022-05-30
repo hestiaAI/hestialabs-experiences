@@ -21,6 +21,7 @@
   # overrides variables in the Site settings
   NODE_VERSION = "14"
   NPM_VERSION = "7"
+  NODE_OPTIONS = "--max-old-space-size=8192"
   NODE_ENV = "production"
 
 # https://github.com/netlify/cli/blob/main/docs/netlify-dev.md

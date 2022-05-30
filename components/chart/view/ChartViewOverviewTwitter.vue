@@ -184,6 +184,7 @@ export default {
       this.results.forEach(d => {
         d.targetingType = d.targetingType ? d.targetingType : 'Unknown'
         d.targetingValue = d.targetingValue ? d.targetingValue : 'Unknown'
+        d.companyName = d.companyName ? d.companyName : ''
         d.dateParsed = dateFormatParser(d.date)
         d.day = d3.timeDay(d.dateParsed) // pre-calculate days for better performance
         d.dateStr = formatTime(d.dateParsed)

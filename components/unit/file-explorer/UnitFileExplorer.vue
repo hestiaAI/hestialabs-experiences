@@ -88,14 +88,14 @@
             <BaseButtonDownload small :href="path" :filename="filename" />
             <component
               :is="componentForType"
-              v-bind="{ fileManager, filename }"
               v-if="supportedTypes.has(fileType)"
+              :filename="filename"
               @loading="onLoading"
               @select-accessor="onSelectAccessor"
             />
             <UnitFileExplorerViewerUnknown
               v-else
-              v-bind="{ fileManager, filename }"
+              :filename="filename"
               @loading="onLoading"
             />
           </template>
@@ -110,7 +110,6 @@
     <div v-if="customPipelineOptions">
       <UnitPipelineCustom
         v-bind="{
-          fileManager,
           customPipeline,
           customPipelineOptions
         }"

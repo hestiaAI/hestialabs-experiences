@@ -9,8 +9,10 @@
   },
   "scripts": {
     "postinstall": "node postinstall.js",
-    "dev": "npm-run-all -p -r dev:api dev:app",
-    "dev:api": "cd ../hestialabs && npm run dev",
+    "dev": "npm-run-all -p -r dev:bubble-server dev:monorepo dev:app",
+    "dev:no-local-server": "npm-run-all -p -r dev:monorepo dev:app",
+    "dev:bubble-server": "cd ../hestialabs-bubble-server/bubbleserver && poetry run python ./manage.py runserver",
+    "dev:monorepo": "cd ../hestialabs && npm run dev",
     "dev:app": "nuxt --open",
     "test": "jest",
     "start": "nuxt start",
@@ -111,7 +113,6 @@
     "vega-lite": "^5.1.1",
     "vue2-ace-editor": "^0.0.15",
     "vuetify": "^2.6.1",
-    "webdav": "^4.9.0",
     "worker-loader": "^3.0.8"
   },
   "devDependencies": {

@@ -164,7 +164,7 @@ export default {
       this.error = false
       try {
         const headers = this.data.headers.map(h => h.text)
-        const filteredItems = this.$refs.tableRef.$children[0].filteredItems
+        const { filteredItems } = this.$refs.tableRef.$children[0]
         // Change the items keys to match the headers
         const itemsWithHeader = filteredItems.map(i =>
           this.data.headers.reduce(

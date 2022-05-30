@@ -1,14 +1,13 @@
-import FileManager from '@/utils/file-manager'
+import { mapState } from 'vuex'
 
 export default {
   props: {
-    fileManager: {
-      type: FileManager,
-      required: true
-    },
     filename: {
       type: String,
       required: true
     }
+  },
+  computed: {
+    ...mapState(['fileManager'])
   }
 }

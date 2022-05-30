@@ -39,6 +39,15 @@ test('generates a zip', async () => {
           fileManager,
           consentForm: testConsentForm,
           selectedFiles: []
+        },
+        getters: {
+          experience: () => ({
+            files: {},
+            keepOnlyFiles: true,
+            preprocessors: {},
+            viewBlocks: []
+          }),
+          config: () => ({})
         }
       },
       $route: {

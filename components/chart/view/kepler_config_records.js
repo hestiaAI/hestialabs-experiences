@@ -5,12 +5,12 @@ export default {
       filters: [],
       layers: [
         {
-          id: '0dpan25',
+          id: 'r9fyctw',
           type: 'point',
           config: {
             dataId: 'data',
             label: 'Point',
-            color: [218, 0, 0],
+            color: [18, 147, 154],
             highlightColor: [252, 242, 26, 255],
             columns: {
               lat: 'latitude',
@@ -19,23 +19,31 @@ export default {
             },
             isVisible: true,
             visConfig: {
-              radius: 10,
+              radius: 5,
               fixedRadius: false,
               opacity: 0.8,
               outline: false,
               thickness: 2,
               strokeColor: null,
               colorRange: {
-                name: 'Global Warming',
-                type: 'sequential',
-                category: 'Uber',
+                name: 'Custom Palette',
+                type: 'custom',
+                category: 'Custom',
                 colors: [
-                  '#5A1846',
-                  '#900C3F',
-                  '#C70039',
-                  '#E3611C',
-                  '#F1920E',
-                  '#FFC300'
+                  '#a6cee3',
+                  '#1f78b4',
+                  '#b2df8a',
+                  '#33a02c',
+                  '#fb9a99',
+                  '#e31a1c',
+                  '#fdbf6f',
+                  '#ff7f00',
+                  '#cab2d6',
+                  '#6a3d9a',
+                  '#ffff99',
+                  '#b15928',
+                  '#49493f',
+                  '#f800c0'
                 ]
               },
               strokeColorRange: {
@@ -51,7 +59,7 @@ export default {
                   '#FFC300'
                 ]
               },
-              radiusRange: [10, 30],
+              radiusRange: [0, 50],
               filled: true
             },
             hidden: false,
@@ -67,15 +75,15 @@ export default {
             ]
           },
           visualChannels: {
-            colorField: null,
-            colorScale: 'quantile',
+            colorField: {
+              name: 'activityType',
+              type: 'string'
+            },
+            colorScale: 'ordinal',
             strokeColorField: null,
             strokeColorScale: 'quantile',
-            sizeField: {
-              name: 'count',
-              type: 'integer'
-            },
-            sizeScale: 'sqrt'
+            sizeField: null,
+            sizeScale: 'linear'
           }
         }
       ],
@@ -84,11 +92,19 @@ export default {
           fieldsToShow: {
             data: [
               {
-                name: 'mac',
+                name: 'timestamp',
                 format: null
               },
               {
-                name: 'count',
+                name: 'accuracy',
+                format: null
+              },
+              {
+                name: 'source',
+                format: null
+              },
+              {
+                name: 'activityType',
                 format: null
               }
             ]
@@ -118,10 +134,10 @@ export default {
     mapState: {
       bearing: 0,
       dragRotate: false,
-      latitude: 46.41269271195032,
-      longitude: 6.560159114941752,
+      latitude: 46.3694608867237,
+      longitude: 6.506723131765135,
       pitch: 0,
-      zoom: 9,
+      zoom: 7.78697017968798,
       isSplit: false
     },
     mapStyle: {

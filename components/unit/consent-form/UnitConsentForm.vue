@@ -13,7 +13,7 @@
       included:
       {{ missingRequiredData.join(', ') }}.
     </BaseAlert>
-    <BaseAlert v-if="!$store.state.config.publicKey" type="info">
+    <BaseAlert v-if="!config.publicKey" type="info">
       The results will not be encrypted because this instance has been
       configured without public key.
     </BaseAlert>
@@ -25,6 +25,8 @@
         means.
       </p>
     </BaseAlert>
+    <!-- TODO replace this button with upload to bubble server -->
+    <!-- $uploadAvailable no longer exists -->
     <VRow v-if="$uploadAvailable">
       <VCol>
         <BaseButton
@@ -78,13 +80,8 @@ const _sodium = require('libsodium-wrappers')
 const VERSION = 3
 
 export default {
-  props: {
-    viewBlocks: {
-      type: Array,
-      required: true
-    }
-  },
   data() {
+    const { viewBlocks } = this.$store.getters.experience(this.$route)
     return {
       zipFile: undefined,
       generateStatus: false,
@@ -94,17 +91,15 @@ export default {
       sentErrorMessage: undefined,
       sentProgress: false,
       filename: '',
-      href: null
+      href: null,
+      viewBlocks
     }
   },
   computed: {
-    ...mapState([
-      'config',
-      'results',
-      'fileManager',
-      'consentForm',
-      'selectedFiles'
-    ]),
+    ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles']),
+    config() {
+      return this.$store.getters.config(this.$route)
+    },
     missingRequiredFields() {
       return !this.consentForm.every(section => {
         if ('required' in section) {
@@ -152,10 +147,12 @@ export default {
         date.getUTCMonth() + 1,
         2
       )}-${padNumber(date.getUTCDate(), 2)}`
-      const filename = `${this.$route.params.key}_${yearMonthDay}_${padNumber(
-        date.getUTCHours(),
+      const filename = `${
+        this.$route.params.experience
+      }_${yearMonthDay}_${padNumber(date.getUTCHours(), 2)}${padNumber(
+        date.getUTCMinutes(),
         2
-      )}${padNumber(date.getUTCMinutes(), 2)}_UTC_${uniqueId}.zip`
+      )}_UTC_${uniqueId}.zip`
       return filename
     },
     async generateZIP() {
@@ -167,7 +164,7 @@ export default {
       const timestamp = Date.now()
       this.filename = this.makeFilename(timestamp)
       const experience = {
-        key: this.$route.params.key,
+        experience: this.$route.params.experience,
         timestamp,
         version: VERSION,
         gitRevision
@@ -181,7 +178,7 @@ export default {
       const dataSection = this.consentForm.find(
         section => section.type === 'data'
       )
-      const keys = this.viewBlocks.map(block => block.key)
+      const keys = this.viewBlocks.map(block => block.id)
       dataSection.value
         .map(key => [key, keys.indexOf(key)])
         .filter(([key, i]) => i !== -1)
@@ -207,7 +204,7 @@ export default {
       }
 
       const content = await zip.generateAsync({ type: 'uint8array' })
-      const publicKey = this.$store.state.config.publicKey
+      const { publicKey } = this.config
       if (publicKey) {
         return this.encryptFile(content, publicKey)
       }

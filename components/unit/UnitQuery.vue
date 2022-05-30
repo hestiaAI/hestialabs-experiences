@@ -80,7 +80,7 @@
               <UnitIframe
                 v-else-if="vizUrl"
                 :src="vizUrl"
-                :data="clonedResult"
+                :args="clonedResult"
               />
             </VCol>
           </VRow>

@@ -1,28 +1,8 @@
 {
-  "experiences": [
-    "amazon",
-    "apple",
-    "facebook",
-    "google",
-    "her",
-    "instagram",
-    "spotify",
-    "netflix",
-    "linkedin",
-    "tiktok",
-    "tinder",
-    "tracker-control",
-    "twitter",
-    "youtube",
-    "uber",
-    "ad-radar",
-    "explorer",
-    "other"
-  ],
-  "bubbles": ["tl-aggregator", "tl-participant"],
-  "hashtags": ["dataprivacy", "hestialabs"],
-  "filedrop": "https://example.com",
-  "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
+  "title": "TL",
+  "icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Logo_Transport_publics_de_la_region_lausannoise.svg/langfr-280px-Logo_Transport_publics_de_la_region_lausannoise.svg.png",
+  "experiences": ["google"],
+  "publicKey": "345cdef",
   "consent": {
     "default": [
       {

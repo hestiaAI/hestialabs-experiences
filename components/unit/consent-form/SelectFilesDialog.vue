@@ -92,9 +92,6 @@ export default {
       set(value) {
         this.$store.commit('setSelectedFiles', value)
       }
-    },
-    key() {
-      return this.$route.params.key
     }
   },
   watch: {
