@@ -22,6 +22,16 @@
       </VRow>
       <VRow>
         <VCol cols="12">
+          <VBtn elevation="2" @click="addNoise">Add Noise</VBtn>
+          <VBtn elevation="2" @click="clear">Clear</VBtn>
+        </VCol>
+        <VCol cols="2">
+          <VSlider :max="1" :min="0" :step="'0.1'" thumb-label="always">
+          </VSlider>
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol cols="12">
           <UnitFilterableTable
             v-bind="{ headers, items: results }"
             @current-items="onTableFilter"
@@ -38,19 +48,17 @@ export default {
   mixins: [mixin],
   data() {
     return {
-      filteredRows: []
-    }
-  },
-  computed: {
-    results() {
-      return this.values.map(v => {
+      filteredRows: [],
+      results: this.values.map(v => {
         return {
           ...v,
           longitude: v.longitude * 1e-7,
           latitude: v.latitude * 1e-7
         }
       })
-    },
+    }
+  },
+  computed: {
     total() {
       return this.results.length
     },
@@ -75,6 +83,29 @@ export default {
     }
   },
   methods: {
+    addNoise() {
+      this.results = this.results.map(x => {
+        return {
+          ...x,
+          longitude:
+            x.longitude +
+            ((0.5 - Math.random()) /
+              ((40075 * 10 ** 3 * Math.cos(Math.radians(x.latitude))) / 360)) *
+              100,
+          latitude:
+            x.latitude + ((0.5 - Math.random()) / (111.32 * 10 ** 3)) * 100
+        }
+      })
+    },
+    clear() {
+      this.results = this.values.map(v => {
+        return {
+          ...v,
+          longitude: v.longitude * 1e-7,
+          latitude: v.latitude * 1e-7
+        }
+      })
+    },
     drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems
