@@ -110,6 +110,8 @@ export default {
     const properties = pick(experience, [
       'databaseConfig',
       'files',
+      'hideSummary',
+      'hideFileExplorer',
       'keepOnlyFiles',
       'preprocessors',
       'viewBlocks'
