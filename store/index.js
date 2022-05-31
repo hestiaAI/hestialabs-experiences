@@ -107,12 +107,12 @@ export const actions = {
     if (!state.loaded) {
       const config = (await import(`@/config/${process.env.configName}.json`))
         .default
-      if (config.bubbles) {
+      if (config.bubbles?.length) {
         config.bubbleConfig = {}
         for (const bubble of config.bubbles) {
           try {
             const { status, data } = await $axios.get(
-              `/bubble-server/bubbles/${bubble}/config`
+              `${process.env.apiUrl}/bubbles/${bubble}/config`
             )
             if (status >= 400) {
               throw new Error(`Axios error, status: ${status}`)

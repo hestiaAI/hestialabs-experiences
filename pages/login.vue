@@ -1,48 +1,66 @@
 <template>
-  <div>
-    <VForm @submit.prevent="userLogin">
-      <VTextField v-model="login.username" label="Username" readonly />
-      <VTextField v-model="login.password" label="Password" required />
-      <VBtn type="submit">Submit</VBtn>
+  <VContainer fluid style="max-width: 400px" class="mt-16">
+    <h1 class="text-h4 mb-6">Bubble Login</h1>
+    <VForm @submit.prevent="login">
+      <VTextField :value="username" label="Username" readonly />
+      <VTextField
+        v-model="password"
+        label="Password"
+        required
+        :type="passwordType"
+        :append-icon="passwordAppendIcon"
+        @click:append="onClickAppend"
+      />
+      <BaseButton type="submit">Login</BaseButton>
     </VForm>
-  </div>
+  </VContainer>
 </template>
 
 <script>
+import { mdiEye, mdiEyeOff } from '@mdi/js'
+
 export default {
   auth: 'guest',
-  beforeRouteEnter(to, from, next) {
-    if (!from.params?.bubble) {
+  validate({ $auth, store }) {
+    const { bubbles } = store.state.config
+    const bubble = ($auth.state.redirect || '').split('/')[2]
+    if (!bubbles.includes(bubble)) {
       return false
     }
-    next(vm => {
-      // access to component public instance via `vm`
-      // -> set the username as the bubble name
-      vm.login.username = from.params.bubble
-    })
+    return true
   },
   data() {
     return {
-      login: {
-        username: '',
-        password: ''
-      }
+      username: this.$auth.state.redirect.split('/')[2],
+      password: '',
+      passwordType: 'password',
+      passwordAppendIcon: mdiEye
     }
   },
   methods: {
-    async userLogin() {
+    onClickAppend() {
+      if (this.passwordType === 'password') {
+        this.passwordType = 'text'
+        this.passwordAppendIcon = mdiEyeOff
+      } else {
+        this.passwordType = 'password'
+        this.passwordAppendIcon = mdiEye
+      }
+    },
+    async login() {
       try {
-        const { login } = this
+        const { username, password } = this
+        const data = { username, password }
+        console.log('data', data)
         const response = await this.$auth.loginWith('local', {
-          data: login
+          data
         })
-        this.$auth.setUser({ username: login.username })
+        this.$auth.setUser({ username })
         console.log(response)
       } catch (err) {
-        console.log(err)
+        console.log(err, this.$auth)
       }
     }
   }
 }
 </script>
-$router.options.history.state.back

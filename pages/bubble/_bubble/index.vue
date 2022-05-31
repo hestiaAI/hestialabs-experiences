@@ -12,10 +12,14 @@
 </template>
 
 <script>
+import validate from '@/pages/validate'
 import { vueMeta } from '@/utils/utils'
 
 export default {
   middleware: 'auth',
+  validate(context) {
+    return validate.bubble(context)
+  },
   head() {
     const title = `${this.bubble.title} Bubble`
     return vueMeta(this, title)

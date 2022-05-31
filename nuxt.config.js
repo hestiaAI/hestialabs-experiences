@@ -9,11 +9,10 @@ const {
   NODE_ENV,
   BASE_URL: baseUrl = 'http://localhost:3000',
   CONFIG_NAME: configName = 'dev',
-  WEBDAV_USERNAME
+  API_URL: apiUrl = 'http://127.0.0.1:8000'
 } = process.env
 
 const isProduction = NODE_ENV === 'production'
-const uploadAvailable = !!WEBDAV_USERNAME
 
 if (!baseUrl && isProduction) {
   throw new Error('BASE_URL environment variable is missing')
@@ -72,38 +71,32 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
 
-  axios: {
-    proxy: true // Can be also an object with default options
-  },
-
-  proxy: {
-    '/bubble-server/': {
-      target: isProduction
-        ? 'https://bubbles.hestialabs.org/'
-        : 'http://127.0.0.1:8000/', // 'localhost' didn't work in one instance on macOS
-      pathRewrite: { '^/bubble-server/': '' }
-    }
-  },
+  axios: {},
 
   auth: {
     redirect: {
       login: '/login',
       logout: '/',
-      callback: '/login',
       home: '/'
     },
     strategies: {
       local: {
-        token: {
-          property: false,
-          global: false
-        },
+        // token: {
+        //   property: false
+        //   // global: false,
+        //   // required: false
+        // },
         user: {
+          property: false,
           autoFetch: false
         },
         endpoints: {
-          login: { url: '/bubble-server/login', method: 'get' },
-          logout: { url: '/bubble-server/logout', method: 'get' },
+          login: {
+            url: `${apiUrl}/bubbles/login`,
+            method: 'post',
+            property: false
+          },
+          logout: { url: `${apiUrl}/bubbles/logout`, method: 'get' },
           user: false
         }
       }
@@ -155,8 +148,8 @@ export default {
 
   env: {
     baseUrl,
-    configName,
-    uploadAvailable
+    apiUrl,
+    configName
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

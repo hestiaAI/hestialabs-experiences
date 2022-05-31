@@ -68,9 +68,8 @@
       </template>
       <div class="my-6">
         <LogoImg width="250" />
-        <TheExperienceMenu v-if="!$route.params.bubble" />
-        <h4 class="mt-6 mb-4 text-h4">Bubbles</h4>
         <TheBubbleMenu />
+        <TheExperienceMenu v-if="!$route.params.bubble" />
       </div>
     </VNavigationDrawer>
   </div>
