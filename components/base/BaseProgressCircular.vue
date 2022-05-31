@@ -1,5 +1,5 @@
 <template>
-  <VProgressCircular v-bind="{ size, width, ...$attrs }" indeterminate />
+  <VProgressCircular v-bind="{ indeterminate, size, width, ...$attrs }" />
 </template>
 
 <script>
@@ -12,6 +12,10 @@ export default {
     width: {
       type: [String, Number],
       default: 2
+    },
+    indeterminate: {
+      type: Boolean,
+      default: true
     }
   }
 }

@@ -31,14 +31,31 @@
         </VRow>
         <VRow>
           <VCol align="center">
-            <VCard height="500">
-              <VCardTitle>Current</VCardTitle>
-              <VCardText>
-                <VListItemGroup
-                  v-model="selectedFiles"
-                  multiple
-                  :prepend-icon="file.icon"
+            <VCard height="500" class="d-flex flex-column">
+              <VCardTitle class="mb-2">
+                <span
+                  >Bubble: <b>{{ dataFromBubble }}</b></span
                 >
+                <VSpacer></VSpacer>
+                <span class="caption"
+                  >{{ nbSelected }} out of {{ nbFiles }} selected</span
+                >
+                <VSpacer></VSpacer>
+                <BaseButton
+                  outlined
+                  small
+                  color="primary"
+                  min-width="120"
+                  @click="selectAll"
+                >
+                  {{ allSelected ? 'un' : '' }}select All</BaseButton
+                >
+              </VCardTitle>
+              <VCardText>
+                <span v-if="!nbFiles">
+                  No files retrieved on the server yet</span
+                >
+                <VListItemGroup v-else v-model="selectedFiles" multiple>
                   <VListItem v-for="file in fileItems" :key="file.filename">
                     <template #default="{ active }">
                       <VListItemAction>
@@ -52,11 +69,46 @@
                         <VListItemTitle>{{ file.filename }}</VListItemTitle>
                         <VListItemSubtitle>{{ file.date }}</VListItemSubtitle>
                       </VListItemContent>
+
+                      <VIcon> {{ file.icon }} </VIcon>
                     </template>
                   </VListItem>
                 </VListItemGroup>
               </VCardText>
+              <VSpacer></VSpacer>
+              <VCardActions class="align-center justify-center">
+                <div v-if="apiLoading">
+                  ><BaseProgressCircular class="ma-0" /><span class="ml-3"
+                    >Fetching files from server...</span
+                  >
+                </div>
+                <div v-else-if="apiError">
+                  <BaseAlert type="error" dense text class="ma-0"
+                    >{{ apiError }}
+                  </BaseAlert>
+                </div>
+                <div v-else>
+                  <BaseProgressCircular
+                    class="ma-0"
+                    :indeterminate="timerPlay"
+                  /><span class="ml-3"
+                    >Updating files in {{ counter }} seconds</span
+                  >
+                </div>
+              </VCardActions>
             </VCard>
+          </VCol>
+        </VRow>
+        <VRow>
+          <VCol justify="center" align="center">
+            <BaseButton
+              v-bind="{ progress, status, error }"
+              :disabled="!selectedFiles.length"
+              text="Explore the data"
+              icon="mdiStepForward"
+              class="my-sm-2 mr-sm-4"
+              @click="downloadFiles"
+            />
           </VCol>
         </VRow>
       </VCardText>
@@ -98,6 +150,9 @@ export default {
     const bubbleConfig = this.$store.getters.config(this.$route)
     const bubbleProps = pick(bubbleConfig, ['dataFromBubble'])
     return {
+      timer: null,
+      timerPlay: true,
+      counter: 5,
       apiError: null,
       apiLoading: false,
       filenames: [],
@@ -107,11 +162,22 @@ export default {
       ...bubbleProps
     }
   },
+  computed: {
+    nbSelected() {
+      return this.selectedFiles.length
+    },
+    nbFiles() {
+      return this.fileItems.length
+    },
+    allSelected() {
+      return this.nbSelected === this.nbFiles
+    }
+  },
   watch: {
-    fileNames(newValue, oldValue) {
+    filenames(newValue, oldValue) {
       const newFilenames = newValue.filter(file => !oldValue.includes(file))
       newFilenames.forEach(filename => {
-        const extension = filename.match(/\.([\S]+)/)?.[1]
+        const extension = String(filename).match(/\.([\S]+)/)?.[1]
         const type = extension2filetype[extension] ?? 'folder'
         const icon = filetype2icon[type] || '$vuetify.icons.mdiFile'
         this.fileItems.push({
@@ -124,8 +190,27 @@ export default {
   },
   mounted() {
     this.fetchData()
+    this.timer = setInterval(() => {
+      if (this.timerPlay) {
+        this.counter--
+        if (this.counter <= 0) {
+          this.counter = 5
+          this.fetchData()
+        }
+      }
+    }, 1000)
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
   },
   methods: {
+    selectAll() {
+      if (!this.allSelected) {
+        this.selectedFiles = [...Array(this.fileItems.length).keys()]
+      } else {
+        this.selectedFiles = []
+      }
+    },
     async fetchData() {
       this.apiError = null
       this.apiLoading = true
@@ -141,12 +226,15 @@ export default {
         if (!resp.ok) {
           this.apiError = response
         } else {
-          this.files = response
+          this.filenames = response
         }
       } catch (e) {
         this.apiError = e
         console.error(e)
       }
+    },
+    downloadFiles() {
+      this.timerPlay = !this.timerPlay
     },
     onUnitFilesUpdate({ uppyFiles }) {
       this.$emit('update', { uppyFiles })
@@ -154,3 +242,9 @@ export default {
   }
 }
 </script>
+<style scoped>
+.v-card__text {
+  flex-grow: 1;
+  overflow: auto;
+}
+</style>
