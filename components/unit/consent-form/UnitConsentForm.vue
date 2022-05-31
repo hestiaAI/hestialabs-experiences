@@ -202,8 +202,7 @@ export default {
       }
 
       const content = await zip.generateAsync({ type: 'uint8array' })
-      if (0 === 1 && publicKey) {
-        // if (publicKey) {
+      if (publicKey) {
         return this.encryptFile(content, publicKey)
       }
       return content
@@ -223,7 +222,6 @@ export default {
       if (!document.cookie) {
         return null
       }
-      console.log(document.cookie)
       const cookie = document.cookie
         .split(';')
         .map(c => c.trim())
@@ -249,26 +247,12 @@ export default {
       })
       formData.append('password', '0123')
       formData.append('file', zip, this.filename)
-      // formData.append('encrypted-zip', zip, this.filename)
       let success = false
       let errorMessage
       try {
-        const authResp = await fetch(
-          'http://127.0.0.1:8000/bubbles/tl-participant/authenticate?password=0123',
-          {
-            type: 'application/zip',
-            method: 'GET'
-          }
-        )
-        if (!authResp.ok) {
-          console.error(authResp)
-          errorMessage = authResp.statusText
-          errorMessage = await authResp.json()
-          throw new Error(errorMessage)
-        }
         const authCookie = this.getCookie('csrftoken')
         const resp = await fetch(
-          `http://127.0.0.1:8000/bubbles/tl-participant/files`,
+          `${process.env.apiUrl}/bubbles/${this.$route.params.bubble}/files`,
           {
             method: 'POST',
             headers: {

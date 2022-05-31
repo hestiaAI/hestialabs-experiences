@@ -38,7 +38,9 @@
         <VTabsItems v-model="tab">
           <VTabItem value="load-data" :transition="false">
             <VCol cols="12 mx-auto" md="6" class="tabItem">
+              <UnitDownload v-if="config.dataFromBubble" />
               <UnitIntroduction
+                v-else
                 v-bind="{
                   progress,
                   error,
@@ -99,12 +101,14 @@ import { mapState } from 'vuex'
 
 import { debounce, pick } from 'lodash'
 
+import UnitDownload from './unit/UnitDownload.vue'
 import DBMS from '~/utils/sql'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 
 export default {
   name: 'TheDataExperience',
+  components: { UnitDownload },
   data() {
     const experience = this.$store.getters.experience(this.$route)
     const properties = pick(experience, [
@@ -176,10 +180,13 @@ export default {
     sqlQueries() {
       return this.viewBlocks.map(o => this.sql[o.sql])
     },
-    consentFormTemplate() {
+    config() {
       const { config } = this.$store.state
       const { bubble } = this.$route.params
-      const { consent } = bubble ? config.bubbleConfig[bubble] : config
+      return bubble ? config.bubbleConfig[bubble] : config
+    },
+    consentFormTemplate() {
+      const { consent } = this.config
       if (consent) {
         const { experience } = this.$route.params
         if (experience in consent) {
