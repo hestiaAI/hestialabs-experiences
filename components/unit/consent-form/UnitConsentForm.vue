@@ -25,6 +25,8 @@
         means.
       </p>
     </BaseAlert>
+    <!-- TODO replace this button with upload to bubble server -->
+    <!-- $uploadAvailable no longer exists -->
     <VRow v-if="$uploadAvailable">
       <VCol>
         <BaseButton
