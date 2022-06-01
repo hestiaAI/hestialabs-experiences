@@ -1,5 +1,5 @@
 <template>
-  <VContainer>
+  <VContainer class="mt-6">
     <div class="d-flex">
       <VImg max-width="50" :src="bubble.icon" :lazy-src="bubble.icon" contain />
       <h1 class="mt-4 ml-3 text-h3" v-text="bubble.title" />

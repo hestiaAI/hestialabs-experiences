@@ -71,9 +71,12 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
 
-  axios: {},
+  axios: {
+    baseURL: apiUrl
+  },
 
   auth: {
+    fullPathRedirect: true,
     redirect: {
       login: '/login',
       logout: '/',
@@ -81,22 +84,19 @@ export default {
     },
     strategies: {
       local: {
-        // token: {
-        //   property: false
-        //   // global: false,
-        //   // required: false
-        // },
-        user: {
+        token: {
           property: false,
+          required: false
+        },
+        user: {
           autoFetch: false
         },
         endpoints: {
           login: {
-            url: `${apiUrl}/bubbles/login`,
-            method: 'post',
-            property: false
+            url: '/bubbles/login',
+            method: 'post'
           },
-          logout: { url: `${apiUrl}/bubbles/logout`, method: 'get' },
+          logout: { url: '/bubbles/logout', method: 'get' },
           user: false
         }
       }

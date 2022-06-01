@@ -10,10 +10,19 @@
           v-if="$route.path !== '/'"
           icon
           to="/"
-          class="v-btn__home mr-0 mr-sm-4"
+          class="v-btn__home mr-0"
           color="primary"
         >
           <VIcon>$vuetify.icons.mdiHome</VIcon>
+        </VBtn>
+        <VBtn
+          v-if="$auth.loggedIn"
+          icon
+          class="ml-1"
+          color="primary"
+          @click="$auth.logout()"
+        >
+          <VIcon>$vuetify.icons.mdiLogout</VIcon>
         </VBtn>
         <VSpacer />
         <div class="d-flex">
