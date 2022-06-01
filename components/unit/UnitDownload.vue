@@ -99,18 +99,24 @@
             </VCard>
           </VCol>
         </VRow>
-        <VRow>
-          <VCol justify="center" align="center">
-            <BaseButton
-              v-bind="{ progress, status, error }"
-              :disabled="!selectedFiles.length"
-              text="Explore the data"
-              icon="mdiStepForward"
-              class="my-sm-2 mr-sm-4"
-              @click="downloadFiles"
-            />
-          </VCol>
-        </VRow>
+        <div justify="center" align="center">
+          <VFileInput
+            v-model="privateKey"
+            accept=".txt"
+            label="Secret Key"
+            class="fileInput"
+          ></VFileInput>
+        </div>
+        <div justify="center" align="center">
+          <BaseButton
+            v-bind="{ success, progress, error }"
+            :disabled="!selectedFiles.length"
+            text="Explore the data"
+            icon="mdiStepForward"
+            class="my-sm-2 mr-sm-4"
+            @click="downloadFiles"
+          />
+        </div>
       </VCardText>
     </VCard>
   </VContainer>
@@ -119,6 +125,7 @@
 <script>
 import { pick } from 'lodash'
 import { filetype2icon, extension2filetype } from '@/utils/file-manager'
+const _sodium = require('libsodium-wrappers')
 export default {
   props: {
     success: {
@@ -148,7 +155,7 @@ export default {
       'tutorialVideos'
     ])
     const bubbleConfig = this.$store.getters.config(this.$route)
-    const bubbleProps = pick(bubbleConfig, ['dataFromBubble'])
+    const bubbleProps = pick(bubbleConfig, ['dataFromBubble', 'publicKey'])
     return {
       timer: null,
       timerPlay: true,
@@ -158,6 +165,7 @@ export default {
       filenames: [],
       fileItems: [],
       selectedFiles: [],
+      privateKey: null,
       ...experienceProps,
       ...bubbleProps
     }
@@ -233,11 +241,61 @@ export default {
         console.error(e)
       }
     },
-    downloadFiles() {
-      this.timerPlay = !this.timerPlay
+    async downloadFiles() {
+      this.timerPlay = false
+      this.apiError = null
+      this.apiLoading = true
+      const files = await Promise.all(
+        this.selectedFiles.map(async fileIdx => {
+          const filename = this.fileItems[fileIdx].filename
+          try {
+            const resp = await fetch(
+              `${process.env.apiUrl}/bubbles/${this.dataFromBubble}/file/${filename}`,
+              {
+                method: 'GET'
+              }
+            )
+            this.apiLoading = false
+            let blob = await resp.blob()
+            if (this.privateKey) {
+              const [decryptedBlob, error] = await this.decryptBlob(
+                blob,
+                await this.privateKey.text(),
+                this.publicKey
+              )
+              if (error) console.error(error)
+              else blob = decryptedBlob
+            }
+            if (!resp.ok) {
+              this.apiError = blob
+              console.error(blob)
+            } else {
+              return new File([blob], filename)
+            }
+          } catch (e) {
+            this.apiError = e
+            console.error(e)
+          }
+        })
+      )
+      console.log(files)
+      this.$emit('update', { uppyFiles: files })
     },
-    onUnitFilesUpdate({ uppyFiles }) {
-      this.$emit('update', { uppyFiles })
+    async decryptBlob(blob, secretKey, publicKey) {
+      try {
+        await _sodium.ready
+        const sodium = _sodium
+        const sk = sodium.from_hex(secretKey)
+        const pk = sodium.from_hex(publicKey)
+        const buf = await blob.arrayBuffer()
+        const ciphertext = new Uint8Array(buf)
+        return [
+          new Blob([sodium.crypto_box_seal_open(ciphertext, pk, sk)]),
+          null
+        ]
+      } catch (error) {
+        return [null, error]
+      }
     }
   }
 }
@@ -246,5 +304,8 @@ export default {
 .v-card__text {
   flex-grow: 1;
   overflow: auto;
+}
+.fileInput {
+  max-width: 300px;
 }
 </style>

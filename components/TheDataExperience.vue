@@ -38,7 +38,16 @@
         <VTabsItems v-model="tab">
           <VTabItem value="load-data" :transition="false">
             <VCol cols="12 mx-auto" md="6" class="tabItem">
-              <UnitDownload v-if="config.dataFromBubble" />
+              <UnitDownload
+                v-if="config.dataFromBubble"
+                v-bind="{
+                  progress,
+                  error,
+                  success,
+                  message
+                }"
+                @update="onUnitFilesUpdate"
+              />
               <UnitIntroduction
                 v-else
                 v-bind="{
