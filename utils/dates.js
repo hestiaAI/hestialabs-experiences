@@ -8,9 +8,39 @@ export function isValidDate(d) {
  * Here we define the date and time formats used in the app
  */
 export const dateFormatter = d3.timeFormat('%Y-%m-%d') // Specify Datetime and Date format to be sortable
-export const datetimeFormatter = d3.timeFormat('%Y-%m-%d, %H:%M:%S') // Specify Datetime and Date format to be sortable
+export const datetimeFormatter = d3.timeFormat('%Y-%m-%d %H:%M:%S') // Specify Datetime and Date format to be sortable
 export const dateParser = d3.timeParse('%Y-%m-%d') // Specify Datetime and Date format to be sortable
-export const datetimeParser = d3.timeParse('%Y-%m-%d, %H:%M:%S') // Specify Datetime and Date format to be sortable
+export const datetimeParser = d3.timeParse('%Y-%m-%d %H:%M:%S') // Specify Datetime and Date format to be sortable
+export const timeFormatter = d3.timeFormat('%H:%M:%S')
+export const timeParser = d3.timeParse('%H:%M:%S')
+/**
+ * Conversion from type-analyser.js format to d3 parser
+ */
+const regex = /(\w+) (\d{1,2})(?:st|nd|rd|th), (\d{4})/g
+export const DATE_FORMAT_TO_D3 = {
+  'YYYY-M-D': d3.timeParse('%Y-%m-%d'),
+  'YYYY/M/D': d3.timeParse('%Y/%m/%d'),
+  'M/D/YYYY': d3.timeParse('%m/%d/%Y'),
+  'MMMM DD, YYYY': d3.timeParse('%B %d, %Y'),
+  'MMM DD, YYYY': d3.timeParse('%b %d, %Y'),
+  'MMMM Do, YYYY': d =>
+    d3.timeParse('%B %d %Y')(regex.exec(d).splice(1).join(' ')),
+  'MMM Do, YYYY': d =>
+    d3.timeParse('%B %d %Y')(regex.exec(d).splice(1).join(' '))
+}
+
+export const TIME_FORMAT_TO_D3 = {
+  X: d3.timeParse('%s'),
+  x: d3.timeParse('%Q'),
+  'H:m': d3.timeParse('%H:%M'),
+  'HH:mmZ': d3.timeParse('%H:%M%Z'),
+  'h:m a': d3.timeParse('%H:%M %p'),
+  'H:m:s': d3.timeParse('%H:%M:%S'),
+  'h:m:s a': d3.timeParse('%H:%M:%S %p'),
+  'HH:mm:ssZZ': d3.timeParse('%H:%M:%S%Z'),
+  'HH:mm:ss.SSSS': d3.timeParse('%H:%M:%S.%L'),
+  'HH:mm:ss.SSSSZZ': d3.timeParse('%H:%M:%S.%L%Z')
+}
 
 /**
  * Convert the given value to a formated date string depending on it's name
