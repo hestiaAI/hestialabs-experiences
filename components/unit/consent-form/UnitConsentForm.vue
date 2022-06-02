@@ -25,12 +25,10 @@
         means.
       </p>
     </BaseAlert>
-    <!-- TODO replace this button with upload to bubble server -->
-    <!-- $uploadAvailable no longer exists -->
-    <VRow v-if="$uploadAvailable">
+    <VRow>
       <VCol>
         <BaseButton
-          text="Share results with hestia"
+          text="Share results with your group"
           :status="sentStatus"
           :error="!!sentErrorMessage"
           :progress="sentProgress"
@@ -155,7 +153,7 @@ export default {
       )}_UTC_${uniqueId}.zip`
       return filename
     },
-    async generateZIP() {
+    async generateZIP(publicKey) {
       const zip = new JSZip()
 
       const revResponse = await window.fetch('/git-revision.txt')
@@ -204,7 +202,6 @@ export default {
       }
 
       const content = await zip.generateAsync({ type: 'uint8array' })
-      const { publicKey } = this.config
       if (publicKey) {
         return this.encryptFile(content, publicKey)
       }
@@ -221,27 +218,49 @@ export default {
       )
       return cipherText
     },
+    getCookie(name) {
+      if (!document.cookie) {
+        return null
+      }
+      const cookie = document.cookie
+        .split(';')
+        .map(c => c.trim())
+        .filter(c => c.startsWith(name + '='))
+
+      if (cookie.length === 0) {
+        return null
+      }
+      return decodeURIComponent(cookie[0].split('=')[1])
+    },
     async sendForm() {
       this.sentStatus = false
       this.sentErrorMessage = undefined
       this.sentProgress = true
 
-      const content = await this.generateZIP()
+      const { publicKey } = this.config
+      const content = await this.generateZIP(publicKey)
       // Programmatically create the form data
       // Names must correspond to the dummy form defined in /static/export-data-form-dummy.html
       const formData = new FormData()
       const zip = new File([content], this.filename, {
         type: 'application/zip'
       })
-      formData.append('zip', zip, this.filename)
-      // formData.append('encrypted-zip', zip, this.filename)
+      formData.append('password', '0123')
+      formData.append('file', zip, this.filename)
       let success = false
       let errorMessage
       try {
-        const resp = await fetch('/api/functions/upload-background', {
-          method: 'POST',
-          body: formData
-        })
+        const authCookie = this.getCookie('csrftoken')
+        const resp = await fetch(
+          `${process.env.apiUrl}/bubbles/${this.$route.params.bubble}/files`,
+          {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': authCookie
+            },
+            body: formData
+          }
+        )
         if (resp.ok) {
           success = true
         } else {
