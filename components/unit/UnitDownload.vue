@@ -180,6 +180,7 @@ export default {
   data() {
     const experience = this.$store.getters.experience(this.$route)
     const experienceProps = pick(experience, [
+      'slug',
       'title',
       'dataPortal',
       'dataPortalHtml',
@@ -263,7 +264,8 @@ export default {
           this.apiStatus = null
           console.error(error)
         } else {
-          this.filenames = res
+          // TODO: refactor the filetring part, maybe an endpoint per experience in the backend ?
+          this.filenames = res.filter(f => this.slug.includes(f.split('_')[0]))
           this.apiStatus = null
         }
       })
