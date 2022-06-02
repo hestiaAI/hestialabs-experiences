@@ -99,7 +99,6 @@ export default {
           value: h
         }))
       }
-
       // Type detection
       const { headers, items } = detectTypes(tempHeaders, this.items)
 

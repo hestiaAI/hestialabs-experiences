@@ -28,7 +28,9 @@ $ cd ../hestialabs-experiences
 $ npm install
 ```
 
-5. to run experiences, open two console terminals, one in `hestialabs-experiences` and the other in `hestialabs`, and run `npm run dev` in both. A tab should open in your browser and allow you to run the experiences.
+5. Clone [hestialabs-bubble-server](https://github.com/hestiaAI/hestialabs-bubble-server), and install it as described in its README.md.
+
+6. to run experiences run `npm run dev`. This runs the three repos A tab should open in your browser and allow you to run the experiences. To run it without the bubble server and access our production server instead, run `API_URL=https://bubbles.hestialabs.org npm run dev`.
 
 ## Instances
 
@@ -53,7 +55,7 @@ Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-
 | -------------------- | -------------------------------------------------------------------------------- |
 | CONFIG_NAME          | Name of the configuration file (without extension: "workshop", "digipower" ...)  |
 | BASE_URL             | Url where the website is deployed (with protocol: "https://test.hestialabs.org") |
-| API_URL              | URL of the rest api (bubble server)                                              |
+| API_URL              | URL of the rest api (with protocol: "https://bubbles.hestialabs.com")            |
 
 Documentation for the configuration file can be found in [config/README.md](config)
 

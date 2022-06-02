@@ -10,10 +10,19 @@
           v-if="$route.path !== '/'"
           icon
           to="/"
-          class="v-btn__home mr-0 mr-sm-4"
+          class="v-btn__home mr-0"
           color="primary"
         >
           <VIcon>$vuetify.icons.mdiHome</VIcon>
+        </VBtn>
+        <VBtn
+          v-if="$auth.loggedIn"
+          icon
+          class="ml-1"
+          color="primary"
+          @click="$auth.logout()"
+        >
+          <VIcon>$vuetify.icons.mdiLogout</VIcon>
         </VBtn>
         <VSpacer />
         <div class="d-flex">
@@ -68,9 +77,8 @@
       </template>
       <div class="my-6">
         <LogoImg width="250" />
-        <TheExperienceMenu v-if="!$route.params.bubble" />
-        <h4 class="mt-6 mb-4 text-h4">Bubbles</h4>
         <TheBubbleMenu />
+        <TheExperienceMenu v-if="!$route.params.bubble" />
       </div>
     </VNavigationDrawer>
   </div>

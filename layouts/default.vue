@@ -1,5 +1,5 @@
 <template>
-  <VApp v-if="!$fetchState.pending">
+  <VApp v-if="$store.state.loaded">
     <TheAppBar />
     <VMain>
       <Nuxt />
@@ -55,27 +55,16 @@
 <script>
 import { mapGetters } from 'vuex'
 
-function validateRoute({ store, error, params: { bubble, experience } }) {
-  // Validate `bubble` parameter
-  if (bubble && !store.state.config.bubbles.includes(bubble)) {
-    return error({ statusCode: 404, message: 'Bubble Not Found' })
-  }
-  // Validate `experience` parameter
-  // 1. /experience/:experience
-  // 2. /bubble/:bubble/experience/:experience
-  if (
-    experience &&
-    (!store.getters.enabledExperiences.find(x => x.slug === experience) ||
-      (bubble &&
-        !store.state.config.bubbleConfig[bubble].experiences.includes(
-          experience
-        )))
-  ) {
-    return error({ statusCode: 404, message: 'Experience Not Found' })
-  }
-}
-
 export default {
+  async middleware({ store, $auth, params: { bubble }, isDev, $axios }) {
+    if (!store.state.loaded) {
+      await store.dispatch('loadExperiences', { isDev, $axios })
+    }
+    if (bubble && $auth.loggedIn && bubble !== $auth.user.username) {
+      // auto-logout if user tries to enter another bubble
+      await $auth.logout()
+    }
+  },
   data() {
     return {
       // Display offline message if user opens app when offline
@@ -83,11 +72,6 @@ export default {
       timeout: 5000,
       alert: false
     }
-  },
-  async fetch() {
-    const { context } = this.$nuxt
-    await context.store.dispatch('loadExperiences', context)
-    validateRoute(context)
   },
   head() {
     if (!this.appName) {
@@ -149,9 +133,6 @@ export default {
       this.snackbar = true
       // changing timeout property resets the timeout
       this.timeout = isOffline ? 5001 : 5000
-    },
-    '$route.params'() {
-      validateRoute(this.$nuxt.context)
     }
   },
   mounted() {

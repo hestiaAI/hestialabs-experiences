@@ -3,9 +3,14 @@
 </template>
 
 <script>
+import validate from '@/pages/validate'
 import { vueMeta } from '@/utils/utils'
 
 export default {
+  middleware: 'auth',
+  validate(context) {
+    return validate.experience(context) && validate.bubble(context)
+  },
   head() {
     const { title: t, subtitle: s } = this.$store.getters.experience(
       this.$route

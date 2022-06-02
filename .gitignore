@@ -89,6 +89,3 @@ sw.*
 # Vim swap files
 *.swp
 /static/git-revision.txt
-
-# npm config file
-.npmrc
