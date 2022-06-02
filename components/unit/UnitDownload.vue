@@ -41,6 +41,9 @@
                   >{{ nbSelected }} out of {{ nbFiles }} selected</span
                 >
                 <VSpacer></VSpacer>
+                <VBtn icon color="primary" class="mr-2" @click="fetchFilenames">
+                  <VIcon>$vuetify.icon.mdiCached</VIcon>
+                </VBtn>
                 <BaseButton
                   outlined
                   small
@@ -77,29 +80,30 @@
               </VCardText>
               <VSpacer></VSpacer>
               <VCardActions class="align-center justify-center">
-                <div v-if="apiLoading">
-                  ><BaseProgressCircular class="ma-0" /><span class="ml-3"
-                    >Fetching files from server...</span
-                  >
-                </div>
-                <div v-else-if="apiError">
+                <div v-if="apiError">
                   <BaseAlert type="error" dense text class="ma-0"
                     >{{ apiError }}
                   </BaseAlert>
                 </div>
+                <div v-else-if="apiStatus">
+                  <BaseProgressCircular class="ma-0" /><span class="ml-3"
+                    >Fetching files from server...</span
+                  >
+                </div>
                 <div v-else>
                   <BaseProgressCircular
                     class="ma-0"
-                    :indeterminate="timerPlay"
-                  /><span class="ml-3"
-                    >Updating files in {{ counter }} seconds</span
-                  >
+                    :indeterminate="!apiStatus"
+                  />
+                  <span class="ml-3">
+                    Updating files in {{ counter }} seconds
+                  </span>
                 </div>
               </VCardActions>
             </VCard>
           </VCol>
         </VRow>
-        <div justify="center" align="center">
+        <div justify="center" align="center" class="mt-3">
           <VFileInput
             v-model="privateKey"
             accept=".txt"
@@ -109,14 +113,40 @@
         </div>
         <div justify="center" align="center">
           <BaseButton
-            v-bind="{ success, progress, error }"
+            v-bind="{ success, progress, error, status }"
             :disabled="!selectedFiles.length"
             text="Explore the data"
             icon="mdiStepForward"
             class="my-sm-2 mr-sm-4"
-            @click="downloadFiles"
+            @click="fetchFiles"
           />
         </div>
+        <VRow>
+          <VCol>
+            <template v-if="progress">
+              <BaseProgressCircular class="mr-2" />
+              <span>Processing files...</span>
+            </template>
+            <template v-else-if="error || success">
+              <BaseAlert
+                :type="error ? 'error' : 'success'"
+                border="left"
+                dense
+                text
+                >{{ message }}
+              </BaseAlert>
+              <BaseAlert
+                v-if="!privateKey"
+                type="info"
+                border="left"
+                dense
+                text
+              >
+                The files may be encrypted, please enter your secret key.
+              </BaseAlert>
+            </template>
+          </VCol>
+        </VRow>
       </VCardText>
     </VCard>
   </VContainer>
@@ -125,7 +155,9 @@
 <script>
 import { pick } from 'lodash'
 import { filetype2icon, extension2filetype } from '@/utils/file-manager'
-const _sodium = require('libsodium-wrappers')
+import { decryptBlob } from '@/utils/encryption'
+import { getFilenames, getFile } from '@/utils/api'
+const util = require('util')
 export default {
   props: {
     success: {
@@ -158,14 +190,16 @@ export default {
     const bubbleProps = pick(bubbleConfig, ['dataFromBubble', 'publicKey'])
     return {
       timer: null,
-      timerPlay: true,
       counter: 5,
       apiError: null,
-      apiLoading: false,
+      apiStatus: '',
       filenames: [],
       fileItems: [],
+      downloadedFiles: [],
+      decryptedFiles: [],
       selectedFiles: [],
       privateKey: null,
+      status: false,
       ...experienceProps,
       ...bubbleProps
     }
@@ -197,13 +231,12 @@ export default {
     }
   },
   mounted() {
-    this.fetchData()
+    this.fetchFilenames()
     this.timer = setInterval(() => {
-      if (this.timerPlay) {
+      if (!this.apiStatus) {
         this.counter--
         if (this.counter <= 0) {
-          this.counter = 5
-          this.fetchData()
+          this.fetchFilenames()
         }
       }
     }, 1000)
@@ -219,83 +252,58 @@ export default {
         this.selectedFiles = []
       }
     },
-    async fetchData() {
+    fetchFilenames() {
       this.apiError = null
-      this.apiLoading = true
-      try {
-        const resp = await fetch(
-          `${process.env.apiUrl}/bubbles/${this.dataFromBubble}/files`,
-          {
-            method: 'GET'
-          }
-        )
+      this.apiStatus = 'Fetching filenames from server...'
+      this.counter = 5
+      getFilenames(this.dataFromBubble, (error, res) => {
         this.apiLoading = false
-        const response = await resp.json()
-        if (!resp.ok) {
-          this.apiError = response
+        if (error) {
+          this.apiError = error.toString()
+          this.apiStatus = null
+          console.error(error)
         } else {
-          this.filenames = response
+          this.filenames = res
+          this.apiStatus = null
         }
-      } catch (e) {
-        this.apiError = e
-        console.error(e)
-      }
+      })
     },
-    async downloadFiles() {
-      this.timerPlay = false
+    fetchFiles() {
       this.apiError = null
-      this.apiLoading = true
-      const files = await Promise.all(
-        this.selectedFiles.map(async fileIdx => {
-          const filename = this.fileItems[fileIdx].filename
-          try {
-            const resp = await fetch(
-              `${process.env.apiUrl}/bubbles/${this.dataFromBubble}/file/${filename}`,
-              {
-                method: 'GET'
-              }
-            )
-            this.apiLoading = false
-            let blob = await resp.blob()
-            if (this.privateKey) {
-              const [decryptedBlob, error] = await this.decryptBlob(
-                blob,
-                await this.privateKey.text(),
-                this.publicKey
-              )
-              if (error) console.error(error)
-              else blob = decryptedBlob
-            }
-            if (!resp.ok) {
-              this.apiError = blob
-              console.error(blob)
-            } else {
-              return new File([blob], filename)
-            }
-          } catch (e) {
-            this.apiError = e
-            console.error(e)
-          }
-        })
+      this.apiStatus = 'Downloading files from server...'
+      this.status = true
+
+      const getFilePromise = util.promisify(getFile)
+      const decryptBlobPromise = util.promisify(decryptBlob)
+      const filenames = this.selectedFiles.map(
+        idx => this.fileItems[idx].filename
       )
-      console.log(files)
-      this.$emit('update', { uppyFiles: files })
-    },
-    async decryptBlob(blob, secretKey, publicKey) {
-      try {
-        await _sodium.ready
-        const sodium = _sodium
-        const sk = sodium.from_hex(secretKey)
-        const pk = sodium.from_hex(publicKey)
-        const buf = await blob.arrayBuffer()
-        const ciphertext = new Uint8Array(buf)
-        return [
-          new Blob([sodium.crypto_box_seal_open(ciphertext, pk, sk)]),
-          null
-        ]
-      } catch (error) {
-        return [null, error]
-      }
+
+      // First Fetch the files
+      Promise.all(
+        filenames.map(filename =>
+          getFilePromise(this.dataFromBubble, filename)
+            .then(fileBlob => {
+              this.apiStatus = 'Decrypting files...'
+              return this.privateKey
+                ? this.privateKey
+                    .text()
+                    .then(privateKey =>
+                      decryptBlobPromise(fileBlob, privateKey, this.publicKey)
+                    )
+                : fileBlob
+            })
+            .then(blob => new File([blob], filename))
+        )
+      )
+        .then(decryptedFiles => {
+          this.apiStatus = 'Processing files...'
+          this.$emit('update', { uppyFiles: decryptedFiles })
+        })
+        .catch(error => {
+          console.error(error)
+          this.apiError = error.toString()
+        })
     }
   }
 }
