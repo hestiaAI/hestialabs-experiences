@@ -1,0 +1,19 @@
+{
+  "name": "@hestiaai/tracker-control-agg",
+  "version": "0.0.0",
+  "browser": "dist/index",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs",
+    "directory": "packages/tracker-control-agg"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}
