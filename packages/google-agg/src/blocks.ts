@@ -1,5 +1,5 @@
 import type { ViewBlocks } from '@/types'
-import allPlaceVisit from './sql/all-place-visit.sql'
+import allPlaceVisit from '../../google/src/sql/all-place-visit.sql'
 
 const blocks: ViewBlocks = [
   {
