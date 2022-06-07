@@ -7,7 +7,6 @@ const blocks: ViewBlocks = [
     sql: allPlaceVisit,
     files: ['placeVisited'],
     visualization: 'ChartViewGooglePlaces.vue',
-    showTable: false,
     title: 'Places visited',
     text: ''
   }

@@ -221,7 +221,6 @@ const blocks: ViewBlocks = [
       }
     },
     visualization: 'ChartViewTimedObservationsViewer.vue',
-    showTable: false,
     title: 'My activity information',
     text: 'Overview of what google knows about you, get all the dated observations we found in your Google My Activity folder.'
   },
@@ -230,7 +229,6 @@ const blocks: ViewBlocks = [
     sql: allPlaceVisit,
     files: ['LOCATION_HISTORY'],
     visualization: 'ChartViewGooglePlaces.vue',
-    showTable: false,
     title: 'Places visited',
     text: ''
   },
@@ -239,7 +237,6 @@ const blocks: ViewBlocks = [
     sql: placeLinkedToCandidate,
     files: ['LOCATION_HISTORY'],
     visualization: 'ChartViewGoogleCandidates.vue',
-    showTable: false,
     title: 'Other Candidates',
     text: ''
   },
@@ -248,7 +245,6 @@ const blocks: ViewBlocks = [
     sql: allActivitySegment,
     files: ['LOCATION_HISTORY'],
     visualization: 'ChartViewGoogleTrips.vue',
-    showTable: false,
     title: 'Travels',
     text: ''
   },
@@ -257,7 +253,6 @@ const blocks: ViewBlocks = [
     sql: recordsLinkedToTrips,
     files: ['LOCATION_HISTORY'],
     visualization: 'ChartViewGoogleRecords.vue',
-    showTable: false,
     title: 'Records',
     text: ''
   },
@@ -266,7 +261,6 @@ const blocks: ViewBlocks = [
     sql: recordsLinkedToMac,
     files: ['LOCATION_HISTORY'],
     visualization: 'ChartViewGoogleWifi.vue',
-    showTable: false,
     title: 'Wifi',
     text: ''
   }

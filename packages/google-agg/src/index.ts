@@ -11,7 +11,6 @@ const options: ExperienceOptions = {
     placeVisited: '*/block01.json'
   },
   icon: icon,
-  keepOnlyFiles: true,
   slug: 'google-agg',
   title: 'Google Agg',
   viewBlocks

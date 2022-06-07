@@ -21,7 +21,6 @@ const blocks: ViewBlocks = [
       seriesAccessor: { text: 'Action', value: 'actionType' },
       topAccessor: { text: 'Action', value: 'accountName' }
     },
-    showTable: true,
     title: 'Views',
     text: ''
   },
@@ -38,7 +37,6 @@ const blocks: ViewBlocks = [
       seriesAccessor: { text: 'Action', value: 'actionType' },
       topAccessor: { text: 'Action', value: 'accountName' }
     },
-    showTable: false,
     title: 'Likes',
     text: ''
   },
@@ -47,7 +45,6 @@ const blocks: ViewBlocks = [
     sql: sqlMessages,
     files: ['messages'],
     visualization: 'ChartViewOverviewInstagramMessage.vue',
-    showTable: false,
     title: 'Messages',
     text: ''
   },
@@ -62,7 +59,6 @@ const blocks: ViewBlocks = [
       dateAccessor: { text: 'Date', value: 'followDate' },
       seriesAccessor: { text: 'Action', value: 'followType' }
     },
-    showTable: false,
     title: 'Follows',
     text: ''
   },
