@@ -199,7 +199,10 @@ export default {
         this.$emit('current-items', filteredItems)
         this.$store.commit('setResult', {
           experience: hash.slice(1),
-          result: filteredItems
+          result: {
+            headers: this.headers,
+            items: filteredItems
+          }
         })
       })
     }
