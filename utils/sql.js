@@ -314,11 +314,10 @@ export async function generateRecords(fileManager, { tables, getters }) {
           path: filesPaths[i]
         }
       })
-
       // iterate over matched files, parse, and generate records from each
       jsonFiles.forEach(file => {
         try {
-          const json = JSON.parse(file.content)
+          const json = isCSV ? file.content : JSON.parse(file.content)
 
           // Update the current file path from defaultValues if needed
           const defaultValuesCopy = _.cloneDeep(defaultValues)
