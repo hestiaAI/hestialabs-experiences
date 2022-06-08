@@ -4,13 +4,16 @@
     <VForm @submit.prevent="login">
       <VTextField :value="username" label="Username" readonly />
       <VTextField
+        ref="password"
         v-model="password"
         label="Password"
+        placeholder="Type..."
         required
         :type="passwordType"
         :append-icon="passwordAppendIcon"
         error-count="10"
         :error-messages="errorMessage"
+        autofocus
         @click:append="onClickAppend"
       />
       <BaseButton type="submit">Login</BaseButton>
@@ -66,6 +69,10 @@ export default {
   watch: {
     password() {
       this.errorMessage = ''
+    },
+    $route() {
+      // focus password input on route change
+      this.$refs.password.$refs.input.focus()
     }
   },
   methods: {
@@ -88,7 +95,8 @@ export default {
         const response = await this.$auth.loginWith('local', {
           data: { username, password }
         })
-        this.$auth.setUser({ username })
+        const bubble = this.$store.state.config.bubbleConfig[username]
+        this.$auth.setUser({ username, bubble })
         console.info(response.statusText)
       } catch ({ response }) {
         if (response.status === 403) {
