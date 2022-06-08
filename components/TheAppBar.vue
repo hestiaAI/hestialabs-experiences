@@ -10,7 +10,7 @@
           v-if="$route.path !== '/'"
           icon
           to="/"
-          class="v-btn__home mr-0 mr-sm-4"
+          class="v-btn__home mr-0"
           color="primary"
         >
           <VIcon>$vuetify.icons.mdiHome</VIcon>
@@ -68,9 +68,20 @@
       </template>
       <div class="my-6">
         <LogoImg width="250" />
-        <TheExperienceMenu v-if="!$route.params.bubble" />
-        <h4 class="mt-6 mb-4 text-h4">Bubbles</h4>
+        <template v-if="$route.params.bubble">
+          <VSubheader class="mt-2">
+            Connected to bubble:
+            <span class="font-weight-black">
+              &nbsp;{{ $auth.user.bubble.title }}
+            </span>
+          </VSubheader>
+        </template>
         <TheBubbleMenu />
+        <TheExperienceMenu
+          v-if="$route.params.bubble"
+          :include="$auth.user.bubble.experiences"
+        />
+        <TheExperienceMenu v-else />
       </div>
     </VNavigationDrawer>
   </div>

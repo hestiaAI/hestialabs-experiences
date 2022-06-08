@@ -69,10 +69,38 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/axios'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
 
   axios: {
-    proxy: true // Can be also an object with default options
+    baseURL: apiUrl
+  },
+
+  auth: {
+    fullPathRedirect: true,
+    redirect: {
+      login: '/login',
+      logout: false,
+      home: '/'
+    },
+    strategies: {
+      local: {
+        token: {
+          property: false,
+          required: false
+        },
+        user: {
+          autoFetch: false
+        },
+        endpoints: {
+          login: {
+            url: '/bubbles/login',
+            method: 'post'
+          },
+          logout: { url: '/bubbles/logout', method: 'get' },
+          user: false
+        }
+      }
+    }
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa

@@ -10,6 +10,7 @@
             <p v-if="$route.params.experience === 'explorer'" class="body-1">
               Explore the structure and contents of any file.
             </p>
+            <!-- eslint-disable vue/no-v-html -->
             <p
               v-else-if="dataPortalHtml"
               class="body-1"

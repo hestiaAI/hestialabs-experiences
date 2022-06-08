@@ -95,6 +95,7 @@ import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
 import { removeEmptyBins } from './utils/DCHelpers'
+import { datetimeFormatter } from '@/utils/dates'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -137,7 +138,6 @@ export default {
       ]
 
       // Parse and format data
-      const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
       const formatDay = d3.timeFormat('%B %d, %Y')
       this.results = this.values.map(d => {
         const date = new Date(d.sendDatetime)
@@ -145,7 +145,7 @@ export default {
           senderName: decodeURIComponent(escape(d.senderName)),
           messageContent: decodeURIComponent(escape(d.messageContent)),
           date,
-          dateStr: formatTime(date),
+          dateStr: datetimeFormatter(date),
           month: d3.timeMonth(date), // pre-calculate months for better performance
           day: d3.timeDay(date),
           weekDay: date.getDay(), // pre-calculate day of week for better performance

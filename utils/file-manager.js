@@ -17,7 +17,7 @@ import { itemifyJSON, nJsonPoints } from './json'
 import { getCsvHeadersAndItems } from './csv'
 import { runWorker } from './utils'
 
-const filetype2icon = {
+export const filetype2icon = {
   folder: mdiFolder,
   zip: mdiFolderZip,
   json: mdiCodeJson,
@@ -32,6 +32,7 @@ const filetype2icon = {
 export const extension2filetype = {
   tar: 'zip',
   js: 'json',
+  ndjson: 'json',
   png: 'img',
   jpeg: 'img',
   jpg: 'img',

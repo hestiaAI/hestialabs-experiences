@@ -30,7 +30,9 @@ $ cd ../hestialabs-experiences
 $ npm install
 ```
 
-5. to run experiences, open two console terminals, one in `hestialabs-experiences` and the other in `hestialabs`, and run `npm run dev` in both. A tab should open in your browser and allow you to run the experiences.
+5. Clone [hestialabs-bubble-server](https://github.com/hestiaAI/hestialabs-bubble-server), and install it as described in its README.md.
+
+6. to run experiences run `npm run dev`. This runs the three repos A tab should open in your browser and allow you to run the experiences. To run it without the bubble server and access our production server instead, run `API_URL=https://bubbles.hestialabs.org npm run dev`.
 
 ## Instances
 
@@ -55,7 +57,7 @@ Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-
 |----------------------|----------------------------------------------------------------------------------|
 | CONFIG_NAME          | Name of the configuration file (without extension: "workshop", "digipower" ...)  |
 | BASE_URL             | Url where the website is deployed (with protocol: "https://test.hestialabs.org") |
-| API_URL              | URL of the rest api (bubble server)                                              |
+| API_URL              | URL of the rest api (with protocol: "https://bubbles.hestialabs.com")            |
 
 Documentation for the configuration file can be found in [config/README.md](config)
 
@@ -148,3 +150,15 @@ We work with a version of npm more recent than the one shipped with the node LTS
 
 - download [this](https://gist.github.com/nokidding/aafaf90adc80cbce54b676340817bb13) as updateNpm.bat file
 - open powershell in that same folder and run this command ./updateNpm.bat latest
+
+## Graphs, Plots and Visualisation
+
+Is is possible to dynamically create graphic representation of the data. The can take the form of charts (hystograms, pie charts etc), maps with overlay, etc.
+
+Chart type are defined by files in [this directory](https://github.com/hestiaAI/hestialabs-experiences/tree/master/components/chart/view). 
+The files use the [D3](https://vuejsexamples.com/tag/d3/) graphics and charts library on top of the [Vue framework](https://vuejs.org/).
+
+The charts are then available for use in [hestialabs](https://github.com/hestiaAI/hestialabs) experience packages. They are called in `blocks.ts` files. For instance, the [Netflix blocks.ts file](https://github.com/hestiaAI/hestialabs/blob/master/packages/netflix/src/blocks.ts) calls `ChartViewTimeSeries.vue` as defined in the file [ChartViewTimeSeries.vue](https://github.com/hestiaAI/hestialabs-experiences/blob/master/components/chart/view/ChartViewTimeSeries.vue).
+
+For debugging purposes, passing option `showTable: true` displays a text table representation of the data.
+
