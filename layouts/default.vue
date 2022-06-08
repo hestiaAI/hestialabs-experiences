@@ -56,13 +56,25 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  async middleware({ store, $auth, params: { bubble }, isDev, $axios }) {
+  async middleware({
+    store,
+    params: { bubble },
+    route: { path },
+    isDev,
+    redirect,
+    $auth,
+    $axios
+  }) {
     if (!store.state.loaded) {
       await store.dispatch('loadExperiences', { isDev, $axios })
     }
     if (bubble && $auth.loggedIn && bubble !== $auth.user.username) {
       // auto-logout if user tries to enter another bubble
       await $auth.logout()
+      return redirect({
+        name: 'login',
+        query: { redirect: path }
+      })
     }
   },
   data() {

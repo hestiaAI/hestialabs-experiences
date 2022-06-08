@@ -79,7 +79,7 @@ export default {
     fullPathRedirect: true,
     redirect: {
       login: '/login',
-      logout: '/',
+      logout: false,
       home: '/'
     },
     strategies: {

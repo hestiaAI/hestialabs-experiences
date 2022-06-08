@@ -7,7 +7,6 @@
         :key="slug"
         nuxt
         :to="{ name: 'bubble-bubble', params: { bubble: slug } }"
-        exact
       >
         <VListItemAvatar tile>
           <VImg :src="icon" :lazy-src="icon" />
