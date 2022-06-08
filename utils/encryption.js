@@ -1,16 +1,12 @@
+import SparkMD5 from 'spark-md5'
+
 const _sodium = require('libsodium-wrappers')
 
-export function encryptFile(content, publicKey, callback) {
-  _sodium.ready
-    .then(() => {
-      const sodium = _sodium
-      const cipherText = sodium.crypto_box_seal(
-        content,
-        sodium.from_hex(publicKey)
-      )
-      callback(null, cipherText)
-    })
-    .catch(error => callback(new Error('Encryption, ' + error.message)))
+export async function encryptFile(content, publicKey) {
+  await _sodium.ready
+  const publicKeyB = _sodium.from_hex(publicKey)
+  const cipherText = _sodium.crypto_box_seal(content, publicKeyB)
+  return cipherText
 }
 
 export function decryptBlob(blob, secretKey, publicKey, callback) {
@@ -29,4 +25,46 @@ export function decryptBlob(blob, secretKey, publicKey, callback) {
       callback(null, decryptedBlob)
     })
     .catch(error => callback(new Error('Decryption, ' + error.message)))
+}
+
+export function hashString(string) {
+  const spark = new SparkMD5()
+  spark.append(string)
+  return spark.end()
+}
+
+// https://github.com/satazor/js-spark-md5
+export function hashFile(file) {
+  return new Promise(function (resolve, reject) {
+    const blobSlice = File.prototype.slice
+    // Read in chunks of 2MB
+    const chunkSize = 2097152
+    const chunks = Math.ceil(file.size / chunkSize)
+    let currentChunk = 0
+    const spark = new SparkMD5.ArrayBuffer()
+    const fileReader = new FileReader()
+
+    fileReader.onload = function (e) {
+      spark.append(e.target.result) // Append array buffer
+      currentChunk++
+      if (currentChunk < chunks) {
+        loadNext()
+      } else {
+        resolve(spark.end())
+      }
+    }
+
+    fileReader.onerror = function () {
+      reject(new Error('hashing failed'))
+    }
+
+    function loadNext() {
+      const start = currentChunk * chunkSize
+      const end = Math.min(file.size, start + chunkSize)
+
+      fileReader.readAsArrayBuffer(blobSlice.call(file, start, end))
+    }
+
+    loadNext()
+  })
 }

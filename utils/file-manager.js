@@ -16,6 +16,7 @@ import { matchNormalized, findMatchesInContent } from './accessor'
 import { itemifyJSON, nJsonPoints } from './json'
 import { getCsvHeadersAndItems } from './csv'
 import { runWorker } from './utils'
+import { hashFile, hashString } from './encryption'
 
 export const filetype2icon = {
   folder: mdiFolder,
@@ -218,6 +219,15 @@ export default class FileManager {
 
   hasFile(filePath) {
     return _.has(this.fileDict, filePath)
+  }
+
+  /**
+   * Return a MD5 hash
+   */
+  async hashAllFiles() {
+    const hashPromises = Object.values(this.fileDict).map(hashFile)
+    const fileHashes = await Promise.all(hashPromises)
+    return hashString(fileHashes.join(''))
   }
 
   /**

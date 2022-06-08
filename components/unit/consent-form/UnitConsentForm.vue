@@ -67,11 +67,9 @@
 <script>
 import { mapState } from 'vuex'
 import JSZip from 'jszip'
-import { nanoid } from 'nanoid'
 import { padNumber } from '~/utils/utils'
+import { encryptFile } from '~/utils/encryption'
 import { createObjectURL, mimeTypes } from '@/utils/utils'
-
-const _sodium = require('libsodium-wrappers')
 
 // In the case of changes that would break the import, this version number must be incremented
 // and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
@@ -133,27 +131,22 @@ export default {
     async downloadZIP() {
       this.generateStatus = false
       this.generateProgress = true
+
       const content = await this.generateZIP()
       this.generateStatus = true
       this.generateProgress = false
-
       this.href = createObjectURL(content, mimeTypes.zip)
       await this.$nextTick()
       this.$refs.downloadLink.click()
     },
-    makeFilename(timestamp) {
+    async makeFilename(timestamp) {
       const date = new Date(timestamp)
-      const uniqueId = nanoid(10)
+      const uniqueId = await this.fileManager.hashAllFiles()
       const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
         date.getUTCMonth() + 1,
         2
       )}-${padNumber(date.getUTCDate(), 2)}`
-      const filename = `${
-        this.$route.params.experience
-      }_${yearMonthDay}_${padNumber(date.getUTCHours(), 2)}${padNumber(
-        date.getUTCMinutes(),
-        2
-      )}_UTC_${uniqueId}.zip`
+      const filename = `${this.$route.params.experience}_${yearMonthDay}_${uniqueId}.zip`
       return filename
     },
     async generateZIP(publicKey) {
@@ -163,7 +156,7 @@ export default {
       const revText = await revResponse.text()
       const gitRevision = revText.replace(/[\n\r]/g, '')
       const timestamp = Date.now()
-      this.filename = this.makeFilename(timestamp)
+      this.filename = await this.makeFilename(timestamp)
       const experience = {
         experience: this.$route.params.experience,
         timestamp,
@@ -206,20 +199,9 @@ export default {
 
       const content = await zip.generateAsync({ type: 'uint8array' })
       if (publicKey) {
-        return this.encryptFile(content, publicKey)
+        return encryptFile(content, publicKey)
       }
       return content
-    },
-    async encryptFile(content, publicKey) {
-      // Encrypt the zip
-      await _sodium.ready
-      const sodium = _sodium
-
-      const cipherText = sodium.crypto_box_seal(
-        content,
-        sodium.from_hex(publicKey)
-      )
-      return cipherText
     },
     getCookie(name) {
       if (!document.cookie) {
