@@ -15,15 +15,6 @@
         >
           <VIcon>$vuetify.icons.mdiHome</VIcon>
         </VBtn>
-        <VBtn
-          v-if="$auth.loggedIn"
-          icon
-          class="ml-1"
-          color="primary"
-          @click="$auth.logout()"
-        >
-          <VIcon>$vuetify.icons.mdiLogout</VIcon>
-        </VBtn>
         <VSpacer />
         <div class="d-flex">
           <VImg max-width="30" :src="e.icon" :lazy-src="e.icon" contain />
@@ -77,8 +68,20 @@
       </template>
       <div class="my-6">
         <LogoImg width="250" />
+        <template v-if="$route.params.bubble">
+          <VSubheader class="mt-2">
+            Connected to bubble:
+            <span class="font-weight-black">
+              &nbsp;{{ $auth.user.bubble.title }}
+            </span>
+          </VSubheader>
+        </template>
         <TheBubbleMenu />
-        <TheExperienceMenu v-if="!$route.params.bubble" />
+        <TheExperienceMenu
+          v-if="$route.params.bubble"
+          :include="$auth.user.bubble.experiences"
+        />
+        <TheExperienceMenu v-else />
       </div>
     </VNavigationDrawer>
   </div>
