@@ -25,7 +25,7 @@
         means.
       </p>
     </BaseAlert>
-    <VRow>
+    <VRow v-if="bubbleName">
       <VCol>
         <BaseButton
           text="Share results with your group"
@@ -97,6 +97,9 @@ export default {
     ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles']),
     config() {
       return this.$store.getters.config(this.$route)
+    },
+    bubbleName() {
+      return this.$route.params.bubble
     },
     missingRequiredFields() {
       return !this.consentForm.every(section => {
