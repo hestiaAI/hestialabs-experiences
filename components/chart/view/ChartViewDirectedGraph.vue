@@ -6,7 +6,7 @@
 
 <script>
 import * as d3 from 'd3'
-import forceBoundary from 'd3-force-boundary'
+import forceBoundary from 'd3-force-boundary' // Faire joli TODO check
 import mixin from './mixin'
 export default {
   name: 'NetworkXGraph',
@@ -31,14 +31,85 @@ export default {
   },
   computed: {
     jsonData() {
+      // Là dedans que tu construis ton format
       return {
-        nodes: [],
-        edges: []
+        nodes: [
+          { color: '#9E99FF', size: 16, weight: 3, id: 'Bisnode' },
+          { color: '#FFFFFF', size: 10, weight: 1, id: 'Mobile Vikings' },
+          { color: '#FFFFFF', size: 10, weight: 1, id: 'Labour Party' },
+          { color: '#FFFFFF', size: 10, weight: 1, id: 'Aamulehti' },
+          { color: '#FFFFFF', size: 10, weight: 1, id: 'Gigantti' },
+          { color: '#9E99FF', size: 16, weight: 3, id: 'Sanoma' },
+          { color: '#CDCCFF', size: 14, weight: 2, id: 'NetricSales' },
+          { color: '#FFFFFF', size: 10, weight: 1, id: 'Samsung Android' },
+          { color: '#FFFFFF', size: 10, weight: 1, id: 'Lenovo Clock' },
+          { color: '#FFFFFF', size: 10, weight: 1, id: 'Experian' },
+          { color: '#FFFFFF', size: 10, weight: 1, id: 'Booking.com' },
+          { color: '#FFFFFF', size: 10, weight: 1, id: 'TikTok' },
+          { color: '#FFFFFF', size: 10, weight: 1, id: 'HSL' },
+          { color: '#FFFFFF', size: 10, weight: 1, id: 'Yle' },
+          { color: '#FFFFFF', size: 10, weight: 1, id: 'Helsingin Sanomat' },
+          { color: '#58539E', size: 22, weight: 6, id: 'Facebook' },
+          { color: '#CDCCFF', size: 14, weight: 2, id: 'AdForm' },
+          { color: '#58539E', size: 28, weight: 9, id: 'Google' },
+          { color: '#9E99FF', size: 16, weight: 3, id: 'Yandex' },
+          { color: '#CDCCFF', size: 14, weight: 2, id: 'AppNexus' },
+          { color: '#7F79E5', size: 18, weight: 4, id: 'PubMatic' },
+          { color: '#CDCCFF', size: 14, weight: 2, id: 'Akamai' },
+          { color: '#9E99FF', size: 16, weight: 3, id: 'Amazon.com' },
+          { color: '#CDCCFF', size: 14, weight: 2, id: 'Adobe' },
+          { color: '#CDCCFF', size: 14, weight: 2, id: 'Fastly' },
+          { color: '#CDCCFF', size: 14, weight: 2, id: 'Amobee' },
+          { color: '#CDCCFF', size: 14, weight: 2, id: 'BidSwitch' },
+          { color: '#CDCCFF', size: 14, weight: 2, id: 'Criteo' },
+          { color: '#CDCCFF', size: 14, weight: 2, id: 'ID5' },
+          { color: '#CDCCFF', size: 14, weight: 2, id: 'Outbrain' },
+          { color: '#CDCCFF', size: 14, weight: 2, id: 'Taboola' }
+        ],
+        links: [
+          { weight: 1, source: 'Bisnode', target: 'Facebook' },
+          { weight: 1, source: 'Mobile Vikings', target: 'Facebook' },
+          { weight: 1, source: 'Mobile Vikings', target: 'Bisnode' },
+          { weight: 1, source: 'Labour Party', target: 'Facebook' },
+          { weight: 1, source: 'Aamulehti', target: 'Sanoma' },
+          { weight: 1, source: 'Aamulehti', target: 'AdForm' },
+          { weight: 1, source: 'Aamulehti', target: 'Google' },
+          { weight: 1, source: 'Aamulehti', target: 'PubMatic' },
+          { weight: 1, source: 'Gigantti', target: 'Facebook' },
+          { weight: 1, source: 'Gigantti', target: 'Google' },
+          { weight: 1, source: 'Gigantti', target: 'Bisnode' },
+          { weight: 1, source: 'Gigantti', target: 'Yandex' },
+          { weight: 1, source: 'Sanoma', target: 'AppNexus' },
+          { weight: 1, source: 'Sanoma', target: 'NetricSales' },
+          { weight: 1, source: 'NetricSales', target: 'PubMatic' },
+          { weight: 1, source: 'Samsung Android', target: 'Google' },
+          { weight: 1, source: 'Lenovo Clock', target: 'Google' },
+          { weight: 1, source: 'Experian', target: 'Facebook' },
+          { weight: 1, source: 'Booking.com', target: 'Google' },
+          { weight: 1, source: 'TikTok', target: 'Google' },
+          { weight: 1, source: 'HSL', target: 'Google' },
+          { weight: 1, source: 'Yle', target: 'Google' },
+          { weight: 1, source: 'Yle', target: 'Akamai' },
+          { weight: 1, source: 'Yle', target: 'Amazon.com' },
+          { weight: 1, source: 'Yle', target: 'Adobe' },
+          { weight: 1, source: 'Yle', target: 'Fastly' },
+          { weight: 1, source: 'Helsingin Sanomat', target: 'Sanoma' },
+          { weight: 1, source: 'Helsingin Sanomat', target: 'Amazon.com' },
+          { weight: 1, source: 'Helsingin Sanomat', target: 'Amobee' },
+          { weight: 1, source: 'Helsingin Sanomat', target: 'BidSwitch' },
+          { weight: 1, source: 'Helsingin Sanomat', target: 'Criteo' },
+          { weight: 1, source: 'Helsingin Sanomat', target: 'ID5' },
+          { weight: 1, source: 'Helsingin Sanomat', target: 'Outbrain' },
+          { weight: 1, source: 'Helsingin Sanomat', target: 'PubMatic' },
+          { weight: 1, source: 'Helsingin Sanomat', target: 'Taboola' },
+          { weight: 1, source: 'Helsingin Sanomat', target: 'Yandex' }
+        ]
       }
     }
   },
   methods: {
     drawViz() {
+      // Init of everything
       // Init Svg container
       d3.select('#' + this.graphId + ' svg').remove()
       this.svg = d3
@@ -49,6 +120,7 @@ export default {
         .style('padding', this.padding)
         .style('margin', this.margin)
         .classed('svg-content', true)
+      this.updateViz()
     },
     updateViz() {
       // Nodes size scale
