@@ -32,6 +32,7 @@ export const filetype2icon = {
 export const extension2filetype = {
   tar: 'zip',
   js: 'json',
+  ndjson: 'json',
   png: 'img',
   jpeg: 'img',
   jpg: 'img',
