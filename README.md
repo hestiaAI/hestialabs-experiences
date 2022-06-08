@@ -154,7 +154,7 @@ We work with a version of npm more recent than the one shipped with the node LTS
 Is is possible to dynamically create graphic representation of the data. The can take the form of charts (hystograms, pie charts etc), maps with overlay, etc.
 
 Chart type are defined by files in [this directory](https://github.com/hestiaAI/hestialabs-experiences/tree/master/components/chart/view). 
-The files use the [Vue framework](https://vuejs.org/).
+The files use the [D3](https://vuejsexamples.com/tag/d3/) graphics and charts library on top of the [Vue framework](https://vuejs.org/).
 
 The charts are then available for use in [hestialabs](https://github.com/hestiaAI/hestialabs) experience packages. They are called in `blocks.ts` files. For instance, the [Netflix blocks.ts file](https://github.com/hestiaAI/hestialabs/blob/master/packages/netflix/src/blocks.ts) calls `ChartViewTimeSeries.vue` as defined in the file [ChartViewTimeSeries.vue](https://github.com/hestiaAI/hestialabs-experiences/blob/master/components/chart/view/ChartViewTimeSeries.vue).
 
