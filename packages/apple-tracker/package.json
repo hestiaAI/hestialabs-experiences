@@ -1,6 +1,6 @@
 {
-  "name": "@hestiaai/instagram",
-  "version": "0.0.1-alpha.22",
+  "name": "@hestiaai/apple-tracker",
+  "version": "0.0.1-alpha.0",
   "browser": "dist/index",
   "type": "module",
   "files": [
@@ -9,7 +9,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/instagram"
+    "directory": "packages/apple-tracker"
   },
   "publishConfig": {
     "access": "public"
