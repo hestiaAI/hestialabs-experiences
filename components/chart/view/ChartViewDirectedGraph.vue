@@ -20,7 +20,7 @@ export default {
     },
     height: {
       type: Number,
-      default: () => 400
+      default: () => 600
     },
     padding: {
       type: Number,
@@ -76,7 +76,7 @@ export default {
           id: k,
           weight: temp[k],
           size: 10 + temp[k] - 1 * 2,
-          color: colors[Math.min(colors.length, temp[k])]
+          color: colors[Math.min(colors.length - 1, temp[k])]
         })
       }
 
@@ -128,7 +128,7 @@ export default {
           })
         )
         .force('center', d3.forceCenter(this.width / 2, this.height / 2))
-        .force('charge', d3.forceManyBody().strength(-150))
+        .force('charge', d3.forceManyBody().strength(-1000))
         .force(
           'collide',
           d3
@@ -140,6 +140,25 @@ export default {
         )
 
       // Draw links
+      // Arrow definition
+      //      this.svg
+      //        .append('defs')
+      //        .append('marker')
+      //        .attr({
+      //          id: 'arrowhead',
+      //          viewBox: '-0 -5 10 10',
+      //          refX: 13,
+      //          refY: 0,
+      //          orient: 'auto',
+      //          markerWidth: 13,
+      //          markerHeight: 13,
+      //          xoverflow: 'visible'
+      //        })
+      //        .append('svg:path')
+      //        .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+      //        .attr('fill', '#999')
+      //        .style('stroke', 'none')
+
       const link = this.svg
         .append('g')
         .attr('id', 'links')
@@ -151,7 +170,8 @@ export default {
           return 1 * d.weight
         })
         .attr('stroke', 'grey')
-        .attr('marker-end', 'url(#end)')
+        .attr('fill', 'none')
+      //        .attr('marker-end', 'url(#arrow)')
 
       // Draw nodes
       const node = this.svg
