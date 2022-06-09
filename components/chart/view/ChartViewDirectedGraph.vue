@@ -7,7 +7,9 @@
 <script>
 import * as d3 from 'd3'
 import forceBoundary from 'd3-force-boundary' // Faire joli TODO check
+import _ from 'lodash'
 import mixin from './mixin'
+
 export default {
   name: 'NetworkXGraph',
   mixins: [mixin],
@@ -32,80 +34,60 @@ export default {
   computed: {
     jsonData() {
       // Là dedans que tu construis ton format
+      const categoriesToKeep = [
+        'FingerprintingGeneral',
+        'FingerprintingInvasive'
+      ]
+
+      let result = this.values.filter(row =>
+        categoriesToKeep.includes(row.Category)
+      )
+      result = result.map(o => _.pick(o, ['App', 'Tracker']))
+
+      const nodesToRemove = ['Chrome', 'Firefox', 'Samsung Internet']
+      result = result.filter(row => !nodesToRemove.includes(row.App))
+
+      const links = result.map(function (item) {
+        return { source: item.App, target: item.Tracker, weight: 1 }
+      })
+
+      const temp = result.reduce((p, c) => {
+        if (!Object.prototype.hasOwnProperty.call(p, c.App)) {
+          p[c.App] = 1
+        }
+        if (!Object.prototype.hasOwnProperty.call(p, c.Tracker)) {
+          p[c.Tracker] = 1
+        }
+        p[c.Tracker]++
+        return p
+      }, {})
+
+      const nodes = []
+      const colors = [
+        '#655FB5',
+        '#8D88C8',
+        '#ACA9D8',
+        '#CCCBE6',
+        '#EBEBF6',
+        '#FFFFFF'
+      ].reverse()
+      for (const k in temp) {
+        nodes.push({
+          id: k,
+          weight: temp[k],
+          size: 10 + temp[k] - 1 * 2,
+          color: colors[Math.min(colors.length, temp[k])]
+        })
+      }
+
       return {
-        nodes: [
-          { color: '#9E99FF', size: 16, weight: 3, id: 'Bisnode' },
-          { color: '#FFFFFF', size: 10, weight: 1, id: 'Mobile Vikings' },
-          { color: '#FFFFFF', size: 10, weight: 1, id: 'Labour Party' },
-          { color: '#FFFFFF', size: 10, weight: 1, id: 'Aamulehti' },
-          { color: '#FFFFFF', size: 10, weight: 1, id: 'Gigantti' },
-          { color: '#9E99FF', size: 16, weight: 3, id: 'Sanoma' },
-          { color: '#CDCCFF', size: 14, weight: 2, id: 'NetricSales' },
-          { color: '#FFFFFF', size: 10, weight: 1, id: 'Samsung Android' },
-          { color: '#FFFFFF', size: 10, weight: 1, id: 'Lenovo Clock' },
-          { color: '#FFFFFF', size: 10, weight: 1, id: 'Experian' },
-          { color: '#FFFFFF', size: 10, weight: 1, id: 'Booking.com' },
-          { color: '#FFFFFF', size: 10, weight: 1, id: 'TikTok' },
-          { color: '#FFFFFF', size: 10, weight: 1, id: 'HSL' },
-          { color: '#FFFFFF', size: 10, weight: 1, id: 'Yle' },
-          { color: '#FFFFFF', size: 10, weight: 1, id: 'Helsingin Sanomat' },
-          { color: '#58539E', size: 22, weight: 6, id: 'Facebook' },
-          { color: '#CDCCFF', size: 14, weight: 2, id: 'AdForm' },
-          { color: '#58539E', size: 28, weight: 9, id: 'Google' },
-          { color: '#9E99FF', size: 16, weight: 3, id: 'Yandex' },
-          { color: '#CDCCFF', size: 14, weight: 2, id: 'AppNexus' },
-          { color: '#7F79E5', size: 18, weight: 4, id: 'PubMatic' },
-          { color: '#CDCCFF', size: 14, weight: 2, id: 'Akamai' },
-          { color: '#9E99FF', size: 16, weight: 3, id: 'Amazon.com' },
-          { color: '#CDCCFF', size: 14, weight: 2, id: 'Adobe' },
-          { color: '#CDCCFF', size: 14, weight: 2, id: 'Fastly' },
-          { color: '#CDCCFF', size: 14, weight: 2, id: 'Amobee' },
-          { color: '#CDCCFF', size: 14, weight: 2, id: 'BidSwitch' },
-          { color: '#CDCCFF', size: 14, weight: 2, id: 'Criteo' },
-          { color: '#CDCCFF', size: 14, weight: 2, id: 'ID5' },
-          { color: '#CDCCFF', size: 14, weight: 2, id: 'Outbrain' },
-          { color: '#CDCCFF', size: 14, weight: 2, id: 'Taboola' }
-        ],
-        links: [
-          { weight: 1, source: 'Bisnode', target: 'Facebook' },
-          { weight: 1, source: 'Mobile Vikings', target: 'Facebook' },
-          { weight: 1, source: 'Mobile Vikings', target: 'Bisnode' },
-          { weight: 1, source: 'Labour Party', target: 'Facebook' },
-          { weight: 1, source: 'Aamulehti', target: 'Sanoma' },
-          { weight: 1, source: 'Aamulehti', target: 'AdForm' },
-          { weight: 1, source: 'Aamulehti', target: 'Google' },
-          { weight: 1, source: 'Aamulehti', target: 'PubMatic' },
-          { weight: 1, source: 'Gigantti', target: 'Facebook' },
-          { weight: 1, source: 'Gigantti', target: 'Google' },
-          { weight: 1, source: 'Gigantti', target: 'Bisnode' },
-          { weight: 1, source: 'Gigantti', target: 'Yandex' },
-          { weight: 1, source: 'Sanoma', target: 'AppNexus' },
-          { weight: 1, source: 'Sanoma', target: 'NetricSales' },
-          { weight: 1, source: 'NetricSales', target: 'PubMatic' },
-          { weight: 1, source: 'Samsung Android', target: 'Google' },
-          { weight: 1, source: 'Lenovo Clock', target: 'Google' },
-          { weight: 1, source: 'Experian', target: 'Facebook' },
-          { weight: 1, source: 'Booking.com', target: 'Google' },
-          { weight: 1, source: 'TikTok', target: 'Google' },
-          { weight: 1, source: 'HSL', target: 'Google' },
-          { weight: 1, source: 'Yle', target: 'Google' },
-          { weight: 1, source: 'Yle', target: 'Akamai' },
-          { weight: 1, source: 'Yle', target: 'Amazon.com' },
-          { weight: 1, source: 'Yle', target: 'Adobe' },
-          { weight: 1, source: 'Yle', target: 'Fastly' },
-          { weight: 1, source: 'Helsingin Sanomat', target: 'Sanoma' },
-          { weight: 1, source: 'Helsingin Sanomat', target: 'Amazon.com' },
-          { weight: 1, source: 'Helsingin Sanomat', target: 'Amobee' },
-          { weight: 1, source: 'Helsingin Sanomat', target: 'BidSwitch' },
-          { weight: 1, source: 'Helsingin Sanomat', target: 'Criteo' },
-          { weight: 1, source: 'Helsingin Sanomat', target: 'ID5' },
-          { weight: 1, source: 'Helsingin Sanomat', target: 'Outbrain' },
-          { weight: 1, source: 'Helsingin Sanomat', target: 'PubMatic' },
-          { weight: 1, source: 'Helsingin Sanomat', target: 'Taboola' },
-          { weight: 1, source: 'Helsingin Sanomat', target: 'Yandex' }
-        ]
+        nodes,
+        links
       }
     }
+  },
+  mounted() {
+    console.log(this.values)
   },
   methods: {
     drawViz() {
@@ -130,7 +112,7 @@ export default {
       const maxValue = d3.max(this.jsonData.nodes, function (d) {
         return +d.size
       })
-      const size = d3.scaleLinear().domain([minValue, maxValue]).range([2, 40])
+      const size = d3.scaleLinear().domain([minValue, maxValue]).range([10, 40])
 
       // Init simulation
       const simulation = d3
@@ -160,15 +142,16 @@ export default {
       // Draw links
       const link = this.svg
         .append('g')
-        .attr('class', 'links')
+        .attr('id', 'links')
         .selectAll('line')
         .data(this.jsonData.links)
         .enter()
         .append('line')
         .attr('stroke-width', function (d) {
-          return 0.1 * d.weight
+          return 1 * d.weight
         })
         .attr('stroke', 'grey')
+        .attr('marker-end', 'url(#end)')
 
       // Draw nodes
       const node = this.svg
