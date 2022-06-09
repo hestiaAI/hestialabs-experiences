@@ -37,8 +37,7 @@ const blocks: ViewBlocks = [
     files: ['travels'],
     visualization: 'ChartViewGoogleAggTrips.vue',
     title: 'Public Transport',
-    text: '',
-    showTable: true
+    text: ''
   },
   {
     id: 'MeansOfTransport',
