@@ -6,11 +6,8 @@
           No records were found in your file(s).
         </p>
         <p v-else class="text-subtitle-2">
-          We found <strong>{{ total }}</strong> mac adresses that were recorded
-          in your file. <br />
-          <br />
-          This map shows where your phone detected them with the size
-          corresponding to the number of times it was detected:
+          This map shows the records that were logged during a travel with the
+          color corresponding to an activity type:
         </p>
       </VCol>
     </VRow>
@@ -33,7 +30,7 @@
 </template>
 <script>
 import mixin from './mixin'
-import keplerConfig from './kepler_config_wifi.js'
+import keplerConfig from './kepler_config_records.js'
 export default {
   mixins: [mixin],
   data() {
@@ -45,10 +42,7 @@ export default {
     results() {
       return this.values.map(v => {
         return {
-          ...v,
-          longitude: v.longitude * 1e-7,
-          latitude: v.latitude * 1e-7,
-          mac: this.convert_mac(v.mac)
+          ...v
         }
       })
     },
@@ -76,24 +70,6 @@ export default {
     }
   },
   methods: {
-    convert_mac(address) {
-      let s = String(address.toString(16))
-      while (s.length < 12) {
-        s = '0' + s
-      }
-      return this.chunk(s, 2).join(':')
-    },
-    chunk(str, n) {
-      const ret = []
-      let i
-      let len
-
-      for (i = 0, len = str.length; i < len; i += n) {
-        ret.push(str.substr(i, n))
-      }
-
-      return ret
-    },
     drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems
