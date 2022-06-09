@@ -57,6 +57,14 @@
       ></VRadio>
     </VRadioGroup>
 
+    <VSelect
+      v-if="section.type === 'select'"
+      v-model="value"
+      :readonly="readonly"
+      :items="section.options"
+      :label="section.placeholder"
+    ></VSelect>
+
     <template v-if="section.type === 'checkbox'">
       <VCheckbox
         v-for="(option, j) in section.options"

@@ -1,67 +1,69 @@
 <template>
-  <VForm v-if="fileManager !== null">
-    <UnitConsentFormSection
-      v-for="(section, index) in consentForm"
-      :key="`section-${index}`"
-      :index="index"
-    />
-    <BaseAlert v-if="missingRequiredFields">
-      Some required fields are not filled in.
-    </BaseAlert>
-    <BaseAlert v-if="missingRequiredData.length > 0">
-      Some data required for sending this form has not been processed or
-      included:
-      {{ missingRequiredData.join(', ') }}.
-    </BaseAlert>
-    <BaseAlert v-if="!config.publicKey" type="info">
-      The results will not be encrypted because this instance has been
-      configured without public key.
-    </BaseAlert>
-    <BaseAlert v-if="sentErrorMessage" type="error">
-      <p>Failed to upload results:</p>
-      <p>{{ sentErrorMessage }}</p>
-      <p>
-        Consider downloading the encrypted results and sending them by other
-        means.
-      </p>
-    </BaseAlert>
-    <VRow v-if="bubbleName">
-      <VCol>
-        <BaseButton
-          text="Share results with your group"
-          :status="sentStatus"
-          :error="!!sentErrorMessage"
-          :progress="sentProgress"
-          :disabled="missingRequiredFields || missingRequiredData.length > 0"
-          @click="sendForm"
-        />
-      </VCol>
-    </VRow>
-    <VRow>
-      <VCol>
-        <BaseButton
-          ref="downloadButton"
-          text="Download results"
-          :status="generateStatus"
-          :error="generateError"
-          :progress="generateProgress"
-          :disabled="missingRequiredFields || missingRequiredData.length > 0"
-          @click="downloadZIP"
-        />
-        <a
-          v-show="false"
-          ref="downloadLink"
-          :href="href"
-          :download="filename"
-        ></a>
-      </VCol>
-      <VCol v-if="config.filedrop">
-        <a :href="config.filedrop" target="_blank">
-          <BaseButton text="Drop file here" />
-        </a>
-      </VCol>
-    </VRow>
-  </VForm>
+  <VContainer>
+    <VForm v-if="fileManager !== null">
+      <UnitConsentFormSection
+        v-for="(section, index) in consentForm"
+        :key="`section-${index}`"
+        :index="index"
+      />
+      <BaseAlert v-if="missingRequiredFields">
+        Some required fields are not filled in.
+      </BaseAlert>
+      <BaseAlert v-if="missingRequiredData.length > 0">
+        Some data required for sending this form has not been processed or
+        included:
+        {{ missingRequiredData.join(', ') }}.
+      </BaseAlert>
+      <BaseAlert v-if="!config.publicKey" type="info">
+        The results will not be encrypted because this instance has been
+        configured without public key.
+      </BaseAlert>
+      <BaseAlert v-if="sentErrorMessage" type="error">
+        <p>Failed to upload results:</p>
+        <p>{{ sentErrorMessage }}</p>
+        <p>
+          Consider downloading the encrypted results and sending them by other
+          means.
+        </p>
+      </BaseAlert>
+      <VRow v-if="bubbleName">
+        <VCol>
+          <BaseButton
+            text="Share results with your group"
+            :status="sentStatus"
+            :error="!!sentErrorMessage"
+            :progress="sentProgress"
+            :disabled="missingRequiredFields || missingRequiredData.length > 0"
+            @click="sendForm"
+          />
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol>
+          <BaseButton
+            ref="downloadButton"
+            text="Download results"
+            :status="generateStatus"
+            :error="generateError"
+            :progress="generateProgress"
+            :disabled="missingRequiredFields || missingRequiredData.length > 0"
+            @click="downloadZIP"
+          />
+          <a
+            v-show="false"
+            ref="downloadLink"
+            :href="href"
+            :download="filename"
+          ></a>
+        </VCol>
+        <VCol v-if="config.filedrop">
+          <a :href="config.filedrop" target="_blank">
+            <BaseButton text="Drop file here" />
+          </a>
+        </VCol>
+      </VRow>
+    </VForm>
+  </VContainer>
 </template>
 
 <script>
@@ -108,8 +110,12 @@ export default {
             section.value[0] === 'file-explorer'
           ) {
             return this.selectedFiles.length > 0
+          } else if (section.type === 'select') {
+            console.log('TEST', section)
+            return 'value' in section
+          } else {
+            return section.value && section.value.length
           }
-          return section.value.length > 0
         }
         return true
       })
