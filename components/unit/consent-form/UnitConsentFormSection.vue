@@ -22,26 +22,27 @@
         :label="section.titles[j]"
         :value="k"
       ></VCheckbox>
-
-      <VCheckbox
-        v-model="value"
-        :readonly="readonly"
-        dense
-        value="file-explorer"
-        @change="changedFilesCheckbox"
-      >
-        <template #label>
-          <span
-            >Individual files (<a
-              style="text-decoration: underline"
-              @click="showDialog = true"
-              ><b>{{ selectedFiles.length }}</b> selected</a
-            >)</span
-          >
-        </template>
-      </VCheckbox>
-      <SelectFilesDialog v-if="!readonly" v-model="showDialog" />
-      <ShowFilesDialog v-else v-model="showDialog" />
+      <div v-if="!section.hideFileSelection">
+        <VCheckbox
+          v-model="value"
+          :readonly="readonly"
+          dense
+          value="file-explorer"
+          @change="changedFilesCheckbox"
+        >
+          <template #label>
+            <span
+              >Individual files (<a
+                style="text-decoration: underline"
+                @click="showDialog = true"
+                ><b>{{ selectedFiles.length }}</b> selected</a
+              >)</span
+            >
+          </template>
+        </VCheckbox>
+        <SelectFilesDialog v-if="!readonly" v-model="showDialog" />
+        <ShowFilesDialog v-else v-model="showDialog" />
+      </div>
     </template>
 
     <VRadioGroup

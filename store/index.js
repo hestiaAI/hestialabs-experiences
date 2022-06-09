@@ -78,7 +78,9 @@ export const mutations = {
         // The value hasn't been initialized
         if (['checkbox', 'data'].includes(section.type)) {
           section.value = []
-        } else if (['radio', 'input', 'multiline'].includes(section.type)) {
+        } else if (
+          ['radio', 'input', 'multiline', 'select'].includes(section.type)
+        ) {
           section.value = ''
         }
       }

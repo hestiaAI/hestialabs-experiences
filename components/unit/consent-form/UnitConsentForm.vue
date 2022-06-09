@@ -110,9 +110,6 @@ export default {
             section.value[0] === 'file-explorer'
           ) {
             return this.selectedFiles.length > 0
-          } else if (section.type === 'select') {
-            console.log('TEST', section)
-            return 'value' in section
           } else {
             return section.value && section.value.length
           }
