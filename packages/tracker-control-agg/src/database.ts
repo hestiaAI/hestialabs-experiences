@@ -10,7 +10,7 @@ const config: DatabaseConfig = {
       columns: [
         ['UID', TEXT],
         ['DAddr', TEXT],
-        ['Time', TEXT],
+        ['time', TEXT],
         ['Tracker', TEXT],
         ['Category', TEXT],
         ['Package', TEXT],
@@ -34,8 +34,8 @@ const config: DatabaseConfig = {
           path: '$.daddr'
         },
         {
-          column: 'Time',
-          path: '$.time'
+          column: 'time',
+          path: '$.date'
         },
         {
           column: 'Tracker',
