@@ -11,6 +11,15 @@ const blocks: ViewBlocks = [
     showTable: true,
     title: 'Overview',
     text: 'Monitor below all the tracking done on all participant smartphone applications. You can filter the results by selecting a time range or clicking on each graph.'
+  },
+  {
+    id: 'trackerControlGraph',
+    sql: sqlAll,
+    files: ['tracker-control'],
+    visualization: 'ChartViewDirectedGraph.vue',
+    showTable: true,
+    title: 'Data hoarding',
+    text: 'Your data is transferred from applications to third parties, but did you know that there is a whole economy behind this data transfer, and that many exchange data with each other?.'
   }
 ]
 
