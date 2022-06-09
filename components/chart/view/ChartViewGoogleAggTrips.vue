@@ -11,10 +11,42 @@
         </p>
       </VCol>
     </VRow>
+    <template v-if="total > 0">
+      <VRow>
+        <VCol cols="12">
+          <UnitFilterableTable
+            v-bind="{
+              headers: header_name_transport,
+              items: get_name_transport
+            }"
+            @current-items="onTableFilter"
+          />
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol cols="12">
+          <p>
+            This map shows the trips made in public transport by at least k
+            participants:
+          </p>
+          <UnitIframe src="/kepler" :args="keplerArgs" />
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol cols="12">
+          <UnitFilterableTable
+            v-bind="{ headers: header_trips, items: get_trips }"
+            @current-items="onTableFilter"
+          />
+        </VCol>
+      </VRow>
+    </template>
   </VContainer>
 </template>
 <script>
+import _ from 'lodash'
 import mixin from './mixin'
+import keplerConfig from './kepler_config_trip.js'
 export default {
   mixins: [mixin],
   data() {
@@ -32,10 +64,79 @@ export default {
     },
     total() {
       return this.values.length
+    },
+    get_name_transport() {
+      const names = this.values.map(v => {
+        return {
+          id: v.FilePath.substr(0, v.FilePath.indexOf('/')),
+          name_of_transport: v.transitPath.substr(0, v.transitPath.indexOf(':'))
+        }
+      })
+      const unique = _.uniqBy(names, 'name_of_transport', 'id')
+      const grouped = _.groupBy(unique, n => n.name_of_transport)
+      const keys = Object.keys(grouped)
+      const result = keys.map(k => {
+        return {
+          name_of_transport: k,
+          number_of_participants: grouped[k].length
+        }
+      })
+      return result
+    },
+    header_name_transport() {
+      return Object.keys(this.get_name_transport[0])
+    },
+    get_trips() {
+      const names = this.values.map(v => {
+        return {
+          ...v,
+          id: v.FilePath.substr(0, v.FilePath.indexOf('/')),
+          start_end: v.transitPath.substr(v.transitPath.indexOf(':') + 1)
+        }
+      })
+      const unique = _.uniqBy(names, 'start_end', 'id')
+      const grouped = _.groupBy(unique, n => n.start_end)
+      const keys = Object.keys(grouped)
+      const result = keys.map(k => {
+        return {
+          startLatitude: grouped[k][0].startLatitude,
+          startLongitude: grouped[k][0].startLongitude,
+          endLatitude: grouped[k][0].endLatitude,
+          endLongitude: grouped[k][0].endLongitude,
+          start_end: k,
+          number_of_participants: grouped[k].length
+        }
+      })
+      return result
+    },
+    header_trips() {
+      return Object.keys(this.get_trips[0])
+    },
+    keplerData() {
+      return {
+        fields: this.header_trips.map(h => {
+          return {
+            name: h
+          }
+        }),
+        rows: this.get_trips.map(r => this.header_trips.map(h => r[h]))
+      }
+    },
+    keplerArgs() {
+      return {
+        keplerData: this.keplerData,
+        config: keplerConfig
+      }
     }
   },
   methods: {
-    drawViz() {}
+    onlyUnique(value, index, self) {
+      return self.indexOf(value) === index
+    },
+    drawViz() {},
+    onTableFilter(newItems) {
+      this.filteredRows = newItems
+    }
   }
 }
 </script>
