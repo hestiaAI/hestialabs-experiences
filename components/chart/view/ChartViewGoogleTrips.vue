@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     parseTransitPath(transitPath) {
-      if (transitPath != null) {
+      if (transitPath != null && transitPath !== 'null') {
         const dico = JSON.parse(transitPath)
         const name = dico.name
         return (
