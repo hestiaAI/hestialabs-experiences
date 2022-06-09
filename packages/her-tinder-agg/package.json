@@ -1,0 +1,19 @@
+{
+  "name": "@hestiaai/her-tinder-agg",
+  "version": "0.0.0",
+  "browser": "dist/index",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs",
+    "directory": "packages/her-tinder-agg"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}
