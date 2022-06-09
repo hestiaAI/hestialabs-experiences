@@ -14,10 +14,6 @@
         included:
         {{ missingRequiredData.join(', ') }}.
       </BaseAlert>
-      <BaseAlert v-if="!config.publicKey" type="info">
-        The results will not be encrypted because this instance has been
-        configured without public key.
-      </BaseAlert>
       <BaseAlert v-if="sentErrorMessage" type="error">
         <p>Failed to upload results:</p>
         <p>{{ sentErrorMessage }}</p>
@@ -95,14 +91,14 @@ export default {
   },
   computed: {
     ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles']),
-    bubble() {
-      return this.$route.params.bubble
-    },
     config() {
       return this.$store.getters.config(this.$route)
     },
     bubbleName() {
       return this.$route.params.bubble
+    },
+    destinationBubbleName() {
+      return this.config.consent.destinationBubble
     },
     missingRequiredFields() {
       return !this.consentForm.every(section => {
@@ -228,7 +224,7 @@ export default {
       this.sentStatus = false
       this.sentErrorMessage = undefined
       this.sentProgress = true
-      const destBubble = this.config.consent.destinationBubble
+      const destBubble = this.destinationBubbleName
       const { publicKey } = await this.$api.getConfig(destBubble)
       const content = await this.generateZIP(publicKey)
       // TODO well...
@@ -239,7 +235,7 @@ export default {
       const errorMessage = await this.$api.uploadFile(
         zip,
         destBubble,
-        this.bubble,
+        this.bubbleName,
         password
       )
       this.sentStatus = !errorMessage
