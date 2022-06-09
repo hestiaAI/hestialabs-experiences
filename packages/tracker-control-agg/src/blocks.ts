@@ -7,8 +7,7 @@ const blocks: ViewBlocks = [
     id: 'trackerControl',
     sql: sqlAll,
     files: ['tracker-control'],
-    // visualization: 'ChartViewTrackerControl.vue',
-    showTable: true,
+    visualization: 'ChartViewTrackerControl.vue',
     title: 'Overview',
     text: 'Monitor below all the tracking done on all participant smartphone applications. You can filter the results by selecting a time range or clicking on each graph.'
   },
@@ -17,7 +16,6 @@ const blocks: ViewBlocks = [
     sql: sqlAll,
     files: ['tracker-control'],
     visualization: 'ChartViewDirectedGraph.vue',
-    showTable: true,
     title: 'Data hoarding',
     text: 'Your data is transferred from applications to third parties, but did you know that there is a whole economy behind this data transfer, and that many exchange data with each other?.'
   }
