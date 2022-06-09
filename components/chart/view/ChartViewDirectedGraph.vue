@@ -20,7 +20,7 @@ export default {
     },
     height: {
       type: Number,
-      default: () => 600
+      default: () => 400
     },
     padding: {
       type: Number,

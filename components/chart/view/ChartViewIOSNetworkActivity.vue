@@ -295,18 +295,14 @@ export default {
         return {
           app: this.decodeDefault(d.bundleID),
           domain: this.decodeDefault(d.domain),
-          domainType: d.domainType
-            ? d.domainType === 1
-              ? 'Yes'
-              : 'No'
-            : 'Unknown',
+          domainType:
+            d.domainType === '2' || d.domainType === false ? 'No' : 'Yes',
           domainOwner: this.decodeDefault(d.domainOwner),
           context: this.decodeDefault(d.context),
-          initiatedType: d.initiatedType
-            ? d.initiatedType === 'AppInitiated'
-              ? 'Yes'
-              : 'No'
-            : 'Unknown',
+          initiatedType:
+            d.initiatedType === 'NonAppInitiated' || d.initiatedType === false
+              ? 'No'
+              : 'Yes',
           hits: +d.hits
         }
       })

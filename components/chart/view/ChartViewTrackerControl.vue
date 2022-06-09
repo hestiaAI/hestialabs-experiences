@@ -216,10 +216,11 @@ export default {
       })
 
       // Format data to correct types
-      const dateFormatParser = d3.timeParse('%Q')
+      const dateFormat = d3.timeParse('%Q')
+      const dateFormatParser = d => dateFormat(d) || new Date(d)
       const formatTime = d3.timeFormat('%B %d, %Y')
       this.values.forEach(d => {
-        d.date = dateFormatParser(d.time)
+        d.date = dateFormatParser(d.time) || new Date(d.time)
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
         d.url =
           'https://reports.exodus-privacy.eu.org/en/reports/' +
