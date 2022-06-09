@@ -1,4 +1,5 @@
 import Vue from 'vue'
+// import { getConfig } from '@/utils/api'
 
 export const state = () => ({
   loaded: false,
@@ -105,23 +106,16 @@ export const mutations = {
 }
 
 export const actions = {
-  async loadConfig({ commit, state }, $axios) {
+  async loadConfig({ commit, state }) {
     if (!state.loaded) {
       const config = (await import(`@/config/${process.env.configName}.json`))
         .default
       if (config.bubbles?.length) {
         config.bubbleConfig = {}
         for (const bubble of config.bubbles) {
-          try {
-            const { status, data } = await $axios.get(
-              `/bubbles/${bubble}/config`
-            )
-            if (status >= 400) {
-              throw new Error(`Axios error, status: ${status}`)
-            }
+          const data = await this.$api.getConfig(bubble)
+          if (data) {
             config.bubbleConfig[bubble] = data
-          } catch (err) {
-            console.error(err)
           }
         }
       }
