@@ -3,5 +3,5 @@ FROM (SELECT AVG(latitude) as latitude, AVG(longitude) as longitude, a.address, 
 FROM (SELECT DISTINCT latitude, longitude, PlaceVisit.address, PlaceVisit.name, SUBSTR(FilePath, 0, INSTR(FilePath, '/')) as uniqueId FROM PlaceVisit) a
 GROUP BY a.address, a.name, uniqueId) b
 GROUP BY b.name, b.address
-HAVING COUNT(uniqueId)>1
+HAVING COUNT(uniqueId)>0
 ORDER BY COUNT(uniqueId) desc

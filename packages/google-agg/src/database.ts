@@ -53,7 +53,8 @@ const config: DatabaseConfig = {
         ['confidence', TEXT],
         ['transitPath', TEXT],
         ['distanceMeters', INTEGER],
-        ['activityType', TEXT]
+        ['activityType', TEXT],
+        ['FilePath', TEXT, 'FILEPATH']
       ]
     },
     {

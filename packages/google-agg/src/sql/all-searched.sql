@@ -11,5 +11,5 @@ Winners AS(
 SELECT latitude, longitude, a.name, COUNT() AS number_of_participants
 FROM (SELECT * FROM Losers UNION SELECT * FROM Winners) a
 GROUP BY latitude, longitude, a.name
-HAVING COUNT(uniqueId)>1
+HAVING COUNT(uniqueId)>0
 ORDER BY COUNT(uniqueId) desc
