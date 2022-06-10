@@ -63,7 +63,9 @@ test('generates a zip', async () => {
   const button = wrapper.findComponent({ ref: 'downloadButton' })
   await button.trigger('click', {})
   expect(wrapper.vm.$data.generateProgress).toBeTruthy()
-  // for some reason we need two ticks
+  // for some reason we need four ticks
+  await wrapper.vm.$nextTick()
+  await wrapper.vm.$nextTick()
   await wrapper.vm.$nextTick()
   await wrapper.vm.$nextTick()
   expect(wrapper.vm.$data.generateProgress).toBeFalsy()
