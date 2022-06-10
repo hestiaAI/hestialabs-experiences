@@ -2,13 +2,13 @@
   <VContainer>
     <VCard class="pa-2" flat>
       <VCardTitle class="text-h5 font-weight-bold justify-center mb-3">
-        Explore the data of multiple participant
+        Explore the data from multiple participants
       </VCardTitle>
       <VCardText>
         <VRow>
           <VCol align="center">
             <p v-if="$route.params.experience === 'explorer'" class="body-1">
-              Explore the data of multiple participant
+              Explore the data from multiple participants
             </p>
             <!-- eslint-disable vue/no-v-html -->
             <p
@@ -33,14 +33,9 @@
           <VCol align="center">
             <VCard height="500" class="d-flex flex-column">
               <VCardTitle class="mb-2">
-                <span
-                  >Bubble: <b>{{ dataFromBubble }}</b></span
-                >
-                <VSpacer></VSpacer>
                 <span class="caption"
                   >{{ nbSelected }} out of {{ nbFiles }} selected</span
                 >
-                <VSpacer></VSpacer>
                 <VBtn icon color="primary" class="mr-2" @click="fetchFilenames">
                   <VIcon>$vuetify.icon.mdiCached</VIcon>
                 </VBtn>
@@ -156,7 +151,6 @@
 import { pick } from 'lodash'
 import { filetype2icon, extension2filetype } from '@/utils/file-manager'
 import { decryptBlob } from '@/utils/encryption'
-import { getFilenames, getFile } from '@/utils/api'
 const util = require('util')
 export default {
   props: {
@@ -187,8 +181,7 @@ export default {
       'dataPortalMessage',
       'tutorialVideos'
     ])
-    const bubbleConfig = this.$store.getters.config(this.$route)
-    const bubbleProps = pick(bubbleConfig, ['dataFromBubble', 'publicKey'])
+    const { publicKey } = this.$store.getters.config(this.$route)
     return {
       timer: null,
       counter: 5,
@@ -201,11 +194,14 @@ export default {
       selectedFiles: [],
       privateKey: null,
       status: false,
-      ...experienceProps,
-      ...bubbleProps
+      publicKey,
+      ...experienceProps
     }
   },
   computed: {
+    bubble() {
+      return this.$route.params.bubble
+    },
     nbSelected() {
       return this.selectedFiles.length
     },
@@ -229,6 +225,7 @@ export default {
           date: new Date()
         })
       })
+      this.fileItems = this.fileItems.filter(f => newValue.includes(f.filename))
     }
   },
   mounted() {
@@ -257,7 +254,7 @@ export default {
       this.apiError = null
       this.apiStatus = 'Fetching filenames from server...'
       this.counter = 5
-      getFilenames(this.dataFromBubble, (error, res) => {
+      this.$api.getFilenames(this.bubble, (error, res) => {
         this.apiLoading = false
         if (error) {
           this.apiError = error.toString()
@@ -275,7 +272,7 @@ export default {
       this.apiStatus = 'Downloading files from server...'
       this.status = true
 
-      const getFilePromise = util.promisify(getFile)
+      const getFilePromise = util.promisify(this.$api.getFile)
       const decryptBlobPromise = util.promisify(decryptBlob)
       const filenames = this.selectedFiles.map(
         idx => this.fileItems[idx].filename
@@ -284,7 +281,7 @@ export default {
       // First Fetch the files
       Promise.all(
         filenames.map(filename =>
-          getFilePromise(this.dataFromBubble, filename)
+          getFilePromise(this.bubble, filename)
             .then(fileBlob => {
               this.apiStatus = 'Decrypting files...'
               return this.privateKey
