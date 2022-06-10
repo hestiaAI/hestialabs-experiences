@@ -8,11 +8,11 @@ const options: ExperienceOptions = {
   dataPortal: 'https://takeout.google.com/settings/takeout',
   dataPortalMessage: '',
   files: {
-    placeVisited: '**/block01.json',
-    otherCandidate: '**/block02.json',
-    travels: '**/block03.json',
-    records: '**/block04.json',
-    wifi: '**/block05.json',
+    placeVisited: '**/block00.json',
+    otherCandidate: '**/block01.json',
+    travels: '**/block02.json',
+    records: '**/block03.json',
+    wifi: '**/block04.json',
     consent: '**/consent.json'
   },
   icon: icon,
