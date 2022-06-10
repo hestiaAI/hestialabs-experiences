@@ -25,6 +25,7 @@
   </VContainer>
 </template>
 <script>
+import _ from 'lodash'
 import mixin from './mixin'
 import keplerConfig from './kepler_config_places.js'
 export default {
@@ -86,12 +87,9 @@ export default {
       return res
     },
     get_durations() {
-      const table = this.values.filter(
-        x => x.loserName === this.values[0].loserName
-      )
-      const dur = table.map(v =>
-        this.compute_duration(v.startTimestamp, v.endTimestamp)
-      )
+      const table = this.values.map(x => [x.startTimestamp, x.endTimestamp])
+      const uniq = _.uniqBy(table, x => x[0])
+      const dur = uniq.map(v => this.compute_duration(v[0], v[1]))
       return dur
     },
     convertHMS(value) {
