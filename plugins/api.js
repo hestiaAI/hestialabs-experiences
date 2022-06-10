@@ -56,6 +56,31 @@ class Api {
       .catch(error => callback(error))
   }
 
+  async deleteFiles(bubble, password) {
+    const formData = new FormData()
+    formData.append('password', password)
+    let errorMessage
+    try {
+      const resp = await fetch(
+        `${process.env.apiUrl}/bubbles/${bubble}/delete-files`,
+        {
+          method: 'POST',
+          body: formData
+        }
+      )
+      if (!resp.ok) {
+        console.error(resp)
+        // use http status text in cas json() fails
+        errorMessage = resp.statusText
+        errorMessage = await resp.json()
+      }
+    } catch (error) {
+      errorMessage = errorMessage || 'Error'
+      console.error(error)
+    }
+    return errorMessage
+  }
+
   async uploadFile(file, destinationBubble, sourceBubble, password) {
     const formData = new FormData()
     formData.append('password', password)

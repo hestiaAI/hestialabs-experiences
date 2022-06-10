@@ -7,25 +7,11 @@
       <VCardText>
         <VRow>
           <VCol align="center">
-            <p v-if="$route.params.experience === 'explorer'" class="body-1">
-              Explore the data from multiple participants
-            </p>
-            <!-- eslint-disable vue/no-v-html -->
-            <p
-              v-else-if="dataPortalHtml"
-              class="body-1"
-              v-html="dataPortalHtml"
-            ></p>
-            <p v-else class="body-1">
-              <template v-if="dataPortal">
-                <a :href="dataPortal" target="_blank" rel="noreferrer noopener"
-                  >Click here</a
-                >
-                to request
-              </template>
-              <template v-else> Request </template>
-              the private data that {{ title }} collected on you. Once you
-              receive it, analyze it here.
+            <p class="body-1">
+              Explore the data of several participants who have shared their
+              data with you. with you. Once you have received enough files,
+              select the ones you want to see, enter your secret key to decrypt
+              them and click on "Explore the data".
             </p>
           </VCol>
         </VRow>
@@ -33,12 +19,42 @@
           <VCol align="center">
             <VCard height="500" class="d-flex flex-column">
               <VCardTitle class="mb-2">
+                <span>Fetching data</span>
+                <VSpacer></VSpacer>
                 <span class="caption"
                   >{{ nbSelected }} out of {{ nbFiles }} selected</span
                 >
-                <VBtn icon color="primary" class="mr-2" @click="fetchFilenames">
-                  <VIcon>$vuetify.icon.mdiCached</VIcon>
-                </VBtn>
+                <VSpacer></VSpacer>
+                <VTooltip left>
+                  <template #activator="{ on, attrs }">
+                    <VBtn
+                      icon
+                      color="error"
+                      class="mr-2"
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="deleteFiles"
+                    >
+                      <VIcon>$vuetify.icon.mdiDelete</VIcon>
+                    </VBtn>
+                  </template>
+                  <span>Delete All Files</span>
+                </VTooltip>
+                <VTooltip left>
+                  <template #activator="{ on, attrs }">
+                    <VBtn
+                      icon
+                      color="primary"
+                      class="mr-2"
+                      v-bind="attrs"
+                      @click="fetchFilenames"
+                      v-on="on"
+                    >
+                      <VIcon>$vuetify.icon.mdiCached</VIcon>
+                    </VBtn>
+                  </template>
+                  <span>Refresh Files</span>
+                </VTooltip>
                 <BaseButton
                   outlined
                   small
@@ -249,6 +265,13 @@ export default {
       } else {
         this.selectedFiles = []
       }
+    },
+    deleteFiles() {
+      const { password } = this.$auth.user
+      this.$api.deleteFiles(this.bubble, password).then(res => {
+        if (res) console.error(res)
+        this.fetchFilenames()
+      })
     },
     fetchFilenames() {
       this.apiError = null
