@@ -36,11 +36,12 @@ export default {
       // Là dedans que tu construis ton format
       const categoriesToKeep = [
         'FingerprintingGeneral',
-        'FingerprintingInvasive'
+        'FingerprintingInvasive',
+        'Advertising'
       ]
 
-      let result = this.values.filter(row =>
-        categoriesToKeep.includes(row.Category)
+      let result = this.values.filter(
+        row => categoriesToKeep.includes(row.Category) & (row.App !== 'Unknown')
       )
       result = result.map(o => _.pick(o, ['App', 'Tracker']))
 
