@@ -102,24 +102,9 @@ export default {
           content: this.$url(this.$route)
         },
         {
-          hid: 'twitter:card',
-          property: 'twitter:card',
-          content: 'summary'
-        },
-        {
-          hid: 'twitter:site',
-          property: 'twitter:site',
-          content: '@HestiaLabs'
-        },
-        {
           hid: 'twitter:title',
           property: 'twitter:title',
           content: this.appName
-        },
-        {
-          hid: 'twitter:image',
-          property: 'twitter:image',
-          content: `${process.env.baseUrl}/ogimg.png`
         }
       ]
     }
