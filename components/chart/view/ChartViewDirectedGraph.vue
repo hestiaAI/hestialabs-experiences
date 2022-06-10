@@ -86,9 +86,6 @@ export default {
       }
     }
   },
-  mounted() {
-    console.log(this.values)
-  },
   methods: {
     drawViz() {
       // Init of everything

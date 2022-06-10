@@ -220,7 +220,6 @@ export default {
       return decodeURIComponent(cookie[0].split('=')[1])
     },
     async sendForm() {
-      console.log('sen form')
       this.sentStatus = false
       this.sentErrorMessage = undefined
       this.sentProgress = true
@@ -228,7 +227,7 @@ export default {
       const { publicKey } = await this.$api.getConfig(destBubble)
       const content = await this.generateZIP(publicKey)
       // TODO well...
-      const password = '0123'
+      const { password } = this.$auth.user
       const zip = new File([content], this.filename, {
         type: 'application/zip'
       })

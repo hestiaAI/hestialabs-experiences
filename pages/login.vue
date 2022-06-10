@@ -96,7 +96,7 @@ export default {
           data: { username, password }
         })
         const bubble = this.$store.state.config.bubbleConfig[username]
-        this.$auth.setUser({ username, bubble })
+        this.$auth.setUser({ username, password, bubble })
         console.info(response.statusText)
       } catch ({ response }) {
         if (response.status === 403) {
