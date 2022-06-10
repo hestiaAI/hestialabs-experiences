@@ -185,7 +185,12 @@ export default {
       dc.renderAll()
     },
     decodeDefault(str) {
-      return str ? decodeURIComponent(escape(str)) : 'Unknown'
+      try {
+        return str ? decodeURIComponent(escape(str)) : 'Unknown'
+      } catch (e) {
+        console.error(e)
+        return str || 'Unknown'
+      }
     },
     createTopRowChart(ndx, fieldAccessor, valueAccessor) {
       // Create and bind charts to their respective divs
