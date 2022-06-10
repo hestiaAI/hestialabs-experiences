@@ -48,6 +48,7 @@ export default {
           ...v,
           longitude: v.longitude * 1e-7,
           latitude: v.latitude * 1e-7,
+          semanticType: v.semanticType === 'undefined' ? null : v.semanticType,
           duration: this.compute_duration(v.startTimestamp, v.endTimestamp)
         }
       })

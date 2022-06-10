@@ -46,11 +46,14 @@ export default {
           winnerLatitude: v.winnerLatitude * 1e-7,
           winnerLongitude: v.winnerLongitude * 1e-7,
           winnerSemanticType:
-            v.winnerSemanticType === 'null' ? null : v.winnerSemanticType,
+            v.winnerSemanticType === 'undefined' ? null : v.winnerSemanticType,
           loserLatitude: v.loserLatitude * 1e-7,
           loserLongitude: v.loserLongitude * 1e-7,
           loserSemanticType:
-            v.loserSemanticType === 'null' ? null : v.loserSemanticType
+            v.loserSemanticType === 'undefined' ? null : v.loserSemanticType,
+          loserAddress: v.loserAddress === 'undefined' ? null : v.loserAddress,
+          winnerName: v.winnerName === 'undefined' ? null : v.winnerName,
+          loserName: v.loserName === 'undefined' ? null : v.loserName
         }
       })
     },
