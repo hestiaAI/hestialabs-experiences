@@ -92,6 +92,7 @@ export default class FileManager {
       ...Object.keys(extension2filetype),
       ...Object.values(extension2filetype)
     ])
+    this.fileDict = {}
     this.preprocessors = preprocessors ?? {}
     this.workers = workers ?? {}
     this.idToGlob = idToGlob ?? {}
