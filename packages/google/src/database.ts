@@ -50,7 +50,8 @@ const config: DatabaseConfig = {
         ['winnerName', TEXT],
         ['winnerConfidence', FLOAT],
         ['winnerSemanticType', TEXT],
-        ['timestamp', TEXT]
+        ['startTimestamp', TEXT],
+        ['endTimestamp', TEXT]
       ],
       primaryKey: 'id'
     },
@@ -259,8 +260,12 @@ const config: DatabaseConfig = {
           path: '$.location.semanticType'
         },
         {
-          column: 'timestamp',
+          column: 'startTimestamp',
           path: '$.duration.startTimestamp'
+        },
+        {
+          column: 'endTimestamp',
+          path: '$.duration.endTimestamp'
         },
         {
           path: '$.otherCandidateLocations[*]',
