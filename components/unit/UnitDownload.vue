@@ -2,13 +2,13 @@
   <VContainer>
     <VCard class="pa-2" flat>
       <VCardTitle class="text-h5 font-weight-bold justify-center mb-3">
-        Explore the data of multiple participant
+        Explore the data from multiple participants
       </VCardTitle>
       <VCardText>
         <VRow>
           <VCol align="center">
             <p v-if="$route.params.experience === 'explorer'" class="body-1">
-              Explore the data of multiple participant
+              Explore the data from multiple participants
             </p>
             <!-- eslint-disable vue/no-v-html -->
             <p
