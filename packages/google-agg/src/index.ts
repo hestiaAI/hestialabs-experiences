@@ -12,7 +12,8 @@ const options: ExperienceOptions = {
     otherCandidate: '**/block02.json',
     travels: '**/block03.json',
     records: '**/block04.json',
-    wifi: '**/block05.json'
+    wifi: '**/block05.json',
+    consent: '**/consent.json'
   },
   icon: icon,
   slug: 'google-agg',
