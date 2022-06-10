@@ -144,8 +144,7 @@ export default {
             (date >= this.dateRange[0] &&
               date <= this.dateRange[1] &&
               this.weekDayAuthorized.includes(this.weekDays[date.getDay()]))) &&
-          this.isDatetime &&
-          this.timeFilterFunction(value)
+          (!this.timeFilterFunction || this.timeFilterFunction(value))
         )
       }
     }
