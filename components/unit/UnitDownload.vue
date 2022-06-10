@@ -225,6 +225,7 @@ export default {
           date: new Date()
         })
       })
+      this.fileItems = this.fileItems.filter(f => newValue.includes(f.filename))
     }
   },
   mounted() {
