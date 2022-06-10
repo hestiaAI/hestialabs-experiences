@@ -30,23 +30,23 @@ export default {
   auth: 'guest',
   middleware({ $auth, redirect, route, error }) {
     if (!route.query.redirect) {
-      if ($auth.state.redirect) {
+      if ($auth.$state.redirect) {
         // add query parameter
         return redirect({
           name: 'login',
-          query: { redirect: $auth.state.redirect }
+          query: { redirect: $auth.$state.redirect }
         })
       }
       // no way to know how to redirect the user after login
       return error({ statusCode: 404, message: 'Page Not Found' })
-    } else if (!$auth.state.redirect) {
+    } else if (!$auth.$state.redirect) {
       // happens on refresh
       $auth.$storage.setState('redirect', route.query.redirect)
     }
   },
   validate({ $auth, store }) {
     const { bubbles } = store.state.config
-    const bubble = extractBubbleParam($auth.state.redirect)
+    const bubble = extractBubbleParam($auth.$state.redirect)
     if (!bubbles.includes(bubble)) {
       return false
     }
