@@ -6,6 +6,13 @@ const { TEXT, INTEGER, FLOAT } = SQLType
 const config: DatabaseConfig = {
   tables: [
     {
+      name: 'KAnonymity',
+      columns: [
+        ['k', INTEGER],
+        ['FilePath', TEXT, 'FILEPATH']
+      ]
+    },
+    {
       name: 'PlaceVisit',
       columns: [
         ['latitude', INTEGER],
@@ -37,7 +44,8 @@ const config: DatabaseConfig = {
         ['loserName', TEXT],
         ['loserConfidence', INTEGER],
         ['loserSemanticType', TEXT],
-        ['timestamp', TEXT],
+        ['startTimestamp', TEXT],
+        ['endTimestamp', TEXT],
         ['FilePath', TEXT, 'FILEPATH']
       ]
     },
@@ -186,8 +194,12 @@ const config: DatabaseConfig = {
           path: '$.loserSemanticType'
         },
         {
-          column: 'timestamp',
-          path: '$.timestamp'
+          column: 'startTimestamp',
+          path: '$.startTimestamp'
+        },
+        {
+          column: 'endTimestamp',
+          path: '$.endTimestamp'
         }
       ]
     },
@@ -289,6 +301,17 @@ const config: DatabaseConfig = {
         {
           column: 'count',
           path: '$.count'
+        }
+      ]
+    },
+    {
+      fileId: 'consent',
+      path: '$[?(@.name === "k")]',
+      table: 'KAnonymity',
+      getters: [
+        {
+          column: 'k',
+          path: '$.value'
         }
       ]
     }

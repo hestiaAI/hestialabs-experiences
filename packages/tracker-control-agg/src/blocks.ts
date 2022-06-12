@@ -1,5 +1,4 @@
 import type { ViewBlocks } from '@/types'
-import { customPipelineMergeCSV } from '@/pipelines/custom'
 import sqlAll from './sql/all.sql'
 
 const blocks: ViewBlocks = [
