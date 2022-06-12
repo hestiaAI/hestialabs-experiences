@@ -35,7 +35,7 @@ export default {
     meta: [
       { name: 'format-detection', content: 'telephone=no' },
       { property: 'og:title', content: name },
-      { property: 'twitter:title', content: this?.appName },
+      { property: 'twitter:title', content: name },
       { property: 'twitter:description', content: description },
       { property: 'twitter:image', content: `${baseUrl}/ogimg.png` }
     ]
