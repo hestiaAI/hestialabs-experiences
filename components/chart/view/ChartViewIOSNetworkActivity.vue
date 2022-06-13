@@ -306,16 +306,17 @@ export default {
     },
     drawViz() {
       // Parse and format data
+      console.log(this.values)
       this.results = this.values.map(d => {
         return {
           app: this.decodeDefault(d.bundleID),
           domain: this.decodeDefault(d.domain),
           domainType:
-            d.domainType === '2' || d.domainType === false ? 'No' : 'Yes',
+            d.domainType === '2' || d.domainType === 'false' ? 'No' : 'Yes',
           domainOwner: this.decodeDefault(d.domainOwner),
           context: this.decodeDefault(d.context),
           initiatedType:
-            d.initiatedType === 'NonAppInitiated' || d.initiatedType === false
+            d.initiatedType === 'NonAppInitiated' || d.initiatedType === 'false'
               ? 'No'
               : 'Yes',
           hits: +d.hits
