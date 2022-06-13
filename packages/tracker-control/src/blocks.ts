@@ -6,7 +6,7 @@ const blocks: ViewBlocks = [
     id: 'trackerControl',
     customPipeline: customPipelineMergeCSV('tracker-control'),
     files: ['tracker-control'],
-    showTable: true,
+    showTable: false,
     visualization: 'ChartViewTrackerControl.vue',
     title: 'Overview',
     text: 'Monitor below all the tracking done on your smartphone applications. You can filter the results by selecting a time range, selecting certain apps in the dropdown, clicking on each graph, or using the table filters or search box.'
