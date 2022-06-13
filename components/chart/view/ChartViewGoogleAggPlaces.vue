@@ -119,7 +119,7 @@ export default {
           k: kMax
         })
       }
-      res = res.filter(x => x.latitude !== 0 || x.longitude !== 0)
+      res = res.filter(x => x.k > 0)
       return res
     }
   }
