@@ -196,7 +196,9 @@ export default {
     },
     decodeDefault(str) {
       try {
-        return str ? decodeURIComponent(escape(str)) : 'Unknown'
+        return str && str !== 'undefined'
+          ? decodeURIComponent(escape(str))
+          : 'Unknown'
       } catch (e) {
         console.error(e)
         return str || 'Unknown'
@@ -306,7 +308,6 @@ export default {
     },
     drawViz() {
       // Parse and format data
-      console.log(this.values)
       this.results = this.values.map(d => {
         return {
           app: this.decodeDefault(d.bundleID),
