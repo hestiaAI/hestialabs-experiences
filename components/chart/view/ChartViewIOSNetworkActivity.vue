@@ -138,6 +138,12 @@
             </div>
           </VCol>
         </VRow>
+        <p v-if="config.consent">
+          Please use the search box and filters below to change what is shown on
+          the map.<br />
+          Any filtering you do will also limit what data is shared into the pool
+          if you share this tab on the 'Share My Data' tab.
+        </p>
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
@@ -155,6 +161,7 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
+import { mapState } from 'vuex'
 import mixin from './mixin'
 import { removeEmptyBins } from './utils/DCHelpers'
 
@@ -178,6 +185,9 @@ export default {
       results: [],
       colorPalette: ['#58539E', '#847CEB', '#605BAB', '#4A4685', '#9498F2']
     }
+  },
+  computed: {
+    ...mapState(['config'])
   },
   methods: {
     resetAll() {
