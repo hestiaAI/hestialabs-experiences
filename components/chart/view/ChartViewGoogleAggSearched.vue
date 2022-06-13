@@ -6,7 +6,7 @@
           No records were found in your file(s).
         </p>
         <p v-else class="text-subtitle-2">
-          This map shows the places that was searched by at least k
+          This map shows the places that were searched by at least k
           participants:
         </p>
       </VCol>
@@ -117,7 +117,7 @@ export default {
           k: kMax
         })
       }
-      res = res.filter(x => x.latitude !== 0 || x.longitude !== 0)
+      res = res.filter(x => x.k > 0)
       return res
     }
   }
