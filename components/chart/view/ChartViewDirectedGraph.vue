@@ -1,7 +1,12 @@
 <template>
   <VContainer>
     <div :id="graphId" style="position: relative"></div>
-    <div><p>Please take into account the fact that this graph only shows the link between data flows that are tagged as Fingerprinting or Advertising.</p></div>
+    <div>
+      <p>
+        Please take into account the fact that this graph only shows the link
+        between data flows that are tagged as Fingerprinting or Advertising.
+      </p>
+    </div>
   </VContainer>
 </template>
 

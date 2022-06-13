@@ -1,6 +1,10 @@
 <template>
   <VContainer>
     <VRow>
+      <p v-if="config.consent">
+        Any filtering you do will also limit what data is shared into the pool
+        if you share this tab on the 'Share My Data' tab.
+      </p>
       <VCol cols="4" offset="4">
         <VSelect
           v-model="selectedApps"
@@ -117,6 +121,7 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
+import { mapState } from 'vuex'
 import mixin from './mixin'
 
 // Remove warning on default colorscheme, even if not used..
@@ -142,6 +147,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['config']),
     selectAll() {
       return this.selectedApps.length === this.apps.length
     },
