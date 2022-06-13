@@ -35,9 +35,10 @@
             ></p>
             <!-- eslint-enable vue/no-v-html -->
             <p>
-              No data is transmitted to HestiaLabs or anyone else. The whole
-              experience takes place locally in the browser and nothing is left
-              behind as soon as you close the tab.
+              Unless explicitly consented in the "Share My Data" tab, no data is
+              transmitted to HestiaLabs or anyone else. The whole experience
+              takes place locally in the browser and nothing is left behind as
+              soon as you close the tab.
             </p>
           </VCol>
         </VRow>
