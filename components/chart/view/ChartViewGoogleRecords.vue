@@ -20,23 +20,55 @@
           <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
       </VRow>
-      <VRow>
-        <VCol cols="12">
-          <VBtn elevation="2" @click="addNoise">Add Noise</VBtn>
-          <VBtn elevation="2" @click="clear">Clear</VBtn>
-        </VCol>
-        <VCol cols="2">
-          <VSlider
-            v-model="sliderValue"
-            :max="100"
-            :min="0"
-            :step="'1'"
-            thumb-label="always"
-          >
-            Level
-          </VSlider>
-        </VCol>
-      </VRow>
+      <VMenu
+        v-model="menu"
+        :close-on-content-click="false"
+        :nudge-width="200"
+        offset-y
+      >
+        <template #activator="{ on, attrs }">
+          <VBtn color="primary" class="ma-2" outlined v-bind="attrs" v-on="on">
+            Add Noise
+          </VBtn>
+        </template>
+        <VCard class="mx-auto" max-width="600">
+          <VCardTitle>Noise Level</VCardTitle>
+          <VCardText>
+            <VRow class="mb-4" justify="space-between">
+              <VCol class="text-left">
+                <span
+                  class="text-h2 font-weight-light"
+                  v-text="sliderValue"
+                ></span>
+                <span class="subheading font-weight-light mr-1">meters</span>
+              </VCol>
+            </VRow>
+
+            <VSlider
+              v-model="sliderValue"
+              :max="100"
+              :min="0"
+              :step="'1'"
+              track-color="grey"
+              always-dirty
+            >
+              <template #prepend>
+                <VIcon @click="decrement"> $vuetify.icons.mdiMinus </VIcon>
+              </template>
+
+              <template #append>
+                <VIcon @click="increment"> $vuetify.icons.mdiPlus </VIcon>
+              </template>
+            </VSlider>
+          </VCardText>
+          <VCardActions>
+            <VSpacer></VSpacer>
+
+            <VBtn @click="clear">Clear</VBtn>
+            <VBtn color="primary" @click="addNoise">Save</VBtn>
+          </VCardActions>
+        </VCard>
+      </VMenu>
       <VRow>
         <VCol cols="12">
           <UnitFilterableTable
@@ -55,6 +87,7 @@ export default {
   mixins: [mixin],
   data() {
     return {
+      menu: false,
       sliderValue: 0,
       filteredRows: [],
       results: this.values.map(v => {
@@ -91,7 +124,14 @@ export default {
     }
   },
   methods: {
+    increment() {
+      this.sliderValue += 1
+    },
+    decrement() {
+      this.sliderValue -= 1
+    },
     addNoise() {
+      this.menu = false
       const level = this.sliderValue
       this.results = this.results.map(x => {
         return {
@@ -109,6 +149,7 @@ export default {
       })
     },
     clear() {
+      this.menu = false
       this.results = this.values.map(v => {
         return {
           ...v,
