@@ -49,6 +49,10 @@ export default {
           startLatitude: v.startLatitude * 1e-7,
           endLongitude: v.endLongitude * 1e-7,
           endLatitude: v.endLatitude * 1e-7,
+          startAddress: v.startAddress === 'undefined' ? null : v.startAddress,
+          endAddress: v.endAddress === 'undefined' ? null : v.endAddress,
+          startName: v.startName === 'undefined' ? null : v.startName,
+          endName: v.endName === 'undefined' ? null : v.endName,
           transitPath: this.parseTransitPath(v.transitPath)
         }
       })
@@ -78,7 +82,7 @@ export default {
   },
   methods: {
     parseTransitPath(transitPath) {
-      if (transitPath != null) {
+      if (transitPath !== 'undefined') {
         const dico = JSON.parse(transitPath)
         const name = dico.name
         return (

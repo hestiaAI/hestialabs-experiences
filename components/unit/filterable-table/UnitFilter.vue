@@ -24,11 +24,24 @@
           >{{ String(header.type).toLowerCase() }}</VChip
         >
       </div>
-      <component
-        :is="component"
-        v-bind="{ header, values, ...filterOptions.args }"
-        @filter-change="filterChange"
-      />
+      <VContainer class="pa-4">
+        <component
+          :is="component"
+          ref="filter"
+          v-bind="{ values, ...filterOptions.args }"
+          @filter-change="filterChange"
+        />
+      </VContainer>
+      <div class="d-flex justify-space-between align-end mt-5">
+        <VBtn
+          small
+          text
+          class="ma-2"
+          color="primary"
+          @click="$refs.filter.reset()"
+          v-text="`Clear`"
+        />
+      </div>
     </div>
   </VMenu>
 </template>
@@ -74,6 +87,8 @@ export default {
           return { name: 'DateFilter.vue', args: {} }
         case 'DATETIME':
           return { name: 'DateFilter.vue', args: { isDatetime: true } }
+        case 'TIME':
+          return { name: 'TimeFilter.vue', args: {} }
         default:
           return { name: 'SelectFilter.vue', args: {} }
       }

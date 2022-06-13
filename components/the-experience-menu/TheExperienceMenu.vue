@@ -53,9 +53,16 @@ export default {
     filterExperiences(experiences) {
       const { include } = this
       // return all experiences, if no filter provided
-      return include
-        ? experiences.filter(e => include.includes(e.slug))
-        : experiences
+      let filtered = experiences
+      if (include) {
+        filtered = filtered.filter(e => include.includes(e.slug))
+      }
+      if (!this.$route.params.bubble) {
+        // remove aggregator experiences from the menu when
+        // user is not in a bubble
+        filtered = filtered.filter(e => !e.slug.endsWith('-agg'))
+      }
+      return filtered
     }
   }
 }

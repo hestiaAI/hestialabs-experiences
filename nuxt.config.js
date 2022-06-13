@@ -34,7 +34,10 @@ export default {
     title: '',
     meta: [
       { name: 'format-detection', content: 'telephone=no' },
-      { property: 'twitter:description', content: description }
+      { property: 'og:title', content: name },
+      { property: 'twitter:title', content: name },
+      { property: 'twitter:description', content: description },
+      { property: 'twitter:image', content: `${baseUrl}/ogimg.png` }
     ]
   },
 
@@ -42,7 +45,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/injected.js'],
+  plugins: ['@/plugins/injected.js', '@/plugins/api.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: [
@@ -69,10 +72,38 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/axios'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
 
   axios: {
-    proxy: true // Can be also an object with default options
+    baseURL: apiUrl
+  },
+
+  auth: {
+    fullPathRedirect: true,
+    redirect: {
+      login: '/login',
+      logout: false,
+      home: '/'
+    },
+    strategies: {
+      local: {
+        token: {
+          property: false,
+          required: false
+        },
+        user: {
+          autoFetch: false
+        },
+        endpoints: {
+          login: {
+            url: '/bubbles/login',
+            method: 'post'
+          },
+          logout: { url: '/bubbles/logout', method: 'get' },
+          user: false
+        }
+      }
+    }
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -91,6 +122,8 @@ export default {
         type: 'image/png'
       },
       ogHost: baseUrl,
+      twitterCard: 'summary',
+      twitterSite: '@HestiaLabs',
       // set following meta tags with vue-meta
       ogTitle: false,
       ogUrl: false
