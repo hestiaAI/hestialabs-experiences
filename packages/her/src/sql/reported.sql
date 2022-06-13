@@ -1,1 +1,4 @@
-SELECT * FROM HerReport;
+SELECT
+  *
+FROM
+  HerReport;

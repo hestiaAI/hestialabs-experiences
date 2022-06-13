@@ -1,1 +1,4 @@
-SELECT * FROM HerMessage;
+SELECT
+  *
+FROM
+  HerMessage;

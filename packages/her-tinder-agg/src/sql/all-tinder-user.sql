@@ -1,1 +1,4 @@
-SELECT * FROM TinderOrientation;
+SELECT
+  *
+FROM
+  TinderOrientation;

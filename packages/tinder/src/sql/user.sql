@@ -1,1 +1,4 @@
-SELECT * FROM TinderUser;
+SELECT
+  *
+FROM
+  TinderUser;

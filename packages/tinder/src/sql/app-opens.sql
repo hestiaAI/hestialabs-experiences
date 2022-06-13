@@ -1,3 +1,8 @@
-SELECT  dateValue, actionType, amount
-FROM TinderUsage
-WHERE actionType='app_opens';
+SELECT
+  dateValue,
+  actionType,
+  amount
+FROM
+  TinderUsage
+WHERE
+  actionType = 'app_opens';

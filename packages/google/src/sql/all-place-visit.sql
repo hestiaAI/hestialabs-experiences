@@ -1,1 +1,4 @@
-SELECT * FROM PlaceVisit;
+SELECT
+  *
+FROM
+  PlaceVisit;

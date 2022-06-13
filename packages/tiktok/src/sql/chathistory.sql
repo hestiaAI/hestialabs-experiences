@@ -1,1 +1,4 @@
-SELECT * FROM ChatHistory;
+SELECT
+  *
+FROM
+  ChatHistory;

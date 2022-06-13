@@ -1,2 +1,9 @@
-SELECT latitude, longitude, timestamp, accuracy, source, activityType
-FROM Records;
+SELECT
+  latitude,
+  longitude,
+  timestamp,
+  accuracy,
+  source,
+  activityType
+FROM
+  Records;

@@ -1,1 +1,4 @@
-SELECT * FROM LoginHistory;
+SELECT
+  *
+FROM
+  LoginHistory;

@@ -1,1 +1,4 @@
-SELECT * FROM ActivitySegment;
+SELECT
+  *
+FROM
+  ActivitySegment;

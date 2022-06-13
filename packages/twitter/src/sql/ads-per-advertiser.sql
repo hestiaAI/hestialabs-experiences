@@ -1,3 +1,8 @@
-SELECT advertiserName, DATE(time) AS date, COUNT(*) AS count
-FROM TwitterAd
-GROUP BY advertiserName;
+SELECT
+  advertiserName,
+  DATE(time) AS date,
+  COUNT(*) AS count
+FROM
+  TwitterAd
+GROUP BY
+  advertiserName;

@@ -1,1 +1,4 @@
-SELECT * FROM TiktokFollowingList;
+SELECT
+  *
+FROM
+  TiktokFollowingList;

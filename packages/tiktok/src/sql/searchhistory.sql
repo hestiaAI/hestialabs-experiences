@@ -1,1 +1,4 @@
-SELECT * FROM SearchHistory;
+SELECT
+  *
+FROM
+  SearchHistory;

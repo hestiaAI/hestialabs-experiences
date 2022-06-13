@@ -1,1 +1,4 @@
-SELECT * FROM BlockList;
+SELECT
+  *
+FROM
+  BlockList;

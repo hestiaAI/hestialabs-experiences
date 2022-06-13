@@ -1,1 +1,4 @@
-SELECT * FROM TrackerControl;
+SELECT
+  *
+FROM
+  TrackerControl;

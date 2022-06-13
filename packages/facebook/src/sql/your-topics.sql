@@ -1,1 +1,4 @@
-SELECT name FROM AdsInterest
+SELECT
+  name
+FROM
+  AdsInterest
