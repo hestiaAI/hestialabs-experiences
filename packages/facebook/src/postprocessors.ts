@@ -10,7 +10,7 @@ export const sunburstTargetingAdvertiser: PostprocessorFunction = result => {
   // Construct tree: Root -> TargetingType -> [TargetingValue, count]
   for (const item of items) {
     const { targetingType, targetingValue } = item
-    const count = parseInt(item.count)
+    const count = parseInt(item.count_)
     if (!tree.has(targetingType)) {
       tree.set(targetingType, [])
     }

@@ -1,9 +1,9 @@
 SELECT
   latitude,
   longitude,
-  timestamp,
+  r.timestamp,
   accuracy,
   source,
   activityType
 FROM
-  Records;
+  Records r;

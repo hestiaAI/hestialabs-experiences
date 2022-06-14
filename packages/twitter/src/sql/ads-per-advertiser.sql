@@ -1,8 +1,8 @@
 SELECT
   advertiserName,
-  DATE(time) AS date,
-  COUNT(*) AS count
+  DATE(t.time) AS date_,
+  COUNT(*) AS count_
 FROM
-  TwitterAd
+  TwitterAd t
 GROUP BY
   advertiserName;

@@ -8,7 +8,7 @@ WITH
         OtherCandidate.FilePath,
         0,
         INSTR(OtherCandidate.FilePath, '/')
-      ) as uniqueId
+      ) AS uniqueId
     FROM
       OtherCandidate
     WHERE
@@ -23,7 +23,7 @@ WITH
         OtherCandidate.FilePath,
         0,
         INSTR(OtherCandidate.FilePath, '/')
-      ) as uniqueId
+      ) AS uniqueId
     FROM
       OtherCandidate,
       KAnonymity

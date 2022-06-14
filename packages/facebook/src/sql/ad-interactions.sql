@@ -1,9 +1,9 @@
 SELECT
   title,
-  action,
-  timestamp
+  a.action,
+  a.timestamp
 FROM
-  AdvertiserInteraction
+  AdvertiserInteraction a
 GROUP BY
   title,
-  timestamp;
+  a.timestamp;

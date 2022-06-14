@@ -25,7 +25,7 @@ const blocks: ViewBlocks = [
     vizProps: {
       title: 'Likes vs Passes over time',
       legendOffset: 350,
-      dateAccessor: { text: 'Date', value: 'date' },
+      dateAccessor: { text: 'Date', value: 'date_' },
       seriesAccessor: { text: 'Action', value: 'actionValue' },
       valueAccessor: 'actionCount'
     },

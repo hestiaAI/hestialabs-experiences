@@ -1,11 +1,11 @@
 SELECT
   name AS targetingType,
   type AS targetingValue,
-  COUNT(*) as count
+  COUNT(*) AS count_
 FROM
   OffFacebookActivityEvent
 WHERE
-  targetingType in (
+  targetingType IN (
     SELECT
       name
     FROM

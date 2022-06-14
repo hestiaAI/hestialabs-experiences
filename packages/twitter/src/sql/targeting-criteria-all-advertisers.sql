@@ -1,7 +1,7 @@
 SELECT
   targetingType,
   targetingValue,
-  COUNT(*) AS count
+  COUNT(*) AS count_
 FROM
   TwitterCriterion
 GROUP BY

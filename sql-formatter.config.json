@@ -1,3 +1,5 @@
 {
-  "language": "sqlite"
+  "language": "sqlite",
+  "keywordCase": "upper",
+  "aliasAs": "select"
 }

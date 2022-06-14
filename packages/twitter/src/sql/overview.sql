@@ -5,7 +5,7 @@ WITH
       a.advertiserName,
       a.displayLocation,
       a.time,
-      COUNT(*) AS count
+      COUNT(*) AS count_
     FROM
       TwitterAd a,
       TwitterEngagement e
@@ -31,7 +31,7 @@ SELECT
   IFNULL(
     (
       SELECT
-        ec.count
+        ec.count_
       FROM
         EngagementCount ec
       WHERE
@@ -41,8 +41,8 @@ SELECT
         AND a.time = ec.time
     ),
     0
-  ) AS engagements,
-  a.time AS date,
+  ) engagements,
+  a.time AS date_,
   c.targetingType,
   c.targetingValue
 FROM

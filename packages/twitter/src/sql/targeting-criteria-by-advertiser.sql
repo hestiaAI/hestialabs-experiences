@@ -2,7 +2,7 @@ SELECT
   advertiserName,
   targetingType,
   targetingValue,
-  COUNT(*) as count
+  COUNT(*) AS count_
 FROM
   TwitterAd
   INNER JOIN TwitterCriterion ON TwitterAd.id = TwitterCriterion.adId

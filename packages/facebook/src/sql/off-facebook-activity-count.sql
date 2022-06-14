@@ -1,9 +1,9 @@
 SELECT
   name AS advertiserName,
-  timestamp AS date,
-  COUNT(*) as count
+  o.timestamp AS date_,
+  COUNT(*) AS count_
 FROM
-  OffFacebookActivityEvent
+  OffFacebookActivityEvent o
 GROUP BY
   name,
-  timestamp;
+  o.timestamp;

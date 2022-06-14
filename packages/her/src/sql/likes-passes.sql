@@ -12,7 +12,7 @@ WITH
       HerSkip
   )
 SELECT
-  likedAt as date,
+  likedAt AS date_,
   "Like" AS actionValue,
   COUNT(*) AS actionCount
 FROM
@@ -21,7 +21,7 @@ GROUP BY
   likedAt
 UNION
 SELECT
-  skippedAt as date,
+  skippedAt AS date_,
   "Skip" AS actionValue,
   COUNT(*) AS actionCount
 FROM
