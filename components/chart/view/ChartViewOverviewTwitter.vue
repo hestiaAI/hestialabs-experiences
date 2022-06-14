@@ -118,7 +118,7 @@ export default {
       header: [
         { text: 'Tweet ID', value: 'tweetId' },
         { text: 'Company', value: 'companyName' },
-        { text: 'Date', value: 'date' },
+        { text: 'Date', value: 'date_' },
         { text: 'Promoted Tweet', value: 'url' },
         {
           text: 'Engagement',
@@ -185,7 +185,7 @@ export default {
         d.targetingType = d.targetingType ? d.targetingType : 'Unknown'
         d.targetingValue = d.targetingValue ? d.targetingValue : 'Unknown'
         d.companyName = d.companyName ? d.companyName : ''
-        d.dateParsed = dateFormatParser(d.date)
+        d.dateParsed = dateFormatParser(d.date_)
         d.day = d3.timeDay(d.dateParsed) // pre-calculate days for better performance
         d.dateStr = formatTime(d.dateParsed)
         d.url = 'https://twitter.com/x/status/' + d.tweetId
@@ -220,14 +220,14 @@ export default {
       })
       const addRecord = (p, v) => {
         // add
-        p.dict[v.tweetId + v.date] = (p.dict[v.tweetId + v.date] || 0) + 1
-        if (p.dict[v.tweetId + v.date] === 1) p.count++
+        p.dict[v.tweetId + v.date_] = (p.dict[v.tweetId + v.date_] || 0) + 1
+        if (p.dict[v.tweetId + v.date_] === 1) p.count++
         return p
       }
       const removeRecord = (p, v) => {
         // remove
-        p.dict[v.tweetId + v.date] -= 1
-        if (p.dict[v.tweetId + v.date] === 0) p.count--
+        p.dict[v.tweetId + v.date_] -= 1
+        if (p.dict[v.tweetId + v.date_] === 0) p.count--
         return p
       }
       function orderValue(p) {
@@ -425,14 +425,14 @@ export default {
             v => v.length,
             d => d.tweetId,
             d => d.companyName,
-            d => d.date,
+            d => d.date_,
             d => d.url,
             d => d.engagements
           )
           this.results = newData.map(x => ({
             tweetId: x[0],
             companyName: x[1],
-            date: x[2],
+            date_: x[2],
             url: x[3],
             engagements: x[4],
             count: x[5]
