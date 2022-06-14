@@ -159,9 +159,9 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    extend(config, { isDev, isClient }) {
-      if (isClient && isDev) {
-        config.devtool = 'source-map'
+    extend(config, { isDev }) {
+      if (isDev) {
+        config.devtool = 'eval'
       }
       config.node = {
         // ignore fs Node.js module (used in some dependencies)

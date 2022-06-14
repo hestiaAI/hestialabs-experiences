@@ -196,7 +196,9 @@ export default {
     },
     decodeDefault(str) {
       try {
-        return str ? decodeURIComponent(escape(str)) : 'Unknown'
+        return str && str !== 'undefined'
+          ? decodeURIComponent(escape(str))
+          : 'Unknown'
       } catch (e) {
         console.error(e)
         return str || 'Unknown'
@@ -311,11 +313,11 @@ export default {
           app: this.decodeDefault(d.bundleID),
           domain: this.decodeDefault(d.domain),
           domainType:
-            d.domainType === '2' || d.domainType === false ? 'No' : 'Yes',
+            d.domainType === '2' || d.domainType === 'false' ? 'No' : 'Yes',
           domainOwner: this.decodeDefault(d.domainOwner),
           context: this.decodeDefault(d.context),
           initiatedType:
-            d.initiatedType === 'NonAppInitiated' || d.initiatedType === false
+            d.initiatedType === 'NonAppInitiated' || d.initiatedType === 'false'
               ? 'No'
               : 'Yes',
           hits: +d.hits
