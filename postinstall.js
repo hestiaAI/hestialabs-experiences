@@ -1,6 +1,6 @@
 const { resolve } = require('path')
 
-const { CONFIG_NAME = 'dev' } = process.env
+const { CONFIG_NAME = 'dev', CIRCLECI, NODE_ENV } = process.env
 
 const { experiences } = require(resolve(
   __dirname,
@@ -22,7 +22,7 @@ function handleSpawnOutput({ status, stderr, stdout, error }) {
 }
 
 if (experiences) {
-  if (process.env.NODE_ENV === 'production') {
+  if (NODE_ENV === 'production' || CIRCLECI) {
     const { spawnSync, execSync } = require('child_process')
     const npmrcPath = resolve(__dirname, '.npmrc')
     const cmd = `echo "//npm.pkg.github.com/:_authToken=$\{HESTIA_OWNER_GITHUB_TOKEN}" >> ${npmrcPath}`
