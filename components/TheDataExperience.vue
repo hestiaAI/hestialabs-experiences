@@ -38,15 +38,19 @@
         <VTabsItems v-model="tab">
           <VTabItem value="load-data" :transition="false">
             <VCol cols="12 mx-auto" md="6" class="tabItem">
-              <UnitIntroduction
+              <UnitDownload
+                v-if="config.dataFromBubble"
                 v-bind="{
-                  companyName: title,
-                  dataPortal,
-                  dataPortalHtml,
-                  dataPortalMessage,
-                  tutorialVideos,
-                  files,
-                  samples,
+                  progress,
+                  error,
+                  success,
+                  message
+                }"
+                @update="onUnitFilesUpdate"
+              />
+              <UnitIntroduction
+                v-else
+                v-bind="{
                   progress,
                   error,
                   success,
@@ -92,11 +96,7 @@
             :transition="false"
           >
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
-              <UnitConsentForm
-                v-bind="{
-                  viewBlocks
-                }"
-              />
+              <UnitConsentForm />
             </VCol>
           </VTabItem>
         </VTabsItems>
@@ -108,69 +108,28 @@
 <script>
 import { mapState } from 'vuex'
 
-import debounce from 'lodash/debounce'
+import { debounce, pick } from 'lodash'
 
+import UnitDownload from './unit/UnitDownload.vue'
 import DBMS from '~/utils/sql'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 
 export default {
   name: 'TheDataExperience',
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    dataPortal: {
-      type: String,
-      default: ''
-    },
-    dataPortalHtml: {
-      type: String,
-      default: ''
-    },
-    dataPortalMessage: {
-      type: String,
-      default: ''
-    },
-    tutorialVideos: {
-      type: Array,
-      default: () => []
-    },
-    dataSamples: {
-      type: Array,
-      default: () => []
-    },
-    files: {
-      type: Object,
-      default: () => ({})
-    },
-    keepOnlyFiles: {
-      type: Boolean,
-      default: true
-    },
-    viewBlocks: {
-      type: Array,
-      default: () => []
-    },
-    hideSummary: {
-      type: Boolean,
-      default: false
-    },
-    hideFileExplorer: {
-      type: Boolean,
-      default: false
-    },
-    preprocessors: {
-      type: Object,
-      default: () => ({})
-    },
-    databaseConfig: {
-      type: Object,
-      default: undefined
-    }
-  },
+  components: { UnitDownload },
   data() {
+    const experience = this.$store.getters.experience(this.$route)
+    const properties = pick(experience, [
+      'databaseConfig',
+      'files',
+      'hideSummary',
+      'hideFileExplorer',
+      'keepOnlyFiles',
+      'preprocessors',
+      'viewBlocks'
+    ])
+
     return {
       tab: null,
       fab: false,
@@ -179,7 +138,7 @@ export default {
       success: false,
       message: '',
       overlay: false,
-      samples: []
+      ...properties
     }
   },
   computed: {
@@ -230,12 +189,17 @@ export default {
     sqlQueries() {
       return this.viewBlocks.map(o => this.sql[o.sql])
     },
+    config() {
+      const { config } = this.$store.state
+      const { bubble } = this.$route.params
+      return bubble ? config.bubbleConfig[bubble] : config
+    },
     consentFormTemplate() {
-      const consent = this.$store.state.config.consent
+      const { consent } = this.config
       if (consent) {
-        const key = this.$route.params.key
-        if (key in consent) {
-          return consent[key]
+        const { experience } = this.$route.params
+        if (experience in consent) {
+          return consent[experience]
         } else if ('default' in consent) {
           return consent.default
         }
@@ -258,16 +222,6 @@ export default {
       handler: debounce(function (value) {
         this.overlay = value
       }, 200)
-    }
-  },
-  async created() {
-    // files in assets/data/ are loaded with file-loader
-    this.samples = []
-    for (const filename of this.dataSamples) {
-      this.samples.push({
-        filename,
-        path: (await import(`@/assets/data/${filename}`)).default
-      })
     }
   },
   mounted() {
@@ -300,9 +254,9 @@ export default {
       // Set consent form
       const consentForm = JSON.parse(JSON.stringify(this.consentFormTemplate))
       if (consentForm) {
-        const section = consentForm.find(section => section.type === 'data')
+        const section = consentForm.find(({ type }) => type === 'data')
         section.titles = this.viewBlocks.map(e => e.title)
-        section.keys = this.viewBlocks.map(e => e.key)
+        section.ids = this.viewBlocks.map(e => e.id)
       }
       this.$store.commit('setConsentForm', consentForm)
 

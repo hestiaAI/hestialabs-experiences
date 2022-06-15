@@ -8,8 +8,12 @@
     "netflix",
     "uber",
     "linkedin",
+    "apple-tracker",
+    "apple-tracker-agg",
     "tracker-control",
+    "tracker-control-agg",
     "google",
+    "google-agg",
     "amazon",
     "easyjet",
     "strava",
@@ -20,5 +24,6 @@
     "whatsapp",
     "explorer"
   ],
+  "bubbles": ["tl-aggregator", "tl-participant"],
   "hashtags": ["dataprivacy", "hestialabs", "digipower"]
 }

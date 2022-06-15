@@ -9,14 +9,14 @@ const {
   NODE_ENV,
   BASE_URL: baseUrl = 'http://localhost:3000',
   CONFIG_NAME: configName = 'dev',
-  WEBDAV_USERNAME
+  API_URL: apiUrl = 'http://127.0.0.1:8000'
 } = process.env
 
-if (!baseUrl && NODE_ENV === 'production') {
+const isProduction = NODE_ENV === 'production'
+
+if (!baseUrl && isProduction) {
   throw new Error('BASE_URL environment variable is missing')
 }
-
-const uploadAvailable = !!WEBDAV_USERNAME
 
 export default {
   ssr: false, // Disable Server-Side Rendering
@@ -29,17 +29,23 @@ export default {
         const { appName } = this.context.store.getters
         return title ? `${title} | ${appName}` : appName
       }
-      return 'HestiaLabs'
+      return 'Booting 🚀'
     },
     title: '',
-    meta: [{ name: 'format-detection', content: 'telephone=no' }]
+    meta: [
+      { name: 'format-detection', content: 'telephone=no' },
+      { property: 'og:title', content: name },
+      { property: 'twitter:title', content: name },
+      { property: 'twitter:description', content: description },
+      { property: 'twitter:image', content: `${baseUrl}/ogimg.png` }
+    ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/injected.js'],
+  plugins: ['@/plugins/injected.js', '@/plugins/api.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: [
@@ -66,7 +72,39 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
+
+  axios: {
+    baseURL: apiUrl
+  },
+
+  auth: {
+    fullPathRedirect: true,
+    redirect: {
+      login: '/login',
+      logout: false,
+      home: '/'
+    },
+    strategies: {
+      local: {
+        token: {
+          property: false,
+          required: false
+        },
+        user: {
+          autoFetch: false
+        },
+        endpoints: {
+          login: {
+            url: '/bubbles/login',
+            method: 'post'
+          },
+          logout: { url: '/bubbles/logout', method: 'get' },
+          user: false
+        }
+      }
+    }
+  },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
@@ -84,6 +122,8 @@ export default {
         type: 'image/png'
       },
       ogHost: baseUrl,
+      twitterCard: 'summary',
+      twitterSite: '@HestiaLabs',
       // set following meta tags with vue-meta
       ogTitle: false,
       ogUrl: false
@@ -113,15 +153,15 @@ export default {
 
   env: {
     baseUrl,
-    configName,
-    uploadAvailable
+    apiUrl,
+    configName
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    extend(config, { isDev, isClient }) {
-      if (isClient && isDev) {
-        config.devtool = 'source-map'
+    extend(config, { isDev }) {
+      if (isDev) {
+        config.devtool = 'eval'
       }
       config.node = {
         // ignore fs Node.js module (used in some dependencies)

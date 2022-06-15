@@ -103,10 +103,6 @@ export default {
                 format: null
               },
               {
-                name: 'placeVisitType',
-                format: null
-              },
-              {
                 name: 'semanticType',
                 format: null
               },

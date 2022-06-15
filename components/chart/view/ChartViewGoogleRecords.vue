@@ -1,0 +1,176 @@
+<template>
+  <VContainer v-if="values.length > 0">
+    <VRow>
+      <VCol cols="12">
+        <p v-if="total === 0" class="text-subtitle-2">
+          No records were found in your file(s).
+        </p>
+        <p v-else class="text-subtitle-2">
+          We found <strong>{{ total }}</strong> records associated to a trip in
+          your file <br />
+          <br />
+          This map shows those records with the color corresponding to an
+          activity type:
+        </p>
+      </VCol>
+    </VRow>
+    <template v-if="total > 0">
+      <VRow>
+        <VCol cols="12">
+          <UnitIframe src="/kepler" :args="keplerArgs" />
+        </VCol>
+        <p v-if="config.consent">
+          Please use the search box and filters below to change what is shown on
+          the map.<br />
+          Any filtering you do will also limit what data is shared into the pool
+          if you share this tab on the 'Share My Data' tab.
+        </p>
+      </VRow>
+      <VMenu
+        v-model="menu"
+        :close-on-content-click="false"
+        :nudge-width="200"
+        offset-y
+      >
+        <template #activator="{ on, attrs }">
+          <VBtn color="primary" class="ma-2" outlined v-bind="attrs" v-on="on">
+            Add Noise
+          </VBtn>
+        </template>
+        <VCard class="mx-auto" max-width="600">
+          <VCardTitle>Noise Level</VCardTitle>
+          <VCardText>
+            <VRow class="mb-4" justify="space-between">
+              <VCol class="text-left">
+                <span
+                  class="text-h2 font-weight-light"
+                  v-text="sliderValue"
+                ></span>
+                <span class="subheading font-weight-light mr-1">meters</span>
+              </VCol>
+            </VRow>
+
+            <VSlider
+              v-model="sliderValue"
+              :max="100"
+              :min="0"
+              :step="'1'"
+              track-color="grey"
+              always-dirty
+            >
+              <template #prepend>
+                <VIcon @click="decrement"> $vuetify.icons.mdiMinus </VIcon>
+              </template>
+
+              <template #append>
+                <VIcon @click="increment"> $vuetify.icons.mdiPlus </VIcon>
+              </template>
+            </VSlider>
+          </VCardText>
+          <VCardActions>
+            <VSpacer></VSpacer>
+
+            <VBtn @click="clear">Clear</VBtn>
+            <VBtn color="primary" @click="addNoise">Save</VBtn>
+          </VCardActions>
+        </VCard>
+      </VMenu>
+      <VRow>
+        <VCol cols="12">
+          <UnitFilterableTable
+            v-bind="{ headers, items: results }"
+            @current-items="onTableFilter"
+          />
+        </VCol>
+      </VRow>
+    </template>
+  </VContainer>
+</template>
+<script>
+import { mapState } from 'vuex'
+import mixin from './mixin'
+import keplerConfig from './kepler_config_records.js'
+export default {
+  mixins: [mixin],
+  data() {
+    return {
+      menu: false,
+      sliderValue: 0,
+      filteredRows: [],
+      results: this.values.map(v => {
+        return {
+          ...v,
+          longitude: v.longitude * 1e-7,
+          latitude: v.latitude * 1e-7
+        }
+      })
+    }
+  },
+  computed: {
+    ...mapState(['config']),
+    total() {
+      return this.results.length
+    },
+    filtered() {
+      return this.filteredRows.length
+    },
+    keplerData() {
+      return {
+        fields: this.headers.map(h => {
+          return {
+            name: h
+          }
+        }),
+        rows: this.filteredRows.map(r => this.headers.map(h => r[h]))
+      }
+    },
+    keplerArgs() {
+      return {
+        keplerData: this.keplerData,
+        config: keplerConfig
+      }
+    }
+  },
+  methods: {
+    increment() {
+      this.sliderValue += 1
+    },
+    decrement() {
+      this.sliderValue -= 1
+    },
+    addNoise() {
+      this.menu = false
+      const level = this.sliderValue
+      this.results = this.results.map(x => {
+        return {
+          ...x,
+          longitude:
+            x.longitude +
+            ((0.5 - Math.random()) /
+              ((40075 * 10 ** 3 * Math.cos(Math.radians(x.latitude))) / 360)) *
+              2 *
+              level,
+          latitude:
+            x.latitude +
+            ((0.5 - Math.random()) / (111.32 * 10 ** 3)) * 2 * level
+        }
+      })
+    },
+    clear() {
+      this.menu = false
+      this.results = this.values.map(v => {
+        return {
+          ...v,
+          longitude: v.longitude * 1e-7,
+          latitude: v.latitude * 1e-7
+        }
+      })
+      this.sliderValue = 0
+    },
+    drawViz() {},
+    onTableFilter(newItems) {
+      this.filteredRows = newItems
+    }
+  }
+}
+</script>

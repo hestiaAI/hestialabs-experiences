@@ -18,6 +18,12 @@
         <VCol cols="12">
           <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
+        <p v-if="config.consent">
+          Please use the search box and filters below to change what is shown on
+          the map.<br />
+          Any filtering you do will also limit what data is shared into the pool
+          if you share this tab on the 'Share My Data' tab.
+        </p>
       </VRow>
       <VRow>
         <VCol cols="12">
@@ -31,6 +37,7 @@
   </VContainer>
 </template>
 <script>
+import { mapState } from 'vuex'
 import mixin from './mixin'
 import keplerConfig from './kepler_config_trip.js'
 export default {
@@ -41,6 +48,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['config']),
     results() {
       return this.values.map(v => {
         return {
@@ -48,7 +56,12 @@ export default {
           startLongitude: v.startLongitude * 1e-7,
           startLatitude: v.startLatitude * 1e-7,
           endLongitude: v.endLongitude * 1e-7,
-          endLatitude: v.endLatitude * 1e-7
+          endLatitude: v.endLatitude * 1e-7,
+          startAddress: v.startAddress === 'undefined' ? null : v.startAddress,
+          endAddress: v.endAddress === 'undefined' ? null : v.endAddress,
+          startName: v.startName === 'undefined' ? null : v.startName,
+          endName: v.endName === 'undefined' ? null : v.endName,
+          transitPath: this.parseTransitPath(v.transitPath)
         }
       })
     },
@@ -76,6 +89,21 @@ export default {
     }
   },
   methods: {
+    parseTransitPath(transitPath) {
+      if (transitPath !== 'undefined') {
+        const dico = JSON.parse(transitPath)
+        const name = dico.name
+        return (
+          name +
+          ': ' +
+          dico.transitStops[0].name +
+          ' -> ' +
+          dico.transitStops[dico.transitStops.length - 1].name
+        )
+      } else {
+        return null
+      }
+    },
     drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems

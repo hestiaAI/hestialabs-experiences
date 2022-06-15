@@ -1,8 +1,7 @@
 import initSqlJs from 'sql.js'
 import sqlWasm from 'sql.js/dist/sql-wasm.wasm'
 import { JSONPath } from 'jsonpath-plus'
-
-import { getCsvAndMergeFromID } from '@/utils/csv'
+import _ from 'lodash'
 
 const enforceArray = value => (typeof value === 'string' ? [value] : value)
 
@@ -256,7 +255,9 @@ function generateRecordsRecursively(
           wrap: false
         })
         record[a.column] =
-          typeof value === 'object' ? JSON.stringify(value) : value || null
+          typeof value === 'object'
+            ? JSON.stringify(value)
+            : String(value) || null
       } else if (a.column && a.value) {
         // hardcoded value
         record[a.column] = a.value
@@ -286,7 +287,7 @@ export async function generateRecords(fileManager, { tables, getters }) {
           .filter(
             c => c.length === 2 || !c[2].toLowerCase().includes('autoincrement')
           )
-          .map(c => [c[0], null])
+          .map(c => (c.length > 2 ? [c[0], c[2]] : [c[0], null]))
       )
     ])
   )
@@ -297,26 +298,47 @@ export async function generateRecords(fileManager, { tables, getters }) {
   // iterate over top level "file" getters
   for (const { fileId, ...rest } of getters) {
     if (fileId in fileManager.idToGlob) {
+      const filesPaths = fileManager.getFilePathsFromId(fileId)
+
+      let jsonTexts = []
       const isCSV = fileManager.idToGlob[fileId].endsWith('.csv')
       if (isCSV) {
-        const json = await getCsvAndMergeFromID(fileManager, fileId)
-        generateRecordsRecursively(defaultValues, records, json, json, rest)
+        jsonTexts = await fileManager.getCsvItemsFromId(fileId)
       } else {
         // ...otherwise we assume JSON format by default
         // get all files that match the glob
-        const matchedJSONFiles = await fileManager.getPreprocessedTextFromId(
-          fileId
-        )
-        // iterate over matched files, parse, and generate records from each
-        matchedJSONFiles.forEach(file => {
-          try {
-            const json = JSON.parse(file)
-            generateRecordsRecursively(defaultValues, records, json, json, rest)
-          } catch (error) {
-            console.error(error)
-          }
-        })
+        jsonTexts = await fileManager.getPreprocessedTextFromId(fileId)
       }
+
+      const jsonFiles = jsonTexts.map((f, i) => {
+        return {
+          content: f,
+          path: filesPaths[i]
+        }
+      })
+      // iterate over matched files, parse, and generate records from each
+      jsonFiles.forEach(file => {
+        try {
+          const json = isCSV ? file.content : JSON.parse(file.content)
+
+          // Update the current file path from defaultValues if needed
+          const defaultValuesCopy = _.cloneDeep(defaultValues)
+          Object.entries(defaultValuesCopy[rest.table]).forEach(([k, v]) => {
+            if (v === 'FILEPATH') {
+              defaultValuesCopy[rest.table][k] = file.path
+            }
+          })
+          generateRecordsRecursively(
+            defaultValuesCopy,
+            records,
+            json,
+            json,
+            rest
+          )
+        } catch (error) {
+          console.error(error)
+        }
+      })
     }
   }
   return records

@@ -2,10 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./*"],
       "@/*": ["./*"],
-      "~~/*": ["./*"],
-      "@@/*": ["./*"]
+      "~/*": ["./*"],
+      "@@/*": ["./*"],
+      "~~/*": ["./*"]
     }
   },
   "vueCompilerOptions": {
@@ -19,7 +19,6 @@
     "assets",
     "config",
     "dist",
-    "manifests/icons",
     "node_modules",
     "static",
     "vega-examples"

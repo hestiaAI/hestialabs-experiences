@@ -86,7 +86,7 @@
           </VRow>
           <VRow v-if="showTable">
             <VCol>
-              <UnitFilterableTable v-bind="{ ...clonedResult }" />
+              <UnitFilterableTable v-bind="clonedResult" />
             </VCol>
           </VRow>
         </template>

@@ -1,6 +1,11 @@
 import { Analyzer, DATA_TYPES } from 'type-analyzer'
 import _ from 'lodash'
-import { isValidDate, dateFormatter, datetimeFormatter } from '@/utils/dates'
+import {
+  isValidDate,
+  dateFormatter,
+  datetimeFormatter,
+  timeFormatter
+} from '@/utils/dates'
 
 // Number of sample to use for the type analysis
 const NB_SAMPLE = 400
@@ -62,7 +67,10 @@ export const TYPE_FORMATTER = {
   },
   TIME: {
     validator: d => true, // TODO: validate time
-    formatter: d => (d ? String(d) : null)
+    formatter: d => {
+      const date = new Date(d)
+      return isValidDate(date) ? timeFormatter(date) : null
+    }
   },
   STRING: {
     validator: d => true, // String is our fallback solution, so no validation here

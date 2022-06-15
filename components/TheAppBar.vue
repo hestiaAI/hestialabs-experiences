@@ -7,10 +7,10 @@
       />
       <VToolbarTitle class="d-flex align-center" style="width: 100%">
         <VBtn
-          v-if="$nuxt.$route.path !== '/'"
+          v-if="$route.path !== '/'"
           icon
           to="/"
-          class="v-btn__home mr-0 mr-sm-4"
+          class="v-btn__home mr-0"
           color="primary"
         >
           <VIcon>$vuetify.icons.mdiHome</VIcon>
@@ -66,16 +66,28 @@
           </VBtn>
         </div>
       </template>
-      <div class="mt-6">
+      <div class="my-6">
         <LogoImg width="250" />
-        <TheExperienceMenu />
+        <template v-if="$route.params.bubble">
+          <VSubheader class="mt-2">
+            Connected to bubble:
+            <span class="font-weight-black">
+              &nbsp;{{ $auth.user.bubble.title }}
+            </span>
+          </VSubheader>
+        </template>
+        <TheBubbleMenu />
+        <TheExperienceMenu
+          v-if="$route.params.bubble"
+          :include="$auth.user.bubble.experiences"
+        />
+        <TheExperienceMenu v-else />
       </div>
     </VNavigationDrawer>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -84,9 +96,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['experience', 'enabledExperiences']),
     e() {
-      return this.experience(this.$route)
+      return this.$store.getters.experience(this.$route)
     },
     collaborator() {
       return this.e.collaborator

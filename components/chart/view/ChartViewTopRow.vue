@@ -202,7 +202,7 @@ export default {
       const formatDate = d3.timeFormat('%B %d, %Y')
       const parseDate = d3.timeParse(this.dateFormat)
       const extent = d3.extent(this.values, d => {
-        return parseDate(d.date)
+        return parseDate(d.date_)
       })
       this.minDate = formatDate(extent[0])
       this.maxDate = formatDate(extent[1])
@@ -210,7 +210,7 @@ export default {
 
       // Add number of samples
       this.total = this.values.reduce(
-        (partialSum, a) => partialSum + a.count,
+        (partialSum, a) => partialSum + a.count_,
         0
       )
 
@@ -221,14 +221,14 @@ export default {
       this.records = {
         total: nest()
           .key(d => d.advertiserName)
-          .rollup(d => d3.sum(d, l => l.count))
+          .rollup(d => d3.sum(d, l => l.count_))
           .entries(this.values)
           .sort(function (a, b) {
             return d3.descending(a.value, b.value)
           }),
         average: nest()
           .key(d => d.advertiserName)
-          .rollup(d => d3.sum(d, l => l.count) / this.nbDay)
+          .rollup(d => d3.sum(d, l => l.count_) / this.nbDay)
           .entries(this.values)
           .sort(function (a, b) {
             return d3.descending(a.value, b.value)

@@ -1,4 +1,5 @@
 import Vue from 'vue'
+// import { getConfig } from '@/utils/api'
 
 export const state = () => ({
   loaded: false,
@@ -35,11 +36,15 @@ export const getters = {
     }
     return disabledExperiences
   },
+  config:
+    state =>
+    ({ params: { bubble } }) =>
+      bubble ? state.config.bubbleConfig[bubble] : state.config,
   // https://vuex.vuejs.org/guide/getters.html#method-style-access
   experience:
     state =>
-    ({ params: { key } }) =>
-      state.experiences.find(e => e.slug === key) || {}
+    ({ params: { experience } }) =>
+      state.experiences.find(e => e.slug === experience) || {}
 }
 
 export const mutations = {
@@ -74,7 +79,9 @@ export const mutations = {
         // The value hasn't been initialized
         if (['checkbox', 'data'].includes(section.type)) {
           section.value = []
-        } else if (['radio', 'input', 'multiline'].includes(section.type)) {
+        } else if (
+          ['radio', 'input', 'multiline', 'select'].includes(section.type)
+        ) {
           section.value = ''
         }
       }
@@ -103,15 +110,24 @@ export const actions = {
     if (!state.loaded) {
       const config = (await import(`@/config/${process.env.configName}.json`))
         .default
+      if (config.bubbles?.length) {
+        config.bubbleConfig = {}
+        for (const bubble of config.bubbles) {
+          const data = await this.$api.getConfig(bubble)
+          if (data) {
+            config.bubbleConfig[bubble] = data
+          }
+        }
+      }
       commit('setConfig', {
         ...config,
         appName: 'HestiaLabs Experiences'
       })
     }
   },
-  async loadExperiences({ commit, state, dispatch }, { isDev }) {
+  async loadExperiences({ commit, state, dispatch }, { isDev, $axios }) {
     if (!state.loaded) {
-      await dispatch('loadConfig')
+      await dispatch('loadConfig', $axios)
       const experiences = (
         await Promise.all(
           state.config.experiences.map(packageNameAndTag => {

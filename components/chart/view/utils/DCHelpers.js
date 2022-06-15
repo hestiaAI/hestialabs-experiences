@@ -54,6 +54,12 @@ export function addYLabel(chartToUpdate, displayText) {
     )
 }
 
+/**
+ * Transform a simple group to a cumulative one in order
+ * to make cumulative line chart
+ * @param {Crossfilter group} group the group to transform
+ * @returns the cumulative group
+ */
 export function createCumulativeGroup(group) {
   return {
     all() {
@@ -70,6 +76,12 @@ export function createCumulativeGroup(group) {
   }
 }
 
+/**
+ * Remove datapoints that are null in a crossfilter group
+ * Used to hide empty bins in a bar graph
+ * @param {Crossfilter group} group the group to transform
+ * @returns the cleaned group
+ */
 export function removeEmptyBins(group) {
   return {
     top(n) {

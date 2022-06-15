@@ -13,7 +13,7 @@
 
     <template v-if="section.type === 'data' && !section.hide">
       <VCheckbox
-        v-for="(k, j) in section.keys"
+        v-for="(k, j) in section.ids"
         :key="`data-${j}`"
         v-model="value"
         :readonly="readonly"
@@ -22,26 +22,27 @@
         :label="section.titles[j]"
         :value="k"
       ></VCheckbox>
-
-      <VCheckbox
-        v-model="value"
-        :readonly="readonly"
-        dense
-        value="file-explorer"
-        @change="changedFilesCheckbox"
-      >
-        <template #label>
-          <span
-            >Individual files (<a
-              style="text-decoration: underline"
-              @click="showDialog = true"
-              ><b>{{ selectedFiles.length }}</b> selected</a
-            >)</span
-          >
-        </template>
-      </VCheckbox>
-      <SelectFilesDialog v-if="!readonly" v-model="showDialog" />
-      <ShowFilesDialog v-else v-model="showDialog" />
+      <div v-if="!section.hideFileSelection">
+        <VCheckbox
+          v-model="value"
+          :readonly="readonly"
+          dense
+          value="file-explorer"
+          @change="changedFilesCheckbox"
+        >
+          <template #label>
+            <span
+              >Individual files (<a
+                style="text-decoration: underline"
+                @click="showDialog = true"
+                ><b>{{ selectedFiles.length }}</b> selected</a
+              >)</span
+            >
+          </template>
+        </VCheckbox>
+        <SelectFilesDialog v-if="!readonly" v-model="showDialog" />
+        <ShowFilesDialog v-else v-model="showDialog" />
+      </div>
     </template>
 
     <VRadioGroup
@@ -56,6 +57,14 @@
         :value="option"
       ></VRadio>
     </VRadioGroup>
+
+    <VSelect
+      v-if="section.type === 'select'"
+      v-model="value"
+      :readonly="readonly"
+      :items="section.options"
+      :label="section.placeholder"
+    ></VSelect>
 
     <template v-if="section.type === 'checkbox'">
       <VCheckbox

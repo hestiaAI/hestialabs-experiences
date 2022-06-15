@@ -1,0 +1,20 @@
+<template>
+  <div v-if="$store.state.config.bubbleConfig">
+    <h4 class="mt-6 mb-4 text-h4">Bubbles</h4>
+    <VList rounded>
+      <VListItem
+        v-for="({ title, icon }, slug) in $store.state.config.bubbleConfig"
+        :key="slug"
+        nuxt
+        :to="{ name: 'bubble-bubble', params: { bubble: slug } }"
+      >
+        <VListItemAvatar tile>
+          <VImg :src="icon" :lazy-src="icon" />
+        </VListItemAvatar>
+        <VListItemContent>
+          <VListItemTitle v-text="title" />
+        </VListItemContent>
+      </VListItem>
+    </VList>
+  </div>
+</template>

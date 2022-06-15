@@ -112,6 +112,14 @@ test('short filenames', async () => {
   expect(fileManager.getShortFilename(f5)).toMatch('toc.json')
 })
 
+test('getFileNames', async () => {
+  const fileManager = new FileManager()
+  const f1 = 'foo/bar.txt'
+  const f2 = 'foo/toc.txt'
+  await fileManager.init([mockFile(f1, '1'), mockFile(f2, '2')])
+  expect(fileManager.getFilenames()).toStrictEqual([f1, f2])
+})
+
 test('files are filtered', async () => {
   const fileManager = new FileManager()
   const f1 = mockFile('__MACOSX/ignored.txt', '')

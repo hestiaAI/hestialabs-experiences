@@ -74,9 +74,9 @@ export default {
   },
   methods: {
     updateOptions() {
-      const optionsObject = this.customPipelineOptions
-      if (optionsObject) {
-        this.options = JSON.stringify(optionsObject, null, 2)
+      const { customPipelineOptions: obj } = this
+      if (obj) {
+        this.options = JSON.stringify(obj, null, 2)
       }
     },
     async run() {
@@ -84,10 +84,10 @@ export default {
       this.progress = true
       await setTimeoutPromise(1)
       try {
-        const optionsObject = JSON.parse(this.options || 'null')
+        const options = JSON.parse(this.options || 'null')
         const result = await this.pipeline({
           fileManager: this.fileManager,
-          options: optionsObject
+          options
         })
         if (!result) {
           throw new Error(

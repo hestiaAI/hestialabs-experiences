@@ -1,8 +1,8 @@
 <template>
-  <VApp>
+  <VApp v-if="$store.state.loaded">
     <TheAppBar />
     <VMain>
-      <Nuxt v-if="!$fetchState.pending" />
+      <Nuxt />
       <VSnackbar
         v-model="snackbar"
         content-class="v-snack__content-online-status"
@@ -55,13 +55,28 @@
 <script>
 import { mapGetters } from 'vuex'
 
-function validateRoute({ store, error, params: { key } }) {
-  if (key && !store.getters.enabledExperiences.find(x => x.slug === key)) {
-    error({ statusCode: 404, message: 'Experience Not Found' })
-  }
-}
-
 export default {
+  async middleware({
+    store,
+    params: { bubble },
+    route: { path },
+    isDev,
+    redirect,
+    $auth,
+    $axios
+  }) {
+    if (!store.state.loaded) {
+      await store.dispatch('loadExperiences', { isDev, $axios })
+    }
+    if (bubble && $auth.loggedIn && bubble !== $auth.user.username) {
+      // auto-logout if user tries to enter another bubble
+      await $auth.logout()
+      return redirect({
+        name: 'login',
+        query: { redirect: path }
+      })
+    }
+  },
   data() {
     return {
       // Display offline message if user opens app when offline
@@ -69,11 +84,6 @@ export default {
       timeout: 5000,
       alert: false
     }
-  },
-  async fetch() {
-    const { context } = this.$nuxt
-    await context.store.dispatch('loadExperiences', context)
-    validateRoute(context)
   },
   head() {
     if (!this.appName) {
@@ -92,24 +102,9 @@ export default {
           content: this.$url(this.$route)
         },
         {
-          hid: 'twitter:card',
-          property: 'twitter:card',
-          content: 'summary'
-        },
-        {
-          hid: 'twitter:site',
-          property: 'twitter:site',
-          content: '@HestiaLabs'
-        },
-        {
           hid: 'twitter:title',
           property: 'twitter:title',
           content: this.appName
-        },
-        {
-          hid: 'twitter:image',
-          property: 'twitter:image',
-          content: `${process.env.baseUrl}/ogimg.png`
         }
       ]
     }
@@ -135,9 +130,6 @@ export default {
       this.snackbar = true
       // changing timeout property resets the timeout
       this.timeout = isOffline ? 5001 : 5000
-    },
-    '$route.params.key'() {
-      validateRoute(this.$nuxt.context)
     }
   },
   mounted() {
