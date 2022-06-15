@@ -60,7 +60,7 @@ This section explains how packages are created and updated
 {
   "name": "@hestiaai/<NAME>",
   "version": "0.0.0",
-  "browser": "dist/index",
+  "main": "dist/index",
   "type": "module",
   "files": ["dist"],
   "repository": {
