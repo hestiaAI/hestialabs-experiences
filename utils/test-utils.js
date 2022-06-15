@@ -39,3 +39,8 @@ export function arrayEqualNoOrder(array1, array2) {
   array1.forEach(x => expect(array2).toContainEqual(x))
   expect(array1.length).toBe(array2.length)
 }
+
+export function getSqlFromBlock({ options: { viewBlocks } }, id) {
+  const { sql = '' } = viewBlocks.find(b => b.id === id)
+  return sql
+}

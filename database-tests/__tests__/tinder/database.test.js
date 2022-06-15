@@ -1,12 +1,14 @@
 import experience from '@hestiaai/tinder'
 import { tinder } from './samples.helpers'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
-import { DatabaseTester, arrayEqualNoOrder } from '~/utils/test-utils'
+import {
+  DatabaseTester,
+  arrayEqualNoOrder,
+  getSqlFromBlock
+} from '~/utils/test-utils'
 
 const tester = new DatabaseTester()
-const {
-  options: { viewBlocks }
-} = experience
+const getSql = getSqlFromBlock.bind(null, experience)
 
 describe('with complete samples', () => {
   beforeAll(async () => {
@@ -16,7 +18,7 @@ describe('with complete samples', () => {
   afterAll(() => tester.close())
 
   test('query all returns the correct items', () => {
-    const { sql } = viewBlocks.find(({ id }) => id === 'donut')
+    const sql = getSql('donut')
     const result = tester.select(sql)
     const expected = {
       headers: [

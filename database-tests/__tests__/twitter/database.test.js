@@ -6,12 +6,14 @@ import {
   missingAttributesEngagements
 } from './samples.helpers'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
-import { DatabaseTester, arrayEqualNoOrder } from '~/utils/test-utils'
+import {
+  DatabaseTester,
+  arrayEqualNoOrder,
+  getSqlFromBlock
+} from '~/utils/test-utils'
 
 const tester = new DatabaseTester()
-const {
-  options: { viewBlocks }
-} = experience
+const getSql = getSqlFromBlock.bind(null, experience)
 
 async function init(adImpressions, adEngagements) {
   const files = [
@@ -74,7 +76,7 @@ describe('with complete samples', () => {
   })
 
   test('query ads-per-advertiser returns the correct items', () => {
-    const { sql } = viewBlocks.find(({ id }) => id === 'ads-per-advertiser')
+    const sql = getSql('ads-per-advertiser')
     const result = tester.select(sql)
     const expected = {
       headers: ['advertiserName', 'date_', 'count_'],
@@ -87,9 +89,7 @@ describe('with complete samples', () => {
   })
 
   test('query all-criteria-all-advertisers returns the correct items', () => {
-    const { sql } = viewBlocks.find(
-      ({ id }) => id === 'all-criteria-all-advertisers'
-    )
+    const sql = getSql('all-criteria-all-advertisers')
     const result = tester.select(sql)
     const expected = {
       headers: ['advertiserName', 'targetingType', 'targetingValue', 'count_'],
@@ -113,7 +113,7 @@ describe('with complete samples', () => {
   })
 
   test('query overview returns the correct items', () => {
-    const { sql } = viewBlocks.find(({ id }) => id === 'overview')
+    const sql = getSql('overview')
     const result = tester.select(sql)
     const expected = {
       headers: [
@@ -148,9 +148,7 @@ describe('with complete samples', () => {
   })
 
   test('query targeting-criteria-all-advertisers returns the correct items', () => {
-    const { sql } = viewBlocks.find(
-      ({ id }) => id === 'targeting-criteria-all-advertisers'
-    )
+    const sql = getSql('targeting-criteria-all-advertisers')
     const result = tester.select(sql)
     const expected = {
       headers: ['targetingType', 'targetingValue', 'count_'],
@@ -172,9 +170,7 @@ describe('with complete samples', () => {
   })
 
   test('query targeting-criteria-by-advertiser returns the correct items', () => {
-    const { sql } = viewBlocks.find(
-      ({ id }) => id === 'targeting-criteria-by-advertiser'
-    )
+    const sql = getSql('targeting-criteria-by-advertiser')
     const result = tester.select(sql)
     const expected = {
       headers: ['advertiserName', 'targetingType', 'targetingValue', 'count_'],

@@ -7,12 +7,14 @@ import {
   adsInterests
 } from './samples.helpers'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
-import { DatabaseTester, arrayEqualNoOrder } from '~/utils/test-utils'
+import {
+  DatabaseTester,
+  arrayEqualNoOrder,
+  getSqlFromBlock
+} from '~/utils/test-utils'
 
 const tester = new DatabaseTester()
-const {
-  options: { viewBlocks }
-} = experience
+const getSql = getSqlFromBlock.bind(null, experience)
 
 describe('with complete samples', () => {
   beforeAll(async () => {
@@ -44,7 +46,7 @@ describe('with complete samples', () => {
   afterAll(() => tester.close())
 
   test('query your-topics returns the correct items', () => {
-    const { sql } = viewBlocks.find(({ id }) => id === 'your-topics')
+    const sql = getSql('your-topics')
     const result = tester.select(sql)
     const expected = {
       headers: ['name'],
@@ -62,9 +64,7 @@ describe('with complete samples', () => {
   })
 
   test('query off-facebook-activity-count returns the correct items', () => {
-    const { sql } = viewBlocks.find(
-      ({ id }) => id === 'off-facebook-activity-count'
-    )
+    const sql = getSql('off-facebook-activity-count')
     const result = tester.select(sql)
     const expected = {
       headers: ['advertiserName', 'date_', 'count_'],
@@ -86,9 +86,7 @@ describe('with complete samples', () => {
   })
 
   test('query off-facebook-activity-type-count returns the correct items', () => {
-    const { sql } = viewBlocks.find(
-      ({ id }) => id === 'off-facebook-activity-type-count'
-    )
+    const sql = getSql('off-facebook-activity-type-count')
     const result = tester.select(sql)
     const expected = {
       headers: ['targetingType', 'targetingValue', 'count_'],
@@ -110,7 +108,7 @@ describe('with complete samples', () => {
   })
 
   test('query ad-interactions returns the correct items', () => {
-    const { sql } = viewBlocks.find(({ id }) => id === 'ad-interactions')
+    const sql = getSql('ad-interactions')
     const result = tester.select(sql)
     const expected = {
       headers: ['title', 'action', 'timestamp'],
@@ -132,9 +130,7 @@ describe('with complete samples', () => {
   })
 
   test('query advertisers-contact-list returns the correct items', () => {
-    const { sql } = viewBlocks.find(
-      ({ id }) => id === 'advertisers-contact-list'
-    )
+    const sql = getSql('advertisers-contact-list')
     const result = tester.select(sql)
     const expected = {
       headers: ['name'],
