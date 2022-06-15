@@ -9,7 +9,10 @@ import {
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { DatabaseTester, arrayEqualNoOrder } from '~/utils/test-utils'
 
-const tester = DatabaseTester()
+const tester = new DatabaseTester()
+const {
+  options: { viewBlocks }
+} = experience
 
 describe('with complete samples', () => {
   beforeAll(async () => {
@@ -41,7 +44,8 @@ describe('with complete samples', () => {
   afterAll(() => tester.close())
 
   test('query your-topics returns the correct items', () => {
-    const result = tester.select('../queries/your-topics.sql')
+    const { sql } = viewBlocks.find(({ id }) => id === 'your-topics')
+    const result = tester.select(sql)
     const expected = {
       headers: ['name'],
       items: [
@@ -58,19 +62,22 @@ describe('with complete samples', () => {
   })
 
   test('query off-facebook-activity-count returns the correct items', () => {
-    const result = tester.select('../queries/off-facebook-activity-count.sql')
+    const { sql } = viewBlocks.find(
+      ({ id }) => id === 'off-facebook-activity-count'
+    )
+    const result = tester.select(sql)
     const expected = {
-      headers: ['advertiserName', 'date', 'count'],
+      headers: ['advertiserName', 'date_', 'count_'],
       items: [
         {
           advertiserName: 'App01',
-          date: 1615460377,
-          count: 1
+          date_: 1615460377,
+          count_: 1
         },
         {
           advertiserName: 'App02',
-          date: 1600622182,
-          count: 1
+          date_: 1600622182,
+          count_: 1
         }
       ]
     }
@@ -79,21 +86,22 @@ describe('with complete samples', () => {
   })
 
   test('query off-facebook-activity-type-count returns the correct items', () => {
-    const result = tester.select(
-      '../queries/off-facebook-activity-type-count.sql'
+    const { sql } = viewBlocks.find(
+      ({ id }) => id === 'off-facebook-activity-type-count'
     )
+    const result = tester.select(sql)
     const expected = {
-      headers: ['targetingType', 'targetingValue', 'count'],
+      headers: ['targetingType', 'targetingValue', 'count_'],
       items: [
         {
           targetingType: 'App01',
           targetingValue: 'CUSTOM',
-          count: 1
+          count_: 1
         },
         {
           targetingType: 'App02',
           targetingValue: 'CUSTOM',
-          count: 1
+          count_: 1
         }
       ]
     }
@@ -102,7 +110,8 @@ describe('with complete samples', () => {
   })
 
   test('query ad-interactions returns the correct items', () => {
-    const result = tester.select('../queries/ad-interactions.sql')
+    const { sql } = viewBlocks.find(({ id }) => id === 'ad-interactions')
+    const result = tester.select(sql)
     const expected = {
       headers: ['title', 'action', 'timestamp'],
       items: [
@@ -123,7 +132,10 @@ describe('with complete samples', () => {
   })
 
   test('query advertisers-contact-list returns the correct items', () => {
-    const result = tester.select('../queries/advertisers-contact-list.sql')
+    const { sql } = viewBlocks.find(
+      ({ id }) => id === 'advertisers-contact-list'
+    )
+    const result = tester.select(sql)
     const expected = {
       headers: ['name'],
       items: [

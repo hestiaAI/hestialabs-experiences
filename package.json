@@ -14,7 +14,7 @@
     "dev:bubble-server": "cd ../hestialabs-bubble-server/bubbleserver && poetry run python ./manage.py runserver",
     "dev:monorepo": "cd ../hestialabs && npm run dev",
     "dev:app": "nuxt --open",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test": "jest",
     "start": "nuxt start",
     "build": "npm run build:update-revision && npm run build:static",
     "build:update-revision": "git rev-parse HEAD > static/git-revision.txt",
@@ -46,7 +46,7 @@
       "vue"
     ],
     "transform": {
-      "^.+\\.[t|j]sx?$": "babel-jest",
+      "^.+\\.m?js$": "babel-jest",
       "^.+\\.vue$": "@vue/vue2-jest"
     },
     "transformIgnorePatterns": [

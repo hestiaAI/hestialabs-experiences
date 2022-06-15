@@ -8,7 +8,10 @@ import {
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { DatabaseTester, arrayEqualNoOrder } from '~/utils/test-utils'
 
-const tester = DatabaseTester()
+const tester = new DatabaseTester()
+const {
+  options: { viewBlocks }
+} = experience
 
 async function init(adImpressions, adEngagements) {
   const files = [
@@ -71,43 +74,37 @@ describe('with complete samples', () => {
   })
 
   test('query ads-per-advertiser returns the correct items', () => {
-    const result = tester.select('../queries/ads-per-advertiser.sql')
+    const { sql } = viewBlocks.find(({ id }) => id === 'ads-per-advertiser')
+    const result = tester.select(sql)
     const expected = {
-      headers: ['advertiserName', 'date', 'count'],
+      headers: ['advertiserName', 'date_', 'count_'],
       items: [
-        { advertiserName: 'PwC Switzerland', date: '2021-04-15', count: 1 }
+        { advertiserName: 'PwC Switzerland', date_: '2021-04-15', count_: 1 }
       ]
     }
     arrayEqualNoOrder(result.headers, expected.headers)
     arrayEqualNoOrder(result.items, expected.items)
   })
 
-  test('query all-advertisers returns the correct items', () => {
-    const result = tester.select('../queries/all-advertisers.sql')
-    const expected = {
-      headers: ['advertiserName', 'count'],
-      items: [{ advertiserName: 'PwC Switzerland', count: 1 }]
-    }
-    arrayEqualNoOrder(result.headers, expected.headers)
-    arrayEqualNoOrder(result.items, expected.items)
-  })
-
   test('query all-criteria-all-advertisers returns the correct items', () => {
-    const result = tester.select('../queries/all-criteria-all-advertisers.sql')
+    const { sql } = viewBlocks.find(
+      ({ id }) => id === 'all-criteria-all-advertisers'
+    )
+    const result = tester.select(sql)
     const expected = {
-      headers: ['advertiserName', 'targetingType', 'targetingValue', 'count'],
+      headers: ['advertiserName', 'targetingType', 'targetingValue', 'count_'],
       items: [
         {
           advertiserName: 'PwC Switzerland',
           targetingType: 'Locations',
           targetingValue: 'Switzerland',
-          count: 1
+          count_: 1
         },
         {
           advertiserName: 'PwC Switzerland',
           targetingType: 'Age',
           targetingValue: '35 and up',
-          count: 1
+          count_: 1
         }
       ]
     }
@@ -116,13 +113,14 @@ describe('with complete samples', () => {
   })
 
   test('query overview returns the correct items', () => {
-    const result = tester.select('../queries/overview.sql')
+    const { sql } = viewBlocks.find(({ id }) => id === 'overview')
+    const result = tester.select(sql)
     const expected = {
       headers: [
         'tweetId',
         'companyName',
         'engagements',
-        'date',
+        'date_',
         'targetingType',
         'targetingValue'
       ],
@@ -131,7 +129,7 @@ describe('with complete samples', () => {
           tweetId: '1381646278988292098',
           companyName: 'PwC Switzerland',
           engagements: 1,
-          date: '2021-04-15 19:43:25',
+          date_: '2021-04-15 19:43:25',
           targetingType: 'Locations',
           targetingValue: 'Switzerland'
         },
@@ -139,7 +137,7 @@ describe('with complete samples', () => {
           tweetId: '1381646278988292098',
           companyName: 'PwC Switzerland',
           engagements: 1,
-          date: '2021-04-15 19:43:25',
+          date_: '2021-04-15 19:43:25',
           targetingType: 'Age',
           targetingValue: '35 and up'
         }
@@ -150,21 +148,22 @@ describe('with complete samples', () => {
   })
 
   test('query targeting-criteria-all-advertisers returns the correct items', () => {
-    const result = tester.select(
-      '../queries/targeting-criteria-all-advertisers.sql'
+    const { sql } = viewBlocks.find(
+      ({ id }) => id === 'targeting-criteria-all-advertisers'
     )
+    const result = tester.select(sql)
     const expected = {
-      headers: ['targetingType', 'targetingValue', 'count'],
+      headers: ['targetingType', 'targetingValue', 'count_'],
       items: [
         {
           targetingType: 'Locations',
           targetingValue: 'Switzerland',
-          count: 1
+          count_: 1
         },
         {
           targetingType: 'Age',
           targetingValue: '35 and up',
-          count: 1
+          count_: 1
         }
       ]
     }
@@ -173,23 +172,24 @@ describe('with complete samples', () => {
   })
 
   test('query targeting-criteria-by-advertiser returns the correct items', () => {
-    const result = tester.select(
-      '../queries/targeting-criteria-by-advertiser.sql'
+    const { sql } = viewBlocks.find(
+      ({ id }) => id === 'targeting-criteria-by-advertiser'
     )
+    const result = tester.select(sql)
     const expected = {
-      headers: ['advertiserName', 'targetingType', 'targetingValue', 'count'],
+      headers: ['advertiserName', 'targetingType', 'targetingValue', 'count_'],
       items: [
         {
           advertiserName: 'PwC Switzerland',
           targetingType: 'Locations',
           targetingValue: 'Switzerland',
-          count: 1
+          count_: 1
         },
         {
           advertiserName: 'PwC Switzerland',
           targetingType: 'Age',
           targetingValue: '35 and up',
-          count: 1
+          count_: 1
         }
       ]
     }

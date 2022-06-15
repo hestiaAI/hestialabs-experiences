@@ -3,7 +3,10 @@ import { her } from './samples.helpers'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { DatabaseTester, arrayEqualNoOrder } from '~/utils/test-utils'
 
-const tester = DatabaseTester()
+const tester = new DatabaseTester()
+const {
+  options: { viewBlocks }
+} = experience
 
 describe('with complete samples', () => {
   beforeAll(async () => {
@@ -14,7 +17,8 @@ describe('with complete samples', () => {
   afterAll(() => tester.close())
 
   test('query liked returns the correct items', () => {
-    const result = tester.select('../queries/liked.sql')
+    const { sql } = viewBlocks.find(({ id }) => id === 'matches')
+    const result = tester.select(sql)
     const expected = {
       headers: ['name', 'likedAt', 'matched'],
       items: [

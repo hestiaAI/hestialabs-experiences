@@ -3,7 +3,10 @@ import { tinder } from './samples.helpers'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { DatabaseTester, arrayEqualNoOrder } from '~/utils/test-utils'
 
-const tester = DatabaseTester()
+const tester = new DatabaseTester()
+const {
+  options: { viewBlocks }
+} = experience
 
 describe('with complete samples', () => {
   beforeAll(async () => {
@@ -13,7 +16,8 @@ describe('with complete samples', () => {
   afterAll(() => tester.close())
 
   test('query all returns the correct items', () => {
-    const result = tester.select('../queries/all.sql')
+    const { sql } = viewBlocks.find(({ id }) => id === 'donut')
+    const result = tester.select(sql)
     const expected = {
       headers: [
         'dateValue',
