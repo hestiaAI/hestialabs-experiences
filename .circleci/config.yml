@@ -21,3 +21,6 @@ workflows:
           pkg-manager: npm
           context:
             - hestialabs
+          filters:
+            branches:
+              ignore: master
