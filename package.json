@@ -41,24 +41,23 @@
     },
     "moduleFileExtensions": [
       "js",
+      "mjs",
       "json",
       "vue"
     ],
     "transform": {
-      "^.+\\.[t|j]sx?$": "babel-jest",
+      "^.+\\.m?js$": "babel-jest",
       "^.+\\.vue$": "@vue/vue2-jest"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!d3)",
+      "/node_modules/(?!d3|@hestiaai)",
       "\\.pnp\\.[^\\/]+$"
     ],
     "testPathIgnorePatterns": [
       "<rootDir>/node_modules/",
       "\\.helpers\\.js"
     ],
-    "modulePathIgnorePatterns": [
-      "<rootDir>/deprecated-tests"
-    ]
+    "modulePathIgnorePatterns": []
   },
   "_transformIgnorePatterns": [
     "/node_modules/(?!robust-predicates)",

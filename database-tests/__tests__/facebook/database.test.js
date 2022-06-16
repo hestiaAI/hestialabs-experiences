@@ -1,6 +1,4 @@
-import fs from 'fs'
-import path from 'path'
-
+import experience from '@hestiaai/facebook'
 import {
   advertisersUsingYourActivity,
   advertisersWhoUploadedAContactList,
@@ -8,32 +6,15 @@ import {
   yourOffFacebookActivity,
   adsInterests
 } from './samples.helpers'
-import preprocessorsModule from '~/manifests/preprocessors'
-import DBMS from '~/utils/sql'
-import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
-import { arrayEqualNoOrder } from '~/utils/test-utils'
+import {
+  DatabaseTester,
+  arrayEqualNoOrder,
+  getSqlFromBlock
+} from '~/utils/test-utils'
 
-let db
-const { files, preprocessors, databaseConfig } = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, '../facebook.json'), 'utf8')
-)
-Object.entries(preprocessors).forEach(
-  ([path, pre]) => (preprocessors[path] = preprocessorsModule[pre])
-)
-
-function runQuery(sqlFilePath) {
-  const sql = fs.readFileSync(path.resolve(__dirname, sqlFilePath), 'utf8')
-  return db.select(sql)
-}
-
-async function getDatabase(mockedFiles) {
-  const fileManager = new FileManager(preprocessors, null, files)
-  await fileManager.init(mockedFiles)
-  db = await DBMS.createDB(databaseConfig)
-  const records = await DBMS.generateRecords(fileManager, databaseConfig)
-  DBMS.insertRecords(db, records)
-}
+const tester = new DatabaseTester()
+const getSql = getSqlFromBlock.bind(null, experience)
 
 describe('with complete samples', () => {
   beforeAll(async () => {
@@ -59,15 +40,14 @@ describe('with complete samples', () => {
         JSON.stringify(adsInterests)
       )
     ]
-    await getDatabase(files)
+    await tester.init(experience, files)
   })
 
-  afterAll(() => {
-    db.close()
-  })
+  afterAll(() => tester.close())
 
   test('query your-topics returns the correct items', () => {
-    const result = runQuery('../queries/your-topics.sql')
+    const sql = getSql('your-topics')
+    const result = tester.select(sql)
     const expected = {
       headers: ['name'],
       items: [
@@ -84,19 +64,20 @@ describe('with complete samples', () => {
   })
 
   test('query off-facebook-activity-count returns the correct items', () => {
-    const result = runQuery('../queries/off-facebook-activity-count.sql')
+    const sql = getSql('off-facebook-activity-count')
+    const result = tester.select(sql)
     const expected = {
-      headers: ['advertiserName', 'date', 'count'],
+      headers: ['advertiserName', 'date_', 'count_'],
       items: [
         {
           advertiserName: 'App01',
-          date: 1615460377,
-          count: 1
+          date_: 1615460377,
+          count_: 1
         },
         {
           advertiserName: 'App02',
-          date: 1600622182,
-          count: 1
+          date_: 1600622182,
+          count_: 1
         }
       ]
     }
@@ -105,19 +86,20 @@ describe('with complete samples', () => {
   })
 
   test('query off-facebook-activity-type-count returns the correct items', () => {
-    const result = runQuery('../queries/off-facebook-activity-type-count.sql')
+    const sql = getSql('off-facebook-activity-type-count')
+    const result = tester.select(sql)
     const expected = {
-      headers: ['targetingType', 'targetingValue', 'count'],
+      headers: ['targetingType', 'targetingValue', 'count_'],
       items: [
         {
           targetingType: 'App01',
           targetingValue: 'CUSTOM',
-          count: 1
+          count_: 1
         },
         {
           targetingType: 'App02',
           targetingValue: 'CUSTOM',
-          count: 1
+          count_: 1
         }
       ]
     }
@@ -126,7 +108,8 @@ describe('with complete samples', () => {
   })
 
   test('query ad-interactions returns the correct items', () => {
-    const result = runQuery('../queries/ad-interactions.sql')
+    const sql = getSql('ad-interactions')
+    const result = tester.select(sql)
     const expected = {
       headers: ['title', 'action', 'timestamp'],
       items: [
@@ -147,7 +130,8 @@ describe('with complete samples', () => {
   })
 
   test('query advertisers-contact-list returns the correct items', () => {
-    const result = runQuery('../queries/advertisers-contact-list.sql')
+    const sql = getSql('advertisers-contact-list')
+    const result = tester.select(sql)
     const expected = {
       headers: ['name'],
       items: [
