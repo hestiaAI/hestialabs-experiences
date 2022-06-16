@@ -1,3 +1,6 @@
+import * as d3 from 'd3'
+import * as dc from 'dc'
+
 // Functions to add x-label & y-label to Row Charts (Unsupported by dc.js)
 // https://www.intothevoid.io/data-visualization/row-chart-axis-labels-dc-js/
 // Use with:
@@ -93,4 +96,23 @@ export function removeEmptyBins(group) {
         .slice(0, n)
     }
   }
+}
+
+export function addPiePercentage(chart) {
+  chart.selectAll('text.pie-slice.pie-label').call(function (t) {
+    t.each(function (d) {
+      const self = d3.select(this)
+      let text = self.text()
+      if (text.length > 14) text = text.substring(0, 14) + '.. '
+      if (text.length > 0)
+        text =
+          text +
+          ' (' +
+          dc.utils.printSingleValue(
+            ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
+          ) +
+          '%)'
+      self.text(text)
+    })
+  })
 }

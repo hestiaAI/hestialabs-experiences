@@ -38,7 +38,7 @@
         <VCol>
           <BaseButton
             ref="downloadButton"
-            text="Download results"
+            text="Download your data"
             :status="generateStatus"
             :error="generateError"
             :progress="generateProgress"
