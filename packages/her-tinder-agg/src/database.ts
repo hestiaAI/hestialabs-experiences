@@ -87,7 +87,7 @@ const config: DatabaseConfig = {
         },
         {
           column: 'likedAt',
-          path: '$.date'
+          path: '$.likedAt'
         },
         {
           column: 'matched',
