@@ -84,7 +84,6 @@
     "@vue/preload-webpack-plugin": "^2.0.0",
     "ajv": "^6.12.6",
     "busboy": "^1.6.0",
-    "core-js": "^3.19.3",
     "crossfilter2": "^1.5.4",
     "d3": "^7.1.1",
     "d3-axis": "^3.0.0",
