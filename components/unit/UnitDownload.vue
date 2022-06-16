@@ -164,10 +164,11 @@
 </template>
 
 <script>
+import { promisify } from 'util'
 import { pick } from 'lodash'
 import { filetype2icon, extension2filetype } from '@/utils/file-manager'
 import { decryptBlob } from '@/utils/encryption'
-const util = require('util')
+
 export default {
   props: {
     success: {
@@ -295,8 +296,8 @@ export default {
       this.apiStatus = 'Downloading files from server...'
       this.status = true
 
-      const getFilePromise = util.promisify(this.$api.getFile)
-      const decryptBlobPromise = util.promisify(decryptBlob)
+      const getFilePromise = promisify(this.$api.getFile)
+      const decryptBlobPromise = promisify(decryptBlob)
       const filenames = this.selectedFiles.map(
         idx => this.fileItems[idx].filename
       )
