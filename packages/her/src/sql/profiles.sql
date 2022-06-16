@@ -1,1 +1,4 @@
-SELECT * FROM HerProfile;
+SELECT
+  *
+FROM
+  HerProfile;

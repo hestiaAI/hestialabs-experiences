@@ -1,1 +1,4 @@
-SELECT * FROM ShareHistory;
+SELECT
+  *
+FROM
+  ShareHistory;

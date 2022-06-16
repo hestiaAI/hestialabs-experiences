@@ -1,2 +1,4 @@
-SELECT *
-FROM TinderMessage;
+SELECT
+  *
+FROM
+  TinderMessage;

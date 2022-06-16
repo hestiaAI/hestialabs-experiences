@@ -1,1 +1,4 @@
-SELECT * FROM TiktokComment;
+SELECT
+  *
+FROM
+  TiktokComment;

@@ -1,1 +1,4 @@
-SELECT * FROM StatusList;
+SELECT
+  *
+FROM
+  StatusList;

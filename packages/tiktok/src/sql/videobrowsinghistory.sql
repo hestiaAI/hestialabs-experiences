@@ -1,1 +1,4 @@
-SELECT * FROM VideoBrowsingHistory;
+SELECT
+  *
+FROM
+  VideoBrowsingHistory;

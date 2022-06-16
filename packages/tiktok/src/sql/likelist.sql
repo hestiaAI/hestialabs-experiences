@@ -1,1 +1,4 @@
-SELECT * FROM LikeList;
+SELECT
+  *
+FROM
+  LikeList;

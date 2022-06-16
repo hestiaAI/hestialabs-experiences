@@ -1,1 +1,4 @@
-SELECT * FROM TwitterPersonalization;
+SELECT
+  *
+FROM
+  TwitterPersonalization;

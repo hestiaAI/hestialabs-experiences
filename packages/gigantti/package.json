@@ -1,7 +1,7 @@
 {
   "name": "@hestiaai/gigantti",
-  "version": "0.0.1-alpha.12",
-  "browser": "dist/index",
+  "version": "0.0.1-alpha.13",
+  "main": "dist/index",
   "type": "module",
   "files": [
     "dist"

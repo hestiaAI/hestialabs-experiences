@@ -64,7 +64,7 @@ export default {
     {
       name: 'source',
       values: [],
-      format: { type: 'json', parse: { count: 'number' } },
+      format: { type: 'json', parse: { count_: 'number' } },
       transform: [
         {
           type: 'filter',
@@ -105,7 +105,7 @@ export default {
           fill: { scale: 'color', field: 'targetingValue' },
           tooltip: {
             signal:
-              "datum.targetingValue + ' was used by ' + datum.count + ' advertiser'"
+              "datum.targetingValue + ' was used by ' + datum.count_ + ' advertiser'"
           }
         },
         update: {
@@ -122,7 +122,7 @@ export default {
           text: { field: 'datum.targetingValue' },
           rotate: { field: 'datum.angle' },
           font: 'Helvetica Neue, Arial',
-          fontSize: { field: 'datum.count' },
+          fontSize: { field: 'datum.count_' },
           fontWeight: { field: 'datum.weight' },
           fontSizeRange: [12, 56],
           padding: 2

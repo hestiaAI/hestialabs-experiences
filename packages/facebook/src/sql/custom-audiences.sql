@@ -1,1 +1,4 @@
-SELECT * FROM CustomAudience;
+SELECT
+  *
+FROM
+  CustomAudience;

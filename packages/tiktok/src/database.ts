@@ -59,7 +59,7 @@ const config: DatabaseConfig = {
         ['resolution', TEXT],
         ['appversion', TEXT],
         ['idfa', TEXT],
-        ['gaid', TEXT], 
+        ['gaid', TEXT],
         ['androidid', TEXT],
         ['idfv', TEXT],
         ['webid', TEXT]

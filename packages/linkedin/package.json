@@ -1,7 +1,7 @@
 {
   "name": "@hestiaai/linkedin",
-  "version": "0.0.1-alpha.14",
-  "browser": "dist/index",
+  "version": "0.0.1-alpha.15",
+  "main": "dist/index",
   "type": "module",
   "files": [
     "dist"

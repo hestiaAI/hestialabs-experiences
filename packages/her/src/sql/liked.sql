@@ -1,1 +1,4 @@
-SELECT * FROM HerLike;
+SELECT
+  *
+FROM
+  HerLike;

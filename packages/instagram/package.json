@@ -1,7 +1,7 @@
 {
   "name": "@hestiaai/instagram",
-  "version": "0.0.1-alpha.25",
-  "browser": "dist/index",
+  "version": "0.0.1-alpha.27",
+  "main": "dist/index",
   "type": "module",
   "files": [
     "dist"

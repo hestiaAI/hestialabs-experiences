@@ -2,5 +2,11 @@
   "semi": false,
   "singleQuote": true,
   "trailingComma": "none",
-  "arrowParens": "avoid"
+  "arrowParens": "avoid",
+  "overrides": [
+    {
+      "files": [".prettierrc", ".eslintrc"],
+      "options": { "parser": "json" }
+    }
+  ]
 }

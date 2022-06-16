@@ -21,7 +21,8 @@
     "lerna:publish": "lerna publish from-package",
     "prepublishOnly": "npm test",
     "prepare": "husky install",
-    "prettier": "prettier"
+    "prettier": "prettier",
+    "sql-formatter": "find ./packages -name *.sql | parallel \"sql-formatter {} --output {} --config ./sql-formatter.config.json\""
   },
   "repository": {
     "type": "git",
@@ -50,6 +51,7 @@
     "lerna": "~4.0.0",
     "lint-staged": "^12.4.1",
     "prettier": "^2.6.2",
+    "sql-formatter": "^6.1.5",
     "ts-loader": "~9.2.6",
     "ts-node": "^10.7.0",
     "tsconfig-paths-webpack-plugin": "^3.5.1",

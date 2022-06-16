@@ -1,1 +1,4 @@
-SELECT * FROM NetworkActivityIOS;
+SELECT
+  *
+FROM
+  NetworkActivityIOS;

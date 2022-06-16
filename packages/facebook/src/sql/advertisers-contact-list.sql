@@ -1,1 +1,4 @@
-SELECT * FROM AdvertiserUploadedContactInformation;
+SELECT
+  *
+FROM
+  AdvertiserUploadedContactInformation;

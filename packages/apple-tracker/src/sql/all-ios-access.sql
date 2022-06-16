@@ -1,1 +1,6 @@
-SELECT * FROM ResourceAccessIOS GROUP BY identifier;
+SELECT
+  *
+FROM
+  ResourceAccessIOS
+GROUP BY
+  identifier;

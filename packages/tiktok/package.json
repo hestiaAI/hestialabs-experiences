@@ -1,7 +1,7 @@
 {
   "name": "@hestiaai/tiktok",
-  "version": "0.0.1-alpha.18",
-  "browser": "dist/index",
+  "version": "0.0.1-alpha.20",
+  "main": "dist/index",
   "type": "module",
   "files": [
     "dist"

@@ -1,7 +1,7 @@
 {
   "name": "@hestiaai/tracker-control-agg",
-  "version": "0.0.1-alpha.4",
-  "browser": "dist/index",
+  "version": "0.0.1-alpha.6",
+  "main": "dist/index",
   "type": "module",
   "files": [
     "dist"
