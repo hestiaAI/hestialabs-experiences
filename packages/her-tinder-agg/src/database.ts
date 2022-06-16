@@ -44,7 +44,8 @@ const config: DatabaseConfig = {
         ['messagesReceived', INTEGER],
         ['matches', INTEGER],
         ['opens', INTEGER],
-        ['superlikes', INTEGER]
+        ['superlikes', INTEGER],
+        ['FilePath', TEXT, 'FILEPATH']
       ]
     },
     {
@@ -58,12 +59,12 @@ const config: DatabaseConfig = {
   getters: [
     {
       fileId: 'herLikeSkip',
-      path: '$.items[*]',
+      path: '$.result.items[*]',
       table: 'HerLikeSkip',
       getters: [
         {
-          column: 'name',
-          path: '$.dateValue'
+          column: 'date',
+          path: '$.date'
         },
         {
           column: 'action',
@@ -77,7 +78,7 @@ const config: DatabaseConfig = {
     },
     {
       fileId: 'herLikeMatch',
-      path: '$.items[*]',
+      path: '$.result.items[*]',
       table: 'HerLikeMatch',
       getters: [
         {
@@ -86,7 +87,7 @@ const config: DatabaseConfig = {
         },
         {
           column: 'likedAt',
-          path: '$.likedAt'
+          path: '$.date'
         },
         {
           column: 'matched',
@@ -96,7 +97,7 @@ const config: DatabaseConfig = {
     },
     {
       fileId: 'herMessage',
-      path: '$.items[*]',
+      path: '$.result.items[*]',
       table: 'HerMessage',
       getters: [
         {
@@ -123,7 +124,7 @@ const config: DatabaseConfig = {
     },
     {
       fileId: 'tinderUsage',
-      path: '$.items[*]',
+      path: '$.result.items[*]',
       table: 'TinderUsage',
       getters: [
         {
@@ -162,7 +163,7 @@ const config: DatabaseConfig = {
     },
     {
       fileId: 'tinderUser',
-      path: '$.items[*].sexualOrientations[*]',
+      path: '$.result.items[*]',
       table: 'TinderOrientation',
       getters: [
         {

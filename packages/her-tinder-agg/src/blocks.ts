@@ -1,46 +1,31 @@
 import type { ViewBlocks } from '@/types'
 
-import sqlAllTinderUser from './sql/all-tinder-user.sql'
-import sqlAllTinderUsage from './sql/all-tinder-usage.sql'
-import sqlAllHerLikeMatch from './sql/all-her-like-match.sql'
-import sqlAllHerLikeSkip from './sql/all-her-like-skip.sql'
-import sqlAllHerMessage from './sql/all-her-message.sql'
+import sqlAll from './sql/all.sql'
+import sqlAllTinder from './sql/all-tinder-usage.sql'
+import sqlAllHer from './sql/all-her-usage.sql'
 
 const blocks: ViewBlocks = [
   {
-    id: 'sqlAllTinderUser',
-    sql: sqlAllTinderUser,
-    showTable: true,
-    title: 'sqlAllTinderUser',
-    text: 'TBD'
+    id: 'overview',
+    sql: sqlAll,
+    showTable: false,
+    visualization: 'ChartViewOverviewHerTinder.vue',
+    title: 'Overview',
+    text: 'Compare the activities of dating applications according to application and sexual orientation.'
   },
   {
-    id: 'sqlAllTinderUsage',
-    sql: sqlAllTinderUsage,
+    id: 'tindersUsage',
+    sql: sqlAllTinder,
     showTable: true,
-    title: 'sqlAllTinderUsage',
-    text: 'TBD'
+    title: 'Tinder',
+    text: ''
   },
   {
-    id: 'sqlAllHerLikeMatch',
-    sql: sqlAllHerLikeMatch,
+    id: 'herUsage',
+    sql: sqlAllHer,
     showTable: true,
-    title: 'sqlAllHerLikeMatch',
-    text: 'TBD'
-  },
-  {
-    id: 'sqlAllHerLikeSkip',
-    sql: sqlAllHerLikeSkip,
-    showTable: true,
-    title: 'sqlAllHerLikeSkip',
-    text: 'TBD'
-  },
-  {
-    id: 'sqlAllHerMessage',
-    sql: sqlAllHerMessage,
-    showTable: true,
-    title: 'sqlAllHerMessage',
-    text: 'TBD'
+    title: 'Her',
+    text: ''
   }
 ]
 

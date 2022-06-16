@@ -9,17 +9,17 @@ const options: ExperienceOptions = {
   databaseConfig,
   dataPortalHtml:
     'Please upload your archives from Tinder and Her below and analyse them here.',
-  dataSamples: ['tinder-synthetic.json'],
   files: {
-    herLikeMatch: 'her_*/block03.json',
-    herLikeSkip: 'her_*/block01.json',
-    herMessage: 'her_*/block04.json',
-    tinderUsage: 'tinder_*/block04.json',
-    tinderUser: 'tinder_*/block00.json'
+    herLikeMatch: 'her**/block03.json',
+    herLikeSkip: 'her**/block01.json',
+    herMessage: 'her**/block04.json',
+    tinderUsage: 'tinder**/block04.json',
+    tinderUser: 'tinder**/block00.json'
   },
   icon: icon,
   slug: 'her-tinder',
   title: 'Her + Tinder',
+  hideFileExplorer: false,
   viewBlocks
 }
 
