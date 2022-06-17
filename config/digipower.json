@@ -24,6 +24,11 @@
     "whatsapp",
     "explorer"
   ],
-  "bubbles": ["tl-aggregator", "tl-participant"],
+  "bubbles": [
+    "tl-aggregator",
+    "tl-participant",
+    "reflets-aggregator",
+    "reflets-participant"
+  ],
   "hashtags": ["dataprivacy", "hestialabs", "digipower"]
 }
