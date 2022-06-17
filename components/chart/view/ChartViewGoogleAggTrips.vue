@@ -46,9 +46,14 @@
 <script>
 import { kAnonymityFilter } from './utils/kAnonymity'
 import mixin from './mixin'
-import keplerConfig from './kepler_config_trip.js'
 export default {
   mixins: [mixin],
+  props: {
+    keplerConfig: {
+      type: Object,
+      default: () => null
+    }
+  },
   data() {
     return {
       filteredRows: []
@@ -107,7 +112,7 @@ export default {
     keplerArgs() {
       return {
         keplerData: this.keplerData,
-        config: keplerConfig
+        config: JSON.parse(JSON.stringify(this.keplerConfig))
       }
     }
   },

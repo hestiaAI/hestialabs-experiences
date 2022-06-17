@@ -6,12 +6,12 @@
           No records were found in your file(s).
         </p>
         <p v-else class="text-subtitle-2">
-          Total time spend at the TL building: {{ total_time }} <br />
+          Total time spend at the {{ placeName }} : {{ total_time }} <br />
           <br />
-          Mean time spend at the TL building: {{ mean_time }} <br />
+          Mean time spend at the {{ placeName }}: {{ mean_time }} <br />
           <br />
           This map shows the other candidates proposed by Google associated to
-          the TL building:
+          the {{ placeName }}:
         </p>
       </VCol>
     </VRow>
@@ -27,9 +27,18 @@
 <script>
 import _ from 'lodash'
 import mixin from './mixin'
-import keplerConfig from './kepler_config_places.js'
 export default {
   mixins: [mixin],
+  props: {
+    keplerConfig: {
+      type: Object,
+      default: () => null
+    },
+    placeName: {
+      type: String,
+      default: () => ''
+    }
+  },
   data() {
     return {}
   },
@@ -49,14 +58,14 @@ export default {
       return this.convertHMS(avg)
     },
     associated_names() {
-      const table = this.values.filter(
-        x => x.startTimestamp === this.values[0].startTimestamp
-      )
-      const names = table.map(v => {
+      const table = this.values.filter(x => x.winnerName === this.placeName)
+      const uniq = _.uniqBy(table, x => x.loserName)
+      const names = uniq.map(v => {
         return {
           name: v.loserName,
           latitude: v.loserLatitude,
-          longitude: v.loserLongitude
+          longitude: v.loserLongitude,
+          confidence: v.loserConfidence
         }
       })
       return names
@@ -75,7 +84,7 @@ export default {
     keplerArgs() {
       return {
         keplerData: this.keplerData,
-        config: keplerConfig
+        config: JSON.parse(JSON.stringify(this.keplerConfig))
       }
     }
   },
@@ -87,7 +96,8 @@ export default {
       return res
     },
     get_durations() {
-      const table = this.values.map(x => [x.startTimestamp, x.endTimestamp])
+      const values = this.values.filter(x => x.winnerName === this.placeName)
+      const table = values.map(x => [x.startTimestamp, x.endTimestamp])
       const uniq = _.uniqBy(table, x => x[0])
       const dur = uniq.map(v => this.compute_duration(v[0], v[1]))
       return dur
