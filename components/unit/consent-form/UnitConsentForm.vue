@@ -39,7 +39,6 @@
           <VMenu bottom>
             <template #activator="{ attrs, on }">
               <VBtn
-                ref="downloadButton"
                 v-bind="attrs"
                 class="my-2"
                 outlined
@@ -57,7 +56,9 @@
               <VListItem @click="downloadZIP(true)"
                 >Download encrypted Zip</VListItem
               >
-              <VListItem @click="downloadZIP(false)">Download Zip</VListItem>
+              <VListItem ref="downloadButton" @click="downloadZIP(false)"
+                >Download Zip</VListItem
+              >
             </VList>
           </VMenu>
           <a
@@ -114,7 +115,7 @@ export default {
       return this.$route.params.bubble
     },
     destinationBubbleName() {
-      return this.config.consent.destinationBubble
+      return this.config.consent?.destinationBubble
     },
     missingRequiredFields() {
       return !this.consentForm.every(section => {
