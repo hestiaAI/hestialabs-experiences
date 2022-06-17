@@ -1,5 +1,5 @@
 <template>
-  <VDialog v-model="show" width="500" scrollable>
+  <VDialog v-model="show" width="500" scrollable style="z-index: 2000">
     <template #activator="{ on }">
       <VTooltip v-bind="{ ...tooltipPos }">
         <template #activator="{ on: onTooltip }">
