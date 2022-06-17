@@ -19,6 +19,23 @@
     </VRow>
     <VRow>
       <VCol align="center">
+        <BaseDialogButton
+          dialog-title="Decrypt Files"
+          tooltip-position="left"
+          tooltip-label="Decrypt Files"
+          icon="mdiLockOpenVariant"
+        >
+          <VTextField
+            v-model="privateKey"
+            label="Enter your secret key"
+            clearable
+          ></VTextField>
+          <VTextField
+            v-model="publicKey"
+            label="Enter your public key (optional)"
+            clearable
+          ></VTextField>
+        </BaseDialogButton>
         <BaseButton
           v-bind="{ disabled, progress, status, error }"
           text="Explore your data"
@@ -50,10 +67,12 @@
 </template>
 
 <script>
+import { promisify } from 'util'
 import { mapState } from 'vuex'
 import Uppy from '@uppy/core'
 import Dashboard from '@uppy/dashboard'
 import DropTarget from '@uppy/drop-target'
+import { decryptBlob } from '~/utils/encryption'
 
 import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
@@ -99,7 +118,10 @@ export default {
       filesEmpty: true,
       status: false,
       files,
-      dataSamples
+      dataSamples,
+      dialog: false,
+      privateKey: null,
+      publicKey: null
     }
   },
   computed: {
@@ -207,9 +229,25 @@ export default {
   },
   methods: {
     returnFiles() {
-      const uppyFiles = this.uppy.getFiles().map(f => f.data)
-      this.status = true
-      this.$emit('update', { uppyFiles })
+      const decryptBlobPromise = promisify(decryptBlob)
+      const publicKey =
+        this.publicKey || this.$store.getters.config(this.$route).publicKey
+      Promise.all(
+        this.uppy.getFiles().map(f => {
+          return this.privateKey
+            ? decryptBlobPromise(f.data, this.privateKey, publicKey).then(
+                blob => new File([blob], f.name)
+              )
+            : f.data
+        })
+      )
+        .then(decryptedFiles => {
+          this.status = true
+          this.$emit('update', { uppyFiles: decryptedFiles })
+        })
+        .catch(error => {
+          console.error(error)
+        })
     }
   }
 }
