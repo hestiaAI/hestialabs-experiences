@@ -1,4 +1,4 @@
-SELECT date, 
+SELECT TinderUsage.date, 
   likes, 
   passes, 
   messagesSent, 

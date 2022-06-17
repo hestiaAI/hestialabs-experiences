@@ -129,7 +129,7 @@ const config: DatabaseConfig = {
       getters: [
         {
           column: 'date',
-          path: '$.dateValue'
+          path: '$.date'
         },
         {
           column: 'likes',

@@ -1,4 +1,5 @@
-SELECT Messages.date,
+SELECT 
+  Messages.date,
   LikesPasses.likes,
   LikesPasses.passes,
   Messages.messagesSent,
@@ -11,7 +12,7 @@ FROM
   (
     SELECT SUBSTR(messageSentAt, 0, INSTR(messageSentAt, ' ')) AS date, 
       SUM(CASE WHEN HerMessage.sender = 'User' THEN 1 ELSE 0 END) messagesSent,
-      SUM(CASE WHEN HerMessage.sender != 'User' THEN 1 ELSE 0 END) messagesReceived,
+      SUM(CASE WHEN HerMessage.sender != 'User' AND HerMessage.sender != 'Her' THEN 1 ELSE 0 END) messagesReceived,
       SUBSTR(FilePath, 0, INSTR(FilePath, '/')) AS userId
     FROM HerMessage
     WHERE HerMessage.messageType = 'Message'
@@ -23,13 +24,12 @@ FROM
       SUM(CASE WHEN HerLikeSkip.action = 'Skip' THEN HerLikeSkip.count ELSE 0 END) passes,
       SUBSTR(HerLikeSkip.FilePath, 0, INSTR(HerLikeSkip.FilePath, '_')) AS app, 
       'Queer' as sexualOrientations,
-       SUBSTR(FilePath, 0, INSTR(FilePath, '/')) AS userId
+        SUBSTR(FilePath, 0, INSTR(FilePath, '/')) AS userId
     FROM HerLikeSkip
     GROUP BY date, FilePath
-    ORDER BY date, FilePath
   ) as LikesPasses,
   (
-    SELECT SUBSTR(likedAt, 0, INSTR(likedAt, 'T')) AS date, 
+    SELECT SUBSTR(likedAt, 0, INSTR(likedAt, ' ')) AS date, 
       COUNT(HerLikeMatch.matched) as matches,
       SUBSTR(FilePath, 0, INSTR(FilePath, '/')) AS userId
     FROM HerLikeMatch
@@ -43,7 +43,7 @@ WHERE Messages.date = LikesPasses.date
 
 UNION ALL
 
-SELECT date, 
+SELECT TinderUsage.date, 
   likes, 
   passes, 
   messagesSent, 
