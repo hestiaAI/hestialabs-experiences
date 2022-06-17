@@ -100,7 +100,7 @@
     "lodash": "^4.17.21",
     "micromatch": "^4.0.4",
     "nuxt": "^2.15.8",
-    "read-excel-file": "^5.2.28",
+    "read-excel-file": "^5.3.4",
     "regression": "^2.0.1",
     "sass-loader": "^10",
     "share-api-polyfill": "^1.1.0",
