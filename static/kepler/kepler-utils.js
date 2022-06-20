@@ -2,15 +2,15 @@
 /* eslint no-undef: "error" */
 // based on the example at https://github.com/keplergl/kepler.gl/blob/master/examples/umd-client/index.html
 
-const { combineReducers, applyMiddleware, createStore, compose } = Redux
-const { Provider } = ReactRedux
-
 // If we wanted to have this with our javascript.
 // Unfortunately webpack fails to load a dependency of moment-timezone
 // import KeplerGl from 'kepler.gl'
 // import React, { ReactDOM } from 'react'
 // import { combineReducers, applyMiddleware, createStore, compose } from 'redux'
 // import { Provider } from 'react-redux'
+
+const { combineReducers, applyMiddleware, createStore, compose } = Redux
+const { Provider } = ReactRedux
 
 export const buildStore = function () {
   const reducers = combineReducers({
@@ -89,14 +89,16 @@ function extractDataId(config) {
  */
 export function update(data, store) {
   const { config, rawCsv, keplerData } = data
+  // make deep copy in order to not modifiy the store
+  const configClone = JSON.parse(JSON.stringify(config))
   const inputData = keplerData || KeplerGl.processCsvData(rawCsv)
   const dataset = {
-    info: { id: extractDataId(config), label: 'trips' },
+    info: { id: extractDataId(configClone), label: 'trips' },
     data: inputData
   }
   let parsedConfig = {}
-  if (config) {
-    parsedConfig = KeplerGl.KeplerGlSchema.parseSavedConfig(config)
+  if (configClone) {
+    parsedConfig = KeplerGl.KeplerGlSchema.parseSavedConfig(configClone)
     parsedConfig.mapStyle = {
       styleType: 'tqwsxjb',
       topLayerGroups: {},

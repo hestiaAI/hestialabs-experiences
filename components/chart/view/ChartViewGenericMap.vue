@@ -22,7 +22,7 @@
           if you share this tab on the 'Share My Data' tab.
         </p>
       </VRow>
-      <template v-if="button == true">
+      <template v-if="showButton == true">
         <VMenu
           v-model="menu"
           :close-on-content-click="false"
@@ -92,8 +92,8 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { kAnonymityFilter } from './utils/kAnonymity'
 import mixin from './mixin'
+import { kAnonymityFilter } from '@/utils/kAnonymity'
 
 export default {
   mixins: [mixin],
@@ -128,7 +128,6 @@ export default {
       menu: false,
       sliderValue: 0,
       filteredRows: [],
-      button: this.showButton,
       results: this.doKAnonymity
         ? kAnonymityFilter(this.values, this.groupKey, this.otherKeys)
         : this.values,
@@ -156,7 +155,7 @@ export default {
     keplerArgs() {
       return {
         keplerData: this.keplerData,
-        config: JSON.parse(JSON.stringify(this.keplerConfig))
+        config: this.keplerConfig
       }
     }
   },

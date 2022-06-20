@@ -44,8 +44,8 @@
   </VContainer>
 </template>
 <script>
-import { kAnonymityFilter } from './utils/kAnonymity'
 import mixin from './mixin'
+import { kAnonymityFilter } from '@/utils/kAnonymity'
 export default {
   mixins: [mixin],
   props: {
@@ -112,7 +112,7 @@ export default {
     keplerArgs() {
       return {
         keplerData: this.keplerData,
-        config: JSON.parse(JSON.stringify(this.keplerConfig))
+        config: this.keplerConfig
       }
     }
   },
