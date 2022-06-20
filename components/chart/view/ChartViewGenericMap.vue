@@ -1,5 +1,15 @@
 <template>
   <VContainer v-if="values.length > 0">
+    <VRow>
+      <VCol cols="12">
+        <p v-if="total === 0" class="text-subtitle-2">
+          No records were found in your file(s).
+        </p>
+        <p v-else-if="label_ !== ''" class="text-subtitle-2">
+          We found <strong>{{ total }}</strong> {{ label_ }} in your file.
+        </p>
+      </VCol>
+    </VRow>
     <template v-if="total > 0">
       <VRow>
         <VCol cols="12">
@@ -107,6 +117,10 @@ export default {
     otherKeys: {
       type: Array,
       default: () => []
+    },
+    label: {
+      type: String,
+      default: () => ''
     }
   },
   data() {
@@ -117,7 +131,8 @@ export default {
       button: this.showButton,
       results: this.doKAnonymity
         ? kAnonymityFilter(this.values, this.groupKey, this.otherKeys)
-        : this.values
+        : this.values,
+      label_: this.label
     }
   },
   computed: {
