@@ -97,6 +97,30 @@ export function update(data, store) {
   let parsedConfig = {}
   if (config) {
     parsedConfig = KeplerGl.KeplerGlSchema.parseSavedConfig(config)
+    parsedConfig.mapStyle = {
+      styleType: 'tqwsxjb',
+      topLayerGroups: {},
+      visibleLayerGroups: {
+        label: true,
+        road: true,
+        building: true,
+        water: true,
+        land: true
+      },
+      threeDBuildingColor: [
+        194.6103322548211, 191.81688250953655, 185.2988331038727
+      ],
+      mapStyles: {
+        tqwsxjb: {
+          accessToken: null,
+          custom: true,
+          icon: 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-122.3391,37.7922,9,0,0/400x300?access_token=pk.eyJ1IjoidWNmLW1hcGJveCIsImEiOiJja2tyMjNhcWIwc29sMnVzMThoZ3djNXhzIn0._hfBNwCD7pCU7RAMOq6vUQ&logo=false&attribution=false',
+          id: 'tqwsxjb',
+          label: 'Mapbox Streets',
+          url: 'mapbox://styles/mapbox/streets-v11'
+        }
+      }
+    }
   }
   store.dispatch(
     KeplerGl.addDataToMap({
