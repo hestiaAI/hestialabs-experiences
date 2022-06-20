@@ -4,47 +4,83 @@ import allPlaceVisit from './sql/all-place-visit.sql'
 import recordsLinkedToMac from './sql/records-linked-to-mac.sql'
 import placeLinkedToCandidate from './sql/place-linked-to-candidate.sql'
 import recordsLinkedToTrips from './sql/records-linked-to-trips.sql'
+import {
+  placesPostProcessor,
+  otherCandidatesPostProcessor,
+  tripsPostProcessor,
+  wifiPostProcessor,
+  recordsPostProcessor
+} from './postprocessor'
+import keplerConfigWifi from './kepler/kepler_config_wifi'
+import keplerConfigPlaces from './kepler/kepler_config_places'
+import keplerConfigCandidate from './kepler/kepler_config_candidate'
+import keplerConfigTrip from './kepler/kepler_config_trip'
+import keplerConfigRecords from './kepler/kepler_config_records'
 
 const blocks: ViewBlocks = [
   {
     id: 'PlaceVisited',
     sql: allPlaceVisit,
     files: ['LOCATION_HISTORY'],
-    visualization: 'ChartViewGooglePlaces.vue',
+    visualization: 'ChartViewGenericMap.vue',
     title: 'Places visited',
-    text: ''
+    text: 'This map shows what places Google think you visited with the size corresponding to the time you spent in this place:',
+    postprocessor: placesPostProcessor,
+    vizProps: {
+      keplerConfig: keplerConfigPlaces,
+      label: 'visited places'
+    }
   },
   {
     id: 'OtherCandidates',
     sql: placeLinkedToCandidate,
     files: ['LOCATION_HISTORY'],
-    visualization: 'ChartViewGoogleCandidates.vue',
+    visualization: 'ChartViewGenericMap.vue',
     title: 'Other Candidates',
-    text: ''
+    text: 'This map shows the other candidate places proposed by Google linked to the location that Google think you visited:',
+    postprocessor: otherCandidatesPostProcessor,
+    vizProps: {
+      keplerConfig: keplerConfigCandidate
+    }
   },
   {
     id: 'ActivitySegment',
     sql: allActivitySegment,
     files: ['LOCATION_HISTORY'],
-    visualization: 'ChartViewGoogleTrips.vue',
+    visualization: 'ChartViewGenericMap.vue',
     title: 'Travels',
-    text: ''
+    text: 'This map shows what trips Google think you did:',
+    postprocessor: tripsPostProcessor,
+    vizProps: {
+      keplerConfig: keplerConfigTrip,
+      label: 'trips'
+    }
   },
   {
     id: 'Records',
     sql: recordsLinkedToTrips,
     files: ['LOCATION_HISTORY'],
-    visualization: 'ChartViewGoogleRecords.vue',
+    visualization: 'ChartViewGenericMap.vue',
     title: 'Records',
-    text: ''
+    text: 'This map shows records associated to a trip with the color corresponding to an activity type:',
+    postprocessor: recordsPostProcessor,
+    vizProps: {
+      keplerConfig: keplerConfigRecords,
+      showButton: true
+    }
   },
   {
     id: 'WifiScan',
     sql: recordsLinkedToMac,
     files: ['LOCATION_HISTORY'],
-    visualization: 'ChartViewGoogleWifi.vue',
+    visualization: 'ChartViewGenericMap.vue',
     title: 'Wifi',
-    text: ''
+    text: 'This map shows where your phone detected mac addresses with the size corresponding to the number of times it was detected:',
+    postprocessor: wifiPostProcessor,
+    vizProps: {
+      keplerConfig: keplerConfigWifi,
+      label: 'mac adresses'
+    }
   }
 ]
 
