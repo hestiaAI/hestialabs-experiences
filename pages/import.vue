@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <VContainer>
     <h2>Key Generation</h2>
     <p>
       This step only needs to be done once. Copy the public key in the config
@@ -117,16 +117,16 @@
         </VCol>
       </VRow>
     </template>
-  </div>
+  </VContainer>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import JSZip from 'jszip'
 import FileSaver from 'file-saver'
+import _sodium from 'libsodium-wrappers'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
-const _sodium = require('libsodium-wrappers')
 
 export default {
   data() {

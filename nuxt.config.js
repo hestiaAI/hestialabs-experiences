@@ -219,6 +219,6 @@ export default {
         as: 'font'
       })
     ],
-    watch: ['../hestialabs/packages/*/dist/*', '../hestialabs/index.js']
+    watch: ['../hestialabs/packages/*/dist/*']
   }
 }

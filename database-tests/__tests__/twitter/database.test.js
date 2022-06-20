@@ -1,71 +1,44 @@
-import fs from 'fs'
-import path from 'path'
-
+import experience from '@hestiaai/twitter'
 import {
   adImpressions,
   adEngagements,
   missingAttributesImpressions,
   missingAttributesEngagements
 } from './samples.helpers'
-import preprocessorsModule from '~/manifests/preprocessors'
-import DBMS from '~/utils/sql'
-import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
-import { arrayEqualNoOrder } from '~/utils/test-utils'
+import {
+  DatabaseTester,
+  arrayEqualNoOrder,
+  getSqlFromBlock
+} from '~/utils/test-utils'
 
-let db
-const { files, preprocessors, databaseConfig } = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, '../twitter.json'), 'utf8')
-)
-Object.entries(preprocessors).forEach(
-  ([path, pre]) => (preprocessors[path] = preprocessorsModule[pre])
-)
+const tester = new DatabaseTester()
+const getSql = getSqlFromBlock.bind(null, experience)
 
-function runQuery(sqlFilePath) {
-  const sql = fs.readFileSync(path.resolve(__dirname, sqlFilePath), 'utf8')
-  return db.select(sql)
-}
-
-async function getDatabase(adImpressions, adEngagements) {
-  const fileManager = new FileManager(preprocessors, null, files)
-  const fileImpressions = mockFile(
-    'test/data/ad-impressions.js',
-    JSON.stringify(adImpressions)
-  )
-  const fileEngagements = mockFile(
-    'test/data/ad-engagements.js',
-    JSON.stringify(adEngagements)
-  )
-  await fileManager.init([fileImpressions, fileEngagements])
-  db = await DBMS.createDB(databaseConfig)
-  const records = await DBMS.generateRecords(fileManager, databaseConfig)
-  DBMS.insertRecords(db, records)
+async function init(adImpressions, adEngagements) {
+  const files = [
+    mockFile('test/data/ad-impressions.js', JSON.stringify(adImpressions)),
+    mockFile('test/data/ad-engagements.js', JSON.stringify(adEngagements))
+  ]
+  await tester.init(experience, files)
 }
 
 describe('with incomplete samples', () => {
   test('the database builder creates the tables without error', async () => {
-    await getDatabase(
-      missingAttributesImpressions,
-      missingAttributesEngagements
-    )
-    db.close()
+    await init(missingAttributesImpressions, missingAttributesEngagements)
+    tester.close()
   })
 })
 
 describe('with complete samples', () => {
-  beforeAll(async () => {
-    await getDatabase(adImpressions, adEngagements)
-  })
-
-  afterAll(() => {
-    db.close()
-  })
+  beforeAll(async () => await init(adImpressions, adEngagements))
+  afterAll(() => tester.close())
 
   test('the database builder creates the tables correctly', () => {
     let result, expected
 
     // Table TwitterAd
-    result = db.select('SELECT * FROM TwitterAd')
+    result = tester.select('SELECT * FROM TwitterAd')
     expected = {
       headers: ['id', 'tweetId', 'advertiserName', 'time', 'displayLocation'],
       items: [
@@ -82,7 +55,7 @@ describe('with complete samples', () => {
     arrayEqualNoOrder(result.items, expected.items)
 
     // Table TwitterCriterion
-    result = db.select('SELECT * FROM TwitterCriterion')
+    result = tester.select('SELECT * FROM TwitterCriterion')
     expected = {
       headers: ['adId', 'targetingType', 'targetingValue'],
       items: [
@@ -103,43 +76,35 @@ describe('with complete samples', () => {
   })
 
   test('query ads-per-advertiser returns the correct items', () => {
-    const result = runQuery('../queries/ads-per-advertiser.sql')
+    const sql = getSql('ads-per-advertiser')
+    const result = tester.select(sql)
     const expected = {
-      headers: ['advertiserName', 'date', 'count'],
+      headers: ['advertiserName', 'date_', 'count_'],
       items: [
-        { advertiserName: 'PwC Switzerland', date: '2021-04-15', count: 1 }
+        { advertiserName: 'PwC Switzerland', date_: '2021-04-15', count_: 1 }
       ]
     }
     arrayEqualNoOrder(result.headers, expected.headers)
     arrayEqualNoOrder(result.items, expected.items)
   })
 
-  test('query all-advertisers returns the correct items', () => {
-    const result = runQuery('../queries/all-advertisers.sql')
-    const expected = {
-      headers: ['advertiserName', 'count'],
-      items: [{ advertiserName: 'PwC Switzerland', count: 1 }]
-    }
-    arrayEqualNoOrder(result.headers, expected.headers)
-    arrayEqualNoOrder(result.items, expected.items)
-  })
-
   test('query all-criteria-all-advertisers returns the correct items', () => {
-    const result = runQuery('../queries/all-criteria-all-advertisers.sql')
+    const sql = getSql('all-criteria-all-advertisers')
+    const result = tester.select(sql)
     const expected = {
-      headers: ['advertiserName', 'targetingType', 'targetingValue', 'count'],
+      headers: ['advertiserName', 'targetingType', 'targetingValue', 'count_'],
       items: [
         {
           advertiserName: 'PwC Switzerland',
           targetingType: 'Locations',
           targetingValue: 'Switzerland',
-          count: 1
+          count_: 1
         },
         {
           advertiserName: 'PwC Switzerland',
           targetingType: 'Age',
           targetingValue: '35 and up',
-          count: 1
+          count_: 1
         }
       ]
     }
@@ -148,13 +113,14 @@ describe('with complete samples', () => {
   })
 
   test('query overview returns the correct items', () => {
-    const result = runQuery('../queries/overview.sql')
+    const sql = getSql('overview')
+    const result = tester.select(sql)
     const expected = {
       headers: [
         'tweetId',
         'companyName',
         'engagements',
-        'date',
+        'date_',
         'targetingType',
         'targetingValue'
       ],
@@ -163,7 +129,7 @@ describe('with complete samples', () => {
           tweetId: '1381646278988292098',
           companyName: 'PwC Switzerland',
           engagements: 1,
-          date: '2021-04-15 19:43:25',
+          date_: '2021-04-15 19:43:25',
           targetingType: 'Locations',
           targetingValue: 'Switzerland'
         },
@@ -171,7 +137,7 @@ describe('with complete samples', () => {
           tweetId: '1381646278988292098',
           companyName: 'PwC Switzerland',
           engagements: 1,
-          date: '2021-04-15 19:43:25',
+          date_: '2021-04-15 19:43:25',
           targetingType: 'Age',
           targetingValue: '35 and up'
         }
@@ -182,19 +148,20 @@ describe('with complete samples', () => {
   })
 
   test('query targeting-criteria-all-advertisers returns the correct items', () => {
-    const result = runQuery('../queries/targeting-criteria-all-advertisers.sql')
+    const sql = getSql('targeting-criteria-all-advertisers')
+    const result = tester.select(sql)
     const expected = {
-      headers: ['targetingType', 'targetingValue', 'count'],
+      headers: ['targetingType', 'targetingValue', 'count_'],
       items: [
         {
           targetingType: 'Locations',
           targetingValue: 'Switzerland',
-          count: 1
+          count_: 1
         },
         {
           targetingType: 'Age',
           targetingValue: '35 and up',
-          count: 1
+          count_: 1
         }
       ]
     }
@@ -203,21 +170,22 @@ describe('with complete samples', () => {
   })
 
   test('query targeting-criteria-by-advertiser returns the correct items', () => {
-    const result = runQuery('../queries/targeting-criteria-by-advertiser.sql')
+    const sql = getSql('targeting-criteria-by-advertiser')
+    const result = tester.select(sql)
     const expected = {
-      headers: ['advertiserName', 'targetingType', 'targetingValue', 'count'],
+      headers: ['advertiserName', 'targetingType', 'targetingValue', 'count_'],
       items: [
         {
           advertiserName: 'PwC Switzerland',
           targetingType: 'Locations',
           targetingValue: 'Switzerland',
-          count: 1
+          count_: 1
         },
         {
           advertiserName: 'PwC Switzerland',
           targetingType: 'Age',
           targetingValue: '35 and up',
-          count: 1
+          count_: 1
         }
       ]
     }
