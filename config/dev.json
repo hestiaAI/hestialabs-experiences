@@ -45,8 +45,8 @@
   "bubbles": [
     "tl-aggregator",
     "tl-participant",
-    "reflets-aggregator",
-    "reflets-participant",
+    "mercator-aggregator",
+    "mercator-participant",
     "demo-aggregator",
     "demo-participant"
   ],
