@@ -18,7 +18,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -41,7 +41,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -51,7 +51,7 @@
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="`dc-data-count-${graphId}`" class="dc-data-count"></div>
+      <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
     </VRow>
     <VRow>
       <VCol cols="12">
@@ -74,7 +74,7 @@ dc.config.defaultColors(d3.schemePaired)
 export default {
   mixins: [mixin],
   props: {},
-  data() {
+  data () {
     return {
       header: [
         { text: 'Date', value: 'dateStr' },
@@ -92,11 +92,11 @@ export default {
     }
   },
   methods: {
-    resetAll() {
+    resetAll () {
       dc.filterAll()
       dc.renderAll()
     },
-    decodeDefault(str) {
+    decodeDefault (str) {
       try {
         return str && str !== 'undefined'
           ? decodeURIComponent(escape(str))
@@ -106,11 +106,11 @@ export default {
         return str || 'Unknown'
       }
     },
-    drawViz() {
+    drawViz () {
       // Parse and format data
       const dateParser = d3.timeParse('%Y-%m-%d')
       const dateFormatter = d3.timeFormat('%B, %Y')
-      this.results = this.values.map(d => {
+      this.results = this.values.map((d) => {
         const date = dateParser(d.date) || new Date(d.date)
         return {
           date,
@@ -169,17 +169,16 @@ export default {
       )
 
       // Custom reduce function to get unique user ids per dimension
-      function add(p, d) {
-        if (d.userId in p.userIds) p.userIds[d.userId]++
-        else p.userIds[d.userId] = 1
+      function add (p, d) {
+        if (d.userId in p.userIds) { p.userIds[d.userId]++ } else { p.userIds[d.userId] = 1 }
         return p
       }
-      function remove(p, d) {
+      function remove (p, d) {
         p.userIds[d.userId]--
-        if (p.userIds[d.userId] === 0) delete p.userIds[d.userId]
+        if (p.userIds[d.userId] === 0) { delete p.userIds[d.userId] }
         return p
       }
-      function init() {
+      function init () {
         return { userIds: {} }
       }
       // Create dimensions

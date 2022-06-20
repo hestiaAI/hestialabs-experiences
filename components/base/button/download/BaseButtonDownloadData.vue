@@ -16,7 +16,7 @@ export default {
     }
   },
   computed: {
-    href() {
+    href () {
       return createObjectURL(this.data, mimeTypes[this.extension])
     }
   }

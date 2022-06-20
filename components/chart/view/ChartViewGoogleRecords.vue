@@ -7,8 +7,8 @@
         </p>
         <p v-else class="text-subtitle-2">
           We found <strong>{{ total }}</strong> records associated to a trip in
-          your file <br />
-          <br />
+          your file <br>
+          <br>
           This map shows those records with the color corresponding to an
           activity type:
         </p>
@@ -21,7 +21,7 @@
         </VCol>
         <p v-if="config.consent">
           Please use the search box and filters below to change what is shown on
-          the map.<br />
+          the map.<br>
           Any filtering you do will also limit what data is shared into the pool
           if you share this tab on the 'Share My Data' tab.
         </p>
@@ -42,10 +42,7 @@
           <VCardText>
             <VRow class="mb-4" justify="space-between">
               <VCol class="text-left">
-                <span
-                  class="text-h2 font-weight-light"
-                  v-text="sliderValue"
-                ></span>
+                <span class="text-h2 font-weight-light" v-text="sliderValue" />
                 <span class="subheading font-weight-light mr-1">meters</span>
               </VCol>
             </VRow>
@@ -59,19 +56,27 @@
               always-dirty
             >
               <template #prepend>
-                <VIcon @click="decrement"> $vuetify.icons.mdiMinus </VIcon>
+                <VIcon @click="decrement">
+                  $vuetify.icons.mdiMinus
+                </VIcon>
               </template>
 
               <template #append>
-                <VIcon @click="increment"> $vuetify.icons.mdiPlus </VIcon>
+                <VIcon @click="increment">
+                  $vuetify.icons.mdiPlus
+                </VIcon>
               </template>
             </VSlider>
           </VCardText>
           <VCardActions>
-            <VSpacer></VSpacer>
+            <VSpacer />
 
-            <VBtn @click="clear">Clear</VBtn>
-            <VBtn color="primary" @click="addNoise">Save</VBtn>
+            <VBtn @click="clear">
+              Clear
+            </VBtn>
+            <VBtn color="primary" @click="addNoise">
+              Save
+            </VBtn>
           </VCardActions>
         </VCard>
       </VMenu>
@@ -92,12 +97,12 @@ import mixin from './mixin'
 import keplerConfig from './kepler_config_records.js'
 export default {
   mixins: [mixin],
-  data() {
+  data () {
     return {
       menu: false,
       sliderValue: 0,
       filteredRows: [],
-      results: this.values.map(v => {
+      results: this.values.map((v) => {
         return {
           ...v,
           longitude: v.longitude * 1e-7,
@@ -108,15 +113,15 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    total() {
+    total () {
       return this.results.length
     },
-    filtered() {
+    filtered () {
       return this.filteredRows.length
     },
-    keplerData() {
+    keplerData () {
       return {
-        fields: this.headers.map(h => {
+        fields: this.headers.map((h) => {
           return {
             name: h
           }
@@ -124,7 +129,7 @@ export default {
         rows: this.filteredRows.map(r => this.headers.map(h => r[h]))
       }
     },
-    keplerArgs() {
+    keplerArgs () {
       return {
         keplerData: this.keplerData,
         config: keplerConfig
@@ -132,16 +137,16 @@ export default {
     }
   },
   methods: {
-    increment() {
+    increment () {
       this.sliderValue += 1
     },
-    decrement() {
+    decrement () {
       this.sliderValue -= 1
     },
-    addNoise() {
+    addNoise () {
       this.menu = false
       const level = this.sliderValue
-      this.results = this.results.map(x => {
+      this.results = this.results.map((x) => {
         return {
           ...x,
           longitude:
@@ -156,9 +161,9 @@ export default {
         }
       })
     },
-    clear() {
+    clear () {
       this.menu = false
-      this.results = this.values.map(v => {
+      this.results = this.values.map((v) => {
         return {
           ...v,
           longitude: v.longitude * 1e-7,
@@ -167,8 +172,8 @@ export default {
       })
       this.sliderValue = 0
     },
-    drawViz() {},
-    onTableFilter(newItems) {
+    drawViz () {},
+    onTableFilter (newItems) {
       this.filteredRows = newItems
     }
   }

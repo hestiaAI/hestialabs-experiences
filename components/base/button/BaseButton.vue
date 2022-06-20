@@ -13,7 +13,9 @@
         v-on="on"
         @click="$emit('click', $event)"
       >
-        <VIcon v-if="icon" :left="text !== ''">{{ mdiIcon }}</VIcon>
+        <VIcon v-if="icon" :left="text !== ''">
+          {{ mdiIcon }}
+        </VIcon>
         <slot>
           <span>{{ text }}</span>
         </slot>
@@ -78,7 +80,7 @@ export default {
     }
   },
   computed: {
-    mdiIcon() {
+    mdiIcon () {
       return this.$vuetify.icons.values[this.icon]
     }
   }

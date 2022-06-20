@@ -1,6 +1,8 @@
 <template>
   <div style="width: 100%">
-    <div class="overline text-center">{{ title }}</div>
+    <div class="overline text-center">
+      {{ title }}
+    </div>
     <VAlert v-if="!url" color="red" dense type="error">
       The video link provided is not recognized
     </VAlert>
@@ -13,7 +15,7 @@
       allow="autoplay; fullscreen; picture-in-picture"
       allowfullscreen
       class="pa-3 video"
-    ></iframe>
+    />
     <div style="text-align: end; margin-top: 0px; font-size: 12px">
       <a target="_blank" :href="linkSrc">{{ linkTxt }}</a>
     </div>
@@ -53,17 +55,15 @@ export default {
     }
   },
   computed: {
-    url() {
+    url () {
       const videoID = this.videoSrc.split('/').pop()
       let videoPrefix = null
 
       // accepted hosts
-      if (this.videoSrc.includes('vimeo.com'))
-        videoPrefix = 'https://player.vimeo.com/video/'
-      if (this.videoSrc.includes('youtube.com'))
-        videoPrefix = 'https://www.youtube.com/embed/'
+      if (this.videoSrc.includes('vimeo.com')) { videoPrefix = 'https://player.vimeo.com/video/' }
+      if (this.videoSrc.includes('youtube.com')) { videoPrefix = 'https://www.youtube.com/embed/' }
 
-      if (!videoPrefix || !videoID) return null
+      if (!videoPrefix || !videoID) { return null }
       return videoPrefix + videoID
     }
   }

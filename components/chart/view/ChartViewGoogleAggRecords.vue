@@ -33,28 +33,28 @@ import mixin from './mixin'
 import keplerConfig from './kepler_config_records.js'
 export default {
   mixins: [mixin],
-  data() {
+  data () {
     return {
       filteredRows: []
     }
   },
   computed: {
-    results() {
-      return this.values.map(v => {
+    results () {
+      return this.values.map((v) => {
         return {
           ...v
         }
       })
     },
-    total() {
+    total () {
       return this.results.length
     },
-    filtered() {
+    filtered () {
       return this.filteredRows.length
     },
-    keplerData() {
+    keplerData () {
       return {
-        fields: this.headers.map(h => {
+        fields: this.headers.map((h) => {
           return {
             name: h
           }
@@ -62,7 +62,7 @@ export default {
         rows: this.filteredRows.map(r => this.headers.map(h => r[h]))
       }
     },
-    keplerArgs() {
+    keplerArgs () {
       return {
         keplerData: this.keplerData,
         config: keplerConfig
@@ -70,8 +70,8 @@ export default {
     }
   },
   methods: {
-    drawViz() {},
-    onTableFilter(newItems) {
+    drawViz () {},
+    onTableFilter (newItems) {
       this.filteredRows = newItems
     }
   }

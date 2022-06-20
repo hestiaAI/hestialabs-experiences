@@ -12,7 +12,7 @@
                   <p class="filters">
                     <span>
                       Current filter:
-                      <span class="filter"></span>
+                      <span class="filter" />
                     </span>
                   </p>
                 </div>
@@ -34,7 +34,7 @@
                   <p class="filters">
                     <span>
                       Current filter:
-                      <span class="filter"></span>
+                      <span class="filter" />
                     </span>
                   </p>
                 </div>
@@ -46,7 +46,7 @@
                   <p class="filters">
                     <span>
                       Current filter:
-                      <span class="filter"></span>
+                      <span class="filter" />
                     </span>
                   </p>
                 </div>
@@ -58,12 +58,12 @@
               <div style="display: flex">
                 <strong>Top Users</strong>
                 <VSpacer />
-                <div :id="`user-search-${graphId}`"></div>
+                <div :id="`user-search-${graphId}`" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -74,9 +74,9 @@
     </ChartViewVRowWebShare>
     <VRow>
       <div :id="`dc-data-count-${graphId}`" class="dc-data-count">
-        <span class="filter-count"></span>
+        <span class="filter-count" />
         selected out of
-        <span class="total-count"></span>
+        <span class="total-count" />
         messages |
         <a class="resetAll">Reset All</a>
       </div>
@@ -102,7 +102,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  data() {
+  data () {
     return {
       header: [
         { text: 'Sender', value: 'senderName' },
@@ -113,11 +113,11 @@ export default {
     }
   },
   methods: {
-    resetAll() {
+    resetAll () {
       dc.filterAll()
       dc.renderAll()
     },
-    drawViz() {
+    drawViz () {
       // Define color palette for the graphs
       /*
       const colorPalette = [
@@ -139,7 +139,7 @@ export default {
 
       // Parse and format data
       const formatDay = d3.timeFormat('%B %d, %Y')
-      this.results = this.values.map(d => {
+      this.results = this.values.map((d) => {
         const date = new Date(d.sendDatetime)
         return {
           senderName: decodeURIComponent(escape(d.senderName)),
@@ -188,7 +188,7 @@ export default {
 
       // Create dimensions
       const all = ndx.groupAll()
-      const dayOfWeekDimension = ndx.dimension(d => {
+      const dayOfWeekDimension = ndx.dimension((d) => {
         const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         return `${name[d.weekDay]}`
       })

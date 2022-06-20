@@ -5,7 +5,9 @@
         <VCardText>
           <VRow>
             <VCol v-for="item in items" :key="item.title" cols="12" md="6">
-              <div class="overline">{{ item.title }}</div>
+              <div class="overline">
+                {{ item.title }}
+              </div>
               <p
                 v-if="!item.value || item.value.length === 0"
                 class="font-weight-bold"
@@ -36,7 +38,7 @@ import mixin from './mixin'
 
 export default {
   mixins: [mixin],
-  data() {
+  data () {
     const [v] = this.values
     const birthDate = new Date(v.birthday)
     const lastOnline = new Date(v.lastOnlineUtc)
@@ -103,7 +105,7 @@ export default {
     }
   },
   methods: {
-    drawViz() {}
+    drawViz () {}
   }
 }
 </script>

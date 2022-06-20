@@ -5,7 +5,7 @@ import Ajv from 'ajv'
 const ajv = new Ajv()
 const posixPath = path.posix || path
 
-export function createAccessor(filePath, jsonPath, jsonSchema) {
+export function createAccessor (filePath, jsonPath, jsonSchema) {
   const accessor = {}
   if (filePath) {
     accessor.filePath = filePath
@@ -19,13 +19,13 @@ export function createAccessor(filePath, jsonPath, jsonSchema) {
   return accessor
 }
 
-export function matchNormalized(name, pattern) {
+export function matchNormalized (name, pattern) {
   const normalizedPattern = posixPath.normalize(pattern)
   return micromatch.isMatch(name, normalizedPattern)
 }
 
 // https://github.com/micromatch/micromatch/issues/227
-export function filePathToGlob(filePath) {
+export function filePathToGlob (filePath) {
   if (!filePath) {
     throw new Error(`cannot create glob for file path "${filePath}"`)
   }
@@ -54,7 +54,7 @@ export function filePathToGlob(filePath) {
  * We're using the default syntax of https://ajv.js.org/
  *
  */
-export function findMatches(fileName, fileContent, accessor) {
+export function findMatches (fileName, fileContent, accessor) {
   const { filePath } = accessor
   if (!filePath) {
     throw new Error('filePath missing')
@@ -83,7 +83,7 @@ export function findMatches(fileName, fileContent, accessor) {
  * We're using the default syntax of https://ajv.js.org/
  *
  */
-export function findMatchesInContent(fileContent, accessor) {
+export function findMatchesInContent (fileContent, accessor) {
   const { jsonPath, jsonSchema } = accessor
   if (!jsonPath && jsonSchema) {
     throw new Error('jsonPath missing')

@@ -20,11 +20,9 @@
             <VCard height="500" class="d-flex flex-column">
               <VCardTitle class="mb-2">
                 <span>Fetching data</span>
-                <VSpacer></VSpacer>
-                <span class="caption"
-                  >{{ nbSelected }} out of {{ nbFiles }} selected</span
-                >
-                <VSpacer></VSpacer>
+                <VSpacer />
+                <span class="caption">{{ nbSelected }} out of {{ nbFiles }} selected</span>
+                <VSpacer />
                 <VTooltip left>
                   <template #activator="{ on, attrs }">
                     <VBtn
@@ -62,21 +60,17 @@
                   min-width="120"
                   @click="selectAll"
                 >
-                  {{ allSelected ? 'un' : '' }}select All</BaseButton
-                >
+                  {{ allSelected ? 'un' : '' }}select All
+                </BaseButton>
               </VCardTitle>
               <VCardText>
                 <span v-if="!nbFiles">
-                  No files retrieved on the server yet</span
-                >
+                  No files retrieved on the server yet</span>
                 <VListItemGroup v-else v-model="selectedFiles" multiple>
                   <VListItem v-for="file in fileItems" :key="file.filename">
                     <template #default="{ active }">
                       <VListItemAction>
-                        <VCheckbox
-                          :input-value="active"
-                          color="primary"
-                        ></VCheckbox>
+                        <VCheckbox :input-value="active" color="primary" />
                       </VListItemAction>
 
                       <VListItemContent>
@@ -89,17 +83,20 @@
                   </VListItem>
                 </VListItemGroup>
               </VCardText>
-              <VSpacer></VSpacer>
+              <VSpacer />
               <VCardActions class="align-center justify-center">
                 <div v-if="apiError">
-                  <BaseAlert type="error" dense text class="ma-0"
-                    >{{ apiError }}
+                  <BaseAlert
+                    type="error"
+                    dense
+                    text
+                    class="ma-0"
+                  >
+                    {{ apiError }}
                   </BaseAlert>
                 </div>
                 <div v-else-if="apiStatus">
-                  <BaseProgressCircular class="ma-0" /><span class="ml-3"
-                    >Fetching files from server...</span
-                  >
+                  <BaseProgressCircular class="ma-0" /><span class="ml-3">Fetching files from server...</span>
                 </div>
                 <div v-else>
                   <BaseProgressCircular
@@ -120,7 +117,7 @@
             accept=".txt"
             label="Secret Key"
             class="fileInput"
-          ></VFileInput>
+          />
         </div>
         <div justify="center" align="center">
           <BaseButton
@@ -144,7 +141,8 @@
                 border="left"
                 dense
                 text
-                >{{ message }}
+              >
+                {{ message }}
               </BaseAlert>
               <BaseAlert
                 v-if="!privateKey"
@@ -188,7 +186,7 @@ export default {
       default: ''
     }
   },
-  data() {
+  data () {
     const experience = this.$store.getters.experience(this.$route)
     const experienceProps = pick(experience, [
       'slug',
@@ -216,23 +214,23 @@ export default {
     }
   },
   computed: {
-    bubble() {
+    bubble () {
       return this.$route.params.bubble
     },
-    nbSelected() {
+    nbSelected () {
       return this.selectedFiles.length
     },
-    nbFiles() {
+    nbFiles () {
       return this.fileItems.length
     },
-    allSelected() {
+    allSelected () {
       return this.nbSelected === this.nbFiles
     }
   },
   watch: {
-    filenames(newValue, oldValue) {
+    filenames (newValue, oldValue) {
       const newFilenames = newValue.filter(file => !oldValue.includes(file))
-      newFilenames.forEach(filename => {
+      newFilenames.forEach((filename) => {
         const extension = String(filename).match(/\.([\S]+)/)?.[1]
         const type = extension2filetype[extension] ?? 'folder'
         const icon = filetype2icon[type] || '$vuetify.icons.mdiFile'
@@ -245,7 +243,7 @@ export default {
       this.fileItems = this.fileItems.filter(f => newValue.includes(f.filename))
     }
   },
-  mounted() {
+  mounted () {
     this.fetchFilenames()
     this.timer = setInterval(() => {
       if (!this.apiStatus) {
@@ -256,25 +254,25 @@ export default {
       }
     }, 1000)
   },
-  beforeDestroy() {
+  beforeDestroy () {
     clearInterval(this.timer)
   },
   methods: {
-    selectAll() {
+    selectAll () {
       if (!this.allSelected) {
         this.selectedFiles = [...Array(this.fileItems.length).keys()]
       } else {
         this.selectedFiles = []
       }
     },
-    deleteFiles() {
+    deleteFiles () {
       const { password } = this.$auth.user
-      this.$api.deleteFiles(this.bubble, password).then(res => {
-        if (res) console.error(res)
+      this.$api.deleteFiles(this.bubble, password).then((res) => {
+        if (res) { console.error(res) }
         this.fetchFilenames()
       })
     },
-    fetchFilenames() {
+    fetchFilenames () {
       this.apiError = null
       this.apiStatus = 'Fetching filenames from server...'
       this.counter = 5
@@ -291,7 +289,7 @@ export default {
         }
       })
     },
-    fetchFiles() {
+    fetchFiles () {
       this.apiError = null
       this.apiStatus = 'Downloading files from server...'
       this.status = true
@@ -306,24 +304,24 @@ export default {
       Promise.all(
         filenames.map(filename =>
           getFilePromise(this.bubble, filename)
-            .then(fileBlob => {
+            .then((fileBlob) => {
               this.apiStatus = 'Decrypting files...'
               return this.privateKey
                 ? this.privateKey
-                    .text()
-                    .then(privateKey =>
-                      decryptBlobPromise(fileBlob, privateKey, this.publicKey)
-                    )
+                  .text()
+                  .then(privateKey =>
+                    decryptBlobPromise(fileBlob, privateKey, this.publicKey)
+                  )
                 : fileBlob
             })
             .then(blob => new File([blob], filename))
         )
       )
-        .then(decryptedFiles => {
+        .then((decryptedFiles) => {
           this.apiStatus = 'Processing files...'
           this.$emit('update', { uppyFiles: decryptedFiles })
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error)
           this.apiError = error.toString()
         })

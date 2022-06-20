@@ -49,24 +49,24 @@ import mixin from './mixin'
 import keplerConfig from './kepler_config_trip.js'
 export default {
   mixins: [mixin],
-  data() {
+  data () {
     return {
       filteredRows: []
     }
   },
   computed: {
-    results() {
-      return this.values.map(v => {
+    results () {
+      return this.values.map((v) => {
         return {
           ...v
         }
       })
     },
-    total() {
+    total () {
       return this.values.length
     },
-    get_name_transport() {
-      const names = this.values.map(v => {
+    get_name_transport () {
+      const names = this.values.map((v) => {
         return {
           name_of_transport: v.transitPath.substr(
             0,
@@ -78,11 +78,11 @@ export default {
       const res = this.filter_k_anonymity_names(names)
       return res
     },
-    header_name_transport() {
+    header_name_transport () {
       return Object.keys(this.get_name_transport[0])
     },
-    get_trips() {
-      const trips = this.values.map(v => {
+    get_trips () {
+      const trips = this.values.map((v) => {
         return {
           ...v,
           start_end: v.transitPath.substr(v.transitPath.indexOf(':') + 1)
@@ -91,12 +91,12 @@ export default {
       const res = this.filter_k_anonymity_trips(trips)
       return res
     },
-    header_trips() {
+    header_trips () {
       return Object.keys(this.get_trips[0])
     },
-    keplerData() {
+    keplerData () {
       return {
-        fields: this.header_trips.map(h => {
+        fields: this.header_trips.map((h) => {
           return {
             name: h
           }
@@ -104,7 +104,7 @@ export default {
         rows: this.get_trips.map(r => this.header_trips.map(h => r[h]))
       }
     },
-    keplerArgs() {
+    keplerArgs () {
       return {
         keplerData: this.keplerData,
         config: keplerConfig
@@ -112,18 +112,18 @@ export default {
     }
   },
   methods: {
-    avg(arr) {
+    avg (arr) {
       const sum = arr.reduce((a, b) => a + b, 0)
       return sum / arr.length || 0
     },
-    onlyUnique(value, index, self) {
+    onlyUnique (value, index, self) {
       return self.indexOf(value) === index
     },
-    drawViz() {},
-    onTableFilter(newItems) {
+    drawViz () {},
+    onTableFilter (newItems) {
       this.filteredRows = newItems
     },
-    filter_k_anonymity_names(values) {
+    filter_k_anonymity_names (values) {
       const grouped = _.groupBy(values, n => n.name_of_transport)
       const keys = Object.keys(grouped)
       const table = []
@@ -153,7 +153,7 @@ export default {
       res = res.filter(x => x.k > 0)
       return res
     },
-    filter_k_anonymity_trips(values) {
+    filter_k_anonymity_trips (values) {
       const grouped = _.groupBy(values, n => n.start_end)
       const keys = Object.keys(grouped)
       const table = []

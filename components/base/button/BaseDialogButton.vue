@@ -12,12 +12,14 @@
     </template>
     <VCard>
       <VCardTitle>{{ dialogTitle }}</VCardTitle>
-      <VDivider></VDivider>
-      <VCardText><slot></slot></VCardText>
-      <VDivider></VDivider>
+      <VDivider />
+      <VCardText><slot /></VCardText>
+      <VDivider />
       <VCardActions>
-        <VSpacer></VSpacer>
-        <VBtn color="primary" text @click="show = false"> Close </VBtn>
+        <VSpacer />
+        <VBtn color="primary" text @click="show = false">
+          Close
+        </VBtn>
       </VCardActions>
     </VCard>
   </VDialog>
@@ -41,22 +43,22 @@ export default {
     tooltipPosition: {
       type: String,
       default: 'left',
-      validator(value) {
+      validator (value) {
         // The value must match one of these strings
         return ['left', 'right', 'top', 'bottom'].includes(value)
       }
     }
   },
-  data() {
+  data () {
     return {
       show: false
     }
   },
   computed: {
-    mdiIcon() {
+    mdiIcon () {
       return this.$vuetify.icons.values[this.icon]
     },
-    tooltipPos() {
+    tooltipPos () {
       return {
         left: this.tooltipPosition === 'left',
         right: this.tooltipPosition === 'right',

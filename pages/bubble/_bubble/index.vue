@@ -17,15 +17,15 @@ import { vueMeta } from '@/utils/utils'
 
 export default {
   middleware: 'auth',
-  validate(context) {
+  validate (context) {
     return validate.bubble(context)
   },
-  head() {
+  head () {
     const title = `${this.bubble.title} Bubble`
     return vueMeta(this, title)
   },
   computed: {
-    bubble() {
+    bubble () {
       return this.$store.state.config.bubbleConfig[this.$route.params.bubble]
     }
   }

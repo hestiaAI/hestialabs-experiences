@@ -13,7 +13,7 @@
           :disabled="allDay"
           dense
           @click="reset"
-        ></VCheckbox>
+        />
       </div>
       <div class="d-flex justify-space-between">
         <VTextField
@@ -22,7 +22,7 @@
           label="Min value"
           type="time"
           @change="filterChange()"
-        ></VTextField>
+        />
 
         <VTextField
           v-model="endTime"
@@ -31,7 +31,7 @@
           :min="startTime"
           type="time"
           @change="filterChange()"
-        ></VTextField>
+        />
       </div>
     </VCol>
   </VRow>
@@ -47,7 +47,7 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       allDay: true,
       startTime: '00:00',
@@ -55,14 +55,14 @@ export default {
     }
   },
   computed: {
-    parser() {
+    parser () {
       return this.isDatetime ? datetimeParser : timeParser
     },
-    filterFunction() {
-      if (this.allDay) return null
-      return value => {
+    filterFunction () {
+      if (this.allDay) { return null }
+      return (value) => {
         const date = this.parser(value)
-        if (!value || !date) return true
+        if (!value || !date) { return true }
         const currentTime = this.toMilliseconds(
           `${date.getHours()}:${date.getMinutes()}`
         )
@@ -73,17 +73,15 @@ export default {
     }
   },
   methods: {
-    toMilliseconds(time) {
+    toMilliseconds (time) {
       const [hours, minutes] = time.split(':').map(d => parseInt(d))
       return hours * 3600 * 1000 + minutes * 60 * 1000
     },
-    filterChange() {
-      if (this.startTime === '00:00' && this.endTime === '23:59')
-        this.allDay = true
-      else this.allDay = false
+    filterChange () {
+      if (this.startTime === '00:00' && this.endTime === '23:59') { this.allDay = true } else { this.allDay = false }
       this.$emit('filter-change', this.filterFunction)
     },
-    reset() {
+    reset () {
       this.startTime = '00:00'
       this.endTime = '23:59'
       this.filterChange()

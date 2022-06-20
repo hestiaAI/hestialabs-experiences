@@ -13,12 +13,12 @@
                   <span>The bundle identifier of the initiating app.</span>
                 </VTooltip>
                 <VSpacer />
-                <div :id="`app-search-${graphId}`"></div>
+                <div :id="`app-search-${graphId}`" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -34,12 +34,12 @@
                   <span>The domain of the network connection.</span>
                 </VTooltip>
                 <VSpacer />
-                <div :id="`domain-search-${graphId}`"></div>
+                <div :id="`domain-search-${graphId}`" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -52,17 +52,15 @@
                   <template #activator="{ on, attrs }">
                     <strong v-bind="attrs" v-on="on">Profiling user</strong>
                   </template>
-                  <span
-                    >Whether the domain has been identified as potentially
+                  <span>Whether the domain has been identified as potentially
                     collecting information across apps and sites, and
-                    potentially profiling users.</span
-                  >
+                    potentially profiling users.</span>
                 </VTooltip>
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -77,17 +75,15 @@
                   <template #activator="{ on, attrs }">
                     <strong v-bind="attrs" v-on="on">Context</strong>
                   </template>
-                  <span
-                    >The website that made the connection, if applicable.</span
-                  >
+                  <span>The website that made the connection, if applicable.</span>
                 </VTooltip>
                 <VSpacer />
-                <div :id="`context-search-${graphId}`"></div>
+                <div :id="`context-search-${graphId}`" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -103,12 +99,12 @@
                   <span>The owner of the domain, if applicable.</span>
                 </VTooltip>
                 <VSpacer />
-                <div :id="`domainOwner-search-${graphId}`"></div>
+                <div :id="`domainOwner-search-${graphId}`" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -119,19 +115,18 @@
               <div style="display: flex">
                 <VTooltip left max-width="200">
                   <template #activator="{ on, attrs }">
-                    <strong v-bind="attrs" v-on="on"
-                      >Initiated by the app</strong
-                    >
+                    <strong
+                      v-bind="attrs"
+                      v-on="on"
+                    >Initiated by the app</strong>
                   </template>
-                  <span
-                    >Whether the app or the user initiated the connection.</span
-                  >
+                  <span>Whether the app or the user initiated the connection.</span>
                 </VTooltip>
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -140,14 +135,14 @@
         </VRow>
         <p v-if="config.consent">
           Please use the search box and filters below to change what is shown on
-          the map.<br />
+          the map.<br>
           Any filtering you do will also limit what data is shared into the pool
           if you share this tab on the 'Share My Data' tab.
         </p>
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="`dc-data-count-${graphId}`" class="dc-data-count"></div>
+      <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
     </VRow>
     <VRow>
       <VCol cols="12">
@@ -171,7 +166,7 @@ dc.config.defaultColors(d3.schemePaired)
 export default {
   mixins: [mixin],
   props: {},
-  data() {
+  data () {
     return {
       header: [
         { text: 'App', value: 'bundleID' },
@@ -190,11 +185,11 @@ export default {
     ...mapState(['config'])
   },
   methods: {
-    resetAll() {
+    resetAll () {
       dc.filterAll()
       dc.renderAll()
     },
-    decodeDefault(str) {
+    decodeDefault (str) {
       try {
         return str && str !== 'undefined'
           ? decodeURIComponent(escape(str))
@@ -204,7 +199,7 @@ export default {
         return str || 'Unknown'
       }
     },
-    createTopRowChart(ndx, fieldAccessor, valueAccessor) {
+    createTopRowChart (ndx, fieldAccessor, valueAccessor) {
       // Create and bind charts to their respective divs
       const chart = new dc.RowChart(`#${fieldAccessor}-chart-${this.graphId}`)
       const search = new dc.TextFilterWidget(
@@ -249,7 +244,7 @@ export default {
         .xAxis()
         .ticks(4)
     },
-    createPieChart(ndx, fieldAccessor, valueAccessor) {
+    createPieChart (ndx, fieldAccessor, valueAccessor) {
       // Create and bind charts to their respective divs
       const chart = new dc.PieChart(`#${fieldAccessor}-chart-${this.graphId}`)
 
@@ -292,8 +287,8 @@ export default {
           t.each(function (d) {
             const self = d3.select(this)
             let text = self.text()
-            if (text.length > 14) text = text.substring(0, 14) + '.. '
-            if (text.length > 0)
+            if (text.length > 14) { text = text.substring(0, 14) + '.. ' }
+            if (text.length > 0) {
               text =
                 text +
                 ' (' +
@@ -301,14 +296,15 @@ export default {
                   ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
                 ) +
                 '%)'
+            }
             self.text(text)
           })
         })
       })
     },
-    drawViz() {
+    drawViz () {
       // Parse and format data
-      this.results = this.values.map(d => {
+      this.results = this.values.map((d) => {
         return {
           app: this.decodeDefault(d.bundleID),
           domain: this.decodeDefault(d.domain),

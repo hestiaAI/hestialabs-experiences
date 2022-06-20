@@ -2,7 +2,7 @@ import domtoimage from 'dom-to-image-more'
 import { processError } from '@/utils/utils'
 
 export default ({ refName = 'domToImageNode' } = {}) => ({
-  data() {
+  data () {
     const extension = 'png'
     const filename = `chart.${extension}`
     return {
@@ -16,7 +16,7 @@ export default ({ refName = 'domToImageNode' } = {}) => ({
     }
   },
   methods: {
-    async exportImage() {
+    async exportImage () {
       this.progress = true
       this.status = false
       this.error = false
@@ -24,7 +24,7 @@ export default ({ refName = 'domToImageNode' } = {}) => ({
         // turn root node of this component to a PNG blob
         this.blob = await domtoimage.toBlob(this.$refs[refName], {
           bgcolor: 'white',
-          filter(node) {
+          filter (node) {
             if (!node.classList) {
               return true
             }

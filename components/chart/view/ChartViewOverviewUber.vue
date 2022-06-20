@@ -7,7 +7,7 @@
           v-model="currentCurrency"
           :items="currencies"
           @input="filterCurrency"
-        ></VSelect>
+        />
       </p>
     </VRow>
     <ChartViewVRowWebShare>
@@ -20,7 +20,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -43,7 +43,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -55,7 +55,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -67,7 +67,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -77,24 +77,28 @@
       <VCol cols="12" md="4">
         <VCard class="general-info">
           <VCardTitle>General information</VCardTitle>
-          <VCardSubtitle></VCardSubtitle>
+          <VCardSubtitle />
           <VCardText>
             <VContainer>
               <VRow dense>
                 <VCol cols="12" md="6">
                   <VCard color="#385F73" dark>
-                    <VCardTitle class="text-h6">Orders</VCardTitle>
-                    <VCardSubtitle></VCardSubtitle>
+                    <VCardTitle class="text-h6">
+                      Orders
+                    </VCardTitle>
+                    <VCardSubtitle />
                     <VCardText class="text-h4 text-center">
-                      <div><strong id="number-trip"></strong></div>
+                      <div><strong id="number-trip" /></div>
                       <span class="text-subtitle-1">trips</span>
                     </VCardText>
                   </VCard>
                 </VCol>
                 <VCol cols="12" md="6">
                   <VCard color="#385F73" dark>
-                    <VCardTitle class="text-h6">Speed</VCardTitle>
-                    <VCardSubtitle></VCardSubtitle>
+                    <VCardTitle class="text-h6">
+                      Speed
+                    </VCardTitle>
+                    <VCardSubtitle />
                     <VCardText class="text-h4 text-center">
                       <div><strong id="number-speed-avg" /></div>
                       <span class="text-subtitle-1">mph</span>
@@ -106,61 +110,65 @@
             <VSimpleTable>
               <thead>
                 <tr>
-                  <th class="text-left"></th>
-                  <th class="text-left">Total</th>
-                  <th class="text-left">Average</th>
+                  <th class="text-left" />
+                  <th class="text-left">
+                    Total
+                  </th>
+                  <th class="text-left">
+                    Average
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td><strong>Price</strong></td>
                   <td>
-                    <span id="number-price-total" class="text-h6"></span>
-                    <br />
+                    <span id="number-price-total" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">{{ currentCurrency }}</span>
                   </td>
                   <td>
-                    <span id="number-price-avg" class="text-h6"></span>
-                    <br />
+                    <span id="number-price-avg" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">{{ currentCurrency }}</span>
                   </td>
                 </tr>
                 <tr>
                   <td><strong>Distance</strong></td>
                   <td>
-                    <span id="number-distance-total" class="text-h6"></span>
-                    <br />
+                    <span id="number-distance-total" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">miles</span>
                   </td>
                   <td>
-                    <span id="number-distance-avg" class="text-h6"></span>
-                    <br />
+                    <span id="number-distance-avg" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">miles</span>
                   </td>
                 </tr>
                 <tr>
                   <td><strong>Duration</strong></td>
                   <td>
-                    <span id="number-duration-total" class="text-h6"></span>
-                    <br />
+                    <span id="number-duration-total" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">min</span>
                   </td>
                   <td>
-                    <span id="number-duration-avg" class="text-h6"></span>
-                    <br />
+                    <span id="number-duration-avg" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">min</span>
                   </td>
                 </tr>
                 <tr>
                   <td><strong>Waiting time</strong></td>
                   <td>
-                    <span id="number-waiting-total" class="text-h6"></span>
-                    <br />
+                    <span id="number-waiting-total" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">min</span>
                   </td>
                   <td>
-                    <span id="number-waiting-avg" class="text-h6"></span>
-                    <br />
+                    <span id="number-waiting-avg" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">min</span>
                   </td>
                 </tr>
@@ -195,7 +203,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  data() {
+  data () {
     return {
       header: [
         { text: 'City', value: 'City' },
@@ -216,16 +224,16 @@ export default {
     }
   },
   methods: {
-    filterCurrency(newCurr) {
+    filterCurrency (newCurr) {
       this.currencyDimension.filter(newCurr)
       this.currentCurrency = newCurr
       this.resetAll()
     },
-    resetAll() {
+    resetAll () {
       dc.filterAll()
       dc.renderAll()
     },
-    drawViz() {
+    drawViz () {
       // Add data to table
       this.results = this.values.filter(
         d => d['Trip or Order Status'] === 'COMPLETED'
@@ -244,7 +252,7 @@ export default {
       // Parse and format data
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC')
       const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
-      this.results.forEach(d => {
+      this.results.forEach((d) => {
         d.service =
           d['Product Type'].charAt(0).toUpperCase() + d['Product Type'].slice(1)
         d.dateRequest = dateFormatParser(d['Request Time'])
@@ -305,7 +313,7 @@ export default {
 
       // Create dimensions
       const allDimension = ndx.groupAll()
-      const dayOfWeekDimension = ndx.dimension(d => {
+      const dayOfWeekDimension = ndx.dimension((d) => {
         const day = d.dateStart.getDay()
         const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         return `${name[day]}`
@@ -354,7 +362,7 @@ export default {
 
       this.currentCurrency = currencyGroup.top(1)[0].key
       this.currencyDimension.filter(this.currentCurrency)
-      currencyGroup.top(Infinity).forEach(d => {
+      currencyGroup.top(Infinity).forEach((d) => {
         this.currencies.push(d.key)
       })
 
@@ -368,13 +376,13 @@ export default {
         })
       speedNumber
         .group(allGroup)
-        .valueAccessor(p => {
+        .valueAccessor((p) => {
           return p.durationTotal ? (p.distanceTotal * 60) / p.durationTotal : 0
         })
         .formatNumber(d3.format('.1f'))
       priceAvgNumber
         .group(allGroup)
-        .valueAccessor(p => {
+        .valueAccessor((p) => {
           return p.count ? p.priceTotal / p.count : 0
         })
         .formatNumber(d3.format('.1f'))
@@ -426,9 +434,9 @@ export default {
         .ticks(7)
 
       // Render days of week row chart
-      function removeEmptyBins(group) {
+      function removeEmptyBins (group) {
         return {
-          top(n) {
+          top (n) {
             return group
               .top(Infinity)
               .filter(function (d) {
@@ -479,14 +487,14 @@ export default {
         .innerRadius(0)
         .dimension(serviceDimension)
         .group(serviceGroup)
-        .valueAccessor(d => {
+        .valueAccessor((d) => {
           return d.value
         })
         .title(d => d.key + ': ' + d.value + ' trips')
         .ordinalColors(colorPalette)
-        .label(d => {
+        .label((d) => {
           let label = d.key
-          if (label.length > 8) label = label.substring(0, 8) + '.. '
+          if (label.length > 8) { label = label.substring(0, 8) + '.. ' }
           if (serviceChart.hasFilter() && !serviceChart.hasFilter(d.key)) {
             return `${label} (0%)`
           }
@@ -503,9 +511,9 @@ export default {
         dayDimension.bottom(1).length > 0 ? dayDimension.bottom(1)[0].day : null
       const maxDate =
         dayDimension.top(1).length > 0 ? dayDimension.top(1)[0].day : null
-      function createCumulativeGroup(group) {
+      function createCumulativeGroup (group) {
         return {
-          all() {
+          all () {
             const cumulate = {}
             return group.all().map(function (d) {
               if (cumulate[d.key[0]]) {

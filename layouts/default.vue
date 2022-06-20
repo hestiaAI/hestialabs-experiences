@@ -12,7 +12,9 @@
         <template v-if="$nuxt.isOffline">
           The app is running in offline mode
         </template>
-        <template v-else> You are online again! </template>
+        <template v-else>
+          You are online again!
+        </template>
       </VSnackbar>
       <VAlert
         :value="alert"
@@ -31,7 +33,7 @@
         @input="alertClosed"
       >
         Want to know more about our work ?
-        <br />
+        <br>
         <a :href="newsletterURL" target="_blank" rel="noreferrer noopener">
           {{ newsletterMessage }}
         </a>
@@ -40,10 +42,12 @@
     <VFooter app absolute color="primary">
       <div class="lighten-2 py-2 ma-auto white--text" align="center">
         Educational material developed by
-        <a href="https://hestia.ai" target="_blank" style="color: white"
-          >Hestia.ai</a
-        >
-        <br />Currently in development |
+        <a
+          href="https://hestia.ai"
+          target="_blank"
+          style="color: white"
+        >Hestia.ai</a>
+        <br>Currently in development |
         <a :href="newsletterURL" target="_blank" style="color: white">
           {{ newsletterMessage }}
         </a>
@@ -56,7 +60,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  async middleware({
+  async middleware ({
     store,
     params: { bubble },
     route: { path },
@@ -77,7 +81,7 @@ export default {
       })
     }
   },
-  data() {
+  data () {
     return {
       // Display offline message if user opens app when offline
       snackbar: this.$nuxt.isOffline,
@@ -85,7 +89,7 @@ export default {
       alert: false
     }
   },
-  head() {
+  head () {
     if (!this.appName) {
       return
     }
@@ -111,28 +115,28 @@ export default {
   },
   computed: {
     ...mapGetters(['experience', 'appName']),
-    collaborator() {
+    collaborator () {
       const { collaborator = {} } = this.experience(this.$route)
       return collaborator
     },
-    newsletterURL() {
+    newsletterURL () {
       const { url = 'https://hestialabs.org/' } = this.collaborator
       return `${url}#newsletter`
     },
-    newsletterMessage() {
+    newsletterMessage () {
       const { title = 'HestiaLabs' } = this.collaborator
       const genitiveCaseEnding = title.endsWith('s') ? '’' : '’s'
       return `Subscribe to ${title}${genitiveCaseEnding} newsletter!`
     }
   },
   watch: {
-    '$nuxt.isOffline'(isOffline) {
+    '$nuxt.isOffline' (isOffline) {
       this.snackbar = true
       // changing timeout property resets the timeout
       this.timeout = isOffline ? 5001 : 5000
     }
   },
-  mounted() {
+  mounted () {
     if (!window.Worker) {
       this.$nuxt.error({
         statusCode: 500,
@@ -153,7 +157,7 @@ export default {
     }
   },
   methods: {
-    alertClosed() {
+    alertClosed () {
       localStorage.alertNewsletterDismissed = new Date()
     }
   }

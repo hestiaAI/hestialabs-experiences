@@ -1,6 +1,8 @@
 <template>
   <VContainer fluid style="max-width: 400px" class="mt-16">
-    <h1 class="text-h4 mb-6">Bubble Login</h1>
+    <h1 class="text-h4 mb-6">
+      Bubble Login
+    </h1>
     <VForm @submit.prevent="login">
       <VTextField :value="username" label="Username" readonly />
       <VTextField
@@ -16,7 +18,9 @@
         autofocus
         @click:append="onClickAppend"
       />
-      <BaseButton type="submit">Login</BaseButton>
+      <BaseButton type="submit">
+        Login
+      </BaseButton>
     </VForm>
   </VContainer>
 </template>
@@ -28,7 +32,7 @@ const extractBubbleParam = (path = '') => path.split('/')[2]
 
 export default {
   auth: 'guest',
-  middleware({ $auth, redirect, route, error }) {
+  middleware ({ $auth, redirect, route, error }) {
     if (!route.query.redirect) {
       if ($auth.$state.redirect) {
         // add query parameter
@@ -44,7 +48,7 @@ export default {
       $auth.$storage.setState('redirect', route.query.redirect)
     }
   },
-  validate({ $auth, store }) {
+  validate ({ $auth, store }) {
     const { bubbles } = store.state.config
     const bubble = extractBubbleParam($auth.$state.redirect)
     if (!bubbles.includes(bubble)) {
@@ -52,7 +56,7 @@ export default {
     }
     return true
   },
-  data() {
+  data () {
     return {
       password: '',
       passwordType: 'password',
@@ -61,22 +65,22 @@ export default {
     }
   },
   computed: {
-    username() {
+    username () {
       const bubble = extractBubbleParam(this.$route.query.redirect)
       return bubble
     }
   },
   watch: {
-    password() {
+    password () {
       this.errorMessage = ''
     },
-    $route() {
+    $route () {
       // focus password input on route change
       this.$refs.password.$refs.input.focus()
     }
   },
   methods: {
-    onClickAppend() {
+    onClickAppend () {
       if (this.passwordType === 'password') {
         this.passwordType = 'text'
         this.passwordAppendIcon = mdiEyeOff
@@ -85,7 +89,7 @@ export default {
         this.passwordAppendIcon = mdiEye
       }
     },
-    async login() {
+    async login () {
       try {
         const { username, password } = this
         if (!password) {

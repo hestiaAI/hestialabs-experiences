@@ -2,17 +2,21 @@
   <div>
     <VCard v-if="fileManager !== null" class="pa-2 mb-6" flat>
       <VRow>
-        <VCol cols="1"></VCol>
-        <VCol cols="10"
-          ><VCardTitle class="justify-center">{{ title }}</VCardTitle></VCol
-        >
+        <VCol cols="1" />
+        <VCol cols="10">
+          <VCardTitle class="justify-center">
+            {{ title }}
+          </VCardTitle>
+        </VCol>
         <VCol cols="1" align-self="center" class="full-height text-center">
           <VTooltip
             v-if="['genericDateViewer', 'genericLocationViewer'].includes(id)"
             left
           >
             <template #activator="{ on }">
-              <VIcon v-on="on">$vuetify.icons.mdiFileMultipleOutline</VIcon>
+              <VIcon v-on="on">
+                $vuetify.icons.mdiFileMultipleOutline
+              </VIcon>
             </template>
             <span>All files are used</span>
           </VTooltip>
@@ -20,7 +24,8 @@
             v-else-if="fileGlobs.length > 0"
             :file-globs="fileGlobs"
             :file-manager="fileManager"
-        /></VCol>
+          />
+        </VCol>
       </VRow>
 
       <VRow v-if="text">
@@ -31,10 +36,10 @@
         </VCol>
       </VRow>
       <template v-if="missingFiles.length > 0">
-        <BaseAlert class="mt-4"
-          >{{ missingFiles.length === 1 ? 'File' : 'Files' }} not found:
-          {{ missingFiles.join(', ') }}</BaseAlert
-        >
+        <BaseAlert class="mt-4">
+          {{ missingFiles.length === 1 ? 'File' : 'Files' }} not found:
+          {{ missingFiles.join(', ') }}
+        </BaseAlert>
       </template>
       <template v-else>
         <UnitPipelineCustom
@@ -145,7 +150,7 @@ export default {
       default: () => ({})
     }
   },
-  data() {
+  data () {
     const { visualization: v } = this
     let vizUrl = false
     let vizVue = false
@@ -170,14 +175,14 @@ export default {
   },
   computed: {
     ...mapState(['fileManager']),
-    clonedResult() {
+    clonedResult () {
       return JSON.parse(JSON.stringify(this.result))
     },
-    fileGlobs() {
+    fileGlobs () {
       const fileIds = this.files ?? []
       return fileIds.map(id => this.fileManager.idToGlob[id])
     },
-    missingFiles() {
+    missingFiles () {
       return this.fileGlobs
         .map(glob => [glob, this.fileManager.findMatchingFilePaths(glob)])
         .filter(([_, files]) => files.length === 0)
@@ -185,7 +190,7 @@ export default {
     }
   },
   watch: {
-    fileManager(value) {
+    fileManager (value) {
       if (!value) {
         // When fileManager is reset,
         // we set result to null to ensure
@@ -197,7 +202,7 @@ export default {
     }
   },
   methods: {
-    onUnitResultsUpdate({ result, error }) {
+    onUnitResultsUpdate ({ result, error }) {
       let finalResult = result
       if (error) {
         console.error(error)

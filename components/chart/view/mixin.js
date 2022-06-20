@@ -9,16 +9,16 @@ export default {
       default: () => []
     }
   },
-  data() {
+  data () {
     return {
       graphId: 'graph_' + this._uid
     }
   },
-  mounted() {
+  mounted () {
     this.drawViz()
   },
   watch: {
-    values() {
+    values () {
       this.drawViz()
     }
   }

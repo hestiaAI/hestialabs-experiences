@@ -1,6 +1,6 @@
 <template>
   <DataValidator :data="data">
-    <div ref="graph"></div>
+    <div ref="graph" />
     <VRow>
       <VCol cols="6 mx-auto">
         <BaseButtonDownloadData
@@ -28,16 +28,16 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       width: 0
     }
   },
   computed: {
-    items() {
+    items () {
       return this.data.items
     },
-    clonedItems() {
+    clonedItems () {
       // Vega happens to modify values,
       // so we clone them to avoid affecting
       // other graphs that could
@@ -47,7 +47,7 @@ export default {
       }
       return JSON.parse(JSON.stringify(this.items))
     },
-    specWithItems() {
+    specWithItems () {
       // Changing the values involves
       // stuffing them into a spec.
       // We'll keep an original spec
@@ -71,16 +71,16 @@ export default {
     }
   },
   watch: {
-    specWithItems() {
+    specWithItems () {
       this.draw()
     }
   },
-  mounted() {
+  mounted () {
     this.width = this.$refs.graph?.offsetWidth ?? 0
     this.draw()
   },
   methods: {
-    async draw() {
+    async draw () {
       // TODO find a way to make vega respect the width...
       // put something like autosize in the spec
       // "autosize": {"type": "fit", "contains": "padding"},

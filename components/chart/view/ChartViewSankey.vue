@@ -6,7 +6,7 @@
           In total there are <strong>{{ total }}</strong> records
           {{ labelTotal }}
         </p>
-        <div :id="graphId" style="position: relative"></div>
+        <div :id="graphId" style="position: relative" />
       </VCol>
     </ChartViewVRowWebShare>
   </VContainer>
@@ -53,17 +53,17 @@ export default {
       default: () => 40
     }
   },
-  data() {
+  data () {
     return {
       graphId: 'graph_' + this._uid,
       total: 0
     }
   },
-  mounted() {
+  mounted () {
     this.drawViz()
   },
   methods: {
-    toJSONGraph(data) {
+    toJSONGraph (data) {
       // group, count each similar links and limit to top n links
       const groupedData = d3
         .flatRollup(
@@ -72,7 +72,7 @@ export default {
           d => d.source,
           d => d.target
         )
-        .map(d => {
+        .map((d) => {
           return { source: d[0], target: d[1], value: d[2] }
         })
         .filter(
@@ -125,7 +125,7 @@ export default {
       })
       return graph
     },
-    drawViz() {
+    drawViz () {
       this.total = this.values.length
 
       // transform to graph format
@@ -288,21 +288,22 @@ export default {
         })
 
       // add in the title for the nodes
-      if (this.displayLinksLabels)
+      if (this.displayLinksLabels) {
         node
           .append('text')
           .attr('x', d => d.x1 + 6)
           .attr('y', d => (d.y1 + d.y0) / 2)
           .attr('dy', '0.35em')
           .attr('text-anchor', 'start')
-          .text(d => {
+          .text((d) => {
             let name = d.name.split(',')[0]
-            if (name.length > 20) name = name.slice(0, 20) + '..'
+            if (name.length > 20) { name = name.slice(0, 20) + '..' }
             return name
           })
           .filter(d => d.x0 < width / 2)
           .attr('x', d => d.x0 - 6)
           .attr('text-anchor', 'end')
+      }
     }
   }
 }

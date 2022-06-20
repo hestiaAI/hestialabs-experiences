@@ -1,8 +1,10 @@
 <template>
   <VContainer>
     <div class="d-flex">
-      <div class="overline mb-3">{{ title }}</div>
-      <VSpacer></VSpacer>
+      <div class="overline mb-3">
+        {{ title }}
+      </div>
+      <VSpacer />
       <div v-if="includeTotal" class="overline mb-3">
         total: <strong>{{ items.length }}</strong>
       </div>
@@ -57,7 +59,7 @@
                 :fill="color(item[3])"
                 :rx="borderRadius"
                 :ry="borderRadius"
-              ></rect>
+              />
               <title>
                 {{ generateTitle(year[0], item[0], item[1], item[3]) }}
               </title>
@@ -83,7 +85,7 @@
               :fill="color(square)"
               :rx="borderRadius"
               :ry="borderRadius"
-            ></rect>
+            />
             <text
               style="text-anchor: middle"
               :x="legendSquareXPos(idx) + cellSize"
@@ -146,7 +148,7 @@ export default {
       default: () => false
     }
   },
-  data() {
+  data () {
     return {
       weekDays: ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat'],
       formatMonth: d3.utcFormat('%b'),
@@ -154,31 +156,30 @@ export default {
     }
   },
   computed: {
-    width() {
+    width () {
       return this.cellSize * (52 + 3)
     },
-    calendarHeight() {
+    calendarHeight () {
       return this.cellSize * (this.weekDays.length + 4)
     },
-    height() {
+    height () {
       return this.calendarHeight * this.itemsPerDay.length
     },
-    viewBox() {
+    viewBox () {
       return `0 0 ${this.width} ${this.height}`
     },
-    dateParser() {
-      if (this.dateFormat) return d3.timeParse(this.dateFormat)
-      else
-        return d => {
+    dateParser () {
+      if (this.dateFormat) { return d3.timeParse(this.dateFormat) } else {
+        return (d) => {
           const date = new Date(d)
           // return null if the date is not recognized
-          if (isNaN(date.getTime())) return null
-          else return date
+          if (isNaN(date.getTime())) { return null } else { return date }
         }
+      }
     },
-    items() {
+    items () {
       return this.values
-        .map(v => {
+        .map((v) => {
           return {
             date: this.dateParser(v[this.dateAccessor]),
             value: this.valueAccessor ? v[this.valueAccessor] : 1
@@ -186,19 +187,19 @@ export default {
         })
         .filter(v => v.date)
     },
-    extent() {
+    extent () {
       return d3.extent(
         this.itemsPerDay.flatMap(y => d3.extent(y[1], i => i[3]))
       )
     },
-    color() {
+    color () {
       return d3
         .scaleSequential()
         .domain([this.extent[0], this.extent[1]])
         .nice()
         .interpolator(this.colorPalette)
     },
-    itemsPerDay() {
+    itemsPerDay () {
       const years = d3
         .groups(this.items, v => v.date.getUTCFullYear())
         .sort((a, b) => b[0] - a[0])
@@ -213,8 +214,8 @@ export default {
         )
       ])
     },
-    monthsPerYear() {
-      const test = this.itemsPerDay.map(y => {
+    monthsPerYear () {
+      const test = this.itemsPerDay.map((y) => {
         const dateExtent = d3.extent(y[1], i => new Date(y[0], i[0], i[1]))
         return {
           year: y[0],
@@ -224,16 +225,16 @@ export default {
 
       return test
     },
-    legendSquares() {
+    legendSquares () {
       return this.color.ticks(this.legendPrefNbItems)
     },
-    legendNbItems() {
+    legendNbItems () {
       return this.legendSquares.length
     }
   },
-  mounted() {},
+  mounted () {},
   methods: {
-    generateTitle(year, month, day, value) {
+    generateTitle (year, month, day, value) {
       return (
         d3.timeFormat('%a %d %B, %Y')(new Date(year, month, day)) +
         ' - ' +
@@ -241,20 +242,20 @@ export default {
         ' records'
       )
     },
-    xPos(year, month, day) {
+    xPos (year, month, day) {
       const date = new Date(year, month, day)
       return d3.utcMonday.count(d3.utcYear(date), date) * this.cellSize + 0.5
     },
-    xPosMonth(d) {
+    xPosMonth (d) {
       return (
         d3.utcMonday.count(d3.utcYear(d), d3.utcMonday.ceil(d)) * this.cellSize
       )
     },
-    legendSquareXPos(idx) {
+    legendSquareXPos (idx) {
       const { width: w, cellSize: s, legendNbItems: n } = this
       return w - s * 2 * n + idx * s * 2 - s * 2
     },
-    drawViz() {}
+    drawViz () {}
   }
 }
 </script>

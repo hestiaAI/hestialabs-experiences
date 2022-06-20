@@ -1,12 +1,12 @@
 import _ from 'lodash'
 
-function commonPrefixAndSuffix(s1, s2) {
+function commonPrefixAndSuffix (s1, s2) {
   const prefix = _.takeWhile(s1, (e, i) => e === s2[i]).join('')
   const suffix = _.takeRightWhile(s1, (e, i) => e === s2[i]).join('')
   return suffix !== prefix ? { prefix, suffix } : []
 }
 
-function groupSimilarEventValues(events) {
+function groupSimilarEventValues (events) {
   const values = _.uniq(events.map(e => e.eventValue))
   const pairs = values.flatMap((v1, i1) =>
     values
@@ -27,7 +27,7 @@ function groupSimilarEventValues(events) {
     if (suffix.includes(' ') || prefix.includes(' ')) {
       events
         .filter(e => !_.has(e, 'matched'))
-        .forEach(e => {
+        .forEach((e) => {
           if (regex.test(e.eventValue)) {
             e.eventValue = e.eventValue.match(regex)[1]
             e.eventType = `${prefix}...${suffix}`
@@ -40,13 +40,13 @@ function groupSimilarEventValues(events) {
   return events
 }
 
-function identifyTypeFromManifestList(events, params, match) {
+function identifyTypeFromManifestList (events, params, match) {
   const types = Object.values(params.eventTypes).flatMap(obj =>
     Object.entries(obj)
       .filter(([folder]) => folder === match[1])
       .flatMap(([folder, types]) => types)
   )
-  events.forEach(event => {
+  events.forEach((event) => {
     event.eventType =
       _.find(types, t => event.eventValue.includes(t)) ?? 'unknown'
   })

@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <div :id="graphId" style="position: relative"></div>
+    <div :id="graphId" style="position: relative" />
     <div>
       <p>
         Please take into account the fact that this graph only shows the link
@@ -38,7 +38,7 @@ export default {
     }
   },
   computed: {
-    jsonData() {
+    jsonData () {
       // Là dedans que tu construis ton format
       const categoriesToKeep = [
         'FingerprintingGeneral',
@@ -94,7 +94,7 @@ export default {
     }
   },
   methods: {
-    drawViz() {
+    drawViz () {
       // Init of everything
       // Init Svg container
       d3.select('#' + this.graphId + ' svg').remove()
@@ -108,7 +108,7 @@ export default {
         .classed('svg-content', true)
       this.updateViz()
     },
-    updateViz() {
+    updateViz () {
       // Nodes size scale
       const minValue = d3.min(this.jsonData.nodes, function (d) {
         return +d.size
@@ -225,7 +225,7 @@ export default {
 
       simulation.force('link').links(this.jsonData.links)
 
-      function ticked() {
+      function ticked () {
         node.attr('transform', function (d) {
           // radius = 3 + Math.sqrt(d.size)*2;
           return 'translate(' + d.x + ',' + d.y + ')'
@@ -267,19 +267,19 @@ export default {
       svg.select(".legend")
         .call(colorLegend);
       */
-      function dragstarted(evt) {
-        if (!evt.active) simulation.alphaTarget(0.3).restart()
+      function dragstarted (evt) {
+        if (!evt.active) { simulation.alphaTarget(0.3).restart() }
         evt.subject.fx = evt.subject.x
         evt.subject.fy = evt.subject.y
       }
 
-      function dragged(evt) {
+      function dragged (evt) {
         evt.subject.fx = evt.x
         evt.subject.fy = evt.y
       }
 
-      function dragended(evt) {
-        if (!evt.active) simulation.alphaTarget(0)
+      function dragended (evt) {
+        if (!evt.active) { simulation.alphaTarget(0) }
         evt.subject.fx = null
         evt.subject.fy = null
       }

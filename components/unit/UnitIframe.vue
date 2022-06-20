@@ -14,7 +14,7 @@
       :style="`width: 100%; height: ${height}px`"
       frameborder="0"
       @load="onload"
-    ></iframe>
+    />
   </VCard>
 </template>
 
@@ -34,20 +34,20 @@ export default {
       default: 500
     }
   },
-  data() {
+  data () {
     return {
       loaded: false
     }
   },
   watch: {
-    args(newArgs) {
+    args (newArgs) {
       if (this.loaded) {
         this.callIframeFunction('update', newArgs)
       }
     }
   },
   methods: {
-    onload() {
+    onload () {
       const initParameters = {
         height: this.height,
         width: (this.width = this.$refs.iframe.offsetWidth)
@@ -56,7 +56,7 @@ export default {
       this.callIframeFunction('update', this.args)
       this.loaded = true
     },
-    callIframeFunction(functionName, ...args) {
+    callIframeFunction (functionName, ...args) {
       const func = this.$refs.iframe.contentWindow?.[functionName]
       if (func) {
         try {

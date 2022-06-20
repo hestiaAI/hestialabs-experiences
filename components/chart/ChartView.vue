@@ -30,7 +30,7 @@ export default {
     }
   },
   computed: {
-    component() {
+    component () {
       return () => import(`@/components/chart/view/${this.graphName}`)
     }
   }

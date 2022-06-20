@@ -4,9 +4,10 @@
       <VTooltip :right="main" :left="!main">
         <template #activator="{ on: onTooltip }">
           <span v-on="onTooltip">
-            <VIcon class="ml-2" v-on="on"
-              >$vuetify.icons.mdiFolderInformationOutline</VIcon
-            >
+            <VIcon
+              class="ml-2"
+              v-on="on"
+            >$vuetify.icons.mdiFolderInformationOutline</VIcon>
           </span>
         </template>
         <span>Show expected files</span>
@@ -14,18 +15,24 @@
     </template>
     <VCard>
       <VCardTitle>Expected files</VCardTitle>
-      <VDivider></VDivider>
+      <VDivider />
       <VCardText>
         <template v-if="fileGlobs && fileGlobs.length > 0">
-          <p v-if="main" class="mt-4">Files used in the experiences:</p>
-          <p v-else class="mt-4">Files required:</p>
+          <p v-if="main" class="mt-4">
+            Files used in the experiences:
+          </p>
+          <p v-else class="mt-4">
+            Files required:
+          </p>
           <ul>
             <li v-for="glob in fileGlobs" :key="glob">
               {{ glob }}
             </li>
           </ul>
           <template v-if="!main && fileManager">
-            <p class="mt-4">Files found:</p>
+            <p class="mt-4">
+              Files found:
+            </p>
             <ul>
               <template v-for="glob in fileGlobs">
                 <li
@@ -50,11 +57,13 @@
         </p>
       </VCardText>
 
-      <VDivider></VDivider>
+      <VDivider />
 
       <VCardActions>
-        <VSpacer></VSpacer>
-        <VBtn color="primary" text @click="show = false"> Close </VBtn>
+        <VSpacer />
+        <VBtn color="primary" text @click="show = false">
+          Close
+        </VBtn>
       </VCardActions>
     </VCard>
   </VDialog>
@@ -78,7 +87,7 @@ export default {
       default: null
     }
   },
-  data() {
+  data () {
     return {
       show: false
     }

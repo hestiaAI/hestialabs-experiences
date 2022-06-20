@@ -33,7 +33,7 @@ const testWrongItems = [
   { id: 1, description: 'foo bar', time: '2022-01-01', ratio: 0.33 }
 ]
 
-async function newDB() {
+async function newDB () {
   const db = new DB()
   await db.init()
   return db

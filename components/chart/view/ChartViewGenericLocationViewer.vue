@@ -2,7 +2,9 @@
   <VContainer v-if="values.length > 0">
     <VRow>
       <VCol cols="12">
-        <p class="text-h6">Number of location records in your files</p>
+        <p class="text-h6">
+          Number of location records in your files
+        </p>
         <p v-if="total === 0" class="text-subtitle-2">
           No location were found in your file(s).
         </p>
@@ -34,7 +36,7 @@ import keplerConfig from './kepler-config'
 
 export default {
   mixins: [mixin],
-  data() {
+  data () {
     return {
       filteredRows: this.values,
       header: [
@@ -47,15 +49,15 @@ export default {
     }
   },
   computed: {
-    total() {
+    total () {
       return this.values.length
     },
-    filtered() {
+    filtered () {
       return this.filteredRows.length
     },
-    keplerData() {
+    keplerData () {
       return {
-        fields: this.header.map(h => {
+        fields: this.header.map((h) => {
           return {
             name: h.value
           }
@@ -63,7 +65,7 @@ export default {
         rows: this.filteredRows.map(r => this.header.map(h => r[h.value]))
       }
     },
-    keplerArgs() {
+    keplerArgs () {
       return {
         keplerData: this.keplerData,
         config: keplerConfig
@@ -71,8 +73,8 @@ export default {
     }
   },
   methods: {
-    drawViz() {},
-    onTableFilter(newItems) {
+    drawViz () {},
+    onTableFilter (newItems) {
       this.filteredRows = newItems
     }
   }

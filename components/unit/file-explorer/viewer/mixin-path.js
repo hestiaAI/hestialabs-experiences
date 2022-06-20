@@ -1,6 +1,6 @@
 export default {
   computed: {
-    path() {
+    path () {
       return URL.createObjectURL(this.fileManager.fileDict[this.filename])
     }
   }

@@ -26,7 +26,7 @@ export const buildStore = function () {
   return store
 }
 
-export function init(containerElement, props = {}, store, mapboxToken) {
+export function init (containerElement, props = {}, store, mapboxToken) {
   const KeplerElement = function (props) {
     return React.createElement(
       'div',
@@ -54,7 +54,7 @@ export function init(containerElement, props = {}, store, mapboxToken) {
   ReactDOM.render(app, containerElement)
 }
 
-function extractDataId(config) {
+function extractDataId (config) {
   let dataId = config?.config?.visState?.filters?.[0]?.dataId?.[0]
   if (!dataId) {
     dataId = config?.config?.visState?.layers?.[0]?.config?.dataId
@@ -87,7 +87,7 @@ function extractDataId(config) {
  * A csv string, for example the trips from your uber data.
  * This argument is only used if there is no keplerData.
  */
-export function update(data, store) {
+export function update (data, store) {
   const { config, rawCsv, keplerData } = data
   const inputData = keplerData || KeplerGl.processCsvData(rawCsv)
   const dataset = {

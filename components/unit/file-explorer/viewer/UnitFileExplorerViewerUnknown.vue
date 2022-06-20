@@ -2,7 +2,9 @@
   <div>
     <p>
       Unknown file type
-      <BaseButton small class="ml-2" @click="click">Try to open it</BaseButton>
+      <BaseButton small class="ml-2" @click="click">
+        Try to open it
+      </BaseButton>
     </p>
     <iframe
       ref="iframe"
@@ -22,27 +24,27 @@ import mixinPath from './mixin-path'
 export default {
   name: 'UnitFileExplorerViewerUnknown',
   mixins: [mixin, mixinPath],
-  data() {
+  data () {
     return {
       showIframe: false,
       href: ''
     }
   },
   computed: {
-    iframeClass() {
+    iframeClass () {
       return this.showIframe ? '' : 'd-none'
     }
   },
   watch: {
-    filename() {
+    filename () {
       this.showIframe = false
     }
   },
   methods: {
-    click() {
+    click () {
       this.href = this.path
     },
-    onIframeLoad() {
+    onIframeLoad () {
       if (this.href === this.path) {
         this.showIframe = true
       }

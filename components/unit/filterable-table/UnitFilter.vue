@@ -15,14 +15,17 @@
     </template>
     <div style="background-color: white; width: 280px">
       <div class="d-flex justify-space-between">
-        <div class="overline ma-3">{{ header.text }}</div>
+        <div class="overline ma-3">
+          {{ header.text }}
+        </div>
         <VChip
           :color="typeColors[String(header.type)]"
           small
           outlined
           class="ma-4"
-          >{{ String(header.type).toLowerCase() }}</VChip
         >
+          {{ String(header.type).toLowerCase() }}
+        </VChip>
       </div>
       <VContainer class="pa-4">
         <component
@@ -39,8 +42,9 @@
           class="ma-2"
           color="primary"
           @click="$refs.filter.reset()"
-          v-text="`Clear`"
-        />
+        >
+          {{ Clear }}
+        </VBtn>
       </div>
     </div>
   </VMenu>
@@ -59,7 +63,7 @@ export default {
       default: () => []
     }
   },
-  data() {
+  data () {
     return {
       args: {},
       filter: null,
@@ -77,7 +81,7 @@ export default {
     }
   },
   computed: {
-    filterOptions() {
+    filterOptions () {
       switch (String(this.header.type)) {
         case 'INT':
           return { name: 'NumberFilter.vue', args: {} }
@@ -93,7 +97,7 @@ export default {
           return { name: 'SelectFilter.vue', args: {} }
       }
     },
-    component() {
+    component () {
       return () =>
         import(
           `@/components/unit/filterable-table/filters/${this.filterOptions.name}`
@@ -101,7 +105,7 @@ export default {
     }
   },
   methods: {
-    filterChange(filter) {
+    filterChange (filter) {
       this.filter = filter
       this.$emit('filter-change', filter)
     }

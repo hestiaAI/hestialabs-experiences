@@ -15,15 +15,15 @@
               dense
               :label="`Cumulative`"
               @change="changeAgg"
-            ></VCheckbox>
+            />
           </VCol>
         </VRow>
-        <div id="line-chart"></div>
-        <div :id="'range-chart' + graphId" class="range-chart"></div>
+        <div id="line-chart" />
+        <div :id="'range-chart' + graphId" class="range-chart" />
       </VCol>
       <VCol cols="12" md="4">
         <p>Information Type</p>
-        <div id="row-chart"></div>
+        <div id="row-chart" />
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
@@ -53,8 +53,12 @@
     <VRow>
       <VCol cols="12">
         <VTabs v-model="tab">
-          <VTab href="#overview" @click="resetSourceFilter">Overview</VTab>
-          <VTab href="#details">Details</VTab>
+          <VTab href="#overview" @click="resetSourceFilter">
+            Overview
+          </VTab>
+          <VTab href="#details">
+            Details
+          </VTab>
         </VTabs>
         <VTabsItems v-model="tab">
           <VTabItem value="overview">
@@ -114,7 +118,9 @@
               Current Filter:
               <VBtn small elevation="2" @click="resetSourceFilter">
                 <strong>{{ currSourceFilter }}</strong>
-                <VIcon x-small> $vuetify.icons.mdiClose </VIcon>
+                <VIcon x-small>
+                  $vuetify.icons.mdiClose
+                </VIcon>
               </VBtn>
             </p>
             <UnitFilterableTable v-bind="{ headers: header, items: results }" />
@@ -146,7 +152,7 @@ export default {
       default: () => ['%Y-%m-%dT%H:%M:%S%Z', '%Y-%m-%dT%H:%M:%S.%L%Z']
     }
   },
-  data() {
+  data () {
     return {
       total: null,
       timeRange: null,
@@ -177,7 +183,7 @@ export default {
     }
   },
   methods: {
-    resetAll() {
+    resetAll () {
       this.timeRange = 'ALL'
       this.filterTimeRange(this.timeRange)
       dc.filterAll()
@@ -185,11 +191,11 @@ export default {
       this.resetSourceFilter()
     },
     // Change tab
-    tabDetails() {
+    tabDetails () {
       this.tab = 'details'
     },
     // When no data available for a specific time period, show an empty message
-    showEmptyMessage(chart) {
+    showEmptyMessage (chart) {
       const isEmpty =
         d3.sum(chart.group().all().map(chart.valueAccessor())) === 0
       const data = isEmpty ? [1] : []
@@ -213,9 +219,9 @@ export default {
       }
     },
     // Make a Fake group to display only value above 0 on the row graphs
-    removeEmptyBins(group) {
+    removeEmptyBins (group) {
       return {
-        top(n) {
+        top (n) {
           return group
             .top(Infinity)
             .filter(function (d) {
@@ -223,14 +229,14 @@ export default {
             })
             .slice(0, n)
         },
-        all() {
+        all () {
           return group.all()
         }
       }
     },
-    createCumulativeGroup(sourceGroup) {
+    createCumulativeGroup (sourceGroup) {
       return {
-        all() {
+        all () {
           let cumulate = 0
           return sourceGroup.all().map(function (d) {
             cumulate += d.value
@@ -240,14 +246,12 @@ export default {
         }
       }
     },
-    changeAgg() {
-      if (this.checkbox)
-        this.lineChart.group(this.createCumulativeGroup(this.timelineGroup))
-      else this.lineChart.group(this.timelineGroup)
+    changeAgg () {
+      if (this.checkbox) { this.lineChart.group(this.createCumulativeGroup(this.timelineGroup)) } else { this.lineChart.group(this.timelineGroup) }
       dc.redrawAll()
     },
     // Main function to init component
-    drawViz() {
+    drawViz () {
       // Init table values
       this.results = this.values
 
@@ -257,9 +261,9 @@ export default {
       this.formatTimeMonth = d3.timeFormat('%B %Y')
       this.formatTimeHour = d3.timeFormat('%H:%M:%S')
       const formatTimeS = d3.timeFormat('%d %B %Y')
-      this.results.forEach(d => {
+      this.results.forEach((d) => {
         d.dateSrc = d.date
-        dateFormatParsers.some(parser => {
+        dateFormatParsers.some((parser) => {
           d.date = parser(d.dateSrc)
           return d.date != null
         })
@@ -394,8 +398,8 @@ export default {
       // Render all graphs
       dc.renderAll()
     },
-    filterTimeRange(newValue) {
-      if (this.rangeChart === null) return
+    filterTimeRange (newValue) {
+      if (this.rangeChart === null) { return }
 
       this.rangeChart.filter(null)
       let minDate = null
@@ -444,8 +448,7 @@ export default {
           this.timeInterval = 'hour'
           break
       }
-      if (minDate !== null)
-        this.rangeChart.filter(dc.filters.RangedFilter(minDate, maxDate))
+      if (minDate !== null) { this.rangeChart.filter(dc.filters.RangedFilter(minDate, maxDate)) }
 
       this.lineChart
         .dimension(this.timeDimension)
@@ -463,7 +466,7 @@ export default {
         .render()
       */
     },
-    filterItems(overviewGroup) {
+    filterItems (overviewGroup) {
       const counts = overviewGroup.top(Infinity).reduce((p, c) => {
         if (!Object.prototype.hasOwnProperty.call(p, c.key[0])) {
           p[c.key[0]] = {}
@@ -473,19 +476,18 @@ export default {
           p[c.key[0]].items = []
         }
         p[c.key[0]].count += c.value
-        if (c.value > 0)
-          p[c.key[0]].items.push({ title: c.key[1], count: c.value })
+        if (c.value > 0) { p[c.key[0]].items.push({ title: c.key[1], count: c.value }) }
         return p
       }, {})
       this.items = Object.values(counts).filter(d => d.count > 0)
     },
-    filterSource(title) {
+    filterSource (title) {
       this.currSourceFilter = title
       this.activityDimension.filter(title)
       dc.redrawAll()
       this.tabDetails()
     },
-    resetSourceFilter() {
+    resetSourceFilter () {
       this.currSourceFilter = null
       this.activityDimension.filter(null)
       dc.redrawAll()

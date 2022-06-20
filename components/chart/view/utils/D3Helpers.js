@@ -10,7 +10,7 @@ import * as d3 from 'd3'
  * @param  {Date} maxDate  the ending date range, computed from the data by default.
  * @return {Array} the modified data array with the missing dates and their value added
  */
-export function addMissingDate(
+export function addMissingDate (
   data,
   dateAccessor,
   valueAccessor,
@@ -19,7 +19,7 @@ export function addMissingDate(
   minDate = null,
   maxDate = null
 ) {
-  if (data.length <= 0) return []
+  if (data.length <= 0) { return [] }
   // Compute the min and max date
   const extent = d3.extent(data, d => new Date(d[dateAccessor]))
 
@@ -36,7 +36,7 @@ export function addMissingDate(
   )
 
   // Add and fill missing dates
-  missingDates.forEach(date => {
+  missingDates.forEach((date) => {
     const obj = { ...data[0] }
     obj[dateAccessor] = date
     obj[valueAccessor] = fillValue

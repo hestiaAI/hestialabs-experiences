@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <VRow><div id="my_dataviz"></div></VRow>
+    <VRow><div id="my_dataviz" /></VRow>
   </VContainer>
 </template>
 

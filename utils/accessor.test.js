@@ -12,13 +12,13 @@ import {
 const ajv = new Ajv()
 const posixPath = posix
 
-function findObjects(fileDict, accessor) {
+function findObjects (fileDict, accessor) {
   return Object.entries(fileDict)
     .flatMap(([name, content]) => findMatches(name, content, accessor))
     .filter(found => !!found)
 }
 
-function matchFiles(files, pattern) {
+function matchFiles (files, pattern) {
   return Object.entries(files).filter(([name]) =>
     matchNormalized(name, pattern)
   )

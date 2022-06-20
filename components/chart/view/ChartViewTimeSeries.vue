@@ -3,9 +3,11 @@
     <VCol cols="12" md="8" offset-md="2">
       <VRow dense>
         <VCol cols="9">
-          <p class="text-h6">{{ title }}</p>
+          <p class="text-h6">
+            {{ title }}
+          </p>
         </VCol>
-        <VSpacer></VSpacer>
+        <VSpacer />
         <VCol cols="3" class="text-right">
           <VSelect
             v-if="filters.length === 0"
@@ -17,7 +19,7 @@
               applyFilters()
               draw()
             "
-          ></VSelect>
+          />
           <VDialog
             v-if="filters.length > 0"
             v-model="settingDialog"
@@ -25,8 +27,17 @@
             max-width="300px"
           >
             <template #activator="{ on, attrs }">
-              <VBtn color="primary" dark small fab v-bind="attrs" v-on="on">
-                <VIcon small>$vuetify.icons.mdiTuneVariant</VIcon>
+              <VBtn
+                color="primary"
+                dark
+                small
+                fab
+                v-bind="attrs"
+                v-on="on"
+              >
+                <VIcon small>
+                  $vuetify.icons.mdiTuneVariant
+                </VIcon>
               </VBtn>
             </template>
             <VCard>
@@ -42,7 +53,7 @@
                         :items="namesInterval"
                         label="Time interval"
                         dense
-                      ></VSelect>
+                      />
                     </VCol>
                     <VCol
                       v-for="filter in filters"
@@ -59,13 +70,13 @@
                         "
                         :label="filter.text"
                         dense
-                      ></VSelect>
+                      />
                     </VCol>
                   </VRow>
                 </VContainer>
               </VCardText>
               <VCardActions>
-                <VSpacer></VSpacer>
+                <VSpacer />
                 <VBtn color="red darken-1" text @click="resetFilters()">
                   Reset
                 </VBtn>
@@ -90,7 +101,7 @@
       </VRow>
       <ChartViewVRowWebShare dense>
         <VCol cols="12">
-          <div :id="graphId"></div>
+          <div :id="graphId" />
         </VCol>
       </ChartViewVRowWebShare>
     </VCol>
@@ -169,7 +180,7 @@ export default {
       default: () => 10
     }
   },
-  data() {
+  data () {
     return {
       slices: [],
       selectedInterval: null,
@@ -182,7 +193,7 @@ export default {
     }
   },
   methods: {
-    initFilters() {
+    initFilters () {
       this.filters.forEach((filter, i) => {
         this.filterItems[filter.value] = []
         // get unique ids and set items for each filter select
@@ -191,20 +202,20 @@ export default {
           .filter((value, index, self) => self.indexOf(value) === index)
       })
     },
-    resetFilters() {
-      this.filters.forEach(filter => {
+    resetFilters () {
+      this.filters.forEach((filter) => {
         this.filterModel[filter.value] = null
       })
     },
-    applyFilters() {
-      this.slices.forEach(serie => {
+    applyFilters () {
+      this.slices.forEach((serie) => {
         // aggregate per selected time interval and other filters
         const interval = this.intervals[this.selectedInterval]
         const filters = Object.keys(this.filterModel).filter(
           k => this.filterModel[k] != null
         )
         // filter according to selection
-        serie.current = serie.values.filter(d => {
+        serie.current = serie.values.filter((d) => {
           return filters.every(f => this.filterModel[f] === d[f])
         })
         // Aggregate per time period
@@ -230,7 +241,7 @@ export default {
         )
       })
     },
-    drawViz() {
+    drawViz () {
       /* Init the possible aggregations dpending on dates extent */
       this.extentDate = d3.extent(
         this.values,
@@ -241,43 +252,47 @@ export default {
         console.error('Unrecognized Dates')
         return
       }
-      if (diffDays < 93)
+      if (diffDays < 93) {
         this.intervals.Days = {
           parser: d3.timeDay,
           format: d3.timeFormat('%B %d, %Y')
         }
-      if (diffDays > 14 && diffDays < 651)
+      }
+      if (diffDays > 14 && diffDays < 651) {
         this.intervals.Weeks = {
           parser: d3.timeWeek,
           format: d3.timeFormat('%B %d, %Y')
         }
-      if (diffDays > 62 && diffDays < 1800)
+      }
+      if (diffDays > 62 && diffDays < 1800) {
         this.intervals.Months = {
           parser: d3.timeMonth,
           format: d3.timeFormat('%B %Y')
         }
-      if (diffDays > 730)
+      }
+      if (diffDays > 730) {
         this.intervals.Years = {
           parser: d3.timeYear,
           format: d3.timeFormat('%Y')
         }
+      }
       this.namesInterval = Object.keys(this.intervals)
       // get unique series ids
       const ids = this.values
         .map(i => i[this.seriesAccessor.value])
         .filter((value, index, self) => self.indexOf(value) === index)
       // group by series ids and sort values
-      this.slices = ids.map(a => {
+      this.slices = ids.map((a) => {
         return {
           id: a,
           values: this.values
             .filter(v => a === v[this.seriesAccessor.value])
-            .map(d => {
+            .map((d) => {
               const ret = {
                 date: new Date(d[this.dateAccessor.value]),
                 value: this.valueAccessor ? +d[this.valueAccessor] : 1
               }
-              this.filters.forEach(f => {
+              this.filters.forEach((f) => {
                 ret[f.value] = d[f.value]
               })
               return ret
@@ -290,7 +305,7 @@ export default {
       this.applyFilters()
       this.draw()
     },
-    draw() {
+    draw () {
       const width = 800
       const height = 300
       /* create svg element */
@@ -313,7 +328,7 @@ export default {
         .style('padding', this.padding)
         .style('margin', this.margin)
         .classed('svg-content', true)
-      function nestedExtent(data, dataAccessor, valueAccessor) {
+      function nestedExtent (data, dataAccessor, valueAccessor) {
         return d3.extent(
           data.reduce(function (prevArr, currArr) {
             const extentArr = d3.extent(currArr[dataAccessor], valueAccessor)
@@ -409,7 +424,7 @@ export default {
         .style('opacity', 0)
       const that = this
       const f = d3.format(this.valueFormat)
-      function showTooltip(evt, d) {
+      function showTooltip (evt, d) {
         tooltip.transition().duration(60).style('opacity', 0.98)
         tooltip
           .html(
@@ -421,7 +436,7 @@ export default {
           .style('left', evt.pageX - 55 + 'px')
           .style('top', evt.pageY - 45 + 'px')
       }
-      function hideTooltip() {
+      function hideTooltip () {
         tooltip.transition().duration(60).style('opacity', 0)
       }
       /* Line */
@@ -453,7 +468,7 @@ export default {
       const points = lines
         .selectAll('circle')
         .data(d =>
-          d.current.map(v => {
+          d.current.map((v) => {
             v.color = color(d.id)
             v.name = d.id
             return v

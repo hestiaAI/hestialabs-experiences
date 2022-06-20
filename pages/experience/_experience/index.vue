@@ -7,10 +7,10 @@ import validate from '@/pages/validate'
 import { vueMeta } from '@/utils/utils'
 
 export default {
-  validate(context) {
+  validate (context) {
     return validate.experience(context)
   },
-  head() {
+  head () {
     const { title: t, subtitle: s } = this.$store.getters.experience(
       this.$route
     )

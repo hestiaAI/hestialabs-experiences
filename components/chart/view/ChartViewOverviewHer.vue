@@ -10,7 +10,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -33,7 +33,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -45,7 +45,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -57,7 +57,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -67,9 +67,9 @@
     </ChartViewVRowWebShare>
     <VRow>
       <div :id="'dc-data-count' + graphId" class="dc-data-count">
-        <span class="filter-count"></span>
+        <span class="filter-count" />
         selected out of
-        <span class="total-count"></span>
+        <span class="total-count" />
         views |
         <a class="resetAll">Reset All</a>
       </div>
@@ -93,7 +93,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  data() {
+  data () {
     return {
       header: [
         { text: 'Name', value: 'name' },
@@ -104,11 +104,11 @@ export default {
     }
   },
   methods: {
-    resetAll() {
+    resetAll () {
       dc.filterAll()
       dc.renderAll()
     },
-    drawViz() {
+    drawViz () {
       // Define color palette for the graphs
       /*
       const colorPalette = [
@@ -131,7 +131,7 @@ export default {
       // Parse and format data
       const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
       const formatDay = d3.timeFormat('%B %d, %Y')
-      this.results = this.values.map(d => {
+      this.results = this.values.map((d) => {
         const date = new Date(d.likedAt)
         return {
           name: d.name,
@@ -175,7 +175,7 @@ export default {
 
       // Create dimensions
       const all = ndx.groupAll()
-      const dayOfWeekDimension = ndx.dimension(d => {
+      const dayOfWeekDimension = ndx.dimension((d) => {
         const day = d.date.getDay()
         const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         return `${name[day]}`
@@ -251,7 +251,7 @@ export default {
         .innerRadius(0)
         .dimension(matchedDimension)
         .group(serviceGroup)
-        .valueAccessor(d => {
+        .valueAccessor((d) => {
           return d.value
         })
         .title(d => d.key + ': ' + d.value + ' matchs')
@@ -262,8 +262,8 @@ export default {
           t.each(function (d) {
             const self = d3.select(this)
             let text = self.text().toUpperCase()
-            if (text.length > 14) text = text.substring(0, 14) + '.. '
-            if (text.length > 0)
+            if (text.length > 14) { text = text.substring(0, 14) + '.. ' }
+            if (text.length > 0) {
               text =
                 text +
                 ' (' +
@@ -271,6 +271,7 @@ export default {
                   ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
                 ) +
                 '%)'
+            }
             self.text(text)
           })
         })

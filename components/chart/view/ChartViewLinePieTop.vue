@@ -10,7 +10,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -33,7 +33,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -44,12 +44,12 @@
               <div style="display: flex">
                 <strong>{{ titleTop }}</strong>
                 <VSpacer />
-                <div :id="`top-search-${graphId}`"></div>
+                <div :id="`top-search-${graphId}`" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -60,9 +60,9 @@
     </ChartViewVRowWebShare>
     <VRow>
       <div :id="`dc-data-count-${graphId}`" class="dc-data-count">
-        <span class="filter-count"></span>
+        <span class="filter-count" />
         selected out of
-        <span class="total-count"></span>
+        <span class="total-count" />
         {{ rowLabel }} |
         <a class="resetAll">Reset All</a>
       </div>
@@ -118,7 +118,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       header: [
         { text: 'Date', value: 'dateStr' },
@@ -142,11 +142,11 @@ export default {
     }
   },
   methods: {
-    resetAll() {
+    resetAll () {
       dc.filterAll()
       dc.renderAll()
     },
-    drawViz() {
+    drawViz () {
       // Define color palette for the graphs
       const colorPalette = [
         '#58539E',
@@ -158,7 +158,7 @@ export default {
 
       // Parse and format data
       const formatDay = d3.timeFormat('%B %d, %Y')
-      this.results = this.values.map(d => {
+      this.results = this.values.map((d) => {
         const date = new Date(d[this.dateAccessor.value])
         return {
           name: decodeURIComponent(escape(d[this.topAccessor.value])),
@@ -318,8 +318,8 @@ export default {
           t.each(function (d) {
             const self = d3.select(this)
             let text = self.text()
-            if (text.length > 14) text = text.substring(0, 14) + '.. '
-            if (text.length > 0)
+            if (text.length > 14) { text = text.substring(0, 14) + '.. ' }
+            if (text.length > 0) {
               text =
                 text +
                 ' (' +
@@ -327,6 +327,7 @@ export default {
                   ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
                 ) +
                 '%)'
+            }
             self.text(text)
           })
         })

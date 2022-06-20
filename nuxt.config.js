@@ -24,7 +24,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate(title) {
+    titleTemplate (title) {
       if (this && this.context) {
         const { appName } = this.context.store.getters
         return title ? `${title} | ${appName}` : appName
@@ -159,7 +159,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    extend(config, { isDev }) {
+    extend (config, { isDev }) {
       if (isDev) {
         config.devtool = 'eval'
       }

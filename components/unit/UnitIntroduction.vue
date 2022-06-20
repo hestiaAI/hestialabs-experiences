@@ -15,15 +15,19 @@
               v-else-if="dataPortalHtml"
               class="body-1"
               v-html="dataPortalHtml"
-            ></p>
+            />
             <p v-else class="body-1">
               <template v-if="dataPortal">
-                <a :href="dataPortal" target="_blank" rel="noreferrer noopener"
-                  >Click here</a
-                >
+                <a
+                  :href="dataPortal"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >Click here</a>
                 to request
               </template>
-              <template v-else> Request </template>
+              <template v-else>
+                Request
+              </template>
               the private data that {{ title }} collected on you. Once you
               receive it, analyze it here.
             </p>
@@ -32,7 +36,7 @@
               v-if="dataPortalMessage"
               class="body-1"
               v-html="dataPortalMessage"
-            ></p>
+            />
             <!-- eslint-enable vue/no-v-html -->
             <p>
               Unless explicitly consented in the "Share My Data" tab, no data is
@@ -107,7 +111,7 @@ export default {
       default: ''
     }
   },
-  data() {
+  data () {
     const experience = this.$store.getters.experience(this.$route)
     const properties = pick(experience, [
       'title',
@@ -123,7 +127,7 @@ export default {
     }
   },
   methods: {
-    onUnitFilesUpdate({ uppyFiles }) {
+    onUnitFilesUpdate ({ uppyFiles }) {
       this.$emit('update', { uppyFiles })
     }
   }

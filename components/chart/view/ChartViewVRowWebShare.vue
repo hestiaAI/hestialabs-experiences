@@ -1,6 +1,6 @@
 <template>
   <VRow ref="domToImageNode" v-bind="$attrs">
-    <slot></slot>
+    <slot />
     <VCol cols="12" class="dom-to-image-exclude">
       <BaseButton
         icon="mdiExport"

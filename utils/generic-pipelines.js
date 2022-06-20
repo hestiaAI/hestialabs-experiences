@@ -32,9 +32,9 @@ const validYearMax = 2038
 
 // Try to transform {{ value }} into a Date object,
 // return the date or null if not a valid date
-function getValidDate(value) {
+function getValidDate (value) {
   // Check if it is a phone number
-  if (value.length === 0 || value[0] === '0' || value[0] === '+') return null
+  if (value.length === 0 || value[0] === '0' || value[0] === '+') { return null }
 
   let date = null
   const findDate = timeParsers.some((parser, idx) => {
@@ -55,18 +55,18 @@ function getValidDate(value) {
   })
   return findDate ? date : null
 }
-function isObject(obj) {
+function isObject (obj) {
   return Object.prototype.toString.call(obj) === '[object Object]'
 }
 // Transform a json object to a list of dated events
-function extractJsonEntries(json) {
+function extractJsonEntries (json) {
   // small trick to avoid recognizing coodinates as date (issue need to be addressed later)
   const unallowedNames = ['lat', 'lon', 'lng']
   const validDateName = name =>
     unallowedNames.every(
       unallowedName => !name.toLowerCase().includes(unallowedName)
     )
-  function recurse(node) {
+  function recurse (node) {
     if (isObject(node)) {
       const entries = Object.entries(node).flatMap(([k, v]) => {
         const kDate = getValidDate(k)
@@ -87,10 +87,9 @@ function extractJsonEntries(json) {
         } else {
           const vDate = getValidDate(v)
           // If both key and value contain dates, use key date as description
-          if (kDate && vDate) return [{ date: vDate, description: `${k}` }]
-          if (!kDate && vDate && validDateName(k))
-            return [{ date: vDate, description: '' }]
-          if (kDate && !vDate) return [{ date: kDate, description: `${v}` }]
+          if (kDate && vDate) { return [{ date: vDate, description: `${k}` }] }
+          if (!kDate && vDate && validDateName(k)) { return [{ date: vDate, description: '' }] }
+          if (kDate && !vDate) { return [{ date: kDate, description: `${v}` }] }
           return [{ description: `${kPretty} : ${v}` }]
         }
       })
@@ -120,8 +119,8 @@ function extractJsonEntries(json) {
   return recurse(json).filter(o => _.has(o, 'date'))
 }
 
-function extractCsvEntries({ items }) {
-  return items.flatMap(item => {
+function extractCsvEntries ({ items }) {
+  return items.flatMap((item) => {
     const entries = Object.entries(item).map(([k, v]) => {
       const date = getValidDate(v)
       return date
@@ -139,16 +138,17 @@ function extractCsvEntries({ items }) {
   })
 }
 
-async function genericDateViewer({ fileManager, options }) {
+async function genericDateViewer ({ fileManager, options }) {
   let filenames = fileManager.getFilenames()
-  if (_.has(options, 'acceptedPaths'))
+  if (_.has(options, 'acceptedPaths')) {
     filenames = filenames.filter(name =>
       new RegExp(options.acceptedPaths).test(name)
     )
+  }
 
   const csvFilenames = filenames.filter(name => name.endsWith('.csv'))
   const csvItems = await Promise.all(
-    csvFilenames.map(async name => {
+    csvFilenames.map(async (name) => {
       const items = await fileManager.getCsvItems(name)
       fileManager.freeFile(name) // Clear file from memory
       return [name, items]
@@ -160,7 +160,7 @@ async function genericDateViewer({ fileManager, options }) {
   const jsonFilenames = filenames.filter(name => /\.js(:?on)?$/.test(name))
   const jsonEntries = (
     await Promise.all(
-      jsonFilenames.flatMap(async jsonFilename => {
+      jsonFilenames.flatMap(async (jsonFilename) => {
         const [filename, json] = Object.entries(
           await fileManager.preprocessFiles([jsonFilename])
         )[0]
@@ -182,9 +182,9 @@ async function genericDateViewer({ fileManager, options }) {
   return { headers, items }
 }
 
-async function timedObservationViewer({ fileManager, options }) {
+async function timedObservationViewer ({ fileManager, options }) {
   // Process options
-  options.fileMatchers.forEach(m => {
+  options.fileMatchers.forEach((m) => {
     try {
       m.regex = new RegExp(m.regex)
     } catch (error) {
@@ -244,8 +244,8 @@ const isValidLon = num => isFinite(num) && Math.abs(num) <= 180
 const namesLat = ['lat']
 const namesLon = ['lon', 'lng']
 
-function extractJsonLocations(items) {
-  function recurse(node, path) {
+function extractJsonLocations (items) {
+  function recurse (node, path) {
     if (isObject(node)) {
       // Object
 
@@ -255,11 +255,8 @@ function extractJsonLocations(items) {
       Object.entries(node).forEach(([k, v]) => {
         const kLw = k.toLowerCase()
         // Specific to Google format, lat and lon are multiplied by 1e7
-        if (kLw.includes('e7')) node[k] = v = v * 1e-7
-        if (namesLat.some(name => kLw.includes(name)) && isValidLat(v))
-          latHeader = k
-        else if (namesLon.some(name => kLw.includes(name)) && isValidLon(v))
-          lonHeader = k
+        if (kLw.includes('e7')) { node[k] = v = v * 1e-7 }
+        if (namesLat.some(name => kLw.includes(name)) && isValidLat(v)) { latHeader = k } else if (namesLon.some(name => kLw.includes(name)) && isValidLon(v)) { lonHeader = k }
       })
 
       // If there is not a lat and lon at this level
@@ -293,12 +290,12 @@ function extractJsonLocations(items) {
   return result
 }
 
-function extractCsvLocations({ items }) {
-  if (items.length === 0) return []
+function extractCsvLocations ({ items }) {
+  if (items.length === 0) { return [] }
   let latHeader = null
   let lonHeader = null
   const sample = items.slice(0, 100)
-  Object.keys(items[0]).forEach(h => {
+  Object.keys(items[0]).forEach((h) => {
     // For each header, check if the name include a name associated with latitude
     // and if a subset (here first 100) of data points are all valid Latitude
     // Start verification with latitude since it is less permissive
@@ -319,9 +316,9 @@ function extractCsvLocations({ items }) {
   })
 
   // If we didnt find a column for lat and lon return empty
-  if (latHeader === null || lonHeader === null) return []
+  if (latHeader === null || lonHeader === null) { return [] }
 
-  return items.map(i => {
+  return items.map((i) => {
     return {
       latitude: +i[latHeader],
       longitude: +i[lonHeader],
@@ -331,16 +328,17 @@ function extractCsvLocations({ items }) {
   })
 }
 
-async function genericLocationViewer({ fileManager, options }) {
+async function genericLocationViewer ({ fileManager, options }) {
   let filenames = fileManager.getFilenames()
-  if (_.has(options, 'acceptedPaths'))
+  if (_.has(options, 'acceptedPaths')) {
     filenames = filenames.filter(name =>
       new RegExp(options.acceptedPaths).test(name)
     )
+  }
 
   const csvFilenames = filenames.filter(name => name.endsWith('.csv'))
   const csvItems = await Promise.all(
-    csvFilenames.map(async name => {
+    csvFilenames.map(async (name) => {
       const csvItems = await fileManager.getCsvItems(name)
       fileManager.freeFile(name) // Clear file from memory
       return [name, csvItems]
@@ -353,7 +351,7 @@ async function genericLocationViewer({ fileManager, options }) {
   const jsonFilenames = filenames.filter(name => /\.js(:?on)?$/.test(name))
   const jsonEntries = (
     await Promise.all(
-      jsonFilenames.flatMap(async jsonFilename => {
+      jsonFilenames.flatMap(async (jsonFilename) => {
         const [filename, json] = Object.entries(
           await fileManager.preprocessFiles([jsonFilename])
         )[0]
@@ -401,7 +399,7 @@ async function genericLocationViewer({ fileManager, options }) {
  * We're using the default syntax of https://ajv.js.org/
  *
  */
-async function jsonToTableConverter({ fileManager, options }) {
+async function jsonToTableConverter ({ fileManager, options }) {
   // Validate that the given options use the correct format
   const validate = ajv.compile(jsonToTableSchema)
   const valid = validate(options)
@@ -410,7 +408,7 @@ async function jsonToTableConverter({ fileManager, options }) {
     return {}
   }
 
-  const tableDatasPromises = options.map(async opts => {
+  const tableDatasPromises = options.map(async (opts) => {
     const entries = await fileManager.findMatchingObjects(opts.accessor, {
       freeFiles: true
     })
@@ -421,7 +419,7 @@ async function jsonToTableConverter({ fileManager, options }) {
   return mergedData
 }
 
-export function mergeTableData(tableDatas) {
+export function mergeTableData (tableDatas) {
   const nonEmpties = tableDatas.filter(
     td => td.headers?.length && td.items?.length
   )
@@ -430,11 +428,11 @@ export function mergeTableData(tableDatas) {
   return { headers, items }
 }
 
-function provideColumnName(column) {
+function provideColumnName (column) {
   return column.name || column.path
 }
 
-function extractHeaders(entries) {
+function extractHeaders (entries) {
   const headerSet = entries.reduce((hSet, obj) => {
     Object.keys(obj).forEach(k => hSet.add(k))
     return hSet
@@ -442,7 +440,7 @@ function extractHeaders(entries) {
   return [...headerSet]
 }
 
-export function makeTableData(entries, options) {
+export function makeTableData (entries, options) {
   // If objects is an array of a single array
   // display the single array.
   // That way a jsonPath to an array is displayed the same way
@@ -480,9 +478,9 @@ export function makeTableData(entries, options) {
   }
 }
 
-function makeTableItem(object, options) {
+function makeTableItem (object, options) {
   const item = {}
-  options.columns.forEach(c => {
+  options.columns.forEach((c) => {
     // get all entries that satisfy the given path
     const value = JSONPath({
       path: c.path,
@@ -515,7 +513,7 @@ function makeTableItem(object, options) {
   return item
 }
 
-function capitalize(str) {
+function capitalize (str) {
   if (!str) {
     return str
   }
@@ -526,13 +524,13 @@ function capitalize(str) {
   return capitalized
 }
 
-async function createTableOptions(fileManager, accessor) {
+async function createTableOptions (fileManager, accessor) {
   const [found] = await fileManager.findMatchingObjects(accessor)
   const firstEntry = Array.isArray(found) ? found[0] : found
   if (!firstEntry || Array.isArray(firstEntry)) {
     return { accessor }
   }
-  const columns = Object.keys(firstEntry).map(key => {
+  const columns = Object.keys(firstEntry).map((key) => {
     const options = {
       name: capitalize(key),
       path: `$["${key}"]`

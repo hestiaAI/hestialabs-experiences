@@ -28,11 +28,10 @@
                 <VListItemTitle> Select All </VListItemTitle>
               </VListItemContent>
             </VListItem>
-            <VDivider class="mt-2"></VDivider>
+            <VDivider class="mt-2" />
           </template>
           <template #selection="{ item, index }">
-            <span v-if="index < 3"
-              >{{ item.length > 13 ? item.slice(0, 13) + '..' : item }}
+            <span v-if="index < 3">{{ item.length > 13 ? item.slice(0, 13) + '..' : item }}
             </span>
             <span v-if="index < 2">, </span>
             <div v-if="index === 3" class="grey--text text-caption">
@@ -52,7 +51,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -72,7 +71,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -84,7 +83,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -98,7 +97,7 @@
           <p class="filters">
             <span>
               Current filter:
-              <span class="filter"></span>
+              <span class="filter" />
             </span>
           </p>
         </div>
@@ -106,9 +105,9 @@
     </ChartViewVRowWebShare>
     <VRow>
       <div id="dc-data-count" class="dc-data-count">
-        <span class="filter-count"></span>
+        <span class="filter-count" />
         selected out of
-        <span class="total-count"></span>
+        <span class="total-count" />
         records |
         <a class="reset">Reset All</a>
       </div>
@@ -129,7 +128,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  data() {
+  data () {
     return {
       apps: [],
       selectedApps: [],
@@ -148,20 +147,20 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    selectAll() {
+    selectAll () {
       return this.selectedApps.length === this.apps.length
     },
-    selectSome() {
+    selectSome () {
       return this.selectedApps.length > 0 && !this.selectAll
     },
-    icon() {
-      if (this.selectAll) return '$vuetify.icons.mdiCloseBox'
-      if (this.selectSome) return '$vuetify.icons.mdiMinusBox'
+    icon () {
+      if (this.selectAll) { return '$vuetify.icons.mdiCloseBox' }
+      if (this.selectSome) { return '$vuetify.icons.mdiMinusBox' }
       return '$vuetify.icons.mdiCheckboxBlankOutline'
     }
   },
   methods: {
-    toggle() {
+    toggle () {
       this.$nextTick(() => {
         if (this.selectAll) {
           this.selectedApps = []
@@ -171,16 +170,16 @@ export default {
         this.filterApps(this.selectedApps)
       })
     },
-    filterApps(items) {
+    filterApps (items) {
       this.selectAppDimension.filter(null)
       this.selectAppDimension.filterFunction(function (d) {
         return items.includes(d)
       })
       dc.redrawAll()
     },
-    removeEmptyBins(group) {
+    removeEmptyBins (group) {
       return {
-        top(n) {
+        top (n) {
           return group
             .top(Infinity)
             .filter(function (d) {
@@ -188,12 +187,12 @@ export default {
             })
             .slice(0, n)
         },
-        all() {
+        all () {
           return group.all()
         }
       }
     },
-    drawViz() {
+    drawViz () {
       // Create and bind charts to their respective divs
       const volumeChart = new dc.LineChart('#volume-chart')
       const rangeChart = new dc.BarChart('#range-chart')
@@ -225,7 +224,7 @@ export default {
       const dateFormat = d3.timeParse('%Q')
       const dateFormatParser = d => dateFormat(d) || new Date(d)
       const formatTime = d3.timeFormat('%B %d, %Y')
-      this.values.forEach(d => {
+      this.values.forEach((d) => {
         d.date = dateFormatParser(d.time) || new Date(d.time)
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
         d.url =
@@ -371,8 +370,8 @@ export default {
           t.each(function (d) {
             const self = d3.select(this)
             let text = self.text()
-            if (text.length > 14) text = text.substring(0, 14) + '.. '
-            if (text.length > 0)
+            if (text.length > 14) { text = text.substring(0, 14) + '.. ' }
+            if (text.length > 0) {
               text =
                 text +
                 ' (' +
@@ -380,6 +379,7 @@ export default {
                   ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
                 ) +
                 '%)'
+            }
             self.text(text)
           })
         })

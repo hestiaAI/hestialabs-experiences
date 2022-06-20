@@ -3,9 +3,11 @@
     <BaseAlert v-if="!hasValidFormat" type="warning">
       Data in this format cannot be displayed in a table
     </BaseAlert>
-    <BaseAlert v-else-if="!hasData">No relevant data found</BaseAlert>
+    <BaseAlert v-else-if="!hasData">
+      No relevant data found
+    </BaseAlert>
     <template v-else>
-      <slot></slot>
+      <slot />
     </template>
   </div>
 </template>
@@ -25,7 +27,7 @@ export default {
     }
   },
   computed: {
-    hasValidFormat() {
+    hasValidFormat () {
       const weHaveArrays = _.every(
         ['items', 'headers'],
         field => _.has(this.data, field) && Array.isArray(this.data[field])
@@ -40,7 +42,7 @@ export default {
         )
       )
     },
-    hasData() {
+    hasData () {
       return (
         !!(this.data?.headers.length > 0) && !!(this.data?.items.length > 0)
       )

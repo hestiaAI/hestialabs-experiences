@@ -8,7 +8,7 @@
     hide-details
     style="max-width: 200px"
     @change="$emit('update:value', $event)"
-  ></VSelect>
+  />
 </template>
 
 <script>
@@ -19,7 +19,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       selected: this.value
     }

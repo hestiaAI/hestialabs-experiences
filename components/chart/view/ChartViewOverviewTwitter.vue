@@ -9,7 +9,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -25,12 +25,12 @@
               <div style="display: flex">
                 <strong>Top 10 advertisers</strong>
                 <VSpacer />
-                <div id="company-search"></div>
+                <div id="company-search" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -44,7 +44,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -55,12 +55,12 @@
               <div style="display: flex">
                 <strong>Type of targeting</strong>
                 <VSpacer />
-                <div id="type-search"></div>
+                <div id="type-search" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -71,12 +71,12 @@
               <div style="display: flex">
                 <strong>Targeting criteria</strong>
                 <VSpacer />
-                <div id="value-search"></div>
+                <div id="value-search" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -85,9 +85,9 @@
         </VRow>
         <VRow>
           <div id="dc-data-count" class="dc-data-count">
-            <span class="filter-count"></span>
+            <span class="filter-count" />
             selected out of
-            <span class="total-count"></span>
+            <span class="total-count" />
             records |
             <a class="reset">Reset All</a>
           </div>
@@ -113,7 +113,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  data() {
+  data () {
     return {
       header: [
         { text: 'Tweet ID', value: 'tweetId' },
@@ -131,7 +131,7 @@ export default {
     }
   },
   methods: {
-    drawViz() {
+    drawViz () {
       this.results = this.values
       // Define a color palette for the viz
       const colorPalette = [
@@ -181,7 +181,7 @@ export default {
       // 2021-06-04 21:08:08
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S')
       const formatTime = d3.timeFormat('%B %d, %Y')
-      this.results.forEach(d => {
+      this.results.forEach((d) => {
         d.targetingType = d.targetingType ? d.targetingType : 'Unknown'
         d.targetingValue = d.targetingValue ? d.targetingValue : 'Unknown'
         d.companyName = d.companyName ? d.companyName : ''
@@ -221,16 +221,16 @@ export default {
       const addRecord = (p, v) => {
         // add
         p.dict[v.tweetId + v.date_] = (p.dict[v.tweetId + v.date_] || 0) + 1
-        if (p.dict[v.tweetId + v.date_] === 1) p.count++
+        if (p.dict[v.tweetId + v.date_] === 1) { p.count++ }
         return p
       }
       const removeRecord = (p, v) => {
         // remove
         p.dict[v.tweetId + v.date_] -= 1
-        if (p.dict[v.tweetId + v.date_] === 0) p.count--
+        if (p.dict[v.tweetId + v.date_] === 0) { p.count-- }
         return p
       }
-      function orderValue(p) {
+      function orderValue (p) {
         return p.count
       }
 
@@ -252,9 +252,9 @@ export default {
       const targetingValueGroup = targetingValueDimension.group().reduceCount()
 
       // Make a Fake group to display only value above 0 on the row graphs
-      function removeEmptyBins(group) {
+      function removeEmptyBins (group) {
         return {
-          top(n) {
+          top (n) {
             return group
               .top(Infinity)
               .filter(function (d) {
@@ -293,7 +293,7 @@ export default {
         })
         .yAxisLabel('N° of ads')
         .clipPadding(10)
-        .title(d => {
+        .title((d) => {
           return `${formatTime(d.key)}: ${d.value.count}`
         })
         .yAxis()
@@ -350,7 +350,7 @@ export default {
         .valueAccessor(d => d.value.count)
         .title(d => d.value.count + ' ads')
         .ordinalColors(colorPalette)
-        .label(d => {
+        .label((d) => {
           if (
             engagementChart.hasFilter() &&
             !engagementChart.hasFilter(d.key)
@@ -402,12 +402,12 @@ export default {
       const total = allGroup.value().count
       tableCount
         .crossfilter({
-          size() {
+          size () {
             return total
           }
         })
         .groupAll({
-          value() {
+          value () {
             return allGroup.value().count
           }
         })

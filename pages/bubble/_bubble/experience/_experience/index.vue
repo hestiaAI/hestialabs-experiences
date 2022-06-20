@@ -8,10 +8,10 @@ import { vueMeta } from '@/utils/utils'
 
 export default {
   middleware: 'auth',
-  validate(context) {
+  validate (context) {
     return validate.experience(context) && validate.bubble(context)
   },
-  head() {
+  head () {
     const { title: t, subtitle: s } = this.$store.getters.experience(
       this.$route
     )

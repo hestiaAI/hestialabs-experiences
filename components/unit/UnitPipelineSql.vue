@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div />
 </template>
 
 <script>
@@ -17,12 +17,12 @@ export default {
   },
   computed: {
     ...mapState(['currentDB']),
-    disabled() {
+    disabled () {
       return !this.currentDB || !this.sql
     }
   },
   methods: {
-    async run() {
+    async run () {
       this.progress = true
       await setTimeoutPromise(1)
       try {

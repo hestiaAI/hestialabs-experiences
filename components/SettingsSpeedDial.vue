@@ -10,8 +10,12 @@
   >
     <template #activator>
       <VBtn v-model="fab" color="primary" dark fab>
-        <VIcon v-if="fab"> $vuetify.icon.mdiClose </VIcon>
-        <VIcon v-else> $vuetify.icon.mdiCog </VIcon>
+        <VIcon v-if="fab">
+          $vuetify.icon.mdiClose
+        </VIcon>
+        <VIcon v-else>
+          $vuetify.icon.mdiCog
+        </VIcon>
       </VBtn>
     </template>
     <BaseButtonShare
@@ -39,7 +43,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       fab: false
     }

@@ -7,8 +7,8 @@
         </p>
         <p v-else class="text-subtitle-2">
           We found <strong>{{ total }}</strong> visited places that were
-          recorded in your file. <br />
-          <br />
+          recorded in your file. <br>
+          <br>
           This map shows what places Google think you visited with the size
           corresponding to the time you spent in this place:
         </p>
@@ -21,7 +21,7 @@
         </VCol>
         <p v-if="config.consent">
           Please use the search box and filters below to change what is shown on
-          the map.<br />
+          the map.<br>
           Any filtering you do will also limit what data is shared into the pool
           if you share this tab on the 'Share My Data' tab.
         </p>
@@ -43,15 +43,15 @@ import mixin from './mixin'
 import keplerConfig from './kepler_config_places.js'
 export default {
   mixins: [mixin],
-  data() {
+  data () {
     return {
       filteredRows: []
     }
   },
   computed: {
     ...mapState(['config']),
-    results() {
-      return this.values.map(v => {
+    results () {
+      return this.values.map((v) => {
         return {
           ...v,
           longitude: v.longitude * 1e-7,
@@ -61,15 +61,15 @@ export default {
         }
       })
     },
-    total() {
+    total () {
       return this.results.length
     },
-    filtered() {
+    filtered () {
       return this.filteredRows.length
     },
-    keplerData() {
+    keplerData () {
       return {
-        fields: this.headers.map(h => {
+        fields: this.headers.map((h) => {
           return {
             name: h
           }
@@ -77,7 +77,7 @@ export default {
         rows: this.filteredRows.map(r => this.headers.map(h => r[h]))
       }
     },
-    keplerArgs() {
+    keplerArgs () {
       return {
         keplerData: this.keplerData,
         config: keplerConfig
@@ -85,14 +85,14 @@ export default {
     }
   },
   methods: {
-    compute_duration(d1, d2) {
+    compute_duration (d1, d2) {
       const date1 = new Date(d1).getTime()
       const date2 = new Date(d2).getTime()
       const res = Math.floor(Math.abs(date1 - date2) / 1000)
       return res
     },
-    drawViz() {},
-    onTableFilter(newItems) {
+    drawViz () {},
+    onTableFilter (newItems) {
       this.filteredRows = newItems
     }
   }

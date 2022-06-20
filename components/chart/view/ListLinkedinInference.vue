@@ -60,15 +60,11 @@
           <VCardTitle>{{ inference.type }}</VCardTitle>
           <VCardSubtitle>{{ inference.category }}</VCardSubtitle>
           <VCardText>{{ inference.description }}</VCardText>
-          <VSpacer></VSpacer>
+          <VSpacer />
           <VCardActions class="ma-3 overline d-flex justify-space-between">
             <div>Inferred</div>
             <div>
-              <VAvatar
-                size="16"
-                :color="inference.color"
-                class="mr-1"
-              ></VAvatar>
+              <VAvatar size="16" :color="inference.color" class="mr-1" />
               {{ inference.inferenceValue }}
             </div>
           </VCardActions>
@@ -83,7 +79,7 @@ import mixin from './mixin'
 
 export default {
   mixins: [mixin],
-  data() {
+  data () {
     return {
       categoriesSelected: [],
       inferencesSelected: [],
@@ -91,18 +87,17 @@ export default {
     }
   },
   computed: {
-    items() {
+    items () {
       return this.values
-        .map(inference => {
+        .map((inference) => {
           const inferenceType =
             inference.Inference === 'true'
               ? 'True'
               : inference.Inference === 'No'
-              ? 'False'
-              : 'Others'
+                ? 'False'
+                : 'Others'
           let value = inferenceType
-          if (value === 'Others')
-            value = parseFloat(inference.Inference).toFixed(2)
+          if (value === 'Others') { value = parseFloat(inference.Inference).toFixed(2) }
 
           return {
             type: inference['Type of inference'],
@@ -114,8 +109,8 @@ export default {
               inferenceType === 'True'
                 ? '#29AA24'
                 : inferenceType === 'False'
-                ? '#E52229'
-                : '#F2F2F2'
+                  ? '#E52229'
+                  : '#F2F2F2'
           }
         })
         .filter(
@@ -129,12 +124,12 @@ export default {
             this.inferencesSelected.includes(inference.inferenceType)
         )
     },
-    categories() {
+    categories () {
       return this.values.map(inference => inference.Category)
     }
   },
   methods: {
-    drawViz() {}
+    drawViz () {}
   }
 }
 </script>

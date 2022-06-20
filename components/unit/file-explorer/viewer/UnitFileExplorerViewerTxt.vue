@@ -10,14 +10,14 @@
           label="View as"
           hide-details
           style="max-width: 200px"
-        ></VSelect>
+        />
       </VCol>
     </VRow>
     <VRow>
       <VCol>
         <div v-if="show === 'txt'">
           <b>Text file content:</b>
-          <hr class="mb-4" />
+          <hr class="mb-4">
           {{ text }}
         </div>
         <UnitFileExplorerViewerCsv
@@ -39,7 +39,7 @@ import mixin from './mixin'
 export default {
   name: 'UnitFileExplorerViewerTxt',
   mixins: [mixin],
-  data() {
+  data () {
     return {
       text: '',
       show: 'txt',
@@ -52,13 +52,13 @@ export default {
   },
   watch: {
     fileManager: {
-      async handler(_) {
+      async handler (_) {
         this.text = await this.fileManager.getPreprocessedText(this.filename)
       },
       immediate: true
     },
     filename: {
-      async handler(_) {
+      async handler (_) {
         this.text = await this.fileManager.getPreprocessedText(this.filename)
       },
       immediate: true

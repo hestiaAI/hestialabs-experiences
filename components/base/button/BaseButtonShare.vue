@@ -18,7 +18,7 @@
 import 'share-api-polyfill'
 import { mapState, mapGetters } from 'vuex'
 
-async function navigatorShare(shareData, polyfillOptions) {
+async function navigatorShare (shareData, polyfillOptions) {
   try {
     await navigator.share(shareData, polyfillOptions)
   } catch (err) {
@@ -49,7 +49,7 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     const condition =
       !this.fileShare ||
       (navigator.canShare &&
@@ -63,11 +63,11 @@ export default {
   computed: {
     ...mapState(['config']),
     ...mapGetters(['appName', 'experience']),
-    experienceTitle() {
+    experienceTitle () {
       const { title } = this.experience(this.$route)
       return title
     },
-    hashtags() {
+    hashtags () {
       const { experienceTitle } = this
       const hashtags = [...(this.config.hashtags || ['hestialabs'])]
       if (experienceTitle) {
@@ -75,7 +75,7 @@ export default {
       }
       return hashtags
     },
-    titleToShare() {
+    titleToShare () {
       const { title, experienceTitle } = this
       if (title) {
         // use prop when provided
@@ -86,7 +86,7 @@ export default {
       }
       return this.appName
     },
-    quoteToShare() {
+    quoteToShare () {
       const { text, experienceTitle } = this
       if (text) {
         // use prop when provided
@@ -98,12 +98,12 @@ export default {
       }
       return `${textToShare}.`
     },
-    textToShare() {
+    textToShare () {
       return `${this.quoteToShare} ${this.hashtags.map(h => `#${h}`).join(' ')}`
     }
   },
   methods: {
-    async share() {
+    async share () {
       const {
         hashtags,
         titleToShare: title,

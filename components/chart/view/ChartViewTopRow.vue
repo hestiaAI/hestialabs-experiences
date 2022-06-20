@@ -20,7 +20,7 @@
           hide-details
           dense
           @change="draw"
-        ></VSlider>
+        />
       </VCol>
     </VRow>
     <VRow dense justify="center">
@@ -30,7 +30,7 @@
           dense
           label="Display Others"
           @change="draw"
-        ></VCheckbox>
+        />
       </VCol>
       <VCol v-if="averageButton" cols="6" md="2">
         <VSelect
@@ -40,12 +40,12 @@
           dense
           hide-details
           @change="draw"
-        ></VSelect>
+        />
       </VCol>
     </VRow>
     <VRow justify="center">
       <VCol cols="12" md="7">
-        <div :id="graphId" style="position: relative"></div>
+        <div :id="graphId" style="position: relative" />
       </VCol>
     </VRow>
   </VContainer>
@@ -100,7 +100,7 @@ export default {
       default: () => 'records'
     }
   },
-  data() {
+  data () {
     return {
       total: 0,
       nbDay: 1,
@@ -115,7 +115,7 @@ export default {
   },
   methods: {
     // Update data depending on the current states of the buttons
-    draw() {
+    draw () {
       const newData = this.records[this.agg].slice(
         0,
         this.othersCheck ? this.topKSlider - 1 : this.topKSlider
@@ -197,11 +197,11 @@ export default {
         .delay(200)
         .call(this.xAxis)
     },
-    drawViz() {
+    drawViz () {
       // Compute date range
       const formatDate = d3.timeFormat('%B %d, %Y')
       const parseDate = d3.timeParse(this.dateFormat)
-      const extent = d3.extent(this.values, d => {
+      const extent = d3.extent(this.values, (d) => {
         return parseDate(d.date_)
       })
       this.minDate = formatDate(extent[0])
@@ -263,9 +263,8 @@ export default {
       this.yScale = d3.scaleBand().range([0, height]).paddingInner(0.1)
 
       /* Axis */
-      function cutLongNames(name, maxLength) {
-        if (name.length > maxLength) return name.slice(0, maxLength) + '..'
-        else return name
+      function cutLongNames (name, maxLength) {
+        if (name.length > maxLength) { return name.slice(0, maxLength) + '..' } else { return name }
       }
       const yAxis = d3
         .axisLeft(this.yScale)

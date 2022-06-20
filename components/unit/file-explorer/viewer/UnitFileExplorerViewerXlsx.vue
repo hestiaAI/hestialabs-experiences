@@ -1,5 +1,7 @@
 <template>
-  <div v-if="loading">Loading</div>
+  <div v-if="loading">
+    Loading
+  </div>
   <div v-else-if="error">
     <p>Could not parse file.</p>
   </div>
@@ -22,7 +24,7 @@ import mixinLoading from './mixin-loading'
 export default {
   name: 'UnitFileExplorerViewerXlsx',
   mixins: [mixin, mixinLoading],
-  data() {
+  data () {
     return {
       loading: true,
       error: false,
@@ -34,14 +36,14 @@ export default {
   },
   watch: {
     filename: {
-      async handler(filename) {
+      async handler (filename) {
         await this.getContentFromFilename(filename)
       },
       immediate: true
     }
   },
   methods: {
-    async getContentFromFilename(filename) {
+    async getContentFromFilename (filename) {
       this.setLoading(true)
       this.file = this.fileManager.fileDict[filename]
       try {
@@ -59,7 +61,7 @@ export default {
               { length: Math.max(...rows.map(r => r.length)) },
               (_, j) => 'Column ' + (j + 1)
             )
-            const items = rows.map(row => {
+            const items = rows.map((row) => {
               return Object.fromEntries(headers.map((h, j) => [h, row[j]]))
             })
             return [sheets[i], { headers, items }]
@@ -73,7 +75,7 @@ export default {
       }
       this.setLoading(false)
     },
-    setSheet(name) {
+    setSheet (name) {
       this.headers = this.sheets[name].headers
       this.items = this.sheets[name].items
     }

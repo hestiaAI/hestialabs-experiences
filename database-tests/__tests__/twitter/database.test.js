@@ -15,7 +15,7 @@ import {
 const tester = new DatabaseTester()
 const getSql = getSqlFromBlock.bind(null, experience)
 
-async function init(adImpressions, adEngagements) {
+async function init (adImpressions, adEngagements) {
   const files = [
     mockFile('test/data/ad-impressions.js', JSON.stringify(adImpressions)),
     mockFile('test/data/ad-engagements.js', JSON.stringify(adEngagements))
