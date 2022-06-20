@@ -13,6 +13,7 @@
     "apple",
     "google",
     "her",
+    "her-tinder-agg",
     "spotify",
     "youtube",
     "linkedin",
@@ -25,6 +26,7 @@
   ],
   "filedrop": "https://drive.infomaniak.com/app/collaborate/193995/c41b3aac-cf1f-4ba7-a1ef-0d44fb45260e",
   "publicKey": "ebabadb7cdca33c6bff6813ae874167b52e4e445120fd6fe7aa4c528d6e27049",
+  "bubbles": ["demo-aggregator", "demo-participant"],
   "consent": {
     "default": [
       {
