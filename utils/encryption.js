@@ -1,6 +1,6 @@
 import SparkMD5 from 'spark-md5'
 
-const _sodium = require('libsodium-wrappers')
+import _sodium from 'libsodium-wrappers'
 
 export async function encryptFile(content, publicKey) {
   await _sodium.ready

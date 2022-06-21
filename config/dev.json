@@ -42,7 +42,14 @@
     "wolt",
     "youtube"
   ],
-  "bubbles": ["tl-aggregator", "tl-participant"],
+  "bubbles": [
+    "tl-aggregator",
+    "tl-participant",
+    "mercator-aggregator",
+    "mercator-participant",
+    "demo-aggregator",
+    "demo-participant"
+  ],
   "hashtags": ["dataprivacy", "hestialabs"],
   "filedrop": "https://example.com",
   "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",

@@ -10,7 +10,7 @@
         :left="left"
         v-bind="[attrs, $attrs]"
         class="my-2"
-        v-on="on"
+        v-on="{ on, $on }"
         @click="$emit('click', $event)"
       >
         <VIcon v-if="icon" :left="text !== ''">{{ mdiIcon }}</VIcon>

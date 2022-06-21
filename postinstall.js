@@ -1,11 +1,11 @@
 const { resolve } = require('path')
+const { readdirSync } = require('fs')
 
-const { CONFIG_NAME = 'dev' } = process.env
+const { CONFIG_NAME = 'dev', CIRCLECI, NODE_ENV } = process.env
 
-const { experiences } = require(resolve(
-  __dirname,
-  `config/${CONFIG_NAME}.json`
-))
+const experiences = CIRCLECI
+  ? readdirSync(resolve(__dirname, 'database-tests/__tests__')) // experiences required for tests
+  : require(resolve(__dirname, `config/${CONFIG_NAME}.json`)).experiences
 
 function handleSpawnOutput({ status, stderr, stdout, error }) {
   if (status) {
@@ -22,7 +22,7 @@ function handleSpawnOutput({ status, stderr, stdout, error }) {
 }
 
 if (experiences) {
-  if (process.env.NODE_ENV === 'production') {
+  if (NODE_ENV === 'production' || CIRCLECI) {
     const { spawnSync, execSync } = require('child_process')
     const npmrcPath = resolve(__dirname, '.npmrc')
     const cmd = `echo "//npm.pkg.github.com/:_authToken=$\{HESTIA_OWNER_GITHUB_TOKEN}" >> ${npmrcPath}`

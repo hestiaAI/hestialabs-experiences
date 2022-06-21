@@ -84,7 +84,7 @@ export default {
     keplerArgs() {
       return {
         keplerData: this.keplerData,
-        config: JSON.parse(JSON.stringify(this.keplerConfig))
+        config: this.keplerConfig
       }
     }
   },
