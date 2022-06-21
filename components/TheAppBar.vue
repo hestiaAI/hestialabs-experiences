@@ -89,17 +89,17 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       drawer: false,
       selected: ''
     }
   },
   computed: {
-    e () {
+    e() {
       return this.$store.getters.experience(this.$route)
     },
-    collaborator () {
+    collaborator() {
       return this.e.collaborator
     }
   }
