@@ -97,7 +97,7 @@ import mixin from './mixin'
 import keplerConfig from './kepler_config_records.js'
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       menu: false,
       sliderValue: 0,
@@ -113,13 +113,13 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    total () {
+    total() {
       return this.results.length
     },
-    filtered () {
+    filtered() {
       return this.filteredRows.length
     },
-    keplerData () {
+    keplerData() {
       return {
         fields: this.headers.map((h) => {
           return {
@@ -129,7 +129,7 @@ export default {
         rows: this.filteredRows.map(r => this.headers.map(h => r[h]))
       }
     },
-    keplerArgs () {
+    keplerArgs() {
       return {
         keplerData: this.keplerData,
         config: keplerConfig
@@ -137,13 +137,13 @@ export default {
     }
   },
   methods: {
-    increment () {
+    increment() {
       this.sliderValue += 1
     },
-    decrement () {
+    decrement() {
       this.sliderValue -= 1
     },
-    addNoise () {
+    addNoise() {
       this.menu = false
       const level = this.sliderValue
       this.results = this.results.map((x) => {
@@ -161,7 +161,7 @@ export default {
         }
       })
     },
-    clear () {
+    clear() {
       this.menu = false
       this.results = this.values.map((v) => {
         return {
@@ -172,8 +172,8 @@ export default {
       })
       this.sliderValue = 0
     },
-    drawViz () {},
-    onTableFilter (newItems) {
+    drawViz() {},
+    onTableFilter(newItems) {
       this.filteredRows = newItems
     }
   }

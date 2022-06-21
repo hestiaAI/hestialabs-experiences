@@ -47,7 +47,7 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       allDay: true,
       startTime: '00:00',
@@ -55,10 +55,10 @@ export default {
     }
   },
   computed: {
-    parser () {
+    parser() {
       return this.isDatetime ? datetimeParser : timeParser
     },
-    filterFunction () {
+    filterFunction() {
       if (this.allDay) { return null }
       return (value) => {
         const date = this.parser(value)
@@ -73,15 +73,15 @@ export default {
     }
   },
   methods: {
-    toMilliseconds (time) {
+    toMilliseconds(time) {
       const [hours, minutes] = time.split(':').map(d => parseInt(d))
       return hours * 3600 * 1000 + minutes * 60 * 1000
     },
-    filterChange () {
+    filterChange() {
       if (this.startTime === '00:00' && this.endTime === '23:59') { this.allDay = true } else { this.allDay = false }
       this.$emit('filter-change', this.filterFunction)
     },
-    reset () {
+    reset() {
       this.startTime = '00:00'
       this.endTime = '23:59'
       this.filterChange()

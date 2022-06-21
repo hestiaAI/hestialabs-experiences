@@ -96,7 +96,7 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       dateFormatter,
       weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
@@ -106,38 +106,38 @@ export default {
     }
   },
   computed: {
-    parser () {
+    parser() {
       if (this.isDatetime) {
         return datetimeParser
       } else {
         return dateParser
       }
     },
-    dates () {
+    dates() {
       return this.values.map(v => this.parser(v)).filter(d => d !== null)
     },
-    dateExtent () {
+    dateExtent() {
       return d3.extent(this.dates)
     },
-    numberOfDays () {
+    numberOfDays() {
       return d3.timeDay.count(...this.dateExtent)
     },
-    timeScale () {
+    timeScale() {
       return d3
         .scaleTime()
         .domain(this.dateExtent)
         .range([0, this.numberOfDays])
     },
-    dateRange () {
+    dateRange() {
       return [
         this.getDate(this.sliderRange[0]),
         this.getDate(this.sliderRange[1])
       ]
     },
-    allWeekDays () {
+    allWeekDays() {
       return this.weekDayAuthorized.length === this.weekDays.length
     },
-    filterFunction () {
+    filterFunction() {
       if (
         !this.timeFilterFunction &&
         this.allWeekDays &&
@@ -156,11 +156,11 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.sliderRange = [0, this.numberOfDays]
   },
   methods: {
-    selectAll () {
+    selectAll() {
       this.$nextTick(() => {
         if (this.allWeekDays) {
           this.weekDayAuthorized = []
@@ -170,17 +170,17 @@ export default {
         this.filterChange()
       })
     },
-    getDate (i) {
+    getDate(i) {
       return this.timeScale.invert(i)
     },
-    timeFilterChange (filter) {
+    timeFilterChange(filter) {
       this.timeFilterFunction = filter
       this.filterChange()
     },
-    filterChange () {
+    filterChange() {
       this.$emit('filter-change', this.filterFunction)
     },
-    reset () {
+    reset() {
       this.weekDayAuthorized = this.weekDays.slice()
       this.sliderRange = [0, this.numberOfDays]
       if (this.isDatetime) { this.$refs.timeFilter.reset() }

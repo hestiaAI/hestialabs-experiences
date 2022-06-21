@@ -17,7 +17,7 @@ class Table {
    * @param {String} name the name of the table
    * @param {Array<Array<String>>} columns an array of columns, each column being an array containing the the name and the type.
    */
-  constructor (name, columns) {
+  constructor(name, columns) {
     // Sanity check: allow only alphanumeric names and correct types
     const r = /^[a-z0-9]+$/i
     if (!r.test(name)) {
@@ -49,11 +49,11 @@ class Table {
     )
   }
 
-  getColumnNames () {
+  getColumnNames() {
     return this.#columnNames.slice()
   }
 
-  datatype (column) {
+  datatype(column) {
     return this.#datatypes[column]
   }
 }
@@ -66,12 +66,12 @@ export class DB {
   #db
   #tables
 
-  constructor () {
+  constructor() {
     this.#db = null
     this.#tables = new Map()
   }
 
-  #checkState () {
+  #checkState() {
     if (!this.#db) {
       throw new Error('The database has not been initialized.')
     }
@@ -80,7 +80,7 @@ export class DB {
   /**
    * Asynchronously initialize the database.
    */
-  async init () {
+  async init() {
     // If a database already exists, close it.
     if (this.#db) {
       this.close()
@@ -98,7 +98,7 @@ export class DB {
    * @param {String} table the name of the table to create.
    * @param {Array<Array<String>>} columns an array of columns, each column being an array containing the the name and the type.
    */
-  create ({ name, columns, foreignKeys = [], primaryKey = [] }) {
+  create({ name, columns, foreignKeys = [], primaryKey = [] }) {
     this.#checkState()
 
     if (this.#tables.has(name)) {
@@ -129,7 +129,7 @@ export class DB {
    * @param {String} table the table in which we insert the values.
    * @param {Array<Object>} items an array of rows to insert. Each row should contain the same attributes.
    */
-  insert (tableName, items) {
+  insert(tableName, items) {
     this.#checkState()
 
     if (!this.#tables.has(tableName)) {
@@ -158,7 +158,7 @@ export class DB {
    * @returns an object containing the resulting headers (format: ['col1', 'col2'])
    * and items (format: [{col1: val1, col2: val2, ...}, ...]).
    */
-  select (sql, params = null) {
+  select(sql, params = null) {
     this.#checkState()
 
     // exec returns an array because it accepts multiple statements, but we don't.
@@ -182,7 +182,7 @@ export class DB {
   /**
    * Close the database to free memory.
    */
-  close () {
+  close() {
     if (this.#db) {
       this.#db.close()
       this.#db = null
@@ -196,7 +196,7 @@ export class DB {
  * @param {Object} - database config
  * @returns {DB} new initialized database instance with tables
  */
-export async function createDB ({ tables }) {
+export async function createDB({ tables }) {
   const db = new DB()
   await db.init()
   tables.forEach(t => db.create(t))
@@ -211,7 +211,7 @@ export async function createDB ({ tables }) {
  * @param {*} root root json
  * @param {Object} - accessor config
  */
-function generateRecordsRecursively (
+function generateRecordsRecursively(
   defaultValues,
   records,
   json,
@@ -275,7 +275,7 @@ function generateRecordsRecursively (
  * @param {Object} - database config
  * @returns {Object} database records for each table
  */
-export async function generateRecords (fileManager, { tables, getters }) {
+export async function generateRecords(fileManager, { tables, getters }) {
   // default values for every table
   // { "Table1": { "col1": null, "col2", null, ... }, "Table2": ... }
   const defaultValues = Object.fromEntries(
@@ -349,7 +349,7 @@ export async function generateRecords (fileManager, { tables, getters }) {
  * @param {DB} db database instance
  * @param {Object} tableRecords contains the database records for each table
  */
-export function insertRecords (db, tableRecords) {
+export function insertRecords(db, tableRecords) {
   Object.entries(tableRecords).forEach(([table, records]) => {
     db.insert(table, records)
   })

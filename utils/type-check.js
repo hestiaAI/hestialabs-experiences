@@ -87,7 +87,7 @@ export const TYPE_FORMATTER = {
  * @param {Number} nbSamples the number of samples to retrieve
  * @returns {Object} an object containing the list of samples retrieved for each column name.
  */
-export function getNotNullSampleFromData (headers, items, nbSamples) {
+export function getNotNullSampleFromData(headers, items, nbSamples) {
   const totalSamples = Math.min(
     items.length,
     nbSamples > 0 ? Math.floor(nbSamples) : 0
@@ -122,9 +122,9 @@ export function getNotNullSampleFromData (headers, items, nbSamples) {
  * @param {*} object an object with keys associated to arrays
  * @returns an array of rows object
  */
-export function objectToDataFrame (object) {
-  return Object.keys(object).reduce(function (r, k) {
-    object[k].forEach(function (a, i) {
+export function objectToDataFrame(object) {
+  return Object.keys(object).reduce(function(r, k) {
+    object[k].forEach(function(a, i) {
       r[i] = r[i] || {}
       r[i][k] = a
     })
@@ -137,7 +137,7 @@ export function objectToDataFrame (object) {
  * @param {*} items an array of rows object (e.g: [{key1: arr1[0], key2: arr2[0]}, {key1: arr1[1], key2: arr2[2]}, ... ])
  * @returns a list of headers with additional metadata about type of each column
  */
-export function getTypesFromData (headers, items) {
+export function getTypesFromData(headers, items) {
   const ignoredDataTypes = Object.keys(DATA_TYPES).filter(
     type => !ACCEPTED_TYPES.includes(type)
   )
@@ -163,7 +163,7 @@ export function getTypesFromData (headers, items) {
  * @param {Array[Object]} items rows to be formatted
  * @returns the formatted rows with the correct type
  */
-export function formatDataWithTypes (headers, items) {
+export function formatDataWithTypes(headers, items) {
   return items.map((r) => {
     headers.forEach((h) => {
       const formatter = TYPE_FORMATTER[h.type]?.formatter ?? (d => d)
@@ -180,7 +180,7 @@ export function formatDataWithTypes (headers, items) {
  * @param {Array[Object]} items rows to be verify
  * @returns the headers with types changed to  string when not validated
  */
-export function verifyTypes (headers, items) {
+export function verifyTypes(headers, items) {
   headers.forEach((h) => {
     const validator = TYPE_FORMATTER[h.type].validator
     let idxRow = 0
@@ -214,7 +214,7 @@ export function verifyTypes (headers, items) {
  * @param {Array[Object]} items an array of objects representing rows
  * @returns the headers array with metadata about inferred type and the items casted to the inferred type
  */
-export function detectTypes (headers, items) {
+export function detectTypes(headers, items) {
   const columnNames = headers.map(h => h.value)
   const samples = getNotNullSampleFromData(columnNames, items, NB_SAMPLE)
   const metadata = getTypesFromData(headers, objectToDataFrame(samples))

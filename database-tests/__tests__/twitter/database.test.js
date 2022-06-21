@@ -15,7 +15,7 @@ import {
 const tester = new DatabaseTester()
 const getSql = getSqlFromBlock.bind(null, experience)
 
-async function init (adImpressions, adEngagements) {
+async function init(adImpressions, adEngagements) {
   const files = [
     mockFile('test/data/ad-impressions.js', JSON.stringify(adImpressions)),
     mockFile('test/data/ad-engagements.js', JSON.stringify(adEngagements))
@@ -24,14 +24,14 @@ async function init (adImpressions, adEngagements) {
 }
 
 describe('with incomplete samples', () => {
-  test('the database builder creates the tables without error', async () => {
+  test('the database builder creates the tables without error', async() => {
     await init(missingAttributesImpressions, missingAttributesEngagements)
     tester.close()
   })
 })
 
 describe('with complete samples', () => {
-  beforeAll(async () => await init(adImpressions, adEngagements))
+  beforeAll(async() => await init(adImpressions, adEngagements))
   afterAll(() => tester.close())
 
   test('the database builder creates the tables correctly', () => {

@@ -15,23 +15,23 @@ export const mimeTypes = {
   [defaultExtension]: 'text/plain;charset=UTF-8'
 }
 
-export function createObjectURL (data, type = 'text/plain') {
+export function createObjectURL(data, type = 'text/plain') {
   if (data instanceof Blob) {
     return window.URL.createObjectURL(data)
   }
   return window.URL.createObjectURL(new Blob([data], { type }))
 }
 
-export function revokeObjectURL (objectURL) {
+export function revokeObjectURL(objectURL) {
   window.URL.revokeObjectURL(objectURL)
 }
 
-export function objectIsEmpty (obj) {
+export function objectIsEmpty(obj) {
   // https://stackoverflow.com/a/32108184/8238129
   return obj && Object.keys(obj).length === 0 && obj.constructor === Object
 }
 
-export function processError (v) {
+export function processError(v) {
   if (v.stack) {
     return v.stack
   }
@@ -45,7 +45,7 @@ export function processError (v) {
   return v
 }
 
-export async function objectToArrayBuffer (obj) {
+export async function objectToArrayBuffer(obj) {
   // Create ArrayBuffer (Transferable object)
   // https://stackoverflow.com/a/55204517/8238129
   // Transfer ArrayBuffer to main thread as transferable object
@@ -54,7 +54,7 @@ export async function objectToArrayBuffer (obj) {
   return await new Response(new Blob([data])).arrayBuffer()
 }
 
-export async function arrayBufferToObject (arrayBuffer) {
+export async function arrayBufferToObject(arrayBuffer) {
   // Worker returns ArrayBuffer
   // We create a Blob from it
   // and then use Blob.text() that resolves with a string
@@ -64,7 +64,7 @@ export async function arrayBufferToObject (arrayBuffer) {
 }
 
 /* Transform integer x to a string of length n, left-padded with zeros. */
-export function padNumber (x, n) {
+export function padNumber(x, n) {
   return x.toString().padStart(n, '0')
 }
 
@@ -74,7 +74,7 @@ export function padNumber (x, n) {
  *   const workResult = await runWorker(new UnionizedWorker(), args)
  * </pre>
  */
-export function runWorker (worker, args) {
+export function runWorker(worker, args) {
   worker.postMessage(args)
   return new Promise((resolve, reject) => {
     worker.addEventListener('message', (message) => {
@@ -95,17 +95,17 @@ export const setTimeoutPromise = (delay, value) =>
   new Promise(resolve => setTimeout(resolve, delay, value))
 
 /* Shallow equality test on sets */
-export function setsEqual (s1, s2) {
+export function setsEqual(s1, s2) {
   return s1.size === s2.size && [...s1].every(value => s2.has(value))
 }
 
-export function humanReadableFileSize (sizeInBytes) {
+export function humanReadableFileSize(sizeInBytes) {
   const i = Math.floor(Math.log(sizeInBytes || 1) / Math.log(1024))
   const units = ['B', 'kB', 'MB', 'GB', 'TB']
   return `${(sizeInBytes / Math.pow(1024, i)).toFixed(2)} ${units[i]}`
 }
 
-export function plurify (word, n) {
+export function plurify(word, n) {
   return n === 1 ? word : `${word}s`
 }
 

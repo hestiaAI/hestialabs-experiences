@@ -120,7 +120,7 @@ import fileManagerWorkers from '~/utils/file-manager-workers'
 export default {
   name: 'TheDataExperience',
   components: { UnitDownload },
-  data () {
+  data() {
     const experience = this.$store.getters.experience(this.$route)
     const properties = pick(experience, [
       'databaseConfig',
@@ -146,7 +146,7 @@ export default {
   computed: {
     ...mapState('experience', { experienceProgress: 'progress' }),
     ...mapState(['config', 'fileManager']),
-    tabs () {
+    tabs() {
       const disabled = !this.success || this.experienceProgress
       const tabs = [
         {
@@ -188,15 +188,15 @@ export default {
       }
       return tabs
     },
-    sqlQueries () {
+    sqlQueries() {
       return this.viewBlocks.map(o => this.sql[o.sql])
     },
-    config () {
+    config() {
       const { config } = this.$store.state
       const { bubble } = this.$route.params
       return bubble ? config.bubbleConfig[bubble] : config
     },
-    consentFormTemplate () {
+    consentFormTemplate() {
       const { consent } = this.config
       if (consent) {
         const { experience } = this.$route.params
@@ -210,7 +210,7 @@ export default {
     }
   },
   watch: {
-    fileManager (value) {
+    fileManager(value) {
       if (value === null) {
         this.switchTab('load-data')
         this.success = false
@@ -221,28 +221,28 @@ export default {
     // debounce overlay
     experienceProgress: {
       immediate: true,
-      handler: debounce(function (value) {
+      handler: debounce(function(value) {
         this.overlay = value
       }, 200)
     }
   },
-  mounted () {
+  mounted() {
     this.switchTab('load-data')
   },
   methods: {
-    switchTab (value) {
+    switchTab(value) {
       this.$router.push(`#${value}`)
     },
-    scrollToTop () {
+    scrollToTop() {
       window.setTimeout(() => window.scrollTo(0, 0), 10)
     },
-    handleError (error) {
+    handleError(error) {
       console.error(error)
       this.error = true
       this.message = error instanceof Error ? error.message : error
       this.progress = false
     },
-    async onUnitFilesUpdate ({ uppyFiles }) {
+    async onUnitFilesUpdate({ uppyFiles }) {
       const { databaseConfig: dbConfig } = this
       this.message = ''
       this.error = false

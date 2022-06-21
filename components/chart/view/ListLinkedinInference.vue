@@ -79,7 +79,7 @@ import mixin from './mixin'
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       categoriesSelected: [],
       inferencesSelected: [],
@@ -87,7 +87,7 @@ export default {
     }
   },
   computed: {
-    items () {
+    items() {
       return this.values
         .map((inference) => {
           const inferenceType =
@@ -124,12 +124,12 @@ export default {
             this.inferencesSelected.includes(inference.inferenceType)
         )
     },
-    categories () {
+    categories() {
       return this.values.map(inference => inference.Category)
     }
   },
   methods: {
-    drawViz () {}
+    drawViz() {}
   }
 }
 </script>

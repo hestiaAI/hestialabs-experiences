@@ -53,17 +53,17 @@ export default {
       default: () => 40
     }
   },
-  data () {
+  data() {
     return {
       graphId: 'graph_' + this._uid,
       total: 0
     }
   },
-  mounted () {
+  mounted() {
     this.drawViz()
   },
   methods: {
-    toJSONGraph (data) {
+    toJSONGraph(data) {
       // group, count each similar links and limit to top n links
       const groupedData = d3
         .flatRollup(
@@ -87,7 +87,7 @@ export default {
 
       const graph = { nodes: [], links: [] }
 
-      groupedData.forEach(function (d) {
+      groupedData.forEach(function(d) {
         d.sourceName = d.source
         d.targetName = d.target
 
@@ -114,18 +114,18 @@ export default {
       )
 
       // loop through each link replacing the text with its index from node
-      graph.links.forEach(function (d, i) {
+      graph.links.forEach(function(d, i) {
         graph.links[i].source = graph.nodes.indexOf(graph.links[i].source)
         graph.links[i].target = graph.nodes.indexOf(graph.links[i].target)
       })
 
       // make nodes an array of objects instead than an array of strings
-      graph.nodes.forEach(function (d, i) {
+      graph.nodes.forEach(function(d, i) {
         graph.nodes[i] = { name: d }
       })
       return graph
     },
-    drawViz () {
+    drawViz() {
       this.total = this.values.length
 
       // transform to graph format
@@ -212,7 +212,7 @@ export default {
         .attr('d', d3Sankey.sankeyLinkHorizontal())
         .attr('stroke-width', d => d.width)
         .attr('opacity', 0.2)
-        .on('mouseover', function (evt, d) {
+        .on('mouseover', function(evt, d) {
           const textToDisplay = `<b>${d.sourceName}</b>  → <b>
             ${d.targetName}</b><br><center><b>
             ${d.value}</b> trips.</center>`
@@ -222,7 +222,7 @@ export default {
           // highlight current one
           d3.select(this).attr('opacity', 0.7)
         })
-        .on('mouseleave', function (d) {
+        .on('mouseleave', function(d) {
           d3.select(this).attr('opacity', 0.2)
           linkTooltip.style('opacity', 0)
         })
@@ -244,12 +244,12 @@ export default {
         .attr('height', d => d.y1 - d.y0)
         .attr('width', sankey.nodeWidth())
         .style('fill', d => (d.color = color(d.name.slice(0, -1))))
-        .style('stroke', function (d) {
+        .style('stroke', function(d) {
           return d3.rgb(d.color).darker(1)
         })
 
       node
-        .on('mouseover', function (evt, d) {
+        .on('mouseover', function(evt, d) {
           const textToDisplay = `<b>${d.name.slice(0, -1)}</b><br><center><b>${
             d.value
           }</b> trips <b>${
@@ -281,7 +281,7 @@ export default {
             )
             .attr('opacity', 0.7)
         })
-        .on('mouseleave', function (d) {
+        .on('mouseleave', function(d) {
           d3.selectAll('#' + this.graphId + '.link').attr('opacity', 0.2)
           d3.select(this).attr('opacity', 1)
           tooltip.style('opacity', 0)

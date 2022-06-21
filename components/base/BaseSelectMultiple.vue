@@ -34,13 +34,13 @@ export default {
   }),
 
   computed: {
-    selectAllItems () {
+    selectAllItems() {
       return this.selectedItems.length === this.items.length
     },
-    selectSomeItems () {
+    selectSomeItems() {
       return this.selectedItems.length > 0 && !this.selectAllItems
     },
-    icon () {
+    icon() {
       if (this.selectAllItems) { return '$vuetify.icons.mdiCloseBox' }
       if (this.selectSomeItems) { return '$vuetify.icons.mdiMinusBox' }
       return '$vuetify.icons.mdiCheckboxBlankOutline'
@@ -48,7 +48,7 @@ export default {
   },
 
   methods: {
-    toggle () {
+    toggle() {
       this.$nextTick(() => {
         if (this.selectAllItems) {
           this.selectedItems = []

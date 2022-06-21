@@ -131,7 +131,7 @@ import { jsonToTableConverter } from '~/utils/generic-pipelines'
 
 export default {
   name: 'UnitFileExplorer',
-  data () {
+  data() {
     return {
       supportedTypes: new Set([
         'json',
@@ -157,10 +157,10 @@ export default {
   computed: {
     ...mapState(['fileExplorerCurrentItem', 'fileManager']),
     active: {
-      get () {
+      get() {
         return _.has(this.selectedItem, 'filename') ? [this.selectedItem] : []
       },
-      set ([item]) {
+      set([item]) {
         // item might be undefined (when unselecting)
         if (item) {
           // close drawer when file is selected
@@ -173,7 +173,7 @@ export default {
         }
       }
     },
-    selectedItem () {
+    selectedItem() {
       const item = this.fileExplorerCurrentItem
       if (_.has(item, 'filename')) {
         if (!_.has(item, 'type')) {
@@ -185,17 +185,17 @@ export default {
         return {}
       }
     },
-    fileType () {
+    fileType() {
       // @fileType should match the postfix of the Vue component name
       return this.selectedItem?.type
     },
-    filename () {
+    filename() {
       return this.selectedItem.filename
     },
-    treeItems () {
+    treeItems() {
       return this.fileManager.getTreeItems()
     },
-    path () {
+    path() {
       // TODO avoid code duplication with viewer/mixin-path
       // maybe by setting path as an attribute on every viewer
       if (this.fileManager.fileDict[this.filename]) {
@@ -203,7 +203,7 @@ export default {
       }
       return ''
     },
-    componentForType () {
+    componentForType() {
       const { fileType } = this
       if (!fileType) {
         return
@@ -214,10 +214,10 @@ export default {
           `~/components/unit/file-explorer/viewer/UnitFileExplorerViewer${postfix}`
         )
     },
-    miniWidthPaddingLeftClass () {
+    miniWidthPaddingLeftClass() {
       return `pl-${parseInt(this.miniWidth / 4)}`
     },
-    drawerMiniFileLabelStyle () {
+    drawerMiniFileLabelStyle() {
       const { miniWidth: w, height: h } = this
       const px = `${w}px`
       return {
@@ -229,26 +229,26 @@ export default {
     }
   },
   watch: {
-    mini (mini) {
+    mini(mini) {
       // hide scrollbar in mini variant of drawer
       const overflowY = mini ? 'hidden' : 'visible'
       this.$refs.drawer.$el.children[1].style.overflowY = overflowY
     }
   },
   methods: {
-    onLoading (loading) {
+    onLoading(loading) {
       this.isFileLoading = loading
     },
-    onSelectAccessor (accessor) {
+    onSelectAccessor(accessor) {
       // TODO make this work better
       // const options = await createTableOptions(this.fileManager, accessor)
       this.customPipelineOptions = [{ accessor }]
     },
-    onUnitResultsUpdate (result) {
+    onUnitResultsUpdate(result) {
       this.tableData = result
     },
-    searchItemWithFilename (filename) {
-      function findItem (item) {
+    searchItemWithFilename(filename) {
+      function findItem(item) {
         if (item.filename === filename) {
           return item
         } else if (Array.isArray(item)) {

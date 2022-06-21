@@ -69,7 +69,7 @@ export default class FileManager {
   #treeItems
   #shortFilenameDict
 
-  setInitialValues () {
+  setInitialValues() {
     this.#fileTexts = {}
     this.#preprocessedTexts = {}
     this.#csvItems = {}
@@ -87,7 +87,7 @@ export default class FileManager {
    * @param {Object} idToGlob an object mapping IDs to globs
    * @param {Boolean} keepOnlyFiles filter the uploaded files to keep only the one present in idToGlob
    */
-  constructor (preprocessors, workers, idToGlob, keepOnlyFiles) {
+  constructor(preprocessors, workers, idToGlob, keepOnlyFiles) {
     this.supportedExtensions = new Set([
       ...Object.keys(extension2filetype),
       ...Object.values(extension2filetype)
@@ -117,7 +117,7 @@ export default class FileManager {
    * @param {File[]} uppyFiles
    * @returns {Promise<FileManager>}
    */
-  async init (uppyFiles) {
+  async init(uppyFiles) {
     this.fileList = await FileManager.extractZips(uppyFiles, this.filesRegex)
     this.fileList = FileManager.filterFiles(this.fileList)
     this.fileList = FileManager.removeZipName(this.fileList)
@@ -136,7 +136,7 @@ export default class FileManager {
    * can be retrieve from another file.
    * @returns an object mapping IDs to globs
    */
-  async fetchDynamicFiles () {
+  async fetchDynamicFiles() {
     const { $DYNAMIC_FILES, ...files } = this.idToGlob
     if ($DYNAMIC_FILES) {
       const matchedFiles = this.getFilePathsFromId('$DYNAMIC_FILES')
@@ -153,7 +153,7 @@ export default class FileManager {
    * @param {File[]} fileList
    * @returns filtered file list
    */
-  static filterFiles (fileList) {
+  static filterFiles(fileList) {
     const filterOut = /__MACOSX|\.DS_STORE/i
     return fileList.filter(f => !filterOut.test(f.name))
   }
@@ -165,7 +165,7 @@ export default class FileManager {
    * @param {[String, File][]} filePairs
    * @returns {{[p: String]: File}}
    */
-  static removeZipName (fileList) {
+  static removeZipName(fileList) {
     const rootSet = new Set(fileList.map(f => f.name.split('/')[0]))
     const roots = [...rootSet]
     if (roots.length === 1 && roots[0].endsWith('.zip')) {
@@ -183,7 +183,7 @@ export default class FileManager {
    * Returns an array with all the file names in the File Manager.
    * @returns {String[]}
    */
-  getFilenames () {
+  getFilenames() {
     return Object.keys(this.fileDict)
   }
 
@@ -193,7 +193,7 @@ export default class FileManager {
    * @param {String[]} filenames
    * @returns {Promise<{[p: String]: String}>}
    */
-  async preprocessFiles (filenames) {
+  async preprocessFiles(filenames) {
     const entries = await Promise.all(
       filenames.map(async filename => [
         filename,
@@ -208,7 +208,7 @@ export default class FileManager {
    * @param {String} filePath
    * @returns {*|(function(*): *)}
    */
-  getPreprocessors (filePath) {
+  getPreprocessors(filePath) {
     if (!this.preprocessors) {
       return []
     }
@@ -218,14 +218,14 @@ export default class FileManager {
       .map(([f, _]) => f)
   }
 
-  hasFile (filePath) {
+  hasFile(filePath) {
     return _.has(this.fileDict, filePath)
   }
 
   /**
    * Return a MD5 hash
    */
-  async hashAllFiles () {
+  async hashAllFiles() {
     const hashPromises = Object.values(this.fileDict).map(hashFile)
     const fileHashes = await Promise.all(hashPromises)
     return hashString(fileHashes.join(''))
@@ -237,7 +237,7 @@ export default class FileManager {
    * @returns {Promise<String>}
    * @throws an error if the file does not exist
    */
-  async getText (filePath) {
+  async getText(filePath) {
     if (!this.hasFile(filePath)) {
       throw new Error(`The file ${filePath} was not provided.`)
     }
@@ -252,7 +252,7 @@ export default class FileManager {
    * @param {String} filePath
    * @returns {Promise<String>}
    */
-  async getPreprocessedText (filePath) {
+  async getPreprocessedText(filePath) {
     if (!_.has(this.#preprocessedTexts, filePath)) {
       let text = await this.getText(filePath)
       if (text === '') {
@@ -272,7 +272,7 @@ export default class FileManager {
    * @param {String} filePath
    * @returns {Promise<String>}
    */
-  async getCsvItems (filePath) {
+  async getCsvItems(filePath) {
     if (!_.has(this.#csvItems, filePath)) {
       const text = await this.getPreprocessedText(filePath)
       const CsvWorker = this.workers?.CsvWorker
@@ -292,7 +292,7 @@ export default class FileManager {
    * @param {String} filePath
    * @returns {Promise<String>}
    */
-  async getJsonItems (filePath) {
+  async getJsonItems(filePath) {
     if (!_.has(this.#jsonItems, filePath)) {
       const text = await this.getPreprocessedText(filePath)
       const JsonWorker = this.workers?.JsonWorker
@@ -311,7 +311,7 @@ export default class FileManager {
    * Return the file paths that match the glob
    * @param {String} filePathGlob (in the same format as accessor.filePath)
    */
-  findMatchingFilePaths (filePathGlob) {
+  findMatchingFilePaths(filePathGlob) {
     if (!filePathGlob) { return ['Dynamic files'] }
     return this.getFilenames().filter(filePath =>
       matchNormalized(filePath, filePathGlob)
@@ -323,7 +323,7 @@ export default class FileManager {
    * @param {String} id
    * @returns an array
    */
-  getFilePathsFromId (id) {
+  getFilePathsFromId(id) {
     if (!(id in this.idToGlob)) {
       throw new Error(`ID ${id} is not defined`)
     }
@@ -336,7 +336,7 @@ export default class FileManager {
    * @param {String} id
    * @returns an array
    */
-  async getPreprocessedTextFromId (id) {
+  async getPreprocessedTextFromId(id) {
     const paths = this.getFilePathsFromId(id)
     return await Promise.all(paths.map(p => this.getPreprocessedText(p)))
   }
@@ -346,7 +346,7 @@ export default class FileManager {
    * @param {String} id
    * @returns an array
    */
-  async getCsvItemsFromId (id) {
+  async getCsvItemsFromId(id) {
     const paths = this.getFilePathsFromId(id)
     return await Promise.all(paths.map(p => this.getCsvItems(p)))
   }
@@ -359,10 +359,10 @@ export default class FileManager {
    * Options can have the following attributes:
    * - freeFiles: true means files are freed after reading
    */
-  async findMatchingObjects (accessor, options = {}) {
+  async findMatchingObjects(accessor, options = {}) {
     const objectPromises = this.findMatchingFilePaths(
       accessor.filePath
-    ).flatMap(async (fileName) => {
+    ).flatMap(async(fileName) => {
       try {
         const text = await this.getPreprocessedText(fileName)
         const content = JSON.parse(text)
@@ -384,7 +384,7 @@ export default class FileManager {
    * @param {String} filePath
    * @returns {Promise<String>}
    */
-  async getNumberOfDataPoints (filePath) {
+  async getNumberOfDataPoints(filePath) {
     if (!_.has(this.#nDataPoints, filePath)) {
       const ext = filePath.match(/^.+\.(.+?)$/)?.[1] ?? 'other'
       if (ext === 'json') {
@@ -404,7 +404,7 @@ export default class FileManager {
    * Frees memory by erasing all loaded content associated to the given file path.
    * @param {String} filePath
    */
-  freeFile (filePath) {
+  freeFile(filePath) {
     if (_.has(this.#fileTexts, filePath)) {
       delete this.#fileTexts[filePath]
     }
@@ -423,7 +423,7 @@ export default class FileManager {
    * Creates a hierarchical object representing the tree of files in the File Manager, only if it has not already been created.
    * @returns {Object}
    */
-  getFileTree () {
+  getFileTree() {
     if (typeof this.#fileTree === 'undefined') {
       this.#fileTree = FileManager.makeTree(this.fileDict)
     }
@@ -434,7 +434,7 @@ export default class FileManager {
    * Creates an array of items to be given to a v-treeview component, only if not already created.
    * @returns {*}
    */
-  getTreeItems () {
+  getTreeItems() {
     if (typeof this.#treeItems === 'undefined') {
       this.#treeItems = FileManager.makeItems(this.getFileTree())
     }
@@ -444,7 +444,7 @@ export default class FileManager {
   /**
    * Transforms the filenames to a shorter version without the path, or with minimal path in case of non-uniqueness.
    */
-  setShortFilenames () {
+  setShortFilenames() {
     const files = Object.keys(this.fileDict).map((f) => {
       const parts = f.split('/')
       return {
@@ -484,7 +484,7 @@ export default class FileManager {
    * @param {*} filename
    * @returns the short filename
    */
-  getShortFilename (filename) {
+  getShortFilename(filename) {
     return this.#shortFilenameDict[filename]
   }
 
@@ -493,10 +493,10 @@ export default class FileManager {
    * @param {File[]} files
    * @returns {Promise<File[]>}
    */
-  static async extractZips (files, filesRegex) {
+  static async extractZips(files, filesRegex) {
     return (
       await Promise.all(
-        files.flatMap(async (file) => {
+        files.flatMap(async(file) => {
           if (file.name.endsWith('.zip')) {
             const zip = new JSZip()
             await zip.loadAsync(file)
@@ -534,7 +534,7 @@ export default class FileManager {
    * @param {Object} fileDict
    * @returns {Object}
    */
-  static makeTree (fileDict) {
+  static makeTree(fileDict) {
     const tree = {}
     Object.entries(fileDict).forEach(([filename, file]) => {
       const nodes = file.name.split('/')
@@ -556,9 +556,9 @@ export default class FileManager {
    * @param {Boolean} sortFiles
    * @returns {Object[]}
    */
-  static makeItems (tree, sortFiles = true) {
+  static makeItems(tree, sortFiles = true) {
     let id = 0
-    function makeItemsRec (tree) {
+    function makeItemsRec(tree) {
       const items = Object.entries(tree).flatMap(([file, node]) => {
         const res = {}
         const extension = file.match(/\.([\S]+)/)?.[1]

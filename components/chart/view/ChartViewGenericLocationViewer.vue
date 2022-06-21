@@ -36,7 +36,7 @@ import keplerConfig from './kepler-config'
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       filteredRows: this.values,
       header: [
@@ -49,13 +49,13 @@ export default {
     }
   },
   computed: {
-    total () {
+    total() {
       return this.values.length
     },
-    filtered () {
+    filtered() {
       return this.filteredRows.length
     },
-    keplerData () {
+    keplerData() {
       return {
         fields: this.header.map((h) => {
           return {
@@ -65,7 +65,7 @@ export default {
         rows: this.filteredRows.map(r => this.header.map(h => r[h.value]))
       }
     },
-    keplerArgs () {
+    keplerArgs() {
       return {
         keplerData: this.keplerData,
         config: keplerConfig
@@ -73,8 +73,8 @@ export default {
     }
   },
   methods: {
-    drawViz () {},
-    onTableFilter (newItems) {
+    drawViz() {},
+    onTableFilter(newItems) {
       this.filteredRows = newItems
     }
   }

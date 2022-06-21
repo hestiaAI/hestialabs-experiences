@@ -2,7 +2,7 @@ import { getCsvHeadersAndItems } from '~/utils/csv'
 
 const csvTestString = 'x,y,z\n1,2,3\n4,5,6'
 
-test('simple CSV parsing', async () => {
+test('simple CSV parsing', async() => {
   const result = await getCsvHeadersAndItems(csvTestString)
   expect(result.headers).toStrictEqual(['x', 'y', 'z'])
   expect(result.items).toStrictEqual([

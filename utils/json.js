@@ -11,7 +11,7 @@ const { TREE, LIST, LEAF } = nodeTypes
  * in the name or the value of a node for it to match
  * @returns {Array} the tree
  */
-export function itemifyJSON (jsonString, filterString) {
+export function itemifyJSON(jsonString, filterString) {
   const json = JSON.parse(jsonString)
   const predicate = makePruningPredicateToMatch(filterString)
   const processAndFilter = (json, path, type, children) => {
@@ -24,7 +24,7 @@ export function itemifyJSON (jsonString, filterString) {
   return [found || []]
 }
 
-export function traverseJson (json, process, path = []) {
+export function traverseJson(json, process, path = []) {
   if (typeof json !== 'object') {
     // value (leaf)
     return process(json, path, LEAF, undefined)
@@ -48,7 +48,7 @@ export function traverseJson (json, process, path = []) {
   }
 }
 
-export function processJsonNode (json, path, type, processedChildren) {
+export function processJsonNode(json, path, type, processedChildren) {
   const item = { id: pathToId(path), path, type }
   const attrName = formatAttributeName(attributeNameFromPath(path))
   if (type === LEAF) {
@@ -73,7 +73,7 @@ export function processJsonNode (json, path, type, processedChildren) {
   return item
 }
 
-export function minifyList (list, path, base = 0, groupsPerLevel = 10) {
+export function minifyList(list, path, base = 0, groupsPerLevel = 10) {
   if (list.length <= groupsPerLevel) { return list }
   const groupSize = Math.pow(
     groupsPerLevel,
@@ -92,7 +92,7 @@ export function minifyList (list, path, base = 0, groupsPerLevel = 10) {
   })
 }
 
-export function findMatchingItems (searchTerm, rootItem) {
+export function findMatchingItems(searchTerm, rootItem) {
   if (!searchTerm) {
     return []
   }
@@ -105,7 +105,7 @@ export function findMatchingItems (searchTerm, rootItem) {
   return foundIds
 }
 
-export function reduceItems (
+export function reduceItems(
   initialAccumulator,
   rootItem,
   idTrail = [],
@@ -127,16 +127,16 @@ export function reduceItems (
   return newAccumulator
 }
 
-export function attributeNameFromPath (path) {
+export function attributeNameFromPath(path) {
   const key = path?.[path.length - 1]
   return key && isNaN(key) ? key : undefined
 }
 
-export function pathToId (path, suffix) {
+export function pathToId(path, suffix) {
   return path.join('.') + (suffix ?? '')
 }
 
-export function makePruningPredicateToMatch (filter) {
+export function makePruningPredicateToMatch(filter) {
   if (!filter) {
     return () => true
   }
@@ -150,13 +150,13 @@ export function makePruningPredicateToMatch (filter) {
   }
 }
 
-export function filterMatchesItem (filter, item) {
+export function filterMatchesItem(filter, item) {
   const name = attributeNameFromPath(item?.path)
   const value = item?.value
   return filterMatchesNameOrValue(filter, name, value)
 }
 
-export function filterMatchesNameOrValue (filter, name, value) {
+export function filterMatchesNameOrValue(filter, name, value) {
   const lowerCaseFilter = filter?.toLowerCase()
   if (name?.toLowerCase().includes(lowerCaseFilter)) {
     return true
@@ -167,7 +167,7 @@ export function filterMatchesNameOrValue (filter, name, value) {
   return false
 }
 
-export function formatObject (object) {
+export function formatObject(object) {
   if (!object) {
     // null is also of type object, we transform it to an empty string
     return ''
@@ -179,7 +179,7 @@ export function formatObject (object) {
   return `{attributes ${keys.map(k => _.startCase(k)).join(', ')}}`
 }
 
-export function formatArray (array) {
+export function formatArray(array) {
   if (array.length === 0) {
     return '[empty list]'
   }
@@ -187,11 +187,11 @@ export function formatArray (array) {
   return `[list with ${array.length} item${plural ? 's' : ''}]`
 }
 
-export function formatAttributeName (name) {
+export function formatAttributeName(name) {
   return _.startCase(name)
 }
 
-export function pathArrayToJsonPath (pathArray) {
+export function pathArrayToJsonPath(pathArray) {
   return (
     '$' +
     pathArray.reduce((path, el) => {
@@ -201,6 +201,6 @@ export function pathArrayToJsonPath (pathArray) {
   )
 }
 
-export function nJsonPoints (json) {
+export function nJsonPoints(json) {
   if (json === null) { return 0 } else if (Array.isArray(json)) { return json.length + _.sumBy(json, nJsonPoints) } else if (_.isObject(json)) { return nJsonPoints(Object.values(json)) } else { return 1 }
 }

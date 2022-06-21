@@ -10,7 +10,7 @@ import * as d3 from 'd3'
  * @param  {Date} maxDate  the ending date range, computed from the data by default.
  * @return {Array} the modified data array with the missing dates and their value added
  */
-export function addMissingDate (
+export function addMissingDate(
   data,
   dateAccessor,
   valueAccessor,

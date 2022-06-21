@@ -39,7 +39,7 @@ import mixin from './mixin'
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       search: '',
       selected: [],
@@ -52,7 +52,7 @@ export default {
     }
   },
   methods: {
-    drawViz () {
+    drawViz() {
       this.items = this.values
         .filter(d => d.parent === 0)
         .sort((a, b) => b.value - a.value)
@@ -66,7 +66,7 @@ export default {
         return d.group === this.items[0].name
       })
     },
-    drawSunburst (selection) {
+    drawSunburst(selection) {
       if (selection.value) {
         this.selectedValues = this.values.filter(
           d => d.group === selection.item.name

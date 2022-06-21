@@ -39,28 +39,28 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       code: this.value
     }
   },
   computed: {
-    editorLanguage () {
+    editorLanguage() {
       // set editor language to 'text' if an error is being displayed
       return this.error ? 'text' : this.language
     }
   },
   watch: {
-    value (v) {
+    value(v) {
       this.code = v
     },
-    code (v) {
+    code(v) {
       // propagate to parent component
       this.$emit('update:value', v)
     }
   },
   methods: {
-    initEditor (editor) {
+    initEditor(editor) {
       editor.setReadOnly(this.readonly)
       editor.setOption('showGutter', this.lineNumbers)
       editor.session.setUseWrapMode(true)

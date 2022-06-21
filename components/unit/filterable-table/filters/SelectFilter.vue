@@ -57,32 +57,32 @@ export default {
       default: () => []
     }
   },
-  data () {
+  data() {
     return {
       filter: [...new Set(this.values)]
     }
   },
   computed: {
-    items () {
+    items() {
       return [...new Set(this.values)]
     },
-    selectAll () {
+    selectAll() {
       return this.filter.length === this.items.length
     },
-    selectSome () {
+    selectSome() {
       return this.filter.length > 0 && !this.selectAll
     },
-    icon () {
+    icon() {
       if (this.selectAll) { return '$vuetify.icons.mdiCloseBox' }
       if (this.selectSome) { return '$vuetify.icons.mdiMinusBox' }
       return '$vuetify.icons.mdiCheckboxBlankOutline'
     },
-    filterFunction () {
+    filterFunction() {
       if (this.selectAll) { return null } else { return value => this.filter.includes(value) }
     }
   },
   methods: {
-    toggle () {
+    toggle() {
       this.$nextTick(() => {
         if (this.selectAll) {
           this.filter = []
@@ -92,10 +92,10 @@ export default {
         this.filterChange()
       })
     },
-    filterChange () {
+    filterChange() {
       this.$emit('filter-change', this.filterFunction)
     },
-    reset () {
+    reset() {
       this.filter = this.items
       this.filterChange()
     }

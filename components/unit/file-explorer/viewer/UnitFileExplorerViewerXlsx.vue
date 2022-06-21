@@ -24,7 +24,7 @@ import mixinLoading from './mixin-loading'
 export default {
   name: 'UnitFileExplorerViewerXlsx',
   mixins: [mixin, mixinLoading],
-  data () {
+  data() {
     return {
       loading: true,
       error: false,
@@ -36,14 +36,14 @@ export default {
   },
   watch: {
     filename: {
-      async handler (filename) {
+      async handler(filename) {
         await this.getContentFromFilename(filename)
       },
       immediate: true
     }
   },
   methods: {
-    async getContentFromFilename (filename) {
+    async getContentFromFilename(filename) {
       this.setLoading(true)
       this.file = this.fileManager.fileDict[filename]
       try {
@@ -75,7 +75,7 @@ export default {
       }
       this.setLoading(false)
     },
-    setSheet (name) {
+    setSheet(name) {
       this.headers = this.sheets[name].headers
       this.items = this.sheets[name].items
     }

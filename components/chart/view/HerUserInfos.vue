@@ -38,7 +38,7 @@ import mixin from './mixin'
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     const [v] = this.values
     const birthDate = new Date(v.birthday)
     const lastOnline = new Date(v.lastOnlineUtc)
@@ -105,7 +105,7 @@ export default {
     }
   },
   methods: {
-    drawViz () {}
+    drawViz() {}
   }
 }
 </script>

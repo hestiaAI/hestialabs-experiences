@@ -74,7 +74,7 @@ export default {
       default: () => []
     }
   },
-  data () {
+  data() {
     return {
       advancedSearch: false,
       status: false,
@@ -92,7 +92,7 @@ export default {
     }
   },
   computed: {
-    data () {
+    data() {
       let tempHeaders = this.headers
       if (typeof this.headers[0] === 'string') {
         // allow headers to be an array of strings
@@ -118,7 +118,7 @@ export default {
   watch: {
     itemsPerPage: {
       immediate: true,
-      handler (value) {
+      handler(value) {
         if (value === 5) {
           this.height = height5
         } else if (defaultItemsPerPage10) {
@@ -128,24 +128,24 @@ export default {
     },
     data: {
       immediate: true,
-      handler () {
+      handler() {
         this.applyFilters()
       }
     }
   },
   methods: {
-    filterChange (header, filter) {
+    filterChange(header, filter) {
       this.filters[header] = filter
       this.applyFilters()
     },
-    applyFilters () {
+    applyFilters() {
       this.filteredItems = this.data.items.filter((d) => {
         return Object.entries(this.filters).every(([header, filter]) => {
           return filter === null || filter(d[header])
         })
       })
     },
-    formatItemAsString (itemProps) {
+    formatItemAsString(itemProps) {
       const { header, value } = itemProps
       // eslint-disable-next-line no-prototype-builtins
       if (header.hasOwnProperty('formatter')) {
@@ -159,7 +159,7 @@ export default {
       }
       return value
     },
-    async exportCSV () {
+    async exportCSV() {
       this.progress = true
       this.status = false
       this.error = false
@@ -186,12 +186,12 @@ export default {
         this.status = true
       }
     },
-    columnValues (header) {
+    columnValues(header) {
       return this.data.items.map(d =>
         this.formatItemAsString({ header, value: d[header.value] })
       )
     },
-    onItemsUpdate () {
+    onItemsUpdate() {
       // wait until the DOM has completely updated
       this.$nextTick(() => {
         // workaround to get the filtered items https://github.com/vuetifyjs/vuetify/issues/8731#issuecomment-617399086

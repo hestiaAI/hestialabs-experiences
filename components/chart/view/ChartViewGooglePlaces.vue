@@ -43,14 +43,14 @@ import mixin from './mixin'
 import keplerConfig from './kepler_config_places.js'
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       filteredRows: []
     }
   },
   computed: {
     ...mapState(['config']),
-    results () {
+    results() {
       return this.values.map((v) => {
         return {
           ...v,
@@ -61,13 +61,13 @@ export default {
         }
       })
     },
-    total () {
+    total() {
       return this.results.length
     },
-    filtered () {
+    filtered() {
       return this.filteredRows.length
     },
-    keplerData () {
+    keplerData() {
       return {
         fields: this.headers.map((h) => {
           return {
@@ -77,7 +77,7 @@ export default {
         rows: this.filteredRows.map(r => this.headers.map(h => r[h]))
       }
     },
-    keplerArgs () {
+    keplerArgs() {
       return {
         keplerData: this.keplerData,
         config: keplerConfig
@@ -85,14 +85,14 @@ export default {
     }
   },
   methods: {
-    compute_duration (d1, d2) {
+    compute_duration(d1, d2) {
       const date1 = new Date(d1).getTime()
       const date2 = new Date(d2).getTime()
       const res = Math.floor(Math.abs(date1 - date2) / 1000)
       return res
     },
-    drawViz () {},
-    onTableFilter (newItems) {
+    drawViz() {},
+    onTableFilter(newItems) {
       this.filteredRows = newItems
     }
   }

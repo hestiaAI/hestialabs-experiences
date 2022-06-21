@@ -63,7 +63,7 @@ export default {
       default: () => []
     }
   },
-  data () {
+  data() {
     return {
       args: {},
       filter: null,
@@ -81,7 +81,7 @@ export default {
     }
   },
   computed: {
-    filterOptions () {
+    filterOptions() {
       switch (String(this.header.type)) {
         case 'INT':
           return { name: 'NumberFilter.vue', args: {} }
@@ -97,7 +97,7 @@ export default {
           return { name: 'SelectFilter.vue', args: {} }
       }
     },
-    component () {
+    component() {
       return () =>
         import(
           `@/components/unit/filterable-table/filters/${this.filterOptions.name}`
@@ -105,7 +105,7 @@ export default {
     }
   },
   methods: {
-    filterChange (filter) {
+    filterChange(filter) {
       this.filter = filter
       this.$emit('filter-change', filter)
     }

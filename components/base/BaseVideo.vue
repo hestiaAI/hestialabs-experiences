@@ -55,7 +55,7 @@ export default {
     }
   },
   computed: {
-    url () {
+    url() {
       const videoID = this.videoSrc.split('/').pop()
       let videoPrefix = null
 

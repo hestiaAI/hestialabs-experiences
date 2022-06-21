@@ -98,7 +98,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       header: [
         { text: 'Date', value: 'dateStr' },
@@ -122,11 +122,11 @@ export default {
     }
   },
   methods: {
-    resetAll () {
+    resetAll() {
       dc.filterAll()
       dc.renderAll()
     },
-    drawViz () {
+    drawViz() {
       // Define color palette for the graphs
       const colorPalette = [
         '#58539E',
@@ -160,11 +160,11 @@ export default {
       const topSearch = new dc.TextFilterWidget(`#top-search-${this.graphId}`)
 
       // Bind reset filters links
-      d3.select(`#top-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#top-chart-${this.graphId} a.reset`).on('click', function() {
         topChart.filterAll()
         dc.redrawAll()
       })
-      d3.select(`#area-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#area-chart-${this.graphId} a.reset`).on('click', function() {
         areaChart.filterAll()
         rangeChart.filterAll()
         dc.redrawAll()

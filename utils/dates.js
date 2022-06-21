@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-export function isValidDate (d) {
+export function isValidDate(d) {
   return d instanceof Date && !isNaN(d) && d.getFullYear() !== 1970
 }
 
@@ -53,7 +53,7 @@ export const TIME_FORMAT_TO_D3 = {
  * @param {Any} value the value to convert
  * @returns the value transformed to local date string or the value inchanged if not possible
  */
-export function toDateString (name, value) {
+export function toDateString(name, value) {
   const assumeDate = ['date', 'time'].find(d => name.toLowerCase().includes(d))
   if (assumeDate) {
     let date = new Date(value)

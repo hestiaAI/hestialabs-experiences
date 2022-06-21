@@ -5,7 +5,7 @@ export default {
     extension: {
       type: String,
       default: defaultExtension,
-      validator (val) {
+      validator(val) {
         return Object.keys(mimeTypes).includes(val)
       }
     }

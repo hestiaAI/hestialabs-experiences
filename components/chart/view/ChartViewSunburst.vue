@@ -16,31 +16,31 @@ import mixin from './mixin'
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       bcItems: [],
       graphId: 'graph_' + this._uid
     }
   },
   watch: {
-    values () {
+    values() {
       this.drawViz()
     }
   },
-  mounted () {
+  mounted() {
     this.drawViz()
   },
   methods: {
-    drawViz () {
+    drawViz() {
       if (!this.values || this.values.length === 0) { return }
       // Transform list to hierarchical object
       const colorDomain = []
       const hierarchicalData = d3
         .stratify()
-        .id(function (d) {
+        .id(function(d) {
           return d.id
         })
-        .parentId(function (d) {
+        .parentId(function(d) {
           if (d.parent === 0) { colorDomain.push(d.name) }
           return d.parent
         })(this.values)
@@ -208,7 +208,7 @@ export default {
         .on('click', clicked)
 
       let currentLevel = [{ text: rootName, disabled: true }]
-      function clicked (event, p) {
+      function clicked(event, p) {
         const ancestors = getAncestors(p)
         currentLevel = ancestors.map((d) => {
           return {
@@ -253,7 +253,7 @@ export default {
             const i = d3.interpolate(d.current, d.target)
             return t => (d.current = i(t))
           })
-          .filter(function (d) {
+          .filter(function(d) {
             return +this.getAttribute('fill-opacity') || arcVisible(d.target)
           })
           .attr('fill-opacity', d =>
@@ -262,7 +262,7 @@ export default {
           .attrTween('d', d => () => arc(d.current))
 
         label
-          .filter(function (d) {
+          .filter(function(d) {
             return +this.getAttribute('fill-opacity') || labelVisible(d.target)
           })
           .transition(t)
@@ -270,15 +270,15 @@ export default {
           .attrTween('transform', d => () => labelTransform(d.current))
       }
 
-      function arcVisible (d) {
+      function arcVisible(d) {
         return d.y1 <= 3 && d.y0 >= 1 && d.x1 > d.x0
       }
 
-      function labelVisible (d) {
+      function labelVisible(d) {
         return d.y1 <= 3 && d.y0 >= 1 && (d.y1 - d.y0) * (d.x1 - d.x0) > 0.05
       }
 
-      function labelTransform (d) {
+      function labelTransform(d) {
         const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI
         const y = ((d.y0 + d.y1) / 2) * radius
         return `rotate(${x - 90}) translate(${y},0) rotate(${
@@ -338,7 +338,7 @@ export default {
       path.on('mouseover', mouseover)
       path.on('mouseleave', mouseleave)
 
-      function getAncestors (node) {
+      function getAncestors(node) {
         const path = []
         let current = node
         while (current.parent) {

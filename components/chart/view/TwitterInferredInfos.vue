@@ -87,7 +87,7 @@ import mixin from './mixin'
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     const [v] = this.values
     return {
       items: [
@@ -167,7 +167,7 @@ export default {
     }
   },
   methods: {
-    drawViz () {}
+    drawViz() {}
   }
 }
 </script>

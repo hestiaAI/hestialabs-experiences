@@ -23,16 +23,16 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       selectedSamples: this.value
     }
   },
   watch: {
-    selectedSamples (v) {
+    selectedSamples(v) {
       this.$emit('update:value', v)
     },
-    value (v) {
+    value(v) {
       this.selectedSamples = v
     }
   }

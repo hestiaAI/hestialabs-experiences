@@ -34,20 +34,20 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {}
   },
   computed: {
-    messageReceived () {
+    messageReceived() {
       return this.values.filter(v => v.receiver === 'You')
     },
-    messageSent () {
+    messageSent() {
       return this.values.filter(v => v.sender === 'You')
     }
   },
-  mounted () {},
+  mounted() {},
   methods: {
-    drawViz () {}
+    drawViz() {}
   }
 }
 </script>

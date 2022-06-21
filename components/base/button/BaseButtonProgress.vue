@@ -33,7 +33,7 @@ export default {
       default: null
     }
   },
-  data () {
+  data() {
     return {
       progress: false,
       status: false,
@@ -41,7 +41,7 @@ export default {
     }
   },
   methods: {
-    async run () {
+    async run() {
       this.progress = true
       this.status = false
       this.error = false

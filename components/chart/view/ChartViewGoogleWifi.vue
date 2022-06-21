@@ -43,14 +43,14 @@ import mixin from './mixin'
 import keplerConfig from './kepler_config_wifi.js'
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       filteredRows: []
     }
   },
   computed: {
     ...mapState(['config']),
-    results () {
+    results() {
       return this.values.map((v) => {
         return {
           ...v,
@@ -60,13 +60,13 @@ export default {
         }
       })
     },
-    total () {
+    total() {
       return this.results.length
     },
-    filtered () {
+    filtered() {
       return this.filteredRows.length
     },
-    keplerData () {
+    keplerData() {
       return {
         fields: this.headers.map((h) => {
           return {
@@ -76,7 +76,7 @@ export default {
         rows: this.filteredRows.map(r => this.headers.map(h => r[h]))
       }
     },
-    keplerArgs () {
+    keplerArgs() {
       return {
         keplerData: this.keplerData,
         config: keplerConfig
@@ -84,14 +84,14 @@ export default {
     }
   },
   methods: {
-    convert_mac (address) {
+    convert_mac(address) {
       let s = String(address.toString(16))
       while (s.length < 12) {
         s = '0' + s
       }
       return this.chunk(s, 2).join(':')
     },
-    chunk (str, n) {
+    chunk(str, n) {
       const ret = []
       let i
       let len
@@ -102,8 +102,8 @@ export default {
 
       return ret
     },
-    drawViz () {},
-    onTableFilter (newItems) {
+    drawViz() {},
+    onTableFilter(newItems) {
       this.filteredRows = newItems
     }
   }

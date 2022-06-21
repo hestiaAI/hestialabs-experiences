@@ -4,7 +4,7 @@ import { setsEqual } from './utils'
 
 const acceptedDelimiters = [',', ';', '\t']
 
-function differentiateDuplicates (strings) {
+function differentiateDuplicates(strings) {
   const occurrences = _.mapValues(_.groupBy(strings, _.identity), l => l.length)
   const counter = Object.fromEntries(_.uniq(strings).map(name => [name, 0]))
   return strings.map(name =>
@@ -12,7 +12,7 @@ function differentiateDuplicates (strings) {
   )
 }
 
-async function getCsvHeadersAndItems (csvText) {
+async function getCsvHeadersAndItems(csvText) {
   let best = { items: [], headers: [] }
   for (const delimiter of acceptedDelimiters) {
     try {
@@ -50,7 +50,7 @@ async function getCsvHeadersAndItems (csvText) {
  * @param {*} fileID The corresponding key that link to the globPath we seek, defined in the manifest under files.
  * @returns the merged csvs array
  */
-async function getCsvAndMergeFromID (fileManager, fileID) {
+async function getCsvAndMergeFromID(fileManager, fileID) {
   const files = await fileManager.getCsvItemsFromId(fileID)
 
   if (!files.length) {

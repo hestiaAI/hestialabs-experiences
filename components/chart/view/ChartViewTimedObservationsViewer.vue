@@ -152,7 +152,7 @@ export default {
       default: () => ['%Y-%m-%dT%H:%M:%S%Z', '%Y-%m-%dT%H:%M:%S.%L%Z']
     }
   },
-  data () {
+  data() {
     return {
       total: null,
       timeRange: null,
@@ -183,7 +183,7 @@ export default {
     }
   },
   methods: {
-    resetAll () {
+    resetAll() {
       this.timeRange = 'ALL'
       this.filterTimeRange(this.timeRange)
       dc.filterAll()
@@ -191,11 +191,11 @@ export default {
       this.resetSourceFilter()
     },
     // Change tab
-    tabDetails () {
+    tabDetails() {
       this.tab = 'details'
     },
     // When no data available for a specific time period, show an empty message
-    showEmptyMessage (chart) {
+    showEmptyMessage(chart) {
       const isEmpty =
         d3.sum(chart.group().all().map(chart.valueAccessor())) === 0
       const data = isEmpty ? [1] : []
@@ -219,26 +219,26 @@ export default {
       }
     },
     // Make a Fake group to display only value above 0 on the row graphs
-    removeEmptyBins (group) {
+    removeEmptyBins(group) {
       return {
-        top (n) {
+        top(n) {
           return group
             .top(Infinity)
-            .filter(function (d) {
+            .filter(function(d) {
               return d.value.count !== 0 && d.value !== 0
             })
             .slice(0, n)
         },
-        all () {
+        all() {
           return group.all()
         }
       }
     },
-    createCumulativeGroup (sourceGroup) {
+    createCumulativeGroup(sourceGroup) {
       return {
-        all () {
+        all() {
           let cumulate = 0
-          return sourceGroup.all().map(function (d) {
+          return sourceGroup.all().map(function(d) {
             cumulate += d.value
 
             return { key: d.key, value: cumulate }
@@ -246,12 +246,12 @@ export default {
         }
       }
     },
-    changeAgg () {
+    changeAgg() {
       if (this.checkbox) { this.lineChart.group(this.createCumulativeGroup(this.timelineGroup)) } else { this.lineChart.group(this.timelineGroup) }
       dc.redrawAll()
     },
     // Main function to init component
-    drawViz () {
+    drawViz() {
       // Init table values
       this.results = this.values
 
@@ -398,7 +398,7 @@ export default {
       // Render all graphs
       dc.renderAll()
     },
-    filterTimeRange (newValue) {
+    filterTimeRange(newValue) {
       if (this.rangeChart === null) { return }
 
       this.rangeChart.filter(null)
@@ -466,7 +466,7 @@ export default {
         .render()
       */
     },
-    filterItems (overviewGroup) {
+    filterItems(overviewGroup) {
       const counts = overviewGroup.top(Infinity).reduce((p, c) => {
         if (!Object.prototype.hasOwnProperty.call(p, c.key[0])) {
           p[c.key[0]] = {}
@@ -481,13 +481,13 @@ export default {
       }, {})
       this.items = Object.values(counts).filter(d => d.count > 0)
     },
-    filterSource (title) {
+    filterSource(title) {
       this.currSourceFilter = title
       this.activityDimension.filter(title)
       dc.redrawAll()
       this.tabDetails()
     },
-    resetSourceFilter () {
+    resetSourceFilter() {
       this.currSourceFilter = null
       this.activityDimension.filter(null)
       dc.redrawAll()

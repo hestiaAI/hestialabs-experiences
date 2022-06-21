@@ -93,7 +93,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       header: [
         { text: 'Name', value: 'name' },
@@ -104,11 +104,11 @@ export default {
     }
   },
   methods: {
-    resetAll () {
+    resetAll() {
       dc.filterAll()
       dc.renderAll()
     },
-    drawViz () {
+    drawViz() {
       // Define color palette for the graphs
       /*
       const colorPalette = [
@@ -153,19 +153,19 @@ export default {
       const tableCount = new dc.DataCount('#dc-data-count' + this.graphId)
 
       // Bind reset filters links
-      d3.select('#hour-chart a.reset').on('click', function () {
+      d3.select('#hour-chart a.reset').on('click', function() {
         hourChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#matched-chart a.reset').on('click', function () {
+      d3.select('#matched-chart a.reset').on('click', function() {
         matchedChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#week-chart a.reset').on('click', function () {
+      d3.select('#week-chart a.reset').on('click', function() {
         weekChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#like-chart a.reset').on('click', function () {
+      d3.select('#like-chart a.reset').on('click', function() {
         likeChart.filterAll()
         rangeChart.filterAll()
         dc.redrawAll()
@@ -222,7 +222,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function (d) {
+      weekChart.ordering(function(d) {
         switch (d.key) {
           case 'Mon':
             return 0
@@ -257,9 +257,9 @@ export default {
         .title(d => d.key + ': ' + d.value + ' matchs')
         .ordinalColors(colorPalette)
 
-      matchedChart.on('pretransition', function (chart) {
-        chart.selectAll('text.pie-slice.pie-label').call(function (t) {
-          t.each(function (d) {
+      matchedChart.on('pretransition', function(chart) {
+        chart.selectAll('text.pie-slice.pie-label').call(function(t) {
+          t.each(function(d) {
             const self = d3.select(this)
             let text = self.text().toUpperCase()
             if (text.length > 14) { text = text.substring(0, 14) + '.. ' }

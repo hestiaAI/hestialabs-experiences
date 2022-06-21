@@ -30,25 +30,25 @@ import mixin from './mixin'
 import keplerConfig from './kepler_config_places.js'
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {}
   },
   computed: {
-    total () {
+    total() {
       return this.values.length
     },
-    total_time () {
+    total_time() {
       const durations = this.get_durations()
       const sum = durations.reduce((a, b) => a + b, 0)
       return this.convertHMS(sum)
     },
-    mean_time () {
+    mean_time() {
       const durations = this.get_durations()
       const sum = durations.reduce((a, b) => a + b, 0)
       const avg = sum / durations.length || 0
       return this.convertHMS(avg)
     },
-    associated_names () {
+    associated_names() {
       const table = this.values.filter(
         x => x.startTimestamp === this.values[0].startTimestamp
       )
@@ -61,7 +61,7 @@ export default {
       })
       return names
     },
-    keplerData () {
+    keplerData() {
       const headers = Object.keys(this.associated_names[0])
       return {
         fields: headers.map((h) => {
@@ -72,7 +72,7 @@ export default {
         rows: this.associated_names.map(r => headers.map(h => r[h]))
       }
     },
-    keplerArgs () {
+    keplerArgs() {
       return {
         keplerData: this.keplerData,
         config: keplerConfig
@@ -80,19 +80,19 @@ export default {
     }
   },
   methods: {
-    compute_duration (d1, d2) {
+    compute_duration(d1, d2) {
       const date1 = new Date(d1).getTime()
       const date2 = new Date(d2).getTime()
       const res = Math.floor(Math.abs(date1 - date2) / 1000)
       return res
     },
-    get_durations () {
+    get_durations() {
       const table = this.values.map(x => [x.startTimestamp, x.endTimestamp])
       const uniq = _.uniqBy(table, x => x[0])
       const dur = uniq.map(v => this.compute_duration(v[0], v[1]))
       return dur
     },
-    convertHMS (value) {
+    convertHMS(value) {
       const sec = Math.round(value)
       let hours = Math.floor(sec / 3600) // get hours
       let minutes = Math.floor((sec - hours * 3600) / 60) // get minutes
@@ -109,7 +109,7 @@ export default {
       }
       return hours + 'h' + minutes + 'm' + seconds + 's' // Return is HH : MM : SS
     },
-    drawViz () {}
+    drawViz() {}
   }
 }
 </script>

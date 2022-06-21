@@ -180,7 +180,7 @@ export default {
       default: () => 10
     }
   },
-  data () {
+  data() {
     return {
       slices: [],
       selectedInterval: null,
@@ -193,7 +193,7 @@ export default {
     }
   },
   methods: {
-    initFilters () {
+    initFilters() {
       this.filters.forEach((filter, i) => {
         this.filterItems[filter.value] = []
         // get unique ids and set items for each filter select
@@ -202,12 +202,12 @@ export default {
           .filter((value, index, self) => self.indexOf(value) === index)
       })
     },
-    resetFilters () {
+    resetFilters() {
       this.filters.forEach((filter) => {
         this.filterModel[filter.value] = null
       })
     },
-    applyFilters () {
+    applyFilters() {
       this.slices.forEach((serie) => {
         // aggregate per selected time interval and other filters
         const interval = this.intervals[this.selectedInterval]
@@ -220,7 +220,7 @@ export default {
         })
         // Aggregate per time period
         serie.current = nest()
-          .key(function (d) {
+          .key(function(d) {
             return interval.parser(new Date(d.date))
           })
           .rollup(leaves => d3.sum(leaves, l => l.value))
@@ -241,7 +241,7 @@ export default {
         )
       })
     },
-    drawViz () {
+    drawViz() {
       /* Init the possible aggregations dpending on dates extent */
       this.extentDate = d3.extent(
         this.values,
@@ -305,7 +305,7 @@ export default {
       this.applyFilters()
       this.draw()
     },
-    draw () {
+    draw() {
       const width = 800
       const height = 300
       /* create svg element */
@@ -328,9 +328,9 @@ export default {
         .style('padding', this.padding)
         .style('margin', this.margin)
         .classed('svg-content', true)
-      function nestedExtent (data, dataAccessor, valueAccessor) {
+      function nestedExtent(data, dataAccessor, valueAccessor) {
         return d3.extent(
-          data.reduce(function (prevArr, currArr) {
+          data.reduce(function(prevArr, currArr) {
             const extentArr = d3.extent(currArr[dataAccessor], valueAccessor)
             prevArr.push(extentArr[0])
             prevArr.push(extentArr[1])
@@ -400,7 +400,7 @@ export default {
         .append('text')
         .attr('x', -5)
         .attr('y', -37)
-        .text(function (d) {
+        .text(function(d) {
           return d
         })
       // space the groups depending on their size
@@ -424,7 +424,7 @@ export default {
         .style('opacity', 0)
       const that = this
       const f = d3.format(this.valueFormat)
-      function showTooltip (evt, d) {
+      function showTooltip(evt, d) {
         tooltip.transition().duration(60).style('opacity', 0.98)
         tooltip
           .html(
@@ -436,7 +436,7 @@ export default {
           .style('left', evt.pageX - 55 + 'px')
           .style('top', evt.pageY - 45 + 'px')
       }
-      function hideTooltip () {
+      function hideTooltip() {
         tooltip.transition().duration(60).style('opacity', 0)
       }
       /* Line */
@@ -454,10 +454,10 @@ export default {
         .attr('stroke-width', this.lineWidth)
         .attr('d', d => line(d.current))
       path
-        .attr('stroke-dashoffset', function () {
+        .attr('stroke-dashoffset', function() {
           return d3.select(this).node().getTotalLength()
         })
-        .attr('stroke-dasharray', function () {
+        .attr('stroke-dasharray', function() {
           return d3.select(this).node().getTotalLength()
         })
         .transition()
@@ -493,7 +493,7 @@ export default {
         .attr('id', (d, i) => i)
         .style('opacity', 1)
       const radius = this.dotRadius
-      points.on('mouseover', function (evt, d) {
+      points.on('mouseover', function(evt, d) {
         d3.select(this)
           .attr('fill', d => d.color)
           .transition()
@@ -501,7 +501,7 @@ export default {
           .attr('r', radius + 5)
         showTooltip(evt, d)
       })
-      points.on('mouseleave', function () {
+      points.on('mouseleave', function() {
         d3.select(this)
           .attr('fill', 'white')
           .transition()

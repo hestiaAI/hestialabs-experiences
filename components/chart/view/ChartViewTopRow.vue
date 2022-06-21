@@ -100,7 +100,7 @@ export default {
       default: () => 'records'
     }
   },
-  data () {
+  data() {
     return {
       total: 0,
       nbDay: 1,
@@ -115,7 +115,7 @@ export default {
   },
   methods: {
     // Update data depending on the current states of the buttons
-    draw () {
+    draw() {
       const newData = this.records[this.agg].slice(
         0,
         this.othersCheck ? this.topKSlider - 1 : this.topKSlider
@@ -128,14 +128,14 @@ export default {
             d => d.value
           )
         })
-        newData.sort(function (a, b) {
+        newData.sort(function(a, b) {
           return d3.descending(a.value, b.value)
         })
       }
 
       this.xScale.domain(d3.extent(newData, d => d.value))
       this.yScale.domain(
-        newData.map(function (d) {
+        newData.map(function(d) {
           return d.key
         })
       )
@@ -151,7 +151,7 @@ export default {
         .attr('width', 0)
         .attr('height', this.yScale.bandwidth())
         .attr('fill', '#69b3a2')
-        .on('mouseover', function (evt, d) {
+        .on('mouseover', function(evt, d) {
           d3.select(this).style('opacity', 0.7)
           d3.select(this.parentNode)
             .append('text')
@@ -165,7 +165,7 @@ export default {
             .style('font-weight', 'bold')
             .style('fill', '#0A0A0A')
         })
-        .on('mouseleave', function (evt, d) {
+        .on('mouseleave', function(evt, d) {
           d3.select(this).style('opacity', 1)
           d3.select('.barsLabel').remove()
         })
@@ -197,7 +197,7 @@ export default {
         .delay(200)
         .call(this.xAxis)
     },
-    drawViz () {
+    drawViz() {
       // Compute date range
       const formatDate = d3.timeFormat('%B %d, %Y')
       const parseDate = d3.timeParse(this.dateFormat)
@@ -223,14 +223,14 @@ export default {
           .key(d => d.advertiserName)
           .rollup(d => d3.sum(d, l => l.count_))
           .entries(this.values)
-          .sort(function (a, b) {
+          .sort(function(a, b) {
             return d3.descending(a.value, b.value)
           }),
         average: nest()
           .key(d => d.advertiserName)
           .rollup(d => d3.sum(d, l => l.count_) / this.nbDay)
           .entries(this.values)
-          .sort(function (a, b) {
+          .sort(function(a, b) {
             return d3.descending(a.value, b.value)
           })
       }
@@ -263,7 +263,7 @@ export default {
       this.yScale = d3.scaleBand().range([0, height]).paddingInner(0.1)
 
       /* Axis */
-      function cutLongNames (name, maxLength) {
+      function cutLongNames(name, maxLength) {
         if (name.length > maxLength) { return name.slice(0, maxLength) + '..' } else { return name }
       }
       const yAxis = d3

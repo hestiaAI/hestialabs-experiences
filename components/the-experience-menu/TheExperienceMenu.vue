@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     ...mapGetters(['enabledExperiences', 'disabledExperiences']),
-    sections () {
+    sections() {
       return [
         {
           experiences: this.filterExperiences(this.enabledExperiences),
@@ -45,12 +45,12 @@ export default {
         }
       ]
     },
-    component () {
+    component() {
       return this.cards ? TheExperienceMenuCards : TheExperienceMenuList
     }
   },
   methods: {
-    filterExperiences (experiences) {
+    filterExperiences(experiences) {
       const { include } = this
       // return all experiences, if no filter provided
       let filtered = experiences

@@ -75,7 +75,7 @@ dc.config.defaultColors(d3.schemePaired)
 export default {
   mixins: [mixin],
   props: {},
-  data () {
+  data() {
     return {
       header: [
         { text: 'Application', value: 'app' },
@@ -91,14 +91,14 @@ export default {
     ...mapState(['config'])
   },
   methods: {
-    resetAll () {
+    resetAll() {
       dc.filterAll()
       dc.renderAll()
     },
-    decodeDefault (str) {
+    decodeDefault(str) {
       return str ? decodeURIComponent(escape(str)) : 'Unknown'
     },
-    createTopRowChart (ndx, fieldAccessor, valueAccessor) {
+    createTopRowChart(ndx, fieldAccessor, valueAccessor) {
       // Create and bind charts to their respective divs
       const chart = new dc.RowChart(`#${fieldAccessor}-chart-${this.graphId}`)
       const search = new dc.TextFilterWidget(
@@ -108,7 +108,7 @@ export default {
       // Bind reset filters buttons
       d3.select(`#${fieldAccessor}-chart-${this.graphId} a.reset`).on(
         'click',
-        function () {
+        function() {
           chart.filterAll()
           search.filterAll()
           dc.redrawAll()
@@ -143,14 +143,14 @@ export default {
         .xAxis()
         .ticks(4)
     },
-    createPieChart (ndx, fieldAccessor, valueAccessor) {
+    createPieChart(ndx, fieldAccessor, valueAccessor) {
       // Create and bind charts to their respective divs
       const chart = new dc.PieChart(`#${fieldAccessor}-chart-${this.graphId}`)
 
       // Bind reset filters buttons
       d3.select(`#${fieldAccessor}-chart-${this.graphId} a.reset`).on(
         'click',
-        function () {
+        function() {
           chart.filterAll()
           dc.redrawAll()
         }
@@ -181,9 +181,9 @@ export default {
         .title(d => d.key + ': ' + d.value + ' records')
         .ordinalColors(this.colorPalette)
 
-      chart.on('pretransition', function (chart) {
-        chart.selectAll('text.pie-slice.pie-label').call(function (t) {
-          t.each(function (d) {
+      chart.on('pretransition', function(chart) {
+        chart.selectAll('text.pie-slice.pie-label').call(function(t) {
+          t.each(function(d) {
             const self = d3.select(this)
             let text = self.text()
             if (text.length > 14) { text = text.substring(0, 14) + '.. ' }
@@ -201,7 +201,7 @@ export default {
         })
       })
     },
-    drawViz () {
+    drawViz() {
       // Parse and format data
       this.results = this.values.map((d) => {
         return {

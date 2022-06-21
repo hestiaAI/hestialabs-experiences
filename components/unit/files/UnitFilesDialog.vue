@@ -87,7 +87,7 @@ export default {
       default: null
     }
   },
-  data () {
+  data() {
     return {
       show: false
     }

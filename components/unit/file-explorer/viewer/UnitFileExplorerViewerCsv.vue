@@ -18,7 +18,7 @@ import mixinLoading from './mixin-loading'
 export default {
   name: 'UnitFileExplorerViewerCsv',
   mixins: [mixin, mixinLoading],
-  data () {
+  data() {
     return {
       csvText: '',
       csvContent: {},
@@ -28,14 +28,14 @@ export default {
   },
   watch: {
     filename: {
-      async handler (filename) {
+      async handler(filename) {
         await this.getContentFromFilename(filename)
       },
       immediate: true
     }
   },
   methods: {
-    async getContentFromFilename (filename) {
+    async getContentFromFilename(filename) {
       this.setLoading(true)
       this.csvText = await this.fileManager.getPreprocessedText(filename)
       try {

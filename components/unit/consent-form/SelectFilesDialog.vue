@@ -72,7 +72,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       search: '',
       activeItems: []
@@ -80,22 +80,22 @@ export default {
   },
   computed: {
     ...mapState(['consentForm', 'fileManager']),
-    treeItems () {
+    treeItems() {
       return this.fileManager.getTreeItems()
     },
     show: {
-      get () {
+      get() {
         return this.value
       },
-      set (value) {
+      set(value) {
         this.$emit('input', value)
       }
     },
     selectedFiles: {
-      get () {
+      get() {
         return this.$store.state.selectedFiles
       },
-      set (value) {
+      set(value) {
         this.$store.commit('setSelectedFiles', value)
       }
     }
@@ -103,22 +103,22 @@ export default {
   watch: {
     fileManager: {
       immediate: true,
-      handler () {
+      handler() {
         this.setInitOpen()
       }
     }
   },
   methods: {
-    ok () {
+    ok() {
       this.show = false
       this.updateCheckboxOnReturn(false)
     },
-    clear () {
+    clear() {
       this.$store.commit('setSelectedFiles', [])
       this.updateCheckboxOnReturn(true)
       this.show = false
     },
-    setInitOpen () {
+    setInitOpen() {
       // If the root has a sequence of nodes with 1 children, pre-open them
       const open = []
       let tree = this.treeItems
@@ -128,7 +128,7 @@ export default {
       }
       this.openItems = open
     },
-    clickOnLabel (event) {
+    clickOnLabel(event) {
       // vuetify doesn't have an option to check/uncheck when clicking the label, this is a workaround
       const item = event[0]
       if (this.selectedFiles.includes(item)) {
@@ -138,7 +138,7 @@ export default {
       }
       this.activeItems = []
     },
-    updateCheckboxOnReturn (clear) {
+    updateCheckboxOnReturn(clear) {
       // Unselect when user clears, select when user confirms
       const index = this.consentForm.findIndex(
         section => section.type === 'data'

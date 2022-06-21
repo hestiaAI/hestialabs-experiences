@@ -81,7 +81,7 @@ import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/drop-target/dist/style.css'
 
-async function fetchSampleFile ({ path, filename }) {
+async function fetchSampleFile({ path, filename }) {
   const response = await window.fetch(path)
   const blob = await response.blob()
   return new File([blob], filename)
@@ -107,7 +107,7 @@ export default {
       default: ''
     }
   },
-  data () {
+  data() {
     const config = {
       debug: false,
       allowMultipleUploads: true,
@@ -129,25 +129,25 @@ export default {
   },
   computed: {
     ...mapState(['fileManager']),
-    disabled () {
+    disabled() {
       return this.filesEmpty
     }
   },
   watch: {
     // Watch filemanager to detect a reset of the store, if it is null
     // we also delete files in the Uppy dashboard
-    fileManager () {
+    fileManager() {
       if (this.fileManager === null && this.uppy) {
         this.uppy.reset()
       }
     },
     // Watch files, if user empty all files we reset the store and delete all files
-    filesEmpty () {
+    filesEmpty() {
       if (this.filesEmpty && this.fileManager) {
         this.$store.commit('clearStore')
       }
     },
-    async selectedSamples (newSamples, oldSamples) {
+    async selectedSamples(newSamples, oldSamples) {
       if (newSamples.length > oldSamples.length) {
         // some sample was added
         const addedSamples = newSamples.filter(
@@ -184,7 +184,7 @@ export default {
       }
     }
   },
-  async created () {
+  async created() {
     // files in assets/data/ are loaded with file-loader
     this.samples = []
     for (const filename of this.dataSamples) {
@@ -194,7 +194,7 @@ export default {
       })
     }
   },
-  mounted () {
+  mounted() {
     this.uppy
       .use(Dashboard, {
         target: this.$refs.dashboard,
@@ -227,11 +227,11 @@ export default {
         }
       })
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.uppy.close()
   },
   methods: {
-    returnFiles () {
+    returnFiles() {
       const decryptBlobPromise = promisify(decryptBlob)
       const publicKey =
         this.publicKey || this.$store.getters.config(this.$route).publicKey

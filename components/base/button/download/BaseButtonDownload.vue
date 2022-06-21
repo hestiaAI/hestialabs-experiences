@@ -23,16 +23,16 @@ export default {
     }
   },
   computed: {
-    download () {
+    download() {
       return this.filename ?? `results.${this.extension}`
     }
   },
   watch: {
-    href (href, oldHref) {
+    href(href, oldHref) {
       revokeObjectURL(oldHref)
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     revokeObjectURL(this.href)
   }
 }

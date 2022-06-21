@@ -62,24 +62,24 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       filter: d3.extent(this.values)
     }
   },
   computed: {
-    extent () {
+    extent() {
       return d3.extent(this.values)
     },
-    filterFunction () {
+    filterFunction() {
       if (this.filter === this.extent) { return null } else { return value => value >= this.filter[0] && value <= this.filter[1] }
     }
   },
   methods: {
-    filterChange () {
+    filterChange() {
       this.$emit('filter-change', this.filterFunction)
     },
-    reset () {
+    reset() {
       this.filter = this.extent
       this.filterChange()
     }

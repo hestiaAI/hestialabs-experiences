@@ -118,7 +118,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       header: [
         { text: 'Date', value: 'dateStr' },
@@ -142,11 +142,11 @@ export default {
     }
   },
   methods: {
-    resetAll () {
+    resetAll() {
       dc.filterAll()
       dc.renderAll()
     },
-    drawViz () {
+    drawViz() {
       // Define color palette for the graphs
       const colorPalette = [
         '#58539E',
@@ -181,15 +181,15 @@ export default {
       const pieChart = new dc.PieChart(`#pie-chart-${this.graphId}`)
 
       // Bind reset filters links
-      d3.select(`#top-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#top-chart-${this.graphId} a.reset`).on('click', function() {
         topChart.filterAll()
         dc.redrawAll()
       })
-      d3.select(`#pie-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#pie-chart-${this.graphId} a.reset`).on('click', function() {
         pieChart.filterAll()
         dc.redrawAll()
       })
-      d3.select(`#area-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#area-chart-${this.graphId} a.reset`).on('click', function() {
         lineChart.filterAll()
         rangeChart.filterAll()
         dc.redrawAll()
@@ -313,9 +313,9 @@ export default {
         .minAngleForLabel(0.1)
         .ordinalColors(colorPalette)
 
-      pieChart.on('pretransition', function (chart) {
-        chart.selectAll('text.pie-slice.pie-label').call(function (t) {
-          t.each(function (d) {
+      pieChart.on('pretransition', function(chart) {
+        chart.selectAll('text.pie-slice.pie-label').call(function(t) {
+          t.each(function(d) {
             const self = d3.select(this)
             let text = self.text()
             if (text.length > 14) { text = text.substring(0, 14) + '.. ' }

@@ -150,7 +150,7 @@ export default {
       default: () => ({})
     }
   },
-  data () {
+  data() {
     const { visualization: v } = this
     let vizUrl = false
     let vizVue = false
@@ -175,14 +175,14 @@ export default {
   },
   computed: {
     ...mapState(['fileManager']),
-    clonedResult () {
+    clonedResult() {
       return JSON.parse(JSON.stringify(this.result))
     },
-    fileGlobs () {
+    fileGlobs() {
       const fileIds = this.files ?? []
       return fileIds.map(id => this.fileManager.idToGlob[id])
     },
-    missingFiles () {
+    missingFiles() {
       return this.fileGlobs
         .map(glob => [glob, this.fileManager.findMatchingFilePaths(glob)])
         .filter(([_, files]) => files.length === 0)
@@ -190,7 +190,7 @@ export default {
     }
   },
   watch: {
-    fileManager (value) {
+    fileManager(value) {
       if (!value) {
         // When fileManager is reset,
         // we set result to null to ensure
@@ -202,7 +202,7 @@ export default {
     }
   },
   methods: {
-    onUnitResultsUpdate ({ result, error }) {
+    onUnitResultsUpdate({ result, error }) {
       let finalResult = result
       if (error) {
         console.error(error)

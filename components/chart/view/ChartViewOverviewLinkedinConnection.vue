@@ -93,7 +93,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       header: [
         { text: 'First Name', value: 'firstname' },
@@ -107,22 +107,22 @@ export default {
     }
   },
   methods: {
-    removeEmptyBins (group) {
+    removeEmptyBins(group) {
       return {
-        top (n) {
+        top(n) {
           return group
             .top(Infinity)
-            .filter(function (d) {
+            .filter(function(d) {
               return d.value.count !== 0 && d.value !== 0
             })
             .slice(0, n)
         },
-        all () {
+        all() {
           return group.all()
         }
       }
     },
-    drawViz () {
+    drawViz() {
       const colorPalette = [
         '#7570b3',
         // '#371D52',
@@ -173,7 +173,7 @@ export default {
       // Bind reset filters links
       d3.select('#connections-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           rangeChart.filterAll()
           connectionsChart.filterAll()
           dc.redrawAll()
@@ -181,21 +181,21 @@ export default {
       )
       d3.select('#company-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           companyChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#position-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           positionChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#week-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           weekChart.filterAll()
           dc.redrawAll()
         }
@@ -337,7 +337,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function (d) {
+      weekChart.ordering(function(d) {
         switch (d.key) {
           case 'Mon':
             return 0

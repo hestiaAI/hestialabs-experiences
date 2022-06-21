@@ -132,7 +132,7 @@ import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 
 export default {
-  data () {
+  data() {
     return {
       secretKey: null,
       inputZIP: null,
@@ -148,30 +148,30 @@ export default {
   },
   computed: {
     ...mapState(['fileManager', 'consentForm']),
-    experienceConfig () {
+    experienceConfig() {
       return this.$store.getters.experience({
         params: { experience: this.experience.slug }
       })
     },
-    sortedResults () {
+    sortedResults() {
       return this.results.slice(0).sort((a, b) => a.index - b.index)
     },
-    hasFileExplorer () {
+    hasFileExplorer() {
       return this.fileManager?.fileList.length > 0
     }
   },
   methods: {
-    handleError (error, message) {
+    handleError(error, message) {
       console.error(error)
       this.error = true
       this.message = message === undefined ? error.message : message
       this.handleEnd()
     },
-    handleEnd () {
+    handleEnd() {
       this.status = true
       this.progress = false
     },
-    async importZIP () {
+    async importZIP() {
       this.status = false
       this.error = false
       this.message = ''
@@ -250,7 +250,7 @@ export default {
 
       this.handleEnd()
     },
-    async decryptZIP (secretKey, publicKey, inputZIP) {
+    async decryptZIP(secretKey, publicKey, inputZIP) {
       await _sodium.ready
       const sodium = _sodium
       const sk = sodium.from_hex(secretKey)
@@ -259,7 +259,7 @@ export default {
       const ciphertext = new Uint8Array(buf)
       return new Blob([sodium.crypto_box_seal_open(ciphertext, pk, sk)])
     },
-    async generateKeys () {
+    async generateKeys() {
       await _sodium.ready
       const sodium = _sodium
 
@@ -273,7 +273,7 @@ export default {
       FileSaver.saveAs(content, 'keys.zip')
     },
     /* Transform the imported zip to make it compatible with the current version */
-    versionCompatibilityHandler () {
+    versionCompatibilityHandler() {
       if (!('version' in this.experience)) {
         this.experience.version = 1
       }

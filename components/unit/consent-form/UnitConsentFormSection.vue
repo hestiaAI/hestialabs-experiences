@@ -114,33 +114,33 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       showDialog: false
     }
   },
   computed: {
     ...mapState(['consentForm', 'fileManager', 'results']),
-    selectedFiles () {
+    selectedFiles() {
       if (this.readonly) {
         return Object.keys(this.fileManager.fileDict)
       }
       return this.$store.state.selectedFiles
     },
-    section () {
+    section() {
       return this.consentForm[this.index]
     },
     value: {
-      get () {
+      get() {
         return this.section.value
       },
-      set (value) {
+      set(value) {
         this.$store.commit('setConsentFormValue', { index: this.index, value })
       }
     }
   },
   methods: {
-    changedFilesCheckbox () {
+    changedFilesCheckbox() {
       // Automatically open the dialog on select
       if (this.value.includes('file-explorer')) {
         this.showDialog = true

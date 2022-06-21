@@ -36,7 +36,7 @@ import { humanReadableFileSize, plurify } from '~/utils/utils'
 
 export default {
   name: 'UnitSummary',
-  data () {
+  data() {
     return {
       group2ext: {
         'audio file': ['mp3', 'm4a', 'wav', 'aac', 'webp'],
@@ -56,28 +56,28 @@ export default {
   },
   computed: {
     ...mapState(['fileManager']),
-    ext2group () {
+    ext2group() {
       return Object.fromEntries(
         Object.entries(this.group2ext).flatMap(entry =>
           entry[1].map(ext => [ext, entry[0]])
         )
       )
     },
-    nFiles () {
+    nFiles() {
       return this.fileManager.fileList.length
     },
-    totalSize () {
+    totalSize() {
       return _.sumBy(this.fileManager.fileList, f => f.size)
     },
-    dataSizeString () {
+    dataSizeString() {
       return humanReadableFileSize(this.totalSize)
     },
-    fileExts () {
+    fileExts() {
       return this.fileManager.fileList
         .map(f => f.name.match(/^.+\.(.+?)$/)?.[1])
         .filter(m => !_.isUndefined(m))
     },
-    sortedGroupCounts () {
+    sortedGroupCounts() {
       const groups = this.fileExts.map(ext => this.ext2group[ext])
       const occurrences = _.mapValues(
         _.groupBy(groups, _.identity),
@@ -91,7 +91,7 @@ export default {
   watch: {
     fileManager: {
       immediate: true,
-      handler () {
+      handler() {
         if (!this.fileManager) { return }
         this.completeGroupsTable()
         this.setExtensionTexts()
@@ -103,11 +103,11 @@ export default {
   },
   methods: {
     plurify,
-    onFileClick (filename) {
+    onFileClick(filename) {
       this.$store.commit('setFileExplorerCurrentItem', { filename })
       this.$emit('switch-tab', 'file-explorer')
     },
-    async setNumberOfDataPoints () {
+    async setNumberOfDataPoints() {
       this.nDataPoints = _.sum(
         await Promise.all(
           this.fileManager
@@ -116,7 +116,7 @@ export default {
         )
       )
     },
-    completeGroupsTable () {
+    completeGroupsTable() {
       // Add unknown extensions to the 'other' group
       for (const ext of this.fileExts) {
         if (!(ext in this.ext2group) && !this.group2ext.other.includes(ext)) {
@@ -124,7 +124,7 @@ export default {
         }
       }
     },
-    async setExtensionTexts () {
+    async setExtensionTexts() {
       const showAtMost = 3
       const pointsPerFile = await Promise.all(
         this.fileManager

@@ -186,7 +186,7 @@ export default {
       default: ''
     }
   },
-  data () {
+  data() {
     const experience = this.$store.getters.experience(this.$route)
     const experienceProps = pick(experience, [
       'slug',
@@ -214,21 +214,21 @@ export default {
     }
   },
   computed: {
-    bubble () {
+    bubble() {
       return this.$route.params.bubble
     },
-    nbSelected () {
+    nbSelected() {
       return this.selectedFiles.length
     },
-    nbFiles () {
+    nbFiles() {
       return this.fileItems.length
     },
-    allSelected () {
+    allSelected() {
       return this.nbSelected === this.nbFiles
     }
   },
   watch: {
-    filenames (newValue, oldValue) {
+    filenames(newValue, oldValue) {
       const newFilenames = newValue.filter(file => !oldValue.includes(file))
       newFilenames.forEach((filename) => {
         const extension = String(filename).match(/\.([\S]+)/)?.[1]
@@ -243,7 +243,7 @@ export default {
       this.fileItems = this.fileItems.filter(f => newValue.includes(f.filename))
     }
   },
-  mounted () {
+  mounted() {
     this.fetchFilenames()
     this.timer = setInterval(() => {
       if (!this.apiStatus) {
@@ -254,25 +254,25 @@ export default {
       }
     }, 1000)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     clearInterval(this.timer)
   },
   methods: {
-    selectAll () {
+    selectAll() {
       if (!this.allSelected) {
         this.selectedFiles = [...Array(this.fileItems.length).keys()]
       } else {
         this.selectedFiles = []
       }
     },
-    deleteFiles () {
+    deleteFiles() {
       const { password } = this.$auth.user
       this.$api.deleteFiles(this.bubble, password).then((res) => {
         if (res) { console.error(res) }
         this.fetchFilenames()
       })
     },
-    fetchFilenames () {
+    fetchFilenames() {
       this.apiError = null
       this.apiStatus = 'Fetching filenames from server...'
       this.counter = 5
@@ -289,7 +289,7 @@ export default {
         }
       })
     },
-    fetchFiles () {
+    fetchFiles() {
       this.apiError = null
       this.apiStatus = 'Downloading files from server...'
       this.status = true

@@ -6,7 +6,7 @@ export default {
     }
   },
   methods: {
-    menuItemAttrs ({ url, slug, disabled }) {
+    menuItemAttrs({ url, slug, disabled }) {
       const { bubble } = this.$route.params
       return url
         ? { href: url, target: '_blank', rel: 'noopener noreferrer', disabled }

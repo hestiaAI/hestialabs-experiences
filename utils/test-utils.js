@@ -4,7 +4,7 @@ import FileManager from '~/utils/file-manager'
 export class DatabaseTester {
   database
 
-  async init (
+  async init(
     { options: { databaseConfig, preprocessors, files, keepOnlyFiles } },
     mockedFiles
   ) {
@@ -25,22 +25,22 @@ export class DatabaseTester {
     this.database = database
   }
 
-  select (sql) {
+  select(sql) {
     return this.database.select(sql)
   }
 
-  close () {
+  close() {
     this.database.close()
   }
 }
 
-export function arrayEqualNoOrder (array1, array2) {
+export function arrayEqualNoOrder(array1, array2) {
   array2.forEach(x => expect(array1).toContainEqual(x))
   array1.forEach(x => expect(array2).toContainEqual(x))
   expect(array1.length).toBe(array2.length)
 }
 
-export function getSqlFromBlock ({ options: { viewBlocks } }, id) {
+export function getSqlFromBlock({ options: { viewBlocks } }, id) {
   const { sql = '' } = viewBlocks.find(b => b.id === id)
   return sql
 }

@@ -1,9 +1,9 @@
 class Api {
-  constructor ($axios) {
+  constructor($axios) {
     this.$axios = $axios
   }
 
-  async getConfig (bubbleName) {
+  async getConfig(bubbleName) {
     try {
       const { status, data } = await this.$axios.get(
         `/bubbles/${bubbleName}/config`
@@ -17,7 +17,7 @@ class Api {
     }
   }
 
-  getFilenames (bubbleName, callback) {
+  getFilenames(bubbleName, callback) {
     const url = `${process.env.apiUrl}/bubbles/${bubbleName}/files`
     const options = { method: 'GET' }
 
@@ -34,7 +34,7 @@ class Api {
       .catch(error => callback(error))
   }
 
-  getFile (bubbleName, filename, callback) {
+  getFile(bubbleName, filename, callback) {
     const url = `${process.env.apiUrl}/bubbles/${bubbleName}/file/${filename}`
     const options = { method: 'GET' }
 
@@ -56,7 +56,7 @@ class Api {
       .catch(error => callback(error))
   }
 
-  async deleteFiles (bubble, password) {
+  async deleteFiles(bubble, password) {
     const formData = new FormData()
     formData.append('password', password)
     let errorMessage
@@ -81,7 +81,7 @@ class Api {
     return errorMessage
   }
 
-  async uploadFile (file, destinationBubble, sourceBubble, password) {
+  async uploadFile(file, destinationBubble, sourceBubble, password) {
     const formData = new FormData()
     formData.append('password', password)
     formData.append('source-bubble', sourceBubble)

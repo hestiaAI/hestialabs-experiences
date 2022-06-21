@@ -80,7 +80,7 @@ export default {
     }
   },
   computed: {
-    mdiIcon () {
+    mdiIcon() {
       return this.$vuetify.icons.values[this.icon]
     }
   }

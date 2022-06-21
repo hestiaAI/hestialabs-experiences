@@ -61,14 +61,14 @@ import mixin from './mixin'
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       showAll: {},
       maxNbItems: 5
     }
   },
   computed: {
-    items () {
+    items() {
       return Object.keys(this.values[0])
         .sort()
         .map((k) => {
@@ -81,7 +81,7 @@ export default {
     }
   },
   methods: {
-    drawViz () {}
+    drawViz() {}
   }
 }
 </script>

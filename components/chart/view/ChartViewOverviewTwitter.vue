@@ -113,7 +113,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       header: [
         { text: 'Tweet ID', value: 'tweetId' },
@@ -131,7 +131,7 @@ export default {
     }
   },
   methods: {
-    drawViz () {
+    drawViz() {
       this.results = this.values
       // Define a color palette for the viz
       const colorPalette = [
@@ -154,24 +154,24 @@ export default {
       const valueSearch = new dc.TextFilterWidget('#value-search')
 
       // Bind reset filters links
-      d3.select('#volume-chart p a.reset').on('click', function () {
+      d3.select('#volume-chart p a.reset').on('click', function() {
         rangeChart.filterAll()
         volumeChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#company-chart p a.reset').on('click', function () {
+      d3.select('#company-chart p a.reset').on('click', function() {
         companyChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#engagement-chart p a.reset').on('click', function () {
+      d3.select('#engagement-chart p a.reset').on('click', function() {
         engagementChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#type-chart p a.reset').on('click', function () {
+      d3.select('#type-chart p a.reset').on('click', function() {
         typeChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#value-chart p a.reset').on('click', function () {
+      d3.select('#value-chart p a.reset').on('click', function() {
         valueChart.filterAll()
         dc.redrawAll()
       })
@@ -190,10 +190,10 @@ export default {
         d.dateStr = formatTime(d.dateParsed)
         d.url = 'https://twitter.com/x/status/' + d.tweetId
       })
-      const minDate = d3.min(this.results, function (d) {
+      const minDate = d3.min(this.results, function(d) {
         return d.day
       })
-      const maxDate = d3.max(this.results, function (d) {
+      const maxDate = d3.max(this.results, function(d) {
         return d.day
       })
 
@@ -230,7 +230,7 @@ export default {
         if (p.dict[v.tweetId + v.date_] === 0) { p.count-- }
         return p
       }
-      function orderValue (p) {
+      function orderValue(p) {
         return p.count
       }
 
@@ -252,12 +252,12 @@ export default {
       const targetingValueGroup = targetingValueDimension.group().reduceCount()
 
       // Make a Fake group to display only value above 0 on the row graphs
-      function removeEmptyBins (group) {
+      function removeEmptyBins(group) {
         return {
-          top (n) {
+          top(n) {
             return group
               .top(Infinity)
-              .filter(function (d) {
+              .filter(function(d) {
                 return d.value.count !== 0 && d.value !== 0
               })
               .slice(0, n)
@@ -402,12 +402,12 @@ export default {
       const total = allGroup.value().count
       tableCount
         .crossfilter({
-          size () {
+          size() {
             return total
           }
         })
         .groupAll({
-          value () {
+          value() {
             return allGroup.value().count
           }
         })
@@ -438,7 +438,7 @@ export default {
             count: x[5]
           }))
 
-          d3.select('#dc-data-count a.reset').on('click', function () {
+          d3.select('#dc-data-count a.reset').on('click', function() {
             dc.filterAll()
             dc.renderAll()
           })

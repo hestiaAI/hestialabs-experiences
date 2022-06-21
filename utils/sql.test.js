@@ -33,43 +33,43 @@ const testWrongItems = [
   { id: 1, description: 'foo bar', time: '2022-01-01', ratio: 0.33 }
 ]
 
-async function newDB () {
+async function newDB() {
   const db = new DB()
   await db.init()
   return db
 }
 
-test('initializing and closing a database without error', async () => {
+test('initializing and closing a database without error', async() => {
   const db = await newDB()
   db.close()
 })
 
 describe('creating a table', () => {
-  test('without error', async () => {
+  test('without error', async() => {
     const db = await newDB()
     db.create(testTable)
     db.close()
   })
 
-  test('with a wrong table name throws an error', async () => {
+  test('with a wrong table name throws an error', async() => {
     const db = await newDB()
     expect(() => db.create(testTableWrongTableName)).toThrow()
     db.close()
   })
 
-  test('with a wrong column name throws an error', async () => {
+  test('with a wrong column name throws an error', async() => {
     const db = await newDB()
     expect(() => db.create(testTableWrongColumnName)).toThrow()
     db.close()
   })
 
-  test('with a wrong column type throws an error', async () => {
+  test('with a wrong column type throws an error', async() => {
     const db = await newDB()
     expect(() => db.create(testTableWrongType)).toThrow()
     db.close()
   })
 
-  test('with a missing type throws an error', async () => {
+  test('with a missing type throws an error', async() => {
     const db = await newDB()
     expect(() => db.create(testTableMissingType)).toThrow()
     db.close()
@@ -77,21 +77,21 @@ describe('creating a table', () => {
 })
 
 describe('inserting elements', () => {
-  test('without error', async () => {
+  test('without error', async() => {
     const db = await newDB()
     db.create(testTable)
     db.insert(testTable.name, testItems)
     db.close()
   })
 
-  test('with a wrong table name throws an error', async () => {
+  test('with a wrong table name throws an error', async() => {
     const db = await newDB()
     db.create(testTable)
     expect(() => db.insert('foobar', testItems)).toThrow()
     db.close()
   })
 
-  test('with wrongly formatted items throws an error', async () => {
+  test('with wrongly formatted items throws an error', async() => {
     const db = await newDB()
     db.create(testTable)
     expect(() => db.insert(testTable.name, testWrongItems)).toThrow()
@@ -100,7 +100,7 @@ describe('inserting elements', () => {
 })
 
 describe('selecting', () => {
-  test('all elements returns the correct elements', async () => {
+  test('all elements returns the correct elements', async() => {
     const db = await newDB()
     db.create(testTable)
     db.insert(testTable.name, testItems)
@@ -108,7 +108,7 @@ describe('selecting', () => {
     db.close()
   })
 
-  test('an element that is not present returns an empty data object', async () => {
+  test('an element that is not present returns an empty data object', async() => {
     const db = await newDB()
     db.create(testTable)
     db.insert(testTable.name, testItems)

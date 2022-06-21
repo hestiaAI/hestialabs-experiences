@@ -7,7 +7,7 @@ import * as dc from 'dc'
 // contentChart.on('postRender', function (chart) {
 //  addXLabel(chart, 'Hours watched')
 // })
-export function addXLabel (chartToUpdate, displayText) {
+export function addXLabel(chartToUpdate, displayText) {
   const textSelection = chartToUpdate
     .svg()
     .append('text')
@@ -28,7 +28,7 @@ export function addXLabel (chartToUpdate, displayText) {
     )
     .attr('y', chartToUpdate.height() - Math.ceil(textDims.height) / 2)
 }
-export function addYLabel (chartToUpdate, displayText) {
+export function addYLabel(chartToUpdate, displayText) {
   const textSelection = chartToUpdate
     .svg()
     .append('text')
@@ -63,11 +63,11 @@ export function addYLabel (chartToUpdate, displayText) {
  * @param {Crossfilter group} group the group to transform
  * @returns the cumulative group
  */
-export function createCumulativeGroup (group) {
+export function createCumulativeGroup(group) {
   return {
-    all () {
+    all() {
       const cumulate = {}
-      return group.all().map(function (d) {
+      return group.all().map(function(d) {
         if (cumulate[d.key[0]]) {
           cumulate[d.key[0]] += d.value
         } else {
@@ -85,12 +85,12 @@ export function createCumulativeGroup (group) {
  * @param {Crossfilter group} group the group to transform
  * @returns the cleaned group
  */
-export function removeEmptyBins (group) {
+export function removeEmptyBins(group) {
   return {
-    top (n) {
+    top(n) {
       return group
         .top(Infinity)
-        .filter(function (d) {
+        .filter(function(d) {
           return d.value.count !== 0 && d.value !== 0
         })
         .slice(0, n)
@@ -98,9 +98,9 @@ export function removeEmptyBins (group) {
   }
 }
 
-export function addPiePercentage (chart) {
-  chart.selectAll('text.pie-slice.pie-label').call(function (t) {
-    t.each(function (d) {
+export function addPiePercentage(chart) {
+  chart.selectAll('text.pie-slice.pie-label').call(function(t) {
+    t.each(function(d) {
       const self = d3.select(this)
       let text = self.text()
       if (text.length > 14) { text = text.substring(0, 14) + '.. ' }

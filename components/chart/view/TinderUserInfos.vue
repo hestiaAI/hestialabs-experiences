@@ -83,7 +83,7 @@
 import * as d3 from 'd3'
 import mixin from './mixin'
 
-function genderIdentity (code) {
+function genderIdentity(code) {
   switch (code) {
     case 'F':
       return 'Female'
@@ -94,7 +94,7 @@ function genderIdentity (code) {
   }
 }
 
-function genderInterest (code) {
+function genderInterest(code) {
   switch (code) {
     case 'F':
       return 'Women'
@@ -107,7 +107,7 @@ function genderInterest (code) {
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     const [v] = this.values
     return {
       slider: [v.ageFilterMin, v.ageFilterMax],
@@ -152,7 +152,7 @@ export default {
     }
   },
   methods: {
-    drawViz () {}
+    drawViz() {}
   }
 }
 </script>

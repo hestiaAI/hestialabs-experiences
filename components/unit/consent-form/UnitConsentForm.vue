@@ -74,7 +74,7 @@ import { createObjectURL, mimeTypes } from '@/utils/utils'
 const VERSION = 3
 
 export default {
-  data () {
+  data() {
     const { viewBlocks } = this.$store.getters.experience(this.$route)
     return {
       zipFile: undefined,
@@ -91,16 +91,16 @@ export default {
   },
   computed: {
     ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles']),
-    config () {
+    config() {
       return this.$store.getters.config(this.$route)
     },
-    bubbleName () {
+    bubbleName() {
       return this.$route.params.bubble
     },
-    destinationBubbleName () {
+    destinationBubbleName() {
       return this.config.consent.destinationBubble
     },
-    missingRequiredFields () {
+    missingRequiredFields() {
       return !this.consentForm.every((section) => {
         if ('required' in section) {
           if (
@@ -116,7 +116,7 @@ export default {
         return true
       })
     },
-    missingRequiredData () {
+    missingRequiredData() {
       const section = this.consentForm.find(section => section.type === 'data')
       return this.viewBlocks
         .filter(
@@ -130,7 +130,7 @@ export default {
     }
   },
   methods: {
-    async downloadZIP () {
+    async downloadZIP() {
       this.generateStatus = false
       this.generateProgress = true
 
@@ -141,7 +141,7 @@ export default {
       await this.$nextTick()
       this.$refs.downloadLink.click()
     },
-    async makeFilename (timestamp) {
+    async makeFilename(timestamp) {
       const date = new Date(timestamp)
       const uniqueId = await this.fileManager.hashAllFiles()
       const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
@@ -151,7 +151,7 @@ export default {
       const filename = `${this.$route.params.experience}_${yearMonthDay}_${uniqueId}.zip`
       return filename
     },
-    async generateZIP (publicKey) {
+    async generateZIP(publicKey) {
       const zip = new JSZip()
 
       const revResponse = await window.fetch('/git-revision.txt')
@@ -205,7 +205,7 @@ export default {
       }
       return content
     },
-    getCookie (name) {
+    getCookie(name) {
       if (!document.cookie) {
         return null
       }
@@ -219,7 +219,7 @@ export default {
       }
       return decodeURIComponent(cookie[0].split('=')[1])
     },
-    async sendForm () {
+    async sendForm() {
       this.sentStatus = false
       this.sentErrorMessage = undefined
       this.sentProgress = true

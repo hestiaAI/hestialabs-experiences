@@ -5,7 +5,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       progress: false,
       refreshPipeline: true
@@ -14,13 +14,13 @@ export default {
   watch: {
     progress: {
       immediate: true,
-      handler (value) {
+      handler(value) {
         this.$store.commit('experience/setProgress', value)
       }
     },
     '$store.state.fileManager': {
       immediate: true,
-      handler (value) {
+      handler(value) {
         if (value) {
           // When switching to a tab, we only want to refresh
           // the corresponding pipeline if this is the first time
@@ -32,13 +32,13 @@ export default {
     },
     '$route.hash': {
       immediate: true,
-      handler (value) {
+      handler(value) {
         // Re-run the pipeline when
         // 1. the tab is reopened, and
         // 2. the store was previously cleared
         if (value.slice(1) === this.hash && this.refreshPipeline) {
           this.progress = true
-          window.setTimeout(async () => {
+          window.setTimeout(async() => {
             await this.run()
             this.refreshPipeline = false
           }, 500)

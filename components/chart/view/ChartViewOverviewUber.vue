@@ -203,7 +203,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       header: [
         { text: 'City', value: 'City' },
@@ -224,16 +224,16 @@ export default {
     }
   },
   methods: {
-    filterCurrency (newCurr) {
+    filterCurrency(newCurr) {
       this.currencyDimension.filter(newCurr)
       this.currentCurrency = newCurr
       this.resetAll()
     },
-    resetAll () {
+    resetAll() {
       dc.filterAll()
       dc.renderAll()
     },
-    drawViz () {
+    drawViz() {
       // Add data to table
       this.results = this.values.filter(
         d => d['Trip or Order Status'] === 'COMPLETED'
@@ -289,23 +289,23 @@ export default {
       const waitingAvgNumber = new dc.NumberDisplay('#number-waiting-avg')
 
       // Bind reset filters links
-      d3.select('#hour-chart a.reset').on('click', function () {
+      d3.select('#hour-chart a.reset').on('click', function() {
         hourChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#service-chart a.reset').on('click', function () {
+      d3.select('#service-chart a.reset').on('click', function() {
         serviceChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#week-chart a.reset').on('click', function () {
+      d3.select('#week-chart a.reset').on('click', function() {
         weekChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#price-chart a.reset').on('click', function () {
+      d3.select('#price-chart a.reset').on('click', function() {
         priceChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#address-chart a.reset').on('click', function () {
+      d3.select('#address-chart a.reset').on('click', function() {
         addressChart.filterAll()
         dc.redrawAll()
       })
@@ -434,12 +434,12 @@ export default {
         .ticks(7)
 
       // Render days of week row chart
-      function removeEmptyBins (group) {
+      function removeEmptyBins(group) {
         return {
-          top (n) {
+          top(n) {
             return group
               .top(Infinity)
-              .filter(function (d) {
+              .filter(function(d) {
                 return d.value.count !== 0 && d.value !== 0
               })
               .slice(0, n)
@@ -458,7 +458,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function (d) {
+      weekChart.ordering(function(d) {
         switch (d.key) {
           case 'Mon':
             return 0
@@ -511,11 +511,11 @@ export default {
         dayDimension.bottom(1).length > 0 ? dayDimension.bottom(1)[0].day : null
       const maxDate =
         dayDimension.top(1).length > 0 ? dayDimension.top(1)[0].day : null
-      function createCumulativeGroup (group) {
+      function createCumulativeGroup(group) {
         return {
-          all () {
+          all() {
             const cumulate = {}
-            return group.all().map(function (d) {
+            return group.all().map(function(d) {
               if (cumulate[d.key[0]]) {
                 cumulate[d.key[0]] += d.value
               } else {

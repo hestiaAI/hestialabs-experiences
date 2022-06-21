@@ -128,7 +128,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       apps: [],
       selectedApps: [],
@@ -147,20 +147,20 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    selectAll () {
+    selectAll() {
       return this.selectedApps.length === this.apps.length
     },
-    selectSome () {
+    selectSome() {
       return this.selectedApps.length > 0 && !this.selectAll
     },
-    icon () {
+    icon() {
       if (this.selectAll) { return '$vuetify.icons.mdiCloseBox' }
       if (this.selectSome) { return '$vuetify.icons.mdiMinusBox' }
       return '$vuetify.icons.mdiCheckboxBlankOutline'
     }
   },
   methods: {
-    toggle () {
+    toggle() {
       this.$nextTick(() => {
         if (this.selectAll) {
           this.selectedApps = []
@@ -170,29 +170,29 @@ export default {
         this.filterApps(this.selectedApps)
       })
     },
-    filterApps (items) {
+    filterApps(items) {
       this.selectAppDimension.filter(null)
-      this.selectAppDimension.filterFunction(function (d) {
+      this.selectAppDimension.filterFunction(function(d) {
         return items.includes(d)
       })
       dc.redrawAll()
     },
-    removeEmptyBins (group) {
+    removeEmptyBins(group) {
       return {
-        top (n) {
+        top(n) {
           return group
             .top(Infinity)
-            .filter(function (d) {
+            .filter(function(d) {
               return d.value.count !== 0 && d.value !== 0
             })
             .slice(0, n)
         },
-        all () {
+        all() {
           return group.all()
         }
       }
     },
-    drawViz () {
+    drawViz() {
       // Create and bind charts to their respective divs
       const volumeChart = new dc.LineChart('#volume-chart')
       const rangeChart = new dc.BarChart('#range-chart')
@@ -202,20 +202,20 @@ export default {
       const tableCount = new dc.DataCount('.dc-data-count')
 
       // Bind reset filters links
-      d3.select('#volume-chart a.reset').on('click', function () {
+      d3.select('#volume-chart a.reset').on('click', function() {
         rangeChart.filterAll()
         volumeChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#category-chart a.reset').on('click', function () {
+      d3.select('#category-chart a.reset').on('click', function() {
         categoryChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#advertiser-chart a.reset').on('click', function () {
+      d3.select('#advertiser-chart a.reset').on('click', function() {
         advertiserChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#app-chart a.reset').on('click', function () {
+      d3.select('#app-chart a.reset').on('click', function() {
         appChart.filterAll()
         dc.redrawAll()
       })
@@ -261,10 +261,10 @@ export default {
       const appGroup = appDimension.group().reduceCount()
 
       // Render volume line chart
-      const minDate = d3.min(this.values, function (d) {
+      const minDate = d3.min(this.values, function(d) {
         return d.day
       })
-      const maxDate = d3.max(this.values, function (d) {
+      const maxDate = d3.max(this.values, function(d) {
         return d.day
       })
       const maxValue = dayGroup.top(1)[0].value + 2
@@ -365,9 +365,9 @@ export default {
           '#58539E'
         ])
 
-      categoryChart.on('pretransition', function (chart) {
-        chart.selectAll('text.pie-slice.pie-label').call(function (t) {
-          t.each(function (d) {
+      categoryChart.on('pretransition', function(chart) {
+        chart.selectAll('text.pie-slice.pie-label').call(function(t) {
+          t.each(function(d) {
             const self = d3.select(this)
             let text = self.text()
             if (text.length > 14) { text = text.substring(0, 14) + '.. ' }

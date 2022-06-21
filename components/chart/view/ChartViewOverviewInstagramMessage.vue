@@ -102,7 +102,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       header: [
         { text: 'Sender', value: 'senderName' },
@@ -113,11 +113,11 @@ export default {
     }
   },
   methods: {
-    resetAll () {
+    resetAll() {
       dc.filterAll()
       dc.renderAll()
     },
-    drawViz () {
+    drawViz() {
       // Define color palette for the graphs
       /*
       const colorPalette = [
@@ -163,21 +163,21 @@ export default {
       const userSearch = new dc.TextFilterWidget(`#user-search-${this.graphId}`)
 
       // Bind reset filters links
-      d3.select(`#hour-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#hour-chart-${this.graphId} a.reset`).on('click', function() {
         hourChart.filterAll()
         dc.redrawAll()
       })
-      d3.select(`#user-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#user-chart-${this.graphId} a.reset`).on('click', function() {
         userChart.filterAll()
         dc.redrawAll()
       })
-      d3.select(`#week-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#week-chart-${this.graphId} a.reset`).on('click', function() {
         weekChart.filterAll()
         dc.redrawAll()
       })
       d3.select(`#messages-chart-${this.graphId} a.reset`).on(
         'click',
-        function () {
+        function() {
           messageChart.filterAll()
           rangeChart.filterAll()
           dc.redrawAll()
@@ -245,7 +245,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function (d) {
+      weekChart.ordering(function(d) {
         switch (d.key) {
           case 'Mon':
             return 0

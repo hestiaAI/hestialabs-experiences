@@ -111,7 +111,7 @@ export default {
       default: ''
     }
   },
-  data () {
+  data() {
     const experience = this.$store.getters.experience(this.$route)
     const properties = pick(experience, [
       'title',
@@ -127,7 +127,7 @@ export default {
     }
   },
   methods: {
-    onUnitFilesUpdate ({ uppyFiles }) {
+    onUnitFilesUpdate({ uppyFiles }) {
       this.$emit('update', { uppyFiles })
     }
   }

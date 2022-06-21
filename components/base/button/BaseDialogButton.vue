@@ -43,22 +43,22 @@ export default {
     tooltipPosition: {
       type: String,
       default: 'left',
-      validator (value) {
+      validator(value) {
         // The value must match one of these strings
         return ['left', 'right', 'top', 'bottom'].includes(value)
       }
     }
   },
-  data () {
+  data() {
     return {
       show: false
     }
   },
   computed: {
-    mdiIcon () {
+    mdiIcon() {
       return this.$vuetify.icons.values[this.icon]
     },
-    tooltipPos () {
+    tooltipPos() {
       return {
         left: this.tooltipPosition === 'left',
         right: this.tooltipPosition === 'right',

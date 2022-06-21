@@ -8,11 +8,11 @@ import mixin from './mixin'
 
 // somewhat inspired by
 // https://bost.ocks.org/mike/chart/
-function barChart () {
+function barChart() {
   let width = 440
   let height = 120
-  function chart (selection) {
-    selection.each(function (data) {
+  function chart(selection) {
+    selection.each(function(data) {
       // Select the svg element, if it exists.
       const svg = d3
         .select(this)
@@ -43,13 +43,13 @@ function barChart () {
     })
   }
 
-  chart.width = function (_) {
+  chart.width = function(_) {
     if (!arguments.length) { return width }
     width = _
     return chart
   }
 
-  chart.height = function (_) {
+  chart.height = function(_) {
     if (!arguments.length) { return height }
     height = _
     return chart
@@ -61,7 +61,7 @@ function barChart () {
 export default {
   mixins: [mixin],
   methods: {
-    drawViz () {
+    drawViz() {
       // another chart should be using this.values
       // but let's ignore it so we can use this one
       // anywhere regardless of the input

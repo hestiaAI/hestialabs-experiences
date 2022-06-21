@@ -57,26 +57,26 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {}
   },
   computed: {
-    messageReceived () {
+    messageReceived() {
       return this.values.filter(v => v.sender !== 'Her' && v.sender !== 'User')
     },
-    messageSent () {
+    messageSent() {
       return this.values.filter(v => v.sender !== 'Her' && v.sender === 'User')
     },
-    nbUser () {
+    nbUser() {
       return new Set(this.values.map(v => v.sender)).size - 2 // Remove Her and the user
     },
-    nbMsg () {
+    nbMsg() {
       return this.values.filter(v => v.sender !== 'Her').length // Remove Her
     }
   },
-  mounted () {},
+  mounted() {},
   methods: {
-    drawViz () {}
+    drawViz() {}
   }
 }
 </script>

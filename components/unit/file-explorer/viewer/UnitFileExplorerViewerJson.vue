@@ -93,7 +93,7 @@ import { pathArrayToJsonPath, nodeTypes } from '@/utils/json'
 export default {
   name: 'UnitFileExplorerViewerJson',
   mixins: [mixin, mixinLoading],
-  data () {
+  data() {
     return {
       jsonText: '',
       items: [],
@@ -109,8 +109,8 @@ export default {
     }
   },
   computed: {
-    delayedUpdateFilteredItems () {
-      return debounce(async function () {
+    delayedUpdateFilteredItems() {
+      return debounce(async function() {
         this.searching = true
         await this.updateFilteredItems()
         this.searching = false
@@ -119,27 +119,27 @@ export default {
   },
   watch: {
     filename: {
-      handler (filename) {
+      handler(filename) {
         this.getContentFromFilename(filename)
       },
       immediate: true
     },
-    search () {
+    search() {
       // The search starts some time after the user stops typing, not after every character typed
       this.delayedUpdateFilteredItems.cancel()
       this.delayedUpdateFilteredItems()
     }
   },
   methods: {
-    onFoundItemRowClick (item) {
+    onFoundItemRowClick(item) {
       this.open = item.trail
     },
-    createItemAcessor (item) {
+    createItemAcessor(item) {
       const filePath = filePathToGlob(this.filename)
       const jsonPath = pathArrayToJsonPath(item.path)
       return createAccessor(filePath, jsonPath)
     },
-    copyAccessor (item) {
+    copyAccessor(item) {
       try {
         const accessor = JSON.stringify(this.createItemAcessor(item))
         navigator.clipboard.writeText(accessor)
@@ -147,14 +147,14 @@ export default {
         console.error(error)
       }
     },
-    onNodeClick (item) {
+    onNodeClick(item) {
       try {
         this.$emit('select-accessor', this.createItemAcessor(item))
       } catch (error) {
         console.error(error)
       }
     },
-    iconForNode (type) {
+    iconForNode(type) {
       switch (type) {
         case nodeTypes.TREE:
           return mdiCodeJson
@@ -164,10 +164,10 @@ export default {
           return mdiInformationOutline
       }
     },
-    isUndef (val) {
+    isUndef(val) {
       return typeof val === 'undefined'
     },
-    async getContentFromFilename (filename) {
+    async getContentFromFilename(filename) {
       this.setLoading(true)
       this.jsonText = await this.fileManager.getPreprocessedText(filename)
       try {
@@ -180,7 +180,7 @@ export default {
       }
       this.setLoading(false)
     },
-    async updateFilteredItems () {
+    async updateFilteredItems() {
       if (this.search) {
         if (this.useOldSearch) {
           this.filteredItems = await runWorker(new JsonWorker(), [

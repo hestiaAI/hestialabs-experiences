@@ -12,7 +12,7 @@ const { Provider } = ReactRedux
 // import { combineReducers, applyMiddleware, createStore, compose } from 'redux'
 // import { Provider } from 'react-redux'
 
-export const buildStore = function () {
+export const buildStore = function() {
   const reducers = combineReducers({
     // mount keplerGl reducer
     keplerGl: KeplerGl.keplerGlReducer
@@ -26,8 +26,8 @@ export const buildStore = function () {
   return store
 }
 
-export function init (containerElement, props = {}, store, mapboxToken) {
-  const KeplerElement = function (props) {
+export function init(containerElement, props = {}, store, mapboxToken) {
+  const KeplerElement = function(props) {
     return React.createElement(
       'div',
       {
@@ -54,7 +54,7 @@ export function init (containerElement, props = {}, store, mapboxToken) {
   ReactDOM.render(app, containerElement)
 }
 
-function extractDataId (config) {
+function extractDataId(config) {
   let dataId = config?.config?.visState?.filters?.[0]?.dataId?.[0]
   if (!dataId) {
     dataId = config?.config?.visState?.layers?.[0]?.config?.dataId
@@ -87,7 +87,7 @@ function extractDataId (config) {
  * A csv string, for example the trips from your uber data.
  * This argument is only used if there is no keplerData.
  */
-export function update (data, store) {
+export function update(data, store) {
   const { config, rawCsv, keplerData } = data
   const inputData = keplerData || KeplerGl.processCsvData(rawCsv)
   const dataset = {

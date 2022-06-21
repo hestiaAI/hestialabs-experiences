@@ -60,7 +60,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  async middleware ({
+  async middleware({
     store,
     params: { bubble },
     route: { path },
@@ -81,7 +81,7 @@ export default {
       })
     }
   },
-  data () {
+  data() {
     return {
       // Display offline message if user opens app when offline
       snackbar: this.$nuxt.isOffline,
@@ -89,7 +89,7 @@ export default {
       alert: false
     }
   },
-  head () {
+  head() {
     if (!this.appName) {
       return
     }
@@ -115,28 +115,28 @@ export default {
   },
   computed: {
     ...mapGetters(['experience', 'appName']),
-    collaborator () {
+    collaborator() {
       const { collaborator = {} } = this.experience(this.$route)
       return collaborator
     },
-    newsletterURL () {
+    newsletterURL() {
       const { url = 'https://hestialabs.org/' } = this.collaborator
       return `${url}#newsletter`
     },
-    newsletterMessage () {
+    newsletterMessage() {
       const { title = 'HestiaLabs' } = this.collaborator
       const genitiveCaseEnding = title.endsWith('s') ? '’' : '’s'
       return `Subscribe to ${title}${genitiveCaseEnding} newsletter!`
     }
   },
   watch: {
-    '$nuxt.isOffline' (isOffline) {
+    '$nuxt.isOffline'(isOffline) {
       this.snackbar = true
       // changing timeout property resets the timeout
       this.timeout = isOffline ? 5001 : 5000
     }
   },
-  mounted () {
+  mounted() {
     if (!window.Worker) {
       this.$nuxt.error({
         statusCode: 500,
@@ -157,7 +157,7 @@ export default {
     }
   },
   methods: {
-    alertClosed () {
+    alertClosed() {
       localStorage.alertNewsletterDismissed = new Date()
     }
   }

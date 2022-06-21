@@ -148,7 +148,7 @@ export default {
       default: () => false
     }
   },
-  data () {
+  data() {
     return {
       weekDays: ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat'],
       formatMonth: d3.utcFormat('%b'),
@@ -156,19 +156,19 @@ export default {
     }
   },
   computed: {
-    width () {
+    width() {
       return this.cellSize * (52 + 3)
     },
-    calendarHeight () {
+    calendarHeight() {
       return this.cellSize * (this.weekDays.length + 4)
     },
-    height () {
+    height() {
       return this.calendarHeight * this.itemsPerDay.length
     },
-    viewBox () {
+    viewBox() {
       return `0 0 ${this.width} ${this.height}`
     },
-    dateParser () {
+    dateParser() {
       if (this.dateFormat) { return d3.timeParse(this.dateFormat) } else {
         return (d) => {
           const date = new Date(d)
@@ -177,7 +177,7 @@ export default {
         }
       }
     },
-    items () {
+    items() {
       return this.values
         .map((v) => {
           return {
@@ -187,19 +187,19 @@ export default {
         })
         .filter(v => v.date)
     },
-    extent () {
+    extent() {
       return d3.extent(
         this.itemsPerDay.flatMap(y => d3.extent(y[1], i => i[3]))
       )
     },
-    color () {
+    color() {
       return d3
         .scaleSequential()
         .domain([this.extent[0], this.extent[1]])
         .nice()
         .interpolator(this.colorPalette)
     },
-    itemsPerDay () {
+    itemsPerDay() {
       const years = d3
         .groups(this.items, v => v.date.getUTCFullYear())
         .sort((a, b) => b[0] - a[0])
@@ -214,7 +214,7 @@ export default {
         )
       ])
     },
-    monthsPerYear () {
+    monthsPerYear() {
       const test = this.itemsPerDay.map((y) => {
         const dateExtent = d3.extent(y[1], i => new Date(y[0], i[0], i[1]))
         return {
@@ -225,16 +225,16 @@ export default {
 
       return test
     },
-    legendSquares () {
+    legendSquares() {
       return this.color.ticks(this.legendPrefNbItems)
     },
-    legendNbItems () {
+    legendNbItems() {
       return this.legendSquares.length
     }
   },
-  mounted () {},
+  mounted() {},
   methods: {
-    generateTitle (year, month, day, value) {
+    generateTitle(year, month, day, value) {
       return (
         d3.timeFormat('%a %d %B, %Y')(new Date(year, month, day)) +
         ' - ' +
@@ -242,20 +242,20 @@ export default {
         ' records'
       )
     },
-    xPos (year, month, day) {
+    xPos(year, month, day) {
       const date = new Date(year, month, day)
       return d3.utcMonday.count(d3.utcYear(date), date) * this.cellSize + 0.5
     },
-    xPosMonth (d) {
+    xPosMonth(d) {
       return (
         d3.utcMonday.count(d3.utcYear(d), d3.utcMonday.ceil(d)) * this.cellSize
       )
     },
-    legendSquareXPos (idx) {
+    legendSquareXPos(idx) {
       const { width: w, cellSize: s, legendNbItems: n } = this
       return w - s * 2 * n + idx * s * 2 - s * 2
     },
-    drawViz () {}
+    drawViz() {}
   }
 }
 </script>

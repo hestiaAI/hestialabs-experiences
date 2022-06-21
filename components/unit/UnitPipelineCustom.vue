@@ -37,7 +37,7 @@ export default {
       default: undefined
     }
   },
-  data () {
+  data() {
     return {
       status: false,
       error: false,
@@ -49,37 +49,37 @@ export default {
   },
   computed: {
     ...mapState(['fileManager']),
-    disabled () {
+    disabled() {
       return this.fileManager === null
     }
   },
   watch: {
-    options () {
+    options() {
       this.status = false
     },
-    async customPipelineOptions () {
+    async customPipelineOptions() {
       this.updateOptions()
       await this.run()
     }
   },
-  async created () {
+  async created() {
     const { customPipeline: pipe } = this
     if (typeof pipe === 'string') {
       const { [pipe]: pipeline } = await import('~/utils/generic-pipelines')
       this.pipeline = pipeline
     }
   },
-  beforeMount () {
+  beforeMount() {
     this.updateOptions()
   },
   methods: {
-    updateOptions () {
+    updateOptions() {
       const { customPipelineOptions: obj } = this
       if (obj) {
         this.options = JSON.stringify(obj, null, 2)
       }
     },
-    async run () {
+    async run() {
       this.error = false
       this.progress = true
       await setTimeoutPromise(1)

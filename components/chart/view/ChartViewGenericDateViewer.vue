@@ -102,7 +102,7 @@ import { datetimeFormatter } from '@/utils/dates'
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       formatDate: d3.timeFormat('%B %d, %Y'),
       fileDimension: null,
@@ -136,20 +136,20 @@ export default {
     }
   },
   computed: {
-    selectAll () {
+    selectAll() {
       return this.selectFiles.length === this.filesNames.length
     },
-    selectSome () {
+    selectSome() {
       return this.selectFiles.length > 0 && !this.selectAll
     },
-    icon () {
+    icon() {
       if (this.selectAll) { return '$vuetify.icons.mdiCloseBox' }
       if (this.selectSome) { return '$vuetify.icons.mdiMinusBox' }
       return '$vuetify.icons.mdiCheckboxBlankOutline'
     }
   },
   methods: {
-    toggle () {
+    toggle() {
       this.$nextTick(() => {
         if (this.selectAll) {
           this.selectFiles = []
@@ -159,7 +159,7 @@ export default {
         this.filterFiles(this.selectFiles)
       })
     },
-    drawViz () {
+    drawViz() {
       if (this.values.length === 0) { return }
       // Format dates
       this.values.forEach((d) => {
@@ -271,7 +271,7 @@ export default {
       dc.renderAll()
       this.toggle()
     },
-    drawBarChart () {
+    drawBarChart() {
       if (this.volumeGroup) { this.volumeGroup.dispose() }
       const interval = this.intervals[this.selectTimeInt]
       this.barChart.xUnits(interval.range)
@@ -283,7 +283,7 @@ export default {
         .transitionDuration(1000)
         .render()
     },
-    calcDomain (chart) {
+    calcDomain(chart) {
       let max = chart.dimension().top(1)
       let min = chart.dimension().bottom(1)
       if (max.length > 0) {
@@ -294,19 +294,19 @@ export default {
         chart.x().domain([min, max])
       }
     },
-    onTableFilter (items) {
+    onTableFilter(items) {
       // TODO: Update graph
     },
-    filterFiles (files) {
+    filterFiles(files) {
       this.fileDimension.filter(null)
-      this.fileDimension.filterFunction(function (d) {
+      this.fileDimension.filterFunction(function(d) {
         return files.includes(d)
       })
       this.calcDomain(this.rangeChart)
       this.calcDomain(this.barChart)
       dc.redrawAll()
     },
-    resetFilter () {
+    resetFilter() {
       dc.filterAll()
       dc.redrawAll()
     }

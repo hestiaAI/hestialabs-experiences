@@ -126,7 +126,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  data () {
+  data() {
     return {
       header: [
         { text: 'Date', value: 'Start Time' },
@@ -139,22 +139,22 @@ export default {
     }
   },
   methods: {
-    removeEmptyBins (group) {
+    removeEmptyBins(group) {
       return {
-        top (n) {
+        top(n) {
           return group
             .top(Infinity)
-            .filter(function (d) {
+            .filter(function(d) {
               return d.value.count !== 0 && d.value !== 0
             })
             .slice(0, n)
         },
-        all () {
+        all() {
           return group.all()
         }
       }
     },
-    drawViz () {
+    drawViz() {
       const colorPalette = [
         '#7570b3',
         // '#371D52',
@@ -207,7 +207,7 @@ export default {
       // Bind reset filters links
       d3.select('#watch-time-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           rangeChart.filterAll()
           watchChart.filterAll()
           dc.redrawAll()
@@ -215,42 +215,42 @@ export default {
       )
       d3.select('#user-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           userChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#country-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           countryChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#content-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           contentChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#week-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           weekChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#device-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           deviceChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#hour-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           hourChart.filterAll()
           dc.redrawAll()
         }
@@ -383,9 +383,9 @@ export default {
         .minAngleForLabel(0.1)
         .ordinalColors(colorPalette)
 
-      userChart.on('pretransition', function (chart) {
-        chart.selectAll('text.pie-slice.pie-label').call(function (t) {
-          t.each(function (d) {
+      userChart.on('pretransition', function(chart) {
+        chart.selectAll('text.pie-slice.pie-label').call(function(t) {
+          t.each(function(d) {
             const self = d3.select(this)
             let text = self.text()
             if (text.length > 14) { text = text.substring(0, 14) + '.. ' }
@@ -444,7 +444,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function (d) {
+      weekChart.ordering(function(d) {
         switch (d.key) {
           case 'Mon':
             return 0

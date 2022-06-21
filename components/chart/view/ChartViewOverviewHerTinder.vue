@@ -74,7 +74,7 @@ dc.config.defaultColors(d3.schemePaired)
 export default {
   mixins: [mixin],
   props: {},
-  data () {
+  data() {
     return {
       header: [
         { text: 'Date', value: 'dateStr' },
@@ -92,11 +92,11 @@ export default {
     }
   },
   methods: {
-    resetAll () {
+    resetAll() {
       dc.filterAll()
       dc.renderAll()
     },
-    decodeDefault (str) {
+    decodeDefault(str) {
       try {
         return str && str !== 'undefined'
           ? decodeURIComponent(escape(str))
@@ -106,7 +106,7 @@ export default {
         return str || 'Unknown'
       }
     },
-    drawViz () {
+    drawViz() {
       // Parse and format data
       const dateParser = d3.timeParse('%Y-%m-%d')
       const dateFormatter = d3.timeFormat('%B, %Y')
@@ -143,7 +143,7 @@ export default {
       // Bind reset filters buttons
       d3.select(`#likes-chart-${this.graphId} a.reset`).on(
         'click',
-        function () {
+        function() {
           likesChart.filterAll()
           dc.redrawAll()
         }
@@ -151,34 +151,34 @@ export default {
 
       d3.select(`#messages-chart-${this.graphId} a.reset`).on(
         'click',
-        function () {
+        function() {
           messagesChart.filterAll()
           dc.redrawAll()
         }
       )
-      d3.select(`#app-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#app-chart-${this.graphId} a.reset`).on('click', function() {
         appChart.filterAll()
         dc.redrawAll()
       })
       d3.select(`#sexualOrientations-chart-${this.graphId} a.reset`).on(
         'click',
-        function () {
+        function() {
           orientationChart.filterAll()
           dc.redrawAll()
         }
       )
 
       // Custom reduce function to get unique user ids per dimension
-      function add (p, d) {
+      function add(p, d) {
         if (d.userId in p.userIds) { p.userIds[d.userId]++ } else { p.userIds[d.userId] = 1 }
         return p
       }
-      function remove (p, d) {
+      function remove(p, d) {
         p.userIds[d.userId]--
         if (p.userIds[d.userId] === 0) { delete p.userIds[d.userId] }
         return p
       }
-      function init () {
+      function init() {
         return { userIds: {} }
       }
       // Create dimensions

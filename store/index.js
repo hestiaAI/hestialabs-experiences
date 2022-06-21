@@ -14,15 +14,15 @@ export const state = () => ({
 })
 
 export const getters = {
-  appName (state) {
+  appName(state) {
     return state.config.appName
   },
-  enabledExperiences (state) {
+  enabledExperiences(state) {
     return state.experiences.filter(
       ({ slug, disabled }) => !disabled && slug !== 'other'
     )
   },
-  disabledExperiences (state, getters) {
+  disabledExperiences(state, getters) {
     const disabledExperiences = state.experiences.filter(
       ({ slug }) => !getters.enabledExperiences.find(e => e.slug === slug)
     )
@@ -48,28 +48,28 @@ export const getters = {
 }
 
 export const mutations = {
-  setLoaded (state) {
+  setLoaded(state) {
     state.loaded = true
   },
-  setConfig (state, config) {
+  setConfig(state, config) {
     state.config = config
   },
-  setExperiences (state, experiences) {
+  setExperiences(state, experiences) {
     state.experiences = experiences
   },
-  setCurrentDB (state, db) {
+  setCurrentDB(state, db) {
     state.currentDB = db
   },
-  setFileManager (state, fileManager) {
+  setFileManager(state, fileManager) {
     state.fileManager = fileManager
   },
-  setSelectedFiles (state, selectedFiles) {
+  setSelectedFiles(state, selectedFiles) {
     state.selectedFiles = selectedFiles
   },
-  setResult (state, { experience, result }) {
+  setResult(state, { experience, result }) {
     Vue.set(state.results, experience, result)
   },
-  setConsentForm (state, consentForm) {
+  setConsentForm(state, consentForm) {
     // Initialize missing values
     if (!consentForm) {
       return
@@ -88,10 +88,10 @@ export const mutations = {
     }
     state.consentForm = consentForm
   },
-  setConsentFormValue (state, { index, value }) {
+  setConsentFormValue(state, { index, value }) {
     state.consentForm[index].value = value
   },
-  clearStore (state) {
+  clearStore(state) {
     state.selectedFiles = []
     state.results = {}
     state.fileExplorerCurrentItem = {}
@@ -100,13 +100,13 @@ export const mutations = {
     state.fileManager = null
     state.consentForm = null
   },
-  setFileExplorerCurrentItem (state, item) {
+  setFileExplorerCurrentItem(state, item) {
     state.fileExplorerCurrentItem = item
   }
 }
 
 export const actions = {
-  async loadConfig ({ commit, state }) {
+  async loadConfig({ commit, state }) {
     if (!state.loaded) {
       const config = (await import(`@/config/${process.env.configName}.json`))
         .default
@@ -125,7 +125,7 @@ export const actions = {
       })
     }
   },
-  async loadExperiences ({ commit, state, dispatch }, { isDev, $axios }) {
+  async loadExperiences({ commit, state, dispatch }, { isDev, $axios }) {
     if (!state.loaded) {
       await dispatch('loadConfig', $axios)
       const experiences = (

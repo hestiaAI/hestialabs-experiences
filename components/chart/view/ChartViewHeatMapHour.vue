@@ -131,7 +131,7 @@ export default {
       default: () => false
     }
   },
-  data () {
+  data() {
     return {
       weekDays: ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat'],
       hours: d3.range(24),
@@ -139,16 +139,16 @@ export default {
     }
   },
   computed: {
-    width () {
+    width() {
       return this.cellSize * (this.hours.length + 3)
     },
-    height () {
+    height() {
       return this.cellSize * (this.weekDays.length + 4)
     },
-    viewBox () {
+    viewBox() {
       return `0 0 ${this.width} ${this.height}`
     },
-    dateParser () {
+    dateParser() {
       if (this.dateFormat) { return d3.timeParse(this.dateFormat) } else {
         return (d) => {
           const date = new Date(d)
@@ -157,7 +157,7 @@ export default {
         }
       }
     },
-    items () {
+    items() {
       return this.values
         .map((v) => {
           return {
@@ -167,7 +167,7 @@ export default {
         })
         .filter(v => v.date)
     },
-    itemsPerHour () {
+    itemsPerHour() {
       const hours = d3.flatRollup(
         this.items,
         v => d3.sum(v, d => d.value),
@@ -176,26 +176,26 @@ export default {
       )
       return hours
     },
-    extent () {
+    extent() {
       return d3.extent(this.itemsPerHour, v => v[2])
     },
-    color () {
+    color() {
       return d3
         .scaleSequential()
         .domain([this.extent[0], this.extent[1]])
         .nice()
         .interpolator(this.colorPalette)
     },
-    legendSquares () {
+    legendSquares() {
       return this.color.ticks(this.legendPrefNbItems)
     },
-    legendNbItems () {
+    legendNbItems() {
       return this.legendSquares.length
     }
   },
-  mounted () {},
+  mounted() {},
   methods: {
-    generateTitle (item) {
+    generateTitle(item) {
       return (
         d3.timeFormat('%a at %H:00')(new Date(2000, 12, item[1], item[0])) +
         ' - ' +
@@ -203,8 +203,8 @@ export default {
         ' records'
       )
     },
-    drawViz () {},
-    legendSquareXPos (idx) {
+    drawViz() {},
+    legendSquareXPos(idx) {
       const { width: w, cellSize: s, legendNbItems: n } = this
       return w - s * 2 * n + idx * s * 2 - s * 2
     }

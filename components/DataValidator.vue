@@ -27,7 +27,7 @@ export default {
     }
   },
   computed: {
-    hasValidFormat () {
+    hasValidFormat() {
       const weHaveArrays = _.every(
         ['items', 'headers'],
         field => _.has(this.data, field) && Array.isArray(this.data[field])
@@ -42,7 +42,7 @@ export default {
         )
       )
     },
-    hasData () {
+    hasData() {
       return (
         !!(this.data?.headers.length > 0) && !!(this.data?.items.length > 0)
       )

@@ -43,10 +43,10 @@ export default {
   computed: {
     ...mapState(['fileManager']),
     show: {
-      get () {
+      get() {
         return this.value
       },
-      set (value) {
+      set(value) {
         this.$emit('input', value)
       }
     }
