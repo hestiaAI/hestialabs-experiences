@@ -29,9 +29,7 @@ module.exports = {
     ],
     // Turn off no-undef-components rule since
     // Nuxt auto-imports components
-    'vue/no-unregistered-components': ['off', {}],
-    // We like our pages import, default etc...
-    'vue/multi-word-component-names': ['off', {}],
+    'vue/no-undef-components': ['off', {}],
     // Enforce PascalCase component names
     // https://vuejs.org/v2/style-guide/#Component-name-casing-in-templates-strongly-recommended
     'vue/component-name-in-template-casing': [
