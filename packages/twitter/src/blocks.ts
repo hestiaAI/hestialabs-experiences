@@ -27,7 +27,11 @@ const blocks: ViewBlocks = [
     files: ['impressions', 'engagements'],
     visualization: 'ChartViewTopRow.vue',
     vizProps: {
-      xLabel: 'ads'
+      yAccessor: 'advertiserName',
+      xAccessor: 'count_',
+      dateAccessor: 'date_',
+      xLabel: 'ads',
+      countLabel: 'ads'
     },
     title: 'Top advertisers',
     text: 'See the ranking of advertisers that have shown you the most ads.'
