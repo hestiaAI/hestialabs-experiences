@@ -14,12 +14,16 @@
     <template v-if="total > 0">
       <VRow>
         <VCol cols="12">
-          <UnitFilterableTable
+          <ChartViewTopRow
             v-bind="{
               headers: header_name_transport,
-              items: get_name_transport
+              values: get_name_transport
             }"
-            @current-items="onTableFilter"
+            y-accessor="name_of_transport"
+            x-accessor="k"
+            x-label="k"
+            count-label="public tansportation that was used by at least k participants"
+            y-label="transport line"
           />
         </VCol>
       </VRow>
@@ -45,8 +49,10 @@
 </template>
 <script>
 import mixin from './mixin'
+import ChartViewTopRow from './ChartViewTopRow.vue'
 import { kAnonymityFilter } from '@/utils/kAnonymity'
 export default {
+  components: { ChartViewTopRow },
   mixins: [mixin],
   props: {
     keplerConfig: {

@@ -3,7 +3,7 @@
     <VRow dense>
       <VCol cols="12" md="12" class="text-center">
         <p>
-          In total we found <strong>{{ total }}</strong> {{ xLabel }}
+          In total we found <strong>{{ total }}</strong> {{ countLabel }}
           <span v-if="minDate && maxDate" class="">
             between <strong>{{ minDate }}</strong> and
             <strong>{{ maxDate }}</strong>
@@ -123,7 +123,14 @@ export default {
       default: () => [150, 150]
     },
     /**
-     * Label displayed in total count + on xAxis
+     * Label displayed on xAxis
+     */
+    countLabel: {
+      type: String,
+      default: 'records'
+    },
+    /**
+     * Label displayed on xAxis
      */
     xLabel: {
       type: String,
@@ -161,6 +168,7 @@ export default {
       if (!this.values.length) {
         console.error('Values is empty')
         valid = false
+        return valid
       }
       if (
         this.dateAccessor &&
