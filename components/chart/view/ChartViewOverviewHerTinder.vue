@@ -215,8 +215,10 @@ export default {
         .externalLabels(50)
         .dimension(appDimension)
         .group(appGroup)
-        .valueAccessor(d => Object.keys(d.value).length)
-        .title(d => d.key + ': ' + Object.keys(d.value).length + ' user(s)')
+        .valueAccessor(d => Object.keys(d.value.userIds).length)
+        .title(
+          d => d.key + ': ' + Object.keys(d.value.userIds).length + ' user(s)'
+        )
         .drawPaths(true)
         .minAngleForLabel(0.1)
         .ordinalColors(this.colorPalette)
@@ -238,8 +240,10 @@ export default {
         .externalLabels(50)
         .dimension(orientDimension)
         .group(orientGroup)
-        .valueAccessor(d => Object.keys(d.value).length)
-        .title(d => d.key + ': ' + Object.keys(d.value).length + ' user(s)')
+        .valueAccessor(d => Object.keys(d.value.userIds).length)
+        .title(
+          d => d.key + ': ' + Object.keys(d.value.userIds).length + ' user(s)'
+        )
         .drawPaths(true)
         .minAngleForLabel(0.1)
         .ordinalColors(this.colorPalette)
