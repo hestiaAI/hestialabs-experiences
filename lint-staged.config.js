@@ -1,7 +1,7 @@
 export default {
   '*.ts': filenames =>
     // only lint changed files
-    `eslint --ext .ts --fix ${filenames.join(' ')}`,
+    `npm run lint -- --fix ${filenames.join(' ')}`,
   '*.{md,json,eslintrc,prettierrc}': filenames =>
     // only format changed files
     `prettier --write ${filenames.join(' ')}`,
