@@ -5,9 +5,9 @@ WITH
       loserLongitude AS longitude,
       loserName AS name,
       SUBSTR(
-        OtherCandidate.FilePath,
+        OtherCandidate.filePath,
         0,
-        INSTR(OtherCandidate.FilePath, '/')
+        INSTR(OtherCandidate.filePath, '/')
       ) AS uniqueId
     FROM
       OtherCandidate
@@ -20,9 +20,9 @@ WITH
       winnerLongitude AS longitude,
       winnerName AS name,
       SUBSTR(
-        OtherCandidate.FilePath,
+        OtherCandidate.filePath,
         0,
-        INSTR(OtherCandidate.FilePath, '/')
+        INSTR(OtherCandidate.filePath, '/')
       ) AS uniqueId
     FROM
       OtherCandidate,
@@ -55,7 +55,7 @@ FROM
   KAnonymity
 WHERE
   b.uniqueId = SUBSTR(
-    KAnonymity.FilePath,
+    KAnonymity.filePath,
     0,
-    INSTR(KAnonymity.FilePath, '/')
+    INSTR(KAnonymity.filePath, '/')
   )

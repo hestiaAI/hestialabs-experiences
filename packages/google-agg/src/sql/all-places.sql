@@ -9,11 +9,11 @@ FROM
   KAnonymity
 WHERE
   SUBSTR(
-    PlaceVisit.FilePath,
+    PlaceVisit.filePath,
     0,
-    INSTR(PlaceVisit.FilePath, '/')
+    INSTR(PlaceVisit.filePath, '/')
   ) = SUBSTR(
-    KAnonymity.FilePath,
+    KAnonymity.filePath,
     0,
-    INSTR(KAnonymity.FilePath, '/')
+    INSTR(KAnonymity.filePath, '/')
   )

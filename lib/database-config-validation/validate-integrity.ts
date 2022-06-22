@@ -26,7 +26,7 @@ function findAndValidateTable(
 function validateColumnReference(table: DatabaseTable, column: string): void {
   const valid = table.columns.some(c => c[0] === column)
   if (!valid) {
-    error(`Uknown column reference '${column}' in table '${table.name}'`)
+    error(`Unknown column reference '${column}' in table '${table.name}'`)
   }
 }
 

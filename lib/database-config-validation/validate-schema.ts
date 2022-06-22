@@ -10,14 +10,14 @@ const tableNameSchema = {
   $id: `${prefix}tableName`,
   type: 'string',
   // PascalCase
-  pattern: '^[A-Z][a-z]+(?:[A-Z][a-z]+)*$'
+  pattern: '^[A-Z][a-z]*(?:[A-Z][a-z]*)*$'
 }
 
 const columnSchema = {
   $id: `${prefix}column`,
   type: 'string',
   // camelCase
-  pattern: '^[a-z]+(?:[A-Z][a-z]+)*$'
+  pattern: '^[a-z]+(?:[A-Z][a-z]*)*$'
 }
 
 const columnsSchema = {

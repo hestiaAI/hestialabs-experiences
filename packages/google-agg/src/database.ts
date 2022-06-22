@@ -9,7 +9,7 @@ const config: DatabaseConfig = {
       name: 'KAnonymity',
       columns: [
         ['k', INTEGER],
-        ['FilePath', TEXT, 'FILEPATH']
+        ['filePath', TEXT, 'FILEPATH']
       ]
     },
     {
@@ -26,7 +26,7 @@ const config: DatabaseConfig = {
         ['locationConfidence', FLOAT],
         ['duration', FLOAT],
         ['semanticType', TEXT],
-        ['FilePath', TEXT, 'FILEPATH']
+        ['filePath', TEXT, 'FILEPATH']
       ]
     },
     {
@@ -46,7 +46,7 @@ const config: DatabaseConfig = {
         ['loserSemanticType', TEXT],
         ['startTimestamp', TEXT],
         ['endTimestamp', TEXT],
-        ['FilePath', TEXT, 'FILEPATH']
+        ['filePath', TEXT, 'FILEPATH']
       ]
     },
     {
@@ -62,7 +62,7 @@ const config: DatabaseConfig = {
         ['transitPath', TEXT],
         ['distanceMeters', INTEGER],
         ['activityType', TEXT],
-        ['FilePath', TEXT, 'FILEPATH']
+        ['filePath', TEXT, 'FILEPATH']
       ]
     },
     {
@@ -74,7 +74,7 @@ const config: DatabaseConfig = {
         ['accuracy', INTEGER],
         ['source', TEXT],
         ['activityType', TEXT],
-        ['FilePath', TEXT, 'FILEPATH']
+        ['filePath', TEXT, 'FILEPATH']
       ]
     },
     {
@@ -84,7 +84,7 @@ const config: DatabaseConfig = {
         ['latitude', INTEGER],
         ['longitude', INTEGER],
         ['count', TEXT],
-        ['FilePath', TEXT, 'FILEPATH']
+        ['filePath', TEXT, 'FILEPATH']
       ]
     }
   ],

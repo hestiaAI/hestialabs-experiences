@@ -8,14 +8,14 @@ const config: DatabaseConfig = {
     {
       name: 'TrackerControl',
       columns: [
-        ['UID', TEXT],
-        ['DAddr', TEXT],
+        ['uid', TEXT],
+        ['daddr', TEXT],
         ['time', TEXT],
-        ['Tracker', TEXT],
-        ['Category', TEXT],
-        ['Package', TEXT],
-        ['App', TEXT],
-        ['FilePath', TEXT, 'FILEPATH']
+        ['tracker', TEXT],
+        ['category', TEXT],
+        ['package', TEXT],
+        ['app', TEXT],
+        ['filePath', TEXT, 'FILEPATH']
       ]
     }
   ],
@@ -26,11 +26,11 @@ const config: DatabaseConfig = {
       table: 'TrackerControl',
       getters: [
         {
-          column: 'UID',
+          column: 'uid',
           path: '$.uid'
         },
         {
-          column: 'DAddr',
+          column: 'daddr',
           path: '$.daddr'
         },
         {
@@ -38,19 +38,19 @@ const config: DatabaseConfig = {
           path: '$.date'
         },
         {
-          column: 'Tracker',
+          column: 'tracker',
           path: '$.Tracker'
         },
         {
-          column: 'Category',
+          column: 'category',
           path: '$.Category'
         },
         {
-          column: 'Package',
+          column: 'package',
           path: '$.Package'
         },
         {
-          column: 'App',
+          column: 'app',
           path: '$.App'
         }
       ]
