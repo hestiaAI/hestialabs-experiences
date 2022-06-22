@@ -32,16 +32,16 @@ export default {
   },
   methods: {
     drawViz() {
-      if (!this.values || this.values.length === 0) return
+      if (!this.values || this.values.length === 0) { return }
       // Transform list to hierarchical object
       const colorDomain = []
       const hierarchicalData = d3
         .stratify()
-        .id(function (d) {
+        .id(function(d) {
           return d.id
         })
-        .parentId(function (d) {
-          if (d.parent === 0) colorDomain.push(d.name)
+        .parentId(function(d) {
+          if (d.parent === 0) { colorDomain.push(d.name) }
           return d.parent
         })(this.values)
 
@@ -146,8 +146,8 @@ export default {
         .selectAll('#' + this.graphId + ' path')
         .data(root.descendants().slice(1))
         .join('path')
-        .attr('fill', d => {
-          while (d.depth > 1) d = d.parent
+        .attr('fill', (d) => {
+          while (d.depth > 1) { d = d.parent }
           return color(d.data.name)
         })
         .attr('fill-opacity', d =>
@@ -181,8 +181,8 @@ export default {
         .attr('dy', '0.35em')
         .attr('fill-opacity', d => +labelVisible(d.current))
         .attr('transform', d => labelTransform(d.current))
-        .text(d => {
-          if (!d.data.name) return 'undefined'
+        .text((d) => {
+          if (!d.data.name) { return 'undefined' }
           return d.data.name.length > 10
             ? d.data.name.substring(0, 10) + '..'
             : d.data.name
@@ -210,7 +210,7 @@ export default {
       let currentLevel = [{ text: rootName, disabled: true }]
       function clicked(event, p) {
         const ancestors = getAncestors(p)
-        currentLevel = ancestors.map(d => {
+        currentLevel = ancestors.map((d) => {
           return {
             text: d.data.name,
             disabled: true
@@ -249,11 +249,11 @@ export default {
         // the next transition from the desired position.
         path
           .transition(t)
-          .tween('data', d => {
+          .tween('data', (d) => {
             const i = d3.interpolate(d.current, d.target)
             return t => (d.current = i(t))
           })
-          .filter(function (d) {
+          .filter(function(d) {
             return +this.getAttribute('fill-opacity') || arcVisible(d.target)
           })
           .attr('fill-opacity', d =>
@@ -262,7 +262,7 @@ export default {
           .attrTween('d', d => () => arc(d.current))
 
         label
-          .filter(function (d) {
+          .filter(function(d) {
             return +this.getAttribute('fill-opacity') || labelVisible(d.target)
           })
           .transition(t)
@@ -287,7 +287,7 @@ export default {
       }
 
       const mouseover = (e, d) => {
-        if (d.depth - currentLevel.length > 1) return
+        if (d.depth - currentLevel.length > 1) { return }
         // Find all ancestors of current overred element
         const ancestors = getAncestors(d)
 
@@ -302,7 +302,7 @@ export default {
             ? d.data.name.slice(0, 15) + '..'
             : d.data.name ?? 'undefined'
         )
-        this.bcItems = ancestors.map(d => {
+        this.bcItems = ancestors.map((d) => {
           return {
             text: d.data.name ?? 'undefined',
             disabled: true
@@ -314,7 +314,7 @@ export default {
         infoPercent.attr('opacity', 1)
         infoNumber.attr('opacity', 1)
         infoLabel.attr('opacity', 1)
-        if (currentLevel.length <= 1) clickLabel.attr('opacity', 1)
+        if (currentLevel.length <= 1) { clickLabel.attr('opacity', 1) }
 
         // Fade all the segments.
         d3.selectAll('#' + this.graphId + ' path').style('opacity', 0.3)

@@ -7,21 +7,16 @@
     </p>
     <BaseButton text="Generate keys" @click="generateKeys" />
 
-    <h2 class="mt-6">Import</h2>
+    <h2 class="mt-6">
+      Import
+    </h2>
     <p>
       Please provide a ZIP file containing exported results and the associated
       consent form.
     </p>
-    <VFileInput
-      v-model="inputZIP"
-      label="Encrypted or plaintext ZIP file"
-    ></VFileInput>
-    <VCheckbox v-model="decrypt" label="Decrypt"></VCheckbox>
-    <VFileInput
-      v-model="secretKey"
-      label="Secret Key"
-      :disabled="!decrypt"
-    ></VFileInput>
+    <VFileInput v-model="inputZIP" label="Encrypted or plaintext ZIP file" />
+    <VCheckbox v-model="decrypt" label="Decrypt" />
+    <VFileInput v-model="secretKey" label="Secret Key" :disabled="!decrypt" />
     <BaseButton
       text="Import"
       v-bind="{ status, error, progress, disabled: !inputZIP }"
@@ -33,11 +28,15 @@
       text="Download plaintext"
       :disabled="!status || error"
     />
-    <p v-if="error">{{ message }}</p>
+    <p v-if="error">
+      {{ message }}
+    </p>
     <template v-if="status && !error">
       <VCard class="pa-2 my-6">
         <!-- Experience details -->
-        <VCardTitle class="justify-center">Experience Details</VCardTitle>
+        <VCardTitle class="justify-center">
+          Experience Details
+        </VCardTitle>
         <VListItem two-line>
           <VListItemContent>
             <VListItemTitle>Experience</VListItemTitle>
@@ -47,9 +46,9 @@
         <VListItem two-line>
           <VListItemContent>
             <VListItemTitle>Date</VListItemTitle>
-            <VListItemSubtitle>{{
-              new Date(experience.timestamp)
-            }}</VListItemSubtitle>
+            <VListItemSubtitle>
+              {{ new Date(experience.timestamp) }}
+            </VListItemSubtitle>
           </VListItemContent>
         </VListItem>
         <VListItem two-line>
@@ -62,7 +61,9 @@
 
       <!-- Consent log -->
       <VCard class="pa-2 my-6">
-        <VCardTitle class="justify-center">Consent Log</VCardTitle>
+        <VCardTitle class="justify-center">
+          Consent Log
+        </VCardTitle>
         <VCardText>
           <UnitConsentFormSection
             v-for="(section, index) in consentForm"
@@ -81,7 +82,9 @@
         :key="resultIndex"
         class="pa-2 my-6"
       >
-        <VCardTitle class="justify-center">{{ title }}</VCardTitle>
+        <VCardTitle class="justify-center">
+          {{ title }}
+        </VCardTitle>
         <VRow>
           <VCol>
             <UnitVegaViz

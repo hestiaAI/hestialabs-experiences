@@ -14,7 +14,7 @@ async function setItem(key, value, name) {
 
 async function clear(...names) {
   await Promise.all(
-    names.map(name => {
+    names.map((name) => {
       const store = createInstance(name)
       return store.clear()
     })

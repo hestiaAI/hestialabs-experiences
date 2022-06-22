@@ -4,8 +4,10 @@
       :data="{ items: items, headers: headers }"
       allow-missing-columns
     >
-      <BaseAlert v-if="error" type="error">{{ message }}</BaseAlert>
-      <BaseSearchBar v-model="search"></BaseSearchBar>
+      <BaseAlert v-if="error" type="error">
+        {{ message }}
+      </BaseAlert>
+      <BaseSearchBar v-model="search" />
       <VDataTable
         v-bind="{ headers: data.headers, search }"
         ref="tableRef"
@@ -137,7 +139,7 @@ export default {
       this.applyFilters()
     },
     applyFilters() {
-      this.filteredItems = this.data.items.filter(d => {
+      this.filteredItems = this.data.items.filter((d) => {
         return Object.entries(this.filters).every(([header, filter]) => {
           return filter === null || filter(d[header])
         })

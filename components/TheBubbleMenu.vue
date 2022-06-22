@@ -1,6 +1,8 @@
 <template>
   <div v-if="$store.state.config.bubbleConfig">
-    <h4 class="mt-6 mb-4 text-h4">Bubbles</h4>
+    <h4 class="mt-6 mb-4 text-h4">
+      Bubbles
+    </h4>
     <VList rounded>
       <VListItem
         v-for="({ title, icon }, slug) in $store.state.config.bubbleConfig"
@@ -12,7 +14,7 @@
           <VImg :src="icon" :lazy-src="icon" />
         </VListItemAvatar>
         <VListItemContent>
-          <VListItemTitle v-text="title" />
+          <VListItemTitle>{{ title }}</VListItemTitle>
         </VListItemContent>
       </VListItem>
     </VList>

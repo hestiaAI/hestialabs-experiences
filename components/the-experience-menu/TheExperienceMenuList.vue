@@ -10,8 +10,8 @@
           <VImg :src="icon" :lazy-src="icon" />
         </VListItemAvatar>
         <VListItemContent>
-          <VListItemTitle v-text="title" />
-          <VListItemSubtitle v-text="subtitle" />
+          <VListItemTitle>{{ title }}</VListItemTitle>
+          <VListItemSubtitle>{{ subtitle }}</VListItemSubtitle>
         </VListItemContent>
       </VListItem>
     </VList>

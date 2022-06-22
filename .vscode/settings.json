@@ -13,12 +13,17 @@
     "source.fixAll.eslint": true
   },
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-
+  "[js][vue]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[json][md]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // https://eslint.vuejs.org/user-guide/#editor-integrations
   "eslint.validate": ["javascript", "vue"],
-  "javascript.validate.enable": false,
-
   // https://eslint.vuejs.org/user-guide/#trouble-with-visual-studio-code
   // https://stackoverflow.com/a/64573900/8238129
-  "vetur.validation.template": false
+  "vetur.validation.template": false,
+
+  "javascript.validate.enable": false
 }

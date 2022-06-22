@@ -1,8 +1,12 @@
 <template>
-  <div v-if="loading">Loading</div>
+  <div v-if="loading">
+    Loading
+  </div>
   <div v-else-if="error">
     <p>Could not parse file. Showing content instead</p>
-    <div class="explorer__content">{{ jsonText }}</div>
+    <div class="explorer__content">
+      {{ jsonText }}
+    </div>
   </div>
   <div v-else>
     <BaseSearchBar v-model="search" :loading="searching" />
@@ -106,7 +110,7 @@ export default {
   },
   computed: {
     delayedUpdateFilteredItems() {
-      return debounce(async function () {
+      return debounce(async function() {
         this.searching = true
         await this.updateFilteredItems()
         this.searching = false

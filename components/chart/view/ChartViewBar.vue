@@ -1,5 +1,5 @@
 <template>
-  <div ref="graph"></div>
+  <div ref="graph" />
 </template>
 
 <script>
@@ -12,7 +12,7 @@ function barChart() {
   let width = 440
   let height = 120
   function chart(selection) {
-    selection.each(function (data) {
+    selection.each(function(data) {
       // Select the svg element, if it exists.
       const svg = d3
         .select(this)
@@ -43,14 +43,14 @@ function barChart() {
     })
   }
 
-  chart.width = function (_) {
-    if (!arguments.length) return width
+  chart.width = function(_) {
+    if (!arguments.length) { return width }
     width = _
     return chart
   }
 
-  chart.height = function (_) {
-    if (!arguments.length) return height
+  chart.height = function(_) {
+    if (!arguments.length) { return height }
     height = _
     return chart
   }

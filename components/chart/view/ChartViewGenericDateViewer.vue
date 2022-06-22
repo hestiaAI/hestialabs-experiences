@@ -2,7 +2,9 @@
   <VContainer v-if="values.length > 0">
     <VRow>
       <VCol cols="12" md="7">
-        <p class="text-h6">Number of dated events in your files</p>
+        <p class="text-h6">
+          Number of dated events in your files
+        </p>
         <p
           v-if="total === 0 && !currMinDate && !currMaxDate"
           class="text-subtitle-2"
@@ -22,7 +24,7 @@
           :items="intervalNames"
           label="Time interval"
           @change="drawBarChart"
-        ></VSelect>
+        />
       </VCol>
       <VCol cols="12" md="3">
         <VSelect
@@ -43,7 +45,7 @@
                 <VListItemTitle> Select All </VListItemTitle>
               </VListItemContent>
             </VListItem>
-            <VDivider class="mt-2"></VDivider>
+            <VDivider class="mt-2" />
           </template>
           <template #selection="{ item, index }">
             <span v-if="index === 0">{{
@@ -58,7 +60,7 @@
     </VRow>
     <ChartViewVRowWebShare>
       <VCol cols="12">
-        <div :id="graphId"></div>
+        <div :id="graphId" />
         <p class="text-subtitle-2">
           Select a <strong>time range</strong> below
           <VBtn
@@ -72,7 +74,7 @@
             Reset
           </VBtn>
         </p>
-        <div :id="'range-chart' + graphId" class="range-chart"></div>
+        <div :id="'range-chart' + graphId" class="range-chart" />
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
@@ -85,7 +87,9 @@
     </VRow>
   </VContainer>
   <VContainer v-else>
-    <p class="text-center">No relevant data found</p>
+    <p class="text-center">
+      No relevant data found
+    </p>
   </VContainer>
 </template>
 
@@ -139,8 +143,8 @@ export default {
       return this.selectFiles.length > 0 && !this.selectAll
     },
     icon() {
-      if (this.selectAll) return '$vuetify.icons.mdiCloseBox'
-      if (this.selectSome) return '$vuetify.icons.mdiMinusBox'
+      if (this.selectAll) { return '$vuetify.icons.mdiCloseBox' }
+      if (this.selectSome) { return '$vuetify.icons.mdiMinusBox' }
       return '$vuetify.icons.mdiCheckboxBlankOutline'
     }
   },
@@ -156,9 +160,9 @@ export default {
       })
     },
     drawViz() {
-      if (this.values.length === 0) return
+      if (this.values.length === 0) { return }
       // Format dates
-      this.values.forEach(d => {
+      this.values.forEach((d) => {
         d.date = new Date(d.date)
         d.day = d3.timeDay(d.date)
         d.dateStr = datetimeFormatter(d.date)
@@ -187,10 +191,13 @@ export default {
       this.currMaxDate = this.formatDate(this.maxDate)
       this.total = this.dateDimension.top(Infinity).length
       const diffDays = d3.timeDay.count(this.minDate, this.maxDate)
-      if (diffDays < 100) this.selectTimeInt = 'Days'
-      else if (diffDays < 1000) this.selectTimeInt = 'Weeks'
-      // else if (diffDays < 3600) this.selectTimeInt = 'Months'
-      else this.selectTimeInt = 'Months'
+      if (diffDays < 100) {
+        this.selectTimeInt = 'Days'
+      } else if (diffDays < 1000) {
+        this.selectTimeInt = 'Weeks'
+      } else {
+        this.selectTimeInt = 'Months'
+      }
 
       const width = d3
         .select('#' + this.graphId)
@@ -265,7 +272,7 @@ export default {
       this.toggle()
     },
     drawBarChart() {
-      if (this.volumeGroup) this.volumeGroup.dispose()
+      if (this.volumeGroup) { this.volumeGroup.dispose() }
       const interval = this.intervals[this.selectTimeInt]
       this.barChart.xUnits(interval.range)
       this.volumeGroup = this.dateDimension.group(k => interval(k))
@@ -292,7 +299,7 @@ export default {
     },
     filterFiles(files) {
       this.fileDimension.filter(null)
-      this.fileDimension.filterFunction(function (d) {
+      this.fileDimension.filterFunction(function(d) {
         return files.includes(d)
       })
       this.calcDomain(this.rangeChart)

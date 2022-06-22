@@ -12,7 +12,7 @@
                   <p class="filters">
                     <span>
                       Current filter:
-                      <span class="filter"></span>
+                      <span class="filter" />
                     </span>
                   </p>
                 </div>
@@ -34,7 +34,7 @@
                   <p class="filters">
                     <span>
                       Current filter:
-                      <span class="filter"></span>
+                      <span class="filter" />
                     </span>
                   </p>
                 </div>
@@ -46,7 +46,7 @@
                   <p class="filters">
                     <span>
                       Current filter:
-                      <span class="filter"></span>
+                      <span class="filter" />
                     </span>
                   </p>
                 </div>
@@ -58,12 +58,12 @@
               <div style="display: flex">
                 <strong>Top Users</strong>
                 <VSpacer />
-                <div :id="`user-search-${graphId}`"></div>
+                <div :id="`user-search-${graphId}`" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -74,9 +74,9 @@
     </ChartViewVRowWebShare>
     <VRow>
       <div :id="`dc-data-count-${graphId}`" class="dc-data-count">
-        <span class="filter-count"></span>
+        <span class="filter-count" />
         selected out of
-        <span class="total-count"></span>
+        <span class="total-count" />
         messages |
         <a class="resetAll">Reset All</a>
       </div>
@@ -139,7 +139,7 @@ export default {
 
       // Parse and format data
       const formatDay = d3.timeFormat('%B %d, %Y')
-      this.results = this.values.map(d => {
+      this.results = this.values.map((d) => {
         const date = new Date(d.sendDatetime)
         return {
           senderName: decodeURIComponent(escape(d.senderName)),
@@ -163,21 +163,21 @@ export default {
       const userSearch = new dc.TextFilterWidget(`#user-search-${this.graphId}`)
 
       // Bind reset filters links
-      d3.select(`#hour-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#hour-chart-${this.graphId} a.reset`).on('click', function() {
         hourChart.filterAll()
         dc.redrawAll()
       })
-      d3.select(`#user-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#user-chart-${this.graphId} a.reset`).on('click', function() {
         userChart.filterAll()
         dc.redrawAll()
       })
-      d3.select(`#week-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#week-chart-${this.graphId} a.reset`).on('click', function() {
         weekChart.filterAll()
         dc.redrawAll()
       })
       d3.select(`#messages-chart-${this.graphId} a.reset`).on(
         'click',
-        function () {
+        function() {
           messageChart.filterAll()
           rangeChart.filterAll()
           dc.redrawAll()
@@ -188,7 +188,7 @@ export default {
 
       // Create dimensions
       const all = ndx.groupAll()
-      const dayOfWeekDimension = ndx.dimension(d => {
+      const dayOfWeekDimension = ndx.dimension((d) => {
         const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         return `${name[d.weekDay]}`
       })
@@ -245,7 +245,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function (d) {
+      weekChart.ordering(function(d) {
         switch (d.key) {
           case 'Mon':
             return 0

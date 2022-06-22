@@ -10,7 +10,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -33,7 +33,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -44,12 +44,12 @@
               <div style="display: flex">
                 <strong>{{ titleTop }}</strong>
                 <VSpacer />
-                <div :id="`top-search-${graphId}`"></div>
+                <div :id="`top-search-${graphId}`" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -60,9 +60,9 @@
     </ChartViewVRowWebShare>
     <VRow>
       <div :id="`dc-data-count-${graphId}`" class="dc-data-count">
-        <span class="filter-count"></span>
+        <span class="filter-count" />
         selected out of
-        <span class="total-count"></span>
+        <span class="total-count" />
         {{ rowLabel }} |
         <a class="resetAll">Reset All</a>
       </div>
@@ -158,7 +158,7 @@ export default {
 
       // Parse and format data
       const formatDay = d3.timeFormat('%B %d, %Y')
-      this.results = this.values.map(d => {
+      this.results = this.values.map((d) => {
         const date = new Date(d[this.dateAccessor.value])
         return {
           name: decodeURIComponent(escape(d[this.topAccessor.value])),
@@ -181,15 +181,15 @@ export default {
       const pieChart = new dc.PieChart(`#pie-chart-${this.graphId}`)
 
       // Bind reset filters links
-      d3.select(`#top-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#top-chart-${this.graphId} a.reset`).on('click', function() {
         topChart.filterAll()
         dc.redrawAll()
       })
-      d3.select(`#pie-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#pie-chart-${this.graphId} a.reset`).on('click', function() {
         pieChart.filterAll()
         dc.redrawAll()
       })
-      d3.select(`#area-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#area-chart-${this.graphId} a.reset`).on('click', function() {
         lineChart.filterAll()
         rangeChart.filterAll()
         dc.redrawAll()
@@ -313,13 +313,13 @@ export default {
         .minAngleForLabel(0.1)
         .ordinalColors(colorPalette)
 
-      pieChart.on('pretransition', function (chart) {
-        chart.selectAll('text.pie-slice.pie-label').call(function (t) {
-          t.each(function (d) {
+      pieChart.on('pretransition', function(chart) {
+        chart.selectAll('text.pie-slice.pie-label').call(function(t) {
+          t.each(function(d) {
             const self = d3.select(this)
             let text = self.text()
-            if (text.length > 14) text = text.substring(0, 14) + '.. '
-            if (text.length > 0)
+            if (text.length > 14) { text = text.substring(0, 14) + '.. ' }
+            if (text.length > 0) {
               text =
                 text +
                 ' (' +
@@ -327,6 +327,7 @@ export default {
                   ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
                 ) +
                 '%)'
+            }
             self.text(text)
           })
         })

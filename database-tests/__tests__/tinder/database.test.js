@@ -11,7 +11,7 @@ const tester = new DatabaseTester()
 const getSql = getSqlFromBlock.bind(null, experience)
 
 describe('with complete samples', () => {
-  beforeAll(async () => {
+  beforeAll(async() => {
     const files = [mockFile('input.json', JSON.stringify(tinder))]
     await tester.init(experience, files)
   })

@@ -9,7 +9,7 @@ export class DatabaseTester {
     mockedFiles
   ) {
     if (!databaseConfig) {
-      throw new Error(`databaseConfig is not defined`)
+      throw new Error('databaseConfig is not defined')
     }
     const fileManager = new FileManager(
       preprocessors,

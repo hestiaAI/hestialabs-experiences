@@ -66,14 +66,11 @@ export default {
     }
   },
   computed: {
-    results() {
-      return this.values
-    },
     total() {
       return this.values.length
     },
     get_name_transport() {
-      const names = this.values.map(v => {
+      const names = this.values.map((v) => {
         return {
           name_of_transport: v.transitPath.substr(
             0,
@@ -89,7 +86,7 @@ export default {
       return Object.keys(this.get_name_transport[0])
     },
     get_trips() {
-      const trips = this.values.map(v => {
+      const trips = this.values.map((v) => {
         return {
           ...v,
           start_end: v.transitPath.substr(v.transitPath.indexOf(':') + 1)
@@ -107,7 +104,7 @@ export default {
     },
     keplerData() {
       return {
-        fields: this.header_trips.map(h => {
+        fields: this.header_trips.map((h) => {
           return {
             name: h
           }

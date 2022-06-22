@@ -12,7 +12,7 @@
             <VListItemTitle> Select All </VListItemTitle>
           </VListItemContent>
         </VListItem>
-        <VDivider class="mt-2"></VDivider>
+        <VDivider class="mt-2" />
       </template>
     </VSelect>
   </VContainer>
@@ -41,8 +41,8 @@ export default {
       return this.selectedItems.length > 0 && !this.selectAllItems
     },
     icon() {
-      if (this.selectAllItems) return '$vuetify.icons.mdiCloseBox'
-      if (this.selectSomeItems) return '$vuetify.icons.mdiMinusBox'
+      if (this.selectAllItems) { return '$vuetify.icons.mdiCloseBox' }
+      if (this.selectSomeItems) { return '$vuetify.icons.mdiMinusBox' }
       return '$vuetify.icons.mdiCheckboxBlankOutline'
     }
   },

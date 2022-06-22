@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <div :id="graphId" style="position: relative"></div>
+    <div :id="graphId" style="position: relative" />
     <div>
       <p>
         Please take into account the fact that this graph only shows the link
@@ -54,7 +54,7 @@ export default {
       const nodesToRemove = ['Chrome', 'Firefox', 'Samsung Internet']
       result = result.filter(row => !nodesToRemove.includes(row.App))
 
-      const links = result.map(function (item) {
+      const links = result.map(function(item) {
         return { source: item.App, target: item.Tracker, weight: 1 }
       })
 
@@ -110,10 +110,10 @@ export default {
     },
     updateViz() {
       // Nodes size scale
-      const minValue = d3.min(this.jsonData.nodes, function (d) {
+      const minValue = d3.min(this.jsonData.nodes, function(d) {
         return +d.size
       })
-      const maxValue = d3.max(this.jsonData.nodes, function (d) {
+      const maxValue = d3.max(this.jsonData.nodes, function(d) {
         return +d.size
       })
       const size = d3.scaleLinear().domain([minValue, maxValue]).range([10, 40])
@@ -127,7 +127,7 @@ export default {
         )
         .force(
           'link',
-          d3.forceLink().id(function (d) {
+          d3.forceLink().id(function(d) {
             return d.id
           })
         )
@@ -137,7 +137,7 @@ export default {
           'collide',
           d3
             .forceCollide()
-            .radius(function (d) {
+            .radius(function(d) {
               return 16 + size(d.size)
             })
             .iterations(2)
@@ -170,7 +170,7 @@ export default {
         .data(this.jsonData.links)
         .enter()
         .append('line')
-        .attr('stroke-width', function (d) {
+        .attr('stroke-width', function(d) {
           return 1 * d.weight
         })
         .attr('stroke', 'grey')
@@ -192,7 +192,7 @@ export default {
         .attr('fill', d => d.color)
         .attr('stroke', 'white')
         .attr('stroke-opacity', 1)
-        .attr('stroke-width', function (d) {
+        .attr('stroke-width', function(d) {
           return 0.05 * size(d.size)
         })
         .call(
@@ -206,7 +206,7 @@ export default {
       // Draw labels of nodes
       node
         .append('text')
-        .text(function (d) {
+        .text(function(d) {
           return d.id
         })
 
@@ -216,7 +216,7 @@ export default {
         .attr('text-baseline', 'middle')
 
       // Title for nodes
-      node.append('title').text(function (d) {
+      node.append('title').text(function(d) {
         return d.id
       })
 
@@ -226,22 +226,22 @@ export default {
       simulation.force('link').links(this.jsonData.links)
 
       function ticked() {
-        node.attr('transform', function (d) {
+        node.attr('transform', function(d) {
           // radius = 3 + Math.sqrt(d.size)*2;
           return 'translate(' + d.x + ',' + d.y + ')'
         })
 
         link
-          .attr('x1', function (d) {
+          .attr('x1', function(d) {
             return d.source.x
           })
-          .attr('y1', function (d) {
+          .attr('y1', function(d) {
             return d.source.y
           })
-          .attr('x2', function (d) {
+          .attr('x2', function(d) {
             return d.target.x
           })
-          .attr('y2', function (d) {
+          .attr('y2', function(d) {
             return d.target.y
           })
       }
@@ -268,7 +268,7 @@ export default {
         .call(colorLegend);
       */
       function dragstarted(evt) {
-        if (!evt.active) simulation.alphaTarget(0.3).restart()
+        if (!evt.active) { simulation.alphaTarget(0.3).restart() }
         evt.subject.fx = evt.subject.x
         evt.subject.fy = evt.subject.y
       }
@@ -279,7 +279,7 @@ export default {
       }
 
       function dragended(evt) {
-        if (!evt.active) simulation.alphaTarget(0)
+        if (!evt.active) { simulation.alphaTarget(0) }
         evt.subject.fx = null
         evt.subject.fy = null
       }

@@ -1,5 +1,7 @@
 <template>
-  <div v-if="loading">Loading</div>
+  <div v-if="loading">
+    Loading
+  </div>
   <div v-else-if="error">
     <p>Could not parse file.</p>
   </div>
@@ -59,7 +61,7 @@ export default {
               { length: Math.max(...rows.map(r => r.length)) },
               (_, j) => 'Column ' + (j + 1)
             )
-            const items = rows.map(row => {
+            const items = rows.map((row) => {
               return Object.fromEntries(headers.map((h, j) => [h, row[j]]))
             })
             return [sheets[i], { headers, items }]

@@ -2,7 +2,9 @@
   <VContainer v-if="values.length > 0">
     <VRow>
       <VCol cols="12">
-        <p class="text-h6">Number of location records in your files</p>
+        <p class="text-h6">
+          Number of location records in your files
+        </p>
         <p v-if="total === 0" class="text-subtitle-2">
           No location were found in your file(s).
         </p>
@@ -55,7 +57,7 @@ export default {
     },
     keplerData() {
       return {
-        fields: this.header.map(h => {
+        fields: this.header.map((h) => {
           return {
             name: h.value
           }

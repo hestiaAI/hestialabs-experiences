@@ -1,6 +1,8 @@
 <template>
   <VContainer fluid style="max-width: 400px" class="mt-16">
-    <h1 class="text-h4 mb-6">Bubble Login</h1>
+    <h1 class="text-h4 mb-6">
+      Bubble Login
+    </h1>
     <VForm @submit.prevent="login">
       <VTextField :value="username" label="Username" readonly />
       <VTextField
@@ -16,7 +18,9 @@
         autofocus
         @click:append="onClickAppend"
       />
-      <BaseButton type="submit">Login</BaseButton>
+      <BaseButton type="submit">
+        Login
+      </BaseButton>
     </VForm>
   </VContainer>
 </template>

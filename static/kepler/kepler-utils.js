@@ -12,7 +12,7 @@
 const { combineReducers, applyMiddleware, createStore, compose } = Redux
 const { Provider } = ReactRedux
 
-export const buildStore = function () {
+export const buildStore = function() {
   const reducers = combineReducers({
     // mount keplerGl reducer
     keplerGl: KeplerGl.keplerGlReducer
@@ -27,7 +27,7 @@ export const buildStore = function () {
 }
 
 export function init(containerElement, props = {}, store, mapboxToken) {
-  const KeplerElement = function (props) {
+  const KeplerElement = function(props) {
     return React.createElement(
       'div',
       {

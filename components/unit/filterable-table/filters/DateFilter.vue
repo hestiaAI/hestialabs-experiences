@@ -5,12 +5,20 @@
         <VCol>
           <div class="d-flex justify-space-between">
             <div>
-              <div class="subtitle-2">From:</div>
-              <VChip label outlined>{{ dateFormatter(dateRange[0]) }}</VChip>
+              <div class="subtitle-2">
+                From:
+              </div>
+              <VChip label outlined>
+                {{ dateFormatter(dateRange[0]) }}
+              </VChip>
             </div>
             <div>
-              <div class="subtitle-2">To:</div>
-              <VChip label outlined>{{ dateFormatter(dateRange[1]) }}</VChip>
+              <div class="subtitle-2">
+                To:
+              </div>
+              <VChip label outlined>
+                {{ dateFormatter(dateRange[1]) }}
+              </VChip>
             </div>
           </div>
           <VRangeSlider
@@ -24,7 +32,7 @@
             dense
             step="1"
             @change="filterChange"
-          ></VRangeSlider>
+          />
         </VCol>
       </VRow>
       <TimeFilter
@@ -44,8 +52,8 @@
           x-small
           @mousedown.prevent
           @click="selectAll"
-          v-text="allWeekDays ? `Unselect All` : `Select All`"
         >
+          {{ allWeekDays ? 'Unselect All' : 'Select All' }}
         </VBtn>
       </div>
       <VRow>
@@ -64,7 +72,7 @@
             hide-details
             dense
             @change="filterChange"
-          ></VCheckbox>
+          />
         </VCol>
       </VRow>
     </div>
@@ -135,9 +143,8 @@ export default {
         this.allWeekDays &&
         JSON.stringify(this.sliderRange) ===
           JSON.stringify([0, this.numberOfDays])
-      )
-        return null
-      return value => {
+      ) { return null }
+      return (value) => {
         const date = this.parser(value)
         return (
           (!value ||
@@ -176,7 +183,7 @@ export default {
     reset() {
       this.weekDayAuthorized = this.weekDays.slice()
       this.sliderRange = [0, this.numberOfDays]
-      if (this.isDatetime) this.$refs.timeFilter.reset()
+      if (this.isDatetime) { this.$refs.timeFilter.reset() }
       this.filterChange()
     }
   }

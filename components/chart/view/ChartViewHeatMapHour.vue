@@ -1,8 +1,10 @@
 <template>
   <VContainer>
     <div class="d-flex mb-3">
-      <div class="overline">{{ title }}</div>
-      <VSpacer></VSpacer>
+      <div class="overline">
+        {{ title }}
+      </div>
+      <VSpacer />
       <div v-if="includeTotal" class="overline">
         total: <strong>{{ items.length }}</strong>
       </div>
@@ -43,7 +45,7 @@
               :fill="color(item[2])"
               :rx="borderRadius"
               :ry="borderRadius"
-            ></rect>
+            />
             <title>{{ generateTitle(item) }}</title>
           </g>
         </g>
@@ -66,7 +68,7 @@
               :fill="color(square)"
               :rx="borderRadius"
               :ry="borderRadius"
-            ></rect>
+            />
             <text
               style="text-anchor: middle"
               :x="legendSquareXPos(idx) + cellSize"
@@ -147,18 +149,17 @@ export default {
       return `0 0 ${this.width} ${this.height}`
     },
     dateParser() {
-      if (this.dateFormat) return d3.timeParse(this.dateFormat)
-      else
-        return d => {
+      if (this.dateFormat) { return d3.timeParse(this.dateFormat) } else {
+        return (d) => {
           const date = new Date(d)
           // return null if the date is not recognized
-          if (isNaN(date.getTime())) return null
-          else return date
+          if (isNaN(date.getTime())) { return null } else { return date }
         }
+      }
     },
     items() {
       return this.values
-        .map(v => {
+        .map((v) => {
           return {
             date: this.dateParser(v[this.dateAccessor]),
             value: this.valueAccessor ? v[this.valueAccessor] : 1
