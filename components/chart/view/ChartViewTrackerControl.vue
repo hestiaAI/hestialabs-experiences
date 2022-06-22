@@ -134,13 +134,13 @@ export default {
       selectedApps: [],
       selectAppDimension: null,
       header: [
-        { text: 'App', value: 'App' },
-        { text: 'Uid', value: 'uid' },
+        { text: 'App', value: 'app' },
+        { text: 'UID', value: 'uid' },
         { text: 'More Info', value: 'url' },
         { text: 'Date', value: 'dateStr' },
-        { text: 'Tracker', value: 'Tracker' },
+        { text: 'Tracker', value: 'tracker' },
         { text: 'daddr', value: 'daddr' },
-        { text: 'Category', value: 'Category' }
+        { text: 'Category', value: 'category' }
       ],
       results: []
     }
@@ -232,9 +232,9 @@ export default {
           d.Package +
           '/latest/'
         d.dateStr = formatTime(d.day)
-        d.Category = d.Category === '' ? 'Unknown' : d.Category
-        d.App = d.App === '' ? 'Unknown' : d.App
-        d.Tracker = d.Tracker === '' ? 'Unknown' : d.Tracker
+        d.category = d.category === '' ? 'Unknown' : d.category
+        d.app = d.app === '' ? 'Unknown' : d.app
+        d.tracker = d.tracker === '' ? 'Unknown' : d.tracker
       })
 
       const ndx = crossfilter(this.values)
@@ -242,12 +242,12 @@ export default {
 
       // Create dimensions
       const dayDimension = ndx.dimension(d => d.day)
-      const categoryDimension = ndx.dimension(d => d.Category)
-      const advertiserDimension = ndx.dimension(d => d.Tracker)
-      const appDimension = ndx.dimension(d => d.App)
+      const categoryDimension = ndx.dimension(d => d.category)
+      const advertiserDimension = ndx.dimension(d => d.tracker)
+      const appDimension = ndx.dimension(d => d.app)
 
       // Dimension for the app selector (has to be different from appDimension)
-      this.selectAppDimension = ndx.dimension(d => d.App)
+      this.selectAppDimension = ndx.dimension(d => d.app)
       this.apps = this.selectAppDimension
         .group()
         .top(Infinity)

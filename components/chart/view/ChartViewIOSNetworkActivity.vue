@@ -169,7 +169,7 @@ export default {
   data() {
     return {
       header: [
-        { text: 'App', value: 'bundleID' },
+        { text: 'App', value: 'bundleId' },
         { text: 'Domain', value: 'domain' },
         { text: 'Domain Type', value: 'domainType' },
         { text: 'Domain Owner', value: 'domainOwner' },
@@ -306,7 +306,7 @@ export default {
       // Parse and format data
       this.results = this.values.map((d) => {
         return {
-          app: this.decodeDefault(d.bundleID),
+          app: this.decodeDefault(d.bundleId),
           domain: this.decodeDefault(d.domain),
           domainType:
             d.domainType === '2' || d.domainType === 'false' ? 'No' : 'Yes',
