@@ -26,6 +26,12 @@ Install all packages:
 npm install
 ```
 
+Set up pre-commit hooks:
+
+```
+npm run prepare
+```
+
 ## Development
 
 Start developing:
