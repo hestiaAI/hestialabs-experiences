@@ -115,7 +115,8 @@
       <UnitPipelineCustom
         v-bind="{
           customPipeline,
-          customPipelineOptions
+          customPipelineOptions,
+          hash: 'file-explorer'
         }"
         @update="onUnitResultsUpdate"
       />
