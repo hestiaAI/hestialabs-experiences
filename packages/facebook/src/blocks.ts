@@ -17,6 +17,11 @@ const blocks: ViewBlocks = [
     files: ['off-facebook-activity'],
     visualization: 'ChartViewTopRow.vue',
     vizProps: {
+      yAccessor: 'advertiserName',
+      xAccessor: 'count_',
+      dateAccessor: 'date_',
+      xLabel: 'ads',
+      countLabel: 'ads',
       dateFormat: '%s'
     },
     title: 'Off Facebook activity ranking',

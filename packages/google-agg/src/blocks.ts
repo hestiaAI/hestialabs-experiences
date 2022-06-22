@@ -4,32 +4,51 @@ import allPlaceSearched from '../../google-agg/src/sql/all-searched.sql'
 import allRecords from '../../google-agg/src/sql/all-records.sql'
 import allWifi from '../../google-agg/src/sql/all-wifi.sql'
 import allTravels from '../../google-agg/src/sql/all-travels.sql'
-import TLBuilding from '../../google-agg/src/sql/tl-building.sql'
+import allOtherCandidates from '../../google-agg/src/sql/all-other-candidates.sql'
+import keplerConfigPlaces from './kepler/kepler_config_places'
+import keplerConfigTrips from './kepler/kepler_config_trip'
+import keplerConfigRecords from './kepler/kepler_config_records'
 
 const blocks: ViewBlocks = [
   {
     id: 'PlaceVisited',
     sql: allPlaceVisit,
     files: ['placeVisited'],
-    visualization: 'ChartViewGoogleAggPlaces.vue',
+    visualization: 'ChartViewGenericMap.vue',
     title: 'Places visited',
-    text: ''
+    text: 'This map shows the places that were visited by at least k participants:',
+    vizProps: {
+      keplerConfig: keplerConfigPlaces,
+      doKAnonymity: true,
+      groupKey: ['name', 'address'],
+      otherKeys: ['latitude', 'longitude']
+    }
   },
   {
     id: 'PlaceSearched',
     sql: allPlaceSearched,
     files: ['otherCandidate'],
-    visualization: 'ChartViewGoogleAggSearched.vue',
+    visualization: 'ChartViewGenericMap.vue',
     title: 'Places searched',
-    text: ''
+    text: 'This map shows the places that were searched by at least k participants:',
+    vizProps: {
+      keplerConfig: keplerConfigPlaces,
+      doKAnonymity: true,
+      groupKey: ['name'],
+      otherKeys: ['latitude', 'longitude']
+    }
   },
   {
-    id: 'TLBuilding',
-    sql: TLBuilding,
-    files: ['otherCandidate', 'placeVisited'],
-    visualization: 'ChartViewGoogleAggTLBuilding.vue',
-    title: 'TL Building',
-    text: ''
+    id: 'Powerhouse',
+    sql: allOtherCandidates,
+    files: ['otherCandidate'],
+    visualization: 'ChartViewGoogleAggOnePlace.vue',
+    title: 'Powerhouse',
+    text: '',
+    vizProps: {
+      keplerConfig: keplerConfigPlaces,
+      placeName: 'Powerhouse'
+    }
   },
   {
     id: 'PublicTransport',
@@ -37,23 +56,35 @@ const blocks: ViewBlocks = [
     files: ['travels'],
     visualization: 'ChartViewGoogleAggTrips.vue',
     title: 'Public Transport',
-    text: ''
+    text: '',
+    vizProps: {
+      keplerConfig: keplerConfigTrips
+    }
   },
   {
     id: 'MeansOfTransport',
     sql: allRecords,
     files: ['records'],
-    visualization: 'ChartViewGoogleAggRecords.vue',
+    visualization: 'ChartViewGenericMap.vue',
     title: 'Means of Transport',
-    text: ''
+    text: 'This map shows the records that were logged during a travel with the color corresponding to an activity type:',
+    vizProps: {
+      keplerConfig: keplerConfigRecords
+    }
   },
   {
     id: 'Wifi',
     sql: allWifi,
     files: ['wifi'],
-    visualization: 'ChartViewGoogleAggWifi.vue',
+    visualization: 'ChartViewGenericMap.vue',
     title: 'Wifi',
-    text: ''
+    text: 'This map shows the mac addresses that were detected by at least k participants:',
+    vizProps: {
+      keplerConfig: keplerConfigPlaces,
+      doKAnonymity: true,
+      groupKey: ['mac'],
+      otherKeys: ['latitude', 'longitude']
+    }
   }
 ]
 
