@@ -27,7 +27,7 @@ async function getFileManager(testTripsData) {
 }
 
 describe('with complete samples', () => {
-  test('pipeline tripsData returns the correct items', async () => {
+  test('pipeline tripsData returns the correct items', async() => {
     const fileManager = await getFileManager(testTripsData)
     const result = await pipelines.tripsData({ fileManager })
     const expected = {
@@ -38,7 +38,7 @@ describe('with complete samples', () => {
     arrayEqualNoOrder(result.items, expected.items)
   })
 
-  test('pipeline tripsGraphData returns the correct items', async () => {
+  test('pipeline tripsGraphData returns the correct items', async() => {
     const fileManager = await getFileManager(testTripsData)
     const result = await pipelines.tripsGraphData({ fileManager })
     const expected = {
