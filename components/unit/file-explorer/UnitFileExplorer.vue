@@ -14,7 +14,7 @@
     >
       <style v-if="isFileLoading">
         :root {
-          --cursor-style: wait !important;
+        --cursor-style: wait !important;
         }
       </style>
       <VNavigationDrawer
@@ -32,7 +32,9 @@
               <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
             </VBtn>
 
-            <VListItemTitle class="mx-4">File Explorer</VListItemTitle>
+            <VListItemTitle class="mx-4">
+              File Explorer
+            </VListItemTitle>
 
             <VBtn icon @click.stop="mini = !mini">
               <VIcon>$vuetify.icons.mdiChevronLeft</VIcon>
@@ -78,7 +80,9 @@
           </VTreeview>
         </div>
       </VNavigationDrawer>
-      <VCardTitle class="justify-center">Explore your files</VCardTitle>
+      <VCardTitle class="justify-center">
+        Explore your files
+      </VCardTitle>
       <div :class="miniWidthPaddingLeftClass">
         <VCardText>
           <template v-if="filename">

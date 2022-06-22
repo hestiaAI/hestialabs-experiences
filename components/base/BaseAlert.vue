@@ -1,5 +1,5 @@
 <template>
   <VAlert v-bind="{ type: 'info', ...$attrs }" rounded>
-    <slot></slot>
+    <slot />
   </VAlert>
 </template>

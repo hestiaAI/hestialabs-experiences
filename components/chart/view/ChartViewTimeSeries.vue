@@ -3,9 +3,11 @@
     <VCol cols="12" md="8" offset-md="2">
       <VRow dense>
         <VCol cols="9">
-          <p class="text-h6">{{ title }}</p>
+          <p class="text-h6">
+            {{ title }}
+          </p>
         </VCol>
-        <VSpacer></VSpacer>
+        <VSpacer />
         <VCol cols="3" class="text-right">
           <VSelect
             v-if="filters.length === 0"
@@ -17,7 +19,7 @@
               applyFilters()
               draw()
             "
-          ></VSelect>
+          />
           <VDialog
             v-if="filters.length > 0"
             v-model="settingDialog"
@@ -25,8 +27,17 @@
             max-width="300px"
           >
             <template #activator="{ on, attrs }">
-              <VBtn color="primary" dark small fab v-bind="attrs" v-on="on">
-                <VIcon small>$vuetify.icons.mdiTuneVariant</VIcon>
+              <VBtn
+                color="primary"
+                dark
+                small
+                fab
+                v-bind="attrs"
+                v-on="on"
+              >
+                <VIcon small>
+                  $vuetify.icons.mdiTuneVariant
+                </VIcon>
               </VBtn>
             </template>
             <VCard>
@@ -42,7 +53,7 @@
                         :items="namesInterval"
                         label="Time interval"
                         dense
-                      ></VSelect>
+                      />
                     </VCol>
                     <VCol
                       v-for="filter in filters"
@@ -59,13 +70,13 @@
                         "
                         :label="filter.text"
                         dense
-                      ></VSelect>
+                      />
                     </VCol>
                   </VRow>
                 </VContainer>
               </VCardText>
               <VCardActions>
-                <VSpacer></VSpacer>
+                <VSpacer />
                 <VBtn color="red darken-1" text @click="resetFilters()">
                   Reset
                 </VBtn>
@@ -90,7 +101,7 @@
       </VRow>
       <ChartViewVRowWebShare dense>
         <VCol cols="12">
-          <div :id="graphId"></div>
+          <div :id="graphId" />
         </VCol>
       </ChartViewVRowWebShare>
     </VCol>
@@ -192,24 +203,24 @@ export default {
       })
     },
     resetFilters() {
-      this.filters.forEach(filter => {
+      this.filters.forEach((filter) => {
         this.filterModel[filter.value] = null
       })
     },
     applyFilters() {
-      this.slices.forEach(serie => {
+      this.slices.forEach((serie) => {
         // aggregate per selected time interval and other filters
         const interval = this.intervals[this.selectedInterval]
         const filters = Object.keys(this.filterModel).filter(
           k => this.filterModel[k] != null
         )
         // filter according to selection
-        serie.current = serie.values.filter(d => {
+        serie.current = serie.values.filter((d) => {
           return filters.every(f => this.filterModel[f] === d[f])
         })
         // Aggregate per time period
         serie.current = nest()
-          .key(function (d) {
+          .key(function(d) {
             return interval.parser(new Date(d.date))
           })
           .rollup(leaves => d3.sum(leaves, l => l.value))
@@ -241,43 +252,47 @@ export default {
         console.error('Unrecognized Dates')
         return
       }
-      if (diffDays < 93)
+      if (diffDays < 93) {
         this.intervals.Days = {
           parser: d3.timeDay,
           format: d3.timeFormat('%B %d, %Y')
         }
-      if (diffDays > 14 && diffDays < 651)
+      }
+      if (diffDays > 14 && diffDays < 651) {
         this.intervals.Weeks = {
           parser: d3.timeWeek,
           format: d3.timeFormat('%B %d, %Y')
         }
-      if (diffDays > 62 && diffDays < 1800)
+      }
+      if (diffDays > 62 && diffDays < 1800) {
         this.intervals.Months = {
           parser: d3.timeMonth,
           format: d3.timeFormat('%B %Y')
         }
-      if (diffDays > 730)
+      }
+      if (diffDays > 730) {
         this.intervals.Years = {
           parser: d3.timeYear,
           format: d3.timeFormat('%Y')
         }
+      }
       this.namesInterval = Object.keys(this.intervals)
       // get unique series ids
       const ids = this.values
         .map(i => i[this.seriesAccessor.value])
         .filter((value, index, self) => self.indexOf(value) === index)
       // group by series ids and sort values
-      this.slices = ids.map(a => {
+      this.slices = ids.map((a) => {
         return {
           id: a,
           values: this.values
             .filter(v => a === v[this.seriesAccessor.value])
-            .map(d => {
+            .map((d) => {
               const ret = {
                 date: new Date(d[this.dateAccessor.value]),
                 value: this.valueAccessor ? +d[this.valueAccessor] : 1
               }
-              this.filters.forEach(f => {
+              this.filters.forEach((f) => {
                 ret[f.value] = d[f.value]
               })
               return ret
@@ -315,7 +330,7 @@ export default {
         .classed('svg-content', true)
       function nestedExtent(data, dataAccessor, valueAccessor) {
         return d3.extent(
-          data.reduce(function (prevArr, currArr) {
+          data.reduce(function(prevArr, currArr) {
             const extentArr = d3.extent(currArr[dataAccessor], valueAccessor)
             prevArr.push(extentArr[0])
             prevArr.push(extentArr[1])
@@ -385,7 +400,7 @@ export default {
         .append('text')
         .attr('x', -5)
         .attr('y', -37)
-        .text(function (d) {
+        .text(function(d) {
           return d
         })
       // space the groups depending on their size
@@ -439,10 +454,10 @@ export default {
         .attr('stroke-width', this.lineWidth)
         .attr('d', d => line(d.current))
       path
-        .attr('stroke-dashoffset', function () {
+        .attr('stroke-dashoffset', function() {
           return d3.select(this).node().getTotalLength()
         })
-        .attr('stroke-dasharray', function () {
+        .attr('stroke-dasharray', function() {
           return d3.select(this).node().getTotalLength()
         })
         .transition()
@@ -453,7 +468,7 @@ export default {
       const points = lines
         .selectAll('circle')
         .data(d =>
-          d.current.map(v => {
+          d.current.map((v) => {
             v.color = color(d.id)
             v.name = d.id
             return v
@@ -478,7 +493,7 @@ export default {
         .attr('id', (d, i) => i)
         .style('opacity', 1)
       const radius = this.dotRadius
-      points.on('mouseover', function (evt, d) {
+      points.on('mouseover', function(evt, d) {
         d3.select(this)
           .attr('fill', d => d.color)
           .transition()
@@ -486,7 +501,7 @@ export default {
           .attr('r', radius + 5)
         showTooltip(evt, d)
       })
-      points.on('mouseleave', function () {
+      points.on('mouseleave', function() {
         d3.select(this)
           .attr('fill', 'white')
           .transition()

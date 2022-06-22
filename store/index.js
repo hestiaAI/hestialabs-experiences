@@ -38,13 +38,13 @@ export const getters = {
   },
   config:
     state =>
-    ({ params: { bubble } }) =>
-      bubble ? state.config.bubbleConfig[bubble] : state.config,
+      ({ params: { bubble } }) =>
+        bubble ? state.config.bubbleConfig[bubble] : state.config,
   // https://vuex.vuejs.org/guide/getters.html#method-style-access
   experience:
     state =>
-    ({ params: { experience } }) =>
-      state.experiences.find(e => e.slug === experience) || {}
+      ({ params: { experience } }) =>
+        state.experiences.find(e => e.slug === experience) || {}
 }
 
 export const mutations = {
@@ -95,7 +95,7 @@ export const mutations = {
     state.selectedFiles = []
     state.results = {}
     state.fileExplorerCurrentItem = {}
-    if (state.currentDB !== null) state.currentDB.close()
+    if (state.currentDB !== null) { state.currentDB.close() }
     state.currentDB = null
     state.fileManager = null
     state.consentForm = null
@@ -130,7 +130,7 @@ export const actions = {
       await dispatch('loadConfig', $axios)
       const experiences = (
         await Promise.all(
-          state.config.experiences.map(packageNameAndTag => {
+          state.config.experiences.map((packageNameAndTag) => {
             // We need to explicitly import dist (dist/index.mjs)
             // and not just `@hestiaai/${name}`
             // since dynamic imports are not resolved by webpack

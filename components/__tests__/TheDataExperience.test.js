@@ -77,7 +77,7 @@ test('mounts without error', () => {
   ).toBeTruthy()
 })
 
-test('process simple text file', async () => {
+test('process simple text file', async() => {
   const wrapper = mount(TheDataExperience, {
     propsData: {
       title: 'Test',

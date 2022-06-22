@@ -3,9 +3,11 @@
     <BaseAlert v-if="!hasValidFormat" type="warning">
       Data in this format cannot be displayed in a table
     </BaseAlert>
-    <BaseAlert v-else-if="!hasData">No relevant data found</BaseAlert>
+    <BaseAlert v-else-if="!hasData">
+      No relevant data found
+    </BaseAlert>
     <template v-else>
-      <slot></slot>
+      <slot />
     </template>
   </div>
 </template>

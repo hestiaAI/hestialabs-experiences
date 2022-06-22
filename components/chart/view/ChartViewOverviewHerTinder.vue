@@ -18,7 +18,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -41,7 +41,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -51,7 +51,7 @@
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="`dc-data-count-${graphId}`" class="dc-data-count"></div>
+      <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
     </VRow>
     <VRow>
       <VCol cols="12">
@@ -110,7 +110,7 @@ export default {
       // Parse and format data
       const dateParser = d3.timeParse('%Y-%m-%d')
       const dateFormatter = d3.timeFormat('%B, %Y')
-      this.results = this.values.map(d => {
+      this.results = this.values.map((d) => {
         const date = dateParser(d.date) || new Date(d.date)
         return {
           date,
@@ -143,7 +143,7 @@ export default {
       // Bind reset filters buttons
       d3.select(`#likes-chart-${this.graphId} a.reset`).on(
         'click',
-        function () {
+        function() {
           likesChart.filterAll()
           dc.redrawAll()
         }
@@ -151,18 +151,18 @@ export default {
 
       d3.select(`#messages-chart-${this.graphId} a.reset`).on(
         'click',
-        function () {
+        function() {
           messagesChart.filterAll()
           dc.redrawAll()
         }
       )
-      d3.select(`#app-chart-${this.graphId} a.reset`).on('click', function () {
+      d3.select(`#app-chart-${this.graphId} a.reset`).on('click', function() {
         appChart.filterAll()
         dc.redrawAll()
       })
       d3.select(`#sexualOrientations-chart-${this.graphId} a.reset`).on(
         'click',
-        function () {
+        function() {
           orientationChart.filterAll()
           dc.redrawAll()
         }
@@ -170,13 +170,12 @@ export default {
 
       // Custom reduce function to get unique user ids per dimension
       function add(p, d) {
-        if (d.userId in p.userIds) p.userIds[d.userId]++
-        else p.userIds[d.userId] = 1
+        if (d.userId in p.userIds) { p.userIds[d.userId]++ } else { p.userIds[d.userId] = 1 }
         return p
       }
       function remove(p, d) {
         p.userIds[d.userId]--
-        if (p.userIds[d.userId] === 0) delete p.userIds[d.userId]
+        if (p.userIds[d.userId] === 0) { delete p.userIds[d.userId] }
         return p
       }
       function init() {
@@ -216,8 +215,10 @@ export default {
         .externalLabels(50)
         .dimension(appDimension)
         .group(appGroup)
-        .valueAccessor(d => Object.keys(d.value).length)
-        .title(d => d.key + ': ' + Object.keys(d.value).length + ' user(s)')
+        .valueAccessor(d => Object.keys(d.value.userIds).length)
+        .title(
+          d => d.key + ': ' + Object.keys(d.value.userIds).length + ' user(s)'
+        )
         .drawPaths(true)
         .minAngleForLabel(0.1)
         .ordinalColors(this.colorPalette)
@@ -239,8 +240,10 @@ export default {
         .externalLabels(50)
         .dimension(orientDimension)
         .group(orientGroup)
-        .valueAccessor(d => Object.keys(d.value).length)
-        .title(d => d.key + ': ' + Object.keys(d.value).length + ' user(s)')
+        .valueAccessor(d => Object.keys(d.value.userIds).length)
+        .title(
+          d => d.key + ': ' + Object.keys(d.value.userIds).length + ' user(s)'
+        )
         .drawPaths(true)
         .minAngleForLabel(0.1)
         .ordinalColors(this.colorPalette)

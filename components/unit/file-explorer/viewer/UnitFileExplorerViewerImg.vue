@@ -1,5 +1,5 @@
 <template>
-  <img width="100%" :src="path" alt="problem" />
+  <img width="100%" :src="path" alt="problem">
 </template>
 
 <script>

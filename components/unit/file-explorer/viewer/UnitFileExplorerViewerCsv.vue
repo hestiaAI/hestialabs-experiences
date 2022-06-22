@@ -1,8 +1,12 @@
 <template>
-  <div v-if="loading">Loading</div>
+  <div v-if="loading">
+    Loading
+  </div>
   <div v-else-if="error">
     <p>Could not parse file. Showing content instead</p>
-    <div class="explorer__content">{{ csvText }}</div>
+    <div class="explorer__content">
+      {{ csvText }}
+    </div>
   </div>
   <UnitFilterableTable v-else v-bind="{ ...csvContent }" />
 </template>

@@ -12,7 +12,9 @@
         <template v-if="$nuxt.isOffline">
           The app is running in offline mode
         </template>
-        <template v-else> You are online again! </template>
+        <template v-else>
+          You are online again!
+        </template>
       </VSnackbar>
       <VAlert
         :value="alert"
@@ -31,7 +33,7 @@
         @input="alertClosed"
       >
         Want to know more about our work ?
-        <br />
+        <br>
         <a :href="newsletterURL" target="_blank" rel="noreferrer noopener">
           {{ newsletterMessage }}
         </a>
@@ -40,10 +42,12 @@
     <VFooter app absolute color="primary">
       <div class="lighten-2 py-2 ma-auto white--text" align="center">
         Educational material developed by
-        <a href="https://hestia.ai" target="_blank" style="color: white"
-          >Hestia.ai</a
-        >
-        <br />Currently in development |
+        <a
+          href="https://hestia.ai"
+          target="_blank"
+          style="color: white"
+        >Hestia.ai</a>
+        <br>Currently in development |
         <a :href="newsletterURL" target="_blank" style="color: white">
           {{ newsletterMessage }}
         </a>

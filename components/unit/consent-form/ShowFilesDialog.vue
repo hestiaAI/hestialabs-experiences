@@ -7,7 +7,9 @@
     scrollable
   >
     <VCard>
-      <VCardTitle class="text-h5 grey lighten-2"> Selected files </VCardTitle>
+      <VCardTitle class="text-h5 grey lighten-2">
+        Selected files
+      </VCardTitle>
 
       <VCardText>
         <ul>
@@ -17,11 +19,13 @@
         </ul>
       </VCardText>
 
-      <VDivider></VDivider>
+      <VDivider />
 
       <VCardActions>
-        <VSpacer></VSpacer>
-        <VBtn color="primary" text @click="show = false"> Close </VBtn>
+        <VSpacer />
+        <VBtn color="primary" text @click="show = false">
+          Close
+        </VBtn>
       </VCardActions>
     </VCard>
   </VDialog>

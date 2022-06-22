@@ -1,8 +1,10 @@
 <template>
   <VContainer>
     <div class="d-flex">
-      <div class="overline mb-3">{{ title }}</div>
-      <VSpacer></VSpacer>
+      <div class="overline mb-3">
+        {{ title }}
+      </div>
+      <VSpacer />
       <div v-if="includeTotal" class="overline mb-3">
         total: <strong>{{ items.length }}</strong>
       </div>
@@ -57,7 +59,7 @@
                 :fill="color(item[3])"
                 :rx="borderRadius"
                 :ry="borderRadius"
-              ></rect>
+              />
               <title>
                 {{ generateTitle(year[0], item[0], item[1], item[3]) }}
               </title>
@@ -83,7 +85,7 @@
               :fill="color(square)"
               :rx="borderRadius"
               :ry="borderRadius"
-            ></rect>
+            />
             <text
               style="text-anchor: middle"
               :x="legendSquareXPos(idx) + cellSize"
@@ -167,18 +169,17 @@ export default {
       return `0 0 ${this.width} ${this.height}`
     },
     dateParser() {
-      if (this.dateFormat) return d3.timeParse(this.dateFormat)
-      else
-        return d => {
+      if (this.dateFormat) { return d3.timeParse(this.dateFormat) } else {
+        return (d) => {
           const date = new Date(d)
           // return null if the date is not recognized
-          if (isNaN(date.getTime())) return null
-          else return date
+          if (isNaN(date.getTime())) { return null } else { return date }
         }
+      }
     },
     items() {
       return this.values
-        .map(v => {
+        .map((v) => {
           return {
             date: this.dateParser(v[this.dateAccessor]),
             value: this.valueAccessor ? v[this.valueAccessor] : 1
@@ -214,7 +215,7 @@ export default {
       ])
     },
     monthsPerYear() {
-      const test = this.itemsPerDay.map(y => {
+      const test = this.itemsPerDay.map((y) => {
         const dateExtent = d3.extent(y[1], i => new Date(y[0], i[0], i[1]))
         return {
           year: y[0],

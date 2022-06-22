@@ -144,7 +144,7 @@ export class DB {
     const placeholders = columns.map(_ => '?').join(', ')
 
     const sql = `INSERT INTO ${tableName}(${columnsJoined}) VALUES (${placeholders});`
-    items.forEach(item => {
+    items.forEach((item) => {
       const values = columns.map(c => item[c])
       this.#db.run(sql, values)
     })
@@ -226,13 +226,13 @@ function generateRecordsRecursively(
     callback: eval(options.callback)
   }
   const result = JSONPath(jsonPathOptions) ?? []
-  result.forEach(item => {
+  result.forEach((item) => {
     // initialize record with default values
     const record = { ...defaultValues[table] }
     // push the record to the end of the array of records
     // note: need to do that here because of recursion (*)
     records[table].push(record)
-    getters.forEach(a => {
+    getters.forEach((a) => {
       if (a.table && a.getters.length && a.path && !a.column) {
         // accessor configures records for a "sub-table"
         generateRecordsRecursively(defaultValues, records, item, root, a)
@@ -317,7 +317,7 @@ export async function generateRecords(fileManager, { tables, getters }) {
         }
       })
       // iterate over matched files, parse, and generate records from each
-      jsonFiles.forEach(file => {
+      jsonFiles.forEach((file) => {
         try {
           const json = isCSV ? file.content : JSON.parse(file.content)
 

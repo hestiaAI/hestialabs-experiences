@@ -19,7 +19,6 @@ export const ACCEPTED_TYPES = [
   DATA_TYPES.ARRAY,
   DATA_TYPES.DATE,
   DATA_TYPES.DATETIME,
-  DATA_TYPES.TIME,
   DATA_TYPES.STRING
 ]
 
@@ -53,21 +52,21 @@ export const TYPE_FORMATTER = {
   },
   DATE: {
     validator: d => !isNaN(new Date(d).getTime()),
-    formatter: d => {
+    formatter: (d) => {
       const date = new Date(d)
       return isValidDate(date) ? dateFormatter(date) : null
     }
   },
   DATETIME: {
     validator: d => !isNaN(new Date(d).getTime()),
-    formatter: d => {
+    formatter: (d) => {
       const date = new Date(d)
       return isValidDate(date) ? datetimeFormatter(date) : null
     }
   },
   TIME: {
     validator: d => true, // TODO: validate time
-    formatter: d => {
+    formatter: (d) => {
       const date = new Date(d)
       return isValidDate(date) ? timeFormatter(date) : null
     }
@@ -98,7 +97,7 @@ export function getNotNullSampleFromData(headers, items, nbSamples) {
       .map((item, idx) => idx)
   )
   const samples = {}
-  headers.forEach(h => {
+  headers.forEach((h) => {
     let idx = 0
     samples[h] = []
 
@@ -123,8 +122,8 @@ export function getNotNullSampleFromData(headers, items, nbSamples) {
  * @returns an array of rows object
  */
 export function objectToDataFrame(object) {
-  return Object.keys(object).reduce(function (r, k) {
-    object[k].forEach(function (a, i) {
+  return Object.keys(object).reduce(function(r, k) {
+    object[k].forEach(function(a, i) {
       r[i] = r[i] || {}
       r[i][k] = a
     })
@@ -146,7 +145,7 @@ export function getTypesFromData(headers, items) {
     ignoredDataTypes
   })
 
-  return meta.map(m => {
+  return meta.map((m) => {
     const header = headers.find(h => h.value === m.label)
     return {
       value: m.label,
@@ -164,8 +163,8 @@ export function getTypesFromData(headers, items) {
  * @returns the formatted rows with the correct type
  */
 export function formatDataWithTypes(headers, items) {
-  return items.map(r => {
-    headers.forEach(h => {
+  return items.map((r) => {
+    headers.forEach((h) => {
       const formatter = TYPE_FORMATTER[h.type]?.formatter ?? (d => d)
       r[h.value] = formatter(r[h.value])
     })
@@ -181,7 +180,7 @@ export function formatDataWithTypes(headers, items) {
  * @returns the headers with types changed to  string when not validated
  */
 export function verifyTypes(headers, items) {
-  headers.forEach(h => {
+  headers.forEach((h) => {
     const validator = TYPE_FORMATTER[h.type].validator
     let idxRow = 0
 
@@ -203,7 +202,9 @@ export function verifyTypes(headers, items) {
       h.type = 'string'
       break
     }
-    if (idxRow === items.length) h.type = 'string'
+    if (idxRow === items.length) {
+      h.type = 'string'
+    }
   })
   return headers
 }

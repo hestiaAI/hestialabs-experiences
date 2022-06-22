@@ -5,7 +5,9 @@
         <VCardText>
           <VRow>
             <VCol v-for="item in items" :key="item.title" cols="12" md="6">
-              <div class="overline">{{ item.title }}</div>
+              <div class="overline">
+                {{ item.title }}
+              </div>
               <p
                 v-if="!item.value || item.value.length === 0"
                 class="font-weight-bold"
@@ -24,7 +26,9 @@
               </p>
             </VCol>
             <VCol v-if="ageFilterMin && ageFilterMax" cols="12">
-              <div class="overline">Age filter</div>
+              <div class="overline">
+                Age filter
+              </div>
               <VRangeSlider
                 v-model="slider"
                 thumb-color="primary"
@@ -35,11 +39,13 @@
                 :min="ageFilterMin - 20"
                 :max="ageFilterMax + 20"
                 readonly
-              ></VRangeSlider>
+              />
             </VCol>
 
             <VCol v-if="descriptors.length" cols="12">
-              <div class="overline">Descriptors</div>
+              <div class="overline">
+                Descriptors
+              </div>
               <VRow v-for="(descriptor, idx) in descriptors" :key="idx">
                 <VCol cols="12">
                   <VCard outlined>

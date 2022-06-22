@@ -23,7 +23,7 @@
           <VListItemTitle> Select All </VListItemTitle>
         </VListItemContent>
       </VListItem>
-      <VDivider class="mt-2"></VDivider>
+      <VDivider class="mt-2" />
     </template>
     <template #selection="{ item, index }">
       <VChip v-if="index < 1" class="ma-1 pr-1">
@@ -37,7 +37,9 @@
           {{ item }}
         </span>
         <VBtn icon small right @click="filter.splice(index, 1)">
-          <VIcon small>$vuetify.icon.mdiCloseCircle</VIcon>
+          <VIcon small>
+            $vuetify.icon.mdiCloseCircle
+          </VIcon>
         </VBtn>
       </VChip>
       <span v-if="index === 1" class="grey--text caption">
@@ -71,13 +73,12 @@ export default {
       return this.filter.length > 0 && !this.selectAll
     },
     icon() {
-      if (this.selectAll) return '$vuetify.icons.mdiCloseBox'
-      if (this.selectSome) return '$vuetify.icons.mdiMinusBox'
+      if (this.selectAll) { return '$vuetify.icons.mdiCloseBox' }
+      if (this.selectSome) { return '$vuetify.icons.mdiMinusBox' }
       return '$vuetify.icons.mdiCheckboxBlankOutline'
     },
     filterFunction() {
-      if (this.selectAll) return null
-      else return value => this.filter.includes(value)
+      if (this.selectAll) { return null } else { return value => this.filter.includes(value) }
     }
   },
   methods: {

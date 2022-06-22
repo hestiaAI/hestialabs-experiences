@@ -18,8 +18,12 @@
             :lazy-src="icon"
             class="mt-3"
           />
-          <VCardTitle class="justify-center" v-text="title" />
-          <VCardSubtitle class="subtitle-1 text-center" v-text="subtitle" />
+          <VCardTitle class="justify-center">
+            {{ title }}
+          </VCardTitle>
+          <VCardSubtitle class="subtitle-1 text-center">
+            {{ subtitle }}
+          </VCardSubtitle>
         </VCard>
       </VCol>
     </VRow>

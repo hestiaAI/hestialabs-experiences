@@ -4,7 +4,7 @@ const { readdirSync } = require('fs')
 const { CONFIG_NAME = 'dev', CIRCLECI, NODE_ENV } = process.env
 
 const experiences = CIRCLECI
-  ? readdirSync(resolve(__dirname, 'database-tests/__tests__')) // experiences required for tests
+  ? readdirSync(resolve(__dirname, 'pipeline-tests/__tests__')) // experiences required for tests
   : require(resolve(__dirname, `config/${CONFIG_NAME}.json`)).experiences
 
 function handleSpawnOutput({ status, stderr, stdout, error }) {
@@ -38,7 +38,7 @@ if (experiences) {
   } else {
     // cross-platform spawn
     const spawn = require('cross-spawn')
-    const packages = experiences.map(packageNameAndTag => {
+    const packages = experiences.map((packageNameAndTag) => {
       const [name] = packageNameAndTag.split('@')
       return `@hestiaai/${name}`
     })

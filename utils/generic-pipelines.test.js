@@ -53,7 +53,7 @@ test('mergeTableData empty', () => {
   expect(merged).toStrictEqual(correct)
 })
 
-test('jsonToTableConverter with properties', async () => {
+test('jsonToTableConverter with properties', async() => {
   const fileName = 'comments_and_reactions/comments.json'
   const content = {
     comments_v2: [
@@ -97,7 +97,7 @@ test('jsonToTableConverter with properties', async () => {
   expect(tableData).toStrictEqual(correct)
 })
 
-test('jsonToTableConverter with nested properties', async () => {
+test('jsonToTableConverter with nested properties', async() => {
   const fileName = 'comments_and_reactions/comments.json'
   const content = {
     comments_v2: [
@@ -149,7 +149,7 @@ test('jsonToTableConverter with nested properties', async () => {
   expect(tableData).toStrictEqual(correct)
 })
 
-test('jsonToTableConverter without properties', async () => {
+test('jsonToTableConverter without properties', async() => {
   const fileName = 'comments_and_reactions/comments.json'
   const content = {
     comments_v2: [
@@ -180,7 +180,7 @@ test('jsonToTableConverter without properties', async () => {
   expect(tableData).toStrictEqual(correct)
 })
 
-test('jsonToTableConverter without properties and varying objects', async () => {
+test('jsonToTableConverter without properties and varying objects', async() => {
   const fileName = 'comments_and_reactions/comments.json'
   const content = {
     comments_v2: [
@@ -211,7 +211,7 @@ test('jsonToTableConverter without properties and varying objects', async () => 
   expect(tableData).toStrictEqual(correct)
 })
 
-test('jsonToTableConverter without properties and incorrect accessor', async () => {
+test('jsonToTableConverter without properties and incorrect accessor', async() => {
   const fileName = 'comments_and_reactions/comments.json'
   const content = {
     comments_v2: [
@@ -240,7 +240,7 @@ test('jsonToTableConverter without properties and incorrect accessor', async () 
   expect(tableData).toStrictEqual(correct)
 })
 
-test('createPipelineOptions', async () => {
+test('createPipelineOptions', async() => {
   const fileName = 'comments_and_reactions/comments.json'
   const content = {
     comments_v2: [

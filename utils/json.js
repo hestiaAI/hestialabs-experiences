@@ -74,7 +74,7 @@ export function processJsonNode(json, path, type, processedChildren) {
 }
 
 export function minifyList(list, path, base = 0, groupsPerLevel = 10) {
-  if (list.length <= groupsPerLevel) return list
+  if (list.length <= groupsPerLevel) { return list }
   const groupSize = Math.pow(
     groupsPerLevel,
     Math.floor(Math.log(list.length - 1) / Math.log(groupsPerLevel))
@@ -140,7 +140,7 @@ export function makePruningPredicateToMatch(filter) {
   if (!filter) {
     return () => true
   }
-  return item => {
+  return (item) => {
     const name = attributeNameFromPath(item.path)
     const value = item.value && '' + item.value
     if (filterMatchesNameOrValue(filter, name, value)) {
@@ -202,8 +202,5 @@ export function pathArrayToJsonPath(pathArray) {
 }
 
 export function nJsonPoints(json) {
-  if (json === null) return 0
-  else if (Array.isArray(json)) return json.length + _.sumBy(json, nJsonPoints)
-  else if (_.isObject(json)) return nJsonPoints(Object.values(json))
-  else return 1
+  if (json === null) { return 0 } else if (Array.isArray(json)) { return json.length + _.sumBy(json, nJsonPoints) } else if (_.isObject(json)) { return nJsonPoints(Object.values(json)) } else { return 1 }
 }

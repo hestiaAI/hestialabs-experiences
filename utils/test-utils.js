@@ -9,7 +9,7 @@ export class DatabaseTester {
     mockedFiles
   ) {
     if (!databaseConfig) {
-      throw new Error(`databaseConfig is not defined`)
+      throw new Error('databaseConfig is not defined')
     }
     const fileManager = new FileManager(
       preprocessors,
@@ -43,4 +43,12 @@ export function arrayEqualNoOrder(array1, array2) {
 export function getSqlFromBlock({ options: { viewBlocks } }, id) {
   const { sql = '' } = viewBlocks.find(b => b.id === id)
   return sql
+}
+
+export function getCustomPipelineFromBlock({ options: { viewBlocks } }, id) {
+  const { customPipeline } = viewBlocks.find(b => b.id === id)
+  if (typeof customPipeline !== 'function') {
+    throw new TypeError(`customPipeline in view block with id ${id} is not a function`)
+  }
+  return customPipeline
 }

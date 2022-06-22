@@ -14,7 +14,7 @@
       :style="`width: 100%; height: ${height}px`"
       frameborder="0"
       @load="onload"
-    ></iframe>
+    />
   </VCard>
 </template>
 

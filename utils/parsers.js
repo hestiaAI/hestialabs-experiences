@@ -27,7 +27,7 @@ function groupSimilarEventValues(events) {
     if (suffix.includes(' ') || prefix.includes(' ')) {
       events
         .filter(e => !_.has(e, 'matched'))
-        .forEach(e => {
+        .forEach((e) => {
           if (regex.test(e.eventValue)) {
             e.eventValue = e.eventValue.match(regex)[1]
             e.eventType = `${prefix}...${suffix}`
@@ -46,7 +46,7 @@ function identifyTypeFromManifestList(events, params, match) {
       .filter(([folder]) => folder === match[1])
       .flatMap(([folder, types]) => types)
   )
-  events.forEach(event => {
+  events.forEach((event) => {
     event.eventType =
       _.find(types, t => event.eventValue.includes(t)) ?? 'unknown'
   })

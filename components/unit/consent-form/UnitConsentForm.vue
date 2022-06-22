@@ -36,21 +36,41 @@
       </VRow>
       <VRow>
         <VCol>
-          <BaseButton
-            ref="downloadButton"
-            text="Download your data"
-            :status="generateStatus"
-            :error="generateError"
-            :progress="generateProgress"
-            :disabled="missingRequiredFields || missingRequiredData.length > 0"
-            @click="downloadZIP"
-          />
+          <VMenu bottom>
+            <template #activator="{ attrs, on }">
+              <VBtn
+                v-bind="attrs"
+                class="my-2"
+                outlined
+                :status="generateStatus"
+                :error="generateError"
+                :progress="generateProgress"
+                :disabled="
+                  missingRequiredFields || missingRequiredData.length > 0
+                "
+                v-on="on"
+              >
+                Download your data
+              </VBtn>
+            </template>
+            <VList>
+              <VListItem @click="downloadZIP(true)">
+                Download encrypted Zip
+              </VListItem>
+              <VListItem
+                ref="downloadButton"
+                @click="downloadZIP(false)"
+              >
+                Download Zip
+              </VListItem>
+            </VList>
+          </VMenu>
           <a
             v-show="false"
             ref="downloadLink"
             :href="href"
             :download="filename"
-          ></a>
+          />
         </VCol>
         <VCol v-if="config.filedrop">
           <a :href="config.filedrop" target="_blank">
@@ -86,7 +106,8 @@ export default {
       sentProgress: false,
       filename: '',
       href: null,
-      viewBlocks
+      viewBlocks,
+      encrypt: false
     }
   },
   computed: {
@@ -98,10 +119,10 @@ export default {
       return this.$route.params.bubble
     },
     destinationBubbleName() {
-      return this.config.consent.destinationBubble
+      return this.config.consent?.destinationBubble
     },
     missingRequiredFields() {
-      return !this.consentForm.every(section => {
+      return !this.consentForm.every((section) => {
         if ('required' in section) {
           if (
             section.type === 'data' &&
@@ -130,11 +151,18 @@ export default {
     }
   },
   methods: {
-    async downloadZIP() {
+    async getPublicKey() {
+      if (this.destinationBubbleName) {
+        const { publicKey } = await this.$api.getConfig(
+          this.destinationBubbleName
+        )
+        return publicKey
+      } else { return this.$store.getters.config(this.$route).publicKey }
+    },
+    async downloadZIP(encrypt) {
       this.generateStatus = false
       this.generateProgress = true
-
-      const content = await this.generateZIP()
+      const content = await this.generateZIP(encrypt)
       this.generateStatus = true
       this.generateProgress = false
       this.href = createObjectURL(content, mimeTypes.zip)
@@ -151,9 +179,8 @@ export default {
       const filename = `${this.$route.params.experience}_${yearMonthDay}_${uniqueId}.zip`
       return filename
     },
-    async generateZIP(publicKey) {
+    async generateZIP(encrypt) {
       const zip = new JSZip()
-
       const revResponse = await window.fetch('/git-revision.txt')
       const revText = await revResponse.text()
       const gitRevision = revText.replace(/[\n\r]/g, '')
@@ -166,10 +193,8 @@ export default {
         gitRevision
       }
       zip.file('experience.json', JSON.stringify(experience, null, 2))
-
       // Add consent log
       zip.file('consent.json', JSON.stringify(this.consentForm, null, 2))
-
       // Add included data
       const dataSection = this.consentForm.find(
         section => section.type === 'data'
@@ -187,7 +212,6 @@ export default {
             JSON.stringify(content, null, 2)
           )
         })
-
       // Add whole files
       if (dataSection.value.includes('file-explorer')) {
         const zipFilesFolder = zip.folder('files')
@@ -199,8 +223,9 @@ export default {
         }
       }
 
+      const publicKey = await this.getPublicKey()
       const content = await zip.generateAsync({ type: 'uint8array' })
-      if (publicKey) {
+      if (encrypt) {
         return encryptFile(content, publicKey)
       }
       return content
@@ -213,7 +238,6 @@ export default {
         .split(';')
         .map(c => c.trim())
         .filter(c => c.startsWith(name + '='))
-
       if (cookie.length === 0) {
         return null
       }
@@ -224,8 +248,7 @@ export default {
       this.sentErrorMessage = undefined
       this.sentProgress = true
       const destBubble = this.destinationBubbleName
-      const { publicKey } = await this.$api.getConfig(destBubble)
-      const content = await this.generateZIP(publicKey)
+      const content = await this.generateZIP(true)
       // TODO well...
       const { password } = this.$auth.user
       const zip = new File([content], this.filename, {

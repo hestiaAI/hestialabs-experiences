@@ -25,7 +25,7 @@ afterAll(() => {
   jest.restoreAllMocks()
 })
 
-test('generates a zip', async () => {
+test('generates a zip', async() => {
   const fileManager = new FileManager()
   const wrapper = mount(UnitConsentForm, {
     propsData: {

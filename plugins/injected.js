@@ -1,5 +1,5 @@
 export default ({ app }, inject) => {
-  inject('url', route => {
+  inject('url', (route) => {
     const { baseUrl } = process.env
     if (route) {
       // use route when provided

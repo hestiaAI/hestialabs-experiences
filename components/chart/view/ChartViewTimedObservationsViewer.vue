@@ -15,15 +15,15 @@
               dense
               :label="`Cumulative`"
               @change="changeAgg"
-            ></VCheckbox>
+            />
           </VCol>
         </VRow>
-        <div id="line-chart"></div>
-        <div :id="'range-chart' + graphId" class="range-chart"></div>
+        <div id="line-chart" />
+        <div :id="'range-chart' + graphId" class="range-chart" />
       </VCol>
       <VCol cols="12" md="4">
         <p>Information Type</p>
-        <div id="row-chart"></div>
+        <div id="row-chart" />
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
@@ -53,8 +53,12 @@
     <VRow>
       <VCol cols="12">
         <VTabs v-model="tab">
-          <VTab href="#overview" @click="resetSourceFilter">Overview</VTab>
-          <VTab href="#details">Details</VTab>
+          <VTab href="#overview" @click="resetSourceFilter">
+            Overview
+          </VTab>
+          <VTab href="#details">
+            Details
+          </VTab>
         </VTabs>
         <VTabsItems v-model="tab">
           <VTabItem value="overview">
@@ -114,7 +118,9 @@
               Current Filter:
               <VBtn small elevation="2" @click="resetSourceFilter">
                 <strong>{{ currSourceFilter }}</strong>
-                <VIcon x-small> $vuetify.icons.mdiClose </VIcon>
+                <VIcon x-small>
+                  $vuetify.icons.mdiClose
+                </VIcon>
               </VBtn>
             </p>
             <UnitFilterableTable v-bind="{ headers: header, items: results }" />
@@ -218,7 +224,7 @@ export default {
         top(n) {
           return group
             .top(Infinity)
-            .filter(function (d) {
+            .filter(function(d) {
               return d.value.count !== 0 && d.value !== 0
             })
             .slice(0, n)
@@ -232,7 +238,7 @@ export default {
       return {
         all() {
           let cumulate = 0
-          return sourceGroup.all().map(function (d) {
+          return sourceGroup.all().map(function(d) {
             cumulate += d.value
 
             return { key: d.key, value: cumulate }
@@ -241,9 +247,7 @@ export default {
       }
     },
     changeAgg() {
-      if (this.checkbox)
-        this.lineChart.group(this.createCumulativeGroup(this.timelineGroup))
-      else this.lineChart.group(this.timelineGroup)
+      if (this.checkbox) { this.lineChart.group(this.createCumulativeGroup(this.timelineGroup)) } else { this.lineChart.group(this.timelineGroup) }
       dc.redrawAll()
     },
     // Main function to init component
@@ -257,9 +261,9 @@ export default {
       this.formatTimeMonth = d3.timeFormat('%B %Y')
       this.formatTimeHour = d3.timeFormat('%H:%M:%S')
       const formatTimeS = d3.timeFormat('%d %B %Y')
-      this.results.forEach(d => {
+      this.results.forEach((d) => {
         d.dateSrc = d.date
-        dateFormatParsers.some(parser => {
+        dateFormatParsers.some((parser) => {
           d.date = parser(d.dateSrc)
           return d.date != null
         })
@@ -395,7 +399,7 @@ export default {
       dc.renderAll()
     },
     filterTimeRange(newValue) {
-      if (this.rangeChart === null) return
+      if (this.rangeChart === null) { return }
 
       this.rangeChart.filter(null)
       let minDate = null
@@ -444,8 +448,7 @@ export default {
           this.timeInterval = 'hour'
           break
       }
-      if (minDate !== null)
-        this.rangeChart.filter(dc.filters.RangedFilter(minDate, maxDate))
+      if (minDate !== null) { this.rangeChart.filter(dc.filters.RangedFilter(minDate, maxDate)) }
 
       this.lineChart
         .dimension(this.timeDimension)
@@ -473,8 +476,7 @@ export default {
           p[c.key[0]].items = []
         }
         p[c.key[0]].count += c.value
-        if (c.value > 0)
-          p[c.key[0]].items.push({ title: c.key[1], count: c.value })
+        if (c.value > 0) { p[c.key[0]].items.push({ title: c.key[1], count: c.value }) }
         return p
       }, {})
       this.items = Object.values(counts).filter(d => d.count > 0)
