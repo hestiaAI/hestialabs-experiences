@@ -38,7 +38,7 @@ export default {
         // 2. the store was previously cleared
         if (value.slice(1) === this.hash && this.refreshPipeline) {
           this.progress = true
-          window.setTimeout(async () => {
+          window.setTimeout(async() => {
             await this.run()
             this.refreshPipeline = false
           }, 500)

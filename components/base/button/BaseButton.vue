@@ -13,7 +13,9 @@
         v-on="{ on, $on }"
         @click="$emit('click', $event)"
       >
-        <VIcon v-if="icon" :left="text !== ''">{{ mdiIcon }}</VIcon>
+        <VIcon v-if="icon" :left="text !== ''">
+          {{ mdiIcon }}
+        </VIcon>
         <slot>
           <span>{{ text }}</span>
         </slot>

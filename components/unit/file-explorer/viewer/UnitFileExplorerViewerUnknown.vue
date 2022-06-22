@@ -2,7 +2,9 @@
   <div>
     <p>
       Unknown file type
-      <BaseButton small class="ml-2" @click="click">Try to open it</BaseButton>
+      <BaseButton small class="ml-2" @click="click">
+        Try to open it
+      </BaseButton>
     </p>
     <iframe
       ref="iframe"

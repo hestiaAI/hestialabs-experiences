@@ -8,7 +8,7 @@
           <p class="filters ma-0">
             <span>
               Current filter:
-              <span class="filter"></span>
+              <span class="filter" />
             </span>
           </p>
         </div>
@@ -28,13 +28,13 @@
           <div style="display: flex">
             <strong>Company</strong>
             <VSpacer />
-            <div id="company-search"></div>
+            <div id="company-search" />
           </div>
           <a class="reset" style="display: none">reset</a>
           <p class="filters ma-0">
             <span>
               Current filter:
-              <span class="filter"></span>
+              <span class="filter" />
             </span>
           </p>
         </div>
@@ -46,7 +46,7 @@
           <p class="filters ma-0">
             <span>
               Current filter:
-              <span class="filter"></span>
+              <span class="filter" />
             </span>
           </p>
         </div>
@@ -56,13 +56,13 @@
           <div style="display: flex">
             <strong>Position</strong>
             <VSpacer />
-            <div id="position-search"></div>
+            <div id="position-search" />
           </div>
           <a class="reset" style="display: none">reset</a>
           <p class="filters ma-0">
             <span>
               Current filter:
-              <span class="filter"></span>
+              <span class="filter" />
             </span>
           </p>
         </div>
@@ -70,9 +70,9 @@
     </VRow>
     <VRow>
       <div :id="'dc-data-count' + graphId" class="dc-data-count">
-        <span class="filter-count"></span>
+        <span class="filter-count" />
         selected out of
-        <span class="total-count"></span>
+        <span class="total-count" />
         connections |
         <a class="resetAll">Reset All</a>
       </div>
@@ -112,7 +112,7 @@ export default {
         top(n) {
           return group
             .top(Infinity)
-            .filter(function (d) {
+            .filter(function(d) {
               return d.value.count !== 0 && d.value !== 0
             })
             .slice(0, n)
@@ -141,7 +141,7 @@ export default {
 
       // Keeps only movies and tv shows (not trailer etc..)
       this.results = this.values
-      this.results.forEach(d => {
+      this.results.forEach((d) => {
         d.firstname = d['First Name']
         d.lastname = d['Last Name']
         d.company = d.Company || 'Unknown'
@@ -173,7 +173,7 @@ export default {
       // Bind reset filters links
       d3.select('#connections-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           rangeChart.filterAll()
           connectionsChart.filterAll()
           dc.redrawAll()
@@ -181,21 +181,21 @@ export default {
       )
       d3.select('#company-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           companyChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#position-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           positionChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#week-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           weekChart.filterAll()
           dc.redrawAll()
         }
@@ -205,7 +205,7 @@ export default {
       const weekDimension = ndx.dimension(d => d.week)
       const companyDimension = ndx.dimension(d => d.company)
       const positionDimension = ndx.dimension(d => d.position)
-      const weekDayDimension = ndx.dimension(d => {
+      const weekDayDimension = ndx.dimension((d) => {
         const day = d.date.getDay()
         const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         return `${name[day]}`
@@ -337,7 +337,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function (d) {
+      weekChart.ordering(function(d) {
         switch (d.key) {
           case 'Mon':
             return 0

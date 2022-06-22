@@ -10,7 +10,9 @@
       </VCol>
     </VRow>
     <VRow v-if="samples.length">
-      <VCol align="center" class="font-weight-bold"> OR </VCol>
+      <VCol align="center" class="font-weight-bold">
+        OR
+      </VCol>
     </VRow>
     <VRow>
       <VCol align="center">
@@ -29,12 +31,12 @@
             v-model="privateKey"
             label="Enter your secret key"
             clearable
-          ></VTextField>
+          />
           <VTextField
             v-model="publicKey"
             label="Enter your public key (optional)"
             clearable
-          ></VTextField>
+          />
         </BaseDialogButton>
         <BaseButton
           v-bind="{ disabled, progress, status, error }"
@@ -58,7 +60,8 @@
             border="left"
             dense
             text
-            >{{ message }}
+          >
+            {{ message }}
           </BaseAlert>
         </template>
       </VCol>
@@ -151,7 +154,7 @@ export default {
           ns => !oldSamples.find(os => os.filename === ns.filename)
         )
         const files = await Promise.all(addedSamples.map(fetchSampleFile))
-        files.forEach(file => {
+        files.forEach((file) => {
           try {
             this.uppy.addFile({
               name: file.name,
@@ -170,7 +173,7 @@ export default {
         const removedSamples = oldSamples.filter(
           os => !newSamples.find(ns => ns.filename === os.filename)
         )
-        removedSamples.forEach(sample => {
+        removedSamples.forEach((sample) => {
           const file = this.uppy
             .getFiles()
             .find(f => f.name === sample.filename)
@@ -233,19 +236,19 @@ export default {
       const publicKey =
         this.publicKey || this.$store.getters.config(this.$route).publicKey
       Promise.all(
-        this.uppy.getFiles().map(f => {
+        this.uppy.getFiles().map((f) => {
           return this.privateKey
             ? decryptBlobPromise(f.data, this.privateKey, publicKey).then(
-                blob => new File([blob], f.name)
-              )
+              blob => new File([blob], f.name)
+            )
             : f.data
         })
       )
-        .then(decryptedFiles => {
+        .then((decryptedFiles) => {
           this.status = true
           this.$emit('update', { uppyFiles: decryptedFiles })
         })
-        .catch(error => {
+        .catch((error) => {
           console.error(error)
         })
     }

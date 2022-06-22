@@ -13,12 +13,12 @@
                   <span>The app accessing the resource.</span>
                 </VTooltip>
                 <VSpacer />
-                <div :id="`app-search-${graphId}`"></div>
+                <div :id="`app-search-${graphId}`" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -37,7 +37,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -51,7 +51,7 @@
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="`dc-data-count-${graphId}`" class="dc-data-count"></div>
+      <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
     </VRow>
     <VRow>
       <VCol cols="12">
@@ -108,7 +108,7 @@ export default {
       // Bind reset filters buttons
       d3.select(`#${fieldAccessor}-chart-${this.graphId} a.reset`).on(
         'click',
-        function () {
+        function() {
           chart.filterAll()
           search.filterAll()
           dc.redrawAll()
@@ -150,7 +150,7 @@ export default {
       // Bind reset filters buttons
       d3.select(`#${fieldAccessor}-chart-${this.graphId} a.reset`).on(
         'click',
-        function () {
+        function() {
           chart.filterAll()
           dc.redrawAll()
         }
@@ -181,13 +181,13 @@ export default {
         .title(d => d.key + ': ' + d.value + ' records')
         .ordinalColors(this.colorPalette)
 
-      chart.on('pretransition', function (chart) {
-        chart.selectAll('text.pie-slice.pie-label').call(function (t) {
-          t.each(function (d) {
+      chart.on('pretransition', function(chart) {
+        chart.selectAll('text.pie-slice.pie-label').call(function(t) {
+          t.each(function(d) {
             const self = d3.select(this)
             let text = self.text()
-            if (text.length > 14) text = text.substring(0, 14) + '.. '
-            if (text.length > 0)
+            if (text.length > 14) { text = text.substring(0, 14) + '.. ' }
+            if (text.length > 0) {
               text =
                 text +
                 ' (' +
@@ -195,6 +195,7 @@ export default {
                   ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
                 ) +
                 '%)'
+            }
             self.text(text)
           })
         })
@@ -202,7 +203,7 @@ export default {
     },
     drawViz() {
       // Parse and format data
-      this.results = this.values.map(d => {
+      this.results = this.values.map((d) => {
         return {
           app: this.decodeDefault(d.App),
           category: this.decodeDefault(d.category),

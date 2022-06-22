@@ -22,7 +22,7 @@ class Api {
     const options = { method: 'GET' }
 
     fetch(url, options)
-      .then(res => {
+      .then((res) => {
         if (!res.ok) {
           throw new Error(
             `Unable to fetch filenames from server: Error ${res.status}`
@@ -39,7 +39,7 @@ class Api {
     const options = { method: 'GET' }
 
     fetch(url, options)
-      .then(res => {
+      .then((res) => {
         if (res.ok) {
           res
             .blob()

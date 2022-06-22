@@ -77,14 +77,14 @@ export function padNumber(x, n) {
 export function runWorker(worker, args) {
   worker.postMessage(args)
   return new Promise((resolve, reject) => {
-    worker.addEventListener('message', message => {
+    worker.addEventListener('message', (message) => {
       resolve(message.data)
     })
-    worker.addEventListener('error', error => {
+    worker.addEventListener('error', (error) => {
       console.error('worker error', error)
       reject(error)
     })
-    worker.addEventListener('messageerror', error => {
+    worker.addEventListener('messageerror', (error) => {
       console.error('worker error', error)
       reject(error)
     })

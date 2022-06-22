@@ -17,7 +17,7 @@ const tester = new DatabaseTester()
 const getSql = getSqlFromBlock.bind(null, experience)
 
 describe('with complete samples', () => {
-  beforeAll(async () => {
+  beforeAll(async() => {
     const files = [
       mockFile(
         'ads_information/advertisers_using_your_activity_or_information.json',

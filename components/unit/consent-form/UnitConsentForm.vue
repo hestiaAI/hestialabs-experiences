@@ -49,16 +49,20 @@
                   missingRequiredFields || missingRequiredData.length > 0
                 "
                 v-on="on"
-                >Download your data</VBtn
               >
+                Download your data
+              </VBtn>
             </template>
             <VList>
-              <VListItem @click="downloadZIP(true)"
-                >Download encrypted Zip</VListItem
+              <VListItem @click="downloadZIP(true)">
+                Download encrypted Zip
+              </VListItem>
+              <VListItem
+                ref="downloadButton"
+                @click="downloadZIP(false)"
               >
-              <VListItem ref="downloadButton" @click="downloadZIP(false)"
-                >Download Zip</VListItem
-              >
+                Download Zip
+              </VListItem>
             </VList>
           </VMenu>
           <a
@@ -66,7 +70,7 @@
             ref="downloadLink"
             :href="href"
             :download="filename"
-          ></a>
+          />
         </VCol>
         <VCol v-if="config.filedrop">
           <a :href="config.filedrop" target="_blank">
@@ -118,7 +122,7 @@ export default {
       return this.config.consent?.destinationBubble
     },
     missingRequiredFields() {
-      return !this.consentForm.every(section => {
+      return !this.consentForm.every((section) => {
         if ('required' in section) {
           if (
             section.type === 'data' &&
@@ -153,7 +157,7 @@ export default {
           this.destinationBubbleName
         )
         return publicKey
-      } else return this.$store.getters.config(this.$route).publicKey
+      } else { return this.$store.getters.config(this.$route).publicKey }
     },
     async downloadZIP(encrypt) {
       this.generateStatus = false

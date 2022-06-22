@@ -7,8 +7,7 @@
       <VCardText>
         Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (<b>{{
           dataSizeString
-        }}</b
-        >)
+        }}</b>)
         <template v-if="nDataPoints">
           and found <b>{{ nDataPoints.toLocaleString() }}</b>
           {{ plurify('datapoint') }}
@@ -20,12 +19,9 @@
             :key="i"
           >
             <!-- eslint-disable-next-line vue/no-v-html -->
-            <span v-html="globalDescription"></span>
+            <span v-html="globalDescription" />
             <span v-for="({ filename, description }, j) in topFiles" :key="j">
-              <a @click="onFileClick(filename)"
-                ><u>{{ fileManager.getShortFilename(filename) }}</u></a
-              ><span>{{ description }}</span
-              ><span v-if="j < topFiles.length - 1">, </span>
+              <a @click="onFileClick(filename)"><u>{{ fileManager.getShortFilename(filename) }}</u></a><span>{{ description }}</span><span v-if="j < topFiles.length - 1">, </span>
             </span>
           </li>
         </ul>
@@ -96,7 +92,7 @@ export default {
     fileManager: {
       immediate: true,
       handler() {
-        if (!this.fileManager) return
+        if (!this.fileManager) { return }
         this.completeGroupsTable()
         this.setExtensionTexts()
         if (this.computeNPoints) {

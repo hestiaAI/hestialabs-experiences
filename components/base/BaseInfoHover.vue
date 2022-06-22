@@ -7,6 +7,6 @@
         </VIcon>
       </VHover>
     </template>
-    <span><slot></slot></span>
+    <span><slot /></span>
   </VTooltip>
 </template>

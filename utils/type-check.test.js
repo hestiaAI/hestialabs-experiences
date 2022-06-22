@@ -82,7 +82,7 @@ test('getTypesFromData gives correct type', () => {
     ratio: [0, '0.5', 0.3, '0.5', 0.3],
     boolean: [true, 'False', 'FALSE', 'TRUE', 0]
   }
-  const TEST_HEADERS = Object.keys(TEST_SAMPLE).map(value => {
+  const TEST_HEADERS = Object.keys(TEST_SAMPLE).map((value) => {
     return { value }
   })
   const types = getTypesFromData(TEST_HEADERS, objectToDataFrame(TEST_SAMPLE))
@@ -193,7 +193,7 @@ test('detectTypes return the correct headers and values', () => {
     { id: 'NaN', description: '', time: '2021-12-31', ratio: NaN },
     { id: null, description: '', time: '2022-01-01', ratio: NaN }
   ]
-  const TEST_HEADERS = Object.keys(TEST_SAMPLE[0]).map(value => {
+  const TEST_HEADERS = Object.keys(TEST_SAMPLE[0]).map((value) => {
     return { value }
   })
   const result = detectTypes(TEST_HEADERS, TEST_SAMPLE)

@@ -57,9 +57,9 @@ export function toDateString(name, value) {
   const assumeDate = ['date', 'time'].find(d => name.toLowerCase().includes(d))
   if (assumeDate) {
     let date = new Date(value)
-    if (isValidDate(date)) return date.toLocaleString()
+    if (isValidDate(date)) { return date.toLocaleString() }
     date = new Date(value * 1000)
-    if (isValidDate(date)) return date.toLocaleString()
+    if (isValidDate(date)) { return date.toLocaleString() }
   }
   return value
 }

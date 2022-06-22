@@ -6,10 +6,10 @@
           No records were found in your file(s).
         </p>
         <p v-else class="text-subtitle-2">
-          Total time spend at the {{ placeName }} : {{ total_time }} <br />
-          <br />
-          Mean time spend at the {{ placeName }}: {{ mean_time }} <br />
-          <br />
+          Total time spend at the {{ placeName }} : {{ total_time }} <br>
+          <br>
+          Mean time spend at the {{ placeName }}: {{ mean_time }} <br>
+          <br>
           This map shows the other candidates proposed by Google associated to
           the {{ placeName }}:
         </p>
@@ -60,7 +60,7 @@ export default {
     associated_names() {
       const table = this.values.filter(x => x.winnerName === this.placeName)
       const uniq = _.uniqBy(table, x => x.loserName)
-      const names = uniq.map(v => {
+      const names = uniq.map((v) => {
         return {
           name: v.loserName,
           latitude: v.loserLatitude,
@@ -73,7 +73,7 @@ export default {
     keplerData() {
       const headers = Object.keys(this.associated_names[0])
       return {
-        fields: headers.map(h => {
+        fields: headers.map((h) => {
           return {
             name: h
           }

@@ -14,7 +14,7 @@ export function decryptBlob(blob, secretKey, publicKey, callback) {
     .then(() => {
       return blob.arrayBuffer()
     })
-    .then(buf => {
+    .then((buf) => {
       const sodium = _sodium
       const sk = sodium.from_hex(secretKey)
       const pk = sodium.from_hex(publicKey)
@@ -35,7 +35,7 @@ export function hashString(string) {
 
 // https://github.com/satazor/js-spark-md5
 export function hashFile(file) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(function(resolve, reject) {
     const blobSlice = File.prototype.slice
     // Read in chunks of 2MB
     const chunkSize = 2097152
@@ -44,7 +44,7 @@ export function hashFile(file) {
     const spark = new SparkMD5.ArrayBuffer()
     const fileReader = new FileReader()
 
-    fileReader.onload = function (e) {
+    fileReader.onload = function(e) {
       spark.append(e.target.result) // Append array buffer
       currentChunk++
       if (currentChunk < chunks) {
@@ -54,7 +54,7 @@ export function hashFile(file) {
       }
     }
 
-    fileReader.onerror = function () {
+    fileReader.onerror = function() {
       reject(new Error('hashing failed'))
     }
 

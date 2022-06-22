@@ -5,7 +5,9 @@
         <VCardText>
           <VRow>
             <VCol v-for="item in items" :key="item.title" cols="12" md="6">
-              <div class="overline">{{ item.title }}</div>
+              <div class="overline">
+                {{ item.title }}
+              </div>
               <p
                 v-if="!item.value || item.value.length === 0"
                 class="font-weight-bold"

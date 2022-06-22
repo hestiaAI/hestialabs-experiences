@@ -10,8 +10,7 @@
           hide-details
           class="align-center"
           @change="filterChange"
-        >
-        </VRangeSlider>
+        />
       </VCol>
     </VRow>
     <VRow>
@@ -30,7 +29,7 @@
             $set(filter, 0, $event)
             filterChange()
           "
-        ></VTextField>
+        />
       </VCol>
       <VCol cols="12" md="4" offset-md="4">
         <VTextField
@@ -44,7 +43,7 @@
             $set(filter, 1, $event)
             filterChange()
           "
-        ></VTextField>
+        />
       </VCol>
     </VRow>
   </div>
@@ -73,8 +72,7 @@ export default {
       return d3.extent(this.values)
     },
     filterFunction() {
-      if (this.filter === this.extent) return null
-      else return value => value >= this.filter[0] && value <= this.filter[1]
+      if (this.filter === this.extent) { return null } else { return value => value >= this.filter[0] && value <= this.filter[1] }
     }
   },
   methods: {

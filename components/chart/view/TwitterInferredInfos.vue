@@ -7,7 +7,7 @@
           <VListItem v-for="item in items" :key="item.title">
             <VListItemContent>
               <div class="d-flex justify-space-between">
-                <span v-text="item.title + ':'"></span>
+                <span v-text="item.title + ':'" />
                 <div
                   v-if="Array.isArray(item.value)"
                   class="d-flex flex-column flex-md-row flex-wrap"
@@ -16,7 +16,7 @@
                     {{ l }}
                   </VChip>
                 </div>
-                <span v-else v-text="item.value"></span>
+                <span v-else v-text="item.value" />
               </div>
             </VListItemContent>
             <VListItemIcon>
@@ -54,8 +54,8 @@
         align="center"
       >
         <VCard max-width="" height="100%">
-          <VCardTitle
-            >{{ table.title }}
+          <VCardTitle>
+            {{ table.title }}
             <VSpacer />
             <VTooltip
               v-if="table.hint"
@@ -71,10 +71,11 @@
               <span>{{ table.hint }}</span>
             </VTooltip>
           </VCardTitle>
-          <VCardText
-            ><UnitFilterableTable
+          <VCardText>
+            <UnitFilterableTable
               v-bind="{ headers: table.headers, items: table.values }"
-          /></VCardText>
+            />
+          </VCardText>
         </VCard>
       </VCol>
     </VRow>
@@ -115,7 +116,7 @@ export default {
         {
           title: 'Inferred Interests',
           headers: [{ text: 'Inferred Interests', value: 'interests' }],
-          values: JSON.parse(v.interests).map(v => {
+          values: JSON.parse(v.interests).map((v) => {
             return { interests: v.name }
           }),
           hint: 'These are some of the interests that match you, based on your profile, your activity and the topics you follow. They are used to personalise your experience on Twitter, including the ads you see.'
@@ -125,7 +126,7 @@ export default {
           headers: [
             { text: 'Lookalike Advertisers', value: 'lookalikeAdvertisers' }
           ],
-          values: JSON.parse(v.lookalikeAdvertisers).map(v => {
+          values: JSON.parse(v.lookalikeAdvertisers).map((v) => {
             return { lookalikeAdvertisers: v }
           }),
           hint: 'List of screen names for the advertisers that own the look-alike audiences your account is a part of.'
@@ -133,7 +134,7 @@ export default {
         {
           title: 'Advertisers',
           headers: [{ text: 'Advertisers', value: 'advertisers' }],
-          values: JSON.parse(v.advertisers).map(v => {
+          values: JSON.parse(v.advertisers).map((v) => {
             return { advertisers: v }
           }),
           hint: 'Here are the advertisers who have added you to one of their audiences. Custom audiences are often created from lists of email addresses or browsing behaviour. They allow advertisers to reach potential customers or users who have already expressed interest in their business.'
@@ -141,7 +142,7 @@ export default {
         {
           title: 'Shows',
           headers: [{ text: 'Shows', value: 'shows' }],
-          values: JSON.parse(v.shows).map(v => {
+          values: JSON.parse(v.shows).map((v) => {
             return { shows: v }
           }),
           hint: 'The programmes you are likely to watch, based on your account activity and information.'
@@ -149,7 +150,7 @@ export default {
         {
           title: 'Location History',
           headers: [{ text: 'Location History', value: 'locationHistory' }],
-          values: JSON.parse(v.locationHistory).map(v => {
+          values: JSON.parse(v.locationHistory).map((v) => {
             return { locationHistory: v }
           }),
           hint: 'Here are the locations that Twitter has associated with your account, based on your activity from the last 60 days.'
@@ -157,7 +158,7 @@ export default {
         {
           title: 'Partner Interests',
           headers: [{ text: 'Partner Interests', value: 'partnerInterests' }],
-          values: JSON.parse(v.partnerInterests).map(v => {
+          values: JSON.parse(v.partnerInterests).map((v) => {
             return { partnerInterests: v }
           })
         }

@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h2 v-if="section.title" class="mb-4">{{ section.title }}</h2>
+    <h2 v-if="section.title" class="mb-4">
+      {{ section.title }}
+    </h2>
 
     <template v-if="section.description">
       <!-- For security reasons, HTML is not rendered on zip import -->
@@ -8,7 +10,7 @@
         {{ section.description }}
       </p>
       <!-- eslint-disable-next-line vue/no-v-html -->
-      <p v-else v-html="section.description"></p>
+      <p v-else v-html="section.description" />
     </template>
 
     <template v-if="section.type === 'data' && !section.hide">
@@ -21,7 +23,7 @@
         :disabled="!readonly && !Object.keys(results).includes(k)"
         :label="section.titles[j]"
         :value="k"
-      ></VCheckbox>
+      />
       <div v-if="!section.hideFileSelection">
         <VCheckbox
           v-model="value"
@@ -31,13 +33,10 @@
           @change="changedFilesCheckbox"
         >
           <template #label>
-            <span
-              >Individual files (<a
-                style="text-decoration: underline"
-                @click="showDialog = true"
-                ><b>{{ selectedFiles.length }}</b> selected</a
-              >)</span
-            >
+            <span>Individual files (<a
+              style="text-decoration: underline"
+              @click="showDialog = true"
+            ><b>{{ selectedFiles.length }}</b> selected</a>)</span>
           </template>
         </VCheckbox>
         <SelectFilesDialog v-if="!readonly" v-model="showDialog" />
@@ -55,7 +54,7 @@
         :key="`${index}-${j}`"
         :label="option"
         :value="option"
-      ></VRadio>
+      />
     </VRadioGroup>
 
     <VSelect
@@ -64,7 +63,7 @@
       :readonly="readonly"
       :items="section.options"
       :label="section.placeholder"
-    ></VSelect>
+    />
 
     <template v-if="section.type === 'checkbox'">
       <VCheckbox
@@ -85,7 +84,7 @@
       :readonly="readonly"
       :label="section.name"
       :placeholder="section.placeholder"
-    ></VTextField>
+    />
 
     <VTextarea
       v-if="section.type === 'multiline'"
@@ -97,7 +96,7 @@
       :readonly="readonly"
       :label="section.name"
       :placeholder="section.placeholder"
-    ></VTextarea>
+    />
   </div>
 </template>
 

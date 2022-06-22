@@ -7,7 +7,7 @@
           :values="messageReceived"
           title="Messages Received"
           legend-label="Messages"
-        ></ChartViewHeatMapHour>
+        />
       </VCol>
       <VCol cols="12" md="6">
         <ChartViewHeatMapHour
@@ -15,7 +15,7 @@
           :values="messageSent"
           title="Messages Sent"
           legend-label="Messages"
-        ></ChartViewHeatMapHour>
+        />
       </VCol>
     </VRow>
   </VContainer>

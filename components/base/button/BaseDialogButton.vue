@@ -12,12 +12,14 @@
     </template>
     <VCard>
       <VCardTitle>{{ dialogTitle }}</VCardTitle>
-      <VDivider></VDivider>
-      <VCardText><slot></slot></VCardText>
-      <VDivider></VDivider>
+      <VDivider />
+      <VCardText><slot /></VCardText>
+      <VDivider />
       <VCardActions>
-        <VSpacer></VSpacer>
-        <VBtn color="primary" text @click="show = false"> Close </VBtn>
+        <VSpacer />
+        <VBtn color="primary" text @click="show = false">
+          Close
+        </VBtn>
       </VCardActions>
     </VCard>
   </VDialog>

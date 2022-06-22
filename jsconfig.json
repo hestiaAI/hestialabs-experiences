@@ -12,6 +12,7 @@
     "experimentalDisableTemplateSupport": true
   },
   "exclude": [
+    ".circleci",
     ".github",
     ".husky",
     ".nuxt",
@@ -20,7 +21,6 @@
     "config",
     "dist",
     "node_modules",
-    "static",
     "vega-examples"
   ]
 }

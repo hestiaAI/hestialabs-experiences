@@ -5,7 +5,7 @@
       <VRow>
         <VCol cols="12 mx-auto" sm="10">
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="config.banner"></div>
+          <div v-html="config.banner" />
         </VCol>
       </VRow>
     </VBanner>
@@ -83,7 +83,9 @@
                   class="d-flex flex-column align-center"
                   style="width: 100%; height: 100%"
                 >
-                  <div class="mb-3">This might take a moment</div>
+                  <div class="mb-3">
+                    This might take a moment
+                  </div>
                   <BaseProgressCircular size="64" width="4" />
                 </div>
               </VOverlay>
@@ -219,7 +221,7 @@ export default {
     // debounce overlay
     experienceProgress: {
       immediate: true,
-      handler: debounce(function (value) {
+      handler: debounce(function(value) {
         this.overlay = value
       }, 200)
     }

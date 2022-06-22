@@ -6,7 +6,7 @@
           In total there are <strong>{{ total }}</strong> records
           {{ labelTotal }}
         </p>
-        <div :id="graphId" style="position: relative"></div>
+        <div :id="graphId" style="position: relative" />
       </VCol>
     </ChartViewVRowWebShare>
   </VContainer>
@@ -72,7 +72,7 @@ export default {
           d => d.source,
           d => d.target
         )
-        .map(d => {
+        .map((d) => {
           return { source: d[0], target: d[1], value: d[2] }
         })
         .filter(
@@ -87,7 +87,7 @@ export default {
 
       const graph = { nodes: [], links: [] }
 
-      groupedData.forEach(function (d) {
+      groupedData.forEach(function(d) {
         d.sourceName = d.source
         d.targetName = d.target
 
@@ -114,13 +114,13 @@ export default {
       )
 
       // loop through each link replacing the text with its index from node
-      graph.links.forEach(function (d, i) {
+      graph.links.forEach(function(d, i) {
         graph.links[i].source = graph.nodes.indexOf(graph.links[i].source)
         graph.links[i].target = graph.nodes.indexOf(graph.links[i].target)
       })
 
       // make nodes an array of objects instead than an array of strings
-      graph.nodes.forEach(function (d, i) {
+      graph.nodes.forEach(function(d, i) {
         graph.nodes[i] = { name: d }
       })
       return graph
@@ -212,7 +212,7 @@ export default {
         .attr('d', d3Sankey.sankeyLinkHorizontal())
         .attr('stroke-width', d => d.width)
         .attr('opacity', 0.2)
-        .on('mouseover', function (evt, d) {
+        .on('mouseover', function(evt, d) {
           const textToDisplay = `<b>${d.sourceName}</b>  → <b>
             ${d.targetName}</b><br><center><b>
             ${d.value}</b> trips.</center>`
@@ -222,7 +222,7 @@ export default {
           // highlight current one
           d3.select(this).attr('opacity', 0.7)
         })
-        .on('mouseleave', function (d) {
+        .on('mouseleave', function(d) {
           d3.select(this).attr('opacity', 0.2)
           linkTooltip.style('opacity', 0)
         })
@@ -244,12 +244,12 @@ export default {
         .attr('height', d => d.y1 - d.y0)
         .attr('width', sankey.nodeWidth())
         .style('fill', d => (d.color = color(d.name.slice(0, -1))))
-        .style('stroke', function (d) {
+        .style('stroke', function(d) {
           return d3.rgb(d.color).darker(1)
         })
 
       node
-        .on('mouseover', function (evt, d) {
+        .on('mouseover', function(evt, d) {
           const textToDisplay = `<b>${d.name.slice(0, -1)}</b><br><center><b>${
             d.value
           }</b> trips <b>${
@@ -281,28 +281,29 @@ export default {
             )
             .attr('opacity', 0.7)
         })
-        .on('mouseleave', function (d) {
+        .on('mouseleave', function(d) {
           d3.selectAll('#' + this.graphId + '.link').attr('opacity', 0.2)
           d3.select(this).attr('opacity', 1)
           tooltip.style('opacity', 0)
         })
 
       // add in the title for the nodes
-      if (this.displayLinksLabels)
+      if (this.displayLinksLabels) {
         node
           .append('text')
           .attr('x', d => d.x1 + 6)
           .attr('y', d => (d.y1 + d.y0) / 2)
           .attr('dy', '0.35em')
           .attr('text-anchor', 'start')
-          .text(d => {
+          .text((d) => {
             let name = d.name.split(',')[0]
-            if (name.length > 20) name = name.slice(0, 20) + '..'
+            if (name.length > 20) { name = name.slice(0, 20) + '..' }
             return name
           })
           .filter(d => d.x0 < width / 2)
           .attr('x', d => d.x0 - 6)
           .attr('text-anchor', 'end')
+      }
     }
   }
 }

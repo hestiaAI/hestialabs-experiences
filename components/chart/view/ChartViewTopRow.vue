@@ -21,12 +21,14 @@
               style="position: absolute; right: 0; z-index: 10"
               v-on="on"
             >
-              <VIcon small> $vuetify.icons.mdiCog </VIcon>
+              <VIcon small>
+                $vuetify.icons.mdiCog
+              </VIcon>
             </VBtn>
           </template>
           <VCard style="width: 300px">
             <VCardTitle>Settings</VCardTitle>
-            <VDivider></VDivider>
+            <VDivider />
             <VCardText>
               <VRow class="mt-3">
                 <VCol>
@@ -40,7 +42,7 @@
                     hide-details
                     dense
                     @change="draw"
-                  ></VSlider>
+                  />
                 </VCol>
               </VRow>
               <VRow>
@@ -51,13 +53,13 @@
                     label="Display Others"
                     hide-details
                     @change="draw"
-                  ></VCheckbox>
+                  />
                 </VCol>
               </VRow>
             </VCardText>
           </VCard>
         </VMenu>
-        <div :id="graphId" style="position: relative"></div>
+        <div :id="graphId" style="position: relative" />
       </VCol>
     </VRow>
   </VContainer>
@@ -203,14 +205,14 @@ export default {
           key: 'Others',
           value: d3.sum(this.records.slice(this.topKSlider), d => d.value)
         })
-        newData.sort(function (a, b) {
+        newData.sort(function(a, b) {
           return d3.descending(a.value, b.value)
         })
       }
 
       this.xScale.domain(d3.extent(newData, d => d.value))
       this.yScale.domain(
-        newData.map(function (d) {
+        newData.map(function(d) {
           return d.key
         })
       )
@@ -227,7 +229,7 @@ export default {
         .attr('width', 0)
         .attr('height', this.yScale.bandwidth())
         .attr('fill', '#69b3a2')
-        .on('mouseover', function (evt, d) {
+        .on('mouseover', function(evt, d) {
           d3.select(this).style('opacity', 0.7)
           d3.select(this.parentNode)
             .append('text')
@@ -241,7 +243,7 @@ export default {
             .style('font-weight', 'bold')
             .style('fill', '#0A0A0A')
         })
-        .on('mouseleave', function (evt, d) {
+        .on('mouseleave', function(evt, d) {
           d3.select(this).style('opacity', 1)
           d3.select('.barsLabel').remove()
         })
@@ -274,7 +276,7 @@ export default {
         .call(this.xAxis)
     },
     drawViz() {
-      if (!this.validProps) return
+      if (!this.validProps) { return }
       // Compute date range
       const dateParser = this.dateFormat
         ? d3.timeParse(this.dateFormat)
@@ -282,7 +284,7 @@ export default {
 
       const formatDate = d3.timeFormat('%B %d, %Y')
       if (this.dateAccessor) {
-        const extent = d3.extent(this.values, d => {
+        const extent = d3.extent(this.values, (d) => {
           return dateParser(d[this.dateAccessor])
         })
         if (extent[0] && extent[1]) {
@@ -304,7 +306,7 @@ export default {
         .key(d => d[this.yAccessor])
         .rollup(d => d3.sum(d, l => (this.xAccessor ? l[this.xAccessor] : 1)))
         .entries(this.values)
-        .sort(function (a, b) {
+        .sort(function(a, b) {
           return d3.descending(a.value, b.value)
         })
 
@@ -337,8 +339,7 @@ export default {
 
       /* Axis */
       function cutLongNames(name, maxLength) {
-        if (name.length > maxLength) return name.slice(0, maxLength) + '..'
-        else return name
+        if (name.length > maxLength) { return name.slice(0, maxLength) + '..' } else { return name }
       }
       const yAxis = d3
         .axisLeft(this.yScale)

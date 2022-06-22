@@ -10,14 +10,14 @@
           label="View as"
           hide-details
           style="max-width: 200px"
-        ></VSelect>
+        />
       </VCol>
     </VRow>
     <VRow>
       <VCol>
         <div v-if="show === 'txt'">
           <b>Text file content:</b>
-          <hr class="mb-4" />
+          <hr class="mb-4">
           {{ text }}
         </div>
         <UnitFileExplorerViewerCsv

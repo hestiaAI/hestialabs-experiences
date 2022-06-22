@@ -101,7 +101,7 @@ export default class FileManager {
     // Define the files filter regex, default to all
     this.filesRegex = /.*/
     if (this.keepOnlyFiles && Object.keys(this.idToGlob).length) {
-      import('micromatch').then(mm => {
+      import('micromatch').then((mm) => {
         const regexs = Object.values(this.idToGlob).map(
           glob => mm.makeRe(glob).source
         )
@@ -169,7 +169,7 @@ export default class FileManager {
     const rootSet = new Set(fileList.map(f => f.name.split('/')[0]))
     const roots = [...rootSet]
     if (roots.length === 1 && roots[0].endsWith('.zip')) {
-      return fileList.map(file => {
+      return fileList.map((file) => {
         const parts = file.name.split('/')
         const blob = file.slice(0, file.size)
         const name = parts.slice(1, parts.length).join('/')
@@ -312,7 +312,7 @@ export default class FileManager {
    * @param {String} filePathGlob (in the same format as accessor.filePath)
    */
   findMatchingFilePaths(filePathGlob) {
-    if (!filePathGlob) return ['Dynamic files']
+    if (!filePathGlob) { return ['Dynamic files'] }
     return this.getFilenames().filter(filePath =>
       matchNormalized(filePath, filePathGlob)
     )
@@ -362,7 +362,7 @@ export default class FileManager {
   async findMatchingObjects(accessor, options = {}) {
     const objectPromises = this.findMatchingFilePaths(
       accessor.filePath
-    ).flatMap(async fileName => {
+    ).flatMap(async(fileName) => {
       try {
         const text = await this.getPreprocessedText(fileName)
         const content = JSON.parse(text)
@@ -445,7 +445,7 @@ export default class FileManager {
    * Transforms the filenames to a shorter version without the path, or with minimal path in case of non-uniqueness.
    */
   setShortFilenames() {
-    const files = Object.keys(this.fileDict).map(f => {
+    const files = Object.keys(this.fileDict).map((f) => {
       const parts = f.split('/')
       return {
         filename: f,
@@ -496,7 +496,7 @@ export default class FileManager {
   static async extractZips(files, filesRegex) {
     return (
       await Promise.all(
-        files.flatMap(async file => {
+        files.flatMap(async(file) => {
           if (file.name.endsWith('.zip')) {
             const zip = new JSZip()
             await zip.loadAsync(file)
@@ -580,8 +580,7 @@ export default class FileManager {
         // Sorts first by type (folder > zip > rest) and then alphabetically
         return items.sort((a, b) => {
           for (const t of ['folder', 'zip']) {
-            if (a.type === t && b.type !== t) return -1
-            else if (a.type !== t && b.type === t) return 1
+            if (a.type === t && b.type !== t) { return -1 } else if (a.type !== t && b.type === t) { return 1 }
           }
           return a.name.localeCompare(b.name)
         })

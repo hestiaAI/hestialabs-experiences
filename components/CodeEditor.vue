@@ -7,7 +7,7 @@
       height="500"
       class="my-ace-editor"
       @init="initEditor"
-    ></AceEditor>
+    />
   </client-only>
 </template>
 
