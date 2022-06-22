@@ -1,15 +1,37 @@
 <template>
-  <div>
+  <VContainer>
+    <h2>Key Generation</h2>
+    <p>
+      This step only needs to be done once. Copy the public key in the config
+      and store the secret key in a safe place.
+    </p>
+    <BaseButton text="Generate keys" @click="generateKeys" />
+
     <h2 class="mt-6">Import</h2>
     <p>
       Please provide a ZIP file containing exported results and the associated
       consent form.
     </p>
-    <VFileInput v-model="inputZIP" label="ZIP file"></VFileInput>
+    <VFileInput
+      v-model="inputZIP"
+      label="Encrypted or plaintext ZIP file"
+    ></VFileInput>
+    <VCheckbox v-model="decrypt" label="Decrypt"></VCheckbox>
+    <VFileInput
+      v-model="secretKey"
+      label="Secret Key"
+      :disabled="!decrypt"
+    ></VFileInput>
     <BaseButton
       text="Import"
       v-bind="{ status, error, progress, disabled: !inputZIP }"
       @click="importZIP"
+    />
+    <BaseButtonDownloadData
+      :data="outputZIP"
+      extension="zip"
+      text="Download plaintext"
+      :disabled="!status || error"
     />
     <p v-if="error">{{ message }}</p>
     <template v-if="status && !error">
@@ -19,7 +41,7 @@
         <VListItem two-line>
           <VListItemContent>
             <VListItemTitle>Experience</VListItemTitle>
-            <VListItemSubtitle>{{ experience.key }}</VListItemSubtitle>
+            <VListItemSubtitle>{{ experience.experience }}</VListItemSubtitle>
           </VListItemContent>
         </VListItem>
         <VListItem two-line>
@@ -53,35 +75,37 @@
 
       <!-- Results -->
       <VCard
-        v-for="(result, resultIndex) in sortedResults"
+        v-for="(
+          { title, visualization: viz, vizProps, result }, resultIndex
+        ) in sortedResults"
         :key="resultIndex"
         class="pa-2 my-6"
       >
-        <VCardTitle class="justify-center">{{ result.title }}</VCardTitle>
+        <VCardTitle class="justify-center">{{ title }}</VCardTitle>
         <VRow>
           <VCol>
             <UnitVegaViz
-              v-if="allVizVega[resultIndex]"
-              :spec-file="allVizVega[resultIndex]"
-              :data="result.result"
+              v-if="typeof viz === 'object'"
+              :spec-file="viz"
+              :data="result"
               class="text-center"
             />
             <ChartView
-              v-else-if="allVizVue[resultIndex]"
-              :graph-name="allVizVue[resultIndex]"
-              :data="result.result"
-              :viz-props="result.vizProps"
+              v-else-if="viz.endsWith('.vue')"
+              :graph-name="viz"
+              :data="result"
+              :viz-props="vizProps"
             />
             <UnitIframe
-              v-else-if="allVizUrl[resultIndex]"
-              :src="allVizUrl[resultIndex]"
-              :data="result.result"
+              v-else-if="viz.startsWith('/')"
+              :src="viz"
+              :data="result"
             />
           </VCol>
         </VRow>
         <VRow>
           <VCol>
-            <UnitFilterableTable :data="result.result" />
+            <UnitFilterableTable v-bind="{ ...result.result }" />
           </VCol>
         </VRow>
       </VCard>
@@ -93,19 +117,24 @@
         </VCol>
       </VRow>
     </template>
-  </div>
+  </VContainer>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import JSZip from 'jszip'
+import FileSaver from 'file-saver'
+import _sodium from 'libsodium-wrappers'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 
 export default {
   data() {
     return {
+      secretKey: null,
       inputZIP: null,
+      decrypt: false,
+      outputZIP: null,
       status: false,
       error: false,
       progress: false,
@@ -116,23 +145,10 @@ export default {
   },
   computed: {
     ...mapState(['fileManager', 'consentForm']),
-    manifest() {
-      return this.$store.getters.manifest({
-        params: { key: this.experience.key }
+    experienceConfig() {
+      return this.$store.getters.experience({
+        params: { experience: this.experience.slug }
       })
-    },
-    allVizVega() {
-      return this.sortedResults.map(r => this.manifest.vega[r.visualization])
-    },
-    allVizUrl() {
-      return this.sortedResults.map(r =>
-        r.visualization?.startsWith('/') ? r.visualization : undefined
-      )
-    },
-    allVizVue() {
-      return this.sortedResults.map(r =>
-        r.visualization?.endsWith('.vue') ? r.visualization : undefined
-      )
     },
     sortedResults() {
       return this.results.slice(0).sort((a, b) => a.index - b.index)
@@ -162,10 +178,27 @@ export default {
         return
       }
 
+      // Decrypt
+      if (this.decrypt) {
+        try {
+          const sk = await this.secretKey.text()
+          const pk = this.$store.getters.config(this.$route).publicKey
+          this.outputZIP = await this.decryptZIP(sk, pk, this.inputZIP)
+        } catch (error) {
+          this.handleError(
+            error,
+            'An error occurred during decryption. Check that the secret key is correct.'
+          )
+          return
+        }
+      } else {
+        this.outputZIP = this.inputZIP
+      }
+
       // Load ZIP
       const zip = new JSZip()
       try {
-        await zip.loadAsync(this.inputZIP)
+        await zip.loadAsync(this.outputZIP)
       } catch (error) {
         this.handleError(error, 'An error occurred while loading the ZIP.')
         return
@@ -190,15 +223,16 @@ export default {
         // Included whole files
         const folderContent = zip.file(/files\/.*/)
         const blobs = await Promise.all(folderContent.map(r => r.async('blob')))
-        const files = folderContent.map(
-          (r, i) => new File([blobs[i]], r.name.substr(6))
+        const fileObjects = folderContent.map(
+          (r, i) => new File([blobs[i]], r.name.substring(6))
         )
+        const { preprocessors, files } = this.experienceConfig
         const fileManager = new FileManager(
-          this.manifest.preprocessors,
+          preprocessors,
           fileManagerWorkers,
-          this.manifest.files
+          files
         )
-        await fileManager.init(files)
+        await fileManager.init(fileObjects)
         this.$store.commit('setFileManager', fileManager)
       } catch (error) {
         this.handleError(
@@ -213,21 +247,34 @@ export default {
 
       this.handleEnd()
     },
+    async decryptZIP(secretKey, publicKey, inputZIP) {
+      await _sodium.ready
+      const sodium = _sodium
+      const sk = sodium.from_hex(secretKey)
+      const pk = sodium.from_hex(publicKey)
+      const buf = await inputZIP.arrayBuffer()
+      const ciphertext = new Uint8Array(buf)
+      return new Blob([sodium.crypto_box_seal_open(ciphertext, pk, sk)])
+    },
+    async generateKeys() {
+      await _sodium.ready
+      const sodium = _sodium
+
+      const key = sodium.crypto_box_keypair()
+      const pk = sodium.to_hex(key.publicKey)
+      const sk = sodium.to_hex(key.privateKey)
+      const zip = new JSZip()
+      zip.file('public-key.txt', pk)
+      zip.file('secret-key.txt', sk)
+      const content = await zip.generateAsync({ type: 'blob' })
+      FileSaver.saveAs(content, 'keys.zip')
+    },
     /* Transform the imported zip to make it compatible with the current version */
     versionCompatibilityHandler() {
       if (!('version' in this.experience)) {
         this.experience.version = 1
       }
-      const version = this.experience.version
-      if (version === 1) {
-        // Convert the array of viz to a single viz
-        // Note: this feature was only used for one tinder block
-        for (const r of this.results) {
-          if ('visualizations' in r) {
-            r.visualization = r.visualizations[0]
-          }
-        }
-      }
+      const { version } = this.experience
       if (version < 3) {
         // Rename "selected" and "includedResults" to "value"
         const newConsentForm = JSON.parse(JSON.stringify(this.consentForm))

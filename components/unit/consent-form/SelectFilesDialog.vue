@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   props: {
     value: {
@@ -73,8 +73,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['consentForm']),
-    ...mapGetters(['fileManager']),
+    ...mapState(['consentForm', 'fileManager']),
     treeItems() {
       return this.fileManager.getTreeItems()
     },
@@ -93,9 +92,6 @@ export default {
       set(value) {
         this.$store.commit('setSelectedFiles', value)
       }
-    },
-    key() {
-      return this.$route.params.key
     }
   },
   watch: {
@@ -112,7 +108,7 @@ export default {
       this.updateCheckboxOnReturn(false)
     },
     clear() {
-      this.$store.commit('setSelectedFiles', { key: this.key, value: [] })
+      this.$store.commit('setSelectedFiles', [])
       this.updateCheckboxOnReturn(true)
       this.show = false
     },
@@ -145,7 +141,7 @@ export default {
       if (clear) {
         value = value.filter(x => x !== 'file-explorer')
       } else if (!value.includes('file-explorer')) {
-        value.push('file-explorer')
+        value = value.concat('file-explorer')
       }
       this.$store.commit('setConsentFormValue', { index, value })
     }

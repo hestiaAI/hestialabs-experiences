@@ -96,7 +96,7 @@
     </ChartViewVRowWebShare>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable :data="{ headers: header, items: results }" />
+        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -118,11 +118,11 @@ export default {
       header: [
         { text: 'Tweet ID', value: 'tweetId' },
         { text: 'Company', value: 'companyName' },
-        { text: 'Date', value: 'date' },
+        { text: 'Date', value: 'date_' },
         { text: 'Promoted Tweet', value: 'url' },
         {
           text: 'Engagement',
-          value: 'engagement',
+          value: 'engagements',
           formatter: d => (d === 0 ? 'No' : 'Yes')
         },
         { text: 'Targeting Criteria', value: 'count' }
@@ -184,7 +184,8 @@ export default {
       this.results.forEach(d => {
         d.targetingType = d.targetingType ? d.targetingType : 'Unknown'
         d.targetingValue = d.targetingValue ? d.targetingValue : 'Unknown'
-        d.dateParsed = dateFormatParser(d.date)
+        d.companyName = d.companyName ? d.companyName : ''
+        d.dateParsed = dateFormatParser(d.date_)
         d.day = d3.timeDay(d.dateParsed) // pre-calculate days for better performance
         d.dateStr = formatTime(d.dateParsed)
         d.url = 'https://twitter.com/x/status/' + d.tweetId
@@ -204,7 +205,7 @@ export default {
       const adPerDayDimension = ndx.dimension(d => d.day)
       const companyDimension = ndx.dimension(d => d.companyName)
       const engagementDimension = ndx.dimension(d =>
-        d.engagement ? 'Yes' : 'No'
+        d.engagements ? 'Yes' : 'No'
       )
       const targetingTypeDimension = ndx.dimension(d => d.targetingType)
       const targetingValueDimension = ndx.dimension(d => d.targetingValue)
@@ -219,14 +220,14 @@ export default {
       })
       const addRecord = (p, v) => {
         // add
-        p.dict[v.tweetId + v.date] = (p.dict[v.tweetId + v.date] || 0) + 1
-        if (p.dict[v.tweetId + v.date] === 1) p.count++
+        p.dict[v.tweetId + v.date_] = (p.dict[v.tweetId + v.date_] || 0) + 1
+        if (p.dict[v.tweetId + v.date_] === 1) p.count++
         return p
       }
       const removeRecord = (p, v) => {
         // remove
-        p.dict[v.tweetId + v.date] -= 1
-        if (p.dict[v.tweetId + v.date] === 0) p.count--
+        p.dict[v.tweetId + v.date_] -= 1
+        if (p.dict[v.tweetId + v.date_] === 0) p.count--
         return p
       }
       function orderValue(p) {
@@ -405,7 +406,7 @@ export default {
             return total
           }
         })
-        .group({
+        .groupAll({
           value() {
             return allGroup.value().count
           }
@@ -416,7 +417,7 @@ export default {
             total +
             '</strong> ads displayed on your Twitter feed' +
             " | <a class='reset'>Reset All</a>",
-          all: 'All ads selected. Please click on the graph to apply filters.'
+          all: 'All <strong>%total-count</strong> ads selected. Please click on the graph to apply filters.'
         })
         .on('pretransition', (chart, filter) => {
           const newData = d3.flatRollup(
@@ -424,16 +425,16 @@ export default {
             v => v.length,
             d => d.tweetId,
             d => d.companyName,
-            d => d.date,
+            d => d.date_,
             d => d.url,
-            d => d.engagement
+            d => d.engagements
           )
           this.results = newData.map(x => ({
             tweetId: x[0],
             companyName: x[1],
-            date: x[2],
+            date_: x[2],
             url: x[3],
-            engagement: x[4],
+            engagements: x[4],
             count: x[5]
           }))
 

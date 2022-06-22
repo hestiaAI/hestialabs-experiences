@@ -1,9 +1,0 @@
-PREFIX h: <http://hestia.ai/>
-
-SELECT ?advertiserName ?date (COUNT(?event) AS ?count) WHERE
-{
-    ?event a h:off_facebook_activity .
-    ?event h:app_name ?advertiserName .
-    ?event h:timestamp ?date .
-}
-GROUP BY ?advertiserName ?date

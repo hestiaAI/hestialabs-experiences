@@ -34,9 +34,9 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import _ from 'lodash'
-import { humanReadableFileSize, plurify } from '~/manifests/utils'
+import { humanReadableFileSize, plurify } from '~/utils/utils'
 
 export default {
   name: 'UnitSummary',
@@ -59,7 +59,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['fileManager']),
+    ...mapState(['fileManager']),
     ext2group() {
       return Object.fromEntries(
         Object.entries(this.group2ext).flatMap(entry =>
@@ -109,7 +109,7 @@ export default {
     plurify,
     onFileClick(filename) {
       this.$store.commit('setFileExplorerCurrentItem', { filename })
-      this.$root.$emit('goToFileExplorer')
+      this.$emit('switch-tab', 'file-explorer')
     },
     async setNumberOfDataPoints() {
       this.nDataPoints = _.sum(

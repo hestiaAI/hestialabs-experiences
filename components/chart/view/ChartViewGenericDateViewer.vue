@@ -78,7 +78,7 @@
     <VRow>
       <VCol cols="12">
         <UnitFilterableTable
-          v-bind="{ data: { headers: header, items: results } }"
+          v-bind="{ headers: header, items: results }"
           @current-items="onTableFilter"
         />
       </VCol>
@@ -94,13 +94,13 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
+import { datetimeFormatter } from '@/utils/dates'
 
 export default {
   mixins: [mixin],
   data() {
     return {
       formatDate: d3.timeFormat('%B %d, %Y'),
-      formatFullDate: d3.timeFormat('%Y/%m/%d %H:%M:%S'),
       fileDimension: null,
       results: [],
       selectTimeInt: null,
@@ -161,7 +161,7 @@ export default {
       this.values.forEach(d => {
         d.date = new Date(d.date)
         d.day = d3.timeDay(d.date)
-        d.dateStr = this.formatFullDate(d.date)
+        d.dateStr = datetimeFormatter(d.date)
       })
       this.results = this.values
 
@@ -223,9 +223,7 @@ export default {
       // .barPadding(0)
       // .gap(this.selectTimeInt === 'Months' ? 20 : 0)
 
-      this.barChart
-        .yAxis()
-        .tickFormat(v => d3.format(Number.isInteger(v) ? '~s' : '.2~f')(v))
+      this.barChart.yAxis().tickFormat(v => (Number.isInteger(v) ? v : ''))
 
       // volume chart date picker
       this.rangeChart
@@ -291,7 +289,6 @@ export default {
     },
     onTableFilter(items) {
       // TODO: Update graph
-      // console.log(items)
     },
     filterFiles(files) {
       this.fileDimension.filter(null)

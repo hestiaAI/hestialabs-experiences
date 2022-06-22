@@ -88,14 +88,14 @@
             <BaseButtonDownload small :href="path" :filename="filename" />
             <component
               :is="componentForType"
-              v-bind="{ fileManager, filename }"
               v-if="supportedTypes.has(fileType)"
+              :filename="filename"
               @loading="onLoading"
               @select-accessor="onSelectAccessor"
             />
             <UnitFileExplorerViewerUnknown
               v-else
-              v-bind="{ fileManager, filename }"
+              :filename="filename"
               @loading="onLoading"
             />
           </template>
@@ -107,17 +107,15 @@
         </VCardText>
       </div>
     </VCard>
-    <div v-if="defaultViewElements.customPipelineOptions">
+    <div v-if="customPipelineOptions">
       <UnitPipelineCustom
         v-bind="{
-          fileManager,
           customPipeline,
-          defaultViewElements,
-          autoRun: true
+          customPipelineOptions
         }"
         @update="onUnitResultsUpdate"
       />
-      <UnitFilterableTable v-if="tableData" :data="tableData" />
+      <UnitFilterableTable v-if="tableData" v-bind="{ ...tableData.result }" />
     </div>
   </div>
 </template>
@@ -125,7 +123,7 @@
 <script>
 import _ from 'lodash'
 import { mapState } from 'vuex'
-import { jsonToTableConverter } from '~/manifests/generic-pipelines'
+import { jsonToTableConverter } from '~/utils/generic-pipelines'
 
 export default {
   name: 'UnitFileExplorer',
@@ -149,9 +147,7 @@ export default {
       height: 500,
       tableData: undefined,
       customPipeline: jsonToTableConverter,
-      defaultViewElements: {},
-      selectedAccessor: undefined,
-      tableDataFromAccessor: undefined
+      customPipelineOptions: undefined
     }
   },
   computed: {
@@ -240,7 +236,9 @@ export default {
       this.isFileLoading = loading
     },
     onSelectAccessor(accessor) {
-      this.defaultViewElements = { customPipelineOptions: { accessor } }
+      // TODO make this work better
+      // const options = await createTableOptions(this.fileManager, accessor)
+      this.customPipelineOptions = [{ accessor }]
     },
     onUnitResultsUpdate(result) {
       this.tableData = result

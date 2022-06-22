@@ -13,11 +13,12 @@ import {
 } from '@mdi/js'
 import _ from 'lodash'
 import { matchNormalized, findMatchesInContent } from './accessor'
-import { itemifyJSON, nJsonPoints } from '~/utils/json'
-import getCsvHeadersAndItems from '~/utils/csv'
-import { runWorker } from '@/utils/utils'
+import { itemifyJSON, nJsonPoints } from './json'
+import { getCsvHeadersAndItems } from './csv'
+import { runWorker } from './utils'
+import { hashFile, hashString } from './encryption'
 
-const filetype2icon = {
+export const filetype2icon = {
   folder: mdiFolder,
   zip: mdiFolderZip,
   json: mdiCodeJson,
@@ -29,9 +30,10 @@ const filetype2icon = {
   html: mdiXml,
   xlsx: mdiMicrosoftExcel
 }
-const extension2filetype = {
+export const extension2filetype = {
   tar: 'zip',
   js: 'json',
+  ndjson: 'json',
   png: 'img',
   jpeg: 'img',
   jpg: 'img',
@@ -83,15 +85,29 @@ export default class FileManager {
    * @param {Object} preprocessors maps file name to preprocessor function
    * @param {Object} workers the workers that this file manager should use
    * @param {Object} idToGlob an object mapping IDs to globs
+   * @param {Boolean} keepOnlyFiles filter the uploaded files to keep only the one present in idToGlob
    */
-  constructor(preprocessors, workers, idToGlob) {
+  constructor(preprocessors, workers, idToGlob, keepOnlyFiles) {
     this.supportedExtensions = new Set([
       ...Object.keys(extension2filetype),
       ...Object.values(extension2filetype)
     ])
+    this.fileDict = {}
     this.preprocessors = preprocessors ?? {}
     this.workers = workers ?? {}
     this.idToGlob = idToGlob ?? {}
+    this.keepOnlyFiles = keepOnlyFiles ?? true
+
+    // Define the files filter regex, default to all
+    this.filesRegex = /.*/
+    if (this.keepOnlyFiles && Object.keys(this.idToGlob).length) {
+      import('micromatch').then(mm => {
+        const regexs = Object.values(this.idToGlob).map(
+          glob => mm.makeRe(glob).source
+        )
+        this.filesRegex = new RegExp(`(${regexs.join(')|(')})`)
+      })
+    }
     this.setInitialValues()
   }
 
@@ -102,15 +118,34 @@ export default class FileManager {
    * @returns {Promise<FileManager>}
    */
   async init(uppyFiles) {
-    this.fileList = await FileManager.extractZips(uppyFiles)
+    this.fileList = await FileManager.extractZips(uppyFiles, this.filesRegex)
     this.fileList = FileManager.filterFiles(this.fileList)
     this.fileList = FileManager.removeZipName(this.fileList)
     this.fileDict = Object.fromEntries(
       this.fileList.map(file => [file.name, file])
     )
+    this.idToGlob = await this.fetchDynamicFiles()
     this.setInitialValues()
     this.setShortFilenames()
     return this
+  }
+
+  /**
+   * Fetch files Ids and globs from a file, given a preprocessor on that same file.
+   * Example: directories names change with languages in google takeout archive but
+   * can be retrieve from another file.
+   * @returns an object mapping IDs to globs
+   */
+  async fetchDynamicFiles() {
+    const { $DYNAMIC_FILES, ...files } = this.idToGlob
+    if ($DYNAMIC_FILES) {
+      const matchedFiles = this.getFilePathsFromId('$DYNAMIC_FILES')
+      const idToGlob = JSON.parse(
+        await this.getPreprocessedText(matchedFiles[0])
+      )
+      return { ...files, ...idToGlob }
+    }
+    return this.idToGlob
   }
 
   /**
@@ -185,6 +220,15 @@ export default class FileManager {
 
   hasFile(filePath) {
     return _.has(this.fileDict, filePath)
+  }
+
+  /**
+   * Return a MD5 hash
+   */
+  async hashAllFiles() {
+    const hashPromises = Object.values(this.fileDict).map(hashFile)
+    const fileHashes = await Promise.all(hashPromises)
+    return hashString(fileHashes.join(''))
   }
 
   /**
@@ -268,6 +312,7 @@ export default class FileManager {
    * @param {String} filePathGlob (in the same format as accessor.filePath)
    */
   findMatchingFilePaths(filePathGlob) {
+    if (!filePathGlob) return ['Dynamic files']
     return this.getFilenames().filter(filePath =>
       matchNormalized(filePath, filePathGlob)
     )
@@ -280,7 +325,7 @@ export default class FileManager {
    */
   getFilePathsFromId(id) {
     if (!(id in this.idToGlob)) {
-      throw new Error('ID is not defined')
+      throw new Error(`ID ${id} is not defined`)
     }
     const glob = this.idToGlob[id]
     return this.findMatchingFilePaths(glob)
@@ -448,22 +493,22 @@ export default class FileManager {
    * @param {File[]} files
    * @returns {Promise<File[]>}
    */
-  static async extractZips(files) {
+  static async extractZips(files, filesRegex) {
     return (
       await Promise.all(
         files.flatMap(async file => {
           if (file.name.endsWith('.zip')) {
             const zip = new JSZip()
             await zip.loadAsync(file)
-            const folderContent = zip.file(/.*/)
+            const folderContent = zip.file(filesRegex)
             const blobs = await Promise.all(
               folderContent.map(r => r.async('blob'))
             )
             const innerFiles = folderContent.map(
               (r, i) => new File([blobs[i]], file.name + '/' + r.name)
             )
-            return await this.extractZips(innerFiles)
-          } else if (file.name.endsWith('/')) {
+            return await this.extractZips(innerFiles, filesRegex)
+          } else if (file.name.endsWith('/') || !filesRegex.test(file.name)) {
             return []
           } else {
             return [file]

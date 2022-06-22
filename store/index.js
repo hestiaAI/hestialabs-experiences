@@ -1,12 +1,10 @@
 import Vue from 'vue'
-import manifestMap, { config } from '@/manifests'
+// import { getConfig } from '@/utils/api'
 
 export const state = () => ({
-  config: {
-    appName: 'HestiaLabs Experiences',
-    ...config
-  },
-  manifestMap,
+  loaded: false,
+  config: {},
+  experiences: [],
   selectedFiles: [],
   results: {},
   currentDB: null,
@@ -16,44 +14,49 @@ export const state = () => ({
 })
 
 export const getters = {
-  fileManager(state) {
-    return state.fileManager
-  },
-  currentDB(state) {
-    return state.currentDB
-  },
   appName(state) {
     return state.config.appName
   },
-  manifests(state) {
-    const experiences = state.config?.experiences || []
-    const activeManifests = experiences
-      .map(key => state.manifestMap[key])
-      .filter(m => m)
-
-    // playground is not available in default mode
-    return activeManifests.filter(m => m.key !== 'playground')
-  },
-  enabledExperiences(state, getters) {
-    return getters.manifests.filter(({ disabled }) => !disabled)
+  enabledExperiences(state) {
+    return state.experiences.filter(
+      ({ slug, disabled }) => !disabled && slug !== 'other'
+    )
   },
   disabledExperiences(state, getters) {
-    return getters.manifests
-      .filter(({ disabled }) => disabled)
-      .map(o => (o.key === 'other' ? { ...o, disabled: false } : o))
-  },
-  keys(state, getters) {
-    return getters.manifests.map(({ key }) => key)
-  },
-  // https://vuex.vuejs.org/guide/getters.html#method-style-access
-  manifest:
-    state =>
-    ({ params: { key } }) => {
-      return state.manifestMap[key] || {}
+    const disabledExperiences = state.experiences.filter(
+      ({ slug }) => !getters.enabledExperiences.find(e => e.slug === slug)
+    )
+    // Add 'other' to the end of the Array
+    const otherIdx = disabledExperiences.findIndex(
+      ({ slug }) => slug === 'other'
+    )
+    const [other] = disabledExperiences.splice(otherIdx, 1)
+    if (other) {
+      disabledExperiences.push(other)
     }
+    return disabledExperiences
+  },
+  config:
+    state =>
+    ({ params: { bubble } }) =>
+      bubble ? state.config.bubbleConfig[bubble] : state.config,
+  // https://vuex.vuejs.org/guide/getters.html#method-style-access
+  experience:
+    state =>
+    ({ params: { experience } }) =>
+      state.experiences.find(e => e.slug === experience) || {}
 }
 
 export const mutations = {
+  setLoaded(state) {
+    state.loaded = true
+  },
+  setConfig(state, config) {
+    state.config = config
+  },
+  setExperiences(state, experiences) {
+    state.experiences = experiences
+  },
   setCurrentDB(state, db) {
     state.currentDB = db
   },
@@ -68,12 +71,17 @@ export const mutations = {
   },
   setConsentForm(state, consentForm) {
     // Initialize missing values
+    if (!consentForm) {
+      return
+    }
     for (const section of consentForm) {
       if (typeof section.value === 'undefined') {
         // The value hasn't been initialized
         if (['checkbox', 'data'].includes(section.type)) {
           section.value = []
-        } else if (['radio', 'input', 'multiline'].includes(section.type)) {
+        } else if (
+          ['radio', 'input', 'multiline', 'select'].includes(section.type)
+        ) {
           section.value = ''
         }
       }
@@ -94,5 +102,47 @@ export const mutations = {
   },
   setFileExplorerCurrentItem(state, item) {
     state.fileExplorerCurrentItem = item
+  }
+}
+
+export const actions = {
+  async loadConfig({ commit, state }) {
+    if (!state.loaded) {
+      const config = (await import(`@/config/${process.env.configName}.json`))
+        .default
+      if (config.bubbles?.length) {
+        config.bubbleConfig = {}
+        for (const bubble of config.bubbles) {
+          const data = await this.$api.getConfig(bubble)
+          if (data) {
+            config.bubbleConfig[bubble] = data
+          }
+        }
+      }
+      commit('setConfig', {
+        ...config,
+        appName: 'HestiaLabs Experiences'
+      })
+    }
+  },
+  async loadExperiences({ commit, state, dispatch }, { isDev, $axios }) {
+    if (!state.loaded) {
+      await dispatch('loadConfig', $axios)
+      const experiences = (
+        await Promise.all(
+          state.config.experiences.map(packageNameAndTag => {
+            // We need to explicitly import dist (dist/index.mjs)
+            // and not just `@hestiaai/${name}`
+            // since dynamic imports are not resolved by webpack
+            // during the build step
+            const [name] = packageNameAndTag.split('@')
+            return import(`@hestiaai/${name}/dist`)
+          })
+        )
+      ).map(module => module.default.options)
+
+      commit('setExperiences', experiences)
+      commit('setLoaded')
+    }
   }
 }

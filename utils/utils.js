@@ -1,5 +1,3 @@
-import { Parser } from 'n3'
-
 export const defaultExtension = 'txt'
 
 export const mimeTypes = {
@@ -65,18 +63,6 @@ export async function arrayBufferToObject(arrayBuffer) {
   return JSON.parse(text)
 }
 
-/**
- * Converts an rdf string to N3 quads
- * @param {String} rdf the input RDF data
- * @param {String} format
- * @returns {Array} N3 quads
- */
-export function rdfToQuads(rdf, format = 'N3') {
-  const parser = new Parser({ format })
-  const quads = parser.parse(rdf)
-  return quads
-}
-
 /* Transform integer x to a string of length n, left-padded with zeros. */
 export function padNumber(x, n) {
   return x.toString().padStart(n, '0')
@@ -111,4 +97,33 @@ export const setTimeoutPromise = (delay, value) =>
 /* Shallow equality test on sets */
 export function setsEqual(s1, s2) {
   return s1.size === s2.size && [...s1].every(value => s2.has(value))
+}
+
+export function humanReadableFileSize(sizeInBytes) {
+  const i = Math.floor(Math.log(sizeInBytes || 1) / Math.log(1024))
+  const units = ['B', 'kB', 'MB', 'GB', 'TB']
+  return `${(sizeInBytes / Math.pow(1024, i)).toFixed(2)} ${units[i]}`
+}
+
+export function plurify(word, n) {
+  return n === 1 ? word : `${word}s`
+}
+
+export const vueMeta = ($nuxt, title) => {
+  const content = `${title} | ${$nuxt.$store.state.config.appName}`
+  return {
+    title,
+    meta: [
+      {
+        hid: 'og:title',
+        property: 'og:title',
+        content
+      },
+      {
+        hid: 'twitter:title',
+        property: 'twitter:title',
+        content
+      }
+    ]
+  }
 }

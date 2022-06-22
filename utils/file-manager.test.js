@@ -2,7 +2,7 @@ import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { arrayEqualNoOrder } from '~/utils/test-utils'
 import { itemifyJSON } from '~/utils/json'
-import getCsvHeadersAndItems from '~/utils/csv'
+import { getCsvHeadersAndItems } from '~/utils/csv'
 
 test('an empty file manager', async () => {
   const fileManager = new FileManager()
@@ -110,6 +110,14 @@ test('short filenames', async () => {
   expect(fileManager.getShortFilename(f3)).toMatch('bar.txt')
   expect(fileManager.getShortFilename(f4)).toMatch('hello/bar.txt')
   expect(fileManager.getShortFilename(f5)).toMatch('toc.json')
+})
+
+test('getFileNames', async () => {
+  const fileManager = new FileManager()
+  const f1 = 'foo/bar.txt'
+  const f2 = 'foo/toc.txt'
+  await fileManager.init([mockFile(f1, '1'), mockFile(f2, '2')])
+  expect(fileManager.getFilenames()).toStrictEqual([f1, f2])
 })
 
 test('files are filtered', async () => {

@@ -2,10 +2,10 @@
 
 exports[`data table html corresponds to snapshot 1`] = `
 "<div>
-  <datavalidator data=\\"[object Object]\\" allow-missing-columns=\\"true\\">
+  <datavalidator data=\\"[object Object]\\" allow-missing-columns=\\"\\">
     <!---->
     <basesearchbar></basesearchbar>
-    <vdatatable items=\\"[object Object]\\" multi-sort=\\"\\" fixed-header=\\"\\" height=\\"530\\" footer-props=\\"[object Object]\\" data-testid=\\"data-table\\" headers=\\"[object Object],[object Object],[object Object]\\" search=\\"\\"></vdatatable>
+    <vdatatable items=\\"[object Object]\\" multi-sort=\\"\\" items-per-page=\\"5\\" fixed-header=\\"\\" height=\\"290\\" footer-props=\\"[object Object]\\" data-testid=\\"data-table\\" headers=\\"[object Object],[object Object],[object Object]\\" search=\\"\\"></vdatatable>
     <basebutton text=\\"Export\\" icon=\\"mdiExport\\"></basebutton>
     <basebuttondownloaddata disabled=\\"disabled\\" extension=\\"csv\\" data=\\"\\"></basebuttondownloaddata>
     <basebuttonshare file-share=\\"\\" disabled=\\"disabled\\"></basebuttonshare>

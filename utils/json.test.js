@@ -127,7 +127,6 @@ test('traverseJson and processJsonNode', () => {
       }
     ]
   }
-  // console.log(JSON.stringify(processed))
   expect(processed).toStrictEqual(correctProcessed)
   expect(true).toStrictEqual(true)
 })
@@ -275,7 +274,6 @@ test('simple reduceItems to collect ids', () => {
   //   a: { n: 'nono', b: [{ d: 'xono' }] }
   // }
   // const items = traverseJson(srcJson, processJsonNode)
-  // console.log('asdf', JSON.stringify(items))
   const rootItem = {
     id: '',
     path: [],

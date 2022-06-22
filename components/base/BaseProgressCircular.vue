@@ -1,17 +1,21 @@
 <template>
-  <VProgressCircular v-bind="{ size, width }" indeterminate />
+  <VProgressCircular v-bind="{ indeterminate, size, width, ...$attrs }" />
 </template>
 
 <script>
 export default {
   props: {
     size: {
-      type: Number,
+      type: [String, Number],
       default: 14
     },
     width: {
-      type: Number,
+      type: [String, Number],
       default: 2
+    },
+    indeterminate: {
+      type: Boolean,
+      default: true
     }
   }
 }

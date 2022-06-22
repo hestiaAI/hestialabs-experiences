@@ -1,5 +1,5 @@
 <template>
-  <VApp>
+  <VApp v-if="$store.state.loaded">
     <TheAppBar />
     <VMain>
       <Nuxt />
@@ -56,6 +56,27 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  async middleware({
+    store,
+    params: { bubble },
+    route: { path },
+    isDev,
+    redirect,
+    $auth,
+    $axios
+  }) {
+    if (!store.state.loaded) {
+      await store.dispatch('loadExperiences', { isDev, $axios })
+    }
+    if (bubble && $auth.loggedIn && bubble !== $auth.user.username) {
+      // auto-logout if user tries to enter another bubble
+      await $auth.logout()
+      return redirect({
+        name: 'login',
+        query: { redirect: path }
+      })
+    }
+  },
   data() {
     return {
       // Display offline message if user opens app when offline
@@ -65,6 +86,9 @@ export default {
     }
   },
   head() {
+    if (!this.appName) {
+      return
+    }
     return {
       meta: [
         {
@@ -78,32 +102,17 @@ export default {
           content: this.$url(this.$route)
         },
         {
-          hid: 'twitter:card',
-          property: 'twitter:card',
-          content: 'summary'
-        },
-        {
-          hid: 'twitter:site',
-          property: 'twitter:site',
-          content: '@HestiaLabs'
-        },
-        {
           hid: 'twitter:title',
           property: 'twitter:title',
           content: this.appName
-        },
-        {
-          hid: 'twitter:image',
-          property: 'twitter:image',
-          content: `${process.env.baseUrl}/ogimg.png`
         }
       ]
     }
   },
   computed: {
-    ...mapGetters(['manifest', 'appName']),
+    ...mapGetters(['experience', 'appName']),
     collaborator() {
-      const { collaborator = {} } = this.manifest(this.$route)
+      const { collaborator = {} } = this.experience(this.$route)
       return collaborator
     },
     newsletterURL() {

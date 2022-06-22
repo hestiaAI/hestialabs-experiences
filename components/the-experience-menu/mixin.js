@@ -6,12 +6,21 @@ export default {
     }
   },
   methods: {
-    menuItemAttrs(url, key, disabled) {
+    menuItemAttrs({ url, slug, disabled }) {
+      const { bubble } = this.$route.params
       return url
         ? { href: url, target: '_blank', rel: 'noopener noreferrer', disabled }
         : disabled
         ? { disabled }
-        : { nuxt: true, to: `/${key}` }
+        : {
+            nuxt: true,
+            exact: true,
+            to: {
+              name: `${bubble ? 'bubble-bubble-' : ''}experience-experience`,
+              params: { bubble, experience: slug },
+              hash: '#load-data'
+            }
+          }
     }
   }
 }

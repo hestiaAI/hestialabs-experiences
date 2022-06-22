@@ -29,7 +29,7 @@ test('generates a zip', async () => {
   const fileManager = new FileManager()
   const wrapper = mount(UnitConsentForm, {
     propsData: {
-      defaultView: []
+      viewBlocks: []
     },
     mocks: {
       $store: {
@@ -39,6 +39,15 @@ test('generates a zip', async () => {
           fileManager,
           consentForm: testConsentForm,
           selectedFiles: []
+        },
+        getters: {
+          experience: () => ({
+            files: {},
+            keepOnlyFiles: true,
+            preprocessors: {},
+            viewBlocks: []
+          }),
+          config: () => ({})
         }
       },
       $route: {
@@ -53,8 +62,13 @@ test('generates a zip', async () => {
   // Trigger the data processing function
   const button = wrapper.findComponent({ ref: 'downloadButton' })
   await button.trigger('click', {})
-
+  expect(wrapper.vm.$data.generateProgress).toBeTruthy()
+  // for some reason we need four ticks
   await wrapper.vm.$nextTick()
+  await wrapper.vm.$nextTick()
+  await wrapper.vm.$nextTick()
+  await wrapper.vm.$nextTick()
+  expect(wrapper.vm.$data.generateProgress).toBeFalsy()
   expect(wrapper.vm.$data.generateError).toBeFalsy()
   expect(wrapper.vm.$data.generateStatus).toBeTruthy()
 })

@@ -3,8 +3,14 @@
  */
 import fs from 'fs'
 import path from 'path'
-import { mount } from '@vue/test-utils'
+import { mount, createLocalVue } from '@vue/test-utils'
+import Vuex from 'vuex'
 import TheDataExperience from '~/components/TheDataExperience'
+
+// Mock the Vuex store
+const localVue = createLocalVue()
+localVue.use(Vuex)
+let store
 
 // We need to disable workers for these tests
 jest.mock('~/utils/file-manager-workers', () => {})
@@ -12,6 +18,37 @@ const originalScrollTo = window.scrollTo
 
 beforeAll(() => {
   window.scrollTo = jest.fn()
+})
+
+beforeEach(() => {
+  // eslint-disable-next-line import/no-named-as-default-member
+  store = new Vuex.Store({
+    state: () => ({
+      config: {},
+      fileManager: null
+    }),
+    getters: {
+      experience: () => () => ({
+        files: {},
+        keepOnlyFiles: true,
+        preprocessors: {},
+        viewBlocks: []
+      })
+    },
+    mutations: {
+      clearStore: () => {},
+      setFileManager: () => {},
+      setConsentForm: () => {}
+    },
+    modules: {
+      experience: {
+        namespaced: true,
+        state: () => ({
+          progress: false
+        })
+      }
+    }
+  })
 })
 
 afterAll(() => {
@@ -24,11 +61,12 @@ test('mounts without error', () => {
       title: 'Test',
       ext: 'all'
     },
+    store,
+    localVue,
     mocks: {
-      $store: {
-        state: {
-          config: {}
-        }
+      $route: { params: {} },
+      $router: {
+        push: () => {}
       }
     }
   })
@@ -37,7 +75,6 @@ test('mounts without error', () => {
   expect(
     wrapper.findComponent({ ref: 'unit-introduction' }).exists()
   ).toBeTruthy()
-  expect(wrapper.findComponent({ ref: 'unit-files' }).exists()).toBeTruthy()
 })
 
 test('process simple text file', async () => {
@@ -46,13 +83,12 @@ test('process simple text file', async () => {
       title: 'Test',
       ext: 'all'
     },
+    store,
+    localVue,
     mocks: {
-      $store: {
-        state: {
-          config: {},
-          fileManager: null
-        },
-        commit: () => {}
+      $route: { params: {} },
+      $router: {
+        push: () => {}
       }
     }
   })
@@ -64,7 +100,7 @@ test('process simple text file', async () => {
   const file = new File([fileContent], 'test.txt')
 
   // Trigger the data processing function
-  const unitFiles = wrapper.findComponent({ ref: 'unit-files' })
+  const unitFiles = wrapper.findComponent({ ref: 'unit-introduction' })
   await unitFiles.trigger('update', { uppyFiles: [file] })
 
   // I don't know why we need so many ticks

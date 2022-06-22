@@ -1,24 +1,14 @@
 <template>
   <div>
-    <VCard
-      v-if="defaultViewElements && fileManager !== null"
-      class="pa-2 mb-6"
-      flat
-    >
+    <VCard v-if="fileManager !== null" class="pa-2 mb-6" flat>
       <VRow>
         <VCol cols="1"></VCol>
         <VCol cols="10"
-          ><VCardTitle class="justify-center">{{
-            defaultViewElements.title
-          }}</VCardTitle></VCol
+          ><VCardTitle class="justify-center">{{ title }}</VCardTitle></VCol
         >
         <VCol cols="1" align-self="center" class="full-height text-center">
           <VTooltip
-            v-if="
-              ['genericDateViewer', 'genericLocationViewer'].includes(
-                defaultViewElements.key
-              )
-            "
+            v-if="['genericDateViewer', 'genericLocationViewer'].includes(id)"
             left
           >
             <template #activator="{ on }">
@@ -33,9 +23,11 @@
         /></VCol>
       </VRow>
 
-      <VRow>
-        <VCol cols="8" class="mx-auto">
-          {{ defaultViewElements.text }}
+      <VRow v-if="text">
+        <VCol>
+          <VContainer>
+            {{ text }}
+          </VContainer>
         </VCol>
       </VRow>
       <template v-if="missingFiles.length > 0">
@@ -45,33 +37,29 @@
         >
       </template>
       <template v-else>
-        <VRow>
+        <UnitPipelineCustom
+          v-if="customPipeline"
+          v-bind="{
+            customPipeline,
+            customPipelineOptions,
+            hash: id
+          }"
+          @update="onUnitResultsUpdate"
+        />
+        <UnitPipelineSql
+          v-else-if="sql"
+          v-bind="{
+            sql,
+            hash: id
+          }"
+          @update="onUnitResultsUpdate"
+        />
+
+        <VRow v-if="errorMessage">
           <VCol>
-            <UnitPipelineCustom
-              v-if="customPipeline !== undefined"
-              v-bind="{
-                fileManager,
-                customPipeline,
-                parameterName: defaultViewElements.parameterName,
-                defaultViewElements
-              }"
-              @update="onUnitResultsUpdate"
-            />
-            <UnitPipelineSql
-              v-else-if="sql"
-              v-bind="{
-                sql,
-                parameterName: defaultViewElements.parameterName,
-                parameterKey: defaultViewElements.parameterKey
-              }"
-              @update="onUnitResultsUpdate"
-            />
-            <UnitPipelineSparql
-              v-else
-              v-bind="{ sparqlQuery }"
-              class="mr-lg-6"
-              @update="onUnitResultsUpdate"
-            />
+            <BaseAlert type="error">
+              {{ errorMessage }}
+            </BaseAlert>
           </VCol>
         </VRow>
         <template v-if="clonedResult">
@@ -87,18 +75,18 @@
                 v-else-if="vizVue"
                 :graph-name="vizVue"
                 :data="clonedResult"
-                :viz-props="defaultViewElements.vizProps"
+                :viz-props="vizProps"
               />
               <UnitIframe
                 v-else-if="vizUrl"
                 :src="vizUrl"
-                :data="clonedResult"
+                :args="clonedResult"
               />
             </VCol>
           </VRow>
           <VRow v-if="showTable">
             <VCol>
-              <UnitFilterableTable :data="clonedResult" />
+              <UnitFilterableTable v-bind="clonedResult" />
             </VCol>
           </VRow>
         </template>
@@ -108,71 +96,85 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
+
 export default {
   props: {
-    sparqlQuery: {
+    id: {
       type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    text: {
+      type: String,
+      required: true
+    },
+    files: {
+      type: Array,
       default: null
     },
-    defaultViewElements: {
-      type: Object,
-      default: null
-    },
-    index: {
-      type: Number,
-      default: 0
-    },
-    customPipeline: {
+    postprocessor: {
       type: Function,
-      default: undefined
+      required: true
+    },
+    visualization: {
+      type: [String, Object],
+      default: ''
     },
     sql: {
       type: String,
       default: ''
     },
-    vega: {
-      type: Object,
-      default: () => {}
+    customPipeline: {
+      type: [String, Function],
+      default: undefined
     },
-    postprocessors: {
+    customPipelineOptions: {
+      type: [Object, Array],
+      default: undefined
+    },
+    showTable: {
+      type: Boolean,
+      required: true
+    },
+    vizProps: {
       type: Object,
-      default: () => {}
+      default: () => ({})
+    }
+  },
+  data() {
+    const { visualization: v } = this
+    let vizUrl = false
+    let vizVue = false
+    let vizVega = false
+    if (typeof v === 'string') {
+      vizUrl = v.startsWith('/') && v
+      vizVue = v.endsWith('.vue') && v
+    } else if (typeof v === 'object') {
+      vizVega = v
+    }
+    return {
+      errorMessage: '',
+      // `result` keeps track of the internal result from the pipeline.
+      // Note: we should not fetch the result from Vuex because
+      // then the UnitQuery component instance will react when
+      // other instances add to the results object in the store.
+      result: null,
+      vizUrl,
+      vizVue,
+      vizVega
     }
   },
   computed: {
-    ...mapGetters(['fileManager']),
-    showTable() {
-      return this.defaultViewElements.showTable
-    },
-    vizName() {
-      return this.defaultViewElements.visualization
-    },
-    vizUrl() {
-      return this.vizName?.startsWith('/') ? this.vizName : undefined
-    },
-    vizVue() {
-      return this.vizName?.endsWith('.vue') ? this.vizName : undefined
-    },
-    vizVega() {
-      return this.vega[this.vizName]
-    },
-    result: {
-      get() {
-        return this.$store.state.results[this.defaultViewElements.key] ?? null
-      },
-      set(result) {
-        this.$store.commit('setResult', {
-          experience: this.defaultViewElements.key,
-          result
-        })
-      }
-    },
+    ...mapState(['fileManager']),
     clonedResult() {
       return JSON.parse(JSON.stringify(this.result))
     },
     fileGlobs() {
-      const fileIds = this.defaultViewElements.files ?? []
+      const fileIds = this.files ?? []
       return fileIds.map(id => this.fileManager.idToGlob[id])
     },
     missingFiles() {
@@ -182,14 +184,33 @@ export default {
         .map(([glob, _]) => glob)
     }
   },
-  methods: {
-    onUnitResultsUpdate(result) {
-      // Postprocessing
-      if (this.defaultViewElements.postprocessor !== undefined) {
-        result =
-          this.postprocessors[this.defaultViewElements.postprocessor](result)
+  watch: {
+    fileManager(value) {
+      if (!value) {
+        // When fileManager is reset,
+        // we set result to null to ensure
+        // the viz component is not mounted
+        // before new results from the pipeline
+        // are available (see clonedResult)
+        this.result = null
       }
-      this.result = result
+    }
+  },
+  methods: {
+    onUnitResultsUpdate({ result, error }) {
+      let finalResult = result
+      if (error) {
+        console.error(error)
+        this.errorMessage = error instanceof Error ? error.message : error
+        return
+      }
+      // Postprocessing
+      finalResult = this.postprocessor(finalResult)
+      this.$store.commit('setResult', {
+        experience: this.id,
+        result: finalResult
+      })
+      this.result = finalResult
     }
   }
 }

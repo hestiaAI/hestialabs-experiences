@@ -28,7 +28,7 @@ test('data table contains passed items', () => {
   // Mount the vue component, pass some data and a mocked vuex store
   const wrapper = mount(UnitFilterableTable, {
     propsData: {
-      data
+      ...data
     },
     store,
     localVue
@@ -41,7 +41,7 @@ test('data table is not rendered when data is malformed', () => {
   // Mount the vue component, pass some data and a mocked vuex store
   const wrapper = mount(UnitFilterableTable, {
     propsData: {
-      data: data.items
+      items: data.items
     },
     store,
     localVue
@@ -54,7 +54,7 @@ test('data table html corresponds to snapshot', () => {
   // Mount the vue component, pass some data and a mocked vuex store
   const wrapper = mount(UnitFilterableTable, {
     propsData: {
-      data
+      ...data
     },
     store,
     localVue

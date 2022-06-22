@@ -61,8 +61,8 @@
             </div>
           </VCol>
           <VCol cols="12" md="4">
-            <div id="city-chart">
-              <strong>Begin trip cities</strong>
+            <div id="address-chart">
+              <strong>Begin trip address</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
@@ -177,7 +177,7 @@
     </ChartViewVRowWebShare>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable :data="{ headers: header, items: results }" />
+        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -260,8 +260,7 @@ export default {
         d.priceStr = d['Fare Amount'] + d['Fare Currency']
         d.price = +d['Fare Amount']
         d.distance = +d['Distance (miles)']
-        const addr = d['Begin Trip Address'].split(',')
-        d.city = addr[addr.length - 2].split(' ').pop()
+        d.address = d['Begin Trip Address'].replace(/[0-9]/g, '').split(',')[0]
       })
 
       // Create and bind charts to their respective divs
@@ -269,7 +268,7 @@ export default {
       const serviceChart = new dc.PieChart('#service-chart')
       const weekChart = new dc.RowChart('#week-chart')
       const priceChart = new dc.LineChart('#price-chart')
-      const cityChart = new dc.RowChart('#city-chart')
+      const addressChart = new dc.RowChart('#address-chart')
       const tripNumber = new dc.NumberDisplay('#number-trip')
       const speedNumber = new dc.NumberDisplay('#number-speed-avg')
       const priceAvgNumber = new dc.NumberDisplay('#number-price-avg')
@@ -298,8 +297,8 @@ export default {
         priceChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#city-chart a.reset').on('click', function () {
-        cityChart.filterAll()
+      d3.select('#address-chart a.reset').on('click', function () {
+        addressChart.filterAll()
         dc.redrawAll()
       })
       const ndx = crossfilter(this.results)
@@ -312,7 +311,7 @@ export default {
         return `${name[day]}`
       })
       const serviceDimension = ndx.dimension(d => d.service)
-      const cityDimension = ndx.dimension(d => d.city)
+      const addressDimension = ndx.dimension(d => d.address)
       const dayDimension = ndx.dimension(d => d.day)
       const hourDimension = ndx.dimension(d => d.hour)
       this.currencyDimension = ndx.dimension(d => d['Fare Currency'])
@@ -349,7 +348,7 @@ export default {
       const dayOfWeekGroup = dayOfWeekDimension.group().reduceCount()
       const serviceGroup = serviceDimension.group().reduceCount()
       const priceGroup = dayDimension.group().reduceSum(d => d.price)
-      const cityGroup = cityDimension.group().reduceCount()
+      const addressGroup = addressDimension.group().reduceCount()
       const hourGroup = hourDimension.group().reduceCount()
       const currencyGroup = this.currencyDimension.group()
 
@@ -527,6 +526,7 @@ export default {
         .xyTipsOn(true)
         .height(180)
         .brushOn(false)
+        .renderArea(true)
         .dimension(dayDimension)
         .group(createCumulativeGroup(priceGroup))
         .x(d3.scaleTime().domain([minDate, maxDate]))
@@ -534,8 +534,8 @@ export default {
         .elasticY(true)
         .renderDataPoints({
           radius: 3,
-          fillOpacity: 0.8,
-          strokeOpacity: 0.0
+          fillOpaaddress: 0.8,
+          strokeOpaaddress: 0.0
         })
         .clipPadding(10)
         .yAxisLabel('Total price')
@@ -545,13 +545,13 @@ export default {
       priceChart.yAxis().ticks(6)
       priceChart.filterAll()
 
-      // Render city row chart
-      cityChart
-        .width(d3.select('#city-chart').node().getBoundingClientRect().width)
+      // Render address row chart
+      addressChart
+        .width(d3.select('#address-chart').node().getBoundingClientRect().width)
         .height(180)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
-        .group(removeEmptyBins(cityGroup))
-        .dimension(cityDimension)
+        .group(removeEmptyBins(addressGroup))
+        .dimension(addressDimension)
         .ordinalColors(colorPalette)
         .label(d => d.key)
         .title(d => d.value)

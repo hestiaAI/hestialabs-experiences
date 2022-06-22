@@ -1,5 +1,5 @@
 <template>
-  <VContainer fluid>
+  <VContainer fluid class="mt-16">
     <VRow align="center" justify="center" class="flex-column">
       <h1 class="h1">{{ title }}</h1>
       <LogoImg max-width="300" class="my-12" />
