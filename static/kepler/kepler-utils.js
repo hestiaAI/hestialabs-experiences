@@ -2,15 +2,15 @@
 /* eslint no-undef: "error" */
 // based on the example at https://github.com/keplergl/kepler.gl/blob/master/examples/umd-client/index.html
 
-const { combineReducers, applyMiddleware, createStore, compose } = Redux
-const { Provider } = ReactRedux
-
 // If we wanted to have this with our javascript.
 // Unfortunately webpack fails to load a dependency of moment-timezone
 // import KeplerGl from 'kepler.gl'
 // import React, { ReactDOM } from 'react'
 // import { combineReducers, applyMiddleware, createStore, compose } from 'redux'
 // import { Provider } from 'react-redux'
+
+const { combineReducers, applyMiddleware, createStore, compose } = Redux
+const { Provider } = ReactRedux
 
 export const buildStore = function() {
   const reducers = combineReducers({
@@ -89,14 +89,40 @@ function extractDataId(config) {
  */
 export function update(data, store) {
   const { config, rawCsv, keplerData } = data
+  // make deep copy in order to not modifiy the store
+  const configClone = JSON.parse(JSON.stringify(config))
   const inputData = keplerData || KeplerGl.processCsvData(rawCsv)
   const dataset = {
-    info: { id: extractDataId(config), label: 'trips' },
+    info: { id: extractDataId(configClone), label: 'trips' },
     data: inputData
   }
   let parsedConfig = {}
-  if (config) {
-    parsedConfig = KeplerGl.KeplerGlSchema.parseSavedConfig(config)
+  if (configClone) {
+    parsedConfig = KeplerGl.KeplerGlSchema.parseSavedConfig(configClone)
+    parsedConfig.mapStyle = {
+      styleType: 'tqwsxjb',
+      topLayerGroups: {},
+      visibleLayerGroups: {
+        label: true,
+        road: true,
+        building: true,
+        water: true,
+        land: true
+      },
+      threeDBuildingColor: [
+        194.6103322548211, 191.81688250953655, 185.2988331038727
+      ],
+      mapStyles: {
+        tqwsxjb: {
+          accessToken: null,
+          custom: true,
+          icon: 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-122.3391,37.7922,9,0,0/400x300?access_token=pk.eyJ1IjoidWNmLW1hcGJveCIsImEiOiJja2tyMjNhcWIwc29sMnVzMThoZ3djNXhzIn0._hfBNwCD7pCU7RAMOq6vUQ&logo=false&attribution=false',
+          id: 'tqwsxjb',
+          label: 'Mapbox Streets',
+          url: 'mapbox://styles/mapbox/streets-v11'
+        }
+      }
+    }
   }
   store.dispatch(
     KeplerGl.addDataToMap({

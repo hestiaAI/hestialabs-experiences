@@ -19,7 +19,6 @@ export const ACCEPTED_TYPES = [
   DATA_TYPES.ARRAY,
   DATA_TYPES.DATE,
   DATA_TYPES.DATETIME,
-  DATA_TYPES.TIME,
   DATA_TYPES.STRING
 ]
 
@@ -203,7 +202,9 @@ export function verifyTypes(headers, items) {
       h.type = 'string'
       break
     }
-    if (idxRow === items.length) { h.type = 'string' }
+    if (idxRow === items.length) {
+      h.type = 'string'
+    }
   })
   return headers
 }
