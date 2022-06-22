@@ -1,35 +1,24 @@
-import fs from 'fs'
-import path from 'path'
-
+import experience from '@hestiaai/uber'
 import { testTripsData, tripsHeaders, tripsItems } from './samples.helpers'
-import pipelines from '~/manifests/experiences/uber/pipeline'
-import preprocessors from '~/manifests/preprocessors'
 import FileManager from '~/utils/file-manager'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
-import { arrayEqualNoOrder } from '~/utils/test-utils'
+import { arrayEqualNoOrder, getCustomPipelineFromBlock } from '~/utils/test-utils'
 
-const manifest = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, '../uber.json'), 'utf8')
+const { preprocessors, files, keepOnlyFiles } = experience.options
+const fileManager = new FileManager(
+  preprocessors,
+  null,
+  files,
+  keepOnlyFiles
 )
-Object.entries(manifest.preprocessors ?? {}).forEach(
-  ([path, pre]) => (manifest.preprocessors[path] = preprocessors[pre])
-)
-
-async function getFileManager(testTripsData) {
-  const fileManager = new FileManager(
-    manifest.preprocessors,
-    null,
-    manifest.files
-  )
-  const fileTrips = mockFile('test/Rider/trips_data.csv', testTripsData)
-  await fileManager.init([fileTrips])
-  return fileManager
-}
+const fileTrips = mockFile('test/Rider/trips_data.csv', testTripsData)
 
 describe('with complete samples', () => {
+  beforeAll(async() => await fileManager.init([fileTrips]))
+
   test('pipeline tripsData returns the correct items', async() => {
-    const fileManager = await getFileManager(testTripsData)
-    const result = await pipelines.tripsData({ fileManager })
+    const pipeline = getCustomPipelineFromBlock(experience, 'tripsData')
+    const result = await pipeline({ fileManager })
     const expected = {
       headers: tripsHeaders,
       items: tripsItems
@@ -39,8 +28,8 @@ describe('with complete samples', () => {
   })
 
   test('pipeline tripsGraphData returns the correct items', async() => {
-    const fileManager = await getFileManager(testTripsData)
-    const result = await pipelines.tripsGraphData({ fileManager })
+    const pipeline = getCustomPipelineFromBlock(experience, 'tripsGraphData')
+    const result = await pipeline({ fileManager })
     const expected = {
       headers: ['source', 'target', 'value'],
       items: [
