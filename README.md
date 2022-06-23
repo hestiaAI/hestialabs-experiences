@@ -32,7 +32,7 @@ Set up pre-commit hooks:
 npm run prepare
 ```
 
-## Development
+## Develop
 
 Start developing:
 
@@ -157,7 +157,7 @@ npm run lerna:publish
 - [TypeScript docs](https://www.typescriptlang.org/docs/)
 - [Working with the npm registry - GitHub Docs](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)
 
-# Caveats
+# Notes
 
 - Passing arguments from the command line to npm scripts works in PowerShell if you [enclose the `--` in quotation marks](https://stackoverflow.com/a/65530483/8238129). For example,
 
