@@ -1,13 +1,13 @@
 WITH
   TempLike AS (
     SELECT
-      substr(likedAt, 1, 10) AS likedAt
+      SUBSTR(likedAt, 1, 10) AS likedAt
     FROM
       HerLike
   ),
   TempSkip AS (
     SELECT
-      substr(skippedAt, 1, 10) AS skippedAt
+      SUBSTR(skippedAt, 1, 10) AS skippedAt
     FROM
       HerSkip
   )
