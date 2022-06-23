@@ -1,11 +1,31 @@
-SELECT TinderUsage.date, 
-  likes, 
-  passes, 
-  messagesSent, 
-  messagesReceived, 
-  matches, 
-  SUBSTR(TinderUsage.FilePath, 0, INSTR(TinderUsage.FilePath, '_')) AS app, 
+SELECT
+  TinderUsage.date,
+  likes,
+  passes,
+  messagesSent,
+  messagesReceived,
+  matches,
+  SUBSTR(
+    TinderUsage.filePath,
+    0,
+    INSTR(TinderUsage.filePath, '_')
+  ) AS app,
   sexualOrientations,
-  SUBSTR(TinderUsage.FilePath, 0, INSTR(TinderUsage.FilePath, '/')) AS userId
-FROM TinderUsage, TinderOrientation
-WHERE SUBSTR(TinderUsage.FilePath, 0, INSTR(TinderUsage.FilePath, '/')) = SUBSTR(TinderOrientation.FilePath, 0, INSTR(TinderOrientation.FilePath, '/'))
+  SUBSTR(
+    TinderUsage.filePath,
+    0,
+    INSTR(TinderUsage.filePath, '/')
+  ) AS userId
+FROM
+  TinderUsage,
+  TinderOrientation
+WHERE
+  SUBSTR(
+    TinderUsage.filePath,
+    0,
+    INSTR(TinderUsage.filePath, '/')
+  ) = SUBSTR(
+    TinderOrientation.filePath,
+    0,
+    INSTR(TinderOrientation.filePath, '/')
+  )

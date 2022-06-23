@@ -16,7 +16,7 @@ const config: DatabaseConfig = {
         ['date', TEXT],
         ['action', TEXT],
         ['count', TEXT],
-        ['FilePath', TEXT, 'FILEPATH']
+        ['filePath', TEXT, 'FILEPATH']
       ]
     },
     {
@@ -25,7 +25,7 @@ const config: DatabaseConfig = {
         ['name', TEXT],
         ['likedAt', TEXT],
         ['matched', TEXT],
-        ['FilePath', TEXT, 'FILEPATH']
+        ['filePath', TEXT, 'FILEPATH']
       ]
     },
     {
@@ -36,7 +36,7 @@ const config: DatabaseConfig = {
         ['messageType', TEXT],
         ['sender', TEXT],
         ['messageSentAt', TEXT],
-        ['FilePath', TEXT, 'FILEPATH']
+        ['filePath', TEXT, 'FILEPATH']
       ]
     },
     {
@@ -50,14 +50,14 @@ const config: DatabaseConfig = {
         ['matches', INTEGER],
         ['opens', INTEGER],
         ['superlikes', INTEGER],
-        ['FilePath', TEXT, 'FILEPATH']
+        ['filePath', TEXT, 'FILEPATH']
       ]
     },
     {
       name: 'TinderOrientation',
       columns: [
         ['sexualOrientations', TEXT],
-        ['FilePath', TEXT, 'FILEPATH']
+        ['filePath', TEXT, 'FILEPATH']
       ]
     }
   ],

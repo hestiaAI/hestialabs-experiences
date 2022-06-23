@@ -10,8 +10,8 @@ FROM
   KAnonymity
 WHERE
   transitPath != 'null'
-  AND SUBSTR(Travels.FilePath, 0, INSTR(Travels.FilePath, '/')) = SUBSTR(
-    KAnonymity.FilePath,
+  AND SUBSTR(Travels.filePath, 0, INSTR(Travels.filePath, '/')) = SUBSTR(
+    KAnonymity.filePath,
     0,
-    INSTR(KAnonymity.FilePath, '/')
+    INSTR(KAnonymity.filePath, '/')
   )

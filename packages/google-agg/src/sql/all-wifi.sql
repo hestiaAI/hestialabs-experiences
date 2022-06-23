@@ -7,8 +7,8 @@ FROM
   Wifi,
   KAnonymity
 WHERE
-  SUBSTR(Wifi.FilePath, 0, INSTR(Wifi.FilePath, '/')) = SUBSTR(
-    KAnonymity.FilePath,
+  SUBSTR(Wifi.filePath, 0, INSTR(Wifi.filePath, '/')) = SUBSTR(
+    KAnonymity.filePath,
     0,
-    INSTR(KAnonymity.FilePath, '/')
+    INSTR(KAnonymity.filePath, '/')
   )

@@ -20,15 +20,21 @@ Read the following instructions carefully before getting started.
 
 ## Setup
 
-Install all packages
+Install all packages:
 
 ```sh
 npm install
 ```
 
-## Development
+Set up pre-commit hooks:
 
-Run the following script to start developing:
+```
+npm run prepare
+```
+
+## Develop
+
+Start developing:
 
 ```sh
 npm run dev
@@ -38,10 +44,24 @@ This runs webpack in watch mode, building the packages once and then watching al
 
 ## Build
 
-Run the following script to build all packages manually:
+Build all packages:
 
 ```sh
 npm run build
+```
+
+## Test
+
+Run tests for all packages:
+
+```sh
+npm test
+```
+
+Run test for a single package:
+
+```sh
+npm run test:ts-node -- [packageNameCamelCased]
 ```
 
 ## Package management
@@ -80,7 +100,9 @@ Replace `<NAME>` with the package name.
 
 4. Add the package name to the `experiences` Array in [dev.json](https://github.com/hestiaAI/hestialabs-experiences/blob/master/config/dev.json#L2).
 
-5. Re-link the packages workspace to the `hestialabs-experiences` repo:
+5. Add an export statement for the package in [`packages.ts`](./packages.ts). This ensures [tests](./test.ts) are run for the package.
+
+6. Re-link the packages workspace to the `hestialabs-experiences` repo:
 
 ```sh
 npm link --workspaces
@@ -135,7 +157,7 @@ npm run lerna:publish
 - [TypeScript docs](https://www.typescriptlang.org/docs/)
 - [Working with the npm registry - GitHub Docs](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)
 
-# Caveats
+# Notes
 
 - Passing arguments from the command line to npm scripts works in PowerShell if you [enclose the `--` in quotation marks](https://stackoverflow.com/a/65530483/8238129). For example,
 

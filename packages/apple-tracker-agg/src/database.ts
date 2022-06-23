@@ -8,7 +8,7 @@ const config: DatabaseConfig = {
     {
       name: 'ResourceAccessIOS',
       columns: [
-        ['App', TEXT],
+        ['app', TEXT],
         ['identifierType', TEXT],
         ['category', TEXT],
         ['identifier', TEXT],
@@ -25,8 +25,9 @@ const config: DatabaseConfig = {
         ['domainType', TEXT],
         ['initiatedType', TEXT],
         ['hits', TEXT],
+        ['firstTimeStamp', TEXT],
         ['domainOwner', TEXT],
-        ['bundleID', TEXT]
+        ['bundleId', TEXT]
       ]
     }
   ],
@@ -37,7 +38,7 @@ const config: DatabaseConfig = {
       table: 'ResourceAccessIOS',
       getters: [
         {
-          column: 'App',
+          column: 'app',
           path: '$.app'
         },
         {
@@ -60,7 +61,7 @@ const config: DatabaseConfig = {
       table: 'NetworkActivityIOS',
       getters: [
         {
-          column: 'bundleID',
+          column: 'bundleId',
           path: '$.app'
         },
         {
