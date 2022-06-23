@@ -1,5 +1,10 @@
 import type { DatabaseConfig } from '@/types'
-import { SQLType } from '@/types/database-config'
+import {
+  SQLType,
+  JSONPathReturnObject,
+  JSONPathResultType,
+  JSONPathValue
+} from '@/types/database-config'
 
 const { TEXT, INTEGER } = SQLType
 
@@ -126,10 +131,17 @@ const config: DatabaseConfig = {
       fileId: 'tinderUsage',
       path: '$.result.items[*]',
       table: 'TinderUsage',
+      options: {
+        callback: output => {
+          const o = output as JSONPathReturnObject
+          const path = ['date', 'dateValue'].find(p => p in o)
+          o['foundDate'] = path ? o[path] : 'null'
+        }
+      },
       getters: [
         {
           column: 'date',
-          path: '$.date'
+          path: 'foundDate'
         },
         {
           column: 'likes',
