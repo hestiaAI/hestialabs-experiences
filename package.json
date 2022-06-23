@@ -55,7 +55,7 @@
     "lerna": "~4.0.0",
     "lint-staged": "^12.4.1",
     "prettier": "^2.6.2",
-    "sql-formatter": "^6.1.5",
+    "sql-formatter": "^7.0.2",
     "ts-loader": "~9.2.6",
     "ts-node": "^10.7.0",
     "tsconfig-paths-webpack-plugin": "^3.5.1",
