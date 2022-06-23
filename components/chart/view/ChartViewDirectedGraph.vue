@@ -47,25 +47,25 @@ export default {
       ]
 
       let result = this.values.filter(
-        row => categoriesToKeep.includes(row.Category) & (row.App !== 'Unknown')
+        row => categoriesToKeep.includes(row.categ) & (row.app !== 'Unknown')
       )
-      result = result.map(o => _.pick(o, ['App', 'Tracker']))
+      result = result.map(o => _.pick(o, ['app', 'tracker']))
 
       const nodesToRemove = ['Chrome', 'Firefox', 'Samsung Internet']
-      result = result.filter(row => !nodesToRemove.includes(row.App))
+      result = result.filter(row => !nodesToRemove.includes(row.app))
 
       const links = result.map(function(item) {
-        return { source: item.App, target: item.Tracker, weight: 1 }
+        return { source: item.app, target: item.tracker, weight: 1 }
       })
 
       const temp = result.reduce((p, c) => {
-        if (!Object.prototype.hasOwnProperty.call(p, c.App)) {
-          p[c.App] = 1
+        if (!Object.prototype.hasOwnProperty.call(p, c.app)) {
+          p[c.app] = 1
         }
-        if (!Object.prototype.hasOwnProperty.call(p, c.Tracker)) {
-          p[c.Tracker] = 1
+        if (!Object.prototype.hasOwnProperty.call(p, c.tracker)) {
+          p[c.tracker] = 1
         }
-        p[c.Tracker]++
+        p[c.tracker]++
         return p
       }, {})
 
