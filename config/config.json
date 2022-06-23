@@ -24,6 +24,8 @@
     "tl-participant",
     "mercator-aggregator",
     "mercator-participant",
+    "reflets-aggregator",
+    "reflets-participant",
     "demo-aggregator",
     "demo-participant"
   ],
