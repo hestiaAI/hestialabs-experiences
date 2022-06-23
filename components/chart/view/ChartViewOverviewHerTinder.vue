@@ -67,6 +67,7 @@ import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
 import { addPiePercentage } from './utils/DCHelpers'
+import { isValidDate } from '@/utils/dates'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -124,12 +125,13 @@ export default {
           messagesReceived: +this.decodeDefault(d.messagesReceived) || 0,
           matches: +this.decodeDefault(d.matches) || 0,
           sexualOrientations:
-            d.app === 'tinder'
-              ? JSON.parse(d.sexualOrientations).join(' | ')
-              : this.decodeDefault(d.sexualOrientations),
+              d.app === 'tinder'
+                ? JSON.parse(d.sexualOrientations).join(' | ')
+                : this.decodeDefault(d.sexualOrientations),
           userId: this.decodeDefault(d.userId)
         }
       })
+        .filter(d => isValidDate(d.date))
 
       const ndx = crossfilter(this.results)
 
