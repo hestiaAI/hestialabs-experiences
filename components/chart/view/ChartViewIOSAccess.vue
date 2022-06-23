@@ -205,7 +205,7 @@ export default {
       // Parse and format data
       this.results = this.values.map((d) => {
         return {
-          app: this.decodeDefault(d.App),
+          app: this.decodeDefault(d.app),
           category: this.decodeDefault(d.category),
           identifier: this.decodeDefault(d.identifier),
           timestamp: this.decodeDefault(d.timestamp)
