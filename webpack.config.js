@@ -3,7 +3,6 @@ import { readdirSync } from 'fs'
 import { fileURLToPath } from 'url'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 import nodeExternals from 'webpack-node-externals'
-import TerserPlugin from 'terser-webpack-plugin'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -80,16 +79,7 @@ export default {
   optimization: {
     // turning off minimization in development mode does not work
     // https://github.com/webpack/webpack/issues/15144
-    minimize: true,
-    minimizer: [
-      new TerserPlugin({
-        // esbuild is faster than the default terser minifier
-        minify: TerserPlugin.esbuildMinify,
-        // `terserOptions` options will be passed to `esbuild`
-        // Link to options - https://esbuild.github.io/api/#minify
-        terserOptions: {}
-      })
-    ]
+    minimize: true
   },
   watchOptions: {
     ignored: /node_modules/
