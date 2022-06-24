@@ -1,23 +1,30 @@
 <template>
-  <VContainer v-if="values.length > 0">
+  <VContainer>
+    <VRow>
+      <VCol v-if="placeName === ''" cols="12">
+        <VSelect
+          v-model="placeSelected"
+          :items="listOfNames"
+          label="Place"
+        />
+      </VCol>
+    </VRow>
     <VRow>
       <VCol cols="12">
-        <p v-if="total === 0" class="text-subtitle-2">
-          No records were found in your file(s).
-        </p>
-        <p v-else class="text-subtitle-2">
-          Total time spend at the {{ placeName }} : {{ total_time }} <br>
+        <p class="text-subtitle-2">
+          Total time spend at the {{ placeSelected }} : {{ total_time }} <br>
           <br>
-          Mean time spend at the {{ placeName }}: {{ mean_time }} <br>
-          <br>
-          This map shows the other candidates proposed by Google associated to
-          the {{ placeName }}:
+          Mean time spend at the {{ placeSelected }}: {{ mean_time }} <br>
         </p>
       </VCol>
     </VRow>
-    <template v-if="total > 0">
+    <template v-if="getFilteredList().length !== 0">
       <VRow>
         <VCol cols="12">
+          <p class="text-subtitle-2">
+            This map shows the other candidates proposed by Google associated to
+            the {{ placeSelected }}:
+          </p>
           <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
       </VRow>
@@ -40,7 +47,10 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      listOfNames: this.getOrderedList(),
+      placeSelected: this.getSelectedName()
+    }
   },
   computed: {
     total() {
@@ -58,7 +68,7 @@ export default {
       return this.convertHMS(avg)
     },
     associated_names() {
-      const table = this.values.filter(x => x.winnerName === this.placeName)
+      const table = this.values.filter(x => x.winnerName === this.placeSelected)
       const uniq = _.uniqBy(table, x => x.loserName)
       const names = uniq.map((v) => {
         return {
@@ -89,6 +99,23 @@ export default {
     }
   },
   methods: {
+    getSelectedName() {
+      const list = this.getOrderedList()
+      if (this.placeName !== '') {
+        return this.placeName
+      } else {
+        return list[0]
+      }
+    },
+    getOrderedList() {
+      const grouped = _.groupBy(this.values, 'winnerName')
+      let list = Object.keys(grouped).map((x) => { return { winnerName: x, count: grouped[x].length } })
+      list = _.orderBy(list, 'count', 'desc').map(x => x.winnerName)
+      return list
+    },
+    getFilteredList() {
+      return this.values.filter(x => x.winnerName === this.placeSelected)
+    },
     compute_duration(d1, d2) {
       const date1 = new Date(d1).getTime()
       const date2 = new Date(d2).getTime()
@@ -96,7 +123,7 @@ export default {
       return res
     },
     get_durations() {
-      const values = this.values.filter(x => x.winnerName === this.placeName)
+      const values = this.values.filter(x => x.winnerName === this.placeSelected)
       const table = values.map(x => [x.startTimestamp, x.endTimestamp])
       const uniq = _.uniqBy(table, x => x[0])
       const dur = uniq.map(v => this.compute_duration(v[0], v[1]))
