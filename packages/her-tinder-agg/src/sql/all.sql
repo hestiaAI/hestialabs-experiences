@@ -1,5 +1,5 @@
 SELECT
-  Messages.date,
+  Messages.date as date,
   LikesPasses.likes,
   LikesPasses.passes,
   Messages.messagesSent,
