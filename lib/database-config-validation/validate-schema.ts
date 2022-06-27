@@ -131,7 +131,7 @@ const schema = {
                 { $ref: '#column' },
                 { enum: ['INTEGER', 'TEXT', 'FLOAT', 'DATE'] }
               ],
-              additionalItems: { type: 'string', pattern: '^.$' }
+              additionalItems: { type: 'string', pattern: '^.*$' }
             }
           },
           foreignKeys: {
