@@ -8,7 +8,7 @@ const config: DatabaseConfig = {
     {
       name: 'HerLikeSkip',
       columns: [
-        ['date', TEXT],
+        ['dateValue', TEXT],
         ['action', TEXT],
         ['count', TEXT],
         ['filePath', TEXT, 'FILEPATH']
@@ -37,7 +37,7 @@ const config: DatabaseConfig = {
     {
       name: 'TinderUsage',
       columns: [
-        ['date', TEXT],
+        ['dateValue', TEXT],
         ['likes', INTEGER],
         ['passes', INTEGER],
         ['messagesSent', INTEGER],
@@ -63,7 +63,7 @@ const config: DatabaseConfig = {
       table: 'HerLikeSkip',
       getters: [
         {
-          column: 'date',
+          column: 'dateValue',
           path: '$.date'
         },
         {
@@ -135,7 +135,7 @@ const config: DatabaseConfig = {
       },
       getters: [
         {
-          column: 'date',
+          column: 'dateValue',
           path: 'foundDate'
         },
         {

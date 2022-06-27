@@ -1,5 +1,5 @@
 SELECT
-  Messages.date as date,
+  Messages.dateValue,
   LikesPasses.likes,
   LikesPasses.passes,
   Messages.messagesSent,
@@ -11,7 +11,7 @@ SELECT
 FROM
   (
     SELECT
-      SUBSTR(messageSentAt, 0, INSTR(messageSentAt, ' ')) AS DATE,
+      SUBSTR(messageSentAt, 0, INSTR(messageSentAt, ' ')) AS dateValue,
       SUM(
         CASE
           WHEN HerMessage.sender = 'User' THEN 1
@@ -31,22 +31,40 @@ FROM
     WHERE
       HerMessage.messageType = 'Message'
     GROUP BY
-      DATE,
+      dateValue,
       filePath
   ) Messages,
   (
-    SELECT date,
-      SUM(CASE WHEN HerLikeSkip.action = 'Like' THEN HerLikeSkip.count ELSE 0 END) likes,
-      SUM(CASE WHEN HerLikeSkip.action = 'Skip' THEN HerLikeSkip.count ELSE 0 END) passes,
-      SUBSTR(HerLikeSkip.FilePath, 0, INSTR(HerLikeSkip.FilePath, '_')) AS app, 
-      'qur' as sexualOrientations,
-        SUBSTR(FilePath, 0, INSTR(FilePath, '/')) AS userId
-    FROM HerLikeSkip
-    GROUP BY date, FilePath
-  ) as LikesPasses,
+    SELECT
+      dateValue,
+      SUM(
+        CASE
+          WHEN HerLikeSkip.action = 'Like' THEN HerLikeSkip.count
+          ELSE 0
+        END
+      ) likes,
+      SUM(
+        CASE
+          WHEN HerLikeSkip.action = 'Skip' THEN HerLikeSkip.count
+          ELSE 0
+        END
+      ) passes,
+      SUBSTR(
+        HerLikeSkip.FilePath,
+        0,
+        INSTR(HerLikeSkip.FilePath, '_')
+      ) AS app,
+      'qur' AS sexualOrientations,
+      SUBSTR(FilePath, 0, INSTR(FilePath, '/')) AS userId
+    FROM
+      HerLikeSkip
+    GROUP BY
+      dateValue,
+      FilePath
+  ) LikesPasses,
   (
     SELECT
-      SUBSTR(likedAt, 0, INSTR(likedAt, ' ')) AS DATE,
+      SUBSTR(likedAt, 0, INSTR(likedAt, ' ')) AS dateValue,
       COUNT(HerLikeMatch.matched) AS matches,
       SUBSTR(filePath, 0, INSTR(filePath, '/')) AS userId
     FROM
@@ -54,17 +72,17 @@ FROM
     WHERE
       HerLikeMatch.matched = "true"
     GROUP BY
-      DATE,
+      dateValue,
       filePath
   ) Matches
 WHERE
-  Messages.date = LikesPasses.date
-  AND Messages.date = Matches.date
+  Messages.dateValue = LikesPasses.dateValue
+  AND Messages.dateValue = Matches.dateValue
   AND Messages.userId = LikesPasses.userId
   AND Messages.userId = Matches.userId
 UNION ALL
 SELECT
-  TinderUsage.date,
+  TinderUsage.dateValue,
   likes,
   passes,
   messagesSent,
