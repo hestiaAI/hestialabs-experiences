@@ -1,5 +1,5 @@
 SELECT
-  DATE,
+  dateValue,
   SUM(
     CASE
       WHEN HerLikeSkip.action = 'Like' THEN HerLikeSkip.count
@@ -22,5 +22,5 @@ SELECT
 FROM
   HerLikeSkip
 GROUP BY
-  DATE,
+  dateValue,
   filePath

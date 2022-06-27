@@ -1,5 +1,5 @@
 SELECT
-  SUBSTR(likedAt, 0, INSTR(likedAt, ' ')) AS DATE,
+  SUBSTR(likedAt, 0, INSTR(likedAt, ' ')) AS dateValue,
   COUNT(HerLikeMatch.matched) AS matches,
   SUBSTR(filePath, 0, INSTR(filePath, '/')) AS userId
 FROM
@@ -7,5 +7,5 @@ FROM
 WHERE
   HerLikeMatch.matched = "true"
 GROUP BY
-  DATE,
+  dateValue,
   filePath

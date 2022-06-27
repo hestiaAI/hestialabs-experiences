@@ -1,5 +1,5 @@
 SELECT
-  SUBSTR(messageSentAt, 0, INSTR(messageSentAt, ' ')) AS DATE,
+  SUBSTR(messageSentAt, 0, INSTR(messageSentAt, ' ')) AS dateValue,
   SUM(
     CASE
       WHEN HerMessage.sender = 'User' THEN 1
@@ -19,5 +19,5 @@ FROM
 WHERE
   HerMessage.messageType = 'Message'
 GROUP BY
-  DATE,
+  dateValue,
   filePath

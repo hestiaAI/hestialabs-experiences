@@ -51,7 +51,7 @@ const config: DatabaseConfig = {
     {
       name: 'TinderOrientation',
       columns: [
-        ['sexualOrientations', TEXT],
+        ['sexualOrientations', TEXT, '["str"]'],
         ['filePath', TEXT, 'FILEPATH']
       ]
     }
@@ -61,10 +61,17 @@ const config: DatabaseConfig = {
       fileId: 'herLikeSkip',
       path: '$.result.items[*]',
       table: 'HerLikeSkip',
+      options: {
+        callback: output => {
+          const o = output as JSONPathReturnObject
+          const path = ['date', 'date_'].find(p => p in o)
+          o['foundDate'] = path ? o[path] : 'null'
+        }
+      },
       getters: [
         {
           column: 'dateValue',
-          path: '$.date'
+          path: 'foundDate'
         },
         {
           column: 'action',
@@ -175,7 +182,7 @@ const config: DatabaseConfig = {
       getters: [
         {
           column: 'sexualOrientations',
-          path: '$.sexualOrientations'
+          path: '$.sexualOrientations@string()'
         }
       ]
     }
