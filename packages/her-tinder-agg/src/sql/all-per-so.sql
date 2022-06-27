@@ -8,7 +8,7 @@ FROM
     LikesPasses.likes,
     LikesPasses.passes,
     Matches.matches,
-    LikesPasses.sexualOrientations
+    REPLACE(REPLACE(LikesPasses.sexualOrientations, '"', ""), ",", " | ") as sexualOrientations
   FROM
     (
       SELECT date,
@@ -36,7 +36,7 @@ FROM
   SELECT likes, 
     passes, 
     matches, 
-    sexualOrientations
+    REPLACE(REPLACE(REPLACE(REPLACE(sexualOrientations, '"', ""), ",", " | "), "[", ""), "]", "") as sexualOrientations
   FROM TinderUsage, TinderOrientation
   WHERE SUBSTR(TinderUsage.FilePath, 0, INSTR(TinderUsage.FilePath, '/')) = SUBSTR(TinderOrientation.FilePath, 0, INSTR(TinderOrientation.FilePath, '/'))
   )
