@@ -196,9 +196,10 @@ export default {
       this.$nextTick(() => {
         // workaround to get the filtered items https://github.com/vuetifyjs/vuetify/issues/8731#issuecomment-617399086
         const { filteredItems } = this.$refs.tableRef.$children[0]
-        const { hash } = this.$route
+        // const { hash } = this.$route
         // emit the current filtered items
         this.$emit('current-items', filteredItems)
+        /*
         this.$store.commit('setResult', {
           experience: hash.slice(1),
           result: {
@@ -206,6 +207,7 @@ export default {
             items: filteredItems
           }
         })
+        */
       })
     }
   }
