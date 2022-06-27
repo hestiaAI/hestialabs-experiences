@@ -112,10 +112,10 @@ export default {
       const dateParser = d3.timeParse('%Y-%m-%d')
       const dateFormatter = d3.timeFormat('%B, %Y')
       this.results = this.values.map((d) => {
-        const date = dateParser(d.date) || new Date(d.date)
+        const date = dateParser(d.dateValue) || new Date(d.dateValue)
         return {
           date,
-          dateStr: d.date,
+          dateStr: d.dateValue,
           month: d3.timeMonth(date), // pre-calculate months for better performance
           day: d3.timeDay(date),
           app: this.decodeDefault(d.app),
