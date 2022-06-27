@@ -1,8 +1,8 @@
 import type { ViewBlocks } from '@/types'
 
 import sqlAll from './sql/all.sql'
-import sqlAllperApp from './sql/all-per-app.sql'
-import sqlAllperSo from './sql/all-per-so.sql'
+import sqlAllPerApp from './sql/all-per-app.sql'
+import sqlAllPerSo from './sql/all-per-so.sql'
 
 const blocks: ViewBlocks = [
   {
@@ -15,7 +15,7 @@ const blocks: ViewBlocks = [
   },
   {
     id: 'sqlAllperSo',
-    sql: sqlAllperSo,
+    sql: sqlAllPerSo,
     visualization: 'ChartViewGroupBar.vue',
     vizProps: {
       groupsAccessor: 'sexualOrientations',
@@ -30,7 +30,7 @@ const blocks: ViewBlocks = [
   },
   {
     id: 'sqlAllperApp',
-    sql: sqlAllperApp,
+    sql: sqlAllPerApp,
     visualization: 'ChartViewGroupBar.vue',
     vizProps: {
       groupsAccessor: 'app',
