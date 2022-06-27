@@ -3,7 +3,7 @@ SELECT
 FROM
   (
     SELECT
-      SUBSTR(messageSentAt, 0, INSTR(messageSentAt, ' ')) AS DATE,
+      SUBSTR(messageSentAt, 0, INSTR(messageSentAt, ' ')) AS [date],
       SUM(
         CASE
           WHEN HerMessage.sender = 'User' THEN 1
@@ -23,12 +23,12 @@ FROM
     WHERE
       HerMessage.messageType = 'Message'
     GROUP BY
-      DATE,
+      [date],
       filePath
   ) Messages,
   (
     SELECT
-      DATE,
+      [date],
       SUM(
         CASE
           WHEN HerLikeSkip.action = 'Like' THEN HerLikeSkip.count
@@ -51,12 +51,12 @@ FROM
     FROM
       HerLikeSkip
     GROUP BY
-      DATE,
+      [date],
       filePath
   ) LikesPasses,
   (
     SELECT
-      SUBSTR(likedAt, 0, INSTR(likedAt, ' ')) AS DATE,
+      SUBSTR(likedAt, 0, INSTR(likedAt, ' ')) AS [date],
       COUNT(HerLikeMatch.matched) AS matches,
       SUBSTR(filePath, 0, INSTR(filePath, '/')) AS userId
     FROM
@@ -64,7 +64,7 @@ FROM
     WHERE
       HerLikeMatch.matched = "true"
     GROUP BY
-      DATE,
+      [date],
       filePath
   ) Matches
 WHERE
