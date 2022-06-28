@@ -51,7 +51,7 @@ const config: DatabaseConfig = {
     {
       name: 'TinderOrientation',
       columns: [
-        ['sexualOrientations', TEXT, '["str"]'],
+        ['sexualOrientations', TEXT],
         ['filePath', TEXT, 'FILEPATH']
       ]
     }
