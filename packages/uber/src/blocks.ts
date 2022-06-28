@@ -14,16 +14,16 @@ async function tripsGraphData(params: { fileManager: FileManager }) {
   const filteredValues = tripsData.items.reduce((acc, d) => {
     // filter non trips data
     if (
-      (d['Product Type'] &&
-        String(d['Product Type']).toLowerCase().includes('ubereats')) ||
-      d['Trip or Order Status'] !== 'COMPLETED'
+      (d.productType &&
+        String(d.productType).toLowerCase().includes('ubereats')) ||
+      d.tripOrOrderStatus !== 'COMPLETED'
     ) {
       return acc
     }
     // remove street numbers to aggregate
     acc.push({
-      source: d['Begin Trip Address'].replace(/[0-9]/g, ''),
-      target: d['Dropoff Address'].replace(/[0-9]/g, ''),
+      source: d.beginTripAddress.replace(/[0-9]/g, ''),
+      target: d.dropoffAddress.replace(/[0-9]/g, ''),
       value: 1
     })
     return acc
