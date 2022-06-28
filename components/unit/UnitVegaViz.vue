@@ -21,7 +21,7 @@ export default {
   props: {
     specFile: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     },
     data: {
       type: Object,

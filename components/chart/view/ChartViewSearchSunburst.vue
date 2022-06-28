@@ -58,7 +58,9 @@ export default {
         .sort((a, b) => b.value - a.value)
 
       this.values.forEach((element) => {
-        if (element.parent === 0) { element.parent = null }
+        if (element.parent === 0) {
+          element.parent = null
+        }
       })
 
       this.selected = [this.items[0]]
