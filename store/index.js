@@ -1,5 +1,4 @@
 import Vue from 'vue'
-// import { getConfig } from '@/utils/api'
 
 export const state = () => ({
   loaded: false,

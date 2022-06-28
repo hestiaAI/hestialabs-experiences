@@ -4,8 +4,8 @@
       <component
         :is="component"
         v-bind="{
-          values: data ? data.items : [],
-          headers: data ? data.headers : [],
+          values: data.items || [],
+          headers: data.headers || [],
           ...vizProps
         }"
       />
@@ -26,7 +26,7 @@ export default {
     },
     vizProps: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   computed: {
