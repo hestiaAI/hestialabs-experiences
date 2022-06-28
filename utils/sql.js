@@ -257,7 +257,7 @@ function generateRecordsRecursively(
         record[a.column] =
           typeof value === 'object'
             ? JSON.stringify(value)
-            : String(value) || null
+            : value ? String(value) : record[a.column]
       } else if (a.column && a.value) {
         // hardcoded value
         record[a.column] = a.value
