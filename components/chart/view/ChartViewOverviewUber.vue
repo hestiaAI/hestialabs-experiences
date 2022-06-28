@@ -208,12 +208,12 @@ export default {
       header: [
         { text: 'City', value: 'City' },
         { text: 'Service', value: 'service' },
-        { text: 'Status', value: 'Trip or Order Status' },
+        { text: 'Status', value: 'tripOrOrderStatus' },
         { text: 'Request Time', value: 'dateRequestStr' },
-        { text: 'From', value: 'Begin Trip Address' },
-        { text: 'To', value: 'Dropoff Address' },
-        { text: 'Waiting time (min)', value: 'waiting_time' },
-        { text: 'Distance (miles)', value: 'Distance (miles)' },
+        { text: 'From', value: 'beginTripAddress' },
+        { text: 'To', value: 'dropoffAddress' },
+        { text: 'Waiting time (min)', value: 'waitingTime' },
+        { text: 'Distance (miles)', value: 'distanceMiles' },
         { text: 'Duration (min)', value: 'duration' },
         { text: 'Price', value: 'priceStr' }
       ],
@@ -236,7 +236,7 @@ export default {
     drawViz() {
       // Add data to table
       this.results = this.values.filter(
-        d => d['Trip or Order Status'] === 'COMPLETED'
+        d => d.tripOrOrderStatus === 'COMPLETED'
       )
 
       // Define color palette for the graphs
@@ -254,21 +254,21 @@ export default {
       const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
       this.results.forEach((d) => {
         d.service =
-          d['Product Type'].charAt(0).toUpperCase() + d['Product Type'].slice(1)
-        d.dateRequest = dateFormatParser(d['Request Time'])
-        d.dateStart = dateFormatParser(d['Begin Trip Time'])
-        d.dateEnd = dateFormatParser(d['Dropoff Time'])
+          d.productType.charAt(0).toUpperCase() + d.productType.slice(1)
+        d.dateRequest = dateFormatParser(d.requestTime)
+        d.dateStart = dateFormatParser(d.beginTripTime)
+        d.dateEnd = dateFormatParser(d.dropoffTime)
         d.dateRequestStr = formatTime(d.dateRequest)
         d.dateStartStr = formatTime(d.dateStart)
         d.dateEndStr = formatTime(d.dateEnd)
         d.day = d3.timeDay(d.dateStart) // pre-calculate days for better performance
         d.hour = d3.timeHour(d.dateStart).getHours()
         d.duration = d3.timeMinute.count(d.dateStart, d.dateEnd)
-        d.waiting_time = d3.timeMinute.count(d.dateRequest, d.dateStart)
-        d.priceStr = d['Fare Amount'] + d['Fare Currency']
-        d.price = +d['Fare Amount']
-        d.distance = +d['Distance (miles)']
-        d.address = d['Begin Trip Address'].replace(/[0-9]/g, '').split(',')[0]
+        d.waitingTime = d3.timeMinute.count(d.dateRequest, d.dateStart)
+        d.priceStr = d.fareAmount + d.fareCurrency
+        d.price = +d.fareAmount
+        d.distance = +d.distanceMiles
+        d.address = d.beginTripAddress.replace(/[0-9]/g, '').split(',')[0]
       })
 
       // Create and bind charts to their respective divs
@@ -322,7 +322,7 @@ export default {
       const addressDimension = ndx.dimension(d => d.address)
       const dayDimension = ndx.dimension(d => d.day)
       const hourDimension = ndx.dimension(d => d.hour)
-      this.currencyDimension = ndx.dimension(d => d['Fare Currency'])
+      this.currencyDimension = ndx.dimension(d => d.fareCurrency)
 
       // Create groups
       const allGroup = allDimension.reduce(
@@ -330,7 +330,7 @@ export default {
         (p, v) => {
           ++p.count
           p.distanceTotal += v.distance
-          p.waitingTotal += v.waiting_time
+          p.waitingTotal += v.waitingTime
           p.priceTotal += v.price
           p.durationTotal += v.duration
           return p
@@ -339,7 +339,7 @@ export default {
         (p, v) => {
           --p.count
           p.distanceTotal -= v.distance
-          p.waitingTotal -= v.waiting_time
+          p.waitingTotal -= v.waitingTime
           p.priceTotal -= v.price
           p.durationTotal -= v.duration
           return p
