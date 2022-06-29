@@ -11,7 +11,7 @@ import {
   mdiXml,
   mdiMicrosoftExcel
 } from '@mdi/js'
-import _ from 'lodash'
+import { has, groupBy, identity } from 'lodash-es'
 import { matchNormalized, findMatchesInContent } from './accessor'
 import { itemifyJSON, nJsonPoints } from './json'
 import { getCsvHeadersAndItems } from './csv'
@@ -219,7 +219,7 @@ export default class FileManager {
   }
 
   hasFile(filePath) {
-    return _.has(this.fileDict, filePath)
+    return has(this.fileDict, filePath)
   }
 
   /**
@@ -241,7 +241,7 @@ export default class FileManager {
     if (!this.hasFile(filePath)) {
       throw new Error(`The file ${filePath} was not provided.`)
     }
-    if (!_.has(this.#fileTexts, filePath)) {
+    if (!has(this.#fileTexts, filePath)) {
       this.#fileTexts[filePath] = await this.fileDict[filePath].text()
     }
     return this.#fileTexts[filePath]
@@ -253,7 +253,7 @@ export default class FileManager {
    * @returns {Promise<String>}
    */
   async getPreprocessedText(filePath) {
-    if (!_.has(this.#preprocessedTexts, filePath)) {
+    if (!has(this.#preprocessedTexts, filePath)) {
       let text = await this.getText(filePath)
       if (text === '') {
         this.#preprocessedTexts[filePath] = text
@@ -273,7 +273,7 @@ export default class FileManager {
    * @returns {Promise<String>}
    */
   async getCsvItems(filePath) {
-    if (!_.has(this.#csvItems, filePath)) {
+    if (!has(this.#csvItems, filePath)) {
       const text = await this.getPreprocessedText(filePath)
       const CsvWorker = this.workers?.CsvWorker
       let items
@@ -293,7 +293,7 @@ export default class FileManager {
    * @returns {Promise<String>}
    */
   async getJsonItems(filePath) {
-    if (!_.has(this.#jsonItems, filePath)) {
+    if (!has(this.#jsonItems, filePath)) {
       const text = await this.getPreprocessedText(filePath)
       const JsonWorker = this.workers?.JsonWorker
       let items
@@ -385,14 +385,14 @@ export default class FileManager {
    * @returns {Promise<String>}
    */
   async getNumberOfDataPoints(filePath) {
-    if (!_.has(this.#nDataPoints, filePath)) {
+    if (!has(this.#nDataPoints, filePath)) {
       const ext = filePath.match(/^.+\.(.+?)$/)?.[1] ?? 'other'
       if (ext === 'json') {
         const json = await this.getJsonItems(filePath)
         this.#nDataPoints[filePath] = nJsonPoints(json)
       } else if (ext === 'csv' || ext === 'tsv' || ext === 'txt') {
         const text = await this.getPreprocessedText(filePath)
-        this.#nDataPoints[filePath] = text.split('\n').filter(_.identity).length
+        this.#nDataPoints[filePath] = text.split('\n').filter(identity).length
       } else {
         this.#nDataPoints[filePath] = 0
       }
@@ -405,16 +405,16 @@ export default class FileManager {
    * @param {String} filePath
    */
   freeFile(filePath) {
-    if (_.has(this.#fileTexts, filePath)) {
+    if (has(this.#fileTexts, filePath)) {
       delete this.#fileTexts[filePath]
     }
-    if (_.has(this.#preprocessedTexts, filePath)) {
+    if (has(this.#preprocessedTexts, filePath)) {
       delete this.#preprocessedTexts[filePath]
     }
-    if (_.has(this.#csvItems, filePath)) {
+    if (has(this.#csvItems, filePath)) {
       delete this.#csvItems[filePath]
     }
-    if (_.has(this.#jsonItems, filePath)) {
+    if (has(this.#jsonItems, filePath)) {
       delete this.#jsonItems[filePath]
     }
   }
@@ -456,7 +456,7 @@ export default class FileManager {
     })
     while (true) {
       // Group by short name
-      const groups = _.groupBy(files, f => f.short)
+      const groups = groupBy(files, f => f.short)
       if (Object.keys(groups).length === files.length) {
         // All the names are unique, we can stop
         this.#shortFilenameDict = Object.fromEntries(

@@ -1,5 +1,5 @@
 import * as csv from '@fast-csv/parse'
-import { camelCase, mapValues, identity, groupBy, every, uniq } from 'lodash'
+import { camelCase, mapValues, identity, groupBy, every, uniq } from 'lodash-es'
 
 import { setsEqual } from './utils'
 

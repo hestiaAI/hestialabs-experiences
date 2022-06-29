@@ -24,9 +24,11 @@
     </template>
   </VContainer>
 </template>
+
 <script>
-import _ from 'lodash'
+import { uniqBy } from 'lodash-es'
 import mixin from './mixin'
+
 export default {
   mixins: [mixin],
   props: {
@@ -59,7 +61,7 @@ export default {
     },
     associated_names() {
       const table = this.values.filter(x => x.winnerName === this.placeName)
-      const uniq = _.uniqBy(table, x => x.loserName)
+      const uniq = uniqBy(table, x => x.loserName)
       const names = uniq.map((v) => {
         return {
           name: v.loserName,
@@ -98,7 +100,7 @@ export default {
     get_durations() {
       const values = this.values.filter(x => x.winnerName === this.placeName)
       const table = values.map(x => [x.startTimestamp, x.endTimestamp])
-      const uniq = _.uniqBy(table, x => x[0])
+      const uniq = uniqBy(table, x => x[0])
       const dur = uniq.map(v => this.compute_duration(v[0], v[1]))
       return dur
     },

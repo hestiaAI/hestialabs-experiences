@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import { pick } from 'lodash'
+import { pick } from 'lodash-es'
 
 export default {
   props: {

@@ -163,7 +163,7 @@
 
 <script>
 import { promisify } from 'util'
-import { pick } from 'lodash'
+import { pick } from 'lodash-es'
 import { filetype2icon, extension2filetype } from '@/utils/file-manager'
 import { decryptBlob } from '@/utils/encryption'
 
