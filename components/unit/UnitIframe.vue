@@ -23,7 +23,7 @@ export default {
   props: {
     args: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     },
     src: {
       type: String,
