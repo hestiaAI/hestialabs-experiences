@@ -18,7 +18,7 @@
             v-model="selected"
             :headers="headersTable"
             :items="items"
-            :single-select="true"
+            single-select
             :search="search"
             item-key="name"
             show-select
@@ -63,10 +63,11 @@ export default {
         }
       })
 
-      this.selected = [this.items[0]]
-      this.selectedValues = this.values.filter((d) => {
-        return d.group === this.items[0].name
-      })
+      const [selected] = this.items
+      this.selected = [selected]
+      this.selectedValues = this.values.filter(d =>
+        d.group === selected.name
+      )
     },
     drawSunburst(selection) {
       if (selection.value) {

@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { cloneDeep } from 'lodash'
 
 export const state = () => ({
   loaded: false,
@@ -66,7 +67,7 @@ export const mutations = {
     state.selectedFiles = selectedFiles
   },
   setResult(state, { experience, result }) {
-    Vue.set(state.results, experience, result)
+    Vue.set(state.results, experience, cloneDeep(result))
   },
   setConsentForm(state, consentForm) {
     // Initialize missing values
