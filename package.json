@@ -49,7 +49,7 @@
       "^.+\\.vue$": "@vue/vue2-jest"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!d3|@hestiaai)",
+      "/node_modules/(?!d3|@hestiaai|lodash-es)",
       "\\.pnp\\.[^\\/]+$"
     ],
     "testPathIgnorePatterns": [
