@@ -22,9 +22,14 @@
             :search="search"
             item-key="name"
             show-select
-            class="elevation-1"
+            class="elevation-1 v-data-table__advertisers"
             @item-selected="drawSunburst"
-          />
+            @click:row="(item, data) => selectAdvertiser(data)"
+          >
+            <template #item.data-table-select="{ isSelected, select }">
+              <VSimpleCheckbox v-ripple :value="isSelected" @click="selectAdvertiser({ isSelected, select })" />
+            </template>
+          </VDataTable>
         </VCard>
       </VCol>
       <VCol cols="12" md="8">
@@ -75,7 +80,16 @@ export default {
           d => d.group === selection.item.name
         )
       }
+    },
+    selectAdvertiser({ isSelected, select }) {
+      return isSelected || select(true)
     }
   }
 }
 </script>
+
+<style>
+.v-data-table__advertisers tbody tr {
+  cursor: pointer;
+}
+</style>
