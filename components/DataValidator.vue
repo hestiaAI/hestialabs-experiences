@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import { has, every } from 'lodash-es'
 
 export default {
   props: {
@@ -28,17 +28,17 @@ export default {
   },
   computed: {
     hasValidFormat() {
-      const weHaveArrays = _.every(
+      const weHaveArrays = every(
         ['items', 'headers'],
-        field => _.has(this.data, field) && Array.isArray(this.data[field])
+        field => has(this.data, field) && Array.isArray(this.data[field])
       )
       if (this.allowMissingColumns) {
         return weHaveArrays
       }
       return (
         weHaveArrays &&
-        _.every(this.data.items, i =>
-          _.every(this.data.headers, h => _.has(i, h) || _.has(i, h.value))
+        every(this.data.items, i =>
+          every(this.data.headers, h => has(i, h) || has(i, h.value))
         )
       )
     },

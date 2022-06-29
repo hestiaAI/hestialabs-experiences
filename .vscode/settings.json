@@ -11,7 +11,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "[js][vue]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },

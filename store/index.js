@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash-es'
 
 export const state = () => ({
   loaded: false,

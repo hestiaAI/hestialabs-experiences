@@ -102,7 +102,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash-es'
 
 export default {
   props: {

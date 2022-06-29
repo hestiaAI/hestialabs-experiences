@@ -7,7 +7,7 @@
 <script>
 // import * as d3 from 'd3'
 // import * as dc from 'dc'
-// import _ from 'lodash'
+// import { pick } from 'lodash-es'
 // import mixin from './mixin'
 //
 // export default {
@@ -29,7 +29,7 @@
 //      this.result = this.values.filter(
 //        row => categoriesToKeep.includes(row.Category) && row.uncertain === '0'
 //      )
-//      result.map(o => _.pick(o, ['App', 'Tracker']))
+//      result.map(o => pick(o, ['App', 'Tracker']))
 //
 //      const nodesToRemove = ['Chrome', 'Firefox', 'Samsung Internet']
 //      this.result = result.filter(row => !nodesToRemove.includes(row.App))

@@ -1,7 +1,7 @@
 import initSqlJs from 'sql.js'
 import sqlWasm from 'sql.js/dist/sql-wasm.wasm'
 import { JSONPath } from 'jsonpath-plus'
-import _ from 'lodash'
+import { cloneDeep } from 'lodash-es'
 
 const enforceArray = value => (typeof value === 'string' ? [value] : value)
 
@@ -322,7 +322,7 @@ export async function generateRecords(fileManager, { tables, getters }) {
           const json = isCSV ? file.content : JSON.parse(file.content)
 
           // Update the current file path from defaultValues if needed
-          const defaultValuesCopy = _.cloneDeep(defaultValues)
+          const defaultValuesCopy = cloneDeep(defaultValues)
           Object.entries(defaultValuesCopy[rest.table]).forEach(([k, v]) => {
             if (v === 'FILEPATH') {
               defaultValuesCopy[rest.table][k] = file.path
