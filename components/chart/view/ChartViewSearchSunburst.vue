@@ -18,13 +18,18 @@
             v-model="selected"
             :headers="headersTable"
             :items="items"
-            :single-select="true"
+            single-select
             :search="search"
             item-key="name"
             show-select
-            class="elevation-1"
+            class="elevation-1 v-data-table__advertisers"
             @item-selected="drawSunburst"
-          />
+            @click:row="(item, data) => selectAdvertiser(data)"
+          >
+            <template #item.data-table-select="{ isSelected, select }">
+              <VSimpleCheckbox v-ripple :value="isSelected" @click="selectAdvertiser({ isSelected, select })" />
+            </template>
+          </VDataTable>
         </VCard>
       </VCol>
       <VCol cols="12" md="8">
@@ -63,10 +68,11 @@ export default {
         }
       })
 
-      this.selected = [this.items[0]]
-      this.selectedValues = this.values.filter((d) => {
-        return d.group === this.items[0].name
-      })
+      const [selected] = this.items
+      this.selected = [selected]
+      this.selectedValues = this.values.filter(d =>
+        d.group === selected.name
+      )
     },
     drawSunburst(selection) {
       if (selection.value) {
@@ -74,7 +80,16 @@ export default {
           d => d.group === selection.item.name
         )
       }
+    },
+    selectAdvertiser({ isSelected, select }) {
+      return isSelected || select(true)
     }
   }
 }
 </script>
+
+<style>
+.v-data-table__advertisers tbody tr {
+  cursor: pointer;
+}
+</style>
