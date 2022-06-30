@@ -4,8 +4,16 @@
     "twitter",
     "tinder",
     "amazon",
+    "easyjet",
+    "strava",
+    "tiktok",
+    "fitbit",
+    "instagram",
+    "uber",
     "apple",
     "google",
+    "her",
+    "her-tinder-agg",
     "spotify",
     "youtube",
     "linkedin",
@@ -13,9 +21,38 @@
     "signal",
     "tracker-control",
     "whatsapp",
-    "uber",
     "ad-radar",
     "explorer"
   ],
+  "filedrop": "https://drive.infomaniak.com/app/collaborate/193995/c41b3aac-cf1f-4ba7-a1ef-0d44fb45260e",
+  "publicKey": "ebabadb7cdca33c6bff6813ae874167b52e4e445120fd6fe7aa4c528d6e27049",
+  "bubbles": ["demo-aggregator", "demo-participant"],
+  "consent": {
+    "default": [
+      {
+        "title": "SHARE MY DATA",
+        "description": "With this form, you can register your consent, optionally share additional data, and agree to the terms."
+      },
+      {
+        "title": "Terms",
+        "_docx_description": "Do you agree with the terms relevant to the queer bodies representation  study <a target=\"_blank\"  href=\"https://drive.infomaniak.com/app/share/193995/d608f311-e59b-4f55-8f0b-1db4b87942b0\">here</a> ?",
+        "description": "Do you agree with the terms relevant to the queer bodies representation  study <a target=\"_blank\"  href=\"https://drive.infomaniak.com/app/share/193995/19c76cbf-a28a-4c9b-a8dc-495d69243e1b\">here</a> ?",
+        "type": "checkbox",
+        "options": ["I agree"]
+      },
+      {
+        "title": "Identification",
+        "description": "Please choose a pseudonym.",
+        "type": "input",
+        "name": "pseudonym"
+      },
+      {
+        "title": "Which data do you agree to share ?",
+        "description": "Please check all the boxes (enable them by visiting the corresponding tabs), and if you so wish, select pictures by clicking the <strong>Individual files</strong> checkbox.<br>Then click <strong>Download results</strong> to get your encrypted data, and click <strong>Drop file here</strong>, which takes you to the webpage where you can upload your data.",
+        "type": "data",
+        "required": true
+      }
+    ]
+  },
   "hashtags": ["dataprivacy", "hestialabs"]
 }

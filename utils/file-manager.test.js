@@ -4,13 +4,13 @@ import { arrayEqualNoOrder } from '~/utils/test-utils'
 import { itemifyJSON } from '~/utils/json'
 import { getCsvHeadersAndItems } from '~/utils/csv'
 
-test('an empty file manager', async () => {
+test('an empty file manager', async() => {
   const fileManager = new FileManager()
   fileManager.init([])
   await expect(() => fileManager.getText('bobo.json')).rejects.toThrow()
 })
 
-test('a json file in file manager', async () => {
+test('a json file in file manager', async() => {
   const fileManager = new FileManager()
   const fileName = 'bibi/bobo.json'
   const content = '{"hello": 1}'
@@ -30,7 +30,7 @@ test('a json file in file manager', async () => {
   expect(result).toEqual(expected)
 })
 
-test('a csv file in file manager', async () => {
+test('a csv file in file manager', async() => {
   const fileManager = new FileManager()
   const fileName = 'test.csv'
   const content = 'col1,col2\nhello,world\nfoo,bar'
@@ -51,7 +51,7 @@ test('a csv file in file manager', async () => {
   arrayEqualNoOrder(result.items, expected.items)
 })
 
-test('findMatchingFilePaths', async () => {
+test('findMatchingFilePaths', async() => {
   const fileManager = new FileManager()
   const fileName1 = 'bibi/bubo.json'
   const fileContent = '{"hello": [11,22,33]}'
@@ -70,7 +70,7 @@ test('findMatchingFilePaths', async () => {
   expect(paths).toStrictEqual([])
 })
 
-test('findMatchingObjects', async () => {
+test('findMatchingObjects', async() => {
   const fileManager = new FileManager()
   const fileName = 'bibi/bubo.json'
   const fileContent = '{"hello": [11,22,33]}'
@@ -91,7 +91,7 @@ test('findMatchingObjects', async () => {
   expect(matching[0]).toStrictEqual(22)
 })
 
-test('short filenames', async () => {
+test('short filenames', async() => {
   const fileManager = new FileManager()
   const f1 = 'foo/bar.txt'
   const f2 = 'foo/toc.txt'
@@ -112,7 +112,15 @@ test('short filenames', async () => {
   expect(fileManager.getShortFilename(f5)).toMatch('toc.json')
 })
 
-test('files are filtered', async () => {
+test('getFileNames', async() => {
+  const fileManager = new FileManager()
+  const f1 = 'foo/bar.txt'
+  const f2 = 'foo/toc.txt'
+  await fileManager.init([mockFile(f1, '1'), mockFile(f2, '2')])
+  expect(fileManager.getFilenames()).toStrictEqual([f1, f2])
+})
+
+test('files are filtered', async() => {
   const fileManager = new FileManager()
   const f1 = mockFile('__MACOSX/ignored.txt', '')
   const f2 = mockFile('test/.DS_STORE', '')
@@ -124,7 +132,7 @@ test('files are filtered', async () => {
   expect(fileManager.hasFile(f3)).toBeFalsy()
 })
 
-test('files from IDs', async () => {
+test('files from IDs', async() => {
   const content = 'hello world'
 
   const id1 = 'foobar'

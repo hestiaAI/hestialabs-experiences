@@ -2,19 +2,15 @@
   <div>
     <VRow class="mt-3 mb-6">
       <VCol
-        v-for="{ key, title, subtitle, icon, url, disabled } in experiences"
-        :key="key"
+        v-for="({ title, subtitle, icon, ...rest }, index) in experiences"
+        :key="index"
         cols="12"
         sm="6"
         md="4"
         lg="3"
         xl="2"
       >
-        <VCard
-          class="d-flex flex-column"
-          v-bind="menuItemAttrs(url, key, disabled)"
-          hover
-        >
+        <VCard class="d-flex flex-column" v-bind="menuItemAttrs(rest)" hover>
           <VImg
             max-height="150"
             contain
@@ -22,8 +18,12 @@
             :lazy-src="icon"
             class="mt-3"
           />
-          <VCardTitle class="justify-center" v-text="title" />
-          <VCardSubtitle class="subtitle-1 text-center" v-text="subtitle" />
+          <VCardTitle class="justify-center">
+            {{ title }}
+          </VCardTitle>
+          <VCardSubtitle class="subtitle-1 text-center">
+            {{ subtitle }}
+          </VCardSubtitle>
         </VCard>
       </VCol>
     </VRow>
@@ -37,3 +37,9 @@ export default {
   mixins: [mixin]
 }
 </script>
+
+<style scoped>
+.v-card--link:before {
+  background: none;
+}
+</style>

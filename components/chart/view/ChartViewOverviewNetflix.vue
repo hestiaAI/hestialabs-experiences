@@ -10,7 +10,7 @@
               <p class="filters ma-0">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -32,7 +32,7 @@
               <p class="filters ma-0">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -44,7 +44,7 @@
               <p class="filters ma-0">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -58,7 +58,7 @@
           <p class="filters ma-0">
             <span>
               Current filter:
-              <span class="filter"></span>
+              <span class="filter" />
             </span>
           </p>
         </div>
@@ -72,7 +72,7 @@
           <p class="filters ma-0">
             <span>
               Current filter:
-              <span class="filter"></span>
+              <span class="filter" />
             </span>
           </p>
         </div>
@@ -84,7 +84,7 @@
           <p class="filters ma-0">
             <span>
               Current filter:
-              <span class="filter"></span>
+              <span class="filter" />
             </span>
           </p>
         </div>
@@ -96,7 +96,7 @@
           <p class="filters ma-0">
             <span>
               Current filter:
-              <span class="filter"></span>
+              <span class="filter" />
             </span>
           </p>
         </div>
@@ -104,14 +104,14 @@
     </ChartViewVRowWebShare>
     <VRow>
       <div :id="'dc-data-count' + graphId" class="dc-data-count">
-        <span class="filter-count"></span>
+        <span class="filter-count" />
         selected out of
-        <span class="total-count"></span>
+        <span class="total-count" />
         views |
         <a class="resetAll">Reset All</a>
       </div>
     </VRow>
-    <UnitFilterableTable :data="{ headers: header, items: results }" />
+    <UnitFilterableTable v-bind="{ headers: header, items: results }" />
   </VContainer>
 </template>
 
@@ -144,7 +144,7 @@ export default {
         top(n) {
           return group
             .top(Infinity)
-            .filter(function (d) {
+            .filter(function(d) {
               return d.value.count !== 0 && d.value !== 0
             })
             .slice(0, n)
@@ -177,7 +177,7 @@ export default {
       this.results = this.values.filter(
         d => d['Supplemental Video Type'] === ''
       )
-      this.results.forEach(d => {
+      this.results.forEach((d) => {
         const time = d.Duration.split(':')
         d.date = dateFormatParser(d['Start Time'])
         d.month = d3.timeMonth(d.date) // pre-calculate months for better performance
@@ -207,7 +207,7 @@ export default {
       // Bind reset filters links
       d3.select('#watch-time-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           rangeChart.filterAll()
           watchChart.filterAll()
           dc.redrawAll()
@@ -215,42 +215,42 @@ export default {
       )
       d3.select('#user-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           userChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#country-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           countryChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#content-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           contentChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#week-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           weekChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#device-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           deviceChart.filterAll()
           dc.redrawAll()
         }
       )
       d3.select('#hour-chart' + this.graphId + ' a.reset').on(
         'click',
-        function () {
+        function() {
           hourChart.filterAll()
           dc.redrawAll()
         }
@@ -264,7 +264,7 @@ export default {
       const contentDimension = ndx.dimension(d => d.content)
       const countryDimension = ndx.dimension(d => d.Country)
       const hourDimension = ndx.dimension(d => d.hour)
-      const weekDimension = ndx.dimension(d => {
+      const weekDimension = ndx.dimension((d) => {
         const day = d.date.getDay()
         const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         return `${name[day]}`
@@ -383,13 +383,13 @@ export default {
         .minAngleForLabel(0.1)
         .ordinalColors(colorPalette)
 
-      userChart.on('pretransition', function (chart) {
-        chart.selectAll('text.pie-slice.pie-label').call(function (t) {
-          t.each(function (d) {
+      userChart.on('pretransition', function(chart) {
+        chart.selectAll('text.pie-slice.pie-label').call(function(t) {
+          t.each(function(d) {
             const self = d3.select(this)
             let text = self.text()
-            if (text.length > 14) text = text.substring(0, 14) + '.. '
-            if (text.length > 0)
+            if (text.length > 14) { text = text.substring(0, 14) + '.. ' }
+            if (text.length > 0) {
               text =
                 text +
                 ' (' +
@@ -397,6 +397,7 @@ export default {
                   ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
                 ) +
                 '%)'
+            }
             self.text(text)
           })
         })
@@ -443,7 +444,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function (d) {
+      weekChart.ordering(function(d) {
         switch (d.key) {
           case 'Mon':
             return 0

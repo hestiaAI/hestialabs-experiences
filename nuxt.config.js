@@ -1,17 +1,20 @@
-import webpack from 'webpack'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
-import { validExtensions } from './manifests/utils'
+import { extension2filetype } from './utils/file-manager'
 
 const name = 'HestiaLabs Experiences'
 const description = 'We create a new relationship to personal data'
 
-const { NODE_ENV, BASE_URL, CONFIG_NAME } = process.env
+const {
+  NODE_ENV,
+  BASE_URL: baseUrl = 'http://localhost:3000',
+  CONFIG_NAME: configName = 'dev',
+  API_URL: apiUrl = 'http://127.0.0.1:8000'
+} = process.env
 
-const baseUrl = NODE_ENV === 'production' ? BASE_URL : 'http://localhost:3000'
-const configName = CONFIG_NAME || 'config'
+const isProduction = NODE_ENV === 'production'
 
-if (!baseUrl) {
+if (!baseUrl && isProduction) {
   throw new Error('BASE_URL environment variable is missing')
 }
 
@@ -26,17 +29,23 @@ export default {
         const { appName } = this.context.store.getters
         return title ? `${title} | ${appName}` : appName
       }
-      return 'HestiaLabs'
+      return 'Booting 🚀'
     },
     title: '',
-    meta: [{ name: 'format-detection', content: 'telephone=no' }]
+    meta: [
+      { name: 'format-detection', content: 'telephone=no' },
+      { property: 'og:title', content: name },
+      { property: 'twitter:title', content: name },
+      { property: 'twitter:description', content: description },
+      { property: 'twitter:image', content: `${baseUrl}/ogimg.png` }
+    ]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/injected.js'],
+  plugins: ['@/plugins/injected.js', '@/plugins/api.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: [
@@ -48,22 +57,54 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
-    // https://go.nuxtjs.dev/eslint
-    '@nuxtjs/eslint-module',
+    // we need to add build modules to `dependencies`
+    // in package.json because NODE_ENV === 'production'
+    // on Netlify does not install `devDependencies`
+    // see: https://docs.netlify.com/configure-builds/manage-dependencies/#node-js-environment
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa'
-  ],
+  ].concat(
+    // eslint module is only needed for development
+    // https://go.nuxtjs.dev/eslint
+    NODE_ENV === 'production' ? [] : '@nuxtjs/eslint-module'
+  ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-    // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios'
-  ],
+  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
 
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseURL: apiUrl
+  },
+
+  auth: {
+    fullPathRedirect: true,
+    redirect: {
+      login: '/login',
+      logout: false,
+      home: '/'
+    },
+    strategies: {
+      local: {
+        token: {
+          property: false,
+          required: false
+        },
+        user: {
+          autoFetch: false
+        },
+        endpoints: {
+          login: {
+            url: '/bubbles/login',
+            method: 'post'
+          },
+          logout: { url: '/bubbles/logout', method: 'get' },
+          user: false
+        }
+      }
+    }
+  },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
@@ -81,6 +122,8 @@ export default {
         type: 'image/png'
       },
       ogHost: baseUrl,
+      twitterCard: 'summary',
+      twitterSite: '@HestiaLabs',
       // set following meta tags with vue-meta
       ogTitle: false,
       ogUrl: false
@@ -95,8 +138,7 @@ export default {
 
   vue: {
     config: {
-      productionTip: false,
-      watch: ['~/manifests/']
+      productionTip: false
     }
   },
 
@@ -111,18 +153,18 @@ export default {
 
   env: {
     baseUrl,
+    apiUrl,
     configName
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    extend(config, { isDev, isClient }) {
-      if (isClient) {
-        config.devtool = 'source-map'
+    extend(config, { isDev }) {
+      if (isDev) {
+        config.devtool = 'eval'
       }
       config.node = {
-        // ignore fs Node.js module (used in yarrrml-parser)
-        // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
+        // ignore fs Node.js module (used in some dependencies)
         fs: 'empty'
       }
       config.module.rules.push(
@@ -131,15 +173,10 @@ export default {
           test: /\.worker\.js$/,
           use: 'worker-loader'
         },
-        // enable raw importing of .yaml, .rq and .vega.json files
-        {
-          test: /\.(ya?ml|rq|vega|rqx|sql)$/i,
-          use: 'raw-loader'
-        },
         {
           // allow all valid extensions as sample data except JS files!
           test: new RegExp(
-            `data.+\\.(${validExtensions
+            `data.+\\.(${Object.keys(extension2filetype)
               .filter(ext => ext !== 'js')
               .join('|')})$`
           ),
@@ -149,7 +186,7 @@ export default {
             {
               loader: 'file-loader',
               options: {
-                esModule: false,
+                esModule: true,
                 name: '[path][name].[contenthash:7].[ext]'
               }
             }
@@ -172,12 +209,6 @@ export default {
       )
     },
     plugins: [
-      // To ignore xpath-iterator package, which is a optional packages that uses nodejs c++ addon
-      // https://github.com/semantifyit/RocketRML/issues/20#issuecomment-880192637
-      new webpack.IgnorePlugin({
-        resourceRegExp: /^/u,
-        contextRegExp: /xpath-iterator/u
-      }),
       // preload fonts to avoid FOUT
       new PreloadWebpackPlugin({
         rel: 'preload',
@@ -187,6 +218,7 @@ export default {
         // crossorigin attribute added by plugin for as='font'
         as: 'font'
       })
-    ]
+    ],
+    watch: ['../hestialabs/packages/*/dist/*']
   }
 }

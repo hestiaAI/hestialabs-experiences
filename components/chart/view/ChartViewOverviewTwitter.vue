@@ -9,7 +9,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -25,12 +25,12 @@
               <div style="display: flex">
                 <strong>Top 10 advertisers</strong>
                 <VSpacer />
-                <div id="company-search"></div>
+                <div id="company-search" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -44,7 +44,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -55,12 +55,12 @@
               <div style="display: flex">
                 <strong>Type of targeting</strong>
                 <VSpacer />
-                <div id="type-search"></div>
+                <div id="type-search" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -71,12 +71,12 @@
               <div style="display: flex">
                 <strong>Targeting criteria</strong>
                 <VSpacer />
-                <div id="value-search"></div>
+                <div id="value-search" />
               </div>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">reset</a>
               </p>
@@ -85,9 +85,9 @@
         </VRow>
         <VRow>
           <div id="dc-data-count" class="dc-data-count">
-            <span class="filter-count"></span>
+            <span class="filter-count" />
             selected out of
-            <span class="total-count"></span>
+            <span class="total-count" />
             records |
             <a class="reset">Reset All</a>
           </div>
@@ -96,7 +96,7 @@
     </ChartViewVRowWebShare>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable :data="{ headers: header, items: results }" />
+        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -118,11 +118,11 @@ export default {
       header: [
         { text: 'Tweet ID', value: 'tweetId' },
         { text: 'Company', value: 'companyName' },
-        { text: 'Date', value: 'date' },
+        { text: 'Date', value: 'date_' },
         { text: 'Promoted Tweet', value: 'url' },
         {
           text: 'Engagement',
-          value: 'engagement',
+          value: 'engagements',
           formatter: d => (d === 0 ? 'No' : 'Yes')
         },
         { text: 'Targeting Criteria', value: 'count' }
@@ -154,24 +154,24 @@ export default {
       const valueSearch = new dc.TextFilterWidget('#value-search')
 
       // Bind reset filters links
-      d3.select('#volume-chart p a.reset').on('click', function () {
+      d3.select('#volume-chart p a.reset').on('click', function() {
         rangeChart.filterAll()
         volumeChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#company-chart p a.reset').on('click', function () {
+      d3.select('#company-chart p a.reset').on('click', function() {
         companyChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#engagement-chart p a.reset').on('click', function () {
+      d3.select('#engagement-chart p a.reset').on('click', function() {
         engagementChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#type-chart p a.reset').on('click', function () {
+      d3.select('#type-chart p a.reset').on('click', function() {
         typeChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#value-chart p a.reset').on('click', function () {
+      d3.select('#value-chart p a.reset').on('click', function() {
         valueChart.filterAll()
         dc.redrawAll()
       })
@@ -181,18 +181,19 @@ export default {
       // 2021-06-04 21:08:08
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S')
       const formatTime = d3.timeFormat('%B %d, %Y')
-      this.results.forEach(d => {
+      this.results.forEach((d) => {
         d.targetingType = d.targetingType ? d.targetingType : 'Unknown'
         d.targetingValue = d.targetingValue ? d.targetingValue : 'Unknown'
-        d.dateParsed = dateFormatParser(d.date)
+        d.companyName = d.companyName ? d.companyName : ''
+        d.dateParsed = dateFormatParser(d.date_)
         d.day = d3.timeDay(d.dateParsed) // pre-calculate days for better performance
         d.dateStr = formatTime(d.dateParsed)
         d.url = 'https://twitter.com/x/status/' + d.tweetId
       })
-      const minDate = d3.min(this.results, function (d) {
+      const minDate = d3.min(this.results, function(d) {
         return d.day
       })
-      const maxDate = d3.max(this.results, function (d) {
+      const maxDate = d3.max(this.results, function(d) {
         return d.day
       })
 
@@ -204,7 +205,7 @@ export default {
       const adPerDayDimension = ndx.dimension(d => d.day)
       const companyDimension = ndx.dimension(d => d.companyName)
       const engagementDimension = ndx.dimension(d =>
-        d.engagement ? 'Yes' : 'No'
+        d.engagements ? 'Yes' : 'No'
       )
       const targetingTypeDimension = ndx.dimension(d => d.targetingType)
       const targetingValueDimension = ndx.dimension(d => d.targetingValue)
@@ -219,14 +220,14 @@ export default {
       })
       const addRecord = (p, v) => {
         // add
-        p.dict[v.tweetId + v.date] = (p.dict[v.tweetId + v.date] || 0) + 1
-        if (p.dict[v.tweetId + v.date] === 1) p.count++
+        p.dict[v.tweetId + v.date_] = (p.dict[v.tweetId + v.date_] || 0) + 1
+        if (p.dict[v.tweetId + v.date_] === 1) { p.count++ }
         return p
       }
       const removeRecord = (p, v) => {
         // remove
-        p.dict[v.tweetId + v.date] -= 1
-        if (p.dict[v.tweetId + v.date] === 0) p.count--
+        p.dict[v.tweetId + v.date_] -= 1
+        if (p.dict[v.tweetId + v.date_] === 0) { p.count-- }
         return p
       }
       function orderValue(p) {
@@ -256,7 +257,7 @@ export default {
           top(n) {
             return group
               .top(Infinity)
-              .filter(function (d) {
+              .filter(function(d) {
                 return d.value.count !== 0 && d.value !== 0
               })
               .slice(0, n)
@@ -292,7 +293,7 @@ export default {
         })
         .yAxisLabel('N° of ads')
         .clipPadding(10)
-        .title(d => {
+        .title((d) => {
           return `${formatTime(d.key)}: ${d.value.count}`
         })
         .yAxis()
@@ -349,7 +350,7 @@ export default {
         .valueAccessor(d => d.value.count)
         .title(d => d.value.count + ' ads')
         .ordinalColors(colorPalette)
-        .label(d => {
+        .label((d) => {
           if (
             engagementChart.hasFilter() &&
             !engagementChart.hasFilter(d.key)
@@ -424,20 +425,20 @@ export default {
             v => v.length,
             d => d.tweetId,
             d => d.companyName,
-            d => d.date,
+            d => d.date_,
             d => d.url,
-            d => d.engagement
+            d => d.engagements
           )
           this.results = newData.map(x => ({
             tweetId: x[0],
             companyName: x[1],
-            date: x[2],
+            date_: x[2],
             url: x[3],
-            engagement: x[4],
+            engagements: x[4],
             count: x[5]
           }))
 
-          d3.select('#dc-data-count a.reset').on('click', function () {
+          d3.select('#dc-data-count a.reset').on('click', function() {
             dc.filterAll()
             dc.renderAll()
           })

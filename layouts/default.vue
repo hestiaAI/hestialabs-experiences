@@ -1,5 +1,5 @@
 <template>
-  <VApp>
+  <VApp v-if="$store.state.loaded">
     <TheAppBar />
     <VMain>
       <Nuxt />
@@ -12,7 +12,9 @@
         <template v-if="$nuxt.isOffline">
           The app is running in offline mode
         </template>
-        <template v-else> You are online again! </template>
+        <template v-else>
+          You are online again!
+        </template>
       </VSnackbar>
       <VAlert
         :value="alert"
@@ -31,7 +33,7 @@
         @input="alertClosed"
       >
         Want to know more about our work ?
-        <br />
+        <br>
         <a :href="newsletterURL" target="_blank" rel="noreferrer noopener">
           {{ newsletterMessage }}
         </a>
@@ -40,10 +42,12 @@
     <VFooter app absolute color="primary">
       <div class="lighten-2 py-2 ma-auto white--text" align="center">
         Educational material developed by
-        <a href="https://hestia.ai" target="_blank" style="color: white"
-          >Hestia.ai</a
-        >
-        <br />Currently in development |
+        <a
+          href="https://hestia.ai"
+          target="_blank"
+          style="color: white"
+        >Hestia.ai</a>
+        <br>Currently in development |
         <a :href="newsletterURL" target="_blank" style="color: white">
           {{ newsletterMessage }}
         </a>
@@ -56,6 +60,27 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  async middleware({
+    store,
+    params: { bubble },
+    route: { path },
+    isDev,
+    redirect,
+    $auth,
+    $axios
+  }) {
+    if (!store.state.loaded) {
+      await store.dispatch('loadExperiences', { isDev, $axios })
+    }
+    if (bubble && $auth.loggedIn && bubble !== $auth.user.username) {
+      // auto-logout if user tries to enter another bubble
+      await $auth.logout()
+      return redirect({
+        name: 'login',
+        query: { redirect: path }
+      })
+    }
+  },
   data() {
     return {
       // Display offline message if user opens app when offline
@@ -65,6 +90,9 @@ export default {
     }
   },
   head() {
+    if (!this.appName) {
+      return
+    }
     return {
       meta: [
         {
@@ -78,32 +106,17 @@ export default {
           content: this.$url(this.$route)
         },
         {
-          hid: 'twitter:card',
-          property: 'twitter:card',
-          content: 'summary'
-        },
-        {
-          hid: 'twitter:site',
-          property: 'twitter:site',
-          content: '@HestiaLabs'
-        },
-        {
           hid: 'twitter:title',
           property: 'twitter:title',
           content: this.appName
-        },
-        {
-          hid: 'twitter:image',
-          property: 'twitter:image',
-          content: `${process.env.baseUrl}/ogimg.png`
         }
       ]
     }
   },
   computed: {
-    ...mapGetters(['manifest', 'appName']),
+    ...mapGetters(['experience', 'appName']),
     collaborator() {
-      const { collaborator = {} } = this.manifest(this.$route)
+      const { collaborator = {} } = this.experience(this.$route)
       return collaborator
     },
     newsletterURL() {

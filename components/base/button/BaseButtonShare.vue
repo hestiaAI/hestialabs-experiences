@@ -62,39 +62,39 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['appName', 'manifest']),
-    manifestTitle() {
-      const { title } = this.manifest(this.$route)
+    ...mapGetters(['appName', 'experience']),
+    experienceTitle() {
+      const { title } = this.experience(this.$route)
       return title
     },
     hashtags() {
-      const { manifestTitle } = this
+      const { experienceTitle } = this
       const hashtags = [...(this.config.hashtags || ['hestialabs'])]
-      if (manifestTitle) {
-        hashtags.push(manifestTitle)
+      if (experienceTitle) {
+        hashtags.push(experienceTitle)
       }
       return hashtags
     },
     titleToShare() {
-      const { title, manifestTitle } = this
+      const { title, experienceTitle } = this
       if (title) {
         // use prop when provided
         return title
       }
-      if (manifestTitle) {
-        return `${this.appName}: ${manifestTitle}`
+      if (experienceTitle) {
+        return `${this.appName}: ${experienceTitle}`
       }
       return this.appName
     },
     quoteToShare() {
-      const { text, manifestTitle } = this
+      const { text, experienceTitle } = this
       if (text) {
         // use prop when provided
         return text
       }
       let textToShare = 'Analyze the data collected on you'
-      if (manifestTitle) {
-        textToShare += ` by ${manifestTitle}`
+      if (experienceTitle) {
+        textToShare += ` by ${experienceTitle}`
       }
       return `${textToShare}.`
     },
@@ -125,11 +125,7 @@ export default {
         text = textToShare
       }
 
-      let url = this.$url()
-      if (process.env.NODE_ENV === 'development') {
-        url = `https://experiences.hestialabs.org${this.$route.path}`
-      }
-
+      const url = this.$url()
       const webShareData = {
         title,
         text,

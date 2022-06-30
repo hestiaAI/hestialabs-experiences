@@ -1,55 +1,92 @@
 <template>
-  <VForm v-if="fileManager !== null">
-    <UnitConsentFormSection
-      v-for="(section, index) in consentForm"
-      :key="`section-${index}`"
-      :index="index"
-    />
-    <BaseAlert v-if="missingRequired">
-      Some required fields are not filled in.
-    </BaseAlert>
-    <BaseAlert v-if="missingRequiredData.length > 0">
-      Some data required for sending this form has not been processed or
-      included:
-      {{ missingRequiredData.join(', ') }}.
-    </BaseAlert>
-    <VRow>
-      <VCol>
-        <VIcon v-if="config.filedrop" class="mr-2" color="#424242"
-          >$vuetify.icons.mdiNumeric1CircleOutline</VIcon
-        >
-        <BaseButton
-          ref="downloadButton"
-          text="Download results"
-          :status="generateStatus"
-          :error="generateError"
-          :progress="generateProgress"
-          :disabled="missingRequired || missingRequiredData.length > 0"
-          @click="generateZIP"
-        />
-        <a
-          v-show="false"
-          ref="downloadLink"
-          :href="href"
-          :download="filename"
-        ></a>
-      </VCol>
-      <VCol v-if="config.filedrop">
-        <VIcon class="mr-2" color="#424242"
-          >$vuetify.icons.mdiNumeric2CircleOutline</VIcon
-        >
-        <a :href="config.filedrop" target="_blank">
-          <BaseButton text="Drop file here" />
-        </a>
-      </VCol>
-    </VRow>
-  </VForm>
+  <VContainer>
+    <VForm v-if="fileManager !== null">
+      <UnitConsentFormSection
+        v-for="(section, index) in consentForm"
+        :key="`section-${index}`"
+        :index="index"
+      />
+      <BaseAlert v-if="missingRequiredFields">
+        Some required fields are not filled in.
+      </BaseAlert>
+      <BaseAlert v-if="missingRequiredData.length > 0">
+        Some data required for sending this form has not been processed or
+        included:
+        {{ missingRequiredData.join(', ') }}.
+      </BaseAlert>
+      <BaseAlert v-if="sentErrorMessage" type="error">
+        <p>Failed to upload results:</p>
+        <p>{{ sentErrorMessage }}</p>
+        <p>
+          Consider downloading the encrypted results and sending them by other
+          means.
+        </p>
+      </BaseAlert>
+      <VRow v-if="bubbleName">
+        <VCol>
+          <BaseButton
+            text="Share results with your group"
+            :status="sentStatus"
+            :error="!!sentErrorMessage"
+            :progress="sentProgress"
+            :disabled="missingRequiredFields || missingRequiredData.length > 0"
+            @click="sendForm"
+          />
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol>
+          <VMenu bottom>
+            <template #activator="{ attrs, on }">
+              <VBtn
+                v-bind="attrs"
+                class="my-2"
+                outlined
+                :status="generateStatus"
+                :error="generateError"
+                :progress="generateProgress"
+                :disabled="
+                  missingRequiredFields || missingRequiredData.length > 0
+                "
+                v-on="on"
+              >
+                Download your data
+              </VBtn>
+            </template>
+            <VList>
+              <VListItem @click="downloadZIP(true)">
+                Download encrypted Zip
+              </VListItem>
+              <VListItem
+                ref="downloadButton"
+                @click="downloadZIP(false)"
+              >
+                Download Zip
+              </VListItem>
+            </VList>
+          </VMenu>
+          <a
+            v-show="false"
+            ref="downloadLink"
+            :href="href"
+            :download="filename"
+          />
+        </VCol>
+        <VCol v-if="config.filedrop">
+          <a :href="config.filedrop" target="_blank">
+            <BaseButton text="Drop file here" />
+          </a>
+        </VCol>
+      </VRow>
+    </VForm>
+  </VContainer>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import JSZip from 'jszip'
 import { padNumber } from '~/utils/utils'
+import { encryptFile } from '~/utils/encryption'
 import { createObjectURL, mimeTypes } from '@/utils/utils'
 
 // In the case of changes that would break the import, this version number must be incremented
@@ -57,32 +94,35 @@ import { createObjectURL, mimeTypes } from '@/utils/utils'
 const VERSION = 3
 
 export default {
-  props: {
-    defaultView: {
-      type: Array,
-      required: true
-    }
-  },
   data() {
+    const { viewBlocks } = this.$store.getters.experience(this.$route)
     return {
-      zipFile: [],
+      zipFile: undefined,
       generateStatus: false,
       generateError: false,
       generateProgress: false,
-      timestamp: 0,
-      href: null
+      sentStatus: false,
+      sentErrorMessage: undefined,
+      sentProgress: false,
+      filename: '',
+      href: null,
+      viewBlocks,
+      encrypt: false
     }
   },
   computed: {
-    ...mapState([
-      'config',
-      'results',
-      'fileManager',
-      'consentForm',
-      'selectedFiles'
-    ]),
-    missingRequired() {
-      return !this.consentForm.every(section => {
+    ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles']),
+    config() {
+      return this.$store.getters.config(this.$route)
+    },
+    bubbleName() {
+      return this.$route.params.bubble
+    },
+    destinationBubbleName() {
+      return this.config.consent?.destinationBubble
+    },
+    missingRequiredFields() {
+      return !this.consentForm.every((section) => {
         if ('required' in section) {
           if (
             section.type === 'data' &&
@@ -90,70 +130,81 @@ export default {
             section.value[0] === 'file-explorer'
           ) {
             return this.selectedFiles.length > 0
+          } else {
+            return section.value && section.value.length
           }
-          return section.value.length > 0
         }
         return true
       })
     },
     missingRequiredData() {
       const section = this.consentForm.find(section => section.type === 'data')
-      return this.defaultView
+      return this.viewBlocks
         .filter(
-          block =>
+          ({ key }) =>
             typeof section.required === 'object' &&
-            section.required.includes(block.key) &&
-            (!Object.keys(this.results).includes(block.key) ||
-              !section.value.includes(block.key))
+            section.required.includes(key) &&
+            (!Object.keys(this.results).includes(key) ||
+              !section.value.includes(key))
         )
-        .map(block => block.title)
+        .map(({ title }) => title)
+    }
+  },
+  methods: {
+    async getPublicKey() {
+      if (this.destinationBubbleName) {
+        const { publicKey } = await this.$api.getConfig(
+          this.destinationBubbleName
+        )
+        return publicKey
+      } else { return this.$store.getters.config(this.$route).publicKey }
     },
-    filename() {
-      const date = new Date(this.timestamp)
+    async downloadZIP(encrypt) {
+      this.generateStatus = false
+      this.generateProgress = true
+      const content = await this.generateZIP(encrypt)
+      this.generateStatus = true
+      this.generateProgress = false
+      this.href = createObjectURL(content, mimeTypes.zip)
+      await this.$nextTick()
+      this.$refs.downloadLink.click()
+    },
+    async makeFilename(timestamp) {
+      const date = new Date(timestamp)
+      const uniqueId = await this.fileManager.hashAllFiles()
       const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
         date.getUTCMonth() + 1,
         2
       )}-${padNumber(date.getUTCDate(), 2)}`
-      const filename = `${this.$route.params.key}_${yearMonthDay}_${padNumber(
-        date.getUTCHours(),
-        2
-      )}${padNumber(date.getUTCMinutes(), 2)}_UTC.zip`
+      const filename = `${this.$route.params.experience}_${yearMonthDay}_${uniqueId}.zip`
       return filename
-    }
-  },
-  methods: {
-    async generateZIP() {
-      this.generateStatus = false
-      this.generateProgress = true
-
+    },
+    async generateZIP(encrypt) {
       const zip = new JSZip()
-
       const revResponse = await window.fetch('/git-revision.txt')
       const revText = await revResponse.text()
       const gitRevision = revText.replace(/[\n\r]/g, '')
-      // Add info about the experience
-      this.timestamp = Date.now()
+      const timestamp = Date.now()
+      this.filename = await this.makeFilename(timestamp)
       const experience = {
-        key: this.$route.params.key,
-        timestamp: this.timestamp,
+        experience: this.$route.params.experience,
+        timestamp,
         version: VERSION,
         gitRevision
       }
       zip.file('experience.json', JSON.stringify(experience, null, 2))
-
       // Add consent log
       zip.file('consent.json', JSON.stringify(this.consentForm, null, 2))
-
       // Add included data
       const dataSection = this.consentForm.find(
         section => section.type === 'data'
       )
-      const keys = this.defaultView.map(block => block.key)
+      const keys = this.viewBlocks.map(block => block.id)
       dataSection.value
         .map(key => [key, keys.indexOf(key)])
         .filter(([key, i]) => i !== -1)
         .forEach(([key, i]) => {
-          const content = JSON.parse(JSON.stringify(this.defaultView[i]))
+          const content = JSON.parse(JSON.stringify(this.viewBlocks[i]))
           content.result = this.results[key]
           content.index = i
           zip.file(
@@ -161,7 +212,6 @@ export default {
             JSON.stringify(content, null, 2)
           )
         })
-
       // Add whole files
       if (dataSection.value.includes('file-explorer')) {
         const zipFilesFolder = zip.folder('files')
@@ -173,15 +223,46 @@ export default {
         }
       }
 
+      const publicKey = await this.getPublicKey()
       const content = await zip.generateAsync({ type: 'uint8array' })
-      this.zipFile = content
-
-      this.generateStatus = true
-      this.generateProgress = false
-
-      this.href = createObjectURL(this.zipFile, mimeTypes.zip)
-      await this.$nextTick()
-      this.$refs.downloadLink.click()
+      if (encrypt) {
+        return encryptFile(content, publicKey)
+      }
+      return content
+    },
+    getCookie(name) {
+      if (!document.cookie) {
+        return null
+      }
+      const cookie = document.cookie
+        .split(';')
+        .map(c => c.trim())
+        .filter(c => c.startsWith(name + '='))
+      if (cookie.length === 0) {
+        return null
+      }
+      return decodeURIComponent(cookie[0].split('=')[1])
+    },
+    async sendForm() {
+      this.sentStatus = false
+      this.sentErrorMessage = undefined
+      this.sentProgress = true
+      const destBubble = this.destinationBubbleName
+      const content = await this.generateZIP(true)
+      // TODO well...
+      const { password } = this.$auth.user
+      const zip = new File([content], this.filename, {
+        type: 'application/zip'
+      })
+      const errorMessage = await this.$api.uploadFile(
+        zip,
+        destBubble,
+        this.bubbleName,
+        password
+      )
+      this.sentStatus = !errorMessage
+      this.sentErrorMessage = errorMessage
+      this.sentProgress = false
     }
   }
 }

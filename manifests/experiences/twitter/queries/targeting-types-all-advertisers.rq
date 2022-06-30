@@ -1,8 +1,0 @@
-PREFIX h: <http://hestia.ai/>
-
-SELECT ?targetingType (COUNT(?criterion) AS ?count) WHERE
-{
-  ?criterion a h:Criterion .
-  ?criterion h:targetingType ?targetingType .
-}
-GROUP BY ?targetingType

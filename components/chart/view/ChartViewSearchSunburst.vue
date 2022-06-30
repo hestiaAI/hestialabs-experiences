@@ -5,14 +5,14 @@
         <VCard>
           <VCardTitle>
             Advertisers
-            <VSpacer></VSpacer>
+            <VSpacer />
             <VTextField
               v-model="search"
               append-icon="mdi-magnify"
               label="Search"
               single-line
               hide-details
-            ></VTextField>
+            />
           </VCardTitle>
           <VDataTable
             v-model="selected"
@@ -24,12 +24,11 @@
             show-select
             class="elevation-1"
             @item-selected="drawSunburst"
-          >
-          </VDataTable>
+          />
         </VCard>
       </VCol>
       <VCol cols="12" md="8">
-        <ChartViewSunburst :values="selectedValues"></ChartViewSunburst>
+        <ChartViewSunburst :values="selectedValues" />
       </VCol>
     </VRow>
   </VContainer>
@@ -58,20 +57,23 @@ export default {
         .filter(d => d.parent === 0)
         .sort((a, b) => b.value - a.value)
 
-      this.values.forEach(element => {
-        if (element.parent === 0) element.parent = null
+      this.values.forEach((element) => {
+        if (element.parent === 0) {
+          element.parent = null
+        }
       })
 
       this.selected = [this.items[0]]
-      this.selectedValues = this.values.filter(d => {
+      this.selectedValues = this.values.filter((d) => {
         return d.group === this.items[0].name
       })
     },
     drawSunburst(selection) {
-      if (selection.value)
+      if (selection.value) {
         this.selectedValues = this.values.filter(
           d => d.group === selection.item.name
         )
+      }
     }
   }
 }

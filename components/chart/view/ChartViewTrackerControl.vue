@@ -1,6 +1,10 @@
 <template>
   <VContainer>
     <VRow>
+      <p v-if="config.consent">
+        Any filtering you do will also limit what data is shared into the pool
+        if you share this tab on the 'Share My Data' tab.
+      </p>
       <VCol cols="4" offset="4">
         <VSelect
           v-model="selectedApps"
@@ -24,11 +28,10 @@
                 <VListItemTitle> Select All </VListItemTitle>
               </VListItemContent>
             </VListItem>
-            <VDivider class="mt-2"></VDivider>
+            <VDivider class="mt-2" />
           </template>
           <template #selection="{ item, index }">
-            <span v-if="index < 3"
-              >{{ item.length > 13 ? item.slice(0, 13) + '..' : item }}
+            <span v-if="index < 3">{{ item.length > 13 ? item.slice(0, 13) + '..' : item }}
             </span>
             <span v-if="index < 2">, </span>
             <div v-if="index === 3" class="grey--text text-caption">
@@ -48,7 +51,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -68,7 +71,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -80,7 +83,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -94,7 +97,7 @@
           <p class="filters">
             <span>
               Current filter:
-              <span class="filter"></span>
+              <span class="filter" />
             </span>
           </p>
         </div>
@@ -102,14 +105,14 @@
     </ChartViewVRowWebShare>
     <VRow>
       <div id="dc-data-count" class="dc-data-count">
-        <span class="filter-count"></span>
+        <span class="filter-count" />
         selected out of
-        <span class="total-count"></span>
+        <span class="total-count" />
         records |
         <a class="reset">Reset All</a>
       </div>
     </VRow>
-    <UnitFilterableTable :data="{ headers: header, items: results }" />
+    <UnitFilterableTable v-bind="{ headers: header, items: results }" />
   </VContainer>
 </template>
 
@@ -117,6 +120,7 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
+import { mapState } from 'vuex'
 import mixin from './mixin'
 
 // Remove warning on default colorscheme, even if not used..
@@ -130,18 +134,19 @@ export default {
       selectedApps: [],
       selectAppDimension: null,
       header: [
-        { text: 'App', value: 'App' },
-        { text: 'Uid', value: 'uid' },
+        { text: 'App', value: 'app' },
+        { text: 'UID', value: 'uid' },
         { text: 'More Info', value: 'url' },
         { text: 'Date', value: 'dateStr' },
-        { text: 'Tracker', value: 'Tracker' },
+        { text: 'Tracker', value: 'tracker' },
         { text: 'daddr', value: 'daddr' },
-        { text: 'Category', value: 'Category' }
+        { text: 'Category', value: 'category' }
       ],
       results: []
     }
   },
   computed: {
+    ...mapState(['config']),
     selectAll() {
       return this.selectedApps.length === this.apps.length
     },
@@ -149,8 +154,8 @@ export default {
       return this.selectedApps.length > 0 && !this.selectAll
     },
     icon() {
-      if (this.selectAll) return '$vuetify.icons.mdiCloseBox'
-      if (this.selectSome) return '$vuetify.icons.mdiMinusBox'
+      if (this.selectAll) { return '$vuetify.icons.mdiCloseBox' }
+      if (this.selectSome) { return '$vuetify.icons.mdiMinusBox' }
       return '$vuetify.icons.mdiCheckboxBlankOutline'
     }
   },
@@ -167,7 +172,7 @@ export default {
     },
     filterApps(items) {
       this.selectAppDimension.filter(null)
-      this.selectAppDimension.filterFunction(function (d) {
+      this.selectAppDimension.filterFunction(function(d) {
         return items.includes(d)
       })
       dc.redrawAll()
@@ -177,7 +182,7 @@ export default {
         top(n) {
           return group
             .top(Infinity)
-            .filter(function (d) {
+            .filter(function(d) {
               return d.value.count !== 0 && d.value !== 0
             })
             .slice(0, n)
@@ -197,38 +202,39 @@ export default {
       const tableCount = new dc.DataCount('.dc-data-count')
 
       // Bind reset filters links
-      d3.select('#volume-chart a.reset').on('click', function () {
+      d3.select('#volume-chart a.reset').on('click', function() {
         rangeChart.filterAll()
         volumeChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#category-chart a.reset').on('click', function () {
+      d3.select('#category-chart a.reset').on('click', function() {
         categoryChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#advertiser-chart a.reset').on('click', function () {
+      d3.select('#advertiser-chart a.reset').on('click', function() {
         advertiserChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#app-chart a.reset').on('click', function () {
+      d3.select('#app-chart a.reset').on('click', function() {
         appChart.filterAll()
         dc.redrawAll()
       })
 
       // Format data to correct types
-      const dateFormatParser = d3.timeParse('%Q')
+      const dateFormat = d3.timeParse('%Q')
+      const dateFormatParser = d => dateFormat(d) || new Date(d)
       const formatTime = d3.timeFormat('%B %d, %Y')
-      this.values.forEach(d => {
-        d.date = dateFormatParser(d.time)
+      this.values.forEach((d) => {
+        d.date = dateFormatParser(d.time) || new Date(d.time)
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
         d.url =
           'https://reports.exodus-privacy.eu.org/en/reports/' +
           d.Package +
           '/latest/'
         d.dateStr = formatTime(d.day)
-        d.Category = d.Category === '' ? 'Unknown' : d.Category
-        d.App = d.App === '' ? 'Unknown' : d.App
-        d.Tracker = d.Tracker === '' ? 'Unknown' : d.Tracker
+        d.category = d.category === '' ? 'Unknown' : d.category
+        d.app = d.app === '' ? 'Unknown' : d.app
+        d.tracker = d.tracker === '' ? 'Unknown' : d.tracker
       })
 
       const ndx = crossfilter(this.values)
@@ -236,12 +242,12 @@ export default {
 
       // Create dimensions
       const dayDimension = ndx.dimension(d => d.day)
-      const categoryDimension = ndx.dimension(d => d.Category)
-      const advertiserDimension = ndx.dimension(d => d.Tracker)
-      const appDimension = ndx.dimension(d => d.App)
+      const categoryDimension = ndx.dimension(d => d.category)
+      const advertiserDimension = ndx.dimension(d => d.tracker)
+      const appDimension = ndx.dimension(d => d.app)
 
       // Dimension for the app selector (has to be different from appDimension)
-      this.selectAppDimension = ndx.dimension(d => d.App)
+      this.selectAppDimension = ndx.dimension(d => d.app)
       this.apps = this.selectAppDimension
         .group()
         .top(Infinity)
@@ -255,10 +261,10 @@ export default {
       const appGroup = appDimension.group().reduceCount()
 
       // Render volume line chart
-      const minDate = d3.min(this.values, function (d) {
+      const minDate = d3.min(this.values, function(d) {
         return d.day
       })
-      const maxDate = d3.max(this.values, function (d) {
+      const maxDate = d3.max(this.values, function(d) {
         return d.day
       })
       const maxValue = dayGroup.top(1)[0].value + 2
@@ -359,13 +365,13 @@ export default {
           '#58539E'
         ])
 
-      categoryChart.on('pretransition', function (chart) {
-        chart.selectAll('text.pie-slice.pie-label').call(function (t) {
-          t.each(function (d) {
+      categoryChart.on('pretransition', function(chart) {
+        chart.selectAll('text.pie-slice.pie-label').call(function(t) {
+          t.each(function(d) {
             const self = d3.select(this)
             let text = self.text()
-            if (text.length > 14) text = text.substring(0, 14) + '.. '
-            if (text.length > 0)
+            if (text.length > 14) { text = text.substring(0, 14) + '.. ' }
+            if (text.length > 0) {
               text =
                 text +
                 ' (' +
@@ -373,6 +379,7 @@ export default {
                   ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
                 ) +
                 '%)'
+            }
             self.text(text)
           })
         })

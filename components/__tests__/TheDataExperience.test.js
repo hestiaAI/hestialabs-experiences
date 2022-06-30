@@ -27,6 +27,14 @@ beforeEach(() => {
       config: {},
       fileManager: null
     }),
+    getters: {
+      experience: () => () => ({
+        files: {},
+        keepOnlyFiles: true,
+        preprocessors: {},
+        viewBlocks: []
+      })
+    },
     mutations: {
       clearStore: () => {},
       setFileManager: () => {},
@@ -56,6 +64,7 @@ test('mounts without error', () => {
     store,
     localVue,
     mocks: {
+      $route: { params: {} },
       $router: {
         push: () => {}
       }
@@ -66,10 +75,9 @@ test('mounts without error', () => {
   expect(
     wrapper.findComponent({ ref: 'unit-introduction' }).exists()
   ).toBeTruthy()
-  expect(wrapper.findComponent({ ref: 'unit-files' }).exists()).toBeTruthy()
 })
 
-test('process simple text file', async () => {
+test('process simple text file', async() => {
   const wrapper = mount(TheDataExperience, {
     propsData: {
       title: 'Test',
@@ -78,6 +86,7 @@ test('process simple text file', async () => {
     store,
     localVue,
     mocks: {
+      $route: { params: {} },
       $router: {
         push: () => {}
       }
@@ -91,7 +100,7 @@ test('process simple text file', async () => {
   const file = new File([fileContent], 'test.txt')
 
   // Trigger the data processing function
-  const unitFiles = wrapper.findComponent({ ref: 'unit-files' })
+  const unitFiles = wrapper.findComponent({ ref: 'unit-introduction' })
   await unitFiles.trigger('update', { uppyFiles: [file] })
 
   // I don't know why we need so many ticks

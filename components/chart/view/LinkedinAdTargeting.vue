@@ -4,7 +4,9 @@
       <VExpansionPanel v-for="item in items" :key="item.name">
         <VExpansionPanelHeader v-slot="{ open }">
           <VRow no-gutters>
-            <VCol cols="4"> {{ item.name }}: </VCol>
+            <VCol cols="4">
+              {{ item.name }}:
+            </VCol>
             <VCol cols="8" class="text--secondary">
               <VFadeTransition leave-absolute>
                 <div
@@ -20,7 +22,8 @@
                       outlined
                       color="primary"
                       class="ma-1"
-                      >{{ value }}
+                    >
+                      {{ value }}
                     </VChip>
                   </div>
                   <VChip
@@ -42,7 +45,9 @@
               v-for="(value, idx) in item.values"
               :key="item.name + value + idx"
             >
-              <VChip outlined color="primary" class="ma-1">{{ value }} </VChip>
+              <VChip outlined color="primary" class="ma-1">
+                {{ value }}
+              </VChip>
             </div>
           </div>
         </VExpansionPanelContent>
@@ -66,7 +71,7 @@ export default {
     items() {
       return Object.keys(this.values[0])
         .sort()
-        .map(k => {
+        .map((k) => {
           return {
             name: k,
             values: this.values[0][k].split('; ')

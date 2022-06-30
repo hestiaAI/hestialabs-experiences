@@ -3,7 +3,7 @@
     <template v-for="({ experiences, heading }, index) in sections">
       <div v-if="experiences.length > 0" :key="index">
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <h4 class="mt-6 mb-4 text-h4" v-html="heading"></h4>
+        <h1 class="mt-6 mb-4 text-h4" v-html="heading" />
         <component :is="component" v-bind="{ experiences }" />
       </div>
     </template>
@@ -23,6 +23,10 @@ export default {
     cards: {
       type: Boolean,
       default: false
+    },
+    include: {
+      type: Array,
+      default: undefined
     }
   },
   computed: {
@@ -30,11 +34,11 @@ export default {
     sections() {
       return [
         {
-          experiences: this.enabledExperiences,
+          experiences: this.filterExperiences(this.enabledExperiences),
           heading: 'Public experiences'
         },
         {
-          experiences: this.disabledExperiences,
+          experiences: this.filterExperiences(this.disabledExperiences),
           heading: `
             Available on-demand (<a href="mailto:contact@hestialabs.org">Contact us</a>)
           `
@@ -43,6 +47,22 @@ export default {
     },
     component() {
       return this.cards ? TheExperienceMenuCards : TheExperienceMenuList
+    }
+  },
+  methods: {
+    filterExperiences(experiences) {
+      const { include } = this
+      // return all experiences, if no filter provided
+      let filtered = experiences
+      if (include) {
+        filtered = filtered.filter(e => include.includes(e.slug))
+      }
+      if (!this.$route.params.bubble) {
+        // remove aggregator experiences from the menu when
+        // user is not in a bubble
+        filtered = filtered.filter(e => !e.slug.endsWith('-agg'))
+      }
+      return filtered
     }
   }
 }

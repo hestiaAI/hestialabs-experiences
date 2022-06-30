@@ -1,85 +1,38 @@
 <template>
   <div>
-    <DataValidator :data="data" allow-missing-columns>
-      <BaseAlert v-if="error" type="error">{{ message }}</BaseAlert>
-      <div class="d-flex flex-row align-center">
-        <BaseSearchBar v-model="search" />
-        <FormDialog :headers="headers" :values="filteredItems" />
-      </div>
+    <DataValidator
+      :data="{ items: items, headers: headers }"
+      allow-missing-columns
+    >
+      <BaseAlert v-if="error" type="error">
+        {{ message }}
+      </BaseAlert>
+      <BaseSearchBar v-model="search" />
       <VDataTable
-        v-bind="{ headers: tableHeaders, search }"
+        v-bind="{ headers: data.headers, search }"
         ref="tableRef"
         :items="filteredItems"
         multi-sort
+        :items-per-page.sync="itemsPerPage"
         fixed-header
-        height="530"
+        :height="height"
         :footer-props="{ itemsPerPageOptions: [5, 10, 15, 500, 1000] }"
         data-testid="data-table"
         @current-items="onItemsUpdate"
       >
-        <template v-for="header in headers" #[`header.${header.value}`]>
+        <template v-for="header in data.headers" #[`header.${header.value}`]>
           {{ header.text }}
-          <VMenu
-            :id="header.value"
+          <UnitFilter
             :key="header.value"
-            offset-y
-            :close-on-content-click="false"
-          >
-            <template #activator="{ on, attrs }">
-              <VBtn icon v-bind="attrs" v-on="on">
-                <VIcon
-                  small
-                  :color="
-                    filters[header.value] && filters[header.value].length
-                      ? 'success'
-                      : ''
-                  "
-                >
-                  $vuetify.icons.mdiFilter
-                </VIcon>
-              </VBtn>
-            </template>
-            <div style="background-color: white; width: 280px">
-              <VAutocomplete
-                v-model="filters[header.value]"
-                flat
-                hide-details
-                full-width
-                multiple
-                chips
-                dense
-                class="pa-4"
-                label="Search ..."
-                :items="columnValues(header)"
-                :menu-props="{ closeOnClick: true }"
-              >
-                <template #selection="{ item, index }">
-                  <VChip v-if="index < 3" class="ma-1">
-                    <span>
-                      {{ item }}
-                    </span>
-                  </VChip>
-                  <span v-if="index === 3" class="grey--text caption">
-                    (+{{ filters[header.value].length - 3 }} others)
-                  </span>
-                </template>
-              </VAutocomplete>
-              <VBtn
-                small
-                text
-                color="primary"
-                class="ml-2 mb-2"
-                @click="filters[header.value] = []"
-                >Clear</VBtn
-              >
-            </div>
-          </VMenu>
+            v-bind="{ header, values: columnValues(header) }"
+            @filter-change="filterChange(header.value, $event)"
+          />
         </template>
         <template #item.url="{ value }">
           <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
         </template>
         <template
-          v-for="header in headers.filter(h => h.value !== 'url')"
+          v-for="header in data.headers.filter(h => h.value !== 'url')"
           #[`item.${header.value}`]="slotProps"
         >
           {{ formatItemAsString(slotProps) }}
@@ -103,15 +56,22 @@
 import { writeToString } from '@fast-csv/format'
 import { processError } from '@/utils/utils'
 import { formatObject, formatArray } from '@/utils/json'
-import { toDateString } from '@/utils/dates'
-import FormDialog from '~/components/chart/forms/FormDialog.vue'
+import { detectTypes } from '@/utils/type-check'
+
+const height5 = 290
+const height10 = 530
+const defaultItemsPerPage10 = window.innerHeight - 250 > 530
+
 export default {
   name: 'UnitFilterableTable',
-  components: { FormDialog },
   props: {
-    data: {
-      type: Object,
-      required: true
+    headers: {
+      type: Array,
+      default: () => []
+    },
+    items: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -124,48 +84,67 @@ export default {
       message: '',
       extension: 'csv',
       search: '',
-      tableHeaders: [],
       files: null,
-      filters: {}
+      filters: {},
+      filteredItems: [],
+      itemsPerPage: defaultItemsPerPage10 ? 10 : 5,
+      height: defaultItemsPerPage10 ? height10 : height5
     }
   },
   computed: {
-    headers() {
-      let headers = this.data?.headers || []
-      if (typeof headers[0] === 'string') {
+    data() {
+      let tempHeaders = this.headers
+      if (typeof this.headers[0] === 'string') {
         // allow headers to be an array of strings
-        headers = headers.map(h => ({
+        tempHeaders = this.headers.map(h => ({
           text: h,
           value: h
         }))
       }
-      // add column attributes
-      return headers.map(h => ({
-        ...h,
-        align: 'left',
-        sortable: true
-      }))
-    },
-    items() {
-      return this.data?.items || []
-    },
-    filteredItems() {
-      return this.items.filter(d => {
-        return Object.keys(this.filters).every(f => {
-          return this.filters[f].length < 1 || this.filters[f].includes(d[f])
-        })
-      })
+      // Type detection
+      const { headers, items } = detectTypes(tempHeaders, this.items)
+
+      // Add column style and options
+      return {
+        headers: headers.map(h => ({
+          ...h,
+          align: 'left',
+          sortable: true
+        })),
+        items
+      }
     }
   },
   watch: {
+    itemsPerPage: {
+      immediate: true,
+      handler(value) {
+        if (value === 5) {
+          this.height = height5
+        } else if (defaultItemsPerPage10) {
+          this.height = height10
+        }
+      }
+    },
     data: {
       immediate: true,
-      handler(data) {
-        this.tableHeaders = this.headers
+      handler() {
+        this.applyFilters()
       }
     }
   },
   methods: {
+    filterChange(header, filter) {
+      this.filters[header] = filter
+      this.applyFilters()
+    },
+    applyFilters() {
+      this.filteredItems = this.data.items.filter((d) => {
+        return Object.entries(this.filters).every(([header, filter]) => {
+          return filter === null || filter(d[header])
+        })
+      })
+    },
     formatItemAsString(itemProps) {
       const { header, value } = itemProps
       // eslint-disable-next-line no-prototype-builtins
@@ -178,18 +157,21 @@ export default {
       if (typeof value === 'object') {
         return formatObject(value)
       }
-      return toDateString(header.value, value)
+      return value
     },
     async exportCSV() {
       this.progress = true
       this.status = false
       this.error = false
       try {
-        const headers = this.headers.map(h => h.text)
-        const filteredItems = this.$refs.tableRef.$children[0].filteredItems
+        const headers = this.data.headers.map(h => h.text)
+        const { filteredItems } = this.$refs.tableRef.$children[0]
         // Change the items keys to match the headers
         const itemsWithHeader = filteredItems.map(i =>
-          this.headers.reduce((o, h) => ({ ...o, [h.text]: i[h.value] }), {})
+          this.data.headers.reduce(
+            (o, h) => ({ ...o, [h.text]: i[h.value] }),
+            {}
+          )
         )
         // update the data
         const csv = await writeToString(itemsWithHeader, { headers })
@@ -205,19 +187,26 @@ export default {
       }
     },
     columnValues(header) {
-      return this.items.map(d =>
+      return this.data.items.map(d =>
         this.formatItemAsString({ header, value: d[header.value] })
       )
     },
     onItemsUpdate() {
       // wait until the DOM has completely updated
       this.$nextTick(() => {
+        // workaround to get the filtered items https://github.com/vuetifyjs/vuetify/issues/8731#issuecomment-617399086
+        const { filteredItems } = this.$refs.tableRef.$children[0]
+        const { hash } = this.$route
         // emit the current filtered items
-        this.$emit(
-          'current-items',
-          // workaround to get the filtered items https://github.com/vuetifyjs/vuetify/issues/8731#issuecomment-617399086
-          this.$refs.tableRef.$children[0].filteredItems
-        )
+        this.$emit('current-items', filteredItems)
+
+        this.$store.commit('setResult', {
+          experience: hash.slice(1),
+          result: {
+            headers: this.headers,
+            items: filteredItems
+          }
+        })
       })
     }
   }

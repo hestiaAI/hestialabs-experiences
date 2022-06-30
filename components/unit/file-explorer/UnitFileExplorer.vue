@@ -1,21 +1,22 @@
 <template>
   <div v-if="fileManager">
     <VCard class="pa-2 mb-6 explorer" min-height="100%" flat>
-      <style v-if="isFileLoading">
-        :root {
-          --cursor-style: wait !important;
-        }
-      </style>
       <VRow>
         <VExpandTransition>
           <VCol cols="12" :md="mini ? 4 : 6" :lg="mini ? 2 : 6">
             <VListItem class="px-2">
               <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
-              <VListItemTitle class="mx-4">File Explorer</VListItemTitle>
+              <VListItemTitle class="mx-4">
+                File Explorer
+              </VListItemTitle>
               <VSpacer />
               <VBtn icon @click="mini = !mini">
-                <VIcon v-if="mini">$vuetify.icons.mdiChevronRight</VIcon>
-                <VIcon v-else>$vuetify.icons.mdiChevronLeft</VIcon>
+                <VIcon v-if="mini">
+                  $vuetify.icons.mdiChevronRight
+                </VIcon>
+                <VIcon v-else>
+                  $vuetify.icons.mdiChevronLeft
+                </VIcon>
               </VBtn>
             </VListItem>
             <VDivider />
@@ -51,9 +52,11 @@
             </VTreeview>
           </VCol>
         </VExpandTransition>
-        <VDivider vertical></VDivider>
+        <VDivider vertical />
         <VCol cols="12" :md="mini ? 8 : 6" :lg="mini ? 10 : 6">
-          <VCardTitle class="justify-center">Explore your files</VCardTitle>
+          <VCardTitle class="justify-center">
+            Explore your files
+          </VCardTitle>
           <VCardText>
             <template v-if="filename">
               <div class="mr-2">
@@ -102,7 +105,7 @@
 <script>
 import _ from 'lodash'
 import { mapState } from 'vuex'
-import { jsonToTableConverter } from '~/manifests/generic-pipelines'
+import { jsonToTableConverter } from '~/utils/generic-pipelines'
 
 export default {
   name: 'UnitFileExplorer',
@@ -125,9 +128,7 @@ export default {
       height: 500,
       tableData: undefined,
       customPipeline: jsonToTableConverter,
-      customPipelineOptions: undefined,
-      selectedAccessor: undefined,
-      tableDataFromAccessor: undefined
+      customPipelineOptions: undefined
     }
   },
   computed: {
@@ -209,6 +210,8 @@ export default {
       this.isFileLoading = loading
     },
     onSelectAccessor(accessor) {
+      // TODO make this work better
+      // const options = await createTableOptions(this.fileManager, accessor)
       this.customPipelineOptions = [{ accessor }]
     },
     onUnitResultsUpdate(result) {

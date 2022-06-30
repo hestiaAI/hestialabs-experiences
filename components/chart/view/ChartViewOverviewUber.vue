@@ -7,7 +7,7 @@
           v-model="currentCurrency"
           :items="currencies"
           @input="filterCurrency"
-        ></VSelect>
+        />
       </p>
     </VRow>
     <ChartViewVRowWebShare>
@@ -20,7 +20,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -43,7 +43,7 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -55,19 +55,19 @@
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
           </VCol>
           <VCol cols="12" md="4">
-            <div id="city-chart">
-              <strong>Begin trip cities</strong>
+            <div id="address-chart">
+              <strong>Begin trip address</strong>
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
                   Current filter:
-                  <span class="filter"></span>
+                  <span class="filter" />
                 </span>
               </p>
             </div>
@@ -77,24 +77,28 @@
       <VCol cols="12" md="4">
         <VCard class="general-info">
           <VCardTitle>General information</VCardTitle>
-          <VCardSubtitle></VCardSubtitle>
+          <VCardSubtitle />
           <VCardText>
             <VContainer>
               <VRow dense>
                 <VCol cols="12" md="6">
                   <VCard color="#385F73" dark>
-                    <VCardTitle class="text-h6">Orders</VCardTitle>
-                    <VCardSubtitle></VCardSubtitle>
+                    <VCardTitle class="text-h6">
+                      Orders
+                    </VCardTitle>
+                    <VCardSubtitle />
                     <VCardText class="text-h4 text-center">
-                      <div><strong id="number-trip"></strong></div>
+                      <div><strong id="number-trip" /></div>
                       <span class="text-subtitle-1">trips</span>
                     </VCardText>
                   </VCard>
                 </VCol>
                 <VCol cols="12" md="6">
                   <VCard color="#385F73" dark>
-                    <VCardTitle class="text-h6">Speed</VCardTitle>
-                    <VCardSubtitle></VCardSubtitle>
+                    <VCardTitle class="text-h6">
+                      Speed
+                    </VCardTitle>
+                    <VCardSubtitle />
                     <VCardText class="text-h4 text-center">
                       <div><strong id="number-speed-avg" /></div>
                       <span class="text-subtitle-1">mph</span>
@@ -106,61 +110,65 @@
             <VSimpleTable>
               <thead>
                 <tr>
-                  <th class="text-left"></th>
-                  <th class="text-left">Total</th>
-                  <th class="text-left">Average</th>
+                  <th class="text-left" />
+                  <th class="text-left">
+                    Total
+                  </th>
+                  <th class="text-left">
+                    Average
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td><strong>Price</strong></td>
                   <td>
-                    <span id="number-price-total" class="text-h6"></span>
-                    <br />
+                    <span id="number-price-total" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">{{ currentCurrency }}</span>
                   </td>
                   <td>
-                    <span id="number-price-avg" class="text-h6"></span>
-                    <br />
+                    <span id="number-price-avg" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">{{ currentCurrency }}</span>
                   </td>
                 </tr>
                 <tr>
                   <td><strong>Distance</strong></td>
                   <td>
-                    <span id="number-distance-total" class="text-h6"></span>
-                    <br />
+                    <span id="number-distance-total" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">miles</span>
                   </td>
                   <td>
-                    <span id="number-distance-avg" class="text-h6"></span>
-                    <br />
+                    <span id="number-distance-avg" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">miles</span>
                   </td>
                 </tr>
                 <tr>
                   <td><strong>Duration</strong></td>
                   <td>
-                    <span id="number-duration-total" class="text-h6"></span>
-                    <br />
+                    <span id="number-duration-total" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">min</span>
                   </td>
                   <td>
-                    <span id="number-duration-avg" class="text-h6"></span>
-                    <br />
+                    <span id="number-duration-avg" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">min</span>
                   </td>
                 </tr>
                 <tr>
                   <td><strong>Waiting time</strong></td>
                   <td>
-                    <span id="number-waiting-total" class="text-h6"></span>
-                    <br />
+                    <span id="number-waiting-total" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">min</span>
                   </td>
                   <td>
-                    <span id="number-waiting-avg" class="text-h6"></span>
-                    <br />
+                    <span id="number-waiting-avg" class="text-h6" />
+                    <br>
                     <span class="text-subtitle-2">min</span>
                   </td>
                 </tr>
@@ -177,7 +185,7 @@
     </ChartViewVRowWebShare>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable :data="{ headers: header, items: results }" />
+        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -200,12 +208,12 @@ export default {
       header: [
         { text: 'City', value: 'City' },
         { text: 'Service', value: 'service' },
-        { text: 'Status', value: 'Trip or Order Status' },
+        { text: 'Status', value: 'tripOrOrderStatus' },
         { text: 'Request Time', value: 'dateRequestStr' },
-        { text: 'From', value: 'Begin Trip Address' },
-        { text: 'To', value: 'Dropoff Address' },
-        { text: 'Waiting time (min)', value: 'waiting_time' },
-        { text: 'Distance (miles)', value: 'Distance (miles)' },
+        { text: 'From', value: 'beginTripAddress' },
+        { text: 'To', value: 'dropoffAddress' },
+        { text: 'Waiting time (min)', value: 'waitingTime' },
+        { text: 'Distance (miles)', value: 'distanceMiles' },
         { text: 'Duration (min)', value: 'duration' },
         { text: 'Price', value: 'priceStr' }
       ],
@@ -228,7 +236,7 @@ export default {
     drawViz() {
       // Add data to table
       this.results = this.values.filter(
-        d => d['Trip or Order Status'] === 'COMPLETED'
+        d => d.tripOrOrderStatus === 'COMPLETED'
       )
 
       // Define color palette for the graphs
@@ -244,24 +252,23 @@ export default {
       // Parse and format data
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC')
       const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
-      this.results.forEach(d => {
+      this.results.forEach((d) => {
         d.service =
-          d['Product Type'].charAt(0).toUpperCase() + d['Product Type'].slice(1)
-        d.dateRequest = dateFormatParser(d['Request Time'])
-        d.dateStart = dateFormatParser(d['Begin Trip Time'])
-        d.dateEnd = dateFormatParser(d['Dropoff Time'])
+          d.productType.charAt(0).toUpperCase() + d.productType.slice(1)
+        d.dateRequest = dateFormatParser(d.requestTime)
+        d.dateStart = dateFormatParser(d.beginTripTime)
+        d.dateEnd = dateFormatParser(d.dropoffTime)
         d.dateRequestStr = formatTime(d.dateRequest)
         d.dateStartStr = formatTime(d.dateStart)
         d.dateEndStr = formatTime(d.dateEnd)
         d.day = d3.timeDay(d.dateStart) // pre-calculate days for better performance
         d.hour = d3.timeHour(d.dateStart).getHours()
         d.duration = d3.timeMinute.count(d.dateStart, d.dateEnd)
-        d.waiting_time = d3.timeMinute.count(d.dateRequest, d.dateStart)
-        d.priceStr = d['Fare Amount'] + d['Fare Currency']
-        d.price = +d['Fare Amount']
-        d.distance = +d['Distance (miles)']
-        const addr = d['Begin Trip Address'].split(',')
-        d.city = addr[addr.length - 2].split(' ').pop()
+        d.waitingTime = d3.timeMinute.count(d.dateRequest, d.dateStart)
+        d.priceStr = d.fareAmount + d.fareCurrency
+        d.price = +d.fareAmount
+        d.distance = +d.distanceMiles
+        d.address = d.beginTripAddress.replace(/[0-9]/g, '').split(',')[0]
       })
 
       // Create and bind charts to their respective divs
@@ -269,7 +276,7 @@ export default {
       const serviceChart = new dc.PieChart('#service-chart')
       const weekChart = new dc.RowChart('#week-chart')
       const priceChart = new dc.LineChart('#price-chart')
-      const cityChart = new dc.RowChart('#city-chart')
+      const addressChart = new dc.RowChart('#address-chart')
       const tripNumber = new dc.NumberDisplay('#number-trip')
       const speedNumber = new dc.NumberDisplay('#number-speed-avg')
       const priceAvgNumber = new dc.NumberDisplay('#number-price-avg')
@@ -282,40 +289,40 @@ export default {
       const waitingAvgNumber = new dc.NumberDisplay('#number-waiting-avg')
 
       // Bind reset filters links
-      d3.select('#hour-chart a.reset').on('click', function () {
+      d3.select('#hour-chart a.reset').on('click', function() {
         hourChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#service-chart a.reset').on('click', function () {
+      d3.select('#service-chart a.reset').on('click', function() {
         serviceChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#week-chart a.reset').on('click', function () {
+      d3.select('#week-chart a.reset').on('click', function() {
         weekChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#price-chart a.reset').on('click', function () {
+      d3.select('#price-chart a.reset').on('click', function() {
         priceChart.filterAll()
         dc.redrawAll()
       })
-      d3.select('#city-chart a.reset').on('click', function () {
-        cityChart.filterAll()
+      d3.select('#address-chart a.reset').on('click', function() {
+        addressChart.filterAll()
         dc.redrawAll()
       })
       const ndx = crossfilter(this.results)
 
       // Create dimensions
       const allDimension = ndx.groupAll()
-      const dayOfWeekDimension = ndx.dimension(d => {
+      const dayOfWeekDimension = ndx.dimension((d) => {
         const day = d.dateStart.getDay()
         const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
         return `${name[day]}`
       })
       const serviceDimension = ndx.dimension(d => d.service)
-      const cityDimension = ndx.dimension(d => d.city)
+      const addressDimension = ndx.dimension(d => d.address)
       const dayDimension = ndx.dimension(d => d.day)
       const hourDimension = ndx.dimension(d => d.hour)
-      this.currencyDimension = ndx.dimension(d => d['Fare Currency'])
+      this.currencyDimension = ndx.dimension(d => d.fareCurrency)
 
       // Create groups
       const allGroup = allDimension.reduce(
@@ -323,7 +330,7 @@ export default {
         (p, v) => {
           ++p.count
           p.distanceTotal += v.distance
-          p.waitingTotal += v.waiting_time
+          p.waitingTotal += v.waitingTime
           p.priceTotal += v.price
           p.durationTotal += v.duration
           return p
@@ -332,7 +339,7 @@ export default {
         (p, v) => {
           --p.count
           p.distanceTotal -= v.distance
-          p.waitingTotal -= v.waiting_time
+          p.waitingTotal -= v.waitingTime
           p.priceTotal -= v.price
           p.durationTotal -= v.duration
           return p
@@ -349,13 +356,13 @@ export default {
       const dayOfWeekGroup = dayOfWeekDimension.group().reduceCount()
       const serviceGroup = serviceDimension.group().reduceCount()
       const priceGroup = dayDimension.group().reduceSum(d => d.price)
-      const cityGroup = cityDimension.group().reduceCount()
+      const addressGroup = addressDimension.group().reduceCount()
       const hourGroup = hourDimension.group().reduceCount()
       const currencyGroup = this.currencyDimension.group()
 
       this.currentCurrency = currencyGroup.top(1)[0].key
       this.currencyDimension.filter(this.currentCurrency)
-      currencyGroup.top(Infinity).forEach(d => {
+      currencyGroup.top(Infinity).forEach((d) => {
         this.currencies.push(d.key)
       })
 
@@ -369,13 +376,13 @@ export default {
         })
       speedNumber
         .group(allGroup)
-        .valueAccessor(p => {
+        .valueAccessor((p) => {
           return p.durationTotal ? (p.distanceTotal * 60) / p.durationTotal : 0
         })
         .formatNumber(d3.format('.1f'))
       priceAvgNumber
         .group(allGroup)
-        .valueAccessor(p => {
+        .valueAccessor((p) => {
           return p.count ? p.priceTotal / p.count : 0
         })
         .formatNumber(d3.format('.1f'))
@@ -432,7 +439,7 @@ export default {
           top(n) {
             return group
               .top(Infinity)
-              .filter(function (d) {
+              .filter(function(d) {
                 return d.value.count !== 0 && d.value !== 0
               })
               .slice(0, n)
@@ -451,7 +458,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function (d) {
+      weekChart.ordering(function(d) {
         switch (d.key) {
           case 'Mon':
             return 0
@@ -480,14 +487,14 @@ export default {
         .innerRadius(0)
         .dimension(serviceDimension)
         .group(serviceGroup)
-        .valueAccessor(d => {
+        .valueAccessor((d) => {
           return d.value
         })
         .title(d => d.key + ': ' + d.value + ' trips')
         .ordinalColors(colorPalette)
-        .label(d => {
+        .label((d) => {
           let label = d.key
-          if (label.length > 8) label = label.substring(0, 8) + '.. '
+          if (label.length > 8) { label = label.substring(0, 8) + '.. ' }
           if (serviceChart.hasFilter() && !serviceChart.hasFilter(d.key)) {
             return `${label} (0%)`
           }
@@ -508,7 +515,7 @@ export default {
         return {
           all() {
             const cumulate = {}
-            return group.all().map(function (d) {
+            return group.all().map(function(d) {
               if (cumulate[d.key[0]]) {
                 cumulate[d.key[0]] += d.value
               } else {
@@ -535,8 +542,8 @@ export default {
         .elasticY(true)
         .renderDataPoints({
           radius: 3,
-          fillOpacity: 0.8,
-          strokeOpacity: 0.0
+          fillOpaaddress: 0.8,
+          strokeOpaaddress: 0.0
         })
         .clipPadding(10)
         .yAxisLabel('Total price')
@@ -546,13 +553,13 @@ export default {
       priceChart.yAxis().ticks(6)
       priceChart.filterAll()
 
-      // Render city row chart
-      cityChart
-        .width(d3.select('#city-chart').node().getBoundingClientRect().width)
+      // Render address row chart
+      addressChart
+        .width(d3.select('#address-chart').node().getBoundingClientRect().width)
         .height(180)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
-        .group(removeEmptyBins(cityGroup))
-        .dimension(cityDimension)
+        .group(removeEmptyBins(addressGroup))
+        .dimension(addressDimension)
         .ordinalColors(colorPalette)
         .label(d => d.key)
         .title(d => d.value)

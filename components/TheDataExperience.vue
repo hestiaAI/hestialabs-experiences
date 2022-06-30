@@ -5,7 +5,7 @@
       <VRow>
         <VCol cols="12 mx-auto" sm="10">
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="config.banner"></div>
+          <div v-html="config.banner" />
         </VCol>
       </VRow>
     </VBanner>
@@ -35,32 +35,28 @@
         </VTabs>
         <VTabsItems v-model="tab">
           <VTabItem value="load-data" :transition="false">
-            <VCol cols="12 mx-auto" sm="6" class="tabItem pa-5">
-              <UnitIntroduction
-                v-bind="{ companyName: title, dataPortal }"
-                ref="unit-introduction"
-              />
-              <UnitFiles
+            <VCol cols="12 mx-auto" md="6" class="tabItem">
+              <UnitDownload
+                v-if="config.dataFromBubble"
                 v-bind="{
-                  files,
-                  samples: data
+                  progress,
+                  error,
+                  success,
+                  message
                 }"
-                ref="unit-files"
                 @update="onUnitFilesUpdate"
               />
-              <template v-if="progress">
-                <BaseProgressCircular class="mr-2" />
-                <span>Processing files...</span>
-              </template>
-              <template v-else-if="error || success">
-                <BaseAlert
-                  :type="error ? 'error' : 'success'"
-                  border="top"
-                  colored-border
-                  max-width="600"
-                  >{{ message }}
-                </BaseAlert>
-              </template>
+              <UnitIntroduction
+                v-else
+                v-bind="{
+                  progress,
+                  error,
+                  success,
+                  message
+                }"
+                ref="unit-introduction"
+                @update="onUnitFilesUpdate"
+              />
             </VCol>
           </VTabItem>
           <VTabItem value="summary" :transition="false">
@@ -74,9 +70,9 @@
             </div>
           </VTabItem>
           <VTabItem
-            v-for="(defaultViewElements, index) in defaultView"
+            v-for="(viewBlock, index) in viewBlocks"
             :key="index"
-            :value="defaultViewElements.key"
+            :value="viewBlock.id"
             :transition="false"
           >
             <VCol cols="12 mx-auto" class="tabItem">
@@ -85,24 +81,13 @@
                   class="d-flex flex-column align-center"
                   style="width: 100%; height: 100%"
                 >
-                  <div class="mb-3">This might take a moment</div>
+                  <div class="mb-3">
+                    This might take a moment
+                  </div>
                   <BaseProgressCircular size="64" width="4" />
                 </div>
               </VOverlay>
-              <UnitQuery
-                v-bind="{
-                  defaultViewElements,
-                  customPipeline:
-                    customPipelines !== undefined
-                      ? customPipelines[defaultViewElements.customPipeline]
-                      : undefined,
-                  sparqlQuery: queries[index],
-                  sql: sqlQueries[index],
-                  postprocessors,
-                  index,
-                  vega
-                }"
-              />
+              <UnitQuery v-bind="viewBlock" />
             </VCol>
           </VTabItem>
           <VTabItem
@@ -111,11 +96,7 @@
             :transition="false"
           >
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
-              <UnitConsentForm
-                v-bind="{
-                  defaultView
-                }"
-              />
+              <UnitConsentForm />
             </VCol>
           </VTabItem>
         </VTabsItems>
@@ -127,76 +108,28 @@
 <script>
 import { mapState } from 'vuex'
 
-import debounce from 'lodash/debounce'
+import { debounce, pick } from 'lodash'
 
+import UnitDownload from './unit/UnitDownload.vue'
+import DBMS from '~/utils/sql'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 
 export default {
   name: 'TheDataExperience',
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    dataPortal: {
-      type: String,
-      default: ''
-    },
-    data: {
-      type: Array,
-      default: () => []
-    },
-    files: {
-      type: Object,
-      default: () => {}
-    },
-    defaultView: {
-      type: Array,
-      default: () => []
-    },
-    hideSummary: {
-      type: Boolean,
-      default: () => false
-    },
-    hideFileExplorer: {
-      type: Boolean,
-      default: () => false
-    },
-    preprocessors: {
-      type: Object,
-      default: () => {}
-    },
-    postprocessors: {
-      type: Object,
-      default: undefined
-    },
-    customPipelines: {
-      type: Object,
-      default: undefined
-    },
-    sparql: {
-      type: Object,
-      default: () => {}
-    },
-    sql: {
-      type: Object,
-      default: () => {}
-    },
-    vega: {
-      type: Object,
-      default: () => {}
-    },
-    yarrrml: {
-      type: String,
-      default: ''
-    },
-    databaseBuilder: {
-      type: Function,
-      default: undefined
-    }
-  },
+  components: { UnitDownload },
   data() {
+    const experience = this.$store.getters.experience(this.$route)
+    const properties = pick(experience, [
+      'databaseConfig',
+      'files',
+      'hideSummary',
+      'hideFileExplorer',
+      'keepOnlyFiles',
+      'preprocessors',
+      'viewBlocks'
+    ])
+
     return {
       tab: null,
       fab: false,
@@ -204,8 +137,8 @@ export default {
       error: false,
       success: false,
       message: '',
-      rml: '',
-      overlay: false
+      overlay: false,
+      ...properties
     }
   },
   computed: {
@@ -237,9 +170,9 @@ export default {
               }
             ]
           : []),
-        ...this.defaultView.map(view => ({
+        ...this.viewBlocks.map(view => ({
           ...view,
-          value: view.key,
+          value: view.id,
           disabled,
           show: true
         }))
@@ -253,21 +186,20 @@ export default {
       }
       return tabs
     },
-    queries() {
-      return this.defaultView.map(o => this.sparql[o.query])
-    },
     sqlQueries() {
-      return this.defaultView.map(o => this.sql[o.sql])
+      return this.viewBlocks.map(o => this.sql[o.sql])
     },
-    isRdfNeeded() {
-      return this.defaultView.filter(v => 'query' in v).length > 0
+    config() {
+      const { config } = this.$store.state
+      const { bubble } = this.$route.params
+      return bubble ? config.bubbleConfig[bubble] : config
     },
     consentFormTemplate() {
-      const consent = this.$store.state.config.consent
+      const { consent } = this.config
       if (consent) {
-        const key = this.$route.params.key
-        if (key in consent) {
-          return consent[key]
+        const { experience } = this.$route.params
+        if (experience in consent) {
+          return consent[experience]
         } else if ('default' in consent) {
           return consent.default
         }
@@ -287,7 +219,7 @@ export default {
     // debounce overlay
     experienceProgress: {
       immediate: true,
-      handler: debounce(function (value) {
+      handler: debounce(function(value) {
         this.overlay = value
       }, 200)
     }
@@ -309,6 +241,7 @@ export default {
       this.progress = false
     },
     async onUnitFilesUpdate({ uppyFiles }) {
+      const { databaseConfig: dbConfig } = this
       this.message = ''
       this.error = false
       this.success = false
@@ -321,9 +254,9 @@ export default {
       // Set consent form
       const consentForm = JSON.parse(JSON.stringify(this.consentFormTemplate))
       if (consentForm) {
-        const section = consentForm.find(section => section.type === 'data')
-        section.titles = this.defaultView.map(e => e.title)
-        section.keys = this.defaultView.map(e => e.key)
+        const section = consentForm.find(({ type }) => type === 'data')
+        section.titles = this.viewBlocks.map(e => e.title)
+        section.ids = this.viewBlocks.map(e => e.id)
       }
       this.$store.commit('setConsentForm', consentForm)
 
@@ -331,25 +264,25 @@ export default {
       const fileManager = new FileManager(
         this.preprocessors,
         fileManagerWorkers,
-        this.files
+        this.files,
+        this.keepOnlyFiles
       )
       try {
         await fileManager.init(uppyFiles)
         this.$store.commit('setFileManager', fileManager)
+        if (dbConfig) {
+          // create database
+          const db = await DBMS.createDB(dbConfig)
+          // generate database records via the file manager
+          const records = await DBMS.generateRecords(fileManager, dbConfig)
+          // insert the records into the database
+          DBMS.insertRecords(db, records)
+          // commit the database to the Vuex store
+          this.$store.commit('setCurrentDB', db)
+        }
       } catch (e) {
         this.handleError(e)
         return
-      }
-
-      // Populate database
-      if (this.databaseBuilder !== undefined) {
-        try {
-          const db = await this.databaseBuilder(fileManager)
-          this.$store.commit('setCurrentDB', db)
-        } catch (e) {
-          this.handleError(e)
-          return
-        }
       }
 
       this.progress = false

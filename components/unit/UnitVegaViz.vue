@@ -1,6 +1,6 @@
 <template>
   <DataValidator :data="data">
-    <div ref="graph"></div>
+    <div ref="graph" />
     <VRow>
       <VCol cols="6 mx-auto">
         <BaseButtonDownloadData
@@ -21,7 +21,7 @@ export default {
   props: {
     specFile: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     },
     data: {
       type: Object,

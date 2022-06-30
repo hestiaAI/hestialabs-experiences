@@ -1,12 +1,13 @@
 import * as csv from '@fast-csv/parse'
-import _ from 'lodash'
-import { setsEqual } from '~/utils/utils'
+import { camelCase, mapValues, identity, groupBy, every, uniq } from 'lodash'
+
+import { setsEqual } from './utils'
 
 const acceptedDelimiters = [',', ';', '\t']
 
 function differentiateDuplicates(strings) {
-  const occurrences = _.mapValues(_.groupBy(strings, _.identity), l => l.length)
-  const counter = Object.fromEntries(_.uniq(strings).map(name => [name, 0]))
+  const occurrences = mapValues(groupBy(strings, identity), l => l.length)
+  const counter = Object.fromEntries(uniq(strings).map(name => [name, 0]))
   return strings.map(name =>
     occurrences[name] === 1 ? name : `${name}_${++counter[name]}`
   )
@@ -22,15 +23,21 @@ async function getCsvHeadersAndItems(csvText) {
         csv
           .parseString(csvText, {
             delimiter,
-            headers: headers => differentiateDuplicates(headers),
+            headers: headers => differentiateDuplicates(headers.map(camelCase)),
             strictColumnHandling: true
           })
           .on('headers', h => headers.push(...h))
-          .on('data', row => items.push(row))
+          .on('data', (row) => {
+            return items.push(
+              Object.fromEntries(
+                Object.entries(row).map(([k, v]) => [camelCase(k), v])
+              )
+            )
+          })
           .on('error', error => reject(error))
           .on('end', () => resolve({ headers, items }))
       })
-      if (_.every(items, i => Object.keys(i).length === headers.length)) {
+      if (every(items, i => Object.keys(i).length === headers.length)) {
         if (headers.length >= 2) {
           return { headers, items }
         } else if (headers.length === 1) {
@@ -53,14 +60,21 @@ async function getCsvHeadersAndItems(csvText) {
 async function getCsvAndMergeFromID(fileManager, fileID) {
   const files = await fileManager.getCsvItemsFromId(fileID)
 
+  if (!files.length) {
+    return {
+      headers: [],
+      items: []
+    }
+  }
+
   // Merge the files that have the same headers as the first file
-  const file = files.reduce((prev, curr) => {
+  const file = files.slice(1).reduce((prev, curr) => {
     if (setsEqual(new Set(prev.headers), new Set(curr.headers))) {
       return { headers: prev.headers, items: prev.items.concat(curr.items) }
     } else {
       return prev
     }
-  })
+  }, files[0])
   return file
 }
 

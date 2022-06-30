@@ -2,13 +2,17 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./*"],
       "@/*": ["./*"],
-      "~~/*": ["./*"],
-      "@@/*": ["./*"]
+      "~/*": ["./*"],
+      "@@/*": ["./*"],
+      "~~/*": ["./*"]
     }
   },
+  "vueCompilerOptions": {
+    "experimentalDisableTemplateSupport": true
+  },
   "exclude": [
+    ".circleci",
     ".github",
     ".husky",
     ".nuxt",
@@ -16,9 +20,7 @@
     "assets",
     "config",
     "dist",
-    "manifests/icons",
     "node_modules",
-    "static",
-    "vega-examples",
+    "vega-examples"
   ]
 }
