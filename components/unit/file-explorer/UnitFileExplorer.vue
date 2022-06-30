@@ -1,127 +1,107 @@
 <template>
-  <div v-if="fileManager !== null">
-    <VCard
-      v-click-outside="{
-        handler: () => {
-          mini = true
-        },
-        closeConditional: () => !mini
-      }"
-      class="pa-2 mb-6 explorer"
-      :min-height="height"
-      height="auto"
-      flat
-    >
-      <style v-if="isFileLoading">
-        :root {
-        --cursor-style: wait !important;
-        }
-      </style>
-      <VNavigationDrawer
-        ref="drawer"
-        :mini-variant.sync="mini"
-        :mini-variant-width="miniWidth"
-        absolute
-        permanent
-        width="100%"
-        style="z-index: 1000"
-      >
-        <template #prepend>
-          <VListItem class="px-2">
-            <VBtn icon @click="mini = !mini">
+  <div v-if="fileManager">
+    <VCard class="pa-2 mb-6 explorer" height="100%" flat>
+      <VRow>
+        <VExpandTransition>
+          <VCol cols="12" :md="mini ? 4 : 6" :lg="mini ? 3 : 6">
+            <VListItem class="px-2">
               <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
-            </VBtn>
-
-            <VListItemTitle class="mx-4">
-              File Explorer
-            </VListItemTitle>
-
-            <VBtn icon @click.stop="mini = !mini">
-              <VIcon>$vuetify.icons.mdiChevronLeft</VIcon>
-            </VBtn>
-          </VListItem>
-          <VListItem v-if="!mini">
-            <VTextField
-              v-model="search"
-              label="Search for files"
-              placeholder="Enter part of a file name..."
-              clearable
-              hide-details
-              prepend-icon="$vuetify.icons.mdiMagnify"
-              class="my-4 pr-3"
-              style="max-width: 500px"
-              outlined
+              <VListItemTitle class="mx-4">
+                File Explorer
+              </VListItemTitle>
+              <VSpacer />
+              <VBtn icon @click="mini = !mini">
+                <VIcon v-if="mini">
+                  $vuetify.icons.mdiChevronRight
+                </VIcon>
+                <VIcon v-else>
+                  $vuetify.icons.mdiChevronLeft
+                </VIcon>
+              </VBtn>
+            </VListItem>
+            <VDivider />
+            <VListItem>
+              <VTextField
+                v-model="search"
+                label="Search for files"
+                placeholder="Enter part of a file name..."
+                clearable
+                hide-details
+                prepend-icon="$vuetify.icons.mdiMagnify"
+                class="my-4 pr-3"
+                outlined
+                dense
+                @input="searchFile"
+              />
+            </VListItem>
+            <VTreeview
+              ref="filesTree"
               dense
-            />
-          </VListItem>
-        </template>
-
-        <div :style="drawerMiniFileLabelStyle" class="drawer-mini-file-label">
-          <div>{{ selectedItem.name }}</div>
-        </div>
-
-        <div :class="miniWidthPaddingLeftClass">
-          <VTreeview
-            dense
-            open-on-click
-            activatable
-            return-object
-            transition
-            rounded
-            :search="search"
-            :items="treeItems"
-            :active.sync="active"
-          >
-            <template #prepend="{ item }">
-              <VIcon>
-                {{ item.icon }}
-              </VIcon>
+              open-on-click
+              activatable
+              return-object
+              transition
+              rounded
+              :open.sync="open"
+              :search="search"
+              :items="treeItems"
+              :active.sync="active"
+            >
+              <template #prepend="{ item }">
+                <VIcon>
+                  {{ item.icon }}
+                </VIcon>
+              </template>
+            </VTreeview>
+          </VCol>
+        </VExpandTransition>
+        <VDivider vertical />
+        <VCol cols="12" :md="mini ? 8 : 6" :lg="mini ? 8 : 6">
+          <VCardTitle class="justify-center">
+            Explore your files
+          </VCardTitle>
+          <VCardText>
+            <template v-if="filename">
+              <div class="mr-2">
+                Exploring file <strong>{{ filename }}</strong>
+              </div>
+              <BaseButtonDownload small :href="path" :filename="filename" />
+              <component
+                :is="componentForType"
+                v-bind="{ fileManager, filename }"
+                v-if="supportedTypes.has(fileType)"
+                @loading="onLoading"
+                @select-accessor="onSelectAccessor"
+              />
+              <UnitFileExplorerViewerUnknown
+                v-else
+                v-bind="{ fileManager, filename }"
+                @loading="onLoading"
+              />
+              <div v-if="customPipelineOptions">
+                <UnitPipelineCustom
+                  v-bind="{
+                    fileManager,
+                    customPipeline,
+                    customPipelineOptions
+                  }"
+                  @update="onUnitResultsUpdate"
+                />
+                <UnitFilterableTable
+                  v-if="tableData"
+                  :data="tableData.result"
+                />
+              </div>
             </template>
-          </VTreeview>
-        </div>
-      </VNavigationDrawer>
-      <VCardTitle class="justify-center">
-        Explore your files
-      </VCardTitle>
-      <div :class="miniWidthPaddingLeftClass">
-        <VCardText>
-          <template v-if="filename">
-            <div class="mr-2">
-              Exploring file <strong>{{ filename }}</strong>
-            </div>
-            <BaseButtonDownload small :href="path" :filename="filename" />
-            <component
-              :is="componentForType"
-              v-if="supportedTypes.has(fileType)"
-              :filename="filename"
-              @loading="onLoading"
-              @select-accessor="onSelectAccessor"
-            />
-            <UnitFileExplorerViewerUnknown
-              v-else
-              :filename="filename"
-              @loading="onLoading"
-            />
-          </template>
-          <template v-else>
-            <p>
-              Select a file on the left panel to see it in more details here
-            </p>
-          </template>
-        </VCardText>
-      </div>
+            <template v-else>
+              <p>
+                Select a file on the left panel to see it in more details here
+              </p>
+            </template>
+          </VCardText>
+        </VCol>
+      </VRow>
     </VCard>
-    <div v-if="customPipelineOptions">
-      <UnitPipelineCustom
-        v-bind="{
-          customPipeline,
-          customPipelineOptions,
-          hash: 'file-explorer'
-        }"
-        @update="onUnitResultsUpdate"
-      />
-      <UnitFilterableTable v-if="tableData" v-bind="{ ...tableData.result }" />
-    </div>
   </div>
 </template>
 
@@ -129,7 +109,6 @@
 import _ from 'lodash'
 import { mapState } from 'vuex'
 import { jsonToTableConverter } from '~/utils/generic-pipelines'
-
 export default {
   name: 'UnitFileExplorer',
   data() {
@@ -145,9 +124,11 @@ export default {
       ]),
       containers: new Set(['folder', 'zip']),
       mini: true,
-      miniWidth: 48,
       summaryPanelActive: [0],
-      search: '',
+      search: null,
+      open: [],
+      lastOpen: [],
+      allOpened: false,
       isFileLoading: false,
       height: 500,
       tableData: undefined,
@@ -229,14 +210,21 @@ export default {
       }
     }
   },
-  watch: {
-    mini(mini) {
-      // hide scrollbar in mini variant of drawer
-      const overflowY = mini ? 'hidden' : 'visible'
-      this.$refs.drawer.$el.children[1].style.overflowY = overflowY
-    }
-  },
   methods: {
+    // Open all treeview when we are searching for something
+    searchFile() {
+      if (this.search) {
+        if (!this.allOpened) {
+          this.lastOpen = this.open
+          this.allOpened = true
+          this.$refs.filesTree.updateAll(true)
+        }
+      } else {
+        this.$refs.filesTree.updateAll(false)
+        this.allOpened = false
+        this.open = this.lastOpen
+      }
+    },
     onLoading(loading) {
       this.isFileLoading = loading
     },
@@ -270,33 +258,13 @@ export default {
   }
 }
 </script>
-
 <style>
-.drawer-mini-file-label {
-  transform: rotate(270deg);
-  transform-origin: top left;
-
-  display: flex;
-  align-items: center;
-
-  position: absolute;
-}
-
-.drawer-mini-file-label > div {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-
-  color: rgba(0, 0, 0, 0.87);
-}
-
 .explorer,
 .explorer .v-icon,
 .explorer .v-treeview-node__root,
 .explorer .v-treeview-node__root > .v-treeview-node__content > * {
   cursor: var(--cursor-style);
 }
-
 .explorer__content {
   max-height: 500px;
   overflow-y: scroll;
