@@ -1,9 +1,9 @@
 <template>
   <div v-if="fileManager">
-    <VCard class="pa-2 mb-6 explorer" height="100%" flat>
+    <VCard class="pa-2 explorer" width="100%" flat>
       <VRow>
         <VExpandTransition>
-          <VCol cols="12" :md="mini ? 4 : 6" :lg="mini ? 3 : 6">
+          <VCol cols="12" :md="mini ? 4 : 6" :lg="mini ? 3 : 6" class="explorer__content">
             <VListItem class="px-2">
               <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
               <VListItemTitle class="mx-4">
@@ -56,49 +56,58 @@
           </VCol>
         </VExpandTransition>
         <VDivider vertical />
-        <VCol cols="12" :md="mini ? 8 : 6" :lg="mini ? 8 : 6">
-          <VCardTitle class="justify-center">
-            Explore your files
-          </VCardTitle>
-          <VCardText>
+        <VCol cols="12" :md="mini ? 8 : 6" :lg="mini ? 9 : 6" class="explorer__content">
+          <VCard flat style="height: 100%">
             <template v-if="filename">
-              <div class="mr-2">
-                Exploring file <strong>{{ filename }}</strong>
-              </div>
-              <BaseButtonDownload small :href="path" :filename="filename" />
-              <component
-                :is="componentForType"
-                v-bind="{ fileManager, filename }"
-                v-if="supportedTypes.has(fileType)"
-                @loading="onLoading"
-                @select-accessor="onSelectAccessor"
-              />
-              <UnitFileExplorerViewerUnknown
-                v-else
-                v-bind="{ fileManager, filename }"
-                @loading="onLoading"
-              />
-              <div v-if="customPipelineOptions">
-                <UnitPipelineCustom
-                  v-bind="{
-                    fileManager,
-                    customPipeline,
-                    customPipelineOptions
-                  }"
-                  @update="onUnitResultsUpdate"
+              <VCardTitle v-if="filename" class="justify-center pa-0 mx-4">
+                <span class="text-subtitle-1">Exploring file: <strong>{{ filename }}</strong></span>
+                <VSpacer />
+                <BaseButtonDownload
+                  small
+                  :href="path"
+                  :filename="filename"
                 />
-                <UnitFilterableTable
-                  v-if="tableData"
-                  :data="tableData.result"
+              </VCardTitle>
+              <VCardText>
+                <component
+                  :is="componentForType"
+                  v-bind="{ fileManager, filename }"
+                  v-if="supportedTypes.has(fileType)"
+                  @loading="onLoading"
+                  @select-accessor="onSelectAccessor"
                 />
-              </div>
+                <UnitFileExplorerViewerUnknown
+                  v-else
+                  v-bind="{ fileManager, filename }"
+                  @loading="onLoading"
+                />
+                <div v-if="customPipelineOptions">
+                  <UnitPipelineCustom
+                    v-bind="{
+                      fileManager,
+                      customPipeline,
+                      customPipelineOptions
+                    }"
+                    hash="file-explorer"
+                    @update="onUnitResultsUpdate"
+                  />
+                  <UnitFilterableTable
+                    v-if="tableData"
+                    :data="tableData.result"
+                  />
+                </div>
+              </VCardText>
             </template>
             <template v-else>
-              <p>
-                Select a file on the left panel to see it in more details here
-              </p>
+              <VCardText style="height: 100%;">
+                <VRow style="height: 100%;" align="center" justify="center">
+                  <p>
+                    Select a file on the left panel to see it in more details here
+                  </p>
+                </VRow>
+              </VCardText>
             </template>
-          </VCardText>
+          </VCard>
         </VCol>
       </VRow>
     </VCard>
@@ -266,8 +275,13 @@ export default {
   cursor: var(--cursor-style);
 }
 .explorer__content {
-  max-height: 500px;
+  max-height: calc(100vh - 60px - 48px);
   overflow-y: scroll;
   overflow-x: hidden;
+}
+.center {
+  height: 100%;
+  align-content: center;
+  justify-content: center;
 }
 </style>
