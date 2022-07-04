@@ -110,7 +110,7 @@
     "vega-lite": "^5.1.1",
     "vue2-ace-editor": "^0.0.15",
     "vuetify": "^2.6.7",
-    "webpack": "^4.46.0",
+    "webpack": "^5.73.0",
     "worker-loader": "^3.0.8"
   },
   "devDependencies": {
