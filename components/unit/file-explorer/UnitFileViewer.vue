@@ -20,13 +20,25 @@
             {{ tabName }}
           </VTab>
         </VTabs>
-        <VTabsItems v-model="tab">
+        <VTabsItems v-model="tab" class="mt-3">
           <VTabItem>
             <component
               :is="fileViewerComponent"
               v-bind="{ fileManager, filename }"
               @loading="onLoading"
               @select-accessor="onSelectAccessor"
+            />
+          </VTabItem>
+          <VTabItem>
+            <UnitFileExplorerViewerRaw
+              v-bind="{ fileManager, filename }"
+              @loading="onLoading"
+            />
+          </VTabItem>
+          <VTabItem>
+            <UnitFileExplorerViewerSchema
+              v-bind="{ fileManager, filename }"
+              @loading="onLoading"
             />
           </VTabItem>
         </VTabsItems>
@@ -61,6 +73,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import UnitFileExplorerViewerCsv from './viewer/UnitFileExplorerViewerCsv.vue'
 import { jsonToTableConverter } from '~/utils/generic-pipelines'
 export default {
   name: 'UnitFileExplorer',
@@ -122,15 +135,8 @@ export default {
     },
     onUnitResultsUpdate(result) {
       this.tableData = result
-    },
-    async fetchSchema() {
-      const path = (await import('@/assets/data/Twitter_model.json')).default
-      const response = await window.fetch(path)
-      const jsonSchema = await response.json()
-      this.treeItems = Object.keys(jsonSchema).map((k, idx) => {
-        return { name: jsonSchema[k].filename, id: idx }
-      })
     }
-  }
+  },
+  components: { UnitFileExplorerViewerCsv }
 }
 </script>

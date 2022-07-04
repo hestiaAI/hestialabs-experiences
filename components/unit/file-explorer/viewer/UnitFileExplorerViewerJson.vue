@@ -3,10 +3,7 @@
     Loading
   </div>
   <div v-else-if="error">
-    <p>Could not parse file. Showing content instead</p>
-    <div class="explorer__content">
-      {{ jsonText }}
-    </div>
+    <p>Could not parse the file. Please use the "RAW" tab to visualise it.</p>
   </div>
   <div v-else>
     <BaseSearchBar v-model="search" :loading="searching" />
