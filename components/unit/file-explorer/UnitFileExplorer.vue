@@ -1,14 +1,12 @@
 <template>
-  <div v-if="fileManager">
+  <div v-if="fileManager" :class="isLoading ? 'loading' : ''">
     <VCard class="pa-2 explorer" width="100%" flat>
       <VRow>
         <VExpandTransition>
           <VCol cols="12" :md="mini ? 4 : 6" :lg="mini ? 3 : 6" class="explorer__content">
             <VListItem class="px-2">
               <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
-              <VListItemTitle class="mx-4">
-                File Explorer
-              </VListItemTitle>
+              <span class="mx-4">File Explorer</span>
               <VSpacer />
               <VBtn icon @click="mini = !mini">
                 <VIcon v-if="mini">
@@ -20,22 +18,20 @@
               </VBtn>
             </VListItem>
             <VDivider />
-            <VListItem>
-              <VTextField
-                v-model="search"
-                label="Search for files"
-                placeholder="Enter part of a file name..."
-                clearable
-                hide-details
-                prepend-icon="$vuetify.icons.mdiMagnify"
-                class="my-4 pr-3"
-                outlined
-                dense
-                @input="searchFile"
-              />
-            </VListItem>
+            <VTextField
+              v-model="search"
+              label="Search for entries"
+              placeholder="Enter part of the name..."
+              clearable
+              hide-details
+              prepend-icon="$vuetify.icons.mdiMagnify"
+              class="ma-2 pa-3"
+              outlined
+              dense
+              @input="searchEntry"
+            />
             <VTreeview
-              ref="filesTree"
+              ref="tree"
               dense
               open-on-click
               activatable
@@ -57,57 +53,10 @@
         </VExpandTransition>
         <VDivider vertical />
         <VCol cols="12" :md="mini ? 8 : 6" :lg="mini ? 9 : 6" class="explorer__content">
-          <VCard flat style="height: 100%">
-            <template v-if="filename">
-              <VCardTitle v-if="filename" class="justify-center pa-0 mx-4">
-                <span class="text-subtitle-1">Exploring file: <strong>{{ filename }}</strong></span>
-                <VSpacer />
-                <BaseButtonDownload
-                  small
-                  :href="path"
-                  :filename="filename"
-                />
-              </VCardTitle>
-              <VCardText>
-                <component
-                  :is="componentForType"
-                  v-bind="{ fileManager, filename }"
-                  v-if="supportedTypes.has(fileType)"
-                  @loading="onLoading"
-                  @select-accessor="onSelectAccessor"
-                />
-                <UnitFileExplorerViewerUnknown
-                  v-else
-                  v-bind="{ fileManager, filename }"
-                  @loading="onLoading"
-                />
-                <div v-if="customPipelineOptions">
-                  <UnitPipelineCustom
-                    v-bind="{
-                      fileManager,
-                      customPipeline,
-                      customPipelineOptions
-                    }"
-                    hash="file-explorer"
-                    @update="onUnitResultsUpdate"
-                  />
-                  <UnitFilterableTable
-                    v-if="tableData"
-                    :data="tableData.result"
-                  />
-                </div>
-              </VCardText>
-            </template>
-            <template v-else>
-              <VCardText style="height: 100%;">
-                <VRow style="height: 100%;" align="center" justify="center">
-                  <p>
-                    Select a file on the left panel to see it in more details here
-                  </p>
-                </VRow>
-              </VCardText>
-            </template>
-          </VCard>
+          <UnitFileViewer
+            v-bind="{ selectedItem }"
+            @loading="onLoading"
+          />
         </VCol>
       </VRow>
     </VCard>
@@ -117,32 +66,17 @@
 <script>
 import _ from 'lodash'
 import { mapState } from 'vuex'
-import { jsonToTableConverter } from '~/utils/generic-pipelines'
 export default {
   name: 'UnitFileExplorer',
   data() {
     return {
-      supportedTypes: new Set([
-        'json',
-        'csv',
-        'pdf',
-        'img',
-        'html',
-        'txt',
-        'xlsx'
-      ]),
       containers: new Set(['folder', 'zip']),
       mini: true,
-      summaryPanelActive: [0],
       search: null,
       open: [],
       lastOpen: [],
       allOpened: false,
-      isFileLoading: false,
-      height: 500,
-      tableData: undefined,
-      customPipeline: jsonToTableConverter,
-      customPipelineOptions: undefined
+      isLoading: false
     }
   },
   computed: {
@@ -154,8 +88,6 @@ export default {
       set([item]) {
         // item might be undefined (when unselecting)
         if (item) {
-          // close drawer when file is selected
-          this.mini = true
           if (!this.containers.has(item.type)) {
             this.$store.commit('setFileExplorerCurrentItem', item)
           }
@@ -176,74 +108,27 @@ export default {
         return {}
       }
     },
-    fileType() {
-      // @fileType should match the postfix of the Vue component name
-      return this.selectedItem?.type
-    },
-    filename() {
-      return this.selectedItem.filename
-    },
     treeItems() {
       return this.fileManager.getTreeItems()
-    },
-    path() {
-      // TODO avoid code duplication with viewer/mixin-path
-      // maybe by setting path as an attribute on every viewer
-      if (this.fileManager.fileDict[this.filename]) {
-        return URL.createObjectURL(this.fileManager.fileDict[this.filename])
-      }
-      return ''
-    },
-    componentForType() {
-      const { fileType } = this
-      if (!fileType) {
-        return
-      }
-      const postfix = fileType[0].toUpperCase() + fileType.substring(1)
-      return () =>
-        import(
-          `~/components/unit/file-explorer/viewer/UnitFileExplorerViewer${postfix}`
-        )
-    },
-    miniWidthPaddingLeftClass() {
-      return `pl-${parseInt(this.miniWidth / 4)}`
-    },
-    drawerMiniFileLabelStyle() {
-      const { miniWidth: w, height: h } = this
-      const px = `${w}px`
-      return {
-        minWidth: px,
-        height: px,
-        bottom: `-${w - 18}px`,
-        maxWidth: `${h - w - 20}px`
-      }
     }
   },
   methods: {
     // Open all treeview when we are searching for something
-    searchFile() {
+    searchEntry() {
       if (this.search) {
         if (!this.allOpened) {
           this.lastOpen = this.open
           this.allOpened = true
-          this.$refs.filesTree.updateAll(true)
+          this.$refs.tree.updateAll(true)
         }
       } else {
-        this.$refs.filesTree.updateAll(false)
+        this.$refs.tree.updateAll(false)
         this.allOpened = false
         this.open = this.lastOpen
       }
     },
     onLoading(loading) {
-      this.isFileLoading = loading
-    },
-    onSelectAccessor(accessor) {
-      // TODO make this work better
-      // const options = await createTableOptions(this.fileManager, accessor)
-      this.customPipelineOptions = [{ accessor }]
-    },
-    onUnitResultsUpdate(result) {
-      this.tableData = result
+      this.isLoading = loading
     },
     searchItemWithFilename(filename) {
       function findItem(item) {
@@ -275,13 +160,15 @@ export default {
   cursor: var(--cursor-style);
 }
 .explorer__content {
-  max-height: calc(100vh - 60px - 48px);
+  height: calc(100vh - 60px - 48px);
   overflow-y: scroll;
   overflow-x: hidden;
 }
-.center {
-  height: 100%;
-  align-content: center;
-  justify-content: center;
+.explorer__select {
+  width: 11.5rem;
+}
+
+.loading {
+  --cursor-style: wait !important;
 }
 </style>
