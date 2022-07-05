@@ -61,7 +61,7 @@ npm test
 Run test for one or more packages:
 
 ```sh
-npm run test:ts-node -- <packageNameCamelCased_1> [<packageNameCamelCased_2> ...]
+npm run test:ts-node -- <package1> [<package2> ...]
 ```
 
 ## Package management
