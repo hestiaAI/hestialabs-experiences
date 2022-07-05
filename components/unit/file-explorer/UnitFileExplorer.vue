@@ -160,9 +160,9 @@ export default {
   cursor: var(--cursor-style);
 }
 .explorer__content {
-  height: calc(100vh - 60px - 48px);
-  overflow-y: scroll;
-  overflow-x: hidden;
+  min-height: calc(100vh - 60px - 48px);
+  /*overflow-y: scroll;
+  overflow-x: hidden;*/
 }
 .explorer__select {
   width: 11.5rem;
