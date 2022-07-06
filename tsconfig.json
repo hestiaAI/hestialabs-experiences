@@ -16,6 +16,7 @@
     "allowSyntheticDefaultImports": true,
     "types": ["node"],
     "baseUrl": ".",
+    "resolveJsonModule": true,
 
     // https://bobbyhadz.com/blog/typescript-cannot-find-module
     "moduleResolution": "node",

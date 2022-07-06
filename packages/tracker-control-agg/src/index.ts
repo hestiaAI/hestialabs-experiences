@@ -1,3 +1,4 @@
+import packageJSON from '../package.json'
 import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/tracker-control.png'
 import viewBlocks from './blocks'
@@ -15,10 +16,9 @@ const options: ExperienceOptions = {
     'tracker-control': '**/block00.json'
   },
   icon: icon,
-  slug: 'tracker-control-agg',
   subtitle: 'Tracking data',
   title: 'TrackerControl Agg',
   viewBlocks
 }
 
-export default new Experience(options)
+export default new Experience(options, packageJSON, import.meta.url)

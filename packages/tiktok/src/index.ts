@@ -1,3 +1,4 @@
+import packageJSON from '../package.json'
 import { Experience, ExperienceOptions } from '@/index'
 import { theEyeballs } from '@/collaborators/index'
 import icon from '@/icons/tiktok.png'
@@ -16,9 +17,8 @@ const options: ExperienceOptions = {
   },
   hideFileExplorer: false,
   icon: icon,
-  slug: 'tiktok',
   title: 'TikTok',
   viewBlocks
 }
 
-export default new Experience(options)
+export default new Experience(options, packageJSON, import.meta.url)

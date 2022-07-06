@@ -1,3 +1,4 @@
+import packageJSON from '../package.json'
 import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/amazon.png'
 
@@ -6,9 +7,8 @@ const options: ExperienceOptions = {
   hideSummary: false,
   hideFileExplorer: false,
   icon: icon,
-  slug: 'amazon',
   title: 'Amazon',
   viewBlocks: []
 }
 
-export default new Experience(options)
+export default new Experience(options, packageJSON, import.meta.url)
