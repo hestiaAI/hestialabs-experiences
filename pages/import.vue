@@ -278,7 +278,7 @@ export default {
         this.experience.version = 1
       }
       const { version } = this.experience
-      if (version < 3) {
+      if (Number.isInteger(version) && version < 3) {
         // Rename "selected" and "includedResults" to "value"
         const newConsentForm = JSON.parse(JSON.stringify(this.consentForm))
         for (const section of newConsentForm) {

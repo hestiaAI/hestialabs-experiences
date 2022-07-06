@@ -91,7 +91,7 @@ import { createObjectURL, mimeTypes } from '@/utils/utils'
 
 // In the case of changes that would break the import, this version number must be incremented
 // and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
-const VERSION = 3
+// const VERSION = 3
 
 export default {
   data() {
@@ -157,7 +157,9 @@ export default {
           this.destinationBubbleName
         )
         return publicKey
-      } else { return this.$store.getters.config(this.$route).publicKey }
+      } else {
+        return this.$store.getters.config(this.$route).publicKey
+      }
     },
     async downloadZIP(encrypt) {
       this.generateStatus = false
@@ -186,13 +188,15 @@ export default {
       const gitRevision = revText.replace(/[\n\r]/g, '')
       const timestamp = Date.now()
       this.filename = await this.makeFilename(timestamp)
-      const experience = {
-        experience: this.$route.params.experience,
+      const { experience } = this.$route.params
+      const { version } = await import(`/node_modules/@hestiaai/${experience}/package.json`)
+      const experienceData = {
+        experience,
         timestamp,
-        version: VERSION,
+        version,
         gitRevision
       }
-      zip.file('experience.json', JSON.stringify(experience, null, 2))
+      zip.file('experience.json', JSON.stringify(experienceData, null, 2))
       // Add consent log
       zip.file('consent.json', JSON.stringify(this.consentForm, null, 2))
       // Add included data
@@ -230,26 +234,25 @@ export default {
       }
       return content
     },
-    getCookie(name) {
-      if (!document.cookie) {
-        return null
-      }
-      const cookie = document.cookie
-        .split(';')
-        .map(c => c.trim())
-        .filter(c => c.startsWith(name + '='))
-      if (cookie.length === 0) {
-        return null
-      }
-      return decodeURIComponent(cookie[0].split('=')[1])
-    },
+    // getCookie(name) {
+    //   if (!document.cookie) {
+    //     return null
+    //   }
+    //   const cookie = document.cookie
+    //     .split(';')
+    //     .map(c => c.trim())
+    //     .filter(c => c.startsWith(name + '='))
+    //   if (cookie.length === 0) {
+    //     return null
+    //   }
+    //   return decodeURIComponent(cookie[0].split('=')[1])
+    // },
     async sendForm() {
       this.sentStatus = false
       this.sentErrorMessage = undefined
       this.sentProgress = true
       const destBubble = this.destinationBubbleName
       const content = await this.generateZIP(true)
-      // TODO well...
       const { password } = this.$auth.user
       const zip = new File([content], this.filename, {
         type: 'application/zip'
