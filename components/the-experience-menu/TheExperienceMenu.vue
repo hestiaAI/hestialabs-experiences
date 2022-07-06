@@ -1,9 +1,17 @@
 <template>
   <div>
-    <template v-for="({ experiences, heading }, index) in sections">
-      <div v-if="experiences.length > 0" :key="index">
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <h1 class="mt-6 mb-4 text-h4" v-html="heading" />
+    <template v-for="({ experiences, heading, collaborator }, index) in sections">
+      <div v-if="experiences.length" :key="index">
+        <div class="mt-6 mb-4">
+          <template v-if="collaborator">
+            <span class="text-overline">Made for</span>
+            <CollaboratorLink v-if="collaborator" :collaborator="collaborator" :width="250" />
+          </template>
+          <template v-else>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <h1 class="text-h4" v-html="heading" />
+          </template>
+        </div>
         <component :is="component" v-bind="{ experiences }" />
       </div>
     </template>
@@ -12,6 +20,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { groupBy } from 'lodash-es'
 
 const TheExperienceMenuCards = () =>
   import('@/components/the-experience-menu/TheExperienceMenuCards')
@@ -32,11 +41,17 @@ export default {
   computed: {
     ...mapGetters(['enabledExperiences', 'disabledExperiences']),
     sections() {
+      const enabledExperiences = this.filterExperiences(this.enabledExperiences)
+      const experiencesByCollaborator = groupBy(enabledExperiences, 'collaborator.title')
       return [
-        {
-          experiences: this.filterExperiences(this.enabledExperiences),
-          heading: 'Public experiences'
-        },
+        ...Object.values(experiencesByCollaborator).map((experiences) => {
+          const { collaborator } = experiences[0]
+          return {
+            experiences,
+            collaborator,
+            heading: collaborator?.title || 'Public experiences'
+          }
+        }),
         {
           experiences: this.filterExperiences(this.disabledExperiences),
           heading: `
