@@ -139,7 +139,14 @@ export const actions = {
             return import(`@hestiaai/${name}/dist`)
           })
         )
-      ).map(module => module.default.options)
+      ).map((module) => {
+        const { name, version, options } = module.default
+        return {
+          slug: name,
+          version,
+          ...options
+        }
+      })
 
       commit('setExperiences', experiences)
       commit('setLoaded')

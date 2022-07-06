@@ -52,7 +52,7 @@ test('generates a zip', async() => {
       },
       $route: {
         params: {
-          key: 'test'
+          experience: 'twitter'
         }
       }
     }
