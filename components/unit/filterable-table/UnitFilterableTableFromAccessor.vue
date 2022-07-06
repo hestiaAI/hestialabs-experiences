@@ -7,7 +7,6 @@
 
 import { mapState } from 'vuex'
 import UnitFilterableTable from './UnitFilterableTable.vue'
-import { createAccessor } from '@/utils/accessor'
 export default {
   components: { UnitFilterableTable },
   props: {
@@ -41,13 +40,8 @@ export default {
   },
   methods: {
     async fetchItems() {
-      const items = await Promise.all(this.jsonPaths.map(async(jsonPath) => {
-        const accessor = createAccessor(this.filename, jsonPath)
-        const values = await this.fileManager.findMatchingObjects(accessor)
-        console.log(values)
-        return values
-      }))
-      console.log(items)
+      this.items = await this.fileManager.findAllMatchingObjects(this.filename, this.jsonPaths)
+      console.log(this.items)
     }
   }
 }

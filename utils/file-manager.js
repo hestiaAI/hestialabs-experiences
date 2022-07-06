@@ -379,6 +379,61 @@ export default class FileManager {
     return objects.filter(m => m).flat()
   }
 
+  async findAllMatchingObjects(filename, jsonPaths) {
+    const { JSONPath } = require('jsonpath-plus')
+    function getIdxs(path, maxLength = -1) {
+      const re = /\[(:?\d)\]/g
+      return [...path.matchAll(re)].map(m => m[1]).slice(0, maxLength).join('')
+    }
+    function getNbArrays(path) {
+      const re = /\[(:?\*)\]/g
+      return [...path.matchAll(re)].length
+    }
+    function computeForeignKey(pathValue, pathPrimary, pathSecondary) {
+      const minLength = Math.min(getNbArrays(pathPrimary), getNbArrays(pathSecondary))
+      return getIdxs(pathValue, minLength)
+    }
+
+    function leftJoinPaths(primary, secondaries) {
+      const secondariesFKs = {}
+      secondaries.forEach((secondary) => {
+        secondary.values.forEach((item) => {
+          const foreignKey = computeForeignKey(item.path, primary.path, secondary.path)
+          if (foreignKey in secondariesFKs) {
+            secondariesFKs[foreignKey].push(item)
+          } else {
+            secondariesFKs[foreignKey] = [item]
+          }
+        })
+      })
+
+      return primary.values.map((primaryItem) => {
+        const result = {}
+        secondaries.forEach((secondary) => {
+          result[primaryItem.parentProperty] = primaryItem.value
+          const foreignKey = computeForeignKey(primaryItem.path, primary.path, secondary.path)
+          const secondaryValues = secondariesFKs[foreignKey] || []
+          secondaryValues.forEach((secondaryItem) => { result[secondaryItem.parentProperty] = secondaryItem.value })
+        })
+        return result
+      })
+    }
+    try {
+      const text = await this.getPreprocessedText(filename)
+      const json = JSON.parse(text)
+      const result = jsonPaths.map((path) => {
+        return {
+          path,
+          values: JSONPath({ path, json, resultType: 'all' })
+        }
+      }).sort((a, b) => b.values.length - a.values.length)
+      return leftJoinPaths(result[0], result.slice(1))
+    } catch (error) {
+      console.error('error during matching', error)
+      return []
+    }
+  }
+
   /**
    * Computes and returns the number of "data points" in a file if not already computed.
    * @param {String} filePath
