@@ -89,10 +89,6 @@ import { padNumber } from '~/utils/utils'
 import { encryptFile } from '~/utils/encryption'
 import { createObjectURL, mimeTypes } from '@/utils/utils'
 
-// In the case of changes that would break the import, this version number must be incremented
-// and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
-// const VERSION = 3
-
 export default {
   data() {
     const experience = this.$store.getters.experience(this.$route)
