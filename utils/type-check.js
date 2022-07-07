@@ -1,5 +1,5 @@
 import { Analyzer, DATA_TYPES } from 'type-analyzer'
-import _ from 'lodash'
+import { shuffle } from 'lodash-es'
 import {
   isValidDate,
   dateFormatter,
@@ -91,7 +91,7 @@ export function getNotNullSampleFromData(headers, items, nbSamples) {
     items.length,
     nbSamples > 0 ? Math.floor(nbSamples) : 0
   )
-  const randomIdxs = _.shuffle(
+  const randomIdxs = shuffle(
     Array(items.length)
       .fill()
       .map((item, idx) => idx)

@@ -139,4 +139,3 @@ export default {
   word-break: normal; /* maybe !important  */
 }
 </style>
-<style scoped></style>

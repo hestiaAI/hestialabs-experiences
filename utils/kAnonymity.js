@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { groupBy } from 'lodash-es'
 
 function findK(arr) {
   let kMin = 0
@@ -23,7 +23,7 @@ function filterOut(arr, k) {
 
 export function kAnonymityFilter(values, groupKeys, otherKeys) {
   const table = []
-  const grouped = _.groupBy(values, n => groupKeys.map(x => n[x]))
+  const grouped = groupBy(values, n => groupKeys.map(x => n[x]))
   const keys = Object.keys(grouped)
   for (let i = 0; i < keys.length; i++) {
     const x = keys[i]

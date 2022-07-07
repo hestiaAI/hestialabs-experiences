@@ -1,6 +1,6 @@
 <template>
   <DataValidator :data="data">
-    <div ref="view">
+    <div>
       <component
         :is="component"
         v-bind="{

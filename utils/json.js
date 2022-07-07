@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import { startCase, chunk, isObject, sumBy, isString } from 'lodash-es'
 import { toDateString } from './dates'
 
 export const nodeTypes = { TREE: 'tree', LIST: 'list', LEAF: 'leaf' }
@@ -79,7 +79,7 @@ export function minifyList(list, path, base = 0, groupsPerLevel = 10) {
     groupsPerLevel,
     Math.floor(Math.log(list.length - 1) / Math.log(groupsPerLevel))
   )
-  return _.chunk(list, groupSize).map((group, i) => {
+  return chunk(list, groupSize).map((group, i) => {
     const from = base + groupSize * i + 1
     const to = base + groupSize * i + group.length
     return {
@@ -161,7 +161,7 @@ export function filterMatchesNameOrValue(filter, name, value) {
   if (name?.toLowerCase().includes(lowerCaseFilter)) {
     return true
   }
-  if (_.isString(value) && value.toLowerCase().includes(lowerCaseFilter)) {
+  if (isString(value) && value.toLowerCase().includes(lowerCaseFilter)) {
     return true
   }
   return false
@@ -176,7 +176,7 @@ export function formatObject(object) {
   if (keys.length === 0) {
     return '{no attributes}'
   }
-  return `{attributes ${keys.map(k => _.startCase(k)).join(', ')}}`
+  return `{attributes ${keys.map(k => startCase(k)).join(', ')}}`
 }
 
 export function formatArray(array) {
@@ -188,7 +188,7 @@ export function formatArray(array) {
 }
 
 export function formatAttributeName(name) {
-  return _.startCase(name)
+  return startCase(name)
 }
 
 export function pathArrayToJsonPath(pathArray) {
@@ -202,5 +202,5 @@ export function pathArrayToJsonPath(pathArray) {
 }
 
 export function nJsonPoints(json) {
-  if (json === null) { return 0 } else if (Array.isArray(json)) { return json.length + _.sumBy(json, nJsonPoints) } else if (_.isObject(json)) { return nJsonPoints(Object.values(json)) } else { return 1 }
+  if (json === null) { return 0 } else if (Array.isArray(json)) { return json.length + sumBy(json, nJsonPoints) } else if (isObject(json)) { return nJsonPoints(Object.values(json)) } else { return 1 }
 }

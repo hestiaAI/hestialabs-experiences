@@ -32,14 +32,14 @@ $ npm install
 
 5. Clone [hestialabs-bubble-server](https://github.com/hestiaAI/hestialabs-bubble-server), and install it as described in its README.md.
 
-6. to run experiences run `npm run dev`. This runs the three repos A tab should open in your browser and allow you to run the experiences. To run it without the bubble server and access our production server instead, run `API_URL=https://bubbles.hestialabs.org npm run dev`.
+6. to run experiences run `npm run dev`. This runs the three repos A tab should open in your browser and allow you to run the experiences. To run it without the bubble server and access our production server instead, run `API_URL=https://bubbles.hestialabs.org npm run dev:no-local-server`.
 
 ## Instances
 
 The instances are deployed on [netlify](https://app.netlify.com/teams/hestia/overview), where you can see a log of their [build](https://app.netlify.com/teams/hestia/builds/). They each point to a different branch of this repo.
 
 | Instance           | [test.hestialabs.org](https://test.hestialabs.org/)                                                                                                                   | [experiences.hestialabs.org](https://experiences.hestialabs.org/)                                                                                                       | [digipower.hestialabs.org](https://digipower.hestialabs.org/)                                                                                                  | [tfac.hestialabs.org](https://tfac.hestialabs.org/)                                                                                                       |
-|:-------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| :----------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | branch             | [netlify-test](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-test)                                                                                  | [netlify](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify)                                                                                              | [netlify-digipower](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-digipower)                                                                 | [netlify-tfac](https://github.com/hestiaAI/hestialabs-experiences/tree/netlify-tfac)                                                                      |
 | netlify name       | test-experiences                                                                                                                                                      | hestia-experiences                                                                                                                                                      | digipower                                                                                                                                                      | tfac                                                                                                                                                      |
 | purpose            | testing, typically with all features and experiences enabled                                                                                                          | our public showcase                                                                                                                                                     | the sitra project                                                                                                                                              | a tool for the [Tracking-Free Ads Coalition](https://trackingfreeads.eu/)                                                                                 |
@@ -54,7 +54,7 @@ Logs for the netlify functions are accessible in each site's netlify under Funct
 Environment variables are set in [netlify](https://app.netlify.com/sites/hestia-experiences/settings/deploys#environment)
 
 | Environment variable | Description                                                                      |
-|----------------------|----------------------------------------------------------------------------------|
+| -------------------- | -------------------------------------------------------------------------------- |
 | CONFIG_NAME          | Name of the configuration file (without extension: "workshop", "digipower" ...)  |
 | BASE_URL             | Url where the website is deployed (with protocol: "https://test.hestialabs.org") |
 | API_URL              | URL of the rest api (with protocol: "https://bubbles.hestialabs.com")            |
@@ -155,10 +155,9 @@ We work with a version of npm more recent than the one shipped with the node LTS
 
 Is is possible to dynamically create graphic representation of the data. The can take the form of charts (hystograms, pie charts etc), maps with overlay, etc.
 
-Chart type are defined by files in [this directory](https://github.com/hestiaAI/hestialabs-experiences/tree/master/components/chart/view). 
+Chart type are defined by files in [this directory](https://github.com/hestiaAI/hestialabs-experiences/tree/master/components/chart/view).
 The files use the [D3](https://vuejsexamples.com/tag/d3/) graphics and charts library on top of the [Vue framework](https://vuejs.org/).
 
 The charts are then available for use in [hestialabs](https://github.com/hestiaAI/hestialabs) experience packages. They are called in `blocks.ts` files. For instance, the [Netflix blocks.ts file](https://github.com/hestiaAI/hestialabs/blob/master/packages/netflix/src/blocks.ts) calls `ChartViewTimeSeries.vue` as defined in the file [ChartViewTimeSeries.vue](https://github.com/hestiaAI/hestialabs-experiences/blob/master/components/chart/view/ChartViewTimeSeries.vue).
 
 For debugging purposes, passing option `showTable: true` displays a text table representation of the data.
-

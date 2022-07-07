@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import { has } from 'lodash-es'
 import { mapState } from 'vuex'
 export default {
   name: 'UnitFileExplorer',
@@ -83,7 +83,7 @@ export default {
     ...mapState(['fileExplorerCurrentItem', 'fileManager']),
     active: {
       get() {
-        return _.has(this.selectedItem, 'filename') ? [this.selectedItem] : []
+        return has(this.selectedItem, 'filename') ? [this.selectedItem] : []
       },
       set([item]) {
         // item might be undefined (when unselecting)
@@ -98,8 +98,8 @@ export default {
     },
     selectedItem() {
       const item = this.fileExplorerCurrentItem
-      if (_.has(item, 'filename')) {
-        if (!_.has(item, 'type')) {
+      if (has(item, 'filename')) {
+        if (!has(item, 'type')) {
           return this.searchItemWithFilename(item.filename)
         } else {
           return item

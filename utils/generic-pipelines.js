@@ -1,5 +1,5 @@
 import { JSONPath } from 'jsonpath-plus'
-import _ from 'lodash'
+import { partition, has, omit, startCase, identity } from 'lodash-es'
 // don't import the whole of d3 or tests fail
 import { timeParse } from 'd3-time-format'
 import Ajv from 'ajv'
@@ -70,16 +70,15 @@ function extractJsonEntries(json) {
     if (isObject(node)) {
       const entries = Object.entries(node).flatMap(([k, v]) => {
         const kDate = getValidDate(k)
-        const kPretty = _.startCase(k)
+        const kPretty = startCase(k)
         // The value is not a leaf node
         if (typeof v === 'object') {
           const inner = recurse(v)
           if (!kDate) {
             return inner.map(o => ({
               ...o,
-              description: `${kPretty}${
-                o.description ? ` > ${o.description}` : ''
-              }`
+              description: `${kPretty}${o.description ? ` > ${o.description}` : ''
+                }`
             }))
           } else {
             return inner.map(o => (o.date ? o : { ...o, date: kDate }))
@@ -93,8 +92,8 @@ function extractJsonEntries(json) {
           return [{ description: `${kPretty} : ${v}` }]
         }
       })
-      const [dates, rest] = _.partition(entries, o => _.has(o, 'date'))
-      const [describedDates, undescribedDates] = _.partition(
+      const [dates, rest] = partition(entries, o => has(o, 'date'))
+      const [describedDates, undescribedDates] = partition(
         dates,
         ({ description }) => description
       )
@@ -116,7 +115,7 @@ function extractJsonEntries(json) {
       return []
     }
   }
-  return recurse(json).filter(o => _.has(o, 'date'))
+  return recurse(json).filter(o => has(o, 'date'))
 }
 
 function extractCsvEntries({ items }) {
@@ -124,10 +123,10 @@ function extractCsvEntries({ items }) {
     const entries = Object.entries(item).map(([k, v]) => {
       const date = getValidDate(v)
       return date
-        ? { date, description: `${_.startCase(k)}` }
-        : { description: `${_.startCase(k)} : ${v}` }
+        ? { date, description: `${startCase(k)}` }
+        : { description: `${startCase(k)} : ${v}` }
     })
-    const [dates, rest] = _.partition(entries, o => _.has(o, 'date'))
+    const [dates, rest] = partition(entries, o => has(o, 'date'))
     return dates.map((obj, i) => {
       const otherDates = dates.filter((_, j) => j !== i)
       const description = `${obj.description} : [${[...rest, ...otherDates]
@@ -140,7 +139,7 @@ function extractCsvEntries({ items }) {
 
 async function genericDateViewer({ fileManager, options }) {
   let filenames = fileManager.getFilenames()
-  if (_.has(options, 'acceptedPaths')) {
+  if (has(options, 'acceptedPaths')) {
     filenames = filenames.filter(name =>
       new RegExp(options.acceptedPaths).test(name)
     )
@@ -191,7 +190,7 @@ async function timedObservationViewer({ fileManager, options }) {
       throw new Error(`The regex '${m.regex}' is not valid`)
     }
   })
-  if (_.has(options, 'parser')) {
+  if (has(options, 'parser')) {
     const parser = options.parser
     if (parser in allParsers) {
       options.parser = allParsers[parser]
@@ -199,7 +198,7 @@ async function timedObservationViewer({ fileManager, options }) {
       throw new Error(`The parser ${parser} doesn't exist`)
     }
   } else {
-    options.parser = _.identity
+    options.parser = identity
   }
 
   // Get files
@@ -211,7 +210,7 @@ async function timedObservationViewer({ fileManager, options }) {
   // Process files
   const headers = ['date', 'eventSource', 'eventType', 'eventValue']
   const items = Object.entries(files).flatMap(([name, text]) => {
-    const matcher = _.find(options.fileMatchers, m => m.regex.test(name))
+    const matcher = find(options.fileMatchers, m => m.regex.test(name))
     let events
     try {
       const entries = JSONPath({
@@ -275,7 +274,7 @@ function extractJsonLocations(items) {
           latitude: +node[latHeader],
           longitude: +node[lonHeader],
           path: path.join('/'),
-          description: _.omit(node, [latHeader, lonHeader])
+          description: omit(node, [latHeader, lonHeader])
         }
       ]
     } else if (Array.isArray(node)) {
@@ -323,14 +322,14 @@ function extractCsvLocations({ items }) {
       latitude: +i[latHeader],
       longitude: +i[lonHeader],
       path: '',
-      description: _.omit(i, [latHeader, lonHeader]) // This can be slow, consider to remove it if not needed
+      description: omit(i, [latHeader, lonHeader]) // This can be slow, consider to remove it if not needed
     }
   })
 }
 
 async function genericLocationViewer({ fileManager, options }) {
   let filenames = fileManager.getFilenames()
-  if (_.has(options, 'acceptedPaths')) {
+  if (has(options, 'acceptedPaths')) {
     filenames = filenames.filter(name =>
       new RegExp(options.acceptedPaths).test(name)
     )
