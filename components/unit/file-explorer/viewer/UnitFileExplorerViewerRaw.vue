@@ -4,7 +4,14 @@
   </div>
   <div v-else>
     <div class="explorer__content">
-      <CodeEditor :value="rawText" :language="language" readonly line-numbers height="100%" />
+      <CodeEditor
+        v-if="rawText != ''"
+        :value="rawText"
+        :language="language"
+        readonly
+        line-numbers
+        height="100%"
+      />
     </div>
   </div>
 </template>
@@ -28,7 +35,6 @@ export default {
   computed: {
     language() {
       switch (this.filename.split('.').pop()) {
-        case 'js': return 'javascript'
         case 'json': return 'json'
         default: return 'text'
       }

@@ -41,7 +41,6 @@ export default {
   methods: {
     async fetchItems() {
       this.items = await this.fileManager.findAllMatchingObjects(this.filename, this.jsonPaths)
-      console.log(this.items)
     }
   }
 }

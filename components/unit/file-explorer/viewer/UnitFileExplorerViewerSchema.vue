@@ -57,6 +57,8 @@ export default {
   name: 'UnitFileExplorerViewerRaw',
   mixins: [mixin, mixinLoading],
   data() {
+    const experience = this.$store.getters.experience(this.$route)
+    console.log(experience)
     return {
       jsonSchema: '',
       leafs: {},
@@ -78,7 +80,6 @@ export default {
   computed: {
     jsonPaths() {
       const items = Object.keys(this.leafs).filter(k => this.leafs[k]).map(p => p.split(':')[1])
-      console.log(items)
       return items
     }
   },
@@ -129,7 +130,6 @@ export default {
       return obj && Object.keys(obj).length === 0
     },
     selectChip(path) {
-      // this.leafs[path] = !this.leafs[path]
       this.$set(this.leafs, path, !this.leafs[path])
     }
 

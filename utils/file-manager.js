@@ -379,21 +379,34 @@ export default class FileManager {
     return objects.filter(m => m).flat()
   }
 
+  /**
+   * Read a JSON files and build a list of rows from a list of JSONPaths
+   * @param {*} filename the JSON file to read
+   * @param {*} jsonPaths the paths to retreive
+   * @returns A list of object with one key per JSONPath
+   */
   async findAllMatchingObjects(filename, jsonPaths) {
     const { JSONPath } = require('jsonpath-plus')
+
+    // Get all arays idx from a processed jsonPath
     function getIdxs(path, maxLength = -1) {
       const re = /\[(:?\d)\]/g
       return [...path.matchAll(re)].map(m => m[1]).slice(0, maxLength).join('')
     }
+
+    // Get the number of nested arrays in a jsonPath
     function getNbArrays(path) {
       const re = /\[(:?\*)\]/g
       return [...path.matchAll(re)].length
     }
+
+    // Compute a foreign key that uniquely identify values from the same tree path
     function computeForeignKey(pathValue, pathPrimary, pathSecondary) {
       const minLength = Math.min(getNbArrays(pathPrimary), getNbArrays(pathSecondary))
       return getIdxs(pathValue, minLength)
     }
 
+    // Left join the result of one JSON query with another one if the path of the latter is a subPath on the primary
     function leftJoinPaths(primary, secondaries) {
       const secondariesFKs = {}
       secondaries.forEach((secondary) => {
@@ -409,8 +422,8 @@ export default class FileManager {
 
       return primary.values.map((primaryItem) => {
         const result = {}
+        result[primaryItem.parentProperty] = primaryItem.value
         secondaries.forEach((secondary) => {
-          result[primaryItem.parentProperty] = primaryItem.value
           const foreignKey = computeForeignKey(primaryItem.path, primary.path, secondary.path)
           const secondaryValues = secondariesFKs[foreignKey] || []
           secondaryValues.forEach((secondaryItem) => { result[secondaryItem.parentProperty] = secondaryItem.value })
@@ -418,6 +431,7 @@ export default class FileManager {
         return result
       })
     }
+    if (!jsonPaths || !jsonPaths.length) { return [] }
     try {
       const text = await this.getPreprocessedText(filename)
       const json = JSON.parse(text)
@@ -427,9 +441,10 @@ export default class FileManager {
           values: JSONPath({ path, json, resultType: 'all' })
         }
       }).sort((a, b) => b.values.length - a.values.length)
+      // For each path/column compute the left join with the column that have the most values
       return leftJoinPaths(result[0], result.slice(1))
     } catch (error) {
-      console.error('error during matching', error)
+      console.error('Error during matching', error)
       return []
     }
   }

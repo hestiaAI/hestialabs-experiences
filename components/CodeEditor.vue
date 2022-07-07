@@ -39,7 +39,7 @@ export default {
     },
     height: {
       type: String,
-      default: '100%'
+      default: ''
     }
   },
   data() {
@@ -54,10 +54,13 @@ export default {
     }
   },
   watch: {
-    value(v) {
-      this.code = v
-      console.log(v)
+    value: {
+      immediate: true,
+      handler(v) {
+        this.code = v
+      }
     },
+
     code(v) {
       // propagate to parent component
       this.$emit('update:value', v)
@@ -69,9 +72,9 @@ export default {
       editor.setOption('showGutter', this.lineNumbers)
       editor.session.setUseWrapMode(true)
       // https://ace.c9.io/demo/autoresize.html
-      // editor.setOption('minLines', 2)
-      // editor.setOption('maxLines', 14)
-      editor.resize()
+      editor.setOption('minLines', 2)
+      editor.setOption('maxLines', 30)
+      // editor.resize()
 
       // available modes:
       // https://github.com/ajaxorg/ace/tree/master/lib/ace/mode
