@@ -4,8 +4,10 @@ import {
   validateDatabaseConfigIntegrity,
   validateDatabaseConfigSchema
 } from './lib/database-config-validation/'
-import { Experience } from './lib'
+import { Experience } from './lib/'
 import * as packages from './packages'
+
+import camelCase from 'lodash.camelcase'
 
 function test([
   name,
@@ -35,17 +37,17 @@ function test([
   }
 }
 if (process.argv.length > 2) {
-  // test a single package
-  const name: string = process.argv[2]
-  // we expect the name to be camelCased
-  const module = (packages as { [key: string]: Experience })[name]
-  if (module) {
-    test([name, module])
-  } else {
-    throw new Error(`
-The given package name "${name}" does not match a package.
-Make sure the name is camelCased`)
-  }
+  // test one or more packages
+  const names: string[] = process.argv.slice(2)
+  names.map(camelCase).forEach(name => {
+    // we expect the name to be camelCased
+    const module = (packages as { [key: string]: Experience })[name]
+    if (module) {
+      test([name, module])
+    } else {
+      throw new Error(`The name "${name}" does not match any package.`)
+    }
+  })
 } else {
   // test all packages
   Object.entries(packages).forEach(test)

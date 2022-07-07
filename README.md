@@ -58,10 +58,10 @@ Run tests for all packages:
 npm test
 ```
 
-Run test for a single package:
+Run test for one or more packages:
 
 ```sh
-npm run test:ts-node -- [packageNameCamelCased]
+npm run test:ts-node -- <package1> [<package2> ...]
 ```
 
 ## Package management

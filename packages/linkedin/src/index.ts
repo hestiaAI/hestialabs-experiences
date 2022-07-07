@@ -1,3 +1,4 @@
+import packageJSON from '../package.json'
 import { Experience, ExperienceOptions } from '@/index'
 import { linkedinConnections } from './preprocessor'
 import icon from '@/icons/linkedin.png'
@@ -16,9 +17,8 @@ const options: ExperienceOptions = {
   preprocessors: {
     '**/Connections.csv': linkedinConnections
   },
-  slug: 'linkedin',
   title: 'LinkedIn',
   viewBlocks
 }
 
-export default new Experience(options)
+export default new Experience(options, packageJSON, import.meta.url)

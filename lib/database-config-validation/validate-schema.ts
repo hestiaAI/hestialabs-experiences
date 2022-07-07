@@ -1,7 +1,7 @@
 // https://ajv.js.org/json-schema.html
 import Ajv from 'ajv'
 
-import { DatabaseConfig } from '@/types/database-config'
+import { DatabaseConfig, SQLType } from '../types/database-config'
 import { error } from '../utils'
 
 const prefix = 'http://hestia.ai/schemas/databaseConfig.json#'
@@ -127,11 +127,8 @@ const schema = {
               type: 'array',
               minItems: 2,
               maxItems: 3,
-              items: [
-                { $ref: '#column' },
-                { enum: ['INTEGER', 'TEXT', 'FLOAT', 'DATE'] }
-              ],
-              additionalItems: { type: 'string', pattern: '^.*$' }
+              items: [{ $ref: '#column' }, { enum: Object.values(SQLType) }],
+              additionalItems: { type: 'string', pattern: '^.+$' }
             }
           },
           foreignKeys: {

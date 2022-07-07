@@ -1,3 +1,4 @@
+import packageJSON from '../package.json'
 import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/google-takeout.png'
 import viewBlocks from './blocks'
@@ -16,9 +17,8 @@ const options: ExperienceOptions = {
     consent: '**/consent.json'
   },
   icon: icon,
-  slug: 'google-agg',
   title: 'Google Agg',
   viewBlocks
 }
 
-export default new Experience(options)
+export default new Experience(options, packageJSON, import.meta.url)

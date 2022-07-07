@@ -1,3 +1,4 @@
+import packageJSON from '../package.json'
 import { Experience, ExperienceOptions } from '@/index'
 import { theEyeballs } from '@/collaborators/index'
 import preprocessor from './preprocessor'
@@ -20,10 +21,9 @@ const options: ExperienceOptions = {
   preprocessors: {
     '**/*.js': preprocessor
   },
-  slug: 'twitter',
   title: 'Twitter',
   tutorialVideos: ['https://vimeo.com/691109800'],
   viewBlocks
 }
 
-export default new Experience(options)
+export default new Experience(options, packageJSON, import.meta.url)

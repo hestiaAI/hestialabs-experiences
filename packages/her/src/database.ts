@@ -79,15 +79,15 @@ const config: DatabaseConfig = {
       getters: [
         {
           column: 'name',
-          path: '$.Name'
+          path: '$.name'
         },
         {
           column: 'likedAt',
-          path: "$.['Liked at']"
+          path: '$.likedAt'
         },
         {
           column: 'matched',
-          path: '$.Matched'
+          path: '$.matched'
         }
       ]
     },
@@ -98,15 +98,15 @@ const config: DatabaseConfig = {
       getters: [
         {
           column: 'sender',
-          path: '$.Sender'
+          path: '$.sender'
         },
         {
           column: 'notificationType',
-          path: "$.['Notification type']"
+          path: '$.notificationType'
         },
         {
           column: 'notificationSentAt',
-          path: "$.['Notifcation sent at']"
+          path: '$.notificationSentAt'
         }
       ]
     },
@@ -117,11 +117,11 @@ const config: DatabaseConfig = {
       getters: [
         {
           column: 'name',
-          path: '$.Name'
+          path: '$.name'
         },
         {
           column: 'blockedAt',
-          path: "$.['Blocked at']"
+          path: '$.blockedAt'
         }
       ]
     },
@@ -132,23 +132,23 @@ const config: DatabaseConfig = {
       getters: [
         {
           column: 'conversationId',
-          path: '$.Conversation'
+          path: '$.conversation'
         },
         {
           column: 'message',
-          path: '$.Message'
+          path: '$.message'
         },
         {
           column: 'messageType',
-          path: "$.['Message type']"
+          path: '$.messageType'
         },
         {
           column: 'sender',
-          path: '$.Sender'
+          path: '$.sender'
         },
         {
           column: 'messageSentAt',
-          path: "$.['Message Sent At']"
+          path: '$.messageSentAt'
         }
       ]
     },
@@ -159,15 +159,15 @@ const config: DatabaseConfig = {
       getters: [
         {
           column: 'reportedType',
-          path: "$.['Reported type']"
+          path: '$.reportedType'
         },
         {
           column: 'reason',
-          path: '$.Reason'
+          path: '$.reason'
         },
         {
           column: 'reportedAt',
-          path: "$.['Reported at']"
+          path: '$.reportedAt'
         }
       ]
     },
@@ -178,11 +178,11 @@ const config: DatabaseConfig = {
       getters: [
         {
           column: 'name',
-          path: '$.Name'
+          path: '$.name'
         },
         {
           column: 'skippedAt',
-          path: "$.['Skipped at']"
+          path: '$.skippedAt'
         }
       ]
     },
@@ -193,51 +193,51 @@ const config: DatabaseConfig = {
       getters: [
         {
           column: 'name',
-          path: '$.Name'
+          path: '$.name'
         },
         {
           column: 'fullName',
-          path: "$.['Full name']"
+          path: '$.fullName'
         },
         {
           column: 'birthday',
-          path: '$.Birthday'
+          path: '$.birthday'
         },
         {
           column: 'lastOnlineUtc',
-          path: "$.['Last online UTC']"
+          path: '$.lastOnlineUtc'
         },
         {
           column: 'registrationDateUtc',
-          path: "$.['Registration_date UTC']"
+          path: '$.registrationDateUtc'
         },
         {
           column: 'email',
-          path: '$.Email'
+          path: '$.email'
         },
         {
           column: 'pushNotificationsEnabled',
-          path: "$.['Push notifications enabled']"
+          path: '$.pushNotificationsEnabled'
         },
         {
           column: 'lastUsedFilters',
-          path: "$.['Last used filters']"
+          path: '$.lastUsedFilters'
         },
         {
           column: 'heightInCm',
-          path: "$.['Height in cm']"
+          path: '$.heightInCm'
         },
         {
           column: 'location',
-          path: '$.Location'
+          path: '$.location'
         },
         {
           column: 'customLocation',
-          path: "$.['Custom Location']"
+          path: '$.customLocation'
         },
         {
           column: 'status',
-          path: '$.Status'
+          path: '$.status'
         }
       ]
     }

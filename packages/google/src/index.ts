@@ -1,3 +1,4 @@
+import packageJSON from '../package.json'
 import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/google-takeout.png'
 import preprocessor from './preprocessor'
@@ -19,9 +20,8 @@ const options: ExperienceOptions = {
   preprocessors: {
     '*/*.html': preprocessor
   },
-  slug: 'google',
   title: 'Google Takeout',
   viewBlocks
 }
 
-export default new Experience(options)
+export default new Experience(options, packageJSON, import.meta.url)

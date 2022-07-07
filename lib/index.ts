@@ -38,10 +38,33 @@ const defaultOptions: Partial<ExperienceOptions> = {
 
 export class Experience {
   options: ExperienceOptions
-  constructor(options: ExperienceOptions) {
+  name: string
+  version: string
+
+  constructor(
+    options: ExperienceOptions,
+    packageJSON: { name: string; version: string },
+    importMetaURL: string
+  ) {
     // spread default options first, and then provided options
     this.options = { ...defaultOptions, ...options }
     // construct default view Array
     this.options.viewBlocks = options.viewBlocks.map(createViewBlock)
+
+    const packageName = packageJSON.name.replace('@hestiaai/', '')
+
+    const match = importMetaURL.match(/\/([^/]+)\/src\//)
+    if (!match) {
+      const message = `Package directory for package "${packageName}" not found`
+      throw new Error(message)
+    }
+    const packageDirectory = match[1]
+    if (packageName !== packageDirectory) {
+      const message = `Package name "${packageName}" must match directory name "${packageDirectory}"`
+      throw new Error(message)
+    }
+
+    this.name = packageName
+    this.version = packageJSON.version
   }
 }
