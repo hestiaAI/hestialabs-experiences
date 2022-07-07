@@ -9,3 +9,5 @@ dist
 .npmrc
 
 .idea/
+
+.DS_STORE

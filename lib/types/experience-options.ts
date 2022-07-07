@@ -12,6 +12,7 @@ export type PreprocessorFunction = (input: string) => string
 export type ExperienceOptions = {
   collaborator?: Collaborator
   databaseConfig?: DatabaseConfig
+  dataModel?: object
   dataPortal?: string
   dataPortalHtml?: string
   dataPortalMessage?: string
