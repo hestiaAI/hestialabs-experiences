@@ -11,8 +11,7 @@
       "registry": "https://npm.pkg.github.com/"
     },
     "version": {
-      "conventionalCommits": true,
-      "noChangelog": true
+      "conventionalCommits": true
     }
   }
 }
