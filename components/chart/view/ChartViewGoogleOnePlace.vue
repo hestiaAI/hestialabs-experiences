@@ -144,7 +144,7 @@ export default {
         }
         res += -sum
       }
-      return res / list.length
+      return (res / list.length).toPrecision(4)
     },
     getProbababilities() {
       const list = this.getFilteredList()
