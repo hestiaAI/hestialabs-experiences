@@ -1,23 +1,32 @@
 <template>
-  <VContainer v-if="values.length > 0">
+  <VContainer>
+    <VRow>
+      <VCol v-if="placeName === ''" cols="12">
+        <VSelect
+          v-model="placeSelected"
+          :items="listOfNames"
+          label="Place"
+        />
+      </VCol>
+    </VRow>
     <VRow>
       <VCol cols="12">
-        <p v-if="total === 0" class="text-subtitle-2">
-          No records were found in your file(s).
-        </p>
-        <p v-else class="text-subtitle-2">
-          Total time spend at the {{ placeName }} : {{ total_time }} <br>
+        <p class="text-subtitle-2">
+          Total time spend at the {{ placeSelected }} : {{ total_time }} <br>
           <br>
-          Mean time spend at the {{ placeName }}: {{ mean_time }} <br>
+          Mean time spend at the {{ placeSelected }}: {{ mean_time }} <br>
           <br>
-          This map shows the other candidates proposed by Google associated to
-          the {{ placeName }}:
+          The entropy for {{ placeSelected }} is {{ computeEntropy() }}. The higher this value is, the more uncertain Google was when deciding if you visited {{ placeSelected }}.
         </p>
       </VCol>
     </VRow>
-    <template v-if="total > 0">
+    <template v-if="getFilteredList().length !== 0">
       <VRow>
         <VCol cols="12">
+          <p class="text-subtitle-2">
+            This map shows the other candidates proposed by Google associated to
+            the {{ placeSelected }}:
+          </p>
           <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
       </VRow>
@@ -26,7 +35,7 @@
 </template>
 
 <script>
-import { uniqBy } from 'lodash-es'
+import { uniqBy, groupBy, orderBy } from 'lodash-es'
 import mixin from './mixin'
 
 export default {
@@ -42,7 +51,10 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      listOfNames: this.getOrderedList(),
+      placeSelected: this.getSelectedName()
+    }
   },
   computed: {
     total() {
@@ -60,8 +72,9 @@ export default {
       return this.convertHMS(avg)
     },
     associated_names() {
-      const table = this.values.filter(x => x.winnerName === this.placeName)
+      const table = this.values.filter(x => x.winnerName === this.placeSelected)
       const uniq = uniqBy(table, x => x.loserName)
+
       const names = uniq.map((v) => {
         return {
           name: v.loserName,
@@ -91,6 +104,23 @@ export default {
     }
   },
   methods: {
+    getSelectedName() {
+      const list = this.getOrderedList()
+      if (this.placeName !== '') {
+        return this.placeName
+      } else {
+        return list[0]
+      }
+    },
+    getOrderedList() {
+      const grouped = groupBy(this.values, 'winnerName')
+      let list = Object.keys(grouped).map((x) => { return { winnerName: x, count: grouped[x].length } })
+      list = orderBy(list, 'count', 'desc').map(x => x.winnerName)
+      return list
+    },
+    getFilteredList() {
+      return this.values.filter(x => x.winnerName === this.placeSelected)
+    },
     compute_duration(d1, d2) {
       const date1 = new Date(d1).getTime()
       const date2 = new Date(d2).getTime()
@@ -98,11 +128,38 @@ export default {
       return res
     },
     get_durations() {
-      const values = this.values.filter(x => x.winnerName === this.placeName)
+      const values = this.values.filter(x => x.winnerName === this.placeSelected)
       const table = values.map(x => [x.startTimestamp, x.endTimestamp])
       const uniq = uniqBy(table, x => x[0])
       const dur = uniq.map(v => this.compute_duration(v[0], v[1]))
       return dur
+    },
+    computeEntropy() {
+      const list = this.getProbababilities()
+      let res = 0
+      for (let i = 0; i < list.length; i++) {
+        let sum = 0
+        for (let j = 0; j < list[i].length; j++) {
+          sum += list[i][j] * Math.log2(list[i][j])
+        }
+        res += -sum
+      }
+      return (res / list.length).toPrecision(4)
+    },
+    getProbababilities() {
+      const list = this.getFilteredList()
+      const grouped = groupBy(list, x => x.startTimestamp)
+      const keys = Object.keys(grouped)
+      const res = []
+      for (let i = 0; i < keys.length; i++) {
+        const elem = grouped[keys[i]]
+        const arr = [elem[0].winnerConfidence / 100]
+        for (let j = 0; j < elem.length; j++) {
+          arr.push(elem[j].loserConfidence / 100)
+        }
+        res.push(arr)
+      }
+      return res
     },
     convertHMS(value) {
       const sec = Math.round(value)
