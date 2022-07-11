@@ -1,3 +1,4 @@
+import packageJSON from '../package.json'
 import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/uber.png'
 import viewBlocks from './blocks'
@@ -9,10 +10,9 @@ const options: ExperienceOptions = {
     trips: '**/Rider/trips_data.csv'
   },
   icon: icon,
-  slug: 'uber',
   subtitle: 'Customer data',
   title: 'Uber',
   viewBlocks
 }
 
-export default new Experience(options)
+export default new Experience(options, packageJSON, import.meta.url)

@@ -1,3 +1,4 @@
+import packageJSON from '../package.json'
 import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/google-takeout.png'
 import viewBlocks from './blocks'
@@ -15,9 +16,8 @@ const options: ExperienceOptions = {
   dataSamples: ['takeout.zip'],
   icon: icon,
   keepOnlyFiles: true,
-  slug: 'google',
   title: 'Google Takeout',
   viewBlocks
 }
 
-export default new Experience(options)
+export default new Experience(options, packageJSON, import.meta.url)

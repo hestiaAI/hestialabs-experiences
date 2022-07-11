@@ -1,3 +1,4 @@
+import packageJSON from '../package.json'
 import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/apple.png'
 import viewBlocks from './blocks'
@@ -25,10 +26,9 @@ const options: ExperienceOptions = {
   preprocessors: {
     '**/*.ndjson': ndjsonToJson
   },
-  slug: 'apple-tracker',
   subtitle: 'Tracking data',
   title: 'AppleTracker',
   viewBlocks
 }
 
-export default new Experience(options)
+export default new Experience(options, packageJSON, import.meta.url)

@@ -1,3 +1,4 @@
+import packageJSON from '../package.json'
 import { Experience, ExperienceOptions } from '@/index'
 import { theDatingPrivacyCollective } from '@/collaborators/index'
 import icon from '@/icons/her.png'
@@ -19,9 +20,8 @@ const options: ExperienceOptions = {
     profiles: '**/profiles.csv'
   },
   icon: icon,
-  slug: 'her',
   title: 'HER',
   viewBlocks
 }
 
-export default new Experience(options)
+export default new Experience(options, packageJSON, import.meta.url)

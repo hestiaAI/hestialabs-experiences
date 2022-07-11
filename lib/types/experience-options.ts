@@ -23,7 +23,6 @@ export type ExperienceOptions = {
   icon: string
   keepOnlyFiles?: boolean
   preprocessors?: { [key: string]: PreprocessorFunction }
-  slug: string
   subtitle?: string
   title: string
   tutorialVideos?: string[]
