@@ -15,6 +15,8 @@
           Total time spend at the {{ placeSelected }} : {{ total_time }} <br>
           <br>
           Mean time spend at the {{ placeSelected }}: {{ mean_time }} <br>
+          <br>
+          The entropy for {{ placeSelected }} is {{ computeEntropy() }}. The higher this value is, the more uncertain Google was when deciding if you visited {{ placeSelected }}.
         </p>
       </VCol>
     </VRow>
@@ -128,6 +130,33 @@ export default {
       const uniq = _.uniqBy(table, x => x[0])
       const dur = uniq.map(v => this.compute_duration(v[0], v[1]))
       return dur
+    },
+    computeEntropy() {
+      const list = this.getProbababilities()
+      let res = 0
+      for (let i = 0; i < list.length; i++) {
+        let sum = 0
+        for (let j = 0; j < list[i].length; j++) {
+          sum += list[i][j] * Math.log2(list[i][j])
+        }
+        res += -sum
+      }
+      return res / list.length
+    },
+    getProbababilities() {
+      const list = this.getFilteredList()
+      const grouped = _.groupBy(list, x => x.startTimestamp)
+      const keys = Object.keys(grouped)
+      const res = []
+      for (let i = 0; i < keys.length; i++) {
+        const elem = grouped[keys[i]]
+        const arr = [elem[0].winnerConfidence / 100]
+        for (let j = 0; j < elem.length; j++) {
+          arr.push(elem[j].loserConfidence / 100)
+        }
+        res.push(arr)
+      }
+      return res
     },
     convertHMS(value) {
       const sec = Math.round(value)
