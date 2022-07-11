@@ -12,6 +12,7 @@
     },
     "version": {
       "conventionalCommits": true,
+      "noCommitHooks": true,
       "noChangelog": true
     }
   }
