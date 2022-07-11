@@ -33,9 +33,11 @@
     </template>
   </VContainer>
 </template>
+
 <script>
-import _ from 'lodash'
+import { uniqBy, groupBy, orderBy } from 'lodash-es'
 import mixin from './mixin'
+
 export default {
   mixins: [mixin],
   props: {
@@ -71,7 +73,8 @@ export default {
     },
     associated_names() {
       const table = this.values.filter(x => x.winnerName === this.placeSelected)
-      const uniq = _.uniqBy(table, x => x.loserName)
+      const uniq = uniqBy(table, x => x.loserName)
+
       const names = uniq.map((v) => {
         return {
           name: v.loserName,
@@ -110,9 +113,9 @@ export default {
       }
     },
     getOrderedList() {
-      const grouped = _.groupBy(this.values, 'winnerName')
+      const grouped = groupBy(this.values, 'winnerName')
       let list = Object.keys(grouped).map((x) => { return { winnerName: x, count: grouped[x].length } })
-      list = _.orderBy(list, 'count', 'desc').map(x => x.winnerName)
+      list = orderBy(list, 'count', 'desc').map(x => x.winnerName)
       return list
     },
     getFilteredList() {
@@ -127,7 +130,7 @@ export default {
     get_durations() {
       const values = this.values.filter(x => x.winnerName === this.placeSelected)
       const table = values.map(x => [x.startTimestamp, x.endTimestamp])
-      const uniq = _.uniqBy(table, x => x[0])
+      const uniq = uniqBy(table, x => x[0])
       const dur = uniq.map(v => this.compute_duration(v[0], v[1]))
       return dur
     },
@@ -145,7 +148,7 @@ export default {
     },
     getProbababilities() {
       const list = this.getFilteredList()
-      const grouped = _.groupBy(list, x => x.startTimestamp)
+      const grouped = groupBy(list, x => x.startTimestamp)
       const keys = Object.keys(grouped)
       const res = []
       for (let i = 0; i < keys.length; i++) {

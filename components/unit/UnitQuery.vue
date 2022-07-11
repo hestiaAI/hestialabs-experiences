@@ -102,6 +102,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { cloneDeep } from 'lodash-es'
 
 export default {
   props: {
@@ -176,7 +177,7 @@ export default {
   computed: {
     ...mapState(['fileManager']),
     clonedResult() {
-      return JSON.parse(JSON.stringify(this.result))
+      return cloneDeep(this.result)
     },
     fileGlobs() {
       const fileIds = this.files ?? []

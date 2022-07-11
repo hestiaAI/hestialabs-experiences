@@ -13,7 +13,7 @@
 <script>
 import * as d3 from 'd3'
 import forceBoundary from 'd3-force-boundary' // Faire joli TODO check
-import _ from 'lodash'
+import { pick } from 'lodash-es'
 import mixin from './mixin'
 
 export default {
@@ -49,7 +49,7 @@ export default {
       let result = this.values.filter(
         row => categoriesToKeep.includes(row.categ) & (row.app !== 'Unknown')
       )
-      result = result.map(o => _.pick(o, ['app', 'tracker']))
+      result = result.map(o => pick(o, ['app', 'tracker']))
 
       const nodesToRemove = ['Chrome', 'Firefox', 'Samsung Internet']
       result = result.filter(row => !nodesToRemove.includes(row.app))
@@ -287,4 +287,3 @@ export default {
   }
 }
 </script>
-<style scoped></style>

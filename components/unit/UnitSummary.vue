@@ -31,7 +31,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import _ from 'lodash'
+import { sum, sumBy, take, isUndefined, mapValues, identity, groupBy, sortBy } from 'lodash-es'
 import { humanReadableFileSize, plurify } from '~/utils/utils'
 
 export default {
@@ -67,7 +67,7 @@ export default {
       return this.fileManager.fileList.length
     },
     totalSize() {
-      return _.sumBy(this.fileManager.fileList, f => f.size)
+      return sumBy(this.fileManager.fileList, f => f.size)
     },
     dataSizeString() {
       return humanReadableFileSize(this.totalSize)
@@ -75,15 +75,15 @@ export default {
     fileExts() {
       return this.fileManager.fileList
         .map(f => f.name.match(/^.+\.(.+?)$/)?.[1])
-        .filter(m => !_.isUndefined(m))
+        .filter(m => !isUndefined(m))
     },
     sortedGroupCounts() {
       const groups = this.fileExts.map(ext => this.ext2group[ext])
-      const occurrences = _.mapValues(
-        _.groupBy(groups, _.identity),
+      const occurrences = mapValues(
+        groupBy(groups, identity),
         v => v.length
       )
-      return _.sortBy(Object.entries(occurrences), ([group, count]) =>
+      return sortBy(Object.entries(occurrences), ([group, count]) =>
         group === 'other' ? 1 : -count
       )
     }
@@ -108,7 +108,7 @@ export default {
       this.$emit('switch-tab', 'file-explorer')
     },
     async setNumberOfDataPoints() {
-      this.nDataPoints = _.sum(
+      this.nDataPoints = sum(
         await Promise.all(
           this.fileManager
             .getFilenames()
@@ -140,11 +140,11 @@ export default {
         const re = new RegExp(`.+\\.${this.group2ext[group].join('|')}$`)
         const filterFunc = ([f, _n]) => re.test(f)
         const files = pointsPerFile.filter(filterFunc)
-        const shownFiles = _.take(
-          _.sortBy(files, ([_f, n]) => -n),
+        const shownFiles = take(
+          sortBy(files, ([_f, n]) => -n),
           showAtMost
         )
-        const nPointsGroup = _.sumBy(files, ([_f, n]) => n)
+        const nPointsGroup = sumBy(files, ([_f, n]) => n)
         const topFiles = shownFiles.map(([f, nPoints]) => ({
           filename: f,
           description: `${

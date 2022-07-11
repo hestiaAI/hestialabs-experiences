@@ -23,21 +23,7 @@
           </h3>
         </div>
         <VSpacer />
-        <a
-          v-if="collaborator"
-          :href="collaborator.url"
-          target="_blank"
-          rel="noreferrer noopener"
-          class="ml-2 mr-5"
-        >
-          <VImg
-            :src="collaborator.icon"
-            :lazy-src="collaborator.icon"
-            :alt="collaborator.title"
-            contain
-            width="100"
-          />
-        </a>
+        <CollaboratorLink v-if="collaborator" :collaborator="collaborator" class="ml-2 mr-5" />
         <a
           href="https://hestialabs.org/"
           target="_blank"

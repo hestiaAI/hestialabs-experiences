@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { cloneDeep } from 'lodash-es'
 
 export const state = () => ({
   loaded: false,
@@ -66,7 +67,7 @@ export const mutations = {
     state.selectedFiles = selectedFiles
   },
   setResult(state, { experience, result }) {
-    Vue.set(state.results, experience, result)
+    Vue.set(state.results, experience, cloneDeep(result))
   },
   setConsentForm(state, consentForm) {
     // Initialize missing values
@@ -138,7 +139,14 @@ export const actions = {
             return import(`@hestiaai/${name}/dist`)
           })
         )
-      ).map(module => module.default.options)
+      ).map((module) => {
+        const { name, version, options } = module.default
+        return {
+          slug: name,
+          version,
+          ...options
+        }
+      })
 
       commit('setExperiences', experiences)
       commit('setLoaded')

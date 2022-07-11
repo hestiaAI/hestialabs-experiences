@@ -13,6 +13,11 @@ This directory contains the configuration files linked to each deployement. They
     */
   "hashtags": ["dataprivacy", "hestialabs"],
   /**
+    * The bubbles that are included in this website.
+    * @type Array
+    */
+  "bubbles": ["workshop-x-participant", "workshop-x-aggregator"],
+  /**
     * A link to a filedrop service. In case the size limit is exceeded,
     * the user is invited to download the ZIP and use this link.
     * @type String
@@ -25,6 +30,7 @@ This directory contains the configuration files linked to each deployement. They
   "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
   /**
     * The content of the consent form. A default form can be defined, but it can be overriden for a specific experience.
+    * Keys can be "default" or "[name-of-overriding-experience]"
     * We can also hide this section for a specific experience by setting it to null.
     * Each section can have:
     * - "title"

@@ -245,9 +245,6 @@ export default {
         return
       }
 
-      // Version compatibility
-      this.versionCompatibilityHandler()
-
       this.handleEnd()
     },
     async decryptZIP(secretKey, publicKey, inputZIP) {
@@ -271,41 +268,6 @@ export default {
       zip.file('secret-key.txt', sk)
       const content = await zip.generateAsync({ type: 'blob' })
       FileSaver.saveAs(content, 'keys.zip')
-    },
-    /* Transform the imported zip to make it compatible with the current version */
-    versionCompatibilityHandler() {
-      if (!('version' in this.experience)) {
-        this.experience.version = 1
-      }
-      const { version } = this.experience
-      if (version < 3) {
-        // Rename "selected" and "includedResults" to "value"
-        const newConsentForm = JSON.parse(JSON.stringify(this.consentForm))
-        for (const section of newConsentForm) {
-          if ('selected' in section) {
-            section.value = section.selected
-            delete section.selected
-          } else if ('includedResults' in section) {
-            section.value = section.includedResults
-            delete section.includedResults
-          }
-        }
-        this.$store.commit('setConsentForm', newConsentForm)
-      }
-      // If individual files are included, the user gave consent for these.
-      // But in older zips, it wasn't presented as a checkbox.
-      // This change is unfortunately not tied to a version number
-      if (this.fileManager.fileList.length !== 0) {
-        const index = this.consentForm.findIndex(
-          section => section.type === 'data'
-        )
-        const includedResults = this.consentForm[index].value ?? []
-        if (!('file-explorer' in includedResults)) {
-          const value = [...includedResults]
-          value.push('file-explorer')
-          this.$store.commit('setConsentFormValue', { index, value })
-        }
-      }
     }
   }
 }

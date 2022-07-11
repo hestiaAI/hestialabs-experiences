@@ -110,7 +110,7 @@
 <script>
 import { mapState } from 'vuex'
 
-import { debounce, pick } from 'lodash'
+import { debounce, pick } from 'lodash-es'
 
 import UnitDownload from './unit/UnitDownload.vue'
 import DBMS from '~/utils/sql'

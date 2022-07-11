@@ -89,13 +89,10 @@ import { padNumber } from '~/utils/utils'
 import { encryptFile } from '~/utils/encryption'
 import { createObjectURL, mimeTypes } from '@/utils/utils'
 
-// In the case of changes that would break the import, this version number must be incremented
-// and the function versionCompatibilityHandler of import.vue must be able to handle previous versions.
-const VERSION = 3
-
 export default {
   data() {
-    const { viewBlocks } = this.$store.getters.experience(this.$route)
+    const experience = this.$store.getters.experience(this.$route)
+    const config = this.$store.getters.config(this.$route)
     return {
       zipFile: undefined,
       generateStatus: false,
@@ -106,15 +103,13 @@ export default {
       sentProgress: false,
       filename: '',
       href: null,
-      viewBlocks,
-      encrypt: false
+      encrypt: false,
+      experience,
+      config
     }
   },
   computed: {
     ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles']),
-    config() {
-      return this.$store.getters.config(this.$route)
-    },
     bubbleName() {
       return this.$route.params.bubble
     },
@@ -139,7 +134,7 @@ export default {
     },
     missingRequiredData() {
       const section = this.consentForm.find(section => section.type === 'data')
-      return this.viewBlocks
+      return this.experience.viewBlocks
         .filter(
           ({ key }) =>
             typeof section.required === 'object' &&
@@ -157,7 +152,9 @@ export default {
           this.destinationBubbleName
         )
         return publicKey
-      } else { return this.$store.getters.config(this.$route).publicKey }
+      } else {
+        return this.config.publicKey
+      }
     },
     async downloadZIP(encrypt) {
       this.generateStatus = false
@@ -176,35 +173,36 @@ export default {
         date.getUTCMonth() + 1,
         2
       )}-${padNumber(date.getUTCDate(), 2)}`
-      const filename = `${this.$route.params.experience}_${yearMonthDay}_${uniqueId}.zip`
+      const filename = `${this.experience.slug}_${yearMonthDay}_${uniqueId}.zip`
       return filename
     },
     async generateZIP(encrypt) {
+      const { viewBlocks, version, slug } = this.experience
       const zip = new JSZip()
       const revResponse = await window.fetch('/git-revision.txt')
       const revText = await revResponse.text()
       const gitRevision = revText.replace(/[\n\r]/g, '')
       const timestamp = Date.now()
       this.filename = await this.makeFilename(timestamp)
-      const experience = {
-        experience: this.$route.params.experience,
+      const experienceData = {
+        experience: slug,
         timestamp,
-        version: VERSION,
+        version,
         gitRevision
       }
-      zip.file('experience.json', JSON.stringify(experience, null, 2))
+      zip.file('experience.json', JSON.stringify(experienceData, null, 2))
       // Add consent log
       zip.file('consent.json', JSON.stringify(this.consentForm, null, 2))
       // Add included data
       const dataSection = this.consentForm.find(
         section => section.type === 'data'
       )
-      const keys = this.viewBlocks.map(block => block.id)
+      const keys = viewBlocks.map(block => block.id)
       dataSection.value
         .map(key => [key, keys.indexOf(key)])
         .filter(([key, i]) => i !== -1)
         .forEach(([key, i]) => {
-          const content = JSON.parse(JSON.stringify(this.viewBlocks[i]))
+          const content = JSON.parse(JSON.stringify(viewBlocks[i]))
           content.result = this.results[key]
           content.index = i
           zip.file(
@@ -230,26 +228,25 @@ export default {
       }
       return content
     },
-    getCookie(name) {
-      if (!document.cookie) {
-        return null
-      }
-      const cookie = document.cookie
-        .split(';')
-        .map(c => c.trim())
-        .filter(c => c.startsWith(name + '='))
-      if (cookie.length === 0) {
-        return null
-      }
-      return decodeURIComponent(cookie[0].split('=')[1])
-    },
+    // getCookie(name) {
+    //   if (!document.cookie) {
+    //     return null
+    //   }
+    //   const cookie = document.cookie
+    //     .split(';')
+    //     .map(c => c.trim())
+    //     .filter(c => c.startsWith(name + '='))
+    //   if (cookie.length === 0) {
+    //     return null
+    //   }
+    //   return decodeURIComponent(cookie[0].split('=')[1])
+    // },
     async sendForm() {
       this.sentStatus = false
       this.sentErrorMessage = undefined
       this.sentProgress = true
       const destBubble = this.destinationBubbleName
       const content = await this.generateZIP(true)
-      // TODO well...
       const { password } = this.$auth.user
       const zip = new File([content], this.filename, {
         type: 'application/zip'
