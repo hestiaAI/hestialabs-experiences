@@ -1,6 +1,5 @@
 import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/google-takeout.png'
-import preprocessor from './preprocessor'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
 
@@ -16,9 +15,6 @@ const options: ExperienceOptions = {
   dataSamples: ['takeout.zip'],
   icon: icon,
   keepOnlyFiles: true,
-  preprocessors: {
-    '*/*.html': preprocessor
-  },
   slug: 'google',
   title: 'Google Takeout',
   viewBlocks

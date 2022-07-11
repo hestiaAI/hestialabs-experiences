@@ -1,4 +1,5 @@
 import type { PostprocessorFunction } from '@/types'
+import { PipelineOutputItems } from '@/types/utils'
 
 function convert_mac(address: number) {
   let s = String(address.toString(16))
@@ -57,6 +58,7 @@ export const wifiPostProcessor: PostprocessorFunction = result => {
 
 export const otherCandidatesPostProcessor: PostprocessorFunction = result => {
   const items = result?.items || []
+  //const entropies = computeEntropy(items)
   const results = items.map(v => {
     return {
       ...v,
@@ -71,6 +73,7 @@ export const otherCandidatesPostProcessor: PostprocessorFunction = result => {
       loserAddress: v.loserAddress === 'undefined' ? null : v.loserAddress,
       winnerName: v.winnerName === 'undefined' ? null : v.winnerName,
       loserName: v.loserName === 'undefined' ? null : v.loserName
+      //entropy: entropies[v.winnerName]
     }
   })
   return { headers: Object.keys(results[0]), items: results }
@@ -120,3 +123,38 @@ export const recordsPostProcessor: PostprocessorFunction = result => {
   })
   return { headers: Object.keys(results[0]), items: results }
 }
+
+function avg(arr: number[]) {
+  const sum = arr.reduce((a: number, b: number) => a + b, 0)
+  return sum / arr.length || 0
+}
+
+/**
+function computeEntropy(list: PipelineOutputItems) {
+  const grouped = groupBy(list, x => x.startTimestamp)
+  const keys = Object.keys(grouped)
+  const entropies = []
+  for (let i = 0; i < keys.length; i++) {
+    const elem = grouped[keys[i]]
+    let val = elem[0].winnerConfidence / 100
+    let sum = val * Math.log2(val)
+    for (let j = 0; j < elem.length; j++) {
+      val = elem[j].loserConfidence / 100
+      sum += val * Math.log2(val)
+    }
+    entropies.push({ winnerName: elem[0].winnerName, entropy: sum })
+  }
+  const grouped_entropies = groupBy(entropies, x => x.winnerName)
+  const name_to_entropy = Object.keys(grouped_entropies).map(x => {
+    return {
+      winnerName: x,
+      entropy: avg(grouped_entropies[x].map(v => v.entropy))
+    }
+  })
+  const res = Object.assign(
+    {},
+    ...name_to_entropy.map(x => ({ [x.winnerName]: x.entropy }))
+  )
+  return res
+}
+*/
