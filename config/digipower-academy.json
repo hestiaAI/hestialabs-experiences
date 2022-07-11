@@ -6,5 +6,11 @@
     "tracker-control",
     "explorer"
   ],
+  "bubbles": [
+    "demo-aggregator",
+    "demo-participant",
+    "sit-aggregator",
+    "sit-participant"
+  ],
   "hashtags": ["dataprivacy", "hestialabs"]
 }
