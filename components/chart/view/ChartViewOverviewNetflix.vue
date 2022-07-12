@@ -129,11 +129,11 @@ export default {
   data() {
     return {
       header: [
-        { text: 'Date', value: 'Start Time' },
-        { text: 'Duration', value: 'Duration' },
-        { text: 'Content', value: 'Title' },
-        { text: 'User', value: 'Profile Name' },
-        { text: 'Country', value: 'Country' }
+        { text: 'Date', value: 'startTime' },
+        { text: 'Duration', value: 'duration' },
+        { text: 'Content', value: 'title' },
+        { text: 'User', value: 'profileName' },
+        { text: 'Country', value: 'country' }
       ],
       results: []
     }
@@ -175,19 +175,19 @@ export default {
 
       // Keeps only movies and tv shows (not trailer etc..)
       this.results = this.values.filter(
-        d => d['Supplemental Video Type'] === ''
+        d => d.supplementalVideoType === ''
       )
       this.results.forEach((d) => {
-        const time = d.Duration.split(':')
-        d.date = dateFormatParser(d['Start Time'])
+        const time = d.duration.split(':')
+        d.date = dateFormatParser(d.startTime)
         d.month = d3.timeMonth(d.date) // pre-calculate months for better performance
         d.dateStr = formatTime(d.day)
         d.hour = d3.timeHour(d.date).getHours()
-        const title = d.Title.split(':')
+        const title = d.title.split(':')
         d.content = title[0].includes('HIDDEN TITLE') ? title[1] : title[0]
-        d.device = d['Device Type'] === '' ? 'Unknown' : d['Device Type']
-        d.duration = +time[0] + +time[1] / 60 + +time[2] / 60 / 60
-        d.user = d['Profile Name']
+        d.device = d.deviceType === '' ? 'Unknown' : d.deviceType
+        d.durationHour = +time[0] + +time[1] / 60 + +time[2] / 60 / 60
+        d.user = d.profileName
       })
       // Create crossfilter indexing
       const ndx = crossfilter(this.results)
@@ -262,7 +262,7 @@ export default {
       const userDimension = ndx.dimension(d => d.user)
       const deviceDimension = ndx.dimension(d => d.device)
       const contentDimension = ndx.dimension(d => d.content)
-      const countryDimension = ndx.dimension(d => d.Country)
+      const countryDimension = ndx.dimension(d => d.country)
       const hourDimension = ndx.dimension(d => d.hour)
       const weekDimension = ndx.dimension((d) => {
         const day = d.date.getDay()
@@ -271,14 +271,14 @@ export default {
       })
 
       // Create groups from dimension
-      const monthGroup = monthDimension.group().reduceSum(d => d.duration)
+      const monthGroup = monthDimension.group().reduceSum(d => d.durationHour)
       // const typeGroup = typeDimension.group().reduceSum(d => d.duration)
-      const userGroup = userDimension.group().reduceSum(d => d.duration)
-      const deviceGroup = deviceDimension.group().reduceSum(d => d.duration)
-      const contentGroup = contentDimension.group().reduceSum(d => d.duration)
-      const countryGroup = countryDimension.group().reduceSum(d => d.duration)
-      const hourGroup = hourDimension.group().reduceSum(d => d.duration)
-      const weekGroup = weekDimension.group().reduceSum(d => d.duration)
+      const userGroup = userDimension.group().reduceSum(d => d.durationHour)
+      const deviceGroup = deviceDimension.group().reduceSum(d => d.durationHour)
+      const contentGroup = contentDimension.group().reduceSum(d => d.durationHour)
+      const countryGroup = countryDimension.group().reduceSum(d => d.durationHour)
+      const hourGroup = hourDimension.group().reduceSum(d => d.durationHour)
+      const weekGroup = weekDimension.group().reduceSum(d => d.durationHour)
 
       // Render watch time line chart
       const minDate = monthDimension.bottom(1)[0].date
