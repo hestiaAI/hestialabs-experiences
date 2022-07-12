@@ -1,6 +1,7 @@
 SELECT
   winnerName,
   loserName,
+  winnerConfidence,
   startTimestamp,
   endTimestamp,
   loserLatitude,

@@ -32,6 +32,18 @@ const blocks: ViewBlocks = [
     }
   },
   {
+    id: 'OnePlace',
+    sql: placeLinkedToCandidate,
+    files: ['LOCATION_HISTORY'],
+    visualization: 'ChartViewGoogleOnePlace.vue',
+    title: 'One Place',
+    text: '',
+    postprocessor: otherCandidatesPostProcessor,
+    vizProps: {
+      keplerConfig: keplerConfigPlaces
+    }
+  },
+  {
     id: 'OtherCandidates',
     sql: placeLinkedToCandidate,
     files: ['LOCATION_HISTORY'],

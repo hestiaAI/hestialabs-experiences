@@ -39,15 +39,14 @@ const blocks: ViewBlocks = [
     }
   },
   {
-    id: 'Powerhouse',
+    id: 'OnePlace',
     sql: allOtherCandidates,
     files: ['otherCandidate'],
-    visualization: 'ChartViewGoogleAggOnePlace.vue',
-    title: 'Powerhouse',
+    visualization: 'ChartViewGoogleOnePlace.vue',
+    title: 'One Place',
     text: '',
     vizProps: {
-      keplerConfig: keplerConfigPlaces,
-      placeName: 'Powerhouse'
+      keplerConfig: keplerConfigPlaces
     }
   },
   {
