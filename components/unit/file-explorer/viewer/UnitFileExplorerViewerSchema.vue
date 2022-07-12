@@ -1,8 +1,5 @@
 <template>
-  <div v-if="loading">
-    Loading
-  </div>
-  <div v-else-if="error">
+  <div v-if="error">
     <p>Could not find a schema for this file</p>
   </div>
   <div v-else>
@@ -17,17 +14,15 @@
       >
         <VExpansionPanelHeader>
           <div class="d-flex justify-space-between">
-            <span>{{ item.path }}</span>
+            <span>{{ item.accessor.jsonPath }}</span>
             <VChip
-              v-if="isEmpty(item['traversal'])"
+              v-if="item.isLeaf"
               class="mr-2"
               color="green"
               outlined
               filter
               dense
               small
-              :input-value="leafs[item.path]"
-              @click="selectChip(item.path)"
             >
               Leaf
             </VChip>
@@ -38,31 +33,25 @@
             <VCol v-for="header in headers" :key="header.value" sm="6" md="4" lg="3">
               <strong>{{ header.text }}:</strong> <span class="ml-1">{{ item[header.value] }}</span>
             </VCol>
+            <VCol cols="12">
+              <UnitFilterableTableFromAccessor :accessor="item.accessor" />
+            </VCol>
           </VRow>
         </VExpansionPanelContent>
       </VExpansionPanel>
     </VExpansionPanels>
-    <VBtn class="ma-3">
-      Generate Tables
-    </VBtn>
-    <UnitFilterableTableFromAccessor v-bind="{filename, jsonPaths}" />
   </div>
 </template>
 
 <script>
 import mixin from './mixin'
-import mixinLoading from './mixin-loading'
-
+import { createAccessor } from '@/utils/accessor'
 export default {
   name: 'UnitFileExplorerViewerRaw',
-  mixins: [mixin, mixinLoading],
+  mixins: [mixin],
   data() {
-    const experience = this.$store.getters.experience(this.$route)
-    console.log(experience)
     return {
-      jsonSchema: '',
-      leafs: {},
-      loading: true,
+      jsonSchemaFile: {},
       error: false,
       panel: [],
       headers: [
@@ -77,12 +66,6 @@ export default {
       items: []
     }
   },
-  computed: {
-    jsonPaths() {
-      const items = Object.keys(this.leafs).filter(k => this.leafs[k]).map(p => p.split(':')[1])
-      return items
-    }
-  },
   watch: {
     filename: {
       async handler(filename) {
@@ -92,27 +75,23 @@ export default {
     }
   },
   methods: {
-    async fetchSchema(filename) {
-      this.setLoading(true)
+    fetchSchema(filename) {
       try {
-        const path = (await import('@/assets/data/Twitter_model.json')).default
-        const response = await window.fetch(path)
-        const jsonSchema = await response.json()
+        const jsonSchema = this.$store.getters.experience(this.$route).dataModel
         const jsonSchemaKey = Object.keys(jsonSchema).filter(k => filename.endsWith(jsonSchema[k].filename))[0]
-        const jsonSchemaFile = jsonSchema[jsonSchemaKey]
+        this.jsonSchemaFile = jsonSchema[jsonSchemaKey]
         const items = []
-        this.visitNode(jsonSchemaFile, jsonSchemaKey, items)
+        this.visitNode(this.jsonSchemaFile, jsonSchemaKey, items)
         this.items = items
       } catch (e) {
         console.error(e)
         this.error = true
       }
-      this.setLoading(false)
     },
     visitNode(node, nodeKey, array) {
       if (node) {
         const nodeValues = {
-          path: nodeKey,
+          accessor: createAccessor(...nodeKey.split(':')),
           foundType: node.foundType,
           descriptiveType: node.descriptiveType,
           unique: node.unique,
@@ -120,7 +99,8 @@ export default {
           description: node.description,
           choices: node.choices,
           regex: node.regex,
-          traversal: node.traversal
+          traversal: node.traversal,
+          isLeaf: this.isEmpty(node.traversal)
         }
         array.push(nodeValues)
         Object.keys(node.traversal).forEach(k => this.visitNode(node.traversal[k], k, array))
@@ -128,11 +108,7 @@ export default {
     },
     isEmpty(obj) {
       return obj && Object.keys(obj).length === 0
-    },
-    selectChip(path) {
-      this.$set(this.leafs, path, !this.leafs[path])
     }
-
   }
 }
 </script>

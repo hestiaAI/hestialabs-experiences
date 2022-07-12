@@ -407,29 +407,29 @@ export default class FileManager {
     }
 
     // Left join the result of one JSON query with another one if the path of the latter is a subPath on the primary
-    function leftJoinPaths(primary, secondaries) {
-      const secondariesFKs = {}
-      secondaries.forEach((secondary) => {
-        secondary.values.forEach((item) => {
-          const foreignKey = computeForeignKey(item.path, primary.path, secondary.path)
-          if (foreignKey in secondariesFKs) {
-            secondariesFKs[foreignKey].push(item)
-          } else {
-            secondariesFKs[foreignKey] = [item]
-          }
-        })
+    function leftJoinPaths(primary, secondary) {
+      console.log('JOIN', primary, secondary)
+      const secondaryFKs = {}
+      secondary.values.forEach((item) => {
+        const foreignKey = computeForeignKey(item.path, primary.path, secondary.path)
+        secondaryFKs[foreignKey] = item
       })
 
-      return primary.values.map((primaryItem) => {
-        const result = {}
-        result[primaryItem.parentProperty] = primaryItem.value
-        secondaries.forEach((secondary) => {
-          const foreignKey = computeForeignKey(primaryItem.path, primary.path, secondary.path)
-          const secondaryValues = secondariesFKs[foreignKey] || []
-          secondaryValues.forEach((secondaryItem) => { result[secondaryItem.parentProperty] = secondaryItem.value })
+      return {
+        path: primary.path,
+        values: primary.values.map((primaryItem) => {
+          if (Array.isArray(primaryItem)) {
+            const foreignKey = computeForeignKey(primaryItem[0].path, primary.path, secondary.path)
+            const secondaryItem = secondaryFKs[foreignKey]
+            primaryItem.push(secondaryItem)
+            return primaryItem
+          } else {
+            const foreignKey = computeForeignKey(primaryItem.path, primary.path, secondary.path)
+            const secondaryItem = secondaryFKs[foreignKey]
+            return [primaryItem, secondaryItem]
+          }
         })
-        return result
-      })
+      }
     }
     if (!jsonPaths || !jsonPaths.length) { return [] }
     try {
@@ -440,9 +440,24 @@ export default class FileManager {
           path,
           values: JSONPath({ path, json, resultType: 'all' })
         }
-      }).sort((a, b) => b.values.length - a.values.length)
+      }).sort((a, b) => getNbArrays(b.path) - getNbArrays(a.path) || b.values.length - a.values.length)
+
+      let items = result[0]
+      for (let i = 1; i < result.length; i++) {
+        if (items.values.length > result[i].values.length) {
+          items = leftJoinPaths(items, result[i])
+        } else {
+          items = leftJoinPaths(result[i], items)
+        }
+      }
       // For each path/column compute the left join with the column that have the most values
-      return leftJoinPaths(result[0], result.slice(1))
+      return items.values.map((l) => {
+        const item = {}
+        l.forEach((jsonPathValue) => {
+          if (jsonPathValue) { item[jsonPathValue.parentProperty] = jsonPathValue.value }
+        })
+        return item
+      })
     } catch (error) {
       console.error('Error during matching', error)
       return []
