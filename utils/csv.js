@@ -26,7 +26,10 @@ async function getCsvHeadersAndItems(csvText) {
             headers: headers => differentiateDuplicates(headers.map(camelCase)),
             strictColumnHandling: true
           })
-          .on('headers', h => headers.push(...h))
+          .on('headers', (h) => {
+            headers.push(...h.map(h => camelCase(h)))
+          }
+          )
           .on('data', (row) => {
             return items.push(
               Object.fromEntries(

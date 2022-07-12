@@ -178,6 +178,10 @@ export default {
     legendPadding: {
       type: Number,
       default: () => 10
+    },
+    dateFormat: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -189,7 +193,8 @@ export default {
       settingDialog: false,
       filterItems: {},
       filterModel: {},
-      extentDate: null
+      extentDate: null,
+      dateParser: d => new Date(d)
     }
   },
   methods: {
@@ -220,9 +225,7 @@ export default {
         })
         // Aggregate per time period
         serie.current = nest()
-          .key(function(d) {
-            return interval.parser(new Date(d.date))
-          })
+          .key(d => interval.parser(this.dateParser(d.date)))
           .rollup(leaves => d3.sum(leaves, l => l.value))
           .entries(serie.current)
         // Add missing datapoints
@@ -237,15 +240,18 @@ export default {
         )
         // Sort the result
         serie.current = serie.current.sort(
-          (e1, e2) => new Date(e1.key) - new Date(e2.key)
+          (e1, e2) => this.dateParser(e1.key) - this.dateParser(e2.key)
         )
       })
     },
     drawViz() {
       /* Init the possible aggregations dpending on dates extent */
+      if (this.dateFormat) {
+        this.dateParser = d3.timeParse(this.dateFormat)
+      }
       this.extentDate = d3.extent(
         this.values,
-        d => new Date(d[this.dateAccessor.value])
+        d => this.dateParser(d[this.dateAccessor.value])
       )
       const diffDays = d3.timeDay.count(this.extentDate[0], this.extentDate[1])
       if (!diffDays) {
@@ -289,7 +295,7 @@ export default {
             .filter(v => a === v[this.seriesAccessor.value])
             .map((d) => {
               const ret = {
-                date: new Date(d[this.dateAccessor.value]),
+                date: this.dateParser(d[this.dateAccessor.value]),
                 value: this.valueAccessor ? +d[this.valueAccessor] : 1
               }
               this.filters.forEach((f) => {
@@ -341,7 +347,7 @@ export default {
       /* Scales */
       const xScale = d3.scaleTime().range([0, width])
       const yScale = d3.scaleLinear().rangeRound([height, 0])
-      xScale.domain(nestedExtent(this.slices, 'current', d => new Date(d.key)))
+      xScale.domain(nestedExtent(this.slices, 'current', d => this.dateParser(d.key)))
       yScale.domain([0, nestedExtent(this.slices, 'current', d => d.value)[1]])
       /* Axis */
       const yAxis = d3.axisLeft().ticks(5).scale(yScale) // .ticks(slices[0].values.length)
@@ -429,7 +435,7 @@ export default {
         tooltip
           .html(
             '<b>' +
-              that.intervals[that.selectedInterval].format(new Date(d.key)) +
+              that.intervals[that.selectedInterval].format(this.dateParser(d.key)) +
               '</b><br/>' +
               f(d.value)
           ) // d.name
@@ -443,7 +449,7 @@ export default {
       const line = d3
         .line()
         .curve(d3.curveMonotoneX)
-        .x(d => xScale(new Date(d.key)))
+        .x(d => xScale(this.dateParser(d.key)))
         .y(d => yScale(d.value))
       /* Draw lines */
       const lines = svg.selectAll('lines').data(this.slices).enter().append('g')
@@ -481,13 +487,13 @@ export default {
         .attr('fill', 'white')
         .attr('stroke-width', this.dotWidth)
         .attr('cy', d => yScale(d.value))
-        .attr('cx', d => xScale(new Date(d.key)))
+        .attr('cx', d => xScale(this.dateParser(d.key)))
         .transition()
         .duration(1500)
         .delay((d, i) => i * 100 + 500)
         .ease(d3.easeSin)
         .attr('cy', d => yScale(d.value))
-        .attr('cx', d => xScale(new Date(d.key)))
+        .attr('cx', d => xScale(this.dateParser(d.key)))
         .attr('r', this.dotRadius)
         .attr('class', 'datapoint')
         .attr('id', (d, i) => i)
