@@ -23,7 +23,14 @@
           </h3>
         </div>
         <VSpacer />
-        <CollaboratorLink v-if="collaborator" :collaborator="collaborator" class="ml-2 mr-5" />
+        <NuxtLink v-for="link in links" :key="link.url" :to="link.url">
+          {{ link.name }}
+        </NuxtLink>
+        <CollaboratorLink
+          v-if="collaborator"
+          :collaborator="collaborator"
+          class="ml-2 mr-5"
+        />
         <a
           href="https://hestialabs.org/"
           target="_blank"
@@ -84,6 +91,10 @@ export default {
   computed: {
     e() {
       return this.$store.getters.experience(this.$route)
+    },
+    links() {
+      const { appBarLinks } = this.$store.getters.config(this.$route)
+      return appBarLinks
     },
     collaborator() {
       return this.e.collaborator
