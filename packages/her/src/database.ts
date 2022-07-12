@@ -106,7 +106,7 @@ const config: DatabaseConfig = {
         },
         {
           column: 'notificationSentAt',
-          path: '$.notificationSentAt'
+          path: '$.notifcationSentAt'
         }
       ]
     },

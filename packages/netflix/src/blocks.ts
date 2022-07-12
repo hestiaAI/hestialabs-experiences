@@ -20,11 +20,11 @@ const blocks: ViewBlocks = [
       title: 'Notifications sent by Netflix',
       yLabel: 'count',
       filters: [
-        { text: 'Interacted with', value: 'Click Cnt', type: 'Boolean' },
-        { text: 'Device Model', value: 'Device Model', type: 'List' }
+        { text: 'Interacted with', value: 'clickCnt', type: 'Boolean' },
+        { text: 'Device Model', value: 'deviceModel', type: 'List' }
       ],
-      dateAccessor: { text: 'Date', value: 'Sent Utc Ts' },
-      seriesAccessor: { text: 'Profile', value: 'Profile Name' }
+      dateAccessor: { text: 'Date', value: 'sentUtcTs' },
+      seriesAccessor: { text: 'Profile', value: 'profileName' }
     },
     title: 'Notifications',
     text: 'See how many times Netflix sent you notifications'
