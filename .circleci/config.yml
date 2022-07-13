@@ -19,6 +19,9 @@ workflows:
           version: '14.19.1'
           # If you are using yarn, change the line below from "npm" to "yarn"
           pkg-manager: npm
+
+          # https://circleci.com/developer/orbs/orb/circleci/node#jobs-test
+          app_dir: ~/experiences
           context:
             - hestialabs
           filters:
