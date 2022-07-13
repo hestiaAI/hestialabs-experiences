@@ -42,6 +42,10 @@
     "wolt",
     "youtube"
   ],
+  "appBarLinks": [
+    { "url": "/about", "name": "About" },
+    { "url": "/privacy", "name": "Privacy" }
+  ],
   "bubbles": [
     "tl-aggregator",
     "tl-participant",

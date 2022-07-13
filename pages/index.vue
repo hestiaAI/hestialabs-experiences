@@ -50,7 +50,6 @@
               class="text-center"
             >
               <BaseBubbleCard
-                v-col
                 v-bind="{title, icon, slug}"
                 class="pa-3"
               />
@@ -86,13 +85,12 @@
     <div class="section-wrapper pa-15">
       <VContainer>
         <VRow justify="center">
-          <VCol cols="12" sm="10" md="10" lg="8">
+          <VCol cols="12" sm="10" md="9">
             <h3 class="section-title font-weight-medium ml-0">
               Any question?
             </h3>
             <BaseContactForm />
           </VCol>
-          <VCol cols="12" sm="10" md="10" lg="8" />
         </VRow>
       </VContainer>
     </div>
