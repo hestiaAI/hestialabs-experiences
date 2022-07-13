@@ -36,10 +36,13 @@ export const getters = {
     }
     return disabledExperiences
   },
-  config:
+  siteConfig: state => state.config,
+  routeConfig:
     state =>
-      ({ params: { bubble } }) =>
-        bubble ? state.config.bubbleConfig[bubble] : state.config,
+      (route) => {
+        const bubble = route?.params?.bubble
+        return bubble ? state.config.bubbleConfig[bubble] : state.config
+      },
   // https://vuex.vuejs.org/guide/getters.html#method-style-access
   experience:
     state =>

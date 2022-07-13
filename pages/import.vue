@@ -185,7 +185,7 @@ export default {
       if (this.decrypt) {
         try {
           const sk = await this.secretKey.text()
-          const pk = this.$store.getters.config(this.$route).publicKey
+          const pk = this.$store.getters.routeConfig(this.$route).publicKey
           this.outputZIP = await this.decryptZIP(sk, pk, this.inputZIP)
         } catch (error) {
           this.handleError(

@@ -93,7 +93,7 @@ export default {
       return this.$store.getters.experience(this.$route)
     },
     links() {
-      const { appBarLinks } = this.$store.getters.config(this.$route)
+      const { appBarLinks } = this.$store.getters.routeConfig(this.$route)
       return appBarLinks
     },
     collaborator() {
