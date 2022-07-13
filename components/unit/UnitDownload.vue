@@ -196,7 +196,7 @@ export default {
       'dataPortalMessage',
       'tutorialVideos'
     ])
-    const { publicKey } = this.$store.getters.config(this.$route)
+    const { publicKey } = this.$store.getters.routeConfig(this.$route)
     return {
       timer: null,
       counter: 5,

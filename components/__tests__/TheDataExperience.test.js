@@ -33,7 +33,8 @@ beforeEach(() => {
         keepOnlyFiles: true,
         preprocessors: {},
         viewBlocks: []
-      })
+      }),
+      routeConfig: () => () => ({})
     },
     mutations: {
       clearStore: () => {},

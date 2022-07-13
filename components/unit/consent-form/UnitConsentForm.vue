@@ -92,7 +92,7 @@ import { createObjectURL, mimeTypes } from '@/utils/utils'
 export default {
   data() {
     const experience = this.$store.getters.experience(this.$route)
-    const config = this.$store.getters.config(this.$route)
+    const config = this.$store.getters.routeConfig(this.$route)
     return {
       zipFile: undefined,
       generateStatus: false,

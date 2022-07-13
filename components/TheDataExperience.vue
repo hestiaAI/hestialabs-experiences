@@ -1,11 +1,11 @@
 <template>
   <div>
     <SettingsSpeedDial />
-    <VBanner v-if="config.banner" color="secondary">
+    <VBanner v-if="routeConfig.banner" color="secondary">
       <VRow>
         <VCol cols="12 mx-auto" sm="10">
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="config.banner" />
+          <div v-html="routeConfig.banner" />
         </VCol>
       </VRow>
     </VBanner>
@@ -39,7 +39,7 @@
           <VTabItem value="load-data" :transition="false">
             <VCol cols="12 mx-auto" md="6" class="tabItem">
               <UnitDownload
-                v-if="config.dataFromBubble"
+                v-if="routeConfig.dataFromBubble"
                 v-bind="{
                   progress,
                   error,
@@ -145,7 +145,7 @@ export default {
   },
   computed: {
     ...mapState('experience', { experienceProgress: 'progress' }),
-    ...mapState(['config', 'fileManager']),
+    ...mapState(['fileManager']),
     tabs() {
       const disabled = !this.success || this.experienceProgress
       const tabs = [
@@ -191,13 +191,11 @@ export default {
     sqlQueries() {
       return this.viewBlocks.map(o => this.sql[o.sql])
     },
-    config() {
-      const { config } = this.$store.state
-      const { bubble } = this.$route.params
-      return bubble ? config.bubbleConfig[bubble] : config
+    routeConfig() {
+      return this.$store.getters.routeConfig(this.$route)
     },
     consentFormTemplate() {
-      const { consent } = this.config
+      const { consent } = this.routeConfig
       if (consent) {
         const { experience } = this.$route.params
         if (experience in consent) {
