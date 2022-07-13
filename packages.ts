@@ -36,6 +36,7 @@ export { default as trackerControl } from './packages/tracker-control/dist/index
 export { default as trackerControlAgg } from './packages/tracker-control-agg/dist/index.mjs'
 export { default as twitter } from './packages/twitter/dist/index.mjs'
 export { default as uber } from './packages/uber/dist/index.mjs'
+export { default as uberDriver } from './packages/uber-driver/dist/index.mjs'
 export { default as voi } from './packages/voi/dist/index.mjs'
 export { default as whatsapp } from './packages/whatsapp/dist/index.mjs'
 export { default as wolt } from './packages/wolt/dist/index.mjs'
