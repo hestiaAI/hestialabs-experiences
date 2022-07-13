@@ -21,7 +21,7 @@ workflows:
           pkg-manager: npm
 
           # https://circleci.com/developer/orbs/orb/circleci/node#jobs-test
-          app_dir: ~/experiences
+          app-dir: ~/experiences
           context:
             - hestialabs
           filters:
