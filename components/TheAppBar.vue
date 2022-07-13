@@ -23,7 +23,20 @@
           </h3>
         </div>
         <VSpacer />
-        <CollaboratorLink v-if="collaborator" :collaborator="collaborator" class="ml-2 mr-5" />
+        <VBtn
+          v-for="link in links"
+          :key="link.url"
+          :to="link.url"
+          class="v-btn__home mr-0"
+          text
+        >
+          {{ link.name }}
+        </VBtn>
+        <CollaboratorLink
+          v-if="collaborator"
+          :collaborator="collaborator"
+          class="ml-2 mr-5"
+        />
         <a
           href="https://hestialabs.org/"
           target="_blank"
@@ -84,6 +97,9 @@ export default {
   computed: {
     e() {
       return this.$store.getters.experience(this.$route)
+    },
+    links() {
+      return this.$store.getters.siteConfig.appBarLinks
     },
     collaborator() {
       return this.e.collaborator

@@ -47,7 +47,7 @@ test('generates a zip', async() => {
             preprocessors: {},
             viewBlocks: []
           }),
-          config: () => ({})
+          routeConfig: () => () => ({})
         }
       },
       $route: {

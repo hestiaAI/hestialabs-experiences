@@ -13,6 +13,15 @@ This directory contains the configuration files linked to each deployement. They
     */
   "hashtags": ["dataprivacy", "hestialabs"],
   /**
+    * Links to existing pages to display in the app bar.
+    * This are valid site wide and cannot be configured in bubbles.
+    * @type Array
+    */
+  "appBarLinks": [
+    { "url": "/about", "name": "About" },
+    { "url": "/privacy", "name": "Privacy" }
+  ],
+  /**
     * The bubbles that are included in this website.
     * @type Array
     */

@@ -234,7 +234,7 @@ export default {
     returnFiles() {
       const decryptBlobPromise = promisify(decryptBlob)
       const publicKey =
-        this.publicKey || this.$store.getters.config(this.$route).publicKey
+        this.publicKey || this.$store.getters.routeConfig(this.$route).publicKey
       Promise.all(
         this.uppy.getFiles().map((f) => {
           return this.privateKey

@@ -12,5 +12,9 @@
     "sit-aggregator",
     "sit-participant"
   ],
+  "appBarLinks": [
+    { "url": "/about", "name": "About" },
+    { "url": "/privacy", "name": "Privacy" }
+  ],
   "hashtags": ["dataprivacy", "hestialabs"]
 }
