@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+exec >/dev/tty 2>&1
+# https://scottsauber.com/2021/06/01/using-husky-git-hooks-and-lint-staged-with-nested-folders/
+cd ./experiences && npm run pre-commit

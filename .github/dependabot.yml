@@ -2,7 +2,7 @@ version: 2
 updates:
 # Fetch and update latest `npm` packages
 - package-ecosystem: npm
-  directory: '/'
+  directory: '/experiences'
   schedule:
     interval: monthly
     time: '00:00'
