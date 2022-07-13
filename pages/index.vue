@@ -15,93 +15,18 @@
         </VRow>
       </VContainer>
     </div>
-    <div class="section-wrapper spacer">
+    <div class="section-wrapper pa-15">
       <VContainer>
         <VRow justify="center">
-          <VCol cols="12" sm="10" md="9" lg="7">
-            <div class="text-center">
-              <h3 class="section-title font-weight-medium">
-                Our tools
-              </h3>
-            </div>
-          </VCol>
-        </VRow>
-        <VRow justify="center">
-          <VCol cols="12" md="4">
-            <VCard flat>
-              <VCardText>
-                <div class="icon light-background">
-                  <VIcon large>
-                    $vuetify.icons.mdiAccount
-                  </VIcon>
-                </div>
-                <h4 class="font-weight-medium">
-                  Experiences
-                </h4>
-                <p class="mt-3 mb-3">
-                  Lorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsum
-                </p>
-                <div>
-                  <VBtn
-                    text
-                    color="primary"
-                  >
-                    See more
-                  </VBtn>
-                </div>
-              </VCardText>
-            </VCard>
-          </VCol>
-          <VCol cols="12" md="4">
-            <VCardText>
-              <div class="icon light-background">
-                <VIcon large>
-                  $vuetify.icons.mdiAccount
-                </VIcon>
-              </div>
-              <h4 class="font-weight-medium">
-                SARs
-              </h4>
-              <p class="mt-3 mb-3">
-                Lorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsum
-              </p>
-              <div>
-                <VBtn
-                  text
-                  color="primary"
-                >
-                  See more
-                </VBtn>
-              </div>
-            </VCardText>
-          </VCol>
-          <VCol cols="12" md="4">
-            <VCardText>
-              <div class="icon light-background">
-                <VIcon large>
-                  $vuetify.icons.mdiAccount
-                </VIcon>
-              </div>
-              <h4 class="font-weight-medium">
-                Workshops
-              </h4>
-              <p class="mt-3 mb-3">
-                Lorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsumLorem Ipusum ipsum
-              </p>
-              <div>
-                <VBtn
-                  text
-                  color="primary"
-                >
-                  See more
-                </VBtn>
-              </div>
-            </VCardText>
+          <VCol v-for="tool in tools" :key="tool.title" cols="12" md="4">
+            <BaseInfoCard
+              v-bind="{...tool}"
+            />
           </VCol>
         </VRow>
       </VContainer>
     </div>
-    <div class="section-wrapper spacer light-background">
+    <div class="section-wrapper pa-15 light-background">
       <VContainer>
         <VRow justify="center">
           <VCol cols="12" sm="10" md="9" lg="7">
@@ -113,9 +38,31 @@
             </div>
           </VCol>
         </VRow>
+        <VRow justify="center">
+          <template v-if="$store.state.config.bubbleConfig">
+            <VCol
+              v-for="({ title, icon }, slug) in $store.state.config.bubbleConfig"
+              :key="slug"
+              cols="12"
+              sm="6"
+              md="4"
+              lg="3"
+              class="text-center"
+            >
+              <BaseBubbleCard
+                v-col
+                v-bind="{title, icon, slug}"
+                class="pa-3"
+              />
+            </VCol>
+          </template>
+          <template v-else>
+            <span class="caption">No workshops available right now, please contact us for more informations.</span>
+          </template>
+        </VRow>
       </VContainer>
     </div>
-    <div class="section-wrapper spacer">
+    <div class="section-wrapper pa-15">
       <VContainer>
         <VRow justify="center">
           <VCol cols="12" sm="10" md="9" lg="7">
@@ -123,42 +70,27 @@
               <h3 class="section-title font-weight-medium">
                 Testimonial
               </h3>
-              <p>Choose the workshop(s) of your choice</p>
+              <p>See what our customers say</p>
+            </div>
+          </VCol>
+        </VRow>
+        <VRow>
+          <VCol>
+            <div class="text-center">
+              <span class="caption">No testimonial yet.</span>
             </div>
           </VCol>
         </VRow>
       </VContainer>
     </div>
-    <div class="section-wrapper spacer">
+    <div class="section-wrapper pa-15">
       <VContainer>
         <VRow justify="center">
           <VCol cols="12" sm="10" md="10" lg="8">
-            <h3 class="section-title font-weight-medium">
+            <h3 class="section-title font-weight-medium ml-0">
               Any question?
             </h3>
-            <form>
-              <VRow>
-                <VCol cols="12" md="6">
-                  <VTextField
-                    label="Name"
-                    outlined
-                  />
-                </VCol>
-                <VCol cols="12" md="6">
-                  <VTextField
-                    label="Email"
-                    outlined
-                  />
-                </VCol>
-                <VCol cols="12">
-                  <VTextarea
-                    outlined
-                    name="input-7-4"
-                    label="Message"
-                  />
-                </VCol>
-              </VRow>
-            </form>
+            <BaseContactForm />
           </VCol>
           <VCol cols="12" sm="10" md="10" lg="8" />
         </VRow>
@@ -166,46 +98,85 @@
     </div>
   </div>
 </template>
+<script>
+import BaseBubbleCard from '../components/base/card/BaseBubbleCard.vue'
+export default {
+  components: { BaseBubbleCard },
+  data() {
+    return {
+      tools: [
+        {
+          title: 'Subject Access Request',
+          text: 'As an app user you have “data subject rights”. The app does not own your data, you do. You can recover your data in a file via a Subject Access Request (SAR).',
+          icon: 'mdiTextBoxEditOutline',
+          actionText: 'See more',
+          actionHref: 'https://hestialabs.org/en/act/sar/'
+        },
+        {
+          title: 'Experiences',
+          text: 'The private data that companies have collected about you is often in a format that is difficult to understand. Once you receive it, you can easily analyse it using our visualisation tools.',
+          icon: 'mdiChartBar',
+          actionText: 'See more',
+          actionHref: '/experience'
+        },
+        {
+          title: 'Workshops',
+          text: 'Want to go deeper? Participate to one of our workshops, mutualise and take back control of your data.',
+          icon: 'mdiAccountGroup',
+          actionText: 'Contact us',
+          actionHref: 'https://hestia.ai/en/#contact'
+        }
+      ]
+    }
+  }
+}
+</script>
+
 <style scoped>
 .banner-wrapper {
     background: #5A53A0;
-    padding: 20px 0;
-    min-height: 350px;
+    padding: 20px;
+    min-height: 400px;
     display: flex;
     align-items: center;
 }
 .banner-title {
-    font-size: 42px;
-    line-height: 54px;
-    margin: 20px 0 15px;
+    font-size: 40px;
+    line-height: 50px;
+    margin: 20px 0;
 }
 .banner-subtitle {
-  font-size: 21px;
+  font-size: 20px;
 }
 
 .section-title {
-  font-size: 28px;
-  margin: 20px 0 20px;
+  font-size: 25px;
+  margin: 20px;
   line-height: 30px;
   color: #464e61;
 }
 
-.spacer {
-  padding: 60px;
+.pa-15 {
+  padding: 50px;
 }
 
 .light-background{
   background-color: #f2f2f2
 }
 
+.icon-wrapper {
+  background-color: #9ca299;
+  border-radius: 100%;
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  line-height: 80px;
+  display: inline-block;
+  margin: 20px 0 30px;
+}
 .icon {
-    font-size: 45px;
-    width: 80px;
-    color: #607df9;
-    line-height: 80px;
-    text-align: center;
-    display: inline-block;
-    margin: 20px 0 30px;
-    border-radius: 100%;
+    font-size: 50px;
+    color: white;
+    vertical-align:middle;
 }
 </style>
