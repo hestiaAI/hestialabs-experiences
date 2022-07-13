@@ -142,12 +142,12 @@ export default {
       // Keeps only movies and tv shows (not trailer etc..)
       this.results = this.values
       this.results.forEach((d) => {
-        d.firstname = d['First Name']
-        d.lastname = d['Last Name']
-        d.company = d.Company || 'Unknown'
-        d.position = d.Position || 'Unknown'
-        d.email = d['Email Address']
-        d.date = new Date(d['Connected On'])
+        d.firstname = d.firstName
+        d.lastname = d.lastName
+        d.company = d.company || 'Unknown'
+        d.position = d.position || 'Unknown'
+        d.email = d.emailAddress
+        d.date = new Date(d.connectedOn)
         d.week = d3.timeWeek(d.date) // pre-calculate months for better performance
         d.dateStr = formatDate(d.date)
       })

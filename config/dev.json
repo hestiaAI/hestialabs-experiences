@@ -51,7 +51,9 @@
     "reflets-aggregator",
     "reflets-participant",
     "demo-aggregator",
-    "demo-participant"
+    "demo-participant",
+    "sit-aggregator",
+    "sit-participant"
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
   "filedrop": "https://example.com",

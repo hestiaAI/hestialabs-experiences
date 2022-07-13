@@ -91,18 +91,18 @@ export default {
       return this.values
         .map((inference) => {
           const inferenceType =
-            inference.Inference === 'true'
+            inference.inference === 'true'
               ? 'True'
-              : inference.Inference === 'No'
+              : inference.inference === 'No'
                 ? 'False'
                 : 'Others'
           let value = inferenceType
-          if (value === 'Others') { value = parseFloat(inference.Inference).toFixed(2) }
+          if (value === 'Others') { value = parseFloat(inference.inference).toFixed(2) }
 
           return {
-            type: inference['Type of inference'],
-            category: inference.Category,
-            description: inference.Description,
+            type: inference.typeOfInference,
+            category: inference.category,
+            description: inference.description,
             inferenceValue: value,
             inferenceType,
             color:
@@ -125,7 +125,7 @@ export default {
         )
     },
     categories() {
-      return this.values.map(inference => inference.Category)
+      return this.values.map(inference => inference.category)
     }
   },
   methods: {

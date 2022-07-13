@@ -206,7 +206,7 @@ export default {
   data() {
     return {
       header: [
-        { text: 'City', value: 'City' },
+        { text: 'City', value: 'city' },
         { text: 'Service', value: 'service' },
         { text: 'Status', value: 'tripOrOrderStatus' },
         { text: 'Request Time', value: 'dateRequestStr' },
