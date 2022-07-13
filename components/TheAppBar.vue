@@ -23,9 +23,15 @@
           </h3>
         </div>
         <VSpacer />
-        <NuxtLink v-for="link in links" :key="link.url" :to="link.url">
+        <VBtn
+          v-for="link in links"
+          :key="link.url"
+          :to="link.url"
+          class="v-btn__home mr-0"
+          text
+        >
           {{ link.name }}
-        </NuxtLink>
+        </VBtn>
         <CollaboratorLink
           v-if="collaborator"
           :collaborator="collaborator"
@@ -93,8 +99,7 @@ export default {
       return this.$store.getters.experience(this.$route)
     },
     links() {
-      const { appBarLinks } = this.$store.getters.routeConfig(this.$route)
-      return appBarLinks
+      return this.$store.getters.siteConfig.appBarLinks
     },
     collaborator() {
       return this.e.collaborator
