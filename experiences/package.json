@@ -89,7 +89,7 @@
     "d3-sankey": "^0.12.3",
     "d3-time-format": "^4.1.0",
     "dc": "^4.2.7",
-    "dom-to-image-more": "^2.10.1",
+    "dom-to-image-more": "^2.11.1",
     "file-saver": "^2.0.5",
     "jsonpath-plus": "^7.0.0",
     "jszip": "^3.10.0",
