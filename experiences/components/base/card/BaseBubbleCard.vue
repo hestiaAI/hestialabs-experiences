@@ -10,6 +10,7 @@
       <h4 class="text-subtitle-1 font-weight-bold">
         {{ title }}
       </h4>
+      <p>{{ description }}</p>
     </VCardText>
   </VCard>
 </template>
@@ -19,6 +20,10 @@ export default {
     title: {
       type: String,
       required: true
+    },
+    description: {
+      type: String,
+      default: ''
     },
     slug: {
       type: String,
