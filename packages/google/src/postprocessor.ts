@@ -28,7 +28,7 @@ function compute_duration(d1: string, d2: string) {
 }
 
 function parseTransitPath(transitPath: string) {
-  if (transitPath !== 'undefined') {
+  if (transitPath !== 'undefined' && transitPath !== null) {
     const dico = JSON.parse(transitPath)
     const name = dico.name
     return (
