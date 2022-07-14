@@ -22,20 +22,28 @@ export default {
               radius: 5,
               fixedRadius: true,
               opacity: 0.8,
-              outline: true,
+              outline: false,
               thickness: 1,
               strokeColor: null,
               colorRange: {
-                name: 'Global Warming',
-                type: 'sequential',
-                category: 'Uber',
+                name: 'Custom Palette',
+                type: 'custom',
+                category: 'Custom',
                 colors: [
-                  '#5A1846',
-                  '#900C3F',
-                  '#C70039',
-                  '#E3611C',
-                  '#F1920E',
-                  '#FFC300'
+                  '#a6cee3',
+                  '#1f78b4',
+                  '#b2df8a',
+                  '#33a02c',
+                  '#fb9a99',
+                  '#e31a1c',
+                  '#fdbf6f',
+                  '#ff7f00',
+                  '#cab2d6',
+                  '#6a3d9a',
+                  '#ffff99',
+                  '#b15928',
+                  '#49493f',
+                  '#f800c0'
                 ]
               },
               strokeColorRange: {
@@ -64,6 +72,17 @@ export default {
                 alignment: 'center'
               }
             ]
+          },
+          visualChannels: {
+            colorField: {
+              name: 'driverStatus',
+              type: 'string'
+            },
+            colorScale: 'ordinal',
+            strokeColorField: null,
+            strokeColorScale: 'quantile',
+            sizeField: null,
+            sizeScale: 'linear'
           }
         }
       ],
