@@ -69,8 +69,6 @@
     "\\.pnp\\.[^\\/]+$"
   ],
   "dependencies": {
-    "@fast-csv/format": "^4.3.5",
-    "@fast-csv/parse": "^4.3.6",
     "@mdi/js": "^6.9.96",
     "@nuxtjs/auth-next": "5.0.0-1648802546.c9880dc",
     "@nuxtjs/axios": "^5.13.6",
@@ -99,6 +97,7 @@
     "lodash-es": "^4.17.21",
     "micromatch": "^4.0.4",
     "nuxt": "^2.15.8",
+    "papaparse": "^5.3.2",
     "read-excel-file": "^5.3.5",
     "regression": "^2.0.1",
     "sass-loader": "^10",
