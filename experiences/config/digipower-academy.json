@@ -1,0 +1,20 @@
+{
+  "experiences": [
+    "uber",
+    "google",
+    "apple-tracker",
+    "tracker-control",
+    "explorer"
+  ],
+  "bubbles": [
+    "demo-aggregator",
+    "demo-participant",
+    "sit-aggregator",
+    "sit-participant"
+  ],
+  "appBarLinks": [
+    { "url": "/about", "name": "About" },
+    { "url": "/privacy", "name": "Privacy" }
+  ],
+  "hashtags": ["dataprivacy", "hestialabs"]
+}
