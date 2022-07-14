@@ -177,9 +177,8 @@
         We are based in Switzerland, Swiss Law shall govern this policy and the Swiss courts be competent.
       </p>
       <p>
-        You will find more information about the procedure in Switzerland through this contact form.
+        You will find more information about the procedure in Switzerland through <a href="https://www.edoeb.admin.ch/edoeb/fr/home/le-pfpdt/contact/formulaire-de-contact.html">this contact form.</a>
       </p>
-    </div>
     </div>
   </VContainer>
 </template>
