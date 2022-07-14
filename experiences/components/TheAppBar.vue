@@ -25,6 +25,7 @@
         <VSpacer />
         <VBtn
           href="https://hestia.ai/en/#contact"
+          target="_blank"
           class="v-btn__home mr-0"
           text
         >
