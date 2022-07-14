@@ -14,7 +14,7 @@
       </p>
     </VCardText>
     <VSpacer />
-    <VCardActions>
+    <VCardActions v-if="actionText">
       <VBtn
         text
         color="primary"
@@ -42,11 +42,11 @@ export default {
     },
     actionText: {
       type: String,
-      required: true
+      default: ''
     },
     actionHref: {
       type: String,
-      required: true
+      default: ''
     }
   },
   computed: {

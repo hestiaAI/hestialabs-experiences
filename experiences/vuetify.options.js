@@ -15,6 +15,7 @@ import {
   mdiCog,
   mdiContentCopy,
   mdiDatabase,
+  mdiDatabaseCog,
   mdiDatabaseRemove,
   mdiDelete,
   mdiDownload,
@@ -22,6 +23,8 @@ import {
   mdiFileSearch,
   mdiFileUpload,
   mdiFilter,
+  mdiFormatQuoteClose,
+  mdiFormatQuoteOpen,
   mdiHome,
   mdiInformationOutline,
   mdiLockOpenVariant,
@@ -39,7 +42,8 @@ import {
   mdiTextBoxEditOutline,
   mdiTwitter,
   mdiFolderInformationOutline,
-  mdiFileMultipleOutline
+  mdiFileMultipleOutline,
+  mdiWeb
 } from '@mdi/js'
 
 export default {
@@ -62,6 +66,7 @@ export default {
       mdiCog,
       mdiContentCopy,
       mdiDatabase,
+      mdiDatabaseCog,
       mdiDatabaseRemove,
       mdiDelete,
       mdiDownload,
@@ -69,6 +74,8 @@ export default {
       mdiFileSearch,
       mdiFileUpload,
       mdiFilter,
+      mdiFormatQuoteClose,
+      mdiFormatQuoteOpen,
       mdiHome,
       mdiInformationOutline,
       mdiLockOpenVariant,
@@ -86,7 +93,8 @@ export default {
       mdiTextBoxEditOutline,
       mdiTwitter,
       mdiFolderInformationOutline,
-      mdiFileMultipleOutline
+      mdiFileMultipleOutline,
+      mdiWeb
     }
   },
   theme: {

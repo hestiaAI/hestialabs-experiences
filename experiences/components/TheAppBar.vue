@@ -24,6 +24,13 @@
         </div>
         <VSpacer />
         <VBtn
+          href="https://hestia.ai/en/#contact"
+          class="v-btn__home mr-0"
+          text
+        >
+          Contact us
+        </VBtn>
+        <VBtn
           v-for="link in links"
           :key="link.url"
           :to="link.url"
