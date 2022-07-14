@@ -11,9 +11,9 @@ const options: ExperienceOptions = {
   files: {
     placeVisited: '**/block00.json',
     otherCandidate: '**/block01.json',
-    travels: '**/block02.json',
-    records: '**/block03.json',
-    wifi: '**/block04.json',
+    travels: '**/block03.json',
+    records: '**/block04.json',
+    wifi: '**/block05.json',
     consent: '**/consent.json'
   },
   icon: icon,
