@@ -1,10 +1,8 @@
-import * as csv from '@fast-csv/parse'
-import { camelCase, mapValues, identity, groupBy, every, uniq } from 'lodash-es'
-
+import * as Papa from 'papaparse'
+import { camelCase } from 'lodash-es'
 import { setsEqual } from './utils'
 
-const acceptedDelimiters = [',', ';', '\t']
-
+/** Need to find a way to apply this function to headers // , mapValues, identity, groupBy, every, uniq
 function differentiateDuplicates(strings) {
   const occurrences = mapValues(groupBy(strings, identity), l => l.length)
   const counter = Object.fromEntries(uniq(strings).map(name => [name, 0]))
@@ -12,46 +10,22 @@ function differentiateDuplicates(strings) {
     occurrences[name] === 1 ? name : `${name}_${++counter[name]}`
   )
 }
-
+ */
 async function getCsvHeadersAndItems(csvText) {
-  let best = { items: [], headers: [] }
-  for (const delimiter of acceptedDelimiters) {
-    try {
-      const { headers, items } = await new Promise((resolve, reject) => {
-        const headers = []
-        const items = []
-        csv
-          .parseString(csvText, {
-            delimiter,
-            headers: headers => differentiateDuplicates(headers.map(camelCase)),
-            strictColumnHandling: true
-          })
-          .on('headers', (h) => {
-            headers.push(...h.map(h => camelCase(h)))
-          }
-          )
-          .on('data', (row) => {
-            return items.push(
-              Object.fromEntries(
-                Object.entries(row).map(([k, v]) => [camelCase(k), v])
-              )
-            )
-          })
-          .on('error', error => reject(error))
-          .on('end', () => resolve({ headers, items }))
-      })
-      if (every(items, i => Object.keys(i).length === headers.length)) {
-        if (headers.length >= 2) {
-          return { headers, items }
-        } else if (headers.length === 1) {
-          best = { headers, items }
-        }
+  const { headers, items } = await new Promise((resolve, reject) => {
+    Papa.parse(csvText, {
+      header: true,
+      skipEmptyLines: true,
+      transformHeader: function(header) {
+        return camelCase(header)
+      },
+      complete: function(results) {
+        results.errors.forEach(e => console.error(e))
+        resolve({ headers: results.meta.fields, items: results.data })
       }
-    } catch (error) {
-      console.error(error)
-    }
-  }
-  return best
+    })
+  })
+  return { headers, items }
 }
 
 /**

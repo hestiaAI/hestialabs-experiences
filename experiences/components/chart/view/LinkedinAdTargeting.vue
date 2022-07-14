@@ -69,7 +69,6 @@ export default {
   },
   computed: {
     items() {
-      console.log(this.values)
       return Object.keys(this.values[0])
         .sort()
         .map((k) => {
@@ -82,9 +81,7 @@ export default {
     }
   },
   methods: {
-    drawViz() {
-      console.log('Test', this.values)
-    }
+    drawViz() {}
   }
 }
 </script>

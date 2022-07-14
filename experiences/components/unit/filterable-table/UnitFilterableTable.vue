@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { writeToString } from '@fast-csv/format'
+import * as Papa from 'papaparse'
 import { processError } from '@/utils/utils'
 import { formatObject, formatArray } from '@/utils/json'
 import { detectTypes } from '@/utils/type-check'
@@ -164,7 +164,6 @@ export default {
       this.status = false
       this.error = false
       try {
-        const headers = this.data.headers.map(h => h.text)
         const { filteredItems } = this.$refs.tableRef.$children[0]
         // Change the items keys to match the headers
         const itemsWithHeader = filteredItems.map(i =>
@@ -174,7 +173,7 @@ export default {
           )
         )
         // update the data
-        const csv = await writeToString(itemsWithHeader, { headers })
+        const csv = await Papa.unparse(itemsWithHeader)
         this.csvString = csv
         this.files = [new File([csv], 'results.csv', { type: 'text/csv' })]
       } catch (error) {
