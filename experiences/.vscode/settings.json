@@ -1,0 +1,24 @@
+{
+  "files.eol": "\n",
+  "files.exclude": {
+    ".eslintcache": true
+  },
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.formatOnSave": false,
+  "[js][vue]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  // https://eslint.vuejs.org/user-guide/#editor-integrations
+  "eslint.validate": ["javascript", "vue"],
+  // https://eslint.vuejs.org/user-guide/#trouble-with-visual-studio-code
+  // https://stackoverflow.com/a/64573900/8238129
+  "vetur.validation.template": false,
+  "javascript.validate.enable": false
+}

@@ -1,0 +1,162 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "width": 500,
+  "height": 200,
+  "padding": 50,
+
+  "data": [
+    {
+      "name": "source",
+      "values": [],
+      "format": { "type": "json", "parse": { "date": "date:'%Y-%m-%d'" } },
+      "transform": [
+        {
+          "type": "formula",
+          "as": "max",
+          "expr": "max(datum.like, datum.dislike)"
+        },
+        {
+          "type": "formula",
+          "as": "dateStr",
+          "expr": "timeFormat(datum.date,'%B %d, %Y')"
+        },
+        { "type": "extent", "field": "max", "signal": "extent" }
+      ]
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "x",
+      "type": "time",
+      "range": "width",
+      "domain": { "data": "source", "field": "date" }
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "range": "height",
+      "nice": true,
+      "zero": true,
+      "domain": [0, { "signal": "extent[1]" }]
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "range": ["#66cc99", "#d24d57"],
+      "domain": ["Likes", "Dislikes"]
+    }
+  ],
+
+  "legends": [
+    {
+      "stroke": "color",
+      "symbolType": "circle",
+      "orient": "top-right",
+      "encode": {
+        "symbols": {
+          "update": { "fill": { "value": "white" }, "opacity": { "value": 1 } }
+        }
+      }
+    }
+  ],
+
+  "axes": [
+    { "orient": "bottom", "scale": "x", "offset": 10 },
+    { "orient": "left", "scale": "y", "offset": 10 }
+  ],
+
+  "marks": [
+    {
+      "name": "likes_line",
+      "type": "line",
+      "style": ["line"],
+      "from": { "data": "source" },
+      "encode": {
+        "enter": {
+          "x": { "scale": "x", "field": "date" },
+          "y": { "scale": "y", "field": "like" },
+          "stroke": { "scale": "color", "value": "Likes" },
+          "strokeWidth": { "value": 2 }
+        }
+      }
+    },
+    {
+      "name": "dislikes_line",
+      "type": "line",
+      "from": { "data": "source" },
+      "encode": {
+        "enter": {
+          "x": { "scale": "x", "field": "date" },
+          "y": { "scale": "y", "field": "dislike" },
+          "stroke": { "scale": "color", "value": "Dislikes" },
+          "strokeWidth": { "value": 2 }
+        }
+      }
+    },
+    {
+      "name": "dislikes_marks",
+      "type": "symbol",
+      "style": ["point"],
+      "from": { "data": "source" },
+      "encode": {
+        "enter": {
+          "opacity": { "value": 1 },
+          "fill": { "value": "white" },
+          "stroke": { "scale": "color", "value": "Dislikes" },
+          "strokeWidth": { "value": 2 },
+          "ariaRoleDescription": { "value": "point" },
+          "x": { "scale": "x", "field": "date" },
+          "y": { "scale": "y", "field": "dislike" },
+          "tooltip": {
+            "signal": "datum.dislike + ' dislikes on ' + datum.dateStr"
+          }
+        },
+        "update": {
+          "strokeOpacity": { "value": 1 }
+        },
+        "hover": {
+          "strokeOpacity": { "value": 0.5 }
+        }
+      }
+    },
+    {
+      "name": "likes_marks",
+      "type": "symbol",
+      "style": ["point"],
+      "from": { "data": "source" },
+      "encode": {
+        "enter": {
+          "opacity": { "value": 1 },
+          "fill": { "value": "white" },
+          "stroke": { "scale": "color", "value": "Likes" },
+          "strokeWidth": { "value": 2 },
+          "ariaRoleDescription": { "value": "point" },
+          "x": { "scale": "x", "field": "date" },
+          "y": { "scale": "y", "field": "like" },
+          "tooltip": {
+            "signal": "datum.like + ' likes on ' + datum.dateStr"
+          }
+        },
+        "update": {
+          "strokeOpacity": { "value": 1 }
+        },
+        "hover": {
+          "strokeOpacity": { "value": 0.5 }
+        }
+      }
+    }
+  ],
+  "title": {
+    "text": "History of likes and dislikes you have made",
+    "encode": {
+      "title": {
+        "enter": {
+          "fill": { "value": "#2e3131" },
+          "fontSize": { "value": 15 },
+          "fontWeight": { "value": "bold" }
+        }
+      }
+    }
+  }
+}

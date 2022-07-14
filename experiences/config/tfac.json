@@ -1,0 +1,31 @@
+{
+  "experiences": ["twitter"],
+  "hashtags": ["dataprivacy", "hestialabs"],
+  "filedrop": "https://drive.infomaniak.com/app/collaborate/193995/6d2e9744-c71d-434e-8d62-62acf0b8a26d",
+  "consent": {
+    "twitter": [
+      {
+        "title": "Export results",
+        "type": "input",
+        "name": "name (optional)"
+      },
+      {
+        "type": "input",
+        "name": "e-mail (optional)"
+      },
+      {
+        "description": "By filling this form, I consent to sharing my targeting criteria for the exclusive purpose of producing screenshots highlighting how I have been targeted by Facebook, Google or other actors of interest to the <a href=\"https://trackingfreeads.eu/\" target=\"_blank\">Tracking-Free Ads Coalition</a>. These screenshots will then be shared with the Tracking-Free Ads Coalition. The raw data will be deleted within 2 months. For further information please refer to our <a href=\"https://hestialabs.org/en/legal/\" target=\"_blank\">privacy policy</a>.",
+        "type": "checkbox",
+        "options": ["I understand and I agree"],
+        "value": [],
+        "required": true
+      },
+      {
+        "type": "data",
+        "hide": true,
+        "value": ["advertisers-per-day", "all-criteria-all-advertisers"],
+        "required": ["advertisers-per-day", "all-criteria-all-advertisers"]
+      }
+    ]
+  }
+}

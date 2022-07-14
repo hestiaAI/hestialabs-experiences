@@ -1,0 +1,61 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.0.json",
+  "width": 500,
+  "height": 500,
+  "padding": 60,
+  "autosize": "none",
+  "data": [
+    {
+      "name": "source",
+      "values": [],
+      "transform": [
+        { "type": "stratify", "key": "id", "parentKey": "parent" },
+        {
+          "type": "partition",
+          "field": "size",
+          "sort": { "field": "value" },
+          "size": [{ "signal": "2 * PI" }, { "signal": "width/2" }],
+          "as": ["a0", "r0", "a1", "r1", "depth", "children"]
+        }
+      ]
+    }
+  ],
+  "scales": [
+    { "name": "color", "type": "ordinal", "range": { "scheme": "tableau20" } }
+  ],
+  "legends": [
+    { "orient": "top-left", "fill": "color", "offset": -50, "zindex": 1 }
+  ],
+  "marks": [
+    {
+      "type": "arc",
+      "from": { "data": "source" },
+      "encode": {
+        "enter": {
+          "x": { "signal": "width / 2" },
+          "y": { "signal": "height / 2" },
+          "fill": { "scale": "color", "field": "group" },
+          "tooltip": {
+            "signal": "datum.name + (datum.value ? ': targeted ' + format(datum.value, ',.0f') + ' times' : '')"
+          }
+        },
+        "update": {
+          "startAngle": { "field": "a0" },
+          "endAngle": { "field": "a1" },
+          "innerRadius": { "field": "r0" },
+          "outerRadius": { "field": "r1" },
+          "stroke": { "value": "white" },
+          "strokeWidth": { "value": 0.5 },
+          "opacity": { "signal": "1 / (datum.depth/2)" },
+          "zindex": { "value": 0 }
+        },
+        "hover": {
+          "stroke": { "value": "grey" },
+          "strokeWidth": { "value": 2 },
+          "zindex": { "value": 1 }
+        }
+      }
+    }
+  ],
+  "config": {}
+}

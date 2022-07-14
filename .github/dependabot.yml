@@ -1,0 +1,13 @@
+version: 2
+updates:
+# Fetch and update latest `npm` packages
+- package-ecosystem: npm
+  directory: '/experiences'
+  schedule:
+    interval: monthly
+    time: '00:00'
+  open-pull-requests-limit: 50
+  commit-message:
+    prefix: fix
+    prefix-development: chore
+    include: scope

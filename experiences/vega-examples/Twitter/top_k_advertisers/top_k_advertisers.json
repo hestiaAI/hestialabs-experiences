@@ -1,0 +1,210 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "width": 500,
+  "height": 510,
+  "padding": 25,
+  "autosize": "fit",
+
+  "signals": [
+    {
+      "name": "tooltip",
+      "value": { "key": "All Others", "value": 0 },
+      "on": [
+        { "events": "rect:mouseover", "update": "datum" },
+        {
+          "events": "rect:mouseout",
+          "update": { "key": "All Others", "value": 0 }
+        }
+      ]
+    },
+    {
+      "name": "k",
+      "value": 20,
+      "bind": { "input": "range", "name": " ", "min": 1, "max": 50, "step": 1 }
+    },
+    {
+      "name": "op",
+      "value": "sum",
+      "bind": {
+        "input": "select",
+        "name": " ",
+        "options": ["average", "sum"],
+        "labels": ["per day", "in total"]
+      }
+    },
+    {
+      "name": "label",
+      "value": { "average": "per day", "sum": "in total" }
+    }
+  ],
+
+  "title": {
+    "text": { "signal": "'Advertiser targetting you ' + label[op]" },
+    "anchor": "start",
+    "frame": "group",
+    "subtitle": {
+      "signal": "'between ' + timeFormat(extent[0], \"%d/%m/%Y\") + ' and ' + timeFormat(extent[1], \"%d/%m/%Y\")"
+    },
+    "dy": { "value": -24 },
+    "fontWeight": { "value": "lighter" },
+    "fontSize": { "value": 18 },
+    "font": { "value": "Tahoma" },
+    "color": { "value": "#303030" },
+    "subtitleFont": { "value": "Tahoma" },
+    "subtitleFontStyle": { "value": "italic" },
+    "subtitlePadding": 10
+  },
+
+  "data": [
+    {
+      "name": "source",
+      "values": [],
+      "format": { "type": "json", "parse": { "date": "date:'%Y-%m-%d'" } },
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "datum.advertiserName != null && datum['count'] != null"
+        },
+        {
+          "type": "extent",
+          "field": "date",
+          "signal": "extent"
+        }
+      ]
+    },
+    {
+      "name": "ranks",
+      "source": "source",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["advertiserName"],
+          "ops": [{ "signal": "op" }],
+          "fields": ["count"],
+          "as": ["count"]
+        },
+        {
+          "type": "window",
+          "sort": { "field": "count", "order": "descending" },
+          "ops": ["row_number"],
+          "as": ["rank"]
+        },
+        {
+          "type": "extent",
+          "field": "rank",
+          "signal": "extentAdvertiser"
+        }
+      ]
+    },
+    {
+      "name": "companies",
+      "source": "source",
+      "transform": [
+        {
+          "type": "lookup",
+          "from": "ranks",
+          "key": "advertiserName",
+          "values": ["rank"],
+          "fields": ["advertiserName"]
+        },
+        {
+          "type": "formula",
+          "as": "key",
+          "expr": "datum.rank < k ? datum.advertiserName : 'All Others'"
+        },
+        {
+          "type": "aggregate",
+          "groupby": ["key"],
+          "ops": [{ "signal": "op" }],
+          "fields": ["count"],
+          "as": ["value"]
+        },
+        {
+          "type": "formula",
+          "as": "value",
+          "expr": "toNumber(format(datum.value, '.2f'))"
+        },
+        {
+          "type": "collect",
+          "sort": { "field": "value" }
+        }
+      ]
+    }
+  ],
+
+  "marks": [
+    {
+      "type": "rect",
+      "from": { "data": "companies" },
+      "encode": {
+        "update": {
+          "x": { "scale": "x", "value": 0 },
+          "x2": { "scale": "x", "field": "value" },
+          "y": { "scale": "y", "field": "key" },
+          "height": { "scale": "y", "band": 1 }
+        }
+      }
+    },
+    {
+      "type": "text",
+      "encode": {
+        "enter": {
+          "align": { "value": "center" },
+          "baseline": { "value": "middle" },
+          "fill": { "value": "#333" }
+        },
+        "update": {
+          "y": {
+            "scale": "y",
+            "signal": "if(tooltip, tooltip.key, \"All Others\")",
+            "band": 0.5
+          },
+          "x": {
+            "scale": "x",
+            "signal": "if(tooltip, tooltip.value, 130)",
+            "offset": 5
+          },
+          "text": { "signal": "tooltip.value" },
+          "align": { "value": "left" },
+          "fontWeight": { "value": "bold" },
+          "opacity": { "signal": "if(tooltip.value === 0, 0,1)" },
+          "fillOpacity": [{ "test": "datum === tooltip", "value": 1 }]
+        }
+      }
+    }
+  ],
+
+  "scales": [
+    {
+      "name": "x",
+      "type": "linear",
+      "domain": { "data": "companies", "field": "value" },
+      "range": "width",
+      "nice": true
+    },
+    {
+      "name": "y",
+      "type": "band",
+      "domain": {
+        "data": "companies",
+        "field": "key",
+        "sort": { "op": "max", "field": "value", "order": "descending" }
+      },
+      "range": "height",
+      "padding": 0.2
+    }
+  ],
+
+  "axes": [
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "format": "d",
+      "tickCount": 6
+    },
+    {
+      "scale": "y",
+      "orient": "left"
+    }
+  ]
+}
