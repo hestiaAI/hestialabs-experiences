@@ -1,10 +1,10 @@
 <template>
   <VContainer class="mt-10">
-    <h3 class="text-h4">
+    <h4 class="text-h4">
       About <strong>DIGIPOWER ACADEMY</strong>
-    </h3>
+    </h4>
     <div class="mt-10">
-      <p class="">
+      <p>
         Data literacy: ability to think critically about data in different contexts and examine the impact of different approaches when collecting, using and sharing data and information.
       </p>
       <p>
