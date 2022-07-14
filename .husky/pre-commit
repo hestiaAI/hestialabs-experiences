@@ -1,9 +1,14 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+echo 'common pre-commit'
+
 if [ -t 2 ]; then
   exec >/dev/tty 2>&1
 fi
 
 # https://scottsauber.com/2021/06/01/using-husky-git-hooks-and-lint-staged-with-nested-folders/
-cd ./experiences && npm run pre-commit
+#
+
+cd ./packages && npx lint-staged
+cd ../experiences && npm run pre-commit

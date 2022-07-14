@@ -12,7 +12,7 @@
     "dev": "npm-run-all -p -r dev:bubble-server dev:monorepo dev:app",
     "dev:no-local-server": "npm-run-all -p -r dev:monorepo dev:app",
     "dev:bubble-server": "cd ../../hestialabs-bubble-server/bubbleserver && cross-env DJANGO_DEBUG=True poetry run python ./manage.py runserver",
-    "dev:monorepo": "cd ../../hestialabs && npm run dev",
+    "dev:monorepo": "cd ../packages && npm run dev",
     "dev:app": "nuxt --open",
     "test": "jest",
     "start": "nuxt start",
@@ -23,7 +23,7 @@
     "lint": "eslint --ext .js,.vue",
     "lint:fix": "eslint --ext .js,.vue --fix",
     "pre-commit": "lint-staged",
-    "prepare": "node prepare.js",
+    "_prepare": "node prepare.js",
     "prettier": "prettier"
   },
   "jest": {
