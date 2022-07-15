@@ -16,6 +16,7 @@
     "sit-aggregator",
     "sit-participant"
   ],
+  "logo": "/digipower-academy-logo.png",
   "appBarLinks": [
     { "url": "/about", "name": "About" },
     { "url": "/privacy", "name": "Privacy" }
