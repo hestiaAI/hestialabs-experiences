@@ -17,7 +17,7 @@
       <span class="text-h6 font-weight-light">Twitter</span>
     </VCardTitle>
 
-    <VCardText class="text-h6 font-weight-bold">
+    <VCardText class="text-subtitle-1 font-weight-bold pr-5 pl-5">
       "{{ text }}"
     </VCardText>
 

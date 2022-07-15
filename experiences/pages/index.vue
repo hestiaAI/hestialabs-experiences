@@ -6,8 +6,8 @@
           <VCol cols="12" md="6">
             <h1 class="banner-title font-weight-bold white--text">
               <div>DIGIPOWER</div>
-              <div class="ml-10">
-                ACADEMY
+              <div class="ml-13">
+                .ACADEMY
               </div>
             </h1>
             <h4 class="banner-subtitle white--text font-weight-regular" />

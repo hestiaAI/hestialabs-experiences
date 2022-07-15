@@ -48,7 +48,7 @@
           style="color: white"
         >Hestia.ai</a>
         <br>
-        The Digipower.Academy has emerged out of projects initiated separately by
+        The Digipower.academy has emerged out of projects initiated separately by
         <a
           href="https://www.sitra.fi/en/projects/digipower-investigation"
           target="_blank"

@@ -1,7 +1,7 @@
 <template>
   <VContainer class="mt-10">
     <h4 class="text-h4">
-      About <strong>DIGIPOWER ACADEMY</strong>
+      About <strong>Digipower.academy</strong>
     </h4>
     <div class="mt-10">
       <p>
