@@ -154,6 +154,7 @@ Note that snapshots do not include Vue props or data, and that child components 
 #### Continuous integration
 
 We are using circle ci to protect the master branch on github.
+TODO: we should really document how this is set up.
 
 ### Upgrading npm on Windows
 
