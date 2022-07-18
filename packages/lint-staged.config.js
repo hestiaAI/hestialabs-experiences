@@ -3,7 +3,7 @@ import camelCase from 'lodash.camelcase'
 export default {
   'packages/*/src/**/*.ts': filenames => {
     const packages = filenames
-      .map(filename => /packages\/([^/]+)\//.exec(filename)[1])
+      .map(filename => /packages\/packages\/([^/]+)\//.exec(filename)[1])
       .map(camelCase)
     // need to build before testing
     return ['npm run build', `npm run test:ts-node -- ${packages.join(' ')}`]
