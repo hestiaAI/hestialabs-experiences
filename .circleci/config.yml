@@ -1,6 +1,19 @@
-# the github project is added to circleci here:
-# https://app.circleci.com/projects/project-dashboard/github/hestiaAI/
 # TODO find out and document how to make circleci protect a github branch
+# Circleci's github app is installed for the hestiaAI user.
+# https://github.com/organizations/hestiaAI/settings/installations
+# It must be configured to access this repo
+# On circleci, set up the github project here:
+# https://app.circleci.com/projects/project-dashboard/github/hestiaAI/
+# At some point circleci adds a deploy key to the github project.
+# You can find it under settings>deploy keys. Copy the SHAxxx code.
+# Under settings>webhooks make sure there's a webhook to https://circleci.com/hooks/github
+# Set the secret to the SHAxxx code from deploy keys
+# At some point it should be possible to add a branch protection
+# at settings>Branches, Add branch protection
+# - Require status checks to pass before merging
+#   - Require branches to be up to date before merging
+# search for status event "tests" from circleci and select it
+#
 
 # This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
