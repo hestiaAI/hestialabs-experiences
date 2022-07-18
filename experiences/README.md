@@ -151,6 +151,10 @@ An example is available in [components/unit/filterable-table/\_\_tests\_\_/UnitF
 
 Note that snapshots do not include Vue props or data, and that child components are not recursively rendered as HTML (e.g. a component `BaseButton` will appear as an HTML tag `<basebutton>`).
 
+#### Continuous integration
+
+We are using circle ci to protect the master branch on github.
+
 ### Upgrading npm on Windows
 
 This is only relevant for Windows users who work with nvm.
