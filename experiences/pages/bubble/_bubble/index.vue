@@ -7,6 +7,7 @@
     <TheExperienceMenu
       :cards="$vuetify.breakpoint.smAndUp"
       :include="bubble.experiences"
+      :group-by-collaborator="false"
     />
   </VContainer>
 </template>

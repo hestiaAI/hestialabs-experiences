@@ -41,16 +41,33 @@
     </VMain>
     <VFooter app absolute color="primary">
       <div class="lighten-2 py-2 ma-auto white--text" align="center">
-        Educational material developed by
+        &copy; Copyright 2022
         <a
           href="https://hestia.ai"
           target="_blank"
           style="color: white"
         >Hestia.ai</a>
-        <br>Currently in development |
-        <a :href="newsletterURL" target="_blank" style="color: white">
-          {{ newsletterMessage }}
-        </a>
+        <br>
+        The Digipower.academy has emerged out of projects initiated separately by
+        <a
+          href="https://www.sitra.fi/en/projects/digipower-investigation"
+          target="_blank"
+          style="color: white"
+        >SITRA</a>, <a
+          href="https://www.migros-engagement.ch/en/news-projects/technology-ethics/hestialabs"
+          target="_blank"
+          style="color: white"
+        >Migros Pioneer Fund</a> (via the
+        <a
+          href="http://www.hestialabs.org"
+          target="_blank"
+          style="color: white"
+        >HestiaLabs </a> project) and
+        <a
+          href="https://personaldata.io/"
+          target="_blank"
+          style="color: white"
+        >PersonalData.IO </a>
       </div>
     </VFooter>
   </VApp>
@@ -144,6 +161,7 @@ export default {
       })
     }
     // Show the newsletter alert once a day
+    /*
     if (
       !this.alert &&
       (!localStorage.alertNewsletterDismissed ||
@@ -155,6 +173,7 @@ export default {
         this.alert = true
       }, 3000)
     }
+    */
   },
   methods: {
     alertClosed() {
