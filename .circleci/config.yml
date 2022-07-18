@@ -8,6 +8,8 @@
 # You can find it under settings>deploy keys. Copy the SHAxxx code.
 # Under settings>webhooks make sure there's a webhook to https://circleci.com/hooks/github
 # Set the secret to the SHAxxx code from deploy keys
+# Choose "Let me select individual events" and check:
+# - Forks, Pushes, Pull Requests, Repositories, Visibility Changes
 # At some point it should be possible to add a branch protection
 # at settings>Branches, Add branch protection
 # make sure the following checkboxes are on
