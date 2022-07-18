@@ -32,5 +32,10 @@
     "mercator-aggregator",
     "mercator-participant"
   ],
+  "logo": "/digipower-academy-logo.png",
+  "appBarLinks": [
+    { "url": "/about", "name": "About" },
+    { "url": "/privacy", "name": "Privacy" }
+  ],
   "hashtags": ["dataprivacy", "hestialabs", "digipower"]
 }

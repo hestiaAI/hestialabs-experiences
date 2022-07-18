@@ -5,13 +5,19 @@
         <VRow justify="center">
           <VCol cols="12" md="6">
             <h1 class="banner-title font-weight-bold white--text">
-              Understand, lever and build stuff with data
+              <div>DIGIPOWER</div>
+              <div class="ml-13">
+                .ACADEMY
+              </div>
             </h1>
-            <h4 class="banner-subtitle white--text font-weight-regular">
-              We are Digipower.academy, we empower people and organisations through the mastery of data flows
-            </h4>
+            <h4 class="banner-subtitle white--text font-weight-regular" />
           </VCol>
-          <VCol cols="12" md="6" />
+          <VCol cols="12" md="6">
+            <BaseQuote
+              text="We need to train both the people who are putting data and information out there, as well as those reading it, how to interpret and question it to ensure they understand it and are not being misled or deceived."
+              author="Sir Tim Berners-Lee, inventor of the World Wide Web"
+            />
+          </VCol>
         </VRow>
       </VContainer>
     </div>
@@ -41,7 +47,7 @@
         <VRow justify="center">
           <template v-if="$store.state.config.bubbleConfig">
             <VCol
-              v-for="({ title, icon }, slug) in $store.state.config.bubbleConfig"
+              v-for="({ title, icon, description, slug}) in workshops"
               :key="slug"
               cols="12"
               sm="6"
@@ -50,7 +56,7 @@
               class="text-center"
             >
               <BaseBubbleCard
-                v-bind="{title, icon, slug}"
+                v-bind="{title, description, icon, slug}"
                 class="pa-3"
               />
             </VCol>
@@ -76,20 +82,14 @@
         <VRow>
           <VCol>
             <div class="text-center">
-              <span class="caption">No testimonial yet.</span>
+              <BaseTwitterCard
+                text="To hope to effectively regulate the data economy you need to deeply understand the power companies have through the personal data they hold. That's why I am participating in @sitrafund's #digipower investigation using #GDPR rights to get my data. Who will be the most transparent?"
+                tweet-link="https://twitter.com/jyrkikatainen/status/1455484493897342977?s=20&t=YdTsvxYhUonm0Gxr9nICvw"
+                profile-name="Jyrki Katainen"
+                profile-description="Former Prime Minister of Finland and VP of EU Commission"
+                profile-photo="https://pbs.twimg.com/profile_images/1229410125930270720/MLN38R_9_400x400.jpg"
+              />
             </div>
-          </VCol>
-        </VRow>
-      </VContainer>
-    </div>
-    <div class="section-wrapper pa-15">
-      <VContainer>
-        <VRow justify="center">
-          <VCol cols="12" sm="10" md="9">
-            <h3 class="section-title font-weight-medium ml-0">
-              Any question?
-            </h3>
-            <BaseContactForm />
           </VCol>
         </VRow>
       </VContainer>
@@ -97,34 +97,43 @@
   </div>
 </template>
 <script>
+import { pick } from 'lodash-es'
 import BaseBubbleCard from '../components/base/card/BaseBubbleCard.vue'
+import BaseTwitterCard from '@/components/base/card/BaseTwitterCard.vue'
 export default {
-  components: { BaseBubbleCard },
+  components: { BaseBubbleCard, BaseTwitterCard },
   data() {
     return {
       tools: [
         {
-          title: 'Subject Access Request',
-          text: 'As an app user you have “data subject rights”. The app does not own your data, you do. You can recover your data in a file via a Subject Access Request (SAR).',
-          icon: 'mdiTextBoxEditOutline',
-          actionText: 'See more',
-          actionHref: 'https://hestialabs.org/en/act/sar/'
+          title: 'What we do',
+          text: 'Digipower.academy empower people and organisations through the mastery of data and data flows.',
+          icon: 'mdiDatabaseCog'
         },
         {
-          title: 'Experiences',
-          text: 'The private data that companies have collected about you is often in a format that is difficult to understand. Once you receive it, you can easily analyse it using our visualisation tools.',
-          icon: 'mdiChartBar',
-          actionText: 'See more',
-          actionHref: '/experience'
+          title: 'Who is it for',
+          text: 'Business leaders, civil servants, researchers, journalists, teachers, you will find here the resources towards understanding and using data in your field.',
+          icon: 'mdiAccountGroup'
         },
         {
-          title: 'Workshops',
-          text: 'Want to go deeper? Participate to one of our workshops, mutualise and take back control of your data.',
-          icon: 'mdiAccountGroup',
-          actionText: 'Contact us',
-          actionHref: 'https://hestia.ai/en/#contact'
+          title: 'Why is it so special',
+          text: 'The sessions take place in the digital life of the participants themselves. They retrieve, explore and make sense of their own data. Highly impactful.',
+          icon: 'mdiWeb'
         }
       ]
+    }
+  },
+  computed: {
+    workshops() {
+      return Object.entries(this.$store.state.config.bubbleConfig).map(([slug, conf]) => {
+        const config = pick(conf, [
+          'title',
+          'icon',
+          'description',
+          'publicKey'
+        ])
+        return { slug, ...config }
+      }).filter(w => !w.publicKey)
     }
   }
 }
@@ -139,7 +148,7 @@ export default {
     align-items: center;
 }
 .banner-title {
-    font-size: 40px;
+    font-size: 60px;
     line-height: 50px;
     margin: 20px 0;
 }

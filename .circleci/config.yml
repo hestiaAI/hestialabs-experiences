@@ -1,3 +1,7 @@
+# the github project is added to circleci here:
+# https://app.circleci.com/projects/project-dashboard/github/hestiaAI/
+# TODO find out and document how to make circleci protect a github branch
+
 # This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
 
