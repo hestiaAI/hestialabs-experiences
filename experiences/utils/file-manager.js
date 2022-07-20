@@ -390,7 +390,7 @@ export default class FileManager {
 
     // Get all arays idx from a processed jsonPath
     function getIdxs(path, maxLength = -1) {
-      const re = /\[(:?\d)\]/g
+      const re = /\[(:?\d+)\]/g
       return [...path.matchAll(re)].map(m => m[1]).slice(0, maxLength).join('')
     }
 
@@ -406,9 +406,18 @@ export default class FileManager {
       return getIdxs(pathValue, minLength)
     }
 
+    // Check that two paths are joinable by making sure they dot not comport diverging nested arrays
+    function validPaths(path1, path2) {
+      const smallerArray = getNbArrays(path1) < getNbArrays(path2) ? path1 : path2
+      const equalIdx = smallerArray.lastIndexOf('[*]') || 0
+      return path1.slice(0, equalIdx) === path2.slice(0, equalIdx)
+    }
+
     // Left join the result of one JSON query with another one if the path of the latter is a subPath on the primary
     function leftJoinPaths(primary, secondary) {
-      console.log('JOIN', primary, secondary)
+      if (!validPaths(primary.path, secondary.path)) {
+        console.error('Cannot join those paths, they are not overlapping')
+      }
       const secondaryFKs = {}
       secondary.values.forEach((item) => {
         const foreignKey = computeForeignKey(item.path, primary.path, secondary.path)

@@ -3,6 +3,7 @@
     <p>Could not find a schema for this file</p>
   </div>
   <div v-else>
+    <BaseSchemaTree :schema="jsonSchema" />
     <VExpansionPanels
       v-model="panel"
       multiple
@@ -46,12 +47,15 @@
 <script>
 import mixin from './mixin'
 import { createAccessor } from '@/utils/accessor'
+import BaseSchemaTree from '@/components/base/schemaTree/BaseSchemaTree.vue'
+
 export default {
   name: 'UnitFileExplorerViewerRaw',
+  components: { BaseSchemaTree },
   mixins: [mixin],
   data() {
     return {
-      jsonSchemaFile: {},
+      jsonSchema: {},
       error: false,
       panel: [],
       headers: [
@@ -77,11 +81,9 @@ export default {
   methods: {
     fetchSchema(filename) {
       try {
-        const jsonSchema = this.$store.getters.experience(this.$route).dataModel
-        const jsonSchemaKey = Object.keys(jsonSchema).filter(k => filename.endsWith(jsonSchema[k].filename))[0]
-        this.jsonSchemaFile = jsonSchema[jsonSchemaKey]
+        this.jsonSchema = this.$store.getters.experience(this.$route).dataModel['@graph'].filter(item => filename.endsWith(item.fileName))[0] || {}
         const items = []
-        this.visitNode(this.jsonSchemaFile, jsonSchemaKey, items)
+        // this.visitNode(this.jsonSchemaFile, jsonSchemaKey, items)
         this.items = items
       } catch (e) {
         console.error(e)
