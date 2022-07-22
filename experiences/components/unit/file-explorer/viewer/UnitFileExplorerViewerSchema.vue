@@ -30,7 +30,7 @@
 <script>
 import { mapState } from 'vuex'
 import mixin from './mixin'
-import BaseSchemaTree from '@/components/base/schemaTree/BaseSchemaTree.vue'
+import BaseSchemaTree from '@/components/base/BaseSchemaTree.vue'
 import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 export default {
   name: 'UnitFileExplorerViewerRaw',
