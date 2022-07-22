@@ -2,11 +2,11 @@
   <VCard
     v-if="validSchema"
     outlined
-    :hover="isSelectable && !schema.fileName"
+    :hover="isSelectable"
+    :ripple="isSelectable"
     class="ma-3"
     :dark="selected"
-    :disabled="!isSelectable && !schema.fileName"
-    @click="clickOnCard"
+    v-on="isSelectable ? { click: clickOnCard } : {}"
     @click.stop=""
   >
     <VCardTitle>
@@ -30,7 +30,7 @@
       <BaseSchemaTree
         v-for="child in schema.contains"
         :key="child.absolutePath"
-        :ref="child.absolutePath"
+        ref="childs"
         :schema="child"
       />
     </VCardText>
@@ -40,7 +40,7 @@
 <script>
 
 import { isEmpty } from 'lodash-es'
-import EventBus from './eventBus'
+// import EventBus from './eventBus'
 
 export default {
   name: 'BaseSchemaTree',
@@ -53,7 +53,7 @@ export default {
   data() {
     return {
       selected: false,
-      selectedPaths: {}
+      isMounted: false
     }
   },
   computed: {
@@ -64,38 +64,51 @@ export default {
       return !this.schema.contains?.length
     },
     isSelectable() {
-      console.log(this.selectedPaths)
-      const selectedPaths = Object.keys(this.selectedPaths).filter(p => this.selectedPaths[p])
-      const ret = selectedPaths.every(p => this.validPaths(p, this.schema.absolutePath))
-      console.log(selectedPaths, ret)
-      return ret
+      // const selectedPaths = this.$store.getters.selectedPaths
+      // const currentValid = selectedPaths.every(p => this.validPaths(p, this.schema.absolutePath))
+      // const childrensValid = this.isMounted && this.$refs.childs ? this.$refs.childs.every(c => c.isSelectable) : true
+      return true// currentValid && childrensValid
     }
+  },
+  mounted() {
+    this.isMounted = true
   },
   created() {
     // Sets up the Event Bus listener
-    EventBus.$on('change', this.pathsChanged)
+    // EventBus.$on('change', this.pathsChanged)
   },
   destroyed() {
     // Removes Event Bus listener upon removal
-    EventBus.$off('change', this.pathsChanged)
+    // EventBus.$off('change', this.pathsChanged)
   },
   methods: {
-    clickOnCard() {
-      if (this.isSelectable) {
-        this.selected = !this.selected
-        // Emitting a custom-event via the Event Bus
-        EventBus.$emit('change', { [this.schema.absolutePath]: this.selected })
+    updateSelectedPaths() {
+      if (this.isLeaf) {
+        if (this.selected) {
+          this.$store.commit('selectPath', this.schema.absolutePath)
+        } else {
+          this.$store.commit('unselectPath', this.schema.absolutePath)
+        }
       }
     },
-    pathsChanged(path) {
-      this.selectedPaths = { ...this.selectedPaths, ...path }
+    clickOnCard() {
+      this.selected = !this.selected
+      this.updateSelectedPaths()
+      // Emitting current change via the Event Bus
+      // EventBus.$emit('change', { path: this.schema.absolutePath || '$', selected: this.selected })
     },
+    // pathsChanged({ path, selected }) {
+    //  if (this.schema.absolutePath && path === this.schema.absolutePath.slice(0, path.length)) {
+    //    this.selected = selected
+    //    this.updateSelectedPaths()
+    //  }
+    // },
+    // Check that arrays from path1 and path2 are all in the same tree branch
     validPaths(path1, path2) {
-      if (!path1 || !path2) { return true }
+      if (!path1 || !path2) { return false }
       const getNbArrays = path => [...path.matchAll(/\[(:?\*)\]/g)].length
       const smallerArray = getNbArrays(path1) < getNbArrays(path2) ? path1 : path2
       const equalIdx = smallerArray.lastIndexOf('[*]') || 0
-      console.log('Validate', path1, path2, path1.slice(0, equalIdx) === path2.slice(0, equalIdx))
       return path1.slice(0, equalIdx) === path2.slice(0, equalIdx)
     }
   }

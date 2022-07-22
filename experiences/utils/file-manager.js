@@ -389,19 +389,13 @@ export default class FileManager {
     const { JSONPath } = require('jsonpath-plus')
 
     // Get all arays idx from a processed jsonPath
-    function getIdxs(path, maxLength = -1) {
-      const re = /\[(:?\d+)\]/g
-      return [...path.matchAll(re)].map(m => m[1]).slice(0, maxLength).join('')
-    }
+    const getIdxs = (path, maxLength = -1) => [...path.matchAll(/\[(:?\d+)\]/g)].map(m => m[1]).slice(0, maxLength).join('')
 
     // Get the number of nested arrays in a jsonPath
-    function getNbArrays(path) {
-      const re = /\[(:?\*)\]/g
-      return [...path.matchAll(re)].length
-    }
+    const getNbArrays = path => [...path.matchAll(/\[(:?\*)\]/g)].length
 
     // Compute a foreign key that uniquely identify values from the same tree path
-    function computeForeignKey(pathValue, pathPrimary, pathSecondary) {
+    const computeForeignKey = (pathValue, pathPrimary, pathSecondary) => {
       const minLength = Math.min(getNbArrays(pathPrimary), getNbArrays(pathSecondary))
       return getIdxs(pathValue, minLength)
     }

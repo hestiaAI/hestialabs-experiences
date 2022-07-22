@@ -4,70 +4,58 @@
   </div>
   <div v-else>
     <BaseSchemaTree :schema="jsonSchema" />
-    <VExpansionPanels
-      v-model="panel"
-      multiple
-      class="pa-3"
-    >
-      <VExpansionPanel
-        v-for="(item,i) in items"
-        :key="i"
+    <div class="text-center">
+      <div v-if="!isValidPaths">
+        Cannot create table with those accessors
+      </div>
+      <VBtn
+        class="ma-3"
+        :disabled="!isValidPaths"
+        @click="buildTable"
       >
-        <VExpansionPanelHeader>
-          <div class="d-flex justify-space-between">
-            <span>{{ item.accessor.jsonPath }}</span>
-            <VChip
-              v-if="item.isLeaf"
-              class="mr-2"
-              color="green"
-              outlined
-              filter
-              dense
-              small
-            >
-              Leaf
-            </VChip>
-          </div>
-        </VExpansionPanelHeader>
-        <VExpansionPanelContent>
-          <VRow>
-            <VCol v-for="header in headers" :key="header.value" sm="6" md="4" lg="3">
-              <strong>{{ header.text }}:</strong> <span class="ml-1">{{ item[header.value] }}</span>
-            </VCol>
-            <VCol cols="12">
-              <UnitFilterableTableFromAccessor :accessor="item.accessor" />
-            </VCol>
-          </VRow>
-        </VExpansionPanelContent>
-      </VExpansionPanel>
-    </VExpansionPanels>
+        Create Table
+      </VBtn>
+      <div v-if="isLoading">
+        <BaseProgressCircular />
+      </div>
+      <div v-else-if="processed">
+        <UnitFilterableTable
+          v-bind="{headers, items}"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import mixin from './mixin'
-import { createAccessor } from '@/utils/accessor'
 import BaseSchemaTree from '@/components/base/schemaTree/BaseSchemaTree.vue'
-
+import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 export default {
   name: 'UnitFileExplorerViewerRaw',
-  components: { BaseSchemaTree },
+  components: { BaseSchemaTree, BaseProgressCircular },
   mixins: [mixin],
   data() {
     return {
       jsonSchema: {},
       error: false,
-      panel: [],
-      headers: [
-        { text: 'Type', value: 'foundType' },
-        { text: 'Descriptive Type', value: 'descriptiveType' },
-        { text: 'Unique', value: 'unique' },
-        { text: 'Default', value: 'default' },
-        { text: 'Description', value: 'description' },
-        { text: 'Choices', value: 'choices' },
-        { text: 'Regex', value: 'regex' }
-      ],
+      isLoading: false,
+      processed: false,
+      headers: [],
       items: []
+    }
+  },
+  computed: {
+    ...mapState(['selectedPaths']),
+    isValidPaths() {
+      const toCheck = [...this.selectedPaths]
+      let allGood = true
+      while (toCheck.length && allGood) {
+        const path1 = toCheck.pop()
+        allGood = toCheck.every(path2 => this.validPaths(path1, path2))
+      }
+      return allGood
     }
   },
   watch: {
@@ -90,26 +78,20 @@ export default {
         this.error = true
       }
     },
-    visitNode(node, nodeKey, array) {
-      if (node) {
-        const nodeValues = {
-          accessor: createAccessor(...nodeKey.split(':')),
-          foundType: node.foundType,
-          descriptiveType: node.descriptiveType,
-          unique: node.unique,
-          default: node.default,
-          description: node.description,
-          choices: node.choices,
-          regex: node.regex,
-          traversal: node.traversal,
-          isLeaf: this.isEmpty(node.traversal)
-        }
-        array.push(nodeValues)
-        Object.keys(node.traversal).forEach(k => this.visitNode(node.traversal[k], k, array))
-      }
+    // Check that arrays from path1 and path2 are all in the same tree branch
+    validPaths(path1, path2) {
+      if (!path1 || !path2) { return false }
+      const getNbArrays = path => [...path.matchAll(/\[(:?\*)\]/g)].length
+      const smallerArray = getNbArrays(path1) < getNbArrays(path2) ? path1 : path2
+      const equalIdx = smallerArray.lastIndexOf('[*]') || 0
+      return path1.slice(0, equalIdx) === path2.slice(0, equalIdx)
     },
-    isEmpty(obj) {
-      return obj && Object.keys(obj).length === 0
+    async buildTable() {
+      this.isLoadind = true
+      this.headers = this.selectedPaths.map(a => a.split('.').pop())
+      this.items = await this.fileManager.findAllMatchingObjects(this.filename, this.selectedPaths)
+      this.processed = true
+      this.isLoadind = false
     }
   }
 }
