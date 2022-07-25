@@ -1,5 +1,6 @@
 import type { DatabaseConfig } from '@/types'
 import { SQLType, JSONPathReturnObject } from '@/types/database-config'
+import { pathToFileURL } from 'url'
 
 const { TEXT, INTEGER } = SQLType
 
@@ -91,7 +92,8 @@ const config: DatabaseConfig = {
         callback: output => {
           const o = output as JSONPathReturnObject
           const path = ['likedAt', 'date'].find(p => p in o)
-          o['foundDate'] = path ? o[path].replace('T', ' ') : 'null'
+          console.log(path, o, path ? o[path] : '')
+          o['foundDate'] = path && o[path] ? o[path].replace('T', ' ') : 'null'
         }
       },
       getters: [
