@@ -3,8 +3,8 @@ import { PostprocessorFunction } from '@/types'
 function parse_date(v: Record<string, any>) {
   if ('gpsTimeMs' in v) {
     return new Date(parseInt(v.gpsTimeMs)).toISOString()
-  } else if ('gpsTime' in v) {
-    return new Date(parseInt(v.gpsTime) * 1000).toISOString()
+  } else if ('time' in v) {
+    return v.time
   } else if ('occurredAt' in v) {
     return new Date(parseInt(v.occurredAt)).toISOString()
   } else {
@@ -20,12 +20,12 @@ export const driverPostProcessor: PostprocessorFunction = result => {
       longitude: v.lng,
       date: parse_date(v),
       speed: v.speed,
-      driverStatus: v.driverStatus,
+      driverStatus: 'driverStatus' in v ? v.driverStatus : 'null',
       horizontalAccuracy: v.horizontalAccuracy,
       verticalAccuracy: v.verticalAccuracy,
       batteryLevel: v.batteryLevel,
-      altitude: v.altitude,
-      type: v.type
+      altitude: 'altitude' in v ? v.altitude : null,
+      type: 'type' in v ? v.type : null
     }
   })
   return { headers: Object.keys(results[0]), items: results }
@@ -39,7 +39,7 @@ export const riderPostProcessor: PostprocessorFunction = result => {
       longitude: v.lng,
       date: parse_date(v),
       speed: v.speed,
-      driverStatus: v.driverStatus,
+      driverStatus: 'driverStatus' in v ? v.driverStatus : 'null',
       riderStatus: v.riderStatus,
       horizontalAccuracy: v.horizontalAccuracy,
       verticalAccuracy: v.verticalAccuracy,
