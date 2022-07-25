@@ -66,7 +66,7 @@ const config: DatabaseConfig = {
         callback: output => {
           const o = output as JSONPathReturnObject
           const path = ['date', 'date_'].find(p => p in o)
-          o['foundDate'] = path ? o[path] : 'null'
+          o['foundDate'] = path && o[path] ? o[path] : 'null'
         }
       },
       getters: [
@@ -92,7 +92,6 @@ const config: DatabaseConfig = {
         callback: output => {
           const o = output as JSONPathReturnObject
           const path = ['likedAt', 'date'].find(p => p in o)
-          console.log(path, o, path ? o[path] : '')
           o['foundDate'] = path && o[path] ? o[path].replace('T', ' ') : 'null'
         }
       },
@@ -146,7 +145,7 @@ const config: DatabaseConfig = {
         callback: output => {
           const o = output as JSONPathReturnObject
           const path = ['date', 'dateValue'].find(p => p in o)
-          o['foundDate'] = path ? o[path] : 'null'
+          o['foundDate'] = path && o[path] ? o[path] : 'null'
         }
       },
       getters: [
