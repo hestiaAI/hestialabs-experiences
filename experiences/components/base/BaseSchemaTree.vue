@@ -37,7 +37,7 @@
 </template>
 
 <script>
-
+import { mapState } from 'vuex'
 import { isEmpty } from 'lodash-es'
 
 export default {
@@ -54,11 +54,21 @@ export default {
     }
   },
   computed: {
+    ...mapState(['selectedPaths']),
     validSchema() {
       return !isEmpty(this.schema)
     },
     isLeaf() {
       return !this.schema.contains?.length
+    }
+  },
+  watch: {
+    selectedPaths(newPaths) {
+      console.log(newPaths)
+      // if (this.schema.absolutePath && path === this.schema.absolutePath.slice(0, path.length)) {
+      //  this.selected = selected
+      //  this.updateSelectedPaths()
+      // }
     }
   },
   methods: {
