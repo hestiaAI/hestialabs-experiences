@@ -82,13 +82,30 @@
         <VRow>
           <VCol>
             <div class="text-center">
-              <BaseTwitterCard
-                text="To hope to effectively regulate the data economy you need to deeply understand the power companies have through the personal data they hold. That's why I am participating in @sitrafund's #digipower investigation using #GDPR rights to get my data. Who will be the most transparent?"
-                tweet-link="https://twitter.com/jyrkikatainen/status/1455484493897342977?s=20&t=YdTsvxYhUonm0Gxr9nICvw"
-                profile-name="Jyrki Katainen"
-                profile-description="Former Prime Minister of Finland and VP of EU Commission"
-                profile-photo="https://pbs.twimg.com/profile_images/1229410125930270720/MLN38R_9_400x400.jpg"
-              />
+              <VCarousel
+                height="400"
+                hide-delimiter-background
+                show-arrows-on-hover
+                delimiter-icon="$vuetify.icons.mdiMinus"
+                light
+              >
+                <VCarouselItem>
+                  <VRow align="center" justify="center">
+                    <BaseTwitterCard
+                      text="To hope to effectively regulate the data economy you need to deeply understand the power companies have through the personal data they hold. That's why I am participating in @sitrafund's #digipower investigation using #GDPR rights to get my data. Who will be the most transparent?"
+                      tweet-link="https://twitter.com/jyrkikatainen/status/1455484493897342977?s=20&t=YdTsvxYhUonm0Gxr9nICvw"
+                      profile-name="Jyrki Katainen"
+                      profile-description="Former Prime Minister of Finland and VP of EU Commission"
+                      profile-photo="https://pbs.twimg.com/profile_images/1229410125930270720/MLN38R_9_400x400.jpg"
+                    />
+                  </VRow>
+                </VCarouselItem>
+                <VCarouselItem>
+                  <VRow align="center" justify="center">
+                    <BaseVideo video-src="https://player.vimeo.com/video/689283925?h=4b12093bf4" height="360" />
+                  </VRow>
+                </VCarouselItem>
+              </VCarousel>
             </div>
           </VCol>
         </VRow>
