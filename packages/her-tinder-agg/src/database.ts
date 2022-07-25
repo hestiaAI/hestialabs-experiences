@@ -1,6 +1,5 @@
 import type { DatabaseConfig } from '@/types'
 import { SQLType, JSONPathReturnObject } from '@/types/database-config'
-import { pathToFileURL } from 'url'
 
 const { TEXT, INTEGER } = SQLType
 
