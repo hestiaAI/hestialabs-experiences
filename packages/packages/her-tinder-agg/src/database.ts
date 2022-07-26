@@ -65,7 +65,7 @@ const config: DatabaseConfig = {
         callback: output => {
           const o = output as JSONPathReturnObject
           const path = ['date', 'date_'].find(p => p in o)
-          o['foundDate'] = path ? o[path] : 'null'
+          o['foundDate'] = path && o[path] ? o[path] : 'null'
         }
       },
       getters: [
@@ -87,6 +87,13 @@ const config: DatabaseConfig = {
       fileId: 'herLikeMatch',
       path: '$.result.items[*]',
       table: 'HerLikeMatch',
+      options: {
+        callback: output => {
+          const o = output as JSONPathReturnObject
+          const path = ['likedAt', 'date'].find(p => p in o)
+          o['foundDate'] = path && o[path] ? o[path].replace('T', ' ') : 'null'
+        }
+      },
       getters: [
         {
           column: 'name',
@@ -94,7 +101,7 @@ const config: DatabaseConfig = {
         },
         {
           column: 'likedAt',
-          path: '$.likedAt'
+          path: 'foundDate'
         },
         {
           column: 'matched',
@@ -137,7 +144,7 @@ const config: DatabaseConfig = {
         callback: output => {
           const o = output as JSONPathReturnObject
           const path = ['date', 'dateValue'].find(p => p in o)
-          o['foundDate'] = path ? o[path] : 'null'
+          o['foundDate'] = path && o[path] ? o[path] : 'null'
         }
       },
       getters: [
