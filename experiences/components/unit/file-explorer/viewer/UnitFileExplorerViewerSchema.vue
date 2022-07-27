@@ -64,6 +64,9 @@ export default {
         await this.fetchSchema(filename)
       },
       immediate: true
+    },
+    selectedPaths() {
+      this.processed = false
     }
   },
   methods: {
