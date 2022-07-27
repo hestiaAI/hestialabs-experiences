@@ -36,7 +36,7 @@
   </VCard>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import { isEmpty } from 'lodash-es'
 import EventBus from './eventBus'
 
@@ -54,7 +54,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['selectedPaths']),
+    ...mapGetters(['selectedPaths']),
     validSchema() {
       return !isEmpty(this.schema)
     },

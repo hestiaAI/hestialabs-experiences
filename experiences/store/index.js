@@ -6,7 +6,6 @@ export const state = () => ({
   config: {},
   experiences: [],
   selectedFiles: [],
-  selectedPaths: [],
   results: {},
   currentDB: null,
   fileManager: null,
@@ -38,7 +37,7 @@ export const getters = {
     return disabledExperiences
   },
   siteConfig: state => state.config,
-  selectedPaths: state => state.selectedPaths,
+  selectedPaths: state => state.fileExplorerCurrentItem.selectedPaths,
   routeConfig:
     state =>
       (route) => {
@@ -72,10 +71,10 @@ export const mutations = {
     state.selectedFiles = selectedFiles
   },
   selectPath(state, path) {
-    if (!state.selectedPaths.includes(path)) { state.selectedPaths.push(path) }
+    if (!state.fileExplorerCurrentItem.selectedPaths.includes(path)) { state.fileExplorerCurrentItem.selectedPaths.push(path) }
   },
   unselectPath(state, path) {
-    state.selectedPaths = state.selectedPaths.filter(e => e !== path)
+    state.fileExplorerCurrentItem.selectedPaths = state.fileExplorerCurrentItem.selectedPaths.filter(e => e !== path)
   },
   setResult(state, { experience, result }) {
     Vue.set(state.results, experience, cloneDeep(result))
@@ -104,7 +103,6 @@ export const mutations = {
   },
   clearStore(state) {
     state.selectedFiles = []
-    state.selectedPaths = []
     state.results = {}
     state.fileExplorerCurrentItem = {}
     if (state.currentDB !== null) { state.currentDB.close() }
@@ -114,6 +112,7 @@ export const mutations = {
   },
   setFileExplorerCurrentItem(state, item) {
     state.fileExplorerCurrentItem = item
+    state.fileExplorerCurrentItem.selectedPaths = []
   }
 }
 

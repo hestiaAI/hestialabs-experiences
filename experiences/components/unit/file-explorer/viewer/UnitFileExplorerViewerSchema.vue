@@ -6,7 +6,7 @@
     <BaseSchemaTree :schema="jsonSchema" />
     <div class="text-center">
       <div v-if="!isValidPaths">
-        Cannot create table with those accessors
+        Impossible to create a table with these accessors, there are several divergent tables.
       </div>
       <VBtn
         class="ma-3"
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import mixin from './mixin'
 import BaseSchemaTree from './base/SchemaTree/BaseSchemaTree.vue'
 import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
@@ -47,7 +47,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['selectedPaths']),
+    ...mapGetters(['selectedPaths']),
     isValidPaths() {
       const toCheck = [...this.selectedPaths]
       let allGood = true
