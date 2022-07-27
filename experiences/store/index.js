@@ -71,7 +71,13 @@ export const mutations = {
     state.selectedFiles = selectedFiles
   },
   selectPath(state, path) {
-    if (!state.fileExplorerCurrentItem.selectedPaths.includes(path)) { state.fileExplorerCurrentItem.selectedPaths.push(path) }
+    if (!state.fileExplorerCurrentItem.selectedPaths.includes(path)) {
+      state.fileExplorerCurrentItem.selectedPaths.push(path)
+      // trigger reactivity
+      state.fileExplorerCurrentItem = {
+        ...state.fileExplorerCurrentItem
+      }
+    }
   },
   unselectPath(state, path) {
     state.fileExplorerCurrentItem.selectedPaths = state.fileExplorerCurrentItem.selectedPaths.filter(e => e !== path)
