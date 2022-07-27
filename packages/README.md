@@ -18,6 +18,11 @@
 
 Read the following instructions carefully before getting started.
 
+```bash
+# All commands are run in the same folder as this readme
+$ cd packages
+```
+
 ## Setup
 
 Install all packages:
@@ -85,8 +90,8 @@ This section explains how packages are created and updated
   "files": ["dist"],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/<NAME>"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/<NAME>"
   },
   "publishConfig": {
     "access": "public"
@@ -106,7 +111,7 @@ Replace `<NAME>` with the package name.
 
 ```sh
 npm link --workspaces
-cd ../hestialabs-experiences
+cd ../experiences
 npm install
 ```
 
