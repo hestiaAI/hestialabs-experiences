@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/her-tinder-agg"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/her-tinder-agg"
   },
   "publishConfig": {
     "access": "public"

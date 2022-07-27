@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/s-ryhma"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/s-ryhma"
   },
   "publishConfig": {
     "access": "public"

@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/tracker-control-agg"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/tracker-control-agg"
   },
   "publishConfig": {
     "access": "public"

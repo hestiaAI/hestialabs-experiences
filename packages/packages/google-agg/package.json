@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/google-agg"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/google-agg"
   },
   "publishConfig": {
     "access": "public"

@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/linkedin"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/linkedin"
   },
   "publishConfig": {
     "access": "public"
