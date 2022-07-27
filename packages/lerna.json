@@ -1,0 +1,17 @@
+{
+  "version": "independent",
+  "npmClient": "npm",
+  "conventionalCommits": true,
+  "packages": ["packages/*"],
+  "command": {
+    "publish": {
+      "conventionalCommits": true,
+      "ignoreChanges": ["*.md"],
+      "message": "chore(release): publish",
+      "registry": "https://npm.pkg.github.com/"
+    },
+    "version": {
+      "conventionalCommits": true
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "eslint.validate": ["javascript", "typescript", "vue"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.renderFinalNewline": true,
+  "editor.tabSize": 2,
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "files.exclude": {
+    ".eslintcache": true,
+    "lerna-debug.log": true
+  }
+}

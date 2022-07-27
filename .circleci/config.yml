@@ -1,3 +1,30 @@
+# TODO find out and document how to make circleci protect a github branch
+# Circleci's github app is installed for the hestiaAI user.
+# https://github.com/organizations/hestiaAI/settings/installations
+# It must be configured to access this repo
+# On circleci, set up the github project here:
+# https://app.circleci.com/projects/project-dashboard/github/hestiaAI/
+# At some point circleci adds a deploy key to the github project.
+# You can find it under settings>deploy keys. Copy the SHAxxx code.
+# Under settings>webhooks make sure there's a webhook to https://circleci.com/hooks/github
+# Set the secret to the SHAxxx code from deploy keys
+# Choose "Let me select individual events" and check:
+# - Forks, Pushes, Pull Requests, Repositories, Visibility Changes
+# At some point it should be possible to add a branch protection
+# at settings>Branches, Add branch protection
+# make sure the following checkboxes are on
+# - Require status checks to pass before merging
+#   - Require branches to be up to date before merging
+#  (search for status event "tests" from circleci and select it)
+# - Require conversation resolution before merging
+# (Not sure we actually need an environment...)
+# Under settings>Environments, add an environment called Test
+#  as deployment branch, choose Protected branches
+# In circleci under project settings, under Advanced, enable only these checkboxes:
+# - Build forked pull requests
+# - Only build pull requests
+# - Free and Open Source
+
 # This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
 
@@ -28,3 +55,14 @@ workflows:
           filters:
             branches:
               ignore: master
+
+      - node/test:
+          # This is the node version to use for the `cimg/node` tag
+          # Relevant tags can be found on the CircleCI Developer Hub
+          # https://circleci.com/developer/images/image/cimg/node
+          version: '14.19.1'
+          # If you are using yarn, change the line below from "npm" to "yarn"
+          pkg-manager: npm
+          app-dir: ~/project/packages
+          context:
+            - hestialabs

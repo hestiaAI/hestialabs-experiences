@@ -1,0 +1,41 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    // 'plugin:import/recommended',
+    // https://github.com/prettier/eslint-plugin-prettier#recommended-configuration
+    "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint", "import", "prettier"],
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    // https://www.npmjs.com/package/eslint-import-resolver-typescript
+    "import/resolver": {
+      // use <root>/tsconfig.json
+      "typescript": {}
+    }
+  },
+  "rules": {
+    "import/no-unresolved": "error",
+    "no-console": [
+      "warn",
+      {
+        "allow": ["info", "warn", "error"]
+      }
+    ],
+    "prettier/prettier": 2
+  }
+}

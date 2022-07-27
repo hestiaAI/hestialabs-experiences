@@ -1,0 +1,4 @@
+SELECT
+  name
+FROM
+  AdsInterest
