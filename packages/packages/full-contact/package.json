@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/full-contact"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/full-contact"
   },
   "publishConfig": {
     "access": "public"

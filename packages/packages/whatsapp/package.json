@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/whatsapp"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/whatsapp"
   },
   "publishConfig": {
     "access": "public"

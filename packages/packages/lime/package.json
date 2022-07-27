@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/lime"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/lime"
   },
   "publishConfig": {
     "access": "public"

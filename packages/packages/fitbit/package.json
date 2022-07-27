@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/fitbit"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/fitbit"
   },
   "publishConfig": {
     "access": "public"

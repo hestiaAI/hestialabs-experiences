@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/instagram"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/instagram"
   },
   "publishConfig": {
     "access": "public"

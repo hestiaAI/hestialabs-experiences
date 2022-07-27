@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/finnair"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/finnair"
   },
   "publishConfig": {
     "access": "public"

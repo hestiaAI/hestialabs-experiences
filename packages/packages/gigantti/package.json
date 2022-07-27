@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/gigantti"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/gigantti"
   },
   "publishConfig": {
     "access": "public"

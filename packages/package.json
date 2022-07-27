@@ -28,13 +28,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hestiaai/hestialabs.git"
+    "url": "git+https://github.com/hestiaai/hestialabs-experiences.git"
   },
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/hestiaai/hestialabs/issues"
+    "url": "https://github.com/hestiaai/hestialabs-experiences/issues"
   },
-  "homepage": "https://github.com/hestiaai/hestialabs#readme",
+  "homepage": "https://github.com/hestiaai/hestialabs-experiences#readme",
   "devDependencies": {
     "@babel/cli": "^7.16.8",
     "@babel/core": "^7.16.12",

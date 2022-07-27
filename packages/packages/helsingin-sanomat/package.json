@@ -8,8 +8,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/hestiaai/hestialabs",
-    "directory": "packages/helsingin-sanomat"
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/helsingin-sanomat"
   },
   "publishConfig": {
     "access": "public"
