@@ -35,10 +35,10 @@
     </VCardText>
   </VCard>
 </template>
-
 <script>
 import { mapState } from 'vuex'
 import { isEmpty } from 'lodash-es'
+import EventBus from './eventBus'
 
 export default {
   name: 'BaseSchemaTree',
@@ -62,18 +62,30 @@ export default {
       return !this.schema.contains?.length
     }
   },
-  watch: {
-    selectedPaths(newPaths) {
-      console.log(newPaths)
-      // if (this.schema.absolutePath && path === this.schema.absolutePath.slice(0, path.length)) {
-      //  this.selected = selected
-      //  this.updateSelectedPaths()
-      // }
-    }
+  created() {
+    // Sets up the Event Bus listener
+    EventBus.$on('change', this.pathsChanged)
+  },
+  destroyed() {
+    // Removes Event Bus listener upon removal
+    EventBus.$off('change', this.pathsChanged)
   },
   methods: {
+    // Invert current state
     clickOnCard() {
       this.selected = !this.selected
+      this.updateSelectedPaths()
+      EventBus.$emit('change', { path: this.schema.absolutePath || '$', selected: this.selected })
+    },
+    pathsChanged(value) {
+      // if a parent has been modify, update current children
+      if (this.schema.absolutePath && value.path === this.schema.absolutePath.slice(0, value.path.length)) {
+        this.selected = value.selected
+        this.updateSelectedPaths()
+      }
+    },
+    // Update list of leafs selected
+    updateSelectedPaths() {
       if (this.isLeaf) {
         if (this.selected) {
           this.$store.commit('selectPath', this.schema.absolutePath)

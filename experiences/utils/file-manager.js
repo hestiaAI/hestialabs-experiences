@@ -456,7 +456,8 @@ export default class FileManager {
       // For each path/column compute the left join with the column that have the most values
       return items.values.map((l) => {
         const item = {}
-        l.forEach((jsonPathValue) => {
+        const columns = Array.isArray(l) ? l : [l]
+        columns.forEach((jsonPathValue) => {
           if (jsonPathValue) { item[jsonPathValue.parentProperty] = jsonPathValue.value }
         })
         return item
