@@ -1,6 +1,8 @@
 <template>
   <div v-if="error">
-    <p>Could not find a schema for this file</p>
+    <p class="mt-3">
+      Could not find a schema for this file, please contact us if you need it.
+    </p>
   </div>
   <div v-else>
     <BaseSchemaTree :schema="jsonSchema" />
@@ -48,6 +50,7 @@ export default {
   },
   computed: {
     ...mapGetters(['selectedPaths']),
+    // Check that the selected paths can be converted to an array
     isValidPaths() {
       const toCheck = [...this.selectedPaths]
       let allGood = true
@@ -71,13 +74,10 @@ export default {
   },
   methods: {
     fetchSchema(filename) {
+      // Try to fetch the schema if it exist
       try {
         this.jsonSchema = this.$store.getters.experience(this.$route).dataModel['@graph'].filter(item => filename.endsWith(item.fileName))[0] || {}
-        const items = []
-        // this.visitNode(this.jsonSchemaFile, jsonSchemaKey, items)
-        this.items = items
       } catch (e) {
-        console.error(e)
         this.error = true
       }
     },
