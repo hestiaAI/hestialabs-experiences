@@ -13,7 +13,7 @@
       <VSpacer />
       <VChip
         outlined
-        color="primary"
+        :color="selectColor"
         :disabled="schema['@type'] === null"
         link
         :href="schema['@type']"
@@ -24,6 +24,55 @@
     </VCardTitle>
     <VCardSubtitle>
       {{ schema['description'] }}
+      <div class="d-flex mt-4">
+        <div v-if="schema.unique" class="mr-5">
+          <span class="font-weight-bold mr-3">Unique values:</span>
+          <VChip
+            outlined
+            label
+            small
+            :color="selectColor"
+          >
+            {{ schema.unique }}
+          </VChip>
+        </div>
+        <div v-if="schema.default" class="mr-5">
+          <span class="font-weight-bold mr-3">Default value:</span>
+          <VChip
+            outlined
+            label
+            small
+            :color="selectColor"
+          >
+            {{ schema.default }}
+          </VChip>
+        </div>
+        <div v-if="schema.regex" class="mr-5">
+          <span class="font-weight-bold mr-3">Regex:</span>
+          <VChip
+            outlined
+            label
+            small
+            :color="selectColor"
+          >
+            {{ schema.regex }}
+          </VChip>
+        </div>
+        <div v-if="schema.choices" class="mr-5">
+          <span class="font-weight-bold mr-3">Choices:</span>
+          <VChip
+            v-for="(choice, idx) in schema.choices.split(',')"
+            :key="choice + idx"
+            class="ma-1"
+            outlined
+            label
+            small
+            :color="selectColor"
+          >
+            {{ choice }}
+          </VChip>
+        </div>
+      </div>
     </VCardSubtitle>
     <VCardText>
       <BaseSchemaTree
@@ -55,6 +104,9 @@ export default {
   },
   computed: {
     ...mapGetters(['selectedPaths']),
+    selectColor() {
+      return this.selected ? 'normal' : 'primary'
+    },
     validSchema() {
       return !isEmpty(this.schema)
     },
