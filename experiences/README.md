@@ -8,31 +8,29 @@ The experiences developed by HestiaLabs are targeted for any user willing to bet
 
 0. Check that you have the correct versions for npm and node (see "engines" in package.json: node 14.x, npm 7.x) by running `npm version`
 
-1. Clone this repo and name the directory `hestialabs-experiences`. Then clone the repo [hestialabs](https://github.com/hestiaAI/hestialabs) and name the directory `hestialabs`. These two directories should be siblings and share a parent directory.
-
-2. In the `hestialabs` repo, install the root package:
+1. In the `packages` folder, install the root package:
 
 ```sh
-$ cd ../hestialabs
+$ cd ../packages
 $ npm install
 ```
 
-3. Then, in `hestialabs`, create symlinks to all packages in the monorepo and save them in the global `node_modules/` folder (see [npm-link documentation](https://docs.npmjs.com/cli/v8/commands/npm-link)):
+2. Then, still in the folder `packages` , create symlinks to all packages in the monorepo and save them in the global `node_modules/` folder (see [npm-link documentation](https://docs.npmjs.com/cli/v8/commands/npm-link)):
 
 ```sh
 $ npm link --workspaces
 ```
 
-4. Navigate back to `hestialabs-experiences/experiences` and install the root package. This triggers the [`postinstall`](./postinstall.js) [post script](https://docs.npmjs.com/cli/v8/using-npm/scripts#pre--post-scripts) that creates symlinks from the previously globally-linked packages to the `node_modules/` of the current folder.
+3. Navigate back to folder `experiences` and install the root package. This triggers the [`postinstall`](./postinstall.js) [post script](https://docs.npmjs.com/cli/v8/using-npm/scripts#pre--post-scripts) that creates symlinks from the previously globally-linked packages to the `node_modules/` of the current folder.
 
 ```sh
-$ cd ../hestialabs-experiences/experiences
+$ cd ../experiences
 $ npm install
 ```
 
-5. Clone [hestialabs-bubble-server](https://github.com/hestiaAI/hestialabs-bubble-server), and install it as described in its README.md.
+4. Clone [hestialabs-bubble-server](https://github.com/hestiaAI/hestialabs-bubble-server), and install it as described in its README.md.
 
-6. to run experiences run `npm run dev`. This runs the three repos A tab should open in your browser and allow you to run the experiences. To run it without the bubble server and access our production server instead, run `API_URL=https://bubbles.hestialabs.org npm run dev:no-local-server`.
+5. to run experiences run `npm run dev`. This runs the three repos A tab should open in your browser and allow you to run the experiences. To run it without the bubble server and access our production server instead, run `API_URL=https://bubbles.hestialabs.org npm run dev:no-local-server`.
 
 ## Instances
 

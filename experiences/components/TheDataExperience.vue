@@ -300,6 +300,7 @@ export default {
 .tabItem {
   min-height: calc(100vh - 48px);
 }
+
 .fixed-tabs-bar {
   position: -webkit-sticky;
   position: sticky;

@@ -1,0 +1,19 @@
+{
+  "name": "@hestiaai/netflix",
+  "version": "0.0.1-alpha.25",
+  "main": "dist/index",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/netflix"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}

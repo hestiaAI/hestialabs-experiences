@@ -1,0 +1,11 @@
+SELECT
+  winnerName,
+  loserName,
+  winnerConfidence,
+  startTimestamp,
+  endTimestamp,
+  loserLatitude,
+  loserLongitude,
+  loserConfidence
+FROM
+  OtherCandidate

@@ -1,0 +1,19 @@
+{
+  "name": "@hestiaai/tracker-control",
+  "version": "0.0.1-alpha.31",
+  "main": "dist/index",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/tracker-control"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}
