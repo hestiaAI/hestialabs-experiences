@@ -24,7 +24,8 @@
     "lint:fix": "eslint --ext .js,.vue --fix",
     "pre-commit": "lint-staged",
     "_prepare": "node prepare.js",
-    "prettier": "prettier"
+    "prettier": "prettier",
+    "build-lib": "vue-cli-service build --target lib --name experienceLib lib.js"
   },
   "jest": {
     "setupFilesAfterEnv": [
