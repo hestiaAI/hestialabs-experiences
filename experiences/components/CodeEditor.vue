@@ -3,8 +3,7 @@
     <AceEditor
       v-model="code"
       :lang="editorLanguage"
-      theme="monokai"
-      height="500"
+      theme="chrome"
       class="my-ace-editor"
       @init="initEditor"
     />
@@ -37,6 +36,10 @@ export default {
     readonly: {
       type: Boolean,
       default: false
+    },
+    height: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -51,9 +54,13 @@ export default {
     }
   },
   watch: {
-    value(v) {
-      this.code = v
+    value: {
+      immediate: true,
+      handler(v) {
+        this.code = v
+      }
     },
+
     code(v) {
       // propagate to parent component
       this.$emit('update:value', v)
@@ -66,7 +73,8 @@ export default {
       editor.session.setUseWrapMode(true)
       // https://ace.c9.io/demo/autoresize.html
       editor.setOption('minLines', 2)
-      editor.setOption('maxLines', 14)
+      editor.setOption('maxLines', 30)
+      // editor.resize()
 
       // available modes:
       // https://github.com/ajaxorg/ace/tree/master/lib/ace/mode
@@ -76,8 +84,9 @@ export default {
       require('brace/mode/sparql')
       require('brace/mode/yaml')
       require('brace/mode/turtle')
-      require('brace/theme/monokai')
+      require('brace/theme/chrome')
       require('brace/snippets/javascript') // snippet
+      require('brace/ext/searchbox')
     }
   }
 }

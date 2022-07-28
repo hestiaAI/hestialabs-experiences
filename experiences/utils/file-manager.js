@@ -380,6 +380,95 @@ export default class FileManager {
   }
 
   /**
+   * Read a JSON files and build a list of rows from a list of JSONPaths
+   * @param {*} filename the JSON file to read
+   * @param {*} jsonPaths the paths to retreive
+   * @returns A list of object with one key per JSONPath
+   */
+  async findAllMatchingObjects(filename, jsonPaths) {
+    const { JSONPath } = require('jsonpath-plus')
+
+    // Get all arays idx from a processed jsonPath
+    const getIdxs = (path, maxLength = -1) => [...path.matchAll(/\[(:?\d+)\]/g)].map(m => m[1]).slice(0, maxLength).join('')
+
+    // Get the number of nested arrays in a jsonPath
+    const getNbArrays = path => [...path.matchAll(/\[(:?\*)\]/g)].length
+
+    // Compute a foreign key that uniquely identify values from the same tree path
+    const computeForeignKey = (pathValue, pathPrimary, pathSecondary) => {
+      const minLength = Math.min(getNbArrays(pathPrimary), getNbArrays(pathSecondary))
+      return getIdxs(pathValue, minLength)
+    }
+
+    // Check that two paths are joinable by making sure they dot not comport diverging nested arrays
+    function validPaths(path1, path2) {
+      const smallerArray = getNbArrays(path1) < getNbArrays(path2) ? path1 : path2
+      const equalIdx = smallerArray.lastIndexOf('[*]') || 0
+      return path1.slice(0, equalIdx) === path2.slice(0, equalIdx)
+    }
+
+    // Left join the result of one JSON query with another one if the path of the latter is a subPath on the primary
+    function leftJoinPaths(primary, secondary) {
+      if (!validPaths(primary.path, secondary.path)) {
+        console.error('Cannot join those paths, they are not overlapping')
+      }
+      const secondaryFKs = {}
+      secondary.values.forEach((item) => {
+        const foreignKey = computeForeignKey(item.path, primary.path, secondary.path)
+        secondaryFKs[foreignKey] = item
+      })
+
+      return {
+        path: primary.path,
+        values: primary.values.map((primaryItem) => {
+          if (Array.isArray(primaryItem)) {
+            const foreignKey = computeForeignKey(primaryItem[0].path, primary.path, secondary.path)
+            const secondaryItem = secondaryFKs[foreignKey]
+            primaryItem.push(secondaryItem)
+            return primaryItem
+          } else {
+            const foreignKey = computeForeignKey(primaryItem.path, primary.path, secondary.path)
+            const secondaryItem = secondaryFKs[foreignKey]
+            return [primaryItem, secondaryItem]
+          }
+        })
+      }
+    }
+    if (!jsonPaths || !jsonPaths.length) { return [] }
+    try {
+      const text = await this.getPreprocessedText(filename)
+      const json = JSON.parse(text)
+      const result = jsonPaths.map((path) => {
+        return {
+          path,
+          values: JSONPath({ path, json, resultType: 'all' })
+        }
+      }).sort((a, b) => getNbArrays(b.path) - getNbArrays(a.path) || b.values.length - a.values.length)
+
+      let items = result[0]
+      for (let i = 1; i < result.length; i++) {
+        if (items.values.length > result[i].values.length) {
+          items = leftJoinPaths(items, result[i])
+        } else {
+          items = leftJoinPaths(result[i], items)
+        }
+      }
+      // For each path/column compute the left join with the column that have the most values
+      return items.values.map((l) => {
+        const item = {}
+        const columns = Array.isArray(l) ? l : [l]
+        columns.forEach((jsonPathValue) => {
+          if (jsonPathValue) { item[jsonPathValue.parentProperty] = jsonPathValue.value }
+        })
+        return item
+      })
+    } catch (error) {
+      console.error('Error during matching', error)
+      return []
+    }
+  }
+
+  /**
    * Computes and returns the number of "data points" in a file if not already computed.
    * @param {String} filePath
    * @returns {Promise<String>}

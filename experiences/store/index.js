@@ -37,6 +37,7 @@ export const getters = {
     return disabledExperiences
   },
   siteConfig: state => state.config,
+  selectedPaths: state => state.fileExplorerCurrentItem.selectedPaths,
   routeConfig:
     state =>
       (route) => {
@@ -68,6 +69,18 @@ export const mutations = {
   },
   setSelectedFiles(state, selectedFiles) {
     state.selectedFiles = selectedFiles
+  },
+  selectPath(state, path) {
+    if (!state.fileExplorerCurrentItem.selectedPaths.includes(path)) {
+      state.fileExplorerCurrentItem.selectedPaths.push(path)
+      // trigger reactivity
+      state.fileExplorerCurrentItem = {
+        ...state.fileExplorerCurrentItem
+      }
+    }
+  },
+  unselectPath(state, path) {
+    state.fileExplorerCurrentItem.selectedPaths = state.fileExplorerCurrentItem.selectedPaths.filter(e => e !== path)
   },
   setResult(state, { experience, result }) {
     Vue.set(state.results, experience, cloneDeep(result))
@@ -105,6 +118,7 @@ export const mutations = {
   },
   setFileExplorerCurrentItem(state, item) {
     state.fileExplorerCurrentItem = item
+    state.fileExplorerCurrentItem.selectedPaths = []
   }
 }
 
