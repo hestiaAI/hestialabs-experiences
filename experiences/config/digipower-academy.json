@@ -15,7 +15,9 @@
     "demo-aggregator",
     "demo-participant",
     "sit-aggregator",
-    "sit-participant"
+    "sit-participant",
+    "brown-aggregator",
+    "brown-participant"
   ],
   "logo": "/digipower-academy-logo.png",
   "appBarLinks": [
