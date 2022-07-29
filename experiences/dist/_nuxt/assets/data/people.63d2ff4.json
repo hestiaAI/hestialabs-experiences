@@ -1,0 +1,110 @@
+[
+  {
+    "firstName": "Frodo",
+    "lastName": "Button",
+    "age": 25,
+    "homeAddress": {
+      "street": "Slude Strand",
+      "houseNumber": "3",
+      "zip": "1125",
+      "city": "Copenhagen"
+    },
+    "phoneNumbers": [
+      {
+        "phoneNumber": "61-59-47-16",
+        "countryCode": "45"
+      },
+      {
+        "phoneNumber": "78-201-55-71",
+        "countryCode": "41"
+      }
+    ],
+    "emailAddresses": ["FrodoButton@rhyta.com"]
+  },
+  {
+    "firstName": "Tobold",
+    "lastName": "Whitfoot",
+    "age": 45,
+    "homeAddress": {
+      "street": "rue Garneau",
+      "houseNumber": "550",
+      "zip": "G1V 3V5",
+      "city": "Quebec"
+    },
+    "phoneNumbers": [
+      {
+        "phoneNumber": "418-654-0804",
+        "countryCode": "1"
+      }
+    ],
+    "emailAddresses": [
+      "ToboldWhitfoot@armyspy.com",
+      "ToboldPersonal@gmail.com",
+      "ToboldWork@work.ch"
+    ]
+  },
+  {
+    "firstName": "Caramella",
+    "lastName": "Puddifoot",
+    "age": 68,
+    "homeAddress": {
+      "street": "Carling Avenue",
+      "houseNumber": "322",
+      "zip": "K1Z 7B5",
+      "city": "Ottawa"
+    },
+    "phoneNumbers": [
+      {
+        "phoneNumber": "613-240-0244",
+        "countryCode": "1"
+      }
+    ],
+    "emailAddresses": ["CaramellaPuddifoot@dayrep.com"]
+  },
+  {
+    "firstName": "Marmaduc",
+    "lastName": "Greenhand",
+    "age": 52,
+    "homeAddress": {
+      "street": "Rua João Pessoa",
+      "houseNumber": "642",
+      "zip": "35164-262",
+      "city": "Ipatinga"
+    },
+    "phoneNumbers": [
+      {
+        "phoneNumber": "(31) 6404-5849",
+        "countryCode": "55"
+      }
+    ],
+    "emailAddresses": [
+      "MarmaducGreenhand@rhyta.com",
+      "MarmaducHobbit@thehobbit.org"
+    ]
+  },
+  {
+    "firstName": "Fastolph",
+    "lastName": "Maggot",
+    "age": 35,
+    "homeAddress": {
+      "street": "Rua Ilicínia",
+      "houseNumber": "1477",
+      "zip": "31255-660",
+      "city": "Belo Horizonte"
+    },
+    "phoneNumbers": [
+      {
+        "phoneNumber": "(31) 9190-8526",
+        "countryCode": "55"
+      },
+      {
+        "phoneNumber": "(31) 9190-8527",
+        "countryCode": "55"
+      }
+    ],
+    "emailAddresses": [
+      "FastolphMaggot@dayrep.com",
+      "Fastolph@fakenamegenerator.com"
+    ]
+  }
+]
