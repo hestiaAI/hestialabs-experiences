@@ -72,7 +72,7 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/i18n'],
 
   axios: {
     baseURL: apiUrl
@@ -101,6 +101,22 @@ export default {
           },
           logout: { url: '/bubbles/logout', method: 'get' },
           user: false
+        }
+      }
+    }
+  },
+
+  i18n: {
+    locales: ['en', 'fr'],
+    defaultLocale: 'en',
+    vueI18n: {
+      fallbackLocale: 'en',
+      messages: {
+        en: {
+          welcome: 'Welcome'
+        },
+        fr: {
+          welcome: 'Bienvenue'
         }
       }
     }

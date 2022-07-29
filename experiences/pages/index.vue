@@ -17,6 +17,7 @@
               text="We need to train both the people who are putting data and information out there, as well as those reading it, how to interpret and question it to ensure they understand it and are not being misled or deceived."
               author="Sir Tim Berners-Lee, inventor of the World Wide Web"
             />
+            {{ $t('welcome') }}
           </VCol>
         </VRow>
       </VContainer>

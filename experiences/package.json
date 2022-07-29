@@ -20,8 +20,8 @@
     "build:update-revision": "git rev-parse HEAD > static/git-revision.txt",
     "build:static": "nuxt generate",
     "build:server": "nuxt build",
-    "lint": "eslint --ext .js,.vue",
-    "lint:fix": "eslint --ext .js,.vue --fix",
+    "lint": "npx eslint . --ext .js,.vue",
+    "lint:fix": "npx eslint . --ext .js,.vue --fix",
     "pre-commit": "lint-staged",
     "_prepare": "node prepare.js",
     "prettier": "prettier"
@@ -72,6 +72,7 @@
     "@mdi/js": "^6.9.96",
     "@nuxtjs/auth-next": "5.0.0-1648802546.c9880dc",
     "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/i18n": "^7.2.2",
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/vuetify": "^1.12.3",
     "@types/d3-collection": "^1.0.10",

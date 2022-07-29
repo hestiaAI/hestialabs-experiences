@@ -88,6 +88,17 @@ export default {
   }) {
     if (!store.state.loaded) {
       await store.dispatch('loadExperiences', { isDev, $axios })
+
+      const messages = {
+        en: {
+          welcome: 'WelcOME'
+        },
+        fr: {
+          welcome: 'BienvENUE'
+        }
+      }
+      console.log('hello from middleware..', store.$i18n)
+      store.$i18n.mergeLocaleMessage('en', messages.en)
     }
     if (bubble && $auth.loggedIn && bubble !== $auth.user.username) {
       // auto-logout if user tries to enter another bubble
