@@ -1,26 +1,19 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "target": "es5",
+    "module": "esnext",
+    "baseUrl": "./",
+    "moduleResolution": "node",
     "paths": {
-      "@/*": ["./*"],
-      "~/*": ["./*"],
-      "@@/*": ["./*"],
-      "~~/*": ["./*"]
-    }
-  },
-  "vueCompilerOptions": {
-    "experimentalDisableTemplateSupport": true
-  },
-  "exclude": [
-    ".circleci",
-    ".github",
-    ".husky",
-    ".nuxt",
-    ".vscode",
-    "assets",
-    "config",
-    "dist",
-    "node_modules",
-    "vega-examples"
-  ]
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
+  }
 }

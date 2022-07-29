@@ -1,88 +1,28 @@
 {
-  "name": "hestialabs-experiences",
-  "description": "We create a new relationship to personal data",
-  "version": "1.0.0",
+  "name": "experiences",
+  "version": "0.1.0",
   "private": true,
   "engines": {
     "npm": "7.x",
     "node": "14.x"
   },
   "scripts": {
-    "postinstall": "node postinstall.js",
-    "dev": "npm-run-all -p -r dev:bubble-server dev:monorepo dev:app",
-    "dev:no-local-server": "npm-run-all -p -r dev:monorepo dev:app",
-    "dev:bubble-server": "cd ../../hestialabs-bubble-server/bubbleserver && cross-env DJANGO_DEBUG=True poetry run python ./manage.py runserver",
-    "dev:monorepo": "cd ../packages && npm run dev",
-    "dev:app": "nuxt --open",
-    "test": "jest",
-    "start": "nuxt start",
-    "build": "npm run build:update-revision && npm run build:static",
-    "build:update-revision": "git rev-parse HEAD > static/git-revision.txt",
-    "build:static": "nuxt generate",
-    "build:server": "nuxt build",
-    "lint": "eslint --ext .js,.vue",
-    "lint:fix": "eslint --ext .js,.vue --fix",
-    "pre-commit": "lint-staged",
-    "_prepare": "node prepare.js",
-    "prettier": "prettier",
-    "build-lib": "vue-cli-service build --target lib --name experienceLib lib.js"
+    "dev": "webpack-dev-server --mode development",
+    "prod": "webpack --mode production",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "build-lib": "vue-cli-service build --target lib --name experiences src/index.js",
+    "lint": "vue-cli-service lint"
   },
-  "jest": {
-    "setupFilesAfterEnv": [
-      "./jest.setup.js"
-    ],
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/$1",
-      "^~/(.*)$": "<rootDir>/$1",
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
-      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
-      "^vue$": "vue/dist/vue.common.js",
-      "sql\\.js/dist/sql-wasm\\.wasm$": "<rootDir>/utils/__mocks__/sql-wasm-mock.js",
-      "d3": "<rootDir>/node_modules/d3/dist/d3.min.js"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "mjs",
-      "json",
-      "vue"
-    ],
-    "transform": {
-      "^.+\\.m?js$": "babel-jest",
-      "^.+\\.vue$": "@vue/vue2-jest"
-    },
-    "transformIgnorePatterns": [
-      "/node_modules/(?!d3|@hestiaai|lodash-es)",
-      "\\.pnp\\.[^\\/]+$"
-    ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/node_modules/",
-      "\\.helpers\\.js"
-    ],
-    "modulePathIgnorePatterns": []
-  },
-  "_transformIgnorePatterns": [
-    "/node_modules/(?!robust-predicates)",
-    "/node_modules/(?!d3)",
-    "/node_modules/",
-    "node_modules/(?!(d3.*|robust-predicates)/)",
-    "node_modules/(?!(robust-predicates)/)",
-    "node_modules/(?!(d3.*)/)",
-    "\\.pnp\\.[^\\/]+$"
-  ],
   "dependencies": {
-    "@mdi/js": "^6.9.96",
-    "@nuxtjs/auth-next": "5.0.0-1648802546.c9880dc",
-    "@nuxtjs/axios": "^5.13.6",
-    "@nuxtjs/pwa": "^3.3.5",
-    "@nuxtjs/vuetify": "^1.12.3",
+    "@mdi/js": "^7.0.96",
     "@types/d3-collection": "^1.0.10",
-    "@uppy/core": "^2.0.2",
-    "@uppy/dashboard": "^2.3.0",
+    "@uppy/core": "^2.3.2",
+    "@uppy/dashboard": "^2.4.1",
     "@uppy/drop-target": "^1.1.3",
-    "@vue/preload-webpack-plugin": "^2.0.0",
     "ajv": "^8.11.0",
     "busboy": "^1.6.0",
-    "core-js": "^3.23.3",
+    "core-js": "^3.24.0",
     "crossfilter2": "^1.5.4",
     "d3": "^7.6.1",
     "d3-collection": "^1.0.7",
@@ -90,51 +30,67 @@
     "d3-sankey": "^0.12.3",
     "d3-time-format": "^4.1.0",
     "dc": "^4.2.7",
-    "dom-to-image-more": "^2.10.1",
+    "dom-to-image-more": "^2.11.1",
     "file-saver": "^2.0.5",
     "jsonpath-plus": "^7.0.0",
     "jszip": "^3.10.0",
     "libsodium-wrappers": "^0.7.10",
     "lodash-es": "^4.17.21",
-    "micromatch": "^4.0.4",
-    "nuxt": "^2.15.8",
+    "micromatch": "^4.0.5",
     "papaparse": "^5.3.2",
-    "read-excel-file": "^5.3.5",
+    "read-excel-file": "^5.4.4",
     "regression": "^2.0.1",
-    "sass-loader": "^10",
+    "sass-loader": "^13",
     "share-api-polyfill": "^1.1.0",
     "spark-md5": "^3.0.2",
     "sql.js": "^1.7.0",
     "type-analyzer": "^0.4.0",
     "vega": "^5.22.1",
     "vega-embed": "^6.21.0",
-    "vega-lite": "^5.1.1",
+    "vega-lite": "^5.4.0",
     "vue2-ace-editor": "^0.0.15",
     "vuetify": "^2.6.7",
-    "webpack": "^4.46.0",
+    "webpack-node-externals": "^3.0.0",
     "worker-loader": "^3.0.8"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.18.2",
-    "@babel/preset-env": "^7.18.6",
-    "@nuxtjs/eslint-config": "^10.0.0",
-    "@nuxtjs/eslint-module": "^3.1.0",
-    "@vue/test-utils": "^1.3.0",
-    "@vue/vue2-jest": "^27.0.0-alpha.3",
-    "babel-core": "^7.0.0-bridge.0",
-    "cross-env": "^7.0.3",
-    "eslint": "^8.17.0",
-    "eslint-plugin-nuxt": "^3.2.0",
-    "eslint-plugin-vue": "^9.1.1",
-    "file-loader": "^6.2.0",
-    "husky": "^8.0.1",
-    "jest": "^27.3.1",
-    "lint-staged": "^13.0.3",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^2.7.1",
-    "regenerator-runtime": "^0.13.9"
+    "@babel/core": "^7.18.9",
+    "@babel/eslint-parser": "^7.18.9",
+    "@babel/preset-env": "^7.18.9",
+    "@vue/cli-plugin-babel": "~5.0.8",
+    "@vue/cli-plugin-eslint": "~5.0.8",
+    "@vue/cli-service": "~5.0.8",
+    "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
+    "eslint": "^8.20.0",
+    "eslint-plugin-vue": "^9.3.0",
+    "html-webpack-plugin": "^5.5.0",
+    "rimraf": "^3.0.2",
+    "vue": "^3.2.37",
+    "vue-loader": "^17.0.0",
+    "vue-style-loader": "^4.1.3",
+    "vue-template-compiler": "^2.7.8",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.9.3"
   },
-  "optionalDependencies": {
-    "fsevents": "^2.3.2"
-  }
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
 }
