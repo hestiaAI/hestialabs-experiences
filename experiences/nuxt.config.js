@@ -1,3 +1,4 @@
+import fs from 'fs'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
 import { extension2filetype } from './utils/file-manager'
@@ -17,7 +18,7 @@ const isProduction = NODE_ENV === 'production'
 if (!baseUrl && isProduction) {
   throw new Error('BASE_URL environment variable is missing')
 }
-
+const i18nMessages = JSON.parse(fs.readFileSync('i18n-messages-default.json'))
 export default {
   ssr: false, // Disable Server-Side Rendering
   target: 'static',
@@ -111,14 +112,7 @@ export default {
     defaultLocale: 'en',
     vueI18n: {
       fallbackLocale: 'en',
-      messages: {
-        en: {
-          welcome: 'Welcome'
-        },
-        fr: {
-          welcome: 'Bienvenue'
-        }
-      }
+      messages: i18nMessages
     }
   },
 
