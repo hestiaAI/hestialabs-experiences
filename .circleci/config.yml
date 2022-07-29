@@ -25,6 +25,8 @@
 # - Only build pull requests
 # - Free and Open Source
 
+# To let circleci access packages, Organziation Settings > Contexts > hestialabs > Add environment variable HESTIA_OWNER_GITHUB_TOKEN
+
 # This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
 
