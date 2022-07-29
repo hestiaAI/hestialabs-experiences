@@ -60,13 +60,13 @@ The build is done in local. The environment variables vary for each site.
 
 Documentation for the configuration file can be found in [config/README.md](config)
 
-| website                                                           | build command                                                                                                         |
-| ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [test.hestialabs.org](https://test.hestialabs.org/)               | BASE_URL=https://test.hestialabs.org API_URL=https://bubbles.hestialabs.org npm run build                             |
-| [experiences.hestialabs.org](https://experiences.hestialabs.org/) | CONFIG_NAME=workshop BASE_URL=https://experiences.hestialabs.org API_URL=https://bubbles.hestialabs.org npm run build |
-| [tfac.hestialabs.org](https://tfac.hestialabs.org/)               | CONFIG_NAME=tfac BASE_URL=https://tfac.hestialabs.org API_URL=https://bubbles.hestialabs.org npm run build            |
-| [digipower.hestialabs.org](https://digipower.hestialabs.org/)     | CONFIG_NAME=digipower BASE_URL=https://digipower.hestialabs.org API_URL=https://bubbles.hestialabs.org npm run build  |
-| [digipower.academy](https://digipower.academy/)                   | CONFIG_NAME=digipower-academy BASE_URL=https://digipower.academy API_URL=https://bubbles.hestialabs.org npm run build |
+| website                    | build command                                                                                                         |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| test.hestialabs.org        | BASE_URL=https://test.hestialabs.org API_URL=https://bubbles.hestialabs.org npm run build                             |
+| experiences.hestialabs.org | CONFIG_NAME=workshop BASE_URL=https://experiences.hestialabs.org API_URL=https://bubbles.hestialabs.org npm run build |
+| tfac.hestialabs.org        | CONFIG_NAME=tfac BASE_URL=https://tfac.hestialabs.org API_URL=https://bubbles.hestialabs.org npm run build            |
+| digipower.hestialabs.org   | CONFIG_NAME=digipower BASE_URL=https://digipower.hestialabs.org API_URL=https://bubbles.hestialabs.org npm run build  |
+| digipower.academy          | CONFIG_NAME=digipower-academy BASE_URL=https://digipower.academy API_URL=https://bubbles.hestialabs.org npm run build |
 
 ## For developers
 
