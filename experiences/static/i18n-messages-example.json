@@ -1,0 +1,21 @@
+{
+  "en": {
+    "welcome": "Welcome"
+  },
+  "fr": {
+    "welcome": "Bienvenue",
+    "experience": {
+      "intro": {
+        "title": "Analysez vos données privées"
+      }
+    },
+    "experiences": {
+      "google": {
+        "intro": {
+          "dataPortalHtml": "Cliquez <a href=\"https://takeout.google.com/settings/takeout\">ici</a>",
+          "dataPortalMessage": "<strong>Important:</strong> pour que l'expérience"
+        }
+      }
+    }
+  }
+}

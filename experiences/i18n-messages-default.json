@@ -1,0 +1,18 @@
+{
+  "en": {
+    "welcome": "WELCOME",
+    "experience": {
+      "intro": {
+        "title": "ANALYZE YOUR PRIVATE DATA"
+      }
+    }
+  },
+  "fr": {
+    "welcome": "BIENVENUE",
+    "experience": {
+      "intro": {
+        "title": "ANALYSEZ VOS DONNÉES PRIVÉES"
+      }
+    }
+  }
+}

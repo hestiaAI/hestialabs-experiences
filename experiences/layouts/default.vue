@@ -89,18 +89,15 @@ export default {
     if (!store.state.loaded) {
       await store.dispatch('loadExperiences', { isDev, $axios })
       const config = store.getters.siteConfig
+      if (config.i18nLocale) {
+        store.$i18n.locale = config.i18nLocale
+      }
+      const locale = store.$i18n.locale
       if (config.i18nUrl) {
         const messagesResp = await fetch(config.i18nUrl)
         const messages = await messagesResp.json()
-        console.log('welcome', store.$i18n.t('welcome', 'en'))
-        store.$i18n.mergeLocaleMessage('en', messages.en)
+        store.$i18n.mergeLocaleMessage(locale, messages[locale])
       }
-      console.log('welcome', store.$i18n.t('welcome', 'en'))
-
-      console.log('welcom', store.$i18n.t('welcom', 'fr'))
-      console.log('xwelcome', store.$i18n.te('welcome', 'fr'))
-
-      console.log('xwelcom', store.$i18n.te('welcom', 'fr'))
     }
     if (bubble && $auth.loggedIn && bubble !== $auth.user.username) {
       // auto-logout if user tries to enter another bubble

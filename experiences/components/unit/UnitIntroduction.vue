@@ -2,7 +2,7 @@
   <VContainer>
     <VCard class="pa-2" flat>
       <VCardTitle class="text-h5 font-weight-bold justify-center mb-3">
-        Analyze your private data
+        {{ $t('experience.intro.title') }}
       </VCardTitle>
       <VCardText>
         <VRow>
@@ -12,9 +12,9 @@
             </p>
             <!-- eslint-disable vue/no-v-html -->
             <p
-              v-else-if="dataPortalHtml"
+              v-else-if="t('dataPortalHtml')"
               class="body-1"
-              v-html="dataPortalHtml"
+              v-html="t('dataPortalHtml')"
             />
             <p v-else class="body-1">
               <template v-if="dataPortal">
@@ -33,9 +33,9 @@
             </p>
             <!-- eslint-disable vue/no-v-html -->
             <p
-              v-if="dataPortalMessage"
+              v-if="t('dataPortalMessage')"
               class="body-1"
-              v-html="dataPortalMessage"
+              v-html="t('dataPortalMessage')"
             />
             <!-- eslint-enable vue/no-v-html -->
             <p>
@@ -126,7 +126,19 @@ export default {
       ...properties
     }
   },
+  created() {
+    console.log(this.$route.params.experience, this.dataPortalMessage)
+  },
   methods: {
+    t(key) {
+      const experienceName = this.$route.params.experience
+      const i18nKey = `experiences.${experienceName}.intro.${key}`
+      if (this.$i18n.te(i18nKey)) {
+        return this.$i18n.t(i18nKey)
+      }
+      // TODO try to find localized text in experience
+      return this[key]
+    },
     onUnitFilesUpdate({ uppyFiles }) {
       this.$emit('update', { uppyFiles })
     }
