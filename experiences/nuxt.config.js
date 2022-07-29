@@ -19,7 +19,7 @@ if (!baseUrl && isProduction) {
   throw new Error('BASE_URL environment variable is missing')
 }
 const i18nMessages = JSON.parse(fs.readFileSync('i18n-messages-default.json'))
-console.warn('III', i18nMessages)
+
 export default {
   ssr: false, // Disable Server-Side Rendering
   target: 'static',
