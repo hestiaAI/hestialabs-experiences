@@ -128,7 +128,7 @@ export default {
   },
   created() {
     const experience = this.$store.getters.experience(this.$route)
-    // TODO come up with a way to specify i18n messages in experiences
+    // TODO come up with a way to specify i18n messages in packaged experiences
     // const locale = this.$i18n.locale
     const defaultMessagesForLocale = pick(experience, [
       'title',
