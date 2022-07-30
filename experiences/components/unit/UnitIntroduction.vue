@@ -12,9 +12,9 @@
             </p>
             <!-- eslint-disable vue/no-v-html -->
             <p
-              v-else-if="t('dataPortalHtml')"
+              v-else-if="$te(k('dataPortalHtml'))"
               class="body-1"
-              v-html="t('dataPortalHtml')"
+              v-html="$t(k('dataPortalHtml'))"
             />
             <p v-else class="body-1">
               <template v-if="dataPortal">
@@ -33,9 +33,9 @@
             </p>
             <!-- eslint-disable vue/no-v-html -->
             <p
-              v-if="t('dataPortalMessage')"
+              v-if="$te(k('dataPortalMessage'))"
               class="body-1"
-              v-html="t('dataPortalMessage')"
+              v-html="$t(k('dataPortalMessage'))"
             />
             <!-- eslint-enable vue/no-v-html -->
             <p>
@@ -127,17 +127,75 @@ export default {
     }
   },
   created() {
-    console.log(this.$route.params.experience, this.dataPortalMessage)
+    const experience = this.$store.getters.experience(this.$route)
+    // TODO come up with a way to specify i18n messages in experiences
+    // const locale = this.$i18n.locale
+    const defaultMessagesForLocale = pick(experience, [
+      'title',
+      'dataPortal',
+      'dataPortalHtml',
+      'dataPortalMessage'
+    ])
+    this.i18nMergeComponentMessages(
+      defaultMessagesForLocale,
+      k => this.i18nMakeGlobalKey(k),
+      m => this.i18nWrapInGlobalNamespace(m),
+      this.$i18n
+    )
   },
   methods: {
-    t(key) {
-      const experienceName = this.$route.params.experience
-      const i18nKey = `experiences.${experienceName}.intro.${key}`
-      if (this.$i18n.te(i18nKey)) {
-        return this.$i18n.t(i18nKey)
+    /**
+     * Wrap a local, experience-specific, key-value object into a format
+     * that can be merged into vue-18n's global dictionary.
+     */
+    i18nWrapInGlobalNamespace(messages) {
+      return {
+        experiences: { [this.experienceName()]: { info: messages } }
       }
-      // TODO try to find localized text in experience
-      return this[key]
+    },
+    /** Convert a local, experience-specific key to a vue-i18n key. */
+    // Implement this on each component with experience specific i18n
+    i18nMakeGlobalKey(localKey) {
+      return `experiences.${this.experienceName()}.intro.${localKey}`
+    },
+    /** Convenient alias for use in templates. */
+    // Implement this on each component with experience specific i18n.
+    k(localKey) {
+      return this.i18nMakeGlobalKey(localKey)
+    },
+    /**
+     * Merge local, experience-specific, default messages
+     * into vue-i18n's global dictionary
+     */
+    // move this function somewhere central
+    // it's meant to be used in every component
+    // with experience-specific messages
+    i18nMergeComponentMessages(
+      defaultMessagesForCurrentLocale,
+      i18nMakeGlobalKey,
+      i18nWrapInGlobalNamespace,
+      i18n) {
+      // keep keys without an existing translation
+      const keysUsingDefaults =
+      Object.keys(defaultMessagesForCurrentLocale).filter((key) => {
+        const i18nKey = i18nMakeGlobalKey(key)
+        return !i18n.te(i18nKey)
+      })
+      // build messages
+      const componentMessages = {}
+      keysUsingDefaults.forEach((key) => {
+        const defaultMessage = defaultMessagesForCurrentLocale[key]
+        if (defaultMessage) {
+          componentMessages[key] = defaultMessage
+        }
+      })
+      // merge the messages into vue-i18n's global dictionary
+      const mergeableMs = i18nWrapInGlobalNamespace(componentMessages)
+      const locale = i18n.locale
+      this.$i18n.mergeLocaleMessage(locale, mergeableMs)
+    },
+    experienceName() {
+      return this.$route.params.experience
     },
     onUnitFilesUpdate({ uppyFiles }) {
       this.$emit('update', { uppyFiles })

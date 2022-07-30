@@ -14,6 +14,11 @@
         "intro": {
           "dataPortalHtml": "Cliquez <a href=\"https://takeout.google.com/settings/takeout\">ici</a>",
           "dataPortalMessage": "<strong>Important:</strong> pour que l'expérience"
+        },
+        "viewBlocks": {
+          "PlaceVisited": {
+            "title": "Endroits visités"
+          }
         }
       }
     }
