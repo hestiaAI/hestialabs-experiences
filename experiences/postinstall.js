@@ -32,7 +32,7 @@ if (experiences) {
     )
     console.info(
       'Installing packages from the GitHub Package Registry...\n' +
-        packages.join('\n')
+      packages.join('\n')
     )
     handleSpawnOutput(spawnSync('npm', ['install', ...packages]))
   } else {
@@ -44,7 +44,7 @@ if (experiences) {
     })
     console.info(
       'Linking packages from the hestialabs repository...\n' +
-        packages.join('\n')
+      packages.join('\n')
     )
     handleSpawnOutput(spawn.sync('npm', ['link', ...packages]))
   }

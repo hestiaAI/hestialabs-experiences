@@ -31,6 +31,12 @@ Install all packages:
 npm install
 ```
 
+Build all packages:
+
+```sh
+npm run build
+```
+
 Set up pre-commit hooks:
 
 ```
