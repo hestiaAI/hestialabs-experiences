@@ -15,7 +15,11 @@ $ cd ../packages
 $ npm install
 ```
 
-2. Then, still in the folder `packages` , create symlinks to all packages in the monorepo and save them in the global `node_modules/` folder (see [npm-link documentation](https://docs.npmjs.com/cli/v8/commands/npm-link)):
+2. Then, still in the folder `packages`, build the packages in the monorepo and create symlinks to them. This saves the packages in the global `node_modules/` folder (see [npm-link documentation](https://docs.npmjs.com/cli/v8/commands/npm-link)).
+
+```sh
+$ npm run build
+```
 
 ```sh
 $ npm link --workspaces
@@ -28,9 +32,15 @@ $ cd ../experiences
 $ npm install
 ```
 
-4. Clone [hestialabs-bubble-server](https://github.com/hestiaAI/hestialabs-bubble-server), and install it as described in its README.md.
+4. Set up pre-commit hooks:
 
-5. to run experiences run `npm run dev`. This runs the three repos A tab should open in your browser and allow you to run the experiences. To run it without the bubble server and access our production server instead, run `API_URL=https://bubbles.hestialabs.org npm run dev:no-local-server`.
+```
+npm run prepare
+```
+
+5. Clone [hestialabs-bubble-server](https://github.com/hestiaAI/hestialabs-bubble-server), and install it as described in its README.md.
+
+6. to run experiences run `npm run dev`. This runs the three repos A tab should open in your browser and allow you to run the experiences. To run it without the bubble server and access our production server instead, run `API_URL=https://bubbles.hestialabs.org npm run dev:no-local-server`.
 
 ## Instances
 
