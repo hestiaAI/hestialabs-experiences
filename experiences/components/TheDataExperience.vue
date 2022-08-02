@@ -112,14 +112,12 @@ import { mapState } from 'vuex'
 
 import { debounce, pick } from 'lodash-es'
 
-import UnitDownload from './unit/UnitDownload.vue'
 import DBMS from '~/utils/sql'
 import FileManager from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 
 export default {
   name: 'TheDataExperience',
-  components: { UnitDownload },
   data() {
     const experience = this.$store.getters.experience(this.$route)
     const properties = pick(experience, [

@@ -32,11 +32,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import mixin from './mixin'
-import BaseSchemaTree from './base/SchemaTree/BaseSchemaTree.vue'
-import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
+
 export default {
   name: 'UnitFileExplorerViewerRaw',
-  components: { BaseSchemaTree, BaseProgressCircular },
   mixins: [mixin],
   data() {
     return {
