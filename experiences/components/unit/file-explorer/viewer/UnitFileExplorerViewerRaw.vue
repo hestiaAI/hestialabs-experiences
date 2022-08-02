@@ -19,11 +19,9 @@
 <script>
 import mixin from './mixin'
 import mixinLoading from './mixin-loading'
-import CodeEditor from '@/components/CodeEditor.vue'
 
 export default {
   name: 'UnitFileExplorerViewerRaw',
-  components: { CodeEditor },
   mixins: [mixin, mixinLoading],
   data() {
     return {
