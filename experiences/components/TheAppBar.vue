@@ -15,11 +15,17 @@
         >
           <VIcon>$vuetify.icons.mdiHome</VIcon>
         </VBtn>
+        <NuxtLink :to="switchLocalePath('en')">
+          English
+        </NuxtLink>
+        <NuxtLink :to="switchLocalePath('fr')">
+          Français
+        </NuxtLink>
         <VSpacer />
         <div class="d-flex">
           <VImg max-width="30" :src="e.icon" :lazy-src="e.icon" contain />
           <h3 class="ml-3">
-            {{ e.title }}
+            {{ $t(`experiences.${$route.params.experience}.intro.title`) }}
           </h3>
         </div>
         <VSpacer />

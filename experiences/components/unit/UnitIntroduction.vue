@@ -123,79 +123,46 @@ export default {
 
     return {
       videoHeight: '400',
+      experienceName: this.$route.params.experience,
       ...properties
     }
   },
-  created() {
-    const experience = this.$store.getters.experience(this.$route)
-    // TODO come up with a way to specify i18n messages in packaged experiences
-    // const locale = this.$i18n.locale
-    const defaultMessagesForLocale = pick(experience, [
-      'title',
-      'dataPortal',
-      'dataPortalHtml',
-      'dataPortalMessage'
-    ])
-    this.i18nMergeComponentMessages(
-      defaultMessagesForLocale,
-      k => this.i18nMakeGlobalKey(k),
-      m => this.i18nWrapInGlobalNamespace(m),
-      this.$i18n
-    )
-  },
+  // created() {
+  //   const experience = this.$store.getters.experience(this.$route)
+  //   // TODO come up with a way to specify i18n messages in packaged experiences
+  //   // const locale = this.$i18n.locale
+  //   const defaultMessagesForLocale = pick(experience, [
+  //     'title',
+  //     'dataPortal',
+  //     'dataPortalHtml',
+  //     'dataPortalMessage'
+  //   ])
+  //   this.i18nMergeComponentMessages(
+  //     defaultMessagesForLocale,
+  //     k => this.i18nMakeGlobalKey(k),
+  //     m => this.i18nWrapInGlobalNamespace(m),
+  //     this.$i18n
+  //   )
+  // },
   methods: {
     /**
      * Wrap a local, experience-specific, key-value object into a format
      * that can be merged into vue-18n's global dictionary.
      */
-    i18nWrapInGlobalNamespace(messages) {
-      return {
-        experiences: { [this.experienceName()]: { info: messages } }
-      }
-    },
+    // i18nWrapInGlobalNamespace(messages) {
+    //   return {
+    //     experiences: { [this.experienceName]: { info: messages } }
+    //   }
+    // },
     /** Convert a local, experience-specific key to a vue-i18n key. */
     // Implement this on each component with experience specific i18n
     i18nMakeGlobalKey(localKey) {
-      return `experiences.${this.experienceName()}.intro.${localKey}`
+      return `experiences.${this.experienceName}.intro.${localKey}`
     },
     /** Convenient alias for use in templates. */
     // Implement this on each component with experience specific i18n.
     k(localKey) {
       return this.i18nMakeGlobalKey(localKey)
-    },
-    /**
-     * Merge local, experience-specific, default messages
-     * into vue-i18n's global dictionary
-     */
-    // move this function somewhere central
-    // it's meant to be used in every component
-    // with experience-specific messages
-    i18nMergeComponentMessages(
-      defaultMessagesForCurrentLocale,
-      i18nMakeGlobalKey,
-      i18nWrapInGlobalNamespace,
-      i18n) {
-      // keep keys without an existing translation
-      const keysUsingDefaults =
-      Object.keys(defaultMessagesForCurrentLocale).filter((key) => {
-        const i18nKey = i18nMakeGlobalKey(key)
-        return !i18n.te(i18nKey)
-      })
-      // build messages
-      const componentMessages = {}
-      keysUsingDefaults.forEach((key) => {
-        const defaultMessage = defaultMessagesForCurrentLocale[key]
-        if (defaultMessage) {
-          componentMessages[key] = defaultMessage
-        }
-      })
-      // merge the messages into vue-i18n's global dictionary
-      const mergeableMs = i18nWrapInGlobalNamespace(componentMessages)
-      const locale = i18n.locale
-      this.$i18n.mergeLocaleMessage(locale, mergeableMs)
-    },
-    experienceName() {
-      return this.$route.params.experience
     },
     onUnitFilesUpdate({ uppyFiles }) {
       this.$emit('update', { uppyFiles })

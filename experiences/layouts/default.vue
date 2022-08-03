@@ -75,9 +75,45 @@
 
 <script>
 import { mapGetters } from 'vuex'
+// import { merge } from 'lodash-es'
+
+/**
+ * Merge local, experience-specific, default messages
+ * into vue-i18n's global dictionary
+ */
+function i18nMergeMessages(
+  experienceName,
+  locale,
+  messages,
+  // defaultMessagesForCurrentLocale,
+  // i18nMakeGlobalKey,
+  // i18nWrapInGlobalNamespace,
+  i18n
+) {
+  // keep keys without an existing translation
+  // const keysUsingDefaults =
+  // Object.keys(defaultMessagesForCurrentLocale).filter((key) => {
+  //   const i18nKey = i18nMakeGlobalKey(key)
+  //   return !i18n.te(i18nKey)
+  // })
+  // // build messages
+  // const componentMessages = {}
+  // keysUsingDefaults.forEach((key) => {
+  //   const defaultMessage = defaultMessagesForCurrentLocale[key]
+  //   if (defaultMessage) {
+  //     componentMessages[key] = defaultMessage
+  //   }
+  // })
+  // merge the messages into vue-i18n's global dictionary
+  const mergeableMessages = { experiences: { [experienceName]: messages } }
+  // const mergeableMs = i18nWrapInGlobalNamespace(componentMessages)
+  // const { locale } = i18n
+  i18n.mergeLocaleMessage(locale, mergeableMessages)
+}
 
 export default {
   async middleware({
+    app,
     store,
     params: { bubble },
     route: { path },
@@ -88,10 +124,23 @@ export default {
   }) {
     if (!store.state.loaded) {
       await store.dispatch('loadExperiences', { isDev, $axios })
+      const { experiences } = store.state
+      experiences.filter(({ messages }) => messages)
+        .forEach((experience) => {
+          // Object.entries(experience.messages).map(([locale, messages]) => {
+          //   return { experiences: { [experience.slug]: messages } }
+          //   // i18nMergeComponentMessages(experience.slug, locale, messages, app.i18n)
+          // })
+          Object.entries(experience.messages).forEach(([locale, messages]) => {
+            i18nMergeMessages(experience.slug, locale, messages, app.i18n)
+          })
+        })
+
       const config = store.getters.siteConfig
       if (config.i18nLocale) {
         store.$i18n.locale = config.i18nLocale
       }
+
       const locale = store.$i18n.locale
       if (config.i18nUrl) {
         const messagesResp = await fetch(config.i18nUrl)

@@ -18,6 +18,8 @@ const isProduction = NODE_ENV === 'production'
 if (!baseUrl && isProduction) {
   throw new Error('BASE_URL environment variable is missing')
 }
+
+const { i18nLocale } = JSON.parse(fs.readFileSync(`config/${configName}.json`))
 const i18nMessages = JSON.parse(fs.readFileSync('i18n-messages-default.json'))
 
 export default {
@@ -110,9 +112,9 @@ export default {
 
   i18n: {
     locales: ['en', 'fr'],
-    defaultLocale: 'en',
+    defaultLocale: i18nLocale || 'en',
     vueI18n: {
-      fallbackLocale: 'en',
+      fallbackLocale: i18nLocale || 'en',
       messages: i18nMessages
     }
   },

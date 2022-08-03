@@ -1,6 +1,7 @@
 {
   "en": {
     "welcome": "WELCOME",
+    "Load your data": "Load your data",
     "experience": {
       "intro": {
         "title": "ANALYZE YOUR PRIVATE DATA"
@@ -9,6 +10,7 @@
   },
   "fr": {
     "welcome": "BIENVENUE",
+    "Load your data": "Loade vous data",
     "experience": {
       "intro": {
         "title": "ANALYSEZ VOS DONNÉES PRIVÉES"

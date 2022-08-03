@@ -32,7 +32,7 @@
             nuxt
             :to="`#${t.value}`"
           >
-            {{ t.title }}
+            {{ $te(`experiences.twitter.viewBlocks.${t.value}.title`) ? $t(`experiences.twitter.viewBlocks.${t.value}.title`) : $t(t.title) }}
           </VTab>
         </VTabs>
         <VTabsItems v-model="tab">
@@ -150,7 +150,7 @@ export default {
       const disabled = !this.success || this.experienceProgress
       const tabs = [
         {
-          title: 'Load your Data',
+          title: 'Load your data',
           value: 'load-data',
           disabled: this.experienceProgress
         },
