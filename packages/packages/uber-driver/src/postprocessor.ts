@@ -59,10 +59,10 @@ export const tripsPostProcessor: PostprocessorFunction = result => {
       begintripLongitude: v.begintripLongitude,
       dropoffLatitude: v.dropoffLatitude,
       dropoffLongitude: v.dropoffLongitude,
-      requestTime: v.requestTime,
-      begintripTime: v.begintripTime,
+      requestTime: v.requestTime.replace('+00', ''),
+      begintripTime: v.begintripTime.replace('+00', ''),
       // The date add a \n in the middle that we need to remove
-      dropoffTime: v.dropoffTime.replace(/\n/g, ''),
+      dropoffTime: v.dropoffTime.replace(/\n/g, '').replace('+00', ''),
       distance: v.distance,
       duration: v.duration,
       fare: v.fare,
