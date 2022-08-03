@@ -1,6 +1,10 @@
 import { customPipelineGetFirstCSV } from '@/pipelines/custom'
 import type { ViewBlocks } from '@/types'
-import { driverPostProcessor, riderPostProcessor } from './postprocessor'
+import {
+  driverPostProcessor,
+  riderPostProcessor,
+  tripsPostProcessor
+} from './postprocessor'
 import keplerConfigPlaces from './kepler/kepler_config_places'
 import keplerConfigTrips from './kepler/kepler_config_trip'
 
@@ -33,11 +37,13 @@ const blocks: ViewBlocks = [
     id: 'trips',
     customPipeline: customPipelineGetFirstCSV('trips'),
     files: ['trips'],
-    visualization: 'ChartViewGenericMap.vue',
+    visualization: 'ChartViewUberDriverTrips.vue',
     title: 'Trips',
     text: '',
+    postprocessor: tripsPostProcessor,
     vizProps: {
-      keplerConfig: keplerConfigTrips
+      keplerConfig: keplerConfigTrips,
+      label: 'trips'
     }
   }
 ]
