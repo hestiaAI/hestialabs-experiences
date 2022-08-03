@@ -3,6 +3,7 @@ import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/instagram.png'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
+import messages from './messages.json'
 
 const options: ExperienceOptions = {
   databaseConfig,
@@ -21,6 +22,7 @@ const options: ExperienceOptions = {
   },
   hideFileExplorer: false,
   icon: icon,
+  messages,
   title: 'Instagram',
   viewBlocks
 }

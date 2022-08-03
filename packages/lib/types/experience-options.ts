@@ -23,6 +23,7 @@ export type ExperienceOptions = {
   hideSummary?: boolean
   icon: string
   keepOnlyFiles?: boolean
+  messages?: object
   preprocessors?: { [key: string]: PreprocessorFunction }
   subtitle?: string
   title: string

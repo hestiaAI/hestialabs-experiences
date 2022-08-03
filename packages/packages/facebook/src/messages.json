@@ -1,0 +1,76 @@
+{
+  "en": {
+    "intro": {
+      "title": "Facebook",
+      "dataPortal": "https://www.facebook.com/help/212802592074644",
+      "dataPortalMessage": "<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format."
+    },
+    "viewBlocks": {
+      "off-facebook-activity-count": {
+        "title": "Off Facebook activity ranking",
+        "text": "See how many times third parties have informed Facebook of your activity outside of Facebook.",
+        "vizProps": {
+          "xLabel": "ads",
+          "countLabel": "ads"
+        }
+      },
+      "off-facebook-activity-type-count": {
+        "title": "Off Facebook activity type",
+        "text": "See which kind of information advertisers have shared with Facebook of your activity outside of Facebook."
+      },
+      "ad-interactions": {
+        "title": "Ad interactions",
+        "text": "See the list of ads with which you have interacted."
+      },
+      "your-topics": {
+        "title": "Inferred interests",
+        "text": "Get a list of topics that Facebook thinks you're interested in."
+      },
+      "advertisers-contact-list": {
+        "title": "Contact list",
+        "text": "Get a list of advertisers that have uploaded a contact list containing you."
+      },
+      "custom-audiences": {
+        "title": "Advertisers using your data",
+        "text": "See all advertisers that use Facebook to get information about you"
+      }
+    }
+  },
+  "fr": {
+    "intro": {
+      "title": "Facebook",
+      "dataPortal": "https://www.facebook.com/help/212802592074644",
+      "dataPortalMessage": "<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format."
+    },
+    "viewBlocks": {
+      "off-facebook-activity-count": {
+        "title": "Classement des activités hors Facebook",
+        "text": "Statistiques de tierces parties qui informent Facebook de vos activités en dehors de Facebook.",
+        "vizProps": {
+          "xLabel": "pubs",
+          "countLabel": "pubs"
+        }
+      },
+      "off-facebook-activity-type-count": {
+        "title": "Types d'activités hors Facebook",
+        "text": "Type d'information que les publicitaires partagent avec Facebook sur vos activités en dehors de Facebook."
+      },
+      "ad-interactions": {
+        "title": "Interactions avec des publicités",
+        "text": "Liste des publicités avec lesquels vous avez interagi."
+      },
+      "your-topics": {
+        "title": "Intérêts supposés",
+        "text": "Liste de sujets dont Facebook pense qu'ils vous intéressent."
+      },
+      "advertisers-contact-list": {
+        "title": "Liste de contacts",
+        "text": "Liste de publicitaires qui ont partagé une liste de contacts qui vous mentionne."
+      },
+      "custom-audiences": {
+        "title": "Publicitaire utilisant vos données",
+        "text": "Liste des publicitaires qui utilisent Facebook pour obtenir des informations qui vous concernent."
+      }
+    }
+  }
+}
