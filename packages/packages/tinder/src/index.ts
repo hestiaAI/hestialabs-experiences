@@ -4,6 +4,7 @@ import { theDatingPrivacyCollective } from '@/collaborators/index'
 import icon from '@/icons/tinder.png'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
+import messages from './messages.json'
 
 const options: ExperienceOptions = {
   collaborator: theDatingPrivacyCollective,
@@ -14,6 +15,7 @@ const options: ExperienceOptions = {
     tinder: '**/*.json'
   },
   icon: icon,
+  messages,
   title: 'Tinder',
   viewBlocks
 }
