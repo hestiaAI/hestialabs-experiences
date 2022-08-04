@@ -11,7 +11,7 @@
     </VRow>
     <VRow v-if="samples.length">
       <VCol align="center" class="font-weight-bold">
-        OR
+        {{ $t('unit-files.or') }}
       </VCol>
     </VRow>
     <VRow>
@@ -22,25 +22,25 @@
     <VRow>
       <VCol align="center">
         <BaseDialogButton
-          dialog-title="Decrypt Files"
+          :dialog-title="$t('decrypt-files.title')"
           tooltip-position="left"
-          tooltip-label="Decrypt Files"
+          :tooltip-label="$t('decrypt-files.title')"
           icon="mdiLockOpenVariant"
         >
           <VTextField
             v-model="privateKey"
-            label="Enter your secret key"
+            :label="$t('decrypt-files.sk-label')"
             clearable
           />
           <VTextField
             v-model="publicKey"
-            label="Enter your public key (optional)"
+            :label="$t('decrypt-files.pk-label')"
             clearable
           />
         </BaseDialogButton>
         <BaseButton
           v-bind="{ disabled, progress, status, error }"
-          text="Explore your data"
+          :text="$t('unit-files.run-btn')"
           icon="mdiStepForward"
           class="my-sm-2 mr-sm-4"
           @click="returnFiles"
@@ -52,7 +52,7 @@
       <VCol>
         <template v-if="progress">
           <BaseProgressCircular class="mr-2" />
-          <span>Processing files...</span>
+          <span>{{ $t('unit-files.process-msg') }}</span>
         </template>
         <template v-else-if="error || success">
           <BaseAlert
@@ -110,8 +110,7 @@ export default {
   data() {
     const config = {
       debug: false,
-      allowMultipleUploads: true,
-      locale: { strings: { cancel: 'Clear all' } }
+      allowMultipleUploads: true
     }
     const { files, dataSamples } = this.$store.getters.experience(this.$route)
     return {
@@ -203,7 +202,8 @@ export default {
         hideUploadButton: true,
         proudlyDisplayPoweredByUppy: false,
         theme: 'light',
-        height: 300
+        height: 300,
+        locale: this.$i18n.t('uppy-locale')
       })
       // allow dropping files anywhere on the page
       .use(DropTarget, { target: document.body })

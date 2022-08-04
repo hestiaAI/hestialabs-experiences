@@ -5,7 +5,7 @@
         <VCol cols="1" />
         <VCol cols="10">
           <VCardTitle class="justify-center">
-            {{ title }}
+            {{ $tev(k('title'), title) }}
           </VCardTitle>
         </VCol>
         <VCol cols="1" align-self="center" class="full-height text-center">
@@ -31,7 +31,7 @@
       <VRow v-if="text">
         <VCol>
           <VContainer>
-            {{ text }}
+            {{ $tev(k('text'), text) }}
           </VContainer>
         </VCol>
       </VRow>
@@ -106,6 +106,10 @@ import { cloneDeep } from 'lodash-es'
 
 export default {
   props: {
+    slug: {
+      type: String,
+      required: true
+    },
     id: {
       type: String,
       required: true
@@ -217,6 +221,10 @@ export default {
         result: finalResult
       })
       this.result = finalResult
+    },
+    // Convert local translation key to global vue18n
+    k(localKey) {
+      return `experiences.${this.slug}.viewBlocks.${this.id}.${localKey}`
     }
   }
 }

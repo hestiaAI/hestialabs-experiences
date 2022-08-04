@@ -63,7 +63,7 @@
       <VCardText style="height: 100%;">
         <VRow style="height: 100%;" align="center" justify="center">
           <p>
-            Select a file on the left panel to see it in more details here
+            {{ $t('file-explorer.select') }}
           </p>
         </VRow>
       </VCardText>

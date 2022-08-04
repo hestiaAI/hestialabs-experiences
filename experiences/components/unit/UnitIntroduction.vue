@@ -2,34 +2,27 @@
   <VContainer>
     <VCard class="pa-2" flat>
       <VCardTitle class="text-h5 font-weight-bold justify-center mb-3">
-        {{ $t('experience.intro.title') }}
+        {{ $t('load-data.title') }}
       </VCardTitle>
       <VCardText>
         <VRow>
           <VCol align="center">
-            <p v-if="$route.params.experience === 'explorer'" class="body-1">
-              Explore the structure and contents of any file.
-            </p>
             <!-- eslint-disable vue/no-v-html -->
             <p
-              v-else-if="$te(k('dataPortalHtml'))"
+              v-if="$te(k('dataPortalHtml'))"
               class="body-1"
               v-html="$t(k('dataPortalHtml'))"
             />
+            <p v-else-if="$te(k('dataPortal'))" class="body-1">
+              <a
+                :href="dataPortal"
+                target="_blank"
+                rel="noreferrer noopener"
+              >{{ $t('load-data.link-text') }}</a>
+              {{ $t('load-data.text') }}
+            </p>
             <p v-else class="body-1">
-              <template v-if="dataPortal">
-                <a
-                  :href="dataPortal"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >Click here</a>
-                to request
-              </template>
-              <template v-else>
-                Request
-              </template>
-              the private data that {{ title }} collected on you. Once you
-              receive it, analyze it here.
+              {{ $t("load-data.text-default") }}
             </p>
             <!-- eslint-disable vue/no-v-html -->
             <p
@@ -39,10 +32,7 @@
             />
             <!-- eslint-enable vue/no-v-html -->
             <p>
-              Unless explicitly consented in the "Share My Data" tab, no data is
-              transmitted to HestiaLabs or anyone else. The whole experience
-              takes place locally in the browser and nothing is left behind as
-              soon as you close the tab.
+              {{ $t('load-data.disclaimer') }}
             </p>
           </VCol>
         </VRow>
@@ -64,7 +54,7 @@
     </VCard>
     <VCard v-if="tutorialVideos.length" flat>
       <VCardTitle class="text-h5 font-weight-bold justify-center">
-        Tutorial{{ tutorialVideos.length > 1 ? 's' : '' }}
+        {{ $t('load-data.tutorial-title') }}{{ tutorialVideos.length > 1 ? 's' : '' }}
       </VCardTitle>
       <VCardText>
         <VCarousel
@@ -94,6 +84,10 @@ import { pick } from 'lodash-es'
 
 export default {
   props: {
+    slug: {
+      type: String,
+      required: true
+    },
     success: {
       type: Boolean,
       default: false
@@ -127,45 +121,12 @@ export default {
       ...properties
     }
   },
-  // created() {
-  //   const experience = this.$store.getters.experience(this.$route)
-  //   // TODO come up with a way to specify i18n messages in packaged experiences
-  //   // const locale = this.$i18n.locale
-  //   const defaultMessagesForLocale = pick(experience, [
-  //     'title',
-  //     'dataPortal',
-  //     'dataPortalHtml',
-  //     'dataPortalMessage'
-  //   ])
-  //   this.i18nMergeComponentMessages(
-  //     defaultMessagesForLocale,
-  //     k => this.i18nMakeGlobalKey(k),
-  //     m => this.i18nWrapInGlobalNamespace(m),
-  //     this.$i18n
-  //   )
-  // },
   methods: {
-    /**
-     * Wrap a local, experience-specific, key-value object into a format
-     * that can be merged into vue-18n's global dictionary.
-     */
-    // i18nWrapInGlobalNamespace(messages) {
-    //   return {
-    //     experiences: { [this.experienceName]: { info: messages } }
-    //   }
-    // },
-    /** Convert a local, experience-specific key to a vue-i18n key. */
-    // Implement this on each component with experience specific i18n
-    i18nMakeGlobalKey(localKey) {
-      return `experiences.${this.experienceName}.intro.${localKey}`
-    },
-    /** Convenient alias for use in templates. */
-    // Implement this on each component with experience specific i18n.
-    k(localKey) {
-      return this.i18nMakeGlobalKey(localKey)
-    },
     onUnitFilesUpdate({ uppyFiles }) {
       this.$emit('update', { uppyFiles })
+    },
+    k(localKey) {
+      return `experiences.${this.slug}.intro.${localKey}`
     }
   }
 }

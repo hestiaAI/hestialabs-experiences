@@ -6,7 +6,7 @@
     <p>Could not parse the file. Please use the "RAW" tab to visualise it.</p>
   </div>
   <div v-else>
-    <BaseSearchBar v-model="search" :loading="searching" />
+    <BaseSearchBar v-model="search" :loading="searching" :label="$t('file-explorer.content-search-name')" :placeholder="$t('file-explorer.content-search-placeholder')" />
     <VExpandTransition>
       <div v-show="foundItems.length > 0">
         <VDataTable

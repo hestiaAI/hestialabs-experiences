@@ -32,7 +32,7 @@
             nuxt
             :to="`#${t.value}`"
           >
-            {{ $te(`experiences.twitter.viewBlocks.${t.value}.title`) ? $t(`experiences.twitter.viewBlocks.${t.value}.title`) : $t(t.title) }}
+            {{ $tetv(k(t.value), `${t.value}.name`, t.title) }}
           </VTab>
         </VTabs>
         <VTabsItems v-model="tab">
@@ -41,6 +41,7 @@
               <UnitDownload
                 v-if="routeConfig.dataFromBubble"
                 v-bind="{
+                  slug,
                   progress,
                   error,
                   success,
@@ -51,6 +52,7 @@
               <UnitIntroduction
                 v-else
                 v-bind="{
+                  slug,
                   progress,
                   error,
                   success,
@@ -89,7 +91,7 @@
                   <BaseProgressCircular size="64" width="4" />
                 </div>
               </VOverlay>
-              <UnitQuery v-bind="viewBlock" />
+              <UnitQuery v-bind="{slug, ...viewBlock}" />
             </VCol>
           </VTabItem>
           <VTabItem
@@ -129,7 +131,8 @@ export default {
       'hideFileExplorer',
       'keepOnlyFiles',
       'preprocessors',
-      'viewBlocks'
+      'viewBlocks',
+      'slug'
     ])
 
     return {
@@ -228,6 +231,10 @@ export default {
     this.switchTab('load-data')
   },
   methods: {
+    // Convert local translation key to global vue18n
+    k(localKey) {
+      return `experiences.${this.slug}.viewBlocks.${localKey}.title`
+    },
     switchTab(value) {
       this.$router.push(`#${value}`)
     },

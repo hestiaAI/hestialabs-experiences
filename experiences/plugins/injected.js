@@ -9,4 +9,12 @@ export default ({ app }, inject) => {
     // otherwise, use router instance from app context
     return baseUrl + app.router.currentRoute.path
   })
+  // Add prototype to show default value when translation is not found
+  inject('tev', (key, valueFallback) => {
+    return app.i18n.te(key) ? app.i18n.t(key) : valueFallback
+  })
+  // Add prototype to show default when translation is not found
+  inject('tetv', (key, keyFallback, valueFallback) => {
+    return app.i18n.te(key) ? app.i18n.t(key) : app.i18n.te(keyFallback) ? app.i18n.t(keyFallback) : valueFallback
+  })
 }

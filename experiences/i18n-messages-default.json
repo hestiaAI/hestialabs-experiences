@@ -1,20 +1,124 @@
 {
   "en": {
-    "welcome": "WELCOME",
-    "Load your data": "Load your data",
-    "experience": {
-      "intro": {
-        "title": "ANALYZE YOUR PRIVATE DATA"
+    "close": "Close",
+    "unit-files": {
+      "run-btn": "Explore your data",
+      "process-msg": "Processing files...",
+      "or": "OR",
+      "sample-selector": "Select sample data"
+    },
+    "unit-files-dialog": {
+      "tooltip": "Show expected files",
+      "title": "Expected files",
+      "used": "Files used in the experiences:",
+      "required": "Files required:",
+      "found": "Files found:",
+      "no-files": "No specific files are used in these experiences.",
+      "all-files-1": "For the experiences marked with",
+      "all-files-2": ", all JSON/CSV files provided will be analysed for dates and geographical coordinates. These experiences will be more interesting the more files you include."
+    },
+    "load-data": {
+      "name": "Load your data",
+      "title": "Analyse your private data",
+      "disclaimer": "Unless explicitly consented in the \"Share My Data\" tab, no data is transmitted to HestiaLabs or anyone else. The whole experience takes place locally in the browser and nothing is left behind as soon as you close the tab.",
+      "tutorial-title": "Tutorial",
+      "text-default": "Explore the structure and contents of your files.",
+      "text": "to request the private data that has been collected about you. Once you receive it, analyse it here.",
+      "link-text": "Click here"
+    },
+    "file-explorer": {
+      "name": "Files",
+      "title": "File Explorer",
+      "select": "Select a file on the left panel to see it in more details here",
+      "file-search-name": "Search for files",
+      "file-search-placeholder": "Enter part of the name",
+      "content-search-name": "Search content",
+      "content-search-placeholder": "Type..."
+    },
+    "genericDateViewer": {
+      "title": "Timeline",
+      "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
+    },
+    "share-data": {
+      "name": "Share my data"
+    },
+    "summary": {
+      "name": "Summary"
+    },
+    "uppy-locale": {
+      "strings": {
+        "cancel": "Clear all"
       }
+    },
+    "decrypt-files": {
+      "title": "Decrypt Files",
+      "sk-label": "Enter your secret key",
+      "pk-label": "Enter your public key (optional)"
     }
   },
   "fr": {
-    "welcome": "BIENVENUE",
-    "Load your data": "Loade vous data",
-    "experience": {
-      "intro": {
-        "title": "ANALYSEZ VOS DONNÉES PRIVÉES"
+    "unit-files": {
+      "run-btn": "Explorer vos données",
+      "process-msg": "Traitement des fichiers...",
+      "or": "OU",
+      "sample-selector": "Selectionner des données de test"
+    },
+    "unit-files-dialog": {
+      "tooltip": "Voir les fichiers requis",
+      "title": "Fichiers requis",
+      "used": "Fichiers utilisés dans l'expérience:",
+      "required": "Fichiers requis:",
+      "found": "Fichiers trouvés:",
+      "no-files": "Aucun fichier spécifique n'est requis dans ces expériences.",
+      "all-files-1": "Pour les expériences marquées par",
+      "all-files-2": ", tous les fichiers JSON/CSV fournis seront analysés pour y trouver des dates et des coordonnées géographiques. Ces expériences seront d'autant plus intéressantes que vous inclurez de fichiers."
+    },
+    "load-data": {
+      "name": "Charger vos données",
+      "title": "Analyser vos données privées",
+      "disclaimer": "Sauf consentement explicite dans l'onglet \"Partager mes données\", aucune donnée n'est transmise à HestiaLabs ou à quiconque. Toute l'expérience se déroule localement dans le navigateur et rien n'est laissé derrière vous dès que vous fermez l'onglet.",
+      "tutorial-title": "Démo",
+      "run-btn": "Explorer vos données",
+      "text-default": "Explorer la structure et le contenu de vos fichiers.",
+      "text": "pour demander les données privées qui ont été collectées sur vous. Une fois que vous les recevrez, analysez-les ici.",
+      "link-text": "Cliquer ici"
+    },
+    "file-explorer": {
+      "name": "Fichiers",
+      "title": "Explorateur de fichiers",
+      "select": "Sélectionnez un fichier dans le panneau de gauche pour le voir plus en détail.",
+      "file-search-name": "Recherche de fichiers",
+      "file-search-placeholder": "Entrez une partie du nom",
+      "content-search-name": "Recherche de contenu",
+      "content-search-placeholder": "Entrez une partie du contenu"
+    },
+    "genericDateViewer": {
+      "title": "Chronologie",
+      "text": "Voir tous les événements datés dans vos dossiers, correspondant aux données qui ont été collectées sur vous à ou concernant une date spécifique."
+    },
+    "share-data": {
+      "name": "Partager mes données"
+    },
+    "summary": {
+      "name": "Résumé"
+    },
+    "uppy-locale": {
+      "strings": {
+        "dropPasteFiles": "Glisser / Déposer vos fichiers ici ou %{browseFiles}",
+        "browseFiles": "parcourir les fichiers",
+        "addMore": "Ajouter",
+        "addMoreFiles": "Ajouter plus de fichiers",
+        "back": "Retour",
+        "removeFile": "Supprimer le fichier",
+        "cancel": "Effacer tout",
+        "addingMoreFiles": "Ajouter plus de fichiers"
       }
-    }
+    },
+    "decrypt-files": {
+      "title": "Décrypter vos fichiers",
+      "sk-label": "Entrer votre clé secrète",
+      "pk-label": "Entrer votre clé publique (facultatif)"
+    },
+    "close": "Fermer"
   }
 }
