@@ -73,8 +73,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import UnitFileExplorerViewerCsv from './viewer/UnitFileExplorerViewerCsv.vue'
 import { jsonToTableConverter } from '~/utils/generic-pipelines'
+
 export default {
   name: 'UnitFileExplorer',
   props: {
@@ -136,7 +136,6 @@ export default {
     onUnitResultsUpdate(result) {
       this.tableData = result
     }
-  },
-  components: { UnitFileExplorerViewerCsv }
+  }
 }
 </script>

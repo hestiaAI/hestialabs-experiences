@@ -49,7 +49,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/injected.js', '@/plugins/api.js'],
+  plugins: ['@/plugins/injected.js', '@/plugins/api.js', { src: '@/plugins/i18n.js' }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: [
@@ -107,11 +107,24 @@ export default {
           user: false
         }
       }
-    }
+    },
+    plugins: ['@/plugins/auth-i18n-redirect.js']
   },
 
   i18n: {
-    locales: ['en', 'fr'],
+    baseUrl,
+    locales: [
+      {
+        code: 'en',
+        iso: 'en-US',
+        name: 'English'
+      },
+      {
+        code: 'fr',
+        iso: 'fr-FR',
+        name: 'Français'
+      }
+    ],
     defaultLocale: i18nLocale || 'en',
     vueI18n: {
       fallbackLocale: i18nLocale || 'en',

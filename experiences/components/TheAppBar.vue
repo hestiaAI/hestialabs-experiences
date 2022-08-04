@@ -6,36 +6,52 @@
         @click.stop="drawer = !drawer"
       />
       <VToolbarTitle class="d-flex align-center" style="width: 100%">
+        <VMenu offset-y>
+          <template #activator="{ on, attrs }">
+            <VBtn
+              v-bind="attrs"
+              icon
+              v-on="on"
+            >
+              <VIcon>$vuetify.icons.mdiTranslate</VIcon>
+            </VBtn>
+          </template>
+          <VList>
+            <VListItem
+              v-for="({ code, name }) in $i18n.locales"
+              :key="code"
+              nuxt
+              :to="switchLocalePath(code)"
+            >
+              <VListItemTitle>{{ name }}</VListItemTitle>
+            </VListItem>
+          </VList>
+        </VMenu>
         <VBtn
-          v-if="$route.path !== '/'"
+          v-if="!$route.name.startsWith('index')"
           icon
-          to="/"
+          :to="localePath('index')"
           class="v-btn__home mr-0"
           color="primary"
         >
           <VIcon>$vuetify.icons.mdiHome</VIcon>
         </VBtn>
-        <NuxtLink :to="switchLocalePath('en')">
-          English
-        </NuxtLink>
-        <NuxtLink :to="switchLocalePath('fr')">
-          Français
-        </NuxtLink>
         <VSpacer />
-        <div class="d-flex">
+        <div v-if="$route.params.experience" class="d-flex">
           <VImg max-width="30" :src="e.icon" :lazy-src="e.icon" contain />
           <h3 class="ml-3">
-            {{ $t(`experiences.${$route.params.experience}.intro.title`) }}
+            {{ $tev(`experiences.${$route.params.experience}.intro.title`, e.title) }}
           </h3>
         </div>
         <VSpacer />
         <VBtn
           href="https://hestia.ai/en/#contact"
           target="_blank"
+          rel="noreferrer noopener"
           class="v-btn__home mr-0"
           text
         >
-          Contact us
+          {{ $t('Contact us') }}
         </VBtn>
         <VBtn
           v-for="link in links"
@@ -44,7 +60,7 @@
           class="v-btn__home mr-0"
           text
         >
-          {{ link.name }}
+          {{ $t(link.name) }}
         </VBtn>
         <CollaboratorLink
           v-if="collaborator"
@@ -59,6 +75,7 @@
         >
           <LogoImg width="100" />
         </a>
+        </v-menu>
       </VToolbarTitle>
     </VAppBar>
     <VNavigationDrawer

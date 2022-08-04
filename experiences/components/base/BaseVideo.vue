@@ -17,7 +17,7 @@
       class="pa-3 video"
     />
     <div style="text-align: end; margin-top: 0px; font-size: 12px">
-      <a target="_blank" :href="linkSrc">{{ linkTxt }}</a>
+      <a target="_blank" rel="noreferrer noopener" :href="linkSrc">{{ linkTxt }}</a>
     </div>
   </div>
 </template>

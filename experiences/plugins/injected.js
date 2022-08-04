@@ -13,8 +13,10 @@ export default ({ app }, inject) => {
   inject('tev', (key, valueFallback) => {
     return app.i18n.te(key) ? app.i18n.t(key) : valueFallback
   })
-  // Add prototype to show default when translation is not found
   inject('tetv', (key, keyFallback, valueFallback) => {
     return app.i18n.te(key) ? app.i18n.t(key) : app.i18n.te(keyFallback) ? app.i18n.t(keyFallback) : valueFallback
+  })
+  inject('tet', (key, keyFallback) => {
+    return app.i18n.te(key) ? app.i18n.t(key) : app.i18n.t(keyFallback)
   })
 }

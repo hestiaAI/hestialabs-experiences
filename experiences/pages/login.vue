@@ -28,18 +28,18 @@
 <script>
 import { mdiEye, mdiEyeOff } from '@mdi/js'
 
-const extractBubbleParam = (path = '') => path.split('/')[2]
+const extractBubbleParam = (path = '') => path.split('/').slice(-1)[0]
 
 export default {
   auth: 'guest',
-  middleware({ $auth, redirect, route, error }) {
+  middleware({ app, $auth, redirect, route, error }) {
     if (!route.query.redirect) {
       if ($auth.$state.redirect) {
         // add query parameter
-        return redirect({
+        return redirect(app.localePath({
           name: 'login',
           query: { redirect: $auth.$state.redirect }
-        })
+        }))
       }
       // no way to know how to redirect the user after login
       return error({ statusCode: 404, message: 'Page Not Found' })

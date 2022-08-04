@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "octref.vetur",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "dariofuzinato.vue-peek"
+  ]
+}
