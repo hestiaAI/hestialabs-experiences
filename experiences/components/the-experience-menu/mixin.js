@@ -6,6 +6,9 @@ export default {
     }
   },
   methods: {
+    k(experience, key) {
+      return `experiences.${experience}.intro.${key}`
+    },
     menuItemAttrs({ url, slug, disabled }) {
       const { bubble } = this.$route.params
       return url
@@ -15,11 +18,11 @@ export default {
           : {
               nuxt: true,
               exact: true,
-              to: {
+              to: this.localePath({
                 name: `${bubble ? 'bubble-bubble-' : ''}experience-experience`,
                 params: { bubble, experience: slug },
                 hash: '#load-data'
-              }
+              })
             }
     }
   }

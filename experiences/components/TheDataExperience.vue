@@ -32,7 +32,7 @@
             nuxt
             :to="`#${t.value}`"
           >
-            {{ $te(`experiences.twitter.viewBlocks.${t.value}.title`) ? $t(`experiences.twitter.viewBlocks.${t.value}.title`) : $t(t.title) }}
+            {{ $tet(`experiences.${slug}.viewBlocks.${t.value}.title`, t.title) }}
           </VTab>
         </VTabs>
         <VTabsItems v-model="tab">
@@ -129,7 +129,8 @@ export default {
       'hideFileExplorer',
       'keepOnlyFiles',
       'preprocessors',
-      'viewBlocks'
+      'viewBlocks',
+      'slug'
     ])
 
     return {

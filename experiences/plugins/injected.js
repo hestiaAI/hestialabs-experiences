@@ -9,4 +9,12 @@ export default ({ app }, inject) => {
     // otherwise, use router instance from app context
     return baseUrl + app.router.currentRoute.path
   })
+
+  inject('tet', (key, keyFallback) => {
+    return app.i18n.te(key) ? app.i18n.t(key) : app.i18n.t(keyFallback)
+  })
+
+  inject('tev', (key, valueFallback) => {
+    return app.i18n.te(key) ? app.i18n.t(key) : valueFallback
+  })
 }

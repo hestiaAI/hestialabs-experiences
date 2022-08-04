@@ -1,7 +1,18 @@
 {
   "en": {
-    "welcome": "WELCOME",
+    "and": "and",
+    "About": "About",
+    "Available on-demand": "Available on-demand",
+    "Bubbles": "Bubbles",
+    "Contact us": "Contact us",
+    "Data Experience": "Data Experience",
     "Load your data": "Load your data",
+    "Made for": "Made for",
+    "Privacy": "Privacy",
+    "Public experiences": "Public experiences",
+    "the HestiaLabs project": "the HestiaLabs project",
+
+    "footer-digipower-academy": "The Digipower.academy has emerged out of projects initiated separately by",
     "experience": {
       "intro": {
         "title": "ANALYZE YOUR PRIVATE DATA"
@@ -9,8 +20,20 @@
     }
   },
   "fr": {
-    "welcome": "BIENVENUE",
-    "Load your data": "Loade vous data",
+    "and": "et",
+    "About": "À propos",
+    "Available on-demand": "Disponible sur demande",
+    "Bubbles": "Bulles",
+    "Contact us": "Contactez-nous",
+    "Data Experience": "Éxperience",
+    "Load your data": "Charger vos données",
+    "Made for": "Fait pour",
+    "Privacy": "Confidentialité",
+    "project": "et",
+    "Public experiences": "Expériences publiques",
+    "the HestiaLabs project": "le projet HestiaLabs",
+
+    "footer-digipower-academy": "Digipower.academy a émergé de projets initiés séparément par",
     "experience": {
       "intro": {
         "title": "ANALYSEZ VOS DONNÉES PRIVÉES"

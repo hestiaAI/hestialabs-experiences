@@ -1,9 +1,6 @@
 {
-  "en": {
-    "welcome": "Welcome"
-  },
+  "en": {},
   "fr": {
-    "welcome": "Bienvenue",
     "experience": {
       "intro": {
         "title": "Analysez vos données privées"

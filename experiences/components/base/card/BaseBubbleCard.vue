@@ -14,6 +14,7 @@
     </VCardText>
   </VCard>
 </template>
+
 <script>
 export default {
   props: {

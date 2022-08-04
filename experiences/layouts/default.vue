@@ -48,7 +48,7 @@
           style="color: white"
         >Hestia.ai</a>
         <br>
-        The Digipower.academy has emerged out of projects initiated separately by
+        {{ $t('footer-digipower-academy') }}
         <a
           href="https://www.sitra.fi/en/projects/digipower-investigation"
           target="_blank"
@@ -57,12 +57,12 @@
           href="https://www.migros-engagement.ch/en/news-projects/technology-ethics/hestialabs"
           target="_blank"
           style="color: white"
-        >Migros Pioneer Fund</a> (via the
+        >Migros Pioneer Fund</a> (via
         <a
           href="http://www.hestialabs.org"
           target="_blank"
           style="color: white"
-        >HestiaLabs </a> project) and
+        >{{ $t('the HestiaLabs project') }} </a>) {{ $t('and') }}
         <a
           href="https://personaldata.io/"
           target="_blank"
@@ -75,7 +75,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-// import { merge } from 'lodash-es'
 
 /**
  * Merge local, experience-specific, default messages
@@ -85,29 +84,10 @@ function i18nMergeMessages(
   experienceName,
   locale,
   messages,
-  // defaultMessagesForCurrentLocale,
-  // i18nMakeGlobalKey,
-  // i18nWrapInGlobalNamespace,
   i18n
 ) {
-  // keep keys without an existing translation
-  // const keysUsingDefaults =
-  // Object.keys(defaultMessagesForCurrentLocale).filter((key) => {
-  //   const i18nKey = i18nMakeGlobalKey(key)
-  //   return !i18n.te(i18nKey)
-  // })
-  // // build messages
-  // const componentMessages = {}
-  // keysUsingDefaults.forEach((key) => {
-  //   const defaultMessage = defaultMessagesForCurrentLocale[key]
-  //   if (defaultMessage) {
-  //     componentMessages[key] = defaultMessage
-  //   }
-  // })
   // merge the messages into vue-i18n's global dictionary
   const mergeableMessages = { experiences: { [experienceName]: messages } }
-  // const mergeableMs = i18nWrapInGlobalNamespace(componentMessages)
-  // const { locale } = i18n
   i18n.mergeLocaleMessage(locale, mergeableMessages)
 }
 
@@ -127,10 +107,6 @@ export default {
       const { experiences } = store.state
       experiences.filter(({ messages }) => messages)
         .forEach((experience) => {
-          // Object.entries(experience.messages).map(([locale, messages]) => {
-          //   return { experiences: { [experience.slug]: messages } }
-          //   // i18nMergeComponentMessages(experience.slug, locale, messages, app.i18n)
-          // })
           Object.entries(experience.messages).forEach(([locale, messages]) => {
             i18nMergeMessages(experience.slug, locale, messages, app.i18n)
           })
@@ -186,7 +162,10 @@ export default {
           property: 'twitter:title',
           content: this.appName
         }
-      ]
+      ],
+      htmlAttrs: {
+        lang: this.$i18n.locale
+      }
     }
   },
   computed: {
