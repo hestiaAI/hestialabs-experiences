@@ -57,7 +57,9 @@
     "demo-aggregator",
     "demo-participant",
     "sit-aggregator",
-    "sit-participant"
+    "sit-participant",
+    "brown-aggregator",
+    "brown-participant"
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
   "i18nUrl": "/i18n-messages-example.json",

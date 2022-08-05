@@ -96,7 +96,7 @@
       </template>
       <div class="my-6">
         <LogoImg width="250" />
-        <template v-if="$route.params.bubble">
+        <template v-if="$auth.loggedIn">
           <VSubheader class="mt-2">
             Connected to bubble:
             <span class="font-weight-black">
@@ -106,7 +106,7 @@
         </template>
         <TheBubbleMenu />
         <TheExperienceMenu
-          v-if="$route.params.bubble"
+          v-if="$auth.loggedIn"
           :include="$auth.user.bubble.experiences"
         />
         <TheExperienceMenu v-else />

@@ -50,3 +50,27 @@ export const riderPostProcessor: PostprocessorFunction = result => {
   })
   return { headers: Object.keys(results[0]), items: results }
 }
+
+export const tripsPostProcessor: PostprocessorFunction = result => {
+  const items = result?.items || []
+  const results = items.map(v => {
+    return {
+      begintripLatitude: v.begintripLatitude,
+      begintripLongitude: v.begintripLongitude,
+      dropoffLatitude: v.dropoffLatitude,
+      dropoffLongitude: v.dropoffLongitude,
+      requestTime: v.requestTime.replace('+00', ''),
+      begintripTime: v.begintripTime.replace('+00', ''),
+      // The date add a \n in the middle that we need to remove
+      dropoffTime: v.dropoffTime.replace(/\n/g, '').replace('+00', ''),
+      distance: v.distance,
+      duration: v.duration,
+      fare: v.fare,
+      currency: v.currency,
+      fareProfile: v.fareProfile,
+      surgeMultiplier: v.surgeMultiplier,
+      status: v.status
+    }
+  })
+  return { headers: Object.keys(results[0]), items: results }
+}

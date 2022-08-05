@@ -49,10 +49,9 @@
 </template>
 <script>
 import mixin from './mixin'
-import ChartViewTopRow from './ChartViewTopRow.vue'
 import { kAnonymityFilter } from '@/utils/kAnonymity'
+
 export default {
-  components: { ChartViewTopRow },
   mixins: [mixin],
   props: {
     keplerConfig: {

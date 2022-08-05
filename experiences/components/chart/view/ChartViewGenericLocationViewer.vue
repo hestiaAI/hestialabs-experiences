@@ -32,7 +32,6 @@
 </template>
 <script>
 import mixin from './mixin'
-import keplerConfig from './kepler-config'
 
 export default {
   mixins: [mixin],
@@ -68,7 +67,7 @@ export default {
     keplerArgs() {
       return {
         keplerData: this.keplerData,
-        config: keplerConfig
+        config: null
       }
     }
   },
