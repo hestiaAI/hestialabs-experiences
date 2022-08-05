@@ -1,6 +1,23 @@
 {
   "en": {
-    "close": "Close",
+    "and": "and",
+    "About": "About",
+    "Available on-demand": "Available on-demand",
+    "Bubbles": "Bubbles",
+    "Close": "Close",
+    "Contact us": "Contact us",
+    "Data Experience": "Data Experience",
+    "Download": "Download",
+    "Export": "Export",
+    "Load your data": "Load your data",
+    "Made for": "Made for",
+    "Privacy": "Privacy",
+    "Public experiences": "Public experiences",
+    "Share": "Share",
+    "Search": "Search",
+    "the HestiaLabs project": "the HestiaLabs project",
+    "This might take a moment": "This might take a moment",
+    "Type...": "Type...",
     "unit-files": {
       "run-btn": "Explore your data",
       "process-msg": "Processing files...",
@@ -50,17 +67,6 @@
         "cancel": "Clear all"
       }
     },
-    "and": "and",
-    "About": "About",
-    "Available on-demand": "Available on-demand",
-    "Bubbles": "Bubbles",
-    "Contact us": "Contact us",
-    "Data Experience": "Data Experience",
-    "Load your data": "Load your data",
-    "Made for": "Made for",
-    "Privacy": "Privacy",
-    "Public experiences": "Public experiences",
-    "the HestiaLabs project": "the HestiaLabs project",
     "footer-digipower-academy": "The Digipower.academy has emerged out of projects initiated separately by",
     "decrypt-files": {
       "title": "Decrypt Files",
@@ -69,6 +75,24 @@
     }
   },
   "fr": {
+    "and": "et",
+    "About": "À propos",
+    "Available on-demand": "Disponible sur demande",
+    "Bubbles": "Bulles",
+    "Close": "Fermer",
+    "Contact us": "Contactez-nous",
+    "Data Experience": "Éxperience",
+    "Download": "Télécharger",
+    "Export": "Exporter",
+    "Load your data": "Charger vos données",
+    "Made for": "Fait pour",
+    "Privacy": "Confidentialité",
+    "Public experiences": "Expériences publiques",
+    "Share": "Partager",
+    "Search": "Rechercher",
+    "the HestiaLabs project": "le projet HestiaLabs",
+    "This might take a moment": "Cela peut prendre un moment",
+    "Type...": "Entrer...",
     "unit-files": {
       "run-btn": "Explorer vos données",
       "process-msg": "Traitement des fichiers...",
@@ -114,24 +138,11 @@
     "summary": {
       "name": "Résumé"
     },
-    "and": "et",
-    "About": "À propos",
-    "Available on-demand": "Disponible sur demande",
-    "Bubbles": "Bulles",
-    "Contact us": "Contactez-nous",
-    "Data Experience": "Éxperience",
-    "Load your data": "Charger vos données",
-    "Made for": "Fait pour",
-    "Privacy": "Confidentialité",
-    "project": "et",
-    "Public experiences": "Expériences publiques",
-    "the HestiaLabs project": "le projet HestiaLabs",
     "footer-digipower-academy": "Digipower.academy a émergé de projets initiés séparément par",
     "decrypt-files": {
       "title": "Décrypter vos fichiers",
       "sk-label": "Entrer votre clé secrète",
       "pk-label": "Entrer votre clé publique (facultatif)"
-    },
-    "close": "Fermer"
+    }
   }
 }

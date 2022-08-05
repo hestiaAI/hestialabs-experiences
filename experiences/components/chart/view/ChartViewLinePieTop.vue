@@ -177,7 +177,7 @@ export default {
       const rangeChart = new dc.BarChart(`#range-chart-${this.graphId}`)
       const topChart = new dc.RowChart(`#top-chart-${this.graphId}`)
       const tableCount = new dc.DataCount(`#dc-data-count-${this.graphId}`)
-      const topSearch = new dc.TextFilterWidget(`#top-search-${this.graphId}`)
+      const topSearch = this.createTextFilterWidget(`#top-search-${this.graphId}`)
       const pieChart = new dc.PieChart(`#pie-chart-${this.graphId}`)
 
       // Bind reset filters links

@@ -202,7 +202,7 @@ export default {
     createTopRowChart(ndx, fieldAccessor, valueAccessor) {
       // Create and bind charts to their respective divs
       const chart = new dc.RowChart(`#${fieldAccessor}-chart-${this.graphId}`)
-      const search = new dc.TextFilterWidget(
+      const search = this.createTextFilterWidget(
         `#${fieldAccessor}-search-${this.graphId}`
       )
 

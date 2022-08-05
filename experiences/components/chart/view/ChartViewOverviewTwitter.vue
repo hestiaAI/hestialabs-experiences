@@ -149,9 +149,10 @@ export default {
       const engagementChart = new dc.PieChart('#engagement-chart')
       const typeChart = new dc.RowChart('#type-chart')
       const valueChart = new dc.RowChart('#value-chart')
-      const companySearch = new dc.TextFilterWidget('#company-search')
-      const typeSearch = new dc.TextFilterWidget('#type-search')
-      const valueSearch = new dc.TextFilterWidget('#value-search')
+
+      const companySearch = this.createTextFilterWidget('#company-search')
+      const typeSearch = this.createTextFilterWidget('#type-search')
+      const valueSearch = this.createTextFilterWidget('#value-search')
 
       // Bind reset filters links
       d3.select('#volume-chart p a.reset').on('click', function() {

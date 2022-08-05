@@ -40,7 +40,7 @@
         </BaseDialogButton>
         <BaseButton
           v-bind="{ disabled, progress, status, error }"
-          :text="$t('unit-files.run-btn')"
+          text="unit-files.run-btn"
           icon="mdiStepForward"
           class="my-sm-2 mr-sm-4"
           @click="returnFiles"

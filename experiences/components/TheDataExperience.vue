@@ -86,7 +86,7 @@
                   style="width: 100%; height: 100%"
                 >
                   <div class="mb-3">
-                    This might take a moment
+                    {{ $t('This might take a moment') }}
                   </div>
                   <BaseProgressCircular size="64" width="4" />
                 </div>
