@@ -1,11 +1,15 @@
 {
   "en": {
-    "close": "Close",
     "unit-files": {
       "run-btn": "Explore your data",
       "process-msg": "Processing files...",
       "or": "OR",
       "sample-selector": "Select sample data"
+    },
+    "decrypt-files": {
+      "title": "Decrypt Files",
+      "sk-label": "Enter your secret key",
+      "pk-label": "Enter your public key (optional)"
     },
     "unit-files-dialog": {
       "tooltip": "Show expected files",
@@ -35,9 +39,35 @@
       "content-search-name": "Search content",
       "content-search-placeholder": "Type..."
     },
-    "genericDateViewer": {
+    "generic-date-viewer": {
       "title": "Timeline",
-      "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
+      "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date.",
+      "graph-title": "Number of dated events in your files",
+      "graph-no-date": "No dated events were found in your file(s).",
+      "from": "From",
+      "to": "to",
+      "found": "we found",
+      "dated-event": "dated events in your file(s)."
+    },
+    "generic-location-viewer": {
+      "graph-title": "Number of location records in your files",
+      "graph-no-location": "No location were found in your file(s).",
+      "found": "We found",
+      "location": "locations in your file(s)."
+    },
+    "generic-map": {
+      "search-info": "Please use the search box and filters below to change what is shown on the map.",
+      "filter-info": "Any filtering you do will also limit what data is shared into the pool if you share this tab on the 'Share My Data' tab.",
+      "add-noise": "Add Noise",
+      "noise-level": "Noise Level",
+      "meters": "meters"
+    },
+    "google-one-place": {
+      "total-time-spend": "Total time spend at the",
+      "mean-time-spend": "Mean time spend at the",
+      "entropy": "Entropy for",
+      "entropy-info": "The higher this value is, the more uncertain Google was when deciding if you visited",
+      "other-candidates": "This map shows the other candidates proposed by Google associated to the"
     },
     "share-data": {
       "name": "Share my data"
@@ -50,6 +80,21 @@
         "cancel": "Clear all"
       }
     },
+    "current-filter": "Current filter:",
+    "select-time-range": "select a time range to zoom in",
+    "selected-out-of": "selected out of",
+    "click-graph": "Please click on the graph to apply filters.",
+    "reset": "reset",
+    "reset-all": "Reset All",
+    "select-all": "Select All",
+    "all": "All",
+    "per": "per",
+    "month": "month",
+    "year": "year",
+    "day": "day",
+    "hour": "hour",
+    "close": "Close",
+    "search": "Search",
     "and": "and",
     "About": "About",
     "Available on-demand": "Available on-demand",
@@ -61,13 +106,15 @@
     "Privacy": "Privacy",
     "Public experiences": "Public experiences",
     "the HestiaLabs project": "the HestiaLabs project",
-
     "footer-digipower-academy": "The Digipower.academy has emerged out of projects initiated separately by",
-    "decrypt-files": {
-      "title": "Decrypt Files",
-      "sk-label": "Enter your secret key",
-      "pk-label": "Enter your public key (optional)"
-    }
+    "directed-graph-disclaimer": "Please take into account the fact that this graph only shows the link between data flows that are tagged as Fingerprinting or Advertising.",
+    "No relevant data found": "No relevant data found",
+    "Time interval": "Time interval",
+    "no-records": "No records were found in your file(s).",
+    "found": "We found",
+    "in-files": "in your file.",
+    "clear": "Clear",
+    "save": "Save"
   },
   "fr": {
     "unit-files": {
@@ -105,9 +152,35 @@
       "content-search-name": "Recherche de contenu",
       "content-search-placeholder": "Entrez une partie du contenu"
     },
-    "genericDateViewer": {
+    "generic-date-viewer": {
       "title": "Chronologie",
-      "text": "Voir tous les événements datés dans vos dossiers, correspondant aux données qui ont été collectées sur vous à ou concernant une date spécifique."
+      "text": "Voir tous les événements datés dans vos dossiers, correspondant aux données qui ont été collectées sur vous à ou concernant une date spécifique.",
+      "graph-title": "Nombre d'événements datés dans vos dossiers",
+      "graph-no-date": "Aucun événement daté n'a été trouvé dans votre (vos) dossier(s).",
+      "from": "De",
+      "to": "à",
+      "found": "nous avons trouvé",
+      "dated-event": "événements datés dans votre (vos) fichier(s)."
+    },
+    "generic-location-viewer": {
+      "graph-title": "Nombre de localisation dans vos fichiers",
+      "graph-no-location": "Aucune localisation n'a été trouvé dans votre/vos fichier(s).",
+      "found": "Nous avons trouvé",
+      "location": "dans votre/vos fichier(s)."
+    },
+    "generic-map": {
+      "search-info": "Veuillez utiliser le champ de recherche et les filtres ci-dessous pour modifier ce qui est affiché sur la carte.",
+      "filter-info": "Tout filtrage effectué limitera également les données qui sont partagées dans le pool si vous partagez cet onglet dans l'onglet 'Partager mes données'.",
+      "add-noise": "Ajouter du bruit",
+      "noise-level": "Niveau de bruit",
+      "meters": "mètres"
+    },
+    "google-one-place": {
+      "total-time-spend": "Temps total passé à",
+      "mean-time-spend": "Temps moyen passé à",
+      "entropy": "Entropie pour",
+      "entropy-info": "Plus cette valeur est élevée, plus l'incertitude de Google était grande au moment de décider si vous avez visité",
+      "other-candidates": "Cette carte montre les autres candidats proposés par Google associés à"
     },
     "share-data": {
       "name": "Partager mes données"
@@ -127,6 +200,24 @@
         "addingMoreFiles": "Ajouter plus de fichiers"
       }
     },
+    "decrypt-files": {
+      "title": "Décrypter vos fichiers",
+      "sk-label": "Entrer votre clé secrète",
+      "pk-label": "Entrer votre clé publique (facultatif)"
+    },
+    "current-filter": "Filtre actuel:",
+    "select-time-range": "sélectionnez une plage de temps pour effectuer un zoom",
+    "selected-out-of": "sélectionné·e·s sur",
+    "click-graph": "Veuillez cliquer sur un graphique pour appliquer des filtres.",
+    "reset": "réinitialiser",
+    "reset-all": "Réinitialiser tout",
+    "select-all": "Sélectionner Tout",
+    "per": "par",
+    "month": "mois",
+    "year": "année",
+    "day": "jour",
+    "hour": "heure",
+    "search": "Recherche",
     "and": "et",
     "About": "À propos",
     "Available on-demand": "Disponible sur demande",
@@ -139,13 +230,15 @@
     "project": "et",
     "Public experiences": "Expériences publiques",
     "the HestiaLabs project": "le projet HestiaLabs",
-
     "footer-digipower-academy": "Digipower.academy a émergé de projets initiés séparément par",
-    "decrypt-files": {
-      "title": "Décrypter vos fichiers",
-      "sk-label": "Entrer votre clé secrète",
-      "pk-label": "Entrer votre clé publique (facultatif)"
-    },
-    "close": "Fermer"
+    "close": "Fermer",
+    "No relevant data found": "Aucune donnée pertinente trouvée",
+    "directed-graph-disclaimer": "Veuillez prendre en compte le fait que ce graphique ne montre que le lien entre les flux de données qui sont étiquetés comme empreintes digitales ou publicité.",
+    "Time interval": "Intervalle",
+    "no-records": "Aucun résultat n'a été trouvé dans votre (vos) dossier(s).",
+    "found": "Nous avons trouvé",
+    "in-files": "dans votre/vos fichier(s)",
+    "clear": "Annuler",
+    "save": "Sauvegarder"
   }
 }

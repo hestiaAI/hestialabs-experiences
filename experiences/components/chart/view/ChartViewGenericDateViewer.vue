@@ -3,26 +3,26 @@
     <VRow>
       <VCol cols="12" md="7">
         <p class="text-h6">
-          Number of dated events in your files
+          {{ $t('generic-date-viewer.graph-title') }}
         </p>
         <p
           v-if="total === 0 && !currMinDate && !currMaxDate"
           class="text-subtitle-2"
         >
-          No dated events were found in your file(s).
+          {{ $t('generic-date-viewer.graph-no-date') }}
         </p>
         <p v-else class="text-subtitle-2">
-          From
-          <strong>{{ currMinDate }}</strong> to
-          <strong>{{ currMaxDate }}</strong> we found
-          <strong>{{ total }}</strong> dated events in your file(s).
+          {{ $t('generic-date-viewer.from') }}
+          <strong>{{ currMinDate }}</strong>  {{ $t('generic-date-viewer.to') }}
+          <strong>{{ currMaxDate }}</strong>  {{ $t('generic-date-viewer.found') }}
+          <strong>{{ total }}</strong>  {{ $t('generic-date-viewer.dated-event') }}
         </p>
       </VCol>
       <VCol cols="12" md="2">
         <VSelect
           v-model="selectTimeInt"
           :items="intervalNames"
-          label="Time interval"
+          :label="$t('Time interval')"
           @change="drawBarChart"
         />
       </VCol>
@@ -42,7 +42,7 @@
                 </VIcon>
               </VListItemAction>
               <VListItemContent>
-                <VListItemTitle> Select All </VListItemTitle>
+                <VListItemTitle> {{ $t('select-all') }} </VListItemTitle>
               </VListItemContent>
             </VListItem>
             <VDivider class="mt-2" />
@@ -62,7 +62,7 @@
       <VCol cols="12">
         <div :id="graphId" />
         <p class="text-subtitle-2">
-          Select a <strong>time range</strong> below
+          {{ $t('select-time-range') }}
           <VBtn
             x-small
             class="ma-1"
@@ -71,7 +71,7 @@
             color="indigo"
             @click="resetFilter"
           >
-            Reset
+            {{ $t('reset') }}
           </VBtn>
         </p>
         <div :id="'range-chart' + graphId" class="range-chart" />
@@ -88,7 +88,7 @@
   </VContainer>
   <VContainer v-else>
     <p class="text-center">
-      No relevant data found
+      {{ $t('No relevant data found') }}
     </p>
   </VContainer>
 </template>

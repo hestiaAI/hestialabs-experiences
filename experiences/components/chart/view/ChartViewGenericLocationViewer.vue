@@ -3,13 +3,13 @@
     <VRow>
       <VCol cols="12">
         <p class="text-h6">
-          Number of location records in your files
+          {{ $t('generic-location-viewer.graph-title') }}
         </p>
         <p v-if="total === 0" class="text-subtitle-2">
-          No location were found in your file(s).
+          {{ $t('generic-location-viewer.graph-no-location') }}
         </p>
         <p v-else class="text-subtitle-2">
-          We found <strong>{{ total }}</strong> locations in your file(s).
+          {{ $t('generic-location-viewer.found') }} <strong>{{ total }}</strong> {{ $t('generic-location-viewer.location') }}
         </p>
       </VCol>
     </VRow>

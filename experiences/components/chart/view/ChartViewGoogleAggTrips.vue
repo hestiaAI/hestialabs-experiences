@@ -3,7 +3,7 @@
     <VRow>
       <VCol cols="12">
         <p v-if="total === 0" class="text-subtitle-2">
-          No records were found in your file(s).
+          {{ $t('no-records') }}
         </p>
         <p v-else class="text-subtitle-2">
           This shows the public tansportation that was used by at least k

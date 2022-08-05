@@ -12,11 +12,12 @@
     <VRow>
       <VCol cols="12">
         <p class="text-subtitle-2">
-          Total time spend at the {{ placeSelected }} : {{ total_time }} <br>
+          {{ $t('google-one-place.total-time-spend') }} {{ placeSelected }}: {{ total_time }}. <br>
           <br>
-          Mean time spend at the {{ placeSelected }}: {{ mean_time }} <br>
+          {{ $t('google-one-place.mean-time-spend') }} {{ placeSelected }}: {{ mean_time }}. <br>
           <br>
-          The entropy for {{ placeSelected }} is {{ computeEntropy() }}. The higher this value is, the more uncertain Google was when deciding if you visited {{ placeSelected }}.
+          {{ $t('google-one-place.entropy') }} {{ placeSelected }}: {{ computeEntropy() }}. <br>
+          {{ $t('google-one-place.entropy-info') }} {{ placeSelected }}.
         </p>
       </VCol>
     </VRow>
@@ -24,8 +25,7 @@
       <VRow>
         <VCol cols="12">
           <p class="text-subtitle-2">
-            This map shows the other candidates proposed by Google associated to
-            the {{ placeSelected }}:
+            {{ $t('google-one-place.other-candidates') }} {{ placeSelected }}:
           </p>
           <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
