@@ -36,6 +36,14 @@
       "all-files-1": "For the experiences marked with",
       "all-files-2": ", all JSON/CSV files provided will be analysed for dates and geographical coordinates. These experiences will be more interesting the more files you include."
     },
+    "unit-consent-form": {
+      "select-files-dialog": {
+        "title": "Select files",
+        "label": "Search for files",
+        "placeholder": "Enter part of a file name...",
+        "clearButton": "Clear selection"
+      }
+    },
     "load-data": {
       "name": "Load your data",
       "title": "Analyse your private data",
@@ -107,6 +115,14 @@
       "no-files": "Aucun fichier spécifique n'est requis dans ces expériences.",
       "all-files-1": "Pour les expériences marquées par",
       "all-files-2": ", tous les fichiers JSON/CSV fournis seront analysés pour y trouver des dates et des coordonnées géographiques. Ces expériences seront d'autant plus intéressantes que vous inclurez de fichiers."
+    },
+    "unit-consent-form": {
+      "select-files-dialog": {
+        "title": "Sélectionner les fichiers",
+        "label": "Rechercher des fichiers",
+        "placeholder": "Entrer le nom d'un fichier...",
+        "clearButton": "Effacer la sélection"
+      }
     },
     "load-data": {
       "name": "Charger vos données",
