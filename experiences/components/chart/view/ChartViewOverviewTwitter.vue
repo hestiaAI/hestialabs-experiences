@@ -5,34 +5,34 @@
         <VRow>
           <VCol cols="12" sm="8">
             <div id="volume-chart">
-              <strong>Number of ads over time</strong>
+              <strong>{{ $t(k('ads-time')) }}</strong>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('current-filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none">{{ $t('reset') }}</a>
               </p>
             </div>
             <div :id="'range-chart' + graphId" class="range-chart">
               <p class="muted pull-right" style="margin-right: 15px">
-                select a <strong>time range</strong> to zoom in
+                {{ $t('select-time-range') }}
               </p>
             </div>
           </VCol>
           <VCol cols="12" sm="4">
             <div id="company-chart">
               <div style="display: flex">
-                <strong>Top 10 advertisers</strong>
+                <strong>{{ $t(k('top-adv')) }}</strong>
                 <VSpacer />
                 <div id="company-search" />
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('current-filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none">{{ $t('reset') }}</a>
               </p>
             </div>
           </VCol>
@@ -40,57 +40,51 @@
         <VRow>
           <VCol cols="12" sm="4">
             <div id="engagement-chart">
-              <strong>Interactions with ads (clicks, video views)</strong>
+              <strong>{{ $t(k('interactions')) }}</strong>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('current-filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none">{{ $t('reset') }}</a>
               </p>
             </div>
           </VCol>
           <VCol cols="12" sm="4">
             <div id="type-chart">
               <div style="display: flex">
-                <strong>Type of targeting</strong>
+                <strong>{{ $t(k('targeting-type')) }}</strong>
                 <VSpacer />
                 <div id="type-search" />
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('current-filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none">{{ $t('reset') }}</a>
               </p>
             </div>
           </VCol>
           <VCol cols="12" sm="4">
             <div id="value-chart">
               <div style="display: flex">
-                <strong>Targeting criteria</strong>
+                <strong>{{ $t(k('targeting-criteria')) }}</strong>
                 <VSpacer />
                 <div id="value-search" />
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('current-filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none">{{ $t('reset') }}</a>
               </p>
             </div>
           </VCol>
         </VRow>
         <VRow>
-          <div id="dc-data-count" class="dc-data-count">
-            <span class="filter-count" />
-            selected out of
-            <span class="total-count" />
-            records |
-            <a class="reset">Reset All</a>
-          </div>
+          <div id="dc-data-count" class="dc-data-count" />
         </VRow>
       </VCol>
     </ChartViewVRowWebShare>
@@ -131,6 +125,9 @@ export default {
     }
   },
   methods: {
+    k(localKey) {
+      return `chart-view-overview-twitter.${localKey}`
+    },
     drawViz() {
       this.results = this.values
       // Define a color palette for the viz
@@ -414,11 +411,10 @@ export default {
         })
         .html({
           some:
-            '<strong>%filter-count</strong> selected out of <strong>' +
-            total +
-            '</strong> ads displayed on your Twitter feed' +
-            " | <a class='reset'>Reset All</a>",
-          all: 'All <strong>%total-count</strong> ads selected. Please click on the graph to apply filters.'
+            `<strong>%filter-count</strong> ${this.$t('selected-out-of')} <strong>%total-count</strong> ` +
+            `${this.$t(this.k('ads'))} | <a class='resetAll'>${this.$t('reset-all')}</a>`,
+          all:
+            `Total: <strong>%total-count</strong> ${this.$t(this.k('ads'))}. ${this.$t('click-graph')}`
         })
         .on('pretransition', (chart, filter) => {
           const newData = d3.flatRollup(

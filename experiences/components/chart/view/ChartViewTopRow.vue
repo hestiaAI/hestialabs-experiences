@@ -3,9 +3,9 @@
     <VRow dense>
       <VCol cols="12" md="12" class="text-center">
         <p>
-          In total we found <strong>{{ total }}</strong> {{ countLabel }}
+          {{ $t('In total we found') }} <strong>{{ total }}</strong> {{ countLabel }}
           <span v-if="minDate && maxDate" class="">
-            between <strong>{{ minDate }}</strong> and
+            {{ $t('between') }} <strong>{{ minDate }}</strong> {{ $t('and') }}
             <strong>{{ maxDate }}</strong>
           </span>
         </p>
@@ -27,14 +27,14 @@
             </VBtn>
           </template>
           <VCard style="width: 300px">
-            <VCardTitle>Settings</VCardTitle>
+            <VCardTitle>{{ $t('Settings') }}</VCardTitle>
             <VDivider />
             <VCardText>
               <VRow class="mt-3">
                 <VCol>
                   <VSlider
                     v-model="topKSlider"
-                    :label="`N° of ${yLabel}`"
+                    :label="`N° ${$t('of')} ${yLabel}`"
                     thumb-color="primary"
                     thumb-label="always"
                     min="1"
@@ -50,7 +50,7 @@
                   <VCheckbox
                     v-model="othersCheck"
                     dense
-                    label="Display Others"
+                    :label="$t('Display Others')"
                     hide-details
                     @change="draw"
                   />

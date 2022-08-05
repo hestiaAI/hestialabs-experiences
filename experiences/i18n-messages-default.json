@@ -13,6 +13,14 @@
       "country": "Country",
       "device": "Device used"
     },
+    "chart-view-overview-twitter": {
+      "ads-time": "Number of ads over time",
+      "top-adv": "Top 10 advertisers",
+      "interactions": "Interactions with ads (clicks, video views)",
+      "targeting-type": "Type of targeting",
+      "targeting-criteria": "Targeting criteria",
+      "ads": "ads"
+    },
     "unit-files": {
       "run-btn": "Explore your data",
       "process-msg": "Processing files...",
@@ -104,6 +112,9 @@
         "cancel": "Clear all"
       }
     },
+    "In total we found": "In total we found",
+    "Display Others": "Display \"Others\"",
+    "of": "of",
     "filter-info": "Any filtering you do will also limit what data is shared into the pool if you share this tab on the 'Share My Data' tab.",
     "current-filter": "Current filter:",
     "select-time-range": "select a time range to zoom in",
@@ -121,6 +132,7 @@
     "close": "Close",
     "search": "Search",
     "and": "and",
+    "between": "between",
     "About": "About",
     "Available on-demand": "Available on-demand",
     "Bubbles": "Bubbles",
@@ -148,7 +160,8 @@
     "seconds": "seconds",
     "Successfully processed in": "Successfully processed in",
     "This might take a moment": "This might take a moment",
-    "Type...": "Type..."
+    "Type...": "Type...",
+    "Settings": "Settings"
   },
   "fr": {
     "chart-view-ios-access": {
@@ -163,6 +176,14 @@
       "most-watched": "Titres les plus regardés",
       "country": "Pays",
       "device": "Dispositif utilisé"
+    },
+    "chart-view-overview-twitter": {
+      "ads-time": "Nombre d'annonces dans le temps",
+      "top-adv": "Top 10 annonceurs",
+      "interactions": "Interactions avec les pubs (clics, visionnage de vidéos)",
+      "targeting-type": "Type de ciblage",
+      "targeting-criteria": "Critères de ciblage",
+      "ads": "pubs"
     },
     "unit-files": {
       "run-btn": "Explorer vos données",
@@ -263,6 +284,9 @@
       "sk-label": "Entrer votre clé secrète",
       "pk-label": "Entrer votre clé publique (facultatif)"
     },
+    "In total we found": "Au total nous avons trouvé",
+    "Display Others": "Afficher \"Others\"",
+    "of": "de",
     "filter-info": "Tout filtrage effectué limitera également les données qui sont partagées dans le pool si vous partagez cet onglet dans l'onglet 'Partager mes données'.",
     "current-filter": "Filtre actuel:",
     "select-time-range": "sélectionnez une plage de temps pour effectuer un zoom",
@@ -278,6 +302,7 @@
     "hour": "heure",
     "search": "Recherche",
     "and": "et",
+    "between": "entre",
     "About": "À propos",
     "Available on-demand": "Disponible sur demande",
     "Bubbles": "Bulles",
@@ -307,6 +332,7 @@
     "seconds": "secondes",
     "Successfully processed in": "Traitement réussi en",
     "This might take a moment": "Cela peut prendre un moment",
-    "Type...": "Entrer..."
+    "Type...": "Entrer...",
+    "Settings": "Réglages"
   }
 }
