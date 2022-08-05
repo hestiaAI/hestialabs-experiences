@@ -3,19 +3,19 @@
     <VRow>
       <VCol cols="12" md="7">
         <p class="text-h6">
-          {{ $t('generic-date-viewer.graph-title') }}
+          {{ $t(k('graph-title')) }}
         </p>
         <p
           v-if="total === 0 && !currMinDate && !currMaxDate"
           class="text-subtitle-2"
         >
-          {{ $t('generic-date-viewer.graph-no-date') }}
+          {{ $t(k('graph-no-date')) }}
         </p>
         <p v-else class="text-subtitle-2">
-          {{ $t('generic-date-viewer.from') }}
-          <strong>{{ currMinDate }}</strong>  {{ $t('generic-date-viewer.to') }}
-          <strong>{{ currMaxDate }}</strong>  {{ $t('generic-date-viewer.found') }}
-          <strong>{{ total }}</strong>  {{ $t('generic-date-viewer.dated-event') }}
+          {{ $t(k('from')) }}
+          <strong>{{ currMinDate }}</strong>  {{ $t(k('to')) }}
+          <strong>{{ currMaxDate }}</strong>  {{ $t(k('found')) }}
+          <strong>{{ total }}</strong>  {{ $t(k('dated-event')) }}
         </p>
       </VCol>
       <VCol cols="12" md="2">
@@ -149,6 +149,9 @@ export default {
     }
   },
   methods: {
+    k(localKey) {
+      return `genericDateViewer.${localKey}`
+    },
     toggle() {
       this.$nextTick(() => {
         if (this.selectAll) {

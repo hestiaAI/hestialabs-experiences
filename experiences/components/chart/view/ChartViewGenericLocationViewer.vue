@@ -3,13 +3,13 @@
     <VRow>
       <VCol cols="12">
         <p class="text-h6">
-          {{ $t('generic-location-viewer.graph-title') }}
+          {{ $t(k('graph-title')) }}
         </p>
         <p v-if="total === 0" class="text-subtitle-2">
-          {{ $t('generic-location-viewer.graph-no-location') }}
+          {{ $t(k('graph-no-location')) }}
         </p>
         <p v-else class="text-subtitle-2">
-          {{ $t('generic-location-viewer.found') }} <strong>{{ total }}</strong> {{ $t('generic-location-viewer.location') }}
+          {{ $t(k('found')) }} <strong>{{ total }}</strong> {{ $t('generic-location-viewer.location') }}
         </p>
       </VCol>
     </VRow>
@@ -72,6 +72,9 @@ export default {
     }
   },
   methods: {
+    k(localKey) {
+      return `genericLocationViewer.${localKey}`
+    },
     drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems
