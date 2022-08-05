@@ -297,7 +297,7 @@ export default {
       setTimeout(() => this.switchTab(this.tabs[1].value), 500)
 
       const elapsed = new Date() - start
-      this.message = `Successfully processed in ${elapsed / 1000} sec.`
+      this.message = `${this.$t('Successfully processed in')} ${elapsed / 1000} ${this.$t('seconds')}`
     }
   }
 }
