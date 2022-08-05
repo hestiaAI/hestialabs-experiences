@@ -20,13 +20,13 @@
     "the HestiaLabs project": "the HestiaLabs project",
     "This might take a moment": "This might take a moment",
     "Type...": "Type...",
-    "UnitFiles": {
+    "unit-files": {
       "run-btn": "Explore your data",
       "process-msg": "Processing files...",
       "or": "OR",
       "sample-selector": "Select sample data"
     },
-    "UnitFilesDialog": {
+    "unit-files-dialog": {
       "tooltip": "Show expected files",
       "title": "Expected files",
       "used": "Files used in the experiences:",

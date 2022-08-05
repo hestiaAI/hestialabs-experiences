@@ -11,7 +11,7 @@
     </VRow>
     <VRow v-if="samples.length">
       <VCol align="center" class="font-weight-bold">
-        {{ $t('UnitFiles.or') }}
+        {{ $t('unit-files.or') }}
       </VCol>
     </VRow>
     <VRow>
@@ -40,7 +40,7 @@
         </BaseDialogButton>
         <BaseButton
           v-bind="{ disabled, progress, status, error }"
-          text="UnitFiles.run-btn"
+          text="unit-files.run-btn"
           icon="mdiStepForward"
           class="my-sm-2 mr-sm-4"
           @click="returnFiles"
@@ -52,7 +52,7 @@
       <VCol>
         <template v-if="progress">
           <BaseProgressCircular class="mr-2" />
-          <span>{{ $t('UnitFiles.process-msg') }}</span>
+          <span>{{ $t('unit-files.process-msg') }}</span>
         </template>
         <template v-else-if="error || success">
           <BaseAlert
