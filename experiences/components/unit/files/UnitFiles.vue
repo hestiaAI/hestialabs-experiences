@@ -75,11 +75,20 @@ import { mapState } from 'vuex'
 import Uppy from '@uppy/core'
 import Dashboard from '@uppy/dashboard'
 import DropTarget from '@uppy/drop-target'
-import { decryptBlob } from '~/utils/encryption'
 
 import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/drop-target/dist/style.css'
+
+import English from '@uppy/locales/lib/en_US'
+import French from '@uppy/locales/lib/fr_FR'
+
+import { decryptBlob } from '@/utils/encryption'
+
+const locales = {
+  en: English,
+  fr: French
+}
 
 async function fetchSampleFile({ path, filename }) {
   const response = await window.fetch(path)
@@ -108,13 +117,9 @@ export default {
     }
   },
   data() {
-    const config = {
-      debug: false,
-      allowMultipleUploads: true
-    }
     const { files, dataSamples } = this.$store.getters.experience(this.$route)
     return {
-      uppy: new Uppy(config),
+      uppy: null,
       samples: [],
       selectedSamples: [],
       filesEmpty: true,
@@ -194,6 +199,21 @@ export default {
     }
   },
   mounted() {
+    const stringsOverride = {
+      en: {
+        cancel: 'Clear all'
+      },
+      fr: {
+        cancel: 'Effacer tout'
+      }
+    }
+
+    const config = {
+      debug: false,
+      allowMultipleUploads: true,
+      locale: locales[this.$i18n.locale]
+    }
+    this.uppy = new Uppy(config)
     this.uppy
       .use(Dashboard, {
         target: this.$refs.dashboard,
@@ -203,7 +223,9 @@ export default {
         proudlyDisplayPoweredByUppy: false,
         theme: 'light',
         height: 300,
-        locale: this.$i18n.t('uppy-locale')
+        locale: {
+          strings: stringsOverride[this.$i18n.locale]
+        }
       })
       // allow dropping files anywhere on the page
       .use(DropTarget, { target: document.body })
