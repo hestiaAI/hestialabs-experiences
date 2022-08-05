@@ -64,11 +64,6 @@
     "summary": {
       "name": "Summary"
     },
-    "uppy-locale": {
-      "strings": {
-        "cancel": "Clear all"
-      }
-    },
     "footer-digipower-academy": "The Digipower.academy has emerged out of projects initiated separately by",
     "decrypt-files": {
       "title": "Decrypt Files",

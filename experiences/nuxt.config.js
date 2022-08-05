@@ -2,6 +2,7 @@ import fs from 'fs'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 import en from 'vuetify/lib/locale/en'
 import fr from 'vuetify/lib/locale/fr'
+import { merge } from 'lodash-es'
 
 import { extension2filetype } from './utils/file-manager'
 
@@ -130,16 +131,29 @@ export default {
     defaultLocale: i18nLocale,
     vueI18n: {
       fallbackLocale: i18nLocale,
-      messages: {
-        en: {
-          ...i18nMessages.en,
-          $vuetify: en
+      messages: merge(
+        {
+          en: {
+            ...i18nMessages.en,
+            $vuetify: en
+          },
+          fr: {
+            ...i18nMessages.fr,
+            $vuetify: fr
+          }
         },
-        fr: {
-          ...i18nMessages.fr,
-          $vuetify: fr
+        // override translations:
+        {
+          en: {},
+          fr: {
+            $vuetify: {
+              dataIterator: {
+                noResultsText: 'Aucun résultat'
+              }
+            }
+          }
         }
-      }
+      )
     }
   },
 
