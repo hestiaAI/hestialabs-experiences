@@ -7,7 +7,7 @@
     multiple
     dense
     class="pa-3"
-    label="Search ..."
+    :label="$t('Search')"
     :items="items"
     :menu-props="{ closeOnClick: true, bottom: true }"
     @change="filterChange"

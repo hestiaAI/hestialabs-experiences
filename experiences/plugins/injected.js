@@ -9,14 +9,19 @@ export default ({ app }, inject) => {
     // otherwise, use router instance from app context
     return baseUrl + app.router.currentRoute.path
   })
-  // Add prototype to show default value when translation is not found
+  const { i18n } = app
+
+  // inject translation helpers to encapsulate ternary expressions
   inject('tev', (key, valueFallback) => {
-    return app.i18n.te(key) ? app.i18n.t(key) : valueFallback
-  })
-  inject('tetv', (key, keyFallback, valueFallback) => {
-    return app.i18n.te(key) ? app.i18n.t(key) : app.i18n.te(keyFallback) ? app.i18n.t(keyFallback) : valueFallback
+    // tev -> Translation Exists (else) Value fallback
+    return i18n.te(key) ? i18n.t(key) : valueFallback
   })
   inject('tet', (key, keyFallback) => {
-    return app.i18n.te(key) ? app.i18n.t(key) : app.i18n.t(keyFallback)
+    // tet -> Translation Exists (else) Translate fallback
+    return i18n.te(key) ? i18n.t(key) : i18n.t(keyFallback)
+  })
+  inject('tetv', (key, keyFallback, valueFallback) => {
+    // tet -> Translation Exists (else) Translate fallback (else) Value fallback
+    return i18n.te(key) ? i18n.t(key) : i18n.te(keyFallback) ? i18n.t(keyFallback) : valueFallback
   })
 }

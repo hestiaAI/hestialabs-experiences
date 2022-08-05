@@ -160,7 +160,7 @@ export default {
       const hourChart = new dc.BarChart(`#hour-chart-${this.graphId}`)
       const weekChart = new dc.RowChart(`#week-chart-${this.graphId}`)
       const tableCount = new dc.DataCount(`#dc-data-count-${this.graphId}`)
-      const userSearch = new dc.TextFilterWidget(`#user-search-${this.graphId}`)
+      const userSearch = this.createTextFilterWidget(`#user-search-${this.graphId}`)
 
       // Bind reset filters links
       d3.select(`#hour-chart-${this.graphId} a.reset`).on('click', function() {
