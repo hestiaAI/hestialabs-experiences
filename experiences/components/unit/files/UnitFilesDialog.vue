@@ -10,19 +10,19 @@
             >$vuetify.icons.mdiFolderInformationOutline</VIcon>
           </span>
         </template>
-        <span>{{ $t('unit-files-dialog.tooltip') }}</span>
+        <span>{{ $t('UnitFilesDialog.tooltip') }}</span>
       </VTooltip>
     </template>
     <VCard>
-      <VCardTitle>{{ $t('unit-files-dialog.title') }}</VCardTitle>
+      <VCardTitle>{{ $t('UnitFilesDialog.title') }}</VCardTitle>
       <VDivider />
       <VCardText>
         <template v-if="fileGlobs && fileGlobs.length > 0">
           <p v-if="main" class="mt-4">
-            {{ $t('unit-files-dialog.used') }}
+            {{ $t('UnitFilesDialog.used') }}
           </p>
           <p v-else class="mt-4">
-            {{ $t('unit-files-dialog.required') }}
+            {{ $t('UnitFilesDialog.required') }}
           </p>
           <ul>
             <li v-for="glob in fileGlobs" :key="glob">
@@ -31,7 +31,7 @@
           </ul>
           <template v-if="!main && fileManager">
             <p class="mt-4">
-              {{ $t('unit-files-dialog.found') }}
+              {{ $t('UnitFilesDialog.found') }}
             </p>
             <ul>
               <template v-for="glob in fileGlobs">
@@ -46,12 +46,12 @@
           </template>
         </template>
         <p v-else class="mt-4">
-          {{ $t('unit-files-dialog.no-files') }}
+          {{ $t('UnitFilesDialog.no-files') }}
         </p>
         <p v-if="main" class="mt-4">
-          {{ $t('unit-files-dialog.all-files-1') }}
+          {{ $t('UnitFilesDialog.all-files-1') }}
           <VIcon>$vuetify.icons.mdiFileMultipleOutline</VIcon>
-          {{ $t('unit-files-dialog.all-files-2') }}
+          {{ $t('UnitFilesDialog.all-files-2') }}
         </p>
       </VCardText>
 
