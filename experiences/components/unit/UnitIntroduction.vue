@@ -14,11 +14,11 @@
               v-html="$t(k('dataPortalHtml'))"
             />
             <p v-else-if="$te(k('dataPortal'))" class="body-1">
-              <a
+              <ExternalLink
                 :href="dataPortal"
-                target="_blank"
-                rel="noreferrer noopener"
-              >{{ $t('load-data.link-text') }}</a>
+              >
+                {{ $t('load-data.link-text') }}
+              </ExternalLink>
               {{ $t('load-data.text') }}
             </p>
             <p v-else class="body-1">

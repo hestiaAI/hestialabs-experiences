@@ -61,7 +61,7 @@ export default {
         {
           experiences: this.filterExperiences(this.disabledExperiences),
           heading: `
-              ${this.$t('Available on-demand')} (<a href="mailto:contact@hestialabs.org">${this.$t('Contact us')}</a>)
+              ${this.$t('Available on-demand')} (<a target="_blank" rel="noopener noreferrer" href="mailto:contact@hestialabs.org">${this.$t('Contact us')}</a>)
             `
         }
       )

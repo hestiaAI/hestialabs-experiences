@@ -34,40 +34,40 @@
       >
         Want to know more about our work ?
         <br>
-        <a :href="newsletterURL" target="_blank" rel="noreferrer noopener">
+        <ExternalLink :href="newsletterURL">
           {{ newsletterMessage }}
-        </a>
+        </ExternalLink>
       </VAlert>
     </VMain>
     <VFooter app absolute color="primary">
       <div class="lighten-2 py-2 ma-auto white--text" align="center">
         &copy; Copyright 2022
-        <a
+        <ExternalLink
           href="https://hestia.ai"
-          target="_blank"
-          style="color: white"
-        >Hestia.ai</a>
+        >
+          Hestia.ai
+        </ExternalLink>
         <br>
         {{ $t('footer-digipower-academy') }}
-        <a
+        <ExternalLink
           href="https://www.sitra.fi/en/projects/digipower-investigation"
-          target="_blank"
-          style="color: white"
-        >SITRA</a>, <a
+        >
+          SITRA
+        </ExternalLink>, <ExternalLink
           href="https://www.migros-engagement.ch/en/news-projects/technology-ethics/hestialabs"
-          target="_blank"
-          style="color: white"
-        >Migros Pioneer Fund</a> (via
-        <a
+        >
+          Migros Pioneer Fund
+        </ExternalLink> (via
+        <ExternalLink
           href="http://www.hestialabs.org"
-          target="_blank"
-          style="color: white"
-        >{{ $t('the HestiaLabs project') }} </a>) {{ $t('and') }}
-        <a
+        >
+          {{ $t('the HestiaLabs project') }}
+        </ExternalLink>) {{ $t('and') }}
+        <ExternalLink
           href="https://personaldata.io/"
-          target="_blank"
-          style="color: white"
-        >PersonalData.IO </a>
+        >
+          PersonalData.IO
+        </ExternalLink>
       </div>
     </VFooter>
   </VApp>
@@ -226,7 +226,11 @@ export default {
 
 .v-snack__content.v-snack__content-online-status
   text-align: center
+
+.v-application .v-footer a
+  color: white
 </style>
+
 <style scoped>
 .fixedAlert {
   position: fixed;

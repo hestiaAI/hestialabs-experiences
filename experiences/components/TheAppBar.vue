@@ -67,14 +67,12 @@
           :collaborator="collaborator"
           class="ml-2 mr-5"
         />
-        <a
+        <ExternalLink
           href="https://hestialabs.org/"
-          target="_blank"
-          rel="noreferrer noopener"
           class="ml-2"
         >
           <LogoImg width="100" />
-        </a>
+        </ExternalLink>
         </v-menu>
       </VToolbarTitle>
     </VAppBar>

@@ -17,7 +17,7 @@
       <div v-if="author" class="d-flex justify-space-between font-italic font-weight-thin">
         <span v-if="authorHref">
           <VIcon right color="white"> $vuetify.icons.mdiMinus </VIcon>
-          <a :href="linkSrc">{{ author }}</a>
+          <ExternalLink :href="linkSrc">{{ author }}</ExternalLink>
         </span>
         <span v-else>
           <VIcon right color="white">  $vuetify.icons.mdiMinus </VIcon>
