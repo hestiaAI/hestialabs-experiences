@@ -61,7 +61,6 @@
     "Privacy": "Privacy",
     "Public experiences": "Public experiences",
     "the HestiaLabs project": "the HestiaLabs project",
-
     "footer-digipower-academy": "The Digipower.academy has emerged out of projects initiated separately by",
     "decrypt-files": {
       "title": "Decrypt Files",
@@ -115,18 +114,6 @@
     "summary": {
       "name": "Résumé"
     },
-    "uppy-locale": {
-      "strings": {
-        "dropPasteFiles": "Glisser / Déposer vos fichiers ici ou %{browseFiles}",
-        "browseFiles": "parcourir les fichiers",
-        "addMore": "Ajouter",
-        "addMoreFiles": "Ajouter plus de fichiers",
-        "back": "Retour",
-        "removeFile": "Supprimer le fichier",
-        "cancel": "Effacer tout",
-        "addingMoreFiles": "Ajouter plus de fichiers"
-      }
-    },
     "and": "et",
     "About": "À propos",
     "Available on-demand": "Disponible sur demande",
@@ -139,7 +126,6 @@
     "project": "et",
     "Public experiences": "Expériences publiques",
     "the HestiaLabs project": "le projet HestiaLabs",
-
     "footer-digipower-academy": "Digipower.academy a émergé de projets initiés séparément par",
     "decrypt-files": {
       "title": "Décrypter vos fichiers",
