@@ -80,7 +80,7 @@
                 v-else-if="vizVue"
                 :graph-name="vizVue"
                 :data="clonedResult"
-                :viz-props="vizProps"
+                :viz-props="vizPropsTranslated"
               />
               <UnitIframe
                 v-else-if="vizUrl"
@@ -192,6 +192,9 @@ export default {
         .map(glob => [glob, this.fileManager.findMatchingFilePaths(glob)])
         .filter(([_, files]) => files.length === 0)
         .map(([glob, _]) => glob)
+    },
+    vizPropsTranslated() {
+      return { ...this.vizProps, ...this.$tev(this.k('vizProps'), {}) }
     }
   },
   watch: {

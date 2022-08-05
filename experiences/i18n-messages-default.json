@@ -63,11 +63,6 @@
     "the HestiaLabs project": "the HestiaLabs project",
 
     "footer-digipower-academy": "The Digipower.academy has emerged out of projects initiated separately by",
-    "experience": {
-      "intro": {
-        "title": "ANALYZE YOUR PRIVATE DATA"
-      }
-    },
     "decrypt-files": {
       "title": "Decrypt Files",
       "sk-label": "Enter your secret key",
@@ -146,11 +141,6 @@
     "the HestiaLabs project": "le projet HestiaLabs",
 
     "footer-digipower-academy": "Digipower.academy a émergé de projets initiés séparément par",
-    "experience": {
-      "intro": {
-        "title": "ANALYSEZ VOS DONNÉES PRIVÉES"
-      }
-    },
     "decrypt-files": {
       "title": "Décrypter vos fichiers",
       "sk-label": "Entrer votre clé secrète",
