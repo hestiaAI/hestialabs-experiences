@@ -18,7 +18,7 @@
         <p v-if="config.consent">
           {{ $t("generic-map.search-info") }}
           <br>
-          {{ $t("generic-map.filter-info") }}
+          {{ $t('filter-info') }}
         </p>
       </VRow>
       <template v-if="showButton == true">

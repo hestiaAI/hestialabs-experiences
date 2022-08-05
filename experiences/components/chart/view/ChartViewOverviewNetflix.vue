@@ -5,11 +5,11 @@
         <VRow dense>
           <VCol cols="12">
             <div :id="'watch-time-chart' + graphId">
-              <strong>Watch time (in hours per month)</strong>
-              <a class="reset" style="display: none">reset</a>
+              <strong>{{ $t(k('watch-time')) }}</strong>
+              <a class="reset" style="display: none">{{ $t('reset') }}</a>
               <p class="filters ma-0">
                 <span>
-                  Current filter:
+                  {{ $t('current-filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -19,7 +19,7 @@
                 class="muted pull-right text-subtitle-2"
                 style="margin-right: 15px; margin-bottom: 5px"
               >
-                select a <strong>time range</strong> to zoom in
+                {{ $t('select-time-range') }}
               </p>
             </div>
           </VCol>
@@ -27,11 +27,11 @@
         <VRow dense>
           <VCol cols="8">
             <div :id="'hour-chart' + graphId">
-              <strong>Time of day</strong>
-              <a class="reset" style="display: none">reset</a>
+              <strong>{{ $t(k('time-of-day')) }}</strong>
+              <a class="reset" style="display: none">{{ $t('reset') }}</a>
               <p class="filters ma-0">
                 <span>
-                  Current filter:
+                  {{ $t('current-filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -39,11 +39,11 @@
           </VCol>
           <VCol cols="4">
             <div :id="'week-chart' + graphId">
-              <strong>Day</strong>
-              <a class="reset" style="display: none">reset</a>
+              <strong>{{ $t(k('day')) }}</strong>
+              <a class="reset" style="display: none">{{ $t('reset') }}</a>
               <p class="filters ma-0">
                 <span>
-                  Current filter:
+                  {{ $t('current-filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -53,11 +53,11 @@
       </VCol>
       <VCol cols="4">
         <div :id="'content-chart' + graphId">
-          <strong>Most watched titles</strong>
-          <a class="reset" style="display: none">reset</a>
+          <strong>{{ $t(k('most-watched')) }}</strong>
+          <a class="reset" style="display: none">{{ $t('reset') }}</a>
           <p class="filters ma-0">
             <span>
-              Current filter:
+              {{ $t('current-filter') }}
               <span class="filter" />
             </span>
           </p>
@@ -68,10 +68,10 @@
       <VCol cols="4">
         <div :id="'user-chart' + graphId">
           <strong>Profiles</strong>
-          <a class="reset" style="display: none">reset</a>
+          <a class="reset" style="display: none">{{ $t('reset') }}</a>
           <p class="filters ma-0">
             <span>
-              Current filter:
+              {{ $t('current-filter') }}
               <span class="filter" />
             </span>
           </p>
@@ -79,11 +79,11 @@
       </VCol>
       <VCol cols="4">
         <div :id="'country-chart' + graphId">
-          <strong>Country</strong>
-          <a class="reset" style="display: none">reset</a>
+          <strong>{{ $t(k('country')) }}</strong>
+          <a class="reset" style="display: none">{{ $t('reset') }}</a>
           <p class="filters ma-0">
             <span>
-              Current filter:
+              {{ $t('current-filter') }}
               <span class="filter" />
             </span>
           </p>
@@ -91,11 +91,11 @@
       </VCol>
       <VCol cols="4">
         <div :id="'device-chart' + graphId">
-          <strong>Device used</strong>
-          <a class="reset" style="display: none">reset</a>
+          <strong>{{ $t(k('device')) }}</strong>
+          <a class="reset" style="display: none">{{ $t('reset') }}</a>
           <p class="filters ma-0">
             <span>
-              Current filter:
+              {{ $t('current-filter') }}
               <span class="filter" />
             </span>
           </p>
@@ -103,13 +103,7 @@
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="'dc-data-count' + graphId" class="dc-data-count">
-        <span class="filter-count" />
-        selected out of
-        <span class="total-count" />
-        views |
-        <a class="resetAll">Reset All</a>
-      </div>
+      <div :id="'dc-data-count' + graphId" class="dc-data-count" />
     </VRow>
     <UnitFilterableTable v-bind="{ headers: header, items: results }" />
   </VContainer>
@@ -139,6 +133,9 @@ export default {
     }
   },
   methods: {
+    k(localKey) {
+      return `chart-view-overview-netflix.${localKey}`
+    },
     removeEmptyBins(group) {
       return {
         top(n) {
@@ -544,9 +541,10 @@ export default {
         .groupAll(all)
         .html({
           some:
-            '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> views' +
-            " | <a class='resetAll'>Reset All</a>",
-          all: 'All <strong>%total-count</strong> views selected. Please click on the graph to apply filters.'
+            `<strong>%filter-count</strong> ${this.$t('selected-out-of')} <strong>%total-count</strong> ` +
+            `${this.$t(this.k('views'))} | <a class='resetAll'>${this.$t('reset-all')}</a>`,
+          all:
+            `Total: <strong>%total-count</strong> ${this.$t(this.k('views'))}. ${this.$t('click-graph')}`
         })
         .on('pretransition', (chart, filter) => {
           this.results = monthDimension.top(all.value())

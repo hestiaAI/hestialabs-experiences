@@ -1,5 +1,18 @@
 {
   "en": {
+    "chart-view-ios-access": {
+      "app-info": "The app accessing the resource.",
+      "resource-info": "The accessed resource."
+    },
+    "chart-view-overview-netflix": {
+      "views": "views",
+      "watch-time": "Watch time (in hours per month)",
+      "time-of-day": "Time of day",
+      "day": "Day",
+      "most-watched": "Most watched titles",
+      "country": "Country",
+      "device": "Device used"
+    },
     "unit-files": {
       "run-btn": "Explore your data",
       "process-msg": "Processing files...",
@@ -65,7 +78,6 @@
     },
     "generic-map": {
       "search-info": "Please use the search box and filters below to change what is shown on the map.",
-      "filter-info": "Any filtering you do will also limit what data is shared into the pool if you share this tab on the 'Share My Data' tab.",
       "add-noise": "Add Noise",
       "noise-level": "Noise Level",
       "meters": "meters"
@@ -88,6 +100,7 @@
         "cancel": "Clear all"
       }
     },
+    "filter-info": "Any filtering you do will also limit what data is shared into the pool if you share this tab on the 'Share My Data' tab.",
     "current-filter": "Current filter:",
     "select-time-range": "select a time range to zoom in",
     "selected-out-of": "selected out of",
@@ -124,19 +137,29 @@
     "clear": "Clear",
     "save": "Save",
     "Close": "Close",
-
     "Download": "Download",
     "Export": "Export",
-
     "Share": "Share",
     "Search": "Search",
     "seconds": "seconds",
     "Successfully processed in": "Successfully processed in",
-
     "This might take a moment": "This might take a moment",
     "Type...": "Type..."
   },
   "fr": {
+    "chart-view-ios-access": {
+      "app-info": "L'application qui accède à la ressource.",
+      "resource-info": "La ressource consultée."
+    },
+    "chart-view-overview-netflix": {
+      "views": "contenu(s) consulté(s)",
+      "watch-time": "Durée de visionnage (en heures par mois)",
+      "time-of-day": "Heure de la journée",
+      "day": "Jour de la semaine",
+      "most-watched": "Titres les plus regardés",
+      "country": "Pays",
+      "device": "Dispositif utilisé"
+    },
     "unit-files": {
       "run-btn": "Explorer vos données",
       "process-msg": "Traitement des fichiers...",
@@ -198,7 +221,6 @@
     },
     "generic-map": {
       "search-info": "Veuillez utiliser le champ de recherche et les filtres ci-dessous pour modifier ce qui est affiché sur la carte.",
-      "filter-info": "Tout filtrage effectué limitera également les données qui sont partagées dans le pool si vous partagez cet onglet dans l'onglet 'Partager mes données'.",
       "add-noise": "Ajouter du bruit",
       "noise-level": "Niveau de bruit",
       "meters": "mètres"
@@ -233,6 +255,7 @@
       "sk-label": "Entrer votre clé secrète",
       "pk-label": "Entrer votre clé publique (facultatif)"
     },
+    "filter-info": "Tout filtrage effectué limitera également les données qui sont partagées dans le pool si vous partagez cet onglet dans l'onglet 'Partager mes données'.",
     "current-filter": "Filtre actuel:",
     "select-time-range": "sélectionnez une plage de temps pour effectuer un zoom",
     "selected-out-of": "sélectionné·e·s sur",

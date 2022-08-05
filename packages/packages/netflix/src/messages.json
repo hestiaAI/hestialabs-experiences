@@ -25,7 +25,11 @@
       },
       "notifications": {
         "title": "Notifications",
-        "text": "Historique des notifications que Netflex vous a envoyées."
+        "text": "Historique des notifications que Netflix vous a envoyées.",
+        "vizProps": {
+          "title": "Notifications envoyées par Netflix",
+          "yLabel": "total"
+        }
       }
     }
   }
