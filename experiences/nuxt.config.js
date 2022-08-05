@@ -1,5 +1,7 @@
 import fs from 'fs'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
+import en from 'vuetify/lib/locale/en'
+import fr from 'vuetify/lib/locale/fr'
 
 import { extension2filetype } from './utils/file-manager'
 
@@ -19,7 +21,7 @@ if (!baseUrl && isProduction) {
   throw new Error('BASE_URL environment variable is missing')
 }
 
-const { i18nLocale } = JSON.parse(fs.readFileSync(`config/${configName}.json`))
+const { i18nLocale = 'en' } = JSON.parse(fs.readFileSync(`config/${configName}.json`))
 const i18nMessages = JSON.parse(fs.readFileSync('i18n-messages-default.json'))
 
 export default {
@@ -125,10 +127,19 @@ export default {
         name: 'Français'
       }
     ],
-    defaultLocale: i18nLocale || 'en',
+    defaultLocale: i18nLocale,
     vueI18n: {
-      fallbackLocale: i18nLocale || 'en',
-      messages: i18nMessages
+      fallbackLocale: i18nLocale,
+      messages: {
+        en: {
+          ...i18nMessages.en,
+          $vuetify: en
+        },
+        fr: {
+          ...i18nMessages.fr,
+          $vuetify: fr
+        }
+      }
     }
   },
 
