@@ -127,10 +127,10 @@ export default {
     if (bubble && $auth.loggedIn && bubble !== $auth.user.username) {
       // auto-logout if user tries to enter another bubble
       await $auth.logout()
-      return redirect({
+      return redirect(app.localePath({
         name: 'login',
         query: { redirect: path }
-      })
+      }))
     }
   },
   data() {
