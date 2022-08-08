@@ -158,16 +158,16 @@ export default {
 
 <style scoped>
 .banner-wrapper {
-    background: #5A53A0;
-    padding: 20px;
-    min-height: 400px;
-    display: flex;
-    align-items: center;
+  background: var(--v-primary-base);
+  padding: 20px;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
 }
 .banner-title {
-    font-size: 60px;
-    line-height: 50px;
-    margin: 20px 0;
+  font-size: 60px;
+  line-height: 50px;
+  margin: 20px 0;
 }
 .banner-subtitle {
   font-size: 20px;
@@ -199,8 +199,8 @@ export default {
   margin: 20px 0 30px;
 }
 .icon {
-    font-size: 50px;
-    color: white;
-    vertical-align:middle;
+  font-size: 50px;
+  color: white;
+  vertical-align:middle;
 }
 </style>

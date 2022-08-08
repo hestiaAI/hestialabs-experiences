@@ -104,6 +104,9 @@ export default {
     }
   },
   theme: {
+    options: {
+      customProperties: true
+    },
     dark: false,
     themes: {
       light: {
