@@ -2,7 +2,7 @@
   <VCard
     height="100%"
     nuxt
-    :to="{ name: 'bubble-bubble', params: { bubble: slug } }"
+    :to="localePath({ name: 'bubble-bubble', params: { bubble: slug } })"
     hover
   >
     <VCardText>
