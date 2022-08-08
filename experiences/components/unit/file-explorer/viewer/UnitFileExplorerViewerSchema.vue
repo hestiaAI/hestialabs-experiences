@@ -8,15 +8,15 @@
     <BaseSchemaTree :schema="jsonSchema" />
     <div class="text-center">
       <div v-if="!isValidPaths">
-        Impossible to create a table with these accessors, there are several divergent tables.
+        {{ $t(k('invalid-paths')) }}
       </div>
-      <VBtn
+      <BaseButton
         class="ma-3"
         :disabled="!isValidPaths"
         @click="buildTable"
       >
-        Create Table
-      </VBtn>
+        {{ $t(k('Create table')) }}
+      </BaseButton>
       <div v-if="isLoading">
         <BaseProgressCircular />
       </div>
@@ -71,6 +71,9 @@ export default {
     }
   },
   methods: {
+    k(key) {
+      return `file-explorer.viewer.schema.${key}`
+    },
     fetchSchema(filename) {
       // Try to fetch the schema if it exist
       try {

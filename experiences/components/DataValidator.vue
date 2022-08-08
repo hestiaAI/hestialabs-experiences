@@ -1,10 +1,10 @@
 <template>
   <div>
     <BaseAlert v-if="!hasValidFormat" type="warning">
-      Data in this format cannot be displayed in a table
+      {{ $t(k('invalid-format')) }}
     </BaseAlert>
     <BaseAlert v-else-if="!hasData">
-      No relevant data found
+      {{ $t(k('no-data')) }}
     </BaseAlert>
     <template v-else>
       <slot />
@@ -46,6 +46,11 @@ export default {
       return (
         !!(this.data?.headers.length > 0) && !!(this.data?.items.length > 0)
       )
+    }
+  },
+  methods: {
+    k(key) {
+      return `data-validator.${key}`
     }
   }
 }

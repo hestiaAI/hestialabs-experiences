@@ -2,7 +2,7 @@
   <VCard v-if="fileManager" flat style="height: 100%">
     <template v-if="filename">
       <VCardTitle v-if="filename" class="justify-center pa-0 mx-4">
-        <span class="text-subtitle-1">Exploring file: <strong>{{ filename }}</strong></span>
+        <span class="text-subtitle-1">{{ $t(k('Exploring file')) }}: <strong>{{ filename }}</strong></span>
         <VSpacer />
         <BaseButtonDownload
           small
@@ -17,7 +17,7 @@
             v-for="tabName in tabs"
             :key="tabName"
           >
-            {{ tabName }}
+            {{ $t(k(tabName)) }}
           </VTab>
         </VTabs>
         <VTabsItems v-model="tab" class="mt-3">
@@ -63,7 +63,7 @@
       <VCardText style="height: 100%;">
         <VRow style="height: 100%;" align="center" justify="center">
           <p>
-            {{ $t('file-explorer.select') }}
+            {{ $t(k('select')) }}
           </p>
         </VRow>
       </VCardText>
@@ -76,7 +76,7 @@ import { mapState } from 'vuex'
 import { jsonToTableConverter } from '~/utils/generic-pipelines'
 
 export default {
-  name: 'UnitFileExplorer',
+  name: 'UnitFileViewer',
   props: {
     selectedItem: {
       type: Object,
@@ -125,6 +125,9 @@ export default {
     }
   },
   methods: {
+    k(key) {
+      return `file-explorer.${key}`
+    },
     onLoading(loading) {
       this.$emit('loading', loading)
     },

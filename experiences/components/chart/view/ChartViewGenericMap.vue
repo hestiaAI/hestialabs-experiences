@@ -77,10 +77,10 @@
               <VSpacer />
 
               <VBtn @click="clear">
-                {{ $t('clear') }}
+                {{ $t('Clear') }}
               </VBtn>
               <VBtn color="primary" @click="addNoise">
-                {{ $t('save') }}
+                {{ $t('Save') }}
               </VBtn>
             </VCardActions>
           </VCard>

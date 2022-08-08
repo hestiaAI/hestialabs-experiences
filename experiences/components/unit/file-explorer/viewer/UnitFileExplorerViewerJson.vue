@@ -54,7 +54,7 @@
                 $vuetify.icons.mdiContentCopy
               </VIcon>
             </template>
-            <span>Copy accessor to clipboard</span>
+            <span>{{ $t(k('Copy accessor to clipboard')) }}</span>
           </VTooltip>
           <VTooltip bottom open-delay="200">
             <template #activator="{ on }">
@@ -62,7 +62,7 @@
                 $vuetify.icons.mdiTable
               </VIcon>
             </template>
-            <span>Show as table</span>
+            <span>{{ $t(k('Show as table')) }}</span>
           </VTooltip>
         </span>
       </template>
@@ -128,6 +128,9 @@ export default {
     }
   },
   methods: {
+    k(key) {
+      return `file-explorer.viewer.json.${key}`
+    },
     onFoundItemRowClick(item) {
       this.open = item.trail
     },
