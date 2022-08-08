@@ -3,6 +3,14 @@ This directory contains the configuration files linked to each deployement. They
 ```js
 {
   /**
+   * Vuetify (light) theme colors to override defaults in vuetify.options.js
+   * @type Object
+   */
+  "theme": {
+    "primary": "#0C2D48",
+    "secondary": "#2E8BC0"
+  },
+  /**
     * The name of the experiences to display (as defined in `/manifests/experiences/`).
     * @type Array
     */

@@ -110,6 +110,9 @@ const optionsFunction = ({ app }) => ({
     values
   },
   theme: {
+    options: {
+      customProperties: true
+    },
     dark: false,
     themes: {
       light: {

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { cloneDeep } from 'lodash-es'
+import { merge, cloneDeep } from 'lodash-es'
 
 export const state = () => ({
   loaded: false,
@@ -123,10 +123,33 @@ export const mutations = {
 }
 
 export const actions = {
-  async loadConfig({ commit, state }) {
+  async loadConfig({ commit, state }, { isDev, $axios }) {
     if (!state.loaded) {
-      const config = (await import(`@/config/${process.env.configName}.json`))
+      let configOverride = {}
+      try {
+        configOverride = await $axios.$get(
+          '/config.json',
+          {
+            baseURL: process.env.baseUrl
+          }
+        )
+      } catch {
+        if (!isDev) {
+          console.info('configOverride not found')
+        }
+      }
+
+      const configDefault = (await import(`@/config/${process.env.configName}.json`))
         .default
+
+      const config = merge(configDefault, configOverride)
+
+      if (!isDev) {
+        // For debugging in production environment
+        console.info('### SITE CONFIG ###')
+        console.info(config)
+      }
+
       if (config.bubbles?.length) {
         config.bubbleConfig = {}
         for (const bubble of config.bubbles) {
@@ -142,9 +165,8 @@ export const actions = {
       })
     }
   },
-  async loadExperiences({ commit, state, dispatch }, { isDev, $axios }) {
+  async loadExperiences({ commit, state }) {
     if (!state.loaded) {
-      await dispatch('loadConfig', $axios)
       const experiences = (
         await Promise.all(
           state.config.experiences.map((packageNameAndTag) => {
@@ -166,7 +188,6 @@ export const actions = {
       })
 
       commit('setExperiences', experiences)
-      commit('setLoaded')
     }
   }
 }
