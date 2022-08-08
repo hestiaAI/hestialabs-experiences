@@ -42,7 +42,7 @@
                 </VIcon>
               </VListItemAction>
               <VListItemContent>
-                <VListItemTitle> {{ $t('select-all') }} </VListItemTitle>
+                <VListItemTitle> {{ $t('Select All') }} </VListItemTitle>
               </VListItemContent>
             </VListItem>
             <VDivider class="mt-2" />

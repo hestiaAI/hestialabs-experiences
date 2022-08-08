@@ -98,7 +98,7 @@
         <LogoImg width="250" />
         <template v-if="$auth.loggedIn">
           <VSubheader class="mt-2">
-            Connected to bubble:
+            {{ $t('Connected to bubble') }}:
             <span class="font-weight-black">
               &nbsp;{{ $auth.user.bubble.title }}
             </span>
@@ -120,15 +120,13 @@ export default {
   data() {
     return {
       drawer: false,
-      selected: ''
+      selected: '',
+      links: this.$store.getters.siteConfig.appBarLinks
     }
   },
   computed: {
     e() {
       return this.$store.getters.experience(this.$route)
-    },
-    links() {
-      return this.$store.getters.siteConfig.appBarLinks
     },
     collaborator() {
       return this.e.collaborator

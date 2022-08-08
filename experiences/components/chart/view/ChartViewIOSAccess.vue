@@ -17,7 +17,7 @@
               </div>
               <p class="filters">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">{{ $t('reset') }}</a>
@@ -36,7 +36,7 @@
               </div>
               <p class="filters">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">{{ $t('reset') }}</a>
@@ -229,7 +229,7 @@ export default {
         .html({
           some:
             `<strong>%filter-count</strong> ${this.$t('selected-out-of')} <strong>%total-count</strong> ` +
-            ` | <a class='resetAll'>${this.$t('reset-all')}</a>`,
+            ` | <a class='resetAll'>${this.$t('Reset All')}</a>`,
           all:
             `Total: <strong>%total-count</strong>. ${this.$t('click-graph')}`
         })

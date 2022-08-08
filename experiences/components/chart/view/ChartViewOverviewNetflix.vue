@@ -9,7 +9,7 @@
               <a class="reset" style="display: none">{{ $t('reset') }}</a>
               <p class="filters ma-0">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -31,7 +31,7 @@
               <a class="reset" style="display: none">{{ $t('reset') }}</a>
               <p class="filters ma-0">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -43,7 +43,7 @@
               <a class="reset" style="display: none">{{ $t('reset') }}</a>
               <p class="filters ma-0">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -57,7 +57,7 @@
           <a class="reset" style="display: none">{{ $t('reset') }}</a>
           <p class="filters ma-0">
             <span>
-              {{ $t('current-filter') }}
+              {{ $t('Current filter') }}
               <span class="filter" />
             </span>
           </p>
@@ -71,7 +71,7 @@
           <a class="reset" style="display: none">{{ $t('reset') }}</a>
           <p class="filters ma-0">
             <span>
-              {{ $t('current-filter') }}
+              {{ $t('Current filter') }}
               <span class="filter" />
             </span>
           </p>
@@ -83,7 +83,7 @@
           <a class="reset" style="display: none">{{ $t('reset') }}</a>
           <p class="filters ma-0">
             <span>
-              {{ $t('current-filter') }}
+              {{ $t('Current filter') }}
               <span class="filter" />
             </span>
           </p>
@@ -95,7 +95,7 @@
           <a class="reset" style="display: none">{{ $t('reset') }}</a>
           <p class="filters ma-0">
             <span>
-              {{ $t('current-filter') }}
+              {{ $t('Current filter') }}
               <span class="filter" />
             </span>
           </p>
@@ -542,7 +542,7 @@ export default {
         .html({
           some:
             `<strong>%filter-count</strong> ${this.$t('selected-out-of')} <strong>%total-count</strong> ` +
-            `${this.$t(this.k('views'))} | <a class='resetAll'>${this.$t('reset-all')}</a>`,
+            `${this.$t(this.k('views'))} | <a class='resetAll'>${this.$t('Reset All')}</a>`,
           all:
             `Total: <strong>%total-count</strong> ${this.$t(this.k('views'))}. ${this.$t('click-graph')}`
         })

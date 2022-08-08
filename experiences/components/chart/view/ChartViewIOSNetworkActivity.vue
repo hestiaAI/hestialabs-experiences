@@ -17,7 +17,7 @@
               </div>
               <p class="filters">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">{{ $t('reset') }}</a>
@@ -38,7 +38,7 @@
               </div>
               <p class="filters">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">{{ $t('reset') }}</a>
@@ -59,7 +59,7 @@
               </div>
               <p class="filters">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">{{ $t('reset') }}</a>
@@ -82,7 +82,7 @@
               </div>
               <p class="filters">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">{{ $t('reset') }}</a>
@@ -103,7 +103,7 @@
               </div>
               <p class="filters">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">{{ $t('reset') }}</a>
@@ -125,7 +125,7 @@
               </div>
               <p class="filters">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
                 <a class="reset" style="display: none"> {{ $t('reset') }}</a>

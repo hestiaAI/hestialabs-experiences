@@ -117,6 +117,7 @@
 import { pick } from 'lodash-es'
 import BaseBubbleCard from '../components/base/card/BaseBubbleCard.vue'
 import BaseTwitterCard from '@/components/base/card/BaseTwitterCard.vue'
+
 export default {
   components: { BaseBubbleCard, BaseTwitterCard },
   data() {

@@ -8,7 +8,7 @@
               <strong>{{ $t(k('ads-time')) }}</strong>
               <p class="filters">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">{{ $t('reset') }}</a>
@@ -29,7 +29,7 @@
               </div>
               <p class="filters">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">{{ $t('reset') }}</a>
@@ -43,7 +43,7 @@
               <strong>{{ $t(k('interactions')) }}</strong>
               <p class="filters">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">{{ $t('reset') }}</a>
@@ -59,7 +59,7 @@
               </div>
               <p class="filters">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">{{ $t('reset') }}</a>
@@ -75,7 +75,7 @@
               </div>
               <p class="filters">
                 <span>
-                  {{ $t('current-filter') }}
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
                 <a class="reset" style="display: none">{{ $t('reset') }}</a>
@@ -412,7 +412,7 @@ export default {
         .html({
           some:
             `<strong>%filter-count</strong> ${this.$t('selected-out-of')} <strong>%total-count</strong> ` +
-            `${this.$t(this.k('ads'))} | <a class='resetAll'>${this.$t('reset-all')}</a>`,
+            `${this.$t(this.k('ads'))} | <a class='resetAll'>${this.$t('Reset All')}</a>`,
           all:
             `Total: <strong>%total-count</strong> ${this.$t(this.k('ads'))}. ${this.$t('click-graph')}`
         })

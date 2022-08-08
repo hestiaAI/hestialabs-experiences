@@ -27,6 +27,7 @@
 
 <script>
 import { mdiEye, mdiEyeOff } from '@mdi/js'
+import { vueMeta } from '@/utils/utils'
 
 const extractBubbleParam = (path = '') => path.split('/').slice(-1)[0]
 
@@ -63,6 +64,9 @@ export default {
       passwordAppendIcon: mdiEye,
       errorMessage: ''
     }
+  },
+  head() {
+    return vueMeta(this, 'Login')
   },
   computed: {
     username() {
