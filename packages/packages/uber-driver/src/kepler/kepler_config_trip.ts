@@ -13,8 +13,8 @@ export default {
             color: [218, 0, 0],
             highlightColor: [252, 242, 26, 255],
             columns: {
-              lat: 'begintripLatitude',
-              lng: 'begintripLongitude',
+              lat: 'beginTripLat',
+              lng: 'beginTripLng',
               altitude: null
             },
             isVisible: true,
@@ -83,8 +83,8 @@ export default {
             color: [218, 0, 0],
             highlightColor: [252, 242, 26, 255],
             columns: {
-              lat: 'dropoffLatitude',
-              lng: 'dropoffLongitude',
+              lat: 'dropoffLat',
+              lng: 'dropoffLng',
               altitude: null
             },
             isVisible: true,
@@ -153,11 +153,11 @@ export default {
             color: [30, 150, 190],
             highlightColor: [252, 242, 26, 255],
             columns: {
-              lat0: 'begintripLatitude',
-              lng0: 'begintripLongitude',
+              lat0: 'beginTripLat',
+              lng0: 'beginTripLng',
               alt0: null,
-              lat1: 'dropoffLatitude',
-              lng1: 'dropoffLongitude',
+              lat1: 'dropoffLat',
+              lng1: 'dropoffLng',
               alt1: null
             },
             isVisible: true,
