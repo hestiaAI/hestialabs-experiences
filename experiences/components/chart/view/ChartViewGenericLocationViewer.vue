@@ -9,7 +9,7 @@
           {{ $t(k('graph-no-location')) }}
         </p>
         <p v-else class="text-subtitle-2">
-          {{ $t(k('found')) }} <strong>{{ total }}</strong> {{ $t('generic-location-viewer.location') }}
+          {{ $t(k('found')) }} <strong>{{ total }}</strong> {{ $t(k('location')) }}
         </p>
       </VCol>
     </VRow>

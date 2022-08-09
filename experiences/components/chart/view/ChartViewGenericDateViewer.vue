@@ -103,6 +103,16 @@ import { datetimeFormatter } from '@/utils/dates'
 export default {
   mixins: [mixin],
   data() {
+    const intervals = {
+      Day: d3.timeDay,
+      Week: d3.timeWeek,
+      Month: d3.timeMonth,
+      Year: d3.timeYear
+    }
+    const intervalNames = Object.keys(intervals).map(value => ({
+      value,
+      text: this.$tc(value, 2)
+    }))
     return {
       formatDate: d3.timeFormat('%B %d, %Y'),
       fileDimension: null,
@@ -111,13 +121,8 @@ export default {
       selectFiles: [],
       filesNames: [],
       filtered: false,
-      intervals: {
-        Days: d3.timeDay,
-        Weeks: d3.timeWeek,
-        Months: d3.timeMonth,
-        Years: d3.timeYear
-      },
-      intervalNames: ['Days', 'Weeks', 'Months', 'Years'],
+      intervals,
+      intervalNames,
       aggregate: true,
       minDate: null,
       maxDate: null,
@@ -195,11 +200,11 @@ export default {
       this.total = this.dateDimension.top(Infinity).length
       const diffDays = d3.timeDay.count(this.minDate, this.maxDate)
       if (diffDays < 100) {
-        this.selectTimeInt = 'Days'
+        this.selectTimeInt = 'Day'
       } else if (diffDays < 1000) {
-        this.selectTimeInt = 'Weeks'
+        this.selectTimeInt = 'Week'
       } else {
-        this.selectTimeInt = 'Months'
+        this.selectTimeInt = 'Month'
       }
 
       const width = d3
@@ -231,7 +236,7 @@ export default {
         .mouseZoomable(false)
         .clipPadding(10)
       // .barPadding(0)
-      // .gap(this.selectTimeInt === 'Months' ? 20 : 0)
+      // .gap(this.selectTimeInt === 'Month' ? 20 : 0)
 
       this.barChart.yAxis().tickFormat(v => (Number.isInteger(v) ? v : ''))
 
@@ -241,7 +246,7 @@ export default {
         .height(40)
         .margins({ top: 0, right: 50, bottom: 20, left: 50 })
         .dimension(this.dateDimension)
-        .group(this.dateDimension.group(k => this.intervals.Days(k)))
+        .group(this.dateDimension.group(k => this.intervals.Day(k)))
         .ordinalColors(['#58539E'])
         .x(
           d3

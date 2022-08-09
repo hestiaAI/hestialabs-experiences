@@ -4,26 +4,33 @@
       "invalid-format": "Data in this format cannot be displayed in a table",
       "no-data": "No relevant data found"
     },
-    "chart-view-ios-access": {
-      "app-info": "The app accessing the resource.",
-      "resource-info": "The accessed resource."
-    },
-    "chart-view-overview-netflix": {
-      "views": "views",
-      "watch-time": "Watch time (in hours per month)",
-      "time-of-day": "Time of day",
-      "day": "Day",
-      "most-watched": "Most watched titles",
-      "country": "Country",
-      "device": "Device used"
-    },
-    "chart-view-overview-twitter": {
-      "ads-time": "Number of ads over time",
-      "top-adv": "Top 10 advertisers",
-      "interactions": "Interactions with ads (clicks, video views)",
-      "targeting-type": "Type of targeting",
-      "targeting-criteria": "Targeting criteria",
-      "ads": "ads"
+    "chart-view": {
+      "ios-access": {
+        "app-info": "The app accessing the resource.",
+        "resource-info": "The accessed resource."
+      },
+      "overview-netflix": {
+        "views": "views",
+        "watch-time": "Watch time (in hours per month)",
+        "time-of-day": "Time of day",
+        "day": "Day",
+        "most-watched": "Most watched titles",
+        "country": "Country",
+        "device": "Device used"
+      },
+      "overview-twitter": {
+        "ads-time": "Number of ads over time",
+        "top-adv": "Top 10 advertisers",
+        "interactions": "Interactions with ads (clicks, video views)",
+        "targeting-type": "Type of targeting",
+        "targeting-criteria": "Targeting criteria",
+        "ads": "ads"
+      },
+      "sunburst": {
+        "Click to expand": "Click to expand",
+        "All": "All",
+        "out of": "out of"
+      }
     },
     "unit-files": {
       "run-btn": "Explore your data",
@@ -125,18 +132,12 @@
     "summary": {
       "name": "Summary"
     },
-    "uppy-locale": {
-      "strings": {
-        "cancel": "Clear all"
-      }
-    },
     "About": "About",
-    "all": "All",
+    "All": "All",
     "and": "and",
     "Available on-demand": "Available on-demand",
     "between": "between",
-    "Bubble": "Bubble",
-    "Bubbles": "Bubbles",
+    "Bubble": "Bubble | Bubbles",
     "Clear": "Clear",
     "click-graph": "Please click on the graph to apply filters.",
     "Close": "Close",
@@ -144,11 +145,13 @@
     "Contact us": "Contact us",
     "Current filter": "Current filter:",
     "Data Experience": "Data Experience",
+    "Day": "Day | Days",
     "day": "day",
     "directed-graph-disclaimer": "Please take into account the fact that this graph only shows the link between data flows that are tagged as Fingerprinting or Advertising.",
     "Display Others": "Display \"Others\"",
     "Download": "Download",
     "Export": "Export",
+    "File": "File | Files",
     "filter-info": "Any filtering you do will also limit what data is shared into the pool if you share this tab on the 'Share My Data' tab.",
     "footer-digipower-academy": "The Digipower.academy has emerged out of projects initiated separately by",
     "found": "We found",
@@ -157,9 +160,11 @@
     "in-files": "in your file.",
     "Load your data": "Load your data",
     "Made for": "Made for",
+    "Month": "Month | Months",
     "month": "month",
     "No relevant data found": "No relevant data found",
     "no-records": "No records were found in your file(s).",
+    "not found": "not found",
     "of": "of",
     "per": "per",
     "Privacy": "Privacy",
@@ -179,6 +184,8 @@
     "This might take a moment": "This might take a moment",
     "Time interval": "Time interval",
     "Type...": "Type...",
+    "Week": "Week | Weeks",
+    "Year": "Year | Years",
     "year": "year"
   },
   "fr": {
@@ -186,26 +193,33 @@
       "invalid-format": "Les données dans ce format ne peuvent pas être affichées dans un tableau.",
       "no-data": "Aucune donnée pertinente trouvée"
     },
-    "chart-view-ios-access": {
-      "app-info": "L'application qui accède à la ressource.",
-      "resource-info": "La ressource consultée."
-    },
-    "chart-view-overview-netflix": {
-      "views": "contenu(s) consulté(s)",
-      "watch-time": "Durée de visionnage (en heures par mois)",
-      "time-of-day": "Heure de la journée",
-      "day": "Jour de la semaine",
-      "most-watched": "Titres les plus regardés",
-      "country": "Pays",
-      "device": "Dispositif utilisé"
-    },
-    "chart-view-overview-twitter": {
-      "ads-time": "Nombre d'annonces dans le temps",
-      "top-adv": "Top 10 annonceurs",
-      "interactions": "Interactions avec les pubs (clics, visionnage de vidéos)",
-      "targeting-type": "Type de ciblage",
-      "targeting-criteria": "Critères de ciblage",
-      "ads": "pubs"
+    "chart-view": {
+      "ios-access": {
+        "app-info": "L'application qui accède à la ressource.",
+        "resource-info": "La ressource consultée."
+      },
+      "overview-netflix": {
+        "views": "contenu(s) consulté(s)",
+        "watch-time": "Durée de visionnage (en heures par mois)",
+        "time-of-day": "Heure de la journée",
+        "day": "Jour de la semaine",
+        "most-watched": "Titres les plus regardés",
+        "country": "Pays",
+        "device": "Dispositif utilisé"
+      },
+      "overview-twitter": {
+        "ads-time": "Nombre d'annonces dans le temps",
+        "top-adv": "Top 10 annonceurs",
+        "interactions": "Interactions avec les pubs (clics, visionnage de vidéos)",
+        "targeting-type": "Type de ciblage",
+        "targeting-criteria": "Critères de ciblage",
+        "ads": "pubs"
+      },
+      "sunburst": {
+        "Click to expand": "Cliquez pour agrandir",
+        "All": "Tout",
+        "out of": "sur"
+      }
     },
     "unit-files": {
       "run-btn": "Explorer vos données",
@@ -309,11 +323,11 @@
       "pk-label": "Entrer votre clé publique (facultatif)"
     },
     "About": "À propos",
+    "All": "Tout",
     "and": "et",
     "Available on-demand": "Disponible sur demande",
     "between": "entre",
-    "Bubble": "Bulle",
-    "Bubbles": "Bulles",
+    "Bubble": "Bulle | Bulles",
     "Clear": "Annuler",
     "click-graph": "Veuillez cliquer sur un graphique pour appliquer des filtres.",
     "Close": "Fermer",
@@ -321,11 +335,13 @@
     "Contact us": "Contactez-nous",
     "Current filter": "Filtre actuel:",
     "Data Experience": "Éxperience",
+    "Day": "Jour | Jours",
     "day": "jour",
     "directed-graph-disclaimer": "Veuillez prendre en compte le fait que ce graphique ne montre que le lien entre les flux de données qui sont étiquetés comme empreintes digitales ou publicité.",
     "Display Others": "Afficher \"Others\"",
     "Download": "Télécharger",
     "Export": "Exporter",
+    "File": "Fichier | Fichiers",
     "filter-info": "Tout filtrage effectué limitera également les données qui sont partagées dans le pool si vous partagez cet onglet dans l'onglet 'Partager mes données'.",
     "footer-digipower-academy": "Digipower.academy a émergé de projets initiés séparément par",
     "found": "Nous avons trouvé",
@@ -334,9 +350,11 @@
     "in-files": "dans votre/vos fichier(s)",
     "Load your data": "Charger vos données",
     "Made for": "Fait pour",
+    "Month": "Mois | Mois",
     "month": "mois",
     "No relevant data found": "Aucune donnée pertinente trouvée",
     "no-records": "Aucun résultat n'a été trouvé dans votre (vos) dossier(s).",
+    "not found": "pas trouvé",
     "of": "de",
     "per": "par",
     "Privacy": "Confidentialité",
@@ -357,6 +375,8 @@
     "This might take a moment": "Cela peut prendre un moment",
     "Time interval": "Intervalle",
     "Type...": "Entrer...",
+    "Week": "Semaine | Semaines",
+    "Year": "Année | Années",
     "year": "année"
   }
 }

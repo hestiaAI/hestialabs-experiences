@@ -134,7 +134,7 @@ export default {
   },
   methods: {
     k(localKey) {
-      return `chart-view-overview-netflix.${localKey}`
+      return `chart-view.overview-netflix.${localKey}`
     },
     removeEmptyBins(group) {
       return {

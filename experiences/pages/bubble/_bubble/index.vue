@@ -22,7 +22,7 @@ export default {
     return validate.bubble(context)
   },
   head() {
-    const bubbleText = this.$t('Bubble')
+    const bubbleText = this.$tc('Bubble', 1)
     const { title: t } = this.bubble
     const title = this.$i18n.locale === 'fr' ? `${bubbleText} ${t}` : `${t} ${bubbleText}`
     return vueMeta(this, title)

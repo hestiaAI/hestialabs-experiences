@@ -129,12 +129,12 @@ export default {
         const messages = await messagesResp.json()
         store.$i18n.mergeLocaleMessage(locale, messages[locale])
       }
-    }
 
-    const { theme } = store.state.config
-    if (theme) {
-      // override light theme colors
-      Object.assign($vuetify.theme.themes.light, theme)
+      const { theme } = store.state.config
+      if (theme) {
+        // override light theme colors
+        Object.assign($vuetify.theme.themes.light, theme)
+      }
     }
 
     if (bubble && $auth.loggedIn && bubble !== $auth.user.username) {

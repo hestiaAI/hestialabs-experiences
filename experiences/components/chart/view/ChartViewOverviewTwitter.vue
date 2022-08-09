@@ -126,7 +126,7 @@ export default {
   },
   methods: {
     k(localKey) {
-      return `chart-view-overview-twitter.${localKey}`
+      return `chart-view.overview-twitter.${localKey}`
     },
     drawViz() {
       this.results = this.values

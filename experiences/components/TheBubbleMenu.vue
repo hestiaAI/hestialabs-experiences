@@ -1,7 +1,7 @@
 <template>
   <div v-if="$store.state.config.bubbleConfig">
     <h4 class="mt-6 mb-4 text-h4">
-      {{ $t('Bubbles') }}
+      {{ $tc('Bubble', 2) }}
     </h4>
     <VList rounded>
       <VListItem

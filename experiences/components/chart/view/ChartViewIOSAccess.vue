@@ -10,7 +10,7 @@
                   <template #activator="{ on, attrs }">
                     <strong v-bind="attrs" v-on="on">Application</strong>
                   </template>
-                  <span>{{ $t('chart-view-ios-access.app-info') }}</span>
+                  <span>{{ $t('chart-view.ios-access.app-info') }}</span>
                 </VTooltip>
                 <VSpacer />
                 <div :id="`app-search-${graphId}`" />
@@ -31,7 +31,7 @@
                   <template #activator="{ on, attrs }">
                     <strong v-bind="attrs" v-on="on">Resource</strong>
                   </template>
-                  <span>{{ $t('chart-view-ios-access.resource-info') }}</span>
+                  <span>{{ $t('chart-view.ios-access.resource-info') }}</span>
                 </VTooltip>
               </div>
               <p class="filters">

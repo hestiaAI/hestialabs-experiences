@@ -23,7 +23,7 @@ export default {
     const bubble =
       this.$store.state.config.bubbleConfig[this.$route.params.bubble]
 
-    const bubbleText = this.$t('Bubble')
+    const bubbleText = this.$tc('Bubble', 1)
     const metaBubbleTitle = this.$i18n.locale === 'fr' ? `${bubbleText} ${bubble.title}` : `${bubble.title} ${bubbleText}`
 
     const metaTitle = `${t}: ${s} | ${metaBubbleTitle}`
