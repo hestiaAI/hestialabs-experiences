@@ -153,6 +153,8 @@ npm run lerna:version -- --no-push
 npm run lerna:version -- --force-publish=*
 ```
 
+**NOTE: You cannot version and publish packages on the master branch**
+
 ### Publish packages
 
 ```sh
@@ -160,6 +162,8 @@ npm run lerna:publish
 ```
 
 [Documentation of lerna’s `publish` command](https://github.com/lerna/lerna/tree/main/commands/publish)
+
+**NOTE: You cannot version and publish packages on the master branch**
 
 # Sources
 
