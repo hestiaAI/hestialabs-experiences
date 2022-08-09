@@ -4,6 +4,7 @@ export const driverTripsPostProcessor: PostprocessorFunction = result => {
   const items = result?.items || []
   if ('distance' in items[0]) {
     const results = items.map(
+      // we want to remove the trip point as they are unreadable
       ({ distance, dropoffTime, begintripPoint, dropoffPoint, ...rest }) => {
         return {
           dropoffTime: dropoffTime.replace(/\n/g, ''),
