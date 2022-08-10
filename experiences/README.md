@@ -55,20 +55,35 @@ The instances are deployed on [netlify](https://app.netlify.com/teams/hestia/ove
 | running it locally | `npm run dev`                                                                                                                                                         | `CONFIG_NAME=workshop npm run dev`                                                                                                                                      | `CONFIG_NAME=digipower npm run dev`                                                                                                                            | `CONFIG_NAME=tfac npm run dev`                                                                                                                            | `CONFIG_NAME=digipower-academy npm run dev`                                                                                                                            |
 | status             | [![Netlify Status](https://api.netlify.com/api/v1/badges/9449a6d8-d0a1-4432-8d24-aa0537a8976f/deploy-status)](https://app.netlify.com/sites/test-experiences/deploys) | [![Netlify Status](https://api.netlify.com/api/v1/badges/d333f584-0ec2-4180-ab28-1edfede952eb/deploy-status)](https://app.netlify.com/sites/hestia-experiences/deploys) | [![Netlify Status](https://api.netlify.com/api/v1/badges/6eaae950-17e0-4a98-a0be-d44aab17c2bf/deploy-status)](https://app.netlify.com/sites/digipower/deploys) | [![Netlify Status](https://api.netlify.com/api/v1/badges/4b4d37c9-a54b-4acd-aee6-877774ff51a5/deploy-status)](https://app.netlify.com/sites/tfac/deploys) | [![Netlify Status](https://api.netlify.com/api/v1/badges/424b46ad-8ef7-4a93-8599-91a3468ed66f/deploy-status)](https://app.netlify.com/sites/digipower-academy/deploys) |
 
-Logs for the netlify functions are accessible in each site's netlify under Functions
+## For developers
 
-### Deployment configuration
+```bash
+# All commands are run in the same folder as this readme
+$ cd experiences
+```
 
-The build is done in local. The environment variables vary for each site.
+### Deployment
 
-| Environment variable      | Description                                                                                                                  |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| CONFIG_NAME               | Name of the configuration file (without extension: "workshop", "digipower" ...)                                              |
-| BASE_URL                  | Url where the website is deployed (with protocol: "https://test.hestialabs.org")                                             |
-| API_URL                   | URL of the rest api (with protocol: "https://bubbles.hestialabs.com")                                                        |
-| HESTIA_OWNER_GITHUB_TOKEN | Access token created by github user hestia-owner that allows using github packages. (Circleci also needs to have this token) |
+Update the deployment branch.
 
-Documentation for the configuration file can be found in [config/README.md](config)
+```bash
+# in this example we're deploying to https://digipower.academy
+git checkout netlify-academy
+# replace current files with what's in master
+git merge -X theirs master
+```
+
+Make sure you have the latest version of all packages
+
+```bash
+cd ../packages
+npm install
+npm link --workspaces
+cd ../experiences
+npm install
+```
+
+Run the build using the appropriate environment variables.
 
 | website                    | build command                                                                                                         |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------- |
@@ -78,12 +93,31 @@ Documentation for the configuration file can be found in [config/README.md](conf
 | digipower.hestialabs.org   | CONFIG_NAME=digipower BASE_URL=https://digipower.hestialabs.org API_URL=https://bubbles.hestialabs.org npm run build  |
 | digipower.academy          | CONFIG_NAME=digipower-academy BASE_URL=https://digipower.academy API_URL=https://bubbles.hestialabs.org npm run build |
 
-## For developers
+Here's what these variables configure.
+| Environment variable | Description |
+|---------------------------|-------------------------------------------------------------------------------------------------|
+| CONFIG_NAME | Name of the configuration file (without extension: "workshop", "digipower" ...) |
+| BASE_URL | Url where the website is deployed (with protocol: "https://test.hestialabs.org") |
+| API_URL | URL of the rest api (with protocol: "https://bubbles.hestialabs.com") |
+| HESTIA_OWNER_GITHUB_TOKEN | Access token that allows using github packages (only needed to configure build done on netlify) |
+
+Documentation for the configuration file can be found in [config/README.md](config)
 
 ```bash
-# All commands are run in the same folder as this readme
-$ cd experiences
+rm -rf dist
+# in this example we're building digipower.academy
+CONFIG_NAME=digipower-academy BASE_URL=https://digipower.academy API_URL=https://bubbles.hestialabs.org npm run build
 ```
+
+Commit and push.
+
+```bash
+git add dist
+git commit -m rebuilt
+git push
+```
+
+Netlify then automatically redeploys the website.
 
 ### Build Setup
 

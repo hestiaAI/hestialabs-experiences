@@ -1,49 +1,69 @@
 import { customPipelineGetFirstCSV } from '@/pipelines/custom'
 import type { ViewBlocks } from '@/types'
 import {
-  driverPostProcessor,
-  riderPostProcessor,
-  tripsPostProcessor
+  driverTripsPostProcessor,
+  driverPointsPostProcessor,
+  riderTripsPostProcessor,
+  riderPointsPostProcessor
 } from './postprocessor'
 import keplerConfigPlaces from './kepler/kepler_config_places'
 import keplerConfigTrips from './kepler/kepler_config_trip'
 
 const blocks: ViewBlocks = [
   {
-    id: 'driverData',
-    customPipeline: customPipelineGetFirstCSV('driver'),
-    files: ['driver'],
-    visualization: 'ChartViewGenericMap.vue',
-    title: 'Driver Data',
+    id: 'driverTrips',
+    customPipeline: customPipelineGetFirstCSV('driver_trips'),
+    files: ['driver_trips'],
+    title: 'Driver Trips',
+    postprocessor: driverTripsPostProcessor,
     text: '',
-    postprocessor: driverPostProcessor,
+    showTable: true
+  },
+  {
+    id: 'driverPoints',
+    customPipeline: customPipelineGetFirstCSV('driver_points'),
+    files: ['driver_points'],
+    visualization: 'ChartViewGenericMap.vue',
+    title: 'Driver Points',
+    text: '',
+    postprocessor: driverPointsPostProcessor,
     vizProps: {
-      keplerConfig: keplerConfigPlaces
+      keplerConfig: keplerConfigPlaces,
+      label: 'data-points'
     }
   },
   {
-    id: 'riderData',
-    customPipeline: customPipelineGetFirstCSV('rider'),
-    files: ['rider'],
-    visualization: 'ChartViewGenericMap.vue',
-    title: 'Rider Data',
+    id: 'driverPayments',
+    customPipeline: customPipelineGetFirstCSV('driver_payments'),
+    files: ['driver_payments'],
+    title: 'Driver Payments',
     text: '',
-    postprocessor: riderPostProcessor,
-    vizProps: {
-      keplerConfig: keplerConfigPlaces
-    }
+    showTable: true
   },
   {
-    id: 'trips',
-    customPipeline: customPipelineGetFirstCSV('trips'),
-    files: ['trips'],
-    visualization: 'ChartViewUberDriverTrips.vue',
-    title: 'Trips',
+    id: 'riderTrips',
+    customPipeline: customPipelineGetFirstCSV('rider_trips'),
+    files: ['rider_trips'],
+    visualization: 'ChartViewGenericMap.vue',
+    title: 'Rider Trips',
     text: '',
-    postprocessor: tripsPostProcessor,
+    postprocessor: riderTripsPostProcessor,
     vizProps: {
       keplerConfig: keplerConfigTrips,
       label: 'trips'
+    }
+  },
+  {
+    id: 'riderPoints',
+    customPipeline: customPipelineGetFirstCSV('rider_points'),
+    files: ['rider_points'],
+    visualization: 'ChartViewGenericMap.vue',
+    title: 'Rider Points',
+    text: '',
+    postprocessor: riderPointsPostProcessor,
+    vizProps: {
+      keplerConfig: keplerConfigPlaces,
+      label: 'data-points'
     }
   }
 ]
