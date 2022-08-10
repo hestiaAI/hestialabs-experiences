@@ -5,7 +5,7 @@
         <VCol cols="1" />
         <VCol cols="10">
           <VCardTitle class="justify-center">
-            {{ title }}
+            {{ $tetv(k('title'),`${id}.title`, title) }}
           </VCardTitle>
         </VCol>
         <VCol cols="1" align-self="center" class="full-height text-center">
@@ -31,13 +31,13 @@
       <VRow v-if="text">
         <VCol>
           <VContainer>
-            {{ text }}
+            {{ $tetv(k('text'),`${id}.text`, text) }}
           </VContainer>
         </VCol>
       </VRow>
       <template v-if="missingFiles.length > 0">
         <BaseAlert class="mt-4">
-          {{ missingFiles.length === 1 ? 'File' : 'Files' }} not found:
+          {{ $tc('File', missingFiles.length) }} {{ $t('not found') }}:
           {{ missingFiles.join(', ') }}
         </BaseAlert>
       </template>
@@ -80,7 +80,7 @@
                 v-else-if="vizVue"
                 :graph-name="vizVue"
                 :data="clonedResult"
-                :viz-props="vizProps"
+                :viz-props="vizPropsTranslated"
               />
               <UnitIframe
                 v-else-if="vizUrl"
@@ -106,6 +106,10 @@ import { cloneDeep } from 'lodash-es'
 
 export default {
   props: {
+    slug: {
+      type: String,
+      required: true
+    },
     id: {
       type: String,
       required: true
@@ -188,6 +192,9 @@ export default {
         .map(glob => [glob, this.fileManager.findMatchingFilePaths(glob)])
         .filter(([_, files]) => files.length === 0)
         .map(([glob, _]) => glob)
+    },
+    vizPropsTranslated() {
+      return { ...this.vizProps, ...this.$tev(this.k('vizProps'), {}) }
     }
   },
   watch: {
@@ -217,6 +224,10 @@ export default {
         result: finalResult
       })
       this.result = finalResult
+    },
+    // Convert local translation key to global vue18n
+    k(localKey) {
+      return `experiences.${this.slug}.viewBlocks.${this.id}.${localKey}`
     }
   }
 }

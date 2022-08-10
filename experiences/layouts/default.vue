@@ -34,40 +34,40 @@
       >
         Want to know more about our work ?
         <br>
-        <a :href="newsletterURL" target="_blank" rel="noreferrer noopener">
+        <ExternalLink :href="newsletterURL">
           {{ newsletterMessage }}
-        </a>
+        </ExternalLink>
       </VAlert>
     </VMain>
     <VFooter app absolute color="primary">
       <div class="lighten-2 py-2 ma-auto white--text" align="center">
         &copy; Copyright 2022
-        <a
+        <ExternalLink
           href="https://hestia.ai"
-          target="_blank"
-          style="color: white"
-        >Hestia.ai</a>
+        >
+          Hestia.ai
+        </ExternalLink>
         <br>
-        The Digipower.academy has emerged out of projects initiated separately by
-        <a
+        {{ $t('footer-digipower-academy') }}
+        <ExternalLink
           href="https://www.sitra.fi/en/projects/digipower-investigation"
-          target="_blank"
-          style="color: white"
-        >SITRA</a>, <a
+        >
+          SITRA
+        </ExternalLink>, <ExternalLink
           href="https://www.migros-engagement.ch/en/news-projects/technology-ethics/hestialabs"
-          target="_blank"
-          style="color: white"
-        >Migros Pioneer Fund</a> (via the
-        <a
+        >
+          Migros Pioneer Fund
+        </ExternalLink> (via
+        <ExternalLink
           href="http://www.hestialabs.org"
-          target="_blank"
-          style="color: white"
-        >HestiaLabs </a> project) and
-        <a
+        >
+          {{ $t('the HestiaLabs project') }}
+        </ExternalLink>) {{ $t('and') }}
+        <ExternalLink
           href="https://personaldata.io/"
-          target="_blank"
-          style="color: white"
-        >PersonalData.IO </a>
+        >
+          PersonalData.IO
+        </ExternalLink>
       </div>
     </VFooter>
   </VApp>
@@ -76,8 +76,24 @@
 <script>
 import { mapGetters } from 'vuex'
 
+/**
+ * Merge local, experience-specific, default messages
+ * into vue-i18n's global dictionary
+ */
+function i18nMergeMessages(
+  experienceName,
+  locale,
+  messages,
+  i18n
+) {
+  // merge the messages into vue-i18n's global dictionary
+  const mergeableMessages = { experiences: { [experienceName]: messages } }
+  i18n.mergeLocaleMessage(locale, mergeableMessages)
+}
+
 export default {
   async middleware({
+    app,
     store,
     params: { bubble },
     route: { path },
@@ -94,21 +110,40 @@ export default {
       await store.dispatch('loadExperiences')
       // set state.loaded = true
       store.commit('setLoaded')
-    }
+      const { experiences } = store.state
+      experiences.filter(({ messages }) => messages)
+        .forEach((experience) => {
+          Object.entries(experience.messages).forEach(([locale, messages]) => {
+            i18nMergeMessages(experience.slug, locale, messages, app.i18n)
+          })
+        })
 
-    const { theme } = store.state.config
-    if (theme) {
-      // override light theme colors
-      Object.assign($vuetify.theme.themes.light, theme)
+      const config = store.getters.siteConfig
+      if (config.i18nLocale) {
+        store.$i18n.locale = config.i18nLocale
+      }
+
+      const locale = store.$i18n.locale
+      if (config.i18nUrl) {
+        const messagesResp = await fetch(config.i18nUrl)
+        const messages = await messagesResp.json()
+        store.$i18n.mergeLocaleMessage(locale, messages[locale])
+      }
+
+      const { theme } = store.state.config
+      if (theme) {
+        // override light theme colors
+        Object.assign($vuetify.theme.themes.light, theme)
+      }
     }
 
     if (bubble && $auth.loggedIn && bubble !== $auth.user.username) {
       // auto-logout if user tries to enter another bubble
       await $auth.logout()
-      return redirect({
+      return redirect(app.localePath({
         name: 'login',
         query: { redirect: path }
-      })
+      }))
     }
   },
   data() {
@@ -140,7 +175,10 @@ export default {
           property: 'twitter:title',
           content: this.appName
         }
-      ]
+      ],
+      htmlAttrs: {
+        lang: this.$i18n.locale
+      }
     }
   },
   computed: {
@@ -201,7 +239,11 @@ export default {
 
 .v-snack__content.v-snack__content-online-status
   text-align: center
+
+.v-application .v-footer a
+  color: white
 </style>
+
 <style scoped>
 .fixedAlert {
   position: fixed;

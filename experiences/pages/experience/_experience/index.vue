@@ -11,11 +11,15 @@ export default {
     return validate.experience(context)
   },
   head() {
-    const { title: t, subtitle: s } = this.$store.getters.experience(
+    const k =
+      key => `experiences.${this.$route.params.experience}.intro.${key}`
+    const { title } = this.$store.getters.experience(
       this.$route
     )
-    const title = `${t}: ${s}`
-    return vueMeta(this, title)
+    const t = this.$tev(k('title'), title)
+    const s = this.$tet(k('subtitle'), 'Data Experience')
+    const metaTitle = `${t}: ${s}`
+    return vueMeta(this, metaTitle)
   }
 }
 </script>

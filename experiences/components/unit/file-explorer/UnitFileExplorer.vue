@@ -6,7 +6,7 @@
           <VCol cols="12" :md="mini ? 4 : 6" :lg="mini ? 3 : 6" class="explorer__content">
             <VListItem class="px-2">
               <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
-              <span class="mx-4">File Explorer</span>
+              <span class="mx-4">{{ $t('file-explorer.title') }}</span>
               <VSpacer />
               <VBtn icon @click="mini = !mini">
                 <VIcon v-if="mini">
@@ -20,8 +20,8 @@
             <VDivider />
             <VTextField
               v-model="search"
-              label="Search for entries"
-              placeholder="Enter part of the name..."
+              :label="$t('file-explorer.file-search-name')"
+              :placeholder="$t('file-explorer.file-search-placeholder')"
               clearable
               hide-details
               prepend-icon="$vuetify.icons.mdiMagnify"

@@ -165,8 +165,8 @@ export default {
       const positionChart = new dc.RowChart('#position-chart' + this.graphId)
       const weekChart = new dc.RowChart('#week-chart' + this.graphId)
       const tableCount = new dc.DataCount('#dc-data-count' + this.graphId)
-      const companySearch = new dc.TextFilterWidget('#company-search')
-      const positionSearch = new dc.TextFilterWidget('#position-search')
+      const companySearch = this.createTextFilterWidget('#company-search')
+      const positionSearch = this.createTextFilterWidget('#position-search')
 
       companySearch.dimension(ndx.dimension(d => d.company.toLowerCase()))
       positionSearch.dimension(ndx.dimension(d => d.position.toLowerCase()))

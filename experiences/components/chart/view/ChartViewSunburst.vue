@@ -31,7 +31,11 @@ export default {
     this.drawViz()
   },
   methods: {
+    k(key) {
+      return `chart-view.sunburst.${key}`
+    },
     drawViz() {
+      const { k } = this
       if (!this.values || this.values.length === 0) { return }
       // Transform list to hierarchical object
       const colorDomain = []
@@ -51,7 +55,7 @@ export default {
         .sort((a, b) => b.value - a.value)
 
       const totalSize = tree.value
-      const rootName = tree.data.name
+      const rootName = this.$t(k(tree.data.name))
       this.bcItems = [{ text: rootName, disabled: true }]
 
       // Compute arcs partitons/positions
@@ -111,7 +115,7 @@ export default {
         .attr('text-anchor', 'end')
         .style('cursor', 'default')
         .style('fill', 'grey')
-        .text('Click to expand!')
+        .text(this.$t(k('Click to expand')) + '!')
         .attr('opacity', 0)
 
       const infoPercent = svg
@@ -310,7 +314,7 @@ export default {
         })
         this.bcItems.unshift({ text: rootName, disabled: true })
         infoPercent.text(percentageString)
-        infoNumber.text(`${d.value} out of ${totalSize}`)
+        infoNumber.text(`${d.value} ${this.$t(k('out of'))} ${totalSize}`)
         infoPercent.attr('opacity', 1)
         infoNumber.attr('opacity', 1)
         infoLabel.attr('opacity', 1)

@@ -1,0 +1,382 @@
+{
+  "en": {
+    "data-validator": {
+      "invalid-format": "Data in this format cannot be displayed in a table",
+      "no-data": "No relevant data found"
+    },
+    "chart-view": {
+      "ios-access": {
+        "app-info": "The app accessing the resource.",
+        "resource-info": "The accessed resource."
+      },
+      "overview-netflix": {
+        "views": "views",
+        "watch-time": "Watch time (in hours per month)",
+        "time-of-day": "Time of day",
+        "day": "Day",
+        "most-watched": "Most watched titles",
+        "country": "Country",
+        "device": "Device used"
+      },
+      "overview-twitter": {
+        "ads-time": "Number of ads over time",
+        "top-adv": "Top 10 advertisers",
+        "interactions": "Interactions with ads (clicks, video views)",
+        "targeting-type": "Type of targeting",
+        "targeting-criteria": "Targeting criteria",
+        "ads": "ads"
+      },
+      "sunburst": {
+        "Click to expand": "Click to expand",
+        "All": "All",
+        "out of": "out of"
+      }
+    },
+    "unit-files": {
+      "run-btn": "Explore your data",
+      "process-msg": "Processing files...",
+      "or": "OR",
+      "sample-selector": "Select sample data"
+    },
+    "decrypt-files": {
+      "title": "Decrypt Files",
+      "sk-label": "Enter your secret key",
+      "pk-label": "Enter your public key (optional)"
+    },
+    "unit-files-dialog": {
+      "tooltip": "Show expected files",
+      "title": "Expected files",
+      "used": "Files used in the experiences:",
+      "required": "Files required:",
+      "found": "Files found:",
+      "no-files": "No specific files are used in these experiences.",
+      "all-files-1": "For the experiences marked with",
+      "all-files-2": ", all JSON/CSV files provided will be analysed for dates and geographical coordinates. These experiences will be more interesting the more files you include."
+    },
+    "unit-consent-form": {
+      "select-files-dialog": {
+        "title": "Select files",
+        "label": "Search for files",
+        "placeholder": "Enter part of a file name...",
+        "clearButton": "Clear selection"
+      }
+    },
+    "load-data": {
+      "name": "Load your data",
+      "title": "Analyse your private data",
+      "disclaimer": "Unless explicitly consented in the \"Share My Data\" tab, no data is transmitted to HestiaLabs or anyone else. The whole experience takes place locally in the browser and nothing is left behind as soon as you close the tab.",
+      "tutorial-title": "Tutorial",
+      "text-default": "Explore the structure and contents of your files.",
+      "text": "to request the private data that has been collected about you. Once you receive it, analyse it here.",
+      "link-text": "Click here"
+    },
+    "file-explorer": {
+      "name": "Files",
+      "title": "File Explorer",
+      "select": "Select a file on the left panel to see it in more details here",
+      "file-search-name": "Search for files",
+      "file-search-placeholder": "Enter part of the name",
+      "content-search-name": "Search content",
+      "content-search-placeholder": "Type...",
+      "Exploring file": "Exploring file",
+      "Pretty": "Pretty",
+      "Raw": "Raw",
+      "Schema": "Schema",
+      "viewer": {
+        "json": {
+          "Copy accessor to clipboard": "Copy accessor to clipboard",
+          "Show as table": "Show as table"
+        },
+        "schema": {
+          "invalid-paths": "Impossible to create a table with these accessors, there are several divergent tables.",
+          "Create table": "Create table"
+        }
+      }
+    },
+    "genericDateViewer": {
+      "name": "Timeline",
+      "title": "Timeline",
+      "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date.",
+      "graph-title": "Number of dated events in your files",
+      "graph-no-date": "No dated events were found in your file(s).",
+      "from": "From",
+      "to": "to",
+      "found": "we found",
+      "dated-event": "dated events in your file(s)."
+    },
+    "genericLocationViewer": {
+      "name": "Location Observations",
+      "title": "Location Observations",
+      "text": "See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location.",
+      "graph-title": "Number of location records in your files",
+      "graph-no-location": "No location were found in your file(s).",
+      "found": "We found",
+      "location": "locations in your file(s)."
+    },
+    "generic-map": {
+      "search-info": "Please use the search box and filters below to change what is shown on the map.",
+      "add-noise": "Add Noise",
+      "noise-level": "Noise Level",
+      "meters": "meters"
+    },
+    "google-one-place": {
+      "total-time-spend": "Total time spend at the",
+      "mean-time-spend": "Mean time spend at the",
+      "entropy": "Entropy for",
+      "entropy-info": "The higher this value is, the more uncertain Google was when deciding if you visited",
+      "other-candidates": "This map shows the other candidates proposed by Google associated to the"
+    },
+    "share-data": {
+      "name": "Share my data"
+    },
+    "summary": {
+      "name": "Summary"
+    },
+    "About": "About",
+    "All": "All",
+    "and": "and",
+    "Available on-demand": "Available on-demand",
+    "between": "between",
+    "Bubble": "Bubble | Bubbles",
+    "Clear": "Clear",
+    "click-graph": "Please click on the graph to apply filters.",
+    "Close": "Close",
+    "Connected to bubble": "Connected to bubble",
+    "Contact us": "Contact us",
+    "Current filter": "Current filter:",
+    "Data Experience": "Data Experience",
+    "Day": "Day | Days",
+    "day": "day",
+    "directed-graph-disclaimer": "Please take into account the fact that this graph only shows the link between data flows that are tagged as Fingerprinting or Advertising.",
+    "Display Others": "Display \"Others\"",
+    "Download": "Download",
+    "Export": "Export",
+    "File": "File | Files",
+    "filter-info": "Any filtering you do will also limit what data is shared into the pool if you share this tab on the 'Share My Data' tab.",
+    "footer-digipower-academy": "The Digipower.academy has emerged out of projects initiated separately by",
+    "found": "We found",
+    "hour": "hour",
+    "In total we found": "In total we found",
+    "in-files": "in your file.",
+    "Load your data": "Load your data",
+    "Made for": "Made for",
+    "Month": "Month | Months",
+    "month": "month",
+    "No relevant data found": "No relevant data found",
+    "no-records": "No records were found in your file(s).",
+    "not found": "not found",
+    "of": "of",
+    "per": "per",
+    "Privacy": "Privacy",
+    "Public experiences": "Public experiences",
+    "Reset All": "Reset All",
+    "reset": "reset",
+    "Save": "Save",
+    "Search": "Search",
+    "seconds": "seconds",
+    "Select All": "Select All",
+    "select-time-range": "select a time range to zoom in",
+    "selected-out-of": "selected out of",
+    "Settings": "Settings",
+    "Share": "Share",
+    "Successfully processed in": "Successfully processed in",
+    "the HestiaLabs project": "the HestiaLabs project",
+    "This might take a moment": "This might take a moment",
+    "Time interval": "Time interval",
+    "Type...": "Type...",
+    "Week": "Week | Weeks",
+    "Year": "Year | Years",
+    "year": "year"
+  },
+  "fr": {
+    "data-validator": {
+      "invalid-format": "Les données dans ce format ne peuvent pas être affichées dans un tableau.",
+      "no-data": "Aucune donnée pertinente trouvée"
+    },
+    "chart-view": {
+      "ios-access": {
+        "app-info": "L'application qui accède à la ressource.",
+        "resource-info": "La ressource consultée."
+      },
+      "overview-netflix": {
+        "views": "contenu(s) consulté(s)",
+        "watch-time": "Durée de visionnage (en heures par mois)",
+        "time-of-day": "Heure de la journée",
+        "day": "Jour de la semaine",
+        "most-watched": "Titres les plus regardés",
+        "country": "Pays",
+        "device": "Dispositif utilisé"
+      },
+      "overview-twitter": {
+        "ads-time": "Nombre d'annonces dans le temps",
+        "top-adv": "Top 10 annonceurs",
+        "interactions": "Interactions avec les pubs (clics, visionnage de vidéos)",
+        "targeting-type": "Type de ciblage",
+        "targeting-criteria": "Critères de ciblage",
+        "ads": "pubs"
+      },
+      "sunburst": {
+        "Click to expand": "Cliquez pour agrandir",
+        "All": "Tout",
+        "out of": "sur"
+      }
+    },
+    "unit-files": {
+      "run-btn": "Explorer vos données",
+      "process-msg": "Traitement des fichiers...",
+      "or": "OU",
+      "sample-selector": "Selectionner des données de test"
+    },
+    "unit-files-dialog": {
+      "tooltip": "Voir les fichiers requis",
+      "title": "Fichiers requis",
+      "used": "Fichiers utilisés dans l'expérience:",
+      "required": "Fichiers requis:",
+      "found": "Fichiers trouvés:",
+      "no-files": "Aucun fichier spécifique n'est requis dans ces expériences.",
+      "all-files-1": "Pour les expériences marquées par",
+      "all-files-2": ", tous les fichiers JSON/CSV fournis seront analysés pour y trouver des dates et des coordonnées géographiques. Ces expériences seront d'autant plus intéressantes que vous inclurez de fichiers."
+    },
+    "unit-consent-form": {
+      "select-files-dialog": {
+        "title": "Sélectionner les fichiers",
+        "label": "Rechercher des fichiers",
+        "placeholder": "Entrer le nom d'un fichier...",
+        "clearButton": "Effacer la sélection"
+      }
+    },
+    "load-data": {
+      "name": "Charger vos données",
+      "title": "Analyser vos données privées",
+      "disclaimer": "Sauf consentement explicite dans l'onglet \"Partager mes données\", aucune donnée n'est transmise à HestiaLabs ou à quiconque. Toute l'expérience se déroule localement dans le navigateur et rien n'est laissé derrière vous dès que vous fermez l'onglet.",
+      "tutorial-title": "Démo",
+      "run-btn": "Explorer vos données",
+      "text-default": "Explorer la structure et le contenu de vos fichiers.",
+      "text": "pour demander les données privées qui ont été collectées sur vous. Une fois que vous les recevrez, analysez-les ici.",
+      "link-text": "Cliquer ici"
+    },
+    "file-explorer": {
+      "name": "Fichiers",
+      "title": "Explorateur de fichiers",
+      "select": "Sélectionnez un fichier dans le panneau de gauche pour le voir plus en détail.",
+      "file-search-name": "Recherche de fichiers",
+      "file-search-placeholder": "Entrez une partie du nom",
+      "content-search-name": "Recherche de contenu",
+      "content-search-placeholder": "Entrez une partie du contenu",
+      "Exploring file": "En cours d'exploration",
+      "Pretty": "Joli",
+      "Raw": "Brut",
+      "Schema": "Schéma",
+      "viewer": {
+        "json": {
+          "Copy accessor to clipboard": "Copier l'accesseur dans le clipboard",
+          "Show as table": "Montrer comme tableau"
+        },
+        "schema": {
+          "invalid-paths": "Impossible de créer une table avec ces accesseurs, il y a plusieurs tables divergentes.",
+          "Create table": "Créer un tableau"
+        }
+      }
+    },
+    "genericDateViewer": {
+      "name": "Chronologie",
+      "title": "Chronologie",
+      "text": "Voir tous les événements datés dans vos dossiers, correspondant aux données qui ont été collectées sur vous à ou concernant une date spécifique.",
+      "graph-title": "Nombre d'événements datés dans vos dossiers",
+      "graph-no-date": "Aucun événement daté n'a été trouvé dans votre (vos) dossier(s).",
+      "from": "De",
+      "to": "à",
+      "found": "nous avons trouvé",
+      "dated-event": "événements datés dans votre (vos) fichier(s)."
+    },
+    "genericLocationViewer": {
+      "name": "Positions",
+      "title": "Observations de localisation",
+      "text": "Voir tous les événements de localisation dans vos fichiers, correspondant aux données qui ont été collectées sur vous à ou concernant un lieu spécifique.",
+      "graph-title": "Nombre de localisation dans vos fichiers",
+      "graph-no-location": "Aucune localisation n'a été trouvé dans votre/vos fichier(s).",
+      "found": "Nous avons trouvé",
+      "location": "dans votre/vos fichier(s)."
+    },
+    "generic-map": {
+      "search-info": "Veuillez utiliser le champ de recherche et les filtres ci-dessous pour modifier ce qui est affiché sur la carte.",
+      "add-noise": "Ajouter du bruit",
+      "noise-level": "Niveau de bruit",
+      "meters": "mètres"
+    },
+    "google-one-place": {
+      "total-time-spend": "Temps total passé à",
+      "mean-time-spend": "Temps moyen passé à",
+      "entropy": "Entropie pour",
+      "entropy-info": "Plus cette valeur est élevée, plus l'incertitude de Google était grande au moment de décider si vous avez visité",
+      "other-candidates": "Cette carte montre les autres candidats proposés par Google associés à"
+    },
+    "share-data": {
+      "name": "Partager mes données"
+    },
+    "summary": {
+      "name": "Résumé"
+    },
+    "decrypt-files": {
+      "title": "Décrypter vos fichiers",
+      "sk-label": "Entrer votre clé secrète",
+      "pk-label": "Entrer votre clé publique (facultatif)"
+    },
+    "About": "À propos",
+    "All": "Tout",
+    "and": "et",
+    "Available on-demand": "Disponible sur demande",
+    "between": "entre",
+    "Bubble": "Bulle | Bulles",
+    "Clear": "Annuler",
+    "click-graph": "Veuillez cliquer sur un graphique pour appliquer des filtres.",
+    "Close": "Fermer",
+    "Connected to bubble": "Connecté à la bulle",
+    "Contact us": "Contactez-nous",
+    "Current filter": "Filtre actuel:",
+    "Data Experience": "Éxperience",
+    "Day": "Jour | Jours",
+    "day": "jour",
+    "directed-graph-disclaimer": "Veuillez prendre en compte le fait que ce graphique ne montre que le lien entre les flux de données qui sont étiquetés comme empreintes digitales ou publicité.",
+    "Display Others": "Afficher \"Others\"",
+    "Download": "Télécharger",
+    "Export": "Exporter",
+    "File": "Fichier | Fichiers",
+    "filter-info": "Tout filtrage effectué limitera également les données qui sont partagées dans le pool si vous partagez cet onglet dans l'onglet 'Partager mes données'.",
+    "footer-digipower-academy": "Digipower.academy a émergé de projets initiés séparément par",
+    "found": "Nous avons trouvé",
+    "hour": "heure",
+    "In total we found": "Au total nous avons trouvé",
+    "in-files": "dans votre/vos fichier(s)",
+    "Load your data": "Charger vos données",
+    "Made for": "Fait pour",
+    "Month": "Mois | Mois",
+    "month": "mois",
+    "No relevant data found": "Aucune donnée pertinente trouvée",
+    "no-records": "Aucun résultat n'a été trouvé dans votre (vos) dossier(s).",
+    "not found": "pas trouvé",
+    "of": "de",
+    "per": "par",
+    "Privacy": "Confidentialité",
+    "project": "et",
+    "Public experiences": "Expériences publiques",
+    "Reset All": "Réinitialiser tout",
+    "reset": "réinitialiser",
+    "Save": "Sauvegarder",
+    "Search": "Rechercher",
+    "seconds": "secondes",
+    "Select All": "Sélectionner Tout",
+    "select-time-range": "sélectionnez une plage de temps pour effectuer un zoom",
+    "selected-out-of": "sélectionné·e·s sur",
+    "Settings": "Réglages",
+    "Share": "Partager",
+    "Successfully processed in": "Traitement réussi en",
+    "the HestiaLabs project": "le projet HestiaLabs",
+    "This might take a moment": "Cela peut prendre un moment",
+    "Time interval": "Intervalle",
+    "Type...": "Entrer...",
+    "Week": "Semaine | Semaines",
+    "Year": "Année | Années",
+    "year": "année"
+  }
+}

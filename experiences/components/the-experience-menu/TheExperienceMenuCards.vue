@@ -2,7 +2,7 @@
   <div>
     <VRow class="mt-3 mb-6">
       <VCol
-        v-for="({ title, subtitle, icon, ...rest }, index) in experiences"
+        v-for="({ icon, title, ...rest }, index) in experiences"
         :key="index"
         cols="12"
         sm="6"
@@ -19,10 +19,10 @@
             class="mt-3"
           />
           <VCardTitle class="justify-center">
-            {{ title }}
+            {{ $tev(k(rest.slug, 'title'), title) }}
           </VCardTitle>
           <VCardSubtitle class="subtitle-1 text-center">
-            {{ subtitle }}
+            {{ $tet(k(rest.slug, 'subtitle'), 'Data Experience') }}
           </VCardSubtitle>
         </VCard>
       </VCol>

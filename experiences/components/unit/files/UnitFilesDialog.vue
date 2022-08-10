@@ -10,19 +10,19 @@
             >$vuetify.icons.mdiFolderInformationOutline</VIcon>
           </span>
         </template>
-        <span>Show expected files</span>
+        <span>{{ $t('unit-files-dialog.tooltip') }}</span>
       </VTooltip>
     </template>
     <VCard>
-      <VCardTitle>Expected files</VCardTitle>
+      <VCardTitle>{{ $t('unit-files-dialog.title') }}</VCardTitle>
       <VDivider />
       <VCardText>
         <template v-if="fileGlobs && fileGlobs.length > 0">
           <p v-if="main" class="mt-4">
-            Files used in the experiences:
+            {{ $t('unit-files-dialog.used') }}
           </p>
           <p v-else class="mt-4">
-            Files required:
+            {{ $t('unit-files-dialog.required') }}
           </p>
           <ul>
             <li v-for="glob in fileGlobs" :key="glob">
@@ -31,7 +31,7 @@
           </ul>
           <template v-if="!main && fileManager">
             <p class="mt-4">
-              Files found:
+              {{ $t('unit-files-dialog.found') }}
             </p>
             <ul>
               <template v-for="glob in fileGlobs">
@@ -46,14 +46,12 @@
           </template>
         </template>
         <p v-else class="mt-4">
-          No specific files are used in these experiences.
+          {{ $t('unit-files-dialog.no-files') }}
         </p>
         <p v-if="main" class="mt-4">
-          For the experiences marked with
-          <VIcon>$vuetify.icons.mdiFileMultipleOutline</VIcon>, all JSON/CSV
-          files provided will be analysed for dates and geographical
-          coordinates. These experiences will be more interesting the more files
-          you include.
+          {{ $t('unit-files-dialog.all-files-1') }}
+          <VIcon>$vuetify.icons.mdiFileMultipleOutline</VIcon>
+          {{ $t('unit-files-dialog.all-files-2') }}
         </p>
       </VCardText>
 
@@ -62,7 +60,7 @@
       <VCardActions>
         <VSpacer />
         <VBtn color="primary" text @click="show = false">
-          Close
+          {{ $t('Close') }}
         </VBtn>
       </VCardActions>
     </VCard>

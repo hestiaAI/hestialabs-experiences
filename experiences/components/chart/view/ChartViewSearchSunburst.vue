@@ -9,7 +9,8 @@
             <VTextField
               v-model="search"
               append-icon="mdi-magnify"
-              label="Search"
+              :label="$t('Search')"
+              :placeholder="$t('Type...')"
               single-line
               hide-details
             />

@@ -1,8 +1,6 @@
 <template>
-  <a
+  <ExternalLink
     :href="collaborator.url"
-    target="_blank"
-    rel="noreferrer noopener"
   >
     <VImg
       :src="collaborator.icon"
@@ -11,7 +9,7 @@
       contain
       :width="width"
     />
-  </a>
+  </ExternalLink>
 </template>
 
 <script>

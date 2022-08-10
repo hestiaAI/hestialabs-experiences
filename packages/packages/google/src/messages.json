@@ -1,0 +1,86 @@
+{
+  "en": {
+    "intro": {
+      "title": "Google Takeout",
+      "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download",
+      "dataPortalMessage": "<strong>Important:</strong> For the experiment to work, please click on <strong>\"deselect all\"</strong> and then select the following: <strong>\"Location History\"</strong><div>Once done you can click the blue \"Next Step\" button at the bottom of the page. This should queue your download"
+    },
+    "viewBlocks": {
+      "PlaceVisited": {
+        "title": "Places visited",
+        "text": "This map shows what places Google think you visited with the size corresponding to the time you spent in this place:",
+        "vizProps": {
+          "label": "visited places"
+        }
+      },
+      "OnePlace": {
+        "title": "One Place",
+        "text": ""
+      },
+      "OtherCandidates": {
+        "title": "Other Candidates",
+        "text": "This map shows the other candidate places proposed by Google linked to the location that Google think you visited:"
+      },
+      "ActivitySegment": {
+        "title": "Travels",
+        "text": "This map shows what trips Google think you did:",
+        "vizProps": {
+          "label": "trips"
+        }
+      },
+      "Records": {
+        "title": "Records",
+        "text": "This map shows records associated to a trip with the color corresponding to an activity type:"
+      },
+      "WifiScan": {
+        "title": "Wifi",
+        "text": "This map shows where your phone detected mac addresses with the size corresponding to the number of times it was detected:",
+        "vizProps": {
+          "label": "mac adresses"
+        }
+      }
+    }
+  },
+  "fr": {
+    "intro": {
+      "title": "Google Takeout",
+      "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download",
+      "dataPortalMessage": "<strong>Important:</strong> Pour que l'expérience fonctionne, veuillez cliquer sur <strong>\"désélectionner tout\"</strong>puis sélectionnez ce qui suit: <strong>\"Historique des positions\"</strong><div>Une fois que vous avez terminé, vous pouvez cliquer sur le bouton bleu \"Étape suivante\" en bas de la page. Cela devrait lancer votre téléchargement."
+    },
+    "viewBlocks": {
+      "PlaceVisited": {
+        "title": "Endroits visités",
+        "text": "Carte des endroits que Google pense que vous avez visités. La taille des points montre le temps passé à l'endroit",
+        "vizProps": {
+          "label": "endroits visités"
+        }
+      },
+      "OnePlace": {
+        "title": "One Place",
+        "text": ""
+      },
+      "OtherCandidates": {
+        "title": "Autres candidats",
+        "text": "Carte des autres endroits que vous êtes susceptible d'avoir visités d'après l'historique de vos positions."
+      },
+      "ActivitySegment": {
+        "title": "Trajets",
+        "text": "Carte des trajets que Google a reconnus",
+        "vizProps": {
+          "label": "trajets"
+        }
+      },
+      "Records": {
+        "title": "Historique",
+        "text": "Carte des historiques associés à un trajet, les couleurs dénotant un type d'activité"
+      },
+      "WifiScan": {
+        "title": "Wifi",
+        "text": "Carte des adresses MAC détectées par votre téléphone, la taille dénotant le nombre de détections.",
+        "vizProps": {
+          "label": "adresses MAC"
+        }
+      }
+    }
+  }
+}

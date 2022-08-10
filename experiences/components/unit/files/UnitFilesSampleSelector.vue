@@ -4,7 +4,7 @@
     v-bind="$attrs"
     item-text="filename"
     return-object
-    label="Select sample data"
+    :label="$t('unit-files.sample-selector')"
     hide-details
     style="max-width: 300px; justify-self: 'center'"
     menu-props="auto, overflowY, offsetY, top"

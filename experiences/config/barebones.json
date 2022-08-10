@@ -1,5 +1,7 @@
 {
   "experiences": ["tracker-control", "twitter"],
+  "i18nLocales": ["fr"],
+  "i18nLocale": "fr",
   "theme": {
     "primary": "#0C2D48",
     "secondary": "#2E8BC0"

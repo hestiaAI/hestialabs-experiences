@@ -1,0 +1,80 @@
+{
+  "en": {
+    "intro": {
+      "title": "Instagram",
+      "dataPortal": "https://help.instagram.com/181231772500920",
+      "dataPortalMessage": "<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format."
+    },
+    "viewBlocks": {
+      "views": {
+        "title": "Views",
+        "text": "",
+        "vizProps": {
+          "titleTimeline": "Content viewed",
+          "titlePie": "Type of content",
+          "titleTop": "Top Account",
+          "rowLabel": "views"
+        }
+      },
+      "likes": {
+        "title": "Likes",
+        "text": "",
+        "vizProps": {
+          "titleArea": "Likes given",
+          "titleTop": "Top User",
+          "rowLabel": "likes"
+        }
+      },
+      "messages": {
+        "title": "Messages",
+        "text": ""
+      },
+      "follows": {
+        "title": "Follows",
+        "text": "",
+        "vizProps": {
+          "title": "Followers vs Followings over time"
+        }
+      }
+    }
+  },
+  "fr": {
+    "intro": {
+      "title": "Instagram",
+      "dataPortal": "https://help.instagram.com/181231772500920",
+      "dataPortalMessage": "<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format."
+    },
+    "viewBlocks": {
+      "views": {
+        "title": "Vues",
+        "text": "",
+        "vizProps": {
+          "titleTimeline": "Contenu consulté",
+          "titlePie": "Type de contenu",
+          "titleTop": "Top compte",
+          "rowLabel": "consulté"
+        }
+      },
+      "likes": {
+        "title": "Likes",
+        "text": "",
+        "vizProps": {
+          "titleArea": "Likes donnés",
+          "titleTop": "Top utilisateur",
+          "rowLabel": "likes"
+        }
+      },
+      "messages": {
+        "title": "Messages",
+        "text": ""
+      },
+      "follows": {
+        "title": "Liste de suivi",
+        "text": "",
+        "vizProps": {
+          "title": "Followers vs Followings au fil du temps"
+        }
+      }
+    }
+  }
+}

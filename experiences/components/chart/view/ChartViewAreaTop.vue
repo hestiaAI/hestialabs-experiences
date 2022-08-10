@@ -5,11 +5,11 @@
         <VRow>
           <VCol cols="12" md="8">
             <div :id="`area-chart-${graphId}`">
-              <strong>{{ titleArea }} per {{ timeUnit.accessor }}</strong>
-              <a class="reset" style="display: none">reset</a>
+              <strong>{{ titleArea }} {{ $t('per') }} {{ $t(timeUnit.accessor) }}</strong>
+              <a class="reset" style="display: none">{{ $t('reset') }}</a>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -19,7 +19,7 @@
                 class="muted pull-right text-subtitle-2"
                 style="margin-right: 15px; margin-bottom: 5px"
               >
-                select a time range to zoom in
+                {{ $t('select-time-range') }}
               </p>
             </div>
           </VCol>
@@ -32,10 +32,10 @@
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none">{{ $t('reset') }}</a>
               </p>
             </div>
           </VCol>
@@ -43,13 +43,7 @@
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="`dc-data-count-${graphId}`" class="dc-data-count">
-        <span class="filter-count" />
-        selected out of
-        <span class="total-count" />
-        {{ rowLabel }} |
-        <a class="resetAll">Reset All</a>
-      </div>
+      <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
     </VRow>
     <VRow>
       <VCol cols="12">
@@ -157,7 +151,7 @@ export default {
       const rangeChart = new dc.BarChart(`#range-chart-${this.graphId}`)
       const topChart = new dc.RowChart(`#top-chart-${this.graphId}`)
       const tableCount = new dc.DataCount(`#dc-data-count-${this.graphId}`)
-      const topSearch = new dc.TextFilterWidget(`#top-search-${this.graphId}`)
+      const topSearch = this.createTextFilterWidget(`#top-search-${this.graphId}`)
 
       // Bind reset filters links
       d3.select(`#top-chart-${this.graphId} a.reset`).on('click', function() {
@@ -293,13 +287,10 @@ export default {
         .groupAll(all)
         .html({
           some:
-            '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> ' +
-            this.rowLabel +
-            " | <a class='resetAll'>Reset All</a>",
+            `<strong>%filter-count</strong> ${this.$t('selected-out-of')} <strong>%total-count</strong> ` +
+            `${this.rowLabel} | <a class='resetAll'>${this.$t('Reset All')}</a>`,
           all:
-            'All <strong>%total-count</strong> ' +
-            this.rowLabel +
-            ' selected. Please click on the graph to apply filters.'
+            `Total: <strong>%total-count</strong> ${this.rowLabel}. ${this.$t('click-graph')}`
         })
         .on('pretransition', (chart, filter) => {
           this.results = dateDimension.top(all.value())

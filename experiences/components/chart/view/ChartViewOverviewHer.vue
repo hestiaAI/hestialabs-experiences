@@ -19,7 +19,7 @@
                 class="muted pull-right text-subtitle-2"
                 style="margin-right: 15px; margin-bottom: 5px"
               >
-                select a time range to zoom in
+                {{ $t('select-time-range') }}
                 <a class="reset" style="display: none">reset</a>
               </p>
             </div>

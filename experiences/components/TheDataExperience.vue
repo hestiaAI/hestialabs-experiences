@@ -32,7 +32,7 @@
             nuxt
             :to="`#${t.value}`"
           >
-            {{ t.title }}
+            {{ $tetv(k(t.value), `${t.value}.name`, t.title) }}
           </VTab>
         </VTabs>
         <VTabsItems v-model="tab">
@@ -41,6 +41,7 @@
               <UnitDownload
                 v-if="routeConfig.dataFromBubble"
                 v-bind="{
+                  slug,
                   progress,
                   error,
                   success,
@@ -51,6 +52,7 @@
               <UnitIntroduction
                 v-else
                 v-bind="{
+                  slug,
                   progress,
                   error,
                   success,
@@ -84,12 +86,12 @@
                   style="width: 100%; height: 100%"
                 >
                   <div class="mb-3">
-                    This might take a moment
+                    {{ $t('This might take a moment') }}
                   </div>
                   <BaseProgressCircular size="64" width="4" />
                 </div>
               </VOverlay>
-              <UnitQuery v-bind="viewBlock" />
+              <UnitQuery v-bind="{slug, ...viewBlock}" />
             </VCol>
           </VTabItem>
           <VTabItem
@@ -127,7 +129,8 @@ export default {
       'hideFileExplorer',
       'keepOnlyFiles',
       'preprocessors',
-      'viewBlocks'
+      'viewBlocks',
+      'slug'
     ])
 
     return {
@@ -148,7 +151,7 @@ export default {
       const disabled = !this.success || this.experienceProgress
       const tabs = [
         {
-          title: 'Load your Data',
+          title: 'Load your data',
           value: 'load-data',
           disabled: this.experienceProgress
         },
@@ -226,6 +229,10 @@ export default {
     this.switchTab('load-data')
   },
   methods: {
+    // Convert local translation key to global vue18n
+    k(localKey) {
+      return `experiences.${this.slug}.viewBlocks.${localKey}.title`
+    },
     switchTab(value) {
       this.$router.push(`#${value}`)
     },
@@ -288,7 +295,7 @@ export default {
       setTimeout(() => this.switchTab(this.tabs[1].value), 500)
 
       const elapsed = new Date() - start
-      this.message = `Successfully processed in ${elapsed / 1000} sec.`
+      this.message = `${this.$t('Successfully processed in')} ${elapsed / 1000} ${this.$t('seconds')}`
     }
   }
 }

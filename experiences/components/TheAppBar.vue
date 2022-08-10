@@ -6,30 +6,52 @@
         @click.stop="drawer = !drawer"
       />
       <VToolbarTitle class="d-flex align-center" style="width: 100%">
+        <VMenu v-if="$i18n.locales.length > 1" offset-y>
+          <template #activator="{ on, attrs }">
+            <VBtn
+              v-bind="attrs"
+              icon
+              v-on="on"
+            >
+              <VIcon>$vuetify.icons.mdiTranslate</VIcon>
+            </VBtn>
+          </template>
+          <VList>
+            <VListItem
+              v-for="({ code, name }) in $i18n.locales"
+              :key="code"
+              nuxt
+              :to="switchLocalePath(code)"
+            >
+              <VListItemTitle>{{ name }}</VListItemTitle>
+            </VListItem>
+          </VList>
+        </VMenu>
         <VBtn
-          v-if="$route.path !== '/'"
+          v-if="!$route.name.startsWith('index')"
           icon
-          to="/"
+          :to="localePath('index')"
           class="v-btn__home mr-0"
           color="primary"
         >
           <VIcon>$vuetify.icons.mdiHome</VIcon>
         </VBtn>
         <VSpacer />
-        <div class="d-flex">
+        <div v-if="$route.params.experience" class="d-flex">
           <VImg max-width="30" :src="e.icon" :lazy-src="e.icon" contain />
           <h3 class="ml-3">
-            {{ e.title }}
+            {{ $tev(`experiences.${$route.params.experience}.intro.title`, e.title) }}
           </h3>
         </div>
         <VSpacer />
         <VBtn
           href="https://hestia.ai/en/#contact"
           target="_blank"
+          rel="noreferrer noopener"
           class="v-btn__home mr-0"
           text
         >
-          Contact us
+          {{ $t('Contact us') }}
         </VBtn>
         <VBtn
           v-for="link in links"
@@ -38,21 +60,20 @@
           class="v-btn__home mr-0"
           text
         >
-          {{ link.name }}
+          {{ $t(link.name) }}
         </VBtn>
         <CollaboratorLink
           v-if="collaborator"
           :collaborator="collaborator"
           class="ml-2 mr-5"
         />
-        <a
+        <ExternalLink
           href="https://hestialabs.org/"
-          target="_blank"
-          rel="noreferrer noopener"
           class="ml-2"
         >
           <LogoImg width="100" />
-        </a>
+        </ExternalLink>
+        </v-menu>
       </VToolbarTitle>
     </VAppBar>
     <VNavigationDrawer
@@ -77,7 +98,7 @@
         <LogoImg width="250" />
         <template v-if="$auth.loggedIn">
           <VSubheader class="mt-2">
-            Connected to bubble:
+            {{ $t('Connected to bubble') }}:
             <span class="font-weight-black">
               &nbsp;{{ $auth.user.bubble.title }}
             </span>
@@ -99,15 +120,13 @@ export default {
   data() {
     return {
       drawer: false,
-      selected: ''
+      selected: '',
+      links: this.$store.getters.siteConfig.appBarLinks
     }
   },
   computed: {
     e() {
       return this.$store.getters.experience(this.$route)
-    },
-    links() {
-      return this.$store.getters.siteConfig.appBarLinks
     },
     collaborator() {
       return this.e.collaborator

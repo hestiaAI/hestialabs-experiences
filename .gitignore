@@ -2,3 +2,5 @@
 
 # MAC Files
 .DS_STORE
+
+node_modules

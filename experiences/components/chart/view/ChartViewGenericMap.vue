@@ -3,10 +3,10 @@
     <VRow>
       <VCol cols="12">
         <p v-if="total === 0" class="text-subtitle-2">
-          No records were found in your file(s).
+          {{ $t('no-records') }}
         </p>
         <p v-else-if="label_ !== ''" class="text-subtitle-2">
-          We found <strong>{{ total }}</strong> {{ label_ }} in your file.
+          {{ $t('found') }} <strong>{{ total }}</strong> {{ label_ }} {{ $t('in-files') }}.
         </p>
       </VCol>
     </VRow>
@@ -16,10 +16,9 @@
           <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
         <p v-if="config.consent">
-          Please use the search box and filters below to change what is shown on
-          the map.<br>
-          Any filtering you do will also limit what data is shared into the pool
-          if you share this tab on the 'Share My Data' tab.
+          {{ $t("generic-map.search-info") }}
+          <br>
+          {{ $t('filter-info') }}
         </p>
       </VRow>
       <template v-if="showButton == true">
@@ -37,11 +36,11 @@
               v-bind="attrs"
               v-on="on"
             >
-              Add Noise
+              {{ $t('generic-map.add-noise') }}
             </VBtn>
           </template>
           <VCard class="mx-auto" max-width="600">
-            <VCardTitle>Noise Level</VCardTitle>
+            <VCardTitle>{{ $t('generic-map.noise-level') }}</VCardTitle>
             <VCardText>
               <VRow class="mb-4" justify="space-between">
                 <VCol class="text-left">
@@ -49,7 +48,7 @@
                     class="text-h2 font-weight-light"
                     v-text="sliderValue"
                   />
-                  <span class="subheading font-weight-light mr-1">meters</span>
+                  <span class="subheading font-weight-light mr-1">{{ $t('generic-map.meters') }}</span>
                 </VCol>
               </VRow>
 
@@ -78,10 +77,10 @@
               <VSpacer />
 
               <VBtn @click="clear">
-                Clear
+                {{ $t('Clear') }}
               </VBtn>
               <VBtn color="primary" @click="addNoise">
-                Save
+                {{ $t('Save') }}
               </VBtn>
             </VCardActions>
           </VCard>
@@ -197,7 +196,9 @@ export default {
       this.results = this.values
       this.sliderValue = 0
     },
-    drawViz() {},
+    drawViz() {
+      console.log(this.$i18n.messages)
+    },
     onTableFilter(newItems) {
       this.filteredRows = newItems
     }
