@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[75],{1369:function(t,e,n){"use strict";n.r(e),e.default=n.p+"assets/data/Twitter_model.50d4ba2.json"}}]);
