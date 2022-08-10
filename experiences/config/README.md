@@ -11,10 +11,27 @@ This directory contains the configuration files linked to each deployement. They
     "secondary": "#2E8BC0"
   },
   /**
-    * The name of the experiences to display (as defined in `/manifests/experiences/`).
+   * URL to fetch 3rd party translations
+   * @type String
+   */
+  "i18nUrl": "https://example.com/translations.json",
+  /**
+   * Override default locale
+   * @type String
+   */
+  "i18nLocale": "en",
+  /**
+   * Override list of available locales
+   * @type Array
+   */
+  "i18nLocales": ["fr"],
+  /**
+    * Name followed by the version tag of each experience to include.
+    * Format: <name>@<tag>
+    * If the <tag> is omitted, "latest" will be used.
     * @type Array
     */
-  "experiences": ["facebook", "google", "twitter"],
+  "experiences": ["facebook", "google", "twitter@1.0.0"],
   /**
     * The hashtags that are pre-written when using the Twitter "Share" button.
     * @type Array

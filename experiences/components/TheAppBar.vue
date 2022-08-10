@@ -6,7 +6,7 @@
         @click.stop="drawer = !drawer"
       />
       <VToolbarTitle class="d-flex align-center" style="width: 100%">
-        <VMenu offset-y>
+        <VMenu v-if="$i18n.locales.length > 1" offset-y>
           <template #activator="{ on, attrs }">
             <VBtn
               v-bind="attrs"
