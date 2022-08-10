@@ -17,7 +17,7 @@ const blocks: ViewBlocks = [
     title: 'Driver Trips',
     postprocessor: driverTripsPostProcessor,
     text: '',
-    showTable: true
+    visualization: 'ChartViewOverviewUber.vue'
   },
   {
     id: 'driverPoints',

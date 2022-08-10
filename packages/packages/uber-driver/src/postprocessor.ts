@@ -9,7 +9,7 @@ export const driverTripsPostProcessor: PostprocessorFunction = result => {
         return {
           dropoffTime: dropoffTime.replace(/\n/g, ''),
           ...rest,
-          distance: (distance * 1.609344).toFixed(3)
+          distanceKm: (distance * 1.609344).toFixed(3)
         }
       }
     )
@@ -18,7 +18,7 @@ export const driverTripsPostProcessor: PostprocessorFunction = result => {
     const results = items.map(({ tripDistanceMiles, ...rest }) => {
       return {
         ...rest,
-        tripDistance: (tripDistanceMiles * 1.609344).toFixed(3)
+        tripDistanceKm: (tripDistanceMiles * 1.609344).toFixed(3)
       }
     })
     return { headers: Object.keys(results[0]), items: results }
@@ -53,7 +53,7 @@ export const riderTripsPostProcessor: PostprocessorFunction = result => {
         beginTripTime: beginTripTime.replace(' +0000 UTC', ''),
         dropoffTime: dropoffTime.replace(' +0000 UTC', ''),
         ...rest,
-        tripDistance: (distanceMiles * 1.609344).toFixed(3)
+        tripDistanceKm: (distanceMiles * 1.609344).toFixed(3)
       }
     }
   )
