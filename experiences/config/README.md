@@ -3,6 +3,11 @@ This directory contains the configuration files linked to each deployement. They
 ```js
 {
   /**
+   * Override link to home page (absolute path to an external home page)
+   * @type String
+   */
+  "homePath": "/index.html"
+  /**
    * Vuetify (light) theme colors to override defaults in vuetify.options.js
    * @type Object
    */
