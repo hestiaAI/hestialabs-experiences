@@ -30,7 +30,7 @@
         <VBtn
           v-if="!$route.name.startsWith('index')"
           icon
-          :to="localePath('index')"
+          v-bind="homeButtonProps"
           class="v-btn__home mr-0"
           color="primary"
         >
@@ -130,6 +130,21 @@ export default {
     },
     collaborator() {
       return this.e.collaborator
+    },
+    homeButtonProps() {
+      // check for an external home page
+      const { homePath } = this.$store.getters.siteConfig
+      if (homePath) {
+        return {
+          href: homePath,
+          rel: 'noreferrer noopener'
+        }
+      }
+      // if an external home page is not configured,
+      // we link to the internal home page
+      return {
+        to: this.localePath('index')
+      }
     }
   }
 }
