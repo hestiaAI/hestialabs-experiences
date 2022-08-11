@@ -141,6 +141,11 @@ Your personal token is a secret that must not be shared with others. The shared 
 ### Bump version of packages changed since the last release
 
 ```sh
+# create a new branch and commit your changes
+git checkout -b <name-of-your-new-branch>
+git push origin <name-of-your-new-branch>
+git commit ...
+# update version in package.json, commit it, and push to branch
 npm run lerna:version
 ```
 
