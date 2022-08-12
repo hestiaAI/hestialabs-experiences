@@ -132,7 +132,7 @@ export default {
       'viewBlocks',
       'slug'
     ])
-    const viewConfig = pick(this.$store.getters.siteConfig, 'mapboxToken')
+    const viewConfig = this.$store.getters.siteViewConfig
     return {
       tab: null,
       fab: false,

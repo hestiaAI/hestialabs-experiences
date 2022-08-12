@@ -160,8 +160,7 @@ export default {
       return this.fileManager?.fileList.length > 0
     },
     viewConfig() {
-      const { mapboxToken } = this.$store.getters.siteConfig
-      return { mapboxToken }
+      return this.$store.getters.siteViewConfig
     }
   },
   methods: {
