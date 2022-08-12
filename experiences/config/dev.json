@@ -41,7 +41,8 @@
     "voi",
     "whatsapp",
     "wolt",
-    "youtube"
+    "youtube",
+    "explorer"
   ],
   "appBarLinks": [
     { "url": "/about", "name": "About" },
