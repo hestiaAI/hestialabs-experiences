@@ -110,6 +110,10 @@ export default {
       type: String,
       required: true
     },
+    viewConfig: {
+      type: Object,
+      default: () => ({})
+    },
     id: {
       type: String,
       required: true

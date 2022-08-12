@@ -91,7 +91,7 @@
                   <BaseProgressCircular size="64" width="4" />
                 </div>
               </VOverlay>
-              <UnitQuery v-bind="{slug, ...viewBlock}" />
+              <UnitQuery v-bind="{slug, viewConfig, ...viewBlock}" />
             </VCol>
           </VTabItem>
           <VTabItem
@@ -132,7 +132,7 @@ export default {
       'viewBlocks',
       'slug'
     ])
-
+    const viewConfig = pick(this.$store.getters.siteConfig, 'mapboxToken')
     return {
       tab: null,
       fab: false,
@@ -141,6 +141,7 @@ export default {
       success: false,
       message: '',
       overlay: false,
+      viewConfig,
       ...properties
     }
   },
