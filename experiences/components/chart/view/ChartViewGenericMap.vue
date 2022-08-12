@@ -109,6 +109,10 @@ export default {
       type: Object,
       default: () => null
     },
+    mapboxToken: {
+      type: String,
+      default: () => ''
+    },
     showButton: {
       type: Boolean,
       default: () => false
@@ -162,7 +166,8 @@ export default {
     keplerArgs() {
       return {
         keplerData: this.keplerData,
-        config: this.keplerConfig
+        config: this.keplerConfig,
+        mapboxToken: this.mapboxToken
       }
     }
   },

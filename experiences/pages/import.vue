@@ -97,12 +97,12 @@
               v-else-if="viz.endsWith('.vue')"
               :graph-name="viz"
               :data="result"
-              :viz-props="vizProps"
+              :viz-props="mergeWithViewConfig(vizProps, viz)"
             />
             <UnitIframe
               v-else-if="viz.startsWith('/')"
               :src="viz"
-              :data="result"
+              :args="mergeWithViewConfig(result, viz)"
             />
           </VCol>
         </VRow>
@@ -158,9 +158,16 @@ export default {
     },
     hasFileExplorer() {
       return this.fileManager?.fileList.length > 0
+    },
+    viewConfig() {
+      const { mapboxToken } = this.$store.getters.siteConfig
+      return { mapboxToken }
     }
   },
   methods: {
+    mergeWithViewConfig(obj, viz) {
+      return { ...obj, ...this.viewConfig }
+    },
     handleError(error, message) {
       console.error(error)
       this.error = true

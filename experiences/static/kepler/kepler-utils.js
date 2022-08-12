@@ -26,7 +26,7 @@ export const buildStore = function() {
   return store
 }
 
-export function init(containerElement, props = {}, store, mapboxToken) {
+export function init(containerElement, props = {}, store) {
   const KeplerElement = function(props) {
     return React.createElement(
       'div',
@@ -39,7 +39,7 @@ export function init(containerElement, props = {}, store, mapboxToken) {
         }
       },
       React.createElement(KeplerGl.KeplerGl, {
-        mapboxApiAccessToken: mapboxToken,
+        mapboxApiAccessToken: props.mapboxToken,
         id: 'map',
         width: props.width || 1200,
         height: props.height || 800

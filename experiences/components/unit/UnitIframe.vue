@@ -50,7 +50,8 @@ export default {
     onload() {
       const initParameters = {
         height: this.height,
-        width: (this.width = this.$refs.iframe.offsetWidth)
+        width: (this.width = this.$refs.iframe.offsetWidth),
+        ...this.args
       }
       this.callIframeFunction('init', initParameters)
       this.callIframeFunction('update', this.args)
