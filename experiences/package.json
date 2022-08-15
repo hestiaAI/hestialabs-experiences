@@ -90,6 +90,7 @@
     "d3-force-boundary": "^0.0.3",
     "d3-sankey": "^0.12.3",
     "d3-time-format": "^4.1.0",
+    "data-experience": "file:../data-experience",
     "dc": "^4.2.7",
     "dom-to-image-more": "^2.10.1",
     "file-saver": "^2.0.5",
