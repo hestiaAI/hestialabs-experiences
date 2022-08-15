@@ -20,8 +20,4 @@ export default ({ app }, inject) => {
     // tet -> Translation Exists (else) Translate fallback
     return i18n.te(key) ? i18n.t(key) : i18n.t(keyFallback)
   })
-  inject('tetv', (key, keyFallback, valueFallback) => {
-    // tet -> Translation Exists (else) Translate fallback (else) Value fallback
-    return i18n.te(key) ? i18n.t(key) : i18n.te(keyFallback) ? i18n.t(keyFallback) : valueFallback
-  })
 }

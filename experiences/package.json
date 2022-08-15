@@ -22,7 +22,7 @@
     "build:server": "nuxt build",
     "lint": "npx eslint . --ext .js,.vue",
     "lint:fix": "npx eslint . --ext .js,.vue --fix",
-    "pre-commit": "lint-staged",
+    "pre-commit": "npx lint-staged",
     "_prepare": "node prepare.js",
     "prettier": "prettier"
   },

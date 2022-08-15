@@ -32,7 +32,7 @@
             nuxt
             :to="`#${t.value}`"
           >
-            {{ $tetv(k(t.value), `${t.value}.name`, t.title) }}
+            {{ $tev(t.titleKey, t.title) }}
           </VTab>
         </VTabs>
         <VTabsItems v-model="tab">
@@ -152,6 +152,7 @@ export default {
         {
           title: 'Load your data',
           value: 'load-data',
+          titleKey: 'load-data.name',
           disabled: this.experienceProgress
         },
         ...(!this.hideSummary
@@ -159,6 +160,7 @@ export default {
               {
                 title: 'Summary',
                 value: 'summary',
+                titleKey: 'summary.name',
                 disabled
               }
             ]
@@ -168,6 +170,7 @@ export default {
               {
                 title: 'Files',
                 value: 'file-explorer',
+                titleKey: 'file-explorer.name',
                 disabled
               }
             ]
@@ -175,6 +178,7 @@ export default {
         ...this.viewBlocks.map(view => ({
           ...view,
           value: view.id,
+          titleKey: this.k(view.id),
           disabled,
           show: true
         }))
@@ -183,6 +187,7 @@ export default {
         tabs.push({
           title: 'Share my data',
           value: 'share-data',
+          titleKey: 'share-data.name',
           disabled
         })
       }

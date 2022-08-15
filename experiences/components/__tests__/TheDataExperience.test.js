@@ -73,8 +73,7 @@ test('mounts without error', () => {
       },
       $t: msg => defaultMessages.en[msg],
       $tev: msg => defaultMessages.en[msg],
-      $tet: msg => defaultMessages.en[msg],
-      $tetv: msg => defaultMessages.en[msg]
+      $tet: msg => defaultMessages.en[msg]
     }
   })
   expect(wrapper.exists()).toBeTruthy()
@@ -99,8 +98,7 @@ test('process simple text file', async() => {
       },
       $t: msg => defaultMessages.en[msg],
       $tev: msg => defaultMessages.en[msg],
-      $tet: msg => defaultMessages.en[msg],
-      $tetv: msg => defaultMessages.en[msg]
+      $tet: msg => defaultMessages.en[msg]
     }
   })
 
