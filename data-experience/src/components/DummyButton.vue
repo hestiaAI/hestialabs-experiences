@@ -2,26 +2,23 @@
   <div>
     <button @click="increment" style="background-color:grey">{{ text }}</button>
   </div>
-</template><script>
+</template>
+
+<script>
 export default {
-  data () {
-    return {
-      count: 0
-    }
-  },
   computed: {
     times () {
-      return this.count > 1
+      return this.$store.getters.counter > 1
         ? 'times'
         : 'time'
     },
     text () {
-      return `I have been clicked ${this.count} ${this.times}`
+      return `I have been clicked ${this.$store.getters.counter} ${this.times}`
     }
   },
   methods: {
     increment () {
-      this.count += 1
+      this.$store.commit('increment')
     }
   }
 }

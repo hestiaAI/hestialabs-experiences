@@ -4,11 +4,7 @@
   </div>
 </template>
 <script>
-import DummyButton from 'data-experience'
 export default {
-  name: 'Modul',
-  components: {
-    DummyButton
-  }
+  name: 'Modul'
 }
 </script>
