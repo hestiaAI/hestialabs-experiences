@@ -91,7 +91,7 @@
                   <BaseProgressCircular size="64" width="4" />
                 </div>
               </VOverlay>
-              <UnitQuery v-bind="{slug, viewConfig, ...viewBlock}" />
+              <UnitQuery v-bind="{slug, ...viewBlock}" />
             </VCol>
           </VTabItem>
           <VTabItem
@@ -132,7 +132,6 @@ export default {
       'viewBlocks',
       'slug'
     ])
-    const viewConfig = this.$store.getters.siteViewConfig
     return {
       tab: null,
       fab: false,
@@ -141,7 +140,6 @@ export default {
       success: false,
       message: '',
       overlay: false,
-      viewConfig,
       ...properties
     }
   },

@@ -37,10 +37,6 @@ export const getters = {
     return disabledExperiences
   },
   siteConfig: state => state.config,
-  siteViewConfig: (state) => {
-    const { mapboxToken } = state.config
-    return { mapboxToken }
-  },
   selectedPaths: state => state.fileExplorerCurrentItem.selectedPaths,
   routeConfig:
     state =>

@@ -39,8 +39,17 @@ export default {
       loaded: false
     }
   },
+  computed: {
+    finalArgs() {
+      const args = this.args
+      if (this.src === '/kepler') {
+        args.mapboxToken = this.$store.state.config.mapboxToken
+      }
+      return args
+    }
+  },
   watch: {
-    args(newArgs) {
+    finalArgs(newArgs) {
       if (this.loaded) {
         this.callIframeFunction('update', newArgs)
       }
@@ -51,10 +60,10 @@ export default {
       const initParameters = {
         height: this.height,
         width: (this.width = this.$refs.iframe.offsetWidth),
-        ...this.args
+        ...this.finalArgs
       }
       this.callIframeFunction('init', initParameters)
-      this.callIframeFunction('update', this.args)
+      this.callIframeFunction('update', this.finalArgs)
       this.loaded = true
     },
     callIframeFunction(functionName, ...args) {

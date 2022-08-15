@@ -109,10 +109,6 @@ export default {
       type: Object,
       default: () => null
     },
-    mapboxToken: {
-      type: String,
-      default: () => ''
-    },
     showButton: {
       type: Boolean,
       default: () => false
@@ -166,8 +162,7 @@ export default {
     keplerArgs() {
       return {
         keplerData: this.keplerData,
-        config: this.keplerConfig,
-        mapboxToken: this.mapboxToken
+        config: this.keplerConfig
       }
     }
   },
@@ -201,9 +196,7 @@ export default {
       this.results = this.values
       this.sliderValue = 0
     },
-    drawViz() {
-      console.log(this.$i18n.messages)
-    },
+    drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems
     }

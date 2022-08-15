@@ -80,12 +80,12 @@
                 v-else-if="vizVue"
                 :graph-name="vizVue"
                 :data="clonedResult"
-                :viz-props="mergeWithViewConfig(vizPropsTranslated)"
+                :viz-props="vizPropsTranslated"
               />
               <UnitIframe
                 v-else-if="vizUrl"
                 :src="vizUrl"
-                :args="mergeWithViewConfig(clonedResult)"
+                :args="clonedResult"
               />
             </VCol>
           </VRow>
@@ -109,10 +109,6 @@ export default {
     slug: {
       type: String,
       required: true
-    },
-    viewConfig: {
-      type: Object,
-      default: () => ({})
     },
     id: {
       type: String,
@@ -200,6 +196,10 @@ export default {
     vizPropsTranslated() {
       // translations override all props...
       // we trust that they only affect texts
+      // NOTE: This is only a shallow merge,
+      // and will not work for nested texts
+      // NOTE: deep merge with lodash.merge()
+      // causes a vuex mutation error
       return {
         ...this.vizProps,
         ...this.$tev(this.k('vizProps'), {})
@@ -207,9 +207,6 @@ export default {
     }
   },
   watch: {
-    mergeWithViewConfig(obj) {
-      return { ...obj, ...this.viewConfig }
-    },
     fileManager(value) {
       if (!value) {
         // When fileManager is reset,
@@ -222,9 +219,6 @@ export default {
     }
   },
   methods: {
-    mergeWithViewConfig(obj) {
-      return { ...obj, ...this.viewConfig }
-    },
     onUnitResultsUpdate({ result, error }) {
       let finalResult = result
       if (error) {

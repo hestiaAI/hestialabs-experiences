@@ -35,12 +35,6 @@ import mixin from './mixin'
 
 export default {
   mixins: [mixin],
-  props: {
-    mapboxToken: {
-      type: String,
-      default: () => ''
-    }
-  },
   data() {
     return {
       filteredRows: this.values,
@@ -73,8 +67,7 @@ export default {
     keplerArgs() {
       return {
         keplerData: this.keplerData,
-        config: null,
-        mapboxToken: this.mapboxToken
+        config: null
       }
     }
   },
