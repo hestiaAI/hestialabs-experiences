@@ -5,7 +5,7 @@
         <VCol cols="1" />
         <VCol cols="10">
           <VCardTitle class="justify-center">
-            {{ $tetv(k('title'),`${id}.title`, title) }}
+            {{ $tev(k('title'), title) }}
           </VCardTitle>
         </VCol>
         <VCol cols="1" align-self="center" class="full-height text-center">
@@ -31,7 +31,7 @@
       <VRow v-if="text">
         <VCol>
           <VContainer>
-            {{ $tetv(k('text'),`${id}.text`, text) }}
+            {{ $tev(k('text'), text) }}
           </VContainer>
         </VCol>
       </VRow>
