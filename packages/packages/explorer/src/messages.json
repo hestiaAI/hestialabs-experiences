@@ -2,10 +2,7 @@
   "en": {
     "intro": {
       "title": "Generic data experience",
-      "subtitle": "Explore data from anywhere!",
-      "title": "Facebook",
-      "dataPortal": "https://www.facebook.com/help/212802592074644",
-      "dataPortalMessage": "<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format."
+      "subtitle": "Explore data from anywhere!"
     }
   },
   "fr": {
