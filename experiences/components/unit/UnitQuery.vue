@@ -194,7 +194,16 @@ export default {
         .map(([glob, _]) => glob)
     },
     vizPropsTranslated() {
-      return { ...this.vizProps, ...this.$tev(this.k('vizProps'), {}) }
+      // translations override all props...
+      // we trust that they only affect texts
+      // NOTE: This is only a shallow merge,
+      // and will not work for nested texts
+      // NOTE: deep merge with lodash.merge()
+      // causes a vuex mutation error
+      return {
+        ...this.vizProps,
+        ...this.$tev(this.k('vizProps'), {})
+      }
     }
   },
   watch: {

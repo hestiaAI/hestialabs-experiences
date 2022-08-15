@@ -196,9 +196,7 @@ export default {
       this.results = this.values
       this.sliderValue = 0
     },
-    drawViz() {
-      console.log(this.$i18n.messages)
-    },
+    drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems
     }

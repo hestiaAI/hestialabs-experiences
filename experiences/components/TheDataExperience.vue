@@ -132,7 +132,6 @@ export default {
       'viewBlocks',
       'slug'
     ])
-
     return {
       tab: null,
       fab: false,
