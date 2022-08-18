@@ -1,0 +1,83 @@
+{
+  "en": {
+    "intro": {
+      "title": "Tinder",
+      "dataPortal": "https://account.gotinder.com/data"
+    },
+    "viewBlocks": {
+      "user": {
+        "title": "User infos",
+        "text": "Tinder profile information"
+      },
+      "app-opens-vue": {
+        "title": "Usage",
+        "text": "See the number of times that you opened the app per day.",
+        "vizProps": {
+          "title": "Application usage over time",
+          "legendLabel": "App Opened"
+        }
+      },
+      "likes-dislikes-vue": {
+        "title": "Likes and passes",
+        "text": "See the number of likes and passes that you made over time.",
+        "vizProps": {
+          "title": "Likes vs Passes over time"
+        }
+      },
+      "messages-activity": {
+        "title": "Messages",
+        "text": "See at what time of the day and week you send the most messages",
+        "vizProps": {
+          "label": "trips"
+        }
+      },
+      "donut": {
+        "title": "Comparison",
+        "text": "Compare the different actions you perform in the application."
+      },
+      "likes-dislikes-open": {
+        "title": "Likes / passes correlation",
+        "text": "Observe the possible correlation between the number of likes/passes and the number of times you open the app."
+      }
+    }
+  },
+  "fr": {
+    "intro": {
+      "title": "Tinder",
+      "dataPortal": "https://account.gotinder.com/data"
+    },
+    "viewBlocks": {
+      "user": {
+        "title": "Informations utilisat·eur·rice",
+        "text": "Informations du profil Tinder"
+      },
+      "app-opens-vue": {
+        "title": "Usage",
+        "text": "Nombre d'ouvertures de l'application par jour.",
+        "vizProps": {
+          "title": "Utilisation de l'application dans le temps",
+          "legendLabel": "App ouverte"
+        }
+      },
+      "likes-dislikes-vue": {
+        "title": "Likes et passes",
+        "text": "Nombre de likes et passes au cours du temps.",
+        "vizProps": {
+          "title": "Likes vs Passes au fil du temps"
+        }
+      },
+      "messages-activity": {
+        "title": "Messages",
+        "text": "Statistiques temporelles de vos messages"
+      },
+      "donut": {
+        "title": "Comparaison",
+        "text": "Comparaison des différentes actions que vous effectuez dans l'application."
+      },
+      "likes-dislikes-open": {
+        "title": "Corrélation Likes / passes",
+        "text": "Corrélation entre les nombres de likes et passes, et le nombre d'ouvertures de l'application."
+      }
+    }
+  }
+}

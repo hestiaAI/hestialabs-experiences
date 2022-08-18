@@ -6,7 +6,7 @@
     <p>Could not parse the file. Please use the "RAW" tab to visualise it.</p>
   </div>
   <div v-else>
-    <BaseSearchBar v-model="search" :loading="searching" />
+    <BaseSearchBar v-model="search" :loading="searching" :label="$t('file-explorer.content-search-name')" :placeholder="$t('file-explorer.content-search-placeholder')" />
     <VExpandTransition>
       <div v-show="foundItems.length > 0">
         <VDataTable
@@ -54,7 +54,7 @@
                 $vuetify.icons.mdiContentCopy
               </VIcon>
             </template>
-            <span>Copy accessor to clipboard</span>
+            <span>{{ $t(k('Copy accessor to clipboard')) }}</span>
           </VTooltip>
           <VTooltip bottom open-delay="200">
             <template #activator="{ on }">
@@ -62,7 +62,7 @@
                 $vuetify.icons.mdiTable
               </VIcon>
             </template>
-            <span>Show as table</span>
+            <span>{{ $t(k('Show as table')) }}</span>
           </VTooltip>
         </span>
       </template>
@@ -128,6 +128,9 @@ export default {
     }
   },
   methods: {
+    k(key) {
+      return `file-explorer.viewer.json.${key}`
+    },
     onFoundItemRowClick(item) {
       this.open = item.trail
     },

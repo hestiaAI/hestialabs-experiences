@@ -11,7 +11,7 @@
     </VRow>
     <VRow v-if="samples.length">
       <VCol align="center" class="font-weight-bold">
-        OR
+        {{ $t('unit-files.or') }}
       </VCol>
     </VRow>
     <VRow>
@@ -22,25 +22,25 @@
     <VRow>
       <VCol align="center">
         <BaseDialogButton
-          dialog-title="Decrypt Files"
+          :dialog-title="$t('decrypt-files.title')"
           tooltip-position="left"
-          tooltip-label="Decrypt Files"
+          :tooltip-label="$t('decrypt-files.title')"
           icon="mdiLockOpenVariant"
         >
           <VTextField
             v-model="privateKey"
-            label="Enter your secret key"
+            :label="$t('decrypt-files.sk-label')"
             clearable
           />
           <VTextField
             v-model="publicKey"
-            label="Enter your public key (optional)"
+            :label="$t('decrypt-files.pk-label')"
             clearable
           />
         </BaseDialogButton>
         <BaseButton
           v-bind="{ disabled, progress, status, error }"
-          text="Explore your data"
+          text="unit-files.run-btn"
           icon="mdiStepForward"
           class="my-sm-2 mr-sm-4"
           @click="returnFiles"
@@ -52,7 +52,7 @@
       <VCol>
         <template v-if="progress">
           <BaseProgressCircular class="mr-2" />
-          <span>Processing files...</span>
+          <span>{{ $t('unit-files.process-msg') }}</span>
         </template>
         <template v-else-if="error || success">
           <BaseAlert
@@ -75,11 +75,20 @@ import { mapState } from 'vuex'
 import Uppy from '@uppy/core'
 import Dashboard from '@uppy/dashboard'
 import DropTarget from '@uppy/drop-target'
-import { decryptBlob } from '~/utils/encryption'
 
 import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/drop-target/dist/style.css'
+
+import English from '@uppy/locales/lib/en_US'
+import French from '@uppy/locales/lib/fr_FR'
+
+import { decryptBlob } from '@/utils/encryption'
+
+const locales = {
+  en: English,
+  fr: French
+}
 
 async function fetchSampleFile({ path, filename }) {
   const response = await window.fetch(path)
@@ -108,14 +117,9 @@ export default {
     }
   },
   data() {
-    const config = {
-      debug: false,
-      allowMultipleUploads: true,
-      locale: { strings: { cancel: 'Clear all' } }
-    }
     const { files, dataSamples } = this.$store.getters.experience(this.$route)
     return {
-      uppy: new Uppy(config),
+      uppy: null,
       samples: [],
       selectedSamples: [],
       filesEmpty: true,
@@ -195,6 +199,21 @@ export default {
     }
   },
   mounted() {
+    const stringsOverride = {
+      en: {
+        cancel: 'Clear all'
+      },
+      fr: {
+        cancel: 'Effacer tout'
+      }
+    }
+
+    const config = {
+      debug: false,
+      allowMultipleUploads: true,
+      locale: locales[this.$i18n.locale]
+    }
+    this.uppy = new Uppy(config)
     this.uppy
       .use(Dashboard, {
         target: this.$refs.dashboard,
@@ -203,7 +222,10 @@ export default {
         hideUploadButton: true,
         proudlyDisplayPoweredByUppy: false,
         theme: 'light',
-        height: 300
+        height: 300,
+        locale: {
+          strings: stringsOverride[this.$i18n.locale]
+        }
       })
       // allow dropping files anywhere on the page
       .use(DropTarget, { target: document.body })

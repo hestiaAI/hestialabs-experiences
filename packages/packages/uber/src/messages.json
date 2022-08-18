@@ -1,0 +1,44 @@
+{
+  "en": {
+    "intro": {
+      "title": "Uber",
+      "subtitle": "Customer data",
+      "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download"
+    },
+    "viewBlocks": {
+      "tripsData": {
+        "title": "Uber overview",
+        "text": "This interactive visualisation shows your Uber habits, play with it to discover everything Uber knows on you. Your data is grouped by currency and every graph is filterable."
+      },
+      "tripsGraphData": {
+        "title": "Uber Trips",
+        "text": "Get information about the places you have visited the most or from which you originate the most."
+      },
+      "tripsKeplerData": {
+        "title": "Map of trips",
+        "text": "See where you travelled"
+      }
+    }
+  },
+  "fr": {
+    "intro": {
+      "title": "Uber",
+      "subtitle": "Données clients",
+      "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download"
+    },
+    "viewBlocks": {
+      "tripsData": {
+        "title": "Vue d'ensemble",
+        "text": "Visulalisation interactive de vos habitudes sur Uber. Les données se regroupent par devise, et l'on peut ajouter des filtres sur les graphiques."
+      },
+      "tripsGraphData": {
+        "title": "Trajets",
+        "text": "Informations sur vos destinations et points de départ."
+      },
+      "tripsKeplerData": {
+        "title": "Carte de trajets",
+        "text": "Visualisation géographique de vos trajets"
+      }
+    }
+  }
+}

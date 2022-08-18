@@ -8,14 +8,14 @@
   >
     <VCard>
       <VCardTitle class="text-h5 grey lighten-2">
-        Select files
+        {{ $t(k('title')) }}
       </VCardTitle>
 
       <VCardText>
         <VTextField
           v-model="search"
-          label="Search for files"
-          placeholder="Enter part of a file name..."
+          :label="$t(k('label'))"
+          :placeholder="$t(k('placeholder'))"
           clearable
           hide-details
           prepend-icon="$vuetify.icons.mdiMagnify"
@@ -53,7 +53,7 @@
       <VCardActions>
         <VSpacer />
         <VBtn color="primary" text @click="clear">
-          Clear selection
+          {{ $t(k('clearButton')) }}
         </VBtn>
         <VBtn color="primary" text @click="ok">
           OK
@@ -65,6 +65,7 @@
 
 <script>
 import { mapState } from 'vuex'
+
 export default {
   props: {
     value: {
@@ -109,6 +110,9 @@ export default {
     }
   },
   methods: {
+    k(key) {
+      return `unit-consent-form.select-files-dialog.${key}`
+    },
     ok() {
       this.show = false
       this.updateCheckboxOnReturn(false)

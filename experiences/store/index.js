@@ -127,12 +127,8 @@ export const actions = {
     if (!state.loaded) {
       let configOverride = {}
       try {
-        configOverride = await $axios.$get(
-          '/config.json',
-          {
-            baseURL: process.env.baseUrl
-          }
-        )
+        const confResp = await fetch('/config.json')
+        configOverride = await confResp.json()
       } catch {
         if (!isDev) {
           console.info('configOverride not found')

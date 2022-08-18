@@ -4,7 +4,7 @@
       <div v-if="experiences.length" :key="index">
         <div class="mt-6 mb-4">
           <template v-if="collaborator && groupByCollaborator">
-            <span class="text-overline">Made for</span>
+            <span class="text-overline">{{ $t('Made for') }}</span>
             <CollaboratorLink v-if="collaborator" :collaborator="collaborator" :width="250" />
           </template>
           <template v-else>
@@ -61,7 +61,7 @@ export default {
         {
           experiences: this.filterExperiences(this.disabledExperiences),
           heading: `
-              Available on-demand (<a href="mailto:contact@hestialabs.org">Contact us</a>)
+              ${this.$t('Available on-demand')} (<a target="_blank" rel="noopener noreferrer" href="mailto:contact@hestialabs.org">${this.$t('Contact us')}</a>)
             `
         }
       )
@@ -80,7 +80,7 @@ export default {
         return {
           experiences,
           collaborator,
-          heading: collaborator?.title || 'Public experiences'
+          heading: collaborator?.title || this.$t('Public experiences')
         }
       })
     },

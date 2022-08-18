@@ -24,7 +24,7 @@
         </g>
 
         <g class="hour-axis">
-          <text y="-20" :x="(hours.length / 2 + 0.5) * cellSize">Hours</text>
+          <text y="-20" :x="(hours.length / 2 + 0.5) * cellSize">{{ $t('hour') }}s</text>
           <text
             v-for="h in hours"
             :key="`h_${h}`"

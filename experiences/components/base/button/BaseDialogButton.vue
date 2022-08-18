@@ -18,7 +18,7 @@
       <VCardActions>
         <VSpacer />
         <VBtn color="primary" text @click="show = false">
-          Close
+          {{ $t('Close') }}
         </VBtn>
       </VCardActions>
     </VCard>

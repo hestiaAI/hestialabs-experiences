@@ -141,7 +141,6 @@ export default {
         tqwsxjb: {
           accessToken: null,
           custom: true,
-          icon: 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-122.3391,37.7922,9,0,0/400x300?access_token=pk.eyJ1IjoidWNmLW1hcGJveCIsImEiOiJja2tyMjNhcWIwc29sMnVzMThoZ3djNXhzIn0._hfBNwCD7pCU7RAMOq6vUQ&logo=false&attribution=false',
           id: 'tqwsxjb',
           label: 'Mapbox Streets',
           url: 'mapbox://styles/mapbox/streets-v11'

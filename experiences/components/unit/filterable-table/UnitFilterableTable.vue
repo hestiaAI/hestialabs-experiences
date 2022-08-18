@@ -29,7 +29,9 @@
           />
         </template>
         <template #item.url="{ value }">
-          <a target="_blank" rel="noreferrer noopener" :href="value"> Link </a>
+          <ExternalLink :href="value">
+            Link
+          </ExternalLink>
         </template>
         <template
           v-for="header in data.headers.filter(h => h.value !== 'url')"

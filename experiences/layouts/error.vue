@@ -6,7 +6,7 @@
       </h1>
       <LogoImg max-width="300" class="my-12" />
 
-      <BaseButton nuxt to="/" icon="mdiHome" text="Home page" />
+      <BaseButton nuxt :to="localePath('index')" icon="mdiHome" text="Home page" />
     </VRow>
   </VContainer>
 </template>

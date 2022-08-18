@@ -1,0 +1,36 @@
+{
+  "en": {
+    "intro": {
+      "title": "Netflix"
+    },
+    "viewBlocks": {
+      "watchOverview": {
+        "title": "Viewing activity",
+        "text": "Get an overview of how you use Netflix and what information is stored about you."
+      },
+      "notifications": {
+        "title": "Notifications",
+        "text": "See how many times Netflix sent you notifications"
+      }
+    }
+  },
+  "fr": {
+    "intro": {
+      "title": "Netflix"
+    },
+    "viewBlocks": {
+      "watchOverview": {
+        "title": "Historique de visionnage",
+        "text": "Vue d'ensemble de vos habitudes d'utilisation de Netflix et des informations enregistrées à propos de vous."
+      },
+      "notifications": {
+        "title": "Notifications",
+        "text": "Historique des notifications que Netflix vous a envoyées.",
+        "vizProps": {
+          "title": "Notifications envoyées par Netflix",
+          "yLabel": "total"
+        }
+      }
+    }
+  }
+}

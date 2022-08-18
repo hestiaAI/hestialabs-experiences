@@ -2,8 +2,8 @@
   <VTextField
     :value="value"
     prepend-icon="$vuetify.icons.mdiMagnify"
-    :label="label"
-    :placeholder="placeholder"
+    :label="$t(label)"
+    :placeholder="$t(placeholder)"
     single-line
     hide-details
     clearable

@@ -10,17 +10,17 @@
                   <template #activator="{ on, attrs }">
                     <strong v-bind="attrs" v-on="on">Application</strong>
                   </template>
-                  <span>The app accessing the resource.</span>
+                  <span>{{ $t('chart-view.ios-access.app-info') }}</span>
                 </VTooltip>
                 <VSpacer />
                 <div :id="`app-search-${graphId}`" />
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none">{{ $t('reset') }}</a>
               </p>
             </div>
           </VCol>
@@ -31,22 +31,21 @@
                   <template #activator="{ on, attrs }">
                     <strong v-bind="attrs" v-on="on">Resource</strong>
                   </template>
-                  <span>The accessed resource.</span>
+                  <span>{{ $t('chart-view.ios-access.resource-info') }}</span>
                 </VTooltip>
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none">{{ $t('reset') }}</a>
               </p>
             </div>
           </VCol>
         </VRow>
         <p v-if="config.consent">
-          Any filtering you do will also limit what data is shared into the pool
-          if you share this tab on the 'Share My Data' tab.
+          {{ $t('filter-info') }}
         </p>
       </VCol>
     </ChartViewVRowWebShare>
@@ -101,7 +100,7 @@ export default {
     createTopRowChart(ndx, fieldAccessor, valueAccessor) {
       // Create and bind charts to their respective divs
       const chart = new dc.RowChart(`#${fieldAccessor}-chart-${this.graphId}`)
-      const search = new dc.TextFilterWidget(
+      const search = this.createTextFilterWidget(
         `#${fieldAccessor}-search-${this.graphId}`
       )
 
@@ -229,11 +228,10 @@ export default {
         .groupAll(all)
         .html({
           some:
-            '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
-            " | <a class='resetAll'>Reset All</a>",
+            `<strong>%filter-count</strong> ${this.$t('selected-out-of')} <strong>%total-count</strong> ` +
+            ` | <a class='resetAll'>${this.$t('Reset All')}</a>`,
           all:
-            'All <strong>%total-count</strong> records' +
-            ' selected. You can filter this data by clicking on each graph or using the table filters or search box.'
+            `Total: <strong>%total-count</strong>. ${this.$t('click-graph')}`
         })
         .on('pretransition', (chart, filter) => {
           this.results = allDim.top(all.value())
