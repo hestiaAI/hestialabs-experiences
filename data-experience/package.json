@@ -6,10 +6,17 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "build-lib": "vue-cli-service build --target lib --name data-experience src/main.js",
+    "build-lib-watch": "vue-cli-service build --watch --target lib --name data-experience src/main.js",
     "lint": "vue-cli-service lint"
   },
   "main": "dist/data-experience.common.js",
   "dependencies": {
+    "d3": "^7.6.1",
+    "d3-collection": "^1.0.7",
+    "d3-force-boundary": "^0.0.3",
+    "d3-sankey": "^0.12.3",
+    "d3-time-format": "^4.1.0",
+    "dc": "^4.2.7",
     "core-js": "^3.8.3",
     "vue": "^2.6.14"
   },

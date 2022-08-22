@@ -200,7 +200,7 @@ export default {
   },
   methods: {
     initFilters() {
-      this.filters.forEach((filter, i) => {
+      this.filters.forEach((filter) => {
         this.filterItems[filter.value] = []
         // get unique ids and set items for each filter select
         this.filterItems[filter.value] = this.values
@@ -246,6 +246,8 @@ export default {
       })
     },
     drawViz() {
+
+      console.log('timeViewSeries says hello')
       /* Init the possible aggregations dpending on dates extent */
       if (this.dateFormat) {
         this.dateParser = d3.timeParse(this.dateFormat)

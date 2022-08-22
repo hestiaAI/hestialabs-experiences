@@ -9,6 +9,7 @@ import mixin from './mixin'
 // somewhat inspired by
 // https://bost.ocks.org/mike/chart/
 function barChart() {
+  console.log('barChart says hello')
   let width = 440
   let height = 120
   function chart(selection) {

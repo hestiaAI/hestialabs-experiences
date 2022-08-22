@@ -1,4 +1,10 @@
-# experience-component
+# data-experience
+
+## build library
+
+```
+npm run build-lib
+```
 
 ## Project setup
 ```
