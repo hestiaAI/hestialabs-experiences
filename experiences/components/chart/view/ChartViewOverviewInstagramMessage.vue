@@ -189,7 +189,7 @@ export default {
       // Create dimensions
       const all = ndx.groupAll()
       const dayOfWeekDimension = ndx.dimension((d) => {
-        const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        const name = this.$days()
         return `${name[d.weekDay]}`
       })
       const userDimension = ndx.dimension(d => d.senderName)
@@ -245,26 +245,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function(d) {
-        switch (d.key) {
-          case 'Mon':
-            return 0
-          case 'Tue':
-            return 1
-          case 'Wed':
-            return 2
-          case 'Thu':
-            return 3
-          case 'Fri':
-            return 4
-          case 'Sat':
-            return 5
-          case 'Sun':
-            return 6
-          default:
-            return 0
-        }
-      })
+      weekChart.ordering(d => this.$days().indexOf(d.key))
 
       // Render user row chart
       userChart

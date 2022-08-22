@@ -2,7 +2,7 @@
   <VContainer>
     <VRow class="justify-center">
       <p>
-        Select data depending on the currency
+        <span v-t="k('select-currency')" />
         <VSelect
           v-model="currentCurrency"
           :items="currencies"
@@ -15,11 +15,11 @@
         <VRow>
           <VCol cols="12" md="12">
             <div id="price-chart">
-              <strong>Cumulative expenses</strong>
+              <strong v-t="k('Cumulative expenses')" />
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
-                  Current filter:
+                  <span v-t="'Current filter'" />
                   <span class="filter" />
                 </span>
               </p>
@@ -29,7 +29,7 @@
                 class="muted pull-right text-subtitle-2"
                 style="margin-right: 15px; margin-bottom: 5px"
               >
-                {{ $t('select-time-range') }}
+                <span v-t="'select-time-range'" />
                 <a class="reset" style="display: none">reset</a>
               </p>
             </div>
@@ -38,11 +38,11 @@
         <VRow>
           <VCol cols="12" md="4">
             <div id="service-chart">
-              <strong>Service used</strong>
+              <strong v-t="k('Service used')" />
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
-                  Current filter:
+                  <span v-t="'Current filter'" />
                   <span class="filter" />
                 </span>
               </p>
@@ -50,11 +50,11 @@
           </VCol>
           <VCol cols="12" md="4">
             <div id="week-chart">
-              <strong>Day of week</strong>
+              <strong v-t="k('Day of week')" />
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
-                  Current filter:
+                  <span v-t="'Current filter'" />
                   <span class="filter" />
                 </span>
               </p>
@@ -62,11 +62,11 @@
           </VCol>
           <VCol cols="12" md="4">
             <div id="address-chart">
-              <strong>Begin trip address</strong>
+              <strong v-t="k('Begin trip address')" />
               <a class="reset" style="display: none">reset</a>
               <p class="filters">
                 <span>
-                  Current filter:
+                  <span v-t="'Current filter'" />
                   <span class="filter" />
                 </span>
               </p>
@@ -76,7 +76,7 @@
       </VCol>
       <VCol cols="12" md="4">
         <VCard class="general-info">
-          <VCardTitle>General information</VCardTitle>
+          <VCardTitle v-t="k('General information')" />
           <VCardSubtitle />
           <VCardText>
             <VContainer>
@@ -111,17 +111,13 @@
               <thead>
                 <tr>
                   <th class="text-left" />
-                  <th class="text-left">
-                    Total
-                  </th>
-                  <th class="text-left">
-                    Average
-                  </th>
+                  <th v-t="k('Total')" class="text-left" />
+                  <th v-t="k('Average')" class="text-left" />
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>Price</strong></td>
+                  <td><strong v-t="k('Price')" /></td>
                   <td>
                     <span id="number-price-total" class="text-h6" />
                     <br>
@@ -134,51 +130,51 @@
                   </td>
                 </tr>
                 <tr>
-                  <td><strong>Distance</strong></td>
+                  <td><strong v-t="k('Distance')" /></td>
                   <td>
                     <span id="number-distance-total" class="text-h6" />
                     <br>
-                    <span class="text-subtitle-2">miles</span>
+                    <span v-t="k('miles')" class="text-subtitle-2" />
                   </td>
                   <td>
                     <span id="number-distance-avg" class="text-h6" />
                     <br>
-                    <span class="text-subtitle-2">miles</span>
+                    <span v-t="k('miles')" class="text-subtitle-2" />
                   </td>
                 </tr>
                 <tr>
-                  <td><strong>Duration</strong></td>
+                  <td><strong v-t="k('Duration')" /></td>
                   <td>
                     <span id="number-duration-total" class="text-h6" />
                     <br>
-                    <span class="text-subtitle-2">min</span>
+                    <span v-t="k('min')" class="text-subtitle-2" />
                   </td>
                   <td>
                     <span id="number-duration-avg" class="text-h6" />
                     <br>
-                    <span class="text-subtitle-2">min</span>
+                    <span v-t="k('min')" class="text-subtitle-2" />
                   </td>
                 </tr>
                 <tr>
-                  <td><strong>Waiting time</strong></td>
+                  <td><strong v-t="k('Waiting time')" /></td>
                   <td>
                     <span id="number-waiting-total" class="text-h6" />
                     <br>
-                    <span class="text-subtitle-2">min</span>
+                    <span v-t="k('min')" class="text-subtitle-2" />
                   </td>
                   <td>
                     <span id="number-waiting-avg" class="text-h6" />
                     <br>
-                    <span class="text-subtitle-2">min</span>
+                    <span v-t="k('min')" class="text-subtitle-2" />
                   </td>
                 </tr>
               </tbody>
             </VSimpleTable>
           </VCardText>
           <VCardActions>
-            <VBtn elevation="2" block @click="resetAll()">
-              Reset all filters
-            </VBtn>
+            <BaseButton elevation="2" block @click="resetAll()">
+              {{ $t(k('Reset all filters')) }}
+            </BaseButton>
           </VCardActions>
         </VCard>
       </VCol>
@@ -206,17 +202,17 @@ export default {
   data() {
     return {
       header: [
-        { text: 'City', value: 'city' },
-        { text: 'Service', value: 'service' },
-        { text: 'Status', value: 'tripOrOrderStatus' },
-        { text: 'Request Time', value: 'dateRequestStr' },
-        { text: 'From', value: 'beginTripAddress' },
-        { text: 'To', value: 'dropoffAddress' },
-        { text: 'Waiting time (min)', value: 'waitingTime' },
-        { text: 'Distance (miles)', value: 'distanceMiles' },
-        { text: 'Duration (min)', value: 'duration' },
-        { text: 'Price', value: 'priceStr' }
-      ],
+        ['City', 'city'],
+        ['Service', 'service'],
+        ['Status', 'tripOrOrderStatus'],
+        ['Request Time', 'dateRequestStr'],
+        ['From', 'beginTripAddress'],
+        ['To', 'dropoffAddress'],
+        ['Waiting time (min)', 'waitingTime'],
+        ['Distance (miles)', 'distanceMiles'],
+        ['Duration (min)', 'duration'],
+        ['Price', 'priceStr']
+      ].map(([text, value]) => ({ text: this.$t(this.k(`columns.${text}`)), value })),
       results: [],
       currencies: [],
       currentCurrency: null,
@@ -224,6 +220,9 @@ export default {
     }
   },
   methods: {
+    k(key) {
+      return `chart-view.overview-uber.${key}`
+    },
     filterCurrency(newCurr) {
       this.currencyDimension.filter(newCurr)
       this.currentCurrency = newCurr
@@ -251,7 +250,7 @@ export default {
 
       // Parse and format data
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC')
-      const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
+      const formatTime = d3.timeFormat(`%B %d, %Y ${this.$t('at')} %H:%M:%S`)
       this.results.forEach((d) => {
         d.service =
           d.productType.charAt(0).toUpperCase() + d.productType.slice(1)
@@ -315,7 +314,7 @@ export default {
       const allDimension = ndx.groupAll()
       const dayOfWeekDimension = ndx.dimension((d) => {
         const day = d.dateStart.getDay()
-        const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        const name = this.$days()
         return `${name[day]}`
       })
       const serviceDimension = ndx.dimension(d => d.service)
@@ -458,26 +457,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function(d) {
-        switch (d.key) {
-          case 'Mon':
-            return 0
-          case 'Tue':
-            return 1
-          case 'Wed':
-            return 2
-          case 'Thu':
-            return 3
-          case 'Fri':
-            return 4
-          case 'Sat':
-            return 5
-          case 'Sun':
-            return 6
-          default:
-            return 0
-        }
-      })
+      weekChart.ordering(d => this.$days().indexOf(d.key))
 
       // Render service pie chart
       serviceChart
@@ -546,7 +526,7 @@ export default {
           strokeOpaaddress: 0.0
         })
         .clipPadding(10)
-        .yAxisLabel('Total price')
+        .yAxisLabel(this.$t(this.k('Total price')))
         .brushOn(true)
         .ordinalColors(colorPalette)
       priceChart.xAxis().ticks(10)

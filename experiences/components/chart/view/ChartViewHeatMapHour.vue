@@ -13,7 +13,7 @@
       <g :transform="`translate(40.5,${cellSize * 1.5})`">
         <g class="week-axis">
           <text
-            v-for="(d, idx) in weekDays"
+            v-for="(d, idx) in $days()"
             :key="`d_${idx}`"
             x="-5"
             :y="(idx + 0.5) * cellSize"
@@ -133,7 +133,6 @@ export default {
   },
   data() {
     return {
-      weekDays: ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat'],
       hours: d3.range(24),
       colorPalette: d3.interpolateRdPu
     }
@@ -143,7 +142,7 @@ export default {
       return this.cellSize * (this.hours.length + 3)
     },
     height() {
-      return this.cellSize * (this.weekDays.length + 4)
+      return this.cellSize * (this.$days().length + 4)
     },
     viewBox() {
       return `0 0 ${this.width} ${this.height}`
