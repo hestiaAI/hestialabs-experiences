@@ -5,8 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build-lib": "vue-cli-service build --target lib --name vtfw4 src/lib.js",
     "lint": "vue-cli-service lint"
   },
+  "main": "dist/vtfw4.common.js",
   "dependencies": {
     "core-js": "^3.6.5",
     "vue": "^2.6.11",

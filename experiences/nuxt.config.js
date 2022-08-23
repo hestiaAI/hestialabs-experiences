@@ -55,7 +55,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/injected.js', '@/plugins/api.js', { src: '@/plugins/i18n.js' }, '@/plugins/data-experience.js', '@/plugins/vtfcomponent.js'],
+  plugins: ['@/plugins/injected.js', '@/plugins/api.js', { src: '@/plugins/i18n.js' }, '@/plugins/data-experience.js', '@/plugins/vtfw4.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: [
