@@ -15,8 +15,8 @@
         <VRow>
           <VCol cols="12" md="12">
             <div id="price-chart">
-              <strong v-t="k('Cumulative expenses')" />
-              <a class="reset" style="display: none">reset</a>
+              <span v-t="k('Cumulative expenses')" class="text-bold" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
                   <span v-t="'Current filter'" />
@@ -30,7 +30,7 @@
                 style="margin-right: 15px; margin-bottom: 5px"
               >
                 <span v-t="'select-time-range'" />
-                <a class="reset" style="display: none">reset</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -38,8 +38,8 @@
         <VRow>
           <VCol cols="12" md="4">
             <div id="service-chart">
-              <strong v-t="k('Service used')" />
-              <a class="reset" style="display: none">reset</a>
+              <span v-t="k('Service used')" class="text-bold" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
                   <span v-t="'Current filter'" />
@@ -50,8 +50,8 @@
           </VCol>
           <VCol cols="12" md="4">
             <div id="week-chart">
-              <strong v-t="k('Day of week')" />
-              <a class="reset" style="display: none">reset</a>
+              <span v-t="k('Day of week')" class="text-bold" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
                   <span v-t="'Current filter'" />
@@ -62,8 +62,8 @@
           </VCol>
           <VCol cols="12" md="4">
             <div id="address-chart">
-              <strong v-t="k('Begin trip address')" />
-              <a class="reset" style="display: none">reset</a>
+              <span v-t="k('Begin trip address')" class="text-bold" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
                   <span v-t="'Current filter'" />
@@ -83,92 +83,52 @@
               <VRow dense>
                 <VCol cols="12" md="6">
                   <VCard color="#385F73" dark>
-                    <VCardTitle class="text-h6">
-                      Orders
-                    </VCardTitle>
+                    <VCardTitle v-t="k('Orders')" class="justify-center text-caption" />
                     <VCardSubtitle />
                     <VCardText class="text-h4 text-center">
-                      <div><strong id="number-trip" /></div>
-                      <span class="text-subtitle-1">trips</span>
+                      <div id="number-trip" />
+                      <span v-t="k('trips')" class="text-subtitle-1" />
                     </VCardText>
                   </VCard>
                 </VCol>
                 <VCol cols="12" md="6">
                   <VCard color="#385F73" dark>
-                    <VCardTitle class="text-h6">
-                      Speed
-                    </VCardTitle>
+                    <VCardTitle v-t="k('Speed')" class="justify-center text-caption" />
                     <VCardSubtitle />
                     <VCardText class="text-h4 text-center">
-                      <div><strong id="number-speed-avg" /></div>
-                      <span class="text-subtitle-1">mph</span>
+                      <div id="number-speed-avg" class="text-bold" />
+                      <span v-t="k('mph')" class="text-subtitle-1" />
                     </VCardText>
                   </VCard>
                 </VCol>
               </VRow>
             </VContainer>
-            <VSimpleTable>
-              <thead>
-                <tr>
-                  <th class="text-left" />
-                  <th v-t="k('Total')" class="text-left" />
-                  <th v-t="k('Average')" class="text-left" />
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong v-t="k('Price')" /></td>
-                  <td>
-                    <span id="number-price-total" class="text-h6" />
-                    <br>
-                    <span class="text-subtitle-2">{{ currentCurrency }}</span>
-                  </td>
-                  <td>
-                    <span id="number-price-avg" class="text-h6" />
-                    <br>
-                    <span class="text-subtitle-2">{{ currentCurrency }}</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong v-t="k('Distance')" /></td>
-                  <td>
-                    <span id="number-distance-total" class="text-h6" />
-                    <br>
-                    <span v-t="k('miles')" class="text-subtitle-2" />
-                  </td>
-                  <td>
-                    <span id="number-distance-avg" class="text-h6" />
-                    <br>
-                    <span v-t="k('miles')" class="text-subtitle-2" />
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong v-t="k('Duration')" /></td>
-                  <td>
-                    <span id="number-duration-total" class="text-h6" />
-                    <br>
-                    <span v-t="k('min')" class="text-subtitle-2" />
-                  </td>
-                  <td>
-                    <span id="number-duration-avg" class="text-h6" />
-                    <br>
-                    <span v-t="k('min')" class="text-subtitle-2" />
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong v-t="k('Waiting time')" /></td>
-                  <td>
-                    <span id="number-waiting-total" class="text-h6" />
-                    <br>
-                    <span v-t="k('min')" class="text-subtitle-2" />
-                  </td>
-                  <td>
-                    <span id="number-waiting-avg" class="text-h6" />
-                    <br>
-                    <span v-t="k('min')" class="text-subtitle-2" />
-                  </td>
-                </tr>
-              </tbody>
+            <VSimpleTable dense>
+              <template #default>
+                <thead>
+                  <tr>
+                    <th class="text-left" />
+                    <th v-t="k('Total')" class="text-left" />
+                    <th v-t="k('Average')" class="text-left" />
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td v-t="k('Price')" class="text-bold" />
+                    <td class="text-h6" v-text="priceTotalNumber" />
+                    <td class="text-h6" v-text="priceAvgNumber" />
+                  </tr>
+                  <tr
+                    v-for="{ heading, ids, metric } in generalInformationRows"
+                    :key="heading"
+                  >
+                    <td v-t="k(heading)" />
+                    <td v-for="id in ids" :key="id">
+                      <span :id="id" class="text-h6" /> <span v-t="k(metric)" />
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
             </VSimpleTable>
           </VCardText>
           <VCardActions>
@@ -192,6 +152,7 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
+import { findNumberFormatIETFCode } from '@/vue-i18n-number-formats'
 // import regression from 'regression'
 
 // Remove warning on default colorscheme, even if not used..
@@ -212,16 +173,33 @@ export default {
         ['Distance (miles)', 'distanceMiles'],
         ['Duration (min)', 'duration'],
         ['Price', 'priceStr']
-      ].map(([text, value]) => ({ text: this.$t(this.k(`columns.${text}`)), value })),
+      ].map(([text, value]) => ({ text: this.$t(this.k(text, 'columns')), value })),
+      generalInformationRows: [{
+        heading: 'Distance',
+        metric: 'miles',
+        ids: ['number-distance-total', 'number-distance-avg']
+      },
+      {
+        heading: 'Duration',
+        metric: 'min',
+        ids: ['number-duration-total', 'number-duration-avg']
+      },
+      {
+        heading: 'Waiting time',
+        metric: 'min',
+        ids: ['number-waiting-total', 'number-waiting-avg']
+      }],
       results: [],
       currencies: [],
       currentCurrency: null,
-      currencyDimension: null
+      currencyDimension: null,
+      priceAvgNumber: null,
+      priceTotalNumber: null
     }
   },
   methods: {
-    k(key) {
-      return `chart-view.overview-uber.${key}`
+    k(key, prefix = '') {
+      return `chart-view.overview-uber.${prefix ? `${prefix}.` : ''}${key}`
     },
     filterCurrency(newCurr) {
       this.currencyDimension.filter(newCurr)
@@ -264,7 +242,8 @@ export default {
         d.hour = d3.timeHour(d.dateStart).getHours()
         d.duration = d3.timeMinute.count(d.dateStart, d.dateEnd)
         d.waitingTime = d3.timeMinute.count(d.dateRequest, d.dateStart)
-        d.priceStr = d.fareAmount + d.fareCurrency
+        // https://kazupon.github.io/vue-i18n/guide/number.html#number-localization
+        d.priceStr = this.$n(Number(d.fareAmount), 'currency', findNumberFormatIETFCode(d.fareCurrency))
         d.price = +d.fareAmount
         d.distance = +d.distanceMiles
         d.address = d.beginTripAddress.replace(/[0-9]/g, '').split(',')[0]
@@ -278,8 +257,6 @@ export default {
       const addressChart = new dc.RowChart('#address-chart')
       const tripNumber = new dc.NumberDisplay('#number-trip')
       const speedNumber = new dc.NumberDisplay('#number-speed-avg')
-      const priceAvgNumber = new dc.NumberDisplay('#number-price-avg')
-      const priceTotalNumber = new dc.NumberDisplay('#number-price-total')
       const distanceTotalNumber = new dc.NumberDisplay('#number-distance-total')
       const distanceAvgNumber = new dc.NumberDisplay('#number-distance-avg')
       const durationTotalNumber = new dc.NumberDisplay('#number-duration-total')
@@ -361,8 +338,13 @@ export default {
 
       this.currentCurrency = currencyGroup.top(1)[0].key
       this.currencyDimension.filter(this.currentCurrency)
-      currencyGroup.top(Infinity).forEach((d) => {
-        this.currencies.push(d.key)
+      currencyGroup.top(Infinity).forEach(({ key }) => {
+        const currencySymbol = this.$n(undefined, 'currency', findNumberFormatIETFCode(key)).replace(/\s*NaN\s*/, '')
+        const text = currencySymbol ? `${key} (${currencySymbol})` : key
+        this.currencies.push({
+          value: key,
+          text
+        })
       })
 
       // Render general Information numbers
@@ -379,16 +361,19 @@ export default {
           return p.durationTotal ? (p.distanceTotal * 60) / p.durationTotal : 0
         })
         .formatNumber(d3.format('.1f'))
-      priceAvgNumber
-        .group(allGroup)
-        .valueAccessor((p) => {
-          return p.count ? p.priceTotal / p.count : 0
-        })
-        .formatNumber(d3.format('.1f'))
-      priceTotalNumber
-        .group(allGroup)
-        .valueAccessor(p => p.priceTotal)
-        .formatNumber(d3.format('.3s'))
+      console.info(allGroup.value())
+      const { priceTotal, count } = allGroup.value()
+      const numberFormatIETF = findNumberFormatIETFCode(this.currentCurrency)
+      this.priceAvgNumber = this.$n(
+        d3.format('.1f')(count ? priceTotal / count : 0),
+        'currency',
+        numberFormatIETF
+      )
+      this.priceTotalNumber = this.$n(
+        d3.format('.3s')(priceTotal),
+        'currency',
+        numberFormatIETF
+      )
       distanceAvgNumber
         .group(allGroup)
         .valueAccessor(p => (p.count ? p.distanceTotal / p.count : 0))
