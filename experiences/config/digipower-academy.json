@@ -17,6 +17,8 @@
     "demo-participant",
     "sit-aggregator",
     "sit-participant",
+    "pdio-aggregator",
+    "pdio-participant",
     "brown-aggregator",
     "brown-participant"
   ],
