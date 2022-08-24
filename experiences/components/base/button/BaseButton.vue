@@ -17,7 +17,7 @@
           {{ mdiIcon }}
         </VIcon>
         <slot>
-          <span>{{ text }}</span>
+          <span>{{ $t(text) }}</span>
         </slot>
         <BaseProgressCircular v-if="progress" class="ml-2" />
         <StatusIndicator v-else-if="status" :error="error" />

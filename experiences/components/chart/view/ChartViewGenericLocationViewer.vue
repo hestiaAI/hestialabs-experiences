@@ -3,13 +3,13 @@
     <VRow>
       <VCol cols="12">
         <p class="text-h6">
-          Number of location records in your files
+          {{ $t(k('graph-title')) }}
         </p>
         <p v-if="total === 0" class="text-subtitle-2">
-          No location were found in your file(s).
+          {{ $t(k('graph-no-location')) }}
         </p>
         <p v-else class="text-subtitle-2">
-          We found <strong>{{ total }}</strong> locations in your file(s).
+          {{ $t(k('found')) }} <strong>{{ total }}</strong> {{ $t(k('location')) }}
         </p>
       </VCol>
     </VRow>
@@ -72,6 +72,9 @@ export default {
     }
   },
   methods: {
+    k(localKey) {
+      return `genericLocationViewer.${localKey}`
+    },
     drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems

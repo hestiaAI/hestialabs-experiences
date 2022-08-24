@@ -17,10 +17,13 @@
     "demo-participant",
     "sit-aggregator",
     "sit-participant",
+    "pdio-aggregator",
+    "pdio-participant",
     "brown-aggregator",
     "brown-participant"
   ],
   "logo": "/digipower-academy-logo.png",
+  "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
   "appBarLinks": [
     { "url": "/about", "name": "About" },
     { "url": "/privacy", "name": "Privacy" }

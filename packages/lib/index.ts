@@ -30,6 +30,7 @@ const defaultOptions: Partial<ExperienceOptions> = {
   hideFileExplorer: true,
   hideSummary: true,
   keepOnlyFiles: true,
+  messages: undefined,
   preprocessors: {},
   subtitle: 'Data Experience',
   tutorialVideos: [],

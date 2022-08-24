@@ -6,6 +6,7 @@ import icon from '@/icons/twitter.png'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
 import dataModel from './model/model.json'
+import messages from './messages.json'
 
 const options: ExperienceOptions = {
   collaborator: theEyeballs,
@@ -20,6 +21,7 @@ const options: ExperienceOptions = {
     personalization: '**/personalization.js'
   },
   icon: icon,
+  messages,
   preprocessors: {
     '**/*.js': preprocessor
   },

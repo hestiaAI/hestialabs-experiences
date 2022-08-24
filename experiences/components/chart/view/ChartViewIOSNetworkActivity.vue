@@ -17,10 +17,10 @@
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none">{{ $t('reset') }}</a>
               </p>
             </div>
           </VCol>
@@ -38,10 +38,10 @@
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none">{{ $t('reset') }}</a>
               </p>
             </div>
           </VCol>
@@ -59,10 +59,10 @@
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none">{{ $t('reset') }}</a>
               </p>
             </div>
           </VCol>
@@ -82,10 +82,10 @@
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none">{{ $t('reset') }}</a>
               </p>
             </div>
           </VCol>
@@ -103,10 +103,10 @@
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none">{{ $t('reset') }}</a>
               </p>
             </div>
           </VCol>
@@ -125,19 +125,16 @@
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a class="reset" style="display: none"> {{ $t('reset') }}</a>
               </p>
             </div>
           </VCol>
         </VRow>
         <p v-if="config.consent">
-          Please use the search box and filters below to change what is shown on
-          the map.<br>
-          Any filtering you do will also limit what data is shared into the pool
-          if you share this tab on the 'Share My Data' tab.
+          {{ $t('filter-info') }}
         </p>
       </VCol>
     </ChartViewVRowWebShare>
@@ -202,7 +199,7 @@ export default {
     createTopRowChart(ndx, fieldAccessor, valueAccessor) {
       // Create and bind charts to their respective divs
       const chart = new dc.RowChart(`#${fieldAccessor}-chart-${this.graphId}`)
-      const search = new dc.TextFilterWidget(
+      const search = this.createTextFilterWidget(
         `#${fieldAccessor}-search-${this.graphId}`
       )
 

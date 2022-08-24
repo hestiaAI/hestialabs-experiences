@@ -6,10 +6,12 @@ import path from 'path'
 import { mount, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import TheDataExperience from '~/components/TheDataExperience'
+import defaultMessages from '~/i18n-messages-default.json'
 
 // Mock the Vuex store
 const localVue = createLocalVue()
 localVue.use(Vuex)
+
 let store
 
 // We need to disable workers for these tests
@@ -68,7 +70,10 @@ test('mounts without error', () => {
       $route: { params: {} },
       $router: {
         push: () => {}
-      }
+      },
+      $t: msg => defaultMessages.en[msg],
+      $tev: msg => defaultMessages.en[msg],
+      $tet: msg => defaultMessages.en[msg]
     }
   })
   expect(wrapper.exists()).toBeTruthy()
@@ -90,7 +95,10 @@ test('process simple text file', async() => {
       $route: { params: {} },
       $router: {
         push: () => {}
-      }
+      },
+      $t: msg => defaultMessages.en[msg],
+      $tev: msg => defaultMessages.en[msg],
+      $tet: msg => defaultMessages.en[msg]
     }
   })
 

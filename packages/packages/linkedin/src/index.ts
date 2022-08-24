@@ -3,6 +3,7 @@ import { Experience, ExperienceOptions } from '@/index'
 import { linkedinConnections } from './preprocessor'
 import icon from '@/icons/linkedin.png'
 import viewBlocks from './blocks'
+import messages from './messages.json'
 
 const options: ExperienceOptions = {
   dataPortal:
@@ -14,6 +15,7 @@ const options: ExperienceOptions = {
   },
   hideFileExplorer: false,
   icon: icon,
+  messages,
   preprocessors: {
     '**/Connections.csv': linkedinConnections
   },

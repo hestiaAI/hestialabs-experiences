@@ -1,4 +1,8 @@
+import fs from 'fs'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
+import en from 'vuetify/lib/locale/en'
+import fr from 'vuetify/lib/locale/fr'
+import { merge } from 'lodash-es'
 
 import { extension2filetype } from './utils/file-manager'
 
@@ -17,6 +21,12 @@ const isProduction = NODE_ENV === 'production'
 if (!baseUrl && isProduction) {
   throw new Error('BASE_URL environment variable is missing')
 }
+
+const {
+  i18nLocale = 'en',
+  i18nLocales = ['fr', 'en']
+} = JSON.parse(fs.readFileSync(`config/${configName}.json`))
+const i18nMessages = JSON.parse(fs.readFileSync('i18n-messages-default.json'))
 
 export default {
   ssr: false, // Disable Server-Side Rendering
@@ -45,7 +55,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/injected.js', '@/plugins/api.js'],
+  plugins: ['@/plugins/injected.js', '@/plugins/api.js', { src: '@/plugins/i18n.js' }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: [
@@ -72,7 +82,7 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/i18n'],
 
   axios: {
     baseURL: apiUrl
@@ -103,6 +113,50 @@ export default {
           user: false
         }
       }
+    },
+    plugins: ['@/plugins/auth-i18n-redirect.js']
+  },
+
+  i18n: {
+    baseUrl,
+    locales: [
+      {
+        code: 'en',
+        iso: 'en-US',
+        name: 'English'
+      },
+      {
+        code: 'fr',
+        iso: 'fr-FR',
+        name: 'Français'
+      }
+    ].filter(({ code }) => i18nLocales.includes(code)),
+    defaultLocale: i18nLocale,
+    vueI18n: {
+      fallbackLocale: i18nLocale,
+      messages: merge(
+        {
+          en: {
+            ...i18nMessages.en,
+            $vuetify: en
+          },
+          fr: {
+            ...i18nMessages.fr,
+            $vuetify: fr
+          }
+        },
+        // override translations:
+        {
+          en: {},
+          fr: {
+            $vuetify: {
+              dataIterator: {
+                noResultsText: 'Aucun résultat'
+              }
+            }
+          }
+        }
+      )
     }
   },
 

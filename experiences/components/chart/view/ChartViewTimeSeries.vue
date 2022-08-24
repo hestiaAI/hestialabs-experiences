@@ -13,7 +13,7 @@
             v-if="filters.length === 0"
             v-model="selectedInterval"
             :items="namesInterval"
-            label="Time interval"
+            :label="$t('Time interval')"
             dense
             @change="
               applyFilters()
@@ -51,7 +51,7 @@
                       <VSelect
                         v-model="selectedInterval"
                         :items="namesInterval"
-                        label="Time interval"
+                        :label="$t('Time interval')"
                         dense
                       />
                     </VCol>
@@ -113,6 +113,7 @@ import * as d3 from 'd3'
 import { nest } from 'd3-collection'
 import { addMissingDate } from './utils/D3Helpers'
 import mixin from './mixin'
+
 // Inspired by
 // https://datawanderings.com/2019/10/28/tutorial-making-a-line-chart-in-d3-js-v-5/
 export default {
@@ -259,30 +260,33 @@ export default {
         return
       }
       if (diffDays < 93) {
-        this.intervals.Days = {
+        this.intervals.Day = {
           parser: d3.timeDay,
           format: d3.timeFormat('%B %d, %Y')
         }
       }
       if (diffDays > 14 && diffDays < 651) {
-        this.intervals.Weeks = {
+        this.intervals.Week = {
           parser: d3.timeWeek,
           format: d3.timeFormat('%B %d, %Y')
         }
       }
       if (diffDays > 62 && diffDays < 1800) {
-        this.intervals.Months = {
+        this.intervals.Month = {
           parser: d3.timeMonth,
           format: d3.timeFormat('%B %Y')
         }
       }
       if (diffDays > 730) {
-        this.intervals.Years = {
+        this.intervals.Year = {
           parser: d3.timeYear,
           format: d3.timeFormat('%Y')
         }
       }
-      this.namesInterval = Object.keys(this.intervals)
+      this.namesInterval = Object.keys(this.intervals).map(value => ({
+        value,
+        text: this.$tc(value, 2)
+      }))
       // get unique series ids
       const ids = this.values
         .map(i => i[this.seriesAccessor.value])
@@ -306,7 +310,7 @@ export default {
             .sort((e1, e2) => e1.date - e2.date)
         }
       })
-      this.selectedInterval = this.namesInterval[this.namesInterval.length - 1]
+      this.selectedInterval = this.namesInterval.slice(-1)[0].value
       this.initFilters()
       this.applyFilters()
       this.draw()

@@ -12,13 +12,22 @@ export default {
     return validate.experience(context) && validate.bubble(context)
   },
   head() {
-    const { title: t, subtitle: s } = this.$store.getters.experience(
+    const k =
+      key => `experiences.${this.$route.params.experience}.intro.${key}`
+    const { title } = this.$store.getters.experience(
       this.$route
     )
+    const t = this.$tev(k('title'), title)
+    const s = this.$tet(k('subtitle'), 'Data Experience')
+
     const bubble =
       this.$store.state.config.bubbleConfig[this.$route.params.bubble]
-    const title = `${t}: ${s} | ${bubble.title} Bubble`
-    return vueMeta(this, title)
+
+    const bubbleText = this.$tc('Bubble', 1)
+    const metaBubbleTitle = this.$i18n.locale === 'fr' ? `${bubbleText} ${bubble.title}` : `${bubble.title} ${bubbleText}`
+
+    const metaTitle = `${t}: ${s} | ${metaBubbleTitle}`
+    return vueMeta(this, metaTitle)
   }
 }
 </script>

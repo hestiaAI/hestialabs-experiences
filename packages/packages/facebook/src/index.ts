@@ -5,6 +5,7 @@ import preprocessor from './preprocessor'
 import icon from '@/icons/facebook.png'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
+import messages from './messages.json'
 
 const options: ExperienceOptions = {
   collaborator: theEyeballs,
@@ -24,6 +25,7 @@ const options: ExperienceOptions = {
     'ads-interests': '**/other_logged_information/ads_interests.json'
   },
   icon: icon,
+  messages,
   preprocessors: {
     '**/*.json': preprocessor
   },

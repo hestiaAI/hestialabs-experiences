@@ -21,7 +21,7 @@
                     class="muted pull-right text-subtitle-2"
                     style="margin-right: 15px; margin-bottom: 5px"
                   >
-                    select a time range to zoom in
+                    {{ $t('select-time-range') }}
                   </p>
                 </div>
               </VCol>
@@ -160,7 +160,7 @@ export default {
       const hourChart = new dc.BarChart(`#hour-chart-${this.graphId}`)
       const weekChart = new dc.RowChart(`#week-chart-${this.graphId}`)
       const tableCount = new dc.DataCount(`#dc-data-count-${this.graphId}`)
-      const userSearch = new dc.TextFilterWidget(`#user-search-${this.graphId}`)
+      const userSearch = this.createTextFilterWidget(`#user-search-${this.graphId}`)
 
       // Bind reset filters links
       d3.select(`#hour-chart-${this.graphId} a.reset`).on('click', function() {

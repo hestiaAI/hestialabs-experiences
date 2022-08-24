@@ -102,7 +102,7 @@
             <UnitIframe
               v-else-if="viz.startsWith('/')"
               :src="viz"
-              :data="result"
+              :args="result"
             />
           </VCol>
         </VRow>
