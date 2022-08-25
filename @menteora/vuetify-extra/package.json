@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve ./dev/main.js",
     "build:demo": "vue-cli-service build --dest demo ./dev/main.js",
     "build": "vue-cli-service build --target lib --name menteora src/plugin.js",
+    "build:linkable": "npm run build && cd .. && rm -rf linkable && mkdir linkable && cp -r vuetify-extra/dist linkable/ && cp -r vuetify-extra/package.json linkable/ ",
     "build:local": "vue-cli-service build --target lib --name menteora src/plugin.js && npm pack",
     "lint": "vue-cli-service lint --fix && vue-cli-service lint dev --fix",
     "deploy:demo": "vue-cli-service build --dest demo ./dev/main.js && ./deploy.demo.sh"

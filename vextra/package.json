@@ -7,8 +7,10 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+  "_dependencies": {
+    "@menteora/vuetify-extra": "^0.3.2"
+  },
   "dependencies": {
-    "@menteora/vuetify-extra": "^0.3.2",
     "core-js": "^3.8.3",
     "vue": "^2.6.14",
     "vuetify": "^2.6.0"
