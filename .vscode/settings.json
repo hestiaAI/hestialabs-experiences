@@ -28,6 +28,10 @@
     "typescript",
     "vue"
   ],
+  "eslint.workingDirectories": [
+    "./packages",
+    "./experiences"
+  ],
   // https://eslint.vuejs.org/user-guide/#trouble-with-visual-studio-code
   // https://stackoverflow.com/a/64573900/8238129
   "vetur.validation.template": false,

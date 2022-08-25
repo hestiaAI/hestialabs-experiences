@@ -1,0 +1,216 @@
+{
+  "data-validator": {
+    "invalid-format": "Data in this format cannot be displayed in a table",
+    "no-data": "No relevant data found"
+  },
+  "chart-view": {
+    "ios-access": {
+      "app-info": "The app accessing the resource.",
+      "resource-info": "The accessed resource."
+    },
+    "overview-netflix": {
+      "views": "views",
+      "watch-time": "Watch time (in hours per month)",
+      "time-of-day": "Time of day",
+      "day": "Day",
+      "most-watched": "Most watched titles",
+      "country": "Country",
+      "device": "Device used"
+    },
+    "overview-twitter": {
+      "ads-time": "Number of ads over time",
+      "top-adv": "Top 10 advertisers",
+      "interactions": "Interactions with ads (clicks, video views)",
+      "targeting-type": "Type of targeting",
+      "targeting-criteria": "Targeting criteria",
+      "ads": "ads"
+    },
+    "overview-uber": {
+      "select-currency": "Select data depending on the currency",
+      "Cumulative expenses": "Cumulative expenses",
+      "Total price": "Total price",
+      "Service used": "Service used",
+      "Day of week": "Day of week",
+      "Begin trip address": "Begin trip address",
+      "General information": "General information",
+      "Orders": "Orders",
+      "Speed": "Speed",
+      "trips": "trips",
+      "mph": "mph",
+      "Total": "Total",
+      "Average": "Average",
+      "Price": "Price",
+      "Distance": "Distance",
+      "Duration": "Duration",
+      "Waiting time": "Waiting time",
+      "min": "min",
+      "miles": "miles",
+      "Reset all filters": "Reset all filters",
+      "columns": {
+        "City": "City",
+        "Service": "Service",
+        "Status": "Status",
+        "Request Time": "Request Time",
+        "From": "From",
+        "To": "To",
+        "Waiting time (min)": "Waiting time (min)",
+        "Distance (miles)": "Distance (miles)",
+        "Duration (min)": "Duration (min)",
+        "Price": "Price"
+      }
+    },
+    "sankey": {
+      "hoverMessage": "hover on the links or nodes to get more information about the most frequent ones"
+    },
+    "sunburst": {
+      "Click to expand": "Click to expand",
+      "All": "All",
+      "out of": "out of"
+    }
+  },
+  "unit-files": {
+    "run-btn": "Explore your data",
+    "process-msg": "Processing files...",
+    "or": "OR",
+    "sample-selector": "Select sample data"
+  },
+  "unit-files-dialog": {
+    "tooltip": "Show expected files",
+    "title": "Expected files",
+    "used": "Files used in the experiences:",
+    "required": "Files required:",
+    "found": "Files found:",
+    "no-files": "No specific files are used in these experiences.",
+    "all-files-1": "For the experiences marked with",
+    "all-files-2": ", all JSON/CSV files provided will be analysed for dates and geographical coordinates. These experiences will be more interesting the more files you include."
+  },
+  "unit-consent-form": {
+    "select-files-dialog": {
+      "title": "Select files",
+      "label": "Search for files",
+      "placeholder": "Enter part of a file name...",
+      "clearButton": "Clear selection"
+    }
+  },
+  "load-data": {
+    "name": "Load your data",
+    "title": "Analyse your private data",
+    "disclaimer": "Unless explicitly consented in the \"Share My Data\" tab, no data is transmitted to HestiaLabs or anyone else. The whole experience takes place locally in the browser and nothing is left behind as soon as you close the tab.",
+    "tutorial-title": "Tutorial",
+    "text-default": "Explore the structure and contents of your files.",
+    "text": "to request the private data that has been collected about you. Once you receive it, analyse it here.",
+    "link-text": "Click here"
+  },
+  "file-explorer": {
+    "name": "Files",
+    "title": "File Explorer",
+    "select": "Select a file on the left panel to see it in more details here",
+    "file-search-name": "Search for files",
+    "file-search-placeholder": "Enter part of the name",
+    "content-search-name": "Search content",
+    "content-search-placeholder": "Type...",
+    "Exploring file": "Exploring file",
+    "Pretty": "Pretty",
+    "Raw": "Raw",
+    "Schema": "Schema",
+    "viewer": {
+      "json": {
+        "Copy accessor to clipboard": "Copy accessor to clipboard",
+        "Show as table": "Show as table"
+      },
+      "schema": {
+        "invalid-paths": "Impossible to create a table with these accessors, there are several divergent tables.",
+        "Create table": "Create table"
+      }
+    }
+  },
+  "generic-map": {
+    "search-info": "Please use the search box and filters below to change what is shown on the map.",
+    "add-noise": "Add Noise",
+    "noise-level": "Noise Level",
+    "meters": "meters"
+  },
+  "google-one-place": {
+    "total-time-spend": "Total time spend at the",
+    "mean-time-spend": "Mean time spend at the",
+    "entropy": "Entropy for",
+    "entropy-info": "The higher this value is, the more uncertain Google was when deciding if you visited",
+    "other-candidates": "This map shows the other candidates proposed by Google associated to the"
+  },
+  "share-data": {
+    "name": "Share my data"
+  },
+  "summary": {
+    "name": "Summary"
+  },
+  "decrypt-files": {
+    "title": "Decrypt Files",
+    "sk-label": "Enter your secret key",
+    "pk-label": "Enter your public key (optional)"
+  },
+  "About": "About",
+  "All": "All",
+  "and": "and",
+  "at": "at",
+  "Available on-demand": "Available on-demand",
+  "between": "between",
+  "Bubble": "Bubble | Bubbles",
+  "Clear": "Clear",
+  "click-graph": "Please click on the graph to apply filters.",
+  "Close": "Close",
+  "Connected to bubble": "Connected to bubble",
+  "Contact us": "Contact us",
+  "Current filter": "Current filter:",
+  "Data Experience": "Data Experience",
+  "Day": "Day | Days",
+  "day": "day",
+  "directed-graph-disclaimer": "Please take into account the fact that this graph only shows the link between data flows that are tagged as Fingerprinting or Advertising.",
+  "Display Others": "Display \"Others\"",
+  "Download": "Download",
+  "Export": "Export",
+  "File": "File | Files",
+  "filter-info": "Any filtering you do will also limit what data is shared into the pool if you share this tab on the 'Share My Data' tab.",
+  "footer-digipower-academy": "The Digipower.academy has emerged out of projects initiated separately by",
+  "found": "We found",
+  "hour": "hour",
+  "In total we found": "In total we found",
+  "in-files": "in your file.",
+  "Load your data": "Load your data",
+  "Made for": "Made for",
+  "Month": "Month | Months",
+  "month": "month",
+  "No relevant data found": "No relevant data found",
+  "no-records": "No records were found in your file(s).",
+  "not found": "not found",
+  "of": "of",
+  "per": "per",
+  "Privacy": "Privacy",
+  "Public experiences": "Public experiences",
+  "Reset All": "Reset All",
+  "reset": "reset",
+  "Save": "Save",
+  "Search": "Search",
+  "seconds": "seconds",
+  "Select All": "Select All",
+  "select-time-range": "select a time range to zoom in",
+  "selected-out-of": "selected out of",
+  "Settings": "Settings",
+  "Share": "Share",
+  "Successfully processed in": "Successfully processed in",
+  "the HestiaLabs project": "the HestiaLabs project",
+  "This might take a moment": "This might take a moment",
+  "Time interval": "Time interval",
+  "Type...": "Type...",
+  "Week": "Week | Weeks",
+  "dayOfWeek": {
+    "Sun": "Sun",
+    "Mon": "Mon",
+    "Tue": "Tue",
+    "Wed": "Wed",
+    "Thu": "Thu",
+    "Fri": "Fri",
+    "Sat": "Sat"
+  },
+  "Year": "Year | Years",
+  "year": "year"
+}

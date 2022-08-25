@@ -14,7 +14,7 @@ module.exports = {
   extends: ['@nuxtjs', 'plugin:nuxt/recommended'],
   // add your custom rules here
   rules: {
-    'space-before-function-paren': ['error', 'never'],
+    'space-before-function-paren': ['error', { anonymous: 'ignore', named: 'never' }],
     'arrow-parens': ['error', 'as-needed', { requireForBlockBody: true }],
     'no-console': [
       'warn',

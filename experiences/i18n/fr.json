@@ -1,0 +1,216 @@
+{
+  "data-validator": {
+    "invalid-format": "Les données dans ce format ne peuvent pas être affichées dans un tableau.",
+    "no-data": "Aucune donnée pertinente trouvée"
+  },
+  "chart-view": {
+    "ios-access": {
+      "app-info": "L'application qui accède à la ressource.",
+      "resource-info": "La ressource consultée."
+    },
+    "overview-netflix": {
+      "views": "contenu(s) consulté(s)",
+      "watch-time": "Durée de visionnage (en heures par mois)",
+      "time-of-day": "Heure de la journée",
+      "day": "Jour de la semaine",
+      "most-watched": "Titres les plus regardés",
+      "country": "Pays",
+      "device": "Dispositif utilisé"
+    },
+    "overview-twitter": {
+      "ads-time": "Nombre d'annonces dans le temps",
+      "top-adv": "Top 10 annonceurs",
+      "interactions": "Interactions avec les pubs (clics, visionnage de vidéos)",
+      "targeting-type": "Type de ciblage",
+      "targeting-criteria": "Critères de ciblage",
+      "ads": "pubs"
+    },
+    "overview-uber": {
+      "select-currency": "Sélectionner les données selon la devise",
+      "Cumulative expenses": "Dépenses cumulées",
+      "Total price": "Prix total",
+      "Service used": "Service utilisé",
+      "Day of week": "Jour de la semaine",
+      "Begin trip address": "Adresse de départ du voyage",
+      "General information": "Informations générales",
+      "Orders": "Commandes",
+      "Speed": "Vitesse",
+      "trips": "voyages",
+      "mph": "mi/h",
+      "Total": "Total",
+      "Average": "Moyenne",
+      "Price": "Prix",
+      "Distance": "Distance",
+      "Duration": "Durée",
+      "Waiting time": "Temps d'attente",
+      "min": "min",
+      "miles": "miles",
+      "Reset all filters": "Réinitialiser tous les filtres",
+      "columns": {
+        "City": "Ville",
+        "Service": "Service",
+        "Status": "Statut",
+        "Request Time": "Heure de demande",
+        "From": "De",
+        "To": "À",
+        "Waiting time (min)": "Temps d'attente (min)",
+        "Distance (miles)": "Distance (miles)",
+        "Duration (min)": "Durée (min)",
+        "Price": "Prix"
+      }
+    },
+    "sankey": {
+      "hoverMessage": "survolez les liens ou les nœuds pour obtenir plus d'informations sur les plus fréquents d'entre eux"
+    },
+    "sunburst": {
+      "Click to expand": "Cliquez pour agrandir",
+      "All": "Tout",
+      "out of": "sur"
+    }
+  },
+  "unit-files": {
+    "run-btn": "Explorer vos données",
+    "process-msg": "Traitement des fichiers...",
+    "or": "OU",
+    "sample-selector": "Selectionner des données de test"
+  },
+  "unit-files-dialog": {
+    "tooltip": "Voir les fichiers requis",
+    "title": "Fichiers requis",
+    "used": "Fichiers utilisés dans l'expérience:",
+    "required": "Fichiers requis:",
+    "found": "Fichiers trouvés:",
+    "no-files": "Aucun fichier spécifique n'est requis dans ces expériences.",
+    "all-files-1": "Pour les expériences marquées par",
+    "all-files-2": ", tous les fichiers JSON/CSV fournis seront analysés pour y trouver des dates et des coordonnées géographiques. Ces expériences seront d'autant plus intéressantes que vous inclurez de fichiers."
+  },
+  "unit-consent-form": {
+    "select-files-dialog": {
+      "title": "Sélectionner les fichiers",
+      "label": "Rechercher des fichiers",
+      "placeholder": "Entrer le nom d'un fichier...",
+      "clearButton": "Effacer la sélection"
+    }
+  },
+  "load-data": {
+    "name": "Charger vos données",
+    "title": "Analyser vos données privées",
+    "disclaimer": "Sauf consentement explicite dans l'onglet \"Partager mes données\", aucune donnée n'est transmise à HestiaLabs ou à quiconque. Toute l'expérience se déroule localement dans le navigateur et rien n'est laissé derrière vous dès que vous fermez l'onglet.",
+    "tutorial-title": "Démo",
+    "text-default": "Explorer la structure et le contenu de vos fichiers.",
+    "text": "pour demander les données privées qui ont été collectées sur vous. Une fois que vous les recevrez, analysez-les ici.",
+    "link-text": "Cliquer ici"
+  },
+  "file-explorer": {
+    "name": "Fichiers",
+    "title": "Explorateur de fichiers",
+    "select": "Sélectionnez un fichier dans le panneau de gauche pour le voir plus en détail.",
+    "file-search-name": "Recherche de fichiers",
+    "file-search-placeholder": "Entrez une partie du nom",
+    "content-search-name": "Recherche de contenu",
+    "content-search-placeholder": "Entrez une partie du contenu",
+    "Exploring file": "En cours d'exploration",
+    "Pretty": "Joli",
+    "Raw": "Brut",
+    "Schema": "Schéma",
+    "viewer": {
+      "json": {
+        "Copy accessor to clipboard": "Copier l'accesseur dans le clipboard",
+        "Show as table": "Montrer comme tableau"
+      },
+      "schema": {
+        "invalid-paths": "Impossible de créer une table avec ces accesseurs, il y a plusieurs tables divergentes.",
+        "Create table": "Créer un tableau"
+      }
+    }
+  },
+  "generic-map": {
+    "search-info": "Veuillez utiliser le champ de recherche et les filtres ci-dessous pour modifier ce qui est affiché sur la carte.",
+    "add-noise": "Ajouter du bruit",
+    "noise-level": "Niveau de bruit",
+    "meters": "mètres"
+  },
+  "google-one-place": {
+    "total-time-spend": "Temps total passé à",
+    "mean-time-spend": "Temps moyen passé à",
+    "entropy": "Entropie pour",
+    "entropy-info": "Plus cette valeur est élevée, plus l'incertitude de Google était grande au moment de décider si vous avez visité",
+    "other-candidates": "Cette carte montre les autres candidats proposés par Google associés à"
+  },
+  "share-data": {
+    "name": "Partager mes données"
+  },
+  "summary": {
+    "name": "Résumé"
+  },
+  "decrypt-files": {
+    "title": "Décrypter vos fichiers",
+    "sk-label": "Entrer votre clé secrète",
+    "pk-label": "Entrer votre clé publique (facultatif)"
+  },
+  "About": "À propos",
+  "All": "Tout",
+  "and": "et",
+  "at": "à",
+  "Available on-demand": "Disponible sur demande",
+  "between": "entre",
+  "Bubble": "Bulle | Bulles",
+  "Clear": "Annuler",
+  "click-graph": "Veuillez cliquer sur un graphique pour appliquer des filtres.",
+  "Close": "Fermer",
+  "Connected to bubble": "Connecté à la bulle",
+  "Contact us": "Contactez-nous",
+  "Current filter": "Filtre actuel:",
+  "Data Experience": "Éxperience",
+  "Day": "Jour | Jours",
+  "day": "jour",
+  "directed-graph-disclaimer": "Veuillez prendre en compte le fait que ce graphique ne montre que le lien entre les flux de données qui sont étiquetés comme empreintes digitales ou publicité.",
+  "Display Others": "Afficher \"Others\"",
+  "Download": "Télécharger",
+  "Export": "Exporter",
+  "File": "Fichier | Fichiers",
+  "filter-info": "Tout filtrage effectué limitera également les données qui sont partagées dans le pool si vous partagez cet onglet dans l'onglet 'Partager mes données'.",
+  "footer-digipower-academy": "Digipower.academy a émergé de projets initiés séparément par",
+  "found": "Nous avons trouvé",
+  "hour": "heure",
+  "In total we found": "Au total nous avons trouvé",
+  "in-files": "dans votre/vos fichier(s)",
+  "Load your data": "Charger vos données",
+  "Made for": "Fait pour",
+  "Month": "Mois | Mois",
+  "month": "mois",
+  "No relevant data found": "Aucune donnée pertinente trouvée",
+  "no-records": "Aucun résultat n'a été trouvé dans votre (vos) dossier(s).",
+  "not found": "pas trouvé",
+  "of": "de",
+  "per": "par",
+  "Privacy": "Confidentialité",
+  "Public experiences": "Expériences publiques",
+  "Reset All": "Réinitialiser tout",
+  "reset": "réinitialiser",
+  "Save": "Sauvegarder",
+  "Search": "Rechercher",
+  "seconds": "secondes",
+  "Select All": "Sélectionner Tout",
+  "select-time-range": "sélectionnez une plage de temps pour effectuer un zoom",
+  "selected-out-of": "sélectionné·e·s sur",
+  "Settings": "Réglages",
+  "Share": "Partager",
+  "Successfully processed in": "Traitement réussi en",
+  "the HestiaLabs project": "le projet HestiaLabs",
+  "This might take a moment": "Cela peut prendre un moment",
+  "Time interval": "Intervalle",
+  "Type...": "Entrer...",
+  "Week": "Semaine | Semaines",
+  "dayOfWeek": {
+    "Sun": "dim",
+    "Mon": "lun",
+    "Tue": "mar",
+    "Wed": "mer",
+    "Thu": "jeu",
+    "Fri": "ven",
+    "Sat": "sam"
+  },
+  "Year": "Année | Années",
+  "year": "année"
+}
