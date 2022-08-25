@@ -2,6 +2,7 @@
   <v-app>
     <v-main>
       <app-bar :menu-items="mItems" />
+      <dummy-button/>
       <v-container>
         <v-card outlined tile>
           <v-card-title class="font-weight-light">Test App Bar</v-card-title>

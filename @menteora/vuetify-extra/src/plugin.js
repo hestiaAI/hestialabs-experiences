@@ -1,11 +1,18 @@
 // Import vue components
 // import * as components from './components/index'
 // var components = {}
+import store from '@/store'
 
 // install function executed by Vue.use()
-function install (Vue) {
+function install (Vue, options) {
   if (install.installed) return
   install.installed = true
+  if (!options || !options.store) {
+    throw new Error('Please initialise plugin with a Vuex store.')
+  }
+  options.store.registerModule('data-experience', store)
+
+  console.log('installing...')
 
   // For each matching file name...
   requireComponent.keys().forEach((fileName) => {
@@ -44,6 +51,7 @@ if (typeof window !== 'undefined') {
   GlobalVue = global.Vue
 }
 if (GlobalVue) {
+  console.log('global vue calling use')
   GlobalVue.use(plugin)
 }
 
