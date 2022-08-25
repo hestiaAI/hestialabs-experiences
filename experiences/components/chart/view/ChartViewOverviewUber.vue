@@ -361,19 +361,18 @@ export default {
           return p.durationTotal ? (p.distanceTotal * 60) / p.durationTotal : 0
         })
         .formatNumber(d3.format('.1f'))
-      console.info(allGroup.value())
+
       const { priceTotal, count } = allGroup.value()
       const numberFormatIETF = findNumberFormatIETFCode(this.currentCurrency)
       this.priceAvgNumber = this.$n(
-        d3.format('.1f')(count ? priceTotal / count : 0),
-        'currency',
-        numberFormatIETF
+        count ? priceTotal / count : 0,
+        { key: 'currency', locale: numberFormatIETF, maximumFractionDigits: 1 }
       )
       this.priceTotalNumber = this.$n(
-        d3.format('.3s')(priceTotal),
-        'currency',
-        numberFormatIETF
+        priceTotal,
+        { key: 'currency', locale: numberFormatIETF, maximumSignificantDigits: 3 }
       )
+
       distanceAvgNumber
         .group(allGroup)
         .valueAccessor(p => (p.count ? p.distanceTotal / p.count : 0))
