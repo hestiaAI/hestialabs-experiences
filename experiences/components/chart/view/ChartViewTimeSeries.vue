@@ -183,6 +183,10 @@ export default {
     dateFormat: {
       type: String,
       default: ''
+    },
+    cumSum: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -310,6 +314,14 @@ export default {
             .sort((e1, e2) => e1.date - e2.date)
         }
       })
+      /*
+      if(this.cumSum){
+        this.slices.forEach(slice => {
+          const cumSum = d3.cumSum(slice.values, d => d.value)
+          slice.values = slice.values.map((v, i) => cumSum[i])
+        })
+      }
+      */
       this.selectedInterval = this.namesInterval.slice(-1)[0].value
       this.initFilters()
       this.applyFilters()

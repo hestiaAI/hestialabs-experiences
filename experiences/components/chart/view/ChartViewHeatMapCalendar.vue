@@ -255,7 +255,9 @@ export default {
       const { width: w, cellSize: s, legendNbItems: n } = this
       return w - s * 2 * n + idx * s * 2 - s * 2
     },
-    drawViz() {}
+    drawViz() {
+      console.log('TEST', this.values)
+    }
   }
 }
 </script>
