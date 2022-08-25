@@ -5,7 +5,7 @@ import fr from 'vuetify/lib/locale/fr'
 import { merge } from 'lodash-es'
 
 import { extension2filetype } from './utils/file-manager'
-import numberFormats from './vue-i18n-number-formats'
+import { numberFormats } from './vue-i18n-number-formats'
 
 const name = 'HestiaLabs Experiences'
 const description = 'We create a new relationship to personal data'

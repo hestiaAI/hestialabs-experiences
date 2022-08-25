@@ -78,9 +78,12 @@
               />
               <ChartView
                 v-else-if="vizVue"
-                :graph-name="vizVue"
-                :data="clonedResult"
-                :viz-props="vizPropsTranslated"
+                v-bind="{
+                  graphName: vizVue,
+                  data: clonedResult,
+                  vizProps: vizPropsTranslated,
+                  kViewBlock: k
+                }"
               />
               <UnitIframe
                 v-else-if="vizUrl"

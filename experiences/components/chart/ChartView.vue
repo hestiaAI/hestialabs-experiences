@@ -6,7 +6,7 @@
         v-bind="{
           values: data.items || [],
           headers: data.headers || [],
-          ...vizProps
+          ...$attrs
         }"
       />
     </div>
@@ -15,6 +15,7 @@
 
 <script>
 export default {
+  inheritAttrs: false,
   props: {
     data: {
       type: Object,
@@ -23,10 +24,6 @@ export default {
     graphName: {
       type: String,
       required: true
-    },
-    vizProps: {
-      type: Object,
-      default: () => ({})
     }
   },
   computed: {

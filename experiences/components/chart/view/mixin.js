@@ -9,6 +9,10 @@ export default {
     headers: {
       type: Array,
       default: () => []
+    },
+    kViewBlock: {
+      type: Function,
+      required: true
     }
   },
   data() {

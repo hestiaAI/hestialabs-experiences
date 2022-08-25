@@ -1,7 +1,7 @@
 <template>
   <div>
     <DataValidator
-      :data="{ items: items, headers: headers }"
+      :data="{ items, headers }"
       allow-missing-columns
     >
       <BaseAlert v-if="error" type="error">

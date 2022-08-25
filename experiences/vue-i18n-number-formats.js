@@ -1,6 +1,8 @@
 // https://kazupon.github.io/vue-i18n/guide/number.html
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#options
 
+// All IETF language codes are included below
+// just in case we need them in the future.
 const numberFormatsArray = [
   ['ca-AD', { currency: { style: 'currency', currency: 'EUR' } }],
   ['ar-AE', { currency: { style: 'currency', currency: 'AED' } }],
@@ -528,9 +530,12 @@ const numberFormatsArray = [
 
 export const numberFormats = Object.fromEntries(numberFormatsArray)
 
+/**
+ *
+ * @param {String} currencyCode
+ * @returns {String} the first matching IETF language code
+ */
 export const findNumberFormatIETFCode = (currencyCode) => {
   const [ietfLangCode] = numberFormatsArray.find(entry => entry[1].currency.currency === currencyCode)
   return ietfLangCode
 }
-
-export default numberFormats

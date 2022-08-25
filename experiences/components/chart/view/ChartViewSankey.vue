@@ -2,10 +2,12 @@
   <VContainer>
     <ChartViewVRowWebShare>
       <VCol cols="12" md="12" class="text-center">
-        <p>
-          In total there are <strong>{{ total }}</strong> records
-          {{ labelTotal }}
-        </p>
+        <!-- https://kazupon.github.io/vue-i18n/guide/interpolation.html#slots-syntax-usage -->
+        <i18n :path="kViewBlock('vizProps.labelTotal')" tag="p">
+          <template #total>
+            <span class="text-bold" v-text="total" />
+          </template>
+        </i18n>
         <div :id="graphId" style="position: relative" />
       </VCol>
     </ChartViewVRowWebShare>
@@ -16,51 +18,41 @@
 import * as d3 from 'd3'
 import { nest, keys } from 'd3-collection'
 import * as d3Sankey from 'd3-sankey'
+import mixin from './mixin'
 
 export default {
   name: 'ChartViewSankey',
+  mixins: [mixin],
   props: {
-    values: {
-      type: Array,
-      default: () => []
-    },
     topN: {
       type: Number,
-      default: () => 10
+      default: 10
     },
     labelLeft: {
       type: String,
-      default: () => 'Pickup places'
+      default: 'Pickup places'
     },
     labelRight: {
       type: String,
-      default: () => 'Dropoff places'
-    },
-    labelTotal: {
-      type: String,
-      default: () => 'of trips you have made with Uber'
+      default: 'Dropoff places'
     },
     displayLinksLabels: {
       type: Boolean,
-      default: () => true
+      default: true
     },
     nodeWidth: {
       type: Number,
-      default: () => 40
+      default: 40
     },
     nodePadding: {
       type: Number,
-      default: () => 40
+      default: 40
     }
   },
   data() {
     return {
-      graphId: 'graph_' + this._uid,
       total: 0
     }
-  },
-  mounted() {
-    this.drawViz()
   },
   methods: {
     toJSONGraph(data) {
