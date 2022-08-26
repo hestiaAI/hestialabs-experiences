@@ -4,6 +4,7 @@ import { theEyeballs } from '@/collaborators/index'
 import icon from '@/icons/tiktok.png'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
+import messages from './messages.json'
 
 const options: ExperienceOptions = {
   collaborator: theEyeballs,
@@ -16,6 +17,7 @@ const options: ExperienceOptions = {
     userdata: '**/user_data.json'
   },
   hideFileExplorer: false,
+  messages,
   icon: icon,
   title: 'TikTok',
   viewBlocks
