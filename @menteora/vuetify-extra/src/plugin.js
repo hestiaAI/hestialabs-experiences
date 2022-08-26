@@ -10,7 +10,7 @@ function install (Vue, options) {
   if (!options || !options.store) {
     throw new Error('Please initialise plugin with a Vuex store.')
   }
-  options.store.registerModule('data-experience', store)
+  options.store.registerModule('vuetify-extra', store)
 
   console.log('installing...')
 

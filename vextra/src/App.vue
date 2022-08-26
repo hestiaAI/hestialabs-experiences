@@ -6,6 +6,23 @@
       dark
     >
       <div class="d-flex align-center">
+        <DummyButton>test</DummyButton>
+        <ChartViewBar />
+        <ChartViewTimeSeries
+          v-bind="{
+            values: [
+              {d: '2010-03-24', a: 'eat'},
+              {d: '2010-03-25', a: 'eat'},
+              {d: '2010-03-26', a: 'sleep'},
+              {d: '2010-03-27', a: 'eat'},
+              {d: '2010-03-28', a: 'sleep'}
+            ],
+            title: 'Followers vs Followings over time',
+            legendOffset: 350,
+            dateAccessor: { text: 'Date', value: 'd' },
+            seriesAccessor: { text: 'Action', value: 'a' }
+          }"
+        />
         <v-img
           alt="Vuetify Logo"
           class="shrink mr-2"
