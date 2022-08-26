@@ -12,7 +12,7 @@ const messagesDefault = {
   },
   fr: {
     ...defaultFr,
-    $vueitfy: vuetifyFr
+    $vuetify: vuetifyFr
   }
 }
 const messagesOverride = {
