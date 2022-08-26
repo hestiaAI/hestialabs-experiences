@@ -102,7 +102,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, merge } from 'lodash-es'
 
 export default {
   props: {
@@ -196,14 +196,10 @@ export default {
     vizPropsTranslated() {
       // translations override all props...
       // we trust that they only affect texts
-      // NOTE: This is only a shallow merge,
-      // and will not work for nested texts
-      // NOTE: deep merge with lodash.merge()
-      // causes a vuex mutation error
-      return {
-        ...this.vizProps,
-        ...this.$tev(this.k('vizProps'), {})
-      }
+      // NOTE: we need to deepClone the viProps before doing the merge.
+      // because the lodash merge function recursively mutates the first argument
+      // and it will cause a vuex mutation error otherwise.
+      return merge(cloneDeep(this.vizProps), this.$tev(this.k('vizProps'), {}))
     }
   },
   watch: {
