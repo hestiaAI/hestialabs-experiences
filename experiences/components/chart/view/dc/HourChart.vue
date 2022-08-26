@@ -24,13 +24,6 @@ export default {
   mixins: [mixin],
   props: {
     /**
-     * Title of the graph
-     */
-    title: {
-      type: String,
-      default: ''
-    },
-    /**
      * Column name of the {values} that represent date values
      */
     dateAccessor: {
@@ -106,7 +99,7 @@ export default {
         .x(d3.scaleLinear().domain([0, 24]))
         .ordinalColors(this.colorPalette)
         .elasticY(true)
-        // .yAxisLabel('Hours')
+        .yAxisLabel(this.valueLabel)
         .yAxis()
         .ticks(5)
 

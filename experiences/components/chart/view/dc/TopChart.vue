@@ -27,13 +27,6 @@ export default {
   mixins: [mixin],
   props: {
     /**
-     * Title of the graph
-     */
-    title: {
-      type: String,
-      required: true
-    },
-    /**
      * Column name of the {values} to be displayed/compared in the graph
      */
     valueAccessor: {
@@ -98,12 +91,13 @@ export default {
         .ordinalColors(this.colorPalette)
         .label(d => d.key)
         .data(group => group.top(10))
-        .title(d => d.value)
+        .title(d => `${d.value} ${this.valueLabel}`)
         .elasticX(true)
         .xAxis()
         .ticks(4)
 
       dc.renderAll()
+      // addXLabel(topChart, this.valueLabel)
     }
   }
 }

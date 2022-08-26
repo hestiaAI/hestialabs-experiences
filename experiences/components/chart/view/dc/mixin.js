@@ -2,18 +2,39 @@ import { TextFilterWidget } from 'dc'
 
 export default {
   props: {
+    /**
+     * The crossfilter object that contains the values and filters
+     * e,g: crossfilter(this.results)
+     */
     ndx: {
       type: Object,
       required: true
     },
-    values: {
-      type: Array,
-      default: () => []
+    /**
+     * Title of the graph
+     */
+    title: {
+      type: String,
+      default: ''
     },
+    /**
+     * Label to display in the axis
+     */
+    valueLabel: {
+      type: String,
+      default: 'records'
+    },
+    /**
+     * The height of the graph
+     * the width is dynamically computed from it's parent
+     */
     height: {
       type: Number,
       default: 250
     },
+    /**
+     * Colors to use in the graph
+     */
     colorPalette: {
       type: Array,
       default: () => [

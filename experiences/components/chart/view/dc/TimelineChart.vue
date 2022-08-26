@@ -32,13 +32,6 @@ export default {
   mixins: [mixin],
   props: {
     /**
-     * Title of the graph
-     */
-    title: {
-      type: String,
-      required: true
-    },
-    /**
      * Column name of the {values} that represent date values
      */
     dateAccessor: {
@@ -158,9 +151,9 @@ export default {
         })
         .round(this.timeUnit.round)
         .xUnits(this.timeUnit.xUnits)
-        .title(d => `${this.dateFormatter(d.key)} : ${d.value} records`)
+        .title(d => `${this.dateFormatter(d.key)} : ${d.value} ${this.valueLabel}`)
         .clipPadding(10)
-        .yAxisLabel('Total records')
+        .yAxisLabel(`Total ${this.valueLabel}`)
         .ordinalColors(this.colorPalette)
       lineChart.xAxis().ticks(10)
       lineChart.yAxis().ticks(6)

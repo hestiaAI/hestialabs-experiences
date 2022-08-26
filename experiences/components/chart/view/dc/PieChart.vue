@@ -25,13 +25,6 @@ export default {
   mixins: [mixin],
   props: {
     /**
-     * Title of the graph
-     */
-    title: {
-      type: String,
-      required: true
-    },
-    /**
      * Column name of the {values} to be displayed/compared in the graph
      */
     valueAccessor: {
@@ -90,7 +83,7 @@ export default {
         .dimension(pieDimension)
         .group(pieGroup)
         .valueAccessor(d => d.value)
-        .title(d => `${d.key}: ${d.value} records`)
+        .title(d => `${d.key}: ${d.value} ${this.valueLabel}`)
         .drawPaths(true)
         .minAngleForLabel(0)
         .ordinalColors(this.colorPalette)

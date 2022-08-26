@@ -13,22 +13,26 @@ const blocks: ViewBlocks = [
       graphs: [
         {
           title: 'Number of login',
+          valueLabel: 'logins',
           cols: '8',
           type: 'TimelineChart.vue',
           dateAccessor: 'date'
         },
         {
+          valueLabel: 'logins',
           type: 'WeekChart.vue',
           cols: '4',
           dateAccessor: 'date'
         },
         {
+          valueLabel: 'logins',
           type: 'HourChart.vue',
           cols: '4',
           height: 220,
           dateAccessor: 'date'
         },
         {
+          valueLabel: 'logins',
           title: 'Network Type',
           cols: '4',
           height: 220,
@@ -36,6 +40,7 @@ const blocks: ViewBlocks = [
           valueAccessor: 'networktype'
         },
         {
+          valueLabel: 'logins',
           title: 'Carrier',
           cols: '4',
           height: 220,
@@ -43,6 +48,7 @@ const blocks: ViewBlocks = [
           valueAccessor: 'carrier'
         },
         {
+          valueLabel: 'logins',
           title: 'Device System',
           cols: '4',
           height: 220,
@@ -50,6 +56,7 @@ const blocks: ViewBlocks = [
           valueAccessor: 'devicesystem'
         },
         {
+          valueLabel: 'logins',
           title: 'Device Model',
           cols: '4',
           height: 220,
@@ -57,6 +64,7 @@ const blocks: ViewBlocks = [
           valueAccessor: 'devicemodel'
         },
         {
+          valueLabel: 'logins',
           title: 'IP',
           cols: '4',
           height: 220,
@@ -77,6 +85,8 @@ const blocks: ViewBlocks = [
     visualization: 'ChartViewTimeSeries.vue',
     vizProps: {
       title: 'Following vs Follower over time',
+      cumSum: true,
+      yLabel: 'Total',
       legendOffset: 350,
       dateAccessor: { text: 'Date', value: 'date_' },
       seriesAccessor: { text: 'Action', value: 'actionType' },
@@ -94,6 +104,7 @@ const blocks: ViewBlocks = [
       graphs: [
         {
           title: 'Number of actions',
+          valueLabel: 'actions',
           cols: '8',
           type: 'TimelineChart.vue',
           dateAccessor: 'date_'

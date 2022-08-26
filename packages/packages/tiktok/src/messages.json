@@ -11,24 +11,34 @@
         "vizProps": {
           "graphs": [
             {
-              "title": "Number of login"
-            },
-            {},
-            {},
-            {
-              "title": "Network Type"
+              "title": "Number of login",
+              "valueLabel": "logins"
             },
             {
-              "title": "Carrier"
+              "valueLabel": "logins"
             },
             {
-              "title": "Device System"
+              "valueLabel": "logins"
             },
             {
-              "title": "Device Model"
+              "title": "Network Type",
+              "valueLabel": "logins"
             },
             {
-              "title": "IP"
+              "title": "Carrier",
+              "valueLabel": "logins"
+            },
+            {
+              "title": "Device System",
+              "valueLabel": "logins"
+            },
+            {
+              "title": "Device Model",
+              "valueLabel": "logins"
+            },
+            {
+              "title": "IP",
+              "valueLabel": "logins"
             }
           ]
         }
@@ -74,24 +84,34 @@
         "vizProps": {
           "graphs": [
             {
-              "title": "Nombre de connexions"
-            },
-            {},
-            {},
-            {
-              "title": "Type de réseau"
+              "title": "Nombre de connexions",
+              "valueLabel": "connexions"
             },
             {
-              "title": "Fournisseur"
+              "valueLabel": "connexions"
             },
             {
-              "title": "Système d'exploitation"
+              "valueLabel": "connexions"
             },
             {
-              "title": "Appareil"
+              "title": "Type de réseau",
+              "valueLabel": "connexions"
             },
             {
-              "title": "IP"
+              "title": "Fournisseur",
+              "valueLabel": "connexions"
+            },
+            {
+              "title": "Système d'exploitation",
+              "valueLabel": "connexions"
+            },
+            {
+              "title": "Appareil",
+              "valueLabel": "connexions"
+            },
+            {
+              "title": "IP",
+              "valueLabel": "connexions"
             }
           ]
         }

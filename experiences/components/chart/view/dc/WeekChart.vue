@@ -24,13 +24,6 @@ export default {
   mixins: [mixin],
   props: {
     /**
-     * Title of the graph
-     */
-    title: {
-      type: String,
-      default: ''
-    },
-    /**
      * Column name of the {values} that represent date values
      */
     dateAccessor: {
