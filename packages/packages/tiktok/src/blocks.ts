@@ -2,7 +2,6 @@ import type { ViewBlocks } from '@/types'
 import loginhistory from './sql/loginhistory.sql'
 import activityhistory from './sql/activity-history.sql'
 import followingfollower from './sql/following-vs-follower.sql'
-import followinglist from './sql/followinglist.sql'
 import chathistory from './sql/chat-history.sql'
 const blocks: ViewBlocks = [
   {
@@ -74,7 +73,7 @@ const blocks: ViewBlocks = [
     id: 'followingfollower',
     sql: followingfollower,
     files: ['userdata'],
-    showTable: true,
+    showTable: false,
     visualization: 'ChartViewTimeSeries.vue',
     vizProps: {
       title: 'Following vs Follower over time',
@@ -119,7 +118,7 @@ const blocks: ViewBlocks = [
         }
       ]
     },
-    showTable: true,
+    showTable: false,
     title: 'Activity History',
     text: 'Consult every actions you have made on the app.'
   },
@@ -127,10 +126,9 @@ const blocks: ViewBlocks = [
     id: 'chathistory',
     sql: chathistory,
     files: ['userdata'],
-    showTable: true,
-    visualization: 'ChartViewHeatMapCalendar.vue',
+    showTable: false,
+    visualization: 'ChartViewHeatMapHour.vue',
     vizProps: {
-      title: 'rtess',
       dateAccessor: 'date'
     },
     title: 'Chat Activity',

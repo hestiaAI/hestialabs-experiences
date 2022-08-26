@@ -32,6 +32,33 @@
             }
           ]
         }
+      },
+      "followingfollower": {
+        "title": "Following vs Follower",
+        "text": "See how much you have follow or have been followed during time",
+        "vizProps": {
+          "title": "Following vs Follower over time"
+        }
+      },
+      "activityhistory": {
+        "title": "Activity History",
+        "text": "Consult every actions you have made on the app.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Number of actions"
+            },
+            {
+              "title": "Type of action"
+            },
+            {},
+            {}
+          ]
+        } 
+      },
+      "chathistory": {
+        "title": "Chat Activity",
+        "text": "Find out what time and day you receive and send the most messages."
       }
     }
   },
@@ -68,6 +95,33 @@
             }
           ]
         }
+      },
+      "followingfollower": {
+        "title": "Abonnements et abonnés",
+        "text": "Voyez combien vous avez suivi ou avez été suivi au cours du temps.",
+        "vizProps": {
+          "title": "Abonnements et abonnés au cours du temps."
+        }
+      },
+      "activityhistory": {
+        "title": "Historique de l'activité",
+        "text": "Consultez toutes les actions que vous avez effectuées sur l'application.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Nombre d'actions"
+            },
+            {
+              "title": "Type d'action"
+            },
+            {},
+            {}
+          ]
+        } 
+      },
+      "chathistory": {
+        "title": "Messages",
+        "text": "Découvrez à quelle heure et quel jour vous recevez et envoyez le plus de messages."
       }
     }
   }
