@@ -105,6 +105,7 @@ export default {
         .gap(1)
         .x(d3.scaleLinear().domain([0, 24]))
         .ordinalColors(this.colorPalette)
+        .elasticY(true)
         // .yAxisLabel('Hours')
         .yAxis()
         .ticks(5)

@@ -33,9 +33,6 @@ export default {
     component() {
       return () => import(`@/components/chart/view/${this.graphName}`)
     }
-  },
-  mounted() {
-    console.log('test', this.graphName, this.data)
   }
 }
 </script>

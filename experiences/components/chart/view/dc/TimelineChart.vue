@@ -100,7 +100,6 @@ export default {
         return d3.timeParse(this.dateFormat)
       } else {
         return (d) => {
-          console.log(d)
           return new Date(d)
         }
       }
@@ -121,6 +120,8 @@ export default {
 
       // Create dimensions
       const dateExtent = d3.extent(this.ndx.all(), d => this.dateParser(d[this.dateAccessor]))
+      dateExtent[0] = d3.timeDay.offset(dateExtent[0], -1)
+      dateExtent[1] = d3.timeDay.offset(dateExtent[1], 1)
       const nbMonths = d3.timeMonth.count(...dateExtent)
       this.timeUnit = nbMonths > 10 ? nbMonths > 120 ? this.timeUnits.year : this.timeUnits.month : this.timeUnits.day
 

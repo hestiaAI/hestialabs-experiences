@@ -1,7 +1,8 @@
 <template>
   <VContainer>
     <div :id="`week-chart-${graphId}`">
-      <strong>{{ title }}</strong>
+      <strong v-if="title">{{ title }}</strong>
+      <strong v-else v-t="$tc('Day', 1)" />
       <a v-t="'reset'" class="reset" style="display: none" />
       <p class="filters">
         <span v-t="'Current filter'" />
@@ -27,7 +28,7 @@ export default {
      */
     title: {
       type: String,
-      default: 'Day'
+      default: ''
     },
     /**
      * Column name of the {values} that represent date values
