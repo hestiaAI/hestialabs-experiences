@@ -1,4 +1,4 @@
-export default async ({ store, isDev, $axios, app }) => {
+export default async({ store, isDev, $axios, app }) => {
   if (!store.state.loaded) {
     // first, we need to load the site config
     await store.dispatch('loadConfig', { isDev, $axios })

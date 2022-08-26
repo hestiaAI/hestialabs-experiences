@@ -33,7 +33,7 @@ function d3Locale({ iso }) {
   )
 }
 
-export default async ({ app, store, $vuetify }) => {
+export default async({ app, store, $vuetify }) => {
   const { config: { i18nUrl, theme }, experiences } = store.state
 
   const messagesExperiences = experiences.filter(e => e.messages)
