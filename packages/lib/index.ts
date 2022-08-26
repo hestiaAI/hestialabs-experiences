@@ -5,6 +5,10 @@ import type { PipelineOutput } from '@/types/utils'
 import type { ExperienceOptions } from '@/types'
 export type { ExperienceOptions } from '@/types'
 
+import merge from 'lodash.merge'
+import genericViewerMessages from '@/pipelines/messages'
+// import genericViewers from '@/pipelines/generic'
+
 const defaultViewBlock: Partial<ViewBlock> = {
   postprocessor: (input: PipelineOutput) => input,
   showTable: false
@@ -30,7 +34,7 @@ const defaultOptions: Partial<ExperienceOptions> = {
   hideFileExplorer: true,
   hideSummary: true,
   keepOnlyFiles: true,
-  messages: undefined,
+  messages: {},
   preprocessors: {},
   subtitle: 'Data Experience',
   tutorialVideos: [],
@@ -49,6 +53,17 @@ export class Experience {
   ) {
     // spread default options first, and then provided options
     this.options = { ...defaultOptions, ...options }
+
+    options.viewBlocks
+      .filter(({ id }) => id in genericViewerMessages)
+      .forEach(({ id }) => {
+        // merge generic viewer messages if some generic viewer is included
+        this.options.messages = merge(
+          this.options.messages,
+          genericViewerMessages[id]
+        )
+      })
+
     // construct default view Array
     this.options.viewBlocks = options.viewBlocks.map(createViewBlock)
 
