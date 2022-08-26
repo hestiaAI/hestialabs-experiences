@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import DummyButton from 'data-experience'
+import DataExperience from 'data-experience'
 
 export default ({ store }) => {
-  Vue.use(DummyButton, { store })
+  Vue.use(DataExperience, { store })
 }

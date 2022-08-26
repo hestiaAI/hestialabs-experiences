@@ -18,7 +18,9 @@
         seriesAccessor: { text: 'Action', value: 'a' }
       }"
     />
+    <!--
     <HelloWorld />
+     -->
   </div>
 </template>
 <script>
