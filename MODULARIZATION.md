@@ -46,6 +46,14 @@ Importing from a normal vuetify project like vtfcomponent also fails.
 
 Next step is trying to import from a project made to export extended vuetify components (vuetify-extra)
 
+## importing vuetify-extra
+
+A vue project needs a [plugin to import vuetify-extra](https://github.com/menteora/vuetify-extra#use-plugin) (see example vextra)
+
+A nuxt project installs plugins in a [module](https://nuxtjs.org/docs/directory-structure/modules/#provide-plugins)
+
+Here's where [nuxt/vuetify](https://github.com/nuxt-community/vuetify-module/blob/8b52b9374ac059a4529635fcd8c96af955d84ea2/src/build.ts#L56) does it. It installs a plugin made specifically for nuxt using its template language and  compiles things with webpack/sass/whatever [:-/](https://github.com/nuxt-community/vuetify-module/blob/master/templates/plugin.js)
+
 ## importing vuetify projects fails
 
 vtfcomponent vtfw4 are new projects created by vue-cli. Vtfw4 is created by an older version of vue-cli and uses webpack 4. 
