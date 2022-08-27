@@ -27,16 +27,22 @@ vuetify&#x2026;
 
 # experiences imports data-experience
 
+    cd data-experience
+    npm install
+    npm run build-lib
+    
+    cd ../experiences
+    npm install
+    npm run dev
+    
+and open http://localhost:3000/modul
+
 Experiences has a dependency to data-experience, a plain vue project created with vue-cli.
 
-    cd experiences
+    # how the dependency was added
     npm install ../data-experience
 
-To test the current imports
-
-    npm run dev
   
-and open http://localhost:3000/modul
 
 DummyButton works with vuex and is successfully imported to  nuxt thanks to the plugin *experiences/plugins/data-experiences.js*
 
@@ -174,3 +180,14 @@ after any npm install in vextra, relink to vuetify-extra
 
     # in vextra
     npm link @menteora/vuetify-extra
+
+## import data-experience into vextra
+
+    cd data-experience
+    npm link
+    
+    
+    cd ../vextra
+    npm link data-experience  @menteora/vuetify-extra
+    npm run serve
+    
