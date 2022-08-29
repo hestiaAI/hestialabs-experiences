@@ -38,9 +38,9 @@
           <VCol cols="12" sm="10" md="9" lg="7">
             <div class="text-center">
               <h3 class="section-title font-weight-medium">
-                Our current workshops
+                Learning programs
               </h3>
-              <p>Choose the workshop(s) of your choice</p>
+              <p>Choose the course(s) of your choice or assemble them to create curricula relevant to your needs.</p>
             </div>
           </VCol>
         </VRow>
