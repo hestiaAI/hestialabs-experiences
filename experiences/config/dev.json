@@ -60,7 +60,19 @@
     "sit-participant",
     "brown-aggregator",
     "brown-participant",
-    "sciencespo-participant"
+    "sciencespo-participant",
+    "dating-apps-course",
+    "health-course",
+    "matching-algo-course",
+    "policy-making-course"
+  ],
+  "homePageBubbles": [
+    "demo-participant",
+    "sit-participant",
+    "dating-apps-course",
+    "health-course",
+    "matching-algo-course",
+    "policy-making-course"
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
   "i18nUrl": "/i18n-messages-example.json",

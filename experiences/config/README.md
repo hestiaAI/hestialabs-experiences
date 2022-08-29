@@ -57,6 +57,12 @@ This directory contains the configuration files linked to each deployement. They
     */
   "bubbles": ["workshop-x-participant", "workshop-x-aggregator"],
   /**
+    * Bubbles that are displayed on the home page (not on the menu).
+    * Must be included in the "bubbles" above.
+    * @type Array
+    */
+  "homePageBubbles": ["workshop-x-participant"],
+  /**
     * A link to a filedrop service. In case the size limit is exceeded,
     * the user is invited to download the ZIP and use this link.
     * @type String
