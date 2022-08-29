@@ -6,7 +6,12 @@
     hover
   >
     <VCardText>
-      <VImg :src="icon" :lazy-src="icon" />
+      <VAvatar
+        size="200"
+        tile
+      >
+        <VImg :src="icon" :lazy-src="icon" contain />
+      </VAvatar>
       <h4 class="text-subtitle-1 font-weight-bold">
         {{ title }}
       </h4>
