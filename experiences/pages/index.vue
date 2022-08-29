@@ -45,7 +45,7 @@
           </VCol>
         </VRow>
         <VRow justify="center">
-          <template v-if="$store.state.config.bubbleConfig">
+          <template v-if="workshops.length">
             <VCol
               v-for="({ title, icon, description, slug}) in workshops"
               :key="slug"
@@ -83,7 +83,7 @@
           <VCol>
             <div class="text-center">
               <VCarousel
-                height="400"
+                height="420"
                 hide-delimiter-background
                 show-arrows-on-hover
                 delimiter-icon="$vuetify.icons.mdiMinus"
@@ -151,7 +151,7 @@ export default {
           'publicKey'
         ])
         return { slug, ...config }
-      }).filter(w => !w.publicKey)
+      }).filter(w => (this.$store.state.config.homePageBubbles || []).includes(w.slug))
     }
   }
 }
