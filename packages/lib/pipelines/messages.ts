@@ -12,7 +12,12 @@ const genericDateViewer: Messages = {
         from: 'From',
         to: 'to',
         found: 'we found',
-        'dated-event': 'dated events in your file(s).'
+        'dated-event': 'dated events in your file(s).',
+        columns: {
+          'File name': 'File name',
+          Date: 'Date',
+          Description: 'Description'
+        }
       }
     }
   },
@@ -28,7 +33,12 @@ const genericDateViewer: Messages = {
         from: 'De',
         to: 'à',
         found: 'nous avons trouvé',
-        'dated-event': 'événements datés dans votre (vos) fichier(s).'
+        'dated-event': 'événements datés dans votre (vos) fichier(s).',
+        columns: {
+          'File name': 'Nom de fichier',
+          Date: 'Date',
+          Description: 'Description'
+        }
       }
     }
   }
@@ -44,7 +54,14 @@ const genericLocationViewer: Messages = {
         'graph-title': 'Number of location records in your files',
         'graph-no-location': 'No location were found in your file(s).',
         found: 'We found',
-        location: 'locations in your file(s).'
+        location: 'locations in your file(s).',
+        columns: {
+          File: 'File',
+          Path: 'Path',
+          Latitude: 'Latitude',
+          Longitude: 'Longitude',
+          Description: 'Description'
+        }
       }
     }
   },
@@ -58,7 +75,14 @@ const genericLocationViewer: Messages = {
         'graph-no-location':
           "Aucune localisation n'a été trouvé dans votre/vos fichier(s).",
         found: 'Nous avons trouvé',
-        location: 'dans votre/vos fichier(s).'
+        location: 'dans votre/vos fichier(s).',
+        columns: {
+          File: 'Fichier',
+          Path: 'Chemin',
+          Latitude: 'Latitude',
+          Longitude: 'Longitude',
+          Description: 'Description'
+        }
       }
     }
   }

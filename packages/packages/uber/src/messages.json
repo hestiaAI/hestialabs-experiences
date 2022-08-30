@@ -13,11 +13,10 @@
       "tripsGraphData": {
         "title": "Uber Trips",
         "text": "Get information about the places you have visited the most or from which you originate the most.",
-        "vizProps": {
-          "labelTotal": "In total there are {total} records of trips you have made with Uber",
-          "sourceText": "Pick-up places",
-          "targetText": "Drop-off places"
-        }
+        "labelTotal": "In total there are {total} records of trips you have made with Uber",
+        "sourceText": "Pick-up places",
+        "targetText": "Drop-off places",
+        "totalText": "trips"
       },
       "tripsKeplerData": {
         "title": "Map of trips",
@@ -39,11 +38,10 @@
       "tripsGraphData": {
         "title": "Trajets",
         "text": "Informations sur vos destinations et points de départ.",
-        "vizProps": {
-          "labelTotal": "Au total, il y a {total} enregistrements des voyages que vous avez effectués avec Uber",
-          "sourceText": "Lieux de ramassage",
-          "targetText": "Lieux de dépôt"
-        }
+        "labelTotal": "Au total, il y a {total} enregistrements des voyages que vous avez effectués avec Uber",
+        "sourceText": "Lieux de ramassage",
+        "targetText": "Lieux de dépôt",
+        "totalText": "trajets"
       },
       "tripsKeplerData": {
         "title": "Carte de trajets",
