@@ -1,6 +1,6 @@
 <template>
   <VCard
-    class="mx-auto"
+    class="mx-auto ma-3"
     color="primary"
     dark
     max-width="400"

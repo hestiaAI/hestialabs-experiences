@@ -38,14 +38,14 @@
           <VCol cols="12" sm="10" md="9" lg="7">
             <div class="text-center">
               <h3 class="section-title font-weight-medium">
-                Our current workshops
+                Learning programs
               </h3>
-              <p>Choose the workshop(s) of your choice</p>
+              <p>Choose the course(s) of your choice or assemble them to create curricula relevant to your needs.</p>
             </div>
           </VCol>
         </VRow>
         <VRow justify="center">
-          <template v-if="$store.state.config.bubbleConfig">
+          <template v-if="workshops.length">
             <VCol
               v-for="({ title, icon, description, slug}) in workshops"
               :key="slug"
@@ -83,7 +83,7 @@
           <VCol>
             <div class="text-center">
               <VCarousel
-                height="400"
+                height="420"
                 hide-delimiter-background
                 show-arrows-on-hover
                 delimiter-icon="$vuetify.icons.mdiMinus"
@@ -151,7 +151,7 @@ export default {
           'publicKey'
         ])
         return { slug, ...config }
-      }).filter(w => !w.publicKey)
+      }).filter(w => (this.$store.state.config.homePageBubbles || []).includes(w.slug))
     }
   }
 }

@@ -183,6 +183,10 @@ export default {
     dateFormat: {
       type: String,
       default: ''
+    },
+    cumSum: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -243,6 +247,18 @@ export default {
         serie.current = serie.current.sort(
           (e1, e2) => this.dateParser(e1.key) - this.dateParser(e2.key)
         )
+
+        // Compute cumulative sum if needed
+        if (this.cumSum) {
+          const cumSum = d3.cumsum(serie.current, d => d.value)
+          serie.current = serie.current.map((d, idx) => {
+            return {
+              ...d,
+              value: cumSum[idx]
+
+            }
+          })
+        }
       })
     },
     drawViz() {
@@ -312,6 +328,7 @@ export default {
             .sort((e1, e2) => e1.date - e2.date)
         }
       })
+
       this.selectedInterval = this.namesInterval.slice(-1)[0].value
       this.initFilters()
       this.applyFilters()

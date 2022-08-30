@@ -1,0 +1,148 @@
+{
+  "en": {
+    "intro": {
+      "title": "TikTok",
+      "dataPortal": "https://support.tiktok.com/en/account-and-privacy/personalized-ads-and-data/requesting-your-data"
+    },
+    "viewBlocks": {
+      "loginhistory": {
+        "title": "Login History",
+        "text": "When and where you logged in.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Number of login",
+              "valueLabel": "logins"
+            },
+            {
+              "valueLabel": "logins"
+            },
+            {
+              "valueLabel": "logins"
+            },
+            {
+              "title": "Network Type",
+              "valueLabel": "logins"
+            },
+            {
+              "title": "Carrier",
+              "valueLabel": "logins"
+            },
+            {
+              "title": "Device System",
+              "valueLabel": "logins"
+            },
+            {
+              "title": "Device Model",
+              "valueLabel": "logins"
+            },
+            {
+              "title": "IP",
+              "valueLabel": "logins"
+            }
+          ]
+        }
+      },
+      "followingfollower": {
+        "title": "Following vs Follower",
+        "text": "See how much you have follow or have been followed during time",
+        "vizProps": {
+          "title": "Following vs Follower over time"
+        }
+      },
+      "activityhistory": {
+        "title": "Activity History",
+        "text": "Consult every actions you have made on the app.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Number of actions"
+            },
+            {
+              "title": "Type of action"
+            },
+            {},
+            {}
+          ]
+        } 
+      },
+      "chathistory": {
+        "title": "Chat Activity",
+        "text": "Find out what time and day you receive and send the most messages."
+      }
+    }
+  },
+  "fr": {
+     "intro": {
+      "title": "TikTok",
+      "dataPortal": "https://support.tiktok.com/fr/account-and-privacy/personalized-ads-and-data/requesting-your-data"
+    },
+    "viewBlocks": {
+      "loginhistory": {
+        "title": "Historique des connexions",
+        "text": "Quand et comment vous vous êtes connecté.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Nombre de connexions",
+              "valueLabel": "connexions"
+            },
+            {
+              "valueLabel": "connexions"
+            },
+            {
+              "valueLabel": "connexions"
+            },
+            {
+              "title": "Type de réseau",
+              "valueLabel": "connexions"
+            },
+            {
+              "title": "Fournisseur",
+              "valueLabel": "connexions"
+            },
+            {
+              "title": "Système d'exploitation",
+              "valueLabel": "connexions"
+            },
+            {
+              "title": "Appareil",
+              "valueLabel": "connexions"
+            },
+            {
+              "title": "IP",
+              "valueLabel": "connexions"
+            }
+          ]
+        }
+      },
+      "followingfollower": {
+        "title": "Abonnements et abonnés",
+        "text": "Voyez combien vous avez suivi ou avez été suivi au cours du temps.",
+        "vizProps": {
+          "title": "Abonnements et abonnés au cours du temps."
+        }
+      },
+      "activityhistory": {
+        "title": "Historique de l'activité",
+        "text": "Consultez toutes les actions que vous avez effectuées sur l'application.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Nombre d'actions"
+            },
+            {
+              "title": "Type d'action"
+            },
+            {},
+            {}
+          ]
+        } 
+      },
+      "chathistory": {
+        "title": "Messages",
+        "text": "Découvrez à quelle heure et quel jour vous recevez et envoyez le plus de messages."
+      }
+    }
+  }
+}
