@@ -8,6 +8,16 @@ export type Collaborator = {
 }
 export type Files = { [key: string]: string }
 export type PreprocessorFunction = (input: string) => string
+export type Lang = 'en' | 'fr'
+export type Messages = Record<
+  Lang,
+  {
+    viewBlocks: {
+      [key: string]: object
+    }
+    [key: string]: object
+  }
+>
 
 export type ExperienceOptions = {
   collaborator?: Collaborator
@@ -23,7 +33,7 @@ export type ExperienceOptions = {
   hideSummary?: boolean
   icon: string
   keepOnlyFiles?: boolean
-  messages?: object
+  messages?: Messages
   preprocessors?: { [key: string]: PreprocessorFunction }
   subtitle?: string
   title: string

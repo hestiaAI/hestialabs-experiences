@@ -1,14 +1,6 @@
-type Viewer = 'genericDateViewer' | 'genericLocationViewer'
+import type { Messages } from '@/types/experience-options'
 
-type i18nViewBlocks = {
-  [lang in 'en' | 'fr']: {
-    viewBlocks: Partial<{
-      [viewer in Viewer]: object
-    }>
-  }
-}
-
-const genericDateViewer: i18nViewBlocks = {
+const genericDateViewer: Messages = {
   en: {
     viewBlocks: {
       genericDateViewer: {
@@ -42,7 +34,7 @@ const genericDateViewer: i18nViewBlocks = {
   }
 }
 
-const genericLocationViewer: i18nViewBlocks = {
+const genericLocationViewer: Messages = {
   en: {
     viewBlocks: {
       genericLocationViewer: {
@@ -73,7 +65,7 @@ const genericLocationViewer: i18nViewBlocks = {
 }
 
 const viewers: {
-  [key: string]: i18nViewBlocks
+  [key: string]: Messages
 } = {
   genericDateViewer,
   genericLocationViewer
