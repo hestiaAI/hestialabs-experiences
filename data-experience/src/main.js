@@ -1,7 +1,7 @@
 import DummyButton from './components/DummyButton.vue'
-import ChartViewBar from './components/chart/view/ChartViewBar.vue'
-import ChartViewTimeSeries from './components/chart/view/ChartViewTimeSeries.vue'
+import ChartView from './components/chart/ChartView.vue'
 import store from './store'
+import './assets/dc.css'
 
 export default {
   install (Vue, options) {
@@ -12,7 +12,6 @@ export default {
     options.store.registerModule('data-experience', store)
 
     Vue.component('DummyButton', DummyButton)
-    Vue.component('ChartViewBar', ChartViewBar)
-    Vue.component('ChartViewTimeSeries', ChartViewTimeSeries)
+    Vue.component('ChartView', ChartView)
   }
 }

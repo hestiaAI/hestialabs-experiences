@@ -204,7 +204,7 @@ export default {
   },
   methods: {
     initFilters() {
-      this.filters.forEach((filter) => {
+      this.filters.forEach((filter, i) => {
         this.filterItems[filter.value] = []
         // get unique ids and set items for each filter select
         this.filterItems[filter.value] = this.values
@@ -431,8 +431,8 @@ export default {
           return d
         })
       // space the groups depending on their size
-      legend.attr('transform', (_, i) => {
-        const x = d3.sum(keys, (_, j) =>
+      legend.attr('transform', (d, i) => {
+        const x = d3.sum(keys, (e, j) =>
           j < i ? legend.nodes()[j].getBBox().width : 0
         )
         return (

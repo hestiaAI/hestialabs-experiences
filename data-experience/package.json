@@ -11,13 +11,16 @@
   },
   "main": "dist/data-experience.common.js",
   "dependencies": {
+    "core-js": "^3.8.3",
+    "crossfilter2": "^1.5.4",
     "d3": "^7.6.1",
     "d3-collection": "^1.0.7",
     "d3-force-boundary": "^0.0.3",
     "d3-sankey": "^0.12.3",
     "d3-time-format": "^4.1.0",
     "dc": "^4.2.7",
-    "core-js": "^3.8.3",
+    "dom-to-image-more": "^2.11.1",
+    "lodash-es": "^4.17.21",
     "vue": "^2.6.14"
   },
   "devDependencies": {
