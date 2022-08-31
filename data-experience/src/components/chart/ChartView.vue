@@ -2,7 +2,7 @@
   <DataValidator :data="data">
     <div>
       <component
-        :is="component"
+        :is="graphName"
         v-bind="{
           values: data.items || [],
           headers: data.headers || [],
@@ -14,6 +14,9 @@
 </template>
 
 <script>
+// eslint-disable-next-line
+import ChartViewTimeSeries from './view/ChartViewTimeSeries.vue'
+
 export default {
   props: {
     data: {
@@ -27,11 +30,6 @@ export default {
     vizProps: {
       type: Object,
       default: () => ({})
-    }
-  },
-  computed: {
-    component() {
-      return () => import(`./view/${this.graphName}`)
     }
   }
 }

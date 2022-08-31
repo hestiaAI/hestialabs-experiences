@@ -12,6 +12,6 @@ export default {
     options.store.registerModule('data-experience', store)
 
     Vue.component('DummyButton', DummyButton)
-    Vue.component('ChartView', ChartView)
+    Vue.component('ChartView2', ChartView)
   }
 }
