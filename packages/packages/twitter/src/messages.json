@@ -27,11 +27,23 @@
       },
       "all-criteria-all-advertisers": {
         "title": "Targeting criteria (1 advertiser)",
-        "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the advertiser in the table below and click on it to visualise them."
+        "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the advertiser in the table below and click on it to visualise them.",
+        "vizProps": {
+          "cardTitle": "Advertisers"
+        },
+        "columns": {
+          "Advertiser": "Advertiser",
+          "Targeting criteria": "Targeting criteria"
+        }
       },
       "personalization": {
         "title": "Inferred Data",
-        "text": "Find out what information Twitter has deduced about you"
+        "text": "Find out what information Twitter has deduced about you",
+        "vizProps": {
+          "messages": {
+            "title": "General information"
+          }
+        }
       }
     }
   },
@@ -63,11 +75,23 @@
       },
       "all-criteria-all-advertisers": {
         "title": "Critères de ciblage (1 publicitaire)",
-        "text": "Visualisation des critères de ciblage qu'un publicitaire donné utilise pour vous viser. Parcourir la liste et cliquer sur un publicitaire pour afficher ses informations."
+        "text": "Visualisation des critères de ciblage qu'un publicitaire donné utilise pour vous viser. Parcourir la liste et cliquer sur un publicitaire pour afficher ses informations.",
+        "vizProps": {
+          "cardTitle": "Publicitaires"
+        },
+        "columns": {
+          "Advertiser": "Publicitaire",
+          "Targeting criteria": "Critères de ciblage"
+        }
       },
       "personalization": {
         "title": "Données supposées",
-        "text": "Information que Twitter a déduites à votre sujet."
+        "text": "Information que Twitter a déduites à votre sujet.",
+        "vizProps": {
+          "messages": {
+            "title": "General information"
+          }
+        }
       }
     }
   }

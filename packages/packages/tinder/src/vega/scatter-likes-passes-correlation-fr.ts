@@ -5,7 +5,7 @@ export default {
   padding: 5,
   autosize: 'pad',
   title: {
-    text: 'Likes/Passes correlation',
+    text: 'Corrélation Likes/Passes',
     anchor: 'middle',
     dy: -10,
     encode: {
@@ -139,7 +139,7 @@ export default {
           fields: ['likes', 'passes', 'opens'],
           groupby: ['dateValue'],
           ops: ['sum', 'sum', 'sum'],
-          as: ['Likes', 'Passes', 'opens']
+          as: ['Likes', 'Passes', 'Ouvertures']
         },
         {
           type: 'fold',
@@ -147,7 +147,7 @@ export default {
         },
         {
           type: 'filter',
-          expr: "(datum['Passes'] != null || datum['Likes'] != null) && datum['opens'] != null"
+          expr: "(datum['Passes'] != null || datum['Likes'] != null) && datum['Ouvertures'] != null"
         }
       ]
     },
@@ -182,7 +182,7 @@ export default {
       zero: true,
       domain: {
         data: 'source',
-        field: 'opens'
+        field: 'Ouvertures'
       },
       range: 'width'
     },
@@ -216,7 +216,7 @@ export default {
       orient: 'bottom',
       tickCount: 5,
       titlePadding: 10,
-      title: 'Number of times the application is opened per day',
+      title: "Nombre de fois que l'application est ouverte par jour",
       titleColor: {
         value: '#2e3131'
       },
@@ -236,7 +236,7 @@ export default {
       domain: false,
       orient: 'left',
       titlePadding: 10,
-      title: 'Number of likes/passes',
+      title: 'Nombre de likes/passes',
       titleColor: {
         value: '#2e3131'
       },
@@ -254,7 +254,7 @@ export default {
   legends: [
     {
       stroke: 'color',
-      title: 'Action type',
+      title: "Type d'action",
       titleColor: {
         value: '#2e3131'
       },
@@ -384,7 +384,7 @@ export default {
         update: {
           x: {
             scale: 'x',
-            field: 'opens'
+            field: 'Ouvertures'
           },
           y: {
             scale: 'y',

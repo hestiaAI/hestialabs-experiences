@@ -71,7 +71,7 @@ const blocks: ViewBlocks = [
     id: 'personalization',
     sql: sqlPersonalization,
     files: ['personalization'],
-    visualization: 'TwitterInferredInfos.vue',
+    visualization: 'ChartViewTwitterInferredInfos.vue',
     title: 'Inferred Data',
     text: 'Find out what information Twitter has deduced about you'
   },
