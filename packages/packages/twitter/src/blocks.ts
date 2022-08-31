@@ -7,7 +7,8 @@ import sqlTargetingCriteriaByAdvertiser from './sql/targeting-criteria-by-advert
 import sqlTargetingCriteriaAllAdvertisers from './sql/targeting-criteria-all-advertisers.sql'
 import sqlAllCriteriaAllAdvertisers from './sql/all-criteria-all-advertisers.sql'
 
-import vegaWordcloudTargetingCriteria from './vega/wordcloud-targeting-criteria'
+import vegaWordcloudTargetingCriteriaEn from './vega/wordcloud-targeting-criteria-en'
+import vegaWordcloudTargetingCriteriaFr from './vega/wordcloud-targeting-criteria-fr'
 
 import { sunburstTargeting } from './postprocessors'
 import { genericDateViewer } from '@/pipelines/generic'
@@ -49,7 +50,10 @@ const blocks: ViewBlocks = [
     id: 'targeting-criteria-all-advertisers',
     sql: sqlTargetingCriteriaAllAdvertisers,
     files: ['impressions', 'engagements'],
-    visualization: vegaWordcloudTargetingCriteria,
+    visualization: {
+      en: vegaWordcloudTargetingCriteriaEn,
+      fr: vegaWordcloudTargetingCriteriaFr
+    },
     title: 'Targeting criteria (All advertisers)',
     text: "Get more details on how you are targeted by these advertisers. This graph shows the number of times you have been targeted by different advertisers using a specific criterion. You can change the type of criterion and get information about the meaning of each criterion's type at the bottom of the graph."
   },

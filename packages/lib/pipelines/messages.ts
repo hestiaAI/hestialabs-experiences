@@ -7,12 +7,10 @@ const genericDateViewer: Messages = {
         name: 'Timeline',
         title: 'Timeline',
         text: 'See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date.',
-        'graph-title': 'Number of dated events in your files',
-        'graph-no-date': 'No dated events were found in your file(s).',
-        from: 'From',
-        to: 'to',
-        found: 'we found',
-        'dated-event': 'dated events in your file(s).',
+        graphTitle: 'Number of dated events in your files',
+        graphNoDate: 'No dated events were found in your file(s).',
+        datedEvents:
+          'From {currMinDate} to {currMaxDate} we found {total} dated events in your file(s).',
         columns: {
           'File name': 'File name',
           Date: 'Date',
@@ -27,13 +25,11 @@ const genericDateViewer: Messages = {
         name: 'Chronologie',
         title: 'Chronologie',
         text: 'Voir tous les événements datés dans vos dossiers, correspondant aux données qui ont été collectées sur vous à ou concernant une date spécifique.',
-        'graph-title': "Nombre d'événements datés dans vos dossiers",
-        'graph-no-date':
+        graphTitle: "Nombre d'événements datés dans vos dossiers",
+        graphNoDate:
           "Aucun événement daté n'a été trouvé dans votre (vos) dossier(s).",
-        from: 'De',
-        to: 'à',
-        found: 'nous avons trouvé',
-        'dated-event': 'événements datés dans votre (vos) fichier(s).',
+        datedEvents:
+          'De {currMinDate} à {currMaxDate} nous avons trouvé {total} événements datés dans votre (vos) fichier(s).',
         columns: {
           'File name': 'Nom de fichier',
           Date: 'Date',
@@ -51,10 +47,9 @@ const genericLocationViewer: Messages = {
         name: 'Location Observations',
         title: 'Location Observations',
         text: 'See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location.',
-        'graph-title': 'Number of location records in your files',
-        'graph-no-location': 'No location were found in your file(s).',
-        found: 'We found',
-        location: 'locations in your file(s).',
+        graphTitle: 'Number of location records in your files',
+        graphNoLocation: 'No location were found in your file(s).',
+        locations: 'We found {total} locations in your file(s).',
         columns: {
           File: 'File',
           Path: 'Path',
@@ -71,11 +66,11 @@ const genericLocationViewer: Messages = {
         name: 'Positions',
         title: 'Observations de localisation',
         text: 'Voir tous les événements de localisation dans vos fichiers, correspondant aux données qui ont été collectées sur vous à ou concernant un lieu spécifique.',
-        'graph-title': 'Nombre de localisation dans vos fichiers',
-        'graph-no-location':
+        graphTitle: 'Nombre de localisation dans vos fichiers',
+        graphNoLocation:
           "Aucune localisation n'a été trouvé dans votre/vos fichier(s).",
-        found: 'Nous avons trouvé',
-        location: 'dans votre/vos fichier(s).',
+        locations:
+          'Nous avons trouvé {total} observations de localisation dans votre/vos fichier(s).',
         columns: {
           File: 'Fichier',
           Path: 'Chemin',

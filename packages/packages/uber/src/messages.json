@@ -16,7 +16,8 @@
         "labelTotal": "In total there are {total} records of trips you have made with Uber",
         "sourceText": "Pick-up places",
         "targetText": "Drop-off places",
-        "totalText": "trips"
+        "linkMouseoverHTML": "<b>{sourceName}</b>  → <b>{targetName}</b><br><center><b>{value}</b> trips.</center>",
+        "nodeMouseoverHTML": ""
       },
       "tripsKeplerData": {
         "title": "Map of trips",
@@ -41,7 +42,8 @@
         "labelTotal": "Au total, il y a {total} enregistrements des voyages que vous avez effectués avec Uber",
         "sourceText": "Lieux de ramassage",
         "targetText": "Lieux de dépôt",
-        "totalText": "trajets"
+        "linkMouseoverHTML": "<b>{sourceName}</b>  → <b>{targetName}</b><br><center><b>{value}</b> trips.</center>",
+        "nodeMouseoverHTML": ""
       },
       "tripsKeplerData": {
         "title": "Carte de trajets",
