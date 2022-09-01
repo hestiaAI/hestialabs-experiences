@@ -32,9 +32,6 @@ export default {
       required: true
     }
   },
-  data() {
-    return {}
-  },
   computed: {
     messageReceived() {
       return this.values.filter(v => v.receiver === 'You')
@@ -42,10 +39,6 @@ export default {
     messageSent() {
       return this.values.filter(v => v.sender === 'You')
     }
-  },
-  mounted() {},
-  methods: {
-    drawViz() {}
   }
 }
 </script>

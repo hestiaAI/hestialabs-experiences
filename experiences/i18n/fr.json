@@ -23,7 +23,15 @@
       "interactions": "Interactions avec les pubs (clics, visionnage de vidéos)",
       "targeting-type": "Type de ciblage",
       "targeting-criteria": "Critères de ciblage",
-      "ads": "pubs"
+      "ads": "pubs",
+      "columns": {
+        "Tweet ID": "Tweet ID",
+        "Company": "Société",
+        "Date": "Date",
+        "Promoted Tweet": "Tweet promu",
+        "Engagement": "Engagement",
+        "Targeting Criteria": "Critères de ciblage"
+      }
     },
     "overview-uber": {
       "select-currency": "Sélectionner les données selon la devise",
@@ -65,7 +73,8 @@
     "sunburst": {
       "Click to expand": "Cliquez pour agrandir",
       "All": "Tout",
-      "out of": "sur"
+      "infoNumber": "{number} sur {total}",
+      "Zoom out": "Zoom arrière"
     }
   },
   "unit-files": {
@@ -150,6 +159,7 @@
   },
   "About": "À propos",
   "All": "Tout",
+  "All files are used": "Tous les fichiers sont utilisés",
   "and": "et",
   "at": "à",
   "Available on-demand": "Disponible sur demande",
@@ -175,10 +185,12 @@
   "hour": "heure",
   "In total we found": "Au total nous avons trouvé",
   "in-files": "dans votre/vos fichier(s)",
+  "Link": "Lien",
   "Load your data": "Charger vos données",
   "Made for": "Fait pour",
   "Month": "Mois | Mois",
   "month": "mois",
+  "No": "Non",
   "No relevant data found": "Aucune donnée pertinente trouvée",
   "no-records": "Aucun résultat n'a été trouvé dans votre (vos) dossier(s).",
   "not found": "pas trouvé",
@@ -192,7 +204,7 @@
   "Search": "Rechercher",
   "seconds": "secondes",
   "Select All": "Sélectionner Tout",
-  "select-time-range": "sélectionnez une plage de temps pour effectuer un zoom",
+  "select-time-range": "Sélectionnez une plage de temps pour effectuer un zoom",
   "selected-out-of": "sélectionné·e·s sur",
   "Settings": "Réglages",
   "Share": "Partager",
@@ -212,5 +224,6 @@
     "Sat": "sam"
   },
   "Year": "Année | Années",
-  "year": "année"
+  "year": "année",
+  "Yes": "Oui"
 }

@@ -3,7 +3,7 @@
     <ChartViewVRowWebShare>
       <VCol cols="12" md="12" class="text-center">
         <!-- https://kazupon.github.io/vue-i18n/guide/interpolation.html#slots-syntax-usage -->
-        <i18n :path="kViewBlock('vizProps.labelTotal')" tag="p">
+        <i18n :path="kViewBlock('labelTotal')" tag="p">
           <template #total>
             <span class="text-bold" v-text="total" />
           </template>
@@ -28,14 +28,6 @@ export default {
       type: Number,
       default: 10
     },
-    labelLeft: {
-      type: String,
-      default: 'Pickup places'
-    },
-    labelRight: {
-      type: String,
-      default: 'Dropoff places'
-    },
     displayLinksLabels: {
       type: Boolean,
       default: true
@@ -55,6 +47,9 @@ export default {
     }
   },
   methods: {
+    k(key) {
+      return `chart-view.sankey.${key}`
+    },
     toJSONGraph(data) {
       // group, count each similar links and limit to top n links
       const groupedData = d3
@@ -146,7 +141,7 @@ export default {
         .append('div')
         .style('opacity', 1)
         .html(
-          '(hover on the links or nodes to get more information<br> about the most frequent ones)'
+          `(${this.$t(this.k('hoverMessage'))})`
         )
         .style('left', width / 2 + margin.left + 'px')
         .style('top', 0 + 'px')
@@ -167,22 +162,22 @@ export default {
         .style('opacity', 0)
         .attr('class', 'tooltip')
 
-      // Add Label left
+      // Add source text (on the left)
       svg
         .append('text')
         .attr('class', 'label')
         .attr('x', 0)
         .attr('y', -margin.top / 2)
-        .text(this.labelLeft)
+        .text(this.$t(this.kViewBlock('sourceText')))
 
-      // Add Label right
+      // Add target text (on the right)
       svg
         .append('text')
         .attr('class', 'label')
         .attr('x', width)
         .attr('y', -margin.top / 2)
         .attr('text-anchor', 'end')
-        .text(this.labelRight)
+        .text(this.$t(this.kViewBlock('targetText')))
 
       // Set the sankey diagram properties
       const sankey = d3Sankey
@@ -204,11 +199,8 @@ export default {
         .attr('d', d3Sankey.sankeyLinkHorizontal())
         .attr('stroke-width', d => d.width)
         .attr('opacity', 0.2)
-        .on('mouseover', function(evt, d) {
-          const textToDisplay = `<b>${d.sourceName}</b>  → <b>
-            ${d.targetName}</b><br><center><b>
-            ${d.value}</b> trips.</center>`
-
+        .on('mouseover', (evt, d) => {
+          const textToDisplay = this.$t(this.kViewBlock('linkMouseoverHTML'), d)
           linkTooltip.html(textToDisplay).style('opacity', 1)
 
           // highlight current one

@@ -103,9 +103,6 @@ export default {
       ],
       ...v
     }
-  },
-  methods: {
-    drawViz() {}
   }
 }
 </script>

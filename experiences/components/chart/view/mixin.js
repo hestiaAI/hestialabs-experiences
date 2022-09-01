@@ -12,7 +12,7 @@ export default {
     },
     kViewBlock: {
       type: Function,
-      required: true
+      default: () => ''
     }
   },
   data() {
@@ -29,6 +29,7 @@ export default {
     }
   },
   methods: {
+    drawViz() { },
     createTextFilterWidget(parent, placeholder = 'Search') {
       const widget = new TextFilterWidget(parent)
       widget.placeHolder(this.$t(placeholder))

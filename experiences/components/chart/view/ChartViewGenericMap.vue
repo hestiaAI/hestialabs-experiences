@@ -196,7 +196,6 @@ export default {
       this.results = this.values
       this.sliderValue = 0
     },
-    drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems
     }

@@ -15,7 +15,7 @@
               </p>
             </div>
             <div :id="'range-chart' + graphId" class="range-chart">
-              <p class="muted pull-right" style="margin-right: 15px">
+              <p class="muted pull-right mr-4 mb-1">
                 {{ $t('select-time-range') }}
               </p>
             </div>
@@ -117,16 +117,19 @@ export default {
         {
           text: 'Engagement',
           value: 'engagements',
-          formatter: d => (d === 0 ? 'No' : 'Yes')
+          formatter: d => this.$t(d === 0 ? 'No' : 'Yes')
         },
         { text: 'Targeting Criteria', value: 'count' }
-      ],
+      ].map(
+        ({ text, ...rest }) =>
+          ({ text: this.$t(this.k(`columns.${text}`)), ...rest })
+      ),
       results: []
     }
   },
   methods: {
-    k(localKey) {
-      return `chart-view.overview-twitter.${localKey}`
+    k(key) {
+      return `chart-view.overview-twitter.${key}`
     },
     drawViz() {
       this.results = this.values
@@ -203,7 +206,7 @@ export default {
       const adPerDayDimension = ndx.dimension(d => d.day)
       const companyDimension = ndx.dimension(d => d.companyName)
       const engagementDimension = ndx.dimension(d =>
-        d.engagements ? 'Yes' : 'No'
+        this.$t(d.engagements ? 'Yes' : 'No')
       )
       const targetingTypeDimension = ndx.dimension(d => d.targetingType)
       const targetingValueDimension = ndx.dimension(d => d.targetingValue)

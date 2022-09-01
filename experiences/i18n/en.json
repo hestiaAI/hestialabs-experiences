@@ -23,7 +23,15 @@
       "interactions": "Interactions with ads (clicks, video views)",
       "targeting-type": "Type of targeting",
       "targeting-criteria": "Targeting criteria",
-      "ads": "ads"
+      "ads": "ads",
+      "columns": {
+        "Tweet ID": "Tweet ID",
+        "Company": "Company",
+        "Date": "Date",
+        "Promoted Tweet": "Promoted Tweet",
+        "Engagement": "Engagement",
+        "Targeting Criteria": "Targeting Criteria"
+      }
     },
     "overview-uber": {
       "select-currency": "Select data depending on the currency",
@@ -65,7 +73,8 @@
     "sunburst": {
       "Click to expand": "Click to expand",
       "All": "All",
-      "out of": "out of"
+      "infoNumber": "{number} out of {total}",
+      "Zoom out": "Zoom out"
     }
   },
   "unit-files": {
@@ -150,6 +159,7 @@
   },
   "About": "About",
   "All": "All",
+  "All files are used": "All files are used",
   "and": "and",
   "at": "at",
   "Available on-demand": "Available on-demand",
@@ -175,10 +185,12 @@
   "hour": "hour",
   "In total we found": "In total we found",
   "in-files": "in your file.",
+  "Link": "Link",
   "Load your data": "Load your data",
   "Made for": "Made for",
   "Month": "Month | Months",
   "month": "month",
+  "No": "No",
   "No relevant data found": "No relevant data found",
   "no-records": "No records were found in your file(s).",
   "not found": "not found",
@@ -192,7 +204,7 @@
   "Search": "Search",
   "seconds": "seconds",
   "Select All": "Select All",
-  "select-time-range": "select a time range to zoom in",
+  "select-time-range": "Select a time range to zoom in",
   "selected-out-of": "selected out of",
   "Settings": "Settings",
   "Share": "Share",
@@ -212,5 +224,6 @@
     "Sat": "Sat"
   },
   "Year": "Year | Years",
-  "year": "year"
+  "year": "year",
+  "Yes": "Yes"
 }

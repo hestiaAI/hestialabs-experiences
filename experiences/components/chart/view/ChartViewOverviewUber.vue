@@ -26,8 +26,7 @@
             </div>
             <div id="hour-chart">
               <p
-                class="muted pull-right text-subtitle-2"
-                style="margin-right: 15px; margin-bottom: 5px"
+                class="muted pull-right text-subtitle-2 mr-4 mb-1"
               >
                 <span v-t="'select-time-range'" />
                 <a v-t="'reset'" class="reset" style="display: none" />

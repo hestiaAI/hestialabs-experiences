@@ -79,9 +79,6 @@ export default {
         })
         .filter(i => i.values[0].length > 0)
     }
-  },
-  methods: {
-    drawViz() {}
   }
 }
 </script>

@@ -192,7 +192,6 @@ export default {
       return this.legendSquares.length
     }
   },
-  mounted() {},
   methods: {
     generateTitle(item) {
       return (
@@ -202,7 +201,6 @@ export default {
         ' records'
       )
     },
-    drawViz() {},
     legendSquareXPos(idx) {
       const { width: w, cellSize: s, legendNbItems: n } = this
       return w - s * 2 * n + idx * s * 2 - s * 2

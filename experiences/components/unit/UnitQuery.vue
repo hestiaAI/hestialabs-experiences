@@ -18,13 +18,19 @@
                 $vuetify.icons.mdiFileMultipleOutline
               </VIcon>
             </template>
-            <span>All files are used</span>
+            <span
+              v-t="'All files are used'"
+            />
           </VTooltip>
           <UnitFilesDialog
-            v-else-if="fileGlobs.length > 0"
+            v-else-if="
+              fileGlobs.length
+                > 0"
             :file-globs="fileGlobs"
             :file-manager="fileManager"
           />
+          </span>
+          </vtooltip>
         </VCol>
       </VRow>
 
@@ -81,8 +87,8 @@
                 v-bind="{
                   graphName: vizVue,
                   data: clonedResult,
-                  vizProps: vizPropsTranslated,
-                  kViewBlock: k
+                  kViewBlock: k,
+                  ...vizPropsTranslated
                 }"
               />
               <UnitIframe
@@ -237,9 +243,11 @@ export default {
       })
       this.result = finalResult
     },
-    // Convert local translation key to global vue18n
-    k(localKey) {
-      return `experiences.${this.slug}.viewBlocks.${this.id}.${localKey}`
+    // Convert local translation key to global vue-i18n
+    k(key, prefix = '', postfix = '') {
+      const pre = prefix ? `${prefix}.` : ''
+      const post = postfix ? `.${postfix}` : ''
+      return `experiences.${this.slug}.viewBlocks.${this.id}.${pre}${key}${post}`
     }
   }
 }

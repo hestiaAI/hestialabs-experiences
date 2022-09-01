@@ -18,8 +18,7 @@
                 </div>
                 <div :id="`range-chart-${graphId}`" class="range-chart">
                   <p
-                    class="muted pull-right text-subtitle-2"
-                    style="margin-right: 15px; margin-bottom: 5px"
+                    class="muted pull-right text-subtitle-2 mr-4 mb-1"
                   >
                     {{ $t('select-time-range') }}
                   </p>
