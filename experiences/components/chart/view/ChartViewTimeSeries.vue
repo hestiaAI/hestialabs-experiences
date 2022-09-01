@@ -42,7 +42,7 @@
             </template>
             <VCard>
               <VCardTitle>
-                <span class="text-h5">Settings/Filters</span>
+                <span class="text-h5">{{ $t('Settings') }}/{{ $t('Filters') }}</span>
               </VCardTitle>
               <VCardText>
                 <VContainer>
@@ -77,13 +77,10 @@
               </VCardText>
               <VCardActions>
                 <VSpacer />
-                <VBtn color="red darken-1" text @click="resetFilters()">
-                  Reset
-                </VBtn>
-                <VBtn color="blue darken-1" text @click="settingDialog = false">
-                  Close
-                </VBtn>
+                <VBtn v-t="'Reset'" color="red darken-1" text @click="resetFilters()" />
+                <VBtn v-t="'Close'" color="blue darken-1" text @click="settingDialog = false" />
                 <VBtn
+                  v-t="'Save'"
                   color="blue darken-1"
                   text
                   @click="
@@ -91,9 +88,7 @@
                     applyFilters()
                     draw()
                   "
-                >
-                  Save
-                </VBtn>
+                />
               </VCardActions>
             </VCard>
           </VDialog>
@@ -130,15 +125,15 @@ export default {
     // if not set will just count the rows
     valueAccessor: {
       type: String,
-      default: () => null
+      default: null
     },
     valueFormat: {
       type: String,
-      default: () => '~s'
+      default: '~s'
     },
     yLabel: {
       type: String,
-      default: () => 'Count'
+      default: 'Count'
     },
     filters: {
       type: Array,
@@ -146,39 +141,39 @@ export default {
     },
     lineWidth: {
       type: Number,
-      default: () => 2
+      default: 2
     },
     dotWidth: {
       type: Number,
-      default: () => 2
+      default: 2
     },
     dotRadius: {
       type: Number,
-      default: () => 4
+      default: 4
     },
     padding: {
       type: Number,
-      default: () => 5
+      default: 5
     },
     margin: {
       type: Number,
-      default: () => 5
+      default: 5
     },
     adj: {
       type: Number,
-      default: () => 70
+      default: 70
     },
     title: {
       type: String,
-      default: () => 'Title of the Graph'
+      default: 'Title of the Graph'
     },
     legendOffset: {
       type: Number,
-      default: () => 0
+      default: 0
     },
     legendPadding: {
       type: Number,
-      default: () => 10
+      default: 10
     },
     dateFormat: {
       type: String,
