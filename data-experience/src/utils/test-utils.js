@@ -1,5 +1,5 @@
-import DBMS from '~/utils/sql'
-import FileManager from '~/utils/file-manager'
+import DBMS from './sql'
+import FileManager from './file-manager'
 
 export class DatabaseTester {
   database

@@ -1,8 +1,8 @@
-import FileManager from '~/utils/file-manager'
-import { mockFile } from '~/utils/__mocks__/file-manager-mock'
-import { arrayEqualNoOrder } from '~/utils/test-utils'
-import { itemifyJSON } from '~/utils/json'
-import { getCsvHeadersAndItems } from '~/utils/csv'
+import FileManager from './file-manager'
+import { mockFile } from './__mocks__/file-manager-mock'
+import { arrayEqualNoOrder } from './test-utils'
+import { itemifyJSON } from './json'
+import { getCsvHeadersAndItems } from './csv'
 
 test('an empty file manager', async() => {
   const fileManager = new FileManager()

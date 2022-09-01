@@ -1,4 +1,4 @@
-import { DB } from '@/utils/sql'
+import { DB } from './sql'
 
 // The .wasm file import must be mocked, see jest.moduleNameMapper in package.json
 

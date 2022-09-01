@@ -1,4 +1,4 @@
-import { getCsvHeadersAndItems } from '~/utils/csv'
+import { getCsvHeadersAndItems } from './csv'
 
 const csvTestString = 'x,y,z\n1,2,3\n4,5,6'
 

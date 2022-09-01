@@ -1,4 +1,4 @@
-import DummyButton from './components/DummyButton.vue'
+import TheDataExperience from './components/TheDataExperience.vue'
 import ChartView from './components/chart/ChartView.vue'
 import store from './store'
 import './assets/dc.css'
@@ -11,7 +11,7 @@ export default {
 
     options.store.registerModule('data-experience', store)
 
-    Vue.component('DummyButton', DummyButton)
+    Vue.component('TheDataExperience2', TheDataExperience)
     Vue.component('ChartView2', ChartView)
   }
 }

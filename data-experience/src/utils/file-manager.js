@@ -1,3 +1,4 @@
+/* eslint-disable */
 import JSZip from 'jszip'
 import {
   mdiCodeJson,

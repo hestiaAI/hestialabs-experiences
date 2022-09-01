@@ -14,9 +14,6 @@
 </template>
 
 <script>
-// eslint-disable-next-line
-import ChartViewTimeSeries from './view/ChartViewTimeSeries.vue'
-
 export default {
   props: {
     data: {
