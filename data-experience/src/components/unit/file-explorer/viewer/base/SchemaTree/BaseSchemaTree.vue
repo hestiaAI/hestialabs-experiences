@@ -103,7 +103,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectedPaths']),
+    ...mapGetters(['fileExplorerCurrentItem.selectedPaths']),
     selectColor() {
       return this.selected ? 'normal' : 'primary'
     },

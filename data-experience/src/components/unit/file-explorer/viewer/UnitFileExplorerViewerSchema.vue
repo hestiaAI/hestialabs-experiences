@@ -47,7 +47,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectedPaths']),
+    ...mapGetters(['fileExplorerCurrentItem.selectedPaths']),
     // Check that the selected paths can be converted to an array
     isValidPaths() {
       const toCheck = [...this.selectedPaths]

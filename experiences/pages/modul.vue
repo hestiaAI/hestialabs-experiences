@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <DummyButton />
     <ChartView2
       v-bind="{
         graphName: 'ChartViewTimeSeries',
