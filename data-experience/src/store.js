@@ -20,6 +20,7 @@ const store = new Vuex.Store({
       state.loaded = true
     },
     setConfig(state, config) {
+      console.log('setting config', config)
       state.config = config
     },
     setCurrentDB(state, db) {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="config">
     <SettingsSpeedDial />
     <VRow>
       <VCol>
@@ -166,6 +166,7 @@ export default {
     experienceConfig: {
       immediate: true,
       handler(value) {
+        console.log('SETTING CONFIG', value)
         this.$store.commit('setConfig', value)
       }
     },  

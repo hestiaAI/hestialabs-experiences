@@ -5,7 +5,10 @@ module.exports = defineConfig({
   configureWebpack: {
     resolve: {
       fallback: {
-        'fs':  false
+        'fs':  false,
+        'crypto': false,
+        'path': false,
+        'util': false
       }
     },
     module: {

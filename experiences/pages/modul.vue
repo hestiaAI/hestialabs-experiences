@@ -39,6 +39,7 @@
         }
       }"
     />
+    <TheDataExperience2 v-bind="{experienceConfig}" />
     <!--
     <HelloWorld />
      -->
@@ -46,6 +47,12 @@
 </template>
 <script>
 export default {
-  name: 'Modul'
+  name: 'Modul',
+  data() {
+    const experiences = this.$store.state.experiences
+    return {
+      experienceConfig: experiences.find(e => e.slug === 'twitter') || {}
+    }
+  }
 }
 </script>

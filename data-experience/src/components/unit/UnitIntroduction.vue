@@ -106,7 +106,8 @@ export default {
     }
   },
   data() {
-    const experience = this.$store.getters.experience(this.$route)
+    const experience = this.$store.state.config
+    console.log('UnitIntro', experience)
     const properties = pick(experience, [
       'title',
       'dataPortal',
