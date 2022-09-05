@@ -125,8 +125,8 @@ export default {
     onUnitFilesUpdate({ uppyFiles }) {
       this.$emit('update', { uppyFiles })
     },
-    k(localKey) {
-      return `experiences.${this.slug}.intro.${localKey}`
+    k(key) {
+      return `experiences.${this.slug}.intro.${key}`
     }
   }
 }

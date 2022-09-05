@@ -4,7 +4,7 @@
       <VCol cols="12" md="4">
         <VCard>
           <VCardTitle>
-            Advertisers
+            {{ cardTitle }}
             <VSpacer />
             <VTextField
               v-model="search"
@@ -45,6 +45,12 @@ import mixin from './mixin'
 
 export default {
   mixins: [mixin],
+  props: {
+    cardTitle: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       search: '',
@@ -53,7 +59,7 @@ export default {
       headersTable: [
         { text: 'Advertiser', value: 'name' },
         { text: 'Targeting criteria', value: 'value' }
-      ],
+      ].map(({ text, ...rest }) => ({ text: this.$t(this.kViewBlock(text, 'headers')), ...rest })),
       items: []
     }
   },

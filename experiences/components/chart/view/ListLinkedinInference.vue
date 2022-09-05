@@ -127,9 +127,6 @@ export default {
     categories() {
       return this.values.map(inference => inference.category)
     }
-  },
-  methods: {
-    drawViz() {}
   }
 }
 </script>

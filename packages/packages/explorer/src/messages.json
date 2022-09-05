@@ -3,12 +3,14 @@
     "intro": {
       "title": "Generic data experience",
       "subtitle": "Explore data from anywhere!"
-    }
+    },
+    "viewBlocks": {}
   },
   "fr": {
     "intro": {
       "title": "Expérience de données génériques",
       "subtitle": "Explorez n'importe quelles données!"
-    }
+    },
+    "viewBlocks": {}
   }
 }

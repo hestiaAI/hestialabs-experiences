@@ -76,67 +76,14 @@
 <script>
 import { mapGetters } from 'vuex'
 
-/**
- * Merge local, experience-specific, default messages
- * into vue-i18n's global dictionary
- */
-function i18nMergeMessages(
-  experienceName,
-  locale,
-  messages,
-  i18n
-) {
-  // merge the messages into vue-i18n's global dictionary
-  const mergeableMessages = { experiences: { [experienceName]: messages } }
-  i18n.mergeLocaleMessage(locale, mergeableMessages)
-}
-
 export default {
   async middleware({
     app,
-    store,
     params: { bubble },
     route: { path },
-    isDev,
     redirect,
-    $auth,
-    $axios,
-    $vuetify
+    $auth
   }) {
-    if (!store.state.loaded) {
-      // first, we need to load the site config
-      await store.dispatch('loadConfig', { isDev, $axios })
-      // and only then we can load the experiences
-      await store.dispatch('loadExperiences')
-      // set state.loaded = true
-      store.commit('setLoaded')
-      const { experiences } = store.state
-      experiences.filter(({ messages }) => messages)
-        .forEach((experience) => {
-          Object.entries(experience.messages).forEach(([locale, messages]) => {
-            i18nMergeMessages(experience.slug, locale, messages, app.i18n)
-          })
-        })
-
-      const config = store.getters.siteConfig
-      if (config.i18nLocale) {
-        store.$i18n.locale = config.i18nLocale
-      }
-
-      const locale = store.$i18n.locale
-      if (config.i18nUrl) {
-        const messagesResp = await fetch(config.i18nUrl)
-        const messages = await messagesResp.json()
-        store.$i18n.mergeLocaleMessage(locale, messages[locale])
-      }
-
-      const { theme } = store.state.config
-      if (theme) {
-        // override light theme colors
-        Object.assign($vuetify.theme.themes.light, theme)
-      }
-    }
-
     if (bubble && $auth.loggedIn && bubble !== $auth.user.username) {
       // auto-logout if user tries to enter another bubble
       await $auth.logout()

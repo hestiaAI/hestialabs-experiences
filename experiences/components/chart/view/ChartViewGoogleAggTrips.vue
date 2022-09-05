@@ -119,7 +119,6 @@ export default {
     }
   },
   methods: {
-    drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems
     }

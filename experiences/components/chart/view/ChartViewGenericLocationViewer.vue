@@ -3,14 +3,17 @@
     <VRow>
       <VCol cols="12">
         <p class="text-h6">
-          {{ $t(k('graph-title')) }}
+          {{ $t(kViewBlock('graphTitle')) }}
         </p>
         <p v-if="total === 0" class="text-subtitle-2">
-          {{ $t(k('graph-no-location')) }}
+          {{ $t(kViewBlock('graphNoLocation')) }}
         </p>
-        <p v-else class="text-subtitle-2">
-          {{ $t(k('found')) }} <strong>{{ total }}</strong> {{ $t(k('location')) }}
-        </p>
+        <!-- https://kazupon.github.io/vue-i18n/guide/interpolation.html#slots-syntax-usage -->
+        <i18n v-else :path="kViewBlock('locations')" tag="p" class="text-subtitle-2">
+          <template #total>
+            <span class="text-bold" v-text="total" />
+          </template>
+        </i18n>
       </VCol>
     </VRow>
     <template v-if="total > 0">
@@ -39,12 +42,15 @@ export default {
     return {
       filteredRows: this.values,
       header: [
-        { text: 'File', value: 'filename' },
-        { text: 'Path', value: 'path' },
-        { text: 'Latitude', value: 'latitude' },
-        { text: 'Longitude', value: 'longitude' },
-        { text: 'Description', value: 'description' }
-      ]
+        ['File', 'filename'],
+        ['Path', 'path'],
+        ['Latitude', 'latitude'],
+        ['Longitude', 'longitude'],
+        ['Description', 'description']
+      ].map(([text, value]) => ({
+        text: this.$t(this.kViewBlock(text, 'headers')),
+        value
+      }))
     }
   },
   computed: {
@@ -72,10 +78,6 @@ export default {
     }
   },
   methods: {
-    k(localKey) {
-      return `genericLocationViewer.${localKey}`
-    },
-    drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems
     }

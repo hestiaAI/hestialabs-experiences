@@ -39,7 +39,7 @@ module.exports = {
       'PascalCase',
       {
         registeredComponentsOnly: false,
-        ignores: ['component', 'client-only', 'keep-alive']
+        ignores: ['component', 'client-only', 'keep-alive', 'i18n']
       }
     ]
   }
