@@ -75,6 +75,9 @@
       "All": "Tout",
       "infoNumber": "{number} sur {total}",
       "Zoom out": "Zoom arrière"
+    },
+    "top-row": {
+      "heading": "Au total nous avons trouvé {total} {countLabel} entre {minDate} et {maxDate}"
     }
   },
   "unit-files": {
@@ -171,7 +174,6 @@
   "and": "et",
   "at": "à",
   "Available on-demand": "Disponible sur demande",
-  "between": "entre",
   "Bubble": "Bulle | Bulles",
   "Clear": "Annuler",
   "click-graph": "Veuillez cliquer sur un graphique pour appliquer des filtres.",
@@ -192,7 +194,6 @@
   "footer-digipower-academy": "Digipower.academy a émergé de projets initiés séparément par",
   "found": "Nous avons trouvé",
   "hour": "heure",
-  "In total we found": "Au total nous avons trouvé",
   "in-files": "dans votre/vos fichier(s)",
   "Link": "Lien",
   "Load your data": "Charger vos données",

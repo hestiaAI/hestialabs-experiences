@@ -3,6 +3,9 @@
 
 export const dateTimeFormats = {
   en: {
+    dateOnly: {
+      dateStyle: 'long'
+    },
     short: {
       year: 'numeric',
       month: 'numeric',
@@ -20,6 +23,9 @@ export const dateTimeFormats = {
     }
   },
   fr: {
+    dateOnly: {
+      dateStyle: 'long'
+    },
     short: {
       year: 'numeric',
       month: 'short',

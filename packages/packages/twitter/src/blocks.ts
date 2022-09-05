@@ -30,9 +30,7 @@ const blocks: ViewBlocks = [
     vizProps: {
       yAccessor: 'advertiserName',
       xAccessor: 'count_',
-      dateAccessor: 'date_',
-      xLabel: 'ads',
-      countLabel: 'ads'
+      dateAccessor: 'date_'
     },
     title: 'Top advertisers',
     text: 'See the ranking of advertisers that have shown you the most ads.'

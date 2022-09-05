@@ -75,6 +75,9 @@
       "All": "All",
       "infoNumber": "{number} out of {total}",
       "Zoom out": "Zoom out"
+    },
+    "top-row": {
+      "heading": "In total we found {total} {countLabel} between {minDate} and {maxDate}"
     }
   },
   "unit-files": {
@@ -171,7 +174,6 @@
   "and": "and",
   "at": "at",
   "Available on-demand": "Available on-demand",
-  "between": "between",
   "Bubble": "Bubble | Bubbles",
   "Clear": "Clear",
   "click-graph": "Please click on the graph to apply filters.",
@@ -192,7 +194,6 @@
   "footer-digipower-academy": "The Digipower.academy has emerged out of projects initiated separately by",
   "found": "We found",
   "hour": "hour",
-  "In total we found": "In total we found",
   "in-files": "in your file.",
   "Link": "Link",
   "Load your data": "Load your data",
