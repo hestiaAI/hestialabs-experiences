@@ -18,13 +18,19 @@
                 $vuetify.icons.mdiFileMultipleOutline
               </VIcon>
             </template>
-            <span>All files are used</span>
+            <span
+              v-t="'All files are used'"
+            />
           </VTooltip>
           <UnitFilesDialog
-            v-else-if="fileGlobs.length > 0"
+            v-else-if="
+              fileGlobs.length
+                > 0"
             :file-globs="fileGlobs"
             :file-manager="fileManager"
           />
+          </span>
+          </vtooltip>
         </VCol>
       </VRow>
 
@@ -78,9 +84,12 @@
               />
               <ChartView
                 v-else-if="vizVue"
-                :graph-name="vizVue"
-                :data="clonedResult"
-                :viz-props="vizPropsTranslated"
+                v-bind="{
+                  graphName: vizVue,
+                  data: clonedResult,
+                  kViewBlock: k,
+                  ...vizPropsTranslated
+                }"
               />
               <UnitIframe
                 v-else-if="vizUrl"
@@ -91,7 +100,7 @@
           </VRow>
           <VRow v-if="showTable">
             <VCol>
-              <UnitFilterableTable v-bind="clonedResult" />
+              <UnitFilterableTable v-bind="clonedResult" :k-view-block="k" />
             </VCol>
           </VRow>
         </template>
@@ -230,9 +239,11 @@ export default {
       })
       this.result = finalResult
     },
-    // Convert local translation key to global vue18n
-    k(localKey) {
-      return `experiences.${this.slug}.viewBlocks.${this.id}.${localKey}`
+    // Convert local translation key to global vue-i18n
+    k(key, prefix = '', postfix = '') {
+      const pre = prefix ? `${prefix}.` : ''
+      const post = postfix ? `.${postfix}` : ''
+      return `experiences.${this.slug}.viewBlocks.${this.id}.${pre}${key}${post}`
     }
   }
 }

@@ -64,7 +64,7 @@
             {},
             {}
           ]
-        } 
+        }
       },
       "chathistory": {
         "title": "Chat Activity",
@@ -73,7 +73,7 @@
     }
   },
   "fr": {
-     "intro": {
+    "intro": {
       "title": "TikTok",
       "dataPortal": "https://support.tiktok.com/fr/account-and-privacy/personalized-ads-and-data/requesting-your-data"
     },
@@ -137,7 +137,7 @@
             {},
             {}
           ]
-        } 
+        }
       },
       "chathistory": {
         "title": "Messages",

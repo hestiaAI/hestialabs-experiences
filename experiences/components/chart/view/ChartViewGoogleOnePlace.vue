@@ -177,8 +177,7 @@ export default {
         seconds = '0' + seconds
       }
       return hours + 'h' + minutes + 'm' + seconds + 's' // Return is HH : MM : SS
-    },
-    drawViz() {}
+    }
   }
 }
 </script>

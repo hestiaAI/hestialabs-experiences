@@ -44,8 +44,14 @@
     "youtube"
   ],
   "appBarLinks": [
-    { "url": "/about", "name": "About" },
-    { "url": "/privacy", "name": "Privacy" }
+    {
+      "url": "/about",
+      "name": "About"
+    },
+    {
+      "url": "/privacy",
+      "name": "Privacy"
+    }
   ],
   "bubbles": [
     "tl-aggregator",

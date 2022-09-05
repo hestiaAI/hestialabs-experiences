@@ -150,9 +150,6 @@ export default {
       ...v,
       descriptors: JSON.parse(v.descriptors) || []
     }
-  },
-  methods: {
-    drawViz() {}
   }
 }
 </script>

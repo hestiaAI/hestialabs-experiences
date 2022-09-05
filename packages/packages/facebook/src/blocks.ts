@@ -20,8 +20,6 @@ const blocks: ViewBlocks = [
       yAccessor: 'advertiserName',
       xAccessor: 'count_',
       dateAccessor: 'date_',
-      xLabel: 'ads',
-      countLabel: 'ads',
       dateFormat: '%s'
     },
     title: 'Off Facebook activity ranking',
@@ -40,6 +38,23 @@ const blocks: ViewBlocks = [
     id: 'ad-interactions',
     sql: sqlAdInteractions,
     files: ['advertisers-interacted'],
+    postprocessor: result => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const headers: any[] = result.headers.map(h => ({ value: h, text: h }))
+      const timestampHeader = headers.find(h => h.value === 'timestamp')
+      if (timestampHeader) {
+        const formatter = new Intl.DateTimeFormat('en-UK', {
+          dateStyle: 'short',
+          timeStyle: 'medium'
+        })
+        timestampHeader.formatter = function (value: number) {
+          const date = new Date(value * 1000)
+          return formatter.format(date)
+        }
+      }
+      result.headers = headers
+      return result
+    },
     showTable: true,
     title: 'Ad interactions',
     text: 'See the list of ads with which you have interacted.'

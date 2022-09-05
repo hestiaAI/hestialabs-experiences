@@ -1,19 +1,21 @@
-SELECT 
+SELECT
   date_,
   actionType,
-  COUNT(*) as count_
+  COUNT(*) AS count_
 FROM
   (
-  SELECT
-    SUBSTR(date, 0, INSTR(date, ' ')) AS date_,
-    'Follower' AS actionType
-  FROM
-    TiktokFollowerList
-  UNION 
-  SELECT
-    SUBSTR(date, 0, INSTR(date, ' ')) AS date_,
-    'Following' AS actionType
-  FROM
-    TiktokFollowingList
+    SELECT
+      SUBSTR(DATE, 0, INSTR(DATE, ' ')) AS date_,
+      'Follower' AS actionType
+    FROM
+      TiktokFollowerList
+    UNION
+    SELECT
+      SUBSTR(DATE, 0, INSTR(DATE, ' ')) AS date_,
+      'Following' AS actionType
+    FROM
+      TiktokFollowingList
   )
-GROUP BY date_, actionType;
+GROUP BY
+  date_,
+  actionType;

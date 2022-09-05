@@ -2,6 +2,7 @@ import path from 'path'
 import { readdirSync } from 'fs'
 import { fileURLToPath } from 'url'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
+// import LodashModuleReplacementPlugin from 'lodash-webpack-plugin'
 import nodeExternals from 'webpack-node-externals'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -35,6 +36,7 @@ export default {
           {
             loader: 'babel-loader',
             options: {
+              // plugins: ['lodash'],
               presets: ['@babel/preset-env', '@babel/preset-typescript']
             }
           },
@@ -54,6 +56,7 @@ export default {
       }
     ]
   },
+  // plugins: [new LodashModuleReplacementPlugin()],
   resolve: {
     extensions: ['.tsx', '.ts'],
     plugins: [

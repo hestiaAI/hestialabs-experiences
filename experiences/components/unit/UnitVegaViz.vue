@@ -54,12 +54,12 @@ export default {
       // that we clone whenever values change.
       // That's not entirely necessary
       // but keeps the linter happy.
-      if (!this.specFile?.data) {
+      const spec = this.specFile[this.$i18n.locale]
+      if (!spec?.data) {
         // invalid data
         return {}
       }
       const values = this.clonedItems
-      const spec = this.specFile
       // we only change spec.data[0].values
       const clonedSpec = Object.assign({}, spec, {
         data: [
