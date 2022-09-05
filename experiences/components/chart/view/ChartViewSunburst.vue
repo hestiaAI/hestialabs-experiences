@@ -55,7 +55,7 @@ export default {
         .sort((a, b) => b.value - a.value)
 
       const totalSize = tree.value
-      const rootName = this.$t(k(tree.data.name))
+      const rootName = this.$tev(k(tree.data.name), tree.data.name)
       this.bcItems = [{ text: rootName, disabled: true }]
 
       // Compute arcs partitons/positions
@@ -205,7 +205,7 @@ export default {
         .style('font-weight', 'light')
         .attr('text-anchor', 'middle')
         .attr('text-decoration', 'underline')
-        .text('zoom out')
+        .text(this.$t(k('Zoom out')))
         .attr('opacity', 0)
         .style('cursor', 'pointer')
         .attr('pointer-events', 'all')
@@ -314,7 +314,7 @@ export default {
         })
         this.bcItems.unshift({ text: rootName, disabled: true })
         infoPercent.text(percentageString)
-        infoNumber.text(`${d.value} ${this.$t(k('out of'))} ${totalSize}`)
+        infoNumber.text(this.$t(k('infoNumber'), { number: d.value, total: totalSize }))
         infoPercent.attr('opacity', 1)
         infoNumber.attr('opacity', 1)
         infoLabel.attr('opacity', 1)

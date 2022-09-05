@@ -20,4 +20,7 @@ export default ({ app }, inject) => {
     // tet -> Translation Exists (else) Translate fallback
     return i18n.te(key) ? i18n.t(key) : i18n.t(keyFallback)
   })
+  inject('days', () => {
+    return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(v => i18n.t(`dayOfWeek.${v}`))
+  })
 }

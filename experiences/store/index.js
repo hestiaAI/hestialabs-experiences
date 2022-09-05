@@ -149,9 +149,18 @@ export const actions = {
       if (config.bubbles?.length) {
         config.bubbleConfig = {}
         for (const bubble of config.bubbles) {
-          const data = await this.$api.getConfig(bubble)
-          if (data) {
-            config.bubbleConfig[bubble] = data
+          try {
+            const data = await this.$api.getConfig(bubble)
+            if (data) {
+              config.bubbleConfig[bubble] = data
+            }
+          } catch (error) {
+            console.error(error)
+            if (error.message === 'Network Error') {
+              // avoid multiple API calls if there is a network error
+              // for instance, when the server is off during development
+              break
+            }
           }
         }
       }

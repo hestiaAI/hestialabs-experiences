@@ -20,7 +20,12 @@
       },
       "ad-interactions": {
         "title": "Ad interactions",
-        "text": "See the list of ads with which you have interacted."
+        "text": "See the list of ads with which you have interacted.",
+        "headers": {
+          "title": "title",
+          "action": "action",
+          "timestamp": "timestamp"
+        }
       },
       "your-topics": {
         "title": "Inferred interests",
@@ -57,7 +62,12 @@
       },
       "ad-interactions": {
         "title": "Interactions avec des publicités",
-        "text": "Liste des publicités avec lesquels vous avez interagi."
+        "text": "Liste des publicités avec lesquels vous avez interagi.",
+        "headers": {
+          "title": "titre",
+          "action": "action",
+          "timestamp": "date"
+        }
       },
       "your-topics": {
         "title": "Intérêts supposés",

@@ -16,8 +16,7 @@
             </div>
             <div id="range-chart">
               <p
-                class="muted pull-right text-subtitle-2"
-                style="margin-right: 15px; margin-bottom: 5px"
+                class="muted pull-right text-subtitle-2 mr-4 mb-1"
               >
                 {{ $t('select-time-range') }}
                 <a class="reset" style="display: none">reset</a>
@@ -177,7 +176,7 @@ export default {
       const all = ndx.groupAll()
       const dayOfWeekDimension = ndx.dimension((d) => {
         const day = d.date.getDay()
-        const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        const name = this.$days()
         return `${name[day]}`
       })
       const matchedDimension = ndx.dimension(d => d.matched)
@@ -222,26 +221,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function(d) {
-        switch (d.key) {
-          case 'Mon':
-            return 0
-          case 'Tue':
-            return 1
-          case 'Wed':
-            return 2
-          case 'Thu':
-            return 3
-          case 'Fri':
-            return 4
-          case 'Sat':
-            return 5
-          case 'Sun':
-            return 6
-          default:
-            return 0
-        }
-      })
+      weekChart.ordering(d => this.$days().indexOf(d.key))
 
       // Render matched pie chart
       matchedChart

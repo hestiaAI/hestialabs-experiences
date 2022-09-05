@@ -44,8 +44,14 @@
     "youtube"
   ],
   "appBarLinks": [
-    { "url": "/about", "name": "About" },
-    { "url": "/privacy", "name": "Privacy" }
+    {
+      "url": "/about",
+      "name": "About"
+    },
+    {
+      "url": "/privacy",
+      "name": "Privacy"
+    }
   ],
   "bubbles": [
     "tl-aggregator",
@@ -64,7 +70,8 @@
     "dating-apps-course",
     "health-course",
     "matching-algo-course",
-    "policy-making-course"
+    "policy-making-course",
+    "demo-computation"
   ],
   "homePageBubbles": [
     "demo-participant",

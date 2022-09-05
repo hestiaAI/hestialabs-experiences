@@ -9,6 +9,10 @@ export default {
     headers: {
       type: Array,
       default: () => []
+    },
+    kViewBlock: {
+      type: Function,
+      default: () => ''
     }
   },
   data() {
@@ -25,6 +29,7 @@ export default {
     }
   },
   methods: {
+    drawViz() { },
     createTextFilterWidget(parent, placeholder = 'Search') {
       const widget = new TextFilterWidget(parent)
       widget.placeHolder(this.$t(placeholder))

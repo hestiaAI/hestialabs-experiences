@@ -28,12 +28,16 @@
     "typescript",
     "vue"
   ],
+  "eslint.workingDirectories": [
+    "./packages",
+    "./experiences"
+  ],
   // https://eslint.vuejs.org/user-guide/#trouble-with-visual-studio-code
   // https://stackoverflow.com/a/64573900/8238129
   "vetur.validation.template": false,
   "javascript.validate.enable": false,
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "search.exclude": {
-    "**/dist": true
-  }
+  // "search.exclude": {
+  //   "**/dist": true
+  // }
 }

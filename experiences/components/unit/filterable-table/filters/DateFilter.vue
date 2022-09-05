@@ -53,19 +53,19 @@
           @mousedown.prevent
           @click="selectAll"
         >
-          {{ allWeekDays ? 'Unselect All' : 'Select All' }}
+          {{ allDays ? 'Unselect All' : 'Select All' }}
         </VBtn>
       </div>
       <VRow>
         <VCol
-          v-for="weekDay in weekDays"
+          v-for="weekDay in days"
           :key="weekDay"
           cols="12"
           md="6"
           class="pt-0 pb-0"
         >
           <VCheckbox
-            v-model="weekDayAuthorized"
+            v-model="daysAuthorized"
             :label="weekDay"
             color="primary"
             :value="weekDay"
@@ -84,6 +84,7 @@
 <script>
 import * as d3 from 'd3'
 import { dateParser, datetimeParser, dateFormatter } from '@/utils/dates'
+
 export default {
   name: 'UnitFilter',
   props: {
@@ -99,8 +100,8 @@ export default {
   data() {
     return {
       dateFormatter,
-      weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      weekDayAuthorized: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      days: this.$days(),
+      daysAuthorized: this.$days(),
       sliderRange: [],
       timeFilterFunction: null
     }
@@ -134,13 +135,13 @@ export default {
         this.getDate(this.sliderRange[1])
       ]
     },
-    allWeekDays() {
-      return this.weekDayAuthorized.length === this.weekDays.length
+    allDays() {
+      return this.daysAuthorized.length === this.days.length
     },
     filterFunction() {
       if (
         !this.timeFilterFunction &&
-        this.allWeekDays &&
+        this.allDays &&
         JSON.stringify(this.sliderRange) ===
           JSON.stringify([0, this.numberOfDays])
       ) { return null }
@@ -150,7 +151,7 @@ export default {
           (!value ||
             (date >= this.dateRange[0] &&
               date <= this.dateRange[1] &&
-              this.weekDayAuthorized.includes(this.weekDays[date.getDay()]))) &&
+              this.daysAuthorized.includes(this.days[date.getDay()]))) &&
           (!this.timeFilterFunction || this.timeFilterFunction(value))
         )
       }
@@ -162,10 +163,10 @@ export default {
   methods: {
     selectAll() {
       this.$nextTick(() => {
-        if (this.allWeekDays) {
-          this.weekDayAuthorized = []
+        if (this.allDays) {
+          this.daysAuthorized = []
         } else {
-          this.weekDayAuthorized = this.weekDays.slice()
+          this.daysAuthorized = this.days.slice()
         }
         this.filterChange()
       })
@@ -181,7 +182,7 @@ export default {
       this.$emit('filter-change', this.filterFunction)
     },
     reset() {
-      this.weekDayAuthorized = this.weekDays.slice()
+      this.daysAuthorized = this.days.slice()
       this.sliderRange = [0, this.numberOfDays]
       if (this.isDatetime) { this.$refs.timeFilter.reset() }
       this.filterChange()

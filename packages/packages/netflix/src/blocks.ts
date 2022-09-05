@@ -17,11 +17,9 @@ const blocks: ViewBlocks = [
     files: ['messages-by-netflix'],
     visualization: 'ChartViewTimeSeries.vue',
     vizProps: {
-      title: 'Notifications sent by Netflix',
-      yLabel: 'count',
       filters: [
-        { text: 'Interacted with', value: 'clickCnt', type: 'Boolean' },
-        { text: 'Device Model', value: 'deviceModel', type: 'List' }
+        { value: 'clickCnt', type: 'Boolean' },
+        { value: 'deviceModel', type: 'List' }
       ],
       dateAccessor: { text: 'Date', value: 'sentUtcTs' },
       seriesAccessor: { text: 'Profile', value: 'profileName' }

@@ -105,10 +105,6 @@ export function humanReadableFileSize(sizeInBytes) {
   return `${(sizeInBytes / Math.pow(1024, i)).toFixed(2)} ${units[i]}`
 }
 
-export function plurify(word, n) {
-  return n === 1 ? word : `${word}s`
-}
-
 export const vueMeta = ($nuxt, title) => {
   const content = `${title} | ${$nuxt.$store.state.config.appName}`
   return {

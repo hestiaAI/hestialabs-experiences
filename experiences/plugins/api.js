@@ -4,17 +4,13 @@ class Api {
   }
 
   async getConfig(bubbleName) {
-    try {
-      const { status, data } = await this.$axios.get(
-        `/bubbles/${bubbleName}/config`
-      )
-      if (status >= 400) {
-        throw new Error(`Axios error, status: ${status}`)
-      }
-      return data
-    } catch (err) {
-      console.error(err)
+    const { status, data } = await this.$axios.get(
+      `/bubbles/${bubbleName}/config`
+    )
+    if (status >= 400) {
+      throw new Error(`Axios error, status: ${status}`)
     }
+    return data
   }
 
   getFilenames(bubbleName, callback) {

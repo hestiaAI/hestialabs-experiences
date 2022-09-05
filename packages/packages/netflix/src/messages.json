@@ -10,7 +10,19 @@
       },
       "notifications": {
         "title": "Notifications",
-        "text": "See how many times Netflix sent you notifications"
+        "text": "See how many times Netflix sent you notifications",
+        "vizProps": {
+          "title": "Notifications sent by Netflix",
+          "yLabel": "count",
+          "filters": [
+            {
+              "text": "Interacted with"
+            },
+            {
+              "text": "Device Model"
+            }
+          ]
+        }
       }
     }
   },
@@ -28,7 +40,15 @@
         "text": "Historique des notifications que Netflix vous a envoyées.",
         "vizProps": {
           "title": "Notifications envoyées par Netflix",
-          "yLabel": "total"
+          "yLabel": "total",
+          "filters": [
+            {
+              "text": "Interaction avec"
+            },
+            {
+              "text": "Modèle d'appareil"
+            }
+          ]
         }
       }
     }

@@ -6,7 +6,7 @@ import path from 'path'
 import { mount, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import TheDataExperience from '~/components/TheDataExperience'
-import defaultMessages from '~/i18n-messages-default.json'
+import defaultMessages from '~/i18n/en.json'
 
 // Mock the Vuex store
 const localVue = createLocalVue()
@@ -15,7 +15,7 @@ localVue.use(Vuex)
 let store
 
 // We need to disable workers for these tests
-jest.mock('~/utils/file-manager-workers', () => {})
+jest.mock('~/utils/file-manager-workers', () => { })
 const originalScrollTo = window.scrollTo
 
 beforeAll(() => {
@@ -39,9 +39,9 @@ beforeEach(() => {
       routeConfig: () => () => ({})
     },
     mutations: {
-      clearStore: () => {},
-      setFileManager: () => {},
-      setConsentForm: () => {}
+      clearStore: () => { },
+      setFileManager: () => { },
+      setConsentForm: () => { }
     },
     modules: {
       experience: {
@@ -69,11 +69,11 @@ test('mounts without error', () => {
     mocks: {
       $route: { params: {} },
       $router: {
-        push: () => {}
+        push: () => { }
       },
-      $t: msg => defaultMessages.en[msg],
-      $tev: msg => defaultMessages.en[msg],
-      $tet: msg => defaultMessages.en[msg]
+      $t: msg => defaultMessages[msg],
+      $tev: msg => defaultMessages[msg],
+      $tet: msg => defaultMessages[msg]
     }
   })
   expect(wrapper.exists()).toBeTruthy()
@@ -94,11 +94,11 @@ test('process simple text file', async() => {
     mocks: {
       $route: { params: {} },
       $router: {
-        push: () => {}
+        push: () => { }
       },
-      $t: msg => defaultMessages.en[msg],
-      $tev: msg => defaultMessages.en[msg],
-      $tet: msg => defaultMessages.en[msg]
+      $t: msg => defaultMessages[msg],
+      $tev: msg => defaultMessages[msg],
+      $tet: msg => defaultMessages[msg]
     }
   })
 

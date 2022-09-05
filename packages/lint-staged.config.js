@@ -1,4 +1,4 @@
-import camelCase from 'lodash.camelcase'
+import { camelCase } from 'lodash-es'
 
 export default {
   'packages/*/src/**/*.ts': filenames => {
