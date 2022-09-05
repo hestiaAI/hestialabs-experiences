@@ -122,7 +122,7 @@ export default {
         { text: 'Targeting Criteria', value: 'count' }
       ].map(
         ({ text, ...rest }) =>
-          ({ text: this.$t(this.k(`columns.${text}`)), ...rest })
+          ({ text: this.$t(this.k(`headers.${text}`)), ...rest })
       ),
       results: []
     }

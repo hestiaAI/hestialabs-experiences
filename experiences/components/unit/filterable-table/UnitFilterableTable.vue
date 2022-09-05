@@ -72,6 +72,10 @@ export default {
     items: {
       type: Array,
       default: () => []
+    },
+    kViewBlock: {
+      type: Function,
+      default: () => ''
     }
   },
   data() {
@@ -106,8 +110,9 @@ export default {
 
       // Add column style and options
       return {
-        headers: headers.map(h => ({
-          ...h,
+        headers: headers.map(({ text, ...rest }) => ({
+          ...rest,
+          text: this.$tev(this.kViewBlock(text, 'headers'), text),
           align: 'left',
           sortable: true
         })),
@@ -149,7 +154,8 @@ export default {
       const { header, value } = itemProps
       // eslint-disable-next-line no-prototype-builtins
       if (header.hasOwnProperty('formatter')) {
-        return header.formatter(value)
+        // call the formatter function with 'this' given as the Vue instance
+        return header.formatter.call(this, value)
       }
       if (Array.isArray(value)) {
         return formatArray(value)

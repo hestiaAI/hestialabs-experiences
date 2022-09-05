@@ -24,7 +24,7 @@
       "targeting-type": "Type de ciblage",
       "targeting-criteria": "Critères de ciblage",
       "ads": "pubs",
-      "columns": {
+      "headers": {
         "Tweet ID": "Tweet ID",
         "Company": "Société",
         "Date": "Date",
@@ -54,7 +54,7 @@
       "min": "min",
       "miles": "miles",
       "Reset all filters": "Réinitialiser tous les filtres",
-      "columns": {
+      "headers": {
         "City": "Ville",
         "Service": "Service",
         "Status": "Statut",
@@ -99,6 +99,14 @@
       "label": "Rechercher des fichiers",
       "placeholder": "Entrer le nom d'un fichier...",
       "clearButton": "Effacer la sélection"
+    }
+  },
+  "unit-summary": {
+    "cardTitle": "Voici un résumé de ce que nous avons trouvé",
+    "summaryHeading": {
+      "main": "Analysé {nFiles} {file} {dataSizeString} et trouvé {datapoint}",
+      "file": "aucun fichier | {n} fichier | {n} fichiers",
+      "datapoint": "aucun point de données | {n} point de données | {n} points de données"
     }
   },
   "load-data": {

@@ -2,7 +2,8 @@ import fs from 'fs'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
 import { extension2filetype } from './utils/file-manager'
-import { numberFormats } from './vue-i18n-number-formats'
+import { numberFormats } from './i18n/vue-i18n-number-formats'
+import { dateTimeFormats } from './i18n/vue-i18n-date-time-formats'
 
 const name = 'HestiaLabs Experiences'
 const description = 'We create a new relationship to personal data'
@@ -136,7 +137,8 @@ export default {
     defaultLocale: i18nLocale,
     vueI18n: {
       fallbackLocale: i18nLocale,
-      numberFormats
+      numberFormats,
+      dateTimeFormats
     }
   },
 

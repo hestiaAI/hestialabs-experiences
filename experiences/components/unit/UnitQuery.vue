@@ -100,7 +100,7 @@
           </VRow>
           <VRow v-if="showTable">
             <VCol>
-              <UnitFilterableTable v-bind="clonedResult" />
+              <UnitFilterableTable v-bind="clonedResult" :k-view-block="k" />
             </VCol>
           </VRow>
         </template>

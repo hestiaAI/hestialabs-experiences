@@ -24,7 +24,7 @@
       "targeting-type": "Type of targeting",
       "targeting-criteria": "Targeting criteria",
       "ads": "ads",
-      "columns": {
+      "headers": {
         "Tweet ID": "Tweet ID",
         "Company": "Company",
         "Date": "Date",
@@ -54,7 +54,7 @@
       "min": "min",
       "miles": "miles",
       "Reset all filters": "Reset all filters",
-      "columns": {
+      "headers": {
         "City": "City",
         "Service": "Service",
         "Status": "Status",
@@ -99,6 +99,14 @@
       "label": "Search for files",
       "placeholder": "Enter part of a file name...",
       "clearButton": "Clear selection"
+    }
+  },
+  "unit-summary": {
+    "cardTitle": "Here's a summary of what we have found",
+    "summaryHeading": {
+      "main": "Analysed {file} {dataSizeString} and found {datapoint}",
+      "file": "no files | {n} file | {n} files",
+      "datapoint": "no datapoints | {n} datapoint | {n} datapoints"
     }
   },
   "load-data": {

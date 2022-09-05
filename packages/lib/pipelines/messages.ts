@@ -12,7 +12,7 @@ const genericDateViewer: Messages = {
         datedEvents:
           'From {currMinDate} to {currMaxDate} we found {total} dated events in your file(s).',
         plusXOther: '+{n} other',
-        columns: {
+        headers: {
           'File name': 'File name',
           Date: 'Date',
           Description: 'Description'
@@ -32,7 +32,7 @@ const genericDateViewer: Messages = {
         datedEvents:
           'De {currMinDate} à {currMaxDate} nous avons trouvé {total} événements datés dans votre (vos) fichier(s).',
         plusXOther: '+{n} autres',
-        columns: {
+        headers: {
           'File name': 'Nom de fichier',
           Date: 'Date',
           Description: 'Description'
@@ -52,7 +52,7 @@ const genericLocationViewer: Messages = {
         graphTitle: 'Number of location records in your files',
         graphNoLocation: 'No location were found in your file(s).',
         locations: 'We found {total} locations in your file(s).',
-        columns: {
+        headers: {
           File: 'File',
           Path: 'Path',
           Latitude: 'Latitude',
@@ -73,7 +73,7 @@ const genericLocationViewer: Messages = {
           "Aucune localisation n'a été trouvé dans votre/vos fichier(s).",
         locations:
           'Nous avons trouvé {total} observations de localisation dans votre/vos fichier(s).',
-        columns: {
+        headers: {
           File: 'Fichier',
           Path: 'Chemin',
           Latitude: 'Latitude',

@@ -31,7 +31,7 @@
         "vizProps": {
           "cardTitle": "Advertisers"
         },
-        "columns": {
+        "headers": {
           "Advertiser": "Advertiser",
           "Targeting criteria": "Targeting criteria"
         }
@@ -141,7 +141,7 @@
         "vizProps": {
           "cardTitle": "Publicitaires"
         },
-        "columns": {
+        "headers": {
           "Advertiser": "Publicitaire",
           "Targeting criteria": "Critères de ciblage"
         }

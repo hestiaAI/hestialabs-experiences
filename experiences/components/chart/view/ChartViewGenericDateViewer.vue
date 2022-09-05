@@ -141,7 +141,7 @@ export default {
         ['Date', 'dateStr'],
         ['Description', 'description']
       ].map(([text, value]) => ({
-        text: this.$t(this.kViewBlock(text, 'columns')),
+        text: this.$t(this.kViewBlock(text, 'headers')),
         value
       }))
     }

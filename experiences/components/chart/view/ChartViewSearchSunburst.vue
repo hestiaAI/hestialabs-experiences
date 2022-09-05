@@ -59,7 +59,7 @@ export default {
       headersTable: [
         { text: 'Advertiser', value: 'name' },
         { text: 'Targeting criteria', value: 'value' }
-      ].map(({ text, ...rest }) => ({ text: this.$t(this.kViewBlock(text, 'columns')), ...rest })),
+      ].map(({ text, ...rest }) => ({ text: this.$t(this.kViewBlock(text, 'headers')), ...rest })),
       items: []
     }
   },

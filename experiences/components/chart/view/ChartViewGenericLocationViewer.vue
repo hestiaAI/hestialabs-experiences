@@ -48,7 +48,7 @@ export default {
         ['Longitude', 'longitude'],
         ['Description', 'description']
       ].map(([text, value]) => ({
-        text: this.$t(this.kViewBlock(text, 'columns')),
+        text: this.$t(this.kViewBlock(text, 'headers')),
         value
       }))
     }
