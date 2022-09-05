@@ -96,7 +96,7 @@
       </template>
       <div class="my-6">
         <LogoImg width="250" />
-        <template v-if="$auth.loggedIn">
+        <template v-if="$auth.loggedIn && $auth.user.bubble">
           <VSubheader class="mt-2">
             {{ $t('Connected to bubble') }}:
             <span class="font-weight-black">
@@ -106,7 +106,7 @@
         </template>
         <TheBubbleMenu />
         <TheExperienceMenu
-          v-if="$auth.loggedIn"
+          v-if="$auth.loggedIn && $auth.user.bubble"
           :include="$auth.user.bubble.experiences"
         />
         <TheExperienceMenu v-else />

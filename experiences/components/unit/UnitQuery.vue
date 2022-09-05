@@ -205,10 +205,9 @@ export default {
     vizPropsTranslated() {
       // translations override all props...
       // we trust that they only affect texts
-      // NOTE: This is only a shallow merge,
-      // and will not work for nested texts
-      // NOTE: deep merge with lodash.merge()
-      // causes a vuex mutation error
+      // NOTE: we need to deepClone the viProps before doing the merge.
+      // because the lodash merge function recursively mutates the first argument
+      // and it will cause a vuex mutation error otherwise.
       return merge(cloneDeep(this.vizProps), this.$tev(this.k('vizProps'), {}))
     }
   },
