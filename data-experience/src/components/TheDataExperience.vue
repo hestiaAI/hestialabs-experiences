@@ -1,5 +1,5 @@
 <template>
-  <div v-if="config">
+  <div v-if="false">
     <SettingsSpeedDial />
     <VRow>
       <VCol>
@@ -81,11 +81,12 @@
 </template>
 
 <script>
-import { debounce, pick } from 'lodash-es'
+import { debounce, pick, cloneDeep } from 'lodash-es'
 import DBMS from '../utils/sql'
 import FileManager from '../utils/file-manager'
 import fileManagerWorkers from '../utils/file-manager-workers'
 import { mapState } from 'vuex'
+
 export default {
   name: 'TheDataExperience',
   props: {
@@ -117,8 +118,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('config', { experienceProgress: 'progress' }),
-    ...mapState(['fileManager']),
+    ...mapState('dataexp', ['fileManager']),
     tabs() {
       const disabled = !this.success || this.experienceProgress
       const tabs = [
@@ -166,8 +166,7 @@ export default {
     experienceConfig: {
       immediate: true,
       handler(value) {
-        console.log('SETTING CONFIG', value)
-        this.$store.commit('setConfig', value)
+        this.$store.commit('dataexp/setConfig', cloneDeep(value))
       }
     },  
     fileManager(value) {
@@ -215,7 +214,7 @@ export default {
       const start = new Date()
 
       // Clean vuex state
-      this.$store.commit('clearStore', {})
+      this.$store.commit('dataexp/clearStore', {})
 
       // Set consent form
       const consentForm = JSON.parse(JSON.stringify(this.consentFormTemplate))
@@ -224,7 +223,7 @@ export default {
         section.titles = this.viewBlocks.map(e => e.title)
         section.ids = this.viewBlocks.map(e => e.id)
       }
-      this.$store.commit('setConsentForm', consentForm)
+      this.$store.commit('dataexp/setConsentForm', consentForm)
 
       // Set file manager
       const fileManager = new FileManager(
@@ -235,7 +234,7 @@ export default {
       )
       try {
         await fileManager.init(uppyFiles)
-        this.$store.commit('setFileManager', fileManager)
+        this.$store.commit('dataexp/setFileManager', fileManager)
         if (dbConfig) {
           // create database
           const db = await DBMS.createDB(dbConfig)
@@ -244,7 +243,7 @@ export default {
           // insert the records into the database
           DBMS.insertRecords(db, records)
           // commit the database to the Vuex store
-          this.$store.commit('setCurrentDB', db)
+          this.$store.commit('dataexp/setCurrentDB', db)
         }
       } catch (e) {
         this.handleError(e)

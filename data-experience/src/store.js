@@ -1,27 +1,28 @@
 import Vue from 'vue'
-import Vuex from 'vuex'
 import { cloneDeep } from 'lodash-es'
 
-Vue.use(Vuex)
-
-const store = new Vuex.Store({
-  state: {
+const store = {
+  namespaced: true,
+  state: () => ({
     loaded: false,
     config: {},
+    newConfig: {},
     selectedFiles: [],
     results: {},
     currentDB: null,
     fileManager: null,
     fileExplorerCurrentItem: {},
     consentForm: null
-  },
+  }),
   mutations: {
     setLoaded(state) {
+      console.log('LOaded')
       state.loaded = true
     },
     setConfig(state, config) {
       console.log('setting config', config)
       state.config = config
+      console.log('config set', state.config)
     },
     setCurrentDB(state, db) {
       state.currentDB = db
@@ -83,6 +84,7 @@ const store = new Vuex.Store({
       state.fileExplorerCurrentItem.selectedPaths = []
     }
   }
-})
+} 
+
 
 export default store

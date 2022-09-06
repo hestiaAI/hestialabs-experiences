@@ -9,7 +9,7 @@ export default {
       throw new Error('Please initialise plugin with a Vuex store.')
     }
 
-    options.store.registerModule('data-experience', store)
+    options.store.registerModule('dataexp', store)
 
     Vue.component('TheDataExperience2', TheDataExperience)
     Vue.component('ChartView2', ChartView)
