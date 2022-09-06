@@ -45,6 +45,11 @@
   ],
   "appBarLinks": [
     {
+      "url": "https://hestia.ai/en/#contact",
+      "name": "Contact us",
+      "external": true
+    },
+    {
       "url": "/about",
       "name": "About"
     },
