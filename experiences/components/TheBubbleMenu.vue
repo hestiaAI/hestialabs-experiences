@@ -26,7 +26,8 @@ import { pick } from 'lodash-es'
 export default {
   computed: {
     bubbles() {
-      return Object.entries(this.$store.state.config.bubbleConfig).map(([slug, conf]) => {
+      const bubbleConfig = this.$store.state.config.bubbleConfig || {}
+      return Object.entries(bubbleConfig).map(([slug, conf]) => {
         const config = pick(conf, [
           'title',
           'icon'
