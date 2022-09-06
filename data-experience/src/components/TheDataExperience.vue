@@ -86,6 +86,7 @@ import DBMS from '../utils/sql'
 import FileManager from '../utils/file-manager'
 import fileManagerWorkers from '../utils/file-manager-workers'
 import { mapState } from 'vuex'
+import UnitIntroduction from './unit/UnitIntroduction.vue'
 
 export default {
   name: 'TheDataExperience',
@@ -95,6 +96,7 @@ export default {
       required: true
     }
   },
+  components: {UnitIntroduction},
   data() {
     const properties = pick(this.experienceConfig, [
       'databaseConfig',
