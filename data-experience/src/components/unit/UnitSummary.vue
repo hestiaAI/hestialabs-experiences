@@ -55,7 +55,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager']),
+    ...mapState('dataexp', ['fileManager']),
     ext2group() {
       return Object.fromEntries(
         Object.entries(this.group2ext).flatMap(entry =>
@@ -104,7 +104,7 @@ export default {
   methods: {
     plurify,
     onFileClick(filename) {
-      this.$store.commit('setFileExplorerCurrentItem', { filename })
+      this.$store.commit('dataexp/setFileExplorerCurrentItem', { filename })
       this.$emit('switch-tab', 'file-explorer')
     },
     async setNumberOfDataPoints() {

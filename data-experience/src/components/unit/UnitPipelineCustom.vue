@@ -48,7 +48,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager']),
+    ...mapState('dataexp', ['fileManager']),
     disabled() {
       return this.fileManager === null
     }

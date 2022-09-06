@@ -106,8 +106,9 @@ export default {
     }
   },
   data() {
-    const experience = this.$store.state.config
-    console.log('UnitIntro', experience)
+    const experience = this.$store.state.dataexp.config
+    
+    console.log('UnitIntro', this.$store.state)
     const properties = pick(experience, [
       'title',
       'dataPortal',

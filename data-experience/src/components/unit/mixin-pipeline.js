@@ -15,10 +15,10 @@ export default {
     progress: {
       immediate: true,
       handler(value) {
-        this.$store.commit('experience/setProgress', value)
+        this.$store.commit('dataexp/setProgress', value)
       }
     },
-    '$store.state.fileManager': {
+    '$store.state.dataexp.fileManager': {
       immediate: true,
       handler(value) {
         if (value) {

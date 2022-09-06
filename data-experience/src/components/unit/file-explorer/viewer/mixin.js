@@ -8,6 +8,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager'])
+    ...mapState('dataexp', ['fileManager'])
   }
 }

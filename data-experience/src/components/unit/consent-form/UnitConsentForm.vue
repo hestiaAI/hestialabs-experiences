@@ -109,7 +109,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles']),
+    ...mapState('dataexp', ['results', 'fileManager', 'consentForm', 'selectedFiles']),
     bubbleName() {
       return this.$route.params.bubble
     },

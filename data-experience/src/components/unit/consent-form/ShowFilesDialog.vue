@@ -41,7 +41,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager']),
+    ...mapState('dataexp', ['fileManager']),
     show: {
       get() {
         return this.value

@@ -80,7 +80,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileExplorerCurrentItem', 'fileManager']),
+    ...mapState('dataexp', ['fileExplorerCurrentItem', 'fileManager']),
     active: {
       get() {
         return has(this.selectedItem, 'filename') ? [this.selectedItem] : []
@@ -89,10 +89,10 @@ export default {
         // item might be undefined (when unselecting)
         if (item) {
           if (!this.containers.has(item.type)) {
-            this.$store.commit('setFileExplorerCurrentItem', item)
+            this.$store.commit('dataexp/setFileExplorerCurrentItem', item)
           }
         } else {
-          this.$store.commit('setFileExplorerCurrentItem', {})
+          this.$store.commit('dataexp/setFileExplorerCurrentItem', {})
         }
       }
     },

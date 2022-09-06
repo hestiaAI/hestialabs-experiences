@@ -120,12 +120,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(['consentForm', 'fileManager', 'results']),
+    ...mapState('dataexp', ['consentForm', 'fileManager', 'results']),
     selectedFiles() {
       if (this.readonly) {
         return Object.keys(this.fileManager.fileDict)
       }
-      return this.$store.state.selectedFiles
+      return this.$store.state.dataexp.selectedFiles
     },
     section() {
       return this.consentForm[this.index]
@@ -135,7 +135,7 @@ export default {
         return this.section.value
       },
       set(value) {
-        this.$store.commit('setConsentFormValue', { index: this.index, value })
+        this.$store.commit('dataexp/setConsentFormValue', { index: this.index, value })
       }
     }
   },

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="false">
+  <div>
     <SettingsSpeedDial />
     <VRow>
       <VCol>

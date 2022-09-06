@@ -179,7 +179,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager']),
+    ...mapState('dataexp', ['fileManager']),
     clonedResult() {
       return cloneDeep(this.result)
     },
@@ -224,7 +224,7 @@ export default {
       }
       // Postprocessing
       finalResult = this.postprocessor(finalResult)
-      this.$store.commit('setResult', {
+      this.$store.commit('dataexp/setResult', {
         experience: this.id,
         result: finalResult
       })

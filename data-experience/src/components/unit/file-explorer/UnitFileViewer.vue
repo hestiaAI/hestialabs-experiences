@@ -102,7 +102,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager']),
+    ...mapState('dataexp', ['fileManager']),
     fileType() {
       // @fileType should match the postfix of the Vue component name
       return this.selectedItem?.type

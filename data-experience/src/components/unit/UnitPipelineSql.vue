@@ -16,7 +16,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentDB']),
+    ...mapState('dataexp', ['currentDB']),
     disabled() {
       return !this.currentDB || !this.sql
     }

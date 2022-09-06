@@ -80,7 +80,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['consentForm', 'fileManager']),
+    ...mapState('dataexp', ['consentForm', 'fileManager']),
     treeItems() {
       return this.fileManager.getTreeItems()
     },
@@ -94,10 +94,10 @@ export default {
     },
     selectedFiles: {
       get() {
-        return this.$store.state.selectedFiles
+        return this.$store.state.dataexp.selectedFiles
       },
       set(value) {
-        this.$store.commit('setSelectedFiles', value)
+        this.$store.commit('dataexp/setSelectedFiles', value)
       }
     }
   },
@@ -118,7 +118,7 @@ export default {
       this.updateCheckboxOnReturn(false)
     },
     clear() {
-      this.$store.commit('setSelectedFiles', [])
+      this.$store.commit('dataexp/setSelectedFiles', [])
       this.updateCheckboxOnReturn(true)
       this.show = false
     },
@@ -153,7 +153,7 @@ export default {
       } else if (!value.includes('file-explorer')) {
         value = value.concat('file-explorer')
       }
-      this.$store.commit('setConsentFormValue', { index, value })
+      this.$store.commit('dataexp/setConsentFormValue', { index, value })
     }
   }
 }
