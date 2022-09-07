@@ -131,7 +131,8 @@ export default {
       return this.$store.getters.experience(this.$route)
     },
     collaborator() {
-      return this.e.collaborator
+      const { displayCollaborators } = this.$store.getters.siteConfig
+      return displayCollaborators ? this.e.collaborator : undefined
     },
     homeButtonProps() {
       // check for an external home page

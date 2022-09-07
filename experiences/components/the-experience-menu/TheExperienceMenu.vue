@@ -36,14 +36,13 @@ export default {
     include: {
       type: Array,
       default: undefined
-    },
-    groupByCollaborator: {
-      type: Boolean,
-      default: true
     }
   },
   computed: {
-    ...mapGetters(['enabledExperiences', 'disabledExperiences']),
+    ...mapGetters(['enabledExperiences', 'disabledExperiences', 'siteConfig']),
+    groupByCollaborator() {
+      return !!this.siteConfig.displayCollaborators
+    },
     sections() {
       const sections = []
       const enabledExperiences = this.filterExperiences(this.enabledExperiences)
