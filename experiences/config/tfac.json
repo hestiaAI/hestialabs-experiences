@@ -3,6 +3,14 @@
   "hashtags": ["dataprivacy", "hestialabs"],
   "filedrop": "https://drive.infomaniak.com/app/collaborate/193995/6d2e9744-c71d-434e-8d62-62acf0b8a26d",
   "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
+  "displayCollaborators": true,
+  "appBarLinks": [
+    {
+      "url": "https://hestia.ai/en/#contact",
+      "name": "Contact us",
+      "external": true
+    }
+  ],
   "consent": {
     "twitter": [
       {
