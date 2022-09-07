@@ -45,6 +45,11 @@
   ],
   "appBarLinks": [
     {
+      "url": "https://hestia.ai/en/#contact",
+      "name": "Contact us",
+      "external": true
+    },
+    {
       "url": "/about",
       "name": "About"
     },
@@ -70,7 +75,8 @@
     "dating-apps-course",
     "health-course",
     "matching-algo-course",
-    "policy-making-course"
+    "policy-making-course",
+    "demo-computation"
   ],
   "homePageBubbles": [
     "demo-participant",
@@ -86,6 +92,7 @@
   "filedrop": "https://example.com",
   "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
   "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
+  "displayCollaborators": true,
   "consent": {
     "default": [
       {
