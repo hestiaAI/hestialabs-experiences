@@ -29,11 +29,17 @@
       },
       "your-topics": {
         "title": "Inferred interests",
-        "text": "Get a list of topics that Facebook thinks you're interested in."
+        "text": "Get a list of topics that Facebook thinks you're interested in.",
+        "headers": {
+          "name": "name"
+        }
       },
       "advertisers-contact-list": {
         "title": "Contact list",
-        "text": "Get a list of advertisers that have uploaded a contact list containing you."
+        "text": "Get a list of advertisers that have uploaded a contact list containing you.",
+        "headers": {
+          "name": "name"
+        }
       },
       "custom-audiences": {
         "title": "Advertisers using your data",
@@ -71,11 +77,17 @@
       },
       "your-topics": {
         "title": "Intérêts supposés",
-        "text": "Liste de sujets dont Facebook pense qu'ils vous intéressent."
+        "text": "Liste de sujets dont Facebook pense qu'ils vous intéressent.",
+        "headers": {
+          "name": "nom"
+        }
       },
       "advertisers-contact-list": {
         "title": "Liste de contacts",
-        "text": "Liste de publicitaires qui ont partagé une liste de contacts qui vous mentionne."
+        "text": "Liste de publicitaires qui ont partagé une liste de contacts qui vous mentionne.",
+        "headers": {
+          "name": "nom"
+        }
       },
       "custom-audiences": {
         "title": "Publicitaire utilisant vos données",
