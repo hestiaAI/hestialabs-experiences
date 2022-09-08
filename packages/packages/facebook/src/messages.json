@@ -43,7 +43,10 @@
       },
       "custom-audiences": {
         "title": "Advertisers using your data",
-        "text": "See all advertisers that use Facebook to get information about you"
+        "text": "See all advertisers that use Facebook to get information about you",
+        "headers": {
+          "advertiserName": "Advertiser name"
+        }
       }
     }
   },
@@ -91,7 +94,10 @@
       },
       "custom-audiences": {
         "title": "Publicitaire utilisant vos données",
-        "text": "Liste des publicitaires qui utilisent Facebook pour obtenir des informations qui vous concernent."
+        "text": "Liste des publicitaires qui utilisent Facebook pour obtenir des informations qui vous concernent.",
+        "headers": {
+          "advertiserName": "Nom de l'publicitaire"
+        }
       }
     }
   }

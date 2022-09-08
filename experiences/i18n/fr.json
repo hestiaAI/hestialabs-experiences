@@ -127,20 +127,34 @@
     "select": "Sélectionnez un fichier dans le panneau de gauche pour le voir plus en détail.",
     "file-search-name": "Recherche de fichiers",
     "file-search-placeholder": "Entrez une partie du nom",
-    "content-search-name": "Recherche de contenu",
-    "content-search-placeholder": "Entrez une partie du contenu",
     "Exploring file": "En cours d'exploration",
     "Pretty": "Joli",
     "Raw": "Brut",
     "Schema": "Schéma",
     "viewer": {
+      "csv": {
+        "errorText": "Impossible d'analyser le fichier. Veuillez utiliser l'onglet \"BRUT\" pour le visualiser."
+      },
       "json": {
+        "errorText": "Impossible d'analyser le fichier. Veuillez utiliser l'onglet \"BRUT\" pour le visualiser.",
+        "content-search-name": "Recherche de contenu",
+        "content-search-placeholder": "Entrez une partie du contenu",
         "Copy accessor to clipboard": "Copier l'accesseur dans le clipboard",
-        "Show as table": "Montrer comme tableau"
+        "Show as table": "Montrer comme tableau",
+        "found-items-header": "Articles trouvés (cliquez pour afficher dans l'arbre)"
       },
       "schema": {
+        "errorText": "Impossible de trouver un schéma pour ce fichier, veuillez nous contacter si vous en avez besoin.",
         "invalid-paths": "Impossible de créer une table avec ces accesseurs, il y a plusieurs tables divergentes.",
         "Create table": "Créer un tableau"
+      },
+      "txt": {
+        "Text file content:": "Contenu du fichier texte :",
+        "Text": "Texte",
+        "View as": "Afficher en"
+      },
+      "xlsx": {
+        "errorText": "Impossible d'analyser le fichier."
       }
     }
   },
@@ -199,6 +213,7 @@
   "in-files": "dans votre/vos fichier(s)",
   "Link": "Lien",
   "Load your data": "Charger vos données",
+  "Loading": "Chargement",
   "Made for": "Fait pour",
   "Month": "Mois | Mois",
   "month": "mois",
@@ -208,6 +223,7 @@
   "not found": "pas trouvé",
   "of": "de",
   "per": "par",
+  "plusXOther": "+{n} autre | +{n} autres",
   "Privacy": "Confidentialité",
   "Public experiences": "Expériences publiques",
   "Reset All": "Réinitialiser tout",
