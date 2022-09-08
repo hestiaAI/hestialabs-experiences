@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import FileManager from '~/utils/file-manager'
+import FileManager from '../../../utils/file-manager'
 
 export default {
   props: {

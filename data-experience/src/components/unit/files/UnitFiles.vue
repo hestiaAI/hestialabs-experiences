@@ -1,19 +1,5 @@
 <template>
   <div>
-    <VRow v-if="samples.length" justify="center" dense>
-      <VCol align="center">
-        <LazyUnitFilesSampleSelector
-          :value.sync="selectedSamples"
-          :items="samples"
-          class="mb-4"
-        />
-      </VCol>
-    </VRow>
-    <VRow v-if="samples.length">
-      <VCol align="center" class="font-weight-bold">
-        {{ $t('unit-files.or') }}
-      </VCol>
-    </VRow>
     <VRow>
       <VCol align="center">
         <div ref="dashboard" />
@@ -83,7 +69,7 @@ import '@uppy/drop-target/dist/style.css'
 import English from '@uppy/locales/lib/en_US'
 import French from '@uppy/locales/lib/fr_FR'
 
-import { decryptBlob } from '@/utils/encryption'
+import { decryptBlob } from '../../../utils/encryption'
 
 const locales = {
   en: English,
@@ -96,8 +82,15 @@ async function fetchSampleFile({ path, filename }) {
   return new File([blob], filename)
 }
 
+import UnitFilesDialog from './UnitFilesDialog.vue'
+import BaseAlert from '../../base/BaseAlert.vue'
+import BaseProgressCircular from '../../base/BaseProgressCircular.vue'
+import BaseButton from '../../base/button/BaseButton.vue'
+import BaseDialogButton from '../../base/button/BaseDialogButton.vue'
+
 export default {
   name: 'UnitFiles',
+  components: {UnitFilesDialog, BaseAlert, BaseProgressCircular, BaseButton, BaseDialogButton},
   props: {
     progress: {
       type: Boolean,
@@ -117,7 +110,7 @@ export default {
     }
   },
   data() {
-    const { files, dataSamples } = this.$store.getters.experience(this.$route)
+    const { files, dataSamples } = this.$store.state.dataexp.config
     return {
       uppy: null,
       samples: [],
@@ -191,12 +184,14 @@ export default {
   async created() {
     // files in assets/data/ are loaded with file-loader
     this.samples = []
+    /*
     for (const filename of this.dataSamples) {
       this.samples.push({
         filename,
-        path: (await import(`@/assets/data/${filename}`)).default
+        path: (await import(`../../../../assets/data/${filename}`)).default
       })
     }
+    */
   },
   mounted() {
     const stringsOverride = {

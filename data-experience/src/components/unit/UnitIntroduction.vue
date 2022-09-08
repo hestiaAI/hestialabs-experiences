@@ -81,8 +81,9 @@
 
 <script>
 import { pick } from 'lodash-es'
-
+import UnitFiles from './files/UnitFiles.vue'
 export default {
+  components: {UnitFiles},
   props: {
     slug: {
       type: String,
