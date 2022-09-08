@@ -82,7 +82,6 @@ const TYPE_FORMATTER = {
 export class TypeChecker {
   constructor(vue) {
     this.vue = vue || { $t: d => d }
-    console.log(this.vue.$t)
   }
 
   /**
