@@ -7,7 +7,10 @@
       <BaseAlert v-if="error" type="error">
         {{ message }}
       </BaseAlert>
-      <BaseSearchBar v-model="search" />
+      <div class="d-flex justify-space-between align-center">
+        <BaseSearchBar v-model="search" />
+        <UnitDashboardMaker v-bind="{values: filteredItems, headers: data.headers}" />
+      </div>
       <VDataTable
         v-bind="{ headers: data.headers, search }"
         ref="tableRef"
@@ -54,6 +57,7 @@
 
 <script>
 import * as Papa from 'papaparse'
+import UnitDashboardMaker from '../dashboard-maker/UnitDashboardMaker.vue'
 import { processError } from '@/utils/utils'
 import { formatObject, formatArray } from '@/utils/json'
 import { detectTypes } from '@/utils/type-check'
@@ -64,6 +68,7 @@ const defaultItemsPerPage10 = window.innerHeight - 250 > 530
 
 export default {
   name: 'UnitFilterableTable',
+  components: { UnitDashboardMaker },
   props: {
     headers: {
       type: Array,
@@ -107,7 +112,6 @@ export default {
       }
       // Type detection
       const { headers, items } = detectTypes(tempHeaders, this.items)
-
       // Add column style and options
       return {
         headers: headers.map(({ text, ...rest }) => ({
@@ -172,12 +176,7 @@ export default {
       try {
         const { filteredItems } = this.$refs.tableRef.$children[0]
         // Change the items keys to match the headers
-        const itemsWithHeader = filteredItems.map(i =>
-          this.data.headers.reduce(
-            (o, h) => ({ ...o, [h.text]: i[h.value] }),
-            {}
-          )
-        )
+        const itemsWithHeader = filteredItems.map(i => this.data.headers.reduce((o, h) => ({ ...o, [h.text]: i[h.value] }), {}))
         // update the data
         const csv = await Papa.unparse(itemsWithHeader)
         this.csvString = csv
@@ -192,9 +191,7 @@ export default {
       }
     },
     columnValues(header) {
-      return this.data.items.map(d =>
-        this.formatItemAsString({ header, value: d[header.value] })
-      )
+      return this.data.items.map(d => this.formatItemAsString({ header, value: d[header.value] }))
     },
     onItemsUpdate() {
       // wait until the DOM has completely updated
@@ -204,7 +201,6 @@ export default {
         const { hash } = this.$route
         // emit the current filtered items
         this.$emit('current-items', filteredItems)
-
         this.$store.commit('setResult', {
           experience: hash.slice(1),
           result: {
