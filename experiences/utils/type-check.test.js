@@ -111,7 +111,6 @@ test('formatDataWithTypes convert to valid format', () => {
     {
       value: 'description',
       type: 'STRING',
-
       category: 'DIMENSION'
     },
     { value: 'time', type: 'DATE', category: 'TIME' },
@@ -119,7 +118,6 @@ test('formatDataWithTypes convert to valid format', () => {
     {
       value: 'boolean',
       type: 'BOOLEAN',
-
       category: 'DIMENSION'
     }
   ]
@@ -140,27 +138,27 @@ test('formatDataWithTypes convert to valid format', () => {
       description: null,
       time: null,
       ratio: 0.5,
-      boolean: true
+      boolean: 'true'
     },
     {
       description: 'hello 1',
       time: null,
       ratio: 0,
-      boolean: true,
+      boolean: 'true',
       id: NaN
     },
     {
       id: NaN,
       description: 'None',
       time: null,
-      boolean: true,
+      boolean: 'true',
       ratio: NaN
     },
     {
       id: 3,
       description: 'Hello 2',
       time: null,
-      boolean: false,
+      boolean: 'false',
       ratio: NaN
     },
     {
@@ -217,26 +215,26 @@ test('detectTypes return the correct headers and values', () => {
       }
     ],
     items: [
-      { id: 0, description: null, time: null, ratio: 0.5, boolean: true },
+      { id: 0, description: null, time: null, ratio: 0.5, boolean: 'true' },
       {
         description: 'hello 1',
         time: null,
         ratio: 0.1,
-        boolean: true,
+        boolean: 'true',
         id: NaN
       },
       {
         id: NaN,
         description: 'None',
         time: null,
-        boolean: true,
+        boolean: 'true',
         ratio: NaN
       },
       {
         id: 3,
         description: 'Hello 2',
         time: null,
-        boolean: false,
+        boolean: 'false',
         ratio: NaN
       },
       {

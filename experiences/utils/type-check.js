@@ -32,8 +32,9 @@ const TYPE_FORMATTER = {
   BOOLEAN: {
     validator: d => BOOLEAN_VALUES.test(String(d)),
     formatter(d) {
-      const val = typeof d === 'undefined' ? null : TRUE_VALUES.test(String(d))
-      return this.vue.$t(String(val))
+      return typeof d === 'undefined'
+        ? null
+        : this.vue.$t(String(TRUE_VALUES.test(String(d))))
     }
   },
   FLOAT: {
