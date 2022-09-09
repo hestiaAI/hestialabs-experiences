@@ -21,7 +21,7 @@ const blocks: ViewBlocks = [
       keplerConfig: keplerConfigTripDrivers,
       label: 'trips'
     },
-    text: 'test',
+    text: '',
     showTable: true
   },
   {
