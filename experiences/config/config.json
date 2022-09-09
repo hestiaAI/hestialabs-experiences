@@ -1,12 +1,9 @@
 {
   "experiences": [
-    "amazon",
-    "apple",
     "facebook",
     "google",
     "her",
     "instagram",
-    "spotify",
     "netflix",
     "linkedin",
     "tiktok",
@@ -33,6 +30,7 @@
   "filedrop": "https://example.com",
   "publicKey": "29500a8814ffbfbb3fda7e9854ab8319e349dd50c1fe018ac342300d52f47626",
   "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
+  "displayCollaborators": true,
   "consent": {
     "default": [
       {

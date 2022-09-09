@@ -14,14 +14,8 @@
     "tracker-control-agg",
     "google",
     "google-agg",
-    "amazon",
-    "easyjet",
     "strava",
     "fitbit",
-    "apple",
-    "spotify",
-    "signal",
-    "whatsapp",
     "explorer"
   ],
   "bubbles": [
@@ -34,9 +28,21 @@
   ],
   "logo": "/digipower-academy-logo.png",
   "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
+  "displayCollaborators": true,
   "appBarLinks": [
-    { "url": "/about", "name": "About" },
-    { "url": "/privacy", "name": "Privacy" }
+    {
+      "url": "https://hestia.ai/en/#contact",
+      "name": "Contact us",
+      "external": true
+    },
+    {
+      "url": "/about",
+      "name": "About"
+    },
+    {
+      "url": "/privacy",
+      "name": "Privacy"
+    }
   ],
   "hashtags": ["dataprivacy", "hestialabs", "digipower"]
 }

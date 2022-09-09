@@ -4,10 +4,8 @@
       <VCol>
         <VSelect
           v-model="show"
-          item-text="name"
-          item-value="value"
           :items="items"
-          label="View as"
+          :label="$t(k('View as'))"
           hide-details
           style="max-width: 200px"
         />
@@ -16,7 +14,7 @@
     <VRow>
       <VCol>
         <div v-if="show === 'txt'">
-          <b>Text file content:</b>
+          <span v-t="k('Text file content:')" class="text-bold" />
           <hr class="mb-4">
           {{ text }}
         </div>
@@ -44,24 +42,32 @@ export default {
       text: '',
       show: 'txt',
       items: [
-        { name: 'Text', value: 'txt' },
-        { name: 'CSV', value: 'csv' },
-        { name: 'JSON', value: 'json' }
+        { text: this.$t(this.k('Text')), value: 'txt' },
+        { text: 'CSV', value: 'csv' },
+        { text: 'JSON', value: 'json' }
       ]
     }
   },
   watch: {
     fileManager: {
-      async handler(_) {
-        this.text = await this.fileManager.getPreprocessedText(this.filename)
+      async handler() {
+        await this.updateText()
       },
       immediate: true
     },
     filename: {
-      async handler(_) {
-        this.text = await this.fileManager.getPreprocessedText(this.filename)
+      async handler() {
+        await this.updateText()
       },
       immediate: true
+    }
+  },
+  methods: {
+    async updateText() {
+      this.text = await this.fileManager.getPreprocessedText(this.filename)
+    },
+    k(key) {
+      return `file-explorer.viewer.txt.${key}`
     }
   }
 }

@@ -44,24 +44,26 @@
           </h3>
         </div>
         <VSpacer />
-        <VBtn
-          href="https://hestia.ai/en/#contact"
-          target="_blank"
-          rel="noreferrer noopener"
-          class="v-btn__home mr-0"
-          text
-        >
-          {{ $t('Contact us') }}
-        </VBtn>
-        <VBtn
-          v-for="link in links"
-          :key="link.url"
-          :to="link.url"
-          class="v-btn__home mr-0"
-          text
-        >
-          {{ $t(link.name) }}
-        </VBtn>
+        <div v-for="link in links" :key="link.url">
+          <VBtn
+            v-if="link.external"
+            :href="link.url"
+            target="_blank"
+            rel="noreferrer noopener"
+            class="v-btn__home mr-0"
+            text
+          >
+            {{ $t(link.name) }}
+          </VBtn>
+          <VBtn
+            v-else
+            :to="link.url"
+            class="v-btn__home mr-0"
+            text
+          >
+            {{ $t(link.name) }}
+          </VBtn>
+        </div>
         <CollaboratorLink
           v-if="collaborator"
           :collaborator="collaborator"
@@ -129,7 +131,8 @@ export default {
       return this.$store.getters.experience(this.$route)
     },
     collaborator() {
-      return this.e.collaborator
+      const { displayCollaborators } = this.$store.getters.siteConfig
+      return displayCollaborators ? this.e.collaborator : undefined
     },
     homeButtonProps() {
       // check for an external home page

@@ -7,7 +7,7 @@ const blocks: ViewBlocks = [
     id: 'inference',
     customPipeline: customPipelineMergeCSV('inference'),
     files: ['inference'],
-    visualization: 'ListLinkedinInference.vue',
+    visualization: 'ChartViewListLinkedinInference.vue',
     title: 'Inferences about you',
     text: 'Each card below represents an inference that Linkedin has made about you, either positively or negatively, e.g. Am I a joob seeker -> true or false.'
   },
@@ -15,7 +15,7 @@ const blocks: ViewBlocks = [
     id: 'ad-targeting',
     customPipeline: customPipelineMergeCSV('ad-targeting'),
     files: ['ad-targeting'],
-    visualization: 'LinkedinAdTargeting.vue',
+    visualization: 'ChartViewLinkedinAdTargeting.vue',
     title: 'Ad targeting',
     text: 'This information is used by Linkedin to determine which ads to show you. Some of the targeting data may be derived from other information you have provided to them. For example, they may use your title as an indication of your seniority level.'
   },

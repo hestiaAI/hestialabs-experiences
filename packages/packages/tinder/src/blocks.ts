@@ -18,7 +18,7 @@ const blocks: ViewBlocks = [
   {
     id: 'user',
     sql: sqlUser,
-    visualization: 'TinderUserInfos.vue',
+    visualization: 'ChartViewTinderUserInfos.vue',
     title: 'User infos',
     text: 'Tinder profile information'
   },

@@ -20,7 +20,7 @@
             </span>
           </VChip>
           <span v-if="index === 3" class="grey--text caption">
-            (+{{ categoriesSelected.length - 3 }} others)
+            ({{ $tc('plusXOther', categoriesSelected.length - 3) }})
           </span>
         </template>
       </VAutocomplete>
@@ -41,7 +41,7 @@
             </span>
           </VChip>
           <span v-if="index === 3" class="grey--text caption">
-            (+{{ inferencesSelected.length - 3 }} others)
+            ({{ $tc('plusXOther', inferencesSelected.length - 3) }})
           </span>
         </template>
       </VAutocomplete>

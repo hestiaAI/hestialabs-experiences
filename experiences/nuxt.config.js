@@ -256,6 +256,6 @@ export default {
         as: 'font'
       })
     ],
-    watch: ['../hestialabs/packages/*/dist/*', './i18n/*.json']
+    watch: ['../packages/*/dist/*', './i18n/*.json']
   }
 }

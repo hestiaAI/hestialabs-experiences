@@ -62,11 +62,7 @@ export default {
     },
     keplerData() {
       return {
-        fields: this.header.map((h) => {
-          return {
-            name: h.value
-          }
-        }),
+        fields: this.header.map(({ text: name }) => ({ name })),
         rows: this.filteredRows.map(r => this.header.map(h => r[h.value]))
       }
     },

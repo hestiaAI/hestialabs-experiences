@@ -55,7 +55,7 @@
               item.length > 13 ? item.slice(0, 13) + '..' : item
             }}</span>
             <span v-if="index === 1" class="grey--text text-caption">
-              ({{ $t(kViewBlock('plusXOther'), { n: selectFiles.length - 1 }) }})
+              ({{ $tc('plusXOther', selectFiles.length - 1) }})
             </span>
           </template>
         </VSelect>
