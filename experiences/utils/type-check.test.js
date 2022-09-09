@@ -1,13 +1,11 @@
 import {
-  getNotNullSampleFromData,
-  getTypesFromData,
-  objectToDataFrame,
-  formatDataWithTypes,
-  detectTypes
+  TypeChecker
 } from '~/utils/type-check'
 
 import { dateFormatter } from '@/utils/dates'
 import { arrayEqualNoOrder } from '~/utils/test-utils'
+
+const typeChecker = new TypeChecker()
 
 test('getNotNullSampleFromData gives unique row samples', () => {
   const TEST_ROWS = [
@@ -20,13 +18,13 @@ test('getNotNullSampleFromData gives unique row samples', () => {
   ]
 
   const TEST_HEADERS = Object.keys(TEST_ROWS[0])
-  const sample = getNotNullSampleFromData(
+  const sample = typeChecker.getNotNullSampleFromData(
     TEST_HEADERS,
     TEST_ROWS,
     TEST_ROWS.length
   )
 
-  arrayEqualNoOrder(objectToDataFrame(sample), TEST_ROWS)
+  arrayEqualNoOrder(typeChecker.objectToDataFrame(sample), TEST_ROWS)
 })
 
 test('getNotNullSampleFromData works if sample size is not in bounds', () => {
@@ -40,15 +38,15 @@ test('getNotNullSampleFromData works if sample size is not in bounds', () => {
   ]
 
   const TEST_HEADERS = Object.keys(TEST_ROWS[0])
-  let sample = getNotNullSampleFromData(
+  let sample = typeChecker.getNotNullSampleFromData(
     TEST_HEADERS,
     TEST_ROWS,
     TEST_ROWS.length + 50
   )
 
-  arrayEqualNoOrder(objectToDataFrame(sample), TEST_ROWS)
+  arrayEqualNoOrder(typeChecker.objectToDataFrame(sample), TEST_ROWS)
 
-  sample = getNotNullSampleFromData(TEST_HEADERS, TEST_ROWS, -1)
+  sample = typeChecker.getNotNullSampleFromData(TEST_HEADERS, TEST_ROWS, -1)
   expect(Object.values(sample).every(e => e.length === 0)).toBeTruthy()
 })
 
@@ -63,7 +61,7 @@ test('getNotNullSampleFromData skip null values', () => {
   ]
   const TEST_HEADERS = Object.keys(TEST_ROWS[0])
 
-  const sample = getNotNullSampleFromData(TEST_HEADERS, TEST_ROWS, 2)
+  const sample = typeChecker.getNotNullSampleFromData(TEST_HEADERS, TEST_ROWS, 2)
   const expected = {
     id: [0, '3'],
     description: ['hello 1', 'Hello 2'],
@@ -85,7 +83,7 @@ test('getTypesFromData gives correct type', () => {
   const TEST_HEADERS = Object.keys(TEST_SAMPLE).map((value) => {
     return { value }
   })
-  const types = getTypesFromData(TEST_HEADERS, objectToDataFrame(TEST_SAMPLE))
+  const types = typeChecker.getTypesFromData(TEST_HEADERS, typeChecker.objectToDataFrame(TEST_SAMPLE))
 
   const expected = [
     { value: 'id', type: 'INT', category: 'MEASURE' },
@@ -113,7 +111,6 @@ test('formatDataWithTypes convert to valid format', () => {
     {
       value: 'description',
       type: 'STRING',
-
       category: 'DIMENSION'
     },
     { value: 'time', type: 'DATE', category: 'TIME' },
@@ -121,7 +118,6 @@ test('formatDataWithTypes convert to valid format', () => {
     {
       value: 'boolean',
       type: 'BOOLEAN',
-
       category: 'DIMENSION'
     }
   ]
@@ -134,7 +130,7 @@ test('formatDataWithTypes convert to valid format', () => {
     { id: null, description: '', time: '2022-01-01', ratio: NaN }
   ]
 
-  const result = formatDataWithTypes(TEST_HEADERS, TEST_SAMPLE)
+  const result = typeChecker.formatDataWithTypes(TEST_HEADERS, TEST_SAMPLE)
 
   const expected = [
     {
@@ -142,27 +138,27 @@ test('formatDataWithTypes convert to valid format', () => {
       description: null,
       time: null,
       ratio: 0.5,
-      boolean: true
+      boolean: 'true'
     },
     {
       description: 'hello 1',
       time: null,
       ratio: 0,
-      boolean: true,
+      boolean: 'true',
       id: NaN
     },
     {
       id: NaN,
       description: 'None',
       time: null,
-      boolean: true,
+      boolean: 'true',
       ratio: NaN
     },
     {
       id: 3,
       description: 'Hello 2',
       time: null,
-      boolean: false,
+      boolean: 'false',
       ratio: NaN
     },
     {
@@ -196,7 +192,7 @@ test('detectTypes return the correct headers and values', () => {
   const TEST_HEADERS = Object.keys(TEST_SAMPLE[0]).map((value) => {
     return { value }
   })
-  const result = detectTypes(TEST_HEADERS, TEST_SAMPLE)
+  const result = typeChecker.detectTypes(TEST_HEADERS, TEST_SAMPLE)
 
   const expected = {
     headers: [
@@ -219,26 +215,26 @@ test('detectTypes return the correct headers and values', () => {
       }
     ],
     items: [
-      { id: 0, description: null, time: null, ratio: 0.5, boolean: true },
+      { id: 0, description: null, time: null, ratio: 0.5, boolean: 'true' },
       {
         description: 'hello 1',
         time: null,
         ratio: 0.1,
-        boolean: true,
+        boolean: 'true',
         id: NaN
       },
       {
         id: NaN,
         description: 'None',
         time: null,
-        boolean: true,
+        boolean: 'true',
         ratio: NaN
       },
       {
         id: 3,
         description: 'Hello 2',
         time: null,
-        boolean: false,
+        boolean: 'false',
         ratio: NaN
       },
       {

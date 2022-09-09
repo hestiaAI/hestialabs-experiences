@@ -43,7 +43,7 @@
         </VBtn>
       </VChip>
       <span v-if="index === 1" class="grey--text caption">
-        (+{{ filter.length - 1 }} others)
+        ({{ $tc('plusXOther', filter.length - 1) }})
       </span>
     </template>
   </VAutocomplete>

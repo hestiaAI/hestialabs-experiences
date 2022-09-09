@@ -11,7 +11,6 @@ const genericDateViewer: Messages = {
         graphNoDate: 'No dated events were found in your file(s).',
         datedEvents:
           'From {currMinDate} to {currMaxDate} we found {total} dated events in your file(s).',
-        plusXOther: '+{n} other',
         headers: {
           'File name': 'File name',
           Date: 'Date',
@@ -31,7 +30,6 @@ const genericDateViewer: Messages = {
           "Aucun événement daté n'a été trouvé dans votre (vos) dossier(s).",
         datedEvents:
           'De {currMinDate} à {currMaxDate} nous avons trouvé {total} événements datés dans votre (vos) fichier(s).',
-        plusXOther: '+{n} autres',
         headers: {
           'File name': 'Nom de fichier',
           Date: 'Date',

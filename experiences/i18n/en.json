@@ -127,20 +127,34 @@
     "select": "Select a file on the left panel to see it in more details here",
     "file-search-name": "Search for files",
     "file-search-placeholder": "Enter part of the name",
-    "content-search-name": "Search content",
-    "content-search-placeholder": "Type...",
     "Exploring file": "Exploring file",
     "Pretty": "Pretty",
     "Raw": "Raw",
     "Schema": "Schema",
     "viewer": {
+      "csv": {
+        "errorText": "Could not parse the file. Please use the \"RAW\" tab to visualise it."
+      },
       "json": {
+        "errorText": "Could not parse the file. Please use the \"RAW\" tab to visualise it.",
+        "content-search-name": "Search content",
+        "content-search-placeholder": "Type...",
         "Copy accessor to clipboard": "Copy accessor to clipboard",
-        "Show as table": "Show as table"
+        "Show as table": "Show as table",
+        "found-items-header": "Found items (click to show in tree)"
       },
       "schema": {
+        "errorText": "Could not find a schema for this file, please contact us if you need it.",
         "invalid-paths": "Impossible to create a table with these accessors, there are several divergent tables.",
         "Create table": "Create table"
+      },
+      "txt": {
+        "Text file content:": "Text file content:",
+        "Text": "Text",
+        "View as": "View as"
+      },
+      "xlsx": {
+        "errorText": "Could not parse the file."
       }
     }
   },
@@ -188,15 +202,18 @@
   "Display Others": "Display \"Others\"",
   "Download": "Download",
   "Export": "Export",
+  "false": "No",
   "File": "File | Files",
   "Filters": "Filters",
   "filter-info": "Any filtering you do will also limit what data is shared into the pool if you share this tab on the 'Share My Data' tab.",
   "footer-digipower-academy": "The Digipower.academy has emerged out of projects initiated separately by",
   "found": "We found",
+  "Home page": "Home page",
   "hour": "hour",
   "in-files": "in your file.",
   "Link": "Link",
   "Load your data": "Load your data",
+  "Loading": "Loading",
   "Made for": "Made for",
   "Month": "Month | Months",
   "month": "month",
@@ -206,6 +223,7 @@
   "not found": "not found",
   "of": "of",
   "per": "per",
+  "plusXOther": "+{n} other | +{n} other",
   "Privacy": "Privacy",
   "Public experiences": "Public experiences",
   "Reset All": "Reset All",
@@ -223,6 +241,7 @@
   "the HestiaLabs project": "the HestiaLabs project",
   "This might take a moment": "This might take a moment",
   "Time interval": "Time interval",
+  "true": "Yes",
   "Type...": "Type...",
   "Week": "Week | Weeks",
   "dayOfWeek": {

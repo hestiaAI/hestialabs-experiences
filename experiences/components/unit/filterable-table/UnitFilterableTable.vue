@@ -56,7 +56,7 @@
 import * as Papa from 'papaparse'
 import { processError } from '@/utils/utils'
 import { formatObject, formatArray } from '@/utils/json'
-import { detectTypes } from '@/utils/type-check'
+import { TypeChecker } from '@/utils/type-check'
 
 const height5 = 290
 const height10 = 530
@@ -106,8 +106,8 @@ export default {
         }))
       }
       // Type detection
-      const { headers, items } = detectTypes(tempHeaders, this.items)
-
+      const typeChecker = new TypeChecker(this)
+      const { headers, items } = typeChecker.detectTypes(tempHeaders, this.items)
       // Add column style and options
       return {
         headers: headers.map(({ text, ...rest }) => ({

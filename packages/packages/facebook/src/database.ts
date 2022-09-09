@@ -2,8 +2,7 @@ import type { DatabaseConfig } from '@/types'
 import {
   SQLType,
   JSONPathResultType,
-  JSONPathReturnObject,
-  JSONPathRecord
+  JSONPathReturnObject
 } from '@/types/database-config'
 
 const { TEXT, INTEGER } = SQLType
@@ -38,6 +37,10 @@ const config: DatabaseConfig = {
       name: 'CustomAudience',
       columns: [
         ['advertiserName', TEXT],
+        // boolean fields should currently be declared as TEXT
+        // and not INTEGER for the type-analyzer package
+        // to correctly detect them as BOOLEAN
+        // (see /experiences/utils/type-checker.js)
         ['hasDataFileCustomAudience', TEXT],
         ['hasRemarketingCustomAudience', TEXT],
         ['hasInPersonStoreVisit', TEXT]
@@ -117,17 +120,6 @@ const config: DatabaseConfig = {
       fileId: 'advertisers-using-information',
       table: 'CustomAudience',
       path: '$.custom_audiences_all_types_v2[*]',
-      options: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        callback: output => {
-          const o = output as JSONPathRecord
-          for (const key in o) {
-            if (typeof o[key] === 'boolean') {
-              o[key] = o[key] ? 'Yes' : 'No'
-            }
-          }
-        }
-      },
       getters: [
         {
           column: 'advertiserName',
