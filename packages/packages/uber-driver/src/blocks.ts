@@ -8,7 +8,7 @@ import {
 } from './postprocessor'
 import keplerConfigPlaces from './kepler/kepler_config_places'
 import keplerConfigTrips from './kepler/kepler_config_trip'
-
+import keplerConfigTripDrivers from './kepler/kepler_config_trip_drivers'
 const blocks: ViewBlocks = [
   {
     id: 'driverTrips',
@@ -16,7 +16,12 @@ const blocks: ViewBlocks = [
     files: ['driver_trips'],
     title: 'Driver Trips',
     postprocessor: driverTripsPostProcessor,
-    text: '',
+    visualization: 'ChartViewGenericMap.vue',
+    vizProps: {
+      keplerConfig: keplerConfigTripDrivers,
+      label: 'trips'
+    },
+    text: 'test',
     showTable: true
   },
   {
