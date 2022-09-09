@@ -15,7 +15,7 @@ const options: ExperienceOptions = {
   files: {
     'tracker-control': '**/block00.json'
   },
-  icon: icon,
+  icon,
   subtitle: 'Tracking data',
   title: 'TrackerControl Agg',
   viewBlocks

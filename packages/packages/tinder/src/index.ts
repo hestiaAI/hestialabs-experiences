@@ -14,7 +14,7 @@ const options: ExperienceOptions = {
   files: {
     tinder: '**/*.json'
   },
-  icon: icon,
+  icon,
   messages,
   title: 'Tinder',
   viewBlocks

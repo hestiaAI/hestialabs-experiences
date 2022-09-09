@@ -19,7 +19,7 @@ const options: ExperienceOptions = {
     skipped: '**/skipped.csv',
     profiles: '**/profiles.csv'
   },
-  icon: icon,
+  icon,
   title: 'HER',
   viewBlocks
 }

@@ -20,7 +20,7 @@ const options: ExperienceOptions = {
     engagements: '**/ad-engagements.js',
     personalization: '**/personalization.js'
   },
-  icon: icon,
+  icon,
   messages,
   preprocessors: {
     '**/*.js': preprocessor

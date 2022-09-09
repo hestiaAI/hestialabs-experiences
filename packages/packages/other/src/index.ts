@@ -3,7 +3,7 @@ import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/help.png'
 
 const options: ExperienceOptions = {
-  icon: icon,
+  icon,
   subtitle: 'Contact us for specific needs',
   title: 'More to come',
   url: 'mailto:contact@hestialabs.org',

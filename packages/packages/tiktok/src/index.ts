@@ -18,7 +18,7 @@ const options: ExperienceOptions = {
   },
   hideFileExplorer: false,
   messages,
-  icon: icon,
+  icon,
   title: 'TikTok',
   viewBlocks
 }

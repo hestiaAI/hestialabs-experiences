@@ -9,7 +9,7 @@ const options: ExperienceOptions = {
     'viewing-activity': '**/CONTENT_INTERACTION/ViewingActivity.csv',
     'messages-by-netflix': '**/MESSAGES/MessagesSentByNetflix.csv'
   },
-  icon: icon,
+  icon,
   messages,
   title: 'Netflix',
   viewBlocks
