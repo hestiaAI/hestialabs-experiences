@@ -3,9 +3,9 @@ import vegaWordcloudTargetingCriteria, {
 } from './wordcloud-targeting-criteria'
 
 const descriptions = [
-  "Twitter détermine les utilisateurs similaires à ceux qui suivent des comptes sur la base d'une variété de signaux, notamment ce qu'ils Retweetent, cliquent, Tweetent, etc.",
+  "Twitter détermine les utilisateurs similaires à ceux qui suivent des comptes sur la base d'une variété de signaux, notamment ce qu'ils retweetent, cliquent, tweetent, etc.",
   "Twitter détermine les intérêts en fonction de divers signaux, notamment les personnes qu'elles suivent, ce qu'elles retweetent, ce qu'elles cliquent, ce qu'elles tweetent, etc",
-  'Atteignez les groupes de personnes qui ont effectué une action spécifique dans votre application, comme les installations ou les inscriptions.',
+  'Atteignez les groupes de personnes qui ont effectué une action spécifique dans votre application, comme des installations ou des inscriptions.',
   "Il est possible de collecter ces données à l'aide de la balise de site web de Twitter disponible via Twitter Ads.",
   "Les listes sont créées en téléchargeant un fichier contenant votre adresse e-mail, votre identifiant publicitaire mobile ou votre nom d'utilisateur Twitter.",
   "Les personnes peuvent être considérées comme faisant partie d'une audience de conversation si elles ont tweeté ou se sont engagées avec un tweet mentionnant le sujet.",
@@ -28,8 +28,8 @@ const dictionary = {
 const labels = [
   'Abonnés similaires',
   'Intérêts',
-  "Activité de l'application",
-  'Website Activity',
+  "Activité dans l'application",
+  'Activité sur le site web',
   'Liste',
   'Sujets de conversation',
   'Mots clés',
@@ -37,7 +37,7 @@ const labels = [
   'Âge',
   'Langues',
   'Genre',
-  'OS versions',
+  "Systèmes d'exploitation",
   'Plateformes',
   'Événements'
 ]
