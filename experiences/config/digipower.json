@@ -14,14 +14,8 @@
     "tracker-control-agg",
     "google",
     "google-agg",
-    "amazon",
-    "easyjet",
     "strava",
     "fitbit",
-    "apple",
-    "spotify",
-    "signal",
-    "whatsapp",
     "explorer"
   ],
   "bubbles": [
@@ -41,8 +35,14 @@
       "name": "Contact us",
       "external": true
     },
-    { "url": "/about", "name": "About" },
-    { "url": "/privacy", "name": "Privacy" }
+    {
+      "url": "/about",
+      "name": "About"
+    },
+    {
+      "url": "/privacy",
+      "name": "Privacy"
+    }
   ],
   "hashtags": ["dataprivacy", "hestialabs", "digipower"]
 }
