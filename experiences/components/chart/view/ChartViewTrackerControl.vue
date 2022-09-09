@@ -35,7 +35,7 @@
             </span>
             <span v-if="index < 2">, </span>
             <div v-if="index === 3" class="grey--text text-caption">
-              (+{{ selectedApps.length - 3 }} others)
+              ({{ $tc('plusXOther', selectedApps.length - 3) }})
             </div>
           </template>
         </VSelect>

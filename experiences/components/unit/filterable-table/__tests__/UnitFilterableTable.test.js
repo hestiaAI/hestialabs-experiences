@@ -34,6 +34,7 @@ test('data table contains passed items', () => {
     store,
     localVue,
     mocks: {
+      $t: msg => defaultMessages[msg],
       $tev: msg => defaultMessages[msg]
     }
   })
@@ -50,6 +51,7 @@ test('data table is not rendered when data is malformed', () => {
     store,
     localVue,
     mocks: {
+      $t: msg => defaultMessages[msg],
       $tev: msg => defaultMessages[msg]
     }
   })
@@ -66,6 +68,7 @@ test('data table html corresponds to snapshot', () => {
     store,
     localVue,
     mocks: {
+      $t: msg => defaultMessages[msg],
       $tev: msg => defaultMessages[msg]
     }
   })

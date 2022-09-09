@@ -1,8 +1,6 @@
 <template>
   <div v-if="error">
-    <p class="mt-3">
-      Could not find a schema for this file, please contact us if you need it.
-    </p>
+    <p v-t="k('errorText')" class="mt-3" />
   </div>
   <div v-else>
     <BaseSchemaTree :schema="jsonSchema" />
