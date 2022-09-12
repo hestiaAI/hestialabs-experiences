@@ -114,11 +114,7 @@ export default {
         { text: 'Company', value: 'companyName' },
         { text: 'Date', value: 'date_' },
         { text: 'Promoted Tweet', value: 'url' },
-        {
-          text: 'Engagement',
-          value: 'engagements',
-          formatter: d => this.$t(d === 0 ? 'No' : 'Yes')
-        },
+        { text: 'Engagement', value: 'engagedWith' },
         { text: 'Targeting Criteria', value: 'count' }
       ].map(
         ({ text, ...rest }) =>
@@ -205,9 +201,7 @@ export default {
       // Create dimensions
       const adPerDayDimension = ndx.dimension(d => d.day)
       const companyDimension = ndx.dimension(d => d.companyName)
-      const engagementDimension = ndx.dimension(d =>
-        this.$t(d.engagements ? 'Yes' : 'No')
-      )
+      const engagementDimension = ndx.dimension(d => this.$t(d.engagedWith))
       const targetingTypeDimension = ndx.dimension(d => d.targetingType)
       const targetingValueDimension = ndx.dimension(d => d.targetingValue)
       companySearch.dimension(ndx.dimension(d => d.companyName.toLowerCase()))
@@ -427,14 +421,14 @@ export default {
             d => d.companyName,
             d => d.date_,
             d => d.url,
-            d => d.engagements
+            d => d.engagedWith
           )
           this.results = newData.map(x => ({
             tweetId: x[0],
             companyName: x[1],
             date_: x[2],
             url: x[3],
-            engagements: x[4],
+            engagedWith: x[4],
             count: x[5]
           }))
 

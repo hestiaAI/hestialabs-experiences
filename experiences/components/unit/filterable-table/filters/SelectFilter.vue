@@ -58,7 +58,6 @@ export default {
     }
   },
   data() {
-    console.log('data')
     return {
       filter: [...new Set(this.values)]
     }
@@ -93,15 +92,6 @@ export default {
     filter() {
       this.$emit('filter-change', this.filterFunction)
     }
-  },
-  beforeCreate() {
-    console.log('beforeCreate')
-  },
-  created() {
-    console.log('created')
-  },
-  mounted() {
-    console.log('mounted')
   },
   methods: {
     toggle() {
