@@ -78,6 +78,7 @@ Make sure you have the latest version of all packages
 ```bash
 cd ../packages
 npm install
+npm run build
 npm link --workspaces
 cd ../experiences
 npm install
