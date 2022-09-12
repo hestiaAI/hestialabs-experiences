@@ -4,10 +4,10 @@
       <div
         class="d-flex justify-space-between align-center text-subtitle-1 mt-3 mb-3"
       >
-        <span>Time</span>
+        <span v-t="'Time'" />
         <VCheckbox
           v-model="allDay"
-          label="All Day"
+          :label="$t('All Day')"
           color="primary"
           hide-details
           :disabled="allDay"
@@ -19,7 +19,7 @@
         <VTextField
           v-model="startTime"
           class="mr-3"
-          label="Min value"
+          :label="$t('Min value')"
           type="time"
           @change="filterChange()"
         />
@@ -27,7 +27,7 @@
         <VTextField
           v-model="endTime"
           class="ml-3"
-          label="Min value"
+          :label="$t('Max value')"
           :min="startTime"
           type="time"
           @change="filterChange()"
@@ -36,9 +36,13 @@
     </VCol>
   </VRow>
 </template>
+
 <script>
-// import * as d3 from 'd3'
 import { timeParser, datetimeParser } from '@/utils/dates'
+
+const DEFAULT_START_TIME = '00:00'
+const DEFAULT_END_TIME = '23:59'
+
 export default {
   name: 'TimeFilter',
   props: {
@@ -50,8 +54,8 @@ export default {
   data() {
     return {
       allDay: true,
-      startTime: '00:00',
-      endTime: '23:59'
+      startTime: DEFAULT_START_TIME,
+      endTime: DEFAULT_END_TIME
     }
   },
   computed: {
@@ -59,7 +63,9 @@ export default {
       return this.isDatetime ? datetimeParser : timeParser
     },
     filterFunction() {
-      if (this.allDay) { return null }
+      if (this.allDay) {
+        return null
+      }
       return (value) => {
         const date = this.parser(value)
         if (!value || !date) { return true }
@@ -78,12 +84,12 @@ export default {
       return hours * 3600 * 1000 + minutes * 60 * 1000
     },
     filterChange() {
-      if (this.startTime === '00:00' && this.endTime === '23:59') { this.allDay = true } else { this.allDay = false }
+      this.allDay = this.startTime === DEFAULT_START_TIME && this.endTime === DEFAULT_END_TIME
       this.$emit('filter-change', this.filterFunction)
     },
     reset() {
-      this.startTime = '00:00'
-      this.endTime = '23:59'
+      this.startTime = DEFAULT_START_TIME
+      this.endTime = DEFAULT_END_TIME
       this.filterChange()
     }
   }

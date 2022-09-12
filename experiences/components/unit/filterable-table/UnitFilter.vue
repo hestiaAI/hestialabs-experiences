@@ -43,7 +43,7 @@
           color="primary"
           @click="$refs.filter.reset()"
         >
-          Clear
+          {{ $t('Clear') }}
         </VBtn>
       </div>
     </div>
@@ -64,6 +64,7 @@ export default {
     }
   },
   data() {
+    console.log('UnitFilter data')
     return {
       args: {},
       filter: null,
@@ -82,6 +83,7 @@ export default {
   },
   computed: {
     filterOptions() {
+      console.log(this.header, String(this.header.type))
       switch (String(this.header.type)) {
         case 'INT':
           return { name: 'NumberFilter.vue', args: {} }
