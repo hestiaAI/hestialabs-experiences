@@ -1,7 +1,7 @@
 <template>
   <VContainer>
     <VRow>
-      <span class="overline"> Total inferences: {{ values.length }}</span>
+      <span v-t="{ path: kViewBlock('total-inferences'), args: { n: values.length } }" class="overline" />
       <VSpacer />
       <VAutocomplete
         v-model="categoriesSelected"
@@ -9,7 +9,7 @@
         chips
         dense
         class="pa-4"
-        label="Filter by Category"
+        :label="$t(kViewBlock('Filter by Category'))"
         :items="categories"
         :menu-props="{ closeOnClick: false }"
       >
@@ -30,7 +30,7 @@
         chips
         dense
         class="pa-4"
-        label="Filter by Inference"
+        :label="$t(kViewBlock('Filter by Inference'))"
         :items="inferenceTypes"
         :menu-props="{ closeOnClick: false }"
       >
@@ -48,8 +48,8 @@
     </VRow>
     <VRow class="ma-6">
       <VCol
-        v-for="(inference, i) in items"
-        :key="i"
+        v-for="(i, idx) in itemsFiltered"
+        :key="idx"
         cols="12"
         sm="6"
         md="4"
@@ -57,15 +57,15 @@
         xl="2"
       >
         <VCard height="100%" class="d-flex flex-column">
-          <VCardTitle>{{ inference.type }}</VCardTitle>
-          <VCardSubtitle>{{ inference.category }}</VCardSubtitle>
-          <VCardText>{{ inference.description }}</VCardText>
+          <VCardTitle>{{ i.type }}</VCardTitle>
+          <VCardSubtitle>{{ i.category }}</VCardSubtitle>
+          <VCardText>{{ i.description }}</VCardText>
           <VSpacer />
           <VCardActions class="ma-3 overline d-flex justify-space-between">
-            <div>Inferred</div>
+            <div v-t="kViewBlock('Inferred')" />
             <div>
-              <VAvatar size="16" :color="inference.color" class="mr-1" />
-              {{ inference.inferenceValue }}
+              <VAvatar size="16" :color="i.color" class="mr-1" />
+              {{ i.inferenceText }}
             </div>
           </VCardActions>
         </VCard>
@@ -76,60 +76,80 @@
 
 <script>
 import mixin from './mixin'
+import { TYPE_FORMATTER, TRUE_VALUES } from '@/utils/type-check'
+
+const getColor = (v) => {
+  if (TYPE_FORMATTER.BOOLEAN.validator(v)) {
+    if (TRUE_VALUES.test(v)) {
+      // true
+      return '#29AA24'
+    }
+    // false
+    return '#E52229'
+  }
+  // other
+  return '#F2F2F2'
+}
 
 export default {
   mixins: [mixin],
   data() {
+    const { BOOLEAN, FLOAT } = TYPE_FORMATTER
+    const items = this.values.map(({ inference: v, ...rest }) => {
+      // by default, the type is 'Other' and the value is unchanged
+      let inferenceType = 'Other'
+      let inferenceText = v
+      if (BOOLEAN.validator(v)) {
+        // the boolean formatter takes care of i18n localization
+        inferenceText = BOOLEAN.formatter(v, this)
+        inferenceType = inferenceText
+      } else if (FLOAT.validator(v)) {
+        inferenceText = FLOAT.formatter(v).toFixed(2)
+        inferenceType = 'Numeric value'
+      }
+
+      return {
+        inference: v,
+        inferenceText,
+        inferenceType: this.$tev(
+          // Keys sourced from view-block dictionary
+          this.kViewBlock(inferenceType, 'inferenceTypes'),
+          // Yes/No is already translated
+          inferenceType
+        ),
+        color: getColor(v),
+        ...rest
+      }
+    })
     return {
+      items,
       categoriesSelected: [],
       inferencesSelected: [],
-      inferenceTypes: ['True', 'False', 'Others']
+      categories: items.map(i => i.category),
+      inferenceTypes: items.map(i => i.inferenceType)
     }
   },
   computed: {
-    items() {
-      return this.values
-        .map((inference) => {
-          const inferenceType =
-            inference.inference === 'true'
-              ? 'True'
-              : inference.inference === 'No'
-                ? 'False'
-                : 'Others'
-          let value = inferenceType
-          if (value === 'Others') { value = parseFloat(inference.inference).toFixed(2) }
-
-          return {
-            type: inference.typeOfInference,
-            category: inference.category,
-            description: inference.description,
-            inferenceValue: value,
-            inferenceType,
-            color:
-              inferenceType === 'True'
-                ? '#29AA24'
-                : inferenceType === 'False'
-                  ? '#E52229'
-                  : '#F2F2F2'
-          }
-        })
+    itemsFiltered() {
+      const { categoriesSelected: cs, inferencesSelected: is } = this
+      return this.items
         .filter(
-          inference =>
-            this.categoriesSelected.length === 0 ||
-            this.categoriesSelected.includes(inference.category)
+          ({ category, inferenceType }) =>
+            (
+              !cs.length ||
+              cs.includes(category)
+            ) &&
+            (
+              !is.length ||
+              is.includes(inferenceType)
+            )
         )
-        .filter(
-          inference =>
-            this.inferencesSelected.length === 0 ||
-            this.inferencesSelected.includes(inference.inferenceType)
-        )
-    },
-    categories() {
-      return this.values.map(inference => inference.category)
     }
+
   }
 }
 </script>
+
 <style>
 .v-card__text,
 .v-card__title {

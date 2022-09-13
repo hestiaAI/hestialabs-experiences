@@ -52,6 +52,7 @@ WITH
   )
 SELECT
   (
+    -- Yes/No is interpreted as BOOLEAN by type-check.js
     CASE
       WHEN e.engagements IS 0 THEN 'No'
       ELSE 'Yes'

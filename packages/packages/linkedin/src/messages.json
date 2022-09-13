@@ -7,7 +7,15 @@
     "viewBlocks": {
       "inference": {
         "title": "Inferences about you",
-        "text": "Each card below represents an inference that Linkedin has made about you, either positively or negatively, e.g. Am I a joob seeker -> true or false."
+        "text": "Each card below represents an inference that Linkedin has made about you, either positively or negatively, e.g. Am I a joob seeker -> true or false.",
+        "total-inferences": "Total inferences: {n}",
+        "Filter by Category": "Filter by Category",
+        "Filter by Inference": "Filter by Inference",
+        "Inferred": "Inferred",
+        "inferenceTypes": {
+          "Numeric value": "Numeric value",
+          "Other": "Other"
+        }
       },
       "ad-targeting": {
         "title": "Ad targeting",
@@ -27,7 +35,15 @@
     "viewBlocks": {
       "inference": {
         "title": "Données inférées",
-        "text": "Chacun des éléments ci-dessous décrit une inférence que Linkedin a faite à votre sujet, en positif ou négatif. Par exemple, \"je recherche un emploi\", vrai ou faux."
+        "text": "Chacun des éléments ci-dessous décrit une inférence que Linkedin a faite à votre sujet, en positif ou négatif. Par exemple, \"je recherche un emploi\", vrai ou faux.",
+        "total-inferences": "Total des inférences : {n}",
+        "Filter by Category": "Filtrer par catégorie",
+        "Filter by Inference": "Filtrer par inférence",
+        "Inferred": "Inférée",
+        "inferenceTypes": {
+          "Numeric value": "Valeur numérique",
+          "Other": "Autres"
+        }
       },
       "ad-targeting": {
         "title": "Ciblage publicitaire",

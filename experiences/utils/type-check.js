@@ -24,18 +24,16 @@ const ACCEPTED_TYPES = [
 
 // Define the possible null values we can encounter to exclude them from the type analysis
 const NULL_VALUES = /^(null|nan|none||)$/i
-const BOOLEAN_VALUES = /^(true|1|on|yes|false|0|off|no)/i
-const TRUE_VALUES = /^(true|1|on|yes)/i
+const BOOLEAN_VALUES = /^(true|1|on|yes|false|0|off|no)$/i
+export const TRUE_VALUES = /^(true|1|on|yes)$/i
 
 // Define Formatters in order to format all columns with the given type
-const TYPE_FORMATTER = {
+export const TYPE_FORMATTER = {
   BOOLEAN: {
     validator: d => BOOLEAN_VALUES.test(String(d)),
-    formatter(d) {
-      return typeof d === 'undefined'
-        ? null
-        : this.vue.$t(String(TRUE_VALUES.test(String(d))))
-    }
+    formatter: (d, vue) => typeof d === 'undefined'
+      ? null
+      : vue.$t(String(TRUE_VALUES.test(String(d))))
   },
   FLOAT: {
     validator: d => !isNaN(parseFloat(d)),
@@ -174,8 +172,7 @@ export class TypeChecker {
     return items.map((r) => {
       headers.forEach((h) => {
         const formatter = TYPE_FORMATTER[h.type]?.formatter ?? (d => d)
-        // call the formatter with 'this' set as the TypeChecker instance
-        r[h.value] = formatter.call(this, r[h.value])
+        r[h.value] = formatter(r[h.value], this.vue)
       })
       return r
     })
