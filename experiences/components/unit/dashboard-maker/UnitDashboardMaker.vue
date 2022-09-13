@@ -38,7 +38,7 @@
               <VDataTable v-bind="{ headers, items: values }" />
             </div>
             <div v-else>
-              <ChartViewDashboard v-bind="{ 'graphs':formsInfo, headers, values }" />
+              <ChartViewDashboard v-bind="{ graphs:formsInfo, headers, values }" />
             </div>
           </VCard>
         </VCol>
@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     submit(formsInfo) {
-      console.log('submit', formsInfo)
+      console.log('submit', this.formsInfo)
       this.formsInfo = formsInfo
     }
   }
@@ -79,13 +79,6 @@ export default {
 <style scoped>
 .dialog {
   z-index: 3000;
-}
-.dialog-card {
-  height: 100%;
-  overflow: hidden
-}
-.inner-dialog {
-  height: 100%;
 }
 .border-right {
   border-right: 0.8px solid rgb(202, 200, 200);

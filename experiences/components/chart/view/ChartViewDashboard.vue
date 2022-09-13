@@ -47,6 +47,9 @@ export default {
       results: this.values
     }
   },
+  mounted() {
+    console.log('Dashboard', this.graphs, this.values, this.headers, this.graphId)
+  },
   methods: {
     resetAll() {
       dc.filterAll()
@@ -70,7 +73,7 @@ export default {
           this.results = this.ndx.allFiltered()
           d3.select(`#dc-data-count-${this.graphId} a.resetAll`).on('click', this.resetAll)
         })
-      dc.renderAll()
+      // dc.renderAll()
     }
   }
 }
