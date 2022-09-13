@@ -14,7 +14,7 @@
     <VRow>
       <VCol>
         <div v-if="show === 'txt'">
-          <span v-t="k('Text file content:')" class="text-bold" />
+          <span v-t="k('Text file content:')" class="font-weight-bold" />
           <hr class="mb-4">
           {{ text }}
         </div>

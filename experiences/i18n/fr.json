@@ -89,9 +89,9 @@
   "unit-files-dialog": {
     "tooltip": "Voir les fichiers requis",
     "title": "Fichiers requis",
-    "used": "Fichiers utilisés dans l'expérience:",
-    "required": "Fichiers requis:",
-    "found": "Fichiers trouvés:",
+    "used": "Fichiers utilisés dans l'expérience :",
+    "required": "Fichiers requis :",
+    "found": "Fichiers trouvés :",
     "no-files": "Aucun fichier spécifique n'est requis dans ces expériences.",
     "all-files-1": "Pour les expériences marquées par",
     "all-files-2": ", tous les fichiers JSON/CSV fournis seront analysés pour y trouver des dates et des coordonnées géographiques. Ces expériences seront d'autant plus intéressantes que vous inclurez de fichiers."
@@ -195,7 +195,7 @@
   "Close": "Fermer",
   "Connected to bubble": "Connecté à la bulle",
   "Contact us": "Contactez-nous",
-  "Current filter": "Filtre actuel:",
+  "Current filter": "Filtre actuel :",
   "Data Experience": "Éxperience",
   "Day": "Jour | Jours",
   "day": "jour",

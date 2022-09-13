@@ -9,7 +9,7 @@
         chips
         dense
         class="pa-4"
-        :label="$t(kViewBlock('Filter by Category'))"
+        :label="messages['Filter by Category']"
         :items="categories"
         :menu-props="{ closeOnClick: false }"
       >
@@ -30,7 +30,7 @@
         chips
         dense
         class="pa-4"
-        :label="$t(kViewBlock('Filter by Inference'))"
+        :label="messages['Filter by Inference']"
         :items="inferenceTypes"
         :menu-props="{ closeOnClick: false }"
       >
@@ -57,12 +57,12 @@
         xl="2"
       >
         <VCard height="100%" class="d-flex flex-column">
-          <VCardTitle>{{ i.type }}</VCardTitle>
+          <VCardTitle>{{ i.typeOfInference }}</VCardTitle>
           <VCardSubtitle>{{ i.category }}</VCardSubtitle>
           <VCardText>{{ i.description }}</VCardText>
           <VSpacer />
           <VCardActions class="ma-3 overline d-flex justify-space-between">
-            <div v-t="kViewBlock('Inferred')" />
+            <div v-text="messages['Inferred']" />
             <div>
               <VAvatar size="16" :color="i.color" class="mr-1" />
               {{ i.inferenceText }}
@@ -93,9 +93,15 @@ const getColor = (v) => {
 
 export default {
   mixins: [mixin],
+  props: {
+    messages: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     const { BOOLEAN, FLOAT } = TYPE_FORMATTER
-    const items = this.values.map(({ inference: v, ...rest }) => {
+    const items = this.values.map(({ inference: v, category, ...rest }) => {
       // by default, the type is 'Other' and the value is unchanged
       let inferenceType = 'Other'
       let inferenceText = v
@@ -110,6 +116,7 @@ export default {
 
       return {
         inference: v,
+        category: this.$tev(this.kViewBlock(category, 'categories'), category),
         inferenceText,
         inferenceType: this.$tev(
           // Keys sourced from view-block dictionary

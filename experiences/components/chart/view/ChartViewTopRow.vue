@@ -7,16 +7,16 @@
           :path="k('heading')"
         >
           <template #total>
-            <span class="text-bold" v-text="total" />
+            <span class="font-weight-bold" v-text="total" />
           </template>
           <template #countLabel>
             {{ countLabel }}
           </template>
           <template #minDate>
-            <span class="text-bold" v-text="minDate" />
+            <span class="font-weight-bold" v-text="minDate" />
           </template>
           <template #maxDate>
-            <span class="text-bold" v-text="maxDate" />
+            <span class="font-weight-bold" v-text="maxDate" />
           </template>
         </i18n>
       </VCol>
