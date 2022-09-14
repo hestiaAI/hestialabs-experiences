@@ -139,9 +139,9 @@ export default {
         { text: 'More Info', value: 'url' },
         { text: 'Date', value: 'dateStr' },
         { text: 'Tracker', value: 'tracker' },
-        { text: 'daddr', value: 'daddr' },
+        { text: 'Destination Address', value: 'daddr' },
         { text: 'Category', value: 'category' }
-      ],
+      ].map(({ text, value }) => ({ text: this.$t(this.kViewBlock(text, 'headers')), value })),
       results: []
     }
   },
@@ -228,9 +228,7 @@ export default {
         d.date = dateFormatParser(d.time) || new Date(d.time)
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
         d.url =
-          'https://reports.exodus-privacy.eu.org/en/reports/' +
-          d.Package +
-          '/latest/'
+          `https://reports.exodus-privacy.eu.org/en/reports/${d.package}/latest/`
         d.dateStr = formatTime(d.day)
         d.category = d.category === '' ? 'Unknown' : d.category
         d.app = d.app === '' ? 'Unknown' : d.app

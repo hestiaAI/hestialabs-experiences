@@ -2,7 +2,10 @@
 module.exports = {
   projects: [
     {
-      root: './'
+      root: './experiences'
+    },
+    {
+      root: './packages'
     }
   ]
 }

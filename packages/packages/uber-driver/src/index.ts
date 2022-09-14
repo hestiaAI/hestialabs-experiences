@@ -14,7 +14,7 @@ const options: ExperienceOptions = {
     rider_points: '**/(rider_app_analytics-0.csv|*Rider Detailed*.csv)',
     non_trip: '**/Lost Time*.csv'
   },
-  icon: icon,
+  icon,
   title: 'Uber Driver',
   viewBlocks
 }

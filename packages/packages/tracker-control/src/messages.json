@@ -1,0 +1,34 @@
+{
+  "en": {
+    "viewBlocks": {
+      "trackerControl": {
+        "title": "title",
+        "description": "description",
+        "headers": {
+          "App": "App",
+          "UID": "UID",
+          "More Info": "More Info",
+          "Date": "Date",
+          "Tracker": "Tracker",
+          "Destination Address": "Destination Address",
+          "Category": "Category"
+        }
+      }
+    }
+  },
+  "fr": {
+    "viewBlocks": {
+      "trackerControl": {
+        "headers": {
+          "App": "App",
+          "UID": "UID",
+          "More Info": "Plus d'informations",
+          "Date": "Date",
+          "Tracker": "Tracker",
+          "Destination Address": "Adresse de destination",
+          "Category": "Catégorie"
+        }
+      }
+    }
+  }
+}

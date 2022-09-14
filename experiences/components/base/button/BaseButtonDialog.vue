@@ -1,7 +1,7 @@
 <template>
   <VDialog v-model="show" width="500" scrollable style="z-index: 2000">
     <template #activator="{ on }">
-      <VTooltip v-bind="{ ...tooltipPos }">
+      <VTooltip :[tooltipPosition]="true">
         <template #activator="{ on: onTooltip }">
           <span v-on="onTooltip">
             <VIcon class="ma-2" v-on="on">{{ mdiIcon }}</VIcon>
@@ -57,14 +57,6 @@ export default {
   computed: {
     mdiIcon() {
       return this.$vuetify.icons.values[this.icon]
-    },
-    tooltipPos() {
-      return {
-        left: this.tooltipPosition === 'left',
-        right: this.tooltipPosition === 'right',
-        top: this.tooltipPosition === 'top',
-        bottom: this.tooltipPosition === 'bottom'
-      }
     }
   }
 }

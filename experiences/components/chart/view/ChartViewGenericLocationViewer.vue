@@ -11,7 +11,7 @@
         <!-- https://kazupon.github.io/vue-i18n/guide/interpolation.html#slots-syntax-usage -->
         <i18n v-else :path="kViewBlock('locations')" tag="p" class="text-subtitle-2">
           <template #total>
-            <span class="text-bold" v-text="total" />
+            <span class="font-weight-bold" v-text="total" />
           </template>
         </i18n>
       </VCol>

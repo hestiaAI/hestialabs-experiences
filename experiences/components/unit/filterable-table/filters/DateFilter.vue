@@ -4,20 +4,12 @@
       <VRow>
         <VCol>
           <div class="d-flex justify-space-between">
-            <div>
+            <div v-for="(label, index) in ['From', 'To']" :key="index">
               <div class="subtitle-2">
-                From:
+                {{ $t(label) }}:
               </div>
               <VChip label outlined>
-                {{ dateFormatter(dateRange[0]) }}
-              </VChip>
-            </div>
-            <div>
-              <div class="subtitle-2">
-                To:
-              </div>
-              <VChip label outlined>
-                {{ dateFormatter(dateRange[1]) }}
+                {{ dateFormatter(dateRange[index]) }}
               </VChip>
             </div>
           </div>
@@ -44,7 +36,7 @@
       <div
         class="d-flex justify-space-between align-center text-subtitle-1 mt-3 mb-3"
       >
-        <span>Day of week</span>
+        <span v-t="'Day of week'" />
         <VBtn
           class="ma-2"
           outlined
@@ -53,7 +45,7 @@
           @mousedown.prevent
           @click="selectAll"
         >
-          {{ allDays ? 'Unselect All' : 'Select All' }}
+          {{ $t(allDays ? 'Unselect All' : 'Select All') }}
         </VBtn>
       </div>
       <VRow>
@@ -77,16 +69,17 @@
       </VRow>
     </div>
     <div v-else align="center">
-      <span class="caption">No valid dates found</span>
+      <span v-t="'No valid dates found'" class="caption" />
     </div>
   </div>
 </template>
+
 <script>
 import * as d3 from 'd3'
 import { dateParser, datetimeParser, dateFormatter } from '@/utils/dates'
 
 export default {
-  name: 'UnitFilter',
+  name: 'DateFilter',
   props: {
     values: {
       type: Array,
@@ -110,9 +103,8 @@ export default {
     parser() {
       if (this.isDatetime) {
         return datetimeParser
-      } else {
-        return dateParser
       }
+      return dateParser
     },
     dates() {
       return this.values.map(v => this.parser(v)).filter(d => d !== null)
@@ -144,7 +136,9 @@ export default {
         this.allDays &&
         JSON.stringify(this.sliderRange) ===
           JSON.stringify([0, this.numberOfDays])
-      ) { return null }
+      ) {
+        return null
+      }
       return (value) => {
         const date = this.parser(value)
         return (
@@ -184,7 +178,9 @@ export default {
     reset() {
       this.daysAuthorized = this.days.slice()
       this.sliderRange = [0, this.numberOfDays]
-      if (this.isDatetime) { this.$refs.timeFilter.reset() }
+      if (this.isDatetime) {
+        this.$refs.timeFilter.reset()
+      }
       this.filterChange()
     }
   }

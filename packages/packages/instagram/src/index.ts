@@ -21,7 +21,7 @@ const options: ExperienceOptions = {
     likedPosts: '**/liked_posts.json'
   },
   hideFileExplorer: false,
-  icon: icon,
+  icon,
   messages,
   title: 'Instagram',
   viewBlocks

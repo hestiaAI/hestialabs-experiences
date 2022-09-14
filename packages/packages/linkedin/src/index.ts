@@ -14,7 +14,7 @@ const options: ExperienceOptions = {
     connections: '**/Connections.csv'
   },
   hideFileExplorer: false,
-  icon: icon,
+  icon,
   messages,
   preprocessors: {
     '**/Connections.csv': linkedinConnections

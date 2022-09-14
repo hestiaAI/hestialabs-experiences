@@ -5,18 +5,11 @@
     </h1>
     <VForm @submit.prevent="login">
       <VTextField :value="username" label="Username" readonly />
-      <VTextField
+      <BasePasswordField
         ref="password"
-        v-model="password"
-        label="Password"
-        placeholder="Type..."
-        required
-        :type="passwordType"
-        :append-icon="passwordAppendIcon"
-        error-count="10"
-        :error-messages="errorMessage"
+        :value.sync="password"
+        :error-message="errorMessage"
         autofocus
-        @click:append="onClickAppend"
       />
       <BaseButton type="submit">
         Login
@@ -26,7 +19,6 @@
 </template>
 
 <script>
-import { mdiEye, mdiEyeOff } from '@mdi/js'
 import { vueMeta } from '@/utils/utils'
 
 const extractBubbleParam = (path = '') => path.split('/').slice(-1)[0]
@@ -59,10 +51,8 @@ export default {
   },
   data() {
     return {
-      password: '',
-      passwordType: 'password',
-      passwordAppendIcon: mdiEye,
-      errorMessage: ''
+      errorMessage: '',
+      password: ''
     }
   },
   head() {
@@ -75,24 +65,12 @@ export default {
     }
   },
   watch: {
-    password() {
-      this.errorMessage = ''
-    },
     $route() {
       // focus password input on route change
-      this.$refs.password.$refs.input.focus()
+      this.$refs.password.$children[0].$refs.input.focus()
     }
   },
   methods: {
-    onClickAppend() {
-      if (this.passwordType === 'password') {
-        this.passwordType = 'text'
-        this.passwordAppendIcon = mdiEyeOff
-      } else {
-        this.passwordType = 'password'
-        this.passwordAppendIcon = mdiEye
-      }
-    },
     async login() {
       try {
         const { username, password } = this
