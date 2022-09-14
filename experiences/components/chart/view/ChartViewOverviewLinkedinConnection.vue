@@ -68,17 +68,21 @@
       </VCol>
     </VRow>
     <VRow>
-      <div>
-        <!-- some:
-            '<strong>%filter-count</strong> connections selected out of <strong>%total-count</strong> views' +
-            " | <a class='resetAll'>Reset All</a>",
-          all: 'All <strong>%total-count</strong> connections selected. Please click on the graph to apply filters.' -->
-        <span class="filter-count" />
-        selected out of
-        <span class="total-count" />
-        connections |
-        <a v-t="'Reset All'" class="resetAll" />
-      </div>
+      <template v-if="filterCount === totalCount">
+        <i18n tag="div" :path="kViewBlock('connections-selected-all')">
+          <template #totalCount>
+            <span class="font-weight-bold" v-text="totalCount" />
+          </template>
+        </i18n>
+      </template>
+      <template v-else>
+        <i18n tag="div" :path="kViewBlock('connections-selected-some')">
+          <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
+            <span :key="k" class="font-weight-bold" v-text="v" />
+          </template>
+        </i18n>
+        <span>&nbsp;| <a v-t="'Reset All'" @click="dc.filterAll(); dc.renderAll()" /></span>
+      </template>
     </VRow>
     <UnitFilterableTable v-bind="{ headers: header, items: results, kViewBlock }" />
   </VContainer>
@@ -104,6 +108,7 @@ export default {
   },
   data() {
     return {
+      dc,
       header: [
         { text: 'First Name', value: 'firstname' },
         { text: 'Last Name', value: 'lastname' },
@@ -168,6 +173,7 @@ export default {
       const ndx = crossfilter(this.results)
       // get total number of records
       this.totalCount = ndx.size()
+      this.filterCount = this.totalCount
       ndx.onChange(() => {
         // update table
         this.results = weekDimension.top(all.value())
