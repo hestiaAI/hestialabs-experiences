@@ -6,13 +6,13 @@
         <!-- https://kazupon.github.io/vue-i18n/guide/pluralization.html -->
         <i18n :path="k('summaryHeading.main')" tag="span">
           <template #file>
-            <span class="text-bold">{{ $tc(k('summaryHeading.file'), nFiles, { n: $n(nFiles) }) }}</span>
+            <span class="font-weight-bold">{{ $tc(k('summaryHeading.file'), nFiles, { n: $n(nFiles) }) }}</span>
           </template>
           <template #dataSizeString>
-            (<span class="text-bold">{{ dataSizeString }}</span>)
+            (<span class="font-weight-bold">{{ dataSizeString }}</span>)
           </template>
           <template #datapoint>
-            <span class="text-bold">{{ $tc(k('summaryHeading.datapoint'), nDataPoints, { n: $n(nDataPoints) }) }}</span>
+            <span class="font-weight-bold">{{ $tc(k('summaryHeading.datapoint'), nDataPoints, { n: $n(nDataPoints) }) }}</span>
           </template>
         </i18n><span>:</span>
         <ul v-if="filesInformation">

@@ -15,7 +15,7 @@
         <VRow>
           <VCol cols="12" md="12">
             <div id="price-chart">
-              <span v-t="k('Cumulative expenses')" class="text-bold" />
+              <span v-t="k('Cumulative expenses')" class="font-weight-bold" />
               <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
@@ -37,7 +37,7 @@
         <VRow>
           <VCol cols="12" md="4">
             <div id="service-chart">
-              <span v-t="k('Service used')" class="text-bold" />
+              <span v-t="k('Service used')" class="font-weight-bold" />
               <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
@@ -49,7 +49,7 @@
           </VCol>
           <VCol cols="12" md="4">
             <div id="week-chart">
-              <span v-t="k('Day of week')" class="text-bold" />
+              <span v-t="k('Day of week')" class="font-weight-bold" />
               <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
@@ -61,7 +61,7 @@
           </VCol>
           <VCol cols="12" md="4">
             <div id="address-chart">
-              <span v-t="k('Begin trip address')" class="text-bold" />
+              <span v-t="k('Begin trip address')" class="font-weight-bold" />
               <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
@@ -95,7 +95,7 @@
                     <VCardTitle v-t="k('Speed')" class="justify-center text-caption" />
                     <VCardSubtitle />
                     <VCardText class="text-h4 text-center">
-                      <div id="number-speed-avg" class="text-bold" />
+                      <div id="number-speed-avg" class="font-weight-bold" />
                       <span v-t="k('mph')" class="text-subtitle-1" />
                     </VCardText>
                   </VCard>
@@ -113,7 +113,7 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td v-t="k('Price')" class="text-bold" />
+                    <td v-t="k('Price')" class="font-weight-bold" />
                     <td class="text-h6" v-text="priceTotalNumber" />
                     <td class="text-h6" v-text="priceAvgNumber" />
                   </tr>

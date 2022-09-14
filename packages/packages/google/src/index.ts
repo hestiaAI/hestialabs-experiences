@@ -15,7 +15,7 @@ const options: ExperienceOptions = {
     LOCATION_HISTORY: '**/*.json'
   },
   dataSamples: ['takeout.zip'],
-  icon: icon,
+  icon,
   keepOnlyFiles: true,
   messages,
   title: 'Google Takeout',

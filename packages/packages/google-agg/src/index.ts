@@ -16,7 +16,7 @@ const options: ExperienceOptions = {
     wifi: '**/block05.json',
     consent: '**/consent.json'
   },
-  icon: icon,
+  icon,
   title: 'Google Agg',
   viewBlocks
 }

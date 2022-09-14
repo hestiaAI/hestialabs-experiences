@@ -17,7 +17,7 @@ const options: ExperienceOptions = {
     tinderUsage: 'tinder**/block04.json',
     tinderUser: 'tinder**/block00.json'
   },
-  icon: icon,
+  icon,
   title: 'Her + Tinder',
   hideFileExplorer: false,
   viewBlocks

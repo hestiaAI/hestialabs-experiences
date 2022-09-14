@@ -8,7 +8,7 @@ const options: ExperienceOptions = {
   dataPortalMessage:
     '<strong>Important:</strong> To make the experiment work, please request your <strong>"Account Archive"</strong> not your <strong>"Fitbit Data"</strong>.',
   hideFileExplorer: false,
-  icon: icon,
+  icon,
   title: 'Fitbit',
   viewBlocks: genericViewers
 }
