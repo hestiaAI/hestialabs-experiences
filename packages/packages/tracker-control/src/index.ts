@@ -2,6 +2,7 @@ import packageJSON from '../package.json'
 import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/tracker-control.png'
 import viewBlocks from './blocks'
+import messages from './messages.json'
 
 const options: ExperienceOptions = {
   dataPortalHtml:
@@ -13,7 +14,8 @@ const options: ExperienceOptions = {
   files: {
     'tracker-control': '**/*.csv'
   },
-  icon: icon,
+  icon,
+  messages,
   subtitle: 'Tracking data',
   title: 'TrackerControl',
   viewBlocks

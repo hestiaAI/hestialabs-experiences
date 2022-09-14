@@ -7,7 +7,7 @@ import messages from './messages.json'
 const options: ExperienceOptions = {
   hideSummary: false,
   hideFileExplorer: false,
-  icon: icon,
+  icon,
   messages,
   keepOnlyFiles: false,
   subtitle: 'Explore data from anywhere!',

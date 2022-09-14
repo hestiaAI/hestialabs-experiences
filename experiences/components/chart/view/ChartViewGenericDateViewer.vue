@@ -17,7 +17,7 @@
             v-for="(value, key) in { currMinDate, currMaxDate, total }"
             #[key]
           >
-            <span :key="key" class="text-bold" v-text="value" />
+            <span :key="key" class="font-weight-bold" v-text="value" />
           </template>
         </i18n>
       </VCol>

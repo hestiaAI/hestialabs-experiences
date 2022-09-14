@@ -21,7 +21,7 @@
     </VRow>
     <VRow>
       <VCol align="center">
-        <BaseDialogButton
+        <BaseButtonDialog
           :dialog-title="$t('decrypt-files.title')"
           tooltip-position="left"
           :tooltip-label="$t('decrypt-files.title')"
@@ -37,7 +37,7 @@
             :label="$t('decrypt-files.pk-label')"
             clearable
           />
-        </BaseDialogButton>
+        </BaseButtonDialog>
         <BaseButton
           v-bind="{ disabled, progress, status, error }"
           text="unit-files.run-btn"

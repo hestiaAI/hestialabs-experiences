@@ -3,11 +3,6 @@
     <template #activator="{ on, attrs }">
       <VBtn
         :outlined="outlined"
-        :fixed="fixed"
-        :right="right"
-        :bottom="bottom"
-        :top="top"
-        :left="left"
         v-bind="[attrs, $attrs]"
         class="my-2"
         v-on="{ on, $on }"
@@ -29,6 +24,7 @@
 
 <script>
 export default {
+  inheritAttrs: false,
   props: {
     tooltip: {
       type: String,
@@ -37,26 +33,6 @@ export default {
     text: {
       type: String,
       default: ''
-    },
-    fixed: {
-      type: Boolean,
-      default: false
-    },
-    right: {
-      type: Boolean,
-      default: false
-    },
-    left: {
-      type: Boolean,
-      default: false
-    },
-    top: {
-      type: Boolean,
-      default: false
-    },
-    bottom: {
-      type: Boolean,
-      default: false
     },
     progress: {
       type: Boolean,

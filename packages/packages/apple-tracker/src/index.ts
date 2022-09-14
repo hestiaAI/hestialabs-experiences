@@ -22,7 +22,7 @@ const options: ExperienceOptions = {
   files: {
     'tracker-control-ios': '**/*.ndjson'
   },
-  icon: icon,
+  icon,
   preprocessors: {
     '**/*.ndjson': ndjsonToJson
   },
