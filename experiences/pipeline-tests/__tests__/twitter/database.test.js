@@ -122,7 +122,8 @@ describe('with complete samples', () => {
         'engagements',
         'date_',
         'targetingType',
-        'targetingValue'
+        'targetingValue',
+        'engagedWith'
       ],
       items: [
         {
@@ -131,7 +132,8 @@ describe('with complete samples', () => {
           engagements: 1,
           date_: '2021-04-15 19:43:25',
           targetingType: 'Locations',
-          targetingValue: 'Switzerland'
+          targetingValue: 'Switzerland',
+          engagedWith: 'Yes'
         },
         {
           tweetId: '1381646278988292098',
@@ -139,7 +141,8 @@ describe('with complete samples', () => {
           engagements: 1,
           date_: '2021-04-15 19:43:25',
           targetingType: 'Age',
-          targetingValue: '35 and up'
+          targetingValue: '35 and up',
+          engagedWith: 'Yes'
         }
       ]
     }
