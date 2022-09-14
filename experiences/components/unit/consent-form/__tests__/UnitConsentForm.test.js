@@ -54,6 +54,11 @@ test('generates a zip', async() => {
         params: {
           experience: 'twitter'
         }
+      },
+      $auth: {
+        user: {
+          password: ''
+        }
       }
     }
   })
