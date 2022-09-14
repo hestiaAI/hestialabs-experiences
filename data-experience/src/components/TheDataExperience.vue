@@ -219,6 +219,7 @@ export default {
       this.$store.commit('dataexp/clearStore', {})
 
       // Set consent form
+      /*
       const consentForm = JSON.parse(JSON.stringify(this.consentFormTemplate))
       if (consentForm) {
         const section = consentForm.find(({ type }) => type === 'data')
@@ -226,7 +227,7 @@ export default {
         section.ids = this.viewBlocks.map(e => e.id)
       }
       this.$store.commit('dataexp/setConsentForm', consentForm)
-
+      */
       // Set file manager
       const fileManager = new FileManager(
         this.preprocessors,

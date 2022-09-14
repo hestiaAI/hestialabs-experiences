@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!--
     <ChartView2
       v-bind="{
         graphName: 'ChartViewTimeSeries',
@@ -39,6 +40,7 @@
         }
       }"
     />
+    -->
     <TheDataExperience2 v-bind="{experienceConfig}" />
     <!--
     <HelloWorld />

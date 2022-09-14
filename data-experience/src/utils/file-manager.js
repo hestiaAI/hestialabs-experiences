@@ -102,12 +102,11 @@ export default class FileManager {
     // Define the files filter regex, default to all
     this.filesRegex = /.*/
     if (this.keepOnlyFiles && Object.keys(this.idToGlob).length) {
-      import('micromatch').then((mm) => {
-        const regexs = Object.values(this.idToGlob).map(
-          glob => mm.makeRe(glob).source
-        )
-        this.filesRegex = new RegExp(`(${regexs.join(')|(')})`)
-      })
+      const mm = require('micromatch');
+      const regexs = Object.values(this.idToGlob).map(
+        glob => mm.makeRe(glob).source
+      )
+      this.filesRegex = new RegExp(`(${regexs.join(')|(')})`)
     }
     this.setInitialValues()
   }

@@ -10,7 +10,7 @@ module.exports = defineConfig({
         'fs':  false,
         'crypto': false,
         'path': false,
-        'util': false
+        'util': require.resolve('util/')
       }
     },
     module: {
