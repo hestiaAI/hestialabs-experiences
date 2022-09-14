@@ -129,15 +129,15 @@
       },
       "targeting-criteria-by-advertiser": {
         "title": "Critères de ciblage (10 principaux publicitaires)",
-        "text": "Critères qui permettent aux publicitaires de vous viser. Le graphique montre les dix publicitaires qui employent le plus de critères sur vous ; le premier cercle montre les différents publicitaires, et le second les types de critères (tels que l'emplacement, la langue, etc.). Cliquer sur l'un de cercle aggrandit le graphique pour montrer les valeurs qui apparaissent dans les critères (telles que \"Suisse\", \"français\", etc.)"
+        "text": "Pourquoi êtes-vous ciblé par ces publicitaires? Ce graphique montre les dix publicitaires qui employent le plus de critères pour vous cibler. Le cercle intérieur affiche les publicitaires, le cercle extérieur le type de ciblage (tels que l'emplacement, la langue, etc.). Cliquer sur l'un des cercles aggrandit le graphique pour montrer les valeurs qui apparaissent dans les critères (telles que \"Suisse\", \"France\", etc.)"
       },
       "targeting-criteria-all-advertisers": {
         "title": "Critères de ciblage (tous publicitaires)",
-        "text": "Vue complète des critères qui permettent aux publicitaires de vous viser. Ce graphique montre le nombre de fois où les divers publicitaires vous ont visé·e sur la base d'un critère donné. Vous pouvez changer les types de critère et en savoir davantage sur eux au bas du graphique."
+        "text": "Vue complète des critères qui permettent aux publicitaires de vous cibler. Ce graphique montre le nombre de fois où les divers publicitaires vous ont visé sur la base d'un critère donné. Vous pouvez changer les types de critères et en savoir davantage sur eux au bas du graphique."
       },
       "all-criteria-all-advertisers": {
         "title": "Critères de ciblage (1 publicitaire)",
-        "text": "Visualisation des critères de ciblage qu'un publicitaire donné utilise pour vous viser. Parcourir la liste et cliquer sur un publicitaire pour afficher ses informations.",
+        "text": "Visualisation des critères de ciblage qu'un publicitaire donné utilise pour vous cibler. Parcourir la liste et cliquer sur un publicitaire pour afficher ses informations.",
         "vizProps": {
           "cardTitle": "Publicitaires"
         },
@@ -170,7 +170,7 @@
                 "hint": "Nombre d'audiences personnalisées (audiences générées par les publicitaires) dont le compte fait partie."
               }
             },
-            "tablesTitle": "Lists",
+            "tablesTitle": "Listes",
             "tables": {
               "interests": {
                 "title": "Intérêts inférés",

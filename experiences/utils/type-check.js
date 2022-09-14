@@ -28,7 +28,7 @@ const BOOLEAN_VALUES = /^(true|1|on|yes|false|0|off|no)$/i
 export const TRUE_VALUES = /^(true|1|on|yes)$/i
 
 // Define Formatters in order to format all columns with the given type
-export const TYPE_FORMATTER = {
+const TYPE_FORMATTER = {
   BOOLEAN: {
     validator: d => BOOLEAN_VALUES.test(String(d)),
     formatter: (d, vue) => typeof d === 'undefined'

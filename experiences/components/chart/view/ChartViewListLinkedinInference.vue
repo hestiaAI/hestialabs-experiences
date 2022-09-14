@@ -113,7 +113,6 @@ export default {
         inferenceText = FLOAT.formatter(v).toFixed(2)
         inferenceType = 'Numeric value'
       }
-
       return {
         inference: v,
         category: this.$tev(this.kViewBlock(category, 'categories'), category),
@@ -152,7 +151,6 @@ export default {
             )
         )
     }
-
   }
 }
 </script>

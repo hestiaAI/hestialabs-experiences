@@ -11,7 +11,8 @@ const options: ExperienceOptions = {
     driver_points: '**/(driver_app_analytics-0.csv|*Driver Detailed*.csv)',
     driver_payments: '**/driver_payments-0.csv',
     rider_trips: '**/trips_data.csv',
-    rider_points: '**/(rider_app_analytics-0.csv|*Rider Detailed*.csv)'
+    rider_points: '**/(rider_app_analytics-0.csv|*Rider Detailed*.csv)',
+    non_trip: '**/Lost Time*.csv'
   },
   icon,
   title: 'Uber Driver',
