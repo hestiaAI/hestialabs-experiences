@@ -82,15 +82,33 @@ export default {
     params: { bubble },
     route: { path },
     redirect,
-    $auth
+    $auth,
+    store
   }) {
-    if (bubble && $auth.loggedIn && bubble !== $auth.user.username) {
-      // auto-logout if user tries to enter another bubble
-      await $auth.logout()
-      return redirect(app.localePath({
-        name: 'login',
-        query: { redirect: path }
-      }))
+    if (bubble) {
+      const bubbleConfig = store.state.config.bubbleConfig[bubble]
+      if (bubbleConfig.bypassLogin && !($auth.loggedIn && bubble === $auth.user.username)) {
+        // log out in case user was logged in to another bubble
+        await $auth.logout()
+        // no password needed when login-bypass is enabled
+        // -> user is logged in automatically
+        await $auth.loginWith('local', {
+          data: { username: bubble }
+        })
+        $auth.setUser({
+          // important: do not add a password property
+          username: bubble,
+          bubble: bubbleConfig
+        })
+        return redirect(app.localePath(path))
+      } else if ($auth.loggedIn && bubble !== $auth.user.username) {
+        // auto-logout if user tries to enter another bubble
+        await $auth.logout()
+        return redirect(app.localePath({
+          name: 'login',
+          query: { redirect: path }
+        }))
+      }
     }
   },
   data() {
