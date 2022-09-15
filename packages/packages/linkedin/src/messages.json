@@ -64,8 +64,8 @@
         "title": "Connections",
         "text": "This tool allows you to track all the connections you have made with Linkedin, you can filter by date, day or by company and position in your address book.",
         "select-time-range": "Select a {timeRange} to zoom in",
-        "connections-selected-some": "{filterCount} connections selected out of {totalCount} views",
-        "connections-selected-all": "All {totalCount} connections selected. Please click on the graph to apply filters.",
+        "selected-some": "{filterCount} connections selected out of {totalCount} views",
+        "selected-all": "All {totalCount} connections selected.",
         "vizProps": {
           "messages": {
             "Cumulative number of connections": "Cumulative number of connections",
@@ -151,8 +151,8 @@
         "title": "Connections",
         "text": "Cet outil vous permet d'examiner les connections que vous avez nouées par Linkedin, filtrables par date, société ou poste dans votre carnet d'adresse.",
         "select-time-range": "Sélectionnez une {timeRange} pour effectuer un zoom avant",
-        "connections-selected-some": "{filterCount} connexions sélectionnées sur {totalCount} vues",
-        "connections-selected-all": "Toutes les {totalCount} connexions sont sélectionnées. Veuillez cliquer sur le graphique pour appliquer des filtres.",
+        "selected-some": "{filterCount} connexions sélectionnées sur {totalCount} vues",
+        "selected-all": "Toutes les {totalCount} connexions sont sélectionnées.",
         "vizProps": {
           "messages": {
             "Cumulative number of connections": "Nombre cumulé de connexions",
