@@ -35,7 +35,6 @@ export default {
           {
             loader: 'babel-loader',
             options: {
-              // plugins: ['lodash'],
               presets: ['@babel/preset-env', '@babel/preset-typescript']
             }
           },

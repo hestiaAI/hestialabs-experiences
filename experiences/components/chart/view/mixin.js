@@ -13,6 +13,10 @@ export default {
     kViewBlock: {
       type: Function,
       default: () => ''
+    },
+    messages: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {

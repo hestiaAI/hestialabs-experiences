@@ -100,12 +100,6 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  props: {
-    messages: {
-      type: Object,
-      required: true
-    }
-  },
   data() {
     return {
       dc,

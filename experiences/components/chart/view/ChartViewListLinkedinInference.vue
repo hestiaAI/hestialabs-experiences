@@ -93,12 +93,6 @@ const getColor = (v) => {
 
 export default {
   mixins: [mixin],
-  props: {
-    messages: {
-      type: Object,
-      required: true
-    }
-  },
   data() {
     const { BOOLEAN, FLOAT } = TYPE_FORMATTER
     const items = this.values.map(({ inference: v, category, ...rest }) => {

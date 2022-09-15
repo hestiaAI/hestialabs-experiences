@@ -56,9 +56,7 @@ const blocks: ViewBlocks = [
     sql: sqlMessages,
     visualization: 'ChartViewHeatMapHour.vue',
     vizProps: {
-      dateAccessor: 'sentDate',
-      title: 'Messages Sent',
-      legendLabel: 'Messages'
+      dateAccessor: 'sentDate'
     },
     title: 'Messages',
     text: 'See at what time of the day and week you send the most messages'

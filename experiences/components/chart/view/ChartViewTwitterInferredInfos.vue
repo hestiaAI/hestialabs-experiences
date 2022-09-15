@@ -87,12 +87,6 @@ import mixin from './mixin'
 
 export default {
   mixins: [mixin],
-  props: {
-    messages: {
-      type: Object,
-      required: true
-    }
-  },
   data() {
     const [firstItem] = this.values
     const v = Object.fromEntries(Object.entries(firstItem).map(([k, v]) => {
