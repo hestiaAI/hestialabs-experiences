@@ -47,10 +47,10 @@
           <VCol cols="12">
             <div id="volume-chart">
               <strong>Number of tracking over time</strong>
-              <a class="reset" style="display: none">reset</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -67,10 +67,10 @@
           <VCol cols="12" md="6">
             <div id="category-chart">
               <strong>Purposes of third party</strong>
-              <a class="reset" style="display: none">reset</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -79,10 +79,10 @@
           <VCol cols="12" md="6">
             <div id="app-chart">
               <strong>Applications that use trackers</strong>
-              <a class="reset" style="display: none">reset</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -93,10 +93,10 @@
       <VCol cols="12" md="3">
         <div id="advertiser-chart">
           <strong>Companies behind tracking</strong>
-          <a class="reset" style="display: none">reset</a>
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters">
             <span>
-              Current filter:
+              {{ $t('Current filter') }}
               <span class="filter" />
             </span>
           </p>

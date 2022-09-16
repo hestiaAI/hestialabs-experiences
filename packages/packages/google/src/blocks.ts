@@ -27,8 +27,7 @@ const blocks: ViewBlocks = [
     text: 'This map shows what places Google think you visited with the size corresponding to the time you spent in this place:',
     postprocessor: placesPostProcessor,
     vizProps: {
-      keplerConfig: keplerConfigPlaces,
-      label: 'visited places'
+      keplerConfig: keplerConfigPlaces
     }
   },
   {

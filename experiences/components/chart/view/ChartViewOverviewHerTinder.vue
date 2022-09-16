@@ -17,10 +17,10 @@
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -40,10 +40,10 @@
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>

@@ -305,7 +305,7 @@ export default {
       // group by series ids and sort values
       this.slices = ids.map((a) => {
         return {
-          id: a,
+          id: this.messages.legend[a], // localize legend
           values: this.values
             .filter(v => a === v[this.seriesAccessor.value])
             .map((d) => {
@@ -328,24 +328,18 @@ export default {
       this.draw()
     },
     draw() {
+      const { graphId, adj } = this
       const width = 800
       const height = 300
       /* create svg element */
-      d3.select('#' + this.graphId + ' svg').remove()
+      d3.select(`#${graphId} svg`).remove()
       const svg = d3
-        .select('#' + this.graphId)
+        .select(`#${graphId}`)
         .append('svg')
         .attr('preserveAspectRatio', 'xMinYMin meet')
         .attr(
           'viewBox',
-          '-' +
-            this.adj +
-            ' -' +
-            this.adj +
-            ' ' +
-            (width + this.adj * 2) +
-            ' ' +
-            (height + this.adj * 2)
+          `-${adj} -${adj} ${width + adj * 2} ${height + adj * 2}`
         )
         .style('padding', this.padding)
         .style('margin', this.margin)
@@ -376,8 +370,14 @@ export default {
       svg
         .append('g')
         .attr('class', 'xAxis')
-        .attr('transform', 'translate(0,' + height + ')')
+        .attr('transform', `translate(0,${height})`)
         .call(xAxis)
+        .selectAll('text')
+        .attr('y', 0)
+        .attr('x', 9)
+        .attr('dy', '2em')
+        .attr('transform', 'rotate(-30)')
+        .style('text-anchor', 'end')
       svg
         .append('g')
         .attr('class', 'yAxis')
@@ -389,7 +389,7 @@ export default {
         .style('text-anchor', 'end')
         .text(this.yLabel)
       /* GridLayout */
-      d3.selectAll('#' + this.graphId + ' g.yAxis g.tick')
+      d3.selectAll('#' + graphId + ' g.yAxis g.tick')
         .append('line')
         .attr('class', 'gridline')
         .attr('x1', 0)
@@ -409,7 +409,10 @@ export default {
       const keys = this.slices.map(d => d.id)
       const color = d3.scaleOrdinal().domain(keys).range(d3.schemeDark2)
       /* Legend */
-      const legend = svg.selectAll('.legend').data(keys).enter().append('g')
+      const legend = svg.selectAll('.legend')
+        .data(keys)
+        .enter()
+        .append('g')
       // add circles
       legend
         .append('circle')
@@ -437,12 +440,12 @@ export default {
         )
       })
       /* Tooltip */
-      d3.select('#' + this.graphId + '.tooltip').remove()
+      d3.select('#' + graphId + '.tooltip').remove()
       const tooltip = d3
         .select('body')
         .append('div')
         .attr('class', 'tooltip')
-        .attr('id', this.graphId)
+        .attr('id', graphId)
         .style('opacity', 0)
       const that = this
       const f = d3.format(this.valueFormat)

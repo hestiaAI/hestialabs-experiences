@@ -97,6 +97,7 @@
     </template>
   </VContainer>
 </template>
+
 <script>
 import { mapState } from 'vuex'
 import mixin from './mixin'
@@ -153,7 +154,7 @@ export default {
       return {
         fields: this.headers.map((h) => {
           return {
-            name: h
+            name: this.$tev(this.kViewBlock(h, 'headers'), h)
           }
         }),
         rows: this.filteredRows.map(r => this.headers.map(h => r[h]))
