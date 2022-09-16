@@ -1,0 +1,19 @@
+{
+  "name": "@hestiaai/twitter-agg",
+  "version": "0.0.0",
+  "main": "dist/index",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/twitter-agg"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}
