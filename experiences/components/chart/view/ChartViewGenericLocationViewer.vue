@@ -25,7 +25,7 @@
       <VRow>
         <VCol cols="12">
           <UnitFilterableTable
-            v-bind="{ headers: header, items: values }"
+            v-bind="{ headers: header, items: values, kViewBlock }"
             @current-items="onTableFilter"
           />
         </VCol>
@@ -47,10 +47,7 @@ export default {
         ['Latitude', 'latitude'],
         ['Longitude', 'longitude'],
         ['Description', 'description']
-      ].map(([text, value]) => ({
-        text: this.$t(this.kViewBlock(text, 'headers')),
-        value
-      }))
+      ].map(([text, value]) => ({ text, value }))
     }
   },
   computed: {
