@@ -239,7 +239,7 @@
   "Search": "Search",
   "seconds": "seconds",
   "Select All": "Select All",
-  "select-time-range": "Select a time range to zoom in",
+  "select-time-range": "Select a <span class='font-weight-bold'>time range</span> to zoom in",
   "selected-out-of": "selected out of",
   "Settings": "Settings",
   "Share": "Share",
