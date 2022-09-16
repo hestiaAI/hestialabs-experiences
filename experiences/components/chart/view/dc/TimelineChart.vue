@@ -11,10 +11,7 @@
       </p>
     </div>
     <div :id="`range-chart-${graphId}`" class="range-chart">
-      <p
-        v-t="'select-time-range'"
-        class="muted pull-right text-subtitle-2 mr-4 mb-1"
-      />
+      <ChartViewTextSelectTimeRange />
     </div>
   </VContainer>
 </template>

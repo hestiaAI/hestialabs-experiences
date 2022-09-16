@@ -21,7 +21,9 @@ export default {
   },
   data() {
     return {
-      graphId: 'graph_' + this._uid
+      graphId: 'graph_' + this._uid,
+      totalCount: null,
+      filterCount: null
     }
   },
   mounted() {

@@ -15,9 +15,7 @@
               </p>
             </div>
             <div :id="'range-chart' + graphId" class="range-chart">
-              <p class="muted pull-right mr-4 mb-1">
-                {{ $t('select-time-range') }}
-              </p>
+              <ChartViewTextSelectTimeRange />
             </div>
           </VCol>
           <VCol cols="12" sm="4">

@@ -15,11 +15,7 @@
               </p>
             </div>
             <div :id="`range-chart-${graphId}`" class="range-chart">
-              <p
-                class="muted pull-right text-subtitle-2 mr-4 mb-1"
-              >
-                {{ $t('select-time-range') }}
-              </p>
+              <ChartViewTextSelectTimeRange />
             </div>
           </VCol>
         </VRow>
@@ -152,9 +148,7 @@ export default {
         accessor: 'day',
         xUnits: d3.timeDays,
         round: d3.timeDay.round
-      },
-      totalCount: null,
-      filterCount: null
+      }
     }
   },
   methods: {
