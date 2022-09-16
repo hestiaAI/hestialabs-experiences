@@ -148,7 +148,9 @@ export default {
         accessor: 'day',
         xUnits: d3.timeDays,
         round: d3.timeDay.round
-      }
+      },
+      totalCount: null,
+      filterCount: null
     }
   },
   methods: {
