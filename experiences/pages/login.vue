@@ -21,24 +21,41 @@
 <script>
 import { vueMeta } from '@/utils/utils'
 
-const extractBubbleParam = (path = '') => path.split('/').slice(-1)[0]
+const extractBubbleParam = (path = '') => {
+  // 1. /bubble/:bubble
+  // 2. /bubble/:bubble/experience/:experience
+  const match = path.match(/^\/bubble\/([^/]+)(?:\/|$)/)
+  if (match && match.length === 2) {
+    return match[1]
+  }
+  return null
+}
 
 export default {
   auth: 'guest',
-  middleware({ app, $auth, redirect, route, error }) {
-    if (!route.query.redirect) {
-      if ($auth.$state.redirect) {
-        // add query parameter
-        return redirect(app.localePath({
-          name: 'login',
-          query: { redirect: $auth.$state.redirect }
-        }))
-      }
+  middleware({ app, $auth, redirect, route, error, from }) {
+    if (from && $auth.loggedIn) {
+      // If user navigated back to the login page
+      // with the browser's "back" function
+      // then we need to handle it here
+      // by going back again.
+      // Otherwise we mess up the auth state,
+      // plus it doesn't make sense to show
+      // the login page in this scenario
+      return app.router.go(-1)
+    }
+
+    if (route.query.redirect) {
+      $auth.$storage.setState('redirect', route.query.redirect)
+    } else if ($auth.$state.redirect) {
+      // add query parameter
+      return redirect(app.localePath({
+        name: 'login',
+        query: { redirect: $auth.$state.redirect }
+      }))
+    } else {
       // no way to know how to redirect the user after login
       return error({ statusCode: 404, message: 'Page Not Found' })
-    } else if (!$auth.$state.redirect) {
-      // happens on refresh
-      $auth.$storage.setState('redirect', route.query.redirect)
     }
   },
   validate({ $auth, store }) {
