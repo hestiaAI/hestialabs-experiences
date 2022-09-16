@@ -82,7 +82,7 @@
     <VRow>
       <VCol cols="12">
         <UnitFilterableTable
-          v-bind="{ headers: header, items: results }"
+          v-bind="{ headers: header, items: results, kViewBlock }"
           @current-items="onTableFilter"
         />
       </VCol>
@@ -139,10 +139,7 @@ export default {
         ['File name', 'filename'],
         ['Date', 'dateStr'],
         ['Description', 'description']
-      ].map(([text, value]) => ({
-        text: this.$t(this.kViewBlock(text, 'headers')),
-        value
-      }))
+      ].map(([text, value]) => ({ text, value }))
     }
   },
   computed: {

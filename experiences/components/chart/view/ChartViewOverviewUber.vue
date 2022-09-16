@@ -137,7 +137,7 @@
     </ChartViewVRowWebShare>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+        <UnitFilterableTable v-bind="{ headers: header, items: results, kViewBlock }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -169,7 +169,7 @@ export default {
         ['Distance (miles)', 'distanceMiles'],
         ['Duration (min)', 'duration'],
         ['Price', 'priceStr']
-      ].map(([text, value]) => ({ text: this.$t(this.k(text, 'headers')), value })),
+      ].map(([text, value]) => ({ text, value })),
       generalInformationRows: [{
         heading: 'Distance',
         metric: 'miles',
