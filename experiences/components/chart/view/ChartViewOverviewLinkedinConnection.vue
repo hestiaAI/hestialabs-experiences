@@ -13,11 +13,7 @@
           </p>
         </div>
         <div :id="'range-chart' + graphId" class="range-chart">
-          <i18n tag="p" class="muted pull-right text-subtitle-2 mr-4 mb-1" :path="kViewBlock('select-time-range')">
-            <template #timeRange>
-              <span v-t="messages['time range']" class="font-weight-bold" />
-            </template>
-          </i18n>
+          <ChartViewTextSelectTimeRange />
         </div>
       </VCol>
     </VRow>
@@ -109,7 +105,6 @@ export default {
   },
   data() {
     return {
-      dc,
       header: [
         { text: 'First Name', value: 'firstname' },
         { text: 'Last Name', value: 'lastname' },
@@ -118,9 +113,7 @@ export default {
         { text: 'Position', value: 'position' },
         { text: 'Connected On', value: 'dateStr' }
       ],
-      results: [],
-      totalCount: null,
-      filterCount: null
+      results: []
     }
   },
   methods: {
