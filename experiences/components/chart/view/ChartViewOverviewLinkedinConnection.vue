@@ -101,8 +101,15 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
+  props: {
+    messages: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
+      dc,
       header: [
         { text: 'First Name', value: 'firstname' },
         { text: 'Last Name', value: 'lastname' },
@@ -169,6 +176,15 @@ export default {
 
       // Create crossfilter indexing
       const ndx = crossfilter(this.results)
+      // get total number of records
+      this.totalCount = ndx.size()
+      this.filterCount = this.totalCount
+      ndx.onChange(() => {
+        // update table
+        this.results = weekDimension.top(all.value())
+        // update filter count
+        this.filterCount = ndx.allFiltered().length
+      })
       const all = ndx.groupAll()
 
       // get total number of records

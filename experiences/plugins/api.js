@@ -93,9 +93,9 @@ class Api {
       )
       if (!resp.ok) {
         console.error(resp)
-        // use http status text in cas json() fails
-        errorMessage = resp.statusText
-        errorMessage = await resp.json()
+        // use http status text in case json() fails
+        const message403 = 'You entered an incorrect password, please try again'
+        errorMessage = resp.status === 403 ? message403 : resp.statusText
       }
     } catch (error) {
       errorMessage = errorMessage || 'Error'
