@@ -13,17 +13,16 @@
         ref="tableRef"
         :items="filteredItems"
         multi-sort
-        :items-per-page.sync="itemsPerPage"
+        v-model:items-per-page="itemsPerPage"
         fixed-header
         :height="height"
         :footer-props="{ itemsPerPageOptions: [5, 10, 15, 500, 1000] }"
         data-testid="data-table"
         @current-items="onItemsUpdate"
       >
-        <template v-for="header in data.headers" #[`header.${header.value}`]>
+        <template v-for="header in data.headers" :key="header.value" #[`header.${header.value}`]>
           {{ header.text }}
           <UnitFilter
-            :key="header.value"
             v-bind="{ header, values: columnValues(header) }"
             @filter-change="filterChange(header.value, $event)"
           />

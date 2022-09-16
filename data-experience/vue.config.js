@@ -6,11 +6,14 @@ module.exports = defineConfig({
   transpileDependencies: true,
   configureWebpack: {
     resolve: {
+      alias: {
+        '~': path.resolve(__dirname, 'src')
+      },
       fallback: {
-        'fs':  false,
-        'crypto': false,
-        'path': false,
-        'util': require.resolve('util/')
+        fs: false,
+        crypto: false, // require.resolve('crypto/'),
+        path: require.resolve('path/'),
+        util: require.resolve('util/')
       }
     },
     module: {
@@ -28,6 +31,9 @@ module.exports = defineConfig({
           ]
         }
       ]
-    }
+    },
+    plugins: [
+      require('unplugin-vue-components/webpack')({ /* options */ })
+    ]
   }
 })

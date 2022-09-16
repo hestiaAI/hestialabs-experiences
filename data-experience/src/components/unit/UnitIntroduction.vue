@@ -83,7 +83,7 @@
 import { pick } from 'lodash-es'
 import UnitFiles from './files/UnitFiles.vue'
 export default {
-  components: {UnitFiles},
+  components: { UnitFiles },
   props: {
     slug: {
       type: String,
@@ -108,7 +108,7 @@ export default {
   },
   data() {
     const experience = this.$store.state.dataexp.config
-    
+
     console.log('UnitIntro', this.$store.state)
     const properties = pick(experience, [
       'title',

@@ -33,7 +33,7 @@
         </VDataTable>
       </div>
     </VExpandTransition>
-    <VTreeview dense transition :items="filteredItems" :open.sync="open">
+    <VTreeview dense transition :items="filteredItems" v-model:open="open">
       <template #prepend="{ item }">
         <VIcon v-if="!isUndef(item.type)">
           {{ iconForNode(item.type) }}

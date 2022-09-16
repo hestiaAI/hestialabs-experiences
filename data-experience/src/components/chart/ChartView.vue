@@ -2,7 +2,7 @@
   <DataValidator :data="data">
     <div>
       <component
-        :is="graphName"
+        :is="component"
         v-bind="{
           values: data.items || [],
           headers: data.headers || [],
@@ -15,6 +15,7 @@
 
 <script>
 export default {
+  name: 'ChartView',
   props: {
     data: {
       type: Object,
@@ -27,6 +28,11 @@ export default {
     vizProps: {
       type: Object,
       default: () => ({})
+    }
+  },
+  computed: {
+    component() {
+      return this.graphName.split('.vue')[0]
     }
   }
 }

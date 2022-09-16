@@ -65,6 +65,7 @@ import { datetimeFormatter } from '@/utils/dates'
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
+  name: 'ChartViewAreaTop',
   mixins: [mixin],
   props: {
     titleArea: {

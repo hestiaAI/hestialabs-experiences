@@ -87,7 +87,7 @@ import FileManager from '../utils/file-manager'
 import fileManagerWorkers from '../utils/file-manager-workers'
 import { mapState } from 'vuex'
 import UnitIntroduction from './unit/UnitIntroduction.vue'
-
+import UnitFileExplorer from './unit/file-explorer/UnitFileExplorer.vue'
 export default {
   name: 'TheDataExperience',
   props: {
@@ -96,7 +96,7 @@ export default {
       required: true
     }
   },
-  components: {UnitIntroduction},
+  components: { UnitIntroduction, UnitFileExplorer },
   data() {
     const properties = pick(this.experienceConfig, [
       'databaseConfig',
@@ -170,7 +170,7 @@ export default {
       handler(value) {
         this.$store.commit('dataexp/setConfig', cloneDeep(value))
       }
-    },  
+    },
     fileManager(value) {
       if (value === null) {
         this.switchTab('load-data')
@@ -238,13 +238,16 @@ export default {
       try {
         await fileManager.init(uppyFiles)
         this.$store.commit('dataexp/setFileManager', fileManager)
+
         if (dbConfig) {
+          console.log('Creating DB', dbConfig)
           // create database
           const db = await DBMS.createDB(dbConfig)
           // generate database records via the file manager
           const records = await DBMS.generateRecords(fileManager, dbConfig)
           // insert the records into the database
           DBMS.insertRecords(db, records)
+          console.log('DB created, setting store')
           // commit the database to the Vuex store
           this.$store.commit('dataexp/setCurrentDB', db)
         }

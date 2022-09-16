@@ -106,6 +106,7 @@ import mixin from './mixin'
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
+  name: 'ChartViewOverviewTwitter',
   mixins: [mixin],
   data() {
     return {

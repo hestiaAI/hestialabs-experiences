@@ -87,7 +87,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { isEmpty } from 'lodash-es'
-import EventBus from './eventBus'
+import EventBus from './EventBus'
 
 export default {
   name: 'BaseSchemaTree',
@@ -118,7 +118,7 @@ export default {
     // Sets up the Event Bus listener
     EventBus.$on('change', this.pathsChanged)
   },
-  destroyed() {
+  unmounted() {
     // Removes Event Bus listener upon removal
     EventBus.$off('change', this.pathsChanged)
   },

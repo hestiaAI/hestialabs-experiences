@@ -32,7 +32,7 @@ export default {
       revokeObjectURL(oldHref)
     }
   },
-  beforeDestroy() {
+  beforeUnmount() {
     revokeObjectURL(this.href)
   }
 }

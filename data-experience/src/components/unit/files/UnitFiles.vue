@@ -71,6 +71,12 @@ import French from '@uppy/locales/lib/fr_FR'
 
 import { decryptBlob } from '../../../utils/encryption'
 
+import UnitFilesDialog from './UnitFilesDialog.vue'
+import BaseAlert from '../../base/BaseAlert.vue'
+import BaseProgressCircular from '../../base/BaseProgressCircular.vue'
+import BaseButton from '../../base/button/BaseButton.vue'
+import BaseDialogButton from '../../base/button/BaseDialogButton.vue'
+
 const locales = {
   en: English,
   fr: French
@@ -82,15 +88,9 @@ async function fetchSampleFile({ path, filename }) {
   return new File([blob], filename)
 }
 
-import UnitFilesDialog from './UnitFilesDialog.vue'
-import BaseAlert from '../../base/BaseAlert.vue'
-import BaseProgressCircular from '../../base/BaseProgressCircular.vue'
-import BaseButton from '../../base/button/BaseButton.vue'
-import BaseDialogButton from '../../base/button/BaseDialogButton.vue'
-
 export default {
   name: 'UnitFiles',
-  components: {UnitFilesDialog, BaseAlert, BaseProgressCircular, BaseButton, BaseDialogButton},
+  components: { UnitFilesDialog, BaseAlert, BaseProgressCircular, BaseButton, BaseDialogButton },
   props: {
     progress: {
       type: Boolean,
@@ -244,7 +244,7 @@ export default {
         }
       })
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.uppy.close()
   },
   methods: {

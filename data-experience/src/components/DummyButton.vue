@@ -7,17 +7,17 @@
 <script>
 export default {
   computed: {
-    times () {
+    times() {
       return this.$store.getters.counter > 1
         ? 'times'
         : 'time'
     },
-    text () {
+    text() {
       return `I have been clicked ${this.$store.getters.counter} ${this.times}`
     }
   },
   methods: {
-    increment () {
+    increment() {
       this.$store.commit('increment')
     }
   }

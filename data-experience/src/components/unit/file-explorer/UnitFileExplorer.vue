@@ -38,10 +38,10 @@
               return-object
               transition
               rounded
-              :open.sync="open"
+              v-model:open="open"
               :search="search"
               :items="treeItems"
-              :active.sync="active"
+              v-model:active="active"
             >
               <template #prepend="{ item }">
                 <VIcon>
@@ -111,6 +111,9 @@ export default {
     treeItems() {
       return this.fileManager.getTreeItems()
     }
+  },
+  mounted() {
+    console.log('UnitFileExplorer', this.fileManager)
   },
   methods: {
     // Open all treeview when we are searching for something

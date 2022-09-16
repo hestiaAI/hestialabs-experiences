@@ -5,6 +5,7 @@ const store = {
   namespaced: true,
   state: () => ({
     loaded: false,
+    progress: false,
     config: {},
     newConfig: {},
     selectedFiles: [],
@@ -15,6 +16,9 @@ const store = {
     consentForm: null
   }),
   mutations: {
+    setProgress(state, value) {
+      state.progress = value
+    },
     setLoaded(state) {
       console.log('LOaded')
       state.loaded = true
@@ -84,7 +88,6 @@ const store = {
       state.fileExplorerCurrentItem.selectedPaths = []
     }
   }
-} 
-
+}
 
 export default store

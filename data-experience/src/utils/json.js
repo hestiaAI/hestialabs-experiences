@@ -12,7 +12,7 @@ const { TREE, LIST, LEAF } = nodeTypes
  * @returns {Array} the tree
  */
 export function itemifyJSON(jsonString, filterString) {
-  if(!jsonString) return []
+  if (!jsonString) return []
   console.log(jsonString, filterString)
   const json = JSON.parse(jsonString) || {}
   const predicate = makePruningPredicateToMatch(filterString)
