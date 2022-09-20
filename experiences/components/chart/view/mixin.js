@@ -1,6 +1,9 @@
 import { TextFilterWidget } from 'dc'
+import { merge } from 'lodash-es'
 
-export default {
+import kViewBlockMixin from '@/mixins/k-view-block'
+
+const mixin = {
   props: {
     values: {
       type: Array,
@@ -19,8 +22,7 @@ export default {
     return {
       graphId: 'graph_' + this._uid,
       totalCount: null,
-      filterCount: null,
-      kViewBlock: this.$store.state.kViewBlock
+      filterCount: null
     }
   },
   mounted() {
@@ -40,3 +42,5 @@ export default {
     }
   }
 }
+
+export default merge(mixin, kViewBlockMixin)

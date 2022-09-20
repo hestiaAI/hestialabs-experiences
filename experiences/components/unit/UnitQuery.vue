@@ -5,7 +5,7 @@
         <VCol cols="1" />
         <VCol cols="10">
           <VCardTitle class="justify-center">
-            {{ $tev(k('title'), title) }}
+            {{ $tev(kViewBlock('title'), title) }}
           </VCardTitle>
         </VCol>
         <VCol cols="1" align-self="center" class="full-height text-center">
@@ -37,7 +37,7 @@
       <VRow v-if="text">
         <VCol>
           <VContainer>
-            {{ $tev(k('text'), text) }}
+            {{ $tev(kViewBlock('text'), text) }}
           </VContainer>
         </VCol>
       </VRow>
@@ -89,7 +89,6 @@
                   v-bind="{
                     graphName: vizVue,
                     data,
-                    kViewBlock: k,
                     ...vizPropsTranslated
                   }"
                 />
@@ -116,12 +115,11 @@
 import { mapState } from 'vuex'
 import { cloneDeep, merge } from 'lodash-es'
 
+import kViewBlockMixin from '@/mixins/k-view-block'
+
 export default {
+  mixins: [kViewBlockMixin],
   props: {
-    slug: {
-      type: String,
-      required: true
-    },
     id: {
       type: String,
       required: true
@@ -211,7 +209,7 @@ export default {
       // NOTE: we need to deepClone the vizProps before doing the merge
       // because the lodash merge function recursively mutates the first argument
       // and it will cause a vuex mutation error otherwise.
-      return merge(cloneDeep(this.vizProps), this.$tev(this.k('vizProps'), {}))
+      return merge(cloneDeep(this.vizProps), this.$tev(this.kViewBlock('vizProps'), {}))
     }
   },
   watch: {
@@ -226,9 +224,6 @@ export default {
       }
     }
   },
-  created() {
-    this.$store.commit('setKViewBlock', this.k)
-  },
   methods: {
     onUnitResultsUpdate({ result, error }) {
       if (error) {
@@ -241,12 +236,6 @@ export default {
         result
       })
       this.result = result
-    },
-    // Convert local translation key to global vue-i18n
-    k(key, prefix = '', postfix = '') {
-      const pre = prefix ? `${prefix}.` : ''
-      const post = postfix ? `.${postfix}` : ''
-      return `experiences.${this.slug}.viewBlocks.${this.id}.${pre}${key}${post}`
     }
   }
 }
