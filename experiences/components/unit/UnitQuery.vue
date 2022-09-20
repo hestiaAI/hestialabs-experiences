@@ -103,7 +103,7 @@
           </VRow>
           <VRow v-if="showTable">
             <VCol>
-              <UnitFilterableTable v-bind="clonedResult" :k-view-block="k" />
+              <UnitFilterableTable v-bind="clonedResult" />
             </VCol>
           </VRow>
         </template>
@@ -225,6 +225,9 @@ export default {
         this.result = null
       }
     }
+  },
+  created() {
+    this.$store.commit('setKViewBlock', this.k)
   },
   methods: {
     onUnitResultsUpdate({ result, error }) {
