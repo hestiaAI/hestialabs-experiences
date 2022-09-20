@@ -36,7 +36,6 @@ export default {
     }
   },
   data() {
-    console.log(this.values)
     return {
       jsonData: this.values[0].jsonData || { nodes: [], links: {} }
     }

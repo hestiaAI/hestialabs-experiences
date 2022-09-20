@@ -5,7 +5,7 @@
         <VRow>
           <VCol cols="12" sm="8">
             <div id="volume-chart">
-              <strong>{{ $t(k('ads-time')) }}</strong>
+              <span class="font-weight-bold" v-text="messages['ads-time']" />
               <p class="filters">
                 <span>
                   {{ $t('Current filter') }}
@@ -21,7 +21,7 @@
           <VCol cols="12" sm="4">
             <div id="company-chart">
               <div style="display: flex">
-                <strong>{{ $t(k('top-adv')) }}</strong>
+                <span class="font-weight-bold" v-text="messages['top-adv']" />
                 <VSpacer />
                 <div id="company-search" />
               </div>
@@ -38,7 +38,7 @@
         <VRow>
           <VCol cols="12" sm="4">
             <div id="engagement-chart">
-              <strong>{{ $t(k('interactions')) }}</strong>
+              <span class="font-weight-bold" v-text="messages['interactions']" />
               <p class="filters">
                 <span>
                   {{ $t('Current filter') }}
@@ -51,7 +51,7 @@
           <VCol cols="12" sm="4">
             <div id="type-chart">
               <div style="display: flex">
-                <strong>{{ $t(k('targeting-type')) }}</strong>
+                <span class="font-weight-bold" v-text="messages['targeting-type']" />
                 <VSpacer />
                 <div id="type-search" />
               </div>
@@ -67,7 +67,7 @@
           <VCol cols="12" sm="4">
             <div id="value-chart">
               <div style="display: flex">
-                <strong>{{ $t(k('targeting-criteria')) }}</strong>
+                <span class="font-weight-bold" v-text="messages['targeting-criteria']" />
                 <VSpacer />
                 <div id="value-search" />
               </div>
@@ -114,17 +114,11 @@ export default {
         { text: 'Promoted Tweet', value: 'url' },
         { text: 'Engagement', value: 'engagedWith' },
         { text: 'Targeting Criteria', value: 'count' }
-      ].map(
-        ({ text, ...rest }) =>
-          ({ text: this.$t(this.k(`headers.${text}`)), ...rest })
-      ),
+      ],
       results: []
     }
   },
   methods: {
-    k(key) {
-      return `chart-view.overview-twitter.${key}`
-    },
     drawViz() {
       this.results = this.values
       // Define a color palette for the viz
@@ -407,9 +401,9 @@ export default {
         .html({
           some:
             `<strong>%filter-count</strong> ${this.$t('selected-out-of')} <strong>%total-count</strong> ` +
-            `${this.$t(this.k('ads'))} | <a class='resetAll'>${this.$t('Reset All')}</a>`,
+            `${this.messages.ads} | <a class='resetAll'>${this.$t('Reset All')}</a>`,
           all:
-            `Total: <strong>%total-count</strong> ${this.$t(this.k('ads'))}. ${this.$t('click-graph')}`
+            `Total: <strong>%total-count</strong> ${this.messages.ads}. ${this.$t('click-graph')}`
         })
         .on('pretransition', (chart, filter) => {
           const newData = d3.flatRollup(
