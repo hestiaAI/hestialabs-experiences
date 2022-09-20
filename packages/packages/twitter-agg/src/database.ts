@@ -18,6 +18,16 @@ const config: DatabaseConfig = {
       ]
     },
     {
+      name: 'TwitterTargeting',
+      columns: [
+        ['advertiserName', TEXT],
+        ['targetingType', TEXT],
+        ['targetingValue', DATE],
+        ['criteriaCount', TEXT],
+        ['filePath', TEXT, 'FILEPATH']
+      ]
+    },
+    {
       name: 'TwitterPersonalization',
       columns: [
         ['languages', TEXT],
@@ -63,6 +73,29 @@ const config: DatabaseConfig = {
         {
           column: 'criteriaCount',
           path: '$.count'
+        }
+      ]
+    },
+    {
+      fileId: 'targeting',
+      path: '$.result.items[*]',
+      table: 'TwitterTargeting',
+      getters: [
+        {
+          column: 'advertiserName',
+          path: '$.advertiserName'
+        },
+        {
+          column: 'targetingType',
+          path: '$.targetingType'
+        },
+        {
+          column: 'targetingValue',
+          path: '$.targetingValue'
+        },
+        {
+          column: 'criteriaCount',
+          path: '$.count_'
         }
       ]
     },

@@ -5,6 +5,7 @@ import preprocessor from './preprocessor'
 import icon from '@/icons/twitter.png'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
+import messages from './messages.json'
 
 const options: ExperienceOptions = {
   collaborator: theEyeballs,
@@ -14,9 +15,11 @@ const options: ExperienceOptions = {
   dataSamples: ['twitter.zip', 'twitter-sample.zip'],
   files: {
     ads: '**/block00.json',
+    targeting: '**/block04.json',
     personalization: '**/personalization.js'
   },
   icon,
+  messages,
   preprocessors: {
     '**/*.js': preprocessor
   },

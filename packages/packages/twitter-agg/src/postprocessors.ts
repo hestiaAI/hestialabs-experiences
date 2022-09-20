@@ -1,81 +1,80 @@
+/* eslint-disable no-prototype-builtins */
 import type { PostprocessorFunction } from '@/types'
+import { Dictionary } from 'lodash'
 
-export const sunburstTargeting: PostprocessorFunction = result => {
+export const toGraph: PostprocessorFunction = result => {
   // TODO generalize this...
   const items = result?.items || []
   if (items.length === 0) {
     return { headers: [], items: [] }
   }
-  const results = []
-  const tree = new Map()
-  // Construct tree: Root -> AdvertiserName -> TargetingType -> [TargetingValue, count]
-  for (const item of items) {
-    const advertiser = item.advertiserName
-    const targetingType = item.targetingType
-    const targetingValue = item.targetingValue
-    const count = parseInt(item.count_)
-    if (!tree.has(advertiser)) {
-      tree.set(advertiser, new Map())
-    }
-    const subtree = tree.get(advertiser)
-    if (!subtree.has(targetingType)) {
-      subtree.set(targetingType, [])
-    }
-    const leaves = subtree.get(targetingType)
-    leaves.push([targetingValue, count])
+  // console.log('TEST', items)
+
+  interface Interest {
+    name: string
+    isDisabled: boolean
   }
-  // Flatten tree into CSV. Give IDs and propagate aggregated counts to parents
-  let id = 0
-  let rootValue = 0
-  const rootID = id
-  for (const [advertiser, subtree] of tree.entries()) {
-    id += 1
-    const advertiserID = id
-    let advertiserValue = 0
-    for (const [targetingType, leaves] of subtree.entries()) {
-      id += 1
-      const targetingTypeID = id
-      let targetingTypeValue = 0
-      for (const [targetingValue, count] of leaves) {
-        id += 1
-        targetingTypeValue += count
-        results.push({
-          id,
-          name: targetingValue,
-          value: count,
-          group: advertiser,
-          parent: targetingTypeID,
-          size: count
-        })
-      }
-      advertiserValue += targetingTypeValue
-      results.push({
-        id: targetingTypeID,
-        name: targetingType,
-        value: targetingTypeValue,
-        group: advertiser,
-        parent: advertiserID,
-        size: null
+
+  const allInterests: Dictionary<number> = {}
+  items.forEach(u => {
+    const interests: Array<Interest> = JSON.parse(u.interests)
+    if (interests) {
+      interests.forEach(i => {
+        if (allInterests[i.name]) allInterests[i.name] += 1
+        else allInterests[i.name] = 1
       })
     }
-    rootValue += advertiserValue
-    results.push({
-      id: advertiserID,
-      name: advertiser,
-      value: advertiserValue,
-      group: advertiser,
-      parent: rootID,
-      size: null
+  })
+  // console.log(allInterests)
+  /*
+  const categoriesToKeep = [
+    'FingerprintingGeneral',
+    'FingerprintingInvasive',
+    'Advertising'
+  ]
+
+  let results = items.filter(
+    row => categoriesToKeep.includes(row.category) && row.app !== 'Unknown'
+  )
+  results = results.map(o => {
+    return { app: o['app'], tracker: o['tracker'] }
+  })
+  const nodesToRemove = ['Chrome', 'Firefox', 'Samsung Internet']
+  results = results.filter(row => !nodesToRemove.includes(row.app))
+  const links = results.map(function (item) {
+    return { source: item.app, target: item.tracker, weight: 1 }
+  })
+
+  const temp = results.reduce((p, c) => {
+    if (!p.hasOwnProperty(c.app)) {
+      p[c.app] = 1
+    }
+    if (!p.hasOwnProperty(c.tracker)) {
+      p[c.tracker] = 1
+    }
+    p[c.tracker]++
+    return p
+  }, {})
+  const nodes = []
+  const colors = [
+    '#655FB5',
+    '#8D88C8',
+    '#ACA9D8',
+    '#CCCBE6',
+    '#EBEBF6',
+    '#FFFFFF'
+  ].reverse()
+  for (const k in temp) {
+    nodes.push({
+      id: k,
+      weight: temp[k],
+      size: 10 + temp[k] - 1 * 2,
+      color: colors[Math.min(colors.length - 1, temp[k])]
     })
   }
-  const root = {
-    id: rootID,
-    name: 'All',
-    value: rootValue,
-    group: 'All',
-    parent: null,
-    size: null
+  */
+  return {
+    headers: ['jsonData'],
+    items: [{ jsonData: { nodes: [], links: [] } }]
   }
-  results.push(root)
-  return { headers: Object.keys(root), items: results }
 }
