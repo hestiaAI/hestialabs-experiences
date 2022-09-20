@@ -6,7 +6,7 @@
           <VCol cols="12">
             <div :id="'watch-time-chart' + graphId">
               <strong>{{ $t(k('watch-time')) }}</strong>
-              <a class="reset" style="display: none">{{ $t('reset') }}</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters ma-0">
                 <span>
                   {{ $t('Current filter') }}
@@ -15,11 +15,7 @@
               </p>
             </div>
             <div :id="'range-chart' + graphId" class="range-chart">
-              <p
-                class="muted pull-right text-subtitle-2 mr-4 mb-1"
-              >
-                {{ $t('select-time-range') }}
-              </p>
+              <ChartViewTextSelectTimeRange />
             </div>
           </VCol>
         </VRow>
@@ -27,7 +23,7 @@
           <VCol cols="8">
             <div :id="'hour-chart' + graphId">
               <strong>{{ $t(k('time-of-day')) }}</strong>
-              <a class="reset" style="display: none">{{ $t('reset') }}</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters ma-0">
                 <span>
                   {{ $t('Current filter') }}
@@ -39,7 +35,7 @@
           <VCol cols="4">
             <div :id="'week-chart' + graphId">
               <strong>{{ $t(k('day')) }}</strong>
-              <a class="reset" style="display: none">{{ $t('reset') }}</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters ma-0">
                 <span>
                   {{ $t('Current filter') }}
@@ -53,7 +49,7 @@
       <VCol cols="4">
         <div :id="'content-chart' + graphId">
           <strong>{{ $t(k('most-watched')) }}</strong>
-          <a class="reset" style="display: none">{{ $t('reset') }}</a>
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters ma-0">
             <span>
               {{ $t('Current filter') }}
@@ -67,7 +63,7 @@
       <VCol cols="4">
         <div :id="'user-chart' + graphId">
           <strong>Profiles</strong>
-          <a class="reset" style="display: none">{{ $t('reset') }}</a>
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters ma-0">
             <span>
               {{ $t('Current filter') }}
@@ -79,7 +75,7 @@
       <VCol cols="4">
         <div :id="'country-chart' + graphId">
           <strong>{{ $t(k('country')) }}</strong>
-          <a class="reset" style="display: none">{{ $t('reset') }}</a>
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters ma-0">
             <span>
               {{ $t('Current filter') }}
@@ -91,7 +87,7 @@
       <VCol cols="4">
         <div :id="'device-chart' + graphId">
           <strong>{{ $t(k('device')) }}</strong>
-          <a class="reset" style="display: none">{{ $t('reset') }}</a>
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters ma-0">
             <span>
               {{ $t('Current filter') }}

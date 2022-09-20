@@ -13,11 +13,7 @@
           </p>
         </div>
         <div :id="'range-chart' + graphId" class="range-chart">
-          <i18n tag="p" class="muted pull-right text-subtitle-2 mr-4 mb-1" :path="kViewBlock('select-time-range')">
-            <template #timeRange>
-              <span v-t="messages['time range']" class="font-weight-bold" />
-            </template>
-          </i18n>
+          <ChartViewTextSelectTimeRange />
         </div>
       </VCol>
     </VRow>
@@ -69,22 +65,23 @@
     </VRow>
     <VRow>
       <template v-if="filterCount === totalCount">
-        <i18n tag="div" :path="kViewBlock('connections-selected-all')">
+        <i18n tag="div" :path="kViewBlock('selected-all')">
           <template #totalCount>
             <span class="font-weight-bold" v-text="totalCount" />
           </template>
         </i18n>
+        <span v-t="'click-graph'" />
       </template>
       <template v-else>
-        <i18n tag="div" :path="kViewBlock('connections-selected-some')">
+        <i18n tag="div" :path="kViewBlock('selected-some')">
           <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
             <span :key="k" class="font-weight-bold" v-text="v" />
           </template>
         </i18n>
-        <span>&nbsp;| <a v-t="'Reset All'" @click="dc.filterAll(); dc.renderAll()" /></span>
+        <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
       </template>
     </VRow>
-    <UnitFilterableTable v-bind="{ headers: header, items: results, kViewBlock }" />
+    <UnitFilterableTable v-bind="{ headers: header, items: results }" />
   </VContainer>
 </template>
 
@@ -108,7 +105,6 @@ export default {
   },
   data() {
     return {
-      dc,
       header: [
         { text: 'First Name', value: 'firstname' },
         { text: 'Last Name', value: 'lastname' },
@@ -117,12 +113,14 @@ export default {
         { text: 'Position', value: 'position' },
         { text: 'Connected On', value: 'dateStr' }
       ],
-      results: [],
-      totalCount: null,
-      filterCount: null
+      results: []
     }
   },
   methods: {
+    resetAll() {
+      dc.filterAll()
+      dc.renderAll()
+    },
     removeEmptyBins(group) {
       return {
         top(n) {
@@ -181,6 +179,16 @@ export default {
         this.filterCount = ndx.allFiltered().length
       })
       const all = ndx.groupAll()
+
+      // get total number of records
+      this.totalCount = ndx.size()
+      this.filterCount = this.totalCount
+      ndx.onChange(() => {
+        // update table
+        this.results = weekDimension.top(all.value())
+        // update filter count
+        this.filterCount = ndx.allFiltered().length
+      })
 
       // Create and bind charts to their respective divs
       const connectionsChart = new dc.LineChart(

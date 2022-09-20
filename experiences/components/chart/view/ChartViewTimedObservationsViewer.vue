@@ -115,7 +115,7 @@
           </VTabItem>
           <VTabItem value="details">
             <p v-if="currSourceFilter" class="text-subtitle-1 text-right">
-              Current Filter:
+              {{ $t('Current filter') }}
               <VBtn small elevation="2" @click="resetSourceFilter">
                 <strong>{{ currSourceFilter }}</strong>
                 <VIcon x-small>

@@ -7,7 +7,30 @@
     "viewBlocks": {
       "user": {
         "title": "User infos",
-        "text": "Tinder profile information"
+        "text": "Tinder profile information",
+        "vizProps": {
+          "messages": {
+            "Not mentioned": "Not mentioned",
+            "Age filter": "Age filter",
+            "Descriptors": "Descriptors",
+            "titles": {
+              "Birthdate": "Birthdate",
+              "Gender": "Gender",
+              "Education": "Education",
+              "College": "College",
+              "Interested In": "Interested In",
+              "Sexual Orientations": "Sexual Orientations",
+              "Gender Filter": "Gender Filter",
+              "Account Creation": "Account Creation"
+            },
+            "values": {
+              "Female": "Female",
+              "Male": "Male",
+              "Women": "Women",
+              "Men": "Men"
+            }
+          }
+        }
       },
       "app-opens-vue": {
         "title": "Usage",
@@ -21,14 +44,22 @@
         "title": "Likes and passes",
         "text": "See the number of likes and passes that you made over time.",
         "vizProps": {
-          "title": "Likes vs Passes over time"
+          "title": "Likes vs Passes over time",
+          "yLabel": "Count",
+          "messages": {
+            "legend": {
+              "swipes_likes": "Likes",
+              "swipes_passes": "Passes"
+            }
+          }
         }
       },
       "messages-activity": {
         "title": "Messages",
         "text": "See at what time of the day and week you send the most messages",
         "vizProps": {
-          "label": "trips"
+          "title": "Messages Sent",
+          "legendLabel": "Messages"
         }
       },
       "donut": {
@@ -49,7 +80,30 @@
     "viewBlocks": {
       "user": {
         "title": "Informations utilisat·eur·rice",
-        "text": "Informations du profil Tinder"
+        "text": "Informations du profil Tinder",
+        "vizProps": {
+          "messages": {
+            "Not mentioned": "Non mentionné",
+            "Age filter": "Filtre d'âge",
+            "Descriptors": "Descripteurs",
+            "titles": {
+              "Birthdate": "Date de naissance",
+              "Gender": "Genre",
+              "Education": "Éducation",
+              "College": "Collège",
+              "Interested In": "Intéressé par",
+              "Sexual Orientations": "Orientations sexuelles",
+              "Gender Filter": "Filtre de genre",
+              "Account Creation": "Création de compte"
+            },
+            "values": {
+              "Female": "Femme",
+              "Male": "Homme",
+              "Women": "Femmes",
+              "Men": "Hommes"
+            }
+          }
+        }
       },
       "app-opens-vue": {
         "title": "Usage",
@@ -63,12 +117,23 @@
         "title": "Likes et passes",
         "text": "Nombre de likes et passes au cours du temps.",
         "vizProps": {
-          "title": "Likes vs Passes au fil du temps"
+          "title": "Likes vs Passes au fil du temps",
+          "yLabel": "Nombre",
+          "messages": {
+            "legend": {
+              "swipes_likes": "Likes",
+              "swipes_passes": "Passes"
+            }
+          }
         }
       },
       "messages-activity": {
         "title": "Messages",
-        "text": "Statistiques temporelles de vos messages"
+        "text": "Statistiques temporelles de vos messages",
+        "vizProps": {
+          "title": "Messages envoyé",
+          "legendLabel": "Messages"
+        }
       },
       "donut": {
         "title": "Comparaison",

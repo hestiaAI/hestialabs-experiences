@@ -10,7 +10,8 @@ export const state = () => ({
   currentDB: null,
   fileManager: null,
   fileExplorerCurrentItem: {},
-  consentForm: null
+  consentForm: null,
+  kViewBlock: () => ''
 })
 
 export const getters = {
@@ -119,6 +120,9 @@ export const mutations = {
   setFileExplorerCurrentItem(state, item) {
     state.fileExplorerCurrentItem = item
     state.fileExplorerCurrentItem.selectedPaths = []
+  },
+  setKViewBlock(state, kViewBlock) {
+    state.kViewBlock = kViewBlock
   }
 }
 

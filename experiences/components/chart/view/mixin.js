@@ -10,14 +10,17 @@ export default {
       type: Array,
       default: () => []
     },
-    kViewBlock: {
-      type: Function,
-      default: () => ''
+    messages: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {
     return {
-      graphId: 'graph_' + this._uid
+      graphId: 'graph_' + this._uid,
+      totalCount: null,
+      filterCount: null,
+      kViewBlock: this.$store.state.kViewBlock
     }
   },
   mounted() {

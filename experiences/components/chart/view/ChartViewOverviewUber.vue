@@ -25,12 +25,9 @@
               </p>
             </div>
             <div id="hour-chart">
-              <p
-                class="muted pull-right text-subtitle-2 mr-4 mb-1"
-              >
-                <span v-t="'select-time-range'" />
+              <ChartViewTextSelectTimeRange>
                 <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              </ChartViewTextSelectTimeRange>
             </div>
           </VCol>
         </VRow>
@@ -172,7 +169,7 @@ export default {
         ['Distance (miles)', 'distanceMiles'],
         ['Duration (min)', 'duration'],
         ['Price', 'priceStr']
-      ].map(([text, value]) => ({ text: this.$t(this.k(text, 'headers')), value })),
+      ].map(([text, value]) => ({ text, value })),
       generalInformationRows: [{
         heading: 'Distance',
         metric: 'miles',

@@ -64,8 +64,7 @@
     <ChartViewVRowWebShare>
       <VCol cols="12">
         <div :id="graphId" />
-        <p class="text-subtitle-2 mt-5">
-          {{ $t('select-time-range') }}
+        <ChartViewTextSelectTimeRange>
           <VBtn
             x-small
             class="ma-1"
@@ -76,7 +75,7 @@
           >
             {{ $t('reset') }}
           </VBtn>
-        </p>
+        </ChartViewTextSelectTimeRange>
         <div :id="'range-chart' + graphId" class="range-chart" />
       </VCol>
     </ChartViewVRowWebShare>
@@ -140,10 +139,7 @@ export default {
         ['File name', 'filename'],
         ['Date', 'dateStr'],
         ['Description', 'description']
-      ].map(([text, value]) => ({
-        text: this.$t(this.kViewBlock(text, 'headers')),
-        value
-      }))
+      ].map(([text, value]) => ({ text, value }))
     }
   },
   computed: {

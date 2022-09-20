@@ -47,10 +47,7 @@ export default {
         ['Latitude', 'latitude'],
         ['Longitude', 'longitude'],
         ['Description', 'description']
-      ].map(([text, value]) => ({
-        text: this.$t(this.kViewBlock(text, 'headers')),
-        value
-      }))
+      ].map(([text, value]) => ({ text, value }))
     }
   },
   computed: {

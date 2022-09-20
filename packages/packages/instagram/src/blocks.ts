@@ -4,7 +4,7 @@ import sqlLikes from './sql/likes.sql'
 import sqlViews from './sql/views.sql'
 import sqlFollows from './sql/follows.sql'
 import sqlMessages from './sql/messages.sql'
-import { genericViewers } from '@/pipelines/generic'
+import { genericDateViewer } from '@/pipelines/generic'
 
 const blocks: ViewBlocks = [
   {
@@ -30,9 +30,6 @@ const blocks: ViewBlocks = [
     files: ['likedComments', 'likedPosts'],
     visualization: 'ChartViewAreaTop.vue',
     vizProps: {
-      titleArea: 'Likes given',
-      titleTop: 'Top User',
-      rowLabel: 'likes',
       dateAccessor: { text: 'Date', value: 'actionDate' },
       seriesAccessor: { text: 'Action', value: 'actionType' },
       topAccessor: { text: 'Action', value: 'accountName' }
@@ -62,7 +59,7 @@ const blocks: ViewBlocks = [
     title: 'Follows',
     text: ''
   },
-  genericViewers[0]
+  genericDateViewer
 ]
 
 export default blocks

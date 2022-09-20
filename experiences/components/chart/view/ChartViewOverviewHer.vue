@@ -6,21 +6,18 @@
           <VCol cols="12" md="12">
             <div id="like-chart">
               <strong>Likes you've made over time</strong>
-              <a class="reset" style="display: none">reset</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
             </div>
             <div id="range-chart">
-              <p
-                class="muted pull-right text-subtitle-2 mr-4 mb-1"
-              >
-                {{ $t('select-time-range') }}
-                <a class="reset" style="display: none">reset</a>
-              </p>
+              <ChartViewTextSelectTimeRange>
+                <a v-t="'reset'" class="reset" style="display: none" />
+              </ChartViewTextSelectTimeRange>
             </div>
           </VCol>
         </VRow>
@@ -28,10 +25,10 @@
           <VCol cols="12" md="4">
             <div id="hour-chart">
               <strong>Time of day</strong>
-              <a class="reset" style="display: none">reset</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -40,10 +37,10 @@
           <VCol cols="12" md="4">
             <div id="week-chart">
               <strong>Day</strong>
-              <a class="reset" style="display: none">reset</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -52,10 +49,10 @@
           <VCol cols="12" md="4">
             <div id="matched-chart">
               <strong>Matched</strong>
-              <a class="reset" style="display: none">reset</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>

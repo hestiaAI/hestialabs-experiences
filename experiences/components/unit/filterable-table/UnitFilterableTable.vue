@@ -72,10 +72,6 @@ export default {
     items: {
       type: Array,
       default: () => []
-    },
-    kViewBlock: {
-      type: Function,
-      default: () => ''
     }
   },
   data() {
@@ -112,7 +108,7 @@ export default {
       return {
         headers: headers.map(({ text, ...rest }) => ({
           ...rest,
-          text: this.$tev(this.kViewBlock(text, 'headers'), text),
+          text: this.$tev(this.$store.state.kViewBlock(text, 'headers'), text),
           align: 'left',
           sortable: true
         })),

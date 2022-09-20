@@ -11,13 +11,11 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
             <div :id="'range-chart' + graphId" class="range-chart">
-              <p class="muted pull-right mr-4 mb-1">
-                {{ $t('select-time-range') }}
-              </p>
+              <ChartViewTextSelectTimeRange />
             </div>
           </VCol>
           <VCol cols="12" sm="4">
@@ -32,7 +30,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -46,7 +44,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -62,7 +60,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -78,7 +76,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
