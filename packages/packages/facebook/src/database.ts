@@ -14,7 +14,8 @@ const config: DatabaseConfig = {
       columns: [
         ['title', TEXT],
         ['action', TEXT],
-        ['timestamp', INTEGER]
+        // timestamp is transformed from INT -> TEXT (see formatters below)
+        ['timestamp', TEXT]
       ]
     },
     {
@@ -52,6 +53,21 @@ const config: DatabaseConfig = {
       fileId: 'advertisers-interacted',
       path: '$.history_v2[*]',
       table: 'AdvertiserInteraction',
+      options: {
+        callback: output => {
+          const o = output as JSONPathReturnObject
+          // the timestamp value is given as the number of seconds
+          // we create a date object
+          const date = new Date(o.timestamp * 1000)
+          // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+          // YYYY-MM-DD HH:mm:ss
+          o['timestamp'] = date
+            .toISOString()
+            .split(/[.T]/)
+            .slice(0, 2)
+            .join(' ')
+        }
+      },
       getters: [
         {
           column: 'title',

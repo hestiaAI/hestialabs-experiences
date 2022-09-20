@@ -79,28 +79,27 @@
               <UnitVegaViz
                 v-if="vizVega"
                 :spec-file="vizVega"
-                :data="clonedResult"
+                :data="clonedResultPostprocessed"
                 class="text-center"
               />
               <ChartView
                 v-else-if="vizVue"
                 v-bind="{
                   graphName: vizVue,
-                  data: clonedResult,
-                  kViewBlock: k,
+                  data: clonedResultPostprocessed,
                   ...vizPropsTranslated
                 }"
               />
               <UnitIframe
                 v-else-if="vizUrl"
                 :src="vizUrl"
-                :args="clonedResult"
+                :args="clonedResultPostprocessed"
               />
             </VCol>
           </VRow>
           <VRow v-if="showTable">
             <VCol>
-              <UnitFilterableTable v-bind="clonedResult" :k-view-block="k" />
+              <UnitFilterableTable v-bind="clonedResult" />
             </VCol>
           </VRow>
         </template>
@@ -192,6 +191,9 @@ export default {
     clonedResult() {
       return cloneDeep(this.result)
     },
+    clonedResultPostprocessed() {
+      return this.postprocessor(this.clonedResult)
+    },
     fileGlobs() {
       const fileIds = this.files ?? []
       return fileIds.map(id => this.fileManager.idToGlob[id])
@@ -205,7 +207,7 @@ export default {
     vizPropsTranslated() {
       // translations override all props...
       // we trust that they only affect texts
-      // NOTE: we need to deepClone the viProps before doing the merge.
+      // NOTE: we need to deepClone the vizProps before doing the merge
       // because the lodash merge function recursively mutates the first argument
       // and it will cause a vuex mutation error otherwise.
       return merge(cloneDeep(this.vizProps), this.$tev(this.k('vizProps'), {}))
@@ -225,25 +227,20 @@ export default {
   },
   methods: {
     onUnitResultsUpdate({ result, error }) {
-      let finalResult = result
       if (error) {
         console.error(error)
         this.errorMessage = error instanceof Error ? error.message : error
         return
       }
-      // Postprocessing
-      finalResult = this.postprocessor(finalResult)
       this.$store.commit('setResult', {
         experience: this.id,
-        result: finalResult
+        result
       })
-      this.result = finalResult
+      this.result = result
     },
     // Convert local translation key to global vue-i18n
-    k(key, prefix = '', postfix = '') {
-      const pre = prefix ? `${prefix}.` : ''
-      const post = postfix ? `.${postfix}` : ''
-      return `experiences.${this.slug}.viewBlocks.${this.id}.${pre}${key}${post}`
+    k(key) {
+      return `experiences.${this.slug}.viewBlocks.${this.id}.${key}`
     }
   }
 }
