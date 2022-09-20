@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[83],{1601:function(n,t,e){"use strict";e.r(t),t.default=e.p+"assets/data/tinder-synthetic.3e158b8.json"}}]);
