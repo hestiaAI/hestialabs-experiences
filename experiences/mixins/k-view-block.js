@@ -4,8 +4,9 @@ export default {
     kViewBlock(key, prefix = '', postfix = '') {
       const pre = prefix ? `${prefix}.` : ''
       const post = postfix ? `.${postfix}` : ''
-      const { experience } = this.$route.params
-      const id = this.$route.hash.slice(1)
+      // fetch :experience param and view-block #id hash from $route
+      const { params: { experience }, hash } = this.$route
+      const id = hash.slice(1)
       return `experiences.${experience}.viewBlocks.${id}.${pre}${key}${post}`
     }
   }

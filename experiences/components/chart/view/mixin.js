@@ -37,7 +37,7 @@ const mixin = {
     drawViz() { },
     createTextFilterWidget(parent, placeholder = 'Search') {
       const widget = new TextFilterWidget(parent)
-      widget.placeHolder(this.$t(placeholder))
+      widget.placeHolder(this.$tev(placeholder, placeholder))
       return widget
     }
   }

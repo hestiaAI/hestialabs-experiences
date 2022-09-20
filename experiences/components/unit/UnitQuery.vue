@@ -5,7 +5,7 @@
         <VCol cols="1" />
         <VCol cols="10">
           <VCardTitle class="justify-center">
-            {{ $tev(kViewBlock('title'), title) }}
+            {{ $tev(k('title'), title) }}
           </VCardTitle>
         </VCol>
         <VCol cols="1" align-self="center" class="full-height text-center">
@@ -37,7 +37,7 @@
       <VRow v-if="text">
         <VCol>
           <VContainer>
-            {{ $tev(kViewBlock('text'), text) }}
+            {{ $tev(k('text'), text) }}
           </VContainer>
         </VCol>
       </VRow>
@@ -76,28 +76,25 @@
         <template v-if="clonedResult">
           <VRow>
             <VCol>
-              <!-- https://v2.vuejs.org/v2/guide/components-slots.html#Abbreviated-Syntax-for-Lone-Default-Slots -->
-              <UnitViz v-slot="{ data }" v-bind="{ postprocessor, clonedResult }">
-                <UnitVegaViz
-                  v-if="vizVega"
-                  :spec-file="vizVega"
-                  :data="data"
-                  class="text-center"
-                />
-                <ChartView
-                  v-else-if="vizVue"
-                  v-bind="{
-                    graphName: vizVue,
-                    data,
-                    ...vizPropsTranslated
-                  }"
-                />
-                <UnitIframe
-                  v-else-if="vizUrl"
-                  :src="vizUrl"
-                  :args="data"
-                />
-              </UnitViz>
+              <UnitVegaViz
+                v-if="vizVega"
+                :spec-file="vizVega"
+                :data="clonedResultPostprocessed"
+                class="text-center"
+              />
+              <ChartView
+                v-else-if="vizVue"
+                v-bind="{
+                  graphName: vizVue,
+                  data: clonedResultPostprocessed,
+                  ...vizPropsTranslated
+                }"
+              />
+              <UnitIframe
+                v-else-if="vizUrl"
+                :src="vizUrl"
+                :args="clonedResultPostprocessed"
+              />
             </VCol>
           </VRow>
           <VRow v-if="showTable">
@@ -115,11 +112,12 @@
 import { mapState } from 'vuex'
 import { cloneDeep, merge } from 'lodash-es'
 
-import kViewBlockMixin from '@/mixins/k-view-block'
-
 export default {
-  mixins: [kViewBlockMixin],
   props: {
+    slug: {
+      type: String,
+      required: true
+    },
     id: {
       type: String,
       required: true
@@ -193,6 +191,9 @@ export default {
     clonedResult() {
       return cloneDeep(this.result)
     },
+    clonedResultPostprocessed() {
+      return this.postprocessor(this.clonedResult)
+    },
     fileGlobs() {
       const fileIds = this.files ?? []
       return fileIds.map(id => this.fileManager.idToGlob[id])
@@ -209,7 +210,7 @@ export default {
       // NOTE: we need to deepClone the vizProps before doing the merge
       // because the lodash merge function recursively mutates the first argument
       // and it will cause a vuex mutation error otherwise.
-      return merge(cloneDeep(this.vizProps), this.$tev(this.kViewBlock('vizProps'), {}))
+      return merge(cloneDeep(this.vizProps), this.$tev(this.k('vizProps'), {}))
     }
   },
   watch: {
@@ -236,6 +237,10 @@ export default {
         result
       })
       this.result = result
+    },
+    // Convert local translation key to global vue-i18n
+    k(key) {
+      return `experiences.${this.slug}.viewBlocks.${this.id}.${key}`
     }
   }
 }

@@ -1,15 +1,13 @@
 <template>
   <DataValidator :data="data">
-    <div>
-      <component
-        :is="component"
-        v-bind="{
-          values: data.items || [],
-          headers: data.headers || [],
-          ...$attrs
-        }"
-      />
-    </div>
+    <component
+      :is="component"
+      v-bind="{
+        values: data.items || [],
+        headers: data.headers || [],
+        ...$attrs
+      }"
+    />
   </DataValidator>
 </template>
 
@@ -33,6 +31,7 @@ export default {
   }
 }
 </script>
+
 <style>
 @import 'assets/styles/dc.css';
 </style>
