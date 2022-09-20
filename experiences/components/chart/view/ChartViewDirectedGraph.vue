@@ -12,7 +12,6 @@
 <script>
 import * as d3 from 'd3'
 import forceBoundary from 'd3-force-boundary' // Faire joli TODO check
-import { pick } from 'lodash-es'
 import mixin from './mixin'
 
 export default {
@@ -36,66 +35,17 @@ export default {
       default: () => 0
     }
   },
-  computed: {
-    jsonData() {
-      // Là dedans que tu construis ton format
-      const categoriesToKeep = [
-        'FingerprintingGeneral',
-        'FingerprintingInvasive',
-        'Advertising'
-      ]
-
-      let result = this.values.filter(
-        row => categoriesToKeep.includes(row.categ) & (row.app !== 'Unknown')
-      )
-      result = result.map(o => pick(o, ['app', 'tracker']))
-
-      const nodesToRemove = ['Chrome', 'Firefox', 'Samsung Internet']
-      result = result.filter(row => !nodesToRemove.includes(row.app))
-
-      const links = result.map(function(item) {
-        return { source: item.app, target: item.tracker, weight: 1 }
-      })
-
-      const temp = result.reduce((p, c) => {
-        if (!Object.prototype.hasOwnProperty.call(p, c.app)) {
-          p[c.app] = 1
-        }
-        if (!Object.prototype.hasOwnProperty.call(p, c.tracker)) {
-          p[c.tracker] = 1
-        }
-        p[c.tracker]++
-        return p
-      }, {})
-
-      const nodes = []
-      const colors = [
-        '#655FB5',
-        '#8D88C8',
-        '#ACA9D8',
-        '#CCCBE6',
-        '#EBEBF6',
-        '#FFFFFF'
-      ].reverse()
-      for (const k in temp) {
-        nodes.push({
-          id: k,
-          weight: temp[k],
-          size: 10 + temp[k] - 1 * 2,
-          color: colors[Math.min(colors.length - 1, temp[k])]
-        })
-      }
-
-      return {
-        nodes,
-        links
-      }
+  data() {
+    console.log(this.values)
+    return {
+      jsonData: this.values[0].jsonData || { nodes: [], links: {} }
     }
   },
   methods: {
     drawViz() {
       // Init of everything
       // Init Svg container
+      console.log(this.jsonData)
       d3.select('#' + this.graphId + ' svg').remove()
       this.svg = d3
         .select('#' + this.graphId)

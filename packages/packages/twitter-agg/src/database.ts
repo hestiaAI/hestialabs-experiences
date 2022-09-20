@@ -8,39 +8,13 @@ const config: DatabaseConfig = {
     {
       name: 'TwitterAd',
       columns: [
-        ['id', INTEGER],
         ['tweetId', TEXT],
-        ['advertiserName', TEXT],
-        ['displayLocation', TEXT],
-        ['time', DATE]
-      ],
-      primaryKey: 'id'
-    },
-    {
-      name: 'TwitterEngagement',
-      columns: [
-        ['id', INTEGER],
-        ['tweetId', TEXT],
-        ['advertiserName', TEXT],
-        ['displayLocation', TEXT],
-        ['time', DATE]
-      ]
-    },
-    {
-      name: 'TwitterCriterion',
-      columns: [
-        ['adId', INTEGER],
-        ['targetingType', TEXT],
-        ['targetingValue', TEXT]
-      ],
-      foreignKeys: [
-        {
-          columns: 'adId',
-          reference: {
-            table: 'TwitterAd',
-            columns: 'id'
-          }
-        }
+        ['companyName', TEXT],
+        ['impressionDate', DATE],
+        ['url', TEXT],
+        ['engagedWith', TEXT],
+        ['criteriaCount', INTEGER],
+        ['filePath', TEXT, 'FILEPATH']
       ]
     },
     {
@@ -55,76 +29,40 @@ const config: DatabaseConfig = {
         ['lookalikeAdvertisers', TEXT],
         ['shows', TEXT],
         ['locationHistory', TEXT],
-        ['age', TEXT]
+        ['age', TEXT],
+        ['filePath', TEXT, 'FILEPATH']
       ]
     }
   ],
   getters: [
     {
-      fileId: 'impressions',
-      path: '$.*.ad.adsUserData.adImpressions.impressions[*]',
+      fileId: 'ads',
+      path: '$.result.items[*]',
       table: 'TwitterAd',
       getters: [
         {
           column: 'tweetId',
-          path: '$.promotedTweetInfo.tweetId'
+          path: '$.tweetId'
         },
         {
-          column: 'advertiserName',
-          path: '$.advertiserInfo.advertiserName'
+          column: 'companyName',
+          path: '$.companyName'
         },
         {
-          column: 'displayLocation',
-          path: '$.displayLocation'
+          column: 'impressionDate',
+          path: '$.date_'
         },
         {
-          column: 'time',
-          path: '$.impressionTime'
+          column: 'url',
+          path: '$.url'
         },
         {
-          path: '$.matchedTargetingCriteria[*]',
-          table: 'TwitterCriterion',
-          getters: [
-            {
-              column: 'adId',
-              reference: {
-                table: 'TwitterAd',
-                column: 'id',
-                autoincrementedId: true
-              }
-            },
-            {
-              column: 'targetingType',
-              path: '$.targetingType'
-            },
-            {
-              column: 'targetingValue',
-              path: '$.targetingValue'
-            }
-          ]
-        }
-      ]
-    },
-    {
-      fileId: 'engagements',
-      path: '$.*.ad.adsUserData.adEngagements.engagements[*].impressionAttributes',
-      table: 'TwitterEngagement',
-      getters: [
-        {
-          column: 'tweetId',
-          path: '$.promotedTweetInfo.tweetId'
+          column: 'engagedWith',
+          path: '$.engagedWith'
         },
         {
-          column: 'advertiserName',
-          path: '$.advertiserInfo.advertiserName'
-        },
-        {
-          column: 'displayLocation',
-          path: '$.displayLocation'
-        },
-        {
-          column: 'time',
-          path: '$.impressionTime'
+          column: 'criteriaCount',
+          path: '$.count'
         }
       ]
     },
