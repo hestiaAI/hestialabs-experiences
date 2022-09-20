@@ -22,7 +22,7 @@
         <VRow dense>
           <VCol cols="8">
             <div :id="'hour-chart' + graphId">
-              <strong>{{ $t(k('time-of-day')) }}</strong>
+              <strong>{{ $t('time-of-day') }}</strong>
               <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters ma-0">
                 <span>
