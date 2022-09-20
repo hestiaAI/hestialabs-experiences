@@ -56,11 +56,15 @@ export default {
       search: '',
       selected: [],
       selectedValues: [],
-      headersTable: [
+      items: []
+    }
+  },
+  computed: {
+    headersTable() {
+      return [
         { text: 'Advertiser', value: 'name' },
         { text: 'Targeting criteria', value: 'value' }
-      ].map(({ text, ...rest }) => ({ text: this.$t(this.kViewBlock(text, 'headers')), ...rest })),
-      items: []
+      ].map(({ text, ...rest }) => ({ text: this.$t(this.kViewBlock(text, 'headers')), ...rest }))
     }
   },
   methods: {

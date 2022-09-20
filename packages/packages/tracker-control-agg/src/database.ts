@@ -39,19 +39,19 @@ const config: DatabaseConfig = {
         },
         {
           column: 'tracker',
-          path: '$.Tracker'
+          path: '$.tracker'
         },
         {
           column: 'category',
-          path: '$.Category'
+          path: '$.category'
         },
         {
           column: 'package',
-          path: '$.Package'
+          path: '$.package'
         },
         {
           column: 'app',
-          path: '$.App'
+          path: '$.app'
         }
       ]
     }

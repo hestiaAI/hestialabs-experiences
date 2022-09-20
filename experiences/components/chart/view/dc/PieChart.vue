@@ -76,7 +76,7 @@ export default {
       pieChart
         .width(width)
         .height(this.height)
-        .slicesCap(10)
+        .slicesCap(8)
         .radius(scale / 4)
         .innerRadius(scale / 8)
         .externalLabels(40)

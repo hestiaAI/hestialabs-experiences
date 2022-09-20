@@ -1,0 +1,110 @@
+{
+  "en": {
+    "intro": {
+      "title": "Twitter Agg",
+      "dataPortal": "https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive"
+    },
+    "viewBlocks": {
+      "overview": {
+        "title": "Advertising overview",
+        "text": "Understand how much, who and when you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Number of ads printed",
+              "valueLabel": "ads"
+            },
+            {
+              "title": "Top Advertisers",
+              "valueLabel": "ads"
+            },
+            {
+              "title": "Interactions with ads (clicks, video views)",
+              "valueLabel": "ads"
+            },
+            {
+              "valueLabel": "ads"
+            },
+            {
+              "valueLabel": "ads"
+            }
+          ]
+        }
+      },
+      "targeting": {
+        "title": "Targeting Criteria",
+        "text": "Find which criteria are used to target this group of person.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Top Advertisers",
+              "valueLabel": "#criteria"
+            },
+            {
+              "title": "Targeting Value",
+              "valueLabel": "#criteria"
+            },
+            {
+              "title": "Targeting Type",
+              "valueLabel": "#criteria"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "fr": {
+    "intro": {
+      "title": "Twitter Agg",
+      "dataPortal": "https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive"
+    },
+    "viewBlocks": {
+      "overview": {
+        "title": "Vue d'ensemble des publicités",
+        "text": "Visualisation du nombre et de l'origine des publicités Twitter qui vous visent. Cliquer sur un graphique pour filtrer les résultats.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Nombre d'annonces imprimées",
+              "valueLabel": "pubs"
+            },
+            {
+              "title": "Top Annonceurs",
+              "valueLabel": "pubs"
+            },
+            {
+              "title": "Interactions avec les publicités (clics, visionnage de vidéos)",
+              "valueLabel": "pubs"
+            },
+            {
+              "valueLabel": "pubs"
+            },
+            {
+              "valueLabel": "pubs"
+            }
+          ]
+        }
+      },
+      "targeting": {
+        "title": "Critères de ciblage",
+        "text": "Trouvez quels critères sont utilisés pour cibler ce groupe de personnes.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Top Annonceurs",
+              "valueLabel": "critères"
+            },
+            {
+              "title": "Valeur du critère",
+              "valueLabel": "critères"
+            },
+            {
+              "title": "Type de critère",
+              "valueLabel": "critères"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
