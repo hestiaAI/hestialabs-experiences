@@ -20,7 +20,11 @@ const data = {
 // Mock vuex store
 const localVue = createLocalVue()
 localVue.use(Vuex)
-const store = new Store()
+const store = new Store({
+  state: () => ({
+    kViewBlock: () => ''
+  })
+})
 
 // Mock createObjectURL because it is not implemented in jsdom
 global.URL.createObjectURL = () => { }
