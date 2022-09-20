@@ -24,7 +24,7 @@ export default {
     },
     height: {
       type: Number,
-      default: () => 400
+      default: () => 500
     },
     padding: {
       type: Number,
@@ -45,7 +45,6 @@ export default {
     drawViz() {
       // Init of everything
       // Init Svg container
-      console.log(this.jsonData)
       d3.select('#' + this.graphId + ' svg').remove()
       this.svg = d3
         .select('#' + this.graphId)
@@ -81,7 +80,7 @@ export default {
           })
         )
         .force('center', d3.forceCenter(this.width / 2, this.height / 2))
-        .force('charge', d3.forceManyBody().strength(-1000))
+        .force('charge', d3.forceManyBody().strength(-400))
         .force(
           'collide',
           d3
