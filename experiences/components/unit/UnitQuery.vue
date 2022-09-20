@@ -76,29 +76,25 @@
         <template v-if="clonedResult">
           <VRow>
             <VCol>
-              <!-- https://v2.vuejs.org/v2/guide/components-slots.html#Abbreviated-Syntax-for-Lone-Default-Slots -->
-              <UnitViz v-slot="{ data }" v-bind="{ postprocessor, clonedResult }">
-                <UnitVegaViz
-                  v-if="vizVega"
-                  :spec-file="vizVega"
-                  :data="data"
-                  class="text-center"
-                />
-                <ChartView
-                  v-else-if="vizVue"
-                  v-bind="{
-                    graphName: vizVue,
-                    data,
-                    kViewBlock: k,
-                    ...vizPropsTranslated
-                  }"
-                />
-                <UnitIframe
-                  v-else-if="vizUrl"
-                  :src="vizUrl"
-                  :args="data"
-                />
-              </UnitViz>
+              <UnitVegaViz
+                v-if="vizVega"
+                :spec-file="vizVega"
+                :data="clonedResultPostprocessed"
+                class="text-center"
+              />
+              <ChartView
+                v-else-if="vizVue"
+                v-bind="{
+                  graphName: vizVue,
+                  data: clonedResultPostprocessed,
+                  ...vizPropsTranslated
+                }"
+              />
+              <UnitIframe
+                v-else-if="vizUrl"
+                :src="vizUrl"
+                :args="clonedResultPostprocessed"
+              />
             </VCol>
           </VRow>
           <VRow v-if="showTable">
@@ -195,6 +191,9 @@ export default {
     clonedResult() {
       return cloneDeep(this.result)
     },
+    clonedResultPostprocessed() {
+      return this.postprocessor(this.clonedResult)
+    },
     fileGlobs() {
       const fileIds = this.files ?? []
       return fileIds.map(id => this.fileManager.idToGlob[id])
@@ -226,9 +225,6 @@ export default {
       }
     }
   },
-  created() {
-    this.$store.commit('setKViewBlock', this.k)
-  },
   methods: {
     onUnitResultsUpdate({ result, error }) {
       if (error) {
@@ -243,10 +239,8 @@ export default {
       this.result = result
     },
     // Convert local translation key to global vue-i18n
-    k(key, prefix = '', postfix = '') {
-      const pre = prefix ? `${prefix}.` : ''
-      const post = postfix ? `.${postfix}` : ''
-      return `experiences.${this.slug}.viewBlocks.${this.id}.${pre}${key}${post}`
+    k(key) {
+      return `experiences.${this.slug}.viewBlocks.${this.id}.${key}`
     }
   }
 }
