@@ -8,64 +8,6 @@
       "app-info": "L'application qui accède à la ressource.",
       "resource-info": "La ressource consultée."
     },
-    "overview-netflix": {
-      "views": "contenu(s) consulté(s)",
-      "watch-time": "Durée de visionnage (en heures par mois)",
-      "day": "Jour de la semaine",
-      "most-watched": "Titres les plus regardés",
-      "country": "Pays",
-      "device": "Dispositif utilisé"
-    },
-    "overview-twitter": {
-      "ads-time": "Nombre d'annonces dans le temps",
-      "top-adv": "Top 10 annonceurs",
-      "interactions": "Interactions avec les pubs (clics, visionnage de vidéos)",
-      "targeting-type": "Type de ciblage",
-      "targeting-criteria": "Critères de ciblage",
-      "ads": "pubs",
-      "headers": {
-        "Tweet ID": "Tweet ID",
-        "Company": "Société",
-        "Date": "Date",
-        "Promoted Tweet": "Tweet promu",
-        "Engagement": "Engagement",
-        "Targeting Criteria": "Critères de ciblage"
-      }
-    },
-    "overview-uber": {
-      "select-currency": "Sélectionner les données selon la devise",
-      "Cumulative expenses": "Dépenses cumulées",
-      "Total price": "Prix total",
-      "Service used": "Service utilisé",
-      "Day of week": "Jour de la semaine",
-      "Begin trip address": "Adresse de départ du voyage",
-      "General information": "Informations générales",
-      "Orders": "Commandes",
-      "Speed": "Vitesse",
-      "trips": "voyages",
-      "mph": "mi/h",
-      "Total": "Total",
-      "Average": "Moyenne",
-      "Price": "Prix",
-      "Distance": "Distance",
-      "Duration": "Durée",
-      "Waiting time": "Temps d'attente",
-      "min": "min",
-      "miles": "miles",
-      "Reset all filters": "Réinitialiser tous les filtres",
-      "headers": {
-        "City": "Ville",
-        "Service": "Service",
-        "Status": "Statut",
-        "Request Time": "Heure de demande",
-        "From": "De",
-        "To": "À",
-        "Waiting time (min)": "Temps d'attente (min)",
-        "Distance (miles)": "Distance (miles)",
-        "Duration (min)": "Durée (min)",
-        "Price": "Prix"
-      }
-    },
     "sankey": {
       "hoverMessage": "survolez les liens ou les nœuds pour obtenir plus d'informations sur les plus fréquents d'entre eux"
     },

@@ -8,64 +8,6 @@
       "app-info": "The app accessing the resource.",
       "resource-info": "The accessed resource."
     },
-    "overview-netflix": {
-      "views": "views",
-      "watch-time": "Watch time (in hours per month)",
-      "day": "Day",
-      "most-watched": "Most watched titles",
-      "country": "Country",
-      "device": "Device used"
-    },
-    "overview-twitter": {
-      "ads-time": "Number of ads over time",
-      "top-adv": "Top 10 advertisers",
-      "interactions": "Interactions with ads (clicks, video views)",
-      "targeting-type": "Type of targeting",
-      "targeting-criteria": "Targeting criteria",
-      "ads": "ads",
-      "headers": {
-        "Tweet ID": "Tweet ID",
-        "Company": "Company",
-        "Date": "Date",
-        "Promoted Tweet": "Promoted Tweet",
-        "Engagement": "Engagement",
-        "Targeting Criteria": "Targeting Criteria"
-      }
-    },
-    "overview-uber": {
-      "select-currency": "Select data depending on the currency",
-      "Cumulative expenses": "Cumulative expenses",
-      "Total price": "Total price",
-      "Service used": "Service used",
-      "Day of week": "Day of week",
-      "Begin trip address": "Begin trip address",
-      "General information": "General information",
-      "Orders": "Orders",
-      "Speed": "Speed",
-      "trips": "trips",
-      "mph": "mph",
-      "Total": "Total",
-      "Average": "Average",
-      "Price": "Price",
-      "Distance": "Distance",
-      "Duration": "Duration",
-      "Waiting time": "Waiting time",
-      "min": "min",
-      "miles": "miles",
-      "Reset all filters": "Reset all filters",
-      "headers": {
-        "City": "City",
-        "Service": "Service",
-        "Status": "Status",
-        "Request Time": "Request Time",
-        "From": "From",
-        "To": "To",
-        "Waiting time (min)": "Waiting time (min)",
-        "Distance (miles)": "Distance (miles)",
-        "Duration (min)": "Duration (min)",
-        "Price": "Price"
-      }
-    },
     "sankey": {
       "hoverMessage": "hover on the links or nodes to get more information about the most frequent ones"
     },

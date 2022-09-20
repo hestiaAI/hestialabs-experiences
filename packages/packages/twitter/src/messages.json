@@ -7,7 +7,25 @@
     "viewBlocks": {
       "overview": {
         "title": "Advertising overview",
-        "text": "Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results."
+        "text": "Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results.",
+        "vizProps": {
+          "messages": {
+            "ads-time": "Number of ads over time",
+            "top-adv": "Top 10 advertisers",
+            "interactions": "Interactions with ads (clicks, video views)",
+            "targeting-type": "Type of targeting",
+            "targeting-criteria": "Targeting criteria",
+            "ads": "ads"
+          }
+        },
+        "headers": {
+          "Tweet ID": "Tweet ID",
+          "Company": "Company",
+          "Date": "Date",
+          "Promoted Tweet": "Promoted Tweet",
+          "Engagement": "Engagement",
+          "Targeting Criteria": "Targeting Criteria"
+        }
       },
       "ads-per-advertiser": {
         "title": "Top advertisers",
@@ -121,7 +139,25 @@
     "viewBlocks": {
       "overview": {
         "title": "Vue d'ensemble des publicités",
-        "text": "Visualisation du nombre, de l'origine et des critères de ciblage des publicités Twitter qui vous visent. Cliquer sur un graphique pour filtrer les résultats."
+        "text": "Visualisation du nombre, de l'origine et des critères de ciblage des publicités Twitter qui vous visent. Cliquer sur un graphique pour filtrer les résultats.",
+        "vizProps": {
+          "messages": {
+            "ads-time": "Nombre d'annonces dans le temps",
+            "top-adv": "Top 10 annonceurs",
+            "interactions": "Interactions avec les pubs (clics, visionnage de vidéos)",
+            "targeting-type": "Type de ciblage",
+            "targeting-criteria": "Critères de ciblage",
+            "ads": "pubs"
+          }
+        },
+        "headers": {
+          "Tweet ID": "Tweet ID",
+          "Company": "Société",
+          "Date": "Date",
+          "Promoted Tweet": "Tweet promu",
+          "Engagement": "Engagement",
+          "Targeting Criteria": "Critères de ciblage"
+        }
       },
       "ads-per-advertiser": {
         "title": "Principaux publicitaires",

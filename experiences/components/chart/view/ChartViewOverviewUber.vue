@@ -2,7 +2,7 @@
   <VContainer>
     <VRow class="justify-center">
       <p>
-        <span v-t="k('select-currency')" />
+        <span v-text="messages['select-currency']" />
         <VSelect
           v-model="currentCurrency"
           :items="currencies"
@@ -15,7 +15,7 @@
         <VRow>
           <VCol cols="12" md="12">
             <div id="price-chart">
-              <span v-t="k('Cumulative expenses')" class="font-weight-bold" />
+              <span class="font-weight-bold" v-text="messages['Cumulative expenses']" />
               <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
@@ -34,7 +34,7 @@
         <VRow>
           <VCol cols="12" md="4">
             <div id="service-chart">
-              <span v-t="k('Service used')" class="font-weight-bold" />
+              <span class="font-weight-bold" v-text="messages['Service used']" />
               <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
@@ -46,7 +46,7 @@
           </VCol>
           <VCol cols="12" md="4">
             <div id="week-chart">
-              <span v-t="k('Day of week')" class="font-weight-bold" />
+              <span class="font-weight-bold" v-text="messages['Day of week']" />
               <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
@@ -58,7 +58,7 @@
           </VCol>
           <VCol cols="12" md="4">
             <div id="address-chart">
-              <span v-t="k('Begin trip address')" class="font-weight-bold" />
+              <span class="font-weight-bold" v-text="messages['Begin trip address']" />
               <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
@@ -72,28 +72,32 @@
       </VCol>
       <VCol cols="12" md="4">
         <VCard class="general-info">
-          <VCardTitle v-t="k('General information')" />
+          <VCardTitle>{{ messages['General information'] }}</VCardTitle>
           <VCardSubtitle />
           <VCardText>
             <VContainer>
               <VRow dense>
                 <VCol cols="12" md="6">
                   <VCard color="#385F73" dark>
-                    <VCardTitle v-t="k('Orders')" class="justify-center text-caption" />
+                    <VCardTitle class="justify-center text-caption">
+                      {{ messages['Orders'] }}
+                    </VCardTitle>
                     <VCardSubtitle />
                     <VCardText class="text-h4 text-center">
                       <div id="number-trip" />
-                      <span v-t="k('trips')" class="text-subtitle-1" />
+                      <span class="text-subtitle-1" v-text="messages['trips']" />
                     </VCardText>
                   </VCard>
                 </VCol>
                 <VCol cols="12" md="6">
                   <VCard color="#385F73" dark>
-                    <VCardTitle v-t="k('Speed')" class="justify-center text-caption" />
+                    <VCardTitle class="justify-center text-caption">
+                      {{ messages['Speed'] }}
+                    </VCardTitle>
                     <VCardSubtitle />
                     <VCardText class="text-h4 text-center">
                       <div id="number-speed-avg" class="font-weight-bold" />
-                      <span v-t="k('mph')" class="text-subtitle-1" />
+                      <span class="text-subtitle-1" v-text="messages['mph']" />
                     </VCardText>
                   </VCard>
                 </VCol>
@@ -104,13 +108,13 @@
                 <thead>
                   <tr>
                     <th class="text-left" />
-                    <th v-t="k('Total')" class="text-left" />
-                    <th v-t="k('Average')" class="text-left" />
+                    <th class="text-left" v-text="messages['Total']" />
+                    <th class="text-left" v-text="messages['Average']" />
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td v-t="k('Price')" class="font-weight-bold" />
+                    <td class="font-weight-bold" v-text="messages['Price']" />
                     <td class="text-h6" v-text="priceTotalNumber" />
                     <td class="text-h6" v-text="priceAvgNumber" />
                   </tr>
@@ -118,9 +122,9 @@
                     v-for="{ heading, ids, metric } in generalInformationRows"
                     :key="heading"
                   >
-                    <td v-t="k(heading)" />
+                    <td v-text="messages[heading]" />
                     <td v-for="id in ids" :key="id">
-                      <span :id="id" class="text-h6" /> <span v-t="k(metric)" />
+                      <span :id="id" class="text-h6" /> <span v-text="messages[metric]" />
                     </td>
                   </tr>
                 </tbody>
@@ -129,7 +133,7 @@
           </VCardText>
           <VCardActions>
             <BaseButton elevation="2" block @click="resetAll()">
-              {{ $t(k('Reset all filters')) }}
+              {{ messages['Reset all filters'] }}
             </BaseButton>
           </VCardActions>
         </VCard>
@@ -137,7 +141,7 @@
     </ChartViewVRowWebShare>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+        <UnitFilterableTable v-bind="{ headers: header, items: results, kViewBlock }" />
       </VCol>
     </VRow>
   </VContainer>
