@@ -20,6 +20,7 @@
     "tracker-control",
     "tracker-control-agg",
     "twitter",
+    "twitter-agg",
     "uber",
     "uber-driver",
     "youtube"
@@ -38,7 +39,9 @@
     "health-course",
     "matching-algo-course",
     "policy-making-course",
-    "demo-computation"
+    "demo-computation",
+    "swiss-mp-participant",
+    "swiss-mp-aggregator"
   ],
   "homePageBubbles": [
     "demo-participant",
