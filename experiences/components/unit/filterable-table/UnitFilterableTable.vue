@@ -57,6 +57,7 @@ import * as Papa from 'papaparse'
 import { processError } from '@/utils/utils'
 import { formatObject, formatArray } from '@/utils/json'
 import { TypeChecker } from '@/utils/type-check'
+import kViewBlockMixin from '@/mixins/k-view-block'
 
 const height5 = 290
 const height10 = 530
@@ -64,6 +65,7 @@ const defaultItemsPerPage10 = window.innerHeight - 250 > 530
 
 export default {
   name: 'UnitFilterableTable',
+  mixins: [kViewBlockMixin],
   props: {
     headers: {
       type: Array,
@@ -106,12 +108,14 @@ export default {
       const { headers, items } = typeChecker.detectTypes(tempHeaders, this.items)
       // Add column style and options
       return {
-        headers: headers.map(({ text, ...rest }) => ({
-          ...rest,
-          text: this.$tev(this.$store.state.kViewBlock(text, 'headers'), text),
-          align: 'left',
-          sortable: true
-        })),
+        headers: headers.map(({ text, ...rest }) => {
+          return {
+            ...rest,
+            text: this.$tev(this.kViewBlock(text, 'headers'), text),
+            align: 'left',
+            sortable: true
+          }
+        }),
         items
       }
     }

@@ -90,7 +90,7 @@ export default {
         .dimension(topDimension)
         .ordinalColors(this.colorPalette)
         .label(d => d.key)
-        .data(group => group.top(10))
+        .data(group => group.top(this.topK))
         .title(d => `${d.value} ${this.valueLabel}`)
         .elasticX(true)
         .xAxis()

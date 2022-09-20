@@ -116,12 +116,12 @@ describe('with complete samples', () => {
         {
           title: 'SALE',
           action: 'Closed ad',
-          timestamp: 1629695476
+          timestamp: '2021-08-23 05:11:16'
         },
         {
           title: 'How to get 10000$ with this one simple trick',
           action: 'Clicked ad',
-          timestamp: 1629440065
+          timestamp: '2021-08-20 06:14:25'
         }
       ]
     }
