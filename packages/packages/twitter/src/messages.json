@@ -33,7 +33,11 @@
         },
         "headers": {
           "Advertiser": "Advertiser",
-          "Targeting criteria": "Targeting criteria"
+          "Targeting criteria": "Targeting criteria",
+          "advertiserName": "Advertiser Name",
+          "targetingType": "Targeting Type",
+          "targetingValue": "Targeting Value",
+          "count_": "Count"
         }
       },
       "personalization": {
@@ -143,7 +147,11 @@
         },
         "headers": {
           "Advertiser": "Publicitaire",
-          "Targeting criteria": "Critères de ciblage"
+          "Targeting criteria": "Critères de ciblage",
+          "advertiserName": "Nom de l'publicitaire",
+          "targetingType": "Type de ciblage",
+          "targetingValue": "Valeur de ciblage",
+          "count_": "Comte"
         }
       },
       "personalization": {
