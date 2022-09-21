@@ -207,7 +207,7 @@ export default {
         const { filteredItems } = this.$refs.tableRef.$children[0]
         // emit the current filtered items
         this.$emit('current-items', filteredItems)
-
+        /*
         this.$store.commit('setResult', {
           experience: this.id,
           result: {
@@ -215,6 +215,7 @@ export default {
             items: filteredItems
           }
         })
+        */
       })
     }
   }
