@@ -5,6 +5,10 @@ import kViewBlockMixin from '@/mixins/k-view-block'
 
 const mixin = {
   props: {
+    id: {
+      type: String,
+      required: true
+    },
     values: {
       type: Array,
       default: () => []
