@@ -123,7 +123,7 @@
                 </VIcon>
               </VBtn>
             </p>
-            <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+            <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
           </VTabItem>
         </VTabsItems>
       </VCol>

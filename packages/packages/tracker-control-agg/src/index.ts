@@ -16,6 +16,7 @@ const options: ExperienceOptions = {
   files: {
     'tracker-control': '**/block00.json'
   },
+  hideFileExplorer: false,
   icon,
   messages,
   subtitle: 'Tracking data',

@@ -100,7 +100,7 @@
     <VRow>
       <div :id="'dc-data-count' + graphId" class="dc-data-count" />
     </VRow>
-    <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+    <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
   </VContainer>
 </template>
 

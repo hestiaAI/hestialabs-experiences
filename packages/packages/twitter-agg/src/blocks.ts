@@ -50,7 +50,7 @@ const blocks: ViewBlocks = [
   {
     id: 'targeting',
     sql: sqlTargeting,
-    files: ['personalization'],
+    files: ['targeting'],
     visualization: 'ChartViewDashboard.vue',
     vizProps: {
       graphs: [

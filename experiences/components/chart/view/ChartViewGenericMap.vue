@@ -89,6 +89,7 @@
       <VRow>
         <VCol cols="12">
           <UnitFilterableTable
+            :id="id"
             v-bind="{ headers, items: results }"
             @current-items="onTableFilter"
           />

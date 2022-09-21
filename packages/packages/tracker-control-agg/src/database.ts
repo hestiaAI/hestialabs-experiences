@@ -35,7 +35,7 @@ const config: DatabaseConfig = {
         },
         {
           column: 'time',
-          path: '$.date'
+          path: '$.time'
         },
         {
           column: 'tracker',
