@@ -24,7 +24,7 @@ import { vueMeta } from '@/utils/utils'
 const extractBubbleParam = (path = '') => {
   // 1. /bubble/:bubble
   // 2. /bubble/:bubble/experience/:experience
-  const match = path.match(/^\/bubble\/([^/]+)(?:\/|$)/)
+  const match = path.match(/\/bubble\/([^/]+)(?:\/|$)/)
   if (match && match.length === 2) {
     return match[1]
   }
