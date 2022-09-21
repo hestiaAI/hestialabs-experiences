@@ -72,7 +72,7 @@
     "intro": {
       "title": "Google Takeout",
       "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download",
-      "dataPortalMessage": "<strong>Important:</strong> Pour que l'expérience fonctionne, veuillez cliquer sur <strong>\"désélectionner tout\"</strong>puis sélectionnez ce qui suit: <strong>\"Historique des positions\"</strong><div>Une fois que vous avez terminé, vous pouvez cliquer sur le bouton bleu \"Étape suivante\" en bas de la page. Cela devrait lancer votre téléchargement."
+      "dataPortalMessage": "<strong>Important:</strong> Pour que l'expérience fonctionne, veuillez cliquer sur <strong>\"Tout désélectionner\"</strong>puis sélectionnez ce qui suit: <strong>\"Historique des positions\"</strong><div>Une fois que vous avez terminé, vous pouvez cliquer sur le bouton bleu \"Étape suivante\" en bas de la page. Cela devrait lancer votre téléchargement."
     },
     "viewBlocks": {
       "PlaceVisited": {
