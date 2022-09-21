@@ -81,7 +81,7 @@
         <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
       </template>
     </VRow>
-    <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+    <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
   </VContainer>
 </template>
 

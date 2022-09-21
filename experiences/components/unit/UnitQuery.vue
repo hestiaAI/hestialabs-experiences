@@ -85,6 +85,7 @@
               <ChartView
                 v-else-if="vizVue"
                 v-bind="{
+                  id,
                   graphName: vizVue,
                   data: clonedResultPostprocessed,
                   ...vizPropsTranslated
@@ -99,7 +100,7 @@
           </VRow>
           <VRow v-if="showTable">
             <VCol>
-              <UnitFilterableTable v-bind="clonedResult" />
+              <UnitFilterableTable v-bind="clonedResult" :id="id" />
             </VCol>
           </VRow>
         </template>
