@@ -14,6 +14,7 @@ const options: ExperienceOptions = {
   },
   subtitle: 'Tracking data',
   title: 'AppleTracker Agg',
+  hideFileExplorer: false,
   viewBlocks
 }
 
