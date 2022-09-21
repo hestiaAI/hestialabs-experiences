@@ -21,7 +21,7 @@
     "build:static": "nuxt generate",
     "build:server": "nuxt build",
     "lint": "npx eslint . --ext .js,.vue",
-    "lint:fix": "npx eslint . --ext .js,.vue --fix",
+    "lint:fix": "npm run lint -- --fix",
     "pre-commit": "npx lint-staged",
     "_prepare": "node prepare.js",
     "prettier": "prettier"
