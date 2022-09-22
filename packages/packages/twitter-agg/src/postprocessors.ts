@@ -25,6 +25,14 @@ export const toGraph: PostprocessorFunction = result => {
       })
     }
   })
+
+  // Create items array
+  const topInterests = Object.keys(allInterests)
+    .map(key => {
+      return { key, count: allInterests[key] }
+    })
+    .sort((first, second) => second.count - first.count)
+  console.log(topInterests)
   // console.log(allInterests)
   /*
   const categoriesToKeep = [

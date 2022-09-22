@@ -1,9 +1,9 @@
 import type { ViewBlocks } from '@/types'
 
 import sqlOverview from './sql/overview.sql'
-// import sqlPersonalization from './sql/personalization.sql'
+import sqlPersonalization from './sql/personalization.sql'
 import sqlTargeting from './sql/targeting.sql'
-// import { toGraph } from './postprocessors'
+import { toGraph } from './postprocessors'
 const blocks: ViewBlocks = [
   {
     id: 'overview',
@@ -83,8 +83,7 @@ const blocks: ViewBlocks = [
     showTable: false,
     title: 'Targeting Criteria',
     text: 'Find which criteria are used to target this group of person.'
-  }
-  /*,
+  },
   {
     id: 'personalization',
     sql: sqlPersonalization,
@@ -95,7 +94,6 @@ const blocks: ViewBlocks = [
     title: 'Inferred Data',
     text: 'Find out what information Twitter has deduced about you'
   }
-  */
 ]
 
 export default blocks
