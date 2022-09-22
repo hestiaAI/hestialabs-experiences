@@ -60,7 +60,9 @@
     "policy-making-course",
     "demo-computation",
     "swiss-mp-participant",
-    "swiss-mp-aggregator"
+    "swiss-mp-aggregator",
+    "th-participant",
+    "th-aggregator"
   ],
   "homePageBubbles": [
     "demo-participant",
