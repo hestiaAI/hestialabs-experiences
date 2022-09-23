@@ -20,19 +20,33 @@
       },
       "ad-interactions": {
         "title": "Ad interactions",
-        "text": "See the list of ads with which you have interacted."
+        "text": "See the list of ads with which you have interacted.",
+        "headers": {
+          "title": "Title",
+          "action": "Action",
+          "timestamp": "Time"
+        }
       },
       "your-topics": {
         "title": "Inferred interests",
-        "text": "Get a list of topics that Facebook thinks you're interested in."
+        "text": "Get a list of topics that Facebook thinks you're interested in.",
+        "headers": {
+          "name": "Name"
+        }
       },
       "advertisers-contact-list": {
         "title": "Contact list",
-        "text": "Get a list of advertisers that have uploaded a contact list containing you."
+        "text": "Get a list of advertisers that have uploaded a contact list containing you.",
+        "headers": {
+          "name": "Name"
+        }
       },
       "custom-audiences": {
         "title": "Advertisers using your data",
-        "text": "See all advertisers that use Facebook to get information about you"
+        "text": "See all advertisers that use Facebook to get information about you",
+        "headers": {
+          "advertiserName": "Advertiser Name"
+        }
       }
     }
   },
@@ -57,19 +71,33 @@
       },
       "ad-interactions": {
         "title": "Interactions avec des publicités",
-        "text": "Liste des publicités avec lesquels vous avez interagi."
+        "text": "Liste des publicités avec lesquels vous avez interagi.",
+        "headers": {
+          "title": "Titre",
+          "action": "Action",
+          "timestamp": "Date"
+        }
       },
       "your-topics": {
         "title": "Intérêts supposés",
-        "text": "Liste de sujets dont Facebook pense qu'ils vous intéressent."
+        "text": "Liste de sujets dont Facebook pense qu'ils vous intéressent.",
+        "headers": {
+          "name": "Nom"
+        }
       },
       "advertisers-contact-list": {
         "title": "Liste de contacts",
-        "text": "Liste de publicitaires qui ont partagé une liste de contacts qui vous mentionne."
+        "text": "Liste de publicitaires qui ont partagé une liste de contacts qui vous mentionne.",
+        "headers": {
+          "name": "Nom"
+        }
       },
       "custom-audiences": {
         "title": "Publicitaire utilisant vos données",
-        "text": "Liste des publicitaires qui utilisent Facebook pour obtenir des informations qui vous concernent."
+        "text": "Liste des publicitaires qui utilisent Facebook pour obtenir des informations qui vous concernent.",
+        "headers": {
+          "advertiserName": "Nom de l'publicitaire"
+        }
       }
     }
   }

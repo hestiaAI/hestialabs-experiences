@@ -43,7 +43,7 @@
           color="primary"
           @click="$refs.filter.reset()"
         >
-          Clear
+          {{ $t('Clear') }}
         </VBtn>
       </div>
     </div>

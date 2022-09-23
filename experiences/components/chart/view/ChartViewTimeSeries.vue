@@ -42,7 +42,7 @@
             </template>
             <VCard>
               <VCardTitle>
-                <span class="text-h5">Settings/Filters</span>
+                <span class="text-h5">{{ $t('Settings') }}/{{ $t('Filters') }}</span>
               </VCardTitle>
               <VCardText>
                 <VContainer>
@@ -77,13 +77,10 @@
               </VCardText>
               <VCardActions>
                 <VSpacer />
-                <VBtn color="red darken-1" text @click="resetFilters()">
-                  Reset
-                </VBtn>
-                <VBtn color="blue darken-1" text @click="settingDialog = false">
-                  Close
-                </VBtn>
+                <VBtn v-t="'Reset'" color="red darken-1" text @click="resetFilters()" />
+                <VBtn v-t="'Close'" color="blue darken-1" text @click="settingDialog = false" />
                 <VBtn
+                  v-t="'Save'"
                   color="blue darken-1"
                   text
                   @click="
@@ -91,9 +88,7 @@
                     applyFilters()
                     draw()
                   "
-                >
-                  Save
-                </VBtn>
+                />
               </VCardActions>
             </VCard>
           </VDialog>
@@ -130,15 +125,15 @@ export default {
     // if not set will just count the rows
     valueAccessor: {
       type: String,
-      default: () => null
+      default: null
     },
     valueFormat: {
       type: String,
-      default: () => '~s'
+      default: '~s'
     },
     yLabel: {
       type: String,
-      default: () => 'Count'
+      default: 'Count'
     },
     filters: {
       type: Array,
@@ -146,39 +141,39 @@ export default {
     },
     lineWidth: {
       type: Number,
-      default: () => 2
+      default: 2
     },
     dotWidth: {
       type: Number,
-      default: () => 2
+      default: 2
     },
     dotRadius: {
       type: Number,
-      default: () => 4
+      default: 4
     },
     padding: {
       type: Number,
-      default: () => 5
+      default: 5
     },
     margin: {
       type: Number,
-      default: () => 5
+      default: 5
     },
     adj: {
       type: Number,
-      default: () => 70
+      default: 70
     },
     title: {
       type: String,
-      default: () => 'Title of the Graph'
+      default: 'Title of the Graph'
     },
     legendOffset: {
       type: Number,
-      default: () => 0
+      default: 0
     },
     legendPadding: {
       type: Number,
-      default: () => 10
+      default: 10
     },
     dateFormat: {
       type: String,
@@ -310,7 +305,7 @@ export default {
       // group by series ids and sort values
       this.slices = ids.map((a) => {
         return {
-          id: a,
+          id: this.messages.legend[a], // localize legend
           values: this.values
             .filter(v => a === v[this.seriesAccessor.value])
             .map((d) => {
@@ -333,24 +328,18 @@ export default {
       this.draw()
     },
     draw() {
+      const { graphId, adj } = this
       const width = 800
       const height = 300
       /* create svg element */
-      d3.select('#' + this.graphId + ' svg').remove()
+      d3.select(`#${graphId} svg`).remove()
       const svg = d3
-        .select('#' + this.graphId)
+        .select(`#${graphId}`)
         .append('svg')
         .attr('preserveAspectRatio', 'xMinYMin meet')
         .attr(
           'viewBox',
-          '-' +
-            this.adj +
-            ' -' +
-            this.adj +
-            ' ' +
-            (width + this.adj * 2) +
-            ' ' +
-            (height + this.adj * 2)
+          `-${adj} -${adj} ${width + adj * 2} ${height + adj * 2}`
         )
         .style('padding', this.padding)
         .style('margin', this.margin)
@@ -381,8 +370,14 @@ export default {
       svg
         .append('g')
         .attr('class', 'xAxis')
-        .attr('transform', 'translate(0,' + height + ')')
+        .attr('transform', `translate(0,${height})`)
         .call(xAxis)
+        .selectAll('text')
+        .attr('y', 0)
+        .attr('x', 9)
+        .attr('dy', '2em')
+        .attr('transform', 'rotate(-30)')
+        .style('text-anchor', 'end')
       svg
         .append('g')
         .attr('class', 'yAxis')
@@ -394,7 +389,7 @@ export default {
         .style('text-anchor', 'end')
         .text(this.yLabel)
       /* GridLayout */
-      d3.selectAll('#' + this.graphId + ' g.yAxis g.tick')
+      d3.selectAll('#' + graphId + ' g.yAxis g.tick')
         .append('line')
         .attr('class', 'gridline')
         .attr('x1', 0)
@@ -414,7 +409,10 @@ export default {
       const keys = this.slices.map(d => d.id)
       const color = d3.scaleOrdinal().domain(keys).range(d3.schemeDark2)
       /* Legend */
-      const legend = svg.selectAll('.legend').data(keys).enter().append('g')
+      const legend = svg.selectAll('.legend')
+        .data(keys)
+        .enter()
+        .append('g')
       // add circles
       legend
         .append('circle')
@@ -442,12 +440,12 @@ export default {
         )
       })
       /* Tooltip */
-      d3.select('#' + this.graphId + '.tooltip').remove()
+      d3.select('#' + graphId + '.tooltip').remove()
       const tooltip = d3
         .select('body')
         .append('div')
         .attr('class', 'tooltip')
-        .attr('id', this.graphId)
+        .attr('id', graphId)
         .style('opacity', 0)
       const that = this
       const f = d3.format(this.valueFormat)

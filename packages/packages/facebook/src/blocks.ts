@@ -20,8 +20,6 @@ const blocks: ViewBlocks = [
       yAccessor: 'advertiserName',
       xAccessor: 'count_',
       dateAccessor: 'date_',
-      xLabel: 'ads',
-      countLabel: 'ads',
       dateFormat: '%s'
     },
     title: 'Off Facebook activity ranking',

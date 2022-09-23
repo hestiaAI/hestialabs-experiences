@@ -1,7 +1,7 @@
 <template>
   <div>
     <DataValidator
-      :data="{ items: items, headers: headers }"
+      :data="{ items, headers }"
       allow-missing-columns
     >
       <BaseAlert v-if="error" type="error">
@@ -29,9 +29,7 @@
           />
         </template>
         <template #item.url="{ value }">
-          <ExternalLink :href="value">
-            Link
-          </ExternalLink>
+          <ExternalLink v-t="'Link'" :href="value" />
         </template>
         <template
           v-for="header in data.headers.filter(h => h.value !== 'url')"
@@ -58,7 +56,8 @@
 import * as Papa from 'papaparse'
 import { processError } from '@/utils/utils'
 import { formatObject, formatArray } from '@/utils/json'
-import { detectTypes } from '@/utils/type-check'
+import { TypeChecker } from '@/utils/type-check'
+import kViewBlockMixin from '@/mixins/k-view-block'
 
 const height5 = 290
 const height10 = 530
@@ -66,6 +65,7 @@ const defaultItemsPerPage10 = window.innerHeight - 250 > 530
 
 export default {
   name: 'UnitFilterableTable',
+  mixins: [kViewBlockMixin],
   props: {
     headers: {
       type: Array,
@@ -74,6 +74,10 @@ export default {
     items: {
       type: Array,
       default: () => []
+    },
+    id: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -104,15 +108,18 @@ export default {
         }))
       }
       // Type detection
-      const { headers, items } = detectTypes(tempHeaders, this.items)
-
+      const typeChecker = new TypeChecker(this)
+      const { headers, items } = typeChecker.detectTypes(tempHeaders, this.items)
       // Add column style and options
       return {
-        headers: headers.map(h => ({
-          ...h,
-          align: 'left',
-          sortable: true
-        })),
+        headers: headers.map(({ text, ...rest }) => {
+          return {
+            ...rest,
+            text: this.$tev(this.kViewBlock(text, 'headers'), text),
+            align: 'left',
+            sortable: true
+          }
+        }),
         items
       }
     }
@@ -151,7 +158,8 @@ export default {
       const { header, value } = itemProps
       // eslint-disable-next-line no-prototype-builtins
       if (header.hasOwnProperty('formatter')) {
-        return header.formatter(value)
+        // call the formatter function with 'this' given as the Vue instance
+        return header.formatter.call(this, value)
       }
       if (Array.isArray(value)) {
         return formatArray(value)
@@ -197,17 +205,17 @@ export default {
       this.$nextTick(() => {
         // workaround to get the filtered items https://github.com/vuetifyjs/vuetify/issues/8731#issuecomment-617399086
         const { filteredItems } = this.$refs.tableRef.$children[0]
-        const { hash } = this.$route
         // emit the current filtered items
         this.$emit('current-items', filteredItems)
-
+        /*
         this.$store.commit('setResult', {
-          experience: hash.slice(1),
+          experience: this.id,
           result: {
             headers: this.headers,
             items: filteredItems
           }
         })
+        */
       })
     }
   }

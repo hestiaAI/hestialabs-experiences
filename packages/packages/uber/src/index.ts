@@ -10,7 +10,7 @@ const options: ExperienceOptions = {
   files: {
     trips: '**/Rider/trips_data.csv'
   },
-  icon: icon,
+  icon,
   messages,
   subtitle: 'Customer data',
   title: 'Uber',

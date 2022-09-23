@@ -20,7 +20,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -41,7 +41,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -62,7 +62,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -85,7 +85,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -106,7 +106,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -143,7 +143,7 @@
     </VRow>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+        <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
       </VCol>
     </VRow>
   </VContainer>

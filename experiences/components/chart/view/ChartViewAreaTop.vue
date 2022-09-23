@@ -6,7 +6,7 @@
           <VCol cols="12" md="8">
             <div :id="`area-chart-${graphId}`">
               <strong>{{ titleArea }} {{ $t('per') }} {{ $t(timeUnit.accessor) }}</strong>
-              <a class="reset" style="display: none">{{ $t('reset') }}</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
                   {{ $t('Current filter') }}
@@ -15,12 +15,7 @@
               </p>
             </div>
             <div :id="`range-chart-${graphId}`" class="range-chart">
-              <p
-                class="muted pull-right text-subtitle-2"
-                style="margin-right: 15px; margin-bottom: 5px"
-              >
-                {{ $t('select-time-range') }}
-              </p>
+              <ChartViewTextSelectTimeRange />
             </div>
           </VCol>
           <VCol cols="12" md="4">
@@ -35,7 +30,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -43,11 +38,32 @@
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
+      <template v-if="filterCount === totalCount">
+        <i18n tag="div" :path="kViewBlock('selected-all')">
+          <template #totalCount>
+            <span class="font-weight-bold" v-text="totalCount" />
+          </template>
+          <template #rowLabel>
+            {{ rowLabel }}
+          </template>
+        </i18n>
+        <span v-t="'click-graph'" />
+      </template>
+      <template v-else>
+        <i18n tag="div" :path="kViewBlock('selected-some')">
+          <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
+            <span :key="k" class="font-weight-bold" v-text="v" />
+          </template>
+          <template #rowLabel>
+            {{ rowLabel }}
+          </template>
+        </i18n>
+        <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
+      </template>
     </VRow>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+        <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -78,6 +94,10 @@ export default {
     rowLabel: {
       type: String,
       default: 'records'
+    },
+    yAxisLabel: {
+      type: String,
+      default: 'Total records'
     },
     dateAccessor: {
       type: Object,
@@ -112,7 +132,9 @@ export default {
         accessor: 'day',
         xUnits: d3.timeDays,
         round: d3.timeDay.round
-      }
+      },
+      totalCount: null,
+      filterCount: null
     }
   },
   methods: {
@@ -134,9 +156,10 @@ export default {
       const formatDay = d3.timeFormat('%B %d, %Y')
       this.results = this.values.map((d) => {
         const date = new Date(d[this.dateAccessor.value])
+        const type = decodeURIComponent(escape(d[this.seriesAccessor.value]))
         return {
           name: decodeURIComponent(escape(d[this.topAccessor.value])),
-          type: decodeURIComponent(escape(d[this.seriesAccessor.value])),
+          type: this.messages?.type[type] || type,
           date,
           dateStr: datetimeFormatter(date),
           month: d3.timeMonth(date), // pre-calculate months for better performance
@@ -150,7 +173,6 @@ export default {
       const areaChart = new dc.LineChart(`#area-chart-${this.graphId}`)
       const rangeChart = new dc.BarChart(`#range-chart-${this.graphId}`)
       const topChart = new dc.RowChart(`#top-chart-${this.graphId}`)
-      const tableCount = new dc.DataCount(`#dc-data-count-${this.graphId}`)
       const topSearch = this.createTextFilterWidget(`#top-search-${this.graphId}`)
 
       // Bind reset filters links
@@ -165,13 +187,22 @@ export default {
       })
 
       const ndx = crossfilter(this.results)
+      const all = ndx.groupAll()
+      // get total number of records
+      this.totalCount = ndx.size()
+      this.filterCount = this.totalCount
+      ndx.onChange(() => {
+        // update table
+        this.results = dateDimension.top(all.value())
+        // update filter count
+        this.filterCount = ndx.allFiltered().length
+      })
 
       // Create dimensions
       this.timeUnit =
         d3.timeMonth.count(...dateExtent) > 10
           ? this.datesAgg.month
           : this.datesAgg.day
-      const all = ndx.groupAll()
       const topDimension = ndx.dimension(d => d.name)
       const dateDimension = ndx.dimension(d => d[this.timeUnit.accessor])
       topSearch.dimension(ndx.dimension(d => d.name.toLowerCase()))
@@ -237,7 +268,7 @@ export default {
           strokeOpacity: 0
         })
         .clipPadding(10)
-        .yAxisLabel('Total ' + this.rowLabel)
+        .yAxisLabel(this.yAxisLabel)
         .ordinalColors(colorPalette)
       areaChart.xAxis().ticks(10)
       areaChart.yAxis().ticks(6)
@@ -281,27 +312,6 @@ export default {
         .yAxis()
         .ticks(0)
 
-      // Render counter and table
-      tableCount
-        .crossfilter(ndx)
-        .groupAll(all)
-        .html({
-          some:
-            `<strong>%filter-count</strong> ${this.$t('selected-out-of')} <strong>%total-count</strong> ` +
-            `${this.rowLabel} | <a class='resetAll'>${this.$t('Reset All')}</a>`,
-          all:
-            `Total: <strong>%total-count</strong> ${this.rowLabel}. ${this.$t('click-graph')}`
-        })
-        .on('pretransition', (chart, filter) => {
-          this.results = dateDimension.top(all.value())
-          d3.select(`#dc-data-count-${this.graphId} a.resetAll`).on(
-            'click',
-            () => {
-              dc.filterAll()
-              dc.renderAll()
-            }
-          )
-        })
       dc.renderAll()
     }
   }

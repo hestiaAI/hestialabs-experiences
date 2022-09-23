@@ -7,7 +7,7 @@ const options: ExperienceOptions = {
   dataPortal:
     'https://support.strava.com/hc/en-us/articles/216918437-Exporting-your-Data-and-Bulk-Export#Bulk',
   hideFileExplorer: false,
-  icon: icon,
+  icon,
   title: 'Strava',
   viewBlocks: genericViewers
 }

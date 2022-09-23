@@ -6,7 +6,7 @@ const options: ExperienceOptions = {
   disabled: true,
   hideFileExplorer: false,
   hideSummary: false,
-  icon: icon,
+  icon,
   title: 'YouTube',
   viewBlocks: []
 }

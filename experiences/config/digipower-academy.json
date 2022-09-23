@@ -1,46 +1,28 @@
 {
   "experiences": [
     "ad-radar",
-    "amazon",
-    "apple",
     "apple-tracker",
     "apple-tracker-agg",
-    "bookbeat",
-    "demdex",
-    "easyjet",
     "explorer",
     "facebook",
-    "finnair",
     "fitbit",
-    "full-contact",
-    "gigantti",
     "google",
     "google-agg",
-    "helsingin-sanomat",
     "her",
     "her-tinder-agg",
-    "hsl",
     "instagram",
-    "k-ryhma",
-    "lime",
     "linkedin",
     "netflix",
     "other",
-    "s-ryhma",
-    "sbb",
-    "signal",
-    "spotify",
     "strava",
     "tiktok",
     "tinder",
     "tracker-control",
     "tracker-control-agg",
     "twitter",
+    "twitter-agg",
     "uber",
     "uber-driver",
-    "voi",
-    "whatsapp",
-    "wolt",
     "youtube"
   ],
   "bubbles": [
@@ -53,10 +35,16 @@
     "brown-aggregator",
     "brown-participant",
     "sciencespo-participant",
+    "sciencespo-aggregator",
     "dating-apps-course",
     "health-course",
     "matching-algo-course",
-    "policy-making-course"
+    "policy-making-course",
+    "demo-computation",
+    "swiss-mp-participant",
+    "swiss-mp-aggregator",
+    "th-participant",
+    "th-aggregator"
   ],
   "homePageBubbles": [
     "demo-participant",
@@ -68,9 +56,21 @@
   ],
   "logo": "/digipower-academy-logo.png",
   "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
+  "displayCollaborators": true,
   "appBarLinks": [
-    { "url": "/about", "name": "About" },
-    { "url": "/privacy", "name": "Privacy" }
+    {
+      "url": "https://hestia.ai/en/#contact",
+      "name": "Contact us",
+      "external": true
+    },
+    {
+      "url": "/about",
+      "name": "About"
+    },
+    {
+      "url": "/privacy",
+      "name": "Privacy"
+    }
   ],
   "hashtags": ["dataprivacy", "hestialabs"]
 }

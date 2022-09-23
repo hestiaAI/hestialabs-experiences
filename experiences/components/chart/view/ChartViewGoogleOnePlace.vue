@@ -90,7 +90,7 @@ export default {
       return {
         fields: headers.map((h) => {
           return {
-            name: h
+            name: this.messages?.keplerFields[h] || h
           }
         }),
         rows: this.associated_names.map(r => headers.map(h => r[h]))
@@ -177,8 +177,7 @@ export default {
         seconds = '0' + seconds
       }
       return hours + 'h' + minutes + 'm' + seconds + 's' // Return is HH : MM : SS
-    },
-    drawViz() {}
+    }
   }
 }
 </script>

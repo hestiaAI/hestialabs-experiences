@@ -8,6 +8,8 @@ import {
 } from './postprocessor'
 import keplerConfigPlaces from './kepler/kepler_config_places'
 import keplerConfigTrips from './kepler/kepler_config_trip'
+import keplerConfigTripDrivers from './kepler/kepler_config_trip_drivers'
+import keplerConfigNonTrip from './kepler/kepler_config_non_trip'
 
 const blocks: ViewBlocks = [
   {
@@ -16,8 +18,13 @@ const blocks: ViewBlocks = [
     files: ['driver_trips'],
     title: 'Driver Trips',
     postprocessor: driverTripsPostProcessor,
+    visualization: 'ChartViewGenericMap.vue',
+    vizProps: {
+      keplerConfig: keplerConfigTripDrivers,
+      label: 'trips'
+    },
     text: '',
-    showTable: true
+    showTable: false
   },
   {
     id: 'driverPoints',
@@ -64,6 +71,18 @@ const blocks: ViewBlocks = [
     vizProps: {
       keplerConfig: keplerConfigPlaces,
       label: 'data-points'
+    }
+  },
+  {
+    id: 'driverNonTrip',
+    customPipeline: customPipelineGetFirstCSV('non_trip'),
+    files: ['rider_points'],
+    visualization: 'ChartViewGenericMap.vue',
+    title: 'Driver Time Lost',
+    text: '',
+    vizProps: {
+      keplerConfig: keplerConfigNonTrip,
+      label: 'in between trips'
     }
   }
 ]

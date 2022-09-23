@@ -1,0 +1,60 @@
+{
+  "en": {
+    "viewBlocks": {
+      "trackerControl": {
+        "title": "Overview",
+        "text": "Monitor below all the tracking done on your smartphone applications. You can filter the results by selecting a time range, selecting certain apps in the dropdown, clicking on each graph, or using the table filters or search box.",
+        "selected-some": "{filterCount} selected out of {totalCount} records",
+        "selected-all": "All {totalCount} records selected.",
+        "vizProps": {
+          "messages": {
+            "select-applications-label": "Applications",
+            "select-applications-hint": "Select the applications you want to include in the visualisation",
+            "Amount of tracking over time": "Amount of tracking over time",
+            "Companies behind tracking": "Companies behind tracking",
+            "Purposes of third party": "Purposes of third party",
+            "Applications that use trackers": "Applications that use trackers"
+          }
+        },
+        "headers": {
+          "App": "App",
+          "UID": "UID",
+          "More Info": "More Info",
+          "Date": "Date",
+          "Tracker": "Tracker",
+          "Destination Address": "Destination Address",
+          "Category": "Category"
+        }
+      }
+    }
+  },
+  "fr": {
+    "viewBlocks": {
+      "trackerControl": {
+        "title": "Vue d'ensemble",
+        "text": "Surveillez ci-dessous tout le suivi effectué sur les applications de votre smartphone. Vous pouvez filtrer les résultats en sélectionnant une plage de temps, en choisissant certaines applications dans la liste déroulante, en cliquant sur chaque graphique, ou en utilisant les filtres du tableau ou le champ de recherche.",
+        "selected-some": "{filterCount} sélectionnées sur {totalCount} dossiers",
+        "selected-all": "Toutes les {totalCount} dossiers sont sélectionnées.",
+        "vizProps": {
+          "messages": {
+            "select-applications-label": "Applications",
+            "select-applications-hint": "Sélectionnez les applications que vous souhaitez inclure dans la visualisation.",
+            "Amount of tracking over time": "Quantité de suivi dans le temps",
+            "Companies behind tracking": "Les entreprises à l'origine du suivi",
+            "Purposes of third party": "Objectifs de la tierce partie",
+            "Applications that use trackers": "Applications qui utilisent des trackers"
+          }
+        },
+        "headers": {
+          "App": "App",
+          "UID": "UID",
+          "More Info": "Plus d'informations",
+          "Date": "Date",
+          "Tracker": "Tracker",
+          "Destination Address": "Adresse de destination",
+          "Category": "Catégorie"
+        }
+      }
+    }
+  }
+}

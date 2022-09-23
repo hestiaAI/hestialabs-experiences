@@ -23,28 +23,41 @@ WITH
       a.advertiserName,
       a.displayLocation,
       a.time
+  ),
+  Engagement AS (
+    SELECT
+      a.tweetId,
+      a.advertiserName AS companyName,
+      -- Return 0 if ad has no engagements
+      IFNULL(
+        (
+          SELECT
+            ec.count_
+          FROM
+            EngagementCount ec
+          WHERE
+            a.tweetId = ec.tweetId
+            AND a.advertiserName = ec.advertiserName
+            AND a.displayLocation = ec.displayLocation
+            AND a.time = ec.time
+        ),
+        0
+      ) engagements,
+      a.time AS date_,
+      c.targetingType,
+      c.targetingValue
+    FROM
+      TwitterAd a
+      INNER JOIN TwitterCriterion c ON a.id = c.adId
   )
 SELECT
-  a.tweetId,
-  a.advertiserName AS companyName,
-  -- Return 0 if ad has no engagements
-  IFNULL(
-    (
-      SELECT
-        ec.count_
-      FROM
-        EngagementCount ec
-      WHERE
-        a.tweetId = ec.tweetId
-        AND a.advertiserName = ec.advertiserName
-        AND a.displayLocation = ec.displayLocation
-        AND a.time = ec.time
-    ),
-    0
-  ) engagements,
-  a.time AS date_,
-  c.targetingType,
-  c.targetingValue
+  (
+    -- Yes/No is interpreted as BOOLEAN by type-check.js
+    CASE
+      WHEN e.engagements IS 0 THEN 'No'
+      ELSE 'Yes'
+    END
+  ) AS engagedWith,
+  e.*
 FROM
-  TwitterAd a
-  INNER JOIN TwitterCriterion c ON a.id = c.adId
+  Engagement e

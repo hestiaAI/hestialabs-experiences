@@ -1,10 +1,14 @@
 <template>
   <VContainer>
-    <VForm v-if="fileManager !== null">
+    <VForm v-if="fileManager !== null" @submit.prevent="sendForm">
       <UnitConsentFormSection
         v-for="(section, index) in consentForm"
         :key="`section-${index}`"
         :index="index"
+      />
+      <BasePasswordField
+        v-if="config.bypassLogin && !$auth.user.password"
+        :value.sync="password"
       />
       <BaseAlert v-if="missingRequiredFields">
         Some required fields are not filled in.
@@ -30,7 +34,7 @@
             :error="!!sentErrorMessage"
             :progress="sentProgress"
             :disabled="missingRequiredFields || missingRequiredData.length > 0"
-            @click="sendForm"
+            type="submit"
           />
         </VCol>
       </VRow>
@@ -105,7 +109,8 @@ export default {
       href: null,
       encrypt: false,
       experience,
-      config
+      config,
+      password: this.$auth.user.password
     }
   },
   computed: {
@@ -228,26 +233,12 @@ export default {
       }
       return content
     },
-    // getCookie(name) {
-    //   if (!document.cookie) {
-    //     return null
-    //   }
-    //   const cookie = document.cookie
-    //     .split(';')
-    //     .map(c => c.trim())
-    //     .filter(c => c.startsWith(name + '='))
-    //   if (cookie.length === 0) {
-    //     return null
-    //   }
-    //   return decodeURIComponent(cookie[0].split('=')[1])
-    // },
     async sendForm() {
       this.sentStatus = false
       this.sentErrorMessage = undefined
       this.sentProgress = true
       const destBubble = this.destinationBubbleName
       const content = await this.generateZIP(true)
-      const { password } = this.$auth.user
       const zip = new File([content], this.filename, {
         type: 'application/zip'
       })
@@ -255,7 +246,7 @@ export default {
         zip,
         destBubble,
         this.bubbleName,
-        password
+        this.password
       )
       this.sentStatus = !errorMessage
       this.sentErrorMessage = errorMessage

@@ -3,6 +3,7 @@ import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/tracker-control.png'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
+import messages from '../../tracker-control/src/messages.json'
 
 const options: ExperienceOptions = {
   databaseConfig,
@@ -15,7 +16,9 @@ const options: ExperienceOptions = {
   files: {
     'tracker-control': '**/block00.json'
   },
-  icon: icon,
+  hideFileExplorer: false,
+  icon,
+  messages,
   subtitle: 'Tracking data',
   title: 'TrackerControl Agg',
   viewBlocks

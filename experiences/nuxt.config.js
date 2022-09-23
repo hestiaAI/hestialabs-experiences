@@ -1,10 +1,9 @@
 import fs from 'fs'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
-import en from 'vuetify/lib/locale/en'
-import fr from 'vuetify/lib/locale/fr'
-import { merge } from 'lodash-es'
 
 import { extension2filetype } from './utils/file-manager'
+import { numberFormats } from './i18n/vue-i18n-number-formats'
+import { dateTimeFormats } from './i18n/vue-i18n-date-time-formats'
 
 const name = 'HestiaLabs Experiences'
 const description = 'We create a new relationship to personal data'
@@ -26,7 +25,6 @@ const {
   i18nLocale = 'en',
   i18nLocales = ['fr', 'en']
 } = JSON.parse(fs.readFileSync(`config/${configName}.json`))
-const i18nMessages = JSON.parse(fs.readFileSync('i18n-messages-default.json'))
 
 export default {
   ssr: false, // Disable Server-Side Rendering
@@ -53,7 +51,6 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
-
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: [
     // pathPrefix: false
@@ -131,29 +128,8 @@ export default {
     defaultLocale: i18nLocale,
     vueI18n: {
       fallbackLocale: i18nLocale,
-      messages: merge(
-        {
-          en: {
-            ...i18nMessages.en,
-            $vuetify: en
-          },
-          fr: {
-            ...i18nMessages.fr,
-            $vuetify: fr
-          }
-        },
-        // override translations:
-        {
-          en: {},
-          fr: {
-            $vuetify: {
-              dataIterator: {
-                noResultsText: 'Aucun résultat'
-              }
-            }
-          }
-        }
-      )
+      numberFormats,
+      dateTimeFormats
     }
   },
 
@@ -274,6 +250,12 @@ export default {
     watch: ['../hestialabs/packages/*/dist/*']
   },
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  // plugins: ['@/plugins/injected.js', '@/plugins/api.js', { src: '@/plugins/i18n.js' }, '@/plugins/data-experience.js', '@/plugins/vtfcomponent.js'],
-  plugins: ['@/plugins/injected.js', '@/plugins/api.js', { src: '@/plugins/i18n.js' }, '@/plugins/vuetify.js', '@/plugins/data-experience.js']
+  plugins: [
+    '@/plugins/api.js', // this plugin must come first as it is used in the initialization
+    '@/plugins/init.js', // this plugin must come second, initialize the store with the configurations
+    '@/plugins/injected.js',
+    '@/plugins/i18n.js',
+    '@/plugins/vuetify.js',
+    '@/plugins/data-experience.js'
+  ]
 }

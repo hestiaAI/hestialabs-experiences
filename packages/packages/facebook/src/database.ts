@@ -2,8 +2,7 @@ import type { DatabaseConfig } from '@/types'
 import {
   SQLType,
   JSONPathResultType,
-  JSONPathReturnObject,
-  JSONPathRecord
+  JSONPathReturnObject
 } from '@/types/database-config'
 
 const { TEXT, INTEGER } = SQLType
@@ -15,7 +14,8 @@ const config: DatabaseConfig = {
       columns: [
         ['title', TEXT],
         ['action', TEXT],
-        ['timestamp', INTEGER]
+        // timestamp is transformed from INT -> TEXT (see formatters below)
+        ['timestamp', TEXT]
       ]
     },
     {
@@ -38,6 +38,10 @@ const config: DatabaseConfig = {
       name: 'CustomAudience',
       columns: [
         ['advertiserName', TEXT],
+        // boolean fields should currently be declared as TEXT
+        // and not INTEGER for the type-analyzer package
+        // to correctly detect them as BOOLEAN
+        // (see /experiences/utils/type-checker.js)
         ['hasDataFileCustomAudience', TEXT],
         ['hasRemarketingCustomAudience', TEXT],
         ['hasInPersonStoreVisit', TEXT]
@@ -49,6 +53,21 @@ const config: DatabaseConfig = {
       fileId: 'advertisers-interacted',
       path: '$.history_v2[*]',
       table: 'AdvertiserInteraction',
+      options: {
+        callback: output => {
+          const o = output as JSONPathReturnObject
+          // the timestamp value is given as the number of seconds
+          // we create a date object
+          const date = new Date(o.timestamp * 1000)
+          // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString
+          // YYYY-MM-DD HH:mm:ss
+          o['timestamp'] = date
+            .toISOString()
+            .split(/[.T]/)
+            .slice(0, 2)
+            .join(' ')
+        }
+      },
       getters: [
         {
           column: 'title',
@@ -117,17 +136,6 @@ const config: DatabaseConfig = {
       fileId: 'advertisers-using-information',
       table: 'CustomAudience',
       path: '$.custom_audiences_all_types_v2[*]',
-      options: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        callback: output => {
-          const o = output as JSONPathRecord
-          for (const key in o) {
-            if (typeof o[key] === 'boolean') {
-              o[key] = o[key] ? 'Yes' : 'No'
-            }
-          }
-        }
-      },
       getters: [
         {
           column: 'advertiserName',

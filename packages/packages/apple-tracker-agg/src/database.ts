@@ -62,7 +62,7 @@ const config: DatabaseConfig = {
       getters: [
         {
           column: 'bundleId',
-          path: '$.app'
+          path: '$.bundleId'
         },
         {
           column: 'domain',

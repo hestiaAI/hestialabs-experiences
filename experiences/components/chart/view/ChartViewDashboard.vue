@@ -16,7 +16,7 @@
         <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
       </VCol>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: headers, items: results }" />
+        <UnitFilterableTable :id="id" v-bind="{ headers: headers, items: results }" />
       </VCol>
     </VRow>
   </VContainer>

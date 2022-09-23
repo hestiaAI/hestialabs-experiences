@@ -13,7 +13,7 @@ const blocks: ViewBlocks = [
     id: 'profiles',
     sql: sqlProfiles,
     files: ['profiles'],
-    visualization: 'HerUserInfos.vue',
+    visualization: 'ChartViewHerUserInfos.vue',
     title: 'User Infos',
     text: 'HER profile information'
   },
@@ -58,7 +58,7 @@ const blocks: ViewBlocks = [
     id: 'messages',
     sql: sqlMessages,
     files: ['messages'],
-    visualization: 'HerMessageActivity.vue',
+    visualization: 'ChartViewHerMessageActivity.vue',
     vizProps: {
       dateAccessor: 'messageSentAt'
     },

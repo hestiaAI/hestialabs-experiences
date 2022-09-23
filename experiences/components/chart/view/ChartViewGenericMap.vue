@@ -89,6 +89,7 @@
       <VRow>
         <VCol cols="12">
           <UnitFilterableTable
+            :id="id"
             v-bind="{ headers, items: results }"
             @current-items="onTableFilter"
           />
@@ -97,6 +98,7 @@
     </template>
   </VContainer>
 </template>
+
 <script>
 import { mapState } from 'vuex'
 import mixin from './mixin'
@@ -153,7 +155,7 @@ export default {
       return {
         fields: this.headers.map((h) => {
           return {
-            name: h
+            name: this.$tev(this.kViewBlock(h, 'headers'), h)
           }
         }),
         rows: this.filteredRows.map(r => this.headers.map(h => r[h]))
@@ -196,7 +198,6 @@ export default {
       this.results = this.values
       this.sliderValue = 0
     },
-    drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems
     }

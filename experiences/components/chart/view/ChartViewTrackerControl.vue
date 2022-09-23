@@ -9,8 +9,8 @@
         <VSelect
           v-model="selectedApps"
           :items="apps"
-          label="Applications"
-          hint="Select the applications you want to include in the visualisation"
+          :label="messages['Applications']"
+          :hint="messages['select-applications-hint']"
           persistent-hint
           multiple
           @change="filterApps"
@@ -25,7 +25,7 @@
                 </VIcon>
               </VListItemAction>
               <VListItemContent>
-                <VListItemTitle> Select All </VListItemTitle>
+                <VListItemTitle>{{ $t('Select All') }}</VListItemTitle>
               </VListItemContent>
             </VListItem>
             <VDivider class="mt-2" />
@@ -35,7 +35,7 @@
             </span>
             <span v-if="index < 2">, </span>
             <div v-if="index === 3" class="grey--text text-caption">
-              (+{{ selectedApps.length - 3 }} others)
+              ({{ $tc('plusXOther', selectedApps.length - 3) }})
             </div>
           </template>
         </VSelect>
@@ -46,31 +46,29 @@
         <VRow>
           <VCol cols="12">
             <div id="volume-chart">
-              <strong>Number of tracking over time</strong>
-              <a class="reset" style="display: none">reset</a>
+              <span v-t="messages['Amount of tracking over time']" class="font-weight-bold" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
             </div>
 
             <div id="range-chart">
-              <p class="muted pull-right" style="margin-right: 15px">
-                select a <strong>time range</strong> below to zoom in
-              </p>
+              <ChartViewTextSelectTimeRange />
             </div>
           </VCol>
         </VRow>
         <VRow>
           <VCol cols="12" md="6">
             <div id="category-chart">
-              <strong>Purposes of third party</strong>
-              <a class="reset" style="display: none">reset</a>
+              <span v-t="messages['Purposes of third party']" class="font-weight-bold" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -78,11 +76,11 @@
           </VCol>
           <VCol cols="12" md="6">
             <div id="app-chart">
-              <strong>Applications that use trackers</strong>
-              <a class="reset" style="display: none">reset</a>
+              <span v-t="messages['Applications that use trackers']" class="font-weight-bold" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -92,11 +90,11 @@
       </VCol>
       <VCol cols="12" md="3">
         <div id="advertiser-chart">
-          <strong>Companies behind tracking</strong>
-          <a class="reset" style="display: none">reset</a>
+          <span v-t="messages['Companies behind tracking']" class="font-weight-bold" />
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters">
             <span>
-              Current filter:
+              {{ $t('Current filter') }}
               <span class="filter" />
             </span>
           </p>
@@ -104,15 +102,24 @@
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div id="dc-data-count" class="dc-data-count">
-        <span class="filter-count" />
-        selected out of
-        <span class="total-count" />
-        records |
-        <a class="reset">Reset All</a>
-      </div>
+      <template v-if="filterCount === totalCount">
+        <i18n tag="div" :path="kViewBlock('selected-all')">
+          <template #totalCount>
+            <span class="font-weight-bold" v-text="totalCount" />
+          </template>
+        </i18n>
+        <span v-t="'click-graph'" />
+      </template>
+      <template v-else>
+        <i18n tag="div" :path="kViewBlock('selected-some')">
+          <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
+            <span :key="k" class="font-weight-bold" v-text="v" />
+          </template>
+        </i18n>
+        <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
+      </template>
     </VRow>
-    <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+    <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results, kViewBlock }" />
   </VContainer>
 </template>
 
@@ -139,7 +146,7 @@ export default {
         { text: 'More Info', value: 'url' },
         { text: 'Date', value: 'dateStr' },
         { text: 'Tracker', value: 'tracker' },
-        { text: 'daddr', value: 'daddr' },
+        { text: 'Destination Address', value: 'daddr' },
         { text: 'Category', value: 'category' }
       ],
       results: []
@@ -199,7 +206,6 @@ export default {
       const categoryChart = new dc.PieChart('#category-chart')
       const advertiserChart = new dc.RowChart('#advertiser-chart')
       const appChart = new dc.RowChart('#app-chart')
-      const tableCount = new dc.DataCount('.dc-data-count')
 
       // Bind reset filters links
       d3.select('#volume-chart a.reset').on('click', function() {
@@ -228,9 +234,7 @@ export default {
         d.date = dateFormatParser(d.time) || new Date(d.time)
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
         d.url =
-          'https://reports.exodus-privacy.eu.org/en/reports/' +
-          d.Package +
-          '/latest/'
+          `https://reports.exodus-privacy.eu.org/en/reports/${d.package}/latest/`
         d.dateStr = formatTime(d.day)
         d.category = d.category === '' ? 'Unknown' : d.category
         d.app = d.app === '' ? 'Unknown' : d.app
@@ -239,6 +243,15 @@ export default {
 
       const ndx = crossfilter(this.values)
       const all = ndx.groupAll()
+      // get total number of records
+      this.totalCount = ndx.size()
+      this.filterCount = this.totalCount
+      ndx.onChange(() => {
+        // update table
+        this.results = dayDimension.top(all.value())
+        // update filter count
+        this.filterCount = ndx.allFiltered().length
+      })
 
       // Create dimensions
       const dayDimension = ndx.dimension(d => d.day)
@@ -423,24 +436,6 @@ export default {
         .xAxis()
         .ticks(4)
 
-      // Render counter and table
-      tableCount
-        .crossfilter(ndx)
-        .groupAll(all)
-        .html({
-          some:
-            '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
-            " | <a class='reset'>Reset All</a>",
-          all: 'All records selected. Please click on the graph to apply filters.'
-        })
-        .on('pretransition', (chart, filter) => {
-          this.results = dayDimension.top(all.value())
-          d3.select('#dc-data-count a.reset').on('click', () => {
-            this.toggle()
-            dc.filterAll()
-            dc.renderAll()
-          })
-        })
       dc.renderAll()
     }
   }

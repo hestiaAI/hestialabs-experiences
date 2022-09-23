@@ -1,20 +1,19 @@
 <template>
   <DataValidator :data="data">
-    <div>
-      <component
-        :is="component"
-        v-bind="{
-          values: data.items || [],
-          headers: data.headers || [],
-          ...vizProps
-        }"
-      />
-    </div>
+    <component
+      :is="component"
+      v-bind="{
+        values: data.items || [],
+        headers: data.headers || [],
+        ...$attrs
+      }"
+    />
   </DataValidator>
 </template>
 
 <script>
 export default {
+  inheritAttrs: false,
   props: {
     data: {
       type: Object,
@@ -23,10 +22,6 @@ export default {
     graphName: {
       type: String,
       required: true
-    },
-    vizProps: {
-      type: Object,
-      default: () => ({})
     }
   },
   computed: {
@@ -36,6 +31,7 @@ export default {
   }
 }
 </script>
+
 <style>
 @import 'assets/styles/dc.css';
 </style>

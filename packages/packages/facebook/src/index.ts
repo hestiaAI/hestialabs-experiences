@@ -24,7 +24,7 @@ const options: ExperienceOptions = {
       '**/apps_and_websites_off_of_facebook/your_off-facebook_activity.json',
     'ads-interests': '**/other_logged_information/ads_interests.json'
   },
-  icon: icon,
+  icon,
   messages,
   preprocessors: {
     '**/*.json': preprocessor

@@ -37,13 +37,16 @@ export default {
       type: Array,
       default: undefined
     },
-    groupByCollaborator: {
+    hideCollaborators: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   computed: {
-    ...mapGetters(['enabledExperiences', 'disabledExperiences']),
+    ...mapGetters(['enabledExperiences', 'disabledExperiences', 'siteConfig']),
+    groupByCollaborator() {
+      return !!this.siteConfig.displayCollaborators && !this.hideCollaborators
+    },
     sections() {
       const sections = []
       const enabledExperiences = this.filterExperiences(this.enabledExperiences)

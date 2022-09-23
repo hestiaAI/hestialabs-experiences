@@ -115,7 +115,7 @@
           </VTabItem>
           <VTabItem value="details">
             <p v-if="currSourceFilter" class="text-subtitle-1 text-right">
-              Current Filter:
+              {{ $t('Current filter') }}
               <VBtn small elevation="2" @click="resetSourceFilter">
                 <strong>{{ currSourceFilter }}</strong>
                 <VIcon x-small>
@@ -123,7 +123,7 @@
                 </VIcon>
               </VBtn>
             </p>
-            <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+            <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
           </VTabItem>
         </VTabsItems>
       </VCol>

@@ -5,8 +5,8 @@
         <VRow dense>
           <VCol cols="12">
             <div :id="'watch-time-chart' + graphId">
-              <strong>{{ $t(k('watch-time')) }}</strong>
-              <a class="reset" style="display: none">{{ $t('reset') }}</a>
+              <span class="font-weight-bold" v-text="messages['watch-time']" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters ma-0">
                 <span>
                   {{ $t('Current filter') }}
@@ -15,20 +15,15 @@
               </p>
             </div>
             <div :id="'range-chart' + graphId" class="range-chart">
-              <p
-                class="muted pull-right text-subtitle-2"
-                style="margin-right: 15px; margin-bottom: 5px"
-              >
-                {{ $t('select-time-range') }}
-              </p>
+              <ChartViewTextSelectTimeRange />
             </div>
           </VCol>
         </VRow>
         <VRow dense>
           <VCol cols="8">
             <div :id="'hour-chart' + graphId">
-              <strong>{{ $t(k('time-of-day')) }}</strong>
-              <a class="reset" style="display: none">{{ $t('reset') }}</a>
+              <span v-t="'time-of-day'" class="font-weight-bold" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters ma-0">
                 <span>
                   {{ $t('Current filter') }}
@@ -39,8 +34,8 @@
           </VCol>
           <VCol cols="4">
             <div :id="'week-chart' + graphId">
-              <strong>{{ $t(k('day')) }}</strong>
-              <a class="reset" style="display: none">{{ $t('reset') }}</a>
+              <span class="font-weight-bold" v-text="messages['day']" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters ma-0">
                 <span>
                   {{ $t('Current filter') }}
@@ -53,8 +48,8 @@
       </VCol>
       <VCol cols="4">
         <div :id="'content-chart' + graphId">
-          <strong>{{ $t(k('most-watched')) }}</strong>
-          <a class="reset" style="display: none">{{ $t('reset') }}</a>
+          <span class="font-weight-bold" v-text="messages['most-watched']" />
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters ma-0">
             <span>
               {{ $t('Current filter') }}
@@ -67,8 +62,8 @@
     <ChartViewVRowWebShare dense>
       <VCol cols="4">
         <div :id="'user-chart' + graphId">
-          <strong>Profiles</strong>
-          <a class="reset" style="display: none">{{ $t('reset') }}</a>
+          <span class="font-weight-bold" v-text="messages['Profiles']" />
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters ma-0">
             <span>
               {{ $t('Current filter') }}
@@ -79,8 +74,8 @@
       </VCol>
       <VCol cols="4">
         <div :id="'country-chart' + graphId">
-          <strong>{{ $t(k('country')) }}</strong>
-          <a class="reset" style="display: none">{{ $t('reset') }}</a>
+          <span class="font-weight-bold" v-text="messages['country']" />
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters ma-0">
             <span>
               {{ $t('Current filter') }}
@@ -91,8 +86,8 @@
       </VCol>
       <VCol cols="4">
         <div :id="'device-chart' + graphId">
-          <strong>{{ $t(k('device')) }}</strong>
-          <a class="reset" style="display: none">{{ $t('reset') }}</a>
+          <span class="font-weight-bold" v-text="messages['device']" />
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters ma-0">
             <span>
               {{ $t('Current filter') }}
@@ -105,7 +100,7 @@
     <VRow>
       <div :id="'dc-data-count' + graphId" class="dc-data-count" />
     </VRow>
-    <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+    <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
   </VContainer>
 </template>
 
@@ -133,8 +128,8 @@ export default {
     }
   },
   methods: {
-    k(localKey) {
-      return `chart-view.overview-netflix.${localKey}`
+    k(key) {
+      return `chart-view.overview-netflix.${key}`
     },
     removeEmptyBins(group) {
       return {
@@ -263,7 +258,7 @@ export default {
       const hourDimension = ndx.dimension(d => d.hour)
       const weekDimension = ndx.dimension((d) => {
         const day = d.date.getDay()
-        const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        const name = this.$days()
         return `${name[day]}`
       })
 
@@ -441,26 +436,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function(d) {
-        switch (d.key) {
-          case 'Mon':
-            return 0
-          case 'Tue':
-            return 1
-          case 'Wed':
-            return 2
-          case 'Thu':
-            return 3
-          case 'Fri':
-            return 4
-          case 'Sat':
-            return 5
-          case 'Sun':
-            return 6
-          default:
-            return 0
-        }
-      })
+      weekChart.ordering(d => this.$days().indexOf(d.key))
 
       // Render hour bar chart
       hourChart

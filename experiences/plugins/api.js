@@ -4,17 +4,13 @@ class Api {
   }
 
   async getConfig(bubbleName) {
-    try {
-      const { status, data } = await this.$axios.get(
-        `/bubbles/${bubbleName}/config`
-      )
-      if (status >= 400) {
-        throw new Error(`Axios error, status: ${status}`)
-      }
-      return data
-    } catch (err) {
-      console.error(err)
+    const { status, data } = await this.$axios.get(
+      `/bubbles/${bubbleName}/config`
+    )
+    if (status >= 400) {
+      throw new Error(`Axios error, status: ${status}`)
     }
+    return data
   }
 
   getFilenames(bubbleName, callback) {
@@ -97,9 +93,9 @@ class Api {
       )
       if (!resp.ok) {
         console.error(resp)
-        // use http status text in cas json() fails
-        errorMessage = resp.statusText
-        errorMessage = await resp.json()
+        // use http status text in case json() fails
+        const message403 = 'You entered an incorrect password, please try again'
+        errorMessage = resp.status === 403 ? message403 : resp.statusText
       }
     } catch (error) {
       errorMessage = errorMessage || 'Error'

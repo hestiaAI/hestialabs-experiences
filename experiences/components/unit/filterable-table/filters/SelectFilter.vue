@@ -10,7 +10,6 @@
     :label="$t('Search')"
     :items="items"
     :menu-props="{ closeOnClick: true, bottom: true }"
-    @change="filterChange"
   >
     <template #prepend-item>
       <VListItem ripple @click="toggle">
@@ -20,7 +19,7 @@
           </VIcon>
         </VListItemAction>
         <VListItemContent>
-          <VListItemTitle> {{ $t('Select All') }} </VListItemTitle>
+          <VListItemTitle v-t="'Select All'" />
         </VListItemContent>
       </VListItem>
       <VDivider class="mt-2" />
@@ -43,14 +42,15 @@
         </VBtn>
       </VChip>
       <span v-if="index === 1" class="grey--text caption">
-        (+{{ filter.length - 1 }} others)
+        ({{ $tc('plusXOther', filter.length - 1) }})
       </span>
     </template>
   </VAutocomplete>
 </template>
+
 <script>
 export default {
-  name: 'UnitFilter',
+  name: 'SelectFilter',
   props: {
     values: {
       type: Array,
@@ -73,12 +73,24 @@ export default {
       return this.filter.length > 0 && !this.selectAll
     },
     icon() {
-      if (this.selectAll) { return '$vuetify.icons.mdiCloseBox' }
-      if (this.selectSome) { return '$vuetify.icons.mdiMinusBox' }
+      if (this.selectAll) {
+        return '$vuetify.icons.mdiCloseBox'
+      }
+      if (this.selectSome) {
+        return '$vuetify.icons.mdiMinusBox'
+      }
       return '$vuetify.icons.mdiCheckboxBlankOutline'
     },
     filterFunction() {
-      if (this.selectAll) { return null } else { return value => this.filter.includes(value) }
+      if (this.selectAll) {
+        return null
+      }
+      return value => this.filter.includes(value)
+    }
+  },
+  watch: {
+    filter() {
+      this.$emit('filter-change', this.filterFunction)
     }
   },
   methods: {
@@ -89,15 +101,10 @@ export default {
         } else {
           this.filter = this.items.slice()
         }
-        this.filterChange()
       })
-    },
-    filterChange() {
-      this.$emit('filter-change', this.filterFunction)
     },
     reset() {
       this.filter = this.items
-      this.filterChange()
     }
   }
 }

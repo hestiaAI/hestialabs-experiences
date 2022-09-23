@@ -11,33 +11,60 @@
         "text": "This map shows what places Google think you visited with the size corresponding to the time you spent in this place:",
         "vizProps": {
           "label": "visited places"
+        },
+        "headers": {
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "address": "Address",
+          "name": "Name",
+          "startTimestamp": "Start Time",
+          "endTimestamp": "End Time",
+          "placeVisitImportance": "Place Visit Importance",
+          "visitConfidence": "Visit Confidence",
+          "locationConfidence": "Location Confidence",
+          "duration": "Duration",
+          "semanticType": "Semantic Type"
         }
       },
       "OnePlace": {
         "title": "One Place",
-        "text": ""
+        "text": "",
+        "vizProps": {
+          "messages": {
+            "keplerFields": {
+              "name": "Name",
+              "latitude": "Latitude",
+              "longitude": "Longitude",
+              "confidence": "Confidence"
+            }
+          }
+        }
       },
       "OtherCandidates": {
         "title": "Other Candidates",
-        "text": "This map shows the other candidate places proposed by Google linked to the location that Google think you visited:"
+        "text": "This map shows the other candidate places proposed by Google linked to the location that Google think you visited:",
+        "headers": {}
       },
       "ActivitySegment": {
         "title": "Travels",
         "text": "This map shows what trips Google think you did:",
         "vizProps": {
           "label": "trips"
-        }
+        },
+        "headers": {}
       },
       "Records": {
         "title": "Records",
-        "text": "This map shows records associated to a trip with the color corresponding to an activity type:"
+        "text": "This map shows records associated to a trip with the color corresponding to an activity type:",
+        "headers": {}
       },
       "WifiScan": {
         "title": "Wifi",
         "text": "This map shows where your phone detected mac addresses with the size corresponding to the number of times it was detected:",
         "vizProps": {
           "label": "mac adresses"
-        }
+        },
+        "headers": {}
       }
     }
   },
@@ -45,7 +72,7 @@
     "intro": {
       "title": "Google Takeout",
       "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download",
-      "dataPortalMessage": "<strong>Important:</strong> Pour que l'expérience fonctionne, veuillez cliquer sur <strong>\"désélectionner tout\"</strong>puis sélectionnez ce qui suit: <strong>\"Historique des positions\"</strong><div>Une fois que vous avez terminé, vous pouvez cliquer sur le bouton bleu \"Étape suivante\" en bas de la page. Cela devrait lancer votre téléchargement."
+      "dataPortalMessage": "<strong>Important:</strong> Pour que l'expérience fonctionne, veuillez cliquer sur <strong>\"Tout désélectionner\"</strong>puis sélectionnez ce qui suit: <strong>\"Historique des positions\"</strong><div>Une fois que vous avez terminé, vous pouvez cliquer sur le bouton bleu \"Étape suivante\" en bas de la page. Cela devrait lancer votre téléchargement."
     },
     "viewBlocks": {
       "PlaceVisited": {
@@ -53,33 +80,60 @@
         "text": "Carte des endroits que Google pense que vous avez visités. La taille des points montre le temps passé à l'endroit",
         "vizProps": {
           "label": "endroits visités"
+        },
+        "headers": {
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "address": "Adresse",
+          "name": "Nom",
+          "startTimestamp": "Heure de début",
+          "endTimestamp": "Heure de fin",
+          "placeVisitImportance": "Lieu Visite Importance",
+          "visitConfidence": "Confiance de la visite",
+          "locationConfidence": "Confiance en l'emplacement",
+          "duration": "Duration",
+          "semanticType": "Type sémantique"
         }
       },
       "OnePlace": {
         "title": "Un endroit particulier",
-        "text": ""
+        "text": "",
+        "vizProps": {
+          "messages": {
+            "keplerFields": {
+              "name": "Nom",
+              "latitude": "Latitude",
+              "longitude": "Longitude",
+              "confidence": "Confiance"
+            }
+          }
+        }
       },
       "OtherCandidates": {
         "title": "Autres candidats",
-        "text": "Carte des autres endroits que vous êtes susceptible d'avoir visités d'après l'historique de vos positions."
+        "text": "Carte des autres endroits que vous êtes susceptible d'avoir visités d'après l'historique de vos positions.",
+        "headers": {}
       },
       "ActivitySegment": {
         "title": "Trajets",
         "text": "Carte des trajets que Google a reconnus",
         "vizProps": {
           "label": "trajets"
-        }
+        },
+        "headers": {}
       },
       "Records": {
         "title": "Historique",
-        "text": "Carte des historiques associés à un trajet, les couleurs dénotant un type d'activité"
+        "text": "Carte des historiques associés à un trajet, les couleurs dénotant un type d'activité",
+        "headers": {}
       },
       "WifiScan": {
         "title": "Wifi",
         "text": "Carte des adresses MAC détectées par votre téléphone, la taille dénotant le nombre de détections.",
         "vizProps": {
           "label": "adresses MAC"
-        }
+        },
+        "headers": {}
       }
     }
   }

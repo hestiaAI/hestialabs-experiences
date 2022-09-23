@@ -6,7 +6,7 @@ const options: ExperienceOptions = {
   disabled: true,
   hideSummary: false,
   hideFileExplorer: false,
-  icon: icon,
+  icon,
   subtitle: 'Browser extension',
   title: 'Ad Radar',
   url: 'https://github.com/hestiaAI/ad-radar',

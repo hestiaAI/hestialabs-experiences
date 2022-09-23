@@ -234,8 +234,8 @@ export default {
   },
   methods: {
     // Convert local translation key to global vue18n
-    k(localKey) {
-      return `experiences.${this.slug}.viewBlocks.${localKey}.title`
+    k(key) {
+      return `experiences.${this.slug}.viewBlocks.${key}.title`
     },
     switchTab(value) {
       this.$router.push(`#${value}`)

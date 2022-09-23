@@ -5,18 +5,11 @@
     </h1>
     <VForm @submit.prevent="login">
       <VTextField :value="username" label="Username" readonly />
-      <VTextField
+      <BasePasswordField
         ref="password"
-        v-model="password"
-        label="Password"
-        placeholder="Type..."
-        required
-        :type="passwordType"
-        :append-icon="passwordAppendIcon"
-        error-count="10"
-        :error-messages="errorMessage"
+        :value.sync="password"
+        :error-message="errorMessage"
         autofocus
-        @click:append="onClickAppend"
       />
       <BaseButton type="submit">
         Login
@@ -26,27 +19,43 @@
 </template>
 
 <script>
-import { mdiEye, mdiEyeOff } from '@mdi/js'
 import { vueMeta } from '@/utils/utils'
 
-const extractBubbleParam = (path = '') => path.split('/').slice(-1)[0]
+const extractBubbleParam = (path = '') => {
+  // 1. /bubble/:bubble
+  // 2. /bubble/:bubble/experience/:experience
+  const match = path.match(/\/bubble\/([^/]+)(?:\/|$)/)
+  if (match && match.length === 2) {
+    return match[1]
+  }
+  return null
+}
 
 export default {
   auth: 'guest',
-  middleware({ app, $auth, redirect, route, error }) {
-    if (!route.query.redirect) {
-      if ($auth.$state.redirect) {
-        // add query parameter
-        return redirect(app.localePath({
-          name: 'login',
-          query: { redirect: $auth.$state.redirect }
-        }))
-      }
+  middleware({ app, $auth, redirect, route, error, from }) {
+    if (from && $auth.loggedIn) {
+      // If user navigated back to the login page
+      // with the browser's "back" function
+      // then we need to handle it here
+      // by going back again.
+      // Otherwise we mess up the auth state,
+      // plus it doesn't make sense to show
+      // the login page in this scenario
+      return app.router.go(-1)
+    }
+
+    if (route.query.redirect) {
+      $auth.$storage.setState('redirect', route.query.redirect)
+    } else if ($auth.$state.redirect) {
+      // add query parameter
+      return redirect(app.localePath({
+        name: 'login',
+        query: { redirect: $auth.$state.redirect }
+      }))
+    } else {
       // no way to know how to redirect the user after login
       return error({ statusCode: 404, message: 'Page Not Found' })
-    } else if (!$auth.$state.redirect) {
-      // happens on refresh
-      $auth.$storage.setState('redirect', route.query.redirect)
     }
   },
   validate({ $auth, store }) {
@@ -59,10 +68,8 @@ export default {
   },
   data() {
     return {
-      password: '',
-      passwordType: 'password',
-      passwordAppendIcon: mdiEye,
-      errorMessage: ''
+      errorMessage: '',
+      password: ''
     }
   },
   head() {
@@ -75,24 +82,12 @@ export default {
     }
   },
   watch: {
-    password() {
-      this.errorMessage = ''
-    },
     $route() {
       // focus password input on route change
-      this.$refs.password.$refs.input.focus()
+      this.$refs.password.$children[0].$refs.input.focus()
     }
   },
   methods: {
-    onClickAppend() {
-      if (this.passwordType === 'password') {
-        this.passwordType = 'text'
-        this.passwordAppendIcon = mdiEyeOff
-      } else {
-        this.passwordType = 'password'
-        this.passwordAppendIcon = mdiEye
-      }
-    },
     async login() {
       try {
         const { username, password } = this

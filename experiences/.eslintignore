@@ -7,5 +7,4 @@ assets
 config
 dist
 node_modules
-vega-examples
 sw.*

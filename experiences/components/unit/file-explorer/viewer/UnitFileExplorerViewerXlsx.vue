@@ -1,9 +1,7 @@
 <template>
-  <div v-if="loading">
-    Loading
-  </div>
+  <div v-if="loading" v-t="'Loading'" />
   <div v-else-if="error">
-    <p>Could not parse file.</p>
+    <p v-t="k('errorText')" />
   </div>
   <div v-else>
     <BaseButton
@@ -43,6 +41,9 @@ export default {
     }
   },
   methods: {
+    k(key) {
+      return `file-explorer.viewer.xlsx.${key}`
+    },
     async getContentFromFilename(filename) {
       this.setLoading(true)
       this.file = this.fileManager.fileDict[filename]

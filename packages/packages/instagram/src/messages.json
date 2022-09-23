@@ -9,11 +9,25 @@
       "views": {
         "title": "Views",
         "text": "",
+        "selected-some": "{filterCount} selected out of {totalCount} {rowLabel}",
+        "selected-all": "All {totalCount} {rowLabel} selected.",
         "vizProps": {
           "titleTimeline": "Content viewed",
           "titlePie": "Type of content",
           "titleTop": "Top Account",
-          "rowLabel": "views"
+          "rowLabel": "views",
+          "messages": {
+            "type": {
+              "Post Viewed": "Post Viewed",
+              "Video Watched": "Video Watched",
+              "Ad Viewed": "Ad Viewed"
+            }
+          }
+        },
+        "headers": {
+          "Date": "Date",
+          "Name": "Name",
+          "Action": "Action"
         }
       },
       "likes": {
@@ -22,18 +36,52 @@
         "vizProps": {
           "titleArea": "Likes given",
           "titleTop": "Top User",
-          "rowLabel": "likes"
+          "rowLabel": "likes",
+          "yAxisLabel": "Total likes",
+          "messages": {
+            "type": {
+              "Comment Liked": "Comment Liked",
+              "Post Liked": "Post Liked"
+            }
+          }
+        },
+        "headers": {
+          "Date": "Date",
+          "Name": "Name",
+          "Action": "Action"
         }
       },
       "messages": {
         "title": "Messages",
-        "text": ""
+        "text": "",
+        "selected-some": "{filterCount} selected out of {totalCount} messages",
+        "selected-all": "All {totalCount} messages selected.",
+        "vizProps": {
+          "messages": {
+            "Messages Exchanged Over Time": "Messages Exchanged Over Time",
+            "Time of Day": "Time of Day",
+            "Day": "Day",
+            "Top Users": "Top Users"
+          }
+        },
+        "headers": {
+          "Sender": "Sender",
+          "Message": "Message",
+          "Sent on": "Sent on"
+        }
       },
       "follows": {
         "title": "Follows",
         "text": "",
         "vizProps": {
-          "title": "Followers vs Followings over time"
+          "title": "Followers vs Followings over time",
+          "yLabel": "Count",
+          "messages": {
+            "legend": {
+              "Follower": "Follower",
+              "Following": "Following"
+            }
+          }
         }
       }
     }
@@ -48,11 +96,25 @@
       "views": {
         "title": "Vues",
         "text": "",
+        "selected-some": "{filterCount} sélectionnées sur {totalCount} {rowLabel}",
+        "selected-all": "Toutes les {totalCount} {rowLabel} sont sélectionnées.",
         "vizProps": {
           "titleTimeline": "Contenu consulté",
           "titlePie": "Type de contenu",
           "titleTop": "Top compte",
-          "rowLabel": "consulté"
+          "rowLabel": "consulté",
+          "messages": {
+            "type": {
+              "Post Viewed": "Poste visualisé",
+              "Video Watched": "Vidéo regardée",
+              "Ad Viewed": "Annonce vue"
+            }
+          }
+        },
+        "headers": {
+          "Date": "Date",
+          "Name": "Nom",
+          "Action": "Action"
         }
       },
       "likes": {
@@ -61,18 +123,52 @@
         "vizProps": {
           "titleArea": "Likes donnés",
           "titleTop": "Top utilisateur",
-          "rowLabel": "likes"
+          "rowLabel": "likes",
+          "yAxisLabel": "Total des likes",
+          "messages": {
+            "type": {
+              "Comment Liked": "Commentaire apprécié",
+              "Post Liked": "Poste apprécié"
+            }
+          }
+        },
+        "headers": {
+          "Date": "Date",
+          "Name": "Nom",
+          "Action": "Action"
         }
       },
       "messages": {
         "title": "Messages",
-        "text": ""
+        "text": "",
+        "selected-some": "{filterCount} sélectionnées sur {totalCount} messages",
+        "selected-all": "Toutes les {totalCount} messages sont sélectionnées.",
+        "vizProps": {
+          "messages": {
+            "Messages Exchanged Over Time": "Messages échangés au fil du temps",
+            "Time of Day": "Heure de la journée",
+            "Day": "Jour",
+            "Top Users": "Principaux utilisateurs"
+          }
+        },
+        "headers": {
+          "Sender": "Émetteur",
+          "Message": "Message",
+          "Sent on": "Heure d'envoi"
+        }
       },
       "follows": {
         "title": "Liste de suivi",
         "text": "",
         "vizProps": {
-          "title": "Followers vs Followings au fil du temps"
+          "title": "Followers vs Followings au fil du temps",
+          "yLabel": "Nombre",
+          "messages": {
+            "legend": {
+              "Follower": "Suiveur",
+              "Following": "Suivant"
+            }
+          }
         }
       }
     }

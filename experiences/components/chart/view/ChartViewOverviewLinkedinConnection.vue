@@ -3,22 +3,17 @@
     <VRow dense>
       <VCol cols="12">
         <div :id="'connections-chart' + graphId">
-          <strong>Cumulative number of connections</strong>
-          <a class="reset" style="display: none">reset</a>
+          <span class="font-weight-bold" v-text="messages['Cumulative number of connections']" />
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters ma-0">
             <span>
-              Current filter:
+              {{ $t('Current filter') }}
               <span class="filter" />
             </span>
           </p>
         </div>
         <div :id="'range-chart' + graphId" class="range-chart">
-          <p
-            class="muted pull-right text-subtitle-2"
-            style="margin-right: 15px; margin-bottom: 5px"
-          >
-            select a <strong>time range</strong> to zoom in
-          </p>
+          <ChartViewTextSelectTimeRange />
         </div>
       </VCol>
     </VRow>
@@ -26,14 +21,14 @@
       <VCol cols="4">
         <div :id="'company-chart' + graphId">
           <div style="display: flex">
-            <strong>Company</strong>
+            <span class="font-weight-bold" v-text="messages['Company']" />
             <VSpacer />
             <div id="company-search" />
           </div>
-          <a class="reset" style="display: none">reset</a>
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters ma-0">
             <span>
-              Current filter:
+              {{ $t('Current filter') }}
               <span class="filter" />
             </span>
           </p>
@@ -41,11 +36,11 @@
       </VCol>
       <VCol cols="4">
         <div :id="'week-chart' + graphId">
-          <strong>Day</strong>
-          <a class="reset" style="display: none">reset</a>
+          <span v-t="messages['Day']" class="font-weight-bold" />
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters ma-0">
             <span>
-              Current filter:
+              {{ $t('Current filter') }}
               <span class="filter" />
             </span>
           </p>
@@ -54,14 +49,14 @@
       <VCol cols="4">
         <div :id="'position-chart' + graphId">
           <div style="display: flex">
-            <strong>Position</strong>
+            <span v-t="messages['Position']" class="font-weight-bold" />
             <VSpacer />
             <div id="position-search" />
           </div>
-          <a class="reset" style="display: none">reset</a>
+          <a v-t="'reset'" class="reset" style="display: none" />
           <p class="filters ma-0">
             <span>
-              Current filter:
+              {{ $t('Current filter') }}
               <span class="filter" />
             </span>
           </p>
@@ -69,15 +64,24 @@
       </VCol>
     </VRow>
     <VRow>
-      <div :id="'dc-data-count' + graphId" class="dc-data-count">
-        <span class="filter-count" />
-        selected out of
-        <span class="total-count" />
-        connections |
-        <a class="resetAll">Reset All</a>
-      </div>
+      <template v-if="filterCount === totalCount">
+        <i18n tag="div" :path="kViewBlock('selected-all')">
+          <template #totalCount>
+            <span class="font-weight-bold" v-text="totalCount" />
+          </template>
+        </i18n>
+        <span v-t="'click-graph'" />
+      </template>
+      <template v-else>
+        <i18n tag="div" :path="kViewBlock('selected-some')">
+          <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
+            <span :key="k" class="font-weight-bold" v-text="v" />
+          </template>
+        </i18n>
+        <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
+      </template>
     </VRow>
-    <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+    <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
   </VContainer>
 </template>
 
@@ -93,6 +97,12 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
+  props: {
+    messages: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       header: [
@@ -107,6 +117,10 @@ export default {
     }
   },
   methods: {
+    resetAll() {
+      dc.filterAll()
+      dc.renderAll()
+    },
     removeEmptyBins(group) {
       return {
         top(n) {
@@ -123,6 +137,7 @@ export default {
       }
     },
     drawViz() {
+      const { graphId } = this
       const colorPalette = [
         '#7570b3',
         // '#371D52',
@@ -154,24 +169,42 @@ export default {
 
       // Create crossfilter indexing
       const ndx = crossfilter(this.results)
+      // get total number of records
+      this.totalCount = ndx.size()
+      this.filterCount = this.totalCount
+      ndx.onChange(() => {
+        // update table
+        this.results = weekDimension.top(all.value())
+        // update filter count
+        this.filterCount = ndx.allFiltered().length
+      })
       const all = ndx.groupAll()
+
+      // get total number of records
+      this.totalCount = ndx.size()
+      this.filterCount = this.totalCount
+      ndx.onChange(() => {
+        // update table
+        this.results = weekDimension.top(all.value())
+        // update filter count
+        this.filterCount = ndx.allFiltered().length
+      })
 
       // Create and bind charts to their respective divs
       const connectionsChart = new dc.LineChart(
-        '#connections-chart' + this.graphId
+        '#connections-chart' + graphId
       )
-      const rangeChart = new dc.BarChart('#range-chart' + this.graphId)
-      const companyChart = new dc.RowChart('#company-chart' + this.graphId)
-      const positionChart = new dc.RowChart('#position-chart' + this.graphId)
-      const weekChart = new dc.RowChart('#week-chart' + this.graphId)
-      const tableCount = new dc.DataCount('#dc-data-count' + this.graphId)
+      const rangeChart = new dc.BarChart('#range-chart' + graphId)
+      const companyChart = new dc.RowChart('#company-chart' + graphId)
+      const positionChart = new dc.RowChart('#position-chart' + graphId)
+      const weekChart = new dc.RowChart('#week-chart' + graphId)
       const companySearch = this.createTextFilterWidget('#company-search')
       const positionSearch = this.createTextFilterWidget('#position-search')
 
       companySearch.dimension(ndx.dimension(d => d.company.toLowerCase()))
       positionSearch.dimension(ndx.dimension(d => d.position.toLowerCase()))
       // Bind reset filters links
-      d3.select('#connections-chart' + this.graphId + ' a.reset').on(
+      d3.select('#connections-chart' + graphId + ' a.reset').on(
         'click',
         function() {
           rangeChart.filterAll()
@@ -179,21 +212,21 @@ export default {
           dc.redrawAll()
         }
       )
-      d3.select('#company-chart' + this.graphId + ' a.reset').on(
+      d3.select('#company-chart' + graphId + ' a.reset').on(
         'click',
         function() {
           companyChart.filterAll()
           dc.redrawAll()
         }
       )
-      d3.select('#position-chart' + this.graphId + ' a.reset').on(
+      d3.select('#position-chart' + graphId + ' a.reset').on(
         'click',
         function() {
           positionChart.filterAll()
           dc.redrawAll()
         }
       )
-      d3.select('#week-chart' + this.graphId + ' a.reset').on(
+      d3.select('#week-chart' + graphId + ' a.reset').on(
         'click',
         function() {
           weekChart.filterAll()
@@ -207,7 +240,7 @@ export default {
       const positionDimension = ndx.dimension(d => d.position)
       const weekDayDimension = ndx.dimension((d) => {
         const day = d.date.getDay()
-        const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        const name = this.$days()
         return `${name[day]}`
       })
 
@@ -223,7 +256,7 @@ export default {
       const maxDate = weekDimension.top(1)[0].date
       const maxValue = weekGroup.top(1)[0].value + 2
       let width = d3
-        .select('#connections-chart' + this.graphId)
+        .select('#connections-chart' + graphId)
         .node()
         .getBoundingClientRect().width
       let height = 150
@@ -298,7 +331,7 @@ export default {
 
       // Render company row chart
       width = d3
-        .select('#company-chart' + this.graphId)
+        .select('#company-chart' + graphId)
         .node()
         .getBoundingClientRect().width
       height = 400
@@ -320,7 +353,7 @@ export default {
 
       // Render day of week row chart
       width = d3
-        .select('#week-chart' + this.graphId)
+        .select('#week-chart' + graphId)
         .node()
         .getBoundingClientRect().width
       height = 400
@@ -337,30 +370,11 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function(d) {
-        switch (d.key) {
-          case 'Mon':
-            return 0
-          case 'Tue':
-            return 1
-          case 'Wed':
-            return 2
-          case 'Thu':
-            return 3
-          case 'Fri':
-            return 4
-          case 'Sat':
-            return 5
-          case 'Sun':
-            return 6
-          default:
-            return 0
-        }
-      })
+      weekChart.ordering(d => this.$days().indexOf(d.key))
 
       // Render content row chart
       width = d3
-        .select('#position-chart' + this.graphId)
+        .select('#position-chart' + graphId)
         .node()
         .getBoundingClientRect().width
       height = 400
@@ -379,27 +393,6 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-
-      // Render counter and table
-      tableCount
-        .crossfilter(ndx)
-        .groupAll(all)
-        .html({
-          some:
-            '<strong>%filter-count</strong> connections selected out of <strong>%total-count</strong> views' +
-            " | <a class='resetAll'>Reset All</a>",
-          all: 'All <strong>%total-count</strong> connections selected. Please click on the graph to apply filters.'
-        })
-        .on('pretransition', (chart, filter) => {
-          this.results = weekDimension.top(all.value())
-          d3.select('#dc-data-count' + this.graphId + ' a.resetAll').on(
-            'click',
-            () => {
-              dc.filterAll()
-              dc.renderAll()
-            }
-          )
-        })
       dc.renderAll()
     }
   }

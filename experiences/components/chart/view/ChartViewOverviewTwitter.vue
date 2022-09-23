@@ -5,25 +5,23 @@
         <VRow>
           <VCol cols="12" sm="8">
             <div id="volume-chart">
-              <strong>{{ $t(k('ads-time')) }}</strong>
+              <span class="font-weight-bold" v-text="messages['ads-time']" />
               <p class="filters">
                 <span>
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
             <div :id="'range-chart' + graphId" class="range-chart">
-              <p class="muted pull-right" style="margin-right: 15px">
-                {{ $t('select-time-range') }}
-              </p>
+              <ChartViewTextSelectTimeRange />
             </div>
           </VCol>
           <VCol cols="12" sm="4">
             <div id="company-chart">
               <div style="display: flex">
-                <strong>{{ $t(k('top-adv')) }}</strong>
+                <span class="font-weight-bold" v-text="messages['top-adv']" />
                 <VSpacer />
                 <div id="company-search" />
               </div>
@@ -32,7 +30,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -40,20 +38,20 @@
         <VRow>
           <VCol cols="12" sm="4">
             <div id="engagement-chart">
-              <strong>{{ $t(k('interactions')) }}</strong>
+              <span class="font-weight-bold" v-text="messages['interactions']" />
               <p class="filters">
                 <span>
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
           <VCol cols="12" sm="4">
             <div id="type-chart">
               <div style="display: flex">
-                <strong>{{ $t(k('targeting-type')) }}</strong>
+                <span class="font-weight-bold" v-text="messages['targeting-type']" />
                 <VSpacer />
                 <div id="type-search" />
               </div>
@@ -62,14 +60,14 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
           <VCol cols="12" sm="4">
             <div id="value-chart">
               <div style="display: flex">
-                <strong>{{ $t(k('targeting-criteria')) }}</strong>
+                <span class="font-weight-bold" v-text="messages['targeting-criteria']" />
                 <VSpacer />
                 <div id="value-search" />
               </div>
@@ -78,7 +76,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -90,7 +88,7 @@
     </ChartViewVRowWebShare>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+        <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -114,20 +112,13 @@ export default {
         { text: 'Company', value: 'companyName' },
         { text: 'Date', value: 'date_' },
         { text: 'Promoted Tweet', value: 'url' },
-        {
-          text: 'Engagement',
-          value: 'engagements',
-          formatter: d => (d === 0 ? 'No' : 'Yes')
-        },
+        { text: 'Engagement', value: 'engagedWith' },
         { text: 'Targeting Criteria', value: 'count' }
       ],
       results: []
     }
   },
   methods: {
-    k(localKey) {
-      return `chart-view.overview-twitter.${localKey}`
-    },
     drawViz() {
       this.results = this.values
       // Define a color palette for the viz
@@ -202,9 +193,7 @@ export default {
       // Create dimensions
       const adPerDayDimension = ndx.dimension(d => d.day)
       const companyDimension = ndx.dimension(d => d.companyName)
-      const engagementDimension = ndx.dimension(d =>
-        d.engagements ? 'Yes' : 'No'
-      )
+      const engagementDimension = ndx.dimension(d => this.$t(d.engagedWith))
       const targetingTypeDimension = ndx.dimension(d => d.targetingType)
       const targetingValueDimension = ndx.dimension(d => d.targetingValue)
       companySearch.dimension(ndx.dimension(d => d.companyName.toLowerCase()))
@@ -412,9 +401,9 @@ export default {
         .html({
           some:
             `<strong>%filter-count</strong> ${this.$t('selected-out-of')} <strong>%total-count</strong> ` +
-            `${this.$t(this.k('ads'))} | <a class='resetAll'>${this.$t('Reset All')}</a>`,
+            `${this.messages.ads} | <a class='resetAll'>${this.$t('Reset All')}</a>`,
           all:
-            `Total: <strong>%total-count</strong> ${this.$t(this.k('ads'))}. ${this.$t('click-graph')}`
+            `Total: <strong>%total-count</strong> ${this.messages.ads}. ${this.$t('click-graph')}`
         })
         .on('pretransition', (chart, filter) => {
           const newData = d3.flatRollup(
@@ -424,14 +413,14 @@ export default {
             d => d.companyName,
             d => d.date_,
             d => d.url,
-            d => d.engagements
+            d => d.engagedWith
           )
           this.results = newData.map(x => ({
             tweetId: x[0],
             companyName: x[1],
             date_: x[2],
             url: x[3],
-            engagements: x[4],
+            engagedWith: x[4],
             count: x[5]
           }))
 

@@ -1,7 +1,5 @@
 <template>
-  <div v-if="loading">
-    Loading
-  </div>
+  <div v-if="loading" v-t="'Loading'" />
   <div v-else>
     <div class="explorer__content">
       <CodeEditor
