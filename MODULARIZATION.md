@@ -1,4 +1,4 @@
-# turn TheDataExperience into a library 
+# turn TheDataExperience into a library
 
 The nuxt app in project **experiences** should import **TheDataExperience.vue** from project **data-experience**
 
@@ -26,15 +26,19 @@ vuetify&#x2026;
 <https://stackoverflow.com/questions/61019454/vue-library-with-vuetify-dependencies>
 
 # experiences imports data-experience
+    cd packages
+    npm install
+    npm run build
+    npm link --workspaces
 
-    cd data-experience
+    cd ../data-experience
     npm install
     npm run build-lib
-    
+
     cd ../experiences
     npm install
     npm run dev
-    
+
 and open http://localhost:3000/modul
 
 Experiences has a dependency to data-experience, a plain vue project created with vue-cli.
@@ -42,13 +46,13 @@ Experiences has a dependency to data-experience, a plain vue project created wit
     # how the dependency was added
     npm install ../data-experience
 
-  
+
 
 DummyButton works with vuex and is successfully imported to  nuxt thanks to the plugin *experiences/plugins/data-experiences.js*
 
 Vuetify elements in the imported charts are not rendered
 
-Importing from a normal vuetify project like vtfcomponent also fails. 
+Importing from a normal vuetify project like vtfcomponent also fails.
 
 Next step is trying to import from a project made to export extended vuetify components (vuetify-extra)
 
@@ -62,7 +66,7 @@ Here's where [nuxt/vuetify](https://github.com/nuxt-community/vuetify-module/blo
 
 ## importing vuetify projects fails
 
-vtfcomponent vtfw4 are new projects created by vue-cli. Vtfw4 is created by an older version of vue-cli and uses webpack 4. 
+vtfcomponent vtfw4 are new projects created by vue-cli. Vtfw4 is created by an older version of vue-cli and uses webpack 4.
 
 Importing from these repos to experiences does not work.
 
@@ -159,16 +163,16 @@ setting up the link
     npm run build:linkable
     cd ../linkable
     npm link
-    
+
     cd ../../vextra
     npm install
     # needs to be done after install (who would delete it)
     npm link @menteora/vuetify-extra
-    
+
     # check it's pointing to the right place
     ls -l node_modules/@menteora/vuetify-extra
     ls -l node_modules/@menteora/vuetify-extra/
-    
+
     npm run serve
 
 update vuetify-extra with
@@ -185,9 +189,8 @@ after any npm install in vextra, relink to vuetify-extra
 
     cd data-experience
     npm link
-    
-    
+
+
     cd ../vextra
     npm link data-experience  @menteora/vuetify-extra
     npm run serve
-    
