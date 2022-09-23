@@ -8,31 +8,35 @@ export const toGraph: PostprocessorFunction = result => {
   if (items.length === 0) {
     return { headers: [], items: [] }
   }
-  // console.log('TEST', items)
-
-  interface Interest {
-    name: string
-    isDisabled: boolean
-  }
-
   const allInterests: Dictionary<number> = {}
+  const interestSets: Array<Set<string>> = []
   items.forEach(u => {
-    const interests: Array<Interest> = JSON.parse(u.interests)
+    const interests: Set<string> = JSON.parse(u.interests).map(
+      (i: { name: string }) => i.name
+    )
+    interestSets.push(interests)
     if (interests) {
       interests.forEach(i => {
-        if (allInterests[i.name]) allInterests[i.name] += 1
-        else allInterests[i.name] = 1
+        if (allInterests[i]) allInterests[i] += 1
+        else allInterests[i] = 1
       })
     }
   })
 
   // Create items array
-  const topInterests = Object.keys(allInterests)
+  const nodes = Object.keys(allInterests)
     .map(key => {
-      return { key, count: allInterests[key] }
+      return { id: key, weight: allInterests[key] }
     })
-    .sort((first, second) => second.count - first.count)
-  console.log(topInterests)
+    .sort((first, second) => second.weight - first.weight)
+    .slice(0, 30)
+  const nodeSet: Set<string> = new Set(nodes.map(n => n.id))
+  const links = []
+  interestSets.forEach(i => {
+    console.log(new Set([...i].filter(x => nodeSet.has(x))))
+    links.push()
+  })
+  console.log(nodes)
   // console.log(allInterests)
   /*
   const categoriesToKeep = [
