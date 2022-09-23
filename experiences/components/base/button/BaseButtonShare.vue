@@ -1,17 +1,11 @@
 <template>
-  <VTooltip left>
-    <template #activator="{ on }">
-      <BaseButton
-        v-if="condition"
-        icon="mdiShare"
-        :text="buttonText"
-        v-bind="$attrs"
-        @click="share"
-        v-on="on"
-      />
-    </template>
-    <span>Reset all</span>
-  </VTooltip>
+  <BaseButton
+    v-if="condition"
+    icon="mdiShare"
+    :text="buttonText"
+    v-bind="$attrs"
+    @click="share"
+  />
 </template>
 
 <script>
