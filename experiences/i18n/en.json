@@ -19,6 +19,12 @@
     },
     "top-row": {
       "heading": "In total we found {total} {countLabel} between {minDate} and {maxDate}"
+    },
+    "generic-map": {
+      "search-info": "Please use the search box and filters below to change what is shown on the map.",
+      "add-noise": "Add Noise",
+      "noise-level": "Noise Level",
+      "meters": "meters"
     }
   },
   "unit-files": {
@@ -98,19 +104,6 @@
         "errorText": "Could not parse the file."
       }
     }
-  },
-  "generic-map": {
-    "search-info": "Please use the search box and filters below to change what is shown on the map.",
-    "add-noise": "Add Noise",
-    "noise-level": "Noise Level",
-    "meters": "meters"
-  },
-  "google-one-place": {
-    "total-time-spend": "Total time spend at the",
-    "mean-time-spend": "Mean time spend at the",
-    "entropy": "Entropy for",
-    "entropy-info": "The higher this value is, the more uncertain Google was when deciding if you visited",
-    "other-candidates": "This map shows the other candidates proposed by Google associated to the"
   },
   "share-data": {
     "name": "Share my data"
