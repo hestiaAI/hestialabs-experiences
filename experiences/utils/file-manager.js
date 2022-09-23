@@ -118,11 +118,11 @@ export default class FileManager {
    * @returns {Promise<FileManager>}
    */
   async init(uppyFiles) {
-    this.fileList = await FileManager.extractZips(uppyFiles, this.filesRegex)
-    this.fileList = FileManager.filterFiles(this.fileList)
-    this.fileList = FileManager.removeZipName(this.fileList)
+    let fileList = await FileManager.extractZips(uppyFiles, this.filesRegex)
+    fileList = FileManager.filterFiles(fileList)
+    fileList = FileManager.removeZipName(fileList)
     this.fileDict = Object.fromEntries(
-      this.fileList.map(file => [file.name, file])
+      fileList.map(file => [file.name, file])
     )
     this.idToGlob = await this.fetchDynamicFiles()
     this.setInitialValues()
@@ -171,9 +171,8 @@ export default class FileManager {
     if (roots.length === 1 && roots[0].endsWith('.zip')) {
       return fileList.map((file) => {
         const parts = file.name.split('/')
-        const blob = file.slice(0, file.size)
         const name = parts.slice(1, parts.length).join('/')
-        return new File([blob], name)
+        return file.copy(name)
       })
     }
     return fileList
@@ -588,13 +587,13 @@ export default class FileManager {
         files.flatMap(async(file) => {
           if (file.name.endsWith('.zip')) {
             const zip = new JSZip()
-            await zip.loadAsync(file)
+            await zip.loadAsync(file.blob)
             const folderContent = zip.file(filesRegex)
             const blobs = await Promise.all(
-              folderContent.map(r => r.async('blob'))
+              folderContent.map(r => r.async(file.bufferType))
             )
             const innerFiles = folderContent.map(
-              (r, i) => new File([blobs[i]], file.name + '/' + r.name)
+              (r, i) => file.build(blobs[i], file.name + '/' + r.name)
             )
             return await this.extractZips(innerFiles, filesRegex)
           } else if (file.name.endsWith('/') || !filesRegex.test(file.name)) {

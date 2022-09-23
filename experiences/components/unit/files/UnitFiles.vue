@@ -227,7 +227,7 @@ export default {
           strings: stringsOverride[this.$i18n.locale]
         }
       })
-      // allow dropping files anywhere on the page
+    // allow dropping files anywhere on the page
       .use(DropTarget, { target: document.body })
       .on('files-added', () => {
         this.filesEmpty = false
@@ -253,26 +253,48 @@ export default {
     this.uppy.close()
   },
   methods: {
-    returnFiles() {
+    async returnFiles() {
       const decryptBlobPromise = promisify(decryptBlob)
       const publicKey =
-        this.publicKey || this.$store.getters.routeConfig(this.$route).publicKey
-      Promise.all(
-        this.uppy.getFiles().map((f) => {
-          return this.privateKey
-            ? decryptBlobPromise(f.data, this.privateKey, publicKey).then(
-              blob => new File([blob], f.name)
-            )
-            : f.data
-        })
-      )
-        .then((decryptedFiles) => {
-          this.status = true
-          this.$emit('update', { uppyFiles: decryptedFiles })
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+            this.publicKey || this.$store.getters.routeConfig(this.$route).publicKey
+      try {
+        const encryptedFiles = this.uppy.getFiles()
+        const decryptedFiles = await
+        Promise.all(
+          encryptedFiles.map(async(f) => {
+            if (!this.privateKey) {
+              return f.data
+            }
+            const blob = await decryptBlobPromise(f.data, this.privateKey, publicKey)
+            return new File([blob], f.name)
+            // return this.privateKey
+            //   ? decryptBlobPromise(f.data, this.privateKey, publicKey).then(
+            //     blob => new File([blob], f.name)
+            //   )
+            //   : f.data
+          })
+        )
+        this.status = true
+        this.$emit('update', { uppyFiles: decryptedFiles })
+      } catch (error) {
+        console.error(error)
+      }
+      // Promise.all(
+      //   this.uppy.getFiles().map((f) => {
+      //     return this.privateKey
+      //       ? decryptBlobPromise(f.data, this.privateKey, publicKey).then(
+      //         blob => new File([blob], f.name)
+      //       )
+      //       : f.data
+      //   })
+      // )
+      //   .then((decryptedFiles) => {
+      //     this.status = true
+      //     this.$emit('update', { uppyFiles: decryptedFiles })
+      //   })
+      //   .catch((error) => {
+      //     console.error(error)
+      //   })
     }
   }
 }

@@ -1,4 +1,9 @@
+import fs from 'fs'
+import util from 'util'
+import stream from 'stream'
+import JSZip from 'jszip'
 import FileManager from '~/utils/file-manager'
+import NodeFile from '~/utils/node-file'
 import { mockFile } from '~/utils/__mocks__/file-manager-mock'
 import { arrayEqualNoOrder } from '~/utils/test-utils'
 import { itemifyJSON } from '~/utils/json'
@@ -8,6 +13,58 @@ test('an empty file manager', async() => {
   const fileManager = new FileManager()
   fileManager.init([])
   await expect(() => fileManager.getText('bobo.json')).rejects.toThrow()
+})
+
+function deleteFileIfExists(fileName) {
+  if (fs.existsSync(fileName)) {
+    fs.unlinkSync(fileName)
+  }
+}
+
+async function storeAsZipFile(zipFileName, fileName, content) {
+  const zip = new JSZip()
+  zip.file(fileName, content)
+  const pipeline = util.promisify(stream.pipeline)
+  return await pipeline(
+    zip
+      .generateNodeStream({ type: 'nodebuffer', streamFiles: true }),
+    fs.createWriteStream(zipFileName)
+  )
+}
+
+test('extractZips with unzipped file', async() => {
+  const fileName = 'bibi/bobo.json'
+  const content = '{"hello": 1}'
+  const file = mockFile(fileName, content)
+  const extracted = await FileManager.extractZips([file], /bobo/)
+  expect(extracted.length).toEqual(1)
+  expect(extracted[0]).toEqual(file)
+})
+
+test('extractZips with zipped file', async() => {
+  const fileName = 'bibi/bobo.json'
+  const content = '{"hello": 1}'
+  const zipFileName = 'test-extractZips.zip'
+  try {
+    deleteFileIfExists(zipFileName)
+    await storeAsZipFile(zipFileName, fileName, content)
+    const zipContent = fs.readFileSync(zipFileName)
+    const file = new NodeFile(zipContent, zipFileName)
+    const extracted = await FileManager.extractZips([file], /bobo/)
+    expect(extracted.length).toEqual(1)
+    expect(extracted[0]).toEqual(file)
+  } finally {
+    deleteFileIfExists(zipFileName)
+  }
+})
+test('removeZipName', () => {
+  const fileName = 'test-removeZipName.zip/bibi/bobo.json'
+  const content = '{"hello": 1}'
+  const file = new NodeFile(content, fileName)
+  const removed = FileManager.removeZipName([file])
+  expect(removed.length).toEqual(1)
+  expect(removed[0].name).toEqual('bibi/bobo.json')
+  expect(removed[0].text()).toEqual(content)
 })
 
 test('a json file in file manager', async() => {
