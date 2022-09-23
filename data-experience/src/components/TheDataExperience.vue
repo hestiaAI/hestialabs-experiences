@@ -88,15 +88,24 @@ import fileManagerWorkers from '../utils/file-manager-workers'
 import { mapState } from 'vuex'
 import UnitIntroduction from './unit/UnitIntroduction.vue'
 import UnitFileExplorer from './unit/file-explorer/UnitFileExplorer.vue'
+import UnitQuery from './unit/UnitQuery.vue'
 export default {
   name: 'TheDataExperience',
   props: {
     experienceConfig: {
       type: Object,
       required: true
+    },
+    siteConfig: {
+      type: Object,
+      required: true
+    },
+    bubbleConfig: {
+      type: Object,
+      default: () => {}
     }
   },
-  components: { UnitIntroduction, UnitFileExplorer },
+  components: { UnitIntroduction, UnitFileExplorer, UnitQuery },
   data() {
     const properties = pick(this.experienceConfig, [
       'databaseConfig',
@@ -121,6 +130,7 @@ export default {
   },
   computed: {
     ...mapState('dataexp', ['fileManager']),
+    ...mapState('dataexp', { experienceProgress: 'progress' }),
     tabs() {
       const disabled = !this.success || this.experienceProgress
       const tabs = [
@@ -247,7 +257,6 @@ export default {
           const records = await DBMS.generateRecords(fileManager, dbConfig)
           // insert the records into the database
           DBMS.insertRecords(db, records)
-          console.log('DB created, setting store')
           // commit the database to the Vuex store
           this.$store.commit('dataexp/setCurrentDB', db)
         }

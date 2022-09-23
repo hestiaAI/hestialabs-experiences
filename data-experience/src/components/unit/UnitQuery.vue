@@ -103,8 +103,9 @@
 <script>
 import { mapState } from 'vuex'
 import { cloneDeep, merge } from 'lodash-es'
-
+import UnitPipelineSql from './UnitPipelineSql.vue'
 export default {
+  components: { UnitPipelineSql },
   props: {
     slug: {
       type: String,
