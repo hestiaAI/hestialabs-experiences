@@ -1,4 +1,9 @@
 {
+  "app": {
+    "name": "HestiaLabs Experiences",
+    "shortName": "HestiaLabs",
+    "description": "We create a new relationship to personal data"
+  },
   "base-button-share": {
     "error-sharing-not-supported": "Your system does not support sharing files",
     "error-sharing-failed": "We apologize, but the sharing operation failed for an unknown reason. Please try again later.",

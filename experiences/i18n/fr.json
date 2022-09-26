@@ -1,4 +1,9 @@
 {
+  "app": {
+    "name": "Expériences HestiaLabs",
+    "shortName": "HestiaLabs",
+    "description": "Nous créons une nouvelle relation avec les données personnelles"
+  },
   "base-button-share": {
     "error-sharing-not-supported": "Votre système ne prend pas en charge le partage de fichiers",
     "error-sharing-failed": "Nous sommes désolés, mais l'opération de partage a échoué pour une raison inconnue. Veuillez réessayer plus tard.",

@@ -14,9 +14,6 @@ export const state = () => ({
 })
 
 export const getters = {
-  appName(state) {
-    return state.config.appName
-  },
   enabledExperiences(state) {
     return state.experiences.filter(
       ({ slug, disabled }) => !disabled && slug !== 'other'
@@ -164,10 +161,7 @@ export const actions = {
           }
         }
       }
-      commit('setConfig', {
-        ...config,
-        appName: 'HestiaLabs Experiences'
-      })
+      commit('setConfig', config)
     }
   },
   async loadExperiences({ commit, state }) {

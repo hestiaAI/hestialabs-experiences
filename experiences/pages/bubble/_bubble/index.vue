@@ -14,9 +14,10 @@
 
 <script>
 import validate from '@/pages/validate'
-import { vueMeta } from '@/utils/utils'
+import mixin from '@/mixins/page'
 
 export default {
+  mixins: [mixin],
   middleware: 'auth',
   validate(context) {
     return validate.bubble(context)
@@ -25,7 +26,7 @@ export default {
     const bubbleText = this.$tc('Bubble', 1)
     const { title: t } = this.bubble
     const title = this.$i18n.locale === 'fr' ? `${bubbleText} ${t}` : `${t} ${bubbleText}`
-    return vueMeta(this, title)
+    return this.vueMeta(title)
   },
   computed: {
     bubble() {

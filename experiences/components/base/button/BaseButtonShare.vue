@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['appName', 'experience']),
+    ...mapGetters(['experience']),
     experienceTitle() {
       const { title } = this.experience(this.$route)
       return title
@@ -67,10 +67,11 @@ export default {
         // use prop when provided
         return title
       }
+      const appName = this.$t('app.name')
       if (experienceTitle) {
-        return `${this.appName}: ${experienceTitle}`
+        return `${appName}: ${experienceTitle}`
       }
-      return this.appName
+      return appName
     },
     quoteToShare() {
       const { text, experienceTitle } = this
