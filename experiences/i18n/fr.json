@@ -1,4 +1,15 @@
 {
+  "app": {
+    "name": "Expériences HestiaLabs",
+    "shortName": "HestiaLabs",
+    "description": "Nous créons une nouvelle relation avec les données personnelles"
+  },
+  "base-button-share": {
+    "error-sharing-not-supported": "Votre système ne prend pas en charge le partage de fichiers",
+    "error-sharing-failed": "Nous sommes désolés, mais l'opération de partage a échoué pour une raison inconnue. Veuillez réessayer plus tard.",
+    "quote-to-share-default": "Analyser les données recueillies sur vous.",
+    "quote-to-share-experience": "Analyser les données recueillies sur vous par {experienceTitle}."
+  },
   "data-validator": {
     "invalid-format": "Les données dans ce format ne peuvent pas être affichées dans un tableau.",
     "no-data": "Aucune donnée pertinente trouvée"
@@ -19,6 +30,12 @@
     },
     "top-row": {
       "heading": "Au total nous avons trouvé {total} {countLabel} entre {minDate} et {maxDate}"
+    },
+    "generic-map": {
+      "search-info": "Veuillez utiliser le champ de recherche et les filtres ci-dessous pour modifier ce qui est affiché sur la carte.",
+      "add-noise": "Ajouter du bruit",
+      "noise-level": "Niveau de bruit",
+      "meters": "mètres"
     }
   },
   "unit-files": {
@@ -99,19 +116,6 @@
       }
     }
   },
-  "generic-map": {
-    "search-info": "Veuillez utiliser le champ de recherche et les filtres ci-dessous pour modifier ce qui est affiché sur la carte.",
-    "add-noise": "Ajouter du bruit",
-    "noise-level": "Niveau de bruit",
-    "meters": "mètres"
-  },
-  "google-one-place": {
-    "total-time-spend": "Temps total passé à",
-    "mean-time-spend": "Temps moyen passé à",
-    "entropy": "Entropie pour",
-    "entropy-info": "Plus cette valeur est élevée, plus l'incertitude de Google était grande au moment de décider si vous avez visité",
-    "other-candidates": "Cette carte montre les autres candidats proposés par Google associés à"
-  },
   "share-data": {
     "name": "Partager mes données"
   },
@@ -132,6 +136,7 @@
   "Available on-demand": "Disponible sur demande",
   "Bubble": "Bulle | Bulles",
   "Clear": "Annuler",
+  "Clear all": "Effacer tout",
   "click-graph": "Veuillez cliquer sur un graphique pour appliquer des filtres.",
   "Close": "Fermer",
   "Connected to bubble": "Connecté à la bulle",

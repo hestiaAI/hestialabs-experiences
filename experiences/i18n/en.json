@@ -1,4 +1,15 @@
 {
+  "app": {
+    "name": "HestiaLabs Experiences",
+    "shortName": "HestiaLabs",
+    "description": "We create a new relationship to personal data"
+  },
+  "base-button-share": {
+    "error-sharing-not-supported": "Your system does not support sharing files",
+    "error-sharing-failed": "We apologize, but the sharing operation failed for an unknown reason. Please try again later.",
+    "quote-to-share-default": "Analyze the data collected on you.",
+    "quote-to-share-experience": "Analyze the data collected on you by {experienceTitle}."
+  },
   "data-validator": {
     "invalid-format": "Data in this format cannot be displayed in a table",
     "no-data": "No relevant data found"
@@ -19,6 +30,12 @@
     },
     "top-row": {
       "heading": "In total we found {total} {countLabel} between {minDate} and {maxDate}"
+    },
+    "generic-map": {
+      "search-info": "Please use the search box and filters below to change what is shown on the map.",
+      "add-noise": "Add Noise",
+      "noise-level": "Noise Level",
+      "meters": "meters"
     }
   },
   "unit-files": {
@@ -99,19 +116,6 @@
       }
     }
   },
-  "generic-map": {
-    "search-info": "Please use the search box and filters below to change what is shown on the map.",
-    "add-noise": "Add Noise",
-    "noise-level": "Noise Level",
-    "meters": "meters"
-  },
-  "google-one-place": {
-    "total-time-spend": "Total time spend at the",
-    "mean-time-spend": "Mean time spend at the",
-    "entropy": "Entropy for",
-    "entropy-info": "The higher this value is, the more uncertain Google was when deciding if you visited",
-    "other-candidates": "This map shows the other candidates proposed by Google associated to the"
-  },
   "share-data": {
     "name": "Share my data"
   },
@@ -132,6 +136,7 @@
   "Available on-demand": "Available on-demand",
   "Bubble": "Bubble | Bubbles",
   "Clear": "Clear",
+  "Clear all": "Clear all",
   "click-graph": "Please click on the graph to apply filters.",
   "Close": "Close",
   "Connected to bubble": "Connected to bubble",
