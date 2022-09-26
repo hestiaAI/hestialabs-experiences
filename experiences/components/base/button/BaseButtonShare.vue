@@ -12,14 +12,6 @@
 import 'share-api-polyfill'
 import { mapState, mapGetters } from 'vuex'
 
-async function navigatorShare(shareData, polyfillOptions) {
-  try {
-    await navigator.share(shareData, polyfillOptions)
-  } catch (err) {
-    console.error('navigator.share() failed', err)
-  }
-}
-
 export default {
   props: {
     buttonText: {
@@ -86,17 +78,17 @@ export default {
         // use prop when provided
         return text
       }
-      let textToShare = 'Analyze the data collected on you'
-      if (experienceTitle) {
-        textToShare += ` by ${experienceTitle}`
-      }
-      return `${textToShare}.`
+      const quoteToShareKey = `quote-to-share-${experienceTitle ? 'experience' : 'default'}`
+      return this.$t(this.k(quoteToShareKey), { experienceTitle })
     },
     textToShare() {
       return `${this.quoteToShare} ${this.hashtags.map(h => `#${h}`).join(' ')}`
     }
   },
   methods: {
+    k(key) {
+      return `base-button-share.${key}`
+    },
     async share() {
       const {
         hashtags,
@@ -110,7 +102,7 @@ export default {
         files.length &&
         !(navigator.canShare && navigator.canShare({ files }))
       ) {
-        throw new Error('Your system does not support sharing files')
+        throw new Error(this.$t(this.k('error-sharing-not-supported')))
       }
 
       let text = quoteToShare
@@ -126,29 +118,33 @@ export default {
         url,
         files
       }
+      try {
+        await navigator.share(
+          {
+            // Web Share Api options
+            ...webShareData,
 
-      await navigatorShare(
-        {
-          // Web Share Api options
-          ...webShareData,
-
-          // share-api-polyfill options
-          hashtag: 'hestialabs',
-          hashtags,
-          via: 'HestiaLabs'
-          // fbId enables sharing with Facebook Messenger
-          // fbId: '?'
-        },
-        {
-          skype: false,
-          // disable text sharing with email, copy, sms, and messenger
-          // since polyfill does not support text for these types
-          email: !text,
-          sms: !text,
-          copy: !text,
-          messenger: !text
-        }
-      )
+            // share-api-polyfill options
+            hashtag: 'hestialabs',
+            hashtags,
+            via: 'HestiaLabs'
+            // fbId enables sharing with Facebook Messenger
+            // fbId: '?'
+          },
+          {
+            skype: false,
+            // disable text sharing with email, copy, sms, and messenger
+            // since polyfill does not support text for these types
+            email: !text,
+            sms: !text,
+            copy: !text,
+            messenger: !text
+          }
+        )
+      } catch (err) {
+        console.error('navigator.share() failed', err)
+        throw new Error(this.$t(this.k('error-sharing-failed')))
+      }
     }
   }
 }

@@ -1,4 +1,10 @@
 {
+  "base-button-share": {
+    "error-sharing-not-supported": "Your system does not support sharing files",
+    "error-sharing-failed": "We apologize, but the sharing operation failed for an unknown reason. Please try again later.",
+    "quote-to-share-default": "Analyze the data collected on you.",
+    "quote-to-share-experience": "Analyze the data collected on you by {experienceTitle}."
+  },
   "data-validator": {
     "invalid-format": "Data in this format cannot be displayed in a table",
     "no-data": "No relevant data found"
