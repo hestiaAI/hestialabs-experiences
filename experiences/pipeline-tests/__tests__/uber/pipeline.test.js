@@ -1,7 +1,6 @@
 import experience from '@hestiaai/uber'
 import { testTripsData, tripsHeaders, tripsItems } from './samples.helpers'
-import FileManager from '~/utils/file-manager'
-import { mockFile } from '~/utils/__mocks__/file-manager-mock'
+import FileManager, { NodeFile } from '~/utils/file-manager'
 import { arrayEqualNoOrder, getCustomPipelineFromBlock } from '~/utils/test-utils'
 
 const { preprocessors, files, keepOnlyFiles } = experience.options
@@ -11,7 +10,7 @@ const fileManager = new FileManager(
   files,
   keepOnlyFiles
 )
-const fileTrips = mockFile('test/Rider/trips_data.csv', testTripsData)
+const fileTrips = new NodeFile('test/Rider/trips_data.csv', testTripsData)
 
 describe('with complete samples', () => {
   beforeAll(async() => await fileManager.init([fileTrips]))

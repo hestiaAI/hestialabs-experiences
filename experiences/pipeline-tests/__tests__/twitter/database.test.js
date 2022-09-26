@@ -5,7 +5,7 @@ import {
   missingAttributesImpressions,
   missingAttributesEngagements
 } from './samples.helpers'
-import { mockFile } from '~/utils/__mocks__/file-manager-mock'
+import { NodeFile } from '~/utils/file-manager'
 import {
   DatabaseTester,
   arrayEqualNoOrder,
@@ -17,8 +17,8 @@ const getSql = getSqlFromBlock.bind(null, experience)
 
 async function init(adImpressions, adEngagements) {
   const files = [
-    mockFile('test/data/ad-impressions.js', JSON.stringify(adImpressions)),
-    mockFile('test/data/ad-engagements.js', JSON.stringify(adEngagements))
+    new NodeFile('test/data/ad-impressions.js', JSON.stringify(adImpressions)),
+    new NodeFile('test/data/ad-engagements.js', JSON.stringify(adEngagements))
   ]
   await tester.init(experience, files)
 }

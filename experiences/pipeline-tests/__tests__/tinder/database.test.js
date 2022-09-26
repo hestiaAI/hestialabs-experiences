@@ -1,6 +1,6 @@
 import experience from '@hestiaai/tinder'
 import { tinder } from './samples.helpers'
-import { mockFile } from '~/utils/__mocks__/file-manager-mock'
+import { NodeFile } from '~/utils/file-manager'
 import {
   DatabaseTester,
   arrayEqualNoOrder,
@@ -12,7 +12,7 @@ const getSql = getSqlFromBlock.bind(null, experience)
 
 describe('with complete samples', () => {
   beforeAll(async() => {
-    const files = [mockFile('input.json', JSON.stringify(tinder))]
+    const files = [new NodeFile('input.json', JSON.stringify(tinder))]
     await tester.init(experience, files)
   })
   afterAll(() => tester.close())

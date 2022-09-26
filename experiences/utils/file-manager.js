@@ -679,3 +679,70 @@ export default class FileManager {
     return makeItemsRec(tree)
   }
 }
+
+export class NodeFile {
+  #content
+  #name
+
+  constructor(name, content) {
+    this.#content = content
+    this.#name = name
+  }
+
+  get name() {
+    return this.#name
+  }
+
+  get blob() {
+    return this.#content
+  }
+
+  text() {
+    return this.#content.toString()
+  }
+
+  get bufferType() {
+    return 'nodebuffer'
+  }
+
+  copy(newName) {
+    return new NodeFile(newName, this.#content)
+  }
+
+  build(content, name) {
+    return new NodeFile(name, content)
+  }
+}
+
+export class BrowserFile {
+  constructor(file) {
+    this.file = file
+  }
+
+  get name() {
+    return this.file.name
+  }
+
+  get blob() {
+    return this.file.data
+  }
+
+  text() {
+    return this.file.text()
+  }
+
+  get bufferType() {
+    return 'blob'
+  }
+
+  copy(newName) {
+    const clone = this.file.slice(0, this.file.size)
+    const file = new File([clone], newName)
+    return new BrowserFile(file)
+  }
+
+  build(content, name) {
+    const file = new File([content], name)
+    return new BrowserFile(file)
+  }
+}

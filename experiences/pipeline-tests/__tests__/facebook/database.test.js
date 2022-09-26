@@ -6,7 +6,7 @@ import {
   yourOffFacebookActivity,
   adsInterests
 } from './samples.helpers'
-import { mockFile } from '~/utils/__mocks__/file-manager-mock'
+import { NodeFile } from '~/utils/file-manager'
 import {
   DatabaseTester,
   arrayEqualNoOrder,
@@ -19,23 +19,23 @@ const getSql = getSqlFromBlock.bind(null, experience)
 describe('with complete samples', () => {
   beforeAll(async() => {
     const files = [
-      mockFile(
+      new NodeFile(
         'ads_information/advertisers_using_your_activity_or_information.json',
         JSON.stringify(advertisersUsingYourActivity)
       ),
-      mockFile(
+      new NodeFile(
         'ads_information/advertisers_who_uploaded_a_contact_list_with_your_information.json',
         JSON.stringify(advertisersWhoUploadedAContactList)
       ),
-      mockFile(
+      new NodeFile(
         "ads_information/advertisers_you've_interacted_with.json",
         JSON.stringify(advertisersInteractedWith)
       ),
-      mockFile(
+      new NodeFile(
         'apps_and_websites_off_of_facebook/your_off-facebook_activity.json',
         JSON.stringify(yourOffFacebookActivity)
       ),
-      mockFile(
+      new NodeFile(
         'other_logged_information/ads_interests.json',
         JSON.stringify(adsInterests)
       )
