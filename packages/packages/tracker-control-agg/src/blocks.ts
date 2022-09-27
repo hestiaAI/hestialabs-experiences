@@ -17,7 +17,7 @@ const blocks: ViewBlocks = [
     files: ['tracker-control'],
     visualization: 'ChartViewDirectedGraph.vue',
     title: 'Data hoarding',
-    text: 'Your data is transferred from applications to third parties, but did you know that there is a whole economy behind this data transfer, and that many exchange data with each other?.'
+    text: 'Your data is transferred from applications to third parties, but did you know that there is a whole economy behind this data transfer, and that many exchange data with each other?'
   }
 ]
 
