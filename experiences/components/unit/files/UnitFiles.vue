@@ -267,11 +267,6 @@ export default {
             }
             const blob = await decryptBlobPromise(f.data, this.privateKey, publicKey)
             return new File([blob], f.name)
-            // return this.privateKey
-            //   ? decryptBlobPromise(f.data, this.privateKey, publicKey).then(
-            //     blob => new File([blob], f.name)
-            //   )
-            //   : f.data
           })
         )
         this.status = true
@@ -279,22 +274,6 @@ export default {
       } catch (error) {
         console.error(error)
       }
-      // Promise.all(
-      //   this.uppy.getFiles().map((f) => {
-      //     return this.privateKey
-      //       ? decryptBlobPromise(f.data, this.privateKey, publicKey).then(
-      //         blob => new File([blob], f.name)
-      //       )
-      //       : f.data
-      //   })
-      // )
-      //   .then((decryptedFiles) => {
-      //     this.status = true
-      //     this.$emit('update', { uppyFiles: decryptedFiles })
-      //   })
-      //   .catch((error) => {
-      //     console.error(error)
-      //   })
     }
   }
 }

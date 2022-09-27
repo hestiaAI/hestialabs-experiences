@@ -289,7 +289,7 @@ export default {
         }
       })
     },
-    fetchFiles() {
+    async fetchFiles() {
       this.apiError = null
       this.apiStatus = 'Downloading files from server...'
       this.status = true
@@ -300,31 +300,53 @@ export default {
         idx => this.fileItems[idx].filename
       )
 
+      try {
+        const filePromises = filenames.map(filename =>
+          getFilePromise(this.bubble, filename))
+        const encryptedFiles = await Promise.all(filePromises)
+        this.apiStatus = 'Decrypting files...'
+        const decryptedFiles = await
+        Promise.all(
+          encryptedFiles.map(async(fileBlob, i) => {
+            if (!this.privateKey) {
+              return fileBlob
+            }
+            const privateKey = await this.privateKey.text()
+            const blob = await decryptBlobPromise(fileBlob, privateKey, this.publicKey)
+            const filename = filenames[i]
+            return new File([blob], filename)
+          }))
+        this.apiStatus = 'Processing files...'
+        this.$emit('update', { uppyFiles: decryptedFiles })
+      } catch (error) {
+        console.error(error)
+        this.apiError = error.toString()
+      }
       // First Fetch the files
-      Promise.all(
-        filenames.map(filename =>
-          getFilePromise(this.bubble, filename)
-            .then((fileBlob) => {
-              this.apiStatus = 'Decrypting files...'
-              return this.privateKey
-                ? this.privateKey
-                  .text()
-                  .then(privateKey =>
-                    decryptBlobPromise(fileBlob, privateKey, this.publicKey)
-                  )
-                : fileBlob
-            })
-            .then(blob => new File([blob], filename))
-        )
-      )
-        .then((decryptedFiles) => {
-          this.apiStatus = 'Processing files...'
-          this.$emit('update', { uppyFiles: decryptedFiles })
-        })
-        .catch((error) => {
-          console.error(error)
-          this.apiError = error.toString()
-        })
+      // Promise.all(
+      //   filenames.map(filename =>
+      //     getFilePromise(this.bubble, filename)
+      //       .then((fileBlob) => {
+      //         this.apiStatus = 'Decrypting files...'
+      //         return this.privateKey
+      //           ? this.privateKey
+      //             .text()
+      //             .then(privateKey =>
+      //               decryptBlobPromise(fileBlob, privateKey, this.publicKey)
+      //             )
+      //           : fileBlob
+      //       })
+      //       .then(blob => new File([blob], filename))
+      //   )
+      // )
+      //   .then((decryptedFiles) => {
+      //     this.apiStatus = 'Processing files...'
+      //     this.$emit('update', { uppyFiles: decryptedFiles })
+      //   })
+      //   .catch((error) => {
+      //     console.error(error)
+      //     this.apiError = error.toString()
+      //   })
     }
   }
 }
