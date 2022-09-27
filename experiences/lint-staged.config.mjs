@@ -9,7 +9,9 @@ const removeIgnoredFiles = async(files) => {
     })
   )
   const filteredFiles = files.filter((_, i) => !isIgnored[i])
-  console.info(`Linting the following files:\n${filteredFiles.join('\n')}`)
+  if (filteredFiles.length) {
+    console.info(`[lint-staged] Linting the following files:\n${filteredFiles.join('\n')}`)
+  }
   return filteredFiles.join(' ')
 }
 
@@ -17,11 +19,17 @@ export default {
   '**/*.{js,vue}': async(filenames) => {
     // only lint changed files
     const filesToLint = await removeIgnoredFiles(filenames)
+    if (!filesToLint) {
+      return 'exit'
+    }
     return `npm run lint -- --fix ${filesToLint}`
   },
   '**/*.{json,md}': async(filenames) => {
     // only format changed files
     const filesToLint = await removeIgnoredFiles(filenames)
+    if (!filesToLint) {
+      return 'exit'
+    }
     return `prettier --write ${filesToLint}`
   }
 }
