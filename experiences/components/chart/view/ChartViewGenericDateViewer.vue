@@ -135,7 +135,6 @@ export default {
       barChart: null,
       dateDimension: null,
       volumeGroup: null,
-      graphId: 'graph_' + this._uid,
       header: [
         ['File name', 'filename'],
         ['Date', 'dateStr'],

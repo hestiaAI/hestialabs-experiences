@@ -19,7 +19,7 @@ module.exports = {
     'no-console': [
       'warn',
       {
-        allow: ['info', 'warn', 'error']
+        allow: ['info', 'warn', 'error', 'time', 'timeEnd']
       }
     ],
     // https://stackoverflow.com/a/64609434/8238129

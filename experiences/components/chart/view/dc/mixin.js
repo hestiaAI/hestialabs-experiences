@@ -48,7 +48,7 @@ export default {
   },
   data() {
     return {
-      graphId: 'graph_' + this._uid
+      graphId: 'graph_' + this.id
     }
   },
   mounted() {
