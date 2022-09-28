@@ -50,7 +50,7 @@ WITH
       TwitterAd a
       INNER JOIN TwitterCriterion c ON a.id = c.adId
     WHERE
-      a.time > DATE('now', '-1 year')
+      a.time > DATE('now', '-1 month')
   )
 SELECT
   (

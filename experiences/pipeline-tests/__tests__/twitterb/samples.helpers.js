@@ -34,8 +34,7 @@ export const adImpressions = [
             },
             {
               deviceInfo: {
-                osType: 'Android',
-                deviceId: '5PUake33TotLdJaLdfujR7VJtgQ5uyQU2Hb7OIU8sCw='
+                osType: 'Android'
               },
               displayLocation: 'SearchTweets',
               promotedTweetInfo: {

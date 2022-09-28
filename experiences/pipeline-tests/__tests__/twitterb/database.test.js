@@ -196,10 +196,10 @@ describe('with complete samples', () => {
     arrayEqualNoOrder(result.items, expected.items)
   })
 
-  test('query overview-last-year returns the correct items', () => {
-    const sql = getSql('overview-last-year')
-    // const sql = readFileSync(path.join(__dirname, 'overview-last-year.sql')).toString()
-    const correctedSql = sql.replace('now', '2022-04-14')
+  test('query overview-last-month returns the correct items', () => {
+    const sql = getSql('overview-last-month')
+    // const sql = readFileSync(path.join(__dirname, 'overview-last-month.sql')).toString()
+    const correctedSql = sql.replace('now', '2021-04-17')
     const result = tester.select(correctedSql)
     const expected = {
       headers: [

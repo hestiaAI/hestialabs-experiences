@@ -1,7 +1,7 @@
 import type { ViewBlocks } from '@/types'
 
 import sqlOverview from './sql/overview.sql'
-import sqlOverviewLastYear from './sql/overview-last-year.sql'
+import sqlOverviewLastMonth from './sql/overview-last-month.sql'
 import sqlPersonalization from './sql/personalization.sql'
 import sqlAdsPerAdvertiser from './sql/ads-per-advertiser.sql'
 import sqlTargetingCriteriaByAdvertiser from './sql/targeting-criteria-by-advertiser.sql'
@@ -24,12 +24,12 @@ const blocks: ViewBlocks = [
     text: 'Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results.'
   },
   {
-    id: 'overview-last-year',
-    sql: sqlOverviewLastYear,
+    id: 'overview-last-month',
+    sql: sqlOverviewLastMonth,
     files: ['impressions', 'engagements'],
     visualization: 'ChartViewOverviewTwitter.vue',
-    title: 'Advertising overview',
-    text: 'Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results.'
+    title: 'Advertising overview (last month)',
+    text: 'Understand how much, who and why you have been targeted by Twitter ads last month in this interactive visualization. Click on any graph to filter the results.'
   },
   {
     id: 'ads-per-advertiser',
