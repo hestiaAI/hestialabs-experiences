@@ -290,6 +290,9 @@ export default {
       })
     },
     fetchFiles() {
+      const consoleLabel = (...labels) => `UnitDownload.fetchFiles${labels.length ? '.' + labels.join('.') : ''}`
+      console.time(consoleLabel())
+
       this.apiError = null
       this.apiStatus = 'Downloading files from server...'
       this.status = true
@@ -302,22 +305,27 @@ export default {
 
       // First Fetch the files
       Promise.all(
-        filenames.map(filename =>
-          getFilePromise(this.bubble, filename)
+        filenames.map((filename) => {
+          console.time(consoleLabel('getFile', filename))
+          return getFilePromise(this.bubble, filename)
             .then((fileBlob) => {
+              console.timeEnd(consoleLabel('getFile', filename))
               this.apiStatus = 'Decrypting files...'
+              console.time(consoleLabel('decryptBlob', filename))
               return this.privateKey
                 ? this.privateKey
                   .text()
-                  .then(privateKey =>
-                    decryptBlobPromise(fileBlob, privateKey, this.publicKey)
-                  )
+                  .then(privateKey => decryptBlobPromise(fileBlob, privateKey, this.publicKey))
                 : fileBlob
             })
-            .then(blob => new File([blob], filename))
-        )
+            .then((blob) => {
+              console.timeEnd(consoleLabel('decryptBlob', filename))
+              return new File([blob], filename)
+            })
+        })
       )
         .then((decryptedFiles) => {
+          console.timeEnd(consoleLabel())
           this.apiStatus = 'Processing files...'
           this.$emit('update', { uppyFiles: decryptedFiles })
         })
