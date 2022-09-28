@@ -140,13 +140,9 @@ export class DB {
       // disregard auto-incremented columns in INSERT statement
       name => !table.datatype(name).toLowerCase().includes('autoincrement')
     )
-    const columnsJoined = columns.join(', ')
-    const placeholders = columns.map(_ => '?').join(', ')
-
-    const sql = `INSERT INTO ${tableName}(${columnsJoined}) VALUES (${placeholders});`
+    const sql = `INSERT INTO ${tableName}(${columns.join(', ')}) VALUES (${columns.map(c => `:${c}`).join(', ')});`
     items.forEach((item) => {
-      const values = columns.map(c => item[c])
-      this.#db.run(sql, values)
+      this.#db.run(sql, item)
     })
   }
 
