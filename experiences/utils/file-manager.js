@@ -127,6 +127,7 @@ export default class FileManager {
     this.idToGlob = await this.fetchDynamicFiles()
     this.setInitialValues()
     this.setShortFilenames()
+    console.log('iog', this.idToGlob)
     return this
   }
 
