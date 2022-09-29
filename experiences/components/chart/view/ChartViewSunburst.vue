@@ -18,8 +18,7 @@ export default {
   mixins: [mixin],
   data() {
     return {
-      bcItems: [],
-      graphId: 'graph_' + this._uid
+      bcItems: []
     }
   },
   watch: {
