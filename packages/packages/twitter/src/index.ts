@@ -26,7 +26,7 @@ const options: ExperienceOptions = {
     '**/*.js': preprocessor
   },
   hideFileExplorer: false,
-  title: 'Twitter',
+  title: 'Twitter.',
   tutorialVideos: ['https://vimeo.com/691109800'],
   viewBlocks
 }
