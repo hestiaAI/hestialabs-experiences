@@ -58,4 +58,12 @@
   to = "index.html"
   status = 200
 
+[[headers]]
+  # for = "/_nuxt/node_modules/*wasm"
+  for = "/_nuxt/node_modules/sql.js/dist/sql-wasm.020d507.wasm"
+  [headers.values]
+    # X-Frame-Options = "DENY"
+    Content-Type = "application/wasm"
+
+
 # eof
