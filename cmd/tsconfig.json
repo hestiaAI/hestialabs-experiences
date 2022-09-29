@@ -20,12 +20,7 @@
     "baseUrl": ".",
     "resolveJsonModule": true,
     // https://bobbyhadz.com/blog/typescript-cannot-find-module
-    "moduleResolution": "node",
-    "paths": {
-      "@/*": [
-        "../*"
-      ]
-    }
+    "moduleResolution": "node"
   },
   "ts-node": {
     "compilerOptions": {

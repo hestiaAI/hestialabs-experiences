@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --experimental-specifier-resolution node --loader ts-node/esm ./pipe.ts"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^18.7.23"
+    "@types/node": "^18.7.23",
+    "@types/yargs": "^17.0.13",
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
     "yargs": "^17.5.1"
