@@ -1,6 +1,6 @@
 {
   "name": "@hestiaai/twitter-agg",
-  "version": "0.0.1-alpha.4",
+  "version": "0.0.0",
   "main": "dist/index",
   "type": "module",
   "files": [
@@ -15,5 +15,6 @@
     "access": "public"
   },
   "author": "",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "gitHead": "9a6350d5eea8ef4ca0f65dc4398d0b425ee7b50f"
 }
