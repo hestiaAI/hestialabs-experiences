@@ -70,7 +70,9 @@
     "swiss-mp-participant",
     "swiss-mp-aggregator",
     "th-participant",
-    "th-aggregator"
+    "th-aggregator",
+    "observe-aggregator",
+    "observe-participant"
   ],
   "homePageBubbles": [
     "demo-participant",
