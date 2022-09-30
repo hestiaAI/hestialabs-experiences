@@ -118,11 +118,11 @@ export default class FileManager {
    * @returns {Promise<FileManager>}
    */
   async init(uppyFiles) {
-    let fileList = await FileManager.extractZips(uppyFiles, this.filesRegex)
-    fileList = FileManager.filterFiles(fileList)
-    fileList = FileManager.removeZipName(fileList)
+    this.fileList = await FileManager.extractZips(uppyFiles, this.filesRegex)
+    this.fileList = FileManager.filterFiles(this.fileList)
+    this.fileList = FileManager.removeZipName(this.fileList)
     this.fileDict = Object.fromEntries(
-      fileList.map(file => [file.name, file])
+      this.fileList.map(file => [file.name, file])
     )
     this.idToGlob = await this.fetchDynamicFiles()
     this.setInitialValues()
@@ -225,7 +225,7 @@ export default class FileManager {
    * Return a MD5 hash
    */
   async hashAllFiles() {
-    const hashPromises = Object.values(this.fileDict).map(hashFile)
+    const hashPromises = Object.values(this.fileDict).map(f => f.hash())
     const fileHashes = await Promise.all(hashPromises)
     return hashString(fileHashes.join(''))
   }
@@ -680,40 +680,6 @@ export default class FileManager {
   }
 }
 
-export class NodeFile {
-  #content
-  #name
-
-  constructor(name, content) {
-    this.#content = content
-    this.#name = name
-  }
-
-  get name() {
-    return this.#name
-  }
-
-  get blob() {
-    return this.#content
-  }
-
-  text() {
-    return this.#content.toString()
-  }
-
-  get bufferType() {
-    return 'nodebuffer'
-  }
-
-  copy(newName) {
-    return new NodeFile(newName, this.#content)
-  }
-
-  build(content, name) {
-    return new NodeFile(name, content)
-  }
-}
-
 export class BrowserFile {
   constructor(file) {
     this.file = file
@@ -724,7 +690,7 @@ export class BrowserFile {
   }
 
   get blob() {
-    return this.file.data
+    return this.file
   }
 
   text() {
@@ -733,6 +699,10 @@ export class BrowserFile {
 
   get bufferType() {
     return 'blob'
+  }
+
+  hash() {
+    hashFile(this.file)
   }
 
   copy(newName) {

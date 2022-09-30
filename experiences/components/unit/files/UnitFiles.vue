@@ -84,6 +84,7 @@ import English from '@uppy/locales/lib/en_US'
 import French from '@uppy/locales/lib/fr_FR'
 
 import { decryptBlob } from '@/utils/encryption'
+import { BrowserFile } from '~/utils/file-manager'
 
 const locales = {
   en: English,
@@ -93,7 +94,7 @@ const locales = {
 async function fetchSampleFile({ path, filename }) {
   const response = await window.fetch(path)
   const blob = await response.blob()
-  return new File([blob], filename)
+  return new BrowserFile(new File([blob], filename))
 }
 
 export default {
@@ -266,7 +267,7 @@ export default {
               return f.data
             }
             const blob = await decryptBlobPromise(f.data, this.privateKey, publicKey)
-            return new File([blob], f.name)
+            return new BrowserFile(new File([blob], f.name))
           })
         )
         this.status = true

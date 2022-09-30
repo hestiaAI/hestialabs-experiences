@@ -269,14 +269,14 @@ export default {
       }
       this.$store.commit('setConsentForm', consentForm)
 
-      // Set file manager
-      const fileManager = new FileManager(
-        this.preprocessors,
-        fileManagerWorkers,
-        this.files,
-        this.keepOnlyFiles
-      )
       try {
+        // Set file manager
+        const fileManager = new FileManager(
+          this.preprocessors,
+          fileManagerWorkers,
+          this.files,
+          this.keepOnlyFiles
+        )
         await fileManager.init(uppyFiles)
         this.$store.commit('setFileManager', fileManager)
         if (dbConfig) {
