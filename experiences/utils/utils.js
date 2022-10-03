@@ -104,22 +104,3 @@ export function humanReadableFileSize(sizeInBytes) {
   const units = ['B', 'kB', 'MB', 'GB', 'TB']
   return `${(sizeInBytes / Math.pow(1024, i)).toFixed(2)} ${units[i]}`
 }
-
-export const vueMeta = ($nuxt, title) => {
-  const content = `${title} | ${$nuxt.$store.state.config.appName}`
-  return {
-    title,
-    meta: [
-      {
-        hid: 'og:title',
-        property: 'og:title',
-        content
-      },
-      {
-        hid: 'twitter:title',
-        property: 'twitter:title',
-        content
-      }
-    ]
-  }
-}

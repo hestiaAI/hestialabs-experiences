@@ -1,4 +1,11 @@
 {
+  "messages": {
+    "fr": {
+      "app": {
+        "name": "Досвід HestiaLabs"
+      }
+    }
+  },
   "experiences": [
     "ad-radar",
     "apple-tracker",
@@ -63,7 +70,9 @@
     "swiss-mp-participant",
     "swiss-mp-aggregator",
     "th-participant",
-    "th-aggregator"
+    "th-aggregator",
+    "observe-aggregator",
+    "observe-participant"
   ],
   "homePageBubbles": [
     "demo-participant",
@@ -73,7 +82,10 @@
     "matching-algo-course",
     "policy-making-course"
   ],
-  "hashtags": ["dataprivacy", "hestialabs"],
+  "hashtags": [
+    "dataprivacy",
+    "hestialabs"
+  ],
   "i18nUrl": "/i18n-messages-example.json",
   "i18nLocale": "fr",
   "filedrop": "https://example.com",

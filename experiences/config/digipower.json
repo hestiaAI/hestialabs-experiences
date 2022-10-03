@@ -1,5 +1,16 @@
 {
-  "appName": "#digipower Data Experiences",
+  "messages": {
+    "en": {
+      "app": {
+        "name": "#digipower Data Experiences"
+      }
+    },
+    "fr": {
+      "app": {
+        "name": "#digipower Expériences"
+      }
+    }
+  },
   "experiences": [
     "facebook",
     "twitter",
@@ -44,5 +55,9 @@
       "name": "Privacy"
     }
   ],
-  "hashtags": ["dataprivacy", "hestialabs", "digipower"]
+  "hashtags": [
+    "dataprivacy",
+    "hestialabs",
+    "digipower"
+  ]
 }
