@@ -1,9 +1,8 @@
-export class NodeFile extends File {
+export class NodeFile {
   #content
   #name
 
   constructor(name, content) {
-    super()
     this.#content = content
     this.#name = name
   }

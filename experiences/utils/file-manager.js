@@ -114,7 +114,7 @@ export default class FileManager {
   /**
    * Fills the FileManager with the given files and creates helper structures.
    * To be called once the files are available.
-   * @param {File[]} uppyFiles
+   * @param {(NodeFile | BrowserFile)[]} uppyFiles
    * @returns {Promise<FileManager>}
    */
   async init(uppyFiles) {
@@ -680,9 +680,8 @@ export default class FileManager {
   }
 }
 
-export class BrowserFile extends File {
+export class BrowserFile {
   constructor(file) {
-    super()
     this.file = file
   }
 
