@@ -36,6 +36,10 @@ const experiences = {
   uberDriver
 }
 
+// This doesn't help with reduce the size of the bundle
+// because the code isn't run when it's bundled.
+// It won't work unless you actually run the file.
+/*
 Object.values(experiences).forEach(experience => {
   const {
     options: {
@@ -56,5 +60,5 @@ Object.values(experiences).forEach(experience => {
     viewBlocks
   }
 })
-
+*/
 export default experiences

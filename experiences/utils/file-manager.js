@@ -82,10 +82,10 @@ export default class FileManager {
 
   /**
    * Builds a FileManager object without any files, just setting the configuration.
-   * @param {Object} preprocessors maps file name to preprocessor function
-   * @param {Object} workers the workers that this file manager should use
-   * @param {Object} idToGlob an object mapping IDs to globs
-   * @param {Boolean} keepOnlyFiles filter the uploaded files to keep only the one present in idToGlob
+   * @param {Object | null | undefined} preprocessors maps file name to preprocessor function
+   * @param {Object | null | undefined} workers the workers that this file manager should use
+   * @param {Object | null | undefined} idToGlob an object mapping IDs to globs
+   * @param {Boolean | null | undefined} keepOnlyFiles filter the uploaded files to keep only the one present in idToGlob
    */
   constructor(preprocessors, workers, idToGlob, keepOnlyFiles) {
     this.supportedExtensions = new Set([
@@ -343,7 +343,7 @@ export default class FileManager {
   /**
    * Return the CSV items of the file(s) that match the ID.
    * @param {String} id
-   * @returns an array
+   * @returns {Promise<PipelineOutput[]>} an array
    */
   async getCsvItemsFromId(id) {
     const paths = this.getFilePathsFromId(id)
@@ -680,11 +680,12 @@ export default class FileManager {
   }
 }
 
-export class NodeFile {
+export class NodeFile extends File {
   #content
   #name
 
   constructor(name, content) {
+    super()
     this.#content = content
     this.#name = name
   }
@@ -714,8 +715,9 @@ export class NodeFile {
   }
 }
 
-export class BrowserFile {
+export class BrowserFile extends File {
   constructor(file) {
+    super()
     this.file = file
   }
 
