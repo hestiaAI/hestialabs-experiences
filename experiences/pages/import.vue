@@ -95,6 +95,7 @@
             />
             <ChartView
               v-else-if="viz.endsWith('.vue')"
+              :id="result.id + 'viz'"
               :graph-name="viz"
               :data="result"
               :viz-props="vizProps"
@@ -108,7 +109,7 @@
         </VRow>
         <VRow>
           <VCol>
-            <UnitFilterableTable v-bind="{ ...result.result }" />
+            <UnitFilterableTable :id="result.id + 'table'" v-bind="{ ...result.result }" />
           </VCol>
         </VRow>
       </VCard>
