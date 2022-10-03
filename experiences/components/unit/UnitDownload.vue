@@ -164,7 +164,7 @@
 <script>
 import { promisify } from 'util'
 import { pick } from 'lodash-es'
-import { filetype2icon, extension2filetype } from '@/utils/file-manager'
+import { BrowserFile, filetype2icon, extension2filetype } from '@/utils/file-manager'
 import { decryptBlob } from '@/utils/encryption'
 
 export default {
@@ -289,7 +289,7 @@ export default {
         }
       })
     },
-    fetchFiles() {
+    async fetchFiles() {
       const consoleLabel = (...labels) => `UnitDownload.fetchFiles${labels.length ? '.' + labels.join('.') : ''}`
       console.time(consoleLabel())
 
@@ -303,36 +303,28 @@ export default {
         idx => this.fileItems[idx].filename
       )
 
-      // First Fetch the files
-      Promise.all(
-        filenames.map((filename) => {
-          console.time(consoleLabel('getFile', filename))
-          return getFilePromise(this.bubble, filename)
-            .then((fileBlob) => {
-              console.timeEnd(consoleLabel('getFile', filename))
-              this.apiStatus = 'Decrypting files...'
-              console.time(consoleLabel('decryptBlob', filename))
-              return this.privateKey
-                ? this.privateKey
-                  .text()
-                  .then(privateKey => decryptBlobPromise(fileBlob, privateKey, this.publicKey))
-                : fileBlob
-            })
-            .then((blob) => {
-              console.timeEnd(consoleLabel('decryptBlob', filename))
-              return new File([blob], filename)
-            })
-        })
-      )
-        .then((decryptedFiles) => {
-          console.timeEnd(consoleLabel())
-          this.apiStatus = 'Processing files...'
-          this.$emit('update', { uppyFiles: decryptedFiles })
-        })
-        .catch((error) => {
-          console.error(error)
-          this.apiError = error.toString()
-        })
+      try {
+        const filePromises = filenames.map(filename =>
+          getFilePromise(this.bubble, filename))
+        const encryptedFiles = await Promise.all(filePromises)
+        this.apiStatus = 'Decrypting files...'
+        const decryptedFiles = await
+        Promise.all(
+          encryptedFiles.map(async(fileBlob, i) => {
+            if (!this.privateKey) {
+              return fileBlob
+            }
+            const privateKey = await this.privateKey.text()
+            const blob = await decryptBlobPromise(fileBlob, privateKey, this.publicKey)
+            const filename = filenames[i]
+            return new BrowserFile(new File([blob], filename))
+          }))
+        this.apiStatus = 'Processing files...'
+        this.$emit('update', { uppyFiles: decryptedFiles })
+      } catch (error) {
+        console.error(error)
+        this.apiError = error.toString()
+      }
     }
   }
 }
