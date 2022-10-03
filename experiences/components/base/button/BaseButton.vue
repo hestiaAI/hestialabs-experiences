@@ -5,20 +5,20 @@
         :outlined="outlined"
         v-bind="[attrs, $attrs]"
         class="my-2"
-        v-on="{ on, $on }"
+        v-on="on"
         @click="$emit('click', $event)"
       >
         <VIcon v-if="icon" :left="text !== ''">
           {{ mdiIcon }}
         </VIcon>
         <slot>
-          <span>{{ $t(text) }}</span>
+          <span>{{ $tev(text, text) }}</span>
         </slot>
         <BaseProgressCircular v-if="progress" class="ml-2" />
         <StatusIndicator v-else-if="status" :error="error" />
       </VBtn>
     </template>
-    <span>{{ tooltip }}</span>
+    <span>{{ $tev(tooltip, tooltip) }}</span>
   </VTooltip>
 </template>
 

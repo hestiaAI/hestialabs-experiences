@@ -16,7 +16,7 @@
           <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
         <p v-if="config.consent">
-          {{ $t("generic-map.search-info") }}
+          {{ $t(k('search-info')) }}
           <br>
           {{ $t('filter-info') }}
         </p>
@@ -36,11 +36,11 @@
               v-bind="attrs"
               v-on="on"
             >
-              {{ $t('generic-map.add-noise') }}
+              {{ $t(k('add-noise')) }}
             </VBtn>
           </template>
           <VCard class="mx-auto" max-width="600">
-            <VCardTitle>{{ $t('generic-map.noise-level') }}</VCardTitle>
+            <VCardTitle>{{ $t(k('noise-level')) }}</VCardTitle>
             <VCardText>
               <VRow class="mb-4" justify="space-between">
                 <VCol class="text-left">
@@ -48,7 +48,7 @@
                     class="text-h2 font-weight-light"
                     v-text="sliderValue"
                   />
-                  <span class="subheading font-weight-light mr-1">{{ $t('generic-map.meters') }}</span>
+                  <span class="subheading font-weight-light mr-1">{{ $t(k('meters')) }}</span>
                 </VCol>
               </VRow>
 
@@ -155,7 +155,7 @@ export default {
       return {
         fields: this.headers.map((h) => {
           return {
-            name: this.$tev(this.kViewBlock(h, 'headers'), h)
+            name: h
           }
         }),
         rows: this.filteredRows.map(r => this.headers.map(h => r[h]))
@@ -169,6 +169,9 @@ export default {
     }
   },
   methods: {
+    k(key) {
+      return `chart-view.generic-map.${key}`
+    },
     increment() {
       this.sliderValue += 1
     },

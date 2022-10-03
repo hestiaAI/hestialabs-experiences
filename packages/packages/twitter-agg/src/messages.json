@@ -31,6 +31,32 @@
           ]
         }
       },
+      "overview-last-month": {
+        "title": "Advertising overview (last month)",
+        "text": "Understand who targeted you with Twitter ads last month, how much, and why, in this interactive visualization. Click on any graph to filter the results.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Number of ads printed",
+              "valueLabel": "ads"
+            },
+            {
+              "title": "Top Advertisers",
+              "valueLabel": "ads"
+            },
+            {
+              "title": "Interactions with ads (clicks, video views)",
+              "valueLabel": "ads"
+            },
+            {
+              "valueLabel": "ads"
+            },
+            {
+              "valueLabel": "ads"
+            }
+          ]
+        }
+      },
       "targeting": {
         "title": "Targeting Criteria",
         "text": "Find which criteria are used to target this group of person.",
@@ -62,6 +88,32 @@
       "overview": {
         "title": "Vue d'ensemble des publicités",
         "text": "Visualisation du nombre et de l'origine des publicités Twitter qui vous visent. Cliquer sur un graphique pour filtrer les résultats.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Nombre d'annonces imprimées",
+              "valueLabel": "pubs"
+            },
+            {
+              "title": "Top Annonceurs",
+              "valueLabel": "pubs"
+            },
+            {
+              "title": "Interactions avec les publicités (clics, visionnage de vidéos)",
+              "valueLabel": "pubs"
+            },
+            {
+              "valueLabel": "pubs"
+            },
+            {
+              "valueLabel": "pubs"
+            }
+          ]
+        }
+      },
+      "overview-last-month": {
+        "title": "Vue d'ensemble des publicités (du mois dernier)",
+        "text": "Visualisation du nombre, de l'origine et des critères de ciblage des publicités Twitter qui vous ont visé le mois dernier. Cliquer sur un graphique pour filtrer les résultats.",
         "vizProps": {
           "graphs": [
             {

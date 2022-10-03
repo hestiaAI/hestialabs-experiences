@@ -233,12 +233,12 @@ export default {
         })
 
       node
-        .on('mouseover', function(evt, d) {
-          const textToDisplay = `<b>${d.name.slice(0, -1)}</b><br><center><b>${
-            d.value
-          }</b> trips <b>${
-            d.name.slice(-1) === 's' ? 'from' : 'to'
-          }</b> this place</center>`
+        .on('mouseover', (evt, d) => {
+          const textToDisplay = this.$t(this.kViewBlock('nodeMouseoverHTML'), {
+            name: d.name.slice(0, -1),
+            value: d.value,
+            fromTo: this.$t(this.kViewBlock(d.name.slice(-1) === 's' ? 'from' : 'to'))
+          })
           // const x = d.x1 // (d.x0 + d.x1) / 2
           // const tooltipWidth = tooltip.node().getBoundingClientRect().width
           // const tooltipHeight = tooltip.node().getBoundingClientRect().height

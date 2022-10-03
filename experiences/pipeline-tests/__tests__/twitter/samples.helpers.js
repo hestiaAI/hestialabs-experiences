@@ -31,6 +31,33 @@ export const adImpressions = [
                 }
               ],
               impressionTime: '2021-04-15 19:43:25'
+            },
+            {
+              deviceInfo: {
+                osType: 'Android'
+              },
+              displayLocation: 'SearchTweets',
+              promotedTweetInfo: {
+                tweetId: '1389506561530384384',
+                tweetText: '« Super! Meine Frau will die Uhr nicht mehr abziehen. »\n#digitec',
+                urls: [],
+                mediaUrls: []
+              },
+              advertiserInfo: {
+                advertiserName: 'digitec',
+                screenName: '@digitec_de'
+              },
+              matchedTargetingCriteria: [
+                {
+                  targetingType: 'Locations',
+                  targetingValue: 'Switzerland'
+                },
+                {
+                  targetingType: 'Languages',
+                  targetingValue: 'English'
+                }
+              ],
+              impressionTime: '2020-06-05 15:27:46'
             }
           ]
         }
@@ -78,6 +105,41 @@ export const adEngagements = [
                 {
                   engagementTime: '2021-04-15 19:43:31',
                   engagementType: 'CardUrlClick'
+                }
+              ]
+            },
+            {
+              impressionAttributes: {
+                deviceInfo: {
+                  osType: 'Android'
+                },
+                displayLocation: 'SearchTweets',
+                promotedTweetInfo: {
+                  tweetId: '1389506561530384384',
+                  tweetText: '« Super! Meine Frau will die Uhr nicht mehr abziehen. »\n#digitec',
+                  urls: [],
+                  mediaUrls: []
+                },
+                advertiserInfo: {
+                  advertiserName: 'digitec',
+                  screenName: '@digitec_de'
+                },
+                matchedTargetingCriteria: [
+                  {
+                    targetingType: 'Locations',
+                    targetingValue: 'Switzerland'
+                  },
+                  {
+                    targetingType: 'Languages',
+                    targetingValue: 'English'
+                  }
+                ],
+                impressionTime: '2020-06-05 15:27:45'
+              },
+              engagementAttributes: [
+                {
+                  engagementTime: '2020-06-05 15:27:46',
+                  engagementType: 'ChargeableImpression'
                 }
               ]
             }

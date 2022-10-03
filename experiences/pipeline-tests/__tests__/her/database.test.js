@@ -1,6 +1,6 @@
 import experience from '@hestiaai/her'
 import { her } from './samples.helpers'
-import { NodeFile } from '~/utils/file-manager'
+import { NodeFile } from '~/utils/node-file'
 import {
   DatabaseTester,
   arrayEqualNoOrder,

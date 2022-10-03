@@ -47,8 +47,8 @@
         <VRow justify="center">
           <template v-if="workshops.length">
             <VCol
-              v-for="({ title, icon, description, slug}) in workshops"
-              :key="slug"
+              v-for="(workshop, index) in workshops"
+              :key="index"
               cols="12"
               sm="6"
               md="4"
@@ -56,7 +56,7 @@
               class="text-center"
             >
               <BaseBubbleCard
-                v-bind="{title, description, icon, slug}"
+                v-bind="workshop"
                 class="pa-3"
               />
             </VCol>
@@ -113,13 +113,11 @@
     </div>
   </div>
 </template>
+
 <script>
 import { pick } from 'lodash-es'
-import BaseBubbleCard from '../components/base/card/BaseBubbleCard.vue'
-import BaseTwitterCard from '@/components/base/card/BaseTwitterCard.vue'
 
 export default {
-  components: { BaseBubbleCard, BaseTwitterCard },
   data() {
     return {
       tools: [
@@ -148,8 +146,7 @@ export default {
         const config = pick(conf, [
           'title',
           'icon',
-          'description',
-          'publicKey'
+          'description'
         ])
         return { slug, ...config }
       }).filter(w => (this.$store.state.config.homePageBubbles || []).includes(w.slug))

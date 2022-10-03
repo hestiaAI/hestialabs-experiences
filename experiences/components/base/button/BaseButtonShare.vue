@@ -1,30 +1,16 @@
 <template>
-  <VTooltip left>
-    <template #activator="{ on }">
-      <BaseButton
-        v-if="condition"
-        icon="mdiShare"
-        :text="buttonText"
-        v-bind="$attrs"
-        @click="share"
-        v-on="on"
-      />
-    </template>
-    <span>Reset all</span>
-  </VTooltip>
+  <BaseButton
+    v-if="condition"
+    icon="mdiShare"
+    :text="buttonText"
+    v-bind="$attrs"
+    @click="share"
+  />
 </template>
 
 <script>
 import 'share-api-polyfill'
 import { mapState, mapGetters } from 'vuex'
-
-async function navigatorShare(shareData, polyfillOptions) {
-  try {
-    await navigator.share(shareData, polyfillOptions)
-  } catch (err) {
-    console.error('navigator.share() failed', err)
-  }
-}
 
 export default {
   props: {
@@ -62,7 +48,7 @@ export default {
   },
   computed: {
     ...mapState(['config']),
-    ...mapGetters(['appName', 'experience']),
+    ...mapGetters(['experience']),
     experienceTitle() {
       const { title } = this.experience(this.$route)
       return title
@@ -81,10 +67,11 @@ export default {
         // use prop when provided
         return title
       }
+      const appName = this.$t('app.name')
       if (experienceTitle) {
-        return `${this.appName}: ${experienceTitle}`
+        return `${appName}: ${experienceTitle}`
       }
-      return this.appName
+      return appName
     },
     quoteToShare() {
       const { text, experienceTitle } = this
@@ -92,17 +79,17 @@ export default {
         // use prop when provided
         return text
       }
-      let textToShare = 'Analyze the data collected on you'
-      if (experienceTitle) {
-        textToShare += ` by ${experienceTitle}`
-      }
-      return `${textToShare}.`
+      const quoteToShareKey = `quote-to-share-${experienceTitle ? 'experience' : 'default'}`
+      return this.$t(this.k(quoteToShareKey), { experienceTitle })
     },
     textToShare() {
       return `${this.quoteToShare} ${this.hashtags.map(h => `#${h}`).join(' ')}`
     }
   },
   methods: {
+    k(key) {
+      return `base-button-share.${key}`
+    },
     async share() {
       const {
         hashtags,
@@ -116,7 +103,7 @@ export default {
         files.length &&
         !(navigator.canShare && navigator.canShare({ files }))
       ) {
-        throw new Error('Your system does not support sharing files')
+        throw new Error(this.$t(this.k('error-sharing-not-supported')))
       }
 
       let text = quoteToShare
@@ -132,29 +119,33 @@ export default {
         url,
         files
       }
+      try {
+        await navigator.share(
+          {
+            // Web Share Api options
+            ...webShareData,
 
-      await navigatorShare(
-        {
-          // Web Share Api options
-          ...webShareData,
-
-          // share-api-polyfill options
-          hashtag: 'hestialabs',
-          hashtags,
-          via: 'HestiaLabs'
-          // fbId enables sharing with Facebook Messenger
-          // fbId: '?'
-        },
-        {
-          skype: false,
-          // disable text sharing with email, copy, sms, and messenger
-          // since polyfill does not support text for these types
-          email: !text,
-          sms: !text,
-          copy: !text,
-          messenger: !text
-        }
-      )
+            // share-api-polyfill options
+            hashtag: 'hestialabs',
+            hashtags,
+            via: 'HestiaLabs'
+            // fbId enables sharing with Facebook Messenger
+            // fbId: '?'
+          },
+          {
+            skype: false,
+            // disable text sharing with email, copy, sms, and messenger
+            // since polyfill does not support text for these types
+            email: !text,
+            sms: !text,
+            copy: !text,
+            messenger: !text
+          }
+        )
+      } catch (err) {
+        console.error('navigator.share() failed', err)
+        throw new Error(this.$t(this.k('error-sharing-failed')))
+      }
     }
   }
 }
