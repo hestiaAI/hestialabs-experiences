@@ -1,6 +1,6 @@
 {
-  "name": "@hestiaai/uber",
-  "version": "0.0.1-alpha.43",
+  "name": "@hestiaai/hestialabs",
+  "version": "0.0.1-alpha.5",
   "main": "dist/index",
   "type": "module",
   "files": [
@@ -9,7 +9,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/hestiaai/hestialabs-experiences",
-    "directory": "packages/packages/uber"
+    "directory": "packages/packages/hestialabs"
   },
   "publishConfig": {
     "access": "public"
