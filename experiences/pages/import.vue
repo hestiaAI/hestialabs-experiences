@@ -95,10 +95,12 @@
             />
             <ChartView
               v-else-if="viz.endsWith('.vue')"
-              :id="result.id + 'viz'"
-              :graph-name="viz"
-              :data="result"
-              :viz-props="vizProps"
+              v-bind="{
+                id: result.id + 'viz',
+                graphName: viz,
+                data: result,
+                ...vizProps
+              }"
             />
             <UnitIframe
               v-else-if="viz.startsWith('/')"
