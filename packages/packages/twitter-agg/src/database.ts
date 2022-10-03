@@ -18,6 +18,18 @@ const config: DatabaseConfig = {
       ]
     },
     {
+      name: 'TwitterAdLastMonth',
+      columns: [
+        ['tweetId', TEXT],
+        ['companyName', TEXT],
+        ['impressionDate', DATE],
+        ['url', TEXT],
+        ['engagedWith', TEXT],
+        ['criteriaCount', INTEGER],
+        ['filePath', TEXT, 'FILEPATH']
+      ]
+    },
+    {
       name: 'TwitterTargeting',
       columns: [
         ['advertiserName', TEXT],
@@ -49,6 +61,37 @@ const config: DatabaseConfig = {
       fileId: 'ads',
       path: '$.result.items[*]',
       table: 'TwitterAd',
+      getters: [
+        {
+          column: 'tweetId',
+          path: '$.tweetId'
+        },
+        {
+          column: 'companyName',
+          path: '$.companyName'
+        },
+        {
+          column: 'impressionDate',
+          path: '$.date_'
+        },
+        {
+          column: 'url',
+          path: '$.url'
+        },
+        {
+          column: 'engagedWith',
+          path: '$.engagedWith'
+        },
+        {
+          column: 'criteriaCount',
+          path: '$.count'
+        }
+      ]
+    },
+    {
+      fileId: 'adsLastMonth',
+      path: '$.result.items[*]',
+      table: 'TwitterAdLastMonth',
       getters: [
         {
           column: 'tweetId',

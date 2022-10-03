@@ -184,3 +184,14 @@ npm run lerna:publish
 ```sh
 $ npm run lerna:version "--" --force-publish
 ```
+
+# Troubleshooting
+
+## lerna:publish assumes packages are unpublished.
+
+```sh
+npm run lerna:publish
+lerna WARN Unable to determine published version, assuming "@hestiaai/youtube" unpublished.
+```
+
+Recreate a github token, your current one has probably expired.

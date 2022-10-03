@@ -120,15 +120,19 @@ export default {
     }
   },
   head() {
-    if (!this.appName) {
-      return
-    }
+    const appName = this.$t('app.name')
+    const appDescription = this.$t('app.description')
     return {
       meta: [
         {
-          hid: 'og:title',
-          property: 'og:title',
-          content: this.appName
+          hid: 'description',
+          name: 'description',
+          content: appDescription
+        },
+        {
+          hid: 'og:site_name',
+          property: 'og:site_name',
+          content: appName
         },
         {
           hid: 'og:url',
@@ -136,9 +140,24 @@ export default {
           content: this.$url(this.$route)
         },
         {
+          hid: 'og:title',
+          property: 'og:title',
+          content: appName
+        },
+        {
           hid: 'twitter:title',
           property: 'twitter:title',
-          content: this.appName
+          content: appName
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: appDescription
+        },
+        {
+          hid: 'twitter:description',
+          property: 'twitter:description',
+          content: appDescription
         }
       ],
       htmlAttrs: {
@@ -147,7 +166,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['experience', 'appName']),
+    ...mapGetters(['experience']),
     collaborator() {
       const { collaborator = {} } = this.experience(this.$route)
       return collaborator

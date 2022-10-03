@@ -31,6 +31,12 @@
         "text": "",
         "vizProps": {
           "messages": {
+            "Place": "Place",
+            "total-time-spent": "Total time spent at",
+            "mean-time-spent": "Mean time spent at",
+            "entropy": "Entropy for",
+            "entropy-info": "The higher this value is, the more uncertain Google was when deciding if you visited",
+            "other-candidates": "This map shows the other candidates proposed by Google associated to the",
             "keplerFields": {
               "name": "Name",
               "latitude": "Latitude",
@@ -43,7 +49,22 @@
       "OtherCandidates": {
         "title": "Other Candidates",
         "text": "This map shows the other candidate places proposed by Google linked to the location that Google think you visited:",
-        "headers": {}
+        "headers": {
+          "winnerLatitude": "Winner Latitude",
+          "winnerLongitude": "Winner Longitude",
+          "winnerAddress": "Winner Address",
+          "winnerName": "Winner Name",
+          "winnerConfidence": "Winner Confidence",
+          "winnerSemanticType": "Winner Semantic Type",
+          "loserLatitude": "Loser Latitude",
+          "loserLongitude": "Loser Longitude",
+          "loserAddress": "Loser Address",
+          "loserName": "Loser Name",
+          "loserConfidence": "Loser Confidence",
+          "loserSemanticType": "Loser Semantic Type",
+          "startTimestamp": "Start Time",
+          "endTimestamp": "End Time"
+        }
       },
       "ActivitySegment": {
         "title": "Travels",
@@ -51,12 +72,34 @@
         "vizProps": {
           "label": "trips"
         },
-        "headers": {}
+        "headers": {
+          "startLatitude": "Start Latitude",
+          "startLongitude": "Start Longitude",
+          "startAddress": "Start Address",
+          "startName": "Start Name",
+          "startTimestamp": "Start Timestamp",
+          "endLatitude": "End Latitude",
+          "endLongitude": "End Longitude",
+          "endAddress": "End Address",
+          "endName": "End Name",
+          "endTimestamp": "End Timestamp",
+          "confidence": "Confidence",
+          "transitPath": "Transit Path",
+          "distanceMeters": "Distance (m)",
+          "activityType": "Activity Type"
+        }
       },
       "Records": {
         "title": "Records",
         "text": "This map shows records associated to a trip with the color corresponding to an activity type:",
-        "headers": {}
+        "headers": {
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "timestamp": "Time",
+          "accuracy": "Accuracy",
+          "source": "Source",
+          "activityType": "Activity Type"
+        }
       },
       "WifiScan": {
         "title": "Wifi",
@@ -64,7 +107,12 @@
         "vizProps": {
           "label": "mac adresses"
         },
-        "headers": {}
+        "headers": {
+          "mac": "MAC",
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "number_of_detections": "Number of Detections"
+        }
       }
     }
   },
@@ -100,6 +148,12 @@
         "text": "",
         "vizProps": {
           "messages": {
+            "Place": "Endroit",
+            "total-time-spent": "Temps total passé à",
+            "mean-time-spent": "Temps moyen passé à",
+            "entropy": "Entropie pour",
+            "entropy-info": "Plus cette valeur est élevée, plus l'incertitude de Google était grande au moment de décider si vous avez visité",
+            "other-candidates": "Cette carte montre les autres candidats proposés par Google associés à",
             "keplerFields": {
               "name": "Nom",
               "latitude": "Latitude",
@@ -112,7 +166,22 @@
       "OtherCandidates": {
         "title": "Autres candidats",
         "text": "Carte des autres endroits que vous êtes susceptible d'avoir visités d'après l'historique de vos positions.",
-        "headers": {}
+        "headers": {
+          "winnerLatitude": "Latitude du gagnant",
+          "winnerLongitude": "Longitude du gagnant",
+          "winnerAddress": "Adresse du gagnant",
+          "winnerName": "Nom du gagnant",
+          "winnerConfidence": "Confiance du gagnant",
+          "winnerSemanticType": "Type sémantique du gagnant",
+          "loserLatitude": "Latitude du perdant",
+          "loserLongitude": "Longitude du perdant",
+          "loserAddress": "Adresse du perdant",
+          "loserName": "Nom du perdant",
+          "loserConfidence": "Confiance du perdant",
+          "loserSemanticType": "Type sémantique du perdant",
+          "startTimestamp": "Heure de début",
+          "endTimestamp": "Heure de fin"
+        }
       },
       "ActivitySegment": {
         "title": "Trajets",
@@ -120,12 +189,34 @@
         "vizProps": {
           "label": "trajets"
         },
-        "headers": {}
+        "headers": {
+          "startLatitude": "Latitude de départ",
+          "startLongitude": "Longitude de départ",
+          "startAddress": "Adresse de départ",
+          "startName": "Nom de départ",
+          "startTimestamp": "Heure de départ",
+          "endLatitude": "Latitude de fin",
+          "endLongitude": "Longitude de fin",
+          "endAddress": "Adresse de fin",
+          "endName": "Nom de fin",
+          "endTimestamp": "Heure de fin",
+          "confidence": "Confiance",
+          "transitPath": "Chemin de transit",
+          "distanceMeters": "Distance (m)",
+          "activityType": "Type d'activité"
+        }
       },
       "Records": {
         "title": "Historique",
         "text": "Carte des historiques associés à un trajet, les couleurs dénotant un type d'activité",
-        "headers": {}
+        "headers": {
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "timestamp": "Heure",
+          "accuracy": "Précision",
+          "source": "Source",
+          "activityType": "Type d'activité"
+        }
       },
       "WifiScan": {
         "title": "Wifi",
@@ -133,7 +224,12 @@
         "vizProps": {
           "label": "adresses MAC"
         },
-        "headers": {}
+        "headers": {
+          "mac": "MAC",
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "number_of_detections": "Nombre de détections"
+        }
       }
     }
   }

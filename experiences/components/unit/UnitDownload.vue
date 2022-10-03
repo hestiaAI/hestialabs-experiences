@@ -290,6 +290,9 @@ export default {
       })
     },
     async fetchFiles() {
+      const consoleLabel = (...labels) => `UnitDownload.fetchFiles${labels.length ? '.' + labels.join('.') : ''}`
+      console.time(consoleLabel())
+
       this.apiError = null
       this.apiStatus = 'Downloading files from server...'
       this.status = true
