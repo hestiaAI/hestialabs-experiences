@@ -155,7 +155,7 @@ export default {
       return {
         fields: this.headers.map((h) => {
           return {
-            name: this.$tev(this.kViewBlock(h, 'headers'), h)
+            name: h
           }
         }),
         rows: this.filteredRows.map(r => this.headers.map(h => r[h]))
