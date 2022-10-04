@@ -28,5 +28,5 @@
       // compilerOptions specified here will override those declared above
     }
   },
-  "exclude": ["test.ts", "packages.ts"]
+  "exclude": ["test.ts", "packages.ts", "hestias-hearth"]
 }
