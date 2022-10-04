@@ -128,7 +128,7 @@ import { mapState } from 'vuex'
 import JSZip from 'jszip'
 import FileSaver from 'file-saver'
 import _sodium from 'libsodium-wrappers'
-import FileManager from '~/utils/file-manager'
+import FileManager, { BrowserFile } from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
 
 export default {
@@ -227,8 +227,8 @@ export default {
         const folderContent = zip.file(/files\/.*/)
         const blobs = await Promise.all(folderContent.map(r => r.async('blob')))
         const fileObjects = folderContent.map(
-          (r, i) => new File([blobs[i]], r.name.substring(6))
-        )
+          (r, i) => new BrowserFile(new File([blobs[i]], r.name.substring(6))
+          ))
         const { preprocessors, files } = this.experienceConfig
         const fileManager = new FileManager(
           preprocessors,
