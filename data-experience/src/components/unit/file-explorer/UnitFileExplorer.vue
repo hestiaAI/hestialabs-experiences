@@ -80,18 +80,23 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataexp', ['fileExplorerCurrentItem', 'fileManager']),
+    ...mapState('dataexp', ['fileExplorerCurrentItem']),
+    ...mapState('dataexp', ['fileManager']),
     active: {
       get() {
+        console.log('Test get')
         return has(this.selectedItem, 'filename') ? [this.selectedItem] : []
       },
       set([item]) {
+        console.log('Test set')
         // item might be undefined (when unselecting)
         if (item) {
           if (!this.containers.has(item.type)) {
+            console.log('setFileExplorerCurrentItem', item)
             this.$store.commit('dataexp/setFileExplorerCurrentItem', item)
           }
         } else {
+          console.log('setFileExplorerCurrentItem', 'null')
           this.$store.commit('dataexp/setFileExplorerCurrentItem', {})
         }
       }

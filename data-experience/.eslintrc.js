@@ -3,19 +3,13 @@ module.exports = {
     browser: true,
     es2021: true
   },
-  extends: [
-    'plugin:vue/vue3-essential',
-    'standard'
-  ],
-  overrides: [
-  ],
+  extends: ['plugin:vue/vue3-essential', 'standard'],
+  overrides: [],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
-  plugins: [
-    'vue'
-  ],
+  plugins: ['vue'],
   rules: {
     'space-before-function-paren': ['error', 'never'],
     'arrow-parens': ['error', 'as-needed', { requireForBlockBody: true }],

@@ -47,7 +47,8 @@ const store = {
       }
     },
     unselectPath(state, path) {
-      state.fileExplorerCurrentItem.selectedPaths = state.fileExplorerCurrentItem.selectedPaths.filter(e => e !== path)
+      state.fileExplorerCurrentItem.selectedPaths =
+        state.fileExplorerCurrentItem.selectedPaths.filter(e => e !== path)
     },
     setResult(state, { experience, result }) {
       Vue.set(state.results, experience, cloneDeep(result))
@@ -78,12 +79,15 @@ const store = {
       state.selectedFiles = []
       state.results = {}
       state.fileExplorerCurrentItem = {}
-      if (state.currentDB !== null) { state.currentDB.close() }
+      if (state.currentDB !== null) {
+        state.currentDB.close()
+      }
       state.currentDB = null
       state.fileManager = null
       state.consentForm = null
     },
     setFileExplorerCurrentItem(state, item) {
+      console.log('STORE setFileExplorerCurrentItem', item)
       state.fileExplorerCurrentItem = item
       state.fileExplorerCurrentItem.selectedPaths = []
     }
