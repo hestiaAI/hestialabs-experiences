@@ -117,9 +117,7 @@ export default {
         .data(this.jsonData.links)
         .enter()
         .append('line')
-        .attr('stroke-width', function(d) {
-          return 1 * d.weight
-        })
+        .attr('stroke-width', d => d.weight)
         .attr('stroke', 'grey')
         .attr('fill', 'none')
       //        .attr('marker-end', 'url(#arrow)')
@@ -153,19 +151,20 @@ export default {
       // Draw labels of nodes
       node
         .append('text')
-        .text(function(d) {
-          return d.id
-        })
-
+        .text(d => d.id)
         .attr('x', 0)
         .attr('y', 3)
         .attr('text-anchor', 'middle')
         .attr('text-baseline', 'middle')
+        // prevent text-selection
+        .style('user-select', 'none')
+        // prevent pointer events on text node
+        // to enable dragging the circle element
+        // when the text element is clicked
+        .style('pointer-events', 'none')
 
       // Title for nodes
-      node.append('title').text(function(d) {
-        return d.id
-      })
+      node.append('title').text(d => d.id)
 
       // Start simulation
       simulation.nodes(this.jsonData.nodes).on('tick', ticked)
