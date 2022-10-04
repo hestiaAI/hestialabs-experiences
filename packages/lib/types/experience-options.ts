@@ -31,7 +31,7 @@ export type ExperienceOptions = {
   files?: Files
   hideFileExplorer?: boolean
   hideSummary?: boolean
-  icon: string
+  icon?: string
   keepOnlyFiles?: boolean
   messages?: Messages
   preprocessors?: { [key: string]: PreprocessorFunction }

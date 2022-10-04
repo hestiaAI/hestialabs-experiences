@@ -27,6 +27,28 @@
           "Targeting Criteria": "Targeting Criteria"
         }
       },
+      "overview-last-month": {
+        "title": "Advertising overview (last month)",
+        "text": "Understand who targeted you with Twitter ads last month, how much, and why, in this interactive visualization. Click on any graph to filter the results.",
+        "vizProps": {
+          "messages": {
+            "ads-time": "Number of ads over time",
+            "top-adv": "Top 10 advertisers",
+            "interactions": "Interactions with ads (clicks, video views)",
+            "targeting-type": "Type of targeting",
+            "targeting-criteria": "Targeting criteria",
+            "ads": "ads"
+          }
+        },
+        "headers": {
+          "Tweet ID": "Tweet ID",
+          "Company": "Company",
+          "Date": "Date",
+          "Promoted Tweet": "Promoted Tweet",
+          "Engagement": "Engagement",
+          "Targeting Criteria": "Targeting Criteria"
+        }
+      },
       "ads-per-advertiser": {
         "title": "Top advertisers",
         "text": "See the ranking of advertisers that have shown you the most ads.",
@@ -140,6 +162,28 @@
       "overview": {
         "title": "Vue d'ensemble des publicités",
         "text": "Visualisation du nombre, de l'origine et des critères de ciblage des publicités Twitter qui vous visent. Cliquer sur un graphique pour filtrer les résultats.",
+        "vizProps": {
+          "messages": {
+            "ads-time": "Nombre d'annonces dans le temps",
+            "top-adv": "Top 10 annonceurs",
+            "interactions": "Interactions avec les pubs (clics, visionnage de vidéos)",
+            "targeting-type": "Type de ciblage",
+            "targeting-criteria": "Critères de ciblage",
+            "ads": "pubs"
+          }
+        },
+        "headers": {
+          "Tweet ID": "Tweet ID",
+          "Company": "Société",
+          "Date": "Date",
+          "Promoted Tweet": "Tweet promu",
+          "Engagement": "Engagement",
+          "Targeting Criteria": "Critères de ciblage"
+        }
+      },
+      "overview-last-month": {
+        "title": "Vue d'ensemble des publicités (du mois dernier)",
+        "text": "Visualisation du nombre, de l'origine et des critères de ciblage des publicités Twitter qui vous ont visé le mois dernier. Cliquer sur un graphique pour filtrer les résultats.",
         "vizProps": {
           "messages": {
             "ads-time": "Nombre d'annonces dans le temps",

@@ -11,7 +11,7 @@ function setsEqual<T>(s1: Set<T>, s2: Set<T>) {
  * @param {*} fileID The corresponding key that link to the globPath we seek, defined in the manifest under files.
  * @returns the merged csvs array
  */
-async function getCsvAndMergeFromID(
+export async function getCsvAndMergeFromID(
   fileManager: FileManager,
   fileID: string
 ): Promise<PipelineOutput> {

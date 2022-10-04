@@ -2,7 +2,7 @@ import lodash from 'lodash'
 const { camelCase } = lodash
 
 export default {
-  'packages/*/src/**/*.ts': filenames => {
+  'packages/!(hestialabs)/src/**/*.ts': filenames => {
     const packages = filenames
       .map(filename => /packages\/packages\/([^/]+)\//.exec(filename)[1])
       .map(camelCase)

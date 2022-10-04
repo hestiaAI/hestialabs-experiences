@@ -250,6 +250,9 @@ export default {
       this.progress = false
     },
     async onUnitFilesUpdate({ uppyFiles }) {
+      const consoleLabel = (...labels) => `TheDataExperience.onUnitFilesUpdate${labels.length ? '.' + labels.join('.') : ''}`
+      console.time(consoleLabel())
+
       const { databaseConfig: dbConfig } = this
       this.message = ''
       this.error = false
@@ -269,30 +272,44 @@ export default {
       }
       this.$store.commit('setConsentForm', consentForm)
 
-      // Set file manager
-      const fileManager = new FileManager(
-        this.preprocessors,
-        fileManagerWorkers,
-        this.files,
-        this.keepOnlyFiles
-      )
       try {
+        // Set file manager
+        const fileManager = new FileManager(
+          this.preprocessors,
+          fileManagerWorkers,
+          this.files,
+          this.keepOnlyFiles
+        )
+        // Set file manager
+        console.time(consoleLabel('initFileManager'))
         await fileManager.init(uppyFiles)
         this.$store.commit('setFileManager', fileManager)
+        console.timeEnd(consoleLabel('initFileManager'))
         if (dbConfig) {
+          const consoleLabelDBMS = consoleLabel.bind(null, 'DBMS')
+          console.time(consoleLabelDBMS())
           // create database
+          console.time(consoleLabelDBMS('createDB'))
           const db = await DBMS.createDB(dbConfig)
+          console.timeEnd(consoleLabelDBMS('createDB'))
           // generate database records via the file manager
+          console.time(consoleLabelDBMS('generateRecords'))
           const records = await DBMS.generateRecords(fileManager, dbConfig)
+          console.timeEnd(consoleLabelDBMS('generateRecords'))
           // insert the records into the database
+          console.time(consoleLabelDBMS('insertRecords'))
           DBMS.insertRecords(db, records)
+          console.timeEnd(consoleLabelDBMS('insertRecords'))
           // commit the database to the Vuex store
           this.$store.commit('setCurrentDB', db)
+          console.timeEnd(consoleLabelDBMS())
         }
       } catch (e) {
         this.handleError(e)
         return
       }
+
+      console.timeEnd(consoleLabel())
 
       this.progress = false
       this.success = true

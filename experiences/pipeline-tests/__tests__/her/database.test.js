@@ -1,6 +1,6 @@
 import experience from '@hestiaai/her'
 import { her } from './samples.helpers'
-import { mockFile } from '~/utils/__mocks__/file-manager-mock'
+import { NodeFile } from '~/utils/node-file'
 import {
   DatabaseTester,
   arrayEqualNoOrder,
@@ -12,7 +12,7 @@ const getSql = getSqlFromBlock.bind(null, experience)
 
 describe('with complete samples', () => {
   beforeAll(async() => {
-    const files = [mockFile('liked.csv', her)]
+    const files = [new NodeFile('liked.csv', her)]
     await tester.init(experience, files)
   })
 

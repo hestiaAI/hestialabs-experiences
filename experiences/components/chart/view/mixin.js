@@ -24,7 +24,7 @@ const mixin = {
   },
   data() {
     return {
-      graphId: 'graph_' + this._uid,
+      graphId: 'graph_' + this.id,
       totalCount: null,
       filterCount: null
     }
