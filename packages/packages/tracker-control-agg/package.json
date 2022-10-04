@@ -15,9 +15,5 @@
     "access": "public"
   },
   "author": "",
-  "license": "UNLICENSED",
-  "dependencies": {
-    "ngraph.centrality": "^2.1.0",
-    "ngraph.graph": "^20.0.0"
-  }
+  "license": "UNLICENSED"
 }

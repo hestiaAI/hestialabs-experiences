@@ -117,9 +117,7 @@ export default {
         .data(this.jsonData.links)
         .enter()
         .append('line')
-        .attr('stroke-width', function(d) {
-          return 1 * d.weight
-        })
+        .attr('stroke-width', d => d.weight)
         .attr('stroke', 'grey')
         .attr('fill', 'none')
       //        .attr('marker-end', 'url(#arrow)')

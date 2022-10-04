@@ -7,7 +7,7 @@ import {
 import { Experience } from './lib/'
 import * as packages from './packages'
 
-import { camelCase } from 'lodash-es'
+import camelCase from 'lodash/camelCase'
 
 function test([
   name,

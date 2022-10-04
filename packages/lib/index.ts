@@ -6,7 +6,7 @@ import type { Lang, Messages } from '@/types/experience-options'
 import type { ExperienceOptions } from '@/types'
 export type { ExperienceOptions } from '@/types'
 
-// import { merge } from 'lodash-es'
+// import { merge } from 'lodash'
 import genericViewerMessages from '@/pipelines/messages'
 
 const defaultViewBlock: Partial<ViewBlock> = {

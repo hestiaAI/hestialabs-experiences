@@ -2,7 +2,7 @@ import path from 'path'
 import { readdirSync } from 'fs'
 import { fileURLToPath } from 'url'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
-import nodeExternals from 'webpack-node-externals'
+import LodashModuleReplacementPlugin from 'lodash-webpack-plugin'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -10,8 +10,6 @@ const __dirname = path.dirname(__filename)
 const packages = readdirSync(path.resolve(__dirname, 'packages'))
 
 export default {
-  // https://stackoverflow.com/a/35820388/8238129
-  externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
   externalsPresets: {
     node: true // in order to ignore built-in modules like path, fs, etc.
   },
@@ -35,6 +33,7 @@ export default {
           {
             loader: 'babel-loader',
             options: {
+              plugins: ['lodash'],
               presets: ['@babel/preset-env', '@babel/preset-typescript']
             }
           },
@@ -54,8 +53,9 @@ export default {
       }
     ]
   },
+  plugins: [new LodashModuleReplacementPlugin()],
   resolve: {
-    extensions: ['.tsx', '.ts'],
+    extensions: ['.tsx', '.ts', '.js'],
     plugins: [
       // https://www.npmjs.com/package/tsconfig-paths-webpack-plugin
       new TsconfigPathsPlugin({})

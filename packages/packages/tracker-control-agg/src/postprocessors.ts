@@ -2,8 +2,9 @@
 /* eslint-disable no-prototype-builtins */
 import type { PostprocessorFunction } from '@/types'
 
-const createGraph = require('ngraph.graph')
-const centrality = require('ngraph.centrality')
+import { groupBy, sortBy } from 'lodash'
+import createGraph from 'ngraph.graph'
+import centrality from 'ngraph.centrality'
 
 export const toGraph: PostprocessorFunction = result => {
   // TODO generalize this...
@@ -17,7 +18,12 @@ export const toGraph: PostprocessorFunction = result => {
     'Advertising'
   ]
 
-  const nodesToRemove = ['Chrome', 'Firefox', 'Samsung Internet']
+  const nodesToRemove = [
+    'Chrome',
+    'Firefox',
+    'Samsung Internet',
+    'Vivaldi Browser'
+  ]
   const results = items.filter(
     row =>
       categoriesToKeep.includes(row.category) &&
@@ -26,24 +32,35 @@ export const toGraph: PostprocessorFunction = result => {
       !nodesToRemove.includes(row.app)
   )
 
-  // compute links
-  let links = results.map(({ app: source, tracker: target }) => ({
+  // compute links (note that this includes duplicate links)
+  const allLinks = results.map(({ app: source, tracker: target }) => ({
     source,
-    target,
-    weight: 1 // all links have the same weight
+    target
   }))
+  // group duplicate links together
+  const groupedLinks = groupBy(allLinks, v => `${v.source}>${v.target}`)
+  // remove duplicates, and set the weight as the number of duplicate links
+  const candidateLinks = Object.entries(groupedLinks).map(
+    ([id, groupLinks]) => ({
+      id,
+      ...groupLinks[0],
+      weight: groupLinks.length
+    })
+  )
 
   // reduce the size of the graph, by choosing
   // nodes with the highest degree in-centrality
   // https://github.com/anvaka/ngraph.centrality#degree-centrality
+  // NOTE: This could also have been implemented by computing in-degree manually from the links.
+  // However, the implementation with ngraph was kept here for demonstration.
   const graph = createGraph()
-  // add links to the graph
-  links.forEach(({ source, target }) => graph.addLink(source, target))
+  // add links to the graph (duplicated links are ignored)
+  candidateLinks.forEach(({ source, target }) => graph.addLink(source, target))
   // compute degree in-centrality (because we weigh nodes by the number of inbound links)
   const measures: [string, number][] = Object.entries(
     centrality.degree(graph, 'in')
   )
-  const measuresFiltered = measures.filter(node => node[1] > 1)
+  const measuresFiltered = measures.filter(node => node[1] > 0)
   // sort nodes by in-centrality
   measuresFiltered.sort((a, b) => b[1] - a[1])
   // store the minimum number of nodes to keep,
@@ -51,21 +68,51 @@ export const toGraph: PostprocessorFunction = result => {
   const MIN_NUMBER_OF_NODES = 20
   const topMeasures = measuresFiltered.splice(0, MIN_NUMBER_OF_NODES)
   // include left-over nodes with the same centrality
-  // as the last node in the cut-off array
-  const lastNode = topMeasures[topMeasures.length - 1]
-  for (const node of measuresFiltered) {
-    if (node[1] !== lastNode[1]) {
-      break
-    }
-    topMeasures.push(node)
-  }
+  // // as the last node in the cut-off array
+  // const lastNode = topMeasures[topMeasures.length - 1]
+  // for (const node of measuresFiltered) {
+  //   if (node[1] !== lastNode[1]) {
+  //     break
+  //   }
+  //   topMeasures.push(node)
+  // }
 
   // get the names of the top nodes
   const topNodes = topMeasures.map(node => node[0])
 
+  // create a target node adjacency list
+  // (i.e. list of inbound links for each selected target node)
+  const candidateLinksGroupedByTarget = groupBy(
+    candidateLinks.filter(l => topNodes.includes(l.target)),
+    'target'
+  )
+  const candidateLinksGroupedAndSorted = //Object.fromEntries(
+    Object.values(candidateLinksGroupedByTarget).map(inboundLinks =>
+      // sort the target node inbound links by the weight,
+      // to prioritize heavy links over light
+      sortBy(inboundLinks, 'weight')
+    )
+
+  // add nodes from the set of candidate links
+  // by picking the sources of the top-ranked links in
+  // the sorted adjacency list
+  const CANDIDATE_INCLUSION_RATIO = 0.5
+  const selectedNodes = new Set(
+    topNodes.concat(
+      candidateLinksGroupedAndSorted
+        .flatMap(inboundLinksSorted =>
+          inboundLinksSorted.slice(
+            0,
+            Math.ceil(CANDIDATE_INCLUSION_RATIO * inboundLinksSorted.length)
+          )
+        )
+        .map(link => link.source)
+    )
+  )
+
   // compute nodes and their weights
-  const temp = links.reduce(
-    (acc: { [key: string]: number }, { source, target }) => {
+  const nodeWeights = candidateLinks.reduce(
+    (acc: { [key: string]: number }, { source, target, weight }) => {
       // set default node weights
       if (!(source in acc)) {
         acc[source] = 1
@@ -74,7 +121,8 @@ export const toGraph: PostprocessorFunction = result => {
         acc[target] = 1
       }
       // only inbound links contribute to node weight
-      acc[target]++
+      // (add overall weight)
+      acc[target] += weight
       return acc
     },
     {}
@@ -88,25 +136,22 @@ export const toGraph: PostprocessorFunction = result => {
     '#EBEBF6',
     '#FFFFFF'
   ].reverse()
-  for (const k in temp) {
-    // only include top nodes
-    if (topNodes.includes(k)) {
+  for (const k in nodeWeights) {
+    // only include selected nodes
+    if (selectedNodes.has(k)) {
       nodes.push({
         id: k,
-        weight: temp[k],
-        size: 10 + temp[k] - 1 * 2,
-        color: colors[Math.min(colors.length - 1, temp[k])]
+        size: 8 + nodeWeights[k],
+        color: colors[Math.min(colors.length - 1, nodeWeights[k])]
       })
     }
   }
 
-  // filter the links by the top nodes
+  // filter the links by the selected nodes
   // note! this needs to be done after computing the nodes above
-  links = links.filter(({ source, target }) =>
-    [source, target].every(n => topNodes.includes(n))
+  const links = candidateLinks.filter(({ source, target }) =>
+    [source, target].every(n => selectedNodes.has(n))
   )
-
-  console.log(nodes, links, topMeasures)
 
   return {
     headers: ['jsonData'],
