@@ -1,7 +1,6 @@
 import fs from 'fs'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
-import { extension2filetype } from './utils/file-manager'
 import { numberFormats } from './i18n/vue-i18n-number-formats'
 import { dateTimeFormats } from './i18n/vue-i18n-date-time-formats'
 
@@ -226,14 +225,7 @@ export default {
           use: 'worker-loader'
         },
         {
-          // allow all valid extensions as sample data except JS files!
-          test: new RegExp(
-            `data.+\\.(${Object.keys(extension2filetype)
-              .filter(ext => ext !== 'js')
-              .join('|')})$`
-          ),
-          // https://webpack.js.org/configuration/module/#ruletype
-          type: 'javascript/auto',
+          test: /@hestiaai\/[^/]+\/dist\/data-samples/,
           use: [
             {
               loader: 'file-loader',

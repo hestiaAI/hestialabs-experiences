@@ -3,10 +3,11 @@ import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/uber.png'
 import viewBlocks from './blocks'
 import messages from './messages.json'
+import dataSample from '@/data-samples/uber.zip'
 
 const options: ExperienceOptions = {
   dataPortal: 'https://myprivacy.uber.com/privacy/exploreyourdata/download',
-  dataSamples: ['uber-trips.zip'],
+  dataSamples: [dataSample],
   files: {
     trips: '**/Rider/trips_data.csv'
   },

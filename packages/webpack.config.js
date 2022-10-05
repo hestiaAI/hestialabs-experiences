@@ -50,6 +50,24 @@ export default {
       {
         test: /\.(?:sql|vega)$/,
         type: 'asset/source'
+      },
+      {
+        include: path.resolve(__dirname, 'lib', 'data-samples'),
+        type: 'asset/resource',
+        generator: {
+          // https://webpack.js.org/configuration/module/#rulegeneratoroutputpath
+          outputPath: pathData => {
+            // pathData.runtime: <package>/dist/index
+            const path = pathData.runtime.replace(/index$/, '')
+            // We want to output the data samples
+            // to the package's dist/ directory
+            // Note: The generated filename will be output.assetModuleFilename (see below)
+            return `${path}/data-samples/`
+          },
+          // https://webpack.js.org/configuration/module/#rulegeneratorfilename
+          // https://webpack.js.org/configuration/output/#template-strings
+          filename: '[name]$[hash][ext][query]'
+        }
       }
     ]
   },
@@ -69,11 +87,17 @@ export default {
     outputModule: true
   },
   output: {
+    publicPath: '',
     path: path.resolve(__dirname, 'packages'),
     library: {
       // https://github.com/webpack/webpack/issues/2933
       // https://webpack.js.org/configuration/output/#type-module
       type: 'module'
+    },
+    clean: {
+      // we want to clean the dist/ directories before each build
+      keep: /^[^/]+\/(?:src\/|[^/]+$)/,
+      dry: false // set to "true" to do a dry run to see which files are kept
     }
   },
   optimization: {

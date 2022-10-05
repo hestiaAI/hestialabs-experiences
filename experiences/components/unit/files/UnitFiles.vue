@@ -1,19 +1,21 @@
 <template>
   <div>
-    <VRow v-if="samples.length" justify="center" dense>
-      <VCol align="center">
-        <LazyUnitFilesSampleSelector
-          :value.sync="selectedSamples"
-          :items="samples"
-          class="mb-4"
-        />
-      </VCol>
-    </VRow>
-    <VRow v-if="samples.length">
-      <VCol align="center" class="font-weight-bold">
-        {{ $t('unit-files.or') }}
-      </VCol>
-    </VRow>
+    <template v-if="samples.length">
+      <VRow justify="center" dense>
+        <VCol align="center">
+          <LazyUnitFilesSampleSelector
+            :value.sync="selectedSamples"
+            :items="samples"
+            class="mb-4"
+          />
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol align="center" class="font-weight-bold">
+          {{ $t('unit-files.or') }}
+        </VCol>
+      </VRow>
+    </template>
     <VRow>
       <VCol align="center">
         <div ref="dashboard" />
@@ -159,6 +161,13 @@ export default {
           ns => !oldSamples.find(os => os.filename === ns.filename)
         )
         const files = await Promise.all(addedSamples.map(fetchSampleFile))
+        // async({ filename, name }) => {
+        //   const file = await import(`@hestiaai/${this.$route.params.experience}/dist/data-samples/${filename}`)
+        //   console.log(file)
+        //   await import(`@hestiaai/${this.$route.params.experience}/dist/data-samples/${filename}`)
+        //   // const blob = await response.blob()
+        //   return new BrowserFile(new File([file], name))
+        // })
         files.forEach((file) => {
           try {
             this.uppy.addFile({
@@ -190,14 +199,19 @@ export default {
     }
   },
   async created() {
-    // files in assets/data/ are loaded with file-loader
+    const { experience } = this.$route.params
+    console.log(experience)
+    // files are loaded with file-loader
     this.samples = []
     for (const filename of this.dataSamples) {
       this.samples.push({
-        filename,
-        path: (await import(`@/assets/data/${filename}`)).default
+        // See generator.filename
+        // in packages/webpack.config.js
+        filename: filename.split('$')[0],
+        path: (await import(`/node_modules/@hestiaai/${experience}/dist/data-samples/${filename}`)).default
       })
     }
+    console.log(this.samples)
   },
   mounted() {
     const stringsOverride = {

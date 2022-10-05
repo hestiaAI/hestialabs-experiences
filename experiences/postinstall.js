@@ -38,14 +38,21 @@ if (experiences) {
   } else {
     // cross-platform spawn
     const spawn = require('cross-spawn')
-    const packages = experiences.map((packageNameAndTag) => {
+    const packages = Object.fromEntries(experiences.map((packageNameAndTag) => {
       const [name] = packageNameAndTag.split('@')
-      return `@hestiaai/${name}`
-    })
+      return [name, `@hestiaai/${name}`]
+    }))
     console.info(
-      'Linking packages from the hestialabs repository...\n' +
-      packages.join('\n')
+      'Linking packages...\n' +
+      Object.keys(packages).join('\n')
     )
-    handleSpawnOutput(spawn.sync('npm', ['link', ...packages]))
+    // const packagePaths = Object.keys(packages).map(name => resolve(__dirname, '../packages/packages', name, 'dist'))
+    // console.log(packagePaths)
+    handleSpawnOutput(spawn.sync('npm', ['link', ...Object.values(packages)]))
+
+    // packages.forEach(p => {
+    //   // handleSpawnOutput(spawn.sync('cd', [resolve(__dirname, '../packages/packages', 'dist')`../${p.split('/')[1]}`]))
+    //   handleSpawnOutput(spawn.sync('npm', ['link', resolve(__dirname, '../packages/packages', 'dist')]))
+    // })
   }
 }
