@@ -31,7 +31,6 @@ export const toGraph: PostprocessorFunction = result => {
       row.app !== 'Unknown' &&
       !nodesToRemove.includes(row.app)
   )
-
   // compute links (note that this includes duplicate links)
   const allLinks = results.map(({ app: source, tracker: target }) => ({
     source,
@@ -79,19 +78,22 @@ export const toGraph: PostprocessorFunction = result => {
 
   // get the names of the top nodes
   const topNodes = topMeasures.map(node => node[0])
-
   // create a target node adjacency list
   // (i.e. list of inbound links for each selected target node)
-  const candidateLinksGroupedByTarget = groupBy(
-    candidateLinks.filter(l => topNodes.includes(l.target)),
-    'target'
+  const candidateLinksFiltered = candidateLinks.filter(l =>
+    topNodes.includes(l.target)
   )
-  const candidateLinksGroupedAndSorted = //Object.fromEntries(
-    Object.values(candidateLinksGroupedByTarget).map(inboundLinks =>
-      // sort the target node inbound links by the weight,
-      // to prioritize heavy links over light
-      sortBy(inboundLinks, 'weight')
-    )
+  const candidateLinksGroupedByTarget = groupBy(
+    candidateLinksFiltered,
+    l => l.target
+  )
+  const candidateLinksGroupedAndSorted = Object.values(
+    candidateLinksGroupedByTarget
+  ).map(inboundLinks =>
+    // sort the target node inbound links by the weight,
+    // to prioritize heavy links over light
+    sortBy(inboundLinks, [l => l.weight])
+  )
 
   // add nodes from the set of candidate links
   // by picking the sources of the top-ranked links in
@@ -127,6 +129,7 @@ export const toGraph: PostprocessorFunction = result => {
     },
     {}
   )
+
   const nodes = []
   const colors = [
     '#655FB5',
