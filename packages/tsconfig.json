@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "es2020",
     "target": "es2016",
-    "allowJs": false,
+    "allowJs": true,
     "strict": true,
     "lib": ["dom", "es2020"],
     // TS v4.2
@@ -14,7 +14,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node", "lodash-es"],
+    "types": ["node", "lodash"],
     "baseUrl": ".",
     "resolveJsonModule": true,
     // https://bobbyhadz.com/blog/typescript-cannot-find-module
@@ -26,8 +26,7 @@
   "ts-node": {
     "compilerOptions": {
       // compilerOptions specified here will override those declared above
-      "allowJs": true
     }
   },
-  "exclude": ["node_modules", "test.ts", "packages.ts", "hestias-hearth"]
+  "exclude": ["test.ts", "packages.ts", "hestias-hearth"]
 }
