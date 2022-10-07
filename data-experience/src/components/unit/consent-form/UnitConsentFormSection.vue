@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 
 export default {
   props: {
@@ -120,12 +120,12 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataexp', ['consentForm', 'fileManager', 'results']),
+    ...mapState(['consentForm', 'fileManager', 'results']),
     selectedFiles() {
       if (this.readonly) {
         return Object.keys(this.fileManager.fileDict)
       }
-      return this.$store.state.dataexp.selectedFiles
+      return this.$store.state.selectedFiles
     },
     section() {
       return this.consentForm[this.index]
@@ -135,7 +135,7 @@ export default {
         return this.section.value
       },
       set(value) {
-        this.$store.commit('dataexp/setConsentFormValue', { index: this.index, value })
+        this.$store.commit('setConsentFormValue', { index: this.index, value })
       }
     }
   },

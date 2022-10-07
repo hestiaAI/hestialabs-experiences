@@ -3,32 +3,28 @@
     <template #activator="{ on, attrs }">
       <VBtn
         :outlined="outlined"
-        :fixed="fixed"
-        :right="right"
-        :bottom="bottom"
-        :top="top"
-        :left="left"
         v-bind="[attrs, $attrs]"
         class="my-2"
-        v-on="{ on, $on }"
+        v-on="on"
         @click="$emit('click', $event)"
       >
         <VIcon v-if="icon" :left="text !== ''">
           {{ mdiIcon }}
         </VIcon>
         <slot>
-          <span>{{ $t(text) }}</span>
+          <span>{{ $tev(text, text) }}</span>
         </slot>
         <BaseProgressCircular v-if="progress" class="ml-2" />
         <StatusIndicator v-else-if="status" :error="error" />
       </VBtn>
     </template>
-    <span>{{ tooltip }}</span>
+    <span>{{ $tev(tooltip, tooltip) }}</span>
   </VTooltip>
 </template>
 
 <script>
 export default {
+  inheritAttrs: false,
   props: {
     tooltip: {
       type: String,
@@ -37,26 +33,6 @@ export default {
     text: {
       type: String,
       default: ''
-    },
-    fixed: {
-      type: Boolean,
-      default: false
-    },
-    right: {
-      type: Boolean,
-      default: false
-    },
-    left: {
-      type: Boolean,
-      default: false
-    },
-    top: {
-      type: Boolean,
-      default: false
-    },
-    bottom: {
-      type: Boolean,
-      default: false
     },
     progress: {
       type: Boolean,

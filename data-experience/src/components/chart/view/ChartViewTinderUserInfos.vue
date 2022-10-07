@@ -4,31 +4,28 @@
       <VCard max-width="600px">
         <VCardText>
           <VRow>
-            <VCol v-for="item in items" :key="item.title" cols="12" md="6">
+            <VCol v-for="{ title, value, list } in items" :key="title" cols="12" md="6">
               <div class="overline">
-                {{ item.title }}
+                {{ messages.titles[title] }}
               </div>
               <p
-                v-if="!item.value || item.value.length === 0"
+                v-if="!value || value.length === 0"
                 class="font-weight-bold"
-              >
-                Not mentioned
-              </p>
-              <div v-else-if="item.list">
+                v-text="messages['Not mentioned']"
+              />
+              <div v-else-if="list">
                 <div class="d-flex flex-column flex-md-row flex-wrap">
-                  <VChip v-for="l in item.value" :key="l" class="ma-2" label>
+                  <VChip v-for="l in value" :key="l" class="ma-2" label>
                     {{ l }}
                   </VChip>
                 </div>
               </div>
               <p v-else class="font-weight-bold">
-                {{ item.value }}
+                {{ messages.values[value] || value }}
               </p>
             </VCol>
             <VCol v-if="ageFilterMin && ageFilterMax" cols="12">
-              <div class="overline">
-                Age filter
-              </div>
+              <div class="overline" v-text="messages['Age filter']" />
               <VRangeSlider
                 v-model="slider"
                 thumb-color="primary"
@@ -43,21 +40,19 @@
             </VCol>
 
             <VCol v-if="descriptors.length" cols="12">
-              <div class="overline">
-                Descriptors
-              </div>
-              <VRow v-for="(descriptor, idx) in descriptors" :key="idx">
+              <div class="overline" v-text="messages['Descriptors']" />
+              <VRow v-for="({ name, choices }, idx) in descriptors" :key="idx">
                 <VCol cols="12">
                   <VCard outlined>
                     <VRow>
                       <VCol cols="4">
-                        <VCardTitle>{{ descriptor.name }}</VCardTitle>
+                        <VCardTitle>{{ name }}</VCardTitle>
                       </VCol>
                       <VCol cols="8">
                         <VCardText>
                           <div class="d-flex flex-column flex-md-row flex-wrap">
                             <VChip
-                              v-for="l in descriptor.choices"
+                              v-for="l in choices"
                               :key="l"
                               class="ma-2"
                               label
@@ -80,7 +75,6 @@
 </template>
 
 <script>
-import * as d3 from 'd3'
 import mixin from './mixin'
 
 function genderIdentity(code) {
@@ -109,12 +103,13 @@ export default {
   mixins: [mixin],
   data() {
     const [v] = this.values
+    const { locale } = this.$i18n
     return {
       slider: [v.ageFilterMin, v.ageFilterMax],
       items: [
         {
           title: 'Birthdate',
-          value: d3.timeFormat('%B %d, %Y')(new Date(v.birthDate))
+          value: this.$d(new Date(v.birthDate), 'dateOnly', locale)
         },
         {
           title: 'Gender',
@@ -139,20 +134,17 @@ export default {
           value: JSON.parse(v.sexualOrientations)
         },
         {
-          title: 'Gender filter',
+          title: 'Gender Filter',
           value: genderIdentity(v.genderFilter)
         },
         {
-          title: 'Account creation',
-          value: d3.timeFormat('%B %d, %Y at %H:%M:%S')(new Date(v.createDate))
+          title: 'Account Creation',
+          value: this.$d(new Date(v.createDate), 'long', locale)
         }
       ],
       ...v,
       descriptors: JSON.parse(v.descriptors) || []
     }
-  },
-  methods: {
-    drawViz() {}
   }
 }
 </script>

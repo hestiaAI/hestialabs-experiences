@@ -7,19 +7,18 @@
             <VRow>
               <VCol cols="12">
                 <div :id="`messages-chart-${graphId}`">
-                  <strong>Messages Exchanged over time</strong>
-                  <a class="reset" style="display: none">reset</a>
+                  <span v-text="messages['Messages Exchanged Over Time']" />
+                  <a v-t="'reset'" class="reset" style="display: none" />
                   <p class="filters">
                     <span>
-                      Current filter:
+                      {{ $t('Current filter') }}
                       <span class="filter" />
                     </span>
                   </p>
                 </div>
                 <div :id="`range-chart-${graphId}`" class="range-chart">
                   <p
-                    class="muted pull-right text-subtitle-2"
-                    style="margin-right: 15px; margin-bottom: 5px"
+                    class="muted pull-right text-subtitle-2 mr-4 mb-1"
                   >
                     {{ $t('select-time-range') }}
                   </p>
@@ -29,11 +28,11 @@
             <VRow>
               <VCol cols="12" md="6">
                 <div :id="`hour-chart-${graphId}`">
-                  <strong>Time of day</strong>
-                  <a class="reset" style="display: none">reset</a>
+                  <span v-text="messages['Time of Day']" />
+                  <a v-t="'reset'" class="reset" style="display: none" />
                   <p class="filters">
                     <span>
-                      Current filter:
+                      {{ $t('Current filter') }}
                       <span class="filter" />
                     </span>
                   </p>
@@ -41,11 +40,11 @@
               </VCol>
               <VCol cols="12" md="6">
                 <div :id="`week-chart-${graphId}`">
-                  <strong>Day</strong>
-                  <a class="reset" style="display: none">reset</a>
+                  <span v-text="messages['Day']" />
+                  <a v-t="'reset'" class="reset" style="display: none" />
                   <p class="filters">
                     <span>
-                      Current filter:
+                      {{ $t('Current filter') }}
                       <span class="filter" />
                     </span>
                   </p>
@@ -56,16 +55,16 @@
           <VCol cols="12" md="4">
             <div :id="`user-chart-${graphId}`">
               <div style="display: flex">
-                <strong>Top Users</strong>
+                <span v-text="messages['Top Users']" />
                 <VSpacer />
                 <div :id="`user-search-${graphId}`" />
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -73,17 +72,26 @@
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="`dc-data-count-${graphId}`" class="dc-data-count">
-        <span class="filter-count" />
-        selected out of
-        <span class="total-count" />
-        messages |
-        <a class="resetAll">Reset All</a>
-      </div>
+      <template v-if="filterCount === totalCount">
+        <i18n tag="div" :path="kViewBlock('selected-all')">
+          <template #totalCount>
+            <span class="font-weight-bold" v-text="totalCount" />
+          </template>
+        </i18n>
+        <span v-t="'click-graph'" />
+      </template>
+      <template v-else>
+        <i18n tag="div" :path="kViewBlock('selected-some')">
+          <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
+            <span :key="k" class="font-weight-bold" v-text="v" />
+          </template>
+        </i18n>
+        <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
+      </template>
     </VRow>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+        <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -107,7 +115,7 @@ export default {
       header: [
         { text: 'Sender', value: 'senderName' },
         { text: 'Message', value: 'messageContent' },
-        { text: 'Send At', value: 'dateStr' }
+        { text: 'Sent on', value: 'dateStr' }
       ],
       results: []
     }
@@ -159,7 +167,6 @@ export default {
       const userChart = new dc.RowChart(`#user-chart-${this.graphId}`)
       const hourChart = new dc.BarChart(`#hour-chart-${this.graphId}`)
       const weekChart = new dc.RowChart(`#week-chart-${this.graphId}`)
-      const tableCount = new dc.DataCount(`#dc-data-count-${this.graphId}`)
       const userSearch = this.createTextFilterWidget(`#user-search-${this.graphId}`)
 
       // Bind reset filters links
@@ -185,11 +192,20 @@ export default {
       )
 
       const ndx = crossfilter(this.results)
+      const all = ndx.groupAll()
+      // get total number of records
+      this.totalCount = ndx.size()
+      this.filterCount = this.totalCount
+      ndx.onChange(() => {
+        // update table
+        this.results = monthDimension.top(all.value())
+        // update filter count
+        this.filterCount = ndx.allFiltered().length
+      })
 
       // Create dimensions
-      const all = ndx.groupAll()
       const dayOfWeekDimension = ndx.dimension((d) => {
-        const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        const name = this.$days()
         return `${name[d.weekDay]}`
       })
       const userDimension = ndx.dimension(d => d.senderName)
@@ -245,26 +261,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function(d) {
-        switch (d.key) {
-          case 'Mon':
-            return 0
-          case 'Tue':
-            return 1
-          case 'Wed':
-            return 2
-          case 'Thu':
-            return 3
-          case 'Fri':
-            return 4
-          case 'Sat':
-            return 5
-          case 'Sun':
-            return 6
-          default:
-            return 0
-        }
-      })
+      weekChart.ordering(d => this.$days().indexOf(d.key))
 
       // Render user row chart
       userChart
@@ -350,32 +347,13 @@ export default {
         .yAxis()
         .ticks(0)
 
-      // Render counter and table
-      tableCount
-        .crossfilter(ndx)
-        .groupAll(all)
-        .html({
-          some:
-            '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> messages' +
-            " | <a class='resetAll'>Reset All</a>",
-          all: 'All <strong>%total-count</strong> messages selected. Please click on the graph to apply filters.'
-        })
-        .on('pretransition', () => {
-          this.results = monthDimension.top(all.value())
-          d3.select(`#dc-data-count-${this.graphId} a.resetAll`).on(
-            'click',
-            () => {
-              dc.filterAll()
-              dc.renderAll()
-            }
-          )
-        })
       dc.renderAll()
     }
   }
 }
 </script>
 <style scoped>
+@import 'assets/styles/dc.css';
 ::v-deep body {
   font-family: sans-serif;
   color: #22313f;

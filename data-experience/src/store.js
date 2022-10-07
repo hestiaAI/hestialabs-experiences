@@ -6,8 +6,8 @@ const store = {
   state: () => ({
     loaded: false,
     progress: false,
-    config: {},
-    newConfig: {},
+    experienceConfig: {},
+    siteConfig: {},
     selectedFiles: [],
     results: {},
     currentDB: null,
@@ -20,13 +20,17 @@ const store = {
       state.progress = value
     },
     setLoaded(state) {
-      console.log('LOaded')
       state.loaded = true
     },
-    setConfig(state, config) {
-      console.log('setting config', config)
-      state.config = config
-      console.log('config set', state.config)
+    setExperienceConfig(state, config) {
+      console.log('setting experienceConfig', config)
+      state.experienceConfig = config
+      console.log('experienceConfig set', state.experienceConfig)
+    },
+    setSiteConfig(state, config) {
+      console.log('setting siteConfig', config)
+      state.siteConfig = config
+      console.log('siteConfig set', state.siteConfig)
     },
     setCurrentDB(state, db) {
       state.currentDB = db
@@ -90,6 +94,18 @@ const store = {
       console.log('STORE setFileExplorerCurrentItem', item)
       state.fileExplorerCurrentItem = item
       state.fileExplorerCurrentItem.selectedPaths = []
+    }
+  },
+  getters: {
+    tutorialVideos(state) {
+      console.log('Get TutVideos', state.experienceConfig.tutorialVideos)
+      return state.experienceConfig.tutorialVideos || []
+    },
+    videoHeight(state) {
+      return state.experienceConfig.videoHeight || '400'
+    },
+    dataPortalHtml(state) {
+      return state.experienceConfig.dataPortalHtml
     }
   }
 }

@@ -1,5 +1,5 @@
-import DBMS from './sql'
-import FileManager from './file-manager'
+import DBMS from '~/utils/sql'
+import FileManager from '~/utils/file-manager'
 
 export class DatabaseTester {
   database
@@ -35,9 +35,9 @@ export class DatabaseTester {
 }
 
 export function arrayEqualNoOrder(array1, array2) {
+  expect(array1.length).toBe(array2.length)
   array2.forEach(x => expect(array1).toContainEqual(x))
   array1.forEach(x => expect(array2).toContainEqual(x))
-  expect(array1.length).toBe(array2.length)
 }
 
 export function getSqlFromBlock({ options: { viewBlocks } }, id) {

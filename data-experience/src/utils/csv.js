@@ -12,7 +12,7 @@ function differentiateDuplicates(strings) {
 }
  */
 async function getCsvHeadersAndItems(csvText) {
-  const { headers, items } = await new Promise((resolve) => {
+  const { headers, items } = await new Promise((resolve, reject) => {
     Papa.parse(csvText, {
       header: true,
       skipEmptyLines: true,

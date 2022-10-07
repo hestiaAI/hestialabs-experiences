@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import FileManager from '../../../utils/file-manager'
+import { mapState } from '@/utils/store-helper'
 
 export default {
   props: {
@@ -79,16 +79,15 @@ export default {
     main: {
       type: Boolean,
       default: false
-    },
-    fileManager: {
-      type: FileManager,
-      default: null
     }
   },
   data() {
     return {
       show: false
     }
+  },
+  computed: {
+    ...mapState(['fileManager'])
   }
 }
 </script>

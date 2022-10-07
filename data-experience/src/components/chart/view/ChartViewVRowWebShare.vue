@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import exportImageMixinFactory from '../../../mixins/export-image-mixin-factory'
+import exportImageMixinFactory from '@/mixins/export-image-mixin-factory'
 
 export default {
   mixins: [exportImageMixinFactory()]

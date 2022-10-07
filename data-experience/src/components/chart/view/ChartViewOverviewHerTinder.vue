@@ -17,10 +17,10 @@
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -40,10 +40,10 @@
               </div>
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">reset</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -55,7 +55,7 @@
     </VRow>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+        <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -361,7 +361,7 @@ export default {
             'All <strong>%total-count</strong> records' +
             ' selected. Please click on the graph to apply filters.'
         })
-        .on('pretransition', () => {
+        .on('pretransition', (chart, filter) => {
           this.results = allDim.top(all.value())
           d3.select(`#dc-data-count-${this.graphId} a.resetAll`).on(
             'click',
@@ -377,6 +377,7 @@ export default {
 }
 </script>
 <style scoped>
+@import 'assets/styles/dc.css';
 ::v-deep body {
   font-family: sans-serif;
   color: #22313f;

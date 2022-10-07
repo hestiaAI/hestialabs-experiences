@@ -34,7 +34,7 @@ module.exports = defineConfig({
       ]
     },
     plugins: [
-      require('unplugin-vue-components/webpack')({ /* options */ })
+      require('unplugin-vue-components/webpack')({})
     ]
   }
 })

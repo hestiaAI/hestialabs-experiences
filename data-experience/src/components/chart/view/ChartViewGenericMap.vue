@@ -15,8 +15,8 @@
         <VCol cols="12">
           <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
-        <p v-if="displayFilterInfo">
-          {{ $t("generic-map.search-info") }}
+        <p v-if="config.consent">
+          {{ $t(k('search-info')) }}
           <br>
           {{ $t('filter-info') }}
         </p>
@@ -36,11 +36,11 @@
               v-bind="attrs"
               v-on="on"
             >
-              {{ $t('generic-map.add-noise') }}
+              {{ $t(k('add-noise')) }}
             </VBtn>
           </template>
           <VCard class="mx-auto" max-width="600">
-            <VCardTitle>{{ $t('generic-map.noise-level') }}</VCardTitle>
+            <VCardTitle>{{ $t(k('noise-level')) }}</VCardTitle>
             <VCardText>
               <VRow class="mb-4" justify="space-between">
                 <VCol class="text-left">
@@ -48,7 +48,7 @@
                     class="text-h2 font-weight-light"
                     v-text="sliderValue"
                   />
-                  <span class="subheading font-weight-light mr-1">{{ $t('generic-map.meters') }}</span>
+                  <span class="subheading font-weight-light mr-1">{{ $t(k('meters')) }}</span>
                 </VCol>
               </VRow>
 
@@ -89,6 +89,7 @@
       <VRow>
         <VCol cols="12">
           <UnitFilterableTable
+            :id="id"
             v-bind="{ headers, items: results }"
             @current-items="onTableFilter"
           />
@@ -97,9 +98,11 @@
     </template>
   </VContainer>
 </template>
+
 <script>
+import { mapState } from '@/utils/store-helper'
 import mixin from './mixin'
-import { kAnonymityFilter } from '../../../utils/kAnonymity'
+import { kAnonymityFilter } from '@/utils/kAnonymity'
 
 export default {
   mixins: [mixin],
@@ -127,10 +130,6 @@ export default {
     label: {
       type: String,
       default: () => ''
-    },
-    displayFilterInfo: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
@@ -145,6 +144,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['config']),
     total() {
       return this.results.length
     },
@@ -169,6 +169,9 @@ export default {
     }
   },
   methods: {
+    k(key) {
+      return `chart-view.generic-map.${key}`
+    },
     increment() {
       this.sliderValue += 1
     },
@@ -198,7 +201,6 @@ export default {
       this.results = this.values
       this.sliderValue = 0
     },
-    drawViz() {},
     onTableFilter(newItems) {
       this.filteredRows = newItems
     }

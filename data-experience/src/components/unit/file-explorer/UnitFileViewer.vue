@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 import { jsonToTableConverter } from '~/utils/generic-pipelines'
 
 export default {
@@ -102,7 +102,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataexp', ['fileManager']),
+    ...mapState(['fileManager']),
     fileType() {
       // @fileType should match the postfix of the Vue component name
       return this.selectedItem?.type

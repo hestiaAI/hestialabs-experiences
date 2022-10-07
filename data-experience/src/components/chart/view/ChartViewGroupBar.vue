@@ -186,7 +186,7 @@ export default {
               .style('font-weight', 'bold')
               .style('fill', '#0A0A0A')
           })
-          .on('mouseleave', function() {
+          .on('mouseleave', function(evt, d) {
             d3.select(this).style('opacity', 1)
             d3.select('.barsLabel').remove()
           })

@@ -1,9 +1,7 @@
 <template>
-  <div v-if="loading">
-    Loading
-  </div>
+  <div v-if="loading" v-t="'Loading'" />
   <div v-else-if="error">
-    <p>Could not parse the file. Please use the "RAW" tab to visualise it.</p>
+    <p v-t="k('errorText')" />
   </div>
   <UnitFilterableTable v-else v-bind="{ ...csvContent }" />
 </template>
@@ -32,6 +30,9 @@ export default {
     }
   },
   methods: {
+    k(key) {
+      return `file-explorer.viewer.csv.${key}`
+    },
     async getContentFromFilename(filename) {
       this.setLoading(true)
       this.csvText = await this.fileManager.getPreprocessedText(filename)

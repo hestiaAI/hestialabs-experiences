@@ -18,13 +18,19 @@
                 $vuetify.icons.mdiFileMultipleOutline
               </VIcon>
             </template>
-            <span>All files are used</span>
+            <span
+              v-t="'All files are used'"
+            />
           </VTooltip>
           <UnitFilesDialog
-            v-else-if="fileGlobs.length > 0"
+            v-else-if="
+              fileGlobs.length
+                > 0"
             :file-globs="fileGlobs"
             :file-manager="fileManager"
           />
+          </span>
+          </vtooltip>
         </VCol>
       </VRow>
 
@@ -73,25 +79,28 @@
               <UnitVegaViz
                 v-if="vizVega"
                 :spec-file="vizVega"
-                :data="clonedResult"
+                :data="clonedResultPostprocessed"
                 class="text-center"
               />
               <ChartView
                 v-else-if="vizVue"
-                :graph-name="vizVue"
-                :data="clonedResult"
-                :viz-props="vizPropsTranslated"
+                v-bind="{
+                  id,
+                  graphName: vizVue,
+                  data: clonedResultPostprocessed,
+                  ...vizPropsTranslated
+                }"
               />
               <UnitIframe
                 v-else-if="vizUrl"
                 :src="vizUrl"
-                :args="clonedResult"
+                :args="clonedResultPostprocessed"
               />
             </VCol>
           </VRow>
           <VRow v-if="showTable">
             <VCol>
-              <UnitFilterableTable v-bind="clonedResult" />
+              <UnitFilterableTable v-bind="clonedResult" :id="id" />
             </VCol>
           </VRow>
         </template>
@@ -101,11 +110,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 import { cloneDeep, merge } from 'lodash-es'
-import UnitPipelineSql from './UnitPipelineSql.vue'
+
 export default {
-  components: { UnitPipelineSql },
   props: {
     slug: {
       type: String,
@@ -180,9 +188,12 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataexp', ['fileManager']),
+    ...mapState(['fileManager']),
     clonedResult() {
       return cloneDeep(this.result)
+    },
+    clonedResultPostprocessed() {
+      return this.postprocessor(this.clonedResult)
     },
     fileGlobs() {
       const fileIds = this.files ?? []
@@ -197,7 +208,7 @@ export default {
     vizPropsTranslated() {
       // translations override all props...
       // we trust that they only affect texts
-      // NOTE: we need to deepClone the viProps before doing the merge.
+      // NOTE: we need to deepClone the vizProps before doing the merge
       // because the lodash merge function recursively mutates the first argument
       // and it will cause a vuex mutation error otherwise.
       return merge(cloneDeep(this.vizProps), this.$tev(this.k('vizProps'), {}))
@@ -217,23 +228,20 @@ export default {
   },
   methods: {
     onUnitResultsUpdate({ result, error }) {
-      let finalResult = result
       if (error) {
         console.error(error)
         this.errorMessage = error instanceof Error ? error.message : error
         return
       }
-      // Postprocessing
-      finalResult = this.postprocessor(finalResult)
-      this.$store.commit('dataexp/setResult', {
+      this.$store.commit('setResult', {
         experience: this.id,
-        result: finalResult
+        result
       })
-      this.result = finalResult
+      this.result = result
     },
-    // Convert local translation key to global vue18n
-    k(localKey) {
-      return `experiences.${this.slug}.viewBlocks.${this.id}.${localKey}`
+    // Convert local translation key to global vue-i18n
+    k(key) {
+      return `experiences.${this.slug}.viewBlocks.${this.id}.${key}`
     }
   }
 }

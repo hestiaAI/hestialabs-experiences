@@ -2,13 +2,23 @@
   <VContainer v-if="validProps">
     <VRow dense>
       <VCol cols="12" md="12" class="text-center">
-        <p>
-          {{ $t('In total we found') }} <strong>{{ total }}</strong> {{ countLabel }}
-          <span v-if="minDate && maxDate" class="">
-            {{ $t('between') }} <strong>{{ minDate }}</strong> {{ $t('and') }}
-            <strong>{{ maxDate }}</strong>
-          </span>
-        </p>
+        <i18n
+          tag="p"
+          :path="k('heading')"
+        >
+          <template #total>
+            <span class="font-weight-bold" v-text="total" />
+          </template>
+          <template #countLabel>
+            {{ countLabel }}
+          </template>
+          <template #minDate>
+            <span class="font-weight-bold" v-text="minDate" />
+          </template>
+          <template #maxDate>
+            <span class="font-weight-bold" v-text="maxDate" />
+          </template>
+        </i18n>
       </VCol>
     </VRow>
     <VRow justify="center" dense>
@@ -194,6 +204,9 @@ export default {
     }
   },
   methods: {
+    k(key) {
+      return `chart-view.top-row.${key}`
+    },
     // Update data depending on the current states of the buttons
     draw() {
       const newData = this.records.slice(
@@ -229,7 +242,7 @@ export default {
         .attr('width', 0)
         .attr('height', this.yScale.bandwidth())
         .attr('fill', '#69b3a2')
-        .on('mouseover', function(_, d) {
+        .on('mouseover', function(evt, d) {
           d3.select(this).style('opacity', 0.7)
           d3.select(this.parentNode)
             .append('text')
@@ -243,7 +256,7 @@ export default {
             .style('font-weight', 'bold')
             .style('fill', '#0A0A0A')
         })
-        .on('mouseleave', function() {
+        .on('mouseleave', function(evt, d) {
           d3.select(this).style('opacity', 1)
           d3.select('.barsLabel').remove()
         })
@@ -282,16 +295,17 @@ export default {
         ? d3.timeParse(this.dateFormat)
         : d => new Date(d)
 
-      const formatDate = d3.timeFormat('%B %d, %Y')
+      const formatDate = date => this.$d(date, 'dateOnly', this.$i18n.locale)
       if (this.dateAccessor) {
-        const extent = d3.extent(this.values, (d) => {
-          return dateParser(d[this.dateAccessor])
-        })
-        if (extent[0] && extent[1]) {
-          this.minDate = formatDate(extent[0])
-          this.maxDate = formatDate(extent[1])
+        const [minDate, maxDate] = d3.extent(
+          this.values,
+          d => dateParser(d[this.dateAccessor])
+        )
+        if (minDate && maxDate) {
+          this.minDate = formatDate(minDate)
+          this.maxDate = formatDate(maxDate)
         } else {
-          console.error('Unable to parse date fields')
+          throw new Error('Unable to parse date fields')
         }
       }
 

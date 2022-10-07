@@ -6,22 +6,18 @@
           <VCol cols="12" md="12">
             <div id="like-chart">
               <strong>Likes you've made over time</strong>
-              <a class="reset" style="display: none">reset</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
             </div>
             <div id="range-chart">
-              <p
-                class="muted pull-right text-subtitle-2"
-                style="margin-right: 15px; margin-bottom: 5px"
-              >
-                {{ $t('select-time-range') }}
-                <a class="reset" style="display: none">reset</a>
-              </p>
+              <ChartViewTextSelectTimeRange>
+                <a v-t="'reset'" class="reset" style="display: none" />
+              </ChartViewTextSelectTimeRange>
             </div>
           </VCol>
         </VRow>
@@ -29,10 +25,10 @@
           <VCol cols="12" md="4">
             <div id="hour-chart">
               <strong>Time of day</strong>
-              <a class="reset" style="display: none">reset</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -41,10 +37,10 @@
           <VCol cols="12" md="4">
             <div id="week-chart">
               <strong>Day</strong>
-              <a class="reset" style="display: none">reset</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -53,10 +49,10 @@
           <VCol cols="12" md="4">
             <div id="matched-chart">
               <strong>Matched</strong>
-              <a class="reset" style="display: none">reset</a>
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
               </p>
@@ -76,7 +72,7 @@
     </VRow>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+        <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -177,7 +173,7 @@ export default {
       const all = ndx.groupAll()
       const dayOfWeekDimension = ndx.dimension((d) => {
         const day = d.date.getDay()
-        const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        const name = this.$days()
         return `${name[day]}`
       })
       const matchedDimension = ndx.dimension(d => d.matched)
@@ -222,26 +218,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function(d) {
-        switch (d.key) {
-          case 'Mon':
-            return 0
-          case 'Tue':
-            return 1
-          case 'Wed':
-            return 2
-          case 'Thu':
-            return 3
-          case 'Fri':
-            return 4
-          case 'Sat':
-            return 5
-          case 'Sun':
-            return 6
-          default:
-            return 0
-        }
-      })
+      weekChart.ordering(d => this.$days().indexOf(d.key))
 
       // Render matched pie chart
       matchedChart
@@ -348,7 +325,7 @@ export default {
             " | <a class='resetAll'>Reset All</a>",
           all: 'All <strong>%total-count</strong> views selected. Please click on the graph to apply filters.'
         })
-        .on('pretransition', () => {
+        .on('pretransition', (chart, filter) => {
           this.results = monthDimension.top(all.value())
           d3.select('#dc-data-count' + this.graphId + ' a.resetAll').on(
             'click',
@@ -364,6 +341,7 @@ export default {
 }
 </script>
 <style scoped>
+@import 'assets/styles/dc.css';
 ::v-deep body {
   font-family: sans-serif;
   color: #22313f;

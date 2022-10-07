@@ -2,8 +2,8 @@ import {
   jsonToTableConverter,
   createTableOptions,
   mergeTableData
-} from './generic-pipelines'
-import { mockFileManager } from './__mocks__/file-manager-mock'
+} from '~/utils/generic-pipelines'
+import { mockFileManager } from '~/utils/__mocks__/file-manager-mock'
 
 test('mergeTableData', () => {
   const t1 = {

@@ -2,10 +2,12 @@
   <VContainer>
     <ChartViewVRowWebShare>
       <VCol cols="12" md="12" class="text-center">
-        <p>
-          In total there are <strong>{{ total }}</strong> records
-          {{ labelTotal }}
-        </p>
+        <!-- https://kazupon.github.io/vue-i18n/guide/interpolation.html#slots-syntax-usage -->
+        <i18n :path="kViewBlock('labelTotal')" tag="p">
+          <template #total>
+            <span class="font-weight-bold" v-text="total" />
+          </template>
+        </i18n>
         <div :id="graphId" style="position: relative" />
       </VCol>
     </ChartViewVRowWebShare>
@@ -16,53 +18,38 @@
 import * as d3 from 'd3'
 import { nest, keys } from 'd3-collection'
 import * as d3Sankey from 'd3-sankey'
+import mixin from './mixin'
 
 export default {
   name: 'ChartViewSankey',
+  mixins: [mixin],
   props: {
-    values: {
-      type: Array,
-      default: () => []
-    },
     topN: {
       type: Number,
-      default: () => 10
-    },
-    labelLeft: {
-      type: String,
-      default: () => 'Pickup places'
-    },
-    labelRight: {
-      type: String,
-      default: () => 'Dropoff places'
-    },
-    labelTotal: {
-      type: String,
-      default: () => 'of trips you have made with Uber'
+      default: 10
     },
     displayLinksLabels: {
       type: Boolean,
-      default: () => true
+      default: true
     },
     nodeWidth: {
       type: Number,
-      default: () => 40
+      default: 40
     },
     nodePadding: {
       type: Number,
-      default: () => 40
+      default: 40
     }
   },
   data() {
     return {
-      graphId: 'graph_' + this._uid,
       total: 0
     }
   },
-  mounted() {
-    this.drawViz()
-  },
   methods: {
+    k(key) {
+      return `chart-view.sankey.${key}`
+    },
     toJSONGraph(data) {
       // group, count each similar links and limit to top n links
       const groupedData = d3
@@ -114,7 +101,7 @@ export default {
       )
 
       // loop through each link replacing the text with its index from node
-      graph.links.forEach(function(_, i) {
+      graph.links.forEach(function(d, i) {
         graph.links[i].source = graph.nodes.indexOf(graph.links[i].source)
         graph.links[i].target = graph.nodes.indexOf(graph.links[i].target)
       })
@@ -154,7 +141,7 @@ export default {
         .append('div')
         .style('opacity', 1)
         .html(
-          '(hover on the links or nodes to get more information<br> about the most frequent ones)'
+          `(${this.$t(this.k('hoverMessage'))})`
         )
         .style('left', width / 2 + margin.left + 'px')
         .style('top', 0 + 'px')
@@ -175,22 +162,22 @@ export default {
         .style('opacity', 0)
         .attr('class', 'tooltip')
 
-      // Add Label left
+      // Add source text (on the left)
       svg
         .append('text')
         .attr('class', 'label')
         .attr('x', 0)
         .attr('y', -margin.top / 2)
-        .text(this.labelLeft)
+        .text(this.$t(this.kViewBlock('sourceText')))
 
-      // Add Label right
+      // Add target text (on the right)
       svg
         .append('text')
         .attr('class', 'label')
         .attr('x', width)
         .attr('y', -margin.top / 2)
         .attr('text-anchor', 'end')
-        .text(this.labelRight)
+        .text(this.$t(this.kViewBlock('targetText')))
 
       // Set the sankey diagram properties
       const sankey = d3Sankey
@@ -212,17 +199,14 @@ export default {
         .attr('d', d3Sankey.sankeyLinkHorizontal())
         .attr('stroke-width', d => d.width)
         .attr('opacity', 0.2)
-        .on('mouseover', function(evt, d) {
-          const textToDisplay = `<b>${d.sourceName}</b>  → <b>
-            ${d.targetName}</b><br><center><b>
-            ${d.value}</b> trips.</center>`
-
+        .on('mouseover', (evt, d) => {
+          const textToDisplay = this.$t(this.kViewBlock('linkMouseoverHTML'), d)
           linkTooltip.html(textToDisplay).style('opacity', 1)
 
           // highlight current one
           d3.select(this).attr('opacity', 0.7)
         })
-        .on('mouseleave', function() {
+        .on('mouseleave', function(d) {
           d3.select(this).attr('opacity', 0.2)
           linkTooltip.style('opacity', 0)
         })
@@ -249,12 +233,12 @@ export default {
         })
 
       node
-        .on('mouseover', function(_, d) {
-          const textToDisplay = `<b>${d.name.slice(0, -1)}</b><br><center><b>${
-            d.value
-          }</b> trips <b>${
-            d.name.slice(-1) === 's' ? 'from' : 'to'
-          }</b> this place</center>`
+        .on('mouseover', (evt, d) => {
+          const textToDisplay = this.$t(this.kViewBlock('nodeMouseoverHTML'), {
+            name: d.name.slice(0, -1),
+            value: d.value,
+            fromTo: this.$t(this.kViewBlock(d.name.slice(-1) === 's' ? 'from' : 'to'))
+          })
           // const x = d.x1 // (d.x0 + d.x1) / 2
           // const tooltipWidth = tooltip.node().getBoundingClientRect().width
           // const tooltipHeight = tooltip.node().getBoundingClientRect().height
@@ -281,7 +265,7 @@ export default {
             )
             .attr('opacity', 0.7)
         })
-        .on('mouseleave', function() {
+        .on('mouseleave', function(d) {
           d3.selectAll('#' + this.graphId + '.link').attr('opacity', 0.2)
           d3.select(this).attr('opacity', 1)
           tooltip.style('opacity', 0)

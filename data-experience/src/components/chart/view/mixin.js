@@ -1,7 +1,14 @@
 import { TextFilterWidget } from 'dc'
+import { merge } from 'lodash-es'
 
-export default {
+import kViewBlockMixin from '@/mixins/k-view-block'
+
+const mixin = {
   props: {
+    id: {
+      type: String,
+      required: true
+    },
     values: {
       type: Array,
       default: () => []
@@ -9,11 +16,17 @@ export default {
     headers: {
       type: Array,
       default: () => []
+    },
+    messages: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {
     return {
-      graphId: 'graph_' + this._uid
+      graphId: 'graph_' + this.id,
+      totalCount: null,
+      filterCount: null
     }
   },
   mounted() {
@@ -25,10 +38,13 @@ export default {
     }
   },
   methods: {
+    drawViz() { },
     createTextFilterWidget(parent, placeholder = 'Search') {
       const widget = new TextFilterWidget(parent)
-      widget.placeHolder(this.$t(placeholder))
+      widget.placeHolder(this.$tev(placeholder, placeholder))
       return widget
     }
   }
 }
+
+export default merge(mixin, kViewBlockMixin)

@@ -17,7 +17,7 @@
           class="week-axis"
         >
           <text
-            v-for="(d, idx) in weekDays"
+            v-for="(d, idx) in $days()"
             :key="`d_${idx}`"
             x="-5"
             :y="idxYear * calendarHeight + (idx + 0.5) * cellSize"
@@ -150,7 +150,6 @@ export default {
   },
   data() {
     return {
-      weekDays: ['Sun', 'Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat'],
       formatMonth: d3.utcFormat('%b'),
       colorPalette: d3.interpolateRdPu
     }
@@ -160,7 +159,7 @@ export default {
       return this.cellSize * (52 + 3)
     },
     calendarHeight() {
-      return this.cellSize * (this.weekDays.length + 4)
+      return this.cellSize * (this.$days().length + 4)
     },
     height() {
       return this.calendarHeight * this.itemsPerDay.length
@@ -232,7 +231,6 @@ export default {
       return this.legendSquares.length
     }
   },
-  mounted() {},
   methods: {
     generateTitle(year, month, day, value) {
       return (
@@ -254,8 +252,7 @@ export default {
     legendSquareXPos(idx) {
       const { width: w, cellSize: s, legendNbItems: n } = this
       return w - s * 2 * n + idx * s * 2 - s * 2
-    },
-    drawViz() {}
+    }
   }
 }
 </script>

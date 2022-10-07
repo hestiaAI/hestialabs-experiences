@@ -1,8 +1,6 @@
 <template>
   <div v-if="error">
-    <p class="mt-3">
-      Could not find a schema for this file, please contact us if you need it.
-    </p>
+    <p v-t="k('errorText')" class="mt-3" />
   </div>
   <div v-else>
     <BaseSchemaTree :schema="jsonSchema" />
@@ -22,7 +20,7 @@
       </div>
       <div v-else-if="processed">
         <UnitFilterableTable
-          v-bind="{headers, items}"
+          v-bind="{ headers, items }"
         />
       </div>
     </div>
@@ -47,7 +45,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['fileExplorerCurrentItem.selectedPaths']),
+    ...mapGetters(['selectedPaths']),
     // Check that the selected paths can be converted to an array
     isValidPaths() {
       const toCheck = [...this.selectedPaths]

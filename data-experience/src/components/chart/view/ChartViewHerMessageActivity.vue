@@ -71,10 +71,6 @@ export default {
     nbMsg() {
       return this.values.filter(v => v.sender !== 'Her').length // Remove Her
     }
-  },
-  mounted() {},
-  methods: {
-    drawViz() {}
   }
 }
 </script>

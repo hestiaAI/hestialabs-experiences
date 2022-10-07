@@ -8,7 +8,7 @@
         v-if="optionsVisible"
         class="d-flex flex-column justify-center align-center"
       >
-        <CodeEditor v-model:value="options" language="json" />
+        <CodeEditor :value.sync="options" language="json" />
         <BaseButton
           v-bind="{ progress, status, error, disabled }"
           text="Run"
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 import mixin from './mixin-pipeline'
 import { setTimeoutPromise } from '@/utils/utils'
 
@@ -48,7 +48,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataexp', ['fileManager']),
+    ...mapState(['fileManager']),
     disabled() {
       return this.fileManager === null
     }

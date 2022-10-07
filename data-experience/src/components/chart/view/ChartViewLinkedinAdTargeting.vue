@@ -1,11 +1,11 @@
 <template>
   <VContainer>
     <VExpansionPanels accordion>
-      <VExpansionPanel v-for="item in items" :key="item.name">
+      <VExpansionPanel v-for="{ name, values } in items" :key="name">
         <VExpansionPanelHeader v-slot="{ open }">
           <VRow no-gutters>
             <VCol cols="4">
-              {{ item.name }}:
+              {{ name }}:
             </VCol>
             <VCol cols="8" class="text--secondary">
               <VFadeTransition leave-absolute>
@@ -14,8 +14,8 @@
                   class="d-flex flex-column flex-md-row flex-wrap"
                 >
                   <div
-                    v-for="(value, idx) in item.values"
-                    :key="item.name + value + idx"
+                    v-for="(value, idx) in values"
+                    :key="name + value + idx"
                   >
                     <VChip
                       v-if="idx < maxNbItems"
@@ -27,12 +27,12 @@
                     </VChip>
                   </div>
                   <VChip
-                    v-if="item.values.length > maxNbItems"
+                    v-if="values.length > maxNbItems"
                     outlined
-                    color="primary"
+                    color="secondary"
                     class="ma-1"
                   >
-                    + {{ item.values.length - maxNbItems }} others
+                    {{ $tc('plusXOther', values.length - maxNbItems) }}
                   </VChip>
                 </div>
               </VFadeTransition>
@@ -42,8 +42,8 @@
         <VExpansionPanelContent>
           <div class="d-flex flex-column flex-md-row flex-wrap">
             <div
-              v-for="(value, idx) in item.values"
-              :key="item.name + value + idx"
+              v-for="(value, idx) in values"
+              :key="name + value + idx"
             >
               <VChip outlined color="primary" class="ma-1">
                 {{ value }}
@@ -73,15 +73,12 @@ export default {
         .sort()
         .map((k) => {
           return {
-            name: k,
+            name: this.$tev(this.kViewBlock(k, 'names'), k),
             values: this.values[0][k].split('; ')
           }
         })
         .filter(i => i.values[0].length > 0)
     }
-  },
-  methods: {
-    drawViz() {}
   }
 }
 </script>

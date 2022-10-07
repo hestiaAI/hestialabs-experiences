@@ -85,10 +85,11 @@ import { debounce, pick, cloneDeep } from 'lodash-es'
 import DBMS from '../utils/sql'
 import FileManager from '../utils/file-manager'
 import fileManagerWorkers from '../utils/file-manager-workers'
-import { mapState } from 'vuex'
 import UnitIntroduction from './unit/UnitIntroduction.vue'
 import UnitFileExplorer from './unit/file-explorer/UnitFileExplorer.vue'
 import UnitQuery from './unit/UnitQuery.vue'
+import { mapState } from '@/utils/store-helper'
+
 export default {
   name: 'TheDataExperience',
   props: {
@@ -129,8 +130,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataexp', ['fileManager']),
-    ...mapState('dataexp', { experienceProgress: 'progress' }),
+    ...mapState(['fileManager']),
+    ...mapState({ experienceProgress: 'progress' }),
     tabs() {
       const disabled = !this.success || this.experienceProgress
       const tabs = [
@@ -178,7 +179,13 @@ export default {
     experienceConfig: {
       immediate: true,
       handler(value) {
-        this.$store.commit('dataexp/setConfig', cloneDeep(value))
+        this.$store.commit('dataexp/setExperienceConfig', cloneDeep(value))
+      }
+    },
+    siteConfig: {
+      immediate: true,
+      handler(value) {
+        this.$store.commit('dataexp/setSiteConfig', cloneDeep(value))
       }
     },
     fileManager(value) {

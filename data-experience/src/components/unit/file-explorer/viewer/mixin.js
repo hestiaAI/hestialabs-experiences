@@ -1,4 +1,4 @@
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 
 export default {
   props: {
@@ -8,6 +8,6 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataexp', ['fileManager'])
+    ...mapState(['fileManager'])
   }
 }

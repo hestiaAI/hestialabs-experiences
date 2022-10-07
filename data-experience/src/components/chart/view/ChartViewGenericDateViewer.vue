@@ -3,20 +3,23 @@
     <VRow>
       <VCol cols="12" md="7">
         <p class="text-h6">
-          {{ $t(k('graph-title')) }}
+          {{ $t(kViewBlock('graphTitle')) }}
         </p>
         <p
           v-if="total === 0 && !currMinDate && !currMaxDate"
           class="text-subtitle-2"
         >
-          {{ $t(k('graph-no-date')) }}
+          {{ $t(kViewBlock('graphNoDate')) }}
         </p>
-        <p v-else class="text-subtitle-2">
-          {{ $t(k('from')) }}
-          <strong>{{ currMinDate }}</strong>  {{ $t(k('to')) }}
-          <strong>{{ currMaxDate }}</strong>  {{ $t(k('found')) }}
-          <strong>{{ total }}</strong>  {{ $t(k('dated-event')) }}
-        </p>
+        <!-- https://kazupon.github.io/vue-i18n/guide/interpolation.html#slots-syntax-usage -->
+        <i18n v-else :path="kViewBlock('datedEvents')" tag="p" class="text-subtitle-2">
+          <template
+            v-for="(value, key) in { currMinDate, currMaxDate, total }"
+            #[key]
+          >
+            <span :key="key" class="font-weight-bold" v-text="value" />
+          </template>
+        </i18n>
       </VCol>
       <VCol cols="12" md="2">
         <VSelect
@@ -30,7 +33,7 @@
         <VSelect
           v-model="selectFiles"
           :items="filesNames"
-          label="Files"
+          :label="$tc('File', 2)"
           multiple
           @change="filterFiles"
         >
@@ -52,7 +55,7 @@
               item.length > 13 ? item.slice(0, 13) + '..' : item
             }}</span>
             <span v-if="index === 1" class="grey--text text-caption">
-              (+{{ selectFiles.length - 1 }} others)
+              ({{ $tc('plusXOther', selectFiles.length - 1) }})
             </span>
           </template>
         </VSelect>
@@ -61,8 +64,7 @@
     <ChartViewVRowWebShare>
       <VCol cols="12">
         <div :id="graphId" />
-        <p class="text-subtitle-2">
-          {{ $t('select-time-range') }}
+        <ChartViewTextSelectTimeRange>
           <VBtn
             x-small
             class="ma-1"
@@ -73,14 +75,15 @@
           >
             {{ $t('reset') }}
           </VBtn>
-        </p>
+        </ChartViewTextSelectTimeRange>
         <div :id="'range-chart' + graphId" class="range-chart" />
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
       <VCol cols="12">
         <UnitFilterableTable
-          v-bind="{ headers: header, items: results }"
+          :id="id"
+          v-bind="{ headers: header, items: results, kViewBlock }"
           @current-items="onTableFilter"
         />
       </VCol>
@@ -132,12 +135,11 @@ export default {
       barChart: null,
       dateDimension: null,
       volumeGroup: null,
-      graphId: 'graph_' + this._uid,
       header: [
-        { text: 'File name', value: 'filename' },
-        { text: 'Date', value: 'dateStr' },
-        { text: 'Description', value: 'description' }
-      ]
+        ['File name', 'filename'],
+        ['Date', 'dateStr'],
+        ['Description', 'description']
+      ].map(([text, value]) => ({ text, value }))
     }
   },
   computed: {
@@ -154,9 +156,6 @@ export default {
     }
   },
   methods: {
-    k(localKey) {
-      return `genericDateViewer.${localKey}`
-    },
     toggle() {
       this.$nextTick(() => {
         if (this.selectAll) {
@@ -302,7 +301,7 @@ export default {
         chart.x().domain([min, max])
       }
     },
-    onTableFilter() {
+    onTableFilter(items) {
       // TODO: Update graph
     },
     filterFiles(files) {

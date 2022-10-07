@@ -1,4 +1,3 @@
-/* eslint-disable */
 import initSqlJs from 'sql.js'
 import sqlWasm from 'sql.js/dist/sql-wasm.wasm'
 import { JSONPath } from 'jsonpath-plus'
@@ -190,6 +189,13 @@ export class DB {
       this.#tables = new Map()
     }
   }
+
+  /**
+   * Export the database
+   */
+  export() {
+    return this.#db.export()
+  }
 }
 
 /**
@@ -202,6 +208,20 @@ export async function createDB({ tables }) {
   await db.init()
   tables.forEach(t => db.create(t))
   return db
+}
+
+function transformValue(value, defaultValue) {
+  switch (typeof value) {
+    case 'object':
+      // stringify object to avoid [object Object]
+      return JSON.stringify(value)
+    case 'undefined':
+      // return default value
+      // when JSONPath returns undefined
+      return defaultValue
+    default:
+      return String(value)
+  }
 }
 
 /**
@@ -255,10 +275,8 @@ function generateRecordsRecursively(
           path: a.pathKey ? item[a.pathKey] : a.path,
           wrap: false
         })
-        record[a.column] =
-          typeof value === 'object'
-            ? JSON.stringify(value)
-            : value ? String(value) : record[a.column]
+
+        record[a.column] = transformValue(value, record[a.column])
       } else if (a.column && a.value) {
         // hardcoded value
         record[a.column] = a.value

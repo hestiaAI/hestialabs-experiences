@@ -1,18 +1,20 @@
 <template>
   <div v-if="fileManager !== null">
     <VCard class="pa-2 mb-6" flat>
-      <VCardTitle class="justify-center">
-        Here's a summary of what we have found
-      </VCardTitle>
+      <VCardTitle v-t="k('cardTitle')" class="justify-center" />
       <VCardText>
-        Analysed <b>{{ nFiles }}</b> {{ plurify('file', nFiles) }} (<b>{{
-          dataSizeString
-        }}</b>)
-        <template v-if="nDataPoints">
-          and found <b>{{ nDataPoints.toLocaleString() }}</b>
-          {{ plurify('datapoint') }}
-        </template>
-        :
+        <!-- https://kazupon.github.io/vue-i18n/guide/pluralization.html -->
+        <i18n :path="k('summaryHeading.main')" tag="span">
+          <template #file>
+            <span class="font-weight-bold">{{ $tc(k('summaryHeading.file'), nFiles, { n: $n(nFiles) }) }}</span>
+          </template>
+          <template #dataSizeString>
+            (<span class="font-weight-bold">{{ dataSizeString }}</span>)
+          </template>
+          <template #datapoint>
+            <span class="font-weight-bold">{{ $tc(k('summaryHeading.datapoint'), nDataPoints, { n: $n(nDataPoints) }) }}</span>
+          </template>
+        </i18n><span>:</span>
         <ul v-if="filesInformation">
           <li
             v-for="({ globalDescription, topFiles }, i) in filesInformation"
@@ -29,10 +31,13 @@
     </VCard>
   </div>
 </template>
+
 <script>
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 import { sum, sumBy, take, isUndefined, mapValues, identity, groupBy, sortBy } from 'lodash-es'
-import { humanReadableFileSize, plurify } from '~/utils/utils'
+import { humanReadableFileSize } from '~/utils/utils'
+
+const plurify = (word, n) => (n === 1 ? word : `${word}s`)
 
 export default {
   name: 'UnitSummary',
@@ -55,7 +60,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataexp', ['fileManager']),
+    ...mapState(['fileManager']),
     ext2group() {
       return Object.fromEntries(
         Object.entries(this.group2ext).flatMap(entry =>
@@ -102,9 +107,11 @@ export default {
     }
   },
   methods: {
-    plurify,
+    k(key) {
+      return `unit-summary.${key}`
+    },
     onFileClick(filename) {
-      this.$store.commit('dataexp/setFileExplorerCurrentItem', { filename })
+      this.$store.commit('setFileExplorerCurrentItem', { filename })
       this.$emit('switch-tab', 'file-explorer')
     },
     async setNumberOfDataPoints() {

@@ -18,8 +18,7 @@ export default {
   mixins: [mixin],
   data() {
     return {
-      bcItems: [],
-      graphId: 'graph_' + this._uid
+      bcItems: []
     }
   },
   watch: {
@@ -55,7 +54,7 @@ export default {
         .sort((a, b) => b.value - a.value)
 
       const totalSize = tree.value
-      const rootName = this.$t(k(tree.data.name))
+      const rootName = this.$tev(k(tree.data.name), tree.data.name)
       this.bcItems = [{ text: rootName, disabled: true }]
 
       // Compute arcs partitons/positions
@@ -205,14 +204,14 @@ export default {
         .style('font-weight', 'light')
         .attr('text-anchor', 'middle')
         .attr('text-decoration', 'underline')
-        .text('zoom out')
+        .text(this.$t(k('Zoom out')))
         .attr('opacity', 0)
         .style('cursor', 'pointer')
         .attr('pointer-events', 'all')
         .on('click', clicked)
 
       let currentLevel = [{ text: rootName, disabled: true }]
-      function clicked(_, p) {
+      function clicked(event, p) {
         const ancestors = getAncestors(p)
         currentLevel = ancestors.map((d) => {
           return {
@@ -290,7 +289,7 @@ export default {
         })`
       }
 
-      const mouseover = (_, d) => {
+      const mouseover = (e, d) => {
         if (d.depth - currentLevel.length > 1) { return }
         // Find all ancestors of current overred element
         const ancestors = getAncestors(d)
@@ -314,7 +313,7 @@ export default {
         })
         this.bcItems.unshift({ text: rootName, disabled: true })
         infoPercent.text(percentageString)
-        infoNumber.text(`${d.value} ${this.$t(k('out of'))} ${totalSize}`)
+        infoNumber.text(this.$t(k('infoNumber'), { number: d.value, total: totalSize }))
         infoPercent.attr('opacity', 1)
         infoNumber.attr('opacity', 1)
         infoLabel.attr('opacity', 1)
@@ -330,7 +329,7 @@ export default {
           .style('opacity', 1)
       }
 
-      const mouseleave = () => {
+      const mouseleave = (e, d) => {
         this.bcItems = currentLevel
         infoPercent.attr('opacity', 0)
         infoNumber.attr('opacity', 0)

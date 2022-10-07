@@ -20,7 +20,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -41,7 +41,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -62,7 +62,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -85,7 +85,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -106,7 +106,7 @@
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
-                <a class="reset" style="display: none">{{ $t('reset') }}</a>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -133,7 +133,7 @@
             </div>
           </VCol>
         </VRow>
-        <p v-if="displayFilterInfo">
+        <p v-if="config.consent">
           {{ $t('filter-info') }}
         </p>
       </VCol>
@@ -143,7 +143,7 @@
     </VRow>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+        <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -153,6 +153,7 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
+import { mapState } from '@/utils/store-helper'
 import mixin from './mixin'
 import { removeEmptyBins } from './utils/DCHelpers'
 
@@ -161,12 +162,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   mixins: [mixin],
-  props: {
-    displayFilterInfo: {
-      type: Boolean,
-      default: false
-    }
-  },
+  props: {},
   data() {
     return {
       header: [
@@ -181,6 +177,9 @@ export default {
       results: [],
       colorPalette: ['#58539E', '#847CEB', '#605BAB', '#4A4685', '#9498F2']
     }
+  },
+  computed: {
+    ...mapState(['config'])
   },
   methods: {
     resetAll() {
@@ -345,7 +344,7 @@ export default {
             'All <strong>%total-count</strong> records' +
             ' selected. Please click on the graph to apply filters.'
         })
-        .on('pretransition', () => {
+        .on('pretransition', (chart, filter) => {
           this.results = allDim.top(all.value())
           d3.select(`#dc-data-count-${this.graphId} a.resetAll`).on(
             'click',
@@ -361,6 +360,7 @@ export default {
 }
 </script>
 <style scoped>
+@import 'assets/styles/dc.css';
 ::v-deep body {
   font-family: sans-serif;
   color: #22313f;

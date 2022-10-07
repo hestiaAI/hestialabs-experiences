@@ -16,7 +16,7 @@
         <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
       </VCol>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: headers, items: results }" />
+        <UnitFilterableTable :id="id" v-bind="{ headers: headers, items: results }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -66,7 +66,7 @@ export default {
                     `records | <a class='resetAll'>${this.$t('Reset All')}</a>`,
           all: `Total: <strong>%total-count</strong> records. ${this.$t('click-graph')}`
         })
-        .on('pretransition', () => {
+        .on('pretransition', (chart, filter) => {
           this.results = this.ndx.allFiltered()
           d3.select(`#dc-data-count-${this.graphId} a.resetAll`).on('click', this.resetAll)
         })
@@ -76,6 +76,7 @@ export default {
 }
 </script>
 <style scoped>
+@import 'assets/styles/dc.css';
 ::v-deep body {
   font-family: sans-serif;
   color: #22313f;

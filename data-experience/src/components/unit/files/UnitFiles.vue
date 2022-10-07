@@ -1,5 +1,19 @@
 <template>
   <div>
+    <VRow v-if="samples.length" justify="center" dense>
+      <VCol align="center">
+        <LazyUnitFilesSampleSelector
+          v-model:value="selectedSamples"
+          :items="samples"
+          class="mb-4"
+        />
+      </VCol>
+    </VRow>
+    <VRow v-if="samples.length">
+      <VCol align="center" class="font-weight-bold">
+        {{ $t('unit-files.or') }}
+      </VCol>
+    </VRow>
     <VRow>
       <VCol align="center">
         <div ref="dashboard" />
@@ -7,7 +21,7 @@
     </VRow>
     <VRow>
       <VCol align="center">
-        <BaseDialogButton
+        <BaseButtonDialog
           :dialog-title="$t('decrypt-files.title')"
           tooltip-position="left"
           :tooltip-label="$t('decrypt-files.title')"
@@ -23,7 +37,7 @@
             :label="$t('decrypt-files.pk-label')"
             clearable
           />
-        </BaseDialogButton>
+        </BaseButtonDialog>
         <BaseButton
           v-bind="{ disabled, progress, status, error }"
           text="unit-files.run-btn"
@@ -31,7 +45,7 @@
           class="my-sm-2 mr-sm-4"
           @click="returnFiles"
         />
-        <UnitFilesDialog :file-globs="Object.values(files)" main />
+        <UnitFilesDialog :file-globs="fileGlobs" main />
       </VCol>
     </VRow>
     <VRow>
@@ -57,7 +71,7 @@
 
 <script>
 import { promisify } from 'util'
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 import Uppy from '@uppy/core'
 import Dashboard from '@uppy/dashboard'
 import DropTarget from '@uppy/drop-target'
@@ -69,13 +83,8 @@ import '@uppy/drop-target/dist/style.css'
 import English from '@uppy/locales/lib/en_US'
 import French from '@uppy/locales/lib/fr_FR'
 
-import { decryptBlob } from '../../../utils/encryption'
-
-import UnitFilesDialog from './UnitFilesDialog.vue'
-import BaseAlert from '../../base/BaseAlert.vue'
-import BaseProgressCircular from '../../base/BaseProgressCircular.vue'
-import BaseButton from '../../base/button/BaseButton.vue'
-import BaseDialogButton from '../../base/button/BaseDialogButton.vue'
+import { decryptBlob } from '@/utils/encryption'
+import { BrowserFile } from '~/utils/file-manager'
 
 const locales = {
   en: English,
@@ -85,12 +94,11 @@ const locales = {
 async function fetchSampleFile({ path, filename }) {
   const response = await window.fetch(path)
   const blob = await response.blob()
-  return new File([blob], filename)
+  return new BrowserFile(new File([blob], filename))
 }
 
 export default {
   name: 'UnitFiles',
-  components: { UnitFilesDialog, BaseAlert, BaseProgressCircular, BaseButton, BaseDialogButton },
   props: {
     progress: {
       type: Boolean,
@@ -110,22 +118,25 @@ export default {
     }
   },
   data() {
-    const { files, dataSamples } = this.$store.state.dataexp.config
     return {
       uppy: null,
       samples: [],
       selectedSamples: [],
       filesEmpty: true,
       status: false,
-      files,
-      dataSamples,
       dialog: false,
       privateKey: null,
       publicKey: null
     }
   },
   computed: {
-    ...mapState('dataexp', ['fileManager']),
+    ...mapState(['fileManager']),
+    ...mapState({ files: state => state.experienceConfig.files }),
+    ...mapState({ dataSamples: state => state.experienceConfig.dataSamples }),
+    fileGlobs() {
+      console.log('UnitFiles', this.files)
+      return Object.values(this.files) || []
+    },
     disabled() {
       return this.filesEmpty
     }
@@ -141,7 +152,7 @@ export default {
     // Watch files, if user empty all files we reset the store and delete all files
     filesEmpty() {
       if (this.filesEmpty && this.fileManager) {
-        this.$store.commit('dataexp/clearStore')
+        this.$store.commit('clearStore')
       }
     },
     async selectedSamples(newSamples, oldSamples) {
@@ -181,19 +192,21 @@ export default {
       }
     }
   },
+  /*
   async created() {
     // files in assets/data/ are loaded with file-loader
     this.samples = []
-    /*
     for (const filename of this.dataSamples) {
       this.samples.push({
         filename,
-        path: (await import(`../../../../assets/data/${filename}`)).default
+        path: (await import(`@/assets/data/${filename}`)).default
       })
     }
-    */
+
   },
+  */
   mounted() {
+    console.log('UnitFiles', this.files, this.dataSamples)
     const stringsOverride = {
       en: {
         cancel: 'Clear all'
@@ -222,7 +235,7 @@ export default {
           strings: stringsOverride[this.$i18n.locale]
         }
       })
-      // allow dropping files anywhere on the page
+    // allow dropping files anywhere on the page
       .use(DropTarget, { target: document.body })
       .on('files-added', () => {
         this.filesEmpty = false
@@ -248,26 +261,27 @@ export default {
     this.uppy.close()
   },
   methods: {
-    returnFiles() {
+    async returnFiles() {
       const decryptBlobPromise = promisify(decryptBlob)
       const publicKey =
-        this.publicKey || this.$store.getters.routeConfig(this.$route).publicKey
-      Promise.all(
-        this.uppy.getFiles().map((f) => {
-          return this.privateKey
-            ? decryptBlobPromise(f.data, this.privateKey, publicKey).then(
-              blob => new File([blob], f.name)
-            )
-            : f.data
-        })
-      )
-        .then((decryptedFiles) => {
-          this.status = true
-          this.$emit('update', { uppyFiles: decryptedFiles })
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+            this.publicKey || this.$store.getters.routeConfig(this.$route).publicKey
+      try {
+        const encryptedFiles = this.uppy.getFiles()
+        const decryptedFiles = await
+        Promise.all(
+          encryptedFiles.map(async(f) => {
+            if (!this.privateKey) {
+              return f.data
+            }
+            const blob = await decryptBlobPromise(f.data, this.privateKey, publicKey)
+            return new BrowserFile(new File([blob], f.name))
+          })
+        )
+        this.status = true
+        this.$emit('update', { uppyFiles: decryptedFiles })
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 }

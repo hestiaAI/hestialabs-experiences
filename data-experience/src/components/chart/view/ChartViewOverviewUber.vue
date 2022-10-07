@@ -2,7 +2,7 @@
   <VContainer>
     <VRow class="justify-center">
       <p>
-        Select data depending on the currency
+        <span v-text="messages['select-currency']" />
         <VSelect
           v-model="currentCurrency"
           :items="currencies"
@@ -15,34 +15,30 @@
         <VRow>
           <VCol cols="12" md="12">
             <div id="price-chart">
-              <strong>Cumulative expenses</strong>
-              <a class="reset" style="display: none">reset</a>
+              <span class="font-weight-bold" v-text="messages['Cumulative expenses']" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  <span v-t="'Current filter'" />
                   <span class="filter" />
                 </span>
               </p>
             </div>
             <div id="hour-chart">
-              <p
-                class="muted pull-right text-subtitle-2"
-                style="margin-right: 15px; margin-bottom: 5px"
-              >
-                {{ $t('select-time-range') }}
-                <a class="reset" style="display: none">reset</a>
-              </p>
+              <ChartViewTextSelectTimeRange>
+                <a v-t="'reset'" class="reset" style="display: none" />
+              </ChartViewTextSelectTimeRange>
             </div>
           </VCol>
         </VRow>
         <VRow>
           <VCol cols="12" md="4">
             <div id="service-chart">
-              <strong>Service used</strong>
-              <a class="reset" style="display: none">reset</a>
+              <span class="font-weight-bold" v-text="messages['Service used']" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  <span v-t="'Current filter'" />
                   <span class="filter" />
                 </span>
               </p>
@@ -50,11 +46,11 @@
           </VCol>
           <VCol cols="12" md="4">
             <div id="week-chart">
-              <strong>Day of week</strong>
-              <a class="reset" style="display: none">reset</a>
+              <span class="font-weight-bold" v-text="messages['Day of week']" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  <span v-t="'Current filter'" />
                   <span class="filter" />
                 </span>
               </p>
@@ -62,11 +58,11 @@
           </VCol>
           <VCol cols="12" md="4">
             <div id="address-chart">
-              <strong>Begin trip address</strong>
-              <a class="reset" style="display: none">reset</a>
+              <span class="font-weight-bold" v-text="messages['Begin trip address']" />
+              <a v-t="'reset'" class="reset" style="display: none" />
               <p class="filters">
                 <span>
-                  Current filter:
+                  <span v-t="'Current filter'" />
                   <span class="filter" />
                 </span>
               </p>
@@ -76,116 +72,76 @@
       </VCol>
       <VCol cols="12" md="4">
         <VCard class="general-info">
-          <VCardTitle>General information</VCardTitle>
+          <VCardTitle>{{ messages['General information'] }}</VCardTitle>
           <VCardSubtitle />
           <VCardText>
             <VContainer>
               <VRow dense>
                 <VCol cols="12" md="6">
                   <VCard color="#385F73" dark>
-                    <VCardTitle class="text-h6">
-                      Orders
+                    <VCardTitle class="justify-center text-caption">
+                      {{ messages['Orders'] }}
                     </VCardTitle>
                     <VCardSubtitle />
                     <VCardText class="text-h4 text-center">
-                      <div><strong id="number-trip" /></div>
-                      <span class="text-subtitle-1">trips</span>
+                      <div id="number-trip" />
+                      <span class="text-subtitle-1" v-text="messages['trips']" />
                     </VCardText>
                   </VCard>
                 </VCol>
                 <VCol cols="12" md="6">
                   <VCard color="#385F73" dark>
-                    <VCardTitle class="text-h6">
-                      Speed
+                    <VCardTitle class="justify-center text-caption">
+                      {{ messages['Speed'] }}
                     </VCardTitle>
                     <VCardSubtitle />
                     <VCardText class="text-h4 text-center">
-                      <div><strong id="number-speed-avg" /></div>
-                      <span class="text-subtitle-1">mph</span>
+                      <div id="number-speed-avg" class="font-weight-bold" />
+                      <span class="text-subtitle-1" v-text="messages['mph']" />
                     </VCardText>
                   </VCard>
                 </VCol>
               </VRow>
             </VContainer>
-            <VSimpleTable>
-              <thead>
-                <tr>
-                  <th class="text-left" />
-                  <th class="text-left">
-                    Total
-                  </th>
-                  <th class="text-left">
-                    Average
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Price</strong></td>
-                  <td>
-                    <span id="number-price-total" class="text-h6" />
-                    <br>
-                    <span class="text-subtitle-2">{{ currentCurrency }}</span>
-                  </td>
-                  <td>
-                    <span id="number-price-avg" class="text-h6" />
-                    <br>
-                    <span class="text-subtitle-2">{{ currentCurrency }}</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Distance</strong></td>
-                  <td>
-                    <span id="number-distance-total" class="text-h6" />
-                    <br>
-                    <span class="text-subtitle-2">miles</span>
-                  </td>
-                  <td>
-                    <span id="number-distance-avg" class="text-h6" />
-                    <br>
-                    <span class="text-subtitle-2">miles</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Duration</strong></td>
-                  <td>
-                    <span id="number-duration-total" class="text-h6" />
-                    <br>
-                    <span class="text-subtitle-2">min</span>
-                  </td>
-                  <td>
-                    <span id="number-duration-avg" class="text-h6" />
-                    <br>
-                    <span class="text-subtitle-2">min</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Waiting time</strong></td>
-                  <td>
-                    <span id="number-waiting-total" class="text-h6" />
-                    <br>
-                    <span class="text-subtitle-2">min</span>
-                  </td>
-                  <td>
-                    <span id="number-waiting-avg" class="text-h6" />
-                    <br>
-                    <span class="text-subtitle-2">min</span>
-                  </td>
-                </tr>
-              </tbody>
+            <VSimpleTable dense>
+              <template #default>
+                <thead>
+                  <tr>
+                    <th class="text-left" />
+                    <th class="text-left" v-text="messages['Total']" />
+                    <th class="text-left" v-text="messages['Average']" />
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-weight-bold" v-text="messages['Price']" />
+                    <td class="text-h6" v-text="priceTotalNumber" />
+                    <td class="text-h6" v-text="priceAvgNumber" />
+                  </tr>
+                  <tr
+                    v-for="{ heading, ids, metric } in generalInformationRows"
+                    :key="heading"
+                  >
+                    <td v-text="messages[heading]" />
+                    <td v-for="id in ids" :key="id">
+                      <span :id="id" class="text-h6" /> <span v-text="messages[metric]" />
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
             </VSimpleTable>
           </VCardText>
           <VCardActions>
-            <VBtn elevation="2" block @click="resetAll()">
-              Reset all filters
-            </VBtn>
+            <BaseButton elevation="2" block @click="resetAll()">
+              {{ messages['Reset all filters'] }}
+            </BaseButton>
           </VCardActions>
         </VCard>
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+        <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results, kViewBlock }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -196,6 +152,7 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
+import { findNumberFormatIETFCode } from '@/i18n/vue-i18n-number-formats'
 // import regression from 'regression'
 
 // Remove warning on default colorscheme, even if not used..
@@ -206,24 +163,44 @@ export default {
   data() {
     return {
       header: [
-        { text: 'City', value: 'city' },
-        { text: 'Service', value: 'service' },
-        { text: 'Status', value: 'tripOrOrderStatus' },
-        { text: 'Request Time', value: 'dateRequestStr' },
-        { text: 'From', value: 'beginTripAddress' },
-        { text: 'To', value: 'dropoffAddress' },
-        { text: 'Waiting time (min)', value: 'waitingTime' },
-        { text: 'Distance (miles)', value: 'distanceMiles' },
-        { text: 'Duration (min)', value: 'duration' },
-        { text: 'Price', value: 'priceStr' }
-      ],
+        ['City', 'city'],
+        ['Service', 'service'],
+        ['Status', 'tripOrOrderStatus'],
+        ['Request Time', 'dateRequestStr'],
+        ['From', 'beginTripAddress'],
+        ['To', 'dropoffAddress'],
+        ['Waiting time (min)', 'waitingTime'],
+        ['Distance (miles)', 'distanceMiles'],
+        ['Duration (min)', 'duration'],
+        ['Price', 'priceStr']
+      ].map(([text, value]) => ({ text, value })),
+      generalInformationRows: [{
+        heading: 'Distance',
+        metric: 'miles',
+        ids: ['number-distance-total', 'number-distance-avg']
+      },
+      {
+        heading: 'Duration',
+        metric: 'min',
+        ids: ['number-duration-total', 'number-duration-avg']
+      },
+      {
+        heading: 'Waiting time',
+        metric: 'min',
+        ids: ['number-waiting-total', 'number-waiting-avg']
+      }],
       results: [],
       currencies: [],
       currentCurrency: null,
-      currencyDimension: null
+      currencyDimension: null,
+      priceAvgNumber: null,
+      priceTotalNumber: null
     }
   },
   methods: {
+    k(key, prefix = '') {
+      return `chart-view.overview-uber.${prefix ? `${prefix}.` : ''}${key}`
+    },
     filterCurrency(newCurr) {
       this.currencyDimension.filter(newCurr)
       this.currentCurrency = newCurr
@@ -251,7 +228,7 @@ export default {
 
       // Parse and format data
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC')
-      const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
+      const formatTime = d3.timeFormat(`%B %d, %Y ${this.$t('at')} %H:%M:%S`)
       this.results.forEach((d) => {
         d.service =
           d.productType.charAt(0).toUpperCase() + d.productType.slice(1)
@@ -265,7 +242,8 @@ export default {
         d.hour = d3.timeHour(d.dateStart).getHours()
         d.duration = d3.timeMinute.count(d.dateStart, d.dateEnd)
         d.waitingTime = d3.timeMinute.count(d.dateRequest, d.dateStart)
-        d.priceStr = d.fareAmount + d.fareCurrency
+        // https://kazupon.github.io/vue-i18n/guide/number.html#number-localization
+        d.priceStr = this.$n(Number(d.fareAmount), 'currency', findNumberFormatIETFCode(d.fareCurrency))
         d.price = +d.fareAmount
         d.distance = +d.distanceMiles
         d.address = d.beginTripAddress.replace(/[0-9]/g, '').split(',')[0]
@@ -279,8 +257,6 @@ export default {
       const addressChart = new dc.RowChart('#address-chart')
       const tripNumber = new dc.NumberDisplay('#number-trip')
       const speedNumber = new dc.NumberDisplay('#number-speed-avg')
-      const priceAvgNumber = new dc.NumberDisplay('#number-price-avg')
-      const priceTotalNumber = new dc.NumberDisplay('#number-price-total')
       const distanceTotalNumber = new dc.NumberDisplay('#number-distance-total')
       const distanceAvgNumber = new dc.NumberDisplay('#number-distance-avg')
       const durationTotalNumber = new dc.NumberDisplay('#number-duration-total')
@@ -315,7 +291,7 @@ export default {
       const allDimension = ndx.groupAll()
       const dayOfWeekDimension = ndx.dimension((d) => {
         const day = d.dateStart.getDay()
-        const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        const name = this.$days()
         return `${name[day]}`
       })
       const serviceDimension = ndx.dimension(d => d.service)
@@ -362,8 +338,13 @@ export default {
 
       this.currentCurrency = currencyGroup.top(1)[0].key
       this.currencyDimension.filter(this.currentCurrency)
-      currencyGroup.top(Infinity).forEach((d) => {
-        this.currencies.push(d.key)
+      currencyGroup.top(Infinity).forEach(({ key }) => {
+        const currencySymbol = this.$n(undefined, 'currency', findNumberFormatIETFCode(key)).replace(/\s*NaN\s*/, '')
+        const text = currencySymbol ? `${key} (${currencySymbol})` : key
+        this.currencies.push({
+          value: key,
+          text
+        })
       })
 
       // Render general Information numbers
@@ -371,7 +352,7 @@ export default {
         .group(allGroup)
         .valueAccessor(p => p.count)
         .formatNumber(d3.format('~s'))
-        .on('pretransition', () => {
+        .on('pretransition', (chart, filter) => {
           this.results = serviceDimension.top(Infinity)
         })
       speedNumber
@@ -380,16 +361,18 @@ export default {
           return p.durationTotal ? (p.distanceTotal * 60) / p.durationTotal : 0
         })
         .formatNumber(d3.format('.1f'))
-      priceAvgNumber
-        .group(allGroup)
-        .valueAccessor((p) => {
-          return p.count ? p.priceTotal / p.count : 0
-        })
-        .formatNumber(d3.format('.1f'))
-      priceTotalNumber
-        .group(allGroup)
-        .valueAccessor(p => p.priceTotal)
-        .formatNumber(d3.format('.3s'))
+
+      const { priceTotal, count } = allGroup.value()
+      const numberFormatIETF = findNumberFormatIETFCode(this.currentCurrency)
+      this.priceAvgNumber = this.$n(
+        count ? priceTotal / count : 0,
+        { key: 'currency', locale: numberFormatIETF, maximumFractionDigits: 1 }
+      )
+      this.priceTotalNumber = this.$n(
+        priceTotal,
+        { key: 'currency', locale: numberFormatIETF, maximumSignificantDigits: 3 }
+      )
+
       distanceAvgNumber
         .group(allGroup)
         .valueAccessor(p => (p.count ? p.distanceTotal / p.count : 0))
@@ -458,26 +441,7 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-      weekChart.ordering(function(d) {
-        switch (d.key) {
-          case 'Mon':
-            return 0
-          case 'Tue':
-            return 1
-          case 'Wed':
-            return 2
-          case 'Thu':
-            return 3
-          case 'Fri':
-            return 4
-          case 'Sat':
-            return 5
-          case 'Sun':
-            return 6
-          default:
-            return 0
-        }
-      })
+      weekChart.ordering(d => this.$days().indexOf(d.key))
 
       // Render service pie chart
       serviceChart
@@ -546,7 +510,7 @@ export default {
           strokeOpaaddress: 0.0
         })
         .clipPadding(10)
-        .yAxisLabel('Total price')
+        .yAxisLabel(this.$t(this.k('Total price')))
         .brushOn(true)
         .ordinalColors(colorPalette)
       priceChart.xAxis().ticks(10)
@@ -574,6 +538,8 @@ export default {
 }
 </script>
 <style scoped>
+@import 'assets/styles/dc.css';
+
 ::v-deep body {
   font-family: sans-serif;
   color: #22313f;

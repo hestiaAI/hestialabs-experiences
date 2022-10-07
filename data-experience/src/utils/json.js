@@ -12,9 +12,7 @@ const { TREE, LIST, LEAF } = nodeTypes
  * @returns {Array} the tree
  */
 export function itemifyJSON(jsonString, filterString) {
-  if (!jsonString) return []
-  console.log(jsonString, filterString)
-  const json = JSON.parse(jsonString) || {}
+  const json = JSON.parse(jsonString)
   const predicate = makePruningPredicateToMatch(filterString)
   const processAndFilter = (json, path, type, children) => {
     const item = processJsonNode(json, path, type, children)

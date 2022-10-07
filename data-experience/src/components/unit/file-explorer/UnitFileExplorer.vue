@@ -38,10 +38,10 @@
               return-object
               transition
               rounded
-              v-model:open="open"
+              :open.sync="open"
               :search="search"
               :items="treeItems"
-              v-model:active="active"
+              :active.sync="active"
             >
               <template #prepend="{ item }">
                 <VIcon>
@@ -65,7 +65,7 @@
 
 <script>
 import { has } from 'lodash-es'
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 export default {
   name: 'UnitFileExplorer',
   data() {
@@ -80,24 +80,19 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataexp', ['fileExplorerCurrentItem']),
-    ...mapState('dataexp', ['fileManager']),
+    ...mapState(['fileExplorerCurrentItem', 'fileManager']),
     active: {
       get() {
-        console.log('Test get')
         return has(this.selectedItem, 'filename') ? [this.selectedItem] : []
       },
       set([item]) {
-        console.log('Test set')
         // item might be undefined (when unselecting)
         if (item) {
           if (!this.containers.has(item.type)) {
-            console.log('setFileExplorerCurrentItem', item)
-            this.$store.commit('dataexp/setFileExplorerCurrentItem', item)
+            this.$store.commit('setFileExplorerCurrentItem', item)
           }
         } else {
-          console.log('setFileExplorerCurrentItem', 'null')
-          this.$store.commit('dataexp/setFileExplorerCurrentItem', {})
+          this.$store.commit('setFileExplorerCurrentItem', {})
         }
       }
     },
@@ -116,9 +111,6 @@ export default {
     treeItems() {
       return this.fileManager.getTreeItems()
     }
-  },
-  mounted() {
-    console.log('UnitFileExplorer', this.fileManager)
   },
   methods: {
     // Open all treeview when we are searching for something

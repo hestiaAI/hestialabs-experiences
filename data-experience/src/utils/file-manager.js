@@ -1,4 +1,3 @@
-/* eslint-disable */
 import JSZip from 'jszip'
 import {
   mdiCodeJson,
@@ -83,10 +82,10 @@ export default class FileManager {
 
   /**
    * Builds a FileManager object without any files, just setting the configuration.
-   * @param {Object} preprocessors maps file name to preprocessor function
-   * @param {Object} workers the workers that this file manager should use
-   * @param {Object} idToGlob an object mapping IDs to globs
-   * @param {Boolean} keepOnlyFiles filter the uploaded files to keep only the one present in idToGlob
+   * @param {Object | null | undefined} preprocessors maps file name to preprocessor function
+   * @param {Object | null | undefined} workers the workers that this file manager should use
+   * @param {Object | null | undefined} idToGlob an object mapping IDs to globs
+   * @param {Boolean | null | undefined} keepOnlyFiles filter the uploaded files to keep only the one present in idToGlob
    */
   constructor(preprocessors, workers, idToGlob, keepOnlyFiles) {
     this.supportedExtensions = new Set([
@@ -102,7 +101,7 @@ export default class FileManager {
     // Define the files filter regex, default to all
     this.filesRegex = /.*/
     if (this.keepOnlyFiles && Object.keys(this.idToGlob).length) {
-      const mm = require('micromatch');
+      const mm = require('micromatch')
       const regexs = Object.values(this.idToGlob).map(
         glob => mm.makeRe(glob).source
       )
@@ -114,7 +113,7 @@ export default class FileManager {
   /**
    * Fills the FileManager with the given files and creates helper structures.
    * To be called once the files are available.
-   * @param {File[]} uppyFiles
+   * @param {(NodeFile | BrowserFile)[]} uppyFiles
    * @returns {Promise<FileManager>}
    */
   async init(uppyFiles) {
@@ -226,7 +225,7 @@ export default class FileManager {
    * Return a MD5 hash
    */
   async hashAllFiles() {
-    const hashPromises = Object.values(this.fileDict).map(hashFile)
+    const hashPromises = Object.values(this.fileDict).map(f => f.hash())
     const fileHashes = await Promise.all(hashPromises)
     return hashString(fileHashes.join(''))
   }
@@ -344,7 +343,7 @@ export default class FileManager {
   /**
    * Return the CSV items of the file(s) that match the ID.
    * @param {String} id
-   * @returns an array
+   * @returns {Promise<PipelineOutput[]>} an array
    */
   async getCsvItemsFromId(id) {
     const paths = this.getFilePathsFromId(id)
@@ -678,5 +677,42 @@ export default class FileManager {
       }
     }
     return makeItemsRec(tree)
+  }
+}
+
+export class BrowserFile {
+  constructor(file) {
+    this.file = file
+  }
+
+  get name() {
+    return this.file.name
+  }
+
+  get blob() {
+    return this.file
+  }
+
+  text() {
+    return this.file.text()
+  }
+
+  get bufferType() {
+    return 'blob'
+  }
+
+  hash() {
+    hashFile(this.file)
+  }
+
+  copy(newName) {
+    const clone = this.file.slice(0, this.file.size)
+    const file = new File([clone], newName)
+    return new BrowserFile(file)
+  }
+
+  build(content, name) {
+    const file = new File([content], name)
+    return new BrowserFile(file)
   }
 }

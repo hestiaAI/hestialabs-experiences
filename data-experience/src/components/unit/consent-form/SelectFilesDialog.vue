@@ -34,8 +34,8 @@
           rounded
           selectable
           selected-color="primary"
-          v-model:open="openItems"
-          v-model:active="activeItems"
+          :open.sync="openItems"
+          :active.sync="activeItems"
           :search="search"
           :items="treeItems"
           @update:active="clickOnLabel"
@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 
 export default {
   props: {
@@ -80,7 +80,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('dataexp', ['consentForm', 'fileManager']),
+    ...mapState(['consentForm', 'fileManager']),
     treeItems() {
       return this.fileManager.getTreeItems()
     },
@@ -94,10 +94,10 @@ export default {
     },
     selectedFiles: {
       get() {
-        return this.$store.state.dataexp.selectedFiles
+        return this.$store.state.selectedFiles
       },
       set(value) {
-        this.$store.commit('dataexp/setSelectedFiles', value)
+        this.$store.commit('setSelectedFiles', value)
       }
     }
   },
@@ -118,7 +118,7 @@ export default {
       this.updateCheckboxOnReturn(false)
     },
     clear() {
-      this.$store.commit('dataexp/setSelectedFiles', [])
+      this.$store.commit('setSelectedFiles', [])
       this.updateCheckboxOnReturn(true)
       this.show = false
     },
@@ -153,7 +153,7 @@ export default {
       } else if (!value.includes('file-explorer')) {
         value = value.concat('file-explorer')
       }
-      this.$store.commit('dataexp/setConsentFormValue', { index, value })
+      this.$store.commit('setConsentFormValue', { index, value })
     }
   }
 }

@@ -1,19 +1,22 @@
 <template>
-  <div v-if="loading">
-    Loading
-  </div>
+  <div v-if="loading" v-t="'Loading'" />
   <div v-else-if="error">
-    <p>Could not parse the file. Please use the "RAW" tab to visualise it.</p>
+    <p v-t="k('errorText')" />
   </div>
   <div v-else>
-    <BaseSearchBar v-model="search" :loading="searching" :label="$t('file-explorer.content-search-name')" :placeholder="$t('file-explorer.content-search-placeholder')" />
+    <BaseSearchBar
+      v-model="search"
+      :loading="searching"
+      :label="$t(k('content-search-name'))"
+      :placeholder="$t(k('content-search-placeholder'))"
+    />
     <VExpandTransition>
       <div v-show="foundItems.length > 0">
         <VDataTable
           dense
           :headers="[
             {
-              text: 'Found items (click to show in tree)',
+              text: $t(k('found-items-header')),
               value: 'item'
             }
           ]"
@@ -33,7 +36,7 @@
         </VDataTable>
       </div>
     </VExpandTransition>
-    <VTreeview dense transition :items="filteredItems" v-model:open="open">
+    <VTreeview dense transition :items="filteredItems" :open.sync="open">
       <template #prepend="{ item }">
         <VIcon v-if="!isUndef(item.type)">
           {{ iconForNode(item.type) }}

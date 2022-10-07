@@ -5,19 +5,19 @@
         <VSelect
           v-model="placeSelected"
           :items="listOfNames"
-          label="Place"
+          :label="messages['Place']"
         />
       </VCol>
     </VRow>
     <VRow>
       <VCol cols="12">
         <p class="text-subtitle-2">
-          {{ $t('google-one-place.total-time-spend') }} {{ placeSelected }}: {{ total_time }}. <br>
+          {{ messages['total-time-spent'] }} {{ placeSelected }}: {{ total_time }}. <br>
           <br>
-          {{ $t('google-one-place.mean-time-spend') }} {{ placeSelected }}: {{ mean_time }}. <br>
+          {{ messages['mean-time-spent'] }} {{ placeSelected }}: {{ mean_time }}. <br>
           <br>
-          {{ $t('google-one-place.entropy') }} {{ placeSelected }}: {{ computeEntropy() }}. <br>
-          {{ $t('google-one-place.entropy-info') }} {{ placeSelected }}.
+          {{ messages['entropy'] }} {{ placeSelected }}: {{ computeEntropy() }}. <br>
+          {{ messages['entropy-info'] }} {{ placeSelected }}.
         </p>
       </VCol>
     </VRow>
@@ -25,7 +25,7 @@
       <VRow>
         <VCol cols="12">
           <p class="text-subtitle-2">
-            {{ $t('google-one-place.other-candidates') }} {{ placeSelected }}:
+            {{ messages['other-candidates'] }} {{ placeSelected }}:
           </p>
           <UnitIframe src="/kepler" :args="keplerArgs" />
         </VCol>
@@ -90,7 +90,7 @@ export default {
       return {
         fields: headers.map((h) => {
           return {
-            name: h
+            name: this.messages?.keplerFields[h] || h
           }
         }),
         rows: this.associated_names.map(r => headers.map(h => r[h]))
@@ -177,8 +177,7 @@ export default {
         seconds = '0' + seconds
       }
       return hours + 'h' + minutes + 'm' + seconds + 's' // Return is HH : MM : SS
-    },
-    drawViz() {}
+    }
   }
 }
 </script>

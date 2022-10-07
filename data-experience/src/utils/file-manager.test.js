@@ -1,8 +1,12 @@
-import FileManager from './file-manager'
-import { mockFile } from './__mocks__/file-manager-mock'
-import { arrayEqualNoOrder } from './test-utils'
-import { itemifyJSON } from './json'
-import { getCsvHeadersAndItems } from './csv'
+import fs from 'fs'
+import util from 'util'
+import stream from 'stream'
+import JSZip from 'jszip'
+import FileManager from '~/utils/file-manager'
+import { NodeFile } from '~/utils/node-file'
+import { arrayEqualNoOrder } from '~/utils/test-utils'
+import { itemifyJSON } from '~/utils/json'
+import { getCsvHeadersAndItems } from '~/utils/csv'
 
 test('an empty file manager', async() => {
   const fileManager = new FileManager()
@@ -10,11 +14,63 @@ test('an empty file manager', async() => {
   await expect(() => fileManager.getText('bobo.json')).rejects.toThrow()
 })
 
+function deleteFileIfExists(fileName) {
+  if (fs.existsSync(fileName)) {
+    fs.unlinkSync(fileName)
+  }
+}
+
+async function storeAsZipFile(zipFileName, fileName, content) {
+  const zip = new JSZip()
+  zip.file(fileName, content)
+  const pipeline = util.promisify(stream.pipeline)
+  return await pipeline(
+    zip
+      .generateNodeStream({ type: 'nodebuffer', streamFiles: true }),
+    fs.createWriteStream(zipFileName)
+  )
+}
+
+test('extractZips with unzipped file', async() => {
+  const fileName = 'bibi/bobo.json'
+  const content = '{"hello": 1}'
+  const file = new NodeFile(fileName, content)
+  const extracted = await FileManager.extractZips([file], /bobo/)
+  expect(extracted.length).toEqual(1)
+  expect(extracted[0]).toEqual(file)
+})
+
+test('extractZips with zipped file', async() => {
+  const fileName = 'bibi/bobo.json'
+  const content = '{"hello": 1}'
+  const zipFileName = 'test-extractZips.zip'
+  try {
+    deleteFileIfExists(zipFileName)
+    await storeAsZipFile(zipFileName, fileName, content)
+    const zipContent = fs.readFileSync(zipFileName)
+    const file = new NodeFile(zipFileName, zipContent)
+    const extracted = await FileManager.extractZips([file], /bobo/)
+    expect(extracted.length).toEqual(1)
+    expect(extracted[0]).toEqual(file)
+  } finally {
+    deleteFileIfExists(zipFileName)
+  }
+})
+test('removeZipName', () => {
+  const fileName = 'test-removeZipName.zip/bibi/bobo.json'
+  const content = '{"hello": 1}'
+  const file = new NodeFile(fileName, content)
+  const removed = FileManager.removeZipName([file])
+  expect(removed.length).toEqual(1)
+  expect(removed[0].name).toEqual('bibi/bobo.json')
+  expect(removed[0].text()).toEqual(content)
+})
+
 test('a json file in file manager', async() => {
   const fileManager = new FileManager()
   const fileName = 'bibi/bobo.json'
   const content = '{"hello": 1}'
-  const file = mockFile(fileName, content)
+  const file = new NodeFile(fileName, content)
   await fileManager.init([file])
 
   expect(fileManager.hasFile(fileName)).toBeTruthy()
@@ -34,7 +90,7 @@ test('a csv file in file manager', async() => {
   const fileManager = new FileManager()
   const fileName = 'test.csv'
   const content = 'col1,col2\nhello,world\nfoo,bar'
-  const file = mockFile(fileName, content)
+  const file = new NodeFile(fileName, content)
   await fileManager.init([file])
 
   expect(fileManager.hasFile(fileName)).toBeTruthy()
@@ -55,9 +111,9 @@ test('findMatchingFilePaths', async() => {
   const fileManager = new FileManager()
   const fileName1 = 'bibi/bubo.json'
   const fileContent = '{"hello": [11,22,33]}'
-  const file1 = mockFile(fileName1, fileContent)
+  const file1 = new NodeFile(fileName1, fileContent)
   const fileName2 = 'bibi/bibo.json'
-  const file2 = mockFile(fileName2, fileContent)
+  const file2 = new NodeFile(fileName2, fileContent)
   await fileManager.init([file1, file2])
 
   let paths = fileManager.findMatchingFilePaths('**/b*bo.json')
@@ -74,7 +130,7 @@ test('findMatchingObjects', async() => {
   const fileManager = new FileManager()
   const fileName = 'bibi/bubo.json'
   const fileContent = '{"hello": [11,22,33]}'
-  const file = mockFile(fileName, fileContent)
+  const file = new NodeFile(fileName, fileContent)
   await fileManager.init([file])
 
   expect(fileManager.hasFile(fileName)).toBeTruthy()
@@ -99,11 +155,11 @@ test('short filenames', async() => {
   const f4 = 'test/hello/bar.txt'
   const f5 = 'zip.zip/toc.json'
   await fileManager.init([
-    mockFile(f1, ''),
-    mockFile(f2, ''),
-    mockFile(f3, ''),
-    mockFile(f4, ''),
-    mockFile(f5, '')
+    new NodeFile(f1, ''),
+    new NodeFile(f2, ''),
+    new NodeFile(f3, ''),
+    new NodeFile(f4, ''),
+    new NodeFile(f5, '')
   ])
   expect(fileManager.getShortFilename(f1)).toMatch('foo/bar.txt')
   expect(fileManager.getShortFilename(f2)).toMatch('toc.txt')
@@ -116,15 +172,15 @@ test('getFileNames', async() => {
   const fileManager = new FileManager()
   const f1 = 'foo/bar.txt'
   const f2 = 'foo/toc.txt'
-  await fileManager.init([mockFile(f1, '1'), mockFile(f2, '2')])
+  await fileManager.init([new NodeFile(f1, '1'), new NodeFile(f2, '2')])
   expect(fileManager.getFilenames()).toStrictEqual([f1, f2])
 })
 
 test('files are filtered', async() => {
   const fileManager = new FileManager()
-  const f1 = mockFile('__MACOSX/ignored.txt', '')
-  const f2 = mockFile('test/.DS_STORE', '')
-  const f3 = mockFile('test/.DS_Store', '')
+  const f1 = new NodeFile('__MACOSX/ignored.txt', '')
+  const f2 = new NodeFile('test/.DS_STORE', '')
+  const f3 = new NodeFile('test/.DS_Store', '')
   await fileManager.init([f1, f2, f3])
 
   expect(fileManager.hasFile(f1)).toBeFalsy()
@@ -137,11 +193,11 @@ test('files from IDs', async() => {
 
   const id1 = 'foobar'
   const path1 = 'foo/bar.txt'
-  const file1 = mockFile(path1, content)
+  const file1 = new NodeFile(path1, content)
 
   const id2 = 'hello'
   const path2 = 'test/hello.txt'
-  const file2 = mockFile(path2, content)
+  const file2 = new NodeFile(path2, content)
 
   const id3 = 'all'
   const id4 = 'not-found'

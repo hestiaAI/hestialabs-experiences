@@ -4,7 +4,7 @@
       <VCol cols="12" md="4">
         <VCard>
           <VCardTitle>
-            Advertisers
+            {{ cardTitle }}
             <VSpacer />
             <VTextField
               v-model="search"
@@ -27,14 +27,14 @@
             @item-selected="drawSunburst"
             @click:row="(item, data) => selectAdvertiser(data)"
           >
-            <template v-slot:[`item.data-table-select`]="{ isSelected, select }">
+            <template #item.data-table-select="{ isSelected, select }">
               <VSimpleCheckbox v-ripple :value="isSelected" @click="selectAdvertiser({ isSelected, select })" />
             </template>
           </VDataTable>
         </VCard>
       </VCol>
       <VCol cols="12" md="8">
-        <ChartViewSunburst :values="selectedValues" />
+        <ChartViewSunburst :id="id" :values="selectedValues" />
       </VCol>
     </VRow>
   </VContainer>
@@ -45,16 +45,26 @@ import mixin from './mixin'
 
 export default {
   mixins: [mixin],
+  props: {
+    cardTitle: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       search: '',
       selected: [],
       selectedValues: [],
-      headersTable: [
+      items: []
+    }
+  },
+  computed: {
+    headersTable() {
+      return [
         { text: 'Advertiser', value: 'name' },
         { text: 'Targeting criteria', value: 'value' }
-      ],
-      items: []
+      ].map(({ text, ...rest }) => ({ text: this.$t(this.kViewBlock(text, 'headers')), ...rest }))
     }
   },
   methods: {

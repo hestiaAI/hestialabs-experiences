@@ -81,8 +81,10 @@
 
 <script>
 import { pick } from 'lodash-es'
-
+import UnitFiles from './files/UnitFiles.vue'
 export default {
+  name: 'UnitIntroduction',
+  components: { UnitFiles },
   props: {
     slug: {
       type: String,
@@ -118,6 +120,7 @@ export default {
     return {
       videoHeight: '400',
       experienceName: this.$route.params.experience,
+      tutorialVideos: [],
       ...properties
     }
   },
