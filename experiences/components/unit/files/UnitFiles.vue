@@ -54,14 +54,14 @@
           <BaseProgressCircular class="mr-2" />
           <span>{{ $t('unit-files.process-msg') }}</span>
         </template>
-        <template v-else-if="error || success">
+        <template v-else-if="readError || error || success">
           <BaseAlert
-            :type="error ? 'error' : 'success'"
+            :type="readError || error ? 'error' : 'success'"
             border="left"
             dense
             text
           >
-            {{ message }}
+            {{ error ? message : readErrorMsg }}
           </BaseAlert>
         </template>
       </VCol>
@@ -94,7 +94,7 @@ const locales = {
 async function fetchSampleFile({ path, filename }) {
   const response = await window.fetch(path)
   const blob = await response.blob()
-  return new BrowserFile(new File([blob], filename))
+  return new File([blob], filename)
 }
 
 export default {
@@ -129,7 +129,9 @@ export default {
       dataSamples,
       dialog: false,
       privateKey: null,
-      publicKey: null
+      publicKey: null,
+      readError: false,
+      readErrorMsg: ''
     }
   },
   computed: {
@@ -254,26 +256,33 @@ export default {
     this.uppy.close()
   },
   methods: {
-    async returnFiles() {
+    async decryptFiles(uppyFiles) {
       const decryptBlobPromise = promisify(decryptBlob)
-      const publicKey =
-            this.publicKey || this.$store.getters.routeConfig(this.$route).publicKey
+      const publicKey = this.publicKey || this.$store.getters.routeConfig(this.$route).publicKey
+      const decryptedFiles = await Promise.all(
+        uppyFiles.map(async(f) => {
+          const blob = await decryptBlobPromise(f.data, this.privateKey, publicKey)
+          return new File([blob], f.name)
+        })
+      )
+      return decryptedFiles
+    },
+    async returnFiles() {
+      this.readError = false
+      this.readErrorMsg = ''
       try {
-        const encryptedFiles = this.uppy.getFiles()
-        const decryptedFiles = await
-        Promise.all(
-          encryptedFiles.map(async(f) => {
-            if (!this.privateKey) {
-              return f.data
-            }
-            const blob = await decryptBlobPromise(f.data, this.privateKey, publicKey)
-            return new BrowserFile(new File([blob], f.name))
-          })
-        )
+        let files = this.uppy.getFiles()
+        if (this.privateKey) {
+          files = await this.decryptFiles(files)
+        } else {
+          files = files.map(f => f.data)
+        }
         this.status = true
-        this.$emit('update', { uppyFiles: decryptedFiles })
+        this.$emit('update', { uppyFiles: files.map(f => new BrowserFile(f)) })
       } catch (error) {
         console.error(error)
+        this.readError = true
+        this.readErrorMsg = String(error)
       }
     }
   }
