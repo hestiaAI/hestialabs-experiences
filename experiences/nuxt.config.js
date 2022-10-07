@@ -224,19 +224,6 @@ export default {
           test: /\.worker\.js$/,
           use: 'worker-loader'
         },
-        {
-          test: /@hestiaai\/[^/]+\/dist\/data-samples/,
-          exclude: /\/src\//,
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                esModule: true,
-                name: '[path][name].[contenthash:7].[ext]'
-              }
-            }
-          ]
-        },
         // for importing wasm files
         // https://github.com/sql-js/react-sqljs-demo
         {
