@@ -50,6 +50,18 @@ export default {
       {
         test: /\.(?:sql|vega)$/,
         type: 'asset/source'
+      },
+      {
+        include: path.resolve(__dirname, 'lib', 'data-samples'),
+        type: 'asset/resource',
+        generator: {
+          // do not emit the file to the output bundle
+          emit: false,
+          // https://webpack.js.org/configuration/module/#rulegeneratorfilename
+          // https://webpack.js.org/configuration/output/#template-strings
+          filename:
+            'https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/refactor/985/packages/lib/data-samples/[name][ext]?contenthash=[contenthash]&filename=[name][ext]'
+        }
       }
     ]
   },
@@ -69,11 +81,17 @@ export default {
     outputModule: true
   },
   output: {
+    publicPath: '',
     path: path.resolve(__dirname, 'packages'),
     library: {
       // https://github.com/webpack/webpack/issues/2933
       // https://webpack.js.org/configuration/output/#type-module
       type: 'module'
+    },
+    clean: {
+      // we want to clean the dist/ directories before each build
+      keep: /^[^/]+\/(?:src\/|[^/]+$)/,
+      dry: false // set to "true" to do a dry run to see which files are kept
     }
   },
   optimization: {
