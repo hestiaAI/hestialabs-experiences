@@ -93,8 +93,8 @@ const locales = {
   fr: French
 }
 
-async function fetchSampleFile({ path, filename }) {
-  const response = await window.fetch(path)
+async function fetchSampleFile({ url, filename }) {
+  const response = await window.fetch(url)
   const blob = await response.blob()
   return new BrowserFile(new File([blob], filename))
 }
@@ -123,7 +123,7 @@ export default {
     const { files, dataSamples } = this.$store.getters.experience(this.$route)
     return {
       uppy: null,
-      samples: [],
+      samples: dataSamples.map(url => ({ url, filename: url.match(/filename=([^&?]+)/)[1] })),
       selectedSamples: [],
       filesEmpty: true,
       status: false,
@@ -161,13 +161,6 @@ export default {
           ns => !oldSamples.find(os => os.filename === ns.filename)
         )
         const files = await Promise.all(addedSamples.map(fetchSampleFile))
-        // async({ filename, name }) => {
-        //   const file = await import(`@hestiaai/${this.$route.params.experience}/dist/data-samples/${filename}`)
-        //   console.log(file)
-        //   await import(`@hestiaai/${this.$route.params.experience}/dist/data-samples/${filename}`)
-        //   // const blob = await response.blob()
-        //   return new BrowserFile(new File([file], name))
-        // })
         files.forEach((file) => {
           try {
             this.uppy.addFile({
@@ -198,21 +191,6 @@ export default {
       }
     }
   },
-  async created() {
-    const { experience } = this.$route.params
-    console.log(experience)
-    // files are loaded with file-loader
-    this.samples = []
-    for (const filename of this.dataSamples) {
-      this.samples.push({
-        // See generator.filename
-        // in packages/webpack.config.js
-        filename: filename.split('$')[0],
-        path: (await import(`/node_modules/@hestiaai/${experience}/dist/data-samples/${filename}`)).default
-      })
-    }
-    console.log(this.samples)
-  },
   mounted() {
     const stringsOverride = {
       en: {
@@ -242,7 +220,7 @@ export default {
           strings: stringsOverride[this.$i18n.locale]
         }
       })
-    // allow dropping files anywhere on the page
+      // allow dropping files anywhere on the page
       .use(DropTarget, { target: document.body })
       .on('files-added', () => {
         this.filesEmpty = false

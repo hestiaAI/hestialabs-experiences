@@ -55,18 +55,12 @@ export default {
         include: path.resolve(__dirname, 'lib', 'data-samples'),
         type: 'asset/resource',
         generator: {
-          // https://webpack.js.org/configuration/module/#rulegeneratoroutputpath
-          outputPath: pathData => {
-            // pathData.runtime: <package>/dist/index
-            const path = pathData.runtime.replace(/index$/, '')
-            // We want to output the data samples
-            // to the package's dist/ directory
-            // Note: The generated filename will be output.assetModuleFilename (see below)
-            return `${path}/data-samples/`
-          },
+          // do not emit the file to the output bundle
+          emit: false,
           // https://webpack.js.org/configuration/module/#rulegeneratorfilename
           // https://webpack.js.org/configuration/output/#template-strings
-          filename: '[name]$[hash][ext][query]'
+          filename:
+            'https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/refactor/985/packages/lib/data-samples/[name][ext]?contenthash=[contenthash]&filename=[name][ext]'
         }
       }
     ]

@@ -40,19 +40,12 @@ if (experiences) {
     const spawn = require('cross-spawn')
     const packages = Object.fromEntries(experiences.map((packageNameAndTag) => {
       const [name] = packageNameAndTag.split('@')
-      return [name, `@hestiaai/${name}`]
+      return `@hestiaai/${name}`
     }))
     console.info(
       'Linking packages...\n' +
-      Object.keys(packages).join('\n')
+      packages.join('\n')
     )
-    // const packagePaths = Object.keys(packages).map(name => resolve(__dirname, '../packages/packages', name, 'dist'))
-    // console.log(packagePaths)
-    handleSpawnOutput(spawn.sync('npm', ['link', ...Object.values(packages)]))
-
-    // packages.forEach(p => {
-    //   // handleSpawnOutput(spawn.sync('cd', [resolve(__dirname, '../packages/packages', 'dist')`../${p.split('/')[1]}`]))
-    //   handleSpawnOutput(spawn.sync('npm', ['link', resolve(__dirname, '../packages/packages', 'dist')]))
-    // })
+    handleSpawnOutput(spawn.sync('npm', ['link', ...packages]))
   }
 }

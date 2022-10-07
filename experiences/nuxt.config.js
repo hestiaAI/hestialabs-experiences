@@ -226,6 +226,7 @@ export default {
         },
         {
           test: /@hestiaai\/[^/]+\/dist\/data-samples/,
+          exclude: /\/src\//,
           use: [
             {
               loader: 'file-loader',

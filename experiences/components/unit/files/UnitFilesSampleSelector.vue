@@ -22,26 +22,12 @@ export default {
       type: Array,
       required: true
     }
-    // dataSamples: {
-    //   type: Array,
-    //   required: true
-    // }
   },
   data() {
     return {
       selectedSamples: this.value
     }
   },
-  // computed: {
-  //   items() {
-  //     return this.dataSamples.map(filename => ({
-  //       // See generator.filename
-  //       // in packages/webpack.config.js
-  //       name: filename.split('$')[0],
-  //       filename
-  //     }))
-  //   }
-  // },
   watch: {
     selectedSamples(v) {
       this.$emit('update:value', v)
