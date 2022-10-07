@@ -163,7 +163,6 @@
 
 <script>
 import { promisify } from 'util'
-import { pick } from 'lodash-es'
 import { BrowserFile, filetype2icon, extension2filetype } from '@/utils/file-manager'
 import { decryptBlob } from '@/utils/encryption'
 
@@ -187,15 +186,7 @@ export default {
     }
   },
   data() {
-    const experience = this.$store.getters.experience(this.$route)
-    const experienceProps = pick(experience, [
-      'slug',
-      'title',
-      'dataPortal',
-      'dataPortalHtml',
-      'dataPortalMessage',
-      'tutorialVideos'
-    ])
+    const { slug } = this.$store.getters.experience(this.$route)
     const { publicKey } = this.$store.getters.routeConfig(this.$route)
     return {
       timer: null,
@@ -210,7 +201,7 @@ export default {
       privateKey: null,
       status: false,
       publicKey,
-      ...experienceProps
+      slug
     }
   },
   computed: {
