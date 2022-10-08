@@ -81,6 +81,7 @@ export default {
     outputModule: true
   },
   output: {
+    publicPath: '',
     path: path.resolve(__dirname, 'packages'),
     library: {
       // https://github.com/webpack/webpack/issues/2933
