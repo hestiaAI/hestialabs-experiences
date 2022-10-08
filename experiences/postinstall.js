@@ -38,10 +38,10 @@ if (experiences) {
   } else {
     // cross-platform spawn
     const spawn = require('cross-spawn')
-    const packages = Object.fromEntries(experiences.map((packageNameAndTag) => {
+    const packages = experiences.map((packageNameAndTag) => {
       const [name] = packageNameAndTag.split('@')
       return `@hestiaai/${name}`
-    }))
+    })
     console.info(
       'Linking packages...\n' +
       packages.join('\n')
