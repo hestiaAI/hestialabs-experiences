@@ -7,7 +7,7 @@
             <VRow>
               <VCol cols="12">
                 <div :id="`messages-chart-${graphId}`">
-                  <span v-text="messages['Messages Exchanged Over Time']" />
+                  <span class="font-weight-bold" v-text="messages['Messages Exchanged Over Time']" />
                   <a v-t="'reset'" class="reset" style="display: none" />
                   <p class="filters">
                     <span>
@@ -17,18 +17,14 @@
                   </p>
                 </div>
                 <div :id="`range-chart-${graphId}`" class="range-chart">
-                  <p
-                    class="muted pull-right text-subtitle-2 mr-4 mb-1"
-                  >
-                    {{ $t('select-time-range') }}
-                  </p>
+                  <ChartViewTextSelectTimeRange />
                 </div>
               </VCol>
             </VRow>
             <VRow>
               <VCol cols="12" md="6">
                 <div :id="`hour-chart-${graphId}`">
-                  <span v-text="messages['Time of Day']" />
+                  <span class="font-weight-bold" v-text="messages['Time of Day']" />
                   <a v-t="'reset'" class="reset" style="display: none" />
                   <p class="filters">
                     <span>
@@ -40,7 +36,7 @@
               </VCol>
               <VCol cols="12" md="6">
                 <div :id="`week-chart-${graphId}`">
-                  <span v-text="messages['Day']" />
+                  <span class="font-weight-bold" v-text="messages['Day']" />
                   <a v-t="'reset'" class="reset" style="display: none" />
                   <p class="filters">
                     <span>
@@ -55,7 +51,7 @@
           <VCol cols="12" md="4">
             <div :id="`user-chart-${graphId}`">
               <div style="display: flex">
-                <span v-text="messages['Top Users']" />
+                <span class="font-weight-bold" v-text="messages['Top Users']" />
                 <VSpacer />
                 <div :id="`user-search-${graphId}`" />
               </div>
@@ -317,7 +313,7 @@ export default {
           strokeOpacity: 0
         })
         .clipPadding(10)
-        .yAxisLabel('Total Messages')
+        .yAxisLabel(this.messages['Total Messages'])
         .ordinalColors(colorPalette)
       messageChart.xAxis().ticks(10)
       messageChart.yAxis().ticks(6)
