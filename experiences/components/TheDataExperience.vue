@@ -1,14 +1,6 @@
 <template>
   <div>
     <SettingsSpeedDial />
-    <VBanner v-if="routeConfig.banner" color="secondary">
-      <VRow>
-        <VCol cols="12 mx-auto" sm="10">
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="routeConfig.banner" />
-        </VCol>
-      </VRow>
-    </VBanner>
     <VRow>
       <VCol>
         <VTabs
@@ -38,19 +30,7 @@
         <VTabsItems v-model="tab">
           <VTabItem value="load-data" :transition="false">
             <VCol cols="12 mx-auto" md="6" class="tabItem">
-              <UnitDownload
-                v-if="routeConfig.dataFromBubble"
-                v-bind="{
-                  slug,
-                  progress,
-                  error,
-                  success,
-                  message
-                }"
-                @update="onUnitFilesUpdate"
-              />
               <UnitIntroduction
-                v-else
                 v-bind="{
                   slug,
                   progress,
@@ -94,15 +74,6 @@
               <UnitQuery v-bind="{slug, ...viewBlock}" />
             </VCol>
           </VTabItem>
-          <VTabItem
-            v-if="consentFormTemplate"
-            value="share-data"
-            :transition="false"
-          >
-            <VCol cols="12 mx-auto" sm="6" class="tabItem">
-              <UnitConsentForm />
-            </VCol>
-          </VTabItem>
         </VTabsItems>
       </VCol>
     </VRow>
@@ -110,19 +81,35 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
-import { debounce, pick } from 'lodash-es'
-
-import DBMS from '~/utils/sql'
-import FileManager from '~/utils/file-manager'
-import fileManagerWorkers from '~/utils/file-manager-workers'
+import { debounce, pick, cloneDeep } from 'lodash-es'
+import DBMS from '../utils/sql'
+import FileManager from '../utils/file-manager'
+import fileManagerWorkers from '../utils/file-manager-workers'
+import UnitIntroduction from './unit/UnitIntroduction.vue'
+import UnitSummary from './unit/UnitSummary.vue'
+import UnitFileExplorer from './unit/file-explorer/UnitFileExplorer.vue'
+import UnitQuery from './unit/UnitQuery.vue'
+import { mapState } from '@/utils/store-helper'
 
 export default {
   name: 'TheDataExperience',
+  props: {
+    experienceConfig: {
+      type: Object,
+      required: true
+    },
+    siteConfig: {
+      type: Object,
+      required: true
+    },
+    bubbleConfig: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  components: { UnitIntroduction, UnitSummary, UnitFileExplorer, UnitQuery },
   data() {
-    const experience = this.$store.getters.experience(this.$route)
-    const properties = pick(experience, [
+    const properties = pick(this.experienceConfig, [
       'databaseConfig',
       'files',
       'hideSummary',
@@ -144,8 +131,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('experience', { experienceProgress: 'progress' }),
     ...mapState(['fileManager']),
+    ...mapState({ experienceProgress: 'progress' }),
     tabs() {
       const disabled = !this.success || this.experienceProgress
       const tabs = [
@@ -183,36 +170,25 @@ export default {
           show: true
         }))
       ]
-      if (this.consentFormTemplate) {
-        tabs.push({
-          title: 'Share my data',
-          value: 'share-data',
-          titleKey: 'share-data.name',
-          disabled
-        })
-      }
       return tabs
     },
     sqlQueries() {
       return this.viewBlocks.map(o => this.sql[o.sql])
-    },
-    routeConfig() {
-      return this.$store.getters.routeConfig(this.$route)
-    },
-    consentFormTemplate() {
-      const { consent } = this.routeConfig
-      if (consent) {
-        const { experience } = this.$route.params
-        if (experience in consent) {
-          return consent[experience]
-        } else if ('default' in consent) {
-          return consent.default
-        }
-      }
-      return null
     }
   },
   watch: {
+    experienceConfig: {
+      immediate: true,
+      handler(value) {
+        this.$store.commit('dataexp/setExperienceConfig', cloneDeep(value))
+      }
+    },
+    siteConfig: {
+      immediate: true,
+      handler(value) {
+        this.$store.commit('dataexp/setSiteConfig', cloneDeep(value))
+      }
+    },
     fileManager(value) {
       if (value === null) {
         this.switchTab('load-data')
@@ -234,8 +210,8 @@ export default {
   },
   methods: {
     // Convert local translation key to global vue18n
-    k(key) {
-      return `experiences.${this.slug}.viewBlocks.${key}.title`
+    k(localKey) {
+      return `experiences.${this.slug}.viewBlocks.${localKey}.title`
     },
     switchTab(value) {
       this.$router.push(`#${value}`)
@@ -250,9 +226,6 @@ export default {
       this.progress = false
     },
     async onUnitFilesUpdate({ uppyFiles }) {
-      const consoleLabel = (...labels) => `TheDataExperience.onUnitFilesUpdate${labels.length ? '.' + labels.join('.') : ''}`
-      console.time(consoleLabel())
-
       const { databaseConfig: dbConfig } = this
       this.message = ''
       this.error = false
@@ -261,55 +234,46 @@ export default {
       const start = new Date()
 
       // Clean vuex state
-      this.$store.commit('clearStore', {})
+      this.$store.commit('dataexp/clearStore', {})
 
       // Set consent form
+      /*
       const consentForm = JSON.parse(JSON.stringify(this.consentFormTemplate))
       if (consentForm) {
         const section = consentForm.find(({ type }) => type === 'data')
         section.titles = this.viewBlocks.map(e => e.title)
         section.ids = this.viewBlocks.map(e => e.id)
       }
-      this.$store.commit('setConsentForm', consentForm)
-
+      this.$store.commit('dataexp/setConsentForm', consentForm)
+      */
+      // Set file manager
+      const fileManager = new FileManager(
+        this.preprocessors,
+        fileManagerWorkers,
+        this.files,
+        this.keepOnlyFiles
+      )
       try {
-        // Set file manager
-        const fileManager = new FileManager(
-          this.preprocessors,
-          fileManagerWorkers,
-          this.files,
-          this.keepOnlyFiles
-        )
-        // Set file manager
-        console.time(consoleLabel('initFileManager'))
         await fileManager.init(uppyFiles)
-        this.$store.commit('setFileManager', fileManager)
-        console.timeEnd(consoleLabel('initFileManager'))
+        this.$store.commit('dataexp/setFileManager', fileManager)
+
         if (dbConfig) {
-          const consoleLabelDBMS = consoleLabel.bind(null, 'DBMS')
-          console.time(consoleLabelDBMS())
+          console.log('Creating DB', dbConfig)
           // create database
-          console.time(consoleLabelDBMS('createDB'))
           const db = await DBMS.createDB(dbConfig)
-          console.timeEnd(consoleLabelDBMS('createDB'))
           // generate database records via the file manager
-          console.time(consoleLabelDBMS('generateRecords'))
           const records = await DBMS.generateRecords(fileManager, dbConfig)
-          console.timeEnd(consoleLabelDBMS('generateRecords'))
+          console.log('records', records)
           // insert the records into the database
-          console.time(consoleLabelDBMS('insertRecords'))
           DBMS.insertRecords(db, records)
-          console.timeEnd(consoleLabelDBMS('insertRecords'))
+          console.log('commit setcurrentDB')
           // commit the database to the Vuex store
-          this.$store.commit('setCurrentDB', db)
-          console.timeEnd(consoleLabelDBMS())
+          this.$store.commit('dataexp/setCurrentDB', db)
         }
       } catch (e) {
         this.handleError(e)
         return
       }
-
-      console.timeEnd(consoleLabel())
 
       this.progress = false
       this.success = true

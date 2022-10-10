@@ -1,9 +1,27 @@
 import fs from 'fs'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
-
-import { extension2filetype } from './utils/file-manager'
 import { numberFormats } from './i18n/vue-i18n-number-formats'
 import { dateTimeFormats } from './i18n/vue-i18n-date-time-formats'
+
+const extension2filetype = {
+  tar: 'zip',
+  js: 'json',
+  ndjson: 'json',
+  png: 'img',
+  jpeg: 'img',
+  jpg: 'img',
+  gif: 'img',
+  bmp: 'img',
+  webp: 'img',
+  pdf: 'pdf',
+  zip: 'zip',
+  json: 'json',
+  txt: 'txt',
+  html: 'html',
+  csv: 'csv',
+  tsv: 'csv',
+  xlsx: 'xlsx'
+}
 
 const {
   NODE_ENV,
