@@ -35,3 +35,8 @@
     </div>
   </form>
 </template>
+<script>
+export default {
+  name: 'BaseContactForm'
+}
+</script>

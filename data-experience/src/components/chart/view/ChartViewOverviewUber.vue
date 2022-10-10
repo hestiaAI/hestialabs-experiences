@@ -538,7 +538,7 @@ export default {
 }
 </script>
 <style scoped>
-@import 'assets/styles/dc.css';
+
 
 ::v-deep body {
   font-family: sans-serif;

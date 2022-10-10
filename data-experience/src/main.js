@@ -11,7 +11,6 @@ export default {
     }
 
     options.store.registerModule(MODULE_NAME, store)
-
     Vue.component('TheDataExperience2', TheDataExperience)
     // Vue.component('ChartView2', ChartView)
   }

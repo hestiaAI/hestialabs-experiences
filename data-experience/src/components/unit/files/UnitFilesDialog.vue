@@ -71,6 +71,7 @@
 import { mapState } from '@/utils/store-helper'
 
 export default {
+  name: 'UnitFilesDialog',
   props: {
     fileGlobs: {
       type: Array,

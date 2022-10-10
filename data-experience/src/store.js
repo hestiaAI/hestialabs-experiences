@@ -33,6 +33,7 @@ const store = {
       console.log('siteConfig set', state.siteConfig)
     },
     setCurrentDB(state, db) {
+      console.log('setting DB', db)
       state.currentDB = db
     },
     setFileManager(state, fileManager) {

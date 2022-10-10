@@ -13,6 +13,7 @@
 
 <script>
 export default {
+  name: 'TheSelectorExample',
   props: {
     value: {
       type: Object,

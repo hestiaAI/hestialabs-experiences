@@ -3,3 +3,8 @@
     <slot />
   </VAlert>
 </template>
+<script>
+export default {
+  name: 'BaseAlert'
+}
+</script>

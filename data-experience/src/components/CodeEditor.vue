@@ -12,6 +12,7 @@
 
 <script>
 export default {
+  name: 'CodeEditor',
   components: {
     AceEditor: () => import('vue2-ace-editor')
   },

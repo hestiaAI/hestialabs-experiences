@@ -86,6 +86,7 @@ import DBMS from '../utils/sql'
 import FileManager from '../utils/file-manager'
 import fileManagerWorkers from '../utils/file-manager-workers'
 import UnitIntroduction from './unit/UnitIntroduction.vue'
+import UnitSummary from './unit/UnitSummary.vue'
 import UnitFileExplorer from './unit/file-explorer/UnitFileExplorer.vue'
 import UnitQuery from './unit/UnitQuery.vue'
 import { mapState } from '@/utils/store-helper'
@@ -106,7 +107,7 @@ export default {
       default: () => {}
     }
   },
-  components: { UnitIntroduction, UnitFileExplorer, UnitQuery },
+  components: { UnitIntroduction, UnitSummary, UnitFileExplorer, UnitQuery },
   data() {
     const properties = pick(this.experienceConfig, [
       'databaseConfig',
@@ -262,8 +263,10 @@ export default {
           const db = await DBMS.createDB(dbConfig)
           // generate database records via the file manager
           const records = await DBMS.generateRecords(fileManager, dbConfig)
+          console.log('records', records)
           // insert the records into the database
           DBMS.insertRecords(db, records)
+          console.log('commit setcurrentDB')
           // commit the database to the Vuex store
           this.$store.commit('dataexp/setCurrentDB', db)
         }

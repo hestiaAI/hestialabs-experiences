@@ -52,7 +52,6 @@ export default {
   name: 'Modul',
   data() {
     const { experiences, config } = this.$store.state
-    console.log(config, experiences)
     return {
       experienceConfig: experiences.find(e => e.slug === 'twitter') || {},
       siteConfig: config

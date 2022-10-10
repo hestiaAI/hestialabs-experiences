@@ -1,19 +1,23 @@
 <template>
   <DataValidator :data="data">
-    <component
-      :is="component"
-      v-bind="{
-        values: data.items || [],
-        headers: data.headers || [],
-        ...$attrs
-      }"
-    />
+    <div>
+      <component
+        :is="component"
+        v-bind="{
+          values: data.items || [],
+          headers: data.headers || [],
+          ...vizProps
+        }"
+      />
+    </div>
   </DataValidator>
 </template>
 
 <script>
+import DataValidator from '@/components/DataValidator.vue'
 export default {
-  inheritAttrs: false,
+  name: 'ChartView',
+  components: { DataValidator },
   props: {
     data: {
       type: Object,
@@ -22,16 +26,16 @@ export default {
     graphName: {
       type: String,
       required: true
+    },
+    vizProps: {
+      type: Object,
+      default: () => ({})
     }
   },
   computed: {
     component() {
-      return () => import(`@/components/chart/view/${this.graphName}`)
+      return this.graphName.split('.vue')[0]
     }
   }
 }
 </script>
-
-<style>
-@import 'assets/styles/dc.css';
-</style>

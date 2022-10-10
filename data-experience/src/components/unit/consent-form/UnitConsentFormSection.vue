@@ -104,6 +104,7 @@
 import { mapState } from '@/utils/store-helper'
 
 export default {
+  name: 'UnitConsentFormSection',
   props: {
     index: {
       type: Number,

@@ -34,6 +34,7 @@
 <script>
 import { mapState } from '@/utils/store-helper'
 export default {
+  name: 'ShowFilesDialog',
   props: {
     value: {
       type: Boolean,

@@ -11,10 +11,11 @@
   "editor.insertSpaces": true,
   "editor.renderFinalNewline": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll": false
+    "source.fixAll.eslint": true
   },
+  "eslint.validate": ["javascript"],
   "editor.formatOnSave": false,
-  "editor.formatOnPaste": true,
+  "editor.formatOnPaste": false,
   "editor.tabSize": 2,
   "[js][vue]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"

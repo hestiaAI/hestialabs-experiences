@@ -19,6 +19,7 @@
 </template>
 <script>
 export default {
+  name: 'BaseSelectMultiple',
   props: {
     items: {
       type: Array,

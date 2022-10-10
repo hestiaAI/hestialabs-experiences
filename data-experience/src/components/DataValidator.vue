@@ -16,6 +16,7 @@
 import { has, every } from 'lodash-es'
 
 export default {
+  name: 'DataValidator',
   props: {
     data: {
       type: Object,

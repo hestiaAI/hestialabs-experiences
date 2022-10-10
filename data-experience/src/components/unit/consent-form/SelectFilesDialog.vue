@@ -34,8 +34,8 @@
           rounded
           selectable
           selected-color="primary"
-          :open.sync="openItems"
-          :active.sync="activeItems"
+          v-model:open="openItems"
+          v-model:active="activeItems"
           :search="search"
           :items="treeItems"
           @update:active="clickOnLabel"
@@ -67,6 +67,7 @@
 import { mapState } from '@/utils/store-helper'
 
 export default {
+  name: 'SelectFilesDialog',
   props: {
     value: {
       type: Boolean,

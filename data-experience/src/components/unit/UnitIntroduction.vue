@@ -81,10 +81,11 @@
 
 <script>
 import UnitFiles from './files/UnitFiles.vue'
+import ExternalLink from '@/components/ExternalLink.vue'
 import { mapGetters } from '@/utils/store-helper'
 export default {
   name: 'UnitIntroduction',
-  components: { UnitFiles },
+  components: { UnitFiles, ExternalLink },
   props: {
     slug: {
       type: String,

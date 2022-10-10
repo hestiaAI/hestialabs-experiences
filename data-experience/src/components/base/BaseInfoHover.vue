@@ -10,3 +10,8 @@
     <span><slot /></span>
   </VTooltip>
 </template>
+<script>
+export default {
+  name: 'BaseInfoHover'
+}
+</script>

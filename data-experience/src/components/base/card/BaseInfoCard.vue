@@ -27,6 +27,7 @@
 </template>
 <script>
 export default {
+  name: 'BaseInfoCard',
   props: {
     title: {
       type: String,

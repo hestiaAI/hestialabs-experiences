@@ -25,7 +25,7 @@
 </template>
 <script>
 export default {
-  name: 'VideoWidget',
+  name: 'BaseVideo',
   props: {
     title: {
       type: String,

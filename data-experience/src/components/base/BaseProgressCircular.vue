@@ -4,6 +4,7 @@
 
 <script>
 export default {
+  name: 'BaseProgressCircular',
   props: {
     size: {
       type: [String, Number],

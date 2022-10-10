@@ -8,7 +8,7 @@
       />
       <BasePasswordField
         v-if="config.bypassLogin && !$auth.user.password"
-        :value.sync="password"
+        v-model:value="password"
       />
       <BaseAlert v-if="missingRequiredFields">
         Some required fields are not filled in.
@@ -94,6 +94,7 @@ import { encryptFile } from '~/utils/encryption'
 import { createObjectURL, mimeTypes } from '@/utils/utils'
 
 export default {
+  name: 'UnitConsentForm',
   data() {
     const experience = this.$store.getters.experience(this.$route)
     const config = this.$store.getters.routeConfig(this.$route)

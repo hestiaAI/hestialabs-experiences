@@ -86,6 +86,8 @@ import French from '@uppy/locales/lib/fr_FR'
 import { decryptBlob } from '@/utils/encryption'
 import { BrowserFile } from '~/utils/file-manager'
 
+import UnitFilesDialog from './UnitFilesDialog.vue'
+
 const locales = {
   en: English,
   fr: French
@@ -99,6 +101,7 @@ async function fetchSampleFile({ path, filename }) {
 
 export default {
   name: 'UnitFiles',
+  components: { UnitFilesDialog },
   props: {
     progress: {
       type: Boolean,

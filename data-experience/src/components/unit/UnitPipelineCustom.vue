@@ -8,7 +8,7 @@
         v-if="optionsVisible"
         class="d-flex flex-column justify-center align-center"
       >
-        <CodeEditor :value.sync="options" language="json" />
+        <CodeEditor v-model:value="options" language="json" />
         <BaseButton
           v-bind="{ progress, status, error, disabled }"
           text="Run"
@@ -24,8 +24,11 @@
 import { mapState } from '@/utils/store-helper'
 import mixin from './mixin-pipeline'
 import { setTimeoutPromise } from '@/utils/utils'
-
+import CodeEditor from '@/components/CodeEditor.vue'
+import BaseButton from '@/components/base/button/BaseButton.vue'
 export default {
+  name: 'UnitPipelineCustom',
+  components: { CodeEditor, BaseButton },
   mixins: [mixin],
   props: {
     customPipeline: {

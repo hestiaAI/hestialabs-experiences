@@ -20,6 +20,7 @@
 
 <script>
 export default {
+  name: 'UnitIntroduction',
   props: {
     args: {
       type: Object,
