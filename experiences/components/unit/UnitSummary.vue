@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 import { sum, sumBy, take, isUndefined, mapValues, identity, groupBy, sortBy } from 'lodash-es'
 import { humanReadableFileSize } from '~/utils/utils'
 

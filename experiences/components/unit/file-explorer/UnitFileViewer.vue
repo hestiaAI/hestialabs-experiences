@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 import { jsonToTableConverter } from '~/utils/generic-pipelines'
 
 export default {

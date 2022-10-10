@@ -19,6 +19,7 @@
 
 <script>
 export default {
+  name: 'StatusIndicator',
   props: {
     error: {
       type: Boolean,

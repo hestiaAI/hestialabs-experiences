@@ -39,25 +39,25 @@
     </ChartViewVRowWebShare>
     <VRow>
       <template v-if="filterCount === totalCount">
-        <i18n tag="div" :path="kViewBlock('selected-all')">
+        <I18n tag="div" :path="kViewBlock('selected-all')">
           <template #totalCount>
             <span class="font-weight-bold" v-text="totalCount" />
           </template>
           <template #rowLabel>
             {{ rowLabel }}
           </template>
-        </i18n>
+        </I18n>
         <span v-t="'click-graph'" />
       </template>
       <template v-else>
-        <i18n tag="div" :path="kViewBlock('selected-some')">
+        <I18n tag="div" :path="kViewBlock('selected-some')">
           <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
             <span :key="k" class="font-weight-bold" v-text="v" />
           </template>
           <template #rowLabel>
             {{ rowLabel }}
           </template>
-        </i18n>
+        </I18n>
         <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
       </template>
     </VRow>
@@ -318,7 +318,6 @@ export default {
 }
 </script>
 <style scoped>
-@import 'assets/styles/dc.css';
 ::v-deep body {
   font-family: sans-serif;
   color: #22313f;

@@ -3,11 +3,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 import mixin from './mixin-pipeline'
 import { setTimeoutPromise } from '@/utils/utils'
 
 export default {
+  name: 'UnitPipelineSql',
   mixins: [mixin],
   props: {
     sql: {
@@ -20,6 +21,9 @@ export default {
     disabled() {
       return !this.currentDB || !this.sql
     }
+  },
+  mounted() {
+    console.log('UnitPipelineSQL')
   },
   methods: {
     async run() {

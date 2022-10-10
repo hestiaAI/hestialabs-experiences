@@ -127,7 +127,7 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 import mixin from './mixin'
 
 // Remove warning on default colorscheme, even if not used..
@@ -442,7 +442,7 @@ export default {
 }
 </script>
 <style scoped>
-@import 'assets/styles/dc.css';
+
 
 ::v-deep body {
   font-family: sans-serif;

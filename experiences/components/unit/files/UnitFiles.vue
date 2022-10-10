@@ -3,7 +3,7 @@
     <VRow v-if="samples.length" justify="center" dense>
       <VCol align="center">
         <LazyUnitFilesSampleSelector
-          :value.sync="selectedSamples"
+          v-model:value="selectedSamples"
           :items="samples"
           class="mb-4"
         />
@@ -45,7 +45,7 @@
           class="my-sm-2 mr-sm-4"
           @click="returnFiles"
         />
-        <UnitFilesDialog :file-globs="Object.values(files)" main />
+        <UnitFilesDialog :file-globs="fileGlobs" main />
       </VCol>
     </VRow>
     <VRow>
@@ -71,7 +71,7 @@
 
 <script>
 import { promisify } from 'util'
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 import Uppy from '@uppy/core'
 import Dashboard from '@uppy/dashboard'
 import DropTarget from '@uppy/drop-target'
@@ -86,6 +86,8 @@ import French from '@uppy/locales/lib/fr_FR'
 import { decryptBlob } from '@/utils/encryption'
 import { BrowserFile } from '~/utils/file-manager'
 
+import UnitFilesDialog from './UnitFilesDialog.vue'
+
 const locales = {
   en: English,
   fr: French
@@ -99,6 +101,7 @@ async function fetchSampleFile({ path, filename }) {
 
 export default {
   name: 'UnitFiles',
+  components: { UnitFilesDialog },
   props: {
     progress: {
       type: Boolean,
@@ -118,15 +121,12 @@ export default {
     }
   },
   data() {
-    const { files, dataSamples } = this.$store.getters.experience(this.$route)
     return {
       uppy: null,
       samples: [],
       selectedSamples: [],
       filesEmpty: true,
       status: false,
-      files,
-      dataSamples,
       dialog: false,
       privateKey: null,
       publicKey: null
@@ -134,6 +134,12 @@ export default {
   },
   computed: {
     ...mapState(['fileManager']),
+    ...mapState({ files: state => state.experienceConfig.files }),
+    ...mapState({ dataSamples: state => state.experienceConfig.dataSamples }),
+    fileGlobs() {
+      console.log('UnitFiles', this.files)
+      return Object.values(this.files) || []
+    },
     disabled() {
       return this.filesEmpty
     }
@@ -189,6 +195,7 @@ export default {
       }
     }
   },
+  /*
   async created() {
     // files in assets/data/ are loaded with file-loader
     this.samples = []
@@ -198,8 +205,11 @@ export default {
         path: (await import(`@/assets/data/${filename}`)).default
       })
     }
+
   },
+  */
   mounted() {
+    console.log('UnitFiles', this.files, this.dataSamples)
     const stringsOverride = {
       en: {
         cancel: 'Clear all'
@@ -250,7 +260,7 @@ export default {
         }
       })
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.uppy.close()
   },
   methods: {

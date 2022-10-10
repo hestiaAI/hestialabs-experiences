@@ -22,6 +22,7 @@
 
 <script>
 export default {
+  name: 'BaseBubbleCard',
   props: {
     title: {
       type: String,

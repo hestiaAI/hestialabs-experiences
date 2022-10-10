@@ -65,7 +65,7 @@
 
 <script>
 import { has } from 'lodash-es'
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 export default {
   name: 'UnitFileExplorer',
   data() {

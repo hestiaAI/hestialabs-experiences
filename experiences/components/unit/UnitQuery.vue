@@ -110,10 +110,18 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 import { cloneDeep, merge } from 'lodash-es'
-
+import UnitPipelineSql from './UnitPipelineSql.vue'
+import UnitFilesDialog from './files/UnitFilesDialog.vue'
+import ChartView from '@/components/chart/ChartView.vue'
+import UnitIframe from '@/components/unit/UnitIframe.vue'
+import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
+import UnitVegaViz from '@/components/unit/UnitVegaViz.vue'
+import BaseAlert from '@/components/base/BaseAlert.vue'
 export default {
+  name: 'UnitQuery',
+  components: { UnitPipelineSql, UnitFilesDialog, ChartView, UnitIframe, UnitFilterableTable, UnitVegaViz, BaseAlert },
   props: {
     slug: {
       type: String,

@@ -68,9 +68,10 @@
 </template>
 
 <script>
-import FileManager from '~/utils/file-manager'
+import { mapState } from '@/utils/store-helper'
 
 export default {
+  name: 'UnitFilesDialog',
   props: {
     fileGlobs: {
       type: Array,
@@ -79,16 +80,15 @@ export default {
     main: {
       type: Boolean,
       default: false
-    },
-    fileManager: {
-      type: FileManager,
-      default: null
     }
   },
   data() {
     return {
       show: false
     }
+  },
+  computed: {
+    ...mapState(['fileManager'])
   }
 }
 </script>

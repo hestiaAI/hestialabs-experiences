@@ -17,6 +17,7 @@ import embed from 'vega-embed'
 import exportImageMixinFactory from '@/mixins/export-image-mixin-factory'
 
 export default {
+  name: 'UnitVegaViz',
   mixins: [exportImageMixinFactory({ refName: 'graph' })],
   props: {
     specFile: {

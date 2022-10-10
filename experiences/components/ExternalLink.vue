@@ -4,6 +4,7 @@
 
 <script>
 export default {
+  name: 'ExternalLink',
   props: {
     target: {
       type: String,

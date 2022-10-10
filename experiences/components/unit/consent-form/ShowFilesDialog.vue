@@ -32,8 +32,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 export default {
+  name: 'ShowFilesDialog',
   props: {
     value: {
       type: Boolean,

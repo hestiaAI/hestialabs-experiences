@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState } from '@/utils/store-helper'
 import mixin from './mixin'
 import { kAnonymityFilter } from '@/utils/kAnonymity'
 

@@ -101,12 +101,11 @@ export default class FileManager {
     // Define the files filter regex, default to all
     this.filesRegex = /.*/
     if (this.keepOnlyFiles && Object.keys(this.idToGlob).length) {
-      import('micromatch').then((mm) => {
-        const regexs = Object.values(this.idToGlob).map(
-          glob => mm.makeRe(glob).source
-        )
-        this.filesRegex = new RegExp(`(${regexs.join(')|(')})`)
-      })
+      const mm = require('micromatch')
+      const regexs = Object.values(this.idToGlob).map(
+        glob => mm.makeRe(glob).source
+      )
+      this.filesRegex = new RegExp(`(${regexs.join(')|(')})`)
     }
     this.setInitialValues()
   }
@@ -171,8 +170,9 @@ export default class FileManager {
     if (roots.length === 1 && roots[0].endsWith('.zip')) {
       return fileList.map((file) => {
         const parts = file.name.split('/')
+        const blob = file.slice(0, file.size)
         const name = parts.slice(1, parts.length).join('/')
-        return file.copy(name)
+        return new File([blob], name)
       })
     }
     return fileList
@@ -587,13 +587,13 @@ export default class FileManager {
         files.flatMap(async(file) => {
           if (file.name.endsWith('.zip')) {
             const zip = new JSZip()
-            await zip.loadAsync(file.blob)
+            await zip.loadAsync(file)
             const folderContent = zip.file(filesRegex)
             const blobs = await Promise.all(
-              folderContent.map(r => r.async(file.bufferType))
+              folderContent.map(r => r.async('blob'))
             )
             const innerFiles = folderContent.map(
-              (r, i) => file.build(blobs[i], file.name + '/' + r.name)
+              (r, i) => new File([blobs[i]], file.name + '/' + r.name)
             )
             return await this.extractZips(innerFiles, filesRegex)
           } else if (file.name.endsWith('/') || !filesRegex.test(file.name)) {

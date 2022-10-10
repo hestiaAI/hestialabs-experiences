@@ -43,6 +43,7 @@
 
 <script>
 export default {
+  name: 'SettingsSpeedDial',
   data() {
     return {
       fab: false

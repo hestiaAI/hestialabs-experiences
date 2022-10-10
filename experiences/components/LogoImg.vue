@@ -9,6 +9,7 @@
 </template>
 <script>
 export default {
+  name: 'LogoImg',
   computed: {
     logoSrc() {
       return this.$store.getters.siteConfig.logo || '/hestialabs-logo.svg'

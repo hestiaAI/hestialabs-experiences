@@ -17,6 +17,7 @@
 import { mdiEye, mdiEyeOff } from '@mdi/js'
 
 export default {
+  name: 'BasePasswordField',
   props: {
     errorMessage: {
       type: String,

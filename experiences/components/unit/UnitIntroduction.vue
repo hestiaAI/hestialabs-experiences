@@ -52,7 +52,7 @@
         </VRow>
       </VCardText>
     </VCard>
-    <VCard v-if="tutorialVideos.length" flat>
+    <VCard v-if="tutorialVideos" flat>
       <VCardTitle class="text-h5 font-weight-bold justify-center">
         {{ $t('load-data.tutorial-title') }}{{ tutorialVideos.length > 1 ? 's' : '' }}
       </VCardTitle>
@@ -80,11 +80,12 @@
 </template>
 
 <script>
-import { pick } from 'lodash-es'
 import UnitFiles from './files/UnitFiles.vue'
+import ExternalLink from '@/components/ExternalLink.vue'
+import { mapGetters } from '@/utils/store-helper'
 export default {
   name: 'UnitIntroduction',
-  components: { UnitFiles },
+  components: { UnitFiles, ExternalLink },
   props: {
     slug: {
       type: String,
@@ -107,22 +108,8 @@ export default {
       default: ''
     }
   },
-  data() {
-    const experience = this.$store.getters.experience(this.$route)
-    const properties = pick(experience, [
-      'title',
-      'dataPortal',
-      'dataPortalHtml',
-      'dataPortalMessage',
-      'tutorialVideos'
-    ])
-
-    return {
-      videoHeight: '400',
-      experienceName: this.$route.params.experience,
-      tutorialVideos: [],
-      ...properties
-    }
+  computed: {
+    ...mapGetters(['tutorialVideos'])
   },
   methods: {
     onUnitFilesUpdate({ uppyFiles }) {
