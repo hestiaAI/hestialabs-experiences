@@ -26,6 +26,8 @@
     "youtube"
   ],
   "bubbles": [
+    "live-aggregator",
+    "live-participant",
     "demo-aggregator",
     "demo-participant",
     "sit-aggregator",
@@ -49,6 +51,7 @@
     "observe-participant"
   ],
   "homePageBubbles": [
+    "live-participant",
     "demo-participant",
     "sit-participant",
     "dating-apps-course",
