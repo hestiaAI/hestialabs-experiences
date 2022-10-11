@@ -9,13 +9,14 @@
           <VCol align="center">
             <!-- eslint-disable vue/no-v-html -->
             <p
-              v-if="$te(k('dataPortalHtml'))"
+              v-if="$te(k('dataPortalHtml')) || dataPortalHtml"
               class="body-1"
-              v-html="$t(k('dataPortalHtml'))"
+              v-html="$tev(k('dataPortalHtml'), dataPortalHtml)"
             />
-            <p v-else-if="$te(k('dataPortal'))" class="body-1">
+            <p v-else-if="$te(k('dataPortal')) || dataPortal" class="body-1">
+              <!-- localized link -->
               <ExternalLink
-                :href="dataPortal"
+                :href="$tev(k('dataPortal'), dataPortal)"
               >
                 {{ $t('load-data.link-text') }}
               </ExternalLink>
@@ -24,11 +25,9 @@
             <p v-else class="body-1">
               {{ $t("load-data.text-default") }}
             </p>
-            <!-- eslint-disable vue/no-v-html -->
             <p
-              v-if="$te(k('dataPortalMessage'))"
               class="body-1"
-              v-html="$t(k('dataPortalMessage'))"
+              v-html="$tev(k('dataPortalMessage'), dataPortalMessage || '')"
             />
             <!-- eslint-enable vue/no-v-html -->
             <p>

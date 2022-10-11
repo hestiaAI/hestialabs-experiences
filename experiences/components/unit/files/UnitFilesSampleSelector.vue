@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: 'TheSelectorSample',
+  name: 'UnitFilesSampleSelector',
   props: {
     value: {
       type: Array,

@@ -4,6 +4,7 @@ import icon from '@/icons/apple.png'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
 import ndjsonToJson from './preprocessor'
+import dataSample from '@/data-samples/apple-tracker.ndjson'
 
 const options: ExperienceOptions = {
   databaseConfig,
@@ -18,7 +19,7 @@ const options: ExperienceOptions = {
     '<li align="left">Run your apps for a while</li>' +
     '<li align="left">Download the report by tapping the <b>Share button</b> on the App Privacy Report screen</li>' +
     '<li align="left">Drop the downloaded file below</li></ul></div>',
-  dataSamples: ['App_Privacy_Report.ndjson'],
+  dataSamples: [dataSample],
   files: {
     'tracker-control-ios': '**/*.ndjson'
   },

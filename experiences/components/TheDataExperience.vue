@@ -272,15 +272,16 @@ export default {
       }
       this.$store.commit('setConsentForm', consentForm)
 
-      // Set file manager
-      console.time(consoleLabel('initFileManager'))
-      const fileManager = new FileManager(
-        this.preprocessors,
-        fileManagerWorkers,
-        this.files,
-        this.keepOnlyFiles
-      )
       try {
+        // Set file manager
+        const fileManager = new FileManager(
+          this.preprocessors,
+          fileManagerWorkers,
+          this.files,
+          this.keepOnlyFiles
+        )
+        // Set file manager
+        console.time(consoleLabel('initFileManager'))
         await fileManager.init(uppyFiles)
         this.$store.commit('setFileManager', fileManager)
         console.timeEnd(consoleLabel('initFileManager'))

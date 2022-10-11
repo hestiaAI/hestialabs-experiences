@@ -12,7 +12,6 @@ const options: ExperienceOptions = {
   databaseConfig,
   dataPortal:
     'https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive',
-  dataSamples: ['twitter.zip', 'twitter-sample.zip'],
   files: {
     ads: '**/block00.json',
     adsLastMonth: '**/block01.json',

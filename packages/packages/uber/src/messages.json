@@ -72,7 +72,7 @@
     "viewBlocks": {
       "tripsData": {
         "title": "Vue d'ensemble",
-        "text": "Visulalisation interactive de vos habitudes sur Uber. Les données se regroupent par devise, et l'on peut ajouter des filtres sur les graphiques.",
+        "text": "Visualisation interactive de vos habitudes sur Uber. Les données se regroupent par devise, et l'on peut ajouter des filtres sur les graphiques.",
         "vizProps": {
           "messages": {
             "select-currency": "Sélectionner les données selon la devise",

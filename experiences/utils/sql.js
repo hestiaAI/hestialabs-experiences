@@ -189,6 +189,13 @@ export class DB {
       this.#tables = new Map()
     }
   }
+
+  /**
+   * Export the database
+   */
+  export() {
+    return this.#db.export()
+  }
 }
 
 /**

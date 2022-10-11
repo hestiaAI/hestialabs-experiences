@@ -6,7 +6,7 @@ import {
   adsLastMonth,
   targeting
 } from './samples.helpers'
-import { mockFile } from '~/utils/__mocks__/file-manager-mock'
+import { NodeFile } from '~/utils/node-file'
 import {
   DatabaseTester,
   arrayEqualNoOrder,
@@ -18,10 +18,10 @@ const getSql = getSqlFromBlock.bind(null, experience)
 
 async function init() {
   const files = [
-    mockFile('test/block00.json', JSON.stringify(ads)),
-    mockFile('test/block01.json', JSON.stringify(adsLastMonth)),
-    mockFile('test/block05.json', JSON.stringify(targeting))
-  ]
+    ['test/block00.json', JSON.stringify(ads)],
+    ['test/block01.json', JSON.stringify(adsLastMonth)],
+    ['test/block05.json', JSON.stringify(targeting)]
+  ].map(([name, contents]) => new NodeFile(name, contents))
   await tester.init(experience, files)
 }
 
