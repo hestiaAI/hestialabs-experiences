@@ -11,9 +11,9 @@ Specification for `messages.json` internationalization file for message translat
       "dataPortalMessage": "<div>Additional hints to the user. For example, used to remind the user to download their data in JSON format. Supports HTML syntax.</div>"
     },
     "viewBlocks": {
-      "[name]": {
-        "title": "",
-        "text": "This map shows what places Google think you visited with the size corresponding to the time you spent in this place:",
+      "[viewBlockName]": {
+        "title": "View Block Title",
+        "text": "View Block Description",
         "vizProps": {
           "[someProp]": "Property passed down to the visualization component (not auto-translated unless specified in the messages field below.)",
           "messages": {
