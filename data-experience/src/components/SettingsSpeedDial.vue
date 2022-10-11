@@ -42,8 +42,12 @@
 </template>
 
 <script>
+import BaseButton from '@/components/base/button/BaseButton.vue'
+import BaseButtonShare from '@/components/base/button/BaseButtonShare.vue'
+
 export default {
   name: 'SettingsSpeedDial',
+  components: { BaseButton, BaseButtonShare },
   data() {
     return {
       fab: false

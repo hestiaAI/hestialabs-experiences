@@ -14,9 +14,11 @@
 
 <script>
 import { has, every } from 'lodash-es'
+import BaseAlert from '@/components/base/BaseAlert.vue'
 
 export default {
   name: 'DataValidator',
+  components: { BaseAlert },
   props: {
     data: {
       type: Object,

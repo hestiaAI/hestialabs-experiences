@@ -167,8 +167,13 @@ import { pick } from 'lodash-es'
 import { BrowserFile, filetype2icon, extension2filetype } from '@/utils/file-manager'
 import { decryptBlob } from '@/utils/encryption'
 
+import BaseAlert from '@/components/base/BaseAlert.vue'
+import BaseButton from '@/components/base/button/BaseButton.vue'
+import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
+
 export default {
   name: 'UnitDownload',
+  components: { BaseAlert, BaseButton, BaseProgressCircular },
   props: {
     success: {
       type: Boolean,

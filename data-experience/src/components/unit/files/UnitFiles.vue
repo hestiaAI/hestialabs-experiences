@@ -87,6 +87,8 @@ import { decryptBlob } from '@/utils/encryption'
 import { BrowserFile } from '~/utils/file-manager'
 
 import UnitFilesDialog from './UnitFilesDialog.vue'
+import BaseButtonDialog from '@/components/base/button/BaseButtonDialog.vue'
+import BaseButton from '@/components/base/button/BaseButton.vue'
 
 const locales = {
   en: English,
@@ -101,7 +103,7 @@ async function fetchSampleFile({ path, filename }) {
 
 export default {
   name: 'UnitFiles',
-  components: { UnitFilesDialog },
+  components: { BaseButton, BaseButtonDialog, UnitFilesDialog },
   props: {
     progress: {
       type: Boolean,

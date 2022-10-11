@@ -82,14 +82,17 @@
 
 <script>
 import { debounce, pick, cloneDeep } from 'lodash-es'
-import DBMS from '../utils/sql'
-import FileManager from '../utils/file-manager'
-import fileManagerWorkers from '../utils/file-manager-workers'
-import UnitIntroduction from './unit/UnitIntroduction.vue'
-import UnitSummary from './unit/UnitSummary.vue'
-import UnitFileExplorer from './unit/file-explorer/UnitFileExplorer.vue'
-import UnitQuery from './unit/UnitQuery.vue'
 import { mapState } from '@/utils/store-helper'
+import DBMS from '@/utils/sql'
+
+import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
+import FileManager from '@/utils/file-manager'
+import fileManagerWorkers from '@/utils/file-manager-workers'
+import UnitFileExplorer from '@/components/unit/file-explorer/UnitFileExplorer.vue'
+import UnitIntroduction from '@/components/unit/UnitIntroduction.vue'
+import UnitQuery from '@/components/unit/UnitQuery.vue'
+import UnitSummary from '@/components/unit/UnitSummary.vue'
+import SettingsSpeedDial from '@/components/SettingsSpeedDial.vue'
 
 export default {
   name: 'TheDataExperience',
@@ -107,7 +110,7 @@ export default {
       default: () => {}
     }
   },
-  components: { UnitIntroduction, UnitSummary, UnitFileExplorer, UnitQuery },
+  components: { BaseProgressCircular, SettingsSpeedDial, UnitFileExplorer, UnitIntroduction, UnitQuery, UnitSummary },
   data() {
     const properties = pick(this.experienceConfig, [
       'databaseConfig',

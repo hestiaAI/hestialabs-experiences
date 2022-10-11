@@ -80,12 +80,14 @@
 </template>
 
 <script>
-import UnitFiles from './files/UnitFiles.vue'
-import ExternalLink from '@/components/ExternalLink.vue'
 import { mapGetters } from '@/utils/store-helper'
+import BaseVideo from '@/components/base/BaseVideo.vue'
+import ExternalLink from '@/components/ExternalLink.vue'
+import UnitFiles from '@/components/unit/files/UnitFiles.vue'
+
 export default {
   name: 'UnitIntroduction',
-  components: { UnitFiles, ExternalLink },
+  components: { UnitFiles, ExternalLink, BaseVideo },
   props: {
     slug: {
       type: String,
@@ -110,6 +112,9 @@ export default {
   },
   computed: {
     ...mapGetters(['tutorialVideos'])
+  },
+  mounted() {
+    console.log('UnitIntroduction')
   },
   methods: {
     onUnitFilesUpdate({ uppyFiles }) {

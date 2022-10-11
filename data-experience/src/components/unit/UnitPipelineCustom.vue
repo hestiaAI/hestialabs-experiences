@@ -21,11 +21,12 @@
 </template>
 
 <script>
-import { mapState } from '@/utils/store-helper'
 import mixin from './mixin-pipeline'
+import { mapState } from '@/utils/store-helper'
 import { setTimeoutPromise } from '@/utils/utils'
-import CodeEditor from '@/components/CodeEditor.vue'
 import BaseButton from '@/components/base/button/BaseButton.vue'
+import CodeEditor from '@/components/CodeEditor.vue'
+
 export default {
   name: 'UnitPipelineCustom',
   components: { CodeEditor, BaseButton },

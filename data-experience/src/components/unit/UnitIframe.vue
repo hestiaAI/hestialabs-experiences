@@ -19,8 +19,11 @@
 </template>
 
 <script>
+import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
+
 export default {
   name: 'UnitIntroduction',
+  components: { BaseProgressCircular },
   props: {
     args: {
       type: Object,

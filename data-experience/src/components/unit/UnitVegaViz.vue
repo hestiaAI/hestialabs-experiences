@@ -16,8 +16,12 @@
 import embed from 'vega-embed'
 import exportImageMixinFactory from '@/mixins/export-image-mixin-factory'
 
+import BaseButtonDownloadData from '@/components/base/button/download/BaseButtonDownloadData.vue'
+import BaseButtonShare from '@/components/base/button/BaseButtonShare.vue'
+
 export default {
   name: 'UnitVegaViz',
+  components: { BaseButtonDownloadData, BaseButtonShare },
   mixins: [exportImageMixinFactory({ refName: 'graph' })],
   props: {
     specFile: {

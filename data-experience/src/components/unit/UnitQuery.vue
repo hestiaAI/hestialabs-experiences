@@ -29,8 +29,6 @@
             :file-globs="fileGlobs"
             :file-manager="fileManager"
           />
-          </span>
-          </vtooltip>
         </VCol>
       </VRow>
 
