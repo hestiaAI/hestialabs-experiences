@@ -1,4 +1,4 @@
-This directory contains the configuration files linked to each deployement. They expect the following grammar:
+This directory contains the configuration files linked to each deployment. They expect the following grammar:
 
 ```js
 {
@@ -73,6 +73,16 @@ This directory contains the configuration files linked to each deployement. They
     * @type String
     */
   "filedrop": "https://example.com/filedrop",
+  /**
+    * Path or URL to override the default site logo
+    * @type String
+    */
+  "logo": "/some-other-logo.png",
+  /**
+    * Mapbox Token
+    * @type String
+    */
+  "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
   /**
     * The public key used to encrypt the zip containing the consent log and results. Public and private key pairs can be generated at https://experiences.hestialabs.org/import/
     * @type String
