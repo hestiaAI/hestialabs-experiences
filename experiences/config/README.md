@@ -82,7 +82,7 @@ This directory contains the configuration files linked to each deployment. They 
     * Mapbox Token
     * @type String
     */
-  "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
+  "mapboxToken": "string",
   /**
     * The public key used to encrypt the zip containing the consent log and results. Public and private key pairs can be generated at https://experiences.hestialabs.org/import/
     * @type String
