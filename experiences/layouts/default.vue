@@ -68,6 +68,10 @@
         >
           PersonalData.IO
         </ExternalLink>
+        <blockquote class="mt-2">
+          <i>"We need to train both the people who are putting data and information out there, as well as those reading it, how to interpret and question it to ensure they understand it and are not being misled or deceived."</i>
+          <br>&mdash; Sir Tim Berners-Lee, inventor of the World Wide Web
+        </blockquote>
       </div>
     </VFooter>
   </VApp>
