@@ -27,7 +27,7 @@
           <p class="text-subtitle-2">
             {{ messages['other-candidates'] }} {{ placeSelected }}:
           </p>
-          <UnitIframe src="/kepler" :args="keplerArgs" />
+          <UnitKepler :args="keplerArgs" />
         </VCol>
       </VRow>
     </template>
