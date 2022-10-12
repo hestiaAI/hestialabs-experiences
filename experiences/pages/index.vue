@@ -2,23 +2,11 @@
   <div>
     <div class="banner-wrapper">
       <VContainer>
-        <VRow justify="center">
-          <VCol cols="12" md="6">
-            <h1 class="banner-title font-weight-bold white--text">
-              <div>DIGIPOWER</div>
-              <div class="ml-13">
-                .ACADEMY
-              </div>
-            </h1>
-            <h4 class="banner-subtitle white--text font-weight-regular" />
-          </VCol>
-          <VCol cols="12" md="6">
-            <BaseQuote
-              text="We need to train both the people who are putting data and information out there, as well as those reading it, how to interpret and question it to ensure they understand it and are not being misled or deceived."
-              author="Sir Tim Berners-Lee, inventor of the World Wide Web"
-            />
-          </VCol>
-        </VRow>
+        <div class="text-center">
+          <h1 class="banner-title font-weight-bold white--text text-uppercase text-break">
+            Analyse Your Data
+          </h1>
+        </div>
       </VContainer>
     </div>
     <div class="section-wrapper pa-15">
@@ -33,6 +21,23 @@
       </VContainer>
     </div>
     <div class="section-wrapper pa-15 light-background">
+      <VContainer>
+        <VRow justify="center">
+          <VCol cols="12" sm="10" md="9" lg="7">
+            <div class="text-center">
+              <h3 class="section-title font-weight-medium">
+                Showroom
+              </h3>
+              <p>Try out some of our experiences for free</p>
+            </div>
+          </VCol>
+        </VRow>
+        <VRow justify="center">
+          <TheExperienceMenuCards :experiences="experiences" class="pa-3" />
+        </VRow>
+      </VContainer>
+    </div>
+    <div class="section-wrapper pa-15">
       <VContainer>
         <VRow justify="center">
           <VCol cols="12" sm="10" md="9" lg="7">
@@ -67,7 +72,7 @@
         </VRow>
       </VContainer>
     </div>
-    <div class="section-wrapper pa-15">
+    <div class="section-wrapper pa-15 light-background">
       <VContainer>
         <VRow justify="center">
           <VCol cols="12" sm="10" md="9" lg="7">
@@ -116,8 +121,10 @@
 
 <script>
 import { pick } from 'lodash-es'
+import TheExperienceMenuCards from '@/components/the-experience-menu/TheExperienceMenuCards.vue'
 
 export default {
+  components: { TheExperienceMenuCards },
   data() {
     return {
       tools: [
@@ -150,6 +157,11 @@ export default {
         ])
         return { slug, ...config }
       }).filter(w => (this.$store.state.config.homePageBubbles || []).includes(w.slug))
+    },
+    experiences() {
+      return ['twitter', 'facebook', 'google', 'tracker-control'].map(e => this.$store.getters.experience({
+        params: { experience: e }
+      }))
     }
   }
 }
@@ -164,8 +176,9 @@ export default {
   align-items: center;
 }
 .banner-title {
-  font-size: 60px;
-  line-height: 50px;
+  font-size: 6.5vw;
+  display: inline-block;
+  line-height:1.1em;
   margin: 20px 0;
 }
 .banner-subtitle {
