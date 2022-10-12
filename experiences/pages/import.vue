@@ -99,9 +99,8 @@
               :data="result"
               :viz-props="vizProps"
             />
-            <UnitIframe
-              v-else-if="viz.startsWith('/')"
-              :src="viz"
+            <UnitKepler
+              v-else-if="viz.startsWith('/kepler')"
               :args="result"
             />
           </VCol>
@@ -130,8 +129,10 @@ import FileSaver from 'file-saver'
 import _sodium from 'libsodium-wrappers'
 import FileManager, { BrowserFile } from '~/utils/file-manager'
 import fileManagerWorkers from '~/utils/file-manager-workers'
+import UnitKepler from '@/components/unit/UnitKepler.vue'
 
 export default {
+  components: { UnitKepler },
   data() {
     return {
       secretKey: null,
