@@ -1,5 +1,5 @@
 {
-  "name": "@hestiaai/kepler-iframe",
+  "name": "@andreaskundig/kepler-iframe",
   "version": "1.0.0",
   "description": "use kepler inside an iframe",
   "main": "index.js",
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/hestiaai/hestialabs-experiences.git"
   },
-  "author": "andreaskundig",
+  "author": "hestia.ai",
   "license": "AGPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/hestiaai/hestialabs-experiences/issues"

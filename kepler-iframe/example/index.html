@@ -24,6 +24,8 @@
       "kepler.gl@2.5.5/umd/keplergl.min.js",
     ].map(s =>
         `<script src="https://unpkg.com/${ s }" crossorigin><\/script>`)
+    const urlOfThisLibrary = "https://unpkg.com/@andreaskundig/kepler-iframe@1.0.0/index.js"
+    // const urlOfThisLibrary = "../index.js"
     const iframeHtml = `
       <!DOCTYPE html>
       <html>
@@ -37,7 +39,7 @@
         <\/head>
         <body>
           <div id="app"><\/div>
-          <script src="../index.js" type="module"><\/script>
+          <script src="${ urlOfThisLibrary }" type="module"><\/script>
         <\/body>
       <\/html>`
 
