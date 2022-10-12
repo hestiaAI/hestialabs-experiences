@@ -4,7 +4,7 @@
       <VContainer>
         <div class="text-center">
           <h1 class="banner-title font-weight-bold white--text text-uppercase text-break">
-            Analyse Your Private Data
+            Analyse Your Data
           </h1>
         </div>
       </VContainer>
@@ -176,7 +176,7 @@ export default {
   align-items: center;
 }
 .banner-title {
-  font-size: 4.5vw;
+  font-size: 6.5vw;
   display: inline-block;
   line-height:1.1em;
   margin: 20px 0;
