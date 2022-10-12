@@ -1,5 +1,5 @@
 import initSqlJs from 'sql.js'
-import sqlWasm from 'sql.js/dist/sql-wasm.wasm'
+import sqlWasm from '@/assets/sql-wasm.wasm'
 import { JSONPath } from 'jsonpath-plus'
 import { cloneDeep } from 'lodash-es'
 

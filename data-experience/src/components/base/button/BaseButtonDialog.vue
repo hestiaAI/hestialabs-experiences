@@ -27,6 +27,7 @@
 
 <script>
 export default {
+  name: 'BaseButtonDialog',
   props: {
     icon: {
       type: String,

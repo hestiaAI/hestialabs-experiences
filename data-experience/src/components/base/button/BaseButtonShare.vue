@@ -11,8 +11,11 @@
 <script>
 import 'share-api-polyfill'
 import { mapState, mapGetters } from 'vuex'
+import BaseButton from '@/components/base/button/BaseButton.vue'
 
 export default {
+  name: 'BaseButtonShare',
+  components: { BaseButton },
   props: {
     buttonText: {
       type: String,

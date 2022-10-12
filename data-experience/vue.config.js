@@ -13,7 +13,7 @@ module.exports = defineConfig({
       },
       fallback: {
         fs: false,
-        crypto: false, // require.resolve('crypto/'),
+        crypto: false, // require.resolve("crypto-browserify") to add polyfill
         path: require.resolve('path/'),
         util: require.resolve('util/')
       }
@@ -33,9 +33,6 @@ module.exports = defineConfig({
           ]
         }
       ]
-    },
-    plugins: [
-      require('unplugin-vue-components/webpack')({ })
-    ]
+    }
   }
 })

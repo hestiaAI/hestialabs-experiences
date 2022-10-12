@@ -10,7 +10,10 @@
  * BaseProgressButton provides an abstraction for the progress, status and error properties of the BaseButton.
  * It expects a function f to be run along with its arguments args, and emits a click event containing the result.
  */
+import BaseButton from '@/components/base/button/BaseButton.vue'
 export default {
+  name: 'BaseButtonProgress',
+  components: { BaseButton },
   props: {
     text: {
       type: String,

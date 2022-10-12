@@ -5,8 +5,11 @@
 <script>
 import mixin from './mixin'
 import { revokeObjectURL } from '@/utils/utils'
+import BaseButton from '@/components/base/button/BaseButton.vue'
 
 export default {
+  name: 'BaseButtonDownload',
+  components: { BaseButton },
   mixins: [mixin],
   props: {
     href: {
@@ -32,7 +35,7 @@ export default {
       revokeObjectURL(oldHref)
     }
   },
-  beforeDestroy() {
+  beforeUnmount() {
     revokeObjectURL(this.href)
   }
 }

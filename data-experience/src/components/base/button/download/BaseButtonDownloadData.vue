@@ -5,9 +5,11 @@
 <script>
 import mixin from './mixin'
 import { createObjectURL, mimeTypes } from '@/utils/utils'
+import BaseButtonDownload from '@/components/base/button/download/BaseButtonDownload.vue'
 
 export default {
   name: 'BaseButtonDownloadData',
+  components: { BaseButtonDownload },
   mixins: [mixin],
   props: {
     data: {

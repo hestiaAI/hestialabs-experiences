@@ -23,8 +23,12 @@
 </template>
 
 <script>
+import StatusIndicator from '@/components/StatusIndicator.vue'
+import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 export default {
+  name: 'BaseButton',
   inheritAttrs: false,
+  components: { BaseProgressCircular, StatusIndicator },
   props: {
     tooltip: {
       type: String,

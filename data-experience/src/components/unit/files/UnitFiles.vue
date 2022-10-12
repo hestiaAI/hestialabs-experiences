@@ -89,6 +89,8 @@ import { BrowserFile } from '~/utils/file-manager'
 import UnitFilesDialog from './UnitFilesDialog.vue'
 import BaseButtonDialog from '@/components/base/button/BaseButtonDialog.vue'
 import BaseButton from '@/components/base/button/BaseButton.vue'
+import BaseAlert from '@/components/base/BaseAlert.vue'
+import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 
 const locales = {
   en: English,
@@ -103,7 +105,7 @@ async function fetchSampleFile({ path, filename }) {
 
 export default {
   name: 'UnitFiles',
-  components: { BaseButton, BaseButtonDialog, UnitFilesDialog },
+  components: { BaseAlert, BaseButton, BaseButtonDialog, BaseProgressCircular, UnitFilesDialog },
   props: {
     progress: {
       type: Boolean,
