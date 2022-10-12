@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- https://github.com/keplergl/kepler.gl/blob/master/examples/umd-client/index.html -->
+<html>
+
+<head>
+</head>
+
+<body>
+  <!-- We will put our React component inside this div. -->
+  <iframe src="iframe.html" id="test_id" width="900" height="700"></iframe>
+  <script>
+    // based on 
+    // https://github.com/keplergl/kepler.gl/blob/master/examples/umd-client/index.html
+    const stylesheets = [
+      "d1a3f4spazzrp4.cloudfront.net/kepler.gl/uber-fonts/4.0.0/superfine.css",
+      "api.tiles.mapbox.com/mapbox-gl-js/v1.1.1/mapbox-gl.css",
+    ].map(s => `<link href="https://${ s }" rel="stylesheet" />`)
+    const headerScripts = [
+      "react@16.8.4/umd/react.production.min.js",
+      "react-dom@16.8.4/umd/react-dom.production.min.js",
+      "redux@3.7.2/dist/redux.js",
+      "react-redux@7.1.3/dist/react-redux.min.js",
+      "styled-components@4.1.3/dist/styled-components.min.js",
+      "kepler.gl@2.5.5/umd/keplergl.min.js",
+    ].map(s =>
+        `<script src="https://unpkg.com/${ s }" crossorigin><\/script>`)
+    const urlOfThisLibrary = "https://unpkg.com/@andreaskundig/kepler-iframe@1.0.0/index.js"
+    // const urlOfThisLibrary = "../index.js"
+    const iframeHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8" />
+          ${ stylesheets.join('\n') }
+          ${ headerScripts.join('\n') }
+          <style type="text/css">
+            body { margin: 0; padding: 0; overflow: hidden; }
+          <\/style>
+        <\/head>
+        <body>
+          <div id="app"><\/div>
+          <script src="${ urlOfThisLibrary }" type="module"><\/script>
+        <\/body>
+      <\/html>`
+
+    const mapboxToken = "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA";
+
+    async function load() {
+      const { config, datasets } =
+            await (await fetch("map-exported-from-kepler.json")).json()
+      const keplerData = datasets[0].data
+      keplerData.rows = keplerData.allData
+      const result = { mapboxToken,
+                       keplerData,
+                       config,
+                       width: 900,
+                       height: 700}
+      iframe.contentWindow.init(result);
+      iframe.contentWindow.update(result);
+    }
+
+    const iframe = document.getElementById("test_id");
+    iframe.addEventListener("load", load);
+    iframe.srcdoc = iframeHtml
+  </script>
+</body>
+
+</html>
