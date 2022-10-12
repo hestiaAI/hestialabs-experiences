@@ -1,5 +1,5 @@
 import initSqlJs from 'sql.js'
-import sqlWasm from '@/assets/sql-wasm.wasm'
+// import sqlWasm from 'sql.js/dist/sql-wasm.wasm'
 import { JSONPath } from 'jsonpath-plus'
 import { cloneDeep } from 'lodash-es'
 
@@ -85,9 +85,16 @@ export class DB {
     if (this.#db) {
       this.close()
     }
+
+    // Use a CDN for now since we have to figure out how to assets import work on host app.
+    const SQL = await initSqlJs({
+      locateFile: () => 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.wasm'
+    })
+    /*
     const SQL = await initSqlJs({
       locateFile: () => sqlWasm
     })
+    */
     this.#db = new SQL.Database()
     // enable foreign keys
     this.#db.run('PRAGMA foreign_keys=ON')
