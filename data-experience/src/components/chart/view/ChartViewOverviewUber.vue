@@ -152,7 +152,6 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
-import { findNumberFormatIETFCode } from '@/i18n/vue-i18n-number-formats'
 // import regression from 'regression'
 
 // Remove warning on default colorscheme, even if not used..
@@ -243,7 +242,7 @@ export default {
         d.duration = d3.timeMinute.count(d.dateStart, d.dateEnd)
         d.waitingTime = d3.timeMinute.count(d.dateRequest, d.dateStart)
         // https://kazupon.github.io/vue-i18n/guide/number.html#number-localization
-        d.priceStr = this.$n(Number(d.fareAmount), 'currency', findNumberFormatIETFCode(d.fareCurrency))
+        d.priceStr = this.$n(Number(d.fareAmount), 'currency', d.fareCurrency)
         d.price = +d.fareAmount
         d.distance = +d.distanceMiles
         d.address = d.beginTripAddress.replace(/[0-9]/g, '').split(',')[0]
@@ -538,7 +537,6 @@ export default {
 }
 </script>
 <style scoped>
-
 
 ::v-deep body {
   font-family: sans-serif;

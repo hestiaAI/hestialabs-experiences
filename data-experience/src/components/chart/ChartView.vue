@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     component() {
-      return this.graphName.split('.vue')[0]
+      return () => import(`./view/${this.graphName}`)
     }
   }
 }

@@ -252,9 +252,10 @@ export default {
               }
             }
           ]
-        },
+        }
         // for importing wasm files
         // https://github.com/sql-js/react-sqljs-demo
+        /*
         {
           test: /\.wasm$/,
           type: 'javascript/auto',
@@ -267,6 +268,7 @@ export default {
             }
           ]
         }
+        */
       )
     },
     plugins: [
