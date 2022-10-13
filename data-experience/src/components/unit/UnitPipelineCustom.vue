@@ -8,7 +8,7 @@
         v-if="optionsVisible"
         class="d-flex flex-column justify-center align-center"
       >
-        <CodeEditor v-model:value="options" language="json" />
+        <CodeEditor v-model="options" language="json" />
         <BaseButton
           v-bind="{ progress, status, error, disabled }"
           text="Run"

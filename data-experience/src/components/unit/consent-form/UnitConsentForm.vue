@@ -8,7 +8,7 @@
       />
       <BasePasswordField
         v-if="config.bypassLogin && !$auth.user.password"
-        v-model:value="password"
+        v-model="password"
       />
       <BaseAlert v-if="missingRequiredFields">
         Some required fields are not filled in.

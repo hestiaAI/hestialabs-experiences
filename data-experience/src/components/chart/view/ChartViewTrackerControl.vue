@@ -443,7 +443,6 @@ export default {
 </script>
 <style scoped>
 
-
 ::v-deep body {
   font-family: sans-serif;
   color: #22313f;

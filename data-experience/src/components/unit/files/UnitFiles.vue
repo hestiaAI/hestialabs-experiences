@@ -3,7 +3,7 @@
     <VRow v-if="samples.length" justify="center" dense>
       <VCol align="center">
         <LazyUnitFilesSampleSelector
-          v-model:value="selectedSamples"
+          v-model="selectedSamples"
           :items="samples"
           class="mb-4"
         />
