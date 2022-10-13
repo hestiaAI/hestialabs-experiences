@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true
   },
-  extends: ['plugin:vue/vue3-essential', 'standard'],
+  extends: ['plugin:vue/essential', 'standard'],
   overrides: [],
   parserOptions: {
     ecmaVersion: 'latest',
@@ -16,7 +16,7 @@ module.exports = {
     'no-console': [
       'warn',
       {
-        allow: ['info', 'warn', 'error']
+        allow: ['info', 'warn', 'error', 'time', 'timeEnd']
       }
     ],
     // https://stackoverflow.com/a/64609434/8238129
@@ -36,7 +36,7 @@ module.exports = {
       'PascalCase',
       {
         registeredComponentsOnly: false,
-        ignores: ['component', 'client-only', 'keep-alive']
+        ignores: ['component', 'client-only', 'keep-alive', 'i18n']
       }
     ]
   }
