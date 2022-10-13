@@ -1,5 +1,6 @@
 import fs from 'fs'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
+import CopyPlugin from 'copy-webpack-plugin'
 import { numberFormats } from './i18n/vue-i18n-number-formats'
 import { dateTimeFormats } from './i18n/vue-i18n-date-time-formats'
 
@@ -280,6 +281,11 @@ export default {
         fileWhitelist: [/\.woff2$/],
         // crossorigin attribute added by plugin for as='font'
         as: 'font'
+      }),
+      new CopyPlugin({
+        patterns: [
+          'node_modules/data-experience/dist'
+        ]
       })
     ],
     watch: ['../hestialabs/packages/*/dist/*']
