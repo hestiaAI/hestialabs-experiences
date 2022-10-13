@@ -1,5 +1,5 @@
 {
-  "name": "@andreaskundig/kepler-iframe",
+  "name": "@hestia.ai/kepler-iframe",
   "version": "1.0.0",
   "description": "use kepler inside an iframe",
   "main": "index.js",
