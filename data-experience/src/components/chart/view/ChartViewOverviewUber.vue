@@ -152,6 +152,7 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
+import { findNumberFormatIETFCode } from '@/i18n/vue-i18n-number-formats'
 // import regression from 'regression'
 
 // Remove warning on default colorscheme, even if not used..
