@@ -5,7 +5,7 @@ const path = require('path')
 
 module.exports = defineConfig({
   transpileDependencies: true,
-  publicPath: './data-experience/dist/',
+  publicPath: './data-experience/',
   configureWebpack: {
     resolve: {
       alias: {

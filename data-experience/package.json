@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "vue-cli-service serve ./dev/main.js",
+    "build:demo": "vue-cli-service build --dest demo ./dev/main.js",
     "build-lib": "vue-cli-service build --target lib --name data-experience src/main.js",
     "build-lib-watch": "vue-cli-service build --watch --target lib --name data-experience src/main.js",
     "lint": "vue-cli-service lint",
