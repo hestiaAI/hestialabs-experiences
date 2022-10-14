@@ -21,6 +21,7 @@ import CodeEditor from '@/components/CodeEditor.vue'
 
 export default {
   name: 'UnitFileExplorerViewerRaw',
+  components: { CodeEditor },
   mixins: [mixin, mixinLoading],
   data() {
     return {
@@ -51,7 +52,6 @@ export default {
       this.rawText = await this.fileManager.getPreprocessedText(filename)
       this.setLoading(false)
     }
-  },
-  components: { CodeEditor }
+  }
 }
 </script>

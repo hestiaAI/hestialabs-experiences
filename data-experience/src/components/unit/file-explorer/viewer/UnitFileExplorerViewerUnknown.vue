@@ -24,6 +24,7 @@ import BaseButton from '@/components/base/button/BaseButton.vue'
 
 export default {
   name: 'UnitFileExplorerViewerUnknown',
+  components: { BaseButton },
   mixins: [mixin, mixinPath],
   data() {
     return {
@@ -50,7 +51,6 @@ export default {
         this.showIframe = true
       }
     }
-  },
-  components: { BaseButton }
+  }
 }
 </script>

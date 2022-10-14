@@ -45,6 +45,7 @@ import mixin from './mixin'
 import ChartViewSunburst from './ChartViewSunburst.vue'
 
 export default {
+  components: { ChartViewSunburst },
   mixins: [mixin],
   props: {
     cardTitle: {
@@ -90,8 +91,7 @@ export default {
     selectAdvertiser({ isSelected, select }) {
       return isSelected || select(true)
     }
-  },
-  components: { ChartViewSunburst }
+  }
 }
 </script>
 

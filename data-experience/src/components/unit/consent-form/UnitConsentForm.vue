@@ -99,6 +99,7 @@ import BaseButton from '@/components/base/button/BaseButton.vue'
 
 export default {
   name: 'UnitConsentForm',
+  components: { UnitConsentFormSection, BasePasswordField, BaseAlert, BaseButton },
   data() {
     const experience = this.$store.getters.experience(this.$route)
     const config = this.$store.getters.routeConfig(this.$route)
@@ -233,7 +234,6 @@ export default {
       this.sentErrorMessage = errorMessage
       this.sentProgress = false
     }
-  },
-  components: { UnitConsentFormSection, BasePasswordField, BaseAlert, BaseButton }
+  }
 }
 </script>

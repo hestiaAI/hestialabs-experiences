@@ -107,6 +107,7 @@ import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vu
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 export default {
+  components: { ChartViewVRowWebShare, ChartViewTextSelectTimeRange, UnitFilterableTable },
   mixins: [mixin],
   data() {
     const intervals = {
@@ -312,8 +313,7 @@ export default {
       dc.filterAll()
       dc.redrawAll()
     }
-  },
-  components: { ChartViewVRowWebShare, ChartViewTextSelectTimeRange, UnitFilterableTable }
+  }
 }
 </script>
 <style scoped>

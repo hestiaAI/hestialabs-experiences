@@ -96,6 +96,7 @@ import SettingsSpeedDial from '@/components/SettingsSpeedDial.vue'
 
 export default {
   name: 'TheDataExperience',
+  components: { BaseProgressCircular, SettingsSpeedDial, UnitFileExplorer, UnitIntroduction, UnitQuery, UnitSummary },
   props: {
     experienceConfig: {
       type: Object,
@@ -110,7 +111,6 @@ export default {
       default: () => {}
     }
   },
-  components: { BaseProgressCircular, SettingsSpeedDial, UnitFileExplorer, UnitIntroduction, UnitQuery, UnitSummary },
   data() {
     const properties = pick(this.experienceConfig, [
       'databaseConfig',

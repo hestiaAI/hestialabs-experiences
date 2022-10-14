@@ -88,6 +88,7 @@ import BaseSearchBar from '@/components/base/BaseSearchBar.vue'
 
 export default {
   name: 'UnitFileExplorerViewerJson',
+  components: { BaseSearchBar },
   mixins: [mixin, mixinLoading],
   data() {
     return {
@@ -197,8 +198,7 @@ export default {
         this.filteredItems = this.items
       }
     }
-  },
-  components: { BaseSearchBar }
+  }
 }
 </script>
 <style scoped>

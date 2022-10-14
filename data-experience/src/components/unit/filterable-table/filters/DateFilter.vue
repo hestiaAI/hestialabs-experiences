@@ -81,6 +81,7 @@ import TimeFilter from './TimeFilter.vue'
 
 export default {
   name: 'DateFilter',
+  components: { TimeFilter },
   props: {
     values: {
       type: Array,
@@ -180,7 +181,6 @@ export default {
       }
       this.filterChange()
     }
-  },
-  components: { TimeFilter }
+  }
 }
 </script>

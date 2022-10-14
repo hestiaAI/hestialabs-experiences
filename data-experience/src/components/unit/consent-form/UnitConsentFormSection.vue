@@ -107,6 +107,7 @@ import ShowFilesDialog from './ShowFilesDialog.vue'
 
 export default {
   name: 'UnitConsentFormSection',
+  components: { SelectFilesDialog, ShowFilesDialog },
   props: {
     index: {
       type: Number,
@@ -149,7 +150,6 @@ export default {
         this.showDialog = true
       }
     }
-  },
-  components: { SelectFilesDialog, ShowFilesDialog }
+  }
 }
 </script>

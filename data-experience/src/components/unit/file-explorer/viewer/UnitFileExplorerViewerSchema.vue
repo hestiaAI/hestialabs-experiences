@@ -37,6 +37,7 @@ import UnitFilterableTable from '../../filterable-table/UnitFilterableTable.vue'
 
 export default {
   name: 'UnitFileExplorerViewerRaw',
+  components: { BaseSchemaTree, BaseButton, BaseProgressCircular, UnitFilterableTable },
   mixins: [mixin],
   data() {
     return {
@@ -101,7 +102,6 @@ export default {
       this.processed = true
       this.isLoadind = false
     }
-  },
-  components: { BaseSchemaTree, BaseButton, BaseProgressCircular, UnitFilterableTable }
+  }
 }
 </script>

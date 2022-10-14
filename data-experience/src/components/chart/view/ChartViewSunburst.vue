@@ -16,6 +16,7 @@ import mixin from './mixin'
 import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
 
 export default {
+  components: { ChartViewVRowWebShare },
   mixins: [mixin],
   data() {
     return {
@@ -321,8 +322,7 @@ export default {
         return path
       }
     }
-  },
-  components: { ChartViewVRowWebShare }
+  }
 }
 </script>
 <style scoped>

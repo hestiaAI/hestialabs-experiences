@@ -40,6 +40,7 @@ import mixin from './mixin'
 import UnitIframe from '@/components/unit/UnitIframe.vue'
 
 export default {
+  components: { UnitIframe },
   mixins: [mixin],
   props: {
     keplerConfig: {
@@ -178,7 +179,6 @@ export default {
       }
       return hours + 'h' + minutes + 'm' + seconds + 's' // Return is HH : MM : SS
     }
-  },
-  components: { UnitIframe }
+  }
 }
 </script>

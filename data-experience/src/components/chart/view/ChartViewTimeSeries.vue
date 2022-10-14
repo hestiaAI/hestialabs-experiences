@@ -113,6 +113,7 @@ import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
 // Inspired by
 // https://datawanderings.com/2019/10/28/tutorial-making-a-line-chart-in-d3-js-v-5/
 export default {
+  components: { ChartViewVRowWebShare },
   mixins: [mixin],
   props: {
     dateAccessor: {
@@ -505,8 +506,7 @@ export default {
         hideTooltip()
       })
     }
-  },
-  components: { ChartViewVRowWebShare }
+  }
 }
 </script>
 <style scoped>

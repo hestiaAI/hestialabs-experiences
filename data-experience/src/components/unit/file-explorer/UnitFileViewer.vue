@@ -82,6 +82,7 @@ import UnitPipelineCustom from '../UnitPipelineCustom.vue'
 
 export default {
   name: 'UnitFileViewer',
+  components: { UnitFilterableTable, BaseButtonDownload, UnitFileExplorerViewerRaw, UnitFileExplorerViewerSchema, UnitPipelineCustom },
   props: {
     selectedItem: {
       type: Object,
@@ -144,7 +145,6 @@ export default {
     onUnitResultsUpdate(result) {
       this.tableData = result
     }
-  },
-  components: { UnitFilterableTable, BaseButtonDownload, UnitFileExplorerViewerRaw, UnitFileExplorerViewerSchema, UnitPipelineCustom }
+  }
 }
 </script>

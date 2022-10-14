@@ -12,6 +12,7 @@ module.exports = {
   },
   plugins: ['vue'],
   rules: {
+    'vue/order-in-components': ['error', {}],
     'vue/no-undef-components': ['error', { ignorePatterns: ['^V(\\w+)$', 'i18n', 'client-only'] }],
     'space-before-function-paren': ['error', 'never'],
     'arrow-parens': ['error', 'as-needed', { requireForBlockBody: true }],

@@ -98,6 +98,7 @@ import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterab
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
+  components: { ChartViewTextSelectTimeRange, UnitFilterableTable },
   mixins: [mixin],
   props: {
     messages: {
@@ -365,8 +366,7 @@ export default {
         .ticks(4)
       dc.renderAll()
     }
-  },
-  components: { ChartViewTextSelectTimeRange, UnitFilterableTable }
+  }
 }
 </script>
 <style scoped>

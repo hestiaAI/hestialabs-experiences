@@ -13,6 +13,7 @@ import UnitFilterableTable from '../../filterable-table/UnitFilterableTable.vue'
 
 export default {
   name: 'UnitFileExplorerViewerCsv',
+  components: { UnitFilterableTable },
   mixins: [mixin, mixinLoading],
   data() {
     return {
@@ -52,7 +53,6 @@ export default {
       }
       this.setLoading(false)
     }
-  },
-  components: { UnitFilterableTable }
+  }
 }
 </script>

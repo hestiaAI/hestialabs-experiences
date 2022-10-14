@@ -163,6 +163,7 @@ import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterab
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
+  components: { ChartViewVRowWebShare, UnitFilterableTable },
   mixins: [mixin],
   props: {},
   data() {
@@ -328,8 +329,7 @@ export default {
         })
       dc.renderAll()
     }
-  },
-  components: { ChartViewVRowWebShare, UnitFilterableTable }
+  }
 }
 </script>
 <style scoped>

@@ -26,6 +26,7 @@ import ChartViewTextSelectTimeRange from '../text/ChartViewTextSelectTimeRange.v
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
+  components: { ChartViewTextSelectTimeRange },
   mixins: [mixin],
   props: {
     /**
@@ -170,7 +171,6 @@ export default {
         .ticks(0)
       dc.renderAll()
     }
-  },
-  components: { ChartViewTextSelectTimeRange }
+  }
 }
 </script>

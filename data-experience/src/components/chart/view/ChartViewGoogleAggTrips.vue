@@ -56,6 +56,7 @@ import UnitIframe from '@/components/unit/UnitIframe.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 export default {
+  components: { ChartViewTopRow, UnitIframe, UnitFilterableTable },
   mixins: [mixin],
   props: {
     keplerConfig: {
@@ -119,7 +120,6 @@ export default {
     onTableFilter(newItems) {
       this.filteredRows = newItems
     }
-  },
-  components: { ChartViewTopRow, UnitIframe, UnitFilterableTable }
+  }
 }
 </script>

@@ -50,6 +50,7 @@ import ChartViewHeatMapHour from './ChartViewHeatMapHour.vue'
 import ChartViewHeatMapCalendar from './ChartViewHeatMapCalendar.vue'
 
 export default {
+  components: { ChartViewHeatMapHour, ChartViewHeatMapCalendar },
   mixins: [mixin],
   props: {
     dateAccessor: {
@@ -73,7 +74,6 @@ export default {
     nbMsg() {
       return this.values.filter(v => v.sender !== 'Her').length // Remove Her
     }
-  },
-  components: { ChartViewHeatMapHour, ChartViewHeatMapCalendar }
+  }
 }
 </script>

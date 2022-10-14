@@ -73,6 +73,7 @@ const defaultItemsPerPage10 = window.innerHeight - 250 > 530
 
 export default {
   name: 'UnitFilterableTable',
+  components: { BaseButton, BaseButtonDownloadData, BaseButtonShare, UnitFilter, ExternalLink, BaseSearchBar, BaseAlert, DataValidator },
   mixins: [kViewBlockMixin],
   props: {
     headers: {
@@ -219,8 +220,7 @@ export default {
                 */
       })
     }
-  },
-  components: { BaseButton, BaseButtonDownloadData, BaseButtonShare, UnitFilter, ExternalLink, BaseSearchBar, BaseAlert, DataValidator }
+  }
 }
 </script>
 <style>

@@ -137,6 +137,7 @@ import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
+  components: { UnitFilterableTable, ChartViewTextSelectTimeRange, ChartViewVRowWebShare },
   mixins: [mixin],
   data() {
     return {
@@ -428,8 +429,7 @@ export default {
         .ticks(4)
       dc.renderAll()
     }
-  },
-  components: { UnitFilterableTable, ChartViewTextSelectTimeRange, ChartViewVRowWebShare }
+  }
 }
 </script>
 <style scoped>

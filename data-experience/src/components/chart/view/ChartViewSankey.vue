@@ -23,6 +23,7 @@ import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
 
 export default {
   name: 'ChartViewSankey',
+  components: { ChartViewVRowWebShare },
   mixins: [mixin],
   props: {
     topN: {
@@ -251,8 +252,7 @@ export default {
           .attr('text-anchor', 'end')
       }
     }
-  },
-  components: { ChartViewVRowWebShare }
+  }
 }
 </script>
 <style scoped>

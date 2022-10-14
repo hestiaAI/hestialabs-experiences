@@ -23,6 +23,7 @@ import UnitFilterableTable from '../../filterable-table/UnitFilterableTable.vue'
 
 export default {
   name: 'UnitFileExplorerViewerXlsx',
+  components: { BaseButton, UnitFilterableTable },
   mixins: [mixin, mixinLoading],
   data() {
     return {
@@ -73,7 +74,6 @@ export default {
       this.headers = this.sheets[name].headers
       this.items = this.sheets[name].items
     }
-  },
-  components: { BaseButton, UnitFilterableTable }
+  }
 }
 </script>
