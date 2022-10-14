@@ -48,6 +48,7 @@
   </div>
 </template>
 <script>
+import 'data-experience/dist/data-experience.css'
 export default {
   name: 'Modul',
   data() {

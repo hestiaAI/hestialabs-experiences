@@ -66,8 +66,10 @@
 <script>
 import { has } from 'lodash-es'
 import { mapState } from '@/utils/store-helper'
+import UnitFileViewer from '@/components/unit/file-explorer/UnitFileViewer.vue'
 export default {
   name: 'UnitFileExplorer',
+  components: { UnitFileViewer },
   data() {
     return {
       containers: new Set(['folder', 'zip']),

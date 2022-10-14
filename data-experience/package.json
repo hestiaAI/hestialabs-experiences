@@ -8,7 +8,7 @@
     "build-lib": "vue-cli-service build --target lib --name data-experience src/main.js",
     "build-lib-watch": "vue-cli-service build --watch --target lib --name data-experience src/main.js",
     "lint": "vue-cli-service lint",
-    "lint:fix": "npx eslint . --ext .js,.vue --fix"
+    "lint:fix": "npx eslint . --ext .vue --fix"
   },
   "main": "dist/data-experience.umd.js",
   "dependencies": {
@@ -70,20 +70,6 @@
     "webpack": "^4.46.0",
     "webpack-cli": "^4.10.0",
     "worker-loader": "^3.0.8"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "@babel/eslint-parser"
-    },
-    "rules": {}
   },
   "browserslist": [
     "> 1%",

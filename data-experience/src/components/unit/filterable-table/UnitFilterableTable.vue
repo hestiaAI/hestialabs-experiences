@@ -58,6 +58,7 @@ import { processError } from '@/utils/utils'
 import { formatObject, formatArray } from '@/utils/json'
 import { TypeChecker } from '@/utils/type-check'
 import kViewBlockMixin from '@/mixins/k-view-block'
+import BaseButton from '@/components/base/button/BaseButton.vue'
 
 const height5 = 290
 const height10 = 530
@@ -176,12 +177,7 @@ export default {
       try {
         const { filteredItems } = this.$refs.tableRef.$children[0]
         // Change the items keys to match the headers
-        const itemsWithHeader = filteredItems.map(i =>
-          this.data.headers.reduce(
-            (o, h) => ({ ...o, [h.text]: i[h.value] }),
-            {}
-          )
-        )
+        const itemsWithHeader = filteredItems.map(i => this.data.headers.reduce((o, h) => ({ ...o, [h.text]: i[h.value] }), {}))
         // update the data
         const csv = await Papa.unparse(itemsWithHeader)
         this.csvString = csv
@@ -196,9 +192,7 @@ export default {
       }
     },
     columnValues(header) {
-      return this.data.items.map(d =>
-        this.formatItemAsString({ header, value: d[header.value] })
-      )
+      return this.data.items.map(d => this.formatItemAsString({ header, value: d[header.value] }))
     },
     onItemsUpdate() {
       // wait until the DOM has completely updated
@@ -208,17 +202,18 @@ export default {
         // emit the current filtered items
         this.$emit('current-items', filteredItems)
         /*
-        this.$store.commit('setResult', {
-          experience: this.id,
-          result: {
-            headers: this.headers,
-            items: filteredItems
-          }
-        })
-        */
+                this.$store.commit('setResult', {
+                  experience: this.id,
+                  result: {
+                    headers: this.headers,
+                    items: filteredItems
+                  }
+                })
+                */
       })
     }
-  }
+  },
+  components: { BaseButton }
 }
 </script>
 <style>

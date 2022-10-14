@@ -72,13 +72,14 @@
 <script>
 import { promisify } from 'util'
 import { mapState } from '@/utils/store-helper'
-import Uppy from '@uppy/core'
-import Dashboard from '@uppy/dashboard'
-import DropTarget from '@uppy/drop-target'
 
 import '@uppy/core/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import '@uppy/drop-target/dist/style.css'
+
+import Uppy from '@uppy/core'
+import Dashboard from '@uppy/dashboard'
+import DropTarget from '@uppy/drop-target'
 
 import English from '@uppy/locales/lib/en_US'
 import French from '@uppy/locales/lib/fr_FR'
@@ -293,7 +294,6 @@ export default {
   }
 }
 </script>
-
 <style scoped>
 ::v-deep .uppy-Dashboard-AddFiles-title {
   font-size: 1rem;

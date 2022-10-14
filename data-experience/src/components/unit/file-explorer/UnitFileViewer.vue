@@ -74,6 +74,7 @@
 <script>
 import { mapState } from '@/utils/store-helper'
 import { jsonToTableConverter } from '~/utils/generic-pipelines'
+import UnitFilterableTable from '../filterable-table/UnitFilterableTable.vue'
 
 export default {
   name: 'UnitFileViewer',
@@ -139,6 +140,7 @@ export default {
     onUnitResultsUpdate(result) {
       this.tableData = result
     }
-  }
+  },
+  components: { UnitFilterableTable }
 }
 </script>

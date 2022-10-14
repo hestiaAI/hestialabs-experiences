@@ -1,6 +1,7 @@
 import TheDataExperience from './components/TheDataExperience.vue'
 // import ChartView from './components/chart/ChartView.vue'
 import store from './store'
+import './assets/dc.css'
 
 import { MODULE_NAME } from '@/utils/store-helper'
 
