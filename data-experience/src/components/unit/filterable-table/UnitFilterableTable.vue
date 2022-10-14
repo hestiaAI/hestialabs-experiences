@@ -59,6 +59,13 @@ import { formatObject, formatArray } from '@/utils/json'
 import { TypeChecker } from '@/utils/type-check'
 import kViewBlockMixin from '@/mixins/k-view-block'
 import BaseButton from '@/components/base/button/BaseButton.vue'
+import BaseButtonDownloadData from '@/components/base/button/download/BaseButtonDownloadData.vue'
+import BaseButtonShare from '@/components/base/button/BaseButtonShare.vue'
+import UnitFilter from './UnitFilter.vue'
+import ExternalLink from '@/components/ExternalLink.vue'
+import BaseSearchBar from '@/components/base/BaseSearchBar.vue'
+import BaseAlert from '@/components/base/BaseAlert.vue'
+import DataValidator from '@/components/DataValidator.vue'
 
 const height5 = 290
 const height10 = 530
@@ -213,7 +220,7 @@ export default {
       })
     }
   },
-  components: { BaseButton }
+  components: { BaseButton, BaseButtonDownloadData, BaseButtonShare, UnitFilter, ExternalLink, BaseSearchBar, BaseAlert, DataValidator }
 }
 </script>
 <style>

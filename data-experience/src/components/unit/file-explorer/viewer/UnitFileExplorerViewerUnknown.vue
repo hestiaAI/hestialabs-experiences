@@ -20,6 +20,7 @@
 <script>
 import mixin from './mixin'
 import mixinPath from './mixin-path'
+import BaseButton from '@/components/base/button/BaseButton.vue'
 
 export default {
   name: 'UnitFileExplorerViewerUnknown',
@@ -49,6 +50,7 @@ export default {
         this.showIframe = true
       }
     }
-  }
+  },
+  components: { BaseButton }
 }
 </script>

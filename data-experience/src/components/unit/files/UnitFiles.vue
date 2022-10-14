@@ -2,7 +2,7 @@
   <div>
     <VRow v-if="samples.length" justify="center" dense>
       <VCol align="center">
-        <LazyUnitFilesSampleSelector
+        <UnitFilesSampleSelector
           v-model="selectedSamples"
           :items="samples"
           class="mb-4"
@@ -92,6 +92,7 @@ import BaseButtonDialog from '@/components/base/button/BaseButtonDialog.vue'
 import BaseButton from '@/components/base/button/BaseButton.vue'
 import BaseAlert from '@/components/base/BaseAlert.vue'
 import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
+import UnitFilesSampleSelector from './UnitFilesSampleSelector.vue'
 
 const locales = {
   en: English,
@@ -106,7 +107,7 @@ async function fetchSampleFile({ path, filename }) {
 
 export default {
   name: 'UnitFiles',
-  components: { BaseAlert, BaseButton, BaseButtonDialog, BaseProgressCircular, UnitFilesDialog },
+  components: { BaseAlert, BaseButton, BaseButtonDialog, BaseProgressCircular, UnitFilesDialog, UnitFilesSampleSelector },
   props: {
     progress: {
       type: Boolean,

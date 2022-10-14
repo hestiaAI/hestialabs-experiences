@@ -108,6 +108,7 @@ import * as d3 from 'd3'
 import { nest } from 'd3-collection'
 import { addMissingDate } from './utils/D3Helpers'
 import mixin from './mixin'
+import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
 
 // Inspired by
 // https://datawanderings.com/2019/10/28/tutorial-making-a-line-chart-in-d3-js-v-5/
@@ -216,9 +217,7 @@ export default {
       this.slices.forEach((serie) => {
         // aggregate per selected time interval and other filters
         const interval = this.intervals[this.selectedInterval]
-        const filters = Object.keys(this.filterModel).filter(
-          k => this.filterModel[k] != null
-        )
+        const filters = Object.keys(this.filterModel).filter(k => this.filterModel[k] != null)
         // filter according to selection
         serie.current = serie.values.filter((d) => {
           return filters.every(f => this.filterModel[f] === d[f])
@@ -229,20 +228,9 @@ export default {
           .rollup(leaves => d3.sum(leaves, l => l.value))
           .entries(serie.current)
         // Add missing datapoints
-        serie.current = addMissingDate(
-          serie.current,
-          'key',
-          'value',
-          interval.parser,
-          0,
-          this.extentDate[0],
-          this.extentDate[1]
-        )
+        serie.current = addMissingDate(serie.current, 'key', 'value', interval.parser, 0, this.extentDate[0], this.extentDate[1])
         // Sort the result
-        serie.current = serie.current.sort(
-          (e1, e2) => this.dateParser(e1.key) - this.dateParser(e2.key)
-        )
-
+        serie.current = serie.current.sort((e1, e2) => this.dateParser(e1.key) - this.dateParser(e2.key))
         // Compute cumulative sum if needed
         if (this.cumSum) {
           const cumSum = d3.cumsum(serie.current, d => d.value)
@@ -250,7 +238,6 @@ export default {
             return {
               ...d,
               value: cumSum[idx]
-
             }
           })
         }
@@ -261,10 +248,7 @@ export default {
       if (this.dateFormat) {
         this.dateParser = d3.timeParse(this.dateFormat)
       }
-      this.extentDate = d3.extent(
-        this.values,
-        d => this.dateParser(d[this.dateAccessor.value])
-      )
+      this.extentDate = d3.extent(this.values, d => this.dateParser(d[this.dateAccessor.value]))
       const diffDays = d3.timeDay.count(this.extentDate[0], this.extentDate[1])
       if (!diffDays) {
         console.error('Unrecognized Dates')
@@ -305,7 +289,7 @@ export default {
       // group by series ids and sort values
       this.slices = ids.map((a) => {
         return {
-          id: this.messages.legend[a], // localize legend
+          id: this.messages.legend[a],
           values: this.values
             .filter(v => a === v[this.seriesAccessor.value])
             .map((d) => {
@@ -321,7 +305,6 @@ export default {
             .sort((e1, e2) => e1.date - e2.date)
         }
       })
-
       this.selectedInterval = this.namesInterval.slice(-1)[0].value
       this.initFilters()
       this.applyFilters()
@@ -337,22 +320,17 @@ export default {
         .select(`#${graphId}`)
         .append('svg')
         .attr('preserveAspectRatio', 'xMinYMin meet')
-        .attr(
-          'viewBox',
-          `-${adj} -${adj} ${width + adj * 2} ${height + adj * 2}`
-        )
+        .attr('viewBox', `-${adj} -${adj} ${width + adj * 2} ${height + adj * 2}`)
         .style('padding', this.padding)
         .style('margin', this.margin)
         .classed('svg-content', true)
       function nestedExtent(data, dataAccessor, valueAccessor) {
-        return d3.extent(
-          data.reduce(function(prevArr, currArr) {
-            const extentArr = d3.extent(currArr[dataAccessor], valueAccessor)
-            prevArr.push(extentArr[0])
-            prevArr.push(extentArr[1])
-            return prevArr
-          }, [])
-        )
+        return d3.extent(data.reduce(function(prevArr, currArr) {
+          const extentArr = d3.extent(currArr[dataAccessor], valueAccessor)
+          prevArr.push(extentArr[0])
+          prevArr.push(extentArr[1])
+          return prevArr
+        }, []))
       }
       /* Scales */
       const xScale = d3.scaleTime().range([0, width])
@@ -364,8 +342,8 @@ export default {
       const xAxis = d3
         .axisBottom()
         .ticks(8)
-        // .ticks(d3.timeDay.every(1))
-        // .tickFormat(d3.timeFormat('%b %d'))
+      // .ticks(d3.timeDay.every(1))
+      // .tickFormat(d3.timeFormat('%b %d'))
         .scale(xScale)
       svg
         .append('g')
@@ -397,14 +375,14 @@ export default {
         .attr('x2', width)
         .attr('y2', 0)
       /*
-      d3.selectAll('#' + this.graphId + ' g.xAxis g.tick')
-        .append('line')
-        .attr('class', 'gridline')
-        .attr('x1', 0)
-        .attr('y1', -height)
-        .attr('x2', 0)
-        .attr('y2', 0)
-      */
+            d3.selectAll('#' + this.graphId + ' g.xAxis g.tick')
+              .append('line')
+              .attr('class', 'gridline')
+              .attr('x1', 0)
+              .attr('y1', -height)
+              .attr('x2', 0)
+              .attr('y2', 0)
+            */
       /* Color Scale */
       const keys = this.slices.map(d => d.id)
       const color = d3.scaleOrdinal().domain(keys).range(d3.schemeDark2)
@@ -430,14 +408,10 @@ export default {
         })
       // space the groups depending on their size
       legend.attr('transform', (d, i) => {
-        const x = d3.sum(keys, (e, j) =>
-          j < i ? legend.nodes()[j].getBBox().width : 0
-        )
-        return (
-          'translate(' +
-          (x + this.legendOffset + this.legendPadding * i) +
-          ',0)'
-        )
+        const x = d3.sum(keys, (e, j) => j < i ? legend.nodes()[j].getBBox().width : 0)
+        return ('translate(' +
+                    (x + this.legendOffset + this.legendPadding * i) +
+                    ',0)')
       })
       /* Tooltip */
       d3.select('#' + graphId + '.tooltip').remove()
@@ -452,12 +426,10 @@ export default {
       function showTooltip(evt, d) {
         tooltip.transition().duration(60).style('opacity', 0.98)
         tooltip
-          .html(
-            '<b>' +
-              that.intervals[that.selectedInterval].format(this.dateParser(d.key)) +
-              '</b><br/>' +
-              f(d.value)
-          ) // d.name
+          .html('<b>' +
+                    that.intervals[that.selectedInterval].format(this.dateParser(d.key)) +
+                    '</b><br/>' +
+                    f(d.value)) // d.name
           .style('left', evt.pageX - 55 + 'px')
           .style('top', evt.pageY - 45 + 'px')
       }
@@ -492,13 +464,11 @@ export default {
       /* Draw points */
       const points = lines
         .selectAll('circle')
-        .data(d =>
-          d.current.map((v) => {
-            v.color = color(d.id)
-            v.name = d.id
-            return v
-          })
-        )
+        .data(d => d.current.map((v) => {
+          v.color = color(d.id)
+          v.name = d.id
+          return v
+        }))
         .enter()
         .append('circle')
       points
@@ -535,7 +505,8 @@ export default {
         hideTooltip()
       })
     }
-  }
+  },
+  components: { ChartViewVRowWebShare }
 }
 </script>
 <style scoped>

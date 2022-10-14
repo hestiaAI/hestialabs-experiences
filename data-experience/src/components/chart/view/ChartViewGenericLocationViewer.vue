@@ -36,6 +36,8 @@
 </template>
 <script>
 import mixin from './mixin'
+import UnitIframe from '@/components/unit/UnitIframe.vue'
+import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 export default {
   mixins: [mixin],
@@ -75,6 +77,7 @@ export default {
     onTableFilter(newItems) {
       this.filteredRows = newItems
     }
-  }
+  },
+  components: { UnitIframe, UnitFilterableTable }
 }
 </script>

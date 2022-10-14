@@ -117,9 +117,10 @@ import UnitIframe from '@/components/unit/UnitIframe.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 import UnitVegaViz from '@/components/unit/UnitVegaViz.vue'
 import BaseAlert from '@/components/base/BaseAlert.vue'
+import UnitPipelineCustom from './UnitPipelineCustom.vue'
 export default {
   name: 'UnitQuery',
-  components: { UnitPipelineSql, UnitFilesDialog, ChartView, UnitIframe, UnitFilterableTable, UnitVegaViz, BaseAlert },
+  components: { UnitPipelineSql, UnitFilesDialog, ChartView, UnitIframe, UnitFilterableTable, UnitVegaViz, BaseAlert, UnitPipelineCustom },
   props: {
     slug: {
       type: String,

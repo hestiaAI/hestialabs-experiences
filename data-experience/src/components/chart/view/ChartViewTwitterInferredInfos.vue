@@ -85,8 +85,10 @@
 
 <script>
 import mixin from './mixin'
-
+import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 export default {
+  name: 'ChartViewTwitterInferredInfos',
+  components: { UnitFilterableTable },
   mixins: [mixin],
   data() {
     const [firstItem] = this.values

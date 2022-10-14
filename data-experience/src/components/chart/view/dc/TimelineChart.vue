@@ -20,6 +20,7 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import mixin from './mixin'
+import ChartViewTextSelectTimeRange from '../text/ChartViewTextSelectTimeRange.vue'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -28,29 +29,29 @@ export default {
   mixins: [mixin],
   props: {
     /**
-     * Column name of the {values} that represent date values
-     */
+         * Column name of the {values} that represent date values
+         */
     dateAccessor: {
       type: String,
       required: true
     },
     /**
-     * Format of the dates being processed, if not set will use the Date constructor
-     */
+         * Format of the dates being processed, if not set will use the Date constructor
+         */
     dateFormat: {
       type: String,
       default: ''
     },
     /**
-     * The value to consider in respect to the date, if not set, will take the number of records
-     */
+         * The value to consider in respect to the date, if not set, will take the number of records
+         */
     valueAccessor: {
       type: String,
       default: ''
     },
     /**
-     * If one of {valueAccessor} is null, replace the value with a default
-     */
+         * If one of {valueAccessor} is null, replace the value with a default
+         */
     defaultValue: {
       type: Number,
       default: 0
@@ -99,27 +100,22 @@ export default {
       // Create and bind charts to their respective divs
       const lineChart = new dc.LineChart(`#area-chart-${this.graphId}`)
       const rangeChart = new dc.BarChart(`#range-chart-${this.graphId}`)
-
       // Bind reset filters links
       d3.select(`#area-chart-${this.graphId} a.reset`).on('click', function() {
         lineChart.filterAll()
         rangeChart.filterAll()
         dc.redrawAll()
       })
-
       // Create dimensions
       const dateExtent = d3.extent(this.ndx.all(), d => this.dateParser(d[this.dateAccessor]))
       dateExtent[0] = d3.timeDay.offset(dateExtent[0], -1)
       dateExtent[1] = d3.timeDay.offset(dateExtent[1], 1)
       const nbMonths = d3.timeMonth.count(...dateExtent)
       this.timeUnit = nbMonths > 10 ? nbMonths > 120 ? this.timeUnits.year : this.timeUnits.month : this.timeUnits.day
-
       // Create the date dimension
       const dateDimension = this.ndx.dimension(d => this.timeUnit.accessor(d[this.dateAccessor]))
-
       // Create the aggregation from the date dimension
       const valueGroup = this.valueAccessor ? dateDimension.group().reduceSum(d => d[this.valueAccessor]) : dateDimension.group().reduceCount()
-
       // Render line chart
       const width = d3
         .select(`#area-chart-${this.graphId}`)
@@ -153,9 +149,7 @@ export default {
         .ordinalColors(this.colorPalette)
       lineChart.xAxis().ticks(10)
       lineChart.yAxis().ticks(6)
-
       lineChart.filterAll()
-
       // range chart date picker
       rangeChart
         .width(width)
@@ -174,9 +168,9 @@ export default {
         .ordinalColors(this.colorPalette)
         .yAxis()
         .ticks(0)
-
       dc.renderAll()
     }
-  }
+  },
+  components: { ChartViewTextSelectTimeRange }
 }
 </script>

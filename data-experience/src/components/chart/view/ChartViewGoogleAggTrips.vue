@@ -51,6 +51,9 @@
 <script>
 import mixin from './mixin'
 import { kAnonymityFilter } from '@/utils/kAnonymity'
+import ChartViewTopRow from './ChartViewTopRow.vue'
+import UnitIframe from '@/components/unit/UnitIframe.vue'
+import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 export default {
   mixins: [mixin],
@@ -72,10 +75,7 @@ export default {
     get_name_transport() {
       const names = this.values.map((v) => {
         return {
-          name_of_transport: v.transitPath.substr(
-            0,
-            v.transitPath.indexOf(':')
-          ),
+          name_of_transport: v.transitPath.substr(0, v.transitPath.indexOf(':')),
           k: v.k
         }
       })
@@ -92,11 +92,7 @@ export default {
           start_end: v.transitPath.substr(v.transitPath.indexOf(':') + 1)
         }
       })
-      const res = kAnonymityFilter(
-        trips,
-        ['start_end'],
-        ['startLatitude', 'startLongitude', 'endLatitude', 'endLongitude']
-      )
+      const res = kAnonymityFilter(trips, ['start_end'], ['startLatitude', 'startLongitude', 'endLatitude', 'endLongitude'])
       return res
     },
     header_trips() {
@@ -123,6 +119,7 @@ export default {
     onTableFilter(newItems) {
       this.filteredRows = newItems
     }
-  }
+  },
+  components: { ChartViewTopRow, UnitIframe, UnitFilterableTable }
 }
 </script>

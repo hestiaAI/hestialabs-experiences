@@ -9,6 +9,7 @@
 <script>
 import mixin from './mixin'
 import mixinLoading from './mixin-loading'
+import UnitFilterableTable from '../../filterable-table/UnitFilterableTable.vue'
 
 export default {
   name: 'UnitFileExplorerViewerCsv',
@@ -51,6 +52,7 @@ export default {
       }
       this.setLoading(false)
     }
-  }
+  },
+  components: { UnitFilterableTable }
 }
 </script>

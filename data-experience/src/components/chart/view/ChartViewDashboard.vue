@@ -28,12 +28,13 @@ import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
 import ChartCaller from './dc/ChartCaller.vue'
+import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
-  components: { ChartCaller },
+  components: { ChartCaller, UnitFilterableTable },
   mixins: [mixin],
   props: {
     graphs: {

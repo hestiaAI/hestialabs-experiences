@@ -153,6 +153,10 @@ import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
 import { findNumberFormatIETFCode } from '@/i18n/vue-i18n-number-formats'
+import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
+import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vue'
+import BaseButton from '@/components/base/button/BaseButton.vue'
+import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 // import regression from 'regression'
 
 // Remove warning on default colorscheme, even if not used..
@@ -178,13 +182,11 @@ export default {
         heading: 'Distance',
         metric: 'miles',
         ids: ['number-distance-total', 'number-distance-avg']
-      },
-      {
+      }, {
         heading: 'Duration',
         metric: 'min',
         ids: ['number-duration-total', 'number-duration-avg']
-      },
-      {
+      }, {
         heading: 'Waiting time',
         metric: 'min',
         ids: ['number-waiting-total', 'number-waiting-avg']
@@ -212,10 +214,7 @@ export default {
     },
     drawViz() {
       // Add data to table
-      this.results = this.values.filter(
-        d => d.tripOrOrderStatus === 'COMPLETED'
-      )
-
+      this.results = this.values.filter(d => d.tripOrOrderStatus === 'COMPLETED')
       // Define color palette for the graphs
       const colorPalette = [
         '#254b7f',
@@ -225,13 +224,12 @@ export default {
         '#59a590',
         '#7dba91'
       ]
-
       // Parse and format data
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC')
       const formatTime = d3.timeFormat(`%B %d, %Y ${this.$t('at')} %H:%M:%S`)
       this.results.forEach((d) => {
         d.service =
-          d.productType.charAt(0).toUpperCase() + d.productType.slice(1)
+                    d.productType.charAt(0).toUpperCase() + d.productType.slice(1)
         d.dateRequest = dateFormatParser(d.requestTime)
         d.dateStart = dateFormatParser(d.beginTripTime)
         d.dateEnd = dateFormatParser(d.dropoffTime)
@@ -248,7 +246,6 @@ export default {
         d.distance = +d.distanceMiles
         d.address = d.beginTripAddress.replace(/[0-9]/g, '').split(',')[0]
       })
-
       // Create and bind charts to their respective divs
       const hourChart = new dc.BarChart('#hour-chart')
       const serviceChart = new dc.PieChart('#service-chart')
@@ -263,7 +260,6 @@ export default {
       const durationAvgNumber = new dc.NumberDisplay('#number-duration-avg')
       const waitingTotalNumber = new dc.NumberDisplay('#number-waiting-total')
       const waitingAvgNumber = new dc.NumberDisplay('#number-waiting-avg')
-
       // Bind reset filters links
       d3.select('#hour-chart a.reset').on('click', function() {
         hourChart.filterAll()
@@ -286,7 +282,6 @@ export default {
         dc.redrawAll()
       })
       const ndx = crossfilter(this.results)
-
       // Create dimensions
       const allDimension = ndx.groupAll()
       const dayOfWeekDimension = ndx.dimension((d) => {
@@ -299,7 +294,6 @@ export default {
       const dayDimension = ndx.dimension(d => d.day)
       const hourDimension = ndx.dimension(d => d.hour)
       this.currencyDimension = ndx.dimension(d => d.fareCurrency)
-
       // Create groups
       const allGroup = allDimension.reduce(
         /* Add elem to dim */
@@ -327,15 +321,13 @@ export default {
           waitingTotal: 0,
           durationTotal: 0,
           priceTotal: 0
-        })
-      )
+        }))
       const dayOfWeekGroup = dayOfWeekDimension.group().reduceCount()
       const serviceGroup = serviceDimension.group().reduceCount()
       const priceGroup = dayDimension.group().reduceSum(d => d.price)
       const addressGroup = addressDimension.group().reduceCount()
       const hourGroup = hourDimension.group().reduceCount()
       const currencyGroup = this.currencyDimension.group()
-
       this.currentCurrency = currencyGroup.top(1)[0].key
       this.currencyDimension.filter(this.currentCurrency)
       currencyGroup.top(Infinity).forEach(({ key }) => {
@@ -346,7 +338,6 @@ export default {
           text
         })
       })
-
       // Render general Information numbers
       tripNumber
         .group(allGroup)
@@ -361,18 +352,10 @@ export default {
           return p.durationTotal ? (p.distanceTotal * 60) / p.durationTotal : 0
         })
         .formatNumber(d3.format('.1f'))
-
       const { priceTotal, count } = allGroup.value()
       const numberFormatIETF = findNumberFormatIETFCode(this.currentCurrency)
-      this.priceAvgNumber = this.$n(
-        count ? priceTotal / count : 0,
-        { key: 'currency', locale: numberFormatIETF, maximumFractionDigits: 1 }
-      )
-      this.priceTotalNumber = this.$n(
-        priceTotal,
-        { key: 'currency', locale: numberFormatIETF, maximumSignificantDigits: 3 }
-      )
-
+      this.priceAvgNumber = this.$n(count ? priceTotal / count : 0, { key: 'currency', locale: numberFormatIETF, maximumFractionDigits: 1 })
+      this.priceTotalNumber = this.$n(priceTotal, { key: 'currency', locale: numberFormatIETF, maximumSignificantDigits: 3 })
       distanceAvgNumber
         .group(allGroup)
         .valueAccessor(p => (p.count ? p.distanceTotal / p.count : 0))
@@ -397,7 +380,6 @@ export default {
         .group(allGroup)
         .valueAccessor(p => (p.count ? p.waitingTotal / p.count : 0))
         .formatNumber(d3.format('.1f'))
-
       // Render hour bar chart
       hourChart
         .width(d3.select('#hour-chart').node().getBoundingClientRect().width)
@@ -415,7 +397,6 @@ export default {
         .xAxis()
         .tickFormat(d => d + ':00')
         .ticks(7)
-
       // Render days of week row chart
       function removeEmptyBins(group) {
         return {
@@ -442,7 +423,6 @@ export default {
         .xAxis()
         .ticks(4)
       weekChart.ordering(d => this.$days().indexOf(d.key))
-
       // Render service pie chart
       serviceChart
         .width(d3.select('#service-chart').node().getBoundingClientRect().width)
@@ -458,23 +438,20 @@ export default {
         .ordinalColors(colorPalette)
         .label((d) => {
           let label = d.key
-          if (label.length > 8) { label = label.substring(0, 8) + '.. ' }
+          if (label.length > 8) {
+            label = label.substring(0, 8) + '.. '
+          }
           if (serviceChart.hasFilter() && !serviceChart.hasFilter(d.key)) {
             return `${label} (0%)`
           }
           if (allDimension.value()) {
-            label += ` (${Math.round(
-              (d.value / allGroup.value().count) * 100
-            )}%)`
+            label += ` (${Math.round((d.value / allGroup.value().count) * 100)}%)`
           }
           return label
         })
-
       // Render CumPrice line chart
-      const minDate =
-        dayDimension.bottom(1).length > 0 ? dayDimension.bottom(1)[0].day : null
-      const maxDate =
-        dayDimension.top(1).length > 0 ? dayDimension.top(1)[0].day : null
+      const minDate = dayDimension.bottom(1).length > 0 ? dayDimension.bottom(1)[0].day : null
+      const maxDate = dayDimension.top(1).length > 0 ? dayDimension.top(1)[0].day : null
       function createCumulativeGroup(group) {
         return {
           all() {
@@ -507,7 +484,7 @@ export default {
         .renderDataPoints({
           radius: 3,
           fillOpaaddress: 0.8,
-          strokeOpaaddress: 0.0
+          strokeOpaaddress: 0
         })
         .clipPadding(10)
         .yAxisLabel(this.$t(this.k('Total price')))
@@ -516,7 +493,6 @@ export default {
       priceChart.xAxis().ticks(10)
       priceChart.yAxis().ticks(6)
       priceChart.filterAll()
-
       // Render address row chart
       addressChart
         .width(d3.select('#address-chart').node().getBoundingClientRect().width)
@@ -531,10 +507,10 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-
       dc.renderAll()
     }
-  }
+  },
+  components: { ChartViewVRowWebShare, ChartViewTextSelectTimeRange, BaseButton, UnitFilterableTable }
 }
 </script>
 <style scoped>

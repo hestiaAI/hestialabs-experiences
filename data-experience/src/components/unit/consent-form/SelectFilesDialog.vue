@@ -34,8 +34,8 @@
           rounded
           selectable
           selected-color="primary"
-          v-model:open="openItems"
-          v-model:active="activeItems"
+          :open="openItems"
+          :active="activeItems"
           :search="search"
           :items="treeItems"
           @update:active="clickOnLabel"

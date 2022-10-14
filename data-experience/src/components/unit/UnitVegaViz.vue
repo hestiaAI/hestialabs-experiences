@@ -18,10 +18,11 @@ import exportImageMixinFactory from '@/mixins/export-image-mixin-factory'
 
 import BaseButtonDownloadData from '@/components/base/button/download/BaseButtonDownloadData.vue'
 import BaseButtonShare from '@/components/base/button/BaseButtonShare.vue'
+import DataValidator from '../DataValidator.vue'
 
 export default {
   name: 'UnitVegaViz',
-  components: { BaseButtonDownloadData, BaseButtonShare },
+  components: { BaseButtonDownloadData, BaseButtonShare, DataValidator },
   mixins: [exportImageMixinFactory({ refName: 'graph' })],
   props: {
     specFile: {

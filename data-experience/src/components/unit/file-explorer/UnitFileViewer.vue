@@ -75,6 +75,10 @@
 import { mapState } from '@/utils/store-helper'
 import { jsonToTableConverter } from '~/utils/generic-pipelines'
 import UnitFilterableTable from '../filterable-table/UnitFilterableTable.vue'
+import BaseButtonDownload from '@/components/base/button/download/BaseButtonDownload.vue'
+import UnitFileExplorerViewerRaw from './viewer/UnitFileExplorerViewerRaw.vue'
+import UnitFileExplorerViewerSchema from './viewer/UnitFileExplorerViewerSchema.vue'
+import UnitPipelineCustom from '../UnitPipelineCustom.vue'
 
 export default {
   name: 'UnitFileViewer',
@@ -141,6 +145,6 @@ export default {
       this.tableData = result
     }
   },
-  components: { UnitFilterableTable }
+  components: { UnitFilterableTable, BaseButtonDownload, UnitFileExplorerViewerRaw, UnitFileExplorerViewerSchema, UnitPipelineCustom }
 }
 </script>

@@ -129,6 +129,9 @@ import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import { mapState } from '@/utils/store-helper'
 import mixin from './mixin'
+import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
+import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vue'
+import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -161,8 +164,12 @@ export default {
       return this.selectedApps.length > 0 && !this.selectAll
     },
     icon() {
-      if (this.selectAll) { return '$vuetify.icons.mdiCloseBox' }
-      if (this.selectSome) { return '$vuetify.icons.mdiMinusBox' }
+      if (this.selectAll) {
+        return '$vuetify.icons.mdiCloseBox'
+      }
+      if (this.selectSome) {
+        return '$vuetify.icons.mdiMinusBox'
+      }
       return '$vuetify.icons.mdiCheckboxBlankOutline'
     }
   },
@@ -206,7 +213,6 @@ export default {
       const categoryChart = new dc.PieChart('#category-chart')
       const advertiserChart = new dc.RowChart('#advertiser-chart')
       const appChart = new dc.RowChart('#app-chart')
-
       // Bind reset filters links
       d3.select('#volume-chart a.reset').on('click', function() {
         rangeChart.filterAll()
@@ -225,7 +231,6 @@ export default {
         appChart.filterAll()
         dc.redrawAll()
       })
-
       // Format data to correct types
       const dateFormat = d3.timeParse('%Q')
       const dateFormatParser = d => dateFormat(d) || new Date(d)
@@ -234,13 +239,12 @@ export default {
         d.date = dateFormatParser(d.time) || new Date(d.time)
         d.day = d3.timeDay(d.date) // pre-calculate days for better performance
         d.url =
-          `https://reports.exodus-privacy.eu.org/en/reports/${d.package}/latest/`
+                    `https://reports.exodus-privacy.eu.org/en/reports/${d.package}/latest/`
         d.dateStr = formatTime(d.day)
         d.category = d.category === '' ? 'Unknown' : d.category
         d.app = d.app === '' ? 'Unknown' : d.app
         d.tracker = d.tracker === '' ? 'Unknown' : d.tracker
       })
-
       const ndx = crossfilter(this.values)
       const all = ndx.groupAll()
       // get total number of records
@@ -252,13 +256,11 @@ export default {
         // update filter count
         this.filterCount = ndx.allFiltered().length
       })
-
       // Create dimensions
       const dayDimension = ndx.dimension(d => d.day)
       const categoryDimension = ndx.dimension(d => d.category)
       const advertiserDimension = ndx.dimension(d => d.tracker)
       const appDimension = ndx.dimension(d => d.app)
-
       // Dimension for the app selector (has to be different from appDimension)
       this.selectAppDimension = ndx.dimension(d => d.app)
       this.apps = this.selectAppDimension
@@ -266,13 +268,11 @@ export default {
         .top(Infinity)
         .map(e => e.key)
       this.toggle()
-
       // Create groups from dimension
       const dayGroup = dayDimension.group().reduceCount()
       const categoryGroup = categoryDimension.group().reduceCount()
       const advertiserGroup = advertiserDimension.group().reduceCount()
       const appGroup = appDimension.group().reduceCount()
-
       // Render volume line chart
       const minDate = d3.min(this.values, function(d) {
         return d.day
@@ -286,7 +286,6 @@ export default {
         .node()
         .getBoundingClientRect().width
       let height = 200
-
       volumeChart
         .renderArea(true)
         .width(width)
@@ -296,14 +295,12 @@ export default {
         .group(dayGroup)
         .dimension(dayDimension)
         .curve(d3.curveMonotoneX)
-        .x(
-          d3
-            .scaleTime()
-            .domain([
-              d3.timeHour.offset(minDate, 0),
-              d3.timeHour.offset(maxDate, 2)
-            ])
-        )
+        .x(d3
+          .scaleTime()
+          .domain([
+            d3.timeHour.offset(minDate, 0),
+            d3.timeHour.offset(maxDate, 2)
+          ]))
         .y(d3.scaleLinear().domain([0, maxValue]))
         .ordinalColors(['#58539E'])
         .xUnits(d3.timeHour)
@@ -314,18 +311,17 @@ export default {
         .mouseZoomable(false)
         .rangeChart(rangeChart)
         .renderHorizontalGridLines(false)
-        // .dashStyle([3,1,1,1])
+      // .dashStyle([3,1,1,1])
         .renderDataPoints({
           radius: 3,
           fillOpacity: 0.8,
-          strokeOpacity: 0.0
+          strokeOpacity: 0
         })
         .yAxisLabel('N° of tracker reach')
         .clipPadding(10)
-        // .xAxisLabel("Date")
+      // .xAxisLabel("Date")
         .yAxis()
         .ticks(5)
-
       // volume chart date picker
       rangeChart
         .width(width)
@@ -336,21 +332,18 @@ export default {
         .centerBar(true)
         .elasticY(true)
         .gap(1)
-        .x(
-          d3
-            .scaleTime()
-            .domain([
-              d3.timeHour.offset(minDate, 0),
-              d3.timeHour.offset(maxDate, 2)
-            ])
-        )
+        .x(d3
+          .scaleTime()
+          .domain([
+            d3.timeHour.offset(minDate, 0),
+            d3.timeHour.offset(maxDate, 2)
+          ]))
         .round(d3.timeDay.round)
         .alwaysUseRounding(true)
         .xUnits(d3.timeDays)
         .ordinalColors(['#58539E'])
         .yAxis()
         .ticks(0)
-
       // Render category pie chart
       width = d3.select('#category-chart').node().getBoundingClientRect().width
       height = 300
@@ -377,21 +370,20 @@ export default {
           '#3F1973',
           '#58539E'
         ])
-
       categoryChart.on('pretransition', function(chart) {
         chart.selectAll('text.pie-slice.pie-label').call(function(t) {
           t.each(function(d) {
             const self = d3.select(this)
             let text = self.text()
-            if (text.length > 14) { text = text.substring(0, 14) + '.. ' }
+            if (text.length > 14) {
+              text = text.substring(0, 14) + '.. '
+            }
             if (text.length > 0) {
               text =
-                text +
-                ' (' +
-                dc.utils.printSingleValue(
-                  ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
-                ) +
-                '%)'
+                                text +
+                                    ' (' +
+                                    dc.utils.printSingleValue(((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100) +
+                                    '%)'
             }
             self.text(text)
           })
@@ -412,12 +404,11 @@ export default {
         .ordinalColors(['#58539E', '#847CEB', '#605BAB', '#4A4685', '#35325E'])
         .label(d => d.key)
         .data(group => group.top(20))
-        // .labelOffsetX(0)
+      // .labelOffsetX(0)
         .title(d => d.value)
         .elasticX(true)
         .xAxis()
         .ticks(4)
-
       // Render app row chart
       width = d3.select('#app-chart').node().getBoundingClientRect().width
       height = 250
@@ -430,15 +421,15 @@ export default {
         .ordinalColors(['#58539E', '#847CEB', '#605BAB', '#4A4685', '#35325E'])
         .label(d => d.key)
         .data(group => group.top(10))
-        // .labelOffsetX(0)
+      // .labelOffsetX(0)
         .title(d => d.value)
         .elasticX(true)
         .xAxis()
         .ticks(4)
-
       dc.renderAll()
     }
-  }
+  },
+  components: { UnitFilterableTable, ChartViewTextSelectTimeRange, ChartViewVRowWebShare }
 }
 </script>
 <style scoped>

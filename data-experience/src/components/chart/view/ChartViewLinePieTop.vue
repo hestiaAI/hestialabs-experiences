@@ -92,6 +92,9 @@ import crossfilter from 'crossfilter2'
 import mixin from './mixin'
 import { removeEmptyBins } from './utils/DCHelpers'
 import { datetimeFormatter } from '@/utils/dates'
+import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
+import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vue'
+import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -167,7 +170,6 @@ export default {
         '#4A4685',
         '#35325E'
       ]
-
       // Parse and format data
       const formatDay = d3.timeFormat('%B %d, %Y')
       this.results = this.values.map((d) => {
@@ -178,20 +180,17 @@ export default {
           type: this.messages?.type[type] || type,
           date,
           dateStr: datetimeFormatter(date),
-          month: d3.timeMonth(date), // pre-calculate months for better performance
+          month: d3.timeMonth(date),
           day: d3.timeDay(date)
         }
       })
-
       const dateExtent = d3.extent(this.results, d => d.date)
-
       // Create and bind charts to their respective divs
       const lineChart = new dc.LineChart(`#area-chart-${this.graphId}`)
       const rangeChart = new dc.BarChart(`#range-chart-${this.graphId}`)
       const topChart = new dc.RowChart(`#top-chart-${this.graphId}`)
       const topSearch = this.createTextFilterWidget(`#top-search-${this.graphId}`)
       const pieChart = new dc.PieChart(`#pie-chart-${this.graphId}`)
-
       // Bind reset filters links
       d3.select(`#top-chart-${this.graphId} a.reset`).on('click', function() {
         topChart.filterAll()
@@ -206,7 +205,6 @@ export default {
         rangeChart.filterAll()
         dc.redrawAll()
       })
-
       const ndx = crossfilter(this.results)
       const all = ndx.groupAll()
       // get total number of records
@@ -220,25 +218,21 @@ export default {
       })
       // Create dimensions
       this.timeUnit =
-        d3.timeMonth.count(...dateExtent) > 10
-          ? this.datesAgg.month
-          : this.datesAgg.day
+                d3.timeMonth.count(...dateExtent) > 10
+                  ? this.datesAgg.month
+                  : this.datesAgg.day
       const topDimension = ndx.dimension(d => d.name)
       const dateDimension = ndx.dimension(d => d[this.timeUnit.accessor])
       const typeDimension = ndx.dimension(d => d.type)
       topSearch.dimension(ndx.dimension(d => d.name.toLowerCase()))
-
       // Create groups
       const topGroup = topDimension.group().reduceCount()
       const typeGroup = typeDimension.group().reduceCount()
       const allGroup = dateDimension.group().reduceCount()
-
       // Render top row chart
       topChart
-        .width(
-          d3.select(`#top-chart-${this.graphId}`).node().getBoundingClientRect()
-            .width
-        )
+        .width(d3.select(`#top-chart-${this.graphId}`).node().getBoundingClientRect()
+          .width)
         .height(252)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(removeEmptyBins(topGroup))
@@ -250,7 +244,6 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-
       // Render line chart
       const chartWidth = d3
         .select(`#area-chart-${this.graphId}`)
@@ -284,17 +277,13 @@ export default {
         .ordinalColors(colorPalette)
       lineChart.xAxis().ticks(10)
       lineChart.yAxis().ticks(6)
-
       lineChart.filterAll()
-
       // range chart date picker
       rangeChart
-        .width(
-          d3
-            .select(`#range-chart-${this.graphId}`)
-            .node()
-            .getBoundingClientRect().width
-        )
+        .width(d3
+          .select(`#range-chart-${this.graphId}`)
+          .node()
+          .getBoundingClientRect().width)
         .height(40)
         .margins({ top: 0, right: 10, bottom: 20, left: 40 })
         .dimension(dateDimension)
@@ -310,7 +299,6 @@ export default {
         .ordinalColors(colorPalette)
         .yAxis()
         .ticks(0)
-
       // Render pie chart
       const width = d3
         .select(`#pie-chart-${this.graphId}`)
@@ -332,21 +320,20 @@ export default {
         .drawPaths(true)
         .minAngleForLabel(0.1)
         .ordinalColors(colorPalette)
-
       pieChart.on('pretransition', function(chart) {
         chart.selectAll('text.pie-slice.pie-label').call(function(t) {
           t.each(function(d) {
             const self = d3.select(this)
             let text = self.text()
-            if (text.length > 14) { text = text.substring(0, 14) + '.. ' }
+            if (text.length > 14) {
+              text = text.substring(0, 14) + '.. '
+            }
             if (text.length > 0) {
               text =
-                text +
-                ' (' +
-                dc.utils.printSingleValue(
-                  ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
-                ) +
-                '%)'
+                                text +
+                                    ' (' +
+                                    dc.utils.printSingleValue(((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100) +
+                                    '%)'
             }
             self.text(text)
           })
@@ -354,7 +341,8 @@ export default {
       })
       dc.renderAll()
     }
-  }
+  },
+  components: { ChartViewVRowWebShare, ChartViewTextSelectTimeRange, UnitFilterableTable }
 }
 </script>
 <style scoped>

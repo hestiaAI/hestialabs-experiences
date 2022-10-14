@@ -18,6 +18,8 @@
 import readXlsxFile from 'read-excel-file'
 import mixin from './mixin'
 import mixinLoading from './mixin-loading'
+import BaseButton from '@/components/base/button/BaseButton.vue'
+import UnitFilterableTable from '../../filterable-table/UnitFilterableTable.vue'
 
 export default {
   name: 'UnitFileExplorerViewerXlsx',
@@ -49,25 +51,16 @@ export default {
       this.file = this.fileManager.fileDict[filename]
       try {
         // Get the names of the sheets
-        const sheets = (await readXlsxFile(this.file, { getSheets: true })).map(
-          s => s.name
-        )
+        const sheets = (await readXlsxFile(this.file, { getSheets: true })).map(s => s.name)
         // Read the content of all sheets
-        const sheetsContent = await Promise.all(
-          sheets.map(s => readXlsxFile(this.file, { sheet: s }))
-        )
-        this.sheets = Object.fromEntries(
-          sheetsContent.map((rows, i) => {
-            const headers = Array.from(
-              { length: Math.max(...rows.map(r => r.length)) },
-              (_, j) => 'Column ' + (j + 1)
-            )
-            const items = rows.map((row) => {
-              return Object.fromEntries(headers.map((h, j) => [h, row[j]]))
-            })
-            return [sheets[i], { headers, items }]
+        const sheetsContent = await Promise.all(sheets.map(s => readXlsxFile(this.file, { sheet: s })))
+        this.sheets = Object.fromEntries(sheetsContent.map((rows, i) => {
+          const headers = Array.from({ length: Math.max(...rows.map(r => r.length)) }, (_, j) => 'Column ' + (j + 1))
+          const items = rows.map((row) => {
+            return Object.fromEntries(headers.map((h, j) => [h, row[j]]))
           })
-        )
+          return [sheets[i], { headers, items }]
+        }))
         // Set the first sheet as visible
         this.setSheet(sheets[0])
         this.error = false
@@ -80,6 +73,7 @@ export default {
       this.headers = this.sheets[name].headers
       this.items = this.sheets[name].items
     }
-  }
+  },
+  components: { BaseButton, UnitFilterableTable }
 }
 </script>

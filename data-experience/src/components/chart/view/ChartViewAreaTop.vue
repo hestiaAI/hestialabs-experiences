@@ -76,6 +76,9 @@ import crossfilter from 'crossfilter2'
 import mixin from './mixin'
 import { removeEmptyBins } from './utils/DCHelpers'
 import { datetimeFormatter } from '@/utils/dates'
+import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
+import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vue'
+import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -151,7 +154,6 @@ export default {
         '#4A4685',
         '#35325E'
       ]
-
       // Parse and format data
       const formatDay = d3.timeFormat('%B %d, %Y')
       this.results = this.values.map((d) => {
@@ -162,19 +164,16 @@ export default {
           type: this.messages?.type[type] || type,
           date,
           dateStr: datetimeFormatter(date),
-          month: d3.timeMonth(date), // pre-calculate months for better performance
+          month: d3.timeMonth(date),
           day: d3.timeDay(date)
         }
       })
-
       const dateExtent = d3.extent(this.results, d => d.date)
-
       // Create and bind charts to their respective divs
       const areaChart = new dc.LineChart(`#area-chart-${this.graphId}`)
       const rangeChart = new dc.BarChart(`#range-chart-${this.graphId}`)
       const topChart = new dc.RowChart(`#top-chart-${this.graphId}`)
       const topSearch = this.createTextFilterWidget(`#top-search-${this.graphId}`)
-
       // Bind reset filters links
       d3.select(`#top-chart-${this.graphId} a.reset`).on('click', function() {
         topChart.filterAll()
@@ -185,7 +184,6 @@ export default {
         rangeChart.filterAll()
         dc.redrawAll()
       })
-
       const ndx = crossfilter(this.results)
       const all = ndx.groupAll()
       // get total number of records
@@ -197,16 +195,14 @@ export default {
         // update filter count
         this.filterCount = ndx.allFiltered().length
       })
-
       // Create dimensions
       this.timeUnit =
-        d3.timeMonth.count(...dateExtent) > 10
-          ? this.datesAgg.month
-          : this.datesAgg.day
+                d3.timeMonth.count(...dateExtent) > 10
+                  ? this.datesAgg.month
+                  : this.datesAgg.day
       const topDimension = ndx.dimension(d => d.name)
       const dateDimension = ndx.dimension(d => d[this.timeUnit.accessor])
       topSearch.dimension(ndx.dimension(d => d.name.toLowerCase()))
-
       // Create groups
       const topGroup = topDimension.group().reduceCount()
       const allGroup = dateDimension.group().reduceCount()
@@ -217,13 +213,10 @@ export default {
           group: dateDimension.group().reduceSum(d => (d.type === type ? 1 : 0))
         }
       })
-
       // Render top row chart
       topChart
-        .width(
-          d3.select(`#top-chart-${this.graphId}`).node().getBoundingClientRect()
-            .width
-        )
+        .width(d3.select(`#top-chart-${this.graphId}`).node().getBoundingClientRect()
+          .width)
         .height(252)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(removeEmptyBins(topGroup))
@@ -235,7 +228,6 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-
       // Render area chart
       const chartWidth = d3
         .select(`#area-chart-${this.graphId}`)
@@ -253,13 +245,11 @@ export default {
         .dimension(dateDimension)
         .group(typesGroups[0].group, typesGroups[0].name)
         .x(d3.scaleTime().domain(dateExtent))
-        .legend(
-          new dc.Legend()
-            .x(chartWidth - 100)
-            .y(5)
-            .itemHeight(13)
-            .gap(5)
-        )
+        .legend(new dc.Legend()
+          .x(chartWidth - 100)
+          .y(5)
+          .itemHeight(13)
+          .gap(5))
         .elasticY(true)
         .rangeChart(rangeChart)
         .renderDataPoints({
@@ -272,30 +262,17 @@ export default {
         .ordinalColors(colorPalette)
       areaChart.xAxis().ticks(10)
       areaChart.yAxis().ticks(6)
-
       typesGroups
         .slice(1)
-        .forEach(typesGroup =>
-          areaChart.stack(typesGroup.group, typesGroup.name)
-        )
-
-      typesGroups.forEach(typesGroup =>
-        areaChart.title(
-          typesGroup.name,
-          d => `${formatDay(d.key)} : ${d.value} ${typesGroup.name}`
-        )
-      )
-
+        .forEach(typesGroup => areaChart.stack(typesGroup.group, typesGroup.name))
+      typesGroups.forEach(typesGroup => areaChart.title(typesGroup.name, d => `${formatDay(d.key)} : ${d.value} ${typesGroup.name}`))
       areaChart.filterAll()
-
       // range chart date picker
       rangeChart
-        .width(
-          d3
-            .select(`#range-chart-${this.graphId}`)
-            .node()
-            .getBoundingClientRect().width
-        )
+        .width(d3
+          .select(`#range-chart-${this.graphId}`)
+          .node()
+          .getBoundingClientRect().width)
         .height(40)
         .margins({ top: 0, right: 10, bottom: 20, left: 40 })
         .dimension(dateDimension)
@@ -311,10 +288,10 @@ export default {
         .ordinalColors(colorPalette)
         .yAxis()
         .ticks(0)
-
       dc.renderAll()
     }
-  }
+  },
+  components: { ChartViewVRowWebShare, ChartViewTextSelectTimeRange, UnitFilterableTable }
 }
 </script>
 <style scoped>

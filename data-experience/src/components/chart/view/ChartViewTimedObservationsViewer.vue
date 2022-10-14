@@ -136,6 +136,8 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
+import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
+import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -196,8 +198,7 @@ export default {
     },
     // When no data available for a specific time period, show an empty message
     showEmptyMessage(chart) {
-      const isEmpty =
-        d3.sum(chart.group().all().map(chart.valueAccessor())) === 0
+      const isEmpty = d3.sum(chart.group().all().map(chart.valueAccessor())) === 0
       const data = isEmpty ? [1] : []
       const empty = chart
         .svg()
@@ -240,21 +241,23 @@ export default {
           let cumulate = 0
           return sourceGroup.all().map(function(d) {
             cumulate += d.value
-
             return { key: d.key, value: cumulate }
           })
         }
       }
     },
     changeAgg() {
-      if (this.checkbox) { this.lineChart.group(this.createCumulativeGroup(this.timelineGroup)) } else { this.lineChart.group(this.timelineGroup) }
+      if (this.checkbox) {
+        this.lineChart.group(this.createCumulativeGroup(this.timelineGroup))
+      } else {
+        this.lineChart.group(this.timelineGroup)
+      }
       dc.redrawAll()
     },
     // Main function to init component
     drawViz() {
       // Init table values
       this.results = this.values
-
       // Format dates
       const dateFormatParsers = this.dateFormats.map(d => d3.timeParse(d))
       this.formatTimeDay = d3.timeFormat('%Y-%m-%d')
@@ -272,7 +275,6 @@ export default {
       // Build index for crossfiltering
       const ndx = crossfilter(this.results)
       const all = ndx.groupAll()
-
       // Compute groupby Count for overview
       const overviewDimension = ndx.dimension(d => [
         d.eventSource,
@@ -282,10 +284,8 @@ export default {
       const overviewGroup = overviewDimension.group().reduceCount()
       this.filterItems(overviewGroup)
       this.total = all.value()
-
       // Dimension to filter by source
       this.activityDimension = ndx.dimension(d => d.eventSource)
-
       // Update items on each change of crossfilter
       ndx.onChange(() => {
         this.filterItems(overviewGroup)
@@ -294,7 +294,6 @@ export default {
         this.currMinDateStr = formatTimeS(this.minDate)
         this.currMaxDateStr = formatTimeS(this.maxDate)
       })
-
       // Compute and draw line chart
       this.lineChart = new dc.LineChart('#line-chart')
       this.rangeChart = new dc.BarChart('#range-chart' + this.graphId)
@@ -332,11 +331,10 @@ export default {
         .renderDataPoints({
           radius: 3,
           fillOpacity: 0.8,
-          strokeOpacity: 0.0
+          strokeOpacity: 0
         })
         .xAxis()
         .ticks(5)
-
       this.rangeChart.on('filtered', () => {
         const filters = this.timeDimension.currentFilter()
         if (filters) {
@@ -347,15 +345,12 @@ export default {
           this.currMaxDateStr = formatTimeS(this.maxDate)
         }
       })
-
       // Compute and draw range chart
       this.rangeChart
-        .width(
-          d3
-            .select('#range-chart' + this.graphId)
-            .node()
-            .getBoundingClientRect().width
-        )
+        .width(d3
+          .select('#range-chart' + this.graphId)
+          .node()
+          .getBoundingClientRect().width)
         .height(40)
         .margins({ top: 0, right: 20, bottom: 20, left: 50 })
         .dimension(this.timeDimension)
@@ -363,18 +358,15 @@ export default {
         .centerBar(true)
         .brushOn(false)
         .gap(1)
-        .x(
-          d3
-            .scaleTime()
-            .domain([this.minDate, d3.timeDay.offset(this.maxDate, 1)])
-        )
-        // .round(d3.timeDay.round)
-        // .alwaysUseRounding(true)
-        // .xUnits(d3.timeDays)
+        .x(d3
+          .scaleTime()
+          .domain([this.minDate, d3.timeDay.offset(this.maxDate, 1)]))
+      // .round(d3.timeDay.round)
+      // .alwaysUseRounding(true)
+      // .xUnits(d3.timeDays)
         .ordinalColors(['#58539E'])
         .yAxis()
         .ticks(0)
-
       // Compute and draw row chart
       const rowChart = new dc.RowChart('#row-chart')
       const typeDimension = ndx.dimension(d => d.eventType)
@@ -393,14 +385,14 @@ export default {
         .elasticX(true)
         .xAxis()
         .ticks(4)
-
       rowChart.on('pretransition', this.showEmptyMessage)
       // Render all graphs
       dc.renderAll()
     },
     filterTimeRange(newValue) {
-      if (this.rangeChart === null) { return }
-
+      if (this.rangeChart === null) {
+        return
+      }
       this.rangeChart.filter(null)
       let minDate = null
       const maxDate = d3.timeDay.offset(this.maxDate, 1)
@@ -448,8 +440,9 @@ export default {
           this.timeInterval = 'hour'
           break
       }
-      if (minDate !== null) { this.rangeChart.filter(dc.filters.RangedFilter(minDate, maxDate)) }
-
+      if (minDate !== null) {
+        this.rangeChart.filter(dc.filters.RangedFilter(minDate, maxDate))
+      }
       this.lineChart
         .dimension(this.timeDimension)
         .group(this.timelineGroup)
@@ -457,14 +450,13 @@ export default {
         .transitionDuration(1000)
         .render()
       dc.redrawAll()
-
       /*
-      this.lineChart
-        .dimension()
-        .group(postsGroup)
-        .transitionDuration(1000)
-        .render()
-      */
+            this.lineChart
+              .dimension()
+              .group(postsGroup)
+              .transitionDuration(1000)
+              .render()
+            */
     },
     filterItems(overviewGroup) {
       const counts = overviewGroup.top(Infinity).reduce((p, c) => {
@@ -476,7 +468,9 @@ export default {
           p[c.key[0]].items = []
         }
         p[c.key[0]].count += c.value
-        if (c.value > 0) { p[c.key[0]].items.push({ title: c.key[1], count: c.value }) }
+        if (c.value > 0) {
+          p[c.key[0]].items.push({ title: c.key[1], count: c.value })
+        }
         return p
       }, {})
       this.items = Object.values(counts).filter(d => d.count > 0)
@@ -492,7 +486,8 @@ export default {
       this.activityDimension.filter(null)
       dc.redrawAll()
     }
-  }
+  },
+  components: { ChartViewVRowWebShare, UnitFilterableTable }
 }
 </script>
 <style scoped>

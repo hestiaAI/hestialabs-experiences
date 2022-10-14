@@ -17,6 +17,7 @@
 <script>
 import mixin from './mixin'
 import mixinLoading from './mixin-loading'
+import CodeEditor from '@/components/CodeEditor.vue'
 
 export default {
   name: 'UnitFileExplorerViewerRaw',
@@ -50,6 +51,7 @@ export default {
       this.rawText = await this.fileManager.getPreprocessedText(filename)
       this.setLoading(false)
     }
-  }
+  },
+  components: { CodeEditor }
 }
 </script>

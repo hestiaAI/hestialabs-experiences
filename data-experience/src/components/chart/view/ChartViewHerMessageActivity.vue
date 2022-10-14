@@ -46,6 +46,8 @@
 
 <script>
 import mixin from './mixin'
+import ChartViewHeatMapHour from './ChartViewHeatMapHour.vue'
+import ChartViewHeatMapCalendar from './ChartViewHeatMapCalendar.vue'
 
 export default {
   mixins: [mixin],
@@ -71,6 +73,7 @@ export default {
     nbMsg() {
       return this.values.filter(v => v.sender !== 'Her').length // Remove Her
     }
-  }
+  },
+  components: { ChartViewHeatMapHour, ChartViewHeatMapCalendar }
 }
 </script>

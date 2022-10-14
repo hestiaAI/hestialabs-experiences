@@ -103,6 +103,8 @@
 import { mapState } from '@/utils/store-helper'
 import mixin from './mixin'
 import { kAnonymityFilter } from '@/utils/kAnonymity'
+import UnitIframe from '@/components/unit/UnitIframe.vue'
+import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 export default {
   mixins: [mixin],
@@ -184,15 +186,13 @@ export default {
       this.results = this.results.map((x) => {
         return {
           ...x,
-          longitude:
-            x.longitude +
-            ((0.5 - Math.random()) /
-              ((40075 * 10 ** 3 * Math.cos(Math.radians(x.latitude))) / 360)) *
-              2 *
-              level,
-          latitude:
-            x.latitude +
-            ((0.5 - Math.random()) / (111.32 * 10 ** 3)) * 2 * level
+          longitude: x.longitude +
+                        ((0.5 - Math.random()) /
+                            ((40075 * 10 ** 3 * Math.cos(Math.radians(x.latitude))) / 360)) *
+                            2 *
+                            level,
+          latitude: x.latitude +
+                        ((0.5 - Math.random()) / (111.32 * 10 ** 3)) * 2 * level
         }
       })
     },
@@ -204,6 +204,7 @@ export default {
     onTableFilter(newItems) {
       this.filteredRows = newItems
     }
-  }
+  },
+  components: { UnitIframe, UnitFilterableTable }
 }
 </script>

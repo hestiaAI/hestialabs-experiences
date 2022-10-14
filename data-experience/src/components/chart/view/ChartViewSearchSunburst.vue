@@ -42,6 +42,7 @@
 
 <script>
 import mixin from './mixin'
+import ChartViewSunburst from './ChartViewSunburst.vue'
 
 export default {
   mixins: [mixin],
@@ -72,30 +73,25 @@ export default {
       this.items = this.values
         .filter(d => d.parent === 0)
         .sort((a, b) => b.value - a.value)
-
       this.values.forEach((element) => {
         if (element.parent === 0) {
           element.parent = null
         }
       })
-
       const [selected] = this.items
       this.selected = [selected]
-      this.selectedValues = this.values.filter(d =>
-        d.group === selected.name
-      )
+      this.selectedValues = this.values.filter(d => d.group === selected.name)
     },
     drawSunburst(selection) {
       if (selection.value) {
-        this.selectedValues = this.values.filter(
-          d => d.group === selection.item.name
-        )
+        this.selectedValues = this.values.filter(d => d.group === selection.item.name)
       }
     },
     selectAdvertiser({ isSelected, select }) {
       return isSelected || select(true)
     }
-  }
+  },
+  components: { ChartViewSunburst }
 }
 </script>
 

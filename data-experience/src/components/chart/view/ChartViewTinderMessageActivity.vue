@@ -23,8 +23,9 @@
 
 <script>
 import mixin from './mixin'
-
+import ChartViewHeatMapHour from './ChartViewHeatMapHour.vue'
 export default {
+  components: { ChartViewHeatMapHour },
   mixins: [mixin],
   props: {
     dateAccessor: {

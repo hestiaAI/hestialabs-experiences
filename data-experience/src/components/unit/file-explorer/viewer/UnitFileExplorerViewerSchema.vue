@@ -30,6 +30,10 @@
 <script>
 import { mapGetters } from 'vuex'
 import mixin from './mixin'
+import BaseSchemaTree from './base/SchemaTree/BaseSchemaTree.vue'
+import BaseButton from '@/components/base/button/BaseButton.vue'
+import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
+import UnitFilterableTable from '../../filterable-table/UnitFilterableTable.vue'
 
 export default {
   name: 'UnitFileExplorerViewerRaw',
@@ -82,7 +86,9 @@ export default {
     },
     // Check that arrays from path1 and path2 are all in the same tree branch
     validPaths(path1, path2) {
-      if (!path1 || !path2) { return false }
+      if (!path1 || !path2) {
+        return false
+      }
       const getNbArrays = path => [...path.matchAll(/\[(:?\*)\]/g)].length
       const smallerArray = getNbArrays(path1) < getNbArrays(path2) ? path1 : path2
       const equalIdx = smallerArray.lastIndexOf('[*]') || 0
@@ -95,6 +101,7 @@ export default {
       this.processed = true
       this.isLoadind = false
     }
-  }
+  },
+  components: { BaseSchemaTree, BaseButton, BaseProgressCircular, UnitFilterableTable }
 }
 </script>

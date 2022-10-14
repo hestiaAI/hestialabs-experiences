@@ -77,6 +77,7 @@
 <script>
 import * as d3 from 'd3'
 import { dateParser, datetimeParser, dateFormatter } from '@/utils/dates'
+import TimeFilter from './TimeFilter.vue'
 
 export default {
   name: 'DateFilter',
@@ -131,23 +132,19 @@ export default {
       return this.daysAuthorized.length === this.days.length
     },
     filterFunction() {
-      if (
-        !this.timeFilterFunction &&
-        this.allDays &&
-        JSON.stringify(this.sliderRange) ===
-          JSON.stringify([0, this.numberOfDays])
-      ) {
+      if (!this.timeFilterFunction &&
+                this.allDays &&
+                JSON.stringify(this.sliderRange) ===
+                    JSON.stringify([0, this.numberOfDays])) {
         return null
       }
       return (value) => {
         const date = this.parser(value)
-        return (
-          (!value ||
-            (date >= this.dateRange[0] &&
-              date <= this.dateRange[1] &&
-              this.daysAuthorized.includes(this.days[date.getDay()]))) &&
-          (!this.timeFilterFunction || this.timeFilterFunction(value))
-        )
+        return ((!value ||
+                    (date >= this.dateRange[0] &&
+                        date <= this.dateRange[1] &&
+                        this.daysAuthorized.includes(this.days[date.getDay()]))) &&
+                    (!this.timeFilterFunction || this.timeFilterFunction(value)))
       }
     }
   },
@@ -183,6 +180,7 @@ export default {
       }
       this.filterChange()
     }
-  }
+  },
+  components: { TimeFilter }
 }
 </script>

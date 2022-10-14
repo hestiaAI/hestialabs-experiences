@@ -14,12 +14,7 @@
       <div v-show="foundItems.length > 0">
         <VDataTable
           dense
-          :headers="[
-            {
-              text: $t(k('found-items-header')),
-              value: 'item'
-            }
-          ]"
+          :headers="[ { text: $t(k('found-items-header')), value: 'item'}]"
           :items="foundItems"
           :items-per-page="5"
           class="elevation-1"
@@ -88,6 +83,7 @@ import FindItemsWorker from '~/utils/find-items.worker.js'
 import { runWorker } from '@/utils/utils'
 import { filePathToGlob, createAccessor } from '@/utils/accessor'
 import { pathArrayToJsonPath, nodeTypes } from '@/utils/json'
+import BaseSearchBar from '@/components/base/BaseSearchBar.vue'
 // import { pathArrayToJsonPath, nodeTypes, findMatchingItems } from '@/utils/json'
 
 export default {
@@ -201,7 +197,8 @@ export default {
         this.filteredItems = this.items
       }
     }
-  }
+  },
+  components: { BaseSearchBar }
 }
 </script>
 <style scoped>

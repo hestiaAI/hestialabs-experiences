@@ -33,6 +33,8 @@
 
 <script>
 import mixin from './mixin'
+import UnitFileExplorerViewerCsv from './UnitFileExplorerViewerCsv.vue'
+import UnitFileExplorerViewerJson from './UnitFileExplorerViewerJson.vue'
 
 export default {
   name: 'UnitFileExplorerViewerTxt',
@@ -69,6 +71,7 @@ export default {
     k(key) {
       return `file-explorer.viewer.txt.${key}`
     }
-  }
+  },
+  components: { UnitFileExplorerViewerCsv, UnitFileExplorerViewerJson }
 }
 </script>

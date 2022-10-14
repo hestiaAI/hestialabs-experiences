@@ -37,6 +37,7 @@
 <script>
 import { uniqBy, groupBy, orderBy } from 'lodash-es'
 import mixin from './mixin'
+import UnitIframe from '@/components/unit/UnitIframe.vue'
 
 export default {
   mixins: [mixin],
@@ -74,7 +75,6 @@ export default {
     associated_names() {
       const table = this.values.filter(x => x.winnerName === this.placeSelected)
       const uniq = uniqBy(table, x => x.loserName)
-
       const names = uniq.map((v) => {
         return {
           name: v.loserName,
@@ -178,6 +178,7 @@ export default {
       }
       return hours + 'h' + minutes + 'm' + seconds + 's' // Return is HH : MM : SS
     }
-  }
+  },
+  components: { UnitIframe }
 }
 </script>

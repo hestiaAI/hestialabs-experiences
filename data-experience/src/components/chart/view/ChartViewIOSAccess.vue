@@ -67,6 +67,8 @@ import crossfilter from 'crossfilter2'
 import { mapState } from '@/utils/store-helper'
 import mixin from './mixin'
 import { removeEmptyBins } from './utils/DCHelpers'
+import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
+import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -100,29 +102,20 @@ export default {
     createTopRowChart(ndx, fieldAccessor, valueAccessor) {
       // Create and bind charts to their respective divs
       const chart = new dc.RowChart(`#${fieldAccessor}-chart-${this.graphId}`)
-      const search = this.createTextFilterWidget(
-        `#${fieldAccessor}-search-${this.graphId}`
-      )
-
+      const search = this.createTextFilterWidget(`#${fieldAccessor}-search-${this.graphId}`)
       // Bind reset filters buttons
-      d3.select(`#${fieldAccessor}-chart-${this.graphId} a.reset`).on(
-        'click',
-        function() {
-          chart.filterAll()
-          search.filterAll()
-          dc.redrawAll()
-        }
-      )
-
+      d3.select(`#${fieldAccessor}-chart-${this.graphId} a.reset`).on('click', function() {
+        chart.filterAll()
+        search.filterAll()
+        dc.redrawAll()
+      })
       // Create dimensions
       const chartDimension = ndx.dimension(d => d[fieldAccessor])
       search.dimension(ndx.dimension(d => d[fieldAccessor].toLowerCase()))
-
       // Create groups
       const chartGroup = chartDimension
         .group()
         .reduceSum(d => (valueAccessor ? d[valueAccessor] : 1))
-
       // Render top row chart
       const width = d3
         .select(`#${fieldAccessor}-chart-${this.graphId}`)
@@ -145,30 +138,22 @@ export default {
     createPieChart(ndx, fieldAccessor, valueAccessor) {
       // Create and bind charts to their respective divs
       const chart = new dc.PieChart(`#${fieldAccessor}-chart-${this.graphId}`)
-
       // Bind reset filters buttons
-      d3.select(`#${fieldAccessor}-chart-${this.graphId} a.reset`).on(
-        'click',
-        function() {
-          chart.filterAll()
-          dc.redrawAll()
-        }
-      )
-
+      d3.select(`#${fieldAccessor}-chart-${this.graphId} a.reset`).on('click', function() {
+        chart.filterAll()
+        dc.redrawAll()
+      })
       // Create dimensions
       const chartDimension = ndx.dimension(d => d[fieldAccessor])
-
       // Create groups
       const chartGroup = chartDimension
         .group()
         .reduceSum(d => (valueAccessor ? d[valueAccessor] : 1))
-
       // Render pie chart
       const width = d3
         .select(`#${fieldAccessor}-chart-${this.graphId}`)
         .node()
         .getBoundingClientRect().width
-
       chart
         .width(width)
         .height(400)
@@ -179,21 +164,20 @@ export default {
         .valueAccessor(d => d.value)
         .title(d => d.key + ': ' + d.value + ' records')
         .ordinalColors(this.colorPalette)
-
       chart.on('pretransition', function(chart) {
         chart.selectAll('text.pie-slice.pie-label').call(function(t) {
           t.each(function(d) {
             const self = d3.select(this)
             let text = self.text()
-            if (text.length > 14) { text = text.substring(0, 14) + '.. ' }
+            if (text.length > 14) {
+              text = text.substring(0, 14) + '.. '
+            }
             if (text.length > 0) {
               text =
-                text +
-                ' (' +
-                dc.utils.printSingleValue(
-                  ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
-                ) +
-                '%)'
+                                text +
+                                    ' (' +
+                                    dc.utils.printSingleValue(((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100) +
+                                    '%)'
             }
             self.text(text)
           })
@@ -210,42 +194,33 @@ export default {
           timestamp: this.decodeDefault(d.timestamp)
         }
       })
-
       const ndx = crossfilter(this.results)
-
       this.createTopRowChart(ndx, 'app')
       this.createPieChart(ndx, 'category')
-
       // const tableCount = new dc.DataCount(`#dc-data-count-${this.graphId}`)
-
       // Render counter and table
       const all = ndx.groupAll()
       const allDim = ndx.dimension(d => d)
       const tableCount = new dc.DataCount(`#dc-data-count-${this.graphId}`)
-
       tableCount
         .crossfilter(ndx)
         .groupAll(all)
         .html({
-          some:
-            `<strong>%filter-count</strong> ${this.$t('selected-out-of')} <strong>%total-count</strong> ` +
-            ` | <a class='resetAll'>${this.$t('Reset All')}</a>`,
-          all:
-            `Total: <strong>%total-count</strong>. ${this.$t('click-graph')}`
+          some: `<strong>%filter-count</strong> ${this.$t('selected-out-of')} <strong>%total-count</strong> ` +
+                    ` | <a class='resetAll'>${this.$t('Reset All')}</a>`,
+          all: `Total: <strong>%total-count</strong>. ${this.$t('click-graph')}`
         })
         .on('pretransition', (chart, filter) => {
           this.results = allDim.top(all.value())
-          d3.select(`#dc-data-count-${this.graphId} a.resetAll`).on(
-            'click',
-            () => {
-              dc.filterAll()
-              dc.renderAll()
-            }
-          )
+          d3.select(`#dc-data-count-${this.graphId} a.resetAll`).on('click', () => {
+            dc.filterAll()
+            dc.renderAll()
+          })
         })
       dc.renderAll()
     }
-  }
+  },
+  components: { ChartViewVRowWebShare, UnitFilterableTable }
 }
 </script>
 <style scoped>

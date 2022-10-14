@@ -102,6 +102,9 @@ import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
 import { datetimeFormatter } from '@/utils/dates'
+import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
+import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vue'
+import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 export default {
   mixins: [mixin],
@@ -150,8 +153,12 @@ export default {
       return this.selectFiles.length > 0 && !this.selectAll
     },
     icon() {
-      if (this.selectAll) { return '$vuetify.icons.mdiCloseBox' }
-      if (this.selectSome) { return '$vuetify.icons.mdiMinusBox' }
+      if (this.selectAll) {
+        return '$vuetify.icons.mdiCloseBox'
+      }
+      if (this.selectSome) {
+        return '$vuetify.icons.mdiMinusBox'
+      }
       return '$vuetify.icons.mdiCheckboxBlankOutline'
     }
   },
@@ -167,7 +174,9 @@ export default {
       })
     },
     drawViz() {
-      if (this.values.length === 0) { return }
+      if (this.values.length === 0) {
+        return
+      }
       // Format dates
       this.values.forEach((d) => {
         d.date = new Date(d.date)
@@ -175,10 +184,8 @@ export default {
         d.dateStr = datetimeFormatter(d.date)
       })
       this.results = this.values
-
       // Build index for crossfiltering
       const ndx = crossfilter(this.values)
-
       // Build dimension for filesNames selection
       this.fileDimension = ndx.dimension(d => d.filename)
       this.filesNames = this.fileDimension
@@ -188,11 +195,7 @@ export default {
       this.dateDimension = ndx.dimension(d => d.date)
       this.barChart = new dc.BarChart('#' + this.graphId)
       this.rangeChart = new dc.BarChart('#range-chart' + this.graphId)
-
-      this.minDate = d3.timeDay.offset(
-        this.dateDimension.bottom(1)[0].date,
-        -12
-      )
+      this.minDate = d3.timeDay.offset(this.dateDimension.bottom(1)[0].date, -12)
       this.currMinDate = this.formatDate(this.minDate)
       this.maxDate = this.dateDimension.top(1)[0].date
       this.currMaxDate = this.formatDate(this.maxDate)
@@ -205,7 +208,6 @@ export default {
       } else {
         this.selectTimeInt = 'Month'
       }
-
       const width = d3
         .select('#' + this.graphId)
         .node()
@@ -214,20 +216,16 @@ export default {
         .width(width)
         .height(180)
         .ordinalColors(['#58539E'])
-        .x(
-          d3
-            .scaleTime()
-            .domain([
-              d3.timeHour.offset(this.minDate, 0),
-              d3.timeHour.offset(this.maxDate, 2)
-            ])
-        )
+        .x(d3
+          .scaleTime()
+          .domain([
+            d3.timeHour.offset(this.minDate, 0),
+            d3.timeHour.offset(this.maxDate, 2)
+          ]))
         .xUnits(this.intervals[this.selectTimeInt].range)
         .margins({ left: 50, top: 20, right: 50, bottom: 20 })
         .dimension(this.dateDimension)
-        .group(
-          this.dateDimension.group(k => this.intervals[this.selectTimeInt](k))
-        )
+        .group(this.dateDimension.group(k => this.intervals[this.selectTimeInt](k)))
         .rangeChart(this.rangeChart)
         .brushOn(false)
         .elasticX(false)
@@ -236,9 +234,7 @@ export default {
         .clipPadding(10)
       // .barPadding(0)
       // .gap(this.selectTimeInt === 'Month' ? 20 : 0)
-
       this.barChart.yAxis().tickFormat(v => (Number.isInteger(v) ? v : ''))
-
       // volume chart date picker
       this.rangeChart
         .width(width)
@@ -247,20 +243,17 @@ export default {
         .dimension(this.dateDimension)
         .group(this.dateDimension.group(k => this.intervals.Day(k)))
         .ordinalColors(['#58539E'])
-        .x(
-          d3
-            .scaleTime()
-            .domain([
-              d3.timeDay.offset(this.minDate, -12),
-              d3.timeHour.offset(this.maxDate, 12)
-            ])
-        )
+        .x(d3
+          .scaleTime()
+          .domain([
+            d3.timeDay.offset(this.minDate, -12),
+            d3.timeHour.offset(this.maxDate, 12)
+          ]))
         .elasticY(true)
         .xUnits(d3.timeDays)
         .brushOn(true)
         .clipPadding(10)
       // .gap(0)
-
       ndx.onChange(() => {
         this.results = ndx.allFiltered()
         this.total = this.results.length
@@ -279,14 +272,16 @@ export default {
       this.toggle()
     },
     drawBarChart() {
-      if (this.volumeGroup) { this.volumeGroup.dispose() }
+      if (this.volumeGroup) {
+        this.volumeGroup.dispose()
+      }
       const interval = this.intervals[this.selectTimeInt]
       this.barChart.xUnits(interval.range)
       this.volumeGroup = this.dateDimension.group(k => interval(k))
       this.barChart
         .dimension(this.dateDimension)
         .group(this.volumeGroup)
-        // .gap(this.selectTimeInt === 'Months' ? 10 : 0)
+      // .gap(this.selectTimeInt === 'Months' ? 10 : 0)
         .transitionDuration(1000)
         .render()
     },
@@ -317,7 +312,8 @@ export default {
       dc.filterAll()
       dc.redrawAll()
     }
-  }
+  },
+  components: { ChartViewVRowWebShare, ChartViewTextSelectTimeRange, UnitFilterableTable }
 }
 </script>
 <style scoped>

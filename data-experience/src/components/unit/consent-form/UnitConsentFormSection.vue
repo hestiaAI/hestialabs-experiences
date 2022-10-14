@@ -102,6 +102,8 @@
 
 <script>
 import { mapState } from '@/utils/store-helper'
+import SelectFilesDialog from './SelectFilesDialog.vue'
+import ShowFilesDialog from './ShowFilesDialog.vue'
 
 export default {
   name: 'UnitConsentFormSection',
@@ -147,6 +149,7 @@ export default {
         this.showDialog = true
       }
     }
-  }
+  },
+  components: { SelectFilesDialog, ShowFilesDialog }
 }
 </script>

@@ -92,6 +92,10 @@ import JSZip from 'jszip'
 import { padNumber } from '~/utils/utils'
 import { encryptFile } from '~/utils/encryption'
 import { createObjectURL, mimeTypes } from '@/utils/utils'
+import UnitConsentFormSection from './UnitConsentFormSection.vue'
+import BasePasswordField from '@/components/base/BasePasswordField.vue'
+import BaseAlert from '@/components/base/BaseAlert.vue'
+import BaseButton from '@/components/base/button/BaseButton.vue'
 
 export default {
   name: 'UnitConsentForm',
@@ -125,11 +129,9 @@ export default {
     missingRequiredFields() {
       return !this.consentForm.every((section) => {
         if ('required' in section) {
-          if (
-            section.type === 'data' &&
-            section.value.length === 1 &&
-            section.value[0] === 'file-explorer'
-          ) {
+          if (section.type === 'data' &&
+                        section.value.length === 1 &&
+                        section.value[0] === 'file-explorer') {
             return this.selectedFiles.length > 0
           } else {
             return section.value && section.value.length
@@ -141,22 +143,17 @@ export default {
     missingRequiredData() {
       const section = this.consentForm.find(section => section.type === 'data')
       return this.experience.viewBlocks
-        .filter(
-          ({ key }) =>
-            typeof section.required === 'object' &&
-            section.required.includes(key) &&
-            (!Object.keys(this.results).includes(key) ||
-              !section.value.includes(key))
-        )
+        .filter(({ key }) => typeof section.required === 'object' &&
+                section.required.includes(key) &&
+                (!Object.keys(this.results).includes(key) ||
+                    !section.value.includes(key)))
         .map(({ title }) => title)
     }
   },
   methods: {
     async getPublicKey() {
       if (this.destinationBubbleName) {
-        const { publicKey } = await this.$api.getConfig(
-          this.destinationBubbleName
-        )
+        const { publicKey } = await this.$api.getConfig(this.destinationBubbleName)
         return publicKey
       } else {
         return this.config.publicKey
@@ -175,10 +172,7 @@ export default {
     async makeFilename(timestamp) {
       const date = new Date(timestamp)
       const uniqueId = await this.fileManager.hashAllFiles()
-      const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(
-        date.getUTCMonth() + 1,
-        2
-      )}-${padNumber(date.getUTCDate(), 2)}`
+      const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(date.getUTCMonth() + 1, 2)}-${padNumber(date.getUTCDate(), 2)}`
       const filename = `${this.experience.slug}_${yearMonthDay}_${uniqueId}.zip`
       return filename
     },
@@ -200,9 +194,7 @@ export default {
       // Add consent log
       zip.file('consent.json', JSON.stringify(this.consentForm, null, 2))
       // Add included data
-      const dataSection = this.consentForm.find(
-        section => section.type === 'data'
-      )
+      const dataSection = this.consentForm.find(section => section.type === 'data')
       const keys = viewBlocks.map(block => block.id)
       dataSection.value
         .map(key => [key, keys.indexOf(key)])
@@ -211,22 +203,15 @@ export default {
           const content = JSON.parse(JSON.stringify(viewBlocks[i]))
           content.result = this.results[key]
           content.index = i
-          zip.file(
-            `block${padNumber(i, 2)}.json`,
-            JSON.stringify(content, null, 2)
-          )
+          zip.file(`block${padNumber(i, 2)}.json`, JSON.stringify(content, null, 2))
         })
       // Add whole files
       if (dataSection.value.includes('file-explorer')) {
         const zipFilesFolder = zip.folder('files')
         for (const file of this.selectedFiles) {
-          zipFilesFolder.file(
-            file.filename,
-            this.fileManager.fileDict[file.filename]
-          )
+          zipFilesFolder.file(file.filename, this.fileManager.fileDict[file.filename])
         }
       }
-
       const publicKey = await this.getPublicKey()
       const content = await zip.generateAsync({ type: 'uint8array' })
       if (encrypt) {
@@ -243,16 +228,12 @@ export default {
       const zip = new File([content], this.filename, {
         type: 'application/zip'
       })
-      const errorMessage = await this.$api.uploadFile(
-        zip,
-        destBubble,
-        this.bubbleName,
-        this.password
-      )
+      const errorMessage = await this.$api.uploadFile(zip, destBubble, this.bubbleName, this.password)
       this.sentStatus = !errorMessage
       this.sentErrorMessage = errorMessage
       this.sentProgress = false
     }
-  }
+  },
+  components: { UnitConsentFormSection, BasePasswordField, BaseAlert, BaseButton }
 }
 </script>

@@ -18,8 +18,12 @@
 
 <script>
 import exportImageMixinFactory from '@/mixins/export-image-mixin-factory'
+import BaseButton from '@/components/base/button/BaseButton.vue'
+import BaseButtonDownloadData from '@/components/base/button/download/BaseButtonDownloadData.vue'
+import BaseButtonShare from '@/components/base/button/BaseButtonShare.vue'
 
 export default {
-  mixins: [exportImageMixinFactory()]
+  mixins: [exportImageMixinFactory()],
+  components: { BaseButton, BaseButtonDownloadData, BaseButtonShare }
 }
 </script>
