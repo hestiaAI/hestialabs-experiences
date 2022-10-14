@@ -41,7 +41,7 @@
       }"
     />
     -->
-    <TheDataExperience2 v-bind="{experienceConfig, siteConfig}" />
+    <TheDataExperience2 v-bind="{ experienceConfig, siteConfig }" />
     <!--
     <HelloWorld />
      -->
