@@ -5,7 +5,7 @@ const path = require('path')
 
 module.exports = defineConfig({
   transpileDependencies: true,
-  publicPath: './data-experience/',
+  publicPath: '/',
   configureWebpack: {
     resolve: {
       alias: {
@@ -19,6 +19,10 @@ module.exports = defineConfig({
         util: require.resolve('util/')
       }
     },
+    // "webpack-node-externals": "^3.0.0",
+    // externalsPresets: {
+    //   node: true // in order to ignore built-in modules like path, fs, etc.
+    // },
     module: {
       rules: [
         {
