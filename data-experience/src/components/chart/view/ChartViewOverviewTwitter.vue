@@ -107,6 +107,7 @@ import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterab
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
+  name: 'ChartViewOverviewTwitter',
   components: { ChartViewVRowWebShare, ChartViewTextSelectTimeRange, UnitFilterableTable },
   mixins: [mixin],
   data() {

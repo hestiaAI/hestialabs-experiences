@@ -6,7 +6,7 @@
         v-bind="{
           values: data.items || [],
           headers: data.headers || [],
-          ...vizProps
+          ...$attrs
         }"
       />
     </div>
@@ -26,16 +26,15 @@ export default {
     graphName: {
       type: String,
       required: true
-    },
-    vizProps: {
-      type: Object,
-      default: () => ({})
     }
   },
   computed: {
     component() {
       return () => import(`./view/${this.graphName}`)
     }
+  },
+  mounted() {
+    console.log('Calling', this.graphName, 'with props', this.$attrs)
   }
 }
 </script>
