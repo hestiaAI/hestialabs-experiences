@@ -91,21 +91,21 @@ export default {
   }) {
     if (bubble) {
       const bubbleConfig = store.state.config.bubbleConfig[bubble]
-      if (bubbleConfig.bypassLogin && !($auth.loggedIn && bubble === $auth.user.username)) {
+      if (bubbleConfig.bypassLogin && !($auth.loggedIn && bubble === $auth.user.id)) {
         // log out in case user was logged in to another bubble
         await $auth.logout()
-        // no password needed when login-bypass is enabled
+        // no codeword needed when login-bypass is enabled
         // -> user is logged in automatically
         await $auth.loginWith('local', {
-          data: { username: bubble }
+          data: { id: bubble }
         })
         $auth.setUser({
-          // important: do not add a password property
-          username: bubble,
+          // important: do not add a codeword property
+          id: bubble,
           bubble: bubbleConfig
         })
         return redirect(app.localePath(path))
-      } else if ($auth.loggedIn && bubble !== $auth.user.username) {
+      } else if ($auth.loggedIn && bubble !== $auth.user.id) {
         // auto-logout if user tries to enter another bubble
         await $auth.logout()
         return redirect(app.localePath({

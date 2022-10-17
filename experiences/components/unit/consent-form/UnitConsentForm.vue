@@ -7,8 +7,9 @@
         :index="index"
       />
       <BasePasswordField
-        v-if="config.bypassLogin && !$auth.user.password"
-        :value.sync="password"
+        v-if="config.bypassLogin && !$auth.user.codeword"
+        :value.sync="codeword"
+        label="Codeword"
       />
       <BaseAlert v-if="missingRequiredFields">
         Some required fields are not filled in.
@@ -110,7 +111,7 @@ export default {
       encrypt: false,
       experience,
       config,
-      password: this.$auth.user.password
+      codeword: this.$auth.user.codeword
     }
   },
   computed: {
@@ -246,7 +247,7 @@ export default {
         zip,
         destBubble,
         this.bubbleName,
-        this.password
+        this.codeword
       )
       this.sentStatus = !errorMessage
       this.sentErrorMessage = errorMessage

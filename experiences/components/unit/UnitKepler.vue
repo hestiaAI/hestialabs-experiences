@@ -35,7 +35,7 @@ function buildIframeHtml() {
     'kepler.gl@2.5.5/umd/keplergl.min.js'
   ].map(s =>
       `<script src="https://unpkg.com/${s}" crossorigin>${scriptEndTag}`)
-  const keplerIframeUrl = 'https://unpkg.com/@andreaskundig/kepler-iframe@1.0.0/index.js'
+  const keplerIframeUrl = 'https://unpkg.com/@hestia.ai/kepler-iframe@1.0.0/index.js'
   return `
       <!DOCTYPE html>
       <html>
