@@ -1,10 +1,10 @@
 <template>
   <VContainer fluid style="max-width: 400px" class="mt-16">
     <h1 class="text-h4 mb-6">
-      Bubble Login
+      Login
     </h1>
     <VForm @submit.prevent="login">
-      <VTextField :value="username" label="Username" readonly />
+      <VTextField :value="id" label="ID" readonly />
       <BasePasswordField
         ref="codeword"
         :value.sync="codeword"
@@ -77,7 +77,7 @@ export default {
     return this.vueMeta('Login')
   },
   computed: {
-    username() {
+    id() {
       const bubble = extractBubbleParam(this.$route.query.redirect)
       return bubble
     }
@@ -91,16 +91,16 @@ export default {
   methods: {
     async login() {
       try {
-        const { username, codeword } = this
+        const { id, codeword } = this
         if (!codeword) {
           this.errorMessage = 'Please enter the codeword'
           return
         }
         const response = await this.$auth.loginWith('local', {
-          data: { username, codeword }
+          data: { id, codeword }
         })
-        const bubble = this.$store.state.config.bubbleConfig[username]
-        this.$auth.setUser({ username, codeword, bubble })
+        const bubble = this.$store.state.config.bubbleConfig[id]
+        this.$auth.setUser({ id, codeword, bubble })
         console.info(response.statusText)
       } catch ({ response }) {
         if (response.status === 403) {
