@@ -87,7 +87,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { isEmpty } from 'lodash-es'
-import EventBus from './eventBus'
+import EventBus from './EventBus'
 
 export default {
   name: 'BaseSchemaTree',
