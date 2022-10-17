@@ -1,19 +1,31 @@
 <template>
   <div id="app">
     Hello
-    <!-- <TheDataExperience2 v-bind="{experienceConfig, siteConfig}" /> -->
+    <TheDataExperience2 v-bind="{experienceConfig, siteConfig}" />
   </div>
 </template>
 <script>
-import experienceConfig from './twitter'
+import twitterExperience from './twitter'
+import TheDataExperience2 from '@/components/TheDataExperience.vue'
+
+function formatExperienceAsInStore(exp) {
+  const { name, version, options } = exp
+  return {
+    slug: name,
+    version,
+    ...options
+  }
+}
+
 const siteConfig =
 { experiences: ['tracker-control', 'twitter'] }
 
 export default {
   name: 'App',
+  components: { TheDataExperience2 },
   data() {
     return {
-      experienceConfig,
+      experienceConfig: formatExperienceAsInStore(twitterExperience),
       siteConfig
     }
   }
