@@ -1,7 +1,7 @@
 <template>
   <VTextField
     v-model="password"
-    label="Password"
+    :label="label"
     placeholder="Type..."
     required
     :type="passwordType"
@@ -21,6 +21,10 @@ export default {
     errorMessage: {
       type: String,
       default: ''
+    },
+    label: {
+      type: String,
+      default: 'Password'
     }
   },
   data() {

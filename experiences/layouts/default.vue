@@ -94,13 +94,13 @@ export default {
       if (bubbleConfig.bypassLogin && !($auth.loggedIn && bubble === $auth.user.username)) {
         // log out in case user was logged in to another bubble
         await $auth.logout()
-        // no password needed when login-bypass is enabled
+        // no codeword needed when login-bypass is enabled
         // -> user is logged in automatically
         await $auth.loginWith('local', {
           data: { username: bubble }
         })
         $auth.setUser({
-          // important: do not add a password property
+          // important: do not add a codeword property
           username: bubble,
           bubble: bubbleConfig
         })

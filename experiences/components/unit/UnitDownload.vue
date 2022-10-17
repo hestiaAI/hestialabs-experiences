@@ -257,8 +257,8 @@ export default {
       }
     },
     deleteFiles() {
-      const { password } = this.$auth.user
-      this.$api.deleteFiles(this.bubble, password).then((res) => {
+      const { codeword } = this.$auth.user
+      this.$api.deleteFiles(this.bubble, codeword).then((res) => {
         if (res) { console.error(res) }
         this.fetchFilenames()
       })

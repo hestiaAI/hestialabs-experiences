@@ -6,8 +6,8 @@
     <VForm @submit.prevent="login">
       <VTextField :value="username" label="Username" readonly />
       <BasePasswordField
-        ref="password"
-        :value.sync="password"
+        ref="codeword"
+        :value.sync="codeword"
         :error-message="errorMessage"
         autofocus
       />
@@ -70,7 +70,7 @@ export default {
   data() {
     return {
       errorMessage: '',
-      password: ''
+      codeword: ''
     }
   },
   head() {
@@ -84,28 +84,28 @@ export default {
   },
   watch: {
     $route() {
-      // focus password input on route change
-      this.$refs.password.$children[0].$refs.input.focus()
+      // focus codeword input on route change
+      this.$refs.codeword.$children[0].$refs.input.focus()
     }
   },
   methods: {
     async login() {
       try {
-        const { username, password } = this
-        if (!password) {
-          this.errorMessage = 'Please enter the password'
+        const { username, codeword } = this
+        if (!codeword) {
+          this.errorMessage = 'Please enter the codeword'
           return
         }
         const response = await this.$auth.loginWith('local', {
-          data: { username, password }
+          data: { username, codeword }
         })
         const bubble = this.$store.state.config.bubbleConfig[username]
-        this.$auth.setUser({ username, password, bubble })
+        this.$auth.setUser({ username, codeword, bubble })
         console.info(response.statusText)
       } catch ({ response }) {
         if (response.status === 403) {
           this.errorMessage =
-            'You entered an incorrect password, please try again'
+            'You entered an incorrect codeword, please try again'
         } else {
           this.errorMessage = [
             'An unknown error occurred, we apologize for the inconvenience.',
