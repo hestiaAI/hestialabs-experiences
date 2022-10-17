@@ -14,6 +14,7 @@ const i18nPlugin = {
     Vue.prototype.$tet = key => key
     Vue.prototype.$te = key => key
     Vue.prototype.$t = key => key
+    Vue.prototype.$i18n = { $t: key => key, $te: key => key }
   }
 }
 Vue.use(i18nPlugin)
