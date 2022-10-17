@@ -10,6 +10,7 @@
         :value.sync="codeword"
         :error-message="errorMessage"
         autofocus
+        label="Codeword"
       />
       <BaseButton type="submit">
         Login
