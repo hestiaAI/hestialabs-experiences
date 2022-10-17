@@ -50,6 +50,7 @@
     "whatwg-fetch": "^3.6.2"
   },
   "peerDependencies": {
+    "vue-router": "^3.5.4",
     "sql.js": "^1.7.0"
   },
   "devDependencies": {
