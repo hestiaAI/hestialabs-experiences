@@ -34,7 +34,8 @@
     "md-gum-polyfill": "^1.0.0",
     "micromatch": "^4.0.5",
     "papaparse": "^5.3.2",
-    "path": "^0.12.7",
+    "path-browserify": "^1.0.1",
+    "picomatch-browser": "^2.2.6",
     "read-excel-file": "^5.5.0",
     "resize-observer-polyfill": "^1.5.1",
     "share-api-polyfill": "^1.1.0",
@@ -69,7 +70,6 @@
     "vue-template-compiler": "^2.6.14",
     "webpack": "^4.46.0",
     "webpack-cli": "^4.10.0",
-    "webpack-node-externals": "^3.0.0",
     "worker-loader": "^3.0.8"
   },
   "browserslist": [

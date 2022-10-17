@@ -10,19 +10,18 @@ module.exports = defineConfig({
     resolve: {
       alias: {
         '~': path.resolve(__dirname, 'src'),
-        '@': path.resolve(__dirname, 'src')
+        '@': path.resolve(__dirname, 'src'),
+        // https://github.com/micromatch/picomatch/pull/23
+        picomatch: 'picomatch-browser'
       },
       fallback: {
         fs: false,
         crypto: false, // require.resolve("crypto-browserify") to add polyfill
-        path: require.resolve('path/'),
+        // path: require.resolve('path/'),
+        path: require.resolve('path-browserify'),
         util: require.resolve('util/')
       }
     },
-    // "webpack-node-externals": "^3.0.0",
-    // externalsPresets: {
-    //   node: true // in order to ignore built-in modules like path, fs, etc.
-    // },
     module: {
       rules: [
         {
