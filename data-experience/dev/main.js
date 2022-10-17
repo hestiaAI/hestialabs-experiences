@@ -4,15 +4,16 @@ import store from './store'
 import DataExperience from '@/main'
 import VueRouter from 'vue-router'
 
+// https://vuetify.cn/en/getting-started/quick-start/#webpack-install
+import vuetify from './vuetify-plugin'
+
 // https://v2.vuejs.org/v2/guide/plugins.html#Writing-a-Plugin
 const i18nPlugin = {
   install: function(Vue) {
-    Vue.prototype.$tev = function(key) {
-      return key
-    }
-    Vue.prototype.$t = function(key) {
-      return key
-    }
+    Vue.prototype.$tev = key => key
+    Vue.prototype.$tet = key => key
+    Vue.prototype.$te = key => key
+    Vue.prototype.$t = key => key
   }
 }
 Vue.use(i18nPlugin)
@@ -28,6 +29,7 @@ Vue.use(DataExperience, { store })
 Vue.config.productionTip = false
 
 new Vue({
+  vuetify,
   router,
   store,
   render: h => h(App)
