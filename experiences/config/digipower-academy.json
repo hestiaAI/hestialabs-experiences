@@ -26,6 +26,8 @@
     "youtube"
   ],
   "bubbles": [
+    "live-aggregator",
+    "live-participant",
     "demo-aggregator",
     "demo-participant",
     "sit-aggregator",
@@ -35,16 +37,21 @@
     "brown-aggregator",
     "brown-participant",
     "sciencespo-participant",
+    "sciencespo-aggregator",
     "dating-apps-course",
     "health-course",
     "matching-algo-course",
     "policy-making-course",
     "demo-computation",
     "swiss-mp-participant",
-    "swiss-mp-aggregator"
+    "swiss-mp-aggregator",
+    "th-participant",
+    "th-aggregator",
+    "observe-aggregator",
+    "observe-participant"
   ],
   "homePageBubbles": [
-    "demo-participant",
+    "live-participant",
     "sit-participant",
     "dating-apps-course",
     "health-course",

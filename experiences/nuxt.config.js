@@ -1,12 +1,8 @@
 import fs from 'fs'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
-import { extension2filetype } from './utils/file-manager'
 import { numberFormats } from './i18n/vue-i18n-number-formats'
 import { dateTimeFormats } from './i18n/vue-i18n-date-time-formats'
-
-const name = 'HestiaLabs Experiences'
-const description = 'We create a new relationship to personal data'
 
 const {
   NODE_ENV,
@@ -22,9 +18,28 @@ if (!baseUrl && isProduction) {
 }
 
 const {
+  messages = {},
   i18nLocale = 'en',
   i18nLocales = ['fr', 'en']
 } = JSON.parse(fs.readFileSync(`config/${configName}.json`))
+
+const messagesDefault = JSON.parse(fs.readFileSync(`i18n/${i18nLocale}.json`))
+const messagesConfig = i18nLocale in messages ? messages[i18nLocale] : {}
+
+// app properties for meta info:
+// these affect the PWA manfiest.json
+// and possibly meta tags other than those
+// configured in default.vue or mixins/page.js
+// such as,
+// * apple-mobile-web-app-title
+const { name, shortName, description } = {
+  // default app properties
+  ...messagesDefault.app,
+  // custom app properties:
+  // currently only customizable with the messages property in the config,
+  // and not remotely with i18nUrl
+  ...(messagesConfig.app || {})
+}
 
 export default {
   ssr: false, // Disable Server-Side Rendering
@@ -34,7 +49,7 @@ export default {
   head: {
     titleTemplate(title) {
       if (this && this.context) {
-        const { appName } = this.context.store.getters
+        const appName = this.context.i18n.t('app.name')
         return title ? `${title} | ${appName}` : appName
       }
       return 'Booting 🚀'
@@ -42,9 +57,6 @@ export default {
     title: '',
     meta: [
       { name: 'format-detection', content: 'telephone=no' },
-      { property: 'og:title', content: name },
-      { property: 'twitter:title', content: name },
-      { property: 'twitter:description', content: description },
       { property: 'twitter:image', content: `${baseUrl}/ogimg.png` }
     ]
   },
@@ -162,11 +174,13 @@ export default {
       twitterSite: '@HestiaLabs',
       // set following meta tags with vue-meta
       ogTitle: false,
-      ogUrl: false
+      ogUrl: false,
+      ogSiteName: false,
+      ogDescription: false
     },
     manifest: {
       name,
-      short_name: 'HestiaLabs',
+      short_name: shortName,
       description
     },
     workbox: {}
@@ -209,25 +223,6 @@ export default {
         {
           test: /\.worker\.js$/,
           use: 'worker-loader'
-        },
-        {
-          // allow all valid extensions as sample data except JS files!
-          test: new RegExp(
-            `data.+\\.(${Object.keys(extension2filetype)
-              .filter(ext => ext !== 'js')
-              .join('|')})$`
-          ),
-          // https://webpack.js.org/configuration/module/#ruletype
-          type: 'javascript/auto',
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                esModule: true,
-                name: '[path][name].[contenthash:7].[ext]'
-              }
-            }
-          ]
         },
         // for importing wasm files
         // https://github.com/sql-js/react-sqljs-demo

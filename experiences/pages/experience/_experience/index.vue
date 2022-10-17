@@ -4,9 +4,10 @@
 
 <script>
 import validate from '@/pages/validate'
-import { vueMeta } from '@/utils/utils'
+import mixin from '@/mixins/page'
 
 export default {
+  mixins: [mixin],
   validate(context) {
     return validate.experience(context)
   },
@@ -19,7 +20,7 @@ export default {
     const t = this.$tev(k('title'), title)
     const s = this.$tet(k('subtitle'), 'Data Experience')
     const metaTitle = `${t}: ${s}`
-    return vueMeta(this, metaTitle)
+    return this.vueMeta(metaTitle)
   }
 }
 </script>

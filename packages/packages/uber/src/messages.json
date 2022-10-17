@@ -52,8 +52,10 @@
         "labelTotal": "In total there are {total} records of trips you have made with Uber",
         "sourceText": "Pick-up places",
         "targetText": "Drop-off places",
-        "linkMouseoverHTML": "<b>{sourceName}</b>  → <b>{targetName}</b><br><center><b>{value}</b> trips.</center>",
-        "nodeMouseoverHTML": ""
+        "linkMouseoverHTML": "<b>{sourceName}</b>  → <b>{targetName}</b><br><center><b>{value}</b> trip(s).</center>",
+        "nodeMouseoverHTML": "<b>{name}</b><br><center><b>{value}</b> trip(s) <b>{fromTo}</b> this place</center>",
+        "from": "from",
+        "to": "to"
       },
       "tripsKeplerData": {
         "title": "Map of trips",
@@ -70,7 +72,7 @@
     "viewBlocks": {
       "tripsData": {
         "title": "Vue d'ensemble",
-        "text": "Visulalisation interactive de vos habitudes sur Uber. Les données se regroupent par devise, et l'on peut ajouter des filtres sur les graphiques.",
+        "text": "Visualisation interactive de vos habitudes sur Uber. Les données se regroupent par devise, et l'on peut ajouter des filtres sur les graphiques.",
         "vizProps": {
           "messages": {
             "select-currency": "Sélectionner les données selon la devise",
@@ -114,8 +116,10 @@
         "labelTotal": "Au total, il y a {total} enregistrements des voyages que vous avez effectués avec Uber",
         "sourceText": "Lieux de ramassage",
         "targetText": "Lieux de dépôt",
-        "linkMouseoverHTML": "<b>{sourceName}</b>  → <b>{targetName}</b><br><center><b>{value}</b> voyages.</center>",
-        "nodeMouseoverHTML": ""
+        "linkMouseoverHTML": "<b>{sourceName}</b>  → <b>{targetName}</b><br><center><b>{value}</b> voyage(s).</center>",
+        "nodeMouseoverHTML": "<b>{name}</b><br><center><b>{value}</b> voyage(s) <b>{fromTo}</b> cet endroit</center>",
+        "from": "de",
+        "to": "à"
       },
       "tripsKeplerData": {
         "title": "Carte de trajets",

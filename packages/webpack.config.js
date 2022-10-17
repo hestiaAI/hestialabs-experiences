@@ -2,7 +2,7 @@ import path from 'path'
 import { readdirSync } from 'fs'
 import { fileURLToPath } from 'url'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
-import nodeExternals from 'webpack-node-externals'
+import LodashModuleReplacementPlugin from 'lodash-webpack-plugin'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -10,8 +10,6 @@ const __dirname = path.dirname(__filename)
 const packages = readdirSync(path.resolve(__dirname, 'packages'))
 
 export default {
-  // https://stackoverflow.com/a/35820388/8238129
-  externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
   externalsPresets: {
     node: true // in order to ignore built-in modules like path, fs, etc.
   },
@@ -35,6 +33,7 @@ export default {
           {
             loader: 'babel-loader',
             options: {
+              plugins: ['lodash'],
               presets: ['@babel/preset-env', '@babel/preset-typescript']
             }
           },
@@ -51,11 +50,24 @@ export default {
       {
         test: /\.(?:sql|vega)$/,
         type: 'asset/source'
+      },
+      {
+        include: path.resolve(__dirname, 'lib', 'data-samples'),
+        type: 'asset/resource',
+        generator: {
+          // do not emit the file to the output bundle
+          emit: false,
+          // https://webpack.js.org/configuration/module/#rulegeneratorfilename
+          // https://webpack.js.org/configuration/output/#template-strings
+          filename:
+            'https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/[name][ext]?contenthash=[contenthash]&filename=[name][ext]'
+        }
       }
     ]
   },
+  plugins: [new LodashModuleReplacementPlugin()],
   resolve: {
-    extensions: ['.tsx', '.ts'],
+    extensions: ['.tsx', '.ts', '.js'],
     plugins: [
       // https://www.npmjs.com/package/tsconfig-paths-webpack-plugin
       new TsconfigPathsPlugin({})
@@ -69,11 +81,17 @@ export default {
     outputModule: true
   },
   output: {
+    publicPath: '',
     path: path.resolve(__dirname, 'packages'),
     library: {
       // https://github.com/webpack/webpack/issues/2933
       // https://webpack.js.org/configuration/output/#type-module
       type: 'module'
+    },
+    clean: {
+      // we want to clean the dist/ directories before each build
+      keep: /^[^/]+\/(?:src\/|[^/]+$)/,
+      dry: false // set to "true" to do a dry run to see which files are kept
     }
   },
   optimization: {

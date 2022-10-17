@@ -43,7 +43,7 @@ if (experiences) {
       return `@hestiaai/${name}`
     })
     console.info(
-      'Linking packages from the hestialabs repository...\n' +
+      'Linking packages...\n' +
       packages.join('\n')
     )
     handleSpawnOutput(spawn.sync('npm', ['link', ...packages]))

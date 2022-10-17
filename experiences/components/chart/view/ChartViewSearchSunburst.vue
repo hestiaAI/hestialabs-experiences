@@ -34,7 +34,7 @@
         </VCard>
       </VCol>
       <VCol cols="12" md="8">
-        <ChartViewSunburst :values="selectedValues" />
+        <ChartViewSunburst :id="id" :values="selectedValues" />
       </VCol>
     </VRow>
   </VContainer>

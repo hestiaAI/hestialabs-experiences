@@ -4,12 +4,13 @@ import { theDatingPrivacyCollective } from '@/collaborators/index'
 import icon from '@/icons/her.png'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
+import dataSample from '@/data-samples/her.zip'
 
 const options: ExperienceOptions = {
   collaborator: theDatingPrivacyCollective,
   databaseConfig,
   dataPortal: 'https://weareher.com/privacy/',
-  dataSamples: ['her-fake-data.zip'],
+  dataSamples: [dataSample],
   files: {
     liked: '**/liked.csv',
     notifications: '**/notifications.csv',

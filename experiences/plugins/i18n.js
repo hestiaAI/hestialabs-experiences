@@ -34,21 +34,21 @@ function d3Locale({ iso }) {
 }
 
 export default async({ app, store, $vuetify }) => {
-  const { config: { i18nUrl, theme }, experiences } = store.state
+  const { config: { i18nUrl, theme, messages: messagesCustomConfig = {} }, experiences } = store.state
 
   const messagesExperiences = experiences.filter(e => e.messages)
 
-  let messagesCustom = {}
+  let messagesCustomRemote = {}
   if (i18nUrl) {
     // fetch messages to override default messages
     const response = await fetch(i18nUrl)
-    messagesCustom = await response.json()
+    messagesCustomRemote = await response.json()
   }
   app.i18n.localeCodes.forEach((locale) => {
-    // default messages
+    /* default messages */
     app.i18n.mergeLocaleMessage(locale, messagesDefault[locale])
 
-    // experience messages
+    /* experience messages */
     messagesExperiences.forEach(({ slug, messages }) => {
       // Merge local, experience-specific, default messages
       // into vue-i18n's global dictionary
@@ -56,12 +56,18 @@ export default async({ app, store, $vuetify }) => {
       app.i18n.mergeLocaleMessage(locale, messagesObject)
     })
 
-    // overriding messages
+    /* overriding messages */
     app.i18n.mergeLocaleMessage(locale, messagesOverride[locale])
 
-    // custom messages (override anything previously merged)
-    if (locale in messagesCustom) {
-      app.i18n.mergeLocaleMessage(locale, messagesCustom[locale])
+    /* custom messages (override anything previously merged) */
+    if (locale in messagesCustomConfig) {
+      // from config
+      app.i18n.mergeLocaleMessage(locale, messagesCustomConfig[locale])
+    }
+
+    if (locale in messagesCustomRemote) {
+      // from remote endpoint
+      app.i18n.mergeLocaleMessage(locale, messagesCustomRemote[locale])
     }
   })
 

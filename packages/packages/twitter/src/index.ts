@@ -7,6 +7,8 @@ import viewBlocks from './blocks'
 import databaseConfig from './database'
 import dataModel from './model/model.json'
 import messages from './messages.json'
+import dataSampleSmall from '@/data-samples/twitter-small.zip'
+import dataSampleLarge from '@/data-samples/twitter-large.zip'
 
 const options: ExperienceOptions = {
   collaborator: theEyeballs,
@@ -14,7 +16,7 @@ const options: ExperienceOptions = {
   dataModel,
   dataPortal:
     'https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive',
-  dataSamples: ['twitter.zip', 'twitter-sample.zip'],
+  dataSamples: [dataSampleSmall, dataSampleLarge],
   files: {
     impressions: '**/ad-impressions.js',
     engagements: '**/ad-engagements.js',
@@ -26,7 +28,7 @@ const options: ExperienceOptions = {
     '**/*.js': preprocessor
   },
   hideFileExplorer: false,
-  title: 'Twitter',
+  title: 'Twitter.',
   tutorialVideos: ['https://vimeo.com/691109800'],
   viewBlocks
 }

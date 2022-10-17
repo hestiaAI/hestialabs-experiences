@@ -33,6 +33,8 @@
       "likes": {
         "title": "Likes",
         "text": "",
+        "selected-some": "{filterCount} selected out of {totalCount} {rowLabel}",
+        "selected-all": "All {totalCount} {rowLabel} selected.",
         "vizProps": {
           "titleArea": "Likes given",
           "titleTop": "Top User",
@@ -61,7 +63,8 @@
             "Messages Exchanged Over Time": "Messages Exchanged Over Time",
             "Time of Day": "Time of Day",
             "Day": "Day",
-            "Top Users": "Top Users"
+            "Top Users": "Top Users",
+            "Total Messages": "Total Messages"
           }
         },
         "headers": {
@@ -120,6 +123,8 @@
       "likes": {
         "title": "Likes",
         "text": "",
+        "selected-some": "{filterCount} sélectionnées sur {totalCount} {rowLabel}",
+        "selected-all": "Toutes les {totalCount} {rowLabel} sont sélectionnées.",
         "vizProps": {
           "titleArea": "Likes donnés",
           "titleTop": "Top utilisateur",
@@ -148,7 +153,8 @@
             "Messages Exchanged Over Time": "Messages échangés au fil du temps",
             "Time of Day": "Heure de la journée",
             "Day": "Jour",
-            "Top Users": "Principaux utilisateurs"
+            "Top Users": "Principaux utilisateurs",
+            "Total Messages": "Total des messages"
           }
         },
         "headers": {

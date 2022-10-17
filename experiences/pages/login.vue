@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { vueMeta } from '@/utils/utils'
+import mixin from '@/mixins/page'
 
 const extractBubbleParam = (path = '') => {
   // 1. /bubble/:bubble
@@ -32,6 +32,7 @@ const extractBubbleParam = (path = '') => {
 }
 
 export default {
+  mixins: [mixin],
   auth: 'guest',
   middleware({ app, $auth, redirect, route, error, from }) {
     if (from && $auth.loggedIn) {
@@ -73,7 +74,7 @@ export default {
     }
   },
   head() {
-    return vueMeta(this, 'Login')
+    return this.vueMeta('Login')
   },
   computed: {
     username() {
