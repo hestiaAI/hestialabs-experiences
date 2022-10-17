@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[205],{1793:function(o,c,e){"use strict";e.r(c),c.default=e.p+"assets/data/colors.b61e5b6.csv"}}]);
