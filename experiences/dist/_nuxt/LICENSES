@@ -51,12 +51,43 @@ License: MIT
  * @license  MIT
  */
 
-/*!
- * fill-range <https://github.com/jonschlinkert/fill-range>
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+/**
+ * Takes a string with placeholder variables like `%{smart_count} file selected`
+ * and replaces it with values from options `{smart_count: 5}`
  *
- * Copyright (c) 2014-present, Jon Schlinkert.
- * Licensed under the MIT License.
+ * @license https://github.com/airbnb/polyglot.js/blob/master/LICENSE
+ * taken from https://github.com/airbnb/polyglot.js/blob/master/lib/polyglot.js#L299
+ *
+ * @param {string} phrase that needs interpolation, with placeholders
+ * @param {object} options with values that will be used to replace placeholders
+ * @returns {any[]} interpolated
  */
+
+/** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
+
+
+/*! dom-to-image-more 12-05-2022 */
+
+
+/*!
+ * vue-client-only v0.0.0-semantic-release
+ * (c) 2021-present egoist <0x142857@gmail.com>
+ * Released under the MIT License.
+ */
+
+/*!
+ * vue-no-ssr v1.1.1
+ * (c) 2018-present egoist <0x142857@gmail.com>
+ * Released under the MIT License.
+ */
+
+
+/** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
+
 
 /*!
  * https://github.com/Starcounter-Jack/JSON-Patch
@@ -85,52 +116,21 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
 
-/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+/*!
+ * fill-range <https://github.com/jonschlinkert/fill-range>
+ *
+ * Copyright (c) 2014-present, Jon Schlinkert.
+ * Licensed under the MIT License.
+ */
+
+/*!
+ * https://github.com/Starcounter-Jack/JSON-Patch
+ * (c) 2017-2021 Joachim Wester
+ * MIT license
+ */
+
 
 /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
-
-/**
- * Takes a string with placeholder variables like `%{smart_count} file selected`
- * and replaces it with values from options `{smart_count: 5}`
- *
- * @license https://github.com/airbnb/polyglot.js/blob/master/LICENSE
- * taken from https://github.com/airbnb/polyglot.js/blob/master/lib/polyglot.js#L299
- *
- * @param {string} phrase that needs interpolation, with placeholders
- * @param {object} options with values that will be used to replace placeholders
- * @returns {any[]} interpolated
- */
-
-/** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
-
-
-/*! dom-to-image-more 12-05-2022 */
-
-
-/** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
-
-
-/*!
- * vue-client-only v0.0.0-semantic-release
- * (c) 2021-present egoist <0x142857@gmail.com>
- * Released under the MIT License.
- */
-
-/*!
- * vue-no-ssr v1.1.1
- * (c) 2018-present egoist <0x142857@gmail.com>
- * Released under the MIT License.
- */
-
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
 
 
 /*!
@@ -179,9 +179,15 @@ PERFORMANCE OF THIS SOFTWARE.
  */
 
 
-/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
-
-
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+
+/* @license
+Papa Parse
+v5.3.2
+https://github.com/mholt/PapaParse
+License: MIT
+*/
+
 
 /** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
