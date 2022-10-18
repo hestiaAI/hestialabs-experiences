@@ -27,8 +27,8 @@
     </VCardText>
   </VCard>
 </template>
+
 <script>
-import ExternalLink from '../ExternalLink.vue'
 export default {
   name: 'BaseQuote',
   props: {
@@ -44,7 +44,6 @@ export default {
       type: String,
       default: ''
     }
-  },
-  components: { ExternalLink }
+  }
 }
 </script>
