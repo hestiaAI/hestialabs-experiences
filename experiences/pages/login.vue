@@ -8,7 +8,7 @@
       <BasePasswordField
         ref="codeword"
         :value.sync="codeword"
-        :error-message="errorMessage"
+        :error-message.sync="errorMessage"
         autofocus
         label="Codeword"
       />
