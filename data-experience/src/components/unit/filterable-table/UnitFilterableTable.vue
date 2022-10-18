@@ -210,7 +210,7 @@ export default {
         // emit the current filtered items
         this.$emit('current-items', filteredItems)
         /*
-                this.$store.commit('setResult', {
+                this.$store.commit('dataexp/setResult', {
                   experience: this.id,
                   result: {
                     headers: this.headers,

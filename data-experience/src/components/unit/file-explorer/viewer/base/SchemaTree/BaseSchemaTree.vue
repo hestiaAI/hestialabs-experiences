@@ -87,7 +87,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { isEmpty } from 'lodash-es'
-import EventBus from './eventBus'
+import EventBus from './EventBus'
 
 export default {
   name: 'BaseSchemaTree',
@@ -140,9 +140,9 @@ export default {
     updateSelectedPaths() {
       if (this.isLeaf) {
         if (this.selected) {
-          this.$store.commit('selectPath', this.schema.absolutePath)
+          this.$store.commit('dataexp/selectPath', this.schema.absolutePath)
         } else {
-          this.$store.commit('unselectPath', this.schema.absolutePath)
+          this.$store.commit('dataexp/unselectPath', this.schema.absolutePath)
         }
       }
     }

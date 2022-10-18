@@ -4,7 +4,6 @@ import { cloneDeep } from 'lodash-es'
 const store = {
   namespaced: true,
   state: () => ({
-    loaded: false,
     progress: false,
     experienceConfig: {},
     siteConfig: {},
@@ -18,9 +17,6 @@ const store = {
   mutations: {
     setProgress(state, value) {
       state.progress = value
-    },
-    setLoaded(state) {
-      state.loaded = true
     },
     setExperienceConfig(state, config) {
       console.log('setting experienceConfig', config)

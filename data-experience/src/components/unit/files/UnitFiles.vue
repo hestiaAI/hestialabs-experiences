@@ -161,7 +161,7 @@ export default {
     // Watch files, if user empty all files we reset the store and delete all files
     filesEmpty() {
       if (this.filesEmpty && this.fileManager) {
-        this.$store.commit('clearStore')
+        this.$store.commit('dataexp/clearStore')
       }
     },
     async selectedSamples(newSamples, oldSamples) {

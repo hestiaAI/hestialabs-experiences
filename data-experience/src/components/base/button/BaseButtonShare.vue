@@ -10,7 +10,6 @@
 
 <script>
 import 'share-api-polyfill'
-import { mapState, mapGetters } from 'vuex'
 import BaseButton from '@/components/base/button/BaseButton.vue'
 
 export default {
@@ -50,15 +49,12 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config']),
-    ...mapGetters(['experience']),
     experienceTitle() {
-      const { title } = this.experience(this.$route)
-      return title
+      return this.$store.state.experienceConfig.title
     },
     hashtags() {
       const { experienceTitle } = this
-      const hashtags = [...(this.config.hashtags || ['hestialabs'])]
+      const hashtags = [...(this.$store.state.siteConfig.hashtags || ['hestialabs'])]
       if (experienceTitle) {
         hashtags.push(experienceTitle)
       }

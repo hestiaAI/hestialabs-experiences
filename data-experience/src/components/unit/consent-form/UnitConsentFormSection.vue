@@ -139,7 +139,7 @@ export default {
         return this.section.value
       },
       set(value) {
-        this.$store.commit('setConsentFormValue', { index: this.index, value })
+        this.$store.commit('dataexp/setConsentFormValue', { index: this.index, value })
       }
     }
   },

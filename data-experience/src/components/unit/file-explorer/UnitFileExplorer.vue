@@ -67,6 +67,7 @@
 import { has } from 'lodash-es'
 import { mapState } from '@/utils/store-helper'
 import UnitFileViewer from '@/components/unit/file-explorer/UnitFileViewer.vue'
+
 export default {
   name: 'UnitFileExplorer',
   components: { UnitFileViewer },
@@ -91,10 +92,10 @@ export default {
         // item might be undefined (when unselecting)
         if (item) {
           if (!this.containers.has(item.type)) {
-            this.$store.commit('setFileExplorerCurrentItem', item)
+            this.$store.commit('dataexp/setFileExplorerCurrentItem', item)
           }
         } else {
-          this.$store.commit('setFileExplorerCurrentItem', {})
+          this.$store.commit('dataexp/setFileExplorerCurrentItem', {})
         }
       }
     },
@@ -154,6 +155,7 @@ export default {
   }
 }
 </script>
+
 <style>
 .explorer,
 .explorer .v-icon,

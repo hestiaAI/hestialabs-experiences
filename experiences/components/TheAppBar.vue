@@ -44,7 +44,7 @@
           </h3>
         </div>
         <VSpacer />
-        <div v-for="link in links" :key="link.url">
+        <div v-for="link in config.appBarLinks" :key="link.url">
           <VBtn
             v-if="link.external"
             :href="link.url"
@@ -118,25 +118,26 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data() {
     return {
       drawer: false,
-      selected: '',
-      links: this.$store.getters.siteConfig.appBarLinks
+      selected: ''
     }
   },
   computed: {
+    ...mapState(['config']),
     e() {
       return this.$store.getters.experience(this.$route)
     },
     collaborator() {
-      const { displayCollaborators } = this.$store.getters.siteConfig
-      return displayCollaborators ? this.e.collaborator : undefined
+      return this.config.displayCollaborators ? this.e.collaborator : undefined
     },
     homeButtonProps() {
       // check for an external home page
-      const { homePath } = this.$store.getters.siteConfig
+      const { homePath } = this.config
       if (homePath) {
         return {
           href: homePath,

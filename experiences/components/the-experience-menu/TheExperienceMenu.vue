@@ -43,9 +43,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['enabledExperiences', 'disabledExperiences', 'siteConfig']),
+    ...mapGetters(['enabledExperiences', 'disabledExperiences']),
     groupByCollaborator() {
-      return !!this.siteConfig.displayCollaborators && !this.hideCollaborators
+      return !!this.$store.state.config.displayCollaborators && !this.hideCollaborators
     },
     sections() {
       const sections = []
