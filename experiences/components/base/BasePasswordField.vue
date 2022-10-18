@@ -36,6 +36,12 @@ export default {
     }
   },
   watch: {
+    errorMessage(value) {
+      this.errorMessages = value
+    },
+    errorMessages(value) {
+      this.$emit('update:error-message', value)
+    },
     password(password) {
       this.errorMessages = ''
       this.$emit('update:value', password)
