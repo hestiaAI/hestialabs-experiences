@@ -1,10 +1,9 @@
 {
   "name": "data-experience",
   "version": "0.1.0",
-  "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "vue-cli-service serve ./dev/main.js",
+    "build:demo": "vue-cli-service build --dest demo ./dev/main.js",
     "build-lib": "vue-cli-service build --target lib --name data-experience src/main.js",
     "build-lib-watch": "vue-cli-service build --watch --target lib --name data-experience src/main.js",
     "lint": "vue-cli-service lint",
@@ -35,7 +34,8 @@
     "md-gum-polyfill": "^1.0.0",
     "micromatch": "^4.0.5",
     "papaparse": "^5.3.2",
-    "path": "^0.12.7",
+    "path-browserify": "^1.0.1",
+    "picomatch-browser": "^2.2.6",
     "read-excel-file": "^5.5.0",
     "resize-observer-polyfill": "^1.5.1",
     "share-api-polyfill": "^1.1.0",
@@ -50,7 +50,9 @@
     "whatwg-fetch": "^3.6.2"
   },
   "peerDependencies": {
-    "sql.js": "^1.7.0"
+    "sql.js": "^1.7.0",
+    "vue-router": "^3.5.4",
+    "vuetify": "^2.6.7"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -65,7 +67,10 @@
     "eslint-plugin-n": "^15.2.5",
     "eslint-plugin-promise": "^6.0.1",
     "eslint-plugin-vue": "^9.4.0",
+    "fibers": "^5.0.3",
     "file-loader": "^6.2.0",
+    "sass": "^1.32.13",
+    "sass-loader": "^10.2.1",
     "unplugin-vue-components": "^0.22.7",
     "vue-template-compiler": "^2.6.14",
     "webpack": "^4.46.0",
