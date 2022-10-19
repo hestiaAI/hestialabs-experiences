@@ -94,6 +94,11 @@ const store = {
     }
   },
   getters: {
+    routeConfig:
+    state =>
+      ({ params: { bubble } = {} }) => {
+        return bubble ? state.siteConfig.bubbleConfig[bubble] : state.siteConfig
+      },
     tutorialVideos(state) {
       console.log('Get TutVideos', state.experienceConfig.tutorialVideos)
       return state.experienceConfig.tutorialVideos || []
