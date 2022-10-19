@@ -45,6 +45,7 @@ function buildIframeHtml() {
           ${headerScripts.join('\n')}
           <style type="text/css">
             body { margin: 0; padding: 0; overflow: hidden; }
+            #app, #app .kepler-gl { width: auto; }
           </style>
         </head>
         <body>
