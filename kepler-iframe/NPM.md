@@ -12,7 +12,7 @@ The one-time password is given by your npm user's two-factor authentication.
 
 The package can be loaded from any webpage through [unpkg](https://unpkg.com/):
 
-https://unpkg.com/@hestia.ai/kepler-iframe@1.0.0/index.js
+https://unpkg.com/@hestia.ai/kepler-iframe@latest/index.js
    
   
   
