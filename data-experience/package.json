@@ -7,6 +7,7 @@
     "build-lib": "vue-cli-service build --target lib --name data-experience src/main.js",
     "build-lib-watch": "vue-cli-service build --watch --target lib --name data-experience src/main.js",
     "build:demo": "vue-cli-service build --dest demo ./dev/main.js",
+    "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
     "lint:fix": "npx eslint . --ext .vue --fix"
   },
   "main": "dist/data-experience.umd.js",
@@ -54,6 +55,7 @@
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
     "@babel/plugin-proposal-private-methods": "^7.18.6",
+    "@intlify/vue-i18n-loader": "^1.1.0",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
@@ -68,6 +70,7 @@
     "sass": "^1.32.13",
     "sass-loader": "^10.2.1",
     "unplugin-vue-components": "^0.22.7",
+    "vue-cli-plugin-i18n": "~2.3.1",
     "vue-cli-plugin-vuetify": "~2.5.8",
     "vue-template-compiler": "^2.6.14",
     "vuetify-loader": "^1.7.0",

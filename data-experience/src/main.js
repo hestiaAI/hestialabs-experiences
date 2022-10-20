@@ -10,8 +10,9 @@ export { default as vuetify } from './plugins/vuetify'
 
 // https://github.com/vuetifyjs/vue-cli-plugins/issues/140#issuecomment-599001935
 // new Vue({
-//   vuetify
-// })
+//   i18n
+// }).$mount('#app')
+
 // export { vuetify }
 export default {
   install(Vue, options) {

@@ -7,7 +7,9 @@ module.exports = defineConfig({
   transpileDependencies: [
     'vuetify'
   ],
+
   publicPath: '/',
+
   configureWebpack: {
     resolve: {
       alias: {
@@ -58,6 +60,16 @@ module.exports = defineConfig({
         //   ]
         // }
       ]
+    }
+  },
+
+  pluginOptions: {
+    i18n: {
+      locale: 'en',
+      fallbackLocale: 'en',
+      localeDir: 'locales',
+      enableInSFC: true,
+      enableBridge: false
     }
   }
 })
