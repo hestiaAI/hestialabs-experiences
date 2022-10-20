@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    Hello
     <TheDataExperience2 v-bind="{experienceConfig, siteConfig}" />
   </div>
 </template>

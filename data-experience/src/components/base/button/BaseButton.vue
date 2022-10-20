@@ -15,7 +15,7 @@
           <span>{{ $tev(text, text) }}</span>
         </slot>
         <BaseProgressCircular v-if="progress" class="ml-2" />
-        <StatusIndicator v-else-if="status" :error="error" />
+        <BaseStatusIndicator v-else-if="status" :error="error" />
       </VBtn>
     </template>
     <span>{{ $tev(tooltip, tooltip) }}</span>
@@ -23,11 +23,11 @@
 </template>
 
 <script>
-import StatusIndicator from '@/components/StatusIndicator.vue'
+import BaseStatusIndicator from '@/components/base/BaseStatusIndicator.vue'
 import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 export default {
   name: 'BaseButton',
-  components: { BaseProgressCircular, StatusIndicator },
+  components: { BaseProgressCircular, BaseStatusIndicator },
   inheritAttrs: false,
   props: {
     tooltip: {

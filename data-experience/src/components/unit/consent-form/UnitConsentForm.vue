@@ -101,8 +101,6 @@ export default {
   name: 'UnitConsentForm',
   components: { UnitConsentFormSection, BasePasswordField, BaseAlert, BaseButton },
   data() {
-    const experience = this.$store.getters.experience(this.$route)
-    const config = this.$store.getters.routeConfig(this.$route)
     return {
       zipFile: undefined,
       generateStatus: false,
@@ -114,13 +112,12 @@ export default {
       filename: '',
       href: null,
       encrypt: false,
-      experience,
-      config,
+      config: this.$auth.user.bubble,
       password: this.$auth.user.password
     }
   },
   computed: {
-    ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles']),
+    ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles', 'experienceConfig']),
     bubbleName() {
       return this.$route.params.bubble
     },
@@ -143,7 +140,7 @@ export default {
     },
     missingRequiredData() {
       const section = this.consentForm.find(section => section.type === 'data')
-      return this.experience.viewBlocks
+      return this.experienceConfig.viewBlocks
         .filter(({ key }) => typeof section.required === 'object' &&
                 section.required.includes(key) &&
                 (!Object.keys(this.results).includes(key) ||
@@ -174,11 +171,11 @@ export default {
       const date = new Date(timestamp)
       const uniqueId = await this.fileManager.hashAllFiles()
       const yearMonthDay = `${date.getUTCFullYear()}-${padNumber(date.getUTCMonth() + 1, 2)}-${padNumber(date.getUTCDate(), 2)}`
-      const filename = `${this.experience.slug}_${yearMonthDay}_${uniqueId}.zip`
+      const filename = `${this.experienceConfig.slug}_${yearMonthDay}_${uniqueId}.zip`
       return filename
     },
     async generateZIP(encrypt) {
-      const { viewBlocks, version, slug } = this.experience
+      const { viewBlocks, version, slug } = this.experienceConfig
       const zip = new JSZip()
       const revResponse = await window.fetch('/git-revision.txt')
       const revText = await revResponse.text()

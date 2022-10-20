@@ -23,8 +23,10 @@
     </div>
   </div>
 </template>
+
 <script>
-import ExternalLink from '@/components/ExternalLink.vue'
+import ExternalLink from '@/components/misc/ExternalLink.vue'
+
 export default {
   name: 'BaseVideo',
   components: { ExternalLink },

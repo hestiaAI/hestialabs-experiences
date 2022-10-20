@@ -18,7 +18,7 @@ import exportImageMixinFactory from '@/mixins/export-image-mixin-factory'
 
 import BaseButtonDownloadData from '@/components/base/button/download/BaseButtonDownloadData.vue'
 import BaseButtonShare from '@/components/base/button/BaseButtonShare.vue'
-import DataValidator from '../DataValidator.vue'
+import DataValidator from '../misc/DataValidator.vue'
 
 export default {
   name: 'UnitVegaViz',

@@ -111,7 +111,7 @@ export default {
       return `unit-summary.${key}`
     },
     onFileClick(filename) {
-      this.$store.commit('dataexp/setFileExplorerCurrentItem', { filename })
+      this.$store.commit('xp/setFileExplorerCurrentItem', { filename })
       this.$emit('switch-tab', 'file-explorer')
     },
     async setNumberOfDataPoints() {

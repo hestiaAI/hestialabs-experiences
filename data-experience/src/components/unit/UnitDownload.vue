@@ -193,7 +193,7 @@ export default {
     }
   },
   data() {
-    const experience = this.$store.getters.experience(this.$route)
+    const experience = this.$store.state.xp.experienceConfig
     const experienceProps = pick(experience, [
       'slug',
       'title',
@@ -202,7 +202,6 @@ export default {
       'dataPortalMessage',
       'tutorialVideos'
     ])
-    const { publicKey } = this.$store.getters.routeConfig(this.$route)
     return {
       timer: null,
       counter: 5,
@@ -215,7 +214,6 @@ export default {
       selectedFiles: [],
       privateKey: null,
       status: false,
-      publicKey,
       ...experienceProps
     }
   },
@@ -272,8 +270,8 @@ export default {
       }
     },
     deleteFiles() {
-      const { password } = this.$auth.user
-      this.$api.deleteFiles(this.bubble, password).then((res) => {
+      const { username, password } = this.$auth.user
+      this.$api.deleteFiles(username, password).then((res) => {
         if (res) { console.error(res) }
         this.fetchFilenames()
       })
@@ -310,9 +308,11 @@ export default {
       )
 
       try {
+        console.time(consoleLabel('getFiles'))
         const filePromises = filenames.map(filename =>
           getFilePromise(this.bubble, filename))
         const encryptedFiles = await Promise.all(filePromises)
+        console.timeEnd(consoleLabel('getFiles'))
         this.apiStatus = 'Decrypting files...'
         const decryptedFiles = await
         Promise.all(
@@ -320,8 +320,11 @@ export default {
             if (!this.privateKey) {
               return fileBlob
             }
+            const label = consoleLabel('decryptBlob', i)
+            console.time(label)
             const privateKey = await this.privateKey.text()
             const blob = await decryptBlobPromise(fileBlob, privateKey, this.publicKey)
+            console.timeEnd(label)
             const filename = filenames[i]
             return new BrowserFile(new File([blob], filename))
           }))
@@ -331,6 +334,8 @@ export default {
         console.error(error)
         this.apiError = error.toString()
       }
+
+      console.timeEnd(consoleLabel())
     }
   }
 }

@@ -36,7 +36,7 @@
       tooltip="Clear all"
       color="red"
       :outlined="false"
-      @click="$store.commit('dataexp/clearStore')"
+      @click="$store.commit('xp/clearStore')"
     />
   </VSpeedDial>
 </template>

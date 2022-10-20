@@ -1,102 +1,106 @@
 <template>
-  <div>
-    <SettingsSpeedDial />
-    <VRow>
-      <VCol>
-        <VTabs
-          v-model="tab"
-          dark
-          background-color="primary"
-          slider-color="secondary"
-          slider-size="4"
-          show-arrows
-          center-active
-          centered
-          fixed-tabs
-          :eager="false"
-          class="fixed-tabs-bar"
-          @change="scrollToTop"
+  <VApp>
+    <VMain>
+      <SettingsSpeedDial />
+      <VTabs
+        v-model="tab"
+        dark
+        background-color="primary"
+        slider-color="secondary"
+        slider-size="4"
+        show-arrows
+        center-active
+        centered
+        fixed-tabs
+        :eager="false"
+        @change="scrollToTop"
+      >
+        <VTab
+          v-for="(t, index) in tabs"
+          :key="index"
+          :disabled="t.disabled"
+          :to="`#${t.value}`"
         >
-          <VTab
-            v-for="(t, index) in tabs"
-            :key="index"
-            :disabled="t.disabled"
-            nuxt
-            :to="`#${t.value}`"
-          >
-            {{ $tev(t.titleKey, t.title) }}
-          </VTab>
-        </VTabs>
-        <VTabsItems v-model="tab">
-          <VTabItem value="load-data" :transition="false">
-            <VCol cols="12 mx-auto" md="6" class="tabItem">
-              <UnitIntroduction
-                v-bind="{
-                  slug,
-                  progress,
-                  error,
-                  success,
-                  message
-                }"
-                ref="unit-introduction"
-                @update="onUnitFilesUpdate"
-              />
-            </VCol>
-          </VTabItem>
-          <VTabItem value="summary" :transition="false">
-            <VCol cols="12 mx-auto" sm="6" class="tabItem">
-              <UnitSummary @switch-tab="switchTab" />
-            </VCol>
-          </VTabItem>
-          <VTabItem value="file-explorer" :transition="false">
-            <div class="tabItem">
-              <UnitFileExplorer />
-            </div>
-          </VTabItem>
-          <VTabItem
-            v-for="(viewBlock, index) in viewBlocks"
-            :key="index"
-            :value="viewBlock.id"
-            :transition="false"
-          >
-            <VCol cols="12 mx-auto" class="tabItem">
-              <VOverlay :value="overlay" absolute opacity="0.8">
-                <div
-                  class="d-flex flex-column align-center"
-                  style="width: 100%; height: 100%"
-                >
-                  <div class="mb-3">
-                    {{ $t('This might take a moment') }}
-                  </div>
-                  <BaseProgressCircular size="64" width="4" />
+          {{ $tev(t.titleKey, t.title) }}
+        </VTab>
+      </VTabs>
+      <VTabsItems v-model="tab">
+        <VTabItem value="load-data" :transition="false">
+          <VCol cols="12 mx-auto" md="6" class="tabItem">
+            <UnitIntroduction
+              v-bind="{
+                slug,
+                progress,
+                error,
+                success,
+                message
+              }"
+              ref="unit-introduction"
+              @update="onUnitFilesUpdate"
+            />
+          </VCol>
+        </VTabItem>
+        <VTabItem value="summary" :transition="false">
+          <VCol cols="12 mx-auto" sm="6" class="tabItem">
+            <UnitSummary @switch-tab="switchTab" />
+          </VCol>
+        </VTabItem>
+        <VTabItem value="file-explorer" :transition="false">
+          <div class="tabItem">
+            <UnitFileExplorer />
+          </div>
+        </VTabItem>
+        <VTabItem
+          v-for="(viewBlock, index) in viewBlocks"
+          :key="index"
+          :value="viewBlock.id"
+          :transition="false"
+        >
+          <VCol cols="12 mx-auto" class="tabItem">
+            <VOverlay :value="overlay" absolute opacity="0.8">
+              <div
+                class="d-flex flex-column align-center"
+                style="width: 100%; height: 100%"
+              >
+                <div class="mb-3">
+                  {{ $t('This might take a moment') }}
                 </div>
-              </VOverlay>
-              <UnitQuery v-bind="{slug, ...viewBlock}" />
-            </VCol>
-          </VTabItem>
-        </VTabsItems>
-      </VCol>
-    </VRow>
-  </div>
+                <BaseProgressCircular size="64" width="4" />
+              </div>
+            </VOverlay>
+            <UnitQuery v-bind="{slug, ...viewBlock}" />
+          </VCol>
+        </VTabItem>
+      </VTabsItems>
+    </VMain>
+  </VApp>
 </template>
 
 <script>
 import { debounce, pick, cloneDeep } from 'lodash-es'
+
 import { mapState } from '@/utils/store-helper'
 import DBMS from '@/utils/sql'
-
-import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 import FileManager from '@/utils/file-manager'
 import fileManagerWorkers from '@/utils/file-manager-workers'
+
+import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 import UnitFileExplorer from '@/components/unit/file-explorer/UnitFileExplorer.vue'
 import UnitIntroduction from '@/components/unit/UnitIntroduction.vue'
 import UnitQuery from '@/components/unit/UnitQuery.vue'
 import UnitSummary from '@/components/unit/UnitSummary.vue'
-import SettingsSpeedDial from '@/components/SettingsSpeedDial.vue'
+import SettingsSpeedDial from '@/components/misc/SettingsSpeedDial.vue'
 
 export default {
   name: 'TheDataExperience',
-  components: { BaseProgressCircular, SettingsSpeedDial, UnitFileExplorer, UnitIntroduction, UnitQuery, UnitSummary },
+  components: {
+    BaseProgressCircular,
+    SettingsSpeedDial,
+    UnitFileExplorer,
+    UnitIntroduction,
+    UnitQuery,
+    UnitSummary
+  },
   props: {
     experienceConfig: {
       type: Object,
@@ -105,10 +109,6 @@ export default {
     siteConfig: {
       type: Object,
       required: true
-    },
-    bubbleConfig: {
-      type: Object,
-      default: () => {}
     }
   },
   data() {
@@ -183,13 +183,13 @@ export default {
     experienceConfig: {
       immediate: true,
       handler(value) {
-        this.$store.commit('dataexp/setExperienceConfig', cloneDeep(value))
+        this.$store.commit('xp/setExperienceConfig', cloneDeep(value))
       }
     },
     siteConfig: {
       immediate: true,
       handler(value) {
-        this.$store.commit('dataexp/setSiteConfig', cloneDeep(value))
+        this.$store.commit('xp/setSiteConfig', cloneDeep(value))
       }
     },
     fileManager(value) {
@@ -237,7 +237,7 @@ export default {
       const start = new Date()
 
       // Clean vuex state
-      this.$store.commit('dataexp/clearStore', {})
+      this.$store.commit('xp/clearStore', {})
 
       // Set consent form
       /*
@@ -247,7 +247,7 @@ export default {
         section.titles = this.viewBlocks.map(e => e.title)
         section.ids = this.viewBlocks.map(e => e.id)
       }
-      this.$store.commit('dataexp/setConsentForm', consentForm)
+      this.$store.commit('xp/setConsentForm', consentForm)
       */
       // Set file manager
       const fileManager = new FileManager(
@@ -258,7 +258,7 @@ export default {
       )
       try {
         await fileManager.init(uppyFiles)
-        this.$store.commit('dataexp/setFileManager', fileManager)
+        this.$store.commit('xp/setFileManager', fileManager)
 
         if (dbConfig) {
           console.log('Creating DB', dbConfig)
@@ -271,7 +271,7 @@ export default {
           DBMS.insertRecords(db, records)
           console.log('commit setcurrentDB')
           // commit the database to the Vuex store
-          this.$store.commit('dataexp/setCurrentDB', db)
+          this.$store.commit('xp/setCurrentDB', db)
         }
       } catch (e) {
         this.handleError(e)
@@ -292,12 +292,5 @@ export default {
 <style>
 .tabItem {
   min-height: calc(100vh - 48px);
-}
-
-.fixed-tabs-bar {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 60px;
-  z-index: 2500;
 }
 </style>

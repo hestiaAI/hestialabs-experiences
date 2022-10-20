@@ -38,7 +38,7 @@ module.exports = defineConfig({
         },
         // https://vuetify.cn/en/getting-started/quick-start/#webpack-install
         {
-          test: /\.s(c|a)ss$/,
+          test: /\.s[ca]ss$/,
           use: [
             'vue-style-loader',
             'css-loader',

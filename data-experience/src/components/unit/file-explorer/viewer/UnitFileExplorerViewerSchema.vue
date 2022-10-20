@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from '@/utils/store-helper'
 import mixin from './mixin'
 import BaseSchemaTree from './base/SchemaTree/BaseSchemaTree.vue'
 import BaseButton from '@/components/base/button/BaseButton.vue'

@@ -95,10 +95,10 @@ export default {
     },
     selectedFiles: {
       get() {
-        return this.$store.state.selectedFiles
+        return this.$store.state.xp.selectedFiles
       },
       set(value) {
-        this.$store.commit('dataexp/setSelectedFiles', value)
+        this.$store.commit('xp/setSelectedFiles', value)
       }
     }
   },
@@ -119,7 +119,7 @@ export default {
       this.updateCheckboxOnReturn(false)
     },
     clear() {
-      this.$store.commit('dataexp/setSelectedFiles', [])
+      this.$store.commit('xp/setSelectedFiles', [])
       this.updateCheckboxOnReturn(true)
       this.show = false
     },
@@ -154,7 +154,7 @@ export default {
       } else if (!value.includes('file-explorer')) {
         value = value.concat('file-explorer')
       }
-      this.$store.commit('dataexp/setConsentFormValue', { index, value })
+      this.$store.commit('xp/setConsentFormValue', { index, value })
     }
   }
 }

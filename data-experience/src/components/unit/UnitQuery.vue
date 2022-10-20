@@ -241,7 +241,7 @@ export default {
         this.errorMessage = error instanceof Error ? error.message : error
         return
       }
-      this.$store.commit('dataexp/setResult', {
+      this.$store.commit('xp/setResult', {
         experience: this.id,
         result
       })

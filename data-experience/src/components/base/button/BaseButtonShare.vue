@@ -50,11 +50,11 @@ export default {
   },
   computed: {
     experienceTitle() {
-      return this.$store.state.experienceConfig.title
+      return this.$store.state.xp.experienceConfig.title
     },
     hashtags() {
       const { experienceTitle } = this
-      const hashtags = [...(this.$store.state.siteConfig.hashtags || ['hestialabs'])]
+      const hashtags = [...(this.$store.state.xp.siteConfig.hashtags || ['hestialabs'])]
       if (experienceTitle) {
         hashtags.push(experienceTitle)
       }

@@ -129,7 +129,7 @@ export default {
       if (this.readonly) {
         return Object.keys(this.fileManager.fileDict)
       }
-      return this.$store.state.selectedFiles
+      return this.$store.state.xp.selectedFiles
     },
     section() {
       return this.consentForm[this.index]
@@ -139,7 +139,7 @@ export default {
         return this.section.value
       },
       set(value) {
-        this.$store.commit('dataexp/setConsentFormValue', { index: this.index, value })
+        this.$store.commit('xp/setConsentFormValue', { index: this.index, value })
       }
     }
   },

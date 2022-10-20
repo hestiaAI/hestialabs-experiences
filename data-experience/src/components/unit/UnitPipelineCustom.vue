@@ -25,7 +25,7 @@ import mixin from './mixin-pipeline'
 import { mapState } from '@/utils/store-helper'
 import { setTimeoutPromise } from '@/utils/utils'
 import BaseButton from '@/components/base/button/BaseButton.vue'
-import CodeEditor from '@/components/CodeEditor.vue'
+import CodeEditor from '@/components/misc/CodeEditor.vue'
 
 export default {
   name: 'UnitPipelineCustom',

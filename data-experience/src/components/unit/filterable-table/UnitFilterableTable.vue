@@ -62,10 +62,10 @@ import BaseButton from '@/components/base/button/BaseButton.vue'
 import BaseButtonDownloadData from '@/components/base/button/download/BaseButtonDownloadData.vue'
 import BaseButtonShare from '@/components/base/button/BaseButtonShare.vue'
 import UnitFilter from './UnitFilter.vue'
-import ExternalLink from '@/components/ExternalLink.vue'
+import ExternalLink from '@/components/misc/ExternalLink.vue'
 import BaseSearchBar from '@/components/base/BaseSearchBar.vue'
 import BaseAlert from '@/components/base/BaseAlert.vue'
-import DataValidator from '@/components/DataValidator.vue'
+import DataValidator from '@/components/misc/DataValidator.vue'
 
 const height5 = 290
 const height10 = 530
@@ -210,7 +210,7 @@ export default {
         // emit the current filtered items
         this.$emit('current-items', filteredItems)
         /*
-                this.$store.commit('dataexp/setResult', {
+                this.$store.commit('xp/setResult', {
                   experience: this.id,
                   result: {
                     headers: this.headers,

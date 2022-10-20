@@ -92,10 +92,10 @@ export default {
         // item might be undefined (when unselecting)
         if (item) {
           if (!this.containers.has(item.type)) {
-            this.$store.commit('dataexp/setFileExplorerCurrentItem', item)
+            this.$store.commit('xp/setFileExplorerCurrentItem', item)
           }
         } else {
-          this.$store.commit('dataexp/setFileExplorerCurrentItem', {})
+          this.$store.commit('xp/setFileExplorerCurrentItem', {})
         }
       }
     },

@@ -140,8 +140,10 @@ export default {
   },
   computed: {
     ...mapState(['fileManager']),
-    ...mapState({ files: state => state.experienceConfig.files }),
-    ...mapState({ dataSamples: state => state.experienceConfig.dataSamples }),
+    ...mapState({
+      files: state => state.experienceConfig.files,
+      dataSamples: state => state.experienceConfig.dataSamples
+    }),
     fileGlobs() {
       console.log('UnitFiles', this.files)
       return Object.values(this.files) || []
@@ -161,7 +163,7 @@ export default {
     // Watch files, if user empty all files we reset the store and delete all files
     filesEmpty() {
       if (this.filesEmpty && this.fileManager) {
-        this.$store.commit('dataexp/clearStore')
+        this.$store.commit('xp/clearStore')
       }
     },
     async selectedSamples(newSamples, oldSamples) {
@@ -273,7 +275,7 @@ export default {
     async returnFiles() {
       const decryptBlobPromise = promisify(decryptBlob)
       const publicKey =
-            this.publicKey || this.$store.getters.routeConfig(this.$route).publicKey
+            this.publicKey || this.$auth.user.bubble.publicKey
       try {
         const encryptedFiles = this.uppy.getFiles()
         const decryptedFiles = await

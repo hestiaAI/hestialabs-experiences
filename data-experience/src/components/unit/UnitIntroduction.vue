@@ -80,9 +80,9 @@
 </template>
 
 <script>
-import { mapGetters } from '@/utils/store-helper'
+import { mapState } from '@/utils/store-helper'
 import BaseVideo from '@/components/base/BaseVideo.vue'
-import ExternalLink from '@/components/ExternalLink.vue'
+import ExternalLink from '@/components/misc/ExternalLink.vue'
 import UnitFiles from '@/components/unit/files/UnitFiles.vue'
 
 export default {
@@ -111,7 +111,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['tutorialVideos'])
+    ...mapState({
+      tutorialVideos: state => state.experienceConfig.tutorialVideos,
+      videoHeight: state => state.experienceConfig.videoHeight || '400'
+    })
   },
   mounted() {
     console.log('UnitIntroduction')

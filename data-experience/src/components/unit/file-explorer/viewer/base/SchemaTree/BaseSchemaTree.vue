@@ -85,7 +85,7 @@
   </VCard>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from '@/utils/store-helper'
 import { isEmpty } from 'lodash-es'
 import EventBus from './EventBus'
 
@@ -140,9 +140,9 @@ export default {
     updateSelectedPaths() {
       if (this.isLeaf) {
         if (this.selected) {
-          this.$store.commit('dataexp/selectPath', this.schema.absolutePath)
+          this.$store.commit('xp/selectPath', this.schema.absolutePath)
         } else {
-          this.$store.commit('dataexp/unselectPath', this.schema.absolutePath)
+          this.$store.commit('xp/unselectPath', this.schema.absolutePath)
         }
       }
     }

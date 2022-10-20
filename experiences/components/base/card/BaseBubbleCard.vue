@@ -40,11 +40,6 @@ export default {
       type: String,
       required: true
     }
-  },
-  computed: {
-    mdiIcon() {
-      return this.$vuetify.icons.values[this.icon]
-    }
   }
 }
 </script>
