@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { resolve } from 'path'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 
 import { numberFormats } from './i18n/vue-i18n-number-formats'
@@ -44,6 +45,10 @@ const { name, shortName, description } = {
 export default {
   ssr: false, // Disable Server-Side Rendering
   target: 'static',
+
+  alias: {
+    '@@': resolve(__dirname, '../')
+  },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {

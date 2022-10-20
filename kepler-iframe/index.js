@@ -4,13 +4,13 @@
 
 // If we wanted to have this with our javascript.
 // Unfortunately webpack fails to load a dependency of moment-timezone
-// import KeplerGl from 'kepler.gl'
-// import React, { ReactDOM } from 'react'
-// import { combineReducers, applyMiddleware, createStore, compose } from 'redux'
-// import { Provider } from 'react-redux'
+ import KeplerGl from 'kepler.gl'
+ import React, { ReactDOM } from 'react'
+ import { combineReducers, applyMiddleware, createStore, compose } from 'redux'
+ import { Provider } from 'react-redux'
 
-const { combineReducers, applyMiddleware, createStore, compose } = Redux
-const { Provider } = ReactRedux
+//const { combineReducers, applyMiddleware, createStore, compose } = Redux
+//const { Provider } = ReactRedux
 
 const buildStore = function() {
   const reducers = combineReducers({

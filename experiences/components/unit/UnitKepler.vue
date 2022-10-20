@@ -8,6 +8,7 @@
       <BaseProgressCircular size="64" width="4" color="primary" />
     </div>
     <iframe
+      v-if="iframeHtml"
       ref="iframe"
       :srcDoc="iframeHtml"
       class="frame"
@@ -19,7 +20,7 @@
 </template>
 
 <script>
-function buildIframeHtml() {
+function buildIframeHtml(keplerIframeUrl) {
   // eslint-disable-next-line no-useless-escape
   const scriptEndTag = '<\/script>'
   const stylesheets = [
@@ -35,7 +36,6 @@ function buildIframeHtml() {
     'kepler.gl@2.5.5/umd/keplergl.min.js'
   ].map(s =>
       `<script src="https://unpkg.com/${s}" crossorigin>${scriptEndTag}`)
-  const keplerIframeUrl = 'https://unpkg.com/@hestia.ai/kepler-iframe@1.0.0/index.js'
   return `
       <!DOCTYPE html>
       <html>
@@ -56,7 +56,6 @@ function buildIframeHtml() {
         </body>
       </html>`
 }
-const iframeHtml = buildIframeHtml()
 export default {
   props: {
     args: {
@@ -71,7 +70,7 @@ export default {
   data() {
     return {
       loaded: false,
-      iframeHtml
+      iframeHtml: null
     }
   },
   computed: {
@@ -87,6 +86,15 @@ export default {
         this.callIframeFunction('update', newArgs)
       }
     }
+  },
+  async created() {
+    let url = 'https://unpkg.com/@hestia.ai/kepler-iframe@latest/index.js'
+
+    if (process.env.NODE_ENV === 'development') {
+      url = await import('@@/kepler-iframe/index.js')
+    }
+    console.log()
+    this.iframeHtml = buildIframeHtml(url)
   },
   methods: {
     onload() {
