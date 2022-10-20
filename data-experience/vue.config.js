@@ -4,7 +4,9 @@ const { defineConfig } = require('@vue/cli-service')
 const path = require('path')
 
 module.exports = defineConfig({
-  transpileDependencies: true,
+  transpileDependencies: [
+    'vuetify'
+  ],
   publicPath: '/',
   configureWebpack: {
     resolve: {
@@ -35,26 +37,26 @@ module.exports = defineConfig({
               }
             }
           ]
-        },
-        // https://vuetify.cn/en/getting-started/quick-start/#webpack-install
-        {
-          test: /\.s[ca]ss$/,
-          use: [
-            'vue-style-loader',
-            'css-loader',
-            {
-              loader: 'sass-loader',
-              // Requires sass-loader@^8.0.0
-              options: {
-                implementation: require('sass'),
-                sassOptions: {
-                  fiber: require('fibers'),
-                  indentedSyntax: true // optional
-                }
-              }
-            }
-          ]
         }
+        // // https://vuetify.cn/en/getting-started/quick-start/#webpack-install
+        // {
+        //   test: /\.s[ca]ss$/,
+        //   use: [
+        //     'vue-style-loader',
+        //     'css-loader',
+        //     {
+        //       loader: 'sass-loader',
+        //       // Requires sass-loader@^8.0.0
+        //       options: {
+        //         implementation: require('sass'),
+        //         sassOptions: {
+        //           fiber: require('fibers'),
+        //           indentedSyntax: true // optional
+        //         }
+        //       }
+        //     }
+        //   ]
+        // }
       ]
     }
   }

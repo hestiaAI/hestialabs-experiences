@@ -3,15 +3,14 @@
   "version": "0.1.0",
   "scripts": {
     "serve": "vue-cli-service serve ./dev/main.js",
-    "build:demo": "vue-cli-service build --dest demo ./dev/main.js",
+    "lint": "vue-cli-service lint",
     "build-lib": "vue-cli-service build --target lib --name data-experience src/main.js",
     "build-lib-watch": "vue-cli-service build --watch --target lib --name data-experience src/main.js",
-    "lint": "vue-cli-service lint",
+    "build:demo": "vue-cli-service build --dest demo ./dev/main.js",
     "lint:fix": "npx eslint . --ext .vue --fix"
   },
   "main": "dist/data-experience.umd.js",
   "dependencies": {
-    "@mdi/js": "^7.0.96",
     "@uppy/core": "^2.0.2",
     "@uppy/dashboard": "^2.3.0",
     "@uppy/drop-target": "^1.1.3",
@@ -42,17 +41,14 @@
     "spark-md5": "^3.0.2",
     "type-analyzer": "^0.4.0",
     "util": "^0.12.4",
+    "vega": "^5.22.1",
     "vega-embed": "^6.21.0",
+    "vega-lite": "^5.6.0",
     "vue": "^2.6.14",
     "vue-i18n": "^8.27.2",
     "vue2-ace-editor": "^0.0.15",
     "vuex": "^3.6.2",
     "whatwg-fetch": "^3.6.2"
-  },
-  "peerDependencies": {
-    "sql.js": "^1.7.0",
-    "vue-router": "^3.5.4",
-    "vuetify": "^2.6.7"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -74,9 +70,16 @@
     "unplugin-vue-components": "^0.22.7",
     "vue-cli-plugin-vuetify": "~2.5.8",
     "vue-template-compiler": "^2.6.14",
+    "vuetify-loader": "^1.7.0",
     "webpack": "^4.46.0",
     "webpack-cli": "^4.10.0",
     "worker-loader": "^3.0.8"
+  },
+  "peerDependencies": {
+    "@mdi/js": "^7.0.96",
+    "sql.js": "^1.7.0",
+    "vue-router": "^3.5.4",
+    "vuetify": "^2.6.0"
   },
   "browserslist": [
     "> 1%",

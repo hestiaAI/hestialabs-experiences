@@ -1,11 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 import store from './store'
-import DataExperience from '@/main'
+import DataExperience, { vuetify } from '@/main'
 import VueRouter from 'vue-router'
-
-// https://vuetify.cn/en/getting-started/quick-start/#webpack-install
-import vuetify from './vuetify-plugin'
 
 // https://v2.vuejs.org/v2/guide/plugins.html#Writing-a-Plugin
 const i18nPlugin = {

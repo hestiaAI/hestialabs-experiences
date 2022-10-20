@@ -3,6 +3,7 @@
     <TheDataExperience2 v-bind="{experienceConfig, siteConfig}" />
   </div>
 </template>
+
 <script>
 import twitterExperience from './twitter'
 import TheDataExperience2 from '@/components/TheDataExperience.vue'
