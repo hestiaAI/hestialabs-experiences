@@ -2,6 +2,48 @@
   <VApp>
     <VMain>
       <SettingsSpeedDial />
+      <!-- <VSpeedDial
+        v-model="langDial"
+        bottom
+        right
+        direction="top"
+        open-on-hover
+        transition="slide-y-reverse-transition"
+        fixed
+      >
+        <template #activator>
+          <VBtn v-model="fab" color="primary" dark fab>
+            <VIcon v-if="fab">
+              $vuetify.icon.mdiClose
+            </VIcon>
+            <VIcon v-else>
+              $vuetify.icon.mdiCog
+            </VIcon>
+          </VBtn>
+        </template>
+      </VSpeedDial> -->
+      <!-- <VMenu v-if="$i18n.locales.length > 1" offset-y> -->
+      <VMenu v-if="!$nuxt" offset-y bottom left absolute>
+        <template #activator="{ on, attrs }">
+          <VBtn
+            v-bind="attrs"
+            icon
+            v-on="on"
+          >
+            <VIcon>$vuetify.icons.mdiTranslate</VIcon>
+          </VBtn>
+        </template>
+        <VList>
+          <VListItemGroup v-model="$i18n.locale">
+            <VListItem
+              v-for="({ code, name }) in [{code:'en', name:'English'}, {code:'fr', name:'Francais'}]"
+              :key="code"
+            >
+              <VListItemTitle>{{ name }}</VListItemTitle>
+            </VListItem>
+          </VListItemGroup>
+        </VList>
+      </VMenu>
       <VTabs
         v-model="tab"
         dark

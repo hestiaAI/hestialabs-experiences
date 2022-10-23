@@ -7,10 +7,9 @@ import './assets/dc.css'
 
 import { MODULE_NAME } from '@/utils/store-helper'
 export { default as vuetify } from './plugins/vuetify'
-
+export { default as vueI18n } from './plugins/i18n'
 // https://github.com/vuetifyjs/vue-cli-plugins/issues/140#issuecomment-599001935
 // new Vue({
-//   i18n
 // }).$mount('#app')
 
 // export { vuetify }
@@ -19,6 +18,23 @@ export default {
     if (!options || !options.store) {
       throw new Error('Please initialise plugin with a Vuex store.')
     }
+
+    Vue.mixin({
+      methods: {
+        // inject translation helpers to encapsulate ternary expressions
+        $tev(key, valueFallback) {
+          // tev -> Translation Exists (else) Value fallback
+          return this.$te(key) ? this.$t(key) : valueFallback
+        },
+        $tet(key, keyFallback) {
+          // tet -> Translation Exists (else) Translate fallback
+          return this.$te(key) ? this.$t(key) : this.$t(keyFallback)
+        },
+        $days() {
+          return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(v => this.$t(`dayOfWeek.${v}`))
+        }
+      }
+    })
 
     // Vue.use(vuetify)
 

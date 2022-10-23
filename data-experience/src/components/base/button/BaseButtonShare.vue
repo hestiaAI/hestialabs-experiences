@@ -111,7 +111,7 @@ export default {
         text = textToShare
       }
 
-      const url = this.$url()
+      const url = `${process.env.baseUrl}${this.$route.path}`
       const webShareData = {
         title,
         text,

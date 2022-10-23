@@ -137,7 +137,7 @@ export default {
         {
           hid: 'og:url',
           property: 'og:url',
-          content: this.$url(this.$route)
+          content: `${process.env.baseUrl}${this.$route.path}`
         },
         {
           hid: 'og:title',

@@ -1,24 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
 import store from './store'
-import DataExperience, { vuetify } from '@/main'
+import DataExperience, { vuetify, vueI18n } from '@/main'
 import VueRouter from 'vue-router'
-
-// https://v2.vuejs.org/v2/guide/plugins.html#Writing-a-Plugin
-const i18nPlugin = {
-  install: function(Vue) {
-    Vue.prototype.$tev = key => key
-    Vue.prototype.$tet = key => key
-    Vue.prototype.$te = key => key
-    Vue.prototype.$t = key => key
-    Vue.prototype.$i18n = { $t: key => key, $te: key => key }
-  }
-}
-Vue.use(i18nPlugin)
 
 // https://stackoverflow.com/questions/40816966/how-to-use-vue-router-in-vue-2
 Vue.use(VueRouter)
 const router = new VueRouter({
+  mode: 'history',
   routes: []
 })
 
@@ -27,6 +16,7 @@ Vue.use(DataExperience, { store })
 Vue.config.productionTip = false
 
 new Vue({
+  i18n: vueI18n,
   vuetify,
   router,
   store,
