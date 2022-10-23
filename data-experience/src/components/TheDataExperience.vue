@@ -2,37 +2,20 @@
   <VApp>
     <VMain>
       <SettingsSpeedDial />
-      <!-- <VSpeedDial
-        v-model="langDial"
-        bottom
-        right
-        direction="top"
-        open-on-hover
-        transition="slide-y-reverse-transition"
-        fixed
-      >
-        <template #activator>
-          <VBtn v-model="fab" color="primary" dark fab>
-            <VIcon v-if="fab">
-              $vuetify.icon.mdiClose
-            </VIcon>
-            <VIcon v-else>
-              $vuetify.icon.mdiCog
-            </VIcon>
-          </VBtn>
-        </template>
-      </VSpeedDial> -->
-      <!-- <VMenu v-if="$i18n.locales.length > 1" offset-y> -->
       <!-- interpret the presence of configName env variable as being in the Nuxt app -->
-      <VMenu v-if="!isNuxt" offset-y bottom left absolute>
+      <VMenu v-if="!isNuxt && locales.length > 1" offset-y absolute>
         <template #activator="{ on, attrs }">
-          <VBtn
+          <BaseButton
             v-bind="attrs"
-            icon
+            icon="mdiTranslate"
+            color="secondary"
+            :outlined="false"
+            fab
+            fixed
+            bottom
+            left
             v-on="on"
-          >
-            <VIcon>$vuetify.icons.mdiTranslate</VIcon>
-          </VBtn>
+          />
         </template>
         <VList>
           <VListItemGroup v-model="localeIndex">
@@ -129,6 +112,7 @@ import DBMS from '@/utils/sql'
 import FileManager from '@/utils/file-manager'
 import fileManagerWorkers from '@/utils/file-manager-workers'
 
+import BaseButton from '@/components/base/button/BaseButton.vue'
 import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 import UnitFileExplorer from '@/components/unit/file-explorer/UnitFileExplorer.vue'
 import UnitIntroduction from '@/components/unit/UnitIntroduction.vue'
@@ -152,6 +136,7 @@ function d3Locale({ iso }) {
 export default {
   name: 'TheDataExperience',
   components: {
+    BaseButton,
     BaseProgressCircular,
     SettingsSpeedDial,
     UnitFileExplorer,
