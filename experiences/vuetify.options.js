@@ -128,7 +128,7 @@ const optionsFunction = ({ app }) => ({
     }
   },
   lang: {
-    current: 'fr',
+    // https://vuetifyjs.com/en/features/internationalization/#vue-i18n
     t: (key, ...params) => app.i18n.t(key, params)
   }
 })

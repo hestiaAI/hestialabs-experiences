@@ -104,12 +104,8 @@ export const actions = {
           })
         )
       ).map((module) => {
-        const { name, version, options } = module.default
-        return {
-          slug: name,
-          version,
-          ...options
-        }
+        const experience = module.default
+        return experience.config
       })
 
       commit('setExperiences', experiences)

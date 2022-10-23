@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuetify from 'vuetify/lib/framework'
+import i18n from './i18n'
 
 import {
   mdiAccount,
@@ -127,11 +128,11 @@ const opts = {
         success: '#388e3c'
       }
     }
+  },
+  lang: {
+    // https://vuetifyjs.com/en/features/internationalization/#vue-i18n
+    t: (key, ...params) => i18n.t(key, params)
   }
-  // lang: {
-  //   current: 'fr',
-  //   t: (key, ...params) => app.i18n.t(key, params)
-  // }
 }
 
 Vue.use(Vuetify)

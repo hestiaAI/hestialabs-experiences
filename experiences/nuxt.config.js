@@ -1,6 +1,7 @@
 import fs from 'fs'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
+import { locales, localeCodes } from '../data-experience/src/i18n/locales'
 import { numberFormats } from './i18n/vue-i18n-number-formats'
 import { dateTimeFormats } from './i18n/vue-i18n-date-time-formats'
 
@@ -40,7 +41,7 @@ if (!baseUrl && isProduction) {
 const {
   messages = {},
   i18nLocale = 'en',
-  i18nLocales = ['fr', 'en']
+  i18nLocales = localeCodes
 } = JSON.parse(fs.readFileSync(`config/${configName}.json`))
 
 const messagesDefault = JSON.parse(fs.readFileSync(`i18n/${i18nLocale}.json`))
@@ -145,18 +146,7 @@ export default {
 
   i18n: {
     baseUrl,
-    locales: [
-      {
-        code: 'en',
-        iso: 'en-US',
-        name: 'English'
-      },
-      {
-        code: 'fr',
-        iso: 'fr-FR',
-        name: 'Français'
-      }
-    ].filter(({ code }) => i18nLocales.includes(code)),
+    locales: locales.filter(({ code }) => i18nLocales.includes(code)),
     defaultLocale: i18nLocale,
     vueI18n: {
       fallbackLocale: i18nLocale,

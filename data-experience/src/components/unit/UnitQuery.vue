@@ -218,7 +218,6 @@ export default {
       // NOTE: we need to deepClone the vizProps before doing the merge
       // because the lodash merge function recursively mutates the first argument
       // and it will cause a vuex mutation error otherwise.
-      console.log('Unitquery vizprops', this.vizProps, merge(cloneDeep(this.vizProps), this.$tev(this.k('vizProps'), {}) || {}))
       return merge(cloneDeep(this.vizProps), this.$tev(this.k('vizProps'), {}) || {})
     }
   },

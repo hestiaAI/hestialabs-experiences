@@ -23,7 +23,8 @@
         </template>
       </VSpeedDial> -->
       <!-- <VMenu v-if="$i18n.locales.length > 1" offset-y> -->
-      <VMenu v-if="!$nuxt" offset-y bottom left absolute>
+      <!-- interpret the presence of configName env variable as being in the Nuxt app -->
+      <VMenu v-if="!isNuxt" offset-y bottom left absolute>
         <template #activator="{ on, attrs }">
           <VBtn
             v-bind="attrs"
@@ -34,9 +35,9 @@
           </VBtn>
         </template>
         <VList>
-          <VListItemGroup v-model="$i18n.locale">
+          <VListItemGroup v-model="localeIndex">
             <VListItem
-              v-for="({ code, name }) in [{code:'en', name:'English'}, {code:'fr', name:'Francais'}]"
+              v-for="({ code, name }) in locales"
               :key="code"
             >
               <VListItemTitle>{{ name }}</VListItemTitle>
@@ -77,7 +78,6 @@
                 success,
                 message
               }"
-              ref="unit-introduction"
               @update="onUnitFilesUpdate"
             />
           </VCol>
@@ -119,7 +119,10 @@
 </template>
 
 <script>
-import { debounce, pick, cloneDeep } from 'lodash-es'
+import { debounce, pick, cloneDeep, merge } from 'lodash-es'
+import { json, timeFormatDefaultLocale } from 'd3'
+
+import { locales, localeCodes } from '@/i18n/locales'
 
 import { mapState } from '@/utils/store-helper'
 import DBMS from '@/utils/sql'
@@ -132,6 +135,19 @@ import UnitIntroduction from '@/components/unit/UnitIntroduction.vue'
 import UnitQuery from '@/components/unit/UnitQuery.vue'
 import UnitSummary from '@/components/unit/UnitSummary.vue'
 import SettingsSpeedDial from '@/components/misc/SettingsSpeedDial.vue'
+
+const siteConfigDefault = {
+  i18nLocale: 'en',
+  i18nLocales: localeCodes,
+  messages: {}
+}
+
+function d3Locale({ iso }) {
+  json(`https://cdn.jsdelivr.net/npm/d3-time-format@4/locale/${iso}.json`).then(
+    locale =>
+      timeFormatDefaultLocale(locale)
+  )
+}
 
 export default {
   name: 'TheDataExperience',
@@ -165,6 +181,8 @@ export default {
       'slug'
     ])
     return {
+      isNuxt: Boolean(process.env.configName),
+      localeIndex: 0,
       tab: null,
       fab: false,
       progress: false,
@@ -172,12 +190,16 @@ export default {
       success: false,
       message: '',
       overlay: false,
+      locales,
       ...properties
     }
   },
   computed: {
     ...mapState(['fileManager']),
     ...mapState({ experienceProgress: 'progress' }),
+    siteConfigMerged() {
+      return cloneDeep(merge(siteConfigDefault, this.siteConfig))
+    },
     tabs() {
       const disabled = !this.success || this.experienceProgress
       const tabs = [
@@ -224,14 +246,35 @@ export default {
   watch: {
     experienceConfig: {
       immediate: true,
-      handler(value) {
+      async handler(value) {
+        await this.mergeMessages()
         this.$store.commit('xp/setExperienceConfig', cloneDeep(value))
       }
     },
-    siteConfig: {
+    siteConfigMerged: {
+      immediate: true,
+      async handler(value) {
+        await this.mergeMessages()
+        // set initial state of locale dropdown
+        this.localeIndex = localeCodes.indexOf(value.i18nLocale)
+        // override light theme colors
+        if (value.theme) {
+          Object.assign(this.$vuetify.theme.themes.light, value.theme)
+        }
+        // initialize d3 locale
+        d3Locale(locales[this.localeIndex])
+        this.$store.commit('xp/setSiteConfig', cloneDeep(value))
+      }
+    },
+    localeIndex: {
       immediate: true,
       handler(value) {
-        this.$store.commit('xp/setSiteConfig', cloneDeep(value))
+        // locale was switched by the user
+        const localeProperties = locales[value]
+        // -> update d3 locale
+        d3Locale(localeProperties)
+        // -> update vue-i18n locale
+        this.$i18n.locale = localeProperties.code
       }
     },
     fileManager(value) {
@@ -254,6 +297,32 @@ export default {
     this.switchTab('load-data')
   },
   methods: {
+    async mergeMessages() {
+      const { messages: messagesExperience, slug } = this.experienceConfig
+      const { messages: messagesCustomConfig, i18nLocales, i18nUrl } = this.siteConfigMerged
+      let messagesCustomRemote = {}
+      if (i18nUrl) {
+        // fetch messages to override default messages
+        messagesCustomRemote = await json(i18nUrl)
+      }
+      i18nLocales.forEach((locale) => {
+        /* experience messages */
+        const messagesObject = { experiences: { [slug]: messagesExperience[locale] } }
+        console.log(messagesObject)
+        this.$i18n.mergeLocaleMessage(locale, messagesObject)
+
+        /* custom messages (override anything previously merged) */
+        if (locale in messagesCustomConfig) {
+          // from config
+          this.$i18n.mergeLocaleMessage(locale, messagesCustomConfig[locale])
+        }
+
+        if (locale in messagesCustomRemote) {
+          // from remote endpoint
+          this.$i18n.mergeLocaleMessage(locale, messagesCustomRemote[locale])
+        }
+      })
+    },
     // Convert local translation key to global vue18n
     k(localKey) {
       return `experiences.${this.slug}.viewBlocks.${localKey}.title`
@@ -303,15 +372,12 @@ export default {
         this.$store.commit('xp/setFileManager', fileManager)
 
         if (dbConfig) {
-          console.log('Creating DB', dbConfig)
           // create database
           const db = await DBMS.createDB(dbConfig)
           // generate database records via the file manager
           const records = await DBMS.generateRecords(fileManager, dbConfig)
-          console.log('records', records)
           // insert the records into the database
           DBMS.insertRecords(db, records)
-          console.log('commit setcurrentDB')
           // commit the database to the Vuex store
           this.$store.commit('xp/setCurrentDB', db)
         }

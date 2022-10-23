@@ -19,17 +19,12 @@ const store = {
       state.progress = value
     },
     setExperienceConfig(state, config) {
-      console.log('setting experienceConfig', config)
       state.experienceConfig = config
-      console.log('experienceConfig set', state.experienceConfig)
     },
     setSiteConfig(state, config) {
-      console.log('setting siteConfig', config)
       state.siteConfig = config
-      console.log('siteConfig set', state.siteConfig)
     },
     setCurrentDB(state, db) {
-      console.log('setting DB', db)
       state.currentDB = db
     },
     setFileManager(state, fileManager) {
@@ -88,7 +83,6 @@ const store = {
       state.consentForm = null
     },
     setFileExplorerCurrentItem(state, item) {
-      console.log('STORE setFileExplorerCurrentItem', item)
       state.fileExplorerCurrentItem = item
       state.fileExplorerCurrentItem.selectedPaths = []
     }

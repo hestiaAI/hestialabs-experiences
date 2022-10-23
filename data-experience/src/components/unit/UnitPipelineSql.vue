@@ -22,9 +22,6 @@ export default {
       return !this.currentDB || !this.sql
     }
   },
-  mounted() {
-    console.log('UnitPipelineSQL')
-  },
   methods: {
     async run() {
       this.progress = true

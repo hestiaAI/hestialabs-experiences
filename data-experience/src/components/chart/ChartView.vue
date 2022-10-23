@@ -32,9 +32,6 @@ export default {
     component() {
       return () => import(`./view/${this.graphName}`)
     }
-  },
-  mounted() {
-    console.log('Calling', this.graphName, 'with props', this.$attrs)
   }
 }
 </script>

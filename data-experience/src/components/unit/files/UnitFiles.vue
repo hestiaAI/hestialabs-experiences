@@ -145,7 +145,6 @@ export default {
       dataSamples: state => state.experienceConfig.dataSamples
     }),
     fileGlobs() {
-      console.log('UnitFiles', this.files)
       return Object.values(this.files) || []
     },
     disabled() {
@@ -217,7 +216,6 @@ export default {
   },
   */
   mounted() {
-    console.log('UnitFiles', this.files, this.dataSamples)
     const stringsOverride = {
       en: {
         cancel: 'Clear all'
@@ -275,7 +273,7 @@ export default {
     async returnFiles() {
       const decryptBlobPromise = promisify(decryptBlob)
       const publicKey =
-            this.publicKey || this.$auth.user.bubble.publicKey
+            this.publicKey || this.$auth?.user.bubble.publicKey
       try {
         const encryptedFiles = this.uppy.getFiles()
         const decryptedFiles = await

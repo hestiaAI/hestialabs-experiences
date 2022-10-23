@@ -80,7 +80,8 @@
 </template>
 
 <script>
-import { mapState } from '@/utils/store-helper'
+import { pick } from 'lodash-es'
+
 import BaseVideo from '@/components/base/BaseVideo.vue'
 import ExternalLink from '@/components/misc/ExternalLink.vue'
 import UnitFiles from '@/components/unit/files/UnitFiles.vue'
@@ -110,14 +111,19 @@ export default {
       default: ''
     }
   },
-  computed: {
-    ...mapState({
-      tutorialVideos: state => state.experienceConfig.tutorialVideos,
-      videoHeight: state => state.experienceConfig.videoHeight || '400'
-    })
-  },
-  mounted() {
-    console.log('UnitIntroduction')
+  data() {
+    const { experienceConfig } = this.$store.state.xp
+    const properties = pick(experienceConfig, [
+      'dataPortal',
+      'dataPortalHtml',
+      'dataPortalMessage',
+      'tutorialVideos',
+      'videoHeight'
+    ])
+    return {
+      videoHeight: '400',
+      ...properties
+    }
   },
   methods: {
     onUnitFilesUpdate({ uppyFiles }) {

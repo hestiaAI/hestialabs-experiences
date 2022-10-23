@@ -7,7 +7,7 @@ import './assets/dc.css'
 
 import { MODULE_NAME } from '@/utils/store-helper'
 export { default as vuetify } from './plugins/vuetify'
-export { default as vueI18n } from './plugins/i18n'
+export { default as i18n } from './plugins/i18n'
 // https://github.com/vuetifyjs/vue-cli-plugins/issues/140#issuecomment-599001935
 // new Vue({
 // }).$mount('#app')

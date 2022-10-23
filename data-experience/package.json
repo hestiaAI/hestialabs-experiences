@@ -64,10 +64,11 @@
     "eslint-plugin-promise": "^6.0.1",
     "eslint-plugin-vue": "^9.4.0",
     "file-loader": "^6.2.0",
-    "sass": "~1.32.6",
+    "sass": "~1.32.13",
     "sass-loader": "^10.3.1",
     "vue-cli-plugin-i18n": "~2.3.1",
     "vue-cli-plugin-vuetify": "~2.5.8",
+    "vuetify-loader": "^1.7.0",
     "worker-loader": "^3.0.8"
   },
   "peerDependencies": {
