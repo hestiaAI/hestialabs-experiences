@@ -538,33 +538,8 @@ export default {
 }
 </script>
 <style scoped>
-@import 'assets/styles/dc.css';
-
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
 ::v-deep #hour-chart g.y {
   display: none;
-}
-
-::v-deep .reset {
-  margin-left: 1rem;
-}
-
-::v-deep .v-application a.reset {
-  color: rgb(85, 3, 30);
-}
-
-::v-deep p.filters {
-  font-size: 0.8rem;
-  font-style: italic;
 }
 
 ::v-deep ul.list-inline {

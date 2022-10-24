@@ -398,31 +398,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
-::v-deep .range-chart > svg > g > g.axis.y {
-  display: none;
-}
-
-::v-deep .reset {
-  margin-left: 1rem;
-}
-
-::v-deep .v-application a.reset {
-  color: rgb(85, 3, 30);
-}
-
-::v-deep p.filters {
-  font-size: 0.8rem;
-  font-style: italic;
-}
-</style>

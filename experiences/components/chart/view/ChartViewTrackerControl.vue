@@ -76,13 +76,17 @@
           </VCol>
           <VCol cols="12" md="6">
             <div id="app-chart">
-              <span v-t="messages['Applications that use trackers']" class="font-weight-bold" />
-              <a v-t="'reset'" class="reset" style="display: none" />
+              <div style="display: flex">
+                <span v-t="messages['Applications that use trackers']" class="font-weight-bold" />
+                <VSpacer />
+                <div id="app-search" class="search" />
+              </div>
               <p class="filters">
                 <span>
                   {{ $t('Current filter') }}
                   <span class="filter" />
                 </span>
+                <a v-t="'reset'" class="reset" style="display: none" />
               </p>
             </div>
           </VCol>
@@ -90,13 +94,17 @@
       </VCol>
       <VCol cols="12" md="3">
         <div id="advertiser-chart">
-          <span v-t="messages['Companies behind tracking']" class="font-weight-bold" />
-          <a v-t="'reset'" class="reset" style="display: none" />
+          <div style="display: flex">
+            <span v-t="messages['Companies behind tracking']" class="font-weight-bold" />
+            <VSpacer />
+            <div id="advertiser-search" />
+          </div>
           <p class="filters">
             <span>
               {{ $t('Current filter') }}
               <span class="filter" />
             </span>
+            <a v-t="'reset'" class="reset" style="display: none" />
           </p>
         </div>
       </VCol>
@@ -167,6 +175,10 @@ export default {
     }
   },
   methods: {
+    resetAll() {
+      dc.filterAll()
+      dc.renderAll()
+    },
     toggle() {
       this.$nextTick(() => {
         if (this.selectAll) {
@@ -206,6 +218,9 @@ export default {
       const categoryChart = new dc.PieChart('#category-chart')
       const advertiserChart = new dc.RowChart('#advertiser-chart')
       const appChart = new dc.RowChart('#app-chart')
+
+      const appSearch = this.createTextFilterWidget('#app-search')
+      const advertiserSearch = this.createTextFilterWidget('#advertiser-search')
 
       // Bind reset filters links
       d3.select('#volume-chart a.reset').on('click', function() {
@@ -258,6 +273,8 @@ export default {
       const categoryDimension = ndx.dimension(d => d.category)
       const advertiserDimension = ndx.dimension(d => d.tracker)
       const appDimension = ndx.dimension(d => d.app)
+      appSearch.dimension(ndx.dimension(d => d.app.toLowerCase()))
+      advertiserSearch.dimension(ndx.dimension(d => d.tracker.toLowerCase()))
 
       // Dimension for the app selector (has to be different from appDimension)
       this.selectAppDimension = ndx.dimension(d => d.app)

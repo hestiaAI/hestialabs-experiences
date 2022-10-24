@@ -348,19 +348,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-@import 'assets/styles/dc.css';
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
-::v-deep .range-chart > svg > g > g.axis.y {
-  display: none;
-}
-</style>
