@@ -95,7 +95,6 @@ export default {
       immediate: true,
       handler(v) {
         this.props.experienceConfig = experienceConfigs.find(e => e.slug === v)
-        console.log(this.props)
       }
     }
   }
