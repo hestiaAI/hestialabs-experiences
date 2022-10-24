@@ -44,7 +44,7 @@ const {
   i18nLocales = localeCodes
 } = JSON.parse(fs.readFileSync(`config/${configName}.json`))
 
-const messagesDefault = JSON.parse(fs.readFileSync(`i18n/${i18nLocale}.json`))
+const messagesDefault = JSON.parse(fs.readFileSync(`locales/${i18nLocale}.json`))
 const messagesConfig = i18nLocale in messages ? messages[i18nLocale] : {}
 
 // app properties for meta info:

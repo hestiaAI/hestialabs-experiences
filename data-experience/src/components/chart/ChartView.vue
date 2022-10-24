@@ -15,6 +15,7 @@
 
 <script>
 import DataValidator from '@/components/misc/DataValidator.vue'
+
 export default {
   name: 'ChartView',
   components: { DataValidator },
