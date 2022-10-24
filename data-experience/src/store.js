@@ -86,6 +86,9 @@ const store = {
       state.fileExplorerCurrentItem = item
       state.fileExplorerCurrentItem.selectedPaths = []
     }
+  },
+  getters: {
+    selectedPaths: state => state.fileExplorerCurrentItem.selectedPaths
   }
 }
 
