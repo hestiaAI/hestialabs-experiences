@@ -90,10 +90,6 @@ export default {
   name: 'UnitIntroduction',
   components: { UnitFiles, ExternalLink, BaseVideo },
   props: {
-    slug: {
-      type: String,
-      required: true
-    },
     success: {
       type: Boolean,
       default: false
@@ -118,7 +114,8 @@ export default {
       'dataPortalHtml',
       'dataPortalMessage',
       'tutorialVideos',
-      'videoHeight'
+      'videoHeight',
+      'slug'
     ])
     return {
       videoHeight: '400',

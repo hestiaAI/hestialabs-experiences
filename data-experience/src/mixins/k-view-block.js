@@ -4,9 +4,11 @@ export default {
     kViewBlock(key, prefix = '', postfix = '') {
       const pre = prefix ? `${prefix}.` : ''
       const post = postfix ? `.${postfix}` : ''
-      // fetch :experience param and view-block #id hash from $route
-      const { params: { experience }, hash } = this.$route
+      // fetch view-block #id hash from $route
+      const { hash } = this.$route
       const id = hash.slice(1)
+      // fetch experience slug from vuex
+      const experience = this.$store.state.xp.experienceConfig.slug
       return `experiences.${experience}.viewBlocks.${id}.${pre}${key}${post}`
     }
   }

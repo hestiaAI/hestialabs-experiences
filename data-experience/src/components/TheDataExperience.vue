@@ -55,7 +55,6 @@
           <VCol cols="12 mx-auto" md="6" class="tabItem">
             <UnitIntroduction
               v-bind="{
-                slug,
                 progress,
                 error,
                 success,
@@ -76,7 +75,7 @@
           </div>
         </VTabItem>
         <VTabItem
-          v-for="(viewBlock, index) in viewBlocks"
+          v-for="(viewBlock, index) in experienceConfig.viewBlocks"
           :key="index"
           :value="viewBlock.id"
           :transition="false"
@@ -93,7 +92,7 @@
                 <BaseProgressCircular size="64" width="4" />
               </div>
             </VOverlay>
-            <UnitQuery v-bind="{slug, ...viewBlock}" />
+            <UnitQuery v-bind="viewBlock" :slug="experienceConfig.slug" />
           </VCol>
         </VTabItem>
       </VTabsItems>
@@ -102,7 +101,7 @@
 </template>
 
 <script>
-import { debounce, pick, cloneDeep, merge } from 'lodash-es'
+import { debounce, cloneDeep, merge } from 'lodash-es'
 import { json, timeFormatDefaultLocale } from 'd3'
 
 import { locales, localeCodes } from '@/i18n/locales'
@@ -175,6 +174,7 @@ export default {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
     },
     tabs() {
+      const { hideSummary, hideFileExplorer, viewBlocks } = this.experienceConfig
       const disabled = !this.success || this.experienceProgress
       const tabs = [
         {
@@ -183,7 +183,7 @@ export default {
           titleKey: 'load-data.name',
           disabled: this.experienceProgress
         },
-        ...(!this.hideSummary
+        ...(!hideSummary
           ? [
               {
                 title: 'Summary',
@@ -193,7 +193,7 @@ export default {
               }
             ]
           : []),
-        ...(!this.hideFileExplorer
+        ...(!hideFileExplorer
           ? [
               {
                 title: 'Files',
@@ -203,7 +203,7 @@ export default {
               }
             ]
           : []),
-        ...this.viewBlocks.map(view => ({
+        ...viewBlocks.map(view => ({
           ...view,
           value: view.id,
           titleKey: this.k(view.id),
@@ -214,25 +214,29 @@ export default {
       return tabs
     },
     sqlQueries() {
-      return this.viewBlocks.map(o => this.sql[o.sql])
+      return this.experienceConfig.viewBlocks.map(o => this.sql[o.sql])
     }
   },
   watch: {
     experienceConfig: {
       immediate: true,
       async handler(value) {
-        Object.entries(
-          pick(value, [
-            'databaseConfig',
-            'files',
-            'hideSummary',
-            'hideFileExplorer',
-            'keepOnlyFiles',
-            'preprocessors',
-            'viewBlocks',
-            'slug'
-          ])
-        ).forEach(([key, value]) => (this[key] = value))
+        this.switchTab('load-data')
+        // Object.entries(
+        //   pick(value, [
+        //     'databaseConfig',
+        //     'files',
+        //     'hideSummary',
+        //     'hideFileExplorer',
+        //     'keepOnlyFiles',
+        //     'preprocessors',
+        //     'viewBlocks',
+        //     'slug'
+        //   ])
+        // ).forEach(([key, value]) => {
+        //   console.log(this, key, value)
+        //   this[key] = value
+        // })
         await this.mergeMessages()
         this.$store.commit('xp/setExperienceConfig', cloneDeep(value))
       }
@@ -310,7 +314,7 @@ export default {
     },
     // Convert local translation key to global vue18n
     k(localKey) {
-      return `experiences.${this.slug}.viewBlocks.${localKey}.title`
+      return `experiences.${this.experienceConfig.slug}.viewBlocks.${localKey}.title`
     },
     switchTab(value) {
       this.$router.push(`#${value}`)
@@ -325,7 +329,12 @@ export default {
       this.progress = false
     },
     async onUnitFilesUpdate({ uppyFiles }) {
-      const { databaseConfig: dbConfig } = this
+      const {
+        databaseConfig,
+        files,
+        preprocessors,
+        keepOnlyFiles
+      } = this.experienceConfig
       this.message = ''
       this.error = false
       this.success = false
@@ -347,20 +356,20 @@ export default {
       */
       // Set file manager
       const fileManager = new FileManager(
-        this.preprocessors,
+        preprocessors,
         fileManagerWorkers,
-        this.files,
-        this.keepOnlyFiles
+        files,
+        keepOnlyFiles
       )
       try {
         await fileManager.init(uppyFiles)
         this.$store.commit('xp/setFileManager', fileManager)
 
-        if (dbConfig) {
+        if (databaseConfig) {
           // create database
-          const db = await DBMS.createDB(dbConfig)
+          const db = await DBMS.createDB(databaseConfig)
           // generate database records via the file manager
-          const records = await DBMS.generateRecords(fileManager, dbConfig)
+          const records = await DBMS.generateRecords(fileManager, databaseConfig)
           // insert the records into the database
           DBMS.insertRecords(db, records)
           // commit the database to the Vuex store
