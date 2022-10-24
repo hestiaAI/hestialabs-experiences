@@ -155,16 +155,6 @@ export default {
     }
   },
   data() {
-    const properties = pick(this.experienceConfig, [
-      'databaseConfig',
-      'files',
-      'hideSummary',
-      'hideFileExplorer',
-      'keepOnlyFiles',
-      'preprocessors',
-      'viewBlocks',
-      'slug'
-    ])
     return {
       isNuxt: Boolean(process.env.configName),
       localeIndex: 0,
@@ -175,8 +165,7 @@ export default {
       success: false,
       message: '',
       overlay: false,
-      locales,
-      ...properties
+      locales
     }
   },
   computed: {
@@ -232,6 +221,18 @@ export default {
     experienceConfig: {
       immediate: true,
       async handler(value) {
+        Object.entries(
+          pick(value, [
+            'databaseConfig',
+            'files',
+            'hideSummary',
+            'hideFileExplorer',
+            'keepOnlyFiles',
+            'preprocessors',
+            'viewBlocks',
+            'slug'
+          ])
+        ).forEach(([key, value]) => (this[key] = value))
         await this.mergeMessages()
         this.$store.commit('xp/setExperienceConfig', cloneDeep(value))
       }
@@ -293,7 +294,6 @@ export default {
       i18nLocales.forEach((locale) => {
         /* experience messages */
         const messagesObject = { experiences: { [slug]: messagesExperience[locale] } }
-        console.log(messagesObject)
         this.$i18n.mergeLocaleMessage(locale, messagesObject)
 
         /* custom messages (override anything previously merged) */
