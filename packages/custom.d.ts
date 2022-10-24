@@ -1,10 +1,4 @@
-// https://stackoverflow.com/a/57129153/8238129
-declare module '*.jpg' {
-  const value: string
-  export default value
-}
-
-declare module '*.png' {
+declare module '@/icons/*' {
   const value: string
   export default value
 }
@@ -14,13 +8,34 @@ declare module '*.sql' {
   export default value
 }
 
-declare module '*.svg' {
+declare module '*package.json' {
+  const value: {
+    name: string
+    version: string
+    [key: string]: string
+  }
+  export default value
+}
+
+declare module '*messages.json' {
+  const value: Messages
+  export default value
+}
+
+declare module '*model.json' {
+  const value: object
+  export default value
+}
+
+declare module '@/data-samples/*' {
   const value: string
   export default value
 }
 
-declare module '*.json' {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const value: any
+declare module '@/data-samples/*.json' {
+  const value: string
   export default value
 }
+
+declare module 'ngraph.graph'
+declare module 'ngraph.centrality'

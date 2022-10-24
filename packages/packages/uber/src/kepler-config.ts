@@ -88,6 +88,8 @@ export default {
             dataId: '40eogm50r',
             label: 'dropoff',
             color: [130, 154, 227],
+            lineColor: [130, 154, 227],
+            lineWidth: 4,
             highlightColor: [252, 242, 26, 255],
             columns: {
               lat: 'Dropoff Lat',
@@ -127,7 +129,7 @@ export default {
           config: {
             dataId: '40eogm50r',
             label: 'begin trip -> dropoff arc',
-            color: [125, 201, 127],
+            color: [0, 90, 0],
             highlightColor: [252, 242, 26, 255],
             columns: {
               lat0: 'Begin Trip Lat',
@@ -137,8 +139,8 @@ export default {
             },
             isVisible: true,
             visConfig: {
-              opacity: 0.8,
-              thickness: 1,
+              opacity: 1,
+              thickness: 2.5,
               colorRange: {
                 name: 'Global Warming',
                 type: 'sequential',
@@ -153,7 +155,7 @@ export default {
                 ]
               },
               sizeRange: [0, 10],
-              targetColor: [237, 233, 250]
+              targetColor: null
             },
             hidden: false,
             textLabel: [

@@ -12,7 +12,7 @@
 const { combineReducers, applyMiddleware, createStore, compose } = Redux
 const { Provider } = ReactRedux
 
-export const buildStore = function() {
+const buildStore = function() {
   const reducers = combineReducers({
     // mount keplerGl reducer
     keplerGl: KeplerGl.keplerGlReducer
@@ -26,7 +26,7 @@ export const buildStore = function() {
   return store
 }
 
-export function init(containerElement, props = {}, store) {
+function init(containerElement, props = {}, store) {
   const KeplerElement = function(props) {
     return React.createElement(
       'div',
@@ -87,7 +87,7 @@ function extractDataId(config) {
  * A csv string, for example the trips from your uber data.
  * This argument is only used if there is no keplerData.
  */
-export function update(data, store) {
+function update(data, store) {
   const { config, rawCsv, keplerData } = data
   // make deep copy in order to not modifiy the store
   const configClone = JSON.parse(JSON.stringify(config))
@@ -143,3 +143,15 @@ export function update(data, store) {
     )
   }
 }
+
+export function initialiseIframe() {
+  console.log('initialize iframe')
+  const _store = buildStore()
+
+  if (window) {
+    window.init = args => init(document.getElementById('app'), args, _store)
+    window.update = data => update(data, _store)
+  }
+}
+
+initialiseIframe()

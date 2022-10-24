@@ -702,7 +702,7 @@ export class BrowserFile {
   }
 
   hash() {
-    hashFile(this.file)
+    return hashFile(this.file)
   }
 
   copy(newName) {

@@ -89,9 +89,8 @@
                   ...vizPropsTranslated
                 }"
               />
-              <UnitIframe
-                v-else-if="vizUrl"
-                :src="vizUrl"
+              <UnitKepler
+                v-else-if="vizKepler"
                 :args="clonedResultPostprocessed"
               />
             </VCol>
@@ -174,11 +173,11 @@ export default {
   },
   data() {
     const { visualization: v } = this
-    let vizUrl = false
+    let vizKepler = false
     let vizVue = false
     let vizVega = false
     if (typeof v === 'string') {
-      vizUrl = v.startsWith('/') && v
+      vizKepler = v.startsWith('/kepler') && v
       vizVue = v.endsWith('.vue') && v
     } else if (typeof v === 'object') {
       vizVega = v
@@ -190,7 +189,7 @@ export default {
       // then the UnitQuery component instance will react when
       // other instances add to the results object in the store.
       result: null,
-      vizUrl,
+      vizKepler,
       vizVue,
       vizVega
     }

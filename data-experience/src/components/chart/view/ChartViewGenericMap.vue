@@ -13,7 +13,7 @@
     <template v-if="total > 0">
       <VRow>
         <VCol cols="12">
-          <UnitIframe src="/kepler" :args="keplerArgs" />
+          <UnitKepler :args="keplerArgs" />
         </VCol>
         <p v-if="config.consent">
           {{ $t(k('search-info')) }}

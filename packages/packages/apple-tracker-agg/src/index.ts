@@ -7,7 +7,6 @@ import viewBlocks from './blocks'
 const options: ExperienceOptions = {
   ...baseOptions.options,
   databaseConfig,
-  dataSamples: [],
   files: {
     network: '**/block00.json',
     access: '**/block01.json'

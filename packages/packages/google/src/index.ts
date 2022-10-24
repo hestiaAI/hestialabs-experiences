@@ -4,6 +4,7 @@ import icon from '@/icons/google-takeout.png'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
 import messages from './messages.json'
+import dataSample from '@/data-samples/google-takeout.zip'
 
 const options: ExperienceOptions = {
   databaseConfig,
@@ -14,7 +15,7 @@ const options: ExperienceOptions = {
   files: {
     LOCATION_HISTORY: '**/*.json'
   },
-  dataSamples: ['takeout.zip'],
+  dataSamples: [dataSample],
   icon,
   keepOnlyFiles: true,
   messages,

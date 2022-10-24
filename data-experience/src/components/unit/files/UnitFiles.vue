@@ -54,14 +54,14 @@
           <BaseProgressCircular class="mr-2" />
           <span>{{ $t('unit-files.process-msg') }}</span>
         </template>
-        <template v-else-if="error || success">
+        <template v-else-if="readError || error || success">
           <BaseAlert
-            :type="error ? 'error' : 'success'"
+            :type="readError || error ? 'error' : 'success'"
             border="left"
             dense
             text
           >
-            {{ message }}
+            {{ error ? message : readErrorMsg }}
           </BaseAlert>
         </template>
       </VCol>
@@ -99,10 +99,10 @@ const locales = {
   fr: French
 }
 
-async function fetchSampleFile({ path, filename }) {
-  const response = await window.fetch(path)
+async function fetchSampleFile({ url, filename }) {
+  const response = await window.fetch(url)
   const blob = await response.blob()
-  return new BrowserFile(new File([blob], filename))
+  return new File([blob], filename)
 }
 
 export default {
@@ -129,13 +129,15 @@ export default {
   data() {
     return {
       uppy: null,
-      samples: [],
+      samples: dataSamples.map(url => ({ url, filename: url.match(/filename=([^&?]+)/)[1] })),
       selectedSamples: [],
       filesEmpty: true,
       status: false,
       dialog: false,
       privateKey: null,
-      publicKey: null
+      publicKey: null,
+      readError: false,
+      readErrorMsg: ''
     }
   },
   computed: {
@@ -202,19 +204,6 @@ export default {
       }
     }
   },
-  /*
-  async created() {
-    // files in assets/data/ are loaded with file-loader
-    this.samples = []
-    for (const filename of this.dataSamples) {
-      this.samples.push({
-        filename,
-        path: (await import(`@/assets/data/${filename}`)).default
-      })
-    }
-
-  },
-  */
   mounted() {
     const stringsOverride = {
       en: {
@@ -244,7 +233,7 @@ export default {
           strings: stringsOverride[this.$i18n.locale]
         }
       })
-    // allow dropping files anywhere on the page
+      // allow dropping files anywhere on the page
       .use(DropTarget, { target: document.body })
       .on('files-added', () => {
         this.filesEmpty = false
@@ -270,26 +259,33 @@ export default {
     this.uppy.close()
   },
   methods: {
-    async returnFiles() {
+    async decryptFiles(uppyFiles) {
       const decryptBlobPromise = promisify(decryptBlob)
-      const publicKey =
-            this.publicKey || this.$auth?.user.bubble.publicKey
+      const publicKey = this.publicKey || this.$auth?.user.bubble.publicKey
+      const decryptedFiles = await Promise.all(
+        uppyFiles.map(async(f) => {
+          const blob = await decryptBlobPromise(f.data, this.privateKey, publicKey)
+          return new File([blob], f.name)
+        })
+      )
+      return decryptedFiles
+    },
+    async returnFiles() {
+      this.readError = false
+      this.readErrorMsg = ''
       try {
-        const encryptedFiles = this.uppy.getFiles()
-        const decryptedFiles = await
-        Promise.all(
-          encryptedFiles.map(async(f) => {
-            if (!this.privateKey) {
-              return f.data
-            }
-            const blob = await decryptBlobPromise(f.data, this.privateKey, publicKey)
-            return new BrowserFile(new File([blob], f.name))
-          })
-        )
+        let files = this.uppy.getFiles()
+        if (this.privateKey) {
+          files = await this.decryptFiles(files)
+        } else {
+          files = files.map(f => f.data)
+        }
         this.status = true
-        this.$emit('update', { uppyFiles: decryptedFiles })
+        this.$emit('update', { uppyFiles: files.map(f => new BrowserFile(f)) })
       } catch (error) {
         console.error(error)
+        this.readError = true
+        this.readErrorMsg = String(error)
       }
     }
   }

@@ -52,9 +52,9 @@ class Api {
       .catch(error => callback(error))
   }
 
-  async deleteFiles(bubble, password) {
+  async deleteFiles(bubble, codeword) {
     const formData = new FormData()
-    formData.append('password', password)
+    formData.append('codeword', codeword)
     let errorMessage
     try {
       const resp = await fetch(
@@ -77,9 +77,9 @@ class Api {
     return errorMessage
   }
 
-  async uploadFile(file, destinationBubble, sourceBubble, password) {
+  async uploadFile(file, destinationBubble, sourceBubble, codeword) {
     const formData = new FormData()
-    formData.append('password', password)
+    formData.append('codeword', codeword)
     formData.append('source-bubble', sourceBubble)
     formData.append('file', file, file.name)
     let errorMessage
@@ -94,7 +94,7 @@ class Api {
       if (!resp.ok) {
         console.error(resp)
         // use http status text in case json() fails
-        const message403 = 'You entered an incorrect password, please try again'
+        const message403 = 'You entered an incorrect codeword, please try again'
         errorMessage = resp.status === 403 ? message403 : resp.statusText
       }
     } catch (error) {

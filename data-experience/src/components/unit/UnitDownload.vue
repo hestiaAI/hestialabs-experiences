@@ -163,7 +163,6 @@
 
 <script>
 import { promisify } from 'util'
-import { pick } from 'lodash-es'
 import { BrowserFile, filetype2icon, extension2filetype } from '@/utils/file-manager'
 import { decryptBlob } from '@/utils/encryption'
 
@@ -193,15 +192,9 @@ export default {
     }
   },
   data() {
-    const experience = this.$store.state.xp.experienceConfig
-    const experienceProps = pick(experience, [
-      'slug',
-      'title',
-      'dataPortal',
-      'dataPortalHtml',
-      'dataPortalMessage',
-      'tutorialVideos'
-    ])
+    const { slug } = this.$store.state.xp.experienceConfig
+    const { publicKey } = this.$store.state.xp.bubbleConfig
+
     return {
       timer: null,
       counter: 5,
@@ -214,7 +207,8 @@ export default {
       selectedFiles: [],
       privateKey: null,
       status: false,
-      ...experienceProps
+      publicKey,
+      slug
     }
   },
   computed: {
@@ -270,8 +264,8 @@ export default {
       }
     },
     deleteFiles() {
-      const { username, password } = this.$auth.user
-      this.$api.deleteFiles(username, password).then((res) => {
+      const { codeword } = this.$auth.user
+      this.$api.deleteFiles(this.bubble, codeword).then((res) => {
         if (res) { console.error(res) }
         this.fetchFilenames()
       })

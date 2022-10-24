@@ -57,7 +57,7 @@ test('generates a zip', async() => {
       },
       $auth: {
         user: {
-          password: ''
+          codeword: ''
         }
       }
     }

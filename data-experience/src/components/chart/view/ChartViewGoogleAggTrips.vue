@@ -33,7 +33,7 @@
             This map shows the trips made in public transport by at least k
             participants:
           </p>
-          <UnitIframe src="/kepler" :args="keplerArgs" />
+          <UnitKepler :args="keplerArgs" />
         </VCol>
       </VRow>
       <VRow>

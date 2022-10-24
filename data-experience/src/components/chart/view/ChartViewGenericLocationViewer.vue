@@ -19,7 +19,7 @@
     <template v-if="total > 0">
       <VRow>
         <VCol cols="12">
-          <UnitIframe src="/kepler" :args="keplerArgs" />
+          <UnitKepler :args="keplerArgs" />
         </VCol>
       </VRow>
       <VRow>

@@ -7,8 +7,9 @@
         :index="index"
       />
       <BasePasswordField
-        v-if="config.bypassLogin && !$auth.user.password"
-        v-model="password"
+        v-if="config.bypassLogin && !$auth.user.codeword"
+        :value.sync="codeword"
+        label="Codeword"
       />
       <BaseAlert v-if="missingRequiredFields">
         Some required fields are not filled in.
@@ -112,17 +113,16 @@ export default {
       filename: '',
       href: null,
       encrypt: false,
-      config: this.$auth.user.bubble,
-      password: this.$auth.user.password
+      codeword: this.$auth.user.codeword
     }
   },
   computed: {
-    ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles', 'experienceConfig']),
+    ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles', 'experienceConfig', 'bubbleConfig']),
     bubbleName() {
       return this.$route.params.bubble
     },
     destinationBubbleName() {
-      return this.config.consent?.destinationBubble
+      return this.bubbleConfig.consent?.destinationBubble
     },
     missingRequiredFields() {
       return !this.consentForm.every((section) => {
@@ -154,7 +154,7 @@ export default {
         const { publicKey } = await this.$api.getConfig(this.destinationBubbleName)
         return publicKey
       } else {
-        return this.config.publicKey
+        return this.bubbleConfig.publicKey
       }
     },
     async downloadZIP(encrypt) {
@@ -226,7 +226,12 @@ export default {
       const zip = new File([content], this.filename, {
         type: 'application/zip'
       })
-      const errorMessage = await this.$api.uploadFile(zip, destBubble, this.bubbleName, this.password)
+      const errorMessage = await this.$api.uploadFile(
+        zip,
+        destBubble,
+        this.bubbleName,
+        this.codeword
+      )
       this.sentStatus = !errorMessage
       this.sentErrorMessage = errorMessage
       this.sentProgress = false
