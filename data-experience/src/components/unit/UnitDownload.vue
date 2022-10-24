@@ -323,7 +323,7 @@ export default {
             const label = consoleLabel('decryptBlob', i)
             console.time(label)
             const privateKey = await this.privateKey.text()
-            const blob = await decryptBlobPromise(fileBlob, privateKey, this.publicKey)
+            const blob = await decryptBlobPromise(fileBlob, privateKey, this.$auth.user.bubble.publicKey)
             console.timeEnd(label)
             const filename = filenames[i]
             return new BrowserFile(new File([blob], filename))
