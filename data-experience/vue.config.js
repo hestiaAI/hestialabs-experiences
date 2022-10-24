@@ -62,7 +62,20 @@ module.exports = defineConfig({
       ]
     }
   },
-
+  // Fix issue when project path has a special symbol like '(' or ')'.
+  // Bug of copy-webpack-plugin or fast-glob, because cli will add the absolute path of the index.html
+  // in the public folder to the ignore list, if the path has a special symbol, copy-webpack-plugin will
+  // not match the path and will not ignore it. Therefore index.html will emit twice.
+  // source: https://github.com/vuejs/vue-cli/issues/7043#issuecomment-1069791347
+  chainWebpack: (config) => {
+    config.plugin('copy').tap((args) => {
+      const UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([()*?[\]{|}]|^!|[!+@](?=\())/g
+      const publicDir = path.resolve(process.VUE_CLI_SERVICE.context, 'public').replace(/\\/g, '/')
+      const escapePublicDir = publicDir.replace(UNESCAPED_GLOB_SYMBOLS_RE, '\\$2')
+      args[0].patterns[0].globOptions.ignore = args[0].patterns[0].globOptions.ignore.map(i => i.replace(publicDir, escapePublicDir))
+      return args
+    })
+  },
   pluginOptions: {
     i18n: {
       locale: 'en',
