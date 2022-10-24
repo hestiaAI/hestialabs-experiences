@@ -222,21 +222,6 @@ export default {
       immediate: true,
       async handler(value) {
         this.switchTab('load-data')
-        // Object.entries(
-        //   pick(value, [
-        //     'databaseConfig',
-        //     'files',
-        //     'hideSummary',
-        //     'hideFileExplorer',
-        //     'keepOnlyFiles',
-        //     'preprocessors',
-        //     'viewBlocks',
-        //     'slug'
-        //   ])
-        // ).forEach(([key, value]) => {
-        //   console.log(this, key, value)
-        //   this[key] = value
-        // })
         await this.mergeMessages()
         this.$store.commit('xp/setExperienceConfig', cloneDeep(value))
       }

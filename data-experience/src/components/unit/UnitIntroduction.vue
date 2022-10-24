@@ -52,7 +52,7 @@
         </VRow>
       </VCardText>
     </VCard>
-    <VCard v-if="tutorialVideos" flat>
+    <VCard v-if="tutorialVideos.length" flat>
       <VCardTitle class="text-h5 font-weight-bold justify-center">
         {{ $t('load-data.tutorial-title') }}{{ tutorialVideos.length > 1 ? 's' : '' }}
       </VCardTitle>
@@ -70,7 +70,7 @@
             :key="idx"
           >
             <VRow align="center" justify="center">
-              <BaseVideo :video-src="tutorialVideo" :height="videoHeight" />
+              <BaseVideo :video-src="tutorialVideo" :height="videoHeight || '400'" />
             </VRow>
           </VCarouselItem>
         </VCarousel>
@@ -80,11 +80,20 @@
 </template>
 
 <script>
-import { pick } from 'lodash-es'
+import { mapState } from '@/utils/store-helper'
 
 import BaseVideo from '@/components/base/BaseVideo.vue'
 import ExternalLink from '@/components/misc/ExternalLink.vue'
 import UnitFiles from '@/components/unit/files/UnitFiles.vue'
+
+const experienceProps = [
+  'dataPortal',
+  'dataPortalHtml',
+  'dataPortalMessage',
+  'tutorialVideos',
+  'videoHeight',
+  'slug'
+]
 
 export default {
   name: 'UnitIntroduction',
@@ -107,20 +116,12 @@ export default {
       default: ''
     }
   },
-  data() {
-    const { experienceConfig } = this.$store.state.xp
-    const properties = pick(experienceConfig, [
-      'dataPortal',
-      'dataPortalHtml',
-      'dataPortalMessage',
-      'tutorialVideos',
-      'videoHeight',
-      'slug'
-    ])
-    return {
-      videoHeight: '400',
-      ...properties
-    }
+  computed: {
+    ...mapState(
+      Object.fromEntries(
+        experienceProps.map(k => [k, state => state.experienceConfig[k]])
+      )
+    )
   },
   methods: {
     onUnitFilesUpdate({ uppyFiles }) {
