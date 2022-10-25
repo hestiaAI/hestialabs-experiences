@@ -44,7 +44,7 @@
             </div>
           </VCol>
         </VRow>
-        <p v-if="$store.state.bubbleConfig.consent">
+        <p v-if="$store.state.xp.bubbleConfig.consent">
           {{ $t('filter-info') }}
         </p>
       </VCol>

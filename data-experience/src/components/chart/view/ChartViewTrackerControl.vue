@@ -1,7 +1,7 @@
 <template>
   <VContainer>
     <VRow>
-      <p v-if="$store.state.bubbleConfig.consent">
+      <p v-if="$store.state.xp.bubbleConfig.consent">
         Any filtering you do will also limit what data is shared into the pool
         if you share this tab on the 'Share My Data' tab.
       </p>

@@ -15,7 +15,7 @@
         <VCol cols="12">
           <UnitKepler :args="keplerArgs" />
         </VCol>
-        <p v-if="$store.state.bubbleConfig.consent">
+        <p v-if="$store.state.xp.bubbleConfig.consent">
           {{ $t(k('search-info')) }}
           <br>
           {{ $t('filter-info') }}
