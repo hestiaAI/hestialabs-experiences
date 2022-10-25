@@ -220,16 +220,13 @@ export default {
   watch: {
     experienceConfig: {
       immediate: true,
-      async handler(value) {
-        this.switchTab('load-data')
-        await this.mergeMessages()
+      handler(value) {
         this.$store.commit('xp/setExperienceConfig', cloneDeep(value))
       }
     },
     siteConfigMerged: {
       immediate: true,
-      async handler(value) {
-        await this.mergeMessages()
+      handler(value) {
         // set initial state of locale dropdown
         this.localeIndex = localeCodes.indexOf(value.i18nLocale)
         // override light theme colors
@@ -267,6 +264,18 @@ export default {
         this.overlay = value
       }, 200)
     }
+  },
+  created() {
+    this.$watch(
+      vm => [vm.experienceConfig, vm.siteConfig],
+      async(val) => {
+        this.$store.commit('xp/clearStore')
+        await this.mergeMessages()
+      },
+      {
+        immediate: true
+      }
+    )
   },
   mounted() {
     this.switchTab('load-data')
