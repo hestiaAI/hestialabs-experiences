@@ -323,6 +323,10 @@ export default {
       this.progress = false
     },
     async onUnitFilesUpdate({ uppyFiles }) {
+      const start = new Date()
+      const consoleLabel = (...labels) => `TheDataExperience.onUnitFilesUpdate${labels.length ? '.' + labels.join('.') : ''}`
+      console.time(consoleLabel())
+
       const {
         databaseConfig,
         files,
@@ -333,7 +337,6 @@ export default {
       this.error = false
       this.success = false
       this.progress = true
-      const start = new Date()
 
       // Clean vuex state
       this.$store.commit('xp/clearStore', {})
@@ -348,26 +351,37 @@ export default {
       }
       this.$store.commit('xp/setConsentForm', consentForm)
       */
-      // Set file manager
-      const fileManager = new FileManager(
-        preprocessors,
-        fileManagerWorkers,
-        files,
-        keepOnlyFiles
-      )
       try {
+        console.time(consoleLabel('initFileManager'))
+        // Set file manager
+        const fileManager = new FileManager(
+          preprocessors,
+          fileManagerWorkers,
+          files,
+          keepOnlyFiles
+        )
         await fileManager.init(uppyFiles)
         this.$store.commit('xp/setFileManager', fileManager)
+        console.timeEnd(consoleLabel('initFileManager'))
 
         if (databaseConfig) {
+          const consoleLabelDBMS = consoleLabel.bind(null, 'DBMS')
+          console.time(consoleLabelDBMS())
           // create database
+          console.time(consoleLabelDBMS('createDB'))
           const db = await DBMS.createDB(databaseConfig)
+          console.timeEnd(consoleLabelDBMS('createDB'))
           // generate database records via the file manager
+          console.time(consoleLabelDBMS('generateRecords'))
           const records = await DBMS.generateRecords(fileManager, databaseConfig)
+          console.timeEnd(consoleLabelDBMS('generateRecords'))
           // insert the records into the database
+          console.time(consoleLabelDBMS('insertRecords'))
           DBMS.insertRecords(db, records)
+          console.timeEnd(consoleLabelDBMS('insertRecords'))
           // commit the database to the Vuex store
           this.$store.commit('xp/setCurrentDB', db)
+          console.timeEnd(consoleLabelDBMS())
         }
       } catch (e) {
         this.handleError(e)
