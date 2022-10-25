@@ -52,11 +52,11 @@
 import mixin from './mixin'
 import { kAnonymityFilter } from '@/utils/kAnonymity'
 import ChartViewTopRow from './ChartViewTopRow.vue'
-import UnitIframe from '@/components/unit/UnitIframe.vue'
+import UnitKepler from '@/components/unit/UnitKepler.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 export default {
-  components: { ChartViewTopRow, UnitIframe, UnitFilterableTable },
+  components: { ChartViewTopRow, UnitKepler, UnitFilterableTable },
   mixins: [mixin],
   props: {
     keplerConfig: {

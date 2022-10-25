@@ -102,12 +102,13 @@ import { removeEmptyBins } from './utils/DCHelpers'
 import { datetimeFormatter } from '@/utils/dates'
 import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
+import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vue'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
-  components: { ChartViewVRowWebShare, UnitFilterableTable },
+  components: { ChartViewVRowWebShare, UnitFilterableTable, ChartViewTextSelectTimeRange },
   mixins: [mixin],
   data() {
     return {

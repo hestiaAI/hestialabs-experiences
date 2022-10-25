@@ -128,10 +128,8 @@ export default {
     }
   },
   data() {
-    // const { files, dataSamples } = this.$store.getters.experience(this.$route)
     return {
       uppy: null,
-      samples: [], // dataSamples.map(url => ({ url, filename: url.match(/filename=([^&?]+)/)[1] })),
       selectedSamples: [],
       filesEmpty: true,
       status: false,
@@ -146,7 +144,9 @@ export default {
     ...mapState(['fileManager']),
     ...mapState({
       files: state => state.experienceConfig.files,
-      dataSamples: state => state.experienceConfig.dataSamples
+      samples: state => state.experienceConfig.dataSamples.map(
+        url => ({ url, filename: url.match(/filename=([^&?]+)/)[1] })
+      )
     }),
     disabled() {
       return this.filesEmpty
@@ -163,7 +163,7 @@ export default {
     // Watch files, if user empty all files we reset the store and delete all files
     filesEmpty() {
       if (this.filesEmpty && this.fileManager) {
-        this.$store.commit('clearStore')
+        this.$store.commit('xp/clearStore')
       }
     },
     async selectedSamples(newSamples, oldSamples) {
@@ -227,8 +227,10 @@ export default {
           strings: stringsOverride[this.$i18n.locale]
         }
       })
-    // allow dropping files anywhere on the page
-      .use(DropTarget, { target: document.body })
+      .use(DropTarget, {
+        // allow dropping files anywhere on the page
+        target: document.body
+      })
       .on('files-added', () => {
         this.filesEmpty = false
       })
@@ -252,7 +254,7 @@ export default {
   methods: {
     async decryptFiles(uppyFiles) {
       const decryptBlobPromise = promisify(decryptBlob)
-      const publicKey = this.publicKey || this.$store.getters.routeConfig(this.$route).publicKey
+      const publicKey = this.publicKey || this.$auth?.user.bubble.publicKey
       const decryptedFiles = await Promise.all(uppyFiles.map(async(f) => {
         const blob = await decryptBlobPromise(f.data, this.privateKey, publicKey)
         return new File([blob], f.name)

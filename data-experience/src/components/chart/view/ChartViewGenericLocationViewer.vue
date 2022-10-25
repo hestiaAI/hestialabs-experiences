@@ -36,11 +36,11 @@
 </template>
 <script>
 import mixin from './mixin'
-import UnitIframe from '@/components/unit/UnitIframe.vue'
+import UnitKepler from '@/components/unit/UnitKepler.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 export default {
-  components: { UnitIframe, UnitFilterableTable },
+  components: { UnitKepler, UnitFilterableTable },
   mixins: [mixin],
   data() {
     return {

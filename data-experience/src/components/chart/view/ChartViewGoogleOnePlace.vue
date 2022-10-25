@@ -37,10 +37,10 @@
 <script>
 import { uniqBy, groupBy, orderBy } from 'lodash-es'
 import mixin from './mixin'
-import UnitIframe from '@/components/unit/UnitIframe.vue'
+import UnitKepler from '@/components/unit/UnitKepler.vue'
 
 export default {
-  components: { UnitIframe },
+  components: { UnitKepler },
   mixins: [mixin],
   props: {
     keplerConfig: {

@@ -112,7 +112,7 @@ import { cloneDeep, merge } from 'lodash-es'
 import UnitPipelineSql from './UnitPipelineSql.vue'
 import UnitFilesDialog from './files/UnitFilesDialog.vue'
 import ChartView from '@/components/chart/ChartView.vue'
-import UnitIframe from '@/components/unit/UnitIframe.vue'
+import UnitKepler from '@/components/unit/UnitKepler.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 import UnitVegaViz from '@/components/unit/UnitVegaViz.vue'
 import BaseAlert from '@/components/base/BaseAlert.vue'
@@ -120,7 +120,7 @@ import UnitPipelineCustom from './UnitPipelineCustom.vue'
 
 export default {
   name: 'UnitQuery',
-  components: { UnitPipelineSql, UnitFilesDialog, ChartView, UnitIframe, UnitFilterableTable, UnitVegaViz, BaseAlert, UnitPipelineCustom },
+  components: { UnitPipelineSql, UnitFilesDialog, ChartView, UnitKepler, UnitFilterableTable, UnitVegaViz, BaseAlert, UnitPipelineCustom },
   props: {
     slug: {
       type: String,
