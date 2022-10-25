@@ -7,6 +7,7 @@ const store = {
     progress: false,
     experienceConfig: {},
     siteConfig: {},
+    bubbleConfig: {},
     selectedFiles: [],
     results: {},
     currentDB: null,

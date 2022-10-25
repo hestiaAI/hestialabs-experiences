@@ -1,7 +1,7 @@
 <template>
   <VContainer>
     <VRow>
-      <p v-if="config.consent">
+      <p v-if="$store.state.bubbleConfig.consent">
         Any filtering you do will also limit what data is shared into the pool
         if you share this tab on the 'Share My Data' tab.
       </p>
@@ -127,7 +127,6 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
-import { mapState } from '@/utils/store-helper'
 import mixin from './mixin'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vue'
@@ -157,7 +156,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config']),
     selectAll() {
       return this.selectedApps.length === this.apps.length
     },

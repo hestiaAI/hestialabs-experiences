@@ -15,7 +15,7 @@
         <VCol cols="12">
           <UnitKepler :args="keplerArgs" />
         </VCol>
-        <p v-if="config.consent">
+        <p v-if="$store.state.bubbleConfig.consent">
           {{ $t(k('search-info')) }}
           <br>
           {{ $t('filter-info') }}
@@ -100,7 +100,6 @@
 </template>
 
 <script>
-import { mapState } from '@/utils/store-helper'
 import mixin from './mixin'
 import { kAnonymityFilter } from '@/utils/kAnonymity'
 import UnitKepler from '@/components/unit/UnitKepler.vue'
@@ -147,7 +146,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(['config']),
     total() {
       return this.results.length
     },
