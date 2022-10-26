@@ -39,24 +39,9 @@
         </div>
       </VCol>
     </VRow>
-    <VRow>
-      <template v-if="filterCount === totalCount">
-        <i18n tag="div" :path="kViewBlock('selected-all')">
-          <template #totalCount>
-            <span class="font-weight-bold" v-text="totalCount" />
-          </template>
-        </i18n>
-        <span v-t="'click-graph'" />
-      </template>
-      <template v-else>
-        <i18n tag="div" :path="kViewBlock('selected-some')">
-          <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
-            <span :key="k" class="font-weight-bold" v-text="v" />
-          </template>
-        </i18n>
-        <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
-      </template>
-    </VRow>
+    <ChartViewDcFilterCount
+      v-bind="{ filterCount, totalCount }"
+    />
     <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
   </VContainer>
 </template>
@@ -66,7 +51,7 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
-import { createCumulativeGroup } from './utils/DCHelpers'
+import { createCumulativeGroup } from './utils/dc-helpers'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -93,10 +78,6 @@ export default {
     }
   },
   methods: {
-    resetAll() {
-      dc.filterAll()
-      dc.renderAll()
-    },
     removeEmptyBins(group) {
       return {
         top(n) {

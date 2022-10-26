@@ -85,25 +85,14 @@
         </div>
       </VCol>
     </ChartViewVRowWebShare>
-    <VRow>
-      <template v-if="filterCount === totalCount">
-        <i18n tag="div" :path="kViewBlock('selected-all')">
-          <template #totalCount>
-            <span class="font-weight-bold" v-text="totalCount" />
-          </template>
-        </i18n>
-        <span v-t="'click-graph'" />
-      </template>
-      <template v-else>
-        <i18n tag="div" :path="kViewBlock('selected-some')">
-          <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
-            <span :key="k" class="font-weight-bold" v-text="v" />
-          </template>
-        </i18n>
-        <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
-      </template>
-    </VRow>
-    <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results, kViewBlock }" />
+    <ChartViewDcFilterCount
+      v-bind="{ filterCount, totalCount }"
+    />
+    <UnitFilterableTable
+      :id="
+        id"
+      v-bind="{ headers: header, items: results, kViewBlock }"
+    />
   </VContainer>
 </template>
 
@@ -151,10 +140,6 @@ export default {
     }
   },
   methods: {
-    resetAll() {
-      dc.filterAll()
-      dc.renderAll()
-    },
     toggle() {
       this.$nextTick(() => {
         if (this.selectAll) {

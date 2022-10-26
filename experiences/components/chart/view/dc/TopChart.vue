@@ -13,7 +13,7 @@
 <script>
 import * as d3 from 'd3'
 import * as dc from 'dc'
-import { removeEmptyBins } from '../utils/DCHelpers'
+import { removeEmptyBins } from '../utils/dc-helpers'
 import mixin from './mixin'
 
 // Remove warning on default colorscheme, even if not used..

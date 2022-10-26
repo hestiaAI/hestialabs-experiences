@@ -25,8 +25,8 @@ const mixin = {
   data() {
     return {
       graphId: 'graph_' + this.id,
-      totalCount: null,
-      filterCount: null
+      totalCount: 0,
+      filterCount: 0
     }
   },
   mounted() {

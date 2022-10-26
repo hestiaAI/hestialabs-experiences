@@ -54,7 +54,7 @@ import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import { mapState } from 'vuex'
 import mixin from './mixin'
-import { removeEmptyBins } from './utils/DCHelpers'
+import { removeEmptyBins } from './utils/dc-helpers'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)

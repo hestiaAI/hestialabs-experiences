@@ -54,7 +54,7 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
-import { addPiePercentage } from './utils/DCHelpers'
+import { addPiePercentage } from './utils/dc-helpers'
 import { isValidDate } from '@/utils/dates'
 
 // Remove warning on default colorscheme, even if not used..
