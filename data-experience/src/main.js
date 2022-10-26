@@ -18,6 +18,9 @@ export default {
     if (!options || !options.store) {
       throw new Error('Please initialise plugin with a Vuex store.')
     }
+    Vue.prototype.$days = function() {
+      return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(v => this.$t(`dayOfWeek.${v}`))
+    }
     if (!options.mixinsAlreadyInjected) {
       Vue.prototype.$tev = function(key, valueFallback) {
         // tev -> Translation Exists (else) Value fallback
@@ -28,9 +31,6 @@ export default {
         return this.$te(key) ? this.$t(key) : this.$t(keyFallback)
       }
 
-      Vue.prototype.$days = function() {
-        return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(v => this.$t(`dayOfWeek.${v}`))
-      }
       /*
       Vue.mixin({
         methods: {
