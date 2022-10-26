@@ -18,23 +18,39 @@ export default {
     if (!options || !options.store) {
       throw new Error('Please initialise plugin with a Vuex store.')
     }
-
-    Vue.mixin({
-      methods: {
-        // inject translation helpers to encapsulate ternary expressions
-        $tev(key, valueFallback) {
-          // tev -> Translation Exists (else) Value fallback
-          return this.$te(key) ? this.$t(key) : valueFallback
-        },
-        $tet(key, keyFallback) {
-          // tet -> Translation Exists (else) Translate fallback
-          return this.$te(key) ? this.$t(key) : this.$t(keyFallback)
-        },
-        $days() {
-          return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(v => this.$t(`dayOfWeek.${v}`))
-        }
+    if (!options.mixinsAlreadyInjected) {
+      Vue.prototype.$tev = function(key, valueFallback) {
+        // tev -> Translation Exists (else) Value fallback
+        return this.$te(key) ? this.$t(key) : valueFallback
       }
-    })
+      Vue.prototype.$tet = function(key, keyFallback) {
+        // tet -> Translation Exists (else) Translate fallback
+        return this.$te(key) ? this.$t(key) : this.$t(keyFallback)
+      }
+
+      Vue.prototype.$days = function() {
+        return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(v => this.$t(`dayOfWeek.${v}`))
+      }
+      /*
+      Vue.mixin({
+        methods: {
+        // inject translation helpers to encapsulate ternary expressions
+          $tev(key, valueFallback) {
+          // tev -> Translation Exists (else) Value fallback
+            return this.$te(key) ? this.$t(key) : valueFallback
+          },
+          $tet(key, keyFallback) {
+          // tet -> Translation Exists (else) Translate fallback
+            return this.$te(key) ? this.$t(key) : this.$t(keyFallback)
+          },
+          $days() {
+            return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(v => this.$t(`dayOfWeek.${v}`))
+          }
+        }
+
+      })
+      */
+    }
 
     // Vue.use(vuetify)
 

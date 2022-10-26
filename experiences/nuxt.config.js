@@ -2,6 +2,7 @@ import fs from 'fs'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 import { locales, localeCodes } from '../data-experience/src/i18n/locales'
+
 import { numberFormats } from './i18n/vue-i18n-number-formats'
 import { dateTimeFormats } from './i18n/vue-i18n-date-time-formats'
 
@@ -46,7 +47,6 @@ const {
 
 const messagesDefault = JSON.parse(fs.readFileSync(`locales/${i18nLocale}.json`))
 const messagesConfig = i18nLocale in messages ? messages[i18nLocale] : {}
-
 // app properties for meta info:
 // these affect the PWA manfiest.json
 // and possibly meta tags other than those
@@ -287,6 +287,6 @@ export default {
     '@/plugins/injected.js',
     '@/plugins/i18n.js',
     '@/plugins/vuetify.js',
-    '@/plugins/data-experience.js'
+    { src: '@/plugins/data-experience.js', ssr: false }
   ]
 }
