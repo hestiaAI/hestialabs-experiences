@@ -1,4 +1,4 @@
-import experience from '@hestiaai/tinder'
+import experience from '@hestia.ai/tinder'
 import { tinder } from './samples.helpers'
 import { NodeFile } from '~/utils/node-file'
 import {

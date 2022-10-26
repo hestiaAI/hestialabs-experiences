@@ -9,13 +9,13 @@ import type { NonEmptyArray, PipelineOutputItems } from '@/types/utils'
 import fs from 'fs'
 import path from 'path'
 
-import { camelCase } from 'lodash-es'
+import { camelCase } from 'lodash'
 import yargs from 'yargs/yargs'
 import { hideBin } from 'yargs/helpers'
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import experiences from '@hestiaai/hestialabs/dist/index.mjs'
+import experiences from '@hestia.ai/hestialabs/dist/index.mjs'
 
 import { SQLType } from '../lib/types/database-config.js'
 import { getCsvAndMergeFromID } from '../lib/pipelines/custom.js'
