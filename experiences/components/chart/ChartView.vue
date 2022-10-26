@@ -37,11 +37,6 @@ export default {
 @import 'assets/styles/dc.css';
 
 /* Global style for every graph */
-body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
 .dc-chart g.row text {
   fill: #22313f;
   font-weight: bold;
