@@ -1,5 +1,5 @@
 {
-  "name": "@hestiaai/fitbit",
+  "name": "@hestia.ai/fitbit",
   "version": "0.0.1-alpha.40",
   "main": "dist/index",
   "type": "module",

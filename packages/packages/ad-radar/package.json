@@ -1,5 +1,5 @@
 {
-  "name": "@hestiaai/ad-radar",
+  "name": "@hestia.ai/ad-radar",
   "version": "0.0.1-alpha.40",
   "main": "dist/index",
   "type": "module",

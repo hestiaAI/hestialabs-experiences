@@ -1,5 +1,5 @@
 {
-  "name": "@hestiaai/tiktok",
+  "name": "@hestia.ai/tiktok",
   "version": "0.0.1-alpha.47",
   "main": "dist/index",
   "type": "module",

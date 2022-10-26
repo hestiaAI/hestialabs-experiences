@@ -89,7 +89,7 @@ This section explains how packages are created and updated
 
 ```json
 {
-  "name": "@hestiaai/<NAME>",
+  "name": "@hestia.ai/<NAME>",
   "version": "0.0.0",
   "main": "dist/index",
   "type": "module",

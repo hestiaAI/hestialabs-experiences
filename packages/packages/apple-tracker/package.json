@@ -1,5 +1,5 @@
 {
-  "name": "@hestiaai/apple-tracker",
+  "name": "@hestia.ai/apple-tracker",
   "version": "0.0.1-alpha.32",
   "main": "dist/index",
   "type": "module",

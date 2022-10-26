@@ -1,5 +1,5 @@
 {
-  "name": "@hestiaai/tracker-control",
+  "name": "@hestia.ai/tracker-control",
   "version": "0.0.1-alpha.49",
   "main": "dist/index",
   "type": "module",

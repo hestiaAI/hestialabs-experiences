@@ -1,5 +1,5 @@
 {
-  "name": "@hestiaai/instagram",
+  "name": "@hestia.ai/instagram",
   "version": "0.0.1-alpha.54",
   "main": "dist/index",
   "type": "module",

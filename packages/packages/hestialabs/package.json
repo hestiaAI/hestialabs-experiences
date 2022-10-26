@@ -1,5 +1,5 @@
 {
-  "name": "@hestiaai/hestialabs",
+  "name": "@hestia.ai/hestialabs",
   "version": "0.0.1-alpha.6",
   "main": "dist/index",
   "type": "module",

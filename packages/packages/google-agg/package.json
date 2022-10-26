@@ -1,5 +1,5 @@
 {
-  "name": "@hestiaai/google-agg",
+  "name": "@hestia.ai/google-agg",
   "version": "0.0.1-alpha.41",
   "main": "dist/index",
   "type": "module",

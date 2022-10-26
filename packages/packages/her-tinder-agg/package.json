@@ -1,5 +1,5 @@
 {
-  "name": "@hestiaai/her-tinder-agg",
+  "name": "@hestia.ai/her-tinder-agg",
   "version": "0.0.1-alpha.43",
   "main": "dist/index",
   "type": "module",

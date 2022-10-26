@@ -1,5 +1,5 @@
 {
-  "name": "@hestiaai/facebook",
+  "name": "@hestia.ai/facebook",
   "version": "0.0.1-alpha.51",
   "main": "dist/index",
   "type": "module",
