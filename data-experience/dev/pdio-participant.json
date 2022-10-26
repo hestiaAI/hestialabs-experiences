@@ -1,0 +1,141 @@
+{
+  "passwordHash": "$argon2id$v=19$m=65536,t=2,p=1$Jy7S5x0/fWqQk8ddwXjD+A$hwVWdLlhnVhw3VrXu3QUPQ4k35stbgNddS8m7NXDmn8",
+  "publicConfig": {
+    "title": "Personaldata.io",
+    "description": "Understanding and grasping the data of VTC or delivery platforms. Measure the power of their collective use",
+    "bypassLogin": true,
+    "icon": "https://pbs.twimg.com/profile_images/836147486377000961/bOW4hLkb_400x400.jpg",
+    "experiences": [
+      "ad-radar",
+      "amazon",
+      "apple",
+      "apple-tracker",
+      "facebook",
+      "fitbit",
+      "google",
+      "her",
+      "instagram",
+      "linkedin",
+      "netflix",
+      "other",
+      "strava",
+      "tiktok",
+      "tinder",
+      "tracker-control",
+      "twitter",
+      "uber",
+      "uber-driver",
+      "youtube",
+      "explorer"
+    ],
+    "consent": {
+      "destinationBubble": "pdio-aggregator",
+      "google": [
+        {
+          "title": "Consent & Share My Data",
+          "description": "With this form, you can make your final choices about which data will be shared into the pool and what information will be viewable by the group. We aim to show you the value of pooling your data and viewing it together with others. Please follow the 5 steps below to share your data into the pool."
+        },
+        {
+          "title": "1. Filter your data",
+          "description": "Using the previous tabs, which data should be shared into the pool (e.g. by dates, place or area)"
+        },
+        {
+          "title": "2. Select which tabs to share",
+          "description": "Please check which tabs’ data should be shared (you must have visited a tab for it to be selectable). Data from unchecked tabs will not be shared into the pool.",
+          "type": "data",
+          "required": true,
+          "hideFileSelection": true
+        },
+        {
+          "title": "3. Set your privacy setting",
+          "description": "You can specify how much of your data can be viewed in detail by the group by setting your privacy level. This lets you specify how anonymous you want to be. We will make sure that the details of your individual data remain anonymous by only showing datapoints that are common to multiple participants (for example, making sure our map only shows places that have been visited by several people, or wi-fi networks seen by many). Please select a value from the dropdown for the level of privacy that suits you:",
+          "type": "select",
+          "name": "k",
+          "placeholder": "Please choose a privacy level",
+          "options": [
+            {
+              "text": "Unrestricted – all of my datapoints are visible",
+              "value": "1"
+            },
+            {
+              "text": "Only show data points shared by at least 2 people including me",
+              "value": "2"
+            },
+            {
+              "text": "Only show data points shared by at least 3 people including me",
+              "value": "3"
+            },
+            {
+              "text": "Only show data points shared by at least 4 people including me",
+              "value": "4"
+            },
+            {
+              "text": "Only show data points shared by at least 5 people including me",
+              "value": "5"
+            },
+            {
+              "text": "Only show data points shared by at least 6 people including me",
+              "value": "6"
+            },
+            {
+              "text": "Only show data points shared by at least 7 people including me",
+              "value": "7"
+            },
+            {
+              "text": "Only show data points shared by at least 8 people including me",
+              "value": "8"
+            },
+            {
+              "text": "Only show data points shared by at least 9 people including me",
+              "value": "9"
+            }
+          ],
+          "required": true
+        },
+        {
+          "title": "4. Give consent",
+          "description": "<h3>Storage and Future Use</h3>During the workshop, all data aggregation and analysis will be done locally on Hestia.ai servers. <b>All individual and pooled data will be deleted from Hestia.ai servers immediately after the workshop.</b> You have the right to withdraw your data from the pool or to participate without sharing your data. <br><br>At the conclusion of the workshop, your group may receive a summary of the analysis on the condition that everyone who contributed data provides consent. This decision can be made after the results are discussed.<h3 class='mt-4'>Any questions?</h3>If you have any remaining questions, please do not hesitate to ask a member of the Hestia.ai team.<h3 class='mt-4'>Please check to agree to the following<h3/>",
+          "type": "checkbox",
+          "options": [
+            "I agree to share the subset of my data I have selected on the previous tabs into the common pool. I understand that all of my shared data can be used in analysis (e.g. totals) but that when viewing details, only those data points matching the privacy level I have selected will be visible."
+          ],
+          "required": true
+        },
+        {
+          "title": "5. Upload Your Data to the Pool",
+          "description": "Once you are happy with your choices, please click the button to share your data:"
+        }
+      ],
+      "default": [
+        {
+          "title": "Consent & Share My Data",
+          "description": "With this form, you can make your final choices about which data will be shared into the pool and what information will be viewable by the group. We aim to show you the value of pooling your data and viewing it together with others. Please follow the 4 steps below to share your data into the pool."
+        },
+        {
+          "title": "1. Filter your data",
+          "description": "Using the previous tabs, which data should be shared into the pool (e.g. by dates, numbers or strings)"
+        },
+        {
+          "title": "2. Select which tabs to share",
+          "description": "Please check which tabs’ data should be shared (you must have visited a tab for it to be selectable). Data from unchecked tabs will not be shared into the pool.",
+          "type": "data",
+          "required": true,
+          "hideFileSelection": true
+        },
+        {
+          "title": "3. Give consent",
+          "description": "<h3>Storage and Future Use</h3>During the workshop, all data aggregation and analysis will be done locally on Hestia.ai servers. <b>All individual and pooled data will be deleted from Hestia.ai servers immediately after the workshop.</b> You have the right to withdraw your data from the pool or to participate without sharing your data. <br><br>At the conclusion of the workshop, your group may receive a summary of the analysis on the condition that everyone who contributed data provides consent. This decision can be made after the results are discussed.<h3 class='mt-4'>Any questions?</h3>If you have any remaining questions, please do not hesitate to ask a member of the Hestia.ai team.<h3 class='mt-4'>Please check to agree to the following<h3/>",
+          "type": "checkbox",
+          "options": [
+            "I agree to share the subset of my data I have selected on the previous tabs into the common pool. I understand that all of my shared data can be used in analysis (e.g. totals)."
+          ],
+          "required": true
+        },
+        {
+          "title": "4. Upload Your Data to the Pool",
+          "description": "Once you are happy with your choices, please click the button to share your data:"
+        }
+      ]
+    }
+  }
+}

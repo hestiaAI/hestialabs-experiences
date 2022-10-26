@@ -96,6 +96,15 @@
             <UnitQuery v-bind="viewBlock" :slug="experienceConfig.slug" />
           </VCol>
         </VTabItem>
+        <VTabItem
+          v-if="bubbleConfig.consent"
+          value="share-data"
+          :transition="false"
+        >
+          <VCol cols="12 mx-auto" sm="6" class="tabItem">
+            <UnitConsentForm />
+          </VCol>
+        </VTabItem>
       </VTabsItems>
     </VMain>
   </VApp>
@@ -119,6 +128,7 @@ import UnitIntroduction from '@/components/unit/UnitIntroduction.vue'
 import UnitQuery from '@/components/unit/UnitQuery.vue'
 import UnitSummary from '@/components/unit/UnitSummary.vue'
 import SettingsSpeedDial from '@/components/misc/SettingsSpeedDial.vue'
+import UnitConsentForm from '@/components/unit/consent-form/UnitConsentForm.vue'
 
 const siteConfigDefault = {
   i18nLocale: 'en',
@@ -140,7 +150,8 @@ export default {
     UnitFileExplorer,
     UnitIntroduction,
     UnitQuery,
-    UnitSummary
+    UnitSummary,
+    UnitConsentForm
   },
   props: {
     experienceConfig: {
@@ -150,6 +161,10 @@ export default {
     siteConfig: {
       type: Object,
       required: true
+    },
+    bubbleConfig: {
+      type: Object,
+      required: false
     }
   },
   data() {
@@ -210,6 +225,14 @@ export default {
           show: true
         }))
       ]
+      if (this.bubbleConfig.consent) {
+        tabs.push({
+          title: 'Share my data',
+          value: 'share-data',
+          titleKey: 'share-data.name',
+          disabled
+        })
+      }
       return tabs
     },
     sqlQueries() {
@@ -221,6 +244,12 @@ export default {
       immediate: true,
       handler(value) {
         this.$store.commit('xp/setExperienceConfig', cloneDeep(value))
+      }
+    },
+    bubbleConfig: {
+      immediate: true,
+      handler(value) {
+        this.$store.commit('xp/setBubbleConfig', cloneDeep(value))
       }
     },
     siteConfigMerged: {
@@ -308,7 +337,10 @@ export default {
       return `experiences.${this.experienceConfig.slug}.viewBlocks.${localKey}.title`
     },
     switchTab(value) {
-      this.$router.push(`#${value}`)
+      const newAnchor = `#${value}`
+      if (newAnchor !== this.$router.currentRoute.hash) {
+        this.$router.push(`#${value}`)
+      }
     },
     scrollToTop() {
       window.setTimeout(() => window.scrollTo(0, 0), 10)
@@ -328,7 +360,8 @@ export default {
         databaseConfig,
         files,
         preprocessors,
-        keepOnlyFiles
+        keepOnlyFiles,
+        viewBlocks
       } = this.experienceConfig
       this.message = ''
       this.error = false
@@ -339,15 +372,14 @@ export default {
       this.$store.commit('xp/clearStore', {})
 
       // Set consent form
-      /*
-      const consentForm = JSON.parse(JSON.stringify(this.consentFormTemplate))
+      const consentForm = JSON.parse(JSON.stringify(this.bubbleConfig?.consent))
       if (consentForm) {
         const section = consentForm.find(({ type }) => type === 'data')
-        section.titles = this.viewBlocks.map(e => e.title)
-        section.ids = this.viewBlocks.map(e => e.id)
+        section.titles = viewBlocks.map(e => e.title)
+        section.ids = viewBlocks.map(e => e.id)
       }
       this.$store.commit('xp/setConsentForm', consentForm)
-      */
+
       try {
         console.time(consoleLabel('initFileManager'))
         // Set file manager

@@ -7,7 +7,7 @@
         :index="index"
       />
       <BasePasswordField
-        v-if="bubbleConfig.bypassLogin && !$auth.user.codeword"
+        v-if="bubbleConfig.bypassLogin && !codeword"
         :value.sync="codeword"
         label="Codeword"
       />
@@ -77,11 +77,13 @@
             :download="filename"
           />
         </VCol>
+        <!--  TODO remove filedrop everywhere ?
         <VCol v-if="siteConfig.filedrop">
           <a :href="siteConfig.filedrop" target="_blank">
             <BaseButton text="Drop file here" />
           </a>
         </VCol>
+          -->
       </VRow>
     </VForm>
   </VContainer>
@@ -113,13 +115,13 @@ export default {
       filename: '',
       href: null,
       encrypt: false,
-      codeword: this.$auth.user.codeword
+      codeword: undefined // TODO this.$auth.user.codeword
     }
   },
   computed: {
     ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles', 'experienceConfig', 'bubbleConfig']),
     bubbleName() {
-      return this.$route.params.bubble
+      return this.bubbleConfig.id
     },
     destinationBubbleName() {
       return this.bubbleConfig.consent?.destinationBubble

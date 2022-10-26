@@ -22,6 +22,9 @@ const store = {
     setExperienceConfig(state, config) {
       state.experienceConfig = config
     },
+    setBubbleConfig(state, config) {
+      state.bubbleConfig = config
+    },
     setSiteConfig(state, config) {
       state.siteConfig = config
     },

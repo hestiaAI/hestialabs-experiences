@@ -40,6 +40,7 @@ import twitterAgg from '../../packages/packages/twitter-agg/dist/index.mjs'
 import uber from '../../packages/packages/uber/dist/index.mjs'
 import uberDriver from '../../packages/packages/uber-driver/dist/index.mjs'
 import youtube from '../../packages/packages/youtube/dist/index.mjs'
+import participantBubbleConfigFromServer from './pdio-participant.json'
 
 const experienceConfigs = [
   appleTracker,
@@ -77,6 +78,16 @@ const siteConfig = {
   }
 }
 
+function makeBubbleConfig(experience) {
+  const bubbleName = 'pdio'
+  const configFromServer = participantBubbleConfigFromServer.publicConfig
+  const consents = configFromServer.consent
+  const consentId = consents?.[experience] ? experience : 'default'
+  const consent = consents?.[consentId]
+  const bubbleConfig = { id: bubbleName, ...configFromServer, consent }
+  return bubbleConfig
+}
+
 export default {
   name: 'App',
   components: { TheDataExperience2 },
@@ -95,6 +106,7 @@ export default {
       immediate: true,
       handler(v) {
         this.props.experienceConfig = experienceConfigs.find(e => e.slug === v)
+        this.props.bubbleConfig = makeBubbleConfig(v)
       }
     }
   }
