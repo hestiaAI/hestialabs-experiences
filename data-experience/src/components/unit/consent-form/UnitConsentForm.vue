@@ -92,6 +92,7 @@
 <script>
 import { mapState } from '@/utils/store-helper'
 import JSZip from 'jszip'
+import BubbleApi from '@/utils/bubble-api'
 import { padNumber } from '~/utils/utils'
 import { encryptFile } from '~/utils/encryption'
 import { createObjectURL, mimeTypes } from '@/utils/utils'
@@ -99,7 +100,6 @@ import UnitConsentFormSection from './UnitConsentFormSection.vue'
 import BasePasswordField from '@/components/base/BasePasswordField.vue'
 import BaseAlert from '@/components/base/BaseAlert.vue'
 import BaseButton from '@/components/base/button/BaseButton.vue'
-
 export default {
   name: 'UnitConsentForm',
   components: { UnitConsentFormSection, BasePasswordField, BaseAlert, BaseButton },
@@ -120,6 +120,12 @@ export default {
   },
   computed: {
     ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles', 'experienceConfig', 'bubbleConfig']),
+    bubbleApi() {
+      if (!this.bubbleConfig) {
+        return undefined
+      }
+      return new BubbleApi(this.bubbleConfig.apiUrl)
+    },
     bubbleName() {
       return this.bubbleConfig.id
     },
@@ -153,7 +159,7 @@ export default {
   methods: {
     async getPublicKey() {
       if (this.destinationBubbleName) {
-        const { publicKey } = await this.$api.getConfig(this.destinationBubbleName)
+        const { publicKey } = await this.bubbleApi.getConfig(this.destinationBubbleName)
         return publicKey
       } else {
         return this.bubbleConfig.publicKey
@@ -228,7 +234,7 @@ export default {
       const zip = new File([content], this.filename, {
         type: 'application/zip'
       })
-      const errorMessage = await this.$api.uploadFile(
+      const errorMessage = await this.bubbleApi.uploadFile(
         zip,
         destBubble,
         this.bubbleName,

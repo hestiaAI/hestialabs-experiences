@@ -79,12 +79,13 @@ const siteConfig = {
 }
 
 function makeBubbleConfig(experience) {
-  const bubbleName = 'pdio'
+  const id = 'pdio'
+  const apiUrl = 'http://127.0.0.1:8000'
   const configFromServer = participantBubbleConfigFromServer.publicConfig
   const consents = configFromServer.consent
   const consentId = consents?.[experience] ? experience : 'default'
   const consent = consents?.[consentId]
-  const bubbleConfig = { id: bubbleName, ...configFromServer, consent }
+  const bubbleConfig = { ...configFromServer, id, apiUrl, consent }
   return bubbleConfig
 }
 
