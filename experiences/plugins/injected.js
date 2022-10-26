@@ -1,4 +1,5 @@
 export default ({ app }, inject) => {
+  /*
   const { i18n } = app
 
   // inject translation helpers to encapsulate ternary expressions
@@ -10,4 +11,5 @@ export default ({ app }, inject) => {
     // tet -> Translation Exists (else) Translate fallback
     return i18n.te(key) ? i18n.t(key) : i18n.t(keyFallback)
   })
+  */
 }
