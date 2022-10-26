@@ -121,22 +121,19 @@ cd ../experiences
 npm install
 ```
 
-### Authenticate to GitHub Packages
+### Login to npm
 
-Follow these instructions to authenticate to GitHub Packages with a personal access token (PAT).
-
-1. [Create a PAT](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). Select the scopes (permissions) `write:packages` and `delete:packages`. Never share your PAT with anybody. You may also use the shared PAT for the organization.
-
-2. [Authenticate](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-with-a-personal-access-token). The simplest recommended way is to add your PAT to your `~/.npmrc` file in your **home directory**. Your `.npmrc` should look like this:
+Add the following file to your `~/.npmrc` file in your **home directory**. Your `~/.npmrc` should look like this:
 
 ```
-//npm.pkg.github.com/:_authToken=TOKEN
-@hestiaai:registry=https://npm.pkg.github.com
+@hestia.ai:registry=https://registry.npmjs.org/
 ```
 
-**IMPORTANT SECURITY NOTE**
+Run the following command to login to npm:
 
-Your personal token is a secret that must not be shared with others. The shared organization token may be shared internally with relevant personnel. Never add the token to the `.npmrc` file in the repository. Tokens must never be pushed to GitHub.
+```sh
+npm login --scope=@hestia.ai --registry=https://registry.npmjs.org/
+```
 
 ### Bump version of packages changed since the last release
 
@@ -175,7 +172,6 @@ npm run lerna:publish
 - [Lerna docs](https://github.com/lerna/lerna)
 - [webpack docs](https://webpack.js.org/concepts/)
 - [TypeScript docs](https://www.typescriptlang.org/docs/)
-- [Working with the npm registry - GitHub Docs](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)
 
 # Notes
 
@@ -184,14 +180,3 @@ npm run lerna:publish
 ```sh
 $ npm run lerna:version "--" --force-publish
 ```
-
-# Troubleshooting
-
-## lerna:publish assumes packages are unpublished.
-
-```sh
-npm run lerna:publish
-lerna WARN Unable to determine published version, assuming "@hestiaai/youtube" unpublished.
-```
-
-Recreate a github token, your current one has probably expired.
