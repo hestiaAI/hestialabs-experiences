@@ -2,6 +2,24 @@
 # https://docs.netlify.com/configure-builds/file-based-configuration/
 
 [[redirects]]
+  from = "/facebook*"
+  to = "https://digipower.academy/experience/facebook"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/twitter*"
+  to = "https://digipower.academy/experience/twitter"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/google*"
+  to = "https://digipower.academy/experience/google"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "https://digipower.academy"
   status = 301
