@@ -7,7 +7,7 @@
         :index="index"
       />
       <BasePasswordField
-        v-if="config.bypassLogin && !$auth.user.codeword"
+        v-if="bubbleConfig.bypassLogin && !$auth.user.codeword"
         :value.sync="codeword"
         label="Codeword"
       />
@@ -77,8 +77,8 @@
             :download="filename"
           />
         </VCol>
-        <VCol v-if="config.filedrop">
-          <a :href="config.filedrop" target="_blank">
+        <VCol v-if="siteConfig.filedrop">
+          <a :href="siteConfig.filedrop" target="_blank">
             <BaseButton text="Drop file here" />
           </a>
         </VCol>

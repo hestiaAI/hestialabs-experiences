@@ -133,7 +133,7 @@
             </div>
           </VCol>
         </VRow>
-        <p v-if="config.consent">
+        <p v-if="$store.state.xp.bubbleConfig.consent">
           {{ $t('filter-info') }}
         </p>
       </VCol>
@@ -153,7 +153,6 @@
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
-import { mapState } from '@/utils/store-helper'
 import mixin from './mixin'
 import { removeEmptyBins } from './utils/DCHelpers'
 import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
@@ -180,9 +179,6 @@ export default {
       results: [],
       colorPalette: ['#58539E', '#847CEB', '#605BAB', '#4A4685', '#9498F2']
     }
-  },
-  computed: {
-    ...mapState(['config'])
   },
   methods: {
     resetAll() {
