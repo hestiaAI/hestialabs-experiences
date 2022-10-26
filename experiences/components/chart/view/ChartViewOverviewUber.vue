@@ -16,13 +16,7 @@
           <VCol cols="12" md="12">
             <div id="price-chart">
               <span class="font-weight-bold" v-text="messages['Cumulative expenses']" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  <span v-t="'Current filter'" />
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
             <div id="hour-chart">
               <ChartViewTextSelectTimeRange>
@@ -35,37 +29,19 @@
           <VCol cols="12" md="4">
             <div id="service-chart">
               <span class="font-weight-bold" v-text="messages['Service used']" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  <span v-t="'Current filter'" />
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
             <div id="week-chart">
               <span class="font-weight-bold" v-text="messages['Day of week']" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  <span v-t="'Current filter'" />
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
             <div id="address-chart">
               <span class="font-weight-bold" v-text="messages['Begin trip address']" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  <span v-t="'Current filter'" />
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>

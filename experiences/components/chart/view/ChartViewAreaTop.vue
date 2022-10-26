@@ -6,13 +6,7 @@
           <VCol cols="12" md="8">
             <div :id="`area-chart-${graphId}`">
               <strong>{{ titleArea }} {{ $t('per') }} {{ $t(timeUnit.accessor) }}</strong>
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
             <div :id="`range-chart-${graphId}`" class="range-chart">
               <ChartViewTextSelectTimeRange />
@@ -25,13 +19,7 @@
                 <VSpacer />
                 <div :id="`top-search-${graphId}`" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>

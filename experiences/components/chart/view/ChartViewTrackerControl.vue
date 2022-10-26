@@ -47,13 +47,7 @@
           <VCol cols="12">
             <div id="volume-chart">
               <span v-t="messages['Amount of tracking over time']" class="font-weight-bold" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
 
             <div id="range-chart">
@@ -65,13 +59,7 @@
           <VCol cols="12" md="6">
             <div id="category-chart">
               <span v-t="messages['Purposes of third party']" class="font-weight-bold" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="6">
@@ -81,13 +69,7 @@
                 <VSpacer />
                 <div id="app-search" class="search" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -99,13 +81,7 @@
             <VSpacer />
             <div id="advertiser-search" />
           </div>
-          <p class="filters">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-            <a v-t="'reset'" class="reset" style="display: none" />
-          </p>
+          <ChartViewFilters />
         </div>
       </VCol>
     </ChartViewVRowWebShare>

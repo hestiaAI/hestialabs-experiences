@@ -6,11 +6,7 @@
         <VSpacer />
         <div :id="`top-search-${graphId}`" />
       </div>
-      <p class="filters">
-        <span v-t="'Current filter'" />
-        <span class="filter" />
-        <a v-t="'reset'" class="reset" style="display: none" />
-      </p>
+      <ChartViewFilters />
     </div>
   </VContainer>
 </template>

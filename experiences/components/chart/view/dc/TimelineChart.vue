@@ -4,11 +4,7 @@
       <strong>{{ title }}</strong>
       <strong v-t="'per'" />
       <strong v-t="timeUnit.name" />
-      <a v-t="'reset'" class="reset" style="display: none" />
-      <p class="filters">
-        <span v-t="'Current filter'" />
-        <span class="filter" />
-      </p>
+      <ChartViewFilters />
     </div>
     <div :id="`range-chart-${graphId}`" class="range-chart">
       <ChartViewTextSelectTimeRange />

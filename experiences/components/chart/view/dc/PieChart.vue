@@ -4,11 +4,7 @@
       <div style="display: flex">
         <strong>{{ title }}</strong>
       </div>
-      <p class="filters">
-        <span v-t="'Current filter'" />
-        <span class="filter" />
-        <a v-t="'reset'" class="reset" style="display: none" />
-      </p>
+      <ChartViewFilters />
     </div>
   </VContainer>
 </template>

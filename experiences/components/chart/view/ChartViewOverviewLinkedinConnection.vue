@@ -4,13 +4,7 @@
       <VCol cols="12">
         <div :id="'connections-chart' + graphId">
           <span class="font-weight-bold" v-text="messages['Cumulative number of connections']" />
-          <a v-t="'reset'" class="reset" style="display: none" />
-          <p class="filters ma-0">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-          </p>
+          <ChartViewFilters />
         </div>
         <div :id="'range-chart' + graphId" class="range-chart">
           <ChartViewTextSelectTimeRange />
@@ -25,25 +19,13 @@
             <VSpacer />
             <div id="company-search" />
           </div>
-          <a v-t="'reset'" class="reset" style="display: none" />
-          <p class="filters ma-0">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-          </p>
+          <ChartViewFilters />
         </div>
       </VCol>
       <VCol cols="4">
         <div :id="'week-chart' + graphId">
           <span v-t="messages['Day']" class="font-weight-bold" />
-          <a v-t="'reset'" class="reset" style="display: none" />
-          <p class="filters ma-0">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-          </p>
+          <ChartViewFilters />
         </div>
       </VCol>
       <VCol cols="4">
@@ -53,13 +35,7 @@
             <VSpacer />
             <div id="position-search" />
           </div>
-          <a v-t="'reset'" class="reset" style="display: none" />
-          <p class="filters ma-0">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-          </p>
+          <ChartViewFilters />
         </div>
       </VCol>
     </VRow>

@@ -8,13 +8,7 @@
               <VCol cols="12">
                 <div :id="`messages-chart-${graphId}`">
                   <span class="font-weight-bold" v-text="messages['Messages Exchanged Over Time']" />
-                  <a v-t="'reset'" class="reset" style="display: none" />
-                  <p class="filters">
-                    <span>
-                      {{ $t('Current filter') }}
-                      <span class="filter" />
-                    </span>
-                  </p>
+                  <ChartViewFilters />
                 </div>
                 <div :id="`range-chart-${graphId}`" class="range-chart">
                   <ChartViewTextSelectTimeRange />
@@ -25,25 +19,13 @@
               <VCol cols="12" md="6">
                 <div :id="`hour-chart-${graphId}`">
                   <span class="font-weight-bold" v-text="messages['Time of Day']" />
-                  <a v-t="'reset'" class="reset" style="display: none" />
-                  <p class="filters">
-                    <span>
-                      {{ $t('Current filter') }}
-                      <span class="filter" />
-                    </span>
-                  </p>
+                  <ChartViewFilters />
                 </div>
               </VCol>
               <VCol cols="12" md="6">
                 <div :id="`week-chart-${graphId}`">
                   <span class="font-weight-bold" v-text="messages['Day']" />
-                  <a v-t="'reset'" class="reset" style="display: none" />
-                  <p class="filters">
-                    <span>
-                      {{ $t('Current filter') }}
-                      <span class="filter" />
-                    </span>
-                  </p>
+                  <ChartViewFilters />
                 </div>
               </VCol>
             </VRow>
@@ -55,13 +37,7 @@
                 <VSpacer />
                 <div :id="`user-search-${graphId}`" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>

@@ -15,13 +15,7 @@
               <div style="display: flex">
                 <strong>App</strong>
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -38,13 +32,7 @@
               <div style="display: flex">
                 <strong>Sexual Orientations</strong>
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>

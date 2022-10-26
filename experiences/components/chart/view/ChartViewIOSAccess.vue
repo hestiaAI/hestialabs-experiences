@@ -15,13 +15,7 @@
                 <VSpacer />
                 <div :id="`app-search-${graphId}`" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="6">
@@ -34,13 +28,7 @@
                   <span>{{ $t('chart-view.ios-access.resource-info') }}</span>
                 </VTooltip>
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>

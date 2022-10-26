@@ -15,13 +15,7 @@
                 <VSpacer />
                 <div :id="`app-search-${graphId}`" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
@@ -36,13 +30,7 @@
                 <VSpacer />
                 <div :id="`domain-search-${graphId}`" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
@@ -57,13 +45,7 @@
                     potentially profiling users.</span>
                 </VTooltip>
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -80,13 +62,7 @@
                 <VSpacer />
                 <div :id="`context-search-${graphId}`" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
@@ -101,13 +77,7 @@
                 <VSpacer />
                 <div :id="`domainOwner-search-${graphId}`" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
@@ -123,13 +93,7 @@
                   <span>Whether the app or the user initiated the connection.</span>
                 </VTooltip>
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a class="reset" style="display: none"> {{ $t('reset') }}</a>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
