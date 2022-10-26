@@ -18,7 +18,6 @@ export default {
     if (!options || !options.store) {
       throw new Error('Please initialise plugin with a Vuex store.')
     }
-    /*
     try {
       Vue.prototype.$tev = function(key, valueFallback) {
         // tev -> Translation Exists (else) Value fallback
@@ -42,7 +41,6 @@ export default {
     } catch (err) {
       throw new Error('Conflict: $days function is already injected in the host app, please change it\'s name.')
     }
-    */
     /*
       Vue.mixin({
         methods: {

@@ -126,11 +126,9 @@ const siteConfigDefault = {
   messages: {}
 }
 
-function d3Locale({ iso }) {
-  json(`https://cdn.jsdelivr.net/npm/d3-time-format@4/locale/${iso}.json`).then(
-    locale =>
-      timeFormatDefaultLocale(locale)
-  )
+async function d3Locale({ iso }) {
+  const locale = await json(`https://cdn.jsdelivr.net/npm/d3-time-format@4/locale/${iso}.json`)
+  timeFormatDefaultLocale(locale)
 }
 
 export default {
@@ -234,18 +232,16 @@ export default {
         if (value.theme) {
           Object.assign(this.$vuetify.theme.themes.light, value.theme)
         }
-        // initialize d3 locale
-        d3Locale(locales[this.localeIndex])
         this.$store.commit('xp/setSiteConfig', cloneDeep(value))
       }
     },
     localeIndex: {
       immediate: true,
-      handler(value) {
+      async handler(value) {
         // locale was switched by the user
         const localeProperties = locales[value]
         // -> update d3 locale
-        d3Locale(localeProperties)
+        await d3Locale(localeProperties)
         // -> update vue-i18n locale
         this.$i18n.locale = localeProperties.code
       }
