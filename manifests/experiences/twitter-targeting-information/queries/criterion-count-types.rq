@@ -1,8 +1,0 @@
-# authors: Valentin Oliver Loftsson <valentin.loftsson@hestia.ai>
-PREFIX : <http://hestia.ai/>
-
-SELECT ?type (count(?type) AS ?count)
-WHERE {
-  ?x :type ?type
-}
-GROUP BY ?type

@@ -1,9 +1,0 @@
-PREFIX h: <http://hestia.ai/>
-
-SELECT ?title ?action ?timestamp WHERE
-{
-    ?x a h:interaction .
-    ?x h:title ?title .
-    ?x h:action ?action .
-    ?x h:timestamp ?timestamp .
-}

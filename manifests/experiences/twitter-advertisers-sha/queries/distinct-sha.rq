@@ -1,9 +1,0 @@
-# authors: Florian Singer <florian.singer@hestia.ai>
-PREFIX :  <http://schema.org/>
-
-SELECT DISTINCT ?sha
-WHERE {
-    ?x a :Organization .
-    ?x :identifier ?sha .
-}
-ORDER BY ?sha
