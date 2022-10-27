@@ -3,6 +3,19 @@ export default class BubbleApi {
     this.apiUrl = bubbleServerUrl
   }
 
+  async list() {
+    const url = `${this.apiUrl}/bubbles/list`
+    const options = { method: 'GET' }
+
+    const res = await fetch(url, options)
+    if (!res.ok) {
+      throw new Error(
+        `Unable to fetch bubble list from server: Error ${res.status}`
+      )
+    }
+    return await res.json()
+  }
+
   async getConfig(bubbleName) {
     const url = `${this.apiUrl}/bubbles/${bubbleName}/config`
     const options = { method: 'GET' }
@@ -53,6 +66,32 @@ export default class BubbleApi {
         }
       })
       .catch(error => callback(error))
+  }
+
+  async login(id, codeword) {
+    let errorMessage
+    try {
+      const resp = await fetch(
+        `${this.apiUrl}/bubbles/login`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ id, codeword })
+        }
+      )
+      if (resp.status === 403) {
+        errorMessage =
+            'You entered an incorrect codeword, please try again'
+      } else if (!resp.ok) {
+        console.error(resp)
+        // use http status text in cas json() fails
+        errorMessage = resp.statusText
+        errorMessage = await resp.json()
+      }
+    } catch (error) {
+      errorMessage = errorMessage || 'Error'
+      console.error(error)
+    }
+    return errorMessage
   }
 
   async deleteFiles(bubble, codeword) {

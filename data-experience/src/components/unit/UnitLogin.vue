@@ -1,0 +1,82 @@
+<template>
+  <VContainer fluid style="max-width: 400px" class="mt-16">
+    <h1 class="text-h4 mb-6">
+      Login
+    </h1>
+    <VForm @submit.prevent="login">
+      <VTextField :value="id" label="ID" readonly />
+      <BasePasswordField
+        ref="codeword"
+        :value.sync="codeword"
+        :error-message.sync="errorMessage"
+        autofocus
+        label="Codeword"
+      />
+      <BaseButton type="submit">
+        Login
+      </BaseButton>
+    </VForm>
+  </VContainer>
+</template>
+
+<script>
+import BubbleApi from '@/utils/bubble-api'
+import BaseButton from '@/components/base/button/BaseButton.vue'
+import BasePasswordField from '@/components/base/BasePasswordField.vue'
+
+export default {
+  name: 'UnitLogin',
+  components: {
+    BasePasswordField,
+    BaseButton
+  },
+  props: {
+    bubbleConfig: {
+      type: Object,
+      required: true
+    }
+  },
+  auth: 'guest',
+  data() {
+    return {
+      errorMessage: '',
+      codeword: ''
+    }
+  },
+  head() {
+    return this.vueMeta('Login')
+  },
+  computed: {
+    id() {
+      return this.bubbleConfig.id
+    },
+    bubbleApi() {
+      return new BubbleApi(this.bubbleConfig.apiUrl)
+    }
+  },
+  methods: {
+    async login() {
+      try {
+        const { id, codeword } = this
+        if (!codeword) {
+          this.errorMessage = 'Please enter the codeword'
+          return
+        }
+        const error = await this.bubbleApi.login(id, codeword)
+        if (error) {
+          this.errorMessage = error
+        } else {
+          this.$store.commit('xp/setBubbleCodeword', codeword)
+        }
+      } catch (error) {
+        this.errorMessage = [
+          'An unknown error occurred, we apologize for the inconvenience.',
+          'Please report the error via e-mail to contact@hestialabs.org)',
+          error
+        ].join(' ')
+        console.error(error)
+      }
+    }
+  }
+}
+</script>

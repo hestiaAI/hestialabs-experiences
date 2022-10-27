@@ -28,84 +28,89 @@
           </VListItemGroup>
         </VList>
       </VMenu>
-      <VTabs
-        v-model="tab"
-        dark
-        background-color="primary"
-        slider-color="secondary"
-        slider-size="4"
-        show-arrows
-        center-active
-        centered
-        fixed-tabs
-        :eager="false"
-        class="fixed-tabs-bar"
-        @change="scrollToTop"
-      >
-        <VTab
-          v-for="(t, index) in tabs"
-          :key="index"
-          :disabled="t.disabled"
-          :to="`#${t.value}`"
+      <div v-if="showLogin">
+        <UnitLogin :bubbleConfig="bubbleConfig"/>
+      </div>
+      <div v-else>
+        <VTabs
+          v-model="tab"
+          dark
+          background-color="primary"
+          slider-color="secondary"
+          slider-size="4"
+          show-arrows
+          center-active
+          centered
+          fixed-tabs
+          :eager="false"
+          class="fixed-tabs-bar"
+          @change="scrollToTop"
         >
-          {{ $tev(t.titleKey, t.title) }}
-        </VTab>
-      </VTabs>
-      <VTabsItems v-model="tab">
-        <VTabItem value="load-data" :transition="false">
-          <VCol cols="12 mx-auto" md="6" class="tabItem">
-            <UnitIntroduction
-              v-bind="{
-                progress,
-                error,
-                success,
-                message
-              }"
-              @update="onUnitFilesUpdate"
-            />
-          </VCol>
-        </VTabItem>
-        <VTabItem value="summary" :transition="false">
-          <VCol cols="12 mx-auto" sm="6" class="tabItem">
-            <UnitSummary @switch-tab="switchTab" />
-          </VCol>
-        </VTabItem>
-        <VTabItem value="file-explorer" :transition="false">
-          <div class="tabItem">
-            <UnitFileExplorer />
-          </div>
-        </VTabItem>
-        <VTabItem
-          v-for="(viewBlock, index) in experienceConfig.viewBlocks"
-          :key="index"
-          :value="viewBlock.id"
-          :transition="false"
-        >
-          <VCol cols="12 mx-auto" class="tabItem">
-            <VOverlay :value="overlay" absolute opacity="0.8">
-              <div
-                class="d-flex flex-column align-center"
-                style="width: 100%; height: 100%"
-              >
-                <div class="mb-3">
-                  {{ $t('This might take a moment') }}
+          <VTab
+            v-for="(t, index) in tabs"
+            :key="index"
+            :disabled="t.disabled"
+            :to="`#${t.value}`"
+          >
+            {{ $tev(t.titleKey, t.title) }}
+          </VTab>
+        </VTabs>
+        <VTabsItems v-model="tab">
+          <VTabItem value="load-data" :transition="false">
+            <VCol cols="12 mx-auto" md="6" class="tabItem">
+              <UnitIntroduction
+                v-bind="{
+                  progress,
+                  error,
+                  success,
+                  message
+                }"
+                @update="onUnitFilesUpdate"
+              />
+            </VCol>
+          </VTabItem>
+          <VTabItem value="summary" :transition="false">
+            <VCol cols="12 mx-auto" sm="6" class="tabItem">
+              <UnitSummary @switch-tab="switchTab" />
+            </VCol>
+          </VTabItem>
+          <VTabItem value="file-explorer" :transition="false">
+            <div class="tabItem">
+              <UnitFileExplorer />
+            </div>
+          </VTabItem>
+          <VTabItem
+            v-for="(viewBlock, index) in experienceConfig.viewBlocks"
+            :key="index"
+            :value="viewBlock.id"
+            :transition="false"
+          >
+            <VCol cols="12 mx-auto" class="tabItem">
+              <VOverlay :value="overlay" absolute opacity="0.8">
+                <div
+                  class="d-flex flex-column align-center"
+                  style="width: 100%; height: 100%"
+                >
+                  <div class="mb-3">
+                    {{ $t('This might take a moment') }}
+                  </div>
+                  <BaseProgressCircular size="64" width="4" />
                 </div>
-                <BaseProgressCircular size="64" width="4" />
-              </div>
-            </VOverlay>
-            <UnitQuery v-bind="viewBlock" :slug="experienceConfig.slug" />
-          </VCol>
-        </VTabItem>
-        <VTabItem
-          v-if="consent"
-          value="share-data"
-          :transition="false"
-        >
-          <VCol cols="12 mx-auto" sm="6" class="tabItem">
-            <UnitConsentForm />
-          </VCol>
-        </VTabItem>
-      </VTabsItems>
+              </VOverlay>
+              <UnitQuery v-bind="viewBlock" :slug="experienceConfig.slug" />
+            </VCol>
+          </VTabItem>
+          <VTabItem
+            v-if="consent"
+            value="share-data"
+            :transition="false"
+          >
+            <VCol cols="12 mx-auto" sm="6" class="tabItem">
+              <UnitConsentForm />
+            </VCol>
+          </VTabItem>
+        </VTabsItems>
+      </div>
     </VMain>
   </VApp>
 </template>
@@ -124,6 +129,7 @@ import fileManagerWorkers from '@/utils/file-manager-workers'
 import BaseButton from '@/components/base/button/BaseButton.vue'
 import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 import UnitFileExplorer from '@/components/unit/file-explorer/UnitFileExplorer.vue'
+import UnitLogin from '@/components/unit/UnitLogin.vue'
 import UnitIntroduction from '@/components/unit/UnitIntroduction.vue'
 import UnitQuery from '@/components/unit/UnitQuery.vue'
 import UnitSummary from '@/components/unit/UnitSummary.vue'
@@ -147,6 +153,7 @@ export default {
     BaseButton,
     BaseProgressCircular,
     SettingsSpeedDial,
+    UnitLogin,
     UnitFileExplorer,
     UnitIntroduction,
     UnitQuery,
@@ -182,10 +189,14 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager']),
+    ...mapState(['fileManager', 'bubbleCodeword']),
     ...mapState({ experienceProgress: 'progress' }),
     siteConfigMerged() {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
+    },
+    showLogin() {
+      const bc = this.bubbleConfig
+      return bc && !bc.bypassLogin && !this.bubbleCodeword
     },
     consent() {
       return this.bubbleConfig?.consent

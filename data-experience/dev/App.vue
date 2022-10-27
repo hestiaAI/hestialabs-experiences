@@ -28,6 +28,7 @@
 
 <script>
 import TheDataExperience2 from '@/components/TheDataExperience.vue'
+import BubbleApi from '@/utils/bubble-api'
 
 import appleTracker from '../../packages/packages/apple-tracker/dist/index.mjs'
 import appleTrackerAgg from '../../packages/packages/apple-tracker-agg/dist/index.mjs'
@@ -51,7 +52,7 @@ import twitterAgg from '../../packages/packages/twitter-agg/dist/index.mjs'
 import uber from '../../packages/packages/uber/dist/index.mjs'
 import uberDriver from '../../packages/packages/uber-driver/dist/index.mjs'
 import youtube from '../../packages/packages/youtube/dist/index.mjs'
-import participantBubbleConfigFromServer from './pdio-participant.json'
+// import participantBubbleConfigFromServer from './pdio-participant.json'
 
 const experienceConfigs = [
   appleTracker,
@@ -89,35 +90,77 @@ const siteConfig = {
   }
 }
 
-function makeBubbleConfig(bubbleId, configFromServer, experience) {
+const noBubble = 'no bubble'
+const bubbleIds = [
+  noBubble,
+  // 'brown-aggregator',
+  // 'brown-participant',
+  // 'dating-apps-course',
+  // 'health-course',
+  // 'live-aggregator',
+  // 'live-participant',
+  // 'matching-algo-course',
+  // 'mercator-aggregator',
+  // 'mercator-participant',
+  // 'observe-aggregator',
+  // 'observe-participant',
+  // 'pdio-aggregator',
+  // 'pdio-participant',
+  // 'policy-making-course',
+  // 'reflets-aggregator',
+  // 'reflets-participant',
+  // 'sciencespo-aggregator',
+  // 'sciencespo-participant',
+  // 'sit-aggregator',
+  // 'sit-participant',
+  // 'swiss-mp-aggregator',
+  // 'swiss-mp-participant',
+  // 'th-aggregator',
+  // 'th-participant',
+  // 'tl-aggregator',
+  // 'tl-participant',
+  'demo-aggregator',
+  // 'demo-computation',
+  'demo-participant'
+]
+const configsFromServer = {}
+async function populateServerConfigs() {
+  const validBubbleIds = bubbleIds.filter(bi => bi !== noBubble)
+  const ps = validBubbleIds.map(bi => bubbleApi.getConfig(bi))
+  const serverConfigList = await Promise.all(ps)
+  validBubbleIds.forEach((bi, i) => {
+    configsFromServer[bi] = serverConfigList[i]
+  })
+}
+
+const theApiUrl = 'http://127.0.0.1:8000'
+const bubbleApi = new BubbleApi(theApiUrl)
+
+function makeBubbleConfig(bubbleId, experience) {
+  const configFromServer = configsFromServer[bubbleId]
   if (!configFromServer) {
     return undefined
   }
   const id = bubbleId
-  const apiUrl = 'http://127.0.0.1:8000'
+  const apiUrl = theApiUrl
   const consents = configFromServer.consent
   const consentId = consents?.[experience] ? experience : 'default'
   const consent = consents?.[consentId]
   const bubbleConfig = { ...configFromServer, id, apiUrl, consent }
+  console.log('bc', bubbleConfig)
   return bubbleConfig
 }
-
-const bubbles = [
-  ['no bubble', undefined],
-  ['pdio-participant', participantBubbleConfigFromServer.publicConfig]
-].map(el => ({ text: el[0], value: el }))
 
 export default {
   name: 'App',
   components: { TheDataExperience2 },
   data() {
     const experience = 'twitter'
-    const bubble = bubbles[0].value
     return {
       experiences,
       experience,
-      bubbles,
-      bubble,
+      bubbles: bubbleIds,
+      bubble: noBubble,
       props: {
         siteConfig
       }
@@ -127,16 +170,22 @@ export default {
     experience: {
       immediate: true,
       handler(v) {
-        this.props.experienceConfig = experienceConfigs.find(e => e.slug === v)
-        this.props.bubbleConfig = makeBubbleConfig(...this.bubble, v)
+        this.props.experienceConfig =
+          experienceConfigs.find(e => e.slug === v)
+        this.props.bubbleConfig =
+          makeBubbleConfig(this.bubble, this.experience)
       }
     },
     bubble: {
       immediate: true,
-      handler(v) {
-        this.props.bubbleConfig = makeBubbleConfig(...this.bubble, this.experience)
+      handler(bubbleId) {
+        this.props.bubbleConfig =
+          makeBubbleConfig(this.bubble, this.experience)
       }
     }
+  },
+  async created() {
+    populateServerConfigs()
   }
 }
 </script>
