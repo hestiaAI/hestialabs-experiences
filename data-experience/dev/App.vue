@@ -1,9 +1,20 @@
 <template>
-  <div id="app" class="app-dev">
+  <div id="app" class="app-dev d-inline-flex">
     <div style="margin: 30px 0; padding: 10px 0; border-bottom: dotted black 5px">
       <VSelect
+        label="Experience"
         v-model="experience"
         :items="experiences"
+        outlined
+        dense
+        attach=".app-dev .v-select"
+        :menu-props="{ bottom: true, offsetY: true }"
+        style="margin: auto; width: 200px;"
+      />
+      <VSelect
+        label="Bubble"
+        v-model="bubble"
+        :items="bubbles"
         outlined
         dense
         attach=".app-dev .v-select"
@@ -78,13 +89,12 @@ const siteConfig = {
   }
 }
 
-function makeBubbleConfig(experience) {
-  if (!experience) {
+function makeBubbleConfig(bubbleId, configFromServer, experience) {
+  if (!configFromServer) {
     return undefined
   }
-  const id = 'pdio'
+  const id = bubbleId
   const apiUrl = 'http://127.0.0.1:8000'
-  const configFromServer = participantBubbleConfigFromServer.publicConfig
   const consents = configFromServer.consent
   const consentId = consents?.[experience] ? experience : 'default'
   const consent = consents?.[consentId]
@@ -92,14 +102,22 @@ function makeBubbleConfig(experience) {
   return bubbleConfig
 }
 
+const bubbles = [
+  ['no bubble', undefined],
+  ['pdio-participant', participantBubbleConfigFromServer.publicConfig]
+].map(el => ({ text: el[0], value: el }))
+
 export default {
   name: 'App',
   components: { TheDataExperience2 },
   data() {
     const experience = 'twitter'
+    const bubble = bubbles[0].value
     return {
       experiences,
       experience,
+      bubbles,
+      bubble,
       props: {
         siteConfig
       }
@@ -110,7 +128,13 @@ export default {
       immediate: true,
       handler(v) {
         this.props.experienceConfig = experienceConfigs.find(e => e.slug === v)
-        this.props.bubbleConfig = makeBubbleConfig(undefined) // makeBubbleConfig(v)
+        this.props.bubbleConfig = makeBubbleConfig(...this.bubble, v)
+      }
+    },
+    bubble: {
+      immediate: true,
+      handler(v) {
+        this.props.bubbleConfig = makeBubbleConfig(...this.bubble, this.experience)
       }
     }
   }
