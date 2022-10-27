@@ -1,0 +1,10 @@
+.circleci
+.github
+.husky
+.nuxt
+.vscode
+assets
+config
+dist
+node_modules
+sw.*

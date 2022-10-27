@@ -33,6 +33,9 @@
     "./experiences",
     "./data-experience"
   ],
+  "eslint.options": {
+    "ignorePath": ".eslintignore"
+  },
   // https://eslint.vuejs.org/user-guide/#trouble-with-visual-studio-code
   // https://stackoverflow.com/a/64573900/8238129
   "vetur.validation.template": false,
