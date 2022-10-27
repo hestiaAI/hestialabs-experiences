@@ -340,9 +340,9 @@ export default {
       return `experiences.${this.experienceConfig.slug}.viewBlocks.${localKey}.title`
     },
     switchTab(value) {
-      const newAnchor = `#${value}`
-      if (newAnchor !== this.$router.currentRoute.hash) {
-        this.$router.push(`#${value}`)
+      const hash = `#${value}`
+      if (hash !== this.$route.hash) {
+        this.$router.push(hash)
       }
     },
     scrollToTop() {
