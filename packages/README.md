@@ -123,13 +123,15 @@ npm install
 
 ### Login to npm
 
-Add the following file to your `~/.npmrc` file in your **home directory**. Your `~/.npmrc` should look like this:
+1. Get an npm account and ask Paul-Olivier to add you to the hestia.ai organization in npm.
+
+2. Add the following file to your `~/.npmrc` file in your **home directory**. Your `~/.npmrc` should look like this:
 
 ```
 @hestia.ai:registry=https://registry.npmjs.org/
 ```
 
-Run the following command to login to npm:
+3. Run the following command to login to npm:
 
 ```sh
 npm login --scope=@hestia.ai --registry=https://registry.npmjs.org/
