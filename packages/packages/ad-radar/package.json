@@ -1,6 +1,6 @@
 {
-  "name": "@hestiaai/ad-radar",
-  "version": "0.0.1-alpha.39",
+  "name": "@hestia.ai/ad-radar",
+  "version": "0.0.1-alpha.41",
   "main": "dist/index",
   "type": "module",
   "files": [

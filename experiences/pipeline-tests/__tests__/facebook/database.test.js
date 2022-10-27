@@ -1,4 +1,4 @@
-import experience from '@hestiaai/facebook'
+import experience from '@hestia.ai/facebook'
 import {
   advertisersUsingYourActivity,
   advertisersWhoUploadedAContactList,

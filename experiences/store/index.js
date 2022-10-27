@@ -96,11 +96,11 @@ export const actions = {
         await Promise.all(
           state.config.experiences.map((packageNameAndTag) => {
             // We need to explicitly import dist (dist/index.mjs)
-            // and not just `@hestiaai/${name}`
+            // and not just `@hestia.ai/${name}`
             // since dynamic imports are not resolved by webpack
             // during the build step
             const [name] = packageNameAndTag.split('@')
-            return import(`@hestiaai/${name}/dist`)
+            return import(`@hestia.ai/${name}/dist`)
           })
         )
       ).map((module) => {

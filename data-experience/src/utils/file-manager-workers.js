@@ -9,3 +9,4 @@ import JsonWorker from '~/utils/json.worker.js'
 
 export default { CsvWorker, JsonWorker }
 */
+export default {}
