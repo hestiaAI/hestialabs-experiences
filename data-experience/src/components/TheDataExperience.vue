@@ -97,7 +97,7 @@
           </VCol>
         </VTabItem>
         <VTabItem
-          v-if="bubbleConfig.consent"
+          v-if="consent"
           value="share-data"
           :transition="false"
         >
@@ -187,6 +187,9 @@ export default {
     siteConfigMerged() {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
     },
+    consent() {
+      return this.bubbleConfig?.consent
+    },
     tabs() {
       const { hideSummary, hideFileExplorer, viewBlocks } = this.experienceConfig
       const disabled = !this.success || this.experienceProgress
@@ -225,7 +228,7 @@ export default {
           show: true
         }))
       ]
-      if (this.bubbleConfig.consent) {
+      if (this.consent) {
         tabs.push({
           title: 'Share my data',
           value: 'share-data',
@@ -372,7 +375,7 @@ export default {
       this.$store.commit('xp/clearStore', {})
 
       // Set consent form
-      const consentForm = JSON.parse(JSON.stringify(this.bubbleConfig?.consent))
+      const consentForm = this.consent && JSON.parse(JSON.stringify(this.consent))
       if (consentForm) {
         const section = consentForm.find(({ type }) => type === 'data')
         section.titles = viewBlocks.map(e => e.title)

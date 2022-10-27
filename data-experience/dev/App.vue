@@ -79,6 +79,9 @@ const siteConfig = {
 }
 
 function makeBubbleConfig(experience) {
+  if (!experience) {
+    return undefined
+  }
   const id = 'pdio'
   const apiUrl = 'http://127.0.0.1:8000'
   const configFromServer = participantBubbleConfigFromServer.publicConfig
@@ -107,7 +110,7 @@ export default {
       immediate: true,
       handler(v) {
         this.props.experienceConfig = experienceConfigs.find(e => e.slug === v)
-        this.props.bubbleConfig = makeBubbleConfig(v)
+        this.props.bubbleConfig = makeBubbleConfig(undefined) // makeBubbleConfig(v)
       }
     }
   }
