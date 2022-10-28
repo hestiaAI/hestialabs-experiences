@@ -237,9 +237,6 @@ export default {
         })
       }
       return tabs
-    },
-    sqlQueries() {
-      return this.experienceConfig.viewBlocks.map(o => this.sql[o.sql])
     }
   },
   watch: {
