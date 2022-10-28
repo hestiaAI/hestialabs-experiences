@@ -7,7 +7,7 @@
         :index="index"
       />
       <BasePasswordField
-        v-if="bubbleConfig.bypassLogin && !codeword"
+        v-if="!bubbleCodeword"
         :value.sync="codeword"
         label="Codeword"
       />
@@ -115,11 +115,11 @@ export default {
       filename: '',
       href: null,
       encrypt: false,
-      codeword: undefined // TODO this.$auth.user.codeword
+      codeword: this.bubbleCodeword
     }
   },
   computed: {
-    ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles', 'experienceConfig', 'bubbleConfig']),
+    ...mapState(['results', 'fileManager', 'consentForm', 'selectedFiles', 'experienceConfig', 'bubbleConfig', 'bubbleCodeword']),
     bubbleApi() {
       if (!this.bubbleConfig) {
         return undefined
@@ -240,6 +240,7 @@ export default {
         this.bubbleName,
         this.codeword
       )
+
       this.sentStatus = !errorMessage
       this.sentErrorMessage = errorMessage
       this.sentProgress = false

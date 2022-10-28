@@ -23,6 +23,7 @@
 import BubbleApi from '@/utils/bubble-api'
 import BaseButton from '@/components/base/button/BaseButton.vue'
 import BasePasswordField from '@/components/base/BasePasswordField.vue'
+import { mapState } from '@/utils/store-helper'
 
 export default {
   name: 'UnitLogin',
@@ -40,13 +41,14 @@ export default {
   data() {
     return {
       errorMessage: '',
-      codeword: ''
+      codeword: this.bubbleCodeword || ''
     }
   },
   head() {
     return this.vueMeta('Login')
   },
   computed: {
+    ...mapState(['bubbleCodeword']),
     id() {
       return this.bubbleConfig.id
     },

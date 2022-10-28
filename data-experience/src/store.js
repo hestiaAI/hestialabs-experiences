@@ -27,6 +27,7 @@ const store = {
       state.bubbleConfig = config
     },
     setBubbleCodeword(state, codeword) {
+      console.log('update cow', codeword)
       state.bubbleCodeword = codeword
     },
     setSiteConfig(state, config) {

@@ -163,7 +163,9 @@
 
 <script>
 import { promisify } from 'util'
+import { mapState } from '@/utils/store-helper'
 import { BrowserFile, filetype2icon, extension2filetype } from '@/utils/file-manager'
+import BubbleApi from '@/utils/bubble-api'
 import { decryptBlob } from '@/utils/encryption'
 
 import BaseAlert from '@/components/base/BaseAlert.vue'
@@ -192,9 +194,6 @@ export default {
     }
   },
   data() {
-    const { slug } = this.$store.state.xp.experienceConfig
-    const { publicKey } = this.$store.state.xp.bubbleConfig
-
     return {
       timer: null,
       counter: 5,
@@ -206,14 +205,26 @@ export default {
       decryptedFiles: [],
       selectedFiles: [],
       privateKey: null,
-      status: false,
-      publicKey,
-      slug
+      status: false
     }
   },
   computed: {
+    ...mapState(['experienceConfig', 'bubbleConfig', 'bubbleCodeword']),
+    publicKey() {
+      return this.bubbleConfig?.publicKey
+    },
+    slug() {
+      return this.experienceConfig?.slug
+    },
+    bubbleApi() {
+      if (!this.bubbleConfig) {
+        console.log('no ubble config')
+        return undefined
+      }
+      return new BubbleApi(this.bubbleConfig.apiUrl)
+    },
     bubble() {
-      return this.$route.params.bubble
+      return this.bubbleConfig?.id
     },
     nbSelected() {
       return this.selectedFiles.length
@@ -264,8 +275,8 @@ export default {
       }
     },
     deleteFiles() {
-      const { codeword } = this.$auth.user
-      this.$api.deleteFiles(this.bubble, codeword).then((res) => {
+      const codeword = this.bubbleConfig
+      this.bubbleApi.deleteFiles(this.bubble, codeword).then((res) => {
         if (res) { console.error(res) }
         this.fetchFilenames()
       })
@@ -274,7 +285,7 @@ export default {
       this.apiError = null
       this.apiStatus = 'Fetching filenames from server...'
       this.counter = 5
-      this.$api.getFilenames(this.bubble, (error, res) => {
+      this.bubbleApi.getFilenames(this.bubble, (error, res) => {
         this.apiLoading = false
         if (error) {
           this.apiError = error.toString()
@@ -295,7 +306,7 @@ export default {
       this.apiStatus = 'Downloading files from server...'
       this.status = true
 
-      const getFilePromise = promisify(this.$api.getFile)
+      // const getFilePromise = promisify(this.bubbleApi.getFile)
       const decryptBlobPromise = promisify(decryptBlob)
       const filenames = this.selectedFiles.map(
         idx => this.fileItems[idx].filename
@@ -304,7 +315,7 @@ export default {
       try {
         console.time(consoleLabel('getFiles'))
         const filePromises = filenames.map(filename =>
-          getFilePromise(this.bubble, filename))
+          this.bubbleApi.getFile(this.bubble, filename))
         const encryptedFiles = await Promise.all(filePromises)
         console.timeEnd(consoleLabel('getFiles'))
         this.apiStatus = 'Decrypting files...'
@@ -317,7 +328,7 @@ export default {
             const label = consoleLabel('decryptBlob', i)
             console.time(label)
             const privateKey = await this.privateKey.text()
-            const blob = await decryptBlobPromise(fileBlob, privateKey, this.$auth.user.bubble.publicKey)
+            const blob = await decryptBlobPromise(fileBlob, privateKey, this.publicKey)
             console.timeEnd(label)
             const filename = filenames[i]
             return new BrowserFile(new File([blob], filename))
