@@ -1,7 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import { mount } from '@vue/test-utils'
+import { mount, createLocalVue } from '@vue/test-utils'
+import Vuex, { Store } from 'vuex'
 import JSZip from 'jszip'
 
 import { testConsentForm } from './consent-form.helpers'
@@ -10,6 +11,10 @@ import FileManager from '~/utils/file-manager'
 
 const originalFetch = window.fetch
 const originalCreateObjectURL = window.URL.createObjectURL
+
+// Mock vuex store
+const localVue = createLocalVue()
+localVue.use(Vuex)
 
 beforeAll(() => {
   window.fetch = jest.fn(() => Promise.resolve({ text: () => 'test' }))
@@ -27,39 +32,31 @@ afterAll(() => {
 
 test('generates a zip', async() => {
   const fileManager = new FileManager()
-  const wrapper = mount(UnitConsentForm, {
-    propsData: {
-      viewBlocks: []
-    },
-    mocks: {
-      $store: {
-        state: {
-          config: {},
+
+  const store = new Store({
+    modules: {
+      xp: {
+        namespaced: true,
+        state: () => ({
+          bubbleConfig: {},
+          experienceConfig: {
+            viewBlocks: []
+          },
+          siteConfig: {},
           results: {},
           fileManager,
           consentForm: testConsentForm,
           selectedFiles: []
-        },
-        getters: {
-          experience: () => ({
-            files: {},
-            keepOnlyFiles: true,
-            preprocessors: {},
-            viewBlocks: []
-          }),
-          routeConfig: () => () => ({})
-        }
-      },
-      $route: {
-        params: {
-          experience: 'twitter'
-        }
-      },
-      $auth: {
-        user: {
-          codeword: ''
-        }
+        })
       }
+    }
+  })
+
+  const wrapper = mount(UnitConsentForm, {
+    store,
+    localVue,
+    mocks: {
+      $t: () => ''
     }
   })
   expect(wrapper.exists()).toBeTruthy()

@@ -6,7 +6,7 @@ import path from 'path'
 import { mount, createLocalVue } from '@vue/test-utils'
 import Vuex from 'vuex'
 import TheDataExperience from '~/components/TheDataExperience'
-import defaultMessages from '~/i18n/en.json'
+import defaultMessages from '~/locales/en.json'
 
 // Mock the Vuex store
 const localVue = createLocalVue()
@@ -25,30 +25,26 @@ beforeAll(() => {
 beforeEach(() => {
   // eslint-disable-next-line import/no-named-as-default-member
   store = new Vuex.Store({
-    state: () => ({
-      config: {},
-      fileManager: null
-    }),
-    getters: {
-      experience: () => () => ({
-        files: {},
-        keepOnlyFiles: true,
-        preprocessors: {},
-        viewBlocks: []
-      }),
-      routeConfig: () => () => ({})
-    },
-    mutations: {
-      clearStore: () => { },
-      setFileManager: () => { },
-      setConsentForm: () => { }
-    },
     modules: {
-      experience: {
-        namespaced: true,
+      xp: {
         state: () => ({
-          progress: false
-        })
+          experienceConfig: {},
+          siteConfig: {},
+          fileManager: null
+        }),
+        getters: {
+
+        },
+        mutations: {
+          'xp/setExperienceConfig': () => { },
+          'xp/setSiteConfig': () => { },
+          'xp/setBubbleConfig': () => { },
+
+          'xp/clearStore': () => { },
+          'xp/setFileManager': () => { },
+          'xp/setConsentForm': () => { }
+
+        }
       }
     }
   })

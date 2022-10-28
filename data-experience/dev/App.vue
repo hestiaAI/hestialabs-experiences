@@ -30,29 +30,28 @@
 import TheDataExperience2 from '@/components/TheDataExperience.vue'
 import BubbleApi from '@/utils/bubble-api'
 
-import appleTracker from '../../packages/packages/apple-tracker/dist/index.mjs'
-import appleTrackerAgg from '../../packages/packages/apple-tracker-agg/dist/index.mjs'
-import explorer from '../../packages/packages/explorer/dist/index.mjs'
-import facebook from '../../packages/packages/facebook/dist/index.mjs'
-import fitbit from '../../packages/packages/fitbit/dist/index.mjs'
-import google from '../../packages/packages/google/dist/index.mjs'
-import googleAgg from '../../packages/packages/google-agg/dist/index.mjs'
-import her from '../../packages/packages/her/dist/index.mjs'
-import herTinderAgg from '../../packages/packages/her-tinder-agg/dist/index.mjs'
-import instagram from '../../packages/packages/instagram/dist/index.mjs'
-import linkedin from '../../packages/packages/linkedin/dist/index.mjs'
-import netflix from '../../packages/packages/netflix/dist/index.mjs'
-import strava from '../../packages/packages/strava/dist/index.mjs'
-import tiktok from '../../packages/packages/tiktok/dist/index.mjs'
-import tinder from '../../packages/packages/tinder/dist/index.mjs'
-import trackerControl from '../../packages/packages/tracker-control/dist/index.mjs'
-import trackerControlAgg from '../../packages/packages/tracker-control-agg/dist/index.mjs'
-import twitter from '../../packages/packages/twitter/dist/index.mjs'
-import twitterAgg from '../../packages/packages/twitter-agg/dist/index.mjs'
-import uber from '../../packages/packages/uber/dist/index.mjs'
-import uberDriver from '../../packages/packages/uber-driver/dist/index.mjs'
-import youtube from '../../packages/packages/youtube/dist/index.mjs'
-// import participantBubbleConfigFromServer from './pdio-participant.json'
+import appleTracker from '@hestia.ai/apple-tracker'
+import appleTrackerAgg from '@hestia.ai/apple-tracker-agg'
+import explorer from '@hestia.ai/explorer'
+import facebook from '@hestia.ai/facebook'
+import fitbit from '@hestia.ai/fitbit'
+import google from '@hestia.ai/google'
+import googleAgg from '@hestia.ai/google-agg'
+import her from '@hestia.ai/her'
+import herTinderAgg from '@hestia.ai/her-tinder-agg'
+import instagram from '@hestia.ai/instagram'
+import linkedin from '@hestia.ai/linkedin'
+import netflix from '@hestia.ai/netflix'
+import strava from '@hestia.ai/strava'
+import tiktok from '@hestia.ai/tiktok'
+import tinder from '@hestia.ai/tinder'
+import trackerControl from '@hestia.ai/tracker-control'
+import trackerControlAgg from '@hestia.ai/tracker-control-agg'
+import twitter from '@hestia.ai/twitter'
+import twitterAgg from '@hestia.ai/twitter-agg'
+import uber from '@hestia.ai/uber'
+import uberDriver from '@hestia.ai/uber-driver'
+import youtube from '@hestia.ai/youtube'
 
 const experienceConfigs = [
   appleTracker,
@@ -147,7 +146,6 @@ function makeBubbleConfig(bubbleId, experience) {
   const consentId = consents?.[experience] ? experience : 'default'
   const consent = consents?.[consentId]
   const bubbleConfig = { ...configFromServer, id, apiUrl, consent }
-  console.log('bc', bubbleConfig)
   return bubbleConfig
 }
 
