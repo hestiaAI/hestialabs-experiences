@@ -58,6 +58,16 @@
         <VTabsItems v-model="tab">
           <VTabItem value="load-data" :transition="false">
             <VCol cols="12 mx-auto" md="6" class="tabItem">
+              <UnitDownload
+                v-if="bubbleConfig && bubbleConfig.dataFromBubble"
+                v-bind="{
+                  progress,
+                  error,
+                  success,
+                  message
+                }"
+                @update="onUnitFilesUpdate"
+              />
               <UnitIntroduction
                 v-bind="{
                   progress,
@@ -130,6 +140,7 @@ import BaseButton from '@/components/base/button/BaseButton.vue'
 import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 import UnitFileExplorer from '@/components/unit/file-explorer/UnitFileExplorer.vue'
 import UnitLogin from '@/components/unit/UnitLogin.vue'
+import UnitDownload from '@/components/unit/UnitDownload.vue'
 import UnitIntroduction from '@/components/unit/UnitIntroduction.vue'
 import UnitQuery from '@/components/unit/UnitQuery.vue'
 import UnitSummary from '@/components/unit/UnitSummary.vue'
@@ -154,6 +165,7 @@ export default {
     BaseProgressCircular,
     SettingsSpeedDial,
     UnitLogin,
+    UnitDownload,
     UnitFileExplorer,
     UnitIntroduction,
     UnitQuery,
@@ -196,7 +208,8 @@ export default {
     },
     showLogin() {
       const bc = this.bubbleConfig
-      return bc && !bc.bypassLogin && !this.bubbleCodeword
+      const show = bc && !bc.bypassLogin && !this.bubbleCodeword
+      return show
     },
     consent() {
       return this.bubbleConfig?.consent
@@ -307,9 +320,10 @@ export default {
   },
   created() {
     this.$watch(
-      vm => [vm.experienceConfig, vm.siteConfig],
+      vm => [vm.experienceConfig, vm.siteConfig, vm.bubbleConfig],
       async(val) => {
         this.$store.commit('xp/clearStore')
+        this.$store.commit('xp/setBubbleCodeword', undefined)
         await this.mergeMessages()
       },
       {
@@ -386,7 +400,8 @@ export default {
       this.$store.commit('xp/clearStore', {})
 
       // Set consent form
-      const consentForm = this.consent && JSON.parse(JSON.stringify(this.consent))
+      const cForm = this.consent?.form
+      const consentForm = cForm && JSON.parse(JSON.stringify(cForm))
       if (consentForm) {
         const section = consentForm.find(({ type }) => type === 'data')
         section.titles = viewBlocks.map(e => e.title)
