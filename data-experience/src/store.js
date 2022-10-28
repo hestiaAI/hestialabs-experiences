@@ -8,6 +8,7 @@ const store = {
     experienceConfig: {},
     siteConfig: {},
     bubbleConfig: {},
+    bubbleCodeword: undefined,
     selectedFiles: [],
     results: {},
     currentDB: null,
@@ -24,6 +25,9 @@ const store = {
     },
     setBubbleConfig(state, config) {
       state.bubbleConfig = config
+    },
+    setBubbleCodeword(state, codeword) {
+      state.bubbleCodeword = codeword
     },
     setSiteConfig(state, config) {
       state.siteConfig = config
