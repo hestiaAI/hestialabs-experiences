@@ -2,6 +2,8 @@
   "name": "data-experience",
   "version": "0.1.0",
   "scripts": {
+    "test": "jest",
+    "postinstall": "node postinstall.js",
     "serve": "vue-cli-service serve ./dev/main.js",
     "lint": "vue-cli-service lint",
     "build-lib": "vue-cli-service build --target lib --name data-experience src/main.js",
@@ -17,7 +19,7 @@
     "@uppy/drop-target": "^1.1.3",
     "@uppy/locales": "^2.1.1",
     "abortcontroller-polyfill": "^1.7.3",
-    "core-js": "^3.25.0",
+    "core-js": "^3.26.0",
     "crossfilter2": "^1.5.4",
     "d3": "^7.6.1",
     "d3-collection": "^1.0.7",
@@ -43,7 +45,7 @@
     "util": "^0.12.4",
     "vega": "^5.22.1",
     "vega-embed": "^6.21.0",
-    "vega-lite": "^5.6.0",
+    "vega-lite": "^5.1.1",
     "vue": "^2.6.14",
     "vue-i18n": "^8.27.2",
     "vue2-ace-editor": "^0.0.15",
@@ -57,6 +59,8 @@
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "@vue/test-utils": "^1.3.0",
+    "@vue/vue2-jest": "^27.0.0",
     "eslint": "^8.23.1",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
@@ -64,6 +68,8 @@
     "eslint-plugin-promise": "^6.0.1",
     "eslint-plugin-vue": "^9.4.0",
     "file-loader": "^6.2.0",
+    "jest": "^27.5.1",
+    "regenerator-runtime": "^0.13.10",
     "sass": "~1.32.13",
     "sass-loader": "^10.3.1",
     "vue-cli-plugin-i18n": "~2.3.1",
@@ -77,6 +83,48 @@
     "vue-router": "^3.5.4",
     "vuetify": "^2.6.0"
   },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "./jest.setup.js"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "^~/(.*)$": "<rootDir>/src/$1",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/file-mock.js",
+      "\\.(css|less)$": "<rootDir>/__mocks__/style-mock.js",
+      "^vue$": "vue/dist/vue.common.js",
+      "sql\\.js/dist/sql-wasm\\.wasm$": "<rootDir>/src/utils/__mocks__/sql-wasm-mock.js",
+      "d3": "<rootDir>/node_modules/d3/dist/d3.min.js"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "mjs",
+      "json",
+      "vue"
+    ],
+    "transform": {
+      "^.+\\.m?js$": "babel-jest",
+      "^.+\\.vue$": "@vue/vue2-jest"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!d3|@hestia.ai|lodash-es|vega-embed)",
+      "\\.pnp\\.[^\\/]+$"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "\\.helpers\\.js"
+    ],
+    "modulePathIgnorePatterns": []
+  },
+  "_transformIgnorePatterns": [
+    "/node_modules/(?!robust-predicates)",
+    "/node_modules/(?!d3)",
+    "/node_modules/",
+    "node_modules/(?!(d3.*|robust-predicates)/)",
+    "node_modules/(?!(robust-predicates)/)",
+    "node_modules/(?!(d3.*)/)",
+    "\\.pnp\\.[^\\/]+$"
+  ],
   "browserslist": [
     "> 1%",
     "last 2 versions",

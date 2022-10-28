@@ -278,7 +278,7 @@ export default {
         ]
       })
     ],
-    watch: ['../hestialabs/packages/*/dist/*']
+    watch: ['../packages/packages/*/dist/*']
   },
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [

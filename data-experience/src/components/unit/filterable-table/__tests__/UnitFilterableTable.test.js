@@ -4,7 +4,7 @@
 import { mount, createLocalVue } from '@vue/test-utils'
 import Vuex, { Store } from 'vuex'
 import UnitFilterableTable from '../UnitFilterableTable'
-import defaultMessages from '@/i18n/en.json'
+import defaultMessages from '@/locales/en.json'
 
 const data = {
   headers: ['col1', 'col2', 'col3'],
@@ -21,7 +21,18 @@ const data = {
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-const store = new Store()
+const store = new Store({
+  modules: {
+    xp: {
+      namespaced: true,
+      state: () => ({
+        experienceConfig: {
+          slug: 'twitter'
+        }
+      })
+    }
+  }
+})
 
 const options = {
   propsData: data,

@@ -50,13 +50,10 @@ workflows:
           pkg-manager: npm
 
           # https://circleci.com/developer/orbs/orb/circleci/node#jobs-test
-          app-dir: ~/project/experiences
-          # working_directory: ~/experiences
+          app-dir: ~/project/data-experience
+          # working_directory: ~/data-experience
           context:
             - hestialabs
-          filters:
-            branches:
-              ignore: master
 
       - node/test:
           # This is the node version to use for the `cimg/node` tag
