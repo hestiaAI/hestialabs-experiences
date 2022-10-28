@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import Vuetify from 'vuetify/lib/framework'
+// import Vue from 'vue'
+// import Vuetify from 'vuetify/lib/framework'
 import i18n from './i18n'
 
 import {
@@ -118,8 +118,8 @@ const opts = {
     dark: false,
     themes: {
       light: {
-        primary: '#58539e',
-        secondary: '#f39506',
+        primary: '#F2F2F2',
+        secondary: '#0000',
         // Following colors are from the MUI default dark palette
         // https://mui.com/customization/palette/#default-values
         info: '#0288d1',
@@ -135,6 +135,6 @@ const opts = {
   }
 }
 
-Vue.use(Vuetify)
+// Vue.use(Vuetify)
 
-export default new Vuetify(opts)
+export default opts

@@ -287,6 +287,6 @@ export default {
     '@/plugins/injected.js',
     '@/plugins/i18n.js',
     '@/plugins/vuetify.js',
-    { src: '@/plugins/data-experience.js', ssr: false }
+    '@/plugins/data-experience.js'
   ]
 }

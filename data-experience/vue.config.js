@@ -2,21 +2,17 @@
 
 const { defineConfig } = require('@vue/cli-service')
 const path = require('path')
-
+const isDev = process.env.NODE_ENV === 'development'
 module.exports = defineConfig({
-  transpileDependencies: [
-    'vuetify'
-  ],
-
   publicPath: '/',
-
   configureWebpack: {
     resolve: {
       alias: {
         '~': path.resolve(__dirname, 'src'),
         '@': path.resolve(__dirname, 'src'),
         // https://github.com/micromatch/picomatch/pull/23
-        picomatch: 'picomatch-browser'
+        picomatch: 'picomatch-browser',
+        vue$: path.resolve(__dirname, 'node_modules/vue/dist/vue.runtime.esm.js')
       },
       fallback: {
         fs: false,
@@ -68,7 +64,7 @@ module.exports = defineConfig({
   // not match the path and will not ignore it. Therefore index.html will emit twice.
   // source: https://github.com/vuejs/vue-cli/issues/7043#issuecomment-1069791347
   chainWebpack: (config) => {
-    if (process.env.NODE_ENV === 'development') {
+    if (isDev) {
       config.plugin('copy').tap((args) => {
         const UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([()*?[\]{|}]|^!|[!+@](?=\())/g
         const publicDir = path.resolve(process.VUE_CLI_SERVICE.context, 'public').replace(/\\/g, '/')
