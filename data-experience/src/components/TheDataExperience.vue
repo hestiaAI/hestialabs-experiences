@@ -65,6 +65,7 @@
                   success,
                   message
                 }"
+                ref="unit-introduction"
                 @update="onUnitFilesUpdate"
               />
             </VCol>
@@ -121,7 +122,7 @@ import { json, timeFormatDefaultLocale } from 'd3'
 
 import { locales, localeCodes } from '@/i18n/locales'
 
-import { mapState } from '@/utils/store-helper'
+import { mapState, mapMutations } from '@/utils/store-helper'
 import DBMS from '@/utils/sql'
 import FileManager from '@/utils/file-manager'
 import fileManagerWorkers from '@/utils/file-manager-workers'
@@ -191,16 +192,6 @@ export default {
   computed: {
     ...mapState(['fileManager', 'bubbleCodeword']),
     ...mapState({ experienceProgress: 'progress' }),
-    siteConfigMerged() {
-      return cloneDeep(merge(siteConfigDefault, this.siteConfig))
-    },
-    showLogin() {
-      const bc = this.bubbleConfig
-      return bc && !bc.bypassLogin && !this.bubbleCodeword
-    },
-    consent() {
-      return this.bubbleConfig?.consent
-    },
     tabs() {
       const { hideSummary, hideFileExplorer, viewBlocks } = this.experienceConfig
       const disabled = !this.success || this.experienceProgress
@@ -209,7 +200,7 @@ export default {
           title: 'Load your data',
           value: 'load-data',
           titleKey: 'load-data.name',
-          disabled: this.experienceProgress
+          disabled: false
         },
         ...(!hideSummary
           ? [
@@ -248,19 +239,29 @@ export default {
         })
       }
       return tabs
+    },
+    siteConfigMerged() {
+      return cloneDeep(merge(siteConfigDefault, this.siteConfig))
+    },
+    showLogin() {
+      const bc = this.bubbleConfig
+      return bc && !bc.bypassLogin && !this.bubbleCodeword
+    },
+    consent() {
+      return this.bubbleConfig?.consent
     }
   },
   watch: {
     experienceConfig: {
       immediate: true,
       handler(value) {
-        this.$store.commit('xp/setExperienceConfig', cloneDeep(value))
+        this.setExperienceConfig(cloneDeep(value))
       }
     },
     bubbleConfig: {
       immediate: true,
       handler(value) {
-        this.$store.commit('xp/setBubbleConfig', cloneDeep(value))
+        this.setBubbleConfig(cloneDeep(value))
       }
     },
     siteConfigMerged: {
@@ -272,7 +273,7 @@ export default {
         if (value.theme) {
           Object.assign(this.$vuetify.theme.themes.light, value.theme)
         }
-        this.$store.commit('xp/setSiteConfig', cloneDeep(value))
+        this.setSiteConfig(cloneDeep(value))
       }
     },
     localeIndex: {
@@ -281,7 +282,9 @@ export default {
         // locale was switched by the user
         const localeProperties = locales[value]
         // -> update d3 locale
-        await d3Locale(localeProperties)
+        if (process.env.NODE_ENV !== 'test') {
+          await d3Locale(localeProperties)
+        }
         // -> update vue-i18n locale
         this.$i18n.locale = localeProperties.code
       }
@@ -305,8 +308,8 @@ export default {
   created() {
     this.$watch(
       vm => [vm.experienceConfig, vm.siteConfig],
-      async(val) => {
-        this.$store.commit('xp/clearStore')
+      async() => {
+        this.clearStore()
         await this.mergeMessages()
       },
       {
@@ -318,9 +321,10 @@ export default {
     this.switchTab('load-data')
   },
   methods: {
+    ...mapMutations(['setSiteConfig', 'setBubbleConfig', 'setExperienceConfig', 'setConsentForm', 'clearStore', 'setFileManager', 'setCurrentDB']),
     async mergeMessages() {
-      const { messages: messagesExperience, slug } = this.experienceConfig
-      const { messages: messagesCustomConfig, i18nLocales, i18nUrl } = this.siteConfigMerged
+      const { messages: messagesExperience = {}, slug } = this.experienceConfig
+      const { messages: messagesCustomConfig = {}, i18nLocales, i18nUrl } = this.siteConfigMerged
       let messagesCustomRemote = {}
       if (i18nUrl) {
         // fetch messages to override default messages
@@ -380,7 +384,7 @@ export default {
       this.progress = true
 
       // Clean vuex state
-      this.$store.commit('xp/clearStore', {})
+      this.clearStore()
 
       // Set consent form
       const consentForm = this.consent && JSON.parse(JSON.stringify(this.consent))
@@ -389,7 +393,7 @@ export default {
         section.titles = viewBlocks.map(e => e.title)
         section.ids = viewBlocks.map(e => e.id)
       }
-      this.$store.commit('xp/setConsentForm', consentForm)
+      this.setConsentForm(consentForm)
 
       try {
         console.time(consoleLabel('initFileManager'))
@@ -401,7 +405,7 @@ export default {
           keepOnlyFiles
         )
         await fileManager.init(uppyFiles)
-        this.$store.commit('xp/setFileManager', fileManager)
+        this.setFileManager(fileManager)
         console.timeEnd(consoleLabel('initFileManager'))
 
         if (databaseConfig) {
@@ -420,7 +424,7 @@ export default {
           DBMS.insertRecords(db, records)
           console.timeEnd(consoleLabelDBMS('insertRecords'))
           // commit the database to the Vuex store
-          this.$store.commit('xp/setCurrentDB', db)
+          this.setCurrentDB(db)
           console.timeEnd(consoleLabelDBMS())
         }
       } catch (e) {

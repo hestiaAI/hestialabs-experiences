@@ -87,15 +87,12 @@ export class DB {
     }
 
     // Use a CDN for now since we have to figure out how to assets import work on host app.
-    const locateFile = process.env.NODE_ENV === 'test'
-      ? undefined
-      : (filename) => {
-          console.log(filename)
-          return 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.7.0/sql-wasm.wasm'
+    const options = process.env.NODE_ENV === 'test'
+      ? {}
+      : {
+          locateFile: () => 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.7.0/sql-wasm.wasm'
         }
-    const SQL = await initSqlJs({
-      locateFile
-    })
+    const SQL = await initSqlJs(options)
     /*
     const SQL = await initSqlJs({
       locateFile: () => sqlWasm

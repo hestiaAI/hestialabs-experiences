@@ -17,8 +17,37 @@ let store
 // We need to disable workers for these tests
 jest.mock('~/utils/file-manager-workers', () => { })
 const originalScrollTo = window.scrollTo
+const originalFetch = window.fetch
+
+const propsData = {
+  experienceConfig: {
+    dataPortal: '',
+    dataPortalHtml: '',
+    dataPortalMessage: '',
+    tutorialVideos: [],
+    videoHeight: 0,
+    slug: ''
+  },
+  siteConfig: {},
+  bubbleConfig: {}
+}
+
+const mocks = {
+  $i18n: {
+    mergeLocaleMessage() {}
+  },
+  $route: { params: {} },
+  $router: {
+    push: () => { }
+  },
+  $t: msg => defaultMessages[msg],
+  $tev: msg => defaultMessages[msg],
+  $tet: msg => defaultMessages[msg]
+}
 
 beforeAll(() => {
+  // mock fetch for d3.json()
+  window.fetch = jest.fn(() => Promise.resolve({ json: () => 'test' }))
   window.scrollTo = jest.fn()
 })
 
@@ -27,22 +56,19 @@ beforeEach(() => {
   store = new Vuex.Store({
     modules: {
       xp: {
+        namespaced: true,
         state: () => ({
-          experienceConfig: {},
-          siteConfig: {},
+          bubbleCodeword: '',
+          progress: false,
           fileManager: null
         }),
-        getters: {
-
-        },
         mutations: {
-          'xp/setExperienceConfig': () => { },
-          'xp/setSiteConfig': () => { },
-          'xp/setBubbleConfig': () => { },
-
-          'xp/clearStore': () => { },
-          'xp/setFileManager': () => { },
-          'xp/setConsentForm': () => { }
+          setExperienceConfig() { },
+          setSiteConfig() { },
+          setBubbleConfig() { },
+          clearStore() { },
+          setFileManager() { },
+          setConsentForm() { }
 
         }
       }
@@ -52,52 +78,30 @@ beforeEach(() => {
 
 afterAll(() => {
   window.scrollTo = originalScrollTo
+  window.fetch = originalFetch
 })
 
-test('mounts without error', () => {
+test('mounts without error', async() => {
   const wrapper = mount(TheDataExperience, {
-    propsData: {
-      title: 'Test',
-      ext: 'all'
-    },
+    propsData,
     store,
     localVue,
-    mocks: {
-      $route: { params: {} },
-      $router: {
-        push: () => { }
-      },
-      $t: msg => defaultMessages[msg],
-      $tev: msg => defaultMessages[msg],
-      $tet: msg => defaultMessages[msg]
-    }
+    mocks
   })
   expect(wrapper.exists()).toBeTruthy()
   // For some reason it doesn't find the component if we search by name or by import
   expect(
-    wrapper.findComponent({ ref: 'unit-introduction' }).exists()
+    wrapper.findComponent('#load-data').exists()
   ).toBeTruthy()
 })
 
 test('process simple text file', async() => {
   const wrapper = mount(TheDataExperience, {
-    propsData: {
-      title: 'Test',
-      ext: 'all'
-    },
+    propsData,
     store,
     localVue,
-    mocks: {
-      $route: { params: {} },
-      $router: {
-        push: () => { }
-      },
-      $t: msg => defaultMessages[msg],
-      $tev: msg => defaultMessages[msg],
-      $tet: msg => defaultMessages[msg]
-    }
+    mocks
   })
-
   const fileContent = fs.readFileSync(
     path.resolve(__dirname, 'data/test.txt'),
     'utf8'
