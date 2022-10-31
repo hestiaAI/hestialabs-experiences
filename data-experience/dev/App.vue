@@ -1,29 +1,34 @@
 <template>
-  <div id="app" class="app-dev d-inline-flex">
-    <div style="margin: 30px 0; padding: 10px 0; border-bottom: dotted black 5px">
-      <VSelect
-        label="Experience"
-        v-model="experience"
-        :items="experiences"
-        outlined
-        dense
-        attach=".app-dev .v-select"
-        :menu-props="{ bottom: true, offsetY: true }"
-        style="margin: auto; width: 200px;"
-      />
-      <VSelect
-        label="Bubble"
-        v-model="bubble"
-        :items="bubbles"
-        outlined
-        dense
-        attach=".app-dev .v-select"
-        :menu-props="{ bottom: true, offsetY: true }"
-        style="margin: auto; width: 200px;"
-      />
-    </div>
-    <TheDataExperience2 v-bind="props" />
-  </div>
+  <VApp>
+    <VMain>
+      <div id="app" class="app-dev d-flex-column justify-center" style="width: 100%;">
+        <div style="margin: 30px 0; padding: 10px 0; border-bottom: dotted black 5px">
+          <VSelect
+            label="Experience"
+            v-model="experience"
+            :items="experiences"
+            outlined
+            dense
+            attach=".app-dev .v-select"
+            :menu-props="{ bottom: true, offsetY: true }"
+            style="margin: auto; width: 200px;"
+          />
+          <VSelect
+            label="Bubble"
+            v-model="bubble"
+            :items="bubbles"
+            outlined
+            dense
+            attach=".app-dev .v-select"
+            :menu-props="{ bottom: true, offsetY: true }"
+            style="margin: auto; width: 200px;"
+          />
+        </div>
+        <TheDataExperience2 v-bind="props" />
+      </div>
+
+    </VMain>
+  </VApp>
 </template>
 
 <script>
