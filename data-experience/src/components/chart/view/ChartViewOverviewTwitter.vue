@@ -6,13 +6,7 @@
           <VCol cols="12" sm="8">
             <div id="volume-chart">
               <span class="font-weight-bold" v-text="messages['ads-time']" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
             <div :id="'range-chart' + graphId" class="range-chart">
               <ChartViewTextSelectTimeRange />
@@ -25,13 +19,7 @@
                 <VSpacer />
                 <div id="company-search" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -39,13 +27,7 @@
           <VCol cols="12" sm="4">
             <div id="engagement-chart">
               <span class="font-weight-bold" v-text="messages['interactions']" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" sm="4">
@@ -55,13 +37,7 @@
                 <VSpacer />
                 <div id="type-search" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" sm="4">
@@ -71,13 +47,7 @@
                 <VSpacer />
                 <div id="value-search" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -101,6 +71,7 @@ import crossfilter from 'crossfilter2'
 import mixin from './mixin'
 import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
 import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vue'
+import ChartViewFilters from './filters/ChartViewFilters.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 // Remove warning on default colorscheme, even if not used..
@@ -108,7 +79,7 @@ dc.config.defaultColors(d3.schemePaired)
 
 export default {
   name: 'ChartViewOverviewTwitter',
-  components: { ChartViewVRowWebShare, ChartViewTextSelectTimeRange, UnitFilterableTable },
+  components: { ChartViewVRowWebShare, ChartViewTextSelectTimeRange, ChartViewFilters, UnitFilterableTable },
   mixins: [mixin],
   data() {
     return {
@@ -413,6 +384,7 @@ export default {
   }
 }
 </script>
+<<<<<<< HEAD:data-experience/src/components/chart/view/ChartViewOverviewTwitter.vue
 <style scoped>
 
 ::v-deep body {
@@ -449,3 +421,5 @@ export default {
   background: transparent;
 }
 </style>
+=======
+>>>>>>> master:experiences/components/chart/view/ChartViewOverviewTwitter.vue

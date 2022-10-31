@@ -15,13 +15,7 @@
               <div style="display: flex">
                 <strong>App</strong>
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -38,13 +32,7 @@
               <div style="display: flex">
                 <strong>Sexual Orientations</strong>
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -66,16 +54,17 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
-import { addPiePercentage } from './utils/DCHelpers'
+import { addPiePercentage } from './utils/dc-helpers'
 import { isValidDate } from '@/utils/dates'
 import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
+import ChartViewFilters from './filters/ChartViewFilters.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
-  components: { ChartViewVRowWebShare, UnitFilterableTable },
+  components: { ChartViewVRowWebShare, ChartViewFilters, UnitFilterableTable },
   mixins: [mixin],
   props: {},
   data() {
@@ -331,6 +320,7 @@ export default {
   }
 }
 </script>
+<<<<<<< HEAD:data-experience/src/components/chart/view/ChartViewOverviewHerTinder.vue
 <style scoped>
 
 ::v-deep body {
@@ -347,3 +337,5 @@ export default {
   display: none;
 }
 </style>
+=======
+>>>>>>> master:experiences/components/chart/view/ChartViewOverviewHerTinder.vue

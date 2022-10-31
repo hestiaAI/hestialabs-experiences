@@ -6,13 +6,7 @@
           <VCol cols="12" md="12">
             <div id="like-chart">
               <strong>Likes you've made over time</strong>
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
             <div id="range-chart">
               <ChartViewTextSelectTimeRange>
@@ -25,37 +19,19 @@
           <VCol cols="12" md="4">
             <div id="hour-chart">
               <strong>Time of day</strong>
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
             <div id="week-chart">
               <strong>Day</strong>
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
             <div id="matched-chart">
               <strong>Matched</strong>
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -84,6 +60,7 @@ import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
 import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
+import ChartViewFilters from './filters/ChartViewFilters.vue'
 import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
@@ -91,7 +68,7 @@ import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterab
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
-  components: { ChartViewVRowWebShare, ChartViewTextSelectTimeRange, UnitFilterableTable },
+  components: { ChartViewVRowWebShare, ChartViewFilters, ChartViewTextSelectTimeRange, UnitFilterableTable },
   mixins: [mixin],
   data() {
     return {
@@ -323,6 +300,7 @@ export default {
   }
 }
 </script>
+<<<<<<< HEAD:data-experience/src/components/chart/view/ChartViewOverviewHer.vue
 <style scoped>
 
 ::v-deep body {
@@ -339,3 +317,5 @@ export default {
   display: none;
 }
 </style>
+=======
+>>>>>>> master:experiences/components/chart/view/ChartViewOverviewHer.vue

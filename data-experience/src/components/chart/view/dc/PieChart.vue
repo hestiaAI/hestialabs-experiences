@@ -4,18 +4,14 @@
       <div style="display: flex">
         <strong>{{ title }}</strong>
       </div>
-      <p class="filters">
-        <span v-t="'Current filter'" />
-        <span class="filter" />
-        <a v-t="'reset'" class="reset" style="display: none" />
-      </p>
+      <ChartViewFilters />
     </div>
   </VContainer>
 </template>
 <script>
 import * as d3 from 'd3'
 import * as dc from 'dc'
-import { addPiePercentage } from '../utils/DCHelpers'
+import { addPiePercentage } from '../utils/dc-helpers'
 import mixin from './mixin'
 
 // Remove warning on default colorscheme, even if not used..

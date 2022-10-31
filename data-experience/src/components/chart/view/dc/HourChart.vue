@@ -3,11 +3,7 @@
     <div :id="'hour-chart-' + graphId">
       <strong v-if="title">{{ title }}</strong>
       <strong v-else v-t="'time-of-day'" />
-      <a v-t="'reset'" class="reset" style="display: none" />
-      <p class="filters">
-        <span v-t="'Current filter'" />
-        <span class="filter" />
-      </p>
+      <ChartViewFilters />
     </div>
   </VContainer>
 </template>

@@ -8,13 +8,7 @@
               <VCol cols="12">
                 <div :id="`messages-chart-${graphId}`">
                   <span class="font-weight-bold" v-text="messages['Messages Exchanged Over Time']" />
-                  <a v-t="'reset'" class="reset" style="display: none" />
-                  <p class="filters">
-                    <span>
-                      {{ $t('Current filter') }}
-                      <span class="filter" />
-                    </span>
-                  </p>
+                  <ChartViewFilters />
                 </div>
                 <div :id="`range-chart-${graphId}`" class="range-chart">
                   <ChartViewTextSelectTimeRange />
@@ -25,25 +19,13 @@
               <VCol cols="12" md="6">
                 <div :id="`hour-chart-${graphId}`">
                   <span class="font-weight-bold" v-text="messages['Time of Day']" />
-                  <a v-t="'reset'" class="reset" style="display: none" />
-                  <p class="filters">
-                    <span>
-                      {{ $t('Current filter') }}
-                      <span class="filter" />
-                    </span>
-                  </p>
+                  <ChartViewFilters />
                 </div>
               </VCol>
               <VCol cols="12" md="6">
                 <div :id="`week-chart-${graphId}`">
                   <span class="font-weight-bold" v-text="messages['Day']" />
-                  <a v-t="'reset'" class="reset" style="display: none" />
-                  <p class="filters">
-                    <span>
-                      {{ $t('Current filter') }}
-                      <span class="filter" />
-                    </span>
-                  </p>
+                  <ChartViewFilters />
                 </div>
               </VCol>
             </VRow>
@@ -55,36 +37,15 @@
                 <VSpacer />
                 <div :id="`user-search-${graphId}`" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
       </VCol>
     </ChartViewVRowWebShare>
-    <VRow>
-      <template v-if="filterCount === totalCount">
-        <i18n tag="div" :path="kViewBlock('selected-all')">
-          <template #totalCount>
-            <span class="font-weight-bold" v-text="totalCount" />
-          </template>
-        </i18n>
-        <span v-t="'click-graph'" />
-      </template>
-      <template v-else>
-        <i18n tag="div" :path="kViewBlock('selected-some')">
-          <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
-            <span :key="k" class="font-weight-bold" v-text="v" />
-          </template>
-        </i18n>
-        <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
-      </template>
-    </VRow>
+    <ChartViewDcFilterCount
+      v-bind="{ filterCount, totalCount }"
+    />
     <VRow>
       <VCol cols="12">
         <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
@@ -98,9 +59,11 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
-import { removeEmptyBins } from './utils/DCHelpers'
+import { removeEmptyBins } from './utils/dc-helpers'
 import { datetimeFormatter } from '@/utils/dates'
 import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
+import ChartViewFilters from './filters/ChartViewFilters.vue'
+import ChartViewDcFilterCount from './dc/ChartViewDcFilterCount.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vue'
 
@@ -108,7 +71,7 @@ import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vu
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
-  components: { ChartViewVRowWebShare, UnitFilterableTable, ChartViewTextSelectTimeRange },
+  components: { ChartViewVRowWebShare, ChartViewFilters, ChartViewDcFilterCount, UnitFilterableTable, ChartViewTextSelectTimeRange },
   mixins: [mixin],
   data() {
     return {
@@ -121,10 +84,6 @@ export default {
     }
   },
   methods: {
-    resetAll() {
-      dc.filterAll()
-      dc.renderAll()
-    },
     drawViz() {
       // Define color palette for the graphs
       /*
@@ -325,19 +284,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
-::v-deep .range-chart > svg > g > g.axis.y {
-  display: none;
-}
-</style>

@@ -15,13 +15,7 @@
                 <VSpacer />
                 <div :id="`app-search-${graphId}`" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
@@ -36,13 +30,7 @@
                 <VSpacer />
                 <div :id="`domain-search-${graphId}`" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
@@ -57,13 +45,7 @@
                     potentially profiling users.</span>
                 </VTooltip>
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -80,13 +62,7 @@
                 <VSpacer />
                 <div :id="`context-search-${graphId}`" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
@@ -101,13 +77,7 @@
                 <VSpacer />
                 <div :id="`domainOwner-search-${graphId}`" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
@@ -123,13 +93,7 @@
                   <span>Whether the app or the user initiated the connection.</span>
                 </VTooltip>
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a class="reset" style="display: none"> {{ $t('reset') }}</a>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -154,15 +118,16 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
-import { removeEmptyBins } from './utils/DCHelpers'
+import { removeEmptyBins } from './utils/dc-helpers'
 import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
+import ChartViewFilters from './filters/ChartViewFilters.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
-  components: { ChartViewVRowWebShare, UnitFilterableTable },
+  components: { ChartViewVRowWebShare, ChartViewFilters, UnitFilterableTable },
   mixins: [mixin],
   props: {},
   data() {
@@ -328,19 +293,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
-::v-deep .range-chart > svg > g > g.axis.y {
-  display: none;
-}
-</style>

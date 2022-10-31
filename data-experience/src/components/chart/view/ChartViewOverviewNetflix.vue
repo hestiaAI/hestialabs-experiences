@@ -6,13 +6,7 @@
           <VCol cols="12">
             <div :id="'watch-time-chart' + graphId">
               <span class="font-weight-bold" v-text="messages['watch-time']" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters ma-0">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
             <div :id="'range-chart' + graphId" class="range-chart">
               <ChartViewTextSelectTimeRange />
@@ -23,25 +17,13 @@
           <VCol cols="8">
             <div :id="'hour-chart' + graphId">
               <span v-t="'time-of-day'" class="font-weight-bold" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters ma-0">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="4">
             <div :id="'week-chart' + graphId">
               <span class="font-weight-bold" v-text="messages['day']" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters ma-0">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -49,13 +31,7 @@
       <VCol cols="4">
         <div :id="'content-chart' + graphId">
           <span class="font-weight-bold" v-text="messages['most-watched']" />
-          <a v-t="'reset'" class="reset" style="display: none" />
-          <p class="filters ma-0">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-          </p>
+          <ChartViewFilters />
         </div>
       </VCol>
     </ChartViewVRowWebShare>
@@ -63,37 +39,19 @@
       <VCol cols="4">
         <div :id="'user-chart' + graphId">
           <span class="font-weight-bold" v-text="messages['Profiles']" />
-          <a v-t="'reset'" class="reset" style="display: none" />
-          <p class="filters ma-0">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-          </p>
+          <ChartViewFilters />
         </div>
       </VCol>
       <VCol cols="4">
         <div :id="'country-chart' + graphId">
           <span class="font-weight-bold" v-text="messages['country']" />
-          <a v-t="'reset'" class="reset" style="display: none" />
-          <p class="filters ma-0">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-          </p>
+          <ChartViewFilters />
         </div>
       </VCol>
       <VCol cols="4">
         <div :id="'device-chart' + graphId">
           <span class="font-weight-bold" v-text="messages['device']" />
-          <a v-t="'reset'" class="reset" style="display: none" />
-          <p class="filters ma-0">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-          </p>
+          <ChartViewFilters />
         </div>
       </VCol>
     </ChartViewVRowWebShare>
@@ -111,13 +69,14 @@ import crossfilter from 'crossfilter2'
 import mixin from './mixin'
 import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
 import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vue'
+import ChartViewFilters from './filters/ChartViewFilters.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
-  components: { ChartViewVRowWebShare, ChartViewTextSelectTimeRange, UnitFilterableTable },
+  components: { ChartViewVRowWebShare, ChartViewTextSelectTimeRange, ChartViewFilters, UnitFilterableTable },
   mixins: [mixin],
   data() {
     return {
@@ -484,31 +443,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
-::v-deep .range-chart > svg > g > g.axis.y {
-  display: none;
-}
-
-::v-deep .reset {
-  margin-left: 1rem;
-}
-
-::v-deep .v-application a.reset {
-  color: rgb(85, 3, 30);
-}
-
-::v-deep p.filters {
-  font-size: 0.8rem;
-  font-style: italic;
-}
-</style>

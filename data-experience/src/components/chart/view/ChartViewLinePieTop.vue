@@ -6,13 +6,7 @@
           <VCol cols="12" md="12">
             <div :id="`area-chart-${graphId}`">
               <strong>{{ titleTimeline }} per {{ timeUnit.accessor }}</strong>
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
             <div :id="`range-chart-${graphId}`" class="range-chart">
               <ChartViewTextSelectTimeRange />
@@ -25,13 +19,7 @@
               <div style="display: flex">
                 <strong>{{ titlePie }}</strong>
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="6">
@@ -41,42 +29,15 @@
                 <VSpacer />
                 <div :id="`top-search-${graphId}`" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
       </VCol>
     </ChartViewVRowWebShare>
-    <VRow>
-      <template v-if="filterCount === totalCount">
-        <i18n tag="div" :path="kViewBlock('selected-all')">
-          <template #totalCount>
-            <span class="font-weight-bold" v-text="totalCount" />
-          </template>
-          <template #rowLabel>
-            {{ rowLabel }}
-          </template>
-        </i18n>
-        <span v-t="'click-graph'" />
-      </template>
-      <template v-else>
-        <i18n tag="div" :path="kViewBlock('selected-some')">
-          <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
-            <span :key="k" class="font-weight-bold" v-text="v" />
-          </template>
-          <template #rowLabel>
-            {{ rowLabel }}
-          </template>
-        </i18n>
-        <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
-      </template>
-    </VRow>
+    <ChartViewDcFilterCount
+      v-bind="{ filterCount, totalCount, rowLabel }"
+    />
     <VRow>
       <VCol cols="12">
         <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
@@ -90,9 +51,11 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
-import { removeEmptyBins } from './utils/DCHelpers'
+import { removeEmptyBins } from './utils/dc-helpers'
 import { datetimeFormatter } from '@/utils/dates'
 import ChartViewVRowWebShare from './ChartViewVRowWebShare.vue'
+import ChartViewFilters from './filters/ChartViewFilters.vue'
+import ChartViewDcFilterCount from './dc/ChartViewDcFilterCount.vue'
 import ChartViewTextSelectTimeRange from './text/ChartViewTextSelectTimeRange.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 
@@ -100,7 +63,7 @@ import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterab
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
-  components: { ChartViewVRowWebShare, ChartViewTextSelectTimeRange, UnitFilterableTable },
+  components: { ChartViewVRowWebShare, ChartViewFilters, ChartViewDcFilterCount, ChartViewTextSelectTimeRange, UnitFilterableTable },
   mixins: [mixin],
   props: {
     titleTimeline: {
@@ -152,16 +115,10 @@ export default {
         accessor: 'day',
         xUnits: d3.timeDays,
         round: d3.timeDay.round
-      },
-      totalCount: null,
-      filterCount: null
+      }
     }
   },
   methods: {
-    resetAll() {
-      dc.filterAll()
-      dc.renderAll()
-    },
     drawViz() {
       // Define color palette for the graphs
       const colorPalette = [
@@ -345,19 +302,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
-::v-deep .range-chart > svg > g > g.axis.y {
-  display: none;
-}
-</style>
