@@ -106,7 +106,7 @@
 <script>
 import * as d3 from 'd3'
 import { nest } from 'd3-collection'
-import { addMissingDate } from './utils/D3Helpers'
+import { addMissingDate } from './utils/d3-helpers'
 import mixin from './mixin'
 
 // Inspired by

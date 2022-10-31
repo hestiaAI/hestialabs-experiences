@@ -47,13 +47,7 @@
           <VCol cols="12">
             <div id="volume-chart">
               <span v-t="messages['Amount of tracking over time']" class="font-weight-bold" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
 
             <div id="range-chart">
@@ -65,61 +59,40 @@
           <VCol cols="12" md="6">
             <div id="category-chart">
               <span v-t="messages['Purposes of third party']" class="font-weight-bold" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="6">
             <div id="app-chart">
-              <span v-t="messages['Applications that use trackers']" class="font-weight-bold" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <div style="display: flex">
+                <span v-t="messages['Applications that use trackers']" class="font-weight-bold" />
+                <VSpacer />
+                <div id="app-search" class="search" />
+              </div>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
       </VCol>
       <VCol cols="12" md="3">
         <div id="advertiser-chart">
-          <span v-t="messages['Companies behind tracking']" class="font-weight-bold" />
-          <a v-t="'reset'" class="reset" style="display: none" />
-          <p class="filters">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-          </p>
+          <div style="display: flex">
+            <span v-t="messages['Companies behind tracking']" class="font-weight-bold" />
+            <VSpacer />
+            <div id="advertiser-search" />
+          </div>
+          <ChartViewFilters />
         </div>
       </VCol>
     </ChartViewVRowWebShare>
-    <VRow>
-      <template v-if="filterCount === totalCount">
-        <i18n tag="div" :path="kViewBlock('selected-all')">
-          <template #totalCount>
-            <span class="font-weight-bold" v-text="totalCount" />
-          </template>
-        </i18n>
-        <span v-t="'click-graph'" />
-      </template>
-      <template v-else>
-        <i18n tag="div" :path="kViewBlock('selected-some')">
-          <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
-            <span :key="k" class="font-weight-bold" v-text="v" />
-          </template>
-        </i18n>
-        <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
-      </template>
-    </VRow>
-    <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results, kViewBlock }" />
+    <ChartViewDcFilterCount
+      v-bind="{ filterCount, totalCount }"
+    />
+    <UnitFilterableTable
+      :id="
+        id"
+      v-bind="{ headers: header, items: results, kViewBlock }"
+    />
   </VContainer>
 </template>
 
@@ -207,6 +180,9 @@ export default {
       const advertiserChart = new dc.RowChart('#advertiser-chart')
       const appChart = new dc.RowChart('#app-chart')
 
+      const appSearch = this.createTextFilterWidget('#app-search')
+      const advertiserSearch = this.createTextFilterWidget('#advertiser-search')
+
       // Bind reset filters links
       d3.select('#volume-chart a.reset').on('click', function() {
         rangeChart.filterAll()
@@ -258,6 +234,8 @@ export default {
       const categoryDimension = ndx.dimension(d => d.category)
       const advertiserDimension = ndx.dimension(d => d.tracker)
       const appDimension = ndx.dimension(d => d.app)
+      appSearch.dimension(ndx.dimension(d => d.app.toLowerCase()))
+      advertiserSearch.dimension(ndx.dimension(d => d.tracker.toLowerCase()))
 
       // Dimension for the app selector (has to be different from appDimension)
       this.selectAppDimension = ndx.dimension(d => d.app)
