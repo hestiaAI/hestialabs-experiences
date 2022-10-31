@@ -36,10 +36,6 @@ const mocks = {
   $i18n: {
     mergeLocaleMessage() {}
   },
-  $route: { params: {} },
-  $router: {
-    push: () => { }
-  },
   $t: msg => defaultMessages[msg],
   $tev: msg => defaultMessages[msg],
   $tet: msg => defaultMessages[msg]

@@ -5,6 +5,7 @@ const store = {
   namespaced: true,
   state: () => ({
     progress: false,
+    currentTab: 'load-data',
     experienceConfig: {},
     siteConfig: {},
     bubbleConfig: {},
@@ -19,6 +20,9 @@ const store = {
   mutations: {
     setProgress(state, value) {
       state.progress = value
+    },
+    setCurrentTab(state, value) {
+      state.currentTab = value
     },
     setExperienceConfig(state, config) {
       state.experienceConfig = config
@@ -54,8 +58,8 @@ const store = {
       state.fileExplorerCurrentItem.selectedPaths =
         state.fileExplorerCurrentItem.selectedPaths.filter(e => e !== path)
     },
-    setResult(state, { experience, result }) {
-      Vue.set(state.results, experience, cloneDeep(result))
+    setResult(state, { result }) {
+      Vue.set(state.results, state.currentTab, cloneDeep(result))
     },
     setConsentForm(state, consentForm) {
       // Initialize missing values

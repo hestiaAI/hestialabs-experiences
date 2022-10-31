@@ -5,10 +5,6 @@ import kViewBlockMixin from '@/mixins/k-view-block'
 
 const mixin = {
   props: {
-    id: {
-      type: String,
-      required: true
-    },
     values: {
       type: Array,
       default: () => []
@@ -24,7 +20,7 @@ const mixin = {
   },
   data() {
     return {
-      graphId: 'graph_' + this.id,
+      graphId: 'graph_' + this.$store.state.xp.currentTab,
       totalCount: 0,
       filterCount: 0
     }

@@ -83,10 +83,6 @@ export default {
     items: {
       type: Array,
       default: () => []
-    },
-    id: {
-      type: String,
-      required: true
     }
   },
   data() {
@@ -210,14 +206,13 @@ export default {
         // emit the current filtered items
         this.$emit('current-items', filteredItems)
         /*
-                this.$store.commit('xp/setResult', {
-                  experience: this.id,
-                  result: {
-                    headers: this.headers,
-                    items: filteredItems
-                  }
-                })
-                */
+        this.$store.commit('xp/setResult', {
+          result: {
+            headers: this.headers,
+            items: filteredItems
+          }
+        })
+        */
       })
     }
   }

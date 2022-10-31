@@ -80,11 +80,12 @@
   "peerDependencies": {
     "@mdi/js": "^7.0.96",
     "sql.js": "^1.7.0",
-    "vue-router": "^3.5.4",
     "vuetify": "^2.6.0"
   },
   "jest": {
-    "setupFiles": ["jest-canvas-mock"],
+    "setupFiles": [
+      "jest-canvas-mock"
+    ],
     "setupFilesAfterEnv": [
       "./jest.setup.js"
     ],

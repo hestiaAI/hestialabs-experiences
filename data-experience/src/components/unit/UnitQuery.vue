@@ -10,7 +10,7 @@
         </VCol>
         <VCol cols="1" align-self="center" class="full-height text-center">
           <VTooltip
-            v-if="['genericDateViewer', 'genericLocationViewer'].includes(id)"
+            v-if="['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
             left
           >
             <template #activator="{ on }">
@@ -50,17 +50,13 @@
           v-if="customPipeline"
           v-bind="{
             customPipeline,
-            customPipelineOptions,
-            hash: id
+            customPipelineOptions
           }"
           @update="onUnitResultsUpdate"
         />
         <UnitPipelineSql
           v-else-if="sql"
-          v-bind="{
-            sql,
-            hash: id
-          }"
+          :sql="sql"
           @update="onUnitResultsUpdate"
         />
 
@@ -83,7 +79,6 @@
               <ChartView
                 v-else-if="vizVue"
                 v-bind="{
-                  id,
                   graphName: vizVue,
                   data: clonedResultPostprocessed,
                   ...vizPropsTranslated
@@ -97,7 +92,7 @@
           </VRow>
           <VRow v-if="showTable">
             <VCol>
-              <UnitFilterableTable v-bind="clonedResult" :id="id" />
+              <UnitFilterableTable v-bind="clonedResult" />
             </VCol>
           </VRow>
         </template>
@@ -122,14 +117,6 @@ export default {
   name: 'UnitQuery',
   components: { UnitPipelineSql, UnitFilesDialog, ChartView, UnitKepler, UnitFilterableTable, UnitVegaViz, BaseAlert, UnitPipelineCustom },
   props: {
-    slug: {
-      type: String,
-      required: true
-    },
-    id: {
-      type: String,
-      required: true
-    },
     title: {
       type: String,
       required: true
@@ -195,7 +182,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager']),
+    ...mapState(['fileManager', 'experienceConfig', 'currentTab']),
     clonedResult() {
       return cloneDeep(this.result)
     },
@@ -241,14 +228,13 @@ export default {
         return
       }
       this.$store.commit('xp/setResult', {
-        experience: this.id,
         result
       })
       this.result = result
     },
     // Convert local translation key to global vue-i18n
     k(key) {
-      return `experiences.${this.slug}.viewBlocks.${this.id}.${key}`
+      return `experiences.${this.experienceConfig.slug}.viewBlocks.${this.currentTab}.${key}`
     }
   }
 }

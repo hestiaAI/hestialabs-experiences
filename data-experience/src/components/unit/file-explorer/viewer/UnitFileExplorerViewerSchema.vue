@@ -50,7 +50,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectedPaths']),
+    ...mapGetters(['selectedPaths', 'experienceConfig']),
     // Check that the selected paths can be converted to an array
     isValidPaths() {
       const toCheck = [...this.selectedPaths]
@@ -80,7 +80,7 @@ export default {
     fetchSchema(filename) {
       // Try to fetch the schema if it exist
       try {
-        this.jsonSchema = this.$store.getters.experience(this.$route).dataModel['@graph'].filter(item => filename.endsWith(item.fileName))[0] || {}
+        this.jsonSchema = this.experienceConfig.dataModel['@graph'].filter(item => filename.endsWith(item.fileName))[0] || {}
       } catch (e) {
         this.error = true
       }

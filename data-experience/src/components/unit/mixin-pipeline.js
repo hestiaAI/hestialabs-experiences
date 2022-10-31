@@ -1,10 +1,4 @@
 export default {
-  props: {
-    hash: {
-      type: String,
-      required: true
-    }
-  },
   data() {
     return {
       progress: false,
@@ -30,13 +24,13 @@ export default {
         }
       }
     },
-    '$route.hash': {
+    '$store.state.xp.currentTab': {
       immediate: true,
-      handler(value) {
+      handler() {
         // Re-run the pipeline when
         // 1. the tab is reopened, and
         // 2. the store was previously cleared
-        if (value.slice(1) === this.hash && this.refreshPipeline) {
+        if (this.refreshPipeline) {
           this.progress = true
           window.setTimeout(async() => {
             await this.run()

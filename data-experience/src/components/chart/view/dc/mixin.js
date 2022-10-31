@@ -48,7 +48,7 @@ export default {
   },
   data() {
     return {
-      graphId: 'graph_' + this.id
+      graphId: 'graph_' + this.$store.state.xp.currentTab
     }
   },
   mounted() {

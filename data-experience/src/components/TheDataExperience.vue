@@ -47,16 +47,15 @@
           @change="scrollToTop"
         >
           <VTab
-            v-for="(t, index) in tabs"
-            :key="index"
+            v-for="t in tabs"
+            :key="t.value"
             :disabled="t.disabled"
-            :to="`#${t.value}`"
           >
             {{ $tev(t.titleKey, t.title) }}
           </VTab>
         </VTabs>
         <VTabsItems v-model="tab">
-          <VTabItem value="load-data" :transition="false">
+          <VTabItem data-value="load-data" :transition="false">
             <VCol cols="12 mx-auto" md="6" class="tabItem">
               <UnitIntroduction
                 v-bind="{
@@ -70,12 +69,12 @@
               />
             </VCol>
           </VTabItem>
-          <VTabItem value="summary" :transition="false">
+          <VTabItem data-value="summary" :transition="false">
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
-              <UnitSummary @switch-tab="switchTab" />
+              <UnitSummary />
             </VCol>
           </VTabItem>
-          <VTabItem value="file-explorer" :transition="false">
+          <VTabItem data-value="file-explorer" :transition="false">
             <div class="tabItem">
               <UnitFileExplorer />
             </div>
@@ -83,7 +82,7 @@
           <VTabItem
             v-for="(viewBlock, index) in experienceConfig.viewBlocks"
             :key="index"
-            :value="viewBlock.id"
+            :data-value="viewBlock.id"
             :transition="false"
           >
             <VCol cols="12 mx-auto" class="tabItem">
@@ -98,12 +97,12 @@
                   <BaseProgressCircular size="64" width="4" />
                 </div>
               </VOverlay>
-              <UnitQuery v-bind="viewBlock" :slug="experienceConfig.slug" />
+              <UnitQuery v-bind="viewBlock" />
             </VCol>
           </VTabItem>
           <VTabItem
             v-if="consent"
-            value="share-data"
+            data-value="share-data"
             :transition="false"
           >
             <VCol cols="12 mx-auto" sm="6" class="tabItem">
@@ -179,7 +178,7 @@ export default {
     return {
       isNuxt: Boolean(process.env.configName),
       localeIndex: 0,
-      tab: null,
+      tab: 0,
       fab: false,
       progress: false,
       error: false,
@@ -190,7 +189,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager', 'bubbleCodeword']),
+    ...mapState(['fileManager', 'bubbleCodeword', 'currentTab']),
     ...mapState({ experienceProgress: 'progress' }),
     tabs() {
       const { hideSummary, hideFileExplorer, viewBlocks } = this.experienceConfig
@@ -201,35 +200,32 @@ export default {
           value: 'load-data',
           titleKey: 'load-data.name',
           disabled: false
-        },
-        ...(!hideSummary
-          ? [
-              {
-                title: 'Summary',
-                value: 'summary',
-                titleKey: 'summary.name',
-                disabled
-              }
-            ]
-          : []),
-        ...(!hideFileExplorer
-          ? [
-              {
-                title: 'Files',
-                value: 'file-explorer',
-                titleKey: 'file-explorer.name',
-                disabled
-              }
-            ]
-          : []),
+        }
+      ]
+      if (!hideSummary) {
+        tabs.push({
+          title: 'Summary',
+          value: 'summary',
+          titleKey: 'summary.name',
+          disabled
+        })
+      }
+      if (!hideFileExplorer) {
+        tabs.push({
+          title: 'Files',
+          value: 'file-explorer',
+          titleKey: 'file-explorer.name',
+          disabled
+        })
+      }
+      tabs.push(
         ...viewBlocks.map(view => ({
           ...view,
           value: view.id,
           titleKey: this.k(view.id),
-          disabled,
-          show: true
+          disabled
         }))
-      ]
+      )
       if (this.consent) {
         tabs.push({
           title: 'Share my data',
@@ -291,7 +287,7 @@ export default {
     },
     fileManager(value) {
       if (value === null) {
-        this.switchTab('load-data')
+        this.setCurrentTab('load-data')
         this.success = false
         this.progress = false
         this.error = false
@@ -303,6 +299,15 @@ export default {
       handler: debounce(function(value) {
         this.overlay = value
       }, 200)
+    },
+    tab(tabIndex) {
+      const { value } = this.tabs[tabIndex]
+      if (value !== this.currentTab) {
+        this.setCurrentTab(value)
+      }
+    },
+    currentTab(value) {
+      this.tab = this.tabs.findIndex(tab => tab.value === value)
     }
   },
   created() {
@@ -317,11 +322,17 @@ export default {
       }
     )
   },
-  mounted() {
-    this.switchTab('load-data')
-  },
   methods: {
-    ...mapMutations(['setSiteConfig', 'setBubbleConfig', 'setExperienceConfig', 'setConsentForm', 'clearStore', 'setFileManager', 'setCurrentDB']),
+    ...mapMutations([
+      'setSiteConfig',
+      'setBubbleConfig',
+      'setExperienceConfig',
+      'setConsentForm',
+      'clearStore',
+      'setFileManager',
+      'setCurrentDB',
+      'setCurrentTab'
+    ]),
     async mergeMessages() {
       const { messages: messagesExperience = {}, slug } = this.experienceConfig
       const { messages: messagesCustomConfig = {}, i18nLocales, i18nUrl } = this.siteConfigMerged
@@ -350,12 +361,6 @@ export default {
     // Convert local translation key to global vue18n
     k(localKey) {
       return `experiences.${this.experienceConfig.slug}.viewBlocks.${localKey}.title`
-    },
-    switchTab(value) {
-      const hash = `#${value}`
-      if (hash !== this.$route.hash) {
-        this.$router.push(hash)
-      }
     },
     scrollToTop() {
       window.setTimeout(() => window.scrollTo(0, 0), 10)
@@ -434,7 +439,9 @@ export default {
 
       this.progress = false
       this.success = true
-      setTimeout(() => this.switchTab(this.tabs[1].value), 500)
+
+      // switch to the second tab
+      this.setCurrentTab(this.tabs[1].value)
 
       const elapsed = new Date() - start
       this.message = `${this.$t('Successfully processed in')} ${elapsed / 1000} ${this.$t('seconds')}`

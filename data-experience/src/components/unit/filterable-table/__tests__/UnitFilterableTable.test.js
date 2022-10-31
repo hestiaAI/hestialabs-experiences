@@ -39,10 +39,6 @@ const options = {
   store,
   localVue,
   mocks: {
-    $route: {
-      params: {},
-      hash: ''
-    },
     $t: msg => defaultMessages[msg],
     $tev: msg => defaultMessages[msg]
   }
