@@ -29,6 +29,7 @@
 <script>
 import TheDataExperience2 from '@/components/TheDataExperience.vue'
 import BubbleApi from '@/utils/bubble-api'
+import { mapMutations } from '@/utils/store-helper'
 
 import appleTracker from '@hestia.ai/apple-tracker'
 import appleTrackerAgg from '@hestia.ai/apple-tracker-agg'
@@ -198,11 +199,15 @@ export default {
             e => e.startsWith(exp) || exp?.startsWith(e))
           this.experience = simi || available?.[0] || initialExperience
         }
+        this.setBubbleCodeword(undefined)
       }
     }
   },
   async created() {
     populateServerConfigs()
+  },
+  methods: {
+    ...mapMutations(['setBubbleCodeword'])
   }
 }
 </script>

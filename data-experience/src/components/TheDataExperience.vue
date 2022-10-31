@@ -262,16 +262,6 @@ export default {
         })
       }
       return tabs
-    },
-    siteConfigMerged() {
-      return cloneDeep(merge(siteConfigDefault, this.siteConfig))
-    },
-    showLogin() {
-      const bc = this.bubbleConfig
-      return bc && !bc.bypassLogin && !this.bubbleCodeword
-    },
-    consent() {
-      return this.bubbleConfig?.consent
     }
   },
   watch: {
