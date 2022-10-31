@@ -1,1 +1,1 @@
-declare module '@hestiaai/hestialabs'
+declare module '@hestia.ai/hestialabs'

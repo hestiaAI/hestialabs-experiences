@@ -1,6 +1,6 @@
 {
-  "name": "@hestiaai/her-tinder-agg",
-  "version": "0.0.1-alpha.42",
+  "name": "@hestia.ai/her-tinder-agg",
+  "version": "0.0.1-alpha.44",
   "main": "dist/index",
   "type": "module",
   "files": [

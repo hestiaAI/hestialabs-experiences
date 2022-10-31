@@ -23,15 +23,16 @@ function handleSpawnOutput({ status, stderr, stdout, error }) {
 
 if (experiences) {
   if (NODE_ENV === 'production' || CIRCLECI) {
-    const { spawnSync, execSync } = require('child_process')
-    const npmrcPath = resolve(__dirname, '.npmrc')
-    const cmd = `echo "//npm.pkg.github.com/:_authToken=$\{HESTIA_OWNER_GITHUB_TOKEN}" >> ${npmrcPath}`
-    execSync(cmd)
+    const { spawnSync } = require('child_process')
+    // const { spawnSync, execSync } = require('child_process')
+    // const npmrcPath = resolve(__dirname, '.npmrc')
+    // const cmd = `echo "//npm.pkg.github.com/:_authToken=$\{HESTIA_OWNER_GITHUB_TOKEN}" >> ${npmrcPath}`
+    // execSync(cmd)
     const packages = experiences.map(
-      packageNameAndTag => `@hestiaai/${packageNameAndTag}`
+      packageNameAndTag => `@hestia.ai/${packageNameAndTag}`
     )
     console.info(
-      'Installing packages from the GitHub Package Registry...\n' +
+      'Installing packages from the npm public registry...\n' +
       packages.join('\n')
     )
     handleSpawnOutput(spawnSync('npm', ['install', ...packages]))
@@ -40,7 +41,7 @@ if (experiences) {
     const spawn = require('cross-spawn')
     const packages = experiences.map((packageNameAndTag) => {
       const [name] = packageNameAndTag.split('@')
-      return `@hestiaai/${name}`
+      return `@hestia.ai/${name}`
     })
     console.info(
       'Linking packages...\n' +
