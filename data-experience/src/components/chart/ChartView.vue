@@ -52,9 +52,6 @@ export default {
 </script>
 
 <style>
-/* Import style for dc graphs */
-@import 'assets/styles/dc.css';
-
 /* Global style for every graph */
 .dc-chart g.row text {
   fill: #22313f;
