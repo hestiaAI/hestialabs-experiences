@@ -491,20 +491,6 @@ export default {
 }
 </script>
 <style scoped>
-<<<<<<< HEAD:data-experience/src/components/chart/view/ChartViewOverviewUber.vue
-
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
-=======
->>>>>>> master:experiences/components/chart/view/ChartViewOverviewUber.vue
 ::v-deep #hour-chart g.y {
   display: none;
 }

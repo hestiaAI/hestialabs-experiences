@@ -320,22 +320,3 @@ export default {
   }
 }
 </script>
-<<<<<<< HEAD:data-experience/src/components/chart/view/ChartViewOverviewHerTinder.vue
-<style scoped>
-
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
-::v-deep .range-chart > svg > g > g.axis.y {
-  display: none;
-}
-</style>
-=======
->>>>>>> master:experiences/components/chart/view/ChartViewOverviewHerTinder.vue
