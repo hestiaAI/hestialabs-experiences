@@ -1,5 +1,11 @@
 <template>
-  <TheDataExperience />
+  <TheDataExperience2
+    v-bind="{
+      experienceConfig,
+      siteConfig: $store.state.config,
+      bubbleConfig
+    }"
+  />
 </template>
 
 <script>
@@ -15,20 +21,26 @@ export default {
   head() {
     const k =
       key => `experiences.${this.$route.params.experience}.intro.${key}`
-    const { title } = this.$store.getters.experience(
-      this.$route
-    )
-    const t = this.$tev(k('title'), title)
+    const t = this.$tev(k('title'), this.experienceConfig.title)
     const s = this.$tet(k('subtitle'), 'Data Experience')
 
-    const bubble =
-      this.$store.state.config.bubbleConfig[this.$route.params.bubble]
+    const { title: bubbleTitle } = this.bubbleConfig
 
     const bubbleText = this.$tc('Bubble', 1)
-    const metaBubbleTitle = this.$i18n.locale === 'fr' ? `${bubbleText} ${bubble.title}` : `${bubble.title} ${bubbleText}`
+    const metaBubbleTitle = this.$i18n.locale === 'fr' ? `${bubbleText} ${bubbleTitle}` : `${bubbleTitle} ${bubbleText}`
 
     const metaTitle = `${t}: ${s} | ${metaBubbleTitle}`
     return this.vueMeta(metaTitle)
+  },
+  computed: {
+    experienceConfig() {
+      return this.$store.getters.experience(
+        this.$route
+      )
+    },
+    bubbleConfig() {
+      return this.$store.state.config.bubbleConfig[this.$route.params.bubble]
+    }
   }
 }
 </script>
