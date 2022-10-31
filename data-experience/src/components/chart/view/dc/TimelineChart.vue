@@ -17,12 +17,13 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import mixin from './mixin'
 import ChartViewTextSelectTimeRange from '../text/ChartViewTextSelectTimeRange.vue'
+import ChartViewFilters from '../filters/ChartViewFilters.vue'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
 
 export default {
-  components: { ChartViewTextSelectTimeRange },
+  components: { ChartViewTextSelectTimeRange, ChartViewFilters },
   mixins: [mixin],
   props: {
     /**

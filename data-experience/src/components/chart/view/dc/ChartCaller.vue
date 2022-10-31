@@ -1,9 +1,7 @@
 <template>
   <component
     :is="component"
-    v-bind="{
-      ...vizProps
-    }"
+    v-bind="vizProps"
   />
 </template>
 
