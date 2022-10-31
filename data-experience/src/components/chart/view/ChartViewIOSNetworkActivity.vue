@@ -97,9 +97,6 @@
             </div>
           </VCol>
         </VRow>
-        <p v-if="$store.state.xp.bubbleConfig.consent">
-          {{ $t('filter-info') }}
-        </p>
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>

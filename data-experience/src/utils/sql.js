@@ -90,14 +90,9 @@ export class DB {
     const options = process.env.NODE_ENV === 'test'
       ? {}
       : {
-          locateFile: () => 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.7.0/sql-wasm.wasm'
+          locateFile: () => 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.wasm'
         }
     const SQL = await initSqlJs(options)
-    /*
-    const SQL = await initSqlJs({
-      locateFile: () => sqlWasm
-    })
-    */
     this.#db = new SQL.Database()
     // enable foreign keys
     this.#db.run('PRAGMA foreign_keys=ON')

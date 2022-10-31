@@ -26,13 +26,13 @@ export default class BubbleApi {
         `Unable to fetch config from server: Error ${res.status}`
       )
     }
-    return await res.json()
+    const config = await res.json()
+    return config
   }
 
   getFilenames(bubbleName, callback) {
     const url = `${this.apiUrl}/bubbles/${bubbleName}/files`
     const options = { method: 'GET' }
-
     fetch(url, options)
       .then((res) => {
         if (!res.ok) {
@@ -46,10 +46,10 @@ export default class BubbleApi {
       .catch(error => callback(error))
   }
 
-  getFile(bubbleName, filename, callback) {
+  getFile0(bubbleName, filename, callback) {
     const url = `${this.apiUrl}/bubbles/${bubbleName}/file/${filename}`
     const options = { method: 'GET' }
-
+    console.log('url', url, this.apiUrl)
     fetch(url, options)
       .then((res) => {
         if (res.ok) {
@@ -66,6 +66,20 @@ export default class BubbleApi {
         }
       })
       .catch(error => callback(error))
+  }
+
+  async getFile(bubbleName, filename) {
+    const url = `${this.apiUrl}/bubbles/${bubbleName}/file/${filename}`
+    const options = { method: 'GET' }
+    const res = await fetch(url, options)
+    if (res.ok) {
+      const blob = await res.blob()
+      return blob
+    } else {
+      throw new Error(
+              `Unable to fetch ${filename} from server: Error ${res.status}`
+      )
+    }
   }
 
   async login(id, codeword) {

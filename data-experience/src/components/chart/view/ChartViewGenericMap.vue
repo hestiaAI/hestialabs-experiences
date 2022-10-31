@@ -15,11 +15,6 @@
         <VCol cols="12">
           <UnitKepler :args="keplerArgs" />
         </VCol>
-        <p v-if="$store.state.xp.bubbleConfig.consent">
-          {{ $t(k('search-info')) }}
-          <br>
-          {{ $t('filter-info') }}
-        </p>
       </VRow>
       <template v-if="showButton == true">
         <VMenu

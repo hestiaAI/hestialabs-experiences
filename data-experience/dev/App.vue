@@ -1,34 +1,40 @@
 <template>
-  <div id="app" class="app-dev d-inline-flex">
-    <div style="margin: 30px 0; padding: 10px 0; border-bottom: dotted black 5px">
-      <VSelect
-        label="Experience"
-        v-model="experience"
-        :items="experiences"
-        outlined
-        dense
-        attach=".app-dev .v-select"
-        :menu-props="{ bottom: true, offsetY: true }"
-        style="margin: auto; width: 200px;"
-      />
-      <VSelect
-        label="Bubble"
-        v-model="bubble"
-        :items="bubbles"
-        outlined
-        dense
-        attach=".app-dev .v-select"
-        :menu-props="{ bottom: true, offsetY: true }"
-        style="margin: auto; width: 200px;"
-      />
-    </div>
-    <TheDataExperience2 v-bind="props" />
-  </div>
+  <VApp>
+    <VMain>
+      <div id="app" class="app-dev d-flex-column justify-center" style="width: 100%;">
+        <div style="margin: 30px 0; padding: 10px 0; border-bottom: dotted black 5px">
+          <VSelect
+            label="Experience"
+            v-model="experience"
+            :items="availableExperiences"
+            outlined
+            dense
+            attach=".app-dev .v-select"
+            :menu-props="{ bottom: true, offsetY: true }"
+            style="margin: auto; width: 200px;"
+          />
+          <VSelect
+            label="Bubble"
+            v-model="bubble"
+            :items="bubbles"
+            outlined
+            dense
+            attach=".app-dev .v-select"
+            :menu-props="{ bottom: true, offsetY: true }"
+            style="margin: auto; width: 200px;"
+          />
+        </div>
+        <TheDataExperience2 v-bind="props" />
+      </div>
+
+    </VMain>
+  </VApp>
 </template>
 
 <script>
 import TheDataExperience2 from '@/components/TheDataExperience.vue'
 import BubbleApi from '@/utils/bubble-api'
+import { mapMutations } from '@/utils/store-helper'
 
 import appleTracker from '@hestia.ai/apple-tracker'
 import appleTrackerAgg from '@hestia.ai/apple-tracker-agg'
@@ -79,6 +85,7 @@ const experienceConfigs = [
 ].map(e => e.config)
 
 const experiences = experienceConfigs.map(e => e.slug)
+const initialExperience = 'twitter'
 
 const siteConfig = {
   experiences,
@@ -132,6 +139,10 @@ async function populateServerConfigs() {
   })
 }
 
+function experiencesInBubble(bubbleId) {
+  return configsFromServer[bubbleId]?.experiences
+}
+
 const theApiUrl = 'http://127.0.0.1:8000'
 const bubbleApi = new BubbleApi(theApiUrl)
 
@@ -142,9 +153,12 @@ function makeBubbleConfig(bubbleId, experience) {
   }
   const id = bubbleId
   const apiUrl = theApiUrl
-  const consents = configFromServer.consent
-  const consentId = consents?.[experience] ? experience : 'default'
-  const consent = consents?.[consentId]
+  let consent
+  if (configFromServer.consent) {
+    const { destinationBubble, ...consents } = configFromServer.consent
+    const form = consents?.[experience] || consents?.default
+    consent = { destinationBubble, form }
+  }
   const bubbleConfig = { ...configFromServer, id, apiUrl, consent }
   return bubbleConfig
 }
@@ -153,15 +167,18 @@ export default {
   name: 'App',
   components: { TheDataExperience2 },
   data() {
-    const experience = 'twitter'
     return {
-      experiences,
-      experience,
+      experience: initialExperience,
       bubbles: bubbleIds,
       bubble: noBubble,
       props: {
         siteConfig
       }
+    }
+  },
+  computed: {
+    availableExperiences() {
+      return experiencesInBubble(this.bubble) || experiences
     }
   },
   watch: {
@@ -177,13 +194,25 @@ export default {
     bubble: {
       immediate: true,
       handler(bubbleId) {
-        this.props.bubbleConfig =
-          makeBubbleConfig(this.bubble, this.experience)
+        const available = experiencesInBubble(bubbleId)
+        if (available?.includes(this.experience)) {
+          this.props.bubbleConfig =
+            makeBubbleConfig(this.bubble, this.experience)
+        } else {
+          const exp = this.experience
+          const simi = available?.find(
+            e => e.startsWith(exp) || exp?.startsWith(e))
+          this.experience = simi || available?.[0] || initialExperience
+        }
+        this.setBubbleCodeword(undefined)
       }
     }
   },
   async created() {
     populateServerConfigs()
+  },
+  methods: {
+    ...mapMutations(['setBubbleCodeword'])
   }
 }
 </script>

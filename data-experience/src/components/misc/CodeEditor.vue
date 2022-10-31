@@ -1,13 +1,11 @@
 <template>
-  <client-only placeholder="Loading...">
-    <AceEditor
-      v-model="code"
-      :lang="editorLanguage"
-      theme="chrome"
-      class="my-ace-editor"
-      @init="initEditor"
-    />
-  </client-only>
+  <AceEditor
+    v-model="code"
+    :lang="editorLanguage"
+    theme="chrome"
+    class="my-ace-editor"
+    @init="initEditor"
+  />
 </template>
 
 <script>
