@@ -6,13 +6,7 @@
           <VCol cols="12" sm="8">
             <div id="volume-chart">
               <span class="font-weight-bold" v-text="messages['ads-time']" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
             <div :id="'range-chart' + graphId" class="range-chart">
               <ChartViewTextSelectTimeRange />
@@ -25,13 +19,7 @@
                 <VSpacer />
                 <div id="company-search" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -39,13 +27,7 @@
           <VCol cols="12" sm="4">
             <div id="engagement-chart">
               <span class="font-weight-bold" v-text="messages['interactions']" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" sm="4">
@@ -55,13 +37,7 @@
                 <VSpacer />
                 <div id="type-search" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" sm="4">
@@ -71,13 +47,7 @@
                 <VSpacer />
                 <div id="value-search" />
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -434,40 +404,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-@import 'assets/styles/dc.css';
-
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
-::v-deep .range-chart > svg > g > g.axis.y {
-  display: none;
-}
-
-::v-deep .reset {
-  margin-left: 1rem;
-}
-
-::v-deep .v-application a.reset {
-  color: rgb(85, 3, 30);
-}
-
-::v-deep p.filters {
-  font-size: 0.8rem;
-  font-style: italic;
-}
-::v-deep .dc-text-filter-input {
-  font-family: inherit;
-  border: 0;
-  border-bottom: 1px solid gray;
-  outline: 0;
-  background: transparent;
-}
-</style>

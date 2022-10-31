@@ -6,13 +6,7 @@
           <VCol cols="12" md="12">
             <div id="like-chart">
               <strong>Likes you've made over time</strong>
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
             <div id="range-chart">
               <ChartViewTextSelectTimeRange>
@@ -25,37 +19,19 @@
           <VCol cols="12" md="4">
             <div id="hour-chart">
               <strong>Time of day</strong>
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
             <div id="week-chart">
               <strong>Day</strong>
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
             <div id="matched-chart">
               <strong>Matched</strong>
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -340,19 +316,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-@import 'assets/styles/dc.css';
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
-::v-deep .range-chart > svg > g > g.axis.y {
-  display: none;
-}
-</style>

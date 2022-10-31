@@ -145,7 +145,6 @@ function update(data, store) {
 }
 
 export function initialiseIframe() {
-  console.log('initialize iframe')
   const _store = buildStore()
 
   if (window) {

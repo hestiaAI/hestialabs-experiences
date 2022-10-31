@@ -8,7 +8,6 @@ export const toGraph: PostprocessorFunction = result => {
   if (items.length === 0) {
     return { headers: [], items: [] }
   }
-  // console.log('TEST', items)
 
   interface Interest {
     name: string
@@ -25,7 +24,6 @@ export const toGraph: PostprocessorFunction = result => {
       })
     }
   })
-  // console.log(allInterests)
   /*
   const categoriesToKeep = [
     'FingerprintingGeneral',

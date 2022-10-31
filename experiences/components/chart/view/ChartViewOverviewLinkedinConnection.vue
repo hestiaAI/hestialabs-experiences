@@ -4,13 +4,7 @@
       <VCol cols="12">
         <div :id="'connections-chart' + graphId">
           <span class="font-weight-bold" v-text="messages['Cumulative number of connections']" />
-          <a v-t="'reset'" class="reset" style="display: none" />
-          <p class="filters ma-0">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-          </p>
+          <ChartViewFilters />
         </div>
         <div :id="'range-chart' + graphId" class="range-chart">
           <ChartViewTextSelectTimeRange />
@@ -25,25 +19,13 @@
             <VSpacer />
             <div id="company-search" />
           </div>
-          <a v-t="'reset'" class="reset" style="display: none" />
-          <p class="filters ma-0">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-          </p>
+          <ChartViewFilters />
         </div>
       </VCol>
       <VCol cols="4">
         <div :id="'week-chart' + graphId">
           <span v-t="messages['Day']" class="font-weight-bold" />
-          <a v-t="'reset'" class="reset" style="display: none" />
-          <p class="filters ma-0">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-          </p>
+          <ChartViewFilters />
         </div>
       </VCol>
       <VCol cols="4">
@@ -53,34 +35,13 @@
             <VSpacer />
             <div id="position-search" />
           </div>
-          <a v-t="'reset'" class="reset" style="display: none" />
-          <p class="filters ma-0">
-            <span>
-              {{ $t('Current filter') }}
-              <span class="filter" />
-            </span>
-          </p>
+          <ChartViewFilters />
         </div>
       </VCol>
     </VRow>
-    <VRow>
-      <template v-if="filterCount === totalCount">
-        <i18n tag="div" :path="kViewBlock('selected-all')">
-          <template #totalCount>
-            <span class="font-weight-bold" v-text="totalCount" />
-          </template>
-        </i18n>
-        <span v-t="'click-graph'" />
-      </template>
-      <template v-else>
-        <i18n tag="div" :path="kViewBlock('selected-some')">
-          <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
-            <span :key="k" class="font-weight-bold" v-text="v" />
-          </template>
-        </i18n>
-        <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
-      </template>
-    </VRow>
+    <ChartViewDcFilterCount
+      v-bind="{ filterCount, totalCount }"
+    />
     <UnitFilterableTable :id="id" v-bind="{ headers: header, items: results }" />
   </VContainer>
 </template>
@@ -90,7 +51,7 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
-import { createCumulativeGroup } from './utils/DCHelpers'
+import { createCumulativeGroup } from './utils/dc-helpers'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -117,10 +78,6 @@ export default {
     }
   },
   methods: {
-    resetAll() {
-      dc.filterAll()
-      dc.renderAll()
-    },
     removeEmptyBins(group) {
       return {
         top(n) {
@@ -398,31 +355,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
-::v-deep .range-chart > svg > g > g.axis.y {
-  display: none;
-}
-
-::v-deep .reset {
-  margin-left: 1rem;
-}
-
-::v-deep .v-application a.reset {
-  color: rgb(85, 3, 30);
-}
-
-::v-deep p.filters {
-  font-size: 0.8rem;
-  font-style: italic;
-}
-</style>

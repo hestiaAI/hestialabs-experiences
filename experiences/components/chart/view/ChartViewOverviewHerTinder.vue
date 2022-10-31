@@ -15,13 +15,7 @@
               <div style="display: flex">
                 <strong>App</strong>
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -38,13 +32,7 @@
               <div style="display: flex">
                 <strong>Sexual Orientations</strong>
               </div>
-              <p class="filters">
-                <span>
-                  {{ $t('Current filter') }}
-                  <span class="filter" />
-                </span>
-                <a v-t="'reset'" class="reset" style="display: none" />
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -66,7 +54,7 @@ import * as d3 from 'd3'
 import * as dc from 'dc'
 import crossfilter from 'crossfilter2'
 import mixin from './mixin'
-import { addPiePercentage } from './utils/DCHelpers'
+import { addPiePercentage } from './utils/dc-helpers'
 import { isValidDate } from '@/utils/dates'
 
 // Remove warning on default colorscheme, even if not used..
@@ -376,19 +364,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-@import 'assets/styles/dc.css';
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
-::v-deep .range-chart > svg > g > g.axis.y {
-  display: none;
-}
-</style>

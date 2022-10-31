@@ -114,7 +114,7 @@ export default {
       // TODO avoid code duplication with viewer/mixin-path
       // maybe by setting path as an attribute on every viewer
       if (this.fileManager.fileDict[this.filename]) {
-        return URL.createObjectURL(this.fileManager.fileDict[this.filename])
+        return URL.createObjectURL(this.fileManager.fileDict[this.filename].blob)
       }
       return ''
     },

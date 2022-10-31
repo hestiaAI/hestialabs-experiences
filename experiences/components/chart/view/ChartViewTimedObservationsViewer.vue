@@ -496,9 +496,6 @@ export default {
 }
 </script>
 <style scoped>
-::v-deep .range-chart > svg > g > g.axis.y {
-  display: none;
-}
 ::v-deep .brush .custom-brush-handle {
   display: auto;
 }

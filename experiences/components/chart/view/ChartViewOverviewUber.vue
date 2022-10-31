@@ -16,13 +16,7 @@
           <VCol cols="12" md="12">
             <div id="price-chart">
               <span class="font-weight-bold" v-text="messages['Cumulative expenses']" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  <span v-t="'Current filter'" />
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
             <div id="hour-chart">
               <ChartViewTextSelectTimeRange>
@@ -35,37 +29,19 @@
           <VCol cols="12" md="4">
             <div id="service-chart">
               <span class="font-weight-bold" v-text="messages['Service used']" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  <span v-t="'Current filter'" />
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
             <div id="week-chart">
               <span class="font-weight-bold" v-text="messages['Day of week']" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  <span v-t="'Current filter'" />
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="12" md="4">
             <div id="address-chart">
               <span class="font-weight-bold" v-text="messages['Begin trip address']" />
-              <a v-t="'reset'" class="reset" style="display: none" />
-              <p class="filters">
-                <span>
-                  <span v-t="'Current filter'" />
-                  <span class="filter" />
-                </span>
-              </p>
+              <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
@@ -538,33 +514,8 @@ export default {
 }
 </script>
 <style scoped>
-@import 'assets/styles/dc.css';
-
-::v-deep body {
-  font-family: sans-serif;
-  color: #22313f;
-}
-
-::v-deep .dc-chart g.row text {
-  fill: #22313f;
-  font-weight: bold;
-}
-
 ::v-deep #hour-chart g.y {
   display: none;
-}
-
-::v-deep .reset {
-  margin-left: 1rem;
-}
-
-::v-deep .v-application a.reset {
-  color: rgb(85, 3, 30);
-}
-
-::v-deep p.filters {
-  font-size: 0.8rem;
-  font-style: italic;
 }
 
 ::v-deep ul.list-inline {

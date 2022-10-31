@@ -1,6 +1,6 @@
 // import { readFileSync } from 'fs'
 // import path from 'path'
-import experience from '@hestiaai/twitter'
+import experience from '@hestia.ai/twitter'
 import {
   adImpressions,
   adEngagements,

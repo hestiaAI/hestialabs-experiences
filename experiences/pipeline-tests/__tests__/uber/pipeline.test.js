@@ -1,4 +1,4 @@
-import experience from '@hestiaai/uber'
+import experience from '@hestia.ai/uber'
 import { testTripsData, tripsHeaders, tripsItems } from './samples.helpers'
 import FileManager from '~/utils/file-manager'
 import { NodeFile } from '~/utils/node-file'

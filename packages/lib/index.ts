@@ -87,7 +87,7 @@ export class Experience {
     // construct default view Array
     this.options.viewBlocks = options.viewBlocks.map(createViewBlock)
 
-    const packageName = packageJSON.name.replace('@hestiaai/', '')
+    const packageName = packageJSON.name.replace(/@hestia\.?ai\//, '')
 
     const match = importMetaURL.match(/\/([^/]+)\/src\//)
     if (!match) {

@@ -3,11 +3,7 @@
     <div :id="`week-chart-${graphId}`">
       <strong v-if="title">{{ title }}</strong>
       <strong v-else> {{ $tc('Day', 1) }}</strong>
-      <a v-t="'reset'" class="reset" style="display: none" />
-      <p class="filters">
-        <span v-t="'Current filter'" />
-        <span class="filter" />
-      </p>
+      <ChartViewFilters />
     </div>
   </VContainer>
 </template>
