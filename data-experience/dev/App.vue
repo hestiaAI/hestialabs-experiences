@@ -6,7 +6,7 @@
           <VSelect
             label="Experience"
             v-model="experience"
-            :items="experiences"
+            :items="availableExperiences"
             outlined
             dense
             attach=".app-dev .v-select"
