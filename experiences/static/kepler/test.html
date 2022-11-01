@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!-- https://github.com/keplergl/kepler.gl/blob/master/examples/umd-client/index.html -->
+<html>
+
+<head>
+</head>
+
+<body>
+  <!-- We will put our React component inside this div. -->
+  <iframe src="index.html" title="Test HTML" id="test_id" width="100%" height="1000"></iframe>
+  <script>
+    // add some code
+    const iframe = document.getElementById("test_id");
+    iframe.addEventListener("load", load);
+
+    const mapboxToken = "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA";
+
+    async function load() {
+      const block = await fetch("block03.json");
+      const po = await (await fetch("kepler-po.gl.json")).json()
+      const blockContent = await block.json();
+      console.log('po', po);
+
+      const result = { config: po.config }
+      result.keplerData = po.datasets[0].data
+      result.keplerData.rows = result.keplerData.allData
+      // const result = blockContent.result
+      result.mapboxToken = mapboxToken;
+
+      console.log(result);
+
+      console.log("Test Iframe", iframe);
+      iframe.contentWindow.init(result);
+      iframe.contentWindow.update(result);
+    }
+
+
+
+  </script>
+</body>
+
+</html>

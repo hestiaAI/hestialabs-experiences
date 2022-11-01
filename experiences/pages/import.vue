@@ -95,9 +95,12 @@
             />
             <ChartView
               v-else-if="viz.endsWith('.vue')"
-              :graph-name="viz"
-              :data="result"
-              :viz-props="vizProps"
+              v-bind="{
+                id: result.id + 'viz',
+                graphName: viz,
+                data: result,
+                ...vizProps
+              }"
             />
             <UnitKepler
               v-else-if="viz.startsWith('/kepler')"
@@ -107,7 +110,7 @@
         </VRow>
         <VRow>
           <VCol>
-            <UnitFilterableTable v-bind="{ ...result.result }" />
+            <UnitFilterableTable :id="result.id + 'table'" v-bind="{ ...result.result }" />
           </VCol>
         </VRow>
       </VCard>
