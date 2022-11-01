@@ -2,7 +2,7 @@
   <div>
     <SettingsSpeedDial />
     <!-- interpret the presence of configName env variable as being in the Nuxt app -->
-    <VMenu locales.length > 1" offset-y absolute>
+    <VMenu v-if="locales.length > 1" offset-y absolute>
       <template #activator="{ on, attrs }">
         <BaseButton
           v-bind="attrs"
