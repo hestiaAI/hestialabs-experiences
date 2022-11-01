@@ -218,8 +218,7 @@ export default {
     },
     bubbleApi() {
       if (!this.bubbleConfig) {
-        console.log('no ubble config')
-        return undefined
+        return
       }
       return new BubbleApi(this.bubbleConfig.apiUrl)
     },
@@ -277,7 +276,9 @@ export default {
     deleteFiles() {
       const codeword = this.bubbleConfig
       this.bubbleApi.deleteFiles(this.bubble, codeword).then((res) => {
-        if (res) { console.error(res) }
+        if (res) {
+          console.error(res)
+        }
         this.fetchFilenames()
       })
     },

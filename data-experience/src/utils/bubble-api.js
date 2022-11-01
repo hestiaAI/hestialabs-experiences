@@ -49,7 +49,6 @@ export default class BubbleApi {
   getFile0(bubbleName, filename, callback) {
     const url = `${this.apiUrl}/bubbles/${bubbleName}/file/${filename}`
     const options = { method: 'GET' }
-    console.log('url', url, this.apiUrl)
     fetch(url, options)
       .then((res) => {
         if (res.ok) {

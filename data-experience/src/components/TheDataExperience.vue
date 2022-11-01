@@ -80,7 +80,7 @@
         </VTabItem>
         <VTabItem data-value="summary" :transition="false">
           <VCol cols="12 mx-auto" sm="6">
-            <UnitSummary @switch-tab="switchTab" />
+            <UnitSummary />
           </VCol>
         </VTabItem>
         <VTabItem data-value="file-explorer" :transition="false">
