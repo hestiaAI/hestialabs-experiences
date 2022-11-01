@@ -31,12 +31,6 @@ export default {
     BasePasswordField,
     BaseButton
   },
-  props: {
-    bubbleConfig: {
-      type: Object,
-      required: true
-    }
-  },
   auth: 'guest',
   data() {
     return {
@@ -48,7 +42,7 @@ export default {
     return this.vueMeta('Login')
   },
   computed: {
-    ...mapState(['bubbleCodeword']),
+    ...mapState(['bubbleCodeword', 'bubbleConfig']),
     id() {
       return this.bubbleConfig.id
     },

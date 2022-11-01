@@ -28,7 +28,7 @@
       </VList>
     </VMenu>
     <template v-if="showLogin">
-      <UnitLogin :bubbleConfig="bubbleConfig"/>
+      <UnitLogin />
     </template>
     <template v-else>
       <VTabs
@@ -57,7 +57,7 @@
         <VTabItem data-value="load-data" :transition="false">
           <VCol cols="12 mx-auto" md="6">
             <UnitDownload
-              v-if="bubbleConfig && bubbleConfig.dataFromBubble"
+              v-if="bubbleConfig.dataFromBubble"
               v-bind="{
                 progress,
                 error,
@@ -78,12 +78,20 @@
             />
           </VCol>
         </VTabItem>
-        <VTabItem data-value="summary" :transition="false">
+        <VTabItem
+          v-if="!experienceConfig.hideSummary"
+          data-value="summary"
+          :transition="false"
+        >
           <VCol cols="12 mx-auto" sm="6">
             <UnitSummary />
           </VCol>
         </VTabItem>
-        <VTabItem data-value="file-explorer" :transition="false">
+        <VTabItem
+          v-if="!experienceConfig.hideFileExplorer"
+          data-value="file-explorer"
+          :transition="false"
+        >
           <div>
             <UnitFileExplorer />
           </div>
@@ -181,7 +189,7 @@ export default {
     },
     bubbleConfig: {
       type: Object,
-      required: false
+      default: () => ({})
     }
   },
   data() {
@@ -205,12 +213,11 @@ export default {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
     },
     showLogin() {
-      const bc = this.bubbleConfig
-      const show = bc && !bc.bypassLogin && !this.bubbleCodeword
+      const show = this.bubbleConfig.bypassLogin && !this.bubbleCodeword
       return show
     },
     consent() {
-      return this.bubbleConfig?.consent
+      return this.bubbleConfig.consent
     },
     tabs() {
       const { hideSummary, hideFileExplorer, viewBlocks } = this.experienceConfig
@@ -463,7 +470,7 @@ export default {
 </script>
 
 <style scoped>
-.v-tab-item {
+.v-tabs-items .v-window-item {
   min-height: calc(100vh - 48px);
 }
 </style>

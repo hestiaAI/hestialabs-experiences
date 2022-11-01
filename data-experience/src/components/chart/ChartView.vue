@@ -20,7 +20,6 @@ import DataValidator from '@/components/misc/DataValidator.vue'
 export default {
   name: 'ChartView',
   components: { DataValidator },
-  inheritAttrs: false,
   props: {
     data: {
       type: Object,
