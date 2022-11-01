@@ -109,11 +109,7 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/axios', '@nuxtjs/i18n'],
-
-  axios: {
-    baseURL: apiUrl
-  },
+  modules: ['@nuxtjs/i18n'],
 
   i18n: {
     baseUrl,
@@ -253,8 +249,7 @@ export default {
   },
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '@/plugins/api.js', // this plugin must come first as it is used in the initialization
-    '@/plugins/init.js', // this plugin must come second, initialize the store with the configurations
+    '@/plugins/init.js', // this plugin must come first, as it initializes the store
     '@/plugins/injected.js',
     '@/plugins/i18n.js',
     '@/plugins/vuetify.js',

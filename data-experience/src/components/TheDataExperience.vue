@@ -395,12 +395,16 @@ export default {
       console.time(consoleLabel())
 
       const {
-        databaseConfig,
-        files,
-        preprocessors,
-        keepOnlyFiles,
-        viewBlocks
-      } = this.experienceConfig
+        consent,
+        experienceConfig: {
+          slug,
+          databaseConfig,
+          files,
+          preprocessors,
+          keepOnlyFiles,
+          viewBlocks
+        }
+      } = this
       this.message = ''
       this.error = false
       this.success = false
@@ -410,7 +414,7 @@ export default {
       this.clearStore()
 
       // Set consent form
-      const cForm = this.consent?.form
+      const cForm = consent?.[slug] || consent?.default
       const consentForm = cForm && JSON.parse(JSON.stringify(cForm))
       if (consentForm) {
         const section = consentForm.find(({ type }) => type === 'data')

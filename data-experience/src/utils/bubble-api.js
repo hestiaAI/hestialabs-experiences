@@ -1,4 +1,4 @@
-export default class BubbleApi {
+export default class BubbleAPI {
   constructor(bubbleServerUrl) {
     this.apiUrl = bubbleServerUrl
   }

@@ -1,4 +1,5 @@
 import { merge } from 'lodash-es'
+import BubbleAPI from '../../data-experience/src/utils/bubble-api'
 
 export const state = () => ({
   loaded: false,
@@ -46,7 +47,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async loadConfig({ commit, state }, { isDev, $axios }) {
+  async loadConfig({ commit, state }, { isDev }) {
     if (!state.loaded) {
       let configOverride = {}
       try {
@@ -70,10 +71,11 @@ export const actions = {
       }
 
       if (config.bubbles?.length) {
+        const bubbleAPI = new BubbleAPI(process.env.apiUrl)
         config.bubbleConfig = {}
         for (const bubble of config.bubbles) {
           try {
-            const data = await this.$api.getConfig(bubble)
+            const data = await bubbleAPI.getConfig(bubble)
             if (data) {
               config.bubbleConfig[bubble] = data
             }

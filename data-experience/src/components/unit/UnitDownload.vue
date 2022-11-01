@@ -165,7 +165,7 @@
 import { promisify } from 'util'
 import { mapState } from '@/utils/store-helper'
 import { BrowserFile, filetype2icon, extension2filetype } from '@/utils/file-manager'
-import BubbleApi from '@/utils/bubble-api'
+import BubbleAPI from '@/utils/bubble-api'
 import { decryptBlob } from '@/utils/encryption'
 
 import BaseAlert from '@/components/base/BaseAlert.vue'
@@ -210,11 +210,11 @@ export default {
   },
   computed: {
     ...mapState(['experienceConfig', 'bubbleConfig', 'bubbleCodeword']),
-    bubbleApi() {
+    bubbleAPI() {
       if (!this.bubbleConfig) {
         return
       }
-      return new BubbleApi(this.bubbleConfig.apiUrl)
+      return new BubbleAPI(this.bubbleConfig.apiUrl)
     },
     bubble() {
       return this.bubbleConfig?.id
@@ -268,7 +268,7 @@ export default {
       }
     },
     deleteFiles() {
-      this.bubbleApi.deleteFiles(this.bubble, this.bubbleCodeword).then((res) => {
+      this.bubbleAPI.deleteFiles(this.bubble, this.bubbleCodeword).then((res) => {
         if (res) {
           console.error(res)
         }
@@ -279,7 +279,7 @@ export default {
       this.apiError = null
       this.apiStatus = 'Fetching filenames from server...'
       this.counter = 5
-      this.bubbleApi.getFilenames(this.bubble, (error, res) => {
+      this.bubbleAPI.getFilenames(this.bubble, (error, res) => {
         this.apiLoading = false
         if (error) {
           this.apiError = error.toString()
@@ -308,7 +308,7 @@ export default {
       try {
         console.time(consoleLabel('getFiles'))
         const filePromises = filenames.map(filename =>
-          this.bubbleApi.getFile(this.bubble, filename))
+          this.bubbleAPI.getFile(this.bubble, filename))
         const encryptedFiles = await Promise.all(filePromises)
         console.timeEnd(consoleLabel('getFiles'))
         this.apiStatus = 'Decrypting files...'

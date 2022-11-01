@@ -39,7 +39,12 @@ export default {
       return this.$store.getters.experience(this.experience)
     },
     bubbleConfig() {
-      return this.$store.state.config.bubbleConfig[this.$route.params.bubble]
+      const { bubble } = this.$route.params
+      return {
+        ...this.$store.state.config.bubbleConfig[bubble],
+        apiUrl: process.env.apiUrl,
+        id: bubble
+      }
     }
   }
 }

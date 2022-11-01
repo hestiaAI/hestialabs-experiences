@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import BubbleApi from '@/utils/bubble-api'
+import BubbleAPI from '@/utils/bubble-api'
 import BaseButton from '@/components/base/button/BaseButton.vue'
 import BasePasswordField from '@/components/base/BasePasswordField.vue'
 import { mapState } from '@/utils/store-helper'
@@ -41,8 +41,8 @@ export default {
     id() {
       return this.bubbleConfig.id
     },
-    bubbleApi() {
-      return new BubbleApi(this.bubbleConfig.apiUrl)
+    bubbleAPI() {
+      return new BubbleAPI(this.bubbleConfig.apiUrl)
     }
   },
   methods: {
@@ -53,7 +53,7 @@ export default {
           this.errorMessage = 'Please enter the codeword'
           return
         }
-        const error = await this.bubbleApi.login(id, codeword)
+        const error = await this.bubbleAPI.login(id, codeword)
         if (error) {
           this.errorMessage = error
         } else {

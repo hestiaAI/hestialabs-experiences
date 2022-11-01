@@ -2,7 +2,7 @@
   <VApp>
     <VMain>
       <div class="d-flex-column justify-center" style="width: 100%;">
-        <div style="margin: 30px 0; padding: 10px 0; border-bottom: dotted black 5px">
+        <div class="dev-toolbar">
           <VSelect
             label="Experience"
             v-model="experience"
@@ -34,7 +34,7 @@
 
 <script>
 import TheDataExperience2 from '@/components/TheDataExperience.vue'
-import BubbleApi from '@/utils/bubble-api'
+import BubbleAPI from '@/utils/bubble-api'
 import { mapMutations } from '@/utils/store-helper'
 
 import appleTracker from '@hestia.ai/apple-tracker'
@@ -132,11 +132,11 @@ const bubbleIds = [
 ]
 const configsFromServer = {}
 async function populateServerConfigs() {
-  const validBubbleIds = bubbleIds.filter(bi => bi !== noBubble)
-  const ps = validBubbleIds.map(bi => bubbleApi.getConfig(bi))
+  const validBubbleIds = bubbleIds.filter(bid => bid !== noBubble)
+  const ps = validBubbleIds.map(bid => bubbleAPI.getConfig(bid))
   const serverConfigList = await Promise.all(ps)
-  validBubbleIds.forEach((bi, i) => {
-    configsFromServer[bi] = serverConfigList[i]
+  validBubbleIds.forEach((bid, i) => {
+    configsFromServer[bid] = serverConfigList[i]
   })
 }
 
@@ -145,23 +145,18 @@ function experiencesInBubble(bubbleId) {
 }
 
 const theApiUrl = 'http://127.0.0.1:8000'
-const bubbleApi = new BubbleApi(theApiUrl)
+const bubbleAPI = new BubbleAPI(theApiUrl)
 
-function makeBubbleConfig(bubbleId, experience) {
+function makeBubbleConfig(bubbleId) {
   const configFromServer = configsFromServer[bubbleId]
   if (!configFromServer) {
-    return undefined
+    return
   }
-  const id = bubbleId
-  const apiUrl = theApiUrl
-  let consent
-  if (configFromServer.consent) {
-    const { destinationBubble, ...consents } = configFromServer.consent
-    const form = consents?.[experience] || consents?.default
-    consent = { destinationBubble, form }
+  return {
+    ...configFromServer,
+    id: bubbleId,
+    apiUrl: theApiUrl
   }
-  const bubbleConfig = { ...configFromServer, id, apiUrl, consent }
-  return bubbleConfig
 }
 
 export default {
@@ -185,11 +180,10 @@ export default {
   watch: {
     experience: {
       immediate: true,
-      handler(v) {
+      handler(experience) {
         this.props.experienceConfig =
-          experienceConfigs.find(e => e.slug === v)
-        this.props.bubbleConfig =
-          makeBubbleConfig(this.bubble, this.experience)
+          experienceConfigs.find(e => e.slug === experience)
+        this.props.bubbleConfig = makeBubbleConfig(this.bubble)
       }
     },
     bubble: {
@@ -197,8 +191,7 @@ export default {
       handler(bubbleId) {
         const available = experiencesInBubble(bubbleId)
         if (available?.includes(this.experience)) {
-          this.props.bubbleConfig =
-            makeBubbleConfig(this.bubble, this.experience)
+          this.props.bubbleConfig = makeBubbleConfig(bubbleId)
         } else {
           const exp = this.experience
           const simi = available?.find(
@@ -219,7 +212,12 @@ export default {
 </script>
 
 <style scoped>
-#app .v-select {
-  font-family: sans-serif
+#app .dev-toolbar {
+  margin: 30px 0;
+  padding: 10px 0;
+  border-bottom: dotted black 5px;
+}
+#app .dev-toolbar .v-select {
+  font-family: sans-serif;
 }
 </style>
