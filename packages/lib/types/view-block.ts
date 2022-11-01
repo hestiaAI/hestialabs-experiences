@@ -13,6 +13,8 @@ export type ViewBlock = {
   customPipelineOptions?: CustomPipelineOptions
   files?: string[]
   id: string
+  image?: string
+  overlay?: string
   postprocessor?: PostprocessorFunction
   showTable?: boolean
   sql?: string
