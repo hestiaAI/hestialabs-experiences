@@ -4,6 +4,7 @@ import TheDataExperience from './components/TheDataExperience.vue'
 
 import store from './store'
 import './assets/dc.css'
+import './assets/dc-custom.css'
 
 import { MODULE_NAME } from '@/utils/store-helper'
 export { default as vuetifyOpts } from './plugins/vuetify'

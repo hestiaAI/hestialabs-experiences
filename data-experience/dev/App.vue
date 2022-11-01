@@ -1,7 +1,7 @@
 <template>
   <VApp>
     <VMain>
-      <div id="app" class="app-dev d-flex-column justify-center" style="width: 100%;">
+      <div class="d-flex-column justify-center" style="width: 100%;">
         <div style="margin: 30px 0; padding: 10px 0; border-bottom: dotted black 5px">
           <VSelect
             label="Experience"
@@ -9,7 +9,8 @@
             :items="availableExperiences"
             outlined
             dense
-            attach=".app-dev .v-select"
+            class="v-select__experiences"
+            attach=".v-select__experiences"
             :menu-props="{ bottom: true, offsetY: true }"
             style="margin: auto; width: 200px;"
           />
@@ -19,14 +20,14 @@
             :items="bubbles"
             outlined
             dense
-            attach=".app-dev .v-select"
+            class="v-select__bubbles"
+            attach=".v-select__bubbles"
             :menu-props="{ bottom: true, offsetY: true }"
             style="margin: auto; width: 200px;"
           />
         </div>
         <TheDataExperience2 v-bind="props" />
       </div>
-
     </VMain>
   </VApp>
 </template>
@@ -208,8 +209,8 @@ export default {
       }
     }
   },
-  async created() {
-    populateServerConfigs()
+  async beforeCreate() {
+    await populateServerConfigs()
   },
   methods: {
     ...mapMutations(['setBubbleCodeword'])
