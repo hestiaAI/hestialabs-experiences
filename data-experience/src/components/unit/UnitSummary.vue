@@ -72,7 +72,7 @@ export default {
       return this.fileManager.fileList.length
     },
     totalSize() {
-      return sumBy(this.fileManager.fileList, f => f.size)
+      return sumBy(this.fileManager.fileList, f => f.file.size)
     },
     dataSizeString() {
       return humanReadableFileSize(this.totalSize)
