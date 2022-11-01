@@ -109,39 +109,10 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/i18n'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/i18n'],
 
   axios: {
     baseURL: apiUrl
-  },
-
-  auth: {
-    fullPathRedirect: true,
-    redirect: {
-      login: '/login',
-      logout: false,
-      home: '/'
-    },
-    strategies: {
-      local: {
-        token: {
-          property: false,
-          required: false
-        },
-        user: {
-          autoFetch: false
-        },
-        endpoints: {
-          login: {
-            url: '/bubbles/login',
-            method: 'post'
-          },
-          logout: { url: '/bubbles/logout', method: 'get' },
-          user: false
-        }
-      }
-    },
-    plugins: ['@/plugins/auth-i18n-redirect.js']
   },
 
   i18n: {

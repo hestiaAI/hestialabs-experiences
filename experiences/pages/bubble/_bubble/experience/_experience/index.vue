@@ -14,13 +14,12 @@ import mixin from '@/mixins/page'
 
 export default {
   mixins: [mixin],
-  middleware: 'auth',
   validate(context) {
     return validate.experience(context) && validate.bubble(context)
   },
   head() {
     const k =
-      key => `experiences.${this.$route.params.experience}.intro.${key}`
+      key => `experiences.${this.experience}.intro.${key}`
     const t = this.$tev(k('title'), this.experienceConfig.title)
     const s = this.$tet(k('subtitle'), 'Data Experience')
 
@@ -33,10 +32,11 @@ export default {
     return this.vueMeta(metaTitle)
   },
   computed: {
+    experience() {
+      return this.$route.params.experience
+    },
     experienceConfig() {
-      return this.$store.getters.experience(
-        this.$route
-      )
+      return this.$store.getters.experience(this.experience)
     },
     bubbleConfig() {
       return this.$store.state.config.bubbleConfig[this.$route.params.bubble]

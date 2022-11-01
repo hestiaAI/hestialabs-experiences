@@ -37,27 +37,16 @@
           <VIcon>$vuetify.icons.mdiHome</VIcon>
         </VBtn>
         <VSpacer />
-        <div v-if="$route.params.experience" class="d-flex">
+        <div v-if="experience" class="d-flex">
           <VImg max-width="30" :src="e.icon" :lazy-src="e.icon" contain />
           <h3 class="ml-3">
-            {{ $tev(`experiences.${$route.params.experience}.intro.title`, e.title) }}
+            {{ $tev(`experiences.${experience}.intro.title`, e.title) }}
           </h3>
         </div>
         <VSpacer />
-        <div v-for="link in config.appBarLinks" :key="link.url">
+        <div v-for="link in appBarLinks" :key="link.url">
           <VBtn
-            v-if="link.external"
-            :href="link.url"
-            target="_blank"
-            rel="noreferrer noopener"
-            class="v-btn__home mr-0"
-            text
-          >
-            {{ $t(link.name) }}
-          </VBtn>
-          <VBtn
-            v-else
-            :to="link.url"
+            v-bind="link"
             class="v-btn__home mr-0"
             text
           >
@@ -75,7 +64,6 @@
         >
           <LogoImg width="100" />
         </ExternalLink>
-        </v-menu>
       </VToolbarTitle>
     </VAppBar>
     <VNavigationDrawer
@@ -98,20 +86,8 @@
       </template>
       <div class="my-6">
         <LogoImg width="250" />
-        <template v-if="$auth.loggedIn && $auth.user.bubble">
-          <VSubheader class="mt-2">
-            {{ $t('Connected to bubble') }}:
-            <span class="font-weight-black">
-              &nbsp;{{ $auth.user.bubble.title }}
-            </span>
-          </VSubheader>
-        </template>
         <TheBubbleMenu />
-        <TheExperienceMenu
-          v-if="$auth.loggedIn && $auth.user.bubble"
-          :include="$auth.user.bubble.experiences"
-        />
-        <TheExperienceMenu v-else />
+        <TheExperienceMenu :include="include" />
       </div>
     </VNavigationDrawer>
   </div>
@@ -129,8 +105,11 @@ export default {
   },
   computed: {
     ...mapState(['config']),
+    experience() {
+      return this.$route.params.experience
+    },
     e() {
-      return this.$store.getters.experience(this.$route)
+      return this.$store.getters.experience(this.experience)
     },
     collaborator() {
       return this.config.displayCollaborators ? this.e.collaborator : undefined
@@ -149,6 +128,29 @@ export default {
       return {
         to: this.localePath('index')
       }
+    },
+    include() {
+      const { bubble } = this.$route.params
+      if (!bubble) {
+        return
+      }
+      return this.config.bubbleConfig[bubble].experiences
+    },
+    appBarLinks() {
+      return this.config.appBarLinks.map(l => ({
+        ...l,
+        ...(
+          l.external
+            ? {
+                href: l.url,
+                target: '_blank',
+                rel: 'noreferrer noopener'
+              }
+            : {
+                to: l.url
+              }
+        )
+      }))
     }
   }
 }

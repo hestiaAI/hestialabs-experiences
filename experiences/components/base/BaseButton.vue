@@ -1,54 +1,28 @@
 <template>
-  <VTooltip left :disabled="!tooltip">
-    <template #activator="{ on, attrs }">
-      <VBtn
-        :outlined="outlined"
-        v-bind="[attrs, $attrs]"
-        class="my-2"
-        v-on="on"
-        @click="$emit('click', $event)"
-      >
-        <VIcon v-if="icon" :left="text !== ''">
-          {{ mdiIcon }}
-        </VIcon>
-        <slot>
-          <span>{{ $tev(text, text) }}</span>
-        </slot>
-        <BaseProgressCircular v-if="progress" class="ml-2" />
-        <BaseStatusIndicator v-else-if="status" :error="error" />
-      </VBtn>
-    </template>
-    <span>{{ $tev(tooltip, tooltip) }}</span>
-  </VTooltip>
+  <VBtn
+    :outlined="outlined"
+    v-bind="[attrs, $attrs]"
+    class="my-2"
+    v-on="on"
+    @click="$emit('click', $event)"
+  >
+    <VIcon v-if="icon" :left="text !== ''">
+      {{ mdiIcon }}
+    </VIcon>
+    <slot>
+      <span>{{ $tev(text, text) }}</span>
+    </slot>
+  </VBtn>
 </template>
 
 <script>
-import BaseStatusIndicator from '@/components/base/BaseStatusIndicator.vue'
-import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 export default {
   name: 'BaseButton',
-  components: { BaseProgressCircular, BaseStatusIndicator },
   inheritAttrs: false,
   props: {
-    tooltip: {
-      type: String,
-      default: ''
-    },
     text: {
       type: String,
       default: ''
-    },
-    progress: {
-      type: Boolean,
-      default: false
-    },
-    status: {
-      type: Boolean,
-      default: false
-    },
-    error: {
-      type: Boolean,
-      default: false
     },
     icon: {
       type: String,
@@ -66,6 +40,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 .v-btn {
   z-index: 4;

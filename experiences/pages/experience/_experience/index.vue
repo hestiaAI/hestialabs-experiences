@@ -1,5 +1,10 @@
 <template>
-  <TheDataExperience2 v-bind="{ experienceConfig, siteConfig: $store.state.config }" />
+  <TheDataExperience2
+    v-bind="{
+      experienceConfig,
+      siteConfig: $store.state.config
+    }"
+  />
 </template>
 
 <script>
@@ -13,17 +18,18 @@ export default {
   },
   head() {
     const k =
-      key => `experiences.${this.$route.params.experience}.intro.${key}`
+      key => `experiences.${this.experience}.intro.${key}`
     const t = this.$tev(k('title'), this.experienceConfig.title)
     const s = this.$tet(k('subtitle'), 'Data Experience')
     const metaTitle = `${t}: ${s}`
     return this.vueMeta(metaTitle)
   },
   computed: {
+    experience() {
+      return this.$route.params.experience
+    },
     experienceConfig() {
-      return this.$store.getters.experience(
-        this.$route
-      )
+      return this.$store.getters.experience(this.experience)
     }
   }
 }

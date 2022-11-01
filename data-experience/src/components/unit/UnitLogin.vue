@@ -6,7 +6,6 @@
     <VForm @submit.prevent="login">
       <VTextField :value="id" label="ID" readonly />
       <BasePasswordField
-        ref="codeword"
         :value.sync="codeword"
         :error-message.sync="errorMessage"
         autofocus

@@ -20,6 +20,7 @@
     </VList>
   </div>
 </template>
+
 <script>
 import { pick } from 'lodash-es'
 

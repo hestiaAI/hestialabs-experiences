@@ -29,7 +29,7 @@ export const getters = {
   // https://vuex.vuejs.org/guide/getters.html#method-style-access
   experience:
     state =>
-      ({ params: { experience } }) =>
+      experience =>
         state.experiences.find(e => e.slug === experience) || {}
 }
 
