@@ -20,7 +20,7 @@
       </div>
       <div v-else-if="processed">
         <UnitFilterableTable
-          v-bind="{ id: filename,  headers, items }"
+          v-bind="{ headers, items }"
         />
       </div>
     </div>

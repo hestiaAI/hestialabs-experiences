@@ -10,7 +10,7 @@
       :text="name"
       @click="v => setSheet(name)"
     />
-    <UnitFilterableTable v-bind="{ id: filename, headers, items }" />
+    <UnitFilterableTable v-bind="{ headers, items }" />
   </div>
 </template>
 

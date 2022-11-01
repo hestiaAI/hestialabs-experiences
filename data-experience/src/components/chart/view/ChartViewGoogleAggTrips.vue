@@ -39,7 +39,6 @@
       <VRow>
         <VCol cols="12">
           <UnitFilterableTable
-            :id="id"
             v-bind="{ headers: header_trips, items: get_trips }"
             @current-items="onTableFilter"
           />

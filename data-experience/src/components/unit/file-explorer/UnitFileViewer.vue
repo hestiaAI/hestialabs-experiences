@@ -54,7 +54,6 @@
           />
           <UnitFilterableTable
             v-if="tableData"
-            :id="filename"
             :data="tableData.result"
           />
         </div>

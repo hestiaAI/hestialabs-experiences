@@ -85,8 +85,6 @@
       v-bind="{ filterCount, totalCount }"
     />
     <UnitFilterableTable
-      :id="
-        id"
       v-bind="{ headers: header, items: results, kViewBlock }"
     />
   </VContainer>

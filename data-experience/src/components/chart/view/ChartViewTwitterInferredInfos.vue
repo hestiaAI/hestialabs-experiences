@@ -73,7 +73,6 @@
           </VCardTitle>
           <VCardText>
             <UnitFilterableTable
-              :id="id"
               v-bind="{ headers, items: values }"
             />
           </VCardText>
