@@ -84,6 +84,14 @@ const blocks: ViewBlocks = [
       keplerConfig: keplerConfigNonTrip,
       label: 'in between trips'
     }
+  },
+  {
+    id: 'driverAccounting',
+    title: 'Accounting (Mockup)',
+    text: 'This table represent blablabla',
+    image:
+      'https://user-images.githubusercontent.com/17878016/198039639-ebc25347-2c29-4570-a19b-7495d8792cf7.png',
+    overlay: 'Coming Soon'
   }
 ]
 

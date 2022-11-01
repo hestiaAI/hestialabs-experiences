@@ -65,7 +65,6 @@
           }"
           @update="onUnitResultsUpdate"
         />
-
         <VRow v-if="errorMessage">
           <VCol>
             <BaseAlert type="error">
@@ -73,6 +72,7 @@
             </BaseAlert>
           </VCol>
         </VRow>
+        <VImg v-if="image" :src="image" />
         <template v-if="clonedResult">
           <VRow>
             <VCol>
@@ -157,6 +157,10 @@ export default {
     showTable: {
       type: Boolean,
       required: true
+    },
+    image: {
+      type: String,
+      default: ''
     },
     vizProps: {
       type: Object,
