@@ -100,6 +100,15 @@ const locales = {
   fr: French
 }
 
+const stringsOverride = {
+  en: {
+    cancel: 'Clear all'
+  },
+  fr: {
+    cancel: 'Effacer tout'
+  }
+}
+
 async function fetchSampleFile({ url, filename }) {
   const response = await window.fetch(url)
   const blob = await response.blob()
@@ -153,6 +162,16 @@ export default {
     }
   },
   watch: {
+    '$i18n.locale'(locale) {
+      this.uppy.setOptions({
+        locale: locales[locale]
+      })
+      this.uppy.getPlugin('Dashboard').setOptions({
+        locale: {
+          strings: stringsOverride[locale]
+        }
+      })
+    },
     // Watch filemanager to detect a reset of the store, if it is null
     // we also delete files in the Uppy dashboard
     fileManager() {
@@ -200,58 +219,53 @@ export default {
     }
   },
   mounted() {
-    const stringsOverride = {
-      en: {
-        cancel: 'Clear all'
-      },
-      fr: {
-        cancel: 'Effacer tout'
-      }
-    }
-    const config = {
-      debug: false,
-      allowMultipleUploads: true,
-      locale: locales[this.$i18n.locale]
-    }
-    this.uppy = new Uppy(config)
-    this.uppy
-      .use(Dashboard, {
-        target: this.$refs.dashboard,
-        inline: true,
-        // we're currently not uploading to a server
-        hideUploadButton: true,
-        proudlyDisplayPoweredByUppy: false,
-        theme: 'light',
-        height: 300,
-        locale: {
-          strings: stringsOverride[this.$i18n.locale]
-        }
-      })
-      .use(DropTarget, {
-        // allow dropping files anywhere on the page
-        target: document.body
-      })
-      .on('files-added', () => {
-        this.filesEmpty = false
-      })
-      .on('cancel-all', () => {
-        this.filesEmpty = true
-        this.selectedSamples = []
-      })
-      .on('file-removed', (file, reason) => {
-        if (reason === 'removed-by-user') {
-          // ensure selectedSamples is updated if sample file is removed using the Uppy dashboard
-          this.selectedSamples = this.selectedSamples.filter(s => s.filename !== file.name)
-        }
-        if (reason !== 'cancel-all' && !this.uppy.getFiles().length) {
-          this.filesEmpty = true
-        }
-      })
+    this.initUppy()
   },
   beforeDestroy() {
     this.uppy.close()
   },
   methods: {
+    initUppy() {
+      const config = {
+        debug: false,
+        allowMultipleUploads: true,
+        locale: locales[this.$i18n.locale]
+      }
+      this.uppy = new Uppy(config)
+      this.uppy
+        .use(Dashboard, {
+          target: this.$refs.dashboard,
+          inline: true,
+          // we're currently not uploading to a server
+          hideUploadButton: true,
+          proudlyDisplayPoweredByUppy: false,
+          theme: 'light',
+          height: 300,
+          locale: {
+            strings: stringsOverride[this.$i18n.locale]
+          }
+        })
+        .use(DropTarget, {
+        // allow dropping files anywhere on the page
+          target: document.body
+        })
+        .on('files-added', () => {
+          this.filesEmpty = false
+        })
+        .on('cancel-all', () => {
+          this.filesEmpty = true
+          this.selectedSamples = []
+        })
+        .on('file-removed', (file, reason) => {
+          if (reason === 'removed-by-user') {
+          // ensure selectedSamples is updated if sample file is removed using the Uppy dashboard
+            this.selectedSamples = this.selectedSamples.filter(s => s.filename !== file.name)
+          }
+          if (reason !== 'cancel-all' && !this.uppy.getFiles().length) {
+            this.filesEmpty = true
+          }
+        })
+    },
     async decryptFiles(uppyFiles) {
       const decryptBlobPromise = promisify(decryptBlob)
       const publicKey = this.publicKey || this.bubbleConfig.publicKey
