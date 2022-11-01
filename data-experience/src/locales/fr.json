@@ -7,8 +7,8 @@
   "base-button-share": {
     "error-sharing-not-supported": "Votre système ne prend pas en charge le partage de fichiers",
     "error-sharing-failed": "Nous sommes désolés, mais l'opération de partage a échoué pour une raison inconnue. Veuillez réessayer plus tard.",
-    "quote-to-share-default": "Analyser les données recueillies sur vous.",
-    "quote-to-share-experience": "Analyser les données recueillies sur vous par {experienceTitle}."
+    "quote-to-share-default": "Analyser les données recueillies sur vous",
+    "quote-to-share-experience": "Analyser les données recueillies sur vous par {experienceTitle}"
   },
   "data-validator": {
     "invalid-format": "Les données dans ce format ne peuvent pas être affichées dans un tableau.",
