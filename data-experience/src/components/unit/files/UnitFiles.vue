@@ -141,7 +141,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager']),
+    ...mapState(['fileManager', 'bubbleConfig']),
     ...mapState({
       files: state => state.experienceConfig.files,
       samples: state => state.experienceConfig.dataSamples.map(
@@ -254,7 +254,7 @@ export default {
   methods: {
     async decryptFiles(uppyFiles) {
       const decryptBlobPromise = promisify(decryptBlob)
-      const publicKey = this.publicKey || this.$auth?.user.bubble.publicKey
+      const publicKey = this.publicKey || this.bubbleConfig.publicKey
       const decryptedFiles = await Promise.all(uppyFiles.map(async(f) => {
         const blob = await decryptBlobPromise(f.data, this.privateKey, publicKey)
         return new File([blob], f.name)

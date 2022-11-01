@@ -31,15 +31,11 @@ export default {
     BasePasswordField,
     BaseButton
   },
-  auth: 'guest',
   data() {
     return {
       errorMessage: '',
       codeword: this.bubbleCodeword || ''
     }
-  },
-  head() {
-    return this.vueMeta('Login')
   },
   computed: {
     ...mapState(['bubbleCodeword', 'bubbleConfig']),

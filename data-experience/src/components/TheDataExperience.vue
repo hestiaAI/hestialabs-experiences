@@ -2,7 +2,7 @@
   <div>
     <SettingsSpeedDial />
     <!-- interpret the presence of configName env variable as being in the Nuxt app -->
-    <VMenu v-if="!isNuxt && locales.length > 1" offset-y absolute>
+    <VMenu locales.length > 1" offset-y absolute>
       <template #activator="{ on, attrs }">
         <BaseButton
           v-bind="attrs"
@@ -57,7 +57,7 @@
         <VTabItem data-value="load-data" :transition="false">
           <VCol cols="12 mx-auto" md="6">
             <UnitDownload
-              v-if="bubbleConfig.dataFromBubble"
+              v-if="bubbleConfig?.dataFromBubble"
               v-bind="{
                 progress,
                 error,
@@ -67,6 +67,7 @@
               @update="onUnitFilesUpdate"
             />
             <UnitIntroduction
+              v-else
               v-bind="{
                 progress,
                 error,
@@ -189,12 +190,11 @@ export default {
     },
     bubbleConfig: {
       type: Object,
-      default: () => ({})
+      required: false
     }
   },
   data() {
     return {
-      isNuxt: Boolean(process.env.configName),
       localeIndex: 0,
       tab: 0,
       fab: false,
@@ -213,10 +213,11 @@ export default {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
     },
     showLogin() {
-      return !this.bubbleConfig.bypassLogin && !this.bubbleCodeword
+      const config = this.bubbleConfig
+      return config && !config.bypassLogin && !this.bubbleCodeword
     },
     consent() {
-      return this.bubbleConfig.consent
+      return this.bubbleConfig?.consent
     },
     tabs() {
       const { hideSummary, hideFileExplorer, viewBlocks } = this.experienceConfig

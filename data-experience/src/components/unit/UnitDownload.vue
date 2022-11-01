@@ -111,7 +111,7 @@
             </VCard>
           </VCol>
         </VRow>
-        <div justify="center" align="center" class="mt-3">
+        <div align="center" class="mt-3">
           <VFileInput
             v-model="privateKey"
             accept=".txt"
@@ -119,7 +119,7 @@
             class="fileInput"
           />
         </div>
-        <div justify="center" align="center">
+        <div align="center">
           <BaseButton
             v-bind="{ success, progress, error, status }"
             :disabled="!selectedFiles.length"
@@ -210,12 +210,6 @@ export default {
   },
   computed: {
     ...mapState(['experienceConfig', 'bubbleConfig', 'bubbleCodeword']),
-    publicKey() {
-      return this.bubbleConfig?.publicKey
-    },
-    slug() {
-      return this.experienceConfig?.slug
-    },
     bubbleApi() {
       if (!this.bubbleConfig) {
         return
@@ -274,8 +268,7 @@ export default {
       }
     },
     deleteFiles() {
-      const codeword = this.bubbleConfig
-      this.bubbleApi.deleteFiles(this.bubble, codeword).then((res) => {
+      this.bubbleApi.deleteFiles(this.bubble, this.bubbleCodeword).then((res) => {
         if (res) {
           console.error(res)
         }
@@ -293,8 +286,8 @@ export default {
           this.apiStatus = null
           console.error(error)
         } else {
-          // TODO: refactor the filetring part, maybe an endpoint per experience in the backend ?
-          this.filenames = res.filter(f => this.slug.includes(f.split('_')[0]))
+          // TODO: refactor the filtering part, maybe an endpoint per experience in the backend ?
+          this.filenames = res.filter(f => this.experienceConfig.slug.includes(f.split('_')[0]))
           this.apiStatus = null
         }
       })
@@ -307,7 +300,6 @@ export default {
       this.apiStatus = 'Downloading files from server...'
       this.status = true
 
-      // const getFilePromise = promisify(this.bubbleApi.getFile)
       const decryptBlobPromise = promisify(decryptBlob)
       const filenames = this.selectedFiles.map(
         idx => this.fileItems[idx].filename
@@ -329,7 +321,7 @@ export default {
             const label = consoleLabel('decryptBlob', i)
             console.time(label)
             const privateKey = await this.privateKey.text()
-            const blob = await decryptBlobPromise(fileBlob, privateKey, this.publicKey)
+            const blob = await decryptBlobPromise(fileBlob, privateKey, this.bubbleConfig.publicKey)
             console.timeEnd(label)
             const filename = filenames[i]
             return new BrowserFile(new File([blob], filename))
