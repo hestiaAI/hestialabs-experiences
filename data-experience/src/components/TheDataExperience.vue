@@ -213,8 +213,7 @@ export default {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
     },
     showLogin() {
-      const show = this.bubbleConfig.bypassLogin && !this.bubbleCodeword
-      return show
+      return !this.bubbleConfig.bypassLogin && !this.bubbleCodeword
     },
     consent() {
       return this.bubbleConfig.consent
