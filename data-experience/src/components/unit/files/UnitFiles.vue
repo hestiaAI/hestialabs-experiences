@@ -63,7 +63,7 @@
             dense
             text
           >
-            {{ error ? message : readErrorMsg }}
+            {{ readError ? readErrorMsg : message }}
           </BaseAlert>
         </template>
       </VCol>

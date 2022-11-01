@@ -463,11 +463,15 @@ export default {
       this.progress = false
       this.success = true
 
-      // switch to the second tab
-      this.setCurrentTab(this.tabs[1].value)
-
       const elapsed = new Date() - start
       this.message = `${this.$t('Successfully processed in')} ${elapsed / 1000} ${this.$t('seconds')}`
+
+      window.setTimeout(
+        // switch to the second tab
+        () => this.setCurrentTab(this.tabs[1].value),
+        // leave some time for the user to read the success message
+        500
+      )
     }
   }
 }
