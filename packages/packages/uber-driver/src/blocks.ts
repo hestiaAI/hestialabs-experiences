@@ -84,6 +84,14 @@ const blocks: ViewBlocks = [
       keplerConfig: keplerConfigNonTrip,
       label: 'in between trips'
     }
+  },
+  {
+    id: 'driverAccounting',
+    title: 'Accounting (Mockup)',
+    text: 'See how you worked and during which pay period.',
+    image:
+      'https://user-images.githubusercontent.com/17878016/199244607-dd9a8b19-fc12-4780-b67e-d8460086d1c0.png',
+    overlay: 'This feature is still under construction'
   }
 ]
 
