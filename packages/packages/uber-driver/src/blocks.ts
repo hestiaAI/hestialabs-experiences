@@ -88,10 +88,10 @@ const blocks: ViewBlocks = [
   {
     id: 'driverAccounting',
     title: 'Accounting (Mockup)',
-    text: 'This table represent blablabla',
+    text: 'See how you worked and during which pay period.',
     image:
-      'https://user-images.githubusercontent.com/17878016/198039639-ebc25347-2c29-4570-a19b-7495d8792cf7.png',
-    overlay: 'Coming Soon'
+      'https://user-images.githubusercontent.com/17878016/199244607-dd9a8b19-fc12-4780-b67e-d8460086d1c0.png',
+    overlay: 'This feature is still under construction'
   }
 ]
 

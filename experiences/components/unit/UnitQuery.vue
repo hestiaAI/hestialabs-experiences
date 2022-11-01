@@ -1,5 +1,15 @@
 <template>
   <div>
+    <VOverlay :value="overlay !== ''" absolute opacity="0.5">
+      <div
+        class="d-flex flex-column align-center"
+        style="width: 100%; height: 100%"
+      >
+        <div class="mb-3">
+          {{ $tev(k('overlay'), overlay) }}
+        </div>
+      </div>
+    </VOverlay>
     <VCard v-if="fileManager !== null" class="pa-2 mb-6" flat>
       <VRow>
         <VCol cols="1" />
@@ -159,6 +169,10 @@ export default {
       required: true
     },
     image: {
+      type: String,
+      default: ''
+    },
+    overlay: {
       type: String,
       default: ''
     },
