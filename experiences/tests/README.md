@@ -1,4 +1,4 @@
-[DOCUMENTATION](https://playwright.dev/docs)
+[DOCUMENTATION](https://playwright.dev/docs/intro)
 
 ## Run the test
 ```
