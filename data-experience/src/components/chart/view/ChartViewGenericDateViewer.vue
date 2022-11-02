@@ -115,10 +115,6 @@ export default {
       Month: d3.timeMonth,
       Year: d3.timeYear
     }
-    const intervalNames = Object.keys(intervals).map(value => ({
-      value,
-      text: this.$tc(value, 2)
-    }))
     return {
       formatDate: d3.timeFormat('%B %d, %Y'),
       fileDimension: null,
@@ -128,7 +124,7 @@ export default {
       filesNames: [],
       filtered: false,
       intervals,
-      intervalNames,
+      intervalNames: null,
       aggregate: true,
       minDate: null,
       maxDate: null,
@@ -177,15 +173,22 @@ export default {
       if (this.values.length === 0) {
         return
       }
+
+      this.intervalNames = Object.keys(this.intervals).map(value => ({
+        value,
+        text: this.$tc(value, 2)
+      }))
+
       // Format dates
-      this.values.forEach((d) => {
-        d.date = new Date(d.date)
-        d.day = d3.timeDay(d.date)
-        d.dateStr = datetimeFormatter(d.date)
-      })
-      this.results = this.values
+      const valuesMapped = this.values.map(d => ({
+        ...d,
+        date: new Date(d.date),
+        day: d3.timeDay(d.date),
+        dateStr: datetimeFormatter(d.date)
+      }))
+      this.results = valuesMapped
       // Build index for crossfiltering
-      const ndx = crossfilter(this.values)
+      const ndx = crossfilter(valuesMapped)
       // Build dimension for filesNames selection
       this.fileDimension = ndx.dimension(d => d.filename)
       this.filesNames = this.fileDimension

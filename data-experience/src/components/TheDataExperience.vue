@@ -326,6 +326,9 @@ export default {
     },
     currentTab(value) {
       this.tab = this.tabs.findIndex(tab => tab.value === value)
+    },
+    '$i18n.locale'() {
+      this.clearStore()
     }
   },
   created() {

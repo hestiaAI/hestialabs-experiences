@@ -2,7 +2,6 @@
   <DataValidator :data="data">
     <div class="chart-view">
       <component
-        v-if="renderComponent"
         :is="component"
         v-bind="{
           values: data.items || [],
@@ -30,21 +29,9 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      renderComponent: true
-    }
-  },
   computed: {
     component() {
       return () => import(`./view/${this.graphName}`)
-    }
-  },
-  watch: {
-    async '$i18n.locale'() {
-      this.renderComponent = false
-      await this.$nextTick()
-      this.renderComponent = true
     }
   }
 }

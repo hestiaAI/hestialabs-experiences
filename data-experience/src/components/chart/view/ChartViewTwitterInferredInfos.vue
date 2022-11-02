@@ -89,76 +89,83 @@ export default {
   name: 'ChartViewTwitterInferredInfos',
   components: { UnitFilterableTable },
   mixins: [mixin],
-  data() {
-    const [firstItem] = this.values
-    const v = Object.fromEntries(Object.entries(firstItem).map(([k, v]) => {
-      try {
-        return [k, JSON.parse(v)]
-      } catch {
-        return [k, v]
-      }
-    }))
-    const items = [
-      {
-        id: 'gender',
-        value: v.gender
-      },
-      {
-        id: 'age',
-        value: v.age
-      },
-      {
-        id: 'languages',
-        value: v.languages.map(l => l.language)
-      },
-      {
-        id: 'numAudiences',
-        value: v.numAudiences
-      }
-    ]
-    const tables = [
-      {
-        id: 'interests',
-        headers: [{ text: 'Inferred Interests', value: 'v' }],
-        values: v.interests.map(v => ({ v: v.name }))
-      },
-      {
-        id: 'lookalikeAdvertisers',
-        headers: [
-          { text: 'Look-alike Advertisers', value: 'v' }
-        ],
-        values: v.lookalikeAdvertisers.map(v => ({ v }))
-      },
-      {
-        id: 'advertisers',
-        headers: [{ text: 'Advertisers', value: 'v' }],
-        values: v.advertisers.map(v => ({ v }))
-      },
-      {
-        id: 'shows',
-        headers: [{ text: 'Shows', value: 'v' }],
-        values: v.shows.map(v => ({ v }))
-      },
-      {
-        id: 'locationHistory',
-        headers: [{ text: 'Location History', value: 'v' }],
-        values: v.locationHistory.map(v => ({ v }))
-      },
-      {
-        id: 'partnerInterests',
-        headers: [{ text: 'Partner Interests', value: 'v' }],
-        values: v.partnerInterests.map(v => ({ v }))
-      }
-    ].map(
-      ({ id, headers, ...rest }) =>
-        ({
-          id,
-          headers: headers.map(({ text, ...headerRest }) =>
-            ({ text: this.messages.tables[id].headers[text], ...headerRest })),
-          ...rest
-        })
-    )
-    return { items, tables }
+  computed: {
+    v() {
+      const [firstItem] = this.values
+      return Object.fromEntries(Object.entries(firstItem).map(([k, v]) => {
+        try {
+          return [k, JSON.parse(v)]
+        } catch {
+          return [k, v]
+        }
+      }))
+    },
+    items() {
+      const { v } = this
+      return [
+        {
+          id: 'gender',
+          value: v.gender
+        },
+        {
+          id: 'age',
+          value: v.age
+        },
+        {
+          id: 'languages',
+          value: v.languages.map(l => l.language)
+        },
+        {
+          id: 'numAudiences',
+          value: v.numAudiences
+        }
+      ]
+    },
+    tables() {
+      const { v } = this
+      return [
+        {
+          id: 'interests',
+          headers: [{ text: 'Inferred Interests', value: 'v' }],
+          values: v.interests.map(v => ({ v: v.name }))
+        },
+        {
+          id: 'lookalikeAdvertisers',
+          headers: [
+            { text: 'Look-alike Advertisers', value: 'v' }
+          ],
+          values: v.lookalikeAdvertisers.map(v => ({ v }))
+        },
+        {
+          id: 'advertisers',
+          headers: [{ text: 'Advertisers', value: 'v' }],
+          values: v.advertisers.map(v => ({ v }))
+        },
+        {
+          id: 'shows',
+          headers: [{ text: 'Shows', value: 'v' }],
+          values: v.shows.map(v => ({ v }))
+        },
+        {
+          id: 'locationHistory',
+          headers: [{ text: 'Location History', value: 'v' }],
+          values: v.locationHistory.map(v => ({ v }))
+        },
+        {
+          id: 'partnerInterests',
+          headers: [{ text: 'Partner Interests', value: 'v' }],
+          values: v.partnerInterests.map(v => ({ v }))
+        }
+      ].map(
+        ({ id, headers, ...rest }) =>
+          ({
+            id,
+            headers: headers.map(({ text, ...headerRest }) =>
+              ({ text: this.messages.tables[id].headers[text], ...headerRest })),
+            ...rest
+          })
+      )
+    }
   }
 }
 </script>
