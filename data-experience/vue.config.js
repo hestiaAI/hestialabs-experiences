@@ -26,7 +26,14 @@ module.exports = defineConfig({
       rules: [
         {
           test: /\.worker\.js$/,
-          use: 'worker-loader'
+          use: [
+            {
+              loader: 'worker-loader',
+              options: {
+                filename: '[name].[contenthash:7].js'
+              }
+            }
+          ]
         },
         {
           test: /\.wasm$/,
