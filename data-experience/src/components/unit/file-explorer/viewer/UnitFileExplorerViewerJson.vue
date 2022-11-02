@@ -84,7 +84,6 @@ import { runWorker } from '@/utils/utils'
 import { filePathToGlob, createAccessor } from '@/utils/accessor'
 import { pathArrayToJsonPath, nodeTypes } from '@/utils/json'
 import BaseSearchBar from '@/components/base/BaseSearchBar.vue'
-// import { pathArrayToJsonPath, nodeTypes, findMatchingItems } from '@/utils/json'
 
 export default {
   name: 'UnitFileExplorerViewerJson',
@@ -188,7 +187,6 @@ export default {
             this.search
           ])
         } else {
-          // this.foundItems = findMatchingItems(this.search, this.items)
           this.foundItems = await runWorker(new FindItemsWorker(), [
             this.search,
             this.items

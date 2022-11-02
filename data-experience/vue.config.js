@@ -25,6 +25,10 @@ module.exports = defineConfig({
     module: {
       rules: [
         {
+          test: /\.worker\.js$/,
+          use: 'worker-loader'
+        },
+        {
           test: /\.wasm$/,
           type: 'javascript/auto',
           use: [
