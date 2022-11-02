@@ -227,7 +227,7 @@ export default {
           title: 'Load your data',
           value: 'load-data',
           titleKey: 'load-data.name',
-          disabled: false
+          disabled: this.experienceProgress
         }
       ]
       if (!hideSummary) {
