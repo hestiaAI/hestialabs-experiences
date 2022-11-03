@@ -80,7 +80,7 @@ export default {
   computed: {
     finalArgs() {
       const args = this.args
-      args.mapboxToken = this.$store.state.config.mapboxToken
+      args.mapboxToken = this.$store.state.siteConfig.mapboxToken
       return args
     }
   },
