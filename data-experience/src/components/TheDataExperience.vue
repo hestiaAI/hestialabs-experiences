@@ -93,31 +93,36 @@
           data-value="file-explorer"
           :transition="false"
         >
-          <div>
-            <UnitFileExplorer />
-          </div>
+          <UnitFileExplorer />
         </VTabItem>
-        <VTabItem
-          v-for="viewBlock in experienceConfig.viewBlocks"
-          :key="viewBlock.id"
-          :data-value="viewBlock.id"
-          :transition="false"
-        >
-          <VCol cols="12 mx-auto">
-            <VOverlay :value="overlay" absolute opacity="0.8">
-              <div
-                class="d-flex flex-column align-center"
-                style="width: 100%; height: 100%"
-              >
-                <div class="mb-3">
-                  {{ $t('This might take a moment') }}
+        <!--
+          we need to conditionally render view blocks,
+          to enable re-rendering when the state is cleared
+          and the same experience is repeated with new settings/data
+        -->
+        <template v-if="success">
+          <VTabItem
+            v-for="viewBlock in experienceConfig.viewBlocks"
+            :key="viewBlock.id"
+            :data-value="viewBlock.id"
+            :transition="false"
+          >
+            <VCol cols="12 mx-auto">
+              <VOverlay :value="overlay" absolute opacity="0.8">
+                <div
+                  class="d-flex flex-column align-center"
+                  style="width: 100%; height: 100%"
+                >
+                  <div class="mb-3">
+                    {{ $t('This might take a moment') }}
+                  </div>
+                  <BaseProgressCircular size="64" width="4" />
                 </div>
-                <BaseProgressCircular size="64" width="4" />
-              </div>
-            </VOverlay>
-            <UnitQuery v-bind="viewBlock" />
-          </VCol>
-        </VTabItem>
+              </VOverlay>
+              <UnitQuery v-bind="viewBlock" />
+            </VCol>
+          </VTabItem>
+        </template>
         <VTabItem
           v-if="consent"
           data-value="share-data"

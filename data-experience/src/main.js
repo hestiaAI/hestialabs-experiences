@@ -13,7 +13,6 @@ export { default as i18n } from './plugins/i18n'
 // new Vue({
 // }).$mount('#app')
 
-// export { vuetify }
 export default {
   install(Vue, options) {
     if (!options || !options.store) {
@@ -61,8 +60,6 @@ export default {
 
       })
       */
-
-    // Vue.use(vuetify)
 
     options.store.registerModule(MODULE_NAME, store)
     Vue.component('TheDataExperience2', TheDataExperience)
