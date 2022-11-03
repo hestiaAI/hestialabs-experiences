@@ -47,7 +47,7 @@ export default {
     finalArgs() {
       const args = this.args
       if (this.src === '/kepler') {
-        args.mapboxToken = this.$store.state.siteConfig.mapboxToken
+        args.mapboxToken = this.$store.state.xp.siteConfig.mapboxToken
       }
       return args
     }

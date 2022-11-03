@@ -57,7 +57,9 @@ function buildIframeHtml() {
         </body>
       </html>`
 }
+
 const iframeHtml = buildIframeHtml()
+
 export default {
   name: 'UnitKepler',
   components: { BaseProgressCircular },
@@ -80,7 +82,7 @@ export default {
   computed: {
     finalArgs() {
       const args = this.args
-      args.mapboxToken = this.$store.state.siteConfig.mapboxToken
+      args.mapboxToken = this.$store.state.xp.siteConfig.mapboxToken
       return args
     }
   },

@@ -90,11 +90,15 @@ const initialExperience = 'twitter'
 
 const siteConfig = {
   experiences,
+  i18nLocales: ['en', 'fr'],
   i18nLocale: 'fr',
+  i18nUrl: '/i18n-messages-custom-dev.json',
   theme: {
     primary: '#0C2D48',
     secondary: '#2E8BC0'
-  }
+  },
+  mapboxToken: 'pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA',
+  displayCollaborators: true
 }
 
 const noBubble = 'no bubble'
@@ -174,7 +178,7 @@ export default {
   },
   computed: {
     availableExperiences() {
-      return experiencesInBubble(this.bubble) || experiences
+      return experiencesInBubble(this.bubble) || experiences.filter(slug => !slug.endsWith('-agg'))
     }
   },
   watch: {

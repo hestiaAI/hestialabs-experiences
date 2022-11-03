@@ -19,7 +19,6 @@
     "explorer"
   ],
   "filedrop": "https://drive.infomaniak.com/app/collaborate/193995/c41b3aac-cf1f-4ba7-a1ef-0d44fb45260e",
-  "publicKey": "ebabadb7cdca33c6bff6813ae874167b52e4e445120fd6fe7aa4c528d6e27049",
   "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
   "displayCollaborators": true,
   "bubbles": ["demo-aggregator", "demo-participant"],
