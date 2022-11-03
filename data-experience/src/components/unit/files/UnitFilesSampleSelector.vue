@@ -2,13 +2,14 @@
   <VSelect
     v-model="selectedSamples"
     v-bind="$attrs"
+    :items="items"
     item-text="filename"
     return-object
     :label="$t('unit-files.sample-selector')"
     hide-details
     style="max-width: 300px; justify-self: 'center'"
     menu-props="auto, overflowY, offsetY, top"
-    multiple
+    :multiple="multiple"
     chips
     deletable-chips
   />
@@ -19,8 +20,15 @@ export default {
   name: 'UnitFilesSampleSelector',
   props: {
     value: {
-      type: Array,
+      type: [Array, Object],
       required: true
+    },
+    items: {
+      type: Array,
+      required: true,
+      validator(value) {
+        return value.length
+      }
     }
   },
   data() {
@@ -28,12 +36,25 @@ export default {
       selectedSamples: this.value
     }
   },
+  computed: {
+    multiple() {
+      return this.items.length > 1
+    }
+  },
   watch: {
     selectedSamples(v) {
-      this.$emit('update:value', v)
+      let value = v
+      if (!this.multiple) {
+        value = v ? [v] : []
+      }
+      this.$emit('update:value', value)
     },
     value(v) {
-      this.selectedSamples = v
+      if (this.multiple) {
+        this.selectedSamples = v
+      } else {
+        this.selectedSamples = v.length ? v[0] : null
+      }
     }
   }
 }

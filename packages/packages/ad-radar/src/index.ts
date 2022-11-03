@@ -4,8 +4,6 @@ import icon from '@/icons/eyeballs.jpg'
 
 const options: ExperienceOptions = {
   disabled: true,
-  hideSummary: false,
-  hideFileExplorer: false,
   icon,
   subtitle: 'Browser extension',
   title: 'Ad Radar',
