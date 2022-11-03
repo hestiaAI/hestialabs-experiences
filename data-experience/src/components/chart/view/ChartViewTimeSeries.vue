@@ -290,7 +290,7 @@ export default {
       // group by series ids and sort values
       this.slices = ids.map((a) => {
         return {
-          id: this.messages.legend[a],
+          id: 'legend' in this.messages ? this.messages.legend[a] : a,
           values: this.values
             .filter(v => a === v[this.seriesAccessor.value])
             .map((d) => {
