@@ -1,6 +1,18 @@
 import { test, expect } from '@playwright/test'
 
-test('test', async({ page }) => {
+test('experience-twitter', async({ page }) => {
+  const messages = []
+  page.on('console', (msg) => {
+    // Ignore regular log messages; we are only interested in errors.
+    if (msg.type() === 'error') {
+      messages.push(`[${msg.type()}] ${msg.text()}`)
+    }
+  })
+  // Uncaught (in promise) TypeError + friends are page errors.
+  page.on('pageerror', (error) => {
+    messages.push(`[${error.name}] ${error.message}`)
+  })
+
   await page.goto('http://localhost:8080/')
 
   await page.getByRole('button', { name: 'Experience twitter' }).click()
@@ -58,4 +70,7 @@ test('test', async({ page }) => {
   await page.getByRole('tab', { name: 'Critères de ciblage (1 publicitaire)' }).click()
 
   await page.getByRole('row', { name: 'Binance 1003' }).locator('div').nth(2).click()
+
+  // Check that there is no error during the test
+  expect(messages).toStrictEqual([])
 })

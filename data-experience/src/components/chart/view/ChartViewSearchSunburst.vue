@@ -50,7 +50,7 @@ export default {
   props: {
     cardTitle: {
       type: String,
-      required: true
+      default: ''
     }
   },
   data() {

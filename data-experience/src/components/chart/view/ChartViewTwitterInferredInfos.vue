@@ -105,19 +105,19 @@ export default {
       return [
         {
           id: 'gender',
-          value: v.gender
+          value: v?.gender || 'Unknown'
         },
         {
           id: 'age',
-          value: v.age
+          value: v?.age || 'Unknown'
         },
         {
           id: 'languages',
-          value: v.languages.map(l => l.language)
+          value: v?.languages.map(l => l.language) || 'Unknown'
         },
         {
           id: 'numAudiences',
-          value: v.numAudiences
+          value: v?.numAudiences || 'Unknown'
         }
       ]
     },
