@@ -54,7 +54,7 @@
         </VTab>
       </VTabs>
       <VTabsItems v-model="tab">
-        <VTabItem data-value="load-data" :transition="false">
+        <VTabItem data-id="load-data" :transition="false">
           <VCol cols="12 mx-auto" md="6">
             <UnitDownload
               v-if="bubbleConfig?.dataFromBubble"
@@ -81,7 +81,7 @@
         </VTabItem>
         <VTabItem
           v-if="!experienceConfig.hideSummary"
-          data-value="summary"
+          data-id="summary"
           :transition="false"
         >
           <VCol cols="12 mx-auto" sm="6">
@@ -90,42 +90,35 @@
         </VTabItem>
         <VTabItem
           v-if="!experienceConfig.hideFileExplorer"
-          data-value="file-explorer"
+          data-id="file-explorer"
           :transition="false"
         >
           <UnitFileExplorer />
         </VTabItem>
-        <!--
-          we need to conditionally render view blocks,
-          to enable re-rendering when the state is cleared
-          and the same experience is repeated with new settings/data
-        -->
-        <template v-if="success">
-          <VTabItem
-            v-for="viewBlock in experienceConfig.viewBlocks"
-            :key="viewBlock.id"
-            :data-value="viewBlock.id"
-            :transition="false"
-          >
-            <VCol cols="12 mx-auto">
-              <VOverlay :value="overlay" absolute opacity="0.8">
-                <div
-                  class="d-flex flex-column align-center"
-                  style="width: 100%; height: 100%"
-                >
-                  <div class="mb-3">
-                    {{ $t('This might take a moment') }}
-                  </div>
-                  <BaseProgressCircular size="64" width="4" />
+        <VTabItem
+          v-for="viewBlock in experienceConfig.viewBlocks"
+          :key="viewBlock.id"
+          :data-id="viewBlock.id"
+          :transition="false"
+        >
+          <VCol cols="12 mx-auto">
+            <VOverlay :value="overlay" absolute opacity="0.8">
+              <div
+              class="d-flex flex-column align-center"
+              style="width: 100%; height: 100%"
+              >
+              <div class="mb-3">
+                  {{ $t('This might take a moment') }}
                 </div>
-              </VOverlay>
-              <UnitQuery v-bind="viewBlock" />
-            </VCol>
-          </VTabItem>
-        </template>
+                <BaseProgressCircular size="64" width="4" />
+              </div>
+            </VOverlay>
+            <UnitQuery v-bind="viewBlock" />
+          </VCol>
+        </VTabItem>
         <VTabItem
           v-if="consent"
-          data-value="share-data"
+          data-id="share-data"
           :transition="false"
         >
           <VCol cols="12 mx-auto" sm="6">

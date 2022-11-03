@@ -59,6 +59,7 @@
         <UnitPipelineCustom
           v-if="customPipeline"
           v-bind="{
+            id,
             customPipeline,
             customPipelineOptions
           }"
@@ -66,7 +67,7 @@
         />
         <UnitPipelineSql
           v-else-if="sql"
-          :sql="sql"
+          v-bind="{ id, sql }"
           @update="onUnitResultsUpdate"
         />
         <VRow v-if="errorMessage">
@@ -127,6 +128,10 @@ export default {
   name: 'UnitQuery',
   components: { UnitPipelineSql, UnitFilesDialog, ChartView, UnitKepler, UnitFilterableTable, UnitVegaViz, BaseAlert, UnitPipelineCustom },
   props: {
+    id: {
+      type: String,
+      required: true
+    },
     title: {
       type: String,
       required: true

@@ -1,4 +1,10 @@
 export default {
+  props: {
+    id: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       progress: false,
@@ -26,11 +32,11 @@ export default {
     },
     '$store.state.xp.currentTab': {
       immediate: true,
-      handler() {
+      handler(currentTab) {
         // Re-run the pipeline when
         // 1. the tab is reopened, and
         // 2. the store was previously cleared
-        if (this.refreshPipeline) {
+        if (currentTab === this.id && this.refreshPipeline) {
           this.progress = true
           window.setTimeout(async() => {
             await this.run()
