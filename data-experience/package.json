@@ -86,7 +86,7 @@
     "worker-loader": "^3.0.8"
   },
   "peerDependencies": {
-    "vuetify": "^2.6.0"
+    "vuetify": "^2.6.7"
   },
   "jest": {
     "setupFiles": [
