@@ -1,14 +1,17 @@
 <template>
   <div v-if="bubbles.length">
-    <h4 class="mt-6 mb-4 text-h4">
-      {{ $tc('Bubble', 2) }}
-    </h4>
+    <h1 class="mt-6 mb-4 text-h4">
+      <VAvatar rounded size="50" class="mr-2">
+        <img src="/data-space.png">
+      </VAvatar>
+      <span>{{ $tc('Data Space', 2) }}</span>
+    </h1>
     <VList rounded>
       <VListItem
         v-for="({ title, icon, slug }) in bubbles"
         :key="slug"
         nuxt
-        :to="localePath({ name: 'bubble-bubble', params: { bubble: slug } })"
+        :to="localePath({ name: 'space-bubble', params: { bubble: slug } })"
       >
         <VListItemAvatar tile>
           <VImg :src="icon" :lazy-src="icon" />
@@ -34,7 +37,7 @@ export default {
           'icon'
         ])
         return { slug, ...config }
-      }).filter(w => !(this.$store.state.config.homePageBubbles || []).includes(w.slug))
+      })
     }
   }
 }

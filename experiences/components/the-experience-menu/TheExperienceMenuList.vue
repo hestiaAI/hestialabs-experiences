@@ -14,7 +14,7 @@
             {{ $tev(k(rest.slug, 'title'), title) }}
           </VListItemTitle>
           <VListItemSubtitle>
-            {{ $tet(k(rest.slug, 'subtitle'), 'Data Experience') }}
+            {{ $tev(k(rest.slug, 'subtitle'), defaultSubtitle) }}
           </VListItemSubtitle>
         </VListItemContent>
       </VListItem>

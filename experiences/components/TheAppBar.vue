@@ -6,15 +6,50 @@
         @click.stop="drawer = !drawer"
       />
       <VToolbarTitle class="d-flex align-center" style="width: 100%">
-        <VMenu v-if="$i18n.locales.length > 1" offset-y>
+        <VTooltip bottom>
           <template #activator="{ on, attrs }">
             <VBtn
-              v-bind="attrs"
               icon
+              v-bind="{...homeButtonProps, ...attrs}"
+              class="v-btn__home mr-0"
+              color="primary"
               v-on="on"
             >
-              <VIcon>$vuetify.icons.mdiTranslate</VIcon>
+              <VIcon>$vuetify.icons.mdiHome</VIcon>
             </VBtn>
+          </template>
+          <span v-t="'Home Page'" />
+        </VTooltip>
+        <VTooltip bottom>
+          <template #activator="{ on, attrs }">
+            <VBtn
+              icon
+              :to="localePath({ name: 'spaces' })"
+              class="v-btn__home"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <VAvatar rounded size="30">
+                <img src="/data-space.png">
+              </VAvatar>
+            </VBtn>
+          </template>
+          <span>{{ $tc('Data Space', 2) }}</span>
+        </VTooltip>
+        <VMenu v-if="$i18n.locales.length > 1" offset-y>
+          <template #activator="menu">
+            <VTooltip bottom>
+              <template #activator="tooltip">
+                <VBtn
+                  icon
+                  v-bind="{ ...menu.attrs, ...tooltip.attrs }"
+                  v-on="{ ...menu.on, ...tooltip.on }"
+                >
+                  <VIcon>$vuetify.icons.mdiTranslate</VIcon>
+                </VBtn>
+              </template>
+              <span v-t="'Language'" />
+            </VTooltip>
           </template>
           <VList>
             <VListItem
@@ -27,15 +62,6 @@
             </VListItem>
           </VList>
         </VMenu>
-        <VBtn
-          v-if="!$route.name.startsWith('index')"
-          icon
-          v-bind="homeButtonProps"
-          class="v-btn__home mr-0"
-          color="primary"
-        >
-          <VIcon>$vuetify.icons.mdiHome</VIcon>
-        </VBtn>
         <VSpacer />
         <div v-if="experience" class="d-flex">
           <VImg max-width="30" :src="e.icon" :lazy-src="e.icon" contain />
@@ -86,7 +112,14 @@
       </template>
       <div class="my-6">
         <LogoImg width="250" />
-        <TheBubbleMenu />
+        <template v-if="$route.params.bubble">
+          <VSubheader class="mt-2">
+            {{ $t('Connected to data space') }}:
+            <span class="font-weight-black">
+              &nbsp;{{ $route.params.bubble }}
+            </span>
+          </VSubheader>
+        </template>
         <TheExperienceMenu :include="include" />
       </div>
     </VNavigationDrawer>

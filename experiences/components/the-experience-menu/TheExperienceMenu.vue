@@ -83,7 +83,7 @@ export default {
         return {
           experiences,
           collaborator,
-          heading: collaborator?.title || this.$t('Public experiences')
+          heading: collaborator?.title || this.$tc('Data Experience', 2)
         }
       })
     },

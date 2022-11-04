@@ -5,6 +5,11 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      defaultSubtitle: this.$tc('Data Experience', 1)
+    }
+  },
   methods: {
     k(experience, key) {
       return `experiences.${experience}.intro.${key}`
@@ -19,7 +24,7 @@ export default {
               nuxt: true,
               exact: true,
               to: this.localePath({
-                name: `${bubble ? 'bubble-bubble-' : ''}experience-experience`,
+                name: `${bubble ? 'space-bubble-' : ''}experience-experience`,
                 params: { bubble, experience: slug }
               })
             }

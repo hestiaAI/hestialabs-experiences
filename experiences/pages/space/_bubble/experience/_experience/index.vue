@@ -25,7 +25,7 @@ export default {
 
     const { title: bubbleTitle } = this.bubbleConfig
 
-    const bubbleText = this.$tc('Bubble', 1)
+    const bubbleText = this.$tc('Data Space', 1)
     const metaBubbleTitle = this.$i18n.locale === 'fr' ? `${bubbleText} ${bubbleTitle}` : `${bubbleTitle} ${bubbleText}`
 
     const metaTitle = `${t}: ${s} | ${metaBubbleTitle}`

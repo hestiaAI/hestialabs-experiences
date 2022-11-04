@@ -26,7 +26,7 @@
           {{ $tev(k(rest.slug, 'title'), title) }}
         </VCardTitle>
         <VCardSubtitle class="subtitle-1 text-center">
-          {{ $tet(k(rest.slug, 'subtitle'), 'Data Experience') }}
+          {{ $tev(k(rest.slug, 'subtitle'), defaultSubtitle) }}
         </VCardSubtitle>
       </VCard>
     </VCol>
