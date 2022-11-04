@@ -20,8 +20,7 @@ export default {
               exact: true,
               to: this.localePath({
                 name: `${bubble ? 'bubble-bubble-' : ''}experience-experience`,
-                params: { bubble, experience: slug },
-                hash: '#load-data'
+                params: { bubble, experience: slug }
               })
             }
     }

@@ -45,11 +45,11 @@
         <div v-if="customPipelineOptions">
           <UnitPipelineCustom
             v-bind="{
+              id: 'file-explorer',
               fileManager,
               customPipeline,
               customPipelineOptions
             }"
-            hash="file-explorer"
             @update="onUnitResultsUpdate"
           />
           <UnitFilterableTable
