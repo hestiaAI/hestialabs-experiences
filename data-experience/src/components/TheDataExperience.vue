@@ -41,13 +41,12 @@
         center-active
         centered
         fixed-tabs
-        :eager="false"
         class="fixed-tabs-bar"
         @change="scrollToTop"
       >
         <VTab
-          v-for="t in tabs"
-          :key="t.value"
+          v-for="(t, index) in tabs"
+          :key="index"
           :disabled="t.disabled"
         >
           {{ $tev(t.titleKey, t.title) }}
@@ -97,7 +96,7 @@
         </VTabItem>
         <VTabItem
           v-for="viewBlock in experienceConfig.viewBlocks"
-          :key="viewBlock.id"
+          :key="`${experienceConfig.slug}-${viewBlock.id}`"
           :data-id="viewBlock.id"
           :transition="false"
         >
