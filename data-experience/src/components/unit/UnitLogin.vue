@@ -33,7 +33,8 @@ export default {
   data() {
     return {
       errorMessage: '',
-      codeword: this.bubbleCodeword || ''
+      codeword: this.bubbleCodeword || '',
+      loginSuccessful: false
     }
   },
   computed: {
@@ -58,6 +59,7 @@ export default {
           this.errorMessage = error
         } else {
           this.$store.commit('xp/setBubbleCodeword', codeword)
+          this.$emit('success')
         }
       } catch (error) {
         this.errorMessage = [

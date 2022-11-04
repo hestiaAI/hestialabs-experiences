@@ -1,7 +1,6 @@
 <template>
   <div>
     <SettingsSpeedDial />
-    <!-- interpret the presence of configName env variable as being in the Nuxt app -->
     <VMenu v-if="locales.length > 1" offset-y absolute>
       <template #activator="{ on, attrs }">
         <BaseButton
@@ -28,7 +27,7 @@
       </VList>
     </VMenu>
     <template v-if="showLogin">
-      <UnitLogin />
+      <UnitLogin @success="loginSuccessful = true" />
     </template>
     <template v-else>
       <VTabs
@@ -105,9 +104,6 @@
               <UnitConsentForm />
             </VCol>
           </VTabItem>
-          <!-- v-for="viewBlock in experienceConfig.viewBlocks"
-          :key="`${experienceConfig.slug}-${viewBlock.id}`"
-          :data-id="viewBlock.id" -->
           <VTabItem
             v-else
             :transition="false"
@@ -204,7 +200,8 @@ export default {
       success: false,
       message: '',
       overlay: false,
-      locales
+      locales,
+      loginSuccessful: false
     }
   },
   computed: {
@@ -215,7 +212,7 @@ export default {
     },
     showLogin() {
       const config = this.bubbleConfig
-      return config && !config.bypassLogin && !this.bubbleCodeword
+      return config && !config.bypassLogin && !this.loginSuccessful
     },
     consent() {
       return this.bubbleConfig?.consent
@@ -339,6 +336,8 @@ export default {
     this.$watch(
       vm => [vm.experienceConfig, vm.siteConfig, vm.bubbleConfig],
       async() => {
+        // clear login state
+        this.loginSuccessful = false
         this.clearStore()
         await this.mergeMessages()
       },

@@ -7,7 +7,7 @@
         :index="index"
       />
       <BasePasswordField
-        v-if="!bubbleCodeword"
+        v-if="bubbleConfig.bypassLogin"
         :value.sync="codeword"
         label="Codeword"
       />
