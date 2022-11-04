@@ -320,7 +320,8 @@ export default {
       }, 200)
     },
     tab(tabIndex) {
-      const { id } = this.tabs[tabIndex]
+      const idx = typeof tabIndex !== 'undefined' ? tabIndex : 0
+      const { id } = this.tabs[idx]
       if (id !== this.currentTab) {
         this.setCurrentTab(id)
       }
