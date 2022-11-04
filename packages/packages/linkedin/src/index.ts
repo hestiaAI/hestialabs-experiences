@@ -4,10 +4,12 @@ import { linkedinConnections } from './preprocessor'
 import icon from '@/icons/linkedin.png'
 import viewBlocks from './blocks'
 import messages from './messages.json'
+import dataSample from '@/data-samples/linkedin.zip'
 
 const options: ExperienceOptions = {
   dataPortal:
     'https://www.linkedin.com/help/linkedin/answer/50191/downloading-your-account-data',
+  dataSamples: [dataSample],
   files: {
     inference: '**/Inferences_about_you.csv',
     'ad-targeting': '**/Ad_Targeting.csv',
