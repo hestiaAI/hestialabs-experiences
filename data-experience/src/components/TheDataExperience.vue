@@ -45,85 +45,89 @@
         @change="scrollToTop"
       >
         <VTab
-          v-for="(t, index) in tabs"
+          v-for="({ title, disabled }, index) in tabs"
           :key="index"
-          :disabled="t.disabled"
+          :disabled="disabled"
         >
-          {{ $tev(t.titleKey, t.title) }}
+          {{ title }}
         </VTab>
       </VTabs>
       <VTabsItems v-model="tab">
-        <VTabItem data-id="load-data" :transition="false">
-          <VCol cols="12 mx-auto" md="6">
-            <UnitDownload
-              v-if="bubbleConfig?.dataFromBubble"
-              v-bind="{
-                progress,
-                error,
-                success,
-                message
-              }"
-              @update="onUnitFilesUpdate"
-            />
-            <UnitIntroduction
-              v-else
-              v-bind="{
-                progress,
-                error,
-                success,
-                message
-              }"
-              ref="unit-introduction"
-              @update="onUnitFilesUpdate"
-            />
-          </VCol>
-        </VTabItem>
-        <VTabItem
-          v-if="!experienceConfig.hideSummary"
-          data-id="summary"
-          :transition="false"
+        <div
+          v-for="{ id, viewBlock } in tabs"
+          :key="`${experienceConfig.slug}-${id}`"
+          :data-id="id"
         >
-          <VCol cols="12 mx-auto" sm="6">
-            <UnitSummary />
-          </VCol>
-        </VTabItem>
-        <VTabItem
-          v-if="!experienceConfig.hideFileExplorer"
-          data-id="file-explorer"
-          :transition="false"
-        >
-          <UnitFileExplorer />
-        </VTabItem>
-        <VTabItem
-          v-for="viewBlock in experienceConfig.viewBlocks"
+          <VTabItem v-if="id === 'load-data'" :transition="false">
+            <VCol cols="12 mx-auto" md="6">
+              <UnitDownload
+                v-if="bubbleConfig?.dataFromBubble"
+                v-bind="{
+                  progress,
+                  error,
+                  success,
+                  message
+                }"
+                @update="onUnitFilesUpdate"
+              />
+              <UnitIntroduction
+                v-else
+                v-bind="{
+                  progress,
+                  error,
+                  success,
+                  message
+                }"
+                ref="unit-introduction"
+                @update="onUnitFilesUpdate"
+              />
+            </VCol>
+          </VTabItem>
+          <VTabItem
+            v-else-if="id === 'summary'"
+            :transition="false"
+          >
+            <VCol cols="12 mx-auto" sm="6">
+              <UnitSummary />
+            </VCol>
+          </VTabItem>
+          <VTabItem
+            v-else-if="id === 'file-explorer'"
+            :transition="false"
+          >
+            <UnitFileExplorer />
+          </VTabItem>
+          <VTabItem
+            v-else-if="id === 'share-data'"
+            :transition="false"
+          >
+            <VCol cols="12 mx-auto" sm="6">
+              <UnitConsentForm />
+            </VCol>
+          </VTabItem>
+          <!-- v-for="viewBlock in experienceConfig.viewBlocks"
           :key="`${experienceConfig.slug}-${viewBlock.id}`"
-          :data-id="viewBlock.id"
-          :transition="false"
-        >
-          <VCol cols="12 mx-auto">
-            <VOverlay :value="overlay" absolute opacity="0.8">
-              <div
-              class="d-flex flex-column align-center"
-              style="width: 100%; height: 100%"
-              >
-              <div class="mb-3">
-                  {{ $t('This might take a moment') }}
+          :data-id="viewBlock.id" -->
+          <VTabItem
+            v-else
+            :transition="false"
+          >
+            <VCol cols="12 mx-auto">
+              <VOverlay :value="overlay" absolute opacity="0.8">
+                <div
+                class="d-flex flex-column align-center"
+                style="width: 100%; height: 100%"
+                >
+                <div class="mb-3">
+                    {{ $t('This might take a moment') }}
+                  </div>
+                  <BaseProgressCircular size="64" width="4" />
                 </div>
-                <BaseProgressCircular size="64" width="4" />
-              </div>
-            </VOverlay>
-            <UnitQuery v-bind="viewBlock" />
-          </VCol>
-        </VTabItem>
-        <VTabItem
-          v-if="consent"
-          data-id="share-data"
-          :transition="false"
-        >
-          <VCol cols="12 mx-auto" sm="6">
-            <UnitConsentForm />
-          </VCol>
-        </VTabItem>
+              </VOverlay>
+              <UnitQuery v-bind="viewBlock" />
+            </VCol>
+          </VTabItem>
+        </div>
       </VTabsItems>
     </template>
   </div>
@@ -222,7 +226,7 @@ export default {
       const tabs = [
         {
           title: 'Load your data',
-          value: 'load-data',
+          id: 'load-data',
           titleKey: 'load-data.name',
           disabled: this.experienceProgress
         }
@@ -230,7 +234,7 @@ export default {
       if (!hideSummary) {
         tabs.push({
           title: 'Summary',
-          value: 'summary',
+          id: 'summary',
           titleKey: 'summary.name',
           disabled
         })
@@ -238,28 +242,31 @@ export default {
       if (!hideFileExplorer) {
         tabs.push({
           title: 'Files',
-          value: 'file-explorer',
+          id: 'file-explorer',
           titleKey: 'file-explorer.name',
           disabled
         })
       }
       tabs.push(
-        ...viewBlocks.map(view => ({
-          ...view,
-          value: view.id,
-          titleKey: this.k(view.id),
-          disabled
+        ...viewBlocks.map(viewBlock => ({
+          title: viewBlock.title,
+          id: viewBlock.id,
+          titleKey: this.k(viewBlock.id),
+          disabled,
+          viewBlock
         }))
       )
       if (this.consent) {
         tabs.push({
           title: 'Share my data',
-          value: 'share-data',
+          id: 'share-data',
           titleKey: 'share-data.name',
           disabled
         })
       }
-      return tabs
+      return tabs.map(({ title, titleKey, ...rest }) =>
+        ({ title: this.$tev(titleKey, title), ...rest })
+      )
     }
   },
   watch: {
@@ -316,13 +323,13 @@ export default {
       }, 200)
     },
     tab(tabIndex) {
-      const { value } = this.tabs[tabIndex]
-      if (value !== this.currentTab) {
-        this.setCurrentTab(value)
+      const { id } = this.tabs[tabIndex]
+      if (id !== this.currentTab) {
+        this.setCurrentTab(id)
       }
     },
-    currentTab(value) {
-      this.tab = this.tabs.findIndex(tab => tab.value === value)
+    currentTab(currentTab) {
+      this.tab = this.tabs.findIndex(tab => tab.id === currentTab)
     },
     '$i18n.locale'() {
       this.clearStore()
@@ -468,7 +475,7 @@ export default {
 
       window.setTimeout(
         // switch to the second tab
-        () => this.setCurrentTab(this.tabs[1].value),
+        () => this.setCurrentTab(this.tabs[1].id),
         // leave some time for the user to read the success message
         500
       )
