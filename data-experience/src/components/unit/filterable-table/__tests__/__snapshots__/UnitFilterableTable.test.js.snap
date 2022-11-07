@@ -2,13 +2,13 @@
 
 exports[`data table html corresponds to snapshot 1`] = `
 "<div>
-  <datavalidator data=\\"[object Object]\\" allow-missing-columns=\\"\\">
+  <div>
     <!---->
-    <basesearchbar></basesearchbar>
+    <vtextfield value=\\"\\" prepend-icon=\\"$vuetify.icons.mdiMagnify\\" label=\\"Search\\" placeholder=\\"Type...\\" single-line=\\"\\" hide-details=\\"\\" clearable=\\"\\" class=\\"mb-6 mt-3\\"></vtextfield>
     <vdatatable items=\\"[object Object]\\" multi-sort=\\"\\" items-per-page=\\"5\\" fixed-header=\\"\\" height=\\"290\\" footer-props=\\"[object Object]\\" data-testid=\\"data-table\\" headers=\\"[object Object],[object Object],[object Object]\\" search=\\"\\"></vdatatable>
-    <basebutton text=\\"Export\\" icon=\\"mdiExport\\"></basebutton>
-    <basebuttondownloaddata disabled=\\"disabled\\" extension=\\"csv\\" data=\\"\\"></basebuttondownloaddata>
-    <basebuttonshare file-share=\\"\\" disabled=\\"disabled\\"></basebuttonshare>
-  </datavalidator>
+    <vtooltip left=\\"\\" disabled=\\"disabled\\"> <span></span></vtooltip>
+    <vtooltip left=\\"\\" disabled=\\"disabled\\"> <span></span></vtooltip>
+    <!---->
+  </div>
 </div>"
 `;
