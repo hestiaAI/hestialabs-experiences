@@ -27,11 +27,7 @@ test('experience-tinder', async({ page }) => {
 
   await page.getByRole('tab', { name: 'Usage' }).click()
 
-  await page.locator('g:nth-child(18) > rect').click()
-
   await page.getByRole('tab', { name: 'Likes et passes' }).click()
-
-  await page.locator('[id="\\34 "]').first().click()
 
   await page.getByLabel('Intervalle').click()
 
@@ -48,8 +44,6 @@ test('experience-tinder', async({ page }) => {
   await page.getByRole('tab', { name: 'Corrélation Likes / passes' }).click()
 
   await page.locator('div[role="tablist"]:has-text("Charger vos données Informations utilisat·eur·rice Usage Likes et passes Message")').click()
-
-  await page.locator('div[role="tablist"]:has-text("Charger vos données Informations utilisat·eur·rice Usage Likes et passes Message") svg').nth(1).click()
 
   // Check that there is no error during the test
   expect(messages).toStrictEqual([])

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test('test', async({ page }) => {
+test('experience-netflix', async({ page }) => {
   const messages = []
   page.on('console', (msg) => {
     // Ignore regular log messages; we are only interested in errors.
@@ -48,8 +48,6 @@ test('test', async({ page }) => {
   await page.getByRole('tab', { name: 'Chronologie' }).click()
 
   await page.getByText('De janvier 01, 2008 à novembre 03, 2022 nous avons trouvé 7526 événements datés').click()
-
-  await page.locator('svg:has-text("Tue Jan 01 2008 00:00:00 GMT+0100 (heure normale d’Europe centrale): 1Wed Jan 02")').click()
 
   // Check that there is no error during the test
   expect(messages).toStrictEqual([])

@@ -19,8 +19,6 @@ test('experience-instagram', async({ page }) => {
 
   await page.getByText('instagram').click()
 
-  await page.getByText('Important: Pour que l\'expérience fonctionne, veuillez demander vos données au fo').click()
-
   await page.getByLabel('Selectionner des données de test').click()
 
   await page.getByText('instagram.zip').click()
@@ -28,8 +26,6 @@ test('experience-instagram', async({ page }) => {
   await page.getByRole('button', { name: 'Explorer vos données' }).click()
 
   await page.getByRole('tab', { name: 'Vues' }).click()
-
-  await page.locator('svg:has-text("Annonce vue: 511 consultéVidéo regardée: 511 consultéPoste visualisé: 388 consul") path').first().click()
 
   await page.getByText('Ramirez Group').click()
 
@@ -56,8 +52,6 @@ test('experience-instagram', async({ page }) => {
   await page.getByLabel('Intervalle').click()
 
   await page.getByText('Liste de suivi').nth(4).click()
-
-  await page.locator('[id="\\35 "]').first().click()
 
   await page.getByRole('tab', { name: 'Chronologie' }).click()
 

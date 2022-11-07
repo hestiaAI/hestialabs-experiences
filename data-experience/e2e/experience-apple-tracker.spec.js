@@ -13,9 +13,7 @@ test('experience-apple-tracker', async({ page }) => {
     messages.push(`[${error.name}] ${error.message}`)
   })
 
-  await page.goto('chrome-error://chromewebdata/')
-
-  await page.getByText('In iOS 15.2, iPadOS 15.2, and watchOS 8.3 or later, users can view a privacy rep').click()
+  await page.goto('http://localhost:8080/')
 
   await page.getByLabel('Selectionner des données de test').click()
 
