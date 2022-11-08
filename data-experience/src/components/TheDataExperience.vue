@@ -60,7 +60,7 @@
           <VTabItem v-if="id === 'load-data'" :transition="false">
             <VCol cols="12 mx-auto" md="6">
               <UnitDownload
-                v-if="bubbleConfig?.dataFromBubble"
+                v-if="bubbleConfig && bubbleConfig.dataFromBubble"
                 v-bind="{
                   progress,
                   error,
