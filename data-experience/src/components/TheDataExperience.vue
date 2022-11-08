@@ -16,7 +16,7 @@
         />
       </template>
       <VList>
-        <VListItemGroup v-model="localeIndex">
+        <VListItemGroup v-model="localeIndex" @change="setLocale">
           <VListItem
             v-for="({ code, name }) in locales"
             :key="code"
@@ -280,29 +280,15 @@ export default {
     },
     siteConfigMerged: {
       immediate: true,
-      handler(value) {
-        // set initial state of locale dropdown
-        this.localeIndex = value.i18nLocale
-          ? localeCodes.indexOf(value.i18nLocale)
-          : 0
+      async handler(value) {
+        if (!value.i18nLocale) {
+          await this.setLocale()
+        }
         // override light theme colors
         if (value.theme) {
           Object.assign(this.$vuetify.theme.themes.light, value.theme)
         }
         this.setSiteConfig(cloneDeep(value))
-      }
-    },
-    localeIndex: {
-      immediate: true,
-      async handler(value) {
-        // locale was switched by the user
-        const localeProperties = locales[value]
-        // -> update d3 locale
-        if (process.env.NODE_ENV !== 'test') {
-          await d3Locale(localeProperties)
-        }
-        // -> update vue-i18n locale
-        this.$i18n.locale = localeProperties.code
       }
     },
     fileManager(value) {
@@ -359,6 +345,16 @@ export default {
       'setCurrentDB',
       'setCurrentTab'
     ]),
+    async setLocale() {
+      // locale was switched by the user (or is being initialized)
+      const localeProperties = locales[this.localeIndex]
+      // -> update d3 locale
+      if (process.env.NODE_ENV !== 'test') {
+        await d3Locale(localeProperties)
+      }
+      // -> update vue-i18n locale
+      this.$i18n.locale = localeProperties.code
+    },
     async mergeMessages() {
       const { messages: messagesExperience = {}, slug } = this.experienceConfig
       const { messages: messagesCustomConfig = {}, i18nLocales, i18nUrl } = this.siteConfigMerged
