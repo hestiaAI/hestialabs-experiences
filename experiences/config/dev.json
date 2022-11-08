@@ -1,4 +1,6 @@
 {
+  "i18nLocale": "fr",
+  "i18nUrl": "/i18n-messages-custom-dev.json",
   "messages": {
     "fr": {
       "app": {
@@ -88,8 +90,6 @@
     "dataprivacy",
     "hestialabs"
   ],
-  "i18nUrl": "/i18n-messages-custom-dev.json",
-  "i18nLocale": "fr",
   "filedrop": "https://example.com",
   "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
   "displayCollaborators": true

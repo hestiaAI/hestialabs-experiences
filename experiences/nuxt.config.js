@@ -211,22 +211,6 @@ export default {
             }
           ]
         }
-        // for importing wasm files
-        // https://github.com/sql-js/react-sqljs-demo
-        /*
-        {
-          test: /\.wasm$/,
-          type: 'javascript/auto',
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                name: '[path][name].[contenthash:7].[ext]'
-              }
-            }
-          ]
-        }
-        */
       )
     },
     plugins: [
@@ -245,7 +229,7 @@ export default {
         ]
       })
     ],
-    watch: ['../packages/packages/*/dist/*']
+    watch: ['../packages/packages/*/dist/*', './config/dev.json']
   },
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [

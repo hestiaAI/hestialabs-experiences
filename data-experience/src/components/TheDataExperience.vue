@@ -1,7 +1,7 @@
 <template>
   <div>
     <SettingsSpeedDial />
-    <VMenu v-if="locales.length > 1" offset-y absolute>
+    <VMenu v-if="!siteConfigMerged.i18nLocale && locales.length > 1" offset-y absolute>
       <template #activator="{ on, attrs }">
         <BaseButton
           v-bind="attrs"
@@ -152,7 +152,6 @@ import SettingsSpeedDial from '@/components/misc/SettingsSpeedDial.vue'
 import UnitConsentForm from '@/components/unit/consent-form/UnitConsentForm.vue'
 
 const siteConfigDefault = {
-  i18nLocale: 'en',
   i18nLocales: localeCodes,
   messages: {}
 }
@@ -283,7 +282,9 @@ export default {
       immediate: true,
       handler(value) {
         // set initial state of locale dropdown
-        this.localeIndex = localeCodes.indexOf(value.i18nLocale)
+        this.localeIndex = value.i18nLocale
+          ? localeCodes.indexOf(value.i18nLocale)
+          : 0
         // override light theme colors
         if (value.theme) {
           Object.assign(this.$vuetify.theme.themes.light, value.theme)
