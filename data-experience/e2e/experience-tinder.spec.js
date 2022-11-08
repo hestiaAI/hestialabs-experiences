@@ -15,6 +15,9 @@ test('experience-tinder', async({ page }) => {
 
   await page.goto('http://localhost:8080/')
 
+  await page.locator('.my-2').first().click()
+  await page.getByText('Français').click()
+
   await page.getByLabel('Experience').click()
 
   await page.getByRole('option', { name: 'tinder' }).getByText('tinder').click()

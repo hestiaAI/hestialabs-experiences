@@ -15,6 +15,9 @@ test('experience-twitter', async({ page }) => {
 
   await page.goto('http://localhost:8080/')
 
+  await page.locator('.my-2').first().click()
+  await page.getByText('Français').click()
+
   await page.getByRole('button', { name: 'Experience twitter' }).click()
 
   await page.getByRole('option', { name: 'twitter' }).locator('div:has-text("twitter")').first().click()

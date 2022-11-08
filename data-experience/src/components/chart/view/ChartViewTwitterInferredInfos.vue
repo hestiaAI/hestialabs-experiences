@@ -7,7 +7,7 @@
           <VListItem v-for="{ id, value } in items" :key="id">
             <VListItemContent>
               <div class="d-flex justify-space-between">
-                <span v-text="messages.items[id].title" />
+                <span v-text="messages.items?.[id].title" />
                 <div
                   v-if="Array.isArray(value)"
                   class="d-flex flex-column flex-md-row flex-wrap"
@@ -22,7 +22,7 @@
             <VListItemIcon>
               <!-- v-model="item.show" -->
               <VTooltip
-                v-if="messages.items[id].hint"
+                v-if="messages.items?.[id].hint"
                 left
                 max-width="200"
               >
@@ -33,7 +33,7 @@
                     </VIcon>
                   </VHover>
                 </template>
-                <span v-text="messages.items[id].hint" />
+                <span v-text="messages.items?.[id].hint" />
               </VTooltip>
             </VListItemIcon>
           </VListItem>
@@ -55,11 +55,11 @@
       >
         <VCard max-width="" height="100%">
           <VCardTitle>
-            {{ messages.tables[id].title }}
+            {{ messages.tables?.[id].title }}
             <VSpacer />
             <!-- v-model="table.show" -->
             <VTooltip
-              v-if="messages.tables[id].hint"
+              v-if="messages.tables?.[id].hint"
               left
               max-width="200"
             >
@@ -68,7 +68,7 @@
                   $vuetify.icons.mdiInformationOutline
                 </VIcon>
               </template>
-              <span v-text="messages.tables[id].hint" />
+              <span v-text="messages.tables?.[id].hint" />
             </VTooltip>
           </VCardTitle>
           <VCardText>
@@ -161,7 +161,7 @@ export default {
           ({
             id,
             headers: headers.map(({ text, ...headerRest }) =>
-              ({ text: this.messages.tables[id].headers[text], ...headerRest })),
+              ({ text: this.messages.tables?.[id].headers?.[text], ...headerRest })),
             ...rest
           })
       )

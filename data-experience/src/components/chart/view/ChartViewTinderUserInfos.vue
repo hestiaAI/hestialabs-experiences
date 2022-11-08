@@ -6,7 +6,7 @@
           <VRow>
             <VCol v-for="{ title, value, list } in items" :key="title" cols="12" md="6">
               <div class="overline">
-                {{ messages.titles[title] }}
+                {{ messages.titles?.[title] }}
               </div>
               <p
                 v-if="!value || value.length === 0"
@@ -21,7 +21,7 @@
                 </div>
               </div>
               <p v-else class="font-weight-bold">
-                {{ messages.values[value] || value }}
+                {{ messages.values?.[value] || value }}
               </p>
             </VCol>
             <VCol v-if="ageFilterMin && ageFilterMax" cols="12">

@@ -428,7 +428,7 @@ export default {
         tooltip.transition().duration(60).style('opacity', 0.98)
         tooltip
           .html('<b>' +
-                    that.intervals[that.selectedInterval].format(this.dateParser(d.key)) +
+                    that.intervals[that.selectedInterval].format(that.dateParser(d.key)) +
                     '</b><br/>' +
                     f(d.value)) // d.name
           .style('left', evt.pageX - 55 + 'px')

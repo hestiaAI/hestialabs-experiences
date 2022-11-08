@@ -90,7 +90,7 @@ const initialExperience = 'twitter'
 
 const siteConfig = {
   experiences,
-  i18nLocales: ['en', 'fr'],
+  i18nLocales: ['fr', 'en'],
   i18nUrl: '/i18n-messages-custom-dev.json',
   theme: {
     primary: '#0C2D48',

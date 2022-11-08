@@ -72,12 +72,13 @@ export default {
       return Object.keys(this.values[0])
         .sort()
         .map((k) => {
+          const values = this.values?.[0]?.[k]
           return {
             name: this.$tev(this.kViewBlock(k, 'names'), k),
-            values: this.values[0][k].split('; ')
+            values: (typeof values === 'string' || values instanceof String) ? values.split('; ') : []
           }
         })
-        .filter(i => i.values[0].length > 0)
+        .filter(i => i.values.length && i.values[0].length > 0)
     }
   }
 }

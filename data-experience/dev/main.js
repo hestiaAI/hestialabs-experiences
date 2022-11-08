@@ -2,8 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import store from './store'
 import DataExperience, { vuetifyOpts, i18n } from '@/main'
-import Vuetify from '../../experiences/node_modules/vuetify'
-import '../../experiences/node_modules/vuetify/dist/vuetify.min.css'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
 
 Vue.use(DataExperience, { store })
 

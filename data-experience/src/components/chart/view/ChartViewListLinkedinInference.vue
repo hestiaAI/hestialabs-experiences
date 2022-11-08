@@ -96,7 +96,9 @@ export default {
   props: {
     messages: {
       type: Object,
-      required: true
+      default: () => {
+        return {}
+      }
     }
   },
   data() {
