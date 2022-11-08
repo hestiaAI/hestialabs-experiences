@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test('test', async({ page }) => {
+test('experience-tiktok', async({ page }) => {
   const messages = []
   page.on('console', (msg) => {
     // Ignore regular log messages; we are only interested in errors.
@@ -31,17 +31,7 @@ test('test', async({ page }) => {
 
   await page.getByRole('tab', { name: 'Historique des connexions' }).click()
 
-  await page.locator('.area').click()
-
-  await page.locator('g:has-text("3G: 778 connexions4G: 759 connexionsWi-fi: 752 connexions3G4GWi-fi") path').nth(2).click()
-
-  await page.locator('text:has-text("547.85.173.835")').click()
-
-  await page.getByText('Réinitialiser tout').click()
-
   await page.getByRole('tab', { name: 'Abonnements et abonnés' }).click()
-
-  await page.locator('[id="\\31 0"]').first().click()
 
   await page.getByRole('tab', { name: 'Historique de l\'activité' }).click()
 

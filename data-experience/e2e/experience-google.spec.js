@@ -33,8 +33,6 @@ test('experience-google', async({ page }) => {
 
   await page.getByRole('button', { name: 'Endroit Rue du Petit-Saint-Jean 5' }).click()
 
-  await page.locator('#OnePlace').getByText('Un endroit particulier').click()
-
   await page.getByRole('tab', { name: 'Autres candidats' }).click()
 
   await page.getByRole('tab', { name: 'Trajets' }).click()

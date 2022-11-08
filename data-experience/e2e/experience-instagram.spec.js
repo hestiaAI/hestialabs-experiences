@@ -19,17 +19,29 @@ test('experience-instagram', async({ page }) => {
 
   await page.getByText('instagram').click()
 
+  await page.getByText('Important: Pour que l\'expérience fonctionne, veuillez demander vos données au fo').click()
+
   await page.getByLabel('Selectionner des données de test').click()
 
   await page.getByText('instagram.zip').click()
 
   await page.getByRole('button', { name: 'Explorer vos données' }).click()
 
+  await page.getByText('Instagram-fake-data').click()
+
+  await page.getByText('ads_and_topics').click()
+
+  await page.getByText('ads_viewed.json').click()
+
+  await page.getByRole('tab', { name: 'Brut' }).click()
+
+  await page.getByRole('tab', { name: 'Schéma' }).click()
+
   await page.getByRole('tab', { name: 'Vues' }).click()
 
-  await page.getByText('Ramirez Group').click()
+  await page.getByText('Annonce vue (36.24%)').click()
 
-  await page.locator('#top-chart-graph_views').getByText('réinitialiser').click()
+  await page.locator('text:has-text("Hart-Lopez")').click()
 
   await page.getByText('Réinitialiser tout').click()
 
@@ -41,25 +53,19 @@ test('experience-instagram', async({ page }) => {
 
   await page.getByRole('tab', { name: 'Messages' }).click()
 
-  await page.getByText('Tracy Leon').click()
+  await page.getByText('dim').click()
 
-  await page.locator('text:has-text("ven")').click()
+  await page.getByText('Claire Wu').click()
 
-  await page.getByText('Réinitialiser tout').click()
+  await page.locator('#week-chart-graph_messages').getByText('réinitialiser').click()
+
+  await page.locator('#user-chart-graph_messages').getByText('réinitialiser').click()
 
   await page.getByRole('tab', { name: 'Liste de suivi' }).click()
 
-  await page.getByLabel('Intervalle').click()
-
-  await page.getByText('Liste de suivi').nth(4).click()
-
   await page.getByRole('tab', { name: 'Chronologie' }).click()
 
-  await page.getByRole('textbox', { name: 'Intervalle' }).click()
-
-  await page.getByText('Semaines').click()
-
-  await page.getByText('De janvier 01, 2008 à novembre 03, 2022 nous avons trouvé 2926 événements datés').click()
+  await page.getByRole('cell', { name: '2018-10-22 21:09:39' }).click()
 
   // Check that there is no error during the test
   expect(messages).toStrictEqual([])

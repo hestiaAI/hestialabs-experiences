@@ -91,7 +91,7 @@ export default {
       return {
         fields: headers.map((h) => {
           return {
-            name: this.messages?.keplerFields[h] || h
+            name: this.messages?.keplerFields?.[h] || h
           }
         }),
         rows: this.associated_names.map(r => headers.map(h => r[h]))

@@ -15,6 +15,10 @@ test('experience-apple-tracker', async({ page }) => {
 
   await page.goto('http://localhost:8080/')
 
+  await page.getByRole('button', { name: 'Experience twitter' }).click()
+
+  await page.getByText('apple-tracker').click()
+
   await page.getByLabel('Selectionner des données de test').click()
 
   await page.getByRole('option', { name: 'apple-tracker.ndjson' }).locator('div:has-text("apple-tracker.ndjson")').first().click()
@@ -42,10 +46,6 @@ test('experience-apple-tracker', async({ page }) => {
   await page.getByText('Réinitialiser tout').click()
 
   await page.getByRole('cell', { name: 'com.apple.mobilemail' }).click()
-
-  await page.locator('#IOSAccess > .pa-2 > div > .full-height > span > .v-icon').click()
-
-  await page.getByRole('button', { name: 'Fermer' }).click()
 
   // Check that there is no error during the test
   expect(messages).toStrictEqual([])

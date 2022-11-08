@@ -117,7 +117,7 @@ export default {
         },
         {
           id: 'numAudiences',
-          value: v?.numAudiences || 'Unknown'
+          value: v?.numAudiences
         }
       ]
     },

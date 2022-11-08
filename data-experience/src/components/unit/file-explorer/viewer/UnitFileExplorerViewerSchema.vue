@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapGetters } from '@/utils/store-helper'
+import { mapGetters, mapState } from '@/utils/store-helper'
 import mixin from './mixin'
 import BaseSchemaTree from './base/SchemaTree/BaseSchemaTree.vue'
 import BaseButton from '@/components/base/button/BaseButton.vue'
@@ -50,7 +50,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['selectedPaths', 'experienceConfig']),
+    ...mapGetters(['selectedPaths']),
+    ...mapState(['experienceConfig']),
     // Check that the selected paths can be converted to an array
     isValidPaths() {
       const toCheck = [...this.selectedPaths]

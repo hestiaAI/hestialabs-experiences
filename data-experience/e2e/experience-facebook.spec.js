@@ -28,10 +28,6 @@ test('experience-facebook', async({ page }) => {
 
   await page.getByText('Au total nous avons trouvé 1804 pubs entre 23 novembre 2019 et 30 octobre 2021').click()
 
-  await page.getByRole('slider', { name: 'N° de companies' }).locator('div').first().click()
-
-  await page.locator('text:has-text("Others")').click()
-
   await page.getByRole('tab', { name: 'Types d\'activités hors Facebook' }).click()
 
   await page.locator('g > g > path').first().click()
