@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "npm": "7.x",
-    "node": "14.x"
+    "npm": "8.x",
+    "node": "18.x"
   },
   "scripts": {
     "postinstall": "node postinstall.js",
@@ -13,13 +13,13 @@
     "dev:no-local-server": "npm-run-all -p -r dev:monorepo dev:app",
     "dev:bubble-server": "cd ../../hestialabs-bubble-server/bubbleserver && cross-env DJANGO_DEBUG=True poetry run python ./manage.py runserver",
     "dev:monorepo": "cd ../packages && npm run dev",
-    "dev:app": "nuxt --open",
+    "dev:app": "cross-env NODE_OPTIONS=--openssl-legacy-provider nuxt --open",
     "test": "jest",
     "start": "nuxt start",
     "build": "npm run build:update-revision && npm run build:static",
     "build:update-revision": "git rev-parse HEAD > static/git-revision.txt",
-    "build:static": "nuxt generate",
-    "build:server": "nuxt build",
+    "build:static": "cross-env NODE_OPTIONS=--openssl-legacy-provider nuxt generate",
+    "build:server": "cross-env NODE_OPTIONS=--openssl-legacy-provider nuxt build",
     "lint": "npx eslint . --ext .js,.vue",
     "lint:fix": "npm run lint -- --fix",
     "pre-commit": "npx lint-staged",
@@ -103,6 +103,7 @@
     "@vue/vue2-jest": "^27.0.0-alpha.3",
     "babel-core": "^7.0.0-bridge.0",
     "copy-webpack-plugin": "^6.4.1",
+    "html-webpack-plugin": "4.5.2",
     "cross-env": "^7.0.3",
     "eslint": "^8.17.0",
     "eslint-plugin-nuxt": "^3.2.0",
