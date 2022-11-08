@@ -45,7 +45,6 @@ const defaultOptions: Partial<ExperienceOptions> = {
   keepOnlyFiles: true,
   messages,
   preprocessors: {},
-  subtitle: 'Data Experience',
   tutorialVideos: [],
   url: undefined
 }

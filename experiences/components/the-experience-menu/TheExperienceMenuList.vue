@@ -2,7 +2,7 @@
   <div>
     <VList rounded>
       <VListItem
-        v-for="({ icon, title, ...rest }, index) in experiences"
+        v-for="({ icon, ...rest }, index) in experiences"
         :key="index"
         v-bind="menuItemAttrs(rest)"
       >
@@ -11,10 +11,10 @@
         </VListItemAvatar>
         <VListItemContent>
           <VListItemTitle>
-            {{ $tev(k(rest.slug, 'title'), title) }}
+            {{ title(rest) }}
           </VListItemTitle>
           <VListItemSubtitle>
-            {{ $tev(k(rest.slug, 'subtitle'), defaultSubtitle) }}
+            {{ subtitle(rest) }}
           </VListItemSubtitle>
         </VListItemContent>
       </VListItem>
@@ -24,8 +24,9 @@
 
 <script>
 import mixin from './mixin'
+import mixinTitles from '@/mixins/titles'
 
 export default {
-  mixins: [mixin]
+  mixins: [mixin, mixinTitles]
 }
 </script>

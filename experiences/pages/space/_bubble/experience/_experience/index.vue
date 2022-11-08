@@ -2,7 +2,7 @@
   <TheDataExperience2
     v-bind="{
       experienceConfig,
-      siteConfig: $store.state.config,
+      siteConfig,
       bubbleConfig
     }"
   />
@@ -10,7 +10,7 @@
 
 <script>
 import validate from '@/pages/validate'
-import mixin from '@/mixins/page'
+import mixin from '@/mixins/page-experience'
 
 export default {
   mixins: [mixin],
@@ -18,10 +18,7 @@ export default {
     return validate.experience(context) && validate.bubble(context)
   },
   head() {
-    const k =
-      key => `experiences.${this.experience}.intro.${key}`
-    const t = this.$tev(k('title'), this.experienceConfig.title)
-    const s = this.$tet(k('subtitle'), 'Data Experience')
+    const { experienceTitle: t, experienceSubtitle: s } = this
 
     const { title: bubbleTitle } = this.bubbleConfig
 
@@ -32,12 +29,6 @@ export default {
     return this.vueMeta(metaTitle)
   },
   computed: {
-    experience() {
-      return this.$route.params.experience
-    },
-    experienceConfig() {
-      return this.$store.getters.experience(this.experience)
-    },
     bubbleConfig() {
       const { bubble } = this.$route.params
       return {

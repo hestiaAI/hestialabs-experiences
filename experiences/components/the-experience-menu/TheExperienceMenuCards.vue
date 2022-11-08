@@ -1,7 +1,7 @@
 <template>
   <VRow class="mt-3 mb-6">
     <VCol
-      v-for="({ icon, title, ...rest }, index) in experiences"
+      v-for="({ icon, ...rest }, index) in experiences"
       :key="index"
       cols="12"
       sm="6"
@@ -23,10 +23,10 @@
           </VAvatar>
         </div>
         <VCardTitle class="justify-center">
-          {{ $tev(k(rest.slug, 'title'), title) }}
+          {{ title(rest) }}
         </VCardTitle>
         <VCardSubtitle class="subtitle-1 text-center">
-          {{ $tev(k(rest.slug, 'subtitle'), defaultSubtitle) }}
+          {{ subtitle(rest) }}
         </VCardSubtitle>
       </VCard>
     </VCol>
@@ -35,9 +35,10 @@
 
 <script>
 import mixin from './mixin'
+import mixinTitles from '@/mixins/titles'
 
 export default {
-  mixins: [mixin]
+  mixins: [mixin, mixinTitles]
 }
 </script>
 

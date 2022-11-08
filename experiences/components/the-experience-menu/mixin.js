@@ -5,15 +5,7 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      defaultSubtitle: this.$tc('Data Experience', 1)
-    }
-  },
   methods: {
-    k(experience, key) {
-      return `experiences.${experience}.intro.${key}`
-    },
     menuItemAttrs({ url, slug, disabled }) {
       const { bubble } = this.$route.params
       return url
