@@ -21,7 +21,7 @@ This directory contains the configuration files linked to each deployment. They 
    */
   "i18nUrl": "https://example.com/translations.json",
   /**
-   * Override default locale
+   * Set default locale
    * @type String
    */
   "i18nLocale": "en",

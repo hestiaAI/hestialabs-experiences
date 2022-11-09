@@ -9,7 +9,11 @@
     }
   },
   "vueCompilerOptions": {
-    "experimentalDisableTemplateSupport": true
+    "experimentalDisableTemplateSupport": true,
+    "target": 2,
+    "extensions": [
+      ".vue"
+    ]
   },
   "exclude": [
     ".circleci",

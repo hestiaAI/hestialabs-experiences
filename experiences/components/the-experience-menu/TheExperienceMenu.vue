@@ -43,9 +43,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['enabledExperiences', 'disabledExperiences', 'siteConfig']),
+    ...mapGetters(['enabledExperiences', 'disabledExperiences']),
     groupByCollaborator() {
-      return !!this.siteConfig.displayCollaborators && !this.hideCollaborators
+      return !!this.$store.state.config.displayCollaborators && !this.hideCollaborators
     },
     sections() {
       const sections = []
@@ -83,7 +83,7 @@ export default {
         return {
           experiences,
           collaborator,
-          heading: collaborator?.title || this.$t('Public experiences')
+          heading: collaborator?.title || this.$tc('Data Experience', 2)
         }
       })
     },

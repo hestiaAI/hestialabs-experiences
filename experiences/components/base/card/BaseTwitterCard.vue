@@ -43,6 +43,7 @@
 </template>
 <script>
 export default {
+  name: 'BaseTwitterCard',
   props: {
     text: {
       type: String,

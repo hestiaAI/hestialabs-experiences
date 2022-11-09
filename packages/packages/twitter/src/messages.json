@@ -292,7 +292,7 @@
                 "title": "Historique de la localisation",
                 "hint": "Voici les lieux que Twitter a associés à votre compte, en fonction de votre activité des 60 derniers jours.",
                 "headers": {
-                  "Historique de localisation": "Historique des localisations"
+                  "Location History": "Historique des localisations"
                 }
               },
               "partnerInterests": {

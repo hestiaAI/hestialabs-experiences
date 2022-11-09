@@ -6,15 +6,50 @@
         @click.stop="drawer = !drawer"
       />
       <VToolbarTitle class="d-flex align-center" style="width: 100%">
-        <VMenu v-if="$i18n.locales.length > 1" offset-y>
+        <VTooltip bottom>
           <template #activator="{ on, attrs }">
             <VBtn
-              v-bind="attrs"
               icon
+              v-bind="{...homeButtonProps, ...attrs}"
+              class="v-btn__home mr-0"
+              color="primary"
               v-on="on"
             >
-              <VIcon>$vuetify.icons.mdiTranslate</VIcon>
+              <VIcon>$vuetify.icons.mdiHome</VIcon>
             </VBtn>
+          </template>
+          <span v-t="'Home Page'" />
+        </VTooltip>
+        <VTooltip bottom>
+          <template #activator="{ on, attrs }">
+            <VBtn
+              icon
+              :to="localePath({ name: 'spaces' })"
+              class="v-btn__home"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <VAvatar rounded size="30">
+                <img src="/data-space.png">
+              </VAvatar>
+            </VBtn>
+          </template>
+          <span>{{ $tc('Data Space', 2) }}</span>
+        </VTooltip>
+        <VMenu v-if="$i18n.locales.length > 1" offset-y>
+          <template #activator="menu">
+            <VTooltip bottom>
+              <template #activator="tooltip">
+                <VBtn
+                  icon
+                  v-bind="{ ...menu.attrs, ...tooltip.attrs }"
+                  v-on="{ ...menu.on, ...tooltip.on }"
+                >
+                  <VIcon>$vuetify.icons.mdiTranslate</VIcon>
+                </VBtn>
+              </template>
+              <span v-t="'Language'" />
+            </VTooltip>
           </template>
           <VList>
             <VListItem
@@ -27,37 +62,17 @@
             </VListItem>
           </VList>
         </VMenu>
-        <VBtn
-          v-if="!$route.name.startsWith('index')"
-          icon
-          v-bind="homeButtonProps"
-          class="v-btn__home mr-0"
-          color="primary"
-        >
-          <VIcon>$vuetify.icons.mdiHome</VIcon>
-        </VBtn>
         <VSpacer />
-        <div v-if="$route.params.experience" class="d-flex">
+        <div v-if="experience" class="d-flex">
           <VImg max-width="30" :src="e.icon" :lazy-src="e.icon" contain />
           <h3 class="ml-3">
-            {{ $tev(`experiences.${$route.params.experience}.intro.title`, e.title) }}
+            {{ $tev(`experiences.${experience}.intro.title`, e.title) }}
           </h3>
         </div>
         <VSpacer />
-        <div v-for="link in links" :key="link.url">
+        <div v-for="link in appBarLinks" :key="link.url">
           <VBtn
-            v-if="link.external"
-            :href="link.url"
-            target="_blank"
-            rel="noreferrer noopener"
-            class="v-btn__home mr-0"
-            text
-          >
-            {{ $t(link.name) }}
-          </VBtn>
-          <VBtn
-            v-else
-            :to="link.url"
+            v-bind="link"
             class="v-btn__home mr-0"
             text
           >
@@ -75,7 +90,6 @@
         >
           <LogoImg width="100" />
         </ExternalLink>
-        </v-menu>
       </VToolbarTitle>
     </VAppBar>
     <VNavigationDrawer
@@ -98,45 +112,44 @@
       </template>
       <div class="my-6">
         <LogoImg width="250" />
-        <template v-if="$auth.loggedIn && $auth.user.bubble">
+        <template v-if="$route.params.bubble">
           <VSubheader class="mt-2">
-            {{ $t('Connected to bubble') }}:
+            {{ $t('Connected to data space') }}:
             <span class="font-weight-black">
-              &nbsp;{{ $auth.user.bubble.title }}
+              &nbsp;{{ $route.params.bubble }}
             </span>
           </VSubheader>
         </template>
-        <TheBubbleMenu />
-        <TheExperienceMenu
-          v-if="$auth.loggedIn && $auth.user.bubble"
-          :include="$auth.user.bubble.experiences"
-        />
-        <TheExperienceMenu v-else />
+        <TheExperienceMenu :include="include" />
       </div>
     </VNavigationDrawer>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data() {
     return {
       drawer: false,
-      selected: '',
-      links: this.$store.getters.siteConfig.appBarLinks
+      selected: ''
     }
   },
   computed: {
+    ...mapState(['config']),
+    experience() {
+      return this.$route.params.experience
+    },
     e() {
-      return this.$store.getters.experience(this.$route)
+      return this.$store.getters.experience(this.experience)
     },
     collaborator() {
-      const { displayCollaborators } = this.$store.getters.siteConfig
-      return displayCollaborators ? this.e.collaborator : undefined
+      return this.config.displayCollaborators ? this.e.collaborator : undefined
     },
     homeButtonProps() {
       // check for an external home page
-      const { homePath } = this.$store.getters.siteConfig
+      const { homePath } = this.config
       if (homePath) {
         return {
           href: homePath,
@@ -148,6 +161,29 @@ export default {
       return {
         to: this.localePath('index')
       }
+    },
+    include() {
+      const { bubble } = this.$route.params
+      if (!bubble) {
+        return
+      }
+      return this.config.bubbleConfig[bubble].experiences
+    },
+    appBarLinks() {
+      return this.config.appBarLinks.map(l => ({
+        ...l,
+        ...(
+          l.external
+            ? {
+                href: l.url,
+                target: '_blank',
+                rel: 'noreferrer noopener'
+              }
+            : {
+                to: l.url
+              }
+        )
+      }))
     }
   }
 }

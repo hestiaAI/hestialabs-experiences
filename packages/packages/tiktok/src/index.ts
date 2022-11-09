@@ -5,6 +5,7 @@ import icon from '@/icons/tiktok.png'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
 import messages from './messages.json'
+import dataSample from '@/data-samples/tiktok.zip'
 
 const options: ExperienceOptions = {
   collaborator: theEyeballs,
@@ -13,6 +14,7 @@ const options: ExperienceOptions = {
     'https://support.tiktok.com/en/account-and-privacy/personalized-ads-and-data/requesting-your-data',
   dataPortalMessage:
     '<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format.',
+  dataSamples: [dataSample],
   files: {
     userdata: '**/user_data.json'
   },

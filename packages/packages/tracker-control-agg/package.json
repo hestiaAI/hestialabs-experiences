@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/tracker-control-agg",
-  "version": "0.0.1-alpha.35",
+  "version": "0.0.1-alpha.36",
   "main": "dist/index",
   "type": "module",
   "files": [
