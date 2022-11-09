@@ -60,6 +60,7 @@ workflows:
             - hestialabs
           # https://support.circleci.com/hc/en-us/articles/115015426888-Clear-project-dependency-cache
           cache-version: myapp-{{ .Environment.CACHE_VERSION }}-{{ checksum "data-experience/package-lock.json" }}
+          override-ci-command: npm install --no-package-lock
 
       # https://circleci.com/developer/orbs/orb/circleci/node#jobs-test
       - node/test:
