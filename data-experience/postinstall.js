@@ -19,7 +19,7 @@ function handleSpawnOutput({ status, stderr, stdout, error }) {
 
 if (CIRCLECI) {
   // experiences required for tests
-  const experiences = readdirSync(resolve(__dirname, 'pipeline-tests/__tests__'))
+  const experiences = readdirSync(resolve(__dirname, 'src/__tests__'))
 
   const { spawnSync } = require('child_process')
   // const { spawnSync, execSync } = require('child_process')
