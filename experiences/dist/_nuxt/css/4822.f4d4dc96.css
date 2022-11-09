@@ -1,0 +1,25 @@
+
+/* AXES */
+/* ticks */
+[data-v-748eb1d0] .xAxis line,[data-v-748eb1d0] .yAxis line {
+  stroke: #706f6f;
+  stroke-width: 0.5;
+  shape-rendering: geometricPrecision;
+}
+
+/* axis contour */
+[data-v-748eb1d0] .xAxis path,[data-v-748eb1d0] .yAxis path {
+  stroke: #706f6f;
+  stroke-width: 0.7;
+  shape-rendering: geometricPrecision;
+}
+[data-v-748eb1d0] .yAxis path {
+  display: none;
+}
+
+/* axis text */
+[data-v-748eb1d0] .xAxis text,[data-v-748eb1d0] .yAxis text {
+  fill: #2b2929;
+  font-weight: 300;
+}
+

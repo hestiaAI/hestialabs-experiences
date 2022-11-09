@@ -1,0 +1,16 @@
+
+/* AXES */
+/* ticks */
+[data-v-5d9bc966] .week-axis {
+  text-anchor: end;
+}
+[data-v-5d9bc966] .hour-axis {
+  text-anchor: middle;
+}
+[data-v-5d9bc966] .graph {
+  font-family: 'Assistant', sans-serif;
+  font-size: 8px;
+  max-width: 100%;
+  height: auto;
+}
+
