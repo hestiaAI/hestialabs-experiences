@@ -1,3 +1,6 @@
+// Add icons of the data-experiences module here
+import { vuetifyOpts } from 'data-experience'
+
 import {
   mdiAccount,
   mdiAccountGroup,
@@ -107,7 +110,7 @@ const values = {
 const optionsFunction = ({ app }) => ({
   icons: {
     iconfont: 'mdiSvg',
-    values
+    values: { ...values, ...vuetifyOpts.icons.values }
   },
   theme: {
     options: {
@@ -128,7 +131,7 @@ const optionsFunction = ({ app }) => ({
     }
   },
   lang: {
-    current: 'fr',
+    // https://vuetifyjs.com/en/features/internationalization/#vue-i18n
     t: (key, ...params) => app.i18n.t(key, params)
   }
 })

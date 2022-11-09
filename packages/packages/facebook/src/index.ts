@@ -6,6 +6,7 @@ import icon from '@/icons/facebook.png'
 import viewBlocks from './blocks'
 import databaseConfig from './database'
 import messages from './messages.json'
+import dataSample from '@/data-samples/facebook.zip'
 
 const options: ExperienceOptions = {
   collaborator: theEyeballs,
@@ -13,6 +14,7 @@ const options: ExperienceOptions = {
   dataPortal: 'https://www.facebook.com/help/212802592074644',
   dataPortalMessage:
     '<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format.',
+  dataSamples: [dataSample],
   files: {
     'advertisers-interacted':
       "**/ads_information/advertisers_you've_interacted_with.json",

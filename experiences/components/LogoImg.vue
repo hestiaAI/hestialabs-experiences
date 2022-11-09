@@ -8,10 +8,13 @@
   />
 </template>
 <script>
+import { mapState } from 'vuex'
 export default {
+  name: 'LogoImg',
   computed: {
+    ...mapState(['config']),
     logoSrc() {
-      return this.$store.getters.siteConfig.logo || '/hestialabs-logo.svg'
+      return this.config.logo || '/hestialabs-logo.svg'
     }
   }
 }

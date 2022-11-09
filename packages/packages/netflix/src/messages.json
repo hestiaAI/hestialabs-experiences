@@ -1,7 +1,9 @@
 {
   "en": {
     "intro": {
-      "title": "Netflix"
+      "title": "Netflix",
+      "dataPortal": "https://www.netflix.com/account/getmyinfo",
+      "dataPortalMessage": "<strong>Important:</strong> Once you have clicked 'Submit Request', you need to confirm the request in your e-mail."
     },
     "viewBlocks": {
       "watchOverview": {
@@ -39,7 +41,9 @@
   },
   "fr": {
     "intro": {
-      "title": "Netflix"
+      "title": "Netflix",
+      "dataPortal": "https://www.netflix.com/account/getmyinfo",
+      "dataPortalMessage": "<strong>Important:</strong> Après avoir cliqué sur 'Soumettre la demande', vous devez confirmer la demande dans votre courriel."
     },
     "viewBlocks": {
       "watchOverview": {

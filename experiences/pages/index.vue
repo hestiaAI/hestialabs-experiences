@@ -159,9 +159,9 @@ export default {
       }).filter(w => (this.$store.state.config.homePageBubbles || []).includes(w.slug))
     },
     experiences() {
-      return ['twitter', 'facebook', 'google', 'tracker-control'].map(e => this.$store.getters.experience({
-        params: { experience: e }
-      }))
+      return ['twitter', 'facebook', 'google', 'tracker-control'].map(
+        e => this.$store.state.experiences.find(({ slug }) => slug === e)
+      )
     }
   }
 }

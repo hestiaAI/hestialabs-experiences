@@ -19,11 +19,10 @@ import experiences from '@hestia.ai/hestialabs/dist/index.mjs'
 
 import { SQLType } from '../lib/types/database-config.js'
 import { getCsvAndMergeFromID } from '../lib/pipelines/custom.js'
-import DBMS from '../../experiences/utils/sql.js'
-import FileManagerClass, {
-  NodeFile
-} from '../../experiences/utils/file-manager.js'
-import fileManagerWorkers from '../../experiences/utils/file-manager-workers.js'
+import DBMS from '../../data-experience/src/utils/sql.js'
+import FileManagerClass from '../../data-experience/src/utils/file-manager.js'
+import { NodeFile } from '../../data-experience/src/utils/node-file.js'
+import fileManagerWorkers from '../../data-experience/src/utils/file-manager-workers.js'
 
 const pascalCase = (str: string) =>
   camelCase(str).replace(/^./, firstChar => firstChar.toUpperCase())

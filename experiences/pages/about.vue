@@ -28,6 +28,7 @@
     </div>
   </VContainer>
 </template>
+
 <script>
 import theEyeballsIcon from '@/assets/icons/the-eyeballs.svg'
 import theDatingPrivacyCollectiveIcon from '@/assets/icons/dating-privacy-collective.svg'

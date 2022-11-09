@@ -1,0 +1,43 @@
+module.exports = {
+  env: {
+    browser: true,
+    es2021: true,
+    jest: true
+  },
+  extends: ['plugin:vue/essential', 'standard'],
+  overrides: [],
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module'
+  },
+  plugins: ['vue'],
+  rules: {
+    'vue/order-in-components': ['error', {}],
+    'vue/no-undef-components': ['error', { ignorePatterns: ['^V(\\w+)$', 'i18n', 'client-only'] }],
+    'space-before-function-paren': ['error', 'never'],
+    'arrow-parens': ['error', 'as-needed', { requireForBlockBody: true }],
+    'no-console': [
+      'warn',
+      {
+        allow: ['info', 'warn', 'error', 'time', 'timeEnd']
+      }
+    ],
+    // https://stackoverflow.com/a/64609434/8238129
+    'vue/valid-v-slot': [
+      'error',
+      {
+        allowModifiers: true
+      }
+    ],
+    // Enforce PascalCase component names
+    // https://vuejs.org/v2/style-guide/#Component-name-casing-in-templates-strongly-recommended
+    'vue/component-name-in-template-casing': [
+      'error',
+      'PascalCase',
+      {
+        registeredComponentsOnly: false,
+        ignores: ['component', 'client-only', 'keep-alive', 'i18n']
+      }
+    ]
+  }
+}

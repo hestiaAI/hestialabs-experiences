@@ -45,7 +45,6 @@ const defaultOptions: Partial<ExperienceOptions> = {
   keepOnlyFiles: true,
   messages,
   preprocessors: {},
-  subtitle: 'Data Experience',
   tutorialVideos: [],
   url: undefined
 }
@@ -102,5 +101,14 @@ export class Experience {
 
     this.name = packageName
     this.version = packageJSON.version
+  }
+
+  get config() {
+    return {
+      name: this.name,
+      slug: this.name,
+      version: this.version,
+      ...this.options
+    }
   }
 }

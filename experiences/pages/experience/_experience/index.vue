@@ -1,10 +1,15 @@
 <template>
-  <TheDataExperience />
+  <TheDataExperience2
+    v-bind="{
+      experienceConfig,
+      siteConfig
+    }"
+  />
 </template>
 
 <script>
 import validate from '@/pages/validate'
-import mixin from '@/mixins/page'
+import mixin from '@/mixins/page-experience'
 
 export default {
   mixins: [mixin],
@@ -12,13 +17,7 @@ export default {
     return validate.experience(context)
   },
   head() {
-    const k =
-      key => `experiences.${this.$route.params.experience}.intro.${key}`
-    const { title } = this.$store.getters.experience(
-      this.$route
-    )
-    const t = this.$tev(k('title'), title)
-    const s = this.$tet(k('subtitle'), 'Data Experience')
+    const { experienceTitle: t, experienceSubtitle: s } = this
     const metaTitle = `${t}: ${s}`
     return this.vueMeta(metaTitle)
   }

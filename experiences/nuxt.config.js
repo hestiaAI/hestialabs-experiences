@@ -1,8 +1,30 @@
 import fs from 'fs'
 import PreloadWebpackPlugin from '@vue/preload-webpack-plugin'
+import CopyPlugin from 'copy-webpack-plugin'
+import { locales, localeCodes } from '../data-experience/src/i18n/locales'
 
 import { numberFormats } from './i18n/vue-i18n-number-formats'
 import { dateTimeFormats } from './i18n/vue-i18n-date-time-formats'
+
+const extension2filetype = {
+  tar: 'zip',
+  js: 'json',
+  ndjson: 'json',
+  png: 'img',
+  jpeg: 'img',
+  jpg: 'img',
+  gif: 'img',
+  bmp: 'img',
+  webp: 'img',
+  pdf: 'pdf',
+  zip: 'zip',
+  json: 'json',
+  txt: 'txt',
+  html: 'html',
+  csv: 'csv',
+  tsv: 'csv',
+  xlsx: 'xlsx'
+}
 
 const {
   NODE_ENV,
@@ -20,12 +42,11 @@ if (!baseUrl && isProduction) {
 const {
   messages = {},
   i18nLocale = 'en',
-  i18nLocales = ['fr', 'en']
+  i18nLocales = localeCodes
 } = JSON.parse(fs.readFileSync(`config/${configName}.json`))
 
-const messagesDefault = JSON.parse(fs.readFileSync(`i18n/${i18nLocale}.json`))
+const messagesDefault = JSON.parse(fs.readFileSync(`locales/${i18nLocale}.json`))
 const messagesConfig = i18nLocale in messages ? messages[i18nLocale] : {}
-
 // app properties for meta info:
 // these affect the PWA manfiest.json
 // and possibly meta tags other than those
@@ -63,15 +84,6 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
-
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    '@/plugins/api.js', // this plugin must come first as it is used in the initialization
-    '@/plugins/init.js', // this plugin must come second, initialize the store with the configurations
-    '@/plugins/injected.js',
-    '@/plugins/i18n.js'
-  ],
-
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: [
     // pathPrefix: false
@@ -97,55 +109,11 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next', '@nuxtjs/i18n'],
-
-  axios: {
-    baseURL: apiUrl
-  },
-
-  auth: {
-    fullPathRedirect: true,
-    redirect: {
-      login: '/login',
-      logout: false,
-      home: '/'
-    },
-    strategies: {
-      local: {
-        token: {
-          property: false,
-          required: false
-        },
-        user: {
-          autoFetch: false
-        },
-        endpoints: {
-          login: {
-            url: '/bubbles/login',
-            method: 'post'
-          },
-          logout: { url: '/bubbles/logout', method: 'get' },
-          user: false
-        }
-      }
-    },
-    plugins: ['@/plugins/auth-i18n-redirect.js']
-  },
+  modules: ['@nuxtjs/i18n'],
 
   i18n: {
     baseUrl,
-    locales: [
-      {
-        code: 'en',
-        iso: 'en-US',
-        name: 'English'
-      },
-      {
-        code: 'fr',
-        iso: 'fr-FR',
-        name: 'Français'
-      }
-    ].filter(({ code }) => i18nLocales.includes(code)),
+    locales: locales.filter(({ code }) => i18nLocales.includes(code)),
     defaultLocale: i18nLocale,
     vueI18n: {
       fallbackLocale: i18nLocale,
@@ -224,15 +192,20 @@ export default {
           test: /\.worker\.js$/,
           use: 'worker-loader'
         },
-        // for importing wasm files
-        // https://github.com/sql-js/react-sqljs-demo
         {
-          test: /\.wasm$/,
+          // allow all valid extensions as sample data except JS files!
+          test: new RegExp(
+            `data.+\\.(${Object.keys(extension2filetype)
+              .filter(ext => ext !== 'js')
+              .join('|')})$`
+          ),
+          // https://webpack.js.org/configuration/module/#ruletype
           type: 'javascript/auto',
           use: [
             {
               loader: 'file-loader',
               options: {
+                esModule: true,
                 name: '[path][name].[contenthash:7].[ext]'
               }
             }
@@ -249,8 +222,21 @@ export default {
         fileWhitelist: [/\.woff2$/],
         // crossorigin attribute added by plugin for as='font'
         as: 'font'
+      }),
+      new CopyPlugin({
+        patterns: [
+          'node_modules/data-experience/dist'
+        ]
       })
     ],
-    watch: ['../packages/*/dist/*', './i18n/*.json']
-  }
+    watch: ['../packages/packages/*/dist/*', './config/dev.json']
+  },
+  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
+  plugins: [
+    '@/plugins/init.js', // this plugin must come first, as it initializes the store
+    '@/plugins/injected.js',
+    '@/plugins/i18n.js',
+    '@/plugins/vuetify.js',
+    '@/plugins/data-experience.js'
+  ]
 }

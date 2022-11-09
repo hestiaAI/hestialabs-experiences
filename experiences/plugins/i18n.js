@@ -2,8 +2,8 @@ import { json, timeFormatDefaultLocale } from 'd3'
 import vuetifyEn from 'vuetify/lib/locale/en'
 import vuetifyFr from 'vuetify/lib/locale/fr'
 
-import defaultEn from '@/i18n/en.json'
-import defaultFr from '@/i18n/fr.json'
+import defaultEn from '@/locales/en.json'
+import defaultFr from '@/locales/fr.json'
 
 const messagesDefault = {
   en: {
@@ -33,16 +33,15 @@ function d3Locale({ iso }) {
   )
 }
 
-export default async({ app, store, $vuetify }) => {
-  const { config: { i18nUrl, theme, messages: messagesCustomConfig = {} }, experiences } = store.state
+export default async({ app, store }) => {
+  const { config: { i18nUrl, messages: messagesCustomConfig = {} }, experiences } = store.state
 
   const messagesExperiences = experiences.filter(e => e.messages)
 
   let messagesCustomRemote = {}
   if (i18nUrl) {
     // fetch messages to override default messages
-    const response = await fetch(i18nUrl)
-    messagesCustomRemote = await response.json()
+    messagesCustomRemote = await json(i18nUrl)
   }
   app.i18n.localeCodes.forEach((locale) => {
     /* default messages */
@@ -71,10 +70,6 @@ export default async({ app, store, $vuetify }) => {
     }
   })
 
-  if (theme) {
-    // override light theme colors
-    Object.assign($vuetify.theme.themes.light, theme)
-  }
   d3Locale(app.i18n.localeProperties)
   app.i18n.onBeforeLanguageSwitch = (oldLocale, newLocale) => {
     const localeProperties = app.i18n.locales.find(l => l.code === newLocale)

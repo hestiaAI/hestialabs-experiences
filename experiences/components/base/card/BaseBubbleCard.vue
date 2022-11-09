@@ -2,7 +2,7 @@
   <VCard
     height="100%"
     nuxt
-    :to="localePath({ name: 'bubble-bubble', params: { bubble: slug } })"
+    :to="localePath({ name: 'space-bubble', params: { bubble: slug } })"
     hover
   >
     <VCardText>
@@ -22,6 +22,7 @@
 
 <script>
 export default {
+  name: 'BaseBubbleCard',
   props: {
     title: {
       type: String,
@@ -38,11 +39,6 @@ export default {
     icon: {
       type: String,
       required: true
-    }
-  },
-  computed: {
-    mdiIcon() {
-      return this.$vuetify.icons.values[this.icon]
     }
   }
 }
