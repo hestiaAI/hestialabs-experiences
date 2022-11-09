@@ -59,7 +59,7 @@ workflows:
           context:
             - hestialabs
           # https://support.circleci.com/hc/en-us/articles/115015426888-Clear-project-dependency-cache
-          cache-version: myapp-{{ .Environment.CACHE_VERSION }}-{{ checksum "package-lock.json" }}
+          cache-version: myapp-{{ .Environment.CACHE_VERSION }}-{{ checksum "data-experience/package-lock.json" }}
 
       # https://circleci.com/developer/orbs/orb/circleci/node#jobs-test
       - node/test:
@@ -73,4 +73,4 @@ workflows:
           context:
             - hestialabs
           # https://support.circleci.com/hc/en-us/articles/115015426888-Clear-project-dependency-cache
-          cache-version: myapp-{{ .Environment.CACHE_VERSION }}-{{ checksum "package-lock.json" }}
+          cache-version: myapp-{{ .Environment.CACHE_VERSION }}-{{ checksum "packages/package-lock.json" }}
