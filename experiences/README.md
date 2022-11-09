@@ -69,6 +69,7 @@ Update the deployment branch.
 ```bash
 # in this example we're deploying to https://digipower.academy
 git checkout netlify-academy
+git pull
 # replace current files with what's in master
 git merge -X theirs master
 ```
@@ -80,8 +81,12 @@ cd ../packages
 npm install
 npm run build
 npm link --workspaces
+cd ../data-experience
+npm install
+npm run build-lib
 cd ../experiences
 npm install
+rm -rf dist
 ```
 
 Run the build using the appropriate environment variables.
@@ -102,7 +107,6 @@ Here's what these variables configure.
 Documentation for the configuration file can be found in [config/README.md](config)
 
 ```bash
-rm -rf dist
 # in this example we're building digipower.academy
 CONFIG_NAME=digipower-academy BASE_URL=https://digipower.academy API_URL=https://bubbles.hestialabs.org npm run build
 ```
