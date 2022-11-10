@@ -6,7 +6,7 @@ import {
   yourOffFacebookActivity,
   adsInterests
 } from './samples.helpers'
-import { NodeFile } from '~/utils/node-file'
+import NodeFile from '~/utils/node-file'
 import {
   DatabaseTester,
   arrayEqualNoOrder,

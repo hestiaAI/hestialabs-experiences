@@ -1,5 +1,4 @@
 import initSqlJs from 'sql.js'
-// import sqlWasm from 'sql.js/dist/sql-wasm.wasm'
 import { JSONPath } from 'jsonpath-plus'
 import { cloneDeep } from 'lodash-es'
 
@@ -87,7 +86,7 @@ export class DB {
     }
 
     // Use a CDN for now since we have to figure out how to assets import work on host app.
-    const options = process.env.NODE_ENV === 'test'
+    const options = process.env.NODE_ENV === 'test' || process?.release.name === 'node'
       ? {}
       : {
           locateFile: () => 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.wasm'

@@ -7,7 +7,7 @@ import {
   missingAttributesImpressions,
   missingAttributesEngagements
 } from './samples.helpers'
-import { NodeFile } from '~/utils/node-file'
+import NodeFile from '~/utils/node-file'
 import {
   DatabaseTester,
   arrayEqualNoOrder,

@@ -13,16 +13,42 @@ import { camelCase } from 'lodash'
 import yargs from 'yargs/yargs'
 import { hideBin } from 'yargs/helpers'
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import experiences from '@hestia.ai/hestialabs/dist/index.mjs'
+import appleTracker from '../packages/apple-tracker/dist/index.mjs'
+import facebook from '../packages/facebook/dist/index.mjs'
+import google from '../packages/google/dist/index.mjs'
+import her from '../packages/her/dist/index.mjs'
+import instagram from '../packages/instagram/dist/index.mjs'
+import linkedin from '../packages/linkedin/dist/index.mjs'
+import netflix from '../packages/netflix/dist/index.mjs'
+import tiktok from '../packages/tiktok/dist/index.mjs'
+import tinder from '../packages/tinder/dist/index.mjs'
+import trackerControl from '../packages/tracker-control/dist/index.mjs'
+import twitter from '../packages/twitter/dist/index.mjs'
+import uber from '../packages/uber/dist/index.mjs'
+import uberDriver from '../packages/uber-driver/dist/index.mjs'
+
+const experiences: { [key: string]: { options: ExperienceOptions } } = {
+  appleTracker,
+  facebook,
+  google,
+  her,
+  instagram,
+  linkedin,
+  netflix,
+  tiktok,
+  tinder,
+  trackerControl,
+  twitter,
+  uber,
+  uberDriver
+}
 
 import { SQLType } from '../lib/types/database-config.js'
 import { getCsvAndMergeFromID } from '../lib/pipelines/custom.js'
 import DBMS from '../../data-experience/src/utils/sql.js'
-import FileManagerClass from '../../data-experience/src/utils/file-manager.js'
-import { NodeFile } from '../../data-experience/src/utils/node-file.js'
-import fileManagerWorkers from '../../data-experience/src/utils/file-manager-workers.js'
+import FileManager from '../../data-experience/src/utils/file-manager.js'
+import NodeFile from '../../data-experience/src/utils/node-file.js'
+// import fileManagerWorkers from '../../data-experience/utils/file-manager-workers.js'
 
 const pascalCase = (str: string) =>
   camelCase(str).replace(/^./, firstChar => firstChar.toUpperCase())
@@ -66,12 +92,11 @@ const nodeFiles = (files as string[]).map(filename => {
   return new NodeFile(filename, buffer.toString())
 })
 
-const { options }: { options: ExperienceOptions } =
-  experiences[experience as string]
+const { options } = experiences[experience as string]
 
-const fileManager = new FileManagerClass(
+const fileManager = new FileManager(
   options.preprocessors,
-  fileManagerWorkers,
+  null,
   options.files,
   options.keepOnlyFiles
 )
