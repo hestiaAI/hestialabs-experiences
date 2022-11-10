@@ -1,12 +1,12 @@
 # HestiaLabs Experiences
 
-![npm](https://img.shields.io/badge/npm-7.x-blue) ![node](https://img.shields.io/badge/node-14.x-brightgreen)
+![npm](https://img.shields.io/badge/npm-8.x-blue) ![node](https://img.shields.io/badge/node-18.x-brightgreen)
 
 The experiences developed by HestiaLabs are targeted for any user willing to better understand their personal data. It takes the form of an easy-to-use web app that locally processes the raw personal data downloaded from various sources (Twitter, Facebook, Uber, etc) and creates meaningful visualizations.
 
 ## Setup
 
-0. Check that you have the correct versions for npm and node (see "engines" in package.json: node 14.x, npm 7.x) by running `npm version`
+0. Check that you have the correct versions for npm and node (see "engines" in package.json: node 18.x, npm 8.x) by running `npm version`
 
 1. In the `packages` folder, install the root package:
 
