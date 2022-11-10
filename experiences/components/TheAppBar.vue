@@ -20,7 +20,7 @@
           </template>
           <span v-t="'Home Page'" />
         </VTooltip>
-        <VTooltip bottom>
+        <VTooltip v-if="hasBubbles" bottom>
           <template #activator="{ on, attrs }">
             <VBtn
               icon
@@ -138,6 +138,10 @@ export default {
   },
   computed: {
     ...mapState(['config']),
+    hasBubbles() {
+      const bubbleConfig = this.$store.state.config.bubbleConfig
+      return bubbleConfig && Object.keys(bubbleConfig).length > 0
+    },
     experience() {
       return this.$route.params.experience
     },
@@ -170,7 +174,7 @@ export default {
       return this.config.bubbleConfig[bubble].experiences
     },
     appBarLinks() {
-      return this.config.appBarLinks.map(l => ({
+      const links = this.config.appBarLinks?.map(l => ({
         ...l,
         ...(
           l.external
@@ -184,6 +188,7 @@ export default {
               }
         )
       }))
+      return links || []
     }
   }
 }
