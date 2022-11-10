@@ -9,8 +9,12 @@ export default {
           /packages\/packages\/experiences\/([^/]+)\//.exec(filename)[1]
       )
       .map(camelCase)
+    const packagesFiltered = Array.from(new Set(packages))
     // need to build before testing
-    return ['npm run build', `npm run test:ts-node -- ${packages.join(' ')}`]
+    return [
+      'npm run build',
+      `npm run test:ts-node -- ${packagesFiltered.join(' ')}`
+    ]
   },
   '*.ts': filenames =>
     // only lint changed files
