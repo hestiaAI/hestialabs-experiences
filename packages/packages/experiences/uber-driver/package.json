@@ -1,0 +1,20 @@
+{
+  "name": "@hestia.ai/uber-driver",
+  "version": "0.0.1-alpha.26",
+  "main": "dist/index",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/experiences/uber-driver"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "gitHead": "e1210e21daff4c42aff12c0f3f6e0b06e49ee212"
+}

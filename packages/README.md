@@ -81,7 +81,7 @@ This section explains how packages are created and updated
 
 ### Create a new package
 
-1. Create a new folder in the `packages` directory. By convention, the folder name is also the package name.
+1. Create a new folder in the `packages/experiences` directory. By convention, the folder name is also the package name.
 
 2. Add a `src` folder with the required `index.ts` entry file.
 
@@ -97,7 +97,7 @@ This section explains how packages are created and updated
   "repository": {
     "type": "git",
     "url": "https://github.com/hestiaai/hestialabs-experiences",
-    "directory": "packages/packages/<NAME>"
+    "directory": "packages/packages/experiences/<NAME>"
   },
   "publishConfig": {
     "access": "public"
@@ -109,16 +109,18 @@ This section explains how packages are created and updated
 
 Replace `<NAME>` with the package name.
 
-4. Add the package name to the `experiences` Array in [dev.json](https://github.com/hestiaAI/hestialabs-experiences/blob/master/config/dev.json#L2).
+4. Add the package name to the `experiences` Array in [dev.json](https://github.com/hestiaAI/hestialabs-experiences/blob/master/experiences/config/dev.json).
 
 5. Add an export statement for the package in [`packages.ts`](./packages.ts). This ensures [tests](./test.ts) are run for the package.
 
-6. Re-link the packages workspace to the `hestialabs-experiences` repo:
+6. Re-link the packages workspace:
 
 ```sh
 npm link --workspaces
+cd ../data-experience
+npm i
 cd ../experiences
-npm install
+npm i
 ```
 
 ### Login to npm

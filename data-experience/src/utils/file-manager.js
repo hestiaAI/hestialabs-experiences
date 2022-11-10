@@ -12,6 +12,8 @@ import {
   mdiMicrosoftExcel
 } from '@mdi/js'
 import { has, groupBy, identity } from 'lodash-es'
+import { JSONPath } from 'jsonpath-plus'
+import mm from 'micromatch'
 import { matchNormalized, findMatchesInContent } from './accessor'
 import { itemifyJSON, nJsonPoints } from './json'
 import { getCsvHeadersAndItems } from './csv'
@@ -101,7 +103,6 @@ export default class FileManager {
     // Define the files filter regex, default to all
     this.filesRegex = /.*/
     if (this.keepOnlyFiles && Object.keys(this.idToGlob).length) {
-      const mm = require('micromatch')
       const regexs = Object.values(this.idToGlob).map(
         glob => mm.makeRe(glob).source
       )
@@ -384,8 +385,6 @@ export default class FileManager {
    * @returns A list of object with one key per JSONPath
    */
   async findAllMatchingObjects(filename, jsonPaths) {
-    const { JSONPath } = require('jsonpath-plus')
-
     // Get all arays idx from a processed jsonPath
     const getIdxs = (path, maxLength = -1) => [...path.matchAll(/\[(:?\d+)\]/g)].map(m => m[1]).slice(0, maxLength).join('')
 

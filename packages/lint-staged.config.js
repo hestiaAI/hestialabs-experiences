@@ -2,9 +2,12 @@ import lodash from 'lodash'
 const { camelCase } = lodash
 
 export default {
-  'packages/!(hestialabs)/src/**/*.ts': filenames => {
+  'packages/experiences/*/src/**/*.ts': filenames => {
     const packages = filenames
-      .map(filename => /packages\/packages\/([^/]+)\//.exec(filename)[1])
+      .map(
+        filename =>
+          /packages\/packages\/experiences\/([^/]+)\//.exec(filename)[1]
+      )
       .map(camelCase)
     // need to build before testing
     return ['npm run build', `npm run test:ts-node -- ${packages.join(' ')}`]

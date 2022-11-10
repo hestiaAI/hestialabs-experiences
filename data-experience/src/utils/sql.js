@@ -85,12 +85,19 @@ export class DB {
       this.close()
     }
 
-    // Use a CDN for now since we have to figure out how to assets import work on host app.
-    const options = process.env.NODE_ENV === 'test' || process?.release.name === 'node'
+    const options = process?.env.NODE_ENV === 'test'
       ? {}
       : {
+        // Use a CDN for now since we have to figure out how to assets import work on host app.
           locateFile: () => 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.wasm'
         }
+    if (process?.release.name === 'node') {
+      // this block is a workaround for Node.js
+      const fs = await import('fs')
+      const path = './sql-wasm.wasm'
+      const wasmBinary = await fs.promises.readFile(new URL(path, import.meta.url))
+      options.wasmBinary = wasmBinary
+    }
     const SQL = await initSqlJs(options)
     this.#db = new SQL.Database()
     // enable foreign keys
