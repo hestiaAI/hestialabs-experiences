@@ -2,16 +2,16 @@
   "version": "independent",
   "npmClient": "npm",
   "conventionalCommits": true,
+  "changelog": false,
+  "commitHooks": false,
+  "ignoreChanges": ["*.md"],
   "packages": ["packages/*"],
   "command": {
     "publish": {
-      "conventionalCommits": true,
-      "ignoreChanges": ["*.md"],
-      "message": "chore(release): publish",
       "registry": "https://registry.npmjs.org/"
     },
     "version": {
-      "conventionalCommits": true
+      "message": "chore(release): publish"
     }
   }
 }
