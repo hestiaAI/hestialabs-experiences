@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import type { ExperienceOptions } from '@/types/index'
 import type {
   DatabaseConfig,

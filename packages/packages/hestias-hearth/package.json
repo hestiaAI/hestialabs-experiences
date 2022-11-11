@@ -7,7 +7,7 @@
     "node": "18.12.x"
   },
   "bin": {
-    "hestias-hearth": "./bin/entry.sh"
+    "hestias-hearth": "./bin/packages/packages/hestias-hearth/entry.sh"
   },
   "files": [
     "bin"
@@ -28,7 +28,7 @@
     "clean": "rimraf ./bin",
     "dev": "npm run clean && npm run copy-files && tsc -w",
     "build": "npm run clean && npm run copy-files && tsc",
-    "copy-files": "copyfiles --flat ../../node_modules/sql.js/dist/sql-wasm.wasm ./bin/data-experience/src/utils && copyfiles ./entry.sh ./bin"
+    "copy-files": "copyfiles --flat ../../node_modules/sql.js/dist/sql-wasm.wasm ./bin/data-experience/src/utils && copyfiles ./entry.sh ./bin/packages/packages/hestias-hearth"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.6",

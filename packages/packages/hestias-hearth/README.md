@@ -1,6 +1,8 @@
 # Hestia’s Hearth
 
-## Compile
+## Development
+
+### Compile
 
 Run the TypeScript compiler in watch mode
 
@@ -8,7 +10,7 @@ Run the TypeScript compiler in watch mode
 npm run dev
 ```
 
-## Run
+### Run
 
 Run the script with Node.js
 
@@ -21,12 +23,26 @@ npm start -- <arguments>
 Method 2:
 
 ```sh
-cd bin
+cd bin/packages/packages/hestias-hearth
 ./entry.sh <arguments>
 ```
 
-### Example
+Example command:
 
 ```sh
 npm start -- fire twitter -f "C:\Users\me\hestialabs-experiences\packages\lib\data-samples\twitter-small.zip"
+```
+
+## Installation and Usage
+
+Install via npm
+
+```bash
+npm i -g @hestia.ai/hestias-hearth
+```
+
+Run
+
+```bash
+hestias-hearth fire twitter -f "C:\Users\me\hestialabs-experiences\packages\lib\data-samples\twitter-small.zip"
 ```
