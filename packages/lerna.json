@@ -5,7 +5,7 @@
   "changelog": false,
   "commitHooks": false,
   "ignoreChanges": ["*.md"],
-  "packages": ["packages/*"],
+  "packages": ["packages/*", "packages/experiences/*"],
   "command": {
     "publish": {
       "registry": "https://registry.npmjs.org/"
