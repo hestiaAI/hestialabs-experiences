@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/data-experience",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "analyse the data companies collect on you",
   "repository": {
     "type": "git",
@@ -20,13 +20,13 @@
     "dev:monorepo": "cd ../packages && npm run dev",
     "dev:bubble-server": "cd ../../hestialabs-bubble-server/bubbleserver && cross-env DJANGO_DEBUG=True poetry run python ./manage.py runserver",
     "lint": "vue-cli-service lint",
-    "build": "vue-cli-service build --target lib --name data-experience src/main.js",
+    "build": "vue-cli-service build --target lib --name DataExperience src/main.js",
     "build-watch": "npm run build -- --watch",
     "build:demo": "vue-cli-service build --dest demo ./dev/main.js",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
     "lint:fix": "npx eslint . --ext .vue --fix"
   },
-  "main": "dist/data-experience.umd.js",
+  "main": "dist/DataExperience.umd.js",
   "dependencies": {
     "@uppy/core": "^2.0.2",
     "@uppy/dashboard": "^2.3.0",
