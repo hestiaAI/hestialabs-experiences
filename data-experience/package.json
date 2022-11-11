@@ -1,6 +1,17 @@
 {
-  "name": "data-experience",
+  "name": "@hestia.ai/data-experience",
   "version": "0.1.0",
+  "description": "analyse the data companies collect on you",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hestiaai/hestialabs-experiences.git"
+  },
+  "author": "hestia.ai",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/hestiaai/hestialabs-experiences/issues"
+  },
+  "homepage": "https://github.com/hestiaAI/hestialabs-experiences/blob/master/data-experience/README.md",
   "scripts": {
     "test": "jest",
     "postinstall": "node postinstall.js",
