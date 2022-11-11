@@ -83,7 +83,7 @@ npm run build
 npm link --workspaces
 cd ../data-experience
 npm install
-npm run build-lib
+npm run build
 cd ../experiences
 npm install
 rm -rf dist

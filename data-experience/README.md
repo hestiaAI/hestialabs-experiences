@@ -3,39 +3,39 @@
 ## build library
 
 ```
-npm run build-lib
+npm run build
 ```
+
+## publish to npm
+
+First increment version in package.json
+
+```
+npm run build
+npm publish
+```
+
+Version 0.1.0 of the library can be imported from this cdn:
+
+https://unpkg.com/@hestia.ai/data-experience@0.1.0/dist/data-experience.umd.js
 
 ## Project setup
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Compiles example and hot-reloads for development
+The example is in folder *dev*
 ```
-npm run serve
+npm run dev
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+This example can be built with 
+ ```
+npm run build:demo
+ ```
 
 ### Lints and fixes files
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-
-### This project was created with vue-cli
-
-``` sh
-npm init
-npm install @vue/cli
-npx vue create experience-component
-```
-
-And then modified according to https://itnext.io/create-a-vue-js-component-library-as-a-module-part-1-a1116e632751
