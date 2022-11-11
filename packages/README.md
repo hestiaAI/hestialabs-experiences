@@ -63,7 +63,7 @@ npm run build
 
 ## Test
 
-Run tests for all packages:
+Run tests for all packages in `packages/experiences/`:
 
 ```sh
 npm test
@@ -77,7 +77,7 @@ npm run test:ts-node -- <package1> [<package2> ...]
 
 ## Package management
 
-This section explains how packages are created and updated
+This section explains how packages for experiences are created and updated. Similar principles apply to other packages.
 
 ### Create a new package
 
@@ -141,12 +141,17 @@ npm login --scope=@hestia.ai --registry=https://registry.npmjs.org/
 
 ### Bump version of packages changed since the last release
 
+Create a new branch and commit your changes:
+
 ```sh
-# create a new branch and commit your changes
 git checkout -b <name-of-your-new-branch>
 git push origin <name-of-your-new-branch>
 git commit ...
-# update version in package.json, commit it, and push to branch
+```
+
+Update the package version
+
+```sh
 npm run lerna:version
 ```
 
@@ -156,8 +161,16 @@ You can pass extra arguments to the npm script:
 
 ```sh
 npm run lerna:version -- --no-push
-npm run lerna:version -- --force-publish=*
+npm run lerna:version -- minor --force-publish=*
 ```
+
+Please update versions with a meaningful [semantic versioning](https://docs.npmjs.com/about-semantic-versioning) (semver) bump depending on the size/importance of the package changes.
+
+- `patch`: 1.2.3 -> 1.2.4
+- `minor`: 1.2.3 -> 1.3.0
+- `major`: 1.2.3 -> 2.0.0
+
+You can either input the new version manually or provide a semver [bump](https://github.com/lerna/lerna/tree/main/commands/version#semver-bump) positional argument.
 
 **NOTE: You cannot version and publish packages on the master branch**
 
