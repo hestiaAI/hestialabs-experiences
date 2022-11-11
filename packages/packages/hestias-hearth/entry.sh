@@ -13,4 +13,4 @@ script_path="$dir_path/index.mjs"
 
 node_path="$(which node)"
 
-"$node_path" --experimental-specifier-resolution=node "$script_path" "$@"
+"$node_path" --no-warnings --experimental-specifier-resolution=node "$script_path" "$@"
