@@ -9,7 +9,9 @@
   },
   "type": "module",
   "workspaces": [
-    "./packages/*"
+    "./packages/experiences/*",
+    "./packages/hestias-hearth",
+    "./packages/kepler-iframe"
   ],
   "scripts": {
     "webpack": "webpack --progress",
