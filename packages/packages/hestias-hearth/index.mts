@@ -59,7 +59,7 @@ const { TEXT } = SQLType
 const cwd = process.cwd()
 
 const argv = yargs(hideBin(process.argv))
-  .scriptName('hestia-hearth')
+  .scriptName('hestias-hearth')
   .usage('$0 <cmd> [args]')
   .command(
     'fire <experience>',
