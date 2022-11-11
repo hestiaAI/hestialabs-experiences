@@ -5,5 +5,5 @@ dir_path="$(dirname $full_path)"
 script_path="$dir_path/index.mjs"
 
 node_path="$(which node)"
-
-$node_path --experimental-specifier-resolution=node $script_path "$@"
+echo $full_path $dir_path $script_path $node_path
+"$node_path" --experimental-specifier-resolution=node "$script_path" "$@"
