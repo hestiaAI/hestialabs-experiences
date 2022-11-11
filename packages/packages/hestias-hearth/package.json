@@ -24,10 +24,9 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "node --no-warnings --experimental-specifier-resolution node ./bin/packages/packages/hestias-hearth/index.mjs",
-    "ts-node": "node --loader ts-node/esm --experimental-specifier-resolution node ./index.mts",
     "clean": "rimraf ./bin",
-    "dev": "npm run clean && npm run copy-files && tsc -w",
     "build": "npm run clean && npm run copy-files && tsc",
+    "dev": "npm run build -- -w",
     "copy-files": "copyfiles --flat ../../node_modules/sql.js/dist/sql-wasm.wasm ./bin/data-experience/src/utils && copyfiles ./entry.sh ./bin/packages/packages/hestias-hearth"
   },
   "devDependencies": {
