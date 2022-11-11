@@ -32,6 +32,15 @@ export default {
       required: true
     },
     /**
+     * Whether or not each value should be considered as an array
+     * eg here col2 should be considered and an array:
+     * [ { col1: "test", col2: ["test1", "test2"] }, ... ]
+     */
+    valueAsArray: {
+      type: Boolean,
+      default: false
+    },
+    /**
      * If defined, calculates the sum of the column named {sumAccessor} over {valueAccessor}.
      * Otherwise, takes the count of the unique {valueAccessor}.
      */
@@ -70,8 +79,21 @@ export default {
       })
 
       // Create dimensions
-      const topDimension = this.ndx.dimension(d => d[this.valueAccessor] || this.defaultValue)
-      topSearch.dimension(this.ndx.dimension(d => (d[this.valueAccessor] || this.defaultValue).toLowerCase()))
+      const topDimension = this.ndx.dimension((d) => {
+        if (this.valueAsArray) {
+          return JSON.parse(d[this.valueAccessor]) || [this.defaultValue]
+        } else {
+          return d[this.valueAccessor] || this.defaultValue
+        }
+      }, this.valueAsArray)
+
+      topSearch.dimension(this.ndx.dimension((d) => {
+        if (this.valueAsArray) {
+          return JSON.parse(d[this.valueAccessor].toLowerCase()) || [this.defaultValue.toLowerCase()]
+        } else {
+          return (d[this.valueAccessor] || this.defaultValue).toLowerCase()
+        }
+      }, this.valueAsArray))
 
       // Create group
       const topGroup = this.sumAccessor ? topDimension.group().reduceSum(d => d[this.sumAccessor]) : topDimension.group().reduceCount()

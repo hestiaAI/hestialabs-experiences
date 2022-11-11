@@ -4,13 +4,15 @@ import allInferences from './sql/inference.sql'
 import allConnections from './sql/connection.sql'
 import allAdTargeting from './sql/ad-targeting.sql'
 
+import { strToArray } from './postprocessors'
+
 const blocks: ViewBlocks = [
   {
     id: 'inference',
     sql: allInferences,
     files: ['inference'],
     showTable: true,
-    // visualization: 'ChartViewListLinkedinInference.vue',
+    visualization: 'ChartViewListLinkedinInference.vue',
     title: 'Inferences about your group',
     text: 'The cards below represent the inferences (positive or negative) that Linkedin has made about the members of your group, classified according to the number of occurrences (from the most present to the least present inference).'
   },
@@ -18,8 +20,67 @@ const blocks: ViewBlocks = [
     id: 'ad-targeting',
     sql: allAdTargeting,
     files: ['ad-targeting'],
-    showTable: true,
-    // visualization: 'ChartViewLinkedinAdTargeting.vue',
+    showTable: false,
+    postprocessor: strToArray,
+    visualization: 'ChartViewDashboard.vue',
+    vizProps: {
+      graphs: [
+        {
+          valueLabel: 'occurences',
+          title: 'Skills',
+          cols: '4',
+          height: 220,
+          type: 'TopChart.vue',
+          valueAccessor: 'memberSkills',
+          valueAsArray: true
+        },
+        {
+          valueLabel: 'occurences',
+          title: 'Job Seniorities',
+          cols: '4',
+          height: 220,
+          type: 'TopChart.vue',
+          valueAccessor: 'jobSeniorities',
+          valueAsArray: true
+        },
+        {
+          valueLabel: 'occurences',
+          title: 'Years of experience',
+          cols: '4',
+          height: 220,
+          type: 'TopChart.vue',
+          valueAccessor: 'yearsOfExperience',
+          valueAsArray: true
+        },
+        {
+          valueLabel: 'occurences',
+          title: 'Degrees',
+          cols: '4',
+          height: 220,
+          type: 'TopChart.vue',
+          valueAccessor: 'degrees',
+          valueAsArray: true
+        },
+        {
+          valueLabel: 'occurences',
+          title: 'Fields of Study',
+          cols: '4',
+          height: 220,
+          type: 'TopChart.vue',
+          valueAccessor: 'fieldsOfStudy',
+          valueAsArray: true
+        },
+        {
+          valueLabel: 'occurences',
+          title: 'Member schools',
+          cols: '4',
+          height: 220,
+          type: 'TopChart.vue',
+          valueAccessor: 'memberSchools',
+          valueAsArray: true
+        }
+      ]
+    },
     title: 'Skills and diversity',
     text: 'The charts below represent the criteria Linkedin uses to determine which ads to show to your group members. They draw an interesting map of the skills and experiences of your group and its diversity.'
   },
@@ -27,8 +88,37 @@ const blocks: ViewBlocks = [
     id: 'connections',
     sql: allConnections,
     files: ['connections'],
-    showTable: true,
-    // visualization: 'ChartViewOverviewLinkedinConnection.vue',
+    showTable: false,
+    visualization: 'ChartViewDashboard.vue',
+    vizProps: {
+      graphs: [
+        {
+          valueLabel: 'contacts',
+          title: 'Number of new connections',
+          cols: '12',
+          height: 220,
+          type: 'TimelineChart.vue',
+          dateAccessor: 'connectedOn',
+          cumulativeGroup: true
+        },
+        {
+          valueLabel: 'contacts',
+          title: 'Employers of your contacts',
+          cols: '6',
+          height: 220,
+          type: 'TopChart.vue',
+          valueAccessor: 'company'
+        },
+        {
+          valueLabel: 'contacts',
+          title: 'Jobs of your contacts',
+          cols: '6',
+          height: 220,
+          type: 'TopChart.vue',
+          valueAccessor: 'position'
+        }
+      ]
+    },
     title: 'Collective network ( Reach )',
     text: "This infographic represents the scope of your group's network. Clicking on an item will filter all the graphs according to this criterion."
   }

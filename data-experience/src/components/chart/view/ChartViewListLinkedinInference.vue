@@ -57,7 +57,13 @@
         xl="2"
       >
         <VCard height="100%" class="d-flex flex-column">
-          <VCardTitle>{{ i.typeOfInference }}</VCardTitle>
+          <VCardTitle class="d-flex flex-nowrap align-start justify-space-between">
+            <div>{{ i.typeOfInference }}</div>
+            <div class="text-center ml-2" v-if="'_count' in i">
+              <div class="text-subtitle-2">{{ i._count }}</div>
+              <div class="text-caption">{{ $tc('profile', i._count) }}</div>
+            </div>
+          </VCardTitle>
           <VCardSubtitle>{{ i.category }}</VCardSubtitle>
           <VCardText>{{ i.description }}</VCardText>
           <VSpacer />
