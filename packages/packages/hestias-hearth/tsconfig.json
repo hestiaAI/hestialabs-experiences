@@ -13,7 +13,7 @@
     "allowSyntheticDefaultImports": true,
     "types": ["node"],
     "paths": {
-      "@/*": ["../lib/*"]
+      "@/*": ["../../lib/*"]
     },
     "baseUrl": "./",
     // https://bobbyhadz.com/blog/typescript-cannot-find-module

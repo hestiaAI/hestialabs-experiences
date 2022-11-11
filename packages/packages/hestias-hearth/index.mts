@@ -13,19 +13,19 @@ import { camelCase } from 'lodash-es'
 import yargs from 'yargs/yargs'
 import { hideBin } from 'yargs/helpers'
 
-import appleTracker from '../packages/experiences/apple-tracker/dist/index.mjs'
-import facebook from '../packages/experiences/facebook/dist/index.mjs'
-import google from '../packages/experiences/google/dist/index.mjs'
-import her from '../packages/experiences/her/dist/index.mjs'
-import instagram from '../packages/experiences/instagram/dist/index.mjs'
-import linkedin from '../packages/experiences/linkedin/dist/index.mjs'
-import netflix from '../packages/experiences/netflix/dist/index.mjs'
-import tiktok from '../packages/experiences/tiktok/dist/index.mjs'
-import tinder from '../packages/experiences/tinder/dist/index.mjs'
-import trackerControl from '../packages/experiences/tracker-control/dist/index.mjs'
-import twitter from '../packages/experiences/twitter/dist/index.mjs'
-import uber from '../packages/experiences/uber/dist/index.mjs'
-import uberDriver from '../packages/experiences/uber-driver/dist/index.mjs'
+import appleTracker from '../experiences/apple-tracker/dist/index.mjs'
+import facebook from '../experiences/facebook/dist/index.mjs'
+import google from '../experiences/google/dist/index.mjs'
+import her from '../experiences/her/dist/index.mjs'
+import instagram from '../experiences/instagram/dist/index.mjs'
+import linkedin from '../experiences/linkedin/dist/index.mjs'
+import netflix from '../experiences/netflix/dist/index.mjs'
+import tiktok from '../experiences/tiktok/dist/index.mjs'
+import tinder from '../experiences/tinder/dist/index.mjs'
+import trackerControl from '../experiences/tracker-control/dist/index.mjs'
+import twitter from '../experiences/twitter/dist/index.mjs'
+import uber from '../experiences/uber/dist/index.mjs'
+import uberDriver from '../experiences/uber-driver/dist/index.mjs'
 
 const experiences: { [key: string]: { options: ExperienceOptions } } = {
   appleTracker,
@@ -43,12 +43,12 @@ const experiences: { [key: string]: { options: ExperienceOptions } } = {
   uberDriver
 }
 
-import { SQLType } from '../lib/types/database-config.js'
-import { getCsvAndMergeFromID } from '../lib/pipelines/custom.js'
-import DBMS from '../../data-experience/src/utils/sql.js'
-import FileManager from '../../data-experience/src/utils/file-manager.js'
-import NodeFile from '../../data-experience/src/utils/node-file.js'
-// import fileManagerWorkers from '../../data-experience/utils/file-manager-workers.js'
+import { SQLType } from '../../lib/types/database-config.js'
+import { getCsvAndMergeFromID } from '../../lib/pipelines/custom.js'
+import DBMS from '../../../data-experience/src/utils/sql.js'
+import FileManager from '../../../data-experience/src/utils/file-manager.js'
+import NodeFile from '../../../data-experience/src/utils/node-file.js'
+// import fileManagerWorkers from '../../../data-experience/utils/file-manager-workers.js'
 
 const pascalCase = (str: string) =>
   camelCase(str).replace(/^./, firstChar => firstChar.toUpperCase())
@@ -71,8 +71,7 @@ const argv = yargs(hideBin(process.argv))
           choices: Object.keys(experiences)
         })
         .option('files', {
-          describe:
-            'input file paths relative to the current working directory',
+          describe: 'absolute paths to data files',
           array: true,
           type: 'array',
           alias: 'f',
@@ -86,17 +85,17 @@ const argv = yargs(hideBin(process.argv))
 
 const { experience, files } = argv
 
-// ;(async () => {
-// You can use await inside this function block
+console.info('Creating Node Files...')
 const nodeFiles = (files as string[]).map(filename => {
-  const filePath = path.join(cwd, filename)
-  const buffer = fs.readFileSync(filePath)
+  // const filePath = path.join(cwd, filename)
+  const buffer = fs.readFileSync(filename)
   const content = filename.endsWith('.zip') ? buffer : buffer.toString()
-  return new NodeFile(filePath, content)
+  return new NodeFile(filename, content)
 })
 
 const { options } = experiences[experience as string]
 
+console.info('Initializing File Manager...')
 const fileManager = new FileManager(
   options.preprocessors,
   null,
@@ -107,6 +106,7 @@ const fileManager = new FileManager(
 await fileManager.init(nodeFiles)
 
 // create database
+console.info('Creating Database...')
 let db
 let records
 if (options.databaseConfig) {
@@ -156,13 +156,19 @@ if (options.databaseConfig) {
 }
 
 // insert the records into the database
+console.info('Inserting Database Records...')
 DBMS.insertRecords(db, records)
 
 // export the database
+console.info('Exporting Database Records...')
 const data = db.export()
 const buffer = Buffer.from(data)
-const writePath = path.join(cwd, 'sqlite')
-if (!fs.existsSync(writePath)) {
-  fs.mkdirSync(writePath, { recursive: true })
+const dirPath = path.join(cwd, 'sqlite')
+if (!fs.existsSync(dirPath)) {
+  fs.mkdirSync(dirPath, { recursive: true })
 }
-fs.writeFileSync(path.join(writePath, 'db.sqlite'), buffer)
+const filePath = path.join(dirPath, 'db.sqlite')
+fs.writeFileSync(filePath, buffer)
+
+console.info(`Database Exported to ${filePath}`)
+console.info('Done')

@@ -16,7 +16,7 @@ export default {
       `npm run test:ts-node -- ${packagesFiltered.join(' ')}`
     ]
   },
-  '*.ts': filenames =>
+  '*.{ts,mts}': filenames =>
     // only lint changed files
     `npm run lint -- --fix ${filenames.join(' ')}`,
   '*.{md,json,eslintrc,prettierrc}': filenames =>

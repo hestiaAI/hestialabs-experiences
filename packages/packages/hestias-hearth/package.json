@@ -1,13 +1,13 @@
 {
   "name": "@hestia.ai/hestias-hearth",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Hestia’s Hearth",
   "type": "module",
   "engines": {
     "node": "18.12.x"
   },
   "bin": {
-    "hestias-hearth": "./bin/packages/hestias-hearth/index.mjs"
+    "hestias-hearth": "./bin/entry.sh"
   },
   "files": [
     "bin"
@@ -23,12 +23,12 @@
   "author": "",
   "license": "UNLICENSED",
   "scripts": {
-    "start": "node --no-warnings --experimental-specifier-resolution node ./bin/packages/hestias-hearth/index.mjs",
+    "start": "node --no-warnings --experimental-specifier-resolution node ./bin/packages/packages/hestias-hearth/index.mjs",
     "ts-node": "node --loader ts-node/esm --experimental-specifier-resolution node ./index.mts",
     "clean": "rimraf ./bin",
     "dev": "npm run clean && npm run copy-files && tsc -w",
     "build": "npm run clean && npm run copy-files && tsc",
-    "copy-files": "copyfiles --flat ./node_modules/sql.js/dist/sql-wasm.wasm ./bin/data-experience/src/utils"
+    "copy-files": "copyfiles --flat ../../node_modules/sql.js/dist/sql-wasm.wasm ./bin/data-experience/src/utils && copyfiles ./entry.sh ./bin"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.6",
@@ -47,7 +47,7 @@
     "lodash-es": "^4.17.21",
     "papaparse": "^5.3.2",
     "spark-md5": "^3.0.2",
-    "sql.js": "^1.7.0",
+    "sql.js": "^1.8.0",
     "yargs": "^17.5.1"
   }
 }
