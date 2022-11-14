@@ -1,13 +1,13 @@
 {
   "en": {
     "intro": {
-      "title": "LinkedIn",
-      "dataPortal": "https://www.linkedin.com/help/linkedin/answer/50191/downloading-your-account-data"
+      "title": "Collective LinkedIn experience",
+      "subtitle": "Unlock the power of Linkedin data"
     },
     "viewBlocks": {
       "inference": {
-        "title": "Inferences about you",
-        "text": "Each card below represents an inference that Linkedin has made about you, either positively or negatively, e.g. Am I a joob seeker -> true or false.",
+        "title": "Inferences about your group",
+        "text": "The cards below represent the inferences (positive or negative) that Linkedin has made about the members of your group, classified according to the number of occurrences (from the most present to the least present inference).",
         "vizProps": {
           "messages": {
             "Filter by Category": "Filter by Category",
@@ -28,9 +28,37 @@
         }
       },
       "ad-targeting": {
-        "title": "Ad targeting",
-        "text": "This information is used by Linkedin to determine which ads to show you. Some of the targeting data may be derived from other information you have provided to them. For example, they may use your title as an indication of your seniority level.",
-        "names": {
+        "title": "Skills and diversity",
+        "text": "The charts below represent the criteria Linkedin uses to determine which ads to show to your group members. They draw an interesting map of the skills and experiences of your group and its diversity.",
+        "vizProps": {
+          "graphs": [
+            {
+              "valueLabel": "profiles",
+              "title": "Skills"
+            },
+            {
+              "valueLabel": "profiles",
+              "title": "Job Seniorities"
+            },
+            {
+              "valueLabel": "profiles",
+              "title": "Years of experience"
+            },
+            {
+              "valueLabel": "profiles",
+              "title": "Degrees"
+            },
+            {
+              "valueLabel": "profiles",
+              "title": "Fields of Study"
+            },
+            {
+              "valueLabel": "profiles",
+              "title": "Member schools"
+            }
+          ]
+        },
+        "headers": {
           "memberAge": "Member Age",
           "companyNames": "Company Names",
           "companyFollowerOf": "Company Follower of",
@@ -57,43 +85,43 @@
           "jobSeniorities": "Job Seniorities",
           "memberSkills": "Member Skills",
           "jobTitles": "Job Titles",
-          "yearsOfExperience": "Years of Experience"
+          "yearsOfExperience": "Years of Experience",
+          "filePath": "File ID"
         }
       },
       "connections": {
-        "title": "Connections",
-        "text": "This tool allows you to track all the connections you have made with Linkedin, you can filter by date, day or by company and position in your address book.",
-        "selected-some": "{filterCount} connections selected out of {totalCount} views",
-        "selected-all": "All {totalCount} connections selected.",
+        "title": "Collective network ( Reach )",
+        "text": "This infographic represents the scope of your group's network. Clicking on an item will filter all the graphs according to this criterion.",
         "vizProps": {
-          "messages": {
-            "Cumulative number of connections": "Cumulative number of connections",
-            "Company": "Company",
-            "Position": "Position",
-            "Day": "Day",
-            "time range": "time range"
-          }
-        },
-        "headers": {
-          "First Name": "First Name",
-          "Last Name": "Last Name",
-          "Email Address": "Email Address",
-          "Company": "Company",
-          "Position": "Position",
-          "Connected On": "Connected On"
+          "graphs": [
+            {
+              "valueLabel": "contacts",
+              "title": "Number of new connections"
+            },
+            {
+              "valueLabel": "contacts",
+              "title": "Employers of your contacts",
+              "defaultValue": "Not mentioned"
+            },
+            {
+              "valueLabel": "contacts",
+              "title": "Jobs of your contacts",
+              "defaultValue": "Not mentioned"
+            }
+          ]
         }
       }
     }
   },
   "fr": {
     "intro": {
-      "title": "LinkedIn",
-      "dataPortal": "https://www.linkedin.com/help/linkedin/answer/50191/downloading-your-account-data"
+      "title": "LinkedIn expérience collective",
+      "subtitle": "Libérez la puissance des données Linkedin"
     },
     "viewBlocks": {
       "inference": {
-        "title": "Données inférées",
-        "text": "Chacun des éléments ci-dessous décrit une inférence que Linkedin a faite à votre sujet, en positif ou négatif. Par exemple, \"je recherche un emploi\", vrai ou faux.",
+        "title": "Données inférées sur votre groupe",
+        "text": "Les cartes ci-dessous représentent les inférences (positives ou négatives) que Linkedin a faites sur les membres de votre groupe, classées selon le nombre d'occurrences (de l'inférence la plus présente à l'inférence la moins présente).",
         "vizProps": {
           "messages": {
             "Filter by Category": "Filtrer par catégorie",
@@ -114,9 +142,37 @@
         }
       },
       "ad-targeting": {
-        "title": "Ciblage publicitaire",
-        "text": "Information utilisée par Linkedin pour choisir les publicités à vous montrer. Une partie de l'information de ciblage peut découler d'informations que vous avez vous-même fournies. Par exemple, votre titre peut donner des indications sur votre niveau hiérarchique.",
-        "names": {
+        "title": "Compétences et diversité",
+        "text": "Les graphiques ci-dessous représentent les critères utilisés par Linkedin pour déterminer les annonces à montrer aux membres de votre groupe. Ils dessinent une carte intéressante des compétences et expériences de votre groupe et de sa diversité.",
+        "vizProps": {
+          "graphs": [
+            {
+              "valueLabel": "profils",
+              "title": "Compétences"
+            },
+            {
+              "valueLabel": "profils",
+              "title": "Ancienneté dans l'emploi"
+            },
+            {
+              "valueLabel": "profils",
+              "title": "Années d'expérience"
+            },
+            {
+              "valueLabel": "profils",
+              "title": "Diplômes"
+            },
+            {
+              "valueLabel": "profils",
+              "title": "Domaines d'études"
+            },
+            {
+              "valueLabel": "profils",
+              "title": "Écoles"
+            }
+          ]
+        },
+        "headers": {
           "memberAge": "Âge du membre",
           "companyNames": "Noms des entreprises",
           "companyFollowerOf": "Suivi de l'entreprise",
@@ -143,30 +199,30 @@
           "jobSeniorities": "Ancienneté des emplois",
           "memberSkills": "Compétences des membres",
           "jobTitles": "Titres des emplois",
-          "yearsOfExperience": "Années d'expérience"
+          "yearsOfExperience": "Années d'expérience",
+          "filePath": "ID du fichier"
         }
       },
       "connections": {
-        "title": "Connections",
-        "text": "Cet outil vous permet d'examiner les connections que vous avez nouées par Linkedin, filtrables par date, société ou poste dans votre carnet d'adresse.",
-        "selected-some": "{filterCount} connexions sélectionnées sur {totalCount} vues",
-        "selected-all": "Toutes les {totalCount} connexions sont sélectionnées.",
+        "title": "Réseau collectif (portée)",
+        "text": "Cette infographie représente l'étendue du réseau de votre groupe. En cliquant sur un élément, vous filtrerez tous les graphiques en fonction de ce critère.",
         "vizProps": {
-          "messages": {
-            "Cumulative number of connections": "Nombre cumulé de connexions",
-            "Company": "Entreprise",
-            "Position": "Position",
-            "Day": "Jour",
-            "time range": "plage de temps"
-          }
-        },
-        "headers": {
-          "First Name": "Prénom",
-          "Last Name": "Nom",
-          "Email Address": "Adresse électronique",
-          "Company": "Entreprise",
-          "Position": "Poste",
-          "Connected On": "Connecté sur"
+          "graphs": [
+            {
+              "valueLabel": "contacts",
+              "title": "Nombre de nouvelles connexions"
+            },
+            {
+              "valueLabel": "contacts",
+              "title": "Employeurs de vos contacts",
+              "defaultValue": "Non mentionné"
+            },
+            {
+              "valueLabel": "contacts",
+              "title": "Emplois de vos contacts",
+              "defaultValue": "Non mentionné"
+            }
+          ]
         }
       }
     }

@@ -11,7 +11,7 @@ const blocks: ViewBlocks = [
     id: 'inference',
     sql: allInferences,
     files: ['inference'],
-    showTable: true,
+    showTable: false,
     visualization: 'ChartViewListLinkedinInference.vue',
     title: 'Inferences about your group',
     text: 'The cards below represent the inferences (positive or negative) that Linkedin has made about the members of your group, classified according to the number of occurrences (from the most present to the least present inference).'
@@ -41,6 +41,8 @@ const blocks: ViewBlocks = [
           height: 220,
           type: 'TopChart.vue',
           valueAccessor: 'jobSeniorities',
+          isScrollable: true,
+          topK: 100,
           valueAsArray: true
         },
         {
@@ -107,6 +109,9 @@ const blocks: ViewBlocks = [
           cols: '6',
           height: 220,
           type: 'TopChart.vue',
+          isScrollable: true,
+          topK: 100,
+          defaultValue: 'Not mentioned',
           valueAccessor: 'company'
         },
         {
@@ -115,6 +120,9 @@ const blocks: ViewBlocks = [
           cols: '6',
           height: 220,
           type: 'TopChart.vue',
+          isScrollable: true,
+          topK: 100,
+          defaultValue: 'Not mentioned',
           valueAccessor: 'position'
         }
       ]

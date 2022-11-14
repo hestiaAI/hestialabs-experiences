@@ -64,8 +64,8 @@ export default {
         .groupAll(all)
         .html({
           some: `<strong>%filter-count</strong> ${this.$t('selected-out-of')} <strong>%total-count</strong> ` +
-                    `records | <a class='resetAll'>${this.$t('Reset All')}</a>`,
-          all: `Total: <strong>%total-count</strong> records. ${this.$t('click-graph')}`
+                    `${this.$t('records')} | <a class='resetAll'>${this.$t('Reset All')}</a>`,
+          all: `Total: <strong>%total-count</strong> ${this.$t('records')}. ${this.$t('click-graph')}`
         })
         .on('pretransition', (chart, filter) => {
           this.results = this.ndx.allFiltered()

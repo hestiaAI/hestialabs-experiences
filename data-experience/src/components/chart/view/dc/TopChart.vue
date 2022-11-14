@@ -1,13 +1,13 @@
 <template>
-  <VContainer>
-    <div :id="`top-chart-${graphId}`">
-      <div style="display: flex">
+  <VContainer :style="cssProps">
+    <div style="display: flex">
         <strong>{{ title }}</strong>
         <VSpacer />
         <div :id="`top-search-${graphId}`" />
-      </div>
-      <ChartViewFilters />
     </div>
+    <ChartViewFilters />
+    <div :id="`top-chart-${graphId}`" :class="{ isScrollable }"></div>
+    <div :id="`top-chart-${graphId}-axis`"></div>
   </VContainer>
 </template>
 <script>
@@ -16,6 +16,7 @@ import * as dc from 'dc'
 import { removeEmptyBins } from '../utils/dc-helpers'
 import mixin from './mixin'
 import ChartViewFilters from '../filters/ChartViewFilters.vue'
+require('../utils/dc-axis.js')
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -56,6 +57,13 @@ export default {
       default: 10
     },
     /**
+     * Define if the chart should be scrollable to see all values
+     */
+    isScrollable: {
+      type: Boolean,
+      default: false
+    },
+    /**
      * If one of {valueAccessor} is null, replace the value with a default
      */
     defaultValue: {
@@ -63,8 +71,12 @@ export default {
       default: ''
     }
   },
-  data() {
-    return {}
+  computed: {
+    cssProps() {
+      return {
+        '--height': (this.height + 6.5) + 'px'
+      }
+    }
   },
   methods: {
     drawViz() {
@@ -98,15 +110,16 @@ export default {
       // Create group
       const topGroup = this.sumAccessor ? topDimension.group().reduceSum(d => d[this.sumAccessor]) : topDimension.group().reduceCount()
 
+      // replace 100 by topGroup.size() to see all records but can slowdown a lot
+      const height = this.isScrollable ? Math.max(Math.min(this.topK, topGroup.size()) * 20, this.height) : this.height
+      const width = d3.select(`#top-chart-${this.graphId}`).node().getBoundingClientRect().width
+
       // Create top row chart
       topChart
-        .width(
-          d3.select(`#top-chart-${this.graphId}`).node().getBoundingClientRect()
-            .width
-        )
-        .height(this.height)
-        .margins({ top: 20, left: 10, right: 10, bottom: 20 })
-        .group(removeEmptyBins(topGroup))
+        .width(width)
+        .height(height)
+        .margins({ top: 20, left: 10, right: 10, bottom: -5 })
+        .group(this.isScrollable ? topGroup : removeEmptyBins(topGroup))
         .dimension(topDimension)
         .ordinalColors(this.colorPalette)
         .label(d => d.key)
@@ -114,6 +127,16 @@ export default {
         .title(d => `${d.value} ${this.valueLabel}`)
         .elasticX(true)
         .xAxis()
+        .ticks(4)
+
+      dc.axisChart(`#top-chart-${this.graphId}-axis`)
+        .margins({ top: 0, left: 10, right: 10, bottom: 10 })
+        .height(20)
+        .width(width)
+        .dimension(topDimension)
+        .group(topGroup)
+        .elastic(true)
+        .axis()
         .ticks(4)
 
       dc.renderAll()
@@ -128,5 +151,9 @@ export default {
   color: #596471;
   border-bottom: 1px solid #596471;
   outline: none;
+}
+.isScrollable {
+  overflow-y: auto;
+  height: var(--height);
 }
 </style>
