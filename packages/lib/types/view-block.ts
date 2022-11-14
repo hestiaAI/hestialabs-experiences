@@ -2,14 +2,13 @@ type CustomPipelineOptions = object | object[]
 
 import type { FileManager, PipelineOutput } from './utils'
 export type PostprocessorFunction = (input: PipelineOutput) => PipelineOutput
+export type CustomPipeline = (params: {
+  fileManager: FileManager
+  options?: CustomPipelineOptions
+}) => Promise<PipelineOutput | { rawCsv: string; config: object }>
 
 export type ViewBlock = {
-  customPipeline?:
-    | string
-    | ((params: {
-        fileManager: FileManager
-        options?: CustomPipelineOptions
-      }) => Promise<PipelineOutput | { rawCsv: string; config: object }>)
+  customPipeline?: string | CustomPipeline
   customPipelineOptions?: CustomPipelineOptions
   files?: string[]
   id: string

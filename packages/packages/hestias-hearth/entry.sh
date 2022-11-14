@@ -7,10 +7,9 @@
 
 # second attempt:
 # inspired by https://github.com/21RISK/yargs-autocomplete/blob/main/test-cli.sh
-full_path="$(realpath "$0")"
-dir_path="$(dirname $full_path)"
-script_path="$dir_path/index.mjs"
+dir_path="$(dirname $(realpath "$0"))" || "$(python -c 'import os, sys; print(os.path.dirname(os.path.realpath(sys.argv[1])))' "$0")"
 
+script_path="$dir_path/index.mjs"
 node_path="$(which node)"
 
 "$node_path" --no-warnings --experimental-specifier-resolution=node "$script_path" "$@"

@@ -6,7 +6,9 @@ import type {
   DatabaseTables
 } from '@/types/database-config'
 import type { NonEmptyArray, PipelineOutputItems } from '@/types/utils'
+import type { CustomPipeline } from '@/types/view-block'
 
+import { homedir } from 'os'
 import fs from 'fs'
 import path from 'path'
 
@@ -49,14 +51,17 @@ import { getCsvAndMergeFromID } from '../../lib/pipelines/custom.js'
 import DBMS from '../../../data-experience/src/utils/sql.js'
 import FileManager from '../../../data-experience/src/utils/file-manager.js'
 import NodeFile from '../../../data-experience/src/utils/node-file.js'
+import genericPipelines from '../../../data-experience/src/utils/generic-pipelines.js'
 // import fileManagerWorkers from '../../../data-experience/utils/file-manager-workers.js'
 
 const pascalCase = (str: string) =>
   camelCase(str).replace(/^./, firstChar => firstChar.toUpperCase())
 
-const { TEXT } = SQLType
-
-const cwd = process.cwd()
+const outputDir = path.join(homedir(), 'hestias-hearth')
+const outputDirViewBlocks = path.join(outputDir, 'view-blocks')
+if (!fs.existsSync(outputDirViewBlocks)) {
+  fs.mkdirSync(outputDirViewBlocks, { recursive: true })
+}
 
 const argv = yargs(hideBin(process.argv))
   .scriptName('hestias-hearth')
@@ -88,7 +93,6 @@ const { experience, files } = argv
 
 console.info('Creating Node Files...')
 const nodeFiles = (files as string[]).map(filename => {
-  // const filePath = path.join(cwd, filename)
   const buffer = fs.readFileSync(filename)
   const content = filename.endsWith('.zip') ? buffer : buffer.toString()
   return new NodeFile(filename, content)
@@ -135,7 +139,9 @@ if (options.databaseConfig) {
 
   if (dataFiltered.length) {
     const tables = dataFiltered.map(({ tableName, headers }) => {
-      const columns: NonEmptyArray<[string, SQLType]> = [[headers[0], TEXT]]
+      const columns: NonEmptyArray<[string, SQLType]> = [
+        [headers[0], SQLType.TEXT]
+      ]
       headers.slice(1).forEach(h => columns.push([h, SQLType.TEXT]))
       const table: DatabaseTable = {
         name: tableName,
@@ -158,18 +164,51 @@ if (options.databaseConfig) {
 
 // insert the records into the database
 console.info('Inserting Database Records...')
+console.info('Table names:', Object.keys(records))
 DBMS.insertRecords(db, records)
 
 // export the database
 console.info('Exporting Database Records...')
 const data = db.export()
 const buffer = Buffer.from(data)
-const dirPath = path.join(cwd, 'sqlite')
-if (!fs.existsSync(dirPath)) {
-  fs.mkdirSync(dirPath, { recursive: true })
-}
-const filePath = path.join(dirPath, 'db.sqlite')
+
+const filePath = path.join(outputDir, 'db.sqlite')
 fs.writeFileSync(filePath, buffer)
 
 console.info(`Database Exported to ${filePath}`)
+
+console.info('Writing View-Block Outputs...')
+for (const {
+  id,
+  customPipeline,
+  customPipelineOptions,
+  sql,
+  overlay
+} of options.viewBlocks) {
+  let results
+  if (customPipeline) {
+    let pipeline: string | CustomPipeline = customPipeline
+    if (typeof pipeline === 'string') {
+      pipeline = (genericPipelines as { [key: string]: CustomPipeline })[
+        pipeline
+      ]
+    }
+    results = await pipeline({ fileManager, options: customPipelineOptions })
+  } else if (sql) {
+    results = db.select(sql)
+  } else if (overlay) {
+    break
+  } else {
+    throw new TypeError('Invalid view-block')
+  }
+
+  if (results) {
+    const viewBlockFile = path.join(outputDirViewBlocks, `${id}.json`)
+    fs.writeFileSync(viewBlockFile, JSON.stringify(results, null, 2))
+    console.info(`[${id}]: ${viewBlockFile}`)
+  } else {
+    throw new Error(`No results for view-block ${id}`)
+  }
+}
+
 console.info('Done')

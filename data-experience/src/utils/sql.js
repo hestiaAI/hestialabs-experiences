@@ -1,6 +1,6 @@
 import initSqlJs from 'sql.js'
 import { JSONPath } from 'jsonpath-plus'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, uniqBy } from 'lodash-es'
 
 const enforceArray = value => (typeof value === 'string' ? [value] : value)
 
@@ -17,13 +17,18 @@ class Table {
    * @param {Array<Array<String>>} columns an array of columns, each column being an array containing the the name and the type.
    */
   constructor(name, columns) {
+    // Remove duplicated columns to avoid the following error:
+    // "Error: duplicate column name"
+    // This error occurs, for instance, when LinkedIn's Ad_Targeting.csv
+    // is processed with sql.js, because it contains 3 copies of the column "Company Names"
+    const columnsUnique = uniqBy(columns, c => c[0])
     // Sanity check: allow only alphanumeric names and correct types
     const r = /^[a-z0-9]+$/i
     if (!r.test(name)) {
       throw new Error('Invalid table name (should be alphanumeric).')
     }
     const validTypes = ['integer', 'text', 'float', 'date']
-    for (const c of columns) {
+    for (const c of columnsUnique) {
       if (![2, 3].includes(c.length)) {
         const msg = `
           Column definition should consist of a name, a type,
@@ -41,10 +46,10 @@ class Table {
       }
     }
     this.#name = name
-    this.#columnNames = columns.map(c => c[0])
+    this.#columnNames = columnsUnique.map(c => c[0])
     // { [column]: [<type> <keywords?>] }
     this.#datatypes = Object.fromEntries(
-      columns.map(c => [c[0], c.slice(1, 3).join(' ')])
+      columnsUnique.map(c => [c[0], c.slice(1, 3).join(' ')])
     )
   }
 
