@@ -9,9 +9,9 @@ import './assets/dc-custom.css'
 import { MODULE_NAME } from '@/utils/store-helper'
 export { default as vuetifyOpts } from './plugins/vuetify'
 export { default as i18n } from './plugins/i18n'
-// https://github.com/vuetifyjs/vue-cli-plugins/issues/140#issuecomment-599001935
-// new Vue({
-// }).$mount('#app')
+export { default as chartView } from './components/chart/ChartView.vue'
+export { default as chartViewBar } from './components/chart/view/ChartViewBar.vue'
+export { default as chartViewGenericMap } from './components/chart/view/ChartViewGenericMap.vue'
 
 export default {
   install(Vue, options) {

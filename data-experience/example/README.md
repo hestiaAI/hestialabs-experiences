@@ -8,4 +8,5 @@ npm run build
 python -m http.server
 ```
 
-go to http://localhost:8000/example
+for an experience go to http://localhost:8000/example
+for a chart see http://localhost:8000/example/chart.html

@@ -4,29 +4,8 @@ const { defineConfig } = require('@vue/cli-service')
 const path = require('path')
 const isDev = process.env.NODE_ENV === 'development'
 
-// workaround to use publicPath when building a library
-// https://github.com/vuejs/vue-cli/issues/4896#issuecomment-569001811
-const ASSET_PATH = isDev ? '/' : './'
-function PublicPathWebpackPlugin() {}
-PublicPathWebpackPlugin.prototype.apply = function(compiler) {
-  compiler.hooks.entryOption.tap('PublicPathWebpackPlugin', (context, entry) => {
-    if (entry['module.common']) {
-      entry['module.common'] = path.resolve(__dirname, './src/main.js')
-    }
-    if (entry['module.umd']) {
-      entry['module.umd'] = path.resolve(__dirname, './src/main.js')
-    }
-    if (entry['module.umd.min']) {
-      entry['module.umd.min'] = path.resolve(__dirname, './src/main.js')
-    }
-  })
-  compiler.hooks.beforeRun.tap('PublicPathWebpackPlugin', (compiler) => {
-    compiler.options.output.publicPath = ASSET_PATH
-  })
-}
-
 module.exports = defineConfig({
-  publicPath: ASSET_PATH,
+  publicPath: isDev ? '/' : './',
   configureWebpack: {
     resolve: {
       alias: {
@@ -97,8 +76,6 @@ module.exports = defineConfig({
   // not match the path and will not ignore it. Therefore index.html will emit twice.
   // source: https://github.com/vuejs/vue-cli/issues/7043#issuecomment-1069791347
   chainWebpack: (config) => {
-    console.log('publicPath', config.plugins)
-    // config.plugins.unshift(new PublicPathWebpackPlugin())
     if (isDev) {
       config.plugin('copy').tap((args) => {
         const UNESCAPED_GLOB_SYMBOLS_RE = /(\\?)([()*?[\]{|}]|^!|[!+@](?=\())/g

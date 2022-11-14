@@ -2,11 +2,6 @@
 <html>
 <head>
   <title>data-experience</title>
-  <!--
-    Does not work
-  https://stackoverflow.com/questions/55955113/is-this-possible-to-configure-publicpath-in-vue-cli-dynamically-in-runtime
-    -->
-  <!-- <script>__webpack_public_path__ = '../dist/'</script> -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
@@ -17,9 +12,6 @@
   <div id="app">
     <v-app>
       <v-main>
-        <v-container>
-          Hello world
-        </v-container>
         <the-data-experience-2 v-bind="{ experienceConfig, siteConfig }"/>
       </v-main>
     </v-app>
@@ -27,8 +19,9 @@
   <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
   <script type="module"  src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuex@3.6.2/dist/vuex.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@hestia.ai/data-experience@0.3.0/dist/DataExperience.umd.js" type="module"></script>
-  <!-- <script src="/dist/DataExperience.umd.js" type="module"></script> -->
+  <!-- can't use jsdelivr because of the size limit... -->
+<!-- <script src="https://unpkg.com/@hestia.ai/data-experience@0.3.0/dist/DataExperience.umd.min.js" type="module"></script> -->
+  <script src="/dist/DataExperience.umd.js"></script> --
   <script src="index.js" type="module"></script>
 </body>
 </html>
