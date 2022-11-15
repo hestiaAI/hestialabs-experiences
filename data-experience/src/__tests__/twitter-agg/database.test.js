@@ -1,5 +1,3 @@
-// import { readFileSync } from 'fs'
-// import path from 'path'
 import experience from '@hestia.ai/twitter-agg'
 import {
   ads,
