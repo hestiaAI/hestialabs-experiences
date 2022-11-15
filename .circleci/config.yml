@@ -45,7 +45,7 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       # https://circleci.com/developer/orbs/orb/circleci/node#jobs-test
-      - node/test:
+      - node/test-data-experience:
           # This is the node version to use for the `cimg/node` tag
           # Relevant tags can be found on the CircleCI Developer Hub
           # https://circleci.com/developer/images/image/cimg/node
@@ -63,7 +63,7 @@ workflows:
           override-ci-command: npm install --no-package-lock
 
       # https://circleci.com/developer/orbs/orb/circleci/node#jobs-test
-      - node/test:
+      - node/test-packages:
           # This is the node version to use for the `cimg/node` tag
           # Relevant tags can be found on the CircleCI Developer Hub
           # https://circleci.com/developer/images/image/cimg/node
