@@ -1,13 +1,14 @@
 <template>
   <VContainer>
     <VRow>
-      <VCol v-for="graph, idx in graphs" :key="idx" cols="12" :md="graph.cols || '6'">
+      <VCol v-for="graph, idx in graphs" :key="idx" cols="12" :md="graph.cols || '6'" :offset-md="graph.offset || '0'">
         <ChartCaller
-          v-if="ndx"
+          v-if="ndx && graph.type"
           :type="graph.type"
           :viz-props="{
             values: values || [],
             ndx,
+            position: idx,
             ...graph
           }"
         />
@@ -16,7 +17,7 @@
         <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
       </VCol>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: headers, items: results }" />
+        <UnitFilterableTable v-show="showTable" v-bind="{ headers: headers, items: results }" />
       </VCol>
     </VRow>
   </VContainer>
@@ -40,6 +41,10 @@ export default {
     graphs: {
       type: Array,
       required: true
+    },
+    showTable: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

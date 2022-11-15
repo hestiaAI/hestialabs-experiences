@@ -1,7 +1,11 @@
 <template>
   <VContainer>
     <VRow>
-      <span v-t="{ path: kViewBlock('total-inferences'), args: { n: values.length } }" class="overline" />
+      <div>
+        <span v-t="{ path: kViewBlock('total-inferences'), args: { n: values.length } }" class="overline" />
+        <br>
+        <span v-if="totalProfiles" v-t="{ path: kViewBlock('total-profiles'), args: { n: totalProfiles } }" class="overline" />
+      </div>
       <VSpacer />
       <VAutocomplete
         v-model="categoriesSelected"
@@ -144,6 +148,13 @@ export default {
     }
   },
   computed: {
+    totalProfiles() {
+      if (this.values.length && this.values[0]._total_profiles) {
+        return this.values[0]._total_profiles
+      } else {
+        return 0
+      }
+    },
     itemsFiltered() {
       const { categoriesSelected: cs, inferencesSelected: is } = this
       return this.items

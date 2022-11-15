@@ -16,6 +16,7 @@
           }
         },
         "total-inferences": "Total inferences: {n}",
+        "total-profiles": "Total profiles: {n}",
         "inferenceTypes": {
           "Numeric value": "Numeric value",
           "Other": "Other"
@@ -36,6 +37,7 @@
               "valueLabel": "profiles",
               "title": "Skills"
             },
+            {},
             {
               "valueLabel": "profiles",
               "title": "Job Seniorities"
@@ -44,6 +46,7 @@
               "valueLabel": "profiles",
               "title": "Years of experience"
             },
+            {},
             {
               "valueLabel": "profiles",
               "title": "Degrees"
@@ -96,7 +99,7 @@
           "graphs": [
             {
               "valueLabel": "contacts",
-              "title": "Number of new connections"
+              "title": "Number of unique connections"
             },
             {
               "valueLabel": "contacts",
@@ -130,6 +133,7 @@
           }
         },
         "total-inferences": "Total des inférences : {n}",
+        "total-profiles": "Total profils: {n}",
         "inferenceTypes": {
           "Numeric value": "Valeur numérique",
           "Other": "Autres"
@@ -150,6 +154,7 @@
               "valueLabel": "profils",
               "title": "Compétences"
             },
+            {},
             {
               "valueLabel": "profils",
               "title": "Ancienneté dans l'emploi"
@@ -158,6 +163,7 @@
               "valueLabel": "profils",
               "title": "Années d'expérience"
             },
+            {},
             {
               "valueLabel": "profils",
               "title": "Diplômes"
@@ -210,7 +216,7 @@
           "graphs": [
             {
               "valueLabel": "contacts",
-              "title": "Nombre de nouvelles connexions"
+              "title": "Nombre de connexions uniques"
             },
             {
               "valueLabel": "contacts",

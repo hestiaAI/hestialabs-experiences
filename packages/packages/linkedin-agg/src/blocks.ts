@@ -24,6 +24,7 @@ const blocks: ViewBlocks = [
     postprocessor: strToArray,
     visualization: 'ChartViewDashboard.vue',
     vizProps: {
+      showTable: false,
       graphs: [
         {
           valueLabel: 'occurences',
@@ -33,6 +34,9 @@ const blocks: ViewBlocks = [
           type: 'TopChart.vue',
           valueAccessor: 'memberSkills',
           valueAsArray: true
+        },
+        {
+          cols: '8'
         },
         {
           valueLabel: 'occurences',
@@ -53,6 +57,9 @@ const blocks: ViewBlocks = [
           type: 'TopChart.vue',
           valueAccessor: 'yearsOfExperience',
           valueAsArray: true
+        },
+        {
+          cols: '4'
         },
         {
           valueLabel: 'occurences',
@@ -90,13 +97,13 @@ const blocks: ViewBlocks = [
     id: 'connections',
     sql: allConnections,
     files: ['connections'],
-    showTable: false,
+    showTable: true,
     visualization: 'ChartViewDashboard.vue',
     vizProps: {
       graphs: [
         {
           valueLabel: 'contacts',
-          title: 'Number of new connections',
+          title: 'Number of unique connections',
           cols: '12',
           height: 220,
           type: 'TimelineChart.vue',

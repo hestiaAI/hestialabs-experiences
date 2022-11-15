@@ -8,6 +8,7 @@
     <ChartViewFilters />
     <div :id="`top-chart-${graphId}`" :class="{ isScrollable }"></div>
     <div :id="`top-chart-${graphId}-axis`"></div>
+    <div v-if="topK < total" class="text-caption" v-t="{ path: 'show-top-n', args: { n: topK, m: total } }"></div>
   </VContainer>
 </template>
 <script>
@@ -71,6 +72,11 @@ export default {
       default: ''
     }
   },
+  data() {
+    return {
+      total: 'N/A'
+    }
+  },
   computed: {
     cssProps() {
       return {
@@ -109,8 +115,7 @@ export default {
 
       // Create group
       const topGroup = this.sumAccessor ? topDimension.group().reduceSum(d => d[this.sumAccessor]) : topDimension.group().reduceCount()
-
-      // replace 100 by topGroup.size() to see all records but can slowdown a lot
+      this.total = topGroup.size()
       const height = this.isScrollable ? Math.max(Math.min(this.topK, topGroup.size()) * 20, this.height) : this.height
       const width = d3.select(`#top-chart-${this.graphId}`).node().getBoundingClientRect().width
 
@@ -121,7 +126,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: -5 })
         .group(this.isScrollable ? topGroup : removeEmptyBins(topGroup))
         .dimension(topDimension)
-        .ordinalColors(this.colorPalette)
+        .ordinalColors([this.colorPalette[this.position % this.colorPalette.length]])
         .label(d => d.key)
         .data(group => group.top(this.topK))
         .title(d => `${d.value} ${this.valueLabel}`)
