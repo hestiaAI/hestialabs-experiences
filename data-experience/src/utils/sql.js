@@ -90,13 +90,14 @@ export class DB {
       this.close()
     }
 
+    // NODE_ENV === 'test' in Jest
     const options = process?.env.NODE_ENV === 'test'
       ? {}
       : {
         // Use a CDN for now since we have to figure out how to assets import work on host app.
           locateFile: () => 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.wasm'
         }
-    if (process?.release.name === 'node' && process?.env.NODE_ENV !== 'test') {
+    if (process?.release.name === 'node' && !process?.env.CIRCLECI) {
       // this block is a workaround for Node.js
       const fs = await import('fs')
       const path = './sql-wasm.wasm'
