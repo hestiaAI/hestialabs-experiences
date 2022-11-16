@@ -1,4 +1,4 @@
-import * as Papa from 'papaparse'
+import Papa from 'papaparse'
 import { camelCase } from 'lodash-es'
 import { setsEqual } from './utils'
 

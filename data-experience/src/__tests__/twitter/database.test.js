@@ -1,5 +1,3 @@
-// import { readFileSync } from 'fs'
-// import path from 'path'
 import experience from '@hestia.ai/twitter'
 import {
   adImpressions,
@@ -7,7 +5,7 @@ import {
   missingAttributesImpressions,
   missingAttributesEngagements
 } from './samples.helpers'
-import { NodeFile } from '~/utils/node-file'
+import NodeFile from '~/utils/node-file'
 import {
   DatabaseTester,
   arrayEqualNoOrder,
@@ -198,7 +196,6 @@ describe('with complete samples', () => {
 
   test('query overview-last-month returns the correct items', () => {
     const sql = getSql('overview-last-month')
-    // const sql = readFileSync(path.join(__dirname, 'overview-last-month.sql')).toString()
     const correctedSql = sql.replace('now', '2021-04-17')
     const result = tester.select(correctedSql)
     const expected = {

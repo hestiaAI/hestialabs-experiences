@@ -1,8 +1,8 @@
-// const acceptedExtensions = ['tar', 'js', 'ndjson', 'png', 'jpeg', 'jpg', 'gif', 'bmp', 'webp', 'pdf', 'zip', 'json', 'txt', 'html', 'csv', 'tsv', 'xlsx']
-
+const webpack = require('webpack')
 const { defineConfig } = require('@vue/cli-service')
 const path = require('path')
 const isDev = process.env.NODE_ENV === 'development'
+
 module.exports = defineConfig({
   publicPath: '/',
   configureWebpack: {
@@ -17,7 +17,6 @@ module.exports = defineConfig({
       fallback: {
         fs: false,
         crypto: false, // require.resolve("crypto-browserify") to add polyfill
-        // path: require.resolve('path/'),
         path: require.resolve('path-browserify'),
         util: require.resolve('util/')
       }
@@ -34,40 +33,15 @@ module.exports = defineConfig({
               }
             }
           ]
-        },
-        {
-          test: /\.wasm$/,
-          type: 'javascript/auto',
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                name: '[path][name].[contenthash:7].[ext]'
-              }
-            }
-          ]
         }
-        // // https://vuetify.cn/en/getting-started/quick-start/#webpack-install
-        // {
-        //   test: /\.s[ca]ss$/,
-        //   use: [
-        //     'vue-style-loader',
-        //     'css-loader',
-        //     {
-        //       loader: 'sass-loader',
-        //       // Requires sass-loader@^8.0.0
-        //       options: {
-        //         implementation: require('sass'),
-        //         sassOptions: {
-        //           fiber: require('fibers'),
-        //           indentedSyntax: true // optional
-        //         }
-        //       }
-        //     }
-        //   ]
-        // }
       ]
-    }
+    },
+    plugins: [
+      new webpack.DefinePlugin({
+        // for init() in sql.js
+        'process.release': {}
+      })
+    ]
   },
   // Fix issue when project path has a special symbol like '(' or ')'.
   // Bug of copy-webpack-plugin or fast-glob, because cli will add the absolute path of the index.html

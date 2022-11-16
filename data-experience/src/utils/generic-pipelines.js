@@ -550,3 +550,8 @@ export {
   jsonToTableConverter,
   createTableOptions
 }
+
+export default {
+  genericDateViewer,
+  genericLocationViewer
+}

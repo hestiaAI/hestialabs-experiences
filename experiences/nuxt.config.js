@@ -229,7 +229,7 @@ export default {
         ]
       })
     ],
-    watch: ['../packages/packages/*/dist/*', './config/dev.json']
+    watch: ['../packages/packages/experiences/*/dist/*', './config/dev.json']
   },
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [

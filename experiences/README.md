@@ -1,12 +1,12 @@
 # HestiaLabs Experiences
 
-![npm](https://img.shields.io/badge/npm-7.x-blue) ![node](https://img.shields.io/badge/node-14.x-brightgreen)
+![npm](https://img.shields.io/badge/npm-8.x-blue) ![node](https://img.shields.io/badge/node-18.x-brightgreen)
 
 The experiences developed by HestiaLabs are targeted for any user willing to better understand their personal data. It takes the form of an easy-to-use web app that locally processes the raw personal data downloaded from various sources (Twitter, Facebook, Uber, etc) and creates meaningful visualizations.
 
 ## Setup
 
-0. Check that you have the correct versions for npm and node (see "engines" in package.json: node 14.x, npm 7.x) by running `npm version`
+0. Check that you have the correct versions for npm and node (see "engines" in package.json: node 18.x, npm 8.x) by running `npm version`
 
 1. In the `packages` folder, install the root package:
 
@@ -69,6 +69,7 @@ Update the deployment branch.
 ```bash
 # in this example we're deploying to https://digipower.academy
 git checkout netlify-academy
+git pull
 # replace current files with what's in master
 git merge -X theirs master
 ```
@@ -80,8 +81,12 @@ cd ../packages
 npm install
 npm run build
 npm link --workspaces
+cd ../data-experience
+npm install
+npm run build-lib
 cd ../experiences
 npm install
+rm -rf dist
 ```
 
 Run the build using the appropriate environment variables.
@@ -102,7 +107,6 @@ Here's what these variables configure.
 Documentation for the configuration file can be found in [config/README.md](config)
 
 ```bash
-rm -rf dist
 # in this example we're building digipower.academy
 CONFIG_NAME=digipower-academy BASE_URL=https://digipower.academy API_URL=https://bubbles.hestialabs.org npm run build
 ```
@@ -215,6 +219,6 @@ Is is possible to dynamically create graphic representation of the data. The can
 Chart type are defined by files in [this directory](https://github.com/hestiaAI/hestialabs-experiences/tree/master/components/chart/view).
 The files use the [D3](https://vuejsexamples.com/tag/d3/) graphics and charts library on top of the [Vue framework](https://vuejs.org/).
 
-The charts are then available for use in [hestialabs](https://github.com/hestiaAI/hestialabs) experience packages. They are called in `blocks.ts` files. For instance, the [Netflix blocks.ts file](https://github.com/hestiaAI/hestialabs/blob/master/packages/netflix/src/blocks.ts) calls `ChartViewTimeSeries.vue` as defined in the file [ChartViewTimeSeries.vue](https://github.com/hestiaAI/hestialabs-experiences/blob/master/components/chart/view/ChartViewTimeSeries.vue).
+The charts are then available for use in [hestialabs](https://github.com/hestiaAI/hestialabs) experience packages. They are called in `blocks.ts` files. For instance, the [Netflix blocks.ts file](https://github.com/hestiaAI/hestialabs/blob/master/packages/experiences/netflix/src/blocks.ts) calls `ChartViewTimeSeries.vue` as defined in the file [ChartViewTimeSeries.vue](https://github.com/hestiaAI/hestialabs-experiences/blob/master/components/chart/view/ChartViewTimeSeries.vue).
 
 For debugging purposes, passing option `showTable: true` displays a text table representation of the data.

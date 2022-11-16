@@ -1,0 +1,55 @@
+{
+  "name": "@hestia.ai/hestias-hearth",
+  "version": "2.2.0",
+  "description": "Hestia’s Hearth",
+  "type": "module",
+  "engines": {
+    "node": "18.12.x"
+  },
+  "bin": {
+    "hestias-hearth": "./bin/packages/packages/hestias-hearth/entry.sh"
+  },
+  "files": [
+    "bin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/hestias-hearth"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "node --no-warnings --experimental-specifier-resolution node ./bin/packages/packages/hestias-hearth/index.mjs",
+    "clean": "rimraf ./bin",
+    "build": "npm run clean && npm run copy-files && tsc",
+    "dev": "npm run build -- -w",
+    "copy-files": "copyfiles --flat ../../node_modules/sql.js/dist/sql-wasm.wasm ./bin/data-experience/src/utils && copyfiles ./entry.sh ./bin/packages/packages/hestias-hearth"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.6",
+    "@types/node": "^18.7.23",
+    "@types/yargs": "^17.0.13",
+    "copyfiles": "^2.4.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@mdi/js": "^7.0.96",
+    "ajv": "^8.11.0",
+    "d3": "^7.6.1",
+    "jsonpath-plus": "^7.0.0",
+    "jszip": "^3.10.0",
+    "libsodium-wrappers": "^0.7.10",
+    "lodash-es": "^4.17.21",
+    "micromatch": "^4.0.5",
+    "papaparse": "^5.3.2",
+    "spark-md5": "^3.0.2",
+    "sql.js": "^1.8.0",
+    "yargs": "^17.5.1"
+  },
+  "gitHead": "75e51261d1e7c29340723d7d4ac50443262bc631"
+}
