@@ -303,7 +303,7 @@ export default {
     experiences() {
       return ['twitter', 'facebook', 'google', 'tracker-control'].map(
         e => this.$store.state.experiences.find(({ slug }) => slug === e)
-      )
+      ).filter(e => e)
     }
   }
 }

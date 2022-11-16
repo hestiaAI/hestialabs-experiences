@@ -2,14 +2,21 @@ import lodash from 'lodash'
 const { camelCase } = lodash
 
 export default {
-  'packages/!(hestialabs)/src/**/*.ts': filenames => {
+  'packages/experiences/*/src/**/*.ts': filenames => {
     const packages = filenames
-      .map(filename => /packages\/packages\/([^/]+)\//.exec(filename)[1])
+      .map(
+        filename =>
+          /packages\/packages\/experiences\/([^/]+)\//.exec(filename)[1]
+      )
       .map(camelCase)
+    const packagesFiltered = Array.from(new Set(packages))
     // need to build before testing
-    return ['npm run build', `npm run test:ts-node -- ${packages.join(' ')}`]
+    return [
+      'npm run build',
+      `npm run test:ts-node -- ${packagesFiltered.join(' ')}`
+    ]
   },
-  '*.ts': filenames =>
+  '*.{ts,mts}': filenames =>
     // only lint changed files
     `npm run lint -- --fix ${filenames.join(' ')}`,
   '*.{md,json,eslintrc,prettierrc}': filenames =>

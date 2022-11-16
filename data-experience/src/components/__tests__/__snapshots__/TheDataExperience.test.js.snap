@@ -1,0 +1,152 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`data experience html corresponds to snapshot 1`] = `
+"<div>
+  <vspeeddial bottom=\\"\\" right=\\"\\" direction=\\"top\\" open-on-hover=\\"\\" transition=\\"slide-y-reverse-transition\\" fixed=\\"\\">
+    <vtooltip left=\\"\\" fab=\\"\\" dark=\\"\\" small=\\"\\" color=\\"blue darken-2\\" tooltip=\\"Share\\"> <span>Share</span></vtooltip>
+    <vtooltip left=\\"\\"> <span>Clear all</span></vtooltip>
+  </vspeeddial>
+  <vmenu offset-y=\\"\\" absolute=\\"\\">
+    <vlist>
+      <vlistitemgroup>
+        <vlistitem>
+          <vlistitemtitle>English</vlistitemtitle>
+        </vlistitem>
+        <vlistitem>
+          <vlistitemtitle>Français</vlistitemtitle>
+        </vlistitem>
+      </vlistitemgroup>
+    </vlist>
+  </vmenu>
+  <vtabs dark=\\"\\" background-color=\\"primary\\" slider-color=\\"secondary\\" slider-size=\\"4\\" show-arrows=\\"\\" center-active=\\"\\" centered=\\"\\" fixed-tabs=\\"\\" class=\\"fixed-tabs-bar\\">
+    <vtab>
+
+    </vtab>
+    <vtab disabled=\\"disabled\\">
+
+    </vtab>
+    <vtab disabled=\\"disabled\\">
+
+    </vtab>
+  </vtabs>
+  <vtabsitems>
+    <div data-id=\\"load-data\\">
+      <vtabitem>
+        <vcol cols=\\"12 mx-auto\\" md=\\"6\\">
+          <vcontainer>
+            <vcard flat=\\"\\" class=\\"pa-2\\">
+              <vcardtitle class=\\"text-h5 font-weight-bold justify-center mb-3\\">
+
+              </vcardtitle>
+              <vcardtext>
+                <vrow>
+                  <vcol align=\\"center\\">
+                    <p class=\\"body-1\\">
+
+                    </p>
+                    <p class=\\"body-1\\"></p>
+                    <p>
+
+                    </p>
+                  </vcol>
+                </vrow>
+                <vrow>
+                  <vcol align=\\"center\\">
+                    <div>
+                      <!---->
+                      <vrow>
+                        <vcol align=\\"center\\">
+                          <div>
+                            <div class=\\"uppy-Root\\" dir=\\"ltr\\">
+                              <div class=\\"uppy-Dashboard uppy-Dashboard--animateOpenClose\\" data-uppy-theme=\\"light\\" data-uppy-num-acquirers=\\"0\\" data-uppy-drag-drop-supported=\\"true\\" aria-hidden=\\"false\\" aria-disabled=\\"false\\" aria-label=\\"Uppy Dashboard\\">
+                                <div aria-hidden=\\"true\\" class=\\"uppy-Dashboard-overlay\\" tabindex=\\"-1\\"></div>
+                                <div class=\\"uppy-Dashboard-inner\\" aria-modal=\\"false\\" style=\\"width: 750px; height: 300px;\\">
+                                  <div class=\\"uppy-Dashboard-innerWrap\\">
+                                    <div class=\\"uppy-Dashboard-dropFilesHereHint\\">Drop your files here</div>
+                                    <div class=\\"uppy-Dashboard-AddFiles\\"><input class=\\"uppy-Dashboard-input\\" hidden=\\"\\" aria-hidden=\\"true\\" tabindex=\\"-1\\" type=\\"file\\" name=\\"files[]\\" multiple=\\"\\" accept=\\"\\"><input class=\\"uppy-Dashboard-input\\" hidden=\\"\\" aria-hidden=\\"true\\" tabindex=\\"-1\\" webkitdirectory=\\"true\\" type=\\"file\\" name=\\"files[]\\" multiple=\\"\\" accept=\\"\\">
+                                      <div class=\\"uppy-Dashboard-AddFiles-title\\">Drop files here or <button type=\\"button\\" class=\\"uppy-u-reset uppy-Dashboard-browse\\" data-uppy-super-focusable=\\"true\\">browse files</button></div>
+                                      <div class=\\"uppy-Dashboard-AddFiles-info\\"></div>
+                                    </div>
+                                    <div class=\\"uppy-Dashboard-progressindicators\\"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </vcol>
+                      </vrow>
+                      <vrow>
+                        <vcol align=\\"center\\">
+                          <vdialog width=\\"500\\" scrollable=\\"\\" style=\\"z-index: 2000;\\">
+                            <vcard>
+                              <vcardtitle></vcardtitle>
+                              <vdivider></vdivider>
+                              <vcardtext>
+                                <vtextfield clearable=\\"\\"></vtextfield>
+                                <vtextfield clearable=\\"\\"></vtextfield>
+                              </vcardtext>
+                              <vdivider></vdivider>
+                              <vcardactions>
+                                <vspacer></vspacer>
+                                <vbtn color=\\"primary\\" text=\\"\\">
+                                  Close
+                                </vbtn>
+                              </vcardactions>
+                            </vcard>
+                          </vdialog>
+                          <vtooltip left=\\"\\" disabled=\\"disabled\\" class=\\"my-sm-2 mr-sm-4\\"> <span></span></vtooltip>
+                          <vdialog width=\\"500\\" scrollable=\\"\\" style=\\"z-index: 2000;\\">
+                            <vcard>
+                              <vcardtitle></vcardtitle>
+                              <vdivider></vdivider>
+                              <vcardtext>
+                                <p class=\\"mt-4\\">
+
+                                </p>
+                                <p class=\\"mt-4\\">
+
+                                  <vicon>$vuetify.icons.mdiFileMultipleOutline</vicon>
+
+                                </p>
+                              </vcardtext>
+                              <vdivider></vdivider>
+                              <vcardactions>
+                                <vspacer></vspacer>
+                                <vbtn color=\\"primary\\" text=\\"\\">
+                                  Close
+                                </vbtn>
+                              </vcardactions>
+                            </vcard>
+                          </vdialog>
+                        </vcol>
+                      </vrow>
+                      <vrow>
+                        <vcol>
+                          <!---->
+                        </vcol>
+                      </vrow>
+                    </div>
+                  </vcol>
+                </vrow>
+              </vcardtext>
+            </vcard>
+            <!---->
+          </vcontainer>
+        </vcol>
+      </vtabitem>
+    </div>
+    <div data-id=\\"summary\\">
+      <vtabitem>
+        <vcol cols=\\"12 mx-auto\\" sm=\\"6\\">
+          <!---->
+        </vcol>
+      </vtabitem>
+    </div>
+    <div data-id=\\"file-explorer\\">
+      <vtabitem>
+        <!---->
+      </vtabitem>
+    </div>
+  </vtabsitems>
+</div>"
+`;

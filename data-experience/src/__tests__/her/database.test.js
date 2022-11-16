@@ -1,6 +1,6 @@
 import experience from '@hestia.ai/her'
 import { her } from './samples.helpers'
-import { NodeFile } from '~/utils/node-file'
+import NodeFile from '~/utils/node-file'
 import {
   DatabaseTester,
   arrayEqualNoOrder,
