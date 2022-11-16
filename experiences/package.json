@@ -22,7 +22,6 @@
     "build:server": "cross-env NODE_OPTIONS=--openssl-legacy-provider nuxt build",
     "lint": "npx eslint . --ext .js,.vue",
     "lint:fix": "npm run lint -- --fix",
-    "pre-commit": "npx lint-staged",
     "_prepare": "node prepare.js",
     "prettier": "prettier"
   },
