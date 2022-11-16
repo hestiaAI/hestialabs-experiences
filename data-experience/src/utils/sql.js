@@ -91,7 +91,6 @@ export class DB {
     }
 
     // NODE_ENV === 'test' in Jest
-    console.info(process?.env.NODE_ENV, process?.env.CIRCLECI)
     const options = process?.env.NODE_ENV === 'test'
       ? {}
       : {
