@@ -1,7 +1,7 @@
 import experience from '@hestia.ai/uber'
 import { testTripsData, tripsHeaders, tripsItems } from './samples.helpers'
 import FileManager from '~/utils/file-manager'
-import { NodeFile } from '~/utils/node-file'
+import NodeFile from '~/utils/node-file'
 import { arrayEqualNoOrder, getCustomPipelineFromBlock } from '~/utils/test-utils'
 
 const { preprocessors, files, keepOnlyFiles } = experience.options

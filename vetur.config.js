@@ -2,6 +2,9 @@
 module.exports = {
   projects: [
     {
+      root: './data-experience'
+    },
+    {
       root: './experiences'
     },
     {
