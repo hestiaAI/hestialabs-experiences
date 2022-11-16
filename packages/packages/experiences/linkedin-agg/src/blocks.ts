@@ -96,7 +96,7 @@ const blocks: ViewBlocks = [
   {
     id: 'connections',
     sql: allConnections,
-    files: ['connections'],
+    files: ['connection'],
     showTable: true,
     visualization: 'ChartViewDashboard.vue',
     vizProps: {
