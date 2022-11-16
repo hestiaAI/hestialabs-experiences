@@ -15,4 +15,3 @@ new Vue({
     siteConfig: {}
   }
 })
-
