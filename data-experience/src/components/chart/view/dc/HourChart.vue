@@ -95,7 +95,7 @@ export default {
         .centerBar(false)
         .gap(1)
         .x(d3.scaleLinear().domain([0, 24]))
-        .ordinalColors(this.colorPalette)
+        .ordinalColors([this.colorPalette[1]])
         .elasticY(true)
         .yAxisLabel(this.valueLabel)
         .yAxis()

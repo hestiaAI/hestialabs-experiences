@@ -48,6 +48,7 @@ import her from '@hestia.ai/her'
 import herTinderAgg from '@hestia.ai/her-tinder-agg'
 import instagram from '@hestia.ai/instagram'
 import linkedin from '@hestia.ai/linkedin'
+import linkedinAgg from '@hestia.ai/linkedin-agg'
 import netflix from '@hestia.ai/netflix'
 import strava from '@hestia.ai/strava'
 import tiktok from '@hestia.ai/tiktok'
@@ -72,6 +73,7 @@ const experienceConfigs = [
   herTinderAgg,
   instagram,
   linkedin,
+  linkedinAgg,
   netflix,
   strava,
   tiktok,
@@ -84,7 +86,6 @@ const experienceConfigs = [
   uberDriver,
   youtube
 ].map(e => e.config)
-
 const experiences = experienceConfigs.map(e => e.slug)
 const initialExperience = 'twitter'
 
@@ -127,8 +128,8 @@ const bubbleIds = [
   // 'swiss-mp-participant',
   // 'th-aggregator',
   // 'th-participant',
-  // 'tl-aggregator',
-  // 'tl-participant',
+  'tl-aggregator',
+  'tl-participant',
   'demo-aggregator',
   // 'demo-computation',
   'demo-participant'
