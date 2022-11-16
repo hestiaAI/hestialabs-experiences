@@ -1,4 +1,4 @@
-import twitter from "https://cdn.jsdelivr.net/npm/@hestia.ai/tinder@1.0.0/dist/index.mjs"
+import twitter from "https://cdn.jsdelivr.net/npm/@hestia.ai/twitter@1.0.0/dist/index.mjs"
 
 Vue.use(Vuex)
 
