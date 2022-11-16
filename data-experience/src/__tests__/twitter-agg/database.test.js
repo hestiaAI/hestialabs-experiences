@@ -1,12 +1,10 @@
-// import { readFileSync } from 'fs'
-// import path from 'path'
 import experience from '@hestia.ai/twitter-agg'
 import {
   ads,
   adsLastMonth,
   targeting
 } from './samples.helpers'
-import { NodeFile } from '~/utils/node-file'
+import NodeFile from '~/utils/node-file'
 import {
   DatabaseTester,
   arrayEqualNoOrder,

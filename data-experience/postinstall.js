@@ -36,7 +36,7 @@ if (CIRCLECI) {
   handleSpawnOutput(spawnSync('npm', ['install', ...packages]))
 } else {
   // experiences required for dev
-  const experiences = readdirSync(resolve(__dirname, '../packages/packages'))
+  const experiences = readdirSync(resolve(__dirname, '../packages/packages/experiences'))
   // cross-platform spawn
   const spawn = require('cross-spawn')
   const packages = experiences.map((packageNameAndTag) => {

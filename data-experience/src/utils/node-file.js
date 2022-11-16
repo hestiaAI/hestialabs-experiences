@@ -1,4 +1,4 @@
-export class NodeFile {
+export default class NodeFile {
   #content
   #name
 

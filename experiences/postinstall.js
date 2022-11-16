@@ -1,11 +1,8 @@
 const { resolve } = require('path')
-const { readdirSync } = require('fs')
 
-const { CONFIG_NAME = 'dev', CIRCLECI, NODE_ENV } = process.env
+const { CONFIG_NAME = 'dev', NODE_ENV } = process.env
 
-const experiences = CIRCLECI
-  ? readdirSync(resolve(__dirname, 'pipeline-tests/__tests__')) // experiences required for tests
-  : require(resolve(__dirname, `config/${CONFIG_NAME}.json`)).experiences
+const { experiences } = require(resolve(__dirname, `config/${CONFIG_NAME}.json`))
 
 function handleSpawnOutput({ status, stderr, stdout, error }) {
   if (status) {
@@ -22,7 +19,7 @@ function handleSpawnOutput({ status, stderr, stdout, error }) {
 }
 
 if (experiences) {
-  if (NODE_ENV === 'production' || CIRCLECI) {
+  if (NODE_ENV === 'production') {
     const { spawnSync } = require('child_process')
     // const { spawnSync, execSync } = require('child_process')
     // const npmrcPath = resolve(__dirname, '.npmrc')

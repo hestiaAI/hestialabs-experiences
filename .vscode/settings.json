@@ -43,6 +43,7 @@
   "javascript.format.enable": false,
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "search.exclude": {
-    "**/dist": true
+    "**/dist": true,
+    "**/bin": true
   }
 }
