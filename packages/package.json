@@ -9,7 +9,9 @@
   },
   "type": "module",
   "workspaces": [
-    "./packages/*"
+    "./packages/experiences/*",
+    "./packages/hestias-hearth",
+    "./packages/kepler-iframe"
   ],
   "scripts": {
     "webpack": "webpack --progress",
@@ -18,13 +20,13 @@
     "clean": "lerna run clean",
     "test:ts-node": "node --experimental-specifier-resolution node --loader ts-node/esm ./test.ts",
     "test": "npm run build && npm run test:ts-node",
-    "lerna:version": "lerna version prerelease --no-changelog --no-commit-hooks",
+    "lerna:version": "lerna version",
     "lerna:publish": "lerna publish from-package",
     "prepublishOnly": "npm test",
     "prepare": "cd ../ && husky install ./.husky",
     "prettier": "prettier",
     "sql-formatter": "find ./packages -name *.sql | parallel \"sql-formatter {} --output {} --config ./sql-formatter.config.json\"",
-    "lint": "eslint --ext .ts,.js"
+    "lint": "eslint --ext .ts,.mts,.js,.mjs"
   },
   "repository": {
     "type": "git",

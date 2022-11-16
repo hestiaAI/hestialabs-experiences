@@ -7,7 +7,9 @@ import LodashModuleReplacementPlugin from 'lodash-webpack-plugin'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const packages = readdirSync(path.resolve(__dirname, 'packages'))
+const prefixPath = 'packages/experiences'
+const experiencesPath = path.resolve(__dirname, prefixPath)
+const packages = readdirSync(experiencesPath)
 
 export default {
   externalsPresets: {
@@ -20,7 +22,7 @@ export default {
       // entry chunk name
       `${name}/dist/index`,
       // module that is loaded upon startup
-      `packages/${name}/src/index.ts`
+      `${prefixPath}/${name}/src/index.ts`
     ])
   ),
   devtool: 'inline-source-map',
@@ -82,7 +84,7 @@ export default {
   },
   output: {
     publicPath: '',
-    path: path.resolve(__dirname, 'packages'),
+    path: experiencesPath,
     library: {
       // https://github.com/webpack/webpack/issues/2933
       // https://webpack.js.org/configuration/output/#type-module
