@@ -241,9 +241,9 @@ export default {
         }
       ],
       videos: [
-        'https://player.twitch.tv/?video=1648947472&parent=localhost&autoplay=false',
-        'https://player.twitch.tv/?video=1648959623&parent=localhost&autoplay=false',
-        'https://player.twitch.tv/?video=1648971525&parent=localhost&autoplay=false'
+        'https://player.twitch.tv/?video=1648947472&parent=localhost&parent=digipower.academy&autoplay=false',
+        'https://player.twitch.tv/?video=1648959623&parent=digipower.academy&parent=localhost&autoplay=false',
+        'https://player.twitch.tv/?video=1648971525&parent=digipower.academy&parent=localhost&autoplay=false'
       ],
       testimonials: [
         {
