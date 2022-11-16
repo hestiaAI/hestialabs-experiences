@@ -1,9 +1,11 @@
 {
   "name": "@hestia.ai/linkedin-agg",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.0",
   "main": "dist/index",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/hestiaai/hestialabs-experiences",
