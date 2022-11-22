@@ -15,11 +15,20 @@ npm run build
 npm publish
 ```
 
-Version 0.1.0 of the library can be imported from this cdn:
+The latest version of the library can be imported using these CDN links:
 
-https://unpkg.com/@hestia.ai/data-experience@0.1.0/dist/data-experience.umd.js
+https://unpkg.com/@hestia.ai/data-experience/dist/DataExperience.umd.js
+https://unpkg.com/@hestia.ai/data-experience/dist/DataExperience.css
 
 ## Project setup
+
+Add an extensionless environment file `.env` with the following configuration:
+
+```
+NODE_ENV=development
+```
+
+Run the following
 
 ```sh
 npm install

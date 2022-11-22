@@ -1,9 +1,16 @@
-const webpack = require('webpack')
-const { defineConfig } = require('@vue/cli-service')
-const path = require('path')
+import webpack from 'webpack'
+import { defineConfig } from '@vue/cli-service'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { createRequire } from 'module'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const require = createRequire(import.meta.url)
+
 const isDev = process.env.NODE_ENV === 'development'
 
-module.exports = defineConfig({
+export default defineConfig({
   publicPath: isDev ? '/' : './',
   configureWebpack: {
     resolve: {

@@ -6,6 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/hestiaai/hestialabs-experiences.git"
   },
+  "type": "module",
   "author": "hestia.ai",
   "license": "AGPL-3.0-or-later",
   "bugs": {
@@ -79,6 +80,7 @@
     "babel-plugin-transform-import-meta": "^2.2.0",
     "canvas": "^2.10.2",
     "cross-env": "^7.0.3",
+    "dotenv": "^16.0.3",
     "eslint": "^8.23.1",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
@@ -126,7 +128,12 @@
       "vue"
     ],
     "transform": {
-      "^.+\\.m?js$": ["babel-jest", { "configFile": "./babel-jest.config.json" }],
+      "^.+\\.m?js$": [
+        "babel-jest",
+        {
+          "configFile": "./babel-jest.config.json"
+        }
+      ],
       "^.+\\.vue$": "@vue/vue2-jest"
     },
     "transformIgnorePatterns": [
