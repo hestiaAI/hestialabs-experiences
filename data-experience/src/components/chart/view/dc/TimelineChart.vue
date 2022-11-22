@@ -2,8 +2,13 @@
   <VContainer>
     <div :id="`area-chart-${graphId}`">
       <strong>{{ title }}</strong>
-      <strong v-t="'per'" />
-      <strong v-t="timeUnit.name" />
+      <template v-if="cumulativeGroup">
+        <strong class="ml-1" v-t="'in total'" />
+      </template>
+      <template v-else>
+        <strong class="ml-1" v-t="'per'" />
+        <strong class="ml-1" v-t="timeUnit.name" />
+      </template>
       <ChartViewFilters />
     </div>
     <div :id="`range-chart-${graphId}`" class="range-chart">
@@ -18,6 +23,7 @@ import * as dc from 'dc'
 import mixin from './mixin'
 import ChartViewTextSelectTimeRange from '../text/ChartViewTextSelectTimeRange.vue'
 import ChartViewFilters from '../filters/ChartViewFilters.vue'
+import { createCumulativeGroup } from '../utils/dc-helpers'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)
@@ -27,32 +33,39 @@ export default {
   mixins: [mixin],
   props: {
     /**
-         * Column name of the {values} that represent date values
-         */
+      * Column name of the {values} that represent date values
+      */
     dateAccessor: {
       type: String,
       required: true
     },
     /**
-         * Format of the dates being processed, if not set will use the Date constructor
-         */
+      * Format of the dates being processed, if not set will use the Date constructor
+      */
     dateFormat: {
       type: String,
       default: ''
     },
     /**
-         * The value to consider in respect to the date, if not set, will take the number of records
-         */
+      * The value to consider in respect to the date, if not set, will take the number of records
+      */
     valueAccessor: {
       type: String,
       default: ''
     },
     /**
-         * If one of {valueAccessor} is null, replace the value with a default
-         */
+      * If one of {valueAccessor} is null, replace the value with a default
+      */
     defaultValue: {
       type: Number,
       default: 0
+    },
+    /**
+     * If set to true use cumulative sum over the time period
+     */
+    cumulativeGroup: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -130,7 +143,7 @@ export default {
         .brushOn(false)
         .renderArea(true)
         .dimension(dateDimension)
-        .group(valueGroup)
+        .group(this.cumulativeGroup ? createCumulativeGroup(valueGroup) : valueGroup)
         .x(d3.scaleTime().domain(dateExtent))
         .elasticY(true)
         .rangeChart(rangeChart)

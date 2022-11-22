@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/hestias-hearth",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Hestia’s Hearth",
   "type": "module",
   "engines": {
@@ -50,5 +50,6 @@
     "spark-md5": "^3.0.2",
     "sql.js": "^1.8.0",
     "yargs": "^17.5.1"
-  }
+  },
+  "gitHead": "75e51261d1e7c29340723d7d4ac50443262bc631"
 }
