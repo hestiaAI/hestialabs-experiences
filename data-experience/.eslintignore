@@ -8,3 +8,5 @@ config
 dist
 node_modules
 sw.*
+
+example/
