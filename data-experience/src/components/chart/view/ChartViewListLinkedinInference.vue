@@ -1,7 +1,11 @@
 <template>
   <VContainer>
     <VRow>
-      <span v-t="{ path: kViewBlock('total-inferences'), args: { n: values.length } }" class="overline" />
+      <div>
+        <span v-t="{ path: kViewBlock('total-inferences'), args: { n: values.length } }" class="overline" />
+        <br>
+        <span v-if="totalProfiles" v-t="{ path: kViewBlock('total-profiles'), args: { n: totalProfiles } }" class="overline" />
+      </div>
       <VSpacer />
       <VAutocomplete
         v-model="categoriesSelected"
@@ -57,7 +61,13 @@
         xl="2"
       >
         <VCard height="100%" class="d-flex flex-column">
-          <VCardTitle>{{ i.typeOfInference }}</VCardTitle>
+          <VCardTitle class="d-flex flex-nowrap align-start justify-space-between">
+            <div>{{ i.typeOfInference }}</div>
+            <div class="text-center ml-2" v-if="'_count' in i">
+              <div class="text-subtitle-2">{{ i._count }}</div>
+              <div class="text-caption">{{ $tc('profile', i._count) }}</div>
+            </div>
+          </VCardTitle>
           <VCardSubtitle>{{ i.category }}</VCardSubtitle>
           <VCardText>{{ i.description }}</VCardText>
           <VSpacer />
@@ -138,6 +148,13 @@ export default {
     }
   },
   computed: {
+    totalProfiles() {
+      if (this.values.length && this.values[0]._total_profiles) {
+        return this.values[0]._total_profiles
+      } else {
+        return 0
+      }
+    },
     itemsFiltered() {
       const { categoriesSelected: cs, inferencesSelected: is } = this
       return this.items

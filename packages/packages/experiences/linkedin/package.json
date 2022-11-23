@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/linkedin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "dist/index",
   "type": "module",
   "files": [
@@ -15,5 +15,6 @@
     "access": "public"
   },
   "author": "",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "gitHead": "75e51261d1e7c29340723d7d4ac50443262bc631"
 }

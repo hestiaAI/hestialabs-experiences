@@ -4,10 +4,10 @@
     color="primary"
     dark
     max-width="400"
-    :href="tweetLink"
+    :href="link"
     hover
   >
-    <VCardTitle>
+    <VCardTitle v-if="twitter">
       <VIcon
         large
         left
@@ -27,15 +27,15 @@
           <VImg
             class="elevation-6"
             alt=""
-            :src="profilePhoto"
+            :src="photo"
           />
         </VListItemAvatar>
 
         <VListItemContent>
           <VListItemTitle class="font-weight-bold">
-            {{ profileName }}
+            {{ name }}
           </VListItemTitle>
-          <div>{{ profileDescription }}</div>
+          <div>{{ description }}</div>
         </VListItemContent>
       </VListItem>
     </VCardActions>
@@ -49,21 +49,25 @@ export default {
       type: String,
       default: ''
     },
-    profileName: {
+    name: {
       type: String,
       default: ''
     },
-    profileDescription: {
+    description: {
       type: String,
       default: ''
     },
-    profilePhoto: {
+    photo: {
       type: String,
       default: ''
     },
-    tweetLink: {
+    link: {
       type: String,
       default: ''
+    },
+    twitter: {
+      type: Boolean,
+      default: false
     }
   }
 }
