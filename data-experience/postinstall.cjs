@@ -1,14 +1,11 @@
-import { resolve, dirname } from 'path'
-import { readdirSync } from 'fs'
-import { spawnSync } from 'child_process'
-import spawn from 'cross-spawn'
-import dotenv from 'dotenv'
-import { fileURLToPath } from 'url'
+const { resolve } = require('path')
+const { readdirSync } = require('fs')
+const { spawnSync } = require('child_process')
+const spawn = require('cross-spawn')
+const dotenv = require('dotenv')
 
 dotenv.config()
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
 const { CIRCLECI, NODE_ENV } = process.env
 
 function handleSpawnOutput({ status, stderr, stdout, error }) {
