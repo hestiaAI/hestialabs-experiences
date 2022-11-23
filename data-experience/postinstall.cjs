@@ -1,11 +1,8 @@
 const { resolve } = require('path')
 const { readdirSync } = require('fs')
 const { spawnSync } = require('child_process')
-const dotenv = require('dotenv')
 
-dotenv.config()
-
-const { CIRCLECI, NODE_ENV } = process.env
+const { CIRCLECI } = process.env
 
 function handleSpawnOutput({ status, stderr, stdout, error }) {
   if (status) {
@@ -35,18 +32,22 @@ if (CIRCLECI) {
       packages.join('\n')
   )
   handleSpawnOutput(spawnSync('npm', ['install', ...packages]))
-} else if (NODE_ENV === 'development') {
-  const spawn = require('cross-spawn')
-  // experiences required for dev
-  const experiences = readdirSync(resolve(__dirname, '../packages/packages/experiences'))
-  const packages = experiences.map((packageNameAndTag) => {
-    const [name] = packageNameAndTag.split('@')
-    return `@hestia.ai/${name}`
-  })
-  console.info(
-    'Linking packages...\n' +
-    packages.join('\n')
-  )
-  // cross-platform spawn
-  handleSpawnOutput(spawn.sync('npm', ['link', ...packages]))
+} else {
+  const dotenv = require('dotenv')
+  dotenv.config()
+  if (process.env.NODE_ENV === 'development') {
+    const spawn = require('cross-spawn')
+    // experiences required for dev
+    const experiences = readdirSync(resolve(__dirname, '../packages/packages/experiences'))
+    const packages = experiences.map((packageNameAndTag) => {
+      const [name] = packageNameAndTag.split('@')
+      return `@hestia.ai/${name}`
+    })
+    console.info(
+      'Linking packages...\n' +
+      packages.join('\n')
+    )
+    // cross-platform spawn
+    handleSpawnOutput(spawn.sync('npm', ['link', ...packages]))
+  }
 }
