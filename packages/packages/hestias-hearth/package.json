@@ -30,8 +30,9 @@
     "copy-files": "copyfiles --flat ../../node_modules/sql.js/dist/sql-wasm.wasm ./bin/data-experience/src/utils && copyfiles ./entry.sh ./bin/packages/packages/hestias-hearth"
   },
   "devDependencies": {
+    "@hestia.ai/data-experience": "file:../../../data-experience",
     "@types/lodash-es": "^4.17.6",
-    "@types/node": "^18.7.23",
+    "@types/node": "^18.11.9",
     "@types/yargs": "^17.0.13",
     "copyfiles": "^2.4.1",
     "rimraf": "^3.0.2",
