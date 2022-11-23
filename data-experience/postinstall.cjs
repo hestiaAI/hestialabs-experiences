@@ -1,7 +1,6 @@
 const { resolve } = require('path')
 const { readdirSync } = require('fs')
 const { spawnSync } = require('child_process')
-const spawn = require('cross-spawn')
 const dotenv = require('dotenv')
 
 dotenv.config()
@@ -37,6 +36,7 @@ if (CIRCLECI) {
   )
   handleSpawnOutput(spawnSync('npm', ['install', ...packages]))
 } else if (NODE_ENV === 'development') {
+  const spawn = require('cross-spawn')
   // experiences required for dev
   const experiences = readdirSync(resolve(__dirname, '../packages/packages/experiences'))
   const packages = experiences.map((packageNameAndTag) => {
