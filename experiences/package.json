@@ -22,7 +22,6 @@
     "build:server": "cross-env NODE_OPTIONS=--openssl-legacy-provider nuxt build",
     "lint": "npx eslint . --ext .js,.vue",
     "lint:fix": "npm run lint -- --fix",
-    "pre-commit": "npx lint-staged",
     "_prepare": "node prepare.js",
     "prettier": "prettier"
   },
@@ -105,6 +104,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "copy-webpack-plugin": "^6.4.1",
     "cross-env": "^7.0.3",
+    "cross-spawn": "^7.0.3",
     "eslint": "^8.17.0",
     "eslint-plugin-nuxt": "^3.2.0",
     "eslint-plugin-vue": "^9.1.1",
