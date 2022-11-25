@@ -1,7 +1,3 @@
-// import Vue from 'vue'
-// import Vuetify from 'vuetify/lib/framework'
-import i18n from './i18n'
-
 import {
   mdiAccount,
   mdiAccountGroup,
@@ -106,7 +102,7 @@ const values = {
   mdiWeb
 }
 
-const opts = {
+const opts = i18n => ({
   icons: {
     iconfont: 'mdiSvg',
     values
@@ -133,8 +129,6 @@ const opts = {
     // https://vuetifyjs.com/en/features/internationalization/#vue-i18n
     t: (key, ...params) => i18n.t(key, params)
   }
-}
-
-// Vue.use(Vuetify)
+})
 
 export default opts

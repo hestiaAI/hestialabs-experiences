@@ -7,8 +7,9 @@
     "npm": "8.x",
     "node": "18.x"
   },
+  "type": "module",
   "scripts": {
-    "postinstall": "node postinstall.js",
+    "postinstall": "node postinstall.cjs",
     "dev": "npm-run-all -p -r dev:bubble-server dev:monorepo dev:app",
     "dev:no-local-server": "npm-run-all -p -r dev:monorepo dev:app",
     "dev:bubble-server": "cd ../../hestialabs-bubble-server/bubbleserver && cross-env DJANGO_DEBUG=True poetry run python ./manage.py runserver",

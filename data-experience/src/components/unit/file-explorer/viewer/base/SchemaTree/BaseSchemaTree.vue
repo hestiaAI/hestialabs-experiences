@@ -87,7 +87,7 @@
 <script>
 import { mapGetters } from '@/utils/store-helper'
 import { isEmpty } from 'lodash-es'
-import EventBus from './EventBus'
+// import EventBus from './EventBus'
 
 export default {
   name: 'BaseSchemaTree',
@@ -114,20 +114,20 @@ export default {
       return !this.schema.contains?.length
     }
   },
-  created() {
-    // Sets up the Event Bus listener
-    EventBus.$on('change', this.pathsChanged)
-  },
-  destroyed() {
-    // Removes Event Bus listener upon removal
-    EventBus.$off('change', this.pathsChanged)
-  },
+  // created() {
+  //   // Sets up the Event Bus listener
+  //   EventBus.$on('change', this.pathsChanged)
+  // },
+  // destroyed() {
+  //   // Removes Event Bus listener upon removal
+  //   EventBus.$off('change', this.pathsChanged)
+  // },
   methods: {
     // Invert current state
     clickOnCard() {
       this.selected = !this.selected
       this.updateSelectedPaths()
-      EventBus.$emit('change', { path: this.schema.absolutePath || '$', selected: this.selected })
+      // EventBus.$emit('change', { path: this.schema.absolutePath || '$', selected: this.selected })
     },
     pathsChanged(value) {
       // if a parent has been modify, update current children

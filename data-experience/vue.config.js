@@ -18,8 +18,7 @@ export default defineConfig({
         '~': path.resolve(__dirname, 'src'),
         '@': path.resolve(__dirname, 'src'),
         // https://github.com/micromatch/picomatch/pull/23
-        picomatch: 'picomatch-browser',
-        vue$: path.resolve(__dirname, 'node_modules/vue/dist/vue.runtime.esm.js')
+        picomatch: 'picomatch-browser'
       },
       fallback: {
         fs: false,
