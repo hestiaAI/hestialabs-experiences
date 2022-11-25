@@ -86,7 +86,7 @@
     "jszip": "^3.10.0",
     "libsodium-wrappers": "^0.7.10",
     "lodash-es": "^4.17.21",
-    "nuxt": "^2.15.8",
+    "nuxt": "^3.0.0",
     "sass-loader": "^10",
     "share-api-polyfill": "^1.1.0",
     "sql.js": "^1.7.0",
