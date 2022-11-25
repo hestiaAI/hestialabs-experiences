@@ -4,5 +4,3 @@
 .DS_STORE
 
 /node_modules
-/data-experience/.log/
-/data-experience/demo/

@@ -1,5 +1,5 @@
 import { merge } from 'lodash-es'
-import BubbleAPI from 'data-experience/src/utils/bubble-api'
+import BubbleAPI from '../../data-experience/src/utils/bubble-api'
 
 export const state = () => ({
   loaded: false,
