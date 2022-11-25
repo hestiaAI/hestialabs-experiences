@@ -85,9 +85,8 @@
   </VCard>
 </template>
 <script>
-import { mapGetters } from '@/utils/store-helper'
+import { mapState, mapGetters, mapMutations } from '@/utils/store-helper'
 import { isEmpty } from 'lodash-es'
-// import EventBus from './EventBus'
 
 export default {
   name: 'BaseSchemaTree',
@@ -104,6 +103,7 @@ export default {
   },
   computed: {
     ...mapGetters(['selectedPaths']),
+    ...mapState({ clickedNode: 'fileExplorerClickedSchemaTreeNode' }),
     selectColor() {
       return this.selected ? 'normal' : 'primary'
     },
@@ -114,29 +114,27 @@ export default {
       return !this.schema.contains?.length
     }
   },
-  // created() {
-  //   // Sets up the Event Bus listener
-  //   EventBus.$on('change', this.pathsChanged)
-  // },
-  // destroyed() {
-  //   // Removes Event Bus listener upon removal
-  //   EventBus.$off('change', this.pathsChanged)
-  // },
+  watch: {
+    clickedNode(node) {
+      this.pathsChanged(node)
+    }
+  },
   methods: {
+    ...mapMutations(['setClickedSchemaTreeNode']),
     // Invert current state
     clickOnCard() {
       this.selected = !this.selected
       this.updateSelectedPaths()
-      // EventBus.$emit('change', { path: this.schema.absolutePath || '$', selected: this.selected })
+      this.setClickedSchemaTreeNode({ path: this.schema.absolutePath || '$', selected: this.selected })
     },
     pathsChanged(value) {
-      // if a parent has been modify, update current children
+      // if a parent has been modified, update current children
       if (this.schema.absolutePath && value.path === this.schema.absolutePath.slice(0, value.path.length)) {
         this.selected = value.selected
         this.updateSelectedPaths()
       }
     },
-    // Update list of leafs selected
+    // Update list of leaves selected
     updateSelectedPaths() {
       if (this.isLeaf) {
         if (this.selected) {
