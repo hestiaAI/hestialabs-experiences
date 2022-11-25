@@ -1,6 +1,5 @@
 node_modules
 dist
-bin
 
 #https://github.com/eslint/eslint/issues/13897
 .eslintcache
