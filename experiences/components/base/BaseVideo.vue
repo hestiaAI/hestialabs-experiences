@@ -33,11 +33,11 @@ export default {
     },
     width: {
       type: String,
-      default: () => '100%'
+      default: () => '500px'
     },
     height: {
       type: String,
-      default: () => '250px'
+      default: () => '300px'
     },
     caption: {
       type: String,
@@ -47,14 +47,29 @@ export default {
   computed: {
     url() {
       const videoID = this.videoSrc.split('/').pop()
-      let videoPrefix = null
+
+      if (!videoID) { return null }
 
       // accepted hosts
-      if (this.videoSrc.includes('vimeo.com')) { videoPrefix = 'https://player.vimeo.com/video/' }
-      if (this.videoSrc.includes('youtube.com')) { videoPrefix = 'https://www.youtube.com/embed/' }
-
-      if (!videoPrefix || !videoID) { return null }
-      return videoPrefix + videoID
+      if (this.videoSrc.includes('vimeo.com')) {
+        return `https://player.vimeo.com/video/${videoID}`
+      } else if (this.videoSrc.includes('youtube.com')) {
+        return `https://www.youtube.com/embed/${videoID}`
+      } else if (this.videoSrc.includes('twitch.tv')) {
+        return `https://player.twitch.tv/?video=${videoID}&parent=${this.host}&autoplay=false`
+      } else {
+        return null
+      }
+    },
+    host() {
+      if (window) {
+        return window.location.host
+          .toLowerCase()
+          .replace(/www./g, '')
+          .split(':')[0]
+      } else {
+        return null
+      }
     }
   }
 }

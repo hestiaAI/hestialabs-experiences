@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/hestias-hearth",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Hestia’s Hearth",
   "type": "module",
   "engines": {
