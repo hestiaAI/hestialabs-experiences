@@ -137,9 +137,9 @@ export default {
   data() {
     return {
       permanences: [
-        { date: '25 Nov, 2022', time: '14h00', location: 'Geneve FacLab', url: '' },
-        { date: '28 Nov 2022', time: '14h00', location: 'Lausanne PowerHouse', url: '' },
-        { date: '1er Dec 2022', time: '14h00', location: 'Lausanne PowerHouse', url: '' }
+        { date: '25 Nov, 2022', time: '14h00-16h00', location: 'Geneve FacLab', url: '' },
+        { date: '28 Nov 2022', time: '14h00-16h00', location: 'Lausanne PowerHouse', url: '' },
+        { date: '1er Dec 2022', time: '14h00-16h00', location: 'Lausanne PowerHouse', url: '' }
       ]
     }
   },
