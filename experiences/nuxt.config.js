@@ -65,7 +65,9 @@ const { name, shortName, description } = {
 export default {
   ssr: false, // Disable Server-Side Rendering
   target: 'static',
-
+  server: {
+    host: '0' // default: localhost
+  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate(title) {

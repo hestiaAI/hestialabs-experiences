@@ -10,18 +10,18 @@ This repo is also dependent on the bubble-server [here](https://github.com/hesti
 ## setup
 **You must use the correct version of npm (8.x) and node (18.x) for this project, we recommend using `nvm` ([installation](https://heynode.com/tutorial/install-nodejs-locally-nvm/)).**
 
-First create a new directory, and clone this repo and the bubble-server:
+First create a new directory, and clone this repo and the bubble-server: 
 ```
 git clone https://github.com/hestiaAI/hestialabs-experiences.git
 git clone https://github.com/hestiaAI/hestialabs-bubble-server.git
 ```
 
-You must use the correct version of node and npm to run the project (note that nvm for windows may have a different syntax).
+You must use the correct version of node and npm to run the project (note that nvm for windows may have a different syntax). 
 ```
 nvm use lts/hydrogen
 ```
 
-Then install and build the bubble-server:
+Then install and build the bubble-server: 
 ```
 cd hestialabs-bubble-server/
 // This line install Poetry, only needed if you don't have it already
@@ -30,7 +30,7 @@ poetry install
 poetry run pre-commit install
 ```
 
-Then install and build the packages:
+Then install and build the packages: 
 ```
 cd ../hestialabs-experiences/packages
 npm install
@@ -39,20 +39,13 @@ npm run prepare
 npm link --workspaces
 ```
 
-Then install and build `data-experience`:
-```
-cd ../data-experience
-npm install
-npm run build
-```
-
-Then install and build the Nuxt app:
+Then install and build the Nuxt app: 
 ```
 cd ../experiences
 npm install
 ```
 
-Finally, you can run the project in development mode:
+Finally, you can run the project in development mode: 
 ```
 npm run dev
 ```

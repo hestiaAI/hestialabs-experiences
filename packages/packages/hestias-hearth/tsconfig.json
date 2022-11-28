@@ -20,6 +20,5 @@
     "moduleResolution": "node",
     "outDir": "bin"
   },
-  "files": ["index.mts", "./custom.d.ts"],
-  "include": ["../../../data-experience/src/utils/*.js"]
+  "files": ["index.mts"]
 }

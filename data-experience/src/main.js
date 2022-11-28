@@ -1,5 +1,3 @@
-// import Vue from 'vue'
-
 import TheDataExperience from './components/TheDataExperience.vue'
 
 import store from './store'

@@ -1,33 +1,21 @@
 {
-  "name": "@hestia.ai/data-experience",
-  "version": "0.4.0",
-  "description": "analyse the data companies collect on you",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hestiaai/hestialabs-experiences.git"
-  },
-  "type": "module",
-  "author": "hestia.ai",
-  "license": "AGPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/hestiaai/hestialabs-experiences/issues"
-  },
-  "homepage": "https://github.com/hestiaAI/hestialabs-experiences/blob/master/data-experience/README.md",
+  "name": "data-experience",
+  "version": "0.1.0",
   "scripts": {
     "test": "jest",
-    "postinstall": "node postinstall.cjs",
+    "postinstall": "node postinstall.js",
     "dev": "npm-run-all -p -r dev:bubble-server dev:monorepo dev:app",
     "dev:app": "vue-cli-service serve ./dev/main.js --open --host localhost",
     "dev:monorepo": "cd ../packages && npm run dev",
     "dev:bubble-server": "cd ../../hestialabs-bubble-server/bubbleserver && cross-env DJANGO_DEBUG=True poetry run python ./manage.py runserver",
     "lint": "vue-cli-service lint",
-    "build": "vue-cli-service build --target lib --name DataExperience src/main.js",
-    "build-watch": "npm run build -- --watch",
+    "build-lib": "vue-cli-service build --target lib --name data-experience src/main.js",
+    "build-lib-watch": "npm run build-lib -- --watch",
     "build:demo": "vue-cli-service build --dest demo ./dev/main.js",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
-    "lint:fix": "npx eslint . --ext .js,.vue --fix"
+    "lint:fix": "npx eslint . --ext .vue --fix"
   },
-  "main": "dist/DataExperience.umd.js",
+  "main": "dist/data-experience.umd.js",
   "dependencies": {
     "@uppy/core": "^2.0.2",
     "@uppy/dashboard": "^2.3.0",
@@ -80,8 +68,6 @@
     "babel-plugin-transform-import-meta": "^2.2.0",
     "canvas": "^2.10.2",
     "cross-env": "^7.0.3",
-    "cross-spawn": "^7.0.3",
-    "dotenv": "^16.0.3",
     "eslint": "^8.23.1",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
@@ -91,9 +77,7 @@
     "file-loader": "^6.2.0",
     "jest": "^27.3.1",
     "jest-canvas-mock": "^2.4.0",
-    "lint-staged": "^13.0.3",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.7.1",
     "regenerator-runtime": "^0.13.9",
     "resize-observer-polyfill": "^1.5.1",
     "sass": "~1.32.13",
@@ -129,12 +113,7 @@
       "vue"
     ],
     "transform": {
-      "^.+\\.m?js$": [
-        "babel-jest",
-        {
-          "configFile": "./babel-jest.config.json"
-        }
-      ],
+      "^.+\\.m?js$": ["babel-jest", { "configFile": "./babel-jest.config.json" }],
       "^.+\\.vue$": "@vue/vue2-jest"
     },
     "transformIgnorePatterns": [

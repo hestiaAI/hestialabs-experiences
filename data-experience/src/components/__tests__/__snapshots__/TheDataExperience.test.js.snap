@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`data experience html corresponds to snapshot 1`] = `
-"<div lang=\\"en\\">
+"<div>
   <vspeeddial bottom=\\"\\" right=\\"\\" direction=\\"top\\" open-on-hover=\\"\\" transition=\\"slide-y-reverse-transition\\" fixed=\\"\\">
     <vtooltip left=\\"\\" fab=\\"\\" dark=\\"\\" small=\\"\\" color=\\"blue darken-2\\" tooltip=\\"Share\\"> <span>Share</span></vtooltip>
     <vtooltip left=\\"\\"> <span>Clear all</span></vtooltip>

@@ -1,6 +1,5 @@
 // Add icons of the data-experiences module here
 import { vuetifyOpts } from 'data-experience'
-
 import {
   mdiAccount,
   mdiAccountGroup,
@@ -50,7 +49,8 @@ import {
   mdiTranslate,
   mdiTuneVariant,
   mdiTwitter,
-  mdiWeb
+  mdiWeb,
+  mdiWhatsapp
 } from '@mdi/js'
 
 const values = {
@@ -102,7 +102,8 @@ const values = {
   mdiTranslate,
   mdiTuneVariant,
   mdiTwitter,
-  mdiWeb
+  mdiWeb,
+  mdiWhatsapp
 }
 
 // If you need to access Nuxt context within the options file, you need to export a function instead

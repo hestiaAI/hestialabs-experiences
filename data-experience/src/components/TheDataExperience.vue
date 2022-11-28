@@ -1,5 +1,5 @@
 <template>
-  <div :lang="$i18n.locale">
+  <div>
     <SettingsSpeedDial />
     <VMenu v-if="!siteConfigMerged.i18nLocale && locales.length > 1" offset-y absolute>
       <template #activator="{ on, attrs }">
