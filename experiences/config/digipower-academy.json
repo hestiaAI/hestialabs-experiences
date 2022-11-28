@@ -34,8 +34,6 @@
     "demo-participant",
     "asdpo-aggregator",
     "asdpo-participant",
-    "sit-aggregator",
-    "sit-participant",
     "pdio-aggregator",
     "pdio-participant",
     "brown-aggregator",
@@ -56,7 +54,6 @@
   ],
   "homePageBubbles": [
     "live-participant",
-    "sit-participant",
     "dating-apps-course",
     "health-course",
     "matching-algo-course",
