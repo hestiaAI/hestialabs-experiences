@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/google-agg",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "dist/index.mjs",
   "type": "module",
   "files": [
