@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/hestias-hearth",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Hestia’s Hearth",
   "type": "module",
   "engines": {
@@ -30,6 +30,7 @@
     "copy-files": "copyfiles --flat ../../node_modules/sql.js/dist/sql-wasm.wasm ./bin/data-experience/src/utils && copyfiles ./entry.sh ./bin/packages/packages/hestias-hearth"
   },
   "devDependencies": {
+    "@hestia.ai/data-experience": "file:../../../data-experience",
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^18.7.23",
     "@types/yargs": "^17.0.13",

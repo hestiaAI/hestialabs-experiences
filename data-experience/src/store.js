@@ -15,6 +15,7 @@ const store = {
     currentDB: null,
     fileManager: null,
     fileExplorerCurrentItem: {},
+    fileExplorerClickedSchemaTreeNode: null,
     consentForm: null
   }),
   mutations: {
@@ -44,6 +45,9 @@ const store = {
     },
     setSelectedFiles(state, selectedFiles) {
       state.selectedFiles = selectedFiles
+    },
+    setClickedSchemaTreeNode(state, node) {
+      state.fileExplorerClickedSchemaTreeNode = node
     },
     selectPath(state, path) {
       if (!state.fileExplorerCurrentItem.selectedPaths.includes(path)) {

@@ -111,7 +111,7 @@ const values = {
 const optionsFunction = ({ app }) => ({
   icons: {
     iconfont: 'mdiSvg',
-    values: { ...values, ...vuetifyOpts.icons.values }
+    values: { ...values, ...vuetifyOpts().icons.values }
   },
   theme: {
     options: {

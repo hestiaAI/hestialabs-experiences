@@ -91,7 +91,7 @@ This section explains how packages for experiences are created and updated. Simi
 {
   "name": "@hestia.ai/<NAME>",
   "version": "0.0.0",
-  "main": "dist/index",
+  "main": "dist/index.mjs",
   "type": "module",
   "files": ["dist"],
   "repository": {
