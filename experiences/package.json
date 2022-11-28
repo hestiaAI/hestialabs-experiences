@@ -14,7 +14,7 @@
     "dev:no-local-server": "npm-run-all -p -r dev:monorepo dev:app",
     "dev:bubble-server": "cd ../../hestialabs-bubble-server/bubbleserver && cross-env DJANGO_DEBUG=True poetry run python ./manage.py runserver",
     "dev:monorepo": "cd ../packages && npm run dev",
-    "dev:app": "cross-env NODE_OPTIONS=--openssl-legacy-provider nuxt --open",
+    "dev:app": "cross-env NODE_OPTIONS=--openssl-legacy-provider nuxt --open --hostname localhost",
     "test": "jest",
     "start": "nuxt start",
     "build": "npm run build:update-revision && npm run build:static",
@@ -23,7 +23,6 @@
     "build:server": "cross-env NODE_OPTIONS=--openssl-legacy-provider nuxt build",
     "lint": "npx eslint . --ext .js,.vue",
     "lint:fix": "npm run lint -- --fix",
-    "pre-commit": "npx lint-staged",
     "_prepare": "node prepare.js",
     "prettier": "prettier"
   },

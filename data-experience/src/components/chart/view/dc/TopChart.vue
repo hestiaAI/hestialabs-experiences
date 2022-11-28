@@ -11,13 +11,14 @@
     <div v-if="topK < total" class="text-caption" v-t="{ path: 'show-top-n', args: { n: topK, m: total } }"></div>
   </VContainer>
 </template>
+
 <script>
 import * as d3 from 'd3'
 import * as dc from 'dc'
 import { removeEmptyBins } from '../utils/dc-helpers'
 import mixin from './mixin'
 import ChartViewFilters from '../filters/ChartViewFilters.vue'
-require('../utils/dc-axis.js')
+import '../utils/dc-axis.js'
 
 // Remove warning on default colorscheme, even if not used..
 dc.config.defaultColors(d3.schemePaired)

@@ -1,0 +1,49 @@
+
+/* AXES */
+/* ticks */
+div[data-v-eb551ed6] .xAxis line,
+div[data-v-eb551ed6] .yAxis line {
+  stroke: #706f6f;
+  stroke-width: 0.5;
+  shape-rendering: geometricPrecision;
+}
+/* axis contour */
+div[data-v-eb551ed6] .xAxis path,
+div[data-v-eb551ed6] .yAxis path {
+  stroke: #706f6f;
+  stroke-width: 0.7;
+  shape-rendering: geometricPrecision;
+}
+div[data-v-eb551ed6] .yAxis path {
+  display: none;
+}
+/* axis text */
+div[data-v-eb551ed6] .xAxis text,
+div[data-v-eb551ed6] .yAxis text {
+  fill: #2b2929;
+  font-size: 1rem;
+  font-weight: 300;
+}
+div[data-v-eb551ed6] .gridline {
+  stroke: lightgray;
+  shape-rendering: geometricPrecision;
+  stroke-opacity: 0.5;
+  stroke-width: 10;
+}
+
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 110px;
+  height: 30px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: white;
+  color: #565656;
+  border: 0px;
+  border-radius: 2px;
+  pointer-events: none;
+  box-shadow: 0 0px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
