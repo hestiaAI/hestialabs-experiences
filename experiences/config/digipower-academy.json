@@ -32,6 +32,8 @@
     "live-participant",
     "demo-aggregator",
     "demo-participant",
+    "asdpo-aggregator",
+    "asdpo-participant",
     "sit-aggregator",
     "sit-participant",
     "pdio-aggregator",
