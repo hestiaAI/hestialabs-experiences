@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
+import { merge } from 'lodash-es'
 
 import vuetifyEn from 'vuetify/lib/locale/en'
 import vuetifyFr from 'vuetify/lib/locale/fr'
@@ -33,20 +32,13 @@ const messagesOverride = {
   }
 }
 
-Vue.use(VueI18n)
-
-const i18n = new VueI18n({
+const i18nOpts = {
   availableLocales: localeCodes,
   locale: 'fr',
   fallbackLocale: 'en',
-  messages: messagesDefault,
+  messages: merge(messagesDefault, messagesOverride),
   numberFormats,
   dateTimeFormats
-})
+}
 
-localeCodes.forEach((locale) => {
-  /* overriding messages */
-  i18n.mergeLocaleMessage(locale, messagesOverride[locale])
-})
-
-export default i18n
+export default i18nOpts

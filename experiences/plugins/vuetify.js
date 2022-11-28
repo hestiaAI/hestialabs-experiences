@@ -10,8 +10,5 @@ export default ({ store, $vuetify }) => {
 import Vue from 'vue'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-import { vuetifyOpts } from 'data-experience'
 
 Vue.use(Vuetify)
-
-export default new Vuetify(vuetifyOpts)

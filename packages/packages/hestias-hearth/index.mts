@@ -48,11 +48,12 @@ const experiences: { [key: string]: { options: ExperienceOptions } } = {
 
 import { SQLType } from '../../lib/types/database-config.js'
 import { getCsvAndMergeFromID } from '../../lib/pipelines/custom.js'
-import DBMS from '../../../data-experience/src/utils/sql.js'
-import FileManager from '../../../data-experience/src/utils/file-manager.js'
-import NodeFile from '../../../data-experience/src/utils/node-file.js'
-import genericPipelines from '../../../data-experience/src/utils/generic-pipelines.js'
-// import fileManagerWorkers from '../../../data-experience/utils/file-manager-workers.js'
+
+import DBMS from '@hestia.ai/data-experience/src/utils/sql.js'
+import FileManager from '@hestia.ai/data-experience/src/utils/file-manager.js'
+import NodeFile from '@hestia.ai/data-experience/src/utils/node-file.js'
+import genericPipelines from '@hestia.ai/data-experience/src/utils/generic-pipelines.js'
+// import fileManagerWorkers from '@hestia.ai/data-experience/utils/file-manager-workers.js'
 
 const pascalCase = (str: string) =>
   camelCase(str).replace(/^./, firstChar => firstChar.toUpperCase())

@@ -1,18 +1,24 @@
-const webpack = require('webpack')
-const { defineConfig } = require('@vue/cli-service')
-const path = require('path')
+import webpack from 'webpack'
+import { defineConfig } from '@vue/cli-service'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { createRequire } from 'module'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const require = createRequire(import.meta.url)
+
 const isDev = process.env.NODE_ENV === 'development'
 
-module.exports = defineConfig({
-  publicPath: '/',
+export default defineConfig({
+  publicPath: isDev ? '/' : './',
   configureWebpack: {
     resolve: {
       alias: {
         '~': path.resolve(__dirname, 'src'),
         '@': path.resolve(__dirname, 'src'),
         // https://github.com/micromatch/picomatch/pull/23
-        picomatch: 'picomatch-browser',
-        vue$: path.resolve(__dirname, 'node_modules/vue/dist/vue.runtime.esm.js')
+        picomatch: 'picomatch-browser'
       },
       fallback: {
         fs: false,

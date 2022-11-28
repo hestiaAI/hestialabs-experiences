@@ -11,4 +11,5 @@ fi
 #
 
 cd ./packages && npx lint-staged
-cd ../experiences && npm run pre-commit
+cd ../data-experience && npx lint-staged
+cd ../experiences && npx lint-staged
