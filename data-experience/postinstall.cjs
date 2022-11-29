@@ -1,5 +1,6 @@
 const { resolve } = require('path')
 const { readdirSync } = require('fs')
+const { spawnSync } = require('child_process')
 
 const { CIRCLECI } = process.env
 
@@ -20,9 +21,6 @@ function handleSpawnOutput({ status, stderr, stdout, error }) {
 if (CIRCLECI) {
   // experiences required for tests
   const experiences = readdirSync(resolve(__dirname, 'src/__tests__'))
-
-  const { spawnSync } = require('child_process')
-  // const { spawnSync, execSync } = require('child_process')
   // const npmrcPath = resolve(__dirname, '.npmrc')
   // const cmd = `echo "//npm.pkg.github.com/:_authToken=$\{HESTIA_OWNER_GITHUB_TOKEN}" >> ${npmrcPath}`
   // execSync(cmd)
@@ -35,17 +33,21 @@ if (CIRCLECI) {
   )
   handleSpawnOutput(spawnSync('npm', ['install', ...packages]))
 } else {
-  // experiences required for dev
-  const experiences = readdirSync(resolve(__dirname, '../packages/packages/experiences'))
-  // cross-platform spawn
-  const spawn = require('cross-spawn')
-  const packages = experiences.map((packageNameAndTag) => {
-    const [name] = packageNameAndTag.split('@')
-    return `@hestia.ai/${name}`
-  })
-  console.info(
-    'Linking packages...\n' +
+  const dotenv = require('dotenv')
+  dotenv.config()
+  if (process.env.NODE_ENV === 'development') {
+    const spawn = require('cross-spawn')
+    // experiences required for dev
+    const experiences = readdirSync(resolve(__dirname, '../packages/packages/experiences'))
+    const packages = experiences.map((packageNameAndTag) => {
+      const [name] = packageNameAndTag.split('@')
+      return `@hestia.ai/${name}`
+    })
+    console.info(
+      'Linking packages...\n' +
       packages.join('\n')
-  )
-  handleSpawnOutput(spawn.sync('npm', ['link', ...packages]))
+    )
+    // cross-platform spawn
+    handleSpawnOutput(spawn.sync('npm', ['link', ...packages]))
+  }
 }

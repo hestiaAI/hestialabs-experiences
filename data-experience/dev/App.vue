@@ -122,8 +122,6 @@ const bubbleIds = [
   // 'reflets-participant',
   // 'sciencespo-aggregator',
   // 'sciencespo-participant',
-  // 'sit-aggregator',
-  // 'sit-participant',
   // 'swiss-mp-aggregator',
   // 'swiss-mp-participant',
   // 'th-aggregator',

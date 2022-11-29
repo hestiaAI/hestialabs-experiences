@@ -1,3 +1,4 @@
+// https://eslint.org/docs/latest/user-guide/configuring/configuration-files#configuration-file-formats
 module.exports = {
   env: {
     browser: true,

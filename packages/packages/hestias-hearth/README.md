@@ -27,6 +27,12 @@ The script stores all output in the `hestias-hearth` folder in your home directo
 
 ## Development
 
+### Setup
+
+```sh
+npm i
+```
+
 ### Compilation
 
 Run the TypeScript compiler in watch mode:
