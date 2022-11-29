@@ -118,14 +118,15 @@
                     v-for="(item, index) in permanences"
                     :key="index"
                   >
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.time }}</td>
-                    <td>{{ item.location }}</td>
-                    <td>{{ item.url }}</td>
+                    <td>{{ item.Date }}</td>
+                    <td>{{ item.Time }}</td>
+                    <td>{{ item.Name }}</td>
+                    <td><a v-if="item.URL" :href="item.URL" target="_blank">Click here</a></td>
                   </tr>
                 </tbody>
               </template>
             </VSimpleTable>
+            <span v-if="!permanences.length" class="caption">Aucune permanence n'est prévue pour le moment, veuillez revenir plus tard.</span>
           </VCol>
         </VRow>
       </section>
@@ -133,14 +134,14 @@
   </div>
 </template>
 <script>
+import Papa from 'papaparse'
+import * as d3 from 'd3'
 export default {
   data() {
     return {
-      permanences: [
-        { date: '25 Nov, 2022', time: '14h00-16h00', location: 'Geneve FacLab', url: '' },
-        { date: '28 Nov 2022', time: '14h00-16h00', location: 'Lausanne PowerHouse', url: '' },
-        { date: '1er Dec 2022', time: '14h00-16h00', location: 'Lausanne PowerHouse', url: '' }
-      ]
+      permanences: [],
+      formatDate: d3.timeFormat('%d %b %Y'),
+      parseDate: d3.timeParse('%Y-%m-%d')
     }
   },
   computed: {
@@ -158,12 +159,31 @@ export default {
       return `https://player.twitch.tv/?video=1648959623&parent=${this.host}&autoplay=false`
     }
   },
+  mounted() {
+    this.getPermanences()
+  },
   methods: {
     scrollMeTo(refName) {
       const element = this.$refs[refName]
       const top = element.offsetTop
 
       window.scrollTo(0, top)
+    },
+    validURL(url) {
+      const regex = /^(http(s):\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,63}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/
+      return regex.test(url)
+    },
+    async getPermanences() {
+      const URL = `https://raw.githubusercontent.com/fquellec/public-content/main/permanences.csv?timestamp=${new Date().getTime()}`
+      const res = await this.$axios.$get(URL)
+      const permanences = Papa.parse(res, { header: true, escapeChar: '\\', skipEmptyLines: true }).data
+      this.permanences = permanences.map((p) => {
+        return {
+          ...p,
+          URL: this.validURL(p.URL) ? p.URL : this.validURL(`https://${p.URL}`) ? `https://${p.URL}` : null,
+          Date: p.Date ? this.formatDate(this.parseDate(p.Date)) || p.Date : null
+        }
+      })
     }
   }
 }

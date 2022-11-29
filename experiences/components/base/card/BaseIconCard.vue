@@ -34,7 +34,6 @@ export default {
   },
   computed: {
     mdiIcon() {
-      console.log('TEST', this.$vuetify.icons.values[this.icon])
       return this.$vuetify.icons.values[this.icon]
     },
     cssProps() {
