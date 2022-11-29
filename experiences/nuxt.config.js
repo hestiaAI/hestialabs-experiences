@@ -68,19 +68,6 @@ export default {
   server: {
     host: '0' // default: localhost
   },
-  axios: {
-    // Do away with the baseUrl when using proxy
-    proxy: true,
-    credentials: true
-  },
-
-  proxy: {
-    '/fibery': {
-      target: 'https://hestiaai.fibery.io/api',
-      changeOrigin: true,
-      pathRewrite: { '^/fibery': '/' }
-    }
-  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate(title) {
