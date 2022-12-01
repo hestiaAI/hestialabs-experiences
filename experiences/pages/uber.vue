@@ -120,8 +120,12 @@
                   >
                     <td>{{ item.Date }}</td>
                     <td>{{ item.Time }}</td>
-                    <td>{{ item.Name }}</td>
-                    <td><a v-if="item.URL" :href="item.URL" target="_blank">Click here</a></td>
+                    <td>{{ item.Location }}</td>
+                    <td>
+                      <ExternalLink v-if="item.URL" :href="item.URL">
+                        Click here
+                      </ExternalLink>
+                    </td>
                   </tr>
                 </tbody>
               </template>
@@ -133,15 +137,22 @@
     </VContainer>
   </div>
 </template>
+
 <script>
 import Papa from 'papaparse'
 import * as d3 from 'd3'
+const formatDate = d3.timeFormat('%d %b %Y')
+const parseDate = d3.timeParse('%Y-%m-%d')
+
+function validURL(url) {
+  const regex = /^(http(s):\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,63}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/
+  return regex.test(url)
+}
+
 export default {
   data() {
     return {
-      permanences: [],
-      formatDate: d3.timeFormat('%d %b %Y'),
-      parseDate: d3.timeParse('%Y-%m-%d')
+      permanences: []
     }
   },
   computed: {
@@ -169,24 +180,29 @@ export default {
 
       window.scrollTo(0, top)
     },
-    validURL(url) {
-      const regex = /^(http(s):\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,63}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/
-      return regex.test(url)
-    },
     async getPermanences() {
-      const URL = `https://raw.githubusercontent.com/fquellec/public-content/main/permanences.csv?timestamp=${new Date().getTime()}`
+      const URL = `https://raw.githubusercontent.com/hestiaAI/fibery-public/main/permanences/uber-driver-permanences.csv?timestamp=${new Date().getTime()}`
       const res = await this.$axios.$get(URL)
-      const permanences = Papa.parse(res, { header: true, escapeChar: '\\', skipEmptyLines: true }).data
-      this.permanences = permanences.map((p) => {
+      const { data } = Papa.parse(res, { header: true, escapeChar: '\\', skipEmptyLines: true })
+      const now = new Date()
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      this.permanences = data.map(({ URL, Date: date, ...rest }) => {
+        const dateParsed = parseDate(date)
         return {
-          ...p,
-          URL: this.validURL(p.URL) ? p.URL : this.validURL(`https://${p.URL}`) ? `https://${p.URL}` : null,
-          Date: p.Date ? this.formatDate(this.parseDate(p.Date)) || p.Date : null
+          ...rest,
+          dateParsed,
+          URL: validURL(URL) ? URL : validURL(`https://${URL}`) ? `https://${URL}` : null,
+          Date: date ? formatDate(dateParsed) || date : null
         }
-      })
+      }).filter(
+        // Show permanences occurring today or later (live update)
+        p =>
+          p.dateParsed >= today
+      )
     }
   }
 }
+
 </script>
 <style scoped>
 .banner-wrapper {
