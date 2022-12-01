@@ -7,6 +7,7 @@ import dataSample from '@/data-samples/uber-driver.zip'
 const options: ExperienceOptions = {
   dataPortal: 'https://myprivacy.uber.com/privacy/exploreyourdata/download',
   dataSamples: [dataSample],
+  hideFileExplorer: false,
   files: {
     driver_trips:
       '**/(driver_lifetime_trips-0.csv|*- Driver Lifetime Trips*.csv|Trip*.csv)',
