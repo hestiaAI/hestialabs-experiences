@@ -6,12 +6,15 @@ License: MIT
 */
 
 
-/* @license
-Papa Parse
-v5.3.2
-https://github.com/mholt/PapaParse
-License: MIT
-*/
+/**
+ * @license
+ * Lodash <https://lodash.com/>
+ * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
 
 /*!
 	Copyright (c) 2018 Jed Watson.
@@ -3303,28 +3306,15 @@ PERFORMANCE OF THIS SOFTWARE.
   \******************************************************************************/
 
 
-/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
-
-
-/**
- * @license
- * Lodash <https://lodash.com/>
- * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
- * Released under MIT license <https://lodash.com/license>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
- * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- */
-
-
-/** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
-
-
 /* @license
 Papa Parse
 v5.3.2
 https://github.com/mholt/PapaParse
 License: MIT
 */
+
+
+/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 
 
 /*!
