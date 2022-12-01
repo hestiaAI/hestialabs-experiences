@@ -113,6 +113,20 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ['@nuxtjs/i18n', '@nuxtjs/axios', '@nuxtjs/proxy'],
 
+  axios: {
+    // Do away with the baseUrl when using proxy
+    proxy: true,
+    credentials: true
+  },
+
+  proxy: {
+    '/github/raw': {
+      target: 'https://raw.githubusercontent.com',
+      changeOrigin: true,
+      pathRewrite: { '^/github/raw': '/' }
+    }
+  },
+
   i18n: {
     baseUrl,
     locales: locales.filter(({ code }) => i18nLocales.includes(code)),

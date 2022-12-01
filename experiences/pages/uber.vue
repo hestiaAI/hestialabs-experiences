@@ -167,8 +167,8 @@ export default {
   },
   methods: {
     async getPermanences() {
-      const URL = `https://raw.githubusercontent.com/hestiaAI/fibery-public/main/permanences/uber-driver-permanences.csv?timestamp=${new Date().getTime()}`
-      const res = await this.$axios.$get(URL)
+      const permanencesUrl = `/github/raw/hestiaAI/fibery-public/main/permanences/uber-driver-permanences.csv?timestamp=${new Date().getTime()}`
+      const res = await this.$axios.$get(permanencesUrl)
       const { data } = Papa.parse(res, { header: true, escapeChar: '\\', skipEmptyLines: true })
       const now = new Date()
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
