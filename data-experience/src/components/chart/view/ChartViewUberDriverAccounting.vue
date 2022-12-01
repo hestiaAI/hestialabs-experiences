@@ -174,7 +174,7 @@ export default {
     const timeParser = d3.timeParse('%s')
     const dateExtent = d3.extent(this.values, v => timeParser(v.begin_ts))
     return {
-      drawer: true,
+      drawer: false,
       timeParser,
       numberFormatter: d3.format('.2s'),
       aggregations: {
