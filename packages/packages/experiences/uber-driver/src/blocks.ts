@@ -1,4 +1,5 @@
 import { customPipelineGetFirstCSV } from '@/pipelines/custom'
+import { getMockupData } from './preprocessor'
 import type { ViewBlocks } from '@/types'
 import {
   driverTripsPostProcessor,
@@ -87,12 +88,12 @@ const blocks: ViewBlocks = [
   },
   {
     id: 'driverAccounting',
-    customPipeline: customPipelineGetFirstCSV('non_trip'),
+    customPipeline: getMockupData,
     files: ['rider_points'],
     title: 'Accounting (Mockup)',
     text: 'Compute your expenses and estimated wages.',
     visualization: 'ChartViewUberDriverAccounting.vue',
-    overlay: 'Under Development'
+    overlay: 'This feature is under development'
   }
 ]
 
