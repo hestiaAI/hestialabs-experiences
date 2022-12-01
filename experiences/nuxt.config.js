@@ -115,15 +115,14 @@ export default {
 
   axios: {
     // Do away with the baseUrl when using proxy
-    proxy: true,
-    credentials: true
+    proxy: true
   },
 
   proxy: {
     '/github/raw': {
       target: 'https://raw.githubusercontent.com',
       changeOrigin: true,
-      pathRewrite: { '^/github/raw': '/' }
+      pathRewrite: { '^/github/raw': '' }
     }
   },
 
