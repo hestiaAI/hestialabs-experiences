@@ -111,7 +111,7 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/i18n'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/axios', '@nuxtjs/proxy'],
 
   i18n: {
     baseUrl,
