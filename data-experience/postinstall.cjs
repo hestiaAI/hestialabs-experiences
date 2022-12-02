@@ -51,12 +51,12 @@ if (CIRCLECI) {
       // cross-platform spawn
       handleSpawnOutput(spawn.sync('npm', ['link', ...packages]))
     }
-  } catch(error) {
+  } catch (error) {
     if (error.code === 'MODULE_NOT_FOUND') {
       // workaround when postinstall hook
       // is called during npm install in ./packages
       process.exit(0)
     }
-    throw err
+    throw error
   }
 }
