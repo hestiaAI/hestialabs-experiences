@@ -111,7 +111,20 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/i18n'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/axios', '@nuxtjs/proxy'],
+
+  axios: {
+    // Do away with the baseUrl when using proxy
+    proxy: true
+  },
+
+  proxy: {
+    '/github/raw': {
+      target: 'https://raw.githubusercontent.com',
+      changeOrigin: true,
+      pathRewrite: { '^/github/raw': '' }
+    }
+  },
 
   i18n: {
     baseUrl,

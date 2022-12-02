@@ -20,9 +20,11 @@
               1ère étape: Récupérer vos données
             </div>
             <p class="text-h6">
-              <a href="https://myprivacy.uber.com/privacy/exploreyourdata/download" target="blank">Cliquez ici</a> pour demander vos données via le portail de téléchargement Uber ou suivez les instructions sur la vidéo*.
+              <ExternalLink href="https://myprivacy.uber.com/privacy/exploreyourdata/download">
+                Cliquez ici
+              </ExternalLink> pour demander vos données via le portail de téléchargement Uber ou suivez les instructions sur la vidéo*.
             </p>
-            <span class="caption">*Que vous travailliez dans un pays de l’UE (<a href="https://www.privacy-regulation.eu/fr/15.htm" target="blank">RGPD art. 15</a>) ou en Suisse (<a href="https://www.fedlex.admin.ch/eli/cc/1993/1945_1945_1945/fr#a8" target="blank">LPD art. 8</a>), Uber doit vous donner vos données, c’est la loi.</span>
+            <span class="caption">*Que vous travailliez dans un pays de l’UE (<ExternalLink href="https://www.privacy-regulation.eu/fr/15.htm">RGPD art. 15</ExternalLink>) ou en Suisse (<ExternalLink href="https://www.fedlex.admin.ch/eli/cc/1993/1945_1945_1945/fr#a8">LPD art. 8</ExternalLink>), Uber doit vous donner vos données, c’est la loi.</span>
           </VCol>
           <VCol cols="12" md="6" align="center">
             <BaseVideo video-src="https://vimeo.com/774677671" width="100%" />
@@ -36,7 +38,7 @@
               2ème étape: Contactez-nous
             </div>
             <p class="text-h6">
-              Participez à l’une de nos <a @click="scrollMeTo('permanences')">permanences (à Genève, à Lausanne ou à Paris)</a> ou contactez-nous:
+              Participez à l’une de nos <a href="#permanences">permanences (à Genève, à Lausanne ou à Paris)</a> ou contactez-nous:
             </p>
           </VCol>
           <VCol cols="12" md="6">
@@ -55,7 +57,11 @@
             </div>
             <p class="text-h6">
               <ul>
-                <li>Estimer les arriérés qui vous sont dûs si vous avez été requalifié en employé (comme par exemple à <a href="https://www.ge.ch/document/decision-historique-dans-dossier-uber-chauffeurs-sont-salaries-pas-independants" target="blank">Genève</a>)</li>
+                <li>
+                  Estimer les arriérés qui vous sont dûs si vous avez été requalifié en employé (comme par exemple à <ExternalLink href="https://www.ge.ch/document/decision-historique-dans-dossier-uber-chauffeurs-sont-salaries-pas-independants">
+                    Genève
+                  </ExternalLink>)
+                </li>
                 <li>Comparer vos gains à vos coûts</li>
                 <li>Visualiser votre temps de travail et vos km parcourus, y compris à vide (sans client)</li>
                 <li>Ne vous laissez plus manipuler par l’algorithme: où et quand gagnez vous le plus?</li>
@@ -80,7 +86,7 @@
           </VCol>
         </VRow>
       </section>
-      <section ref="permanences" class="section-wrapper">
+      <section id="permanences" class="section-wrapper">
         <VRow>
           <VCol cols="12" md="6">
             <div class="text-h4 font-weight-bold blue-grey--text text--darken-2 mb-6">
@@ -118,55 +124,71 @@
                     v-for="(item, index) in permanences"
                     :key="index"
                   >
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.time }}</td>
-                    <td>{{ item.location }}</td>
-                    <td>{{ item.url }}</td>
+                    <td>{{ item.Date }}</td>
+                    <td>{{ item.Time }}</td>
+                    <td>{{ item.Location }}</td>
+                    <td>
+                      <ExternalLink v-if="item.URL" :href="item.URL">
+                        Click here
+                      </ExternalLink>
+                    </td>
                   </tr>
                 </tbody>
               </template>
             </VSimpleTable>
+            <span v-if="!permanences.length" class="caption">Aucune permanence n'est prévue pour le moment, veuillez revenir plus tard.</span>
           </VCol>
         </VRow>
       </section>
     </VContainer>
   </div>
 </template>
+
 <script>
+import Papa from 'papaparse'
+import * as d3 from 'd3'
+const formatDate = d3.timeFormat('%d %b %Y')
+const parseDate = d3.timeParse('%Y-%m-%d')
+
+function validURL(url) {
+  const regex = /^(http(s):\/\/.)[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,63}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/
+  return regex.test(url)
+}
+
 export default {
   data() {
     return {
-      permanences: [
-        { date: '25 Nov, 2022', time: '14h00-16h00', location: 'Geneve FacLab', url: '' },
-        { date: '28 Nov 2022', time: '14h00-16h00', location: 'Lausanne PowerHouse', url: '' },
-        { date: '1er Dec 2022', time: '14h00-16h00', location: 'Lausanne PowerHouse', url: '' }
-      ]
+      permanences: [],
+      videoLink: `https://player.twitch.tv/?video=1648959623&parent=${window.location.hostname.replace(/^www\./, '')}&autoplay=false`
     }
   },
-  computed: {
-    host() {
-      if (window) {
-        return window.location.host
-          .toLowerCase()
-          .replace(/www./g, '')
-          .split(':')[0]
-      } else {
-        return null
-      }
-    },
-    videoLink() {
-      return `https://player.twitch.tv/?video=1648959623&parent=${this.host}&autoplay=false`
-    }
+  mounted() {
+    this.getPermanences()
   },
   methods: {
-    scrollMeTo(refName) {
-      const element = this.$refs[refName]
-      const top = element.offsetTop
-
-      window.scrollTo(0, top)
+    async getPermanences() {
+      const permanencesUrl = `/github/raw/hestiaAI/fibery-public/main/permanences/uber-driver-permanences.csv?timestamp=${new Date().getTime()}`
+      const res = await this.$axios.$get(permanencesUrl)
+      const { data } = Papa.parse(res, { header: true, escapeChar: '\\', skipEmptyLines: true })
+      const now = new Date()
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+      this.permanences = data.map(({ URL, Date: date, ...rest }) => {
+        const dateParsed = parseDate(date)
+        return {
+          ...rest,
+          dateParsed,
+          URL: validURL(URL) ? URL : validURL(`https://${URL}`) ? `https://${URL}` : null,
+          Date: date ? formatDate(dateParsed) || date : null
+        }
+      }).filter(
+        // Show permanences occurring today or later (live update)
+        p =>
+          p.dateParsed >= today
+      )
     }
   }
 }
+
 </script>
 <style scoped>
 .banner-wrapper {
