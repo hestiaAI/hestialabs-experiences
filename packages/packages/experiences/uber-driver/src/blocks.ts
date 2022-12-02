@@ -92,8 +92,8 @@ const blocks: ViewBlocks = [
     files: ['rider_points'],
     title: 'Accounting (Mockup)',
     text: 'Compute your expenses and estimated wages.',
-    visualization: 'ChartViewUberDriverAccounting.vue',
-    overlay: 'This feature is under development'
+    visualization: 'ChartViewEvent.vue'
+    // overlay: 'This feature is under development'
   }
 ]
 
