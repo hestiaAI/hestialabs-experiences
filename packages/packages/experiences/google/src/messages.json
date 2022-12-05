@@ -2,7 +2,7 @@
   "en": {
     "intro": {
       "title": "Google Takeout",
-      "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download",
+      "dataPortal": "https://takeout.google.com/settings/takeout",
       "dataPortalMessage": "<strong>Important:</strong> For the experiment to work, please click on <strong>\"deselect all\"</strong> and then select the following: <strong>\"Location History\"</strong><div>Once done you can click the blue \"Next Step\" button at the bottom of the page. This should queue your download"
     },
     "viewBlocks": {
@@ -119,7 +119,7 @@
   "fr": {
     "intro": {
       "title": "Google Takeout",
-      "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download",
+      "dataPortal": "https://takeout.google.com/settings/takeout",
       "dataPortalMessage": "<strong>Important:</strong> Pour que l'expérience fonctionne, veuillez cliquer sur <strong>\"Tout désélectionner\"</strong>puis sélectionnez ce qui suit: <strong>\"Historique des positions\"</strong><div>Une fois que vous avez terminé, vous pouvez cliquer sur le bouton bleu \"Étape suivante\" en bas de la page. Cela devrait lancer votre téléchargement."
     },
     "viewBlocks": {
