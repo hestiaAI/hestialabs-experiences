@@ -10,6 +10,10 @@ import { nest } from 'd3-collection'
 
 export default {
   props: {
+    value: {
+      type: Array,
+      default: null
+    },
     values: {
       type: Array,
       default: () => []
@@ -25,6 +29,7 @@ export default {
   },
   data() {
     return {
+      margin: { top: 50, right: 20, bottom: 20, left: 50 },
       dateParser: d => new Date(d),
       intervals: {
         Day: {
@@ -101,15 +106,16 @@ export default {
       const width = d3
         .select(`#AreaDatePicker-${this._uid}`)
         .node()
-        .getBoundingClientRect().width
+        .getBoundingClientRect().width -
+        this.margin.right - this.margin.left
       const height = 100
-
       // d3.select(`#AreaDatePicker-${this._uid} svg`).remove()
       const svg = d3.select(`#AreaDatePicker-${this._uid}`)
         .append('svg')
-        .attr('width', width)
-        .attr('height', height)
+        .attr('width', width + this.margin.left + this.margin.right)
+        .attr('height', height + this.margin.top + this.margin.bottom)
         .append('g')
+        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
 
       // Add X axis --> it is a date format
       const x = d3.scaleTime()
@@ -124,6 +130,7 @@ export default {
       const y = d3.scaleLinear()
         .domain([0, d3.max(this.aggValues, d => d.value)])
         .range([height, 0])
+
       svg.append('g')
         .call(d3.axisLeft(y))
 
@@ -140,37 +147,42 @@ export default {
           .y1(d => y(d.value))
         )
 
-      const brush = d3.svg.brush()
-        .x(x)
-      //  .on('brush', brushed)
-      //  .on('brushend', brushend)
+      const arc = d3.arc()
+        .innerRadius(0)
+        .outerRadius((height) / 10)
+        .startAngle(0)
+        .endAngle((d, i) => i ? 2 * Math.PI : -2 * Math.PI)
 
-      const brushg = svg.append('g')
-        .attr('class', 'x brush')
+      const brushHandle = (g, selection) => g
+        .selectAll('.handle--custom')
+        .data([{ type: 'w' }, { type: 'e' }])
+        .join(
+          enter => enter.append('path')
+            .attr('class', 'handle--custom')
+            .attr('fill', '#8D9FCA')
+            .attr('stroke', '#fff')
+            .attr('stroke-width', 1.5)
+            .attr('cursor', 'ew-resize')
+            .attr('d', arc)
+        )
+        .attr('display', selection === null ? 'none' : null)
+        .attr('transform', selection === null ? null : (d, i) => `translate(${selection[i]},${(height) / 2})`)
+
+      const brush = d3.brushX()
+        .extent([[0, 0], [width, height]])
+        .on('start brush end', ({ selection }) => {
+          if (selection === null) {
+            console.log('Selection NULL')
+          } else {
+            this.$emit('input', selection.map(v => x.invert(v)))
+            console.log('Emitted', selection.map(v => x.invert(v)))
+          }
+          svg.select('.brush').call(brushHandle, selection)
+        })
+      svg.append('g')
+        .attr('class', 'brush')
         .call(brush)
-
-      brushg.selectAll('.extent')
-        .attr('y', -6)
-        .attr('height', height + 8)
-      // .extent is the actual window/rectangle showing what's in focus
-
-      brushg.selectAll('.resize')
-        .append('rect')
-        .attr('class', 'handle')
-        .attr('transform', 'translate(0,' + -3 + ')')
-        .attr('rx', 2)
-        .attr('ry', 2)
-        .attr('height', height + 6)
-        .attr('width', 3)
-
-      brushg.selectAll('.resize')
-        .append('rect')
-        .attr('class', 'handle-mini')
-        .attr('transform', 'translate(-2,8)')
-        .attr('rx', 3)
-        .attr('ry', 3)
-        .attr('height', (height / 2))
-        .attr('width', 7)
+        .call(brush.move, this.value.map(v => x(v)))
     }
   }
 }
