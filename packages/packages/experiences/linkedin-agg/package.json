@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/linkedin-agg",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "dist/index.mjs",
   "type": "module",
   "files": [
