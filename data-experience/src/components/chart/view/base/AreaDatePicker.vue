@@ -29,8 +29,9 @@ export default {
   },
   data() {
     return {
-      margin: { top: 50, right: 20, bottom: 20, left: 50 },
+      margin: { top: 50, right: 50, bottom: 20, left: 50 },
       dateParser: d => new Date(d),
+      dateFormatter: d3.timeFormat('%d %b %Y'),
       intervals: {
         Day: {
           parser: d3.timeDay,
@@ -109,7 +110,9 @@ export default {
         .getBoundingClientRect().width -
         this.margin.right - this.margin.left
       const height = 100
-      // d3.select(`#AreaDatePicker-${this._uid} svg`).remove()
+
+      // Create svg container
+      d3.select(`#AreaDatePicker-${this._uid} svg`).remove()
       const svg = d3.select(`#AreaDatePicker-${this._uid}`)
         .append('svg')
         .attr('width', width + this.margin.left + this.margin.right)
@@ -117,24 +120,26 @@ export default {
         .append('g')
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
 
-      // Add X axis --> it is a date format
+      // Create Time scale
       const x = d3.scaleTime()
         .domain(d3.extent(this.aggValues, d => d.key))
         .range([0, width])
 
+      // Add x Axis
       svg.append('g')
         .attr('transform', 'translate(0,' + height + ')')
         .call(d3.axisBottom(x))
 
-      // Add Y axis
+      // Create Value scale
       const y = d3.scaleLinear()
         .domain([0, d3.max(this.aggValues, d => d.value)])
         .range([height, 0])
 
+      // Add Y axis
       svg.append('g')
-        .call(d3.axisLeft(y))
+        .call(d3.axisLeft(y).ticks(4))
 
-      // Add the area
+      // Add the area graph
       svg.append('path')
         .datum(this.aggValues)
         .attr('fill', '#cce5df')
@@ -142,11 +147,24 @@ export default {
         .attr('stroke-width', 1.5)
         .attr('d', d3.area()
           .curve(d3.curveMonotoneX)
+          // .curve(d3.curveNatural)
           .x(d => x(d.key))
           .y0(y(0))
           .y1(d => y(d.value))
         )
 
+      // Create zoom
+      const zoom = d3.zoom()
+        .scaleExtent([1, Infinity])
+        .translateExtent([[0, 0], [width, height]])
+        .extent([[0, 0], [width, height]])
+
+      // Create Brush
+      const brush = d3.brushX()
+        .extent([[0, 0], [width, height]])
+
+      /** BRUSH BEHAVIOR */
+      // Customize brush handles
       const arc = d3.arc()
         .innerRadius(0)
         .outerRadius((height) / 10)
@@ -168,21 +186,64 @@ export default {
         .attr('display', selection === null ? 'none' : null)
         .attr('transform', selection === null ? null : (d, i) => `translate(${selection[i]},${(height) / 2})`)
 
-      const brush = d3.brushX()
-        .extent([[0, 0], [width, height]])
-        .on('start brush end', ({ selection }) => {
-          if (selection === null) {
-            console.log('Selection NULL')
-          } else {
-            this.$emit('input', selection.map(v => x.invert(v)))
-            console.log('Emitted', selection.map(v => x.invert(v)))
-          }
-          svg.select('.brush').call(brushHandle, selection)
+      // Add Brush action
+      brush
+        .on('start brush end', (event) => {
+          const selection = event.selection ? event.selection.map(v => x.invert(v)) : this.dateExtent
+          this.$emit('input', selection)
+          svg.select('.label-extent-0').text(this.dateFormatter(selection[0]))
+          svg.select('.label-extent-1').text(this.dateFormatter(selection[1]))
+          svg.select('.brush').call(brushHandle, event.selection)
+
+          if (!event.sourceEvent) return // Don't call zoom if this event were fired by zoom
+          svg.call(zoom.transform, d3.zoomIdentity
+            .scale(width / (event.selection[1] - event.selection[0]))
+            .translate(-event.selection[0], 0))
         })
+
+      // Append brush to graph
       svg.append('g')
         .attr('class', 'brush')
         .call(brush)
         .call(brush.move, this.value.map(v => x(v)))
+
+      /** ZOOM BEHAVIOUR */
+      // Add Zoom action
+      zoom
+        .on('zoom', (event) => {
+          if (!event.sourceEvent) return // Don't call brush if this event were fired by brush
+
+          // Update brush
+          const t = event.transform
+          svg.select('.brush').call(brush.move, x.range().map(t.invertX, t))
+        })
+
+      // Append zoom to graph
+      svg
+        .classed('zoom', true)
+        // Add zoom behaviour
+        .call(zoom)
+        // Disable Pan
+        .on('mousedown.zoom', null)
+        .on('touchstart.zoom', null)
+        .on('touchmove.zoom', null)
+        .on('touchend.zoom', null)
+
+      // Add current date range labels
+      svg.append('text')
+        .attr('class', 'label-extent-0')
+        .attr('x', -30)
+        .attr('y', -30)
+        .attr('dy', '.35em')
+        .text(this.dateFormatter(this.value[0]))
+
+      svg.append('text')
+        .attr('class', 'label-extent-1')
+        .attr('text-anchor', 'end')
+        .attr('x', width + 30)
+        .attr('y', -30)
+        .attr('dy', '.35em')
+        .text(this.dateFormatter(this.value[1]))
     }
   }
 }
