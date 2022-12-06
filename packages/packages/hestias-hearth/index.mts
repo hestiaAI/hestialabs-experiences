@@ -15,6 +15,7 @@ import path from 'path'
 import { camelCase } from 'lodash-es'
 import yargs from 'yargs/yargs'
 import { hideBin } from 'yargs/helpers'
+import packageJSON from './package.json' assert { type: 'json' }
 
 import appleTracker from '../experiences/apple-tracker/dist/index.mjs'
 import facebook from '../experiences/facebook/dist/index.mjs'
@@ -88,6 +89,7 @@ const argv = yargs(hideBin(process.argv))
   )
   .demandCommand(1, 'You need at least one command before moving on')
   .help()
+  .version(packageJSON.version)
   .parseSync()
 
 const { experience, files } = argv

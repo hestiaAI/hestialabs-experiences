@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "es2022",
+    "module": "esnext",
     "target": "es2022",
     "allowJs": true,
     "strict": true,
@@ -18,7 +18,8 @@
     "baseUrl": "./",
     // https://bobbyhadz.com/blog/typescript-cannot-find-module
     "moduleResolution": "node",
-    "outDir": "bin"
+    "outDir": "bin",
+    "resolveJsonModule": true
   },
   "files": ["index.mts", "./custom.d.ts"],
   "include": ["../../../data-experience/src/utils/*.js"]
