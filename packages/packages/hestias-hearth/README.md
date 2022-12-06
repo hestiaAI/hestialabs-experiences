@@ -73,16 +73,23 @@ Example command:
 
 ## Publishing
 
+Increment version
+
+```sh
+cd ../..
+npm run lerna:version
+```
+
 Build with TypeScript compiler
 
 ```sh
+cd packages/hestias-hearth
 npm run build
 ```
 
 Publish with Lerna
 
 ```sh
-cd ../../
-npm run lerna:version
+cd ../..
 npm run lerna:publish
 ```

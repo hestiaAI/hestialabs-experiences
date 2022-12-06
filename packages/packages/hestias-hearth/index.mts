@@ -54,7 +54,6 @@ import DBMS from '@hestia.ai/data-experience/src/utils/sql.js'
 import FileManager from '@hestia.ai/data-experience/src/utils/file-manager.js'
 import NodeFile from '@hestia.ai/data-experience/src/utils/node-file.js'
 import genericPipelines from '@hestia.ai/data-experience/src/utils/generic-pipelines.js'
-// import fileManagerWorkers from '@hestia.ai/data-experience/utils/file-manager-workers.js'
 
 const pascalCase = (str: string) =>
   camelCase(str).replace(/^./, firstChar => firstChar.toUpperCase())
