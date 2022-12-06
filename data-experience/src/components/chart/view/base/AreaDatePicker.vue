@@ -189,16 +189,17 @@ export default {
       // Add Brush action
       brush
         .on('start brush end', (event) => {
-          const selection = event.selection ? event.selection.map(v => x.invert(v)) : this.dateExtent
-          this.$emit('input', selection)
-          svg.select('.label-extent-0').text(this.dateFormatter(selection[0]))
-          svg.select('.label-extent-1').text(this.dateFormatter(selection[1]))
+          const selection = event.selection || [0, width]
+          const dateExtent = event.selection ? event.selection.map(v => x.invert(v)) : [0, width].map(v => x.invert(v))
+          this.$emit('input', dateExtent)
+          svg.select('.label-extent-0').text(this.dateFormatter(dateExtent[0]))
+          svg.select('.label-extent-1').text(this.dateFormatter(dateExtent[1]))
           svg.select('.brush').call(brushHandle, event.selection)
 
           if (!event.sourceEvent) return // Don't call zoom if this event were fired by zoom
           svg.call(zoom.transform, d3.zoomIdentity
-            .scale(width / (event.selection[1] - event.selection[0]))
-            .translate(-event.selection[0], 0))
+            .scale(width / (selection[1] - selection[0]))
+            .translate(-selection[0], 0))
         })
 
       // Append brush to graph
