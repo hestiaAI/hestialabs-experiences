@@ -1,11 +1,16 @@
 #!/usr/bin/env node
+
 import type { ExperienceOptions } from '@/types/index'
 import type {
   DatabaseConfig,
   DatabaseTable,
   DatabaseTables
 } from '@/types/database-config'
-import type { NonEmptyArray, PipelineOutputItems } from '@/types/utils'
+import type {
+  NonEmptyArray,
+  PipelineOutput,
+  PipelineOutputItems
+} from '@/types/utils'
 import type { CustomPipeline } from '@/types/view-block'
 
 import { homedir } from 'os'
@@ -185,9 +190,10 @@ for (const {
   customPipeline,
   customPipelineOptions,
   sql,
+  postprocessor,
   overlay
 } of options.viewBlocks) {
-  let results
+  let results: PipelineOutput | { rawCsv: string; config: object }
   if (customPipeline) {
     let pipeline: string | CustomPipeline = customPipeline
     if (typeof pipeline === 'string') {
@@ -204,12 +210,15 @@ for (const {
     throw new TypeError('Invalid view-block')
   }
 
-  if (results) {
+  if (results && ('rawCsv' in results || results.headers.length)) {
+    if (postprocessor && 'headers' in results) {
+      results = postprocessor(results as PipelineOutput)
+    }
     const viewBlockFile = path.join(outputDirViewBlocks, `${id}.json`)
     fs.writeFileSync(viewBlockFile, JSON.stringify(results, null, 2))
-    console.info(`[${id}]: ${viewBlockFile}`)
+    console.info(`[${id}]: ${viewBlockFile.replace(/\\/g, '/')}`)
   } else {
-    throw new Error(`No results for view-block ${id}`)
+    console.warn(`[${id}]: No results`)
   }
 }
 
