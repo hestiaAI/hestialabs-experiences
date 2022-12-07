@@ -35,21 +35,27 @@
     </VRow>
     <VRow>
       <VCol cols="3">
-        <VCheckbox
-          v-for="(status, index) in statuses"
-          :key="index"
-          v-model="options.statuses[status]"
-          :label="status"
-          color="red"
-          :value="true"
-          hide-details
-        ></VCheckbox>
+        <Draggable v-model="statuses">
+           <TransitionGroup name="statuses">
+            <div v-for="(status, idx) in statuses" :key="idx" class="d-flex justify-space-between align-center mt-3 mb-3">
+              <VCheckbox
+                v-model="options.statuses[status]"
+                :label="status"
+                color="red"
+                :value="true"
+                class="mt-2 mb-2"
+                hide-details
+              ></VCheckbox>
+              <VIcon depressed small class="move">$vuetify.icons.mdiReorderVertical</VIcon>
+            </div>
+           </TransitionGroup>
+        </Draggable>
         <VBtn text small class="ma-3">
           <VIcon>$vuetify.icons.mdiPlus</VIcon> Add Status
         </VBtn>
       </VCol>
       <VCol cols="9">
-        <GantDiagram :currentExtent="currentExtent" :values="allValues" class="pa-3"></GantDiagram>
+        <GantDiagram v-bind="{activities: statuses, currentExtent, colorScale, values: allValues}" class="pa-3"></GantDiagram>
       </VCol>
     </VRow>
     <VRow>
@@ -66,6 +72,7 @@
 </template>
 
 <script>
+import Draggable from 'vuedraggable'
 import mixin from './mixin'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 import * as d3 from 'd3'
@@ -74,13 +81,14 @@ import GantDiagram from './base/GantDiagram.vue'
 // import { nest } from 'd3-collection'
 // import { sumBy, mapValues } from 'lodash'
 export default {
-  components: { UnitFilterableTable, AreaDatePicker, GantDiagram },
+  components: { UnitFilterableTable, AreaDatePicker, GantDiagram, Draggable },
   mixins: [mixin],
   props: {},
   data() {
     const timeParser = d3.timeParse('%s')
     const timeFormat = d3.timeFormat('%Y-%m-%d %H:%M:%S')
     const dateExtent = d3.extent(this.values, v => timeParser(v.begin_ts))
+    const uniqueStatuses = [...new Set(this.values.map(d => d.status))]
     return {
       timeParser,
       timeFormat,
@@ -96,7 +104,12 @@ export default {
       options: {
         statuses: {},
         groupBy: 'Year'
-      }
+      },
+      statuses: uniqueStatuses,
+      colorScale: d3
+        .scaleOrdinal()
+        .domain(uniqueStatuses)
+        .range(d3.schemeSet2)
     }
   },
   computed: {
@@ -106,9 +119,6 @@ export default {
       } else {
         return []
       }
-    },
-    statuses() {
-      return [...new Set(this.values.map(d => d.status))]
     },
     allValues() {
       const test = this.values.map((v) => {
@@ -126,3 +136,28 @@ export default {
   }
 }
 </script>
+<style scoped>
+/* 1. declare transition */
+.statuses-move,
+.statuses-enter-active,
+.statuses-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+/* 2. declare enter from and leave to state */
+.statuses-enter-from,
+.statuses-leave-to {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
+/* 3. ensure leaving items are taken out of layout flow so that moving
+      animations can be calculated correctly. */
+.statuses-leave-active {
+  position: absolute;
+}
+
+.move {
+  cursor: move;
+}
+</style>

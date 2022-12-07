@@ -27,6 +27,14 @@ export default {
     activityAccessor: {
       type: String,
       default: 'status'
+    },
+    activities: {
+      type: Array,
+      default: () => []
+    },
+    colorScale: {
+      type: Function,
+      default: () => '#fc8d62'
     }
   },
   data() {
@@ -48,9 +56,6 @@ export default {
     height() {
       return this.activities.length * (this.barHeight + this.gap)
     },
-    activities() {
-      return [...new Set(this.values.map(d => d[this.activityAccessor]))]
-    },
     results() {
       return this.values.map((v) => {
         return {
@@ -69,21 +74,6 @@ export default {
       return d3.scaleTime()
         .domain(this.currentExtent || this.dateExtent)
         .range([0, this.width])
-    },
-    colorScale() {
-      return d3
-        .scaleOrdinal()
-        .domain(this.activities)
-        .range(d3.schemeSet2)
-    },
-    svg() {
-      d3.select(`#GantDiagram-${this._uid} svg`).remove()
-      return d3.select(`#GantDiagram-${this._uid}`)
-        .append('svg')
-        .attr('width', this.width + this.margin.left + this.margin.right)
-        .attr('height', this.height + this.margin.top + this.margin.bottom)
-        .append('g')
-        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
     }
   },
   watch: {
@@ -91,6 +81,10 @@ export default {
       this.svg.selectAll('rect')
         .attr('width', d => this.timeScale(d[this.endAccessor]) - this.timeScale(d[this.beginAccessor]))
         .attr('x', d => this.timeScale(d[this.beginAccessor]))
+    },
+    activities() {
+      this.svg.selectAll('.event')
+        .attr('y', d => this.activities.indexOf(d[this.activityAccessor]) * (this.barHeight + this.gap))
     }
   },
   mounted() {
@@ -98,12 +92,21 @@ export default {
   },
   methods: {
     drawViz() {
+      d3.select(`#GantDiagram-${this._uid} svg`).remove()
+      this.svg = d3.select(`#GantDiagram-${this._uid}`)
+        .append('svg')
+        .attr('width', this.width + this.margin.left + this.margin.right)
+        .attr('height', this.height + this.margin.top + this.margin.bottom)
+        .append('g')
+        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
+
       const rectangles = this.svg
         .selectAll('rect')
         .data(this.results)
 
       rectangles.enter()
         .append('rect')
+        .classed('event', true)
         .attr('rx', 3)
         .attr('ry', 3)
         .attr('x', d => this.timeScale(d[this.beginAccessor]))
@@ -112,6 +115,7 @@ export default {
         .attr('height', this.barHeight)
         .attr('stroke', 'none')
         .attr('fill', d => this.colorScale(d[this.activityAccessor]))
+
       /*
       rectangles.append('text')
         .text(function(d) {
