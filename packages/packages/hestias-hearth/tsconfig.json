@@ -13,7 +13,7 @@
     "allowSyntheticDefaultImports": true,
     "types": ["node"],
     "paths": {
-      "@/*": ["../../lib/*"]
+      "@/*": ["../../lib/*", "../../../lib/*"]
     },
     "baseUrl": "./",
     // https://bobbyhadz.com/blog/typescript-cannot-find-module
@@ -21,6 +21,11 @@
     "outDir": "bin",
     "resolveJsonModule": true
   },
-  "files": ["index.mts", "./custom.d.ts"],
-  "include": ["../../../data-experience/src/utils/*.js"]
+  // "files": ["index.mts", "schema.mts", "./custom.d.ts"],
+  "include": [
+    "*.d.ts",
+    "*.mts",
+    "./utils/*.mts",
+    "../../../data-experience/src/utils/*.js"
+  ]
 }
