@@ -41,8 +41,7 @@
               <VCheckbox
                 v-model="options.statuses[status]"
                 :label="status"
-                color="red"
-                :value="true"
+                :color="colorScale(status)"
                 class="mt-2 mb-2"
                 hide-details
               ></VCheckbox>
@@ -50,9 +49,94 @@
             </div>
            </TransitionGroup>
         </Draggable>
-        <VBtn text small class="ma-3">
-          <VIcon>$vuetify.icons.mdiPlus</VIcon> Add Status
-        </VBtn>
+        <VMenu
+          v-model="menuAddStatus"
+          :close-on-content-click="false"
+          offset-x
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <VBtn text small class="ma-3" v-bind="attrs"
+              v-on="on">
+              <VIcon>$vuetify.icons.mdiPlus</VIcon> Add Status
+            </VBtn>
+          </template>
+          <VCard max-width="450px">
+            <VContainer>
+              <VForm ref="form">
+                <VRow align="center">
+                  <VCol
+                      cols="12"
+                    >
+                      <VTextField
+                        v-model="formAddStatus['name']"
+                        label="Name"
+                        required
+                        :rules="[v => !!v || 'Name is required']"
+                      ></VTextField>
+                  </VCol>
+                  <VCol
+                      class="d-flex"
+                      cols="12"
+                      md="4"
+                    >
+                      <VSelect
+                        v-model="formAddStatus['status_1']"
+                        :items="statuses"
+                        label="Status 1"
+                        required
+                        :rules="[v => !!v || 'Status 1 is required']"
+                      ></VSelect>
+                  </VCol>
+                  <VCol
+                      class="d-flex"
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <VSelect
+                         v-model="formAddStatus['operation']"
+                        :items="['And', 'Or']"
+                        label="Operation"
+                        required
+                        :rules="[v => !!v || 'Operation is required']"
+                      ></VSelect>
+                  </VCol>
+                  <VCol
+                      class="d-flex"
+                      cols="12"
+                      sm="6"
+                      md="4"
+                    >
+                      <VSelect
+                         v-model="formAddStatus['status_2']"
+                        :items="statuses"
+                        label="Status 2"
+                        required
+                        :rules="[v => !!v || 'Status 2 is required']"
+                      ></VSelect>
+                  </VCol>
+                </VRow>
+              </VForm>
+            </VContainer>
+             <VCardActions>
+              <VSpacer></VSpacer>
+
+              <VBtn
+                text
+                @click="menuAddStatus = false"
+              >
+                Cancel
+              </VBtn>
+              <VBtn
+                color="primary"
+                text
+                @click="newStatus"
+              >
+                Save
+              </VBtn>
+            </VCardActions>
+          </VCard>
+        </VMenu>
       </VCol>
       <VCol cols="9">
         <GantDiagram v-bind="{activities: statuses, currentExtent, colorScale, values: allValues}" class="pa-3"></GantDiagram>
@@ -90,6 +174,15 @@ export default {
     const dateExtent = d3.extent(this.values, v => timeParser(v.begin_ts))
     const uniqueStatuses = [...new Set(this.values.map(d => d.status))]
     return {
+      allValues: this.values.map((v) => {
+        return {
+          begin_ts: timeFormat(timeParser(v.begin_ts)),
+          end_ts: timeFormat(timeParser(v.end_ts)),
+          status: v.status
+        }
+      }),
+      menuAddStatus: false,
+      formAddStatus: {},
       timeParser,
       timeFormat,
       dateExtent,
@@ -102,10 +195,9 @@ export default {
         Day: d3.timeFormat('%Y/%m/%d')
       },
       options: {
-        statuses: {},
+        statuses: uniqueStatuses.reduce((a, v) => ({ ...a, [v]: true }), {}),
         groupBy: 'Year'
       },
-      statuses: uniqueStatuses,
       colorScale: d3
         .scaleOrdinal()
         .domain(uniqueStatuses)
@@ -120,19 +212,87 @@ export default {
         return []
       }
     },
-    allValues() {
-      const test = this.values.map((v) => {
-        return {
-          begin_ts: this.timeFormat(this.timeParser(v.begin_ts)),
-          end_ts: this.timeFormat(this.timeParser(v.end_ts)),
-          status: v.status
-        }
-      })
-      return test
+    statuses() {
+      return [...new Set(this.allValues.map(d => d.status))]
     }
   },
   methods: {
-    drawViz() {}
+    drawViz() {},
+    newStatus() {
+      if (!this.$refs.form.validate()) return
+      this.computeIntersection(this.formAddStatus.status_1, this.formAddStatus.status_2, this.formAddStatus.name)
+      console.log(this.formAddStatus)
+      // this.$refs.form.reset()
+      this.menuAddStatus = false
+    },
+    computeIntersection(status1, status2, name) {
+      const first = this.allValues
+        .filter(v => v.status === status1)
+        .map((v) => {
+          return {
+            ...v,
+            begin_ts: new Date(v.begin_ts),
+            end_ts: new Date(v.end_ts),
+            status: name
+          }
+        })
+        .sort((a, b) => b.begin_ts - a.begin_ts)
+      const second = this.allValues
+        .filter(v => v.status === status2)
+        .map((v) => {
+          return {
+            ...v,
+            begin_ts: new Date(v.begin_ts),
+            end_ts: new Date(v.end_ts)
+          }
+        })
+        .sort((a, b) => b.begin_ts - a.begin_ts)
+
+      const events = []
+      first.forEach((event1) => {
+        second.every((event2) => {
+          // console.log('Comparing: ', event1.begin_ts, event1.end_ts, 'with', event2.begin_ts, event2.end_ts)
+          // break the second loop if no more interserctions possible
+          if (event1.begin_ts > event2.end_ts) return false
+          console.log('Event1: ', this.timeFormat(event1.begin_ts), this.timeFormat(event1.end_ts))
+          console.log('Event2', this.timeFormat(event2.begin_ts), this.timeFormat(event2.end_ts))
+          // if event2 start in event1
+          if (event1.begin_ts <= event2.begin_ts && event2.begin_ts <= event1.end_ts) {
+            console.log('Event2 start in Event1')
+            events.push({
+              begin_ts: event2.begin_ts,
+              end_ts: new Date(Math.min(event2.end_ts, event1.end_ts)),
+              status: name
+            })
+            return true
+          }
+
+          // if event2 end in event1
+          if (event1.begin_ts <= event2.end_ts && event2.end_ts <= event1.end_ts) {
+            console.log('Event2 end in Event1')
+            events.push({
+              begin_ts: new Date(Math.max(event2.begin_ts, event1.begin_ts)),
+              end_ts: event2.end_ts,
+              status: name
+            })
+            return true
+          }
+
+          // if event1 is included in event2
+          if (event2.begin_ts < event1.begin_ts && event1.end_ts < event2.end_ts) {
+            console.log('Event1 is included in Event2')
+            events.push({
+              begin_ts: event1.begin_ts,
+              end_ts: event1.end_ts,
+              status: name
+            })
+          }
+          return true
+        })
+      })
+      this.allValues.push(events)
+      console.log(events, first)
+    }
   }
 }
 </script>

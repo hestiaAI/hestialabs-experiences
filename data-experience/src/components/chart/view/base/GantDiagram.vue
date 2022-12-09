@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      margin: { top: 10, right: 10, bottom: 10, left: 10 },
+      margin: { top: 10, right: 40, bottom: 50, left: 20 },
       dateParser: d => new Date(d),
       barHeight: 30,
       gap: 20
@@ -81,6 +81,7 @@ export default {
       this.svg.selectAll('rect')
         .attr('width', d => this.timeScale(d[this.endAccessor]) - this.timeScale(d[this.beginAccessor]))
         .attr('x', d => this.timeScale(d[this.beginAccessor]))
+      this.svg.selectAll('.xAxis').call(d3.axisBottom(this.timeScale))
     },
     activities() {
       this.svg.selectAll('.event')
@@ -92,6 +93,7 @@ export default {
   },
   methods: {
     drawViz() {
+      // Create the svg container
       d3.select(`#GantDiagram-${this._uid} svg`).remove()
       this.svg = d3.select(`#GantDiagram-${this._uid}`)
         .append('svg')
@@ -100,6 +102,7 @@ export default {
         .append('g')
         .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
 
+      // Add the Gant rectangles
       const rectangles = this.svg
         .selectAll('rect')
         .data(this.results)
@@ -116,6 +119,12 @@ export default {
         .attr('stroke', 'none')
         .attr('fill', d => this.colorScale(d[this.activityAccessor]))
 
+      // Add the X axis
+      // Add x Axis
+      this.svg.append('g')
+        .classed('xAxis', true)
+        .attr('transform', 'translate(0,' + this.height + ')')
+        .call(d3.axisBottom(this.timeScale))
       /*
       rectangles.append('text')
         .text(function(d) {
