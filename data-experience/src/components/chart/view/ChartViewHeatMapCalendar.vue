@@ -146,6 +146,10 @@ export default {
     includeTotal: {
       type: Boolean,
       default: () => false
+    },
+    colorPalette: {
+      type: Array,
+      default: () => ['#fff7f3', '#49006a']
     }
   },
   data() {

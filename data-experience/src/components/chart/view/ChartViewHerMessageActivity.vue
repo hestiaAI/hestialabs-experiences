@@ -48,6 +48,7 @@
 import mixin from './mixin'
 import ChartViewHeatMapHour from './ChartViewHeatMapHour.vue'
 import ChartViewHeatMapCalendar from './ChartViewHeatMapCalendar.vue'
+import * as d3 from 'd3'
 
 export default {
   components: { ChartViewHeatMapHour, ChartViewHeatMapCalendar },
@@ -56,6 +57,10 @@ export default {
     dateAccessor: {
       type: String,
       required: true
+    },
+    colorPalette: {
+      type: Array,
+      default: () => ['#fff7f3', '#49006a']
     }
   },
   data() {
