@@ -85,24 +85,6 @@ export default {
   },
   methods: {
     drawViz() {
-      // Define color palette for the graphs
-      /*
-            const colorPalette = [
-              '#254b7f',
-              '#1c6488',
-              '#287a8c',
-              '#40908e',
-              '#59a590',
-              '#7dba91'
-            ]
-            */
-      const colorPalette = [
-        '#58539E',
-        '#847CEB',
-        '#605BAB',
-        '#4A4685',
-        '#35325E'
-      ]
       // Parse and format data
       const formatDay = d3.timeFormat('%B %d, %Y')
       this.results = this.values.map((d) => {
@@ -183,7 +165,7 @@ export default {
         .centerBar(true)
         .gap(1)
         .x(d3.scaleLinear().domain([0, 23]))
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .yAxis()
       hourChart
         .xAxis()
@@ -199,7 +181,7 @@ export default {
         .margins({ top: 10, left: 10, right: 10, bottom: 20 })
         .group(dayOfWeekGroup)
         .dimension(dayOfWeekDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .label(d => d.key)
         .title(d => d.value)
         .elasticX(true)
@@ -216,7 +198,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(removeEmptyBins(userGroup))
         .dimension(userDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .label(d => d.key)
         .data(group => group.top(20))
         .title(d => d.value)
@@ -254,7 +236,7 @@ export default {
         })
         .clipPadding(10)
         .yAxisLabel(this.messages['Total Messages'])
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
       messageChart.xAxis().ticks(10)
       messageChart.yAxis().ticks(6)
       messageChart.filterAll()
@@ -276,7 +258,7 @@ export default {
         .round(d3.timeDay.round)
         .alwaysUseRounding(true)
         .xUnits(d3.timeDays)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .yAxis()
         .ticks(0)
       dc.renderAll()

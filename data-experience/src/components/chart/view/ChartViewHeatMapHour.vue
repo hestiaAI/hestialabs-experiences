@@ -134,7 +134,7 @@ export default {
   data() {
     return {
       hours: d3.range(24),
-      colorPalette: d3.interpolateRdPu
+      colors: d3.interpolate(...this.colorPalette) // d3.interpolateRdPu
     }
   },
   computed: {
@@ -183,7 +183,7 @@ export default {
         .scaleSequential()
         .domain([this.extent[0], this.extent[1]])
         .nice()
-        .interpolator(this.colorPalette)
+        .interpolator(this.colors)
     },
     legendSquares() {
       return this.color.ticks(this.legendPrefNbItems)

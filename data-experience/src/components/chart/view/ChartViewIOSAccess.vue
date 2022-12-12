@@ -70,8 +70,7 @@ export default {
         { text: 'Identifier', value: 'identifier' },
         { text: 'Timestamp', value: 'timestamp' }
       ],
-      results: [],
-      colorPalette: ['#58539E', '#847CEB', '#605BAB', '#4A4685', '#9498F2']
+      results: []
     }
   },
   methods: {

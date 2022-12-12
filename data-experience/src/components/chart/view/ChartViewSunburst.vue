@@ -69,7 +69,7 @@ export default {
         .node()
         .getBoundingClientRect().width, 600)
       const radius = width / 6
-      const color = d3.scaleOrdinal().domain(colorDomain).range(d3.schemeDark2)
+      const color = d3.scaleOrdinal().domain(colorDomain).range(this.colorPalette) // ['#1b9e77', '#d95f02', '#7570b3', '#e7298a', '#66a61e', '#e6ab02', '#a6761d', '#666666']
       // const format = d3.format(',d')
       const arc = d3
         .arc()
@@ -294,7 +294,7 @@ export default {
           clickLabel.attr('opacity', 1)
         }
         // Fade all the segments.
-        d3.selectAll('#' + this.graphId + ' path').style('opacity', 0.3)
+        d3.selectAll('#' + this.graphId + ' path').style('opacity', 0.5)
         // Then highlight only those that are an ancestor of the current segment.
         svg
           .selectAll('#' + this.graphId + ' path')

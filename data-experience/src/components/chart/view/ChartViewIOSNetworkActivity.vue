@@ -138,8 +138,7 @@ export default {
         { text: 'Initated by', value: 'initiatedType' },
         { text: 'Hits', value: 'hits' }
       ],
-      results: [],
-      colorPalette: ['#58539E', '#847CEB', '#605BAB', '#4A4685', '#9498F2']
+      results: []
     }
   },
   methods: {

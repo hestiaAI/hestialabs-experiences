@@ -97,14 +97,7 @@ export default {
   methods: {
     drawViz() {
       this.results = this.values
-      // Define a color palette for the viz
-      const colorPalette = [
-        '#0D4B7A',
-        // '#0B2B38',
-        '#248EB8',
-        '#7FCEF0',
-        '#4A659E'
-      ]
+
       // Create and bind charts to their respective divs
       const volumeChart = new dc.LineChart('#volume-chart')
       const rangeChart = new dc.BarChart('#range-chart' + this.graphId)
@@ -236,7 +229,7 @@ export default {
       // .curve(d3.curveCardinal.tension(0.6))
         .x(d3.scaleTime().domain([minDate, maxDate]))
         .valueAccessor(d => d.value.count)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
       // .xUnits(d3.timeHour)
         .brushOn(false)
         .elasticX(false)
@@ -272,7 +265,7 @@ export default {
         .round(d3.timeDay.round)
         .alwaysUseRounding(true)
         .xUnits(d3.timeDays)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .yAxis()
         .ticks(0)
       // Render advertiser row chart
@@ -282,7 +275,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(removeEmptyBins(companyGroup))
         .dimension(companyDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors([this.colorPalette[1]])
         .label(d => d.key)
         .valueAccessor(d => d.value.count)
         .data(group => group.top(10))
@@ -304,7 +297,7 @@ export default {
         .group(engagementGroup)
         .valueAccessor(d => d.value.count)
         .title(d => d.value.count + ' ads')
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .label((d) => {
           if (engagementChart.hasFilter() &&
                     !engagementChart.hasFilter(d.key)) {
@@ -323,7 +316,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(removeEmptyBins(targetingTypeGroup))
         .dimension(targetingTypeDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors([this.colorPalette[2]])
         .label(d => d.key)
         .data(group => group.top(10))
       // .labelOffsetX(0)
@@ -338,7 +331,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(removeEmptyBins(targetingValueGroup))
         .dimension(targetingValueDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors([this.colorPalette[3]])
         .label(d => d.key)
         .data(group => group.top(10))
       // .labelOffsetX(0)

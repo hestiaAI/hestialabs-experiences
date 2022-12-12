@@ -42,7 +42,7 @@
         </VCol>
       </VRow>
 
-      <VRow v-if="text">
+      <VRow v-if="text || $te(k('text'))">
         <VCol>
           <VContainer>
             {{ $tev(k('text'), text) }}
@@ -101,11 +101,9 @@
               />
             </VCol>
           </VRow>
-          <VRow v-if="showTable">
-            <VCol>
-              <UnitFilterableTable v-bind="clonedResult" />
-            </VCol>
-          </VRow>
+          <VContainer v-if="showTable">
+            <UnitFilterableTable v-bind="clonedResult" />
+          </VContainer>
         </template>
       </template>
     </VCard>

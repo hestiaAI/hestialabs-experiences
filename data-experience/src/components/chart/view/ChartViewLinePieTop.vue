@@ -120,14 +120,6 @@ export default {
   },
   methods: {
     drawViz() {
-      // Define color palette for the graphs
-      const colorPalette = [
-        '#58539E',
-        '#847CEB',
-        '#605BAB',
-        '#4A4685',
-        '#35325E'
-      ]
       // Parse and format data
       const formatDay = d3.timeFormat('%B %d, %Y')
       this.results = this.values.map((d) => {
@@ -195,7 +187,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(removeEmptyBins(topGroup))
         .dimension(topDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .label(d => d.key)
         .data(group => group.top(10))
         .title(d => d.value)
@@ -232,7 +224,7 @@ export default {
         .title(d => `${formatDay(d.key)} : ${d.value} ${this.rowLabel}`)
         .clipPadding(10)
         .yAxisLabel('Total ' + this.rowLabel)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
       lineChart.xAxis().ticks(10)
       lineChart.yAxis().ticks(6)
       lineChart.filterAll()
@@ -254,7 +246,7 @@ export default {
         .round(this.timeUnit.round)
         .alwaysUseRounding(true)
         .xUnits(this.timeUnit.xUnits)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .yAxis()
         .ticks(0)
       // Render pie chart
@@ -277,7 +269,7 @@ export default {
         .title(d => `${d.key}: ${d.value} ${this.rowLabel}`)
         .drawPaths(true)
         .minAngleForLabel(0.1)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
       pieChart.on('pretransition', function(chart) {
         chart.selectAll('text.pie-slice.pie-label').call(function(t) {
           t.each(function(d) {

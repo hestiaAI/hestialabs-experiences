@@ -218,7 +218,7 @@ export default {
       this.barChart
         .width(width)
         .height(180)
-        .ordinalColors(['#58539E'])
+        .ordinalColors([this.colorPalette[0]])
         .x(d3
           .scaleTime()
           .domain([
@@ -245,7 +245,7 @@ export default {
         .margins({ top: 0, right: 50, bottom: 20, left: 50 })
         .dimension(this.dateDimension)
         .group(this.dateDimension.group(k => this.intervals.Day(k)))
-        .ordinalColors(['#58539E'])
+        .ordinalColors([this.colorPalette[0]])
         .x(d3
           .scaleTime()
           .domain([

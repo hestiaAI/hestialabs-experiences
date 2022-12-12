@@ -386,7 +386,7 @@ export default {
             */
       /* Color Scale */
       const keys = this.slices.map(d => d.id)
-      const color = d3.scaleOrdinal().domain(keys).range(d3.schemeDark2)
+      const color = d3.scaleOrdinal().domain(keys).range(this.colorPalette)
       /* Legend */
       const legend = svg.selectAll('.legend')
         .data(keys)

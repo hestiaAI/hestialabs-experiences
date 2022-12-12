@@ -151,7 +151,7 @@ export default {
   data() {
     return {
       formatMonth: d3.utcFormat('%b'),
-      colorPalette: d3.interpolateRdPu
+      colors: d3.interpolate(...this.colorPalette) // d3.interpolateRdPu
     }
   },
   computed: {
@@ -196,7 +196,7 @@ export default {
         .scaleSequential()
         .domain([this.extent[0], this.extent[1]])
         .nice()
-        .interpolator(this.colorPalette)
+        .interpolator(this.colors)
     },
     itemsPerDay() {
       const years = d3

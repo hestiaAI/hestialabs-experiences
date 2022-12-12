@@ -49,10 +49,6 @@ export default {
     formatNumber: {
       type: String,
       default: '.2f'
-    },
-    colorPalette: {
-      type: Array,
-      default: () => ['#69B3A2', '#C23636', '#67A4BF']
     }
   },
   data() {
