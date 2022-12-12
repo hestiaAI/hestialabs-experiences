@@ -50,7 +50,9 @@
     "th-participant",
     "th-aggregator",
     "observe-aggregator",
-    "observe-participant"
+    "observe-participant",
+    "transitec-participant",
+    "transitec-aggregator"
   ],
   "homePageBubbles": [
     "live-participant",
