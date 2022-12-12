@@ -137,7 +137,7 @@
       "^.+\\.vue$": "@vue/vue2-jest"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!d3|@hestia.ai|lodash-es|vega-lite)",
+      "/node_modules/(?!d3|@hestia.ai|lodash-es|vega-lite|vuetify)",
       "\\.pnp\\.[^\\/]+$"
     ],
     "testPathIgnorePatterns": [
