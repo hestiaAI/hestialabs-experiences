@@ -41,33 +41,44 @@
     </VMain>
     <VFooter app absolute color="primary">
       <div class="lighten-2 py-2 ma-auto white--text" align="center">
-        &copy; Copyright 2022
-        <ExternalLink
-          href="https://hestia.ai"
-        >
-          Hestia.ai
-        </ExternalLink>
-        <br>
-        {{ $t('footer-digipower-academy') }}
-        <ExternalLink
-          href="https://www.sitra.fi/en/projects/digipower-investigation"
-        >
-          SITRA
-        </ExternalLink>, <ExternalLink
-          href="https://www.migros-engagement.ch/en/news-projects/technology-ethics/hestialabs"
-        >
-          Migros Pioneer Fund
-        </ExternalLink> (via
-        <ExternalLink
-          href="http://www.hestialabs.org"
-        >
-          {{ $t('the HestiaLabs project') }}
-        </ExternalLink>) {{ $t('and') }}
-        <ExternalLink
-          href="https://personaldata.io/"
-        >
-          PersonalData.IO
-        </ExternalLink>
+        <div>
+          <span>&copy; Copyright 2022</span>
+          <ExternalLink
+            href="https://hestia.ai"
+          >
+            Hestia.ai
+          </ExternalLink>
+        </div>
+        <i18n path="footer-digipower-academy" tag="p">
+          <template #sitra>
+            <ExternalLink
+              href="https://www.sitra.fi/en/projects/digipower-investigation"
+            >
+              SITRA
+            </ExternalLink>
+          </template>
+          <template #migros>
+            <ExternalLink
+              href="https://www.migros-engagement.ch/en/news-projects/technology-ethics/hestialabs"
+            >
+              {{ $t('Migros Pioneer Fund') }}
+            </ExternalLink>
+          </template>
+          <template #hestialabs>
+            <ExternalLink
+              href="http://www.hestialabs.org"
+            >
+              {{ $t('the HestiaLabs project') }}
+            </ExternalLink>
+          </template>
+          <template #personaldataio>
+            <ExternalLink
+              href="https://personaldata.io/"
+            >
+              PersonalData.IO
+            </ExternalLink>
+          </template>
+        </i18n>
         <blockquote class="mt-2">
           <span class="font-italic">"We need to train both the people who are putting data and information out there, as well as those reading it, how to interpret and question it to ensure they understand it and are not being misled or deceived."</span>
           <br>&mdash; Sir Tim Berners-Lee, inventor of the World Wide Web

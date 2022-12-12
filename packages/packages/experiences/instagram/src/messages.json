@@ -78,13 +78,7 @@
         "text": "",
         "vizProps": {
           "title": "Followers vs Followings over time",
-          "yLabel": "Count",
-          "messages": {
-            "legend": {
-              "Follower": "Follower",
-              "Following": "Following"
-            }
-          }
+          "yLabel": "Count"
         }
       }
     }
@@ -164,17 +158,11 @@
         }
       },
       "follows": {
-        "title": "Liste de suivi",
+        "title": "Follows",
         "text": "",
         "vizProps": {
           "title": "Followers vs Followings au fil du temps",
-          "yLabel": "Nombre",
-          "messages": {
-            "legend": {
-              "Follower": "Suiveur",
-              "Following": "Suivant"
-            }
-          }
+          "yLabel": "Nombre"
         }
       }
     }

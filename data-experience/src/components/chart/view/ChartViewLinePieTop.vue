@@ -5,7 +5,16 @@
         <VRow>
           <VCol cols="12" md="12">
             <div :id="`area-chart-${graphId}`">
-              <strong>{{ titleTimeline }} per {{ timeUnit.accessor }}</strong>
+              <span class="font-weight-bold">
+                <i18n path="item-per-timeunit">
+                  <template #title>
+                    {{ titleTimeline }}
+                  </template>
+                  <template #timeUnit>
+                    {{ $t(timeUnit.accessor) }}
+                  </template>
+                </i18n>
+              </span>
               <ChartViewFilters />
             </div>
             <div :id="`range-chart-${graphId}`" class="range-chart">
@@ -17,7 +26,7 @@
           <VCol cols="12" md="6">
             <div :id="`pie-chart-${graphId}`">
               <div style="display: flex">
-                <strong>{{ titlePie }}</strong>
+                <span class="font-weight-bold">{{ titlePie }}</span>
               </div>
               <ChartViewFilters />
             </div>
@@ -25,7 +34,7 @@
           <VCol cols="12" md="6">
             <div :id="`top-chart-${graphId}`">
               <div style="display: flex">
-                <strong>{{ titleTop }}</strong>
+                <span class="font-weight-bold">{{ titleTop }}</span>
                 <VSpacer />
                 <div :id="`top-search-${graphId}`" />
               </div>
