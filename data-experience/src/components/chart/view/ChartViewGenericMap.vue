@@ -2,12 +2,15 @@
   <VContainer v-if="values.length > 0">
     <VRow>
       <VCol cols="12">
-        <p v-if="total === 0" class="text-subtitle-2">
-          {{ $t('no-records') }}
-        </p>
-        <p v-else-if="label_ !== ''" class="text-subtitle-2">
-          {{ $t('found') }} <strong>{{ total }}</strong> {{ label_ }} {{ $t('in-files') }}.
-        </p>
+        <p v-if="total === 0" class="text-subtitle-2" v-t="'records-none'" />
+        <i18n path="records-some" v-else-if="label_" tag="p" class="text-subtitle-2">
+          <template #total>
+            <span class="font-weight-bold" v-text="total" />
+          </template>
+          <template #label>
+            <span v-text="label_" />
+          </template>
+        </i18n>
       </VCol>
     </VRow>
     <template v-if="total > 0">
@@ -105,15 +108,15 @@ export default {
   props: {
     keplerConfig: {
       type: Object,
-      default: () => null
+      default: null
     },
     showButton: {
       type: Boolean,
-      default: () => false
+      default: false
     },
     doKAnonymity: {
       type: Boolean,
-      default: () => false
+      default: false
     },
     groupKey: {
       type: Array,
@@ -125,7 +128,7 @@ export default {
     },
     label: {
       type: String,
-      default: () => ''
+      default: ''
     }
   },
   data() {
