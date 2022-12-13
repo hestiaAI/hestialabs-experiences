@@ -10,6 +10,6 @@ export const strToArray: PostprocessorFunction = result => {
   }
   return {
     headers: Object.keys(items[0]),
-    items: items.map(r => mapValues(r, v => v.split(';')))
+    items: items.map(r => mapValues(r, v => (v ? v.split(';') : [])))
   }
 }
