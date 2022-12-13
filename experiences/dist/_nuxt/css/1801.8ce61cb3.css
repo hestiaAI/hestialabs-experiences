@@ -1,0 +1,32 @@
+
+/* AXES */
+/* ticks */
+[data-v-1d58f133] .week-axis {
+  text-anchor: end;
+}
+[data-v-1d58f133] .hour-axis {
+  text-anchor: middle;
+}
+[data-v-1d58f133] .graph {
+  font-family: 'Assistant', sans-serif;
+  font-size: 8px;
+  max-width: 100%;
+  height: auto;
+}
+
+
+/* AXES */
+/* ticks */
+[data-v-43a660ce] .week-axis {
+  text-anchor: end;
+}
+[data-v-43a660ce] .hour-axis {
+  text-anchor: middle;
+}
+[data-v-43a660ce] .graph {
+  font-family: 'Assistant', sans-serif;
+  font-size: 8px;
+  max-width: 100%;
+  height: auto;
+}
+

@@ -1,0 +1,23 @@
+
+[data-v-258f01a1] body {
+  font-family: sans-serif;
+  color: #22313f;
+}
+[data-v-258f01a1] .dc-chart g.row text {
+  fill: #22313f;
+  font-weight: bold;
+}
+[data-v-258f01a1] #range-chart g.y {
+  display: none;
+}
+[data-v-258f01a1] .reset {
+  margin-left: 1rem;
+}
+[data-v-258f01a1] .v-application a.reset {
+  color: rgb(85, 3, 30);
+}
+[data-v-258f01a1] p.filters {
+  font-size: 0.8rem;
+  font-style: italic;
+}
+

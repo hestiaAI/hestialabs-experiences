@@ -1,0 +1,32 @@
+
+[data-v-16dbcb0c] #hour-chart g.y {
+  display: none;
+}
+[data-v-16dbcb0c] ul.list-inline {
+  list-style: none;
+  padding-left: 0;
+}
+[data-v-16dbcb0c] ul.list-inline > li {
+  display: inline-block;
+}
+[data-v-16dbcb0c] li.border-right {
+  border-right: 1px solid #90a4ae;
+}
+[data-v-16dbcb0c] .pl-2 {
+  padding-left: 1.5rem;
+}
+[data-v-16dbcb0c] .pr-2 {
+  padding-right: 1.5rem;
+}
+[data-v-16dbcb0c] .stat-info {
+  font-style: italic;
+  font-size: 0.8em;
+}
+[data-v-16dbcb0c] p.stat-title {
+  margin: 0.5rem;
+  padding: 0;
+}
+[data-v-16dbcb0c] .stat-elem {
+  padding: 1rem;
+}
+
