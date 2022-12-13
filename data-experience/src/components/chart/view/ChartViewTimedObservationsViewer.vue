@@ -365,7 +365,7 @@ export default {
       // .round(d3.timeDay.round)
       // .alwaysUseRounding(true)
       // .xUnits(d3.timeDays)
-        .ordinalColors(['#58539E'])
+        .ordinalColors([this.colorPalette[0]])
         .yAxis()
         .ticks(0)
       // Compute and draw row chart
@@ -379,7 +379,7 @@ export default {
         .margins({ top: 20, left: 10, right: 30, bottom: 20 })
         .group(this.removeEmptyBins(typeGroup))
         .dimension(typeDimension)
-        .ordinalColors(['#58539E', '#847CEB', '#605BAB', '#4A4685', '#35325E'])
+        .ordinalColors(this.colorPalette)
         .label(d => d.key)
         .data(group => group.top(10))
         .title(d => d.value)

@@ -70,8 +70,7 @@ export default {
         { text: 'Identifier', value: 'identifier' },
         { text: 'Timestamp', value: 'timestamp' }
       ],
-      results: [],
-      colorPalette: ['#58539E', '#847CEB', '#605BAB', '#4A4685', '#9498F2']
+      results: []
     }
   },
   methods: {
@@ -82,7 +81,7 @@ export default {
     decodeDefault(str) {
       return str ? decodeURIComponent(escape(str)) : 'Unknown'
     },
-    createTopRowChart(ndx, fieldAccessor, valueAccessor) {
+    createTopRowChart(ndx, fieldAccessor, idx) {
       // Create and bind charts to their respective divs
       const chart = new dc.RowChart(`#${fieldAccessor}-chart-${this.graphId}`)
       const search = this.createTextFilterWidget(`#${fieldAccessor}-search-${this.graphId}`)
@@ -98,7 +97,7 @@ export default {
       // Create groups
       const chartGroup = chartDimension
         .group()
-        .reduceSum(d => (valueAccessor ? d[valueAccessor] : 1))
+        .reduceCount()
       // Render top row chart
       const width = d3
         .select(`#${fieldAccessor}-chart-${this.graphId}`)
@@ -110,7 +109,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(removeEmptyBins(chartGroup))
         .dimension(chartDimension)
-        .ordinalColors(this.colorPalette)
+        .ordinalColors([this.colorPalette[idx]])
         .label(d => d.key)
         .data(group => group.top(20))
         .title(d => d.value)
@@ -178,7 +177,7 @@ export default {
         }
       })
       const ndx = crossfilter(this.results)
-      this.createTopRowChart(ndx, 'app')
+      this.createTopRowChart(ndx, 'app', 0)
       this.createPieChart(ndx, 'category')
       // const tableCount = new dc.DataCount(`#dc-data-count-${this.graphId}`)
       // Render counter and table

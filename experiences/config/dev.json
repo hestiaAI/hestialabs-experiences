@@ -74,6 +74,8 @@
     "swiss-mp-aggregator",
     "th-participant",
     "th-aggregator",
+    "transitec-participant",
+    "transitec-aggregator",
     "observe-aggregator",
     "observe-participant"
   ],

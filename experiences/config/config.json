@@ -25,7 +25,9 @@
     "reflets-aggregator",
     "reflets-participant",
     "demo-aggregator",
-    "demo-participant"
+    "demo-participant",
+    "transitec-participant",
+    "transitec-aggregator"
   ],
   "hashtags": ["dataprivacy", "hestialabs"],
   "filedrop": "https://example.com",
