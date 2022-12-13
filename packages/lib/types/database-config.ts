@@ -83,5 +83,5 @@ export type DatabaseTables = NonEmptyArray<DatabaseTable>
 
 export type DatabaseConfig = {
   tables: DatabaseTables
-  getters: DatabaseGetters
+  getters?: DatabaseGetters
 }

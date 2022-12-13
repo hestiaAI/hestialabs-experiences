@@ -30,7 +30,7 @@
               v-html="$tev(k('dataPortalMessage'), dataPortalMessage || '')"
             />
             <!-- eslint-enable vue/no-v-html -->
-            <p>
+            <p class="disclaimer">
               {{ $t('load-data.disclaimer') }}
             </p>
           </VCol>

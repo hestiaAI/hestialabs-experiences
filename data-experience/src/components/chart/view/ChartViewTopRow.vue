@@ -241,7 +241,7 @@ export default {
         .attr('y', d => this.yScale(d.key))
         .attr('width', 0)
         .attr('height', this.yScale.bandwidth())
-        .attr('fill', '#69b3a2')
+        .attr('fill', this.colorPalette[0]) // '#69b3a2'
         .on('mouseover', function(evt, d) {
           d3.select(this).style('opacity', 0.7)
           d3.select(this.parentNode)

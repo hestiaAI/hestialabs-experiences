@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="filterable-table">
     <DataValidator
       :data="{ items, headers }"
       allow-missing-columns
@@ -39,15 +39,21 @@
         </template>
       </VDataTable>
       <BaseButton
+        class="filterable-table__export-button"
         v-bind="{ error, progress, status }"
         text="Export"
         icon="mdiExport"
         @click="exportCSV"
       />
       <BaseButtonDownloadData
+        class="filterable-table__download-button"
         v-bind="{ disabled: !csvString, extension, data: csvString }"
       />
-      <BaseButtonShare v-bind="{ disabled: !files, files }" file-share />
+      <BaseButtonShare
+        class="filterable-table__share-button"
+        v-bind="{ disabled: !files, files }"
+        file-share
+      />
     </DataValidator>
   </div>
 </template>

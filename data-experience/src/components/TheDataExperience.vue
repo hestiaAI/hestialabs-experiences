@@ -151,6 +151,33 @@ import UnitSummary from '@/components/unit/UnitSummary.vue'
 import SettingsSpeedDial from '@/components/misc/SettingsSpeedDial.vue'
 import UnitConsentForm from '@/components/unit/consent-form/UnitConsentForm.vue'
 
+import vuetifyEn from 'vuetify/lib/locale/en'
+import vuetifyFr from 'vuetify/lib/locale/fr'
+
+import defaultEn from '@/locales/en.json'
+import defaultFr from '@/locales/fr.json'
+
+const messagesDefault = {
+  en: {
+    ...defaultEn,
+    $vuetify: vuetifyEn
+  },
+  fr: {
+    ...defaultFr,
+    $vuetify: vuetifyFr
+  }
+}
+const messagesOverride = {
+  en: {},
+  fr: {
+    $vuetify: {
+      dataIterator: {
+        noResultsText: 'Aucun résultat'
+      }
+    }
+  }
+}
+
 const siteConfigDefault = {
   i18nLocales: localeCodes,
   messages: {}
@@ -321,6 +348,12 @@ export default {
     }
   },
   created() {
+    this.siteConfigMerged.i18nLocales.forEach((locale) => {
+      /* default messages */
+      this.$i18n.mergeLocaleMessage(locale, messagesDefault[locale])
+      /* overriding messages */
+      this.$i18n.mergeLocaleMessage(locale, messagesOverride[locale])
+    })
     this.$watch(
       vm => [vm.experienceConfig, vm.siteConfig, vm.bubbleConfig],
       async() => {
@@ -468,7 +501,7 @@ export default {
       this.success = true
 
       const elapsed = new Date() - start
-      this.message = `${this.$t('Successfully processed in')} ${elapsed / 1000} ${this.$t('seconds')}`
+      this.message = this.$t('successful-processing', { seconds: elapsed / 1000 })
 
       window.setTimeout(
         // switch to the second tab

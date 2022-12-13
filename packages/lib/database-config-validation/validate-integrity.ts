@@ -109,5 +109,7 @@ export default function (
   console.info(`[${experience}] Validating integrity of databaseConfig...`)
   validateForeignKeys(tables)
   validatePrimaryKeys(tables)
-  getters.forEach(g => validateGetter(g, tables, files))
+  if (getters) {
+    getters.forEach(g => validateGetter(g, tables, files))
+  }
 }

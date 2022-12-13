@@ -1,14 +1,19 @@
 <template>
   <VContainer>
     <div :id="`area-chart-${graphId}`">
-      <strong>{{ title }}</strong>
-      <template v-if="cumulativeGroup">
-        <strong class="ml-1" v-t="'in total'" />
-      </template>
-      <template v-else>
-        <strong class="ml-1" v-t="'per'" />
-        <strong class="ml-1" v-t="timeUnit.name" />
-      </template>
+      <span class="font-weight-bold ml-1">
+        <template v-if="cumulativeGroup">
+          {{ $t('item-total', { title }) }}
+        </template>
+        <i18n v-else path="item-per-timeunit">
+          <template #title>
+            {{ title }}
+          </template>
+          <template #timeUnit>
+            {{ $t(timeUnit.name) }}
+          </template>
+        </i18n>
+      </span>
       <ChartViewFilters />
     </div>
     <div :id="`range-chart-${graphId}`" class="range-chart">

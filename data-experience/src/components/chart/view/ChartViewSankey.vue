@@ -114,7 +114,7 @@ export default {
       const color = d3
         .scaleOrdinal()
         .domain(linksData.nodes.map(d => d.name.slice(0, -1)))
-        .range(d3.schemeDark2)
+        .range(this.colorPalette)
       // create a tooltip for the links and append it to the viz
       const linkTooltip = d3
         .select('#' + this.graphId)
@@ -161,13 +161,15 @@ export default {
       sankey.links()
       // set up graph in same style as original example but empty
       const graph = sankey(linksData)
-      svg
+      const links = svg
         .append('g')
         .selectAll('#' + this.graphId + '.link')
         .data(graph.links)
         .enter()
         .append('path')
         .attr('class', 'link')
+
+      links
         .attr('d', d3Sankey.sankeyLinkHorizontal())
         .attr('stroke-width', d => d.width)
         .attr('opacity', 0.2)
@@ -175,14 +177,14 @@ export default {
           const textToDisplay = this.$t(this.kViewBlock('linkMouseoverHTML'), d)
           linkTooltip.html(textToDisplay).style('opacity', 1)
           // highlight current one
-          d3.select(this).attr('opacity', 0.7)
+          links.filter(e => e === d).attr('opacity', 0.5)
         })
-        .on('mouseleave', function(d) {
-          d3.select(this).attr('opacity', 0.2)
+        .on('mouseleave', (d) => {
+          links.attr('opacity', 0.2)
           linkTooltip.style('opacity', 0)
         })
       // add in the nodes
-      const node = svg
+      const nodes = svg
         .append('g')
         .selectAll('#' + this.graphId + '.node')
         .data(graph.nodes)
@@ -190,7 +192,7 @@ export default {
         .append('g')
         .attr('class', 'node')
       // add the rectangles for the nodes
-      node
+      nodes
         .append('rect')
         .attr('x', d => d.x0)
         .attr('y', d => d.y0)
@@ -200,7 +202,7 @@ export default {
         .style('stroke', function(d) {
           return d3.rgb(d.color).darker(1)
         })
-      node
+      nodes
         .on('mouseover', (evt, d) => {
           const textToDisplay = this.$t(this.kViewBlock('nodeMouseoverHTML'), {
             name: d.name.slice(0, -1),
@@ -218,23 +220,23 @@ export default {
             .style('top', d.y0 + labelHeight + 35 + 'px')
           tooltip.style('opacity', 1)
           // highlight current node
-          d3.select(this).attr('opacity', 0.7)
+          nodes.filter(e => e === d).attr('opacity', 0.7)
+
           // Fade all the links.
-          d3.selectAll('#' + this.graphId + '.link').attr('opacity', 0.2)
+          links.attr('opacity', 0.2)
           // Then highlight only those that are linked to the current node.
-          svg
-            .selectAll('#' + this.graphId + '.link')
+          links
             .filter(link => d.index === link.source.index || d.index === link.target.index)
-            .attr('opacity', 0.7)
+            .attr('opacity', 0.5)
         })
-        .on('mouseleave', function(d) {
-          d3.selectAll('#' + this.graphId + '.link').attr('opacity', 0.2)
-          d3.select(this).attr('opacity', 1)
+        .on('mouseleave', (evt, d) => {
+          links.attr('opacity', 0.2)
+          nodes.attr('opacity', 1)
           tooltip.style('opacity', 0)
         })
       // add in the title for the nodes
       if (this.displayLinksLabels) {
-        node
+        nodes
           .append('text')
           .attr('x', d => d.x1 + 6)
           .attr('y', d => (d.y1 + d.y0) / 2)

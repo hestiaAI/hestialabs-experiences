@@ -102,6 +102,7 @@ export default {
     },
     drawViz() {
       const { graphId } = this
+      /*
       const colorPalette = [
         '#7570b3',
         // '#371D52',
@@ -114,6 +115,7 @@ export default {
         '#3F1973',
         '#58539E'
       ]
+      */
       // Format data to correct types 06 Oct 2021
       const formatDate = d3.timeFormat('%B %d, %Y')
       // Keeps only movies and tv shows (not trailer etc..)
@@ -217,7 +219,7 @@ export default {
             d3.timeHour.offset(maxDate, 2)
           ]))
         .y(d3.scaleLinear().domain([0, maxValue]))
-        .ordinalColors([colorPalette[1]])
+        .ordinalColors([this.colorPalette[0]])
         .valueAccessor(d => d.value)
         .title(d => formatDate(d.key) + ': ' + d.value + ' connections made')
         .xUnits(d3.timeHour)
@@ -260,7 +262,7 @@ export default {
         .valueAccessor(d => d.value)
         .alwaysUseRounding(true)
         .xUnits(d3.timeDays)
-        .ordinalColors(colorPalette)
+        .ordinalColors([this.colorPalette[0]])
         .yAxis()
         .ticks(0)
       // Render company row chart
@@ -275,7 +277,7 @@ export default {
         .margins({ top: 25, left: 25, right: 25, bottom: 25 })
         .group(companyGroup)
         .dimension(companyDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors([this.colorPalette[1]])
         .valueAccessor(d => d.value)
         .label(d => d.key)
         .data(group => group.top(20))
@@ -297,7 +299,7 @@ export default {
         .group(weekDayGroup)
         .dimension(weekDayDimension)
         .valueAccessor(d => d.value)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .label(d => d.key)
         .title(d => d.value + ' connections')
         .elasticX(true)
@@ -316,7 +318,7 @@ export default {
         .margins({ top: 25, left: 25, right: 25, bottom: 25 })
         .group(positionGroup)
         .dimension(positionDimension)
-        .ordinalColors([colorPalette[0]])
+        .ordinalColors([this.colorPalette[2]])
         .valueAccessor(d => d.value)
         .title(d => d.key + ': ' + d.value + ' connections')
         .label(d => d.key)
