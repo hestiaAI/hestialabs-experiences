@@ -112,7 +112,7 @@ export default {
     },
     onFileClick(filename) {
       this.$store.commit('xp/setFileExplorerCurrentItem', { filename })
-      this.$store.commit('xp/setCurrentTab', 'file-explorer')
+      // this.$store.commit('xp/setCurrentTab', 'file-explorer')
     },
     async setNumberOfDataPoints() {
       this.nDataPoints = sum(

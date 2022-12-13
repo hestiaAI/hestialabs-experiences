@@ -3,7 +3,7 @@
     <slot />
     <VCol cols="12" class="dom-to-image-exclude">
       <BaseButton
-        icon="mdiExport"
+        mdi-icon="mdiExport"
         text="Export"
         v-bind="{ progress, status, error }"
         @click="exportImage"

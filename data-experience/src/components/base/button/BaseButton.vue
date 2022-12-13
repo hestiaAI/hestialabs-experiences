@@ -1,5 +1,8 @@
 <template>
-  <VTooltip left :disabled="!tooltip">
+  <VTooltip
+    v-bind="tooltipProps"
+    :disabled="!tooltip"
+  >
     <template #activator="{ on, attrs }">
       <VBtn
         :outlined="outlined"
@@ -8,8 +11,8 @@
         v-on="on"
         @click="$emit('click', $event)"
       >
-        <VIcon v-if="icon" :left="text !== ''">
-          {{ mdiIcon }}
+        <VIcon v-if="mdiIcon" :left="text !== ''">
+          {{ mdiIconResolved }}
         </VIcon>
         <slot>
           <span>{{ $tev(text, text) }}</span>
@@ -30,10 +33,6 @@ export default {
   components: { BaseProgressCircular, BaseStatusIndicator },
   inheritAttrs: false,
   props: {
-    tooltip: {
-      type: String,
-      default: ''
-    },
     text: {
       type: String,
       default: ''
@@ -50,18 +49,27 @@ export default {
       type: Boolean,
       default: false
     },
-    icon: {
+    mdiIcon: {
       type: String,
       default: null
     },
     outlined: {
       type: Boolean,
       default: true
+    },
+    // tooltip props
+    tooltip: {
+      type: String,
+      default: ''
+    },
+    tooltipProps: {
+      type: Object,
+      default: () => ({ left: true })
     }
   },
   computed: {
-    mdiIcon() {
-      return this.$vuetify.icons.values[this.icon]
+    mdiIconResolved() {
+      return this.$vuetify.icons.values[this.mdiIcon]
     }
   }
 }

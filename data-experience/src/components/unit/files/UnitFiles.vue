@@ -27,7 +27,7 @@
           :dialog-title="$t('decrypt-files.title')"
           tooltip-position="left"
           :tooltip-label="$t('decrypt-files.title')"
-          icon="mdiLockOpenVariant"
+          mdi-icon="mdiLockOpenVariant"
         >
           <VTextField
             v-model="privateKey"
@@ -43,7 +43,7 @@
         <BaseButton
           v-bind="{ disabled, progress, status, error }"
           text="unit-files.run-btn"
-          icon="mdiStepForward"
+          mdi-icon="mdiStepForward"
           class="my-sm-2 mr-sm-4"
           @click="returnFiles"
         />

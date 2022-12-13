@@ -4,7 +4,7 @@
       <VTooltip :[tooltipPosition]="true">
         <template #activator="{ on: onTooltip }">
           <span v-on="onTooltip">
-            <VIcon class="ma-2" v-on="on">{{ mdiIcon }}</VIcon>
+            <VIcon class="ma-2" v-on="on">{{ mdiIconResolved }}</VIcon>
           </span>
         </template>
         <span>{{ tooltipLabel }}</span>
@@ -29,7 +29,7 @@
 export default {
   name: 'BaseButtonDialog',
   props: {
-    icon: {
+    mdiIcon: {
       type: String,
       required: true
     },
@@ -56,7 +56,7 @@ export default {
     }
   },
   computed: {
-    mdiIcon() {
+    mdiIconResolved() {
       return this.$vuetify.icons.values[this.icon]
     }
   }

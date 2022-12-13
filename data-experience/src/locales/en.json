@@ -69,16 +69,16 @@
     }
   },
   "load-data": {
-    "name": "Load your data",
+    "name": "Load Your Data",
     "title": "Analyse your private data",
-    "disclaimer": "Unless explicitly consented in the \"Share My Data\" tab, no data is transmitted to HestiaLabs or anyone else. The whole experience takes place locally in the browser and nothing is left behind as soon as you close the tab.",
+    "disclaimer": "Unless explicitly consented in the \"Share Your Data\" section, no data is transmitted to HestiaLabs or anyone else. The whole experience takes place locally in the browser and nothing is left behind as soon as you close the browser tab.",
     "tutorial-title": "Tutorial",
     "text-default": "Explore the structure and contents of your files.",
     "text": "to request the private data that has been collected about you. Once you receive it, analyse it here.",
     "link-text": "Click here"
   },
   "file-explorer": {
-    "name": "Files",
+    "name": "View Your Data",
     "title": "File Explorer",
     "select": "Select a file on the left panel to see it in more details here",
     "file-search-name": "Search for files",
@@ -114,11 +114,11 @@
       }
     }
   },
-  "share-data": {
-    "name": "Share my data"
+  "understand-data": {
+    "name": "Understand Your Data"
   },
-  "summary": {
-    "name": "Summary"
+  "share-data": {
+    "name": "Share Your Data"
   },
   "decrypt-files": {
     "title": "Decrypt Files",

@@ -5,7 +5,7 @@
       <template #activator="{ on, attrs }">
         <BaseButton
           v-bind="attrs"
-          icon="mdiTranslate"
+          mdi-icon="mdiTranslate"
           color="secondary"
           :outlined="false"
           fab
@@ -30,8 +30,62 @@
       <UnitLogin @success="loginSuccessful = true" />
     </template>
     <template v-else>
-      <VTabs
-        v-model="tab"
+      <VRow>
+        <VItemGroup
+          v-model="window"
+          mandatory
+          class="shrink mx-6 pt-9"
+        >
+          <VItem
+            v-for="i in windows"
+            :key="i.id"
+            v-slot="{ active, toggle }"
+          >
+            <div>
+              <BaseButtonWindow
+                :mdi-icon="i.mdiIcon"
+                :tooltip="$t(`${i.id}.name`)"
+                :input-value="active"
+                @click="toggle"
+              />
+            </div>
+          </VItem>
+        </VItemGroup>
+        <VCol>
+          <VWindow
+            v-model="window"
+            vertical
+          >
+            <BaseWindowItem>
+              <UnitDownload
+                v-if="bubbleConfig && bubbleConfig.dataFromBubble"
+                v-bind="{
+                  progress,
+                  error,
+                  success,
+                  message
+                }"
+                @update="onUnitFilesUpdate"
+              />
+              <UnitIntroduction
+                v-else
+                v-bind="{
+                  progress,
+                  error,
+                  success,
+                  message
+                }"
+                ref="unit-introduction"
+                @update="onUnitFilesUpdate"
+              />
+            </BaseWindowItem>
+            <BaseWindowItem v-if="!experienceConfig.hideFileExplorer">
+              <UnitSummary v-if="!experienceConfig.hideSummary" />
+              <UnitFileExplorer />
+            </BaseWindowItem>
+            <BaseWindowItem>
+              <VTabs
+      v-model="tab"
         dark
         background-color="primary"
         slider-color="secondary"
@@ -57,55 +111,7 @@
           :key="`${experienceConfig.slug}-${id}`"
           :data-id="id"
         >
-          <VTabItem v-if="id === 'load-data'" :transition="false">
-            <VCol cols="12 mx-auto" md="6">
-              <UnitDownload
-                v-if="bubbleConfig && bubbleConfig.dataFromBubble"
-                v-bind="{
-                  progress,
-                  error,
-                  success,
-                  message
-                }"
-                @update="onUnitFilesUpdate"
-              />
-              <UnitIntroduction
-                v-else
-                v-bind="{
-                  progress,
-                  error,
-                  success,
-                  message
-                }"
-                ref="unit-introduction"
-                @update="onUnitFilesUpdate"
-              />
-            </VCol>
-          </VTabItem>
           <VTabItem
-            v-else-if="id === 'summary'"
-            :transition="false"
-          >
-            <VCol cols="12 mx-auto" sm="6">
-              <UnitSummary />
-            </VCol>
-          </VTabItem>
-          <VTabItem
-            v-else-if="id === 'file-explorer'"
-            :transition="false"
-          >
-            <UnitFileExplorer />
-          </VTabItem>
-          <VTabItem
-            v-else-if="id === 'share-data'"
-            :transition="false"
-          >
-            <VCol cols="12 mx-auto" sm="6">
-              <UnitConsentForm />
-            </VCol>
-          </VTabItem>
-          <VTabItem
-            v-else
             :transition="false"
           >
             <VCol cols="12 mx-auto">
@@ -125,6 +131,21 @@
           </VTabItem>
         </div>
       </VTabsItems>
+            </BaseWindowItem>
+            <BaseWindowItem v-if="consent">
+              <UnitConsentForm />
+            </BaseWindowItem>
+          </VWindow>
+        </VCol>
+      </VRow>
+      <!-- <VStepper v-model="step" vertical>
+
+          <VStepperStep complete editable step="1" edit-icon="$vuetify.icons.mdiFileUpload">
+            <VIcon>$vuetify.icons.mdiFileUpload</VIcon>
+            {{ $t('Load your data') }}
+          </VStepperStep>
+      </VStepper> -->
+
     </template>
   </div>
 </template>
@@ -141,7 +162,9 @@ import FileManager from '@/utils/file-manager'
 import fileManagerWorkers from '@/utils/file-manager-workers'
 
 import BaseButton from '@/components/base/button/BaseButton.vue'
+import BaseButtonWindow from '@/components/base/button/BaseButtonWindow.vue'
 import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
+import BaseWindowItem from '@/components/base/BaseWindowItem.vue'
 import UnitFileExplorer from '@/components/unit/file-explorer/UnitFileExplorer.vue'
 import UnitLogin from '@/components/unit/UnitLogin.vue'
 import UnitDownload from '@/components/unit/UnitDownload.vue'
@@ -192,7 +215,9 @@ export default {
   name: 'TheDataExperience',
   components: {
     BaseButton,
+    BaseButtonWindow,
     BaseProgressCircular,
+    BaseWindowItem,
     SettingsSpeedDial,
     UnitLogin,
     UnitDownload,
@@ -219,6 +244,7 @@ export default {
   data() {
     return {
       localeIndex: 0,
+      window: 0,
       tab: 0,
       fab: false,
       progress: false,
@@ -243,50 +269,43 @@ export default {
     consent() {
       return this.bubbleConfig?.consent
     },
-    tabs() {
-      const { hideSummary, hideFileExplorer, viewBlocks } = this.experienceConfig
-      const disabled = !this.success || this.experienceProgress
-      const tabs = [
+    windows() {
+      const windows = [
         {
-          title: 'Load your data',
           id: 'load-data',
-          titleKey: 'load-data.name',
-          disabled: this.experienceProgress
+          mdiIcon: 'mdiFileUpload'
         }
       ]
-      if (!hideSummary) {
-        tabs.push({
-          title: 'Summary',
-          id: 'summary',
-          titleKey: 'summary.name',
-          disabled
-        })
-      }
-      if (!hideFileExplorer) {
-        tabs.push({
-          title: 'Files',
+      if (!this.experienceConfig.hideFileExplorer) {
+        windows.push({
           id: 'file-explorer',
-          titleKey: 'file-explorer.name',
-          disabled
+          mdiIcon: 'mdiFileSearch'
         })
       }
-      tabs.push(
-        ...viewBlocks.map(viewBlock => ({
-          title: viewBlock.title,
-          id: viewBlock.id,
-          titleKey: this.k(viewBlock.id),
-          disabled,
-          viewBlock
-        }))
+      windows.push(
+        {
+          id: 'understand-data',
+          mdiIcon: 'mdiChartBar'
+        }
       )
       if (this.consent) {
-        tabs.push({
-          title: 'Share my data',
+        windows.push({
           id: 'share-data',
-          titleKey: 'share-data.name',
-          disabled
+          mdiIcon: 'mdiShare'
         })
       }
+      return windows
+    },
+    tabs() {
+      const { viewBlocks } = this.experienceConfig
+      const disabled = !this.success || this.experienceProgress
+      const tabs = viewBlocks.map(viewBlock => ({
+        title: viewBlock.title,
+        id: viewBlock.id,
+        titleKey: this.k(viewBlock.id),
+        disabled,
+        viewBlock
+      }))
       return tabs.map(({ title, titleKey, ...rest }) =>
         ({ title: this.$tev(titleKey, title), ...rest })
       )

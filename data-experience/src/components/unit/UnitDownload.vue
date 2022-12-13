@@ -124,7 +124,7 @@
             v-bind="{ success, progress, error, status }"
             :disabled="!selectedFiles.length"
             text="Explore the data"
-            icon="mdiStepForward"
+            mdi-icon="mdiStepForward"
             class="my-sm-2 mr-sm-4"
             @click="fetchFiles"
           />

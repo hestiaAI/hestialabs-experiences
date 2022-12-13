@@ -28,7 +28,7 @@
       tooltip="Share"
     />
     <BaseButton
-      icon="mdiClose"
+      mdi-icon="mdiClose"
       text=""
       fab
       dark
