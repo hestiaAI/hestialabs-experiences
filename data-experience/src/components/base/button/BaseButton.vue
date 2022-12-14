@@ -7,10 +7,12 @@
       <VBtn
         :outlined="outlined"
         v-bind="[attrs, $attrs]"
-        class="my-2 mr-2"
+        :class="vbtnClass"
+        :style="vbtnStyle"
         v-on="on"
         @click="$emit('click', $event)"
       >
+        <slot name="left"></slot>
         <VIcon v-if="mdiIcon" :left="text !== ''">
           {{ mdiIconResolved }}
         </VIcon>
@@ -56,6 +58,14 @@ export default {
     outlined: {
       type: Boolean,
       default: true
+    },
+    vbtnClass: {
+      type: [String, Object, Array],
+      default: 'my-2 mr-2'
+    },
+    vbtnStyle: {
+      type: [String, Object, Array],
+      default: ''
     },
     // tooltip props
     tooltip: {

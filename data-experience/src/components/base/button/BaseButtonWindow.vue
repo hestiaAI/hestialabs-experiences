@@ -6,6 +6,7 @@
     :outlined="false"
     v-bind="$attrs"
     v-on="$listeners"
+    class="my-0"
   />
 </template>
 
