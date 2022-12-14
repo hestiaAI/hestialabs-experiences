@@ -19,13 +19,13 @@ exports[`data experience html corresponds to snapshot 1`] = `
     </vlist>
   </vmenu>
   <vtabs dark=\\"\\" background-color=\\"primary\\" slider-color=\\"secondary\\" slider-size=\\"4\\" show-arrows=\\"\\" center-active=\\"\\" centered=\\"\\" fixed-tabs=\\"\\" class=\\"fixed-tabs-bar\\">
-    <vtab>
+    <vtab id=\\"load-data\\">
 
     </vtab>
-    <vtab disabled=\\"disabled\\">
+    <vtab disabled=\\"disabled\\" id=\\"summary\\">
 
     </vtab>
-    <vtab disabled=\\"disabled\\">
+    <vtab disabled=\\"disabled\\" id=\\"file-explorer\\">
 
     </vtab>
   </vtabs>

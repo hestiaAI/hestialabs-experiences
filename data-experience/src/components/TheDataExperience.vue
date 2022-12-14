@@ -44,9 +44,10 @@
         @change="scrollToTop"
       >
         <VTab
-          v-for="({ title, disabled }, index) in tabs"
+          v-for="({ title, id, disabled }, index) in tabs"
           :key="index"
           :disabled="disabled"
+          :id="id"
         >
           {{ title }}
         </VTab>

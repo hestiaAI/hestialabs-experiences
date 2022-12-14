@@ -39,7 +39,7 @@
         </template>
       </VDataTable>
       <div class="d-flex">
-        <div class="filterable-table__export-button" >
+        <div class="filterable-table__export-button">
           <BaseButton
             v-bind="{ error, progress, status }"
             text="Export"
