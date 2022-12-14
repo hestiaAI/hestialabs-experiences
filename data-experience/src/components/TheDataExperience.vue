@@ -16,7 +16,7 @@
         />
       </template>
       <VList>
-        <VListItemGroup v-model="localeIndex" @change="setLocale">
+        <VListItemGroup v-model="localeIndex" @change="selectLocale">
           <VListItem
             v-for="({ code, name }) in locales"
             :key="code"
@@ -226,7 +226,6 @@ export default {
       success: false,
       message: '',
       overlay: false,
-      locales,
       loginSuccessful: false
     }
   },
@@ -235,6 +234,13 @@ export default {
     ...mapState({ experienceProgress: 'progress' }),
     siteConfigMerged() {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
+    },
+    locales() {
+      const { i18nLocales } = this.siteConfigMerged
+      const localesFiltered = locales.filter(l => i18nLocales.includes(l.code))
+      // sort locales according to order provided in i18nLocales
+      localesFiltered.sort((a, b) => i18nLocales.indexOf(a.code) > i18nLocales.indexOf(b.code) ? 1 : -1)
+      return localesFiltered
     },
     showLogin() {
       const config = this.bubbleConfig
@@ -307,10 +313,7 @@ export default {
     },
     siteConfigMerged: {
       immediate: true,
-      async handler(value) {
-        if (!value.i18nLocale) {
-          await this.setLocale()
-        }
+      handler(value) {
         // override light theme colors
         if (value.theme) {
           Object.assign(this.$vuetify.theme.themes.light, value.theme)
@@ -343,11 +346,19 @@ export default {
     currentTab(currentTab) {
       this.tab = this.tabs.findIndex(tab => tab.id === currentTab)
     },
-    '$i18n.locale'() {
-      this.clearStore()
+    '$i18n.locale': {
+      async handler(value) {
+        this.clearStore()
+        await this.update3rdPartyLocale(value)
+      },
+      immediate: true
     }
   },
   created() {
+    if (!this.siteConfigMerged.i18nLocale) {
+      // initialize locale if no default is already set
+      this.selectLocale(this.localeIndex)
+    }
     this.siteConfigMerged.i18nLocales.forEach((locale) => {
       /* default messages */
       this.$i18n.mergeLocaleMessage(locale, messagesDefault[locale])
@@ -378,15 +389,17 @@ export default {
       'setCurrentDB',
       'setCurrentTab'
     ]),
-    async setLocale() {
-      // locale was switched by the user (or is being initialized)
-      const localeProperties = locales[this.localeIndex]
+    selectLocale(localeIndex) {
+      // user switched locale with the component's lang switcher
+      const { code } = this.locales[localeIndex]
+      this.$i18n.locale = code
+    },
+    async update3rdPartyLocale(locale) {
+      const localeProperties = this.locales.find(l => l.code === locale)
       // -> update d3 locale
       if (process.env.NODE_ENV !== 'test') {
         await d3Locale(localeProperties)
       }
-      // -> update vue-i18n locale
-      this.$i18n.locale = localeProperties.code
     },
     async mergeMessages() {
       const { messages: messagesExperience = {}, slug } = this.experienceConfig
