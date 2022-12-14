@@ -8,6 +8,10 @@
       }
     }
   },
+  "theme": {
+    "primary": "#01949A",
+    "secondary": "#DB1F48"
+  },
   "experiences": [
     "ad-radar",
     "apple-tracker",
