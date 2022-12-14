@@ -38,22 +38,27 @@
           {{ formatItemAsString(slotProps) }}
         </template>
       </VDataTable>
-      <BaseButton
-        class="filterable-table__export-button"
-        v-bind="{ error, progress, status }"
-        text="Export"
-        icon="mdiExport"
-        @click="exportCSV"
-      />
-      <BaseButtonDownloadData
-        class="filterable-table__download-button"
-        v-bind="{ disabled: !csvString, extension, data: csvString }"
-      />
-      <BaseButtonShare
-        class="filterable-table__share-button"
-        v-bind="{ disabled: !files, files }"
-        file-share
-      />
+      <div class="d-flex">
+        <div class="filterable-table__export-button" >
+          <BaseButton
+            v-bind="{ error, progress, status }"
+            text="Export"
+            icon="mdiExport"
+            @click="exportCSV"
+          />
+        </div>
+        <div class="filterable-table__download-button">
+          <BaseButtonDownloadData
+            v-bind="{ disabled: !csvString, extension, data: csvString }"
+          />
+        </div>
+        <div class="filterable-table__share-button">
+          <BaseButtonShare
+            v-bind="{ disabled: !files, files }"
+            file-share
+          />
+        </div>
+      </div>
     </DataValidator>
   </div>
 </template>
