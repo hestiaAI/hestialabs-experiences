@@ -349,11 +349,14 @@ export default {
         this.overlay = value
       }, 200)
     },
-    tab(tabIndex) {
-      const idx = typeof tabIndex !== 'undefined' ? tabIndex : 0
-      const { id } = this.tabs[idx]
-      if (id !== this.currentTab) {
-        this.setCurrentTab(id)
+    tab: {
+      immediate: true,
+      handler(tabIndex) {
+        const idx = typeof tabIndex !== 'undefined' ? tabIndex : 0
+        const { id } = this.tabs[idx]
+        if (id !== this.currentTab) {
+          this.setCurrentTab(id)
+        }
       }
     },
     currentTab(currentTab) {

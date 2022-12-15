@@ -87,7 +87,7 @@ const experienceConfigs = [
   youtube
 ].map(e => e.config)
 const experiences = experienceConfigs.map(e => e.slug)
-const initialExperience = 'uber-driver'
+const initialExperience = 'tracker-control'
 
 const siteConfig = {
   experiences,
