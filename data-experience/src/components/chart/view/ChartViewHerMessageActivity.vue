@@ -48,7 +48,6 @@
 import mixin from './mixin'
 import ChartViewHeatMapHour from './ChartViewHeatMapHour.vue'
 import ChartViewHeatMapCalendar from './ChartViewHeatMapCalendar.vue'
-import * as d3 from 'd3'
 
 export default {
   components: { ChartViewHeatMapHour, ChartViewHeatMapCalendar },

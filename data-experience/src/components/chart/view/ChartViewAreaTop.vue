@@ -202,7 +202,7 @@ export default {
         .group(typesGroups[0].group, typesGroups[0].name)
         .x(d3.scaleTime().domain(dateExtent))
         .legend(new dc.Legend()
-          .x(chartWidth - 100)
+          .x(chartWidth - 130)
           .y(5)
           .itemHeight(13)
           .gap(5))

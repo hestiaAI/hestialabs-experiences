@@ -8,6 +8,10 @@
       }
     }
   },
+  "theme": {
+    "primary": "#01949A",
+    "secondary": "#DB1F48"
+  },
   "experiences": [
     "ad-radar",
     "apple-tracker",
@@ -70,6 +74,8 @@
     "matching-algo-course",
     "policy-making-course",
     "demo-computation",
+    "reper-participant",
+    "reper-aggregator",
     "swiss-mp-participant",
     "swiss-mp-aggregator",
     "th-participant",
