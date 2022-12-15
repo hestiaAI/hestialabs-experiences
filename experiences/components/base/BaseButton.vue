@@ -2,7 +2,7 @@
   <VBtn
     :outlined="outlined"
     v-bind="[attrs, $attrs]"
-    class="my-2"
+    class="my-2  base-button"
     v-on="on"
     @click="$emit('click', $event)"
   >

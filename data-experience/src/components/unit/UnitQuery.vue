@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <VContainer>
     <VOverlay :value="overlay !== ''" absolute opacity="0.5">
       <div
         class="d-flex flex-column align-center"
@@ -12,37 +12,22 @@
     </VOverlay>
     <VCard v-if="fileManager !== null" class="pa-2 mb-6" flat>
       <VRow>
-        <VCol cols="1" />
-        <VCol cols="10">
+        <VCol cols="10" offset="1">
           <VCardTitle class="justify-center">
             {{ $tev(k('title'), title) }}
           </VCardTitle>
         </VCol>
         <VCol cols="1" align-self="center" class="full-height text-center">
-          <VTooltip
-            v-if="['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
-            left
-          >
-            <template #activator="{ on }">
-              <VIcon v-on="on">
-                $vuetify.icons.mdiFileMultipleOutline
-              </VIcon>
-            </template>
-            <span
-              v-t="'All files are used'"
-            />
-          </VTooltip>
           <UnitFilesDialog
-            v-else-if="
-              fileGlobs.length
-                > 0"
+            v-if="fileGlobs.length > 0 || ['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
+            :all-files="['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
             :file-globs="fileGlobs"
             :file-manager="fileManager"
           />
         </VCol>
       </VRow>
 
-      <VRow v-if="text">
+      <VRow v-if="text || $te(k('text'))">
         <VCol>
           <VContainer>
             {{ $tev(k('text'), text) }}
@@ -101,15 +86,13 @@
               />
             </VCol>
           </VRow>
-          <VRow v-if="showTable">
-            <VCol>
-              <UnitFilterableTable v-bind="clonedResult" />
-            </VCol>
-          </VRow>
+          <VContainer v-if="showTable">
+            <UnitFilterableTable v-bind="clonedResult" />
+          </VContainer>
         </template>
       </template>
     </VCard>
-  </div>
+  </VContainer>
 </template>
 
 <script>

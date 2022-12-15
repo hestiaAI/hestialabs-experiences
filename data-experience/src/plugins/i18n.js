@@ -5,6 +5,7 @@ import { localeCodes } from '../i18n/locales'
 
 const i18nOpts = {
   availableLocales: localeCodes,
+  // should locale be a parameter?
   locale: 'fr',
   fallbackLocale: 'en',
   numberFormats,

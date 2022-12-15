@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="filterable-table">
     <DataValidator
       :data="{ items, headers }"
       allow-missing-columns
@@ -38,16 +38,27 @@
           {{ formatItemAsString(slotProps) }}
         </template>
       </VDataTable>
-      <BaseButton
-        v-bind="{ error, progress, status }"
-        text="Export"
-        mdi-icon="mdiExport"
-        @click="exportCSV"
-      />
-      <BaseButtonDownloadData
-        v-bind="{ disabled: !csvString, extension, data: csvString }"
-      />
-      <BaseButtonShare v-bind="{ disabled: !files, files }" file-share />
+      <div class="d-flex">
+        <div class="filterable-table__export-button">
+          <BaseButton
+            v-bind="{ error, progress, status }"
+            text="Export"
+            mdi-icon="mdiExport"
+            @click="exportCSV"
+          />
+        </div>
+        <div class="filterable-table__download-button">
+          <BaseButtonDownloadData
+            v-bind="{ disabled: !csvString, extension, data: csvString }"
+          />
+        </div>
+        <div class="filterable-table__share-button">
+          <BaseButtonShare
+            v-bind="{ disabled: !files, files }"
+            file-share
+          />
+        </div>
+      </div>
     </DataValidator>
   </div>
 </template>

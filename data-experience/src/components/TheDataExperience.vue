@@ -18,7 +18,7 @@
         />
       </template>
       <VList>
-        <VListItemGroup v-model="localeIndex" @change="setLocale">
+        <VListItemGroup v-model="localeIndex" @change="selectLocale">
           <VListItem
             v-for="({ code, name }) in locales"
             :key="code"
@@ -33,142 +33,118 @@
     </template>
     <template v-else>
       <VWindow
-          v-model="window"
-          vertical
-          :show-arrows="success"
+        v-model="window"
+        vertical
+        :show-arrows="success"
+      >
+        <VWindowItem :disabled="experienceProgress">
+          <UnitDownload
+            v-if="bubbleConfig && bubbleConfig.dataFromBubble"
+            v-bind="{
+              progress,
+              error,
+              success,
+              message
+            }"
+            @update="onUnitFilesUpdate"
+          />
+          <UnitIntroduction
+            v-else
+            v-bind="{
+              progress,
+              error,
+              success,
+              message
+            }"
+            ref="unit-introduction"
+            @update="onUnitFilesUpdate"
+          />
+        </VWindowItem>
+        <VWindowItem v-if="!experienceConfig.hideFileExplorer" disabled>
+          <UnitSummary v-if="!experienceConfig.hideSummary" />
+          <UnitFileExplorer />
+        </VWindowItem>
+        <VWindowItem disabled>
+          <VTabs
+            v-model="tab"
+            dark
+            background-color="primary"
+            slider-color="secondary"
+            slider-size="4"
+            show-arrows
+            center-active
+            centered
+            fixed-tabs
+            class="fixed-tabs-bar"
+            @change="scrollToTop"
           >
-          <VWindowItem :disabled="experienceProgress">
-            <UnitDownload
-              v-if="bubbleConfig && bubbleConfig.dataFromBubble"
-              v-bind="{
-                progress,
-                error,
-                success,
-                message
-              }"
-              @update="onUnitFilesUpdate"
-            />
-            <UnitIntroduction
-              v-else
-              v-bind="{
-                progress,
-                error,
-                success,
-                message
-              }"
-              ref="unit-introduction"
-              @update="onUnitFilesUpdate"
-            />
-          </VWindowItem>
-          <VWindowItem v-if="!experienceConfig.hideFileExplorer" disabled>
-            <UnitSummary v-if="!experienceConfig.hideSummary" />
-            <UnitFileExplorer />
-          </VWindowItem>
-          <VWindowItem disabled>
-            <VTabs
-              v-model="tab"
-              dark
-              background-color="primary"
-              slider-color="secondary"
-              slider-size="4"
-              show-arrows
-              center-active
-              centered
-              fixed-tabs
-              class="fixed-tabs-bar"
-              @change="scrollToTop"
+            <VTab
+              v-for="({ title, id }, index) in tabs"
+              :key="index"
+              :id="id"
             >
-              <VTab
-                v-for="({ title }, index) in tabs"
-                :key="index"
+              {{ title }}
+            </VTab>
+          </VTabs>
+          <VTabsItems v-model="tab">
+            <div
+              v-for="{ id, viewBlock } in tabs"
+              :key="`${experienceConfig.slug}-${id}`"
+              :data-id="id"
+            >
+              <VTabItem
+                :transition="false"
               >
-                {{ title }}
-              </VTab>
-            </VTabs>
-            <VTabsItems v-model="tab">
-              <div
-                v-for="{ id, viewBlock } in tabs"
-                :key="`${experienceConfig.slug}-${id}`"
-                :data-id="id"
-              >
-                <VTabItem
-                  :transition="false"
-                >
-                  <VRow>
-                    <VCol cols="12" class="pa-0">
-                      <VOverlay :value="overlay" absolute opacity="0.8">
-                        <div
-                          class="d-flex flex-column align-center"
-                          style="width: 100%; height: 100%"
-                        >
-                          <div class="mb-3">
-                            {{ $t('This might take a moment') }}
-                          </div>
-                          <BaseProgressCircular size="64" width="4" />
+                <VRow>
+                  <VCol cols="12" class="pa-0">
+                    <VOverlay :value="overlay" absolute opacity="0.8">
+                      <div
+                        class="d-flex flex-column align-center"
+                        style="width: 100%; height: 100%"
+                      >
+                        <div class="mb-3">
+                          {{ $t('This might take a moment') }}
                         </div>
-                      </VOverlay>
-                      <UnitQuery v-bind="viewBlock" />
-                    </VCol>
-                  </VRow>
-                </VTabItem>
-              </div>
-            </VTabsItems>
-          </VWindowItem>
-          <VWindowItem v-if="consent" disabled>
-            <UnitConsentForm />
-          </VWindowItem>
-        </VWindow>
-        <!-- style="z-index: 3" -->
-        <VBottomNavigation
-          v-model="window"
-          :grow="$vuetify.breakpoint.smAndUp"
-          color="secondary"
-          fixed
-          height="90"
+                        <BaseProgressCircular size="64" width="4" />
+                      </div>
+                    </VOverlay>
+                    <UnitQuery v-bind="viewBlock" />
+                  </VCol>
+                </VRow>
+              </VTabItem>
+            </div>
+          </VTabsItems>
+        </VWindowItem>
+        <VWindowItem v-if="consent" disabled>
+          <UnitConsentForm />
+        </VWindowItem>
+      </VWindow>
+      <VBottomNavigation
+        v-model="window"
+        :grow="$vuetify.breakpoint.smAndUp"
+        color="secondary"
+        fixed
+        height="90"
+      >
+        <BaseButton
+          v-for="(i, idx) in windows"
+          :key="i.id"
+          :mdi-icon="i.mdiIcon"
+          :disabled="idx === 0 ? experienceProgress : disabled"
+          :tooltip="$t(`${i.id}.name`)"
+          :tooltipProps="{ top: true }"
+          :outlined="false"
+          vbtn-class="my-0"
         >
-          <!-- <VItemGroup
-            v-model="window"
-            mandatory
-            class="pl-7 pr-3 pt-9 elevation-6"
-          >
-            <VItem
-              v-for="(i, idx) in windows"
-              :key="i.id"
-              v-slot="{ active, toggle }"
+          <template #left>
+            <span
+              v-if="$vuetify.breakpoint.smAndUp"
             >
-              <div> -->
-                <BaseButton
-                  v-for="(i, idx) in windows"
-                  :key="i.id"
-                  :mdi-icon="i.mdiIcon"
-                  :disabled="idx === 0 ? experienceProgress : disabled"
-                  :tooltip="$t(`${i.id}.name`)"
-                  :tooltipProps="{ top: true }"
-                  :outlined="false"
-                  vbtn-class="my-0"
-                  >
-                  <!-- :input-value="active"
-                  @click="toggle" -->
-                  <template #left>
-                    <span
-                      v-if="$vuetify.breakpoint.smAndUp"
-                    >
-                      {{ $t(`${i.id}.name`).split(/\s/)[0] }}
-                    </span>
-                  </template>
-                </BaseButton>
-              <!-- </div>
-            </VItem>
-          </VItemGroup> -->
-        </VBottomNavigation>
-      <!-- <VStepper v-model="step" vertical>
-
-          <VStepperStep complete editable step="1" edit-icon="$vuetify.icons.mdiFileUpload">
-            <VIcon>$vuetify.icons.mdiFileUpload</VIcon>
-            {{ $t('Load your data') }}
-          </VStepperStep>
-      </VStepper> -->
-
+              {{ $t(`${i.id}.name`).split(/\s/)[0] }}
+            </span>
+          </template>
+        </BaseButton>
+      </VBottomNavigation
     </template>
   </div>
 </template>
@@ -273,7 +249,6 @@ export default {
       success: false,
       message: '',
       overlay: false,
-      locales,
       loginSuccessful: false
     }
   },
@@ -282,6 +257,13 @@ export default {
     ...mapState({ experienceProgress: 'progress' }),
     siteConfigMerged() {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
+    },
+    locales() {
+      const { i18nLocales } = this.siteConfigMerged
+      const localesFiltered = locales.filter(l => i18nLocales.includes(l.code))
+      // sort locales according to order provided in i18nLocales
+      localesFiltered.sort((a, b) => i18nLocales.indexOf(a.code) > i18nLocales.indexOf(b.code) ? 1 : -1)
+      return localesFiltered
     },
     showLogin() {
       const config = this.bubbleConfig
@@ -342,10 +324,7 @@ export default {
     },
     siteConfigMerged: {
       immediate: true,
-      async handler(value) {
-        if (!value.i18nLocale) {
-          await this.setLocale()
-        }
+      handler(value) {
         // override light theme colors
         if (value.theme) {
           Object.assign(this.$vuetify.theme.themes.light, value.theme)
@@ -378,11 +357,19 @@ export default {
     currentTab(currentTab) {
       this.tab = this.tabs.findIndex(tab => tab.id === currentTab)
     },
-    '$i18n.locale'() {
-      this.clearStore()
+    '$i18n.locale': {
+      async handler(value) {
+        this.clearStore()
+        await this.update3rdPartyLocale(value)
+      },
+      immediate: true
     }
   },
   created() {
+    if (!this.siteConfigMerged.i18nLocale) {
+      // initialize locale if no default is already set
+      this.selectLocale(this.localeIndex)
+    }
     this.siteConfigMerged.i18nLocales.forEach((locale) => {
       /* default messages */
       this.$i18n.mergeLocaleMessage(locale, messagesDefault[locale])
@@ -413,15 +400,17 @@ export default {
       'setCurrentDB',
       'setCurrentTab'
     ]),
-    async setLocale() {
-      // locale was switched by the user (or is being initialized)
-      const localeProperties = locales[this.localeIndex]
+    selectLocale(localeIndex) {
+      // user switched locale with the component's lang switcher
+      const { code } = this.locales[localeIndex]
+      this.$i18n.locale = code
+    },
+    async update3rdPartyLocale(locale) {
+      const localeProperties = this.locales.find(l => l.code === locale)
       // -> update d3 locale
       if (process.env.NODE_ENV !== 'test') {
         await d3Locale(localeProperties)
       }
-      // -> update vue-i18n locale
-      this.$i18n.locale = localeProperties.code
     },
     async mergeMessages() {
       const { messages: messagesExperience = {}, slug } = this.experienceConfig

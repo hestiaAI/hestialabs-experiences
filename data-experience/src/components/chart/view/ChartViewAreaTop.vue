@@ -110,14 +110,6 @@ export default {
   },
   methods: {
     drawViz() {
-      // Define color palette for the graphs
-      const colorPalette = [
-        '#58539E',
-        '#847CEB',
-        '#605BAB',
-        '#4A4685',
-        '#35325E'
-      ]
       // Parse and format data
       const formatDay = d3.timeFormat('%B %d, %Y')
       this.results = this.values.map((d) => {
@@ -185,7 +177,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(removeEmptyBins(topGroup))
         .dimension(topDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .label(d => d.key)
         .data(group => group.top(10))
         .title(d => d.value)
@@ -210,7 +202,7 @@ export default {
         .group(typesGroups[0].group, typesGroups[0].name)
         .x(d3.scaleTime().domain(dateExtent))
         .legend(new dc.Legend()
-          .x(chartWidth - 100)
+          .x(chartWidth - 130)
           .y(5)
           .itemHeight(13)
           .gap(5))
@@ -223,7 +215,7 @@ export default {
         })
         .clipPadding(10)
         .yAxisLabel(this.yAxisLabel)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
       areaChart.xAxis().ticks(10)
       areaChart.yAxis().ticks(6)
       typesGroups
@@ -249,7 +241,7 @@ export default {
         .round(this.timeUnit.round)
         .alwaysUseRounding(true)
         .xUnits(this.timeUnit.xUnits)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .yAxis()
         .ticks(0)
       dc.renderAll()

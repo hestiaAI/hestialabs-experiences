@@ -138,8 +138,7 @@ export default {
         { text: 'Initated by', value: 'initiatedType' },
         { text: 'Hits', value: 'hits' }
       ],
-      results: [],
-      colorPalette: ['#58539E', '#847CEB', '#605BAB', '#4A4685', '#9498F2']
+      results: []
     }
   },
   methods: {
@@ -157,7 +156,7 @@ export default {
         return str || 'Unknown'
       }
     },
-    createTopRowChart(ndx, fieldAccessor, valueAccessor) {
+    createTopRowChart(ndx, fieldAccessor, valueAccessor, idx) {
       // Create and bind charts to their respective divs
       const chart = new dc.RowChart(`#${fieldAccessor}-chart-${this.graphId}`)
       const search = this.createTextFilterWidget(`#${fieldAccessor}-search-${this.graphId}`)
@@ -185,7 +184,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(removeEmptyBins(chartGroup))
         .dimension(chartDimension)
-        .ordinalColors(this.colorPalette)
+        .ordinalColors([this.colorPalette[idx]])
         .label(d => d.key)
         .data(group => group.top(10))
         .title(d => d.value)
@@ -258,10 +257,10 @@ export default {
         }
       })
       const ndx = crossfilter(this.results)
-      this.createTopRowChart(ndx, 'app', 'hits')
-      this.createTopRowChart(ndx, 'domain', 'hits')
-      this.createTopRowChart(ndx, 'context', 'hits')
-      this.createTopRowChart(ndx, 'domainOwner', 'hits')
+      this.createTopRowChart(ndx, 'app', 'hits', 0)
+      this.createTopRowChart(ndx, 'domain', 'hits', 1)
+      this.createTopRowChart(ndx, 'context', 'hits', 2)
+      this.createTopRowChart(ndx, 'domainOwner', 'hits', 3)
       this.createPieChart(ndx, 'domainType', 'hits')
       this.createPieChart(ndx, 'initiatedType', 'hits')
       // const tableCount = new dc.DataCount(`#dc-data-count-${this.graphId}`)

@@ -8,6 +8,10 @@
       }
     }
   },
+  "theme": {
+    "primary": "#01949A",
+    "secondary": "#DB1F48"
+  },
   "experiences": [
     "ad-radar",
     "apple-tracker",
@@ -74,6 +78,8 @@
     "swiss-mp-aggregator",
     "th-participant",
     "th-aggregator",
+    "transitec-participant",
+    "transitec-aggregator",
     "observe-aggregator",
     "observe-participant"
   ],

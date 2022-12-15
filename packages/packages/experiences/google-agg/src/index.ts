@@ -8,6 +8,7 @@ const options: ExperienceOptions = {
   databaseConfig,
   dataPortal: 'https://takeout.google.com/settings/takeout',
   dataPortalMessage: '',
+  hideFileExplorer: false,
   files: {
     placeVisited: '**/block00.json',
     otherCandidate: '**/block02.json',

@@ -54,28 +54,32 @@
             <VContainer>
               <VRow dense>
                 <VCol cols="12" md="6">
-                  <VCard color="#385F73" dark>
-                    <VCardTitle class="justify-center text-caption">
-                      {{ messages['Orders'] }}
-                    </VCardTitle>
-                    <VCardSubtitle />
-                    <VCardText class="text-h4 text-center">
-                      <div id="number-trip" />
-                      <span class="text-subtitle-1" v-text="messages['trips']" />
-                    </VCardText>
-                  </VCard>
+                  <VSheet outlined :color="colorPalette[0]" rounded>
+                    <VCard elevation="0" outlined>
+                      <VCardTitle class="justify-center text-caption">
+                        {{ messages['Orders'] }}
+                      </VCardTitle>
+                      <VCardSubtitle />
+                      <VCardText class="text-h4 text-center">
+                        <div id="number-trip" />
+                        <span class="text-subtitle-1" v-text="messages['trips']" />
+                      </VCardText>
+                    </VCard>
+                  </VSheet>
                 </VCol>
                 <VCol cols="12" md="6">
-                  <VCard color="#385F73" dark>
-                    <VCardTitle class="justify-center text-caption">
-                      {{ messages['Speed'] }}
-                    </VCardTitle>
-                    <VCardSubtitle />
-                    <VCardText class="text-h4 text-center">
-                      <div id="number-speed-avg" class="font-weight-bold" />
-                      <span class="text-subtitle-1" v-text="messages['mph']" />
-                    </VCardText>
-                  </VCard>
+                  <VSheet outlined :color="colorPalette[0]" rounded>
+                    <VCard elevation="0" outlined>
+                      <VCardTitle class="justify-center text-caption">
+                        {{ messages['Speed'] }}
+                      </VCardTitle>
+                      <VCardSubtitle />
+                      <VCardText class="text-h4 text-center">
+                        <div id="number-speed-avg" class="font-weight-bold" />
+                        <span class="text-subtitle-1" v-text="messages['mph']" />
+                      </VCardText>
+                    </VCard>
+                  </VSheet>
                 </VCol>
               </VRow>
             </VContainer>
@@ -108,7 +112,7 @@
             </VSimpleTable>
           </VCardText>
           <VCardActions>
-            <BaseButton elevation="2" block @click="resetAll()">
+            <BaseButton elevation="2" block @click="resetAll()" :color="colorPalette[0]">
               {{ messages['Reset all filters'] }}
             </BaseButton>
           </VCardActions>
@@ -194,6 +198,7 @@ export default {
       // Add data to table
       this.results = this.values.filter(d => d.tripOrOrderStatus === 'COMPLETED')
       // Define color palette for the graphs
+      /*
       const colorPalette = [
         '#254b7f',
         '#1c6488',
@@ -202,6 +207,7 @@ export default {
         '#59a590',
         '#7dba91'
       ]
+      */
       // Parse and format data
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S %Z UTC')
       const formatTime = d3.timeFormat(`%B %d, %Y ${this.$t('at')} %H:%M:%S`)
@@ -368,7 +374,7 @@ export default {
         .centerBar(true)
         .gap(1)
         .x(d3.scaleLinear().domain([0, 23]))
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .yAxis()
         .ticks(0)
       hourChart
@@ -394,7 +400,7 @@ export default {
         .margins({ top: 10, left: 10, right: 10, bottom: 20 })
         .group(dayOfWeekGroup)
         .dimension(dayOfWeekDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .label(d => d.key)
         .title(d => d.value)
         .elasticX(true)
@@ -413,7 +419,7 @@ export default {
           return d.value
         })
         .title(d => d.key + ': ' + d.value + ' trips')
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .label((d) => {
           let label = d.key
           if (label.length > 8) {
@@ -467,7 +473,7 @@ export default {
         .clipPadding(10)
         .yAxisLabel(this.$t(this.k('Total price')))
         .brushOn(true)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
       priceChart.xAxis().ticks(10)
       priceChart.yAxis().ticks(6)
       priceChart.filterAll()
@@ -478,7 +484,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(removeEmptyBins(addressGroup))
         .dimension(addressDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .label(d => d.key)
         .title(d => d.value)
         .data(group => group.top(10))

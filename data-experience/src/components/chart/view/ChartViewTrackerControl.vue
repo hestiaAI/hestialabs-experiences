@@ -277,7 +277,7 @@ export default {
             d3.timeHour.offset(maxDate, 2)
           ]))
         .y(d3.scaleLinear().domain([0, maxValue]))
-        .ordinalColors(['#58539E'])
+        .ordinalColors([this.colorPalette[0]])
         .xUnits(d3.timeHour)
         .brushOn(false)
         .elasticX(false)
@@ -316,7 +316,7 @@ export default {
         .round(d3.timeDay.round)
         .alwaysUseRounding(true)
         .xUnits(d3.timeDays)
-        .ordinalColors(['#58539E'])
+        .ordinalColors([this.colorPalette[0]])
         .yAxis()
         .ticks(0)
       // Render category pie chart
@@ -334,17 +334,7 @@ export default {
         .group(categoryGroup)
         .drawPaths(true)
         .minAngleForLabel(0.1)
-        .ordinalColors([
-          '#371D52',
-          '#6652A1',
-          '#35334A',
-          '#859ED5',
-          '#CC94F2',
-          '#9A5BD9',
-          '#6F36BF',
-          '#3F1973',
-          '#58539E'
-        ])
+        .ordinalColors(this.colorPalette)
       categoryChart.on('pretransition', function(chart) {
         chart.selectAll('text.pie-slice.pie-label').call(function(t) {
           t.each(function(d) {
@@ -376,7 +366,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(advertiserGroup)
         .dimension(advertiserDimension)
-        .ordinalColors(['#58539E', '#847CEB', '#605BAB', '#4A4685', '#35325E'])
+        .ordinalColors([this.colorPalette[2]])
         .label(d => d.key)
         .data(group => group.top(20))
       // .labelOffsetX(0)
@@ -393,7 +383,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(this.removeEmptyBins(appGroup))
         .dimension(appDimension)
-        .ordinalColors(['#58539E', '#847CEB', '#605BAB', '#4A4685', '#35325E'])
+        .ordinalColors([this.colorPalette[1]])
         .label(d => d.key)
         .data(group => group.top(10))
       // .labelOffsetX(0)
