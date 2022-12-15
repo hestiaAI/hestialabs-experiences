@@ -9,6 +9,7 @@
             values: values || [],
             ndx,
             position: idx,
+            colorPalette,
             ...graph
           }"
         />

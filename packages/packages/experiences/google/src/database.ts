@@ -1,7 +1,50 @@
 import type { DatabaseConfig } from '@/types'
-import { SQLType } from '@/types/database-config'
+import { SQLType, JSONPathReturnObject } from '@/types/database-config'
 
 const { TEXT, INTEGER, FLOAT } = SQLType
+
+function convert_mac(address: number) {
+  let s = String(address.toString(16))
+  while (s.length < 12) {
+    s = '0' + s
+  }
+  return chunk(s, 2).join(':')
+}
+function chunk(str: string, n: number) {
+  const ret = []
+  let i
+  let len
+
+  for (i = 0, len = str.length; i < len; i += n) {
+    ret.push(str.substr(i, n))
+  }
+
+  return ret
+}
+
+function compute_duration(d1: string, d2: string) {
+  const date1 = new Date(d1).getTime()
+  const date2 = new Date(d2).getTime()
+  const res = Math.floor(Math.abs(date1 - date2) / 1000)
+  return res
+}
+
+function parseTransitPath(
+  transitPath: { name: any; transitStops: string | any[] } | null
+) {
+  if (transitPath !== null) {
+    const name = transitPath.name
+    return (
+      name +
+      ': ' +
+      transitPath.transitStops[0].name +
+      ' -> ' +
+      transitPath.transitStops[transitPath.transitStops.length - 1].name
+    )
+  } else {
+    return null
+  }
+}
 
 const config: DatabaseConfig = {
   tables: [
@@ -120,6 +163,28 @@ const config: DatabaseConfig = {
       fileId: 'LOCATION_HISTORY',
       path: '$.timelineObjects[*].activitySegment',
       table: 'ActivitySegment',
+      options: {
+        callback: output => {
+          const o = output as JSONPathReturnObject
+          o['startLocation']['latitudeE7'] *= 1e-7
+          o['startLocation']['longitudeE7'] *= 1e-7
+          o['endLocation']['latitudeE7'] *= 1e-7
+          o['endLocation']['longitudeE7'] *= 1e-7
+          o['startLocation']['address'] =
+            o.startLocation.address === 'undefined'
+              ? null
+              : o.startLocation.address
+          o['endLocation']['address'] =
+            o.endLocation.address === 'undefined' ? null : o.endLocation.address
+          o['startLocation']['name'] =
+            o.startLocation.name === 'undefined' ? null : o.startLocation.name
+          o['endLocation']['name'] =
+            o.endLocation.name === 'undefined' ? null : o.endLocation.name
+          o['transitPath'] = o.transitPath
+            ? parseTransitPath(o.transitPath)
+            : null
+        }
+      },
       getters: [
         {
           column: 'startLatitude',
@@ -183,6 +248,21 @@ const config: DatabaseConfig = {
       fileId: 'LOCATION_HISTORY',
       path: '$.timelineObjects.[*].placeVisit',
       table: 'PlaceVisit',
+      options: {
+        callback: output => {
+          const o = output as JSONPathReturnObject
+          o['location']['latitudeE7'] *= 1e-7
+          o['location']['longitudeE7'] *= 1e-7
+          o['location']['semanticType'] =
+            o.location.semanticType === 'undefined'
+              ? null
+              : o.location.semanticType
+          o['duration']['time'] = compute_duration(
+            o.duration.startTimestamp,
+            o.duration.endTimestamp
+          )
+        }
+      },
       getters: [
         {
           column: 'latitude',
@@ -222,7 +302,7 @@ const config: DatabaseConfig = {
         },
         {
           column: 'duration',
-          path: '$.visitConfidence'
+          path: '$.duration.time'
         },
         {
           column: 'semanticType',
@@ -234,6 +314,21 @@ const config: DatabaseConfig = {
       fileId: 'LOCATION_HISTORY',
       path: '$.timelineObjects.[*].placeVisit',
       table: 'Winners',
+      options: {
+        callback: output => {
+          const o = output as JSONPathReturnObject
+          o['location']['latitudeE7'] *= 1e-7
+          o['location']['longitudeE7'] *= 1e-7
+          o['location']['semanticType'] =
+            o.location.semanticType === 'undefined'
+              ? null
+              : o.location.semanticType
+          o['location']['address'] =
+            o.location.address === 'undefined' ? null : o.location.address
+          o['location']['name'] =
+            o.location.name === 'undefined' ? null : o.location.name
+        }
+      },
       getters: [
         {
           column: 'winnerLatitude',
@@ -270,6 +365,17 @@ const config: DatabaseConfig = {
         {
           path: '$.otherCandidateLocations[*]',
           table: 'Losers',
+          options: {
+            callback: output => {
+              const o = output as JSONPathReturnObject
+              o['latitudeE7'] *= 1e-7
+              o['longitudeE7'] *= 1e-7
+              o['semanticType'] =
+                o.semanticType === 'undefined' ? null : o.semanticType
+              o['address'] = o.address === 'undefined' ? null : o.address
+              o['name'] = o.name === 'undefined' ? null : o.name
+            }
+          },
           getters: [
             {
               column: 'loserId',
@@ -281,7 +387,7 @@ const config: DatabaseConfig = {
             },
             { column: 'loserLatitude', path: '$.latitudeE7' },
             { column: 'loserLongitude', path: '$.longitudeE7' },
-            { column: 'loserAddress', path: '$.addres' },
+            { column: 'loserAddress', path: '$.address' },
             { column: 'loserName', path: '$.name' },
             { column: 'loserConfidence', path: '$.locationConfidence' },
             { column: 'loserSemanticType', path: '$.semanticType' }
@@ -293,6 +399,13 @@ const config: DatabaseConfig = {
       fileId: 'LOCATION_HISTORY',
       path: '$.locations[*]',
       table: 'Records',
+      options: {
+        callback: output => {
+          const o = output as JSONPathReturnObject
+          o['latitudeE7'] *= 1e-7
+          o['longitudeE7'] *= 1e-7
+        }
+      },
       getters: [
         { column: 'latitude', path: '$.latitudeE7' },
         { column: 'longitude', path: '$.longitudeE7' },
@@ -310,6 +423,13 @@ const config: DatabaseConfig = {
       fileId: 'LOCATION_HISTORY',
       path: '$.locations[*]',
       table: 'WifiScan',
+      options: {
+        callback: output => {
+          const o = output as JSONPathReturnObject
+          o['latitudeE7'] *= 1e-7
+          o['longitudeE7'] *= 1e-7
+        }
+      },
       getters: [
         {
           column: 'latitude',
@@ -326,6 +446,12 @@ const config: DatabaseConfig = {
         {
           path: '$.activeWifiScan.accessPoints[*]',
           table: 'MacAdresses',
+          options: {
+            callback: output => {
+              const o = output as JSONPathReturnObject
+              o['mac'] = convert_mac(o.mac)
+            }
+          },
           getters: [
             {
               column: 'macId',

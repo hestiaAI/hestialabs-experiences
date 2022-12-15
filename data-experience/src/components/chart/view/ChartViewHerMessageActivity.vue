@@ -12,7 +12,7 @@
       </VCol>
       <VCol cols="12" md="6">
         <ChartViewHeatMapHour
-          v-bind="{ headers, dateAccessor }"
+          v-bind="{ headers, dateAccessor, colorPalette }"
           :values="messageReceived"
           title="Messages Received"
           legend-label="Messages"
@@ -21,7 +21,7 @@
       </VCol>
       <VCol cols="12" md="6">
         <ChartViewHeatMapHour
-          v-bind="{ headers, dateAccessor }"
+          v-bind="{ headers, dateAccessor, colorPalette }"
           :values="messageSent"
           title="Messages Sent"
           legend-label="Messages"
@@ -35,7 +35,7 @@
           Messages exchanged per day
         </h3>
         <ChartViewHeatMapCalendar
-          v-bind="{ headers, dateAccessor }"
+          v-bind="{ headers, dateAccessor, colorPalette }"
           :values="messageReceived"
           legend-label="Messages"
         />
@@ -56,6 +56,10 @@ export default {
     dateAccessor: {
       type: String,
       required: true
+    },
+    colorPalette: {
+      type: Array,
+      default: () => ['#fff7f3', '#49006a']
     }
   },
   data() {

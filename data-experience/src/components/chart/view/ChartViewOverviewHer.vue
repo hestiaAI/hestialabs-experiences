@@ -86,24 +86,6 @@ export default {
       dc.renderAll()
     },
     drawViz() {
-      // Define color palette for the graphs
-      /*
-            const colorPalette = [
-              '#254b7f',
-              '#1c6488',
-              '#287a8c',
-              '#40908e',
-              '#59a590',
-              '#7dba91'
-            ]
-            */
-      const colorPalette = [
-        '#58539E',
-        '#847CEB',
-        '#605BAB',
-        '#4A4685',
-        '#35325E'
-      ]
       // Parse and format data
       const formatTime = d3.timeFormat('%B %d, %Y at %H:%M:%S')
       const formatDay = d3.timeFormat('%B %d, %Y')
@@ -172,7 +154,7 @@ export default {
         .centerBar(true)
         .gap(1)
         .x(d3.scaleLinear().domain([0, 23]))
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .yAxis()
       hourChart
         .xAxis()
@@ -185,7 +167,7 @@ export default {
         .margins({ top: 10, left: 10, right: 10, bottom: 20 })
         .group(dayOfWeekGroup)
         .dimension(dayOfWeekDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .label(d => d.key)
         .title(d => d.value)
         .elasticX(true)
@@ -204,7 +186,7 @@ export default {
           return d.value
         })
         .title(d => d.key + ': ' + d.value + ' matchs')
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
       matchedChart.on('pretransition', function(chart) {
         chart.selectAll('text.pie-slice.pie-label').call(function(t) {
           t.each(function(d) {
@@ -252,7 +234,7 @@ export default {
         })
         .clipPadding(10)
         .yAxisLabel('Total likes')
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
       likeChart.xAxis().ticks(10)
       likeChart.yAxis().ticks(6)
       likeChart.filterAll()
@@ -276,7 +258,7 @@ export default {
         .valueAccessor(d => d.value)
         .alwaysUseRounding(true)
         .xUnits(d3.timeDays)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .yAxis()
         .ticks(0)
       // Render counter and table

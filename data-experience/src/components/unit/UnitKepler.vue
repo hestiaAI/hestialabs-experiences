@@ -1,21 +1,23 @@
 <template>
-  <VCard :style="`width: 100%; height: ${height}px`">
-    <div
-      v-if="!loaded"
-      class="d-flex flex-column align-center justify-center"
-      :style="`width: 100%; height: ${height}px`"
-    >
-      <BaseProgressCircular size="64" width="4" color="primary" />
-    </div>
-    <iframe
-      ref="iframe"
-      :srcDoc="iframeHtml"
-      class="frame"
-      :style="`width: 100%; height: ${height}px`"
-      frameborder="0"
-      @load="onload"
-    />
-  </VCard>
+  <VContainer>
+    <VCard :style="`width: 100%; height: ${height}px`">
+      <div
+        v-if="!loaded"
+        class="d-flex flex-column align-center justify-center"
+        :style="`width: 100%; height: ${height}px`"
+      >
+        <BaseProgressCircular size="64" width="4" color="primary" />
+      </div>
+      <iframe
+        ref="iframe"
+        :srcDoc="iframeHtml"
+        class="frame"
+        :style="`width: 100%; height: ${height}px`"
+        frameborder="0"
+        @load="onload"
+      />
+    </VCard>
+  </VContainer>
 </template>
 
 <script>

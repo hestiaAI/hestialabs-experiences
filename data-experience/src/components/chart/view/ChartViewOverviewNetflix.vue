@@ -110,18 +110,6 @@ export default {
       }
     },
     drawViz() {
-      const colorPalette = [
-        '#7570b3',
-        // '#371D52',
-        // '#35334A',
-        '#6652A1',
-        '#859ED5',
-        '#CC94F2',
-        '#9A5BD9',
-        '#6F36BF',
-        '#3F1973',
-        '#58539E'
-      ]
       // Format data to correct types 2021-09-19 22:58:12
       const dateFormatParser = d3.timeParse('%Y-%m-%d %H:%M:%S')
       const formatTime = d3.timeFormat('%B %d, %Y')
@@ -230,7 +218,7 @@ export default {
             d3.timeHour.offset(maxDate, 2)
           ]))
         .y(d3.scaleLinear().domain([0, maxValue]))
-        .ordinalColors([colorPalette[1]])
+        .ordinalColors([this.colorPalette[1]])
         .valueAccessor(d => d.value)
         .title(d => formatTime(d.key) + ': ' + formatNumber(d.value) + ' hours watched')
         .xUnits(d3.timeHour)
@@ -273,7 +261,7 @@ export default {
         .valueAccessor(d => d.value)
         .alwaysUseRounding(true)
         .xUnits(d3.timeDays)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .yAxis()
         .ticks(0)
       // Render user pie chart
@@ -296,7 +284,7 @@ export default {
         .title(d => d.key + ': ' + formatNumber(d.value) + ' hours watched')
         .drawPaths(true)
         .minAngleForLabel(0.1)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
       userChart.on('pretransition', function(chart) {
         chart.selectAll('text.pie-slice.pie-label').call(function(t) {
           t.each(function(d) {
@@ -328,7 +316,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(countryGroup)
         .dimension(countryDimension)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .valueAccessor(d => d.value)
         .label(d => d.key)
         .data(group => group.top(10))
@@ -350,7 +338,7 @@ export default {
         .group(weekGroup)
         .dimension(weekDimension)
         .valueAccessor(d => d.value)
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .label(d => d.key)
         .title(d => formatNumber(d.value) + ' hours watched')
         .elasticX(true)
@@ -371,7 +359,7 @@ export default {
         .centerBar(false)
         .gap(1)
         .x(d3.scaleLinear().domain([0, 24]))
-        .ordinalColors(colorPalette)
+        .ordinalColors(this.colorPalette)
         .yAxisLabel('Hours watched')
         .yAxis()
         .ticks(5)
@@ -391,7 +379,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(contentGroup)
         .dimension(contentDimension)
-        .ordinalColors([colorPalette[0]])
+        .ordinalColors([this.colorPalette[0]])
         .valueAccessor(d => d.value)
         .title(d => d.key + ': ' + formatNumber(d.value) + ' hours watched')
         .label(d => d.key)
@@ -412,7 +400,7 @@ export default {
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(this.removeEmptyBins(deviceGroup))
         .dimension(deviceDimension)
-        .ordinalColors([colorPalette[2]])
+        .ordinalColors([this.colorPalette[2]])
         .valueAccessor(d => d.value)
         .title(d => formatTime(d.key) + ': ' + formatNumber(d.value) + ' hours watched')
         .label(d => d.key)

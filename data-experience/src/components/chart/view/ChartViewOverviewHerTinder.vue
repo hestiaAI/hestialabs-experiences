@@ -80,8 +80,7 @@ export default {
         { text: 'Sexual Orientation', value: 'sexualOrientations' },
         { text: 'User ID', value: 'userId' }
       ],
-      results: [],
-      colorPalette: ['#58539E', '#847CEB', '#605BAB', '#4A4685', '#9498F2']
+      results: []
     }
   },
   methods: {

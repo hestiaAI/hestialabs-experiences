@@ -19,13 +19,13 @@ exports[`data experience html corresponds to snapshot 1`] = `
     </vlist>
   </vmenu>
   <vtabs dark=\\"\\" background-color=\\"primary\\" slider-color=\\"secondary\\" slider-size=\\"4\\" show-arrows=\\"\\" center-active=\\"\\" centered=\\"\\" fixed-tabs=\\"\\" class=\\"fixed-tabs-bar\\">
-    <vtab>
+    <vtab id=\\"load-data\\">
 
     </vtab>
-    <vtab disabled=\\"disabled\\">
+    <vtab disabled=\\"disabled\\" id=\\"summary\\">
 
     </vtab>
-    <vtab disabled=\\"disabled\\">
+    <vtab disabled=\\"disabled\\" id=\\"file-explorer\\">
 
     </vtab>
   </vtabs>
@@ -45,7 +45,7 @@ exports[`data experience html corresponds to snapshot 1`] = `
 
                     </p>
                     <p class=\\"body-1\\"></p>
-                    <p>
+                    <p class=\\"disclaimer\\">
 
                     </p>
                   </vcol>
@@ -76,48 +76,56 @@ exports[`data experience html corresponds to snapshot 1`] = `
                         </vcol>
                       </vrow>
                       <vrow>
-                        <vcol align=\\"center\\">
-                          <vdialog width=\\"500\\" scrollable=\\"\\" style=\\"z-index: 2000;\\">
-                            <vcard>
-                              <vcardtitle></vcardtitle>
-                              <vdivider></vdivider>
-                              <vcardtext>
-                                <vtextfield clearable=\\"\\"></vtextfield>
-                                <vtextfield clearable=\\"\\"></vtextfield>
-                              </vcardtext>
-                              <vdivider></vdivider>
-                              <vcardactions>
-                                <vspacer></vspacer>
-                                <vbtn color=\\"primary\\" text=\\"\\">
-                                  Close
-                                </vbtn>
-                              </vcardactions>
-                            </vcard>
-                          </vdialog>
-                          <vtooltip left=\\"\\" disabled=\\"disabled\\" class=\\"my-sm-2 mr-sm-4\\"> <span></span></vtooltip>
-                          <vdialog width=\\"500\\" scrollable=\\"\\" style=\\"z-index: 2000;\\">
-                            <vcard>
-                              <vcardtitle></vcardtitle>
-                              <vdivider></vdivider>
-                              <vcardtext>
-                                <p class=\\"mt-4\\">
+                        <vcol class=\\"d-flex align-center justify-center\\">
+                          <div class=\\"unit-files__decrypt-button\\">
+                            <vdialog width=\\"500\\" scrollable=\\"\\" style=\\"z-index: 2000;\\">
+                              <vcard>
+                                <vcardtitle></vcardtitle>
+                                <vdivider></vdivider>
+                                <vcardtext>
+                                  <vtextfield clearable=\\"\\"></vtextfield>
+                                  <vtextfield clearable=\\"\\"></vtextfield>
+                                </vcardtext>
+                                <vdivider></vdivider>
+                                <vcardactions>
+                                  <vspacer></vspacer>
+                                  <vbtn color=\\"primary\\" text=\\"\\">
+                                    Close
+                                  </vbtn>
+                                </vcardactions>
+                              </vcard>
+                            </vdialog>
+                          </div>
+                          <div class=\\"unit-files__explore-button\\">
+                            <vtooltip left=\\"\\" disabled=\\"disabled\\" class=\\"my-sm-2 mr-sm-4\\"> <span></span></vtooltip>
+                          </div>
+                          <div class=\\"unit-files__files-button\\">
+                            <div class=\\"files-dialog\\">
+                              <vdialog width=\\"500\\" scrollable=\\"\\" style=\\"z-index: 2000;\\">
+                                <vcard>
+                                  <vcardtitle></vcardtitle>
+                                  <vdivider></vdivider>
+                                  <vcardtext>
+                                    <p class=\\"mt-4\\">
 
-                                </p>
-                                <p class=\\"mt-4\\">
+                                    </p>
+                                    <p class=\\"mt-4\\">
 
-                                  <vicon>$vuetify.icons.mdiFileMultipleOutline</vicon>
+                                      <vicon>$vuetify.icons.mdiFileMultipleOutline</vicon>
 
-                                </p>
-                              </vcardtext>
-                              <vdivider></vdivider>
-                              <vcardactions>
-                                <vspacer></vspacer>
-                                <vbtn color=\\"primary\\" text=\\"\\">
-                                  Close
-                                </vbtn>
-                              </vcardactions>
-                            </vcard>
-                          </vdialog>
+                                    </p>
+                                  </vcardtext>
+                                  <vdivider></vdivider>
+                                  <vcardactions>
+                                    <vspacer></vspacer>
+                                    <vbtn color=\\"primary\\" text=\\"\\">
+                                      Close
+                                    </vbtn>
+                                  </vcardactions>
+                                </vcard>
+                              </vdialog>
+                            </div>
+                          </div>
                         </vcol>
                       </vrow>
                       <vrow>

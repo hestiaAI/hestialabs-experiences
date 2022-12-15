@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/data-experience",
-  "version": "0.6.0",
+  "version": "1.0.1",
   "description": "analyse the data companies collect on you",
   "repository": {
     "type": "git",
@@ -44,7 +44,6 @@
     "d3-time-format": "^4.1.0",
     "dc": "^4.2.7",
     "dom-to-image-more": "^2.11.1",
-    "fs": "^0.0.1-security",
     "jsonpath-plus": "^7.1.0",
     "jszip": "^3.10.1",
     "libsodium-wrappers": "^0.7.10",
@@ -140,7 +139,7 @@
       "^.+\\.vue$": "@vue/vue2-jest"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!d3|@hestia.ai|lodash-es|vega-lite)",
+      "/node_modules/(?!d3|@hestia.ai|lodash-es|vega-lite|vuetify)",
       "\\.pnp\\.[^\\/]+$"
     ],
     "testPathIgnorePatterns": [

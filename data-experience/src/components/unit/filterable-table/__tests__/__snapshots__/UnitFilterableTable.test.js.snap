@@ -1,14 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`data table html corresponds to snapshot 1`] = `
-"<div>
+"<div class=\\"filterable-table\\">
   <div>
     <!---->
     <vtextfield value=\\"\\" prepend-icon=\\"$vuetify.icons.mdiMagnify\\" label=\\"Search\\" placeholder=\\"Type...\\" single-line=\\"\\" hide-details=\\"\\" clearable=\\"\\" class=\\"mb-6 mt-3\\"></vtextfield>
     <vdatatable items=\\"[object Object]\\" multi-sort=\\"\\" items-per-page=\\"5\\" fixed-header=\\"\\" height=\\"290\\" footer-props=\\"[object Object]\\" data-testid=\\"data-table\\" headers=\\"[object Object],[object Object],[object Object]\\" search=\\"\\"></vdatatable>
-    <vtooltip left=\\"\\" disabled=\\"disabled\\"> <span></span></vtooltip>
-    <vtooltip left=\\"\\" disabled=\\"disabled\\"> <span></span></vtooltip>
-    <!---->
+    <div class=\\"d-flex\\">
+      <div class=\\"filterable-table__export-button\\">
+        <vtooltip left=\\"\\" disabled=\\"disabled\\"> <span></span></vtooltip>
+      </div>
+      <div class=\\"filterable-table__download-button\\">
+        <vtooltip left=\\"\\" disabled=\\"disabled\\"> <span></span></vtooltip>
+      </div>
+      <div class=\\"filterable-table__share-button\\">
+        <!---->
+      </div>
+    </div>
   </div>
 </div>"
 `;

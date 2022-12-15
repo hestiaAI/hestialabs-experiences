@@ -22,32 +22,38 @@
       </VCol>
     </VRow>
     <VRow>
-      <VCol align="center">
-        <BaseButtonDialog
-          :dialog-title="$t('decrypt-files.title')"
-          tooltip-position="left"
-          :tooltip-label="$t('decrypt-files.title')"
-          icon="mdiLockOpenVariant"
-        >
-          <VTextField
-            v-model="privateKey"
-            :label="$t('decrypt-files.sk-label')"
-            clearable
+      <VCol class="d-flex align-center justify-center">
+        <div class="unit-files__decrypt-button">
+          <BaseButtonDialog
+            :dialog-title="$t('decrypt-files.title')"
+            tooltip-position="left"
+            :tooltip-label="$t('decrypt-files.title')"
+            icon="mdiLockOpenVariant"
+          >
+            <VTextField
+              v-model="privateKey"
+              :label="$t('decrypt-files.sk-label')"
+              clearable
+            />
+            <VTextField
+              v-model="publicKey"
+              :label="$t('decrypt-files.pk-label')"
+              clearable
+            />
+          </BaseButtonDialog>
+        </div>
+        <div class="unit-files__explore-button">
+          <BaseButton
+            v-bind="{ disabled, progress, status, error }"
+            text="unit-files.run-btn"
+            icon="mdiStepForward"
+            class="my-sm-2 mr-sm-4"
+            @click="returnFiles"
           />
-          <VTextField
-            v-model="publicKey"
-            :label="$t('decrypt-files.pk-label')"
-            clearable
-          />
-        </BaseButtonDialog>
-        <BaseButton
-          v-bind="{ disabled, progress, status, error }"
-          text="unit-files.run-btn"
-          icon="mdiStepForward"
-          class="my-sm-2 mr-sm-4"
-          @click="returnFiles"
-        />
-        <UnitFilesDialog :file-globs="Object.values(files)" main />
+        </div>
+        <div class="unit-files__files-button">
+          <UnitFilesDialog :file-globs="Object.values(files)" main />
+        </div>
       </VCol>
     </VRow>
     <VRow>

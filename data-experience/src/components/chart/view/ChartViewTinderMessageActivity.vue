@@ -3,7 +3,7 @@
     <VRow justify="center">
       <VCol cols="12" md="6">
         <ChartViewHeatMapHour
-          v-bind="{ headers, dateAccessor }"
+          v-bind="{ headers, dateAccessor, colorPalette }"
           :values="messageReceived"
           title="Messages Received"
           legend-label="Messages"
@@ -11,7 +11,7 @@
       </VCol>
       <VCol cols="12" md="6">
         <ChartViewHeatMapHour
-          v-bind="{ headers, dateAccessor }"
+          v-bind="{ headers, dateAccessor, colorPalette }"
           :values="messageSent"
           title="Messages Sent"
           legend-label="Messages"
