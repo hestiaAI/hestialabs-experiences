@@ -75,8 +75,8 @@
             center-active
             centered
             fixed-tabs
-            class="fixed-tabs-bar"
             @change="scrollToTop"
+            class="py-3"
           >
             <VTab
               v-for="({ title, id }, index) in tabs"
