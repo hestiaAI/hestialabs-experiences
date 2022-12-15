@@ -13,9 +13,11 @@
         @click="$emit('click', $event)"
       >
         <slot name="left"></slot>
-        <VIcon v-if="mdiIcon" :left="text !== ''">
-          {{ mdiIconResolved }}
-        </VIcon>
+        <slot name="icon">
+          <VIcon v-if="mdiIcon" :left="text !== ''">
+            {{ mdiIconResolved }}
+          </VIcon>
+        </slot>
         <slot>
           <span>{{ $tev(text, text) }}</span>
         </slot>

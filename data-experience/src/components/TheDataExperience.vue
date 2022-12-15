@@ -1,33 +1,35 @@
 <template>
   <div :lang="$i18n.locale">
-    <SettingsSpeedDial style="z-index: 10" />
-    <VMenu v-if="!siteConfigMerged.i18nLocale && locales.length > 1" offset-y absolute style="z-index: 15">
-      <template #activator="{ on, attrs }">
-        <BaseButton
-          v-bind="attrs"
-          mdi-icon="mdiTranslate"
-          color="secondary"
-          :outlined="false"
-          fab
-          fixed
-          bottom
-          left
-          v-on="on"
-          vbtn-class="ma-0"
-          vbtn-style="z-index: 10"
-        />
+    <SettingsSpeedDial>
+      <template #lang>
+        <VMenu v-if="!siteConfigMerged.i18nLocale && locales.length > 1" offset-y absolute>
+          <template #activator="{ on, attrs }">
+            <BaseButton
+              v-bind="attrs"
+              color="secondary"
+              :outlined="false"
+              mdi-icon="mdiTranslate"
+              tooltip="Language"
+              fab
+              dark
+              small
+              v-on="on"
+              vbtn-class=""
+            />
+          </template>
+          <VList>
+            <VListItemGroup v-model="localeIndex" @change="selectLocale">
+              <VListItem
+                v-for="({ code, name }) in locales"
+                :key="code"
+              >
+                <VListItemTitle>{{ name }}</VListItemTitle>
+              </VListItem>
+            </VListItemGroup>
+          </VList>
+        </VMenu>
       </template>
-      <VList>
-        <VListItemGroup v-model="localeIndex" @change="selectLocale">
-          <VListItem
-            v-for="({ code, name }) in locales"
-            :key="code"
-          >
-            <VListItemTitle>{{ name }}</VListItemTitle>
-          </VListItem>
-        </VListItemGroup>
-      </VList>
-    </VMenu>
+    </SettingsSpeedDial>
     <template v-if="showLogin">
       <UnitLogin @success="loginSuccessful = true" />
     </template>
@@ -35,7 +37,7 @@
       <VWindow
         v-model="window"
         vertical
-        :show-arrows="success"
+        style="margin-bottom: 60px"
       >
         <VWindowItem :disabled="experienceProgress">
           <UnitDownload
@@ -67,8 +69,6 @@
         <VWindowItem disabled>
           <VTabs
             v-model="tab"
-            dark
-            background-color="primary"
             slider-color="secondary"
             slider-size="4"
             show-arrows
@@ -124,7 +124,6 @@
         :grow="$vuetify.breakpoint.smAndUp"
         color="secondary"
         fixed
-        height="90"
       >
         <BaseButton
           v-for="(i, idx) in windows"
@@ -140,7 +139,10 @@
             <span
               v-if="$vuetify.breakpoint.smAndUp"
             >
-              {{ $t(`${i.id}.name`).split(/\s/)[0] }}
+              <span v-text="`${idx +1 }.`" />
+              <span>
+                {{ $t(`${i.id}.name`).split(/\s/)[0] }}
+              </span>
             </span>
           </template>
         </BaseButton>
@@ -527,12 +529,12 @@ export default {
       const elapsed = new Date() - start
       this.message = this.$t('successful-processing', { seconds: elapsed / 1000 })
 
-      // window.setTimeout(
-      //   // switch to the second window
-      //   () => (this.window = 1),
-      //   // leave some time for the user to read the success message
-      //   500
-      // )
+      window.setTimeout(
+        // switch to the second window
+        () => (this.window = 1),
+        // leave some time for the user to read the success message
+        500
+      )
     }
   }
 }
