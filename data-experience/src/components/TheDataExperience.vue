@@ -144,7 +144,7 @@
             </span>
           </template>
         </BaseButton>
-      </VBottomNavigation
+      </VBottomNavigation>
     </template>
   </div>
 </template>
