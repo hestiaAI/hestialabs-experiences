@@ -1,131 +1,156 @@
 <template>
   <div :lang="$i18n.locale">
-    <SettingsSpeedDial />
-    <VMenu v-if="!siteConfigMerged.i18nLocale && locales.length > 1" offset-y absolute>
-      <template #activator="{ on, attrs }">
-        <BaseButton
-          v-bind="attrs"
-          icon="mdiTranslate"
-          color="secondary"
-          :outlined="false"
-          fab
-          fixed
-          bottom
-          left
-          v-on="on"
-        />
+    <SettingsSpeedDial>
+      <template #lang>
+        <VMenu v-if="!siteConfigMerged.i18nLocale && locales.length > 1" offset-y absolute>
+          <template #activator="{ on, attrs }">
+            <BaseButton
+              v-bind="attrs"
+              color="secondary"
+              :outlined="false"
+              mdi-icon="mdiTranslate"
+              tooltip="Language"
+              fab
+              dark
+              small
+              v-on="on"
+              vbtn-class=""
+            />
+          </template>
+          <VList>
+            <VListItemGroup v-model="localeIndex" @change="selectLocale">
+              <VListItem
+                v-for="({ code, name }) in locales"
+                :key="code"
+              >
+                <VListItemTitle>{{ name }}</VListItemTitle>
+              </VListItem>
+            </VListItemGroup>
+          </VList>
+        </VMenu>
       </template>
-      <VList>
-        <VListItemGroup v-model="localeIndex" @change="selectLocale">
-          <VListItem
-            v-for="({ code, name }) in locales"
-            :key="code"
-          >
-            <VListItemTitle>{{ name }}</VListItemTitle>
-          </VListItem>
-        </VListItemGroup>
-      </VList>
-    </VMenu>
+    </SettingsSpeedDial>
     <template v-if="showLogin">
       <UnitLogin @success="loginSuccessful = true" />
     </template>
     <template v-else>
-      <VTabs
-        v-model="tab"
-        dark
-        background-color="primary"
-        slider-color="secondary"
-        slider-size="4"
-        show-arrows
-        center-active
-        centered
-        fixed-tabs
-        class="fixed-tabs-bar"
-        @change="scrollToTop"
+      <VWindow
+        v-model="window"
+        class="v-window--main"
       >
-        <VTab
-          v-for="({ title, id, disabled }, index) in tabs"
-          :key="index"
-          :disabled="disabled"
-          :id="id"
-        >
-          {{ title }}
-        </VTab>
-      </VTabs>
-      <VTabsItems v-model="tab">
         <div
-          v-for="{ id, viewBlock } in tabs"
+          v-for="({ id }) in windows"
           :key="`${experienceConfig.slug}-${id}`"
-          :data-id="id"
+          :data-id="`window-${id}`"
         >
-          <VTabItem v-if="id === 'load-data'" :transition="false">
-            <VCol cols="12 mx-auto" md="6">
-              <UnitDownload
-                v-if="bubbleConfig && bubbleConfig.dataFromBubble"
-                v-bind="{
-                  progress,
-                  error,
-                  success,
-                  message
-                }"
-                @update="onUnitFilesUpdate"
-              />
-              <UnitIntroduction
-                v-else
-                v-bind="{
-                  progress,
-                  error,
-                  success,
-                  message
-                }"
-                ref="unit-introduction"
-                @update="onUnitFilesUpdate"
-              />
-            </VCol>
-          </VTabItem>
-          <VTabItem
-            v-else-if="id === 'summary'"
-            :transition="false"
-          >
-            <VCol cols="12 mx-auto" sm="6">
-              <UnitSummary />
-            </VCol>
-          </VTabItem>
-          <VTabItem
-            v-else-if="id === 'file-explorer'"
-            :transition="false"
-          >
+          <VWindowItem v-if="id === 'load-data'" :value="id" :disabled="experienceProgress">
+            <UnitDownload
+              v-if="bubbleConfig && bubbleConfig.dataFromBubble"
+              v-bind="{
+                progress,
+                error,
+                success,
+                message
+              }"
+              @update="onUnitFilesUpdate"
+            />
+            <UnitIntroduction
+              v-else
+              v-bind="{
+                progress,
+                error,
+                success,
+                message
+              }"
+              ref="unit-introduction"
+              @update="onUnitFilesUpdate"
+            />
+          </VWindowItem>
+          <VWindowItem v-else-if="id === 'file-explorer'" :value="id" disabled>
+            <UnitSummary v-if="!experienceConfig.hideSummary" />
             <UnitFileExplorer />
-          </VTabItem>
-          <VTabItem
-            v-else-if="id === 'share-data'"
-            :transition="false"
-          >
-            <VCol cols="12 mx-auto" sm="6">
-              <UnitConsentForm />
-            </VCol>
-          </VTabItem>
-          <VTabItem
-            v-else
-            :transition="false"
-          >
-            <VCol cols="12 mx-auto">
-              <VOverlay :value="overlay" absolute opacity="0.8">
-                <div
-                class="d-flex flex-column align-center"
-                style="width: 100%; height: 100%"
-                >
-                <div class="mb-3">
-                    {{ $t('This might take a moment') }}
-                  </div>
-                  <BaseProgressCircular size="64" width="4" />
-                </div>
-              </VOverlay>
-              <UnitQuery v-bind="viewBlock" />
-            </VCol>
-          </VTabItem>
+          </VWindowItem>
+          <!-- && fileManager to trigger re-rendering when store is cleared -->
+          <VWindowItem v-else-if="id === 'understand-data' && fileManager" :value="id" disabled>
+            <VTabs
+              v-model="tab"
+              slider-color="secondary"
+              slider-size="4"
+              show-arrows
+              center-active
+              centered
+              fixed-tabs
+              @change="scrollToTop"
+              class="py-3"
+            >
+              <VTab
+                v-for="({ title, id }, index) in tabs"
+                :key="index"
+                :id="id"
+              >
+                {{ title }}
+              </VTab>
+            </VTabs>
+            <VTabsItems v-model="tab">
+              <div
+                v-for="{ id, viewBlock } in tabs"
+                :key="`${experienceConfig.slug}-${id}`"
+                :data-id="`view-block-${id}`"
+              >
+                <VTabItem :transition="false">
+                  <VRow>
+                    <VCol cols="12" class="pa-0">
+                      <VOverlay :value="overlay" absolute opacity="0.8">
+                        <div
+                          class="d-flex flex-column align-center v-overlay__content"
+                        >
+                          <div class="mb-3">
+                            {{ $t('This might take a moment') }}
+                          </div>
+                          <BaseProgressCircular size="64" width="4" />
+                        </div>
+                      </VOverlay>
+                      <UnitQuery v-bind="viewBlock" />
+                    </VCol>
+                  </VRow>
+                </VTabItem>
+              </div>
+            </VTabsItems>
+          </VWindowItem>
+          <VWindowItem v-else-if="id === 'share-data'" :value="id" disabled>
+            <UnitConsentForm />
+          </VWindowItem>
         </div>
-      </VTabsItems>
+      </VWindow>
+      <VBottomNavigation
+        v-model="window"
+        :grow="$vuetify.breakpoint.smAndUp"
+        color="secondary"
+        app
+      >
+        <BaseButton
+          v-for="(i, idx) in windows"
+          :value="i.id"
+          :key="`window-button-${experienceConfig.slug}-${i.id}`"
+          :mdi-icon="i.mdiIcon"
+          :disabled="idx === 0 ? experienceProgress : disabled"
+          :tooltip="$t(`${i.id}.name`)"
+          :tooltipProps="{ top: true }"
+          :outlined="false"
+          vbtn-class="my-0"
+        >
+          <template #left>
+            <span
+              v-if="$vuetify.breakpoint.smAndUp"
+            >
+              <span v-text="`${idx + 1}.`" />
+              <span>
+                {{ $t(`${i.id}.name`).split(/\s/)[0] }}
+              </span>
+            </span>
+          </template>
+        </BaseButton>
+      </VBottomNavigation>
     </template>
   </div>
 </template>
@@ -220,6 +245,7 @@ export default {
   data() {
     return {
       localeIndex: 0,
+      window: 'load-data',
       tab: 0,
       fab: false,
       progress: false,
@@ -231,7 +257,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager', 'bubbleCodeword', 'currentTab']),
+    ...mapState(['fileManager', 'bubbleCodeword', 'currentTab', 'currentWindow']),
     ...mapState({ experienceProgress: 'progress' }),
     siteConfigMerged() {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
@@ -250,53 +276,41 @@ export default {
     consent() {
       return this.bubbleConfig?.consent
     },
-    tabs() {
-      const { hideSummary, hideFileExplorer, viewBlocks } = this.experienceConfig
-      const disabled = !this.success || this.experienceProgress
-      const tabs = [
+    disabled() {
+      return !this.success || this.experienceProgress
+    },
+    windows() {
+      const windows = [
         {
-          title: 'Load your data',
           id: 'load-data',
-          titleKey: 'load-data.name',
-          disabled: this.experienceProgress
+          mdiIcon: 'mdiFileUpload'
         }
       ]
-      if (!hideSummary) {
-        tabs.push({
-          title: 'Summary',
-          id: 'summary',
-          titleKey: 'summary.name',
-          disabled
-        })
-      }
-      if (!hideFileExplorer) {
-        tabs.push({
-          title: 'Files',
+      if (!this.experienceConfig.hideFileExplorer) {
+        windows.push({
           id: 'file-explorer',
-          titleKey: 'file-explorer.name',
-          disabled
+          mdiIcon: 'mdiFileSearch'
         })
       }
-      tabs.push(
-        ...viewBlocks.map(viewBlock => ({
-          title: viewBlock.title,
-          id: viewBlock.id,
-          titleKey: this.k(viewBlock.id),
-          disabled,
-          viewBlock
-        }))
-      )
+      windows.push({
+        id: 'understand-data',
+        mdiIcon: 'mdiChartBar'
+      })
       if (this.consent) {
-        tabs.push({
-          title: 'Share my data',
+        windows.push({
           id: 'share-data',
-          titleKey: 'share-data.name',
-          disabled
+          mdiIcon: 'mdiShare'
         })
       }
-      return tabs.map(({ title, titleKey, ...rest }) =>
-        ({ title: this.$tev(titleKey, title), ...rest })
-      )
+      return windows
+    },
+    tabs() {
+      const { viewBlocks } = this.experienceConfig
+      return viewBlocks.map(viewBlock => ({
+        title: this.$tev(this.k(viewBlock.id, 'title'), viewBlock.title),
+        id: viewBlock.id,
+        viewBlock
+      }))
     }
   },
   watch: {
@@ -324,7 +338,10 @@ export default {
     },
     fileManager(value) {
       if (value === null) {
-        this.setCurrentTab('load-data')
+        // reset window and tab
+        this.window = 'load-data'
+        this.setCurrentTab(this.tabs[0].id)
+        // reset processing flags
         this.success = false
         this.progress = false
         this.error = false
@@ -337,11 +354,14 @@ export default {
         this.overlay = value
       }, 200)
     },
-    tab(tabIndex) {
-      const idx = typeof tabIndex !== 'undefined' ? tabIndex : 0
-      const { id } = this.tabs[idx]
-      if (id !== this.currentTab) {
-        this.setCurrentTab(id)
+    tab: {
+      immediate: true,
+      handler(tabIndex) {
+        const idx = tabIndex ?? 0
+        const { id } = this.tabs[idx]
+        if (id !== this.currentTab) {
+          this.setCurrentTab(id)
+        }
       }
     },
     currentTab(currentTab) {
@@ -388,7 +408,8 @@ export default {
       'clearStore',
       'setFileManager',
       'setCurrentDB',
-      'setCurrentTab'
+      'setCurrentTab',
+      'setCurrentWindow'
     ]),
     selectLocale(localeIndex) {
       // user switched locale with the component's lang switcher
@@ -428,8 +449,8 @@ export default {
       })
     },
     // Convert local translation key to global vue18n
-    k(localKey) {
-      return `experiences.${this.experienceConfig.slug}.viewBlocks.${localKey}.title`
+    k(viewBlockId, key) {
+      return `experiences.${this.experienceConfig.slug}.viewBlocks.${viewBlockId}.${key}`
     },
     scrollToTop() {
       window.setTimeout(() => window.scrollTo(0, 0), 10)
@@ -518,8 +539,8 @@ export default {
       this.message = this.$t('successful-processing', { seconds: elapsed / 1000 })
 
       window.setTimeout(
-        // switch to the second tab
-        () => this.setCurrentTab(this.tabs[1].id),
+        // switch to the second window
+        () => (this.window = this.windows[1].id),
         // leave some time for the user to read the success message
         500
       )
@@ -529,7 +550,16 @@ export default {
 </script>
 
 <style scoped>
+.v-window.v-window--main {
+  margin-bottom: 60px;
+}
+
 .v-tabs-items .v-window-item {
   min-height: calc(100vh - 48px);
+}
+
+.v-overlay .v-overlay__content {
+  height: 100%;
+  width: 100%;
 }
 </style>

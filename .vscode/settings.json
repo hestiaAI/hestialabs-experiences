@@ -11,7 +11,8 @@
   "editor.insertSpaces": true,
   "editor.renderFinalNewline": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": true,
+    "source.fixAll": true
   },
   "editor.formatOnSave": false,
   "editor.formatOnPaste": false,
@@ -33,7 +34,10 @@
     "./experiences",
     "./data-experience"
   ],
+  "eslint.format.enable": true,
+
   "eslint.options": {
+
     "ignorePath": ".eslintignore"
   },
   // https://eslint.vuejs.org/user-guide/#trouble-with-visual-studio-code

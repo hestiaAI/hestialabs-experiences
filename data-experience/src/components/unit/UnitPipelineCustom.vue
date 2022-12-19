@@ -12,7 +12,7 @@
         <BaseButton
           v-bind="{ progress, status, error, disabled }"
           text="Run"
-          icon="mdiStepForward"
+          mdi-icon="mdiStepForward"
           @click="run"
         />
       </div>

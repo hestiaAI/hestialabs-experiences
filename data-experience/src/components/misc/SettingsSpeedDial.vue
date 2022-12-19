@@ -1,34 +1,30 @@
 <template>
   <VSpeedDial
     v-model="fab"
-    bottom
-    right
     direction="top"
-    open-on-hover
     transition="slide-y-reverse-transition"
     fixed
+    style="z-index: 100; bottom: 8px; right: 8px;"
   >
     <template #activator>
-      <VBtn v-model="fab" color="primary" dark fab>
-        <VIcon v-if="fab">
-          $vuetify.icon.mdiClose
-        </VIcon>
-        <VIcon v-else>
-          $vuetify.icon.mdiCog
-        </VIcon>
-      </VBtn>
+      <BaseButton
+        v-model="fab"
+        color="primary"
+        dark
+        fab
+        small
+        :outlined="false"
+        vbtn-class=""
+      >
+        <template #icon>
+          <VIcon>
+            {{ fab ? '$vuetify.icon.mdiClose' : '$vuetify.icon.mdiCog' }}
+          </VIcon>
+        </template>
+      </BaseButton>
     </template>
-    <BaseButtonShare
-      fab
-      dark
-      small
-      color="blue darken-2"
-      button-text=""
-      :outlined="false"
-      tooltip="Share"
-    />
     <BaseButton
-      icon="mdiClose"
+      mdi-icon="mdiCancel"
       text=""
       fab
       dark
@@ -37,7 +33,19 @@
       color="red"
       :outlined="false"
       @click="$store.commit('xp/clearStore')"
+      vbtn-class=""
     />
+    <BaseButtonShare
+      fab
+      dark
+      small
+      color="blue darken-2"
+      button-text=""
+      :outlined="false"
+      tooltip="Share"
+      vbtn-class=""
+    />
+    <slot name="lang"></slot>
   </VSpeedDial>
 </template>
 

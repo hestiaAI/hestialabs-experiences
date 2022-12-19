@@ -71,14 +71,14 @@
   "load-data": {
     "name": "Charger vos données",
     "title": "Analyser vos données privées",
-    "disclaimer": "Sauf consentement explicite dans l'onglet \"Partager mes données\", aucune donnée n'est transmise à HestiaLabs ou à quiconque. Toute l'expérience se déroule localement dans le navigateur et rien n'est laissé derrière vous dès que vous fermez l'onglet.",
+    "disclaimer": "Sauf consentement explicite dans la section \"Partager vos données\", aucune donnée n'est transmise à HestiaLabs ou à quiconque. Toute l'expérience se déroule localement dans le navigateur et rien n'est laissé derrière vous dès que vous fermez l'onglet.",
     "tutorial-title": "Démo",
     "text-default": "Explorer la structure et le contenu de vos fichiers.",
     "text": "pour demander les données privées qui ont été collectées sur vous. Une fois que vous les recevrez, analysez-les ici.",
     "link-text": "Cliquer ici"
   },
   "file-explorer": {
-    "name": "Fichiers",
+    "name": "Voir vos données",
     "title": "Explorateur de fichiers",
     "select": "Sélectionnez un fichier dans le panneau de gauche pour le voir plus en détail.",
     "file-search-name": "Recherche de fichiers",
@@ -114,8 +114,11 @@
       }
     }
   },
+  "understand-data": {
+    "name": "Comprendre vos données"
+  },
   "share-data": {
-    "name": "Partager mes données"
+    "name": "Partager vos données"
   },
   "summary": {
     "name": "Résumé"
@@ -157,6 +160,7 @@
   "hour": "heure",
   "item-per-timeunit": "{title} par {timeUnit}",
   "item-total": "{title} au total",
+  "Language": "Langue",
   "Link": "Lien",
   "Load your data": "Charger vos données",
   "Loading": "Chargement",

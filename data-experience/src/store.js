@@ -5,7 +5,7 @@ const store = {
   namespaced: true,
   state: () => ({
     progress: false,
-    currentTab: 'load-data',
+    currentTab: 0,
     experienceConfig: {},
     siteConfig: {},
     bubbleConfig: {},

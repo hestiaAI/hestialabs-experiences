@@ -8,10 +8,10 @@ exports[`data table html corresponds to snapshot 1`] = `
     <vdatatable items=\\"[object Object]\\" multi-sort=\\"\\" items-per-page=\\"5\\" fixed-header=\\"\\" height=\\"290\\" footer-props=\\"[object Object]\\" data-testid=\\"data-table\\" headers=\\"[object Object],[object Object],[object Object]\\" search=\\"\\"></vdatatable>
     <div class=\\"d-flex\\">
       <div class=\\"filterable-table__export-button\\">
-        <vtooltip left=\\"\\" disabled=\\"disabled\\"> <span></span></vtooltip>
+        <vtooltip disabled=\\"disabled\\" left=\\"true\\"> <span></span></vtooltip>
       </div>
       <div class=\\"filterable-table__download-button\\">
-        <vtooltip left=\\"\\" disabled=\\"disabled\\"> <span></span></vtooltip>
+        <vtooltip disabled=\\"disabled\\" left=\\"true\\"> <span></span></vtooltip>
       </div>
       <div class=\\"filterable-table__share-button\\">
         <!---->
