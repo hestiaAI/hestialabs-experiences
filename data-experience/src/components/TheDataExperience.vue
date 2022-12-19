@@ -70,7 +70,8 @@
             <UnitSummary v-if="!experienceConfig.hideSummary" />
             <UnitFileExplorer />
           </VWindowItem>
-          <VWindowItem v-else-if="id === 'understand-data'" :value="id" disabled>
+          <!-- && fileManager to trigger re-rendering when store is cleared -->
+          <VWindowItem v-else-if="id === 'understand-data' && fileManager" :value="id" disabled>
             <VTabs
               v-model="tab"
               slider-color="secondary"
