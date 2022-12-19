@@ -126,7 +126,7 @@
         v-model="window"
         :grow="$vuetify.breakpoint.smAndUp"
         color="secondary"
-        fixed
+        app
       >
         <BaseButton
           v-for="(i, idx) in windows"
