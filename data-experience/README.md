@@ -61,3 +61,7 @@ The latest version of the library can be imported using these CDN links:
 
 - https://unpkg.com/@hestia.ai/data-experience/dist/DataExperience.umd.min.js
 - https://unpkg.com/@hestia.ai/data-experience/dist/DataExperience.css
+
+## Usage
+
+See [the example](./example/index.html)
