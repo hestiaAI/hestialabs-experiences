@@ -30,10 +30,13 @@
 </template>
 
 <script>
+import mixinPage from '@/mixins/page'
+
 import theEyeballsIcon from '@/assets/icons/the-eyeballs.svg'
 import theDatingPrivacyCollectiveIcon from '@/assets/icons/dating-privacy-collective.svg'
 
 export default {
+  mixins: [mixinPage],
   data() {
     return {
       collaborators: [
@@ -49,6 +52,9 @@ export default {
         }
       ]
     }
+  },
+  head() {
+    return this.vueMeta(this.$t('About'))
   }
 }
 </script>

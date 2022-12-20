@@ -145,8 +145,10 @@
 </template>
 
 <script>
+
 import Papa from 'papaparse'
 import * as d3 from 'd3'
+import mixinPage from '@/mixins/page'
 const formatDate = d3.timeFormat('%d %b %Y')
 const parseDate = d3.timeParse('%Y-%m-%d')
 
@@ -156,11 +158,15 @@ function validURL(url) {
 }
 
 export default {
+  mixins: [mixinPage],
   data() {
     return {
       permanences: [],
       videoLink: `https://player.twitch.tv/?video=1648959623&parent=${window.location.hostname.replace(/^www\./, '')}&autoplay=false`
     }
+  },
+  head() {
+    return this.vueMeta('Uber')
   },
   mounted() {
     this.getPermanences()

@@ -19,13 +19,8 @@ export default {
   },
   head() {
     const { experienceTitle: t, experienceSubtitle: s } = this
-
-    const { title: bubbleTitle } = this.bubbleConfig
-
-    const bubbleText = this.$tc('Data Space', 1)
-    const metaBubbleTitle = this.$i18n.locale === 'fr' ? `${bubbleText} ${bubbleTitle}` : `${bubbleTitle} ${bubbleText}`
-
-    const metaTitle = `${t}: ${s} | ${metaBubbleTitle}`
+    const { title: spaceTitle } = this.bubbleConfig
+    const metaTitle = `${t}: ${s} | ${spaceTitle} | ${this.$tc('Data Space', 1)}`
     return this.vueMeta(metaTitle)
   },
   computed: {
