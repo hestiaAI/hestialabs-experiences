@@ -49,7 +49,7 @@
           v-on="on"
         >
           <VAvatar rounded size="30">
-            <img src="/icon.png">
+            <img src="/hestialabs-icon.png">
           </VAvatar>
         </VBtn>
       </template>

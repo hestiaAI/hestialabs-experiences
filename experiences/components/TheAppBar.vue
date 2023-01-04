@@ -27,7 +27,7 @@
             class="ml-3"
           />
           <ExternalLink
-            href="https://hestialabs.org/"
+            :href="logoLink"
             class="ml-3"
           >
             <LogoImg width="100" />
@@ -59,7 +59,6 @@
         </div>
       </template>
       <div class="my-6">
-        <LogoImg width="250" />
         <template v-if="$route.params.bubble">
           <VSubheader class="mt-2">
             {{ $t('Connected to data space') }}:
@@ -69,6 +68,7 @@
           </VSubheader>
         </template>
         <TheExperienceMenu :include="include" />
+        <LogoImg :url="config.logoImgMenu" class="mt-16 mb-10" />
       </div>
     </VNavigationDrawer>
   </div>
@@ -104,6 +104,9 @@ export default {
         return this.config.bubbleConfig[bubble].experiences
       }
       return this.config.experiences
+    },
+    logoLink() {
+      return this.config.logoLink || 'https://hestialabs.org'
     }
   }
 }

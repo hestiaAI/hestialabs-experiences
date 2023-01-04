@@ -43,6 +43,7 @@ const {
   theme: {
     primary = '#58539e'
   } = {},
+  logoImg = '/hestialabs-logo.svg',
   messages = {},
   i18nLocale = 'en',
   i18nLocales = localeCodes
@@ -83,7 +84,7 @@ export default {
     title: '',
     meta: [
       { name: 'format-detection', content: 'telephone=no' },
-      { property: 'twitter:image', content: `${baseUrl}/ogimg.png` }
+      { property: 'twitter:image', content: `${baseUrl}/${logoImg}` }
     ]
   },
 
@@ -150,7 +151,7 @@ export default {
       description,
       theme_color: '#ffffff',
       ogImage: {
-        path: '/ogimg.png',
+        path: logoImg,
         width: 1200,
         height: 630,
         type: 'image/png'

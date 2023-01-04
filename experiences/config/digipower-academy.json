@@ -1,5 +1,8 @@
 {
   "i18nLocale": "en",
+  "logoImg": "/Logo_Digipower_Academy.png",
+  "logoImgMenu": "/Logo_Digipower_Academy_compact.png",
+  "logoLink": "https://digipower.academy",
   "experiences": [
     "ad-radar",
     "apple-tracker",
@@ -57,7 +60,6 @@
     "matching-algo-course",
     "policy-making-course"
   ],
-  "logo": "/digipower-academy-logo.png",
   "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
   "displayCollaborators": true,
   "appInfoLinks": [
