@@ -15,43 +15,40 @@
   "experiences": [
     "ad-radar",
     "apple-tracker",
-    "apple-tracker-agg",
     "explorer",
     "facebook",
     "fitbit",
     "google",
-    "google-agg",
     "her",
-    "her-tinder-agg",
     "instagram",
     "linkedin",
-    "linkedin-agg",
     "netflix",
     "other",
     "strava",
     "tiktok",
     "tinder",
     "tracker-control",
-    "tracker-control-agg",
     "twitter",
-    "twitter-agg",
     "uber",
     "uber-driver",
     "youtube"
   ],
-  "appBarLinks": [
+  "appInfoLinks": [
     {
       "url": "https://hestia.ai/en/#contact",
       "name": "Contact us",
+      "icon": "mdiMessageOutline",
       "external": true
     },
     {
       "url": "/about",
-      "name": "About"
+      "name": "About",
+      "icon": "mdiHelp"
     },
     {
       "url": "/privacy",
-      "name": "Privacy"
+      "name": "Privacy",
+      "icon": "mdiShieldLockOutline"
     }
   ],
   "bubbles": [

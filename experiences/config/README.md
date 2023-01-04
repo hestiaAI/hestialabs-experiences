@@ -52,9 +52,18 @@ This directory contains the configuration files linked to each deployment. They 
     * This are valid site wide and cannot be configured in bubbles.
     * @type Array
     */
-  "appBarLinks": [
-    { "url": "/about", "name": "About" },
-    { "url": "/privacy", "name": "Privacy" }
+  "appInfoLinks": [
+    {
+      "url": "https://hestia.ai/en/#contact",
+      "name": "Contact us",
+      "icon": "mdiMessageOutline",
+      "external": true
+    },
+    {
+      "url": "/about",
+      "name": "About",
+      "icon": "mdiHelp"
+    }
   ],
   /**
     * The bubbles that are included in this website.
