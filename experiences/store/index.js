@@ -1,37 +1,45 @@
+import { set } from 'vue'
+
 import { merge } from 'lodash-es'
 import BubbleAPI from 'data-experience/src/utils/bubble-api'
 
 export const state = () => ({
   loaded: false,
   config: {},
-  experiences: []
+  experiences: {}
 })
 
 export const getters = {
-  enabledExperiences(state) {
-    return state.experiences.filter(
-      ({ slug, disabled }) => !disabled && slug !== 'other'
-    )
-  },
-  disabledExperiences(state, getters) {
-    const disabledExperiences = state.experiences.filter(
-      ({ slug }) => !getters.enabledExperiences.find(e => e.slug === slug)
-    )
+  experiencesArray: state => Object.entries(state.experiences).map(([nameAndTag, xp]) => ({ nameAndTag, ...xp })),
+  experiencesEnabled: (state, getters) =>
+    getters.experiencesArray.filter(({ slug, disabled }) => !disabled && slug !== 'other'),
+  experiencesDisabled: (state, getters) => {
+    const experiencesDisabled = getters.experiencesArray.filter(({ slug }) => !getters.experiencesEnabled.find(e => e.slug === slug))
     // Add 'other' to the end of the Array
-    const otherIdx = disabledExperiences.findIndex(
+    const otherIdx = experiencesDisabled.findIndex(
       ({ slug }) => slug === 'other'
     )
-    const [other] = disabledExperiences.splice(otherIdx, 1)
+    const [other] = experiencesDisabled.splice(otherIdx, 1)
     if (other) {
-      disabledExperiences.push(other)
+      experiencesDisabled.push(other)
     }
-    return disabledExperiences
+    return experiencesDisabled
   },
   // https://vuex.vuejs.org/guide/getters.html#method-style-access
   experience:
-    state =>
-      experience =>
-        state.experiences.find(e => e.slug === experience) || {}
+    (state, getters) =>
+      ({ params: { experience, bubble } }) => {
+        if (!experience) {
+          return
+        }
+        const bubbleConfig = bubble ? state.config.bubbleConfig[bubble] : undefined
+        const nameAndTag = getters['xp/experienceNameAndTagFromConfig'](
+          experience,
+          state.config,
+          bubbleConfig
+        )
+        return state.experiences[nameAndTag]
+      }
 }
 
 export const mutations = {
@@ -43,6 +51,9 @@ export const mutations = {
   },
   setExperiences(state, experiences) {
     state.experiences = experiences
+  },
+  addExperience(state, { key, value }) {
+    set(state.experiences, key, value)
   }
 }
 
@@ -102,15 +113,14 @@ export const actions = {
             // since dynamic imports are not resolved by webpack
             // during the build step
             const [name] = packageNameAndTag.split('@')
-            return import(`@hestia.ai/${name}/dist`)
+            return Promise.all([packageNameAndTag, import(`@hestia.ai/${name}/dist`)])
           })
         )
-      ).map((module) => {
+      ).map(([packageNameAndTag, module]) => {
         const experience = module.default
-        return experience.config
+        return [packageNameAndTag, experience.config]
       })
-
-      commit('setExperiences', experiences)
+      commit('setExperiences', Object.fromEntries(experiences))
     }
   }
 }

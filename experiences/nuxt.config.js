@@ -40,6 +40,9 @@ if (!baseUrl && isProduction) {
 }
 
 const {
+  theme: {
+    primary = '#58539e'
+  } = {},
   messages = {},
   i18nLocale = 'en',
   i18nLocales = localeCodes
@@ -253,5 +256,10 @@ export default {
     '@/plugins/i18n.js',
     '@/plugins/vuetify.js',
     '@/plugins/data-experience.js'
-  ]
+  ],
+  loading: {
+    color: primary,
+    continuous: true,
+    height: '5px'
+  }
 }

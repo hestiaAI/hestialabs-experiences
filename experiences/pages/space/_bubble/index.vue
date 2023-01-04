@@ -21,6 +21,7 @@ import mixin from '@/mixins/page'
 
 export default {
   mixins: [mixin],
+  middleware: 'bubble-experiences-cdn',
   validate(context) {
     return validate.bubble(context)
   },

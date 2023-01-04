@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import { cloneDeep } from 'lodash-es'
 
+const matchExperienceName = (nameAndTag, name) => nameAndTag.match(new RegExp(`^${name}(?:$|@)`))
+
 const store = {
   namespaced: true,
   state: () => ({
@@ -8,7 +10,7 @@ const store = {
     currentTab: 0,
     experienceConfig: {},
     siteConfig: {},
-    bubbleConfig: {},
+    bubbleConfig: undefined,
     bubbleCodeword: undefined,
     selectedFiles: [],
     results: {},
@@ -104,7 +106,31 @@ const store = {
     }
   },
   getters: {
-    selectedPaths: state => state.fileExplorerCurrentItem.selectedPaths
+    selectedPaths: state => state.fileExplorerCurrentItem.selectedPaths,
+    experienceNameAndTagFromConfig:
+      state =>
+        (experienceSlug, siteConfig, bubbleConfig) => {
+          // fetch name and tag from site config
+          let experienceNameAndTag = siteConfig.experiences.find(
+            nameAndTag => matchExperienceName(nameAndTag, experienceSlug)
+          )
+          if (bubbleConfig) {
+            // fetch name and tag from bubble config
+            experienceNameAndTag = bubbleConfig.experiences.find(
+              nameAndTag => matchExperienceName(nameAndTag, experienceSlug)
+            )
+          }
+          return experienceNameAndTag
+        },
+    // use `experienceNameAndTag` within an experience
+    experienceNameAndTag:
+      (state, getters) => {
+        return getters.experienceNameAndTagFromConfig(
+          state.experienceConfig.slug,
+          state.siteConfig,
+          state.bubbleConfig
+        )
+      }
   }
 }
 

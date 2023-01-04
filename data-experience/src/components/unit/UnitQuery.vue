@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { mapState } from '@/utils/store-helper'
+import { mapState, mapGetters } from '@/utils/store-helper'
 import { cloneDeep, merge } from 'lodash-es'
 import UnitPipelineSql from './UnitPipelineSql.vue'
 import UnitFilesDialog from './files/UnitFilesDialog.vue'
@@ -188,7 +188,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager', 'experienceConfig', 'currentTab']),
+    ...mapState(['fileManager', 'experienceConfig', 'bubbleConfig', 'currentTab']),
+    ...mapGetters(['experienceNameAndTag']),
     clonedResult() {
       return cloneDeep(this.result)
     },
@@ -240,7 +241,8 @@ export default {
     },
     // Convert local translation key to global vue-i18n
     k(key) {
-      return `experiences.${this.experienceConfig.slug}.viewBlocks.${this.currentTab}.${key}`
+      const nameAndTag = this.experienceNameAndTag
+      return `experiences.${nameAndTag}.viewBlocks.${this.currentTab}.${key}`
     }
   }
 }

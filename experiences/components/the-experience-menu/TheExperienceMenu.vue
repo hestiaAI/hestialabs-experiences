@@ -43,32 +43,29 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['enabledExperiences', 'disabledExperiences']),
+    ...mapGetters(['experiencesEnabled', 'experiencesDisabled']),
     groupByCollaborator() {
       return !!this.$store.state.config.displayCollaborators && !this.hideCollaborators
     },
     sections() {
       const sections = []
-      const enabledExperiences = this.filterExperiences(this.enabledExperiences)
+      const experiencesEnabledFiltered = this.filterExperiences(this.experiencesEnabled)
       if (this.groupByCollaborator) {
-        sections.push(...this.groupExperiences(enabledExperiences))
+        sections.push(...this.groupExperiences(experiencesEnabledFiltered))
       } else {
         sections.push(
           {
-            experiences: enabledExperiences,
+            experiences: experiencesEnabledFiltered,
             heading: ''
           }
         )
       }
       sections.push(
         {
-          experiences: this.filterExperiences(this.disabledExperiences),
-          heading: `
-              ${this.$t('Available on-demand')} (<a target="_blank" rel="noopener noreferrer" href="mailto:contact@hestialabs.org">${this.$t('Contact us')}</a>)
-            `
+          experiences: this.filterExperiences(this.experiencesDisabled),
+          heading: `${this.$t('Available on-demand')} (<a target="_blank" rel="noopener noreferrer" href="mailto:contact@hestialabs.org">${this.$t('Contact us')}</a>)`
         }
       )
-
       return sections
     },
     component() {
@@ -92,12 +89,7 @@ export default {
       // return all experiences, if no filter provided
       let filtered = experiences
       if (include) {
-        filtered = filtered.filter(e => include.includes(e.slug))
-      }
-      if (!this.$route.params.bubble) {
-        // remove aggregator experiences from the menu when
-        // user is not in a bubble
-        filtered = filtered.filter(e => !e.slug.endsWith('-agg'))
+        filtered = filtered.filter(e => include.includes(e.nameAndTag))
       }
       return filtered
     }

@@ -161,7 +161,7 @@ import { json, timeFormatDefaultLocale } from 'd3'
 
 import { locales, localeCodes } from '@/i18n/locales'
 
-import { mapState, mapMutations } from '@/utils/store-helper'
+import { mapState, mapGetters, mapMutations } from '@/utils/store-helper'
 import DBMS from '@/utils/sql'
 import FileManager from '@/utils/file-manager'
 import fileManagerWorkers from '@/utils/file-manager-workers'
@@ -259,6 +259,7 @@ export default {
   computed: {
     ...mapState(['fileManager', 'bubbleCodeword', 'currentTab', 'currentWindow']),
     ...mapState({ experienceProgress: 'progress' }),
+    ...mapGetters(['experienceNameAndTag']),
     siteConfigMerged() {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
     },
@@ -424,8 +425,11 @@ export default {
       }
     },
     async mergeMessages() {
-      const { messages: messagesExperience = {}, slug } = this.experienceConfig
+      const { messages: messagesExperience = {} } = this.experienceConfig
       const { messages: messagesCustomConfig = {}, i18nLocales, i18nUrl } = this.siteConfigMerged
+
+      const nameAndTag = this.experienceNameAndTag
+
       let messagesCustomRemote = {}
       if (i18nUrl) {
         // fetch messages to override default messages
@@ -433,7 +437,7 @@ export default {
       }
       i18nLocales.forEach((locale) => {
         /* experience messages */
-        const messagesObject = { experiences: { [slug]: messagesExperience[locale] } }
+        const messagesObject = { experiences: { [nameAndTag]: messagesExperience[locale] } }
         this.$i18n.mergeLocaleMessage(locale, messagesObject)
 
         /* custom messages (override anything previously merged) */
@@ -450,7 +454,8 @@ export default {
     },
     // Convert local translation key to global vue18n
     k(viewBlockId, key) {
-      return `experiences.${this.experienceConfig.slug}.viewBlocks.${viewBlockId}.${key}`
+      const nameAndTag = this.experienceNameAndTag
+      return `experiences.${nameAndTag}.viewBlocks.${viewBlockId}.${key}`
     },
     scrollToTop() {
       window.setTimeout(() => window.scrollTo(0, 0), 10)
