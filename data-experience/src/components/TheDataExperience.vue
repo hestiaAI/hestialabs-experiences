@@ -206,7 +206,8 @@ const messagesOverride = {
 
 const siteConfigDefault = {
   i18nLocales: localeCodes,
-  messages: {}
+  messages: {},
+  experiences: []
 }
 
 async function d3Locale({ iso }) {

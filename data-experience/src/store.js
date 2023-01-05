@@ -9,7 +9,10 @@ const store = {
     progress: false,
     currentTab: 0,
     experienceConfig: {},
-    siteConfig: {},
+    siteConfig: {
+      // to avoid "Cannot read properties of undefined (reading 'find')"
+      experiences: []
+    },
     bubbleConfig: undefined,
     bubbleCodeword: undefined,
     selectedFiles: [],
