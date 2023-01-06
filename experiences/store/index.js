@@ -34,7 +34,7 @@ export const getters = {
         }
         const bubbleConfig = bubble ? state.config.bubbleConfig[bubble] : undefined
         const nameAndTag = getters['xp/experienceNameAndTagFromConfig'](
-          experience,
+          { name: experience },
           state.config,
           bubbleConfig
         )

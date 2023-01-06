@@ -112,15 +112,17 @@ const store = {
     selectedPaths: state => state.fileExplorerCurrentItem.selectedPaths,
     experienceNameAndTagFromConfig:
       state =>
-        (experienceSlug, siteConfig, bubbleConfig) => {
-          // fetch name and tag from site config
-          let experienceNameAndTag = siteConfig.experiences.find(
-            nameAndTag => matchExperienceName(nameAndTag, experienceSlug)
-          )
-          if (bubbleConfig) {
+        (experienceConfig, siteConfig, bubbleConfig) => {
+          let experienceNameAndTag = `${experienceConfig.name}@${experienceConfig.version || 'latest'}`
+          if (bubbleConfig?.experiences) {
             // fetch name and tag from bubble config
             experienceNameAndTag = bubbleConfig.experiences.find(
-              nameAndTag => matchExperienceName(nameAndTag, experienceSlug)
+              nameAndTag => matchExperienceName(nameAndTag, experienceConfig.name)
+            )
+          } else if (siteConfig.experiences) {
+            // fetch name and tag from site config
+            experienceNameAndTag = siteConfig.experiences.find(
+              nameAndTag => matchExperienceName(nameAndTag, experienceConfig.name)
             )
           }
           return experienceNameAndTag
@@ -129,7 +131,7 @@ const store = {
     experienceNameAndTag:
       (state, getters) => {
         return getters.experienceNameAndTagFromConfig(
-          state.experienceConfig.slug,
+          state.experienceConfig,
           state.siteConfig,
           state.bubbleConfig
         )

@@ -89,15 +89,13 @@ const experiences = experienceConfigs.map(e => e.slug)
 const initialExperience = 'uber-driver'
 
 const siteConfig = {
-  experiences,
   i18nLocales: ['fr', 'en'],
   i18nUrl: '/i18n-messages-custom-dev.json',
   theme: {
     primary: '#0C2D48',
     secondary: '#2E8BC0'
   },
-  mapboxToken: 'pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA',
-  displayCollaborators: true
+  mapboxToken: 'pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA'
 }
 
 const noBubble = 'no bubble'

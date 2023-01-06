@@ -6,24 +6,24 @@ export default {
     }
   },
   methods: {
-    kTitle(experience, key) {
+    kTitle(experienceConfig, key) {
       let bubbleConfig
       const { bubble } = this.$route.params
       if (bubble) {
         bubbleConfig = this.$store.state.config.bubbleConfig[bubble]
       }
       const nameAndTag = this.$store.getters['xp/experienceNameAndTagFromConfig'](
-        experience,
+        experienceConfig,
         this.$store.state.config,
         bubbleConfig
       )
       return `experiences.${nameAndTag}.intro.${key}`
     },
-    title({ slug, title }) {
-      return this.$tev(this.kTitle(slug, 'title'), title)
+    title(xp) {
+      return this.$tev(this.kTitle(xp, 'title'), xp.title)
     },
-    subtitle({ slug, subtitle }) {
-      return this.$tev(this.kTitle(slug, 'subtitle'), subtitle || this.defaultSubtitle)
+    subtitle(xp) {
+      return this.$tev(this.kTitle(xp, 'subtitle'), xp.subtitle || this.defaultSubtitle)
     }
   }
 }
