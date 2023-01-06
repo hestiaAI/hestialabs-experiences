@@ -22,7 +22,7 @@ export default {
         return this.$te(key) ? this.$t(key) : valueFallback
       }
     } catch (err) {
-      throw new Error('Conflict: $tev function is already injected in the host app, please change it\'s name.')
+      throw new Error('Conflict: $tev function is already injected in the host app, please change its name.')
     }
     try {
       Vue.prototype.$tet = function(key, keyFallback) {
@@ -30,14 +30,14 @@ export default {
         return this.$te(key) ? this.$t(key) : this.$t(keyFallback)
       }
     } catch (err) {
-      throw new Error('Conflict: $tet function is already injected in the host app, please change it\'s name.')
+      throw new Error('Conflict: $tet function is already injected in the host app, please change its name.')
     }
     try {
       Vue.prototype.$days = function() {
         return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(v => this.$t(`dayOfWeek.${v}`))
       }
     } catch (err) {
-      throw new Error('Conflict: $days function is already injected in the host app, please change it\'s name.')
+      throw new Error('Conflict: $days function is already injected in the host app, please change its name.')
     }
     /*
       Vue.mixin({
@@ -60,6 +60,6 @@ export default {
       */
 
     options.store.registerModule(MODULE_NAME, store)
-    Vue.component('TheDataExperience2', TheDataExperience)
+    Vue.component('TheDataExperience', TheDataExperience)
   }
 }
