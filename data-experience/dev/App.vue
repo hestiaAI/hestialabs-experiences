@@ -26,14 +26,13 @@
             style="margin: auto; width: 200px;"
           />
         </div>
-        <TheDataExperience2 v-bind="props" />
+        <TheDataExperience v-bind="props" />
       </div>
     </VMain>
   </VApp>
 </template>
 
 <script>
-import TheDataExperience2 from '@/components/TheDataExperience.vue'
 import BubbleAPI from '@/utils/bubble-api'
 import { mapMutations } from '@/utils/store-helper'
 
@@ -163,7 +162,6 @@ function makeBubbleConfig(bubbleId) {
 
 export default {
   name: 'App',
-  components: { TheDataExperience2 },
   data() {
     return {
       experience: initialExperience,
