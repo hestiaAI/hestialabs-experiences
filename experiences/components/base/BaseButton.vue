@@ -1,13 +1,12 @@
 <template>
   <VBtn
     :outlined="outlined"
-    v-bind="[attrs, $attrs]"
-    class="my-2  base-button"
-    v-on="on"
+    v-bind="$attrs"
+    class="my-2 base-button"
     @click="$emit('click', $event)"
   >
-    <VIcon v-if="icon" :left="text !== ''">
-      {{ mdiIcon }}
+    <VIcon v-if="mdiIcon" :left="text !== ''">
+      {{ mdiIconResolved }}
     </VIcon>
     <slot>
       <span>{{ $tev(text, text) }}</span>
@@ -24,7 +23,7 @@ export default {
       type: String,
       default: ''
     },
-    icon: {
+    mdiIcon: {
       type: String,
       default: null
     },
@@ -34,8 +33,8 @@ export default {
     }
   },
   computed: {
-    mdiIcon() {
-      return this.$vuetify.icons.values[this.icon]
+    mdiIconResolved() {
+      return this.$vuetify.icons.values[this.mdiIcon]
     }
   }
 }

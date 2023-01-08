@@ -21,13 +21,13 @@ import mixin from '@/mixins/page'
 
 export default {
   mixins: [mixin],
+  middleware: 'bubble-experiences-cdn',
   validate(context) {
     return validate.bubble(context)
   },
   head() {
-    const bubbleText = this.$tc('Data Space', 1)
     const { title: t } = this.bubble
-    const title = this.$i18n.locale === 'fr' ? `${bubbleText} ${t}` : `${t} ${bubbleText}`
+    const title = `${t} | ${this.$tc('Data Space', 1)}`
     return this.vueMeta(title)
   },
   computed: {

@@ -4,7 +4,7 @@
       <VCol cols="12" class="dom-to-image-exclude webshare d-flex">
         <div class="webshare__export-button">
           <BaseButton
-            icon="mdiExport"
+            mdi-icon="mdiExport"
             text="Export"
             v-bind="{ progress, status, error }"
             @click="exportImage"

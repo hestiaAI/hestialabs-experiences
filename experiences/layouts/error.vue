@@ -5,7 +5,7 @@
         {{ title }}
       </h1>
       <LogoImg max-width="300" class="my-12" />
-      <BaseButton nuxt :to="localePath('index')" icon="mdiHome" text="Home Page" />
+      <BaseButton nuxt :to="localePath('index')" mdi-icon="mdiHome" text="Home Page" />
     </VRow>
   </VContainer>
 </template>

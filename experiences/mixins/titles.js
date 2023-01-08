@@ -1,4 +1,3 @@
-const k = (experience, key) => `experiences.${experience}.intro.${key}`
 
 export default {
   computed: {
@@ -7,11 +6,24 @@ export default {
     }
   },
   methods: {
-    title({ slug, title }) {
-      return this.$tev(k(slug, 'title'), title)
+    kTitle(experienceConfig, key) {
+      let bubbleConfig
+      const { bubble } = this.$route.params
+      if (bubble) {
+        bubbleConfig = this.$store.state.config.bubbleConfig[bubble]
+      }
+      const nameAndTag = this.$store.getters['xp/experienceNameAndTagFromConfig'](
+        experienceConfig,
+        this.$store.state.config,
+        bubbleConfig
+      )
+      return `experiences.${nameAndTag}.intro.${key}`
     },
-    subtitle({ slug, subtitle }) {
-      return this.$tev(k(slug, 'subtitle'), subtitle || this.defaultSubtitle)
+    title(xp) {
+      return this.$tev(this.kTitle(xp, 'title'), xp.title)
+    },
+    subtitle(xp) {
+      return this.$tev(this.kTitle(xp, 'subtitle'), xp.subtitle || this.defaultSubtitle)
     }
   }
 }

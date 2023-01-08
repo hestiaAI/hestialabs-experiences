@@ -43,7 +43,7 @@
           <BaseButton
             v-bind="{ error, progress, status }"
             text="Export"
-            icon="mdiExport"
+            mdi-icon="mdiExport"
             @click="exportCSV"
           />
         </div>

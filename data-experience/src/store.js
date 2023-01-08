@@ -1,14 +1,19 @@
 import Vue from 'vue'
 import { cloneDeep } from 'lodash-es'
 
+const matchExperienceName = (nameAndTag, name) => nameAndTag.match(new RegExp(`^${name}(?:$|@)`))
+
 const store = {
   namespaced: true,
   state: () => ({
     progress: false,
-    currentTab: 'load-data',
+    currentTab: 0,
     experienceConfig: {},
-    siteConfig: {},
-    bubbleConfig: {},
+    siteConfig: {
+      // to avoid "Cannot read properties of undefined (reading 'find')"
+      experiences: []
+    },
+    bubbleConfig: undefined,
     bubbleCodeword: undefined,
     selectedFiles: [],
     results: {},
@@ -104,7 +109,33 @@ const store = {
     }
   },
   getters: {
-    selectedPaths: state => state.fileExplorerCurrentItem.selectedPaths
+    selectedPaths: state => state.fileExplorerCurrentItem.selectedPaths,
+    experienceNameAndTagFromConfig:
+      state =>
+        (experienceConfig, siteConfig, bubbleConfig) => {
+          let experienceNameAndTag = `${experienceConfig.name}@${experienceConfig.version || 'latest'}`
+          if (bubbleConfig?.experiences) {
+            // fetch name and tag from bubble config
+            experienceNameAndTag = bubbleConfig.experiences.find(
+              nameAndTag => matchExperienceName(nameAndTag, experienceConfig.name)
+            )
+          } else if (siteConfig.experiences) {
+            // fetch name and tag from site config
+            experienceNameAndTag = siteConfig.experiences.find(
+              nameAndTag => matchExperienceName(nameAndTag, experienceConfig.name)
+            )
+          }
+          return experienceNameAndTag
+        },
+    // use `experienceNameAndTag` within an experience
+    experienceNameAndTag:
+      (state, getters) => {
+        return getters.experienceNameAndTagFromConfig(
+          state.experienceConfig,
+          state.siteConfig,
+          state.bubbleConfig
+        )
+      }
   }
 }
 

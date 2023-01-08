@@ -29,19 +29,25 @@ const propsData = {
     dataSamples: [],
     tutorialVideos: [],
     videoHeight: 0,
-    viewBlocks: [],
+    viewBlocks: [{}],
     files: [],
     slug: 'a-slug'
   },
-  siteConfig: {},
+  siteConfig: {
+    experiences: []
+  },
   bubbleConfig: {
     id: 'the-data-experience-test',
     apiUrl: 'http://localhost:0000',
-    bypassLogin: true
+    bypassLogin: true,
+    experiences: []
   }
 }
 
 const mocks = {
+  $vuetify: {
+    breakpoint: {}
+  },
   $i18n: {
     mergeLocaleMessage() {}
   },
@@ -87,7 +93,7 @@ test('mounts without error', async() => {
   expect(wrapper.exists()).toBeTruthy()
   // For some reason it doesn't find the component if we search by name or by import
   expect(
-    wrapper.findComponent('[data-id="load-data"]').exists()
+    wrapper.findComponent('[data-id="window-load-data"]').exists()
   ).toBeTruthy()
 })
 

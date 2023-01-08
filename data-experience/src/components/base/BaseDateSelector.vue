@@ -60,7 +60,6 @@ export default {
   },
   watch: {
     date() {
-      console.log(this.date)
       this.dateFormatted = this.formatDateCustom(this.parseDate(this.date))
     }
   },

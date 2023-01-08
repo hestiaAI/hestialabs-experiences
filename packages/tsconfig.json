@@ -14,7 +14,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node", "lodash"],
+    "types": ["node", "lodash", "d3"],
     "baseUrl": ".",
     // https://bobbyhadz.com/blog/typescript-cannot-find-module
     "moduleResolution": "node",

@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { mapState } from '@/utils/store-helper'
+import { mapState, mapGetters } from '@/utils/store-helper'
 
 import BaseVideo from '@/components/base/BaseVideo.vue'
 import ExternalLink from '@/components/misc/ExternalLink.vue'
@@ -120,14 +120,17 @@ export default {
       Object.fromEntries(
         experienceProps.map(k => [k, state => state.experienceConfig[k]])
       )
-    )
+    ),
+    ...mapState(['experienceConfig', 'bubbleConfig']),
+    ...mapGetters(['experienceNameAndTag'])
   },
   methods: {
     onUnitFilesUpdate({ uppyFiles }) {
       this.$emit('update', { uppyFiles })
     },
     k(key) {
-      return `experiences.${this.slug}.intro.${key}`
+      const nameAndTag = this.experienceNameAndTag
+      return `experiences.${nameAndTag}.intro.${key}`
     }
   }
 }

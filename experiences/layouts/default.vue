@@ -149,8 +149,8 @@ export default {
   computed: {
     ...mapGetters(['experience']),
     collaborator() {
-      const { collaborator = {} } = this.experience(this.$route)
-      return collaborator
+      const experience = this.experience(this.$route)
+      return experience?.collaborator || {}
     },
     newsletterURL() {
       const { url = 'https://hestialabs.org/' } = this.collaborator

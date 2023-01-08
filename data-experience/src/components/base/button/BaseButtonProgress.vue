@@ -1,6 +1,6 @@
 <template>
   <BaseButton
-    v-bind="{ progress, status, error, disabled, text, icon }"
+    v-bind="{ progress, status, error, disabled, text, mdiIcon }"
     @click="run"
   />
 </template>
@@ -19,7 +19,7 @@ export default {
       type: String,
       default: ''
     },
-    icon: {
+    mdiIcon: {
       type: String,
       default: null
     },

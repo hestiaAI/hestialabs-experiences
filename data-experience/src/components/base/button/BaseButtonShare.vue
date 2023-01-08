@@ -1,7 +1,7 @@
 <template>
   <BaseButton
     v-if="condition"
-    icon="mdiShare"
+    mdi-icon="mdiShare"
     :text="buttonText"
     v-bind="$attrs"
     @click="share"
