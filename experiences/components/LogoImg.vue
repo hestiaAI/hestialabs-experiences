@@ -11,10 +11,16 @@
 import { mapState } from 'vuex'
 export default {
   name: 'LogoImg',
+  props: {
+    url: {
+      type: String,
+      default: ''
+    }
+  },
   computed: {
     ...mapState(['config']),
     logoSrc() {
-      return this.config.logo || '/hestialabs-logo.svg'
+      return this.url || this.config.logoImg || '/hestialabs-logo.svg'
     }
   }
 }

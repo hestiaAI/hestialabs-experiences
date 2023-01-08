@@ -1,5 +1,5 @@
 <template>
-  <TheDataExperience2
+  <TheDataExperience
     v-bind="{
       experienceConfig,
       siteConfig

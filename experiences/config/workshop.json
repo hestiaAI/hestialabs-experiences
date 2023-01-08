@@ -23,10 +23,11 @@
   "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
   "displayCollaborators": true,
   "bubbles": ["demo-aggregator", "demo-participant"],
-  "appBarLinks": [
+  "appInfoLinks": [
     {
       "url": "https://hestia.ai/en/#contact",
       "name": "Contact us",
+      "icon": "mdiMessageOutline",
       "external": true
     }
   ],

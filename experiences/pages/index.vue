@@ -191,10 +191,8 @@
 
 <script>
 import { pick } from 'lodash-es'
-import TheExperienceMenuCards from '@/components/the-experience-menu/TheExperienceMenuCards.vue'
 
 export default {
-  components: { TheExperienceMenuCards },
   data() {
     return {
       tools: [
@@ -309,9 +307,9 @@ export default {
       }).filter(w => (this.$store.state.config.homePageBubbles || []).includes(w.slug))
     },
     experiences() {
-      return ['twitter', 'facebook', 'google', 'tracker-control'].map(
-        e => this.$store.state.experiences.find(({ slug }) => slug === e)
-      ).filter(e => e)
+      return ['twitter', 'facebook', 'google', 'tracker-control']
+        .map(e => this.$store.state.experiences[e])
+        .filter(e => e)
     }
   }
 }

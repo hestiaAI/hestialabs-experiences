@@ -34,9 +34,7 @@ function d3Locale({ iso }) {
 }
 
 export default async({ app, store }) => {
-  const { config: { i18nUrl, messages: messagesCustomConfig = {} }, experiences } = store.state
-
-  const messagesExperiences = experiences.filter(e => e.messages)
+  const { config: { i18nUrl, messages: messagesCustomConfig = {} } } = store.state
 
   let messagesCustomRemote = {}
   if (i18nUrl) {
@@ -48,11 +46,13 @@ export default async({ app, store }) => {
     app.i18n.mergeLocaleMessage(locale, messagesDefault[locale])
 
     /* experience messages */
-    messagesExperiences.forEach(({ slug, messages }) => {
-      // Merge local, experience-specific, default messages
-      // into vue-i18n's global dictionary
-      const messagesObject = { experiences: { [slug]: messages[locale] } }
-      app.i18n.mergeLocaleMessage(locale, messagesObject)
+    Object.entries(store.state.experiences).forEach(([nameAndTag, { messages }]) => {
+      if (messages) {
+        // Merge local, experience-specific, default messages
+        // into vue-i18n's global dictionary
+        const messagesObject = { experiences: { [nameAndTag]: messages[locale] } }
+        app.i18n.mergeLocaleMessage(locale, messagesObject)
+      }
     })
 
     /* overriding messages */
