@@ -1,0 +1,11 @@
+{
+  "name": "HestiaLabs Experiences",
+  "short_name": "HestiaLabs",
+  "description": "We create a new relationship to personal data",
+  "icons": [],
+  "start_url": "/?standalone=true",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "lang": "en"
+}
