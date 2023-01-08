@@ -6,82 +6,108 @@
       "dataPortalMessage": "<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format."
     },
     "viewBlocks": {
-      "views": {
-        "title": "Views",
-        "text": "",
-        "selected-some": "{filterCount} selected out of {totalCount} {rowLabel}",
-        "selected-all": "All {totalCount} {rowLabel} selected.",
+      "consumption": {
+        "title": "Consumption",
+        "text": "See how much content you watch over time.",
         "vizProps": {
-          "titleTimeline": "Content viewed",
-          "titlePie": "Type of content",
-          "titleTop": "Top Account",
-          "rowLabel": "views",
-          "messages": {
-            "type": {
-              "Post Viewed": "Post Viewed",
-              "Video Watched": "Video Watched",
-              "Ad Viewed": "Ad Viewed"
-            }
-          }
+          "graphs": [
+              {
+                "title": "Content viewed",
+                "valueLabel": "views"
+              },
+              {
+                "title": "Type of content",
+                "valueLabel": "views"
+              },
+              {
+                "title": "Top Account",
+                "valueLabel": "views"
+              }
+          ]
         },
         "headers": {
-          "Date": "Date",
-          "Name": "Name",
-          "Action": "Action"
+          "actionDate": "Date",
+          "accountName": "Name",
+          "actionType": "Action"
         }
       },
-      "likes": {
-        "title": "Likes",
-        "text": "",
-        "selected-some": "{filterCount} selected out of {totalCount} {rowLabel}",
-        "selected-all": "All {totalCount} {rowLabel} selected.",
+      "interactions": {
+        "title": "Interactions",
+        "text": "See which actions you do most when using Instagram.",
         "vizProps": {
-          "titleArea": "Likes given",
-          "titleTop": "Top User",
-          "rowLabel": "likes",
-          "yAxisLabel": "Total likes",
-          "messages": {
-            "type": {
-              "Comment Liked": "Comment Liked",
-              "Post Liked": "Post Liked"
-            }
-          }
+          "graphs": [
+              {
+                "title": "Number of interactions",
+                "valueLabel": "interactions"
+              },
+              {
+                "title": "Interaction Type",
+                "valueLabel": "interactions"
+              },
+              {
+                "valueLabel": "interactions"
+              },
+              {
+                "valueLabel": "interactions"
+              },
+              {
+                "title": "User",
+                "valueLabel": "interactions"
+              }
+          ]
         },
         "headers": {
-          "Date": "Date",
-          "Name": "Name",
-          "Action": "Action"
+          "_date": "Date",
+          "accountName": "Name",
+          "interactionType": "Interaction"
         }
       },
-      "messages": {
-        "title": "Messages",
-        "text": "",
-        "selected-some": "{filterCount} selected out of {totalCount} messages",
-        "selected-all": "All {totalCount} messages selected.",
+      "ad-interactions": {
+        "title": "Ad 1/3 (Interactions)",
+        "text": "See how much ads you see and wether or not you interact with them.",
         "vizProps": {
-          "messages": {
-            "Messages Exchanged Over Time": "Messages Exchanged Over Time",
-            "Time of Day": "Time of Day",
-            "Day": "Day",
-            "Top Users": "Top Users",
-            "Total Messages": "Total Messages"
-          }
+          "graphs": [
+              {
+                "title": "Ad viewed",
+                "valueLabel": "interactions"
+              },
+              {
+                "title": "Ad Clicked",
+                "valueLabel": "interactions"
+              }
+          ]
         },
         "headers": {
-          "Sender": "Sender",
-          "Message": "Message",
-          "Sent on": "Sent on"
+          "_date": "Date",
+          "title": "Name",
+          "clicked": "Clicked"
         }
       },
-      "follows": {
-        "title": "Follows",
-        "text": "",
+      "ad-interests": {
+        "title": "Ad 2/3 (Interests)",
+        "text": "See which interests are inferred about you.",
         "vizProps": {
-          "title": "Followers vs Followings over time",
-          "yLabel": "Count"
+          "graphs": [
+              {
+                "title": "Type of interest",
+                "valueLabel": "interests"
+              }
+          ]
+        },
+        "headers": {
+          "title": "Name",
+          "_type": "Type"
         }
       }
-    }
+    },
+    "ad-advertisers": {
+      "title": "Ad 3/3 (Advertisers)",
+      "text": "See which advertisers are using your information on Instagram."
+    },
+     "localisation": {
+        "title": "Localisation",
+        "text": "See your posts and stories that have been geotagged."
+      }
   },
   "fr": {
     "intro": {
@@ -90,81 +116,108 @@
       "dataPortalMessage": "<strong>Important:</strong> Pour que l'expérience fonctionne, veuillez demander vos données au format <strong>JSON</strong>."
     },
     "viewBlocks": {
-      "views": {
-        "title": "Vues",
-        "text": "",
-        "selected-some": "{filterCount} sélectionnées sur {totalCount} {rowLabel}",
-        "selected-all": "Toutes les {totalCount} {rowLabel} sont sélectionnées.",
+      "consumption": {
+        "title": "Consommation",
+        "text": "Observer la quantité de contenu que vous regardez au fil du temps.",
         "vizProps": {
-          "titleTimeline": "Contenu consulté",
-          "titlePie": "Type de contenu",
-          "titleTop": "Top compte",
-          "rowLabel": "consulté",
-          "messages": {
-            "type": {
-              "Post Viewed": "Poste visualisé",
-              "Video Watched": "Vidéo regardée",
-              "Ad Viewed": "Annonce vue"
-            }
-          }
+          "graphs": [
+              {
+                "title": "Contenu consulté",
+                "valueLabel": "vues"
+              },
+              {
+                "title": "Type de contenu",
+                "valueLabel": "vues"
+              },
+              {
+                "title": "Top Compte",
+                "valueLabel": "vues"
+              }
+          ]
         },
         "headers": {
-          "Date": "Date",
-          "Name": "Nom",
-          "Action": "Action"
+          "actionDate": "Date",
+          "accountName": "Nom",
+          "actionType": "Action"
         }
       },
-      "likes": {
-        "title": "Likes",
-        "text": "",
-        "selected-some": "{filterCount} sélectionnées sur {totalCount} {rowLabel}",
-        "selected-all": "Toutes les {totalCount} {rowLabel} sont sélectionnées.",
+      "interactions": {
+        "title": "Interactions",
+        "text": "Découvrez les actions que vous effectuez le plus lorsque vous utilisez Instagram.",
         "vizProps": {
-          "titleArea": "Likes donnés",
-          "titleTop": "Top utilisateur",
-          "rowLabel": "likes",
-          "yAxisLabel": "Total des likes",
-          "messages": {
-            "type": {
-              "Comment Liked": "Commentaire apprécié",
-              "Post Liked": "Poste apprécié"
-            }
-          }
+          "graphs": [
+              {
+                "title": "Nombre d'interactions",
+                "valueLabel": "interactions"
+              },
+              {
+                "title": "Type d'intéractions",
+                "valueLabel": "interactions"
+              },
+              {
+                "valueLabel": "interactions"
+              },
+              {
+                "valueLabel": "interactions"
+              },
+              {
+                "title": "Utilisateur",
+                "valueLabel": "interactions"
+              }
+          ]
         },
         "headers": {
-          "Date": "Date",
-          "Name": "Nom",
-          "Action": "Action"
+          "_date": "Date",
+          "accountName": "Nom",
+          "interactionType": "Intéraction"
         }
       },
-      "messages": {
-        "title": "Messages",
-        "text": "",
-        "selected-some": "{filterCount} sélectionnées sur {totalCount} messages",
-        "selected-all": "Toutes les {totalCount} messages sont sélectionnées.",
+      "ad-interactions": {
+        "title": "Publicité 1/3 (Interactions)",
+        "text": "Observer combien de publicités vous voyez et si vous interagissez ou non avec elles.",
         "vizProps": {
-          "messages": {
-            "Messages Exchanged Over Time": "Messages échangés au fil du temps",
-            "Time of Day": "Heure de la journée",
-            "Day": "Jour",
-            "Top Users": "Principaux utilisateurs",
-            "Total Messages": "Total des messages"
-          }
+          "graphs": [
+              {
+                "title": "Annonce vue",
+                "valueLabel": "vues"
+              },
+              {
+                "title": "Annonce cliquer",
+                "valueLabel": "vues"
+              }
+          ]
         },
         "headers": {
-          "Sender": "Émetteur",
-          "Message": "Message",
-          "Sent on": "Heure d'envoi"
+          "_date": "Date",
+          "title": "Nom",
+          "clicked": "Cliquer"
         }
       },
-      "follows": {
-        "title": "Follows",
-        "text": "",
+      "ad-interests": {
+        "title": "Publicité 2/3 (Intérêts)",
+        "text": "Observer quels intérêts sont déduits à votre sujet.",
         "vizProps": {
-          "title": "Followers vs Followings au fil du temps",
-          "yLabel": "Nombre"
+          "graphs": [
+              {
+                "title": "Type d'intérêt",
+                "valueLabel": "intérêts"
+              }
+          ]
+        },
+        "headers": {
+          "title": "Nom",
+          "_type": "Type"
         }
+      },
+      "ad-advertisers": {
+        "title": "Publicité 3/3 (Annonceurs)",
+        "text": "Observer quels sont les annonceurs qui utilisent vos informations sur Instagram."
+      },
+      "localisation": {
+        "title": "Localisation",
+        "text": "Consultez vos Posts et vos Stories qui ont été géolocalisées."
       }
     }
+
   }
 }

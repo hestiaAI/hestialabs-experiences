@@ -1,20 +1,20 @@
 SELECT
   accountName,
-  DATETIME(unixTimestamp, 'unixepoch') AS actionDate,
+  datetime AS actionDate,
   'Post Viewed' AS actionType
 FROM
   InstagramPostViewed
 UNION
 SELECT
   accountName,
-  DATETIME(unixTimestamp, 'unixepoch') AS actionDate,
+  datetime AS actionDate,
   'Video Watched' AS actionType
 FROM
   InstagramVideoWatched
 UNION
 SELECT
   accountName,
-  DATETIME(unixTimestamp, 'unixepoch') AS actionDate,
+  datetime AS actionDate,
   'Ad Viewed' AS actionType
 FROM
   InstagramAdViewed;
