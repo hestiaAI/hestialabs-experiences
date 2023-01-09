@@ -31,6 +31,35 @@
           "actionType": "Action"
         }
       },
+      "consumption-time": {
+        "title": "Consumption (Time spent)",
+        "text": "See how much time you spend on Instagram in one week.",
+        "vizProps": {
+          "graphs": [
+              {
+                "title": "Minutes spent",
+                "valueLabel": "minutes"
+              },
+              {
+                "valueLabel": "minutes"
+              },
+              {
+                "valueLabel": "minutes"
+              },
+              {
+                "title": "Top Actions",
+                "valueLabel": "actions"
+              }
+          ]
+        },
+        "headers": {
+          "start_date": "Start Date",
+          "end_date": "End Date",
+          "nb_actions": "Number of actions",
+          "actions": "List of actions",
+          "duration_m": "Duration in minutes"
+        }
+      },
       "interactions": {
         "title": "Interactions",
         "text": "See which actions you do most when using Instagram.",
@@ -139,6 +168,35 @@
           "actionDate": "Date",
           "accountName": "Nom",
           "actionType": "Action"
+        }
+      },
+      "consumption-time": {
+        "title": "Consommation (Temps passé)",
+        "text": "Voyez combien de temps vous passez sur Instagram en une semaine.",
+        "vizProps": {
+          "graphs": [
+              {
+                "title": "Minutes passées",
+                "valueLabel": "minutes"
+              },
+              {
+                "valueLabel": "minutes"
+              },
+              {
+                "valueLabel": "minutes"
+              },
+              {
+                "title": "Top Actions",
+                "valueLabel": "actions"
+              }
+          ]
+        },
+        "headers": {
+          "start_date": "Date de début",
+          "end_date": "Date de fin",
+          "nb_actions": "Nombre d'actions",
+          "actions": "Liste des actions",
+          "duration_m": "Durée en minutes"
         }
       },
       "interactions": {
