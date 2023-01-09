@@ -68,7 +68,13 @@
           </VSubheader>
         </template>
         <TheExperienceMenu :include="include" />
-        <LogoImg :url="config.logoImgMenu" class="mt-16 mb-10" />
+        <div class="d-flex justify-center">
+          <LogoImg
+            :url="config.logoImgMenu"
+            class="mt-16 mb-10"
+            max-width="200"
+          />
+        </div>
       </div>
     </VNavigationDrawer>
   </div>
