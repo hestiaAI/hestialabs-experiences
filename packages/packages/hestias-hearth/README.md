@@ -71,6 +71,12 @@ Example command:
 ./bin/packages/packages/hestias-hearth/entry.sh fire twitter -f "C:\Users\me\hestialabs-experiences\packages\lib\data-samples\twitter-small.zip"
 ```
 
+#### Generate the schema
+
+```sh
+npm run schema
+```
+
 ## Publishing
 
 Increment version

@@ -3,6 +3,7 @@
 import path from 'path'
 import { writeFileSync } from 'fs'
 
+import { ExperienceOptions } from '@/index.js'
 import { createDatabaseAndGenerateRecords } from './utils/database.mjs'
 import { createAndInitializeFileManager, createFiles } from './utils/file.mjs'
 import { experiences } from './utils/experiences.mjs'
@@ -11,25 +12,17 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const schema: {
-  [key: string]: {
-    database: {
-      tables: {
-        name: string
-        columns: {
-          name: string
-          type: string
-          meta?: string
-        }[]
-      }[]
-    }
-    tabs: object[]
+const schema: Array<
+  ExperienceOptions & {
+    name: string
+    slug: string
+    version: string
   }
-} = {}
+> = []
 
 for (const xp of Object.values(experiences)) {
-  const { name, options } = xp
-  console.info(`\n[${name}]`)
+  const { name, version, options } = xp
+  console.info(`\n[${name}@${version}]`)
 
   console.info('Creating Node Files...')
   const fileBaseURL = path.join(__dirname, '../../../../../../lib/data-samples')
@@ -51,35 +44,37 @@ for (const xp of Object.values(experiences)) {
     }
   }
 
-  schema[name] = {
-    database: {
-      tables: options.databaseConfig.tables.map(({ columns, ...rest }) => ({
-        // map columns Array to Object to add semantics
-        columns: columns.map(([name, type, meta]) => ({ name, type, meta })),
-        ...rest
-      }))
-    },
-    tabs: options.viewBlocks
-      .map(block =>
-        Object.fromEntries(
-          Object.entries(block)
-            // exclude functions
-            .filter(b => typeof b[1] !== 'function')
-        )
-      )
-      .map(({ sql, ...rest }) => ({
-        sql:
-          typeof sql === 'undefined'
-            ? undefined
-            : // replace whitespace in SQL string
-              (sql as string).replace(/\s+/g, ' '),
-        ...rest
-      }))
-  }
+  // options.databaseConfig.tables = options.databaseConfig.tables.map(({ columns, ...rest }) => ({
+  //   // map columns Array to Object to add semantics
+  //   columns: columns.map(([name, type, meta]) => ({ name, type, meta })),
+  //   ...rest
+  // }))
+  schema.push(xp.config)
 }
 
 const filePath = path.join(__dirname, '../../../../schema.json')
-writeFileSync(filePath, JSON.stringify(schema, null, 2))
+writeFileSync(
+  filePath,
+  JSON.stringify(
+    schema,
+    (key, val) => {
+      if (typeof val === 'function') {
+        return '[function]'
+      }
+      switch (key) {
+        case 'icon':
+          return '[data URL]'
+        case 'dataModel':
+          return '[argonodes graph]'
+        case 'keplerConfig':
+          return '[kepler config]'
+      }
+
+      return val
+    },
+    2
+  )
+)
 
 console.info(`\nSchema written to ${filePath}`)
 console.info('Done')

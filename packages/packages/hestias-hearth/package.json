@@ -27,8 +27,9 @@
     "start": "node --no-warnings --experimental-specifier-resolution node ./bin/packages/packages/hestias-hearth/index.mjs",
     "schema": "node --no-warnings --experimental-specifier-resolution node ./bin/packages/packages/hestias-hearth/schema.mjs",
     "clean": "rimraf ./bin",
-    "build": "npm run clean && npm run copy-files && tsc && npm run schema",
-    "dev": "npm run build -- -w",
+    "compile": "npm run clean && npm run copy-files && tsc",
+    "build": "npm run compile && npm run schema",
+    "dev": "npm run compile -- -w",
     "copy-files": "copyfiles --flat ../../node_modules/sql.js/dist/sql-wasm.wasm ./bin/data-experience/src/utils && copyfiles ./entry.sh ./bin/packages/packages/hestias-hearth"
   },
   "devDependencies": {
