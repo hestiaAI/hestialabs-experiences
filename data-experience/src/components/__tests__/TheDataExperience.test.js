@@ -33,14 +33,11 @@ const propsData = {
     files: [],
     slug: 'a-slug'
   },
-  siteConfig: {
-    experiences: []
-  },
+  siteConfig: {},
   bubbleConfig: {
     id: 'the-data-experience-test',
     apiUrl: 'http://localhost:0000',
-    bypassLogin: true,
-    experiences: []
+    bypassLogin: true
   }
 }
 
