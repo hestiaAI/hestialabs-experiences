@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { cloneDeep } from 'lodash-es'
 
-const matchExperienceName = (nameAndTag, name) => nameAndTag.match(new RegExp(`^${name}(?:$|@)`))
+const matchExperienceName = (nameAndTag, name) => nameAndTag.match(new RegExp(`^${name}(?:$|@|latest)`))
 
 const store = {
   namespaced: true,
@@ -125,7 +125,9 @@ const store = {
               nameAndTag => matchExperienceName(nameAndTag, experienceConfig.name)
             )
           }
-          return experienceNameAndTag
+          // It is problematic to have '.' in a key,
+          // notably for i18n messages
+          return experienceNameAndTag.replace(/[@.]/g, '_')
         },
     // use `experienceNameAndTag` within an experience
     experienceNameAndTag:

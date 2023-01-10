@@ -206,8 +206,7 @@ const messagesOverride = {
 
 const siteConfigDefault = {
   i18nLocales: localeCodes,
-  messages: {},
-  experiences: []
+  messages: {}
 }
 
 async function d3Locale({ iso }) {
@@ -338,6 +337,12 @@ export default {
         this.setSiteConfig(cloneDeep(value))
       }
     },
+    experienceNameAndTag: {
+      immediate: true,
+      async handler() {
+        await this.mergeMessages()
+      }
+    },
     fileManager(value) {
       if (value === null) {
         // reset window and tab
@@ -410,8 +415,7 @@ export default {
       'clearStore',
       'setFileManager',
       'setCurrentDB',
-      'setCurrentTab',
-      'setCurrentWindow'
+      'setCurrentTab'
     ]),
     selectLocale(localeIndex) {
       // user switched locale with the component's lang switcher

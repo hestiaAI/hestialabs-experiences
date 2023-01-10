@@ -118,7 +118,12 @@ export const actions = {
         )
       ).map(([packageNameAndTag, module]) => {
         const experience = module.default
-        return [packageNameAndTag, experience.config]
+        return [
+          // It is problematic to have '.' in a key,
+          // notably for i18n messages
+          packageNameAndTag.replaceAll(/[@.]/, '_'),
+          experience.config
+        ]
       })
       commit('setExperiences', Object.fromEntries(experiences))
     }

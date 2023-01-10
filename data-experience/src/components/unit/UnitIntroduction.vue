@@ -121,7 +121,6 @@ export default {
         experienceProps.map(k => [k, state => state.experienceConfig[k]])
       )
     ),
-    ...mapState(['experienceConfig', 'bubbleConfig']),
     ...mapGetters(['experienceNameAndTag'])
   },
   methods: {
