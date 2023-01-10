@@ -7,9 +7,13 @@ import sqlInterests from './sql/interests.sql'
 import sqlAdInteractions from './sql/ad-interactions.sql'
 import sqlPostsAndStories from './sql/posts-and-stories.sql'
 
+import sqlTime from './sql/time.sql'
+
 import { genericDateViewer } from '@/pipelines/generic'
 
 import keplerConfigPublications from './kepler/kepler_config_publications'
+
+import { makeSessions } from './postprocessors'
 
 const blocks: ViewBlocks = [
   {
@@ -49,6 +53,52 @@ const blocks: ViewBlocks = [
     },
     title: 'Consumption',
     text: 'See how much content you watch over time.'
+  },
+  {
+    id: 'consumption-time',
+    sql: sqlTime,
+    showTable: false,
+    postprocessor: makeSessions,
+    visualization: 'ChartViewDashboard.vue',
+    vizProps: {
+      graphs: [
+        {
+          title: 'Time spent',
+          valueLabel: 'minutes',
+          cols: '12',
+          type: 'TimelineChart.vue',
+          dateAccessor: 'start_date',
+          valueAccessor: 'duration_m'
+        },
+        {
+          valueLabel: 'minutes',
+          type: 'WeekChart.vue',
+          cols: '4',
+          height: 220,
+          dateAccessor: 'start_date',
+          valueAccessor: 'duration_m'
+        },
+        {
+          valueLabel: 'minutes',
+          type: 'HourChart.vue',
+          cols: '4',
+          height: 220,
+          dateAccessor: 'start_date',
+          valueAccessor: 'duration_m'
+        },
+        {
+          valueLabel: 'actions',
+          title: 'Actions',
+          cols: '4',
+          height: 220,
+          type: 'TopChart.vue',
+          valueAccessor: 'actions',
+          valueAsArray: true
+        }
+      ]
+    },
+    title: 'Consommation (durée)',
+    text: 'See which advertisers are using your information on Instagram.'
   },
   {
     id: 'interactions',
