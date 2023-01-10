@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <VOverlay :value="overlay !== ''" absolute opacity="0.5">
+    <VOverlay :value="overlay" absolute opacity="0.5">
       <div
         class="d-flex flex-column align-center"
         style="width: 100%; height: 100%"
@@ -96,10 +96,13 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from '@/utils/store-helper'
 import { cloneDeep, merge } from 'lodash-es'
+
+import { mapState, mapGetters } from '@/utils/store-helper'
+
 import UnitPipelineSql from './UnitPipelineSql.vue'
 import UnitFilesDialog from './files/UnitFilesDialog.vue'
+
 import ChartView from '@/components/chart/ChartView.vue'
 import UnitKepler from '@/components/unit/UnitKepler.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'

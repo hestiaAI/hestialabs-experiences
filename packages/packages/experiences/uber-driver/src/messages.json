@@ -1,0 +1,210 @@
+{
+  "en": {
+    "intro": {
+      "title": "Uber Driver"
+    },
+    "viewBlocks": {
+      "driverTrips": {
+        "title": "Driver Trips",
+        "vizProps": {
+          "label": "trips"
+        },
+        "headers": {
+          "dropoffTime": "Drop-off Time",
+          "requestTime": "Request Time",
+          "begintripTime": "Start Time",
+          "begintripLatitude": "Start Latitude",
+          "begintripLongitude": "Start Lontitude",
+          "dropoffLatitude": "Drop-off Latitude",
+          "dropoffLongitude": "Drop-off Longitude",
+          "status": "Status",
+          "currency": "Currency",
+          "fareProfile": "Fare Profile",
+          "fare": "Fare",
+          "duration": "Duration",
+          "surgeMultiplier": "Surge Multiplier",
+          "distance": "Distance"
+        }
+      },
+      "driverPoints": {
+        "title": "Driver Points",
+        "vizProps": {
+          "label": "data points"
+        },
+        "headers": {
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "gpsTimeMs": "GPS Time (ms)",
+          "altitude": "Altitude",
+          "speed": "Speed",
+          "horizontalAccuracy": "Horizontal Accuracy",
+          "verticalAccuracy": "Vertical Accuracy",
+          "driverStatus": "Driver Status",
+          "batteryLevel": "Battery Level",
+          "type": "Type"
+        }
+      },
+      "driverPayments": {
+        "title": "Driver Payments"
+      },
+      "riderTrips": {
+        "title": "Rider Trips",
+        "vizProps": {
+          "label": "trips"
+        }
+      },
+      "riderPoints": {
+        "title": "Rider Points",
+        "vizProps": {
+          "label": "data points"
+        },
+        "headers": {
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "occurredAt": "Occurred At",
+          "speed": "Speed",
+          "horizontalAccuracy": "Horizontal Accuracy",
+          "verticalAccuracy": "Vertical Accuracy",
+          "riderStatus": "Rider Status",
+          "batteryLevel": "Battery Level",
+          "type": "Type"
+        }
+      },
+      "driverNonTrip": {
+        "title": "Driver Time Lost",
+        "vizProps": {
+          "label": "in-between trips"
+        },
+        "headers": {
+          "previousDropoffTime": "Previous Drop-off Time",
+          "previousDropoffLatitude": "Previous Drop-off Latitude",
+          "previousDropoffLongitude": "Previous Drop-off Longitude",
+          "previousStatus": "Previous Status",
+          "nextRequestTime": "Next Request Time",
+          "nextBegintripTime": "Next Trip Start Time",
+          "nextBegintripLatitude": "Next Trip Start Latitude",
+          "nextBegintripLongitude": "Next Trip Start Longitude",
+          "previousCurrency": "Previous Currency",
+          "previousFareProfile": "Previous Fare Profile",
+          "previousFare": "Previous Fare",
+          "previousDistance": "Previous Distance",
+          "previousDuration": "Previous Duration",
+          "previousSurgeMultiplier": "Previous Surge Multiplier",
+          "notaskMinutes": "Sans Task Minutes",
+          "nopassengerMinutes": "Sans Passenger Minutes",
+          "nopassengerPythagoreanDistance": "Sans Passenger Pythagorean Distance",
+          "nopassengerSpeed": "Sans Passenger Speed"
+        }
+      },
+      "driverAccounting": {
+        "title": "Accounting (Mockup)",
+        "text": "Compute your expenses and estimated wages.",
+        "overlay": "This feature is under development"
+      }
+    }
+  },
+  "fr": {
+    "intro": {
+      "title": "Chauffeur Uber"
+    },
+    "viewBlocks": {
+      "driverTrips": {
+        "title": "Trajets du chauffeur",
+        "vizProps": {
+          "label": "trajets"
+        },
+        "headers": {
+          "dropoffTime": "Heure de dépôt",
+          "requestTime": "Heure de requête",
+          "begintripTime": "Heure de départ",
+          "begintripLatitude": "Latitude de départ",
+          "begintripLongitude": "Longitude de départ",
+          "dropoffLatitude": "Latitude d'arrivée",
+          "dropoffLongitude": "Longitude d'arrivée",
+          "status": "Statut",
+          "currency": "Devise",
+          "fareProfile": "Profil de tarif",
+          "fare": "Tarif",
+          "duration": "Durée",
+          "surgeMultiplier": "Multiplicateur de surtension",
+          "distance": "Distance"
+        }
+      },
+      "driverPoints": {
+        "title": "Localisations du chauffeur",
+        "vizProps": {
+          "label": "localisations"
+        },
+        "headers": {
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "gpsTimeMs": "Heure GPS (ms)",
+          "altitude": "Altitude",
+          "speed": "Vitesse",
+          "horizontalAccuracy": "Précision horizontale",
+          "verticalAccuracy": "Précision verticale",
+          "driverStatus": "Statut du chauffeur",
+          "batteryLevel": "Niveau de la batterie",
+          "type": "Type"
+        }
+      },
+      "driverPayments": {
+        "title": "Paiements du chauffeur"
+      },
+      "riderTrips": {
+        "title": "Trajets des passagers",
+        "vizProps": {
+          "label": "trajets"
+        }
+      },
+      "riderPoints": {
+        "title": "Localisations du passager",
+        "vizProps": {
+          "label": "localisations"
+        },
+        "headers": {
+          "latitude": "Latitude",
+          "longitude": "Longitude",
+          "occurredAt": "Survenu à",
+          "speed": "Vitesse",
+          "horizontalAccuracy": "Précision horizontale",
+          "verticalAccuracy": "Précision verticale",
+          "riderStatus": "Statut du passager",
+          "batteryLevel": "Niveau de la batterie",
+          "type": "Type"
+        }
+      },
+      "driverNonTrip": {
+        "title": "Temps perdu par le chauffeur",
+        "vizProps": {
+          "label": "entre deux voyages"
+        },
+        "headers": {
+          "previousDropoffTime": "Heure du point de chute précédent",
+          "previousDropoffLatitude": "Latitude du point de chute précédent",
+          "previousDropoffLongitude": "Longitude du point de chute précédent",
+          "previousStatus": "Statut précédent",
+          "nextRequestTime": "Heure de la requête suivante",
+          "nextBegintripTime": "Heure de départ du prochain trajet",
+          "nextBegintripLatitude": "Latitude de départ du prochain trajet",
+          "nextBegintripLongitude": "Longitude de départ du prochain trajet",
+          "previousCurrency": "Devise précédente",
+          "previousFareProfile": "Profil du tarif précédent",
+          "previousFare": "Tarif précédent",
+          "previousDistance": "Distance précédente",
+          "previousDuration": "Durée précédente",
+          "previousSurgeMultiplier": "Multiplicateur de surtension précédent",
+          "notaskMinutes": "Minutes sans tâche",
+          "nopassengerMinutes": "Minutes sans passager",
+          "nopassengerPythagoreanDistance": "Distance pythagoricienne sans passenger",
+          "nopassengerSpeed": "Vitesse sans passager"
+        }
+      },
+      "driverAccounting": {
+        "title": "Comptabilité (maquette)",
+        "text": "Calculez vos dépenses et vos salaires estimés.",
+        "overlay": "Cette fonctionnalité est en cours de développement"
+      }
+    }
+  }
+}

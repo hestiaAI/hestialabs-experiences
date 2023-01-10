@@ -21,8 +21,7 @@ const blocks: ViewBlocks = [
     postprocessor: driverTripsPostProcessor,
     visualization: 'ChartViewGenericMap.vue',
     vizProps: {
-      keplerConfig: keplerConfigTripDrivers,
-      label: 'trips'
+      keplerConfig: keplerConfigTripDrivers
     },
     text: '',
     showTable: false
@@ -36,8 +35,7 @@ const blocks: ViewBlocks = [
     text: '',
     postprocessor: driverPointsPostProcessor,
     vizProps: {
-      keplerConfig: keplerConfigPlaces,
-      label: 'data-points'
+      keplerConfig: keplerConfigPlaces
     }
   },
   {
@@ -57,8 +55,7 @@ const blocks: ViewBlocks = [
     text: '',
     postprocessor: riderTripsPostProcessor,
     vizProps: {
-      keplerConfig: keplerConfigTrips,
-      label: 'trips'
+      keplerConfig: keplerConfigTrips
     }
   },
   {
@@ -70,8 +67,7 @@ const blocks: ViewBlocks = [
     text: '',
     postprocessor: riderPointsPostProcessor,
     vizProps: {
-      keplerConfig: keplerConfigPlaces,
-      label: 'data-points'
+      keplerConfig: keplerConfigPlaces
     }
   },
   {
@@ -82,8 +78,7 @@ const blocks: ViewBlocks = [
     title: 'Driver Time Lost',
     text: '',
     vizProps: {
-      keplerConfig: keplerConfigNonTrip,
-      label: 'in between trips'
+      keplerConfig: keplerConfigNonTrip
     }
   },
   {
@@ -93,7 +88,7 @@ const blocks: ViewBlocks = [
     title: 'Accounting (Mockup)',
     text: 'Compute your expenses and estimated wages.',
     visualization: 'ChartViewUberDriverAccounting.vue',
-    overlay: 'This feature is under development'
+    overlay: true
   }
 ]
 

@@ -2,6 +2,7 @@ import packageJSON from '../package.json'
 import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/uber.png'
 import viewBlocks from './blocks'
+import messages from './messages.json'
 import dataSample from '@/data-samples/uber-driver.zip'
 
 const options: ExperienceOptions = {
@@ -18,6 +19,7 @@ const options: ExperienceOptions = {
     non_trip: '**/Lost Time*.csv'
   },
   icon,
+  messages,
   title: 'Uber Driver',
   viewBlocks
 }
