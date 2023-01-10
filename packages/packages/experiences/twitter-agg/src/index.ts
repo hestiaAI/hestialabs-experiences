@@ -10,8 +10,6 @@ import messages from './messages.json'
 const options: ExperienceOptions = {
   collaborator: theEyeballs,
   databaseConfig,
-  dataPortal:
-    'https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive',
   files: {
     ads: '**/block00.json',
     adsLastMonth: '**/block01.json',
