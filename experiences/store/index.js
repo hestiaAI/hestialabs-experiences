@@ -121,7 +121,7 @@ export const actions = {
         return [
           // It is problematic to have '.' in a key,
           // notably for i18n messages
-          packageNameAndTag.replaceAll(/[@.]/, '_'),
+          packageNameAndTag.replace(/[@.]/g, '_'),
           experience.config
         ]
       })
