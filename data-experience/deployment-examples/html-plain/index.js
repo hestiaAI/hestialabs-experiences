@@ -1,4 +1,5 @@
-import twitter from 'https://cdn.jsdelivr.net/npm/@hestia.ai/twitter@1.x/dist/index.mjs'
+/* eslint-disable no-undef */
+import experience from 'https://cdn.jsdelivr.net/npm/@hestia.ai/uber-driver/dist/index.mjs'
 
 Vue.use(Vuex)
 Vue.use(VueI18n)
@@ -17,7 +18,7 @@ new Vue({
   vuetify,
   store,
   data: {
-    experienceConfig: twitter.options,
+    experienceConfig: experience.config,
     siteConfig: {}
   }
 })
