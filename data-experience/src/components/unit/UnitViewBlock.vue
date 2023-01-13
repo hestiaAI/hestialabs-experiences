@@ -111,7 +111,7 @@ import BaseAlert from '@/components/base/BaseAlert.vue'
 import UnitPipelineCustom from './UnitPipelineCustom.vue'
 
 export default {
-  name: 'UnitQuery',
+  name: 'UnitViewBlock',
   components: { UnitPipelineSql, UnitFilesDialog, ChartView, UnitKepler, UnitFilterableTable, UnitVegaViz, BaseAlert, UnitPipelineCustom },
   props: {
     id: {
@@ -182,7 +182,7 @@ export default {
       errorMessage: '',
       // `result` keeps track of the internal result from the pipeline.
       // Note: we should not fetch the result from Vuex because
-      // then the UnitQuery component instance will react when
+      // then the UnitViewBlock component instance will react when
       // other instances add to the results object in the store.
       result: null,
       vizKepler,
