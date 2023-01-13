@@ -34,10 +34,7 @@
       <UnitLogin @success="loginSuccessful = true" />
     </template>
     <template v-else>
-      <VWindow
-        v-model="window"
-        class="v-window--main"
-      >
+      <VWindow v-model="window">
         <div
           v-for="({ id }) in windows"
           :key="`${experienceConfig.slug}-${id}`"
@@ -71,7 +68,15 @@
             <UnitFileExplorer />
           </VWindowItem>
           <!-- && fileManager to trigger re-rendering when store is cleared -->
-          <VWindowItem v-else-if="id === 'understand-data' && fileManager" :value="id" disabled>
+          <VWindowItem
+            v-else-if="
+              id === 'understand-data'
+              && fileManager
+              && experienceConfig.viewBlocks?.length
+            "
+            :value="id"
+            disabled
+          >
             <VTabs
               v-model="tab"
               slider-color="secondary"
@@ -100,9 +105,12 @@
                 <VTabItem :transition="false">
                   <VRow>
                     <VCol cols="12" class="pa-0">
-                      <VOverlay :value="overlay" absolute opacity="0.8">
+                      <VOverlay
+                        :value="overlay"
+                        opacity="0.8"
+                      >
                         <div
-                          class="d-flex flex-column align-center v-overlay__content"
+                          class="d-flex flex-column align-center"
                         >
                           <div class="mb-3">
                             {{ $t('This might take a moment') }}
@@ -558,18 +566,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.v-window.v-window--main {
-  margin-bottom: 60px;
-}
-
-.v-tabs-items .v-window-item {
-  min-height: calc(100vh - 48px);
-}
-
-.v-overlay .v-overlay__content {
-  height: 100%;
-  width: 100%;
-}
-</style>

@@ -29,7 +29,12 @@ const store = new Store({
         experienceConfig: {
           slug: 'twitter'
         }
-      })
+      }),
+      getters: {
+        experienceNameAndTag() {
+          return ''
+        }
+      }
     }
   }
 })

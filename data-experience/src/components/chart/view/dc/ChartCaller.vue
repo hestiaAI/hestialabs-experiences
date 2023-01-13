@@ -19,7 +19,7 @@ export default {
   },
   computed: {
     component() {
-      return () => import(`@/components/chart/view/dc/${this.type}`)
+      return () => import(`./${this.type}`)
     }
   }
 }

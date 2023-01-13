@@ -127,7 +127,7 @@ export default {
     fileViewerComponent() {
       const { fileType } = this
       const postfix = this.supportedTypes.has(fileType) ? fileType[0].toUpperCase() + fileType.substring(1) : 'Unknown'
-      return () => import(`~/components/unit/file-explorer/viewer/UnitFileExplorerViewer${postfix}`)
+      return () => import(`./viewer/UnitFileExplorerViewer${postfix}`)
     }
   },
   methods: {
