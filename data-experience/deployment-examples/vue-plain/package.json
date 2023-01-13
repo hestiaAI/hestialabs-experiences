@@ -2,6 +2,7 @@
   "name": "vue-plain",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "serve": "vue-cli-service serve --open --host localhost",
     "build": "vue-cli-service build"
@@ -16,6 +17,7 @@
   "devDependencies": {
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "copy-webpack-plugin": "^11.0.0",
     "vue-template-compiler": "^2.6.14"
   }
 }
