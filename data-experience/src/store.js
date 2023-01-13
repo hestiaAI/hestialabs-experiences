@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { set } from 'vue'
 import { cloneDeep } from 'lodash-es'
 
 const matchExperienceName = (nameAndTag, name) => nameAndTag.match(new RegExp(`^${name}(?:$|@|latest)`))
@@ -68,7 +68,7 @@ const store = {
         state.fileExplorerCurrentItem.selectedPaths.filter(e => e !== path)
     },
     setResult(state, { result }) {
-      Vue.set(state.results, state.currentTab, cloneDeep(result))
+      set(state.results, state.currentTab, cloneDeep(result))
     },
     setConsentForm(state, consentForm) {
       // Initialize missing values
