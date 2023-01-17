@@ -36,8 +36,12 @@
       </VRow>
       <template v-if="missingFiles.length > 0">
         <BaseAlert class="mt-4">
-          {{ $tc('File', missingFiles.length) }} {{ $t('not found') }}:
+          <p>
+          {{ $tc('File', missingFiles.length) }} {{ $t('not found') }}
+          </p>
+          <p>
           {{ missingFiles.join(', ') }}
+          </p>
         </BaseAlert>
       </template>
       <template v-else>
