@@ -27,7 +27,7 @@
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
     "lint:fix": "npx eslint . --ext .js,.vue --fix"
   },
-  "main": "dist/DataExperience.umd.min.js",
+  "main": "dist/DataExperience.umd.js",
   "dependencies": {
     "@uppy/core": "^2.0.2",
     "@uppy/dashboard": "^2.3.0",
