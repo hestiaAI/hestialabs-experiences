@@ -34,10 +34,7 @@
       <UnitLogin @success="loginSuccessful = true" />
     </template>
     <template v-else>
-      <VWindow
-        v-model="window"
-        class="v-window--main"
-      >
+      <VWindow v-model="window">
         <div
           v-for="({ id }) in windows"
           :key="`${experienceConfig.slug}-${id}`"
@@ -71,7 +68,15 @@
             <UnitFileExplorer />
           </VWindowItem>
           <!-- && fileManager to trigger re-rendering when store is cleared -->
-          <VWindowItem v-else-if="id === 'understand-data' && fileManager" :value="id" disabled>
+          <VWindowItem
+            v-else-if="
+              id === 'understand-data'
+              && fileManager
+              && experienceConfig.viewBlocks?.length
+            "
+            :value="id"
+            disabled
+          >
             <VTabs
               v-model="tab"
               slider-color="secondary"
@@ -100,9 +105,12 @@
                 <VTabItem :transition="false">
                   <VRow>
                     <VCol cols="12" class="pa-0">
-                      <VOverlay :value="overlay" absolute opacity="0.8">
+                      <VOverlay
+                        :value="overlay"
+                        opacity="0.8"
+                      >
                         <div
-                          class="d-flex flex-column align-center v-overlay__content"
+                          class="d-flex flex-column align-center"
                         >
                           <div class="mb-3">
                             {{ $t('This might take a moment') }}
@@ -110,7 +118,7 @@
                           <BaseProgressCircular size="64" width="4" />
                         </div>
                       </VOverlay>
-                      <UnitQuery v-bind="viewBlock" />
+                      <UnitViewBlock v-bind="viewBlock" />
                     </VCol>
                   </VRow>
                 </VTabItem>
@@ -172,7 +180,7 @@ import UnitFileExplorer from '@/components/unit/file-explorer/UnitFileExplorer.v
 import UnitLogin from '@/components/unit/UnitLogin.vue'
 import UnitDownload from '@/components/unit/UnitDownload.vue'
 import UnitIntroduction from '@/components/unit/UnitIntroduction.vue'
-import UnitQuery from '@/components/unit/UnitQuery.vue'
+import UnitViewBlock from '@/components/unit/UnitViewBlock.vue'
 import UnitSummary from '@/components/unit/UnitSummary.vue'
 import SettingsSpeedDial from '@/components/misc/SettingsSpeedDial.vue'
 import UnitConsentForm from '@/components/unit/consent-form/UnitConsentForm.vue'
@@ -206,8 +214,7 @@ const messagesOverride = {
 
 const siteConfigDefault = {
   i18nLocales: localeCodes,
-  messages: {},
-  experiences: []
+  messages: {}
 }
 
 async function d3Locale({ iso }) {
@@ -225,7 +232,7 @@ export default {
     UnitDownload,
     UnitFileExplorer,
     UnitIntroduction,
-    UnitQuery,
+    UnitViewBlock,
     UnitSummary,
     UnitConsentForm
   },
@@ -338,6 +345,12 @@ export default {
         this.setSiteConfig(cloneDeep(value))
       }
     },
+    experienceNameAndTag: {
+      immediate: true,
+      async handler() {
+        await this.mergeMessages()
+      }
+    },
     fileManager(value) {
       if (value === null) {
         // reset window and tab
@@ -410,8 +423,7 @@ export default {
       'clearStore',
       'setFileManager',
       'setCurrentDB',
-      'setCurrentTab',
-      'setCurrentWindow'
+      'setCurrentTab'
     ]),
     selectLocale(localeIndex) {
       // user switched locale with the component's lang switcher
@@ -554,18 +566,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.v-window.v-window--main {
-  margin-bottom: 60px;
-}
-
-.v-tabs-items .v-window-item {
-  min-height: calc(100vh - 48px);
-}
-
-.v-overlay .v-overlay__content {
-  height: 100%;
-  width: 100%;
-}
-</style>

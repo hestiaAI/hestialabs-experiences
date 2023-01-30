@@ -13,7 +13,7 @@ export type ViewBlock = {
   files?: string[]
   id: string
   image?: string
-  overlay?: string
+  overlay?: string | boolean
   postprocessor?: PostprocessorFunction
   showTable?: boolean
   sql?: string

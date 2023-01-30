@@ -8,8 +8,6 @@ import databaseConfig from './database'
 const options: ExperienceOptions = {
   collaborator: theDatingPrivacyCollective,
   databaseConfig,
-  dataPortalHtml:
-    'Please upload your archives from Tinder and Her below and analyse them here.',
   files: {
     herLikeMatch: 'her**/block03.json',
     herLikeSkip: 'her**/block01.json',

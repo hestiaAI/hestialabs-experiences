@@ -127,7 +127,7 @@ export default {
     fileViewerComponent() {
       const { fileType } = this
       const postfix = this.supportedTypes.has(fileType) ? fileType[0].toUpperCase() + fileType.substring(1) : 'Unknown'
-      return () => import(`~/components/unit/file-explorer/viewer/UnitFileExplorerViewer${postfix}`)
+      return () => import(`./viewer/UnitFileExplorerViewer${postfix}`)
     }
   },
   methods: {
@@ -140,6 +140,7 @@ export default {
     onSelectAccessor(accessor) {
       // TODO make this work better
       // const options = await createTableOptions(this.fileManager, accessor)
+      console.log(accessor)
       this.customPipelineOptions = [{ accessor }]
     },
     onUnitResultsUpdate(result) {

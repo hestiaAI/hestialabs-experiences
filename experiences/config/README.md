@@ -29,6 +29,14 @@ This directory contains the configuration files linked to each deployment. They 
    */
   "i18nLocales": ["fr"],
   /**
+   * i18n messages
+   * @type Object
+   */
+  "messages": {
+    "fr": {},
+    "en": {}
+  },
+  /**
    * A link to a filedrop service. In case the size limit is exceeded,
    * the user is invited to download the ZIP and use this link.
    * @type String

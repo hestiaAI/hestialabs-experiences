@@ -1,7 +1,7 @@
 {
   "en": {
     "intro": {
-      "title": "Uber",
+      "title": "Uber Rider",
       "subtitle": "Customer data",
       "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download"
     },
@@ -65,7 +65,7 @@
   },
   "fr": {
     "intro": {
-      "title": "Uber",
+      "title": "Passagers Uber",
       "subtitle": "Données clients",
       "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download"
     },

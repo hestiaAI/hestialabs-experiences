@@ -1,22 +1,26 @@
+/* eslint-disable no-undef */
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import App from './App.vue'
-import store from './store'
-import DataExperience, { vuetifyOpts, i18nOpts } from '@hestia.ai/data-experience'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
+import DataExperience, { i18nOpts, vuetifyOpts } from '@hestia.ai/data-experience'
+// import '@hestia.ai/data-experience/dist/DataExperience.css'
+
+import store from './store'
+import App from './App.vue'
+console.log(DataExperience, i18nOpts, vuetifyOpts)
 
 Vue.use(VueI18n)
 const i18n = new VueI18n(i18nOpts)
-console.log(DataExperience, i18nOpts, vuetifyOpts)
+
 Vue.use(Vuetify)
 const vuetify = new Vuetify(vuetifyOpts(i18n))
 
-Vue.use(DataExperience.default, { store })
+Vue.use(DataExperience, { store })
 
 new Vue({
-  i18n,
-  vuetify,
   store,
+  vuetify,
+  i18n,
   render: h => h(App)
 }).$mount('#app')

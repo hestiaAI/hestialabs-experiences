@@ -2,20 +2,22 @@
   "name": "vue-plain",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --open --host localhost",
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "@hestia.ai/data-experience": "^2.0.1",
+    "@hestia.ai/data-experience": "^2.0.3",
     "@hestia.ai/uber-driver": "^1.2.0",
-    "vue": "^2.6.14",
+    "vue": "^2.7.14",
     "vuetify": "^2.6.7",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "copy-webpack-plugin": "^11.0.0",
     "vue-template-compiler": "^2.6.14"
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <VOverlay :value="overlay !== ''" absolute opacity="0.5">
+    <VOverlay :value="overlay" absolute opacity="0.5">
       <div
         class="d-flex flex-column align-center"
         style="width: 100%; height: 100%"
@@ -36,8 +36,12 @@
       </VRow>
       <template v-if="missingFiles.length > 0">
         <BaseAlert class="mt-4">
-          {{ $tc('File', missingFiles.length) }} {{ $t('not found') }}:
+          <p>
+          {{ $tc('File', missingFiles.length) }} {{ $t('not found') }}
+          </p>
+          <p>
           {{ missingFiles.join(', ') }}
+          </p>
         </BaseAlert>
       </template>
       <template v-else>
@@ -96,10 +100,13 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from '@/utils/store-helper'
 import { cloneDeep, merge } from 'lodash-es'
+
+import { mapState, mapGetters } from '@/utils/store-helper'
+
 import UnitPipelineSql from './UnitPipelineSql.vue'
 import UnitFilesDialog from './files/UnitFilesDialog.vue'
+
 import ChartView from '@/components/chart/ChartView.vue'
 import UnitKepler from '@/components/unit/UnitKepler.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
@@ -108,7 +115,7 @@ import BaseAlert from '@/components/base/BaseAlert.vue'
 import UnitPipelineCustom from './UnitPipelineCustom.vue'
 
 export default {
-  name: 'UnitQuery',
+  name: 'UnitViewBlock',
   components: { UnitPipelineSql, UnitFilesDialog, ChartView, UnitKepler, UnitFilterableTable, UnitVegaViz, BaseAlert, UnitPipelineCustom },
   props: {
     id: {
@@ -179,7 +186,7 @@ export default {
       errorMessage: '',
       // `result` keeps track of the internal result from the pipeline.
       // Note: we should not fetch the result from Vuex because
-      // then the UnitQuery component instance will react when
+      // then the UnitViewBlock component instance will react when
       // other instances add to the results object in the store.
       result: null,
       vizKepler,

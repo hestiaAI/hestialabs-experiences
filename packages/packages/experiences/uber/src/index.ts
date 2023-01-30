@@ -14,7 +14,7 @@ const options: ExperienceOptions = {
   icon,
   messages,
   subtitle: 'Customer data',
-  title: 'Uber',
+  title: 'Uber Rider',
   viewBlocks
 }
 

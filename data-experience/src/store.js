@@ -1,7 +1,7 @@
-import Vue from 'vue'
+import { set } from 'vue'
 import { cloneDeep } from 'lodash-es'
 
-const matchExperienceName = (nameAndTag, name) => nameAndTag.match(new RegExp(`^${name}(?:$|@)`))
+const matchExperienceName = (nameAndTag, name) => nameAndTag.match(new RegExp(`^${name}(?:$|@|latest)`))
 
 const store = {
   namespaced: true,
@@ -68,7 +68,7 @@ const store = {
         state.fileExplorerCurrentItem.selectedPaths.filter(e => e !== path)
     },
     setResult(state, { result }) {
-      Vue.set(state.results, state.currentTab, cloneDeep(result))
+      set(state.results, state.currentTab, cloneDeep(result))
     },
     setConsentForm(state, consentForm) {
       // Initialize missing values
@@ -125,7 +125,9 @@ const store = {
               nameAndTag => matchExperienceName(nameAndTag, experienceConfig.name)
             )
           }
-          return experienceNameAndTag
+          // It is problematic to have '.' in a key,
+          // notably for i18n messages
+          return experienceNameAndTag.replace(/[@.]/g, '_')
         },
     // use `experienceNameAndTag` within an experience
     experienceNameAndTag:
