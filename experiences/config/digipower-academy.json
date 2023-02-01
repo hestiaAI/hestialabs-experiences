@@ -53,7 +53,9 @@
     "transitec-participant",
     "transitec-aggregator",
     "innopark-participant",
-    "innopark-aggregator"
+    "innopark-aggregator",
+    "tamedia-participant",
+    "tamedia-aggregator"
   ],
   "homePageBubbles": [
     "live-participant",
