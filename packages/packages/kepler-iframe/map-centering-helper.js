@@ -10,10 +10,10 @@
  * For example, a row with a begin lat/long point in cols 4 and 5 and an end point in cols 7 and 8, could be passed in as
  *  tuples e.g. [ [X1,Y1], [X2,Y2], ... ] where each tuple is a column index for retrieving a latitude (Xn) followed by a
  *  column index for retrieving the corresponding longitude (Yn)
- * @param viewportProps an object with any viewport properties you want to include
+ * @param viewportProps an object with any viewport properties you want to include (they will be passed through unchanged)
  * @return {Object} a viewport object in the same format that KeplerGL's updateMap requires -
  */
-function getBestViewport(
+export function getBestViewport(
   data,
   columnIndicesToUseForLatLongPoints,
   viewportProps = {}
@@ -54,5 +54,3 @@ function getBestViewport(
     zoom: zoom
   }
 }
-
-export default getBestViewport

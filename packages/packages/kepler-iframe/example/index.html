@@ -7,9 +7,9 @@
 
 <body>
   <!-- We will put our React component inside this div. -->
-  <iframe src="iframe.html" id="test_id" width="900" height="700"></iframe>
+  <iframe src="iframe.html" id="test_id" width="900" height="700"></iframe><!-- this src is not used, src is loaded at end of script tag -->
   <script>
-    // based on 
+    // based on
     // https://github.com/keplergl/kepler.gl/blob/master/examples/umd-client/index.html
     const stylesheets = [
       "d1a3f4spazzrp4.cloudfront.net/kepler.gl/uber-fonts/4.0.0/superfine.css",
@@ -24,8 +24,8 @@
       "kepler.gl@2.5.5/umd/keplergl.min.js",
     ].map(s =>
         `<script src="https://unpkg.com/${ s }" crossorigin><\/script>`)
-    const urlOfThisLibrary = "https://unpkg.com/@hestia.ai/kepler-iframe@1.0.0/index.js"
-    // const urlOfThisLibrary = "../index.js"
+    //const urlOfThisLibrary = "https://unpkg.com/@hestia.ai/kepler-iframe@1.0.0/index.js"
+    const urlOfThisLibrary = "../index.js"
     const iframeHtml = `
       <!DOCTYPE html>
       <html>
@@ -50,12 +50,18 @@
             await (await fetch("map-exported-from-kepler.json")).json()
       const keplerData = datasets[0].data
       keplerData.rows = keplerData.allData
+      console.dir(keplerData);
       const result = { mapboxToken,
                        keplerData,
                        config,
                        width: 900,
-                       height: 700}
+                       height: 700};
       iframe.contentWindow.init(result);
+      result.overrideDefaultZoom = false;
+      if (result.overrideDefaultZoom) {
+        result.overrideData = keplerData.rows;
+        result.overrideLatLongColumnPairs = [[3,4]] ;
+      }
       iframe.contentWindow.update(result);
     }
 
