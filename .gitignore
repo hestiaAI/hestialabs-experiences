@@ -6,3 +6,5 @@
 /node_modules
 /data-experience/.log/
 /data-experience/demo/
+
+.vscode/settings.json
