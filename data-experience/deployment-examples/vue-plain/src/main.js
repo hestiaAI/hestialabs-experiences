@@ -3,20 +3,22 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
-import DataExperience, { i18nOpts, vuetifyOpts } from '@hestia.ai/data-experience'
 // import '@hestia.ai/data-experience/dist/DataExperience.css'
 
 import store from './store'
 import App from './App.vue'
-console.log(DataExperience, i18nOpts, vuetifyOpts)
+
+// Unfortunately, vue-cli does not support ES modules output format for bundles
+// so we must import the DataExperience module with a <script> tag
+// import { DataExperience, i18nOpts, vuetifyOpts } from '@hestia.ai/data-experience'
 
 Vue.use(VueI18n)
-const i18n = new VueI18n(i18nOpts)
+const i18n = new VueI18n(DataExperience.i18nOpts)
 
 Vue.use(Vuetify)
-const vuetify = new Vuetify(vuetifyOpts(i18n))
+const vuetify = new Vuetify(DataExperience.vuetifyOpts(i18n))
 
-Vue.use(DataExperience, { store })
+Vue.use(DataExperience.DataExperience, { store })
 
 new Vue({
   store,

@@ -10,7 +10,7 @@ const vuetify = new Vuetify(DataExperience.vuetifyOpts(i18n))
 
 const store = new Vuex.Store({})
 
-Vue.use(DataExperience.default, { store })
+Vue.use(DataExperience.DataExperience, { store })
 
 new Vue({
   el: '#app',
