@@ -68,6 +68,15 @@ export function padNumber(x, n) {
   return x.toString().padStart(n, '0')
 }
 
+/* Papaparse workaround
+ * to remove if this pull request is accepted
+ * https://github.com/mholt/PapaParse/pull/971
+ */
+function isSpuriousPapaparseMessage({ data }) {
+  const spu = data && data.results && 'workerId' in data
+  return spu && data.workerId === undefined && data.finished === true
+}
+
 /**
  * Run a worker without callbacks
  * <pre>
@@ -78,7 +87,9 @@ export function runWorker(worker, args) {
   worker.postMessage(args)
   return new Promise((resolve, reject) => {
     worker.addEventListener('message', (message) => {
-      resolve(message.data)
+      if (!isSpuriousPapaparseMessage(message)) {
+        resolve(message.data)
+      }
     })
     worker.addEventListener('error', (error) => {
       console.error('worker error', error)

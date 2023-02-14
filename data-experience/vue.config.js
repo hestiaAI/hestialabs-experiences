@@ -35,6 +35,7 @@ export default defineConfig({
             {
               loader: 'worker-loader',
               options: {
+                inline: 'fallback',
                 filename: '[name].[contenthash:7].js'
               }
             }
