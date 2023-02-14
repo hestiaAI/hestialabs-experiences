@@ -3,40 +3,95 @@ import { getMockupData } from './preprocessor'
 import type { ViewBlocks } from '@/types'
 import {
   driverTripsPostProcessor,
-  driverPointsPostProcessor,
-  riderTripsPostProcessor,
-  riderPointsPostProcessor
+  driverHeatMapPostProcessor,
+  driverRestrictionsPostProcessor,
+  driverOnOffPostProcessor
 } from './postprocessor'
-import keplerConfigPlaces from './kepler/kepler_config_places'
-import keplerConfigTrips from './kepler/kepler_config_trip'
-import keplerConfigTripDrivers from './kepler/kepler_config_trip_drivers'
-import keplerConfigNonTrip from './kepler/kepler_config_non_trip'
+
+import keplerConfigOnOff from './kepler/kepler_config_onlineOffline'
+import keplerConfigHeatMap from './kepler/kepler_config_heatmap'
+import keplerConfigRestrictions from './kepler/kepler_config_restriction'
 
 const blocks: ViewBlocks = [
+  {
+    id: 'driverHeatMap',
+    customPipeline: customPipelineGetFirstCSV('driver_on_off'),
+    files: ['driver_on_off'],
+    postprocessor: driverHeatMapPostProcessor,
+    visualization: 'ChartViewGenericMap.vue',
+    vizProps: {
+      keplerConfig: keplerConfigHeatMap
+    },
+    title: 'Hot areas',
+    text: '< TO DEFINE IN TRANSLATIONS >',
+    showTable: false
+  },
   {
     id: 'driverTrips',
     customPipeline: customPipelineGetFirstCSV('driver_trips'),
     files: ['driver_trips'],
-    title: 'Driver Trips',
+    title: 'Trips',
     postprocessor: driverTripsPostProcessor,
-    visualization: 'ChartViewGenericMap.vue',
+    visualization: 'ChartViewDashboard.vue',
     vizProps: {
-      keplerConfig: keplerConfigTripDrivers
+      graphs: [
+        {
+          title: 'Number of trips',
+          valueLabel: 'trips',
+          cols: '12',
+          type: 'TimelineChart.vue',
+          dateAccessor: 'begin_date'
+        },
+        {
+          valueLabel: 'trips',
+          type: 'WeekChart.vue',
+          cols: '4',
+          dateAccessor: 'begin_date'
+        },
+        {
+          valueLabel: 'trips',
+          type: 'HourChart.vue',
+          cols: '4',
+          dateAccessor: 'begin_date'
+        },
+        {
+          valueLabel: 'trips',
+          title: 'Status of the trip',
+          cols: '4',
+          height: 220,
+          type: 'TopChart.vue',
+          valueAccessor: 'status'
+        }
+      ]
     },
-    text: '',
+    text: '< TO DEFINE IN TRANSLATIONS >',
     showTable: false
   },
   {
-    id: 'driverPoints',
-    customPipeline: customPipelineGetFirstCSV('driver_points'),
-    files: ['driver_points'],
+    id: 'driverOnOff',
+    customPipeline: customPipelineGetFirstCSV('driver_on_off'),
+    postprocessor: driverOnOffPostProcessor,
+    files: ['driver_on_off'],
     visualization: 'ChartViewGenericMap.vue',
-    title: 'Driver Points',
-    text: '',
-    postprocessor: driverPointsPostProcessor,
     vizProps: {
-      keplerConfig: keplerConfigPlaces
-    }
+      keplerConfig: keplerConfigOnOff
+    },
+    title: 'Driver Status',
+    text: '< TO DEFINE IN TRANSLATIONS >',
+    showTable: false
+  },
+  {
+    id: 'driverRestrictions',
+    customPipeline: customPipelineGetFirstCSV('driver_app_restrictions'),
+    postprocessor: driverRestrictionsPostProcessor,
+    files: ['driver_app_restrictions'],
+    visualization: 'ChartViewGenericMap.vue',
+    vizProps: {
+      keplerConfig: keplerConfigRestrictions
+    },
+    title: 'Restrictions',
+    text: '< TO DEFINE IN TRANSLATIONS >',
+    showTable: false
   },
   {
     id: 'driverPayments',
@@ -45,41 +100,6 @@ const blocks: ViewBlocks = [
     title: 'Driver Payments',
     text: '',
     showTable: true
-  },
-  {
-    id: 'riderTrips',
-    customPipeline: customPipelineGetFirstCSV('rider_trips'),
-    files: ['rider_trips'],
-    visualization: 'ChartViewGenericMap.vue',
-    title: 'Rider Trips',
-    text: '',
-    postprocessor: riderTripsPostProcessor,
-    vizProps: {
-      keplerConfig: keplerConfigTrips
-    }
-  },
-  {
-    id: 'riderPoints',
-    customPipeline: customPipelineGetFirstCSV('rider_points'),
-    files: ['rider_points'],
-    visualization: 'ChartViewGenericMap.vue',
-    title: 'Rider Points',
-    text: '',
-    postprocessor: riderPointsPostProcessor,
-    vizProps: {
-      keplerConfig: keplerConfigPlaces
-    }
-  },
-  {
-    id: 'driverNonTrip',
-    customPipeline: customPipelineGetFirstCSV('non_trip'),
-    files: ['rider_points'],
-    visualization: 'ChartViewGenericMap.vue',
-    title: 'Driver Time Lost',
-    text: '',
-    vizProps: {
-      keplerConfig: keplerConfigNonTrip
-    }
   },
   {
     id: 'driverAccounting',
