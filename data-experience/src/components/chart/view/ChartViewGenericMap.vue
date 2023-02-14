@@ -16,7 +16,7 @@
     <template v-if="total > 0">
       <VRow>
         <VCol cols="12">
-          <UnitKepler :args="keplerArgs" />
+          <UnitKepler :args="keplerArgs" :height="mapHeight" />
         </VCol>
       </VRow>
       <template v-if="showButton == true">
@@ -109,6 +109,10 @@ export default {
     keplerConfig: {
       type: Object,
       default: null
+    },
+    mapHeight: {
+      type: Number,
+      default: 500
     },
     showButton: {
       type: Boolean,

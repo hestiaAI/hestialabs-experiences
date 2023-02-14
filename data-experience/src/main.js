@@ -11,7 +11,7 @@ export { default as chartView } from './components/chart/ChartView.vue'
 export { default as chartViewBar } from './components/chart/view/ChartViewBar.vue'
 export { default as chartViewGenericMap } from './components/chart/view/ChartViewGenericMap.vue'
 
-export default {
+export const DataExperience = {
   install(Vue, options) {
     if (!options || !options.store) {
       throw new Error('Please initialise plugin with a Vuex store.')

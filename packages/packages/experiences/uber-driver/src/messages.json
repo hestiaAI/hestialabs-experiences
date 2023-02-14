@@ -4,97 +4,72 @@
       "title": "Uber Driver"
     },
     "viewBlocks": {
-      "driverTrips": {
-        "title": "Driver Trips",
-        "vizProps": {
-          "label": "trips"
-        },
+      "driverHeatMap": {
+        "title": "Hot areas",
+        "text": "This map shows all locations where you picked up passengers.",
         "headers": {
-          "dropoffTime": "Drop-off Time",
-          "requestTime": "Request Time",
-          "begintripTime": "Start Time",
-          "begintripLatitude": "Start Latitude",
-          "begintripLongitude": "Start Lontitude",
-          "dropoffLatitude": "Drop-off Latitude",
-          "dropoffLongitude": "Drop-off Longitude",
-          "status": "Status",
-          "currency": "Currency",
-          "fareProfile": "Fare Profile",
-          "fare": "Fare",
-          "duration": "Duration",
-          "surgeMultiplier": "Surge Multiplier",
-          "distance": "Distance"
+          "beginTimestampUtc": "Time of Pickup (UTC)",
+          "endTimestampUtc": "Time of Dropoff (UTC)",
+          "beginLat": "Pickup Latitude",
+          "beginLng": "Pickup Longitude",
+          "endLat": "Dropoff Latitude",
+          "endLng": "Dropoff Longitude"
         }
       },
-      "driverPoints": {
-        "title": "Driver Points",
+      "driverTrips": {
+        "title": "Trips",
+        "text": "This visualisation shows the number of trips booked over time, depending on the time of day, day of the week or status of the trip.",
         "vizProps": {
-          "label": "data points"
+          "graphs": [
+            {
+              "title": "Number of trips",
+              "valueLabel": "trips"
+            },
+            {
+              "valueLabel": "trips"
+            },
+            {
+              "valueLabel": "trips"
+            },
+            {
+              "title": "Status",
+              "valueLabel": "trips"
+            }
+          ]
         },
         "headers": {
-          "latitude": "Latitude",
-          "longitude": "Longitude",
-          "gpsTimeMs": "GPS Time (ms)",
-          "altitude": "Altitude",
-          "speed": "Speed",
-          "horizontalAccuracy": "Horizontal Accuracy",
-          "verticalAccuracy": "Vertical Accuracy",
-          "driverStatus": "Driver Status",
-          "batteryLevel": "Battery Level",
-          "type": "Type"
+          "begin_date": "Time of Pickup (UTC)",
+          "end_date": "Time of Dropoff (UTC)"
+        }
+      },
+      "driverOnOff": {
+        "title": "Status",
+        "text": "This map shows every trips you have made depending on your status. Offline (P0), Open (P1), En route (P2) or On trip (P3).",
+        "headers": {
+          "earnerState": "Status",
+          "beginTimestampUtc": "Time of Pickup (UTC)",
+          "endTimestampUtc": "Time of Dropoff (UTC)",
+          "beginLat": "Pickup Latitude",
+          "beginLng": "Pickup Longitude",
+          "endLat": "Dropoff Latitude",
+          "endLng": "Dropoff Longitude",
+          "durationMs": "Duration (ms)"
+        }
+      },
+      "driverRestrictions": {
+        "title": "Restrictions",
+        "text": "This map shows every place where Uber restricted your access to the application, and the reasons why they temporarily suspend your access to the application. Note: Sometime the restriction duration is 0, meaning that it was only a notification.",
+        "headers": {
+          "time": "Time of notification",
+          "msgRule": "Reason of restriction",
+          "msgPenaltyboxdurationms": "Restriction duration (ms)",
+          "msgLatitude": "Latitude",
+          "msgLongitude": "Longitude"
         }
       },
       "driverPayments": {
-        "title": "Driver Payments"
-      },
-      "riderTrips": {
-        "title": "Rider Trips",
-        "vizProps": {
-          "label": "trips"
-        }
-      },
-      "riderPoints": {
-        "title": "Rider Points",
-        "vizProps": {
-          "label": "data points"
-        },
-        "headers": {
-          "latitude": "Latitude",
-          "longitude": "Longitude",
-          "occurredAt": "Occurred At",
-          "speed": "Speed",
-          "horizontalAccuracy": "Horizontal Accuracy",
-          "verticalAccuracy": "Vertical Accuracy",
-          "riderStatus": "Rider Status",
-          "batteryLevel": "Battery Level",
-          "type": "Type"
-        }
-      },
-      "driverNonTrip": {
-        "title": "Driver Time Lost",
-        "vizProps": {
-          "label": "in-between trips"
-        },
-        "headers": {
-          "previousDropoffTime": "Previous Drop-off Time",
-          "previousDropoffLatitude": "Previous Drop-off Latitude",
-          "previousDropoffLongitude": "Previous Drop-off Longitude",
-          "previousStatus": "Previous Status",
-          "nextRequestTime": "Next Request Time",
-          "nextBegintripTime": "Next Trip Start Time",
-          "nextBegintripLatitude": "Next Trip Start Latitude",
-          "nextBegintripLongitude": "Next Trip Start Longitude",
-          "previousCurrency": "Previous Currency",
-          "previousFareProfile": "Previous Fare Profile",
-          "previousFare": "Previous Fare",
-          "previousDistance": "Previous Distance",
-          "previousDuration": "Previous Duration",
-          "previousSurgeMultiplier": "Previous Surge Multiplier",
-          "notaskMinutes": "Sans Task Minutes",
-          "nopassengerMinutes": "Sans Passenger Minutes",
-          "nopassengerPythagoreanDistance": "Sans Passenger Pythagorean Distance",
-          "nopassengerSpeed": "Sans Passenger Speed"
-        }
+        "title": "Payments",
+        "text": "Overview of the weekly payments that have been made."
       },
       "driverAccounting": {
         "title": "Accounting (Mockup)",
@@ -108,97 +83,72 @@
       "title": "Chauffeur Uber"
     },
     "viewBlocks": {
-      "driverTrips": {
-        "title": "Trajets du chauffeur",
-        "vizProps": {
-          "label": "trajets"
-        },
+      "driverHeatMap": {
+        "title": "Zones Chaudes",
+        "text": "Cette carte montre tous les endroits où vous avez pris des passagers.",
         "headers": {
-          "dropoffTime": "Heure de dépôt",
-          "requestTime": "Heure de requête",
-          "begintripTime": "Heure de départ",
-          "begintripLatitude": "Latitude de départ",
-          "begintripLongitude": "Longitude de départ",
-          "dropoffLatitude": "Latitude d'arrivée",
-          "dropoffLongitude": "Longitude d'arrivée",
-          "status": "Statut",
-          "currency": "Devise",
-          "fareProfile": "Profil de tarif",
-          "fare": "Tarif",
-          "duration": "Durée",
-          "surgeMultiplier": "Multiplicateur de surtension",
-          "distance": "Distance"
+          "beginTimestampUtc": "Heure de prise en charge (UTC)",
+          "endTimestampUtc": "Heure de dépose (UTC)",
+          "beginLat": "Latitude de prise en charge",
+          "beginLng": "Longitude de prise en charge",
+          "endLat": "Latitude de dépose",
+          "endLng": "Longitude de dépose"
         }
       },
-      "driverPoints": {
-        "title": "Localisations du chauffeur",
+      "driverTrips": {
+        "title": "Courses",
+        "text": "Cette visualisation montre le nombre de courses réservées au cours du temps, en fonction de l'heure de la journée, du jour de la semaine ou du statut de la course.",
         "vizProps": {
-          "label": "localisations"
+          "graphs": [
+            {
+              "title": "Nombre de courses",
+              "valueLabel": "courses"
+            },
+            {
+              "valueLabel": "courses"
+            },
+            {
+              "valueLabel": "courses"
+            },
+            {
+              "title": "Statut",
+              "valueLabel": "courses"
+            }
+          ]
         },
         "headers": {
-          "latitude": "Latitude",
-          "longitude": "Longitude",
-          "gpsTimeMs": "Heure GPS (ms)",
-          "altitude": "Altitude",
-          "speed": "Vitesse",
-          "horizontalAccuracy": "Précision horizontale",
-          "verticalAccuracy": "Précision verticale",
-          "driverStatus": "Statut du chauffeur",
-          "batteryLevel": "Niveau de la batterie",
-          "type": "Type"
+          "begin_date": "Heure de prise en charge (UTC)",
+          "end_date": "Heure de dépose (UTC)"
+        }
+      },
+      "driverOnOff": {
+        "title": "Statut",
+        "text": "Cette carte montre tous les déplacements que vous avez effectués en fonction de votre statut. Hors ligne (P0), Ouvert (P1), En route (P2) ou En voyage (P3).",
+        "headers": {
+          "earnerState": "Statut",
+          "beginTimestampUtc": "Heure de prise en charge (UTC)",
+          "endTimestampUtc": "Heure de dépose (UTC)",
+          "beginLat": "Latitude de prise en charge",
+          "beginLng": "Longitude de prise en charge",
+          "endLat": "Latitude de dépose",
+          "endLng": "Longitude de dépose",
+          "durationMs": "Duration (ms)"
+        }
+      },
+      "driverRestrictions": {
+        "title": "Restrictions",
+        "text": "Cette carte indique tous les endroits où Uber a restreint votre accès à l'application, ainsi que les raisons pour lesquelles votre accès a temporairement été suspendu. Remarque : Parfois, la durée de la restriction est égale à 0, ce qui signifie qu'il ne s'agissait que d'une notification.",
+        "headers": {
+          "time": "Date de la notification",
+          "msgRule": "Raison de restriction",
+          "msgPenaltyboxdurationms": "Durée de la restriction (ms)",
+          "msgLatitude": "Latitude",
+          "msgLongitude": "Longitude"
         }
       },
       "driverPayments": {
-        "title": "Paiements du chauffeur"
-      },
-      "riderTrips": {
-        "title": "Trajets des passagers",
-        "vizProps": {
-          "label": "trajets"
-        }
-      },
-      "riderPoints": {
-        "title": "Localisations du passager",
-        "vizProps": {
-          "label": "localisations"
-        },
-        "headers": {
-          "latitude": "Latitude",
-          "longitude": "Longitude",
-          "occurredAt": "Survenu à",
-          "speed": "Vitesse",
-          "horizontalAccuracy": "Précision horizontale",
-          "verticalAccuracy": "Précision verticale",
-          "riderStatus": "Statut du passager",
-          "batteryLevel": "Niveau de la batterie",
-          "type": "Type"
-        }
-      },
-      "driverNonTrip": {
-        "title": "Temps perdu par le chauffeur",
-        "vizProps": {
-          "label": "entre deux voyages"
-        },
-        "headers": {
-          "previousDropoffTime": "Heure du point de chute précédent",
-          "previousDropoffLatitude": "Latitude du point de chute précédent",
-          "previousDropoffLongitude": "Longitude du point de chute précédent",
-          "previousStatus": "Statut précédent",
-          "nextRequestTime": "Heure de la requête suivante",
-          "nextBegintripTime": "Heure de départ du prochain trajet",
-          "nextBegintripLatitude": "Latitude de départ du prochain trajet",
-          "nextBegintripLongitude": "Longitude de départ du prochain trajet",
-          "previousCurrency": "Devise précédente",
-          "previousFareProfile": "Profil du tarif précédent",
-          "previousFare": "Tarif précédent",
-          "previousDistance": "Distance précédente",
-          "previousDuration": "Durée précédente",
-          "previousSurgeMultiplier": "Multiplicateur de surtension précédent",
-          "notaskMinutes": "Minutes sans tâche",
-          "nopassengerMinutes": "Minutes sans passager",
-          "nopassengerPythagoreanDistance": "Distance pythagoricienne sans passenger",
-          "nopassengerSpeed": "Vitesse sans passager"
-        }
+        "title": "Paiements",
+        "text": "Aperçu des paiements hebdomadaires qui vont ont été versés."
       },
       "driverAccounting": {
         "title": "Comptabilité (maquette)",
