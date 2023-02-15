@@ -94,7 +94,8 @@ export default {
   methods: {
     ...mapMutations(['setProgress', 'setResult']),
     async run() {
-      const { fileManager, currentDB, sql, customPipeline, customPipelineOptions: options } = this
+      const { fileManager, currentDB, customPipeline, customPipelineOptions: options } = this
+      const { sql } = this.viewBlock
       this.errorMessage = false
       this.progress = true
       await setTimeoutPromise(1)
