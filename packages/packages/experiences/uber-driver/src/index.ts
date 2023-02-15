@@ -3,11 +3,11 @@ import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/uber.png'
 import viewBlocks from './blocks'
 import messages from './messages.json'
-// import dataSample from '@/data-samples/uber-driver.zip'
+import dataSample from '@/data-samples/uber-driver-fr-paris.zip'
 
 const options: ExperienceOptions = {
   dataPortal: 'https://myprivacy.uber.com/privacy/exploreyourdata/download',
-  // dataSamples: [dataSample],
+  dataSamples: [dataSample],
   hideFileExplorer: false,
   files: {
     driver_on_off: '**/*Driver Online Offline.csv',
