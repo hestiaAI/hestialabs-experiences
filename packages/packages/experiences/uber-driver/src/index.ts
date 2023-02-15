@@ -14,13 +14,8 @@ const options: ExperienceOptions = {
     driver_performances: '**/*Driver Performance Badges.csv',
     driver_app_restrictions: '**/*Driver App Restrictions.csv',
     driver_dispatches: '**/*Driver Dispatches Offered and Accepted.csv',
-    driver_trips:
-      '**/(driver_lifetime_trips-0.csv|*- Driver Lifetime Trips*.csv|Trip*.csv)',
-    driver_payments: '**/(driver_payments-0.csv|*- Driver Payments*.csv)',
-    driver_points: '**/(driver_app_analytics-0.csv|*Driver Detailed*.csv)',
-    rider_trips: '**/trips_data.csv',
-    rider_points: '**/(rider_app_analytics-0.csv|*Rider Detailed*.csv)',
-    non_trip: '**/Lost Time*.csv'
+    driver_trips: '**/*Driver Lifetime Trips*.csv',
+    driver_payments: '**/(driver_payments-0.csv|*- Driver Payments*.csv)'
   },
   icon,
   messages,
