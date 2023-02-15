@@ -69,8 +69,8 @@ export function padNumber(x, n) {
 }
 
 /* Papaparse workaround
- * to remove if this pull request is accepted
- * https://github.com/mholt/PapaParse/pull/971
+ * There might be a better solution with then next version of papaparsej
+ * https://github.com/mholt/PapaParse/issues/970
  */
 function isSpuriousPapaparseMessage({ data }) {
   const spu = data && data.results && 'workerId' in data
