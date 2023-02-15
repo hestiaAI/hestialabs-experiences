@@ -118,7 +118,7 @@
                           <BaseProgressCircular size="64" width="4" />
                         </div>
                       </VOverlay>
-                      <UnitViewBlock v-bind="viewBlock" />
+                      <UnitPipeline v-bind="{ viewBlock }"></UnitPipeline>
                     </VCol>
                   </VRow>
                 </VTabItem>
@@ -180,7 +180,7 @@ import UnitFileExplorer from '@/components/unit/file-explorer/UnitFileExplorer.v
 import UnitLogin from '@/components/unit/UnitLogin.vue'
 import UnitDownload from '@/components/unit/UnitDownload.vue'
 import UnitIntroduction from '@/components/unit/UnitIntroduction.vue'
-import UnitViewBlock from '@/components/unit/UnitViewBlock.vue'
+import UnitPipeline from '@/components/unit/UnitPipeline.vue'
 import UnitSummary from '@/components/unit/UnitSummary.vue'
 import SettingsSpeedDial from '@/components/misc/SettingsSpeedDial.vue'
 import UnitConsentForm from '@/components/unit/consent-form/UnitConsentForm.vue'
@@ -232,7 +232,7 @@ export default {
     UnitDownload,
     UnitFileExplorer,
     UnitIntroduction,
-    UnitViewBlock,
+    UnitPipeline,
     UnitSummary,
     UnitConsentForm
   },
