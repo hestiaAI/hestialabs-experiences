@@ -10,6 +10,7 @@ export { default as i18nOpts } from './plugins/i18n'
 export { default as chartView } from './components/chart/ChartView.vue'
 export { default as chartViewBar } from './components/chart/view/ChartViewBar.vue'
 export { default as chartViewGenericMap } from './components/chart/view/ChartViewGenericMap.vue'
+export { default as UnitPipelineViewBlock } from './components/unit/UnitPipelineViewBlock'
 
 export const DataExperience = {
   install(Vue, options) {
