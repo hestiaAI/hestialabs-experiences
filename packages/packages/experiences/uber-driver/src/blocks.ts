@@ -104,7 +104,6 @@ const blocks: ViewBlocks = [
   {
     id: 'driverAccounting',
     customPipeline: getMockupData,
-    files: ['rider_points'],
     title: 'Accounting (Mockup)',
     text: 'Compute your expenses and estimated wages.',
     visualization: 'ChartViewUberDriverAccounting.vue',
