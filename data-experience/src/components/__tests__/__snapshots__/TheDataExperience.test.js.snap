@@ -18,7 +18,7 @@ exports[`data experience html corresponds to snapshot 1`] = `
       </vlist>
     </vmenu>
   </vspeeddial>
-  <vwindow class=\\"v-window--main\\">
+  <vwindow>
     <div data-id=\\"window-load-data\\">
       <vwindowitem value=\\"load-data\\">
         <vcontainer>

@@ -72,7 +72,7 @@
             v-else-if="
               id === 'understand-data'
               && fileManager
-              && experienceConfig.viewBlocks?.length
+              && experienceConfig.viewBlocks.length
             "
             :value="id"
             disabled
