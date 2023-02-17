@@ -1,27 +1,40 @@
 <template>
-  <div>
-    <VRow v-if="errorMessage">
-      <VCol>
-        <BaseAlert type="error">
-          {{ errorMessage }}
-        </BaseAlert>
-      </VCol>
-    </VRow>
-    <UnitPipelineViewBlock v-bind="{ data, ...viewBlock }" />
-  </div>
+<div>
+  <VRow v-if="errorMessage">
+    <VCol>
+      <BaseAlert type="error">
+        {{ errorMessage }}
+      </BaseAlert>
+    </VCol>
+  </VRow>
+  <UnitPipelineViewBlock
+    v-if="fileManager !== null"
+    v-bind="{ data, missingFiles, ...viewBlock }">
+    <template v-slot:infoDialog>
+      <UnitFilesDialog
+        v-if="fileGlobs.length > 0 || ['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
+        :all-files="['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
+        :file-globs="fileGlobs"
+        :file-manager="fileManager"
+        />
+    </template>
+  </UnitPipelineViewBlock>
+</div>
 </template>
 
 <script>
-import { mapState, mapMutations } from '@/utils/store-helper'
+import { mapState, mapGetters, mapMutations } from '@/utils/store-helper'
 
 import BaseAlert from '@/components/base/BaseAlert.vue'
 import UnitPipelineViewBlock from './UnitPipelineViewBlock.vue'
+import UnitFilesDialog from './files/UnitFilesDialog.vue'
 
 import { setTimeoutPromise } from '@/utils/utils'
 
 export default {
   components: {
     BaseAlert,
+    UnitFilesDialog,
     UnitPipelineViewBlock
   },
   props: {
@@ -40,7 +53,18 @@ export default {
     }
   },
   computed: {
-    ...mapState(['currentDB', 'fileManager', 'currentTab'])
+    ...mapState(['currentDB', 'fileManager', 'currentTab']),
+    ...mapGetters(['experienceNameAndTag']),
+    fileGlobs() {
+      const fileIds = this.viewBlock.files ?? []
+      return fileIds.map(id => this.fileManager.idToGlob[id])
+    },
+    missingFiles() {
+      return this.fileGlobs
+        .map(glob => [glob, this.fileManager.findMatchingFilePaths(glob)])
+        .filter(([_, files]) => files.length === 0)
+        .map(([glob, _]) => glob)
+    }
   },
   watch: {
     progress: {

@@ -10,7 +10,7 @@
         </div>
       </div>
     </VOverlay>
-    <VCard v-if="fileManager !== null" class="pa-2 mb-6" flat>
+    <VCard class="pa-2 mb-6" flat>
       <VRow>
         <VCol cols="10" offset="1">
           <VCardTitle class="justify-center">
@@ -18,12 +18,7 @@
           </VCardTitle>
         </VCol>
         <VCol cols="1" align-self="center" class="full-height text-center">
-          <UnitFilesDialog
-            v-if="fileGlobs.length > 0 || ['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
-            :all-files="['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
-            :file-globs="fileGlobs"
-            :file-manager="fileManager"
-          />
+          <slot name="infoDialog"></slot>
         </VCol>
       </VRow>
 
@@ -83,8 +78,6 @@ import { cloneDeep, merge } from 'lodash-es'
 
 import { mapState, mapGetters } from '@/utils/store-helper'
 
-import UnitFilesDialog from './files/UnitFilesDialog.vue'
-
 import ChartView from '@/components/chart/ChartView.vue'
 import UnitKepler from '@/components/unit/UnitKepler.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
@@ -94,7 +87,6 @@ import BaseAlert from '@/components/base/BaseAlert.vue'
 export default {
   name: 'UnitViewBlock',
   components: {
-    UnitFilesDialog,
     ChartView,
     UnitKepler,
     UnitFilterableTable,
@@ -115,6 +107,10 @@ export default {
       required: true
     },
     files: {
+      type: Array,
+      default: null
+    },
+    missingFiles: {
       type: Array,
       default: null
     },
@@ -169,23 +165,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager', 'experienceConfig', 'bubbleConfig', 'currentTab']),
+    ...mapState(['experienceConfig', 'bubbleConfig', 'currentTab']),
     ...mapGetters(['experienceNameAndTag']),
     clonedData() {
       return cloneDeep(this.data)
     },
     clonedDataPostprocessed() {
       return this.postprocessor(this.clonedData)
-    },
-    fileGlobs() {
-      const fileIds = this.files ?? []
-      return fileIds.map(id => this.fileManager.idToGlob[id])
-    },
-    missingFiles() {
-      return this.fileGlobs
-        .map(glob => [glob, this.fileManager.findMatchingFilePaths(glob)])
-        .filter(([_, files]) => files.length === 0)
-        .map(([glob, _]) => glob)
     },
     vizPropsTranslated() {
       // translations override all props...
