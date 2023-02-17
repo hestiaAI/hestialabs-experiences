@@ -4,7 +4,8 @@ import experience from 'https://cdn.jsdelivr.net/npm/@hestia.ai/twitter/dist/ind
 const dataResp = await fetch('./twitter-overview.json')
 const data = await dataResp.json()
 
-console.log('to', data)
+const viewBlock = experience.config.viewBlocks[0]
+
 Vue.use(Vuex)
 Vue.use(VueI18n)
 
@@ -14,7 +15,15 @@ const vuetify = new Vuetify(DataExperience.vuetifyOpts(i18n))
 
 const store = new Vuex.Store({})
 
+// TODO: remove use of store in UnitFilterableTable
+// It comes from:
+// import kViewBlockMixin from '@/mixins/k-view-block'
+
+// needed for installing the store and setting globals like $tev
 Vue.use(DataExperience.DataExperience, { store })
+Vue.component('unit-pipeline-view-block', DataExperience.UnitPipelineViewBlock)
+// console.log('store', store)
+// store.commit('setExperienceConfig', experience.config)
 
 new Vue({
   el: '#app',
@@ -22,7 +31,9 @@ new Vue({
   vuetify,
   store,
   data: {
-    experienceConfig: experience.config,
-    siteConfig: {}
+    data,
+    missingFiles: [],
+    translationKeyPrefix: 'dodo',
+    viewBlock
   }
 })
