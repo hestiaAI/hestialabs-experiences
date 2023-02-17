@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/data-experience",
-  "version": "2.0.7",
+  "version": "2.0.10",
   "description": "analyse the data companies collect on you",
   "repository": {
     "type": "git",
@@ -159,5 +159,12 @@
     "> 1%",
     "last 2 versions",
     "not dead"
+  ],
+  "files": [
+    "dist/DataExperience.umd*.js",
+    "dist/*worker*.js",
+    "dist/*.css",
+    "postinstall.cjs",
+    "dist/css/*"
   ]
 }

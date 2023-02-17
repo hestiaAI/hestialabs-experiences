@@ -29,6 +29,8 @@
     "live-participant",
     "demo-aggregator",
     "demo-participant",
+    "trialinternational-participant",
+    "trialinternational-aggregator",
     "asdpo-aggregator",
     "asdpo-participant",
     "pdio-aggregator",
@@ -55,7 +57,9 @@
     "innopark-participant",
     "innopark-aggregator",
     "tamedia-participant",
-    "tamedia-aggregator"
+    "tamedia-aggregator",
+    "trialinternational-participant",
+    "trialinternational-aggregator"
   ],
   "homePageBubbles": [
     "live-participant",

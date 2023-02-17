@@ -9,7 +9,7 @@
   "files.trimTrailingWhitespace": true,
   "editor.acceptSuggestionOnCommitCharacter": false,
   "editor.insertSpaces": true,
-  "editor.renderFinalNewline": true,
+  "editor.renderFinalNewline": "on",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
     "source.fixAll": true

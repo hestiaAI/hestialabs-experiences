@@ -17,7 +17,7 @@ const i18n = new VueI18n(DataExperience.i18nOpts)
 Vue.use(Vuetify)
 const vuetify = new Vuetify(DataExperience.vuetifyOpts(i18n))
 
-Vue.use(DataExperience.default, { store })
+Vue.use(DataExperience.DataExperience, { store })
 
 new Vue({
   store,
