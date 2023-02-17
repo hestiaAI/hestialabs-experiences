@@ -55,7 +55,9 @@
     "innopark-participant",
     "innopark-aggregator",
     "tamedia-participant",
-    "tamedia-aggregator"
+    "tamedia-aggregator",
+    "trialinternational-participant",
+    "trialinternational-aggregator"
   ],
   "homePageBubbles": [
     "live-participant",
