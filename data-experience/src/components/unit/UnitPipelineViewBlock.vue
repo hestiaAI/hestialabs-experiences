@@ -76,8 +76,6 @@
 <script>
 import { cloneDeep, merge } from 'lodash-es'
 
-import { mapState, mapGetters } from '@/utils/store-helper'
-
 import ChartView from '@/components/chart/ChartView.vue'
 import UnitKepler from '@/components/unit/UnitKepler.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
@@ -95,6 +93,10 @@ export default {
   },
   props: {
     id: {
+      type: String,
+      required: true
+    },
+    translationKeyPrefix: {
       type: String,
       required: true
     },
@@ -165,8 +167,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(['experienceConfig', 'bubbleConfig', 'currentTab']),
-    ...mapGetters(['experienceNameAndTag']),
     clonedData() {
       return cloneDeep(this.data)
     },
@@ -185,8 +185,7 @@ export default {
   methods: {
     // Convert local translation key to global vue-i18n
     k(key) {
-      const nameAndTag = this.experienceNameAndTag
-      return `experiences.${nameAndTag}.viewBlocks.${this.currentTab}.${key}`
+      return `${this.translationKeyPrefix}.${key}`
     }
   }
 }

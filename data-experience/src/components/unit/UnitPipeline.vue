@@ -64,6 +64,10 @@ export default {
         .map(glob => [glob, this.fileManager.findMatchingFilePaths(glob)])
         .filter(([_, files]) => files.length === 0)
         .map(([glob, _]) => glob)
+    },
+    viewBlockTranslationKeyPrefix() {
+      const nameAndTag = this.experienceNameAndTag
+      return `experiences.${nameAndTag}.viewBlocks.${this.currentTab}`
     }
   },
   watch: {
