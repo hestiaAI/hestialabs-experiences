@@ -9,7 +9,9 @@
   </VRow>
   <UnitPipelineViewBlock
     v-if="fileManager !== null"
-    v-bind="{ data, missingFiles, ...viewBlock }">
+    v-bind="{ data,
+              translationKey: viewBlockTranslationKeyPrefix,
+              missingFiles, ...viewBlock }">
     <template v-slot:infoDialog>
       <UnitFilesDialog
         v-if="fileGlobs.length > 0 || ['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
