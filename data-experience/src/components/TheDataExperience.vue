@@ -282,8 +282,20 @@ export default {
       const config = this.bubbleConfig
       return config && !config.bypassLogin && !this.loginSuccessful
     },
-    consent() {
-      return this.bubbleConfig?.consent
+    consentForm() {
+      const consent = this.bubbleConfig?.consent
+      if (consent) {
+        const consentFormExperience = consent[this.experienceConfig.slug]
+        if (consentFormExperience === null) {
+          // consent form disabled for this experience
+          return null
+        }
+        // fall back to the default form is consentFormExperience is undefined
+        const cForm = consentFormExperience || consent.default
+        const consentForm = cForm && JSON.parse(JSON.stringify(cForm))
+        return consentForm
+      }
+      return null
     },
     disabled() {
       return !this.success || this.experienceProgress
@@ -305,7 +317,7 @@ export default {
         id: 'understand-data',
         mdiIcon: 'mdiChartBar'
       })
-      if (this.consent) {
+      if (this.consentForm) {
         windows.push({
           id: 'share-data',
           mdiIcon: 'mdiShare'
@@ -485,9 +497,8 @@ export default {
       console.time(consoleLabel())
 
       const {
-        consent,
+        consentForm,
         experienceConfig: {
-          slug,
           databaseConfig,
           files,
           preprocessors,
@@ -504,8 +515,6 @@ export default {
       this.clearStore()
 
       // Set consent form
-      const cForm = consent?.[slug] || consent?.default
-      const consentForm = cForm && JSON.parse(JSON.stringify(cForm))
       if (consentForm) {
         const section = consentForm.find(({ type }) => type === 'data')
         section.titles = viewBlocks.map(e => e.title)
