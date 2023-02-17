@@ -1,0 +1,6 @@
+{
+  "en": {},
+  "fr": {
+    "not found": "non trouvé : il est possible que l'archive ne soit pas dans le bon format ou qu'elle ne contienne pas ce fichier pour une autre raison. Sa présence peut dépendre des services utilisés, ou activés, ou des options choisies lors du téléchargement. Nous vous invitons à vérifier les recommandations de téléchargement."
+  }
+}
