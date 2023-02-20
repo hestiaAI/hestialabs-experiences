@@ -32,7 +32,7 @@
     </VRow>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+        <UnitFilterableTable v-bind="{ headers: header, items: results, translationKeyPrefix }" />
       </VCol>
     </VRow>
     <span class="caption">* Km Cost to be covered: This value is computed with the following formula: <strong>Km * Cost per kilometre</strong></span><br>

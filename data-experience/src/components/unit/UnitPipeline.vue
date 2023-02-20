@@ -10,7 +10,7 @@
   <UnitPipelineViewBlock
     v-if="fileManager !== null"
     v-bind="{ data,
-              translationKey: viewBlockTranslationKeyPrefix,
+              translationKeyPrefix: viewBlockTranslationKeyPrefix,
               missingFiles, ...viewBlock }">
     <template v-slot:infoDialog>
       <UnitFilesDialog

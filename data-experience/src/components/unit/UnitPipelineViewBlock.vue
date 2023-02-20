@@ -55,6 +55,7 @@
                 v-bind="{
                   graphName: vizVue,
                   data: clonedDataPostprocessed,
+                  translationKeyPrefix,
                   ...vizPropsTranslated
                 }"
               />
@@ -65,7 +66,8 @@
             </VCol>
           </VRow>
           <VContainer v-if="showTable">
-            <UnitFilterableTable v-bind="clonedData" />
+            <UnitFilterableTable
+              v-bind="{ translationKeyPrefix, ...clonedData }" />
           </VContainer>
         </template>
       </template>

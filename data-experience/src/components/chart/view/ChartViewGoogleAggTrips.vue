@@ -37,7 +37,7 @@
       <VRow>
         <VCol cols="12">
           <UnitFilterableTable
-            v-bind="{ headers: header_trips, items: get_trips }"
+            v-bind="{ headers: header_trips, items: get_trips, translationKeyPrefix }"
             @current-items="onTableFilter"
           />
         </VCol>

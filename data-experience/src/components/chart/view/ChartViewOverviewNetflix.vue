@@ -58,7 +58,7 @@
     <VRow>
       <div :id="'dc-data-count' + graphId" class="dc-data-count" />
     </VRow>
-    <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+    <UnitFilterableTable v-bind="{ headers: header, items: results, translationKeyPrefix }" />
   </VContainer>
 </template>
 

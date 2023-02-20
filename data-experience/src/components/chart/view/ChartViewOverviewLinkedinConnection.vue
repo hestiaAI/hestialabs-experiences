@@ -42,7 +42,7 @@
     <ChartViewDcFilterCount
       v-bind="{ filterCount, totalCount }"
     />
-    <UnitFilterableTable v-bind="{ headers: header, items: results }" />
+    <UnitFilterableTable v-bind="{ headers: header, items: results, translationKeyPrefix }" />
   </VContainer>
 </template>
 

@@ -82,7 +82,7 @@
     <VRow>
       <VCol cols="12">
         <UnitFilterableTable
-          v-bind="{ headers: header, items: results, kViewBlock }"
+          v-bind="{ headers: header, items: results, translationKeyPrefix }"
           @current-items="onTableFilter"
         />
       </VCol>
