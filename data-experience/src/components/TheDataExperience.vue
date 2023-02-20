@@ -190,6 +190,7 @@ import vuetifyFr from 'vuetify/lib/locale/fr'
 
 import defaultEn from '@/locales/en.json'
 import defaultFr from '@/locales/fr.json'
+import { kViewBlockPrefix } from '@/utils/i18n-utils'
 
 const messagesDefault = {
   en: {
@@ -480,7 +481,7 @@ export default {
     // Convert local translation key to global vue18n
     k(viewBlockId, key) {
       const nameAndTag = this.experienceNameAndTag
-      return `experiences.${nameAndTag}.viewBlocks.${viewBlockId}.${key}`
+      return `${kViewBlockPrefix(nameAndTag, viewBlockId)}.${key}`
     },
     scrollToTop() {
       window.setTimeout(() => window.scrollTo(0, 0), 10)

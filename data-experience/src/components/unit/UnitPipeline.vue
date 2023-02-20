@@ -32,6 +32,7 @@ import UnitPipelineViewBlock from './UnitPipelineViewBlock.vue'
 import UnitFilesDialog from './files/UnitFilesDialog.vue'
 
 import { setTimeoutPromise } from '@/utils/utils'
+import { kViewBlockPrefix } from '@/utils/i18n-utils'
 
 export default {
   components: {
@@ -69,7 +70,7 @@ export default {
     },
     viewBlockTranslationPrefix() {
       const nameAndTag = this.experienceNameAndTag
-      return `experiences.${nameAndTag}.viewBlocks.${this.currentTab}`
+      return kViewBlockPrefix(nameAndTag, this.currentTab)
     }
   },
   watch: {
