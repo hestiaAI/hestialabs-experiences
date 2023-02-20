@@ -1,6 +1,6 @@
 export default {
   props: {
-    translationKeyPrefix: {
+    viewBlockTranslationPrefix: {
       type: String,
       required: true
     }
@@ -10,7 +10,7 @@ export default {
     kViewBlock(key, prefix = '', postfix = '') {
       const pre = prefix ? `${prefix}.` : ''
       const post = postfix ? `.${postfix}` : ''
-      return `${this.translationKeyPrefix}.${pre}${key}${post}`
+      return `${this.viewBlockTranslationPrefix}.${pre}${key}${post}`
     }
   }
 }

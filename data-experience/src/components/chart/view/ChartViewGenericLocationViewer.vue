@@ -25,7 +25,7 @@
       <VRow>
         <VCol cols="12">
           <UnitFilterableTable
-            v-bind="{ headers: header, items: values, translationKeyPrefix }"
+            v-bind="{ headers: header, items: values, viewBlockTranslationPrefix }"
             @current-items="onTableFilter"
           />
         </VCol>

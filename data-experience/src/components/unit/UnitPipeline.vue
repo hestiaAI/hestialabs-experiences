@@ -10,7 +10,7 @@
   <UnitPipelineViewBlock
     v-if="fileManager !== null"
     v-bind="{ data,
-              translationKeyPrefix: viewBlockTranslationKeyPrefix,
+              viewBlockTranslationPrefix,
               missingFiles, ...viewBlock }">
     <template v-slot:infoDialog>
       <UnitFilesDialog
@@ -67,7 +67,7 @@ export default {
         .filter(([_, files]) => files.length === 0)
         .map(([glob, _]) => glob)
     },
-    viewBlockTranslationKeyPrefix() {
+    viewBlockTranslationPrefix() {
       const nameAndTag = this.experienceNameAndTag
       return `experiences.${nameAndTag}.viewBlocks.${this.currentTab}`
     }

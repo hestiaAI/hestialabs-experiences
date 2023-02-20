@@ -48,7 +48,7 @@
     </VRow>
     <VRow>
       <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: header, items: results, translationKeyPrefix }" />
+        <UnitFilterableTable v-bind="{ headers: header, items: results, viewBlockTranslationPrefix }" />
       </VCol>
     </VRow>
   </VContainer>

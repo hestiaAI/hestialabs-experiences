@@ -55,7 +55,7 @@
                 v-bind="{
                   graphName: vizVue,
                   data: clonedDataPostprocessed,
-                  translationKeyPrefix,
+                  viewBlockTranslationPrefix,
                   ...vizPropsTranslated
                 }"
               />
@@ -67,7 +67,7 @@
           </VRow>
           <VContainer v-if="showTable">
             <UnitFilterableTable
-              v-bind="{ translationKeyPrefix, ...clonedData }" />
+              v-bind="{ viewBlockTranslationPrefix, ...clonedData }" />
           </VContainer>
         </template>
       </template>
@@ -98,7 +98,7 @@ export default {
       type: String,
       required: true
     },
-    translationKeyPrefix: {
+    viewBlockTranslationPrefix: {
       type: String,
       required: true
     },
@@ -116,7 +116,7 @@ export default {
     },
     missingFiles: {
       type: Array,
-      default: null
+      default: () => []
     },
     postprocessor: {
       type: Function,
@@ -187,7 +187,7 @@ export default {
   methods: {
     // Convert local translation key to global vue-i18n
     k(key) {
-      return `${this.translationKeyPrefix}.${key}`
+      return `${this.viewBlockTranslationPrefix}.${key}`
     }
   }
 }

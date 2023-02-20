@@ -123,7 +123,7 @@
                 </VIcon>
               </VBtn>
             </p>
-            <UnitFilterableTable v-bind="{ headers: header, items: results, translationKeyPrefix }" />
+            <UnitFilterableTable v-bind="{ headers: header, items: results, viewBlockTranslationPrefix }" />
           </VTabItem>
         </VTabsItems>
       </VCol>

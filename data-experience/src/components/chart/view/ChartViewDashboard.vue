@@ -18,7 +18,7 @@
         <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
       </VCol>
       <VCol cols="12">
-        <UnitFilterableTable v-show="showTable" v-bind="{ headers: headers, items: results, translationKeyPrefix }" />
+        <UnitFilterableTable v-show="showTable" v-bind="{ headers: headers, items: results, viewBlockTranslationPrefix }" />
       </VCol>
     </VRow>
   </VContainer>

@@ -17,10 +17,9 @@
   <div id="app">
     <v-app>
       <v-main>
-        <unit-pipeline-view-block v-bind="{ data,
-                                            translationKeyPrefix,
-                                            missingFiles,
-                                            ...viewBlock }"/>
+        <view-block v-bind="{ data,
+                              viewBlockTranslationPrefix,
+                              ...viewBlock }"/>
         <!-- <the-data-experience v-bind="{ experienceConfig, siteConfig }"/> -->
       </v-main>
     </v-app>
