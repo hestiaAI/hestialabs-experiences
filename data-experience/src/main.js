@@ -22,9 +22,10 @@ export const ViewBlock = {
     injectTranslationHelpersIntoVue(Vue, options?.ignoreConflicts)
     Vue.component('ViewBlock', UnitPipelineViewBlock)
   },
-  configureI18n(i18n, experience, appLocaleMessages) {
+  configureI18n(i18n, experience, appLocaleMessages, vuetifyMessages) {
     const { config: { title, messages } } = experience
     const { locale } = i18n
+    appLocaleMessages.$vuetify = vuetifyMessages
     const experienceName = experienceNameFromTitle(title)
     const expLocaleMessages =
           nestExperienceLocaleMessages(experienceName, messages[locale])
