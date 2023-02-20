@@ -190,7 +190,7 @@ import vuetifyFr from 'vuetify/lib/locale/fr'
 
 import defaultEn from '@/locales/en.json'
 import defaultFr from '@/locales/fr.json'
-import { kViewBlockPrefix } from '@/utils/i18n-utils'
+import { kViewBlockPrefix, mergeMessagesIntoI18n, nestExperienceLocaleMessages } from '@/utils/i18n-utils'
 
 const messagesDefault = {
   en: {
@@ -463,19 +463,13 @@ export default {
       }
       i18nLocales.forEach((locale) => {
         /* experience messages */
-        const messagesObject = { experiences: { [nameAndTag]: messagesExperience[locale] } }
-        this.$i18n.mergeLocaleMessage(locale, messagesObject)
+        const messagesObject = nestExperienceLocaleMessages(nameAndTag, messagesExperience[locale])
+        const allMessages = [
+          messagesObject,
+          messagesCustomConfig[locale],
+          messagesCustomRemote[locale]]
 
-        /* custom messages (override anything previously merged) */
-        if (locale in messagesCustomConfig) {
-          // from config
-          this.$i18n.mergeLocaleMessage(locale, messagesCustomConfig[locale])
-        }
-
-        if (locale in messagesCustomRemote) {
-          // from remote endpoint
-          this.$i18n.mergeLocaleMessage(locale, messagesCustomRemote[locale])
-        }
+        mergeMessagesIntoI18n(this.$i18n, locale, allMessages)
       })
     },
     // Convert local translation key to global vue18n
