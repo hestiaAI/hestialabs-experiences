@@ -3,10 +3,13 @@ import { set } from 'vue'
 import { merge } from 'lodash-es'
 import BubbleAPI from 'data-experience/src/utils/bubble-api'
 
+import { mapTranslationObject } from '@/utils/directusHelpers'
+
 export const state = () => ({
   loaded: false,
   config: {},
-  experiences: {}
+  experiences: {},
+  pages: {}
 })
 
 export const getters = {
@@ -43,6 +46,9 @@ export const getters = {
 }
 
 export const mutations = {
+  setPage(state, { key, value }) {
+    set(state.pages, key, value)
+  },
   setLoaded(state) {
     state.loaded = true
   },
@@ -58,6 +64,38 @@ export const mutations = {
 }
 
 export const actions = {
+  async loadPage({ commit, state }, { pageId }) {
+    console.log('load page')
+    try {
+      const pagesData = await this.$directus.items('websites').readByQuery({
+        fields: ['*', 'url_name', 'pages.Page_id.*', 'pages.Page_id.content.Content_id.*', 'pages.Page_id.content.Content_id.translations.*'],
+        filter: {
+          url: {
+            _eq: 'digipower.academy'
+          },
+          pages: {
+            Page_id: {
+              url_name: {
+                _eq: pageId
+              }
+            }
+          }
+        }
+      })
+      // Take first page with digipower.academy as website and current id as url_name, should always be unique
+      const page = pagesData.data[0].pages[0].Page_id
+      const contents = page.content.map((c) => {
+        return {
+          ...c.Content_id,
+          translations: mapTranslationObject(c.Content_id.translations)
+        }
+      })
+
+      commit('setPage', { key: page.url_name, value: contents })
+    } catch (err) {
+      console.error(err)
+    }
+  },
   async loadConfig({ commit, state }, { isDev }) {
     if (!state.loaded) {
       let configOverride = {}

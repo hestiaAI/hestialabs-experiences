@@ -115,8 +115,10 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/i18n', '@nuxtjs/axios', '@nuxtjs/proxy'],
-
+  modules: ['@nuxtjs/i18n', '@nuxtjs/axios', '@nuxtjs/proxy', '~/modules/directus'],
+  directus: {
+    url: 'https://hestiaai.directus.app'
+  },
   axios: {
     // Do away with the baseUrl when using proxy
     proxy: true
