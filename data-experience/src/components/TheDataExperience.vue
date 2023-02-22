@@ -118,7 +118,7 @@
                           <BaseProgressCircular size="64" width="4" />
                         </div>
                       </VOverlay>
-                      <UnitViewBlock v-bind="viewBlock" />
+                      <UnitPipeline v-bind="{ viewBlock }"></UnitPipeline>
                     </VCol>
                   </VRow>
                 </VTabItem>
@@ -180,7 +180,7 @@ import UnitFileExplorer from '@/components/unit/file-explorer/UnitFileExplorer.v
 import UnitLogin from '@/components/unit/UnitLogin.vue'
 import UnitDownload from '@/components/unit/UnitDownload.vue'
 import UnitIntroduction from '@/components/unit/UnitIntroduction.vue'
-import UnitViewBlock from '@/components/unit/UnitViewBlock.vue'
+import UnitPipeline from '@/components/unit/UnitPipeline.vue'
 import UnitSummary from '@/components/unit/UnitSummary.vue'
 import SettingsSpeedDial from '@/components/misc/SettingsSpeedDial.vue'
 import UnitConsentForm from '@/components/unit/consent-form/UnitConsentForm.vue'
@@ -190,6 +190,7 @@ import vuetifyFr from 'vuetify/lib/locale/fr'
 
 import defaultEn from '@/locales/en.json'
 import defaultFr from '@/locales/fr.json'
+import { kViewBlockPrefix, mergeMessagesIntoI18n, nestExperienceLocaleMessages } from '@/utils/i18n-utils'
 
 const messagesDefault = {
   en: {
@@ -232,7 +233,7 @@ export default {
     UnitDownload,
     UnitFileExplorer,
     UnitIntroduction,
-    UnitViewBlock,
+    UnitPipeline,
     UnitSummary,
     UnitConsentForm
   },
@@ -462,25 +463,19 @@ export default {
       }
       i18nLocales.forEach((locale) => {
         /* experience messages */
-        const messagesObject = { experiences: { [nameAndTag]: messagesExperience[locale] } }
-        this.$i18n.mergeLocaleMessage(locale, messagesObject)
+        const messagesObject = nestExperienceLocaleMessages(nameAndTag, messagesExperience[locale])
+        const allMessages = [
+          messagesObject,
+          messagesCustomConfig[locale],
+          messagesCustomRemote[locale]]
 
-        /* custom messages (override anything previously merged) */
-        if (locale in messagesCustomConfig) {
-          // from config
-          this.$i18n.mergeLocaleMessage(locale, messagesCustomConfig[locale])
-        }
-
-        if (locale in messagesCustomRemote) {
-          // from remote endpoint
-          this.$i18n.mergeLocaleMessage(locale, messagesCustomRemote[locale])
-        }
+        mergeMessagesIntoI18n(this.$i18n, locale, allMessages)
       })
     },
     // Convert local translation key to global vue18n
     k(viewBlockId, key) {
       const nameAndTag = this.experienceNameAndTag
-      return `experiences.${nameAndTag}.viewBlocks.${viewBlockId}.${key}`
+      return `${kViewBlockPrefix(nameAndTag, viewBlockId)}.${key}`
     },
     scrollToTop() {
       window.setTimeout(() => window.scrollTo(0, 0), 10)

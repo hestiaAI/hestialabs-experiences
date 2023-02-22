@@ -54,7 +54,7 @@
           />
           <UnitFilterableTable
             v-if="tableData"
-            :data="tableData.result"
+            v-bind="tableData.result"
           />
         </div>
       </VCardText>
