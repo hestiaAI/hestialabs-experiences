@@ -42,7 +42,7 @@
     <VFooter app absolute color="primary">
       <div class="lighten-2 py-2 ma-auto white--text" align="center">
         <div>
-          <span>&copy; Copyright 2022</span>
+          <span>&copy; Copyright {{ new Date().getFullYear() }}</span>
           <ExternalLink
             href="https://hestia.ai"
           >
