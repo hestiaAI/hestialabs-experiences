@@ -77,6 +77,7 @@
             :value="id"
             disabled
           >
+            <template v-if="tabs.length">
             <VTabs
               v-model="tab"
               slider-color="secondary"
@@ -124,6 +125,21 @@
                 </VTabItem>
               </div>
             </VTabsItems>
+            </template>
+            <template v-else>
+              <VContainer>
+                <BaseAlert>
+                  <p>{{ $tc('File', 2) }} {{ $t('not found') }}</p>
+                  <p>
+                    <ul>
+                      <li v-for="glob in experienceConfig.files" :key="glob">
+                        {{ glob }}
+                      </li>
+                    </ul>
+                  </p>
+                </BaseAlert>
+              </VContainer>
+            </template>
           </VWindowItem>
           <VWindowItem v-else-if="id === 'share-data'" :value="id" disabled>
             <UnitConsentForm />
@@ -174,6 +190,7 @@ import DBMS from '@/utils/sql'
 import FileManager from '@/utils/file-manager'
 import fileManagerWorkers from '@/utils/file-manager-workers'
 
+import BaseAlert from '@/components/base/BaseAlert.vue'
 import BaseButton from '@/components/base/button/BaseButton.vue'
 import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 import UnitFileExplorer from '@/components/unit/file-explorer/UnitFileExplorer.vue'
@@ -226,6 +243,7 @@ async function d3Locale({ iso }) {
 export default {
   name: 'TheDataExperience',
   components: {
+    BaseAlert,
     BaseButton,
     BaseProgressCircular,
     SettingsSpeedDial,
@@ -328,11 +346,23 @@ export default {
     },
     tabs() {
       const { viewBlocks } = this.experienceConfig
-      return viewBlocks.map(viewBlock => ({
-        title: this.$tev(this.k(viewBlock.id, 'title'), viewBlock.title),
-        id: viewBlock.id,
-        viewBlock
-      }))
+      return viewBlocks
+        // filter out tabs where needed files are not found
+        .filter((viewBlock) => {
+          if (this.fileManager && this.experienceConfig.hideEmptyTabs && viewBlock.files) {
+            return viewBlock.files
+              .map(id => this.fileManager.idToGlob[id])
+              .map(glob => [glob, this.fileManager.findMatchingFilePaths(glob)])
+              .filter(([_, files]) => files.length > 0).length > 0
+          } else {
+            return true
+          }
+        })
+        .map(viewBlock => ({
+          title: this.$tev(this.k(viewBlock.id, 'title'), viewBlock.title),
+          id: viewBlock.id,
+          viewBlock
+        }))
     }
   },
   watch: {
@@ -390,6 +420,11 @@ export default {
         if (id !== this.currentTab) {
           this.setCurrentTab(id)
         }
+      }
+    },
+    tabs(value) {
+      if (value.length) {
+        this.setCurrentTab(value[0].id)
       }
     },
     currentTab(currentTab) {

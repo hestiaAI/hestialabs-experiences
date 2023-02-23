@@ -5,12 +5,14 @@ import {
   driverTripsPostProcessor,
   driverHeatMapPostProcessor,
   driverRestrictionsPostProcessor,
-  driverOnOffPostProcessor
+  driverOnOffPostProcessor,
+  driverPointsPostProcessor
 } from './postprocessor'
 
 import keplerConfigOnOff from './kepler/kepler_config_onlineOffline'
 import keplerConfigHeatMap from './kepler/kepler_config_heatmap'
 import keplerConfigRestrictions from './kepler/kepler_config_restriction'
+import keplerConfigPoints from './kepler/kepler_config_points'
 
 const blocks: ViewBlocks = [
   {
@@ -68,6 +70,14 @@ const blocks: ViewBlocks = [
     showTable: false
   },
   {
+    id: 'driverTrips_0',
+    customPipeline: customPipelineGetFirstCSV('driver_trips_0'),
+    files: ['driver_trips_0'],
+    title: 'Trips',
+    text: '< TO DEFINE IN TRANSLATIONS >',
+    showTable: true
+  },
+  {
     id: 'driverOnOff',
     customPipeline: customPipelineGetFirstCSV('driver_on_off'),
     postprocessor: driverOnOffPostProcessor,
@@ -100,6 +110,18 @@ const blocks: ViewBlocks = [
     title: 'Driver Payments',
     text: '',
     showTable: true
+  },
+  {
+    id: 'driverAppAnalytics',
+    customPipeline: customPipelineGetFirstCSV('driver_app_analytics'),
+    files: ['driver_app_analytics'],
+    visualization: 'ChartViewGenericMap.vue',
+    title: 'GPS',
+    text: '< TO DEFINE IN TRANSLATIONS >',
+    postprocessor: driverPointsPostProcessor,
+    vizProps: {
+      keplerConfig: keplerConfigPoints
+    }
   },
   {
     id: 'driverAccounting',

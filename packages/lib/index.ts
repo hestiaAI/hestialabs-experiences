@@ -40,6 +40,7 @@ const defaultOptions: Partial<ExperienceOptions> = {
   dataSamples: [],
   disabled: false,
   files: {},
+  hideEmptyTabs: false,
   hideFileExplorer: true,
   hideSummary: true,
   keepOnlyFiles: true,
