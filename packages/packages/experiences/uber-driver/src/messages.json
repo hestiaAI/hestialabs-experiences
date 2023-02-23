@@ -43,6 +43,10 @@
           "end_date": "Time of Dropoff (UTC)"
         }
       },
+      "driverTrips_0": {
+        "title": "Trips",
+        "text": "List of your trips such as request, start and end times and distances travelled."
+      },
       "driverOnOff": {
         "title": "Status",
         "text": "This map shows every trips you have made depending on your status. Open (P1), En route (P2) or On trip (P3).",
@@ -71,6 +75,10 @@
       "driverPayments": {
         "title": "Payments",
         "text": "Overview of the weekly payments that have been made."
+      },
+      "driverAppAnalytics": {
+        "title": "GPS",
+        "text": "Last 50 000 GPS points collected on your device (limited number for performance reason)."
       },
       "driverAccounting": {
         "title": "Accounting (Mockup)",
@@ -123,6 +131,10 @@
           "end_date": "Heure de dépose (UTC)"
         }
       },
+      "driverTrips_0": {
+        "title": "Courses",
+        "text": "Détails des courses tels que les heures de début et de fin, ainsi que les distances parcourues."
+      },
       "driverOnOff": {
         "title": "Statut",
         "text": "Cette carte montre tous les déplacements que vous avez effectués en fonction de votre statut. Ouvert (P1), En route (P2) ou En voyage (P3).",
@@ -151,6 +163,10 @@
       "driverPayments": {
         "title": "Paiements",
         "text": "Aperçu des paiements hebdomadaires qui vont ont été versés."
+      },
+      "driverAppAnalytics": {
+        "title": "GPS",
+        "text": "Les 50 000 derniers points GPS collectés sur votre appareil (nombre limité pour des raisons de performance)."
       },
       "driverAccounting": {
         "title": "Comptabilité (maquette)",
