@@ -19,6 +19,8 @@ module.exports = {
         ignorePatterns: [
           '^V(\\w+)$',
           'i18n',
+          'RouterView',
+          'RouterLink',
           'TheDataExperience'
         ]
       }

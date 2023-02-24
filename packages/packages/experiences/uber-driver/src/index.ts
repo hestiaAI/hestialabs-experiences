@@ -3,21 +3,25 @@ import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/uber.png'
 import viewBlocks from './blocks'
 import messages from './messages.json'
-import dataSample from '@/data-samples/uber-driver.zip'
+import dataSample from '@/data-samples/uber-driver-fr-paris.zip'
 
 const options: ExperienceOptions = {
   dataPortal: 'https://myprivacy.uber.com/privacy/exploreyourdata/download',
   dataSamples: [dataSample],
   hideFileExplorer: false,
   files: {
-    driver_trips:
-      '**/(driver_lifetime_trips-0.csv|*- Driver Lifetime Trips*.csv|Trip*.csv)',
-    driver_points: '**/(driver_app_analytics-0.csv|*Driver Detailed*.csv)',
+    driver_on_off: '**/*Driver Online Offline.csv',
+    driver_performances: '**/*Driver Performance Badges.csv',
+    driver_app_restrictions: '**/*Driver App Restrictions.csv',
+    driver_dispatches: '**/*Driver Dispatches Offered and Accepted.csv',
+    driver_trips: '**/*Driver Lifetime Trips*.csv',
     driver_payments: '**/(driver_payments-0.csv|*- Driver Payments*.csv)',
-    rider_trips: '**/trips_data.csv',
-    rider_points: '**/(rider_app_analytics-0.csv|*Rider Detailed*.csv)',
-    non_trip: '**/Lost Time*.csv'
+    driver_app_analytics:
+      '**/(driver_app_analytics-0.csv|*Driver Detailed*.csv)',
+    driver_trips_0: '**/(driver_lifetime_trips-0.csv|Trip*.csv)'
   },
+  keepOnlyFiles: false,
+  hideEmptyTabs: true,
   icon,
   messages,
   title: 'Uber Driver',

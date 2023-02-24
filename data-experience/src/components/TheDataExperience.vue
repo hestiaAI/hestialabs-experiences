@@ -72,11 +72,12 @@
             v-else-if="
               id === 'understand-data'
               && fileManager
-              && experienceConfig.viewBlocks?.length
+              && experienceConfig.viewBlocks.length
             "
             :value="id"
             disabled
           >
+            <template v-if="tabs.length">
             <VTabs
               v-model="tab"
               slider-color="secondary"
@@ -118,12 +119,27 @@
                           <BaseProgressCircular size="64" width="4" />
                         </div>
                       </VOverlay>
-                      <UnitQuery v-bind="viewBlock" />
+                      <UnitPipeline v-bind="{ viewBlock }"></UnitPipeline>
                     </VCol>
                   </VRow>
                 </VTabItem>
               </div>
             </VTabsItems>
+            </template>
+            <template v-else>
+              <VContainer>
+                <BaseAlert>
+                  <p>{{ $tc('File', 2) }} {{ $t('not found') }}</p>
+                  <p>
+                    <ul>
+                      <li v-for="glob in experienceConfig.files" :key="glob">
+                        {{ glob }}
+                      </li>
+                    </ul>
+                  </p>
+                </BaseAlert>
+              </VContainer>
+            </template>
           </VWindowItem>
           <VWindowItem v-else-if="id === 'share-data'" :value="id" disabled>
             <UnitConsentForm />
@@ -174,13 +190,14 @@ import DBMS from '@/utils/sql'
 import FileManager from '@/utils/file-manager'
 import fileManagerWorkers from '@/utils/file-manager-workers'
 
+import BaseAlert from '@/components/base/BaseAlert.vue'
 import BaseButton from '@/components/base/button/BaseButton.vue'
 import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 import UnitFileExplorer from '@/components/unit/file-explorer/UnitFileExplorer.vue'
 import UnitLogin from '@/components/unit/UnitLogin.vue'
 import UnitDownload from '@/components/unit/UnitDownload.vue'
 import UnitIntroduction from '@/components/unit/UnitIntroduction.vue'
-import UnitQuery from '@/components/unit/UnitQuery.vue'
+import UnitPipeline from '@/components/unit/UnitPipeline.vue'
 import UnitSummary from '@/components/unit/UnitSummary.vue'
 import SettingsSpeedDial from '@/components/misc/SettingsSpeedDial.vue'
 import UnitConsentForm from '@/components/unit/consent-form/UnitConsentForm.vue'
@@ -190,6 +207,7 @@ import vuetifyFr from 'vuetify/lib/locale/fr'
 
 import defaultEn from '@/locales/en.json'
 import defaultFr from '@/locales/fr.json'
+import { kViewBlockPrefix, mergeMessagesIntoI18n, nestExperienceLocaleMessages } from '@/utils/i18n-utils'
 
 const messagesDefault = {
   en: {
@@ -225,6 +243,7 @@ async function d3Locale({ iso }) {
 export default {
   name: 'TheDataExperience',
   components: {
+    BaseAlert,
     BaseButton,
     BaseProgressCircular,
     SettingsSpeedDial,
@@ -232,7 +251,7 @@ export default {
     UnitDownload,
     UnitFileExplorer,
     UnitIntroduction,
-    UnitQuery,
+    UnitPipeline,
     UnitSummary,
     UnitConsentForm
   },
@@ -282,8 +301,20 @@ export default {
       const config = this.bubbleConfig
       return config && !config.bypassLogin && !this.loginSuccessful
     },
-    consent() {
-      return this.bubbleConfig?.consent
+    consentForm() {
+      const consent = this.bubbleConfig?.consent
+      if (consent) {
+        const consentFormExperience = consent[this.experienceConfig.slug]
+        if (consentFormExperience === null) {
+          // consent form disabled for this experience
+          return null
+        }
+        // fall back to the default form is consentFormExperience is undefined
+        const cForm = consentFormExperience || consent.default
+        const consentForm = cForm && JSON.parse(JSON.stringify(cForm))
+        return consentForm
+      }
+      return null
     },
     disabled() {
       return !this.success || this.experienceProgress
@@ -305,7 +336,7 @@ export default {
         id: 'understand-data',
         mdiIcon: 'mdiChartBar'
       })
-      if (this.consent) {
+      if (this.consentForm) {
         windows.push({
           id: 'share-data',
           mdiIcon: 'mdiShare'
@@ -315,11 +346,23 @@ export default {
     },
     tabs() {
       const { viewBlocks } = this.experienceConfig
-      return viewBlocks.map(viewBlock => ({
-        title: this.$tev(this.k(viewBlock.id, 'title'), viewBlock.title),
-        id: viewBlock.id,
-        viewBlock
-      }))
+      return viewBlocks
+        // filter out tabs where needed files are not found
+        .filter((viewBlock) => {
+          if (this.fileManager && this.experienceConfig.hideEmptyTabs && viewBlock.files) {
+            return viewBlock.files
+              .map(id => this.fileManager.idToGlob[id])
+              .map(glob => [glob, this.fileManager.findMatchingFilePaths(glob)])
+              .filter(([_, files]) => files.length > 0).length > 0
+          } else {
+            return true
+          }
+        })
+        .map(viewBlock => ({
+          title: this.$tev(this.k(viewBlock.id, 'title'), viewBlock.title),
+          id: viewBlock.id,
+          viewBlock
+        }))
     }
   },
   watch: {
@@ -377,6 +420,11 @@ export default {
         if (id !== this.currentTab) {
           this.setCurrentTab(id)
         }
+      }
+    },
+    tabs(value) {
+      if (value.length) {
+        this.setCurrentTab(value[0].id)
       }
     },
     currentTab(currentTab) {
@@ -450,25 +498,19 @@ export default {
       }
       i18nLocales.forEach((locale) => {
         /* experience messages */
-        const messagesObject = { experiences: { [nameAndTag]: messagesExperience[locale] } }
-        this.$i18n.mergeLocaleMessage(locale, messagesObject)
+        const messagesObject = nestExperienceLocaleMessages(nameAndTag, messagesExperience[locale])
+        const allMessages = [
+          messagesObject,
+          messagesCustomConfig[locale],
+          messagesCustomRemote[locale]]
 
-        /* custom messages (override anything previously merged) */
-        if (locale in messagesCustomConfig) {
-          // from config
-          this.$i18n.mergeLocaleMessage(locale, messagesCustomConfig[locale])
-        }
-
-        if (locale in messagesCustomRemote) {
-          // from remote endpoint
-          this.$i18n.mergeLocaleMessage(locale, messagesCustomRemote[locale])
-        }
+        mergeMessagesIntoI18n(this.$i18n, locale, allMessages)
       })
     },
     // Convert local translation key to global vue18n
     k(viewBlockId, key) {
       const nameAndTag = this.experienceNameAndTag
-      return `experiences.${nameAndTag}.viewBlocks.${viewBlockId}.${key}`
+      return `${kViewBlockPrefix(nameAndTag, viewBlockId)}.${key}`
     },
     scrollToTop() {
       window.setTimeout(() => window.scrollTo(0, 0), 10)
@@ -485,9 +527,8 @@ export default {
       console.time(consoleLabel())
 
       const {
-        consent,
+        consentForm,
         experienceConfig: {
-          slug,
           databaseConfig,
           files,
           preprocessors,
@@ -504,8 +545,6 @@ export default {
       this.clearStore()
 
       // Set consent form
-      const cForm = consent?.[slug] || consent?.default
-      const consentForm = cForm && JSON.parse(JSON.stringify(cForm))
       if (consentForm) {
         const section = consentForm.find(({ type }) => type === 'data')
         section.titles = viewBlocks.map(e => e.title)

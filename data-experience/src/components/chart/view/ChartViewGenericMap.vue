@@ -16,7 +16,7 @@
     <template v-if="total > 0">
       <VRow>
         <VCol cols="12">
-          <UnitKepler :args="keplerArgs" />
+          <UnitKepler :args="keplerArgs" :height="mapHeight" />
         </VCol>
       </VRow>
       <template v-if="showButton == true">
@@ -87,7 +87,7 @@
       <VRow>
         <VCol cols="12">
           <UnitFilterableTable
-            v-bind="{ headers, items: results }"
+            v-bind="{ headers, items: results, viewBlockTranslationPrefix }"
             @current-items="onTableFilter"
           />
         </VCol>
@@ -109,6 +109,10 @@ export default {
     keplerConfig: {
       type: Object,
       default: null
+    },
+    mapHeight: {
+      type: Number,
+      default: 500
     },
     showButton: {
       type: Boolean,

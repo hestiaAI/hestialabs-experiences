@@ -5,60 +5,52 @@ import './assets/dc.css'
 import './assets/dc-custom.css'
 
 import { MODULE_NAME } from '@/utils/store-helper'
+import UnitPipelineViewBlock from './components/unit/UnitPipelineViewBlock'
+import {
+  kViewBlockPrefix, mergeMessagesIntoI18n, experienceNameFromTitle,
+  nestExperienceLocaleMessages, injectTranslationHelpersIntoVue
+}
+  from '@/utils/i18n-utils'
 export { default as vuetifyOpts } from './plugins/vuetify'
 export { default as i18nOpts } from './plugins/i18n'
 export { default as chartView } from './components/chart/ChartView.vue'
 export { default as chartViewBar } from './components/chart/view/ChartViewBar.vue'
 export { default as chartViewGenericMap } from './components/chart/view/ChartViewGenericMap.vue'
 
-export default {
+export const ViewBlock = {
+  install(Vue, options) {
+    injectTranslationHelpersIntoVue(Vue, options?.ignoreConflicts)
+    Vue.component('ViewBlock', UnitPipelineViewBlock)
+  },
+  configureI18n(i18n, experience, appLocaleMessages, vuetifyMessages) {
+    const { config: { title, messages } } = experience
+    const { locale } = i18n
+    appLocaleMessages.$vuetify = vuetifyMessages
+    const experienceName = experienceNameFromTitle(title)
+    const expLocaleMessages =
+          nestExperienceLocaleMessages(experienceName, messages[locale])
+    const messagesList = [expLocaleMessages, appLocaleMessages]
+    mergeMessagesIntoI18n(i18n, locale, messagesList)
+  },
+  buildProps(data, experience, viewBlockId) {
+    const { config: { title, viewBlocks } } = experience
+    const experienceName = experienceNameFromTitle(title)
+    const viewBlock = viewBlocks.find(vb => vb.id === viewBlockId)
+    const prefix = kViewBlockPrefix(experienceName, viewBlockId)
+    return {
+      data,
+      viewBlockTranslationPrefix: prefix,
+      ...viewBlock
+    }
+  }
+}
+
+export const DataExperience = {
   install(Vue, options) {
     if (!options || !options.store) {
       throw new Error('Please initialise plugin with a Vuex store.')
     }
-    try {
-      Vue.prototype.$tev = function(key, valueFallback) {
-        // tev -> Translation Exists (else) Value fallback
-        return this.$te(key) ? this.$t(key) : valueFallback
-      }
-    } catch (err) {
-      throw new Error('Conflict: $tev function is already injected in the host app, please change its name.')
-    }
-    try {
-      Vue.prototype.$tet = function(key, keyFallback) {
-        // tet -> Translation Exists (else) Translate fallback
-        return this.$te(key) ? this.$t(key) : this.$t(keyFallback)
-      }
-    } catch (err) {
-      throw new Error('Conflict: $tet function is already injected in the host app, please change its name.')
-    }
-    try {
-      Vue.prototype.$days = function() {
-        return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(v => this.$t(`dayOfWeek.${v}`))
-      }
-    } catch (err) {
-      throw new Error('Conflict: $days function is already injected in the host app, please change its name.')
-    }
-    /*
-      Vue.mixin({
-        methods: {
-        // inject translation helpers to encapsulate ternary expressions
-          $tev(key, valueFallback) {
-          // tev -> Translation Exists (else) Value fallback
-            return this.$te(key) ? this.$t(key) : valueFallback
-          },
-          $tet(key, keyFallback) {
-          // tet -> Translation Exists (else) Translate fallback
-            return this.$te(key) ? this.$t(key) : this.$t(keyFallback)
-          },
-          $days() {
-            return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(v => this.$t(`dayOfWeek.${v}`))
-          }
-        }
-
-      })
-      */
-
+    injectTranslationHelpersIntoVue(Vue)
     options.store.registerModule(MODULE_NAME, store)
     Vue.component('TheDataExperience', TheDataExperience)
   }

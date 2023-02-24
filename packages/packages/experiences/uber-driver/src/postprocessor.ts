@@ -1,80 +1,102 @@
 import { PostprocessorFunction } from '@/types'
 
-export const driverTripsPostProcessor: PostprocessorFunction = result => {
+export const driverHeatMapPostProcessor: PostprocessorFunction = result => {
   const items = result?.items || []
-  if ('distance' in items[0]) {
-    const results = items.map(
-      // we want to remove the trip point as they are unreadable
-      ({ distance, dropoffTime, begintripPoint, dropoffPoint, ...rest }) => {
-        return {
-          dropoffTime: dropoffTime.replace(/\n/g, ''),
-          ...rest,
-          distance: (distance * 1.609344).toFixed(3)
-        }
-      }
-    )
-    return { headers: Object.keys(results[0]), items: results }
-  } else {
-    const results = items.map(({ tripDistanceMiles, ...rest }) => {
+  const results = items
+    .filter(d => d.earnerState == 'ontrip')
+    .map(d => {
       return {
-        ...rest,
-        tripDistance: (tripDistanceMiles * 1.609344).toFixed(3)
+        beginTimestampUtc: d.beginTimestampUtc,
+        endTimestampUtc: d.endTimestampUtc,
+        durationMs: d.durationMs,
+        beginLat: d.beginLat,
+        beginLng: d.beginLng,
+        endLat: d.endLat,
+        endLng: d.endLng
       }
     })
+
+  if (results.length === 0) {
+    return { headers: [], items: [] }
+  } else {
     return { headers: Object.keys(results[0]), items: results }
   }
 }
+
+export const driverTripsPostProcessor: PostprocessorFunction = result => {
+  const items = result?.items || []
+  const results = items.map(d => {
+    return {
+      status: d.status,
+      begin_date: d.begintripTimestampUtc || d.requestTimestampUtc,
+      end_date: d.dropoffTimestampUtc,
+      distance: (d.tripDistanceMiles * 1.609344).toFixed(3),
+      duration: d.tripDurationSeconds,
+      originalFareLocal: d.originalFareLocal
+    }
+  })
+  if (results.length === 0) {
+    return { headers: [], items: [] }
+  } else {
+    return { headers: Object.keys(results[0]), items: results }
+  }
+}
+
+export const driverOnOffPostProcessor: PostprocessorFunction = result => {
+  const items = result?.items || []
+  const results = items
+    .filter(d => d.earnerState !== 'offline')
+    .map(d => {
+      return {
+        earnerState: d.earnerState,
+        beginTimestampUtc: d.beginTimestampUtc,
+        endTimestampUtc: d.endTimestampUtc,
+        durationMs: d.durationMs,
+        beginLat: d.beginLat,
+        beginLng: d.beginLng,
+        endLat: d.endLat,
+        endLng: d.endLng
+      }
+    })
+
+  if (results.length === 0) {
+    return { headers: [], items: [] }
+  } else {
+    return { headers: Object.keys(results[0]), items: results }
+  }
+}
+
+export const driverRestrictionsPostProcessor: PostprocessorFunction =
+  result => {
+    const items = result?.items || []
+    const results = items.filter(
+      d => !(d.msgLatitude == 0 && d.msgLongitude == 0)
+    )
+    if (results.length === 0) {
+      return { headers: [], items: [] }
+    } else {
+      return { headers: Object.keys(results[0]), items: results }
+    }
+  }
 
 export const driverPointsPostProcessor: PostprocessorFunction = result => {
   const items = result?.items || []
-  if ('lat' in items[0]) {
-    const results = items.map(({ lat, lng, gpsTimeMs, ...rest }) => {
-      return {
-        latitude: lat,
-        longitude: lng,
-        gpsTimeMs:
-          'gpsTimeMs' in items[0]
-            ? new Date(parseInt(gpsTimeMs)).toISOString()
-            : null,
-        ...rest
-      }
-    })
-    return { headers: Object.keys(results[0]), items: results }
-  }
-  return { headers: Object.keys(items[0]), items: items }
-}
 
-export const riderTripsPostProcessor: PostprocessorFunction = result => {
-  const items = result?.items || []
-  const results = items.map(
-    ({ distanceMiles, requestTime, beginTripTime, dropoffTime, ...rest }) => {
-      return {
-        requestTime: requestTime.replace(' +0000 UTC', ''),
-        beginTripTime: beginTripTime.replace(' +0000 UTC', ''),
-        dropoffTime: dropoffTime.replace(' +0000 UTC', ''),
-        ...rest,
-        tripDistance: (distanceMiles * 1.609344).toFixed(3)
-      }
+  const results = items.slice(0, 50000).map(({ lat, lng, ...rest }) => {
+    return {
+      date: rest.eventTimeUtc,
+      latitude: lat || rest.latitude,
+      longitude: lng || rest.longitude,
+      carrier: rest.cellularCarrier,
+      city: rest.city,
+      event_type: rest.analyticsEventType,
+      speed: rest.speedGps
     }
-  )
-  return { headers: Object.keys(results[0]), items: results }
-}
+  })
 
-export const riderPointsPostProcessor: PostprocessorFunction = result => {
-  const items = result?.items || []
-  if ('lat' in items[0]) {
-    const results = items.map(({ lat, lng, gpsTimeMs, ...rest }) => {
-      return {
-        latitude: lat,
-        longitude: lng,
-        gpsTimeMs:
-          'gpsTimeMs' in items[0]
-            ? new Date(parseInt(gpsTimeMs)).toISOString()
-            : null,
-        ...rest
-      }
-    })
+  if (results.length === 0) {
+    return { headers: [], items: [] }
+  } else {
     return { headers: Object.keys(results[0]), items: results }
   }
-  return { headers: Object.keys(items[0]), items: items }
 }

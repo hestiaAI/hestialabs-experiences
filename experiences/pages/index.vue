@@ -245,6 +245,14 @@ export default {
       ],
       testimonials: [
         {
+          text: "Les géants du web ont fait de nous des datas, mais ça n'est pas une fatalité. Aujourd'hui il est temps de renverser la tendance, de réagir en reprenant la main sur nos données personelles. Nous avons des droits, exerçons-les!",
+          link: 'https://twitter.com/jyrkikatainen/status/1455484493897342977?s=20&t=YdTsvxYhUonm0Gxr9nICvw',
+          name: 'Alain Bazot',
+          description: 'Président de l\'UFC- QUE CHOISIR',
+          photo: 'https://pbs.twimg.com/profile_images/914770787764260865/PioYDllJ_400x400.jpg',
+          twitter: false
+        },
+        {
           text: "To hope to effectively regulate the data economy you need to deeply understand the power companies have through the personal data they hold. That's why I am participating in @sitrafund's #digipower investigation using #GDPR rights to get my data. Who will be the most transparent?",
           link: 'https://twitter.com/jyrkikatainen/status/1455484493897342977?s=20&t=YdTsvxYhUonm0Gxr9nICvw',
           name: 'Jyrki Katainen',

@@ -54,7 +54,7 @@
           />
           <UnitFilterableTable
             v-if="tableData"
-            :data="tableData.result"
+            v-bind="tableData.result"
           />
         </div>
       </VCardText>
@@ -140,6 +140,7 @@ export default {
     onSelectAccessor(accessor) {
       // TODO make this work better
       // const options = await createTableOptions(this.fileManager, accessor)
+      console.log(accessor)
       this.customPipelineOptions = [{ accessor }]
     },
     onUnitResultsUpdate(result) {

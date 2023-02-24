@@ -168,7 +168,7 @@
   "No": "No",
   "No relevant data found": "No relevant data found",
   "No valid dates found": "No valid dates found",
-  "not found": "not found",
+  "not found": "not found. The archive could be in a wrong format, or a file could be missing for another reason. The presence of a file can depend on the services used, or activated, or on the options chosen during download. Please make sure you followed the recommendations for retrieving your data.",
   "of": "of",
   "plusXOther": "+{n} other | +{n} other",
   "profile": "profile | profiles",

@@ -10,8 +10,9 @@ const vuetify = new Vuetify(DataExperience.vuetifyOpts(i18n))
 
 const store = new Vuex.Store({})
 
-Vue.use(DataExperience.default, { store })
+Vue.use(DataExperience.DataExperience, { store })
 
+const mapboxToken = 'pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA'
 new Vue({
   el: '#app',
   i18n,
@@ -19,6 +20,6 @@ new Vue({
   store,
   data: {
     experienceConfig: experience.config,
-    siteConfig: {}
+    siteConfig: { mapboxToken }
   }
 })

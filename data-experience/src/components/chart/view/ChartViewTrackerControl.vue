@@ -85,7 +85,7 @@
       v-bind="{ filterCount, totalCount }"
     />
     <UnitFilterableTable
-      v-bind="{ headers: header, items: results, kViewBlock }"
+      v-bind="{ headers: header, items: results, viewBlockTranslationPrefix }"
     />
   </VContainer>
 </template>
