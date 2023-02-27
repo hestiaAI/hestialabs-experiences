@@ -65,35 +65,40 @@ export const mutations = {
 
 export const actions = {
   async loadPage({ commit, state }, { pageId }) {
-    console.log('load page')
+    if (pageId in state.pages) { return }
+
     try {
       const pagesData = await this.$directus.items('websites').readByQuery({
-        fields: ['*', 'url_name', 'pages.Page_id.*', 'pages.Page_id.content.Content_id.*', 'pages.Page_id.content.Content_id.translations.*'],
+        fields: ['*', 'url_name', 'pages.Page_id.*', 'pages.Page_id.content.Content_id.*', 'pages.Page_id.content.Content_id.translations.*', 'pages.Page_id.content.Content_id.related_pages.*.url_name', 'pages.Page_id.translations.*'],
         filter: {
           url: {
             _eq: 'digipower.academy'
-          },
-          pages: {
-            Page_id: {
-              url_name: {
-                _eq: pageId
-              }
-            }
           }
         }
       })
+
       // Take first page with digipower.academy as website and current id as url_name, should always be unique
-      const page = pagesData.data[0].pages[0].Page_id
+      const page = pagesData.data[0].pages.filter(p => p.Page_id.url_name === pageId)[0].Page_id
+
       const contents = page.content.map((c) => {
         return {
           ...c.Content_id,
+          related_pages: c.Content_id.related_pages.map(p => p.Page_id.url_name),
           translations: mapTranslationObject(c.Content_id.translations)
         }
       })
 
-      commit('setPage', { key: page.url_name, value: contents })
+      commit('setPage', {
+        key: pageId,
+        value: {
+          ...page,
+          translations: mapTranslationObject(page.translations),
+          contents
+        }
+      })
     } catch (err) {
       console.error(err)
+      commit('setPage', { key: pageId, value: null })
     }
   },
   async loadConfig({ commit, state }, { isDev }) {
