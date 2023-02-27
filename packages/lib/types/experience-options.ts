@@ -29,6 +29,7 @@ export type ExperienceOptions = {
   dataSamples?: string[]
   disabled?: boolean
   files?: Files
+  hideEmptyTabs?: boolean
   hideFileExplorer?: boolean
   hideSummary?: boolean
   icon?: string

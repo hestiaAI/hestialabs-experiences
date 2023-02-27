@@ -78,3 +78,25 @@ export const driverRestrictionsPostProcessor: PostprocessorFunction =
       return { headers: Object.keys(results[0]), items: results }
     }
   }
+
+export const driverPointsPostProcessor: PostprocessorFunction = result => {
+  const items = result?.items || []
+
+  const results = items.slice(0, 50000).map(({ lat, lng, ...rest }) => {
+    return {
+      date: rest.eventTimeUtc,
+      latitude: lat || rest.latitude,
+      longitude: lng || rest.longitude,
+      carrier: rest.cellularCarrier,
+      city: rest.city,
+      event_type: rest.analyticsEventType,
+      speed: rest.speedGps
+    }
+  })
+
+  if (results.length === 0) {
+    return { headers: [], items: [] }
+  } else {
+    return { headers: Object.keys(results[0]), items: results }
+  }
+}

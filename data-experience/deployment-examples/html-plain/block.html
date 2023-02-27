@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>html-plain</title>
+  <title>html-plain block</title>
   <meta charset="utf-8">
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
   <link href="https://releases.transloadit.com/uppy/v3.3.0/uppy.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/@hestia.ai/data-experience@2.0.8/dist/DataExperience.css" rel="stylesheet">
-  <!-- <link href="https://cdn.jsdelivr.net/npm/@hestia.ai/data-experience/dist/DataExperience.css" rel="stylesheet"> -->
+  <!-- <link href="https://unpkg.com/npm/@hestia.ai/data-experience/dist/DataExperience.css" rel="stylesheet"> -->
+  <link href="https://cdn.jsdelivr.net/npm/@hestia.ai/data-experience/dist/DataExperience.css" rel="stylesheet">
+  <!-- <link href="https://cdn.jsdelivr.net/npm/@hestia.ai/data-experience@2.0.8/dist/DataExperience.css" rel="stylesheet"> -->
   <!-- <link href="/dist/DataExperience.css" rel="stylesheet"> -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
 </head>
@@ -16,7 +17,10 @@
   <div id="app">
     <v-app>
       <v-main>
-        <the-data-experience v-bind="{ experienceConfig, siteConfig }"/>
+        <view-block v-bind="props"/>
+        <!-- <view-block v-bind="{ data, -->
+        <!--                       viewBlockTranslationPrefix, -->
+        <!--                       ...viewBlock }"/> -->
       </v-main>
     </v-app>
   </div>
@@ -25,11 +29,10 @@
   <script type="module" src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuex@3.x/dist/vuex.min.js"></script>
   <!-- <script src="http://localhost:8002/dist/DataExperience.umd.js"></script> -->
-  <!-- <script src="/dist/DataExperience.umd.js"></script> -->
+  <script src="/dist/DataExperience.umd.js"></script>
   <!-- <script src="/dist/DataExperience.umd.min.js"></script> -->
-  <!-- <script src="https://cdn.jsdelivr.net/npm/@hestia.ai/data-experience@2.0.8/dist/DataExperience.umd.min.js"></script> -->
-  <script src="https://cdn.jsdelivr.net/npm/@hestia.ai/data-experience/dist/DataExperience.umd.min.js"></script>
-  <!-- <script src="https://unpkg.com/@hestia.ai/data-experience/dist/DataExperience.umd.min.js"></script> -->
-  <script src="index.js" type="module"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@hestia.ai/data-experience/dist/DataExperience.umd.min.js"></script> -->
+  <!-- <script src="https://unpkg.com/@hestia.ai/data-experience@2.0.7/dist/DataExperience.umd.js"></script> -->
+  <script src="block.js" type="module"></script>
 </body>
 </html>
