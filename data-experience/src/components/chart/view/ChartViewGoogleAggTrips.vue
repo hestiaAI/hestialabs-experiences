@@ -109,7 +109,8 @@ export default {
     keplerArgs() {
       return {
         keplerData: this.keplerData,
-        config: this.keplerConfig
+        config: this.keplerConfig,
+        mapboxToken: this.mapboxToken
       }
     }
   },

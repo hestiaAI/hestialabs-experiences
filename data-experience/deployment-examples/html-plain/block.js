@@ -12,7 +12,7 @@ Vue.use(DataExperience.ViewBlock)
 
 Vue.use(VueI18n)
 const i18n = new VueI18n(DataExperience.i18nOpts)
-ViewBlock.configureI18n(i18n, experience, messagesFr, vuetifyFr )
+ViewBlock.configureI18n(i18n, experience, messagesFr, vuetifyFr)
 
 const props = ViewBlock.buildProps(data, experience, 'overview')
 const vuetify = new Vuetify(DataExperience.vuetifyOpts(i18n))

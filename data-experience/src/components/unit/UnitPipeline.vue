@@ -11,7 +11,7 @@
     v-if="fileManager !== null"
     v-bind="{ data,
               viewBlockTranslationPrefix,
-              missingFiles, ...viewBlock }">
+              missingFiles, ...viewBlock, mapboxToken }">
     <template v-slot:infoDialog>
       <UnitFilesDialog
         v-if="fileGlobs.length > 0 || ['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
@@ -71,6 +71,9 @@ export default {
     viewBlockTranslationPrefix() {
       const nameAndTag = this.experienceNameAndTag
       return kViewBlockPrefix(nameAndTag, this.currentTab)
+    },
+    mapboxToken() {
+      return this.$store.state.xp.siteConfig.mapboxToken
     }
   },
   watch: {

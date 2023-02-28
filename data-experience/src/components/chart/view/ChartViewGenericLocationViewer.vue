@@ -69,7 +69,8 @@ export default {
     keplerArgs() {
       return {
         keplerData: this.keplerData,
-        config: null
+        config: null,
+        mapboxToken: this.mapboxToken
       }
     }
   },
