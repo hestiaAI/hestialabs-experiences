@@ -18,6 +18,7 @@ const timeParsers = [
   timeParse('%Y-%m-%d %H:%M'),
   timeParse('%Y-%m-%d %H:%M'),
   timeParse('%Y-%m-%d'),
+  timeParse('%d %b %Y'),
   timeParse('%Y/%m/%d %H:%M:%S'),
   timeParse('%Y-%m-%dT%H:%M:%S.%LZ[UTC]'),
   timeParse('%Y-%m-%d %H:%M'),

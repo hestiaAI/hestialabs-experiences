@@ -115,8 +115,10 @@ export default {
   ),
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/i18n', '@nuxtjs/axios', '@nuxtjs/proxy'],
-
+  modules: ['@nuxtjs/i18n', '@nuxtjs/axios', '@nuxtjs/proxy', '~/modules/directus'],
+  directus: {
+    url: 'https://hestiaai.directus.app'
+  },
   axios: {
     // Do away with the baseUrl when using proxy
     proxy: true
@@ -250,13 +252,17 @@ export default {
     ],
     watch: ['../packages/packages/experiences/*/dist/*', './config/dev.json']
   },
+  publicRuntimeConfig: {
+    assetUrl: 'https://hestiaai.directus.app'
+  },
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '@/plugins/init.js', // this plugin must come first, as it initializes the store
     '@/plugins/injected.js',
     '@/plugins/i18n.js',
     '@/plugins/vuetify.js',
-    '@/plugins/data-experience.js'
+    '@/plugins/data-experience.js',
+    '@/plugins/asset-url.js'
   ],
   loading: {
     color: primary,
