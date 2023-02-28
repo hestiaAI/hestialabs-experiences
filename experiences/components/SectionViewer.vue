@@ -2,12 +2,11 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <div>
-    <div v-for="view in content.views" :key="view.id" class="mt-6">
-      {{ view }}
-      <ViewBlock v-for="viewBlockProp in viewBlockProps" v-key="viewBlockProp.id" v-bind="{ ...viewBlockProp, mapboxToken:'pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA' }" />
-    </div>
     <div class="content-wrapper">
       <p v-html="content.translations[$i18n.locale].body" />
+    </div>
+    <div v-for="view in content.views" :key="view.id" class="mt-6">
+      <ViewBlock v-for="viewBlockProp in viewBlockProps" :key="viewBlockProp.id" v-bind="{ ...viewBlockProp, mapboxToken:'pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA' }" />
     </div>
     <VRow class="mt-6">
       <VCol v-for="relatedPage in content.related_pages" :key="relatedPage" cols="12" md="6" lg="3">
@@ -71,7 +70,6 @@ export default {
         .then(zip => zip.file(`block0${view.position}.json`).async('string'))
         .then(json => JSON.parse(json).result)
     })).then(([data]) => {
-      console.log('dde', data)
       this.data = data
     })
   },

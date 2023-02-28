@@ -70,10 +70,6 @@ export default {
       type: Object,
       default: () => ({})
     },
-    mapboxToken: {
-      type: String,
-      required: true
-    },
     height: {
       type: Number,
       default: 500
@@ -88,8 +84,7 @@ export default {
   computed: {
     finalArgs() {
       const args = this.args
-      console.log(this.args, this.mapboxToken)
-      args.mapboxToken = this.mapboxToken
+      args.mapboxToken = this.args.mapboxToken
       return args
     }
   },
@@ -99,9 +94,6 @@ export default {
         this.callIframeFunction('update', newArgs)
       }
     }
-  },
-  mounted() {
-    console.log('mounted', this.args, this.mapboxToken, this.finalArgs)
   },
   methods: {
     onload() {

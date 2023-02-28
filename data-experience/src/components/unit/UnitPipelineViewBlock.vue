@@ -61,8 +61,7 @@
               />
               <UnitKepler
                 v-else-if="vizKepler"
-                :mapboxToken="mapboxToken"
-                :args="{ ...clonedDataPostprocessed }"
+                :args="clonedDataPostprocessed"
               />
             </VCol>
           </VRow>
@@ -178,7 +177,7 @@ export default {
       return cloneDeep(this.data)
     },
     clonedDataPostprocessed() {
-      return this.postprocessor(this.clonedData)
+      return { ...this.postprocessor(this.clonedData), mapboxToken: this.mapboxToken }
     },
     vizPropsTranslated() {
       // translations override all props...
@@ -188,9 +187,6 @@ export default {
       // and it will cause a vuex mutation error otherwise.
       return merge(cloneDeep(this.vizProps), this.$tev(this.k('vizProps'), {}) || {})
     }
-  },
-  mounted() {
-    console.log('ViewBlock', this.mapboxToken)
   },
   methods: {
     // Convert local translation key to global vue-i18n
