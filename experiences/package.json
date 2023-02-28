@@ -95,7 +95,7 @@
     "sass-loader": "^10",
     "share-api-polyfill": "^1.1.0",
     "sql.js": "^1.7.0",
-    "vuetify": "^2.6.7",
+    "vuetify": "^3.1.6",
     "webpack": "^4.46.0",
     "worker-loader": "^3.0.8"
   },
