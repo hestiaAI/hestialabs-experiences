@@ -3,59 +3,51 @@
 <template>
   <div class="wrapper">
     <VContainer>
-      <section v-for="content in contents" :key="content.id" class="mb-3">
-        <h3 class="page-title">
-          {{ content.translations[$i18n.locale].title }}
-        </h3>
-        <p v-html="content.translations[$i18n.locale].body" />
-
-        <VRow class="mt-6">
-          <VCol v-for="relatedPage in content.related_pages" :key="relatedPage" cols="12" md="6" lg="3">
-            <template v-if="pages[relatedPage]">
-              <VCard class="pa-3" height="100%" color="primary" flat :to="pages[relatedPage].url_name">
-                <VImg
-                  :src="$assetURL(pages[relatedPage].thumbnail)"
-                  height="200px"
-                  class="card-image"
-                  cover
-                />
-                <VCardTitle class="card-title">
-                  {{ pages[relatedPage].translations[$i18n.locale].title }}
-                </VCardTitle>
-
-                <VCardSubtitle class="card-subtitle" v-html="pages[relatedPage].translations[$i18n.locale].description" />
-              </VCard>
-            </template>
-          </VCol>
-        </VRow>
+      <section v-for="content in sections" :key="content.id" class="mb-3">
+        <SectionViewer :content="content" />
       </section>
     </VContainer>
   </div>
 </template>
 
 <script>
-
 import { mapState } from 'vuex'
-
+import { ViewBlock } from 'data-experience'
+import SectionViewer from '@/components/SectionViewer.vue'
 export default {
+  components: {
+    SectionViewer
+  },
+  data() {
+    return {
+      data: null
+    }
+  },
   computed: {
-    ...mapState(['pages']),
+    ...mapState(['pages', 'experiences']),
     url() {
       return this.$route.params.id
     },
     page() {
       return this.pages[this.url]
     },
-    contents() {
-      const contents = this.page?.contents || []
+    sections() {
+      const content = this.page?.content || []
 
-      contents.forEach((c) => {
+      content.forEach((c) => {
         const relatedPages = c.related_pages || []
         relatedPages.forEach((url) => {
           this.$store.dispatch('loadPage', { pageId: url })
         })
       })
-      return contents
+      return content
+    },
+    viewBlockProps() {
+      if (this.data && this.experiences.twitter) {
+        return ViewBlock.buildProps(this.data, { config: this.experiences.twitter }, 'overview')
+      } else {
+        return null
+      }
     }
   },
   created() {
@@ -67,7 +59,7 @@ export default {
 }
 </script>
 <style scoped>
-.page-title {
+.content-wrapper /deep/ h1 {
   margin-top: 1em;
   margin-bottom: 1em;
   text-transform: uppercase;

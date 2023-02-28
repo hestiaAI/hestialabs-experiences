@@ -61,7 +61,8 @@
               />
               <UnitKepler
                 v-else-if="vizKepler"
-                :args="clonedDataPostprocessed"
+                :mapboxToken="mapboxToken"
+                :args="{ ...clonedDataPostprocessed }"
               />
             </VCol>
           </VRow>
@@ -142,6 +143,10 @@ export default {
       type: Object,
       default: () => ({})
     },
+    mapboxToken: {
+      type: String,
+      default: ''
+    },
     // `data` is the result from the pipeline.
     // Note: we should not fetch the data from Vuex because
     // then the UnitPipelineViewBlock component instance will react when
@@ -183,6 +188,9 @@ export default {
       // and it will cause a vuex mutation error otherwise.
       return merge(cloneDeep(this.vizProps), this.$tev(this.k('vizProps'), {}) || {})
     }
+  },
+  mounted() {
+    console.log('ViewBlock', this.mapboxToken)
   },
   methods: {
     // Convert local translation key to global vue-i18n

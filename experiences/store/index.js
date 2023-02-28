@@ -69,7 +69,7 @@ export const actions = {
 
     try {
       const pagesData = await this.$directus.items('websites').readByQuery({
-        fields: ['*', 'url_name', 'pages.Page_id.*', 'pages.Page_id.content.Content_id.*', 'pages.Page_id.content.Content_id.translations.*', 'pages.Page_id.content.Content_id.related_pages.*.url_name', 'pages.Page_id.translations.*'],
+        fields: ['*', 'url_name', 'pages.Page_id.*', 'pages.Page_id.content.Content_id.*', 'pages.Page_id.content.Content_id.datasets.dataset_id.*', 'pages.Page_id.content.Content_id.view.view_id.*', 'pages.Page_id.content.Content_id.translations.*', 'pages.Page_id.content.Content_id.related_pages.*.url_name', 'pages.Page_id.translations.*'],
         filter: {
           url: {
             _eq: 'digipower.academy'
@@ -80,11 +80,12 @@ export const actions = {
       // Take first page with digipower.academy as website and current id as url_name, should always be unique
       const page = pagesData.data[0].pages.filter(p => p.Page_id.url_name === pageId)[0].Page_id
 
-      const contents = page.content.map((c) => {
+      const content = page.content.map((c) => {
         return {
-          ...c.Content_id,
           related_pages: c.Content_id.related_pages.map(p => p.Page_id.url_name),
-          translations: mapTranslationObject(c.Content_id.translations)
+          translations: mapTranslationObject(c.Content_id.translations),
+          datasets: c.Content_id.datasets?.map(d => d.dataset_id) || [],
+          views: c.Content_id.view?.map(d => d.view_id) || []
         }
       })
 
@@ -93,7 +94,7 @@ export const actions = {
         value: {
           ...page,
           translations: mapTranslationObject(page.translations),
-          contents
+          content
         }
       })
     } catch (err) {

@@ -8,3 +8,4 @@ config
 dist
 node_modules
 sw.*
+static
