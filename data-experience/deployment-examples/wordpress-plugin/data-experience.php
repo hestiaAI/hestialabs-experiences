@@ -12,7 +12,6 @@
 function func_load_scripts() {
   wp_register_script( 'daex_vuejs', 'https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js');
   wp_register_script( 'daex_vuei18n', 'https://cdn.jsdelivr.net/npm/vue-i18n@8.x/dist/vue-i18n.js');
-  // module
   wp_register_script( 'daex_vuetify', 'https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js');
   wp_register_script( 'daex_vuex', 'https://cdn.jsdelivr.net/npm/vuex@3.x/dist/vuex.min.js');
   wp_register_script( 'daex_dataexp', 'https://cdn.jsdelivr.net/npm/@hestia.ai/data-experience/dist/DataExperience.umd.min.js');
@@ -20,6 +19,15 @@ function func_load_scripts() {
 }
 add_action('wp_enqueue_scripts', 'func_load_scripts');
 add_filter( 'script_loader_tag', 'add_module_to_script', 10, 3 );
+
+function func_load_styles() {
+  wp_register_style('daex_font_roboto', 'https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900');
+  wp_register_style('daex_font_icons', 'https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css');
+  wp_register_style('daex_style_vuetify', 'https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css');
+  wp_register_style('daex_style_uppy', 'https://releases.transloadit.com/uppy/v3.3.0/uppy.min.css');
+  wp_register_style('daex_style_dataexp', 'https://cdn.jsdelivr.net/npm/@hestia.ai/data-experience@2.0.8/dist/DataExperience.css');
+}
+add_action('wp_enqueue_scripts', 'func_load_styles');
 
 function add_module_to_script( $tag, $handle, $src ) {
     $modules = array('daex_vuetify', 'daex_setup');
@@ -38,9 +46,11 @@ function func_data_experience(){
   wp_enqueue_script('daex_dataexp');
   wp_enqueue_script('daex_setup');
 
-   // $str= "<div id='divWpVue'>"
-   //  ."Message from Vue: "
-   //  ."</div>";
+  wp_enqueue_style('daex_font_roboto');
+  wp_enqueue_style('daex_font_icons');
+  wp_enqueue_style('daex_style_vuetify');
+  wp_enqueue_style('daex_style_uppy');
+  wp_enqueue_style('daex_style_dataexp');
 
   $html = "<div id=\"app\">"
   ."  <v-app>"
