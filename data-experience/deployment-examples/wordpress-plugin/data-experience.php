@@ -9,13 +9,14 @@
  * Based on https://dev.to/workingwebsites/using-vue-in-wordpress-1b9l
  */
 
-$plugin_path = plugin_dir_path(__FILE__);
-$json_data = file_get_contents($plugin_path . 'config.json');
+// $plugin_path = plugin_dir_path(__FILE__);
+// $json_data = file_get_contents($plugin_path . 'config.json');
+// $dataexp_setup_js = file_get_contents($plugin_path . 'data-experience-setup.js');
 
 // Decode the JSON data into a PHP object
-$config = json_decode($json_data);
-$dataexp_version = $config->data_experience_version;
-
+// $config = json_decode($json_data);
+// $dataexp_version = $config->data_experience_version;
+$dataexp_version = '2.0.8';
 
 function func_load_scripts() {
   global $dataexp_version;
@@ -25,8 +26,31 @@ function func_load_scripts() {
   wp_register_script( 'daex_vuex', 'https://cdn.jsdelivr.net/npm/vuex@3.x/dist/vuex.min.js');
   wp_register_script( 'daex_dataexp', 'https://cdn.jsdelivr.net/npm/@hestia.ai/data-experience@'
                       .$dataexp_version.'/dist/DataExperience.umd.min.js');
-  wp_register_script('daex_setup', plugin_dir_url( __FILE__ ).'data-experience-setup.js', 'daex_dataexp', true );
+  // wp_register_script('daex_setup', plugin_dir_url( __FILE__ ).'data-experience-setup.js', 'daex_dataexp', true );
 }
+function add_module_to_script( $tag, $handle, $src ) {
+  global $dataexp_setup_js;
+  $modules = array('daex_vuetify', 'daex_setup');
+  if (in_array($handle, $modules)) {
+      $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
+  }
+  if ($handle == 'daex_dataexp') {
+      // $tag = $tag.'<script type="module">console.log("Hello from filter, world!", `'.$dataexp_setup_js.'`);</script>';
+      $tag = $tag.'<script type="module">'.$dataexp_setup_js.'</script>';
+  }
+  return $tag;
+}
+
+ echo 'wouououw';
+ $bibi = 'totagata';
+ $bobo = <<<END
+      a
+     b
+    $bibi
+\n
+END;
+print $bobo;
+
 add_action('wp_enqueue_scripts', 'func_load_scripts');
 add_filter( 'script_loader_tag', 'add_module_to_script', 10, 3 );
 
@@ -41,16 +65,48 @@ function func_load_styles() {
 }
 add_action('wp_enqueue_scripts', 'func_load_styles');
 
-function add_module_to_script( $tag, $handle, $src ) {
-    $modules = array('daex_vuetify', 'daex_setup');
-    if (in_array($handle, $modules)) {
-        $tag = '<script type="module" src="' . esc_url( $src ) . '"></script>';
-    }
-    return $tag;
-}
-
 //Add shortcode
-function func_data_experience(){
+// https://developer.wordpress.org/plugins/shortcodes/shortcodes-with-parameters/#complete-example
+function func_data_experience($atts){
+
+  global $dataexp_version;
+  global $dataexp_setup_js;
+
+  $dataexp_version = $atts['version'] ?? '2.0.8';
+  $experience = $atts['experience'] ?? 'twitter';
+  print 'atts '.$dataexp_version;
+
+  $html = <<<END
+  <div id="app">
+    <v-app>
+      <v-main>
+        <the-data-experience v-bind="{ experienceConfig, siteConfig }"/>
+      </v-main>
+    </v-app>
+  </div>
+END;
+
+  $dataexp_setup_js = <<<END
+  import experience from 'https://cdn.jsdelivr.net/npm/@hestia.ai/$experience/dist/index.mjs'
+  Vue.use(Vuex)
+  Vue.use(VueI18n)
+  const i18n = new VueI18n(DataExperience.i18nOpts)
+  const vuetify = new Vuetify(DataExperience.vuetifyOpts(i18n))
+  const store = new Vuex.Store({})
+  Vue.use(DataExperience.DataExperience, { store })
+  const mapboxToken = 'pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA'
+  new Vue({
+    el: '#app',
+    i18n,
+    vuetify,
+    store,
+    data: {
+      experienceConfig: experience.config,
+      siteConfig: { mapboxToken }
+    }
+  })
+END;
+
   wp_enqueue_script('daex_vuejs');
   wp_enqueue_script('daex_vuei18n');
   wp_enqueue_script('daex_vuetify');
@@ -64,15 +120,9 @@ function func_data_experience(){
   wp_enqueue_style('daex_style_uppy');
   wp_enqueue_style('daex_style_dataexp');
 
-  $html = "<div id=\"app\">"
-  ."  <v-app>"
-  ."    <v-main>"
-  ."      <the-data-experience v-bind=\"{ experienceConfig, siteConfig }\"/>"
-  ."    </v-main>"
-  ."  </v-app>"
-  ."</div>";
-
    return $html;
 }
+
+// https://developer.wordpress.org/plugins/shortcodes/
 add_shortcode( 'dataexperience', 'func_data_experience' );
 ?>
