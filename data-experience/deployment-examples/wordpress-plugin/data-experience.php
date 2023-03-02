@@ -9,13 +9,7 @@
  * Based on https://dev.to/workingwebsites/using-vue-in-wordpress-1b9l
  */
 
-// $plugin_path = plugin_dir_path(__FILE__);
-// $json_data = file_get_contents($plugin_path . 'config.json');
-// $dataexp_setup_js = file_get_contents($plugin_path . 'data-experience-setup.js');
-
-// Decode the JSON data into a PHP object
-// $config = json_decode($json_data);
-// $dataexp_version = $config->data_experience_version;
+// :( this needs to be initialized here to be seen in func_load_scripts
 $dataexp_version = '2.0.8';
 
 function func_load_scripts() {
@@ -41,16 +35,6 @@ function add_module_to_script( $tag, $handle, $src ) {
   return $tag;
 }
 
- echo 'wouououw';
- $bibi = 'totagata';
- $bobo = <<<END
-      a
-     b
-    $bibi
-\n
-END;
-print $bobo;
-
 add_action('wp_enqueue_scripts', 'func_load_scripts');
 add_filter( 'script_loader_tag', 'add_module_to_script', 10, 3 );
 
@@ -72,9 +56,23 @@ function func_data_experience($atts){
   global $dataexp_version;
   global $dataexp_setup_js;
 
+// TODO: $dataexp_version is read earlier by register_script/style sees it
+// the value set here is ignored
+//
+// solution 1: pass argumetns to action somehow
+// https://wordpress.stackexchange.com/questions/45901/passing-a-parameter-to-filter-and-action-functions
+// https://wordpress.stackexchange.com/questions/69605/passing-parameters-to-do-action-from-shortcode-to-wp-footer
+//
+// solution 2: add the script tags in the filters
+// since it apparently reads $dataexp_setup_js
+// but would this work with css styles too?
+
+// this is overwrittent to late here
   $dataexp_version = $atts['version'] ?? '2.0.8';
-  $experience = $atts['experience'] ?? 'twitter';
-  print 'atts '.$dataexp_version;
+
+  //this works
+  $experience = $atts['experience'] ?? 'uber-driver';
+  // print 'atts '.$dataexp_version;
 
   $html = <<<END
   <div id="app">
