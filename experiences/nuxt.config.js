@@ -6,26 +6,6 @@ import { locales, localeCodes } from '../data-experience/src/i18n/locales'
 import { numberFormats } from './i18n/vue-i18n-number-formats'
 import { dateTimeFormats } from './i18n/vue-i18n-date-time-formats'
 
-const extension2filetype = {
-  tar: 'zip',
-  js: 'json',
-  ndjson: 'json',
-  png: 'img',
-  jpeg: 'img',
-  jpg: 'img',
-  gif: 'img',
-  bmp: 'img',
-  webp: 'img',
-  pdf: 'pdf',
-  zip: 'zip',
-  json: 'json',
-  txt: 'txt',
-  html: 'html',
-  csv: 'csv',
-  tsv: 'csv',
-  xlsx: 'xlsx'
-}
-
 const {
   NODE_ENV,
   BASE_URL: baseUrl = 'http://localhost:3000',
@@ -201,36 +181,6 @@ export default {
       if (isDev) {
         config.devtool = 'eval'
       }
-      config.node = {
-        // ignore fs Node.js module (used in some dependencies)
-        fs: 'empty'
-      }
-      config.module.rules.push(
-        // for importing/exporting workers as ES modules
-        {
-          test: /\.worker\.js$/,
-          use: 'worker-loader'
-        },
-        {
-          // allow all valid extensions as sample data except JS files!
-          test: new RegExp(
-            `data.+\\.(${Object.keys(extension2filetype)
-              .filter(ext => ext !== 'js')
-              .join('|')})$`
-          ),
-          // https://webpack.js.org/configuration/module/#ruletype
-          type: 'javascript/auto',
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                esModule: true,
-                name: '[path][name].[contenthash:7].[ext]'
-              }
-            }
-          ]
-        }
-      )
     },
     plugins: [
       // preload fonts to avoid FOUT
