@@ -1,6 +1,9 @@
 <template>
   <div>
-    <h2 v-if="section.title" class="mb-4">
+    <h2
+      v-if="section.title"
+      class="mb-4"
+    >
       {{ section.title }}
     </h2>
 
@@ -10,7 +13,10 @@
         {{ section.description }}
       </p>
       <!-- eslint-disable-next-line vue/no-v-html -->
-      <p v-else v-html="section.description" />
+      <p
+        v-else
+        v-html="section.description"
+      />
     </template>
 
     <template v-if="section.type === 'data' && !section.hide">
@@ -39,8 +45,14 @@
             ><b>{{ selectedFiles.length }}</b> selected</a>)</span>
           </template>
         </VCheckbox>
-        <SelectFilesDialog v-if="!readonly" v-model="showDialog" />
-        <ShowFilesDialog v-else v-model="showDialog" />
+        <SelectFilesDialog
+          v-if="!readonly"
+          v-model="showDialog"
+        />
+        <ShowFilesDialog
+          v-else
+          v-model="showDialog"
+        />
       </div>
     </template>
 

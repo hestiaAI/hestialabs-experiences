@@ -3,16 +3,25 @@
     <ChartViewVRowWebShare>
       <VCol cols="12">
         <VRow>
-          <VCol cols="12" md="8">
+          <VCol
+            cols="12"
+            md="8"
+          >
             <div :id="`area-chart-${graphId}`">
               <strong>{{ titleArea }} {{ $t('per') }} {{ $t(timeUnit.accessor) }}</strong>
               <ChartViewFilters />
             </div>
-            <div :id="`range-chart-${graphId}`" class="range-chart">
+            <div
+              :id="`range-chart-${graphId}`"
+              class="range-chart"
+            >
               <ChartViewTextSelectTimeRange />
             </div>
           </VCol>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div :id="`top-chart-${graphId}`">
               <div style="display: flex">
                 <strong>{{ titleTop }}</strong>

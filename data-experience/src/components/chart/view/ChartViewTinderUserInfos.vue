@@ -1,10 +1,18 @@
 <template>
   <VRow>
-    <VCol cols="12" align="center">
+    <VCol
+      cols="12"
+      align="center"
+    >
       <VCard max-width="600px">
         <VCardText>
           <VRow>
-            <VCol v-for="{ title, value, list } in items" :key="title" cols="12" md="6">
+            <VCol
+              v-for="{ title, value, list } in items"
+              :key="title"
+              cols="12"
+              md="6"
+            >
               <div class="overline">
                 {{ messages.titles?.[title] }}
               </div>
@@ -15,17 +23,31 @@
               />
               <div v-else-if="list">
                 <div class="d-flex flex-column flex-md-row flex-wrap">
-                  <VChip v-for="l in value" :key="l" class="ma-2" label>
+                  <VChip
+                    v-for="l in value"
+                    :key="l"
+                    class="ma-2"
+                    label
+                  >
                     {{ l }}
                   </VChip>
                 </div>
               </div>
-              <p v-else class="font-weight-bold">
+              <p
+                v-else
+                class="font-weight-bold"
+              >
                 {{ messages.values?.[value] || value }}
               </p>
             </VCol>
-            <VCol v-if="ageFilterMin && ageFilterMax" cols="12">
-              <div class="overline" v-text="messages['Age filter']" />
+            <VCol
+              v-if="ageFilterMin && ageFilterMax"
+              cols="12"
+            >
+              <div
+                class="overline"
+                v-text="messages['Age filter']"
+              />
               <VRangeSlider
                 v-model="slider"
                 thumb-color="primary"
@@ -39,9 +61,18 @@
               />
             </VCol>
 
-            <VCol v-if="descriptors.length" cols="12">
-              <div class="overline" v-text="messages['Descriptors']" />
-              <VRow v-for="({ name, choices }, idx) in descriptors" :key="idx">
+            <VCol
+              v-if="descriptors.length"
+              cols="12"
+            >
+              <div
+                class="overline"
+                v-text="messages['Descriptors']"
+              />
+              <VRow
+                v-for="({ name, choices }, idx) in descriptors"
+                :key="idx"
+              >
                 <VCol cols="12">
                   <VCard outlined>
                     <VRow>

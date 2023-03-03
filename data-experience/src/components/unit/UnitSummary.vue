@@ -1,10 +1,19 @@
 <template>
   <div v-if="fileManager !== null">
-    <VCard class="pa-2 mb-6" flat>
-      <VCardTitle v-t="k('cardTitle')" class="justify-center" />
+    <VCard
+      class="pa-2 mb-6"
+      flat
+    >
+      <VCardTitle
+        v-t="k('cardTitle')"
+        class="justify-center"
+      />
       <VCardText>
         <!-- https://kazupon.github.io/vue-i18n/guide/pluralization.html -->
-        <i18n :path="k('summaryHeading.main')" tag="span">
+        <i18n
+          :path="k('summaryHeading.main')"
+          tag="span"
+        >
           <template #file>
             <span class="font-weight-bold">{{ $tc(k('summaryHeading.file'), nFiles, { n: $n(nFiles) }) }}</span>
           </template>
@@ -22,7 +31,10 @@
           >
             <!-- eslint-disable-next-line vue/no-v-html -->
             <span v-html="globalDescription" />
-            <span v-for="({ filename, description }, j) in topFiles" :key="j">
+            <span
+              v-for="({ filename, description }, j) in topFiles"
+              :key="j"
+            >
               <a @click="onFileClick(filename)"><u>{{ fileManager.getShortFilename(filename) }}</u></a><span>{{ description }}</span><span v-if="j < topFiles.length - 1">, </span>
             </span>
           </li>

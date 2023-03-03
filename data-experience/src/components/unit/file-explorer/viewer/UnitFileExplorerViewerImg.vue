@@ -1,5 +1,9 @@
 <template>
-  <img width="100%" :src="path" :alt="filename">
+  <img
+    width="100%"
+    :src="path"
+    :alt="filename"
+  >
 </template>
 
 <script>

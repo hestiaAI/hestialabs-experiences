@@ -4,11 +4,17 @@
       <VRow>
         <VCol>
           <div class="d-flex justify-space-between">
-            <div v-for="(label, index) in ['From', 'To']" :key="index">
+            <div
+              v-for="(label, index) in ['From', 'To']"
+              :key="index"
+            >
               <div class="subtitle-2">
                 {{ $t(label) }}:
               </div>
-              <VChip label outlined>
+              <VChip
+                label
+                outlined
+              >
                 {{ dateFormatter(dateRange[index]) }}
               </VChip>
             </div>
@@ -68,8 +74,14 @@
         </VCol>
       </VRow>
     </div>
-    <div v-else align="center">
-      <span v-t="'No valid dates found'" class="caption" />
+    <div
+      v-else
+      align="center"
+    >
+      <span
+        v-t="'No valid dates found'"
+        class="caption"
+      />
     </div>
   </div>
 </template>

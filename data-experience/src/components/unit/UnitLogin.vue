@@ -1,10 +1,18 @@
 <template>
-  <VContainer fluid style="max-width: 400px" class="mt-16">
+  <VContainer
+    fluid
+    style="max-width: 400px"
+    class="mt-16"
+  >
     <h1 class="text-h4 mb-6">
       Login
     </h1>
     <VForm @submit.prevent="login">
-      <VTextField :value="id" label="ID" readonly />
+      <VTextField
+        :value="id"
+        label="ID"
+        readonly
+      />
       <BasePasswordField
         :value.sync="codeword"
         :error-message.sync="errorMessage"

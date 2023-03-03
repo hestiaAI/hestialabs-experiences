@@ -12,17 +12,26 @@
         v-on="on"
         @click="$emit('click', $event)"
       >
-        <slot name="left"></slot>
+        <slot name="left" />
         <slot name="icon">
-          <VIcon v-if="mdiIcon" :left="text !== ''">
+          <VIcon
+            v-if="mdiIcon"
+            :left="text !== ''"
+          >
             {{ mdiIconResolved }}
           </VIcon>
         </slot>
         <slot>
           <span>{{ $tev(text, text) }}</span>
         </slot>
-        <BaseProgressCircular v-if="progress" class="ml-2" />
-        <BaseStatusIndicator v-else-if="status" :error="error" />
+        <BaseProgressCircular
+          v-if="progress"
+          class="ml-2"
+        />
+        <BaseStatusIndicator
+          v-else-if="status"
+          :error="error"
+        />
       </VBtn>
     </template>
     <span>{{ $tev(tooltip, tooltip) }}</span>

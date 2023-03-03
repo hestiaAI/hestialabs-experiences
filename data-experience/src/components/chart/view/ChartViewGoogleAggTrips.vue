@@ -2,8 +2,15 @@
   <VContainer v-if="values.length > 0">
     <VRow>
       <VCol cols="12">
-        <p v-if="total === 0" class="text-subtitle-2" v-t="'records-none'" />
-        <p v-else class="text-subtitle-2">
+        <p
+          v-if="total === 0"
+          v-t="'records-none'"
+          class="text-subtitle-2"
+        />
+        <p
+          v-else
+          class="text-subtitle-2"
+        >
           This shows the public tansportation that was used by at least k
           participants:
         </p>

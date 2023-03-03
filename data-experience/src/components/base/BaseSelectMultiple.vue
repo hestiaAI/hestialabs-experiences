@@ -1,8 +1,16 @@
 <template>
   <VContainer fluid>
-    <VSelect v-model="selectedItems" v-bind="{ label, items }" multiple>
+    <VSelect
+      v-model="selectedItems"
+      v-bind="{ label, items }"
+      multiple
+    >
       <template #prepend-item>
-        <VListItem ripple @mousedown.prevent @click="toggle">
+        <VListItem
+          ripple
+          @mousedown.prevent
+          @click="toggle"
+        >
           <VListItemAction>
             <VIcon :color="selectedItems.length > 0 ? 'indigo darken-4' : ''">
               {{ icon }}

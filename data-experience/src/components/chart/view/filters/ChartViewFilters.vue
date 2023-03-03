@@ -4,7 +4,11 @@
       {{ $t('Current filter') }}
       <span class="filter" />
     </span>
-    <a v-t="'reset'" class="reset" style="display: none" />
+    <a
+      v-t="'reset'"
+      class="reset"
+      style="display: none"
+    />
   </p>
 </template>
 

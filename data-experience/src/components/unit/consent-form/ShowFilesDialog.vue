@@ -13,7 +13,10 @@
 
       <VCardText>
         <ul>
-          <li v-for="file in Object.keys(fileManager.fileDict)" :key="file">
+          <li
+            v-for="file in Object.keys(fileManager.fileDict)"
+            :key="file"
+          >
             {{ file }}
           </li>
         </ul>
@@ -23,7 +26,11 @@
 
       <VCardActions>
         <VSpacer />
-        <VBtn color="primary" text @click="show = false">
+        <VBtn
+          color="primary"
+          text
+          @click="show = false"
+        >
           Close
         </VBtn>
       </VCardActions>

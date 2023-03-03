@@ -3,12 +3,21 @@
     <ChartViewVRowWebShare>
       <VCol cols="12">
         <VRow>
-          <VCol cols="12" md="6">
+          <VCol
+            cols="12"
+            md="6"
+          >
             <div :id="`app-chart-${graphId}`">
               <div style="display: flex">
-                <VTooltip left max-width="200">
+                <VTooltip
+                  left
+                  max-width="200"
+                >
                   <template #activator="{ on, attrs }">
-                    <strong v-bind="attrs" v-on="on">Application</strong>
+                    <strong
+                      v-bind="attrs"
+                      v-on="on"
+                    >Application</strong>
                   </template>
                   <span>{{ $t('chart-view.ios-access.app-info') }}</span>
                 </VTooltip>
@@ -18,12 +27,21 @@
               <ChartViewFilters />
             </div>
           </VCol>
-          <VCol cols="12" md="6">
+          <VCol
+            cols="12"
+            md="6"
+          >
             <div :id="`category-chart-${graphId}`">
               <div style="display: flex">
-                <VTooltip left max-width="200">
+                <VTooltip
+                  left
+                  max-width="200"
+                >
                   <template #activator="{ on, attrs }">
-                    <strong v-bind="attrs" v-on="on">Resource</strong>
+                    <strong
+                      v-bind="attrs"
+                      v-on="on"
+                    >Resource</strong>
                   </template>
                   <span>{{ $t('chart-view.ios-access.resource-info') }}</span>
                 </VTooltip>
@@ -35,7 +53,10 @@
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
+      <div
+        :id="`dc-data-count-${graphId}`"
+        class="dc-data-count"
+      />
     </VRow>
     <VRow>
       <VCol cols="12">

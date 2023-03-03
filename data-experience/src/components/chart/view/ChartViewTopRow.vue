@@ -1,29 +1,52 @@
 <template>
   <VContainer v-if="validProps">
     <VRow dense>
-      <VCol cols="12" md="12" class="text-center">
+      <VCol
+        cols="12"
+        md="12"
+        class="text-center"
+      >
         <i18n
           tag="p"
           :path="k('heading')"
         >
           <template #total>
-            <span class="font-weight-bold" v-text="total" />
+            <span
+              class="font-weight-bold"
+              v-text="total"
+            />
           </template>
           <template #countLabel>
             {{ countLabel }}
           </template>
           <template #minDate>
-            <span class="font-weight-bold" v-text="minDate" />
+            <span
+              class="font-weight-bold"
+              v-text="minDate"
+            />
           </template>
           <template #maxDate>
-            <span class="font-weight-bold" v-text="maxDate" />
+            <span
+              class="font-weight-bold"
+              v-text="maxDate"
+            />
           </template>
         </i18n>
       </VCol>
     </VRow>
-    <VRow justify="center" dense>
-      <VCol cols="12" md="7" style="position: relative">
-        <VMenu offset-x :close-on-content-click="false">
+    <VRow
+      justify="center"
+      dense
+    >
+      <VCol
+        cols="12"
+        md="7"
+        style="position: relative"
+      >
+        <VMenu
+          offset-x
+          :close-on-content-click="false"
+        >
           <template #activator="{ on, attrs }">
             <VBtn
               icon
@@ -69,7 +92,10 @@
             </VCardText>
           </VCard>
         </VMenu>
-        <div :id="graphId" style="position: relative" />
+        <div
+          :id="graphId"
+          style="position: relative"
+        />
       </VCol>
     </VRow>
   </VContainer>

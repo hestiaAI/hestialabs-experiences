@@ -2,16 +2,18 @@
 module.exports = {
   env: {
     browser: true,
-    es2021: true,
+    es2022: true,
     jest: true
   },
-  extends: ['plugin:vue/essential', 'standard'],
-  overrides: [],
+  extends: [
+    'standard',
+    'plugin:vue/recommended'
+    // 'plugin:vue/vue3-recommended'
+  ],
   parserOptions: {
-    ecmaVersion: 'latest',
+    ecmaVersion: 2022,
     sourceType: 'module'
   },
-  plugins: ['vue'],
   rules: {
     'vue/order-in-components': ['error', {}],
     'vue/no-undef-components': [

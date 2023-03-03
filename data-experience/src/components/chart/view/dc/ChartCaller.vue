@@ -19,7 +19,7 @@ export default {
   },
   computed: {
     component() {
-      return () => import(`./${this.type}`)
+      return () => import(`./chart/${this.type.replace(/\.vue$/, '')}.vue`)
     }
   }
 }

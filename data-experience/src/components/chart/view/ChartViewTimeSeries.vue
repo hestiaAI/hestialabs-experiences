@@ -1,6 +1,10 @@
 <template>
   <VRow>
-    <VCol cols="12" md="8" offset-md="2">
+    <VCol
+      cols="12"
+      md="8"
+      offset-md="2"
+    >
       <VRow dense>
         <VCol cols="9">
           <p class="text-h6">
@@ -8,7 +12,10 @@
           </p>
         </VCol>
         <VSpacer />
-        <VCol cols="3" class="text-right">
+        <VCol
+          cols="3"
+          class="text-right"
+        >
           <VSelect
             v-if="filters.length === 0"
             v-model="selectedInterval"
@@ -47,7 +54,10 @@
               <VCardText>
                 <VContainer>
                   <VRow>
-                    <VCol cols="6" sm="12">
+                    <VCol
+                      cols="6"
+                      sm="12"
+                    >
                       <VSelect
                         v-model="selectedInterval"
                         :items="namesInterval"
@@ -77,8 +87,18 @@
               </VCardText>
               <VCardActions>
                 <VSpacer />
-                <VBtn v-t="'Reset'" color="red darken-1" text @click="resetFilters()" />
-                <VBtn v-t="'Close'" color="blue darken-1" text @click="settingDialog = false" />
+                <VBtn
+                  v-t="'Reset'"
+                  color="red darken-1"
+                  text
+                  @click="resetFilters()"
+                />
+                <VBtn
+                  v-t="'Close'"
+                  color="blue darken-1"
+                  text
+                  @click="settingDialog = false"
+                />
                 <VBtn
                   v-t="'Save'"
                   color="blue darken-1"

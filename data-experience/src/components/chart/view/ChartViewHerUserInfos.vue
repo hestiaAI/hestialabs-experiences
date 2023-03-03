@@ -1,10 +1,18 @@
 <template>
   <VRow>
-    <VCol cols="12" align="center">
+    <VCol
+      cols="12"
+      align="center"
+    >
       <VCard max-width="600px">
         <VCardText>
           <VRow>
-            <VCol v-for="item in items" :key="item.title" cols="12" md="6">
+            <VCol
+              v-for="item in items"
+              :key="item.title"
+              cols="12"
+              md="6"
+            >
               <div class="overline">
                 {{ item.title }}
               </div>
@@ -16,12 +24,20 @@
               </p>
               <div v-else-if="item.list">
                 <div class="d-flex flex-column flex-md-row flex-wrap">
-                  <VChip v-for="l in item.value" :key="l" class="ma-2" label>
+                  <VChip
+                    v-for="l in item.value"
+                    :key="l"
+                    class="ma-2"
+                    label
+                  >
                     {{ l }}
                   </VChip>
                 </div>
               </div>
-              <p v-else class="font-weight-bold">
+              <p
+                v-else
+                class="font-weight-bold"
+              >
                 {{ item.value }}
               </p>
             </VCol>

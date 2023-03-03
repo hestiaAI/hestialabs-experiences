@@ -1,14 +1,29 @@
 <template>
-  <div v-if="fileManager" :class="isLoading ? 'loading' : ''">
-    <VCard class="pa-2 explorer" width="100%" flat>
+  <div
+    v-if="fileManager"
+    :class="isLoading ? 'loading' : ''"
+  >
+    <VCard
+      class="pa-2 explorer"
+      width="100%"
+      flat
+    >
       <VRow>
         <VExpandTransition>
-          <VCol cols="12" :md="mini ? 4 : 6" :lg="mini ? 3 : 6" class="explorer__content">
+          <VCol
+            cols="12"
+            :md="mini ? 4 : 6"
+            :lg="mini ? 3 : 6"
+            class="explorer__content"
+          >
             <VListItem class="px-2">
               <VIcon>$vuetify.icons.mdiFileSearch</VIcon>
               <span class="mx-4">{{ $t('file-explorer.title') }}</span>
               <VSpacer />
-              <VBtn icon @click="mini = !mini">
+              <VBtn
+                icon
+                @click="mini = !mini"
+              >
                 <VIcon v-if="mini">
                   $vuetify.icons.mdiChevronRight
                 </VIcon>
@@ -52,7 +67,12 @@
           </VCol>
         </VExpandTransition>
         <VDivider vertical />
-        <VCol cols="12" :md="mini ? 8 : 6" :lg="mini ? 9 : 6" class="explorer__content">
+        <VCol
+          cols="12"
+          :md="mini ? 8 : 6"
+          :lg="mini ? 9 : 6"
+          class="explorer__content"
+        >
           <UnitFileViewer
             v-bind="{ selectedItem }"
             @loading="onLoading"

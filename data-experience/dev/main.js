@@ -14,8 +14,6 @@ const vuetify = new Vuetify(vuetifyOpts(i18n))
 
 Vue.use(DataExperience, { store })
 
-Vue.config.productionTip = false
-
 new Vue({
   i18n,
   vuetify,

@@ -8,20 +8,20 @@
     max-width="290px"
     min-width="auto"
   >
-    <template v-slot:activator="{ on, attrs }">
+    <template #activator="{ on, attrs }">
       <VTextField
         v-model="dateFormatted"
         v-bind="{label, hint, attrs}"
-        v-on="on"
         persistent-hint
         prepend-icon="mdi-calendar"
-      ></VTextField>
+        v-on="on"
+      />
     </template>
     <VDatePicker
       v-model="date"
       no-title
       @input="handleInput"
-    ></VDatePicker>
+    />
   </VMenu>
 </template>
 <script>

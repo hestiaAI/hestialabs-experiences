@@ -32,8 +32,8 @@
       tooltip="Clear all"
       color="red"
       :outlined="false"
-      @click="$store.commit('xp/clearStore')"
       vbtn-class=""
+      @click="$store.commit('xp/clearStore')"
     />
     <BaseButtonShare
       fab
@@ -45,7 +45,7 @@
       tooltip="Share"
       vbtn-class=""
     />
-    <slot name="lang"></slot>
+    <slot name="lang" />
   </VSpeedDial>
 </template>
 

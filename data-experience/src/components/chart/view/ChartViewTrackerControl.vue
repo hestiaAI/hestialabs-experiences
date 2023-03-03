@@ -1,7 +1,10 @@
 <template>
   <VContainer>
     <VRow>
-      <VCol cols="4" offset="4">
+      <VCol
+        cols="4"
+        offset="4"
+      >
         <VSelect
           v-model="selectedApps"
           :items="apps"
@@ -12,7 +15,10 @@
           @change="filterApps"
         >
           <template #prepend-item>
-            <VListItem ripple @click="toggle">
+            <VListItem
+              ripple
+              @click="toggle"
+            >
               <VListItemAction>
                 <VIcon
                   :color="selectedApps.length > 0 ? 'indigo darken-4' : ''"
@@ -30,7 +36,10 @@
             <span v-if="index < 3">{{ item.length > 13 ? item.slice(0, 13) + '..' : item }}
             </span>
             <span v-if="index < 2">, </span>
-            <div v-if="index === 3" class="grey--text text-caption">
+            <div
+              v-if="index === 3"
+              class="grey--text text-caption"
+            >
               ({{ $tc('plusXOther', selectedApps.length - 3) }})
             </div>
           </template>
@@ -38,11 +47,17 @@
       </VCol>
     </VRow>
     <ChartViewVRowWebShare>
-      <VCol cols="12" md="9">
+      <VCol
+        cols="12"
+        md="9"
+      >
         <VRow>
           <VCol cols="12">
             <div id="volume-chart">
-              <span v-t="messages['Amount of tracking over time']" class="font-weight-bold" />
+              <span
+                v-t="messages['Amount of tracking over time']"
+                class="font-weight-bold"
+              />
               <ChartViewFilters />
             </div>
 
@@ -52,28 +67,49 @@
           </VCol>
         </VRow>
         <VRow>
-          <VCol cols="12" md="6">
+          <VCol
+            cols="12"
+            md="6"
+          >
             <div id="category-chart">
-              <span v-t="messages['Purposes of third party']" class="font-weight-bold" />
+              <span
+                v-t="messages['Purposes of third party']"
+                class="font-weight-bold"
+              />
               <ChartViewFilters />
             </div>
           </VCol>
-          <VCol cols="12" md="6">
+          <VCol
+            cols="12"
+            md="6"
+          >
             <div id="app-chart">
               <div style="display: flex">
-                <span v-t="messages['Applications that use trackers']" class="font-weight-bold" />
+                <span
+                  v-t="messages['Applications that use trackers']"
+                  class="font-weight-bold"
+                />
                 <VSpacer />
-                <div id="app-search" class="search" />
+                <div
+                  id="app-search"
+                  class="search"
+                />
               </div>
               <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
       </VCol>
-      <VCol cols="12" md="3">
+      <VCol
+        cols="12"
+        md="3"
+      >
         <div id="advertiser-chart">
           <div style="display: flex">
-            <span v-t="messages['Companies behind tracking']" class="font-weight-bold" />
+            <span
+              v-t="messages['Companies behind tracking']"
+              class="font-weight-bold"
+            />
             <VSpacer />
             <div id="advertiser-search" />
           </div>

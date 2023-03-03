@@ -3,12 +3,21 @@
     <ChartViewVRowWebShare>
       <VCol cols="12">
         <VRow>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div :id="`app-chart-${graphId}`">
               <div style="display: flex">
-                <VTooltip left max-width="200">
+                <VTooltip
+                  left
+                  max-width="200"
+                >
                   <template #activator="{ on, attrs }">
-                    <strong v-bind="attrs" v-on="on">Application ID</strong>
+                    <strong
+                      v-bind="attrs"
+                      v-on="on"
+                    >Application ID</strong>
                   </template>
                   <span>The bundle identifier of the initiating app.</span>
                 </VTooltip>
@@ -18,12 +27,21 @@
               <ChartViewFilters />
             </div>
           </VCol>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div :id="`domain-chart-${graphId}`">
               <div style="display: flex">
-                <VTooltip left max-width="200">
+                <VTooltip
+                  left
+                  max-width="200"
+                >
                   <template #activator="{ on, attrs }">
-                    <strong v-bind="attrs" v-on="on">Domain</strong>
+                    <strong
+                      v-bind="attrs"
+                      v-on="on"
+                    >Domain</strong>
                   </template>
                   <span>The domain of the network connection.</span>
                 </VTooltip>
@@ -33,12 +51,21 @@
               <ChartViewFilters />
             </div>
           </VCol>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div :id="`domainType-chart-${graphId}`">
               <div style="display: flex">
-                <VTooltip left max-width="200">
+                <VTooltip
+                  left
+                  max-width="200"
+                >
                   <template #activator="{ on, attrs }">
-                    <strong v-bind="attrs" v-on="on">Profiling user</strong>
+                    <strong
+                      v-bind="attrs"
+                      v-on="on"
+                    >Profiling user</strong>
                   </template>
                   <span>Whether the domain has been identified as potentially
                     collecting information across apps and sites, and
@@ -50,12 +77,21 @@
           </VCol>
         </VRow>
         <VRow>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div :id="`context-chart-${graphId}`">
               <div style="display: flex">
-                <VTooltip left max-width="200">
+                <VTooltip
+                  left
+                  max-width="200"
+                >
                   <template #activator="{ on, attrs }">
-                    <strong v-bind="attrs" v-on="on">Context</strong>
+                    <strong
+                      v-bind="attrs"
+                      v-on="on"
+                    >Context</strong>
                   </template>
                   <span>The website that made the connection, if applicable.</span>
                 </VTooltip>
@@ -65,12 +101,21 @@
               <ChartViewFilters />
             </div>
           </VCol>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div :id="`domainOwner-chart-${graphId}`">
               <div style="display: flex">
-                <VTooltip left max-width="200">
+                <VTooltip
+                  left
+                  max-width="200"
+                >
                   <template #activator="{ on, attrs }">
-                    <strong v-bind="attrs" v-on="on">Domain owner</strong>
+                    <strong
+                      v-bind="attrs"
+                      v-on="on"
+                    >Domain owner</strong>
                   </template>
                   <span>The owner of the domain, if applicable.</span>
                 </VTooltip>
@@ -80,10 +125,16 @@
               <ChartViewFilters />
             </div>
           </VCol>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div :id="`initiatedType-chart-${graphId}`">
               <div style="display: flex">
-                <VTooltip left max-width="200">
+                <VTooltip
+                  left
+                  max-width="200"
+                >
                   <template #activator="{ on, attrs }">
                     <strong
                       v-bind="attrs"
@@ -100,7 +151,10 @@
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
+      <div
+        :id="`dc-data-count-${graphId}`"
+        class="dc-data-count"
+      />
     </VRow>
     <VRow>
       <VCol cols="12">

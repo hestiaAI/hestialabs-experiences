@@ -13,7 +13,10 @@
       </VCol>
     </VRow>
     <VRow>
-      <VCol cols="12" md="4">
+      <VCol
+        cols="12"
+        md="4"
+      >
         <VTextField
           :value="filter[0]"
           class="mt-0 pt-0"
@@ -29,7 +32,11 @@
           "
         />
       </VCol>
-      <VCol cols="12" md="4" offset-md="4">
+      <VCol
+        cols="12"
+        md="4"
+        offset-md="4"
+      >
         <VTextField
           :value="filter[1]"
           class="mt-0 pt-0"

@@ -2,9 +2,16 @@
   <VContainer>
     <VRow>
       <div>
-        <span v-t="{ path: kViewBlock('total-inferences'), args: { n: values.length } }" class="overline" />
+        <span
+          v-t="{ path: kViewBlock('total-inferences'), args: { n: values.length } }"
+          class="overline"
+        />
         <br>
-        <span v-if="totalProfiles" v-t="{ path: kViewBlock('total-profiles'), args: { n: totalProfiles } }" class="overline" />
+        <span
+          v-if="totalProfiles"
+          v-t="{ path: kViewBlock('total-profiles'), args: { n: totalProfiles } }"
+          class="overline"
+        />
       </div>
       <VSpacer />
       <VAutocomplete
@@ -18,12 +25,18 @@
         :menu-props="{ closeOnClick: false }"
       >
         <template #selection="{ item, index }">
-          <VChip v-if="index < 3" class="ma-1">
+          <VChip
+            v-if="index < 3"
+            class="ma-1"
+          >
             <span>
               {{ item }}
             </span>
           </VChip>
-          <span v-if="index === 3" class="grey--text caption">
+          <span
+            v-if="index === 3"
+            class="grey--text caption"
+          >
             ({{ $tc('plusXOther', categoriesSelected.length - 3) }})
           </span>
         </template>
@@ -39,12 +52,18 @@
         :menu-props="{ closeOnClick: false }"
       >
         <template #selection="{ item, index }">
-          <VChip v-if="index < 3" class="ma-1">
+          <VChip
+            v-if="index < 3"
+            class="ma-1"
+          >
             <span>
               {{ item }}
             </span>
           </VChip>
-          <span v-if="index === 3" class="grey--text caption">
+          <span
+            v-if="index === 3"
+            class="grey--text caption"
+          >
             ({{ $tc('plusXOther', inferencesSelected.length - 3) }})
           </span>
         </template>
@@ -60,12 +79,22 @@
         lg="3"
         xl="2"
       >
-        <VCard height="100%" class="d-flex flex-column">
+        <VCard
+          height="100%"
+          class="d-flex flex-column"
+        >
           <VCardTitle class="d-flex flex-nowrap align-start justify-space-between">
             <div>{{ i.typeOfInference }}</div>
-            <div class="text-center ml-2" v-if="'_count' in i">
-              <div class="text-subtitle-2">{{ i._count }}</div>
-              <div class="text-caption">{{ $tc('profile', i._count) }}</div>
+            <div
+              v-if="'_count' in i"
+              class="text-center ml-2"
+            >
+              <div class="text-subtitle-2">
+                {{ i._count }}
+              </div>
+              <div class="text-caption">
+                {{ $tc('profile', i._count) }}
+              </div>
             </div>
           </VCardTitle>
           <VCardSubtitle>{{ i.category }}</VCardSubtitle>
@@ -74,7 +103,11 @@
           <VCardActions class="ma-3 overline d-flex justify-space-between">
             <div v-text="messages['Inferred']" />
             <div>
-              <VAvatar size="16" :color="i.color" class="mr-1" />
+              <VAvatar
+                size="16"
+                :color="i.color"
+                class="mr-1"
+              />
               {{ i.inferenceText }}
             </div>
           </VCardActions>

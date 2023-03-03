@@ -3,7 +3,12 @@
     <div class="overline text-center">
       {{ title }}
     </div>
-    <VAlert v-if="!url" color="red" dense type="error">
+    <VAlert
+      v-if="!url"
+      color="red"
+      dense
+      type="error"
+    >
       The video link provided is not recognized
     </VAlert>
     <iframe

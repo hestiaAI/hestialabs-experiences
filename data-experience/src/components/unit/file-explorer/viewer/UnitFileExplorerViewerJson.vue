@@ -1,5 +1,8 @@
 <template>
-  <div v-if="loading" v-t="'Loading'" />
+  <div
+    v-if="loading"
+    v-t="'Loading'"
+  />
   <div v-else-if="error">
     <p v-t="k('errorText')" />
   </div>
@@ -31,7 +34,12 @@
         </VDataTable>
       </div>
     </VExpandTransition>
-    <VTreeview dense transition :items="filteredItems" :open.sync="open">
+    <VTreeview
+      dense
+      transition
+      :items="filteredItems"
+      :open.sync="open"
+    >
       <template #prepend="{ item }">
         <VIcon v-if="!isUndef(item.type)">
           {{ iconForNode(item.type) }}
@@ -39,24 +47,41 @@
       </template>
       <template #label="{ item, leaf }">
         <span>
-          <span v-if="leaf" :title="item.value">
+          <span
+            v-if="leaf"
+            :title="item.value"
+          >
             <span v-if="!isUndef(item.name)">
               {{ `${item.name}:` }}
             </span>
             <span class="font-italic">{{ item.value }}</span>
           </span>
           <span v-else>{{ item.name }}</span>
-          <VTooltip bottom open-delay="200">
+          <VTooltip
+            bottom
+            open-delay="200"
+          >
             <template #activator="{ on }">
-              <VIcon class="clickable" v-on="on" @click="copyAccessor(item)">
+              <VIcon
+                class="clickable"
+                v-on="on"
+                @click="copyAccessor(item)"
+              >
                 $vuetify.icons.mdiContentCopy
               </VIcon>
             </template>
             <span>{{ $t(k('Copy accessor to clipboard')) }}</span>
           </VTooltip>
-          <VTooltip bottom open-delay="200">
+          <VTooltip
+            bottom
+            open-delay="200"
+          >
             <template #activator="{ on }">
-              <VIcon class="clickable" v-on="on" @click="onNodeClick(item)">
+              <VIcon
+                class="clickable"
+                v-on="on"
+                @click="onNodeClick(item)"
+              >
                 $vuetify.icons.mdiTable
               </VIcon>
             </template>
@@ -78,8 +103,8 @@ import {
 
 import mixin from './mixin'
 import mixinLoading from './mixin-loading'
-import JsonWorker from '~/utils/json.worker.js'
-import FindItemsWorker from '~/utils/find-items.worker.js'
+import JsonWorker from '~/utils/json.worker.js?worker&inline'
+import FindItemsWorker from '~/utils/find-items.worker.js?worker&inline'
 import { runWorker } from '@/utils/utils'
 import { filePathToGlob, createAccessor } from '@/utils/accessor'
 import { pathArrayToJsonPath, nodeTypes } from '@/utils/json'

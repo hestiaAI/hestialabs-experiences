@@ -12,7 +12,10 @@
     :menu-props="{ closeOnClick: true, bottom: true }"
   >
     <template #prepend-item>
-      <VListItem ripple @click="toggle">
+      <VListItem
+        ripple
+        @click="toggle"
+      >
         <VListItemAction>
           <VIcon :color="filter.length > 0 ? 'indigo darken-4' : ''">
             {{ icon }}
@@ -25,7 +28,10 @@
       <VDivider class="mt-2" />
     </template>
     <template #selection="{ item, index }">
-      <VChip v-if="index < 1" class="ma-1 pr-1">
+      <VChip
+        v-if="index < 1"
+        class="ma-1 pr-1"
+      >
         <span
           style="
             overflow-x: hidden;
@@ -35,13 +41,21 @@
         >
           {{ item }}
         </span>
-        <VBtn icon small right @click="filter.splice(index, 1)">
+        <VBtn
+          icon
+          small
+          right
+          @click="filter.splice(index, 1)"
+        >
           <VIcon small>
             $vuetify.icon.mdiCloseCircle
           </VIcon>
         </VBtn>
       </VChip>
-      <span v-if="index === 1" class="grey--text caption">
+      <span
+        v-if="index === 1"
+        class="grey--text caption"
+      >
         ({{ $tc('plusXOther', filter.length - 1) }})
       </span>
     </template>

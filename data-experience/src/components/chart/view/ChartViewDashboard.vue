@@ -1,7 +1,13 @@
 <template>
   <VContainer>
     <VRow>
-      <VCol v-for="graph, idx in graphs" :key="idx" cols="12" :md="graph.cols || '6'" :offset-md="graph.offset || '0'">
+      <VCol
+        v-for="graph, idx in graphs"
+        :key="idx"
+        cols="12"
+        :md="graph.cols || '6'"
+        :offset-md="graph.offset || '0'"
+      >
         <ChartCaller
           v-if="ndx && graph.type"
           :type="graph.type"
@@ -14,11 +20,20 @@
           }"
         />
       </VCol>
-      <VCol cols="12" class="text-center">
-        <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
+      <VCol
+        cols="12"
+        class="text-center"
+      >
+        <div
+          :id="`dc-data-count-${graphId}`"
+          class="dc-data-count"
+        />
       </VCol>
       <VCol cols="12">
-        <UnitFilterableTable v-show="showTable" v-bind="{ headers: headers, items: results, viewBlockTranslationPrefix }" />
+        <UnitFilterableTable
+          v-show="showTable"
+          v-bind="{ headers: headers, items: results, viewBlockTranslationPrefix }"
+        />
       </VCol>
     </VRow>
   </VContainer>

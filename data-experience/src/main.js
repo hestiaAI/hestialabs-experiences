@@ -5,7 +5,7 @@ import './assets/dc.css'
 import './assets/dc-custom.css'
 
 import { MODULE_NAME } from '@/utils/store-helper'
-import UnitPipelineViewBlock from './components/unit/UnitPipelineViewBlock'
+import UnitPipelineViewBlock from './components/unit/UnitPipelineViewBlock.vue'
 import {
   kViewBlockPrefix, mergeMessagesIntoI18n, experienceNameFromTitle,
   nestExperienceLocaleMessages, injectTranslationHelpersIntoVue

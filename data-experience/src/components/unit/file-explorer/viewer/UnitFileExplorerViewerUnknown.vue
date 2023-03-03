@@ -2,7 +2,11 @@
   <div>
     <p>
       Unknown file type
-      <BaseButton small class="ml-2" @click="click">
+      <BaseButton
+        small
+        class="ml-2"
+        @click="click"
+      >
         Try to open it
       </BaseButton>
     </p>

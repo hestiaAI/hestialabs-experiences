@@ -1,6 +1,9 @@
 <template>
   <div v-if="error">
-    <p v-t="k('errorText')" class="mt-3" />
+    <p
+      v-t="k('errorText')"
+      class="mt-3"
+    />
   </div>
   <div v-else>
     <BaseSchemaTree :schema="jsonSchema" />

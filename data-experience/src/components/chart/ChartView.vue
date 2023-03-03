@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     component() {
-      return () => import(`./view/${this.graphName}`)
+      return () => import(`./view/${this.graphName.replace(/\.vue$/, '')}.vue`)
     }
   }
 }

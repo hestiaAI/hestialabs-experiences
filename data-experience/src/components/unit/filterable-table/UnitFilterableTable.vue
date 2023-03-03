@@ -4,7 +4,10 @@
       :data="{ items, headers }"
       allow-missing-columns
     >
-      <BaseAlert v-if="error" type="error">
+      <BaseAlert
+        v-if="error"
+        type="error"
+      >
         {{ message }}
       </BaseAlert>
       <BaseSearchBar v-model="search" />
@@ -20,7 +23,10 @@
         data-testid="data-table"
         @current-items="onItemsUpdate"
       >
-        <template v-for="header in data.headers" #[`header.${header.value}`]>
+        <template
+          v-for="header in data.headers"
+          #[`header.${header.value}`]
+        >
           {{ header.text }}
           <UnitFilter
             :key="header.value"
@@ -29,7 +35,10 @@
           />
         </template>
         <template #item.url="{ value }">
-          <ExternalLink v-t="'Link'" :href="value" />
+          <ExternalLink
+            v-t="'Link'"
+            :href="value"
+          />
         </template>
         <template
           v-for="header in data.headers.filter(h => h.value !== 'url')"

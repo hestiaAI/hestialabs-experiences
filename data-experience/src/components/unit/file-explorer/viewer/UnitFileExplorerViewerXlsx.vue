@@ -1,5 +1,8 @@
 <template>
-  <div v-if="loading" v-t="'Loading'" />
+  <div
+    v-if="loading"
+    v-t="'Loading'"
+  />
   <div v-else-if="error">
     <p v-t="k('errorText')" />
   </div>

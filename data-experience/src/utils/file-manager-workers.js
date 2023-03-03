@@ -4,7 +4,7 @@
 // that somehow can't deal with this syntax
 // given by the worker-loader
 // https://v4.webpack.js.org/loaders/worker-loader/
-import CsvWorker from './csv.worker.js'
-import JsonWorker from './json.worker.js'
+import CsvWorker from './csv.worker.js?worker&inline'
+import JsonWorker from './json.worker.js?worker&inline'
 
 export default { CsvWorker, JsonWorker }

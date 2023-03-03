@@ -3,7 +3,10 @@
     <ChartViewVRowWebShare>
       <VCol cols="12">
         <VRow>
-          <VCol cols="12" md="12">
+          <VCol
+            cols="12"
+            md="12"
+          >
             <div :id="`area-chart-${graphId}`">
               <span class="font-weight-bold">
                 <i18n path="item-per-timeunit">
@@ -17,13 +20,19 @@
               </span>
               <ChartViewFilters />
             </div>
-            <div :id="`range-chart-${graphId}`" class="range-chart">
+            <div
+              :id="`range-chart-${graphId}`"
+              class="range-chart"
+            >
               <ChartViewTextSelectTimeRange />
             </div>
           </VCol>
         </VRow>
         <VRow>
-          <VCol cols="12" md="6">
+          <VCol
+            cols="12"
+            md="6"
+          >
             <div :id="`pie-chart-${graphId}`">
               <div style="display: flex">
                 <span class="font-weight-bold">{{ titlePie }}</span>
@@ -31,7 +40,10 @@
               <ChartViewFilters />
             </div>
           </VCol>
-          <VCol cols="12" md="6">
+          <VCol
+            cols="12"
+            md="6"
+          >
             <div :id="`top-chart-${graphId}`">
               <div style="display: flex">
                 <span class="font-weight-bold">{{ titleTop }}</span>

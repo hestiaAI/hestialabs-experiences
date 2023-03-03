@@ -1,7 +1,10 @@
 <template>
   <VContainer>
     <VRow>
-      <VCol v-if="placeName === ''" cols="12">
+      <VCol
+        v-if="placeName === ''"
+        cols="12"
+      >
         <VSelect
           v-model="placeSelected"
           :items="listOfNames"

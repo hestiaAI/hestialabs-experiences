@@ -1,9 +1,15 @@
 <template>
-  <div v-if="loading" v-t="'Loading'" />
+  <div
+    v-if="loading"
+    v-t="'Loading'"
+  />
   <div v-else-if="error">
     <p v-t="k('errorText')" />
   </div>
-  <UnitFilterableTable v-else v-bind="csvContent" />
+  <UnitFilterableTable
+    v-else
+    v-bind="csvContent"
+  />
 </template>
 
 <script>

@@ -1,8 +1,15 @@
 <template>
-  <VTooltip left max-width="200">
+  <VTooltip
+    left
+    max-width="200"
+  >
     <template #activator="{ on, attrs }">
       <VHover>
-        <VIcon color="" v-bind="attrs" v-on="on">
+        <VIcon
+          color=""
+          v-bind="attrs"
+          v-on="on"
+        >
           $vuetify.icons.mdiInformationOutline
         </VIcon>
       </VHover>

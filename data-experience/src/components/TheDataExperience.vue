@@ -2,7 +2,11 @@
   <div :lang="$i18n.locale">
     <SettingsSpeedDial>
       <template #lang>
-        <VMenu v-if="!siteConfigMerged.i18nLocale && locales.length > 1" offset-y absolute>
+        <VMenu
+          v-if="!siteConfigMerged.i18nLocale && locales.length > 1"
+          offset-y
+          absolute
+        >
           <template #activator="{ on, attrs }">
             <BaseButton
               v-bind="attrs"
@@ -13,12 +17,15 @@
               fab
               dark
               small
-              v-on="on"
               vbtn-class=""
+              v-on="on"
             />
           </template>
           <VList>
-            <VListItemGroup v-model="localeIndex" @change="selectLocale">
+            <VListItemGroup
+              v-model="localeIndex"
+              @change="selectLocale"
+            >
               <VListItem
                 v-for="({ code, name }) in locales"
                 :key="code"
@@ -40,7 +47,11 @@
           :key="`${experienceConfig.slug}-${id}`"
           :data-id="`window-${id}`"
         >
-          <VWindowItem v-if="id === 'load-data'" :value="id" :disabled="experienceProgress">
+          <VWindowItem
+            v-if="id === 'load-data'"
+            :value="id"
+            :disabled="experienceProgress"
+          >
             <UnitDownload
               v-if="bubbleConfig && bubbleConfig.dataFromBubble"
               v-bind="{
@@ -63,7 +74,11 @@
               @update="onUnitFilesUpdate"
             />
           </VWindowItem>
-          <VWindowItem v-else-if="id === 'file-explorer'" :value="id" disabled>
+          <VWindowItem
+            v-else-if="id === 'file-explorer'"
+            :value="id"
+            disabled
+          >
             <UnitSummary v-if="!experienceConfig.hideSummary" />
             <UnitFileExplorer />
           </VWindowItem>
@@ -71,60 +86,66 @@
           <VWindowItem
             v-else-if="
               id === 'understand-data'
-              && fileManager
-              && experienceConfig.viewBlocks.length
+                && fileManager
+                && experienceConfig.viewBlocks.length
             "
             :value="id"
             disabled
           >
             <template v-if="tabs.length">
-            <VTabs
-              v-model="tab"
-              slider-color="secondary"
-              slider-size="4"
-              show-arrows
-              center-active
-              centered
-              fixed-tabs
-              @change="scrollToTop"
-              class="py-3"
-            >
-              <VTab
-                v-for="({ title, id }, index) in tabs"
-                :key="index"
-                :id="id"
+              <VTabs
+                v-model="tab"
+                slider-color="secondary"
+                slider-size="4"
+                show-arrows
+                center-active
+                centered
+                fixed-tabs
+                class="py-3"
+                @change="scrollToTop"
               >
-                {{ title }}
-              </VTab>
-            </VTabs>
-            <VTabsItems v-model="tab">
-              <div
-                v-for="{ id, viewBlock } in tabs"
-                :key="`${experienceConfig.slug}-${id}`"
-                :data-id="`view-block-${id}`"
-              >
-                <VTabItem :transition="false">
-                  <VRow>
-                    <VCol cols="12" class="pa-0">
-                      <VOverlay
-                        :value="overlay"
-                        opacity="0.8"
+                <VTab
+                  v-for="({ title, id }, index) in tabs"
+                  :id="id"
+                  :key="index"
+                >
+                  {{ title }}
+                </VTab>
+              </VTabs>
+              <VTabsItems v-model="tab">
+                <div
+                  v-for="{ id, viewBlock } in tabs"
+                  :key="`${experienceConfig.slug}-${id}`"
+                  :data-id="`view-block-${id}`"
+                >
+                  <VTabItem :transition="false">
+                    <VRow>
+                      <VCol
+                        cols="12"
+                        class="pa-0"
                       >
-                        <div
-                          class="d-flex flex-column align-center"
+                        <VOverlay
+                          :value="overlay"
+                          opacity="0.8"
                         >
-                          <div class="mb-3">
-                            {{ $t('This might take a moment') }}
+                          <div
+                            class="d-flex flex-column align-center"
+                          >
+                            <div class="mb-3">
+                              {{ $t('This might take a moment') }}
+                            </div>
+                            <BaseProgressCircular
+                              size="64"
+                              width="4"
+                            />
                           </div>
-                          <BaseProgressCircular size="64" width="4" />
-                        </div>
-                      </VOverlay>
-                      <UnitPipeline v-bind="{ viewBlock }"></UnitPipeline>
-                    </VCol>
-                  </VRow>
-                </VTabItem>
-              </div>
-            </VTabsItems>
+                        </VOverlay>
+                        <UnitPipeline v-bind="{ viewBlock }" />
+                      </VCol>
+                    </VRow>
+                  </VTabItem>
+                </div>
+              </VTabsItems>
             </template>
             <template v-else>
               <VContainer>
@@ -132,7 +153,10 @@
                   <p>{{ $tc('File', 2) }} {{ $t('not found') }}</p>
                   <p>
                     <ul>
-                      <li v-for="glob in experienceConfig.files" :key="glob">
+                      <li
+                        v-for="glob in experienceConfig.files"
+                        :key="glob"
+                      >
                         {{ glob }}
                       </li>
                     </ul>
@@ -141,7 +165,11 @@
               </VContainer>
             </template>
           </VWindowItem>
-          <VWindowItem v-else-if="id === 'share-data'" :value="id" disabled>
+          <VWindowItem
+            v-else-if="id === 'share-data'"
+            :value="id"
+            disabled
+          >
             <UnitConsentForm />
           </VWindowItem>
         </div>
@@ -154,12 +182,12 @@
       >
         <BaseButton
           v-for="(i, idx) in windows"
-          :value="i.id"
           :key="`window-button-${experienceConfig.slug}-${i.id}`"
+          :value="i.id"
           :mdi-icon="i.mdiIcon"
           :disabled="idx === 0 ? experienceProgress : disabled"
           :tooltip="$t(`${i.id}.name`)"
-          :tooltipProps="{ top: true }"
+          :tooltip-props="{ top: true }"
           :outlined="false"
           vbtn-class="my-0"
         >

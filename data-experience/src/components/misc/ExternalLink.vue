@@ -1,5 +1,9 @@
 <template>
-  <a v-bind="$attrs" rel="noreferrer noopener" :target="target"><slot /></a>
+  <a
+    v-bind="$attrs"
+    rel="noreferrer noopener"
+    :target="target"
+  ><slot /></a>
 </template>
 
 <script>

@@ -7,8 +7,15 @@
     max-width="600"
   >
     <template #activator="{ on, attrs }">
-      <VBtn icon v-bind="attrs" v-on="on">
-        <VIcon small :color="filter ? 'error' : ''">
+      <VBtn
+        icon
+        v-bind="attrs"
+        v-on="on"
+      >
+        <VIcon
+          small
+          :color="filter ? 'error' : ''"
+        >
           $vuetify.icons.mdiFilter
         </VIcon>
       </VBtn>
@@ -84,23 +91,23 @@ export default {
     filterOptions() {
       switch (String(this.header.type)) {
         case 'INT':
-          return { name: 'NumberFilter.vue', args: {} }
+          return { name: 'NumberFilter', args: {} }
         case 'FLOAT':
-          return { name: 'NumberFilter.vue', args: { isFloat: true } }
+          return { name: 'NumberFilter', args: { isFloat: true } }
         case 'DATE':
-          return { name: 'DateFilter.vue', args: {} }
+          return { name: 'DateFilter', args: {} }
         case 'DATETIME':
-          return { name: 'DateFilter.vue', args: { isDatetime: true } }
+          return { name: 'DateFilter', args: { isDatetime: true } }
         case 'TIME':
-          return { name: 'TimeFilter.vue', args: {} }
+          return { name: 'TimeFilter', args: {} }
         default:
-          return { name: 'SelectFilter.vue', args: {} }
+          return { name: 'SelectFilter', args: {} }
       }
     },
     component() {
       return () =>
         import(
-          `@/components/unit/filterable-table/filters/${this.filterOptions.name}`
+          `./filters/${this.filterOptions.name}.vue`
         )
     }
   },

@@ -3,7 +3,10 @@
     <p class="overline font-weight-bold text-subtitle-1 text-center">
       {{ title }}
     </p>
-    <div :id="graphId" style="position: relative" />
+    <div
+      :id="graphId"
+      style="position: relative"
+    />
   </VContainer>
 </template>
 

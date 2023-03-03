@@ -5,11 +5,17 @@
         {{ title }}
       </div>
       <VSpacer />
-      <div v-if="includeTotal" class="overline mb-3">
+      <div
+        v-if="includeTotal"
+        class="overline mb-3"
+      >
         total: <strong>{{ items.length }}</strong>
       </div>
     </div>
-    <svg class="graph" :viewBox="viewBox">
+    <svg
+      class="graph"
+      :viewBox="viewBox"
+    >
       <g :transform="`translate(40.5,${cellSize * 1.5})`">
         <g
           v-for="(year, idxYear) in itemsPerDay"
@@ -42,7 +48,10 @@
           </text>
         </g>
         <g class="calendars">
-          <g v-for="(year, idxYear) in itemsPerDay" :key="'year_' + idxYear">
+          <g
+            v-for="(year, idxYear) in itemsPerDay"
+            :key="'year_' + idxYear"
+          >
             <text
               :x="0.5"
               :y="idxYear * calendarHeight - cellSize"
@@ -50,7 +59,10 @@
             >
               {{ year[0] }}
             </text>
-            <g v-for="(item, idxItem) in year[1]" :key="'day_' + idxItem">
+            <g
+              v-for="(item, idxItem) in year[1]"
+              :key="'day_' + idxItem"
+            >
               <rect
                 :width="cellSize - cellSpacing"
                 :height="cellSize - cellSpacing"
@@ -76,7 +88,10 @@
           >
             {{ legendLabel }}
           </text>
-          <g v-for="(square, idx) in legendSquares" :key="'legend_' + idx">
+          <g
+            v-for="(square, idx) in legendSquares"
+            :key="'legend_' + idx"
+          >
             <rect
               :width="(cellSize - cellSpacing) * 2"
               :height="(cellSize - cellSpacing) / 2"

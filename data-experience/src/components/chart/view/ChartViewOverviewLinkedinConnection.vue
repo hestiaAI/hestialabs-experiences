@@ -3,10 +3,16 @@
     <VRow dense>
       <VCol cols="12">
         <div :id="'connections-chart' + graphId">
-          <span class="font-weight-bold" v-text="messages['Cumulative number of connections']" />
+          <span
+            class="font-weight-bold"
+            v-text="messages['Cumulative number of connections']"
+          />
           <ChartViewFilters />
         </div>
-        <div :id="'range-chart' + graphId" class="range-chart">
+        <div
+          :id="'range-chart' + graphId"
+          class="range-chart"
+        >
           <ChartViewTextSelectTimeRange />
         </div>
       </VCol>
@@ -15,7 +21,10 @@
       <VCol cols="4">
         <div :id="'company-chart' + graphId">
           <div style="display: flex">
-            <span class="font-weight-bold" v-text="messages['Company']" />
+            <span
+              class="font-weight-bold"
+              v-text="messages['Company']"
+            />
             <VSpacer />
             <div id="company-search" />
           </div>
@@ -24,14 +33,20 @@
       </VCol>
       <VCol cols="4">
         <div :id="'week-chart' + graphId">
-          <span v-t="messages['Day']" class="font-weight-bold" />
+          <span
+            v-t="messages['Day']"
+            class="font-weight-bold"
+          />
           <ChartViewFilters />
         </div>
       </VCol>
       <VCol cols="4">
         <div :id="'position-chart' + graphId">
           <div style="display: flex">
-            <span v-t="messages['Position']" class="font-weight-bold" />
+            <span
+              v-t="messages['Position']"
+              class="font-weight-bold"
+            />
             <VSpacer />
             <div id="position-search" />
           </div>

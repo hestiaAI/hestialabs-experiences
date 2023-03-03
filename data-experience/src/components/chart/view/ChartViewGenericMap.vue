@@ -2,10 +2,22 @@
   <VContainer v-if="values.length > 0">
     <VRow>
       <VCol cols="12">
-        <p v-if="total === 0" class="text-subtitle-2" v-t="'records-none'" />
-        <i18n path="records-some" v-else-if="label_" tag="p" class="text-subtitle-2">
+        <p
+          v-if="total === 0"
+          v-t="'records-none'"
+          class="text-subtitle-2"
+        />
+        <i18n
+          v-else-if="label_"
+          path="records-some"
+          tag="p"
+          class="text-subtitle-2"
+        >
           <template #total>
-            <span class="font-weight-bold" v-text="total" />
+            <span
+              class="font-weight-bold"
+              v-text="total"
+            />
           </template>
           <template #label>
             <span v-text="label_" />
@@ -16,7 +28,10 @@
     <template v-if="total > 0">
       <VRow>
         <VCol cols="12">
-          <UnitKepler :args="keplerArgs" :height="mapHeight" />
+          <UnitKepler
+            :args="keplerArgs"
+            :height="mapHeight"
+          />
         </VCol>
       </VRow>
       <template v-if="showButton == true">
@@ -37,10 +52,16 @@
               {{ $t(k('add-noise')) }}
             </VBtn>
           </template>
-          <VCard class="mx-auto" max-width="600">
+          <VCard
+            class="mx-auto"
+            max-width="600"
+          >
             <VCardTitle>{{ $t(k('noise-level')) }}</VCardTitle>
             <VCardText>
-              <VRow class="mb-4" justify="space-between">
+              <VRow
+                class="mb-4"
+                justify="space-between"
+              >
                 <VCol class="text-left">
                   <span
                     class="text-h2 font-weight-light"
@@ -77,7 +98,10 @@
               <VBtn @click="clear">
                 {{ $t('Clear') }}
               </VBtn>
-              <VBtn color="primary" @click="addNoise">
+              <VBtn
+                color="primary"
+                @click="addNoise"
+              >
                 {{ $t('Save') }}
               </VBtn>
             </VCardActions>

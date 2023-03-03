@@ -1,13 +1,19 @@
 <template>
   <form>
     <VRow>
-      <VCol cols="12" md="6">
+      <VCol
+        cols="12"
+        md="6"
+      >
         <VTextField
           label="Name"
           outlined
         />
       </VCol>
-      <VCol cols="12" md="6">
+      <VCol
+        cols="12"
+        md="6"
+      >
         <VTextField
           label="Email"
           outlined

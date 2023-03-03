@@ -5,13 +5,24 @@
         <p class="text-h6">
           {{ $t(kViewBlock('graphTitle')) }}
         </p>
-        <p v-if="total === 0" class="text-subtitle-2">
+        <p
+          v-if="total === 0"
+          class="text-subtitle-2"
+        >
           {{ $t(kViewBlock('graphNoLocation')) }}
         </p>
         <!-- https://kazupon.github.io/vue-i18n/guide/interpolation.html#slots-syntax-usage -->
-        <i18n v-else :path="kViewBlock('locations')" tag="p" class="text-subtitle-2">
+        <i18n
+          v-else
+          :path="kViewBlock('locations')"
+          tag="p"
+          class="text-subtitle-2"
+        >
           <template #total>
-            <span class="font-weight-bold" v-text="total" />
+            <span
+              class="font-weight-bold"
+              v-text="total"
+            />
           </template>
         </i18n>
       </VCol>

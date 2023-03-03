@@ -5,10 +5,16 @@
         <VRow dense>
           <VCol cols="12">
             <div :id="'watch-time-chart' + graphId">
-              <span class="font-weight-bold" v-text="messages['watch-time']" />
+              <span
+                class="font-weight-bold"
+                v-text="messages['watch-time']"
+              />
               <ChartViewFilters />
             </div>
-            <div :id="'range-chart' + graphId" class="range-chart">
+            <div
+              :id="'range-chart' + graphId"
+              class="range-chart"
+            >
               <ChartViewTextSelectTimeRange />
             </div>
           </VCol>
@@ -16,13 +22,19 @@
         <VRow dense>
           <VCol cols="8">
             <div :id="'hour-chart' + graphId">
-              <span v-t="'time-of-day'" class="font-weight-bold" />
+              <span
+                v-t="'time-of-day'"
+                class="font-weight-bold"
+              />
               <ChartViewFilters />
             </div>
           </VCol>
           <VCol cols="4">
             <div :id="'week-chart' + graphId">
-              <span class="font-weight-bold" v-text="messages['day']" />
+              <span
+                class="font-weight-bold"
+                v-text="messages['day']"
+              />
               <ChartViewFilters />
             </div>
           </VCol>
@@ -30,7 +42,10 @@
       </VCol>
       <VCol cols="4">
         <div :id="'content-chart' + graphId">
-          <span class="font-weight-bold" v-text="messages['most-watched']" />
+          <span
+            class="font-weight-bold"
+            v-text="messages['most-watched']"
+          />
           <ChartViewFilters />
         </div>
       </VCol>
@@ -38,25 +53,37 @@
     <ChartViewVRowWebShare dense>
       <VCol cols="4">
         <div :id="'user-chart' + graphId">
-          <span class="font-weight-bold" v-text="messages['Profiles']" />
+          <span
+            class="font-weight-bold"
+            v-text="messages['Profiles']"
+          />
           <ChartViewFilters />
         </div>
       </VCol>
       <VCol cols="4">
         <div :id="'country-chart' + graphId">
-          <span class="font-weight-bold" v-text="messages['country']" />
+          <span
+            class="font-weight-bold"
+            v-text="messages['country']"
+          />
           <ChartViewFilters />
         </div>
       </VCol>
       <VCol cols="4">
         <div :id="'device-chart' + graphId">
-          <span class="font-weight-bold" v-text="messages['device']" />
+          <span
+            class="font-weight-bold"
+            v-text="messages['device']"
+          />
           <ChartViewFilters />
         </div>
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="'dc-data-count' + graphId" class="dc-data-count" />
+      <div
+        :id="'dc-data-count' + graphId"
+        class="dc-data-count"
+      />
     </VRow>
     <UnitFilterableTable v-bind="{ headers: header, items: results, viewBlockTranslationPrefix }" />
   </VContainer>

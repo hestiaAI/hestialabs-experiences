@@ -1,7 +1,10 @@
 <template>
   <div>
     <template v-if="samples.length">
-      <VRow justify="center" dense>
+      <VRow
+        justify="center"
+        dense
+      >
         <VCol align="center">
           <UnitFilesSampleSelector
             :value.sync="selectedSamples"
@@ -11,7 +14,10 @@
         </VCol>
       </VRow>
       <VRow>
-        <VCol align="center" class="font-weight-bold">
+        <VCol
+          align="center"
+          class="font-weight-bold"
+        >
           {{ $t('unit-files.or') }}
         </VCol>
       </VRow>
@@ -52,7 +58,10 @@
           />
         </div>
         <div class="unit-files__files-button">
-          <UnitFilesDialog :file-globs="Object.values(files)" main />
+          <UnitFilesDialog
+            :file-globs="Object.values(files)"
+            main
+          />
         </div>
       </VCol>
     </VRow>

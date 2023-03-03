@@ -6,7 +6,11 @@
         class="d-flex flex-column align-center justify-center"
         :style="`width: 100%; height: ${height}px`"
       >
-        <BaseProgressCircular size="64" width="4" color="primary" />
+        <BaseProgressCircular
+          size="64"
+          width="4"
+          color="primary"
+        />
       </div>
       <iframe
         ref="iframe"

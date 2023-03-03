@@ -1,6 +1,9 @@
 <template>
   <VContainer class="pt-8">
-    <VForm v-if="fileManager !== null" @submit.prevent="sendForm">
+    <VForm
+      v-if="fileManager !== null"
+      @submit.prevent="sendForm"
+    >
       <UnitConsentFormSection
         v-for="(section, index) in consentForm"
         :key="`section-${index}`"
@@ -19,7 +22,10 @@
         included:
         {{ missingRequiredData.join(', ') }}.
       </BaseAlert>
-      <BaseAlert v-if="sentErrorMessage" type="error">
+      <BaseAlert
+        v-if="sentErrorMessage"
+        type="error"
+      >
         <p>Failed to upload results:</p>
         <p>{{ sentErrorMessage }}</p>
         <p>

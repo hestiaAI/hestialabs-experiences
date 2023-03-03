@@ -1,7 +1,10 @@
 <template>
   <VContainer v-if="values.length > 0">
     <VRow>
-      <VCol cols="12" md="7">
+      <VCol
+        cols="12"
+        md="7"
+      >
         <p class="text-h6">
           {{ $t(kViewBlock('graphTitle')) }}
         </p>
@@ -12,16 +15,28 @@
           {{ $t(kViewBlock('graphNoDate')) }}
         </p>
         <!-- https://kazupon.github.io/vue-i18n/guide/interpolation.html#slots-syntax-usage -->
-        <i18n v-else :path="kViewBlock('datedEvents')" tag="p" class="text-subtitle-2">
+        <i18n
+          v-else
+          :path="kViewBlock('datedEvents')"
+          tag="p"
+          class="text-subtitle-2"
+        >
           <template
             v-for="(value, key) in { currMinDate, currMaxDate, total }"
             #[key]
           >
-            <span :key="key" class="font-weight-bold" v-text="value" />
+            <span
+              :key="key"
+              class="font-weight-bold"
+              v-text="value"
+            />
           </template>
         </i18n>
       </VCol>
-      <VCol cols="12" md="2">
+      <VCol
+        cols="12"
+        md="2"
+      >
         <VSelect
           v-model="selectTimeInt"
           :items="intervalNames"
@@ -29,7 +44,10 @@
           @change="drawBarChart"
         />
       </VCol>
-      <VCol cols="12" md="3">
+      <VCol
+        cols="12"
+        md="3"
+      >
         <VSelect
           v-model="selectFiles"
           :items="filesNames"
@@ -38,7 +56,10 @@
           @change="filterFiles"
         >
           <template #prepend-item>
-            <VListItem ripple @click="toggle">
+            <VListItem
+              ripple
+              @click="toggle"
+            >
               <VListItemAction>
                 <VIcon :color="selectFiles.length > 0 ? 'indigo darken-4' : ''">
                   {{ icon }}
@@ -54,7 +75,10 @@
             <span v-if="index === 0">{{
               item.length > 13 ? item.slice(0, 13) + '..' : item
             }}</span>
-            <span v-if="index === 1" class="grey--text text-caption">
+            <span
+              v-if="index === 1"
+              class="grey--text text-caption"
+            >
               ({{ $tc('plusXOther', selectFiles.length - 1) }})
             </span>
           </template>
@@ -76,7 +100,10 @@
             {{ $t('reset') }}
           </VBtn>
         </ChartViewTextSelectTimeRange>
-        <div :id="'range-chart' + graphId" class="range-chart" />
+        <div
+          :id="'range-chart' + graphId"
+          class="range-chart"
+        />
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>

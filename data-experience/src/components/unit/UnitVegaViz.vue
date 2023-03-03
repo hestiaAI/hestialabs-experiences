@@ -6,7 +6,10 @@
         <BaseButtonDownloadData
           v-bind="{ disabled: !blob, extension, filename, data: blob }"
         />
-        <BaseButtonShare file-share v-bind="{ files, disabled: !files }" />
+        <BaseButtonShare
+          file-share
+          v-bind="{ files, disabled: !files }"
+        />
       </VCol>
     </VRow>
   </DataValidator>

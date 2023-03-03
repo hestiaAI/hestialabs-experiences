@@ -1,27 +1,28 @@
 <template>
-<div>
-  <VRow v-if="errorMessage">
-    <VCol>
-      <BaseAlert type="error">
-        {{ errorMessage }}
-      </BaseAlert>
-    </VCol>
-  </VRow>
-  <UnitPipelineViewBlock
-    v-if="fileManager !== null"
-    v-bind="{ data,
-              viewBlockTranslationPrefix,
-              missingFiles, ...viewBlock }">
-    <template v-slot:infoDialog>
-      <UnitFilesDialog
-        v-if="fileGlobs.length > 0 || ['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
-        :all-files="['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
-        :file-globs="fileGlobs"
-        :file-manager="fileManager"
+  <div>
+    <VRow v-if="errorMessage">
+      <VCol>
+        <BaseAlert type="error">
+          {{ errorMessage }}
+        </BaseAlert>
+      </VCol>
+    </VRow>
+    <UnitPipelineViewBlock
+      v-if="fileManager !== null"
+      v-bind="{ data,
+                viewBlockTranslationPrefix,
+                missingFiles, ...viewBlock }"
+    >
+      <template #infoDialog>
+        <UnitFilesDialog
+          v-if="fileGlobs.length > 0 || ['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
+          :all-files="['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
+          :file-globs="fileGlobs"
+          :file-manager="fileManager"
         />
-    </template>
-  </UnitPipelineViewBlock>
-</div>
+      </template>
+    </UnitPipelineViewBlock>
+  </div>
 </template>
 
 <script>

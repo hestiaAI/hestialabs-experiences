@@ -5,11 +5,17 @@
         {{ title }}
       </div>
       <VSpacer />
-      <div v-if="includeTotal" class="overline">
+      <div
+        v-if="includeTotal"
+        class="overline"
+      >
         total: <strong>{{ items.length }}</strong>
       </div>
     </div>
-    <svg class="graph" :viewBox="viewBox">
+    <svg
+      class="graph"
+      :viewBox="viewBox"
+    >
       <g :transform="`translate(40.5,${cellSize * 1.5})`">
         <g class="week-axis">
           <text
@@ -24,7 +30,10 @@
         </g>
 
         <g class="hour-axis">
-          <text y="-20" :x="(hours.length / 2 + 0.5) * cellSize">{{ $t('hour') }}s</text>
+          <text
+            y="-20"
+            :x="(hours.length / 2 + 0.5) * cellSize"
+          >{{ $t('hour') }}s</text>
           <text
             v-for="h in hours"
             :key="`h_${h}`"
@@ -36,7 +45,10 @@
         </g>
 
         <g class="calendar-hour">
-          <g v-for="(item, idx) in itemsPerHour" :key="idx">
+          <g
+            v-for="(item, idx) in itemsPerHour"
+            :key="idx"
+          >
             <rect
               :width="cellSize - cellSpacing"
               :height="cellSize - cellSpacing"
@@ -59,7 +71,10 @@
           >
             {{ legendLabel }}
           </text>
-          <g v-for="(square, idx) in legendSquares" :key="'legend_' + idx">
+          <g
+            v-for="(square, idx) in legendSquares"
+            :key="'legend_' + idx"
+          >
             <rect
               :width="(cellSize - cellSpacing) * 2"
               :height="(cellSize - cellSpacing) / 2"

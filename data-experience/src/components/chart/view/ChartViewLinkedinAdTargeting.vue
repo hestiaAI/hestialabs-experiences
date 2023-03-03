@@ -1,13 +1,19 @@
 <template>
   <VContainer>
     <VExpansionPanels accordion>
-      <VExpansionPanel v-for="{ name, values } in items" :key="name">
+      <VExpansionPanel
+        v-for="{ name, values } in items"
+        :key="name"
+      >
         <VExpansionPanelHeader v-slot="{ open }">
           <VRow no-gutters>
             <VCol cols="4">
               {{ name }}:
             </VCol>
-            <VCol cols="8" class="text--secondary">
+            <VCol
+              cols="8"
+              class="text--secondary"
+            >
               <VFadeTransition leave-absolute>
                 <div
                   v-if="!open"
@@ -45,7 +51,11 @@
               v-for="(value, idx) in values"
               :key="name + value + idx"
             >
-              <VChip outlined color="primary" class="ma-1">
+              <VChip
+                outlined
+                color="primary"
+                class="ma-1"
+              >
                 {{ value }}
               </VChip>
             </div>

@@ -3,19 +3,34 @@
     <ChartViewVRowWebShare>
       <VCol cols="12">
         <VRow>
-          <VCol cols="12" sm="8">
+          <VCol
+            cols="12"
+            sm="8"
+          >
             <div id="volume-chart">
-              <span class="font-weight-bold" v-text="messages['ads-time']" />
+              <span
+                class="font-weight-bold"
+                v-text="messages['ads-time']"
+              />
               <ChartViewFilters />
             </div>
-            <div :id="'range-chart' + graphId" class="range-chart">
+            <div
+              :id="'range-chart' + graphId"
+              class="range-chart"
+            >
               <ChartViewTextSelectTimeRange />
             </div>
           </VCol>
-          <VCol cols="12" sm="4">
+          <VCol
+            cols="12"
+            sm="4"
+          >
             <div id="company-chart">
               <div style="display: flex">
-                <span class="font-weight-bold" v-text="messages['top-adv']" />
+                <span
+                  class="font-weight-bold"
+                  v-text="messages['top-adv']"
+                />
                 <VSpacer />
                 <div id="company-search" />
               </div>
@@ -24,26 +39,44 @@
           </VCol>
         </VRow>
         <VRow>
-          <VCol cols="12" sm="4">
+          <VCol
+            cols="12"
+            sm="4"
+          >
             <div id="engagement-chart">
-              <span class="font-weight-bold" v-text="messages['interactions']" />
+              <span
+                class="font-weight-bold"
+                v-text="messages['interactions']"
+              />
               <ChartViewFilters />
             </div>
           </VCol>
-          <VCol cols="12" sm="4">
+          <VCol
+            cols="12"
+            sm="4"
+          >
             <div id="type-chart">
               <div style="display: flex">
-                <span class="font-weight-bold" v-text="messages['targeting-type']" />
+                <span
+                  class="font-weight-bold"
+                  v-text="messages['targeting-type']"
+                />
                 <VSpacer />
                 <div id="type-search" />
               </div>
               <ChartViewFilters />
             </div>
           </VCol>
-          <VCol cols="12" sm="4">
+          <VCol
+            cols="12"
+            sm="4"
+          >
             <div id="value-chart">
               <div style="display: flex">
-                <span class="font-weight-bold" v-text="messages['targeting-criteria']" />
+                <span
+                  class="font-weight-bold"
+                  v-text="messages['targeting-criteria']"
+                />
                 <VSpacer />
                 <div id="value-search" />
               </div>
@@ -52,7 +85,10 @@
           </VCol>
         </VRow>
         <VRow>
-          <div id="dc-data-count" class="dc-data-count" />
+          <div
+            id="dc-data-count"
+            class="dc-data-count"
+          />
         </VRow>
       </VCol>
     </ChartViewVRowWebShare>

@@ -1,7 +1,10 @@
 <template>
   <VContainer>
     <ChartViewVRowWebShare>
-      <VCol cols="12" md="8">
+      <VCol
+        cols="12"
+        md="8"
+      >
         <VRow>
           <VCol cols="8">
             <p>
@@ -9,7 +12,10 @@
               <strong>{{ timeInterval }}</strong>
             </p>
           </VCol>
-          <VCol cols="4" class="text-right">
+          <VCol
+            cols="4"
+            class="text-right"
+          >
             <VCheckbox
               v-model="checkbox"
               dense
@@ -19,9 +25,15 @@
           </VCol>
         </VRow>
         <div id="line-chart" />
-        <div :id="'range-chart' + graphId" class="range-chart" />
+        <div
+          :id="'range-chart' + graphId"
+          class="range-chart"
+        />
       </VCol>
-      <VCol cols="12" md="4">
+      <VCol
+        cols="12"
+        md="4"
+      >
         <p>Information Type</p>
         <div id="row-chart" />
       </VCol>
@@ -45,7 +57,12 @@
         </VRadioGroup>
       </VCol>
       <VCol cols="3">
-        <VBtn class="ma-2" outlined color="indigo" @click="resetAll()">
+        <VBtn
+          class="ma-2"
+          outlined
+          color="indigo"
+          @click="resetAll()"
+        >
           Reset all filters
         </VBtn>
       </VCol>
@@ -53,7 +70,10 @@
     <VRow>
       <VCol cols="12">
         <VTabs v-model="tab">
-          <VTab href="#overview" @click="resetSourceFilter">
+          <VTab
+            href="#overview"
+            @click="resetSourceFilter"
+          >
             Overview
           </VTab>
           <VTab href="#details">
@@ -67,7 +87,12 @@
               <strong>{{ total }}</strong> things that happened between
               <strong>{{ currMinDateStr }}</strong> and
               <strong>{{ currMaxDateStr }}</strong>
-              <VBtn class="ma-2" outlined color="indigo" @click="tabDetails()">
+              <VBtn
+                class="ma-2"
+                outlined
+                color="indigo"
+                @click="tabDetails()"
+              >
                 See All
               </VBtn>
             </p>
@@ -90,7 +115,10 @@
                   </VListItemContent>
                 </template>
 
-                <VListItem v-for="child in item.items" :key="child.title">
+                <VListItem
+                  v-for="child in item.items"
+                  :key="child.title"
+                >
                   <VListItemContent>
                     <VListItemTitle>
                       <strong>{{ child.count }}</strong>
@@ -114,9 +142,16 @@
             </VList>
           </VTabItem>
           <VTabItem value="details">
-            <p v-if="currSourceFilter" class="text-subtitle-1 text-right">
+            <p
+              v-if="currSourceFilter"
+              class="text-subtitle-1 text-right"
+            >
               {{ $t('Current filter') }}
-              <VBtn small elevation="2" @click="resetSourceFilter">
+              <VBtn
+                small
+                elevation="2"
+                @click="resetSourceFilter"
+              >
                 <strong>{{ currSourceFilter }}</strong>
                 <VIcon x-small>
                   $vuetify.icons.mdiClose

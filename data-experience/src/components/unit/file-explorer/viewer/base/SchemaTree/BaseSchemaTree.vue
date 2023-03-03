@@ -25,7 +25,10 @@
     <VCardSubtitle>
       {{ schema['description'] }}
       <div class="d-flex mt-4">
-        <div v-if="schema.unique" class="mr-5">
+        <div
+          v-if="schema.unique"
+          class="mr-5"
+        >
           <span class="font-weight-bold mr-3">Unique values:</span>
           <VChip
             outlined
@@ -36,7 +39,10 @@
             {{ schema.unique }}
           </VChip>
         </div>
-        <div v-if="schema.default" class="mr-5">
+        <div
+          v-if="schema.default"
+          class="mr-5"
+        >
           <span class="font-weight-bold mr-3">Default value:</span>
           <VChip
             outlined
@@ -47,7 +53,10 @@
             {{ schema.default }}
           </VChip>
         </div>
-        <div v-if="schema.regex" class="mr-5">
+        <div
+          v-if="schema.regex"
+          class="mr-5"
+        >
           <span class="font-weight-bold mr-3">Regex:</span>
           <VChip
             outlined
@@ -58,7 +67,10 @@
             {{ schema.regex }}
           </VChip>
         </div>
-        <div v-if="schema.choices" class="mr-5">
+        <div
+          v-if="schema.choices"
+          class="mr-5"
+        >
           <span class="font-weight-bold mr-3">Choices:</span>
           <VChip
             v-for="(choice, idx) in schema.choices.split(',')"

@@ -11,72 +11,135 @@
       </p>
     </VRow>
     <ChartViewVRowWebShare>
-      <VCol cols="12" md="8">
+      <VCol
+        cols="12"
+        md="8"
+      >
         <VRow>
-          <VCol cols="12" md="12">
+          <VCol
+            cols="12"
+            md="12"
+          >
             <div id="price-chart">
-              <span class="font-weight-bold" v-text="messages['Cumulative expenses']" />
+              <span
+                class="font-weight-bold"
+                v-text="messages['Cumulative expenses']"
+              />
               <ChartViewFilters />
             </div>
             <div id="hour-chart">
               <ChartViewTextSelectTimeRange>
-                <a v-t="'reset'" class="reset" style="display: none" />
+                <a
+                  v-t="'reset'"
+                  class="reset"
+                  style="display: none"
+                />
               </ChartViewTextSelectTimeRange>
             </div>
           </VCol>
         </VRow>
         <VRow>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div id="service-chart">
-              <span class="font-weight-bold" v-text="messages['Service used']" />
+              <span
+                class="font-weight-bold"
+                v-text="messages['Service used']"
+              />
               <ChartViewFilters />
             </div>
           </VCol>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div id="week-chart">
-              <span class="font-weight-bold" v-text="messages['Day of week']" />
+              <span
+                class="font-weight-bold"
+                v-text="messages['Day of week']"
+              />
               <ChartViewFilters />
             </div>
           </VCol>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div id="address-chart">
-              <span class="font-weight-bold" v-text="messages['Begin trip address']" />
+              <span
+                class="font-weight-bold"
+                v-text="messages['Begin trip address']"
+              />
               <ChartViewFilters />
             </div>
           </VCol>
         </VRow>
       </VCol>
-      <VCol cols="12" md="4">
+      <VCol
+        cols="12"
+        md="4"
+      >
         <VCard class="general-info">
           <VCardTitle>{{ messages['General information'] }}</VCardTitle>
           <VCardSubtitle />
           <VCardText>
             <VContainer>
               <VRow dense>
-                <VCol cols="12" md="6">
-                  <VSheet outlined :color="colorPalette[0]" rounded>
-                    <VCard elevation="0" outlined>
+                <VCol
+                  cols="12"
+                  md="6"
+                >
+                  <VSheet
+                    outlined
+                    :color="colorPalette[0]"
+                    rounded
+                  >
+                    <VCard
+                      elevation="0"
+                      outlined
+                    >
                       <VCardTitle class="justify-center text-caption">
                         {{ messages['Orders'] }}
                       </VCardTitle>
                       <VCardSubtitle />
                       <VCardText class="text-h4 text-center">
                         <div id="number-trip" />
-                        <span class="text-subtitle-1" v-text="messages['trips']" />
+                        <span
+                          class="text-subtitle-1"
+                          v-text="messages['trips']"
+                        />
                       </VCardText>
                     </VCard>
                   </VSheet>
                 </VCol>
-                <VCol cols="12" md="6">
-                  <VSheet outlined :color="colorPalette[0]" rounded>
-                    <VCard elevation="0" outlined>
+                <VCol
+                  cols="12"
+                  md="6"
+                >
+                  <VSheet
+                    outlined
+                    :color="colorPalette[0]"
+                    rounded
+                  >
+                    <VCard
+                      elevation="0"
+                      outlined
+                    >
                       <VCardTitle class="justify-center text-caption">
                         {{ messages['Speed'] }}
                       </VCardTitle>
                       <VCardSubtitle />
                       <VCardText class="text-h4 text-center">
-                        <div id="number-speed-avg" class="font-weight-bold" />
-                        <span class="text-subtitle-1" v-text="messages['mph']" />
+                        <div
+                          id="number-speed-avg"
+                          class="font-weight-bold"
+                        />
+                        <span
+                          class="text-subtitle-1"
+                          v-text="messages['mph']"
+                        />
                       </VCardText>
                     </VCard>
                   </VSheet>
@@ -88,23 +151,44 @@
                 <thead>
                   <tr>
                     <th class="text-left" />
-                    <th class="text-left" v-text="messages['Total']" />
-                    <th class="text-left" v-text="messages['Average']" />
+                    <th
+                      class="text-left"
+                      v-text="messages['Total']"
+                    />
+                    <th
+                      class="text-left"
+                      v-text="messages['Average']"
+                    />
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="font-weight-bold" v-text="messages['Price']" />
-                    <td class="text-h6" v-text="priceTotalNumber" />
-                    <td class="text-h6" v-text="priceAvgNumber" />
+                    <td
+                      class="font-weight-bold"
+                      v-text="messages['Price']"
+                    />
+                    <td
+                      class="text-h6"
+                      v-text="priceTotalNumber"
+                    />
+                    <td
+                      class="text-h6"
+                      v-text="priceAvgNumber"
+                    />
                   </tr>
                   <tr
                     v-for="{ heading, ids, metric } in generalInformationRows"
                     :key="heading"
                   >
                     <td v-text="messages[heading]" />
-                    <td v-for="id in ids" :key="id">
-                      <span :id="id" class="text-h6" /> <span v-text="messages[metric]" />
+                    <td
+                      v-for="id in ids"
+                      :key="id"
+                    >
+                      <span
+                        :id="id"
+                        class="text-h6"
+                      /> <span v-text="messages[metric]" />
                     </td>
                   </tr>
                 </tbody>
@@ -112,7 +196,12 @@
             </VSimpleTable>
           </VCardText>
           <VCardActions>
-            <BaseButton elevation="2" block @click="resetAll()" :color="colorPalette[0]">
+            <BaseButton
+              elevation="2"
+              block
+              :color="colorPalette[0]"
+              @click="resetAll()"
+            >
               {{ messages['Reset all filters'] }}
             </BaseButton>
           </VCardActions>

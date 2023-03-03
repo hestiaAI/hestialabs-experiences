@@ -1,10 +1,18 @@
 <template>
-  <VDialog v-model="show" width="500" scrollable style="z-index: 2000">
+  <VDialog
+    v-model="show"
+    width="500"
+    scrollable
+    style="z-index: 2000"
+  >
     <template #activator="{ on }">
       <VTooltip :[tooltipPosition]="true">
         <template #activator="{ on: onTooltip }">
           <span v-on="onTooltip">
-            <VIcon class="ma-2" v-on="on">{{ mdiIconResolved }}</VIcon>
+            <VIcon
+              class="ma-2"
+              v-on="on"
+            >{{ mdiIconResolved }}</VIcon>
           </span>
         </template>
         <span>{{ tooltipLabel }}</span>
@@ -17,7 +25,11 @@
       <VDivider />
       <VCardActions>
         <VSpacer />
-        <VBtn color="primary" text @click="show = false">
+        <VBtn
+          color="primary"
+          text
+          @click="show = false"
+        >
           {{ $t('Close') }}
         </VBtn>
       </VCardActions>

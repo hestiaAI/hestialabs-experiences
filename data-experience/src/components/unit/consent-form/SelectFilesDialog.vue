@@ -52,10 +52,18 @@
 
       <VCardActions>
         <VSpacer />
-        <VBtn color="primary" text @click="clear">
+        <VBtn
+          color="primary"
+          text
+          @click="clear"
+        >
           {{ $t(k('clearButton')) }}
         </VBtn>
-        <VBtn color="primary" text @click="ok">
+        <VBtn
+          color="primary"
+          text
+          @click="ok"
+        >
           OK
         </VBtn>
       </VCardActions>

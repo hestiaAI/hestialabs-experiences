@@ -3,32 +3,48 @@
     <ChartViewVRowWebShare>
       <VCol cols="12">
         <VRow>
-          <VCol cols="12" md="12">
+          <VCol
+            cols="12"
+            md="12"
+          >
             <div id="like-chart">
               <strong>Likes you've made over time</strong>
               <ChartViewFilters />
             </div>
             <div id="range-chart">
               <ChartViewTextSelectTimeRange>
-                <a v-t="'reset'" class="reset" style="display: none" />
+                <a
+                  v-t="'reset'"
+                  class="reset"
+                  style="display: none"
+                />
               </ChartViewTextSelectTimeRange>
             </div>
           </VCol>
         </VRow>
         <VRow>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div id="hour-chart">
               <strong>Time of day</strong>
               <ChartViewFilters />
             </div>
           </VCol>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div id="week-chart">
               <strong>Day</strong>
               <ChartViewFilters />
             </div>
           </VCol>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div id="matched-chart">
               <strong>Matched</strong>
               <ChartViewFilters />
@@ -38,7 +54,10 @@
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="'dc-data-count' + graphId" class="dc-data-count">
+      <div
+        :id="'dc-data-count' + graphId"
+        class="dc-data-count"
+      >
         <span class="filter-count" />
         selected out of
         <span class="total-count" />

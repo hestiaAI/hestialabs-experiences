@@ -5,7 +5,10 @@
       left
     >
       <template #activator="{ on }">
-        <VIcon v-on="on" class="ml-2 files-dialog__icon">
+        <VIcon
+          class="ml-2 files-dialog__icon"
+          v-on="on"
+        >
           $vuetify.icons.mdiFileMultipleOutline
         </VIcon>
       </template>
@@ -13,9 +16,18 @@
         v-t="'All files are used'"
       />
     </VTooltip>
-    <VDialog v-else v-model="show" width="500" style="z-index: 2000" scrollable>
+    <VDialog
+      v-else
+      v-model="show"
+      width="500"
+      style="z-index: 2000"
+      scrollable
+    >
       <template #activator="{ on }">
-        <VTooltip :right="main" :left="!main">
+        <VTooltip
+          :right="main"
+          :left="!main"
+        >
           <template #activator="{ on: onTooltip }">
             <span v-on="onTooltip">
               <VIcon
@@ -32,14 +44,23 @@
         <VDivider />
         <VCardText>
           <template v-if="fileGlobs && fileGlobs.length > 0">
-            <p v-if="main" class="mt-4">
+            <p
+              v-if="main"
+              class="mt-4"
+            >
               {{ $t('unit-files-dialog.used') }}
             </p>
-            <p v-else class="mt-4">
+            <p
+              v-else
+              class="mt-4"
+            >
               {{ $t('unit-files-dialog.required') }}
             </p>
             <ul>
-              <li v-for="glob in fileGlobs" :key="glob">
+              <li
+                v-for="glob in fileGlobs"
+                :key="glob"
+              >
                 {{ glob }}
               </li>
             </ul>
@@ -59,10 +80,16 @@
               </ul>
             </template>
           </template>
-          <p v-else class="mt-4">
+          <p
+            v-else
+            class="mt-4"
+          >
             {{ $t('unit-files-dialog.no-files') }}
           </p>
-          <p v-if="main" class="mt-4">
+          <p
+            v-if="main"
+            class="mt-4"
+          >
             {{ $t('unit-files-dialog.all-files-1') }}
             <VIcon>$vuetify.icons.mdiFileMultipleOutline</VIcon>
             {{ $t('unit-files-dialog.all-files-2') }}
@@ -73,7 +100,11 @@
 
         <VCardActions>
           <VSpacer />
-          <VBtn color="primary" text @click="show = false">
+          <VBtn
+            color="primary"
+            text
+            @click="show = false"
+          >
             {{ $t('Close') }}
           </VBtn>
         </VCardActions>

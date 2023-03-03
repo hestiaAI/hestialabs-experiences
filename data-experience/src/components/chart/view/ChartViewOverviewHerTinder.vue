@@ -3,14 +3,20 @@
     <ChartViewVRowWebShare>
       <VCol cols="12">
         <VRow>
-          <VCol cols="12" md="8">
+          <VCol
+            cols="12"
+            md="8"
+          >
             <div :id="`likes-chart-${graphId}`">
               <div style="display: flex">
                 <strong>Likes / Passes / Matches per month</strong>
               </div>
             </div>
           </VCol>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div :id="`app-chart-${graphId}`">
               <div style="display: flex">
                 <strong>App</strong>
@@ -20,14 +26,20 @@
           </VCol>
         </VRow>
         <VRow>
-          <VCol cols="12" md="8">
+          <VCol
+            cols="12"
+            md="8"
+          >
             <div :id="`messages-chart-${graphId}`">
               <div style="display: flex">
                 <strong>Messages per month</strong>
               </div>
             </div>
           </VCol>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div :id="`sexualOrientations-chart-${graphId}`">
               <div style="display: flex">
                 <strong>Sexual Orientations</strong>
@@ -39,7 +51,10 @@
       </VCol>
     </ChartViewVRowWebShare>
     <VRow>
-      <div :id="`dc-data-count-${graphId}`" class="dc-data-count" />
+      <div
+        :id="`dc-data-count-${graphId}`"
+        class="dc-data-count"
+      />
     </VRow>
     <VRow>
       <VCol cols="12">

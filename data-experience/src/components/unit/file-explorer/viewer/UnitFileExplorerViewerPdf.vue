@@ -1,5 +1,9 @@
 <template>
-  <iframe :src="path" width="100%" height="500px" />
+  <iframe
+    :src="path"
+    width="100%"
+    height="500px"
+  />
 </template>
 
 <script>

@@ -1,14 +1,23 @@
 <template>
   <div v-if="customPipelineOptions">
-    <div v-if="options" class="d-flex justify-center">
-      <VSwitch v-model="optionsVisible" label="Edit options" />
+    <div
+      v-if="options"
+      class="d-flex justify-center"
+    >
+      <VSwitch
+        v-model="optionsVisible"
+        label="Edit options"
+      />
     </div>
     <VExpandTransition>
       <div
         v-if="optionsVisible"
         class="d-flex flex-column justify-center align-center"
       >
-        <CodeEditor v-model="options" language="json" />
+        <CodeEditor
+          v-model="options"
+          language="json"
+        />
         <BaseButton
           v-bind="{ progress, status, error, disabled }"
           text="Run"

@@ -1,6 +1,9 @@
 <template>
   <VContainer>
-    <VCard class="pa-2" flat>
+    <VCard
+      class="pa-2"
+      flat
+    >
       <VCardTitle class="text-h5 font-weight-bold justify-center mb-3">
         Explore the data from multiple participants
       </VCardTitle>
@@ -17,7 +20,10 @@
         </VRow>
         <VRow>
           <VCol align="center">
-            <VCard height="500" class="d-flex flex-column">
+            <VCard
+              height="500"
+              class="d-flex flex-column"
+            >
               <VCardTitle class="mb-2">
                 <span>Fetching data</span>
                 <VSpacer />
@@ -66,11 +72,21 @@
               <VCardText>
                 <span v-if="!nbFiles">
                   No files retrieved on the server yet</span>
-                <VListItemGroup v-else v-model="selectedFiles" multiple>
-                  <VListItem v-for="file in fileItems" :key="file.filename">
+                <VListItemGroup
+                  v-else
+                  v-model="selectedFiles"
+                  multiple
+                >
+                  <VListItem
+                    v-for="file in fileItems"
+                    :key="file.filename"
+                  >
                     <template #default="{ active }">
                       <VListItemAction>
-                        <VCheckbox :input-value="active" color="primary" />
+                        <VCheckbox
+                          :input-value="active"
+                          color="primary"
+                        />
                       </VListItemAction>
 
                       <VListItemContent>
@@ -111,7 +127,10 @@
             </VCard>
           </VCol>
         </VRow>
-        <div align="center" class="mt-3">
+        <div
+          align="center"
+          class="mt-3"
+        >
           <VFileInput
             v-model="privateKey"
             accept=".txt"

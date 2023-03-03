@@ -10,7 +10,10 @@
           <strong>{{ nbUser }}</strong> users.
         </p>
       </VCol>
-      <VCol cols="12" md="6">
+      <VCol
+        cols="12"
+        md="6"
+      >
         <ChartViewHeatMapHour
           v-bind="{ headers, dateAccessor, colorPalette }"
           :values="messageReceived"
@@ -19,7 +22,10 @@
           include-total
         />
       </VCol>
-      <VCol cols="12" md="6">
+      <VCol
+        cols="12"
+        md="6"
+      >
         <ChartViewHeatMapHour
           v-bind="{ headers, dateAccessor, colorPalette }"
           :values="messageSent"

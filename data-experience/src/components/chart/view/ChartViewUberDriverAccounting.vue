@@ -1,65 +1,85 @@
 <template>
   <div class="ma-0 pa-0">
-  <VContainer>
-    <VRow class="d-flex  align-stretch justify-center">
-      <VCol v-for="(overview, index) in overviews" :key="index" :cols="2" class="pa-0">
-        <VCard height="100%" flat>
+    <VContainer>
+      <VRow class="d-flex  align-stretch justify-center">
+        <VCol
+          v-for="(overview, index) in overviews"
+          :key="index"
+          :cols="2"
+          class="pa-0"
+        >
+          <VCard
+            height="100%"
+            flat
+          >
             <VListItem two-line>
               <VListItemContent>
                 <div class="text-overline mb-1">
-                  {{overview.title}}
+                  {{ overview.title }}
                 </div>
                 <VListItemTitle class="text-h4 text--primary font-weight-bold">
-                    {{numberFormatter(overview.value)}}
-                    <span class="caption">
-                    {{overview.suffix}}
+                  {{ numberFormatter(overview.value) }}
+                  <span class="caption">
+                    {{ overview.suffix }}
                   </span>
                 </VListItemTitle>
               </VListItemContent>
-          </VListItem>
-        </VCard>
-      </VCol>
-      <VCol cols="2">
-        <VBtn
-          color="primary"
-          outlined
-          dark
-          @click="drawer = true"
-        >
-          More Options
-        </VBtn>
-      </VCol>
-    </VRow>
-    <VRow>
-      <VCol cols="12">
-        <UnitFilterableTable v-bind="{ headers: header, items: results, viewBlockTranslationPrefix }" />
-      </VCol>
-    </VRow>
-    <span class="caption">* Km Cost to be covered: This value is computed with the following formula: <strong>Km * Cost per kilometre</strong></span><br>
-    <span class="caption">** Theoritical wage: This value is computed with the following formula: <strong>Time * Multiplying factor * Wage</strong></span>
-  </VContainer>
-  <VNavigationDrawer
+            </VListItem>
+          </VCard>
+        </VCol>
+        <VCol cols="2">
+          <VBtn
+            color="primary"
+            outlined
+            dark
+            @click="drawer = true"
+          >
+            More Options
+          </VBtn>
+        </VCol>
+      </VRow>
+      <VRow>
+        <VCol cols="12">
+          <UnitFilterableTable v-bind="{ headers: header, items: results, viewBlockTranslationPrefix }" />
+        </VCol>
+      </VRow>
+      <span class="caption">* Km Cost to be covered: This value is computed with the following formula: <strong>Km * Cost per kilometre</strong></span><br>
+      <span class="caption">** Theoritical wage: This value is computed with the following formula: <strong>Time * Multiplying factor * Wage</strong></span>
+    </VContainer>
+    <VNavigationDrawer
       v-model="drawer"
       fixed
       width="280px"
       temporary
     >
       <div class="d-flex ma-3">
-        <div class="text-h6">Options</div>
-        <VSpacer/>
-        <VIcon @click="drawer = false">$vuetify.icons.mdiClose</VIcon>
+        <div class="text-h6">
+          Options
+        </div>
+        <VSpacer />
+        <VIcon @click="drawer = false">
+          $vuetify.icons.mdiClose
+        </VIcon>
       </div>
       <VListItem>
         <VListItemContent>
           <VListItemTitle>Date range</VListItemTitle>
-          <div class="caption">The date range to include.</div>
+          <div class="caption">
+            The date range to include.
+          </div>
           <div class="d-flex">
-            <BaseDateSelector v-model="form.startDate" label="From"></BaseDateSelector>
-            <BaseDateSelector v-model="form.endDate" label="To"></BaseDateSelector>
+            <BaseDateSelector
+              v-model="form.startDate"
+              label="From"
+            />
+            <BaseDateSelector
+              v-model="form.endDate"
+              label="To"
+            />
           </div>
         </VListItemContent>
       </VListItem>
-       <VListItem>
+      <VListItem>
         <VListItemContent>
           <VListItemTitle>Kilometric cost</VListItemTitle>
           <div class="caption">
@@ -67,12 +87,12 @@
             <a href="https://www.tcs.ch/fr/tests-conseils/conseils/achat-vente-vehicule/recherche-auto-comparaison.php">Calculate yours according to your car.</a>
           </div>
           <VTextField
-            label="Costs per kilometre"
             v-model="form.kmCost"
+            label="Costs per kilometre"
             :step="0.01"
             type="number"
             prefix="CHF"
-          ></VTextField>
+          />
         </VListItemContent>
       </VListItem>
       <VListItem>
@@ -83,12 +103,12 @@
             <a href="https://www.eda.admin.ch/missions/mission-onu-geneve/en/home/manual-regime-privileges-and-immunities/introduction/manual-labour-law/Salaire-minimum-dans-le-canton-de-Geneve.html">eda.admin.ch</a>.<br>
           </div>
           <VTextField
-            label="Costs per hour"
             v-model="form.wage"
+            label="Costs per hour"
             :step="0.1"
             type="number"
             prefix="CHF"
-          ></VTextField>
+          />
         </VListItemContent>
       </VListItem>
       <VListItem>
@@ -98,11 +118,11 @@
             Decide on the temporal granularity at which you will group the data.
           </div>
           <VSelect
+            v-model="form.groupBy"
             :items="Object.keys(aggregations)"
             :menu-props="{ bottom: true, offsetY: true }"
-            v-model="form.groupBy"
             label="Group by"
-          ></VSelect>
+          />
         </VListItemContent>
       </VListItem>
       <VListItem>
@@ -121,7 +141,7 @@
                 label="Day"
                 :step="0.1"
                 type="number"
-              ></VTextField>
+              />
             </VCol>
             <VCol cols="4">
               <VTextField
@@ -129,7 +149,7 @@
                 label="Night"
                 :step="0.1"
                 type="number"
-              ></VTextField>
+              />
             </VCol>
           </VRow>
           <VRow dense>
@@ -142,7 +162,7 @@
                 label="Day"
                 :step="0.1"
                 type="number"
-              ></VTextField>
+              />
             </VCol>
             <VCol cols="4">
               <VTextField
@@ -150,12 +170,12 @@
                 label="Night"
                 :step="0.1"
                 type="number"
-              ></VTextField>
+              />
             </VCol>
           </VRow>
         </VListItemContent>
       </VListItem>
-  </VNavigationDrawer>
+    </VNavigationDrawer>
   </div>
 </template>
 

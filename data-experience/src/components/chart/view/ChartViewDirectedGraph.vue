@@ -1,6 +1,9 @@
 <template>
   <VContainer>
-    <div :id="graphId" style="position: relative" />
+    <div
+      :id="graphId"
+      style="position: relative"
+    />
     <div>
       <p>
         {{ $t('directed-graph-disclaimer') }}

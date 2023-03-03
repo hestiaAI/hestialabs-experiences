@@ -1,26 +1,51 @@
 <template>
   <VRow>
     <template v-if="filterCount === totalCount">
-      <i18n tag="div" :path="kViewBlock('selected-all')">
+      <i18n
+        tag="div"
+        :path="kViewBlock('selected-all')"
+      >
         <template #totalCount>
-          <span class="font-weight-bold" v-text="totalCount" />
+          <span
+            class="font-weight-bold"
+            v-text="totalCount"
+          />
         </template>
-        <template v-if="rowLabel" #rowLabel>
+        <template
+          v-if="rowLabel"
+          #rowLabel
+        >
           {{ rowLabel }}
         </template>
       </i18n>
       <span v-t="'click-graph'" />
     </template>
     <template v-else>
-      <i18n tag="div" :path="kViewBlock('selected-some')">
-        <template v-for="(v, k) in { filterCount, totalCount }" #[k]>
-          <span :key="k" class="font-weight-bold" v-text="v" />
+      <i18n
+        tag="div"
+        :path="kViewBlock('selected-some')"
+      >
+        <template
+          v-for="(v, k) in { filterCount, totalCount }"
+          #[k]
+        >
+          <span
+            :key="k"
+            class="font-weight-bold"
+            v-text="v"
+          />
         </template>
-        <template v-if="rowLabel" #rowLabel>
+        <template
+          v-if="rowLabel"
+          #rowLabel
+        >
           {{ rowLabel }}
         </template>
       </i18n>
-      <span>&nbsp;| <a v-t="'Reset All'" @click="resetAll" /></span>
+      <span>&nbsp;| <a
+        v-t="'Reset All'"
+        @click="resetAll"
+      /></span>
     </template>
   </VRow>
 </template>

@@ -1,9 +1,8 @@
-import path from 'path'
+import normalize from 'path-normalize'
 import { JSONPath } from 'jsonpath-plus'
 import micromatch from 'micromatch'
 import Ajv from 'ajv'
 const ajv = new Ajv()
-const posixPath = path.posix || path
 
 export function createAccessor(filePath, jsonPath, jsonSchema) {
   const accessor = {}
@@ -20,7 +19,7 @@ export function createAccessor(filePath, jsonPath, jsonSchema) {
 }
 
 export function matchNormalized(name, pattern) {
-  const normalizedPattern = posixPath.normalize(pattern)
+  const normalizedPattern = normalize(pattern)
   return micromatch.isMatch(name, normalizedPattern)
 }
 

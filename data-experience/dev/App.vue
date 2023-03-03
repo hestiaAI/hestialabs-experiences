@@ -1,11 +1,14 @@
 <template>
   <VApp>
     <VMain>
-      <div class="d-flex-column justify-center" style="width: 100%;">
+      <div
+        class="d-flex-column justify-center"
+        style="width: 100%;"
+      >
         <div class="dev-toolbar">
           <VSelect
-            label="Experience"
             v-model="experience"
+            label="Experience"
             :items="availableExperiences"
             outlined
             dense
@@ -15,8 +18,8 @@
             style="margin: auto; width: 200px;"
           />
           <VSelect
-            label="Bubble"
             v-model="bubble"
+            label="Bubble"
             :items="bubbles"
             outlined
             dense

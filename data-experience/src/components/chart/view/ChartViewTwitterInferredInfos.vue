@@ -1,10 +1,16 @@
 <template>
   <VContainer>
     <VRow>
-      <VCol cols="12" md="6">
+      <VCol
+        cols="12"
+        md="6"
+      >
         <h3 v-text="messages.itemsTitle" />
         <VList>
-          <VListItem v-for="{ id, value } in items" :key="id">
+          <VListItem
+            v-for="{ id, value } in items"
+            :key="id"
+          >
             <VListItemContent>
               <div class="d-flex justify-space-between">
                 <span v-text="messages.items?.[id].title" />
@@ -12,11 +18,19 @@
                   v-if="Array.isArray(value)"
                   class="d-flex flex-column flex-md-row flex-wrap"
                 >
-                  <VChip v-for="l in value" :key="l" class="ma-2" label>
+                  <VChip
+                    v-for="l in value"
+                    :key="l"
+                    class="ma-2"
+                    label
+                  >
                     {{ l }}
                   </VChip>
                 </div>
-                <span v-else v-text="value" />
+                <span
+                  v-else
+                  v-text="value"
+                />
               </div>
             </VListItemContent>
             <VListItemIcon>
@@ -28,7 +42,11 @@
               >
                 <template #activator="{ on, attrs }">
                   <VHover>
-                    <VIcon color="" v-bind="attrs" v-on="on">
+                    <VIcon
+                      color=""
+                      v-bind="attrs"
+                      v-on="on"
+                    >
                       $vuetify.icons.mdiInformationOutline
                     </VIcon>
                   </VHover>
@@ -53,7 +71,10 @@
         md="6"
         align="center"
       >
-        <VCard max-width="" height="100%">
+        <VCard
+          max-width=""
+          height="100%"
+        >
           <VCardTitle>
             {{ messages.tables?.[id].title }}
             <VSpacer />
@@ -64,7 +85,11 @@
               max-width="200"
             >
               <template #activator="{ on, attrs }">
-                <VIcon color="" v-bind="attrs" v-on="on">
+                <VIcon
+                  color=""
+                  v-bind="attrs"
+                  v-on="on"
+                >
                   $vuetify.icons.mdiInformationOutline
                 </VIcon>
               </template>

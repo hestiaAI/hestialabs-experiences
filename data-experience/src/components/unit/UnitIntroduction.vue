@@ -1,6 +1,9 @@
 <template>
   <VContainer>
-    <VCard class="pa-2" flat>
+    <VCard
+      class="pa-2"
+      flat
+    >
       <VCardTitle class="text-h5 font-weight-bold justify-center mb-3">
         {{ $t('load-data.title') }}
       </VCardTitle>
@@ -13,7 +16,10 @@
               class="body-1"
               v-html="$tev(k('dataPortalHtml'), dataPortalHtml)"
             />
-            <p v-else-if="$te(k('dataPortal')) || dataPortal" class="body-1">
+            <p
+              v-else-if="$te(k('dataPortal')) || dataPortal"
+              class="body-1"
+            >
               <!-- localized link -->
               <ExternalLink
                 :href="$tev(k('dataPortal'), dataPortal)"
@@ -22,7 +28,10 @@
               </ExternalLink>
               {{ $t('load-data.text') }}
             </p>
-            <p v-else class="body-1">
+            <p
+              v-else
+              class="body-1"
+            >
               {{ $t("load-data.text-default") }}
             </p>
             <p
@@ -51,7 +60,10 @@
         </VRow>
       </VCardText>
     </VCard>
-    <VCard v-if="tutorialVideos.length" flat>
+    <VCard
+      v-if="tutorialVideos.length"
+      flat
+    >
       <VCardTitle class="text-h5 font-weight-bold justify-center">
         {{ $t('load-data.tutorial-title') }}{{ tutorialVideos.length > 1 ? 's' : '' }}
       </VCardTitle>
@@ -68,8 +80,14 @@
             v-for="(tutorialVideo, idx) in tutorialVideos"
             :key="idx"
           >
-            <VRow align="center" justify="center">
-              <BaseVideo :video-src="tutorialVideo" :height="videoHeight || '400'" />
+            <VRow
+              align="center"
+              justify="center"
+            >
+              <BaseVideo
+                :video-src="tutorialVideo"
+                :height="videoHeight || '400'"
+              />
             </VRow>
           </VCarouselItem>
         </VCarousel>

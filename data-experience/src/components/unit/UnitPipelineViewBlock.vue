@@ -1,6 +1,10 @@
 <template>
   <VContainer>
-    <VOverlay :value="overlay" absolute opacity="0.5">
+    <VOverlay
+      :value="overlay"
+      absolute
+      opacity="0.5"
+    >
       <div
         class="d-flex flex-column align-center"
         style="width: 100%; height: 100%"
@@ -10,15 +14,25 @@
         </div>
       </div>
     </VOverlay>
-    <VCard class="pa-2 mb-6" flat>
+    <VCard
+      class="pa-2 mb-6"
+      flat
+    >
       <VRow>
-        <VCol cols="10" offset="1">
+        <VCol
+          cols="10"
+          offset="1"
+        >
           <VCardTitle class="justify-center">
             {{ $tev(k('title'), title) }}
           </VCardTitle>
         </VCol>
-        <VCol cols="1" align-self="center" class="full-height text-center">
-          <slot name="infoDialog"></slot>
+        <VCol
+          cols="1"
+          align-self="center"
+          class="full-height text-center"
+        >
+          <slot name="infoDialog" />
         </VCol>
       </VRow>
 
@@ -32,15 +46,18 @@
       <template v-if="missingFiles.length > 0">
         <BaseAlert class="mt-4">
           <p>
-          {{ $tc('File', missingFiles.length) }} {{ $t('not found') }}
+            {{ $tc('File', missingFiles.length) }} {{ $t('not found') }}
           </p>
           <p>
-          {{ missingFiles.join(', ') }}
+            {{ missingFiles.join(', ') }}
           </p>
         </BaseAlert>
       </template>
       <template v-else>
-        <VImg v-if="image" :src="image" />
+        <VImg
+          v-if="image"
+          :src="image"
+        />
         <template v-if="clonedData">
           <VRow>
             <VCol>
@@ -67,7 +84,8 @@
           </VRow>
           <VContainer v-if="showTable">
             <UnitFilterableTable
-              v-bind="{ viewBlockTranslationPrefix, ...clonedData }" />
+              v-bind="{ viewBlockTranslationPrefix, ...clonedData }"
+            />
           </VContainer>
         </template>
       </template>

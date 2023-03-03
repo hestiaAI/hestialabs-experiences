@@ -1,6 +1,9 @@
 <template>
   <div>
-    <BaseAlert v-if="!hasValidFormat" type="warning">
+    <BaseAlert
+      v-if="!hasValidFormat"
+      type="warning"
+    >
       {{ $t(k('invalid-format')) }}
     </BaseAlert>
     <BaseAlert v-else-if="!hasData">

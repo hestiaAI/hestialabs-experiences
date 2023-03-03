@@ -1,7 +1,10 @@
 <template>
   <VContainer>
     <VRow>
-      <VCol cols="12" md="4">
+      <VCol
+        cols="12"
+        md="4"
+      >
         <VCard>
           <VCardTitle>
             {{ cardTitle }}
@@ -28,12 +31,19 @@
             @click:row="(item, data) => selectAdvertiser(data)"
           >
             <template #item.data-table-select="{ isSelected, select }">
-              <VSimpleCheckbox v-ripple :value="isSelected" @click="selectAdvertiser({ isSelected, select })" />
+              <VSimpleCheckbox
+                v-ripple
+                :value="isSelected"
+                @click="selectAdvertiser({ isSelected, select })"
+              />
             </template>
           </VDataTable>
         </VCard>
       </VCol>
-      <VCol cols="12" md="8">
+      <VCol
+        cols="12"
+        md="8"
+      >
         <ChartViewSunburst v-bind="{colorPalette, values: selectedValues}" />
       </VCol>
     </VRow>

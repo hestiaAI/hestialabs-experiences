@@ -1,7 +1,14 @@
 <template>
-  <VCard v-if="fileManager" flat style="height: 100%">
+  <VCard
+    v-if="fileManager"
+    flat
+    style="height: 100%"
+  >
     <template v-if="filename">
-      <VCardTitle v-if="filename" class="justify-center pa-0 mx-4">
+      <VCardTitle
+        v-if="filename"
+        class="justify-center pa-0 mx-4"
+      >
         <span class="text-subtitle-1">{{ $t(k('Exploring file')) }}: <strong>{{ filename }}</strong></span>
         <VSpacer />
         <BaseButtonDownload
@@ -20,7 +27,10 @@
             {{ $t(k(tabName)) }}
           </VTab>
         </VTabs>
-        <VTabsItems v-model="tab" class="mt-3">
+        <VTabsItems
+          v-model="tab"
+          class="mt-3"
+        >
           <VTabItem>
             <component
               :is="fileViewerComponent"
@@ -61,7 +71,11 @@
     </template>
     <template v-else>
       <VCardText style="height: 100%;">
-        <VRow style="height: 100%;" align="center" justify="center">
+        <VRow
+          style="height: 100%;"
+          align="center"
+          justify="center"
+        >
           <p>
             {{ $t(k('select')) }}
           </p>
@@ -127,7 +141,7 @@ export default {
     fileViewerComponent() {
       const { fileType } = this
       const postfix = this.supportedTypes.has(fileType) ? fileType[0].toUpperCase() + fileType.substring(1) : 'Unknown'
-      return () => import(`./viewer/UnitFileExplorerViewer${postfix}`)
+      return () => import(`./viewer/UnitFileExplorerViewer${postfix}.vue`)
     }
   },
   methods: {

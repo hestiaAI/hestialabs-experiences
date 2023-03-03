@@ -3,37 +3,64 @@
     <ChartViewVRowWebShare>
       <VCol cols="12">
         <VRow>
-          <VCol cols="12" md="8">
+          <VCol
+            cols="12"
+            md="8"
+          >
             <VRow>
               <VCol cols="12">
                 <div :id="`messages-chart-${graphId}`">
-                  <span class="font-weight-bold" v-text="messages['Messages Exchanged Over Time']" />
+                  <span
+                    class="font-weight-bold"
+                    v-text="messages['Messages Exchanged Over Time']"
+                  />
                   <ChartViewFilters />
                 </div>
-                <div :id="`range-chart-${graphId}`" class="range-chart">
+                <div
+                  :id="`range-chart-${graphId}`"
+                  class="range-chart"
+                >
                   <ChartViewTextSelectTimeRange />
                 </div>
               </VCol>
             </VRow>
             <VRow>
-              <VCol cols="12" md="6">
+              <VCol
+                cols="12"
+                md="6"
+              >
                 <div :id="`hour-chart-${graphId}`">
-                  <span class="font-weight-bold" v-text="messages['Time of Day']" />
+                  <span
+                    class="font-weight-bold"
+                    v-text="messages['Time of Day']"
+                  />
                   <ChartViewFilters />
                 </div>
               </VCol>
-              <VCol cols="12" md="6">
+              <VCol
+                cols="12"
+                md="6"
+              >
                 <div :id="`week-chart-${graphId}`">
-                  <span class="font-weight-bold" v-text="messages['Day']" />
+                  <span
+                    class="font-weight-bold"
+                    v-text="messages['Day']"
+                  />
                   <ChartViewFilters />
                 </div>
               </VCol>
             </VRow>
           </VCol>
-          <VCol cols="12" md="4">
+          <VCol
+            cols="12"
+            md="4"
+          >
             <div :id="`user-chart-${graphId}`">
               <div style="display: flex">
-                <span class="font-weight-bold" v-text="messages['Top Users']" />
+                <span
+                  class="font-weight-bold"
+                  v-text="messages['Top Users']"
+                />
                 <VSpacer />
                 <div :id="`user-search-${graphId}`" />
               </div>

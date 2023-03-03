@@ -1,14 +1,27 @@
 <template>
   <VContainer>
     <ChartViewVRowWebShare>
-      <VCol cols="12" md="12" class="text-center">
+      <VCol
+        cols="12"
+        md="12"
+        class="text-center"
+      >
         <!-- https://kazupon.github.io/vue-i18n/guide/interpolation.html#slots-syntax-usage -->
-        <i18n :path="kViewBlock('labelTotal')" tag="p">
+        <i18n
+          :path="kViewBlock('labelTotal')"
+          tag="p"
+        >
           <template #total>
-            <span class="font-weight-bold" v-text="total" />
+            <span
+              class="font-weight-bold"
+              v-text="total"
+            />
           </template>
         </i18n>
-        <div :id="graphId" style="position: relative" />
+        <div
+          :id="graphId"
+          style="position: relative"
+        />
       </VCol>
     </ChartViewVRowWebShare>
   </VContainer>
