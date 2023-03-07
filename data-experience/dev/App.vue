@@ -166,7 +166,8 @@ export default {
       bubbles: bubbleIds,
       bubble: noBubble,
       props: {
-        siteConfig
+        siteConfig,
+        showLocales: true
       }
     }
   },

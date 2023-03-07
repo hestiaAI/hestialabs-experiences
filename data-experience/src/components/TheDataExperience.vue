@@ -1,8 +1,8 @@
 <template>
   <div :lang="$i18n.locale">
     <SettingsSpeedDial>
-      <template #lang>
-        <VMenu v-if="!siteConfigMerged.i18nLocale && locales.length > 1" offset-y absolute>
+      <template #lang v-if="showLocalesSelector">
+        <VMenu offset-y absolute>
           <template #activator="{ on, attrs }">
             <BaseButton
               v-bind="attrs"
@@ -20,10 +20,10 @@
           <VList>
             <VListItemGroup v-model="localeIndex" @change="selectLocale">
               <VListItem
-                v-for="({ code, name }) in locales"
+                v-for="code in localeCodes"
                 :key="code"
               >
-                <VListItemTitle>{{ name }}</VListItemTitle>
+                <VListItemTitle v-t="code"></VListItemTitle>
               </VListItem>
             </VListItemGroup>
           </VList>
@@ -183,8 +183,6 @@
 import { debounce, cloneDeep, merge } from 'lodash-es'
 import { json, timeFormatDefaultLocale } from 'd3'
 
-import { locales, localeCodes } from '@/i18n/locales'
-
 import { mapState, mapGetters, mapMutations } from '@/utils/store-helper'
 import DBMS from '@/utils/sql'
 import FileManager from '@/utils/file-manager'
@@ -202,43 +200,9 @@ import UnitSummary from '@/components/unit/UnitSummary.vue'
 import SettingsSpeedDial from '@/components/misc/SettingsSpeedDial.vue'
 import UnitConsentForm from '@/components/unit/consent-form/UnitConsentForm.vue'
 
-import vuetifyEn from 'vuetify/lib/locale/en'
-import vuetifyFr from 'vuetify/lib/locale/fr'
-
-import defaultEn from '@/locales/en.json'
-import defaultFr from '@/locales/fr.json'
 import { kViewBlockPrefix, mergeMessagesIntoI18n, nestExperienceLocaleMessages } from '@/utils/i18n-utils'
 
-const messagesDefault = {
-  en: {
-    ...defaultEn,
-    $vuetify: vuetifyEn
-  },
-  fr: {
-    ...defaultFr,
-    $vuetify: vuetifyFr
-  }
-}
-const messagesOverride = {
-  en: {},
-  fr: {
-    $vuetify: {
-      dataIterator: {
-        noResultsText: 'Aucun résultat'
-      }
-    }
-  }
-}
-
-const siteConfigDefault = {
-  i18nLocales: localeCodes,
-  messages: {}
-}
-
-async function d3Locale({ iso }) {
-  const locale = await json(`https://cdn.jsdelivr.net/npm/d3-time-format@4/locale/${iso}.json`)
-  timeFormatDefaultLocale(locale)
-}
+import { setLocale, mergeMessages, localeCodes, defaultLocale } from '@/plugins/i18n'
 
 export default {
   name: 'TheDataExperience',
@@ -267,11 +231,18 @@ export default {
     bubbleConfig: {
       type: Object,
       required: false
+    },
+    showLocalesSelector: {
+      type: Boolean,
+      default: false
+    },
+    locale: {
+      type: String,
+      default: defaultLocale
     }
   },
   data() {
     return {
-      localeIndex: 0,
       window: 'load-data',
       tab: 0,
       fab: false,
@@ -280,7 +251,8 @@ export default {
       success: false,
       message: '',
       overlay: false,
-      loginSuccessful: false
+      loginSuccessful: false,
+      localeCodes
     }
   },
   computed: {
@@ -288,14 +260,7 @@ export default {
     ...mapState({ experienceProgress: 'progress' }),
     ...mapGetters(['experienceNameAndTag']),
     siteConfigMerged() {
-      return cloneDeep(merge(siteConfigDefault, this.siteConfig))
-    },
-    locales() {
-      const { i18nLocales } = this.siteConfigMerged
-      const localesFiltered = locales.filter(l => i18nLocales.includes(l.code))
-      // sort locales according to order provided in i18nLocales
-      localesFiltered.sort((a, b) => i18nLocales.indexOf(a.code) > i18nLocales.indexOf(b.code) ? 1 : -1)
-      return localesFiltered
+      return cloneDeep(this.siteConfig)
     },
     showLogin() {
       const config = this.bubbleConfig
@@ -391,7 +356,7 @@ export default {
     experienceNameAndTag: {
       immediate: true,
       async handler() {
-        await this.mergeMessages()
+        // await this.mergeMessages()
       }
     },
     fileManager(value) {
@@ -430,32 +395,30 @@ export default {
     currentTab(currentTab) {
       this.tab = this.tabs.findIndex(tab => tab.id === currentTab)
     },
-    '$i18n.locale': {
-      async handler(value) {
+    locale: {
+      immediate: true,
+      handler(value) {
         this.clearStore()
-        await this.update3rdPartyLocale(value)
-      },
-      immediate: true
+        this.selectLocale(value)
+      }
     }
   },
   created() {
-    if (!this.siteConfigMerged.i18nLocale) {
-      // initialize locale if no default is already set
-      this.selectLocale(this.localeIndex)
-    }
+    /*
     this.siteConfigMerged.i18nLocales.forEach((locale) => {
-      /* default messages */
+      // default messages
       this.$i18n.mergeLocaleMessage(locale, messagesDefault[locale])
-      /* overriding messages */
+      // overriding messages
       this.$i18n.mergeLocaleMessage(locale, messagesOverride[locale])
     })
+    */
     this.$watch(
       vm => [vm.experienceConfig, vm.siteConfig, vm.bubbleConfig],
       async() => {
         // clear login state
         this.loginSuccessful = false
         this.clearStore()
-        await this.mergeMessages()
+        // await this.mergeMessages()
       },
       {
         immediate: true
@@ -474,16 +437,7 @@ export default {
       'setCurrentTab'
     ]),
     selectLocale(localeIndex) {
-      // user switched locale with the component's lang switcher
-      const { code } = this.locales[localeIndex]
-      this.$i18n.locale = code
-    },
-    async update3rdPartyLocale(locale) {
-      const localeProperties = this.locales.find(l => l.code === locale)
-      // -> update d3 locale
-      if (process.env.NODE_ENV !== 'test') {
-        await d3Locale(localeProperties)
-      }
+      this.$i18n.locale = this.localeCodes[localeIndex]
     },
     async mergeMessages() {
       const { messages: messagesExperience = {} } = this.experienceConfig

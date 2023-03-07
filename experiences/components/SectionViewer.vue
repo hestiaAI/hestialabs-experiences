@@ -6,12 +6,32 @@
       <p v-html="content.translations[$i18n.locale].body" />
     </div>
     <div v-for="view in content.views" :key="view.id" class="mt-6">
-      <ViewBlock v-for="viewBlockProp in viewBlockProps" :key="viewBlockProp.id" v-bind="{ ...viewBlockProp, mapboxToken:'pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA' }" />
+      <ViewBlock
+        v-for="viewBlockProp in viewBlockProps"
+        :key="viewBlockProp.id"
+        v-bind="{
+          ...viewBlockProp,
+          mapboxToken:
+            'pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA',
+        }"
+      />
     </div>
     <VRow class="mt-6">
-      <VCol v-for="relatedPage in content.related_pages" :key="relatedPage" cols="12" md="6" lg="3">
+      <VCol
+        v-for="relatedPage in content.related_pages"
+        :key="relatedPage"
+        cols="12"
+        md="6"
+        lg="3"
+      >
         <template v-if="pages[relatedPage]">
-          <VCard class="pa-3" height="100%" color="primary" flat :to="pages[relatedPage].url_name">
+          <VCard
+            class="pa-3"
+            height="100%"
+            color="primary"
+            flat
+            :to="pages[relatedPage].url_name"
+          >
             <VImg
               :src="$assetURL(pages[relatedPage].thumbnail)"
               height="200px"
@@ -22,7 +42,10 @@
               {{ pages[relatedPage].translations[$i18n.locale].title }}
             </VCardTitle>
 
-            <VCardSubtitle class="card-subtitle" v-html="pages[relatedPage].translations[$i18n.locale].description" />
+            <VCardSubtitle
+              class="card-subtitle"
+              v-html="pages[relatedPage].translations[$i18n.locale].description"
+            />
           </VCard>
         </template>
       </VCol>
@@ -52,7 +75,13 @@ export default {
       if (this.data) {
         return this.content.views.reduce((acc, view) => {
           if (this.experiences[view.experience]) {
-            acc.push(ViewBlock.buildProps(this.data, { config: this.experiences[view.experience] }, view.name))
+            const props = ViewBlock.buildProps(
+              this.data,
+              { config: this.experiences[view.experience] },
+              view.name
+            )
+            console.log('TEST', props, view)
+            acc.push(props)
           }
           return acc
         }, [])
@@ -63,20 +92,22 @@ export default {
   },
   created() {
     const zipLoader = new JSZip()
-    Promise.all(this.content.views.map((view) => {
-      return fetch(this.$assetURL(this.content.datasets[0].zip_file))
-        .then(res => res.blob())
-        .then(blob => zipLoader.loadAsync(blob))
-        .then(zip => zip.file(`block0${view.position}.json`).async('string'))
-        .then(json => JSON.parse(json).result)
-    })).then(([data]) => {
+    Promise.all(
+      this.content.views.map((view) => {
+        return fetch(this.$assetURL(this.content.datasets[0].zip_file))
+          .then(res => res.blob())
+          .then(blob => zipLoader.loadAsync(blob))
+          .then(zip =>
+            zip.file(`block0${view.position}.json`).async('string')
+          )
+          .then(json => JSON.parse(json).result)
+      })
+    ).then(([data]) => {
       this.data = data
     })
   },
   methods: {
-    async fetchDatasets() {
-
-    }
+    async fetchDatasets() {}
   }
 }
 </script>
@@ -87,7 +118,7 @@ export default {
   text-transform: uppercase;
   line-height: 1.5;
   font-size: 3.5rem;
-  font-weight:bolder;
+  font-weight: bolder;
 }
 
 .card-image {
@@ -100,7 +131,7 @@ export default {
   text-transform: uppercase;
   line-height: 1.5;
   font-size: 1.5rem;
-  font-weight:bolder;
+  font-weight: bolder;
   text-decoration: underline;
   color: white;
 }

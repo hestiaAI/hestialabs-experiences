@@ -1,19 +1,30 @@
+// https://eslint.org/docs/latest/user-guide/configuring/configuration-files#configuration-file-formats
 module.exports = {
-  root: true,
   env: {
     browser: true,
-    node: true,
+    es2021: true,
     jest: true
   },
-  // https://eslint.vuejs.org/user-guide/#how-to-use-a-custom-parser
-  parser: 'vue-eslint-parser',
+  extends: ['plugin:vue/essential', 'standard'],
+  overrides: [],
   parserOptions: {
-    parser: '@babel/eslint-parser',
-    requireConfigFile: false
+    ecmaVersion: 'latest',
+    sourceType: 'module'
   },
-  extends: ['@nuxtjs', 'plugin:nuxt/recommended'],
-  // add your custom rules here
+  plugins: ['vue'],
   rules: {
+    'vue/order-in-components': ['error', {}],
+    'vue/no-undef-components': [
+      'error', {
+        ignorePatterns: [
+          '^V(\\w+)$',
+          'i18n',
+          'RouterView',
+          'RouterLink',
+          'TheDataExperience'
+        ]
+      }
+    ],
     'space-before-function-paren': ['error', 'never'],
     'arrow-parens': ['error', 'as-needed', { requireForBlockBody: true }],
     'no-console': [
@@ -29,9 +40,6 @@ module.exports = {
         allowModifiers: true
       }
     ],
-    // Turn off no-undef-components rule since
-    // Nuxt auto-imports components
-    'vue/no-undef-components': ['off', {}],
     // Enforce PascalCase component names
     // https://vuejs.org/v2/style-guide/#Component-name-casing-in-templates-strongly-recommended
     'vue/component-name-in-template-casing': [

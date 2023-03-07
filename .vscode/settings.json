@@ -11,33 +11,30 @@
   "editor.insertSpaces": true,
   "editor.renderFinalNewline": "on",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.fixAll": true
+    "source.fixAll.eslint": true
   },
-  "editor.formatOnSave": false,
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "[vue][js]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": false
+    }
+  },
+  "editor.formatOnSave": true,
+  "eslint.format.enable": true,
   "editor.formatOnPaste": false,
   "editor.tabSize": 2,
-  "[js][vue]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  },
   // "[ts][json][md]": {
   //   "editor.defaultFormatter": "esbenp.prettier-vscode",
   // },
   // https://eslint.vuejs.org/user-guide/#editor-integrations
-  "eslint.validate": [
-    "javascript",
-    "typescript",
-    "vue"
-  ],
+  "eslint.validate": ["javascript", "typescript", "vue"],
   "eslint.workingDirectories": [
     "./packages",
     "./experiences",
     "./data-experience"
   ],
-  "eslint.format.enable": true,
-
   "eslint.options": {
-
     "ignorePath": ".eslintignore"
   },
   // https://eslint.vuejs.org/user-guide/#trouble-with-visual-studio-code
