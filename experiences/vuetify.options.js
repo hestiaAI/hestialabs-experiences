@@ -52,6 +52,7 @@ import {
   mdiTranslate,
   mdiTuneVariant,
   mdiTwitter,
+  mdiUpload,
   mdiWeb,
   mdiWhatsapp
 } from '@mdi/js'
@@ -108,6 +109,7 @@ const values = {
   mdiTranslate,
   mdiTuneVariant,
   mdiTwitter,
+  mdiUpload,
   mdiWeb,
   mdiWhatsapp
 }
