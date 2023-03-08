@@ -4,6 +4,8 @@ import { timeFormatDefaultLocale } from 'd3'
 // Import app locales
 import en from '@/locales/en.json'
 import fr from '@/locales/fr.json'
+import { numberFormats } from '@/locales/vue-i18n-number-formats'
+import { dateTimeFormats } from '@/locales/vue-i18n-date-time-formats'
 
 // Import vuetify locales
 import vuetifyEn from 'vuetify/lib/locale/en'
@@ -14,10 +16,6 @@ import vuetifyFr from 'vuetify/lib/locale/fr'
 // https://stackoverflow.com/questions/74072409/webpack-doesnt-resolve-imports-of-json-files-from-d3-packages
 import d3En from '@/../node_modules/d3-time-format/locale/en-US.json'
 import d3Fr from '@/../node_modules/d3-time-format/locale/fr-FR.json'
-
-// Import formats locales
-import { numberFormats } from '@/i18n/vue-i18n-number-formats'
-import { dateTimeFormats } from '@/i18n/vue-i18n-date-time-formats'
 
 import { merge } from 'lodash'
 
@@ -59,15 +57,8 @@ const i18nOpts = {
 
 function setLocale(locale) {
   const currentLang = messages[locale] ? locale : defaultLocale
-  console.log('setLocale', locale, currentLang, messages[currentLang].$d3)
   timeFormatDefaultLocale(messages[currentLang].$d3)
 }
 
-function mergeMessages(i18n, messages) {
-  Object.entries(messages).forEach(([locale, messages]) => {
-    i18n.mergeLocaleMessage(locale, messages)
-  })
-}
-
 export default i18nOpts
-export { localeCodes, setLocale, mergeMessages, defaultLocale }
+export { localeCodes, setLocale }

@@ -1,35 +1,6 @@
 <template>
   <div :lang="$i18n.locale">
-    <SettingsSpeedDial>
-      <template #lang v-if="showLocalesSelector">
-        <VMenu offset-y absolute>
-          <template #activator="{ on, attrs }">
-            <BaseButton
-              v-bind="attrs"
-              color="secondary"
-              :outlined="false"
-              mdi-icon="mdiTranslate"
-              tooltip="Language"
-              fab
-              dark
-              small
-              v-on="on"
-              vbtn-class=""
-            />
-          </template>
-          <VList>
-            <VListItemGroup v-model="localeIndex" @change="selectLocale">
-              <VListItem
-                v-for="code in localeCodes"
-                :key="code"
-              >
-                <VListItemTitle v-t="code"></VListItemTitle>
-              </VListItem>
-            </VListItemGroup>
-          </VList>
-        </VMenu>
-      </template>
-    </SettingsSpeedDial>
+    <SettingsSpeedDial></SettingsSpeedDial>
     <template v-if="showLogin">
       <UnitLogin @success="loginSuccessful = true" />
     </template>
@@ -181,7 +152,7 @@
 
 <script>
 import { debounce, cloneDeep, merge } from 'lodash-es'
-import { json, timeFormatDefaultLocale } from 'd3'
+import { json } from 'd3'
 
 import { mapState, mapGetters, mapMutations } from '@/utils/store-helper'
 import DBMS from '@/utils/sql'
@@ -201,8 +172,7 @@ import SettingsSpeedDial from '@/components/misc/SettingsSpeedDial.vue'
 import UnitConsentForm from '@/components/unit/consent-form/UnitConsentForm.vue'
 
 import { kViewBlockPrefix, mergeMessagesIntoI18n, nestExperienceLocaleMessages } from '@/utils/i18n-utils'
-
-import { setLocale, mergeMessages, localeCodes, defaultLocale } from '@/plugins/i18n'
+import { setLocale, localeCodes } from '@/plugins/i18n'
 
 export default {
   name: 'TheDataExperience',
@@ -231,14 +201,6 @@ export default {
     bubbleConfig: {
       type: Object,
       required: false
-    },
-    showLocalesSelector: {
-      type: Boolean,
-      default: false
-    },
-    locale: {
-      type: String,
-      default: defaultLocale
     }
   },
   data() {
@@ -259,9 +221,6 @@ export default {
     ...mapState(['fileManager', 'bubbleCodeword', 'currentTab', 'currentWindow']),
     ...mapState({ experienceProgress: 'progress' }),
     ...mapGetters(['experienceNameAndTag']),
-    siteConfigMerged() {
-      return cloneDeep(this.siteConfig)
-    },
     showLogin() {
       const config = this.bubbleConfig
       return config && !config.bypassLogin && !this.loginSuccessful
@@ -343,7 +302,7 @@ export default {
         this.setBubbleConfig(cloneDeep(value))
       }
     },
-    siteConfigMerged: {
+    siteConfig: {
       immediate: true,
       handler(value) {
         // override light theme colors
@@ -356,7 +315,7 @@ export default {
     experienceNameAndTag: {
       immediate: true,
       async handler() {
-        // await this.mergeMessages()
+        await this.mergeMessages()
       }
     },
     fileManager(value) {
@@ -395,30 +354,23 @@ export default {
     currentTab(currentTab) {
       this.tab = this.tabs.findIndex(tab => tab.id === currentTab)
     },
-    locale: {
+    '$i18n.locale': {
       immediate: true,
       handler(value) {
         this.clearStore()
-        this.selectLocale(value)
+        setLocale(value)
       }
     }
   },
   created() {
-    /*
-    this.siteConfigMerged.i18nLocales.forEach((locale) => {
-      // default messages
-      this.$i18n.mergeLocaleMessage(locale, messagesDefault[locale])
-      // overriding messages
-      this.$i18n.mergeLocaleMessage(locale, messagesOverride[locale])
-    })
-    */
+    setLocale(this.$i18n.locale)
     this.$watch(
       vm => [vm.experienceConfig, vm.siteConfig, vm.bubbleConfig],
       async() => {
         // clear login state
         this.loginSuccessful = false
         this.clearStore()
-        // await this.mergeMessages()
+        await this.mergeMessages()
       },
       {
         immediate: true
@@ -436,30 +388,20 @@ export default {
       'setCurrentDB',
       'setCurrentTab'
     ]),
-    selectLocale(localeIndex) {
-      this.$i18n.locale = this.localeCodes[localeIndex]
-    },
     async mergeMessages() {
       const { messages: messagesExperience = {} } = this.experienceConfig
-      const { messages: messagesCustomConfig = {}, i18nLocales, i18nUrl } = this.siteConfigMerged
-
-      const nameAndTag = this.experienceNameAndTag
+      Object.keys(messagesExperience).forEach((locale) => {
+        messagesExperience[locale] = nestExperienceLocaleMessages(this.experienceNameAndTag, messagesExperience[locale])
+      })
+      const { messages: messagesCustomConfig = {}, i18nUrl } = this.siteConfig
 
       let messagesCustomRemote = {}
       if (i18nUrl) {
         // fetch messages to override default messages
         messagesCustomRemote = await json(i18nUrl)
       }
-      i18nLocales.forEach((locale) => {
-        /* experience messages */
-        const messagesObject = nestExperienceLocaleMessages(nameAndTag, messagesExperience[locale])
-        const allMessages = [
-          messagesObject,
-          messagesCustomConfig[locale],
-          messagesCustomRemote[locale]]
 
-        mergeMessagesIntoI18n(this.$i18n, locale, allMessages)
-      })
+      mergeMessagesIntoI18n(this.$i18n, [messagesCustomConfig, messagesCustomRemote, messagesExperience])
     },
     // Convert local translation key to global vue18n
     k(viewBlockId, key) {

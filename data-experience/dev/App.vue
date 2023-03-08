@@ -1,33 +1,43 @@
 <template>
   <VApp>
     <VMain>
-      <div class="d-flex-column justify-center" style="width: 100%;">
-        <div class="dev-toolbar">
+      <VRow class="dev-toolbar">
+        <VCol>
           <VSelect
             label="Experience"
             v-model="experience"
+            class="ma-2"
             :items="availableExperiences"
             outlined
             dense
-            class="v-select__experiences"
-            attach=".v-select__experiences"
             :menu-props="{ bottom: true, offsetY: true }"
-            style="margin: auto; width: 200px;"
           />
+        </VCol>
+        <VCol>
           <VSelect
             label="Bubble"
             v-model="bubble"
+            class="ma-2"
             :items="bubbles"
             outlined
             dense
-            class="v-select__bubbles"
-            attach=".v-select__bubbles"
             :menu-props="{ bottom: true, offsetY: true }"
-            style="margin: auto; width: 200px;"
           />
-        </div>
-        <TheDataExperience v-bind="props" />
-      </div>
+        </VCol>
+        <VCol>
+          <VSelect
+            label="Language"
+            v-model="locale"
+            class="ma-2"
+            :items="locales"
+            outlined
+            dense
+            @change="$i18n.locale = locale"
+            :menu-props="{ bottom: true, offsetY: true }"
+          />
+        </VCol>
+      </VRow>
+      <TheDataExperience v-bind="props" />
     </VMain>
   </VApp>
 </template>
@@ -165,6 +175,8 @@ export default {
       experience: initialExperience,
       bubbles: bubbleIds,
       bubble: noBubble,
+      locales: siteConfig.i18nLocales,
+      locale: siteConfig.i18nLocales[0],
       props: {
         siteConfig,
         showLocales: true

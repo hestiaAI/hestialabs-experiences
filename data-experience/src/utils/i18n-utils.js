@@ -2,19 +2,19 @@ export function kViewBlockPrefix(experienceNameAndTag, viewBlockId) {
   return `experiences.${experienceNameAndTag}.viewBlocks.${viewBlockId}`
 }
 
-export function mergeMessagesIntoI18n(i18n, locale, localeMessagesList) {
-  localeMessagesList.forEach((messages) => {
-    if (messages) {
-      i18n.mergeLocaleMessage(locale, messages)
-    }
-  })
-}
-
 export function nestExperienceLocaleMessages(
   experienceNameAndTag,
   localeMessages
 ) {
   return { experiences: { [experienceNameAndTag]: localeMessages } }
+}
+
+export function mergeMessagesIntoI18n(i18n, messagesSources) {
+  messagesSources.forEach((messages) => {
+    Object.keys(messages).forEach((locale) => {
+      i18n.mergeLocaleMessage(locale, messages[locale])
+    })
+  })
 }
 
 function injectIntoVuePrototype(Vue, key, value, ignoreConflicts) {
