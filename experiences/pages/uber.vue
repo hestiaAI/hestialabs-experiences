@@ -42,7 +42,7 @@
           </VCol>
           <VCol cols="12">
             <p class="text-h6">
-              Une fois votre archive transmise, vérifiez la boite email associée à votre compte Uber. Nous vous contacterons par email dans quelques jours, dès que votre analyse sera prête. Le lien dans cet email vous permettra de payer 100 € (TTC) pour obtenir votre fichier personnalisé d'analyse de votre activité Uber ainsi que 6 mois de suivi personnalisé de votre dossier (tarif de lancement, susceptible de changer à tout moment).
+              Une fois votre archive transmise, vérifiez la boite email associée à votre compte Uber. Après avoir vérifié que la qualité de vos données nous permet de faire une analyse utile, nous vous recontacterons par email. Le lien dans cet email vous permettra de payer 100 € (TTC) pour obtenir votre fichier personnalisé d'analyse de votre activité Uber ainsi que 6 mois de suivi de votre dossier personnalisé (tarif de lancement, susceptible de changer à tout moment). Le détail exact de la prestation sera inclus dans l'email envoyé avant payement.
             </p>
           </VCol>
         </VRow>
