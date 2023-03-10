@@ -10,6 +10,7 @@ export function nestExperienceLocaleMessages(
 }
 
 export function mergeMessagesIntoI18n(i18n, messagesSources) {
+  console.log('mergeMessagesIntoI18n', messagesSources)
   messagesSources.forEach((messages) => {
     Object.keys(messages).forEach((locale) => {
       i18n.mergeLocaleMessage(locale, messages[locale])

@@ -146,6 +146,10 @@ export default {
       type: String,
       default: ''
     },
+    messages: {
+      type: Object,
+      default: () => ({})
+    },
     // `data` is the result from the pipeline.
     // Note: we should not fetch the data from Vuex because
     // then the UnitPipelineViewBlock component instance will react when
@@ -186,6 +190,15 @@ export default {
       // because the lodash merge function recursively mutates the first argument
       // and it will cause a vuex mutation error otherwise.
       return merge(cloneDeep(this.vizProps), this.$tev(this.k('vizProps'), {}) || {})
+    }
+  },
+  watch: {
+    messages: {
+      immediate: true,
+      deep: true,
+      handler(value) {
+
+      }
     }
   },
   methods: {

@@ -151,7 +151,7 @@
 </template>
 
 <script>
-import { debounce, cloneDeep, merge } from 'lodash-es'
+import { debounce, cloneDeep } from 'lodash-es'
 import { json } from 'd3'
 
 import { mapState, mapGetters, mapMutations } from '@/utils/store-helper'
@@ -172,7 +172,7 @@ import SettingsSpeedDial from '@/components/misc/SettingsSpeedDial.vue'
 import UnitConsentForm from '@/components/unit/consent-form/UnitConsentForm.vue'
 
 import { kViewBlockPrefix, mergeMessagesIntoI18n, nestExperienceLocaleMessages } from '@/utils/i18n-utils'
-import { setLocale, localeCodes } from '@/plugins/i18n'
+import { setD3Locale, localeCodes } from '@/plugins/i18n'
 
 export default {
   name: 'TheDataExperience',
@@ -358,12 +358,12 @@ export default {
       immediate: true,
       handler(value) {
         this.clearStore()
-        setLocale(value)
+        setD3Locale(value)
       }
     }
   },
   created() {
-    setLocale(this.$i18n.locale)
+    setD3Locale(this.$i18n.locale)
     this.$watch(
       vm => [vm.experienceConfig, vm.siteConfig, vm.bubbleConfig],
       async() => {
@@ -389,7 +389,7 @@ export default {
       'setCurrentTab'
     ]),
     async mergeMessages() {
-      const { messages: messagesExperience = {} } = this.experienceConfig
+      const { messages: messagesExperience = {} } = cloneDeep(this.experienceConfig)
       Object.keys(messagesExperience).forEach((locale) => {
         messagesExperience[locale] = nestExperienceLocaleMessages(this.experienceNameAndTag, messagesExperience[locale])
       })

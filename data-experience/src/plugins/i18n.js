@@ -55,10 +55,10 @@ const i18nOpts = {
   dateTimeFormats
 }
 
-function setLocale(locale) {
+function setD3Locale(locale) {
   const currentLang = messages[locale] ? locale : defaultLocale
   timeFormatDefaultLocale(messages[currentLang].$d3)
 }
 
 export default i18nOpts
-export { localeCodes, setLocale }
+export { localeCodes, setD3Locale }
