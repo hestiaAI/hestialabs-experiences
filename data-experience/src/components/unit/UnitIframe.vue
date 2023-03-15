@@ -26,7 +26,7 @@
 import BaseProgressCircular from '@/components/base/BaseProgressCircular.vue'
 
 export default {
-  name: 'UnitIntroduction',
+  name: 'UnitIframe',
   components: { BaseProgressCircular },
   props: {
     args: {

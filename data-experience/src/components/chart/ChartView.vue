@@ -6,6 +6,7 @@
         v-bind="{
           values: data.items || [],
           headers: data.headers || [],
+          mapboxToken: data.mapboxToken,
           ...$attrs
         }"
       />

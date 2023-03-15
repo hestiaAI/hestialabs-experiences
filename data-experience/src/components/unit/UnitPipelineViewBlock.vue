@@ -160,6 +160,10 @@ export default {
       type: Object,
       default: () => ({})
     },
+    mapboxToken: {
+      type: String,
+      default: ''
+    },
     // `data` is the result from the pipeline.
     // Note: we should not fetch the data from Vuex because
     // then the UnitPipelineViewBlock component instance will react when
@@ -191,7 +195,7 @@ export default {
       return cloneDeep(this.data)
     },
     clonedDataPostprocessed() {
-      return this.postprocessor(this.clonedData)
+      return { ...this.postprocessor(this.clonedData), mapboxToken: this.mapboxToken }
     },
     vizPropsTranslated() {
       // translations override all props...
