@@ -1,6 +1,6 @@
 import Vue from 'vue'
+import 'data-experience/dist/style.css'
 import { DataExperience } from 'data-experience'
-import 'data-experience/dist/DataExperience.css'
 
 export default ({ store }) => {
   Vue.use(DataExperience, { store, mixinsAlreadyInjected: true })
