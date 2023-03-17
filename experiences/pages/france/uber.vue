@@ -32,14 +32,56 @@
               Alors c’est tout bon ! Déposez ci-dessous le fichier .zip récupéré auprès d’Uber pour obtenir l’analyse personnalisée de votre activité. Des éléments à partager avec votre avocat et/ou votre syndicat afin d’engager une procédure légale contre Uber.
             </p>
           </VCol>
-          <VCol cols="12" align-self="center" class="text-center">
-            <VBtn x-large href="https://kdrive.infomaniak.com/app/collaborate/333680/b0097753-f05f-4302-9d04-fc416d2633fd" target="_blank">
-              <VIcon left>
-                $vuetify.icons.mdiUpload
-              </VIcon>
-              <span>Transmettez vos données</span>
-            </VBtn>
+        </VRow>
+        <VRow justify="center">
+          <VCol cols="12" md="8" lg="6" align-self="center" class="text-center">
+            <VCard outlined class="pa-6">
+              <VForm ref="fileForm">
+                <VFileInput
+                  v-model="file"
+                  :disabled="disabled"
+                  :rules="fileRules"
+                  show-size
+                  class="mx-auto"
+                  label="Sélectionnez votre archive"
+                  accept="application/zip"
+                />
+
+                <BaseButton
+                  v-bind="{ disabled, progress }"
+                  text="unit-files.run-btn"
+                  :mdi-icon="statusIcon"
+                  class="my-sm-2 mr-sm-4"
+                  @click="uploadFile"
+                >
+                  <span>Transmettez vos données</span>
+                </BaseButton>
+                <div v-if="status" v-text="status" />
+                <VAlert
+                  v-if="error || success"
+                  class="mt-6 text-left"
+                  :type="error ? 'error' : 'success'"
+                  text
+                >
+                  {{ error ? errorMessage : successMessage }}
+                  <p v-if="fileMissing.length">
+                    {{ fileMissing.length }} fichiers manquent à votre archive:
+                    <ul>
+                      <li v-for="filename in fileMissing" :key="filename">
+                        {{ filename }}
+                      </li>
+                    </ul>
+                    <br>
+                    Avez bien suivi les instructions pour récupérer vos données ?
+                    <br>
+                    Si vous rencontrez des problèmes pour récupérer vos données ou si ce message apparait alors que vous avez récemment récupéré vos données en suivant bien le protocole indiqué sur <a href="https://personaldata.io/nos-donnees-nos-projets/mobilite/uber/rgpd/" target="blank">cette page</a>, veuillez nous contacter via <a :href="whatsAppLink" target="blank">Whatsapp</a>.
+                  </p>
+                </VAlert>
+              </VForm>
+            </VCard>
           </VCol>
+        </VRow>
+        <VRow>
           <VCol cols="12">
             <p class="text-h6">
               Une fois votre archive transmise, vérifiez la boite email associée à votre compte Uber. Après avoir vérifié que la qualité de vos données nous permet de faire une analyse utile, nous vous recontacterons par email. Le lien dans cet email vous permettra de payer 100 € (TTC) pour obtenir votre fichier personnalisé d'analyse de votre activité Uber ainsi que 6 mois de suivi de votre dossier personnalisé (tarif de lancement, susceptible de changer à tout moment). Le détail exact de la prestation sera inclus dans l'email envoyé avant payement.
@@ -70,7 +112,7 @@
               3. Vous avez déjà demandé vos données Uber mais n’avez pas encore reçu le fichier
             </div>
             <p class="text-h6">
-              Uber est tenu de vous répondre dans un délai d'un mois au plus tard. Si vous n'avez toujours pas reçu de réponse dans ce délai, vous pouvez nous contacter via Discord ou Whatsapp.
+              Uber est tenu de vous répondre dans un délai d'un mois au plus tard. Si vous n'avez toujours pas reçu de réponse dans ce délai, vous pouvez nous contacter via <a :href="discordLink" target="blank">Discord</a> ou <a :href="whatsAppLink" target="blank">Whatsapp</a>.
             </p>
           </VCol>
         </VRow>
@@ -107,8 +149,8 @@
           </VCol>
           <VCol cols="12">
             <div class="d-flex justify-space-around">
-              <BaseIconCard href="https://chat.whatsapp.com/J9RyQxh5qYI9M64j8PFIxf" icon="mdiWhatsapp" text="WhatsApp" color="#23D366" />
-              <BaseIconCard href="https://discord.gg/MSKQHjEF" icon="/discord-mark-white.svg" text="Discord" color="#5865F2" />
+              <BaseIconCard :href="whatsAppLink" icon="mdiWhatsapp" text="WhatsApp" color="#23D366" />
+              <BaseIconCard :href="discordLink" icon="/discord-mark-white.svg" text="Discord" color="#5865F2" />
             </div>
           </VCol>
         </VRow>
@@ -118,12 +160,163 @@
 </template>
 
 <script>
+import JSZip from 'jszip'
+import mm from 'micromatch'
+import { timeFormat } from 'd3-time-format'
+import { hashFile, encryptFile } from 'data-experience'
 import mixinPage from '@/mixins/page'
 
 export default {
   mixins: [mixinPage],
+  data() {
+    return {
+      s3URL: 'https://serverless.hestia.ai/.netlify/functions/getUploadUrl?',
+      publicKey: 'fa71a63fafb8f9f3f5f23e120976c81995ee711a3d73ee871e82102bedf41022',
+      file: null,
+      progress: false,
+      disabled: false,
+      validated: false,
+      error: false,
+      errorMessage: '',
+      success: false,
+      status: '',
+      successMessage: 'Votre archive a bien été envoyée. Nous vous contacterons dès que possible.',
+      fileNeeded: [
+        '**/*Driver Profile Data*.csv',
+        '**/*Driver Payments*.csv',
+        '**/*Driver Lifetime Trip*.csv',
+        '**/*Driver Online Offline.csv'
+      ],
+      fileMissing: [],
+      fileRules: [
+        v => !!v || 'Fichier requis',
+        v => (v && v.size < 500 * 1e6) || 'Le fichier est trop volumineux',
+        v => (v && v.name.endsWith('.zip')) || 'Le fichier doit être un zip'
+      ],
+      whatsAppLink: 'https://chat.whatsapp.com/C8NHw4OBveHCTLgWNddD2L',
+      discordLink: 'https://discord.gg/MSKQHjEF'
+    }
+  },
   head() {
     return this.vueMeta('Uber')
+  },
+  computed: {
+    statusIcon() {
+      if (this.error) {
+        return 'mdiAlert'
+      } else if (this.success) {
+        return 'mdiCheckCircle'
+      } else {
+        return 'mdiUpload'
+      }
+    }
+  },
+  watch: {
+    file() {
+      this.validated = false
+      this.error = false
+      this.progress = false
+      this.success = false
+      this.fileMissing = []
+    }
+  },
+  methods: {
+    validateZip(zip) {
+      this.fileMissing = this.fileNeeded.filter((file) => {
+        const regex = mm.makeRe(file)
+        return !zip.file(regex).length
+      })
+      return this.fileMissing.length === 0
+    },
+    async uploadFile() {
+      if (!this.$refs.fileForm.validate()) { return }
+      this.disabled = true
+      this.error = false
+      this.progress = true
+
+      // Read the zip file
+      this.status = 'Reading file...'
+      const zipLoader = new JSZip()
+      const zipObject = await zipLoader.loadAsync(this.file)
+
+      // Validate the zip file
+      this.status = 'Validating file...'
+      this.error = !(this.validateZip(zipObject))
+      if (this.error) {
+        this.errorMessage = 'Erreur pendant la validation du fichier: '
+        this.disabled = false
+        this.progress = false
+        return
+      }
+
+      // Get the file name
+      this.status = 'Getting file name...'
+      const hash = await hashFile(this.file)
+      const dateFormatter = timeFormat('%Y%m%d%H%M%S')
+      const filename = `Uber_${dateFormatter(new Date())}_${hash}.zip`
+
+      // Encrypt the file
+      this.status = 'Encrypting file...'
+      const content = await zipObject.generateAsync({ type: 'uint8array' })
+      const encryptedContent = await encryptFile(content, this.publicKey)
+      const encryptedFile = new File([encryptedContent], this.filename, {
+        type: 'application/zip'
+      })
+
+      // Get the presighned URL to upload the file
+      this.status = 'Getting presigned URL...'
+      let presignedUrl = null
+      try {
+        const apiURL = this.s3URL + new URLSearchParams({ name: filename })
+        const response = await fetch(apiURL)
+
+        if (response.status !== 200) {
+          throw new Error(`Le serveur à retourner le code d'erreur ${response.status} : ${response.body}`)
+        }
+
+        const json = await response.json()
+        presignedUrl = json.presignedUrl
+        if (!presignedUrl) {
+          throw new Error('No presigned URL returned')
+        }
+      } catch (err) {
+        this.error = true
+        this.disabled = false
+        this.progress = false
+        this.status = ''
+        this.errorMessage = 'Erreur pendant la récupération du lien d\'upload: ' + err.toString()
+        return
+      }
+
+      // Upload the file to S3
+      this.status = 'Uploading file...'
+      try {
+        const response = await fetch(presignedUrl, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/zip'
+          },
+          body: encryptedFile
+        })
+
+        // Check if the upload was successful
+        if (response.status !== 200) {
+          throw new Error(`Le serveur à retourner le code d'erreur ${response.status} : ${response.body}`)
+        }
+      } catch (err) {
+        this.error = true
+        this.disabled = false
+        this.progress = false
+        this.status = ''
+        this.errorMessage = 'Erreur pendant l\'upload du fichier: ' + err.toString()
+        return
+      }
+
+      this.status = ''
+      this.success = true
+      this.disabled = false
+      this.progress = false
+    }
   }
 }
 
