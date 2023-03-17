@@ -17,7 +17,7 @@
         <VRow>
           <VCol cols="12">
             <div class="text-h5 font-weight-bold blue-grey--text text--darken-2 mb-6">
-              Choississez votre pays:
+              Choisissez votre pays:
             </div>
             <p class="text-h6">
               <ul>

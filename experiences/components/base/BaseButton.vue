@@ -5,7 +5,8 @@
     class="my-2 base-button"
     @click="$emit('click', $event)"
   >
-    <VIcon v-if="mdiIcon" :left="text !== ''">
+    <VProgressCircular v-if="progress" indeterminate width="2" size="20" />
+    <VIcon v-else-if="mdiIcon" :left="text !== ''">
       {{ mdiIconResolved }}
     </VIcon>
     <slot>
@@ -30,6 +31,10 @@ export default {
     outlined: {
       type: Boolean,
       default: true
+    },
+    progress: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
