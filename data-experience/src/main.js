@@ -16,6 +16,7 @@ export { default as i18nOpts } from './plugins/i18n'
 export { default as chartView } from './components/chart/ChartView.vue'
 export { default as chartViewBar } from './components/chart/view/ChartViewBar.vue'
 export { default as chartViewGenericMap } from './components/chart/view/ChartViewGenericMap.vue'
+export { hashFile, encryptFile } from './utils/encryption'
 
 export const ViewBlock = {
   install(Vue, options) {

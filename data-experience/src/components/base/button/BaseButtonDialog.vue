@@ -57,7 +57,7 @@ export default {
   },
   computed: {
     mdiIconResolved() {
-      return this.$vuetify.icons.values[this.icon]
+      return this.$vuetify.icons.values[this.mdiIcon]
     }
   }
 }
