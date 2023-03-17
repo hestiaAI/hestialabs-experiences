@@ -162,7 +162,7 @@
 <script>
 import JSZip from 'jszip'
 import mm from 'micromatch'
-import { timeFormat } from 'd3-time-format'
+// import { timeFormat } from 'd3-time-format'
 import { hashFile, encryptFile } from 'data-experience'
 import mixinPage from '@/mixins/page'
 
@@ -252,16 +252,26 @@ export default {
       // Get the file name
       this.status = 'Getting file name...'
       const hash = await hashFile(this.file)
-      const dateFormatter = timeFormat('%Y%m%d%H%M%S')
-      const filename = `Uber_${dateFormatter(new Date())}_${hash}.zip`
+      // const dateFormatter = timeFormat('%Y%m%d%H%M%S')
+      const filename = `Uber_${hash}.zip`
 
       // Encrypt the file
       this.status = 'Encrypting file...'
-      const content = await zipObject.generateAsync({ type: 'uint8array' })
-      const encryptedContent = await encryptFile(content, this.publicKey)
-      const encryptedFile = new File([encryptedContent], this.filename, {
-        type: 'application/zip'
-      })
+      let encryptedFile = null
+      try {
+        const content = await zipObject.generateAsync({ type: 'uint8array' })
+        const encryptedContent = await encryptFile(content, this.publicKey)
+        encryptedFile = new File([encryptedContent], this.filename, {
+          type: 'application/zip'
+        })
+      } catch (err) {
+        this.error = true
+        this.disabled = false
+        this.progress = false
+        this.status = ''
+        this.errorMessage = 'Erreur pendant l\'encryption du fichier: ' + err.toString()
+        return
+      }
 
       // Get the presighned URL to upload the file
       this.status = 'Getting presigned URL...'
