@@ -261,7 +261,7 @@ export default {
       try {
         const content = await zipObject.generateAsync({ type: 'uint8array' })
         const encryptedContent = await encryptFile(content, this.publicKey)
-        encryptedFile = new File([encryptedContent], this.filename, {
+        encryptedFile = new File([encryptedContent], filename, {
           type: 'application/zip'
         })
       } catch (err) {
@@ -281,7 +281,8 @@ export default {
         const response = await fetch(apiURL)
 
         if (response.status !== 200) {
-          throw new Error(`Le serveur à retourner le code d'erreur ${response.status} : ${response.body}`)
+          const text = await response.text()
+          throw new Error(`Le serveur à retourner le code d'erreur ${response.status} : ${text}`)
         }
 
         const json = await response.json()
@@ -311,7 +312,8 @@ export default {
 
         // Check if the upload was successful
         if (response.status !== 200) {
-          throw new Error(`Le serveur à retourner le code d'erreur ${response.status} : ${response.body}`)
+          const text = await response.text()
+          throw new Error(`Le serveur à retourner le code d'erreur ${response.status} : ${text}`)
         }
       } catch (err) {
         this.error = true
