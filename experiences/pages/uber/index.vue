@@ -26,6 +26,11 @@
                     France
                   </NuxtLink>
                 </li>
+                <li>
+                  <NuxtLink to="/uber/switzerland">
+                    Suisse
+                  </NuxtLink>
+                </li>
               </ul>
             </p>
           </VCol>

@@ -279,7 +279,7 @@ export default {
       try {
         const apiURL = this.s3URL + new URLSearchParams({
           platform: 'uber',
-          country: 'france',
+          country: 'switzerland',
           name: filename
         })
         const response = await fetch(apiURL)
