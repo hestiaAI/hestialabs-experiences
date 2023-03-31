@@ -41,7 +41,7 @@
           Si vous rencontrez des problèmes pour récupérer vos données ou si ce message apparait alors que vous avez récemment récupéré vos données en suivant bien le protocole indiqué sur <a href="https://personaldata.io/nos-donnees-nos-projets/mobilite/uber/rgpd/" target="blank">cette page</a>, veuillez nous contacter via <a :href="whatsAppLink" target="blank">Whatsapp</a>.
         </p>
       </VAlert>
-      <CheckoutDialog v-bind="{show: success, paymentURL}" />
+      <CheckoutDialog v-if="success && paymentURL" v-bind="{paymentURL}" />
     </VForm>
   </VCard>
 </template>
@@ -109,6 +109,7 @@ export default {
       this.progress = false
       this.success = false
       this.fileMissing = []
+      this.paymentURL = null
     }
   },
   methods: {
