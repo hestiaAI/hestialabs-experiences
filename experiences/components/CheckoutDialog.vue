@@ -3,6 +3,7 @@
     v-model="dialog"
     transition="dialog-bottom-transition"
     max-width="600"
+    persistent
   >
     <VCard>
       <VCardText class="text-center pa-6">

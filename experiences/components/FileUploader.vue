@@ -13,7 +13,6 @@
 
       <BaseButton
         v-bind="{ disabled, progress }"
-        text="unit-files.run-btn"
         :mdi-icon="statusIcon"
         class="my-sm-2 mr-sm-4"
         @click="uploadFile"
@@ -43,6 +42,14 @@
       </VAlert>
       <CheckoutDialog v-if="success && paymentURL" v-bind="{paymentURL}" />
     </VForm>
+    <div v-if="progress && uploadPercentage" class="text-center mt-6">
+      <VProgressLinear
+        :value="uploadPercentage"
+        color="primary"
+        height="4"
+      />
+      <div>{{ uploadPercentage }}%</div>
+    </div>
   </VCard>
 </template>
 <script>
@@ -63,12 +70,21 @@ export default {
     publicKey: {
       type: String,
       default: 'fa71a63fafb8f9f3f5f23e120976c81995ee711a3d73ee871e82102bedf41022'
+    },
+    platform: {
+      type: String,
+      required: true
+    },
+    country: {
+      type: String,
+      required: true
     }
   },
   data() {
     return {
       file: null,
       progress: false,
+      uploadPercentage: 0,
       disabled: false,
       validated: false,
       error: false,
@@ -175,8 +191,8 @@ export default {
       let presignedUrl = null
       try {
         const apiURL = this.s3URL + 'getUploadUrl?' + new URLSearchParams({
-          platform: 'uber',
-          country: 'france',
+          platform: this.platform,
+          country: this.country,
           name: filename
         })
         const response = await fetch(apiURL)
@@ -203,14 +219,17 @@ export default {
       // Upload the file to S3
       this.status = 'Uploading file...'
       try {
-        const response = await fetch(presignedUrl, {
-          method: 'PUT',
+        const response = await this.$axios.put(presignedUrl, encryptedFile, {
           headers: {
             'Content-Type': 'application/zip'
           },
-          body: encryptedFile
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            if (progress < 100) {
+              this.uploadPercentage = progress
+            }
+          }
         })
-
         // Check if the upload was successful
         if (response.status !== 200) {
           const text = await response.text()
