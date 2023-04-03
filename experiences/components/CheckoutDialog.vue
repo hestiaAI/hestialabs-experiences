@@ -3,6 +3,7 @@
     v-model="dialog"
     transition="dialog-bottom-transition"
     max-width="600"
+    persistent
   >
     <VCard>
       <VCardText class="text-center pa-6">
@@ -14,47 +15,40 @@
             Votre archive a bien été envoyée!
           </span>
         </div>
-        <VBtn :href="paymentURL" target="_blank" color="primary" @click="dialog = false">
-          Payez maintenant
-        </VBtn>
+        <span>
+          Vous allez être redirigé vers la page de paiement.
+        </span>
+        <div class="ma-3">
+          <VProgressLinear
+            color="success"
+            indeterminate
+            rounded
+            height="6"
+          />
+        </div>
       </VCardText>
-      <VCardActions class="justify-end">
-        <VBtn
-          text
-          @click="dialog = false"
-        >
-          Plus tard
-        </VBtn>
-      </VCardActions>
     </VCard>
   </VDialog>
 </template>
 <script>
 export default {
   props: {
-    show: {
-      type: Boolean,
-      default: true
-    },
     paymentURL: {
       type: String,
-      default: null
+      required: true
+    },
+    timeout: {
+      type: Number,
+      default: 5000
     }
   },
   data() {
     return {
-      dialog: this.show
+      dialog: true
     }
   },
-  computed: {
-    disabled() {
-      return !this.paymentURL
-    }
-  },
-  watch: {
-    show(value) {
-      this.dialog = value
-    }
+  mounted() {
+    setTimeout(() => { window.location.href = this.paymentURL }, this.timeout)
   }
 }
 </script>
