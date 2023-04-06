@@ -8,6 +8,7 @@ import { mapTranslationObject } from '@/utils/directusHelpers'
 export const state = () => ({
   loaded: false,
   config: {},
+  uploads: {},
   experiences: {},
   pages: {}
 })
@@ -51,6 +52,9 @@ export const mutations = {
   },
   setLoaded(state) {
     state.loaded = true
+  },
+  setUploads(state, config) {
+    state.uploads = config
   },
   setConfig(state, config) {
     state.config = config
@@ -100,6 +104,12 @@ export const actions = {
     } catch (err) {
       console.error(err)
       commit('setPage', { key: pageId, value: null })
+    }
+  },
+  async loadUploads({ commit, state }) {
+    if (!state.loaded) {
+      const config = (await import('@/config/uploads-config.json')).default
+      commit('setUploads', config)
     }
   },
   async loadConfig({ commit, state }, { isDev }) {
