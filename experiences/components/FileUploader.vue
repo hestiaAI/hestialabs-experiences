@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <VCard outlined class="pa-6">
     <VForm ref="fileForm">
@@ -12,8 +13,8 @@
       />
 
       <BaseButton
-        v-bind="{ disabled, progress }"
-        :mdi-icon="statusIcon"
+        v-bind="{ error, success, disabled, progress }"
+        mdi-icon="mdiUpload"
         class="my-sm-2 mr-sm-4"
         @click="uploadFile"
       >
@@ -26,19 +27,7 @@
         :type="error ? 'error' : 'success'"
         text
       >
-        {{ error ? errorMessage : successMessage }}
-        <p v-if="fileMissing.length">
-          {{ fileMissing.length }} fichiers manquent à votre archive:
-          <ul>
-            <li v-for="filename in fileMissing" :key="filename">
-              {{ filename }}
-            </li>
-          </ul>
-          <br>
-          Avez bien suivi les instructions pour récupérer vos données ?
-          <br>
-          Si vous rencontrez des problèmes pour récupérer vos données ou si ce message apparait alors que vous avez récemment récupéré vos données en suivant bien le protocole indiqué sur <a href="https://personaldata.io/nos-donnees-nos-projets/mobilite/uber/rgpd/" target="blank">cette page</a>, veuillez nous contacter via <a :href="whatsAppLink" target="blank">Whatsapp</a>.
-        </p>
+        <div  v-html="error ? errorMessage : successMessage" />
       </VAlert>
       <CheckoutDialog v-if="success && paymentURL" v-bind="{paymentURL}" />
     </VForm>
@@ -53,24 +42,18 @@
   </VCard>
 </template>
 <script>
+import { mapState } from 'vuex'
 import JSZip from 'jszip'
-import mm from 'micromatch'
 import { hashFile, encryptFile } from 'data-experience'
 import * as d3 from 'd3'
+import mm from 'micromatch'
 import CheckoutDialog from './CheckoutDialog.vue'
+import { validateZip, getFilesFromZip } from '@/utils/fileHelpers.js'
 
 export default {
   name: 'FileUploader',
   components: { CheckoutDialog },
   props: {
-    s3URL: {
-      type: String,
-      default: 'https://serverless.hestia.ai/.netlify/functions/'
-    },
-    publicKey: {
-      type: String,
-      default: 'fa71a63fafb8f9f3f5f23e120976c81995ee711a3d73ee871e82102bedf41022'
-    },
     platform: {
       type: String,
       required: true
@@ -92,31 +75,21 @@ export default {
       success: false,
       status: '',
       successMessage: 'Votre archive a bien été envoyée. Nous vous contacterons dès que possible.',
-      fileNeeded: [
-        '**/*Driver Profile Data*.csv',
-        '**/*Driver Payments*.csv',
-        '**/*Driver Lifetime Trip*.csv',
-        '**/*Driver Online Offline.csv'
-      ],
-      fileMissing: [],
       fileRules: [
         v => !!v || 'Fichier requis',
         v => (v && v.size < 500 * 1e6) || 'Le fichier est trop volumineux',
         v => (v && v.name.endsWith('.zip')) || 'Le fichier doit être un zip'
       ],
-      paymentURL: null
+      paymentURL: null,
+      fileType: null
     }
   },
   computed: {
-    statusIcon() {
-      if (this.error) {
-        return 'mdiAlert'
-      } else if (this.success) {
-        return 'mdiCheckCircle'
-      } else {
-        return 'mdiUpload'
-      }
-    }
+    ...mapState({
+      encryptionPK: state => state.uploads.encryptionPK,
+      serverlessUrl: state => state.uploads.serverlessUrl,
+      products: state => state.uploads.products
+    })
   },
   watch: {
     file() {
@@ -124,23 +97,31 @@ export default {
       this.error = false
       this.progress = false
       this.success = false
-      this.fileMissing = []
       this.paymentURL = null
     }
   },
   methods: {
-    validateZip(zip) {
-      this.fileMissing = this.fileNeeded.filter((file) => {
-        const regex = mm.makeRe(file)
-        return !zip.file(regex).length
-      })
-      return this.fileMissing.length === 0
-    },
     async getUberInfos(zip) {
-      const file = await zip.file(mm.makeRe('**/*Driver Profile Data*.csv'))[0].async('text')
+      const product = this.products[this.country][this.platform].find(product => product.name === this.fileType)
+      if (!product) { return }
+      const file = await zip.file(mm.makeRe(product.driverInfos.file))[0].async('text')
       return await d3.csvParse(file, (d) => {
-        return { email: d.email, firstname: d.firstname, lastname: d.lastname }
+        const infos = {}
+        Object.entries(product.driverInfos.fields).forEach(([k, v]) => {
+          infos[k] = d[v]
+        })
+        return infos
       })[0]
+    },
+    getFileType(zip) {
+      return this.products[this.country][this.platform].some((product) => {
+        if (validateZip(zip, product.filesNeeded)) {
+          this.fileType = product.name
+          return true
+        } else {
+          return false
+        }
+      })
     },
     async uploadFile() {
       if (!this.$refs.fileForm.validate()) { return }
@@ -155,9 +136,9 @@ export default {
 
       // Validate the zip file
       this.status = 'Validating file...'
-      this.error = !(this.validateZip(zipObject))
+      this.error = !(this.getFileType(zipObject))
       if (this.error) {
-        this.errorMessage = 'Erreur pendant la validation du fichier: '
+        this.errorMessage = 'Erreur pendant la validation du fichier: votre archive n\'est pas reconnu par notre système. Si vous rencontrez des problèmes pour récupérer vos données ou si ce message apparait alors que vous avez récemment récupéré vos données en suivant bien le protocole indiqué sur <a href="https://personaldata.io/nos-donnees-nos-projets/mobilite/uber/rgpd/" target="blank">cette page</a>, veuillez nous contacter via <a :href="whatsAppLink" target="blank">Whatsapp</a>'
         this.disabled = false
         this.progress = false
         return
@@ -167,6 +148,9 @@ export default {
       this.status = 'Getting file name...'
       const hash = await hashFile(this.file)
       const filename = `Uber_${hash}.zip`
+
+      const uberInfos = await this.getUberInfos(zipObject)
+      console.log(uberInfos)
 
       // Encrypt the file
       this.status = 'Encrypting file...'
@@ -190,9 +174,9 @@ export default {
       this.status = 'Getting presigned URL...'
       let presignedUrl = null
       try {
-        const apiURL = this.s3URL + 'getUploadUrl?' + new URLSearchParams({
+        const apiURL = this.serverlessUrl + 'getUploadUrl?' + new URLSearchParams({
           platform: this.platform,
-          country: this.country,
+          country: 'test',//this.country,
           name: filename
         })
         const response = await fetch(apiURL)
@@ -249,7 +233,7 @@ export default {
       const { email, firstname, lastname } = await this.getUberInfos(zipObject)
       let clientRefID = null
       try {
-        const apiURL = this.s3URL + 'createTransaction?' + new URLSearchParams({
+        const apiURL = this.serverlessUrl + 'createTransaction?' + new URLSearchParams({
           filename,
           email,
           firstname,
@@ -277,7 +261,7 @@ export default {
       }
 
       this.paymentURL = `https://buy.stripe.com/fZe8wYbek6Nm6ze4gg?prefilled_email=${email}&client_reference_id=${clientRefID}&locale=fr`
-
+      */
       this.status = ''
       this.success = true
       this.disabled = false

@@ -32,14 +32,31 @@ export default {
       type: Boolean,
       default: true
     },
+    error: {
+      type: Boolean,
+      default: false
+    },
+    success: {
+      type: Boolean,
+      default: false
+    },
     progress: {
       type: Boolean,
       default: false
     }
   },
   computed: {
+    statusIcon() {
+      if (this.error) {
+        return 'mdiAlert'
+      } else if (this.success) {
+        return 'mdiCheckCircle'
+      } else {
+        return this.mdiIcon
+      }
+    },
     mdiIconResolved() {
-      return this.$vuetify.icons.values[this.mdiIcon]
+      return this.$vuetify.icons.values[this.statusIcon]
     }
   }
 }

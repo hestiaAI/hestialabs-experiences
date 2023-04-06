@@ -4,6 +4,8 @@ export default async({ store, isDev, app }) => {
     await store.dispatch('loadConfig', { isDev })
     // and only then we can load the experiences
     await store.dispatch('loadExperiences')
+    // load the products
+    await store.dispatch('loadUploads')
     // set state.loaded = true
     store.commit('setLoaded')
   }

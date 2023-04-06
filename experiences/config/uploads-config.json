@@ -1,0 +1,73 @@
+{
+  "serverlessUrl": "https://serverless.hestia.ai/.netlify/functions/",
+  "encryptionPK": "fa71a63fafb8f9f3f5f23e120976c81995ee711a3d73ee871e82102bedf41022",
+  "products": {
+    "france": {
+      "uber": [
+        {
+          "name": "method-01",
+          "paymentLink": "https://buy.stripe.com/28odRi4PW0oYcXC6op",
+          "filesNeeded": [
+            "**/driver_profile_data.csv",
+            "**/driver_app_analytics-*.csv",
+            "**/driver_lifetime_trips-*.csv",
+            "**/driver_payments-*.csv"
+          ],
+          "driverInfos": {
+            "file": "**/driver_profile_data.csv",
+            "fields": {
+              "email": "E-mail",
+              "firstname": "First Name",
+              "lastname": "Last Name",
+              "phone": "Phone Number"
+            }
+          }
+        },
+        {
+          "name": "method-02",
+          "paymentLink": "https://buy.stripe.com/fZe8wYbek6Nm6ze4gg",
+          "filesNeeded": [
+            "**/*Driver Profile Data*.csv",
+            "**/*Driver Payments*.csv",
+            "**/*Driver Lifetime Trip*.csv",
+            "**/*Driver Online Offline.csv"
+          ],
+          "driverInfos": {
+            "file": "**/*Driver Profile Data*.csv",
+            "fields": {
+              "email": "email",
+              "firstname": "firstname",
+              "lastname": "lastname",
+              "phone": "contact_number",
+              "mobile_country_code": "mobile_country_code"
+            }
+          }
+        }
+      ]
+    },
+    "switzerland": {
+      "uber": [
+        {
+          "name": "method-02",
+          "paymentLink": "https://buy.stripe.com/fZe8wYbek6Nm6ze4gg",
+          "filesNeeded": [
+            "**/*Driver Profile Data*.csv",
+            "**/*Driver Payments*.csv",
+            "**/*Driver Lifetime Trip*.csv",
+            "**/*Driver Online Offline.csv"
+          ],
+          "driverInfos": {
+            "file": "**/*Driver Profile Data*.csv",
+            "fields": {
+              "email": "email",
+              "firstname": "firstname",
+              "lastname": "lastname",
+              "phone": "contact_number",
+              "mobile_country_code": "mobile_country_code"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
