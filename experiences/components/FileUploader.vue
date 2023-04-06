@@ -27,7 +27,7 @@
         :type="error ? 'error' : 'success'"
         text
       >
-        <div  v-html="error ? errorMessage : successMessage" />
+        <div v-html="error ? errorMessage : successMessage" />
       </VAlert>
       <CheckoutDialog v-if="success && paymentURL" v-bind="{paymentURL}" />
     </VForm>
@@ -48,7 +48,7 @@ import { hashFile, encryptFile } from 'data-experience'
 import * as d3 from 'd3'
 import mm from 'micromatch'
 import CheckoutDialog from './CheckoutDialog.vue'
-import { validateZip, getFilesFromZip } from '@/utils/fileHelpers.js'
+import { validateZip } from '@/utils/fileHelpers.js'
 
 export default {
   name: 'FileUploader',
@@ -81,7 +81,8 @@ export default {
         v => (v && v.name.endsWith('.zip')) || 'Le fichier doit être un zip'
       ],
       paymentURL: null,
-      fileType: null
+      fileType: null,
+      paymentLink: null
     }
   },
   computed: {
@@ -98,6 +99,7 @@ export default {
       this.progress = false
       this.success = false
       this.paymentURL = null
+      this.paymentLink = null
     }
   },
   methods: {
@@ -117,6 +119,7 @@ export default {
       return this.products[this.country][this.platform].some((product) => {
         if (validateZip(zip, product.filesNeeded)) {
           this.fileType = product.name
+          this.paymentLink = product.paymentLink
           return true
         } else {
           return false
@@ -149,15 +152,12 @@ export default {
       const hash = await hashFile(this.file)
       const filename = `Uber_${hash}.zip`
 
-      const uberInfos = await this.getUberInfos(zipObject)
-      console.log(uberInfos)
-
       // Encrypt the file
       this.status = 'Encrypting file...'
       let encryptedFile = null
       try {
         const content = await zipObject.generateAsync({ type: 'uint8array' })
-        const encryptedContent = await encryptFile(content, this.publicKey)
+        const encryptedContent = await encryptFile(content, this.encryptionPK)
         encryptedFile = new File([encryptedContent], filename, {
           type: 'application/zip'
         })
@@ -176,7 +176,7 @@ export default {
       try {
         const apiURL = this.serverlessUrl + 'getUploadUrl?' + new URLSearchParams({
           platform: this.platform,
-          country: 'test',//this.country,
+          country: this.country,
           name: filename
         })
         const response = await fetch(apiURL)
@@ -230,14 +230,12 @@ export default {
 
       // Create a transaction for payment
       this.status = 'Creating a transaction...'
-      const { email, firstname, lastname } = await this.getUberInfos(zipObject)
+      const uberInfos = await this.getUberInfos(zipObject)
       let clientRefID = null
       try {
         const apiURL = this.serverlessUrl + 'createTransaction?' + new URLSearchParams({
           filename,
-          email,
-          firstname,
-          lastname
+          ...uberInfos
         })
         const response = await fetch(apiURL)
 
@@ -260,8 +258,7 @@ export default {
         return
       }
 
-      this.paymentURL = `https://buy.stripe.com/fZe8wYbek6Nm6ze4gg?prefilled_email=${email}&client_reference_id=${clientRefID}&locale=fr`
-      */
+      this.paymentURL = `${this.paymentLink}?prefilled_email=${uberInfos.email}&client_reference_id=${clientRefID}&locale=fr`
       this.status = ''
       this.success = true
       this.disabled = false

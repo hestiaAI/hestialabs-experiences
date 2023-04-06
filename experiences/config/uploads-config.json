@@ -5,25 +5,6 @@
     "france": {
       "uber": [
         {
-          "name": "method-01",
-          "paymentLink": "https://buy.stripe.com/28odRi4PW0oYcXC6op",
-          "filesNeeded": [
-            "**/driver_profile_data.csv",
-            "**/driver_app_analytics-*.csv",
-            "**/driver_lifetime_trips-*.csv",
-            "**/driver_payments-*.csv"
-          ],
-          "driverInfos": {
-            "file": "**/driver_profile_data.csv",
-            "fields": {
-              "email": "E-mail",
-              "firstname": "First Name",
-              "lastname": "Last Name",
-              "phone": "Phone Number"
-            }
-          }
-        },
-        {
           "name": "method-02",
           "paymentLink": "https://buy.stripe.com/fZe8wYbek6Nm6ze4gg",
           "filesNeeded": [
@@ -38,7 +19,7 @@
               "email": "email",
               "firstname": "firstname",
               "lastname": "lastname",
-              "phone": "contact_number",
+              "mobile_phone_number": "contact_number",
               "mobile_country_code": "mobile_country_code"
             }
           }
@@ -62,7 +43,7 @@
               "email": "email",
               "firstname": "firstname",
               "lastname": "lastname",
-              "phone": "contact_number",
+              "mobile_phone_number": "contact_number",
               "mobile_country_code": "mobile_country_code"
             }
           }
