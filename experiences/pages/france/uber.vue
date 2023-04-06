@@ -14,7 +14,7 @@
     </div>
     <VContainer>
       <p class="text-h6 mt-6">
-        Nous avons développé un outil pour vous aider à analyser vos données Uber. Cet outil permet de transformer vos données bruts en données comptables. Vous pouvez ensuite les utiliser pour calculer vos arriérés, vos gains et vos coûts. Vous pouvez aussi visualiser votre temps de travail et vos km parcourus, y compris à vide (sans client).
+        Nous avons développé Horkos Deluxe, un assistant juridique 2.0 qui vous aide à récupérer vos données Uber, les analyser, et produire les documents vous permettant d'engager des procédures légales (preuves).
       </p>
       <section ref="get-your-data" class="section-wrapper">
         <VRow>
@@ -26,7 +26,7 @@
               1. Vous n’avez pas encore récupéré vos données Uber
             </div>
             <p class="text-h6">
-              Profiter de notre accompagnement tout au long du procesus de récupération de vos données Uber.
+              Profitez de notre accompagnement tout au long du processus de récupération de vos données auprès d'Uber. Horkos Deluxe transformera ensuite vos données bruts en données comptables : calculs de vos arriérés, de vos gains et de vos coûts. Vous pourrez aussi visualiser votre temps de travail et vos km parcourus, y compris à vide (sans client).
             </p>
             <div class="text-center ma-3">
               <VBtn href="https://buy.stripe.com/5kA3cEcio5Jie1GdQU" color="primary" target="_blank">
