@@ -1,6 +1,5 @@
 <template>
   <VBtn
-    :outlined="outlined"
     v-bind="$attrs"
     class="my-2 base-button"
     @click="$emit('click', $event)"
@@ -27,10 +26,6 @@ export default {
     mdiIcon: {
       type: String,
       default: null
-    },
-    outlined: {
-      type: Boolean,
-      default: true
     },
     error: {
       type: Boolean,
