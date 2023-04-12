@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/twitter",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "main": "dist/index.mjs",
   "type": "module",
   "files": [
