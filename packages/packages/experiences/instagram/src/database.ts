@@ -337,7 +337,12 @@ const config: DatabaseConfig = {
               '%b %d, %Y, %H:%M %p',
               SUPPORTED_LOCALE.EN
             ) ||
-            toDateString(o.Time.value, '%d %b %Y à %H:%M', SUPPORTED_LOCALE.FR)
+            toDateString(
+              o.Time.value,
+              '%d %b %Y à %H:%M',
+              SUPPORTED_LOCALE.FR
+            ) ||
+            toDateString(o.Time.timestamp, '%s', SUPPORTED_LOCALE.FR)
         }
       },
       getters: [
@@ -364,7 +369,12 @@ const config: DatabaseConfig = {
               '%b %d, %Y, %H:%M %p',
               SUPPORTED_LOCALE.EN
             ) ||
-            toDateString(o.Time.value, '%d %b %Y à %H:%M', SUPPORTED_LOCALE.FR)
+            toDateString(
+              o.Time.value,
+              '%d %b %Y à %H:%M',
+              SUPPORTED_LOCALE.FR
+            ) ||
+            toDateString(o.Time.timestamp, '%s', SUPPORTED_LOCALE.FR)
         }
       },
       getters: [
@@ -391,7 +401,12 @@ const config: DatabaseConfig = {
               '%b %d, %Y, %H:%M %p',
               SUPPORTED_LOCALE.EN
             ) ||
-            toDateString(o.Time.value, '%d %b %Y à %H:%M', SUPPORTED_LOCALE.FR)
+            toDateString(
+              o.Time.value,
+              '%d %b %Y à %H:%M',
+              SUPPORTED_LOCALE.FR
+            ) ||
+            toDateString(o.Time.timestamp, '%s', SUPPORTED_LOCALE.FR)
         }
       },
       getters: [
@@ -434,7 +449,8 @@ const config: DatabaseConfig = {
               '%b %d, %Y, %H:%M %p',
               SUPPORTED_LOCALE.EN
             ) ||
-            toDateString(dateString, '%d %b %Y à %H:%M', SUPPORTED_LOCALE.FR)
+            toDateString(dateString, '%d %b %Y à %H:%M', SUPPORTED_LOCALE.FR) ||
+            toDateString(o.Time.timestamp, '%s', SUPPORTED_LOCALE.FR)
         }
       },
       getters: [
