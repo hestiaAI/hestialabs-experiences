@@ -50,7 +50,6 @@ import * as d3 from 'd3'
 import mm from 'micromatch'
 import CheckoutDialog from './CheckoutDialog.vue'
 import { validateZip } from '@/utils/fileHelpers.js'
-import { encodeObject } from '@/utils/apiHelpers'
 
 export default {
   name: 'FileUploader',
@@ -176,11 +175,11 @@ export default {
       this.status = 'Getting presigned URL...'
       let presignedUrl = null
       try {
-        const apiURL = this.serverlessUrl + 'getUploadUrl?' + new URLSearchParams(encodeObject({
+        const apiURL = this.serverlessUrl + 'getUploadUrl?' + new URLSearchParams({
           platform: this.platform,
           country: this.country,
           name: filename
-        }))
+        })
         const response = await fetch(apiURL)
 
         if (response.status !== 200) {
@@ -235,10 +234,10 @@ export default {
       const uberInfos = await this.getUberInfos(zipObject)
       let clientRefID = null
       try {
-        const apiURL = this.serverlessUrl + 'createTransaction?' + new URLSearchParams(encodeObject({
+        const apiURL = this.serverlessUrl + 'createTransaction?' + new URLSearchParams({
           filename,
           ...uberInfos
-        }))
+        })
         const response = await fetch(apiURL)
 
         if (response.status !== 200) {
