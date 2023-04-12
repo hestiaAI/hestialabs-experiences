@@ -56,7 +56,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import { encodeObject } from '@/utils/apiHelpers'
 
 export default {
   data() {
@@ -115,13 +114,13 @@ export default {
       this.success = false
 
       if (this.$refs.form.validate()) {
-        const contactInfo = encodeObject({
+        const contactInfo = {
           firstname: this.firstName,
           lastname: this.lastName,
           email: this.email,
           mobile_country_code: `+${this.phoneCountryCode}`,
           mobile_phone_number: this.phoneNumber
-        })
+        }
         try {
           const apiURL = this.serverlessUrl + 'createAffiliate?' + new URLSearchParams(contactInfo)
           const response = await fetch(apiURL)
