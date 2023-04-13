@@ -1,4 +1,7 @@
 import mm from 'micromatch'
+import JSZip from 'jszip'
+import Papa from 'papaparse'
+import { JSONPath } from 'jsonpath-plus'
 
 /**
  * Validates a zip file to ensure it contains all the files needed
@@ -34,7 +37,7 @@ export function getFilesFromZip(zip, filesNeeded) {
   const files = {}
   filesNeeded.forEach((file) => {
     const regex = mm.makeRe(file)
-    const fileObject = zip.file(regex)[0]
+    const fileObject = zip.file(regex)
     files[file] = fileObject
   })
   return files
@@ -55,4 +58,75 @@ export function searchAndReplace(file, search, replace) {
   const fileString = file.asText()
   const newFileString = fileString.replace(search, replace)
   return newFileString
+}
+
+/**
+ * Retrieve and read all files that match a regex
+ * @param {List of Uppy files} files: the list of uppy files to inspect
+ * @param {Regex pattern to search for files} regex: the regex use to find files
+ * @returns a list of files Object of the form:
+ * {
+ *    text: content of the file as string
+ *    name: file name
+ *    extension: file extension
+ * }
+ */
+export async function getFiles(files, regex) {
+  const filesFound = []
+  for (const file of files) {
+    if (file.extension === 'zip') {
+      const zipLoader = new JSZip()
+      const zip = await zipLoader.loadAsync(file.data)
+      const zipFiles = zip.file(regex).filter(zipFile => !zipFile.dir)
+      const contents = await Promise.all(zipFiles.map((zipFile) => {
+        const name = zipFile.name.split('/').pop()
+        const extension = zipFile.name.split('.').pop()
+        return zipFile.async('string').then((text) => { return { text, name, extension } })
+      }))
+      filesFound.push(...contents)
+    } else if (regex.test(file.name)) {
+      filesFound.push({
+        text: file.data.text(),
+        name: file.name,
+        extension: file.name.split('.').pop()
+      })
+    }
+  }
+  return filesFound
+}
+
+export async function readCsv(csvString, params = {}) {
+  const { headers, items } = await new Promise((resolve, reject) => {
+    Papa.parse(csvString, {
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results) {
+        results.errors.forEach(e => console.error(e))
+        resolve({ headers: results.meta.fields, items: results.data })
+      },
+      ...params
+    })
+  })
+  return { headers, items }
+}
+
+export function applyJsonPath(jsonObject, jsonPath) {
+  const found = JSONPath({ path: jsonPath, json: jsonObject })
+}
+export async function generateTable(files, config) {
+  console.log('Files:', files, 'config: ', config)
+  const regex = mm.makeRe(config.file)
+  const filesFound = await getFiles(files, regex)
+  if (!filesFound.length) {
+    throw new Error('No files where found with the current regex: ' + regex)
+  }
+
+  /*
+  const results = []
+  filesFound.forEach(fileObject => {
+
+    config.columns.
+  })
+  */
+  console.log(filesFound)
 }
