@@ -1,4 +1,5 @@
 import TheDataExperience from './components/TheDataExperience.vue'
+import CodeEditorComponent from './components/misc/CodeEditor.vue'
 
 import store from './store'
 import './assets/dc.css'
@@ -18,6 +19,11 @@ export { default as chartViewBar } from './components/chart/view/ChartViewBar.vu
 export { default as chartViewGenericMap } from './components/chart/view/ChartViewGenericMap.vue'
 export { hashFile, encryptFile } from './utils/encryption'
 
+export const CodeEditor = {
+  install(Vue, options) {
+    Vue.component('CodeEditor', CodeEditorComponent)
+  }
+}
 export const ViewBlock = {
   install(Vue, options) {
     injectTranslationHelpersIntoVue(Vue, options?.ignoreConflicts)
