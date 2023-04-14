@@ -22,10 +22,12 @@
           label="Configuration de parsing"
           solo
           class="text-center"
+          item-value="config"
+          item-text="name"
           @change="onConfigChange"
         />
-        <CodeEditor v-if="selectedConfig === 'custom'" v-model="configString" language="json" line-numbers class="mb-3" />
-        <BaseButton v-bind="{error, success, progress}" @click="generateTable">
+        <CodeEditor v-model="configString" language="json" line-numbers class="mb-3" />
+        <BaseButton v-bind="{error, success, progress}" class="mb-3" @click="generateTable">
           Generate Table
         </BaseButton>
         <VAlert
@@ -70,15 +72,14 @@ export default {
   data() {
     return {
       uppy: null,
-      configs: ['custom'],
-      selectedConfig: 'custom',
+      configs: [{ name: 'custom', config: {} }],
+      selectedConfig: null,
+      configString: '',
       table: null,
       error: false,
       success: false,
       progress: false,
-      errorMessage: '',
-      configString: '',
-      configObject: {}
+      errorMessage: ''
     }
   },
   watch: {
@@ -86,22 +87,23 @@ export default {
       this.uppy.setOptions({
         locale: locales[locale]
       })
-    },
-    customConfig(config) {
-      this.error = true
-      try {
-        const configObject = JSON.parse(config)
-        this.configObject = configObject
-      } catch (e) {
-        this.errorMessage = 'Invalid JSON configuration: ' + e.toString()
-        this.error = true
-      }
     }
   },
   mounted() {
     this.initUppy()
+    this.fetchConfigs()
   },
   methods: {
+    async fetchConfigs() {
+      try {
+        const configs = (await this.$directus.items('Parsing_configs').readByQuery({
+          fields: ['name', 'config']
+        })).data
+        this.configs = [...this.configs, ...configs]
+      } catch (e) {
+        console.error(e)
+      }
+    },
     initUppy() {
       const config = {
         debug: false,
@@ -125,15 +127,32 @@ export default {
         })
     },
     onConfigChange() {
-      console.log(this.selectedConfig)
+      this.configString = JSON.stringify(this.selectedConfig, null, 2)
     },
     async generateTable() {
       this.progress = true
       this.error = false
       this.success = false
+
+      if (this.uppy.getFiles().length === 0) {
+        this.error = true
+        this.progress = false
+        this.errorMessage = 'Please provide a file to parse'
+        return
+      }
+
+      let configObject = {}
+      try {
+        configObject = JSON.parse(this.configString)
+      } catch (e) {
+        this.errorMessage = 'Invalid JSON configuration: ' + e.toString()
+        this.error = true
+        return
+      }
+
       try {
         const start2 = performance.now()
-        this.table = await generateTable(this.uppy.getFiles(), this.configObject)
+        this.table = await generateTable(this.uppy.getFiles(), configObject)
         const end2 = performance.now()
         console.log(`Execution time 2: ${end2 - start2} ms`)
       } catch (e) {
