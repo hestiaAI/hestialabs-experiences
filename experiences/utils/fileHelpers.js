@@ -1,8 +1,8 @@
 import mm from 'micromatch'
 import JSZip from 'jszip'
 import Papa from 'papaparse'
-import { JSONPath } from 'jsonpath-plus'
-
+import FetchItemsWorker from '@/utils/jsonpath.worker.js'
+import { runWorker } from '@/utils/worker'
 /**
  * Validates a zip file to ensure it contains all the files needed
  * Usage:
@@ -120,6 +120,7 @@ export function getJsonObject(text, extension) {
       throw new Error(`Invalid file type, ${extension} is not supported.`)
   }
 }
+
 export async function generateTable(files, config) {
   const regex = mm.makeRe(config.file)
   const filesFound = await getFiles(files, regex)
@@ -127,23 +128,16 @@ export async function generateTable(files, config) {
     throw new Error('No files where found with the current regex: ' + regex)
   }
 
-  console.log('Files found:', filesFound)
-
-  const results = []
-  filesFound.forEach((fileObject) => {
-    console.log('fileObject:', fileObject)
+  const results = (await Promise.all(filesFound.map(async(fileObject) => {
     const json = getJsonObject(fileObject.text, fileObject.extension)
-    const rows = JSONPath({ json, path: config.array, resultType: 'all' })
-    rows.forEach((r) => {
-      const row = {}
-      config.columns.forEach((c) => {
-        row[c.name] = JSONPath({ json, path: r.path + c.selector, resultType: 'value' }).pop() || null
-      })
-      results.push(row)
+    const rows = await runWorker(new FetchItemsWorker(), {
+      json,
+      arrayPath: config.array,
+      columns: config.columns
     })
-  })
+    return rows
+  }))).flat(1)
 
-  console.log(results)
   return {
     headers: config.columns.map((c) => { return { text: c.name, value: c.name } }),
     items: results
