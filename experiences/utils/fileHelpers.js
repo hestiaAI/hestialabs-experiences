@@ -86,7 +86,7 @@ export async function getFiles(files, regex) {
       filesFound.push(...contents)
     } else if (regex.test(file.name)) {
       filesFound.push({
-        text: file.data.text(),
+        text: await file.data.text(),
         name: file.name,
         extension: file.name.split('.').pop()
       })
@@ -110,23 +110,42 @@ export async function readCsv(csvString, params = {}) {
   return { headers, items }
 }
 
-export function applyJsonPath(jsonObject, jsonPath) {
-  const found = JSONPath({ path: jsonPath, json: jsonObject })
+export function getJsonObject(text, extension) {
+  switch (extension) {
+    case 'json':
+      return JSON.parse(text)
+    case 'csv':
+      return readCsv(text).items
+    default:
+      throw new Error(`Invalid file type, ${extension} is not supported.`)
+  }
 }
 export async function generateTable(files, config) {
-  console.log('Files:', files, 'config: ', config)
   const regex = mm.makeRe(config.file)
   const filesFound = await getFiles(files, regex)
   if (!filesFound.length) {
     throw new Error('No files where found with the current regex: ' + regex)
   }
 
-  /*
-  const results = []
-  filesFound.forEach(fileObject => {
+  console.log('Files found:', filesFound)
 
-    config.columns.
+  const results = []
+  filesFound.forEach((fileObject) => {
+    console.log('fileObject:', fileObject)
+    const json = getJsonObject(fileObject.text, fileObject.extension)
+    const rows = JSONPath({ json, path: config.array, resultType: 'all' })
+    rows.forEach((r) => {
+      const row = {}
+      config.columns.forEach((c) => {
+        row[c.name] = JSONPath({ json, path: r.path + c.selector, resultType: 'value' }).pop() || null
+      })
+      results.push(row)
+    })
   })
-  */
-  console.log(filesFound)
+
+  console.log(results)
+  return {
+    headers: config.columns.map((c) => { return { text: c.name, value: c.name } }),
+    items: results
+  }
 }
