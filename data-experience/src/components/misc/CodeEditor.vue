@@ -62,7 +62,7 @@ export default {
 
     code(v) {
       // propagate to parent component
-      this.$emit('update:value', v)
+      this.$emit('input', v)
     }
   },
   methods: {
