@@ -25,7 +25,7 @@
           @change="onConfigChange"
         />
         <CodeEditor v-if="selectedConfig === 'custom'" v-model="customConfig" language="json" line-numbers class="mb-3" />
-        <BaseButton @click="generateTable">
+        <BaseButton v-bind="{error, success, progress}" @click="generateTable">
           Generate Table
         </BaseButton>
         <VAlert
@@ -36,6 +36,13 @@
         >
           <div v-text="error" />
         </VAlert>
+
+        <VDataTable
+          v-if="success"
+          v-bind="{...table}"
+          :items-per-page="5"
+          class="elevation-1"
+        />
       </VCol>
     </VRow>
   </VContainer>
@@ -64,17 +71,22 @@ export default {
     return {
       uppy: null,
       configs: ['custom'],
-      selectedConfig: null,
-      headers: [],
-      items: [],
-      error: null,
+      selectedConfig: 'custom',
+      table: null,
+      error: false,
+      success: false,
+      progress: false,
       customConfig: JSON.stringify({
         file: '**/*viewed.json',
-        array: '$.custom_audiences_all_types_v2.*',
+        array: '$..impressions_history_ads_seen[*]',
         columns: [
           {
             name: 'column1',
-            selector: '$.advertiser_name'
+            selector: '..value'
+          },
+          {
+            name: 'column2',
+            selector: '..timestamp'
           }
         ]
       }, null, 2)
@@ -85,6 +97,10 @@ export default {
       this.uppy.setOptions({
         locale: locales[locale]
       })
+    },
+    customConfig(oldValue, newValue) {
+      console.log('old', oldValue)
+      console.log('new', newValue)
     }
   },
   mounted() {
@@ -116,15 +132,20 @@ export default {
     onConfigChange() {
       console.log(this.selectedConfig)
     },
-    generateTable() {
-      console.log(this.uppy.getFiles())
-
+    async generateTable() {
+      this.progress = true
+      this.error = false
+      this.success = false
       try {
-        this.table = generateTable(this.uppy.getFiles(), JSON.parse(this.customConfig))
+        this.table = await generateTable(this.uppy.getFiles(), JSON.parse(this.customConfig))
         console.log(this.table)
       } catch (e) {
-        this.error = e.toString()
+        this.progress = false
+        this.error = true
+        return
       }
+      this.progress = false
+      this.success = true
     }
   }
 }
