@@ -110,12 +110,12 @@ export async function readCsv(csvString, params = {}) {
   return { headers, items }
 }
 
-export function getJsonObject(text, extension) {
+export async function getJsonObject(text, extension) {
   switch (extension) {
     case 'json':
       return JSON.parse(text)
     case 'csv':
-      return readCsv(text).items
+      return (await readCsv(text)).items
     default:
       throw new Error(`Invalid file type, ${extension} is not supported.`)
   }
@@ -129,7 +129,8 @@ export async function generateTable(files, config) {
   }
 
   const results = (await Promise.all(filesFound.map(async(fileObject) => {
-    const json = getJsonObject(fileObject.text, fileObject.extension)
+    const json = await getJsonObject(fileObject.text, fileObject.extension)
+    console.log(json)
     const rows = await runWorker(new FetchItemsWorker(), {
       json,
       arrayPath: config.array,
