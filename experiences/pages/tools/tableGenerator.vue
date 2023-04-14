@@ -24,7 +24,7 @@
           class="text-center"
           @change="onConfigChange"
         />
-        <CodeEditor v-if="selectedConfig === 'custom'" v-model="customConfig" language="json" line-numbers class="mb-3" />
+        <CodeEditor v-if="selectedConfig === 'custom'" v-model="configString" language="json" line-numbers class="mb-3" />
         <BaseButton v-bind="{error, success, progress}" @click="generateTable">
           Generate Table
         </BaseButton>
@@ -34,7 +34,7 @@
           type="error"
           text
         >
-          <div v-text="error" />
+          <div v-text="errorMessage" />
         </VAlert>
 
         <VDataTable
@@ -76,20 +76,9 @@ export default {
       error: false,
       success: false,
       progress: false,
-      customConfig: JSON.stringify({
-        file: '**/*viewed.json',
-        array: '$..impressions_history_ads_seen[*]',
-        columns: [
-          {
-            name: 'column1',
-            selector: '..value'
-          },
-          {
-            name: 'column2',
-            selector: '..timestamp'
-          }
-        ]
-      }, null, 2)
+      errorMessage: '',
+      configString: '',
+      configObject: {}
     }
   },
   watch: {
@@ -98,9 +87,15 @@ export default {
         locale: locales[locale]
       })
     },
-    customConfig(oldValue, newValue) {
-      console.log('old', oldValue)
-      console.log('new', newValue)
+    customConfig(config) {
+      this.error = true
+      try {
+        const configObject = JSON.parse(config)
+        this.configObject = configObject
+      } catch (e) {
+        this.errorMessage = 'Invalid JSON configuration: ' + e.toString()
+        this.error = true
+      }
     }
   },
   mounted() {
@@ -137,10 +132,13 @@ export default {
       this.error = false
       this.success = false
       try {
-        this.table = await generateTable(this.uppy.getFiles(), JSON.parse(this.customConfig))
-        console.log(this.table)
+        const start2 = performance.now()
+        this.table = await generateTable(this.uppy.getFiles(), this.configObject)
+        const end2 = performance.now()
+        console.log(`Execution time 2: ${end2 - start2} ms`)
       } catch (e) {
         this.progress = false
+        this.errorMessage = e
         this.error = true
         return
       }
