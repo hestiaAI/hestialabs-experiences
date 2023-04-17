@@ -58,6 +58,12 @@
 import { mapState } from 'vuex'
 
 export default {
+  props: {
+    country: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       firstName: '',
@@ -118,6 +124,7 @@ export default {
           firstname: this.firstName,
           lastname: this.lastName,
           email: this.email,
+          country: this.country,
           mobile_country_code: `+${this.phoneCountryCode}`,
           mobile_phone_number: this.phoneNumber
         }

@@ -27,7 +27,7 @@
                   </NuxtLink>
                 </li>
                 <li>
-                  <NuxtLink to="/uber/switzerland">
+                  <NuxtLink to="/switzerland/uber">
                     Suisse
                   </NuxtLink>
                 </li>
