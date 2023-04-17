@@ -42,6 +42,7 @@
     "d3-time-format": "^4.1.0",
     "dc": "^4.2.7",
     "dom-to-image-more": "^2.11.1",
+    "hybrid-crypto-js": "^0.2.4",
     "jsonpath-plus": "^7.1.0",
     "jszip": "^3.10.1",
     "libsodium-wrappers": "^0.7.10",
