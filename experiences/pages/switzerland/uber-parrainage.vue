@@ -64,7 +64,7 @@
       <section ref="subscribe" class="section-wrapper">
         <VRow>
           <VCol cols="12">
-            <AffiliateForm country="France" />
+            <AffiliateForm country="Switzerland" />
           </VCol>
         </VRow>
       </section>
