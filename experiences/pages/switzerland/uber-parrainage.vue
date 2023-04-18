@@ -7,18 +7,13 @@
             Parlez d’Horkos Deluxe, Gagnez de l’argent
           </h1>
           <h6 class="text-h6 white--text">
-            Vous recevrez 50 euros à chaque fois qu’un chauffeur utilise notre service grâce à vous.
+            Vous recevrez 50 CHF à chaque fois qu’un chauffeur utilise notre service grâce à vous.
           </h6>
         </div>
       </VContainer>
     </div>
     <VContainer>
       <section ref="description" class="section-wrapper">
-        <VRow justify="center">
-          <VCol cols="12" align="center">
-            <BaseVideo video-src="https://vimeo.com/816591836" />
-          </VCol>
-        </VRow>
         <VRow>
           <VCol cols="12">
             <p class="text-h6 mt-6">
@@ -43,20 +38,21 @@
             <p class="text-h6 mt-6">
               <ol>
                 <li>
-                  Inscrivez-vous au programme de parrainage en remplissant le formulaire ci-dessous
+                  Inscrivez-vous au programme de parrainage en remplissant le formulaire ci-dessous.
                 </li>
                 <li>
                   Vous recevrez un code personnel par email. Partagez-le avec des chauffeurs Uber.
                 </li>
                 <li>
-                  <span class="red--text font-weight-bold">À chaque fois qu’un chauffeur utilise votre code personnel</span> en cliquant sur le bouton « Souscrivez au service Horkos Deluxe » sur <NuxtLink to="/france/uber">
-                    cette page
-                  </NuxtLink>, il bénéficie de <span class="red--text font-weight-bold">30 euros de réduction</span> (120 euros au lieu de 150 euros) et <span class="red--text font-weight-bold">nous vous versons 50 euros.</span>
+                  <span class="red--text font-weight-bold">À chaque fois qu’un chauffeur utilise votre code personnel</span> en cliquant sur le bouton « Souscrivez au service Horkos Deluxe » sur
+                  <NuxtLink to="/switzerland/uber">
+                    <span>cette page</span>
+                  </NuxtLink>, il bénéficie de <span class="red--text font-weight-bold">60% de réduction</span> (60 CHF au lieu de 150 CHF) et <span class="red--text font-weight-bold">nous vous versons 50 CHF</span> par chauffeur parrainé.
                 </li>
               </ol>
             </p>
             <p class="text-h6 mt-6">
-              Ceci est une offre de lancement, premiers arrivés, premiers servis. Nous diminuerons vraisemblablement la valeur des coupons dans les semaines à venir.
+              Attention cette offre n'est valable que jusqu'au 30 avril.
             </p>
           </VCol>
         </VRow>
