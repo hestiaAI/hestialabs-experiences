@@ -125,6 +125,7 @@ export default {
           lastname: this.lastName,
           email: this.email,
           country: this.country,
+          source: `AffiliateForm/${this.country}`,
           mobile_country_code: `+${this.phoneCountryCode}`,
           mobile_phone_number: this.phoneNumber
         }
