@@ -7,7 +7,7 @@
             Parlez d’Horkos Deluxe, Gagnez de l’argent
           </h1>
           <h6 class="text-h6 white--text">
-            Vous recevrez 50 euros à chaque fois qu’un chauffeur utilise notre service grâce à vous.
+            Vous recevrez 50 CHF à chaque fois qu’un chauffeur utilise notre service grâce à vous.
           </h6>
         </div>
       </VContainer>
@@ -45,9 +45,9 @@
                 </li>
                 <li>
                   <span class="red--text font-weight-bold">À chaque fois qu’un chauffeur utilise votre code personnel</span> en cliquant sur le bouton « Souscrivez au service Horkos Deluxe » sur
-                  <NuxtLink to="/france/uber">
+                  <NuxtLink to="/switzerland/uber">
                     <span>cette page</span>
-                  </NuxtLink>, il bénéficie de <span class="red--text font-weight-bold">60% de réduction</span> (60 euros au lieu de 150 euros) et <span class="red--text font-weight-bold">nous vous versons 50 euros</span> par chauffeur parrainé.
+                  </NuxtLink>, il bénéficie de <span class="red--text font-weight-bold">60% de réduction</span> (60 CHF au lieu de 150 CHF) et <span class="red--text font-weight-bold">nous vous versons 50 CHF</span> par chauffeur parrainé.
                 </li>
               </ol>
             </p>
@@ -60,7 +60,7 @@
       <section ref="subscribe" class="section-wrapper">
         <VRow>
           <VCol cols="12">
-            <AffiliateForm country="France" />
+            <AffiliateForm country="Switzerland" />
           </VCol>
         </VRow>
       </section>
