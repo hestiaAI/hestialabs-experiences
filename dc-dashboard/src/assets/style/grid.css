@@ -1,0 +1,68 @@
+/* Include padding and border in the total width and height of the elements. */
+.dc-dashboard * {
+  box-sizing: border-box;
+}
+
+.dc-dashboard .row {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  margin: 12px;
+}
+
+.dc-dashboard .flex {
+  display: flex;
+}
+
+.dc-dashboard .flex-column {
+  flex-direction: column;
+}
+
+.dc-dashboard .flex-row {
+  flex-direction: row;
+}
+
+.dc-dashboard .spacer {
+  flex: 1;
+}
+
+.dc-dashboard .flex-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.dc-dashboard .flex-start {
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.dc-dashboard .flex-end {
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.dc-dashboard .flex-justify {
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* For mobile phones: */
+.dc-dashboard [class*="c-"] {
+  width: 100%;
+}
+
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  .dc-dashboard .c-1 {width: 8.33%;}
+  .dc-dashboard .c-2 {width: 16.66%;}
+  .dc-dashboard .c-3 {width: 25%;}
+  .dc-dashboard .c-4 {width: 33.33%;}
+  .dc-dashboard .c-5 {width: 41.66%;}
+  .dc-dashboard .c-6 {width: 50%;}
+  .dc-dashboard .c-7 {width: 58.33%;}
+  .dc-dashboard .c-8 {width: 66.66%;}
+  .dc-dashboard .c-9 {width: 75%;}
+  .dc-dashboard .c-10 {width: 83.33%;}
+  .dc-dashboard .c-11 {width: 91.66%;}
+  .dc-dashboard .c-12 {width: 100%;}
+}

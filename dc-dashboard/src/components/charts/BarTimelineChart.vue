@@ -1,40 +1,33 @@
 <template>
-  <VContainer>
+  <div>
     <div :id="'bar-chart-' + graphId">
-      <div class="d-flex">
+      <div class="flex">
         <div>
           <strong>{{ title }}</strong>
-          <ChartViewFilters />
+          <ChartFilters />
         </div>
-        <VSpacer />
-        <div style="max-width: 160px">
-        <VSelect
+        <div class="spacer"></div>
+        <TabRadio
           v-model="interval"
-          :items="intervalsName"
-          :label="$t('Time interval')"
+          :options="intervalsName"
+          :label="$t(k('time-interval'))"
           @change="redraw"
-          class="ma-0 ml-2"
-          hide-details
+          class="capitalize"
         />
-        </div>
       </div>
-
     </div>
-  </VContainer>
+  </div>
 </template>
 <script>
-
 import * as d3 from 'd3'
 import * as dc from 'dc'
-import mixin from './mixin'
-import ChartViewFilters from '../filters/ChartViewFilters.vue'
-
-// Remove warning on default colorscheme, even if not used..
-dc.config.defaultColors(d3.schemePaired)
-
+import ChartMixin from '@/mixins/chart-mixin'
+import TranslationMixin from '@/mixins/translation-mixin'
+import ChartFilters from '@/components/ChartFilters.vue'
+import TabRadio from '@/components/base/TabRadio.vue'
 export default {
-  components: { ChartViewFilters },
-  mixins: [mixin],
+  components: { ChartFilters, TabRadio },
+  mixins: [ChartMixin, TranslationMixin],
   props: {
     /**
      * Column name of the {values} that represent date values
@@ -81,14 +74,12 @@ export default {
     }
     return {
       results: [],
-      interval: null,
+      interval: 'Month',
       intervals,
       intervalsName: Object.keys(intervals),
       minDate: null,
       maxDate: null,
-      barChart: null,
-      dateDimension: null,
-      dateGroup: null
+      barChart: null
     }
   },
   computed: {
@@ -98,6 +89,16 @@ export default {
       } else {
         return d => new Date(d)
       }
+    },
+    dateDimension(){
+      return this.ndx.dimension(d => this.dateParser(d[this.dateAccessor]))
+    },
+    dateGroup(){
+      console.log('Selected', this.interval)
+      const grouper = k => this.intervals[this.interval](k)
+      return this.valueAccessor
+        ? this.dateDimension.group(grouper).reduceSum(d => d[this.valueAccessor])
+        : this.dateDimension.group(grouper).reduceCount()
     }
   },
   methods: {
@@ -113,8 +114,6 @@ export default {
       })
 
       // Choose the time interval to use
-      this.dateDimension = this.ndx.dimension(d => this.dateParser(d[this.dateAccessor]))
-      console.log(this.dateDimension)
       this.minDate = this.dateParser(this.dateDimension.bottom(1)[0][this.dateAccessor])
       this.maxDate = this.dateParser(this.dateDimension.top(1)[0][this.dateAccessor])
       const diffDays = d3.timeDay.count(this.minDate, this.maxDate)
@@ -126,12 +125,6 @@ export default {
       } else {
         this.interval = 'Month'
       }
-
-      const grouper = k => this.intervals[this.interval](k)
-      this.dateGroup = this.valueAccessor
-        ? this.dateDimension.group(grouper).reduceSum(d => d[this.valueAccessor])
-        : this.dateDimension.group(grouper).reduceCount()
-      console.log(this.interval, this.dateGroup)
 
       // Render hour date chart
       this.barChart
@@ -145,7 +138,7 @@ export default {
             d3.timeHour.offset(this.maxDate, 2)
           ]))
         .xUnits(this.intervals[this.interval].range)
-        .margins({ left: 50, top: 20, right: 50, bottom: 20 })
+        .margins(this.margins)
         .dimension(this.dateDimension)
         .group(this.dateGroup)
         .brushOn(false)
@@ -157,11 +150,6 @@ export default {
       dc.renderAll()
     },
     redraw() {
-      const grouper = k => this.intervals[this.interval](k)
-      console.log(this.intervals[this.interval])
-      this.dateGroup = this.valueAccessor
-        ? this.dateDimension.group(grouper).reduceSum(d => d[this.valueAccessor])
-        : this.dateDimension.group(grouper).reduceCount()
       this.barChart.xUnits(this.intervals[this.interval].range)
       this.barChart
         .dimension(this.dateDimension)

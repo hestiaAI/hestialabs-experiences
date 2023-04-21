@@ -88,6 +88,7 @@
     "d3": "^7.6.1",
     "d3-time-format": "^4.1.0",
     "data-experience": "file:../data-experience",
+    "dc-dashboard": "file:../dc-dashboard",
     "dom-to-image-more": "^2.10.1",
     "file-saver": "^2.0.5",
     "jsonpath-plus": "^7.2.0",
