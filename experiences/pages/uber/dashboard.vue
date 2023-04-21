@@ -89,13 +89,7 @@ export default {
             valueLabel: '',
             cols: '6',
             chart: 'TopChart',
-            valueAccessor: 'begin',
-            margins: {
-              top: 20,
-              right: 20,
-              bottom: 50,
-              left: 20
-            }
+            valueAccessor: 'begin'
           },
           {
             title: 'Number of login',
@@ -114,15 +108,14 @@ export default {
           {
             title: 'Number of login',
             valueLabel: '',
-            cols: '12',
+            cols: '6',
             chart: 'PieChart',
-            height: 600,
             valueAccessor: 'status'
           },
           {
             title: 'Number of login',
             valueLabel: 'tets',
-            cols: '12',
+            cols: '6',
             chart: 'BarTimelineChart',
             dateAccessor: 'begin'
           }

@@ -93,15 +93,41 @@ export default {
     dateDimension(){
       return this.ndx.dimension(d => this.dateParser(d[this.dateAccessor]))
     },
+    types() {
+      return [...new Set(this.dateDimension.top(Infinity).map(d => d[this.typeAccessor]))];
+    },
     dateGroup(){
-      console.log('Selected', this.interval)
+      console.log('Selected', this.types)
       const grouper = k => this.intervals[this.interval](k)
-      return this.valueAccessor
-        ? this.dateDimension.group(grouper).reduceSum(d => d[this.valueAccessor])
-        : this.dateDimension.group(grouper).reduceCount()
+
+      if(!this.typeAccessor) {
+        return this.valueAccessor
+          ? this.dateDimension.group(grouper).reduceSum(d => d[this.valueAccessor])
+          : this.dateDimension.group(grouper).reduceCount()
+      } else {
+        return this.dateDimension.group(grouper).reduce(
+          (p, v) => {
+            console.log('add', p, v)
+            p[v[this.typeAccessor]] = (p[v[this.typeAccessor]] || 0) + (this.valueAccessor ?  v[this.valueAccessor] : 1)
+            return p;},
+          (p, v) => {
+            console.log('rmove', p, v)
+            p[v[this.typeAccessor]] = (p[v[this.typeAccessor]] || 0) - (this.valueAccessor ?  v[this.valueAccessor] : 1)
+            return p;},
+          function() {
+            return {};
+          }
+        )
+      }
     }
   },
   methods: {
+    sel_stack(valueKey) {
+      return function(d) {
+        console.log(d, valueKey)
+        return d.value[valueKey];
+      }
+    },
     drawViz() {
       // Create and bind charts to their respective divs
       this.barChart = new dc.BarChart(`#bar-chart-${this.graphId}`)
@@ -140,13 +166,18 @@ export default {
         .xUnits(this.intervals[this.interval].range)
         .margins(this.margins)
         .dimension(this.dateDimension)
-        .group(this.dateGroup)
+        .group(this.dateGroup, this.types[0], this.sel_stack(this.types[0]))
+        .colorAccessor(function(d) { console.log(d);return d.layer; })
         .brushOn(false)
         .elasticX(false)
         .elasticY(true)
         .mouseZoomable(false)
         .clipPadding(10)
 
+      for (let i = 1; i < this.types.length; i++) {
+        this.barChart.stack(this.dateGroup, this.types[i], this.sel_stack(this.types[i]))
+      }
+      this.barChart.legend(dc.legend());
       dc.renderAll()
     },
     redraw() {

@@ -16,3 +16,12 @@ export default {
   mixins: [TranslationMixin]
 }
 </script>
+<style scoped>
+.reset {
+  color: currentColor;
+  margin-left: 1rem;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  padding: 3px;
+}
+</style>
