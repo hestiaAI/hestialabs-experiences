@@ -58,6 +58,7 @@ export default {
           cols: '6',
           chart: 'BarTimelineChart',
           dateAccessor: 'time',
+          typeAccessor: 'Category',
           dateFormat: '%Q'
         }
       ],
