@@ -41,7 +41,7 @@ const blocks: ViewBlocks = [
           title: 'Number of trips',
           valueLabel: 'trips',
           cols: '12',
-          type: 'TimelineChart.vue',
+          type: 'BarTimelineChart.vue',
           dateAccessor: 'begin_date'
         },
         {

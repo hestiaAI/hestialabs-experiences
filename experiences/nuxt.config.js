@@ -262,7 +262,8 @@ export default {
     '@/plugins/i18n.js',
     '@/plugins/vuetify.js',
     '@/plugins/data-experience.js',
-    '@/plugins/asset-url.js'
+    '@/plugins/asset-url.js',
+    '@/plugins/dc-dashboard.js'
   ],
   loading: {
     color: primary,

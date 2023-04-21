@@ -1,0 +1,261 @@
+uid,daddr,time,Tracker,Category,Package,App
+10275,ajax.googleapis.com,1626862433338,Google,Content,ru.bnice.asolver,ASolver
+10276,3p.ampproject.net,1626781735641,,,com.google.android.apps.docs,Drive
+10276,ajax.googleapis.com,1626910581735,Google,Content,com.google.android.apps.docs,Drive
+10276,firebaseinappmessaging.googleapis.com,1626909674359,Google,Content,com.google.android.apps.docs,Drive
+10276,firebaseinstallations.googleapis.com,1626814506143,Google,Content,com.google.android.apps.docs,Drive
+10276,firebaseremoteconfig.googleapis.com,1625818719435,Google,Content,com.google.android.apps.docs,Drive
+10276,people-pa.clients6.google.com,1625694058677,Google,Content,com.google.android.apps.docs,Drive
+10277,ecs.office.com,1626867676012,Microsoft,Content,,
+10277,in.appcenter.ms,1626873808593,Microsoft,Uncategorised,,
+10277,messaging.office.com,1626867676591,Microsoft,Content,,
+10277,nexusrules.officeapps.live.com,1626873805635,Microsoft,Content,,
+10277,officeclient.microsoft.com,1626873806346,Microsoft,Content,,
+10277,oneclient.sfx.ms,1626862421822,,,,
+10277,roaming.officeapps.live.com,1626867676016,Microsoft,Content,,
+10277,self.events.data.microsoft.com,1626867685892,Microsoft,Content,,
+10277,support.content.office.net,1626867676007,,,,
+10278,3p.ampproject.net,1626862411398,,,com.github.android,GitHub
+10278,accounts.google.de,1626649872768,Google,Content,com.github.android,GitHub
+10278,ajax.googleapis.com,1626337940302,Google,Content,com.github.android,GitHub
+10278,api.github.com,1626909909050,,,com.github.android,GitHub
+10278,avatars.githubusercontent.com,1626765789156,,,com.github.android,GitHub
+10278,d-22166172004016782570.ampproject.net,1626337940412,,,com.github.android,GitHub
+10278,firebase-settings.crashlytics.com,1626706569136,Google,Analytics,com.github.android,GitHub
+10279,ajax.googleapis.com,1626597028211,Google,Content,com.Slack,Slack
+10279,avatars.slack-edge.com,1625994999859,,,com.Slack,Slack
+10279,edgeapi.slack.com,1625996525289,,,com.Slack,Slack
+10279,sessions.bugsnag.com,1626076651474,Bugsnag,Uncategorised,com.Slack,Slack
+10279,slack.com,1626910185354,,,com.Slack,Slack
+10279,slackb.com,1626855044609,,,com.Slack,Slack
+10279,wss-mobile.slack.com,1625996526438,,,com.Slack,Slack
+10283,ajax.googleapis.com,1626873337062,Google,Content,com.ridedott.rider,Dott
+10283,firebaseinappmessaging.googleapis.com,1626116942619,Google,Content,com.ridedott.rider,Dott
+10283,firebaseinstallations.googleapis.com,1626876515847,Google,Content,com.ridedott.rider,Dott
+10283,functions.api.ridedott.com,1626876516835,,,com.ridedott.rider,Dott
+10284,3p.ampproject.net,1626832293544,,,com.spotify.music,Spotify
+10284,ajax.googleapis.com,1626544927422,Google,Content,com.spotify.music,Spotify
+10284,api-partner.spotify.com,1626873170433,,,com.spotify.music,Spotify
+10284,api.facebook.com,1626909602216,Facebook,Social,com.spotify.music,Spotify
+10284,clienttoken.spotify.com,1625873901569,,,com.spotify.music,Spotify
+10284,d-22166172004016782570.ampproject.net,1626245269129,,,com.spotify.music,Spotify
+10284,firebase-settings.crashlytics.com,1625827805878,Google,Analytics,com.spotify.music,Spotify
+10284,sharing-config.spotifycdn.com,1626909602417,,,com.spotify.music,Spotify
+10284,spclient.wg.spotify.com,1626186100639,,,com.spotify.music,Spotify
+10285,accounts.youtube.com,1625827885044,Google,Content,com.google.android.videos,Google TV
+10285,ajax.googleapis.com,1626862415452,Google,Content,com.google.android.videos,Google TV
+10285,android.clients.google.com,1626862416132,Google,Content,com.google.android.videos,Google TV
+10287,8296686.fls.doubleclick.net,1626873232004,Google,FingerprintingGeneral,com.google.android.apps.youtube.music,YouTube Music
+10287,ad.doubleclick.net,1626909910530,Google,FingerprintingGeneral,com.google.android.apps.youtube.music,YouTube Music
+10287,ade.googlesyndication.com,1626909910707,Google,FingerprintingGeneral,com.google.android.apps.youtube.music,YouTube Music
+10287,adservice.google.ch,1626909910250,Google,Content,com.google.android.apps.youtube.music,YouTube Music
+10357,conv-tm.everesttech.net,1626486714821,Adobe,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,csm.nl.eu.criteo.net,1626486852658,Criteo,Advertising,com.facebook.katana,Facebook
+10357,csx.credit-suisse.com,1625690847209,,,com.facebook.katana,Facebook
+10357,cx.atdmt.com,1625690875035,Facebook,Social,com.facebook.katana,Facebook
+10357,d.adroll.com,1626486714174,AdRoll,Advertising,com.facebook.katana,Facebook
+10357,d2oh4tlt9mrke9.cloudfront.net,1626486703598,Amazon.com,Content,com.facebook.katana,Facebook
+10357,d7jfq7jpccsjd.cloudfront.net,1625690937303,Amazon.com,Content,com.facebook.katana,Facebook
+10357,dd.nytimes.com,1626486708091,,,com.facebook.katana,Facebook
+10357,dis.criteo.com,1626486714623,Criteo,Advertising,com.facebook.katana,Facebook
+10357,dnacdn.net,1626486713820,,,com.facebook.katana,Facebook
+10357,dowjones.demdex.net,1626486707053,Adobe,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,dpm.demdex.net,1625690853089,Adobe,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,dt.adsafeprotected.com,1626486852614,Integral Ad Science,Advertising,com.facebook.katana,Facebook
+10357,eb2.3lift.com,1626486713693,TripleLift,Advertising,com.facebook.katana,Facebook
+10357,edge-mqtt.facebook.com,1626859193320,Facebook,Social,com.facebook.katana,Facebook
+10357,eus.rubiconproject.com,1626486713679,RubiconProject,Advertising,com.facebook.katana,Facebook
+10357,external.fqls1-1.fna.fbcdn.net,1626860498740,Facebook,Content,com.facebook.katana,Facebook
+10357,external.fzrh1-1.fna.fbcdn.net,1626893516173,Facebook,Content,com.facebook.katana,Facebook
+10357,fastlane.rubiconproject.com,1626486712599,RubiconProject,Advertising,com.facebook.katana,Facebook
+10357,fonts.googleapis.com,1625690937456,Google,Content,com.facebook.katana,Facebook
+10357,fonts.gstatic.com,1625690938235,Google,Content,com.facebook.katana,Facebook
+10357,gateway.facebook.com,1626860959939,Facebook,Social,com.facebook.katana,Facebook
+10357,genevesecrete.com,1625690877762,,,com.facebook.katana,Facebook
+10357,geo.moatads.com,1626486842657,Moat,Advertising,com.facebook.katana,Facebook
+10357,global.ib-ibi.com,1626486711555,iBehavior,Advertising,com.facebook.katana,Facebook
+10357,googleads.g.doubleclick.net,1625690875524,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,graph.fbpigeon.com,1625809831366,,,com.facebook.katana,Facebook
+10357,htlb.casalemedia.com,1626486840486,Casale Media,Advertising,com.facebook.katana,Facebook
+10357,id.cxense.com,1626486707621,cXense,Advertising,com.facebook.katana,Facebook
+10357,id.rlcdn.com,1626486708814,TowerData,Advertising,com.facebook.katana,Facebook
+10357,id.sv.rkdms.com,1626486705110,Merkle,Analytics,com.facebook.katana,Facebook
+10357,image2.pubmatic.com,1626486715163,PubMatic,Advertising,com.facebook.katana,Facebook
+10357,image4.pubmatic.com,1626486715213,PubMatic,Advertising,com.facebook.katana,Facebook
+10357,image6.pubmatic.com,1626486714194,PubMatic,Advertising,com.facebook.katana,Facebook
+10357,image8.pubmatic.com,1626486716499,PubMatic,Advertising,com.facebook.katana,Facebook
+10357,images.wsj.net,1626486703816,,,com.facebook.katana,Facebook
+10357,in.ml314.com,1626486709172,Bombora,Analytics,com.facebook.katana,Facebook
+10357,jadserve.postrelease.com,1626486708862,Nativo,Advertising,com.facebook.katana,Facebook
+10357,js-agent.newrelic.com,1626486711756,New Relic,Analytics,com.facebook.katana,Facebook
+10357,loadus.exelator.com,1626486712043,eXelate,Advertising,com.facebook.katana,Facebook
+10357,m.adnxs.com,1626486716797,AT&T,Advertising,com.facebook.katana,Facebook
+10357,m.wsj.net,1626486703828,,,com.facebook.katana,Facebook
+10357,match.adsrvr.org,1626486714164,The Trade Desk,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,match.deepintent.com,1626486714635,Deep Intent,Analytics,com.facebook.katana,Facebook
+10357,match.prod.bidr.io,1626486714573,Bidr,Advertising,com.facebook.katana,Facebook
+10357,mb.moatads.com,1626486704783,Moat,Advertising,com.facebook.katana,Facebook
+10357,mcdp-chidc2.outbrain.com,1626486709758,Outbrain,Advertising,com.facebook.katana,Facebook
+10357,ml314.com,1626486710450,Bombora,Analytics,com.facebook.katana,Facebook
+10357,mv.outbrain.com,1626486708625,Outbrain,Advertising,com.facebook.katana,Facebook
+10357,nep.advangelists.com,1626486716742,nep.advangelists.com,Uncategorised,com.facebook.katana,Facebook
+10357,odr.mookie1.com,1626486716639,WPP,Advertising,com.facebook.katana,Facebook
+10357,on.wsj.com,1626486701599,,,com.facebook.katana,Facebook
+10357,p.rfihub.com,1626486714230,Rocket Fuel,Advertising,com.facebook.katana,Facebook
+10357,p.teads.tv,1625690853505,Teads.tv,Advertising,com.facebook.katana,Facebook
+10357,p1cluster.cxense.com,1626486706170,cXense,Advertising,com.facebook.katana,Facebook
+10357,pagead2.googlesyndication.com,1625690875110,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,pay.datatrans.com,1625690937034,,,com.facebook.katana,Facebook
+10357,pg-prebid-server.rubiconproject.com,1626486792938,RubiconProject,Advertising,com.facebook.katana,Facebook
+10357,pixel-sync.sitescout.com,1626486715322,SiteScout,Advertising,com.facebook.katana,Facebook
+10357,pixel.adsafeprotected.com,1626486842173,Integral Ad Science,Advertising,com.facebook.katana,Facebook
+10357,pixel.mathtag.com,1626486710188,MediaMath,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,pixel.quantserve.com,1626486714008,Quantcast,Advertising,com.facebook.katana,Facebook
+10357,pixel.rubiconproject.com,1626486715018,RubiconProject,Advertising,com.facebook.katana,Facebook
+10357,pixel.videohub.tv,1626486708048,Tremor International,Uncategorised,com.facebook.katana,Facebook
+10357,platform-cdn.sharethis.com,1626486702553,ShareThis,Social,com.facebook.katana,Facebook
+10357,pm.w55c.net,1626486716387,DataXu,Advertising,com.facebook.katana,Facebook
+10357,pmp.mxptint.net,1626486715280,MaxPoint,Advertising,com.facebook.katana,Facebook
+10357,pr-bh.ybp.yahoo.com,1626486714823,VerizonMedia,Advertising,com.facebook.katana,Facebook
+10357,prebid-server.rubiconproject.com,1626486713594,RubiconProject,Advertising,com.facebook.katana,Facebook
+10357,ps.eyeota.net,1626486841907,Eyeota,Analytics,com.facebook.katana,Facebook
+10357,pubmatic-match.dotomi.com,1626486714870,ConversantMedia,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,px.ads.linkedin.com,1626486708975,LinkedIn,Social,com.facebook.katana,Facebook
+10357,px.moatads.com,1626486852611,Moat,Advertising,com.facebook.katana,Facebook
+10357,quantcast.mgr.consensu.org,1625690874547,quantcast.mgr.consensu.org,Uncategorised,com.facebook.katana,Facebook
+10357,rb.adnxs.com,1626486712933,AT&T,Advertising,com.facebook.katana,Facebook
+10357,rtb-csync.smartadserver.com,1626486715787,SmartAdServer,Advertising,com.facebook.katana,Facebook
+10357,rtb.adentifi.com,1626486715041,rtb.adentifi.com,Uncategorised,com.facebook.katana,Facebook
+10357,rtb.openx.net,1626486716853,OpenX,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,rules.quantcount.com,1625690875045,Quantcast,Advertising,com.facebook.katana,Facebook
+10357,s.amazon-adsystem.com,1626486714224,Amazon.com,Advertising,com.facebook.katana,Facebook
+10357,s.go-mpulse.net,1625690855388,Akamai,Analytics,com.facebook.katana,Facebook
+10357,s.ntv.io,1626486708046,Nativo,Uncategorised,com.facebook.katana,Facebook
+10357,s.pinimg.com,1625690853779,Pinterest,Content,com.facebook.katana,Facebook
+10357,s3.amazonaws.com,1626486703671,Amazon Web Services,Content,com.facebook.katana,Facebook
+10357,sc-static.net,1625690853784,sc-static.net,Uncategorised,com.facebook.katana,Facebook
+10357,scontent-cgk1-1.xx.fbcdn.net,1625763258607,Facebook,Content,com.facebook.katana,Facebook
+10357,scontent.facc2-1.fna.fbcdn.net,1626042962809,Facebook,Content,com.facebook.katana,Facebook
+10357,scontent.fzrh1-1.fna.fbcdn.net,1626162519825,Facebook,Content,com.facebook.katana,Facebook
+10357,sdc2.credit-suisse.com,1625690853510,sdc2.credit-suisse.com,Uncategorised,com.facebook.katana,Facebook
+10357,secure-us.imrworldwide.com,1626486708559,Nielsen,Advertising,com.facebook.katana,Facebook
+10357,segment-data.zqtk.net,1626486703538,comScore,Uncategorised,com.facebook.katana,Facebook
+10357,shop.tagesanzeiger.ch,1625690936098,,,com.facebook.katana,Facebook
+10357,snap.licdn.com,1626486708347,LinkedIn,Social,com.facebook.katana,Facebook
+10357,sonar-zrh1-1.xx.fbcdn.net,1626860077926,Facebook,Content,com.facebook.katana,Facebook
+10357,ssl.google-analytics.com,1626486708087,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,stags.bluekai.com,1626486711452,BlueKai,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,static.ads-twitter.com,1626486708147,Twitter,Advertising,com.facebook.katana,Facebook
+10357,static.adsafeprotected.com,1626486842471,Integral Ad Science,Advertising,com.facebook.katana,Facebook
+10357,static.criteo.net,1626486713427,Criteo,Advertising,com.facebook.katana,Facebook
+10357,stats.g.doubleclick.net,1625690937849,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,sync.1rx.io,1626486715394,Rhythm,Advertising,com.facebook.katana,Facebook
+10357,sync.ipredictive.com,1626486715043,Adelphic,Advertising,com.facebook.katana,Facebook
+10357,sync.mathtag.com,1626486714811,MediaMath,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,sync.navdmp.com,1626486711509,Navegg,Advertising,com.facebook.katana,Facebook
+10357,t.co,1626486708522,Twitter,Uncategorised,com.facebook.katana,Facebook
+10357,tags.tiqcdn.com,1626486705679,Tealium,Uncategorised,com.facebook.katana,Facebook
+10357,tagservice.maximus.mobkoi.com,1626486841992,,,com.facebook.katana,Facebook
+10357,tpc.googlesyndication.com,1625690875914,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,tps.doubleverify.com,1626486711549,DoubleVerify,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,tps20236.doubleverify.com,1626486852079,DoubleVerify,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,tr.snapchat.com,1626486709054,,,com.facebook.katana,Facebook
+10357,track.celtra.com,1626486842808,Celtra,Uncategorised,com.facebook.katana,Facebook
+10357,trial-eum-clientnsv4-s.akamaihd.net,1625690850603,Akamai,Content,com.facebook.katana,Facebook
+10357,trial-eum-clienttons-s.akamaihd.net,1625690850329,Akamai,Content,com.facebook.katana,Facebook
+10357,trib.al,1626486701982,,,com.facebook.katana,Facebook
+10357,um.simpli.fi,1626486714868,Simpli.fi,Advertising,com.facebook.katana,Facebook
+10357,ups.analytics.yahoo.com,1626486716650,VerizonMedia,Analytics,com.facebook.katana,Facebook
+10357,us.pixel.newscgp.com,1626486708819,us.pixel.newscgp.com,Uncategorised,com.facebook.katana,Facebook
+10357,usermatch.krxd.net,1626486711455,Krux,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,video-api.wsj.com,1626486706814,,,com.facebook.katana,Facebook
+10357,video.fqls1-1.fna.fbcdn.net,1626859194068,Facebook,Content,com.facebook.katana,Facebook
+10357,ws.sessioncam.com,1626486704138,SessionCam,Analytics,com.facebook.katana,Facebook
+10357,wsjstream.wsj.net,1626486853292,,,com.facebook.katana,Facebook
+10357,www.credit-suisse.com,1625690849683,,,com.facebook.katana,Facebook
+10357,www.dianomi.com,1626486708290,dianomi,Advertising,com.facebook.katana,Facebook
+10357,www.google-analytics.com,1625690938773,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,www.google.ch,1625690937854,Google,Content,com.facebook.katana,Facebook
+10357,www.google.com,1626486710520,Google,Content,com.facebook.katana,Facebook
+10357,www.googletagmanager.com,1625690937327,Google,Uncategorised,com.facebook.katana,Facebook
+10357,www.linkedin.com,1626486709890,LinkedIn,Social,com.facebook.katana,Facebook
+10357,x.bidswitch.net,1626486716417,BidSwitch,Advertising,com.facebook.katana,Facebook
+10357,10421980.fls.doubleclick.net,1626486842128,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,10744925.fls.doubleclick.net,1625690939567,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,239.255.255.250,1626888033189,,,com.facebook.katana,Facebook
+10357,3p.ampproject.net,1626486710904,,,com.facebook.katana,Facebook
+10357,ade.googlesyndication.com,1626486842139,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,adservice.google.ch,1625690940119,Google,Content,com.facebook.katana,Facebook
+10357,adservice.google.com,1625690939954,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,ajax.googleapis.com,1626486709310,Google,Content,com.facebook.katana,Facebook
+10357,b-api.facebook.com,1626486709208,Facebook,Social,com.facebook.katana,Facebook
+10357,cdn.ampproject.org,1626486714886,,,com.facebook.katana,Facebook
+10357,connect.facebook.net,1626486708058,Facebook,Social,com.facebook.katana,Facebook
+10357,googleads.g.doubleclick.net,1625690940121,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,pagead2.googlesyndication.com,1625690875779,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,shop.tagesanzeiger.ch,1625690936970,,,com.facebook.katana,Facebook
+10357,ssl.google-analytics.com,1626486709007,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,stats.g.doubleclick.net,1625690938940,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,tr.snapchat.com,1626486709441,,,com.facebook.katana,Facebook
+10357,www.google-analytics.com,1625690938744,Google,FingerprintingGeneral,com.facebook.katana,Facebook
+10357,www.google.ch,1625690939985,Google,Content,com.facebook.katana,Facebook
+10357,www.google.com,1626486710645,Google,Content,com.facebook.katana,Facebook
+10357,www.googletagmanager.com,1625690937307,Google,Uncategorised,com.facebook.katana,Facebook
+10357,2001:1702:28:1:face:b00c:0:358e,1626883808238,,,com.facebook.katana,Facebook
+10357,2001:1702:28:1:face:b00c:0:a7,1625696385527,,,com.facebook.katana,Facebook
+10357,2001:1702:28:2:face:b00c:0:358e,1626859193914,,,com.facebook.katana,Facebook
+10357,2001:1702:28:2:face:b00c:0:a7,1626716396028,,,com.facebook.katana,Facebook
+10357,2a03:2880:f05b:12:face:b00c:0:2,1625695308501,,,com.facebook.katana,Facebook
+10357,2a03:2880:f05b:12:face:b00c:0:2,1625696384137,,,com.facebook.katana,Facebook
+10357,2a03:2880:f05b:19:face:b00c:0:8e,1626859193248,,,com.facebook.katana,Facebook
+10357,2a03:2880:f05b:b:face:b00c:0:2825,1626860960664,,,com.facebook.katana,Facebook
+10357,2a03:2880:f15b:83:face:b00c:0:25de,1625694350038,,,com.facebook.katana,Facebook
+10357,api.facebook.com,1626936195944,Facebook,Social,com.facebook.katana,Facebook
+10357,api.facebook.com,1626936181392,Facebook,Social,com.facebook.katana,Facebook
+10357,b-api.facebook.com,1626936182790,Facebook,Social,com.facebook.katana,Facebook
+10357,connect.facebook.net,1626883830802,Facebook,Social,com.facebook.katana,Facebook
+10357,edge-mqtt.facebook.com,1626901188455,Facebook,Social,com.facebook.katana,Facebook
+10357,external.fqls1-1.fna.fbcdn.net,1626883814725,Facebook,Content,com.facebook.katana,Facebook
+10357,external.fzrh1-1.fna.fbcdn.net,1626544928237,Facebook,Content,com.facebook.katana,Facebook
+10357,gateway.facebook.com,1626888064388,Facebook,Social,com.facebook.katana,Facebook
+10357,scontent-cgk1-1.xx.fbcdn.net,1625763258450,Facebook,Content,com.facebook.katana,Facebook
+10357,scontent.fqls1-1.fna.fbcdn.net,1626860178044,Facebook,Content,com.facebook.katana,Facebook
+10357,scontent.fzrh1-1.fna.fbcdn.net,1626908532086,Facebook,Content,com.facebook.katana,Facebook
+10357,video.fzrh1-1.fna.fbcdn.net,1625789145029,Facebook,Content,com.facebook.katana,Facebook
+10359,accounts.wsj.com,1626530713423,,,ch.admin.bag.dp3t,SwissCovid
+10359,admeira.bbvms.com,1625979289447,,,ch.admin.bag.dp3t,SwissCovid
+10359,api.company-target.com,1626525411339,Demandbase,Analytics,ch.admin.bag.dp3t,SwissCovid
+10359,api.privacy-center.org,1626906698635,,,ch.admin.bag.dp3t,SwissCovid
+10359,app.link,1626230569413,,,ch.admin.bag.dp3t,SwissCovid
+10359,cdn.cwi.re,1626539868964,,,ch.admin.bag.dp3t,SwissCovid
+10359,cdn.keywee.co,1626892164744,Keywee,Advertising,ch.admin.bag.dp3t,SwissCovid
+10359,cdn.ml314.com,1626220430299,Bombora,Analytics,ch.admin.bag.dp3t,SwissCovid
+10359,cdn2-public.ladmedia.fr,1626825840088,,,ch.admin.bag.dp3t,SwissCovid
+10359,codegen-service.bag.admin.ch,1626901237920,,,ch.admin.bag.dp3t,SwissCovid
+10359,config.api.bbci.co.uk,1626255585564,,,ch.admin.bag.dp3t,SwissCovid
+10359,dd.nytimes.com,1626450967315,,,ch.admin.bag.dp3t,SwissCovid
+10359,firefox.settings.services.mozilla.com,1626351770526,,,ch.admin.bag.dp3t,SwissCovid
+10359,platform-cdn.sharethis.com,1626510809588,ShareThis,Social,ch.admin.bag.dp3t,SwissCovid
+10359,s.ad.smaato.net,1626113356989,Spearhead Integrated Marketing Communication,Uncategorised,ch.admin.bag.dp3t,SwissCovid
+10359,ws-downloads.files.bbci.co.uk,1626170090481,,,ch.admin.bag.dp3t,SwissCovid
+10359,www.pt.bfs.admin.ch,1626913916440,,,ch.admin.bag.dp3t,SwissCovid
+10359,www.pt1.bfs.admin.ch,1626901298805,,,ch.admin.bag.dp3t,SwissCovid
+10362,3p.ampproject.net,1626859368334,,,com.parknow.app,PARK NOW
+10362,accounts.google.de,1626552280580,Google,Content,com.parknow.app,PARK NOW
+10362,ajax.googleapis.com,1626913364749,Google,Content,com.parknow.app,PARK NOW
+10362,api2.amplitude.com,1626011352147,Amplitude,Analytics,com.parknow.app,PARK NOW
+10362,app.adjust.com,1626011345902,Adjust,FingerprintingGeneral,com.parknow.app,PARK NOW
+10362,d-22166172004016782570.ampproject.net,1626276552353,,,com.parknow.app,PARK NOW
+10362,d-23417983971095928131.ampproject.net,1626449193544,,,com.parknow.app,PARK NOW
+10362,firebase-settings.crashlytics.com,1626725627593,Google,Analytics,com.parknow.app,PARK NOW
+10362,firebaseinappmessaging.googleapis.com,1626866731750,Google,Content,com.parknow.app,PARK NOW
+10362,firebaseinstallations.googleapis.com,1626863079311,Google,Content,com.parknow.app,PARK NOW
+10362,webservices.park-now.com,1626011344060,,,com.parknow.app,PARK NOW
+10363,ajax.googleapis.com,1626862416100,Google,Content,com.iemgroup.v2.prestopark,PrestoPark
+10363,android.clients.google.com,1626019710569,Google,Content,com.iemgroup.v2.prestopark,PrestoPark
+10363,api.prestoplatform.io,1626020439302,,,com.iemgroup.v2.prestopark,PrestoPark
+10363,csi.gstatic.com,1626019711825,Google,Content,com.iemgroup.v2.prestopark,PrestoPark
+10363,iem-pp-staticfiles.s3.eu-west-3.amazonaws.com,1626011564801,Amazon Web Services,Content,com.iemgroup.v2.prestopark,PrestoPark
+10363,mobile-api.prestoplatform.io,1626019704815,,,com.iemgroup.v2.prestopark,PrestoPark
+10363,sprlatest.prestoplatform.io,1626019708313,,,com.iemgroup.v2.prestopark,PrestoPark
+10363,www.saferpay.com,1626011884846,,,com.iemgroup.v2.prestopark,PrestoPark

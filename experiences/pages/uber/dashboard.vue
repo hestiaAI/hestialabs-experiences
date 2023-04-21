@@ -18,6 +18,8 @@
         <h3 class="mb-3">
           Vos courses
         </h3>
+        <Dashboard v-if="data" v-bind="{graphs: tripsData.graphs, values: data}" />
+        <ChartView v-else-if="false" v-bind="{...tripsData, graphName: 'ChartViewDashboard.vue'}" />
       </section>
       <section id="income" class="mt-6">
         <h3 class="mb-3">
@@ -42,12 +44,90 @@
 <script>
 import * as d3 from 'd3'
 import mixinPage from '@/mixins/page'
-
 export default {
   mixins: [mixinPage],
   data() {
     return {
       data: null
+    }
+  },
+  computed: {
+    tripsData() {
+      const headers = ['begin', 'end', 'distance', 'income', 'status']
+      return {
+        data: {
+          headers,
+          items: this.data
+        },
+        values: this.data,
+        showTable: false,
+        viewBlockTranslationPrefix: 'overview',
+        graphs: [
+          {
+            title: 'Number of login',
+            valueLabel: '',
+            cols: '6',
+            chart: 'TimelineChart',
+            dateAccessor: 'begin'
+          },
+          {
+            title: 'Number of login',
+            valueLabel: '',
+            cols: '6',
+            chart: 'WeekChart',
+            dateAccessor: 'begin'
+          },
+          {
+            title: 'Number of login',
+            valueLabel: '',
+            cols: '6',
+            chart: 'HourChart',
+            dateAccessor: 'begin'
+          },
+          {
+            title: 'Number of login',
+            valueLabel: '',
+            cols: '6',
+            chart: 'TopChart',
+            valueAccessor: 'begin',
+            margins: {
+              top: 20,
+              right: 20,
+              bottom: 50,
+              left: 20
+            }
+          },
+          {
+            title: 'Number of login',
+            valueLabel: '',
+            cols: '6',
+            chart: 'WeekChart',
+            dateAccessor: 'begin'
+          },
+          {
+            title: 'Number of login',
+            valueLabel: '',
+            cols: '6',
+            chart: 'HourChart',
+            dateAccessor: 'begin'
+          },
+          {
+            title: 'Number of login',
+            valueLabel: '',
+            cols: '12',
+            chart: 'PieChart',
+            height: 600,
+            valueAccessor: 'status'
+          },
+          {
+            title: 'Number of login',
+            valueLabel: 'tets',
+            cols: '12',
+            chart: 'BarTimelineChart',
+            dateAccessor: 'begin'
+          }
+        ]
+      }
     }
   },
   mounted() {
@@ -57,8 +137,8 @@ export default {
     async fetchData() {
       this.data = await d3.dsv(';', '/data/test.csv', (data) => {
         return {
-          begin: new Date(data.begin),
-          end: new Date(data.end),
+          begin: data.begin,
+          end: data.end,
           distance: +data.distance_km,
           income: +data.uber_paid,
           status: data.status

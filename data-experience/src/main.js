@@ -1,5 +1,6 @@
 import TheDataExperience from './components/TheDataExperience.vue'
 import CodeEditorComponent from './components/misc/CodeEditor.vue'
+import ChartViewComponent from './components/chart/ChartView.vue'
 
 import store from './store'
 import './assets/dc.css'
@@ -14,7 +15,6 @@ import {
   from '@/utils/i18n-utils'
 export { default as vuetifyOpts } from './plugins/vuetify'
 export { default as i18nOpts } from './plugins/i18n'
-export { default as chartView } from './components/chart/ChartView.vue'
 export { default as chartViewBar } from './components/chart/view/ChartViewBar.vue'
 export { default as chartViewGenericMap } from './components/chart/view/ChartViewGenericMap.vue'
 export { hashFile, encryptFile } from './utils/encryption'
@@ -22,6 +22,12 @@ export { hashFile, encryptFile } from './utils/encryption'
 export const CodeEditor = {
   install(Vue, options) {
     Vue.component('CodeEditor', CodeEditorComponent)
+  }
+}
+
+export const ChartView = {
+  install(Vue, options) {
+    Vue.component('ChartView', ChartViewComponent)
   }
 }
 export const ViewBlock = {

@@ -11,10 +11,6 @@
   "logoImg": "/Logo_Digipower_Academy.png",
   "logoImgMenu": "/Logo_Digipower_Academy_compact.png",
   "logoLink": "https://digipower.academy",
-  "theme": {
-    "primary": "#01949A",
-    "secondary": "#DB1F48"
-  },
   "experiences": [
     "ad-radar",
     "apple-tracker",
