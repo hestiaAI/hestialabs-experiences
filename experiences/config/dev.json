@@ -85,7 +85,9 @@
     "observe-aggregator",
     "observe-participant",
     "trialinternational-participant",
-    "trialinternational-aggregator"
+    "trialinternational-aggregator",
+    "shds-participant",
+    "shds-aggregator"
   ],
   "homePageBubbles": [
     "live-participant",

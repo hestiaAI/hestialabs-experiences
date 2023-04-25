@@ -59,7 +59,9 @@
     "tamedia-participant",
     "tamedia-aggregator",
     "trialinternational-participant",
-    "trialinternational-aggregator"
+    "trialinternational-aggregator",
+    "shds-participant",
+    "shds-aggregator"
   ],
   "homePageBubbles": [
     "live-participant",
