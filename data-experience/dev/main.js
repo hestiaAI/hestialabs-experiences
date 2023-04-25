@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import App from './App.vue'
 import store from './store'
-import DataExperience, { vuetifyOpts, i18nOpts } from '@/main'
+import { DataExperience, vuetifyOpts, i18nOpts } from '@/main'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 

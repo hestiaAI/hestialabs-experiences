@@ -3,10 +3,14 @@ import { set } from 'vue'
 import { merge } from 'lodash-es'
 import BubbleAPI from 'data-experience/src/utils/bubble-api'
 
+import { mapTranslationObject } from '@/utils/directusHelpers'
+
 export const state = () => ({
   loaded: false,
   config: {},
-  experiences: {}
+  uploads: {},
+  experiences: {},
+  pages: {}
 })
 
 export const getters = {
@@ -43,8 +47,14 @@ export const getters = {
 }
 
 export const mutations = {
+  setPage(state, { key, value }) {
+    set(state.pages, key, value)
+  },
   setLoaded(state) {
     state.loaded = true
+  },
+  setUploads(state, config) {
+    state.uploads = config
   },
   setConfig(state, config) {
     state.config = config
@@ -58,6 +68,50 @@ export const mutations = {
 }
 
 export const actions = {
+  async loadPage({ commit, state }, { pageId }) {
+    if (pageId in state.pages) { return }
+
+    try {
+      const pagesData = await this.$directus.items('websites').readByQuery({
+        fields: ['*', 'url_name', 'pages.Page_id.*', 'pages.Page_id.content.Content_id.*', 'pages.Page_id.content.Content_id.datasets.dataset_id.*', 'pages.Page_id.content.Content_id.view.view_id.*', 'pages.Page_id.content.Content_id.translations.*', 'pages.Page_id.content.Content_id.related_pages.*.url_name', 'pages.Page_id.translations.*'],
+        filter: {
+          url: {
+            _eq: 'digipower.academy'
+          }
+        }
+      })
+
+      // Take first page with digipower.academy as website and current id as url_name, should always be unique
+      const page = pagesData.data[0].pages.filter(p => p.Page_id.url_name === pageId)[0].Page_id
+
+      const content = page.content.map((c) => {
+        return {
+          related_pages: c.Content_id.related_pages.map(p => p.Page_id.url_name),
+          translations: mapTranslationObject(c.Content_id.translations),
+          datasets: c.Content_id.datasets?.map(d => d.dataset_id) || [],
+          views: c.Content_id.view?.map(d => d.view_id) || []
+        }
+      })
+
+      commit('setPage', {
+        key: pageId,
+        value: {
+          ...page,
+          translations: mapTranslationObject(page.translations),
+          content
+        }
+      })
+    } catch (err) {
+      console.error(err)
+      commit('setPage', { key: pageId, value: null })
+    }
+  },
+  async loadUploads({ commit, state }) {
+    if (!state.loaded) {
+      const config = (await import('@/config/uploads-config.json')).default
+      commit('setUploads', config)
+    }
+  },
   async loadConfig({ commit, state }, { isDev }) {
     if (!state.loaded) {
       let configOverride = {}

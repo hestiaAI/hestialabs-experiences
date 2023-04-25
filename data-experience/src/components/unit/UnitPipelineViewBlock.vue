@@ -10,7 +10,7 @@
         </div>
       </div>
     </VOverlay>
-    <VCard v-if="fileManager !== null" class="pa-2 mb-6" flat>
+    <VCard class="pa-2 mb-6" flat>
       <VRow>
         <VCol cols="10" offset="1">
           <VCardTitle class="justify-center">
@@ -18,12 +18,7 @@
           </VCardTitle>
         </VCol>
         <VCol cols="1" align-self="center" class="full-height text-center">
-          <UnitFilesDialog
-            v-if="fileGlobs.length > 0 || ['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
-            :all-files="['genericDateViewer', 'genericLocationViewer'].includes(currentTab)"
-            :file-globs="fileGlobs"
-            :file-manager="fileManager"
-          />
+          <slot name="infoDialog"></slot>
         </VCol>
       </VRow>
 
@@ -45,53 +40,34 @@
         </BaseAlert>
       </template>
       <template v-else>
-        <UnitPipelineCustom
-          v-if="customPipeline"
-          v-bind="{
-            id,
-            customPipeline,
-            customPipelineOptions
-          }"
-          @update="onUnitResultsUpdate"
-        />
-        <UnitPipelineSql
-          v-else-if="sql"
-          v-bind="{ id, sql }"
-          @update="onUnitResultsUpdate"
-        />
-        <VRow v-if="errorMessage">
-          <VCol>
-            <BaseAlert type="error">
-              {{ errorMessage }}
-            </BaseAlert>
-          </VCol>
-        </VRow>
         <VImg v-if="image" :src="image" />
-        <template v-if="clonedResult">
+        <template v-if="clonedData">
           <VRow>
             <VCol>
               <UnitVegaViz
                 v-if="vizVega"
                 :spec-file="vizVega"
-                :data="clonedResultPostprocessed"
+                :data="clonedDataPostprocessed"
                 class="text-center"
               />
               <ChartView
                 v-else-if="vizVue"
                 v-bind="{
                   graphName: vizVue,
-                  data: clonedResultPostprocessed,
+                  data: clonedDataPostprocessed,
+                  viewBlockTranslationPrefix,
                   ...vizPropsTranslated
                 }"
               />
               <UnitKepler
                 v-else-if="vizKepler"
-                :args="clonedResultPostprocessed"
+                :args="clonedDataPostprocessed"
               />
             </VCol>
           </VRow>
           <VContainer v-if="showTable">
-            <UnitFilterableTable v-bind="clonedResult" />
+            <UnitFilterableTable
+              v-bind="{ viewBlockTranslationPrefix, ...clonedData }" />
           </VContainer>
         </template>
       </template>
@@ -102,23 +78,27 @@
 <script>
 import { cloneDeep, merge } from 'lodash-es'
 
-import { mapState, mapGetters } from '@/utils/store-helper'
-
-import UnitPipelineSql from './UnitPipelineSql.vue'
-import UnitFilesDialog from './files/UnitFilesDialog.vue'
-
 import ChartView from '@/components/chart/ChartView.vue'
 import UnitKepler from '@/components/unit/UnitKepler.vue'
 import UnitFilterableTable from '@/components/unit/filterable-table/UnitFilterableTable.vue'
 import UnitVegaViz from '@/components/unit/UnitVegaViz.vue'
 import BaseAlert from '@/components/base/BaseAlert.vue'
-import UnitPipelineCustom from './UnitPipelineCustom.vue'
 
 export default {
   name: 'UnitViewBlock',
-  components: { UnitPipelineSql, UnitFilesDialog, ChartView, UnitKepler, UnitFilterableTable, UnitVegaViz, BaseAlert, UnitPipelineCustom },
+  components: {
+    ChartView,
+    UnitKepler,
+    UnitFilterableTable,
+    UnitVegaViz,
+    BaseAlert
+  },
   props: {
     id: {
+      type: String,
+      required: true
+    },
+    viewBlockTranslationPrefix: {
       type: String,
       required: true
     },
@@ -134,6 +114,10 @@ export default {
       type: Array,
       default: null
     },
+    missingFiles: {
+      type: Array,
+      default: () => []
+    },
     postprocessor: {
       type: Function,
       required: true
@@ -141,18 +125,6 @@ export default {
     visualization: {
       type: [String, Object],
       default: ''
-    },
-    sql: {
-      type: String,
-      default: ''
-    },
-    customPipeline: {
-      type: [String, Function],
-      default: undefined
-    },
-    customPipelineOptions: {
-      type: [Object, Array],
-      default: undefined
     },
     showTable: {
       type: Boolean,
@@ -169,6 +141,18 @@ export default {
     vizProps: {
       type: Object,
       default: () => ({})
+    },
+    mapboxToken: {
+      type: String,
+      default: ''
+    },
+    // `data` is the result from the pipeline.
+    // Note: we should not fetch the data from Vuex because
+    // then the UnitPipelineViewBlock component instance will react when
+    // other instances add to the results object in the store.
+    data: {
+      required: false,
+      default: null
     }
   },
   data() {
@@ -183,35 +167,17 @@ export default {
       vizVega = v
     }
     return {
-      errorMessage: '',
-      // `result` keeps track of the internal result from the pipeline.
-      // Note: we should not fetch the result from Vuex because
-      // then the UnitViewBlock component instance will react when
-      // other instances add to the results object in the store.
-      result: null,
       vizKepler,
       vizVue,
       vizVega
     }
   },
   computed: {
-    ...mapState(['fileManager', 'experienceConfig', 'bubbleConfig', 'currentTab']),
-    ...mapGetters(['experienceNameAndTag']),
-    clonedResult() {
-      return cloneDeep(this.result)
+    clonedData() {
+      return cloneDeep(this.data)
     },
-    clonedResultPostprocessed() {
-      return this.postprocessor(this.clonedResult)
-    },
-    fileGlobs() {
-      const fileIds = this.files ?? []
-      return fileIds.map(id => this.fileManager.idToGlob[id])
-    },
-    missingFiles() {
-      return this.fileGlobs
-        .map(glob => [glob, this.fileManager.findMatchingFilePaths(glob)])
-        .filter(([_, files]) => files.length === 0)
-        .map(([glob, _]) => glob)
+    clonedDataPostprocessed() {
+      return { ...this.postprocessor(this.clonedData), mapboxToken: this.mapboxToken }
     },
     vizPropsTranslated() {
       // translations override all props...
@@ -222,34 +188,10 @@ export default {
       return merge(cloneDeep(this.vizProps), this.$tev(this.k('vizProps'), {}) || {})
     }
   },
-  watch: {
-    fileManager(value) {
-      if (!value) {
-        // When fileManager is reset,
-        // we set result to null to ensure
-        // the viz component is not mounted
-        // before new results from the pipeline
-        // are available (see clonedResult)
-        this.result = null
-      }
-    }
-  },
   methods: {
-    onUnitResultsUpdate({ result, error }) {
-      if (error) {
-        console.error(error)
-        this.errorMessage = error instanceof Error ? error.message : error
-        return
-      }
-      this.$store.commit('xp/setResult', {
-        result
-      })
-      this.result = result
-    },
     // Convert local translation key to global vue-i18n
     k(key) {
-      const nameAndTag = this.experienceNameAndTag
-      return `experiences.${nameAndTag}.viewBlocks.${this.currentTab}.${key}`
+      return `${this.viewBlockTranslationPrefix}.${key}`
     }
   }
 }

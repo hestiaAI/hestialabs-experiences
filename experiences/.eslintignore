@@ -8,3 +8,6 @@ config
 dist
 node_modules
 sw.*
+static
+
+modules/directus/plugin.js

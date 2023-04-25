@@ -37,7 +37,7 @@
       <VRow>
         <VCol cols="12">
           <UnitFilterableTable
-            v-bind="{ headers: header_trips, items: get_trips }"
+            v-bind="{ headers: header_trips, items: get_trips, viewBlockTranslationPrefix }"
             @current-items="onTableFilter"
           />
         </VCol>
@@ -109,7 +109,8 @@ export default {
     keplerArgs() {
       return {
         keplerData: this.keplerData,
-        config: this.keplerConfig
+        config: this.keplerConfig,
+        mapboxToken: this.mapboxToken
       }
     }
   },

@@ -166,7 +166,7 @@ const blocks: ViewBlocks = [
     vizProps: {
       graphs: [
         {
-          title: 'Ad viewed',
+          title: 'Ads viewed',
           valueLabel: 'action',
           cols: '8',
           type: 'TimelineChart.vue',
@@ -174,15 +174,15 @@ const blocks: ViewBlocks = [
         },
         {
           valueLabel: 'interactions',
-          title: 'Ad Clicked',
+          title: 'Ads clicked',
           cols: '4',
           type: 'PieChart.vue',
           valueAccessor: 'clicked'
         }
       ]
     },
-    title: 'Ad 1/3 (Interactions)',
-    text: 'See how much ads you see and wether or not you interact with them.'
+    title: 'Ads 1/3 (Interactions)',
+    text: 'See how many ads you viewed and whether or not you interacted with them.'
   },
   {
     id: 'ad-interests',
@@ -202,7 +202,7 @@ const blocks: ViewBlocks = [
       ]
     },
     showTable: false,
-    title: 'Ad 2/3 (Interests)',
+    title: 'Ads 2/3 (Interests)',
     text: 'See which interests are inferred about you.'
   },
   {
@@ -210,8 +210,8 @@ const blocks: ViewBlocks = [
     sql: sqlAdvertisers,
     files: ['advertisers'],
     showTable: true,
-    title: 'Ad 3/3 (Advertisers)',
-    text: 'See which advertisers are using your information on Instagram.'
+    title: 'Ads 3/3 (Advertisers)',
+    text: 'See which advertisers have used your information on Instagram.'
   },
   {
     id: 'localisation',

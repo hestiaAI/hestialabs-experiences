@@ -73,7 +73,7 @@
           </VCardTitle>
           <VCardText>
             <UnitFilterableTable
-              v-bind="{ headers, items: values }"
+              v-bind="{ headers, items: values, viewBlockTranslationPrefix}"
             />
           </VCardText>
         </VCard>

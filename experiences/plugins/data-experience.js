@@ -1,7 +1,10 @@
 import Vue from 'vue'
-import DataExperience from 'data-experience'
+import { DataExperience, ViewBlock, CodeEditor } from 'data-experience'
 import 'data-experience/dist/DataExperience.css'
 
 export default ({ store }) => {
-  Vue.use(DataExperience, { store, mixinsAlreadyInjected: true })
+  console.log('TEST', CodeEditor, DataExperience)
+  Vue.use(CodeEditor)
+  Vue.use(DataExperience, { store })
+  Vue.use(ViewBlock, { store })
 }

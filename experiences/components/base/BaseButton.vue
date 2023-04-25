@@ -1,11 +1,11 @@
 <template>
   <VBtn
-    :outlined="outlined"
     v-bind="$attrs"
     class="my-2 base-button"
     @click="$emit('click', $event)"
   >
-    <VIcon v-if="mdiIcon" :left="text !== ''">
+    <VProgressCircular v-if="progress" indeterminate width="2" size="20" />
+    <VIcon v-else-if="mdiIcon" :left="text !== ''">
       {{ mdiIconResolved }}
     </VIcon>
     <slot>
@@ -27,14 +27,31 @@ export default {
       type: String,
       default: null
     },
-    outlined: {
+    error: {
       type: Boolean,
-      default: true
+      default: false
+    },
+    success: {
+      type: Boolean,
+      default: false
+    },
+    progress: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
+    statusIcon() {
+      if (this.error) {
+        return 'mdiAlert'
+      } else if (this.success) {
+        return 'mdiCheckCircle'
+      } else {
+        return this.mdiIcon
+      }
+    },
     mdiIconResolved() {
-      return this.$vuetify.icons.values[this.mdiIcon]
+      return this.$vuetify.icons.values[this.statusIcon]
     }
   }
 }

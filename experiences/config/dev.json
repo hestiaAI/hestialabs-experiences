@@ -83,7 +83,11 @@
     "transitec-participant",
     "transitec-aggregator",
     "observe-aggregator",
-    "observe-participant"
+    "observe-participant",
+    "trialinternational-participant",
+    "trialinternational-aggregator",
+    "shds-participant",
+    "shds-aggregator"
   ],
   "homePageBubbles": [
     "live-participant",
