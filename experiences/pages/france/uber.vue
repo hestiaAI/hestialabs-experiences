@@ -1,5 +1,13 @@
 <template>
   <div>
+    <VBanner
+      color="secondary"
+      icon="$mdiBrightnessPercent"
+      class="banner"
+      dark
+    >
+      Offre de lancement : <span class="font-weight-bold">50%</span> de réduction si vous souscrivez à <span class="font-weight-bold">Horkos-Deluxe</span> avant le 30 avril avec le code: <strong class="promo-code">SUPERPROMO</strong>
+    </VBanner>
     <div class="banner-wrapper">
       <VContainer>
         <div class="text-center">
@@ -29,7 +37,7 @@
               Profitez de notre accompagnement tout au long du processus de récupération de vos données auprès d'Uber. Horkos Deluxe transformera ensuite vos données bruts en données comptables : calculs de vos arriérés, de vos gains et de vos coûts. Vous pourrez aussi visualiser votre temps de travail et vos km parcourus, y compris à vide (sans client).
             </p>
             <div class="text-center ma-3">
-              <VBtn href="https://buy.stripe.com/5kA3cEcio5Jie1GdQU" color="primary" target="_blank">
+              <VBtn href="https://buy.stripe.com/5kA3cEcio5Jie1GdQU" color="secondary" target="_blank">
                 Souscrivez au service Horkos Deluxe
               </VBtn>
             </div>
@@ -146,5 +154,13 @@ export default {
 .section-wrapper {
   margin-top: 60px;
   margin-bottom: 40px;
+}
+.banner {
+  color: white;
+  font-size: 1.5em;
+}
+.promo-code {
+  font-weight: bolder;
+  font-size: 1.1em;
 }
 </style>
