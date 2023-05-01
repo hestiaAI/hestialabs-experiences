@@ -52,19 +52,24 @@ export const sparqlEmailAndItemsTargetedBy = (project) =>
 } `;
 
 // https://stackoverflow.com/questions/38349975/sparql-how-to-obtain-label-in-available-languages-if-first-option-is-not-availa
-export const sparqlItemPropertiesLabel = (item, property, lang='en') =>
-`SELECT ?itemLabel (lang(?itemLabel) as ?lang) WHERE {
-   ${item} ${property} ?personalData.
-   ?personalData rdfs:label ?itemLabel
-}`
+export const sparqlItemPropertiesLabel = (item, property, labelName='itemLabel', lang='en') => {
+  const query = `SELECT ?${labelName} WHERE {
+    ${item} ${property} ?personalData.
+    ?personalData rdfs:label ?${labelName}
+    filter langMatches(lang(?${labelName}), "en")
+  }`
+  console.log(query)
+  return query
+}
 
 export async function query(sparqlQuery, apiUrl) {
-    const response = await fetch(
-        `https://${apiUrl}?origin=*&query=${encodeURIComponent(sparqlQuery)}`,
-        { "headers": { "Accept": "application/sparql-results+json" } }
-    );
-    const data = await response.json();
-    return bindingsAsKeyVals(data);
+  const response = await fetch(
+      `https://${apiUrl}?origin=*&query=${encodeURIComponent(sparqlQuery)}`,
+      { "headers": { "Accept": "application/sparql-results+json" } }
+  );
+  const data = await response.json();
+  console.log('d', data)
+  return data
 }
 
 export async function expandTemplate(itemId, templateName, wikiUrl) {
@@ -92,16 +97,25 @@ export function bindingsAsKeyVals(result){
     })
 };
 
+export function singleVarBindingsAsVals(result){
+  const {head: {vars}, results: {bindings}} = result;
+  const singlevar = vars[0]
+  return bindings.map(binding => binding[singlevar]?.value)
+};
+
+
 export async function fetchOrgsOfInstance(item){
     const sparql =
           sparqlEmailAndItemsOfInstance(item);
-    return query(sparql, URL_PERSONALDATA_IO);
+    const data = await query(sparql, URL_PERSONALDATA_IO);
+    return bindingsAsKeyVals(data);
 }
 
 export async function fetchOrgsTargetedBy(item){
     const sparql =
           sparqlEmailAndItemsTargetedBy(item);
-    return query(sparql, URL_PERSONALDATA_IO);
+    const data = await query(sparql, URL_PERSONALDATA_IO);
+    return bindingsAsKeyVals(data);
 }
 
 export async function fetchMailTo(item, template){

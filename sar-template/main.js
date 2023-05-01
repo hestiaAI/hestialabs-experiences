@@ -3,6 +3,8 @@ import javascriptLogo from './javascript.svg'
 import viteLogo from '/vite.svg'
 import { setupCounter } from './counter.js'
 import { ITEM_ONLINE_DATING_APPLICATION, fetchOrgsOfInstance,
+         bindingsAsKeyVals,
+         singleVarBindingsAsVals,
          vocabulary, query, sparqlItemPropertiesLabel,
          URL_PERSONALDATA_IO} from './pdio-wiki.js'
 import nunjucks from 'nunjucks'
@@ -33,7 +35,8 @@ const hello = nunjucks.renderString('Hello {{ username }}', { username: 'James' 
 console.log('h ', hello)
 const datingApps = await fetchOrgsOfInstance(ITEM_ONLINE_DATING_APPLICATION)
 console.log('da', datingApps)
-const {items: {swisscom, instagram}, properties: {collects}} = vocabulary
-const qSwColl = sparqlItemPropertiesLabel(swisscom, collects)
-const collectedBySwisscom = await query(qSwColl, URL_PERSONALDATA_IO)
-console.log('cbs', collectedBySwisscom)
+const {items: {swisscom, instagram}, properties: {collects, requires}} = vocabulary
+const qColl = sparqlItemPropertiesLabel(instagram, collects)
+const collected = await query(qColl, URL_PERSONALDATA_IO)
+// console.log('cbs', collectedBySwisscom)
+console.log('cbs', singleVarBindingsAsVals(collected))
