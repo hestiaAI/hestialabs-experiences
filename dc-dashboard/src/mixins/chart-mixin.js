@@ -69,14 +69,16 @@ export default {
     this.drawViz()
   },
   watch: {
-    values() {
-      this.drawViz()
+    ndx: {
+      handler() {
+        this.drawViz()
+      }
     }
   },
   methods: {
-    createTextFilterWidget(parent, placeholder = 'Search') {
+    createTextFilterWidget(parent, placeholder = 'search') {
       const widget = new dc.TextFilterWidget(parent)
-      widget.placeHolder(this.$t(placeholder))
+      widget.placeHolder(this.$t(`dc-dashboard-locales.${placeholder}`))
       return widget
     }
   }

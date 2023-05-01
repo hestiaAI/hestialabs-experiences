@@ -3,7 +3,7 @@ import VueI18n from 'vue-i18n'
 import DashboardComponent from '@/components/Dashboard.vue'
 
 Vue.use(VueI18n)
-
+Vue.config.silent = true
 import en from '@/locales/en.json'
 import fr from '@/locales/fr.json'
 
@@ -18,6 +18,8 @@ export const Dashboard = {
         fr
       }
     })
+
+
 
     // If the parent app has already setup i18n, merge the messages
     if(options.i18n) {

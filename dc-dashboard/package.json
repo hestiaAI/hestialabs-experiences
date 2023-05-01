@@ -21,10 +21,9 @@
   },
   "dependencies": {
     "crossfilter2": "^1.5.4",
-    "d3": "^7.6.1",
-    "d3-collection": "^1.0.7",
+    "d3": "^7.8.4",
     "d3-time-format": "^4.1.0",
-    "dc": "^4.2.7"
+    "dc": "^4.2.6"
   },
   "devDependencies": {
     "@intlify/unplugin-vue-i18n": "^0.10.0",

@@ -1,21 +1,29 @@
 <template>
   <div>
-    <ul class="tab-radio">
-      <li v-for="item in options"
-        :key="item"
-        :id="item"
-        class="tab-radio__item"
-        :class="{'tab-radio__item--selected': item === value}"
-        @click="select($event)"
-        >
-        {{ item }}
-      </li>
-    </ul>
+    <div class="tab-radio__label">
+      {{ label }}
+    </div>
+    <div :class="{'outlined': outlined}">
+      <ul class="tab-radio">
+        <li v-for="item in options"
+          :key="item"
+          :id="item"
+          class="tab-radio__item"
+          :class="{'tab-radio__item--selected': item === value}"
+          @click="select($event)"
+          >
+            {{ $tc(k(item), 1) }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
+  import TranslationMixin from '@/mixins/translation-mixin'
+
   export default {
+    mixins: [TranslationMixin],
     props: {
       value: {
         type: String,
@@ -25,6 +33,10 @@
         type: Array,
         required: true
       },
+      label: {
+        type: String,
+        default: ''
+      },
       textAccessor: {
         type: String,
         default: 'text'
@@ -32,6 +44,10 @@
       valueAccessor: {
         type: String,
         default: 'value'
+      },
+      outlined: {
+        type: Boolean,
+        default: true
       }
     },
     data(){
@@ -69,7 +85,6 @@
 .tab-radio__item {
   padding: 7px 8px;
   white-space: nowrap;
-  color: rgb(88, 102, 126);
   border-top: 1px solid transparent;
   border-right: 1px solid transparent;
   border-left: 1px solid transparent;
@@ -97,5 +112,22 @@
   color: rgb(34, 37, 49);
   box-shadow: rgb(239 242 245) 0px 1px 0px;
   font-weight: 400;
+}
+
+.outlined::v-deep .tab-radio {
+  background: transparent;
+  color: currentColor;
+  border: 1px solid currentColor;
+}
+
+.outlined::v-deep .tab-radio__item {
+  color: currentColor;
+}
+
+.outlined::v-deep .tab-radio__item--selected {
+  background: transparent;
+  color: currentColor;
+  box-shadow: none;
+  border: 1px solid currentColor;
 }
 </style>
