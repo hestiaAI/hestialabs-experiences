@@ -79,7 +79,7 @@ export default {
         const appName = this.context.i18n.t('app.name')
         return title ? `${title} | ${appName}` : appName
       }
-      return 'Booting 🚀'
+      return name
     },
     title: '',
     meta: [
