@@ -14,7 +14,11 @@
     </div>
     <VContainer>
       <p class="text-h6 mt-6">
-        Nous avons développé Horkos Deluxe, un assistant juridique 2.0 qui vous aide à récupérer vos données Uber, les analyser, et produire les documents vous permettant d'engager des procédures légales (preuves).
+        <strong>Horkos Deluxe est un assistant juridique 2.0 pour chauffeurs Uber.</strong>
+        Il aide les chauffeurs à récupérer leurs données Uber, il les analyse et produit les documents qui leurs permettent d'engager des procédures légales (preuves) contre la plateforme.
+      </p>
+      <p class="text-h6 mt-6">
+        <strong>Horkos Deluxe est aussi un super comptable pour chauffeurs VTC.</strong> Il calcule tous les éléments qui permettent à un chauffeur Uber de déterminer la rentabilité de son activité : kilomètres parcourus et temps de connexion, en course (P3), en approche (P2) et en disponibilité (P1), le jour, la nuit, le week-end, partage des revenus avec Uber…
       </p>
       <section ref="get-your-data" class="section-wrapper">
         <VRow>

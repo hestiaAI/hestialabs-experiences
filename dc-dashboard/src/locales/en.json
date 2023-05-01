@@ -1,0 +1,33 @@
+{
+  "dc-dashboard-locales": {
+    "click-graph": "Please click on the graph to apply filters.",
+    "current-filter": "Current filter:",
+    "day": "day | days",
+    "day-of-week": "day of week",
+    "item-per-timeunit": "{title} per {timeUnit}",
+    "item-total": "{title} in total",
+    "month": "month | months",
+    "no-data": "No data available",
+    "no-filter": "No filter selected",
+    "reset": "reset",
+    "reset-all": "reset all",
+    "search": "search",
+    "select-time-range": "Select a date range to zoom in",
+    "selected-out-of": "selected out of",
+    "show-top-n": "top {n} on {m} elements",
+    "time": "time",
+    "time-interval": "time interval | time intervals",
+    "time-of-day": "time of day",
+    "week": "week | weeks",
+    "weekdays": {
+      "Sun": "dim",
+      "Mon": "lun",
+      "Tue": "mar",
+      "Wed": "mer",
+      "Thu": "jeu",
+      "Fri": "ven",
+      "Sat": "sam"
+    },
+    "year": "year | years"
+  }
+}

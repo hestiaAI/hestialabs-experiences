@@ -79,7 +79,7 @@ export default {
         const appName = this.context.i18n.t('app.name')
         return title ? `${title} | ${appName}` : appName
       }
-      return 'Booting 🚀'
+      return name
     },
     title: '',
     meta: [
@@ -262,7 +262,8 @@ export default {
     '@/plugins/i18n.js',
     '@/plugins/vuetify.js',
     '@/plugins/data-experience.js',
-    '@/plugins/asset-url.js'
+    '@/plugins/asset-url.js',
+    '@/plugins/dc-dashboard.js'
   ],
   loading: {
     color: primary,
