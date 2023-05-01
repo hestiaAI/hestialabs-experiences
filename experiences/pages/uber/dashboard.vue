@@ -169,21 +169,6 @@ export default {
   },
   methods: {
     async fetchData() {
-      /*
-      this.data = await d3.dsv(';', '/data/test-sample.csv', (data) => {
-        console.log(data)
-        return {
-          begin: data.day,
-          end: data.end,
-          duration_hours: ((new Date(data.end) - new Date(data.begin)) / 1000 / 60 / 60),
-          distance: +data.distance_km,
-          income: +data.uber_paid,
-          per_hour: (+data.uber_paid / ((new Date(data.end) - new Date(data.begin)) / 1000 / 60 / 60)) || 0,
-          per_km: (+data.uber_paid / +data.distance_km) || 0,
-          status: data.status
-        }
-      })
-      */
       this.data = await d3.dsv(',', '/data/test-sample.csv', (data) => {
         const income = +(+data.uber_paid).toFixed(2)
         const duration = +(+data.duration_h).toFixed(2)
@@ -200,9 +185,6 @@ export default {
           status: data.status
         }
       })
-
-      console.log('MAX', d3.max(this.data, function(d) { return d.per_km }))
-      console.log('MIN', d3.min(this.data, function(d) { return d.per_km }))
     }
   }
 }
