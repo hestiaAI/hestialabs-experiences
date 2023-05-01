@@ -7,7 +7,7 @@
 
 <script>
 import TimelineChart from './charts/TimelineChart.vue'
-import BarTimelineChart from './charts/BarTimelineChart.vue'
+import StackTimelineChart from './charts/StackTimelineChart.vue'
 import HourChart from './charts/HourChart.vue'
 import PieChart from './charts/PieChart.vue'
 import TopChart from './charts/TopChart.vue'
@@ -16,7 +16,7 @@ import WeekChart from './charts/WeekChart.vue'
 export default {
   components: {
     TimelineChart,
-    BarTimelineChart,
+    StackTimelineChart,
     HourChart,
     PieChart,
     TopChart,

@@ -78,19 +78,22 @@ export default {
         name: 'day',
         accessor: d => d3.timeDay(this.dateParser(d)),
         xUnits: d3.timeDays,
-        round: d3.timeDay.round
+        round: d3.timeDay.round,
+        formatter: d3.timeFormat('%B %d, %Y')
       },
       month: {
         name: 'month',
         accessor: d => d3.timeMonth(this.dateParser(d)),
         xUnits: d3.timeMonths,
-        round: d3.timeMonth.round
+        round: d3.timeMonth.round,
+        formatter: d3.timeFormat('%B %Y')
       },
       year: {
         name: 'year',
         accessor: d => d3.timeYear(this.dateParser(d)),
         xUnits: d3.timeYears,
-        round: d3.timeYear.round
+        round: d3.timeYear.round,
+        formatter: d3.timeFormat('%Y')
       }
     }
     return {
@@ -139,7 +142,7 @@ export default {
 
       const height = this.height - this.margins.bottom - this.margins.top
       lineChart
-        .margins({ top: this.margins.top, left: this.margins.left, right: this.margins.right, bottom: -5 })
+        .margins({ top: this.margins.top, left: this.margins.left, right: this.margins.right, bottom: 20 })
         .width(width)
         .transitionDuration(1000)
         .turnOnControls(false)
@@ -160,7 +163,7 @@ export default {
         })
         .round(this.timeUnit.round)
         .xUnits(this.timeUnit.xUnits)
-        .title(d => `${this.dateFormatter(d.key)} : ${d.value} ${this.valueLabel}`)
+        .title(d => `${this.timeUnit.formatter(d.key)} : ${d.value} ${this.valueLabel}`)
         .clipPadding(10)
         .yAxisLabel(`Total ${this.valueLabel}`)
         .ordinalColors(this.colorPalette)

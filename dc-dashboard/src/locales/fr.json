@@ -11,6 +11,7 @@
     "no-filter": "Aucun filtre sélectionné",
     "reset": "réinitialiser",
     "reset-all": "réinitialiser tout",
+    "search": "rechercher",
     "select-time-range": "Sélectionnez une plage de temps pour effectuer un zoom",
     "selected-out-of": "sélectionné·e·s sur",
     "show-top-n": "top {n} sur {m} elements",

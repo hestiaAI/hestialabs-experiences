@@ -49,6 +49,7 @@
 /* For mobile phones: */
 .dc-dashboard [class*="c-"] {
   width: 100%;
+  padding: 12px;
 }
 
 @media only screen and (min-width: 768px) {

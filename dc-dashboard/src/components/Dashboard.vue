@@ -34,7 +34,7 @@ export default {
     },
     colorPalette: {
       type: Array,
-      default: () => ['#bebada', '#8dd3c7', '#fb8072', '#80b1d3', '#fdb462', '#b3de69', '#bc80bd', '#ccebc5']
+      default: () => ['#bebada', '#8dd3c7', '#fb8072', '#80b1d3', '#fdb462', '#b3de69', '#bc80bd', '#ccebc5', '#64B5CD', '#8C8C8C', '#CCB974']
     },
     messages: {
       type: Object,
@@ -45,9 +45,10 @@ export default {
       default: 'en'
     }
   },
-  data() {
-    return {
-      ndx: crossfilter(this.values)
+  computed: {
+    ndx() {
+      console.log('Values changed: ', this.values)
+      return crossfilter(this.values)
     }
   },
   mounted() {

@@ -56,7 +56,7 @@ export default {
           title: 'Number of login',
           valueLabel: 'tets',
           cols: '6',
-          chart: 'BarTimelineChart',
+          chart: 'StackTimelineChart',
           dateAccessor: 'time',
           typeAccessor: 'Category',
           dateFormat: '%Q'

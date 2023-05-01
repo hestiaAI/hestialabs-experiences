@@ -11,6 +11,7 @@
     "no-filter": "No filter selected",
     "reset": "reset",
     "reset-all": "reset all",
+    "search": "search",
     "select-time-range": "Select a date range to zoom in",
     "selected-out-of": "selected out of",
     "show-top-n": "top {n} on {m} elements",

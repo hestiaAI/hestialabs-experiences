@@ -8,6 +8,10 @@
   fill: currentColor;
 }
 
+.dc-dashboard .dc-legend .dc-legend-item {
+  fill: currentColor;
+}
+
 .dc-dashboard .dc-chart .dc-text-filter-input {
   fill: currentColor;
   background: none;
