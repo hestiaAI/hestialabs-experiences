@@ -62,6 +62,10 @@ export default {
     country: {
       type: String,
       required: true
+    },
+    productId: {
+      type: Number,
+      required: true
     }
   },
   data() {
@@ -236,7 +240,8 @@ export default {
       try {
         const apiURL = this.serverlessUrl + 'createTransaction?' + new URLSearchParams({
           filename,
-          ...uberInfos
+          ...uberInfos,
+          product: this.productId
         })
         const response = await fetch(apiURL)
 
