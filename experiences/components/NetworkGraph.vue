@@ -183,8 +183,14 @@ export default {
 
       // Start simulation
       simulation.nodes(this.nodes).on('tick', ticked)
-
       simulation.force('link').links(this.edges)
+
+      // Static initialisation, nodes dont move after being dragged
+      // simulation.start()
+
+      const n = this.nodes.length
+      for (let i = n * n; i > 0; --i) { simulation.tick() }
+      // simulation.stop()
 
       function ticked() {
         node.attr('transform', function(d) {
@@ -240,7 +246,8 @@ export default {
       }
 
       function dragended(evt) {
-        if (!evt.active) { simulation.alphaTarget(0) }
+        simulation.stop()
+        // if (!evt.active) { simulation.alphaTarget(0) }
         evt.subject.fx = null
         evt.subject.fy = null
       }
