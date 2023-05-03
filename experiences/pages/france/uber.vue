@@ -56,7 +56,7 @@
         </VRow>
         <VRow justify="center">
           <VCol cols="12" md="8" lg="6" align-self="center" class="text-center">
-            <FileUploader platform="uber" country="france" />
+            <FileUploader platform="uber" country="france" :product-id="1" />
           </VCol>
         </VRow>
       </section>
