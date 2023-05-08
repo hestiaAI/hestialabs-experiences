@@ -1,39 +1,36 @@
 
 <template>
-  <VContainer>
+  <VContainer class="mb-6">
     <VRow justify="center">
       <VCol cols="12" md="8">
-        <h3 class="text-h3 font-weight-bold blue-grey--text text--darken-2 mt-6 mb-10 text-center">
-          Graph Generator
-        </h3>
         <p class="text-h5 blue-grey--text text--darken-2 mt-6 mb-6">
-          Display interactive graphs
+          Graph Generator
         </p>
         <VSelect
           v-model="selectedGraph"
           :items="graphs"
           label="Select a Graph"
-          solo
           class="text-center"
           item-text="name"
           return-object
+          outlined
         />
       </VCol>
     </VRow>
     <VRow justify="center">
       <VCol cols="12" md="8">
-        <NetworkGraph v-if="graphValues" v-bind="{...graphValues}" />
+        <G6Graph v-if="graphValues" v-bind="{...graphValues}" />
       </VCol>
     </VRow>
   </VContainer>
 </template>
 
 <script>
-import NetworkGraph from '@/components/NetworkGraph.vue'
+import G6Graph from '@/components/G6Graph.vue'
 export default {
   name: 'Graphulator',
   components: {
-    NetworkGraph
+    G6Graph
   },
   data() {
     return {
@@ -44,23 +41,22 @@ export default {
   },
   watch: {
     selectedGraph(newValues) {
-      console.log('newValues', newValues)
+      // Convert Directus format to our component needed format
       this.graphValues = {
         nodes: newValues.nodes.map(node => ({
-          id: node.node_id.id,
+          ...node.node_id,
+          id: node.node_id.id.toString(),
           label: node.node_id.name,
-          size: node.node_id.size,
-          color: node.node_id.color
+          size: node.node_id.size.toString()
         })),
         edges: newValues.edges.map(edge => ({
-          id: edge.edge_id.id,
-          source: edge.edge_id.source,
-          target: edge.edge_id.target,
-          label: edge.edge_id.name,
-          color: edge.edge_id.color
+          ...edge.edge_id,
+          id: edge.edge_id.id.toString(),
+          source: edge.edge_id.source.toString(),
+          target: edge.edge_id.target.toString(),
+          label: edge.edge_id.name
         }))
       }
-      console.log(this.graphValues)
     }
   },
   mounted() {
