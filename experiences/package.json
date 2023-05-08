@@ -87,7 +87,6 @@
     "cookie": "^0.5.0",
     "core-js": "^3.23.3",
     "d3": "^7.6.1",
-    "d3-force-boundary": "^0.0.3",
     "d3-time-format": "^4.1.0",
     "data-experience": "file:../data-experience",
     "dc-dashboard": "file:../dc-dashboard",
