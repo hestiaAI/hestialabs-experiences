@@ -69,6 +69,7 @@
     "\\.pnp\\.[^\\/]+$"
   ],
   "dependencies": {
+    "@antv/g6": "^4.8.10",
     "@directus/sdk": "^10.3.1",
     "@mdi/js": "^6.9.96",
     "@nuxtjs/axios": "^5.13.6",
