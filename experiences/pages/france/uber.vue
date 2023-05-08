@@ -1,13 +1,5 @@
 <template>
   <div>
-    <VBanner
-      color="secondary"
-      icon="$mdiBrightnessPercent"
-      class="banner"
-      dark
-    >
-      Offre de lancement : <span class="font-weight-bold">50%</span> de réduction si vous souscrivez à <span class="font-weight-bold">Horkos-Deluxe</span> avant le 30 avril avec le code: <strong class="promo-code">SUPERPROMO</strong>
-    </VBanner>
     <div class="banner-wrapper">
       <VContainer>
         <div class="text-center">
@@ -22,7 +14,11 @@
     </div>
     <VContainer>
       <p class="text-h6 mt-6">
-        Nous avons développé Horkos Deluxe, un assistant juridique 2.0 qui vous aide à récupérer vos données Uber, les analyser, et produire les documents vous permettant d'engager des procédures légales (preuves).
+        <strong>Horkos Deluxe est un assistant juridique 2.0 pour chauffeurs Uber.</strong>
+        Il aide les chauffeurs à récupérer leurs données Uber, il les analyse et produit les documents qui leurs permettent d'engager des procédures légales (preuves) contre la plateforme.
+      </p>
+      <p class="text-h6 mt-6">
+        <strong>Horkos Deluxe est aussi un super comptable pour chauffeurs VTC.</strong> Il calcule tous les éléments qui permettent à un chauffeur Uber de déterminer la rentabilité de son activité : kilomètres parcourus et temps de connexion, en course (P3), en approche (P2) et en disponibilité (P1), le jour, la nuit, le week-end, partage des revenus avec Uber…
       </p>
       <section ref="get-your-data" class="section-wrapper">
         <VRow>
@@ -37,7 +33,7 @@
               Profitez de notre accompagnement tout au long du processus de récupération de vos données auprès d'Uber. Horkos Deluxe transformera ensuite vos données bruts en données comptables : calculs de vos arriérés, de vos gains et de vos coûts. Vous pourrez aussi visualiser votre temps de travail et vos km parcourus, y compris à vide (sans client).
             </p>
             <div class="text-center ma-3">
-              <VBtn href="https://buy.stripe.com/5kA3cEcio5Jie1GdQU" color="secondary" target="_blank">
+              <VBtn href="https://buy.stripe.com/5kA3cEcio5Jie1GdQU" color="primary" target="_blank">
                 Souscrivez au service Horkos Deluxe
               </VBtn>
             </div>
@@ -60,7 +56,7 @@
         </VRow>
         <VRow justify="center">
           <VCol cols="12" md="8" lg="6" align-self="center" class="text-center">
-            <FileUploader platform="uber" country="france" />
+            <FileUploader platform="uber" country="france" :product-id="1" />
           </VCol>
         </VRow>
       </section>
