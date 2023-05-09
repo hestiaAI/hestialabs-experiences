@@ -73,7 +73,7 @@ export const actions = {
 
     try {
       const pagesData = await this.$directus.items('websites').readByQuery({
-        fields: ['*', 'url_name', 'pages.Page_id.*', 'pages.Page_id.content.Content_id.*', 'pages.Page_id.content.Content_id.datasets.dataset_id.*', 'pages.Page_id.content.Content_id.view.view_id.*', 'pages.Page_id.content.Content_id.translations.*', 'pages.Page_id.content.Content_id.related_pages.*.url_name', 'pages.Page_id.translations.*'],
+        fields: ['*', 'url_name', 'pages.Page_id.*', 'pages.Page_id.content.Content_id.*', 'pages.Page_id.content.Content_id.datasets.dataset_id.*', 'pages.Page_id.content.Content_id.view.view_id.*', 'pages.Page_id.content.Content_id.translations.*', 'pages.Page_id.content.Content_id.related_pages.*.url_name', 'pages.Page_id.translations.*', 'pages.Page_id.content.Content_id.view.view_id.experience_id.*', 'pages.Page_id.content.Content_id.view.view_id.experience.*'],
         filter: {
           url: {
             _eq: 'digipower.academy'
