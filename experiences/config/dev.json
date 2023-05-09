@@ -51,6 +51,8 @@
     }
   ],
   "bubbles": [
+    "frc-participant",
+    "frc-aggregator",
     "tl-aggregator",
     "tl-participant",
     "mercator-aggregator",
