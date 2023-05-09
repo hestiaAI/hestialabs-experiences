@@ -25,6 +25,8 @@
     "youtube"
   ],
   "bubbles": [
+    "frc-participant",
+    "frc-aggregator",
     "live-aggregator",
     "live-participant",
     "demo-aggregator",
