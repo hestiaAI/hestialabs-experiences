@@ -130,7 +130,6 @@ export async function generateTable(files, config) {
 
   const results = (await Promise.all(filesFound.map(async(fileObject) => {
     const json = await getJsonObject(fileObject.text, fileObject.extension)
-    console.log(json)
     const rows = await runWorker(new FetchItemsWorker(), {
       json,
       arrayPath: config.array,
