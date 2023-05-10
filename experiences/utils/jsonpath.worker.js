@@ -9,7 +9,7 @@ self.onmessage = (message) => {
     columns.forEach((c) => {
       row[c.name] = JSONPath({ json, path: r.path + c.selector, resultType: 'value' }).pop() || null
     })
-    results.push(row)
+    if (!Object.values(row).every(v => v === null)) { results.push(row) }
   })
   self.postMessage(results)
 }
