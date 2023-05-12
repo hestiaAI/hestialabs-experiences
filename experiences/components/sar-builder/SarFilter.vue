@@ -8,9 +8,9 @@
             <span v-t="k('no-data')" class="caption ma-10" />
           </VCol>
         </VRow>
-        <VRow>
+        <VRow v-else>
           <template v-for="lens in configs">
-            <VCol v-if="lens.values" :key="lens.id" cols="12">
+            <VCol v-if="lens.values.length" :key="lens.id" cols="12">
               <VAutocomplete
                 v-model="lens['selectedValues']"
                 :filter="customFilter"
@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     noData() {
-      return this.configs.every(lens => !lens.values)
+      return this.configs.every(lens => !lens.values || !lens.values.length)
     }
   },
   watch: {
