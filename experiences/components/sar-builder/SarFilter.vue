@@ -3,7 +3,7 @@
     <span v-t="k('filter-description')" class="blue-grey--text text--darken-2 mt-6 mb-6" />
     <VCard flat class="pa-3 mt-6">
       <VForm>
-        <VRow v-if="!configs.length">
+        <VRow v-if="noData">
           <VCol align="center">
             <span v-t="k('no-data')" class="caption ma-10" />
           </VCol>
@@ -14,29 +14,33 @@
               <VAutocomplete
                 v-model="lens['selectedValues']"
                 :filter="customFilter"
-                :items="lens.values"
+                :items="lens.values.map((item, index) => ({ ...item, id: index }))"
                 chips
-                closable-chips
                 color="blue-grey-lighten-2"
                 :label="lens.name"
                 multiple
                 dense
                 return-object
+                item-value="id"
                 @change="updateFilters"
               >
                 <template #selection="data">
                   <VChip class="ma-1">
-                    <div v-for="(propertyValue, _, idx) in data.item" :key="propertyValue">
-                      <span v-if="idx > 0" class="mr-1 ml-1">-</span>
-                      {{ propertyValue }}
-                    </div>
+                    <template v-for="(propertyValue, propertyName, idx) in data.item">
+                      <div v-if="propertyName !== 'id'" :key="idx">
+                        <span v-if="idx > 0" class="mr-1 ml-1">-</span>
+                        {{ propertyValue }}
+                      </div>
+                    </template>
                   </VChip>
                 </template>
                 <template #item="data">
-                  <VListItemContent v-for="(propertyValue, propertyName) in data.item" :key="propertyValue + propertyValue">
-                    <VListItemTitle>{{ propertyValue }} </VListItemTitle>
-                    <VListItemSubtitle>{{ propertyName }}</VListItemSubtitle>
-                  </VListItemContent>
+                  <template v-for="(propertyValue, propertyName, idx) in data.item">
+                    <VListItemContent v-if="propertyName !== 'id'" :key="idx + data.item.id">
+                      <VListItemTitle>{{ propertyValue }} </VListItemTitle>
+                      <VListItemSubtitle>{{ propertyName }}</VListItemSubtitle>
+                    </VListItemContent>
+                  </template>
                 </template>
               </VAutocomplete>
             </VCol>
@@ -61,13 +65,15 @@ export default {
       filters: {}
     }
   },
+  computed: {
+    noData() {
+      return this.configs.every(lens => !lens.values)
+    }
+  },
   watch: {
     value(newValue) {
       this.configs = newValue
     }
-  },
-  mounted() {
-    console.log('test0', this.configs)
   },
   methods: {
     k(key) {
@@ -77,7 +83,6 @@ export default {
       return Object.values(item).some(value => value && value.toLocaleLowerCase().includes(queryText.toLocaleLowerCase()))
     },
     updateFilters() {
-      console.log(this.configs)
       this.$emit('input', this.configs)
     }
   }

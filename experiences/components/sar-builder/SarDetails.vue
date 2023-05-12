@@ -35,10 +35,9 @@
               class="text-center"
               item-value="email"
               item-text="name"
-              chips
-              deletable-chips
+              clearable
               return-object
-              @input="updateModel"
+              @update:search-input="updateModel"
             />
           </VCol>
         </VRow>
@@ -87,11 +86,11 @@ export default {
     k(key) {
       return `sar-builder.${key}`
     },
-    updateModel() {
+    updateModel(company) {
       this.$emit('input', {
         firstname: this.firstname,
         lastname: this.lastname,
-        company: this.company
+        company: this.company ? this.company.name === company ? this.company : { name: company, email: null } : null
       })
     }
   }

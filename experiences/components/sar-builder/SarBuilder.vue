@@ -58,7 +58,7 @@
             <span v-t="k('back')" />
           </BaseButton>
           <VSpacer />
-          <BaseButton color="primary" @click="step = 2">
+          <BaseButton color="primary" @click="reset">
             <span v-t="k('new-sar')" />
           </BaseButton>
         </div>
@@ -78,30 +78,18 @@ export default {
       loading: false,
       step: 1,
       files: [],
+      introduction: '',
+      conclusion: '',
       lens_configs: [],
       details: {
-        firstname: '',
-        lastname: '',
+        firstname: null,
+        lastname: null,
         company: null
       },
       sar: {
         to: '',
         subject: '',
-        body: 'test test test'
-      }
-    }
-  },
-  watch: {
-    sar: {
-      deep: true,
-      handler() {
-        console.log('updated sar', this.sar)
-      }
-    },
-    details: {
-      deep: true,
-      handler() {
-        console.log('updated details', this.details)
+        body: ''
       }
     }
   },
@@ -131,7 +119,31 @@ export default {
             ]
           }
         })).data
-        console.log(this.lens_configs)
+
+        this.introduction = (await this.$directus.items('SAR_templates').readByQuery({
+          fields: ['text'],
+          filter: {
+            _and: [
+              {
+                id: {
+                  _eq: 8
+                }
+              }
+            ]
+          }
+        })).data[0].text
+        this.conclusion = (await this.$directus.items('SAR_templates').readByQuery({
+          fields: ['text'],
+          filter: {
+            _and: [
+              {
+                id: {
+                  _eq: 9
+                }
+              }
+            ]
+          }
+        })).data[0].text
       } catch (e) {
         console.error(e)
       }
@@ -144,13 +156,17 @@ export default {
           values: await Promise.all(lens.Tabulator_configs.map(t => generateTable(this.files, t.Parsing_configs_id.config).catch(_ => null)))
         }
       }))).map((lens) => {
+        const values = lens.values.find(a => a && a.items.length > 0)?.items || []
         return {
           ...lens,
-          values: lens.values.find(a => a && a.items.length > 0)?.items
+          values: values.filter((value, index) => {
+            const _value = JSON.stringify(value)
+            return index === values.findIndex((obj) => {
+              return JSON.stringify(obj) === _value
+            })
+          })
         }
       })
-
-      console.log('Parsed: ', this.lens_configs)
       this.loading = false
       this.step = 2
     },
@@ -167,11 +183,22 @@ export default {
         return await engine.parseAndRender(c.SAR_template.text || '', { items: c.selectedValues } || { items: [] })
       }))
 
-      console.log('texts', texts)
+      const introduction = await engine.parseAndRender(this.introduction, this.details)
+      const conclusion = await engine.parseAndRender(this.conclusion, this.details)
+
+      texts.unshift(introduction)
+      texts.push(conclusion)
 
       this.sar.body = texts.join('\n')
       this.loading = false
       this.step = 4
+    },
+    reset() {
+      this.lens_configs.forEach((e) => {
+        e.selectedValues = []
+      })
+      this.details.company = null
+      this.step = 2
     }
   }
 }
