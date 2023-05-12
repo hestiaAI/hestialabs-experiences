@@ -38,7 +38,9 @@
         </VRow>
         <VRow>
           <VCol cols="12">
-            <BaseButton type="submit" color="primary" text="Devenir parrain" mdi-icon="mdiSend" v-bind="{error, success, progress}" />
+            <BaseButton type="submit" color="primary" mdi-icon="mdiSend" v-bind="{error, success, progress}">
+              Devenir parrain
+            </BaseButton>
           </VCol>
         </VRow>
         <VAlert

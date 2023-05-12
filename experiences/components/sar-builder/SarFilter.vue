@@ -1,28 +1,46 @@
 <template>
   <VContainer>
-    <span class="blue-grey--text text--darken-2 mt-6 mb-6">
-      Now select the data points you want to include.
-    </span>
+    <span v-t="k('filter-description')" class="blue-grey--text text--darken-2 mt-6 mb-6" />
     <VCard flat class="pa-3 mt-6">
       <VForm>
-        <VRow v-if="!configsFound.length">
+        <VRow v-if="!configs.length">
           <VCol align="center">
-            <span class="caption ma-10">No data points were found in the files you provided.</span>
+            <span v-t="k('no-data')" class="caption ma-10" />
           </VCol>
         </VRow>
-        <VRow v-for="lens in configsFound" :key="lens.id">
-          <VCol cols="12">
-            <VAutocomplete
-              v-model="filters[lens.id]"
-              :items="lens.values"
-              chips
-              closable-chips
-              color="blue-grey-lighten-2"
-              :label="lens.name"
-              multiple
-              dense
-            />
-          </VCol>
+        <VRow>
+          <template v-for="lens in configs">
+            <VCol v-if="lens.values" :key="lens.id" cols="12">
+              <VAutocomplete
+                v-model="lens['selectedValues']"
+                :filter="customFilter"
+                :items="lens.values"
+                chips
+                closable-chips
+                color="blue-grey-lighten-2"
+                :label="lens.name"
+                multiple
+                dense
+                return-object
+                @change="updateFilters"
+              >
+                <template #selection="data">
+                  <VChip class="ma-1">
+                    <div v-for="(propertyValue, _, idx) in data.item" :key="propertyValue">
+                      <span v-if="idx > 0" class="mr-1 ml-1">-</span>
+                      {{ propertyValue }}
+                    </div>
+                  </VChip>
+                </template>
+                <template #item="data">
+                  <VListItemContent v-for="(propertyValue, propertyName) in data.item" :key="propertyValue + propertyValue">
+                    <VListItemTitle>{{ propertyValue }} </VListItemTitle>
+                    <VListItemSubtitle>{{ propertyName }}</VListItemSubtitle>
+                  </VListItemContent>
+                </template>
+              </VAutocomplete>
+            </VCol>
+          </template>
         </VRow>
       </VForm>
     </VCard>
@@ -32,33 +50,35 @@
 
 export default {
   props: {
-    configs: {
+    value: {
       type: Array,
-      default: () => []
+      required: true
     }
   },
   data() {
     return {
-      filters: {},
-      items: ['test', 'test2']
-    }
-  },
-  computed: {
-    configsFound() {
-      return this.configs.filter(c => c.values).map((c) => {
-        return {
-          ...c,
-          values: c.values.map(v => Object.values(v)[0])
-        }
-      })
+      configs: this.value,
+      filters: {}
     }
   },
   watch: {
-    filters: {
-      deep: true,
-      handler() {
-        this.$emit('change', this.filters)
-      }
+    value(newValue) {
+      this.configs = newValue
+    }
+  },
+  mounted() {
+    console.log('test0', this.configs)
+  },
+  methods: {
+    k(key) {
+      return `sar-builder.${key}`
+    },
+    customFilter(item, queryText) {
+      return Object.values(item).some(value => value && value.toLocaleLowerCase().includes(queryText.toLocaleLowerCase()))
+    },
+    updateFilters() {
+      console.log(this.configs)
+      this.$emit('input', this.configs)
     }
   }
 }
