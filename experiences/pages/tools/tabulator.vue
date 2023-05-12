@@ -154,7 +154,7 @@ export default {
         const start2 = performance.now()
         this.table = await generateTable(this.uppy.getFiles(), configObject)
         const end2 = performance.now()
-        console.log(`Execution time 2: ${end2 - start2} ms`)
+        console.info(`Execution time 2: ${end2 - start2} ms`)
       } catch (e) {
         this.progress = false
         this.errorMessage = e
