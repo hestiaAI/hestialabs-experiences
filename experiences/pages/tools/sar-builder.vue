@@ -7,7 +7,7 @@
           SAR Builder
         </h3>
         <p v-t="'sar-builder.intro'" class="text-h5 blue-grey--text text--darken-2 mt-6 mb-6" />
-        <SarBuilder />
+        <SarBuilder class="ma-3 mb-10" />
       </VCol>
     </VRow>
   </VContainer>
