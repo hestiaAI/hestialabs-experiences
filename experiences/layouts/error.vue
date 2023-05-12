@@ -5,7 +5,9 @@
         {{ title }}
       </h1>
       <LogoImg max-width="300" class="my-12" />
-      <BaseButton nuxt :to="localePath('index')" mdi-icon="mdiHome" text="Home Page" />
+      <BaseButton nuxt :to="localePath('index')" mdi-icon="mdiHome">
+        <span>{{ $tev("Home Page", "Home Page") }}</span>
+      </BaseButton>
     </VRow>
   </VContainer>
 </template>

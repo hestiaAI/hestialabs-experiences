@@ -16,5 +16,24 @@
   "Made for": "Made for",
   "Migros Pioneer Fund": "Migros Pioneer Fund",
   "Privacy": "Privacy",
-  "the HestiaLabs project": "the HestiaLabs project"
+  "the HestiaLabs project": "the HestiaLabs project",
+  "sar-builder": {
+    "intro": "Fill in the form below to generate your Subject Access Request from your data.",
+    "add-data": "Add data",
+    "add-data-description": "First add the files you want to include in the SAR.",
+    "filter": "Filter",
+    "filter-description": "Then select the data points you wish to include.",
+    "infos": "Details",
+    "infos-description": "Fill in your details and the company to contact.",
+    "send-sar": "Send SAR",
+    "send-sar-description": "Finally, copy the generated SAR text or send it directly.",
+    "next": "Next",
+    "back": "Back",
+    "send": "Send",
+    "new-sar": "Make another SAR",
+    "no-data": "No data was found in the files you provided.",
+    "firstname": "First Name",
+    "lastname": "Last Name",
+    "company": "Company"
+  }
 }

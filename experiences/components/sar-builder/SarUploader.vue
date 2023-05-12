@@ -1,8 +1,6 @@
 <template>
   <VContainer>
-    <span class="blue-grey--text text--darken-2 mt-6 mb-6">
-      First add the files you want to include in the SAR
-    </span>
+    <span v-t="'sar-builder.add-data-description'" class="blue-grey--text text--darken-2 mt-6 mb-6" />
     <VCard flat class="pa-3 mt-6">
       <div ref="dashboard" />
     </VCard>

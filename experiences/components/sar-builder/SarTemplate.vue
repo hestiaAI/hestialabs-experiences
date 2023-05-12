@@ -1,8 +1,6 @@
 <template>
   <VContainer>
-    <span class="blue-grey--text text--darken-2 mt-6 mb-6">
-      Finally copy the generated SAR text or send it directly
-    </span>
+    <span v-t="'sar-builder.send-sar-description'" class="blue-grey--text text--darken-2 mt-6 mb-6" />
     <VCard flat class="pa-3 mt-6">
       <VForm>
         <VTextField
@@ -13,6 +11,7 @@
           placeholder="example@example.com"
           persistent-placeholder
           @click:append="copyToClipboard(to)"
+          @input="updateModel"
         />
         <VTextField
           v-model="subject"
@@ -22,30 +21,57 @@
           placeholder="Subject Access Request"
           persistent-placeholder
           @click:append="copyToClipboard(subject)"
+          @input="updateModel"
         />
         <VTextarea
           v-model="body"
           outlined
           :append-icon="$vuetify.icons.values['mdiContentCopy']"
-          label="SAR Text"
+          label="Body"
           @click:append="copyToClipboard(body)"
+          @input="updateModel"
         />
       </VForm>
     </VCard>
   </VContainer>
 </template>
 <script>
+
 export default {
+  props: {
+    value: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
-      to: '',
-      subject: '',
-      body: 'The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through.'
+      to: this.value.to,
+      subject: this.value.subject,
+      body: this.value.body,
+      isLoading: true
+    }
+  },
+  watch: {
+    value: {
+      deep: true,
+      handler(newValue) {
+        this.to = newValue.to
+        this.subject = newValue.subject
+        this.body = newValue.body
+      }
     }
   },
   methods: {
     copyToClipboard(text) {
       navigator.clipboard.writeText(text)
+    },
+    updateModel() {
+      this.$emit('input', {
+        to: this.to,
+        subject: this.subject,
+        body: this.body
+      })
     }
   }
 }

@@ -5,7 +5,9 @@
       This step only needs to be done once. Copy the public key in the config
       and store the secret key in a safe place.
     </p>
-    <BaseButton text="Generate keys" @click="generateKeys" />
+    <BaseButton @click="generateKeys">
+      Generate keys
+    </BaseButton>
   </VContainer>
 </template>
 

@@ -7,7 +7,8 @@ self.onmessage = (message) => {
   rows.forEach((r) => {
     const row = {}
     columns.forEach((c) => {
-      row[c.name] = JSONPath({ json, path: r.path + c.selector, resultType: 'value' }).pop() || null
+      const result = JSONPath({ json, path: r.path + c.selector, resultType: 'value' }).pop() || null
+      row[c.name] = result ? decodeURIComponent(escape(result)) : result
     })
     if (!Object.values(row).every(v => v === null)) { results.push(row) }
   })

@@ -1,16 +1,14 @@
 <template>
   <VBtn
     v-bind="$attrs"
-    class="my-2 base-button"
+    class="ma-2"
     @click="$emit('click', $event)"
   >
     <VProgressCircular v-if="progress" indeterminate width="2" size="20" />
-    <VIcon v-else-if="mdiIcon" :left="text !== ''">
+    <VIcon v-else-if="mdiIcon" :left="!!$slots.default">
       {{ mdiIconResolved }}
     </VIcon>
-    <slot>
-      <span>{{ $tev(text, text) }}</span>
-    </slot>
+    <slot />
   </VBtn>
 </template>
 
@@ -19,10 +17,6 @@ export default {
   name: 'BaseButton',
   inheritAttrs: false,
   props: {
-    text: {
-      type: String,
-      default: ''
-    },
     mdiIcon: {
       type: String,
       default: null
