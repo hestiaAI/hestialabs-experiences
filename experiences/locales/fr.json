@@ -16,5 +16,24 @@
   "Made for": "Fait pour",
   "Migros Pioneer Fund": "Le Fonds pionnier Migros",
   "Privacy": "Confidentialité",
-  "the HestiaLabs project": "le projet HestiaLabs"
+  "the HestiaLabs project": "le projet HestiaLabs",
+  "sar-builder": {
+    "intro": "Remplissez le formulaire ci-dessous pour générer votre demande d'accès à vos données.",
+    "add-data": "Données",
+    "add-data-description": "Ajoutez d'abord les fichiers que vous souhaitez inclure dans le SAR.",
+    "filter": "Filtrer",
+    "filter-description": "Sélectionnez ensuite les points de données que vous souhaitez inclure.",
+    "infos": "Coordonnées",
+    "infos-description": "Remplissez vos informations et l'entreprise à contacter.",
+    "send-sar": "Envoyer",
+    "send-sar-description": "Enfin, copiez le texte SAR généré ou envoyez-le directement.",
+    "next": "Suivant",
+    "back": "Retour",
+    "send": "Envoyer",
+    "new-sar": "Faire un autre SAR",
+    "no-data": "Aucune données n'a été trouvé dans les fichiers que vous avez fournis.",
+    "firstname": "Prénom",
+    "lastname": "Nom",
+    "company": "Entreprise"
+  }
 }
