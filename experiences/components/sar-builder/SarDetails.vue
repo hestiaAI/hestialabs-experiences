@@ -37,7 +37,7 @@
               item-text="name"
               clearable
               return-object
-              @update:search-input="updateModel"
+              @update:search-input="updateCompany"
             />
           </VCol>
         </VRow>
@@ -86,7 +86,14 @@ export default {
     k(key) {
       return `sar-builder.${key}`
     },
-    updateModel(company) {
+    updateModel() {
+      this.$emit('input', {
+        firstname: this.firstname,
+        lastname: this.lastname,
+        company: this.company
+      })
+    },
+    updateCompany(company) {
       this.$emit('input', {
         firstname: this.firstname,
         lastname: this.lastname,
