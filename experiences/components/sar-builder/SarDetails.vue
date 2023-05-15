@@ -30,6 +30,7 @@
             <VCombobox
               v-model="company"
               :items="companies"
+              :filter="customFilter"
               label="Company"
               outlined
               class="text-center"
@@ -38,7 +39,14 @@
               clearable
               return-object
               @update:search-input="updateCompany"
-            />
+            >
+              <template #item="data">
+                <VListItemContent>
+                  <VListItemTitle>{{ data.item.name }} </VListItemTitle>
+                  <VListItemSubtitle>{{ data.item.lang }}</VListItemSubtitle>
+                </VListItemContent>
+              </template>
+            </VCombobox>
           </VCol>
         </VRow>
       </vform>
@@ -46,6 +54,7 @@
   </VContainer>
 </template>
 <script>
+import { fetchDataControllerEmails } from '@/utils/pdio-wiki'
 export default {
   props: {
     value: {
@@ -58,19 +67,7 @@ export default {
       firstname: this.value.firstname,
       lastname: this.value.lastname,
       companies: [
-        { header: 'Select an option or create one' },
-        {
-          name: 'Facebook',
-          email: 'facebook@example.com'
-        },
-        {
-          name: 'Instagram',
-          email: 'instagram@example.com'
-        },
-        {
-          name: 'Twitter',
-          email: 'twitter@example.com'
-        }
+        { header: 'Select an option or create one' }
       ],
       company: this.value.company
     }
@@ -82,9 +79,15 @@ export default {
       this.company = newValue.company
     }
   },
+  mounted() {
+    fetchDataControllerEmails().then((pdioDPO) => { this.companies = [...pdioDPO, ...this.companies] })
+  },
   methods: {
     k(key) {
       return `sar-builder.${key}`
+    },
+    customFilter(item, queryText) {
+      return item && item.name?.toLocaleLowerCase().includes(queryText.toLocaleLowerCase())
     },
     updateModel() {
       this.$emit('input', {
