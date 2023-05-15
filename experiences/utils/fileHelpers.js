@@ -137,7 +137,6 @@ export async function generateTable(files, config) {
     })
     return rows
   }))).flat(1)
-
   return {
     headers: config.columns.map((c) => { return { text: c.name, value: c.name } }),
     items: results

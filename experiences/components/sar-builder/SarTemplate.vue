@@ -28,6 +28,7 @@
           outlined
           :append-icon="$vuetify.icons.values['mdiContentCopy']"
           label="Body"
+          height="500"
           @click:append="copyToClipboard(body)"
           @input="updateModel"
         />

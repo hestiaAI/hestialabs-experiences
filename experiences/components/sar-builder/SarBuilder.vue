@@ -30,32 +30,32 @@
       <VStepperContent step="2">
         <SarFilter v-model="lens_configs" />
         <VSpacer />
-        <BaseButton color="primary" @click="step = 3">
-          <span v-t="k('next')" />
-        </BaseButton>
         <BaseButton text @click="step = 1">
           <span v-t="k('back')" />
+        </BaseButton>
+        <BaseButton color="primary" @click="step = 3">
+          <span v-t="k('next')" />
         </BaseButton>
       </VStepperContent>
       <VStepperContent step="3">
         <SarDetails v-model="details" />
         <VSpacer />
-        <BaseButton color="primary" @click="generateSAR">
-          <span v-t="k('next')" />
-        </BaseButton>
         <BaseButton text @click="step = 2">
           <span v-t="k('back')" />
+        </BaseButton>
+        <BaseButton color="primary" @click="generateSAR">
+          <span v-t="k('next')" />
         </BaseButton>
       </VStepperContent>
       <VStepperContent step="4">
         <SarTemplate v-model="sar" />
         <VSpacer />
         <div class="d-flex">
-          <BaseButton color="primary" mdi-icon="mdiSend" href="mailto:test@example.com?subject=Me&body=Hello!">
-            <span v-t="k('send')" />
-          </BaseButton>
           <BaseButton text @click="step = 3">
             <span v-t="k('back')" />
+          </BaseButton>
+          <BaseButton color="primary" mdi-icon="mdiSend" href="mailto:test@example.com?subject=Me&body=Hello!">
+            <span v-t="k('send')" />
           </BaseButton>
           <VSpacer />
           <BaseButton color="primary" @click="reset">
@@ -120,6 +120,18 @@ export default {
           }
         })).data
 
+        this.sar.subject = (await this.$directus.items('SAR_templates').readByQuery({
+          fields: ['text'],
+          filter: {
+            _and: [
+              {
+                id: {
+                  _eq: 10
+                }
+              }
+            ]
+          }
+        })).data[0].text
         this.introduction = (await this.$directus.items('SAR_templates').readByQuery({
           fields: ['text'],
           filter: {
@@ -175,7 +187,6 @@ export default {
 
       const engine = new Liquid()
       this.sar.to = this.details.company?.email || ''
-      this.sar.subject = 'Subject Access Request'
       const texts = await Promise.all(this.lens_configs.map(async(c) => {
         if (!c.selectedValues?.length) {
           return ''

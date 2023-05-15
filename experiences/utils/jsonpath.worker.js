@@ -17,15 +17,23 @@ self.onmessage = (message) => {
   rows.forEach((r) => {
     const row = {}
     columns.forEach((c) => {
-      const result = JSONPath({ json, path: r.path + c.selector, resultType: 'value' }).pop() || null
-      row[c.name] = result ? decodeURIComponent(escape(result)) : result
+      const result = JSONPath({ json, path: r.path + c.selector, resultType: 'value' }).pop()
+      switch (typeof result) {
+        case 'string':
+          row[c.name] = decodeURIComponent(escape(result))
+          if (row[c.name] && 'timeParse' in c) {
+            row[c.name] = c.timeParse(row[c.name])
 
-      if (row[c.name] && 'timeParse' in c) {
-        row[c.name] = c.timeParse(row[c.name])
-
-        if ('timeFormat' in c) {
-          row[c.name] = c.timeFormat(row[c.name])
-        }
+            if ('timeFormat' in c) {
+              row[c.name] = c.timeFormat(row[c.name])
+            }
+          }
+          break
+        case 'boolean':
+          row[c.name] = result ? 'True' : 'False'
+          break
+        default:
+          row[c.name] = result || null
       }
     })
     if (!Object.values(row).every(v => v === null)) { results.push(row) }
