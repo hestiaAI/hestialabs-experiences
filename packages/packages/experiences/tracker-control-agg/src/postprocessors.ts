@@ -5,37 +5,34 @@ import type { PostprocessorFunction } from '@/types'
 import { groupBy, sortBy } from 'lodash'
 import createGraph from 'ngraph.graph'
 import centrality from 'ngraph.centrality'
+import { PipelineOutput } from '@/types/utils'
 
-export const toGraph: PostprocessorFunction = result => {
-  // TODO generalize this...
+function pruneGraph(
+  result: PipelineOutput,
+  categoriesToKeep: Array<string>,
+  nodesToRemove: Array<string>,
+  maxNodes: number,
+  inclusion_ratio: number
+): PipelineOutput {
   const items = result?.items || []
   if (items.length === 0) {
     return { headers: [], items: [] }
   }
-  const categoriesToKeep = [
-    'FingerprintingGeneral',
-    'FingerprintingInvasive',
-    'Advertising'
-  ]
 
-  const nodesToRemove = [
-    'Chrome',
-    'Firefox',
-    'Samsung Internet',
-    'Vivaldi Browser'
-  ]
   const results = items.filter(
     row =>
-      categoriesToKeep.includes(row.category) &&
+      (!categoriesToKeep.length || categoriesToKeep.includes(row.category)) &&
       row.app &&
       row.app !== 'Unknown' &&
-      !nodesToRemove.includes(row.app)
+      (!nodesToRemove.length || !nodesToRemove.includes(row.app))
   )
+
   // compute links (note that this includes duplicate links)
   const allLinks = results.map(({ app: source, tracker: target }) => ({
     source,
     target
   }))
+
   // group duplicate links together
   const groupedLinks = groupBy(allLinks, v => `${v.source}>${v.target}`)
   // remove duplicates, and set the weight as the number of duplicate links
@@ -64,8 +61,8 @@ export const toGraph: PostprocessorFunction = result => {
   measuresFiltered.sort((a, b) => b[1] - a[1])
   // store the minimum number of nodes to keep,
   // and delete them from the original array with splice()
-  const MIN_NUMBER_OF_NODES = 20
-  const topMeasures = measuresFiltered.splice(0, MIN_NUMBER_OF_NODES)
+
+  const topMeasures = measuresFiltered.splice(0, maxNodes)
   // include left-over nodes with the same centrality
   // // as the last node in the cut-off array
   // const lastNode = topMeasures[topMeasures.length - 1]
@@ -98,14 +95,13 @@ export const toGraph: PostprocessorFunction = result => {
   // add nodes from the set of candidate links
   // by picking the sources of the top-ranked links in
   // the sorted adjacency list
-  const CANDIDATE_INCLUSION_RATIO = 0.5
   const selectedNodes = new Set(
     topNodes.concat(
       candidateLinksGroupedAndSorted
         .flatMap(inboundLinksSorted =>
           inboundLinksSorted.slice(
             0,
-            Math.ceil(CANDIDATE_INCLUSION_RATIO * inboundLinksSorted.length)
+            Math.ceil(inclusion_ratio * inboundLinksSorted.length)
           )
         )
         .map(link => link.source)
@@ -160,4 +156,62 @@ export const toGraph: PostprocessorFunction = result => {
     headers: ['jsonData'],
     items: [{ jsonData: { nodes, links } }]
   }
+}
+
+export const toGraph: PostprocessorFunction = result => {
+  const categoriesToKeep = [
+    'FingerprintingGeneral',
+    'FingerprintingInvasive',
+    'Advertising'
+  ]
+
+  const nodesToRemove = [
+    'Chrome',
+    'Firefox',
+    'Samsung Internet',
+    'Vivaldi Browser'
+  ]
+
+  return pruneGraph(result, categoriesToKeep, nodesToRemove, 20, 0.5)
+}
+
+export const toGraphAll: PostprocessorFunction = result => {
+  const categoriesToKeep: Array<string> = []
+
+  const nodesToRemove = [
+    'Chrome',
+    'Firefox',
+    'Samsung Internet',
+    'Vivaldi Browser'
+  ]
+
+  return pruneGraph(result, categoriesToKeep, nodesToRemove, 200, 1)
+}
+
+export const toGraphAllCategories: PostprocessorFunction = result => {
+  const categoriesToKeep: Array<string> = []
+  const nodesToRemove = [
+    'Chrome',
+    'Firefox',
+    'Samsung Internet',
+    'Vivaldi Browser'
+  ]
+  return pruneGraph(result, categoriesToKeep, nodesToRemove, 20, 0.5)
+}
+
+export const toGraphAllInclusion: PostprocessorFunction = result => {
+  const categoriesToKeep = [
+    'FingerprintingGeneral',
+    'FingerprintingInvasive',
+    'Advertising'
+  ]
+
+  const nodesToRemove = [
+    'Chrome',
+    'Firefox',
+    'Samsung Internet',
+    'Vivaldi Browser'
+  ]
+
+  return pruneGraph(result, categoriesToKeep, nodesToRemove, 20, 1)
 }
