@@ -5,6 +5,9 @@ npm link --workspaces
 cd ../data-experience
 npm install
 npm run build
+cd ../dc-dashboard
+npm install
+npm run build
 cd ../experiences
 npm install
 npm run dev
