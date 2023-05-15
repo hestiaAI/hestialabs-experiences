@@ -1,6 +1,6 @@
 <template>
   <VContainer>
-    <div :id="graphId" style="position: relative" />
+    <div :id="graphId" class="svg-container"/>
     <div>
       <p>
         {{ $t('directed-graph-disclaimer') }}
@@ -11,9 +11,8 @@
 
 <script>
 import * as d3 from 'd3'
-import forceBoundary from 'd3-force-boundary' // Faire joli TODO check
 import mixin from './mixin'
-
+import panzoom from 'panzoom'
 export default {
   name: 'NetworkXGraph',
   mixins: [mixin],
@@ -33,6 +32,10 @@ export default {
     margin: {
       type: Number,
       default: () => 0
+    },
+    nodeStrength: {
+      type: Number,
+      default: -400
     }
   },
   data() {
@@ -41,75 +44,68 @@ export default {
     }
   },
   methods: {
+    zoomToFit() {
+      const bounds = this.svg.node().getBBox()
+      const parent = this.svg.node().parentElement
+      const fullWidth = parent.clientWidth
+      const fullHeight = parent.clientHeight
+      const width = bounds.width
+      const height = bounds.height
+      const midX = bounds.x + width / 2
+      const midY = bounds.y + height / 2
+      if (width === 0 || height === 0) return // nothing to fit
+      const scale = (0.9) / Math.max(width / fullWidth, height / fullHeight)
+      const translate = [fullWidth / 2 - (scale * midX), fullHeight / 2 - (scale * midY)]
+
+      const transform = d3.zoomIdentity
+        .translate(translate[0], translate[1])
+        .scale(scale)
+
+      this.svg.attr('transform', transform)
+    },
     drawViz() {
       // Init of everything
       // Init Svg container
+
+      const height = Math.max(window.innerHeight / 2, 500)
       d3.select('#' + this.graphId + ' svg').remove()
       this.svg = d3
         .select('#' + this.graphId)
         .append('svg')
-        .attr('preserveAspectRatio', 'xMinYMin meet')
-        .attr('viewBox', '0 0 ' + this.width + ' ' + this.height)
-        .style('padding', this.padding)
-        .style('margin', this.margin)
+        .attr('width', '100%')
+        .attr('height', height)
+        // .attr('preserveAspectRatio', 'xMinYMin meet')
+        // .attr('viewBox', '0 0 ' + this.width + ' ' + this.height)
         .classed('svg-content', true)
+        .append('g')
+        .attr('id', `g-${this.graphId}`)
       this.updateViz()
     },
     updateViz() {
       // Nodes size scale
-      const minValue = d3.min(this.jsonData.nodes, function(d) {
-        return +d.size
-      })
-      const maxValue = d3.max(this.jsonData.nodes, function(d) {
-        return +d.size
-      })
-      const size = d3.scaleLinear().domain([minValue, maxValue]).range([10, 40])
+      const sizeExtent = d3.extent(this.jsonData.links, d => +d.weight)
+      const size = d3.scaleLinear().domain(sizeExtent).range([10, 40])
+
+      // Edges size scale
+      const weightExtent = d3.extent(this.jsonData.links, d => +d.weight)
+      const weight = d3.scaleLinear().domain(weightExtent).range([1, 10])
+
+      // Init forces
+      const forceNode = d3.forceManyBody()
+      const forceLink = d3.forceLink().id(d => d.id)
+      const forceCollide = d3.forceCollide().radius(d => 16 + size(d.size)).iterations(2)
+      if (this.nodeStrength) forceNode.strength(this.nodeStrength)
+      if (this.linkStrength) forceLink.strength(this.linkStrength)
 
       // Init simulation
       const simulation = d3
         .forceSimulation()
-        .force(
-          'boundary',
-          forceBoundary(30, 30, this.width - 30, this.height - 30)
-        )
-        .force(
-          'link',
-          d3.forceLink().id(function(d) {
-            return d.id
-          })
-        )
+        .force('link', forceLink)
+        .force('charge', forceNode)
         .force('center', d3.forceCenter(this.width / 2, this.height / 2))
-        .force('charge', d3.forceManyBody().strength(-400))
-        .force(
-          'collide',
-          d3
-            .forceCollide()
-            .radius(function(d) {
-              return 16 + size(d.size)
-            })
-            .iterations(2)
-        )
+        .force('collide', forceCollide)
 
       // Draw links
-      // Arrow definition
-      //      this.svg
-      //        .append('defs')
-      //        .append('marker')
-      //        .attr({
-      //          id: 'arrowhead',
-      //          viewBox: '-0 -5 10 10',
-      //          refX: 13,
-      //          refY: 0,
-      //          orient: 'auto',
-      //          markerWidth: 13,
-      //          markerHeight: 13,
-      //          xoverflow: 'visible'
-      //        })
-      //        .append('svg:path')
-      //        .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-      //        .attr('fill', '#999')
-      //        .style('stroke', 'none')
-
       const link = this.svg
         .append('g')
         .attr('id', 'links')
@@ -117,10 +113,9 @@ export default {
         .data(this.jsonData.links)
         .enter()
         .append('line')
-        .attr('stroke-width', d => d.weight)
+        .attr('stroke-width', d => weight(d.weight))
         .attr('stroke', 'grey')
         .attr('fill', 'none')
-      //        .attr('marker-end', 'url(#arrow)')
 
       // Draw nodes
       const node = this.svg
@@ -168,7 +163,6 @@ export default {
 
       // Start simulation
       simulation.nodes(this.jsonData.nodes).on('tick', ticked)
-
       simulation.force('link').links(this.jsonData.links)
 
       function ticked() {
@@ -229,7 +223,16 @@ export default {
         evt.subject.fx = null
         evt.subject.fy = null
       }
+
+      // Add pan & zoom
+      const element = document.getElementById(`g-${this.graphId}`)
+      panzoom(element)
     }
   }
 }
 </script>
+<style scoped>
+::v-deep .svg-content {
+  outline: none;
+}
+</style>
