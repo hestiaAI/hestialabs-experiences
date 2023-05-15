@@ -80,7 +80,7 @@ export default {
       return `sar-builder.${key}`
     },
     customFilter(item, queryText) {
-      return Object.values(item).some(value => value && value.toLocaleLowerCase().includes(queryText.toLocaleLowerCase()))
+      return Object.values(item).some(value => value && JSON.stringify(value).toLocaleLowerCase().includes(queryText.toLocaleLowerCase()))
     },
     updateFilters() {
       this.$emit('input', this.configs)
