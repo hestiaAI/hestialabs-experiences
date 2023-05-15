@@ -54,7 +54,7 @@
           <BaseButton text @click="step = 3">
             <span v-t="k('back')" />
           </BaseButton>
-          <BaseButton color="primary" mdi-icon="mdiSend" href="mailto:test@example.com?subject=Me&body=Hello!">
+          <BaseButton color="primary" mdi-icon="mdiSend" :href="sendHref">
             <span v-t="k('send')" />
           </BaseButton>
           <VSpacer />
@@ -90,6 +90,15 @@ export default {
         to: '',
         subject: '',
         body: ''
+      },
+      sendHref: null
+    }
+  },
+  watch: {
+    sar: {
+      deep: true,
+      handler(newValue) {
+        this.sendHref = `mailto:${newValue.to}?subject=${encodeURIComponent(newValue.subject)}&body=${encodeURIComponent(newValue.body)}`
       }
     }
   },
@@ -201,6 +210,7 @@ export default {
       texts.push(conclusion)
 
       this.sar.body = texts.join('\n')
+
       this.loading = false
       this.step = 4
     },
