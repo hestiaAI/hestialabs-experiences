@@ -39,6 +39,21 @@
         </VListItem>
       </VList>
     </VMenu>
+
+    <VTooltip bottom>
+      <template #activator="{ on, attrs }">
+        <VBtn
+          icon
+          :to="localePath({ name: 'tools' })"
+          class="ml-0"
+          v-bind="attrs"
+          v-on="on"
+        >
+          <VIcon>$vuetify.icons.mdiTools</VIcon>
+        </VBtn>
+      </template>
+      <span>{{ $tc('Tool', 2) }}</span>
+    </VTooltip>
     <VTooltip bottom>
       <template #activator="{ on, attrs }">
         <VBtn
