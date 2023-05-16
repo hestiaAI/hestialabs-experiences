@@ -39,14 +39,14 @@ if (experiences) {
   } else {
     // cross-platform spawn
     const spawn = require('cross-spawn')
-    const experiencePackages  = experiences.map((packageNameAndTag) => {
+    const experiencePackages = experiences.map((packageNameAndTag) => {
       const [name] = packageNameAndTag.split('@')
       return `@hestia.ai/${name}`
     })
     console.info(
       'Linking packages...\n' +
-      experiencePackages .join('\n')
+      experiencePackages.join('\n')
     )
-    handleSpawnOutput(spawn.sync('npm', ['link', ...experiencePackages ]))
+    handleSpawnOutput(spawn.sync('npm', ['link', ...experiencePackages]))
   }
 }
