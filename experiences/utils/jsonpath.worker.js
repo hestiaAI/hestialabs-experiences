@@ -20,7 +20,7 @@ self.onmessage = (message) => {
       const result = JSONPath({ json, path: r.path + c.selector, resultType: 'value' }).pop()
       switch (typeof result) {
         case 'string':
-          row[c.name] = decodeURIComponent(escape(result))
+          row[c.name] = decodeURIComponent(unescape(result))
           if (row[c.name] && 'timeParse' in c) {
             row[c.name] = c.timeParse(row[c.name])
 
