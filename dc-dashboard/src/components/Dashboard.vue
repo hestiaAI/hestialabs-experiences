@@ -47,12 +47,8 @@ export default {
   },
   computed: {
     ndx() {
-      console.log('Values changed: ', this.values)
       return crossfilter(this.values)
     }
-  },
-  mounted() {
-    console.log('Props: ', this.graphs, this.values)
   }
 }
 </script>

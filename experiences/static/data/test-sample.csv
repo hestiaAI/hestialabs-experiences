@@ -1,4 +1,4 @@
-day,status,distance_km,uber_paid,duration_h
+begin,status,distance_km,uber_paid,duration_h
 2017-12-10 16:00:00,P1,,,0.010688405797101449
 2018-12-20 18:00:00,P1,,,0.17814814814814817
 2017-05-20 18:00:00,P2,,,0.10055555555555555

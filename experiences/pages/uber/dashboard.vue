@@ -1,78 +1,70 @@
 <template>
   <div class="wrapper" fill-height>
-    <VContainer class="content-wrapper" fill-height>
-      <template v-if="showLogin">
-        <LoginScreen @success="fetchData" />
-      </template>
-      <template v-else>
-        <section id="header">
-          <h1>
-            Combien vous <br>rapporte Uber
-          </h1>
-          <h2 class="border-bottom mb-3">
-            Tableau de bord
-          </h2>
-          <p>
-            Tout sur votre activité Uber : le nombre de courses que vous faites par jour, vos kilomètres parcourus et temps de travail, en course (P3), en approche (P2) et en disponibilité (P1), le jour, la nuit, le week-end, et l'évolution de vos revenus : <br>
-            <strong>Combien gagnez vous par kilomètre ? Combien gagnez-vous par heure ?</strong><br>
-            <strong>Comparez vos gains à ceux des autres chauffeurs.</strong>
-          </p>
-        </section>
-        <section id="when" class="mt-6">
-          <h3 class="mb-3">
-            Vos courses
-          </h3>
-          <Dashboard v-if="data" v-bind="{graphs: tripsGraphs, values: tripsData}" />
-        </section>
-        <section id="income" class="mt-6">
-          <h3 class="mb-3">
-            Vos Revenus
-          </h3>
-          <Dashboard v-if="data" v-bind="{graphs: paymentsGraphs, values: data}" />
-        </section>
-        <VRow>
-          <VCol cols="12" md="6">
-            <section id="time" class="mt-6">
-              <h3 class="mb-3 d-flex">
-                Temps de connexion
-                <VSpacer />
-                <div class="d-flex">
-                  <VCheckbox
-                    v-model="statusSelected"
-                    label="P1"
-                    value="P1"
-                    class="ml-3"
-                    dark
-                  />
-                  <VCheckbox
-                    v-model="statusSelected"
-                    label="P2"
-                    value="P2"
-                    class="ml-3"
-                    dark
-                  />
-                  <VCheckbox
-                    v-model="statusSelected"
-                    label="P3"
-                    value="P3"
-                    class="ml-3"
-                    dark
-                  />
-                </div>
-              </h3>
-              <Dashboard v-if="data" v-bind="{graphs: timeGraphs, values: timeData}" />
-            </section>
-          </VCol>
-          <VCol cols="12" md="6">
-            <section id="km" class="mt-6">
-              <h3 class="mb-3">
-                Kilomètres parcourus
-              </h3>
-              <Dashboard v-if="data" v-bind="{graphs: kilometersGraphs, values: tripsData}" />
-            </section>
-          </VCol>
-        </VRow>
-      </template>
+    <VContainer v-if="showLogin" class="content-wrapper" fill-height>
+      <LoginScreen @success="fetchData" />
+    </VContainer>
+    <VContainer v-else class="content-wrapper">
+      <section id="header">
+        <h1>
+          Combien vous <br>rapporte Uber
+        </h1>
+        <h2 class="border-bottom mb-3">
+          Tableau de bord
+        </h2>
+        <p>
+          Tout sur votre activité Uber : le nombre de courses que vous faites par jour, vos kilomètres parcourus et temps de travail, en course (P3), en approche (P2) et en disponibilité (P1), le jour, la nuit, le week-end, et l'évolution de vos revenus : <br>
+          <strong>Combien gagnez vous par kilomètre ? Combien gagnez-vous par heure ?</strong><br>
+          <strong>Comparez vos gains à ceux des autres chauffeurs.</strong>
+        </p>
+      </section>
+      <section id="when" class="mt-6">
+        <h3 class="mb-3">
+          Vos courses
+        </h3>
+        <Dashboard v-if="data" v-bind="{graphs: tripsGraphs, values: tripsData}" />
+      </section>
+      <section id="income" class="mt-6">
+        <h3 class="mb-3">
+          Vos Revenus
+        </h3>
+        <Dashboard v-if="data" v-bind="{graphs: paymentsGraphs, values: data}" />
+      </section>
+      <section id="time" class="mt-6">
+        <h3 class="mb-3 d-flex">
+          Temps de connexion
+          <VSpacer />
+          <div class="d-flex">
+            <VCheckbox
+              v-model="statusSelected"
+              label="P1"
+              value="P1"
+              class="ml-3"
+              dark
+            />
+            <VCheckbox
+              v-model="statusSelected"
+              label="P2"
+              value="P2"
+              class="ml-3"
+              dark
+            />
+            <VCheckbox
+              v-model="statusSelected"
+              label="P3"
+              value="P3"
+              class="ml-3"
+              dark
+            />
+          </div>
+        </h3>
+        <Dashboard v-if="data" v-bind="{graphs: timeGraphs, values: timeData}" />
+      </section>
+      <section id="km" class="mt-6">
+        <h3 class="mb-3">
+          Kilomètres parcourus
+        </h3>
+        <Dashboard v-if="data" v-bind="{graphs: kilometersGraphs, values: tripsData}" />
+      </section>
     </VContainer>
   </div>
 </template>
@@ -180,15 +172,18 @@ export default {
   methods: {
     async fetchData(url) {
       this.showLogin = false
-      const downloadUrl = process.env.NODE_ENV === 'development' ? '/data/test-sample.csv' : url
-      this.data = await d3.dsv(',', downloadUrl, (data) => {
+      // const downloadUrl = process.env.NODE_ENV === 'development' ? '/data/test-sample.csv' : url
+      this.data = await d3.dsv(',', url, (data) => {
+        const begin = new Date(data.begin)
+        const end = new Date(data.end)
         const income = +(+data.uber_paid).toFixed(2)
-        const duration = +(+data.duration_h).toFixed(2)
+        const duration = +(+Math.abs(end.getTime() - begin.getTime()) / (1000 * 60 * 60)).toFixed(2)
         const distance = +(+data.distance_km).toFixed(2)
         const perHour = +(income / duration).toFixed(2)
         const perKm = +(income / distance).toFixed(2)
         return {
-          begin: data.day,
+          begin,
+          end,
           duration,
           distance,
           income,
@@ -197,8 +192,6 @@ export default {
           status: data.status
         }
       })
-
-      console.log('FETCHED  ', this.data)
     }
   }
 }
