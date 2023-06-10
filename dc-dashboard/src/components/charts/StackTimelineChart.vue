@@ -163,6 +163,7 @@ export default {
       this.barChart = new dc.BarChart(`#bar-chart-${this.graphId}`)
       const width = d3.select(`#bar-chart-${this.graphId}`).node().getBoundingClientRect().width
 
+      console.log('width', width)
       // Bind reset filters links
       d3.select(`#bar-chart-${this.graphId} a.reset`).on('click', function() {
         this.barChart.filterAll()
@@ -176,16 +177,19 @@ export default {
         const diffDays = d3.timeDay.count(this.minDate, this.maxDate)
         console.log('diffDays', diffDays)
         console.log(this.dateDimension.bottom(1)[0][this.dateAccessor], this.minDate)
-        if (diffDays < 100) {
+        if (diffDays < 300) {
           this.interval = 'day'
         } else if (diffDays < 1000) {
-          this.interval = 'week'
-        } else {
           this.interval = 'month'
+        } else {
+          this.interval = 'year'
         }
       }
+      console.log(this.intervals, this.interval, this.intervals[this.interval])
       const formatter = this.intervals[this.interval].format
       const accessor = this.valueAccessor ? this.valueAggregate : 'count'
+
+      console.log('margins', this.margins)
       // Render hour date chart
       this.barChart
         .width(width)

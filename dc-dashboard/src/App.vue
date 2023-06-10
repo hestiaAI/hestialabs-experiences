@@ -73,7 +73,6 @@ export default {
       this.values = await d3.dsv(',', '/data/tracker-control.csv', (data) => {
         return data
       })
-      console.log(this.values)
     }
   }
 }
