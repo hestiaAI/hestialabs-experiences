@@ -155,9 +155,6 @@ PERFORMANCE OF THIS SOFTWARE.
  */
 
 
-/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
-
-
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -3350,6 +3347,9 @@ PERFORMANCE OF THIS SOFTWARE.
 /*!******************************************************************************!*\
   !*** external {"commonjs":"vue","commonjs2":"vue","amd":"vue","root":"Vue"} ***!
   \******************************************************************************/
+
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
 
 
 /* @license
