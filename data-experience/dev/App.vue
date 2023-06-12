@@ -38,6 +38,7 @@ import { mapMutations } from '@/utils/store-helper'
 
 import appleTracker from '@hestia.ai/apple-tracker'
 import appleTrackerAgg from '@hestia.ai/apple-tracker-agg'
+import chatgpt from '@hestia.ai/chatgpt'
 import explorer from '@hestia.ai/explorer'
 import facebook from '@hestia.ai/facebook'
 import fitbit from '@hestia.ai/fitbit'
@@ -63,6 +64,7 @@ import youtube from '@hestia.ai/youtube'
 const experienceConfigs = [
   appleTracker,
   appleTrackerAgg,
+  chatgpt,
   explorer,
   facebook,
   fitbit,

@@ -1,0 +1,16 @@
+{
+  "en": {
+    "intro": {
+      "title": "ChatGPT",
+      "dataPortal": "https://github.com/hestiaAI/data-catalog/blob/main/workshop/chatgpt.md"
+    },
+    "viewBlocks": {}
+  },
+  "fr": {
+    "intro": {
+      "title": "ChatGPT",
+      "dataPortal": "https://github.com/hestiaAI/data-catalog/blob/main/workshop/chatgpt.md"
+    },
+    "viewBlocks": {}
+  }
+}
