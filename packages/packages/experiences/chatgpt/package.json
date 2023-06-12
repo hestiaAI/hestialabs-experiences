@@ -1,0 +1,19 @@
+{
+  "name": "@hestia.ai/chatgpt",
+  "version": "1.0.0",
+  "main": "dist/index.mjs",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/experiences/chatgpt"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}
