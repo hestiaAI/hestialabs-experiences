@@ -7,7 +7,6 @@
     "ad-radar",
     "apple-tracker",
     "chatgpt",
-    "explorer",
     "facebook",
     "fitbit",
     "google",
@@ -24,7 +23,8 @@
     "twitter",
     "uber",
     "uber-driver",
-    "youtube"
+    "youtube",
+    "explorer"
   ],
   "bubbles": [
     "frc-participant",
