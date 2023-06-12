@@ -1,6 +1,9 @@
 <template>
-  <div class="wrapper">
-    <VContainer class="content-wrapper">
+  <div class="wrapper" fill-height>
+    <VContainer v-if="showLogin" class="content-wrapper" fill-height>
+      <LoginScreen @success="fetchData" />
+    </VContainer>
+    <VContainer v-else class="content-wrapper">
       <section id="header">
         <h1>
           Combien vous <br>rapporte Uber
@@ -69,11 +72,14 @@
 <script>
 import * as d3 from 'd3'
 import mixinPage from '@/mixins/page'
+import LoginScreen from '@/components/LoginScreen.vue'
 export default {
+  components: { LoginScreen },
   mixins: [mixinPage],
   data() {
     return {
       data: null,
+      showLogin: true,
       paymentData: null,
       statusSelected: ['P1', 'P2', 'P3']
     }
@@ -149,7 +155,6 @@ export default {
           dateAccessor: 'begin'
         },
         {
-
           valueLabel: 'courses',
           cols: '6',
           chart: 'HourChart',
@@ -164,19 +169,21 @@ export default {
       return this.data.filter(d => this.statusSelected.includes(d.status))
     }
   },
-  mounted() {
-    this.fetchData()
-  },
   methods: {
-    async fetchData() {
-      this.data = await d3.dsv(',', '/data/test-sample.csv', (data) => {
+    async fetchData(url) {
+      this.showLogin = false
+      // const downloadUrl = process.env.NODE_ENV === 'development' ? '/data/test-sample.csv' : url
+      this.data = await d3.dsv(',', url, (data) => {
+        const begin = new Date(data.begin)
+        const end = new Date(data.end)
         const income = +(+data.uber_paid).toFixed(2)
-        const duration = +(+data.duration_h).toFixed(2)
+        const duration = +(+Math.abs(end.getTime() - begin.getTime()) / (1000 * 60 * 60)).toFixed(2)
         const distance = +(+data.distance_km).toFixed(2)
         const perHour = +(income / duration).toFixed(2)
         const perKm = +(income / distance).toFixed(2)
         return {
-          begin: data.day,
+          begin,
+          end,
           duration,
           distance,
           income,
@@ -196,10 +203,22 @@ export default {
   margin-bottom: 1em;
   text-transform: uppercase;
   line-height: 1.1;
-  font-size: 6rem;
+  word-break: normal;
   font-weight: bolder;
 }
+/* If the screen size is 601px wide or more, set the font-size of <div> to 80px */
+@media screen and (min-width: 601px) {
+  .content-wrapper /deep/ h1 {
+    font-size: 6rem;
+  }
+}
 
+/* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+@media screen and (max-width: 600px) {
+  .content-wrapper /deep/ h1 {
+    font-size: 3rem;
+  }
+}
 .content-wrapper /deep/ h2 {
   text-transform: uppercase;
   font-size: 2.5rem;

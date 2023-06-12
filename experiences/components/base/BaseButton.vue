@@ -4,8 +4,8 @@
     class="ma-2"
     @click="$emit('click', $event)"
   >
-    <VProgressCircular v-if="progress" indeterminate width="2" size="20" />
-    <VIcon v-else-if="mdiIcon" :left="!!$slots.default">
+    <VProgressCircular v-if="progress" indeterminate width="2" size="20" class="mr-1" />
+    <VIcon v-else-if="mdiIcon || error || success" :left="!!$slots.default">
       {{ mdiIconResolved }}
     </VIcon>
     <slot />
