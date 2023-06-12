@@ -203,10 +203,22 @@ export default {
   margin-bottom: 1em;
   text-transform: uppercase;
   line-height: 1.1;
-  font-size: 6rem;
+  word-break: normal;
   font-weight: bolder;
 }
+/* If the screen size is 601px wide or more, set the font-size of <div> to 80px */
+@media screen and (min-width: 601px) {
+  .content-wrapper /deep/ h1 {
+    font-size: 6rem;
+  }
+}
 
+/* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+@media screen and (max-width: 600px) {
+  .content-wrapper /deep/ h1 {
+    font-size: 3rem;
+  }
+}
 .content-wrapper /deep/ h2 {
   text-transform: uppercase;
   font-size: 2.5rem;
