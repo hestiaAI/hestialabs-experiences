@@ -6,7 +6,7 @@
   "experiences": [
     "ad-radar",
     "apple-tracker",
-    "explorer",
+    "chatgpt",
     "facebook",
     "fitbit",
     "google",
@@ -23,7 +23,8 @@
     "twitter",
     "uber",
     "uber-driver",
-    "youtube"
+    "youtube",
+    "explorer"
   ],
   "bubbles": [
     "frc-participant",

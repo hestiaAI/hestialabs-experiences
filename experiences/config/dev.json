@@ -14,7 +14,7 @@
   "experiences": [
     "ad-radar",
     "apple-tracker",
-    "explorer",
+    "chatgpt",
     "facebook",
     "fitbit",
     "google",
@@ -27,11 +27,11 @@
     "tiktok",
     "tinder",
     "tracker-control",
-    "tracker-control-agg",
     "twitter",
     "uber",
     "uber-driver",
-    "youtube"
+    "youtube",
+    "explorer"
   ],
   "appInfoLinks": [
     {
