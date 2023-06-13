@@ -4,13 +4,67 @@
       "title": "ChatGPT",
       "dataPortal": "https://github.com/hestiaAI/data-catalog/blob/main/workshop/chatgpt.md"
     },
-    "viewBlocks": {}
+    "viewBlocks": {
+      "messages": {
+        "title": "Activity",
+        "text": "See your daily activity on ChatGPT",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Number of messages",
+              "valueLabel": "messages"
+            },
+            {
+              "title": "Author",
+              "valueLabel": "messages"
+            },
+            {
+              "valueLabel": "messages"
+            },
+            {
+              "valueLabel": "messages"
+            },
+            {
+              "title": "Top chats",
+              "valueLabel": "messages"
+            }
+          ]
+        }
+      }
+    }
   },
   "fr": {
     "intro": {
       "title": "ChatGPT",
       "dataPortal": "https://github.com/hestiaAI/data-catalog/blob/main/workshop/chatgpt.md"
     },
-    "viewBlocks": {}
+    "viewBlocks": {
+      "messages": {
+        "title": "Activité",
+        "text": "Voir votre activité quotidienne sur ChatGPT",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Nombre de messages",
+              "valueLabel": "messages"
+            },
+            {
+              "title": "Auteur",
+              "valueLabel": "messages"
+            },
+            {
+              "valueLabel": "messages"
+            },
+            {
+              "valueLabel": "messages"
+            },
+            {
+              "title": "Top discussions",
+              "valueLabel": "messages"
+            }
+          ]
+        }
+      }
+    }
   }
 }
