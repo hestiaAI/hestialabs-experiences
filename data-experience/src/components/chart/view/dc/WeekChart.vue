@@ -53,7 +53,7 @@ export default {
   data() {
     return {
       results: [],
-      weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      weekDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'unknow']
     }
   },
   computed: {
@@ -61,7 +61,9 @@ export default {
       if (this.dateFormat) {
         return d3.timeParse(this.dateFormat)
       } else {
-        return d => new Date(d)
+        return (d) => {
+          return d ? new Date(d) : null
+        }
       }
     }
   },
@@ -78,7 +80,7 @@ export default {
 
       // Create dimension
       const dayOfWeekDimension = this.ndx.dimension((d) => {
-        const day = this.dateParser(d[this.dateAccessor]).getDay()
+        const day = this.dateParser(d[this.dateAccessor])?.getDay() || 7
         return `${this.weekDays[day]}`
       })
 
