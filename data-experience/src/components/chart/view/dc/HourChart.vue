@@ -60,7 +60,9 @@ export default {
       if (this.dateFormat) {
         return d3.timeParse(this.dateFormat)
       } else {
-        return d => new Date(d)
+        return (d) => {
+          return d ? new Date(d) : null
+        }
       }
     }
   },
