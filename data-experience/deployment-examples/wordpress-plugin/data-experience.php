@@ -15,16 +15,16 @@ function func_data_experience($atts){
 
   global $dataexp_setup_js;
 
-  $dataexp_version = $atts['version'] ?? '2.0.8';
-
+  $dataexp_version = $atts['version'] ?? '2.0.12';
   $experience = $atts['experience'] ?? 'uber-driver';
-  // print 'atts '.$dataexp_version;
+  $bubble = $atts['bubble'] ?? '';
+  // print 'atts '.$dataexp_version.' '.$experience.' '.$bubble;
 
   $html = <<<END
   <div id="app">
     <v-app>
       <v-main>
-        <the-data-experience v-bind="{ experienceConfig, siteConfig }"/>
+        <the-data-experience v-bind="{ experienceConfig, bubbleConfig, siteConfig }"/>
       </v-main>
     </v-app>
   </div>
@@ -38,6 +38,13 @@ END;
   const vuetify = new Vuetify(DataExperience.vuetifyOpts(i18n))
   const store = new Vuex.Store({})
   Vue.use(DataExperience.DataExperience, { store })
+  const theApiUrl = 'https://bubbles.hestialabs.org'
+  const bubbleAPI = new DataExperience.BubbleAPI(theApiUrl)
+  const bubble = '$bubble'
+  let bubbleConfig = undefined
+  if (bubble) {
+    bubbleConfig = await bubbleAPI.getConfig('$bubble')
+  }
   const mapboxToken = 'pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA'
   new Vue({
     el: '#app',
@@ -46,15 +53,17 @@ END;
     store,
     data: {
       experienceConfig: experience.config,
+      bubbleConfig,
       siteConfig: { mapboxToken }
     }
   })
 END;
 
-  wp_enqueue_script( 'daex_vuejs', 'https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js');
-  wp_enqueue_script( 'daex_vuei18n', 'https://cdn.jsdelivr.net/npm/vue-i18n@8.x/dist/vue-i18n.js');
-  wp_enqueue_script( 'daex_vuetify', 'https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js');
-  wp_enqueue_script( 'daex_vuex', 'https://cdn.jsdelivr.net/npm/vuex@3.x/dist/vuex.min.js');
+  wp_enqueue_script('daex_vuejs', 'https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js');
+  wp_enqueue_script('daex_vuei18n', 'https://cdn.jsdelivr.net/npm/vue-i18n@8.x/dist/vue-i18n.js');
+  wp_enqueue_script('daex_vuetify', 'https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js');
+  wp_enqueue_script('daex_vuex', 'https://cdn.jsdelivr.net/npm/vuex@3.x/dist/vuex.min.js');
+  // wp_enqueue_script('daex_dataexp', 'http://localhost:8000/dist/DataExperience.umd.min.js');
   wp_enqueue_script('daex_dataexp', 'https://cdn.jsdelivr.net/npm/@hestia.ai/data-experience@'
                      .$dataexp_version.'/dist/DataExperience.umd.min.js');
 

@@ -12,6 +12,10 @@ const store = new Vuex.Store({})
 
 Vue.use(DataExperience.DataExperience, { store })
 
+const theApiUrl = 'https://bubbles.hestialabs.org'
+const bubbleAPI = new DataExperience.BubbleAPI(theApiUrl)
+const bubbleConfig = await bubbleAPI.getConfig('live-participant')
+
 const mapboxToken = 'pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA'
 new Vue({
   el: '#app',
@@ -20,6 +24,7 @@ new Vue({
   store,
   data: {
     experienceConfig: experience.config,
+    bubbleConfig,
     siteConfig: { mapboxToken }
   }
 })
