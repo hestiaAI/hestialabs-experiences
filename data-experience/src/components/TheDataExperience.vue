@@ -303,7 +303,10 @@ export default {
     },
     consentForm() {
       const bconf = this.bubbleConfig
-      return bconf?.getConsentForm(this.experienceConfig.slug)
+      if (bconf) {
+        return bconf.getConsentForm(this.experienceConfig.slug)
+      }
+      return undefined
     },
     disabled() {
       return !this.success || this.experienceProgress
