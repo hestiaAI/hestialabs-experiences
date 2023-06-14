@@ -16,3 +16,27 @@ Add content with the shortcode [dataexperience]. By default this will show the u
 The plugin is based on this [tutorial](https://dev.to/workingwebsites/using-vue-in-wordpress-1b9l)
 
 I used [InstantWP](https://instantwp.com/) to test this locally. On windows, remember to start it with Start-InstantWP.bat
+
+## Run the example with a local build
+
+In [data-experience.php](data-experience.php) **uncomment** this line
+
+```php
+  // wp_enqueue_script('daex_dataexp', 'http://localhost:8000/dist/DataExperience.umd.min.js');
+
+```
+
+and **comment** these two
+
+```php
+  wp_enqueue_script('daex_dataexp', 'https://cdn.jsdelivr.net/npm/@hestia.ai/data-experience@'
+  .$dataexp_version.'/dist/DataExperience.umd.min.js');
+```
+
+Then build and run from the root of the data-experience project
+
+```sh
+cd ..
+npm run build
+python -m http.server
+```
