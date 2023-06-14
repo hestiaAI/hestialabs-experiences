@@ -18,6 +18,7 @@ export { default as i18nOpts } from './plugins/i18n'
 export { default as chartViewBar } from './components/chart/view/ChartViewBar.vue'
 export { default as chartViewGenericMap } from './components/chart/view/ChartViewGenericMap.vue'
 export { hashFile, encryptFile } from './utils/encryption'
+export { default as BubbleAPI } from './utils/bubble-api'
 
 export const CodeEditor = {
   install(Vue, options) {

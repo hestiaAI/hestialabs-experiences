@@ -302,19 +302,8 @@ export default {
       return config && !config.bypassLogin && !this.loginSuccessful
     },
     consentForm() {
-      const consent = this.bubbleConfig?.consent
-      if (consent) {
-        const consentFormExperience = consent[this.experienceConfig.slug]
-        if (consentFormExperience === null) {
-          // consent form disabled for this experience
-          return null
-        }
-        // fall back to the default form is consentFormExperience is undefined
-        const cForm = consentFormExperience || consent.default
-        const consentForm = cForm && JSON.parse(JSON.stringify(cForm))
-        return consentForm
-      }
-      return null
+      const bconf = this.bubbleConfig
+      return bconf?.getConsentForm(this.experienceConfig.slug)
     },
     disabled() {
       return !this.success || this.experienceProgress

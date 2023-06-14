@@ -16,7 +16,7 @@ export default class BubbleAPI {
     return await res.json()
   }
 
-  async getConfig(bubbleName) {
+  async getPlainConfig(bubbleName) {
     const url = `${this.apiUrl}/bubbles/${bubbleName}/config`
     const options = { method: 'GET' }
 
@@ -27,6 +27,25 @@ export default class BubbleAPI {
       )
     }
     const config = await res.json()
+    return config
+  }
+
+  async getConfig(bubbleName) {
+    const config = await this.getPlainConfig(bubbleName)
+    config.getConsentForm = function(experienceSlug) {
+      if (this.consent) {
+        const consentFormExperience = this.consent[experienceSlug]
+        if (consentFormExperience === null) {
+          // consent form disabled for this experience
+          return null
+        }
+        // fall back to the default form is consentFormExperience is undefined
+        const cForm = consentFormExperience || this.consent.default
+        const consentForm = cForm && JSON.parse(JSON.stringify(cForm))
+        return consentForm
+      }
+      return null
+    }
     return config
   }
 
@@ -43,27 +62,6 @@ export default class BubbleAPI {
         return res.json()
       })
       .then(json => callback(null, json))
-      .catch(error => callback(error))
-  }
-
-  getFile0(bubbleName, filename, callback) {
-    const url = `${this.apiUrl}/bubbles/${bubbleName}/file/${filename}`
-    const options = { method: 'GET' }
-    fetch(url, options)
-      .then((res) => {
-        if (res.ok) {
-          res
-            .blob()
-            .then(blob => callback(null, blob))
-            .catch(error => callback(error))
-        } else {
-          callback(
-            new Error(
-              `Unable to fetch ${filename} from server: Error ${res.status}`
-            )
-          )
-        }
-      })
       .catch(error => callback(error))
   }
 
