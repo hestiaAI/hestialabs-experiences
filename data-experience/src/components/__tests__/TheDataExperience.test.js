@@ -37,7 +37,8 @@ const propsData = {
   bubbleConfig: {
     id: 'the-data-experience-test',
     apiUrl: 'http://localhost:0000',
-    bypassLogin: true
+    bypassLogin: true,
+    getConsentForm: () => {}
   }
 }
 
