@@ -69,6 +69,9 @@ const { name, shortName, description } = {
 export default {
   ssr: false, // Disable Server-Side Rendering
   target: 'static',
+  generate: {
+    cache: false
+  },
   server: {
     host: '0' // default: localhost
   },
