@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!-- https://github.com/keplergl/kepler.gl/blob/master/examples/umd-client/index.html -->
+<html>
+
+<head>
+  <title>iframe-html-plain</title>
+  <meta charset="utf-8">
+</head>
+
+<body>
+  <h2>Below this starts an iframe</h2>
+  <div id="parent">
+    <div id="wrapper" style="position:relative">
+      <iframe style="position:absolute;top:0px;width:100%;height:100vh;"
+              frameborder="0"
+              id="iframe_id"></iframe>
+    </div>
+  </div>
+  <h2>Here we are after the iframe</h2>
+  <script>
+    const stylesheets = [
+"fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900",
+"cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css",
+"cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css",
+"releases.transloadit.com/uppy/v3.3.0/uppy.min.css",
+"cdn.jsdelivr.net/npm/@hestia.ai/data-experience@2.0.8/dist/DataExperience.css"
+    ].map(s => `<link href="https://${ s }" rel="stylesheet" />`)
+    const scripts = [
+["cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"],
+["cdn.jsdelivr.net/npm/vue-i18n@8.x/dist/vue-i18n.js"],
+        ["cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js", "module"],
+["cdn.jsdelivr.net/npm/vuex@3.x/dist/vuex.min.js"],
+        ["cdn.jsdelivr.net/npm/@hestia.ai/data-experience/dist/DataExperience.umd.min.js"]
+    ].map(s =>
+`<script src="https://${s[0]}" ${s[1] ? 'type="module"' : ''} crossorigin> <\/script>`)
+    const iframeHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8" />
+          ${ stylesheets.join('\n') }
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+        <\/head>
+        <body>
+          <div id="app">
+          <v-app>
+            <v-main>
+              <the-data-experience v-bind="{ experienceConfig, siteConfig, bubbleConfig }"\/>
+            <\/v-main>
+          <\/v-app>
+          <\/div>
+         ${ scripts.join('\n') }
+         <script src="index.js" type="module"><\/script>
+        <\/body>
+      <\/html>`
+
+    const iframe = document.getElementById("iframe_id");
+    iframe.srcdoc = iframeHtml
+  </script>
+</body>
+</html>
