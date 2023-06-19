@@ -3,7 +3,6 @@
 ## Upload plugin to wordpress
 
 Zip the files in this folder and upload the zip to plugins in the [wordpress dashboard](https://themewaves.com/how-to-upload-plugin-to-wordpress/)
-https://themewaves.com/how-to-upload-plugin-to-wordpress/
 
 Alternatively, you can upload this folder to wordpress's plugin directory with [FTP](https://www.wonderplugin.com/wordpress-tutorials/how-to-manually-install-a-wordpress-plugin-via-ftp/)
 
@@ -16,6 +15,10 @@ Attributes allow you to specify the version of dataexperience, the experience, a
 ```
 [dataexperience version="2.0.12" experience="twitter" bubble="live-participant"]
 ```
+
+- version: you can set the version of data-experience that you access. If you don't set the version, your page will load the latest version. Note that it's currently not possible to set the version of the experience, so your page will be loading the latest experience.
+- experience: see the list of available experiences [here](https://github.com/hestiaAI/hestialabs-experiences/tree/master/packages/packages/experiences)
+- bubble: if you specify a participant bubble, allows the user to upload his data to the bubble, if they have the password. If you specify an aggregator bubble, the user will be able to download and display the data from the bubble, if they have the password and the private key. The list of bubbles is [here](https://github.com/hestiaAI/hestialabs-experiences/tree/master/packages/packages/experiences)
 
 # Development
 
