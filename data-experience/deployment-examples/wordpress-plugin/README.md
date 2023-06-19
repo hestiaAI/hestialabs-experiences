@@ -18,7 +18,7 @@ Attributes allow you to specify the version of dataexperience, the experience, a
 
 - version: you can set the version of data-experience that you access. If you don't set the version, your page will load the latest version. Note that it's currently not possible to set the version of the experience, so your page will be loading the latest experience.
 - experience: see the list of available experiences [here](https://github.com/hestiaAI/hestialabs-experiences/tree/master/packages/packages/experiences)
-- bubble: if you specify a participant bubble, allows the user to upload his data to the bubble, if they have the password. If you specify an aggregator bubble, the user will be able to download and display the data from the bubble, if they have the password and the private key. The list of bubbles is [here](https://github.com/hestiaAI/hestialabs-experiences/tree/master/packages/packages/experiences)
+- bubble: if you specify a participant bubble, allows the user to upload his data to the bubble, if they have the password. If you specify an aggregator bubble, the user will be able to download and display the data from the bubble, if they have the password and the private key. The list of bubbles is [here](https://bubbles.hestialabs.org/bubbles/list)
 
 # Development
 
