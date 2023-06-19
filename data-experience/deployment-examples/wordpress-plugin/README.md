@@ -9,7 +9,13 @@ Alternatively, you can upload this folder to wordpress's plugin directory with [
 
 ## Create a new page
 
-Add content with the shortcode [dataexperience]. By default this will show the uber-driver experience, but you can change it to another like this: [dataexperience experience="twitter"]
+Add content with the shortcode [dataexperience]. By default this will show the uber-driver experience.
+
+Attributes allow you to specify the version of dataexperience, the experience, and a bubble for uploads:
+
+```
+[dataexperience version="2.0.12" experience="twitter" bubble="live-participant"]
+```
 
 # Development
 
