@@ -8,11 +8,13 @@ import dataSample from '@/data-samples/instagramV2.zip'
 import preprocessor from '../../facebook/src/preprocessor'
 
 const options: ExperienceOptions = {
+  // version: 2,
+  //
+  // version 3 load external viewer.json during build
+  // version 4 load external viewer.json during runtime (user)
+  // problem: aggregation bubbles depend on presentation of view tabs
+  // loader
   databaseConfig,
-  dataPortal: 'https://help.instagram.com/181231772500920',
-  dataPortalMessage:
-    '<strong>Important:</strong> To make the experience work, please request your data in <strong>JSON</strong> format.',
-  dataSamples: [dataSample],
   files: {
     messages: '**/messages/inbox/**/message_*.json',
     followers: '**/followers.json',
@@ -35,11 +37,16 @@ const options: ExperienceOptions = {
   preprocessors: {
     '**/*.json': preprocessor
   },
-  hideFileExplorer: false,
-  icon,
-  messages,
+  // TODO goes into viewer.json
   title: 'Instagram',
-  viewBlocks
+  dataPortal: 'https://help.instagram.com/181231772500920',
+  dataPortalMessage:
+    '<strong>Important:</strong> To make the experience work, please request your data in <strong>JSON</strong> format.',
+  dataSamples: [dataSample],
+  icon,
+  hideFileExplorer: false,
+  viewBlocks,
+  messages
 }
 
 export default new Experience(options, packageJSON, import.meta.url)
