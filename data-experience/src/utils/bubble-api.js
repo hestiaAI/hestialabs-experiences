@@ -32,6 +32,8 @@ export default class BubbleAPI {
 
   async getConfig(bubbleName) {
     const config = await this.getPlainConfig(bubbleName)
+    config.id = bubbleName
+    config.apiUrl = this.apiUrl
     config.getConsentForm = function(experienceSlug) {
       if (this.consent) {
         const consentFormExperience = this.consent[experienceSlug]
