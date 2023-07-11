@@ -6,6 +6,17 @@ import databaseConfig from './database'
 import messages from './messages.json'
 import dataSample from '@/data-samples/instagramV2.zip'
 import preprocessor from '../../facebook/src/preprocessor'
+import viewerConfig from './viewer.json'
+
+console.log('viewerConfig', viewerConfig)
+try {
+  // https://bobbyhadz.com/blog/typescript-conversion-of-type-to-type-may-be-mistake
+  const resp = await fetch(new URL(viewerConfig as unknown as string))
+  const viewer = await resp.json()
+  console.log('viewer', viewer)
+} catch (e) {
+  console.error(e)
+}
 
 const options: ExperienceOptions = {
   // version: 2,

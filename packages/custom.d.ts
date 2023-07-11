@@ -22,6 +22,11 @@ declare module '*messages.json' {
   export default value
 }
 
+declare module '*viewer.json' {
+  const value: object
+  export default value
+}
+
 declare module '*model.json' {
   const value: object
   export default value

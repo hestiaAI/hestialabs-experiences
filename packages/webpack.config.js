@@ -1,5 +1,5 @@
 import path from 'path'
-import { readdirSync } from 'fs'
+import { readdirSync, statSync } from 'fs'
 import { fileURLToPath } from 'url'
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin'
@@ -9,7 +9,9 @@ const __dirname = path.dirname(__filename)
 
 const prefixPath = 'packages/experiences'
 const experiencesPath = path.resolve(__dirname, prefixPath)
-const packages = readdirSync(experiencesPath)
+const packages = readdirSync(experiencesPath).filter(file =>
+  statSync(path.join(experiencesPath, file)).isDirectory()
+)
 
 export default {
   externalsPresets: {
@@ -54,6 +56,20 @@ export default {
         type: 'asset/source'
       },
       {
+        test: /viewer\.json$/,
+        type: 'asset/resource',
+        generator: {
+          // https://webpack.js.org/configuration/module/#rulegeneratorfilename
+          // https://webpack.js.org/configuration/output/#outputfilename
+          filename: function (pathData) {
+            const { filename } = pathData
+            const relativePath = filename.substr(prefixPath.length + 1)
+            const targetFileName = relativePath.replace('src', 'dist')
+            return targetFileName
+          }
+        }
+      },
+      {
         include: path.resolve(__dirname, 'lib', 'data-samples'),
         type: 'asset/resource',
         generator: {
@@ -80,6 +96,7 @@ export default {
     hints: false
   },
   experiments: {
+    topLevelAwait: true,
     outputModule: true
   },
   output: {
