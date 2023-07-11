@@ -123,25 +123,21 @@ Netlify then automatically redeploys the website.
 
 ### Build Setup
 
+The project is built with nuxt. For detailed explanations check out the [nuxt documentation](https://nuxtjs.org).
+The app follows the default structure of Nuxt, [see the docs](https://nuxtjs.org/docs/get-started/directory-structure) for more details about the different directories.
+
+To run the dev version, run this script and be patient, this will install all dependencies from sibling projects.
+
 ```bash
-# All commands are run in the same folder as this readme
-$ cd experiences
-
-# install dependencies
-$ npm install
-
-# serve with hot reload at localhost:3000
-$ npm run dev
-
-# build for production and launch server
-$ npm run build
-$ npm run start
-
-# generate static project
-$ npm run generate
+# on windows you can run this in git bash
+$ ./dev.sh
 ```
 
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
+If the sibling projects are already installed, you can run the dev version with
+
+```bash
+npm run dev
+```
 
 ### Global Configuration
 
@@ -160,10 +156,6 @@ $ CONFIG_NAME=workshop BASE_URL=https://experiences.hestialabs.org npm run build
 # launch server
 $ npm run start
 ```
-
-### Structure
-
-The app follows the default structure of Nuxt, [see the docs](https://nuxtjs.org/docs/get-started/directory-structure) for more details about the different directories.
 
 ### Testing
 
