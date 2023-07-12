@@ -1,0 +1,660 @@
+{
+  "title": "Instagram from VIEWER",
+  "dataPortal": "https://help.instagram.com/181231772500920",
+  "dataPortalMessage": "<strong>Important:</strong> To make the experience work, please request your data in <strong>JSON</strong> format.",
+  "hideFileExplorer": false,
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/instagram.png",
+  "dataSamples": [
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/instagramV2.zip"
+  ],
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "consumption",
+      "sql": "SELECT\r\n  accountName,\r\n  datetime AS actionDate,\r\n  'Post Viewed' AS actionType\r\nFROM\r\n  InstagramPostViewed\r\nUNION\r\nSELECT\r\n  accountName,\r\n  datetime AS actionDate,\r\n  'Video Watched' AS actionType\r\nFROM\r\n  InstagramVideoWatched\r\nUNION\r\nSELECT\r\n  accountName,\r\n  datetime AS actionDate,\r\n  'Ad Viewed' AS actionType\r\nFROM\r\n  InstagramAdViewed;\r\n",
+      "files": ["postsViewed", "videosWatched", "adsViewed"],
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Content viewed",
+            "valueLabel": "views",
+            "cols": "12",
+            "type": "TimelineChart.vue",
+            "dateAccessor": "actionDate"
+          },
+          {
+            "valueLabel": "interactions",
+            "title": "Type of content",
+            "cols": "6",
+            "height": 220,
+            "type": "PieChart.vue",
+            "valueAccessor": "actionType"
+          },
+          {
+            "valueLabel": "interactions",
+            "title": "Top Account",
+            "cols": "6",
+            "height": 220,
+            "type": "TopChart.vue",
+            "isScrollable": true,
+            "topK": 100,
+            "valueAccessor": "accountName"
+          }
+        ]
+      },
+      "title": "Consumption",
+      "text": "See how much content you watch over time."
+    },
+    {
+      "showTable": false,
+      "id": "consumption-time",
+      "sql": "SELECT * FROM (  SELECT    accountName,    datetime AS _date,    'Post Viewed' AS actionType  FROM    InstagramPostViewed  UNION  SELECT    accountName,    datetime AS _date,    'Video Watched' AS actionType  FROM    InstagramVideoWatched  UNION  SELECT    accountName,    datetime AS _date,    'Ad Viewed' AS actionType  FROM    InstagramAdViewed  UNION  SELECT    accountName,    DATETIME(ROUND(timestampMS), 'unixepoch') AS _date,    'Follow' AS actionType  FROM    InstagramFollowing  UNION  SELECT    accountName,    DATETIME(unixTimestamp, 'unixepoch') AS _date,    'Comment Liked' AS actionType  FROM    InstagramCommentLiked  UNION  SELECT    accountName,    datetime AS _date,    'Post Liked' AS actionType  FROM    InstagramPostLiked  UNION  SELECT    senderName as accountName,    DATETIME(ROUND(timestampMS / 1000), 'unixepoch') AS _date,    'Message Sent' as actionType  FROM    InstagramMessage  WHERE InstagramMessage.senderName IN (SELECT name as username FROM InstagramInfo) ) ORDER BY _date ASC; ",
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Time spent",
+            "valueLabel": "minutes",
+            "cols": "12",
+            "type": "TimelineChart.vue",
+            "dateAccessor": "start_date",
+            "valueAccessor": "duration_m"
+          },
+          {
+            "valueLabel": "minutes",
+            "type": "WeekChart.vue",
+            "cols": "4",
+            "height": 220,
+            "dateAccessor": "start_date",
+            "valueAccessor": "duration_m"
+          },
+          {
+            "valueLabel": "minutes",
+            "type": "HourChart.vue",
+            "cols": "4",
+            "height": 220,
+            "dateAccessor": "start_date",
+            "valueAccessor": "duration_m"
+          },
+          {
+            "valueLabel": "actions",
+            "title": "Actions",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "valueAccessor": "actions",
+            "valueAsArray": true
+          }
+        ]
+      },
+      "title": "Consommation (durée)",
+      "text": "See which advertisers are using your information on Instagram."
+    },
+    {
+      "showTable": false,
+      "id": "interactions",
+      "sql": "SELECT  accountName,  DATETIME(ROUND(timestampMS), 'unixepoch') AS _date,  'Follow' AS interactionType FROM  InstagramFollowing UNION SELECT  accountName,  DATETIME(unixTimestamp, 'unixepoch') AS _date,  'Comment Liked' AS interactionType FROM  InstagramCommentLiked UNION SELECT  accountName,  datetime AS _date,  'Post Liked' AS interactionType FROM  InstagramPostLiked UNION SELECT  senderName as accountName,  DATETIME(ROUND(timestampMS / 1000), 'unixepoch') AS _date,  'Message Sent' as interactionType FROM  InstagramMessage WHERE InstagramMessage.senderName IN (SELECT name as username FROM InstagramInfo) UNION SELECT  senderName as accountName,  DATETIME(ROUND(timestampMS / 1000), 'unixepoch') AS _date,  'Message Received' as interactionType FROM  InstagramMessage WHERE InstagramMessage.senderName NOT IN (SELECT name as username FROM InstagramInfo); ",
+      "files": [
+        "likedComments",
+        "likedPosts",
+        "followings",
+        "messages",
+        "personalInfos"
+      ],
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Number of interactions",
+            "valueLabel": "action",
+            "cols": "8",
+            "type": "TimelineChart.vue",
+            "dateAccessor": "_date"
+          },
+          {
+            "valueLabel": "interactions",
+            "title": "Interaction Type",
+            "cols": "4",
+            "type": "TopChart.vue",
+            "valueAccessor": "interactionType"
+          },
+          {
+            "valueLabel": "interactions",
+            "type": "WeekChart.vue",
+            "cols": "4",
+            "height": 220,
+            "dateAccessor": "_date"
+          },
+          {
+            "valueLabel": "interactions",
+            "type": "HourChart.vue",
+            "cols": "4",
+            "height": 220,
+            "dateAccessor": "_date"
+          },
+          {
+            "valueLabel": "interactions",
+            "title": "User",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "isScrollable": true,
+            "topK": 100,
+            "valueAccessor": "accountName"
+          }
+        ]
+      },
+      "title": "Interactions",
+      "text": "See which actions you do most when using Instagram."
+    },
+    {
+      "showTable": false,
+      "id": "ad-interactions",
+      "sql": "SELECT title, DATETIME(ROUND(unixTimestamp), 'unixepoch') AS _date, 'True' as clicked FROM InstagramAdClicked\r\nUNION\r\nSELECT accountName as title, datetime AS _date, 'False' as clicked FROM InstagramAdViewed;\r\n",
+      "files": ["adsClicked", "adsViewed"],
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Ads viewed",
+            "valueLabel": "action",
+            "cols": "8",
+            "type": "TimelineChart.vue",
+            "dateAccessor": "_date"
+          },
+          {
+            "valueLabel": "interactions",
+            "title": "Ads clicked",
+            "cols": "4",
+            "type": "PieChart.vue",
+            "valueAccessor": "clicked"
+          }
+        ]
+      },
+      "title": "Ads 1/3 (Interactions)",
+      "text": "See how many ads you viewed and whether or not you interacted with them."
+    },
+    {
+      "showTable": false,
+      "id": "ad-interests",
+      "sql": "SELECT title, 'Ad Interest' as _type FROM InstagramAdInterest\r\nUNION\r\nSELECT title, 'Topic' as _type FROM InstagramYourTopic\r\nUNION\r\nSELECT title, 'Reel Topic' as _type FROM InstagramReelTopic\r\nUNION\r\nSELECT title, 'Reel Sentiment' as _type FROM InstagramReelSentiment;\r\n",
+      "visualization": "ChartViewDashboard.vue",
+      "files": ["adsInterests"],
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Type of interest",
+            "valueLabel": "value",
+            "cols": "12",
+            "type": "TopChart.vue",
+            "valueAccessor": "_type",
+            "height": 150
+          }
+        ]
+      },
+      "title": "Ads 2/3 (Interests)",
+      "text": "See which interests are inferred about you."
+    },
+    {
+      "showTable": true,
+      "id": "ad-advertisers",
+      "sql": "SELECT * FROM InstagramAdvertiser;\r\n",
+      "files": ["advertisers"],
+      "title": "Ads 3/3 (Advertisers)",
+      "text": "See which advertisers have used your information on Instagram."
+    },
+    {
+      "showTable": false,
+      "id": "localisation",
+      "sql": "SELECT\r\n  title,\r\n  DATETIME(unixTimestamp, 'unixepoch') AS _date,\r\n  latitude,\r\n  longitude,\r\n  'Post' AS actionType\r\nFROM InstagramPost\r\nWHERE latitude IS NOT NULL AND longitude IS NOT NULL\r\nUNION\r\nSELECT\r\n  title,\r\n  DATETIME(unixTimestamp, 'unixepoch') AS _date,\r\n  latitude,\r\n  longitude,\r\n  'Story' AS actionType\r\nFROM InstagramStory\r\nWHERE latitude IS NOT NULL AND longitude IS NOT NULL;\r\n",
+      "files": ["posts", "stories"],
+      "visualization": "ChartViewGenericMap.vue",
+      "vizProps": {
+        "keplerConfig": {
+          "version": "v1",
+          "config": {
+            "visState": {
+              "filters": [],
+              "layers": [
+                {
+                  "id": "gzlxnlb",
+                  "type": "cluster",
+                  "config": {
+                    "dataId": "57hfllte",
+                    "label": "Publication",
+                    "color": [255, 203, 153],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat": "latitude",
+                      "lng": "longitude"
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "opacity": 0.8,
+                      "clusterRadius": 40,
+                      "colorRange": {
+                        "name": "ColorBrewer Set1-6",
+                        "type": "qualitative",
+                        "category": "ColorBrewer",
+                        "colors": [
+                          "#e41a1c",
+                          "#377eb8",
+                          "#4daf4a",
+                          "#984ea3",
+                          "#ff7f00",
+                          "#ffff33"
+                        ]
+                      },
+                      "radiusRange": [0, 50],
+                      "colorAggregation": "mode"
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": {
+                      "name": "actionType",
+                      "type": "string"
+                    },
+                    "colorScale": "ordinal"
+                  }
+                }
+              ],
+              "interactionConfig": {
+                "tooltip": {
+                  "fieldsToShow": {
+                    "57hfllte": [
+                      {
+                        "name": "title",
+                        "format": null
+                      },
+                      {
+                        "name": "_date",
+                        "format": null
+                      },
+                      {
+                        "name": "actionType",
+                        "format": null
+                      }
+                    ]
+                  },
+                  "compareMode": false,
+                  "compareType": "absolute",
+                  "enabled": true
+                },
+                "brush": {
+                  "size": 0.5,
+                  "enabled": false
+                },
+                "geocoder": {
+                  "enabled": false
+                },
+                "coordinate": {
+                  "enabled": false
+                }
+              },
+              "layerBlending": "normal",
+              "splitMaps": [],
+              "animationConfig": {
+                "currentTime": null,
+                "speed": 1
+              }
+            },
+            "mapState": {
+              "bearing": 0,
+              "dragRotate": false,
+              "latitude": 46.48268876272195,
+              "longitude": 7.027939380011415,
+              "pitch": 0,
+              "zoom": 8.079269847392451,
+              "isSplit": false
+            },
+            "mapStyle": {
+              "styleType": "dark",
+              "topLayerGroups": {},
+              "visibleLayerGroups": {
+                "label": true,
+                "road": true,
+                "border": false,
+                "building": true,
+                "water": true,
+                "land": true,
+                "3d building": false
+              },
+              "threeDBuildingColor": [
+                9.665468314072013, 17.18305478057247, 31.1442867897876
+              ],
+              "mapStyles": {}
+            }
+          }
+        }
+      },
+      "title": "Localisation",
+      "text": "See your posts and stories that have been geotagged."
+    },
+    {
+      "showTable": false,
+      "id": "genericDateViewer",
+      "customPipeline": "genericDateViewer",
+      "visualization": "ChartViewGenericDateViewer.vue",
+      "title": "Timeline",
+      "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
+    }
+  ],
+  "messages": {
+    "en": {
+      "intro": {
+        "title": "Instagram",
+        "dataPortal": "https://help.instagram.com/181231772500920",
+        "dataPortalMessage": "<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format."
+      },
+      "viewBlocks": {
+        "consumption": {
+          "title": "Consumption",
+          "text": "See how much content you watch over time.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Content viewed",
+                "valueLabel": "views"
+              },
+              {
+                "title": "Type of content",
+                "valueLabel": "views"
+              },
+              {
+                "title": "Top Account",
+                "valueLabel": "views"
+              }
+            ]
+          },
+          "headers": {
+            "actionDate": "Date",
+            "accountName": "Name",
+            "actionType": "Action"
+          }
+        },
+        "consumption-time": {
+          "title": "Consumption (Time spent)",
+          "text": "See how much time you spend on Instagram in one week.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Minutes spent",
+                "valueLabel": "minutes"
+              },
+              {
+                "valueLabel": "minutes"
+              },
+              {
+                "valueLabel": "minutes"
+              },
+              {
+                "title": "Top Actions",
+                "valueLabel": "actions"
+              }
+            ]
+          },
+          "headers": {
+            "start_date": "Start Date",
+            "end_date": "End Date",
+            "nb_actions": "Number of actions",
+            "actions": "List of actions",
+            "duration_m": "Duration in minutes"
+          }
+        },
+        "interactions": {
+          "title": "Interactions",
+          "text": "See which actions you do most when using Instagram.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Number of interactions",
+                "valueLabel": "interactions"
+              },
+              {
+                "title": "Interaction Type",
+                "valueLabel": "interactions"
+              },
+              {
+                "valueLabel": "interactions"
+              },
+              {
+                "valueLabel": "interactions"
+              },
+              {
+                "title": "User",
+                "valueLabel": "interactions"
+              }
+            ]
+          },
+          "headers": {
+            "_date": "Date",
+            "accountName": "Name",
+            "interactionType": "Interaction"
+          }
+        },
+        "ad-interactions": {
+          "title": "Ads 1/3 (Interactions)",
+          "text": "See how many ads you viewed and whether or not you interacted with them.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Ads viewed",
+                "valueLabel": "interactions"
+              },
+              {
+                "title": "Ads clicked",
+                "valueLabel": "interactions"
+              }
+            ]
+          },
+          "headers": {
+            "_date": "Date",
+            "title": "Name",
+            "clicked": "Clicked"
+          }
+        },
+        "ad-interests": {
+          "title": "Ads 2/3 (Interests)",
+          "text": "See which interests were inferred about you.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Type of interest",
+                "valueLabel": "interests"
+              }
+            ]
+          },
+          "headers": {
+            "title": "Name",
+            "_type": "Type"
+          }
+        },
+        "genericDateViewer": {
+          "name": "Timeline",
+          "title": "Timeline",
+          "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date.",
+          "graphTitle": "Number of dated events in your files",
+          "graphNoDate": "No dated events were found in your file(s).",
+          "datedEvents": "From {currMinDate} to {currMaxDate} we found {total} dated events in your file(s).",
+          "headers": {
+            "File name": "File name",
+            "Date": "Date",
+            "Description": "Description"
+          }
+        }
+      },
+      "ad-advertisers": {
+        "title": "Ads 3/3 (Advertisers)",
+        "text": "See which advertisers have used your information on Instagram."
+      },
+      "localisation": {
+        "title": "Localisation",
+        "text": "See your posts and stories that have been geotagged."
+      }
+    },
+    "fr": {
+      "intro": {
+        "title": "Instagram",
+        "dataPortal": "https://help.instagram.com/181231772500920",
+        "dataPortalMessage": "<strong>Important:</strong> Pour que l'expérience fonctionne, veuillez demander vos données au format <strong>JSON</strong>."
+      },
+      "viewBlocks": {
+        "consumption": {
+          "title": "Consommation",
+          "text": "Observer la quantité de contenu que vous regardez au fil du temps.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Contenu consulté",
+                "valueLabel": "vues"
+              },
+              {
+                "title": "Type de contenu",
+                "valueLabel": "vues"
+              },
+              {
+                "title": "Top Compte",
+                "valueLabel": "vues"
+              }
+            ]
+          },
+          "headers": {
+            "actionDate": "Date",
+            "accountName": "Nom",
+            "actionType": "Action"
+          }
+        },
+        "consumption-time": {
+          "title": "Consommation (Temps passé)",
+          "text": "Voyez combien de temps vous passez sur Instagram en une semaine.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Minutes passées",
+                "valueLabel": "minutes"
+              },
+              {
+                "valueLabel": "minutes"
+              },
+              {
+                "valueLabel": "minutes"
+              },
+              {
+                "title": "Top Actions",
+                "valueLabel": "actions"
+              }
+            ]
+          },
+          "headers": {
+            "start_date": "Date de début",
+            "end_date": "Date de fin",
+            "nb_actions": "Nombre d'actions",
+            "actions": "Liste des actions",
+            "duration_m": "Durée en minutes"
+          }
+        },
+        "interactions": {
+          "title": "Interactions",
+          "text": "Découvrez les actions que vous effectuez le plus lorsque vous utilisez Instagram.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Nombre d'interactions",
+                "valueLabel": "interactions"
+              },
+              {
+                "title": "Type d'intéractions",
+                "valueLabel": "interactions"
+              },
+              {
+                "valueLabel": "interactions"
+              },
+              {
+                "valueLabel": "interactions"
+              },
+              {
+                "title": "Utilisateur",
+                "valueLabel": "interactions"
+              }
+            ]
+          },
+          "headers": {
+            "_date": "Date",
+            "accountName": "Nom",
+            "interactionType": "Intéraction"
+          }
+        },
+        "ad-interactions": {
+          "title": "Publicité 1/3 (Interactions)",
+          "text": "Observer combien de publicités vous voyez et si vous interagissez ou non avec elles.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Annonce vue",
+                "valueLabel": "vues"
+              },
+              {
+                "title": "Annonce cliquer",
+                "valueLabel": "vues"
+              }
+            ]
+          },
+          "headers": {
+            "_date": "Date",
+            "title": "Nom",
+            "clicked": "Cliquer"
+          }
+        },
+        "ad-interests": {
+          "title": "Publicité 2/3 (Intérêts)",
+          "text": "Observer quels intérêts sont déduits à votre sujet.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Type d'intérêt",
+                "valueLabel": "intérêts"
+              }
+            ]
+          },
+          "headers": {
+            "title": "Nom",
+            "_type": "Type"
+          }
+        },
+        "ad-advertisers": {
+          "title": "Publicité 3/3 (Annonceurs)",
+          "text": "Observer quels sont les annonceurs qui utilisent vos informations sur Instagram."
+        },
+        "localisation": {
+          "title": "Localisation",
+          "text": "Consultez vos Posts et vos Stories qui ont été géolocalisées."
+        },
+        "genericDateViewer": {
+          "name": "Chronologie",
+          "title": "Chronologie",
+          "text": "Voir tous les événements datés dans vos dossiers, correspondant aux données qui ont été collectées sur vous à ou concernant une date spécifique.",
+          "graphTitle": "Nombre d'événements datés dans vos dossiers",
+          "graphNoDate": "Aucun événement daté n'a été trouvé dans votre (vos) dossier(s).",
+          "datedEvents": "De {currMinDate} à {currMaxDate} nous avons trouvé {total} événements datés dans votre (vos) fichier(s).",
+          "headers": {
+            "File name": "Nom de fichier",
+            "Date": "Date",
+            "Description": "Description"
+          }
+        }
+      }
+    }
+  }
+}
