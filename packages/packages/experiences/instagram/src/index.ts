@@ -1,15 +1,14 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
+import { Experience, ExperienceOptions, LoaderOptions } from '@/index'
 // import icon from '@/icons/instagram.png'
-import viewBlocks from './blocks'
+// import viewBlocks from './blocks'
 import databaseConfig from './database'
-import messages from './messages.json'
-import dataSample from '@/data-samples/instagramV2.zip'
+// import messages from './messages.json'
+// import dataSample from '@/data-samples/instagramV2.zip'
 import preprocessor from '../../facebook/src/preprocessor'
-import viewerConfig from './viewer.json'
-console.log('vc', viewerConfig)
+import viewerOptions from './viewer.json'
 
-const options: ExperienceOptions = {
+const loaderOptions: LoaderOptions = {
   // version: 2,
   //
   // version 3 load external viewer.json during build
@@ -38,18 +37,22 @@ const options: ExperienceOptions = {
   },
   preprocessors: {
     '**/*.json': preprocessor
-  },
-  // TODO goes into viewer.json
-  title: 'Instagram',
-  dataPortal: 'https://help.instagram.com/181231772500920',
-  dataPortalMessage:
-    '<strong>Important:</strong> To make the experience work, please request your data in <strong>JSON</strong> format.',
-  dataSamples: [dataSample],
-  // icon,
-  icon: 'https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/a29ee41dca8d2d8aaf2e377e6422e820f66db1bd/packages/lib/icons/instagram.png',
-  hideFileExplorer: false,
-  viewBlocks,
-  messages
+  }
 }
+
+const options = { ...loaderOptions, ...viewerOptions } as ExperienceOptions
+// const oldViewerOptions: ViewerOptions = {
+//   title: 'Instagram',
+//   dataPortal: 'https://help.instagram.com/181231772500920',
+//   dataPortalMessage:
+//     '<strong>Important:</strong> To make the experience work, please request your data in <strong>JSON</strong> format.',
+//   dataSamples: [dataSample],
+//   // icon,
+//   icon: 'https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/a29ee41dca8d2d8aaf2e377e6422e820f66db1bd/packages/lib/icons/instagram.png',
+//   hideFileExplorer: false,
+//   viewBlocks,
+//   messages
+// }
+// const oldOptions = { ...loaderOptions, ...oldViewerOptions } as ExperienceOptions
 
 export default new Experience(options, packageJSON, import.meta.url)
