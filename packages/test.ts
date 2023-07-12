@@ -12,7 +12,8 @@ import camelCase from 'lodash/camelCase'
 function test([
   name,
   {
-    options: { files, viewBlocks, disabled, url, databaseConfig }
+    options: { files, disabled, databaseConfig },
+    viewerOptions: { viewBlocks, url }
   }
 ]: [name: string, experience: Experience]): void {
   if (!disabled && !url && !viewBlocks.length) {
