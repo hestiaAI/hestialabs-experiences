@@ -30,44 +30,106 @@ const messages: Messages = {
     viewBlocks: {}
   }
 }
-
-const defaultOptions: Partial<ExperienceOptions> = {
-  collaborator: undefined,
+const defaultLoaderOptions: Partial<LoaderOptions> = {
+  preprocessors: {},
   databaseConfig: undefined,
+  disabled: false,
+  files: {},
+  keepOnlyFiles: true
+}
+const defaultViewerOptions: Partial<ViewerOptions> = {
+  collaborator: undefined,
   dataPortal: undefined,
   dataPortalMessage: undefined,
   dataPortalHtml: undefined,
   dataSamples: [],
-  disabled: false,
-  files: {},
   hideEmptyTabs: false,
   hideFileExplorer: true,
   hideSummary: true,
-  keepOnlyFiles: true,
   messages,
-  preprocessors: {},
   tutorialVideos: [],
   url: undefined
 }
 
+const loaderOptionKeys = [
+  'preprocessors',
+  'databaseConfig',
+  'dataModel',
+  'disabled',
+  'files',
+  'keepOnlyFiles'
+]
+
+const viewerOptionKeys = [
+  'title',
+  'hideEmptyTabs',
+  'hideFileExplorer',
+  'hideSummary',
+  'icon',
+  'messages',
+  'subtitle',
+  'dataPortal',
+  'dataPortalHtml',
+  'dataPortalMessage',
+  'dataSamples',
+  'tutorialVideos',
+  'url',
+  'viewBlocks',
+  'collaborator'
+]
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function cloneKeys(obj: any, keys: string[]) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const clone: any = {}
+  for (const key of keys) {
+    clone[key] = obj[key]
+  }
+  return clone
+}
+
 export class Experience {
-  options: LoaderOptions
+  loaderOptions: LoaderOptions
   viewerOptions: ViewerOptions
   name: string
   version: string
 
   constructor(
-    options: LoaderOptions,
+    loaderOptions: LoaderOptions,
     viewerOptions: ViewerOptions,
     packageJSON: { name: string; version: string },
     importMetaURL: string
   ) {
     // spread default options first, and then provided options
-    const mergedOptions = { ...defaultOptions, ...options } as ExperienceOptions
+    this.loaderOptions = {
+      ...defaultLoaderOptions,
+      ...cloneKeys(loaderOptions, loaderOptionKeys)
+    } as LoaderOptions
 
-    this.options = mergedOptions
-    this.viewerOptions = mergedOptions
+    this.viewerOptions = {
+      ...defaultViewerOptions,
+      ...cloneKeys(viewerOptions, viewerOptionKeys)
+    } as ViewerOptions
 
+    this.initializeViewBlocks(this.viewerOptions)
+
+    const packageName = packageJSON.name.replace(/@hestia\.?ai\//, '')
+
+    const match = importMetaURL.match(/\/([^/]+)\/src\//)
+    if (!match) {
+      const message = `Package directory for package "${packageName}" not found`
+      throw new Error(message)
+    }
+    const packageDirectory = match[1]
+    if (packageName !== packageDirectory) {
+      const message = `Package name "${packageName}" must match directory name "${packageDirectory}"`
+      throw new Error(message)
+    }
+
+    this.name = packageName
+    this.version = packageJSON.version
+  }
+
+  initializeViewBlocks(viewerOptions: ViewerOptions) {
     viewerOptions.viewBlocks
       .filter(({ id }) => id in genericViewerMessages)
       .forEach(({ id }) => {
@@ -90,24 +152,10 @@ export class Experience {
       })
 
     // construct default view Array
-    this.viewerOptions.viewBlocks =
-      viewerOptions.viewBlocks.map(createViewBlock)
-
-    const packageName = packageJSON.name.replace(/@hestia\.?ai\//, '')
-
-    const match = importMetaURL.match(/\/([^/]+)\/src\//)
-    if (!match) {
-      const message = `Package directory for package "${packageName}" not found`
-      throw new Error(message)
-    }
-    const packageDirectory = match[1]
-    if (packageName !== packageDirectory) {
-      const message = `Package name "${packageName}" must match directory name "${packageDirectory}"`
-      throw new Error(message)
-    }
-
-    this.name = packageName
-    this.version = packageJSON.version
+    viewerOptions.viewBlocks = viewerOptions.viewBlocks.map(createViewBlock)
+  }
+  get options() {
+    return { ...this.loaderOptions, ...this.viewerOptions } as ExperienceOptions
   }
 
   get config() {
