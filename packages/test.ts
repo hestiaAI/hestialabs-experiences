@@ -12,7 +12,7 @@ import camelCase from 'lodash/camelCase'
 function test([
   name,
   {
-    options: { files, disabled, databaseConfig },
+    loaderOptions: { files, disabled, databaseConfig },
     viewerOptions: { viewBlocks, url }
   }
 ]: [name: string, experience: Experience]): void {
