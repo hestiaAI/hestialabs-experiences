@@ -13,4 +13,4 @@ const options: ExperienceOptions = {
   viewBlocks: genericViewers
 }
 
-export default new Experience(options, packageJSON, import.meta.url)
+export default new Experience(options, undefined, packageJSON, import.meta.url)
