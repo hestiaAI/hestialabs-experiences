@@ -19,26 +19,31 @@ export type Messages = Record<
   }
 >
 
-export type ExperienceOptions = {
-  collaborator?: Collaborator
+export type LoaderOptions = {
+  preprocessors?: { [key: string]: PreprocessorFunction }
   databaseConfig?: DatabaseConfig
   dataModel?: object
-  dataPortal?: string
-  dataPortalHtml?: string
-  dataPortalMessage?: string
-  dataSamples?: string[]
   disabled?: boolean
   files?: Files
+  keepOnlyFiles?: boolean
+}
+
+export type ViewerOptions = {
+  title: string
   hideEmptyTabs?: boolean
   hideFileExplorer?: boolean
   hideSummary?: boolean
   icon?: string
-  keepOnlyFiles?: boolean
   messages?: Messages
-  preprocessors?: { [key: string]: PreprocessorFunction }
   subtitle?: string
-  title: string
+  dataPortal?: string
+  dataPortalHtml?: string
+  dataPortalMessage?: string
+  dataSamples?: string[]
   tutorialVideos?: string[]
   url?: string
   viewBlocks: ViewBlock[]
+  collaborator?: Collaborator
 }
+
+export type ExperienceOptions = LoaderOptions & ViewerOptions

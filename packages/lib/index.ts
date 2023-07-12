@@ -3,8 +3,8 @@ import type { PipelineOutput } from '@/types/utils'
 import type { Lang, Messages } from '@/types/experience-options'
 
 // https://javascript.plainenglish.io/leveraging-type-only-imports-and-exports-with-typescript-3-8-5c1be8bd17fb
-import type { ExperienceOptions } from '@/types'
-export type { ExperienceOptions } from '@/types'
+import type { ExperienceOptions, LoaderOptions } from '@/types'
+export type { ExperienceOptions, LoaderOptions } from '@/types'
 
 // import { merge } from 'lodash'
 import genericViewerMessages from '@/pipelines/messages'

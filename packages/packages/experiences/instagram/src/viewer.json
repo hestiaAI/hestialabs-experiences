@@ -5,7 +5,7 @@
   "hideFileExplorer": false,
   "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/instagram.png",
   "dataSamples": [
-    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/instagramV2.zip"
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/instagramV2.zip?contenthash=c03f3fb83b90ecaa150a&filename=instagramV2.zip"
   ],
   "viewBlocks": [
     {
