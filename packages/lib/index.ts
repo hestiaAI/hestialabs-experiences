@@ -51,29 +51,33 @@ const defaultOptions: Partial<ExperienceOptions> = {
 }
 
 export class Experience {
-  options: ExperienceOptions
+  options: LoaderOptions
+  viewerOptions: ViewerOptions
   name: string
   version: string
 
   constructor(
-    options: ExperienceOptions,
-    viewerOptions: ViewerOptions | undefined,
+    options: LoaderOptions,
+    viewerOptions: ViewerOptions,
     packageJSON: { name: string; version: string },
     importMetaURL: string
   ) {
     // spread default options first, and then provided options
-    this.options = { ...defaultOptions, ...options }
+    const mergedOptions = { ...defaultOptions, ...options } as ExperienceOptions
 
-    options.viewBlocks
+    this.options = mergedOptions
+    this.viewerOptions = mergedOptions
+
+    viewerOptions.viewBlocks
       .filter(({ id }) => id in genericViewerMessages)
       .forEach(({ id }) => {
         // merge generic viewer messages if some generic viewer is included
 
         // Temporary solution until we know how to use lodash
-        if (this.options.messages) {
-          for (const lang in options.messages) {
+        if (this.viewerOptions.messages) {
+          for (const lang in viewerOptions.messages) {
             const l = lang as Lang
-            this.options.messages[l].viewBlocks[id] =
+            this.viewerOptions.messages[l].viewBlocks[id] =
               genericViewerMessages[id][l].viewBlocks[id]
           }
         }
@@ -86,7 +90,8 @@ export class Experience {
       })
 
     // construct default view Array
-    this.options.viewBlocks = options.viewBlocks.map(createViewBlock)
+    this.viewerOptions.viewBlocks =
+      viewerOptions.viewBlocks.map(createViewBlock)
 
     const packageName = packageJSON.name.replace(/@hestia\.?ai\//, '')
 

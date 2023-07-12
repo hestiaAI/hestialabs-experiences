@@ -55,4 +55,4 @@ const options = { ...loaderOptions, ...viewerOptions } as ExperienceOptions
 // }
 // const oldOptions = { ...loaderOptions, ...oldViewerOptions } as ExperienceOptions
 
-export default new Experience(options, undefined, packageJSON, import.meta.url)
+export default new Experience(options, options, packageJSON, import.meta.url)
