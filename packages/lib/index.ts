@@ -99,7 +99,7 @@ export class Experience {
     loaderOptions: LoaderOptions,
     viewerOptions: ViewerOptions,
     packageJSON: { name: string; version: string },
-    importMetaURL: string
+    importMetaURL?: string
   ) {
     // spread default options first, and then provided options
     this.loaderOptions = {
@@ -113,9 +113,26 @@ export class Experience {
     } as ViewerOptions
 
     this.initializeViewBlocks(this.viewerOptions)
-
     const packageName = packageJSON.name.replace(/@hestia\.?ai\//, '')
+    this.checkPackageDirectory(packageName, importMetaURL)
 
+    this.name = packageName
+    this.version = packageJSON.version
+  }
+
+  reconfigure(viewerOptions: ViewerOptions) {
+    const packageJSON = { name: this.name, version: this.version }
+    return new Experience(this.loaderOptions, viewerOptions, packageJSON)
+  }
+
+  checkPackageDirectory(packageName: string, importMetaURL?: string) {
+    if (!importMetaURL) {
+      // For some reason import.meta.url is not available in the browser
+      // (probably because we're not loading it as a module).
+      // That's ok because this check only makes sense
+      // when the experience is tested in node before publication.
+      return
+    }
     const match = importMetaURL.match(/\/([^/]+)\/src\//)
     if (!match) {
       const message = `Package directory for package "${packageName}" not found`
@@ -126,9 +143,6 @@ export class Experience {
       const message = `Package name "${packageName}" must match directory name "${packageDirectory}"`
       throw new Error(message)
     }
-
-    this.name = packageName
-    this.version = packageJSON.version
   }
 
   initializeViewBlocks(viewerOptions: ViewerOptions) {
@@ -156,8 +170,12 @@ export class Experience {
     // construct default view Array
     viewerOptions.viewBlocks = viewerOptions.viewBlocks.map(createViewBlock)
   }
+
   get options() {
-    return { ...this.loaderOptions, ...this.viewerOptions } as ExperienceOptions
+    return {
+      ...this.loaderOptions,
+      ...this.viewerOptions
+    } as ExperienceOptions
   }
 
   get config() {
