@@ -61,7 +61,7 @@ import uber from '@hestia.ai/uber'
 import uberDriver from '@hestia.ai/uber-driver'
 import youtube from '@hestia.ai/youtube'
 
-const experienceConfigs = [
+const experienceObjects = [
   appleTracker,
   appleTrackerAgg,
   chatgpt,
@@ -86,8 +86,9 @@ const experienceConfigs = [
   uber,
   uberDriver,
   youtube
-].map(e => e.config)
-const experiences = experienceConfigs.map(e => e.slug)
+]
+
+const experiences = experienceObjects.map(e => e.config.slug)
 const initialExperience = 'instagram'
 
 const siteConfig = {
@@ -141,6 +142,26 @@ async function populateServerConfigs() {
   })
 }
 
+const experienceViewerOptions = {}
+async function populateExperienceViewerOptions() {
+  const experiencesWithOpts = ['instagram']
+  const optPromises = experiencesWithOpts.map(
+    async e => [e, await fetchViewerOptions(e)])
+  const opts = await Promise.all(optPromises)
+  opts.forEach(([exp, conf]) => { experienceViewerOptions[exp] = conf })
+}
+await populateExperienceViewerOptions()
+
+async function fetchViewerOptions(experience) {
+  const relativeUrl = `/${experience}-viewer.json`
+  const resp = await fetch(relativeUrl)
+  if (resp.ok) {
+    const viewerOptions = await resp.json()
+    return viewerOptions
+  }
+  return undefined
+}
+
 function experiencesInBubble(bubbleId) {
   return configsFromServer[bubbleId]?.experiences
 }
@@ -181,8 +202,13 @@ export default {
     experience: {
       immediate: true,
       handler(experience) {
-        this.props.experienceConfig =
-          experienceConfigs.find(e => e.slug === experience)
+        let expObj = experienceObjects.find(e => e.config.slug === experience)
+        const viewerOpts = experienceViewerOptions[experience]
+        if (viewerOpts) {
+          console.log('reconfiguring', experience)
+          expObj = expObj.reconfigure(viewerOpts)
+        }
+        this.props.experienceConfig = expObj.config
         this.props.bubbleConfig = makeBubbleConfig(this.bubble)
       }
     },

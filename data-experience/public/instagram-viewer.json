@@ -505,7 +505,7 @@
       "intro": {
         "title": "Instagram",
         "dataPortal": "https://help.instagram.com/181231772500920",
-        "dataPortalMessage": "<strong>Important:</strong> Pour que l'expérience fonctionne, veuillez demander vos données au format <strong>JSON</strong>."
+        "dataPortalMessage": "<strong>IMPORTANT:</strong> Pour que l'expérience fonctionne, veuillez demander vos données au format <strong>JSON</strong>."
       },
       "viewBlocks": {
         "consumption": {
