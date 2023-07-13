@@ -82,7 +82,9 @@ function cloneKeys(obj: any, keys: string[]) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const clone: any = {}
   for (const key of keys) {
-    clone[key] = obj[key]
+    if (key in obj) {
+      clone[key] = obj[key]
+    }
   }
   return clone
 }
