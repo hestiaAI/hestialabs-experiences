@@ -144,7 +144,7 @@ async function populateServerConfigs() {
 
 const experienceViewerOptions = {}
 async function populateExperienceViewerOptions() {
-  const experiencesWithOpts = ['instagram']
+  const experiencesWithOpts = ['instagram', 'uber-driver']
   const optPromises = experiencesWithOpts.map(
     async e => [e, await fetchViewerOptions(e)])
   const opts = await Promise.all(optPromises)
