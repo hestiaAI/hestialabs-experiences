@@ -1,24 +1,21 @@
-import type { ViewBlock } from './lib/types'
-import { error } from './lib/utils'
-import { existsSync, mkdirSync, writeFileSync } from 'fs'
-import {
-  validateDatabaseConfigIntegrity,
-  validateDatabaseConfigSchema
-} from './lib/database-config-validation/'
 import { Experience } from './lib/'
+import { writeFileSync, mkdirSync } from 'fs'
 import * as packages from './packages'
 
 import camelCase from 'lodash/camelCase'
 import isEqual from 'lodash/isEqual'
+import { ViewerOptions } from './lib/types'
 
-function test([
-  name,
-  {
-    loaderOptions: { files, disabled, databaseConfig },
-    viewerOptions,
-    viewerOptions: { viewBlocks, url }
-  }
-]: [name: string, experience: Experience]): void {
+const outputDir = 'viewer-opts'
+function test([name, experience]: [
+  name: string,
+  experience: Experience
+]): void {
+  const {
+    // loaderOptions: { files, disabled, databaseConfig },
+    viewerOptions
+    // viewerOptions: { viewBlocks, url }
+  } = experience
   viewerOptions.icon = 'TODO'
   const unserializable = diffWithSerialized(viewerOptions)
   if (unserializable) {
@@ -27,7 +24,29 @@ function test([
   }
 }
 
-function getObjectDifferences(
+function saveUberDriverKeplerConfigs(viewerOptions: ViewerOptions) {
+  const keplerFileNames = [
+    'kepler_config_heatmap',
+    'kepler_config_onlineOffline',
+    'kepler_config_restriction',
+    'kepler_config_points'
+  ]
+  let kfindex = 0
+  viewerOptions.viewBlocks.forEach(viewBlock => {
+    const vizProps: any | undefined = viewBlock.vizProps
+    if (vizProps?.keplerConfig) {
+      console.log(viewBlock.id, keplerFileNames[kfindex])
+      const config = vizProps.keplerConfig
+      mkdirSync(outputDir, { recursive: true } as any)
+      const fileName = `${outputDir}/${keplerFileNames[kfindex]}.json`
+      writeFileSync(fileName, JSON.stringify(vizProps.keplerConfig))
+      console.log('wrote', fileName)
+      kfindex++
+    }
+  })
+}
+
+function diffObjects(
   obj1: Record<string, any>,
   obj2: Record<string, any>
 ): Record<string, any> {
@@ -40,9 +59,9 @@ function getObjectDifferences(
       const val1 = obj1[key]
       const val2 = obj2[key]
       if (!isEqual(val1, val2)) {
-        const diff = getObjectDifferences(val1, val2)
+        const difference = diffObjects(val1, val2)
         // console.log('value different for key', key)
-        differences[key] = diff
+        differences[key] = difference
       }
     } else {
       // console.log('key missing in 1:', key)
@@ -77,23 +96,12 @@ const stringifyReplacer = (_: any, value: any) => {
   return value
 }
 
-function isSerializable(object: any) {
-  const deundefined = removeUndefinedKeys(object)
-  const parstringified = JSON.parse(JSON.stringify(object))
-  const equal = isEqual(deundefined, parstringified)
-  if (!equal) {
-    const diff = getObjectDifferences(deundefined, parstringified)
-    console.log(JSON.stringify(diff, stringifyReplacer, 2))
-  }
-  return equal
-}
-
 function diffWithSerialized(object: any) {
   const deundefined = removeUndefinedKeys(object)
   const parstringified = JSON.parse(JSON.stringify(object))
   const equal = isEqual(deundefined, parstringified)
   if (!equal) {
-    const diff = getObjectDifferences(deundefined, parstringified)
+    const diff = diffObjects(deundefined, parstringified)
     return diff
   }
   return undefined

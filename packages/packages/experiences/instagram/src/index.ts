@@ -1,5 +1,5 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions, LoaderOptions } from '@/index'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
 // import icon from '@/icons/instagram.png'
 // import viewBlocks from './blocks'
 import databaseConfig from './database'
@@ -40,7 +40,6 @@ const loaderOptions: LoaderOptions = {
   }
 }
 
-const options = { ...loaderOptions, ...viewerOptions } as ExperienceOptions
 // const oldViewerOptions: ViewerOptions = {
 //   title: 'Instagram',
 //   dataPortal: 'https://help.instagram.com/181231772500920',
@@ -55,4 +54,9 @@ const options = { ...loaderOptions, ...viewerOptions } as ExperienceOptions
 // }
 // const oldOptions = { ...loaderOptions, ...oldViewerOptions } as ExperienceOptions
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url
+)
