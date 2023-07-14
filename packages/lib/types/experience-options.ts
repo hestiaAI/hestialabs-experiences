@@ -1,4 +1,8 @@
-import type { ViewBlock } from './view-block'
+import type {
+  CustomPipeline,
+  PostprocessorFunction,
+  ViewBlock
+} from './view-block'
 import type { DatabaseConfig } from './database-config'
 
 export type Collaborator = {
@@ -46,4 +50,8 @@ export type ViewerOptions = {
   collaborator?: Collaborator
 }
 
+export type ViewerFunctions = {
+  postprocessors?: { [key: string]: PostprocessorFunction }
+  customPipelines?: { [key: string]: CustomPipeline }
+}
 export type ExperienceOptions = LoaderOptions & ViewerOptions

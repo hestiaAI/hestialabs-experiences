@@ -1,6 +1,10 @@
 import type { ViewBlock } from '@/types'
 import type { PipelineOutput } from '@/types/utils'
-import type { Lang, Messages } from '@/types/experience-options'
+import type {
+  Lang,
+  Messages,
+  ViewerFunctions
+} from '@/types/experience-options'
 
 // https://javascript.plainenglish.io/leveraging-type-only-imports-and-exports-with-typescript-3-8-5c1be8bd17fb
 import type { ExperienceOptions, LoaderOptions, ViewerOptions } from '@/types'
@@ -14,11 +18,32 @@ const defaultViewBlock: Partial<ViewBlock> = {
   showTable: false
 }
 
-export function createViewBlock(viewBlock: ViewBlock) {
+export function createViewBlock(
+  viewBlock: ViewBlock,
+  viewerFunctions: ViewerFunctions
+) {
   // merge with default options
-  return {
+  const mergedViewBlock = {
     ...defaultViewBlock,
     ...viewBlock
+  }
+  populateViewBlockFunctions(mergedViewBlock, viewerFunctions)
+  return mergedViewBlock
+}
+
+export function populateViewBlockFunctions(
+  viewBlock: ViewBlock,
+  viewerFunctions: ViewerFunctions
+) {
+  const postprocessor = viewBlock.postprocessor as string
+  if (typeof postprocessor === 'string') {
+    console.log('popoa', postprocessor)
+    viewBlock.postprocessor = viewerFunctions.postprocessors?.[postprocessor]
+    console.log('popob', viewBlock.postprocessor)
+  }
+  const customPipeline = viewBlock.customPipeline as string
+  if (typeof customPipeline === 'string') {
+    viewBlock.customPipeline = viewerFunctions.customPipelines?.[customPipeline]
   }
 }
 
@@ -30,6 +55,7 @@ const messages: Messages = {
     viewBlocks: {}
   }
 }
+
 const defaultLoaderOptions: Partial<LoaderOptions> = {
   preprocessors: {},
   databaseConfig: undefined,
@@ -92,6 +118,7 @@ function cloneKeys(obj: any, keys: string[]) {
 export class Experience {
   loaderOptions: LoaderOptions
   viewerOptions: ViewerOptions
+  viewerFunctions: ViewerFunctions
   name: string
   version: string
 
@@ -99,7 +126,8 @@ export class Experience {
     loaderOptions: LoaderOptions,
     viewerOptions: ViewerOptions,
     packageJSON: { name: string; version: string },
-    importMetaURL?: string
+    importMetaURL: string | undefined,
+    viewerFunctions: ViewerFunctions = {}
   ) {
     // spread default options first, and then provided options
     this.loaderOptions = {
@@ -112,7 +140,9 @@ export class Experience {
       ...cloneKeys(viewerOptions, viewerOptionKeys)
     } as ViewerOptions
 
-    this.initializeViewBlocks(this.viewerOptions)
+    this.viewerFunctions = viewerFunctions
+
+    this.initializeViewBlocks(this.viewerOptions, this.viewerFunctions)
     const packageName = packageJSON.name.replace(/@hestia\.?ai\//, '')
     this.checkPackageDirectory(packageName, importMetaURL)
 
@@ -122,7 +152,13 @@ export class Experience {
 
   reconfigure(viewerOptions: ViewerOptions) {
     const packageJSON = { name: this.name, version: this.version }
-    return new Experience(this.loaderOptions, viewerOptions, packageJSON)
+    return new Experience(
+      this.loaderOptions,
+      viewerOptions,
+      packageJSON,
+      undefined,
+      this.viewerFunctions
+    )
   }
 
   checkPackageDirectory(packageName: string, importMetaURL?: string) {
@@ -145,7 +181,10 @@ export class Experience {
     }
   }
 
-  initializeViewBlocks(viewerOptions: ViewerOptions) {
+  initializeViewBlocks(
+    viewerOptions: ViewerOptions,
+    viewerFunctions: ViewerFunctions
+  ) {
     viewerOptions.viewBlocks
       .filter(({ id }) => id in genericViewerMessages)
       .forEach(({ id }) => {
@@ -168,7 +207,9 @@ export class Experience {
       })
 
     // construct default view Array
-    viewerOptions.viewBlocks = viewerOptions.viewBlocks.map(createViewBlock)
+    viewerOptions.viewBlocks = viewerOptions.viewBlocks.map(b =>
+      createViewBlock(b, viewerFunctions)
+    )
   }
 
   get options() {
