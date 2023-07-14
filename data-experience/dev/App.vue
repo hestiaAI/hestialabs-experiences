@@ -89,7 +89,7 @@ const experienceObjects = [
 ]
 
 const experiences = experienceObjects.map(e => e.config.slug)
-const initialExperience = 'instagram'
+const initialExperience = 'uber-driver'
 
 const siteConfig = {
   i18nLocales: ['fr', 'en'],
