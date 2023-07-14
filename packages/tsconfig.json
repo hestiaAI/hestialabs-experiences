@@ -29,6 +29,7 @@
   },
   "exclude": [
     "test.ts",
+    "migrate-viewer.ts",
     "packages.ts",
     "packages/hestias-hearth",
     "packages/kepler-iframe"
