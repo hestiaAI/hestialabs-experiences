@@ -1,0 +1,766 @@
+{
+  "title": "Uber Driver",
+  "hideFileExplorer": false,
+  "hideEmptyTabs": true,
+  "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download",
+  "dataSamples": [
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/uber-driver-fr-paris.zip?contenthash=c03f3fb83b90ecaa150a&filename=uber-driver-fr-paris.zip"
+  ],
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/uber.png",
+  "messages": {
+    "en": {
+      "intro": {
+        "title": "Uber Driver",
+        "dataPortalHtml": "To use this experience, you must first retrieve the data Uber has collected about you by making a SAR request. Please follow <a href=\"https://github.com/hestiaAI/data-catalog/blob/main/workshop/uber.md#subject-access-request-instructions\" target=\"_blank\" rel=\"noreferrer noopener\">these instructions</a> to retrieve your data and analyze it here. If you don't have your data yet, you can use the example below."
+      },
+      "viewBlocks": {
+        "driverHeatMap": {
+          "title": "Hot areas",
+          "text": "This map shows all locations where you picked up passengers.",
+          "headers": {
+            "beginTimestampUtc": "Time of Pickup (UTC)",
+            "endTimestampUtc": "Time of Dropoff (UTC)",
+            "beginLat": "Pickup Latitude",
+            "beginLng": "Pickup Longitude",
+            "endLat": "Dropoff Latitude",
+            "endLng": "Dropoff Longitude"
+          }
+        },
+        "driverTrips": {
+          "title": "Trips",
+          "text": "This visualisation shows the number of trips booked over time, depending on the time of day, day of the week or status of the trip.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Number of trips",
+                "valueLabel": "trips"
+              },
+              {
+                "valueLabel": "trips"
+              },
+              {
+                "valueLabel": "trips"
+              },
+              {
+                "title": "Status",
+                "valueLabel": "trips"
+              }
+            ]
+          },
+          "headers": {
+            "begin_date": "Time of Pickup (UTC)",
+            "end_date": "Time of Dropoff (UTC)"
+          }
+        },
+        "driverTrips_0": {
+          "title": "Trips",
+          "text": "List of your trips such as request, start and end times and distances travelled."
+        },
+        "driverOnOff": {
+          "title": "Status",
+          "text": "This map shows every trips you have made depending on your status. Open (P1), En route (P2) or On trip (P3).",
+          "headers": {
+            "earnerState": "Status",
+            "beginTimestampUtc": "Time of Pickup (UTC)",
+            "endTimestampUtc": "Time of Dropoff (UTC)",
+            "beginLat": "Pickup Latitude",
+            "beginLng": "Pickup Longitude",
+            "endLat": "Dropoff Latitude",
+            "endLng": "Dropoff Longitude",
+            "durationMs": "Duration (ms)"
+          }
+        },
+        "driverRestrictions": {
+          "title": "Restrictions",
+          "text": "This map shows every place where Uber restricted your access to the application, and the reasons why they temporarily suspend your access to the application. Note: Sometime the restriction duration is 0, meaning that it was only a notification.",
+          "headers": {
+            "time": "Time of notification",
+            "msgRule": "Reason of restriction",
+            "msgPenaltyboxdurationms": "Restriction duration (ms)",
+            "msgLatitude": "Latitude",
+            "msgLongitude": "Longitude"
+          }
+        },
+        "driverPayments": {
+          "title": "Payments",
+          "text": "Overview of the weekly payments that have been made."
+        },
+        "driverAppAnalytics": {
+          "title": "GPS",
+          "text": "Last 50 000 GPS points collected on your device (limited number for performance reason)."
+        },
+        "driverAccounting": {
+          "title": "Accounting (Mockup)",
+          "text": "Compute your expenses and estimated wages.",
+          "overlay": "This feature is under development"
+        }
+      }
+    },
+    "fr": {
+      "intro": {
+        "title": "Chauffeur Uber",
+        "dataPortalHtml": "POUR utiliser cette expérience, vous devez d'abord récupérer les données qu'Uber a recueillies sur vous en faisant une demande SAR. Veuillez suivre <a href=\"https://github.com/hestiaAI/data-catalog/blob/main/workshop/uber.md#subject-access-request-instructions\" target=\"_blank\" rel=\"noreferrer noopener\" >ces instructions</a> pour récupérer vos données et les analyser ici. Si vous ne disposez pas encore de vos données, vous pouvez utiliser l'exemple ci-dessous."
+      },
+      "viewBlocks": {
+        "driverHeatMap": {
+          "title": "Zones Chaudes",
+          "text": "Cette carte montre tous les endroits où vous avez pris des passagers.",
+          "headers": {
+            "beginTimestampUtc": "Heure de prise en charge (UTC)",
+            "endTimestampUtc": "Heure de dépose (UTC)",
+            "beginLat": "Latitude de prise en charge",
+            "beginLng": "Longitude de prise en charge",
+            "endLat": "Latitude de dépose",
+            "endLng": "Longitude de dépose"
+          }
+        },
+        "driverTrips": {
+          "title": "Courses",
+          "text": "Cette visualisation montre le nombre de courses réservées au cours du temps, en fonction de l'heure de la journée, du jour de la semaine ou du statut de la course.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Nombre de courses",
+                "valueLabel": "courses"
+              },
+              {
+                "valueLabel": "courses"
+              },
+              {
+                "valueLabel": "courses"
+              },
+              {
+                "title": "Statut",
+                "valueLabel": "courses"
+              }
+            ]
+          },
+          "headers": {
+            "begin_date": "Heure de prise en charge (UTC)",
+            "end_date": "Heure de dépose (UTC)"
+          }
+        },
+        "driverTrips_0": {
+          "title": "Courses",
+          "text": "Détails des courses tels que les heures de début et de fin, ainsi que les distances parcourues."
+        },
+        "driverOnOff": {
+          "title": "Statut",
+          "text": "Cette carte montre tous les déplacements que vous avez effectués en fonction de votre statut. Ouvert (P1), En route (P2) ou En voyage (P3).",
+          "headers": {
+            "earnerState": "Statut",
+            "beginTimestampUtc": "Heure de prise en charge (UTC)",
+            "endTimestampUtc": "Heure de dépose (UTC)",
+            "beginLat": "Latitude de prise en charge",
+            "beginLng": "Longitude de prise en charge",
+            "endLat": "Latitude de dépose",
+            "endLng": "Longitude de dépose",
+            "durationMs": "Duration (ms)"
+          }
+        },
+        "driverRestrictions": {
+          "title": "Restrictions",
+          "text": "Cette carte indique tous les endroits où Uber a restreint votre accès à l'application, ainsi que les raisons pour lesquelles votre accès a temporairement été suspendu. Remarque : Parfois, la durée de la restriction est égale à 0, ce qui signifie qu'il ne s'agissait que d'une notification.",
+          "headers": {
+            "time": "Date de la notification",
+            "msgRule": "Raison de restriction",
+            "msgPenaltyboxdurationms": "Durée de la restriction (ms)",
+            "msgLatitude": "Latitude",
+            "msgLongitude": "Longitude"
+          }
+        },
+        "driverPayments": {
+          "title": "Paiements",
+          "text": "Aperçu des paiements hebdomadaires qui vont ont été versés."
+        },
+        "driverAppAnalytics": {
+          "title": "GPS",
+          "text": "Les 50 000 derniers points GPS collectés sur votre appareil (nombre limité pour des raisons de performance)."
+        },
+        "driverAccounting": {
+          "title": "Comptabilité (maquette)",
+          "text": "Calculez vos dépenses et vos salaires estimés.",
+          "overlay": "Cette fonctionnalité est en cours de développement"
+        }
+      }
+    }
+  },
+  "viewBlocks": [
+    {
+      "id": "driverHeatMap",
+      "customPipeline": "csv_driver_on_off",
+      "files": ["driver_on_off"],
+      "postprocessor": "driverHeatMapPostProcessor",
+      "visualization": "ChartViewGenericMap.vue",
+      "vizProps": {
+        "keplerConfig": {
+          "version": "v1",
+          "config": {
+            "visState": {
+              "filters": [],
+              "layers": [
+                {
+                  "id": "ncot21h",
+                  "type": "heatmap",
+                  "config": {
+                    "dataId": "6ivdxksmk",
+                    "label": "new layer",
+                    "color": [136, 87, 44],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": { "lat": "beginLat", "lng": "beginLng" },
+                    "isVisible": true,
+                    "visConfig": {
+                      "opacity": 0.69,
+                      "colorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#FFC300",
+                          "#F1920E",
+                          "#E3611C",
+                          "#C70039",
+                          "#900C3F",
+                          "#5A1846"
+                        ],
+                        "reversed": true
+                      },
+                      "radius": 5.2
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "weightField": null,
+                    "weightScale": "linear"
+                  }
+                }
+              ],
+              "interactionConfig": {
+                "tooltip": {
+                  "fieldsToShow": {
+                    "6ivdxksmk": [
+                      { "name": "beginTimestampUtc", "format": null },
+                      { "name": "endTimestampUtc", "format": null }
+                    ]
+                  },
+                  "compareMode": false,
+                  "compareType": "absolute",
+                  "enabled": true
+                },
+                "brush": { "size": 0.5, "enabled": false },
+                "geocoder": { "enabled": false },
+                "coordinate": { "enabled": false }
+              },
+              "layerBlending": "normal",
+              "splitMaps": [],
+              "animationConfig": { "currentTime": null, "speed": 1 }
+            },
+            "mapState": {
+              "bearing": 0,
+              "dragRotate": false,
+              "latitude": 48.862403289323815,
+              "longitude": 2.3130846304873494,
+              "pitch": 0,
+              "zoom": 10.77200518984696,
+              "isSplit": false
+            },
+            "mapStyle": {
+              "styleType": "dark",
+              "topLayerGroups": {},
+              "visibleLayerGroups": {
+                "label": true,
+                "road": true,
+                "border": false,
+                "building": true,
+                "water": true,
+                "land": true,
+                "3d building": false
+              },
+              "threeDBuildingColor": [
+                9.665468314072013, 17.18305478057247, 31.1442867897876
+              ],
+              "mapStyles": {}
+            }
+          }
+        }
+      },
+      "title": "Hot areas",
+      "text": "< TO DEFINE IN TRANSLATIONS >",
+      "showTable": false
+    },
+    {
+      "id": "driverTrips",
+      "customPipeline": "csv_driver_trips",
+      "files": ["driver_trips"],
+      "title": "Trips",
+      "postprocessor": "driverTripsPostProcessor",
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Number of trips",
+            "valueLabel": "trips",
+            "cols": "12",
+            "type": "BarTimelineChart.vue",
+            "dateAccessor": "begin_date"
+          },
+          {
+            "valueLabel": "trips",
+            "type": "WeekChart.vue",
+            "cols": "4",
+            "dateAccessor": "begin_date"
+          },
+          {
+            "valueLabel": "trips",
+            "type": "HourChart.vue",
+            "cols": "4",
+            "dateAccessor": "begin_date"
+          },
+          {
+            "valueLabel": "trips",
+            "title": "Status of the trip",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "valueAccessor": "status"
+          }
+        ]
+      },
+      "text": "< TO DEFINE IN TRANSLATIONS >",
+      "showTable": false
+    },
+    {
+      "id": "driverTrips_0",
+      "customPipeline": "csv_driver_trips_0",
+      "files": ["driver_trips_0"],
+      "title": "Trips",
+      "text": "< TO DEFINE IN TRANSLATIONS >",
+      "showTable": true
+    },
+    {
+      "id": "driverOnOff",
+      "customPipeline": "csv_driver_on_off",
+      "postprocessor": "driverOnOffPostProcessor",
+      "files": ["driver_on_off"],
+      "visualization": "ChartViewGenericMap.vue",
+      "vizProps": {
+        "keplerConfig": {
+          "version": "v1",
+          "config": {
+            "visState": {
+              "filters": [],
+              "layers": [
+                {
+                  "id": "fq212av",
+                  "type": "line",
+                  "config": {
+                    "dataId": "6ivdxksmk",
+                    "label": "Trips",
+                    "color": [130, 154, 227],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat0": "beginLat",
+                      "lng0": "beginLng",
+                      "alt0": null,
+                      "lat1": "endLat",
+                      "lng1": "endLng",
+                      "alt1": null
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "opacity": 0.8,
+                      "thickness": 2,
+                      "colorRange": {
+                        "name": "ColorBrewer Dark2-6",
+                        "type": "qualitative",
+                        "category": "ColorBrewer",
+                        "colors": [
+                          "#1b9e77",
+                          "#d95f02",
+                          "#7570b3",
+                          "#e7298a",
+                          "#66a61e",
+                          "#e6ab02"
+                        ]
+                      },
+                      "sizeRange": [0, 10],
+                      "targetColor": null,
+                      "elevationScale": 1
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": { "name": "earnerState", "type": "string" },
+                    "colorScale": "ordinal",
+                    "sizeField": null,
+                    "sizeScale": "linear"
+                  }
+                }
+              ],
+              "interactionConfig": {
+                "tooltip": {
+                  "fieldsToShow": {
+                    "6ivdxksmk": [
+                      { "name": "earnerState", "format": null },
+                      { "name": "cityId", "format": null },
+                      { "name": "vehicleUuid", "format": null },
+                      { "name": "beginTimestampUtc", "format": null },
+                      { "name": "endTimestampUtc", "format": null }
+                    ]
+                  },
+                  "compareMode": false,
+                  "compareType": "absolute",
+                  "enabled": true
+                },
+                "brush": { "size": 0.5, "enabled": false },
+                "geocoder": { "enabled": false },
+                "coordinate": { "enabled": false }
+              },
+              "layerBlending": "normal",
+              "splitMaps": [],
+              "animationConfig": { "currentTime": null, "speed": 1 }
+            },
+            "mapState": {
+              "bearing": 0,
+              "dragRotate": false,
+              "latitude": 48.7996107175326,
+              "longitude": 2.262185310256901,
+              "pitch": 0,
+              "zoom": 10.033387277760834,
+              "isSplit": false
+            },
+            "mapStyle": {
+              "styleType": "dark",
+              "topLayerGroups": {},
+              "visibleLayerGroups": {
+                "label": true,
+                "road": true,
+                "border": false,
+                "building": true,
+                "water": true,
+                "land": true,
+                "3d building": false
+              },
+              "threeDBuildingColor": [
+                9.665468314072013, 17.18305478057247, 31.1442867897876
+              ],
+              "mapStyles": {}
+            }
+          }
+        }
+      },
+      "title": "Driver Status",
+      "text": "< TO DEFINE IN TRANSLATIONS >",
+      "showTable": false
+    },
+    {
+      "id": "driverRestrictions",
+      "customPipeline": "csv_driver_app_restrictions",
+      "postprocessor": "driverRestrictionsPostProcessor",
+      "files": ["driver_app_restrictions"],
+      "visualization": "ChartViewGenericMap.vue",
+      "vizProps": {
+        "keplerConfig": {
+          "version": "v1",
+          "config": {
+            "visState": {
+              "filters": [],
+              "layers": [
+                {
+                  "id": "ksnf8c",
+                  "type": "point",
+                  "config": {
+                    "dataId": "570fzs57h",
+                    "label": "msg",
+                    "color": [183, 136, 94],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat": "msgLatitude",
+                      "lng": "msgLongitude",
+                      "altitude": null
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "radius": 10.4,
+                      "fixedRadius": false,
+                      "opacity": 0.8,
+                      "outline": false,
+                      "thickness": 2,
+                      "strokeColor": null,
+                      "colorRange": {
+                        "name": "Custom Palette",
+                        "type": "custom",
+                        "category": "Custom",
+                        "colors": [
+                          "#377eb8",
+                          "#e41a1c",
+                          "#4daf4a",
+                          "#984ea3",
+                          "#ff7f00",
+                          "#ffff33"
+                        ]
+                      },
+                      "strokeColorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#5A1846",
+                          "#900C3F",
+                          "#C70039",
+                          "#E3611C",
+                          "#F1920E",
+                          "#FFC300"
+                        ]
+                      },
+                      "radiusRange": [0, 50],
+                      "filled": true
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": { "name": "msgRule", "type": "string" },
+                    "colorScale": "ordinal",
+                    "strokeColorField": null,
+                    "strokeColorScale": "quantile",
+                    "sizeField": null,
+                    "sizeScale": "linear"
+                  }
+                }
+              ],
+              "interactionConfig": {
+                "tooltip": {
+                  "fieldsToShow": {
+                    "570fzs57h": [
+                      { "name": "msgRule", "format": null },
+                      { "name": "msgPenaltyboxdurationms", "format": null },
+                      { "name": "Time", "format": null }
+                    ]
+                  },
+                  "compareMode": false,
+                  "compareType": "absolute",
+                  "enabled": true
+                },
+                "brush": { "size": 0.5, "enabled": false },
+                "geocoder": { "enabled": false },
+                "coordinate": { "enabled": false }
+              },
+              "layerBlending": "normal",
+              "splitMaps": [],
+              "animationConfig": { "currentTime": null, "speed": 1 }
+            },
+            "mapState": {
+              "bearing": 0,
+              "dragRotate": false,
+              "latitude": 48.81737986441635,
+              "longitude": 2.275128723949621,
+              "pitch": 0,
+              "zoom": 10.780011285868596,
+              "isSplit": false
+            },
+            "mapStyle": {
+              "styleType": "dark",
+              "topLayerGroups": {},
+              "visibleLayerGroups": {
+                "label": true,
+                "road": true,
+                "border": false,
+                "building": true,
+                "water": true,
+                "land": true,
+                "3d building": false
+              },
+              "threeDBuildingColor": [
+                9.665468314072013, 17.18305478057247, 31.1442867897876
+              ],
+              "mapStyles": {}
+            }
+          }
+        }
+      },
+      "title": "Restrictions",
+      "text": "< TO DEFINE IN TRANSLATIONS >",
+      "showTable": false
+    },
+    {
+      "id": "driverPayments",
+      "customPipeline": "csv_driver_payments",
+      "files": ["driver_payments"],
+      "title": "Driver Payments",
+      "text": "",
+      "showTable": true
+    },
+    {
+      "id": "driverAppAnalytics",
+      "customPipeline": "csv_driver_app_analytics",
+      "files": ["driver_app_analytics"],
+      "visualization": "ChartViewGenericMap.vue",
+      "title": "GPS",
+      "text": "< TO DEFINE IN TRANSLATIONS >",
+      "postprocessor": "driverPointsPostProcessor",
+      "vizProps": {
+        "keplerConfig": {
+          "version": "v1",
+          "config": {
+            "visState": {
+              "filters": [],
+              "layers": [
+                {
+                  "id": "yiawwh3",
+                  "type": "point",
+                  "config": {
+                    "dataId": "data",
+                    "label": "Point",
+                    "color": [187, 0, 0],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat": "latitude",
+                      "lng": "longitude",
+                      "altitude": null
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "radius": 5,
+                      "fixedRadius": true,
+                      "opacity": 0.8,
+                      "outline": false,
+                      "thickness": 1,
+                      "strokeColor": null,
+                      "colorRange": {
+                        "name": "Custom Palette",
+                        "type": "custom",
+                        "category": "Custom",
+                        "colors": [
+                          "#e31a1c",
+                          "#a6cee3",
+                          "#1f78b4",
+                          "#b2df8a",
+                          "#33a02c",
+                          "#fb9a99",
+                          "#fdbf6f",
+                          "#ff7f00",
+                          "#cab2d6",
+                          "#6a3d9a",
+                          "#ffff99",
+                          "#b15928",
+                          "#49493f",
+                          "#f800c0"
+                        ]
+                      },
+                      "strokeColorRange": {
+                        "name": "Uber Viz Qualitative 1.2",
+                        "type": "qualitative",
+                        "category": "Uber",
+                        "colors": [
+                          "#12939A",
+                          "#DDB27C",
+                          "#88572C",
+                          "#FF991F",
+                          "#F15C17",
+                          "#223F9A"
+                        ]
+                      },
+                      "filled": true
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": { "name": "driverStatus", "type": "string" },
+                    "colorScale": "ordinal",
+                    "strokeColorField": null,
+                    "strokeColorScale": "quantile",
+                    "sizeField": null,
+                    "sizeScale": "linear"
+                  }
+                }
+              ],
+              "interactionConfig": {
+                "tooltip": {
+                  "fieldsToShow": {
+                    "data": [
+                      { "name": "address", "format": null },
+                      { "name": "name", "format": null },
+                      { "name": "startTimestamp", "format": null },
+                      { "name": "endTimestamp", "format": null },
+                      { "name": "semanticType", "format": null },
+                      { "name": "duration", "format": null },
+                      { "name": "placeVisitImportance", "format": null },
+                      { "name": "visitConfidence", "format": null },
+                      { "name": "locationConfidence", "format": null }
+                    ]
+                  },
+                  "compareMode": false,
+                  "compareType": "absolute",
+                  "enabled": true
+                },
+                "brush": { "size": 0.5, "enabled": false },
+                "geocoder": { "enabled": false },
+                "coordinate": { "enabled": false }
+              },
+              "layerBlending": "normal",
+              "splitMaps": [],
+              "animationConfig": { "currentTime": null, "speed": 1 }
+            },
+            "mapState": {
+              "bearing": 0,
+              "dragRotate": false,
+              "latitude": 46.38494014302197,
+              "longitude": 6.571780257805701,
+              "pitch": 0,
+              "zoom": 7.802552830838788,
+              "isSplit": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "driverAccounting",
+      "customPipeline": "getMockupData",
+      "title": "Accounting (Mockup)",
+      "text": "Compute your expenses and estimated wages.",
+      "visualization": "ChartViewUberDriverAccounting.vue",
+      "overlay": true
+    }
+  ]
+}

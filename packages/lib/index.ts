@@ -37,9 +37,7 @@ export function populateViewBlockFunctions(
 ) {
   const postprocessor = viewBlock.postprocessor as string
   if (typeof postprocessor === 'string') {
-    console.log('popoa', postprocessor)
     viewBlock.postprocessor = viewerFunctions.postprocessors?.[postprocessor]
-    console.log('popob', viewBlock.postprocessor)
   }
   const customPipeline = viewBlock.customPipeline as string
   if (typeof customPipeline === 'string') {
