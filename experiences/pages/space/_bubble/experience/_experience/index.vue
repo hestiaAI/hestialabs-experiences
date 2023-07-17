@@ -32,6 +32,9 @@ export default {
         apiUrl: process.env.apiUrl,
         id: bubble
       }
+    },
+    experienceConfig() {
+      return this.experienceModule.config
     }
   }
 }
