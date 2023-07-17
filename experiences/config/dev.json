@@ -33,6 +33,7 @@
     "youtube",
     "explorer"
   ],
+  "experienceViewOptionsUrl": "https://raw.githubusercontent.com/digipower-academy/experience-view-options/main",
   "appInfoLinks": [
     {
       "url": "https://hestia.ai/en/#contact",
