@@ -14,7 +14,7 @@ export const state = () => ({
 })
 
 export const getters = {
-  experiencesArray: state => Object.entries(state.experiences).map(([nameAndTag, xp]) => ({ nameAndTag, ...xp })),
+  experiencesArray: state => Object.entries(state.experiences).map(([nameAndTag, { config }]) => ({ nameAndTag, ...config })),
   experiencesEnabled: (state, getters) =>
     getters.experiencesArray.filter(({ slug, disabled }) => !disabled && slug !== 'other'),
   experiencesDisabled: (state, getters) => {
@@ -176,7 +176,7 @@ export const actions = {
           // It is problematic to have '.' in a key,
           // notably for i18n messages
           packageNameAndTag.replace(/[@.]/g, '_'),
-          experience.config
+          experience
         ]
       })
       commit('setExperiences', Object.fromEntries(experiences))
