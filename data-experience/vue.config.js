@@ -48,7 +48,10 @@ export default defineConfig({
         // for init() in sql.js
         'process.release': {}
       })
-    ]
+    ],
+    experiments: {
+      topLevelAwait: true
+    }
   },
   // Fix issue when project path has a special symbol like '(' or ')'.
   // Bug of copy-webpack-plugin or fast-glob, because cli will add the absolute path of the index.html
