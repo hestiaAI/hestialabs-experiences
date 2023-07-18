@@ -5,8 +5,8 @@ import mixinTitles from '@/mixins/titles'
 
 const mixin = {
   computed: {
-    experienceModule() {
-      return this.$store.getters.experience(this.$route)
+    experienceConfig() {
+      return this.$store.getters.experience(this.$route).config
     },
     siteConfig() {
       return this.$store.state.config

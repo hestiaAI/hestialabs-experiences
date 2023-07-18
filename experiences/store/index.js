@@ -159,6 +159,7 @@ export const actions = {
   },
   async loadExperiences({ commit, state }) {
     if (!state.loaded) {
+      const { experienceViewOptionsUrl } = state.config
       const experiences = (
         await Promise.all(
           state.config.experiences.map((packageNameAndTag) => {
@@ -167,11 +168,18 @@ export const actions = {
             // since dynamic imports are not resolved by webpack
             // during the build step
             const [name] = packageNameAndTag.split('@')
-            return Promise.all([packageNameAndTag, import(`@hestia.ai/${name}/dist`)])
+            return Promise.all([
+              packageNameAndTag,
+              import(`@hestia.ai/${name}/dist`),
+              fetchViewerOptions(name, experienceViewOptionsUrl)
+            ])
           })
         )
-      ).map(([packageNameAndTag, module]) => {
-        const experience = module.default
+      ).map(([packageNameAndTag, module, experienceViewerOptions]) => {
+        let experience = module.default
+        if (experienceViewerOptions) {
+          experience = experience.reconfigure(experienceViewerOptions)
+        }
         return [
           // It is problematic to have '.' in a key,
           // notably for i18n messages
@@ -182,4 +190,14 @@ export const actions = {
       commit('setExperiences', Object.fromEntries(experiences))
     }
   }
+}
+
+async function fetchViewerOptions(experienceName, experienceViewOptionsUrl) {
+  const vUrl =
+        `${experienceViewOptionsUrl}/${experienceName}-viewer.json`
+  const viewerOptsResp = await fetch(vUrl)
+  if (viewerOptsResp.ok) {
+    return await viewerOptsResp.json()
+  }
+  return undefined
 }
