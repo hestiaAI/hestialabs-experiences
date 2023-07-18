@@ -1,5 +1,4 @@
 import type { ViewBlock } from '@/types'
-import type { PipelineOutput } from '@/types/utils'
 import type {
   Lang,
   Messages,
@@ -14,7 +13,6 @@ export type { ExperienceOptions, LoaderOptions, ViewerOptions } from '@/types'
 import genericViewerMessages from '@/pipelines/messages'
 
 const defaultViewBlock: Partial<ViewBlock> = {
-  postprocessor: (input: PipelineOutput) => input,
   showTable: false
 }
 
