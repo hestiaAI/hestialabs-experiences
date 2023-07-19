@@ -465,7 +465,7 @@ export default {
           const viewerOpts = await fetchViewerOptions(
             experienceModule.name,
             this.experienceViewOptions)
-          const configured = experienceModule.reconfigure(viewerOpts)
+          const configured = experienceModule.configureViewer(viewerOpts)
           experienceConfig = configured.config
         } else {
           experienceConfig = cloneDeep(experienceModule.config)

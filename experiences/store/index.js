@@ -178,7 +178,7 @@ export const actions = {
       ).map(([packageNameAndTag, module, experienceViewerOptions]) => {
         let experience = module.default
         if (experienceViewerOptions) {
-          experience = experience.reconfigure(experienceViewerOptions)
+          experience = experience.configureViewer(experienceViewerOptions)
         }
         return [
           // It is problematic to have '.' in a key,
