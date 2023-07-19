@@ -20,4 +20,4 @@ export default Object.fromEntries([
   twitter,
   uber,
   uberDriver
-].map(xp => [xp.name, xp.config]))
+].map(xp => [xp.name, xp]))

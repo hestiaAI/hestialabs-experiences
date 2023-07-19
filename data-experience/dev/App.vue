@@ -206,10 +206,10 @@ export default {
         let expObj = experienceObjects.find(e => e.config.slug === experience)
         const viewerOpts = experienceViewerOptions[experience]
         if (viewerOpts) {
-          console.log('reconfiguring', experience)
+          // console.log('reconfiguring', experience)
           expObj = expObj.reconfigure(viewerOpts)
         }
-        this.props.experienceConfig = expObj.config
+        this.props.experienceModule = expObj
         this.props.bubbleConfig = makeBubbleConfig(this.bubble)
       }
     },

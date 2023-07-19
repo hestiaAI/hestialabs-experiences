@@ -24,7 +24,7 @@ function func_data_experience($atts){
   <div id="app">
     <v-app>
       <v-main>
-        <the-data-experience v-bind="{ experienceConfig, bubbleConfig, siteConfig }"/>
+        <the-data-experience v-bind="{ experienceModule, bubbleConfig, siteConfig }"/>
       </v-main>
     </v-app>
   </div>
@@ -52,7 +52,7 @@ END;
     vuetify,
     store,
     data: {
-      experienceConfig: experience.config,
+      experienceModule: experience,
       bubbleConfig,
       siteConfig: { mapboxToken }
     }

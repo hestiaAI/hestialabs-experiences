@@ -22,16 +22,18 @@ const originalScrollTo = window.scrollTo
 const originalFetch = window.fetch
 
 const propsData = {
-  experienceConfig: {
-    dataPortal: '',
-    dataPortalHtml: '',
-    dataPortalMessage: '',
-    dataSamples: [],
-    tutorialVideos: [],
-    videoHeight: 0,
-    viewBlocks: [{}],
-    files: [],
-    slug: 'a-slug'
+  experienceModule: {
+    config: {
+      dataPortal: '',
+      dataPortalHtml: '',
+      dataPortalMessage: '',
+      dataSamples: [],
+      tutorialVideos: [],
+      videoHeight: 0,
+      viewBlocks: [{}],
+      files: [],
+      slug: 'a-slug'
+    }
   },
   siteConfig: {},
   bubbleConfig: {

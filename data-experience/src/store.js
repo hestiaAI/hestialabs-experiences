@@ -8,7 +8,7 @@ const store = {
   state: () => ({
     progress: false,
     currentTab: 0,
-    experienceConfig: {},
+    experienceConfig: undefined,
     siteConfig: {
       // to avoid "Cannot read properties of undefined (reading 'find')"
       experiences: []
