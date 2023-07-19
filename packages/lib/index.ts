@@ -146,7 +146,7 @@ export class Experience {
     this.version = packageJSON.version
   }
 
-  reconfigure(viewerOptions: ViewerOptions) {
+  configureViewer(viewerOptions: ViewerOptions) {
     const packageJSON = { name: this.name, version: this.version }
     return new Experience(
       this.loaderOptions,
