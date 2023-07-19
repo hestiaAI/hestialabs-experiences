@@ -159,7 +159,7 @@ export const actions = {
   },
   async loadExperiences({ commit, state }) {
     if (!state.loaded) {
-      const { experienceViewOptionsUrl } = state.config
+      const { experienceViewOptions } = state.config
       const experiences = (
         await Promise.all(
           state.config.experiences.map((packageNameAndTag) => {
@@ -171,7 +171,7 @@ export const actions = {
             return Promise.all([
               packageNameAndTag,
               import(`@hestia.ai/${name}/dist`),
-              fetchViewerOptions(name, experienceViewOptionsUrl)
+              fetchViewerOptions(name, experienceViewOptions)
             ])
           })
         )
@@ -190,15 +190,15 @@ export const actions = {
       // cheap trick to prevent the viewer options
       // from being reloaded inside data-experience
       commit('setExperiences', Object.fromEntries(experiences))
-      const newConfig = { ...state.config, experienceViewOptionsUrl: false }
+      const newConfig = { ...state.config, experienceViewOptions: false }
       commit('setConfig', newConfig)
     }
   }
 }
 
-async function fetchViewerOptions(experienceName, experienceViewOptionsUrl) {
+async function fetchViewerOptions(experienceName, experienceViewOptions) {
   const vUrl =
-        `${experienceViewOptionsUrl}/${experienceName}-viewer.json`
+        `${experienceViewOptions}/${experienceName}-viewer.json`
   const viewerOptsResp = await fetch(vUrl)
   if (viewerOptsResp.ok) {
     return await viewerOptsResp.json()

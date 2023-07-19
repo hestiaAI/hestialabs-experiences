@@ -72,7 +72,7 @@ This directory contains the configuration files linked to each deployment. They 
    * Url prefix for experience viewer options.
    * @type String
    */
-   "experienceViewOptionsUrl": "https://raw.githubusercontent.com/some-path/",
+   "experienceViewOptions": "https://raw.githubusercontent.com/some-path/",
    
   /**
    * DISCLAIMER: THIS OPTION IS ONLY FOR THE NUXT APP
