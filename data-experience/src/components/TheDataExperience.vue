@@ -33,7 +33,7 @@
     <template v-if="showLogin">
       <UnitLogin @success="loginSuccessful = true" />
     </template>
-    <template v-else>
+    <template v-else-if="experienceConfig">
       <VWindow v-model="window">
         <div
           v-for="({ id }) in windows"
@@ -267,7 +267,7 @@ export default {
     UnitConsentForm
   },
   props: {
-    experienceConfig: {
+    experienceModule: {
       type: Object,
       required: true
     },
@@ -295,7 +295,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager', 'bubbleCodeword', 'currentTab', 'currentWindow']),
+    ...mapState(['experienceConfig', 'fileManager', 'bubbleCodeword', 'currentTab', 'currentWindow']),
     ...mapState({ experienceProgress: 'progress' }),
     ...mapGetters(['experienceNameAndTag', 'experienceViewOptionsUrl']),
     siteConfigMerged() {
@@ -369,13 +369,13 @@ export default {
     }
   },
   watch: {
-    experienceConfig: {
+    experienceModule: {
       immediate: true,
       async handler(value) {
         // TODO: do we merge bubbleConfig and siteConfig
         // TODO: do we go from experienceConfig to experienceModule?
-        console.log('experienceViewOptionsUrl', this.experienceViewOptionsUrl)
-        console.log('siteConf', this.siteConfig?.experienceViewOptionsUrl, fetchViewerOptions, value)
+        // console.log('experienceViewOptionsUrl', this.experienceViewOptionsUrl)
+        console.log('evou', this.experienceViewOptionsUrl, fetchViewerOptions, value)
         // const experienceViewOptionsUrl = this.siteConfig?.experienceViewOptionsUrl
         // if (experienceViewOptionsUrl) {
         //   const viewerOpts = await fetchViewerOptions(value.name, experienceViewOptionsUrl)
@@ -384,7 +384,7 @@ export default {
         // } else {
         //   // experienceConfig = cloneDeep(value)
         // }
-        const experienceConfig = cloneDeep(value)
+        const experienceConfig = cloneDeep(value.config)
         this.setExperienceConfig(experienceConfig)
       }
     },

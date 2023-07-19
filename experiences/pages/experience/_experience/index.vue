@@ -1,8 +1,8 @@
 <template>
   <TheDataExperience
-    v-if="experienceConfig"
+    v-if="experienceModule"
     v-bind="{
-      experienceConfig,
+      experienceModule,
       siteConfig
     }"
   />

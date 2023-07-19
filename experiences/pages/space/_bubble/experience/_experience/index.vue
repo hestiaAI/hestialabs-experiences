@@ -1,7 +1,7 @@
 <template>
   <TheDataExperience
     v-bind="{
-      experienceConfig,
+      experienceModule,
       siteConfig,
       bubbleConfig
     }"

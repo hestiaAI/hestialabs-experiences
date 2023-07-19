@@ -23,7 +23,7 @@ new Vue({
   vuetify,
   store,
   data: {
-    experienceConfig: experience.config,
+    experienceModule: experience,
     bubbleConfig,
     siteConfig: { mapboxToken }
   }
