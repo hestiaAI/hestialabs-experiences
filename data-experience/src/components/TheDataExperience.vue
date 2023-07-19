@@ -240,9 +240,9 @@ async function d3Locale({ iso }) {
   timeFormatDefaultLocale(locale)
 }
 
-async function fetchViewerOptions(experienceName, experienceViewOptionsUrl) {
+async function fetchViewerOptions(experienceName, experienceViewOptions) {
   const vUrl =
-        `${experienceViewOptionsUrl}/${experienceName}-viewer.json`
+        `${experienceViewOptions}/${experienceName}-viewer.json`
   const viewerOptsResp = await fetch(vUrl)
   if (viewerOptsResp.ok) {
     return await viewerOptsResp.json()
@@ -300,9 +300,9 @@ export default {
     siteConfigMerged() {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
     },
-    experienceViewOptionsUrl() {
-      const bubOpt = this.bubbleConfig?.experienceViewOptionsUrl
-      return bubOpt || this.siteConfig?.experienceViewOptionsUrl
+    experienceViewOptions() {
+      const bubOpt = this.bubbleConfig?.experienceViewOptions
+      return bubOpt || this.siteConfig?.experienceViewOptions
     },
     locales() {
       const { i18nLocales } = this.siteConfigMerged
@@ -461,10 +461,10 @@ export default {
         // configure and set experienceConfig
         const experienceModule = this.experienceModule
         let experienceConfig
-        if (this.experienceViewOptionsUrl !== undefined) {
+        if (this.experienceViewOptions !== undefined) {
           const viewerOpts = await fetchViewerOptions(
             experienceModule.name,
-            this.experienceViewOptionsUrl)
+            this.experienceViewOptions)
           const configured = experienceModule.reconfigure(viewerOpts)
           experienceConfig = configured.config
         } else {
