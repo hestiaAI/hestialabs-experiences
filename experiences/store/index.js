@@ -190,7 +190,7 @@ export const actions = {
       // cheap trick to prevent the viewer options
       // from being reloaded inside data-experience
       commit('setExperiences', Object.fromEntries(experiences))
-      const newConfig = { ...state.config, experienceViewOptions: false }
+      const newConfig = { ...state.config, experienceViewOptions: undefined }
       commit('setConfig', newConfig)
     }
   }
