@@ -74,6 +74,7 @@ const defaultViewerOptions: Partial<ViewerOptions> = {
 }
 
 const loaderOptionKeys = [
+  'viewerVersion',
   'preprocessors',
   'databaseConfig',
   'dataModel',
@@ -147,6 +148,17 @@ export class Experience {
   }
 
   configureViewer(viewerOptions: ViewerOptions) {
+    const { viewerVersion } = this.loaderOptions
+    if (viewerVersion !== undefined) {
+      const { version } = viewerOptions
+      if (!version || version < viewerVersion) {
+        throw new Error(
+          `Experience ${this.name} ${this.version}` +
+            ` requires viewerVersion ${viewerVersion},` +
+            ` which is incompatible with viewerOptions version ${version}.`
+        )
+      }
+    }
     const packageJSON = { name: this.name, version: this.version }
     return new Experience(
       this.loaderOptions,

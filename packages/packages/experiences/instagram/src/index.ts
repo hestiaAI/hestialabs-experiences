@@ -9,12 +9,7 @@ import preprocessor from '../../facebook/src/preprocessor'
 import viewerOptions from './viewer.json'
 
 const loaderOptions: LoaderOptions = {
-  // version: 2,
-  //
-  // version 3 load external viewer.json during build
-  // version 4 load external viewer.json during runtime (user)
-  // problem: aggregation bubbles depend on presentation of view tabs
-  // loader
+  viewerVersion: 1,
   databaseConfig,
   files: {
     messages: '**/messages/inbox/**/message_*.json',
