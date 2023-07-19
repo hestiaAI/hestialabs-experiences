@@ -240,6 +240,17 @@ async function d3Locale({ iso }) {
   timeFormatDefaultLocale(locale)
 }
 
+async function fetchViewerOptions(experienceName, experienceViewOptionsUrl) {
+  const vUrl =
+        `${experienceViewOptionsUrl}/${experienceName}-viewer.json`
+  console.log('fevo', vUrl)
+  const viewerOptsResp = await fetch(vUrl)
+  if (viewerOptsResp.ok) {
+    return await viewerOptsResp.json()
+  }
+  return undefined
+}
+
 export default {
   name: 'TheDataExperience',
   components: {
@@ -286,7 +297,7 @@ export default {
   computed: {
     ...mapState(['fileManager', 'bubbleCodeword', 'currentTab', 'currentWindow']),
     ...mapState({ experienceProgress: 'progress' }),
-    ...mapGetters(['experienceNameAndTag']),
+    ...mapGetters(['experienceNameAndTag', 'experienceViewOptionsUrl']),
     siteConfigMerged() {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
     },
@@ -360,8 +371,21 @@ export default {
   watch: {
     experienceConfig: {
       immediate: true,
-      handler(value) {
-        this.setExperienceConfig(cloneDeep(value))
+      async handler(value) {
+        // TODO: do we merge bubbleConfig and siteConfig
+        // TODO: do we go from experienceConfig to experienceModule?
+        console.log('experienceViewOptionsUrl', this.experienceViewOptionsUrl)
+        console.log('siteConf', this.siteConfig?.experienceViewOptionsUrl, fetchViewerOptions, value)
+        // const experienceViewOptionsUrl = this.siteConfig?.experienceViewOptionsUrl
+        // if (experienceViewOptionsUrl) {
+        //   const viewerOpts = await fetchViewerOptions(value.name, experienceViewOptionsUrl)
+        //   console.log('vo', viewerOpts, value.reconfigure)
+        //   // experienceModule = experienceModule.reconfigure(viewerOpts)
+        // } else {
+        //   // experienceConfig = cloneDeep(value)
+        // }
+        const experienceConfig = cloneDeep(value)
+        this.setExperienceConfig(experienceConfig)
       }
     },
     bubbleConfig: {
