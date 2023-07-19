@@ -243,7 +243,6 @@ async function d3Locale({ iso }) {
 async function fetchViewerOptions(experienceName, experienceViewOptionsUrl) {
   const vUrl =
         `${experienceViewOptionsUrl}/${experienceName}-viewer.json`
-  console.log('fevo', vUrl)
   const viewerOptsResp = await fetch(vUrl)
   if (viewerOptsResp.ok) {
     return await viewerOptsResp.json()
@@ -297,9 +296,13 @@ export default {
   computed: {
     ...mapState(['experienceConfig', 'fileManager', 'bubbleCodeword', 'currentTab', 'currentWindow']),
     ...mapState({ experienceProgress: 'progress' }),
-    ...mapGetters(['experienceNameAndTag', 'experienceViewOptionsUrl']),
+    ...mapGetters(['experienceNameAndTag']),
     siteConfigMerged() {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
+    },
+    experienceViewOptionsUrl() {
+      const bubOpt = this.bubbleConfig?.experienceViewOptionsUrl
+      return bubOpt || this.siteConfig?.experienceViewOptionsUrl
     },
     locales() {
       const { i18nLocales } = this.siteConfigMerged
@@ -348,6 +351,9 @@ export default {
       return windows
     },
     tabs() {
+      if (!this.experienceConfig) {
+        return []
+      }
       const { viewBlocks } = this.experienceConfig
       return viewBlocks
         // filter out tabs where needed files are not found
@@ -369,25 +375,6 @@ export default {
     }
   },
   watch: {
-    experienceModule: {
-      immediate: true,
-      async handler(value) {
-        // TODO: do we merge bubbleConfig and siteConfig
-        // TODO: do we go from experienceConfig to experienceModule?
-        // console.log('experienceViewOptionsUrl', this.experienceViewOptionsUrl)
-        console.log('evou', this.experienceViewOptionsUrl, fetchViewerOptions, value)
-        // const experienceViewOptionsUrl = this.siteConfig?.experienceViewOptionsUrl
-        // if (experienceViewOptionsUrl) {
-        //   const viewerOpts = await fetchViewerOptions(value.name, experienceViewOptionsUrl)
-        //   console.log('vo', viewerOpts, value.reconfigure)
-        //   // experienceModule = experienceModule.reconfigure(viewerOpts)
-        // } else {
-        //   // experienceConfig = cloneDeep(value)
-        // }
-        const experienceConfig = cloneDeep(value.config)
-        this.setExperienceConfig(experienceConfig)
-      }
-    },
     bubbleConfig: {
       immediate: true,
       handler(value) {
@@ -432,9 +419,9 @@ export default {
       immediate: true,
       handler(tabIndex) {
         const idx = tabIndex ?? 0
-        const { id } = this.tabs[idx]
-        if (id !== this.currentTab) {
-          this.setCurrentTab(id)
+        const tab = this.tabs[idx]
+        if (tab && tab.id !== this.currentTab) {
+          this.setCurrentTab(tab.id)
         }
       }
     },
@@ -465,9 +452,26 @@ export default {
       /* overriding messages */
       this.$i18n.mergeLocaleMessage(locale, messagesOverride[locale])
     })
+    // https://v2.vuejs.org/v2/api/#vm-watch
     this.$watch(
-      vm => [vm.experienceConfig, vm.siteConfig, vm.bubbleConfig],
+      // everytime the resulting expression changes, call the handler
+      vm => [vm.experienceModule, vm.siteConfig, vm.bubbleConfig],
+      // the handler
       async() => {
+        // configure and set experienceConfig
+        const experienceModule = this.experienceModule
+        let experienceConfig
+        if (this.experienceViewOptionsUrl !== undefined) {
+          const viewerOpts = await fetchViewerOptions(
+            experienceModule.name,
+            this.experienceViewOptionsUrl)
+          const configured = experienceModule.reconfigure(viewerOpts)
+          experienceConfig = configured.config
+        } else {
+          experienceConfig = cloneDeep(experienceModule.config)
+        }
+        this.setExperienceConfig(experienceConfig)
+
         // clear login state
         this.loginSuccessful = false
         this.clearStore()
@@ -502,6 +506,9 @@ export default {
       }
     },
     async mergeMessages() {
+      if (!this.experienceConfig) {
+        return
+      }
       const { messages: messagesExperience = {} } = this.experienceConfig
       const { messages: messagesCustomConfig = {}, i18nLocales, i18nUrl } = this.siteConfigMerged
 
