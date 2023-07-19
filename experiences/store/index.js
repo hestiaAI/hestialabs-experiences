@@ -187,7 +187,11 @@ export const actions = {
           experience
         ]
       })
+      // cheap trick to prevent the viewer options
+      // from being reloaded inside data-experience
       commit('setExperiences', Object.fromEntries(experiences))
+      const newConfig = { ...state.config, experienceViewOptionsUrl: false }
+      commit('setConfig', newConfig)
     }
   }
 }

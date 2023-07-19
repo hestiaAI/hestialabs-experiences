@@ -137,7 +137,9 @@ const store = {
           state.siteConfig,
           state.bubbleConfig
         )
-      }
+      },
+    experienceViewOptionsUrl: state =>
+      state.bubbleConfig?.experienceViewOptionsUrl || state.siteConfig?.experienceViewOptionsUrl
   }
 }
 

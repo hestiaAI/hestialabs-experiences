@@ -94,6 +94,7 @@ const initialExperience = 'uber-driver'
 const siteConfig = {
   i18nLocales: ['fr', 'en'],
   i18nUrl: '/i18n-messages-custom-dev.json',
+  experienceViewOptionsUrl: 'https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main',
   theme: {
     primary: '#0C2D48',
     secondary: '#2E8BC0'
