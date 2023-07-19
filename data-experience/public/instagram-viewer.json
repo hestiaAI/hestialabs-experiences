@@ -1,4 +1,6 @@
 {
+  "title": "Instagram",
+  "version": 1,
   "hideFileExplorer": false,
   "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/instagram.png",
   "dataSamples": [

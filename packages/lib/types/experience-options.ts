@@ -24,6 +24,7 @@ export type Messages = Record<
 >
 
 export type LoaderOptions = {
+  viewerVersion?: number
   preprocessors?: { [key: string]: PreprocessorFunction }
   databaseConfig?: DatabaseConfig
   dataModel?: object
@@ -34,6 +35,7 @@ export type LoaderOptions = {
 
 export type ViewerOptions = {
   title: string
+  version?: number
   hideEmptyTabs?: boolean
   hideFileExplorer?: boolean
   hideSummary?: boolean
