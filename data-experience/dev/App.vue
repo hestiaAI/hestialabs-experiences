@@ -94,7 +94,8 @@ const initialExperience = 'uber-driver'
 const siteConfig = {
   i18nLocales: ['fr', 'en'],
   i18nUrl: '/i18n-messages-custom-dev.json',
-  experienceViewOptionsUrl: 'https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main',
+  experienceViewOptionsUrl: '',
+  // experienceViewOptionsUrl: 'https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main',
   theme: {
     primary: '#0C2D48',
     secondary: '#2E8BC0'
@@ -143,26 +144,6 @@ async function populateServerConfigs() {
   })
 }
 
-const experienceViewerOptions = {}
-async function populateExperienceViewerOptions() {
-  const experiencesWithOpts = ['instagram', 'uber-driver']
-  const optPromises = experiencesWithOpts.map(
-    async e => [e, await fetchViewerOptions(e)])
-  const opts = await Promise.all(optPromises)
-  opts.forEach(([exp, conf]) => { experienceViewerOptions[exp] = conf })
-}
-await populateExperienceViewerOptions()
-
-async function fetchViewerOptions(experience) {
-  const relativeUrl = `/${experience}-viewer.json`
-  const resp = await fetch(relativeUrl)
-  if (resp.ok) {
-    const viewerOptions = await resp.json()
-    return viewerOptions
-  }
-  return undefined
-}
-
 function experiencesInBubble(bubbleId) {
   return configsFromServer[bubbleId]?.experiences
 }
@@ -173,10 +154,11 @@ const bubbleAPI = new BubbleAPI(theApiUrl)
 function makeBubbleConfig(bubbleId) {
   const configFromServer = configsFromServer[bubbleId]
   if (!configFromServer) {
-    return
+    return undefined
   }
   return {
     ...configFromServer,
+    experienceViewOptionsUrl: 'https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main',
     id: bubbleId,
     apiUrl: theApiUrl
   }
@@ -203,12 +185,7 @@ export default {
     experience: {
       immediate: true,
       handler(experience) {
-        let expObj = experienceObjects.find(e => e.config.slug === experience)
-        const viewerOpts = experienceViewerOptions[experience]
-        if (viewerOpts) {
-          // console.log('reconfiguring', experience)
-          expObj = expObj.reconfigure(viewerOpts)
-        }
+        const expObj = experienceObjects.find(e => e.config.slug === experience)
         this.props.experienceModule = expObj
         this.props.bubbleConfig = makeBubbleConfig(this.bubble)
       }
@@ -220,6 +197,7 @@ export default {
         if (available?.includes(this.experience)) {
           this.props.bubbleConfig = makeBubbleConfig(bubbleId)
         } else {
+          this.props.bubbleConfig = undefined
           const exp = this.experience
           const simi = available?.find(
             e => e.startsWith(exp) || exp?.startsWith(e))

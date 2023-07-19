@@ -113,6 +113,9 @@ const store = {
     experienceNameAndTagFromConfig:
       state =>
         (experienceConfig, siteConfig, bubbleConfig) => {
+          if (!experienceConfig) {
+            return ''
+          }
           let experienceNameAndTag = `${experienceConfig.name}@${experienceConfig.version || 'latest'}`
           if (bubbleConfig?.experiences) {
             // fetch name and tag from bubble config
@@ -137,9 +140,7 @@ const store = {
           state.siteConfig,
           state.bubbleConfig
         )
-      },
-    experienceViewOptionsUrl: state =>
-      state.bubbleConfig?.experienceViewOptionsUrl || state.siteConfig?.experienceViewOptionsUrl
+      }
   }
 }
 
