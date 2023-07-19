@@ -13,11 +13,13 @@ const mixin = {
     },
     experienceTitle() {
       // title() comes from mixinTitles
-      return this.experienceConfig && this.title(this.experienceConfig)
+      const experienceConfig = this.experienceModule?.config
+      return experienceConfig && this.title(experienceConfig)
     },
     experienceSubtitle() {
       // subtitle() comes from mixinTitles
-      return this.experienceConfig && this.subtitle(this.experienceConfig)
+      const experienceConfig = this.experienceModule?.config
+      return experienceConfig && this.subtitle(experienceConfig)
     }
   }
 }
