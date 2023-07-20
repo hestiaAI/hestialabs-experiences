@@ -34,8 +34,48 @@
     "explorer"
   ],
   "experienceViewerOptions": {
-    "instagram": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main"
+    "instagram": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main",
+    "apple-tracker": {
+      "title": "AppleTracker",
+      "version": 1,
+      "dataPortalHtml": "IN IOS 15.2, IPADOS 15.2, AND WATCHOS 8.3 OR LATER, USERS CAN VIEW A PRIVACY REPORT OF WHEN YOUR APPS ACCESSES CERTAIN KINDS OF USER DATA, LIKE PHOTOS AND CONTACTS OR SENSITIVE DEVICE RESOURCES, LIKE THE CAMERA AND MICROPHONE. YOU CAN ALSO SEE WHEN THEY CONTACTS NETWORK DOMAINS, INCLUDING WEBSITES THAT YOU VISIT FROM WITHIN YOUR APPS. EXAMINE THE DATA THAT YOUR APPS CONTRIBUTES TO THIS SUMMARY TO MAKE SURE THAT YOUR APP BEHAVES AS YOU EXPECT. ONCE YOU RECEIVE IT, ANALYZE IT HERE.<DIV STYLE=\"MARGIN: 1REM;\"><UL STYLE=\"DISPLAY: INLINE-BLOCK;\"><LI ALIGN=\"LEFT\">GO TO THE SETTINGS APP THEN CHOOSE <B>PRIVACY > APP PRIVACY REPORT</B>.</LI><LI ALIGN=\"LEFT\">ENABLE APP ACTIVITY RECORDING ON YOUR DEVICE BY TAPPING <B>TURN ON APP PRIVACY REPORT</B></LI><LI ALIGN=\"LEFT\">RUN YOUR APPS FOR A WHILE</LI><LI ALIGN=\"LEFT\">DOWNLOAD THE REPORT BY TAPPING THE <B>SHARE BUTTON</B> ON THE APP PRIVACY REPORT SCREEN</LI><LI ALIGN=\"LEFT\">DROP THE DOWNLOADED FILE BELOW</LI></UL></DIV>",
+      "dataSamples": [
+        "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/apple-tracker.ndjson?contenthash=ffc0bae14b60435d936f&filename=apple-tracker.ndjson"
+      ],
+      "hideEmptyTabs": false,
+      "hideFileExplorer": true,
+      "hideSummary": true,
+      "messages": {"en": {"viewBlocks": {}}, "fr": {"viewBlocks": {}}},
+      "tutorialVideos": [],
+      "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/apple.png",
+      "subtitle": "Tracking data",
+      "viewBlocks": [
+        {
+          "showTable": false,
+          "id": "IOSNetwork",
+          "sql": "SELECT * FROM NetworkActivityIOS;",
+          "files": [
+            "tracker-control-ios"
+          ],
+          "visualization": "ChartViewIOSNetworkActivity.vue",
+          "title": "Network Activity",
+          "text": "Explore every connection made by your applications to a particular domain. The result is limited to the last two weeks since you activated the App Privacy Report."
+        },
+        {
+          "showTable": false,
+          "id": "IOSAccess",
+          "sql": "SELECT * FROM ResourceAccessIOS GROUP BY identifier;",
+          "files": [
+            "tracker-control-ios"
+          ],
+          "visualization": "ChartViewIOSAccess.vue",
+          "title": "Resource Access",
+          "text": "Explore every access your apps have made to a resource on your device. The result is limited to the last two weeks since you activated the App Privacy Report."
+        }
+      ]
+    }
   },
+  "_experienceViewerOptions": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main",
   "appInfoLinks": [
     {
       "url": "https://hestia.ai/en/#contact",
