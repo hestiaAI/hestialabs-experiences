@@ -11,11 +11,11 @@ import {
 
 const viewerFunctions = {
   postprocessors: {
-    driverTripsPostProcessor: driverTripsPostProcessor,
-    driverHeatMapPostProcessor: driverHeatMapPostProcessor,
-    driverRestrictionsPostProcessor: driverRestrictionsPostProcessor,
-    driverOnOffPostProcessor: driverOnOffPostProcessor,
-    driverPointsPostProcessor: driverPointsPostProcessor
+    driverTripsPostProcessor,
+    driverHeatMapPostProcessor,
+    driverRestrictionsPostProcessor,
+    driverOnOffPostProcessor,
+    driverPointsPostProcessor
   },
   customPipelines: {
     csv_driver_on_off: customPipelineGetFirstCSV('driver_on_off'),
