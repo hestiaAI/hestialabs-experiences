@@ -1,5 +1,6 @@
 import type { ViewBlock } from '@/types'
 import type {
+  ExperienceViewerOptionsMap as ViewerOptionsMap,
   Lang,
   Messages,
   ViewerFunctions
@@ -112,6 +113,17 @@ function cloneKeys(obj: any, keys: string[]) {
   return clone
 }
 
+async function fetchViewerOptions(
+  experienceName: string,
+  experienceViewOptionsUrlPrefix: string
+) {
+  const vUrl = `${experienceViewOptionsUrlPrefix}/${experienceName}-viewer.json`
+  const viewerOptsResp = await fetch(vUrl)
+  if (viewerOptsResp.ok) {
+    return await viewerOptsResp.json()
+  }
+  return undefined
+}
 export class Experience {
   loaderOptions: LoaderOptions
   viewerOptions: ViewerOptions
@@ -147,18 +159,30 @@ export class Experience {
     this.version = packageJSON.version
   }
 
-  configureViewer(viewerOptions: ViewerOptions) {
+  viewerCompatibilityErrors(viewerOptions: ViewerOptions | undefined) {
+    if (viewerOptions === undefined) {
+      return `Undefined viewer options passed to experience ${this.name}`
+    }
     const { viewerVersion } = this.loaderOptions
     if (viewerVersion !== undefined) {
       const { version } = viewerOptions
       if (!version || version < viewerVersion) {
-        throw new Error(
+        return (
           `Experience ${this.name} ${this.version}` +
-            ` requires viewerVersion ${viewerVersion},` +
-            ` which is incompatible with viewerOptions version ${version}.`
+          ` requires viewerVersion ${viewerVersion},` +
+          ` which is incompatible with viewerOptions version ${version}.`
         )
       }
     }
+    return false
+  }
+
+  configureViewer(viewerOptions: ViewerOptions) {
+    const errorMessage = this.viewerCompatibilityErrors(viewerOptions)
+    if (errorMessage) {
+      throw new Error(errorMessage)
+    }
+
     const packageJSON = { name: this.name, version: this.version }
     return new Experience(
       this.loaderOptions,
@@ -167,6 +191,22 @@ export class Experience {
       undefined,
       this.viewerFunctions
     )
+  }
+
+  async provideViewerOptions(
+    viewerOptionRef: string | ViewerOptionsMap | undefined
+  ) {
+    if (viewerOptionRef === undefined) {
+      return undefined
+    }
+    if (typeof viewerOptionRef == 'string') {
+      return fetchViewerOptions(this.name, viewerOptionRef)
+    }
+    const experienceVRef = viewerOptionRef[this.name]
+    if (typeof experienceVRef == 'string') {
+      return fetchViewerOptions(this.name, experienceVRef)
+    }
+    return experienceVRef
   }
 
   checkPackageDirectory(packageName: string, importMetaURL?: string) {

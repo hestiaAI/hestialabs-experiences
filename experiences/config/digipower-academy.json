@@ -25,7 +25,7 @@
     "youtube",
     "explorer"
   ],
-  "experienceViewOptions": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main",
+  "experienceViewerOptions": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main",
   "bubbles": [
     "frc-participant",
     "frc-aggregator",

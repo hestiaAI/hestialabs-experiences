@@ -158,50 +158,68 @@ export const actions = {
     }
   },
   async loadExperiences({ commit, state }) {
+    const viewerOptionsRef = state.config.experienceViewerOptions
     if (!state.loaded) {
-      const { experienceViewOptions } = state.config
       const experiences = (
         await Promise.all(
-          state.config.experiences.map((packageNameAndTag) => {
+          state.config.experiences.map(async(packageNameAndTag) => {
             // We need to explicitly import dist (dist/index.mjs)
             // and not just `@hestia.ai/${name}`
             // since dynamic imports are not resolved by webpack
             // during the build step
             const [name] = packageNameAndTag.split('@')
-            return Promise.all([
+            return [
               packageNameAndTag,
-              import(`@hestia.ai/${name}/dist`),
-              fetchViewerOptions(name, experienceViewOptions)
-            ])
+              await import(`@hestia.ai/${name}/dist`)
+            ]
+          }).map(async(nameExpPromise) => {
+            const [packageNameAndTag, module] = await nameExpPromise
+            let experience = module.default
+            // const viewerOptions = undefined
+            const viewerOptions =
+                  await experience.provideViewerOptions(viewerOptionsRef)
+            // console.log(viewerOptionsRef)
+            const error = experience.viewerCompatibilityErrors(viewerOptions)
+            if (viewerOptions && error) {
+              console.error(error)
+            }
+            if (viewerOptions && !error) {
+              experience = experience.configureViewer(viewerOptions)
+            }
+            return [
+              // It is problematic to have '.' in a key,
+              // notably for i18n messages
+              packageNameAndTag.replace(/[@.]/g, '_'),
+              experience
+            ]
           })
         )
-      ).map(([packageNameAndTag, module, experienceViewerOptions]) => {
-        let experience = module.default
-        if (experienceViewerOptions) {
-          experience = experience.configureViewer(experienceViewerOptions)
-        }
-        return [
-          // It is problematic to have '.' in a key,
-          // notably for i18n messages
-          packageNameAndTag.replace(/[@.]/g, '_'),
-          experience
-        ]
-      })
+      )
+      // ).map(([packageNameAndTag, module]) => {
+      //   let experience = module.default
+      //   const viewerOptions = undefined
+      //   // const viewerOptions =
+      //   //       await experience.provideViewerOptions(viewerOptionsRef)
+      //   console.log(viewerOptionsRef)
+      //   const error = experience.viewerCompatibilityErrors(viewerOptions)
+      //   if (error) {
+      //     console.error(error)
+      //   }
+      //   if (viewerOptions && !error) {
+      //     experience = experience.configureViewer(viewerOptions)
+      //   }
+      //   return [
+      //     // It is problematic to have '.' in a key,
+      //     // notably for i18n messages
+      //     packageNameAndTag.replace(/[@.]/g, '_'),
+      //     experience
+      //   ]
+      // })
       // cheap trick to prevent the viewer options
       // from being reloaded inside data-experience
       commit('setExperiences', Object.fromEntries(experiences))
-      const newConfig = { ...state.config, experienceViewOptions: undefined }
+      const newConfig = { ...state.config, experienceViewerOptions: undefined }
       commit('setConfig', newConfig)
     }
   }
-}
-
-async function fetchViewerOptions(experienceName, experienceViewOptions) {
-  const vUrl =
-        `${experienceViewOptions}/${experienceName}-viewer.json`
-  const viewerOptsResp = await fetch(vUrl)
-  if (viewerOptsResp.ok) {
-    return await viewerOptsResp.json()
-  }
-  return undefined
 }

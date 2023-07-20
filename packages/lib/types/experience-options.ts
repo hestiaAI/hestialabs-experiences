@@ -52,6 +52,10 @@ export type ViewerOptions = {
   collaborator?: Collaborator
 }
 
+export type ExperienceViewerOptionsMap = {
+  [key: string]: ViewerOptions | string
+}
+
 export type ViewerFunctions = {
   postprocessors?: { [key: string]: PostprocessorFunction }
   customPipelines?: { [key: string]: CustomPipeline }
