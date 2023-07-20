@@ -175,10 +175,8 @@ export const actions = {
           }).map(async(nameExpPromise) => {
             const [packageNameAndTag, module] = await nameExpPromise
             let experience = module.default
-            // const viewerOptions = undefined
             const viewerOptions =
                   await experience.provideViewerOptions(viewerOptionsRef)
-            // console.log(viewerOptionsRef)
             const error = experience.viewerCompatibilityErrors(viewerOptions)
             if (viewerOptions && error) {
               console.error(error)
@@ -195,26 +193,6 @@ export const actions = {
           })
         )
       )
-      // ).map(([packageNameAndTag, module]) => {
-      //   let experience = module.default
-      //   const viewerOptions = undefined
-      //   // const viewerOptions =
-      //   //       await experience.provideViewerOptions(viewerOptionsRef)
-      //   console.log(viewerOptionsRef)
-      //   const error = experience.viewerCompatibilityErrors(viewerOptions)
-      //   if (error) {
-      //     console.error(error)
-      //   }
-      //   if (viewerOptions && !error) {
-      //     experience = experience.configureViewer(viewerOptions)
-      //   }
-      //   return [
-      //     // It is problematic to have '.' in a key,
-      //     // notably for i18n messages
-      //     packageNameAndTag.replace(/[@.]/g, '_'),
-      //     experience
-      //   ]
-      // })
       // cheap trick to prevent the viewer options
       // from being reloaded inside data-experience
       commit('setExperiences', Object.fromEntries(experiences))
