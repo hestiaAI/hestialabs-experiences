@@ -240,16 +240,6 @@ async function d3Locale({ iso }) {
   timeFormatDefaultLocale(locale)
 }
 
-async function fetchViewerOptions(experienceName, experienceViewOptions) {
-  const vUrl =
-        `${experienceViewOptions}/${experienceName}-viewer.json`
-  const viewerOptsResp = await fetch(vUrl)
-  if (viewerOptsResp.ok) {
-    return await viewerOptsResp.json()
-  }
-  return undefined
-}
-
 export default {
   name: 'TheDataExperience',
   components: {
@@ -300,9 +290,9 @@ export default {
     siteConfigMerged() {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
     },
-    experienceViewOptions() {
-      const bubOpt = this.bubbleConfig?.experienceViewOptions
-      return bubOpt || this.siteConfig?.experienceViewOptions
+    experienceViewerOptions() {
+      const bubOpt = this.bubbleConfig?.experienceViewerOptions
+      return bubOpt || this.siteConfig?.experienceViewerOptions
     },
     locales() {
       const { i18nLocales } = this.siteConfigMerged
@@ -356,7 +346,7 @@ export default {
       }
       const { viewBlocks } = this.experienceConfig
       return viewBlocks
-        // filter out tabs where needed files are not found
+      // filter out tabs where needed files are not found
         .filter((viewBlock) => {
           if (this.fileManager && this.experienceConfig.hideEmptyTabs && viewBlock.files) {
             return viewBlock.files
@@ -459,16 +449,18 @@ export default {
       // the handler
       async() => {
         // configure and set experienceConfig
-        const experienceModule = this.experienceModule
+        const module = this.experienceModule
+        // keep it retrocompatible for now
+        const canProvide = !!module.provideViewerOptions
         let experienceConfig
-        if (this.experienceViewOptions !== undefined) {
-          const viewerOpts = await fetchViewerOptions(
-            experienceModule.name,
-            this.experienceViewOptions)
-          const configured = experienceModule.configureViewer(viewerOpts)
+        const viewerOpts =
+              canProvide && await module.provideViewerOptions(
+                this.experienceViewerOptions)
+        if (viewerOpts) {
+          const configured = module.configureViewer(viewerOpts)
           experienceConfig = configured.config
         } else {
-          experienceConfig = cloneDeep(experienceModule.config)
+          experienceConfig = cloneDeep(module.config)
         }
         this.setExperienceConfig(experienceConfig)
 

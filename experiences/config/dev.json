@@ -33,7 +33,9 @@
     "youtube",
     "explorer"
   ],
-  "experienceViewOptions": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main",
+  "experienceViewerOptions": {
+    "instagram": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main"
+  },
   "appInfoLinks": [
     {
       "url": "https://hestia.ai/en/#contact",
