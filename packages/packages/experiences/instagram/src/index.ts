@@ -7,6 +7,7 @@ import databaseConfig from './database'
 // import dataSample from '@/data-samples/instagramV2.zip'
 import preprocessor from '../../facebook/src/preprocessor'
 import viewerOptions from './viewer.json'
+import viewerFunctions from './viewer-functions'
 
 const loaderOptions: LoaderOptions = {
   viewerVersion: 1,
@@ -53,5 +54,6 @@ export default new Experience(
   loaderOptions,
   viewerOptions as ViewerOptions,
   packageJSON,
-  import.meta.url
+  import.meta.url,
+  viewerFunctions
 )
