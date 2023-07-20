@@ -6,7 +6,7 @@ import databaseConfig from './database'
 // import messages from './messages.json'
 // import dataSample from '@/data-samples/instagramV2.zip'
 import preprocessor from '../../facebook/src/preprocessor'
-import viewerOptions from './viewer.json'
+import viewerOptions from './instagram-viewer.json'
 import viewerFunctions from './viewer-functions'
 
 const loaderOptions: LoaderOptions = {
