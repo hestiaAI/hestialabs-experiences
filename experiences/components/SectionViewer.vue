@@ -51,8 +51,11 @@ export default {
     viewBlockProps() {
       if (this.data) {
         return this.content.views.reduce((acc, view) => {
-          if (this.experiences[view.experience.experience_id]) {
-            acc.push(ViewBlock.buildProps(this.data, { config: this.experiences[view.experience.experience_id] }, view.name))
+          const experience = this.experiences[view.experience.experience_id]
+          const experienceConfig = experience.config
+          if (experienceConfig) {
+            acc.push(ViewBlock.buildProps(
+              this.data, { config: experienceConfig }, view.name))
           }
           return acc
         }, [])
