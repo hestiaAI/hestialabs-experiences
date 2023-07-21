@@ -1,7 +1,7 @@
 <template>
   <TheDataExperience
     v-bind="{
-      experienceConfig,
+      experienceModule,
       siteConfig
     }"
   />
@@ -28,7 +28,7 @@ export default {
     }
   },
   computed: {
-    experienceConfig() {
+    experienceModule() {
       return experiences[this.$route.params.experience]
     }
   }

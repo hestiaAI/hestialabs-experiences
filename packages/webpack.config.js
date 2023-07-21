@@ -80,6 +80,7 @@ export default {
     hints: false
   },
   experiments: {
+    topLevelAwait: true,
     outputModule: true
   },
   output: {

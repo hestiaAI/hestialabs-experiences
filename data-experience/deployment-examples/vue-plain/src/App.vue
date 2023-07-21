@@ -1,7 +1,7 @@
 <template>
   <VApp>
     <VMain>
-      <TheDataExperience v-bind="{ experienceConfig, siteConfig }"/>
+      <TheDataExperience v-bind="{ experienceModule, siteConfig }"/>
     </VMain>
   </VApp>
 </template>
@@ -14,7 +14,7 @@ export default {
   name: 'App',
   data() {
     return {
-      experienceConfig: uberDriver.config,
+      experienceModule: uberDriver,
       siteConfig: {
         i18nLocales: ['fr', 'en'],
         theme: {

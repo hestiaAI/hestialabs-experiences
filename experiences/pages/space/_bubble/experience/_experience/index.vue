@@ -1,7 +1,7 @@
 <template>
   <TheDataExperience
     v-bind="{
-      experienceConfig,
+      experienceModule,
       siteConfig,
       bubbleConfig
     }"
@@ -13,6 +13,8 @@ import validate from '@/pages/validate'
 import mixin from '@/mixins/page-experience'
 
 export default {
+  // https://github.com/nuxt-community/router-module/issues/67#issuecomment-726112465
+  name: 'Index',
   mixins: [mixin],
   middleware: 'bubble-experiences-cdn',
   validate(context) {

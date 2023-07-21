@@ -1,4 +1,8 @@
-import type { ViewBlock } from './view-block'
+import type {
+  CustomPipeline,
+  PostprocessorFunction,
+  ViewBlock
+} from './view-block'
 import type { DatabaseConfig } from './database-config'
 
 export type Collaborator = {
@@ -19,26 +23,41 @@ export type Messages = Record<
   }
 >
 
-export type ExperienceOptions = {
-  collaborator?: Collaborator
+export type LoaderOptions = {
+  viewerVersion?: number
+  preprocessors?: { [key: string]: PreprocessorFunction }
   databaseConfig?: DatabaseConfig
   dataModel?: object
-  dataPortal?: string
-  dataPortalHtml?: string
-  dataPortalMessage?: string
-  dataSamples?: string[]
   disabled?: boolean
   files?: Files
+  keepOnlyFiles?: boolean
+}
+
+export type ViewerOptions = {
+  title: string
+  version?: number
   hideEmptyTabs?: boolean
   hideFileExplorer?: boolean
   hideSummary?: boolean
   icon?: string
-  keepOnlyFiles?: boolean
   messages?: Messages
-  preprocessors?: { [key: string]: PreprocessorFunction }
   subtitle?: string
-  title: string
+  dataPortal?: string
+  dataPortalHtml?: string
+  dataPortalMessage?: string
+  dataSamples?: string[]
   tutorialVideos?: string[]
   url?: string
   viewBlocks: ViewBlock[]
+  collaborator?: Collaborator
 }
+
+export type ExperienceViewerOptionsMap = {
+  [key: string]: ViewerOptions | string
+}
+
+export type ViewerFunctions = {
+  postprocessors?: { [key: string]: PostprocessorFunction }
+  customPipelines?: { [key: string]: CustomPipeline }
+}
+export type ExperienceOptions = LoaderOptions & ViewerOptions

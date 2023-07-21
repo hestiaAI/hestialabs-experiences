@@ -2,6 +2,7 @@
 export { default as adRadar } from './packages/experiences/ad-radar/dist/index.mjs'
 export { default as appleTracker } from './packages/experiences/apple-tracker/dist/index.mjs'
 export { default as appleTrackerAgg } from './packages/experiences/apple-tracker-agg/dist/index.mjs'
+export { default as chatgpt } from './packages/experiences/chatgpt/dist/index.mjs'
 export { default as explorer } from './packages/experiences/explorer/dist/index.mjs'
 export { default as facebook } from './packages/experiences/facebook/dist/index.mjs'
 export { default as fitbit } from './packages/experiences/fitbit/dist/index.mjs'

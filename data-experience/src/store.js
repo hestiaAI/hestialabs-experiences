@@ -8,7 +8,7 @@ const store = {
   state: () => ({
     progress: false,
     currentTab: 0,
-    experienceConfig: {},
+    experienceConfig: undefined,
     siteConfig: {
       // to avoid "Cannot read properties of undefined (reading 'find')"
       experiences: []
@@ -113,6 +113,9 @@ const store = {
     experienceNameAndTagFromConfig:
       state =>
         (experienceConfig, siteConfig, bubbleConfig) => {
+          if (!experienceConfig) {
+            return ''
+          }
           let experienceNameAndTag = `${experienceConfig.name}@${experienceConfig.version || 'latest'}`
           if (bubbleConfig?.experiences) {
             // fetch name and tag from bubble config

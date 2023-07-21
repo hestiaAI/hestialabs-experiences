@@ -5,7 +5,7 @@ async function addExperience(store, key) {
   if (!(key in store.state.experiences)) {
     const url = `https://cdn.jsdelivr.net/npm/@hestia.ai/${key}`
     const experience = await import(/* webpackIgnore: true */ url)
-    store.commit('addExperience', { key, value: experience.default.config })
+    store.commit('addExperience', { key, value: experience.default })
   }
 }
 
