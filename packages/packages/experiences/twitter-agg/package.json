@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/twitter-agg",
-  "version": "3.2.2",
+  "version": "3.3.0",
   "main": "dist/index.mjs",
   "type": "module",
   "files": [
