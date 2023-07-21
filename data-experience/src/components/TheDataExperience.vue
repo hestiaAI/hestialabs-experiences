@@ -448,6 +448,13 @@ export default {
       vm => [vm.experienceModule, vm.siteConfig, vm.bubbleConfig],
       // the handler
       async() => {
+        const experienceName = this.experienceModule.name
+        // validation: is experience in bubble ?
+        if (this.bubbleConfig &&
+            !this.bubbleConfig.experiences.includes(experienceName)) {
+          throw new Error(`Experience ${experienceName} not included in bubble ${this.bubbleConfig.title}`)
+        }
+
         // configure and set experienceConfig
         const module = this.experienceModule
         // keep it retrocompatible for now
