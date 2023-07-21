@@ -23,6 +23,7 @@ const originalFetch = window.fetch
 
 const propsData = {
   experienceModule: {
+    name: 'some-experience',
     config: {
       dataPortal: '',
       dataPortalHtml: '',
@@ -32,6 +33,7 @@ const propsData = {
       videoHeight: 0,
       viewBlocks: [{}],
       files: [],
+      name: 'some-experience',
       slug: 'a-slug'
     }
   },
@@ -40,6 +42,7 @@ const propsData = {
     id: 'the-data-experience-test',
     apiUrl: 'http://localhost:0000',
     bypassLogin: true,
+    experiences: ['some-experience'],
     getConsentForm: () => {}
   }
 }
