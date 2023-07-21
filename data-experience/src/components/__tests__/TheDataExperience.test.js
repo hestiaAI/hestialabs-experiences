@@ -22,22 +22,27 @@ const originalScrollTo = window.scrollTo
 const originalFetch = window.fetch
 
 const propsData = {
-  experienceConfig: {
-    dataPortal: '',
-    dataPortalHtml: '',
-    dataPortalMessage: '',
-    dataSamples: [],
-    tutorialVideos: [],
-    videoHeight: 0,
-    viewBlocks: [{}],
-    files: [],
-    slug: 'a-slug'
+  experienceModule: {
+    name: 'some-experience',
+    config: {
+      dataPortal: '',
+      dataPortalHtml: '',
+      dataPortalMessage: '',
+      dataSamples: [],
+      tutorialVideos: [],
+      videoHeight: 0,
+      viewBlocks: [{}],
+      files: [],
+      name: 'some-experience',
+      slug: 'a-slug'
+    }
   },
   siteConfig: {},
   bubbleConfig: {
     id: 'the-data-experience-test',
     apiUrl: 'http://localhost:0000',
     bypassLogin: true,
+    experiences: ['some-experience'],
     getConsentForm: () => {}
   }
 }

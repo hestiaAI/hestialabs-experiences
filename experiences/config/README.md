@@ -66,6 +66,16 @@ This directory contains the configuration files linked to each deployment. They 
    * @type Array
    */
   "experiences": ["facebook", "google", "twitter@1.0.0"],
+  
+  /**
+   * DISCLAIMER: THIS OPTION IS ONLY FOR THE NUXT APP
+   * Url prefix for experience viewer options,
+   * or a map of experience name to viewer options as json,
+   * or a map of experience name to url prefix
+   * @type String | Object
+   */
+   "experienceViewerOptions": "https://raw.githubusercontent.com/some-path/",
+   
   /**
    * DISCLAIMER: THIS OPTION IS ONLY FOR THE NUXT APP
    * Display the logos of experience collaborators (such as eyeballs, dating privacy)

@@ -120,7 +120,7 @@ export default {
     },
     postprocessor: {
       type: Function,
-      required: true
+      required: false
     },
     visualization: {
       type: [String, Object],
@@ -177,7 +177,11 @@ export default {
       return cloneDeep(this.data)
     },
     clonedDataPostprocessed() {
-      return { ...this.postprocessor(this.clonedData), mapboxToken: this.mapboxToken }
+      let data = this.clonedData
+      if (this.postprocessor) {
+        data = this.postprocessor(this.clonedData)
+      }
+      return { ...data, mapboxToken: this.mapboxToken }
     },
     vizPropsTranslated() {
       // translations override all props...

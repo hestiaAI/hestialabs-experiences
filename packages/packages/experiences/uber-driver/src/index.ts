@@ -1,14 +1,9 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import icon from '@/icons/uber.png'
-import viewBlocks from './blocks'
-import messages from './messages.json'
-import dataSample from '@/data-samples/uber-driver-fr-paris.zip'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerFunctions from './viewer-functions'
+import viewerOptions from './viewer.json'
 
-const options: ExperienceOptions = {
-  dataPortal: 'https://myprivacy.uber.com/privacy/exploreyourdata/download',
-  dataSamples: [dataSample],
-  hideFileExplorer: false,
+const loaderOptions: LoaderOptions = {
   files: {
     driver_on_off: '**/*Driver Online Offline.csv',
     driver_performances: '**/*Driver Performance Badges.csv',
@@ -20,12 +15,13 @@ const options: ExperienceOptions = {
       '**/(driver_app_analytics-0.csv|*Driver Detailed*.csv)',
     driver_trips_0: '**/(driver_lifetime_trips-0.csv|Trip*.csv)'
   },
-  keepOnlyFiles: false,
-  hideEmptyTabs: true,
-  icon,
-  messages,
-  title: 'Uber Driver',
-  viewBlocks
+  keepOnlyFiles: false
 }
 
-export default new Experience(options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url,
+  viewerFunctions
+)

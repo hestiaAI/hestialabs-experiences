@@ -36,7 +36,8 @@
 <script>
 import mixin from './mixin'
 import mixinTitles from '@/mixins/titles'
-
+// TODO merge experience messages into i18n
+// like TheDataExperience.vue mergeMessages() does
 export default {
   mixins: [mixin, mixinTitles]
 }

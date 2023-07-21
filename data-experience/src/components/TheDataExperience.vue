@@ -33,7 +33,7 @@
     <template v-if="showLogin">
       <UnitLogin @success="loginSuccessful = true" />
     </template>
-    <template v-else>
+    <template v-else-if="experienceConfig">
       <VWindow v-model="window">
         <div
           v-for="({ id }) in windows"
@@ -256,7 +256,7 @@ export default {
     UnitConsentForm
   },
   props: {
-    experienceConfig: {
+    experienceModule: {
       type: Object,
       required: true
     },
@@ -284,11 +284,15 @@ export default {
     }
   },
   computed: {
-    ...mapState(['fileManager', 'bubbleCodeword', 'currentTab', 'currentWindow']),
+    ...mapState(['experienceConfig', 'fileManager', 'bubbleCodeword', 'currentTab', 'currentWindow']),
     ...mapState({ experienceProgress: 'progress' }),
     ...mapGetters(['experienceNameAndTag']),
     siteConfigMerged() {
       return cloneDeep(merge(siteConfigDefault, this.siteConfig))
+    },
+    experienceViewerOptions() {
+      const bubOpt = this.bubbleConfig?.experienceViewerOptions
+      return bubOpt || this.siteConfig?.experienceViewerOptions
     },
     locales() {
       const { i18nLocales } = this.siteConfigMerged
@@ -337,9 +341,12 @@ export default {
       return windows
     },
     tabs() {
+      if (!this.experienceConfig) {
+        return []
+      }
       const { viewBlocks } = this.experienceConfig
       return viewBlocks
-        // filter out tabs where needed files are not found
+      // filter out tabs where needed files are not found
         .filter((viewBlock) => {
           if (this.fileManager && this.experienceConfig.hideEmptyTabs && viewBlock.files) {
             return viewBlock.files
@@ -358,12 +365,6 @@ export default {
     }
   },
   watch: {
-    experienceConfig: {
-      immediate: true,
-      handler(value) {
-        this.setExperienceConfig(cloneDeep(value))
-      }
-    },
     bubbleConfig: {
       immediate: true,
       handler(value) {
@@ -408,9 +409,9 @@ export default {
       immediate: true,
       handler(tabIndex) {
         const idx = tabIndex ?? 0
-        const { id } = this.tabs[idx]
-        if (id !== this.currentTab) {
-          this.setCurrentTab(id)
+        const tab = this.tabs[idx]
+        if (tab && tab.id !== this.currentTab) {
+          this.setCurrentTab(tab.id)
         }
       }
     },
@@ -441,9 +442,35 @@ export default {
       /* overriding messages */
       this.$i18n.mergeLocaleMessage(locale, messagesOverride[locale])
     })
+    // https://v2.vuejs.org/v2/api/#vm-watch
     this.$watch(
-      vm => [vm.experienceConfig, vm.siteConfig, vm.bubbleConfig],
+      // everytime the resulting expression changes, call the handler
+      vm => [vm.experienceModule, vm.siteConfig, vm.bubbleConfig],
+      // the handler
       async() => {
+        const experienceName = this.experienceModule.name
+        // validation: is experience in bubble ?
+        if (this.bubbleConfig &&
+            !this.bubbleConfig.experiences.includes(experienceName)) {
+          throw new Error(`Experience ${experienceName} not included in bubble ${this.bubbleConfig.title}`)
+        }
+
+        // configure and set experienceConfig
+        const module = this.experienceModule
+        // keep it retrocompatible for now
+        const canProvide = !!module.provideViewerOptions
+        let experienceConfig
+        const viewerOpts =
+              canProvide && await module.provideViewerOptions(
+                this.experienceViewerOptions)
+        if (viewerOpts) {
+          const configured = module.configureViewer(viewerOpts)
+          experienceConfig = configured.config
+        } else {
+          experienceConfig = cloneDeep(module.config)
+        }
+        this.setExperienceConfig(experienceConfig)
+
         // clear login state
         this.loginSuccessful = false
         this.clearStore()
@@ -478,6 +505,9 @@ export default {
       }
     },
     async mergeMessages() {
+      if (!this.experienceConfig) {
+        return
+      }
       const { messages: messagesExperience = {} } = this.experienceConfig
       const { messages: messagesCustomConfig = {}, i18nLocales, i18nUrl } = this.siteConfigMerged
 

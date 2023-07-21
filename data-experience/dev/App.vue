@@ -61,7 +61,7 @@ import uber from '@hestia.ai/uber'
 import uberDriver from '@hestia.ai/uber-driver'
 import youtube from '@hestia.ai/youtube'
 
-const experienceConfigs = [
+const experienceObjects = [
   appleTracker,
   appleTrackerAgg,
   chatgpt,
@@ -86,13 +86,16 @@ const experienceConfigs = [
   uber,
   uberDriver,
   youtube
-].map(e => e.config)
-const experiences = experienceConfigs.map(e => e.slug)
-const initialExperience = 'chatgpt'
+]
+
+const experiences = experienceObjects.map(e => e.config.slug)
+const initialExperience = 'uber-driver'
 
 const siteConfig = {
   i18nLocales: ['fr', 'en'],
   i18nUrl: '/i18n-messages-custom-dev.json',
+  experienceViewerOptions: '',
+  // experienceViewerOptions: 'https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main',
   theme: {
     primary: '#0C2D48',
     secondary: '#2E8BC0'
@@ -151,10 +154,11 @@ const bubbleAPI = new BubbleAPI(theApiUrl)
 function makeBubbleConfig(bubbleId) {
   const configFromServer = configsFromServer[bubbleId]
   if (!configFromServer) {
-    return
+    return undefined
   }
   return {
     ...configFromServer,
+    experienceViewerOptions: 'https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main',
     id: bubbleId,
     apiUrl: theApiUrl
   }
@@ -181,8 +185,8 @@ export default {
     experience: {
       immediate: true,
       handler(experience) {
-        this.props.experienceConfig =
-          experienceConfigs.find(e => e.slug === experience)
+        const expObj = experienceObjects.find(e => e.config.slug === experience)
+        this.props.experienceModule = expObj
         this.props.bubbleConfig = makeBubbleConfig(this.bubble)
       }
     },
@@ -193,6 +197,7 @@ export default {
         if (available?.includes(this.experience)) {
           this.props.bubbleConfig = makeBubbleConfig(bubbleId)
         } else {
+          this.props.bubbleConfig = undefined
           const exp = this.experience
           const simi = available?.find(
             e => e.startsWith(exp) || exp?.startsWith(e))

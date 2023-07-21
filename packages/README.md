@@ -155,7 +155,7 @@ Update the package version
 npm run lerna:version
 ```
 
-[Documentation of lerna’s `version` command](https://github.com/lerna/lerna/tree/main/commands/version)
+[Documentation of lerna’s `version` command](https://github.com/lerna/lerna/tree/main/libs/commands/version#readme)
 
 You can pass extra arguments to the npm script:
 
@@ -170,7 +170,7 @@ Please update versions with a meaningful [semantic versioning](https://docs.npmj
 - `minor`: 1.2.3 -> 1.3.0
 - `major`: 1.2.3 -> 2.0.0
 
-You can either input the new version manually or provide a semver [bump](https://github.com/lerna/lerna/tree/main/commands/version#semver-bump) positional argument.
+You can either input the new version manually or provide a semver [bump](https://github.com/lerna/lerna/tree/main/libs/commands/version#semver-bump) positional argument.
 
 **NOTE: You cannot version and publish packages on the master branch**
 
@@ -180,13 +180,13 @@ You can either input the new version manually or provide a semver [bump](https:/
 npm run lerna:publish
 ```
 
-[Documentation of lerna’s `publish` command](https://github.com/lerna/lerna/tree/main/commands/publish)
-
+[Documentation of lerna’s `publish` command](https://github.com/lerna/lerna/tree/main/libs/commands/publish#readme)
 **NOTE: You cannot version and publish packages on the master branch**
 
 # Sources
 
-- [Lerna docs](https://github.com/lerna/lerna)
+- [Lerna docs](https://lerna.js.org/docs/introduction)
+- [lerna github](https://github.com/lerna/lerna)
 - [webpack docs](https://webpack.js.org/concepts/)
 - [TypeScript docs](https://www.typescriptlang.org/docs/)
 

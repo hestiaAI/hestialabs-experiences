@@ -25,4 +25,4 @@ const options: ExperienceOptions = {
   viewBlocks
 }
 
-export default new Experience(options, packageJSON, import.meta.url)
+export default new Experience(options, options, packageJSON, import.meta.url)
