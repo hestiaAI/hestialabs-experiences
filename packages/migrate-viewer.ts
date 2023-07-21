@@ -21,11 +21,10 @@ function test([name, experience]: [
   if (unserializable) {
     console.log(`[${name}] viewerOptions are not serializable`)
     console.log(JSON.stringify(unserializable, stringifyReplacer, 2))
-  } else {
-    const fileName = `${outputDir}/${experience.name}-viewer.json`
-    writeFileSync(fileName, JSON.stringify(viewerOptions, null, 2))
-    console.log('wrote', fileName)
   }
+  const fileName = `${outputDir}/${experience.name}-viewer.json`
+  writeFileSync(fileName, JSON.stringify(viewerOptions, null, 2))
+  console.log('wrote', fileName)
 }
 
 function saveUberDriverKeplerConfigs(viewerOptions: ViewerOptions) {

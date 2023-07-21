@@ -39,8 +39,9 @@ export function populateViewBlockFunctions(
     viewBlock.postprocessor = viewerFunctions.postprocessors?.[postprocessor]
   }
   const customPipeline = viewBlock.customPipeline as string
-  if (typeof customPipeline === 'string') {
-    viewBlock.customPipeline = viewerFunctions.customPipelines?.[customPipeline]
+  const pipelineFunc = viewerFunctions.customPipelines?.[customPipeline]
+  if (typeof customPipeline === 'string' && pipelineFunc) {
+    viewBlock.customPipeline = pipelineFunc
   }
 }
 
