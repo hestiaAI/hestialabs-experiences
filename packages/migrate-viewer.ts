@@ -115,7 +115,7 @@ function replaceRegexes(fileName: string, regexes: [RegExp, string][]) {
     })
     .filter(l => l !== undefined)
   const result = replaced.join('\n')
-  const newFileName = `${fileName}.migrated.ts`
+  const newFileName = `migrated-${fileName}`
   writeFileSync(newFileName, result)
   console.log('wrote', newFileName)
 }
