@@ -14,6 +14,9 @@ export function nestExperienceLocaleMessages(
   experienceNameAndTag,
   localeMessages
 ) {
+  if (!experienceNameAndTag || !localeMessages) {
+    return {}
+  }
   return { experiences: { [experienceNameAndTag]: localeMessages } }
 }
 
