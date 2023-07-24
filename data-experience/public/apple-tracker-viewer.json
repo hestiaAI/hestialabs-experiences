@@ -1,0 +1,42 @@
+{
+  "title": "AppleTracker",
+  "version": 1,
+  "dataPortalHtml": "IN IOS 15.2, iPadOS 15.2, and watchOS 8.3 or later, users can view a privacy report of when your apps accesses certain kinds of user data, like photos and contacts or sensitive device resources, like the camera and microphone. You can also see when they contacts network domains, including websites that you visit from within your apps. Examine the data that your apps contributes to this summary to make sure that your app behaves as you expect. Once you receive it, analyze it here.<div style=\"margin: 1rem;\"><ul style=\"display: inline-block;\"><li align=\"left\">Go to the Settings app then choose <b>Privacy > App Privacy Report</b>.</li><li align=\"left\">Enable app activity recording on your device by tapping <b>Turn On App Privacy Report</b></li><li align=\"left\">Run your apps for a while</li><li align=\"left\">Download the report by tapping the <b>Share button</b> on the App Privacy Report screen</li><li align=\"left\">Drop the downloaded file below</li></ul></div>",
+  "dataSamples": [
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/apple-tracker.ndjson?contenthash=ffc0bae14b60435d936f&filename=apple-tracker.ndjson"
+  ],
+  "hideEmptyTabs": false,
+  "hideFileExplorer": true,
+  "hideSummary": true,
+  "messages": {
+    "en": {
+      "viewBlocks": {}
+    },
+    "fr": {
+      "viewBlocks": {}
+    }
+  },
+  "tutorialVideos": [],
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/apple.png",
+  "subtitle": "Tracking data",
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "IOSNetwork",
+      "sql": "SELECT * FROM NetworkActivityIOS; ",
+      "files": ["tracker-control-ios"],
+      "visualization": "ChartViewIOSNetworkActivity.vue",
+      "title": "Network Activity",
+      "text": "Explore every connection made by your applications to a particular domain. The result is limited to the last two weeks since you activated the App Privacy Report."
+    },
+    {
+      "showTable": false,
+      "id": "IOSAccess",
+      "sql": "SELECT * FROM ResourceAccessIOS GROUP BY identifier; ",
+      "files": ["tracker-control-ios"],
+      "visualization": "ChartViewIOSAccess.vue",
+      "title": "Resource Access",
+      "text": "Explore every access your apps have made to a resource on your device. The result is limited to the last two weeks since you activated the App Privacy Report."
+    }
+  ]
+}
