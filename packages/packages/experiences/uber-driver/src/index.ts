@@ -1,7 +1,7 @@
 import packageJSON from '../package.json'
 import { Experience, LoaderOptions, ViewerOptions } from '@/index'
 import viewerFunctions from './viewer-functions'
-import viewerOptions from './viewer.json'
+import viewerOptions from './uber-driver-viewer.json'
 
 const loaderOptions: LoaderOptions = {
   files: {
