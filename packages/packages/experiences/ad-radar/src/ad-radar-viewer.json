@@ -1,0 +1,21 @@
+{
+  "title": "Ad Radar",
+  "version": 1,
+  "dataSamples": [],
+  "hideEmptyTabs": false,
+  "hideFileExplorer": true,
+  "hideSummary": true,
+  "messages": {
+    "en": {
+      "viewBlocks": {}
+    },
+    "fr": {
+      "viewBlocks": {}
+    }
+  },
+  "tutorialVideos": [],
+  "url": "https://github.com/hestiaAI/ad-radar",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/eyeballs.jpg",
+  "subtitle": "Browser extension",
+  "viewBlocks": []
+}

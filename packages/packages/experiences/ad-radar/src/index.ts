@@ -1,14 +1,15 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import icon from '@/icons/eyeballs.jpg'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './ad-radar-viewer.json'
 
-const options: ExperienceOptions = {
-  disabled: true,
-  icon,
-  subtitle: 'Browser extension',
-  title: 'Ad Radar',
-  url: 'https://github.com/hestiaAI/ad-radar',
-  viewBlocks: []
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
+  disabled: true
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url
+)
