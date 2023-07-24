@@ -20,13 +20,15 @@ function test([name, experience]: [
     viewerOptions
     // viewerOptions: { viewBlocks, url }
   } = experience
+  const srcPath = `packages/experiences/${experience.name}/src`
   const viewerOptionsFileName = `${experience.name}-viewer.json`
-  const migratedViewerOptionsPath = `packages/experiences/${experience.name}/src/${viewerOptionsFileName}`
+  const migratedViewerOptionsPath = `${srcPath}/${viewerOptionsFileName}`
   if (existsSync(migratedViewerOptionsPath)) {
     console.log(`[${experience.name}] DONE: ${migratedViewerOptionsPath}`)
     return
   }
   viewerOptions.viewBlocks.forEach(replaceSqlLineEndings)
+  viewerOptions.version = 1
   const unserializable = diffWithSerialized(viewerOptions)
   if (unserializable) {
     console.log(`[${experience.name}] BAD ${formatDiff(unserializable)}`)
@@ -41,7 +43,66 @@ function test([name, experience]: [
     viewerOptions.icon = `${iconUrlPrefix}/${iconFile}`
     writeFileSync(fileName, JSON.stringify(viewerOptions, null, 2))
     console.log(`[${experience.name}] OK ${viewerOptionsFileName}`)
+    migrateIndexTs(experience.name)
   }
+}
+
+function migrateIndexTs(experienceName: string) {
+  const filePath = `packages/experiences/${experienceName}/src/index.ts`
+  replaceRegexes(filePath, [
+    [
+      /^import \{ Experience, ExperienceOptions \} from '@\/index'/g,
+      `import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './${experienceName}-viewer.json'`
+    ],
+    [/^import dataSample from/, ''],
+    [/^import viewBlocks from '.\/blocks'/, ''],
+    [/^import icon from.*$/, ''],
+    [/^ *icon,? *$/, ''],
+    [/^ *viewBlocks,? *$/, ''],
+    [/^ *dataPortalHtml:.*$/, ''],
+    [/^ *dataSamples:.*$/, ''],
+    [/^ *hideFileExplorer:.*$/, ''],
+    [/^ *title:.*$/, ''],
+    [/^ *subtitle:.*$/, ''],
+    [/^( *) {2}('[^']+'[^:']*)$/, '$1// $2'],
+    [
+      /const options: ExperienceOptions = \{/,
+      `const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,`
+    ],
+    [
+      /export default new Experience\(options, options, packageJSON, import.meta.url.*/,
+      `export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url
+)`
+    ]
+  ])
+}
+
+function replaceRegexes(fileName: string, regexes: [RegExp, string][]) {
+  const data = readFileSync(fileName, 'utf8')
+  const lines = data.split(/\r?\n/)
+  const replaced = lines
+    .map(line => {
+      const found = regexes.filter(([regex]) => regex.test(line))
+      if (found.length == 1) {
+        const [regex, replacement] = found[0]
+        // console.log(`matched ${line}`)
+        return replacement ? line.replace(regex, replacement) : undefined
+      } else if (found.length > 1) {
+        throw new Error(`Found more than one matches on line: ${line}`)
+      }
+      return line
+    })
+    .filter(l => l !== undefined)
+  const result = replaced.join('\n')
+  const newFileName = `${fileName}.migrated.ts`
+  writeFileSync(newFileName, result)
+  console.log('wrote', newFileName)
 }
 
 function formatDiff(diff: any) {
