@@ -11,10 +11,10 @@ const outputDir = 'viewer-opts'
 const iconUrlPrefix =
   'https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons'
 
-function test([name, experience]: [
-  name: string,
-  experience: Experience
-]): void {
+function test(
+  [name, experience]: [name: string, experience: Experience],
+  doWriteFiles = false
+): void {
   const {
     // loaderOptions: { files, disabled, databaseConfig },
     viewerOptions
@@ -22,29 +22,42 @@ function test([name, experience]: [
   } = experience
   const srcPath = `packages/experiences/${experience.name}/src`
   const viewerOptionsFileName = `${experience.name}-viewer.json`
-  const migratedViewerOptionsPath = `${srcPath}/${viewerOptionsFileName}`
-  if (existsSync(migratedViewerOptionsPath)) {
-    console.log(`[${experience.name}] DONE: ${migratedViewerOptionsPath}`)
+  const migratedViewerOptsPath = `${srcPath}/${viewerOptionsFileName}`
+  if (existsSync(migratedViewerOptsPath)) {
+    console.log(`[${experience.name}] DONE: ${migratedViewerOptsPath}`)
     return
   }
-  viewerOptions.viewBlocks.forEach(replaceSqlLineEndings)
-  viewerOptions.version = 1
   const unserializable = diffWithSerialized(viewerOptions)
   if (unserializable) {
     console.log(`[${experience.name}] BAD ${formatDiff(unserializable)}`)
     // console.log(JSON.stringify(unserializable, stringifyReplacer, 2))
-    // console.log(
-    //   ' ',
-    //   JSON.stringify(unserializable, stringifyReplacer).substring(0, 80)
-    // )
   } else {
-    const fileName = `${outputDir}/${viewerOptionsFileName}`
-    const iconFile = experienceIcons[experience.name]
-    viewerOptions.icon = `${iconUrlPrefix}/${iconFile}`
-    writeFileSync(fileName, JSON.stringify(viewerOptions, null, 2))
-    console.log(`[${experience.name}] OK ${viewerOptionsFileName}`)
-    migrateIndexTs(experience.name)
+    if (doWriteFiles) {
+      const fixedVOs = fixViewerOptions(viewerOptions, experience.name, 1)
+      const almostMigratedVOptsPath = migratedViewerOptsPath + '.mig'
+      writeFileSync(almostMigratedVOptsPath, JSON.stringify(fixedVOs, null, 2))
+      console.log(`[${experience.name}] OK wrote ${almostMigratedVOptsPath}`)
+      const testVOPath = `../data-experience/public/${viewerOptionsFileName}`
+      fixedVOs.version = 0
+      writeFileSync(testVOPath, JSON.stringify(fixedVOs, null, 2))
+      console.log(` wrote ${testVOPath}`)
+      migrateIndexTs(experience.name)
+    } else {
+      console.log(`[${experience.name}] OK`)
+    }
   }
+}
+
+function fixViewerOptions(
+  viewerOptions: ViewerOptions,
+  experienceName: string,
+  version: number
+) {
+  viewerOptions.viewBlocks.forEach(replaceSqlLineEndings)
+  viewerOptions.version = version
+  const iconFile = experienceIcons[experienceName]
+  viewerOptions.icon = `${iconUrlPrefix}/${iconFile}`
+  return viewerOptions
 }
 
 function migrateIndexTs(experienceName: string) {
@@ -60,9 +73,11 @@ import viewerOptions from './${experienceName}-viewer.json'`
     [/^import icon from.*$/, ''],
     [/^ *icon,? *$/, ''],
     [/^ *viewBlocks,? *$/, ''],
+    [/^ *messages,? *$/, ''],
     [/^ *dataPortalHtml:.*$/, ''],
     [/^ *dataSamples:.*$/, ''],
     [/^ *hideFileExplorer:.*$/, ''],
+    [/^ *keepOnlyFiles:.*$/, ''],
     [/^ *title:.*$/, ''],
     [/^ *subtitle:.*$/, ''],
     [/^( *) {2}('[^']+'[^:']*)$/, '$1// $2'],
@@ -226,12 +241,12 @@ if (process.argv.length > 2) {
     // we expect the name to be camelCased
     const module = (packages as { [key: string]: Experience })[name]
     if (module) {
-      test([name, module])
+      test([name, module], true)
     } else {
       throw new Error(`The name "${name}" does not match any package.`)
     }
   })
 } else {
   // test all packages
-  Object.entries(packages).forEach(test)
+  Object.entries(packages).forEach(p => test(p))
 }
