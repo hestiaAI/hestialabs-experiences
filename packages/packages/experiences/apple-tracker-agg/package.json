@@ -4,7 +4,8 @@
   "main": "dist/index.mjs",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "src/apple-tracker-agg-viewer.json"
   ],
   "repository": {
     "type": "git",
