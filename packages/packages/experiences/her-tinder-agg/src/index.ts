@@ -1,12 +1,10 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import { theDatingPrivacyCollective } from '@/collaborators/index'
-import icon from '@/icons/tinder.png'
-import viewBlocks from './blocks'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './her-tinder-agg-viewer.json'
 import databaseConfig from './database'
 
-const options: ExperienceOptions = {
-  collaborator: theDatingPrivacyCollective,
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
   databaseConfig,
   files: {
     herLikeMatch: 'her**/block03.json',
@@ -14,11 +12,12 @@ const options: ExperienceOptions = {
     herMessage: 'her**/block04.json',
     tinderUsage: 'tinder**/block04.json',
     tinderUser: 'tinder**/block00.json'
-  },
-  icon,
-  title: 'Her + Tinder',
-  hideFileExplorer: false,
-  viewBlocks
+  }
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url
+)
