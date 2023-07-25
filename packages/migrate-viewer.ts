@@ -34,7 +34,7 @@ function test(
   } else {
     if (doWriteFiles) {
       const fixedVOs = fixViewerOptions(viewerOptions, experience.name, 1)
-      const almostMigratedVOptsPath = migratedViewerOptsPath + '.mig'
+      const almostMigratedVOptsPath = migratedViewerOptsPath + '.mig.json'
       writeFileSync(almostMigratedVOptsPath, JSON.stringify(fixedVOs, null, 2))
       console.log(`[${experience.name}] OK wrote ${almostMigratedVOptsPath}`)
       const testVOPath = `../data-experience/public/${viewerOptionsFileName}`
@@ -42,6 +42,7 @@ function test(
       writeFileSync(testVOPath, JSON.stringify(fixedVOs, null, 2))
       console.log(` wrote ${testVOPath}`)
       migrateIndexTs(experience.name)
+      migratePackageJson(experience.name, viewerOptionsFileName)
     } else {
       console.log(`[${experience.name}] OK`)
     }
@@ -60,26 +61,51 @@ function fixViewerOptions(
   return viewerOptions
 }
 
+function migratePackageJson(
+  experienceName: string,
+  viewerOptionsFileName: string
+) {
+  const filePath = `packages/experiences/${experienceName}/package.json`
+  replaceRegexes(filePath, [
+    [/^( +)"dist" *$/g, `$&,\n$1"src/${viewerOptionsFileName}"`]
+  ])
+}
+
+function viewerOptionRegexes(): [RegExp, string][] {
+  return [
+    'title',
+    'version',
+    'hideEmptyTabs',
+    'hideFileExplorer',
+    'hideSummary',
+    'icon',
+    'messages',
+    'subtitle',
+    'dataPortal',
+    'dataPortalHtml',
+    'dataPortalMessage',
+    'dataSamples',
+    'tutorialVideos',
+    'url',
+    'viewBlocks',
+    'collaborator'
+  ].map(opt => [new RegExp(`^ +${opt}(,? *|:.*)$`), ''])
+}
+
 function migrateIndexTs(experienceName: string) {
   const filePath = `packages/experiences/${experienceName}/src/index.ts`
   replaceRegexes(filePath, [
+    ...viewerOptionRegexes(),
     [
       /^import \{ Experience, ExperienceOptions \} from '@\/index'/g,
       `import { Experience, LoaderOptions, ViewerOptions } from '@/index'
 import viewerOptions from './${experienceName}-viewer.json'`
     ],
+    [/^import \{ .* \} from '@\/pipelines\/generic'/, ''],
+    [/^import messages from/, ''],
     [/^import dataSample from/, ''],
     [/^import viewBlocks from '.\/blocks'/, ''],
     [/^import icon from.*$/, ''],
-    [/^ *icon,? *$/, ''],
-    [/^ *viewBlocks,? *$/, ''],
-    [/^ *messages,? *$/, ''],
-    [/^ *dataPortalHtml:.*$/, ''],
-    [/^ *dataSamples:.*$/, ''],
-    [/^ *hideFileExplorer:.*$/, ''],
-    [/^ *keepOnlyFiles:.*$/, ''],
-    [/^ *title:.*$/, ''],
-    [/^ *subtitle:.*$/, ''],
     [/^( *) {2}('[^']+'[^:']*)$/, '$1// $2'],
     [
       /const options: ExperienceOptions = \{/,
@@ -115,7 +141,8 @@ function replaceRegexes(fileName: string, regexes: [RegExp, string][]) {
     })
     .filter(l => l !== undefined)
   const result = replaced.join('\n')
-  const newFileName = `migrated-${fileName}`
+  const extension = fileName.split('.').pop()
+  const newFileName = `${fileName}.mig.${extension}`
   writeFileSync(newFileName, result)
   console.log('wrote', newFileName)
 }
