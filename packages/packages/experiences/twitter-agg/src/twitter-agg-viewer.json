@@ -1,0 +1,300 @@
+{
+  "collaborator": {
+    "title": "The Eyeballs Collective",
+    "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/the-eyeballs.svg",
+    "url": "https://eyeballs.hestialabs.org/"
+  },
+  "dataSamples": [],
+  "hideEmptyTabs": false,
+  "hideFileExplorer": false,
+  "hideSummary": true,
+  "messages": {
+    "en": {
+      "intro": {
+        "title": "Twitter Agg",
+        "dataPortal": "https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive"
+      },
+      "viewBlocks": {
+        "overview": {
+          "title": "Advertising overview",
+          "text": "Understand how much, who and when you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Number of ads printed",
+                "valueLabel": "ads"
+              },
+              {
+                "title": "Top Advertisers",
+                "valueLabel": "ads"
+              },
+              {
+                "title": "Interactions with ads (clicks, video views)",
+                "valueLabel": "ads"
+              },
+              {
+                "valueLabel": "ads"
+              },
+              {
+                "valueLabel": "ads"
+              }
+            ]
+          }
+        },
+        "overview-last-month": {
+          "title": "Advertising overview (last month)",
+          "text": "Understand who targeted you with Twitter ads last month, how much, and why, in this interactive visualization. Click on any graph to filter the results.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Number of ads printed",
+                "valueLabel": "ads"
+              },
+              {
+                "title": "Top Advertisers",
+                "valueLabel": "ads"
+              },
+              {
+                "title": "Interactions with ads (clicks, video views)",
+                "valueLabel": "ads"
+              },
+              {
+                "valueLabel": "ads"
+              },
+              {
+                "valueLabel": "ads"
+              }
+            ]
+          }
+        },
+        "targeting": {
+          "title": "Targeting Criteria",
+          "text": "Find which criteria are used to target this group of person.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Top Advertisers",
+                "valueLabel": "#criteria"
+              },
+              {
+                "title": "Targeting Value",
+                "valueLabel": "#criteria"
+              },
+              {
+                "title": "Targeting Type",
+                "valueLabel": "#criteria"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "fr": {
+      "intro": {
+        "title": "Twitter Agg",
+        "dataPortal": "https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive"
+      },
+      "viewBlocks": {
+        "overview": {
+          "title": "Vue d'ensemble des publicités",
+          "text": "Visualisation du nombre et de l'origine des publicités Twitter qui vous visent. Cliquer sur un graphique pour filtrer les résultats.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Nombre d'annonces imprimées",
+                "valueLabel": "pubs"
+              },
+              {
+                "title": "Top Annonceurs",
+                "valueLabel": "pubs"
+              },
+              {
+                "title": "Interactions avec les publicités (clics, visionnage de vidéos)",
+                "valueLabel": "pubs"
+              },
+              {
+                "valueLabel": "pubs"
+              },
+              {
+                "valueLabel": "pubs"
+              }
+            ]
+          }
+        },
+        "overview-last-month": {
+          "title": "Vue d'ensemble des publicités (du mois dernier)",
+          "text": "Visualisation du nombre, de l'origine et des critères de ciblage des publicités Twitter qui vous ont visé le mois dernier. Cliquer sur un graphique pour filtrer les résultats.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Nombre d'annonces imprimées",
+                "valueLabel": "pubs"
+              },
+              {
+                "title": "Top Annonceurs",
+                "valueLabel": "pubs"
+              },
+              {
+                "title": "Interactions avec les publicités (clics, visionnage de vidéos)",
+                "valueLabel": "pubs"
+              },
+              {
+                "valueLabel": "pubs"
+              },
+              {
+                "valueLabel": "pubs"
+              }
+            ]
+          }
+        },
+        "targeting": {
+          "title": "Critères de ciblage",
+          "text": "Trouvez quels critères sont utilisés pour cibler ce groupe de personnes.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Top Annonceurs",
+                "valueLabel": "critères"
+              },
+              {
+                "title": "Valeur du critère",
+                "valueLabel": "critères"
+              },
+              {
+                "title": "Type de critère",
+                "valueLabel": "critères"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "tutorialVideos": [],
+  "title": "Twitter Agg",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/twitter.png",
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "overview",
+      "sql": "SELECT * FROM TwitterAd; ",
+      "files": ["ads"],
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Number of ads printed",
+            "valueLabel": "ads",
+            "cols": "8",
+            "type": "TimelineChart.vue",
+            "dateAccessor": "impressionDate"
+          },
+          {
+            "title": "Top Advertisers",
+            "cols": "4",
+            "type": "TopChart.vue",
+            "valueAccessor": "companyName"
+          },
+          {
+            "title": "Interactions with ads (clicks, video views)",
+            "cols": "4",
+            "type": "PieChart.vue",
+            "valueAccessor": "engagedWith"
+          },
+          {
+            "type": "HourChart.vue",
+            "cols": "4",
+            "dateAccessor": "impressionDate"
+          },
+          {
+            "type": "WeekChart.vue",
+            "cols": "4",
+            "dateAccessor": "impressionDate"
+          }
+        ]
+      },
+      "title": "Advertising overview",
+      "text": "Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results."
+    },
+    {
+      "showTable": false,
+      "id": "overview-last-month",
+      "sql": "SELECT * FROM TwitterAdLastMonth; ",
+      "files": ["adsLastMonth"],
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Number of ads printed",
+            "valueLabel": "ads",
+            "cols": "8",
+            "type": "TimelineChart.vue",
+            "dateAccessor": "impressionDate"
+          },
+          {
+            "title": "Top Advertisers",
+            "cols": "4",
+            "type": "TopChart.vue",
+            "valueAccessor": "companyName"
+          },
+          {
+            "title": "Interactions with ads (clicks, video views)",
+            "cols": "4",
+            "type": "PieChart.vue",
+            "valueAccessor": "engagedWith"
+          },
+          {
+            "type": "HourChart.vue",
+            "cols": "4",
+            "dateAccessor": "impressionDate"
+          },
+          {
+            "type": "WeekChart.vue",
+            "cols": "4",
+            "dateAccessor": "impressionDate"
+          }
+        ]
+      },
+      "title": "Advertising overview",
+      "text": "Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results."
+    },
+    {
+      "showTable": false,
+      "id": "targeting",
+      "sql": "SELECT * FROM TwitterTargeting; ",
+      "files": ["targeting"],
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Top Advertisers",
+            "valueLabel": "ads",
+            "cols": "4",
+            "height": 600,
+            "topK": 30,
+            "type": "TopChart.vue",
+            "valueAccessor": "advertiserName"
+          },
+          {
+            "title": "Targeting Value",
+            "cols": "4",
+            "height": 600,
+            "topK": 30,
+            "type": "TopChart.vue",
+            "valueAccessor": "targetingValue"
+          },
+          {
+            "title": "Targeting Type",
+            "cols": "4",
+            "type": "PieChart.vue",
+            "height": 600,
+            "valueAccessor": "targetingType"
+          }
+        ]
+      },
+      "title": "Targeting Criteria",
+      "text": "Find which criteria are used to target this group of person."
+    }
+  ],
+  "version": 1
+}
