@@ -7,6 +7,7 @@ import databaseConfig from './database'
 const loaderOptions: LoaderOptions = {
   viewerVersion: 1,
   databaseConfig,
+  keepOnlyFiles: false,
   files: {
     conversations: '**/conversations.json'
   }
