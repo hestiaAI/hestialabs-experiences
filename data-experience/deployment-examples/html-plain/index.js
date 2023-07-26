@@ -13,9 +13,10 @@ const store = new Vuex.Store({})
 
 Vue.use(DataExperience.DataExperience, { store })
 
+// const theApiUrl = 'http://localhost:8000'
 const theApiUrl = 'https://bubbles.hestialabs.org'
 const bubbleAPI = new DataExperience.BubbleAPI(theApiUrl)
-const bubbleConfig = await bubbleAPI.getConfig('shds-aggregator')
+const bubbleConfig = await bubbleAPI.getConfig('demo-aggregator')
 console.log('bub', bubbleConfig?.id, bubbleConfig)
 // const bubbleConfig = await bubbleAPI.getConfig('live-participant')
 
