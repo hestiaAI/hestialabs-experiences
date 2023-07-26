@@ -1,20 +1,13 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import { theEyeballs } from '@/collaborators/index'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './facebook-viewer.json'
+import viewerFunctions from './viewer-functions'
 import preprocessor from './preprocessor'
-import icon from '@/icons/facebook.png'
-import viewBlocks from './blocks'
 import databaseConfig from './database'
-import messages from './messages.json'
-import dataSample from '@/data-samples/facebook.zip'
 
-const options: ExperienceOptions = {
-  collaborator: theEyeballs,
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
   databaseConfig,
-  dataPortal: 'https://www.facebook.com/help/212802592074644',
-  dataPortalMessage:
-    '<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format.',
-  dataSamples: [dataSample],
   files: {
     'advertisers-interacted':
       "**/ads_information/advertisers_you've_interacted_with.json",
@@ -26,13 +19,15 @@ const options: ExperienceOptions = {
       '**/apps_and_websites_off_of_facebook/your_off-facebook_activity.json',
     'ads-interests': '**/other_logged_information/ads_interests.json'
   },
-  icon,
-  messages,
   preprocessors: {
     '**/*.json': preprocessor
-  },
-  title: 'Facebook',
-  viewBlocks
+  }
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url,
+  viewerFunctions
+)
