@@ -29,11 +29,7 @@ export default {
   computed: {
     bubbleConfig() {
       const { bubble } = this.$route.params
-      return {
-        ...this.$store.state.config.bubbleConfig[bubble],
-        apiUrl: process.env.apiUrl,
-        id: bubble
-      }
+      return this.$store.state.config.bubbleConfig[bubble]
     }
   }
 }

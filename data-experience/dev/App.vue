@@ -159,9 +159,7 @@ function makeBubbleConfig(bubbleId) {
   return {
     experienceViewerOptions: '',
     // experienceViewerOptions: 'https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main',
-    ...configFromServer,
-    id: bubbleId,
-    apiUrl: theApiUrl
+    ...configFromServer
   }
 }
 
