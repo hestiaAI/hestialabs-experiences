@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/fitbit",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "main": "dist/index.mjs",
   "type": "module",
   "files": [
