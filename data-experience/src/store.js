@@ -130,7 +130,10 @@ const store = {
           }
           // It is problematic to have '.' in a key,
           // notably for i18n messages
-          return experienceNameAndTag.replace(/[@.]/g, '_')
+          if (experienceNameAndTag) {
+            return experienceNameAndTag.replace(/[@.]/g, '_')
+          }
+          return undefined
         },
     // use `experienceNameAndTag` within an experience
     experienceNameAndTag:

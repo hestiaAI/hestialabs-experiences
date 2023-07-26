@@ -1,21 +1,21 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import icon from '@/icons/chatgpt.png'
-import viewBlocks from './blocks'
-import messages from './messages.json'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './chatgpt-viewer.json'
+
 import databaseConfig from './database'
 
-const options: ExperienceOptions = {
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
   databaseConfig,
+  keepOnlyFiles: false,
   files: {
     conversations: '**/conversations.json'
-  },
-  hideFileExplorer: false,
-  messages,
-  keepOnlyFiles: false,
-  icon,
-  title: 'ChatGPT',
-  viewBlocks
+  }
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url
+)

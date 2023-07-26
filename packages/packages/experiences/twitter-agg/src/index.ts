@@ -1,14 +1,11 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import { theEyeballs } from '@/collaborators/index'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './twitter-agg-viewer.json'
 import preprocessor from './preprocessor'
-import icon from '@/icons/twitter.png'
-import viewBlocks from './blocks'
 import databaseConfig from './database'
-import messages from './messages.json'
 
-const options: ExperienceOptions = {
-  collaborator: theEyeballs,
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
   databaseConfig,
   files: {
     ads: '**/block00.json',
@@ -16,14 +13,14 @@ const options: ExperienceOptions = {
     targeting: '**/block05.json',
     personalization: '**/personalization.js'
   },
-  icon,
-  messages,
   preprocessors: {
     '**/*.js': preprocessor
-  },
-  hideFileExplorer: false,
-  title: 'Twitter Agg',
-  viewBlocks
+  }
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url
+)

@@ -1,14 +1,15 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import icon from '@/icons/youtube.png'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './youtube-viewer.json'
 
-const options: ExperienceOptions = {
-  disabled: true,
-  hideFileExplorer: false,
-  hideSummary: false,
-  icon,
-  title: 'YouTube',
-  viewBlocks: []
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
+  disabled: true
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url
+)

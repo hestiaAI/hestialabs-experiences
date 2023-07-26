@@ -1,30 +1,168 @@
+// to run this script
+// node --experimental-specifier-resolution node --loader ts-node/esm ./migrate-viewer.ts
 import { Experience } from './lib/'
-import { writeFileSync, mkdirSync } from 'fs'
+import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs'
 import * as packages from './packages'
 
 import camelCase from 'lodash/camelCase'
 import isEqual from 'lodash/isEqual'
-import { ViewerOptions } from './lib/types'
-
+import { ViewBlock, ViewerOptions } from './lib/types'
 const outputDir = 'viewer-opts'
-function test([name, experience]: [
-  name: string,
-  experience: Experience
-]): void {
+const iconUrlPrefix =
+  'https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons'
+
+function test(
+  [name, experience]: [name: string, experience: Experience],
+  doWriteFiles = false
+): void {
   const {
     // loaderOptions: { files, disabled, databaseConfig },
     viewerOptions
     // viewerOptions: { viewBlocks, url }
   } = experience
-  viewerOptions.icon = 'TODO'
+  const srcPath = `packages/experiences/${experience.name}/src`
+  const viewerOptionsFileName = `${experience.name}-viewer.json`
+  const migratedViewerOptsPath = `${srcPath}/${viewerOptionsFileName}`
+  if (existsSync(migratedViewerOptsPath)) {
+    console.log(`[${experience.name}] DONE: ${migratedViewerOptsPath}`)
+    return
+  }
   const unserializable = diffWithSerialized(viewerOptions)
   if (unserializable) {
-    console.log(`[${name}] viewerOptions are not serializable`)
-    console.log(JSON.stringify(unserializable, stringifyReplacer, 2))
+    console.log(`[${experience.name}] BAD ${formatDiff(unserializable)}`)
+    // console.log(JSON.stringify(unserializable, stringifyReplacer, 2))
+  } else {
+    console.log(`[${experience.name}] OK`)
   }
-  const fileName = `${outputDir}/${experience.name}-viewer.json`
-  writeFileSync(fileName, JSON.stringify(viewerOptions, null, 2))
-  console.log('wrote', fileName)
+  if (doWriteFiles) {
+    const fixedVOs = fixViewerOptions(viewerOptions, experience.name, 1)
+    const almostMigratedVOptsPath = migratedViewerOptsPath + '.mig.json'
+    writeFileSync(almostMigratedVOptsPath, JSON.stringify(fixedVOs, null, 2))
+    console.log(`[${experience.name}] OK wrote ${almostMigratedVOptsPath}`)
+    const testVOPath = `../data-experience/public/${viewerOptionsFileName}`
+    fixedVOs.version = 0
+    writeFileSync(testVOPath, JSON.stringify(fixedVOs, null, 2))
+    console.log(` wrote ${testVOPath}`)
+    migrateIndexTs(experience.name)
+    migratePackageJson(experience.name, viewerOptionsFileName)
+  }
+}
+
+function fixViewerOptions(
+  viewerOptions: ViewerOptions,
+  experienceName: string,
+  version: number
+) {
+  viewerOptions.viewBlocks.forEach(replaceSqlLineEndings)
+  viewerOptions.version = version
+  const iconFile = experienceIcons[experienceName]
+  viewerOptions.icon = `${iconUrlPrefix}/${iconFile}`
+  return viewerOptions
+}
+
+function migratePackageJson(
+  experienceName: string,
+  viewerOptionsFileName: string
+) {
+  const filePath = `packages/experiences/${experienceName}/package.json`
+  replaceRegexes(filePath, [
+    [/^( +)"dist" *$/g, `$&,\n$1"src/${viewerOptionsFileName}"`]
+  ])
+}
+
+function viewerOptionRegexes(): [RegExp, string][] {
+  return [
+    'title',
+    'version',
+    'hideEmptyTabs',
+    'hideFileExplorer',
+    'hideSummary',
+    'icon',
+    'messages',
+    'subtitle',
+    'dataPortal',
+    'dataPortalHtml',
+    'dataPortalMessage',
+    'dataSamples',
+    'tutorialVideos',
+    'url',
+    'viewBlocks',
+    'collaborator'
+  ].map(opt => [new RegExp(`^ +${opt}(,? *|:.*)$`), ''])
+}
+
+function migrateIndexTs(experienceName: string) {
+  const filePath = `packages/experiences/${experienceName}/src/index.ts`
+  replaceRegexes(filePath, [
+    ...viewerOptionRegexes(),
+    [
+      /^import \{ Experience, ExperienceOptions \} from '@\/index'/g,
+      `import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './${experienceName}-viewer.json'`
+    ],
+    [/^import \{ .* \} from '@\/pipelines\/generic'/, ''],
+    [/^import messages from/, ''],
+    [/^import dataSample from/, ''],
+    [/^import viewBlocks from '.\/blocks'/, ''],
+    [/^import icon from.*$/, ''],
+    [/^( *) {2}('[^']+'[^:']*)$/, '$1// $2'],
+    [
+      /const options: ExperienceOptions = \{/,
+      `const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,`
+    ],
+    [
+      /export default new Experience\(options, options, packageJSON, import.meta.url.*/,
+      `export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url
+)`
+    ]
+  ])
+}
+
+function replaceRegexes(fileName: string, regexes: [RegExp, string][]) {
+  const data = readFileSync(fileName, 'utf8')
+  const lines = data.split(/\r?\n/)
+  const replaced = lines
+    .map(line => {
+      const found = regexes.filter(([regex]) => regex.test(line))
+      if (found.length == 1) {
+        const [regex, replacement] = found[0]
+        // console.log(`matched ${line}`)
+        return replacement ? line.replace(regex, replacement) : undefined
+      } else if (found.length > 1) {
+        throw new Error(`Found more than one matches on line: ${line}`)
+      }
+      return line
+    })
+    .filter(l => l !== undefined)
+  const result = replaced.join('\n')
+  const extension = fileName.split('.').pop()
+  const newFileName = `${fileName}.mig.${extension}`
+  writeFileSync(newFileName, result)
+  console.log('wrote', newFileName)
+}
+
+function formatDiff(diff: any) {
+  const { viewBlocks } = diff
+  if (!viewBlocks) {
+    return ''
+  }
+  return Object.keys(viewBlocks)
+    .map(k => {
+      const b = viewBlocks[k]
+      return `${k}${b.customPipeline ? 'c' : ''}${b.postprocessor ? 'p' : ''}`
+    })
+    .join(' ')
+}
+
+function replaceSqlLineEndings(viewBlock: ViewBlock) {
+  if (viewBlock.sql) {
+    viewBlock.sql = viewBlock.sql.replace(/\r\n */g, ' ')
+  }
 }
 
 function saveUberDriverKeplerConfigs(viewerOptions: ViewerOptions) {
@@ -65,25 +203,17 @@ function diffObjects(
         const difference = diffObjects(val1, val2)
         // console.log('value different for key', key)
         differences[key] = difference
+        // differences[key] = 'value changed'
       }
     } else {
-      // console.log('key missing in 1:', key)
-      // Key only exists in the first object
-      differences[key] = {
-        oldValue: obj1[key],
-        newValue: undefined
-      }
+      differences[key] = 'missing'
     }
   }
 
   // Check for keys in the second object that are not in the first object
   for (const key in obj2) {
     if (!(key in obj1)) {
-      // console.log('key missing in 2:', key)
-      differences[key] = {
-        oldValue: undefined,
-        newValue: obj2[key]
-      }
+      differences[key] = 'appeared'
     }
   }
 
@@ -124,6 +254,12 @@ function removeUndefinedKeys(object: any) {
   return object
 }
 
+// Change this typescript code so that it doesn't produce this error
+// Argument of type 'Buffer' is not assignable to parameter of type 'string'. (lsp)
+const experienceIconsBuf = readFileSync('./experience-icons.json')
+const experienceIcons = JSON.parse(experienceIconsBuf.toString())
+mkdirSync(outputDir, { recursive: true } as any)
+
 if (process.argv.length > 2) {
   // test one or more packages
   const names: string[] = process.argv.slice(2)
@@ -131,12 +267,12 @@ if (process.argv.length > 2) {
     // we expect the name to be camelCased
     const module = (packages as { [key: string]: Experience })[name]
     if (module) {
-      test([name, module])
+      test([name, module], true)
     } else {
       throw new Error(`The name "${name}" does not match any package.`)
     }
   })
 } else {
   // test all packages
-  Object.entries(packages).forEach(test)
+  Object.entries(packages).forEach(p => test(p))
 }

@@ -1,0 +1,316 @@
+{
+  "collaborator": {
+    "title": "The Eyeballs Collective",
+    "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/the-eyeballs.svg",
+    "url": "https://eyeballs.hestialabs.org/"
+  },
+  "dataPortal": "https://support.tiktok.com/en/account-and-privacy/personalized-ads-and-data/requesting-your-data",
+  "dataPortalMessage": "<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format.",
+  "dataSamples": [
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/tiktok.zip?contenthash=3ff4f028df46e4815658&filename=tiktok.zip"
+  ],
+  "hideEmptyTabs": false,
+  "hideFileExplorer": false,
+  "hideSummary": true,
+  "messages": {
+    "en": {
+      "intro": {
+        "title": "TikTok",
+        "dataPortal": "https://support.tiktok.com/en/account-and-privacy/personalized-ads-and-data/requesting-your-data"
+      },
+      "viewBlocks": {
+        "loginhistory": {
+          "title": "Login History",
+          "text": "When and where you logged in.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Number of login",
+                "valueLabel": "logins"
+              },
+              {
+                "valueLabel": "logins"
+              },
+              {
+                "valueLabel": "logins"
+              },
+              {
+                "title": "Network Type",
+                "valueLabel": "logins"
+              },
+              {
+                "title": "Carrier",
+                "valueLabel": "logins"
+              },
+              {
+                "title": "Device System",
+                "valueLabel": "logins"
+              },
+              {
+                "title": "Device Model",
+                "valueLabel": "logins"
+              },
+              {
+                "title": "IP",
+                "valueLabel": "logins"
+              }
+            ]
+          }
+        },
+        "followingfollower": {
+          "title": "Following vs Follower",
+          "text": "See how much you have follow or have been followed during time",
+          "vizProps": {
+            "title": "Following vs Follower over time"
+          }
+        },
+        "activityhistory": {
+          "title": "Activity History",
+          "text": "Consult every actions you have made on the app.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Number of actions"
+              },
+              {
+                "title": "Type of action"
+              },
+              {},
+              {}
+            ]
+          }
+        },
+        "chathistory": {
+          "title": "Chat Activity",
+          "text": "Find out what time and day you receive and send the most messages."
+        }
+      }
+    },
+    "fr": {
+      "intro": {
+        "title": "TikTok",
+        "dataPortal": "https://support.tiktok.com/fr/account-and-privacy/personalized-ads-and-data/requesting-your-data"
+      },
+      "viewBlocks": {
+        "loginhistory": {
+          "title": "Historique des connexions",
+          "text": "Quand et comment vous vous êtes connecté.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Nombre de connexions",
+                "valueLabel": "connexions"
+              },
+              {
+                "valueLabel": "connexions"
+              },
+              {
+                "valueLabel": "connexions"
+              },
+              {
+                "title": "Type de réseau",
+                "valueLabel": "connexions"
+              },
+              {
+                "title": "Fournisseur",
+                "valueLabel": "connexions"
+              },
+              {
+                "title": "Système d'exploitation",
+                "valueLabel": "connexions"
+              },
+              {
+                "title": "Appareil",
+                "valueLabel": "connexions"
+              },
+              {
+                "title": "IP",
+                "valueLabel": "connexions"
+              }
+            ]
+          }
+        },
+        "followingfollower": {
+          "title": "Abonnements et abonnés",
+          "text": "Voyez combien vous avez suivi ou avez été suivi au cours du temps.",
+          "vizProps": {
+            "title": "Abonnements et abonnés au cours du temps."
+          }
+        },
+        "activityhistory": {
+          "title": "Historique de l'activité",
+          "text": "Consultez toutes les actions que vous avez effectuées sur l'application.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Nombre d'actions"
+              },
+              {
+                "title": "Type d'action"
+              },
+              {},
+              {}
+            ]
+          }
+        },
+        "chathistory": {
+          "title": "Messages",
+          "text": "Découvrez à quelle heure et quel jour vous recevez et envoyez le plus de messages."
+        }
+      }
+    }
+  },
+  "tutorialVideos": [],
+  "title": "TikTok",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/tiktok.png",
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "loginhistory",
+      "sql": "SELECT * FROM LoginHistory; ",
+      "files": ["userdata"],
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Number of login",
+            "valueLabel": "logins",
+            "cols": "8",
+            "type": "TimelineChart.vue",
+            "dateAccessor": "date"
+          },
+          {
+            "valueLabel": "logins",
+            "type": "WeekChart.vue",
+            "cols": "4",
+            "dateAccessor": "date"
+          },
+          {
+            "valueLabel": "logins",
+            "type": "HourChart.vue",
+            "cols": "4",
+            "height": 220,
+            "dateAccessor": "date"
+          },
+          {
+            "valueLabel": "logins",
+            "title": "Network Type",
+            "cols": "4",
+            "height": 220,
+            "type": "PieChart.vue",
+            "valueAccessor": "networktype"
+          },
+          {
+            "valueLabel": "logins",
+            "title": "Carrier",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "valueAccessor": "carrier"
+          },
+          {
+            "valueLabel": "logins",
+            "title": "Device System",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "valueAccessor": "devicesystem"
+          },
+          {
+            "valueLabel": "logins",
+            "title": "Device Model",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "valueAccessor": "devicemodel"
+          },
+          {
+            "valueLabel": "logins",
+            "title": "IP",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "valueAccessor": "ip"
+          }
+        ]
+      },
+      "title": "Login History",
+      "text": "When and where you logged in"
+    },
+    {
+      "showTable": false,
+      "id": "followingfollower",
+      "sql": "SELECT date_, actionType, COUNT(*) AS count_ FROM ( SELECT SUBSTR(DATE, 0, INSTR(DATE, ' ')) AS date_, 'Follower' AS actionType FROM TiktokFollowerList UNION SELECT SUBSTR(DATE, 0, INSTR(DATE, ' ')) AS date_, 'Following' AS actionType FROM TiktokFollowingList ) GROUP BY date_, actionType; ",
+      "files": ["userdata"],
+      "visualization": "ChartViewTimeSeries.vue",
+      "vizProps": {
+        "title": "Following vs Follower over time",
+        "cumSum": true,
+        "yLabel": "Total",
+        "legendOffset": 350,
+        "dateAccessor": {
+          "text": "Date",
+          "value": "date_"
+        },
+        "seriesAccessor": {
+          "text": "Action",
+          "value": "actionType"
+        },
+        "valueAccessor": "count_"
+      },
+      "title": "Following vs Follower",
+      "text": "See how much you have follow or have been followed during time"
+    },
+    {
+      "showTable": false,
+      "id": "activityhistory",
+      "sql": "SELECT * FROM ( SELECT DATE AS date_, searchterm AS activityValue, 'Search' AS activityType FROM SearchHistory UNION SELECT DATE AS date_, link AS activityValue, 'Share' AS activityType FROM ShareHistory UNION SELECT DATE AS date_, videolink AS activityValue, 'Like' AS activityType FROM LikeList UNION SELECT DATE AS date_, videolink AS activityValue, 'Watch' AS activityType FROM VideoBrowsingHistory UNION SELECT DATE AS date_, username AS activityValue, 'Block' AS activityType FROM BlockList UNION SELECT DATE AS date_, comment AS activityValue, 'Comment' AS activityType FROM TiktokComment ) ",
+      "files": ["userdata"],
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Number of actions",
+            "valueLabel": "actions",
+            "cols": "8",
+            "type": "TimelineChart.vue",
+            "dateAccessor": "date_"
+          },
+          {
+            "title": "Type of action",
+            "cols": "4",
+            "type": "TopChart.vue",
+            "valueAccessor": "activityType"
+          },
+          {
+            "type": "WeekChart.vue",
+            "cols": "6",
+            "height": 220,
+            "dateAccessor": "date_"
+          },
+          {
+            "type": "HourChart.vue",
+            "cols": "6",
+            "height": 220,
+            "dateAccessor": "date_"
+          }
+        ]
+      },
+      "title": "Activity History",
+      "text": "Consult every actions you have made on the app."
+    },
+    {
+      "showTable": false,
+      "id": "chathistory",
+      "sql": "SELECT * FROM ChatHistory; ",
+      "files": ["userdata"],
+      "visualization": "ChartViewHeatMapHour.vue",
+      "vizProps": {
+        "dateAccessor": "date"
+      },
+      "title": "Chat Activity",
+      "text": "Private messages sent and received"
+    }
+  ],
+  "version": 1
+}

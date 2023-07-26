@@ -1,13 +1,14 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import icon from '@/icons/help.png'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './other-viewer.json'
 
-const options: ExperienceOptions = {
-  icon,
-  subtitle: 'Contact us for specific needs',
-  title: 'More to come',
-  url: 'mailto:contact@hestialabs.org',
-  viewBlocks: []
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url
+)

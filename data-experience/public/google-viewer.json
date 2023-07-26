@@ -1,0 +1,1570 @@
+{
+  "dataPortal": "https://takeout.google.com/settings/takeout",
+  "dataSamples": [
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/google-takeout.zip?contenthash=df64540e5e61160a0591&filename=google-takeout.zip"
+  ],
+  "hideEmptyTabs": false,
+  "hideFileExplorer": true,
+  "hideSummary": true,
+  "messages": {
+    "en": {
+      "intro": {
+        "title": "Google Takeout",
+        "dataPortal": " https://takeout.google.com/takeout/custom/location_history"
+      },
+      "viewBlocks": {
+        "PlaceVisited": {
+          "title": "Places visited",
+          "text": "This map shows what places Google think you visited with the size corresponding to the time you spent in this place:",
+          "vizProps": {
+            "label": "visited places"
+          },
+          "headers": {
+            "latitude": "Latitude",
+            "longitude": "Longitude",
+            "address": "Address",
+            "name": "Name",
+            "startTimestamp": "Start Time",
+            "endTimestamp": "End Time",
+            "placeVisitImportance": "Place Visit Importance",
+            "visitConfidence": "Visit Confidence",
+            "locationConfidence": "Location Confidence",
+            "duration": "Duration",
+            "semanticType": "Semantic Type"
+          }
+        },
+        "OnePlace": {
+          "title": "One Place",
+          "text": "",
+          "vizProps": {
+            "messages": {
+              "Place": "Place",
+              "total-time-spent": "Total time spent at",
+              "mean-time-spent": "Mean time spent at",
+              "entropy": "Entropy for",
+              "entropy-info": "The higher this value is, the more uncertain Google was when deciding if you visited",
+              "other-candidates": "This map shows the other candidates proposed by Google associated to the",
+              "keplerFields": {
+                "name": "Name",
+                "latitude": "Latitude",
+                "longitude": "Longitude",
+                "confidence": "Confidence"
+              }
+            }
+          }
+        },
+        "OtherCandidates": {
+          "title": "Other Candidates",
+          "text": "This map shows the other candidate places proposed by Google linked to the location that Google think you visited:",
+          "headers": {
+            "winnerLatitude": "Winner Latitude",
+            "winnerLongitude": "Winner Longitude",
+            "winnerAddress": "Winner Address",
+            "winnerName": "Winner Name",
+            "winnerConfidence": "Winner Confidence",
+            "winnerSemanticType": "Winner Semantic Type",
+            "loserLatitude": "Loser Latitude",
+            "loserLongitude": "Loser Longitude",
+            "loserAddress": "Loser Address",
+            "loserName": "Loser Name",
+            "loserConfidence": "Loser Confidence",
+            "loserSemanticType": "Loser Semantic Type",
+            "startTimestamp": "Start Time",
+            "endTimestamp": "End Time"
+          }
+        },
+        "ActivitySegment": {
+          "title": "Travels",
+          "text": "This map shows what trips Google think you did:",
+          "vizProps": {
+            "label": "trips"
+          },
+          "headers": {
+            "startLatitude": "Start Latitude",
+            "startLongitude": "Start Longitude",
+            "startAddress": "Start Address",
+            "startName": "Start Name",
+            "startTimestamp": "Start Timestamp",
+            "endLatitude": "End Latitude",
+            "endLongitude": "End Longitude",
+            "endAddress": "End Address",
+            "endName": "End Name",
+            "endTimestamp": "End Timestamp",
+            "confidence": "Confidence",
+            "transitPath": "Transit Path",
+            "distanceMeters": "Distance (m)",
+            "activityType": "Activity Type"
+          }
+        },
+        "Records": {
+          "title": "Records",
+          "text": "This map shows records associated to a trip with the color corresponding to an activity type:",
+          "headers": {
+            "latitude": "Latitude",
+            "longitude": "Longitude",
+            "timestamp": "Time",
+            "accuracy": "Accuracy",
+            "source": "Source",
+            "activityType": "Activity Type"
+          }
+        },
+        "WifiScan": {
+          "title": "Wifi",
+          "text": "This map shows where your phone detected mac addresses with the size corresponding to the number of times it was detected:",
+          "vizProps": {
+            "label": "mac adresses"
+          },
+          "headers": {
+            "mac": "MAC",
+            "latitude": "Latitude",
+            "longitude": "Longitude",
+            "number_of_detections": "Number of Detections"
+          }
+        }
+      }
+    },
+    "fr": {
+      "intro": {
+        "title": "Google Takeout",
+        "dataPortal": " https://takeout.google.com/takeout/custom/location_history"
+      },
+      "viewBlocks": {
+        "PlaceVisited": {
+          "title": "Endroits visités",
+          "text": "Carte des endroits que Google pense que vous avez visités. La taille des points montre le temps passé à l'endroit",
+          "vizProps": {
+            "label": "endroits visités"
+          },
+          "headers": {
+            "latitude": "Latitude",
+            "longitude": "Longitude",
+            "address": "Adresse",
+            "name": "Nom",
+            "startTimestamp": "Heure de début",
+            "endTimestamp": "Heure de fin",
+            "placeVisitImportance": "Lieu Visite Importance",
+            "visitConfidence": "Confiance de la visite",
+            "locationConfidence": "Confiance en l'emplacement",
+            "duration": "Duration",
+            "semanticType": "Type sémantique"
+          }
+        },
+        "OnePlace": {
+          "title": "Un endroit particulier",
+          "text": "",
+          "vizProps": {
+            "messages": {
+              "Place": "Endroit",
+              "total-time-spent": "Temps total passé à",
+              "mean-time-spent": "Temps moyen passé à",
+              "entropy": "Entropie pour",
+              "entropy-info": "Plus cette valeur est élevée, plus l'incertitude de Google était grande au moment de décider si vous avez visité",
+              "other-candidates": "Cette carte montre les autres candidats proposés par Google associés à",
+              "keplerFields": {
+                "name": "Nom",
+                "latitude": "Latitude",
+                "longitude": "Longitude",
+                "confidence": "Confiance"
+              }
+            }
+          }
+        },
+        "OtherCandidates": {
+          "title": "Autres candidats",
+          "text": "Carte des autres endroits que vous êtes susceptible d'avoir visités d'après l'historique de vos positions.",
+          "headers": {
+            "winnerLatitude": "Latitude du gagnant",
+            "winnerLongitude": "Longitude du gagnant",
+            "winnerAddress": "Adresse du gagnant",
+            "winnerName": "Nom du gagnant",
+            "winnerConfidence": "Confiance du gagnant",
+            "winnerSemanticType": "Type sémantique du gagnant",
+            "loserLatitude": "Latitude du perdant",
+            "loserLongitude": "Longitude du perdant",
+            "loserAddress": "Adresse du perdant",
+            "loserName": "Nom du perdant",
+            "loserConfidence": "Confiance du perdant",
+            "loserSemanticType": "Type sémantique du perdant",
+            "startTimestamp": "Heure de début",
+            "endTimestamp": "Heure de fin"
+          }
+        },
+        "ActivitySegment": {
+          "title": "Trajets",
+          "text": "Carte des trajets que Google a reconnus",
+          "vizProps": {
+            "label": "trajets"
+          },
+          "headers": {
+            "startLatitude": "Latitude de départ",
+            "startLongitude": "Longitude de départ",
+            "startAddress": "Adresse de départ",
+            "startName": "Nom de départ",
+            "startTimestamp": "Heure de départ",
+            "endLatitude": "Latitude de fin",
+            "endLongitude": "Longitude de fin",
+            "endAddress": "Adresse de fin",
+            "endName": "Nom de fin",
+            "endTimestamp": "Heure de fin",
+            "confidence": "Confiance",
+            "transitPath": "Chemin de transit",
+            "distanceMeters": "Distance (m)",
+            "activityType": "Type d'activité"
+          }
+        },
+        "Records": {
+          "title": "Historique",
+          "text": "Carte des historiques associés à un trajet, les couleurs dénotant un type d'activité",
+          "headers": {
+            "latitude": "Latitude",
+            "longitude": "Longitude",
+            "timestamp": "Heure",
+            "accuracy": "Précision",
+            "source": "Source",
+            "activityType": "Type d'activité"
+          }
+        },
+        "WifiScan": {
+          "title": "Wifi",
+          "text": "Carte des adresses MAC détectées par votre téléphone, la taille dénotant le nombre de détections.",
+          "vizProps": {
+            "label": "adresses MAC"
+          },
+          "headers": {
+            "mac": "MAC",
+            "latitude": "Latitude",
+            "longitude": "Longitude",
+            "number_of_detections": "Nombre de détections"
+          }
+        }
+      }
+    }
+  },
+  "tutorialVideos": [],
+  "title": "Google Takeout",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/google-takeout.png",
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "PlaceVisited",
+      "sql": "SELECT * FROM PlaceVisit; ",
+      "files": ["LOCATION_HISTORY"],
+      "visualization": "ChartViewGenericMap.vue",
+      "title": "Places visited",
+      "text": "This map shows what places Google think you visited with the size corresponding to the time you spent in this place:",
+      "vizProps": {
+        "keplerConfig": {
+          "version": "v1",
+          "config": {
+            "visState": {
+              "filters": [],
+              "layers": [
+                {
+                  "id": "yiawwh3",
+                  "type": "point",
+                  "config": {
+                    "dataId": "data",
+                    "label": "Point",
+                    "color": [187, 0, 0],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat": "latitude",
+                      "lng": "longitude",
+                      "altitude": null
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "radius": 10,
+                      "fixedRadius": false,
+                      "opacity": 0.8,
+                      "outline": true,
+                      "thickness": 1,
+                      "strokeColor": null,
+                      "colorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#5A1846",
+                          "#900C3F",
+                          "#C70039",
+                          "#E3611C",
+                          "#F1920E",
+                          "#FFC300"
+                        ]
+                      },
+                      "strokeColorRange": {
+                        "name": "Uber Viz Qualitative 1.2",
+                        "type": "qualitative",
+                        "category": "Uber",
+                        "colors": [
+                          "#12939A",
+                          "#DDB27C",
+                          "#88572C",
+                          "#FF991F",
+                          "#F15C17",
+                          "#223F9A"
+                        ]
+                      },
+                      "radiusRange": [10, 30],
+                      "filled": true
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": null,
+                    "colorScale": "quantile",
+                    "strokeColorField": {
+                      "name": "semanticType",
+                      "type": "string"
+                    },
+                    "strokeColorScale": "ordinal",
+                    "sizeField": {
+                      "name": "duration",
+                      "type": "real"
+                    },
+                    "sizeScale": "sqrt"
+                  }
+                }
+              ],
+              "interactionConfig": {
+                "tooltip": {
+                  "fieldsToShow": {
+                    "data": [
+                      {
+                        "name": "address",
+                        "format": null
+                      },
+                      {
+                        "name": "name",
+                        "format": null
+                      },
+                      {
+                        "name": "startTimestamp",
+                        "format": null
+                      },
+                      {
+                        "name": "endTimestamp",
+                        "format": null
+                      },
+                      {
+                        "name": "semanticType",
+                        "format": null
+                      },
+                      {
+                        "name": "duration",
+                        "format": null
+                      },
+                      {
+                        "name": "placeVisitImportance",
+                        "format": null
+                      },
+                      {
+                        "name": "visitConfidence",
+                        "format": null
+                      },
+                      {
+                        "name": "locationConfidence",
+                        "format": null
+                      }
+                    ]
+                  },
+                  "compareMode": false,
+                  "compareType": "absolute",
+                  "enabled": true
+                },
+                "brush": {
+                  "size": 0.5,
+                  "enabled": false
+                },
+                "geocoder": {
+                  "enabled": false
+                },
+                "coordinate": {
+                  "enabled": false
+                }
+              },
+              "layerBlending": "normal",
+              "splitMaps": [],
+              "animationConfig": {
+                "currentTime": null,
+                "speed": 1
+              }
+            },
+            "mapState": {
+              "bearing": 0,
+              "dragRotate": false,
+              "latitude": 46.38494014302197,
+              "longitude": 6.571780257805701,
+              "pitch": 0,
+              "zoom": 7.802552830838788,
+              "isSplit": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "showTable": false,
+      "id": "OnePlace",
+      "sql": "SELECT winnerLatitude, winnerLongitude, winnerAddress, winnerName, winnerConfidence, winnerSemanticType, loserLatitude, loserLongitude, loserAddress, loserName, loserConfidence, loserSemanticType, startTimestamp, endTimestamp FROM Winners INNER JOIN Losers ON Winners.id = Losers.loserId ",
+      "files": ["LOCATION_HISTORY"],
+      "visualization": "ChartViewGoogleOnePlace.vue",
+      "title": "One Place",
+      "text": "",
+      "vizProps": {
+        "keplerConfig": {
+          "version": "v1",
+          "config": {
+            "visState": {
+              "filters": [],
+              "layers": [
+                {
+                  "id": "yiawwh3",
+                  "type": "point",
+                  "config": {
+                    "dataId": "data",
+                    "label": "Point",
+                    "color": [187, 0, 0],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat": "latitude",
+                      "lng": "longitude",
+                      "altitude": null
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "radius": 10,
+                      "fixedRadius": false,
+                      "opacity": 0.8,
+                      "outline": true,
+                      "thickness": 1,
+                      "strokeColor": null,
+                      "colorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#5A1846",
+                          "#900C3F",
+                          "#C70039",
+                          "#E3611C",
+                          "#F1920E",
+                          "#FFC300"
+                        ]
+                      },
+                      "strokeColorRange": {
+                        "name": "Uber Viz Qualitative 1.2",
+                        "type": "qualitative",
+                        "category": "Uber",
+                        "colors": [
+                          "#12939A",
+                          "#DDB27C",
+                          "#88572C",
+                          "#FF991F",
+                          "#F15C17",
+                          "#223F9A"
+                        ]
+                      },
+                      "radiusRange": [10, 30],
+                      "filled": true
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": null,
+                    "colorScale": "quantile",
+                    "strokeColorField": {
+                      "name": "semanticType",
+                      "type": "string"
+                    },
+                    "strokeColorScale": "ordinal",
+                    "sizeField": {
+                      "name": "duration",
+                      "type": "real"
+                    },
+                    "sizeScale": "sqrt"
+                  }
+                }
+              ],
+              "interactionConfig": {
+                "tooltip": {
+                  "fieldsToShow": {
+                    "data": [
+                      {
+                        "name": "address",
+                        "format": null
+                      },
+                      {
+                        "name": "name",
+                        "format": null
+                      },
+                      {
+                        "name": "startTimestamp",
+                        "format": null
+                      },
+                      {
+                        "name": "endTimestamp",
+                        "format": null
+                      },
+                      {
+                        "name": "semanticType",
+                        "format": null
+                      },
+                      {
+                        "name": "duration",
+                        "format": null
+                      },
+                      {
+                        "name": "placeVisitImportance",
+                        "format": null
+                      },
+                      {
+                        "name": "visitConfidence",
+                        "format": null
+                      },
+                      {
+                        "name": "locationConfidence",
+                        "format": null
+                      }
+                    ]
+                  },
+                  "compareMode": false,
+                  "compareType": "absolute",
+                  "enabled": true
+                },
+                "brush": {
+                  "size": 0.5,
+                  "enabled": false
+                },
+                "geocoder": {
+                  "enabled": false
+                },
+                "coordinate": {
+                  "enabled": false
+                }
+              },
+              "layerBlending": "normal",
+              "splitMaps": [],
+              "animationConfig": {
+                "currentTime": null,
+                "speed": 1
+              }
+            },
+            "mapState": {
+              "bearing": 0,
+              "dragRotate": false,
+              "latitude": 46.38494014302197,
+              "longitude": 6.571780257805701,
+              "pitch": 0,
+              "zoom": 7.802552830838788,
+              "isSplit": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "showTable": false,
+      "id": "OtherCandidates",
+      "sql": "SELECT winnerLatitude, winnerLongitude, winnerAddress, winnerName, winnerConfidence, winnerSemanticType, loserLatitude, loserLongitude, loserAddress, loserName, loserConfidence, loserSemanticType, startTimestamp, endTimestamp FROM Winners INNER JOIN Losers ON Winners.id = Losers.loserId ",
+      "files": ["LOCATION_HISTORY"],
+      "visualization": "ChartViewGenericMap.vue",
+      "title": "Other Candidates",
+      "text": "This map shows the other candidate places proposed by Google linked to the location that Google think you visited:",
+      "vizProps": {
+        "keplerConfig": {
+          "version": "v1",
+          "config": {
+            "visState": {
+              "filters": [],
+              "layers": [
+                {
+                  "id": "di6sjwk",
+                  "type": "point",
+                  "config": {
+                    "dataId": "data",
+                    "label": "winner",
+                    "color": [210, 0, 0],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat": "winnerLatitude",
+                      "lng": "winnerLongitude",
+                      "altitude": null
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "radius": 8,
+                      "fixedRadius": false,
+                      "opacity": 0.8,
+                      "outline": true,
+                      "thickness": 2,
+                      "strokeColor": null,
+                      "colorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#5A1846",
+                          "#900C3F",
+                          "#C70039",
+                          "#E3611C",
+                          "#F1920E",
+                          "#FFC300"
+                        ]
+                      },
+                      "strokeColorRange": {
+                        "name": "Custom Palette",
+                        "type": "custom",
+                        "category": "Custom",
+                        "colors": ["#12939A", "#6aca1f", "#dba71c"]
+                      },
+                      "radiusRange": [0, 50],
+                      "filled": true
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": null,
+                    "colorScale": "quantile",
+                    "strokeColorField": {
+                      "name": "winnerSemanticType",
+                      "type": "string"
+                    },
+                    "strokeColorScale": "ordinal",
+                    "sizeField": null,
+                    "sizeScale": "linear"
+                  }
+                },
+                {
+                  "id": "cc20vld",
+                  "type": "point",
+                  "config": {
+                    "dataId": "data",
+                    "label": "loser",
+                    "color": [254, 242, 26],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat": "loserLatitude",
+                      "lng": "loserLongitude",
+                      "altitude": null
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "radius": 10,
+                      "fixedRadius": false,
+                      "opacity": 0.8,
+                      "outline": true,
+                      "thickness": 2,
+                      "strokeColor": null,
+                      "colorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#5A1846",
+                          "#900C3F",
+                          "#C70039",
+                          "#E3611C",
+                          "#F1920E",
+                          "#FFC300"
+                        ]
+                      },
+                      "strokeColorRange": {
+                        "name": "Custom Palette",
+                        "type": "custom",
+                        "category": "Custom",
+                        "colors": ["#12939A", "#72d228", "#d0a531"]
+                      },
+                      "radiusRange": [0, 50],
+                      "filled": true
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": null,
+                    "colorScale": "quantile",
+                    "strokeColorField": {
+                      "name": "loserSemanticType",
+                      "type": "string"
+                    },
+                    "strokeColorScale": "ordinal",
+                    "sizeField": null,
+                    "sizeScale": "linear"
+                  }
+                },
+                {
+                  "id": "4am7zj",
+                  "type": "line",
+                  "config": {
+                    "dataId": "data",
+                    "label": "winner -> loser line",
+                    "color": [218, 0, 0],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat0": "winnerLatitude",
+                      "lng0": "winnerLongitude",
+                      "alt0": null,
+                      "lat1": "loserLatitude",
+                      "lng1": "loserLongitude",
+                      "alt1": null
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "opacity": 0.8,
+                      "thickness": 2,
+                      "colorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#5A1846",
+                          "#900C3F",
+                          "#C70039",
+                          "#E3611C",
+                          "#F1920E",
+                          "#FFC300"
+                        ]
+                      },
+                      "sizeRange": [0.5, 10],
+                      "targetColor": [254, 242, 26],
+                      "elevationScale": 1
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": null,
+                    "colorScale": "quantile",
+                    "sizeField": {
+                      "name": "loserConfidence",
+                      "type": "real"
+                    },
+                    "sizeScale": "linear"
+                  }
+                }
+              ],
+              "interactionConfig": {
+                "tooltip": {
+                  "fieldsToShow": {
+                    "data": [
+                      {
+                        "name": "winnerAddress",
+                        "format": null
+                      },
+                      {
+                        "name": "winnerName",
+                        "format": null
+                      },
+                      {
+                        "name": "winnerConfidence",
+                        "format": null
+                      },
+                      {
+                        "name": "winnerSemanticType",
+                        "format": null
+                      },
+                      {
+                        "name": "loserAddress",
+                        "format": null
+                      },
+                      {
+                        "name": "loserName",
+                        "format": null
+                      },
+                      {
+                        "name": "loserConfidence",
+                        "format": null
+                      },
+                      {
+                        "name": "loserSemanticType",
+                        "format": null
+                      },
+                      {
+                        "name": "timestamp",
+                        "format": null
+                      }
+                    ]
+                  },
+                  "compareMode": false,
+                  "compareType": "absolute",
+                  "enabled": true
+                },
+                "brush": {
+                  "size": 0.5,
+                  "enabled": false
+                },
+                "geocoder": {
+                  "enabled": false
+                },
+                "coordinate": {
+                  "enabled": false
+                }
+              },
+              "layerBlending": "normal",
+              "splitMaps": [],
+              "animationConfig": {
+                "currentTime": null,
+                "speed": 1
+              }
+            },
+            "mapState": {
+              "bearing": 0,
+              "dragRotate": false,
+              "latitude": 46.532766228529596,
+              "longitude": 6.629735388007509,
+              "pitch": 0,
+              "zoom": 12.205264650981901,
+              "isSplit": false
+            },
+            "mapStyle": {
+              "styleType": "tqwsxjb",
+              "topLayerGroups": {},
+              "visibleLayerGroups": {
+                "label": true,
+                "road": true,
+                "building": true,
+                "water": true,
+                "land": true
+              },
+              "threeDBuildingColor": [
+                194.6103322548211, 191.81688250953655, 185.2988331038727
+              ],
+              "mapStyles": {
+                "tqwsxjb": {
+                  "accessToken": null,
+                  "custom": true,
+                  "id": "tqwsxjb",
+                  "label": "Mapbox Streets",
+                  "url": "mapbox://styles/mapbox/streets-v11"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "showTable": false,
+      "id": "ActivitySegment",
+      "sql": "SELECT * FROM ActivitySegment; ",
+      "files": ["LOCATION_HISTORY"],
+      "visualization": "ChartViewGenericMap.vue",
+      "title": "Travels",
+      "text": "This map shows what trips Google think you did:",
+      "vizProps": {
+        "keplerConfig": {
+          "version": "v1",
+          "config": {
+            "visState": {
+              "filters": [],
+              "layers": [
+                {
+                  "id": "g0vqe8g",
+                  "type": "point",
+                  "config": {
+                    "dataId": "data",
+                    "label": "start",
+                    "color": [218, 0, 0],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat": "startLatitude",
+                      "lng": "startLongitude",
+                      "altitude": null
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "radius": 10,
+                      "fixedRadius": false,
+                      "opacity": 0.8,
+                      "outline": false,
+                      "thickness": 2,
+                      "strokeColor": null,
+                      "colorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#5A1846",
+                          "#900C3F",
+                          "#C70039",
+                          "#E3611C",
+                          "#F1920E",
+                          "#FFC300"
+                        ]
+                      },
+                      "strokeColorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#5A1846",
+                          "#900C3F",
+                          "#C70039",
+                          "#E3611C",
+                          "#F1920E",
+                          "#FFC300"
+                        ]
+                      },
+                      "radiusRange": [0, 50],
+                      "filled": true
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": null,
+                    "colorScale": "quantile",
+                    "strokeColorField": null,
+                    "strokeColorScale": "quantile",
+                    "sizeField": null,
+                    "sizeScale": "linear"
+                  }
+                },
+                {
+                  "id": "c64x49g",
+                  "type": "point",
+                  "config": {
+                    "dataId": "data",
+                    "label": "end",
+                    "color": [218, 0, 0],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat": "endLatitude",
+                      "lng": "endLongitude",
+                      "altitude": null
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "radius": 10,
+                      "fixedRadius": false,
+                      "opacity": 0.8,
+                      "outline": false,
+                      "thickness": 2,
+                      "strokeColor": null,
+                      "colorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#5A1846",
+                          "#900C3F",
+                          "#C70039",
+                          "#E3611C",
+                          "#F1920E",
+                          "#FFC300"
+                        ]
+                      },
+                      "strokeColorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#5A1846",
+                          "#900C3F",
+                          "#C70039",
+                          "#E3611C",
+                          "#F1920E",
+                          "#FFC300"
+                        ]
+                      },
+                      "radiusRange": [0, 50],
+                      "filled": true
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": null,
+                    "colorScale": "quantile",
+                    "strokeColorField": null,
+                    "strokeColorScale": "quantile",
+                    "sizeField": null,
+                    "sizeScale": "linear"
+                  }
+                },
+                {
+                  "id": "xbdqwbb",
+                  "type": "line",
+                  "config": {
+                    "dataId": "data",
+                    "label": "start -> end line",
+                    "color": [30, 150, 190],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat0": "startLatitude",
+                      "lng0": "startLongitude",
+                      "alt0": null,
+                      "lat1": "endLatitude",
+                      "lng1": "endLongitude",
+                      "alt1": null
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "opacity": 0.8,
+                      "thickness": 2,
+                      "colorRange": {
+                        "name": "Custom Palette",
+                        "type": "custom",
+                        "category": "Custom",
+                        "colors": [
+                          "#a6cee3",
+                          "#1f78b4",
+                          "#b2df8a",
+                          "#33a02c",
+                          "#fb9a99",
+                          "#e31a1c",
+                          "#fdbf6f",
+                          "#ff7f00",
+                          "#cab2d6",
+                          "#6a3d9a",
+                          "#ffff99",
+                          "#b15928",
+                          "#49493f",
+                          "#f800c0"
+                        ]
+                      },
+                      "sizeRange": [0, 10],
+                      "targetColor": null,
+                      "elevationScale": 1
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": {
+                      "name": "activityType",
+                      "type": "string"
+                    },
+                    "colorScale": "ordinal",
+                    "sizeField": null,
+                    "sizeScale": "linear"
+                  }
+                }
+              ],
+              "interactionConfig": {
+                "tooltip": {
+                  "fieldsToShow": {
+                    "data": [
+                      {
+                        "name": "startAddress",
+                        "format": null
+                      },
+                      {
+                        "name": "startName",
+                        "format": null
+                      },
+                      {
+                        "name": "startTimestamp",
+                        "format": null
+                      },
+                      {
+                        "name": "endAddress",
+                        "format": null
+                      },
+                      {
+                        "name": "endName",
+                        "format": null
+                      },
+                      {
+                        "name": "endTimestamp",
+                        "format": null
+                      },
+                      {
+                        "name": "confidence",
+                        "format": null
+                      },
+                      {
+                        "name": "transitPath",
+                        "format": null
+                      },
+                      {
+                        "name": "distanceMeters",
+                        "format": null
+                      },
+                      {
+                        "name": "activityType",
+                        "format": null
+                      }
+                    ]
+                  },
+                  "compareMode": false,
+                  "compareType": "absolute",
+                  "enabled": true
+                },
+                "brush": {
+                  "size": 0.5,
+                  "enabled": false
+                },
+                "geocoder": {
+                  "enabled": false
+                },
+                "coordinate": {
+                  "enabled": false
+                }
+              },
+              "layerBlending": "normal",
+              "splitMaps": [],
+              "animationConfig": {
+                "currentTime": null,
+                "speed": 1
+              }
+            },
+            "mapState": {
+              "bearing": 0,
+              "dragRotate": false,
+              "latitude": 45.723304634494724,
+              "longitude": 4.649325630519184,
+              "pitch": 0,
+              "zoom": 5.807773337936039,
+              "isSplit": false
+            },
+            "mapStyle": {
+              "styleType": "tqwsxjb",
+              "topLayerGroups": {},
+              "visibleLayerGroups": {
+                "label": true,
+                "road": true,
+                "building": true,
+                "water": true,
+                "land": true
+              },
+              "threeDBuildingColor": [
+                194.6103322548211, 191.81688250953655, 185.2988331038727
+              ],
+              "mapStyles": {
+                "tqwsxjb": {
+                  "accessToken": null,
+                  "custom": true,
+                  "id": "tqwsxjb",
+                  "label": "Mapbox Streets",
+                  "url": "mapbox://styles/mapbox/streets-v11"
+                }
+              }
+            }
+          }
+        },
+        "label": "trips"
+      }
+    },
+    {
+      "showTable": false,
+      "id": "Records",
+      "sql": "WITH a AS ( SELECT * FROM Records ORDER BY Records.timestamp DESC LIMIT 100000 ) SELECT a.latitude, a.longitude, a.timestamp, a.accuracy, a.source, ActivitySegment.activityType FROM a, ActivitySegment WHERE a.timestamp >= startTimestamp AND a.timestamp <= endTimestamp ",
+      "files": ["LOCATION_HISTORY"],
+      "visualization": "ChartViewGenericMap.vue",
+      "title": "Records",
+      "text": "This map shows records associated to a trip with the color corresponding to an activity type:",
+      "vizProps": {
+        "keplerConfig": {
+          "version": "v1",
+          "config": {
+            "visState": {
+              "filters": [],
+              "layers": [
+                {
+                  "id": "r9fyctw",
+                  "type": "point",
+                  "config": {
+                    "dataId": "data",
+                    "label": "Point",
+                    "color": [18, 147, 154],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat": "latitude",
+                      "lng": "longitude",
+                      "altitude": null
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "radius": 5,
+                      "fixedRadius": false,
+                      "opacity": 0.8,
+                      "outline": false,
+                      "thickness": 2,
+                      "strokeColor": null,
+                      "colorRange": {
+                        "name": "Custom Palette",
+                        "type": "custom",
+                        "category": "Custom",
+                        "colors": [
+                          "#a6cee3",
+                          "#1f78b4",
+                          "#b2df8a",
+                          "#33a02c",
+                          "#fb9a99",
+                          "#e31a1c",
+                          "#fdbf6f",
+                          "#ff7f00",
+                          "#cab2d6",
+                          "#6a3d9a",
+                          "#ffff99",
+                          "#b15928",
+                          "#49493f",
+                          "#f800c0"
+                        ]
+                      },
+                      "strokeColorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#5A1846",
+                          "#900C3F",
+                          "#C70039",
+                          "#E3611C",
+                          "#F1920E",
+                          "#FFC300"
+                        ]
+                      },
+                      "radiusRange": [0, 50],
+                      "filled": true
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": {
+                      "name": "activityType",
+                      "type": "string"
+                    },
+                    "colorScale": "ordinal",
+                    "strokeColorField": null,
+                    "strokeColorScale": "quantile",
+                    "sizeField": null,
+                    "sizeScale": "linear"
+                  }
+                }
+              ],
+              "interactionConfig": {
+                "tooltip": {
+                  "fieldsToShow": {
+                    "data": [
+                      {
+                        "name": "timestamp",
+                        "format": null
+                      },
+                      {
+                        "name": "accuracy",
+                        "format": null
+                      },
+                      {
+                        "name": "source",
+                        "format": null
+                      },
+                      {
+                        "name": "activityType",
+                        "format": null
+                      }
+                    ]
+                  },
+                  "compareMode": false,
+                  "compareType": "absolute",
+                  "enabled": true
+                },
+                "brush": {
+                  "size": 0.5,
+                  "enabled": false
+                },
+                "geocoder": {
+                  "enabled": false
+                },
+                "coordinate": {
+                  "enabled": false
+                }
+              },
+              "layerBlending": "normal",
+              "splitMaps": [],
+              "animationConfig": {
+                "currentTime": null,
+                "speed": 1
+              }
+            },
+            "mapState": {
+              "bearing": 0,
+              "dragRotate": false,
+              "latitude": 46.3694608867237,
+              "longitude": 6.506723131765135,
+              "pitch": 0,
+              "zoom": 7.78697017968798,
+              "isSplit": false
+            },
+            "mapStyle": {
+              "styleType": "tqwsxjb",
+              "topLayerGroups": {},
+              "visibleLayerGroups": {
+                "label": true,
+                "road": true,
+                "building": true,
+                "water": true,
+                "land": true
+              },
+              "threeDBuildingColor": [
+                194.6103322548211, 191.81688250953655, 185.2988331038727
+              ],
+              "mapStyles": {
+                "tqwsxjb": {
+                  "accessToken": null,
+                  "custom": true,
+                  "id": "tqwsxjb",
+                  "label": "Mapbox Streets",
+                  "url": "mapbox://styles/mapbox/streets-v11"
+                }
+              }
+            }
+          }
+        },
+        "showButton": true
+      }
+    },
+    {
+      "showTable": false,
+      "id": "WifiScan",
+      "sql": "SELECT mac, AVG(latitude) AS latitude, AVG(longitude) AS longitude, COUNT(*) AS number_of_detections FROM WifiScan INNER JOIN MacAdresses ON WifiScan.id = MacAdresses.macId GROUP BY mac ORDER BY COUNT() DESC ",
+      "files": ["LOCATION_HISTORY"],
+      "visualization": "ChartViewGenericMap.vue",
+      "title": "Wifi",
+      "text": "This map shows where your phone detected mac addresses with the size corresponding to the number of times it was detected:",
+      "vizProps": {
+        "keplerConfig": {
+          "version": "v1",
+          "config": {
+            "visState": {
+              "filters": [],
+              "layers": [
+                {
+                  "id": "0dpan25",
+                  "type": "point",
+                  "config": {
+                    "dataId": "data",
+                    "label": "Point",
+                    "color": [218, 0, 0],
+                    "highlightColor": [252, 242, 26, 255],
+                    "columns": {
+                      "lat": "latitude",
+                      "lng": "longitude",
+                      "altitude": null
+                    },
+                    "isVisible": true,
+                    "visConfig": {
+                      "radius": 10,
+                      "fixedRadius": false,
+                      "opacity": 0.8,
+                      "outline": false,
+                      "thickness": 2,
+                      "strokeColor": null,
+                      "colorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#5A1846",
+                          "#900C3F",
+                          "#C70039",
+                          "#E3611C",
+                          "#F1920E",
+                          "#FFC300"
+                        ]
+                      },
+                      "strokeColorRange": {
+                        "name": "Global Warming",
+                        "type": "sequential",
+                        "category": "Uber",
+                        "colors": [
+                          "#5A1846",
+                          "#900C3F",
+                          "#C70039",
+                          "#E3611C",
+                          "#F1920E",
+                          "#FFC300"
+                        ]
+                      },
+                      "radiusRange": [10, 30],
+                      "filled": true
+                    },
+                    "hidden": false,
+                    "textLabel": [
+                      {
+                        "field": null,
+                        "color": [255, 255, 255],
+                        "size": 18,
+                        "offset": [0, 0],
+                        "anchor": "start",
+                        "alignment": "center"
+                      }
+                    ]
+                  },
+                  "visualChannels": {
+                    "colorField": null,
+                    "colorScale": "quantile",
+                    "strokeColorField": null,
+                    "strokeColorScale": "quantile",
+                    "sizeField": {
+                      "name": "number_of_detections",
+                      "type": "integer"
+                    },
+                    "sizeScale": "sqrt"
+                  }
+                }
+              ],
+              "interactionConfig": {
+                "tooltip": {
+                  "fieldsToShow": {
+                    "data": [
+                      {
+                        "name": "mac",
+                        "format": null
+                      },
+                      {
+                        "name": "number_of_detections",
+                        "format": null
+                      }
+                    ]
+                  },
+                  "compareMode": false,
+                  "compareType": "absolute",
+                  "enabled": true
+                },
+                "brush": {
+                  "size": 0.5,
+                  "enabled": false
+                },
+                "geocoder": {
+                  "enabled": false
+                },
+                "coordinate": {
+                  "enabled": false
+                }
+              },
+              "layerBlending": "normal",
+              "splitMaps": [],
+              "animationConfig": {
+                "currentTime": null,
+                "speed": 1
+              }
+            },
+            "mapState": {
+              "bearing": 0,
+              "dragRotate": false,
+              "latitude": 46.41269271195032,
+              "longitude": 6.560159114941752,
+              "pitch": 0,
+              "zoom": 9,
+              "isSplit": false
+            },
+            "mapStyle": {
+              "styleType": "tqwsxjb",
+              "topLayerGroups": {},
+              "visibleLayerGroups": {
+                "label": true,
+                "road": true,
+                "building": true,
+                "water": true,
+                "land": true
+              },
+              "threeDBuildingColor": [
+                194.6103322548211, 191.81688250953655, 185.2988331038727
+              ],
+              "mapStyles": {
+                "tqwsxjb": {
+                  "accessToken": null,
+                  "custom": true,
+                  "id": "tqwsxjb",
+                  "label": "Mapbox Streets",
+                  "url": "mapbox://styles/mapbox/streets-v11"
+                }
+              }
+            }
+          }
+        },
+        "label": "mac adresses"
+      }
+    }
+  ],
+  "version": 1
+}

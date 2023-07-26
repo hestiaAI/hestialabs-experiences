@@ -1,10 +1,11 @@
 {
   "name": "@hestia.ai/chatgpt",
-  "version": "3.1.0",
+  "version": "3.1.2",
   "main": "dist/index.mjs",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "src/chatgpt-viewer.json"
   ],
   "repository": {
     "type": "git",

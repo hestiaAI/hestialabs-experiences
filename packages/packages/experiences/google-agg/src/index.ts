@@ -1,12 +1,11 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import icon from '@/icons/google-takeout.png'
-import viewBlocks from './blocks'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './google-agg-viewer.json'
 import databaseConfig from './database'
 
-const options: ExperienceOptions = {
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
   databaseConfig,
-  hideFileExplorer: false,
   files: {
     placeVisited: '**/block00.json',
     otherCandidate: '**/block02.json',
@@ -14,10 +13,12 @@ const options: ExperienceOptions = {
     records: '**/block04.json',
     wifi: '**/block05.json',
     consent: '**/consent.json'
-  },
-  icon,
-  title: 'Google Agg',
-  viewBlocks
+  }
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url
+)
