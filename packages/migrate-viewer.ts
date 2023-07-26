@@ -32,20 +32,19 @@ function test(
     console.log(`[${experience.name}] BAD ${formatDiff(unserializable)}`)
     // console.log(JSON.stringify(unserializable, stringifyReplacer, 2))
   } else {
-    if (doWriteFiles) {
-      const fixedVOs = fixViewerOptions(viewerOptions, experience.name, 1)
-      const almostMigratedVOptsPath = migratedViewerOptsPath + '.mig.json'
-      writeFileSync(almostMigratedVOptsPath, JSON.stringify(fixedVOs, null, 2))
-      console.log(`[${experience.name}] OK wrote ${almostMigratedVOptsPath}`)
-      const testVOPath = `../data-experience/public/${viewerOptionsFileName}`
-      fixedVOs.version = 0
-      writeFileSync(testVOPath, JSON.stringify(fixedVOs, null, 2))
-      console.log(` wrote ${testVOPath}`)
-      migrateIndexTs(experience.name)
-      migratePackageJson(experience.name, viewerOptionsFileName)
-    } else {
-      console.log(`[${experience.name}] OK`)
-    }
+    console.log(`[${experience.name}] OK`)
+  }
+  if (doWriteFiles) {
+    const fixedVOs = fixViewerOptions(viewerOptions, experience.name, 1)
+    const almostMigratedVOptsPath = migratedViewerOptsPath + '.mig.json'
+    writeFileSync(almostMigratedVOptsPath, JSON.stringify(fixedVOs, null, 2))
+    console.log(`[${experience.name}] OK wrote ${almostMigratedVOptsPath}`)
+    const testVOPath = `../data-experience/public/${viewerOptionsFileName}`
+    fixedVOs.version = 0
+    writeFileSync(testVOPath, JSON.stringify(fixedVOs, null, 2))
+    console.log(` wrote ${testVOPath}`)
+    migrateIndexTs(experience.name)
+    migratePackageJson(experience.name, viewerOptionsFileName)
   }
 }
 
