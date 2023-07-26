@@ -10,7 +10,7 @@
     {
       "showTable": false,
       "id": "consumption",
-      "sql": "SELECT\r\n  accountName,\r\n  datetime AS actionDate,\r\n  'Post Viewed' AS actionType\r\nFROM\r\n  InstagramPostViewed\r\nUNION\r\nSELECT\r\n  accountName,\r\n  datetime AS actionDate,\r\n  'Video Watched' AS actionType\r\nFROM\r\n  InstagramVideoWatched\r\nUNION\r\nSELECT\r\n  accountName,\r\n  datetime AS actionDate,\r\n  'Ad Viewed' AS actionType\r\nFROM\r\n  InstagramAdViewed;\r\n",
+      "sql": "SELECT accountName, datetime AS actionDate, 'Post Viewed' AS actionType FROM InstagramPostViewed UNION SELECT accountName, datetime AS actionDate, 'Video Watched' AS actionType FROM InstagramVideoWatched UNION SELECT accountName, datetime AS actionDate, 'Ad Viewed' AS actionType FROM InstagramAdViewed; ",
       "files": ["postsViewed", "videosWatched", "adsViewed"],
       "visualization": "ChartViewDashboard.vue",
       "vizProps": {
@@ -151,7 +151,7 @@
     {
       "showTable": false,
       "id": "ad-interactions",
-      "sql": "SELECT title, DATETIME(ROUND(unixTimestamp), 'unixepoch') AS _date, 'True' as clicked FROM InstagramAdClicked\r\nUNION\r\nSELECT accountName as title, datetime AS _date, 'False' as clicked FROM InstagramAdViewed;\r\n",
+      "sql": "SELECT title, DATETIME(ROUND(unixTimestamp), 'unixepoch') AS _date, 'True' as clicked FROM InstagramAdClicked UNION SELECT accountName as title, datetime AS _date, 'False' as clicked FROM InstagramAdViewed; ",
       "files": ["adsClicked", "adsViewed"],
       "visualization": "ChartViewDashboard.vue",
       "vizProps": {
@@ -178,7 +178,7 @@
     {
       "showTable": false,
       "id": "ad-interests",
-      "sql": "SELECT title, 'Ad Interest' as _type FROM InstagramAdInterest\r\nUNION\r\nSELECT title, 'Topic' as _type FROM InstagramYourTopic\r\nUNION\r\nSELECT title, 'Reel Topic' as _type FROM InstagramReelTopic\r\nUNION\r\nSELECT title, 'Reel Sentiment' as _type FROM InstagramReelSentiment;\r\n",
+      "sql": "SELECT title, 'Ad Interest' as _type FROM InstagramAdInterest UNION SELECT title, 'Topic' as _type FROM InstagramYourTopic UNION SELECT title, 'Reel Topic' as _type FROM InstagramReelTopic UNION SELECT title, 'Reel Sentiment' as _type FROM InstagramReelSentiment; ",
       "visualization": "ChartViewDashboard.vue",
       "files": ["adsInterests"],
       "vizProps": {
@@ -199,7 +199,7 @@
     {
       "showTable": true,
       "id": "ad-advertisers",
-      "sql": "SELECT * FROM InstagramAdvertiser;\r\n",
+      "sql": "SELECT * FROM InstagramAdvertiser; ",
       "files": ["advertisers"],
       "title": "Ads 3/3 (Advertisers)",
       "text": "See which advertisers have used your information on Instagram."
@@ -207,7 +207,7 @@
     {
       "showTable": false,
       "id": "localisation",
-      "sql": "SELECT\r\n  title,\r\n  DATETIME(unixTimestamp, 'unixepoch') AS _date,\r\n  latitude,\r\n  longitude,\r\n  'Post' AS actionType\r\nFROM InstagramPost\r\nWHERE latitude IS NOT NULL AND longitude IS NOT NULL\r\nUNION\r\nSELECT\r\n  title,\r\n  DATETIME(unixTimestamp, 'unixepoch') AS _date,\r\n  latitude,\r\n  longitude,\r\n  'Story' AS actionType\r\nFROM InstagramStory\r\nWHERE latitude IS NOT NULL AND longitude IS NOT NULL;\r\n",
+      "sql": "SELECT title, DATETIME(unixTimestamp, 'unixepoch') AS _date, latitude, longitude, 'Post' AS actionType FROM InstagramPost WHERE latitude IS NOT NULL AND longitude IS NOT NULL UNION SELECT title, DATETIME(unixTimestamp, 'unixepoch') AS _date, latitude, longitude, 'Story' AS actionType FROM InstagramStory WHERE latitude IS NOT NULL AND longitude IS NOT NULL; ",
       "files": ["posts", "stories"],
       "visualization": "ChartViewGenericMap.vue",
       "vizProps": {

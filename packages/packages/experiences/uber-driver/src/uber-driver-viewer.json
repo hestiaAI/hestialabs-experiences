@@ -1,5 +1,6 @@
 {
   "title": "Uber Driver",
+  "version": 1,
   "hideFileExplorer": false,
   "hideEmptyTabs": true,
   "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download",

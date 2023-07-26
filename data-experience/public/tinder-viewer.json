@@ -1,0 +1,1677 @@
+{
+  "collaborator": {
+    "title": "The Dating Privacy Collective",
+    "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/dating-privacy-collective.svg",
+    "url": "https://dating-privacy.hestialabs.org/"
+  },
+  "dataPortal": "https://account.gotinder.com/data",
+  "dataSamples": [
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/tinder.json?contenthash=3e158b8db4a8c9d5c7b4&filename=tinder.json"
+  ],
+  "hideEmptyTabs": false,
+  "hideFileExplorer": true,
+  "hideSummary": true,
+  "messages": {
+    "en": {
+      "intro": {
+        "title": "Tinder",
+        "dataPortal": "https://account.gotinder.com/data"
+      },
+      "viewBlocks": {
+        "user": {
+          "title": "User infos",
+          "text": "Tinder profile information",
+          "vizProps": {
+            "messages": {
+              "Not mentioned": "Not mentioned",
+              "Age filter": "Age filter",
+              "Descriptors": "Descriptors",
+              "titles": {
+                "Birthdate": "Birthdate",
+                "Gender": "Gender",
+                "Education": "Education",
+                "College": "College",
+                "Interested In": "Interested In",
+                "Sexual Orientations": "Sexual Orientations",
+                "Gender Filter": "Gender Filter",
+                "Account Creation": "Account Creation"
+              },
+              "values": {
+                "Female": "Female",
+                "Male": "Male",
+                "Women": "Women",
+                "Men": "Men"
+              }
+            }
+          }
+        },
+        "app-opens-vue": {
+          "title": "Usage",
+          "text": "See the number of times that you opened the app per day.",
+          "vizProps": {
+            "title": "Application usage over time",
+            "legendLabel": "App Opened"
+          }
+        },
+        "likes-dislikes-vue": {
+          "title": "Likes and passes",
+          "text": "See the number of likes and passes that you made over time.",
+          "vizProps": {
+            "title": "Likes vs Passes over time",
+            "yLabel": "Count",
+            "messages": {
+              "legend": {
+                "swipes_likes": "Likes",
+                "swipes_passes": "Passes"
+              }
+            }
+          }
+        },
+        "messages-activity": {
+          "title": "Messages",
+          "text": "See at what time of the day and week you send the most messages",
+          "vizProps": {
+            "title": "Messages Sent",
+            "legendLabel": "Messages"
+          }
+        },
+        "donut": {
+          "title": "Comparison",
+          "text": "Compare the different actions you perform in the application."
+        },
+        "likes-dislikes-open": {
+          "title": "Likes / passes correlation",
+          "text": "Observe the possible correlation between the number of likes/passes and the number of times you open the app."
+        }
+      }
+    },
+    "fr": {
+      "intro": {
+        "title": "Tinder",
+        "dataPortal": "https://account.gotinder.com/data"
+      },
+      "viewBlocks": {
+        "user": {
+          "title": "Informations utilisat·eur·rice",
+          "text": "Informations du profil Tinder",
+          "vizProps": {
+            "messages": {
+              "Not mentioned": "Non mentionné",
+              "Age filter": "Filtre d'âge",
+              "Descriptors": "Descripteurs",
+              "titles": {
+                "Birthdate": "Date de naissance",
+                "Gender": "Genre",
+                "Education": "Éducation",
+                "College": "Collège",
+                "Interested In": "Intéressé par",
+                "Sexual Orientations": "Orientations sexuelles",
+                "Gender Filter": "Filtre de genre",
+                "Account Creation": "Création de compte"
+              },
+              "values": {
+                "Female": "Femme",
+                "Male": "Homme",
+                "Women": "Femmes",
+                "Men": "Hommes"
+              }
+            }
+          }
+        },
+        "app-opens-vue": {
+          "title": "Usage",
+          "text": "Nombre d'ouvertures de l'application par jour.",
+          "vizProps": {
+            "title": "Utilisation de l'application dans le temps",
+            "legendLabel": "App ouverte"
+          }
+        },
+        "likes-dislikes-vue": {
+          "title": "Likes et passes",
+          "text": "Nombre de likes et passes au cours du temps.",
+          "vizProps": {
+            "title": "Likes vs Passes au fil du temps",
+            "yLabel": "Nombre",
+            "messages": {
+              "legend": {
+                "swipes_likes": "Likes",
+                "swipes_passes": "Passes"
+              }
+            }
+          }
+        },
+        "messages-activity": {
+          "title": "Messages",
+          "text": "Statistiques temporelles de vos messages",
+          "vizProps": {
+            "title": "Messages envoyé",
+            "legendLabel": "Messages"
+          }
+        },
+        "donut": {
+          "title": "Comparaison",
+          "text": "Comparaison des différentes actions que vous effectuez dans l'application."
+        },
+        "likes-dislikes-open": {
+          "title": "Corrélation Likes / passes",
+          "text": "Corrélation entre les nombres de likes et passes, et le nombre d'ouvertures de l'application."
+        }
+      }
+    }
+  },
+  "tutorialVideos": [],
+  "title": "Tinder",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/tinder.png",
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "user",
+      "sql": "SELECT * FROM TinderUser; ",
+      "visualization": "ChartViewTinderUserInfos.vue",
+      "title": "User infos",
+      "text": "Tinder profile information",
+      "files": ["tinder"]
+    },
+    {
+      "showTable": false,
+      "id": "app-opens-vue",
+      "sql": "SELECT dateValue, actionType, amount FROM TinderUsage WHERE actionType = 'app_opens'; ",
+      "files": ["tinder"],
+      "text": "See the number of times that you opened the app per day.",
+      "title": "Usage",
+      "visualization": "ChartViewHeatMapCalendar.vue",
+      "vizProps": {
+        "title": "Application usage over time",
+        "legendOffset": 360,
+        "dateAccessor": "dateValue",
+        "valueAccessor": "amount",
+        "legendLabel": "App Opened"
+      }
+    },
+    {
+      "showTable": false,
+      "id": "likes-dislikes-vue",
+      "sql": "SELECT dateValue, actionType, amount FROM TinderUsage WHERE actionType = 'swipes_likes' OR actionType = 'swipes_passes' ",
+      "text": "See the number of likes and passes that you made over time.",
+      "title": "Likes and passes",
+      "visualization": "ChartViewTimeSeries.vue",
+      "vizProps": {
+        "title": "Likes vs Passes over time",
+        "legendOffset": 350,
+        "dateAccessor": {
+          "text": "Date",
+          "value": "dateValue"
+        },
+        "seriesAccessor": {
+          "text": "Action",
+          "value": "actionType"
+        },
+        "valueAccessor": "amount"
+      },
+      "files": ["tinder"]
+    },
+    {
+      "showTable": false,
+      "id": "messages-activity",
+      "sql": "SELECT * FROM TinderMessage; ",
+      "visualization": "ChartViewHeatMapHour.vue",
+      "vizProps": {
+        "dateAccessor": "sentDate"
+      },
+      "title": "Messages",
+      "text": "See at what time of the day and week you send the most messages",
+      "files": ["tinder"]
+    },
+    {
+      "showTable": false,
+      "id": "donut",
+      "sql": "SELECT dateValue, MAX( CASE WHEN actionType = 'swipes_likes' THEN amount ELSE 0 END ) likes, MAX( CASE WHEN actionType = 'superlikes' THEN amount ELSE 0 END ) number_of_superlikes, MAX( CASE WHEN actionType = 'swipes_passes' THEN amount ELSE 0 END ) passes, MAX( CASE WHEN actionType = 'messages_sent' THEN amount ELSE 0 END ) number_of_messages_sent, MAX( CASE WHEN actionType = 'messages_received' THEN amount ELSE 0 END ) number_of_messages_received, MAX( CASE WHEN actionType = 'matches' THEN amount ELSE 0 END ) number_of_matches, MAX( CASE WHEN actionType = 'app_opens' THEN amount ELSE 0 END ) opens FROM TinderUsage GROUP BY dateValue; ",
+      "text": "Compare the different actions you perform in the application.",
+      "title": "Comparison",
+      "visualization": {
+        "en": {
+          "$schema": "https://vega.github.io/schema/vega/v5.json",
+          "width": 400,
+          "height": 415,
+          "autosize": "fit",
+          "title": {
+            "text": {
+              "signal": "versus[0] + ' vs ' + versus[1]"
+            },
+            "subtitle": {
+              "signal": "'between ' + timeFormat(extent[0], \"%d/%m/%Y\") + ' and ' + timeFormat(extent[1], \"%d/%m/%Y\")"
+            },
+            "dy": {
+              "value": -24
+            },
+            "fontWeight": {
+              "value": "lighter"
+            },
+            "fontSize": {
+              "value": 18
+            },
+            "font": {
+              "value": "Tahoma"
+            },
+            "color": {
+              "value": "#303030"
+            },
+            "subtitleFont": {
+              "value": "Tahoma"
+            },
+            "subtitleFontStyle": {
+              "value": "italic"
+            },
+            "subtitlePadding": 10,
+            "anchor": "middle",
+            "frame": "group"
+          },
+          "signals": [
+            {
+              "name": "versus",
+              "value": ["Likes", "Passes"],
+              "bind": {
+                "input": "select",
+                "name": " ",
+                "options": [
+                  ["Likes", "Passes"],
+                  ["Likes", "Matches"],
+                  ["Messages sent", "Messages received"],
+                  ["Likes", "App opened"]
+                ],
+                "labels": [
+                  "Likes/Passes",
+                  "Likes/Matches",
+                  "Messages sent/received",
+                  "Open/Likes"
+                ]
+              }
+            },
+            {
+              "name": "colors",
+              "value": {
+                "Likes": "#62D995",
+                "Passes": "#d24d57",
+                "App opened": "#F2F2F2",
+                "Messages sent": "#2994F2",
+                "Messages received": "#F2C063",
+                "Matches": "#d24d57"
+              }
+            }
+          ],
+          "data": [
+            {
+              "name": "source",
+              "values": [],
+              "format": {
+                "type": "json",
+                "parse": {
+                  "dateValue": "date:'%Y-%m-%d'"
+                }
+              },
+              "transform": [
+                {
+                  "type": "extent",
+                  "field": "dateValue",
+                  "signal": "extent"
+                },
+                {
+                  "type": "aggregate",
+                  "fields": [
+                    "likes",
+                    "opens",
+                    "number_of_superlikes",
+                    "passes",
+                    "number_of_messages_sent",
+                    "number_of_messages_received",
+                    "number_of_matches"
+                  ],
+                  "ops": ["sum", "sum", "sum", "sum", "sum", "sum", "sum"],
+                  "as": [
+                    "Likes",
+                    "App opened",
+                    "Superlikes",
+                    "Passes",
+                    "Messages sent",
+                    "Messages received",
+                    "Matches"
+                  ]
+                },
+                {
+                  "type": "fold",
+                  "fields": {
+                    "signal": "versus"
+                  }
+                },
+                {
+                  "type": "pie",
+                  "field": "value",
+                  "sort": true
+                }
+              ]
+            }
+          ],
+          "scales": [
+            {
+              "name": "color",
+              "type": "ordinal",
+              "domain": {
+                "data": "source",
+                "field": "key"
+              },
+              "range": ["#414141", "#ff6a6e"]
+            }
+          ],
+          "legends": [
+            {
+              "orient": "bottom",
+              "fill": "color",
+              "symbolSize": 120,
+              "offset": 0,
+              "zindex": 1,
+              "symbolType": "circle",
+              "labelFont": {
+                "value": "Tahoma"
+              },
+              "labelColor": {
+                "value": "#24252a"
+              },
+              "labelFontWeight": {
+                "value": "lighter"
+              }
+            }
+          ],
+          "marks": [
+            {
+              "type": "arc",
+              "from": {
+                "data": "source"
+              },
+              "encode": {
+                "enter": {
+                  "fill": {
+                    "scale": "color",
+                    "field": "key"
+                  },
+                  "x": {
+                    "signal": "width / 2"
+                  },
+                  "y": {
+                    "signal": "height / 2"
+                  },
+                  "tooltip": {
+                    "signal": "datum.key + ': ' + datum.value"
+                  }
+                },
+                "update": {
+                  "startAngle": {
+                    "field": "startAngle"
+                  },
+                  "endAngle": {
+                    "field": "endAngle"
+                  },
+                  "padAngle": {
+                    "value": 0.02
+                  },
+                  "innerRadius": {
+                    "signal": "width / 20"
+                  },
+                  "outerRadius": {
+                    "signal": "width / 2.5"
+                  },
+                  "cornerRadius": {
+                    "value": 7
+                  },
+                  "opacity": {
+                    "value": 1
+                  },
+                  "zindex": {
+                    "value": 0
+                  }
+                },
+                "hover": {
+                  "opacity": {
+                    "value": 0.7
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "fr": {
+          "$schema": "https://vega.github.io/schema/vega/v5.json",
+          "width": 400,
+          "height": 415,
+          "autosize": "fit",
+          "title": {
+            "text": {
+              "signal": "versus[0] + ' vs ' + versus[1]"
+            },
+            "subtitle": {
+              "signal": "'Entre ' + timeFormat(extent[0], \"%d/%m/%Y\") + ' et ' + timeFormat(extent[1], \"%d/%m/%Y\")"
+            },
+            "dy": {
+              "value": -24
+            },
+            "fontWeight": {
+              "value": "lighter"
+            },
+            "fontSize": {
+              "value": 18
+            },
+            "font": {
+              "value": "Tahoma"
+            },
+            "color": {
+              "value": "#303030"
+            },
+            "subtitleFont": {
+              "value": "Tahoma"
+            },
+            "subtitleFontStyle": {
+              "value": "italic"
+            },
+            "subtitlePadding": 10,
+            "anchor": "middle",
+            "frame": "group"
+          },
+          "signals": [
+            {
+              "name": "versus",
+              "value": ["Likes", "Passes"],
+              "bind": {
+                "input": "select",
+                "name": " ",
+                "options": [
+                  ["Likes", "Passes"],
+                  ["Likes", "Matches"],
+                  ["Messages envoyés", "Messages reçus"],
+                  ["Likes", "App ouverte"]
+                ],
+                "labels": [
+                  "Likes/Passes",
+                  "Likes/Matches",
+                  "Messages envoyés/reçus",
+                  "App ouverte/Likes"
+                ]
+              }
+            },
+            {
+              "name": "colors",
+              "value": {
+                "Likes": "#62D995",
+                "Passes": "#d24d57",
+                "App ouverte": "#F2F2F2",
+                "Messages envoyés": "#2994F2",
+                "Messages reçus": "#F2C063",
+                "Matches": "#d24d57"
+              }
+            }
+          ],
+          "data": [
+            {
+              "name": "source",
+              "values": [],
+              "format": {
+                "type": "json",
+                "parse": {
+                  "dateValue": "date:'%Y-%m-%d'"
+                }
+              },
+              "transform": [
+                {
+                  "type": "extent",
+                  "field": "dateValue",
+                  "signal": "extent"
+                },
+                {
+                  "type": "aggregate",
+                  "fields": [
+                    "likes",
+                    "opens",
+                    "number_of_superlikes",
+                    "passes",
+                    "number_of_messages_sent",
+                    "number_of_messages_received",
+                    "number_of_matches"
+                  ],
+                  "ops": ["sum", "sum", "sum", "sum", "sum", "sum", "sum"],
+                  "as": [
+                    "Likes",
+                    "App ouverte",
+                    "Superlikes",
+                    "Passes",
+                    "Messages envoyés",
+                    "Messages reçus",
+                    "Matches"
+                  ]
+                },
+                {
+                  "type": "fold",
+                  "fields": {
+                    "signal": "versus"
+                  }
+                },
+                {
+                  "type": "pie",
+                  "field": "value",
+                  "sort": true
+                }
+              ]
+            }
+          ],
+          "scales": [
+            {
+              "name": "color",
+              "type": "ordinal",
+              "domain": {
+                "data": "source",
+                "field": "key"
+              },
+              "range": ["#414141", "#ff6a6e"]
+            }
+          ],
+          "legends": [
+            {
+              "orient": "bottom",
+              "fill": "color",
+              "symbolSize": 120,
+              "offset": 0,
+              "zindex": 1,
+              "symbolType": "circle",
+              "labelFont": {
+                "value": "Tahoma"
+              },
+              "labelColor": {
+                "value": "#24252a"
+              },
+              "labelFontWeight": {
+                "value": "lighter"
+              }
+            }
+          ],
+          "marks": [
+            {
+              "type": "arc",
+              "from": {
+                "data": "source"
+              },
+              "encode": {
+                "enter": {
+                  "fill": {
+                    "scale": "color",
+                    "field": "key"
+                  },
+                  "x": {
+                    "signal": "width / 2"
+                  },
+                  "y": {
+                    "signal": "height / 2"
+                  },
+                  "tooltip": {
+                    "signal": "datum.key + ': ' + datum.value"
+                  }
+                },
+                "update": {
+                  "startAngle": {
+                    "field": "startAngle"
+                  },
+                  "endAngle": {
+                    "field": "endAngle"
+                  },
+                  "padAngle": {
+                    "value": 0.02
+                  },
+                  "innerRadius": {
+                    "signal": "width / 20"
+                  },
+                  "outerRadius": {
+                    "signal": "width / 2.5"
+                  },
+                  "cornerRadius": {
+                    "value": 7
+                  },
+                  "opacity": {
+                    "value": 1
+                  },
+                  "zindex": {
+                    "value": 0
+                  }
+                },
+                "hover": {
+                  "opacity": {
+                    "value": 0.7
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "files": ["tinder"]
+    },
+    {
+      "showTable": false,
+      "id": "likes-dislikes-open",
+      "sql": "SELECT dateValue, MAX( CASE WHEN actionType = 'swipes_likes' THEN amount ELSE NULL END ) likes, MAX( CASE WHEN actionType = 'swipes_passes' THEN amount ELSE NULL END ) passes, MAX( CASE WHEN actionType = 'app_opens' THEN amount ELSE NULL END ) opens FROM TinderUsage GROUP BY dateValue; ",
+      "text": "Observe the possible correlation between the number of likes/passes and the number of times you open the app.",
+      "title": "Likes / passes correlation",
+      "visualization": {
+        "en": {
+          "$schema": "https://vega.github.io/schema/vega/v5.json",
+          "width": 400,
+          "height": 400,
+          "padding": 5,
+          "autosize": "pad",
+          "title": {
+            "text": "Likes/Passes correlation",
+            "anchor": "middle",
+            "dy": -10,
+            "encode": {
+              "title": {
+                "enter": {
+                  "fill": {
+                    "value": "#2e3131"
+                  },
+                  "fontWeight": {
+                    "value": "lighter"
+                  },
+                  "fontSize": {
+                    "value": 16
+                  },
+                  "font": {
+                    "value": "Tahoma"
+                  }
+                }
+              }
+            }
+          },
+          "signals": [
+            {
+              "name": "clear",
+              "value": true,
+              "on": [
+                {
+                  "events": "mouseup[!event.item]",
+                  "update": "true",
+                  "force": true
+                }
+              ]
+            },
+            {
+              "name": "shift",
+              "value": false,
+              "on": [
+                {
+                  "events": "@legendSymbol:click, @legendLabel:click",
+                  "update": "event.shiftKey",
+                  "force": true
+                }
+              ]
+            },
+            {
+              "name": "clicked",
+              "value": null,
+              "on": [
+                {
+                  "events": "@legendSymbol:click, @legendLabel:click",
+                  "update": "{value: datum.value}",
+                  "force": true
+                }
+              ]
+            },
+            {
+              "name": "brush",
+              "value": 0,
+              "on": [
+                {
+                  "events": {
+                    "signal": "clear"
+                  },
+                  "update": "clear ? [0, 0] : brush"
+                },
+                {
+                  "events": "@xaxis:mousedown",
+                  "update": "[x(), x()]"
+                },
+                {
+                  "events": "[@xaxis:mousedown, window:mouseup] > window:mousemove!",
+                  "update": "[brush[0], clamp(x(), 0, width)]"
+                },
+                {
+                  "events": {
+                    "signal": "delta"
+                  },
+                  "update": "clampRange([anchor[0] + delta, anchor[1] + delta], 0, width)"
+                }
+              ]
+            },
+            {
+              "name": "anchor",
+              "value": null,
+              "on": [
+                {
+                  "events": "@brush:mousedown",
+                  "update": "slice(brush)"
+                }
+              ]
+            },
+            {
+              "name": "xdown",
+              "value": 0,
+              "on": [
+                {
+                  "events": "@brush:mousedown",
+                  "update": "x()"
+                }
+              ]
+            },
+            {
+              "name": "delta",
+              "value": 0,
+              "on": [
+                {
+                  "events": "[@brush:mousedown, window:mouseup] > window:mousemove!",
+                  "update": "x() - xdown"
+                }
+              ]
+            },
+            {
+              "name": "domain",
+              "on": [
+                {
+                  "events": {
+                    "signal": "brush"
+                  },
+                  "update": "span(brush) ? invert('x', brush) : null"
+                }
+              ]
+            }
+          ],
+          "data": [
+            {
+              "name": "source",
+              "values": [],
+              "transform": [
+                {
+                  "type": "aggregate",
+                  "fields": ["likes", "passes", "opens"],
+                  "groupby": ["dateValue"],
+                  "ops": ["sum", "sum", "sum"],
+                  "as": ["Likes", "Passes", "opens"]
+                },
+                {
+                  "type": "fold",
+                  "fields": ["Likes", "Passes"]
+                },
+                {
+                  "type": "filter",
+                  "expr": "(datum['Passes'] != null || datum['Likes'] != null) && datum['opens'] != null"
+                }
+              ]
+            },
+            {
+              "name": "selected",
+              "on": [
+                {
+                  "trigger": "clear",
+                  "remove": true
+                },
+                {
+                  "trigger": "!shift",
+                  "remove": true
+                },
+                {
+                  "trigger": "!shift && clicked",
+                  "insert": "clicked"
+                },
+                {
+                  "trigger": "shift && clicked",
+                  "toggle": "clicked"
+                }
+              ]
+            }
+          ],
+          "scales": [
+            {
+              "name": "x",
+              "type": "linear",
+              "round": true,
+              "nice": true,
+              "zero": true,
+              "domain": {
+                "data": "source",
+                "field": "opens"
+              },
+              "range": "width"
+            },
+            {
+              "name": "y",
+              "type": "linear",
+              "round": true,
+              "nice": true,
+              "zero": true,
+              "domain": {
+                "data": "source",
+                "field": "value"
+              },
+              "range": "height"
+            },
+            {
+              "name": "color",
+              "type": "ordinal",
+              "range": ["#414141", "#ff6a6e"],
+              "domain": {
+                "data": "source",
+                "field": "key"
+              }
+            }
+          ],
+          "axes": [
+            {
+              "scale": "x",
+              "grid": true,
+              "domain": false,
+              "orient": "bottom",
+              "tickCount": 5,
+              "titlePadding": 10,
+              "title": "Number of times the application is opened per day",
+              "titleColor": {
+                "value": "#2e3131"
+              },
+              "titleFontWeight": {
+                "value": "bold"
+              },
+              "titleFontSize": {
+                "value": 10
+              },
+              "titleFont": {
+                "value": "Tahoma"
+              }
+            },
+            {
+              "scale": "y",
+              "grid": true,
+              "domain": false,
+              "orient": "left",
+              "titlePadding": 10,
+              "title": "Number of likes/passes",
+              "titleColor": {
+                "value": "#2e3131"
+              },
+              "titleFontWeight": {
+                "value": "bold"
+              },
+              "titleFontSize": {
+                "value": 10
+              },
+              "titleFont": {
+                "value": "Tahoma"
+              }
+            }
+          ],
+          "legends": [
+            {
+              "stroke": "color",
+              "title": "Action type",
+              "titleColor": {
+                "value": "#2e3131"
+              },
+              "titleFontWeight": {
+                "value": "bold"
+              },
+              "titleFontSize": {
+                "value": 10
+              },
+              "titleFont": {
+                "value": "Tahoma"
+              },
+              "encode": {
+                "symbols": {
+                  "name": "legendSymbol",
+                  "interactive": true,
+                  "update": {
+                    "fill": {
+                      "value": "transparent"
+                    },
+                    "strokeWidth": {
+                      "value": 2
+                    },
+                    "opacity": [
+                      {
+                        "test": "!length(data('selected')) || indata('selected', 'value', datum.value)",
+                        "value": 0.9
+                      },
+                      {
+                        "value": 0.15
+                      }
+                    ],
+                    "size": {
+                      "value": 64
+                    }
+                  }
+                },
+                "labels": {
+                  "name": "legendLabel",
+                  "interactive": true,
+                  "update": {
+                    "opacity": [
+                      {
+                        "test": "!length(data('selected')) || indata('selected', 'value', datum.value)",
+                        "value": 1
+                      },
+                      {
+                        "value": 0.25
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "marks": [
+            {
+              "type": "rect",
+              "name": "xaxis",
+              "interactive": true,
+              "encode": {
+                "enter": {
+                  "x": {
+                    "value": 0
+                  },
+                  "height": {
+                    "value": 35
+                  },
+                  "fill": {
+                    "value": "transparent"
+                  },
+                  "cursor": {
+                    "value": "ew-resize"
+                  }
+                },
+                "update": {
+                  "y": {
+                    "signal": "height"
+                  },
+                  "width": {
+                    "signal": "span(range('x'))"
+                  }
+                }
+              }
+            },
+            {
+              "type": "rect",
+              "interactive": false,
+              "encode": {
+                "enter": {
+                  "y": {
+                    "value": 0
+                  },
+                  "height": {
+                    "signal": "height"
+                  },
+                  "fill": {
+                    "value": "#ddd"
+                  }
+                },
+                "update": {
+                  "x": {
+                    "signal": "brush[0]"
+                  },
+                  "x2": {
+                    "signal": "brush[1]"
+                  },
+                  "fillOpacity": {
+                    "signal": "domain ? 0.2 : 0"
+                  }
+                }
+              }
+            },
+            {
+              "name": "marks",
+              "type": "symbol",
+              "from": {
+                "data": "source"
+              },
+              "interactive": false,
+              "encode": {
+                "enter": {
+                  "tooltip": {
+                    "signal": "datum.value "
+                  }
+                },
+                "update": {
+                  "x": {
+                    "scale": "x",
+                    "field": "opens"
+                  },
+                  "y": {
+                    "scale": "y",
+                    "field": "value"
+                  },
+                  "shape": {
+                    "value": "circle"
+                  },
+                  "strokeWidth": {
+                    "value": 2
+                  },
+                  "opacity": [
+                    {
+                      "test": "(!domain || inrange(datum.open, domain)) && (!length(data('selected')) || indata('selected', 'value', datum.key))",
+                      "value": 0.9
+                    },
+                    {
+                      "value": 0.15
+                    }
+                  ],
+                  "stroke": [
+                    {
+                      "test": "(!domain || inrange(datum.open, domain)) && (!length(data('selected')) || indata('selected', 'value', datum.key))",
+                      "scale": "color",
+                      "field": "key"
+                    },
+                    {
+                      "value": "#ccc"
+                    }
+                  ],
+                  "fill": {
+                    "value": "transparent"
+                  }
+                }
+              }
+            },
+            {
+              "type": "rect",
+              "name": "brush",
+              "encode": {
+                "enter": {
+                  "y": {
+                    "value": 0
+                  },
+                  "height": {
+                    "signal": "height"
+                  },
+                  "fill": {
+                    "value": "transparent"
+                  }
+                },
+                "update": {
+                  "x": {
+                    "signal": "brush[0]"
+                  },
+                  "x2": {
+                    "signal": "brush[1]"
+                  }
+                }
+              }
+            },
+            {
+              "type": "rect",
+              "interactive": false,
+              "encode": {
+                "enter": {
+                  "y": {
+                    "value": 0
+                  },
+                  "height": {
+                    "signal": "height"
+                  },
+                  "width": {
+                    "value": 1
+                  },
+                  "fill": {
+                    "value": "firebrick"
+                  }
+                },
+                "update": {
+                  "fillOpacity": {
+                    "signal": "domain ? 1 : 0"
+                  },
+                  "x": {
+                    "signal": "brush[0]"
+                  }
+                }
+              }
+            },
+            {
+              "type": "rect",
+              "interactive": false,
+              "encode": {
+                "enter": {
+                  "y": {
+                    "value": 0
+                  },
+                  "height": {
+                    "signal": "height"
+                  },
+                  "width": {
+                    "value": 1
+                  },
+                  "fill": {
+                    "value": "firebrick"
+                  }
+                },
+                "update": {
+                  "fillOpacity": {
+                    "signal": "domain ? 1 : 0"
+                  },
+                  "x": {
+                    "signal": "brush[1]"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "fr": {
+          "$schema": "https://vega.github.io/schema/vega/v5.json",
+          "width": 400,
+          "height": 400,
+          "padding": 5,
+          "autosize": "pad",
+          "title": {
+            "text": "Corrélation Likes/Passes",
+            "anchor": "middle",
+            "dy": -10,
+            "encode": {
+              "title": {
+                "enter": {
+                  "fill": {
+                    "value": "#2e3131"
+                  },
+                  "fontWeight": {
+                    "value": "lighter"
+                  },
+                  "fontSize": {
+                    "value": 16
+                  },
+                  "font": {
+                    "value": "Tahoma"
+                  }
+                }
+              }
+            }
+          },
+          "signals": [
+            {
+              "name": "clear",
+              "value": true,
+              "on": [
+                {
+                  "events": "mouseup[!event.item]",
+                  "update": "true",
+                  "force": true
+                }
+              ]
+            },
+            {
+              "name": "shift",
+              "value": false,
+              "on": [
+                {
+                  "events": "@legendSymbol:click, @legendLabel:click",
+                  "update": "event.shiftKey",
+                  "force": true
+                }
+              ]
+            },
+            {
+              "name": "clicked",
+              "value": null,
+              "on": [
+                {
+                  "events": "@legendSymbol:click, @legendLabel:click",
+                  "update": "{value: datum.value}",
+                  "force": true
+                }
+              ]
+            },
+            {
+              "name": "brush",
+              "value": 0,
+              "on": [
+                {
+                  "events": {
+                    "signal": "clear"
+                  },
+                  "update": "clear ? [0, 0] : brush"
+                },
+                {
+                  "events": "@xaxis:mousedown",
+                  "update": "[x(), x()]"
+                },
+                {
+                  "events": "[@xaxis:mousedown, window:mouseup] > window:mousemove!",
+                  "update": "[brush[0], clamp(x(), 0, width)]"
+                },
+                {
+                  "events": {
+                    "signal": "delta"
+                  },
+                  "update": "clampRange([anchor[0] + delta, anchor[1] + delta], 0, width)"
+                }
+              ]
+            },
+            {
+              "name": "anchor",
+              "value": null,
+              "on": [
+                {
+                  "events": "@brush:mousedown",
+                  "update": "slice(brush)"
+                }
+              ]
+            },
+            {
+              "name": "xdown",
+              "value": 0,
+              "on": [
+                {
+                  "events": "@brush:mousedown",
+                  "update": "x()"
+                }
+              ]
+            },
+            {
+              "name": "delta",
+              "value": 0,
+              "on": [
+                {
+                  "events": "[@brush:mousedown, window:mouseup] > window:mousemove!",
+                  "update": "x() - xdown"
+                }
+              ]
+            },
+            {
+              "name": "domain",
+              "on": [
+                {
+                  "events": {
+                    "signal": "brush"
+                  },
+                  "update": "span(brush) ? invert('x', brush) : null"
+                }
+              ]
+            }
+          ],
+          "data": [
+            {
+              "name": "source",
+              "values": [],
+              "transform": [
+                {
+                  "type": "aggregate",
+                  "fields": ["likes", "passes", "opens"],
+                  "groupby": ["dateValue"],
+                  "ops": ["sum", "sum", "sum"],
+                  "as": ["Likes", "Passes", "Ouvertures"]
+                },
+                {
+                  "type": "fold",
+                  "fields": ["Likes", "Passes"]
+                },
+                {
+                  "type": "filter",
+                  "expr": "(datum['Passes'] != null || datum['Likes'] != null) && datum['Ouvertures'] != null"
+                }
+              ]
+            },
+            {
+              "name": "selected",
+              "on": [
+                {
+                  "trigger": "clear",
+                  "remove": true
+                },
+                {
+                  "trigger": "!shift",
+                  "remove": true
+                },
+                {
+                  "trigger": "!shift && clicked",
+                  "insert": "clicked"
+                },
+                {
+                  "trigger": "shift && clicked",
+                  "toggle": "clicked"
+                }
+              ]
+            }
+          ],
+          "scales": [
+            {
+              "name": "x",
+              "type": "linear",
+              "round": true,
+              "nice": true,
+              "zero": true,
+              "domain": {
+                "data": "source",
+                "field": "Ouvertures"
+              },
+              "range": "width"
+            },
+            {
+              "name": "y",
+              "type": "linear",
+              "round": true,
+              "nice": true,
+              "zero": true,
+              "domain": {
+                "data": "source",
+                "field": "value"
+              },
+              "range": "height"
+            },
+            {
+              "name": "color",
+              "type": "ordinal",
+              "range": ["#414141", "#ff6a6e"],
+              "domain": {
+                "data": "source",
+                "field": "key"
+              }
+            }
+          ],
+          "axes": [
+            {
+              "scale": "x",
+              "grid": true,
+              "domain": false,
+              "orient": "bottom",
+              "tickCount": 5,
+              "titlePadding": 10,
+              "title": "Nombre de fois que l'application est ouverte par jour",
+              "titleColor": {
+                "value": "#2e3131"
+              },
+              "titleFontWeight": {
+                "value": "bold"
+              },
+              "titleFontSize": {
+                "value": 10
+              },
+              "titleFont": {
+                "value": "Tahoma"
+              }
+            },
+            {
+              "scale": "y",
+              "grid": true,
+              "domain": false,
+              "orient": "left",
+              "titlePadding": 10,
+              "title": "Nombre de likes/passes",
+              "titleColor": {
+                "value": "#2e3131"
+              },
+              "titleFontWeight": {
+                "value": "bold"
+              },
+              "titleFontSize": {
+                "value": 10
+              },
+              "titleFont": {
+                "value": "Tahoma"
+              }
+            }
+          ],
+          "legends": [
+            {
+              "stroke": "color",
+              "title": "Type d'action",
+              "titleColor": {
+                "value": "#2e3131"
+              },
+              "titleFontWeight": {
+                "value": "bold"
+              },
+              "titleFontSize": {
+                "value": 10
+              },
+              "titleFont": {
+                "value": "Tahoma"
+              },
+              "encode": {
+                "symbols": {
+                  "name": "legendSymbol",
+                  "interactive": true,
+                  "update": {
+                    "fill": {
+                      "value": "transparent"
+                    },
+                    "strokeWidth": {
+                      "value": 2
+                    },
+                    "opacity": [
+                      {
+                        "test": "!length(data('selected')) || indata('selected', 'value', datum.value)",
+                        "value": 0.9
+                      },
+                      {
+                        "value": 0.15
+                      }
+                    ],
+                    "size": {
+                      "value": 64
+                    }
+                  }
+                },
+                "labels": {
+                  "name": "legendLabel",
+                  "interactive": true,
+                  "update": {
+                    "opacity": [
+                      {
+                        "test": "!length(data('selected')) || indata('selected', 'value', datum.value)",
+                        "value": 1
+                      },
+                      {
+                        "value": 0.25
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "marks": [
+            {
+              "type": "rect",
+              "name": "xaxis",
+              "interactive": true,
+              "encode": {
+                "enter": {
+                  "x": {
+                    "value": 0
+                  },
+                  "height": {
+                    "value": 35
+                  },
+                  "fill": {
+                    "value": "transparent"
+                  },
+                  "cursor": {
+                    "value": "ew-resize"
+                  }
+                },
+                "update": {
+                  "y": {
+                    "signal": "height"
+                  },
+                  "width": {
+                    "signal": "span(range('x'))"
+                  }
+                }
+              }
+            },
+            {
+              "type": "rect",
+              "interactive": false,
+              "encode": {
+                "enter": {
+                  "y": {
+                    "value": 0
+                  },
+                  "height": {
+                    "signal": "height"
+                  },
+                  "fill": {
+                    "value": "#ddd"
+                  }
+                },
+                "update": {
+                  "x": {
+                    "signal": "brush[0]"
+                  },
+                  "x2": {
+                    "signal": "brush[1]"
+                  },
+                  "fillOpacity": {
+                    "signal": "domain ? 0.2 : 0"
+                  }
+                }
+              }
+            },
+            {
+              "name": "marks",
+              "type": "symbol",
+              "from": {
+                "data": "source"
+              },
+              "interactive": false,
+              "encode": {
+                "enter": {
+                  "tooltip": {
+                    "signal": "datum.value "
+                  }
+                },
+                "update": {
+                  "x": {
+                    "scale": "x",
+                    "field": "Ouvertures"
+                  },
+                  "y": {
+                    "scale": "y",
+                    "field": "value"
+                  },
+                  "shape": {
+                    "value": "circle"
+                  },
+                  "strokeWidth": {
+                    "value": 2
+                  },
+                  "opacity": [
+                    {
+                      "test": "(!domain || inrange(datum.open, domain)) && (!length(data('selected')) || indata('selected', 'value', datum.key))",
+                      "value": 0.9
+                    },
+                    {
+                      "value": 0.15
+                    }
+                  ],
+                  "stroke": [
+                    {
+                      "test": "(!domain || inrange(datum.open, domain)) && (!length(data('selected')) || indata('selected', 'value', datum.key))",
+                      "scale": "color",
+                      "field": "key"
+                    },
+                    {
+                      "value": "#ccc"
+                    }
+                  ],
+                  "fill": {
+                    "value": "transparent"
+                  }
+                }
+              }
+            },
+            {
+              "type": "rect",
+              "name": "brush",
+              "encode": {
+                "enter": {
+                  "y": {
+                    "value": 0
+                  },
+                  "height": {
+                    "signal": "height"
+                  },
+                  "fill": {
+                    "value": "transparent"
+                  }
+                },
+                "update": {
+                  "x": {
+                    "signal": "brush[0]"
+                  },
+                  "x2": {
+                    "signal": "brush[1]"
+                  }
+                }
+              }
+            },
+            {
+              "type": "rect",
+              "interactive": false,
+              "encode": {
+                "enter": {
+                  "y": {
+                    "value": 0
+                  },
+                  "height": {
+                    "signal": "height"
+                  },
+                  "width": {
+                    "value": 1
+                  },
+                  "fill": {
+                    "value": "firebrick"
+                  }
+                },
+                "update": {
+                  "fillOpacity": {
+                    "signal": "domain ? 1 : 0"
+                  },
+                  "x": {
+                    "signal": "brush[0]"
+                  }
+                }
+              }
+            },
+            {
+              "type": "rect",
+              "interactive": false,
+              "encode": {
+                "enter": {
+                  "y": {
+                    "value": 0
+                  },
+                  "height": {
+                    "signal": "height"
+                  },
+                  "width": {
+                    "value": 1
+                  },
+                  "fill": {
+                    "value": "firebrick"
+                  }
+                },
+                "update": {
+                  "fillOpacity": {
+                    "signal": "domain ? 1 : 0"
+                  },
+                  "x": {
+                    "signal": "brush[1]"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "files": ["tinder"]
+    }
+  ],
+  "version": 1
+}

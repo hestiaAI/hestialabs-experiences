@@ -1,10 +1,11 @@
 {
   "name": "@hestia.ai/strava",
-  "version": "3.3.0",
+  "version": "3.3.2",
   "main": "dist/index.mjs",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "src/strava-viewer.json"
   ],
   "repository": {
     "type": "git",

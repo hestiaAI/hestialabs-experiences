@@ -1,9 +1,10 @@
 import packageJSON from '../package.json'
 import { Experience, LoaderOptions, ViewerOptions } from '@/index'
 import viewerFunctions from './viewer-functions'
-import viewerOptions from './viewer.json'
+import viewerOptions from './uber-driver-viewer.json'
 
 const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
   files: {
     driver_on_off: '**/*Driver Online Offline.csv',
     driver_performances: '**/*Driver Performance Badges.csv',

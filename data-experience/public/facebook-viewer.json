@@ -1,0 +1,254 @@
+{
+  "collaborator": {
+    "title": "The Eyeballs Collective",
+    "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/the-eyeballs.svg",
+    "url": "https://eyeballs.hestialabs.org/"
+  },
+  "dataPortal": "https://www.facebook.com/help/212802592074644",
+  "dataPortalMessage": "<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format.",
+  "dataSamples": [
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/facebook.zip?contenthash=9ebe7f31f91e24e87abd&filename=facebook.zip"
+  ],
+  "hideEmptyTabs": false,
+  "hideFileExplorer": true,
+  "hideSummary": true,
+  "messages": {
+    "en": {
+      "intro": {
+        "title": "Facebook",
+        "dataPortal": "https://www.facebook.com/help/212802592074644",
+        "dataPortalMessage": "<strong>Important:</strong> To make the experiment work, please request your data in <strong>JSON</strong> format."
+      },
+      "viewBlocks": {
+        "off-facebook-activity-count": {
+          "title": "Off Facebook activity ranking",
+          "text": "See how many times third parties have informed Facebook of your activity outside of Facebook.",
+          "vizProps": {
+            "xLabel": "ads",
+            "countLabel": "ads"
+          }
+        },
+        "off-facebook-activity-type-count": {
+          "title": "Off Facebook activity type",
+          "text": "See which kind of information advertisers have shared with Facebook of your activity outside of Facebook."
+        },
+        "ad-interactions": {
+          "title": "Ad interactions",
+          "text": "See the list of ads with which you have interacted.",
+          "headers": {
+            "title": "Title",
+            "action": "Action",
+            "timestamp": "Time"
+          }
+        },
+        "your-topics": {
+          "title": "Inferred interests",
+          "text": "Get a list of topics that Facebook thinks you're interested in.",
+          "headers": {
+            "name": "Name"
+          }
+        },
+        "advertisers-contact-list": {
+          "title": "Contact list",
+          "text": "Get a list of advertisers that have uploaded a contact list containing you.",
+          "headers": {
+            "name": "Name"
+          }
+        },
+        "custom-audiences": {
+          "title": "Advertisers using your data",
+          "text": "See all advertisers that use Facebook to get information about you",
+          "headers": {
+            "advertiserName": "Advertiser Name"
+          }
+        },
+        "genericDateViewer": {
+          "name": "Timeline",
+          "title": "Timeline",
+          "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date.",
+          "graphTitle": "Number of dated events in your files",
+          "graphNoDate": "No dated events were found in your file(s).",
+          "datedEvents": "From {currMinDate} to {currMaxDate} we found {total} dated events in your file(s).",
+          "headers": {
+            "File name": "File name",
+            "Date": "Date",
+            "Description": "Description"
+          }
+        },
+        "genericLocationViewer": {
+          "name": "Location Observations",
+          "title": "Location Observations",
+          "text": "See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location.",
+          "graphTitle": "Number of location records in your files",
+          "graphNoLocation": "No location were found in your file(s).",
+          "locations": "We found {total} locations in your file(s).",
+          "headers": {
+            "File": "File",
+            "Path": "Path",
+            "Latitude": "Latitude",
+            "Longitude": "Longitude",
+            "Description": "Description"
+          }
+        }
+      }
+    },
+    "fr": {
+      "intro": {
+        "title": "Facebook",
+        "dataPortal": "https://www.facebook.com/help/212802592074644",
+        "dataPortalMessage": "<strong>Important:</strong> Pour que l'expérience fonctionne, veuillez demander vos données au format <strong>JSON</strong>."
+      },
+      "viewBlocks": {
+        "off-facebook-activity-count": {
+          "title": "Classement des activités hors Facebook",
+          "text": "Statistiques de tierces parties qui informent Facebook de vos activités en dehors de Facebook.",
+          "vizProps": {
+            "xLabel": "pubs",
+            "countLabel": "pubs"
+          }
+        },
+        "off-facebook-activity-type-count": {
+          "title": "Types d'activités hors Facebook",
+          "text": "Type d'information que les publicitaires partagent avec Facebook sur vos activités en dehors de Facebook."
+        },
+        "ad-interactions": {
+          "title": "Interactions avec des publicités",
+          "text": "Liste des publicités avec lesquels vous avez interagi.",
+          "headers": {
+            "title": "Titre",
+            "action": "Action",
+            "timestamp": "Date"
+          }
+        },
+        "your-topics": {
+          "title": "Intérêts supposés",
+          "text": "Liste de sujets dont Facebook pense qu'ils vous intéressent.",
+          "headers": {
+            "name": "Nom"
+          }
+        },
+        "advertisers-contact-list": {
+          "title": "Liste de contacts",
+          "text": "Liste de publicitaires qui ont partagé une liste de contacts qui vous mentionne.",
+          "headers": {
+            "name": "Nom"
+          }
+        },
+        "custom-audiences": {
+          "title": "Publicitaire utilisant vos données",
+          "text": "Liste des publicitaires qui utilisent Facebook pour obtenir des informations qui vous concernent.",
+          "headers": {
+            "advertiserName": "Nom de l'publicitaire"
+          }
+        },
+        "genericDateViewer": {
+          "name": "Chronologie",
+          "title": "Chronologie",
+          "text": "Voir tous les événements datés dans vos dossiers, correspondant aux données qui ont été collectées sur vous à ou concernant une date spécifique.",
+          "graphTitle": "Nombre d'événements datés dans vos dossiers",
+          "graphNoDate": "Aucun événement daté n'a été trouvé dans votre (vos) dossier(s).",
+          "datedEvents": "De {currMinDate} à {currMaxDate} nous avons trouvé {total} événements datés dans votre (vos) fichier(s).",
+          "headers": {
+            "File name": "Nom de fichier",
+            "Date": "Date",
+            "Description": "Description"
+          }
+        },
+        "genericLocationViewer": {
+          "name": "Positions",
+          "title": "Observations de localisation",
+          "text": "Voir tous les événements de localisation dans vos fichiers, correspondant aux données qui ont été collectées sur vous à ou concernant un lieu spécifique.",
+          "graphTitle": "Nombre de localisation dans vos fichiers",
+          "graphNoLocation": "Aucune localisation n'a été trouvé dans votre/vos fichier(s).",
+          "locations": "Nous avons trouvé {total} observations de localisation dans votre/vos fichier(s).",
+          "headers": {
+            "File": "Fichier",
+            "Path": "Chemin",
+            "Latitude": "Latitude",
+            "Longitude": "Longitude",
+            "Description": "Description"
+          }
+        }
+      }
+    }
+  },
+  "tutorialVideos": [],
+  "title": "Facebook",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/facebook.png",
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "off-facebook-activity-count",
+      "sql": "SELECT name AS advertiserName, o.timestamp AS date_, COUNT(*) AS count_ FROM OffFacebookActivityEvent o GROUP BY name, o.timestamp; ",
+      "files": ["off-facebook-activity"],
+      "visualization": "ChartViewTopRow.vue",
+      "vizProps": {
+        "yAccessor": "advertiserName",
+        "xAccessor": "count_",
+        "dateAccessor": "date_",
+        "dateFormat": "%s"
+      },
+      "title": "Off Facebook activity ranking",
+      "text": "See how many times third parties have informed Facebook of your activity outside of Facebook."
+    },
+    {
+      "showTable": false,
+      "id": "off-facebook-activity-type-count",
+      "sql": "SELECT name AS targetingType, type AS targetingValue, COUNT(*) AS count_ FROM OffFacebookActivityEvent WHERE targetingType IN ( SELECT name FROM OffFacebookActivityEvent GROUP BY name ORDER BY COUNT(*) DESC LIMIT 10 ) GROUP BY targetingType, targetingValue ",
+      "files": ["off-facebook-activity"],
+      "postprocessor": "sunburstTargetingAdvertiser",
+      "visualization": "ChartViewSunburst.vue",
+      "title": "Off Facebook activity type",
+      "text": "See which kind of information advertisers have shared with Facebook of your activity outside of Facebook."
+    },
+    {
+      "showTable": true,
+      "id": "ad-interactions",
+      "sql": "SELECT title, a.action, a.timestamp FROM AdvertiserInteraction a GROUP BY title, a.timestamp; ",
+      "files": ["advertisers-interacted"],
+      "title": "Ad interactions",
+      "text": "See the list of ads with which you have interacted."
+    },
+    {
+      "showTable": true,
+      "id": "your-topics",
+      "sql": "SELECT name FROM AdsInterest ",
+      "files": ["ads-interests"],
+      "title": "Inferred interests",
+      "text": "Get a list of topics that Facebook thinks you're interested in."
+    },
+    {
+      "showTable": true,
+      "id": "advertisers-contact-list",
+      "sql": "SELECT * FROM AdvertiserUploadedContactInformation; ",
+      "files": ["advertisers-contact-list"],
+      "title": "Contact list",
+      "text": "Get a list of advertisers that have uploaded a contact list containing you."
+    },
+    {
+      "showTable": true,
+      "id": "custom-audiences",
+      "sql": "SELECT * FROM CustomAudience; ",
+      "files": ["advertisers-using-information"],
+      "title": "Advertisers using your data",
+      "text": "See all advertisers that use Facebook to get information about you"
+    },
+    {
+      "showTable": false,
+      "id": "genericDateViewer",
+      "customPipeline": "genericDateViewer",
+      "visualization": "ChartViewGenericDateViewer.vue",
+      "title": "Timeline",
+      "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
+    },
+    {
+      "showTable": false,
+      "id": "genericLocationViewer",
+      "customPipeline": "genericLocationViewer",
+      "visualization": "ChartViewGenericLocationViewer.vue",
+      "title": "Location observations",
+      "text": "See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location."
+    }
+  ],
+  "version": 1
+}

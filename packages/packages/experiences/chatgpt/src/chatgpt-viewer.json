@@ -1,0 +1,127 @@
+{
+  "title": "ChatGPT",
+  "version": 1,
+  "dataSamples": [],
+  "hideEmptyTabs": false,
+  "hideFileExplorer": false,
+  "hideSummary": true,
+  "messages": {
+    "en": {
+      "intro": {
+        "title": "ChatGPT",
+        "dataPortal": "https://github.com/hestiaAI/data-catalog/blob/main/workshop/chatgpt.md"
+      },
+      "viewBlocks": {
+        "messages": {
+          "title": "Activity",
+          "text": "See your daily activity on ChatGPT",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Number of messages",
+                "valueLabel": "messages"
+              },
+              {
+                "title": "Author",
+                "valueLabel": "messages"
+              },
+              {
+                "valueLabel": "messages"
+              },
+              {
+                "valueLabel": "messages"
+              },
+              {
+                "title": "Top chats",
+                "valueLabel": "messages"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "fr": {
+      "intro": {
+        "title": "ChatGPT",
+        "dataPortal": "https://github.com/hestiaAI/data-catalog/blob/main/workshop/chatgpt.md"
+      },
+      "viewBlocks": {
+        "messages": {
+          "title": "Activité",
+          "text": "Voir votre activité quotidienne sur ChatGPT",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Nombre de messages",
+                "valueLabel": "messages"
+              },
+              {
+                "title": "Auteur",
+                "valueLabel": "messages"
+              },
+              {
+                "valueLabel": "messages"
+              },
+              {
+                "valueLabel": "messages"
+              },
+              {
+                "title": "Top discussions",
+                "valueLabel": "messages"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "tutorialVideos": [],
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/chatgpt.png",
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "messages",
+      "sql": "SELECT * FROM Messages; ",
+      "title": "Activity",
+      "text": "See your activity on ChatGPT",
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Number of messages",
+            "valueLabel": "messages",
+            "cols": "8",
+            "type": "TimelineChart.vue",
+            "dateAccessor": "createTime"
+          },
+          {
+            "title": "Author",
+            "valueLabel": "messages",
+            "cols": "4",
+            "type": "PieChart.vue",
+            "valueAccessor": "role"
+          },
+          {
+            "cols": "4",
+            "type": "HourChart.vue",
+            "dateAccessor": "createTime"
+          },
+          {
+            "valueLabel": "logins",
+            "type": "WeekChart.vue",
+            "cols": "4",
+            "dateAccessor": "createTime"
+          },
+          {
+            "title": "Top Discussion",
+            "valueLabel": "messages",
+            "cols": "4",
+            "type": "TopChart.vue",
+            "height": 220,
+            "valueAccessor": "convTitle"
+          }
+        ]
+      }
+    }
+  ]
+}

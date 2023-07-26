@@ -1,0 +1,117 @@
+{
+  "collaborator": {
+    "title": "The Dating Privacy Collective",
+    "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/dating-privacy-collective.svg",
+    "url": "https://dating-privacy.hestialabs.org/"
+  },
+  "dataPortal": "https://weareher.com/privacy/",
+  "dataSamples": [
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/her.zip?contenthash=fc8c1cae013bd09047a6&filename=her.zip"
+  ],
+  "hideEmptyTabs": false,
+  "hideFileExplorer": true,
+  "hideSummary": true,
+  "messages": {
+    "en": {
+      "viewBlocks": {}
+    },
+    "fr": {
+      "viewBlocks": {}
+    }
+  },
+  "tutorialVideos": [],
+  "title": "HER",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/her.png",
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "profiles",
+      "sql": "SELECT * FROM HerProfile; ",
+      "files": ["profiles"],
+      "visualization": "ChartViewHerUserInfos.vue",
+      "title": "User Infos",
+      "text": "HER profile information"
+    },
+    {
+      "showTable": false,
+      "id": "liked",
+      "sql": "WITH TempLike AS ( SELECT SUBSTR(likedAt, 1, 10) AS likedAt FROM HerLike ), TempSkip AS ( SELECT SUBSTR(skippedAt, 1, 10) AS skippedAt FROM HerSkip ) SELECT likedAt AS date_, \"Like\" AS actionValue, COUNT(*) AS actionCount FROM TempLike GROUP BY likedAt UNION SELECT skippedAt AS date_, \"Skip\" AS actionValue, COUNT(*) AS actionCount FROM TempSkip GROUP BY skippedAt; ",
+      "files": ["liked", "skipped"],
+      "visualization": "ChartViewTimeSeries.vue",
+      "vizProps": {
+        "title": "Likes vs Passes over time",
+        "legendOffset": 350,
+        "dateAccessor": {
+          "text": "Date",
+          "value": "date_"
+        },
+        "seriesAccessor": {
+          "text": "Action",
+          "value": "actionValue"
+        },
+        "valueAccessor": "actionCount"
+      },
+      "title": "Likes and Passes",
+      "text": "Number of likes and passes that you made over time."
+    },
+    {
+      "showTable": false,
+      "id": "notifications",
+      "sql": "SELECT * FROM HerNotification; ",
+      "files": ["notifications"],
+      "visualization": "ChartViewTimeSeries.vue",
+      "vizProps": {
+        "title": "Notifications over time",
+        "legendOffset": 350,
+        "dateAccessor": {
+          "text": "Date",
+          "value": "notificationSentAt"
+        },
+        "seriesAccessor": {
+          "text": "Action",
+          "value": "notificationType"
+        }
+      },
+      "title": "Notifications",
+      "text": "Number of notifications that you recieved over time."
+    },
+    {
+      "showTable": false,
+      "id": "matches",
+      "sql": "SELECT * FROM HerLike; ",
+      "files": ["liked"],
+      "visualization": "ChartViewOverviewHer.vue",
+      "title": "Matches",
+      "text": "Look at the likes you've made that have become matches or not."
+    },
+    {
+      "showTable": false,
+      "id": "messages",
+      "sql": "SELECT * FROM HerMessage; ",
+      "files": ["messages"],
+      "visualization": "ChartViewHerMessageActivity.vue",
+      "vizProps": {
+        "dateAccessor": "messageSentAt"
+      },
+      "title": "Messages",
+      "text": "Message Activity"
+    },
+    {
+      "showTable": true,
+      "id": "blocked",
+      "sql": "SELECT * FROM HerBlock; ",
+      "files": ["blocked"],
+      "title": "Blocks",
+      "text": "Blocks that you established over time."
+    },
+    {
+      "showTable": true,
+      "id": "reported",
+      "sql": "SELECT * FROM HerReport; ",
+      "files": ["reported"],
+      "title": "Reported",
+      "text": "Users that you reported to the moderation."
+    }
+  ],
+  "version": 1
+}

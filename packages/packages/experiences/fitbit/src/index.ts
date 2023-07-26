@@ -1,16 +1,14 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import icon from '@/icons/fitbit.jpg'
-import { genericViewers } from '@/pipelines/generic'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './fitbit-viewer.json'
 
-const options: ExperienceOptions = {
-  dataPortal: 'https://help.fitbit.com/articles/en_US/Help_article/1133.htm',
-  dataPortalMessage:
-    '<strong>Important:</strong> To make the experiment work, please request your <strong>"Account Archive"</strong> not your <strong>"Fitbit Data"</strong>.',
-  hideFileExplorer: false,
-  icon,
-  title: 'Fitbit',
-  viewBlocks: genericViewers
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url
+)

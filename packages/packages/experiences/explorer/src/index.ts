@@ -1,18 +1,15 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import icon from '@/icons/clipboard-search-outline.png'
-import { genericViewers as viewBlocks } from '@/pipelines/generic'
-import messages from './messages.json'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './explorer-viewer.json'
 
-const options: ExperienceOptions = {
-  hideSummary: false,
-  hideFileExplorer: false,
-  icon,
-  messages,
-  keepOnlyFiles: false,
-  subtitle: 'Explore data from anywhere!',
-  title: 'Generic data experience',
-  viewBlocks
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
+  keepOnlyFiles: false
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url
+)
