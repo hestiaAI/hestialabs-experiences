@@ -7,16 +7,14 @@
   <meta charset="utf-8">
 </head>
 
-<body>
-  <h2>Below this starts an iframe</h2>
-  <div id="parent">
-    <div id="wrapper" style="position:relative">
-      <iframe style="position:absolute;top:0px;width:100%;height:100vh;"
-              frameborder="0"
-              id="iframe_id"></iframe>
-    </div>
+<body style="margin:0">
+  <div style="display: flex; flex-direction: column; height: 100vh">
+    <h2>Below this starts an iframe</h2>
+    <iframe style="flex-grow: 1;" 
+            frameborder="1"
+            id="iframe_id"></iframe>
+    <div><h2>Here we are after the iframe</h2></div>
   </div>
-  <h2>Here we are after the iframe</h2>
   <script>
     const stylesheets = [
 "fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900",
