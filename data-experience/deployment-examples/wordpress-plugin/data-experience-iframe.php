@@ -1,7 +1,10 @@
 <?php
 /**
  * Plugin Name: Data Experience Iframe
- * Description: A shortcode to include data-experience on a page, in an iframe.
+ * Description: A shortcode to include data-experience on a page, in an iframe. See readme on the plugin site.
+ * Plugin URI: https://github.com/hestiaAI/hestialabs-experiences/tree/master/data-experience/deployment-examples/wordpress-plugin
+ * Author: hestia.ai
+ * Author URI: https://hestia.ai
  *
  * Zip this file and upload it to plugins in the wordpress dashboard
  * https://themewaves.com/how-to-upload-plugin-to-wordpress/
