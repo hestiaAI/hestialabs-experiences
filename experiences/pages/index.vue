@@ -316,7 +316,7 @@ export default {
     },
     experiences() {
       return ['twitter', 'facebook', 'google', 'tracker-control']
-        .map(e => this.$store.state.experiences[e])
+        .map(e => this.$store.state.experiences[e].config)
         .filter(e => e)
     }
   }
