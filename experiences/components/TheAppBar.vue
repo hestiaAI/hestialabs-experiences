@@ -99,7 +99,8 @@ export default {
       return this.$route.params.experience
     },
     e() {
-      return this.$store.getters.experience(this.$route) || {}
+      const module = this.$store.getters.experience(this.$route)
+      return module?.config || {}
     },
     collaborator() {
       return this.config.displayCollaborators ? this.e.collaborator : undefined
