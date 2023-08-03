@@ -6,7 +6,9 @@ import * as packages from './packages'
 
 import camelCase from 'lodash/camelCase'
 import isEqual from 'lodash/isEqual'
-import { ViewBlock, ViewerOptions } from './lib/types'
+import { PostprocessorFunction, ViewBlock, ViewerOptions } from './lib/types'
+import { ViewerFunctions } from './lib/types/experience-options'
+import { CustomPipeline } from './lib/types/view-block'
 const outputDir = 'viewer-opts'
 const iconUrlPrefix =
   'https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons'
@@ -28,11 +30,11 @@ function migrate(
     console.log(`[${experience.name}] DONE: ${migratedViewerOptsPath}`)
     return
   }
+  viewerOptions.viewBlocks.forEach(vb =>
+    unpopulateViewerOptions(vb, viewerFunctions)
+  )
   const unserializable = diffWithSerialized(viewerOptions)
-  const migratable =
-    !unserializable ||
-    viewerFunctions.postprocessors ||
-    viewerFunctions.customPipelines
+  const migratable = !unserializable
   if (!migratable) {
     console.log(`[${experience.name}] BAD ${formatDiff(unserializable)}`)
     // console.log(JSON.stringify(unserializable, stringifyReplacer, 2))
@@ -48,11 +50,33 @@ function migrate(
       writeFileSync(almostMigratedVOptsPath, JSON.stringify(fixedVOs, null, 2))
       console.log(`[${experience.name}] OK wrote ${almostMigratedVOptsPath}`)
       const testVOPath = `../data-experience/public/${viewerOptionsFileName}`
-      fixedVOs.version = 0
+      // fixedVOs.version = 0
       writeFileSync(testVOPath, JSON.stringify(fixedVOs, null, 2))
       console.log(` wrote ${testVOPath}`)
       migrateIndexTs(experience.name)
       migratePackageJson(experience.name, viewerOptionsFileName)
+    }
+  }
+}
+
+function unpopulateViewerOptions(
+  viewBlock: ViewBlock,
+  viewerFunctions: ViewerFunctions
+) {
+  const postprocessor = viewBlock.postprocessor as PostprocessorFunction
+  if (viewerFunctions.postprocessors) {
+    const poproEntries = Object.entries(viewerFunctions.postprocessors)
+    const poproName = poproEntries.find(([_, f]) => f === postprocessor)?.[0]
+    if (poproName) {
+      viewBlock.postprocessor = poproName
+    }
+  }
+  const customPipeline = viewBlock.customPipeline as CustomPipeline
+  if (viewerFunctions.customPipelines) {
+    const cupiEntries = Object.entries(viewerFunctions.customPipelines)
+    const cupiName = cupiEntries.find(([_, f]) => f === customPipeline)?.[0]
+    if (cupiName) {
+      viewBlock.customPipeline = cupiName
     }
   }
 }
@@ -85,16 +109,18 @@ $&, viewerFunctions`
 }
 function writeViewerFunctions(
   experienceName: string,
-  pipelineImports: string[],
+  imports: string[],
+  postProcessorLines: string[][],
   customPipelineLines: string[][]
 ) {
   const filePath = `packages/experiences/${experienceName}/src/viewer-functions.ts`
-  const postProcessorLines = []
   const cLF = customPipelineLines.length ? '\n' : ''
   const pLF = postProcessorLines.length ? '\n' : ''
-  const content = `${pipelineImports.join('\n')}
+  const content = `${imports.join('\n')}
 const viewerFunctions = {
-  postprocessors: {${pLF}${pLF}},
+  postprocessors: {${pLF}${postProcessorLines
+    .map(([n, v]) => `    ${n}: ${v}`)
+    .join(',\n')}${pLF ? pLF + '  ' : pLF}},
   customPipelines: {${cLF}${customPipelineLines
     .map(([n, v]) => `    ${n}: ${v}`)
     .join(',\n')}${cLF ? cLF + '  ' : cLF}}
@@ -157,13 +183,24 @@ import viewerOptions from './${experienceName}-viewer.json'`
       `const loaderOptions: LoaderOptions = {
   viewerVersion: 1,`
     ],
+    [/\/\/ eslint-disable-next-line prettier\/prettier/, ''],
     [
-      /export default new Experience\(options, options, packageJSON, import.meta.url.*/,
+      /export default new Experience\(options, options, packageJSON, import.meta.url[^,]*$/,
       `export default new Experience(
   loaderOptions,
   viewerOptions as ViewerOptions,
   packageJSON,
   import.meta.url
+)`
+    ],
+    [
+      /^export default new Experience\(options, options, packageJSON, import.meta.url, viewerFunctions\)$/,
+      `export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url,
+  viewerFunctions
 )`
     ]
   ])
@@ -173,6 +210,7 @@ function createViewFunctions(experienceName: string) {
   const filePath = `packages/experiences/${experienceName}/src/blocks.ts`
   const originalContent = readFileSync(filePath, 'utf8')
   const lines = originalContent.split(/\r?\n/)
+
   const pipelineImportRegex = /import.*pipelines\/custom/
   const pipelineImports = lines.filter(l => pipelineImportRegex.test(l))
   const customPipelineLines = lines.filter(l => /^ +customPipeline/.test(l))
@@ -195,11 +233,35 @@ function createViewFunctions(experienceName: string) {
     `'${name}'`
   ]) as [RegExp, string][]
   console.log('customPipeline regexes:\n', pipelineRegexes)
-  replaceRegexesInFile(filePath, [
-    [pipelineImportRegex, ''],
-    ...pipelineRegexes
+
+  const poproImportRegex = /import.*\/postprocessors/
+  const poproImports = lines.filter(l => poproImportRegex.test(l))
+  const poproLines = lines.filter(l => /^ +postprocessor/.test(l))
+  console.log('postProcessor lines:\n', poproLines)
+  const poproNames = poproLines.map(l => [
+    l.replace(/^ *postprocessor: ?([^, ]+).*/, '$1'),
+    l.replace(/^ *postprocessor: ?([^, ]+).*/, '$1')
   ])
-  writeViewerFunctions(experienceName, pipelineImports, pipelineNames)
+  console.log('postProcessor names:\n', poproNames)
+  const poproRegexes = poproNames.map(([name, def]) => [
+    new RegExp(`postprocessor: *${def}`),
+    `postprocessor: '${name}'`
+  ]) as [RegExp, string][]
+  console.log('postProcessor regexes:\n', poproRegexes)
+
+  replaceRegexesInFile(filePath, [
+    [poproImportRegex, ''],
+    [pipelineImportRegex, ''],
+    ...pipelineRegexes,
+    ...poproRegexes
+  ])
+
+  writeViewerFunctions(
+    experienceName,
+    pipelineImports.concat(poproImports),
+    poproNames,
+    pipelineNames
+  )
   insertViewerFunctionsIntoIndexTs(experienceName)
 }
 
