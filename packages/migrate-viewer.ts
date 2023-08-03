@@ -236,6 +236,7 @@ function createViewFunctions(experienceName: string) {
 
   const poproImportRegex = /import.*\/postprocessors/
   const poproImports = lines.filter(l => poproImportRegex.test(l))
+  console.log('postProcessor imports:\n', poproImports)
   const poproLines = lines.filter(l => /^ +postprocessor/.test(l))
   console.log('postProcessor lines:\n', poproLines)
   const poproNames = poproLines.map(l => [
@@ -265,16 +266,6 @@ function createViewFunctions(experienceName: string) {
   insertViewerFunctionsIntoIndexTs(experienceName)
 }
 
-function migrateViewBlocks(experienceName: string) {
-  const filePath = `packages/experiences/${experienceName}/src/blocks.ts`
-  replaceRegexesInFile(filePath, [
-    [
-      /^( *)customPipeline: ?customPipelineMergeCSV\('([^']+)[^,]+/,
-      "$1customPipeline: 'csv_$2'"
-    ]
-  ])
-}
-
 function replaceRegexesInFile(fileName: string, regexes: [RegExp, string][]) {
   const originalContent = readFileSync(fileName, 'utf8')
   const result = replaceRegexesInString(originalContent, regexes)
@@ -292,12 +283,15 @@ function replaceRegexesInString(
   const replaced = lines
     .map(line => {
       const found = regexes.filter(([regex]) => regex.test(line))
-      if (found.length == 1) {
+      const uniqueReplacements = new Set(found.map(f => f[1]))
+      if (uniqueReplacements.size == 1) {
         const [regex, replacement] = found[0]
         // console.log(`matched ${line}`)
         return replacement ? line.replace(regex, replacement) : undefined
-      } else if (found.length > 1) {
-        throw new Error(`Found more than one matches on line: ${line}`)
+      } else if (uniqueReplacements.size > 1) {
+        throw new Error(
+          `Found more than one matches with same replacement on line: ${line}`
+        )
       }
       return line
     })
