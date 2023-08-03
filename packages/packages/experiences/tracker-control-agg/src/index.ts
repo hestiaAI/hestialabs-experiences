@@ -1,21 +1,21 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import icon from '@/icons/tracker-control.png'
-import viewBlocks from './blocks'
+import viewerFunctions from './viewer-functions'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './tracker-control-agg-viewer.json'
 import databaseConfig from './database'
-import messages from '../../tracker-control/src/messages.json'
 
-const options: ExperienceOptions = {
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
   databaseConfig,
   files: {
     'tracker-control': '**/block00.json'
-  },
-  hideFileExplorer: false,
-  icon,
-  messages,
-  subtitle: 'Tracking data',
-  title: 'TrackerControl Agg',
-  viewBlocks
+  }
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url,
+  viewerFunctions
+)

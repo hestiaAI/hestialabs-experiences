@@ -1,11 +1,5 @@
 import type { ViewBlocks } from '@/types'
 import sqlAll from './sql/all.sql'
-import {
-  toGraph,
-  toGraphAll,
-  toGraphAllCategories,
-  toGraphAllInclusion
-} from './postprocessors'
 const blocks: ViewBlocks = [
   {
     id: 'trackerControl',
@@ -18,7 +12,7 @@ const blocks: ViewBlocks = [
   {
     id: 'trackerControlGraph',
     sql: sqlAll,
-    postprocessor: toGraph,
+    postprocessor: 'toGraph',
     files: ['tracker-control'],
     visualization: 'ChartViewDirectedGraph.vue',
     title: 'Data hoarding',
@@ -27,7 +21,7 @@ const blocks: ViewBlocks = [
   {
     id: 'trackerControlGraphAllCategories',
     sql: sqlAll,
-    postprocessor: toGraphAllCategories,
+    postprocessor: 'toGraphAllCategories',
     files: ['tracker-control'],
     visualization: 'ChartViewDirectedGraph.vue',
     title: 'Data hoarding (All Categories)',
@@ -36,7 +30,7 @@ const blocks: ViewBlocks = [
   {
     id: 'trackerControlGraphAllInclusion',
     sql: sqlAll,
-    postprocessor: toGraphAllInclusion,
+    postprocessor: 'toGraphAllInclusion',
     files: ['tracker-control'],
     visualization: 'ChartViewDirectedGraph.vue',
     title: 'Data hoarding (All inbound)',
@@ -45,7 +39,7 @@ const blocks: ViewBlocks = [
   {
     id: 'trackerControlGraphAll',
     sql: sqlAll,
-    postprocessor: toGraphAll,
+    postprocessor: 'toGraphAll',
     files: ['tracker-control'],
     visualization: 'ChartViewDirectedGraph.vue',
     title: 'Data hoarding (All)',
