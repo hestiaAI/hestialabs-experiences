@@ -215,22 +215,28 @@ function createViewFunctions(experienceName: string) {
   const pipelineImports = lines.filter(l => pipelineImportRegex.test(l))
   const customPipelineLines = lines.filter(l => /^ +customPipeline/.test(l))
   console.log('customPipeline lines:\n', customPipelineLines)
-  const pipelineNames = customPipelineLines.map(l => [
-    l
-      .replace(
-        /^ *customPipeline: ?customPipeline[^(]+CSV\('([^']+)[^,]+.*/,
-        'csv_$1'
+  const pipelineNames = customPipelineLines
+    .map(l => [
+      l
+        .replace(
+          /^ *customPipeline: ?customPipeline[^(]+CSV\('([^']+)[^,]+.*/,
+          'csv_$1'
+        )
+        .replace(/-/g, '_'),
+      l.replace(
+        /^ *customPipeline: ?(customPipeline[^(]+CSV\('[^']+[^,]+).*/,
+        '$1'
       )
-      .replace(/-/g, '_'),
-    l.replace(
-      /^ *customPipeline: ?(customPipeline[^(]+CSV\('[^']+[^,]+).*/,
-      '$1'
-    )
-  ])
+    ])
+    // map the lines that aren't calling a function
+    .map(([l, n]) => [
+      l.replace(/^ *customPipeline: ?([^,' ]+)[^']*$/, '$1'),
+      n.replace(/^ *customPipeline: ?([^,' ]+)[^']*$/, '$1')
+    ])
   console.log('customPipeline names:\n', pipelineNames)
   const pipelineRegexes = pipelineNames.map(([name, def]) => [
-    new RegExp(def.replace(/([()])/g, '\\$1')),
-    `'${name}'`
+    new RegExp('customPipeline: ?' + def.replace(/([()])/g, '\\$1')),
+    `customPipeline: '${name}'`
   ]) as [RegExp, string][]
   console.log('customPipeline regexes:\n', pipelineRegexes)
 
