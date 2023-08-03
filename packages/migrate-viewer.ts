@@ -17,7 +17,8 @@ function migrate(
 ): void {
   const {
     // loaderOptions: { files, disabled, databaseConfig },
-    viewerOptions
+    viewerOptions,
+    viewerFunctions
     // viewerOptions: { viewBlocks, url }
   } = experience
   const srcPath = `packages/experiences/${experience.name}/src`
@@ -28,7 +29,11 @@ function migrate(
     return
   }
   const unserializable = diffWithSerialized(viewerOptions)
-  if (unserializable) {
+  const migratable =
+    !unserializable ||
+    viewerFunctions.postprocessors ||
+    viewerFunctions.customPipelines
+  if (!migratable) {
     console.log(`[${experience.name}] BAD ${formatDiff(unserializable)}`)
     // console.log(JSON.stringify(unserializable, stringifyReplacer, 2))
     if (doWriteFiles) {
