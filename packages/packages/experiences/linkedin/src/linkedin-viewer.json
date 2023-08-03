@@ -1,0 +1,250 @@
+{
+  "dataPortal": "https://www.linkedin.com/help/linkedin/answer/50191/downloading-your-account-data",
+  "dataSamples": [
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/linkedin.zip?contenthash=9a067fd4d08481359234&filename=linkedin.zip"
+  ],
+  "hideEmptyTabs": false,
+  "hideFileExplorer": false,
+  "hideSummary": true,
+  "messages": {
+    "en": {
+      "intro": {
+        "title": "LinkedIn",
+        "dataPortal": "https://www.linkedin.com/help/linkedin/answer/50191/downloading-your-account-data"
+      },
+      "viewBlocks": {
+        "inference": {
+          "title": "Inferences about you",
+          "text": "Each card below represents an inference that Linkedin has made about you, either positively or negatively, e.g. Am I a joob seeker -> true or false.",
+          "vizProps": {
+            "messages": {
+              "Filter by Category": "Filter by Category",
+              "Filter by Inference": "Filter by Inference",
+              "Inferred": "Inferred"
+            }
+          },
+          "total-inferences": "Total inferences: {n}",
+          "inferenceTypes": {
+            "Numeric value": "Numeric value",
+            "Other": "Other"
+          },
+          "categories": {
+            "Career inferences": "Career inferences",
+            "Inferred interests": "Inferred interests",
+            "LinkedIn Sales Solutions (LSS) inferences": "LinkedIn Sales Solutions (LSS) inferences",
+            "LinkedIn activity inferences": "LinkedIn activity inferences"
+          }
+        },
+        "ad-targeting": {
+          "title": "Ad targeting",
+          "text": "This information is used by Linkedin to determine which ads to show you. Some of the targeting data may be derived from other information you have provided to them. For example, they may use your title as an indication of your seniority level.",
+          "names": {
+            "memberAge": "Member Age",
+            "companyNames": "Company Names",
+            "companyFollowerOf": "Company Follower of",
+            "companyCategory": "Company Category",
+            "companySize": "Company Size",
+            "degrees": "Degrees",
+            "degreeClass": "Degree Class",
+            "memberSchools": "Member Schools",
+            "companyGrowthRate": "Company Growth Rate",
+            "fieldsOfStudy": "Fields of Study",
+            "companyConnections": "Company Connections",
+            "functionBySize": "Function By Size",
+            "jobFunctions": "Job Functions",
+            "memberGender": "Member Gender",
+            "graduationYear": "Graduation Year",
+            "memberGroups": "Member Groups",
+            "companyIndustries": "Company Industries",
+            "memberInterests": "Member Interests",
+            "interfaceLocales": "Interface Locales",
+            "interfaceLocale": "Interface Locale",
+            "memberTraits": "Member Traits",
+            "profileLocations": "Profile Locations",
+            "companyRevenue": "Company Revenue",
+            "jobSeniorities": "Job Seniorities",
+            "memberSkills": "Member Skills",
+            "jobTitles": "Job Titles",
+            "yearsOfExperience": "Years of Experience"
+          }
+        },
+        "connections": {
+          "title": "Connections",
+          "text": "This tool allows you to track all the connections you have made with Linkedin, you can filter by date, day or by company and position in your address book.",
+          "selected-some": "{filterCount} connections selected out of {totalCount} views",
+          "selected-all": "All {totalCount} connections selected.",
+          "vizProps": {
+            "messages": {
+              "Cumulative number of connections": "Cumulative number of connections",
+              "Company": "Company",
+              "Position": "Position",
+              "Day": "Day",
+              "time range": "time range"
+            }
+          },
+          "headers": {
+            "First Name": "First Name",
+            "Last Name": "Last Name",
+            "Email Address": "Email Address",
+            "Company": "Company",
+            "Position": "Position",
+            "Connected On": "Connected On"
+          }
+        },
+        "genericDateViewer": {
+          "name": "Timeline",
+          "title": "Timeline",
+          "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date.",
+          "graphTitle": "Number of dated events in your files",
+          "graphNoDate": "No dated events were found in your file(s).",
+          "datedEvents": "From {currMinDate} to {currMaxDate} we found {total} dated events in your file(s).",
+          "headers": {
+            "File name": "File name",
+            "Date": "Date",
+            "Description": "Description"
+          }
+        }
+      }
+    },
+    "fr": {
+      "intro": {
+        "title": "LinkedIn",
+        "dataPortal": "https://www.linkedin.com/help/linkedin/answer/50191/downloading-your-account-data"
+      },
+      "viewBlocks": {
+        "inference": {
+          "title": "Données inférées",
+          "text": "Chacun des éléments ci-dessous décrit une inférence que Linkedin a faite à votre sujet, en positif ou négatif. Par exemple, \"je recherche un emploi\", vrai ou faux.",
+          "vizProps": {
+            "messages": {
+              "Filter by Category": "Filtrer par catégorie",
+              "Filter by Inference": "Filtrer par inférence",
+              "Inferred": "Inférée"
+            }
+          },
+          "total-inferences": "Total des inférences : {n}",
+          "inferenceTypes": {
+            "Numeric value": "Valeur numérique",
+            "Other": "Autres"
+          },
+          "categories": {
+            "Career inferences": "Déductions pour la carrière",
+            "Inferred interests": "Intérêts inférés",
+            "LinkedIn Sales Solutions (LSS) inferences": "Inférences LinkedIn Sales Solutions (LSS)",
+            "LinkedIn activity inferences": "Inférences sur l'activité de LinkedIn"
+          }
+        },
+        "ad-targeting": {
+          "title": "Ciblage publicitaire",
+          "text": "Informations utilisées par Linkedin pour choisir les publicités à vous montrer. Une partie de l'information de ciblage peut découler d'informations que vous avez vous-même fournies. Par exemple, votre titre peut donner des indications sur votre niveau hiérarchique.",
+          "names": {
+            "memberAge": "Âge du membre",
+            "companyNames": "Noms des entreprises",
+            "companyFollowerOf": "Suivi de l'entreprise",
+            "companyCategory": "Catégorie d'entreprise",
+            "companySize": "Taille de l'entreprise",
+            "degrees": "Degrés",
+            "degreeClass": "Classe de degré",
+            "memberSchools": "Écoles membres",
+            "companyGrowthRate": "Taux de croissance de l'entreprise",
+            "fieldsOfStudy": "Domaines d'études",
+            "companyConnections": "Connexions d'entreprises",
+            "functionBySize": "Fonction par taille",
+            "jobFunctions": "Fonctions de l'emploi",
+            "memberGender": "Membre Genre",
+            "graduationYear": "Année d'obtention du diplôme",
+            "memberGroups": "Groupes de membres",
+            "companyIndustries": "Industries de l'entreprise",
+            "memberInterests": "Intérêts des membres",
+            "interfaceLocales": "Interface Locales",
+            "interfaceLocale": "Interface Locale",
+            "memberTraits": "Traits des membres",
+            "profileLocations": "Emplacements des profils",
+            "companyRevenue": "Revenu de l'entreprise",
+            "jobSeniorities": "Ancienneté des emplois",
+            "memberSkills": "Compétences des membres",
+            "jobTitles": "Titres des emplois",
+            "yearsOfExperience": "Années d'expérience"
+          }
+        },
+        "connections": {
+          "title": "Connections",
+          "text": "Cet outil vous permet d'examiner les connections que vous avez nouées par Linkedin, filtrables par date, société ou poste dans votre carnet d'adresse.",
+          "selected-some": "{filterCount} connexions sélectionnées sur {totalCount} vues",
+          "selected-all": "Toutes les {totalCount} connexions sont sélectionnées.",
+          "vizProps": {
+            "messages": {
+              "Cumulative number of connections": "Nombre cumulé de connexions",
+              "Company": "Entreprise",
+              "Position": "Position",
+              "Day": "Jour",
+              "time range": "plage de temps"
+            }
+          },
+          "headers": {
+            "First Name": "Prénom",
+            "Last Name": "Nom",
+            "Email Address": "Adresse électronique",
+            "Company": "Entreprise",
+            "Position": "Poste",
+            "Connected On": "Connecté sur"
+          }
+        },
+        "genericDateViewer": {
+          "name": "Chronologie",
+          "title": "Chronologie",
+          "text": "Voir tous les événements datés dans vos dossiers, correspondant aux données qui ont été collectées sur vous à ou concernant une date spécifique.",
+          "graphTitle": "Nombre d'événements datés dans vos dossiers",
+          "graphNoDate": "Aucun événement daté n'a été trouvé dans votre (vos) dossier(s).",
+          "datedEvents": "De {currMinDate} à {currMaxDate} nous avons trouvé {total} événements datés dans votre (vos) fichier(s).",
+          "headers": {
+            "File name": "Nom de fichier",
+            "Date": "Date",
+            "Description": "Description"
+          }
+        }
+      }
+    }
+  },
+  "tutorialVideos": [],
+  "title": "LinkedIn",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/linkedin.png",
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "inference",
+      "customPipeline": "csv_inference",
+      "files": ["inference"],
+      "visualization": "ChartViewListLinkedinInference.vue",
+      "title": "Inferences about you",
+      "text": "Each card below represents an inference that Linkedin has made about you, either positively or negatively, e.g. Am I a joob seeker -> true or false."
+    },
+    {
+      "showTable": false,
+      "id": "ad-targeting",
+      "customPipeline": "csv_ad_targeting",
+      "files": ["ad-targeting"],
+      "visualization": "ChartViewLinkedinAdTargeting.vue",
+      "title": "Ad targeting",
+      "text": "This information is used by Linkedin to determine which ads to show you. Some of the targeting data may be derived from other information you have provided to them. For example, they may use your title as an indication of your seniority level."
+    },
+    {
+      "showTable": false,
+      "id": "connections",
+      "customPipeline": "csv_connections",
+      "files": ["connections"],
+      "visualization": "ChartViewOverviewLinkedinConnection.vue",
+      "title": "Connections",
+      "text": "This tool allows you to track all the connections you have made with Linkedin, you can filter by date, day or by company and position in your address book."
+    },
+    {
+      "showTable": false,
+      "id": "genericDateViewer",
+      "customPipeline": "genericDateViewer",
+      "visualization": "ChartViewGenericDateViewer.vue",
+      "title": "Timeline",
+      "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
+    }
+  ],
+  "version": 1
+}

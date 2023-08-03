@@ -1,31 +1,27 @@
 import packageJSON from '../package.json'
 import viewerFunctions from './viewer-functions'
-import { Experience, ExperienceOptions } from '@/index'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './linkedin-viewer.json'
 import { linkedinConnections } from './preprocessor'
-import icon from '@/icons/linkedin.png'
-import viewBlocks from './blocks'
-import messages from './messages.json'
-import dataSample from '@/data-samples/linkedin.zip'
 
-const options: ExperienceOptions = {
-  dataPortal:
-    'https://www.linkedin.com/help/linkedin/answer/50191/downloading-your-account-data',
-  dataSamples: [dataSample],
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
+  // 'https://www.linkedin.com/help/linkedin/answer/50191/downloading-your-account-data',
   files: {
     inference: '**/Inferences_about_you.csv',
     'ad-targeting': '**/Ad_Targeting.csv',
     connections: '**/Connections.csv'
   },
-  hideFileExplorer: false,
-  icon,
-  messages,
   keepOnlyFiles: false,
   preprocessors: {
     '**/Connections.csv': linkedinConnections
-  },
-  title: 'LinkedIn',
-  viewBlocks
+  }
 }
 
-// eslint-disable-next-line prettier/prettier
-export default new Experience(options, options, packageJSON, import.meta.url, viewerFunctions)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url,
+  viewerFunctions
+)
