@@ -176,7 +176,7 @@ function createViewFunctions(experienceName: string) {
     l
       .replace(
         /^ *customPipeline: ?customPipelineMergeCSV\('([^']+)[^,]+.*/,
-        '$1'
+        'csv_$1'
       )
       .replace(/-/g, '_'),
     l.replace(
@@ -187,7 +187,7 @@ function createViewFunctions(experienceName: string) {
   console.log('customPipeline names:\n', pipelineNames)
   const pipelineRegexes = pipelineNames.map(([name, def]) => [
     new RegExp(def.replace(/([()])/g, '\\$1')),
-    `'csv_${name}'`
+    `'${name}'`
   ]) as [RegExp, string][]
   console.log('customPipeline regexes:\n', pipelineRegexes)
   replaceRegexesInFile(filePath, [
