@@ -1,4 +1,5 @@
 import packageJSON from '../package.json'
+import viewerFunctions from './viewer-functions'
 import { Experience, ExperienceOptions } from '@/index'
 import icon from '@/icons/uber.png'
 import viewBlocks from './blocks'
@@ -18,4 +19,5 @@ const options: ExperienceOptions = {
   viewBlocks
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+// eslint-disable-next-line prettier/prettier
+export default new Experience(options, options, packageJSON, import.meta.url, viewerFunctions)
