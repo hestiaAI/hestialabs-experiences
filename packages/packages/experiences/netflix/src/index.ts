@@ -1,20 +1,20 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import icon from '@/icons/netflix.png'
-import viewBlocks from './blocks'
-import messages from './messages.json'
-import dataSample from '@/data-samples/netflix.zip'
+import viewerFunctions from './viewer-functions'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './netflix-viewer.json'
 
-const options: ExperienceOptions = {
-  dataSamples: [dataSample],
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
   files: {
     'viewing-activity': '**/CONTENT_INTERACTION/ViewingActivity.csv',
     'messages-by-netflix': '**/MESSAGES/MessagesSentByNetflix.csv'
-  },
-  icon,
-  messages,
-  title: 'Netflix',
-  viewBlocks
+  }
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url,
+  viewerFunctions
+)
