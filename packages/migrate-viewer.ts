@@ -218,12 +218,12 @@ function createViewFunctions(experienceName: string) {
   const pipelineNames = customPipelineLines.map(l => [
     l
       .replace(
-        /^ *customPipeline: ?customPipelineMergeCSV\('([^']+)[^,]+.*/,
+        /^ *customPipeline: ?customPipeline[^(]+CSV\('([^']+)[^,]+.*/,
         'csv_$1'
       )
       .replace(/-/g, '_'),
     l.replace(
-      /^ *customPipeline: ?(customPipelineMergeCSV\('[^']+[^,]+).*/,
+      /^ *customPipeline: ?(customPipeline[^(]+CSV\('[^']+[^,]+).*/,
       '$1'
     )
   ])
