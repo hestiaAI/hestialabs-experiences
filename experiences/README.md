@@ -141,7 +141,7 @@ npm run dev
 
 ### Global Configuration
 
-The files in `config` let us set parameters for each deployment. [See the README](config) for more details about the different parameters.
+The files in `config` let us set parameters for each deployment. [See the README](config/README.md) for more details about the different parameters.
 
 The default is [config/config.json](config/config.json) (the test deployment), but if you want to use another configuration like `config/workshop.json`, set the environment variable **CONFIG_NAME**
 
