@@ -3,6 +3,7 @@
 This repo currently contains three projects:
 - [packages](packages/README.md): Monorepo for packages used throughout the system, including data experience packages.
 - [data-experience](data-experience/README.md): Vue component for the data experience to visualize one data set.
+- [dc-dashboard](dc-dashboard/README.md): A library to generate interactive dashboards.
 - [experiences](experiences/README.md): Nuxt app.
 
 This repo is also dependent on the [bubble-server](https://github.com/hestiaAI/hestialabs-bubble-server)
