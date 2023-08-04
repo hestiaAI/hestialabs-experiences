@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/her-tinder-agg",
-  "version": "3.3.2",
+  "version": "3.3.3",
   "main": "dist/index.mjs",
   "type": "module",
   "files": [

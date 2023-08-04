@@ -1,36 +1,29 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import { theEyeballs } from '@/collaborators/index'
+import viewerFunctions from './viewer-functions'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './twitter-viewer.json'
 import preprocessor from './preprocessor'
-import icon from '@/icons/twitter.png'
-import viewBlocks from './blocks'
 import databaseConfig from './database'
 import dataModel from './model/model.json'
-import messages from './messages.json'
-import dataSampleSmall from '@/data-samples/twitter-small.zip'
-import dataSampleLarge from '@/data-samples/twitter-large.zip'
 
-const options: ExperienceOptions = {
-  collaborator: theEyeballs,
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
   databaseConfig,
   dataModel,
-  dataPortal:
-    'https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive',
-  dataSamples: [dataSampleSmall, dataSampleLarge],
   files: {
     impressions: '**/ad-impressions.js',
     engagements: '**/ad-engagements.js',
     personalization: '**/personalization.js'
   },
-  icon,
-  messages,
   preprocessors: {
     '**/*.js': preprocessor
-  },
-  hideFileExplorer: false,
-  title: 'Twitter',
-  tutorialVideos: ['https://vimeo.com/691109800'],
-  viewBlocks
+  }
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url,
+  viewerFunctions
+)

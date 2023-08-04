@@ -1,21 +1,19 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import icon from '@/icons/uber.png'
-import viewBlocks from './blocks'
-import messages from './messages.json'
-import dataSample from '@/data-samples/uber.zip'
+import viewerFunctions from './viewer-functions'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './uber-viewer.json'
 
-const options: ExperienceOptions = {
-  dataPortal: 'https://myprivacy.uber.com/privacy/exploreyourdata/download',
-  dataSamples: [dataSample],
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
   files: {
     trips: '**/Rider/trips_data.csv'
-  },
-  icon,
-  messages,
-  subtitle: 'Customer data',
-  title: 'Uber Rider',
-  viewBlocks
+  }
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url,
+  viewerFunctions
+)

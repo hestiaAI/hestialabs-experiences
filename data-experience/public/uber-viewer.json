@@ -1,0 +1,245 @@
+{
+  "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download",
+  "dataSamples": [
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/uber.zip?contenthash=0d805337d802fc857bc0&filename=uber.zip"
+  ],
+  "hideEmptyTabs": false,
+  "hideFileExplorer": true,
+  "hideSummary": true,
+  "messages": {
+    "en": {
+      "intro": {
+        "title": "Uber Rider",
+        "subtitle": "Customer data",
+        "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download"
+      },
+      "viewBlocks": {
+        "tripsData": {
+          "title": "Uber overview",
+          "text": "This interactive visualisation shows your Uber habits, play with it to discover everything Uber knows on you. Your data is grouped by currency and every graph is filterable.",
+          "vizProps": {
+            "messages": {
+              "select-currency": "Select data depending on the currency",
+              "Cumulative expenses": "Cumulative expenses",
+              "Total price": "Total price",
+              "Service used": "Service used",
+              "Day of week": "Day of week",
+              "Begin trip address": "Begin trip address",
+              "General information": "General information",
+              "Orders": "Orders",
+              "Speed": "Speed",
+              "trips": "trips",
+              "mph": "mph",
+              "Total": "Total",
+              "Average": "Average",
+              "Price": "Price",
+              "Distance": "Distance",
+              "Duration": "Duration",
+              "Waiting time": "Waiting time",
+              "min": "min",
+              "miles": "miles",
+              "Reset all filters": "Reset all filters"
+            }
+          },
+          "headers": {
+            "City": "City",
+            "Service": "Service",
+            "Status": "Status",
+            "Request Time": "Request Time",
+            "From": "From",
+            "To": "To",
+            "Waiting time (min)": "Waiting time (min)",
+            "Distance (miles)": "Distance (miles)",
+            "Duration (min)": "Duration (min)",
+            "Price": "Price"
+          }
+        },
+        "tripsGraphData": {
+          "title": "Uber Trips",
+          "text": "Get information about the places you have visited the most or from which you originate the most.",
+          "labelTotal": "In total there are {total} records of trips you have made with Uber",
+          "sourceText": "Pick-up places",
+          "targetText": "Drop-off places",
+          "linkMouseoverHTML": "<b>{sourceName}</b>  → <b>{targetName}</b><br><center><b>{value}</b> trip(s).</center>",
+          "nodeMouseoverHTML": "<b>{name}</b><br><center><b>{value}</b> trip(s) <b>{fromTo}</b> this place</center>",
+          "from": "from",
+          "to": "to"
+        },
+        "tripsKeplerData": {
+          "title": "Map of trips",
+          "text": "See where you travelled"
+        },
+        "genericDateViewer": {
+          "name": "Timeline",
+          "title": "Timeline",
+          "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date.",
+          "graphTitle": "Number of dated events in your files",
+          "graphNoDate": "No dated events were found in your file(s).",
+          "datedEvents": "From {currMinDate} to {currMaxDate} we found {total} dated events in your file(s).",
+          "headers": {
+            "File name": "File name",
+            "Date": "Date",
+            "Description": "Description"
+          }
+        },
+        "genericLocationViewer": {
+          "name": "Location Observations",
+          "title": "Location Observations",
+          "text": "See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location.",
+          "graphTitle": "Number of location records in your files",
+          "graphNoLocation": "No location were found in your file(s).",
+          "locations": "We found {total} locations in your file(s).",
+          "headers": {
+            "File": "File",
+            "Path": "Path",
+            "Latitude": "Latitude",
+            "Longitude": "Longitude",
+            "Description": "Description"
+          }
+        }
+      }
+    },
+    "fr": {
+      "intro": {
+        "title": "Passagers Uber",
+        "subtitle": "Données clients",
+        "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download"
+      },
+      "viewBlocks": {
+        "tripsData": {
+          "title": "Vue d'ensemble",
+          "text": "Visualisation interactive de vos habitudes sur Uber. Les données se regroupent par devise, et l'on peut ajouter des filtres sur les graphiques.",
+          "vizProps": {
+            "messages": {
+              "select-currency": "Sélectionner les données selon la devise",
+              "Cumulative expenses": "Dépenses cumulées",
+              "Total price": "Prix total",
+              "Service used": "Service utilisé",
+              "Day of week": "Jour de la semaine",
+              "Begin trip address": "Adresse de départ du voyage",
+              "General information": "Informations générales",
+              "Orders": "Commandes",
+              "Speed": "Vitesse",
+              "trips": "voyages",
+              "mph": "mi/h",
+              "Total": "Total",
+              "Average": "Moyenne",
+              "Price": "Prix",
+              "Distance": "Distance",
+              "Duration": "Durée",
+              "Waiting time": "Temps d'attente",
+              "min": "min",
+              "miles": "miles",
+              "Reset all filters": "Réinitialiser tous les filtres"
+            }
+          },
+          "headers": {
+            "City": "Ville",
+            "Service": "Service",
+            "Status": "Statut",
+            "Request Time": "Heure de demande",
+            "From": "De",
+            "To": "À",
+            "Waiting time (min)": "Temps d'attente (min)",
+            "Distance (miles)": "Distance (miles)",
+            "Duration (min)": "Durée (min)",
+            "Price": "Prix"
+          }
+        },
+        "tripsGraphData": {
+          "title": "Trajets",
+          "text": "Informations sur vos destinations et points de départ.",
+          "labelTotal": "Au total, il y a {total} enregistrements des voyages que vous avez effectués avec Uber",
+          "sourceText": "Lieux de ramassage",
+          "targetText": "Lieux de dépôt",
+          "linkMouseoverHTML": "<b>{sourceName}</b>  → <b>{targetName}</b><br><center><b>{value}</b> voyage(s).</center>",
+          "nodeMouseoverHTML": "<b>{name}</b><br><center><b>{value}</b> voyage(s) <b>{fromTo}</b> cet endroit</center>",
+          "from": "de",
+          "to": "à"
+        },
+        "tripsKeplerData": {
+          "title": "Carte de trajets",
+          "text": "Visualisation géographique de vos trajets"
+        },
+        "genericDateViewer": {
+          "name": "Chronologie",
+          "title": "Chronologie",
+          "text": "Voir tous les événements datés dans vos dossiers, correspondant aux données qui ont été collectées sur vous à ou concernant une date spécifique.",
+          "graphTitle": "Nombre d'événements datés dans vos dossiers",
+          "graphNoDate": "Aucun événement daté n'a été trouvé dans votre (vos) dossier(s).",
+          "datedEvents": "De {currMinDate} à {currMaxDate} nous avons trouvé {total} événements datés dans votre (vos) fichier(s).",
+          "headers": {
+            "File name": "Nom de fichier",
+            "Date": "Date",
+            "Description": "Description"
+          }
+        },
+        "genericLocationViewer": {
+          "name": "Positions",
+          "title": "Observations de localisation",
+          "text": "Voir tous les événements de localisation dans vos fichiers, correspondant aux données qui ont été collectées sur vous à ou concernant un lieu spécifique.",
+          "graphTitle": "Nombre de localisation dans vos fichiers",
+          "graphNoLocation": "Aucune localisation n'a été trouvé dans votre/vos fichier(s).",
+          "locations": "Nous avons trouvé {total} observations de localisation dans votre/vos fichier(s).",
+          "headers": {
+            "File": "Fichier",
+            "Path": "Chemin",
+            "Latitude": "Latitude",
+            "Longitude": "Longitude",
+            "Description": "Description"
+          }
+        }
+      }
+    }
+  },
+  "tutorialVideos": [],
+  "title": "Uber Rider",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/uber.png",
+  "subtitle": "Customer data",
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "tripsData",
+      "customPipeline": "csv_trips",
+      "files": ["trips"],
+      "visualization": "ChartViewOverviewUber.vue",
+      "title": "Uber overview",
+      "text": "This interactive visualisation shows your Uber habits, play with it to discover everything Uber knows on you. Your data is grouped by currency and every graph is filterable."
+    },
+    {
+      "showTable": false,
+      "id": "tripsGraphData",
+      "customPipeline": "tripsGraphData",
+      "files": ["trips"],
+      "visualization": "ChartViewSankey.vue",
+      "title": "Uber Trips",
+      "text": "Get information about the places you have visited the most or from which you originate the most."
+    },
+    {
+      "showTable": false,
+      "id": "genericDateViewer",
+      "customPipeline": "genericDateViewer",
+      "visualization": "ChartViewGenericDateViewer.vue",
+      "title": "Timeline",
+      "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
+    },
+    {
+      "showTable": false,
+      "id": "tripsKeplerData",
+      "customPipeline": "tripsKeplerData",
+      "files": ["trips"],
+      "visualization": "/kepler",
+      "title": "Map of trips",
+      "text": "See where you travelled"
+    },
+    {
+      "showTable": false,
+      "id": "genericLocationViewer",
+      "customPipeline": "genericLocationViewer",
+      "visualization": "ChartViewGenericLocationViewer.vue",
+      "title": "Location observations",
+      "text": "See all the location events in your files, corresponding to data that has been collected on you at or concerning a specific location."
+    }
+  ],
+  "version": 1
+}

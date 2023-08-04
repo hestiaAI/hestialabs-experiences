@@ -1,25 +1,23 @@
 import packageJSON from '../package.json'
-import { Experience, ExperienceOptions } from '@/index'
-import icon from '@/icons/linkedin.png'
-import viewBlocks from './blocks'
-import messages from './messages.json'
-import { theEyeballs } from '@/collaborators/index'
+import viewerFunctions from './viewer-functions'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './linkedin-agg-viewer.json'
 import databaseConfig from './database'
 
-const options: ExperienceOptions = {
-  collaborator: theEyeballs,
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
   databaseConfig,
   files: {
     inference: '**/block00.json',
     'ad-targeting': '**/block01.json',
     connection: '**/block02.json'
-  },
-  hideFileExplorer: false,
-  icon,
-  messages,
-  title: 'Collective LinkedIn experience',
-  subtitle: 'Unlock the power of Linkedin data',
-  viewBlocks
+  }
 }
 
-export default new Experience(options, options, packageJSON, import.meta.url)
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url,
+  viewerFunctions
+)

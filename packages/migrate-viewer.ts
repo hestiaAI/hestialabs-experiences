@@ -6,18 +6,21 @@ import * as packages from './packages'
 
 import camelCase from 'lodash/camelCase'
 import isEqual from 'lodash/isEqual'
-import { ViewBlock, ViewerOptions } from './lib/types'
+import { PostprocessorFunction, ViewBlock, ViewerOptions } from './lib/types'
+import { ViewerFunctions } from './lib/types/experience-options'
+import { CustomPipeline } from './lib/types/view-block'
 const outputDir = 'viewer-opts'
 const iconUrlPrefix =
   'https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons'
 
-function test(
+function migrate(
   [name, experience]: [name: string, experience: Experience],
   doWriteFiles = false
 ): void {
   const {
     // loaderOptions: { files, disabled, databaseConfig },
-    viewerOptions
+    viewerOptions,
+    viewerFunctions
     // viewerOptions: { viewBlocks, url }
   } = experience
   const srcPath = `packages/experiences/${experience.name}/src`
@@ -27,24 +30,54 @@ function test(
     console.log(`[${experience.name}] DONE: ${migratedViewerOptsPath}`)
     return
   }
+  viewerOptions.viewBlocks.forEach(vb =>
+    unpopulateViewerOptions(vb, viewerFunctions)
+  )
   const unserializable = diffWithSerialized(viewerOptions)
-  if (unserializable) {
+  const migratable = !unserializable
+  if (!migratable) {
     console.log(`[${experience.name}] BAD ${formatDiff(unserializable)}`)
     // console.log(JSON.stringify(unserializable, stringifyReplacer, 2))
+    if (doWriteFiles) {
+      createViewFunctions(experience.name)
+    }
   } else {
     console.log(`[${experience.name}] OK`)
+    // migrateViewBlocks(experience.name)
+    if (doWriteFiles) {
+      const fixedVOs = fixViewerOptions(viewerOptions, experience.name, 1)
+      const almostMigratedVOptsPath = migratedViewerOptsPath + '.mig.json'
+      writeFileSync(almostMigratedVOptsPath, JSON.stringify(fixedVOs, null, 2))
+      console.log(`[${experience.name}] OK wrote ${almostMigratedVOptsPath}`)
+      const testVOPath = `../data-experience/public/${viewerOptionsFileName}`
+      // fixedVOs.version = 0
+      writeFileSync(testVOPath, JSON.stringify(fixedVOs, null, 2))
+      console.log(` wrote ${testVOPath}`)
+      migrateIndexTs(experience.name)
+      migratePackageJson(experience.name, viewerOptionsFileName)
+    }
   }
-  if (doWriteFiles) {
-    const fixedVOs = fixViewerOptions(viewerOptions, experience.name, 1)
-    const almostMigratedVOptsPath = migratedViewerOptsPath + '.mig.json'
-    writeFileSync(almostMigratedVOptsPath, JSON.stringify(fixedVOs, null, 2))
-    console.log(`[${experience.name}] OK wrote ${almostMigratedVOptsPath}`)
-    const testVOPath = `../data-experience/public/${viewerOptionsFileName}`
-    fixedVOs.version = 0
-    writeFileSync(testVOPath, JSON.stringify(fixedVOs, null, 2))
-    console.log(` wrote ${testVOPath}`)
-    migrateIndexTs(experience.name)
-    migratePackageJson(experience.name, viewerOptionsFileName)
+}
+
+function unpopulateViewerOptions(
+  viewBlock: ViewBlock,
+  viewerFunctions: ViewerFunctions
+) {
+  const postprocessor = viewBlock.postprocessor as PostprocessorFunction
+  if (viewerFunctions.postprocessors) {
+    const poproEntries = Object.entries(viewerFunctions.postprocessors)
+    const poproName = poproEntries.find(([_, f]) => f === postprocessor)?.[0]
+    if (poproName) {
+      viewBlock.postprocessor = poproName
+    }
+  }
+  const customPipeline = viewBlock.customPipeline as CustomPipeline
+  if (viewerFunctions.customPipelines) {
+    const cupiEntries = Object.entries(viewerFunctions.customPipelines)
+    const cupiName = cupiEntries.find(([_, f]) => f === customPipeline)?.[0]
+    if (cupiName) {
+      viewBlock.customPipeline = cupiName
+    }
   }
 }
 
@@ -60,12 +93,51 @@ function fixViewerOptions(
   return viewerOptions
 }
 
+function insertViewerFunctionsIntoIndexTs(experienceName: string) {
+  const filePath = `packages/experiences/${experienceName}/src/index.ts`
+  replaceRegexesInFile(filePath, [
+    [
+      /^import \{ Experience, ExperienceOptions \} from '@\/index'.*/g,
+      `import viewerFunctions from './viewer-functions'\n$&`
+    ],
+    [
+      /export default new Experience\(options, options, packageJSON, import.meta.url/,
+      `// eslint-disable-next-line prettier/prettier
+$&, viewerFunctions`
+    ]
+  ])
+}
+function writeViewerFunctions(
+  experienceName: string,
+  imports: string[],
+  postProcessorLines: string[][],
+  customPipelineLines: string[][]
+) {
+  const filePath = `packages/experiences/${experienceName}/src/viewer-functions.ts`
+  const cLF = customPipelineLines.length ? '\n' : ''
+  const pLF = postProcessorLines.length ? '\n' : ''
+  const content = `${imports.join('\n')}
+const viewerFunctions = {
+  postprocessors: {${pLF}${postProcessorLines
+    .map(([n, v]) => `    ${n}: ${v}`)
+    .join(',\n')}${pLF ? pLF + '  ' : pLF}},
+  customPipelines: {${cLF}${customPipelineLines
+    .map(([n, v]) => `    ${n}: ${v}`)
+    .join(',\n')}${cLF ? cLF + '  ' : cLF}}
+}
+
+export default viewerFunctions
+`
+  writeFileSync(filePath, content)
+  console.log('wrote', filePath)
+}
+
 function migratePackageJson(
   experienceName: string,
   viewerOptionsFileName: string
 ) {
   const filePath = `packages/experiences/${experienceName}/package.json`
-  replaceRegexes(filePath, [
+  replaceRegexesInFile(filePath, [
     [/^( +)"dist" *$/g, `$&,\n$1"src/${viewerOptionsFileName}"`]
   ])
 }
@@ -93,7 +165,7 @@ function viewerOptionRegexes(): [RegExp, string][] {
 
 function migrateIndexTs(experienceName: string) {
   const filePath = `packages/experiences/${experienceName}/src/index.ts`
-  replaceRegexes(filePath, [
+  replaceRegexesInFile(filePath, [
     ...viewerOptionRegexes(),
     [
       /^import \{ Experience, ExperienceOptions \} from '@\/index'/g,
@@ -111,39 +183,126 @@ import viewerOptions from './${experienceName}-viewer.json'`
       `const loaderOptions: LoaderOptions = {
   viewerVersion: 1,`
     ],
+    [/\/\/ eslint-disable-next-line prettier\/prettier/, ''],
     [
-      /export default new Experience\(options, options, packageJSON, import.meta.url.*/,
+      /export default new Experience\(options, options, packageJSON, import.meta.url[^,]*$/,
       `export default new Experience(
   loaderOptions,
   viewerOptions as ViewerOptions,
   packageJSON,
   import.meta.url
 )`
+    ],
+    [
+      /^export default new Experience\(options, options, packageJSON, import.meta.url, viewerFunctions\)$/,
+      `export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url,
+  viewerFunctions
+)`
     ]
   ])
 }
 
-function replaceRegexes(fileName: string, regexes: [RegExp, string][]) {
-  const data = readFileSync(fileName, 'utf8')
-  const lines = data.split(/\r?\n/)
-  const replaced = lines
-    .map(line => {
-      const found = regexes.filter(([regex]) => regex.test(line))
-      if (found.length == 1) {
-        const [regex, replacement] = found[0]
-        // console.log(`matched ${line}`)
-        return replacement ? line.replace(regex, replacement) : undefined
-      } else if (found.length > 1) {
-        throw new Error(`Found more than one matches on line: ${line}`)
-      }
-      return line
-    })
-    .filter(l => l !== undefined)
-  const result = replaced.join('\n')
+function createViewFunctions(experienceName: string) {
+  const filePath = `packages/experiences/${experienceName}/src/blocks.ts`
+  const originalContent = readFileSync(filePath, 'utf8')
+  const lines = originalContent.split(/\r?\n/)
+
+  const pipelineImportRegex = /import.*pipelines\/custom/
+  const pipelineImports = lines.filter(l => pipelineImportRegex.test(l))
+  const customPipelineLines = lines.filter(l => /^ +customPipeline/.test(l))
+  console.log('customPipeline lines:\n', customPipelineLines)
+  const pipelineNames = customPipelineLines
+    .map(l => [
+      l
+        .replace(
+          /^ *customPipeline: ?customPipeline[^(]+CSV\('([^']+)[^,]+.*/,
+          'csv_$1'
+        )
+        .replace(/-/g, '_'),
+      l.replace(
+        /^ *customPipeline: ?(customPipeline[^(]+CSV\('[^']+[^,]+).*/,
+        '$1'
+      )
+    ])
+    // map the lines that aren't calling a function
+    .map(([l, n]) => [
+      l.replace(/^ *customPipeline: ?([^,' ]+)[^']*$/, '$1'),
+      n.replace(/^ *customPipeline: ?([^,' ]+)[^']*$/, '$1')
+    ])
+  console.log('customPipeline names:\n', pipelineNames)
+  const pipelineRegexes = pipelineNames.map(([name, def]) => [
+    new RegExp('customPipeline: ?' + def.replace(/([()])/g, '\\$1')),
+    `customPipeline: '${name}'`
+  ]) as [RegExp, string][]
+  console.log('customPipeline regexes:\n', pipelineRegexes)
+
+  const poproImportRegex = /import.*\/postprocessors/
+  const poproImports = lines.filter(l => poproImportRegex.test(l))
+  console.log('postProcessor imports:\n', poproImports)
+  const poproLines = lines.filter(l => /^ +postprocessor/.test(l))
+  console.log('postProcessor lines:\n', poproLines)
+  const poproNames = poproLines.map(l => [
+    l.replace(/^ *postprocessor: ?([^, ]+).*/, '$1'),
+    l.replace(/^ *postprocessor: ?([^, ]+).*/, '$1')
+  ])
+  console.log('postProcessor names:\n', poproNames)
+  const poproRegexes = poproNames.map(([name, def]) => [
+    new RegExp(`postprocessor: *${def}`),
+    `postprocessor: '${name}'`
+  ]) as [RegExp, string][]
+  console.log('postProcessor regexes:\n', poproRegexes)
+
+  replaceRegexesInFile(filePath, [
+    [poproImportRegex, ''],
+    [pipelineImportRegex, ''],
+    ...pipelineRegexes,
+    ...poproRegexes
+  ])
+
+  writeViewerFunctions(
+    experienceName,
+    pipelineImports.concat(poproImports),
+    poproNames,
+    pipelineNames
+  )
+  insertViewerFunctionsIntoIndexTs(experienceName)
+}
+
+function replaceRegexesInFile(fileName: string, regexes: [RegExp, string][]) {
+  const originalContent = readFileSync(fileName, 'utf8')
+  const result = replaceRegexesInString(originalContent, regexes)
   const extension = fileName.split('.').pop()
   const newFileName = `${fileName}.mig.${extension}`
   writeFileSync(newFileName, result)
   console.log('wrote', newFileName)
+}
+
+function replaceRegexesInString(
+  originalContent: string,
+  regexes: [RegExp, string][]
+) {
+  const lines = originalContent.split(/\r?\n/)
+  const replaced = lines
+    .map(line => {
+      const found = regexes.filter(([regex]) => regex.test(line))
+      const uniqueReplacements = new Set(found.map(f => f[1]))
+      if (uniqueReplacements.size == 1) {
+        const [regex, replacement] = found[0]
+        // console.log(`matched ${line}`)
+        return replacement ? line.replace(regex, replacement) : undefined
+      } else if (uniqueReplacements.size > 1) {
+        throw new Error(
+          `Found more than one matches with same replacement on line: ${line}`
+        )
+      }
+      return line
+    })
+    .filter(l => l !== undefined)
+  return replaced.join('\n')
 }
 
 function formatDiff(diff: any) {
@@ -267,12 +426,12 @@ if (process.argv.length > 2) {
     // we expect the name to be camelCased
     const module = (packages as { [key: string]: Experience })[name]
     if (module) {
-      test([name, module], true)
+      migrate([name, module], true)
     } else {
       throw new Error(`The name "${name}" does not match any package.`)
     }
   })
 } else {
   // test all packages
-  Object.entries(packages).forEach(p => test(p))
+  Object.entries(packages).forEach(p => migrate(p))
 }

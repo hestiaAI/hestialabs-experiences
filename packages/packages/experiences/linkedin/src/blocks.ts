@@ -1,11 +1,10 @@
 import type { ViewBlocks } from '@/types'
-import { customPipelineMergeCSV } from '@/pipelines/custom'
 import { genericDateViewer } from '@/pipelines/generic'
 
 const blocks: ViewBlocks = [
   {
     id: 'inference',
-    customPipeline: customPipelineMergeCSV('inference'),
+    customPipeline: 'csv_inference',
     files: ['inference'],
     visualization: 'ChartViewListLinkedinInference.vue',
     title: 'Inferences about you',
@@ -13,7 +12,7 @@ const blocks: ViewBlocks = [
   },
   {
     id: 'ad-targeting',
-    customPipeline: customPipelineMergeCSV('ad-targeting'),
+    customPipeline: 'csv_ad_targeting',
     files: ['ad-targeting'],
     visualization: 'ChartViewLinkedinAdTargeting.vue',
     title: 'Ad targeting',
@@ -21,7 +20,7 @@ const blocks: ViewBlocks = [
   },
   {
     id: 'connections',
-    customPipeline: customPipelineMergeCSV('connections'),
+    customPipeline: 'csv_connections',
     files: ['connections'],
     visualization: 'ChartViewOverviewLinkedinConnection.vue',
     title: 'Connections',
