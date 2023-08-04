@@ -178,6 +178,11 @@ export class Experience {
     return false
   }
 
+  /**
+   * Returns a new experience module configured with other viewer options.
+   *
+   * @param viewerOptions - The configuration of the new experience module.
+   */
   configureViewer(viewerOptions: ViewerOptions) {
     const errorMessage = this.viewerCompatibilityErrors(viewerOptions)
     if (errorMessage) {

@@ -1,24 +1,10 @@
 # Experience packages
 
-These packages define experiences that can be displayed by the project [data-experience](../../../data-experience/README.md)
-
-## Importing
-
-An experience can be imported from npm in node, as in data-experience's [development example](https://github.com/hestiaAI/hestialabs-experiences/blob/master/data-experience/dev/App.vue#L39)
-
-```javascript
-import appleTracker from '@hestia.ai/apple-tracker'
-```
-
-or from cdns like jsdelivr.com or unpkg.com in the browser, as in this data-experience [deployment example](https://github.com/hestiaAI/hestialabs-experiences/blob/master/data-experience/deployment-examples/html-plain/index.js#L2)
-
-```javascript
-import experience from 'https://cdn.jsdelivr.net/npm/@hestia.ai/twitter-agg/dist/index.mjs'
-```
+These packages define experiences that can be displayed by the component **TheDataExperience** from project [data-experience](../../../data-experience/README.md)
 
 ## Configuration with viewer options
 
-An experience can be configured with **viewer options** that can be taken from a json file. When imported, it is already configured by the default *-viewer.json* file in its *src* folder, for example [instagram-viewer.json](instagram/src/instagram-viewer.json)
+An experience can be configured with **viewer options** that can be taken from a json file. When imported, it is already configured by the default _-viewer.json_ file in its _src_ folder, for example [instagram-viewer.json](instagram/src/instagram-viewer.json)
 
 When defining a new configuration, it's best to start from a default configuration and modify it, as a lot of them have experience specific attributes.
 
@@ -26,15 +12,14 @@ When defining a new configuration, it's best to start from a default configurati
 
 The exact type of _ViewerOptions_ and its attributes are defined in the [types folder](../../lib/types)
 
-[experience-options.ts](../../lib/types/experience-options.ts)
+File [experience-options.ts](../../lib/types/experience-options.ts)
 
 ```typescript
 export type ViewerOptions = {
-
   /**
    * The viewblocks that define the different tabs of an experience.
    * See the ViewBlock type further down to see the possible attributes.
-   **/
+   */
   viewBlocks: ViewBlock[]
 
   /** Monolingual texts.
@@ -80,8 +65,6 @@ export type ViewerOptions = {
   url?: string
   /** See the Collaborator type below*/
   collaborator?: Collaborator
-
-
 }
 
 /**
@@ -91,7 +74,7 @@ export type ViewerOptions = {
  * the experience, viewblocks and their charts.
  * See the default configuration to have an idea
  * of what texts you can change.
- **/
+ */
 export type Messages = Record<
   Lang,
   {
@@ -102,7 +85,9 @@ export type Messages = Record<
   }
 >
 
-/** Another organization we're working with, like eyeballs or dating privacy */
+/**
+ * Another organization we're working with, like eyeballs or dating privacy
+ */
 export type Collaborator = {
   icon: string
   title: string
@@ -110,7 +95,7 @@ export type Collaborator = {
 }
 ```
 
-[view-block.ts](../../lib/types/view-block.ts)
+File [view-block.ts](../../lib/types/view-block.ts)
 
 ```typescript
 /**
@@ -143,3 +128,48 @@ export type ViewBlock = {
   vizProps?: object
 }
 ```
+
+# For developers
+
+## Importing an experience into your code
+
+An experience can be imported from npm in node, as in data-experience's [development example](https://github.com/hestiaAI/hestialabs-experiences/blob/master/data-experience/dev/App.vue#L39)
+
+```javascript
+import appleTracker from '@hestia.ai/apple-tracker'
+```
+
+or from cdns like jsdelivr.com or unpkg.com in the browser, as in this data-experience deployment example [index.js](https://github.com/hestiaAI/hestialabs-experiences/blob/master/data-experience/deployment-examples/html-plain/index.js#L2)
+
+```javascript
+import twitterAgg from 'https://cdn.jsdelivr.net/npm/@hestia.ai/twitter-agg/dist/index.mjs'
+```
+
+Then it can be set as a _TheDataExperience_ prop, as in the deployment example's [index.html](https://github.com/hestiaAI/hestialabs-experiences/blob/master/data-experience/deployment-examples/html-plain/index.html#L19)
+
+```vue
+<the-data-experience v-bind="{ experienceModule: twitterAgg }" />
+```
+
+### Viewer options usage
+
+The experience module has several methods that help configuring an experience.
+
+#### Configuring an experienceModule
+
+[configureViewer](https://github.com/hestiaAI/hestialabs-experiences/blob/master/packages/lib/index.ts#L181) creates a new experience module configured with the options passed as argument.
+
+```javascript
+const newExperienceModule = experienceModule.configureViewer(viewerOpts)
+```
+
+#### Finding viewer options
+
+[provideViewerOptions](https://github.com/hestiaAI/hestialabs-experiences/blob/master/packages/lib/index.ts#L197) downloads viewer options from an url when given these types of arguments:
+
+- an url prefix that the experienceModule can use to download an experience's viewer.json file like [instagram-viewer.json](https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options/instagram-viewer.json) from the repo [experience-viewer-options](https://github.com/digipower-academy/experience-viewer-options)
+- an object where keys are experience names and values url prefixes
+
+#### Usage example
+
+Here's how they are used in [TheDataExperience.vue](https://github.com/hestiaAI/hestialabs-experiences/blob/master/data-experience/src/components/TheDataExperience.vue#L458)
