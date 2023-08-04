@@ -34,7 +34,7 @@
     "explorer"
   ],
   "experienceViewerOptions": {
-    "instagram": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main",
+    "instagram": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
     "apple-tracker": {
       "title": "AppleTracker",
       "version": 1,
@@ -75,7 +75,7 @@
       ]
     }
   },
-  "_experienceViewerOptions": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main",
+  "_experienceViewerOptions": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
   "appInfoLinks": [
     {
       "url": "https://hestia.ai/en/#contact",

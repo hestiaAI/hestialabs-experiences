@@ -26,7 +26,32 @@
     "explorer"
   ],
   "experienceViewerOptions": {
-    "instagram": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main"
+    "ad-radar": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "apple-tracker": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "apple-tracker-agg": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "chatgpt": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "explorer": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "facebook": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "fitbit": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "google": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "google-agg": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "her": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "her-tinder-agg": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "instagram": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "linkedin": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "linkedin-agg": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "netflix": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "other": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "strava": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "tiktok": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "tinder": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "tracker-control": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "tracker-control-agg": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "twitter": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "twitter-agg": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "uber": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "uber-driver": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
+    "youtube": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options"
   },
   "bubbles": [
     "frc-participant",
