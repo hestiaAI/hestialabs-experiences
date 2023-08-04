@@ -1,11 +1,10 @@
 import type { ViewBlocks } from '@/types'
 import { genericDateViewer } from '@/pipelines/generic'
-import { customPipelineGetFirstCSV } from '@/pipelines/custom'
 
 const blocks: ViewBlocks = [
   {
     id: 'watchOverview',
-    customPipeline: customPipelineGetFirstCSV('viewing-activity'),
+    customPipeline: 'csv_viewing_activity',
     files: ['viewing-activity'],
     visualization: 'ChartViewOverviewNetflix.vue',
     title: 'Viewing activity',
@@ -13,7 +12,7 @@ const blocks: ViewBlocks = [
   },
   {
     id: 'notifications',
-    customPipeline: customPipelineGetFirstCSV('messages-by-netflix'),
+    customPipeline: 'csv_messages_by_netflix',
     files: ['messages-by-netflix'],
     visualization: 'ChartViewTimeSeries.vue',
     vizProps: {

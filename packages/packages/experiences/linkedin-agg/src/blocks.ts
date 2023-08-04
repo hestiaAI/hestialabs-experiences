@@ -4,8 +4,6 @@ import allInferences from './sql/inference.sql'
 import allConnections from './sql/connection.sql'
 import allAdTargeting from './sql/ad-targeting.sql'
 
-import { strToArray } from './postprocessors'
-
 const blocks: ViewBlocks = [
   {
     id: 'inference',
@@ -21,7 +19,7 @@ const blocks: ViewBlocks = [
     sql: allAdTargeting,
     files: ['ad-targeting'],
     showTable: false,
-    postprocessor: strToArray,
+    postprocessor: 'strToArray',
     visualization: 'ChartViewDashboard.vue',
     vizProps: {
       showTable: false,

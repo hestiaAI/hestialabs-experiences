@@ -1,10 +1,9 @@
 import type { ViewBlocks } from '@/types'
-import { customPipelineMergeCSV } from '@/pipelines/custom'
 
 const blocks: ViewBlocks = [
   {
     id: 'trackerControl',
-    customPipeline: customPipelineMergeCSV('tracker-control'),
+    customPipeline: 'csv_tracker_control',
     files: ['tracker-control'],
     showTable: false,
     visualization: 'ChartViewTrackerControl.vue',

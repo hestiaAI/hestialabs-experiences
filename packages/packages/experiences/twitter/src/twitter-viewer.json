@@ -1,0 +1,860 @@
+{
+  "collaborator": {
+    "title": "The Eyeballs Collective",
+    "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/the-eyeballs.svg",
+    "url": "https://eyeballs.hestialabs.org/"
+  },
+  "dataPortal": "https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive",
+  "dataSamples": [
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/twitter-small.zip?contenthash=c736a805d222d286962d&filename=twitter-small.zip",
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/twitter-large.zip?contenthash=635ec1966ca5584b8766&filename=twitter-large.zip"
+  ],
+  "hideEmptyTabs": false,
+  "hideFileExplorer": false,
+  "hideSummary": true,
+  "messages": {
+    "en": {
+      "intro": {
+        "title": "Twitter",
+        "dataPortal": "https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive"
+      },
+      "viewBlocks": {
+        "overview": {
+          "title": "Advertising overview",
+          "text": "Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results.",
+          "vizProps": {
+            "messages": {
+              "ads-time": "Number of ads over time",
+              "top-adv": "Top 10 advertisers",
+              "interactions": "Interactions with ads (clicks, video views)",
+              "targeting-type": "Type of targeting",
+              "targeting-criteria": "Targeting criteria",
+              "ads": "ads"
+            }
+          },
+          "headers": {
+            "Tweet ID": "Tweet ID",
+            "Company": "Company",
+            "Date": "Date",
+            "Promoted Tweet": "Promoted Tweet",
+            "Engagement": "Engagement",
+            "Targeting Criteria": "Targeting Criteria"
+          }
+        },
+        "overview-last-month": {
+          "title": "Advertising overview (last month)",
+          "text": "Understand who targeted you with Twitter ads last month, how much, and why, in this interactive visualization. Click on any graph to filter the results.",
+          "vizProps": {
+            "messages": {
+              "ads-time": "Number of ads over time",
+              "top-adv": "Top 10 advertisers",
+              "interactions": "Interactions with ads (clicks, video views)",
+              "targeting-type": "Type of targeting",
+              "targeting-criteria": "Targeting criteria",
+              "ads": "ads"
+            }
+          },
+          "headers": {
+            "Tweet ID": "Tweet ID",
+            "Company": "Company",
+            "Date": "Date",
+            "Promoted Tweet": "Promoted Tweet",
+            "Engagement": "Engagement",
+            "Targeting Criteria": "Targeting Criteria"
+          }
+        },
+        "ads-per-advertiser": {
+          "title": "Top advertisers",
+          "text": "See the ranking of advertisers that have shown you the most ads.",
+          "vizProps": {
+            "xLabel": "ads",
+            "countLabel": "ads"
+          }
+        },
+        "targeting-criteria-by-advertiser": {
+          "title": "Targeting criteria (Top 10 advertisers)",
+          "text": "Understand why you have been targeted by these advertisers. The graph shows the 10 advertisers who use the most targeting criteria on you. In the first ring you will find the different advertisers, in the second ring the types of targeting used (location, language, ...). And finally, if you click on a ring, the graph will enlarge to show you the targeting values (Swiss, French, ...) in the outer ring."
+        },
+        "targeting-criteria-all-advertisers": {
+          "title": "Targeting criteria (All advertisers)",
+          "text": "Get more details on how you are targeted by these advertisers. This graph shows the number of times you have been targeted by different advertisers using a specific criterion. You can change the type of criterion and get information about the meaning of each criterion's type at the bottom of the graph."
+        },
+        "all-criteria-all-advertisers": {
+          "title": "Targeting criteria (1 advertiser)",
+          "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the advertiser in the table below and click on it to visualise them.",
+          "vizProps": {
+            "cardTitle": "Advertisers"
+          },
+          "headers": {
+            "Advertiser": "Advertiser",
+            "Targeting criteria": "Targeting criteria",
+            "advertiserName": "Advertiser Name",
+            "targetingType": "Targeting Type",
+            "targetingValue": "Targeting Value",
+            "count_": "Count"
+          }
+        },
+        "personalization": {
+          "title": "Inferred Data",
+          "text": "Find out what information Twitter has deduced about you",
+          "vizProps": {
+            "messages": {
+              "itemsTitle": "General information",
+              "items": {
+                "gender": {
+                  "title": "Gender",
+                  "hint": "Gender associated with the account. This information may be inferred."
+                },
+                "age": {
+                  "title": "Age",
+                  "hint": "Date of birth Twitter has inferred about the account and corresponding current age."
+                },
+                "languages": {
+                  "title": "Languages",
+                  "hint": "Gender associated with the account. This information may be inferred."
+                },
+                "numAudiences": {
+                  "title": "Audiences",
+                  "hint": "Number of tailored audiences (audiences generated by advertisers) the account is a part of."
+                }
+              },
+              "tablesTitle": "Lists",
+              "tables": {
+                "interests": {
+                  "title": "Inferred Interests",
+                  "hint": "These are some of the interests that match you, based on your profile, your activity and the topics you follow. They are used to personalise your experience on Twitter, including the ads you see.",
+                  "headers": {
+                    "Inferred Interests": "Inferred Interests"
+                  }
+                },
+                "lookalikeAdvertisers": {
+                  "title": "Look-alike Advertisers",
+                  "hint": "List of screen names for the advertisers that own the look-alike audiences your account is a part of.",
+                  "headers": {
+                    "Look-alike Advertisers": "Look-alike Advertisers"
+                  }
+                },
+                "advertisers": {
+                  "title": "Advertisers",
+                  "hint": "Here are the advertisers who have added you to one of their audiences. Custom audiences are often created from lists of email addresses or browsing behaviour. They allow advertisers to reach potential customers or users who have already expressed interest in their business.",
+                  "headers": {
+                    "Advertisers": "Advertisers"
+                  }
+                },
+                "shows": {
+                  "title": "Shows",
+                  "hint": "The programmes you are likely to watch, based on your account activity and information.",
+                  "headers": {
+                    "Shows": "Shows"
+                  }
+                },
+                "locationHistory": {
+                  "title": "Location History",
+                  "hint": "Here are the locations that Twitter has associated with your account, based on your activity from the last 60 days.",
+                  "headers": {
+                    "Location History": "Location History"
+                  }
+                },
+                "partnerInterests": {
+                  "title": "Partner Interests",
+                  "headers": {
+                    "Partner Interests": "Partner Interests"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "genericDateViewer": {
+          "name": "Timeline",
+          "title": "Timeline",
+          "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date.",
+          "graphTitle": "Number of dated events in your files",
+          "graphNoDate": "No dated events were found in your file(s).",
+          "datedEvents": "From {currMinDate} to {currMaxDate} we found {total} dated events in your file(s).",
+          "headers": {
+            "File name": "File name",
+            "Date": "Date",
+            "Description": "Description"
+          }
+        }
+      }
+    },
+    "fr": {
+      "intro": {
+        "title": "Twitter",
+        "dataPortal": "https://help.twitter.com/en/managing-your-account/how-to-download-your-twitter-archive"
+      },
+      "viewBlocks": {
+        "overview": {
+          "title": "Vue d'ensemble des publicités",
+          "text": "Visualisation du nombre, de l'origine et des critères de ciblage des publicités Twitter qui vous visent. Cliquer sur un graphique pour filtrer les résultats.",
+          "vizProps": {
+            "messages": {
+              "ads-time": "Nombre d'annonces dans le temps",
+              "top-adv": "Top 10 annonceurs",
+              "interactions": "Interactions avec les pubs (clics, visionnage de vidéos)",
+              "targeting-type": "Type de ciblage",
+              "targeting-criteria": "Critères de ciblage",
+              "ads": "pubs"
+            }
+          },
+          "headers": {
+            "Tweet ID": "Tweet ID",
+            "Company": "Société",
+            "Date": "Date",
+            "Promoted Tweet": "Tweet promu",
+            "Engagement": "Engagement",
+            "Targeting Criteria": "Critères de ciblage"
+          }
+        },
+        "overview-last-month": {
+          "title": "Vue d'ensemble des publicités (du mois dernier)",
+          "text": "Visualisation du nombre, de l'origine et des critères de ciblage des publicités Twitter qui vous ont visé le mois dernier. Cliquer sur un graphique pour filtrer les résultats.",
+          "vizProps": {
+            "messages": {
+              "ads-time": "Nombre d'annonces dans le temps",
+              "top-adv": "Top 10 annonceurs",
+              "interactions": "Interactions avec les pubs (clics, visionnage de vidéos)",
+              "targeting-type": "Type de ciblage",
+              "targeting-criteria": "Critères de ciblage",
+              "ads": "pubs"
+            }
+          },
+          "headers": {
+            "Tweet ID": "Tweet ID",
+            "Company": "Société",
+            "Date": "Date",
+            "Promoted Tweet": "Tweet promu",
+            "Engagement": "Engagement",
+            "Targeting Criteria": "Critères de ciblage"
+          }
+        },
+        "ads-per-advertiser": {
+          "title": "Principaux publicitaires",
+          "text": "Classement des publicitaires qui vous ont présenté le plus de publicités.",
+          "vizProps": {
+            "xLabel": "pubs",
+            "countLabel": "pubs"
+          }
+        },
+        "targeting-criteria-by-advertiser": {
+          "title": "Critères de ciblage (10 principaux publicitaires)",
+          "text": "Pourquoi êtes-vous ciblé par ces publicitaires? Ce graphique montre les dix publicitaires qui employent le plus de critères pour vous cibler. Le cercle intérieur affiche les publicitaires, le cercle extérieur le type de ciblage (tels que l'emplacement, la langue, etc.). Cliquer sur l'un des cercles aggrandit le graphique pour montrer les valeurs qui apparaissent dans les critères (telles que \"Suisse\", \"France\", etc.)"
+        },
+        "targeting-criteria-all-advertisers": {
+          "title": "Critères de ciblage (tous publicitaires)",
+          "text": "Vue complète des critères qui permettent aux publicitaires de vous cibler. Ce graphique montre le nombre de fois où les divers publicitaires vous ont visé sur la base d'un critère donné. Vous pouvez changer les types de critères et en savoir davantage sur eux au bas du graphique."
+        },
+        "all-criteria-all-advertisers": {
+          "title": "Critères de ciblage (1 publicitaire)",
+          "text": "Visualisation des critères de ciblage qu'un publicitaire donné utilise pour vous cibler. Parcourir la liste et cliquer sur un publicitaire pour afficher ses informations.",
+          "vizProps": {
+            "cardTitle": "Publicitaires"
+          },
+          "headers": {
+            "Advertiser": "Publicitaire",
+            "Targeting criteria": "Critères de ciblage",
+            "advertiserName": "Nom de l'publicitaire",
+            "targetingType": "Type de ciblage",
+            "targetingValue": "Valeur de ciblage",
+            "count_": "Comte"
+          }
+        },
+        "personalization": {
+          "title": "Données supposées",
+          "text": "Information que Twitter a déduites à votre sujet.",
+          "vizProps": {
+            "messages": {
+              "itemsTitle": "Informations générales",
+              "items": {
+                "gender": {
+                  "title": "Sexe",
+                  "hint": "Sexe associé au compte. Cette information peut être déduite."
+                },
+                "age": {
+                  "title": "Age",
+                  "hint": "Date de naissance que Twitter a déduite du compte et âge actuel correspondant."
+                },
+                "languages": {
+                  "title": "Langues",
+                  "hint": "Sexe associé au compte. Cette information peut être déduite."
+                },
+                "numAudiences": {
+                  "title": "Audiences",
+                  "hint": "Nombre d'audiences personnalisées (audiences générées par les publicitaires) dont le compte fait partie."
+                }
+              },
+              "tablesTitle": "Listes",
+              "tables": {
+                "interests": {
+                  "title": "Intérêts inférés",
+                  "hint": "Ce sont certains des intérêts qui vous correspondent, en fonction de votre profil, de votre activité et des sujets que vous suivez. Ils sont utilisés pour personnaliser votre expérience sur Twitter, y compris les publicités que vous voyez.",
+                  "headers": {
+                    "Inferred Interests": "Intérêts inférés"
+                  }
+                },
+                "lookalikeAdvertisers": {
+                  "title": "Publicitaires sosies",
+                  "hint": "Liste des noms d'écran des publicitaires qui possèdent les audiences sosies dont votre compte fait partie",
+                  "headers": {
+                    "Look-alike Advertisers": "Publicitaires sosies"
+                  }
+                },
+                "advertisers": {
+                  "title": "Publicitaires",
+                  "hint": "Voici les publicitaires qui vous ont ajouté à l'une de leurs audiences. Les audiences personnalisées sont souvent créées à partir de listes d'adresses e-mail ou de comportements de navigation. Elles permettent aux publicitaires d'atteindre des clients potentiels ou des utilisateurs qui ont déjà exprimé un intérêt pour leur activité.",
+                  "headers": {
+                    "Advertisers": "Publicitaires"
+                  }
+                },
+                "shows": {
+                  "title": "Spectacles",
+                  "hint": "Les programmes que vous êtes susceptible de regarder, en fonction de l'activité et des informations de votre compte.",
+                  "headers": {
+                    "Shows": "Spectacles"
+                  }
+                },
+                "locationHistory": {
+                  "title": "Historique de la localisation",
+                  "hint": "Voici les lieux que Twitter a associés à votre compte, en fonction de votre activité des 60 derniers jours.",
+                  "headers": {
+                    "Location History": "Historique des localisations"
+                  }
+                },
+                "partnerInterests": {
+                  "title": "Intérêts des partenaires",
+                  "headers": {
+                    "Partner Interests": "Intérêts des partenaires"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "genericDateViewer": {
+          "name": "Chronologie",
+          "title": "Chronologie",
+          "text": "Voir tous les événements datés dans vos dossiers, correspondant aux données qui ont été collectées sur vous à ou concernant une date spécifique.",
+          "graphTitle": "Nombre d'événements datés dans vos dossiers",
+          "graphNoDate": "Aucun événement daté n'a été trouvé dans votre (vos) dossier(s).",
+          "datedEvents": "De {currMinDate} à {currMaxDate} nous avons trouvé {total} événements datés dans votre (vos) fichier(s).",
+          "headers": {
+            "File name": "Nom de fichier",
+            "Date": "Date",
+            "Description": "Description"
+          }
+        }
+      }
+    }
+  },
+  "tutorialVideos": ["https://vimeo.com/691109800"],
+  "title": "Twitter",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/twitter.png",
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "overview",
+      "sql": "WITH EngagementCount AS ( SELECT a.tweetId, a.advertiserName, a.displayLocation, a.time, COUNT(*) AS count_ FROM TwitterAd a, TwitterEngagement e WHERE a.tweetId = e.tweetId AND a.advertiserName = e.advertiserName AND a.displayLocation = e.displayLocation \n-- We only consider engagements that occur\n-- within 120 sec of a corresponding impression. \n-- 60 sec x 60 min x 24 hours = 86,400 sec\n  AND ABS( ROUND((JULIANDAY(a.time) - JULIANDAY(e.time)) * 86400) ) < 120 GROUP BY a.tweetId, a.advertiserName, a.displayLocation, a.time ), Engagement AS ( SELECT a.tweetId, a.advertiserName AS companyName, \n-- Return 0 if ad has no engagements\n IFNULL( ( SELECT ec.count_ FROM EngagementCount ec WHERE a.tweetId = ec.tweetId AND a.advertiserName = ec.advertiserName AND a.displayLocation = ec.displayLocation AND a.time = ec.time ), 0 ) engagements, a.time AS date_, c.targetingType, c.targetingValue FROM TwitterAd a INNER JOIN TwitterCriterion c ON a.id = c.adId ) SELECT ( \n-- Yes/No is interpreted as BOOLEAN by type-check.js\n CASE WHEN e.engagements IS 0 THEN 'No' ELSE 'Yes' END ) AS engagedWith, e.* FROM Engagement e ",
+      "files": ["impressions", "engagements"],
+      "visualization": "ChartViewOverviewTwitter.vue",
+      "title": "Advertising overview",
+      "text": "Understand how much, who and why you are being targeted by Twitter ads in this interactive visualization. Click on any graph to filter the results."
+    },
+    {
+      "showTable": false,
+      "id": "overview-last-month",
+      "sql": "WITH EngagementCount AS ( SELECT a.tweetId, a.advertiserName, a.displayLocation, a.time, COUNT(*) AS count_ FROM TwitterAd a, TwitterEngagement e WHERE a.tweetId = e.tweetId AND a.advertiserName = e.advertiserName AND a.displayLocation = e.displayLocation \n-- We only consider engagements that occur \n-- within 120 sec of a corresponding impression. \n-- 60 sec x 60 min x 24 hours = 86,400 sec\n AND ABS( ROUND((JULIANDAY(a.time) - JULIANDAY(e.time)) * 86400) ) < 120 GROUP BY a.tweetId, a.advertiserName, a.displayLocation, a.time ), Engagement AS ( SELECT a.tweetId, a.advertiserName AS companyName, \n-- Return 0 if ad has no engagements\n IFNULL( ( SELECT ec.count_ FROM EngagementCount ec WHERE a.tweetId = ec.tweetId AND a.advertiserName = ec.advertiserName AND a.displayLocation = ec.displayLocation AND a.time = ec.time ), 0 ) engagements, a.time AS date_, c.targetingType, c.targetingValue FROM TwitterAd a INNER JOIN TwitterCriterion c ON a.id = c.adId WHERE a.time > DATE('now', '-1 month') ) SELECT ( \n-- Yes/No is interpreted as BOOLEAN by type-check.js\n CASE WHEN e.engagements IS 0 THEN 'No' ELSE 'Yes' END ) AS engagedWith, e.* FROM Engagement e ",
+      "files": ["impressions", "engagements"],
+      "visualization": "ChartViewOverviewTwitter.vue",
+      "title": "Advertising overview (last month)",
+      "text": "Understand how much, who and why you have been targeted by Twitter ads last month in this interactive visualization. Click on any graph to filter the results."
+    },
+    {
+      "showTable": false,
+      "id": "ads-per-advertiser",
+      "sql": "SELECT advertiserName, DATE(t.time) AS date_, COUNT(*) AS count_ FROM TwitterAd t GROUP BY advertiserName; ",
+      "files": ["impressions", "engagements"],
+      "visualization": "ChartViewTopRow.vue",
+      "vizProps": {
+        "yAccessor": "advertiserName",
+        "xAccessor": "count_",
+        "dateAccessor": "date_"
+      },
+      "title": "Top advertisers",
+      "text": "See the ranking of advertisers that have shown you the most ads."
+    },
+    {
+      "showTable": false,
+      "id": "targeting-criteria-by-advertiser",
+      "sql": "SELECT advertiserName, targetingType, targetingValue, COUNT(*) AS count_ FROM TwitterAd INNER JOIN TwitterCriterion ON TwitterAd.id = TwitterCriterion.adId WHERE TwitterAd.advertiserName IN ( SELECT advertiserName FROM TwitterAd GROUP BY advertiserName ORDER BY COUNT(*) DESC LIMIT 10 ) GROUP BY advertiserName, targetingType, targetingValue ",
+      "files": ["impressions", "engagements"],
+      "postprocessor": "sunburstTargeting",
+      "visualization": "ChartViewSunburst.vue",
+      "title": "Targeting criteria (Top 10 advertisers)",
+      "text": "Understand why you have been targeted by these advertisers. The graph shows the 10 advertisers who use the most targeting criteria on you. In the first ring you will find the different advertisers, in the second ring the types of targeting used (location, language, ...). And finally, if you click on a ring, the graph will enlarge to show you the targeting values (Swiss, French, ...) in the outer ring."
+    },
+    {
+      "showTable": false,
+      "id": "targeting-criteria-all-advertisers",
+      "sql": "SELECT targetingType, targetingValue, COUNT(*) AS count_ FROM TwitterCriterion GROUP BY targetingType, targetingValue; ",
+      "files": ["impressions", "engagements"],
+      "visualization": {
+        "en": {
+          "$schema": "https://vega.github.io/schema/vega/v5.json",
+          "width": 800,
+          "height": 400,
+          "padding": 0,
+          "signals": [
+            {
+              "name": "filterSignal",
+              "value": ["Follower look-alikes"],
+              "bind": {
+                "input": "select",
+                "name": " Criteria: ",
+                "options": [
+                  "Follower look-alikes",
+                  "Interests",
+                  "App Activity",
+                  "Website Activity",
+                  "List",
+                  "Conversation topics",
+                  "Keywords",
+                  "Locations",
+                  "Age",
+                  "Languages",
+                  "Gender",
+                  "OS versions",
+                  "Platforms",
+                  "Events"
+                ],
+                "labels": [
+                  "Follower look-alikes",
+                  "Interests",
+                  "App Activity",
+                  "Website Activity",
+                  "List",
+                  "Conversation topics",
+                  "Keywords",
+                  "Locations",
+                  "Age",
+                  "Languages",
+                  "Gender",
+                  "OS versions",
+                  "Platforms",
+                  "Events"
+                ]
+              }
+            },
+            {
+              "name": "descriptions",
+              "value": {
+                "Follower look-alikes": "Twitter determine users similar to those who follow accounts based on a variety of signals, including what they Retweet, click on, Tweet, and more.",
+                "Interests": "Twitter determine interests based on a variety of signals, including who they follow, what they Retweet, click on, Tweet, and more.",
+                "App Activity": "Reach groups of people who have taken a specific action in your app, such as installs or sign-ups.",
+                "Website Activity": "It is possible to collect this data using Twitter's website tag available through Twitter Ads.",
+                "List": "Lists are created by uploading a file containing your email address, mobile advertising ID or Twitter username.",
+                "Conversation topics": "People may be considered part of a conversation audience if they've Tweeted or engaged with a Tweet mentioning the topic.",
+                "Keywords": "Keyword targeting allows advertisers to reach people on Twitter based on keywords in their search queries, recent Tweets, and Tweets they recently engaged with.",
+                "Locations": "Twitter’s geo targeting is based on someone's recent location. This is a combination of current location and recent location history. Twitter uses several signals for determining whether someone is presently in a particular geographic location, such as web IP address, mobile GPS signal, mobile WiFi signal, and real-time signals, such as when someone includes their location in a Tweet.",
+                "Age": "If not specified in your Twitter profile, Twitter deduct it from users who did it, based on a number of attributes such as the accounts they follows and their interests.",
+                "Languages": "Twitter derive a person’s language from the language selected in their profile settings, the languages that correspond to their activity on Twitter and more.",
+                "Gender": "Twitter use the gender provided by people in their profiles, and extend that data to other people based on factors of account likeness to determine the gender of people haven't manually entered their preferred gender.",
+                "OS versions": "Advertisers can target by Operating System (e.g IOS vs Android)",
+                "Platforms": "Advertisers can target by platform used by the client (e.g Iphone 7 vs Iphone 8)",
+                "Events": "With event targeting, Twitter can discover and target the events that best fit the advertisers' audience — then create a campaign that delivers their ads at just the right time to just the right audience as the event unfolds."
+              }
+            }
+          ],
+          "data": [
+            {
+              "name": "source",
+              "values": [],
+              "format": {
+                "type": "json",
+                "parse": {
+                  "count_": "number"
+                }
+              },
+              "transform": [
+                {
+                  "type": "filter",
+                  "expr": "datum.targetingType == filterSignal"
+                },
+                {
+                  "type": "formula",
+                  "as": "angle",
+                  "expr": "[-45, 0, 45][~~(random() * 3)]"
+                },
+                {
+                  "type": "formula",
+                  "as": "weight",
+                  "expr": "if(datum.targetingValue=='VEGA', 600, 300)"
+                }
+              ]
+            }
+          ],
+          "scales": [
+            {
+              "name": "color",
+              "type": "ordinal",
+              "domain": {
+                "data": "source",
+                "field": "targetingValue"
+              },
+              "range": ["#d5a928", "#652c90", "#939597"]
+            }
+          ],
+          "marks": [
+            {
+              "type": "text",
+              "from": {
+                "data": "source"
+              },
+              "encode": {
+                "enter": {
+                  "text": {
+                    "field": "targetingValue"
+                  },
+                  "align": {
+                    "value": "center"
+                  },
+                  "baseline": {
+                    "value": "alphabetic"
+                  },
+                  "fill": {
+                    "scale": "color",
+                    "field": "targetingValue"
+                  },
+                  "tooltip": {
+                    "signal": "datum.targetingValue + \" was used by \" + datum.count_ + \" advertiser(s)\""
+                  }
+                },
+                "update": {
+                  "fillOpacity": {
+                    "value": 1
+                  }
+                },
+                "hover": {
+                  "fillOpacity": {
+                    "value": 0.5
+                  }
+                }
+              },
+              "transform": [
+                {
+                  "type": "wordcloud",
+                  "size": [800, 400],
+                  "text": {
+                    "field": "datum.targetingValue"
+                  },
+                  "rotate": {
+                    "field": "datum.angle"
+                  },
+                  "font": "Helvetica Neue, Arial",
+                  "fontSize": {
+                    "field": "datum.count_"
+                  },
+                  "fontWeight": {
+                    "field": "datum.weight"
+                  },
+                  "fontSizeRange": [12, 56],
+                  "padding": 2
+                }
+              ]
+            },
+            {
+              "type": "image",
+              "encode": {
+                "enter": {
+                  "url": {
+                    "value": "https://cdn1.iconfinder.com/data/icons/free-education-set/32/question-512.png"
+                  }
+                },
+                "update": {
+                  "tooltip": {
+                    "signal": "descriptions[filterSignal]"
+                  },
+                  "opacity": {
+                    "value": 1
+                  },
+                  "x": {
+                    "signal": "width - 20"
+                  },
+                  "y": {
+                    "signal": "height + 10"
+                  },
+                  "width": {
+                    "value": 20
+                  },
+                  "height": {
+                    "value": 20
+                  },
+                  "aspect": {
+                    "value": true
+                  },
+                  "smooth": {
+                    "value": true
+                  },
+                  "align": {
+                    "value": "center"
+                  },
+                  "baseline": {
+                    "value": "middle"
+                  }
+                },
+                "hover": {
+                  "opacity": {
+                    "value": 0.5
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "fr": {
+          "$schema": "https://vega.github.io/schema/vega/v5.json",
+          "width": 800,
+          "height": 400,
+          "padding": 0,
+          "signals": [
+            {
+              "name": "filterSignal",
+              "value": ["Follower look-alikes"],
+              "bind": {
+                "input": "select",
+                "name": " Critères: ",
+                "options": [
+                  "Follower look-alikes",
+                  "Interests",
+                  "App Activity",
+                  "Website Activity",
+                  "List",
+                  "Conversation topics",
+                  "Keywords",
+                  "Locations",
+                  "Age",
+                  "Languages",
+                  "Gender",
+                  "OS versions",
+                  "Platforms",
+                  "Events"
+                ],
+                "labels": [
+                  "Abonnés similaires",
+                  "Intérêts",
+                  "Activité dans l'application",
+                  "Activité sur le site web",
+                  "Liste",
+                  "Sujets de conversation",
+                  "Mots clés",
+                  "Emplacements",
+                  "Âge",
+                  "Langues",
+                  "Genre",
+                  "Systèmes d'exploitation",
+                  "Plateformes",
+                  "Événements"
+                ]
+              }
+            },
+            {
+              "name": "descriptions",
+              "value": {
+                "Follower look-alikes": "Twitter détermine les utilisateurs similaires à ceux qui suivent des comptes sur la base d'une variété de signaux, notamment ce qu'ils retweetent, cliquent, tweetent, etc.",
+                "Interests": "Twitter détermine les intérêts en fonction de divers signaux, notamment les personnes qu'elles suivent, ce qu'elles retweetent, ce qu'elles cliquent, ce qu'elles tweetent, etc",
+                "App Activity": "Atteignez les groupes de personnes qui ont effectué une action spécifique dans votre application, comme des installations ou des inscriptions.",
+                "Website Activity": "Il est possible de collecter ces données à l'aide de la balise de site web de Twitter disponible via Twitter Ads.",
+                "List": "Les listes sont créées en téléchargeant un fichier contenant votre adresse e-mail, votre identifiant publicitaire mobile ou votre nom d'utilisateur Twitter.",
+                "Conversation topics": "Les personnes peuvent être considérées comme faisant partie d'une audience de conversation si elles ont tweeté ou se sont engagées avec un tweet mentionnant le sujet.",
+                "Keywords": "Le ciblage par mot-clé permet aux annonceurs d'atteindre des personnes sur Twitter sur la base de mots-clés dans leurs requêtes de recherche, de Tweets récents et de Tweets avec lesquels ils se sont récemment engagés.",
+                "Locations": "Le ciblage géographique de Twitter est basé sur la localisation récente d'une personne. Il s'agit d'une combinaison de la localisation actuelle et de l'historique des localisations récentes. Twitter utilise plusieurs signaux pour déterminer si quelqu'un se trouve actuellement dans un lieu géographique particulier, comme l'adresse IP web, le signal GPS mobile, le signal WiFi mobile, et des signaux en temps réel, comme lorsque quelqu'un inclut son emplacement dans un Tweet.",
+                "Age": "S'il n'est pas spécifié dans votre profil Twitter, Twitter le déduit des utilisateurs qui l'ont fait, en se basant sur un certain nombre d'attributs tels que les comptes qu'ils suivent et leurs intérêts ",
+                "Languages": "Twitter déduit la langue d'une personne à partir de la langue sélectionnée dans les paramètres de son profil, des langues qui correspondent à son activité sur Twitter et plus encore.",
+                "Gender": "Twitter utilise le genre fourni par les personnes dans leurs profils, et étend ces données à d'autres personnes en fonction de facteurs de ressemblance de comptes pour déterminer le genre des personnes n'ayant pas saisi manuellement leur genre préféré.",
+                "OS versions": "Les annonceurs peuvent cibler par système d'exploitation (par exemple, IOS vs Android)",
+                "Platforms": "Les annonceurs peuvent cibler par plateforme utilisée par le client (par exemple Iphone 7 vs Iphone 8)",
+                "Events": "Avec le ciblage par événement, Twitter peut découvrir et cibler les événements qui correspondent le mieux à l'audience des annonceurs - puis créer une campagne qui diffuse leurs publicités au bon moment, à la bonne audience, au fur et à mesure que l'événement se déroule."
+              }
+            }
+          ],
+          "data": [
+            {
+              "name": "source",
+              "values": [],
+              "format": {
+                "type": "json",
+                "parse": {
+                  "count_": "number"
+                }
+              },
+              "transform": [
+                {
+                  "type": "filter",
+                  "expr": "datum.targetingType == filterSignal"
+                },
+                {
+                  "type": "formula",
+                  "as": "angle",
+                  "expr": "[-45, 0, 45][~~(random() * 3)]"
+                },
+                {
+                  "type": "formula",
+                  "as": "weight",
+                  "expr": "if(datum.targetingValue=='VEGA', 600, 300)"
+                }
+              ]
+            }
+          ],
+          "scales": [
+            {
+              "name": "color",
+              "type": "ordinal",
+              "domain": {
+                "data": "source",
+                "field": "targetingValue"
+              },
+              "range": ["#d5a928", "#652c90", "#939597"]
+            }
+          ],
+          "marks": [
+            {
+              "type": "text",
+              "from": {
+                "data": "source"
+              },
+              "encode": {
+                "enter": {
+                  "text": {
+                    "field": "targetingValue"
+                  },
+                  "align": {
+                    "value": "center"
+                  },
+                  "baseline": {
+                    "value": "alphabetic"
+                  },
+                  "fill": {
+                    "scale": "color",
+                    "field": "targetingValue"
+                  },
+                  "tooltip": {
+                    "signal": "datum.targetingValue + \" a été utilisé \" + datum.count_ + \" annonceur(s)\""
+                  }
+                },
+                "update": {
+                  "fillOpacity": {
+                    "value": 1
+                  }
+                },
+                "hover": {
+                  "fillOpacity": {
+                    "value": 0.5
+                  }
+                }
+              },
+              "transform": [
+                {
+                  "type": "wordcloud",
+                  "size": [800, 400],
+                  "text": {
+                    "field": "datum.targetingValue"
+                  },
+                  "rotate": {
+                    "field": "datum.angle"
+                  },
+                  "font": "Helvetica Neue, Arial",
+                  "fontSize": {
+                    "field": "datum.count_"
+                  },
+                  "fontWeight": {
+                    "field": "datum.weight"
+                  },
+                  "fontSizeRange": [12, 56],
+                  "padding": 2
+                }
+              ]
+            },
+            {
+              "type": "image",
+              "encode": {
+                "enter": {
+                  "url": {
+                    "value": "https://cdn1.iconfinder.com/data/icons/free-education-set/32/question-512.png"
+                  }
+                },
+                "update": {
+                  "tooltip": {
+                    "signal": "descriptions[filterSignal]"
+                  },
+                  "opacity": {
+                    "value": 1
+                  },
+                  "x": {
+                    "signal": "width - 20"
+                  },
+                  "y": {
+                    "signal": "height + 10"
+                  },
+                  "width": {
+                    "value": 20
+                  },
+                  "height": {
+                    "value": 20
+                  },
+                  "aspect": {
+                    "value": true
+                  },
+                  "smooth": {
+                    "value": true
+                  },
+                  "align": {
+                    "value": "center"
+                  },
+                  "baseline": {
+                    "value": "middle"
+                  }
+                },
+                "hover": {
+                  "opacity": {
+                    "value": 0.5
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "title": "Targeting criteria (All advertisers)",
+      "text": "Get more details on how you are targeted by these advertisers. This graph shows the number of times you have been targeted by different advertisers using a specific criterion. You can change the type of criterion and get information about the meaning of each criterion's type at the bottom of the graph."
+    },
+    {
+      "showTable": true,
+      "id": "all-criteria-all-advertisers",
+      "sql": "SELECT advertiserName, targetingType, targetingValue, COUNT(*) AS count_ FROM TwitterAd INNER JOIN TwitterCriterion ON TwitterAd.id = TwitterCriterion.adId GROUP BY advertiserName, targetingType, targetingValue; ",
+      "files": ["impressions", "engagements"],
+      "postprocessor": "sunburstTargeting",
+      "title": "Targeting criteria (1 advertiser)",
+      "visualization": "ChartViewSearchSunburst.vue",
+      "text": "Visualize the targeting criteria used by one specific advertiser. You can look up the advertiser in the table below and click on it to visualise them."
+    },
+    {
+      "showTable": false,
+      "id": "personalization",
+      "sql": "SELECT * FROM TwitterPersonalization; ",
+      "files": ["personalization"],
+      "visualization": "ChartViewTwitterInferredInfos.vue",
+      "title": "Inferred Data",
+      "text": "Find out what information Twitter has deduced about you"
+    },
+    {
+      "showTable": false,
+      "id": "genericDateViewer",
+      "customPipeline": "genericDateViewer",
+      "visualization": "ChartViewGenericDateViewer.vue",
+      "title": "Timeline",
+      "text": "See all the dated events in your files, corresponding to data that has been collected on you at or concerning a specific date."
+    }
+  ],
+  "version": 1
+}
