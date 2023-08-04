@@ -9,7 +9,9 @@ const __dirname = path.dirname(__filename)
 
 const prefixPath = 'packages/experiences'
 const experiencesPath = path.resolve(__dirname, prefixPath)
-const packages = readdirSync(experiencesPath)
+const packages = readdirSync(experiencesPath, { withFileTypes: true })
+  .filter(dirent => dirent.isDirectory())
+  .map(dirent => dirent.name)
 
 export default {
   externalsPresets: {
