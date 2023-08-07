@@ -69,4 +69,4 @@ The latest version of the library can be imported using these CDN links:
 
 ## Usage
 
-See [the example](./example/index.html)
+See the [deployment examples](./deployment-examples/). The simplest one is in [html-plain](./deployment-examples/html-plain/index.html). Run it in your browser through [raw.githack.com](https://raw.githack.com/hestiaAI/hestialabs-experiences/master/data-experience/deployment-examples/html-plain/index.html)

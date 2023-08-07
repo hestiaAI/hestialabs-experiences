@@ -160,7 +160,17 @@ export class Experience {
     this.version = packageJSON.version
   }
 
-  viewerCompatibilityErrors(viewerOptions: ViewerOptions | undefined) {
+  /**
+   * Checks if viewer options have compatibility problems with this experience.
+   * Currently it only checks that:
+   * viewerOptions.version >= this.loaderOptions.viewerVersion
+   *
+   * @param viewerOptions - The options to check.
+   * @returns false or a string explaining the compatibility errors.
+   */
+  viewerCompatibilityErrors(
+    viewerOptions: ViewerOptions | undefined
+  ): string | boolean {
     if (viewerOptions === undefined) {
       return `Undefined viewer options passed to experience ${this.name}`
     }
