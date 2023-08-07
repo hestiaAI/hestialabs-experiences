@@ -196,7 +196,7 @@ export class Experience {
   configureViewer(viewerOptions: ViewerOptions) {
     const errorMessage = this.viewerCompatibilityErrors(viewerOptions)
     if (errorMessage) {
-      throw new Error(errorMessage)
+      throw new Error('' + errorMessage)
     }
 
     const packageJSON = { name: this.name, version: this.version }
