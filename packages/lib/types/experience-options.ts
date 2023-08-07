@@ -10,6 +10,10 @@ export type PreprocessorFunction = (input: string) => string
 export type Lang = 'en' | 'fr'
 
 export type LoaderOptions = {
+  /**
+   * The smallest version of the viewer.json format
+   * supported by this loader.
+   */
   viewerVersion?: number
   preprocessors?: { [key: string]: PreprocessorFunction }
   databaseConfig?: DatabaseConfig

@@ -75,6 +75,10 @@ Run test for one or more packages:
 npm run test:ts-node -- <package1> [<package2> ...]
 ```
 
+## Usage
+
+Refer to [packages/experiences/README.md](packages/experiences/README.md)
+
 ## Package management
 
 This section explains how packages for experiences are created and updated. Similar principles apply to other packages.
@@ -93,7 +97,7 @@ This section explains how packages for experiences are created and updated. Simi
   "version": "0.0.0",
   "main": "dist/index.mjs",
   "type": "module",
-  "files": ["dist"],
+  "files": ["dist", "src/<NAME>-viewer.json"],
   "repository": {
     "type": "git",
     "url": "https://github.com/hestiaai/hestialabs-experiences",
