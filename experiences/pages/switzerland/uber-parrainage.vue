@@ -1,5 +1,11 @@
 <template>
   <div>
+    <VBanner color="warning" sticky dark>
+      <VIcon class="mr-6">
+        $vuetify.icons.mdiInformationOutline
+      </VIcon>
+      Nous regrettons de vous informer que ce service n'est plus disponible. Nous vous remercions pour votre compréhension
+    </VBanner>
     <div class="banner-wrapper">
       <VContainer>
         <div class="text-center">
