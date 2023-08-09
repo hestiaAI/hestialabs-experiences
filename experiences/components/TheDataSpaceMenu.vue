@@ -1,11 +1,11 @@
 <template>
-  <div v-if="bubbles.length">
-    <h1 class="mt-6 mb-4 text-h4">
+  <VContainer v-if="bubbles.length" class="mt-10">
+    <h4 class="text-h4">
       <VAvatar rounded size="50" class="mr-2">
         <img src="/data-space.png">
       </VAvatar>
-      <span>{{ $tc('Data Space', 2) }}</span>
-    </h1>
+      {{ $tc('Data Space', 2) }}
+    </h4>
     <VList rounded>
       <VListItem
         v-for="({ title, icon, slug }) in bubbles"
@@ -21,7 +21,7 @@
         </VListItemContent>
       </VListItem>
     </VList>
-  </div>
+  </VContainer>
 </template>
 
 <script>

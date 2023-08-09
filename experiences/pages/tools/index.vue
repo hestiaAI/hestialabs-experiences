@@ -1,11 +1,11 @@
 <template>
-  <VContainer>
-    <h1 class="mt-6 mb-4 text-h4">
+  <VContainer class="mt-10">
+    <h4 class="text-h4">
       <VIcon x-large>
         $vuetify.icons.mdiTools
       </VIcon>
       <span>{{ $tc('Tool', 2) }}</span>
-    </h1>
+    </h4>
     <VList rounded>
       <!-- https://zaengle.com/blog/named-routes-in-nuxt -->
       <VListItem
@@ -16,6 +16,14 @@
       >
         <VListItemContent>
           <VListItemTitle>{{ $t(name) }}</VListItemTitle>
+        </VListItemContent>
+      </VListItem>
+      <VListItem
+        href="https://personaldata.io/digipower-academy-questionnaire/"
+        target="_blank"
+      >
+        <VListItemContent>
+          <VListItemTitle>{{ $t("Data Spaces Creator") }}</VListItemTitle>
         </VListItemContent>
       </VListItem>
     </VList>

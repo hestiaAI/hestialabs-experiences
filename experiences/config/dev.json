@@ -78,20 +78,10 @@
   "_experienceViewerOptions": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
   "appInfoLinks": [
     {
-      "url": "https://hestia.ai/en/#contact",
+      "url": "mailto:contact@hestia.ai",
       "name": "Contact us",
       "icon": "mdiMessageOutline",
       "external": true
-    },
-    {
-      "url": "/about",
-      "name": "About",
-      "icon": "mdiHelp"
-    },
-    {
-      "url": "/privacy",
-      "name": "Privacy",
-      "icon": "mdiShieldLockOutline"
     }
   ],
   "bubbles": [
