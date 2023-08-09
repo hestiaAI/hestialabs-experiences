@@ -22,3 +22,5 @@ FROM
 WHERE
   a.timestamp >= startTimestamp
   AND a.timestamp <= endTimestamp
+  AND a.latitude IS NOT NULL
+  AND a.longitude IS NOT NULL;
