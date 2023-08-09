@@ -66,6 +66,10 @@ export default {
     productId: {
       type: Number,
       required: true
+    },
+    disable: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -73,7 +77,7 @@ export default {
       file: null,
       progress: false,
       uploadPercentage: 0,
-      disabled: false,
+      disabled: this.disable,
       validated: false,
       error: false,
       errorMessage: '',

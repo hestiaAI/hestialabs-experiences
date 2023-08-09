@@ -1,5 +1,11 @@
 <template>
   <div>
+    <VBanner color="warning" sticky dark>
+      <VIcon class="mr-6">
+        $vuetify.icons.mdiInformationOutline
+      </VIcon>
+      Nous regrettons de vous informer que ce service n'est plus disponible. Nous vous remercions pour votre compréhension
+    </VBanner>
     <div class="banner-wrapper">
       <VContainer>
         <div class="text-center">
@@ -33,7 +39,7 @@
               Profitez de notre accompagnement tout au long du processus de récupération de vos données auprès d'Uber. Horkos Deluxe transformera ensuite vos données bruts en données comptables : calculs de vos arriérés, de vos gains et de vos coûts. Vous pourrez aussi visualiser votre temps de travail et vos km parcourus, y compris à vide (sans client).
             </p>
             <div class="text-center ma-3">
-              <VBtn href="https://buy.stripe.com/00g4gI828dbK3n2dQT" color="primary" target="_blank">
+              <VBtn href="https://buy.stripe.com/00g4gI828dbK3n2dQT" color="primary" target="_blank" disabled>
                 Souscrivez au service Horkos Deluxe
               </VBtn>
             </div>
@@ -56,7 +62,7 @@
         </VRow>
         <VRow justify="center">
           <VCol cols="12" md="8" lg="6" align-self="center" class="text-center">
-            <FileUploader platform="uber" country="switzerland" :product-id="2" />
+            <FileUploader platform="uber" country="switzerland" :product-id="2" :disable="true" />
           </VCol>
         </VRow>
       </section>
