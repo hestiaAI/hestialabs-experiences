@@ -166,10 +166,22 @@ const config: DatabaseConfig = {
       options: {
         callback: output => {
           const o = output as JSONPathReturnObject
-          o['startLocation']['latitudeE7'] *= 1e-7
-          o['startLocation']['longitudeE7'] *= 1e-7
-          o['endLocation']['latitudeE7'] *= 1e-7
-          o['endLocation']['longitudeE7'] *= 1e-7
+          if (
+            !o['startLocation'] ||
+            !o['endLocation'] ||
+            !o['startLocation']['latitudeE7'] ||
+            !o['startLocation']['longitudeE7'] ||
+            !o['endLocation']['latitudeE7'] ||
+            !o['endLocation']['longitudeE7']
+          ) {
+            o['startLocation'] = { latitudeE7: null, longitudeE7: null }
+            o['endLocation'] = { latitudeE7: null, longitudeE7: null }
+          } else {
+            o['startLocation']['latitudeE7'] *= 1e-7
+            o['startLocation']['longitudeE7'] *= 1e-7
+            o['endLocation']['latitudeE7'] *= 1e-7
+            o['endLocation']['longitudeE7'] *= 1e-7
+          }
           o['startLocation']['address'] =
             o.startLocation.address === 'undefined'
               ? null
@@ -251,8 +263,16 @@ const config: DatabaseConfig = {
       options: {
         callback: output => {
           const o = output as JSONPathReturnObject
-          o['location']['latitudeE7'] *= 1e-7
-          o['location']['longitudeE7'] *= 1e-7
+          if (
+            !o['location'] ||
+            !o['location']['latitudeE7'] ||
+            !o['location']['longitudeE7']
+          ) {
+            o['location'] = { latitudeE7: null, longitudeE7: null }
+          } else {
+            o['location']['latitudeE7'] *= 1e-7
+            o['location']['longitudeE7'] *= 1e-7
+          }
           o['location']['semanticType'] =
             o.location.semanticType === 'undefined'
               ? null
@@ -317,8 +337,16 @@ const config: DatabaseConfig = {
       options: {
         callback: output => {
           const o = output as JSONPathReturnObject
-          o['location']['latitudeE7'] *= 1e-7
-          o['location']['longitudeE7'] *= 1e-7
+          if (
+            !o['location'] ||
+            !o['location']['latitudeE7'] ||
+            !o['location']['longitudeE7']
+          ) {
+            o['location'] = { latitudeE7: null, longitudeE7: null }
+          } else {
+            o['location']['latitudeE7'] *= 1e-7
+            o['location']['longitudeE7'] *= 1e-7
+          }
           o['location']['semanticType'] =
             o.location.semanticType === 'undefined'
               ? null
@@ -368,8 +396,13 @@ const config: DatabaseConfig = {
           options: {
             callback: output => {
               const o = output as JSONPathReturnObject
-              o['latitudeE7'] *= 1e-7
-              o['longitudeE7'] *= 1e-7
+              if (!o['latitudeE7'] || !o['longitudeE7']) {
+                o['latitudeE7'] = null
+                o['longitudeE7'] = null
+              } else {
+                o['latitudeE7'] *= 1e-7
+                o['longitudeE7'] *= 1e-7
+              }
               o['semanticType'] =
                 o.semanticType === 'undefined' ? null : o.semanticType
               o['address'] = o.address === 'undefined' ? null : o.address
@@ -402,8 +435,13 @@ const config: DatabaseConfig = {
       options: {
         callback: output => {
           const o = output as JSONPathReturnObject
-          o['latitudeE7'] *= 1e-7
-          o['longitudeE7'] *= 1e-7
+          if (!o['latitudeE7'] || !o['longitudeE7']) {
+            o['latitudeE7'] = null
+            o['longitudeE7'] = null
+          } else {
+            o['latitudeE7'] *= 1e-7
+            o['longitudeE7'] *= 1e-7
+          }
         }
       },
       getters: [
@@ -426,8 +464,13 @@ const config: DatabaseConfig = {
       options: {
         callback: output => {
           const o = output as JSONPathReturnObject
-          o['latitudeE7'] *= 1e-7
-          o['longitudeE7'] *= 1e-7
+          if (!o['latitudeE7'] || !o['longitudeE7']) {
+            o['latitudeE7'] = null
+            o['longitudeE7'] = null
+          } else {
+            o['latitudeE7'] *= 1e-7
+            o['longitudeE7'] *= 1e-7
+          }
         }
       },
       getters: [
