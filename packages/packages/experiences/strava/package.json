@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/strava",
-  "version": "3.3.2",
+  "version": "3.3.6",
   "main": "dist/index.mjs",
   "type": "module",
   "files": [

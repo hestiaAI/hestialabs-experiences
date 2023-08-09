@@ -1,10 +1,11 @@
 {
   "name": "@hestia.ai/twitter",
-  "version": "3.3.1",
+  "version": "3.3.5",
   "main": "dist/index.mjs",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "src/twitter-viewer.json"
   ],
   "repository": {
     "type": "git",

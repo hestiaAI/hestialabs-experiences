@@ -247,7 +247,7 @@
     {
       "showTable": false,
       "id": "PlaceVisited",
-      "sql": "SELECT * FROM PlaceVisit; ",
+      "sql": "SELECT * FROM PlaceVisit WHERE latitude IS NOT NULL AND longitude IS NOT NULL;",
       "files": ["LOCATION_HISTORY"],
       "visualization": "ChartViewGenericMap.vue",
       "title": "Places visited",
@@ -417,7 +417,7 @@
     {
       "showTable": false,
       "id": "OnePlace",
-      "sql": "SELECT winnerLatitude, winnerLongitude, winnerAddress, winnerName, winnerConfidence, winnerSemanticType, loserLatitude, loserLongitude, loserAddress, loserName, loserConfidence, loserSemanticType, startTimestamp, endTimestamp FROM Winners INNER JOIN Losers ON Winners.id = Losers.loserId ",
+      "sql": "SELECT winnerLatitude, winnerLongitude, winnerAddress, winnerName, winnerConfidence, winnerSemanticType, loserLatitude, loserLongitude, loserAddress, loserName, loserConfidence, loserSemanticType, startTimestamp, endTimestamp FROM Winners INNER JOIN Losers ON Winners.id = Losers.loserId WHERE winnerLatitude IS NOT NULL AND winnerLongitude IS NOT NULL AND loserLatitude IS NOT NULL AND loserLongitude IS NOT NULL;",
       "files": ["LOCATION_HISTORY"],
       "visualization": "ChartViewGoogleOnePlace.vue",
       "title": "One Place",
@@ -587,7 +587,7 @@
     {
       "showTable": false,
       "id": "OtherCandidates",
-      "sql": "SELECT winnerLatitude, winnerLongitude, winnerAddress, winnerName, winnerConfidence, winnerSemanticType, loserLatitude, loserLongitude, loserAddress, loserName, loserConfidence, loserSemanticType, startTimestamp, endTimestamp FROM Winners INNER JOIN Losers ON Winners.id = Losers.loserId ",
+      "sql": "SELECT winnerLatitude, winnerLongitude, winnerAddress, winnerName, winnerConfidence, winnerSemanticType, loserLatitude, loserLongitude, loserAddress, loserName, loserConfidence, loserSemanticType, startTimestamp, endTimestamp FROM Winners INNER JOIN Losers ON Winners.id = Losers.loserId WHERE winnerLatitude IS NOT NULL AND winnerLongitude IS NOT NULL AND loserLatitude IS NOT NULL AND loserLongitude IS NOT NULL;",
       "files": ["LOCATION_HISTORY"],
       "visualization": "ChartViewGenericMap.vue",
       "title": "Other Candidates",
@@ -896,7 +896,7 @@
     {
       "showTable": false,
       "id": "ActivitySegment",
-      "sql": "SELECT * FROM ActivitySegment; ",
+      "sql": "SELECT * FROM ActivitySegment WHERE startLatitude IS NOT NULL AND startLongitude IS NOT NULL AND endLatitude IS NOT NULL AND endLongitude IS NOT NULL;",
       "files": ["LOCATION_HISTORY"],
       "visualization": "ChartViewGenericMap.vue",
       "title": "Travels",
@@ -1226,7 +1226,7 @@
     {
       "showTable": false,
       "id": "Records",
-      "sql": "WITH a AS ( SELECT * FROM Records ORDER BY Records.timestamp DESC LIMIT 100000 ) SELECT a.latitude, a.longitude, a.timestamp, a.accuracy, a.source, ActivitySegment.activityType FROM a, ActivitySegment WHERE a.timestamp >= startTimestamp AND a.timestamp <= endTimestamp ",
+      "sql": "WITH a AS ( SELECT * FROM Records ORDER BY Records.timestamp DESC LIMIT 100000 ) SELECT a.latitude, a.longitude, a.timestamp, a.accuracy, a.source, ActivitySegment.activityType FROM a, ActivitySegment WHERE a.timestamp >= startTimestamp AND a.timestamp <= endTimestamp AND a.latitude IS NOT NULL AND a.longitude IS NOT NULL;",
       "files": ["LOCATION_HISTORY"],
       "visualization": "ChartViewGenericMap.vue",
       "title": "Records",
@@ -1405,7 +1405,7 @@
     {
       "showTable": false,
       "id": "WifiScan",
-      "sql": "SELECT mac, AVG(latitude) AS latitude, AVG(longitude) AS longitude, COUNT(*) AS number_of_detections FROM WifiScan INNER JOIN MacAdresses ON WifiScan.id = MacAdresses.macId GROUP BY mac ORDER BY COUNT() DESC ",
+      "sql": "SELECT mac, AVG(latitude) AS latitude, AVG(longitude) AS longitude, COUNT(*) AS number_of_detections FROM WifiScan INNER JOIN MacAdresses ON WifiScan.id = MacAdresses.macId WHERE latitude IS NOT NULL AND longitude IS NOT NULL GROUP BY mac ORDER BY COUNT() DESC;",
       "files": ["LOCATION_HISTORY"],
       "visualization": "ChartViewGenericMap.vue",
       "title": "Wifi",

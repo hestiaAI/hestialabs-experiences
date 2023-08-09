@@ -1,0 +1,384 @@
+{
+  "collaborator": {
+    "title": "The Eyeballs Collective",
+    "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/the-eyeballs.svg",
+    "url": "https://eyeballs.hestialabs.org/"
+  },
+  "dataSamples": [],
+  "hideEmptyTabs": false,
+  "hideFileExplorer": false,
+  "hideSummary": true,
+  "messages": {
+    "en": {
+      "intro": {
+        "title": "Collective LinkedIn experience",
+        "subtitle": "Unlock the power of Linkedin data"
+      },
+      "viewBlocks": {
+        "inference": {
+          "title": "Inferences about your group",
+          "text": "The cards below represent the inferences (positive or negative) that Linkedin has made about the members of your group, classified according to the number of occurrences (from the most present to the least present inference).",
+          "vizProps": {
+            "messages": {
+              "Filter by Category": "Filter by Category",
+              "Filter by Inference": "Filter by Inference",
+              "Inferred": "Inferred"
+            }
+          },
+          "total-inferences": "Total inferences: {n}",
+          "total-profiles": "Total profiles: {n}",
+          "inferenceTypes": {
+            "Numeric value": "Numeric value",
+            "Other": "Other"
+          },
+          "categories": {
+            "Career inferences": "Career inferences",
+            "Inferred interests": "Inferred interests",
+            "LinkedIn Sales Solutions (LSS) inferences": "LinkedIn Sales Solutions (LSS) inferences",
+            "LinkedIn activity inferences": "LinkedIn activity inferences"
+          }
+        },
+        "ad-targeting": {
+          "title": "Skills and diversity",
+          "text": "The charts below represent the criteria Linkedin uses to determine which ads to show to your group members. They draw an interesting map of the skills and experiences of your group and its diversity.",
+          "vizProps": {
+            "graphs": [
+              {
+                "valueLabel": "profiles",
+                "title": "Skills"
+              },
+              {},
+              {
+                "valueLabel": "profiles",
+                "title": "Job Seniorities"
+              },
+              {
+                "valueLabel": "profiles",
+                "title": "Years of experience"
+              },
+              {},
+              {
+                "valueLabel": "profiles",
+                "title": "Degrees"
+              },
+              {
+                "valueLabel": "profiles",
+                "title": "Fields of Study"
+              },
+              {
+                "valueLabel": "profiles",
+                "title": "Member schools"
+              }
+            ]
+          },
+          "headers": {
+            "memberAge": "Member Age",
+            "companyNames": "Company Names",
+            "companyFollowerOf": "Company Follower of",
+            "companyCategory": "Company Category",
+            "companySize": "Company Size",
+            "degrees": "Degrees",
+            "degreeClass": "Degree Class",
+            "memberSchools": "Member Schools",
+            "companyGrowthRate": "Company Growth Rate",
+            "fieldsOfStudy": "Fields of Study",
+            "companyConnections": "Company Connections",
+            "functionBySize": "Function By Size",
+            "jobFunctions": "Job Functions",
+            "memberGender": "Member Gender",
+            "graduationYear": "Graduation Year",
+            "memberGroups": "Member Groups",
+            "companyIndustries": "Company Industries",
+            "memberInterests": "Member Interests",
+            "interfaceLocales": "Interface Locales",
+            "interfaceLocale": "Interface Locale",
+            "memberTraits": "Member Traits",
+            "profileLocations": "Profile Locations",
+            "companyRevenue": "Company Revenue",
+            "jobSeniorities": "Job Seniorities",
+            "memberSkills": "Member Skills",
+            "jobTitles": "Job Titles",
+            "yearsOfExperience": "Years of Experience",
+            "filePath": "File ID"
+          }
+        },
+        "connections": {
+          "title": "Collective network ( Reach )",
+          "text": "This infographic represents the scope of your group's network. Clicking on an item will filter all the graphs according to this criterion.",
+          "vizProps": {
+            "graphs": [
+              {
+                "valueLabel": "contacts",
+                "title": "Number of unique connections"
+              },
+              {
+                "valueLabel": "contacts",
+                "title": "Employers of your contacts",
+                "defaultValue": "Not mentioned"
+              },
+              {
+                "valueLabel": "contacts",
+                "title": "Jobs of your contacts",
+                "defaultValue": "Not mentioned"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "fr": {
+      "intro": {
+        "title": "LinkedIn expérience collective",
+        "subtitle": "Libérez la puissance des données Linkedin"
+      },
+      "viewBlocks": {
+        "inference": {
+          "title": "Données inférées sur votre groupe",
+          "text": "Les cartes ci-dessous représentent les inférences (positives ou négatives) que Linkedin a faites sur les membres de votre groupe, classées selon le nombre d'occurrences (de l'inférence la plus présente à l'inférence la moins présente).",
+          "vizProps": {
+            "messages": {
+              "Filter by Category": "Filtrer par catégorie",
+              "Filter by Inference": "Filtrer par inférence",
+              "Inferred": "Inférée"
+            }
+          },
+          "total-inferences": "Total des inférences : {n}",
+          "total-profiles": "Total profils: {n}",
+          "inferenceTypes": {
+            "Numeric value": "Valeur numérique",
+            "Other": "Autres"
+          },
+          "categories": {
+            "Career inferences": "Déductions pour la carrière",
+            "Inferred interests": "Intérêts inférés",
+            "LinkedIn Sales Solutions (LSS) inferences": "Inférences LinkedIn Sales Solutions (LSS)",
+            "LinkedIn activity inferences": "Inférences sur l'activité de LinkedIn"
+          }
+        },
+        "ad-targeting": {
+          "title": "Compétences et diversité",
+          "text": "Les graphiques ci-dessous représentent les critères utilisés par Linkedin pour déterminer les annonces à montrer aux membres de votre groupe. Ils dessinent une carte intéressante des compétences et expériences de votre groupe et de sa diversité.",
+          "vizProps": {
+            "graphs": [
+              {
+                "valueLabel": "profils",
+                "title": "Compétences"
+              },
+              {},
+              {
+                "valueLabel": "profils",
+                "title": "Ancienneté dans l'emploi"
+              },
+              {
+                "valueLabel": "profils",
+                "title": "Années d'expérience"
+              },
+              {},
+              {
+                "valueLabel": "profils",
+                "title": "Diplômes"
+              },
+              {
+                "valueLabel": "profils",
+                "title": "Domaines d'études"
+              },
+              {
+                "valueLabel": "profils",
+                "title": "Écoles"
+              }
+            ]
+          },
+          "headers": {
+            "memberAge": "Âge du membre",
+            "companyNames": "Noms des entreprises",
+            "companyFollowerOf": "Suivi de l'entreprise",
+            "companyCategory": "Catégorie d'entreprise",
+            "companySize": "Taille de l'entreprise",
+            "degrees": "Degrés",
+            "degreeClass": "Classe de degré",
+            "memberSchools": "Écoles membres",
+            "companyGrowthRate": "Taux de croissance de l'entreprise",
+            "fieldsOfStudy": "Domaines d'études",
+            "companyConnections": "Connexions d'entreprises",
+            "functionBySize": "Fonction par taille",
+            "jobFunctions": "Fonctions de l'emploi",
+            "memberGender": "Membre Genre",
+            "graduationYear": "Année d'obtention du diplôme",
+            "memberGroups": "Groupes de membres",
+            "companyIndustries": "Industries de l'entreprise",
+            "memberInterests": "Intérêts des membres",
+            "interfaceLocales": "Interface Locales",
+            "interfaceLocale": "Interface Locale",
+            "memberTraits": "Traits des membres",
+            "profileLocations": "Emplacements des profils",
+            "companyRevenue": "Revenu de l'entreprise",
+            "jobSeniorities": "Ancienneté des emplois",
+            "memberSkills": "Compétences des membres",
+            "jobTitles": "Titres des emplois",
+            "yearsOfExperience": "Années d'expérience",
+            "filePath": "ID du fichier"
+          }
+        },
+        "connections": {
+          "title": "Réseau collectif (portée)",
+          "text": "Cette infographie représente l'étendue du réseau de votre groupe. En cliquant sur un élément, vous filtrerez tous les graphiques en fonction de ce critère.",
+          "vizProps": {
+            "graphs": [
+              {
+                "valueLabel": "contacts",
+                "title": "Nombre de connexions uniques"
+              },
+              {
+                "valueLabel": "contacts",
+                "title": "Employeurs de vos contacts",
+                "defaultValue": "Non mentionné"
+              },
+              {
+                "valueLabel": "contacts",
+                "title": "Emplois de vos contacts",
+                "defaultValue": "Non mentionné"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "tutorialVideos": [],
+  "title": "Collective LinkedIn experience",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/linkedin.png",
+  "subtitle": "Unlock the power of Linkedin data",
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "inference",
+      "sql": "SELECT category, typeOfInference, description, inference, SUBSTR(filepath, 0, INSTR(filepath, '/')), COUNT(*) AS _count, ( SELECT COUNT(*) FROM ( SELECT * FROM Inference GROUP BY SUBSTR(filepath, 0, INSTR(filepath, '/')) ) ) _total_profiles FROM Inference GROUP BY category, typeOfInference, description, inference ORDER BY _count DESC, inference DESC; ",
+      "files": ["inference"],
+      "visualization": "ChartViewListLinkedinInference.vue",
+      "title": "Inferences about your group",
+      "text": "The cards below represent the inferences (positive or negative) that Linkedin has made about the members of your group, classified according to the number of occurrences (from the most present to the least present inference)."
+    },
+    {
+      "showTable": false,
+      "id": "ad-targeting",
+      "sql": "SELECT * FROM AdTargeting; ",
+      "files": ["ad-targeting"],
+      "postprocessor": "strToArray",
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "showTable": false,
+        "graphs": [
+          {
+            "valueLabel": "occurences",
+            "title": "Skills",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "valueAccessor": "memberSkills",
+            "valueAsArray": true
+          },
+          {
+            "cols": "8"
+          },
+          {
+            "valueLabel": "occurences",
+            "title": "Job Seniorities",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "valueAccessor": "jobSeniorities",
+            "isScrollable": true,
+            "topK": 100,
+            "valueAsArray": true
+          },
+          {
+            "valueLabel": "occurences",
+            "title": "Years of experience",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "valueAccessor": "yearsOfExperience",
+            "valueAsArray": true
+          },
+          {
+            "cols": "4"
+          },
+          {
+            "valueLabel": "occurences",
+            "title": "Degrees",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "valueAccessor": "degrees",
+            "valueAsArray": true
+          },
+          {
+            "valueLabel": "occurences",
+            "title": "Fields of Study",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "valueAccessor": "fieldsOfStudy",
+            "valueAsArray": true
+          },
+          {
+            "valueLabel": "occurences",
+            "title": "Member schools",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "valueAccessor": "memberSchools",
+            "valueAsArray": true
+          }
+        ]
+      },
+      "title": "Skills and diversity",
+      "text": "The charts below represent the criteria Linkedin uses to determine which ads to show to your group members. They draw an interesting map of the skills and experiences of your group and its diversity."
+    },
+    {
+      "showTable": true,
+      "id": "connections",
+      "sql": "SELECT * FROM ( SELECT *, RANK() OVER( PARTITION BY emailAddress, firstName, lastName ORDER BY rowid ) rank FROM Connection ) WHERE rank = 1; ",
+      "files": ["connection"],
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "valueLabel": "contacts",
+            "title": "Number of unique connections",
+            "cols": "12",
+            "height": 220,
+            "type": "TimelineChart.vue",
+            "dateAccessor": "connectedOn",
+            "cumulativeGroup": true
+          },
+          {
+            "valueLabel": "contacts",
+            "title": "Employers of your contacts",
+            "cols": "6",
+            "height": 220,
+            "type": "TopChart.vue",
+            "isScrollable": true,
+            "topK": 100,
+            "defaultValue": "Not mentioned",
+            "valueAccessor": "company"
+          },
+          {
+            "valueLabel": "contacts",
+            "title": "Jobs of your contacts",
+            "cols": "6",
+            "height": 220,
+            "type": "TopChart.vue",
+            "isScrollable": true,
+            "topK": 100,
+            "defaultValue": "Not mentioned",
+            "valueAccessor": "position"
+          }
+        ]
+      },
+      "title": "Collective network ( Reach )",
+      "text": "This infographic represents the scope of your group's network. Clicking on an item will filter all the graphs according to this criterion."
+    }
+  ],
+  "version": 1
+}

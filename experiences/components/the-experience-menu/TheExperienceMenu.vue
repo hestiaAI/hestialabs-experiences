@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <VContainer class="mt-10">
     <template v-for="({ experiences, heading, collaborator }, index) in sections">
       <div v-if="experiences.length" :key="index">
         <div class="mt-6 mb-4">
@@ -15,7 +15,7 @@
         <component :is="component" v-bind="{ experiences }" />
       </div>
     </template>
-  </div>
+  </VContainer>
 </template>
 
 <script>

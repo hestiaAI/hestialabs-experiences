@@ -1,7 +1,10 @@
 <?php
 /**
  * Plugin Name: Data Experience
- * Description: A shortcode to include data-experience on a page.
+ * Description: A shortcode to include data-experience on a page. See readme on the plugin site.
+ * Plugin URI: https://github.com/hestiaAI/hestialabs-experiences/tree/master/data-experience/deployment-examples/wordpress-plugin
+ * Author: hestia.ai
+ * Author URI: https://hestia.ai
  *
  * Zip this file and upload it to plugins in the wordpress dashboard
  * https://themewaves.com/how-to-upload-plugin-to-wordpress/
@@ -15,8 +18,10 @@ function func_data_experience($atts){
 
   global $dataexp_setup_js;
 
-  $dataexp_version = $atts['version'] ?? '2.0.12';
+  $dataexp_version = $atts['version'] ?? 'latest';
   $experience = $atts['experience'] ?? 'uber-driver';
+  $viewer_opts = $atts['viewer-opts'] ?? null;
+  $viewer_opts = $viewer_opts === null ? 'undefined' : "'$viewer_opts'";
   $bubble = $atts['bubble'] ?? '';
   // print 'atts '.$dataexp_version.' '.$experience.' '.$bubble;
 
@@ -38,13 +43,18 @@ END;
   const vuetify = new Vuetify(DataExperience.vuetifyOpts(i18n))
   const store = new Vuex.Store({})
   Vue.use(DataExperience.DataExperience, { store })
+  const experienceViewerOptions = $viewer_opts
   const theApiUrl = 'https://bubbles.hestialabs.org'
   const bubbleAPI = new DataExperience.BubbleAPI(theApiUrl)
   const bubble = '$bubble'
   let bubbleConfig = undefined
   if (bubble) {
     bubbleConfig = await bubbleAPI.getConfig('$bubble')
+    if (experienceViewerOptions !== undefined) {
+      bubbleConfig.experienceViewerOptions = experienceViewerOptions
+    }
   }
+
   const mapboxToken = 'pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA'
   new Vue({
     el: '#app',
@@ -54,7 +64,7 @@ END;
     data: {
       experienceModule: experience,
       bubbleConfig,
-      siteConfig: { mapboxToken }
+      siteConfig: { mapboxToken, experienceViewerOptions }
     }
   })
 END;

@@ -1,10 +1,11 @@
 {
   "name": "@hestia.ai/linkedin-agg",
-  "version": "3.2.1",
+  "version": "3.2.5",
   "main": "dist/index.mjs",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "src/linkedin-agg-viewer.json"
   ],
   "repository": {
     "type": "git",

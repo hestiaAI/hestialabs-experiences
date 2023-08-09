@@ -2,6 +2,7 @@
 import { vuetifyOpts } from 'data-experience'
 import {
   mdiAccount,
+  mdiAccountDetails,
   mdiAccountGroup,
   mdiAlert,
   mdiAutorenew,
@@ -9,6 +10,7 @@ import {
   mdiCached,
   mdiCalendar,
   mdiChartBar,
+  mdiChartScatterPlot,
   mdiCheckboxBlankOutline,
   mdiCheckCircle,
   mdiChevronLeft,
@@ -64,6 +66,7 @@ import {
 
 const values = {
   mdiAccount,
+  mdiAccountDetails,
   mdiAccountGroup,
   mdiAlert,
   mdiAutorenew,
@@ -71,6 +74,7 @@ const values = {
   mdiCached,
   mdiCalendar,
   mdiChartBar,
+  mdiChartScatterPlot,
   mdiCheckboxBlankOutline,
   mdiCheckCircle,
   mdiCheckCircleOutline,

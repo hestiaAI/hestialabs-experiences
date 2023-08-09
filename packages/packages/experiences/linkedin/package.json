@@ -1,10 +1,11 @@
 {
   "name": "@hestia.ai/linkedin",
-  "version": "3.3.1",
+  "version": "3.3.5",
   "main": "dist/index.mjs",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "src/linkedin-viewer.json"
   ],
   "repository": {
     "type": "git",
