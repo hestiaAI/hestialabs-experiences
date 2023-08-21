@@ -68,6 +68,9 @@ export default {
   font-weight:bolder;
 }
 
+.wrapper /deep/ a {
+ color: white !important;
+}
 .card-image {
   border-radius: 4px;
 }
