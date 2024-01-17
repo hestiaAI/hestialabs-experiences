@@ -36,7 +36,7 @@ You can also change the default locale to english:
 
 The web page should instantly reflect your change.
 
-## Viewer options (instgram-viewer.json)
+## Viewer options (instagram-viewer.json)
 The experience's viewer options are taken from the folder *data-experience/public*. The instagram viewer options are in [data-experience/public/instagram-viewer.json](data-experience/public/instagram-viewer.json)
 
 Change the property "dataPortalMessage":
@@ -108,6 +108,202 @@ Looking at the viewBlock of the first tab *consumption* you notice:
 - **vizualization** tells the experience what visualization component to use. In this case it's [chart/view/ChartViewDashboard.vue](data-experience/src/components/chart/view/ChartViewDashboard.vue).
 
 The visualization components are a part of *data-experience*, the experiences only refer to them by name. The visualization is configured by vizProps that depend on the type of the visualization component. ChartViewDashboard.vue can contain graphs that are also components like [chart/view/dc/TimelineChart.vue](data-experience/src/components/chart/view/dc/TimelineChart.vue). I suspect that only components in the dc folder can be used inside the dashboard.
- 
+
+### Viewer functions
+
+The second tab in the instagram experience defines a postprocessor.
+
+``` json
+    {
+      "showTable": false,
+      "id": "consumption-time",
+      "postprocessor": "makeSessions",
+```
+
+The postprocessor refers by name to a function called *makeSessions*. This function needs to be defined in instagram's [index.ts](packages/packages/experiences/instagram/src/index.ts) viewerFunctions. Here they are imported from [viewer-functions.ts](packages/packages/experiences/instagram/src/viewer-functions.ts) which takes makeSessions from postprocessors.ts.
+
+The postprocessor is run on the result of the sql query. It's useful for doing things that are hard in SQL and easy in javascript.
+
 ## Loader options 
+
+The loader options in [src/index.ts](packages/packages/experiences/instagram/src/index.ts) define most of the processing done in an experience when you click the button *explore your data*. Here's how they look for instagram:
+
+``` json
+
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
+  databaseConfig,
+  files: {
+    messages: '**/messages/inbox/**/message_*.json',
+    followers: '**/followers.json',
+    followings: '**/following.json',
+    ...
+  },
+  preprocessors: {
+    '**/*.json': preprocessor
+  }
+}
+```
+
+- *files* names the files from the user's zipped data that are needed for this experience. The glob syntax matches files and folders. (The name given to the file here serves as id for the filemanager).
+- *databaseConfig* defines how the files are mapped to database tables. Here it imported from *database.ts*
+- *preprocessors* defines functions that need to be run on files that match a glob expression. (In instragram, the preprocessor is imported from the neighbouring facebook experience; that is a bad idea, in js you should only import from projects defined in the package.json dependencies.)
+
+### experience without database (uber)
+
+The uber experience has much simpler loader options in its [index.ts](packages/packages/experiences/uber/src/index.ts):
+
+``` typescript
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
+  files: {
+    trips: '**/Rider/trips_data.csv'
+  }
+}
+```
+There are no databaseOptions. The data from uber comes in a csv format which is close enough to what we need for the visualization, so we skip the step where we map the data to a database, populate it and query it with sql. 
+
+## The pipeline 
+
+The pipeline is the process that takes a zip file of the user's data and turns into javascript objects that can be used by a chart component.
+
+To start developing a pipeline, it's useful to run it separately from the whole application in the browser. For this you can use tests.
+
+The tests for the experiencs live in project *data-experience* because it has all the machinery for running them.
+
+``` sh
+$ cd data-experience
+$ npm run test
+...
+ PASS  src/__tests__/twitter/database.test.js (60.832 s)
+ PASS  src/__tests__/facebook/database.test.js (50.432 s)
+ PASS  src/__tests__/twitter-agg/database.test.js (60.768 s)
+ PASS  src/__tests__/her/database.test.js
+ PASS  src/__tests__/uber/pipeline.test.js
+ PASS  src/__tests__/tinder/database.test.js
+```
+
+## Example: creating an experience for Wolt
+
+We start with a zip file of a Wolt courier's data. There's one interesting csv file **courier_tasks** with a date in colum *Task completion time*. We would like to display it a bit uber-driver's trips. 
+
+Let's look at the uber-driver experience to find out what charts it's using, in the default values defined in [uber-driver-viewer.json](packages/packages/experiences/uber-driver/src/uber-driver-viewer.json) (in subproject *packages* where the experiences are defined).
+
+It's the second tab of the experience, so it's configured as the second element of the root property *viewBlocks*:
+
+``` json
+  "viewBlocks": [
+    {
+      "id": "driverHeatMap",
+      ...
+    },
+    {
+      "id": "driverTrips",
+      "customPipeline": "csv_driver_trips",
+      "files": ["driver_trips"],
+      "title": "Trips",
+      "postprocessor": "driverTripsPostProcessor",
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Number of trips",
+            "valueLabel": "trips",
+            "cols": "12",
+            "type": "BarTimelineChart.vue",
+            "dateAccessor": "begin_date"
+          },
+          {
+            "valueLabel": "trips",
+            "type": "WeekChart.vue",
+            "cols": "4",
+            "dateAccessor": "begin_date"
+          },
+          {
+            "valueLabel": "trips",
+            "type": "HourChart.vue",
+            "cols": "4",
+            "dateAccessor": "begin_date"
+          },
+          {
+            "valueLabel": "trips",
+            "title": "Status of the trip",
+            "cols": "4",
+            "height": 220,
+            "type": "TopChart.vue",
+            "valueAccessor": "status"
+          }
+        ]
+      },
+      "text": "< TO DEFINE IN TRANSLATIONS >",
+      "showTable": false
+    },
+```
+
+We'll start by creating the first chart. It's a *BarTimelineChart* inside a *ChartViewDashboard*. There is no database, instead there is a *customPipeline* called *csv_driver_trips*. This is named function from a viewer.json, so you can find it's implementation in the experience's [viewer-functions.ts](packages/packages/experiences/uber-driver/src/viewer-functions.ts). 
+
+### Creating the package
+Follow the documentation in the [packages README](packages/README.md#create-a-new-package). 
+
+Things you can skip:
+- don't bother changing anything in the top-level *experiences* project 
+- don't log in to npm yet, that's for later).
+
+#### Creating a test
+Before running the experience in the browser, we can execute just it's pipeline in a test. Let's start by copying  [data-experience/src/__tests__/uber/pipeline.test.js](data-experience/src/__tests__/uber/pipeline.test.js) to **wolt/pipeline.test.js**. Also copy **samples.helpers.js**.
+
+The tests should still run.
+``` sh
+npm run test
+```
+
+Replace the first line to import the wolt experience, and check the test now fails.
+
+``` javascript
+// import experience from '@hestia.ai/uber'
+import experience from '@hestia.ai/wolt
+```
+
+Add some anonymized data to *samples.helpers.js*
+
+``` js
+export const courierTasks = `"Task creation time ","Task completion time","Is pickup task","Completed with vehicle type","Arrived at","Started at","Arrival time","Departed at"
+"2021-04-24 16:19:34.025","2021-04-24 17:13:35.463",TRUE,"BICYCLE","2021-04-24 16:56:59.914","2021-04-24 16:55:03.975","2021-04-24 17:12:54",
+"2021-05-07 15:07:02.476","2021-05-07 15:26:22.875",FALSE,"BICYCLE","2021-05-07 15:24:14.696","2021-05-07 15:19:55.534","2021-05-07 15:25:54",
+"2021-04-24 16:43:28.318","2021-04-24 17:22:08.96",TRUE,"BICYCLE","2021-04-24 17:20:23.608","2021-04-24 17:17:20.728","2021-04-24 17:21:20",
+"2021-04-16 16:36:22.13","2021-04-16 16:48:58.293",TRUE,"BICYCLE","2021-04-16 16:41:59.532","2021-04-16 16:39:45.597","2021-04-16 16:49:34",
+"2021-04-24 16:19:34.025","2021-04-24 17:17:17.544",FALSE,"BICYCLE","2021-04-24 17:15:29.318","2021-04-24 17:13:37.043","2021-04-24 17:16:45",
+"2021-04-10 11:13:30.969","2021-04-10 11:22:33.466",TRUE,"BICYCLE","2021-04-10 11:19:15.922","2021-04-10 11:15:22.737","2021-04-10 11:22:55",
+"2021-04-10 11:13:30.969","2021-04-10 11:33:06.738",FALSE,"BICYCLE","2021-04-10 11:30:46.502","2021-04-10 11:22:36.42","2021-04-10 11:33:41",
+"2021-04-13 12:38:15.312",,TRUE,,,,"2021-04-13 12:58:48",
+"2021-04-13 12:38:15.312",,FALSE,,,,"2021-04-13 13:19:42",`
+```
+
+### Creating a customPipeline
+
+In the wolt experience, add code to the index.ts by copying what you need from the uber-driver experience. You'll need to create viewer options and viewer functions.
+
+``` typescript
+import packageJSON from '../package.json'
+import viewerFunctions from './viewer-functions'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './wolt-viewer.json'
+
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
+  files: {
+    courier_tasks: 'courier_tasks.csv'
+  }
+}
+
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url,
+  viewerFunctions
+)
+```
+
+
 
