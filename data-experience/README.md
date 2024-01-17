@@ -19,6 +19,8 @@ cd ../data-experience
 npm install
 ```
 
+Make sure to use the exact version of node we want. If you don't the build system will tell you which one to use.
+
 ### Compiles and hot-reloads for development
 
 The example is in folder dev/
