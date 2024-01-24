@@ -9,7 +9,7 @@ An experience lives in the subproject *packages*. For example [instagram is here
 
 It's made up of **loader options** and **viewer options**. The loader options contain the code. The viewer options can be changed by the developer who uses this package. There are default viewer options in file [src/instagram-viewer.json](packages/packages/experiences/instagram/src/instagram-viewer.json)
 
-## Running an experience in developement mode
+## Running an experience in development mode
 
 The experience are run in the project *data-experience*. You first need to follow the setup instructions in the  [README](data-experience/README.md)
 
@@ -249,35 +249,6 @@ Things you can skip:
 - don't bother changing anything in the top-level *experiences* project 
 - don't log in to npm yet, that's for later).
 
-#### Creating a test
-Before running the experience in the browser, we can execute just it's pipeline in a test. Let's start by copying  [data-experience/src/__tests__/uber/pipeline.test.js](data-experience/src/__tests__/uber/pipeline.test.js) to **wolt/pipeline.test.js**. Also copy **samples.helpers.js**.
-
-The tests should still run.
-``` sh
-npm run test
-```
-
-Replace the first line to import the wolt experience, and check the test now fails.
-
-``` javascript
-// import experience from '@hestia.ai/uber'
-import experience from '@hestia.ai/wolt
-```
-
-Add some anonymized data to *samples.helpers.js*
-
-``` js
-export const courierTasks = `"Task creation time ","Task completion time","Is pickup task","Completed with vehicle type","Arrived at","Started at","Arrival time","Departed at"
-"2021-04-24 16:19:34.025","2021-04-24 17:13:35.463",TRUE,"BICYCLE","2021-04-24 16:56:59.914","2021-04-24 16:55:03.975","2021-04-24 17:12:54",
-"2021-05-07 15:07:02.476","2021-05-07 15:26:22.875",FALSE,"BICYCLE","2021-05-07 15:24:14.696","2021-05-07 15:19:55.534","2021-05-07 15:25:54",
-"2021-04-24 16:43:28.318","2021-04-24 17:22:08.96",TRUE,"BICYCLE","2021-04-24 17:20:23.608","2021-04-24 17:17:20.728","2021-04-24 17:21:20",
-"2021-04-16 16:36:22.13","2021-04-16 16:48:58.293",TRUE,"BICYCLE","2021-04-16 16:41:59.532","2021-04-16 16:39:45.597","2021-04-16 16:49:34",
-"2021-04-24 16:19:34.025","2021-04-24 17:17:17.544",FALSE,"BICYCLE","2021-04-24 17:15:29.318","2021-04-24 17:13:37.043","2021-04-24 17:16:45",
-"2021-04-10 11:13:30.969","2021-04-10 11:22:33.466",TRUE,"BICYCLE","2021-04-10 11:19:15.922","2021-04-10 11:15:22.737","2021-04-10 11:22:55",
-"2021-04-10 11:13:30.969","2021-04-10 11:33:06.738",FALSE,"BICYCLE","2021-04-10 11:30:46.502","2021-04-10 11:22:36.42","2021-04-10 11:33:41",
-"2021-04-13 12:38:15.312",,TRUE,,,,"2021-04-13 12:58:48",
-"2021-04-13 12:38:15.312",,FALSE,,,,"2021-04-13 13:19:42",`
-```
 
 ### Creating a customPipeline
 
@@ -305,5 +276,123 @@ export default new Experience(
 )
 ```
 
+### Creating a test
+Before running the experience in the browser, we can execute just it's pipeline in a test. Let's start by copying  [data-experience/src/__tests__/uber/pipeline.test.js](data-experience/src/__tests__/uber/pipeline.test.js) to **wolt/pipeline.test.js**. Also copy **samples.helpers.js**.
+
+The tests should still run.
+``` sh
+npm run test
+```
+
+You can run an interactive version of the test runner that lets you choose what tests to run
+``` sh
+npm run test -- --watch
+```
+
+Replace the first line to import the wolt experience, and check the test now fails.
+
+``` javascript
+// import experience from '@hestia.ai/uber'
+import experience from '@hestia.ai/wolt
+```
+
+Add some anonymized test data to *samples.helpers.js*
+
+``` js
+// input of the test
+export const courierTasks = `"Task creation time ","Task completion time","Is pickup task","Completed with vehicle type","Arrived at","Started at","Arrival time","Departed at"
+"2021-04-24 16:19:34.025","2021-04-24 17:13:35.463",TRUE,"BICYCLE","2021-04-24 16:56:59.914","2021-04-24 16:55:03.975","2021-04-24 17:12:54",
+"2021-05-07 15:07:02.476","2021-05-07 15:26:22.875",FALSE,"BICYCLE","2021-05-07 15:24:14.696","2021-05-07 15:19:55.534","2021-05-07 15:25:54",`
+
+// expected output of the test
+export const courierTasksHeaders = [
+  'begin_date'
+]
+export const courierTasksItems = [
+  {
+    begin_date: '2021-04-24 16:19:34.025'
+  },
+  {
+    begin_date: '2021-05-07 15:07:02.476'
+  }
+]
+```
+
+Adapt **wolt/pipeline.test.js**
+```
+import experience from '@hestia.ai/wolt'
+import { courierTasksHeaders, courierTasksItems, courierTasks } from './samples.helpers'
+import FileManager from '~/utils/file-manager'
+import NodeFile from '~/utils/node-file'
+import { arrayEqualNoOrder, getViewBlock } from '~/utils/test-utils'
+
+const { preprocessors, files, keepOnlyFiles } = experience.options
+const fileManager = new FileManager(
+  preprocessors,
+  null,
+  files,
+  keepOnlyFiles
+)
+// courier_tasks.csv is at the root of the zip
+const fileTasks = new NodeFile('courier_tasks.csv', courierTasks)
+
+describe('with complete samples', () => {
+  beforeAll(async() => await fileManager.init([fileTasks]))
+  test('pipeline courierTasks returns the correct items', async() => {
+    const blockId = 'courierTasks'
+    const viewBlock = getViewBlock(experience, blockId)
+    const pipeline = viewBlock.customPipeline
+    const postprocessor = viewBlock.postprocessor
+    const pipelineResult = await pipeline({ fileManager })
+    const result = await postprocessor(pipelineResult)
+    const expected = {
+      headers: courierTasksHeaders,
+      items: courierTasksItems
+    }
+    arrayEqualNoOrder(result.headers, expected.headers)
+    arrayEqualNoOrder(result.items, expected.items)
+  })
+})
+```
+
+Once the pipeline test works, you can try to run it in development
+### Running the experience in development mode
+
+Create some fake sample data in a wolt.zip and save it as **data-experience/public/data-samples/wolt.zip**, so when the dev app is running it will be able to access it with the at [http://localhost:8080/data-samples/wolt.zip](http://localhost:8080/data-samples/wolt.zip)
+
+Configure the data-samples in the experience's [wolt-viewer.json](packages/packages/experiences/wolt/src/wolt-viewer.json). For some reason, you absolutely need to add a parameter with the file name.
+
+``` json
+  "dataSamples": [
+    "http://localhost:8080/data-samples/wolt.zip?filename=wolt.zip"
+  ],
+```
+
+Make sure that the experience's [index.ts](packages/packages/experiences/wolt/src/index.ts), the loaderOptions configure the right file:
+
+``` typescript
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
+  files: {
+    courier_tasks: '**/courier_tasks.csv'
+  }
+}
+```
 
 
+Import the new experience in [data-experience/dev/App.vue](data-experience/dev/App.vue)
+``` javascript
+import wolt from '@hestia.ai/wolt'
+
+const experienceObjects = [
+//...
+  wolt
+]
+```
+
+``` sh
+cd ../data-experience
+npm run dev
+```
+
+The new experience should be available in the Experience dropdown.
