@@ -654,6 +654,57 @@ const config: DatabaseConfig = {
 }
 ```
 
+Paths are using the syntax of [JSONPath plus](https://github.com/JSONPath-Plus/JSONPath).
+
+Note that getters can also be configured by code for difficult cases like an instagram property with a name that changes according to the user's language. See [instagram's database.ts](packages/packages/experiences/instagram/src/database.ts)
+
+``` typescript
+    {
+      fileId: 'personalInfos',
+      path: '$.profile_user[*].string_map_data',
+      table: 'InstagramInfo',
+      options: {
+        callback: output => {
+          const o = output as JSONPathRecord
+          // Get 4th value == Name, language dependent
+          o['name'] = Object.values(o)[3].value
+        }
+      },
+      getters: [
+        {
+          column: 'name',
+          path: 'name'
+        }
+      ]
+    },
+
+```
+
+This snippet in 
+[tinder's database.ts](packages/packages/experiences/tinder/src/database.ts)
+ creates a new property on items and populates it with a string extracted from a property on their grandParent
+
+``` typescript
+
+  getters: [
+    {
+      fileId: 'tinder',
+      path: '$.Usage.[*]@number()',
+      table: 'TinderUsage',
+      options: {
+        resultType: JSONPathResultType.all,
+        callback: output => {
+          const o = output as JSONPathReturnObject
+          o['grandparentProperty'] = o.pointer.split('/')[2]
+        }
+      },
+      getters: [
+        {
+          column: 'actionType',
+          path: '$.grandparentProperty'
+        },
+```
+
 This will validate the database config and run some checks on the experiences 
 
 ``` typescript
