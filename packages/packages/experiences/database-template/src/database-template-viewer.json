@@ -1,0 +1,101 @@
+{
+  "title": "Database template",
+  "version": 1,
+  "hideFileExplorer": false,
+  "hideEmptyTabs": true,
+  "dataPortal": "https://example.com/en/isl/courier-privacy-policy",
+  "dataSamples": [
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/wolt.zip?contenthash=c03f3fb83b90ecaa150a&filename=wolt.zip"
+  ],
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/uber.png",
+  "viewBlocks": [
+    {
+      "id": "courierTasks",
+      "sql": "SELECT beginDate FROM CourierTasks; ",
+      "customPipeline": "csv_tasks",
+      "files": ["courier_tasks"],
+      "title": "Tasks",
+      "postprocessor": "courierTasksPostProcessor",
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Number of tasks",
+            "valueLabel": "tasks",
+            "cols": "12",
+            "type": "BarTimelineChart.vue",
+            "dateAccessor": "beginDate"
+          },
+          {
+            "valueLabel": "tasks",
+            "type": "WeekChart.vue",
+            "cols": "4",
+            "dateAccessor": "beginDate"
+          }
+        ]
+      },
+      "text": "< TO DEFINE IN TRANSLATIONS >",
+      "showTable": false
+    }
+  ],
+  "messages": {
+    "en": {
+      "intro": {
+        "title": "Wolt courrier",
+        "dataPortalHtml": "To use this experience, you must first retrieve the data Wolt has collected about you by making a SAR request. Please follow <a href=\"https://explore.wolt.com/en/isl/courier-privacy-policy\" target=\"_blank\" rel=\"noreferrer noopener\">these instructions</a> to retrieve your data and analyze it here. If you don't have your data yet, you can use the example below."
+      },
+      "viewBlocks": {
+        "courierTasks": {
+          "title": "Tasks",
+          "text": "This visualisation shows the number of tasks booked over time, depending on the time of day, day of the week or status of the trip.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Number of tasks",
+                "valueLabel": "tasks"
+              }
+            ]
+          },
+          "headers": {
+            "begin_date": "Time of Pickup (UTC)",
+            "end_date": "Time of Dropoff (UTC)"
+          }
+        }
+      }
+    },
+    "fr": {
+      "intro": {
+        "title": "Courrier Wolt",
+        "dataPortalHtml": "Pour utiliser cette expérience, vous devez d'abord récupérer les données que Wolt a recueillies sur vous en faisant une demande SAR. Veuillez suivre <a href=\"https://github.com/hestiaAI/data-catalog/blob/main/workshop/uber.md#subject-access-request-instructions\" target=\"_blank\" rel=\"noreferrer noopener\" >ces instructions</a> pour récupérer vos données et les analyser ici. Si vous ne disposez pas encore de vos données, vous pouvez utiliser l'exemple ci-dessous."
+      },
+      "viewBlocks": {
+        "courierTasks": {
+          "title": "Courses",
+          "text": "Cette visualisation montre le nombre de courses réservées au cours du temps, en fonction de l'heure de la journée, du jour de la semaine ou du statut de la course.",
+          "vizProps": {
+            "graphs": [
+              {
+                "title": "Nombre de courses",
+                "valueLabel": "courses"
+              },
+              {
+                "valueLabel": "courses"
+              },
+              {
+                "valueLabel": "courses"
+              },
+              {
+                "title": "Statut",
+                "valueLabel": "courses"
+              }
+            ]
+          },
+          "headers": {
+            "begin_date": "Heure de prise en charge (UTC)",
+            "end_date": "Heure de dépose (UTC)"
+          }
+        }
+      }
+    }
+  }
+}

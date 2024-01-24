@@ -120,6 +120,7 @@ Replace `<NAME>` with the package name.
 6. Re-link the packages workspace:
 
 ```sh
+npm run build
 npm link --workspaces
 cd ../data-experience
 npm i

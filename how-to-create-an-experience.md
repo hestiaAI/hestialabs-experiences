@@ -183,8 +183,7 @@ $ npm run test
  PASS  src/__tests__/tinder/database.test.js
 ```
 
-## Example: creating an experience for Wolt
-
+## Example: creating a experience for Wolt (customPipeline)
 We start with a zip file of a Wolt courier's data. There's one interesting csv file **courier_tasks** with a date in colum *Task completion time*. We would like to display it a bit uber-driver's trips. 
 
 Let's look at the uber-driver experience to find out what charts it's using, in the default values defined in [uber-driver-viewer.json](packages/packages/experiences/uber-driver/src/uber-driver-viewer.json) (in subproject *packages* where the experiences are defined).
@@ -243,6 +242,11 @@ It's the second tab of the experience, so it's configured as the second element 
 We'll start by creating the first chart. It's a *BarTimelineChart* inside a *ChartViewDashboard*. There is no database, instead there is a *customPipeline* called *csv_driver_trips*. This is named function from a viewer.json, so you can find it's implementation in the experience's [viewer-functions.ts](packages/packages/experiences/uber-driver/src/viewer-functions.ts). 
 
 ### Creating the package
+Create a git branch.
+``` sh
+git checkout -b wolt-experience
+```
+
 Follow the documentation in the [packages README](packages/README.md#create-a-new-package). 
 
 Things you can skip:
@@ -387,6 +391,300 @@ import wolt from '@hestia.ai/wolt'
 const experienceObjects = [
 //...
   wolt
+]
+```
+
+``` sh
+cd ../data-experience
+npm run dev
+```
+
+The new experience should be available in the Experience dropdown.
+
+### Publishing the package to npm
+
+Move your anonymized data sample *wolt.zip* to [packages/lib](packages/lib). Once committed and pushed to github, this is were the experience will download it from.
+
+Change the address of your dataSamples in [wolt-viewer.json](packages/packages/experiences/wolt/src/wolt-viewer.json). For some reason, you absolutely need to add a parameter with the file name. (The contenthash is probably just for cache busting, change it in case you update the wolt.zip).
+
+``` json
+  "dataSamples": [
+  "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/wolt.zip?contenthash=c03f3fb83b90ecaa150a&filename=wolt.zip"
+  ],
+```
+
+You can also delete the temporary **data-experience/public/data-samples/wolt.zip** now.
+
+Check that all tests pass.
+
+``` sh
+cd ./packages
+npm run test
+cd ./data-experience
+npm run test
+```
+
+Follow the documentation in the [packages README](packages/README.md#login-to-npm) and follow the steps:
+- Login to npm
+- Publish packages
+
+``` sh
+git push --set-upstream origin wolt-experience
+```
+On github repo [hestialabs-experiences](https://github.com/hestiaAI/hestialabs-experiences/) go to your branch click on contribute and create a pull request.
+
+Wait until all the tests have passed, ask for a code review or not, and merge the pull request.
+
+### Add the experience to digipower.academy
+
+The website digipower.academy is built from subproject *experiences*. It imports *data-experience* so you need to build it first (I think).
+
+For an experience to look nice on experiences, you want set a logo icon in [wolt-viewer.json](packages/packages/experiences/wolt/src/wolt-viewer.json), and republish the experience.
+
+As explained in the [packages README](packages/README.md#create-a-new-package),
+add the name of the new package to the `experiences` Array in [dev.json](https://github.com/hestiaAI/hestialabs-experiences/blob/master/experiences/config/dev.json).
+
+``` sh
+cd ../data-experience
+npm run build
+cd ../dc-dashboard
+npm i
+npm run build
+cd ../experiences
+npm i
+npm run dev
+```
+
+If it looks like what you like, ask François to configure the prod version to show your experience and deploy it on digipower.academy. It's documented in the readmes, but somewhat complicated and you need access to netlify.
+
+
+## Example: creating experience that works with a (database)
+
+Let's use the same data as the previous example and store it in a database instead. We can follow the example of the her experience, which reads csv files and stores the data in a database. 
+
+Let's call it **database-template**. It's going to serve as an example for creating other experiences that would be named after an organization like **wolt** or **her**.
+
+Looking at the her experience, we find that matches have a similar shape as the tasks in the previous example. In [her-viewer.json](packages/packages/experiences/her/src/her-viewer.json) we see it configured like this:
+
+``` json
+    {
+      "showTable": false,
+      "id": "matches",
+      "sql": "SELECT * FROM HerLike; ",
+      "files": ["liked"],
+      "visualization": "ChartViewOverviewHer.vue",
+      "title": "Matches",
+      "text": "Look at the likes you've made that have become matches or not."
+    }
+```
+
+It's using a chart made specifically for Her, **ChartViewOverviewHer**. Instead we will use the same generic chart as the previous example.
+
+There is an **sql** property that's set to an SQL query on table HerLike. That table is created by migration tool that lives in [data-experience/src/utils/sql.js](data-experience/src/utils/sql.js).
+
+The migration for Her is configured by the databaseConfig in the loader options of its [index.ts](packages/packages/experiences/her/src/index.ts)
+
+``` typescript
+import databaseConfig from './database'
+
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
+  databaseConfig,
+  //...
+```
+
+The config itself comes from [database.ts](packages/packages/experiences/her/src/database.ts)
+
+Where you can see a definition of table HerLike with three columns:
+
+``` typescript
+const config: DatabaseConfig = {
+  tables: [
+    {
+      name: 'HerLike',
+      columns: [
+        ['name', TEXT],
+        ['likedAt', TEXT],
+        ['matched', TEXT]
+      ]
+    },
+   //...
+```
+
+And getters that specify where the data from the columns is taken from.
+``` typescript
+   //...
+  getters: [
+    {
+      // This is the file
+      fileId: 'liked',
+      
+      // This is the path to the items
+      path: '$.items[*]',
+      table: 'HerLike',
+      getters: [
+        {
+          column: 'name',
+          // This is how we get from the item 
+          // to the value we want for the column
+          path: '$.name'
+        },
+        {
+          column: 'likedAt',
+          path: '$.likedAt'
+        },
+        {
+          column: 'matched',
+          path: '$.matched'
+        }
+      ]
+    },
+```
+
+The fileId refers to a file in the loaderOptions of [index.ts](packages/packages/experiences/her/src/index.ts)
+
+``` typescript
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
+  databaseConfig,
+  files: {
+    liked: '**/liked.csv',
+    //...
+```
+
+### Creating the package
+Follow the documentation in the [packages README](packages/README.md#create-a-new-package). 
+
+Things you can skip:
+- don't bother changing anything in the top-level *experiences* project 
+- don't log in to npm yet, that's for later).
+
+### Create the database pipeline
+
+In the database-template experience, add code to the index.ts by copying what you need from the her experience. You'll need to create viewer options and viewer functions.
+
+The file is the same as in the previous wolt experience.
+``` typescript
+import packageJSON from '../package.json'
+import { Experience, LoaderOptions, ViewerOptions } from '@/index'
+import viewerOptions from './database-template-viewer.json'
+import databaseConfig from './database'
+
+const loaderOptions: LoaderOptions = {
+  viewerVersion: 1,
+  databaseConfig,
+  files: {
+    courier_tasks: '**/courier_tasks.csv'
+  }
+}
+
+export default new Experience(
+  loaderOptions,
+  viewerOptions as ViewerOptions,
+  packageJSON,
+  import.meta.url
+)
+```
+
+Create database-template-viewer.json from wolt. We change the visualization to use **ChartViewDashboard.vue**. To see an example of a ChartViewDashboard that uses a database pipeline, we look at [instagram-viewer.json](packages/packages/experiences/instagram/src/instagram-viewer.json) and see the *sql* attribute lives next to the id.
+
+``` json
+{
+  "title": "Database template",
+  "version": 1,
+  "hideFileExplorer": false,
+  "hideEmptyTabs": true,
+  "dataPortal": "https://example.com/en/isl/courier-privacy-policy",
+  "dataSamples": [
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/wolt.zip?contenthash=c03f3fb83b90ecaa150a&filename=wolt.zip"
+  ],
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/uber.png",
+  "viewBlocks": [
+    {
+      "id": "courierTasks",
+      "sql": "SELECT begin_date FROM CourierTasks; ",
+      "customPipeline": "csv_tasks",
+      "files": ["courier_tasks"],
+      "title": "Tasks",
+      "postprocessor": "courierTasksPostProcessor",
+      "visualization": "ChartViewDashboard.vue",
+      "vizProps": {
+        "graphs": [
+          {
+            "title": "Number of tasks",
+            "valueLabel": "tasks",
+            "cols": "12",
+            "type": "BarTimelineChart.vue",
+            "dateAccessor": "begin_date"
+```
+
+We change the sql to a query similar to the one in 
+[her-viewer.json](packages/packages/experiences/her/src/her-viewer.json)
+
+ ``` sql
+      SELECT begin_date FROM CourierTasks;
+ ```
+
+So we need a table CourierTasks with a column begin_date. We define them in the database configuration [database.ts](packages/packages/experiences/her/src/database.ts).
+
+We assume this will allow the script to read the column *taskCreationTime* which is not camecased in the csv.
+
+``` typescript
+
+const config: DatabaseConfig = {
+  tables: [
+    {
+      name: 'CourierTasks',
+      columns: [['begin_date', TEXT]]
+    }
+  ],
+  getters: [
+    {
+      fileId: 'courier_tasks',
+      path: '$.items[*]',
+      table: 'CourierTasks',
+      getters: [
+        {
+          column: 'begin_date',
+          path: '$.taskCreationTime'
+        }
+      ]
+    }
+  ]
+}
+```
+
+This will validate the database config and run some checks on the experiences 
+
+``` typescript
+cd ../packages
+npm run test
+# and just to be sure, for the next step
+npm link --workspaces
+```
+
+### Creating a database test 
+Start by installing the new experience package
+
+``` sh
+cd ../data-experience 
+npm i
+```
+
+Copy  [data-experience/src/__tests__/her/database.test.js](data-experience/src/__tests__/her/database.test.js) to **database-template/database.test.js**. Also copy the samples from the wolt test **wolt/samples.helpers.js**. Change the names of fields and tables.
+
+
+### Running the experience in development mode
+
+We are using the wolt.zip as dummy data, so the configuration is already done.
+
+Import the new experience in [data-experience/dev/App.vue](data-experience/dev/App.vue)
+``` javascript
+import databaseTemplate from '@hestia.ai/database-template'
+
+const experienceObjects = [
+//...
+  databaseTemplate
 ]
 ```
 
