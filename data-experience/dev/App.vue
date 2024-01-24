@@ -60,6 +60,7 @@ import twitterAgg from '@hestia.ai/twitter-agg'
 import uber from '@hestia.ai/uber'
 import uberDriver from '@hestia.ai/uber-driver'
 import youtube from '@hestia.ai/youtube'
+import wolt from '@hestia.ai/wolt'
 
 const experienceObjects = [
   appleTracker,
@@ -85,7 +86,8 @@ const experienceObjects = [
   twitterAgg,
   uber,
   uberDriver,
-  youtube
+  youtube,
+  wolt
 ]
 
 const experiences = experienceObjects.map(e => e.config.slug)
