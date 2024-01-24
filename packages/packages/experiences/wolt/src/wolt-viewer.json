@@ -7,7 +7,7 @@
   "dataSamples": [
     "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/wolt.zip?contenthash=c03f3fb83b90ecaa150a&filename=wolt.zip"
   ],
-  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/uber.png",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/wolt.png",
   "viewBlocks": [
     {
       "id": "courierTasks",
