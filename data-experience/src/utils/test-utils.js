@@ -45,10 +45,14 @@ export function getSqlFromBlock({ options: { viewBlocks } }, id) {
   return sql
 }
 
-export function getCustomPipelineFromBlock({ options: { viewBlocks } }, id) {
-  const { customPipeline } = viewBlocks.find(b => b.id === id)
+export function getCustomPipelineFromBlock(experience, id) {
+  const { customPipeline } = getViewBlock(experience, id)
   if (typeof customPipeline !== 'function') {
     throw new TypeError(`customPipeline in view block with id ${id} is not a function`)
   }
   return customPipeline
+}
+
+export function getViewBlock(experience, viewBlockId) {
+  return experience?.options?.viewBlocks?.find(b => b.id === viewBlockId)
 }
