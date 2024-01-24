@@ -61,6 +61,7 @@ import uber from '@hestia.ai/uber'
 import uberDriver from '@hestia.ai/uber-driver'
 import youtube from '@hestia.ai/youtube'
 import wolt from '@hestia.ai/wolt'
+import databaseTemplate from '@hestia.ai/database-template'
 
 const experienceObjects = [
   appleTracker,
@@ -87,7 +88,8 @@ const experienceObjects = [
   uber,
   uberDriver,
   youtube,
-  wolt
+  wolt,
+  databaseTemplate
 ]
 
 const experiences = experienceObjects.map(e => e.config.slug)

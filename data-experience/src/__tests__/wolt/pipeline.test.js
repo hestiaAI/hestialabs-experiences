@@ -1,5 +1,5 @@
 import experience from '@hestia.ai/wolt'
-import { testTripsData, courierTasks, courierTasksHeaders, courierTasksItems } from './samples.helpers'
+import { courierTasks, courierTasksHeaders, courierTasksItems } from './samples.helpers'
 import FileManager from '~/utils/file-manager'
 import NodeFile from '~/utils/node-file'
 import { arrayEqualNoOrder, getViewBlock } from '~/utils/test-utils'
@@ -11,12 +11,11 @@ const fileManager = new FileManager(
   files,
   keepOnlyFiles
 )
-const fileTrips = new NodeFile('test/Rider/trips_data.csv', testTripsData)
 
 const fileTasks = new NodeFile('courier_tasks.csv', courierTasks)
 
 describe('with complete samples', () => {
-  beforeAll(async() => await fileManager.init([fileTrips, fileTasks]))
+  beforeAll(async() => await fileManager.init([fileTasks]))
 
   test('wolt pipeline courierTasks returns the correct items', async() => {
     const blockId = 'courierTasks'
