@@ -1,16 +1,16 @@
 {
-  "name": "@hestia.ai/apple-tracker-agg",
-  "version": "3.3.7",
+  "name": "@hestia.ai/database-template",
+  "version": "0.0.1",
   "main": "dist/index.mjs",
   "type": "module",
   "files": [
     "dist",
-    "src/apple-tracker-agg-viewer.json"
+    "src/database-template-viewer.json"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/hestiaai/hestialabs-experiences",
-    "directory": "packages/packages/experiences/apple-tracker-agg"
+    "directory": "packages/packages/experiences/database-template"
   },
   "publishConfig": {
     "access": "public"

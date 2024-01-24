@@ -1,9 +1,9 @@
 {
-  "title": "Wolt",
+  "title": "Database template",
   "version": 1,
   "hideFileExplorer": false,
   "hideEmptyTabs": true,
-  "dataPortal": "https://explore.wolt.com/en/isl/courier-privacy-policy",
+  "dataPortal": "https://example.com/en/isl/courier-privacy-policy",
   "dataSamples": [
     "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/wolt.zip?contenthash=c03f3fb83b90ecaa150a&filename=wolt.zip"
   ],
@@ -11,6 +11,7 @@
   "viewBlocks": [
     {
       "id": "courierTasks",
+      "sql": "SELECT beginDate FROM CourierTasks; ",
       "customPipeline": "csv_tasks",
       "files": ["courier_tasks"],
       "title": "Tasks",
@@ -23,13 +24,13 @@
             "valueLabel": "tasks",
             "cols": "12",
             "type": "BarTimelineChart.vue",
-            "dateAccessor": "begin_date"
+            "dateAccessor": "beginDate"
           },
           {
             "valueLabel": "tasks",
             "type": "WeekChart.vue",
             "cols": "4",
-            "dateAccessor": "begin_date"
+            "dateAccessor": "beginDate"
           }
         ]
       },
@@ -97,5 +98,4 @@
       }
     }
   }
-
 }
