@@ -745,3 +745,22 @@ npm run dev
 ```
 
 The new experience should be available in the Experience dropdown.
+
+## A quick list for all the files that needed to be changed in data-experience when creating a new experience
+
+- **[data-experience](data-experience/)** package (runs the packages):
+
+- [ ] [dev/App.vue](data-experience/dev/App.vue): we need to add the newly created experience so that it gets displayed.
+- [ ] [public/other-viwer.json](data-experience/public/other-viwer.json): (optional) renders the default view/visual for that experience. If that doesn't exists, it searches in the packages.
+- [ ] [src/_tests__/wolt](data-experience/src/_tests__/wolt): test. you should start with the test for the experience you want to create and test either the custom pipeline or the database
+
+
+- **[experiences](experiences/)** package (that runs the digipower.academy):
+- [ ] [config/dev.json](experiences/config/dev.json): we add the new experience there so it gets displayed to digipower.academy
+
+- **[packages](packages/)** package (where you develop the code for the new experience, ex. 'wolt'):
+
+- [ ] [packages/experiences/wolt/](packages/packages/experiences/wolt/): the folder that creates everything on the new experience (and everything below)
+- [ ] [packages/experiences/wolt/package.json](packages/packages/experiences/wolt/package.json): we need to add the newly created experience so that it gets displayed.
+- [ ] [lib/data-samples/](packages/lib/data-samples/): the folder where we put the sample/default data for each experience
+- [ ] [packages.ts](packages/packages.ts): exports the code to the world
