@@ -12,7 +12,7 @@
     "postinstall": "node postinstall.cjs",
     "dev": "npm-run-all -p -r dev:bubble-server dev:monorepo dev:app",
     "dev:no-local-server": "npm-run-all -p -r dev:monorepo dev:app",
-    "dev:bubble-server": "cd ../../hestialabs-bubble-server/bubbleserver && cross-env DJANGO_DEBUG=True poetry run python ./manage.py runserver",
+    "dev:bubble-server": "cd ../../hestialabs-bubble-server/bubbleserver && poetry env use python3.11 && poetry install && cross-env DJANGO_DEBUG=True poetry run python ./manage.py runserver",
     "dev:monorepo": "cd ../packages && npm run dev",
     "dev:app": "cross-env NODE_OPTIONS=--openssl-legacy-provider nuxt --open --hostname localhost",
     "test": "jest",

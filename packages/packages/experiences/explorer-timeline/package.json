@@ -1,0 +1,20 @@
+{
+  "name": "@hestia.ai/explorer-timeline",
+  "version": "0.0.1",
+  "main": "dist/index.mjs",
+  "type": "module",
+  "files": [
+    "dist",
+    "src/explorer-timeline-viewer.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/experiences/explorer-timeline"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}
