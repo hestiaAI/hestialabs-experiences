@@ -30,8 +30,10 @@
     "twitter",
     "uber",
     "uber-driver",
+    "uber-rider",
     "youtube",
     "explorer",
+    "explorer-timeline",
     "wolt"
   ],
   "experienceViewerOptions": {
@@ -86,6 +88,7 @@
     }
   ],
   "bubbles": [
+    "unine-participant",
     "frc-participant",
     "frc-aggregator",
     "trialinternational-participant",

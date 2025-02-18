@@ -1,0 +1,178 @@
+{
+  "en": {
+    "intro": {
+      "title": "Uber Rider",
+      "dataPortalHtml": "To use this experience, you must first retrieve the data Uber has collected about you by making a SAR request. Please follow <a href='https://github.com/hestiaAI/data-catalog/blob/main/workshop/uber.md#subject-access-request-instructions' target='_blank' rel='noreferrer noopener' >these instructions</a> to retrieve your data and analyze it here. If you don't have your data yet, you can use the example below."
+    },
+    "viewBlocks": {
+      "driverHeatMap": {
+        "title": "Hot areas",
+        "text": "This map shows all locations where you picked up passengers.",
+        "headers": {
+          "beginTimestampUtc": "Time of Pickup (UTC)",
+          "endTimestampUtc": "Time of Dropoff (UTC)",
+          "beginLat": "Pickup Latitude",
+          "beginLng": "Pickup Longitude",
+          "endLat": "Dropoff Latitude",
+          "endLng": "Dropoff Longitude"
+        }
+      },
+      "driverTrips": {
+        "title": "Trips",
+        "text": "This visualisation shows the number of trips booked over time, depending on the time of day, day of the week or status of the trip.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Number of trips",
+              "valueLabel": "trips"
+            },
+            {
+              "valueLabel": "trips"
+            },
+            {
+              "valueLabel": "trips"
+            },
+            {
+              "title": "Status",
+              "valueLabel": "trips"
+            }
+          ]
+        },
+        "headers": {
+          "begin_date": "Time of Pickup (UTC)",
+          "end_date": "Time of Dropoff (UTC)"
+        }
+      },
+      "driverTrips_0": {
+        "title": "Trips",
+        "text": "List of your trips such as request, start and end times and distances travelled."
+      },
+      "driverOnOff": {
+        "title": "Status",
+        "text": "This map shows every trips you have made depending on your status. Open (P1), En route (P2) or On trip (P3).",
+        "headers": {
+          "earnerState": "Status",
+          "beginTimestampUtc": "Time of Pickup (UTC)",
+          "endTimestampUtc": "Time of Dropoff (UTC)",
+          "beginLat": "Pickup Latitude",
+          "beginLng": "Pickup Longitude",
+          "endLat": "Dropoff Latitude",
+          "endLng": "Dropoff Longitude",
+          "durationMs": "Duration (ms)"
+        }
+      },
+      "driverRestrictions": {
+        "title": "Restrictions",
+        "text": "This map shows every place where Uber restricted your access to the application, and the reasons why they temporarily suspend your access to the application. Note: Sometime the restriction duration is 0, meaning that it was only a notification.",
+        "headers": {
+          "time": "Time of notification",
+          "msgRule": "Reason of restriction",
+          "msgPenaltyboxdurationms": "Restriction duration (ms)",
+          "msgLatitude": "Latitude",
+          "msgLongitude": "Longitude"
+        }
+      },
+      "driverPayments": {
+        "title": "Payments",
+        "text": "Overview of the weekly payments that have been made."
+      },
+      "driverAppAnalytics": {
+        "title": "GPS",
+        "text": "Last 50 000 GPS points collected on your device (limited number for performance reason)."
+      },
+      "driverAccounting": {
+        "title": "Accounting (Mockup)",
+        "text": "Compute your expenses and estimated wages.",
+        "overlay": "This feature is under development"
+      }
+    }
+  },
+  "fr": {
+    "intro": {
+      "title": "Livreur Uber",
+      "dataPortalHtml": "Pour utiliser cette expérience, vous devez d'abord récupérer les données qu'Uber a recueillies sur vous en faisant une demande SAR. Veuillez suivre <a href='https://github.com/hestiaAI/data-catalog/blob/main/workshop/uber.md#subject-access-request-instructions' target='_blank' rel='noreferrer noopener' >ces instructions</a> pour récupérer vos données et les analyser ici. Si vous ne disposez pas encore de vos données, vous pouvez utiliser l'exemple ci-dessous."
+    },
+    "viewBlocks": {
+      "driverHeatMap": {
+        "title": "Zones Chaudes",
+        "text": "Cette carte montre tous les endroits où vous avez pris des passagers.",
+        "headers": {
+          "beginTimestampUtc": "Heure de prise en charge (UTC)",
+          "endTimestampUtc": "Heure de dépose (UTC)",
+          "beginLat": "Latitude de prise en charge",
+          "beginLng": "Longitude de prise en charge",
+          "endLat": "Latitude de dépose",
+          "endLng": "Longitude de dépose"
+        }
+      },
+      "driverTrips": {
+        "title": "Courses",
+        "text": "Cette visualisation montre le nombre de courses réservées au cours du temps, en fonction de l'heure de la journée, du jour de la semaine ou du statut de la course.",
+        "vizProps": {
+          "graphs": [
+            {
+              "title": "Nombre de courses",
+              "valueLabel": "courses"
+            },
+            {
+              "valueLabel": "courses"
+            },
+            {
+              "valueLabel": "courses"
+            },
+            {
+              "title": "Statut",
+              "valueLabel": "courses"
+            }
+          ]
+        },
+        "headers": {
+          "begin_date": "Heure de prise en charge (UTC)",
+          "end_date": "Heure de dépose (UTC)"
+        }
+      },
+      "driverTrips_0": {
+        "title": "Courses",
+        "text": "Détails des courses tels que les heures de début et de fin, ainsi que les distances parcourues."
+      },
+      "driverOnOff": {
+        "title": "Statut",
+        "text": "Cette carte montre tous les déplacements que vous avez effectués en fonction de votre statut. Ouvert (P1), En route (P2) ou En voyage (P3).",
+        "headers": {
+          "earnerState": "Statut",
+          "beginTimestampUtc": "Heure de prise en charge (UTC)",
+          "endTimestampUtc": "Heure de dépose (UTC)",
+          "beginLat": "Latitude de prise en charge",
+          "beginLng": "Longitude de prise en charge",
+          "endLat": "Latitude de dépose",
+          "endLng": "Longitude de dépose",
+          "durationMs": "Duration (ms)"
+        }
+      },
+      "driverRestrictions": {
+        "title": "Restrictions",
+        "text": "Cette carte indique tous les endroits où Uber a restreint votre accès à l'application, ainsi que les raisons pour lesquelles votre accès a temporairement été suspendu. Remarque : Parfois, la durée de la restriction est égale à 0, ce qui signifie qu'il ne s'agissait que d'une notification.",
+        "headers": {
+          "time": "Date de la notification",
+          "msgRule": "Raison de restriction",
+          "msgPenaltyboxdurationms": "Durée de la restriction (ms)",
+          "msgLatitude": "Latitude",
+          "msgLongitude": "Longitude"
+        }
+      },
+      "driverPayments": {
+        "title": "Paiements",
+        "text": "Aperçu des paiements hebdomadaires qui vont ont été versés."
+      },
+      "driverAppAnalytics": {
+        "title": "GPS",
+        "text": "Les 50 000 derniers points GPS collectés sur votre appareil (nombre limité pour des raisons de performance)."
+      },
+      "driverAccounting": {
+        "title": "Comptabilité (maquette)",
+        "text": "Calculez vos dépenses et vos salaires estimés.",
+        "overlay": "Cette fonctionnalité est en cours de développement"
+      }
+    }
+  }
+}
