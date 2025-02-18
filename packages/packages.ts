@@ -25,3 +25,5 @@ export { default as twitterAgg } from './packages/experiences/twitter-agg/dist/i
 export { default as uber } from './packages/experiences/uber/dist/index.mjs'
 export { default as uberDriver } from './packages/experiences/uber-driver/dist/index.mjs'
 export { default as youtube } from './packages/experiences/youtube/dist/index.mjs'
+export { default as wolt } from './packages/experiences/wolt/dist/index.mjs'
+export { default as databaseTemplate } from './packages/experiences/database-template/dist/index.mjs'

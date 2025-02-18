@@ -2,9 +2,9 @@
 
 This repo currently contains three projects:
 - [packages](packages/README.md): Monorepo for packages used throughout the system, including data experience packages.
-- [data-experience](data-experience/README.md): Vue component for the data experience to visualize one data set.
+- [data-experience](data-experience/README.md): Vue component for the data experience to visualize one data set. Every new dataset we want to visualise starts from there.
 - [dc-dashboard](dc-dashboard/README.md): A library to generate interactive dashboards.
-- [experiences](experiences/README.md): Nuxt app.
+- [experiences](experiences/README.md): Nuxt app, where [digipower.academy](https://digipower.academy) lives.
 
 This repo is also dependent on the [bubble-server](https://github.com/hestiaAI/hestialabs-bubble-server)
 

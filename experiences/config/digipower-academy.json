@@ -22,8 +22,10 @@
     "twitter",
     "uber",
     "uber-driver",
+    "uber-rider",
     "youtube",
-    "explorer"
+    "explorer",
+    "explorer-timeline"
   ],
   "experienceViewerOptions": {
     "ad-radar": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options",
@@ -54,6 +56,7 @@
     "youtube": "https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main/viewer-options"
   },
   "bubbles": [
+    "unine-participant",
     "frc-participant",
     "frc-aggregator",
     "trialinternational-participant",
