@@ -18,6 +18,11 @@ git clone https://github.com/hestiaAI/hestialabs-bubble-server.git
 ```
 
 You must use the correct version of node and npm to run the project (note that nvm for Windows may have a different syntax.)
+First install `nvm` if you don't have it already: [install instruction](https://github.com/nvm-sh/nvm) or with HomeBrew `brew install nvm`. Then install `lts/hydrogen`: 
+```sh
+nvm install nvm/hydrogen
+```
+And finally set the correct version of `npm` to run this project: 
 ```sh
 nvm use lts/hydrogen
 ```
@@ -26,7 +31,7 @@ Then install and build the bubble-server:
 ```sh
 cd hestialabs-bubble-server
 # This line install Poetry, only needed if you don't have it already
-curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+pip install poetry
 poetry install
 poetry run pre-commit install
 ```
@@ -48,7 +53,7 @@ cd ../data-experience
 Add an extensionless environment file `.env` with the following configuration:
 
 ```
-NODE_ENV=development
+echo "NODE_ENV=development" > .env
 ```
 
 Then run
