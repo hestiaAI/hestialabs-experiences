@@ -45,6 +45,13 @@ npm run prepare
 npm link --workspaces
 ```
 
+Then install and build `dc-dashboard` package:
+```sh
+cd ../dc-dashboard
+npm i
+npm run build
+```
+
 Then install and build `data-experience`:
 ```sh
 cd ../data-experience
