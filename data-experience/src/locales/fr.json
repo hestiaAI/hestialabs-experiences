@@ -1,0 +1,205 @@
+{
+  "app": {
+    "name": "Expériences HestiaLabs"
+  },
+  "base-button-share": {
+    "error-sharing-not-supported": "Votre système ne prend pas en charge le partage de fichiers",
+    "error-sharing-failed": "Nous sommes désolés, mais l'opération de partage a échoué pour une raison inconnue. Veuillez réessayer plus tard.",
+    "quote-to-share-default": "Analyser les données recueillies sur vous",
+    "quote-to-share-experience": "Analyser les données recueillies sur vous par {experienceTitle}"
+  },
+  "data-validator": {
+    "invalid-format": "Les données dans ce format ne peuvent pas être affichées dans un tableau.",
+    "no-data": "Aucune donnée pertinente trouvée"
+  },
+  "chart-view": {
+    "ios-access": {
+      "app-info": "L'application qui accède à la ressource.",
+      "resource-info": "La ressource consultée."
+    },
+    "sankey": {
+      "hoverMessage": "survolez les liens ou les nœuds pour obtenir plus d'informations sur les plus fréquents d'entre eux"
+    },
+    "sunburst": {
+      "Click to expand": "Cliquez pour agrandir",
+      "All": "Tout",
+      "infoNumber": "{number} sur {total}",
+      "Zoom out": "Zoom arrière"
+    },
+    "top-row": {
+      "heading": "Au total nous avons trouvé {total} {countLabel} entre {minDate} et {maxDate}"
+    },
+    "generic-map": {
+      "search-info": "Veuillez utiliser le champ de recherche et les filtres ci-dessous pour modifier ce qui est affiché sur la carte.",
+      "add-noise": "Ajouter du bruit",
+      "noise-level": "Niveau de bruit",
+      "meters": "mètres"
+    }
+  },
+  "unit-files": {
+    "run-btn": "Explorer vos données",
+    "process-msg": "Traitement des fichiers...",
+    "or": "OU",
+    "sample-selector": "Selectionner des données de test"
+  },
+  "unit-files-dialog": {
+    "tooltip": "Voir les fichiers requis",
+    "title": "Fichiers requis",
+    "used": "Fichiers utilisés dans l'expérience :",
+    "required": "Fichiers requis :",
+    "found": "Fichiers trouvés :",
+    "no-files": "Aucun fichier spécifique n'est requis dans ces expériences.",
+    "all-files-1": "Pour les expériences marquées par",
+    "all-files-2": ", tous les fichiers JSON/CSV fournis seront analysés pour y trouver des dates et des coordonnées géographiques. Ces expériences seront d'autant plus intéressantes que vous inclurez de fichiers."
+  },
+  "unit-consent-form": {
+    "select-files-dialog": {
+      "title": "Sélectionner les fichiers",
+      "label": "Rechercher des fichiers",
+      "placeholder": "Entrer le nom d'un fichier...",
+      "clearButton": "Effacer la sélection"
+    }
+  },
+  "unit-summary": {
+    "cardTitle": "Voici un résumé de ce que nous avons trouvé",
+    "summaryHeading": {
+      "main": "Analysé {nFiles} {file} {dataSizeString} et trouvé {datapoint}",
+      "file": "aucun fichier | {n} fichier | {n} fichiers",
+      "datapoint": "aucun point de données | {n} point de données | {n} points de données"
+    }
+  },
+  "load-data": {
+    "name": "Charger vos données",
+    "title": "Analyser vos données privées",
+    "disclaimer": "Sauf consentement explicite dans la section \"Partager vos données\", aucune donnée n'est transmise à HestiaLabs ou à quiconque. Toute l'expérience se déroule localement dans le navigateur et rien n'est laissé derrière vous dès que vous fermez l'onglet.",
+    "tutorial-title": "Démo",
+    "text-default": "Explorer la structure et le contenu de vos fichiers.",
+    "text": "pour demander les données privées qui ont été collectées sur vous. Une fois que vous les recevrez, analysez-les ici.",
+    "link-text": "Cliquer ici"
+  },
+  "file-explorer": {
+    "name": "Voir vos données",
+    "title": "Explorateur de fichiers",
+    "select": "Sélectionnez un fichier dans le panneau de gauche pour le voir plus en détail.",
+    "file-search-name": "Recherche de fichiers",
+    "file-search-placeholder": "Entrez une partie du nom",
+    "Exploring file": "En cours d'exploration",
+    "Pretty": "Joli",
+    "Raw": "Brut",
+    "Schema": "Schéma",
+    "viewer": {
+      "csv": {
+        "errorText": "Impossible d'analyser le fichier. Veuillez utiliser l'onglet \"BRUT\" pour le visualiser."
+      },
+      "json": {
+        "errorText": "Impossible d'analyser le fichier. Veuillez utiliser l'onglet \"BRUT\" pour le visualiser.",
+        "content-search-name": "Recherche de contenu",
+        "content-search-placeholder": "Entrez une partie du contenu",
+        "Copy accessor to clipboard": "Copier l'accesseur dans le clipboard",
+        "Show as table": "Montrer comme tableau",
+        "found-items-header": "Articles trouvés (cliquez pour afficher dans l'arbre)"
+      },
+      "schema": {
+        "errorText": "Impossible de trouver un schéma pour ce fichier, veuillez nous contacter si vous en avez besoin.",
+        "invalid-paths": "Impossible de créer une table avec ces accesseurs, il y a plusieurs tables divergentes.",
+        "Create table": "Créer un tableau"
+      },
+      "txt": {
+        "Text file content:": "Contenu du fichier texte :",
+        "Text": "Texte",
+        "View as": "Afficher en"
+      },
+      "xlsx": {
+        "errorText": "Impossible d'analyser le fichier."
+      }
+    }
+  },
+  "understand-data": {
+    "name": "Comprendre vos données"
+  },
+  "share-data": {
+    "name": "Partager vos données"
+  },
+  "summary": {
+    "name": "Résumé"
+  },
+  "decrypt-files": {
+    "title": "Décrypter vos fichiers",
+    "sk-label": "Entrer votre clé secrète",
+    "pk-label": "Entrer votre clé publique (facultatif)"
+  },
+  "All": "Tout",
+  "All Day": "Toute la journée",
+  "All files are used": "Tous les fichiers sont utilisés",
+  "at": "à",
+  "Clear": "Annuler",
+  "Clear all": "Effacer tout",
+  "click-graph": "Veuillez cliquer sur un graphique pour appliquer des filtres.",
+  "Close": "Fermer",
+  "Current filter": "Filtre actuel :",
+  "Day": "Jour | Jours",
+  "day": "jour",
+  "Day of week": "Jour de la semaine",
+  "dayOfWeek": {
+    "Sun": "dim",
+    "Mon": "lun",
+    "Tue": "mar",
+    "Wed": "mer",
+    "Thu": "jeu",
+    "Fri": "ven",
+    "Sat": "sam"
+  },
+  "directed-graph-disclaimer": "Veuillez prendre en compte le fait que ce graphique ne montre que le lien entre les flux de données qui sont étiquetés comme empreintes digitales ou publicité.",
+  "Display Others": "Afficher \"Others\"",
+  "Download": "Télécharger",
+  "Export": "Exporter",
+  "false": "Non",
+  "File": "Fichier | Fichiers",
+  "Filters": "Filtres",
+  "From": "De",
+  "hour": "heure",
+  "item-per-timeunit": "{title} par {timeUnit}",
+  "item-total": "{title} au total",
+  "Language": "Langue",
+  "Link": "Lien",
+  "Load your data": "Charger vos données",
+  "Loading": "Chargement",
+  "Max value": "Valeur max.",
+  "Min value": "Valeur min.",
+  "Month": "Mois | Mois",
+  "month": "mois",
+  "No": "Non",
+  "No relevant data found": "Aucune donnée pertinente trouvée",
+  "No valid dates found": "Aucune date valide trouvée",
+  "not found": "non trouvé : il est possible que l'archive ne soit pas dans le bon format ou qu'elle ne contienne pas ce fichier pour une autre raison. Sa présence peut dépendre des services utilisés, ou activés, ou des options choisies lors du téléchargement. Nous vous invitons à vérifier les recommandations de téléchargement.",
+  "of": "de",
+  "plusXOther": "+{n} autre | +{n} autres",
+  "profile": "profil | profils",
+  "records": "résultats",
+  "records-none": "Aucun résultat n'a été trouvé dans votre (vos) dossier(s).",
+  "records-some": "Nous avons trouvé {total} {label} dans votre/vos fichier(s).",
+  "Reset All": "Réinitialiser tout",
+  "Reset": "Reset",
+  "reset": "réinitialiser",
+  "Save": "Sauvegarder",
+  "Search": "Rechercher",
+  "Select All": "Sélectionner Tout",
+  "select-time-range": "Sélectionnez une <span class='font-weight-bold'>plage de temps</span> pour effectuer un zoom",
+  "selected-out-of": "sélectionné·e·s sur",
+  "Settings": "Réglages",
+  "Share": "Partager",
+  "show-top-n": "top {n} sur {m} elements",
+  "successful-processing": "Traitement réussi en {seconds} secondes",
+  "This might take a moment": "Cela peut prendre un moment",
+  "Time": "Heure",
+  "Time interval": "Intervalle",
+  "To": "À",
+  "true": "Oui",
+  "Type...": "Entrer...",
+  "Unselect All": "Désélectionner Tout",
+  "Week": "Semaine | Semaines",
+  "time-of-day": "Heure de la journée",
+  "Year": "Année | Années",
+  "year": "année",
+  "Yes": "Oui"
+}

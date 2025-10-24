@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "module": "es2020",
+    "target": "es2016",
+    "allowJs": true,
+    "strict": true,
+    "lib": ["dom", "es2020"],
+    // TS v4.2
+    // "explainFiles": true,
+    "sourceMap": true,
+    "declaration": false,
+    "declarationMap": false,
+    "noEmitOnError": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["node", "lodash", "d3"],
+    "baseUrl": ".",
+    // https://bobbyhadz.com/blog/typescript-cannot-find-module
+    "moduleResolution": "node",
+    "paths": {
+      "@/*": ["lib/*"]
+    }
+  },
+  "ts-node": {
+    "compilerOptions": {
+      // compilerOptions specified here will override those declared above
+    }
+  },
+  "exclude": [
+    "test.ts",
+    "migrate-viewer.ts",
+    "packages.ts",
+    "packages/hestias-hearth",
+    "packages/kepler-iframe"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "i18nLocale": "en",
+  "experiences": [
+    "facebook",
+    "twitter",
+    "tinder",
+    "strava",
+    "tiktok",
+    "fitbit",
+    "instagram",
+    "uber",
+    "google",
+    "her",
+    "her-tinder-agg",
+    "youtube",
+    "linkedin",
+    "netflix",
+    "tracker-control",
+    "ad-radar",
+    "explorer"
+  ],
+  "filedrop": "https://drive.infomaniak.com/app/collaborate/193995/c41b3aac-cf1f-4ba7-a1ef-0d44fb45260e",
+  "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
+  "displayCollaborators": true,
+  "bubbles": ["demo-aggregator", "demo-participant"],
+  "appInfoLinks": [
+    {
+      "url": "https://hestia.ai/en/#contact",
+      "name": "Contact us",
+      "icon": "mdiMessageOutline",
+      "external": true
+    }
+  ],
+  "hashtags": ["dataprivacy", "hestialabs"]
+}

@@ -1,0 +1,17 @@
+{
+  "version": "independent",
+  "npmClient": "npm",
+  "conventionalCommits": true,
+  "changelog": false,
+  "commitHooks": false,
+  "ignoreChanges": ["*.md"],
+  "packages": ["packages/*", "packages/experiences/*"],
+  "command": {
+    "publish": {
+      "registry": "https://registry.npmjs.org/"
+    },
+    "version": {
+      "message": "chore(release): publish"
+    }
+  }
+}

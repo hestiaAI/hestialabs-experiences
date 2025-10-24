@@ -1,0 +1,20 @@
+{
+  "name": "@hestia.ai/uber",
+  "version": "3.4.6",
+  "main": "dist/index.mjs",
+  "type": "module",
+  "files": [
+    "dist",
+    "src/uber-viewer.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/experiences/uber"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}

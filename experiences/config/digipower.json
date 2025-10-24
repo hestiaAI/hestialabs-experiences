@@ -1,0 +1,69 @@
+{
+  "i18nLocale": "en",
+  "messages": {
+    "en": {
+      "app": {
+        "name": "#digipower Data Experiences"
+      }
+    },
+    "fr": {
+      "app": {
+        "name": "#digipower Expériences"
+      }
+    }
+  },
+  "logoImg": "/Logo_Digipower_Academy.png",
+  "logoImgMenu": "/Logo_Digipower_Academy_compact.png",
+  "logoLink": "https://digipower.academy",
+  "experiences": [
+    "facebook",
+    "twitter",
+    "instagram",
+    "tiktok",
+    "netflix",
+    "uber",
+    "linkedin",
+    "apple-tracker",
+    "apple-tracker-agg",
+    "tracker-control",
+    "tracker-control-agg",
+    "google",
+    "google-agg",
+    "strava",
+    "fitbit",
+    "explorer"
+  ],
+  "bubbles": [
+    "tl-aggregator",
+    "tl-participant",
+    "reflets-aggregator",
+    "reflets-participant",
+    "mercator-aggregator",
+    "mercator-participant"
+  ],
+  "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
+  "displayCollaborators": true,
+  "appInfoLinks": [
+    {
+      "url": "https://hestia.ai/en/#contact",
+      "name": "Contact us",
+      "icon": "mdiMessageOutline",
+      "external": true
+    },
+    {
+      "url": "/about",
+      "name": "About",
+      "icon": "mdiHelp"
+    },
+    {
+      "url": "/privacy",
+      "name": "Privacy",
+      "icon": "mdiShieldLockOutline"
+    }
+  ],
+  "hashtags": [
+    "dataprivacy",
+    "hestialabs",
+    "digipower"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@hestia.ai/other",
+  "version": "3.3.7",
+  "main": "dist/index.mjs",
+  "type": "module",
+  "files": [
+    "dist",
+    "src/other-viewer.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/experiences/other"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}

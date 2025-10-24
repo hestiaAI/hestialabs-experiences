@@ -1,0 +1,19 @@
+.dc-dashboard {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 20px;
+}
+
+.dc-dashboard .capitalize {
+  text-transform: capitalize;
+}
+
+.dc-dashboard .caption {
+  font-family: inherit;
+  font-size: .75rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+  letter-spacing: .0333333333em;
+}

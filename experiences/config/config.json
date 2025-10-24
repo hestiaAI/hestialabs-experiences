@@ -1,0 +1,41 @@
+{
+  "i18nLocale": "en",
+  "experiences": [
+    "facebook",
+    "google",
+    "her",
+    "chatgpt",
+    "instagram",
+    "netflix",
+    "linkedin",
+    "tiktok",
+    "tinder",
+    "tracker-control",
+    "twitter",
+    "youtube",
+    "uber",
+    "ad-radar",
+    "explorer",
+    "other"
+  ],
+  "bubbles": [
+    "frc-participant",
+    "frc-aggregator",
+    "tl-aggregator",
+    "tl-participant",
+    "mercator-aggregator",
+    "mercator-participant",
+    "reflets-aggregator",
+    "reflets-participant",
+    "demo-aggregator",
+    "demo-participant",
+    "transitec-participant",
+    "transitec-aggregator",
+    "reper-participant",
+    "reper-aggregator"
+  ],
+  "hashtags": ["dataprivacy", "hestialabs"],
+  "filedrop": "https://example.com",
+  "mapboxToken": "pk.eyJ1IjoiYW5kcmVhc2t1bmRpZyIsImEiOiJja3ZxcnlmNXc2ZzUwMnFva2F2a3Q1azU5In0.NrvCU8OKlkwJOVFOgZzTzA",
+  "displayCollaborators": true
+}

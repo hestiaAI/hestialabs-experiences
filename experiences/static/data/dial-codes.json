@@ -1,0 +1,1755 @@
+[
+  { "header": "Recent" },
+  {
+    "Dial": 33,
+    "official_name_fr": "France",
+    "official_name_en": "France",
+    "Region Name": "Europe",
+    "CLDR display name": "France"
+  },
+   {
+    "Dial": 41,
+    "official_name_fr": "Suisse",
+    "official_name_en": "Switzerland",
+    "Region Name": "Europe",
+    "CLDR display name": "Switzerland"
+  },
+  { "divider": true },
+  { "header": "All" },
+  {
+    "Dial": 93,
+    "official_name_fr": "Afghanistan",
+    "official_name_en": "Afghanistan",
+    "Region Name": "Asia",
+    "CLDR display name": "Afghanistan"
+  },
+  {
+    "Dial": 355,
+    "official_name_fr": "Albanie",
+    "official_name_en": "Albania",
+    "Region Name": "Europe",
+    "CLDR display name": "Albania"
+  },
+  {
+    "Dial": 213,
+    "official_name_fr": "Algérie",
+    "official_name_en": "Algeria",
+    "Region Name": "Africa",
+    "CLDR display name": "Algeria"
+  },
+  {
+    "Dial": "1-684",
+    "official_name_fr": "Samoa américaines",
+    "official_name_en": "American Samoa",
+    "Region Name": "Oceania",
+    "CLDR display name": "American Samoa"
+  },
+  {
+    "Dial": 376,
+    "official_name_fr": "Andorre",
+    "official_name_en": "Andorra",
+    "Region Name": "Europe",
+    "CLDR display name": "Andorra"
+  },
+  {
+    "Dial": 244,
+    "official_name_fr": "Angola",
+    "official_name_en": "Angola",
+    "Region Name": "Africa",
+    "CLDR display name": "Angola"
+  },
+  {
+    "Dial": "1-264",
+    "official_name_fr": "Anguilla",
+    "official_name_en": "Anguilla",
+    "Region Name": "Americas",
+    "CLDR display name": "Anguilla"
+  },
+  {
+    "Dial": 672,
+    "official_name_fr": "Antarctique",
+    "official_name_en": "Antarctica",
+    "Region Name": "Antarctica",
+    "CLDR display name": "Antarctica"
+  },
+  {
+    "Dial": "1-268",
+    "official_name_fr": "Antigua-et-Barbuda",
+    "official_name_en": "Antigua and Barbuda",
+    "Region Name": "Americas",
+    "CLDR display name": "Antigua & Barbuda"
+  },
+  {
+    "Dial": 54,
+    "official_name_fr": "Argentine",
+    "official_name_en": "Argentina",
+    "Region Name": "Americas",
+    "CLDR display name": "Argentina"
+  },
+  {
+    "Dial": 374,
+    "official_name_fr": "Arménie",
+    "official_name_en": "Armenia",
+    "Region Name": "Asia",
+    "CLDR display name": "Armenia"
+  },
+  {
+    "Dial": 297,
+    "official_name_fr": "Aruba",
+    "official_name_en": "Aruba",
+    "Region Name": "Americas",
+    "CLDR display name": "Aruba"
+  },
+  {
+    "Dial": 61,
+    "official_name_fr": "Australie",
+    "official_name_en": "Australia",
+    "Region Name": "Oceania",
+    "CLDR display name": "Australia"
+  },
+  {
+    "Dial": 43,
+    "official_name_fr": "Autriche",
+    "official_name_en": "Austria",
+    "Region Name": "Europe",
+    "CLDR display name": "Austria"
+  },
+  {
+    "Dial": 994,
+    "official_name_fr": "Azerbaïdjan",
+    "official_name_en": "Azerbaijan",
+    "Region Name": "Asia",
+    "CLDR display name": "Azerbaijan"
+  },
+  {
+    "Dial": "1-242",
+    "official_name_fr": "Bahamas",
+    "official_name_en": "Bahamas",
+    "Region Name": "Americas",
+    "CLDR display name": "Bahamas"
+  },
+  {
+    "Dial": 973,
+    "official_name_fr": "Bahreïn",
+    "official_name_en": "Bahrain",
+    "Region Name": "Asia",
+    "CLDR display name": "Bahrain"
+  },
+  {
+    "Dial": 880,
+    "official_name_fr": "Bangladesh",
+    "official_name_en": "Bangladesh",
+    "Region Name": "Asia",
+    "CLDR display name": "Bangladesh"
+  },
+  {
+    "Dial": "1-246",
+    "official_name_fr": "Barbade",
+    "official_name_en": "Barbados",
+    "Region Name": "Americas",
+    "CLDR display name": "Barbados"
+  },
+  {
+    "Dial": 375,
+    "official_name_fr": "Bélarus",
+    "official_name_en": "Belarus",
+    "Region Name": "Europe",
+    "CLDR display name": "Belarus"
+  },
+  {
+    "Dial": 32,
+    "official_name_fr": "Belgique",
+    "official_name_en": "Belgium",
+    "Region Name": "Europe",
+    "CLDR display name": "Belgium"
+  },
+  {
+    "Dial": 501,
+    "official_name_fr": "Belize",
+    "official_name_en": "Belize",
+    "Region Name": "Americas",
+    "CLDR display name": "Belize"
+  },
+  {
+    "Dial": 229,
+    "official_name_fr": "Bénin",
+    "official_name_en": "Benin",
+    "Region Name": "Africa",
+    "CLDR display name": "Benin"
+  },
+  {
+    "Dial": "1-441",
+    "official_name_fr": "Bermudes",
+    "official_name_en": "Bermuda",
+    "Region Name": "Americas",
+    "CLDR display name": "Bermuda"
+  },
+  {
+    "Dial": 975,
+    "official_name_fr": "Bhoutan",
+    "official_name_en": "Bhutan",
+    "Region Name": "Asia",
+    "CLDR display name": "Bhutan"
+  },
+  {
+    "Dial": 591,
+    "official_name_fr": "Bolivie (État plurinational de)",
+    "official_name_en": "Bolivia (Plurinational State of)",
+    "Region Name": "Americas",
+    "CLDR display name": "Bolivia"
+  },
+  {
+    "Dial": 599,
+    "official_name_fr": "Bonaire, Saint-Eustache et Saba",
+    "official_name_en": "Bonaire, Sint Eustatius and Saba",
+    "Region Name": "Americas",
+    "CLDR display name": "Caribbean Netherlands"
+  },
+  {
+    "Dial": 387,
+    "official_name_fr": "Bosnie-Herzégovine",
+    "official_name_en": "Bosnia and Herzegovina",
+    "Region Name": "Europe",
+    "CLDR display name": "Bosnia"
+  },
+  {
+    "Dial": 267,
+    "official_name_fr": "Botswana",
+    "official_name_en": "Botswana",
+    "Region Name": "Africa",
+    "CLDR display name": "Botswana"
+  },
+  {
+    "Dial": 47,
+    "official_name_fr": "Île Bouvet",
+    "official_name_en": "Bouvet Island",
+    "Region Name": "Americas",
+    "CLDR display name": "Bouvet Island"
+  },
+  {
+    "Dial": 55,
+    "official_name_fr": "Brésil",
+    "official_name_en": "Brazil",
+    "Region Name": "Americas",
+    "CLDR display name": "Brazil"
+  },
+  {
+    "Dial": 246,
+    "official_name_fr": "Territoire britannique de l'océan Indien",
+    "official_name_en": "British Indian Ocean Territory",
+    "Region Name": "Africa",
+    "CLDR display name": "British Indian Ocean Territory"
+  },
+  {
+    "Dial": "1-284",
+    "official_name_fr": "Îles Vierges britanniques",
+    "official_name_en": "British Virgin Islands",
+    "Region Name": "Americas",
+    "CLDR display name": "British Virgin Islands"
+  },
+  {
+    "Dial": 673,
+    "official_name_fr": "Brunéi Darussalam",
+    "official_name_en": "Brunei Darussalam",
+    "Region Name": "Asia",
+    "CLDR display name": "Brunei"
+  },
+  {
+    "Dial": 359,
+    "official_name_fr": "Bulgarie",
+    "official_name_en": "Bulgaria",
+    "Region Name": "Europe",
+    "CLDR display name": "Bulgaria"
+  },
+  {
+    "Dial": 226,
+    "official_name_fr": "Burkina Faso",
+    "official_name_en": "Burkina Faso",
+    "Region Name": "Africa",
+    "CLDR display name": "Burkina Faso"
+  },
+  {
+    "Dial": 257,
+    "official_name_fr": "Burundi",
+    "official_name_en": "Burundi",
+    "Region Name": "Africa",
+    "CLDR display name": "Burundi"
+  },
+  {
+    "Dial": 238,
+    "official_name_fr": "Cabo Verde",
+    "official_name_en": "Cabo Verde",
+    "Region Name": "Africa",
+    "CLDR display name": "Cape Verde"
+  },
+  {
+    "Dial": 855,
+    "official_name_fr": "Cambodge",
+    "official_name_en": "Cambodia",
+    "Region Name": "Asia",
+    "CLDR display name": "Cambodia"
+  },
+  {
+    "Dial": 237,
+    "official_name_fr": "Cameroun",
+    "official_name_en": "Cameroon",
+    "Region Name": "Africa",
+    "CLDR display name": "Cameroon"
+  },
+  {
+    "Dial": 1,
+    "official_name_fr": "Canada",
+    "official_name_en": "Canada",
+    "Region Name": "Americas",
+    "CLDR display name": "Canada"
+  },
+  {
+    "Dial": "1-345",
+    "official_name_fr": "Îles Caïmanes",
+    "official_name_en": "Cayman Islands",
+    "Region Name": "Americas",
+    "CLDR display name": "Cayman Islands"
+  },
+  {
+    "Dial": 236,
+    "official_name_fr": "République centrafricaine",
+    "official_name_en": "Central African Republic",
+    "Region Name": "Africa",
+    "CLDR display name": "Central African Republic"
+  },
+  {
+    "Dial": 235,
+    "official_name_fr": "Tchad",
+    "official_name_en": "Chad",
+    "Region Name": "Africa",
+    "CLDR display name": "Chad"
+  },
+  {
+    "Dial": 56,
+    "official_name_fr": "Chili",
+    "official_name_en": "Chile",
+    "Region Name": "Americas",
+    "CLDR display name": "Chile"
+  },
+  {
+    "Dial": 86,
+    "official_name_fr": "Chine",
+    "official_name_en": "China",
+    "Region Name": "Asia",
+    "CLDR display name": "China"
+  },
+  {
+    "Dial": 852,
+    "official_name_fr": "Chine, région administrative spéciale de Hong Kong",
+    "official_name_en": "China, Hong Kong Special Administrative Region",
+    "Region Name": "Asia",
+    "CLDR display name": "Hong Kong"
+  },
+  {
+    "Dial": 853,
+    "official_name_fr": "Chine, région administrative spéciale de Macao",
+    "official_name_en": "China, Macao Special Administrative Region",
+    "Region Name": "Asia",
+    "CLDR display name": "Macau"
+  },
+  {
+    "Dial": 61,
+    "official_name_fr": "Île Christmas",
+    "official_name_en": "Christmas Island",
+    "Region Name": "Oceania",
+    "CLDR display name": "Christmas Island"
+  },
+  {
+    "Dial": 61,
+    "official_name_fr": "Îles des Cocos (Keeling)",
+    "official_name_en": "Cocos (Keeling) Islands",
+    "Region Name": "Oceania",
+    "CLDR display name": "Cocos (Keeling) Islands"
+  },
+  {
+    "Dial": 57,
+    "official_name_fr": "Colombie",
+    "official_name_en": "Colombia",
+    "Region Name": "Americas",
+    "CLDR display name": "Colombia"
+  },
+  {
+    "Dial": 269,
+    "official_name_fr": "Comores",
+    "official_name_en": "Comoros",
+    "Region Name": "Africa",
+    "CLDR display name": "Comoros"
+  },
+  {
+    "Dial": 242,
+    "official_name_fr": "Congo",
+    "official_name_en": "Congo",
+    "Region Name": "Africa",
+    "CLDR display name": "Congo - Brazzaville"
+  },
+  {
+    "Dial": 682,
+    "official_name_fr": "Îles Cook",
+    "official_name_en": "Cook Islands",
+    "Region Name": "Oceania",
+    "CLDR display name": "Cook Islands"
+  },
+  {
+    "Dial": 506,
+    "official_name_fr": "Costa Rica",
+    "official_name_en": "Costa Rica",
+    "Region Name": "Americas",
+    "CLDR display name": "Costa Rica"
+  },
+  {
+    "Dial": 385,
+    "official_name_fr": "Croatie",
+    "official_name_en": "Croatia",
+    "Region Name": "Europe",
+    "CLDR display name": "Croatia"
+  },
+  {
+    "Dial": 53,
+    "official_name_fr": "Cuba",
+    "official_name_en": "Cuba",
+    "Region Name": "Americas",
+    "CLDR display name": "Cuba"
+  },
+  {
+    "Dial": 599,
+    "official_name_fr": "Curaçao",
+    "official_name_en": "Curaçao",
+    "Region Name": "Americas",
+    "CLDR display name": "Curaçao"
+  },
+  {
+    "Dial": 357,
+    "official_name_fr": "Chypre",
+    "official_name_en": "Cyprus",
+    "Region Name": "Asia",
+    "CLDR display name": "Cyprus"
+  },
+  {
+    "Dial": 420,
+    "official_name_fr": "Tchéquie",
+    "official_name_en": "Czechia",
+    "Region Name": "Europe",
+    "CLDR display name": "Czechia"
+  },
+  {
+    "Dial": 225,
+    "official_name_fr": "Côte d'Ivoire",
+    "official_name_en": "Côte d'Ivoire",
+    "Region Name": "Africa",
+    "CLDR display name": "Côte d’Ivoire"
+  },
+  {
+    "Dial": 850,
+    "official_name_fr": "République populaire démocratique de Corée",
+    "official_name_en": "Democratic People's Republic of Korea",
+    "Region Name": "Asia",
+    "CLDR display name": "North Korea"
+  },
+  {
+    "Dial": 243,
+    "official_name_fr": "République démocratique du Congo",
+    "official_name_en": "Democratic Republic of the Congo",
+    "Region Name": "Africa",
+    "CLDR display name": "Congo - Kinshasa"
+  },
+  {
+    "Dial": 45,
+    "official_name_fr": "Danemark",
+    "official_name_en": "Denmark",
+    "Region Name": "Europe",
+    "CLDR display name": "Denmark"
+  },
+  {
+    "Dial": 253,
+    "official_name_fr": "Djibouti",
+    "official_name_en": "Djibouti",
+    "Region Name": "Africa",
+    "CLDR display name": "Djibouti"
+  },
+  {
+    "Dial": "1-767",
+    "official_name_fr": "Dominique",
+    "official_name_en": "Dominica",
+    "Region Name": "Americas",
+    "CLDR display name": "Dominica"
+  },
+  {
+    "Dial": "1-809,1-829,1-849",
+    "official_name_fr": "République dominicaine",
+    "official_name_en": "Dominican Republic",
+    "Region Name": "Americas",
+    "CLDR display name": "Dominican Republic"
+  },
+  {
+    "Dial": 593,
+    "official_name_fr": "Équateur",
+    "official_name_en": "Ecuador",
+    "Region Name": "Americas",
+    "CLDR display name": "Ecuador"
+  },
+  {
+    "Dial": 20,
+    "official_name_fr": "Égypte",
+    "official_name_en": "Egypt",
+    "Region Name": "Africa",
+    "CLDR display name": "Egypt"
+  },
+  {
+    "Dial": 503,
+    "official_name_fr": "El Salvador",
+    "official_name_en": "El Salvador",
+    "Region Name": "Americas",
+    "CLDR display name": "El Salvador"
+  },
+  {
+    "Dial": 240,
+    "official_name_fr": "Guinée équatoriale",
+    "official_name_en": "Equatorial Guinea",
+    "Region Name": "Africa",
+    "CLDR display name": "Equatorial Guinea"
+  },
+  {
+    "Dial": 291,
+    "official_name_fr": "Érythrée",
+    "official_name_en": "Eritrea",
+    "Region Name": "Africa",
+    "CLDR display name": "Eritrea"
+  },
+  {
+    "Dial": 372,
+    "official_name_fr": "Estonie",
+    "official_name_en": "Estonia",
+    "Region Name": "Europe",
+    "CLDR display name": "Estonia"
+  },
+  {
+    "Dial": 268,
+    "official_name_fr": "Eswatini",
+    "official_name_en": "Eswatini",
+    "Region Name": "Africa",
+    "CLDR display name": "Eswatini"
+  },
+  {
+    "Dial": 251,
+    "official_name_fr": "Éthiopie",
+    "official_name_en": "Ethiopia",
+    "Region Name": "Africa",
+    "CLDR display name": "Ethiopia"
+  },
+  {
+    "Dial": 500,
+    "official_name_fr": "Îles Falkland (Malvinas)",
+    "official_name_en": "Falkland Islands (Malvinas)",
+    "Region Name": "Americas",
+    "CLDR display name": "Falkland Islands"
+  },
+  {
+    "Dial": 298,
+    "official_name_fr": "Îles Féroé",
+    "official_name_en": "Faroe Islands",
+    "Region Name": "Europe",
+    "CLDR display name": "Faroe Islands"
+  },
+  {
+    "Dial": 679,
+    "official_name_fr": "Fidji",
+    "official_name_en": "Fiji",
+    "Region Name": "Oceania",
+    "CLDR display name": "Fiji"
+  },
+  {
+    "Dial": 358,
+    "official_name_fr": "Finlande",
+    "official_name_en": "Finland",
+    "Region Name": "Europe",
+    "CLDR display name": "Finland"
+  },
+  {
+    "Dial": 594,
+    "official_name_fr": "Guyane française",
+    "official_name_en": "French Guiana",
+    "Region Name": "Americas",
+    "CLDR display name": "French Guiana"
+  },
+  {
+    "Dial": 689,
+    "official_name_fr": "Polynésie française",
+    "official_name_en": "French Polynesia",
+    "Region Name": "Oceania",
+    "CLDR display name": "French Polynesia"
+  },
+  {
+    "Dial": 262,
+    "official_name_fr": "Terres australes françaises",
+    "official_name_en": "French Southern Territories",
+    "Region Name": "Africa",
+    "CLDR display name": "French Southern Territories"
+  },
+  {
+    "Dial": 241,
+    "official_name_fr": "Gabon",
+    "official_name_en": "Gabon",
+    "Region Name": "Africa",
+    "CLDR display name": "Gabon"
+  },
+  {
+    "Dial": 220,
+    "official_name_fr": "Gambie",
+    "official_name_en": "Gambia",
+    "Region Name": "Africa",
+    "CLDR display name": "Gambia"
+  },
+  {
+    "Dial": 995,
+    "official_name_fr": "Géorgie",
+    "official_name_en": "Georgia",
+    "Region Name": "Asia",
+    "CLDR display name": "Georgia"
+  },
+  {
+    "Dial": 49,
+    "official_name_fr": "Allemagne",
+    "official_name_en": "Germany",
+    "Region Name": "Europe",
+    "CLDR display name": "Germany"
+  },
+  {
+    "Dial": 233,
+    "official_name_fr": "Ghana",
+    "official_name_en": "Ghana",
+    "Region Name": "Africa",
+    "CLDR display name": "Ghana"
+  },
+  {
+    "Dial": 350,
+    "official_name_fr": "Gibraltar",
+    "official_name_en": "Gibraltar",
+    "Region Name": "Europe",
+    "CLDR display name": "Gibraltar"
+  },
+  {
+    "Dial": 30,
+    "official_name_fr": "Grèce",
+    "official_name_en": "Greece",
+    "Region Name": "Europe",
+    "CLDR display name": "Greece"
+  },
+  {
+    "Dial": 299,
+    "official_name_fr": "Groenland",
+    "official_name_en": "Greenland",
+    "Region Name": "Americas",
+    "CLDR display name": "Greenland"
+  },
+  {
+    "Dial": "1-473",
+    "official_name_fr": "Grenade",
+    "official_name_en": "Grenada",
+    "Region Name": "Americas",
+    "CLDR display name": "Grenada"
+  },
+  {
+    "Dial": 590,
+    "official_name_fr": "Guadeloupe",
+    "official_name_en": "Guadeloupe",
+    "Region Name": "Americas",
+    "CLDR display name": "Guadeloupe"
+  },
+  {
+    "Dial": "1-671",
+    "official_name_fr": "Guam",
+    "official_name_en": "Guam",
+    "Region Name": "Oceania",
+    "CLDR display name": "Guam"
+  },
+  {
+    "Dial": 502,
+    "official_name_fr": "Guatemala",
+    "official_name_en": "Guatemala",
+    "Region Name": "Americas",
+    "CLDR display name": "Guatemala"
+  },
+  {
+    "Dial": 44,
+    "official_name_fr": "Guernesey",
+    "official_name_en": "Guernsey",
+    "Region Name": "Europe",
+    "CLDR display name": "Guernsey"
+  },
+  {
+    "Dial": 224,
+    "official_name_fr": "Guinée",
+    "official_name_en": "Guinea",
+    "Region Name": "Africa",
+    "CLDR display name": "Guinea"
+  },
+  {
+    "Dial": 245,
+    "official_name_fr": "Guinée-Bissau",
+    "official_name_en": "Guinea-Bissau",
+    "Region Name": "Africa",
+    "CLDR display name": "Guinea-Bissau"
+  },
+  {
+    "Dial": 592,
+    "official_name_fr": "Guyana",
+    "official_name_en": "Guyana",
+    "Region Name": "Americas",
+    "CLDR display name": "Guyana"
+  },
+  {
+    "Dial": 509,
+    "official_name_fr": "Haïti",
+    "official_name_en": "Haiti",
+    "Region Name": "Americas",
+    "CLDR display name": "Haiti"
+  },
+  {
+    "Dial": 672,
+    "official_name_fr": "Île Heard-et-Îles MacDonald",
+    "official_name_en": "Heard Island and McDonald Islands",
+    "Region Name": "Oceania",
+    "CLDR display name": "Heard & McDonald Islands"
+  },
+  {
+    "Dial": "39-06",
+    "official_name_fr": "Saint-Siège",
+    "official_name_en": "Holy See",
+    "Region Name": "Europe",
+    "CLDR display name": "Vatican City"
+  },
+  {
+    "Dial": 504,
+    "official_name_fr": "Honduras",
+    "official_name_en": "Honduras",
+    "Region Name": "Americas",
+    "CLDR display name": "Honduras"
+  },
+  {
+    "Dial": 36,
+    "official_name_fr": "Hongrie",
+    "official_name_en": "Hungary",
+    "Region Name": "Europe",
+    "CLDR display name": "Hungary"
+  },
+  {
+    "Dial": 354,
+    "official_name_fr": "Islande",
+    "official_name_en": "Iceland",
+    "Region Name": "Europe",
+    "CLDR display name": "Iceland"
+  },
+  {
+    "Dial": 91,
+    "official_name_fr": "Inde",
+    "official_name_en": "India",
+    "Region Name": "Asia",
+    "CLDR display name": "India"
+  },
+  {
+    "Dial": 62,
+    "official_name_fr": "Indonésie",
+    "official_name_en": "Indonesia",
+    "Region Name": "Asia",
+    "CLDR display name": "Indonesia"
+  },
+  {
+    "Dial": 98,
+    "official_name_fr": "Iran (République islamique d')",
+    "official_name_en": "Iran (Islamic Republic of)",
+    "Region Name": "Asia",
+    "CLDR display name": "Iran"
+  },
+  {
+    "Dial": 964,
+    "official_name_fr": "Iraq",
+    "official_name_en": "Iraq",
+    "Region Name": "Asia",
+    "CLDR display name": "Iraq"
+  },
+  {
+    "Dial": 353,
+    "official_name_fr": "Irlande",
+    "official_name_en": "Ireland",
+    "Region Name": "Europe",
+    "CLDR display name": "Ireland"
+  },
+  {
+    "Dial": 44,
+    "official_name_fr": "Île de Man",
+    "official_name_en": "Isle of Man",
+    "Region Name": "Europe",
+    "CLDR display name": "Isle of Man"
+  },
+  {
+    "Dial": 972,
+    "official_name_fr": "Israël",
+    "official_name_en": "Israel",
+    "Region Name": "Asia",
+    "CLDR display name": "Israel"
+  },
+  {
+    "Dial": 39,
+    "official_name_fr": "Italie",
+    "official_name_en": "Italy",
+    "Region Name": "Europe",
+    "CLDR display name": "Italy"
+  },
+  {
+    "Dial": "1-876",
+    "official_name_fr": "Jamaïque",
+    "official_name_en": "Jamaica",
+    "Region Name": "Americas",
+    "CLDR display name": "Jamaica"
+  },
+  {
+    "Dial": 81,
+    "official_name_fr": "Japon",
+    "official_name_en": "Japan",
+    "Region Name": "Asia",
+    "CLDR display name": "Japan"
+  },
+  {
+    "Dial": 44,
+    "official_name_fr": "Jersey",
+    "official_name_en": "Jersey",
+    "Region Name": "Europe",
+    "CLDR display name": "Jersey"
+  },
+  {
+    "Dial": 962,
+    "official_name_fr": "Jordanie",
+    "official_name_en": "Jordan",
+    "Region Name": "Asia",
+    "CLDR display name": "Jordan"
+  },
+  {
+    "Dial": 7,
+    "official_name_fr": "Kazakhstan",
+    "official_name_en": "Kazakhstan",
+    "Region Name": "Asia",
+    "CLDR display name": "Kazakhstan"
+  },
+  {
+    "Dial": 254,
+    "official_name_fr": "Kenya",
+    "official_name_en": "Kenya",
+    "Region Name": "Africa",
+    "CLDR display name": "Kenya"
+  },
+  {
+    "Dial": 686,
+    "official_name_fr": "Kiribati",
+    "official_name_en": "Kiribati",
+    "Region Name": "Oceania",
+    "CLDR display name": "Kiribati"
+  },
+  {
+    "Dial": 965,
+    "official_name_fr": "Koweït",
+    "official_name_en": "Kuwait",
+    "Region Name": "Asia",
+    "CLDR display name": "Kuwait"
+  },
+  {
+    "Dial": 996,
+    "official_name_fr": "Kirghizistan",
+    "official_name_en": "Kyrgyzstan",
+    "Region Name": "Asia",
+    "CLDR display name": "Kyrgyzstan"
+  },
+  {
+    "Dial": 856,
+    "official_name_fr": "République démocratique populaire lao",
+    "official_name_en": "Lao People's Democratic Republic",
+    "Region Name": "Asia",
+    "CLDR display name": "Laos"
+  },
+  {
+    "Dial": 371,
+    "official_name_fr": "Lettonie",
+    "official_name_en": "Latvia",
+    "Region Name": "Europe",
+    "CLDR display name": "Latvia"
+  },
+  {
+    "Dial": 961,
+    "official_name_fr": "Liban",
+    "official_name_en": "Lebanon",
+    "Region Name": "Asia",
+    "CLDR display name": "Lebanon"
+  },
+  {
+    "Dial": 266,
+    "official_name_fr": "Lesotho",
+    "official_name_en": "Lesotho",
+    "Region Name": "Africa",
+    "CLDR display name": "Lesotho"
+  },
+  {
+    "Dial": 231,
+    "official_name_fr": "Libéria",
+    "official_name_en": "Liberia",
+    "Region Name": "Africa",
+    "CLDR display name": "Liberia"
+  },
+  {
+    "Dial": 218,
+    "official_name_fr": "Libye",
+    "official_name_en": "Libya",
+    "Region Name": "Africa",
+    "CLDR display name": "Libya"
+  },
+  {
+    "Dial": 423,
+    "official_name_fr": "Liechtenstein",
+    "official_name_en": "Liechtenstein",
+    "Region Name": "Europe",
+    "CLDR display name": "Liechtenstein"
+  },
+  {
+    "Dial": 370,
+    "official_name_fr": "Lituanie",
+    "official_name_en": "Lithuania",
+    "Region Name": "Europe",
+    "CLDR display name": "Lithuania"
+  },
+  {
+    "Dial": 352,
+    "official_name_fr": "Luxembourg",
+    "official_name_en": "Luxembourg",
+    "Region Name": "Europe",
+    "CLDR display name": "Luxembourg"
+  },
+  {
+    "Dial": 261,
+    "official_name_fr": "Madagascar",
+    "official_name_en": "Madagascar",
+    "Region Name": "Africa",
+    "CLDR display name": "Madagascar"
+  },
+  {
+    "Dial": 265,
+    "official_name_fr": "Malawi",
+    "official_name_en": "Malawi",
+    "Region Name": "Africa",
+    "CLDR display name": "Malawi"
+  },
+  {
+    "Dial": 60,
+    "official_name_fr": "Malaisie",
+    "official_name_en": "Malaysia",
+    "Region Name": "Asia",
+    "CLDR display name": "Malaysia"
+  },
+  {
+    "Dial": 960,
+    "official_name_fr": "Maldives",
+    "official_name_en": "Maldives",
+    "Region Name": "Asia",
+    "CLDR display name": "Maldives"
+  },
+  {
+    "Dial": 223,
+    "official_name_fr": "Mali",
+    "official_name_en": "Mali",
+    "Region Name": "Africa",
+    "CLDR display name": "Mali"
+  },
+  {
+    "Dial": 356,
+    "official_name_fr": "Malte",
+    "official_name_en": "Malta",
+    "Region Name": "Europe",
+    "CLDR display name": "Malta"
+  },
+  {
+    "Dial": 692,
+    "official_name_fr": "Îles Marshall",
+    "official_name_en": "Marshall Islands",
+    "Region Name": "Oceania",
+    "CLDR display name": "Marshall Islands"
+  },
+  {
+    "Dial": 596,
+    "official_name_fr": "Martinique",
+    "official_name_en": "Martinique",
+    "Region Name": "Americas",
+    "CLDR display name": "Martinique"
+  },
+  {
+    "Dial": 222,
+    "official_name_fr": "Mauritanie",
+    "official_name_en": "Mauritania",
+    "Region Name": "Africa",
+    "CLDR display name": "Mauritania"
+  },
+  {
+    "Dial": 230,
+    "official_name_fr": "Maurice",
+    "official_name_en": "Mauritius",
+    "Region Name": "Africa",
+    "CLDR display name": "Mauritius"
+  },
+  {
+    "Dial": 262,
+    "official_name_fr": "Mayotte",
+    "official_name_en": "Mayotte",
+    "Region Name": "Africa",
+    "CLDR display name": "Mayotte"
+  },
+  {
+    "Dial": 52,
+    "official_name_fr": "Mexique",
+    "official_name_en": "Mexico",
+    "Region Name": "Americas",
+    "CLDR display name": "Mexico"
+  },
+  {
+    "Dial": 691,
+    "official_name_fr": "Micronésie (États fédérés de)",
+    "official_name_en": "Micronesia (Federated States of)",
+    "Region Name": "Oceania",
+    "CLDR display name": "Micronesia"
+  },
+  {
+    "Dial": 377,
+    "official_name_fr": "Monaco",
+    "official_name_en": "Monaco",
+    "Region Name": "Europe",
+    "CLDR display name": "Monaco"
+  },
+  {
+    "Dial": 976,
+    "official_name_fr": "Mongolie",
+    "official_name_en": "Mongolia",
+    "Region Name": "Asia",
+    "CLDR display name": "Mongolia"
+  },
+  {
+    "Dial": 382,
+    "official_name_fr": "Monténégro",
+    "official_name_en": "Montenegro",
+    "Region Name": "Europe",
+    "CLDR display name": "Montenegro"
+  },
+  {
+    "Dial": "1-664",
+    "official_name_fr": "Montserrat",
+    "official_name_en": "Montserrat",
+    "Region Name": "Americas",
+    "CLDR display name": "Montserrat"
+  },
+  {
+    "Dial": 212,
+    "official_name_fr": "Maroc",
+    "official_name_en": "Morocco",
+    "Region Name": "Africa",
+    "CLDR display name": "Morocco"
+  },
+  {
+    "Dial": 258,
+    "official_name_fr": "Mozambique",
+    "official_name_en": "Mozambique",
+    "Region Name": "Africa",
+    "CLDR display name": "Mozambique"
+  },
+  {
+    "Dial": 95,
+    "official_name_fr": "Myanmar",
+    "official_name_en": "Myanmar",
+    "Region Name": "Asia",
+    "CLDR display name": "Myanmar"
+  },
+  {
+    "Dial": 264,
+    "official_name_fr": "Namibie",
+    "official_name_en": "Namibia",
+    "Region Name": "Africa",
+    "CLDR display name": "Namibia"
+  },
+  {
+    "Dial": 674,
+    "official_name_fr": "Nauru",
+    "official_name_en": "Nauru",
+    "Region Name": "Oceania",
+    "CLDR display name": "Nauru"
+  },
+  {
+    "Dial": 977,
+    "official_name_fr": "Népal",
+    "official_name_en": "Nepal",
+    "Region Name": "Asia",
+    "CLDR display name": "Nepal"
+  },
+  {
+    "Dial": 31,
+    "official_name_fr": "Pays-Bas",
+    "official_name_en": "Netherlands",
+    "Region Name": "Europe",
+    "CLDR display name": "Netherlands"
+  },
+  {
+    "Dial": 687,
+    "official_name_fr": "Nouvelle-Calédonie",
+    "official_name_en": "New Caledonia",
+    "Region Name": "Oceania",
+    "CLDR display name": "New Caledonia"
+  },
+  {
+    "Dial": 64,
+    "official_name_fr": "Nouvelle-Zélande",
+    "official_name_en": "New Zealand",
+    "Region Name": "Oceania",
+    "CLDR display name": "New Zealand"
+  },
+  {
+    "Dial": 505,
+    "official_name_fr": "Nicaragua",
+    "official_name_en": "Nicaragua",
+    "Region Name": "Americas",
+    "CLDR display name": "Nicaragua"
+  },
+  {
+    "Dial": 227,
+    "official_name_fr": "Niger",
+    "official_name_en": "Niger",
+    "Region Name": "Africa",
+    "CLDR display name": "Niger"
+  },
+  {
+    "Dial": 234,
+    "official_name_fr": "Nigéria",
+    "official_name_en": "Nigeria",
+    "Region Name": "Africa",
+    "CLDR display name": "Nigeria"
+  },
+  {
+    "Dial": 683,
+    "official_name_fr": "Nioué",
+    "official_name_en": "Niue",
+    "Region Name": "Oceania",
+    "CLDR display name": "Niue"
+  },
+  {
+    "Dial": 672,
+    "official_name_fr": "Île Norfolk",
+    "official_name_en": "Norfolk Island",
+    "Region Name": "Oceania",
+    "CLDR display name": "Norfolk Island"
+  },
+  {
+    "Dial": "1-670",
+    "official_name_fr": "Îles Mariannes du Nord",
+    "official_name_en": "Northern Mariana Islands",
+    "Region Name": "Oceania",
+    "CLDR display name": "Northern Mariana Islands"
+  },
+  {
+    "Dial": 47,
+    "official_name_fr": "Norvège",
+    "official_name_en": "Norway",
+    "Region Name": "Europe",
+    "CLDR display name": "Norway"
+  },
+  {
+    "Dial": 968,
+    "official_name_fr": "Oman",
+    "official_name_en": "Oman",
+    "Region Name": "Asia",
+    "CLDR display name": "Oman"
+  },
+  {
+    "Dial": 92,
+    "official_name_fr": "Pakistan",
+    "official_name_en": "Pakistan",
+    "Region Name": "Asia",
+    "CLDR display name": "Pakistan"
+  },
+  {
+    "Dial": 680,
+    "official_name_fr": "Palaos",
+    "official_name_en": "Palau",
+    "Region Name": "Oceania",
+    "CLDR display name": "Palau"
+  },
+  {
+    "Dial": 507,
+    "official_name_fr": "Panama",
+    "official_name_en": "Panama",
+    "Region Name": "Americas",
+    "CLDR display name": "Panama"
+  },
+  {
+    "Dial": 675,
+    "official_name_fr": "Papouasie-Nouvelle-Guinée",
+    "official_name_en": "Papua New Guinea",
+    "Region Name": "Oceania",
+    "CLDR display name": "Papua New Guinea"
+  },
+  {
+    "Dial": 595,
+    "official_name_fr": "Paraguay",
+    "official_name_en": "Paraguay",
+    "Region Name": "Americas",
+    "CLDR display name": "Paraguay"
+  },
+  {
+    "Dial": 51,
+    "official_name_fr": "Pérou",
+    "official_name_en": "Peru",
+    "Region Name": "Americas",
+    "CLDR display name": "Peru"
+  },
+  {
+    "Dial": 63,
+    "official_name_fr": "Philippines",
+    "official_name_en": "Philippines",
+    "Region Name": "Asia",
+    "CLDR display name": "Philippines"
+  },
+  {
+    "Dial": 870,
+    "official_name_fr": "Pitcairn",
+    "official_name_en": "Pitcairn",
+    "Region Name": "Oceania",
+    "CLDR display name": "Pitcairn Islands"
+  },
+  {
+    "Dial": 48,
+    "official_name_fr": "Pologne",
+    "official_name_en": "Poland",
+    "Region Name": "Europe",
+    "CLDR display name": "Poland"
+  },
+  {
+    "Dial": 351,
+    "official_name_fr": "Portugal",
+    "official_name_en": "Portugal",
+    "Region Name": "Europe",
+    "CLDR display name": "Portugal"
+  },
+  {
+    "Dial": 1,
+    "official_name_fr": "Porto Rico",
+    "official_name_en": "Puerto Rico",
+    "Region Name": "Americas",
+    "CLDR display name": "Puerto Rico"
+  },
+  {
+    "Dial": 974,
+    "official_name_fr": "Qatar",
+    "official_name_en": "Qatar",
+    "Region Name": "Asia",
+    "CLDR display name": "Qatar"
+  },
+  {
+    "Dial": 82,
+    "official_name_fr": "République de Corée",
+    "official_name_en": "Republic of Korea",
+    "Region Name": "Asia",
+    "CLDR display name": "South Korea"
+  },
+  {
+    "Dial": 373,
+    "official_name_fr": "République de Moldova",
+    "official_name_en": "Republic of Moldova",
+    "Region Name": "Europe",
+    "CLDR display name": "Moldova"
+  },
+  {
+    "Dial": 40,
+    "official_name_fr": "Roumanie",
+    "official_name_en": "Romania",
+    "Region Name": "Europe",
+    "CLDR display name": "Romania"
+  },
+  {
+    "Dial": 7,
+    "official_name_fr": "Fédération de Russie",
+    "official_name_en": "Russian Federation",
+    "Region Name": "Europe",
+    "CLDR display name": "Russia"
+  },
+  {
+    "Dial": 250,
+    "official_name_fr": "Rwanda",
+    "official_name_en": "Rwanda",
+    "Region Name": "Africa",
+    "CLDR display name": "Rwanda"
+  },
+  {
+    "Dial": 262,
+    "official_name_fr": "Réunion",
+    "official_name_en": "Réunion",
+    "Region Name": "Africa",
+    "CLDR display name": "Réunion"
+  },
+  {
+    "Dial": 590,
+    "official_name_fr": "Saint-Barthélemy",
+    "official_name_en": "Saint Barthélemy",
+    "Region Name": "Americas",
+    "CLDR display name": "St. Barthélemy"
+  },
+  {
+    "Dial": 290,
+    "official_name_fr": "Sainte-Hélène",
+    "official_name_en": "Saint Helena",
+    "Region Name": "Africa",
+    "CLDR display name": "St. Helena"
+  },
+  {
+    "Dial": "1-869",
+    "official_name_fr": "Saint-Kitts-et-Nevis",
+    "official_name_en": "Saint Kitts and Nevis",
+    "Region Name": "Americas",
+    "CLDR display name": "St. Kitts & Nevis"
+  },
+  {
+    "Dial": "1-758",
+    "official_name_fr": "Sainte-Lucie",
+    "official_name_en": "Saint Lucia",
+    "Region Name": "Americas",
+    "CLDR display name": "St. Lucia"
+  },
+  {
+    "Dial": 590,
+    "official_name_fr": "Saint-Martin (partie française)",
+    "official_name_en": "Saint Martin (French Part)",
+    "Region Name": "Americas",
+    "CLDR display name": "St. Martin"
+  },
+  {
+    "Dial": 508,
+    "official_name_fr": "Saint-Pierre-et-Miquelon",
+    "official_name_en": "Saint Pierre and Miquelon",
+    "Region Name": "Americas",
+    "CLDR display name": "St. Pierre & Miquelon"
+  },
+  {
+    "Dial": "1-784",
+    "official_name_fr": "Saint-Vincent-et-les Grenadines",
+    "official_name_en": "Saint Vincent and the Grenadines",
+    "Region Name": "Americas",
+    "CLDR display name": "St. Vincent & Grenadines"
+  },
+  {
+    "Dial": 685,
+    "official_name_fr": "Samoa",
+    "official_name_en": "Samoa",
+    "Region Name": "Oceania",
+    "CLDR display name": "Samoa"
+  },
+  {
+    "Dial": 378,
+    "official_name_fr": "Saint-Marin",
+    "official_name_en": "San Marino",
+    "Region Name": "Europe",
+    "CLDR display name": "San Marino"
+  },
+  {
+    "Dial": 239,
+    "official_name_fr": "Sao Tomé-et-Principe",
+    "official_name_en": "Sao Tome and Principe",
+    "Region Name": "Africa",
+    "CLDR display name": "São Tomé & Príncipe"
+  },
+  {
+    "Dial": "",
+    "official_name_fr": "Sercq",
+    "official_name_en": "Sark",
+    "Region Name": "Europe",
+    "CLDR display name": ""
+  },
+  {
+    "Dial": 966,
+    "official_name_fr": "Arabie saoudite",
+    "official_name_en": "Saudi Arabia",
+    "Region Name": "Asia",
+    "CLDR display name": "Saudi Arabia"
+  },
+  {
+    "Dial": 221,
+    "official_name_fr": "Sénégal",
+    "official_name_en": "Senegal",
+    "Region Name": "Africa",
+    "CLDR display name": "Senegal"
+  },
+  {
+    "Dial": 381,
+    "official_name_fr": "Serbie",
+    "official_name_en": "Serbia",
+    "Region Name": "Europe",
+    "CLDR display name": "Serbia"
+  },
+  {
+    "Dial": 248,
+    "official_name_fr": "Seychelles",
+    "official_name_en": "Seychelles",
+    "Region Name": "Africa",
+    "CLDR display name": "Seychelles"
+  },
+  {
+    "Dial": 232,
+    "official_name_fr": "Sierra Leone",
+    "official_name_en": "Sierra Leone",
+    "Region Name": "Africa",
+    "CLDR display name": "Sierra Leone"
+  },
+  {
+    "Dial": 65,
+    "official_name_fr": "Singapour",
+    "official_name_en": "Singapore",
+    "Region Name": "Asia",
+    "CLDR display name": "Singapore"
+  },
+  {
+    "Dial": "1-721",
+    "official_name_fr": "Saint-Martin (partie néerlandaise)",
+    "official_name_en": "Sint Maarten (Dutch part)",
+    "Region Name": "Americas",
+    "CLDR display name": "Sint Maarten"
+  },
+  {
+    "Dial": 421,
+    "official_name_fr": "Slovaquie",
+    "official_name_en": "Slovakia",
+    "Region Name": "Europe",
+    "CLDR display name": "Slovakia"
+  },
+  {
+    "Dial": 386,
+    "official_name_fr": "Slovénie",
+    "official_name_en": "Slovenia",
+    "Region Name": "Europe",
+    "CLDR display name": "Slovenia"
+  },
+  {
+    "Dial": 677,
+    "official_name_fr": "Îles Salomon",
+    "official_name_en": "Solomon Islands",
+    "Region Name": "Oceania",
+    "CLDR display name": "Solomon Islands"
+  },
+  {
+    "Dial": 252,
+    "official_name_fr": "Somalie",
+    "official_name_en": "Somalia",
+    "Region Name": "Africa",
+    "CLDR display name": "Somalia"
+  },
+  {
+    "Dial": 27,
+    "official_name_fr": "Afrique du Sud",
+    "official_name_en": "South Africa",
+    "Region Name": "Africa",
+    "CLDR display name": "South Africa"
+  },
+  {
+    "Dial": 500,
+    "official_name_fr": "Géorgie du Sud-et-les Îles Sandwich du Sud",
+    "official_name_en": "South Georgia and the South Sandwich Islands",
+    "Region Name": "Americas",
+    "CLDR display name": "South Georgia & South Sandwich Islands"
+  },
+  {
+    "Dial": 211,
+    "official_name_fr": "Soudan du Sud",
+    "official_name_en": "South Sudan",
+    "Region Name": "Africa",
+    "CLDR display name": "South Sudan"
+  },
+  {
+    "Dial": 34,
+    "official_name_fr": "Espagne",
+    "official_name_en": "Spain",
+    "Region Name": "Europe",
+    "CLDR display name": "Spain"
+  },
+  {
+    "Dial": 94,
+    "official_name_fr": "Sri Lanka",
+    "official_name_en": "Sri Lanka",
+    "Region Name": "Asia",
+    "CLDR display name": "Sri Lanka"
+  },
+  {
+    "Dial": 970,
+    "official_name_fr": "État de Palestine",
+    "official_name_en": "State of Palestine",
+    "Region Name": "Asia",
+    "CLDR display name": "Palestine"
+  },
+  {
+    "Dial": 249,
+    "official_name_fr": "Soudan",
+    "official_name_en": "Sudan",
+    "Region Name": "Africa",
+    "CLDR display name": "Sudan"
+  },
+  {
+    "Dial": 597,
+    "official_name_fr": "Suriname",
+    "official_name_en": "Suriname",
+    "Region Name": "Americas",
+    "CLDR display name": "Suriname"
+  },
+  {
+    "Dial": 47,
+    "official_name_fr": "Îles Svalbard-et-Jan Mayen",
+    "official_name_en": "Svalbard and Jan Mayen Islands",
+    "Region Name": "Europe",
+    "CLDR display name": "Svalbard & Jan Mayen"
+  },
+  {
+    "Dial": 46,
+    "official_name_fr": "Suède",
+    "official_name_en": "Sweden",
+    "Region Name": "Europe",
+    "CLDR display name": "Sweden"
+  },
+  {
+    "Dial": 963,
+    "official_name_fr": "République arabe syrienne",
+    "official_name_en": "Syrian Arab Republic",
+    "Region Name": "Asia",
+    "CLDR display name": "Syria"
+  },
+  {
+    "Dial": 886,
+    "official_name_fr": "Taiwan",
+    "official_name_en": "Taiwan",
+    "Region Name": "Asia",
+    "CLDR display name": "Taiwan"
+  },
+  {
+    "Dial": 992,
+    "official_name_fr": "Tadjikistan",
+    "official_name_en": "Tajikistan",
+    "Region Name": "Asia",
+    "CLDR display name": "Tajikistan"
+  },
+  {
+    "Dial": 66,
+    "official_name_fr": "Thaïlande",
+    "official_name_en": "Thailand",
+    "Region Name": "Asia",
+    "CLDR display name": "Thailand"
+  },
+  {
+    "Dial": 389,
+    "official_name_fr": "ex-République yougoslave de Macédoine",
+    "official_name_en": "The former Yugoslav Republic of Macedonia",
+    "Region Name": "Europe",
+    "CLDR display name": "North Macedonia"
+  },
+  {
+    "Dial": 670,
+    "official_name_fr": "Timor-Leste",
+    "official_name_en": "Timor-Leste",
+    "Region Name": "Asia",
+    "CLDR display name": "Timor-Leste"
+  },
+  {
+    "Dial": 228,
+    "official_name_fr": "Togo",
+    "official_name_en": "Togo",
+    "Region Name": "Africa",
+    "CLDR display name": "Togo"
+  },
+  {
+    "Dial": 690,
+    "official_name_fr": "Tokélaou",
+    "official_name_en": "Tokelau",
+    "Region Name": "Oceania",
+    "CLDR display name": "Tokelau"
+  },
+  {
+    "Dial": 676,
+    "official_name_fr": "Tonga",
+    "official_name_en": "Tonga",
+    "Region Name": "Oceania",
+    "CLDR display name": "Tonga"
+  },
+  {
+    "Dial": "1-868",
+    "official_name_fr": "Trinité-et-Tobago",
+    "official_name_en": "Trinidad and Tobago",
+    "Region Name": "Americas",
+    "CLDR display name": "Trinidad & Tobago"
+  },
+  {
+    "Dial": 216,
+    "official_name_fr": "Tunisie",
+    "official_name_en": "Tunisia",
+    "Region Name": "Africa",
+    "CLDR display name": "Tunisia"
+  },
+  {
+    "Dial": 90,
+    "official_name_fr": "Turquie",
+    "official_name_en": "Turkey",
+    "Region Name": "Asia",
+    "CLDR display name": "Turkey"
+  },
+  {
+    "Dial": 993,
+    "official_name_fr": "Turkménistan",
+    "official_name_en": "Turkmenistan",
+    "Region Name": "Asia",
+    "CLDR display name": "Turkmenistan"
+  },
+  {
+    "Dial": "1-649",
+    "official_name_fr": "Îles Turques-et-Caïques",
+    "official_name_en": "Turks and Caicos Islands",
+    "Region Name": "Americas",
+    "CLDR display name": "Turks & Caicos Islands"
+  },
+  {
+    "Dial": 688,
+    "official_name_fr": "Tuvalu",
+    "official_name_en": "Tuvalu",
+    "Region Name": "Oceania",
+    "CLDR display name": "Tuvalu"
+  },
+  {
+    "Dial": 256,
+    "official_name_fr": "Ouganda",
+    "official_name_en": "Uganda",
+    "Region Name": "Africa",
+    "CLDR display name": "Uganda"
+  },
+  {
+    "Dial": 380,
+    "official_name_fr": "Ukraine",
+    "official_name_en": "Ukraine",
+    "Region Name": "Europe",
+    "CLDR display name": "Ukraine"
+  },
+  {
+    "Dial": 971,
+    "official_name_fr": "Émirats arabes unis",
+    "official_name_en": "United Arab Emirates",
+    "Region Name": "Asia",
+    "CLDR display name": "United Arab Emirates"
+  },
+  {
+    "Dial": 44,
+    "official_name_fr": "Royaume-Uni de Grande-Bretagne et d'Irlande du Nord",
+    "official_name_en": "United Kingdom of Great Britain and Northern Ireland",
+    "Region Name": "Europe",
+    "CLDR display name": "UK"
+  },
+  {
+    "Dial": 255,
+    "official_name_fr": "République-Unie de Tanzanie",
+    "official_name_en": "United Republic of Tanzania",
+    "Region Name": "Africa",
+    "CLDR display name": "Tanzania"
+  },
+  {
+    "Dial": "",
+    "official_name_fr": "Îles mineures éloignées des États-Unis",
+    "official_name_en": "United States Minor Outlying Islands",
+    "Region Name": "Oceania",
+    "CLDR display name": "U.S. Outlying Islands"
+  },
+  {
+    "Dial": "1-340",
+    "official_name_fr": "Îles Vierges américaines",
+    "official_name_en": "United States Virgin Islands",
+    "Region Name": "Americas",
+    "CLDR display name": "U.S. Virgin Islands"
+  },
+  {
+    "Dial": 1,
+    "official_name_fr": "États-Unis d'Amérique",
+    "official_name_en": "United States of America",
+    "Region Name": "Americas",
+    "CLDR display name": "US"
+  },
+  {
+    "Dial": 598,
+    "official_name_fr": "Uruguay",
+    "official_name_en": "Uruguay",
+    "Region Name": "Americas",
+    "CLDR display name": "Uruguay"
+  },
+  {
+    "Dial": 998,
+    "official_name_fr": "Ouzbékistan",
+    "official_name_en": "Uzbekistan",
+    "Region Name": "Asia",
+    "CLDR display name": "Uzbekistan"
+  },
+  {
+    "Dial": 678,
+    "official_name_fr": "Vanuatu",
+    "official_name_en": "Vanuatu",
+    "Region Name": "Oceania",
+    "CLDR display name": "Vanuatu"
+  },
+  {
+    "Dial": 58,
+    "official_name_fr": "Venezuela (République bolivarienne du)",
+    "official_name_en": "Venezuela (Bolivarian Republic of)",
+    "Region Name": "Americas",
+    "CLDR display name": "Venezuela"
+  },
+  {
+    "Dial": 84,
+    "official_name_fr": "Viet Nam",
+    "official_name_en": "Viet Nam",
+    "Region Name": "Asia",
+    "CLDR display name": "Vietnam"
+  },
+  {
+    "Dial": 681,
+    "official_name_fr": "Îles Wallis-et-Futuna",
+    "official_name_en": "Wallis and Futuna Islands",
+    "Region Name": "Oceania",
+    "CLDR display name": "Wallis & Futuna"
+  },
+  {
+    "Dial": 212,
+    "official_name_fr": "Sahara occidental",
+    "official_name_en": "Western Sahara",
+    "Region Name": "Africa",
+    "CLDR display name": "Western Sahara"
+  },
+  {
+    "Dial": 967,
+    "official_name_fr": "Yémen",
+    "official_name_en": "Yemen",
+    "Region Name": "Asia",
+    "CLDR display name": "Yemen"
+  },
+  {
+    "Dial": 260,
+    "official_name_fr": "Zambie",
+    "official_name_en": "Zambia",
+    "Region Name": "Africa",
+    "CLDR display name": "Zambia"
+  },
+  {
+    "Dial": 263,
+    "official_name_fr": "Zimbabwe",
+    "official_name_en": "Zimbabwe",
+    "Region Name": "Africa",
+    "CLDR display name": "Zimbabwe"
+  },
+  {
+    "Dial": 358,
+    "official_name_fr": "Îles d'Åland",
+    "official_name_en": "Åland Islands",
+    "Region Name": "Europe",
+    "CLDR display name": "Åland Islands"
+  }
+]
