@@ -125,6 +125,7 @@ export default defineConfig({
         '@hestia.ai/twitter-agg': path.resolve(__dirname, '../packages/packages/experiences/twitter-agg'),
         '@hestia.ai/uber': path.resolve(__dirname, '../packages/packages/experiences/uber'),
         '@hestia.ai/uber-driver': path.resolve(__dirname, '../packages/packages/experiences/uber-driver'),
+        '@hestia.ai/uber-eats': path.resolve(__dirname, '../packages/packages/experiences/uber-eats'),
         '@hestia.ai/wolt': path.resolve(__dirname, '../packages/packages/experiences/wolt'),
         '@hestia.ai/youtube': path.resolve(__dirname, '../packages/packages/experiences/youtube'),
         '@hestia.ai/database-template': path.resolve(__dirname, '../packages/packages/experiences/database-template')

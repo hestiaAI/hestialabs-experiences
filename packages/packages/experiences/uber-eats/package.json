@@ -1,16 +1,13 @@
 {
   "name": "@hestia.ai/uber-eats",
-  "version": "3.3.7",
+  "version": "0.0.0",
   "main": "dist/index.mjs",
   "type": "module",
-  "files": [
-    "dist",
-    "src/google-viewer.json"
-  ],
+  "files": ["dist", "src/uber-eats-viewer.json"],
   "repository": {
     "type": "git",
     "url": "https://github.com/hestiaai/hestialabs-experiences",
-    "directory": "packages/packages/experiences/google"
+    "directory": "packages/packages/experiences/uber-eats"
   },
   "publishConfig": {
     "access": "public"
