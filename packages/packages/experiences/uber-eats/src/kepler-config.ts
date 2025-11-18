@@ -1,22 +1,8 @@
 const keplerConfig = {
   version: 'v1',
   config: {
-    visState: {
-      layers: [
-        {
-          id: 'trips',
-          type: 'point',
-          config: {
-            dataId: 'CourierLifetimeTripData',
-            label: 'Delivery points',
-            columns: {
-              lat: 'courier_begintrip_lat',
-              lng: 'courier_begintrip_lng'
-            }
-          }
-        }
-      ]
-    }
+    mapState: { latitude: 46.52, longitude: 6.63, zoom: 11 },
+    visState: { layers: [] }
   }
 }
 export default keplerConfig

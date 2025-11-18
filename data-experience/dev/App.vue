@@ -95,10 +95,10 @@ const experienceObjects = [
 ]
 
 const experiences = experienceObjects.map(e => e.config.slug)
-const initialExperience = 'uber-driver'
+const initialExperience = 'uber-eats'
 
 const siteConfig = {
-  i18nLocales: ['fr', 'en'],
+  i18nLocales: ['en', 'fr'],
   i18nUrl: '/i18n-messages-custom-dev.json',
   experienceViewerOptions: '',
   // experienceViewerOptions: 'https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main',

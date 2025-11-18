@@ -6,9 +6,9 @@ import viewerFunctions from './viewer-functions'
 const loaderOptions: LoaderOptions = {
     viewerVersion: 1,
     files: {
-        status: '**/Driver Online Offline.csv',
-        payments: '**/Driver Payments.csv',
-        trips: '**/Courier Lifetime Trip Data.csv'
+        DriverOnlineOffline: '**/11 - Driver Online Offline.csv',
+        DriverPayments: '**/23a - Driver Payments.csv',
+        CourierLifetimeTripData: '**/31 - Courier Lifetime Trip Data.csv'
     }
 }
 

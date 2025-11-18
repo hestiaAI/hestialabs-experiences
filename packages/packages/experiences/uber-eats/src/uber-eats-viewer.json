@@ -1,73 +1,37 @@
 {
   "title": "Uber Eats",
-  "version": 1,
-  "hideFileExplorer": false,
-  "hideEmptyTabs": true,
-  "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download",
-  "dataSamples": [
-    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/uber-eats-fr-paris.zip?contenthash=dummyhash&filename=uber-eats-fr-paris.zip"
-  ],
-  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/uber-eats.png",
+  "icon": "",
   "messages": {
     "en": {
-      "intro": {
-        "title": "Uber Eats",
-        "dataPortalHtml": "To use this experience, you must first retrieve the data Uber Eats has collected about you by making a SAR request. Please follow <a href=\"https://github.com/hestiaAI/data-catalog/blob/main/workshop/uber-eats.md#subject-access-request-instructions\" target=\"_blank\" rel=\"noreferrer noopener\">these instructions</a> to retrieve your data and analyze it here. If you don't have your data yet, you can use the example below."
-      },
-      "viewBlocks": {
-        "ordersSummary": {
-          "title": "Orders summary",
-          "text": "Overview of your Uber Eats orders and their total costs."
-        }
-      }
-    },
-    "fr": {
-      "intro": {
-        "title": "Uber Eats",
-        "dataPortalHtml": "Pour utiliser cette expérience, vous devez d'abord récupérer les données qu'Uber Eats a recueillies sur vous en faisant une demande SAR. Veuillez suivre <a href=\"https://github.com/hestiaAI/data-catalog/blob/main/workshop/uber-eats.md#subject-access-request-instructions\" target=\"_blank\" rel=\"noreferrer noopener\">ces instructions</a> pour récupérer vos données et les analyser ici. Si vous ne disposez pas encore de vos données, vous pouvez utiliser l'exemple ci-dessous."
-      },
-      "viewBlocks": {
-        "ordersSummary": {
-          "title": "Résumé des commandes",
-          "text": "Aperçu de vos commandes Uber Eats et de leurs coûts totaux."
-        }
-      }
+      "viewBlocks": {}
     }
   },
   "viewBlocks": [
     {
-      "id": "ordersSummary",
-      "customPipeline": "csv_orders",
-      "files": ["orders"],
-      "title": "Orders summary",
-      "text": "< TO DEFINE IN TRANSLATIONS >",
+      "showTable": true,
+      "id": "driverShifts",
+      "customPipeline": "csv_driver_online",
+      "files": ["DriverOnlineOffline"],
       "visualization": "ChartViewDashboard.vue",
-      "vizProps": {
-        "graphs": [
-          {
-            "title": "Number of orders per month",
-            "valueLabel": "orders",
-            "cols": "12",
-            "type": "BarTimelineChart.vue",
-            "dateAccessor": "order_date"
-          },
-          {
-            "title": "Top restaurants",
-            "type": "TopChart.vue",
-            "cols": "6",
-            "height": 220,
-            "valueAccessor": "restaurant_name"
-          },
-          {
-            "title": "Payment methods",
-            "type": "TopChart.vue",
-            "cols": "6",
-            "height": 220,
-            "valueAccessor": "payment_method"
-          }
-        ]
-      },
-      "showTable": true
+      "title": "Shifts",
+      "text": "Driver online/offline shifts and durations."
+    },
+    {
+      "showTable": false,
+      "id": "genericDateViewer",
+      "customPipeline": "genericDateViewer",
+      "visualization": "ChartViewGenericDateViewer.vue",
+      "title": "Timeline",
+      "text": "Timeline of dated events."
+    },
+    {
+      "showTable": false,
+      "id": "genericLocationViewer",
+      "customPipeline": "genericLocationViewer",
+      "visualization": "ChartViewGenericLocationViewer.vue",
+      "title": "Locations",
+      "text": "Location observations (if any)."
     }
-  ]
+  ],
+  "version": 1
 }
