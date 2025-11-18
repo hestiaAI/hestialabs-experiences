@@ -1,6 +1,6 @@
 {
   "name": "@hestia.ai/uber-eats",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "dist/index.mjs",
   "type": "module",
   "files": ["dist", "src/uber-eats-viewer.json"],
