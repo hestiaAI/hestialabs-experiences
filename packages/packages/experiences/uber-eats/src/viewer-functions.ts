@@ -1,16 +1,33 @@
-import { customPipelineGetFirstCSV } from '@/pipelines/custom'
 import type { FileManager } from '@/types/utils'
 import keplerConfig from './kepler-config'
 
 // return parsed CSV (headers + items) for DriverOnlineOffline
 async function csv_driver_online({ fileManager }: { fileManager: FileManager }) {
-  const csv = (await fileManager.getCsvItemsFromId('DriverOnlineOffline'))[0] ?? { headers: [], items: [] }
-  // optional: transform rows, ensure timestamps exist, compute duration seconds etc.
-  const items = csv.items.map(row => ({
-    ...row,
-    duration_seconds: row.duration_ms ? Number(row.duration_ms) / 1000 : null
-  }))
-  return { headers: [...csv.headers, 'duration_seconds'], items }
+  const csv =
+    (await fileManager.getCsvItemsFromId("DriverOnlineOffline"))[0] ?? {
+      headers: [],
+      items: [],
+    };
+
+  const items = csv.items.map(row => {
+    const begin = row.beginTimestampLocal;
+    const end = row.endTimestempLocal;
+
+    const hours = row.durationMs
+      ? Number(row.durationMs) / 1000 / 3600
+      : null;
+
+    return {
+      begin,
+      end,
+      hours,
+    };
+  });
+
+  return {
+    headers: ["begin", "end", "hours"],
+    items
+  };
 }
 
 // driver payments CSV

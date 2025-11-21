@@ -8,13 +8,13 @@
   },
   "viewBlocks": [
     {
-      "showTable": true,
-      "id": "driverShifts",
+      "showTable": false,
+      "id": "overview",
       "customPipeline": "csv_driver_online",
       "files": ["DriverOnlineOffline"],
-      "visualization": "ChartViewDashboard.vue",
-      "title": "Shifts",
-      "text": "Driver online/offline shifts and durations."
+      "visualization": "uberEats/OverView.vue",
+      "title": "Overview",
+      "text": "Your Online/Offline activity"
     },
     {
       "showTable": false,

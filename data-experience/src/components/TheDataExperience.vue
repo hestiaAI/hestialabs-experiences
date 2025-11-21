@@ -78,53 +78,55 @@
             disabled
           >
             <template v-if="tabs.length">
-            <VTabs
-              v-model="tab"
-              slider-color="secondary"
-              slider-size="4"
-              show-arrows
-              center-active
-              centered
-              fixed-tabs
-              @change="scrollToTop"
-              class="py-3"
-            >
-              <VTab
-                v-for="({ title, id }, index) in tabs"
-                :key="index"
-                :id="id"
-              >
-                {{ title }}
-              </VTab>
-            </VTabs>
-            <VTabsItems v-model="tab">
-              <div
-                v-for="{ id, viewBlock } in tabs"
-                :key="`${experienceConfig.slug}-${id}`"
-                :data-id="`view-block-${id}`"
-              >
-                <VTabItem :transition="false">
-                  <VRow>
-                    <VCol cols="12" class="pa-0">
-                      <VOverlay
-                        :value="overlay"
-                        opacity="0.8"
-                      >
-                        <div
-                          class="d-flex flex-column align-center"
-                        >
-                          <div class="mb-3">
-                            {{ $t('This might take a moment') }}
-                          </div>
-                          <BaseProgressCircular size="64" width="4" />
-                        </div>
-                      </VOverlay>
-                      <UnitPipeline v-bind="{ viewBlock }"></UnitPipeline>
-                    </VCol>
-                  </VRow>
-                </VTabItem>
+              <div :class="`${experienceConfig.slug}-tabs-wrapper`">
+                <VTabs
+                  v-model="tab"
+                  slider-color="secondary"
+                  slider-size="4"
+                  show-arrows
+                  center-active
+                  centered
+                  fixed-tabs
+                  @change="scrollToTop"
+                  class="py-3"
+                >
+                  <VTab
+                    v-for="({ title, id }, index) in tabs"
+                    :key="index"
+                    :id="id"
+                  >
+                    {{ title }}
+                  </VTab>
+                </VTabs>
+                <VTabsItems v-model="tab">
+                  <div
+                    v-for="{ id, viewBlock } in tabs"
+                    :key="`${experienceConfig.slug}-${id}`"
+                    :data-id="`view-block-${id}`"
+                  >
+                    <VTabItem :transition="false">
+                      <VRow>
+                        <VCol cols="12" class="pa-0">
+                          <VOverlay
+                            :value="overlay"
+                            opacity="0.8"
+                          >
+                            <div
+                              class="d-flex flex-column align-center"
+                            >
+                              <div class="mb-3">
+                                {{ $t('This might take a moment') }}
+                              </div>
+                              <BaseProgressCircular size="64" width="4" />
+                            </div>
+                          </VOverlay>
+                          <UnitPipeline v-bind="{ viewBlock }"></UnitPipeline>
+                        </VCol>
+                      </VRow>
+                    </VTabItem>
+                  </div>
+                </VTabsItems>
               </div>
-            </VTabsItems>
             </template>
             <template v-else>
               <VContainer>
