@@ -1,0 +1,37 @@
+{
+  "title": "Uber Eats",
+  "icon": "",
+  "messages": {
+    "en": {
+      "viewBlocks": {}
+    }
+  },
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "overview",
+      "customPipeline": "csv_driver_online",
+      "files": ["DriverOnlineOffline"],
+      "visualization": "uberEats/OverView.vue",
+      "title": "Overview",
+      "text": "Your Online/Offline activity"
+    },
+    {
+      "showTable": false,
+      "id": "genericDateViewer",
+      "customPipeline": "genericDateViewer",
+      "visualization": "ChartViewGenericDateViewer.vue",
+      "title": "Timeline",
+      "text": "Timeline of dated events."
+    },
+    {
+      "showTable": false,
+      "id": "genericLocationViewer",
+      "customPipeline": "genericLocationViewer",
+      "visualization": "ChartViewGenericLocationViewer.vue",
+      "title": "Locations",
+      "text": "Location observations (if any)."
+    }
+  ],
+  "version": 1
+}
