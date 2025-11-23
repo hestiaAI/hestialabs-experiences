@@ -6,7 +6,7 @@ import viewerFunctions from './viewer-functions'
 const loaderOptions: LoaderOptions = {
     viewerVersion: 1,
     files: {
-        BabysitterJobs: '**/data_jobs_1234567.xlsx',
+        BabysitterJobs: '**/data_jobs_1234567.csv',
     }
 }
 
