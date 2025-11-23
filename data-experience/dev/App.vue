@@ -60,6 +60,7 @@ import twitterAgg from '@hestia.ai/twitter-agg'
 import uber from '@hestia.ai/uber'
 import uberDriver from '@hestia.ai/uber-driver'
 import uberEats from '@hestia.ai/uber-eats'
+import babysits from '@hestia.ai/babysits'
 import youtube from '@hestia.ai/youtube'
 import wolt from '@hestia.ai/wolt'
 import databaseTemplate from '@hestia.ai/database-template'
@@ -67,6 +68,7 @@ import databaseTemplate from '@hestia.ai/database-template'
 const experienceObjects = [
   appleTracker,
   appleTrackerAgg,
+  babysits,
   chatgpt,
   explorer,
   facebook,

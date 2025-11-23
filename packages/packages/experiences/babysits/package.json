@@ -1,0 +1,17 @@
+{
+  "name": "@hestia.ai/babysits",
+  "version": "0.0.1",
+  "main": "dist/index.mjs",
+  "type": "module",
+  "files": ["dist", "src/babysits-viewer.json"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hestiaai/hestialabs-experiences",
+    "directory": "packages/packages/experiences/babysits"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "",
+  "license": "UNLICENSED"
+}
