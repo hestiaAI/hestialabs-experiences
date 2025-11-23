@@ -1,0 +1,37 @@
+{
+  "title": "Babysits",
+  "icon": "",
+  "messages": {
+    "en": {
+      "viewBlocks": {}
+    }
+  },
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "shiftTimeline",
+      "customPipeline": "genericDateViewer",
+      "files": ["BabysitterJobs"],
+      "visualization": "uberEats/OverView.vue",
+      "title": "Shift Timeline",
+      "text": "Overview of babysitting jobs over time."
+    },
+    {
+      "showTable": false,
+      "id": "activityTypes",
+      "customPipeline": "genericDateViewer",
+      "visualization": "ChartViewGenericDateViewer.vue",
+      "title": "Activity Types",
+      "text": "Activity types over time."
+    },
+    {
+      "showTable": false,
+      "id": "earningsDistribution",
+      "customPipeline": "genericDateViewer",
+      "visualization": "ChartViewGenericDateViewer.vue",
+      "title": "Earnings Distribution",
+      "text": "Earnigns over time."
+    }
+  ],
+  "version": 1
+}
