@@ -10,11 +10,10 @@
     {
       "showTable": false,
       "id": "overview",
-      "customPipeline": "csv_driver_online",
-      "files": ["DriverOnlineOffline"],
+      "customPipeline": "combined_data_pipeline",
+      "files": ["DriverOnlineOffline", "DriverPayments", "CourierLifetimeTripData"],
       "visualization": "uberEats/OverView.vue",
-      "title": "Overview",
-      "text": "Your Online/Offline activity"
+      "title": "Overview"
     },
     {
       "showTable": false,

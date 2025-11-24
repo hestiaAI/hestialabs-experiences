@@ -104,6 +104,7 @@ export default defineConfig({
         picomatch: 'picomatch-browser',
         '@hestia.ai/apple-tracker': path.resolve(__dirname, '../packages/packages/experiences/apple-tracker'),
         '@hestia.ai/apple-tracker-agg': path.resolve(__dirname, '../packages/packages/experiences/apple-tracker-agg'),
+        '@hestia.ai/babysits': path.resolve(__dirname, '../packages/packages/experiences/babysits'),
         '@hestia.ai/chatgpt': path.resolve(__dirname, '../packages/packages/experiences/chatgpt'),
         '@hestia.ai/explorer': path.resolve(__dirname, '../packages/packages/experiences/explorer'),
         '@hestia.ai/facebook': path.resolve(__dirname, '../packages/packages/experiences/facebook'),
