@@ -5,7 +5,6 @@ async function csv_babysitter_jobs({ fileManager }: { fileManager: FileManager }
     headers: [],
     items: [],
   }
-  console.log('CSV:', csv);
 
   const rows = csv.items
 
@@ -22,33 +21,58 @@ async function csv_babysitter_jobs({ fileManager }: { fileManager: FileManager }
     return { hours, minutes }
   }
 
-  const items = rows
-    .map(r => {
-      const dateObj = parseEuropeanDateSafe(r.date)
-      if (!dateObj) return null
+  const formatTime = (d: Date) => {
+    const hh = d.getHours().toString().padStart(2, '0')
+    const mm = d.getMinutes().toString().padStart(2, '0')
+    return `${hh}:${mm}`
+  }
 
-      const startHour = parseFloat(r.startHour)
-      const duration = parseFloat(r.nbHours)
-      if (isNaN(startHour) || isNaN(duration)) return null
+  const items: Record<string, any>[] = []
 
-      const start = hourToTime(startHour)
-      const begin = new Date(dateObj)
-      begin.setHours(start.hours, start.minutes, 0, 0)
+  for (const r of rows) {
+    const dateObj = parseEuropeanDateSafe(r.date)
+    if (!dateObj) continue
 
-      const endTime = hourToTime(startHour + duration)
-      const end = new Date(dateObj)
-      end.setHours(endTime.hours, endTime.minutes, 0, 0)
+    const startHour = parseFloat(r.startHour)
+    const duration = parseFloat(r.nbHours)
+    const price = parseFloat(r.pricePerHour)
 
-      return {
-        begin: begin.toISOString(),
-        end: end.toISOString(),
-        hours: duration
-      }
+    if (isNaN(startHour) || isNaN(duration)) continue
+
+    // compute begin/end timestamps
+    const start = hourToTime(startHour)
+    const begin = new Date(dateObj)
+    begin.setHours(start.hours, start.minutes, 0, 0)
+
+    const endT = hourToTime(startHour + duration)
+    const end = new Date(dateObj)
+    end.setHours(endT.hours, endT.minutes, 0, 0)
+
+    items.push({
+      job_id: r.id,
+      date: dateObj.toISOString().split('T')[0],
+      start_time: formatTime(begin),
+      end_time: formatTime(end),
+      duration_hours: duration,
+      earnings: Number.isFinite(price) ? price * duration : null,
+      location: r.cityName || '',
+      job_type: r.title || '',
+      status: (r.state || '').toLowerCase()
     })
-    .filter(Boolean) as { begin: string, end: string, hours: number }[]
+  }
 
   return {
-    headers: ["begin", "end", "hours"],
+    headers: [
+      "job_id",
+      "date",
+      "start_time",
+      "end_time",
+      "duration_hours",
+      "earnings",
+      "location",
+      "job_type",
+      "status",
+    ],
     items
   }
 }

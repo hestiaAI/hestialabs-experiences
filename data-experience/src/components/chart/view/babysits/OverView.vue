@@ -1,14 +1,38 @@
 <template>
   <div class="p-4">
-    <h2>Online/Offline Shifts</h2>
+    <h2>Babysitter Jobs</h2>
 
-    <ul v-if="values && values.length">
-      <li v-for="(entry, i) in values" :key="i">
-        {{ entry.begin }} – {{ entry.end }} ({{ parseFloat(entry.hours).toFixed(2) }} hours)
-      </li>
-    </ul>
+    <table v-if="items.length" class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Hours</th>
+          <th>Earnings</th>
+          <th>Location</th>
+          <th>Type</th>
+          <th>Status</th>
+        </tr>
+      </thead>
 
-    <p v-else>No shift data found.</p>
+      <tbody>
+        <tr v-for="(e, i) in items" :key="i">
+          <td>{{ e.job_id }}</td>
+          <td>{{ e.date }}</td>
+          <td>{{ e.start_time }}</td>
+          <td>{{ e.end_time }}</td>
+          <td>{{ e.duration_hours.toFixed(2) }}</td>
+          <td>{{ e.earnings ?? '-' }}</td>
+          <td>{{ e.location }}</td>
+          <td>{{ e.job_type }}</td>
+          <td>{{ e.status }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p v-else>No job data found.</p>
   </div>
 </template>
 
@@ -22,23 +46,8 @@ export default {
   computed: {
     items() {
       if (!this.values || !this.values.length) return []
-      return this.values.map(v => ({
-        begin: v.begin ?? v.Begin ?? '',
-        end: v.end ?? v.End ?? '',
-        hours: Number.parseFloat(v.hours ?? v.Hours ?? 0)
-      }))
+      return this.values
     }
-  },
-
-  watch: {
-    values(newVal) {
-      console.log('Values loaded:', newVal)
-    }
-  },
-  mounted() {
-    console.log('Headers:', this.headers)
-    console.log('Items:', this.items)
-    console.log('Values:', this.values)
   }
 }
 </script>
