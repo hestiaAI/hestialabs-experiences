@@ -19,9 +19,9 @@
     {
       "showTable": false,
       "id": "activityTypes",
-      "customPipeline": "genericDateViewer",
+      "customPipeline": "csv_babysitter_jobs",
       "files": ["BabysitterJobs"],
-      "visualization": "ChartViewGenericDateViewer.vue",
+      "visualization": "babysits/ActivityTypes.vue",
       "title": "Activity Types",
       "text": "Activity types over time."
     },

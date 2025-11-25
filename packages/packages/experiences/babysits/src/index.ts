@@ -4,10 +4,10 @@ import viewerOptions from './babysits-viewer.json'
 import viewerFunctions from './viewer-functions'
 
 const loaderOptions: LoaderOptions = {
-    viewerVersion: 1,
-    files: {
-        BabysitterJobs: '**/data_jobs_1234567.csv',
-    }
+  viewerVersion: 1,
+  files: {
+    BabysitterJobs: '**/data_jobs_1234567.csv'
+  }
 }
 
 export default new Experience(
