@@ -12,16 +12,16 @@
       "id": "overview",
       "customPipeline": "combined_data_pipeline",
       "files": ["DriverOnlineOffline", "DriverPayments", "CourierLifetimeTripData"],
-      "visualization": "uberEats/OverView.vue",
+      "visualization": "uberEats/Overview.vue",
       "title": "Overview"
     },
     {
       "showTable": false,
-      "id": "genericDateViewer",
-      "customPipeline": "genericDateViewer",
-      "visualization": "ChartViewGenericDateViewer.vue",
-      "title": "Timeline",
-      "text": "Timeline of dated events."
+      "id": "myroutes",
+      "customPipeline": "csv_courier_trips",
+      "files": ["CourierLifetimeTripData"],
+      "visualization": "uberEats/MyRoutes.vue",
+      "title": "My Routes"
     },
     {
       "showTable": false,
