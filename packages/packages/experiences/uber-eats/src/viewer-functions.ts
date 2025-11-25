@@ -86,8 +86,18 @@ async function csv_driver_payments({ fileManager }: { fileManager: FileManager }
 
 // courier trips for kepler (return rawCsv + kepler config)
 async function csv_courier_trips({ fileManager }: { fileManager: FileManager }) {
-  const rawCsv = (await fileManager.getPreprocessedTextFromId('CourierLifetimeTripData'))[0]
-  return { rawCsv, config: keplerConfig }
+  const csv =
+    (await fileManager.getCsvItemsFromId("CourierLifetimeTripData"))[0] ?? { headers: [], items: [] };
+
+  return {
+    headers: ["trips"],
+    items: [
+      {
+        trips: csv,
+        props: { periodStart, periodEnd, initialMode }
+      }
+    ]
+  };
 }
 
 const viewerFunctions = {

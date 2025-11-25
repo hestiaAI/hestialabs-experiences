@@ -110,7 +110,6 @@ export default {
 
     // currency guess: fallback '€'
     currency() {
-      console.log(this.payments[0])
       // Try to infer from payments if present
       if (this.payments.length > 0 && this.payments[0].currencyCode) {
         return this.payments[0].currencyCode
