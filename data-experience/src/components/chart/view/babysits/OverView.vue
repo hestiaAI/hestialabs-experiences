@@ -1,24 +1,53 @@
 <template>
-  <div class="p-4">
-    <h2 class="mb-4">Shift Timeline</h2>
+  <div class="layout-container">
 
-    <div v-if="jobs.length">
-      <ApexChart
-        type="rangeBar"
-        height="450"
-        :options="chartOptions"
-        :series="chartSeries"
-      />
+    <!-- BOX 1 → Top Stats -->
+    <div class="box box1">
+      <div>
+        <strong>Total Earnings</strong>
+        <div>{{ totalEarnings.toFixed(2) }} {{ currency }}</div>
+      </div>
 
-      <div class="legend mt-4">
-        <div v-for="item in statusItems" :key="item.name" class="legend-item">
-          <span class="legend-swatch" :style="{ background: item.color }" />
-          {{ item.label }} ({{ item.count }})
-        </div>
+      <div>
+        <strong>Total Hours Worked</strong>
+        <div>{{ totalHours.toFixed(1) }} h</div>
+      </div>
+
+      <div>
+        <strong>Number of Jobs</strong>
+        <div>{{ jobs.length }}</div>
       </div>
     </div>
 
-    <p v-else>No job data found.</p>
+    <!-- BOX 2 → Apex Timeline -->
+    <div class="box box2">
+      <h2 class="mb-4">Shift Timeline</h2>
+
+      <div v-if="jobs.length">
+        <ApexChart
+          type="rangeBar"
+          height="450"
+          :options="chartOptions"
+          :series="chartSeries"
+        />
+
+        <div class="legend mt-4">
+          <div v-for="item in statusItems" :key="item.name" class="legend-item">
+            <span class="legend-swatch" :style="{ background: item.color }" />
+            {{ item.label }} ({{ item.count }})
+          </div>
+        </div>
+      </div>
+
+      <p v-else>No job data found.</p>
+    </div>
+
+    <!-- BOX 4 → Average Work Time -->
+    <div class="box box4">
+      <p><strong>Average Work Time</strong></p>
+      <p class="avg-value">{{ averageWorkTime }}</p>
+    </div>
+
   </div>
 </template>
 
@@ -37,6 +66,58 @@ export default {
       return this.values || []
     },
 
+    /* ---------- TOP STATS ---------- */
+
+    totalEarnings() {
+      return this.jobs.reduce((s, j) => s + (parseFloat(j.earnings) || 0), 0)
+    },
+
+    totalHours() {
+      let min = 0
+      this.jobs.forEach((j) => {
+        const hours =
+          parseFloat(
+            j.nbHours ||
+            j.duration ||
+            j.duration_hours ||
+            j.hours ||
+            j.work_hours
+          ) || 0
+
+        min += hours * 60
+      })
+      return min / 60
+    },
+
+    currency() {
+      return this.jobs[0]?.currency || 'CHF'
+    },
+
+    /* ---------- AVERAGE WORK TIME ---------- */
+
+    averageWorkTime() {
+      if (!this.jobs.length) return '0h 0m'
+
+      const durations = this.jobs.map(j =>
+        parseFloat(
+          j.nbHours ||
+          j.duration ||
+          j.duration_hours ||
+          j.hours ||
+          j.work_hours
+        ) || 0
+      )
+
+      const avg = durations.reduce((a, b) => a + b, 0) / durations.length
+
+      const h = Math.floor(avg)
+      const m = Math.round((avg - h) * 60)
+
+      return `${h}h ${m}m`
+    },
+
+    /* ---------- CHART DATA ---------- */
+
     chartSeries() {
       return [
         {
@@ -52,20 +133,14 @@ export default {
               meta: j
             }
           })
-
         }
       ]
     },
 
     chartOptions() {
       return {
-        chart: {
-          type: 'rangeBar',
-          toolbar: { show: false }
-        },
-        plotOptions: {
-          bar: { horizontal: true }
-        },
+        chart: { type: 'rangeBar', toolbar: { show: false } },
+        plotOptions: { bar: { horizontal: true } },
         xaxis: {
           type: 'datetime',
           labels: { format: 'HH:mm' },
@@ -74,8 +149,7 @@ export default {
         },
         tooltip: {
           custom: ({ seriesIndex, dataPointIndex, w }) => {
-            const item =
-              w.config.series[seriesIndex].data[dataPointIndex].meta
+            const item = w.config.series[seriesIndex].data[dataPointIndex].meta
             return `
               <div class="tooltip-box">
                 <strong>${item.date}</strong><br>
@@ -117,21 +191,81 @@ export default {
 </script>
 
 <style scoped>
-.legend {
+/* --- LAYOUT --- */
+.layout-container {
+  display: grid;
+  width: 94%;
+  grid-template-rows: 20% 1fr;
+  grid-template-columns: 70% 1fr;
+  gap: 16px;
+  margin-left: 16px;
+}
+
+/* Base box style */
+.box {
+  background-color: #e8e8e8;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  font-size: 1.2rem;
+}
+
+/* TOP BAR */
+.box1 {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  align-items: center;
+}
+
+/* TIMELINE */
+.box2 {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
   display: flex;
-  gap: 14px;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+
+/* RIGHT COLUMN BOX 4 */
+.box4 {
+  grid-column: 2 / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  height: auto;
+  align-self: start;
+}
+
+.avg-value {
+  font-size: 1.6rem;
+  margin-top: 8px;
+}
+
+/* Legend */
+.legend {
+  display:flex;
+  gap:12px;
+  margin-top: 10px;
   flex-wrap: wrap;
 }
 .legend-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size: .9rem;
 }
 .legend-swatch {
   width: 14px;
   height: 14px;
   border-radius: 3px;
 }
+
+/* Tooltip */
 .tooltip-box {
   padding: 8px;
   background: white;
