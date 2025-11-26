@@ -28,9 +28,9 @@
     {
       "showTable": false,
       "id": "earningsDistribution",
-      "customPipeline": "genericDateViewer",
+      "customPipeline": "csv_babysitter_jobs",
       "files": ["BabysitterJobs"],
-      "visualization": "ChartViewGenericDateViewer.vue",
+      "visualization": "babysits/EarningsDistribution.vue",
       "title": "Earnings Distribution",
       "text": "Earnigns over time."
     }
