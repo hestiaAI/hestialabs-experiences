@@ -55,6 +55,9 @@
 import mixin from '@/components/chart/view/mixin'
 import VueApexCharts from 'vue-apexcharts'
 import dayjs from 'dayjs'
+import 'dayjs/locale/en'
+import weekday from 'dayjs/plugin/weekday'
+dayjs.extend(weekday)
 
 export default {
   name: 'BabysitsShiftTimeline',
@@ -119,37 +122,70 @@ export default {
     /* ---------- CHART DATA ---------- */
 
     chartSeries() {
-      return [
-        {
-          name: 'Shift',
-          data: this.jobs.map((j) => {
-            const start = dayjs(`2025-01-01 ${j.start_time}`).valueOf()
-            const end = dayjs(`2025-01-01 ${j.end_time}`).valueOf()
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-            return {
-              x: dayjs(j.date).format('ddd'),
+      const jobsByDay = Array.from({ length: 7 }, () => [])
+
+      this.jobs.forEach((j) => {
+        if (!j.date) return
+        let wd = dayjs(j.date).day()
+        wd = wd === 0 ? 6 : wd - 1
+        jobsByDay[wd].push(j)
+      })
+
+      const seriesData = []
+
+      days.forEach((dayName, idx) => {
+        const dayJobs = jobsByDay[idx]
+
+        if (dayJobs.length === 0) {
+          seriesData.push({
+            x: dayName,
+            y: [dayjs('2025-01-01T00:00').valueOf(), dayjs('2025-01-01T00:00').valueOf()],
+            fillColor: 'transparent',
+            meta: { status: 'none' }
+          })
+        } else {
+          dayJobs.forEach((j) => {
+            const [sh, sm] = (j.start_time || '00:00').split(':').map(Number)
+            const [eh, em] = (j.end_time || '00:00').split(':').map(Number)
+            const start = dayjs('2025-01-01').hour(sh).minute(sm).valueOf()
+            const end = dayjs('2025-01-01').hour(eh).minute(em).valueOf()
+            const statusKey = (j.status || 'unknown').toLowerCase()
+            const color = this.statusColors[statusKey] || this.statusColors.unknown
+
+            seriesData.push({
+              x: dayName,
               y: [start, end],
-              fillColor: this.statusColors[j.status] || '#888',
+              fillColor: color,
               meta: j
-            }
+            })
           })
         }
-      ]
+      })
+
+      return [{ name: 'Shift', data: seriesData }]
     },
 
     chartOptions() {
       return {
         chart: { type: 'rangeBar', toolbar: { show: false } },
-        plotOptions: { bar: { horizontal: true } },
+        plotOptions: { bar: { horizontal: true, rangeBarGroupRows: true } },
         xaxis: {
           type: 'datetime',
           labels: { format: 'HH:mm' },
           min: dayjs('2025-01-01T00:00').valueOf(),
           max: dayjs('2025-01-01T23:59').valueOf()
         },
+        yaxis: {
+          type: 'category',
+          categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          reversed: true
+        },
         tooltip: {
           custom: ({ seriesIndex, dataPointIndex, w }) => {
             const item = w.config.series[seriesIndex].data[dataPointIndex].meta
+            if (item.status === 'none') return null
             return `
               <div class="tooltip-box">
                 <strong>${item.date}</strong><br>
