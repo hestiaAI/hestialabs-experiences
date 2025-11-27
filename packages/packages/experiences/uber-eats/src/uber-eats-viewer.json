@@ -28,8 +28,8 @@
       "id": "genericLocationViewer",
       "customPipeline": "genericLocationViewer",
       "visualization": "ChartViewGenericLocationViewer.vue",
-      "title": "Locations",
-      "text": "Location observations (if any)."
+      "title": "Earnings",
+      "text": "Earnings"
     }
   ],
   "version": 1
