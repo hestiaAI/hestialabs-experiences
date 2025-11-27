@@ -27,7 +27,7 @@ export default {
     visState: {
       layers: [
         {
-          id: 'trips-layer',
+          id: 'trips',
           type: 'point',
           config: {
             dataId: 'trips',

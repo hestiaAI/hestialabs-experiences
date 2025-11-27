@@ -5,7 +5,7 @@
       <h3>Map of Routes</h3>
       <UnitKepler
         ref="keplerRef"
-        :height="780"
+        class="map-frame"
         :args="keplerArgs"
       />
     </div>
@@ -106,43 +106,39 @@ export default {
         const accept = dayjs(t.courierAcceptTimestampLocal)
         return accept.isSameOrAfter(this.periodStart) && accept.isSameOrBefore(this.periodEnd)
       })
-      console.log('Filtered trips:', filtered)
       return filtered
     },
     keplerData() {
       return {
-        info: { id: 'trips', label: 'Trips' },
-        data: {
-          fields: [
-            { name: 'latitude', type: 'real' },
-            { name: 'longitude', type: 'real' },
-            { name: 'type', type: 'string' },
-            { name: 'fromLat', type: 'real' },
-            { name: 'fromLng', type: 'real' },
-            { name: 'toLat', type: 'real' },
-            { name: 'toLng', type: 'real' }
+        fields: [
+          { name: 'latitude', type: 'real' },
+          { name: 'longitude', type: 'real' },
+          { name: 'type', type: 'string' },
+          { name: 'fromLat', type: 'real' },
+          { name: 'fromLng', type: 'real' },
+          { name: 'toLat', type: 'real' },
+          { name: 'toLng', type: 'real' }
+        ],
+        rows: this.tripsFiltered.flatMap(t => [
+          [
+            Number(t.courierAcceptTripLat),
+            Number(t.courierAcceptTripLng),
+            'accept',
+            Number(t.courierAcceptTripLat),
+            Number(t.courierAcceptTripLng),
+            Number(t.courierBegintripLat),
+            Number(t.courierBegintripLng)
           ],
-          rows: this.tripsFiltered.flatMap(t => [
-            [
-              Number(t.courierAcceptTripLat),
-              Number(t.courierAcceptTripLng),
-              'accept',
-              Number(t.courierAcceptTripLat),
-              Number(t.courierAcceptTripLng),
-              Number(t.courierBegintripLat),
-              Number(t.courierBegintripLng)
-            ],
-            [
-              Number(t.courierBegintripLat),
-              Number(t.courierBegintripLng),
-              'begin',
-              Number(t.courierAcceptTripLat),
-              Number(t.courierAcceptTripLng),
-              Number(t.courierBegintripLat),
-              Number(t.courierBegintripLng)
-            ]
-          ])
-        }
+          [
+            Number(t.courierBegintripLat),
+            Number(t.courierBegintripLng),
+            'begin',
+            Number(t.courierAcceptTripLat),
+            Number(t.courierAcceptTripLng),
+            Number(t.courierBegintripLat),
+            Number(t.courierBegintripLng)
+          ]
+        ])
       }
     },
     keplerArgs() {
@@ -156,14 +152,17 @@ export default {
   watch: {
     keplerData: {
       handler(newData) {
-        this.keplerRef?.callIframeFunction('update', {
-          data: newData.data,
-          info: newData.info,
-          config: keplerConfigPoints
+        this.callIframeFunction('update', {
+          keplerData: newData,
+          config: keplerConfigPoints,
+          mapboxToken: this.mapboxToken
         })
       },
       deep: true
     }
+  },
+  mounted() {
+    this.keplerRef = this.$refs.keplerRef
   },
   methods: {
     formatTime(timestamp) {
@@ -175,34 +174,34 @@ export default {
       return dayjs(timestamp).format('DD.MM.YY')
     },
     selectTrip(trip) {
-      const filtered = {
-        info: { id: 'trips', label: 'Trips' },
-        data: {
-          fields: this.keplerData.data.fields,
-          rows: [
-            [
-              Number(trip.courierAcceptTripLat),
-              Number(trip.courierAcceptTripLng),
-              'accept',
-              Number(trip.courierAcceptTripLat),
-              Number(trip.courierAcceptTripLng),
-              Number(trip.courierBegintripLat),
-              Number(trip.courierBegintripLng)
-            ],
-            [
-              Number(trip.courierBegintripLat),
-              Number(trip.courierBegintripLng),
-              'begin',
-              Number(trip.courierAcceptTripLat),
-              Number(trip.courierAcceptTripLng),
-              Number(trip.courierBegintripLat),
-              Number(trip.courierBegintripLng)
-            ]
-          ]
-        }
-      }
+      const fields = this.keplerData.fields
 
-      this.keplerRef?.callIframeFunction('update', filtered)
+      const rows = [
+        [
+          Number(trip.courierAcceptTripLat),
+          Number(trip.courierAcceptTripLng),
+          'accept',
+          Number(trip.courierAcceptTripLat),
+          Number(trip.courierAcceptTripLng),
+          Number(trip.courierBegintripLat),
+          Number(trip.courierBegintripLng)
+        ],
+        [
+          Number(trip.courierBegintripLat),
+          Number(trip.courierBegintripLng),
+          'begin',
+          Number(trip.courierAcceptTripLat),
+          Number(trip.courierAcceptTripLng),
+          Number(trip.courierBegintripLat),
+          Number(trip.courierBegintripLng)
+        ]
+      ]
+
+      console.log(this.keplerRef)
+      this.keplerRef?.callIframeFunction('update', {
+        keplerData: { fields, rows },
+        config: keplerConfigPoints
+      })
     }
   }
 }
@@ -212,7 +211,7 @@ export default {
 .layout {
   display: flex;
   width: 95%;
-  height: 78vh;
+  height: 56vh;
   overflow: hidden;
   margin: 16px 0px 0px 16px;
 }
