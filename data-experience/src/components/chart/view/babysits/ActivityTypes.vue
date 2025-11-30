@@ -1,5 +1,10 @@
 <template>
   <div class="layout-container">
+    <div class="week-nav">
+      <button class="nav-btn" @click="prevWeek">←</button>
+      <div class="week-label">{{ weekLabel }}</div>
+      <button class="nav-btn" @click="nextWeek">→</button>
+    </div>
 
     <!-- BOX 2 → Apex Timeline -->
     <div class="box box2">
@@ -42,6 +47,8 @@ import VueApexCharts from 'vue-apexcharts'
 import dayjs from 'dayjs'
 import 'dayjs/locale/en'
 import weekday from 'dayjs/plugin/weekday'
+import isBetween from 'dayjs/plugin/isBetween'
+dayjs.extend(isBetween)
 dayjs.extend(weekday)
 
 export default {
@@ -51,7 +58,8 @@ export default {
 
   data() {
     return {
-      selectedJobType: ''
+      selectedJobType: '',
+      currentWeekStart: this.getMondayOf(dayjs())
     }
   },
 
@@ -63,8 +71,38 @@ export default {
 
     // ---------- FILTERED JOBS ----------
     filteredJobs() {
-      if (!this.selectedJobType) return this.jobs
-      return this.jobs.filter(job => job.job_type === this.selectedJobType)
+      let jobs = this.jobs
+
+      if (this.selectedJobType) {
+        jobs = jobs.filter(j => j.job_type === this.selectedJobType)
+      }
+
+      return jobs.filter((j) => {
+        if (!j.date) return false
+        const d = dayjs(j.date)
+        return d.isBetween(this.weekStart, this.weekEnd, 'day', '[]')
+      })
+    },
+
+    weekStart() {
+      return this.currentWeekStart
+    },
+
+    weekEnd() {
+      return this.currentWeekStart.add(6, 'day').endOf('day')
+    },
+
+    weekLabel() {
+      return `${this.weekStart.format('DD.MM')} - ${this.weekEnd.format('DD.MM.YYYY')}`
+    },
+
+    latestJobDate() {
+      if (!this.jobs.length) return null
+
+      return this.jobs
+        .map(j => dayjs(j.date))
+        .filter(d => d.isValid())
+        .sort((a, b) => b.valueOf() - a.valueOf())[0]
     },
 
     // ---------- TOP STATS ----------
@@ -218,6 +256,27 @@ export default {
         unknown: '#888'
       }
     }
+  },
+
+  mounted() {
+    if (this.latestJobDate) {
+      this.currentWeekStart = this.getMondayOf(this.latestJobDate)
+    }
+  },
+
+  methods: {
+    prevWeek() {
+      this.currentWeekStart = this.currentWeekStart.subtract(7, 'day')
+    },
+    nextWeek() {
+      this.currentWeekStart = this.currentWeekStart.add(7, 'day')
+    },
+    getMondayOf(d) {
+      const day = d.day()
+      return day === 0
+        ? d.subtract(6, 'day').startOf('day')
+        : d.subtract(day - 1, 'day').startOf('day')
+    }
   }
 }
 </script>
@@ -227,7 +286,7 @@ export default {
 .layout-container {
   display: grid;
   width: 94%;
-  grid-template-rows: 20% 1fr;
+  grid-template-rows: auto 20% 1fr;
   grid-template-columns: 70% 1fr;
   gap: 16px;
   margin-left: 16px;
@@ -245,7 +304,7 @@ export default {
 /* TIMELINE */
 .box2 {
   grid-column: 1 / 2;
-  grid-row: 1 / 3;
+  grid-row: 2 / 4;
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
@@ -254,6 +313,7 @@ export default {
 /* RIGHT COLUMN BOX 4 */
 .box4 {
   grid-column: 2 / 3;
+  grid-row: 2 / 3;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -321,5 +381,35 @@ export default {
   border-color: #1e88e5;
   box-shadow: 0 0 4px rgba(30, 136, 229, 0.5);
   outline: none;
+}
+
+.week-nav {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.nav-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  background: white;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+
+.nav-btn:hover {
+  background: #f3f3f3;
+}
+
+.week-label {
+  font-weight: 700;
+  color: #333;
+  font-size: 1rem;
 }
 </style>
