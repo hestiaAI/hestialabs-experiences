@@ -1,16 +1,15 @@
 <template>
   <div class="layout-container">
+    <div class="week-nav">
+      <button class="nav-btn" @click="prevWeek">←</button>
+      <div class="week-label">{{ weekLabel }}</div>
+      <button class="nav-btn" @click="nextWeek">→</button>
+    </div>
 
     <!-- BOX 2 → Bubble Chart -->
     <div class="box box2">
       <div class="header-controls">
         <h2 class="chart-title">Earnings Distribution</h2>
-
-        <div class="week-nav">
-          <button class="nav-btn" @click="prevWeek">←</button>
-          <div class="week-label">{{ weekLabel }}</div>
-          <button class="nav-btn" @click="nextWeek">→</button>
-        </div>
       </div>
 
       <div class="chart-wrapper">
@@ -346,6 +345,7 @@ export default {
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
+  margin-bottom: 12px;
 }
 
 .nav-btn {
