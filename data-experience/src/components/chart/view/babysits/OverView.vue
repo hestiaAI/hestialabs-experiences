@@ -1,5 +1,10 @@
 <template>
   <div class="layout-container">
+    <div class="week-nav">
+      <button class="nav-btn" @click="prevWeek">←</button>
+      <div class="week-label">{{ weekLabel }}</div>
+      <button class="nav-btn" @click="nextWeek">→</button>
+    </div>
 
     <!-- BOX 1 → Top Stats -->
     <div class="box box1">
@@ -15,7 +20,7 @@
 
       <div>
         <strong>Number of Jobs</strong>
-        <div>{{ jobs.length }}</div>
+        <div>{{ totalJobs.toFixed(1) }}</div>
       </div>
     </div>
 
@@ -57,6 +62,8 @@ import VueApexCharts from 'vue-apexcharts'
 import dayjs from 'dayjs'
 import 'dayjs/locale/en'
 import weekday from 'dayjs/plugin/weekday'
+import isBetween from 'dayjs/plugin/isBetween'
+dayjs.extend(isBetween)
 dayjs.extend(weekday)
 
 export default {
@@ -64,31 +71,76 @@ export default {
   components: { ApexChart: VueApexCharts },
   mixins: [mixin],
 
+  data() {
+    return {
+      currentWeekStart: this.getMondayOf(dayjs())
+    }
+  },
+
   computed: {
     jobs() {
       return this.values || []
     },
 
+    filteredJobs() {
+      return this.jobs.filter((j) => {
+        if (!j.date) return false
+        const d = dayjs(j.date)
+        return d.isBetween(this.weekStart, this.weekEnd, 'day', '[]')
+      })
+    },
+
+    weekLabel() {
+      const s = this.weekStart
+      const e = this.weekEnd
+      return `${s.format('DD.MM')} - ${e.format('DD.MM.YYYY')}`
+    },
+
+    weekStart() {
+      return this.currentWeekStart
+    },
+
+    weekEnd() {
+      return this.currentWeekStart.add(6, 'day').endOf('day')
+    },
+
+    latestJobDate() {
+      if (!this.jobs.length) return null
+
+      return this.jobs
+        .map(j => dayjs(j.date))
+        .filter(d => d.isValid())
+        .sort((a, b) => b.valueOf() - a.valueOf())[0]
+    },
+
     /* ---------- TOP STATS ---------- */
 
     totalEarnings() {
-      return this.jobs.reduce((s, j) => s + (parseFloat(j.earnings) || 0), 0)
+      return this.filteredJobs.reduce(
+        (s, j) => s + (parseFloat(j.earnings) || 0),
+        0
+      )
+    },
+
+    totalJobs() {
+      return this.filteredJobs.length
     },
 
     totalHours() {
       let min = 0
-      this.jobs.forEach((j) => {
-        const hours =
-          parseFloat(
-            j.nbHours ||
-            j.duration ||
-            j.duration_hours ||
-            j.hours ||
-            j.work_hours
-          ) || 0
 
-        min += hours * 60
+      this.filteredJobs.forEach((j) => {
+        const h = parseFloat(
+          j.nbHours ||
+          j.duration ||
+          j.duration_hours ||
+          j.hours ||
+          j.work_hours
+        ) || 0
+
+        min += h * 60
       })
+
       return min / 60
     },
 
@@ -99,19 +151,20 @@ export default {
     /* ---------- AVERAGE WORK TIME ---------- */
 
     averageWorkTime() {
-      if (!this.jobs.length) return '0h 0m'
+      if (!this.filteredJobs.length) return '0h 0m'
 
-      const durations = this.jobs.map(j =>
-        parseFloat(
-          j.nbHours ||
-          j.duration ||
-          j.duration_hours ||
-          j.hours ||
-          j.work_hours
-        ) || 0
-      )
-
-      const avg = durations.reduce((a, b) => a + b, 0) / durations.length
+      const avg =
+        this.filteredJobs.reduce((s, j) => {
+          return s + (
+            parseFloat(
+              j.nbHours ||
+              j.duration ||
+              j.duration_hours ||
+              j.hours ||
+              j.work_hours
+            ) || 0
+          )
+        }, 0) / this.filteredJobs.length
 
       const h = Math.floor(avg)
       const m = Math.round((avg - h) * 60)
@@ -126,7 +179,7 @@ export default {
 
       const jobsByDay = Array.from({ length: 7 }, () => [])
 
-      this.jobs.forEach((j) => {
+      this.filteredJobs.forEach((j) => {
         if (!j.date) return
         let wd = dayjs(j.date).day()
         wd = wd === 0 ? 6 : wd - 1
@@ -200,7 +253,7 @@ export default {
 
     statusItems() {
       const counts = {}
-      this.jobs.forEach((j) => {
+      this.filteredJobs.forEach((j) => {
         counts[j.status] = (counts[j.status] || 0) + 1
       })
 
@@ -222,6 +275,29 @@ export default {
         unknown: '#888'
       }
     }
+  },
+
+  mounted() {
+    if (this.latestJobDate) {
+      this.currentWeekStart = this.getMondayOf(this.latestJobDate)
+    }
+  },
+
+  methods: {
+    prevWeek() {
+      this.currentWeekStart = this.currentWeekStart.subtract(7, 'day')
+    },
+
+    nextWeek() {
+      this.currentWeekStart = this.currentWeekStart.add(7, 'day')
+    },
+
+    getMondayOf(d) {
+      const day = d.day()
+      return day === 0
+        ? d.subtract(6, 'day').startOf('day')
+        : d.subtract(day - 1, 'day').startOf('day')
+    }
   }
 }
 </script>
@@ -231,7 +307,7 @@ export default {
 .layout-container {
   display: grid;
   width: 94%;
-  grid-template-rows: 20% 1fr;
+  grid-template-rows: auto 20% 1fr;
   grid-template-columns: 70% 1fr;
   gap: 16px;
   margin-left: 16px;
@@ -249,7 +325,7 @@ export default {
 /* TOP BAR */
 .box1 {
   grid-column: 1 / 3;
-  grid-row: 1 / 2;
+  grid-row: 2 / 3;
 
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -260,7 +336,7 @@ export default {
 /* TIMELINE */
 .box2 {
   grid-column: 1 / 2;
-  grid-row: 2 / 3;
+  grid-row: 3 / 4;
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
@@ -269,6 +345,7 @@ export default {
 /* RIGHT COLUMN BOX 4 */
 .box4 {
   grid-column: 2 / 3;
+  grid-row: 3 / 4;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -307,5 +384,35 @@ export default {
   background: white;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.week-nav {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.nav-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  background: white;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+
+.nav-btn:hover {
+  background: #f3f3f3;
+}
+
+.week-label {
+  font-weight: 700;
+  color: #333;
+  font-size: 1rem;
 }
 </style>
