@@ -104,6 +104,14 @@ export default {
       return this.block.payments?.items ?? []
     },
 
+    // payments between start and end date
+    paymentsInRange() {
+      return this.filterByPeriod(
+        this.payments,
+        p => p.recognizeTimestampLocal
+      )
+    },
+
     tripsRaw() {
       return this.block.trips?.rawCsv ?? ''
     },
@@ -119,7 +127,7 @@ export default {
 
     // total earnings summed up
     totalEarnings() {
-      return this.payments.reduce((s, p) => s + (Number(p.amountLocal) || 0), 0)
+      return this.paymentsInRange.reduce((s, p) => s + (Number(p.amountLocal) || 0), 0)
     },
 
     // total hours from shifts (skip offline)
@@ -135,10 +143,16 @@ export default {
       return (minutes / 60).toFixed(1)
     },
 
+    tripsInPeriod() {
+      return this.filterByPeriod(
+        this.tripsParsed,
+        t => t.courierBegintripTimestampLocal || t.beginTimestampLocal
+      )
+    },
+
     deliveryCount() {
       // trips who were completed
-      const trips = this.tripsParsed
-      return trips.length
+      return this.tripsInPeriod.length
     },
 
     // Complete distance summed up
@@ -218,7 +232,7 @@ export default {
           const st = dayjs(p.begin)
           if (st.isSameOrAfter(start) && st.isSameOrBefore(end)) {
             // attach original meta
-            res.push(Object.assign({}, p.raw || p, { begin_timestamp_utc: p.begin, end_timestamp_utc: p.end, earner_state: p.raw?.earner_state ?? p.raw?.earnerState }))
+            res.push(Object.assign({}, p.raw || p, { begin_timestamp_utc: p.begin, end_timestamp_utc: p.end, earner_state: p.raw?.state }))
           }
         })
       })
@@ -256,6 +270,14 @@ export default {
       this.mode = m
       // redraw if switching to week
       if (m === 'week') this.drawChart()
+    },
+
+    filterByPeriod(items, getDateFn) {
+      const { start, end } = this.periodRange
+      return items.filter((i) => {
+        const d = dayjs(getDateFn(i))
+        return d.isValid() && d.isSameOrAfter(start) && d.isSameOrBefore(end)
+      })
     },
 
     // Splits a shift object if it crosses midnight.
