@@ -144,39 +144,40 @@ export default {
         seriesMap[b] = { name: b, data: [] }
       })
 
-      // Add data for each time bucket
+      // Add data for each time bucket - using numeric day index (0-6)
       Object.entries(this.aggregatedData).forEach(([dayName, buckets]) => {
+        const dayIndex = this.weekdays.indexOf(dayName)
         Object.entries(buckets).forEach(([bucket, metrics]) => {
           const series = seriesMap[bucket] || seriesMap.Other
-          series.data.push({
-            x: dayName,
-            y: parseFloat(metrics.totalEarnings.toFixed(2)),
-            z: parseFloat(metrics.totalDuration.toFixed(1)),
-            jobCount: metrics.count
-          })
+          series.data.push([
+            dayIndex,
+            parseFloat(metrics.totalEarnings.toFixed(2)),
+            parseFloat(metrics.totalDuration.toFixed(1)),
+            metrics.count
+          ])
         })
       })
 
       const filteredSeries = bucketKeys.map(k => seriesMap[k]).filter(s => s && s.data.length > 0)
 
-      // If no data, create a placeholder series with all days but no visible bubbles
-      if (filteredSeries.length === 0) {
-        return [{
-          name: 'Placeholder',
-          data: this.weekdays.map(day => ({
-            x: day,
-            y: 0,
-            z: 0
-          }))
-        }]
+      // Always add a hidden placeholder series to ensure all days are shown
+      const placeholderSeries = {
+        name: 'Placeholder',
+        data: this.weekdays.map((day, idx) => [idx, null, 0])
       }
 
-      return filteredSeries
+      // If no data, return only placeholder
+      if (filteredSeries.length === 0) {
+        return [placeholderSeries]
+      }
+
+      // If there is data, add placeholder at the end to ensure all days show
+      return [...filteredSeries, placeholderSeries]
     },
 
     chartOptions() {
       const seriesColors = this.chartSeries.map(s =>
-        this.timeBucketColors[s.name] || '#FFFFFF'
+        s.name === 'Placeholder' ? 'transparent' : (this.timeBucketColors[s.name] || this.timeBucketColors.Other)
       )
 
       return {
@@ -193,10 +194,16 @@ export default {
           opacity: 0.8
         },
         xaxis: {
-          type: 'category',
-          categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          type: 'numeric',
+          min: -0.5,
+          max: 6.5,
+          tickAmount: 7,
           labels: {
             rotate: 0,
+            formatter: (val) => {
+              const idx = Math.round(val)
+              return this.weekdays[idx] || ''
+            },
             style: {
               fontSize: '12px'
             }
@@ -233,14 +240,17 @@ export default {
           enabled: this.filteredJobs.length > 0,
           custom: ({ seriesIndex, dataPointIndex, w }) => {
             const point = w.config.series[seriesIndex].data[dataPointIndex]
+            const seriesName = w.config.series[seriesIndex].name
 
-            if (!point || point.y === 0) return ''
+            // Don't show tooltip for placeholder series
+            if (seriesName === 'Placeholder' || !point || point[1] === null || point[1] === 0) return ''
 
-            const dayName = point.x
-            const totalEarnings = point.y
-            const totalDuration = point.z
-            const jobCount = point.jobCount || 1
-            const bucketName = w.config.series[seriesIndex].name
+            const dayIndex = Math.round(point[0])
+            const dayName = this.weekdays[dayIndex]
+            const totalEarnings = point[1]
+            const totalDuration = point[2]
+            const jobCount = point[3] || 1
+            const bucketName = seriesName
 
             return `
               <div class="tooltip-box">
