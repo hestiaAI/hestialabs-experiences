@@ -323,6 +323,23 @@ export default {
     }
   },
 
+  watch: {
+    currentPeriod(newVal) {
+      if (!this.latestJobDate) return
+
+      if (newVal === 'month') {
+        this.currentWeekStart = this.latestJobDate.startOf('month')
+        return
+      }
+
+      if (newVal === 'total') {
+        return
+      }
+
+      this.currentWeekStart = this.getMondayOf(this.latestJobDate)
+    }
+  },
+
   mounted() {
     if (!this.latestJobDate) return
 
