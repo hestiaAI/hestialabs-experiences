@@ -144,24 +144,31 @@ export default {
         seriesMap[b] = { name: b, data: [] }
       })
 
+      // Add data for each time bucket
       Object.entries(this.aggregatedData).forEach(([dayName, buckets]) => {
-        const dayIndex = this.weekdays.indexOf(dayName) + 1
         Object.entries(buckets).forEach(([bucket, metrics]) => {
           const series = seriesMap[bucket] || seriesMap.Other
-          series.data.push([
-            dayIndex,
-            parseFloat(metrics.totalEarnings.toFixed(2)),
-            parseFloat(metrics.totalDuration.toFixed(1)),
-            { jobCount: metrics.count }
-          ])
+          series.data.push({
+            x: dayName,
+            y: parseFloat(metrics.totalEarnings.toFixed(2)),
+            z: parseFloat(metrics.totalDuration.toFixed(1)),
+            jobCount: metrics.count
+          })
         })
       })
 
       const filteredSeries = bucketKeys.map(k => seriesMap[k]).filter(s => s && s.data.length > 0)
 
-      // If no data, return empty series to show empty chart
+      // If no data, create a placeholder series with all days but no visible bubbles
       if (filteredSeries.length === 0) {
-        return [{ name: 'No Data', data: [] }]
+        return [{
+          name: 'Placeholder',
+          data: this.weekdays.map(day => ({
+            x: day,
+            y: 0,
+            z: 0
+          }))
+        }]
       }
 
       return filteredSeries
@@ -169,7 +176,7 @@ export default {
 
     chartOptions() {
       const seriesColors = this.chartSeries.map(s =>
-        this.timeBucketColors[s.name] || this.timeBucketColors.Other
+        this.timeBucketColors[s.name] || '#FFFFFF'
       )
 
       return {
@@ -186,41 +193,53 @@ export default {
           opacity: 0.8
         },
         xaxis: {
-          tickAmount: 7,
-          categories: ['', ...this.weekdays, ''],
+          type: 'category',
+          categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
           labels: {
-            formatter: (val) => {
-              if (val === '') return ''
-              const idx = parseInt(val) - 1
-              return this.weekdays[idx] || ''
+            rotate: 0,
+            style: {
+              fontSize: '12px'
             }
           },
-          min: 0.5,
-          max: 7.5
+          axisBorder: {
+            show: true
+          },
+          axisTicks: {
+            show: true
+          }
         },
         yaxis: {
           title: {
             text: `Earnings (${this.currency})`
           },
-          min: 0
+          min: 0,
+          forceNiceScale: true
+        },
+        grid: {
+          show: true,
+          xaxis: {
+            lines: {
+              show: true
+            }
+          }
         },
         plotOptions: {
           bubble: {
-            maxBubbleRadius: 40
+            maxBubbleRadius: 40,
+            minBubbleRadius: 5
           }
         },
         tooltip: {
+          enabled: this.filteredJobs.length > 0,
           custom: ({ seriesIndex, dataPointIndex, w }) => {
-            const data = w.config.series[seriesIndex].data[dataPointIndex]
+            const point = w.config.series[seriesIndex].data[dataPointIndex]
 
-            if (!data) return ''
+            if (!point || point.y === 0) return ''
 
-            const dayIndex = data[0]
-            const totalEarnings = data[1]
-            const totalDuration = data[2]
-            const jobCount = data[3]?.jobCount || 1
-
-            const dayName = this.weekdays[dayIndex - 1]
+            const dayName = point.x
+            const totalEarnings = point.y
+            const totalDuration = point.z
+            const jobCount = point.jobCount || 1
             const bucketName = w.config.series[seriesIndex].name
 
             return `
