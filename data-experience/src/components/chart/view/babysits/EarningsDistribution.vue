@@ -76,6 +76,15 @@ export default {
       return this.currentWeekStart.add(6, 'day').endOf('day')
     },
 
+    latestJobDate() {
+      if (!this.jobs.length) return null
+
+      return this.jobs
+        .map(j => dayjs(j.date))
+        .filter(d => d.isValid())
+        .sort((a, b) => b.valueOf() - a.valueOf())[0]
+    },
+
     weekLabel() {
       const s = this.weekStart
       const e = this.weekEnd
@@ -200,12 +209,15 @@ export default {
           tickAmount: 7,
           labels: {
             rotate: 0,
+            offsetX: 20,
+            offsetY: 0,
             formatter: (val) => {
               const idx = Math.round(val)
               return this.weekdays[idx] || ''
             },
             style: {
-              fontSize: '12px'
+              fontSize: '12px',
+              textAnchor: 'middle'
             }
           },
           axisBorder: {
@@ -285,6 +297,12 @@ export default {
         }, 0)
         return { name: type, label: type, color: this.timeBucketColors[type], count }
       }).filter(item => item.count > 0)
+    }
+  },
+
+  mounted() {
+    if (this.latestJobDate) {
+      this.currentWeekStart = this.getMondayOf(this.latestJobDate)
     }
   },
 
