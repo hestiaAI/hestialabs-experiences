@@ -1,16 +1,15 @@
 <template>
   <div class="layout-container">
+    <div class="week-nav">
+      <button class="nav-btn" @click="prevWeek">←</button>
+      <div class="week-label">{{ weekLabel }}</div>
+      <button class="nav-btn" @click="nextWeek">→</button>
+    </div>
 
     <!-- BOX 2 → Bubble Chart -->
     <div class="box box2">
       <div class="header-controls">
         <h2 class="chart-title">Earnings Distribution</h2>
-
-        <div class="week-nav">
-          <button class="nav-btn" @click="prevWeek">←</button>
-          <div class="week-label">{{ weekLabel }}</div>
-          <button class="nav-btn" @click="nextWeek">→</button>
-        </div>
       </div>
 
       <div class="chart-wrapper">
@@ -75,6 +74,15 @@ export default {
 
     weekEnd() {
       return this.currentWeekStart.add(6, 'day').endOf('day')
+    },
+
+    latestJobDate() {
+      if (!this.jobs.length) return null
+
+      return this.jobs
+        .map(j => dayjs(j.date))
+        .filter(d => d.isValid())
+        .sort((a, b) => b.valueOf() - a.valueOf())[0]
     },
 
     weekLabel() {
@@ -145,32 +153,40 @@ export default {
         seriesMap[b] = { name: b, data: [] }
       })
 
+      // Add data for each time bucket - using numeric day index (0-6)
       Object.entries(this.aggregatedData).forEach(([dayName, buckets]) => {
-        const dayIndex = this.weekdays.indexOf(dayName) + 1
+        const dayIndex = this.weekdays.indexOf(dayName)
         Object.entries(buckets).forEach(([bucket, metrics]) => {
           const series = seriesMap[bucket] || seriesMap.Other
           series.data.push([
             dayIndex,
             parseFloat(metrics.totalEarnings.toFixed(2)),
             parseFloat(metrics.totalDuration.toFixed(1)),
-            { jobCount: metrics.count }
+            metrics.count
           ])
         })
       })
 
       const filteredSeries = bucketKeys.map(k => seriesMap[k]).filter(s => s && s.data.length > 0)
 
-      // If no data, return empty series to show empty chart
-      if (filteredSeries.length === 0) {
-        return [{ name: 'No Data', data: [] }]
+      // Always add a hidden placeholder series to ensure all days are shown
+      const placeholderSeries = {
+        name: 'Placeholder',
+        data: this.weekdays.map((day, idx) => [idx, null, 0])
       }
 
-      return filteredSeries
+      // If no data, return only placeholder
+      if (filteredSeries.length === 0) {
+        return [placeholderSeries]
+      }
+
+      // If there is data, add placeholder at the end to ensure all days show
+      return [...filteredSeries, placeholderSeries]
     },
 
     chartOptions() {
       const seriesColors = this.chartSeries.map(s =>
-        this.timeBucketColors[s.name] || this.timeBucketColors.Other
+        s.name === 'Placeholder' ? 'transparent' : (this.timeBucketColors[s.name] || this.timeBucketColors.Other)
       )
 
       return {
@@ -187,42 +203,66 @@ export default {
           opacity: 0.8
         },
         xaxis: {
+          type: 'numeric',
+          min: -0.5,
+          max: 6.5,
           tickAmount: 7,
-          categories: ['', ...this.weekdays, ''],
           labels: {
+            rotate: 0,
+            offsetX: 20,
+            offsetY: 0,
             formatter: (val) => {
-              if (val === '') return ''
-              const idx = parseInt(val) - 1
+              const idx = Math.round(val)
               return this.weekdays[idx] || ''
+            },
+            style: {
+              fontSize: '12px',
+              textAnchor: 'middle'
             }
           },
-          min: 0.5,
-          max: 7.5
+          axisBorder: {
+            show: true
+          },
+          axisTicks: {
+            show: true
+          }
         },
         yaxis: {
           title: {
             text: `Earnings (${this.currency})`
           },
-          min: 0
+          min: 0,
+          forceNiceScale: true
+        },
+        grid: {
+          show: true,
+          xaxis: {
+            lines: {
+              show: true
+            }
+          }
         },
         plotOptions: {
           bubble: {
-            maxBubbleRadius: 40
+            maxBubbleRadius: 40,
+            minBubbleRadius: 5
           }
         },
         tooltip: {
+          enabled: this.filteredJobs.length > 0,
           custom: ({ seriesIndex, dataPointIndex, w }) => {
-            const data = w.config.series[seriesIndex].data[dataPointIndex]
+            const point = w.config.series[seriesIndex].data[dataPointIndex]
+            const seriesName = w.config.series[seriesIndex].name
 
-            if (!data) return ''
+            // Don't show tooltip for placeholder series
+            if (seriesName === 'Placeholder' || !point || point[1] === null || point[1] === 0) return ''
 
-            const dayIndex = data[0]
-            const totalEarnings = data[1]
-            const totalDuration = data[2]
-            const jobCount = data[3]?.jobCount || 1
-
-            const dayName = this.weekdays[dayIndex - 1]
-            const bucketName = w.config.series[seriesIndex].name
+            const dayIndex = Math.round(point[0])
+            const dayName = this.weekdays[dayIndex]
+            const totalEarnings = point[1]
+            const totalDuration = point[2]
+            const jobCount = point[3] || 1
+            const bucketName = seriesName
 
             return `
               <div class="tooltip-box">
@@ -257,6 +297,12 @@ export default {
         }, 0)
         return { name: type, label: type, color: this.timeBucketColors[type], count }
       }).filter(item => item.count > 0)
+    }
+  },
+
+  mounted() {
+    if (this.latestJobDate) {
+      this.currentWeekStart = this.getMondayOf(this.latestJobDate)
     }
   },
 
@@ -346,6 +392,7 @@ export default {
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
+  margin-bottom: 12px;
 }
 
 .nav-btn {
