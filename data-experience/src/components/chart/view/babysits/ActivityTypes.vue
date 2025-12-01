@@ -1,5 +1,16 @@
 <template>
   <div class="layout-container">
+    <div class="period-switch">
+      <button
+        v-for="p in ['week','month','total']"
+        :key="p"
+        :class="['switch-btn', { active: currentPeriod === p }]"
+        @click="currentPeriod = p"
+      >
+        {{ p.toUpperCase() }}
+      </button>
+    </div>
+
     <div class="week-nav">
       <button class="nav-btn" @click="prevWeek">←</button>
       <div class="week-label">{{ weekLabel }}</div>
@@ -59,7 +70,8 @@ export default {
   data() {
     return {
       selectedJobType: '',
-      currentWeekStart: this.getMondayOf(dayjs())
+      currentWeekStart: this.getMondayOf(dayjs()),
+      currentPeriod: 'week'
     }
   },
 
@@ -77,22 +89,32 @@ export default {
         jobs = jobs.filter(j => j.job_type === this.selectedJobType)
       }
 
-      return jobs.filter((j) => {
-        if (!j.date) return false
-        const d = dayjs(j.date)
-        return d.isBetween(this.weekStart, this.weekEnd, 'day', '[]')
-      })
+      if (this.currentPeriod === 'total') {
+        return jobs
+      }
+
+      if (this.currentPeriod === 'month') {
+        const mStart = this.currentWeekStart.startOf('month')
+        const mEnd = this.currentWeekStart.endOf('month')
+        return jobs.filter(j => j.date && dayjs(j.date).isBetween(mStart, mEnd, 'day', '[]'))
+      }
+
+      return jobs.filter(j => j.date && dayjs(j.date).isBetween(this.weekStart, this.weekEnd, 'day', '[]'))
     },
 
     weekStart() {
+      if (this.currentPeriod === 'month') return this.currentWeekStart.startOf('month')
       return this.currentWeekStart
     },
 
     weekEnd() {
+      if (this.currentPeriod === 'month') return this.currentWeekStart.endOf('month')
       return this.currentWeekStart.add(6, 'day').endOf('day')
     },
 
     weekLabel() {
+      if (this.currentPeriod === 'total') return 'All time'
+      if (this.currentPeriod === 'month') return this.weekStart.format('MMMM YYYY')
       return `${this.weekStart.format('DD.MM')} - ${this.weekEnd.format('DD.MM.YYYY')}`
     },
 
@@ -258,18 +280,42 @@ export default {
     }
   },
 
+  watch: {
+    currentPeriod(newVal) {
+      if (!this.latestJobDate) return
+
+      if (newVal === 'month') {
+        this.currentWeekStart = this.latestJobDate.startOf('month')
+      } else if (newVal === 'week') {
+        this.currentWeekStart = this.getMondayOf(this.latestJobDate)
+      }
+    }
+  },
+
   mounted() {
-    if (this.latestJobDate) {
+    if (!this.latestJobDate) return
+
+    if (this.currentPeriod === 'month') {
+      this.currentWeekStart = this.latestJobDate.startOf('month')
+    } else {
       this.currentWeekStart = this.getMondayOf(this.latestJobDate)
     }
   },
 
   methods: {
     prevWeek() {
-      this.currentWeekStart = this.currentWeekStart.subtract(7, 'day')
+      if (this.currentPeriod === 'month') {
+        this.currentWeekStart = this.currentWeekStart.subtract(1, 'month')
+      } else if (this.currentPeriod === 'week') {
+        this.currentWeekStart = this.currentWeekStart.subtract(7, 'day')
+      }
     },
     nextWeek() {
-      this.currentWeekStart = this.currentWeekStart.add(7, 'day')
+      if (this.currentPeriod === 'month') {
+        this.currentWeekStart = this.currentWeekStart.add(1, 'month')
+      } else if (this.currentPeriod === 'week') {
+        this.currentWeekStart = this.currentWeekStart.add(7, 'day')
+      }
     },
     getMondayOf(d) {
       const day = d.day()
@@ -411,5 +457,32 @@ export default {
   font-weight: 700;
   color: #333;
   font-size: 1rem;
+}
+
+.period-switch {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  position: absolute;
+  display: flex;
+  gap: 6px;
+}
+
+.switch-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  background: #e0e0e0;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.switch-btn.active {
+  background: #bcbcbc;
+  font-weight: 700;
+}
+
+.switch-btn:hover {
+  background: #d2d2d2;
 }
 </style>
