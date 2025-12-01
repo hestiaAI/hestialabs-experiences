@@ -1,9 +1,4 @@
 import type { FileManager } from '@/types/utils'
-import keplerConfig from './kepler-config'
-
-let periodStart = "2025-03-24";
-let periodEnd = "2025-03-30";
-let initialMode = "week";
 
 async function combined_data_pipeline({ fileManager }: { fileManager: FileManager }) {
   // Get driver online/offline
@@ -43,7 +38,6 @@ async function combined_data_pipeline({ fileManager }: { fileManager: FileManage
         online: { headers: ["begin", "end", "hours"], items: onlineItems },
         payments,
         trips,
-        props: { periodStart, periodEnd, initialMode }
       }
     ]
   };
@@ -94,7 +88,6 @@ async function csv_courier_trips({ fileManager }: { fileManager: FileManager }) 
     items: [
       {
         trips: csv,
-        props: { periodStart, periodEnd, initialMode }
       }
     ]
   };
