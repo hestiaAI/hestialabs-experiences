@@ -1,49 +1,72 @@
 <template>
   <div class="layout">
-    <!-- LEFT SIDE — Kepler Map -->
-    <div class="map-div">
-      <h3>Map of Routes</h3>
-      <UnitKepler
-        ref="keplerRef"
-        class="map-frame"
-        :args="keplerArgs"
-      />
+    <div class="controls-bar">
+      <div class="period-switch">
+        <button
+          v-for="p in ['week', 'month', 'total']"
+          :key="p"
+          :class="['switch-btn', { active: mode === p }]"
+          @click="setPeriodMode(p)"
+        >
+          {{ p.toUpperCase() }}
+        </button>
+      </div>
+
+      <div class="week-nav">
+        <button class="nav-btn" @click="prevPeriod">←</button>
+        <div class="week-label">
+          {{ periodLabel }}
+        </div>
+        <button class="nav-btn" @click="nextPeriod">→</button>
+      </div>
     </div>
 
-    <!-- RIGHT SIDE — Selected Trips -->
-    <div class="selected-routes">
-      <h3>Selected Routes</h3>
+    <div class="content-area">
+      <!-- LEFT SIDE — Kepler Map -->
+      <div class="map-div">
+        <h3>Map of Routes</h3>
+        <UnitKepler
+          ref="keplerRef"
+          class="map-frame"
+          :args="keplerArgs"
+        />
+      </div>
 
-      <div class="trip-list">
-        <div
-          v-for="(trip, index) in tripsFiltered"
-          :key="index"
-          class="trip-item"
-          @click="selectTrip(trip)"
-        >
-          <div class="trip-header">
-            <strong>
-              {{ trip.cityName || 'Unknown City' }} —
-              {{ formatDate(trip.courierAcceptTimestampLocal) }}
-            </strong>
-          </div>
+      <!-- RIGHT SIDE — Selected Trips -->
+      <div class="selected-routes">
+        <h3>Selected Routes</h3>
 
-          <div class="trip-info">
-            <div class="info-row">
-              <span class="label">Start</span>
-              <span class="value">{{ formatTime(trip.courierAcceptTimestampLocal) }}</span>
+        <div class="trip-list">
+          <div
+            v-for="(trip, index) in tripsFiltered"
+            :key="index"
+            class="trip-item"
+            @click="selectTrip(trip)"
+          >
+            <div class="trip-header">
+              <strong>
+                {{ trip.cityName || 'Unknown City' }} —
+                {{ formatDate(trip.courierAcceptTimestampLocal) }}
+              </strong>
             </div>
-            <div class="info-row">
-              <span class="label">End</span>
-              <span class="value">{{ formatTime(trip.courierDropoffTimestampLocal) }}</span>
-            </div>
-            <div class="info-row">
-              <span class="label">Distance</span>
-              <span class="value">{{ trip.dropoffDeliveryDistanceKm }} km</span>
-            </div>
-            <div class="info-row">
-              <span class="label">Status</span>
-              <span class="value">{{ trip.deliveryStatus }}</span>
+
+            <div class="trip-info">
+              <div class="info-row">
+                <span class="label">Start</span>
+                <span class="value">{{ formatTime(trip.courierAcceptTimestampLocal) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">End</span>
+                <span class="value">{{ formatTime(trip.courierDropoffTimestampLocal) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Distance</span>
+                <span class="value">{{ trip.dropoffDeliveryDistanceKm }} km</span>
+              </div>
+              <div class="info-row">
+                <span class="label">Status</span>
+                <span class="value">{{ trip.deliveryStatus }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -59,6 +82,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import keplerConfigPoints from './kepler_config_points.js'
 import mixin from '@/components/chart/view/mixin'
+import { periodStore } from './store/periodStore'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
@@ -93,12 +117,21 @@ export default {
       return this.pipelineBlock.trips?.items ?? []
     },
 
+    periodLabel() {
+      if (periodStore.mode === 'total') return 'All time'
+      if (periodStore.mode === 'month') return this.periodStart.format('MMMM YYYY')
+      return `${this.periodStart.format('DD.MM.YYYY')} – ${this.periodEnd.format('DD.MM.YYYY')}`
+    },
+    mode: {
+      get() { return periodStore.mode },
+      set(v) { periodStore.mode = v }
+    },
     // Period metadata
     periodStart() {
-      return this.pipelineBlock.props?.periodStart
+      return dayjs(periodStore.periodStart)
     },
     periodEnd() {
-      return this.pipelineBlock.props?.periodEnd
+      return dayjs(periodStore.periodEnd)
     },
     tripsFiltered() {
       const filtered = this.trips.filter((t) => {
@@ -152,7 +185,7 @@ export default {
   watch: {
     keplerData: {
       handler(newData) {
-        this.callIframeFunction('update', {
+        this.keplerRef?.callIframeFunction('update', {
           keplerData: newData,
           config: keplerConfigPoints,
           mapboxToken: this.mapboxToken
@@ -165,6 +198,42 @@ export default {
     this.keplerRef = this.$refs.keplerRef
   },
   methods: {
+    setPeriodMode(mode) {
+      periodStore.setMode(mode)
+      if (mode === 'week') {
+        const monday = dayjs(periodStore.periodStart).startOf('week').add(1, 'day')
+        const sunday = monday.add(6, 'day').endOf('day')
+        periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
+      } else if (mode === 'month') {
+        const start = dayjs(periodStore.periodStart).startOf('month')
+        const end = start.endOf('month')
+        periodStore.setPeriod(start.toISOString(), end.toISOString())
+      } else if (mode === 'total') {
+        periodStore.setPeriod(null, null)
+      }
+    },
+    prevPeriod() {
+      if (periodStore.mode === 'week') {
+        const newStart = this.periodStart.subtract(7, 'day')
+        const newEnd = newStart.add(6, 'day').endOf('day')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+      } else if (periodStore.mode === 'month') {
+        const newStart = this.periodStart.subtract(1, 'month').startOf('month')
+        const newEnd = newStart.endOf('month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+      }
+    },
+    nextPeriod() {
+      if (periodStore.mode === 'week') {
+        const newStart = this.periodStart.add(7, 'day')
+        const newEnd = newStart.add(6, 'day').endOf('day')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+      } else if (periodStore.mode === 'month') {
+        const newStart = this.periodStart.add(1, 'month').startOf('month')
+        const newEnd = newStart.endOf('month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+      }
+    },
     formatTime(timestamp) {
       if (!timestamp) return '-'
       return dayjs(timestamp).format('HH:mm:ss')
@@ -210,10 +279,73 @@ export default {
 <style scoped>
 .layout {
   display: flex;
+  flex-direction: column;
   width: 95%;
-  height: 56vh;
-  overflow: hidden;
   margin: 16px 0px 0px 16px;
+  position: relative;
+}
+
+.controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 12px;
+}
+
+.period-switch {
+  display: flex;
+  gap: 6px;
+}
+
+.switch-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  background: #e0e0e0;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.switch-btn.active {
+  background: #bcbcbc;
+  font-weight: 700;
+}
+
+.switch-btn:hover {
+  background: #d2d2d2;
+}
+
+.week-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  background: white;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+
+.nav-btn:hover {
+  background: #f3f3f3;
+}
+
+.week-label {
+  font-weight: 700;
+  color: #333;
+  font-size: 1rem;
+}
+
+.content-area {
+  display: flex;
+  flex: 1;
 }
 
 .map-div {
@@ -223,6 +355,10 @@ export default {
   border-radius: 10px;
   margin-right: 16px;
   padding: 16px;
+}
+
+.map-div, .selected-routes {
+  max-height: 62vh;
 }
 
 .selected-routes {

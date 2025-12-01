@@ -1,5 +1,21 @@
 <template>
   <div class="layout-container">
+    <div class="period-switch">
+      <button
+        v-for="p in ['week', 'month', 'total']"
+        :key="p"
+        :class="['switch-btn', { active: mode === p }]"
+        @click="setPeriodMode(p)"
+      >
+        {{ p.toUpperCase() }}
+      </button>
+    </div>
+
+    <div class="week-nav">
+      <button class="nav-btn" @click="prevPeriod">←</button>
+      <div class="week-label">{{ periodLabel }}</div>
+      <button class="nav-btn" @click="nextPeriod">→</button>
+    </div>
 
     <!-- BOX 1 → Top full width stats -->
     <div class="box box1">
@@ -21,20 +37,25 @@
 
     <!-- BOX 2 → Timeline chart -->
     <div class="box box2">
-      <div class="chart-controls">
-        <VBtn small depressed :class="{ active: mode === 'week' }" @click="setMode('week')">Week</VBtn>
-        <VBtn small depressed :class="{ active: mode === 'month' }" @click="setMode('month')">Month</VBtn>
-      </div>
-
       <div v-if="mode === 'week'" class="timeline-wrapper">
         <svg ref="svg" class="timeline-svg"></svg>
       </div>
 
-      <div v-else class="calendar-placeholder">
-        <p><strong>Monthly Overview (not implemented)</strong></p>
+      <div v-else-if="mode === 'month'">
+        <MonthlyCalendar
+          :year="calendarYear"
+          :month="calendarMonth"
+          :shifts="shiftsThisPeriod"
+          :payments="paymentsInRange"
+          @select-day="onSelectDay"
+        />
       </div>
 
-      <div class="legend">
+      <div v-else class="calendar-placeholder">
+        <p><strong>All-time view not implemented</strong></p>
+      </div>
+
+      <div class="legend" v-if="mode === 'week'">
         <div class="legend-item"><span class="color-box offline"></span> Offline</div>
         <div class="legend-item"><span class="color-box open"></span> Open</div>
         <div class="legend-item"><span class="color-box enroute"></span> Enroute</div>
@@ -61,9 +82,12 @@
 <script>
 import * as d3 from 'd3'
 import dayjs from 'dayjs'
+import { watch } from 'vue'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
+import MonthlyCalendar from './MonthlyCalendar.vue'
 import mixin from '@/components/chart/view/mixin'
+import { periodStore } from './store/periodStore'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
@@ -75,20 +99,44 @@ dayjs.extend(isSameOrBefore)
  */
 export default {
   name: 'OverView',
+  components: { MonthlyCalendar },
   mixins: [mixin],
-  props: {
-    periodStart: { type: String, required: false },
-    periodEnd: { type: String, required: false },
-    initialMode: { type: String, default: 'week' }
-  },
   data() {
     return {
-      mode: this.initialMode,
       svgSize: { width: 800, height: 450 },
       resizeObserver: null
     }
   },
   computed: {
+    mode: {
+      get() { return periodStore.mode },
+      set(v) { periodStore.mode = v }
+    },
+
+    periodStart() {
+      return dayjs(periodStore.periodStart)
+    },
+
+    periodEnd() {
+      return dayjs(periodStore.periodEnd)
+    },
+
+    calendarYear() {
+      return this.periodStart.year()
+    },
+    calendarMonth() {
+      return this.periodStart.month() // 0–11
+    },
+
+    periodLabel() {
+      if (this.mode === 'total') return 'All time'
+      if (this.mode === 'month') {
+        return this.periodStart.format('MMMM YYYY')
+      }
+
+      return `${this.periodStart.format('DD.MM')} – ${this.periodEnd.format('DD.MM.YYYY')}`
+    },
+
     // block is the wrapper object from the combined pipeline
     block() {
       return this.values?.[0] ?? {}
@@ -132,7 +180,7 @@ export default {
 
     // total hours from shifts (skip offline)
     totalHours() {
-      const minutes = this.shiftsThisWeek.reduce((sum, s) => {
+      const minutes = this.shiftsThisPeriod.reduce((sum, s) => {
         if (!s.begin_timestamp_utc || !s.end_timestamp_utc) return sum
         if (s.earner_state === 'offline') return sum
         const start = dayjs(s.begin_timestamp_utc)
@@ -157,13 +205,13 @@ export default {
 
     // Complete distance summed up
     totalDistance() {
-      const km = this.tripsParsed.reduce((sum, t) => sum + (Number(t.dropoffDeliveryDistanceKm) || 0), 0)
+      const km = this.tripsInPeriod.reduce((sum, t) => sum + (Number(t.dropoffDeliveryDistanceKm) || 0), 0)
       return km.toFixed(2)
     },
 
     // Average time per delivery calculated
     avgDeliveryTimeFormatted() {
-      const trips = this.tripsParsed
+      const trips = this.tripsInPeriod
       if (!trips.length) return '0 min'
       const totalMinutes = trips.reduce((sum, t) => {
         const start = dayjs(t.courierBegintripTimestampLocal)
@@ -198,8 +246,8 @@ export default {
 
     // Determine the week period (start = Monday)
     periodRange() {
-      const startStr = this.block?.props?.periodStart ?? this.periodStart
-      const endStr = this.block?.props?.periodEnd ?? this.periodEnd
+      const startStr = periodStore.periodStart
+      const endStr = periodStore.periodEnd
 
       if (startStr && endStr) {
         return { start: dayjs(startStr), end: dayjs(endStr) }
@@ -213,8 +261,8 @@ export default {
       return { start, end }
     },
 
-    // Shifts filtered for the week & split overnight
-    shiftsThisWeek() {
+    // Shifts filtered for the time period & split overnight
+    shiftsThisPeriod() {
       const res = []
       const { start, end } = this.periodRange
       this.itemsComputed.forEach((s) => {
@@ -256,6 +304,22 @@ export default {
     }
   },
   mounted() {
+    periodStore.initFromTrips(this.tripsParsed)
+
+    watch(
+      () => periodStore.periodStart,
+      () => {
+        this.redraw()
+      }
+    )
+
+    watch(
+      () => periodStore.periodEnd,
+      () => {
+        this.redraw()
+      }
+    )
+
     // initial draw
     this.redraw()
 
@@ -266,10 +330,70 @@ export default {
     window.removeEventListener('resize', this.onResize)
   },
   methods: {
-    setMode(m) {
-      this.mode = m
-      // redraw if switching to week
-      if (m === 'week') this.drawChart()
+    onSelectDay(date) {
+      periodStore.setMode('week')
+
+      // 2. Compute the Monday–Sunday of that date
+      const clicked = dayjs(date)
+      const monday = clicked.startOf('week').add(1, 'day') // Monday
+      const sunday = monday.add(6, 'day').endOf('day')
+
+      // 3. Update the store
+      periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
+
+      // Optional: redraw chart immediately
+      this.redraw()
+    },
+
+    setPeriodMode(mode) {
+      periodStore.setMode(mode)
+
+      if (mode === 'total') return
+
+      if (mode === 'month') {
+        const start = this.periodStart.startOf('month')
+        const end = this.periodStart.endOf('month')
+        periodStore.setPeriod(start.toISOString(), end.toISOString())
+        return
+      }
+
+      // week mode
+      const monday = this.periodStart.startOf('week').add(1, 'day')
+      const sunday = monday.add(6, 'day').endOf('day')
+
+      periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
+    },
+
+    prevPeriod() {
+      if (this.mode === 'total') return
+
+      if (this.mode === 'month') {
+        const newStart = this.periodStart.subtract(1, 'month').startOf('month')
+        const newEnd = newStart.endOf('month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+        return
+      }
+
+      // week mode
+      const newStart = this.periodStart.subtract(7, 'day')
+      const newEnd = newStart.add(6, 'day').endOf('day')
+      periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+    },
+
+    nextPeriod() {
+      if (this.mode === 'total') return
+
+      if (this.mode === 'month') {
+        const newStart = this.periodStart.add(1, 'month').startOf('month')
+        const newEnd = newStart.endOf('month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+        return
+      }
+
+      // week mode
+      const newStart = this.periodStart.add(7, 'day')
+      const newEnd = newStart.add(6, 'day').endOf('day')
+      periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
     },
 
     filterByPeriod(items, getDateFn) {
@@ -305,7 +429,7 @@ export default {
 
       const container = this.$refs.svg.parentElement
       const width = container.getBoundingClientRect().width
-      const height = 360
+      const height = 400
       this.svgSize = { width, height }
       svg.attr('width', width).attr('height', height)
 
@@ -342,7 +466,7 @@ export default {
         .text(d => d)
 
       // Prepare shifts grouped by weekday index
-      const shifts = this.shiftsThisWeek.map((s) => {
+      const shifts = this.shiftsThisPeriod.map((s) => {
         const start = dayjs(s.begin_timestamp_utc)
         const end = dayjs(s.end_timestamp_utc)
         const dow = start.day() === 0 ? 6 : start.day() - 1 // Mon=0..Sun=6
@@ -438,10 +562,68 @@ export default {
 .layout-container {
   display: grid;
   width: 94%;
-  grid-template-rows: 20% 1fr;
+  grid-template-rows: auto 16% 1fr;
   grid-template-columns: 70% 1fr;
   gap: 16px;
   margin-left: 16px;
+  margin-bottom: 24px;
+}
+
+.period-switch {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  position: absolute;
+  display: flex;
+  gap: 6px;
+}
+
+.switch-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  background: #e0e0e0;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.switch-btn.active {
+  background: #bcbcbc;
+  font-weight: 700;
+}
+
+.switch-btn:hover {
+  background: #d2d2d2;
+}
+
+.week-nav {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.nav-btn {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  background: white;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1rem;
+}
+
+.nav-btn:hover {
+  background: #f3f3f3;
+}
+
+.week-label {
+  font-weight: 700;
+  color: #333;
+  font-size: 1rem;
 }
 
 /* Base box style */
@@ -456,7 +638,7 @@ export default {
 /* TOP BAR */
 .box1 {
   grid-column: 1 / 3;
-  grid-row: 1 / 2;
+  grid-row: 2 / 3;
 
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -467,20 +649,10 @@ export default {
 /* TIMELINE CHART (bottom left) */
 .box2 {
   grid-column: 1 / 2;
-  grid-row: 2 / 3;
+  grid-row: 3 / 4;
   display: flex;
   flex-direction: column;
-  padding-bottom: 30px;
-}
-
-.timeline-wrapper {
-  width: 100%;
-  height: 360px;
-}
-
-.timeline-svg {
-  width: 100%;
-  height: 100%;
+  padding-bottom: 16px;
 }
 
 .chart-controls {
@@ -492,7 +664,7 @@ export default {
 /* RIGHT COLUMN (bottom right) */
 .right-column {
   grid-column: 2 / 3;
-  grid-row: 2 / 3;
+  grid-row: 3 / 4;
 
   display: grid;
   grid-template-rows: 1fr 1fr;
