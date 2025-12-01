@@ -25,9 +25,10 @@
     },
     {
       "showTable": false,
-      "id": "genericLocationViewer",
-      "customPipeline": "genericLocationViewer",
-      "visualization": "ChartViewGenericLocationViewer.vue",
+      "id": "earnings",
+      "customPipeline": "combined_data_pipeline",
+      "files": ["DriverPayments"],
+      "visualization": "uberEats/Earnings.vue",
       "title": "Earnings",
       "text": "Earnings"
     }
