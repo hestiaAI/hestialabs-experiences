@@ -73,6 +73,33 @@ export default {
               thickness: 2
             }
           }
+        },
+        {
+          id: 'trip-radius-layer',
+          type: 'point',
+          config: {
+            dataId: 'trips',
+            label: 'Trip Radius',
+            columns: { lat: 'latitude', lng: 'longitude' },
+            isVisible: true,
+            enable3d: false,
+            visConfig: {
+              radius: 30,
+              fixedRadius: true,
+              radiusUnits: 'meters',
+              opacity: 0.3,
+              colorRange: { colors: ['#ff0000'] },
+              stroke: false,
+              filled: true,
+              enableHighlight: false,
+              hoverHighlightColor: [0, 0, 0, 0]
+            }
+          },
+          pickable: false,
+          visualChannels: {
+            sizeField: { name: 'radius', type: 'integer' },
+            sizeScale: 'linear'
+          }
         }
       ],
       interactionConfig: {
