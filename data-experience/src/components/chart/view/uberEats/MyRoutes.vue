@@ -103,7 +103,8 @@ export default {
   },
   data() {
     return {
-      keplerRef: null
+      keplerRef: null,
+      selectedTrip: null
     }
   },
   computed: {
@@ -142,6 +143,10 @@ export default {
       return filtered
     },
     keplerData() {
+      const trips = this.selectedTrip
+        ? [this.selectedTrip]
+        : this.tripsFiltered
+
       return {
         fields: [
           { name: 'latitude', type: 'real' },
@@ -150,9 +155,10 @@ export default {
           { name: 'fromLat', type: 'real' },
           { name: 'fromLng', type: 'real' },
           { name: 'toLat', type: 'real' },
-          { name: 'toLng', type: 'real' }
+          { name: 'toLng', type: 'real' },
+          { name: 'radius', type: 'real' }
         ],
-        rows: this.tripsFiltered.flatMap(t => [
+        rows: trips.flatMap(t => [
           [
             Number(t.courierAcceptTripLat),
             Number(t.courierAcceptTripLng),
@@ -160,7 +166,8 @@ export default {
             Number(t.courierAcceptTripLat),
             Number(t.courierAcceptTripLng),
             Number(t.courierBegintripLat),
-            Number(t.courierBegintripLng)
+            Number(t.courierBegintripLng),
+            0
           ],
           [
             Number(t.courierBegintripLat),
@@ -169,7 +176,8 @@ export default {
             Number(t.courierAcceptTripLat),
             Number(t.courierAcceptTripLng),
             Number(t.courierBegintripLat),
-            Number(t.courierBegintripLng)
+            Number(t.courierBegintripLng),
+            Number(t.dropoffDeliveryDistanceKm) * 1000 // radius in metres
           ]
         ])
       }
@@ -243,32 +251,9 @@ export default {
       return dayjs(timestamp).format('DD.MM.YY')
     },
     selectTrip(trip) {
-      const fields = this.keplerData.fields
-
-      const rows = [
-        [
-          Number(trip.courierAcceptTripLat),
-          Number(trip.courierAcceptTripLng),
-          'accept',
-          Number(trip.courierAcceptTripLat),
-          Number(trip.courierAcceptTripLng),
-          Number(trip.courierBegintripLat),
-          Number(trip.courierBegintripLng)
-        ],
-        [
-          Number(trip.courierBegintripLat),
-          Number(trip.courierBegintripLng),
-          'begin',
-          Number(trip.courierAcceptTripLat),
-          Number(trip.courierAcceptTripLng),
-          Number(trip.courierBegintripLat),
-          Number(trip.courierBegintripLng)
-        ]
-      ]
-
-      console.log(this.keplerRef)
+      this.selectedTrip = trip
       this.keplerRef?.callIframeFunction('update', {
-        keplerData: { fields, rows },
+        keplerData: this.keplerData,
         config: keplerConfigPoints
       })
     }
