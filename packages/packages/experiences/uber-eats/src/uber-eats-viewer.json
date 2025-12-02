@@ -13,7 +13,8 @@
       "customPipeline": "combined_data_pipeline",
       "files": ["DriverOnlineOffline", "DriverPayments", "CourierLifetimeTripData"],
       "visualization": "uberEats/Overview.vue",
-      "title": "Overview"
+      "title": "Overview",
+      "text": ""
     },
     {
       "showTable": false,
@@ -21,16 +22,17 @@
       "customPipeline": "csv_courier_trips",
       "files": ["CourierLifetimeTripData"],
       "visualization": "uberEats/MyRoutes.vue",
-      "title": "My Routes"
+      "title": "My Routes",
+      "text": ""
     },
     {
       "showTable": false,
       "id": "earnings",
       "customPipeline": "combined_data_pipeline",
-      "files": ["DriverPayments"],
+      "files": ["DriverOnlineOffline", "DriverPayments", "CourierLifetimeTripData"],
       "visualization": "uberEats/Earnings.vue",
       "title": "Earnings",
-      "text": "Earnings"
+      "text": ""
     }
   ],
   "version": 1
