@@ -54,6 +54,7 @@
     "picomatch-browser": "^2.2.6",
     "read-excel-file": "^5.5.0",
     "share-api-polyfill": "^1.1.0",
+    "shepherd.js": "^14.5.1",
     "spark-md5": "^3.0.2",
     "type-analyzer": "^0.4.0",
     "util": "^0.12.4",

@@ -1,5 +1,16 @@
 <template>
   <div class="layout-container">
+    <div class="period-switch">
+      <button
+        v-for="p in ['week','month','total']"
+        :key="p"
+        :class="['switch-btn', { active: currentPeriod === p }]"
+        @click="currentPeriod = p"
+      >
+        {{ p.toUpperCase() }}
+      </button>
+    </div>
+
     <div class="week-nav">
       <button class="nav-btn" @click="prevWeek">←</button>
       <div class="week-label">{{ weekLabel }}</div>
@@ -12,7 +23,7 @@
         <h2 class="chart-title">Earnings Distribution</h2>
       </div>
 
-      <div class="chart-wrapper">
+      <div class="chart-wrapper" v-if="currentPeriod === 'week'">
         <ApexChart
           type="bubble"
           height="450"
@@ -32,8 +43,17 @@
         </div>
       </div>
 
-    </div>
+      <p
+        v-else-if="currentPeriod !== 'week'"
+        class="dev-placeholder"
+      >
+        Monthly and total charts are in development
+      </p>
 
+      <p v-else>
+        No job data found.
+      </p>
+    </div>
   </div>
 </template>
 
@@ -55,7 +75,8 @@ export default {
 
   data() {
     return {
-      currentWeekStart: this.getMondayOf(dayjs())
+      currentWeekStart: this.getMondayOf(dayjs()),
+      currentPeriod: 'week'
     }
   },
 
@@ -86,17 +107,31 @@ export default {
     },
 
     weekLabel() {
-      const s = this.weekStart
-      const e = this.weekEnd
-      return `${s.format('DD.MM')} - ${e.format('DD.MM.YYYY')}`
+      if (this.currentPeriod === 'total') return 'All time'
+      if (this.currentPeriod === 'month') return this.weekStart.format('MMMM YYYY')
+
+      return `${this.weekStart.format('DD.MM')} - ${this.weekEnd.format('DD.MM.YYYY')}`
     },
 
     filteredJobs() {
-      return this.jobs.filter((j) => {
-        if (!j.date || j.status === 'cancelled') return false
-        const d = dayjs(j.date)
-        return d.isBetween(this.weekStart, this.weekEnd, 'day', '[]')
-      })
+      const jobs = this.jobs.filter(j => j.status !== 'cancelled')
+
+      if (this.currentPeriod === 'total') {
+        return jobs
+      }
+
+      if (this.currentPeriod === 'month') {
+        const mStart = this.currentWeekStart.startOf('month')
+        const mEnd = this.currentWeekStart.endOf('month')
+
+        return jobs.filter(j =>
+          j.date && dayjs(j.date).isBetween(mStart, mEnd, 'day', '[]')
+        )
+      }
+
+      return jobs.filter(j =>
+        j.date && dayjs(j.date).isBetween(this.weekStart, this.weekEnd, 'day', '[]')
+      )
     },
 
     timeBucketColors() {
@@ -300,6 +335,18 @@ export default {
     }
   },
 
+  watch: {
+    currentPeriod(newVal) {
+      if (!this.latestJobDate) return
+
+      if (newVal === 'month') {
+        this.currentWeekStart = this.latestJobDate.startOf('month')
+      } else if (newVal === 'week') {
+        this.currentWeekStart = this.getMondayOf(this.latestJobDate)
+      }
+    }
+  },
+
   mounted() {
     if (this.latestJobDate) {
       this.currentWeekStart = this.getMondayOf(this.latestJobDate)
@@ -323,11 +370,19 @@ export default {
     },
 
     prevWeek() {
-      this.currentWeekStart = this.currentWeekStart.subtract(7, 'day')
+      if (this.currentPeriod === 'month') {
+        this.currentWeekStart = this.currentWeekStart.subtract(1, 'month')
+      } else if (this.currentPeriod === 'week') {
+        this.currentWeekStart = this.currentWeekStart.subtract(7, 'day')
+      }
     },
 
     nextWeek() {
-      this.currentWeekStart = this.currentWeekStart.add(7, 'day')
+      if (this.currentPeriod === 'month') {
+        this.currentWeekStart = this.currentWeekStart.add(1, 'month')
+      } else if (this.currentPeriod === 'week') {
+        this.currentWeekStart = this.currentWeekStart.add(7, 'day')
+      }
     }
   }
 }
@@ -461,5 +516,32 @@ export default {
 
 .tooltip-box strong {
   color: #333;
+}
+
+.period-switch {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  position: absolute;
+  display: flex;
+  gap: 6px;
+}
+
+.switch-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  background: #e0e0e0;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.switch-btn.active {
+  background: #bcbcbc;
+  font-weight: 700;
+}
+
+.switch-btn:hover {
+  background: #d2d2d2;
 }
 </style>
