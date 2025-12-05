@@ -37,11 +37,23 @@
         </div>
       </div>
 
+      <div
+        v-else-if="currentPeriod == 'month'"
+      >
+        <MonthlyCalendar
+          :year="calendarYear"
+          :month="calendarMonth"
+          :shifts="filteredJobs"
+          :payments="[]"
+          @select-day="onSelectDay"
+        />
+      </div>
+
       <p
-        v-else-if="currentPeriod !== 'week'"
+        v-else-if="currentPeriod == 'total'"
         class="dev-placeholder"
       >
-        Monthly and total charts are in development
+        Total chart is in development
       </p>
 
       <p v-else>No job data found.</p>
@@ -60,6 +72,7 @@
 </template>
 
 <script>
+import MonthlyCalendar from './MonthlyCalendar.vue'
 import mixin from '@/components/chart/view/mixin'
 import VueApexCharts from 'vue-apexcharts'
 import dayjs from 'dayjs'
@@ -71,7 +84,10 @@ dayjs.extend(weekday)
 
 export default {
   name: 'BabysitsActivityTypes',
-  components: { ApexChart: VueApexCharts },
+  components: {
+    ApexChart: VueApexCharts,
+    MonthlyCalendar
+  },
   mixins: [mixin],
 
   data() {
@@ -132,6 +148,13 @@ export default {
         .map(j => dayjs(j.date))
         .filter(d => d.isValid())
         .sort((a, b) => b.valueOf() - a.valueOf())[0]
+    },
+
+    calendarYear() {
+      return this.weekStart.year()
+    },
+    calendarMonth() {
+      return this.weekStart.month() // 0–11
     },
 
     // ---------- TOP STATS ----------
@@ -329,6 +352,9 @@ export default {
       return day === 0
         ? d.subtract(6, 'day').startOf('day')
         : d.subtract(day - 1, 'day').startOf('day')
+    },
+    onSelectDay(date) {
+      console.log('Selected day:', date)
     }
   }
 }
