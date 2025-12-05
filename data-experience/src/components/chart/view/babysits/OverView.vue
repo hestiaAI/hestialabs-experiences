@@ -55,8 +55,25 @@
         </div>
       </div>
 
-      <p v-else-if="currentPeriod !== 'week'" class="dev-placeholder">
-        Monthly and total charts are in development
+      <div v-else-if="currentPeriod == 'month'" class="dev-placeholder">
+        <MonthlyCalendar
+          :year="calendarYear"
+          :month="calendarMonth"
+          :shifts="shiftsThisPeriod"
+          :payments="paymentsInRange"
+          @select-day="onSelectDay"
+        />
+
+        <div class="legend mt-4">
+          <div v-for="item in statusItems" :key="item.name" class="legend-item">
+            <span class="legend-swatch" :style="{ background: item.color }" />
+            {{ item.label }} ({{ item.count }})
+          </div>
+        </div>
+      </div>
+
+      <p v-else-if="currentPeriod == 'total'" class="dev-placeholder">
+        Total chart is in development
       </p>
 
       <p v-else>No job data found.</p>
@@ -72,6 +89,7 @@
 </template>
 
 <script>
+import MonthlyCalendar from './MonthlyCalendar.vue'
 import mixin from '@/components/chart/view/mixin'
 import VueApexCharts from 'vue-apexcharts'
 import dayjs from 'dayjs'
@@ -83,7 +101,10 @@ dayjs.extend(weekday)
 
 export default {
   name: 'BabysitsShiftTimeline',
-  components: { ApexChart: VueApexCharts },
+  components: {
+    ApexChart: VueApexCharts,
+    MonthlyCalendar
+  },
   mixins: [mixin],
 
   data() {
@@ -96,6 +117,22 @@ export default {
   computed: {
     jobs() {
       return this.values || []
+    },
+
+    calendarYear() {
+      return this.weekStart.year()
+    },
+
+    calendarMonth() {
+      return this.weekStart.month()
+    },
+
+    shiftsThisPeriod() {
+      return this.filteredJobs
+    },
+
+    paymentsInRange() {
+      return []
     },
 
     filteredJobs() {
@@ -372,6 +409,10 @@ export default {
       return day === 0
         ? d.subtract(6, 'day').startOf('day')
         : d.subtract(day - 1, 'day').startOf('day')
+    },
+
+    onSelectDay(date) {
+      console.log('Selected day:', date)
     }
   }
 }
