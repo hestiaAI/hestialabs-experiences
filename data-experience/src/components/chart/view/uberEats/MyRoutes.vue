@@ -34,13 +34,22 @@
 
       <!-- RIGHT SIDE — Selected Trips -->
       <div class="selected-routes">
-        <h3>Selected Routes</h3>
+        <div class="title-row">
+          <h3>Selected Routes</h3>
+          <button
+            class="clear-btn"
+            @click="clearSelection"
+          >
+            Unselect
+          </button>
+        </div>
 
         <div class="trip-list">
           <div
             v-for="(trip, index) in tripsFiltered"
             :key="index"
             class="trip-item"
+            :class="{ selected: selectedTrips.includes(trip) }"
             @click="selectTrip(trip)"
           >
             <div class="trip-header">
@@ -104,7 +113,7 @@ export default {
   data() {
     return {
       keplerRef: null,
-      selectedTrip: null
+      selectedTrips: []
     }
   },
   computed: {
@@ -143,9 +152,7 @@ export default {
       return filtered
     },
     keplerData() {
-      const trips = this.selectedTrip
-        ? [this.selectedTrip]
-        : this.tripsFiltered
+      const trips = this.selectedTrips.length ? this.selectedTrips : this.tripsFiltered
 
       return {
         fields: [
@@ -255,8 +262,30 @@ export default {
       if (!timestamp) return '-'
       return dayjs(timestamp).format('DD.MM.YY')
     },
+    makeTripId(trip) {
+      return `${trip.courierAcceptTimestampLocal}_${trip.courierBegintripTimestampLocal}_${trip.courierBegintripToDropoffMiles}`
+    },
     selectTrip(trip) {
-      this.selectedTrip = trip
+      const id = this.makeTripId(trip)
+      console.log(id)
+
+      const index = this.selectedTrips.findIndex(
+        t => this.makeTripId(t) === id
+      )
+
+      if (index >= 0) {
+        this.selectedTrips.splice(index, 1)
+      } else {
+        this.selectedTrips.push(trip)
+      }
+
+      this.keplerRef?.callIframeFunction('update', {
+        keplerData: this.keplerData,
+        config: keplerConfigPoints
+      })
+    },
+    clearSelection() {
+      this.selectedTrips = []
       this.keplerRef?.callIframeFunction('update', {
         keplerData: this.keplerData,
         config: keplerConfigPoints
@@ -360,6 +389,26 @@ export default {
   overflow-y: auto;
 }
 
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.clear-btn {
+  padding: 4px 6px;
+  border-radius: 6px;
+  background: #cfcfcf;
+  border: 1px solid #aaa;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.clear-btn:hover {
+  background: #bbbbbb;
+}
+
 .trip-list {
   display: flex;
   flex-direction: column;
@@ -372,6 +421,11 @@ export default {
   padding: 12px 16px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   cursor: pointer;
+}
+
+.trip-item.selected {
+  background: #d7ebff;
+  border: 2px solid #4a9eff;
 }
 
 .trip-item:hover {

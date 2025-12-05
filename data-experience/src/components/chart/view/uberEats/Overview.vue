@@ -84,7 +84,6 @@
 <script>
 import * as d3 from 'd3'
 import dayjs from 'dayjs'
-import { watch } from 'vue'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import MonthlyCalendar from './MonthlyCalendar.vue'
@@ -304,6 +303,13 @@ export default {
     // watch mode change
     mode() {
       this.$nextTick(() => this.redraw())
+    },
+
+    'periodStart'() {
+      this.$nextTick(() => this.redraw())
+    },
+    'periodEnd'() {
+      this.$nextTick(() => this.redraw())
     }
   },
   mounted() {
@@ -318,20 +324,6 @@ export default {
       this.startOverviewTour()
     }
 
-    watch(
-      () => periodStore.periodStart,
-      () => {
-        this.redraw()
-      }
-    )
-
-    watch(
-      () => periodStore.periodEnd,
-      () => {
-        this.redraw()
-      }
-    )
-
     // initial draw
     this.redraw()
 
@@ -343,6 +335,11 @@ export default {
       window.__continueRoutesTour()
       window.__continueRoutesTour = null
     }
+
+    this.$nextTick(() => {
+      console.log('Huch')
+      this.redraw()
+    })
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize)
