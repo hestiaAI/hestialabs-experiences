@@ -12,9 +12,11 @@
     </div>
 
     <div class="week-nav">
-      <button class="nav-btn" @click="prevPeriod">←</button>
-      <div class="week-label">{{ periodLabel }}</div>
-      <button class="nav-btn" @click="nextPeriod">→</button>
+      <div class="week-nav-wrapper">
+        <button class="nav-btn" @click="prevPeriod">←</button>
+        <div class="week-label">{{ periodLabel }}</div>
+        <button class="nav-btn" @click="nextPeriod">→</button>
+      </div>
     </div>
 
     <!-- BOX 1 → Top full width stats -->
@@ -88,6 +90,7 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import MonthlyCalendar from './MonthlyCalendar.vue'
 import mixin from '@/components/chart/view/mixin'
 import { periodStore } from './store/periodStore'
+import { createTour } from './onboarding/tour'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
@@ -304,7 +307,16 @@ export default {
     }
   },
   mounted() {
+    if (window.__continueRoutesTour) {
+      window.__continueRoutesTour()
+      window.__continueRoutesTour = null
+    }
     periodStore.initFromTrips(this.tripsParsed)
+
+    const alreadyShown = localStorage.getItem('uberEatsTourShown')
+    if (!alreadyShown) {
+      this.startOverviewTour()
+    }
 
     watch(
       () => periodStore.periodStart,
@@ -326,10 +338,35 @@ export default {
     // resize observer
     window.addEventListener('resize', this.onResize)
   },
+  activated() {
+    if (window.__continueRoutesTour) {
+      window.__continueRoutesTour()
+      window.__continueRoutesTour = null
+    }
+  },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize)
   },
   methods: {
+    startOverviewTour() {
+      // Create tour instance with callback to switch tabs
+      const tour = createTour({
+        onGoToRoutes: () => {
+          // Emit event to parent to switch tab (no Shepherd logic in parent)
+          this.$emit('switch-tab', 'routes')
+
+          // Wait for new tab to render before continuing
+          setTimeout(() => tour.next(), 350)
+        }
+      })
+
+      // Mark as shown so it doesn't repeat
+      localStorage.setItem('uberEatsTourShown', 'yes')
+
+      // Start the tour
+      tour.start()
+    },
+
     onSelectDay(date) {
       periodStore.setMode('week')
 
@@ -606,6 +643,12 @@ export default {
   margin-bottom: 12px;
 }
 
+.week-nav-wrapper {
+  width: 240px;
+  display: flex;
+  flex-direction: row;
+}
+
 .nav-btn {
   padding: 6px 10px;
   border-radius: 6px;
@@ -621,9 +664,14 @@ export default {
 }
 
 .week-label {
+  width: 180px;
   font-weight: 700;
   color: #333;
   font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 8px;
 }
 
 /* Base box style */

@@ -24,7 +24,7 @@
     <div class="header-row">
       <h2>Earnings Breakdown</h2>
 
-      <div>
+      <div class="earnings-adjusted">
         <label class="switch">
           <input type="checkbox" v-model="showAvg" />
           <span class="slider"></span>
@@ -188,6 +188,11 @@ export default {
     }
   },
   mounted() {
+    if (window.__continueRoutesTour) {
+      window.__continueRoutesTour()
+      window.__continueRoutesTour = null
+    }
+
     watch(
       () => periodStore.periodStart,
       () => {
