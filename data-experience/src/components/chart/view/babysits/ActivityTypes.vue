@@ -21,7 +21,7 @@
     <div class="box box2">
       <h2 class="mb-4">Activity Types</h2>
 
-      <div v-if="jobs.length">
+      <div v-if="currentPeriod === 'week' && filteredJobs.length">
         <ApexChart
           type="rangeBar"
           height="450"
@@ -36,6 +36,13 @@
           </div>
         </div>
       </div>
+
+      <p
+        v-else-if="currentPeriod !== 'week'"
+        class="dev-placeholder"
+      >
+        Monthly and total charts are in development
+      </p>
 
       <p v-else>No job data found.</p>
     </div>
