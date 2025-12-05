@@ -55,7 +55,7 @@
         </div>
       </div>
 
-      <div v-else-if="currentPeriod == 'month'" class="dev-placeholder">
+      <div v-else-if="currentPeriod == 'month'">
         <MonthlyCalendar
           :year="calendarYear"
           :month="calendarMonth"
@@ -63,13 +63,6 @@
           :payments="paymentsInRange"
           @select-day="onSelectDay"
         />
-
-        <div class="legend mt-4">
-          <div v-for="item in statusItems" :key="item.name" class="legend-item">
-            <span class="legend-swatch" :style="{ background: item.color }" />
-            {{ item.label }} ({{ item.count }})
-          </div>
-        </div>
       </div>
 
       <p v-else-if="currentPeriod == 'total'" class="dev-placeholder">
