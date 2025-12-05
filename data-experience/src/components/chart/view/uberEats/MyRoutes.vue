@@ -203,6 +203,11 @@ export default {
     }
   },
   mounted() {
+    if (window.__continueRoutesTour) {
+      window.__continueRoutesTour()
+      window.__continueRoutesTour = null
+    }
+
     this.keplerRef = this.$refs.keplerRef
   },
   methods: {
