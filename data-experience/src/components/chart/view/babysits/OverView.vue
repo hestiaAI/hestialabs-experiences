@@ -82,6 +82,7 @@
 </template>
 
 <script>
+import { createBabysitterTour } from './onboarding/babysitterTour'
 import MonthlyCalendar from './MonthlyCalendar.vue'
 import mixin from '@/components/chart/view/mixin'
 import VueApexCharts from 'vue-apexcharts'
@@ -390,6 +391,14 @@ export default {
       this.currentWeekStart = this.latestJobDate.startOf('month')
     } else {
       this.currentWeekStart = this.getMondayOf(this.latestJobDate)
+    }
+
+    const alreadyShown = localStorage.getItem('babysitterTourShown')
+
+    if (!alreadyShown) {
+      const tour = createBabysitterTour()
+      tour.start()
+      localStorage.setItem('babysitterTourShown', 'yes')
     }
   },
 
