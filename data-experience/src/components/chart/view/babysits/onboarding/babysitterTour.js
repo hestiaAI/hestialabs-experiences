@@ -72,5 +72,77 @@ export function createBabysitterTour() {
     buttons: [{ text: 'Finish', action: tour.complete }]
   })
 
+  tour.addStep({
+    id: 'go-to-activity',
+    text: 'Next, let\'s look at your Activity Types overview.',
+    buttons: [{
+      text: 'Next',
+      action: () => {
+        window.__continueBabysitterTour = () => tour.next()
+
+        const btn = document.getElementById('activityTypes')
+        if (btn) btn.click()
+      }
+    }
+    ]
+  })
+
+  /* ------------------------------
+    ACTIVITY DIAGRAM
+  ------------------------------ */
+  tour.addStep({
+    id: 'activity-chart',
+    attachTo: { element: '.tour-activity-chart', on: 'top' },
+    text: 'This chart shows your shifts grouped by activity types and times.',
+    buttons: [{ text: 'Next', action: tour.next }]
+  })
+
+  /* ------------------------------
+    JOB TYPE FILTER
+  ------------------------------ */
+  tour.addStep({
+    id: 'jobtype-filter',
+    attachTo: { element: '.tour-jobtype-filter', on: 'left' },
+    text: 'Here you can filter jobs by activity type to narrow down what’s displayed.',
+    buttons: [{ text: 'Finish', action: tour.complete }]
+  })
+
+  /* ------------------------------
+    GO TO EARNINGS TAB
+  ------------------------------ */
+  tour.addStep({
+    id: 'go-to-earnings',
+    text: 'Now let’s check how your earnings are distributed.',
+    buttons: [
+      {
+        text: 'Next',
+        action: () => {
+          window.__continueBabysitterTour = () => tour.next()
+
+          const btn = document.getElementById('earningsDistribution')
+          if (btn) btn.click()
+        }
+      }
+    ]
+  })
+
+  /* ------------------------------
+    EARNINGS CHART
+  ------------------------------ */
+  tour.addStep({
+    id: 'earnings-chart',
+    attachTo: {
+      element: '.tour-earnings-chart',
+      on: 'top'
+    },
+    text: 'This bubble chart shows how your income is distributed by days and time of work.',
+    buttons: [
+      {
+        text: 'Finish',
+        action: tour.complete
+      }
+    ]
+  })
+
   return tour
 }
