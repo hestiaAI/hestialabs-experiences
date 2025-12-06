@@ -228,7 +228,15 @@ export default {
         chart: {
           type: 'bubble',
           height: 450,
-          toolbar: { show: false }
+          toolbar: {
+            show: false
+          },
+          zoom: {
+            enabled: false
+          },
+          pan: {
+            enabled: false
+          }
         },
         colors: seriesColors,
         dataLabels: {
