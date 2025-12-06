@@ -23,7 +23,7 @@
         <h2 class="chart-title">Earnings Distribution</h2>
       </div>
 
-      <div class="chart-wrapper" v-if="currentPeriod === 'week'">
+      <div class="chart-wrapper" v-if="currentPeriod !== 'total'">
         <ApexChart
           type="bubble"
           height="450"
@@ -39,15 +39,15 @@
         </div>
 
         <div v-if="filteredJobs.length === 0" class="no-data-overlay">
-          <p>No job data for this week</p>
+          <p>No job data for this period</p>
         </div>
       </div>
 
       <p
-        v-else-if="currentPeriod !== 'week'"
+        v-else-if="currentPeriod == 'total'"
         class="dev-placeholder"
       >
-        Monthly and total charts are in development
+        Total chart is in development
       </p>
 
       <p v-else>
@@ -81,6 +81,11 @@ export default {
   },
 
   computed: {
+    monthDays() {
+      const daysInMonth = this.weekStart.daysInMonth()
+      return Array.from({ length: daysInMonth }, (_, i) => i + 1)
+    },
+
     jobs() {
       return this.values || []
     },
@@ -144,8 +149,10 @@ export default {
       }
     },
 
-    weekdays() {
-      return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    xLabels() {
+      return this.currentPeriod === 'month'
+        ? this.monthDays.map(d => d.toString())
+        : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     },
 
     aggregatedData() {
@@ -153,28 +160,29 @@ export default {
 
       this.filteredJobs.forEach((job) => {
         const jobDate = dayjs(job.date)
-        let dayIndex = jobDate.day()
-        dayIndex = dayIndex === 0 ? 6 : dayIndex - 1
 
-        const dayName = this.weekdays[dayIndex]
+        const dayIndex =
+          this.currentPeriod === 'month'
+            ? jobDate.date() - 1
+            : (jobDate.day() === 0 ? 6 : jobDate.day() - 1)
 
         const [startH] = (job.start_time || '0:00').split(':').map(Number)
         const bucket = this.getTimeBucketFromHour(startH)
 
-        if (!data[dayName]) data[dayName] = {}
-        if (!data[dayName][bucket]) {
-          data[dayName][bucket] = { totalEarnings: 0, totalDuration: 0, count: 0 }
+        if (!data[dayIndex]) data[dayIndex] = {}
+        if (!data[dayIndex][bucket]) {
+          data[dayIndex][bucket] = { totalEarnings: 0, totalDuration: 0, count: 0 }
         }
 
-        data[dayName][bucket].totalEarnings += Number(job.earnings) || 0
-        data[dayName][bucket].totalDuration += Number(
+        data[dayIndex][bucket].totalEarnings += Number(job.earnings) || 0
+        data[dayIndex][bucket].totalDuration += Number(
           job.nbHours ||
           job.duration ||
           job.duration_hours ||
           job.hours ||
           job.work_hours
         ) || 0
-        data[dayName][bucket].count += 1
+        data[dayIndex][bucket].count += 1
       })
 
       return data
@@ -184,39 +192,38 @@ export default {
       const bucketKeys = ['Morning', 'Day', 'Evening', 'Night', 'Other']
       const seriesMap = {}
 
-      bucketKeys.forEach((b) => {
-        seriesMap[b] = { name: b, data: [] }
-      })
+      bucketKeys.forEach(b => (seriesMap[b] = { name: b, data: [] }))
 
-      // Add data for each time bucket - using numeric day index (0-6)
-      Object.entries(this.aggregatedData).forEach(([dayName, buckets]) => {
-        const dayIndex = this.weekdays.indexOf(dayName)
+      const maxIndex =
+        this.currentPeriod === 'month'
+          ? this.monthDays.length - 1
+          : 6
+
+      Object.entries(this.aggregatedData).forEach(([idx, buckets]) => {
         Object.entries(buckets).forEach(([bucket, metrics]) => {
           const series = seriesMap[bucket] || seriesMap.Other
+
           series.data.push([
-            dayIndex,
-            parseFloat(metrics.totalEarnings.toFixed(2)),
-            parseFloat(metrics.totalDuration.toFixed(1)),
+            Number(idx),
+            Number(metrics.totalEarnings.toFixed(2)),
+            Number(metrics.totalDuration.toFixed(1)),
             metrics.count
           ])
         })
       })
 
-      const filteredSeries = bucketKeys.map(k => seriesMap[k]).filter(s => s && s.data.length > 0)
+      const dataSeries = bucketKeys
+        .map(k => seriesMap[k])
+        .filter(s => s.data.length)
 
-      // Always add a hidden placeholder series to ensure all days are shown
-      const placeholderSeries = {
+      const placeholder = {
         name: 'Placeholder',
-        data: this.weekdays.map((day, idx) => [idx, null, 0])
+        data: Array.from({ length: maxIndex + 1 }, (_, i) => [i, null, 0])
       }
 
-      // If no data, return only placeholder
-      if (filteredSeries.length === 0) {
-        return [placeholderSeries]
-      }
-
-      // If there is data, add placeholder at the end to ensure all days show
-      return [...filteredSeries, placeholderSeries]
+      return dataSeries.length
+        ? [...dataSeries, placeholder]
+        : [placeholder]
     },
 
     chartOptions() {
@@ -248,26 +255,12 @@ export default {
         xaxis: {
           type: 'numeric',
           min: -0.5,
-          max: 6.5,
-          tickAmount: 7,
+          max: this.xLabels.length - 0.5,
+          tickAmount: this.xLabels.length,
           labels: {
             rotate: 0,
-            offsetX: 20,
-            offsetY: 0,
-            formatter: (val) => {
-              const idx = Math.round(val)
-              return this.weekdays[idx] || ''
-            },
-            style: {
-              fontSize: '12px',
-              textAnchor: 'middle'
-            }
-          },
-          axisBorder: {
-            show: true
-          },
-          axisTicks: {
-            show: true
+            formatter: v => this.xLabels[Math.round(v)] || '',
+            style: { fontSize: '11px' }
           }
         },
         yaxis: {
@@ -301,7 +294,10 @@ export default {
             if (seriesName === 'Placeholder' || !point || point[1] === null || point[1] === 0) return ''
 
             const dayIndex = Math.round(point[0])
-            const dayName = this.weekdays[dayIndex]
+            const dayName =
+              this.currentPeriod === 'month'
+                ? dayIndex + 1
+                : this.xLabels[dayIndex]
             const totalEarnings = point[1]
             const totalDuration = point[2]
             const jobCount = point[3] || 1
