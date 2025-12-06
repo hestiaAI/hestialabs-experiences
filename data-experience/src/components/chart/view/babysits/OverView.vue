@@ -298,13 +298,26 @@ export default {
 
     chartOptions() {
       return {
-        chart: { type: 'rangeBar', toolbar: { show: false } },
+        chart: {
+          type: 'rangeBar',
+          toolbar: {
+            show: false
+          },
+          zoom: {
+            enabled: false
+          },
+          pan: {
+            enabled: false
+          }
+        },
         plotOptions: { bar: { horizontal: true, rangeBarGroupRows: true } },
         xaxis: {
           type: 'datetime',
           labels: { format: 'HH:mm' },
           min: dayjs('2025-01-01T00:00').valueOf(),
-          max: dayjs('2025-01-01T23:59').valueOf()
+          max: dayjs('2025-01-02T00:00').valueOf(),
+
+          tickAmount: 24
         },
         yaxis: {
           type: 'category',

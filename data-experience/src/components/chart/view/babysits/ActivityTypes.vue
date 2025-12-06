@@ -248,7 +248,18 @@ export default {
 
     chartOptions() {
       return {
-        chart: { type: 'rangeBar', toolbar: { show: false } },
+        chart: {
+          type: 'rangeBar',
+          toolbar: {
+            show: false
+          },
+          zoom: {
+            enabled: false
+          },
+          pan: {
+            enabled: false
+          }
+        },
         plotOptions: { bar: { horizontal: true, rangeBarGroupRows: true } },
         xaxis: {
           type: 'datetime',
