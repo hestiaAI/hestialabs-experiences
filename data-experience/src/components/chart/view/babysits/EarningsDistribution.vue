@@ -18,7 +18,7 @@
     </div>
 
     <!-- BOX 2 → Bubble Chart -->
-    <div class="box box2">
+    <div class="box box2 tour-earnings-chart">
       <div class="header-controls">
         <h2 class="chart-title">Earnings Distribution</h2>
       </div>

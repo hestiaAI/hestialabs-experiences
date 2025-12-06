@@ -18,7 +18,7 @@
     </div>
 
     <!-- BOX 2 → Apex Timeline -->
-    <div class="box box2">
+    <div class="box box2 tour-activity-chart">
       <h2 class="mb-4">Activity Types</h2>
 
       <div v-if="currentPeriod === 'week' && filteredJobs.length">
@@ -60,7 +60,7 @@
     </div>
 
     <!-- BOX 4 → Filter -->
-    <div class="box box4">
+    <div class="box box4 tour-jobtype-filter">
       <label for="jobTypeSelect" class="filter-label"><strong>Filter by Job Type</strong></label>
       <select id="jobTypeSelect" v-model="selectedJobType" class="filter-select">
         <option value="">All</option>
@@ -340,6 +340,11 @@ export default {
       this.currentWeekStart = this.latestJobDate.startOf('month')
     } else {
       this.currentWeekStart = this.getMondayOf(this.latestJobDate)
+    }
+
+    if (window.__continueBabysitterTour) {
+      window.__continueBabysitterTour()
+      window.__continueBabysitterTour = null
     }
   },
 
