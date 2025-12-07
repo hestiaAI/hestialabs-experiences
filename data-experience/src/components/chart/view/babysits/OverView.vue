@@ -65,9 +65,15 @@
         />
       </div>
 
-      <p v-else-if="currentPeriod == 'total'" class="dev-placeholder">
-        Total chart is in development
-      </p>
+      <div v-else-if="currentPeriod === 'total'">
+        <ApexChart
+        type="heatmap"
+        height="450"
+        :key="'heatmap-total'"
+        :series="heatmapSeries"
+        :options="heatmapOptions"
+      />
+      </div>
 
       <p v-else>No job data found.</p>
     </div>
@@ -364,7 +370,86 @@ export default {
         paid: '#2ecc71',
         unknown: '#888'
       }
+    },
+
+    heatmapSeries() {
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
+      const matrix = Array.from({ length: 7 }, () =>
+        Array.from({ length: 24 }, () => 0)
+      )
+
+      this.jobs.forEach((j) => {
+        if (!j.date || !j.start_time || !j.end_time) return
+
+        let wd = dayjs(j.date).day()
+        wd = wd === 0 ? 6 : wd - 1
+
+        const [sh, sm] = j.start_time.split(':').map(Number)
+        const [eh, em] = j.end_time.split(':').map(Number)
+
+        const start = sh + sm / 60
+        let end = eh + em / 60
+
+        if (end < start) end = 24
+
+        for (let h = Math.floor(start); h < Math.ceil(end); h++) {
+          if (h >= 0 && h < 24) {
+            matrix[wd][h] += 1
+          }
+        }
+      })
+
+      return days.map((day, dIdx) => ({
+        name: day,
+        data: matrix[dIdx].map((val, h) => ({
+          x: `${h}:00`,
+          y: Number(val.toFixed(2))
+        }))
+      }))
+    },
+
+    heatmapOptions() {
+      return {
+        chart: {
+          type: 'heatmap',
+          toolbar: { show: false }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        xaxis: {
+          type: 'category',
+          title: {
+            text: 'Hour of Day'
+          }
+        },
+        yaxis: {
+          reversed: true,
+          title: {
+            text: 'Day of Week'
+          }
+        },
+        plotOptions: {
+          heatmap: {
+            colorScale: {
+              ranges: [
+                { from: 0, to: 0.1, color: '#eeeeee', name: 'None' },
+                { from: 0.1, to: 1, color: '#b3d9ff', name: 'Low' },
+                { from: 1, to: 3, color: '#4da3ff', name: 'Medium' },
+                { from: 3, to: 100, color: '#003f8c', name: 'High' }
+              ]
+            }
+          }
+        },
+        tooltip: {
+          y: {
+            formatter: v => `${v} h total`
+          }
+        }
+      }
     }
+
   },
 
   watch: {
