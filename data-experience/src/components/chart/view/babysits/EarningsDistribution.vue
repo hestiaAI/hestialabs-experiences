@@ -254,13 +254,16 @@ export default {
         },
         xaxis: {
           type: 'numeric',
-          min: -0.5,
-          max: this.xLabels.length - 0.5,
+          min: 0.0,
+          max: this.xLabels.length,
           tickAmount: this.xLabels.length,
           labels: {
             rotate: 0,
             formatter: v => this.xLabels[Math.round(v)] || '',
-            style: { fontSize: '11px' }
+            style: {
+              fontSize: '11px',
+              textAnchor: 'middle'
+            }
           }
         },
         yaxis: {
