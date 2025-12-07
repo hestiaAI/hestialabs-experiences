@@ -23,6 +23,7 @@
 
       <div v-if="currentPeriod === 'week' && filteredJobs.length">
         <ApexChart
+          :key="'week-' + currentWeekStart.format('YYYY-MM-DD')"
           type="rangeBar"
           height="450"
           :options="chartOptions"
@@ -53,6 +54,7 @@
         v-else-if="currentPeriod == 'total' && filteredJobs.length"
       >
         <ApexChart
+          :key="'total'"
           type="bar"
           height="450"
           :options="totalBarOptions"
