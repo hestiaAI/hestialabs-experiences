@@ -49,12 +49,16 @@
         />
       </div>
 
-      <p
-        v-else-if="currentPeriod == 'total'"
-        class="dev-placeholder"
+      <div
+        v-else-if="currentPeriod == 'total' && filteredJobs.length"
       >
-        Total chart is in development
-      </p>
+        <ApexChart
+          type="bar"
+          height="450"
+          :options="totalBarOptions"
+        :series="totalTypeSeries.series"
+      />
+      </div>
 
       <p v-else>No job data found.</p>
     </div>
@@ -318,7 +322,77 @@ export default {
         paid: '#2ecc71',
         unknown: '#888'
       }
+    },
+
+    // ---------- TOTAL BAR: ACTIVITY TYPES ----------
+    totalTypeSeries() {
+      const map = {}
+
+      this.filteredJobs.forEach((j) => {
+        const type = j.job_type || 'Other'
+        const hours =
+          parseFloat(
+            j.nbHours ||
+            j.duration ||
+            j.duration_hours ||
+            j.hours ||
+            j.work_hours
+          ) || 0
+
+        if (!map[type]) map[type] = 0
+        map[type] += hours
+      })
+
+      const categories = Object.keys(map)
+      const data = categories.map(t => Number(map[t].toFixed(2)))
+
+      return {
+        categories,
+        series: [
+          {
+            name: 'Total hours',
+            data
+          }
+        ]
+      }
+    },
+
+    totalBarOptions() {
+      return {
+        chart: {
+          type: 'bar',
+          toolbar: { show: false }
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            borderRadius: 6
+          }
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: v => `${v} h`
+        },
+        xaxis: {
+          categories: this.totalTypeSeries.categories,
+          title: {
+            text: 'Total worked hours'
+          }
+        },
+        yaxis: {
+          title: {
+            text: 'Job type'
+          }
+        },
+        tooltip: {
+          y: {
+            formatter: v => `${v} h`
+          }
+        },
+        colors: ['#2ecc71']
+      }
     }
+
   },
 
   watch: {
