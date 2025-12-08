@@ -305,10 +305,10 @@ export default {
       this.$nextTick(() => this.redraw())
     },
 
-    'periodStart'() {
+    periodStart() {
       this.$nextTick(() => this.redraw())
     },
-    'periodEnd'() {
+    periodEnd() {
       this.$nextTick(() => this.redraw())
     }
   },
@@ -327,6 +327,17 @@ export default {
     // initial draw
     this.redraw()
 
+    this.resizeObserver = new ResizeObserver((entries) => {
+      const { width } = entries[0].contentRect
+
+      // If width > 0, the tab is now visible → redraw
+      if (width > 0) {
+        this.$nextTick(() => this.redraw())
+      }
+    })
+
+    this.resizeObserver.observe(this.$el)
+
     // resize observer
     window.addEventListener('resize', this.onResize)
   },
@@ -335,11 +346,6 @@ export default {
       window.__continueRoutesTour()
       window.__continueRoutesTour = null
     }
-
-    this.$nextTick(() => {
-      console.log('Huch')
-      this.redraw()
-    })
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.onResize)
