@@ -444,19 +444,32 @@ export default {
         },
 
         tooltip: {
-          custom: ({ series, seriesIndex, dataPointIndex }) => {
-            const point = series[seriesIndex][dataPointIndex]
-            if (!point || point[1] == null) return ''
+          custom: ({ seriesIndex, dataPointIndex, w }) => {
+            const point = w.config.series[seriesIndex].data[dataPointIndex]
 
-            const bucket = categories[Math.round(point[0])]
+            if (!point || point[1] == null || point[1] === 0) return ''
+
+            const bucketIndex = Math.round(point[0])
+            const bucket = categories[bucketIndex]
             const avg = point[1]
-            const count = point[2]
+            const shifts = point[2]
+
+            const stats = this.totalScatterData[bucket]
+            if (!stats) return ''
+
+            const totalIncome = stats.totalEarnings.toFixed(2)
+            const totalHours = stats.totalDuration.toFixed(1)
 
             return `
               <div class="tooltip-box">
                 <div class="tooltip-title">${bucket}</div>
-                <p>Avg hourly income: <strong>${avg.toFixed(2)} ${this.currency}</strong></p>
-                <p>Shifts: <strong>${count}</strong></p>
+                <p>Avg hourly income:<br>
+                <strong>${avg.toFixed(2)} ${this.currency}</strong></p>
+
+                <p>Shifts (bubble size): <strong>${shifts}</strong></p>
+
+                <p>Total income: <strong>${totalIncome} ${this.currency}</strong></p>
+                <p>Total hours: <strong>${totalHours} h</strong></p>
               </div>
             `
           }
