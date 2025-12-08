@@ -43,12 +43,14 @@
         </div>
       </div>
 
-      <p
-        v-else-if="currentPeriod == 'total'"
-        class="dev-placeholder"
-      >
-        Total chart is in development
-      </p>
+      <div v-else-if="currentPeriod === 'total'">
+        <ApexChart
+          type="bubble"
+          height="450"
+          :series="totalScatterSeries"
+          :options="totalScatterOptions"
+        />
+      </div>
 
       <p v-else>
         No job data found.
@@ -339,6 +341,131 @@ export default {
         }, 0)
         return { name: type, label: type, color: this.timeBucketColors[type], count }
       }).filter(item => item.count > 0)
+    },
+
+    totalScatterData() {
+      const buckets = {}
+
+      this.filteredJobs.forEach((job) => {
+        const [startH] = (job.start_time || '0:00').split(':').map(Number)
+        const bucket = this.getTimeBucketFromHour(startH)
+
+        if (!buckets[bucket]) {
+          buckets[bucket] = {
+            totalEarnings: 0,
+            totalDuration: 0,
+            count: 0
+          }
+        }
+
+        buckets[bucket].totalEarnings += Number(job.earnings) || 0
+        buckets[bucket].totalDuration += Number(
+          job.nbHours ||
+          job.duration ||
+          job.duration_hours ||
+          job.hours ||
+          job.work_hours
+        ) || 0
+
+        buckets[bucket].count += 1
+      })
+
+      return buckets
+    },
+
+    totalScatterSeries() {
+      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night', 'Other']
+
+      const data = bucketKeys.map((bucket, i) => {
+        const b = this.totalScatterData[bucket]
+
+        if (!b || b.count === 0 || b.totalDuration === 0) {
+          return [i, null, 0]
+        }
+
+        const avgPerHour = b.totalEarnings / b.totalDuration
+
+        return [
+          i,
+          Number(avgPerHour.toFixed(2)),
+          b.count
+        ]
+      })
+
+      return [{
+        name: 'Total Summary',
+        data
+      }]
+    },
+
+    totalScatterOptions() {
+      const categories = ['Morning', 'Day', 'Evening', 'Night', 'Other']
+
+      return {
+        chart: {
+          type: 'bubble',
+          toolbar: { show: false },
+          zoom: { enabled: false }
+        },
+
+        colors: categories.map(
+          b => this.timeBucketColors[b] || this.timeBucketColors.Other
+        ),
+
+        xaxis: {
+          type: 'numeric',
+          min: 0,
+          max: categories.length - 1,
+          tickAmount: categories.length - 1,
+          labels: {
+            formatter: v => categories[Math.round(v)] || ''
+          },
+          title: {
+            text: 'Time Bucket'
+          }
+        },
+
+        yaxis: {
+          min: 0,
+          title: {
+            text: `Average earnings per hour (${this.currency})`
+          }
+        },
+
+        plotOptions: {
+          bubble: {
+            minBubbleRadius: 6,
+            maxBubbleRadius: 50
+          }
+        },
+
+        dataLabels: {
+          enabled: false
+        },
+
+        tooltip: {
+          custom: ({ series, seriesIndex, dataPointIndex }) => {
+            const point = series[seriesIndex][dataPointIndex]
+            if (!point || point[1] == null) return ''
+
+            const bucket = categories[Math.round(point[0])]
+            const avg = point[1]
+            const count = point[2]
+
+            return `
+              <div class="tooltip-box">
+                <div class="tooltip-title">${bucket}</div>
+                <p>Avg hourly income: <strong>${avg.toFixed(2)} ${this.currency}</strong></p>
+                <p>Shifts: <strong>${count}</strong></p>
+              </div>
+            `
+          }
+        },
+
+        legend: {
+          show: false
+        }
+      }
     }
   },
 
