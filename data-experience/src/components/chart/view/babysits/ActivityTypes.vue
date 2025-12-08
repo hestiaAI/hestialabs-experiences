@@ -18,7 +18,10 @@
     </div>
 
     <!-- BOX 2 → Apex Timeline -->
-    <div class="box box2 tour-activity-chart">
+    <div
+      class="box box2 tour-activity-chart"
+      :class="{ 'box2--fullwidth': currentPeriod === 'total' }"
+    >
       <h2 class="mb-4">Activity Types</h2>
 
       <div v-if="currentPeriod === 'week' && filteredJobs.length">
@@ -66,7 +69,10 @@
     </div>
 
     <!-- BOX 4 → Filter -->
-    <div class="box box4 tour-jobtype-filter">
+    <div
+      v-if="currentPeriod !== 'total'"
+      class="box box4 tour-jobtype-filter"
+    >
       <label for="jobTypeSelect" class="filter-label"><strong>Filter by Job Type</strong></label>
       <select id="jobTypeSelect" v-model="selectedJobType" class="filter-select">
         <option value="">All</option>
@@ -399,6 +405,10 @@ export default {
 
   watch: {
     currentPeriod(newVal) {
+      if (newVal === 'total') {
+        this.selectedJobType = ''
+      }
+
       if (!this.latestJobDate) return
 
       if (newVal === 'month') {
@@ -609,5 +619,9 @@ export default {
 
 .switch-btn:hover {
   background: #d2d2d2;
+}
+
+.box2--fullwidth {
+  grid-column: 1 / 3;
 }
 </style>
