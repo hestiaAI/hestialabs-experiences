@@ -53,8 +53,8 @@
         />
       </div>
 
-      <div v-else class="calendar-placeholder">
-        <p><strong>All-time view not implemented</strong></p>
+      <div v-else>
+        <TopDays :days="top5Days" :currency="currency" />
       </div>
 
       <div class="legend" v-if="mode === 'week'">
@@ -87,6 +87,7 @@ import dayjs from 'dayjs'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import MonthlyCalendar from './MonthlyCalendar.vue'
+import TopDays from './TopDays.vue'
 import mixin from '@/components/chart/view/mixin'
 import { periodStore } from './store/periodStore'
 import { createTour } from './onboarding/tour'
@@ -101,7 +102,7 @@ dayjs.extend(isSameOrBefore)
  */
 export default {
   name: 'OverView',
-  components: { MonthlyCalendar },
+  components: { MonthlyCalendar, TopDays },
   mixins: [mixin],
   data() {
     return {
@@ -225,6 +226,28 @@ export default {
       const hours = Math.floor(avg / 60)
       const minutes = Math.round(avg % 60)
       return hours > 0 ? `${hours}h ${minutes}min` : `${minutes}min`
+    },
+
+    paymentsByDayTotal() {
+      // Ignore periodStore completely (full payments)
+      const map = {}
+
+      this.payments.forEach((p) => {
+        const d = dayjs(p.recognizeTimestampLocal)
+        if (!d.isValid()) return
+        const key = d.format('YYYY-MM-DD')
+        const amt = Number(p.amountLocal) || 0
+        map[key] = (map[key] || 0) + amt
+      })
+
+      // Convert to array sorted desc
+      return Object.entries(map)
+        .map(([date, amount]) => ({ date, amount }))
+        .sort((a, b) => b.amount - a.amount)
+    },
+
+    top5Days() {
+      return this.paymentsByDayTotal.slice(0, 5)
     },
 
     // trips parsed from raw CSV if available (best-effort)
