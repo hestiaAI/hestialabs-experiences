@@ -25,7 +25,11 @@
       <!-- LEFT SIDE — Kepler Map -->
       <div class="map-div">
         <h3>Map of Routes</h3>
+        <div v-if="mode === 'total'" class="map-unavailable">
+          Map view is not available in "Total" mode.
+        </div>
         <UnitKepler
+          v-else
           ref="keplerRef"
           class="map-frame"
           :args="keplerArgs"
@@ -45,7 +49,11 @@
         </div>
 
         <div class="trip-list">
+          <div v-if="tripsFiltered.length === 0" class="no-data">
+            No trips available for this period.
+          </div>
           <div
+            v-else
             v-for="(trip, index) in tripsFiltered"
             :key="index"
             class="trip-item"
@@ -228,8 +236,6 @@ export default {
         const start = dayjs(periodStore.periodStart).startOf('month')
         const end = start.endOf('month')
         periodStore.setPeriod(start.toISOString(), end.toISOString())
-      } else if (mode === 'total') {
-        periodStore.setPeriod(null, null)
       }
     },
     prevPeriod() {
@@ -443,5 +449,26 @@ export default {
   display: flex;
   justify-content: space-between;
   font-size: 0.9em;
+}
+
+.no-data {
+  text-align: center;
+  padding: 24px 0;
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.map-unavailable {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 84%;
+  font-size: 1rem;
+  color: #555;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  text-align: center;
+  padding: 16px;
+  margin-top: 4px;
 }
 </style>

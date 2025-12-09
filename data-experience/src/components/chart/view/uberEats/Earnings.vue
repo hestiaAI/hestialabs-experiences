@@ -20,23 +20,30 @@
       <button class="nav-btn" @click="nextPeriod">→</button>
     </div>
 
-    <!-- ORIGINAL HEADER -->
-    <div class="header-row">
-      <h2>Earnings Breakdown</h2>
-
+    <div class="box header-row">
       <div class="earnings-adjusted">
-        <label class="switch">
-          <input type="checkbox" v-model="showAvg" />
-          <span class="slider"></span>
-        </label>
+        <h2>Earnings Breakdown</h2>
+        <div class="toggle-wrapper">
+          <label class="switch">
+            <input type="checkbox" v-model="showAvg" />
+            <span class="slider"></span>
+          </label>
 
-        <span class="toggle-label">
-          {{ showAvg ? 'Earnings per Hour' : 'Total Earnings' }}
-        </span>
+          <span class="toggle-label">
+            {{ showAvg ? 'Earnings per Hour' : 'Total Earnings' }}
+          </span>
+        </div>
+      </div>
+      <div ref="chartRef" class="chart-container"></div>
+      <div class="legend legend-earnings">
+        <div class="legend-item">
+          <span class="color-box earnings"></span> Earnings (no tips)
+        </div>
+        <div class="legend-item">
+          <span class="color-box tips"></span> Tips
+        </div>
       </div>
     </div>
-
-    <div ref="chartRef" class="chart-container"></div>
   </div>
 </template>
 
@@ -151,6 +158,23 @@ export default {
       return out
     },
 
+    earningsByYear() {
+      const out = {}
+
+      this.payments.forEach((p) => {
+        const year = dayjs(p.recognizeTimestampLocal).format('YYYY')
+        const amount = Number(p.amountLocal || 0)
+        const isTip = (p.category || '').toLowerCase() === 'tip'
+
+        if (!out[year]) out[year] = { tips: 0, nonTips: 0 }
+
+        if (isTip) out[year].tips += amount
+        else out[year].nonTips += amount
+      })
+
+      return out
+    },
+
     /** Avg earnings per hour */
     avgEarningsPerDay() {
       const out = {}
@@ -168,8 +192,48 @@ export default {
       return out
     },
 
+    avgEarningsByYear() {
+      const out = {}
+
+      const hoursByYear = {}
+
+      // Sum hours worked per year
+      this.shifts.forEach((s) => {
+        const start = dayjs(s.begin)
+        const end = dayjs(s.end)
+        if (!start.isValid() || !end.isValid()) return
+
+        const year = start.format('YYYY')
+        const hours = end.diff(start, 'minute') / 60
+        hoursByYear[year] = (hoursByYear[year] || 0) + hours
+      })
+
+      for (const year in this.earningsByYear) {
+        const e = this.earningsByYear[year]
+        const h = hoursByYear[year] || 0
+
+        out[year] = h > 0
+          ? { tips: e.tips / h, nonTips: e.nonTips / h }
+          : { tips: 0, nonTips: 0 }
+      }
+
+      return out
+    },
+
     /** Final chart dataset */
     chartData() {
+      if (this.mode === 'total') {
+        const src = this.showAvg
+          ? this.avgEarningsByYear
+          : this.earningsByYear
+
+        return Object.keys(src).map(year => ({
+          date: year, // X-axis label
+          tips: src[year].tips,
+          nonTips: src[year].nonTips
+        }))
+      }
+
       return this.allDays.map((d) => {
         const src = this.showAvg
           ? this.avgEarningsPerDay[d]
@@ -208,6 +272,20 @@ export default {
     )
 
     this.drawChart()
+
+    this.resizeObserver = new ResizeObserver((entries) => {
+      const { width } = entries[0].contentRect
+
+      // If width > 0, the tab is now visible → redraw
+      if (width > 0) {
+        this.$nextTick(() => this.drawChart())
+      }
+    })
+
+    this.resizeObserver.observe(this.$el)
+
+    // resize observer
+    window.addEventListener('resize', this.onResize)
   },
   methods: {
     setPeriodMode(mode) {
@@ -259,10 +337,11 @@ export default {
       if (!el) return
 
       const data = this.chartData
+      const currency = this.payments[0]?.currencyCode || '€'
 
-      const width = 700
-      const height = 350
-      const margin = { top: 20, right: 20, bottom: 40, left: 50 }
+      const width = el.clientWidth
+      const height = el.clientHeight
+      const margin = { top: 16, right: 4, bottom: 56, left: 32 }
 
       d3.select(el).selectAll('*').remove()
 
@@ -299,24 +378,65 @@ export default {
         .attr('transform', `translate(${margin.left},0)`)
         .call(d3.axisLeft(y))
 
+      // Tooltip div
+      const tooltip = d3.select(el)
+        .append('div')
+        .attr('class', 'chart-tooltip')
+        .style('position', 'absolute')
+        .style('pointer-events', 'none')
+        .style('background', 'white')
+        .style('border', '1px solid #ccc')
+        .style('padding', '6px 8px')
+        .style('border-radius', '4px')
+        .style('font-size', '12px')
+        .style('color', '#333')
+        .style('opacity', 0)
+
       // Bars (stacked)
-      svg
-        .selectAll('g.bar')
+      svg.selectAll('g.bar')
         .data(data)
         .join('g')
         .attr('transform', d => `translate(${x(d.date)},0)`)
-        .call((g) => {
+        .each(function(d) {
+          const g = d3.select(this)
+
+          // Non-tips bar
           g.append('rect')
-            .attr('y', d => y(d.nonTips))
-            .attr('height', d => y(0) - y(d.nonTips))
+            .attr('y', y(d.nonTips))
+            .attr('height', y(0) - y(d.nonTips))
             .attr('width', x.bandwidth())
             .attr('fill', '#2196f3')
+            .on('mousemove', (event) => {
+              const bounds = el.getBoundingClientRect()
 
+              const localX = event.clientX - bounds.left
+              const localY = event.clientY - bounds.top
+              tooltip
+                .style('opacity', 1)
+                .html(`<strong>Earnings (no tips)</strong>: ${d.nonTips.toFixed(2)} ${currency}`)
+                .style('left', `${localX + 48}px`)
+                .style('top', `${localY + 204}px`)
+            })
+            .on('mouseleave', () => tooltip.style('opacity', 0))
+
+          // Tips bar (stacked on top)
           g.append('rect')
-            .attr('y', d => y(d.nonTips + d.tips))
-            .attr('height', d => y(0) - y(d.tips))
+            .attr('y', y(d.nonTips + d.tips))
+            .attr('height', y(0) - y(d.tips))
             .attr('width', x.bandwidth())
             .attr('fill', '#4caf50')
+            .on('mousemove', (event) => {
+              const bounds = el.getBoundingClientRect()
+
+              const localX = event.clientX - bounds.left
+              const localY = event.clientY - bounds.top
+              tooltip
+                .style('opacity', 1)
+                .html(`<strong>Tips</strong>: ${d.tips.toFixed(2)} ${currency}`)
+                .style('left', `${localX + 48}px`)
+                .style('top', `${localY + 204}px`)
+            })
+            .on('mouseleave', () => tooltip.style('opacity', 0))
         })
     }
   }
@@ -383,12 +503,37 @@ export default {
   font-size: 1rem;
 }
 
+.box {
+  background-color: #e8e8e8;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  font-size: 1.2rem;
+}
+
 .header-row {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
   margin-bottom: 12px;
+}
+
+.earnings-adjusted {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-label {
+  width: 120px;
 }
 
 /* Simple toggle switch styling */
@@ -439,6 +584,34 @@ input:checked + .slider:before {
 }
 
 .chart-container {
-  overflow-x: auto;
+  width: 100%;
+  height: 350px;
+  margin-bottom: 4px;
 }
+
+.legend {
+  display: flex;
+  width: 100%;
+  gap: 12px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .9rem;
+}
+
+.color-box {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* Colors for earnings legend */
+.color-box.earnings { background-color: #2196f3; }
+.color-box.tips { background-color: #4caf50; }
 </style>
