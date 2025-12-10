@@ -498,6 +498,11 @@ export default {
     if (this.latestJobDate) {
       this.currentWeekStart = this.getMondayOf(this.latestJobDate)
     }
+
+    if (window.__continueBabysitterTour) {
+      window.__continueBabysitterTour()
+      window.__continueBabysitterTour = null
+    }
   },
 
   methods: {
