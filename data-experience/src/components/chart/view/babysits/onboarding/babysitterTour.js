@@ -69,7 +69,7 @@ export function createBabysitterTour() {
     id: 'stats',
     attachTo: { element: '.box1', on: 'bottom' },
     text: 'This section summarizes your totals: earnings, hours worked and number of jobs.',
-    buttons: [{ text: 'Finish', action: tour.complete }]
+    buttons: [{ text: 'Next', action: tour.next }]
   })
 
   tour.addStep({
@@ -104,7 +104,7 @@ export function createBabysitterTour() {
     id: 'jobtype-filter',
     attachTo: { element: '.tour-jobtype-filter', on: 'left' },
     text: 'Here you can filter jobs by activity type to narrow down what’s displayed.',
-    buttons: [{ text: 'Finish', action: tour.complete }]
+    buttons: [{ text: 'Next', action: tour.next }]
   })
 
   /* ------------------------------
