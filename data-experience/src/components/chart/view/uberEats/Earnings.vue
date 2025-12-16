@@ -337,7 +337,7 @@ export default {
       if (!el) return
 
       const data = this.chartData
-      const currency = this.payments[0]?.currencyCode || '€'
+      const currency = this.payments[0]?.currencyCode || 'CHF'
 
       const width = el.clientWidth
       const height = el.clientHeight
@@ -413,7 +413,7 @@ export default {
               const localY = event.clientY - bounds.top
               tooltip
                 .style('opacity', 1)
-                .html(`<strong>Earnings (no tips)</strong>: ${d.nonTips.toFixed(2)} ${currency}`)
+                .html(`<strong>Earnings (no tips)</strong>: ${currency} ${d.nonTips.toFixed(2)}`)
                 .style('left', `${localX + 48}px`)
                 .style('top', `${localY + 204}px`)
             })
@@ -432,7 +432,7 @@ export default {
               const localY = event.clientY - bounds.top
               tooltip
                 .style('opacity', 1)
-                .html(`<strong>Tips</strong>: ${d.tips.toFixed(2)} ${currency}`)
+                .html(`<strong>Tips</strong>: ${currency} ${d.tips.toFixed(2)}`)
                 .style('left', `${localX + 48}px`)
                 .style('top', `${localY + 204}px`)
             })
