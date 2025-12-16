@@ -7,6 +7,7 @@
         <tr>
           <th>Date</th>
           <th>Earnings</th>
+          <th>Total time worked</th>
         </tr>
       </thead>
 
@@ -14,6 +15,7 @@
         <tr v-for="d in days" :key="d.date">
           <td>{{ format(d.date) }}</td>
           <td>{{ d.amount.toFixed(2) }} {{ currency }}</td>
+          <td>{{ d.hours }} h</td>
         </tr>
       </tbody>
     </table>

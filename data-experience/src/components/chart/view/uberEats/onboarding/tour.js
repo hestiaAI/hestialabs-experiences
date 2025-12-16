@@ -18,7 +18,7 @@ export function createTour({ onSwitchTab }) {
     text: 'Welcome! This page shows your weekly or monthly performance overview.',
     buttons: [
       { text: 'Skip', action: tour.cancel },
-      { text: 'Next', action: tour.next }
+      { text: 'Start Tutorial', action: tour.next }
     ]
   })
 

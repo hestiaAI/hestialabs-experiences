@@ -23,7 +23,7 @@
     <div class="box box1">
       <div>
         <strong>Total Earnings</strong>
-        <div>{{ totalEarnings.toFixed(2) }} {{ currency }}</div>
+        <div>{{ currency }} {{ totalEarnings.toFixed(2) }}</div>
       </div>
 
       <div>
@@ -194,6 +194,38 @@ export default {
       return (minutes / 60).toFixed(1)
     },
 
+    shiftsByDay() {
+      const map = {}
+
+      this.itemsComputed.forEach((s) => {
+        const begin = s.begin_timestamp_utc || s.beginTimestampUtc || s.begin_timestamp || s.begin
+        const end = s.end_timestamp_utc || s.endTimestampUtc || s.end_timestamp || s.end
+        if (!begin || !end) return
+
+        const start = dayjs(begin)
+        const finish = dayjs(end)
+        if (!start.isValid() || !finish.isValid()) return
+
+        // split overnight shifts
+        const parts = this.splitOvernightShift({ begin: start, end: finish, raw: s })
+
+        parts.forEach((p) => {
+          const d = dayjs(p.begin)
+          const key = d.format('YYYY-MM-DD')
+
+          if (!map[key]) map[key] = []
+
+          map[key].push({
+            begin_timestamp_utc: p.begin,
+            end_timestamp_utc: p.end,
+            earner_state: p.raw?.state || p.raw?.earner_state
+          })
+        })
+      })
+
+      return map
+    },
+
     tripsInPeriod() {
       return this.filterByPeriod(
         this.tripsParsed,
@@ -237,12 +269,25 @@ export default {
         if (!d.isValid()) return
         const key = d.format('YYYY-MM-DD')
         const amt = Number(p.amountLocal) || 0
-        map[key] = (map[key] || 0) + amt
+        if (!map[key]) {
+          map[key] = { amount: 0, hours: 0 }
+        }
+
+        map[key].amount += amt
+      })
+
+      Object.keys(map).forEach((date) => {
+        const shifts = this.shiftsByDay[date] || []
+        map[date].hours = this.calcHoursFromShifts(shifts)
       })
 
       // Convert to array sorted desc
       return Object.entries(map)
-        .map(([date, amount]) => ({ date, amount }))
+        .map(([date, v]) => ({
+          date,
+          amount: v.amount,
+          hours: v.hours
+        }))
         .sort((a, b) => b.amount - a.amount)
     },
 
@@ -271,6 +316,13 @@ export default {
 
     // Determine the week period (start = Monday)
     periodRange() {
+      if (periodStore.mode === 'total') {
+        return {
+          start: dayjs('2000-01-01').startOf('day'),
+          end: dayjs().endOf('day')
+        }
+      }
+
       const startStr = periodStore.periodStart
       const endStr = periodStore.periodEnd
 
@@ -406,6 +458,21 @@ export default {
 
       // Optional: redraw chart immediately
       this.redraw()
+    },
+
+    calcHoursFromShifts(shifts) {
+      const minutes = shifts.reduce((sum, s) => {
+        if (!s.begin_timestamp_utc || !s.end_timestamp_utc) return sum
+        if (s.earner_state === 'offline') return sum
+
+        const start = dayjs(s.begin_timestamp_utc)
+        const end = dayjs(s.end_timestamp_utc)
+        if (!start.isValid() || !end.isValid() || end.isBefore(start)) return sum
+
+        return sum + end.diff(start, 'minute')
+      }, 0)
+
+      return Number((minutes / 60).toFixed(1))
     },
 
     setPeriodMode(mode) {

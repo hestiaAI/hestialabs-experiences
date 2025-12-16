@@ -69,14 +69,20 @@ export default {
             },
             isVisible: true,
             visConfig: {
+              colorRange: { colors: ['#4a4a4a'] },
               opacity: 0.8,
               thickness: 2
             }
+          },
+          visualChannels: {
+            colorField: { name: 'type', type: 'string' },
+            colorScale: 'ordinal'
           }
         },
         {
           id: 'trip-radius-layer',
           type: 'point',
+          pickable: false,
           config: {
             dataId: 'trips',
             label: 'Trip Radius',
@@ -88,17 +94,19 @@ export default {
               fixedRadius: true,
               radiusUnits: 'meters',
               opacity: 0.3,
-              colorRange: { colors: ['#ff0000'] },
+              colorRange: { colors: ['#2d8ee3'] },
               stroke: false,
               filled: true,
-              enableHighlight: false,
               hoverHighlightColor: [0, 0, 0, 0]
-            }
+            },
+            enableHighlight: false,
+            highlightColor: [0, 0, 0, 0]
           },
-          pickable: false,
           visualChannels: {
             sizeField: { name: 'radius', type: 'integer' },
-            sizeScale: 'linear'
+            sizeScale: 'linear',
+            colorField: { name: 'type', type: 'string' },
+            colorScale: 'ordinal'
           }
         }
       ],

@@ -23,7 +23,7 @@
 
       <div class="stats" v-if="day.hours > 0 || day.earnings > 0">
         <div class="stat-hours">{{ day.hours.toFixed(1) }}h</div>
-        <div class="stat-money">{{ day.earnings.toFixed(2) }}$</div>
+        <div class="stat-money">{{ currency }} {{ day.earnings.toFixed(2) }}</div>
       </div>
 
       <div class=" stats empty-stats" v-else>
@@ -57,6 +57,10 @@ export default {
     const selectDay = (day) => {
       emit('select-day', day.date) // full ISO date string
     }
+
+    const currency = computed(() => {
+      return props.shifts[0]?.currency || 'CHF'
+    })
 
     const firstDayOffset = computed(() => {
       const weekday = start.value.day() // Sunday=0
@@ -101,6 +105,7 @@ export default {
       end,
       firstDayOffset,
       daysInMonth,
+      currency,
       selectDay
     }
   }
