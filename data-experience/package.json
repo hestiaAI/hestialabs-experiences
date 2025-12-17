@@ -17,7 +17,7 @@
     "test": "jest",
     "postinstall": "node postinstall.cjs",
     "dev": "npm-run-all -p -r dev:bubble-server dev:monorepo dev:app",
-    "dev:app": "vue-cli-service serve ./dev/main.js --open --host localhost",
+    "dev:app": "vue-cli-service serve ./dev/main.js --open --host 0.0.0.0",
     "dev:monorepo": "cd ../packages && npm run dev",
     "dev:bubble-server": "cd ../../hestialabs-bubble-server/bubbleserver && cross-env DJANGO_DEBUG=True poetry run python ./manage.py runserver",
     "lint": "vue-cli-service lint",
