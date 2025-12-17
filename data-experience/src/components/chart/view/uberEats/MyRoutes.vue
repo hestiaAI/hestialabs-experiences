@@ -227,6 +227,7 @@ export default {
   },
   methods: {
     setPeriodMode(mode) {
+      this.clearSelection()
       periodStore.setMode(mode)
       if (mode === 'week') {
         const monday = dayjs(periodStore.periodStart).startOf('week').add(1, 'day')
@@ -239,6 +240,7 @@ export default {
       }
     },
     prevPeriod() {
+      this.clearSelection()
       if (periodStore.mode === 'week') {
         const newStart = this.periodStart.subtract(7, 'day')
         const newEnd = newStart.add(6, 'day').endOf('day')
@@ -250,6 +252,7 @@ export default {
       }
     },
     nextPeriod() {
+      this.clearSelection()
       if (periodStore.mode === 'week') {
         const newStart = this.periodStart.add(7, 'day')
         const newEnd = newStart.add(6, 'day').endOf('day')
@@ -383,7 +386,7 @@ export default {
 }
 
 .map-div, .selected-routes {
-  max-height: 62vh;
+  height: 600px;
 }
 
 .selected-routes {
