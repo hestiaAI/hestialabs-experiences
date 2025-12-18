@@ -1,0 +1,7 @@
+node_modules
+.git
+.gitlab
+dist
+coverage
+npm-debug.log
+Dockerfile
