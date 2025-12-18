@@ -23,10 +23,10 @@ deploy:
 
   script:
     # Build image in CI
-    - docker build -t data4worker:latest .
+    - docker build -t data-experience:latest .
 
     # Export image
-    - docker save data4worker:latest | gzip > image.tar.gz
+    - docker save data-experience:latest | gzip > image.tar.gz
 
     # Upload image
     - scp image.tar.gz "$SERVER_USER@$SERVER_IP:/tmp/image.tar.gz"
