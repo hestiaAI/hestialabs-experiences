@@ -3,7 +3,7 @@
     <div class="controls-bar">
       <div class="period-switch">
         <button
-          v-for="p in ['week', 'month', 'total']"
+          v-for="p in ['week', 'month', 'uncompleted']"
           :key="p"
           :class="['switch-btn', { active: mode === p }]"
           @click="setPeriodMode(p)"
@@ -24,12 +24,8 @@
     <div class="content-area">
       <!-- LEFT SIDE — Kepler Map -->
       <div class="map-div">
-        <h3>Map of Routes</h3>
-        <div v-if="mode === 'total'" class="map-unavailable">
-          Map view is not available in "Total" mode.
-        </div>
+        <h3>{{ mapTitle }}</h3>
         <UnitKepler
-          v-else
           ref="keplerRef"
           class="map-frame"
           :args="keplerArgs"
@@ -135,6 +131,13 @@ export default {
       return this.pipelineBlock.trips?.items ?? []
     },
 
+    mapTitle() {
+      return this.mode === 'week' || this.mode === 'month'
+        ? 'Map of Routes Completed'
+        : 'Map of Routes Uncompleted'
+    },
+
+    // Period label for display
     periodLabel() {
       if (periodStore.mode === 'total') return 'All time'
       if (periodStore.mode === 'month') return this.periodStart.format('MMMM YYYY')
@@ -152,12 +155,31 @@ export default {
       return dayjs(periodStore.periodEnd)
     },
     tripsFiltered() {
-      const filtered = this.trips.filter((t) => {
-        if (!t.deliveryStatus || t.deliveryStatus.toLowerCase() !== 'completed') return false
-        const accept = dayjs(t.courierAcceptTimestampLocal)
-        return accept.isSameOrAfter(this.periodStart) && accept.isSameOrBefore(this.periodEnd)
-      })
-      return filtered
+      let result
+
+      if (this.mode === 'uncompleted') {
+        // UNCOMPLETED → not completed
+        result = this.trips.filter((t) => {
+          return !t.deliveryStatus || t.deliveryStatus.toLowerCase() !== 'completed'
+        })
+      } else {
+        // WEEK / MONTH → completed within period
+        result = this.trips.filter((t) => {
+          if (!t.deliveryStatus || t.deliveryStatus.toLowerCase() !== 'completed') {
+            return false
+          }
+
+          const accept = dayjs(t.courierAcceptTimestampLocal)
+          return accept.isSameOrAfter(this.periodStart) &&
+                accept.isSameOrBefore(this.periodEnd)
+        })
+      }
+
+      // Sort newest → oldest
+      return result.sort((a, b) =>
+        dayjs(b.courierAcceptTimestampLocal).valueOf() -
+        dayjs(a.courierAcceptTimestampLocal).valueOf()
+      )
     },
     keplerData() {
       const trips = this.selectedTrips.length ? this.selectedTrips : this.tripsFiltered
