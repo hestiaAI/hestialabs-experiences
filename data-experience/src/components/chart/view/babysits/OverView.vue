@@ -444,6 +444,18 @@ export default {
             }
           }
         },
+        states: {
+          hover: {
+            filter: {
+              type: 'none'
+            }
+          },
+          active: {
+            filter: {
+              type: 'none'
+            }
+          }
+        },
         tooltip: {
           y: {
             formatter: v => `${v} hour(s) worked totally`
@@ -666,5 +678,10 @@ export default {
   margin-top:120px;
   color:#777;
   font-size:1.1rem;
+}
+
+:deep(.apexcharts-heatmap-rect:hover) {
+  stroke: #333;
+  stroke-width: 1.5px;
 }
 </style>
