@@ -223,40 +223,40 @@ export default {
       const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
       const seriesMap = {}
 
-      bucketKeys.forEach(b => (seriesMap[b] = { name: b, data: [] }))
-
-      const maxIndex =
-        this.currentPeriod === 'month'
-          ? this.monthDays.length - 1
-          : 6
+      bucketKeys.forEach((b) => {
+        seriesMap[b] = { name: b, data: [] }
+      })
 
       Object.entries(this.aggregatedData).forEach(([idx, buckets]) => {
         Object.entries(buckets).forEach(([bucket, metrics]) => {
-          const series = seriesMap[bucket] || seriesMap.Other
+          if (!seriesMap[bucket]) return
 
-          series.data.push([
-            Number(idx),
-            Number(metrics.totalEarnings.toFixed(2)),
-            Number(metrics.totalDuration.toFixed(1)),
-            metrics.count,
-            Math.min(...metrics.startTimes),
-            Math.max(...metrics.endTimes)
-          ])
+          seriesMap[bucket].data.push({
+            x: Number(idx),
+            y: Number(metrics.totalEarnings.toFixed(2)),
+            z: Number(metrics.totalDuration.toFixed(1)),
+            count: metrics.count,
+            start: Math.min(...metrics.startTimes),
+            end: Math.max(...metrics.endTimes)
+          })
         })
       })
 
-      const dataSeries = bucketKeys
+      return bucketKeys
         .map(k => seriesMap[k])
-        .filter(s => s.data.length)
+        .filter(s => s.data.length > 0)
+    },
 
-      const placeholder = {
-        name: 'Placeholder',
-        data: Array.from({ length: maxIndex + 1 }, (_, i) => [i, null, 0])
-      }
+    maxEarnings() {
+      let max = 0
 
-      return dataSeries.length
-        ? [...dataSeries, placeholder]
-        : [placeholder]
+      this.chartSeries.forEach((series) => {
+        series.data.forEach((p) => {
+          if (p.y > max) max = p.y
+        })
+      })
+
+      return max
     },
 
     chartOptions() {
@@ -283,7 +283,8 @@ export default {
           enabled: false
         },
         fill: {
-          opacity: 0.8
+          opacity: 0.8,
+          colors: ['#36A2EB', '#4BC0C0', '#FF6384', '#6A9BE8']
         },
         xaxis: {
           type: 'numeric',
@@ -304,7 +305,7 @@ export default {
             text: `Earnings (${this.currency})`
           },
           min: 0,
-          forceNiceScale: true
+          max: this.maxEarnings * 1.15
         },
         grid: {
           show: true,
@@ -323,23 +324,11 @@ export default {
         tooltip: {
           enabled: this.filteredJobs.length > 0,
           custom: ({ seriesIndex, dataPointIndex, w }) => {
-            const point = w.config.series[seriesIndex].data[dataPointIndex]
-            const seriesName = w.config.series[seriesIndex].name
+            const series = w.config.series[seriesIndex]
+            const point = series.data[dataPointIndex]
+            if (!point) return ''
 
-            // Don't show tooltip for placeholder series
-            if (seriesName === 'Placeholder' || !point || point[1] === null || point[1] === 0) return ''
-
-            const dayIndex = Math.round(point[0])
-            const dayName =
-              this.currentPeriod === 'month'
-                ? dayIndex + 1
-                : this.xLabels[dayIndex]
-            const totalEarnings = point[1]
-            const totalDuration = point[2]
-            const jobCount = point[3] || 1
-            const bucketName = seriesName
-            const minStart = point[4]
-            const maxEnd = point[5]
+            const day = this.xLabels[Math.round(point.x)]
 
             const fmt = m =>
               `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`
@@ -347,11 +336,11 @@ export default {
             return `
               <div class="tooltip-box">
                 <div class="tooltip-title">
-                  ${dayName} - ${bucketName} (${fmt(minStart)}–${fmt(maxEnd)})
+                  ${day} - ${series.name} (${fmt(point.start)}-${fmt(point.end)})
                 </div>
-                <p>Total Income: <strong>${totalEarnings.toFixed(2)} ${this.currency}</strong></p>
-                <p>Jobs: <strong>${jobCount}</strong></p>
-                <p>Total Duration: <strong>${totalDuration.toFixed(1)} h</strong></p>
+                <p>Total income: <strong>${point.y.toFixed(2)} ${this.currency}</strong></p>
+                <p>Jobs: <strong>${point.count}</strong></p>
+                <p>Duration: <strong>${point.z.toFixed(1)} h</strong></p>
               </div>
             `
           }
