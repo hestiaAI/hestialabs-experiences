@@ -70,6 +70,13 @@ import isBetween from 'dayjs/plugin/isBetween'
 dayjs.extend(weekday)
 dayjs.extend(isBetween)
 
+const TIME_BUCKETS = {
+  Morning: { from: '08:00', to: '12:00' },
+  Day: { from: '12:00', to: '17:00' },
+  Evening: { from: '17:00', to: '22:00' },
+  Night: { from: '22:00', to: '08:00' }
+}
+
 export default {
   name: 'BabysitsEarningsDistribution',
   components: { ApexChart: VueApexCharts },
@@ -83,13 +90,6 @@ export default {
   },
 
   computed: {
-
-    TIME_BUCKETS: {
-      Morning: { from: '08:00', to: '12:00' },
-      Day: { from: '12:00', to: '17:00' },
-      Evening: { from: '17:00', to: '22:00' },
-      Night: { from: '22:00', to: '08:00' }
-    },
 
     monthDays() {
       const daysInMonth = this.weekStart.daysInMonth()
@@ -314,7 +314,7 @@ export default {
             const totalDuration = point[2]
             const jobCount = point[3] || 1
             const bucketName = seriesName
-            const range = this.TIME_BUCKETS[bucketName]
+            const range = TIME_BUCKETS[bucketName]
 
             return `
               <div class="tooltip-box">
@@ -349,7 +349,7 @@ export default {
         const count = Object.values(this.aggregatedData).reduce((sum, buckets) => {
           return sum + (buckets[type]?.count || 0)
         }, 0)
-        const range = this.TIME_BUCKETS[type]
+        const range = TIME_BUCKETS[type]
         return {
           name: type,
           label: `${type} (${range.from}–${range.to})`,
@@ -476,7 +476,7 @@ export default {
             const totalIncome = stats.totalEarnings.toFixed(2)
             const totalHours = stats.totalDuration.toFixed(1)
 
-            const range = this.TIME_BUCKETS[bucket]
+            const range = TIME_BUCKETS[bucket]
 
             return `
               <div class="tooltip-box">
