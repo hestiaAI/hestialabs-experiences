@@ -436,10 +436,10 @@ export default {
             enableShades: false,
             colorScale: {
               ranges: [
-                { from: 0, to: 0.1, color: '#eeeeee', name: 'None' },
-                { from: 0.1, to: 1, color: '#b3d9ff', name: 'Low' },
-                { from: 1, to: 3, color: '#4da3ff', name: 'Medium' },
-                { from: 3, to: 100, color: '#003f8c', name: 'High' }
+                { from: 0, to: 0.1, color: '#eeeeee', name: 'No activity (0 h)' },
+                { from: 0.1, to: 2, color: '#b3d9ff', name: '0-2 h' },
+                { from: 2, to: 4, color: '#4da3ff', name: '2-4 h' },
+                { from: 4, to: 100, color: '#003f8c', name: 'More than 4 h' }
               ]
             }
           }
