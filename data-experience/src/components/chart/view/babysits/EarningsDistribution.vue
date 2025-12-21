@@ -180,8 +180,30 @@ export default {
 
         if (!data[dayIndex]) data[dayIndex] = {}
         if (!data[dayIndex][bucket]) {
-          data[dayIndex][bucket] = { totalEarnings: 0, totalDuration: 0, count: 0 }
+          data[dayIndex][bucket] = {
+            totalEarnings: 0,
+            totalDuration: 0,
+            count: 0,
+            startTimes: [],
+            endTimes: []
+          }
         }
+
+        const [sh, sm] = (job.start_time || '0:00').split(':').map(Number)
+        const startMinutes = sh * 60 + sm
+
+        const durationHours =
+          job.nbHours ||
+          job.duration ||
+          job.duration_hours ||
+          job.hours ||
+          job.work_hours ||
+          0
+
+        const endMinutes = startMinutes + durationHours * 60
+
+        data[dayIndex][bucket].startTimes.push(startMinutes)
+        data[dayIndex][bucket].endTimes.push(endMinutes)
 
         data[dayIndex][bucket].totalEarnings += Number(job.earnings) || 0
         data[dayIndex][bucket].totalDuration += Number(
@@ -216,7 +238,9 @@ export default {
             Number(idx),
             Number(metrics.totalEarnings.toFixed(2)),
             Number(metrics.totalDuration.toFixed(1)),
-            metrics.count
+            metrics.count,
+            Math.min(...metrics.startTimes),
+            Math.max(...metrics.endTimes)
           ])
         })
       })
@@ -314,12 +338,16 @@ export default {
             const totalDuration = point[2]
             const jobCount = point[3] || 1
             const bucketName = seriesName
-            const range = TIME_BUCKETS[bucketName]
+            const minStart = point[4]
+            const maxEnd = point[5]
+
+            const fmt = m =>
+              `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`
 
             return `
               <div class="tooltip-box">
                 <div class="tooltip-title">
-                  ${dayName} – ${bucketName} (${range.from}–${range.to})
+                  ${dayName} - ${bucketName} (${fmt(minStart)}–${fmt(maxEnd)})
                 </div>
                 <p>Total Income: <strong>${totalEarnings.toFixed(2)} ${this.currency}</strong></p>
                 <p>Jobs: <strong>${jobCount}</strong></p>
