@@ -432,6 +432,8 @@ export default {
         },
         plotOptions: {
           heatmap: {
+            shadeIntensity: 0,
+            enableShades: false,
             colorScale: {
               ranges: [
                 { from: 0, to: 0.1, color: '#eeeeee', name: 'None' },
@@ -444,7 +446,7 @@ export default {
         },
         tooltip: {
           y: {
-            formatter: v => `${v} h total`
+            formatter: v => `${v} hour(s) worked totally`
           }
         }
       }
