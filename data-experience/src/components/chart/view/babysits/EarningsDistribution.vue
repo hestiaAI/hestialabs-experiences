@@ -443,7 +443,10 @@ export default {
     },
 
     totalScatterOptions() {
-      const categories = ['Morning', 'Day', 'Evening', 'Night']
+      const bucketKeys = Object.keys(TIME_BUCKETS)
+      const categories = bucketKeys.map(
+        key => `${key} (${TIME_BUCKETS[key].from}-${TIME_BUCKETS[key].to})`
+      )
 
       return {
         chart: {
@@ -452,9 +455,7 @@ export default {
           zoom: { enabled: false }
         },
 
-        colors: categories.map(
-          b => this.timeBucketColors[b] || this.timeBucketColors.Other
-        ),
+        colors: bucketKeys.map(b => this.timeBucketColors[b] || '#ccc'),
 
         xaxis: {
           type: 'numeric',
@@ -494,26 +495,22 @@ export default {
             if (!point || point[1] == null || point[1] === 0) return ''
 
             const bucketIndex = Math.round(point[0])
-            const bucket = categories[bucketIndex]
+            const bucketKey = bucketKeys[bucketIndex]
+            const range = TIME_BUCKETS[bucketKey]
             const avg = point[1]
             const shifts = point[2]
 
-            const stats = this.totalScatterData[bucket]
+            const stats = this.totalScatterData[bucketKey]
             if (!stats) return ''
 
             const totalIncome = stats.totalEarnings.toFixed(2)
             const totalHours = stats.totalDuration.toFixed(1)
 
-            const range = TIME_BUCKETS[bucket]
-
             return `
               <div class="tooltip-box">
-                <div class="tooltip-title">${bucket} (${range.from}-${range.to})</div>
-                <p>Avg hourly income:<br>
-                <strong>${avg.toFixed(2)} ${this.currency}</strong></p>
-
+                <div class="tooltip-title">${bucketKey} (${range.from}-${range.to})</div>
+                <p>Avg hourly income:<br><strong>${avg.toFixed(2)} ${this.currency}</strong></p>
                 <p>Shifts (bubble size): <strong>${shifts}</strong></p>
-
                 <p>Total income: <strong>${totalIncome} ${this.currency}</strong></p>
                 <p>Total hours: <strong>${totalHours} h</strong></p>
               </div>
