@@ -83,6 +83,14 @@ export default {
   },
 
   computed: {
+
+    TIME_BUCKETS: {
+      Morning: { from: '08:00', to: '12:00' },
+      Day: { from: '12:00', to: '17:00' },
+      Evening: { from: '17:00', to: '22:00' },
+      Night: { from: '22:00', to: '08:00' }
+    },
+
     monthDays() {
       const daysInMonth = this.weekStart.daysInMonth()
       return Array.from({ length: daysInMonth }, (_, i) => i + 1)
@@ -306,10 +314,13 @@ export default {
             const totalDuration = point[2]
             const jobCount = point[3] || 1
             const bucketName = seriesName
+            const range = this.TIME_BUCKETS[bucketName]
 
             return `
               <div class="tooltip-box">
-                <div class="tooltip-title">${dayName} - ${bucketName}</div>
+                <div class="tooltip-title">
+                  ${dayName} – ${bucketName} (${range.from}–${range.to})
+                </div>
                 <p>Total Income: <strong>${totalEarnings.toFixed(2)} ${this.currency}</strong></p>
                 <p>Jobs: <strong>${jobCount}</strong></p>
                 <p>Total Duration: <strong>${totalDuration.toFixed(1)} h</strong></p>
@@ -338,7 +349,13 @@ export default {
         const count = Object.values(this.aggregatedData).reduce((sum, buckets) => {
           return sum + (buckets[type]?.count || 0)
         }, 0)
-        return { name: type, label: type, color: this.timeBucketColors[type], count }
+        const range = this.TIME_BUCKETS[type]
+        return {
+          name: type,
+          label: `${type} (${range.from}–${range.to})`,
+          color: this.timeBucketColors[type],
+          count
+        }
       }).filter(item => item.count > 0)
     },
 
@@ -459,9 +476,11 @@ export default {
             const totalIncome = stats.totalEarnings.toFixed(2)
             const totalHours = stats.totalDuration.toFixed(1)
 
+            const range = this.TIME_BUCKETS[bucket]
+
             return `
               <div class="tooltip-box">
-                <div class="tooltip-title">${bucket}</div>
+                <div class="tooltip-title">${bucket} (${range.from}-${range.to})</div>
                 <p>Avg hourly income:<br>
                 <strong>${avg.toFixed(2)} ${this.currency}</strong></p>
 
@@ -514,9 +533,9 @@ export default {
 
     getTimeBucketFromHour(h) {
       if (h == null || isNaN(h)) return 'Other'
-      if (h >= 5 && h < 11) return 'Morning'
-      if (h >= 11 && h < 17) return 'Day'
-      if (h >= 17 && h < 23) return 'Evening'
+      if (h >= 8 && h < 12) return 'Morning'
+      if (h >= 12 && h < 17) return 'Day'
+      if (h >= 17 && h < 22) return 'Evening'
       return 'Night'
     },
 
