@@ -146,8 +146,7 @@ export default {
         Morning: '#36A2EB',
         Day: '#4BC0C0',
         Evening: '#FF6384',
-        Night: '#6A9BE8',
-        Other: '#9E9E9E'
+        Night: '#6A9BE8'
       }
     },
 
@@ -191,7 +190,7 @@ export default {
     },
 
     chartSeries() {
-      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night', 'Other']
+      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
       const seriesMap = {}
 
       bucketKeys.forEach(b => (seriesMap[b] = { name: b, data: [] }))
@@ -374,7 +373,7 @@ export default {
     },
 
     totalScatterSeries() {
-      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night', 'Other']
+      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
 
       const data = bucketKeys.map((bucket, i) => {
         const b = this.totalScatterData[bucket]
@@ -399,7 +398,7 @@ export default {
     },
 
     totalScatterOptions() {
-      const categories = ['Morning', 'Day', 'Evening', 'Night', 'Other']
+      const categories = ['Morning', 'Day', 'Evening', 'Night']
 
       return {
         chart: {
