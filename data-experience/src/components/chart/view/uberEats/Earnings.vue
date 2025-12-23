@@ -430,13 +430,12 @@ export default {
 
 <style scoped>
 .earnings-view {
-  padding: 20px;
+  margin: 8px;
 }
 
 .period-switch {
   grid-column: 1 / 3;
   grid-row: 1 / 2;
-  position: absolute;
   display: flex;
   gap: 6px;
 }
@@ -599,4 +598,23 @@ input:checked + .slider:before {
 /* Colors for earnings legend */
 .color-box.earnings { background-color: #2196f3; }
 .color-box.tips { background-color: #4caf50; }
+
+/* Mobile layout */
+@media (max-width: 768px) {
+  .earnings-adjusted {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .period-switch {
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .week-nav {
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+}
 </style>
