@@ -112,26 +112,33 @@ export default {
     }
   },
   computed: {
+    // periodStore period mode bindings
     mode: {
       get() { return periodStore.mode },
       set(v) { periodStore.mode = v }
     },
 
+    // period start as dayjs object
     periodStart() {
       return dayjs(periodStore.periodStart)
     },
 
+    // period end as dayjs object
     periodEnd() {
       return dayjs(periodStore.periodEnd)
     },
 
+    // calendar year for MonthlyCalendar
     calendarYear() {
       return this.periodStart.year()
     },
+
+    // calendar month for MonthlyCalendar
     calendarMonth() {
       return this.periodStart.month() // 0–11
     },
 
+    // human-readable period label
     periodLabel() {
       if (this.mode === 'total') return 'All time'
       if (this.mode === 'month') {
@@ -164,17 +171,18 @@ export default {
       )
     },
 
+    // raw trips CSV string
     tripsRaw() {
       return this.block.trips?.rawCsv ?? ''
     },
 
-    // currency guess: fallback '€'
+    // currency guess: fallback '$'
     currency() {
       // Try to infer from payments if present
       if (this.payments.length > 0 && this.payments[0].currencyCode) {
         return this.payments[0].currencyCode
       }
-      return this.block.currency ?? '€'
+      return this.block.currency ?? '$'
     },
 
     // total earnings summed up
@@ -195,6 +203,7 @@ export default {
       return (minutes / 60).toFixed(1)
     },
 
+    // shifts grouped by day (YYYY-MM-DD)
     shiftsByDay() {
       const map = {}
 
@@ -227,6 +236,7 @@ export default {
       return map
     },
 
+    // filtered trips in the selected period
     tripsInPeriod() {
       return this.filterByPeriod(
         this.tripsParsed,
@@ -234,6 +244,7 @@ export default {
       )
     },
 
+    // Number of completed deliveries
     deliveryCount() {
       // trips who were completed
       return this.tripsInPeriod.length
@@ -261,6 +272,7 @@ export default {
       return hours > 0 ? `${hours}h ${minutes}min` : `${minutes}min`
     },
 
+    // payments grouped by day with total amount and hours
     paymentsByDayTotal() {
       // Ignore periodStore completely (full payments)
       const map = {}
@@ -292,6 +304,7 @@ export default {
         .sort((a, b) => b.amount - a.amount)
     },
 
+    // 5 most earned days
     top5Days() {
       return this.paymentsByDayTotal.slice(0, 5)
     },
@@ -382,20 +395,25 @@ export default {
       this.$nextTick(() => this.redraw())
     },
 
+    // watch period start change
     periodStart() {
       this.$nextTick(() => this.redraw())
     },
+
+    // watch period end change
     periodEnd() {
       this.$nextTick(() => this.redraw())
     }
   },
   mounted() {
+    // Continue tutorial if needed
     if (window.__continueRoutesTour) {
       window.__continueRoutesTour()
       window.__continueRoutesTour = null
     }
     periodStore.initFromTrips(this.tripsParsed)
 
+    // Check if we need to start the tutorial
     const alreadyShown = localStorage.getItem('uberEatsTourShown')
     if (!alreadyShown) {
       this.startOverviewTour()
@@ -404,6 +422,7 @@ export default {
     // initial draw
     this.redraw()
 
+    // Resize observer to detect tab visibility changes
     this.resizeObserver = new ResizeObserver((entries) => {
       const { width } = entries[0].contentRect
 
@@ -428,6 +447,9 @@ export default {
     window.removeEventListener('resize', this.onResize)
   },
   methods: {
+    /**
+     * Start the overview tutorial tour
+     */
     startOverviewTour() {
       // Create tour instance with callback to switch tabs
       const tour = createTour({
@@ -447,6 +469,9 @@ export default {
       tour.start()
     },
 
+    /**
+     * Handle day selection from MonthlyCalendar
+     */
     onSelectDay(date) {
       periodStore.setMode('week')
 
@@ -462,6 +487,9 @@ export default {
       this.redraw()
     },
 
+    /**
+     * Calculate total hours from shifts array
+     */
     calcHoursFromShifts(shifts) {
       const minutes = shifts.reduce((sum, s) => {
         if (!s.begin_timestamp_utc || !s.end_timestamp_utc) return sum
@@ -477,6 +505,9 @@ export default {
       return Number((minutes / 60).toFixed(1))
     },
 
+    /**
+     * Set the period mode (week, month, total)
+     */
     setPeriodMode(mode) {
       periodStore.setMode(mode)
 
@@ -496,6 +527,9 @@ export default {
       periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
     },
 
+    /**
+     * Navigate to previous period
+     */
     prevPeriod() {
       if (this.mode === 'total') return
 
@@ -512,6 +546,9 @@ export default {
       periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
     },
 
+    /**
+     * Navigate to next period
+     */
     nextPeriod() {
       if (this.mode === 'total') return
 
@@ -528,6 +565,9 @@ export default {
       periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
     },
 
+    /**
+     * Filter items by current period range
+     */
     filterByPeriod(items, getDateFn) {
       const { start, end } = this.periodRange
       return items.filter((i) => {
@@ -684,6 +724,7 @@ export default {
       this.drawChart()
     },
 
+    // handle window resize
     onResize() {
       this.redraw()
     }

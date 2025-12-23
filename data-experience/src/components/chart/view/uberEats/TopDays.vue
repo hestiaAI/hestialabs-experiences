@@ -36,6 +36,10 @@ export default {
     currency: String
   },
   methods: {
+    /**
+     * Transform dayjs date to DD.MM.YYYY format
+     * @param d
+     */
     format(d) {
       return dayjs(d).format('DD.MM.YYYY')
     }
