@@ -50,7 +50,6 @@
 <script>
 import * as d3 from 'd3'
 import dayjs from 'dayjs'
-import { watch } from 'vue'
 import { periodStore } from './store/periodStore'
 import mixin from '@/components/chart/view/mixin'
 
@@ -257,20 +256,6 @@ export default {
       window.__continueRoutesTour = null
     }
 
-    watch(
-      () => periodStore.periodStart,
-      () => {
-        this.redraw()
-      }
-    )
-
-    watch(
-      () => periodStore.periodEnd,
-      () => {
-        this.redraw()
-      }
-    )
-
     this.drawChart()
 
     this.resizeObserver = new ResizeObserver((entries) => {
@@ -403,7 +388,7 @@ export default {
           // Non-tips bar
           g.append('rect')
             .attr('y', y(d.nonTips))
-            .attr('height', y(0) - y(d.nonTips))
+            .attr('height', Math.max(0, y(0) - y(d.nonTips)))
             .attr('width', x.bandwidth())
             .attr('fill', '#2196f3')
             .on('mousemove', (event) => {
@@ -422,7 +407,7 @@ export default {
           // Tips bar (stacked on top)
           g.append('rect')
             .attr('y', y(d.nonTips + d.tips))
-            .attr('height', y(0) - y(d.tips))
+            .attr('height', Math.max(0, y(0) - y(d.tips)))
             .attr('width', x.bandwidth())
             .attr('fill', '#4caf50')
             .on('mousemove', (event) => {
