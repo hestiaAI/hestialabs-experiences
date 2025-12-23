@@ -565,7 +565,7 @@ export default {
       this.svgSize = { width, height }
       svg.attr('width', width).attr('height', height)
 
-      const margin = { top: 20, right: 20, bottom: 30, left: 80 }
+      const margin = { top: 20, right: 20, bottom: 30, left: 40 }
       const innerWidth = width - margin.left - margin.right
       const innerHeight = height - margin.top - margin.bottom
 
@@ -595,6 +595,7 @@ export default {
         .attr('y', (_, i) => yScale(i) + yScale.bandwidth() / 2)
         .attr('dy', '0.35em')
         .attr('text-anchor', 'end')
+        .style('font-size', '14px')
         .text(d => d)
 
       // Prepare shifts grouped by weekday index
@@ -836,4 +837,51 @@ export default {
 
 /* small active button */
 .v-btn.active { background-color: #2e7d32 !important; color: white !important; }
+
+/* Mobile layout */
+@media (max-width: 768px) {
+  .layout-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .period-switch {
+    position: static;
+    grid-column: 1 / 2;
+    grid-row: auto;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .week-nav {
+    grid-column: 1 / 2;
+    grid-row: auto;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .box1 {
+    grid-column: 1 / 2;
+    grid-row: auto;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .box2 {
+    grid-column: 1 / 2;
+    grid-row: auto;
+  }
+
+  .right-column {
+    grid-column: 1 / 2;
+    grid-row: auto;
+    grid-template-rows: auto;
+  }
+
+  .box3,
+  .box4 {
+    text-align: center;
+  }
+}
 </style>

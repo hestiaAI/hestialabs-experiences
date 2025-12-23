@@ -517,4 +517,46 @@ export default {
   padding: 16px;
   margin-top: 4px;
 }
+
+/* Mobile layout */
+@media (max-width: 768px) {
+  .layout {
+    margin: 8px;
+  }
+
+  .controls-bar {
+    flex-direction: column;
+  }
+
+  .period-switch {
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .week-nav {
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .content-area {
+    flex-direction: column;
+  }
+
+  .map-div {
+    flex: none;
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+
+  .selected-routes {
+    width: 100%;
+    height: auto;
+    max-height: 420px;
+  }
+
+  .nav-btn {
+    padding: 8px 12px;
+  }
+}
 </style>
