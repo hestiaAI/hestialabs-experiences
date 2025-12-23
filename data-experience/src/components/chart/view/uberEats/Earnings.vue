@@ -67,18 +67,23 @@ export default {
   },
 
   computed: {
+    // Period mode metadata
     mode: {
       get() { return periodStore.mode },
       set(v) { periodStore.mode = v }
     },
 
+    // Period start as dayjs object
     periodStart() {
       return dayjs(periodStore.periodStart)
     },
+
+    // Period end as dayjs object
     periodEnd() {
       return dayjs(periodStore.periodEnd)
     },
 
+    // Period label for display
     periodLabel() {
       if (this.mode === 'total') return 'All Time'
       if (this.mode === 'month') return this.periodStart.format('MMMM YYYY')
@@ -90,6 +95,7 @@ export default {
       return this.data?.[0] ?? {}
     },
 
+    // Uber Eats specific block
     block() {
       return this.values?.[0] ?? {}
     },
@@ -104,7 +110,7 @@ export default {
       return this.block.payments?.items ?? []
     },
 
-    /** All days in range */
+    // All days in the selected period as DD.MM.YYYY strings
     allDays() {
       const days = []
       let current = this.periodStart
@@ -118,7 +124,7 @@ export default {
       return days
     },
 
-    /** Hours worked grouped per day */
+    // Hours worked grouped per day
     hoursPerDay() {
       const out = {}
 
@@ -135,7 +141,7 @@ export default {
       return out
     },
 
-    /** Earnings grouped per day */
+    // Earnings grouped per day
     earningsByDay() {
       const out = {}
 
@@ -157,6 +163,7 @@ export default {
       return out
     },
 
+    // Earnings grouped per year
     earningsByYear() {
       const out = {}
 
@@ -174,7 +181,7 @@ export default {
       return out
     },
 
-    /** Avg earnings per hour */
+    // Avg earnings per hour
     avgEarningsPerDay() {
       const out = {}
 
@@ -191,6 +198,7 @@ export default {
       return out
     },
 
+    // Avg earnings per year
     avgEarningsByYear() {
       const out = {}
 
@@ -219,7 +227,7 @@ export default {
       return out
     },
 
-    /** Final chart dataset */
+    // Final chart dataset
     chartData() {
       if (this.mode === 'total') {
         const src = this.showAvg
@@ -243,14 +251,18 @@ export default {
     }
   },
   watch: {
+    // Redraw chart on relevant changes
     showAvg() {
       this.drawChart()
     },
+
+    // Redraw chart on data changes
     chartData() {
       this.drawChart()
     }
   },
   mounted() {
+    // Continue tutorial if applicable
     if (window.__continueRoutesTour) {
       window.__continueRoutesTour()
       window.__continueRoutesTour = null
@@ -258,6 +270,7 @@ export default {
 
     this.drawChart()
 
+    // Resize observer to detect tab visibility changes
     this.resizeObserver = new ResizeObserver((entries) => {
       const { width } = entries[0].contentRect
 
@@ -273,6 +286,10 @@ export default {
     window.addEventListener('resize', this.onResize)
   },
   methods: {
+    /**
+     * Set the period mode (week, month, total)
+     * @param mode {string}
+     */
     setPeriodMode(mode) {
       periodStore.setMode(mode)
 
@@ -290,6 +307,9 @@ export default {
       periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
     },
 
+    /**
+     * Navigate to previous period
+     */
     prevPeriod() {
       if (this.mode === 'total') return
 
@@ -304,6 +324,9 @@ export default {
       periodStore.setPeriod(start.toISOString(), end.toISOString())
     },
 
+    /**
+     * Navigate to next period
+     */
     nextPeriod() {
       if (this.mode === 'total') return
 
@@ -317,6 +340,10 @@ export default {
       const end = start.add(6, 'day').endOf('day')
       periodStore.setPeriod(start.toISOString(), end.toISOString())
     },
+
+    /**
+     * Redraw the D3 chart
+     */
     drawChart() {
       const el = this.$refs.chartRef
       if (!el) return

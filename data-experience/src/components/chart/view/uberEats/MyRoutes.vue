@@ -131,6 +131,7 @@ export default {
       return this.pipelineBlock.trips?.items ?? []
     },
 
+    // Map title based on mode
     mapTitle() {
       return this.mode === 'week' || this.mode === 'month'
         ? 'Map of Routes Completed'
@@ -143,17 +144,24 @@ export default {
       if (periodStore.mode === 'month') return this.periodStart.format('MMMM YYYY')
       return `${this.periodStart.format('DD.MM.YYYY')} – ${this.periodEnd.format('DD.MM.YYYY')}`
     },
+
+    // Current period mode
     mode: {
       get() { return periodStore.mode },
       set(v) { periodStore.mode = v }
     },
+
     // Period metadata
     periodStart() {
       return dayjs(periodStore.periodStart)
     },
+
+    // Period metadata
     periodEnd() {
       return dayjs(periodStore.periodEnd)
     },
+
+    // Filtered trips based on period and mode
     tripsFiltered() {
       let result
 
@@ -181,6 +189,8 @@ export default {
         dayjs(a.courierAcceptTimestampLocal).valueOf()
       )
     },
+
+    // Data formatted for Kepler.gl
     keplerData() {
       const trips = this.selectedTrips.length ? this.selectedTrips : this.tripsFiltered
 
@@ -228,15 +238,22 @@ export default {
     }
   },
   watch: {
+    // React to period changes
     periodStart() {
       this.onPeriodChanged()
     },
+
+    // React to period changes
     periodEnd() {
       this.onPeriodChanged()
     },
+
+    // React to mode changes
     mode() {
       this.onPeriodChanged()
     },
+
+    // Update Kepler map when data changes
     keplerData: {
       handler(newData) {
         this.keplerRef?.callIframeFunction('update', {
@@ -249,6 +266,7 @@ export default {
     }
   },
   mounted() {
+    // Continue tutorial if applicable
     if (window.__continueRoutesTour) {
       window.__continueRoutesTour()
       window.__continueRoutesTour = null
@@ -257,6 +275,9 @@ export default {
     this.keplerRef = this.$refs.keplerRef
   },
   methods: {
+    /**
+     * Handle period changes
+     */
     onPeriodChanged() {
       // Unselect everything
       this.selectedTrips = []
@@ -270,6 +291,11 @@ export default {
         })
       })
     },
+
+    /**
+     * Set the period mode (week, month, total)
+     * @param mode 'week' | 'month' | 'uncompleted'
+     */
     setPeriodMode(mode) {
       this.clearSelection()
       periodStore.setMode(mode)
@@ -283,6 +309,10 @@ export default {
         periodStore.setPeriod(start.toISOString(), end.toISOString())
       }
     },
+
+    /**
+     * Navigate to previous period
+     */
     prevPeriod() {
       this.clearSelection()
       if (periodStore.mode === 'week') {
@@ -295,6 +325,10 @@ export default {
         periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
     },
+
+    /**
+     * Navigate to next period
+     */
     nextPeriod() {
       this.clearSelection()
       if (periodStore.mode === 'week') {
@@ -307,17 +341,37 @@ export default {
         periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
     },
+
+    /**
+     * Format timestamp to HH:mm:ss
+     * @param timestamp
+     */
     formatTime(timestamp) {
       if (!timestamp) return '-'
       return dayjs(timestamp).format('HH:mm:ss')
     },
+
+    /**
+     * Format timestamp to DD.MM.YY
+     * @param timestamp
+     */
     formatDate(timestamp) {
       if (!timestamp) return '-'
       return dayjs(timestamp).format('DD.MM.YY')
     },
+
+    /**
+     * Create a unique ID for a trip
+     * @param trip
+     */
     makeTripId(trip) {
       return `${trip.courierAcceptTimestampLocal}_${trip.courierBegintripTimestampLocal}_${trip.courierBegintripToDropoffMiles}`
     },
+
+    /**
+     * Select or unselect a trip
+     * @param trip
+     */
     selectTrip(trip) {
       const id = this.makeTripId(trip)
 
@@ -336,6 +390,10 @@ export default {
         config: keplerConfigPoints
       })
     },
+
+    /**
+     * Clear all selected trips on the map
+     */
     clearSelection() {
       this.selectedTrips = []
       this.keplerRef?.callIframeFunction('update', {

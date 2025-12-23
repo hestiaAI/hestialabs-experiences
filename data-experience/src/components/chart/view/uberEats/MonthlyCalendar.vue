@@ -49,24 +49,30 @@ export default {
   },
   emits: ['select-day'],
   setup(props, { emit }) {
+    // Weekday labels
     const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
+    // Start and end of the month
     const start = computed(() => dayjs().year(props.year).month(props.month).startOf('month'))
     const end = computed(() => start.value.endOf('month'))
 
+    // Handle day selection
     const selectDay = (day) => {
       emit('select-day', day.date) // full ISO date string
     }
 
+    // Currency used in the month
     const currency = computed(() => {
-      return props.shifts[0]?.currency || 'CHF'
+      return props.shifts[0]?.currency || '$'
     })
 
+    // Offset for the first day of the month (0=Mon, 6=Sun)
     const firstDayOffset = computed(() => {
       const weekday = start.value.day() // Sunday=0
       return weekday === 0 ? 6 : weekday - 1
     })
 
+    // Days in the month with aggregated stats
     const daysInMonth = computed(() => {
       const days = []
       const totalDays = end.value.date()
