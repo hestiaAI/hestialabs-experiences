@@ -9,7 +9,7 @@
   "viewBlocks": [
     {
       "showTable": false,
-      "id": "overview",
+      "id": "combined_data_pipeline",
       "customPipeline": "combined_data_pipeline",
       "files": ["DriverOnlineOffline", "DriverPayments", "CourierLifetimeTripData"],
       "visualization": "uberEats/Overview.vue",
@@ -18,7 +18,7 @@
     },
     {
       "showTable": false,
-      "id": "myroutes",
+      "id": "csv_courier_trips",
       "customPipeline": "csv_courier_trips",
       "files": ["CourierLifetimeTripData"],
       "visualization": "uberEats/MyRoutes.vue",

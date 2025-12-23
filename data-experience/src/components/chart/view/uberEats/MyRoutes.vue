@@ -228,6 +228,15 @@ export default {
     }
   },
   watch: {
+    periodStart() {
+      this.onPeriodChanged()
+    },
+    periodEnd() {
+      this.onPeriodChanged()
+    },
+    mode() {
+      this.onPeriodChanged()
+    },
     keplerData: {
       handler(newData) {
         this.keplerRef?.callIframeFunction('update', {
@@ -248,6 +257,19 @@ export default {
     this.keplerRef = this.$refs.keplerRef
   },
   methods: {
+    onPeriodChanged() {
+      // Unselect everything
+      this.selectedTrips = []
+
+      // Force map redraw with full filtered dataset
+      this.$nextTick(() => {
+        this.keplerRef?.callIframeFunction('update', {
+          keplerData: this.keplerData,
+          config: keplerConfigPoints,
+          mapboxToken: this.mapboxToken
+        })
+      })
+    },
     setPeriodMode(mode) {
       this.clearSelection()
       periodStore.setMode(mode)
@@ -298,7 +320,6 @@ export default {
     },
     selectTrip(trip) {
       const id = this.makeTripId(trip)
-      console.log(id)
 
       const index = this.selectedTrips.findIndex(
         t => this.makeTripId(t) === id

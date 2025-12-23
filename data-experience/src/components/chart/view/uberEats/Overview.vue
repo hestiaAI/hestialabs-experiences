@@ -45,6 +45,7 @@
 
       <div v-else-if="mode === 'month'">
         <MonthlyCalendar
+          view-block-translation-prefix="uberEats.monthlyCalendar"
           :year="calendarYear"
           :month="calendarMonth"
           :shifts="shiftsThisPeriod"
@@ -369,8 +370,9 @@ export default {
     values: {
       handler() {
         // small debounce
-        if (this._drawTimeout) clearTimeout(this._drawTimeout)
-        this._drawTimeout = setTimeout(() => this.redraw(), 100)
+        if (typeof this.redraw === 'function') {
+          this.redraw()
+        }
       },
       deep: true
     },
@@ -620,7 +622,7 @@ export default {
         .append('rect')
         .attr('class', 'shift-bar')
         .attr('x', d => xScale(d.startMinutes))
-        .attr('width', d => xScale(d.endMinutes) - xScale(d.startMinutes))
+        .attr('width', d => Math.max(0, xScale(d.endMinutes) - xScale(d.startMinutes)))
         .attr('y', d => yScale(d.dow))
         .attr('height', yScale.bandwidth())
         .attr('fill', d => stateColors[d.state] || '#888')
