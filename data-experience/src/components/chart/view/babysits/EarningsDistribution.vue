@@ -70,6 +70,13 @@ import isBetween from 'dayjs/plugin/isBetween'
 dayjs.extend(weekday)
 dayjs.extend(isBetween)
 
+const TIME_BUCKETS = {
+  Morning: { from: '08:00', to: '12:00' },
+  Day: { from: '12:00', to: '17:00' },
+  Evening: { from: '17:00', to: '22:00' },
+  Night: { from: '22:00', to: '08:00' }
+}
+
 export default {
   name: 'BabysitsEarningsDistribution',
   components: { ApexChart: VueApexCharts },
@@ -83,6 +90,7 @@ export default {
   },
 
   computed: {
+
     monthDays() {
       const daysInMonth = this.weekStart.daysInMonth()
       return Array.from({ length: daysInMonth }, (_, i) => i + 1)
@@ -146,8 +154,7 @@ export default {
         Morning: '#36A2EB',
         Day: '#4BC0C0',
         Evening: '#FF6384',
-        Night: '#6A9BE8',
-        Other: '#9E9E9E'
+        Night: '#6A9BE8'
       }
     },
 
@@ -173,8 +180,30 @@ export default {
 
         if (!data[dayIndex]) data[dayIndex] = {}
         if (!data[dayIndex][bucket]) {
-          data[dayIndex][bucket] = { totalEarnings: 0, totalDuration: 0, count: 0 }
+          data[dayIndex][bucket] = {
+            totalEarnings: 0,
+            totalDuration: 0,
+            count: 0,
+            startTimes: [],
+            endTimes: []
+          }
         }
+
+        const [sh, sm] = (job.start_time || '0:00').split(':').map(Number)
+        const startMinutes = sh * 60 + sm
+
+        const durationHours =
+          job.nbHours ||
+          job.duration ||
+          job.duration_hours ||
+          job.hours ||
+          job.work_hours ||
+          0
+
+        const endMinutes = startMinutes + durationHours * 60
+
+        data[dayIndex][bucket].startTimes.push(startMinutes)
+        data[dayIndex][bucket].endTimes.push(endMinutes)
 
         data[dayIndex][bucket].totalEarnings += Number(job.earnings) || 0
         data[dayIndex][bucket].totalDuration += Number(
@@ -191,41 +220,43 @@ export default {
     },
 
     chartSeries() {
-      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night', 'Other']
+      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
       const seriesMap = {}
 
-      bucketKeys.forEach(b => (seriesMap[b] = { name: b, data: [] }))
-
-      const maxIndex =
-        this.currentPeriod === 'month'
-          ? this.monthDays.length - 1
-          : 6
+      bucketKeys.forEach((b) => {
+        seriesMap[b] = { name: b, data: [] }
+      })
 
       Object.entries(this.aggregatedData).forEach(([idx, buckets]) => {
         Object.entries(buckets).forEach(([bucket, metrics]) => {
-          const series = seriesMap[bucket] || seriesMap.Other
+          if (!seriesMap[bucket]) return
 
-          series.data.push([
-            Number(idx),
-            Number(metrics.totalEarnings.toFixed(2)),
-            Number(metrics.totalDuration.toFixed(1)),
-            metrics.count
-          ])
+          seriesMap[bucket].data.push({
+            x: Number(idx),
+            y: Number(metrics.totalEarnings.toFixed(2)),
+            z: Number(metrics.totalDuration.toFixed(1)),
+            count: metrics.count,
+            start: Math.min(...metrics.startTimes),
+            end: Math.max(...metrics.endTimes)
+          })
         })
       })
 
-      const dataSeries = bucketKeys
+      return bucketKeys
         .map(k => seriesMap[k])
-        .filter(s => s.data.length)
+        .filter(s => s.data.length > 0)
+    },
 
-      const placeholder = {
-        name: 'Placeholder',
-        data: Array.from({ length: maxIndex + 1 }, (_, i) => [i, null, 0])
-      }
+    maxEarnings() {
+      let max = 0
 
-      return dataSeries.length
-        ? [...dataSeries, placeholder]
-        : [placeholder]
+      this.chartSeries.forEach((series) => {
+        series.data.forEach((p) => {
+          if (p.y > max) max = p.y
+        })
+      })
+
+      return max
     },
 
     chartOptions() {
@@ -252,7 +283,8 @@ export default {
           enabled: false
         },
         fill: {
-          opacity: 0.8
+          opacity: 0.8,
+          colors: ['#36A2EB', '#4BC0C0', '#FF6384', '#6A9BE8']
         },
         xaxis: {
           type: 'numeric',
@@ -273,7 +305,7 @@ export default {
             text: `Earnings (${this.currency})`
           },
           min: 0,
-          forceNiceScale: true
+          max: this.maxEarnings * 1.15
         },
         grid: {
           show: true,
@@ -292,28 +324,23 @@ export default {
         tooltip: {
           enabled: this.filteredJobs.length > 0,
           custom: ({ seriesIndex, dataPointIndex, w }) => {
-            const point = w.config.series[seriesIndex].data[dataPointIndex]
-            const seriesName = w.config.series[seriesIndex].name
+            const series = w.config.series[seriesIndex]
+            const point = series.data[dataPointIndex]
+            if (!point) return ''
 
-            // Don't show tooltip for placeholder series
-            if (seriesName === 'Placeholder' || !point || point[1] === null || point[1] === 0) return ''
+            const day = this.xLabels[Math.round(point.x)]
 
-            const dayIndex = Math.round(point[0])
-            const dayName =
-              this.currentPeriod === 'month'
-                ? dayIndex + 1
-                : this.xLabels[dayIndex]
-            const totalEarnings = point[1]
-            const totalDuration = point[2]
-            const jobCount = point[3] || 1
-            const bucketName = seriesName
+            const fmt = m =>
+              `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`
 
             return `
               <div class="tooltip-box">
-                <div class="tooltip-title">${dayName} - ${bucketName}</div>
-                <p>Total Income: <strong>${totalEarnings.toFixed(2)} ${this.currency}</strong></p>
-                <p>Jobs: <strong>${jobCount}</strong></p>
-                <p>Total Duration: <strong>${totalDuration.toFixed(1)} h</strong></p>
+                <div class="tooltip-title">
+                  ${day} - ${series.name} (${fmt(point.start)}-${fmt(point.end)})
+                </div>
+                <p>Total income: <strong>${point.y.toFixed(2)} ${this.currency}</strong></p>
+                <p>Jobs: <strong>${point.count}</strong></p>
+                <p>Duration: <strong>${point.z.toFixed(1)} h</strong></p>
               </div>
             `
           }
@@ -339,7 +366,13 @@ export default {
         const count = Object.values(this.aggregatedData).reduce((sum, buckets) => {
           return sum + (buckets[type]?.count || 0)
         }, 0)
-        return { name: type, label: type, color: this.timeBucketColors[type], count }
+        const range = TIME_BUCKETS[type]
+        return {
+          name: type,
+          label: `${type} (${range.from}–${range.to})`,
+          color: this.timeBucketColors[type],
+          count
+        }
       }).filter(item => item.count > 0)
     },
 
@@ -374,7 +407,7 @@ export default {
     },
 
     totalScatterSeries() {
-      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night', 'Other']
+      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
 
       const data = bucketKeys.map((bucket, i) => {
         const b = this.totalScatterData[bucket]
@@ -399,7 +432,10 @@ export default {
     },
 
     totalScatterOptions() {
-      const categories = ['Morning', 'Day', 'Evening', 'Night', 'Other']
+      const bucketKeys = Object.keys(TIME_BUCKETS)
+      const categories = bucketKeys.map(
+        key => `${key} (${TIME_BUCKETS[key].from}-${TIME_BUCKETS[key].to})`
+      )
 
       return {
         chart: {
@@ -408,9 +444,7 @@ export default {
           zoom: { enabled: false }
         },
 
-        colors: categories.map(
-          b => this.timeBucketColors[b] || this.timeBucketColors.Other
-        ),
+        colors: bucketKeys.map(b => this.timeBucketColors[b] || '#ccc'),
 
         xaxis: {
           type: 'numeric',
@@ -450,11 +484,12 @@ export default {
             if (!point || point[1] == null || point[1] === 0) return ''
 
             const bucketIndex = Math.round(point[0])
-            const bucket = categories[bucketIndex]
+            const bucketKey = bucketKeys[bucketIndex]
+            const range = TIME_BUCKETS[bucketKey]
             const avg = point[1]
             const shifts = point[2]
 
-            const stats = this.totalScatterData[bucket]
+            const stats = this.totalScatterData[bucketKey]
             if (!stats) return ''
 
             const totalIncome = stats.totalEarnings.toFixed(2)
@@ -462,12 +497,9 @@ export default {
 
             return `
               <div class="tooltip-box">
-                <div class="tooltip-title">${bucket}</div>
-                <p>Avg hourly income:<br>
-                <strong>${avg.toFixed(2)} ${this.currency}</strong></p>
-
+                <div class="tooltip-title">${bucketKey} (${range.from}-${range.to})</div>
+                <p>Avg hourly income:<br><strong>${avg.toFixed(2)} ${this.currency}</strong></p>
                 <p>Shifts (bubble size): <strong>${shifts}</strong></p>
-
                 <p>Total income: <strong>${totalIncome} ${this.currency}</strong></p>
                 <p>Total hours: <strong>${totalHours} h</strong></p>
               </div>
@@ -515,9 +547,9 @@ export default {
 
     getTimeBucketFromHour(h) {
       if (h == null || isNaN(h)) return 'Other'
-      if (h >= 5 && h < 11) return 'Morning'
-      if (h >= 11 && h < 17) return 'Day'
-      if (h >= 17 && h < 23) return 'Evening'
+      if (h >= 8 && h < 12) return 'Morning'
+      if (h >= 12 && h < 17) return 'Day'
+      if (h >= 17 && h < 22) return 'Evening'
       return 'Night'
     },
 
