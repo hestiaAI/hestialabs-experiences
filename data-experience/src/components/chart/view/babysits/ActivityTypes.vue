@@ -106,7 +106,8 @@ export default {
     return {
       selectedJobType: '',
       currentWeekStart: this.getMondayOf(dayjs()),
-      currentPeriod: 'week'
+      currentPeriod: 'week',
+      hoveredJob: null
     }
   },
 
@@ -270,6 +271,17 @@ export default {
           },
           pan: {
             enabled: false
+          },
+          events: {
+            dataPointMouseEnter: (event, chartContext, config) => {
+              const point = config.w.config.series[config.seriesIndex].data[config.dataPointIndex].meta
+              if (point.status !== 'none') {
+                this.hoveredJob = point
+              }
+            },
+            dataPointMouseLeave: () => {
+              this.hoveredJob = null
+            }
           }
         },
         plotOptions: { bar: { horizontal: true, rangeBarGroupRows: true } },
@@ -292,7 +304,9 @@ export default {
               <div class="tooltip-box">
                 <strong>${item.date}</strong><br>
                 ${item.start_time} - ${item.end_time}<br>
-                Earnings: ${item.earnings || '-'}
+                Earnings: ${item.earnings || '-'}<br>
+                Job type: ${item.job_type || '-'}<br>
+                Status: ${item.status || '-'}
               </div>
             `
           }
