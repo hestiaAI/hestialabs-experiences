@@ -17,33 +17,13 @@
       <button class="nav-btn" @click="nextWeek">→</button>
     </div>
 
-    <!-- BOX 2 → Bubble Chart -->
-    <div class="box box2 tour-earnings-chart">
-      <div class="header-controls">
-        <h2 class="chart-title">Earnings Distribution</h2>
-      </div>
-
-      <div class="chart-wrapper" v-if="currentPeriod !== 'total'">
-        <ApexChart
-          type="bubble"
-          height="450"
-          :options="chartOptions"
-          :series="chartSeries"
-        />
-
-        <div v-if="legendItems.length" class="legend mt-4">
-          <div v-for="item in legendItems" :key="item.name" class="legend-item">
-            <span class="legend-swatch" :style="{ backgroundColor: item.color }" />
-            {{ item.label }} ({{ item.count }})
-          </div>
+    <div v-if="currentPeriod === 'total'" class="total-layout">
+      <!-- BOX 2 → Bubble Chart -->
+      <div class="box box2 tour-earnings-chart">
+        <div class="header-controls">
+          <h2 class="chart-title">Earnings Distribution</h2>
         </div>
 
-        <div v-if="filteredJobs.length === 0" class="no-data-overlay">
-          <p>No job data for this period</p>
-        </div>
-      </div>
-
-      <div v-else-if="currentPeriod === 'total'">
         <ApexChart
           type="bubble"
           height="450"
@@ -52,9 +32,68 @@
         />
       </div>
 
-      <p v-else>
-        No job data found.
-      </p>
+      <!-- BOX 4 → Job List Panel -->
+      <div class="box box4 tour-jobtype-filter">
+        <div class="panel-header">
+          <h3 v-if="selectedTotalBucket">
+            {{ selectedTotalBucket }} jobs
+          </h3>
+          <h3 v-else>
+            Select a bubble
+          </h3>
+        </div>
+
+        <div class="job-list">
+          <div
+            v-for="job in totalPanelJobs"
+            :key="job.job_id || job.date + job.start_time"
+            class="job-item"
+          >
+            <strong>{{ formatDate(job.date) }}</strong>
+            <div>
+              {{ job.start_time }} · {{ job.duration_hours || job.nbHours }}h
+            </div>
+            <div>
+              {{ job.earnings }} {{ currency }}
+            </div>
+          </div>
+          <div v-if="selectedTotalBucket && totalPanelJobs.length === 0" class="no-data">
+            No jobs in this segment
+          </div>
+          <div v-if="!selectedTotalBucket" class="no-data">
+            Click on a bubble to see jobs
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-else>
+      <!-- BOX 2 → Bubble Chart for week/month -->
+      <div class="box box2 tour-earnings-chart">
+        <div class="header-controls">
+          <h2 class="chart-title">Earnings Distribution</h2>
+        </div>
+
+        <div class="chart-wrapper">
+          <ApexChart
+            type="bubble"
+            height="450"
+            :options="chartOptions"
+            :series="chartSeries"
+          />
+
+          <div v-if="legendItems.length" class="legend mt-4">
+            <div v-for="item in legendItems" :key="item.name" class="legend-item">
+              <span class="legend-swatch" :style="{ backgroundColor: item.color }" />
+              {{ item.label }} ({{ item.count }})
+            </div>
+          </div>
+
+          <div v-if="filteredJobs.length === 0" class="no-data-overlay">
+            <p>No job data for this period</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -85,11 +124,23 @@ export default {
   data() {
     return {
       currentWeekStart: this.getMondayOf(dayjs()),
-      currentPeriod: 'week'
+      currentPeriod: 'week',
+      selectedTotalBucket: null
     }
   },
 
   computed: {
+    totalPanelJobs() {
+      if (this.currentPeriod !== 'total') return []
+      if (!this.selectedTotalBucket) return []
+
+      return this.filteredJobs
+        .filter((job) => {
+          const [h] = (job.start_time || '0:00').split(':').map(Number)
+          return this.getTimeBucketFromHour(h) === this.selectedTotalBucket
+        })
+        .sort((a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf())
+    },
 
     baseHourSize() {
       return 10
@@ -269,27 +320,19 @@ export default {
 
     chartOptions() {
       const seriesColors = this.chartSeries.map(s =>
-        s.name === 'Placeholder' ? 'transparent' : (this.timeBucketColors[s.name] || this.timeBucketColors.Other)
+        this.timeBucketColors[s.name] || this.timeBucketColors.Other
       )
 
       return {
         chart: {
           type: 'bubble',
           height: 450,
-          toolbar: {
-            show: false
-          },
-          zoom: {
-            enabled: false
-          },
-          pan: {
-            enabled: false
-          }
+          toolbar: { show: false },
+          zoom: { enabled: false },
+          pan: { enabled: false }
         },
         colors: seriesColors,
-        dataLabels: {
-          enabled: false
-        },
+        dataLabels: { enabled: false },
         fill: {
           opacity: 0.8,
           colors: ['#36A2EB', '#4BC0C0', '#FF6384', '#6A9BE8']
@@ -357,7 +400,7 @@ export default {
           show: false
         },
         noData: {
-          text: 'No data available for this week',
+          text: 'No data available for this period',
           align: 'center',
           verticalAlign: 'middle',
           style: {
@@ -442,23 +485,32 @@ export default {
     totalScatterOptions() {
       const bucketKeys = Object.keys(TIME_BUCKETS)
       const categories = bucketKeys.map(
-        key => `${key} (${TIME_BUCKETS[key].from}-${TIME_BUCKETS[key].to})`
+        key => `${key}\n(${TIME_BUCKETS[key].from}-${TIME_BUCKETS[key].to})`
       )
 
       return {
         chart: {
           type: 'bubble',
           toolbar: { show: false },
-          zoom: { enabled: false }
+          zoom: { enabled: false },
+          events: {
+            dataPointSelection: (event, chartContext, config) => {
+              const index = config.dataPointIndex
+              const bucket = bucketKeys[index] || null
+
+              console.log('CLICK', bucket)
+              this.selectedTotalBucket = bucket
+            }
+          }
         },
 
         colors: bucketKeys.map(b => this.timeBucketColors[b] || '#ccc'),
 
         xaxis: {
           type: 'numeric',
-          min: 0,
-          max: categories.length - 1,
-          tickAmount: categories.length - 1,
+          min: -0.5,
+          max: categories.length - 0.5,
+          tickAmount: categories.length,
           labels: {
             formatter: v => categories[Math.round(v)] || ''
           },
@@ -476,8 +528,8 @@ export default {
 
         plotOptions: {
           bubble: {
-            minBubbleRadius: 8,
-            maxBubbleRadius: 45
+            minBubbleRadius: 12,
+            maxBubbleRadius: 50
           }
         },
 
@@ -526,6 +578,8 @@ export default {
 
   watch: {
     currentPeriod(newVal) {
+      this.selectedTotalBucket = null
+
       if (!this.latestJobDate) return
 
       if (newVal === 'month') {
@@ -548,6 +602,10 @@ export default {
   },
 
   methods: {
+    formatDate(date) {
+      return dayjs(date).format('DD.MM.YYYY')
+    },
+
     getMondayOf(d) {
       const day = d.day()
       return day === 0
@@ -713,8 +771,6 @@ export default {
 }
 
 .period-switch {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
   position: absolute;
   display: flex;
   gap: 6px;
@@ -737,5 +793,72 @@ export default {
 
 .switch-btn:hover {
   background: #d2d2d2;
+}
+
+/* Total layout - chart + panel side by side */
+.total-layout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.total-layout .box2 {
+  flex: 0 0 65%;
+  margin-bottom: 0;
+}
+
+.total-layout .box4 {
+  flex: 1;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Job list panel */
+.panel-header {
+  margin-bottom: 16px;
+}
+
+.panel-header h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin: 0;
+}
+
+.job-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.job-item {
+  background: white;
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: 1px solid #ddd;
+}
+
+.job-item:hover {
+  background: #f3f3f3;
+}
+
+.job-item strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.job-item div {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px 20px;
+  color: #999;
+  font-style: italic;
 }
 </style>
