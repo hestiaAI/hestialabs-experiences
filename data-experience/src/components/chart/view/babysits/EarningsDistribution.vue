@@ -91,6 +91,14 @@ export default {
 
   computed: {
 
+    baseHourSize() {
+      return 10
+    },
+
+    baseShiftSize() {
+      return 8
+    },
+
     monthDays() {
       const daysInMonth = this.weekStart.daysInMonth()
       return Array.from({ length: daysInMonth }, (_, i) => i + 1)
@@ -234,7 +242,7 @@ export default {
           seriesMap[bucket].data.push({
             x: Number(idx),
             y: Number(metrics.totalEarnings.toFixed(2)),
-            z: Number(metrics.totalDuration.toFixed(1)),
+            z: Number((metrics.totalDuration * this.baseHourSize).toFixed(1)),
             count: metrics.count,
             start: Math.min(...metrics.startTimes),
             end: Math.max(...metrics.endTimes)
@@ -317,8 +325,8 @@ export default {
         },
         plotOptions: {
           bubble: {
-            maxBubbleRadius: 40,
-            minBubbleRadius: 5
+            maxBubbleRadius: 45,
+            minBubbleRadius: 8
           }
         },
         tooltip: {
@@ -340,7 +348,7 @@ export default {
                 </div>
                 <p>Total income: <strong>${point.y.toFixed(2)} ${this.currency}</strong></p>
                 <p>Jobs: <strong>${point.count}</strong></p>
-                <p>Duration: <strong>${point.z.toFixed(1)} h</strong></p>
+                <p>Duration (bubble size): <strong>${(point.z / this.baseHourSize).toFixed(1)} h</strong></p>
               </div>
             `
           }
@@ -369,7 +377,7 @@ export default {
         const range = TIME_BUCKETS[type]
         return {
           name: type,
-          label: `${type} (${range.from}–${range.to})`,
+          label: `${type} (${range.from}-${range.to})`,
           color: this.timeBucketColors[type],
           count
         }
@@ -421,7 +429,7 @@ export default {
         return [
           i,
           Number(avgPerHour.toFixed(2)),
-          b.count
+          b.count * this.baseShiftSize
         ]
       })
 
@@ -455,7 +463,7 @@ export default {
             formatter: v => categories[Math.round(v)] || ''
           },
           title: {
-            text: 'Time Bucket'
+            text: 'Time of Day'
           }
         },
 
@@ -468,8 +476,8 @@ export default {
 
         plotOptions: {
           bubble: {
-            minBubbleRadius: 6,
-            maxBubbleRadius: 50
+            minBubbleRadius: 8,
+            maxBubbleRadius: 45
           }
         },
 
@@ -487,7 +495,9 @@ export default {
             const bucketKey = bucketKeys[bucketIndex]
             const range = TIME_BUCKETS[bucketKey]
             const avg = point[1]
-            const shifts = point[2]
+
+            const bubbleZ = point[2]
+            const shifts = Math.round(bubbleZ / this.baseShiftSize)
 
             const stats = this.totalScatterData[bucketKey]
             if (!stats) return ''
