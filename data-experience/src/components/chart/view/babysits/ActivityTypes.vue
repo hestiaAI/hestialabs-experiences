@@ -76,7 +76,7 @@
       <label for="jobTypeSelect" class="filter-label"><strong>Filter by Job Type</strong></label>
       <select id="jobTypeSelect" v-model="selectedJobType" class="filter-select">
         <option value="">All</option>
-        <option v-for="type in jobTypes" :key="type" :value="type">{{ type }}</option>
+        <option v-for="type in pageJobTypes" :key="type" :value="type">{{ type }}</option>
       </select>
     </div>
 
@@ -112,6 +112,24 @@ export default {
   },
 
   computed: {
+    pageJobTypes() {
+      const jobs = this.jobs
+
+      if (this.currentPeriod === 'total') {
+        return Array.from(new Set(jobs.map(j => j.job_type)))
+      }
+
+      let periodJobs = jobs.filter(j => j.date && dayjs(j.date).isBetween(this.weekStart, this.weekEnd, 'day', '[]'))
+
+      if (this.currentPeriod === 'month') {
+        const mStart = this.currentWeekStart.startOf('month')
+        const mEnd = this.currentWeekStart.endOf('month')
+        periodJobs = jobs.filter(j => j.date && dayjs(j.date).isBetween(mStart, mEnd, 'day', '[]'))
+      }
+
+      return Array.from(new Set(periodJobs.map(j => j.job_type)))
+    },
+
     // ---------- ORIGINAL JOBS ----------
     jobs() {
       return this.values || []
