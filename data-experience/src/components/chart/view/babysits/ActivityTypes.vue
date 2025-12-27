@@ -56,13 +56,21 @@
       <div
         v-else-if="currentPeriod == 'total' && filteredJobs.length"
       >
+        <div class="total-sort">
+          <label><strong>Sort activities by time worked</strong></label>
+          <select v-model="totalSortDirection" class="filter-select">
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
+          </select>
+        </div>
+
         <ApexChart
-          :key="'total'"
+          :key="'total-' + totalSortDirection"
           type="bar"
           height="450"
           :options="totalBarOptions"
-        :series="totalTypeSeries.series"
-      />
+          :series="totalTypeSeries.series"
+        />
       </div>
 
       <p v-else>No job data found.</p>
@@ -107,7 +115,8 @@ export default {
       selectedJobType: '',
       currentWeekStart: this.getMondayOf(dayjs()),
       currentPeriod: 'week',
-      hoveredJob: null
+      hoveredJob: null,
+      totalSortDirection: 'desc' // 'asc' | 'desc'
     }
   },
 
@@ -383,8 +392,16 @@ export default {
         map[type] += hours
       })
 
-      const categories = Object.keys(map)
-      const data = categories.map(t => Number(map[t].toFixed(2)))
+      const entries = Object.entries(map)
+
+      entries.sort((a, b) => {
+        return this.totalSortDirection === 'asc'
+          ? a[1] - b[1]
+          : b[1] - a[1]
+      })
+
+      const categories = entries.map(([type]) => type)
+      const data = entries.map(([, hours]) => Number(hours.toFixed(2)))
 
       return {
         categories,
@@ -655,5 +672,12 @@ export default {
 
 .box2--fullwidth {
   grid-column: 1 / 3;
+}
+
+.total-sort {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 </style>
