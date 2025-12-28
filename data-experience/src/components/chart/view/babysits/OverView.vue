@@ -135,7 +135,8 @@ export default {
     return {
       currentWeekStart: this.getMondayOf(dayjs()),
       currentPeriod: 'week',
-      selectedJobType: ''
+      selectedJobType: '',
+      fromCalendarClick: false
     }
   },
 
@@ -530,6 +531,11 @@ export default {
     currentPeriod(newVal) {
       this.selectedJobType = ''
 
+      if (this.fromCalendarClick) {
+        this.fromCalendarClick = false
+        return
+      }
+
       if (!this.latestJobDate) return
 
       if (newVal === 'month') {
@@ -588,7 +594,11 @@ export default {
     },
 
     onSelectDay(date) {
-      console.log('Selected day:', date)
+      const d = dayjs(date)
+
+      this.fromCalendarClick = true
+      this.currentWeekStart = this.getMondayOf(d)
+      this.currentPeriod = 'week'
     }
   }
 }
