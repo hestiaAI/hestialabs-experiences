@@ -79,9 +79,33 @@
     </div>
 
     <!-- BOX 4 → Average Work Time -->
-    <div class="box box4">
-      <p><strong>Average Work Time</strong></p>
-      <p class="avg-value">{{ averageWorkTime }}</p>
+    <div class="right-column">
+      <div class="box box4 avg-box">
+        <p><strong>Average Work Time</strong></p>
+        <p class="avg-value">{{ averageWorkTime }}</p>
+      </div>
+
+      <div
+        class="box box4 filter-box tour-jobtype-filter"
+      >
+        <label for="jobTypeSelect" class="filter-label">
+          <strong>Filter by Job Type</strong>
+        </label>
+        <select
+          id="jobTypeSelect"
+          v-model="selectedJobType"
+          class="filter-select"
+        >
+          <option value="">All</option>
+          <option
+            v-for="type in pageJobTypes"
+            :key="type"
+            :value="type"
+          >
+            {{ type }}
+          </option>
+        </select>
+      </div>
     </div>
 
   </div>
@@ -110,11 +134,41 @@ export default {
   data() {
     return {
       currentWeekStart: this.getMondayOf(dayjs()),
-      currentPeriod: 'week'
+      currentPeriod: 'week',
+      selectedJobType: ''
     }
   },
 
   computed: {
+    pageJobTypes() {
+      const jobs = this.jobs
+
+      if (this.currentPeriod === 'total') {
+        return Array.from(
+          new Set(jobs.map(j => j.job_type).filter(Boolean))
+        )
+      }
+
+      let periodJobs = []
+
+      if (this.currentPeriod === 'month') {
+        const mStart = this.currentWeekStart.startOf('month')
+        const mEnd = this.currentWeekStart.endOf('month')
+
+        periodJobs = jobs.filter(j =>
+          j.date && dayjs(j.date).isBetween(mStart, mEnd, 'day', '[]')
+        )
+      } else {
+        periodJobs = jobs.filter(j =>
+          j.date && dayjs(j.date).isBetween(this.weekStart, this.weekEnd, 'day', '[]')
+        )
+      }
+
+      return Array.from(
+        new Set(periodJobs.map(j => j.job_type).filter(Boolean))
+      )
+    },
+
     jobs() {
       return this.values || []
     },
@@ -136,21 +190,27 @@ export default {
     },
 
     filteredJobs() {
+      let jobs = this.jobs
+
+      if (this.selectedJobType) {
+        jobs = jobs.filter(j => j.job_type === this.selectedJobType)
+      }
+
       if (this.currentPeriod === 'total') {
-        return this.jobs
+        return jobs
       }
 
       if (this.currentPeriod === 'month') {
         const mStart = this.currentWeekStart.startOf('month')
         const mEnd = this.currentWeekStart.endOf('month')
 
-        return this.jobs.filter((j) => {
+        return jobs.filter((j) => {
           if (!j.date) return false
           return dayjs(j.date).isBetween(mStart, mEnd, 'day', '[]')
         })
       }
 
-      return this.jobs.filter((j) => {
+      return jobs.filter((j) => {
         if (!j.date) return false
         const d = dayjs(j.date)
         return d.isBetween(this.weekStart, this.weekEnd, 'day', '[]')
@@ -379,7 +439,7 @@ export default {
         Array.from({ length: 24 }, () => 0)
       )
 
-      this.jobs.forEach((j) => {
+      this.filteredJobs.forEach((j) => {
         if (!j.date || !j.start_time || !j.end_time) return
 
         let wd = dayjs(j.date).day()
@@ -468,6 +528,8 @@ export default {
 
   watch: {
     currentPeriod(newVal) {
+      this.selectedJobType = ''
+
       if (!this.latestJobDate) return
 
       if (newVal === 'month') {
@@ -574,8 +636,6 @@ export default {
 
 /* RIGHT COLUMN BOX 4 */
 .box4 {
-  grid-column: 2 / 3;
-  grid-row: 3 / 4;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -683,5 +743,30 @@ export default {
 :deep(.apexcharts-heatmap-rect:hover) {
   stroke: #333;
   stroke-width: 1.5px;
+}
+
+.filter-select {
+  margin-top: 8px;
+  padding: 8px 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  background: white;
+  cursor: pointer;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #666;
+}
+
+.right-column {
+  align-content: start;
+  grid-column: 2 / 3;
+  grid-row: 3 / 4;
+
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 16px;
 }
 </style>
