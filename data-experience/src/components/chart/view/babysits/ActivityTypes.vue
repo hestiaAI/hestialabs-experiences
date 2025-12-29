@@ -17,45 +17,37 @@
       <button class="nav-btn" @click="nextWeek">→</button>
     </div>
 
-    <!-- BOX 2 → Apex Timeline -->
+    <!-- BOX 2 → Heatmap for Week/Month or Bar for Total -->
     <div
       class="box box2 tour-activity-chart"
-      :class="{ 'box2--fullwidth': currentPeriod === 'total' }"
+      :class="{ 'box2--fullwidth': true }"
     >
       <h2 class="mb-4">Activity Types</h2>
 
+      <!-- WEEK VIEW: Heatmap -->
       <div v-if="currentPeriod === 'week' && filteredJobs.length">
         <ApexChart
-          :key="'week-' + currentWeekStart.format('YYYY-MM-DD')"
-          type="rangeBar"
+          :key="'week-heatmap-' + currentWeekStart.format('YYYY-MM-DD')"
+          type="heatmap"
           height="450"
-          :options="chartOptions"
-          :series="chartSeries"
-        />
-
-        <div class="legend mt-4">
-          <div v-for="item in statusItems" :key="item.name" class="legend-item">
-            <span class="legend-swatch" :style="{ background: item.color }" />
-            {{ item.label }} ({{ item.count }})
-          </div>
-        </div>
-      </div>
-
-      <div
-        v-else-if="currentPeriod == 'month'"
-      >
-        <MonthlyCalendar
-          :year="calendarYear"
-          :month="calendarMonth"
-          :shifts="filteredJobs"
-          :payments="[]"
-          @select-day="onSelectDay"
+          :options="weekHeatmapOptions"
+          :series="weekHeatmapSeries"
         />
       </div>
 
-      <div
-        v-else-if="currentPeriod == 'total' && filteredJobs.length"
-      >
+      <!-- MONTH VIEW: Heatmap -->
+      <div v-else-if="currentPeriod === 'month' && filteredJobs.length">
+        <ApexChart
+          :key="'month-heatmap-' + currentWeekStart.format('YYYY-MM')"
+          type="heatmap"
+          height="450"
+          :options="monthHeatmapOptions"
+          :series="monthHeatmapSeries"
+        />
+      </div>
+
+      <!-- TOTAL VIEW: Bar chart -->
+      <div v-else-if="currentPeriod === 'total' && filteredJobs.length">
         <div class="total-sort">
           <label><strong>Sort activities by time worked</strong></label>
           <select v-model="totalSortDirection" class="filter-select">
@@ -73,26 +65,13 @@
         />
       </div>
 
-      <p v-else>No job data found.</p>
-    </div>
-
-    <!-- BOX 4 → Filter -->
-    <div
-      v-if="currentPeriod !== 'total'"
-      class="box box4 tour-jobtype-filter"
-    >
-      <label for="jobTypeSelect" class="filter-label"><strong>Filter by Job Type</strong></label>
-      <select id="jobTypeSelect" v-model="selectedJobType" class="filter-select">
-        <option value="">All</option>
-        <option v-for="type in pageJobTypes" :key="type" :value="type">{{ type }}</option>
-      </select>
+      <p v-else>No job data found for this {{ currentPeriod }}.</p>
     </div>
 
   </div>
 </template>
 
 <script>
-import MonthlyCalendar from './MonthlyCalendar.vue'
 import mixin from '@/components/chart/view/mixin'
 import VueApexCharts from 'vue-apexcharts'
 import dayjs from 'dayjs'
@@ -105,18 +84,15 @@ dayjs.extend(weekday)
 export default {
   name: 'BabysitsActivityTypes',
   components: {
-    ApexChart: VueApexCharts,
-    MonthlyCalendar
+    ApexChart: VueApexCharts
   },
   mixins: [mixin],
 
   data() {
     return {
-      selectedJobType: '',
       currentWeekStart: this.getMondayOf(dayjs()),
       currentPeriod: 'week',
-      hoveredJob: null,
-      totalSortDirection: 'desc' // 'asc' | 'desc'
+      totalSortDirection: 'desc'
     }
   },
 
@@ -139,18 +115,12 @@ export default {
       return Array.from(new Set(periodJobs.map(j => j.job_type)))
     },
 
-    // ---------- ORIGINAL JOBS ----------
     jobs() {
       return this.values || []
     },
 
-    // ---------- FILTERED JOBS ----------
     filteredJobs() {
-      let jobs = this.jobs
-
-      if (this.selectedJobType) {
-        jobs = jobs.filter(j => j.job_type === this.selectedJobType)
-      }
+      const jobs = this.jobs
 
       if (this.currentPeriod === 'total') {
         return jobs
@@ -190,190 +160,165 @@ export default {
         .sort((a, b) => b.valueOf() - a.valueOf())[0]
     },
 
-    calendarYear() {
-      return this.weekStart.year()
-    },
-    calendarMonth() {
-      return this.weekStart.month() // 0–11
-    },
-
-    // ---------- TOP STATS ----------
-    totalEarnings() {
-      return this.filteredJobs.reduce((s, j) => s + (parseFloat(j.earnings) || 0), 0)
-    },
-
-    totalHours() {
-      let min = 0
-      this.filteredJobs.forEach((j) => {
-        const hours = parseFloat(
-          j.nbHours ||
-          j.duration ||
-          j.duration_hours ||
-          j.hours ||
-          j.work_hours
-        ) || 0
-        min += hours * 60
-      })
-      return min / 60
-    },
-
-    currency() {
-      return this.filteredJobs[0]?.currency || 'CHF'
-    },
-
-    // ---------- AVERAGE WORK TIME ----------
-    averageWorkTime() {
-      if (!this.filteredJobs.length) return '0h 0m'
-      const durations = this.filteredJobs.map(j =>
-        parseFloat(
-          j.nbHours ||
-          j.duration ||
-          j.duration_hours ||
-          j.hours ||
-          j.work_hours
-        ) || 0
-      )
-      const avg = durations.reduce((a, b) => a + b, 0) / durations.length
-      const h = Math.floor(avg)
-      const m = Math.round((avg - h) * 60)
-      return `${h}h ${m}m`
-    },
-
-    // ---------- CHART DATA ----------
-    chartSeries() {
+    // ---------- WEEK HEATMAP ----------
+    weekHeatmapSeries() {
       const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      const jobTypes = this.pageJobTypes.length ? this.pageJobTypes : ['No data']
 
-      const jobsByDay = Array.from({ length: 7 }, () => [])
+      // Create map: jobType -> day -> hours
+      const dataMap = {}
+      jobTypes.forEach((type) => {
+        dataMap[type] = {}
+        days.forEach((day) => {
+          dataMap[type][day] = 0
+        })
+      })
 
       this.filteredJobs.forEach((j) => {
         if (!j.date) return
+        const type = j.job_type || 'Other'
         let wd = dayjs(j.date).day()
         wd = wd === 0 ? 6 : wd - 1
-        jobsByDay[wd].push(j)
-      })
+        const dayName = days[wd]
 
-      const seriesData = []
+        const hours = parseFloat(
+          j.nbHours || j.duration || j.duration_hours || j.hours || j.work_hours
+        ) || 0
 
-      days.forEach((dayName, idx) => {
-        const dayJobs = jobsByDay[idx]
-
-        if (dayJobs.length === 0) {
-          seriesData.push({
-            x: dayName,
-            y: [dayjs('2025-01-01T00:00').valueOf(), dayjs('2025-01-01T00:00').valueOf()],
-            fillColor: 'transparent',
-            meta: { status: 'none' }
-          })
-        } else {
-          dayJobs.forEach((j) => {
-            const [sh, sm] = (j.start_time || '00:00').split(':').map(Number)
-            const [eh, em] = (j.end_time || '00:00').split(':').map(Number)
-            const start = dayjs('2025-01-01').hour(sh).minute(sm).valueOf()
-            const end = dayjs('2025-01-01').hour(eh).minute(em).valueOf()
-            const statusKey = (j.status || 'unknown').toLowerCase()
-            const color = this.statusColors[statusKey] || this.statusColors.unknown
-
-            seriesData.push({
-              x: dayName,
-              y: [start, end],
-              fillColor: color,
-              meta: j
-            })
-          })
+        if (dataMap[type]) {
+          dataMap[type][dayName] += hours
         }
       })
 
-      return [{ name: 'Shift', data: seriesData }]
-    },
-
-    chartOptions() {
-      return {
-        chart: {
-          type: 'rangeBar',
-          toolbar: {
-            show: false
-          },
-          zoom: {
-            enabled: false
-          },
-          pan: {
-            enabled: false
-          },
-          events: {
-            dataPointMouseEnter: (event, chartContext, config) => {
-              const point = config.w.config.series[config.seriesIndex].data[config.dataPointIndex].meta
-              if (point.status !== 'none') {
-                this.hoveredJob = point
-              }
-            },
-            dataPointMouseLeave: () => {
-              this.hoveredJob = null
-            }
-          }
-        },
-        plotOptions: { bar: { horizontal: true, rangeBarGroupRows: true } },
-        xaxis: {
-          type: 'datetime',
-          labels: { format: 'HH:mm' },
-          min: dayjs('2025-01-01T00:00').valueOf(),
-          max: dayjs('2025-01-01T23:59').valueOf()
-        },
-        yaxis: {
-          type: 'category',
-          categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          reversed: true
-        },
-        tooltip: {
-          custom: ({ seriesIndex, dataPointIndex, w }) => {
-            const item = w.config.series[seriesIndex].data[dataPointIndex].meta
-            if (item.status === 'none') return null
-            return `
-              <div class="tooltip-box">
-                <strong>${item.date}</strong><br>
-                ${item.start_time} - ${item.end_time}<br>
-                Earnings: ${item.earnings || '-'}<br>
-                Job type: ${item.job_type || '-'}<br>
-                Status: ${item.status || '-'}
-              </div>
-            `
-          }
-        }
-      }
-    },
-
-    // ---------- STATUS ITEMS ----------
-    statusItems() {
-      const counts = {}
-      this.filteredJobs.forEach((j) => {
-        counts[j.status] = (counts[j.status] || 0) + 1
-      })
-      return Object.keys(counts).map(s => ({
-        name: s,
-        label: s.charAt(0).toUpperCase() + s.slice(1),
-        count: counts[s],
-        color: this.statusColors[s] || '#888'
+      return jobTypes.map(type => ({
+        name: type,
+        data: days.map(day => ({
+          x: day,
+          y: Math.round(dataMap[type][day] * 10) / 10
+        }))
       }))
     },
 
-    // ---------- UNIQUE JOB TYPES ----------
-    jobTypes() {
-      const types = new Set(this.jobs.map(j => j.job_type))
-      return Array.from(types)
-    },
-
-    // ---------- STATUS COLORS ----------
-    statusColors() {
+    weekHeatmapOptions() {
       return {
-        completed: '#1e8449',
-        cancelled: '#c0392b',
-        booked: '#9b59b6',
-        postulated: '#FFC107',
-        paid: '#2ecc71',
-        unknown: '#888'
+        chart: {
+          type: 'heatmap',
+          toolbar: { show: false }
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: val => val > 0 ? `${val}h` : ''
+        },
+        colors: ['#2ecc71'],
+        plotOptions: {
+          heatmap: {
+            colorScale: {
+              ranges: [
+                { from: 0, to: 0, color: '#f0f0f0', name: '0h' },
+                { from: 0.1, to: 2, color: '#a8e6cf', name: '0-2h' },
+                { from: 2.1, to: 4, color: '#56c596', name: '2-4h' },
+                { from: 4.1, to: 8, color: '#2ecc71', name: '4-8h' },
+                { from: 8.1, to: 100, color: '#1e8449', name: '8h+' }
+              ]
+            }
+          }
+        },
+        xaxis: {
+          type: 'category',
+          title: { text: 'Day of Week' }
+        },
+        yaxis: {
+          title: { text: 'Job Type' }
+        },
+        tooltip: {
+          y: {
+            formatter: val => `${val} hours`
+          }
+        }
       }
     },
 
-    // ---------- TOTAL BAR: ACTIVITY TYPES ----------
+    // ---------- MONTH HEATMAP ----------
+    monthHeatmapSeries() {
+      const daysInMonth = this.weekStart.daysInMonth()
+      const dayLabels = Array.from({ length: daysInMonth }, (_, i) => `${i + 1}`)
+      const jobTypes = this.pageJobTypes.length ? this.pageJobTypes : ['No data']
+
+      const dataMap = {}
+      jobTypes.forEach((type) => {
+        dataMap[type] = {}
+        dayLabels.forEach((day) => {
+          dataMap[type][day] = 0
+        })
+      })
+
+      this.filteredJobs.forEach((j) => {
+        if (!j.date) return
+        const type = j.job_type || 'Other'
+        const dayOfMonth = dayjs(j.date).date()
+        const dayLabel = `${dayOfMonth}`
+
+        const hours = parseFloat(
+          j.nbHours || j.duration || j.duration_hours || j.hours || j.work_hours
+        ) || 0
+
+        if (dataMap[type]) {
+          dataMap[type][dayLabel] += hours
+        }
+      })
+
+      return jobTypes.map(type => ({
+        name: type,
+        data: dayLabels.map(day => ({
+          x: day,
+          y: Math.round(dataMap[type][day] * 10) / 10
+        }))
+      }))
+    },
+
+    monthHeatmapOptions() {
+      return {
+        chart: {
+          type: 'heatmap',
+          toolbar: { show: false }
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: val => val > 0 ? `${val}h` : '',
+          style: {
+            fontSize: '10px'
+          }
+        },
+        colors: ['#2ecc71'],
+        plotOptions: {
+          heatmap: {
+            colorScale: {
+              ranges: [
+                { from: 0, to: 0, color: '#f0f0f0', name: '0h' },
+                { from: 0.1, to: 2, color: '#a8e6cf', name: '0-2h' },
+                { from: 2.1, to: 4, color: '#56c596', name: '2-4h' },
+                { from: 4.1, to: 8, color: '#2ecc71', name: '4-8h' },
+                { from: 8.1, to: 100, color: '#1e8449', name: '8h+' }
+              ]
+            }
+          }
+        },
+        xaxis: {
+          type: 'category',
+          title: { text: 'Day of Month' }
+        },
+        yaxis: {
+          title: { text: 'Job Type' }
+        },
+        tooltip: {
+          y: {
+            formatter: val => `${val} hours`
+          }
+        }
+      }
+    },
+
+    // ---------- TOTAL BAR ----------
     totalTypeSeries() {
       const map = {}
 
@@ -454,10 +399,6 @@ export default {
 
   watch: {
     currentPeriod(newVal) {
-      if (newVal === 'total') {
-        this.selectedJobType = ''
-      }
-
       if (!this.latestJobDate) return
 
       if (newVal === 'month') {
@@ -503,26 +444,21 @@ export default {
       return day === 0
         ? d.subtract(6, 'day').startOf('day')
         : d.subtract(day - 1, 'day').startOf('day')
-    },
-    onSelectDay(date) {
-      console.log('Selected day:', date)
     }
   }
 }
 </script>
 
 <style scoped>
-/* --- LAYOUT --- */
 .layout-container {
   display: grid;
   width: 94%;
-  grid-template-rows: auto 20% 1fr;
-  grid-template-columns: 70% 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr;
   gap: 16px;
   margin-left: 16px;
 }
 
-/* Base box style */
 .box {
   background-color: #e8e8e8;
   border: 2px solid #ccc;
@@ -531,58 +467,12 @@ export default {
   font-size: 1.2rem;
 }
 
-/* TIMELINE */
 .box2 {
   grid-column: 1 / 2;
-  grid-row: 2 / 4;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 30px;
-}
-
-/* RIGHT COLUMN BOX 4 */
-.box4 {
-  grid-column: 2 / 3;
   grid-row: 2 / 3;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  text-align: left;
-  height: auto;
-  align-self: start;
-  max-width: 300px;
-}
-
-.avg-value {
-  font-size: 1.6rem;
-  margin-top: 8px;
-}
-
-/* Legend */
-.legend {
-  display: flex;
-  gap: 12px;
-  margin-top: 10px;
-  flex-wrap: wrap;
-}
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: .9rem;
-}
-.legend-swatch {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
-}
-
-/* Tooltip */
-.tooltip-box {
-  padding: 8px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  margin-bottom: 30px;
 }
 
 .filter-label {
@@ -592,7 +482,6 @@ export default {
   color: #333;
 }
 
-/* Select styling */
 .filter-select {
   margin-top: 4px;
   padding: 8px 12px;
