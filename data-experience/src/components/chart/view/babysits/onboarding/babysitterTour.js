@@ -18,7 +18,7 @@ export function createBabysitterTour() {
     text: 'Welcome! This page shows all your babysitting jobs and earnings.',
     buttons: [
       { text: 'Skip', action: tour.cancel },
-      { text: 'Next', action: tour.next }
+      { text: 'Start tutorial', action: tour.next }
     ]
   })
 
