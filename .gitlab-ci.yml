@@ -15,9 +15,16 @@ test:
   stage: test
   image: node:18
   script:
-    - cd data-experience
+    # Build shared packages
+    - cd packages
     - npm ci
     - npm run build
+    - npm run prepare
+    - cd ..
+
+    # Install + test data-experience
+    - cd data-experience
+    - npm ci
     - npm run test
 
 deploy:
