@@ -17,6 +17,7 @@ test:
   script:
     - cd data-experience
     - npm ci
+    - npm run build
     - npm run test
 
 deploy:
