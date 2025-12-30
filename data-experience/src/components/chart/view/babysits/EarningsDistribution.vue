@@ -497,8 +497,6 @@ export default {
             dataPointSelection: (event, chartContext, config) => {
               const index = config.dataPointIndex
               const bucket = bucketKeys[index] || null
-
-              console.log('CLICK', bucket)
               this.selectedTotalBucket = bucket
             }
           }
@@ -512,10 +510,20 @@ export default {
           max: categories.length - 0.5,
           tickAmount: categories.length,
           labels: {
+            rotate: -45,
+            rotateAlways: true,
+            offsetX: 25,
             formatter: v => categories[Math.round(v)] || ''
           },
           title: {
-            text: 'Time of Day'
+            text: 'Time of Day',
+            offsetY: 50
+          }
+        },
+
+        grid: {
+          padding: {
+            bottom: 50
           }
         },
 
