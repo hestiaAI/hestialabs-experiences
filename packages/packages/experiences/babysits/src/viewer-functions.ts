@@ -27,6 +27,13 @@ async function csv_babysitter_jobs({ fileManager }: { fileManager: FileManager }
     return `${hh}:${mm}`
   }
 
+  const formatDateLocal = (d: Date) => {
+    const yyyy = d.getFullYear()
+    const mm = String(d.getMonth() + 1).padStart(2, '0')
+    const dd = String(d.getDate()).padStart(2, '0')
+    return `${yyyy}-${mm}-${dd}`
+  }
+
   const items: Record<string, any>[] = []
 
   for (const r of rows) {
@@ -50,7 +57,7 @@ async function csv_babysitter_jobs({ fileManager }: { fileManager: FileManager }
 
     items.push({
       job_id: r.id,
-      date: dateObj.toISOString().split('T')[0],
+      date: formatDateLocal(dateObj),
       start_time: formatTime(begin),
       end_time: formatTime(end),
       duration_hours: duration,

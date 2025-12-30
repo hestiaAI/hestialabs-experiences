@@ -15,5 +15,5 @@ export default new Experience(
   viewerOptions as ViewerOptions,
   packageJSON,
   import.meta.url,
-  viewerFunctions,
+  viewerFunctions
 )
