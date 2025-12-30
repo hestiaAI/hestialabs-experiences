@@ -188,4 +188,13 @@ export default {
   margin-top: auto;
   margin-bottom: auto;
 }
+
+@media (max-width: 480px) {
+  .calendar { padding: 4px 6px 0 6px; gap: 4px; }
+  .calendar-header { height: 24px; font-size: 12px; }
+  .calendar-cell { height: 52px; padding: 2px; }
+  .day-number { font-size: 12px; }
+  .stat-hours, .stat-money { font-size: 11px; }
+  .empty-stats { font-size: 11px; }
+}
 </style>

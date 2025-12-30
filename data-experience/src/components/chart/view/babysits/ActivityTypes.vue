@@ -569,4 +569,42 @@ export default {
   gap: 12px;
   margin-bottom: 12px;
 }
+
+@media (max-width: 768px) {
+  .layout-container {
+    width: 100%;
+    margin-left: 8px;
+    gap: 12px;
+    grid-template-rows: auto auto 1fr;
+  }
+
+  .period-switch {
+    position: static;
+    justify-content: center;
+    margin-bottom: 12px;
+    grid-row: 1 / 2;
+  }
+
+  .week-nav {
+    justify-content: center;
+    margin-bottom: 12px;
+    grid-row: 2 / 3;
+  }
+
+  .period-switch .switch-btn,
+  .week-nav .nav-btn {
+    flex-shrink: 0;
+    margin: 0 6px;
+  }
+
+  .box2 {
+    grid-column: 1 / -1;
+    grid-row: 3 / 4;
+    margin-bottom: 12px;
+  }
+
+  .box2--fullwidth { grid-column: 1 / -1; }
+  .filter-select { width: 100%; box-sizing: border-box; }
+  .week-label { text-align: center; width: auto; }
+}
 </style>

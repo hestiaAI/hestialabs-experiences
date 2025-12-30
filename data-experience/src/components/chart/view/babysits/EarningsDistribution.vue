@@ -861,4 +861,17 @@ export default {
   color: #999;
   font-style: italic;
 }
+
+/* --- MEDIA QUERIES --- */
+@media (max-width: 768px) {
+  .layout-container { width: 100%; margin-left: 8px; gap: 12px; }
+  .period-switch { position: static; justify-content: center; margin-bottom: 12px; }
+  .week-nav { justify-content: center; margin-bottom: 12px; }
+  .total-layout { flex-direction: column; align-items: stretch; }
+  .total-layout .box2 { flex: 1 1 100%; order: 1; margin-bottom: 12px; }
+  .total-layout .box4 { flex: 1 1 100%; order: 2; max-height: none; overflow: visible; }
+  .box { padding: 12px; }
+  .chart-wrapper { margin-top: 8px; }
+  .legend { justify-content: center; }
+}
 </style>

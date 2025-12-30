@@ -779,4 +779,72 @@ export default {
   grid-template-rows: auto auto;
   gap: 16px;
 }
+
+/* --- MEDIA QUERIES --- */
+@media (max-width: 768px) {
+  .layout-container {
+    width: 100%;
+    margin-left: 8px;
+    gap: 12px;
+    grid-template-rows: auto auto auto 1fr auto;
+  }
+
+  .period-switch {
+    position: static;
+    justify-content: center;
+    margin-bottom: 12px;
+    grid-column: 1 / -1;
+    grid-row: 1 / 2;
+  }
+
+  .week-nav {
+    justify-content: center;
+    margin-bottom: 12px;
+    grid-column: 1 / -1;
+    grid-row: 2 / 3;
+  }
+
+  .period-switch .switch-btn,
+  .week-nav .nav-btn {
+    flex-shrink: 0;
+    margin: 0 6px;
+  }
+
+  .box1 {
+    grid-column: 1 / -1;
+    grid-row: 3 / 4;
+    grid-template-columns: 1fr;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .box2 {
+    grid-column: 1 / -1;
+    grid-row: 4 / 5;
+    margin-bottom: 12px;
+    padding: 12px;
+  }
+
+  .right-column {
+    grid-column: 1 / -1;
+    grid-row: 5 / 6;
+    display: block;
+    gap: 12px;
+  }
+
+  .box4, .avg-box, .filter-box {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .week-label {
+    text-align: center;
+    width: auto;
+  }
+
+  .nav-btn {
+    padding: 6px 8px;
+  }
+}
 </style>
