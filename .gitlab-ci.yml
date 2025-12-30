@@ -16,7 +16,7 @@ test:
   image: node:18
   script:
     - cd data-experience
-    - npm CI
+    - npm ci
     - npm run test
 
 deploy:
