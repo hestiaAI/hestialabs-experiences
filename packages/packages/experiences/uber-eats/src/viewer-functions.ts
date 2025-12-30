@@ -8,6 +8,7 @@ async function combined_data_pipeline({ fileManager }: { fileManager: FileManage
       items: [],
     };
 
+
   const onlineItems = driverOnlineCsv.items.map(row => {
     const begin = row.beginTimestampLocal;
     const end = row.endTimestampLocal;

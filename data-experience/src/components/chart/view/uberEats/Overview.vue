@@ -150,6 +150,7 @@ export default {
 
     // block is the wrapper object from the combined pipeline
     block() {
+      console.log(this.values)
       return this.values?.[0] ?? {}
     },
 
