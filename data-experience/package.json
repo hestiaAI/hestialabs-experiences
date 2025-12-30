@@ -147,7 +147,8 @@
       "<rootDir>/node_modules/",
       "<rootDir>/e2e/",
       "<rootDir>/tests-examples/",
-      "\\.helpers\\.js"
+      "\\.helpers\\.js",
+      "testSetup.js"
     ],
     "modulePathIgnorePatterns": []
   },
