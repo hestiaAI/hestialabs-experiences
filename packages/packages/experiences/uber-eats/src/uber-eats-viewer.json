@@ -1,0 +1,39 @@
+{
+  "title": "Uber Eats",
+  "icon": "",
+  "messages": {
+    "en": {
+      "viewBlocks": {}
+    }
+  },
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "combined_data_pipeline",
+      "customPipeline": "combined_data_pipeline",
+      "files": ["DriverOnlineOffline", "DriverPayments", "CourierLifetimeTripData"],
+      "visualization": "uberEats/Overview.vue",
+      "title": "Overview",
+      "text": ""
+    },
+    {
+      "showTable": false,
+      "id": "csv_courier_trips",
+      "customPipeline": "csv_courier_trips",
+      "files": ["CourierLifetimeTripData"],
+      "visualization": "uberEats/MyRoutes.vue",
+      "title": "My Routes",
+      "text": ""
+    },
+    {
+      "showTable": false,
+      "id": "earnings",
+      "customPipeline": "combined_data_pipeline",
+      "files": ["DriverOnlineOffline", "DriverPayments", "CourierLifetimeTripData"],
+      "visualization": "uberEats/Earnings.vue",
+      "title": "Earnings",
+      "text": ""
+    }
+  ],
+  "version": 1
+}

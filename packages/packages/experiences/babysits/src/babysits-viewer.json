@@ -1,0 +1,39 @@
+{
+  "title": "Babysits",
+  "icon": "",
+  "messages": {
+    "en": {
+      "viewBlocks": {}
+    }
+  },
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "shiftTimeline",
+      "customPipeline": "csv_babysitter_jobs",
+      "files": ["BabysitterJobs"],
+      "visualization": "babysits/OverView.vue",
+      "title": "Shift Timeline",
+      "text": "Overview of babysitting jobs over time."
+    },
+    {
+      "showTable": false,
+      "id": "activityTypes",
+      "customPipeline": "csv_babysitter_jobs",
+      "files": ["BabysitterJobs"],
+      "visualization": "babysits/ActivityTypes.vue",
+      "title": "Activity Types",
+      "text": "Activity types over time."
+    },
+    {
+      "showTable": false,
+      "id": "earningsDistribution",
+      "customPipeline": "csv_babysitter_jobs",
+      "files": ["BabysitterJobs"],
+      "visualization": "babysits/EarningsDistribution.vue",
+      "title": "Earnings Distribution",
+      "text": "Earnigns over time."
+    }
+  ],
+  "version": 1
+}

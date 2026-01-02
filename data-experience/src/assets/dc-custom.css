@@ -12,3 +12,8 @@
   background: transparent;
   max-width: 7em;
 }
+
+.shepherd-element,
+.shepherd-element * {
+  font-family: Arial, sans-serif !important;
+}

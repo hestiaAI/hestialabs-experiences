@@ -59,6 +59,8 @@ import twitter from '@hestia.ai/twitter'
 import twitterAgg from '@hestia.ai/twitter-agg'
 import uber from '@hestia.ai/uber'
 import uberDriver from '@hestia.ai/uber-driver'
+import uberEats from '@hestia.ai/uber-eats'
+import babysits from '@hestia.ai/babysits'
 import youtube from '@hestia.ai/youtube'
 import wolt from '@hestia.ai/wolt'
 import databaseTemplate from '@hestia.ai/database-template'
@@ -66,6 +68,7 @@ import databaseTemplate from '@hestia.ai/database-template'
 const experienceObjects = [
   appleTracker,
   appleTrackerAgg,
+  babysits,
   chatgpt,
   explorer,
   facebook,
@@ -87,16 +90,17 @@ const experienceObjects = [
   twitterAgg,
   uber,
   uberDriver,
+  uberEats,
   youtube,
   wolt,
   databaseTemplate
 ]
 
 const experiences = experienceObjects.map(e => e.config.slug)
-const initialExperience = 'uber-driver'
+const initialExperience = 'uber-eats'
 
 const siteConfig = {
-  i18nLocales: ['fr', 'en'],
+  i18nLocales: ['en', 'fr'],
   i18nUrl: '/i18n-messages-custom-dev.json',
   experienceViewerOptions: '',
   // experienceViewerOptions: 'https://raw.githubusercontent.com/digipower-academy/experience-viewer-options/main',
