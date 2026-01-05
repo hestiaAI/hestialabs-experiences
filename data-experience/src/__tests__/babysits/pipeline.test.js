@@ -58,4 +58,26 @@ describe('babysits - csv_babysitter_jobs', () => {
     expect(item.earnings).toBeCloseTo(37.5)
     expect(item.status).toBe('completed')
   })
+
+  test('handles integer start hour and status normalization correctly', async() => {
+    const pipeline = getCustomPipelineFromBlock(experience, 'activityTypes')
+
+    const result = await pipeline({ fileManager })
+
+    const item = result.items.find(i => i.job_id === 'job-2')
+    expect(item).toBeDefined()
+
+    expect(item.date).toBe('2023-10-16')
+
+    expect(item.start_time).toBe('20:00')
+    expect(item.end_time).toBe('22:00')
+
+    expect(item.duration_hours).toBe(2)
+    expect(item.earnings).toBe(40)
+
+    expect(item.location).toBe('Zurich')
+    expect(item.job_type).toBe('Night shift')
+
+    expect(item.status).toBe('paid')
+  })
 })
