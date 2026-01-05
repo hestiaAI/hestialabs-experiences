@@ -54,7 +54,7 @@ export function createTour({ onSwitchTab }) {
           window.__continueRoutesTour = () => tour.next()
 
           // Click the button that navigates to MyRoutes
-          const btn = document.getElementById('myroutes')
+          const btn = document.getElementById('csv_courier_trips')
           if (btn) btn.click()
         }
       }
@@ -123,7 +123,7 @@ export function createTour({ onSwitchTab }) {
         text: 'Finish',
         action: () => {
           // Navigate back to Overview
-          const btn = document.getElementById('overview')
+          const btn = document.getElementById('combined_data_pipeline')
           if (btn) btn.click()
 
           // End the tour immediately

@@ -34,7 +34,14 @@
           </span>
         </div>
       </div>
-      <div ref="chartRef" class="chart-container"></div>
+      <div class="chart-container">
+        <ApexChart
+          type="bar"
+          height="350"
+          :options="chartOptions"
+          :series="chartSeries"
+        />
+      </div>
       <div class="legend legend-earnings">
         <div class="legend-item">
           <span class="color-box earnings"></span> Earnings (no tips)
@@ -48,13 +55,16 @@
 </template>
 
 <script>
-import * as d3 from 'd3'
+import VueApexCharts from 'vue-apexcharts'
 import dayjs from 'dayjs'
 import { periodStore } from './store/periodStore'
 import mixin from '@/components/chart/view/mixin'
 
 export default {
   name: 'EarningsView',
+  components: {
+    ApexChart: VueApexCharts
+  },
   mixins: [mixin],
   props: {
     data: { type: Array, required: false }
@@ -88,11 +98,6 @@ export default {
       if (this.mode === 'total') return 'All Time'
       if (this.mode === 'month') return this.periodStart.format('MMMM YYYY')
       return `${this.periodStart.format('DD.MM')} – ${this.periodEnd.format('DD.MM.YYYY')}`
-    },
-
-    // Top-level pipeline block
-    pipelineBlock() {
-      return this.data?.[0] ?? {}
     },
 
     // Uber Eats specific block
@@ -248,17 +253,62 @@ export default {
 
         return { date: d, tips: src.tips, nonTips: src.nonTips }
       })
-    }
-  },
-  watch: {
-    // Redraw chart on relevant changes
-    showAvg() {
-      this.drawChart()
     },
 
-    // Redraw chart on data changes
-    chartData() {
-      this.drawChart()
+    // Chart series for ApexCharts
+    chartSeries() {
+      return [
+        {
+          name: 'Earnings (no tips)',
+          data: this.chartData.map(d => Number(d.nonTips.toFixed(2)))
+        },
+        {
+          name: 'Tips',
+          data: this.chartData.map(d => Number(d.tips.toFixed(2)))
+        }
+      ]
+    },
+
+    // Chart options for ApexCharts
+    chartOptions() {
+      const currency = this.payments[0]?.currencyCode || 'CHF'
+
+      return {
+        chart: {
+          stacked: true,
+          toolbar: { show: false },
+          animations: { enabled: true }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            columnWidth: '60%'
+          }
+        },
+        xaxis: {
+          categories: this.chartData.map(d => d.date),
+          labels: {
+            rotate: -45
+          }
+        },
+        yaxis: {
+          labels: {
+            formatter: val => `${currency} ${val.toFixed(0)}`
+          }
+        },
+        tooltip: {
+          y: {
+            formatter: val => `${currency} ${val.toFixed(2)}`
+          }
+        },
+        legend: {
+          show: false
+        },
+        colors: ['#2196f3', '#4caf50']
+      }
     }
   },
   mounted() {
@@ -269,21 +319,6 @@ export default {
     }
 
     this.drawChart()
-
-    // Resize observer to detect tab visibility changes
-    this.resizeObserver = new ResizeObserver((entries) => {
-      const { width } = entries[0].contentRect
-
-      // If width > 0, the tab is now visible → redraw
-      if (width > 0) {
-        this.$nextTick(() => this.drawChart())
-      }
-    })
-
-    this.resizeObserver.observe(this.$el)
-
-    // resize observer
-    window.addEventListener('resize', this.onResize)
   },
   methods: {
     /**
@@ -339,117 +374,6 @@ export default {
       const start = this.periodStart.add(7, 'day')
       const end = start.add(6, 'day').endOf('day')
       periodStore.setPeriod(start.toISOString(), end.toISOString())
-    },
-
-    /**
-     * Redraw the D3 chart
-     */
-    drawChart() {
-      const el = this.$refs.chartRef
-      if (!el) return
-
-      const data = this.chartData
-      const currency = this.payments[0]?.currencyCode || 'CHF'
-
-      const width = el.clientWidth
-      const height = el.clientHeight
-      const margin = { top: 16, right: 4, bottom: 56, left: 32 }
-
-      d3.select(el).selectAll('*').remove()
-
-      const svg = d3
-        .select(el)
-        .append('svg')
-        .attr('width', width)
-        .attr('height', height)
-
-      const x = d3
-        .scaleBand()
-        .domain(data.map(d => d.date))
-        .range([margin.left, width - margin.right])
-        .padding(0.2)
-
-      const y = d3
-        .scaleLinear()
-        .domain([0, d3.max(data, d => d.nonTips + d.tips)])
-        .nice()
-        .range([height - margin.bottom, margin.top])
-
-      // X axis
-      svg
-        .append('g')
-        .attr('transform', `translate(0, ${height - margin.bottom})`)
-        .call(d3.axisBottom(x))
-        .selectAll('text')
-        .attr('transform', 'rotate(-45)')
-        .style('text-anchor', 'end')
-
-      // Y axis
-      svg
-        .append('g')
-        .attr('transform', `translate(${margin.left},0)`)
-        .call(d3.axisLeft(y))
-
-      // Tooltip div
-      const tooltip = d3.select(el)
-        .append('div')
-        .attr('class', 'chart-tooltip')
-        .style('position', 'absolute')
-        .style('pointer-events', 'none')
-        .style('background', 'white')
-        .style('border', '1px solid #ccc')
-        .style('padding', '6px 8px')
-        .style('border-radius', '4px')
-        .style('font-size', '12px')
-        .style('color', '#333')
-        .style('opacity', 0)
-
-      // Bars (stacked)
-      svg.selectAll('g.bar')
-        .data(data)
-        .join('g')
-        .attr('transform', d => `translate(${x(d.date)},0)`)
-        .each(function(d) {
-          const g = d3.select(this)
-
-          // Non-tips bar
-          g.append('rect')
-            .attr('y', y(d.nonTips))
-            .attr('height', Math.max(0, y(0) - y(d.nonTips)))
-            .attr('width', x.bandwidth())
-            .attr('fill', '#2196f3')
-            .on('mousemove', (event) => {
-              const bounds = el.getBoundingClientRect()
-
-              const localX = event.clientX - bounds.left
-              const localY = event.clientY - bounds.top
-              tooltip
-                .style('opacity', 1)
-                .html(`<strong>Earnings (no tips)</strong>: ${currency} ${d.nonTips.toFixed(2)}`)
-                .style('left', `${localX + 48}px`)
-                .style('top', `${localY + 204}px`)
-            })
-            .on('mouseleave', () => tooltip.style('opacity', 0))
-
-          // Tips bar (stacked on top)
-          g.append('rect')
-            .attr('y', y(d.nonTips + d.tips))
-            .attr('height', Math.max(0, y(0) - y(d.tips)))
-            .attr('width', x.bandwidth())
-            .attr('fill', '#4caf50')
-            .on('mousemove', (event) => {
-              const bounds = el.getBoundingClientRect()
-
-              const localX = event.clientX - bounds.left
-              const localY = event.clientY - bounds.top
-              tooltip
-                .style('opacity', 1)
-                .html(`<strong>Tips</strong>: ${currency} ${d.tips.toFixed(2)}`)
-                .style('left', `${localX + 48}px`)
-                .style('top', `${localY + 204}px`)
-            })
-            .on('mouseleave', () => tooltip.style('opacity', 0))
-        })
     }
   }
 }

@@ -40,7 +40,12 @@
     <!-- BOX 2 → Timeline chart -->
     <div class="box box2">
       <div v-if="mode === 'week'" class="timeline-wrapper">
-        <svg ref="svg" class="timeline-svg"></svg>
+        <ApexChart
+          type="rangeBar"
+          height="400"
+          :options="timelineOptions"
+          :series="timelineSeries"
+        />
       </div>
 
       <div v-else-if="mode === 'month'">
@@ -83,7 +88,7 @@
 </template>
 
 <script>
-import * as d3 from 'd3'
+import VueApexCharts from 'vue-apexcharts'
 import dayjs from 'dayjs'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
@@ -96,6 +101,8 @@ import { createTour } from './onboarding/tour'
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
 
+const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
 /**
  * OverView.vue
  * - expects pipeline output: this.values[0] = { online, payments, trips, props }
@@ -103,14 +110,12 @@ dayjs.extend(isSameOrBefore)
  */
 export default {
   name: 'OverView',
-  components: { MonthlyCalendar, TopDays },
-  mixins: [mixin],
-  data() {
-    return {
-      svgSize: { width: 800, height: 450 },
-      resizeObserver: null
-    }
+  components: {
+    MonthlyCalendar,
+    TopDays,
+    ApexChart: VueApexCharts
   },
+  mixins: [mixin],
   computed: {
     // periodStore period mode bindings
     mode: {
@@ -150,7 +155,6 @@ export default {
 
     // block is the wrapper object from the combined pipeline
     block() {
-      console.log(this.values)
       return this.values?.[0] ?? {}
     },
 
@@ -377,33 +381,91 @@ export default {
         })
       })
       return res
-    }
-  },
-  watch: {
-    // watch for pipeline values changing
-    values: {
-      handler() {
-        // small debounce
-        if (typeof this.redraw === 'function') {
-          this.redraw()
+    },
+
+    // Timeline chart series data
+    timelineSeries() {
+      const colors = {
+        offline: '#cccccc',
+        open: '#4caf50',
+        enroute: '#ff9800',
+        ontrip: '#2196f3'
+      }
+
+      const states = Object.keys(colors)
+
+      // Initialize structure with ALL weekdays
+      const seriesMap = {}
+      states.forEach((state) => {
+        seriesMap[state] = {
+          name: state,
+          color: colors[state],
+          data: WEEKDAYS.map(day => ({
+            x: day,
+            y: null // placeholder → forces category to exist
+          }))
         }
-      },
-      deep: true
+      })
+
+      this.shiftsThisPeriod.forEach((s) => {
+        const start = dayjs(s.begin_timestamp_utc)
+        const end = dayjs(s.end_timestamp_utc)
+
+        const dow = start.day() === 0 ? 6 : start.day() - 1
+        const dayLabel = WEEKDAYS[dow]
+
+        const state = (s.state || s.earner_state || 'open').toLowerCase()
+
+        seriesMap[state].data.push({
+          x: dayLabel,
+          y: [
+            start.hour() * 60 + start.minute(),
+            end.hour() * 60 + end.minute()
+          ],
+          meta: s
+        })
+      })
+
+      return Object.values(seriesMap)
     },
 
-    // watch mode change
-    mode() {
-      this.$nextTick(() => this.redraw())
-    },
-
-    // watch period start change
-    periodStart() {
-      this.$nextTick(() => this.redraw())
-    },
-
-    // watch period end change
-    periodEnd() {
-      this.$nextTick(() => this.redraw())
+    // Timeline chart options
+    timelineOptions() {
+      return {
+        chart: {
+          toolbar: { show: false },
+          zoom: { enabled: false }
+        },
+        plotOptions: {
+          bar: { horizontal: true, rangeBarGroupRows: true }
+        },
+        xaxis: {
+          min: 0,
+          max: 1440,
+          tickAmount: 8,
+          labels: {
+            formatter: (v) => {
+              const h = Math.floor(v / 60)
+              return `${h}:00`
+            }
+          }
+        },
+        yaxis: { categories: WEEKDAYS },
+        tooltip: {
+          custom: ({ seriesIndex, dataPointIndex, w }) => {
+            const d = w.config.series[seriesIndex].data[dataPointIndex]
+            const s = dayjs(d.meta.begin_timestamp_utc)
+            const e = dayjs(d.meta.end_timestamp_utc)
+            return `
+              <div style="padding:8px;font-size:12px">
+                <strong>${w.config.series[seriesIndex].name.toUpperCase()}</strong><br/>
+                ${s.format('DD.MM.YY')}<br/>
+                ${s.format('HH:mm')} – ${e.format('HH:mm')}
+              </div>`
+          }
+        },
+        legend: { show: false }
+      }
     }
   },
   mounted() {
@@ -419,33 +481,12 @@ export default {
     if (!alreadyShown) {
       this.startOverviewTour()
     }
-
-    // initial draw
-    this.redraw()
-
-    // Resize observer to detect tab visibility changes
-    this.resizeObserver = new ResizeObserver((entries) => {
-      const { width } = entries[0].contentRect
-
-      // If width > 0, the tab is now visible → redraw
-      if (width > 0) {
-        this.$nextTick(() => this.redraw())
-      }
-    })
-
-    this.resizeObserver.observe(this.$el)
-
-    // resize observer
-    window.addEventListener('resize', this.onResize)
   },
   activated() {
     if (window.__continueRoutesTour) {
       window.__continueRoutesTour()
       window.__continueRoutesTour = null
     }
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.onResize)
   },
   methods: {
     /**
@@ -592,142 +633,6 @@ export default {
         { begin: start.toISOString(), end: endOfDay.toISOString(), raw },
         { begin: startOfNext.toISOString(), end: end.toISOString(), raw }
       ]
-    },
-
-    // Draw the week timeline using D3
-    drawChart() {
-      if (this.mode !== 'week') return
-      const svg = d3.select(this.$refs.svg)
-      svg.selectAll('*').remove()
-
-      const container = this.$refs.svg.parentElement
-      const width = container.getBoundingClientRect().width
-      const height = 400
-      this.svgSize = { width, height }
-      svg.attr('width', width).attr('height', height)
-
-      const margin = { top: 20, right: 20, bottom: 30, left: 40 }
-      const innerWidth = width - margin.left - margin.right
-      const innerHeight = height - margin.top - margin.bottom
-
-      const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`)
-
-      // weekdays labels 0..6 -> Mon..Sun
-      const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-
-      // x scale: time from 00:00 to 24:00 (we normalize to an arbitrary date)
-      const xScale = d3.scaleLinear()
-        .domain([0, 24 * 60])
-        .range([0, innerWidth])
-
-      // y scale: map weekday index to vertical position
-      const yScale = d3.scaleBand()
-        .domain(d3.range(0, 7))
-        .range([0, innerHeight])
-        .padding(0.3)
-
-      // Draw weekday labels
-      g.selectAll('.weekday-label')
-        .data(weekdays)
-        .enter()
-        .append('text')
-        .attr('class', 'weekday-label')
-        .attr('x', -10)
-        .attr('y', (_, i) => yScale(i) + yScale.bandwidth() / 2)
-        .attr('dy', '0.35em')
-        .attr('text-anchor', 'end')
-        .style('font-size', '14px')
-        .text(d => d)
-
-      // Prepare shifts grouped by weekday index
-      const shifts = this.shiftsThisPeriod.map((s) => {
-        const start = dayjs(s.begin_timestamp_utc)
-        const end = dayjs(s.end_timestamp_utc)
-        const dow = start.day() === 0 ? 6 : start.day() - 1 // Mon=0..Sun=6
-        // preserve state
-        return {
-          startMinutes: start.hour() * 60 + start.minute(),
-          endMinutes: end.hour() * 60 + end.minute(),
-          dow,
-          state: (s.state || 'open').toLowerCase(),
-          meta: s
-        }
-      })
-
-      // color map
-      const stateColors = { offline: '#cccccc', open: '#4caf50', enroute: '#ff9800', ontrip: '#2196f3' }
-
-      // Draw bars
-      g.selectAll('.shift-bar')
-        .data(shifts)
-        .enter()
-        .append('rect')
-        .attr('class', 'shift-bar')
-        .attr('x', d => xScale(d.startMinutes))
-        .attr('width', d => Math.max(0, xScale(d.endMinutes) - xScale(d.startMinutes)))
-        .attr('y', d => yScale(d.dow))
-        .attr('height', yScale.bandwidth())
-        .attr('fill', d => stateColors[d.state] || '#888')
-        .attr('rx', 3)
-        .attr('ry', 3)
-        .on('mousemove', (event, d) => {
-          const bounds = this.$el.getBoundingClientRect()
-
-          const localX = event.clientX - bounds.left
-          const localY = event.clientY - bounds.top
-
-          // show tooltip
-          const tooltip = d3.select(this.$el).selectAll('.ov-tooltip').data([d])
-          const tEnter = tooltip.enter().append('div').attr('class', 'ov-tooltip')
-          tEnter.merge(tooltip)
-            .style('position', 'absolute')
-            .style('pointer-events', 'none')
-            .style('background', 'white')
-            .style('border', '1px solid #ccc')
-            .style('padding', '6px')
-            .style('border-radius', '6px')
-            .style('font-size', '12px')
-            .html(() => {
-              const s = dayjs(d.meta.begin_timestamp_utc)
-              const e = dayjs(d.meta.end_timestamp_utc)
-              const dateFormatted = s.format('DD.MM.YY')
-              const timeRange = `${s.format('HH:mm')} - ${e.format('HH:mm')}`
-              const cap = s => typeof s === 'string' ? s.charAt(0).toUpperCase() + s.slice(1) : ''
-              const stateLabel = cap(d.state)
-              return `<div style="color: green;"><strong>${stateLabel}</strong></div>
-                      <div>${dateFormatted}: ${timeRange}</div>`
-            })
-            .style('left', `${localX + 24}px`)
-            .style('top', `${localY + 116}px`)
-        })
-        .on('mouseleave', () => {
-          d3.select(this.$el).selectAll('.ov-tooltip').remove()
-        })
-
-      // Create ticks at [0, 180, 360, ..., 1440] minutes
-      const tickValues = d3.range(0, 24 * 60 + 1, 180) // 180 min = 3h
-
-      const xAxis = d3.axisBottom(xScale)
-        .tickValues(tickValues)
-        .tickFormat((d) => {
-          const h = Math.floor(d / 60)
-          const m = d % 60
-          return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
-        })
-
-      g.append('g')
-        .attr('transform', `translate(0, ${innerHeight})`)
-        .call(xAxis)
-    },
-
-    // redraw on data changes or resize
-    redraw() {
-      this.drawChart()
-    },
-
-    // handle window resize
-    onResize() {
-      this.redraw()
     }
   }
 }
@@ -839,12 +744,6 @@ export default {
   display: flex;
   flex-direction: column;
   padding-bottom: 16px;
-}
-
-.chart-controls {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 10px;
 }
 
 /* RIGHT COLUMN (bottom right) */
