@@ -42,8 +42,10 @@ deploy:
     # Build image in CI
     - docker build -t data-experience:latest .
 
-    # Export image
-    - docker save data-experience:latest | gzip > image.tar.gz
+    # Stream image to server (NO /tmp usage)
+    - |
+      docker save data-experience:latest | gzip | \
+      ssh "$SERVER_USER@$SERVER_IP" 'gunzip | docker load'
 
     # Upload image
     - scp image.tar.gz "$SERVER_USER@$SERVER_IP:/tmp/image.tar.gz"
@@ -60,5 +62,9 @@ deploy:
           --restart unless-stopped \
           -p 80:8080 \
           data-experience:latest
-        rm /tmp/image.tar.gz
+        docker image prune -af
+        docker builder prune -af
       EOF
+
+  after_script:
+    - docker system prune -af
