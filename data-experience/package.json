@@ -2,6 +2,9 @@
   "name": "@hestia.ai/data-experience",
   "version": "3.0.13",
   "description": "analyse the data companies collect on you",
+  "overrides": {
+    "vega-crossfilter": "4.1.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hestiaai/hestialabs-experiences.git"
