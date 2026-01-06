@@ -119,7 +119,6 @@
       "^~/(.*)$": "<rootDir>/src/$1",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/file-mock.js",
       "\\.(css|less)$": "<rootDir>/__mocks__/style-mock.js",
-      "^@hestia.ai/(.*)$": "<rootDir>/../packages/packages/experiences/$1/dist/index.mjs",
       "^vue$": "vue/dist/vue.common.js",
       "sql\\.js/dist/sql-wasm\\.wasm$": "<rootDir>/src/utils/__mocks__/sql-wasm-mock.js",
       "d3": "<rootDir>/node_modules/d3/dist/d3.min.js"
