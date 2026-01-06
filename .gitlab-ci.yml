@@ -47,14 +47,10 @@ deploy:
       docker save data-experience:latest | gzip | \
       ssh "$SERVER_USER@$SERVER_IP" 'gunzip | docker load'
 
-    # Upload image
-    - scp image.tar.gz "$SERVER_USER@$SERVER_IP:/tmp/image.tar.gz"
-
     # Deploy remotely
     - |
       ssh "$SERVER_USER@$SERVER_IP" << 'EOF'
         set -e
-        docker load < /tmp/image.tar.gz
         docker stop data-experience || true
         docker rm data-experience || true
         docker run -d \
