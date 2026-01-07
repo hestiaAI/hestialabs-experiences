@@ -56,7 +56,6 @@ deploy:
         docker run -d \
           --name data-experience \
           --restart unless-stopped \
-          -e DANGEROUSLY_DISABLE_HOST_CHECK=true \
           -p 80:8080 \
           data-experience:latest
         docker image prune -af

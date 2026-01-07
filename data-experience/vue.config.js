@@ -12,6 +12,11 @@ const isDev = process.env.NODE_ENV === 'development'
 
 export default defineConfig({
   publicPath: isDev ? '/' : './',
+  devServer: {
+    host: '86.119.48.75', // FHNW server IP
+    allowedHosts: 'all',
+    port: 8080
+  },
   configureWebpack: {
     resolve: {
       alias: {
