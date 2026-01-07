@@ -6,6 +6,7 @@ import ChartViewComponent from './components/chart/ChartView.vue'
 import store from './store'
 import './assets/dc.css'
 import './assets/dc-custom.css'
+import 'shepherd.js/dist/css/shepherd.css'
 
 import { MODULE_NAME } from '@/utils/store-helper'
 import UnitPipelineViewBlock from './components/unit/UnitPipelineViewBlock'
