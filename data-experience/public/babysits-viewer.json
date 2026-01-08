@@ -1,0 +1,42 @@
+{
+  "title": "Babysits",
+  "icon": "",
+  "messages": {
+    "en": {
+      "viewBlocks": {}
+    }
+  },
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "shiftTimeline",
+      "customPipeline": "csv_babysitter_jobs",
+      "files": ["BabysitterJobs"],
+      "visualization": "babysits/OverView.vue",
+      "title": "Shift Timeline",
+      "text": "Overview of babysitting jobs over time."
+    },
+    {
+      "showTable": false,
+      "id": "activityTypes",
+      "customPipeline": "csv_babysitter_jobs",
+      "files": ["BabysitterJobs"],
+      "visualization": "babysits/ActivityTypes.vue",
+      "title": "Activity Types",
+      "text": "Activity types over time."
+    },
+    {
+      "showTable": false,
+      "id": "earningsDistribution",
+      "customPipeline": "csv_babysitter_jobs",
+      "files": ["BabysitterJobs"],
+      "visualization": "babysits/EarningsDistribution.vue",
+      "title": "Earnings Distribution",
+      "text": "Earnigns over time."
+    }
+  ],
+  "dataSamples": [
+    "https://raw.githubusercontent.com/sergeymoshtakov/hestialabs-experiences/master/packages/lib/data-samples/babysits-sample.zip?contenthash=540b127f5a592687411c4352bef711c935ad41e226822e69ac42fe4d6a3855c6&filename=babysits-sample.zip"
+  ],
+  "version": 1
+}

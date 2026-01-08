@@ -1,0 +1,43 @@
+{
+  "title": "Uber Eats",
+  "icon": "",
+  "messages": {
+    "en": {
+      "viewBlocks": {}
+    }
+  },
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "combined_data_pipeline",
+      "customPipeline": "combined_data_pipeline",
+      "files": ["DriverOnlineOffline", "DriverPayments", "CourierLifetimeTripData"],
+      "visualization": "uberEats/Overview.vue",
+      "title": "Overview",
+      "text": ""
+    },
+    {
+      "showTable": false,
+      "id": "csv_courier_trips",
+      "customPipeline": "csv_courier_trips",
+      "files": ["CourierLifetimeTripData"],
+      "visualization": "uberEats/MyRoutes.vue",
+      "title": "My Routes",
+      "text": ""
+    },
+    {
+      "showTable": false,
+      "id": "earnings",
+      "customPipeline": "combined_data_pipeline",
+      "files": ["DriverOnlineOffline", "DriverPayments", "CourierLifetimeTripData"],
+      "visualization": "uberEats/Earnings.vue",
+      "title": "Earnings",
+      "text": ""
+    }
+  ],
+  "dataSamples": [
+    "https://raw.githubusercontent.com/Fabian3677/hestialabs-experiences/master/packages/lib/data-samples/uber-eats-sample.zip?contenthash=0631c1595fef379b2cfba284d4a74ab597f61923bcc3a585048e6928b5e4b314&filename=uber-eats-sample.zip"
+  ],
+  "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download",
+  "version": 1
+}

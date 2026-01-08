@@ -1,4 +1,4 @@
-/* Please keep the below exports in alphabetical order */
+s/* Please keep the below exports in alphabetical order */
 export { default as adRadar } from './packages/experiences/ad-radar/dist/index.mjs'
 export { default as appleTracker } from './packages/experiences/apple-tracker/dist/index.mjs'
 export { default as appleTrackerAgg } from './packages/experiences/apple-tracker-agg/dist/index.mjs'
@@ -24,6 +24,7 @@ export { default as twitter } from './packages/experiences/twitter/dist/index.mj
 export { default as twitterAgg } from './packages/experiences/twitter-agg/dist/index.mjs'
 export { default as uber } from './packages/experiences/uber/dist/index.mjs'
 export { default as uberDriver } from './packages/experiences/uber-driver/dist/index.mjs'
+export { default as uberEats } from './packages/experiences/uber-eats/dist/index.mjs'
 export { default as youtube } from './packages/experiences/youtube/dist/index.mjs'
 export { default as wolt } from './packages/experiences/wolt/dist/index.mjs'
 export { default as databaseTemplate } from './packages/experiences/database-template/dist/index.mjs'
