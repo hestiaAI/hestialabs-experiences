@@ -36,7 +36,7 @@
     }
   ],
   "dataSamples": [
-    "https://raw.githubusercontent.com/sergeymoshtakov/hestialabs-experiences/master/packages/lib/data-samples/babysits-sample.zip?contenthash=540b127f5a592687411c4352bef711c935ad41e226822e69ac42fe4d6a3855c6&filename=babysits-sample.zip"
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/babysits-sample.zip"
   ],
   "dataPortal": "https://www.babysits.com/account/personal-information/",
   "version": 1
