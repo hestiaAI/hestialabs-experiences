@@ -607,4 +607,9 @@ export default {
   .filter-select { width: 100%; box-sizing: border-box; }
   .week-label { text-align: center; width: auto; }
 }
+
+:deep(.apexcharts-heatmap-rect:hover) {
+  stroke: #000;
+  stroke-width: 2px;
+}
 </style>
