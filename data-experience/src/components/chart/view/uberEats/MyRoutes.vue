@@ -140,7 +140,7 @@ export default {
 
     // Period label for display
     periodLabel() {
-      if (periodStore.mode === 'total') return 'All time'
+      if (periodStore.mode === 'uncompleted') return 'All time'
       if (periodStore.mode === 'month') return this.periodStart.format('MMMM YYYY')
       return `${this.periodStart.format('DD.MM.YYYY')} – ${this.periodEnd.format('DD.MM.YYYY')}`
     },
@@ -444,6 +444,10 @@ export default {
 
 .switch-btn:hover {
   background: #d2d2d2;
+}
+
+.period-switch .switch-btn:nth-child(3) {
+  margin-left: 20px;
 }
 
 .week-nav {
