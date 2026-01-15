@@ -25,11 +25,7 @@
       <!-- LEFT SIDE — Kepler Map -->
       <div class="map-div">
         <h3>{{ mapTitle }}</h3>
-        <UnitKepler
-          ref="keplerRef"
-          class="map-frame"
-          :args="keplerArgs"
-        />
+        <div ref="mapContainer" class="map-frame"></div>
       </div>
 
       <!-- RIGHT SIDE — Selected Trips -->
@@ -38,7 +34,7 @@
           <h3>Selected Routes</h3>
           <button
             class="clear-btn"
-            @click="clearSelection"
+            @click="clearMapSelection"
           >
             Unselect
           </button>
@@ -89,7 +85,9 @@
 </template>
 
 <script>
-import UnitKepler from '@/components/unit/UnitKepler.vue'
+import 'maplibre-gl/dist/maplibre-gl.css'
+import maplibregl from 'maplibre-gl'
+import bbox from '@turf/bbox'
 import dayjs from 'dayjs'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
@@ -102,7 +100,6 @@ dayjs.extend(isSameOrBefore)
 
 export default {
   name: 'MyRoutes',
-  components: { UnitKepler },
   mixins: [mixin],
   props: {
     data: {
@@ -116,7 +113,7 @@ export default {
   },
   data() {
     return {
-      keplerRef: null,
+      map: null,
       selectedTrips: []
     }
   },
@@ -190,54 +187,44 @@ export default {
       )
     },
 
-    // Data formatted for Kepler.gl
-    keplerData() {
-      const trips = this.selectedTrips.length ? this.selectedTrips : this.tripsFiltered
+    routesGeoJson() {
+      const trips = this.selectedTrips.length
+        ? this.selectedTrips
+        : this.tripsFiltered
 
       return {
-        fields: [
-          { name: 'latitude', type: 'real' },
-          { name: 'longitude', type: 'real' },
-          { name: 'type', type: 'string' },
-          { name: 'fromLat', type: 'real' },
-          { name: 'fromLng', type: 'real' },
-          { name: 'toLat', type: 'real' },
-          { name: 'toLng', type: 'real' },
-          { name: 'radius', type: 'real' }
-        ],
-        rows: trips.flatMap(t => [
-          [
-            Number(t.courierAcceptTripLat),
-            Number(t.courierAcceptTripLng),
-            'accept',
-            Number(t.courierAcceptTripLat),
-            Number(t.courierAcceptTripLng),
-            Number(t.courierBegintripLat),
-            Number(t.courierBegintripLng),
-            0
-          ],
-          [
-            Number(t.courierBegintripLat),
-            Number(t.courierBegintripLng),
-            'begin',
-            Number(t.courierAcceptTripLat),
-            Number(t.courierAcceptTripLng),
-            Number(t.courierBegintripLat),
-            Number(t.courierBegintripLng),
-            Number(t.dropoffDeliveryDistanceKm) * 1000 // radius in metres
-          ]
-        ])
-      }
-    },
-    keplerArgs() {
-      return {
-        keplerData: this.keplerData,
-        config: keplerConfigPoints,
-        mapboxToken: this.mapboxToken
+        type: 'FeatureCollection',
+        features: trips.map(trip => ({
+          type: 'Feature',
+          properties: {
+            id: this.makeTripId(trip),
+            type: 'trip'
+          },
+          geometry: {
+            type: 'LineString',
+            coordinates: [
+              [
+                Number(trip.courierAcceptTripLng),
+                Number(trip.courierAcceptTripLat)
+              ],
+              [
+                Number(trip.courierBegintripLng),
+                Number(trip.courierBegintripLat)
+              ]
+            ]
+          }
+        }))
       }
     }
   },
   watch: {
+    tripsFiltered() {
+      this.updateMapData()
+    },
+    selectedTrips() {
+      this.updateMapData()
+    },
+
     // React to period changes
     periodStart() {
       this.onPeriodChanged()
@@ -251,18 +238,6 @@ export default {
     // React to mode changes
     mode() {
       this.onPeriodChanged()
-    },
-
-    // Update Kepler map when data changes
-    keplerData: {
-      handler(newData) {
-        this.keplerRef?.callIframeFunction('update', {
-          keplerData: newData,
-          config: keplerConfigPoints,
-          mapboxToken: this.mapboxToken
-        })
-      },
-      deep: true
     }
   },
   mounted() {
@@ -272,9 +247,115 @@ export default {
       window.__continueRoutesTour = null
     }
 
-    this.keplerRef = this.$refs.keplerRef
+    this.map = new maplibregl.Map({
+      container: this.$refs.mapContainer,
+      style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+      center: [7.447, 46.948],
+      zoom: 8
+    })
+
+    this.map.on('load', () => {
+      this.addRoutesSource()
+      this.addLayers()
+      this.updateMapData()
+      this.registerClickHandler()
+
+      if (this.routesGeoJson.features.length > 0) {
+        const bounds = bbox(this.routesGeoJson)
+        this.map.fitBounds(bounds, {
+          padding: 40,
+          linear: true,
+          duration: 1000
+        })
+      }
+    })
   },
   methods: {
+    addRoutesSource() {
+      this.map.addSource('routes', {
+        type: 'geojson',
+        data: this.routesGeoJson
+      })
+    },
+
+    addLayers() {
+      // Lines
+      this.map.addLayer({
+        id: 'routes-line',
+        type: 'line',
+        source: 'routes',
+        paint: {
+          'line-color': '#4a4a4a',
+          'line-width': 3,
+          'line-opacity': [
+            'case',
+            ['boolean', ['feature-state', 'selected'], false],
+            1,
+            0.4
+          ]
+        }
+      })
+
+      // Accept points
+      this.map.addLayer({
+        id: 'routes-points',
+        type: 'circle',
+        source: 'routes',
+        paint: {
+          'circle-radius': 6,
+          'circle-color': '#2ecc71'
+        }
+      })
+    },
+
+    updateMapData() {
+      if (!this.map?.getSource('routes')) return
+
+      const data = this.routesGeoJson
+      this.map.getSource('routes').setData(this.routesGeoJson)
+
+      if (data.features.length > 0) {
+        const bounds = bbox(data)
+        this.map.fitBounds(bounds, {
+          padding: 40,
+          linear: true,
+          duration: 1000
+        })
+      }
+    },
+
+    registerClickHandler() {
+      this.map.on('click', 'routes-line', (e) => {
+        const feature = e.features[0]
+        const id = feature.properties.id
+
+        // Clear previous
+        this.clearMapSelection()
+
+        this.map.setFeatureState(
+          { source: 'routes', id },
+          { selected: true }
+        )
+
+        const bounds = bbox(this.routesGeoJson)
+        this.map.fitBounds(bounds, {
+          padding: 40,
+          linear: true,
+          duration: 1000
+        })
+      })
+    },
+
+    clearMapSelection() {
+      const features = this.map.querySourceFeatures('routes')
+      features.forEach((f) => {
+        this.map.setFeatureState(
+          { source: 'routes', id: f.properties.id },
+          { selected: false }
+        )
+      })
+    },
+
     /**
      * Handle period changes
      */
@@ -389,17 +470,6 @@ export default {
         keplerData: this.keplerData,
         config: keplerConfigPoints
       })
-    },
-
-    /**
-     * Clear all selected trips on the map
-     */
-    clearSelection() {
-      this.selectedTrips = []
-      this.keplerRef?.callIframeFunction('update', {
-        keplerData: this.keplerData,
-        config: keplerConfigPoints
-      })
     }
   }
 }
@@ -492,6 +562,11 @@ export default {
 
 .map-div, .selected-routes {
   height: 600px;
+}
+
+.map-frame {
+  width: 100%;
+  height: 100%;
 }
 
 .selected-routes {
