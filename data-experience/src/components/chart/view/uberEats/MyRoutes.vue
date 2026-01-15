@@ -183,11 +183,14 @@ export default {
       )
     },
 
+    // GeoJSON for all routes
     routesGeoJson() {
+      // Use selected trips if any
       const trips = this.selectedTrips.length
         ? this.selectedTrips
         : this.tripsFiltered
 
+      // Line features
       const lineFeatures = trips.map(trip => ({
         type: 'Feature',
         properties: {
@@ -203,6 +206,7 @@ export default {
         }
       }))
 
+      // Start and end points
       const startPoints = trips.map(trip => ({
         type: 'Feature',
         properties: { id: this.makeTripId(trip) + '_start', pointType: 'start' },
@@ -215,6 +219,7 @@ export default {
         }
       }))
 
+      // End points with delivery distance as radius property
       const endPoints = trips.map(trip => ({
         type: 'Feature',
         properties: {
@@ -236,6 +241,8 @@ export default {
         features: [...lineFeatures, ...startPoints, ...endPoints]
       }
     },
+
+    // GeoJSON for delivery area circles
     endRadiusGeoJson() {
       const trips = this.selectedTrips.length ? this.selectedTrips : this.tripsFiltered
 
@@ -251,9 +258,12 @@ export default {
     }
   },
   watch: {
+    // React to trip selection changes
     tripsFiltered() {
       this.updateMapData()
     },
+
+    // React to trip selection changes
     selectedTrips() {
       this.updateMapData()
     },
@@ -280,6 +290,7 @@ export default {
       window.__continueRoutesTour = null
     }
 
+    // Initialize MapLibre map
     this.map = new maplibregl.Map({
       container: this.$refs.mapContainer,
       style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
@@ -287,6 +298,7 @@ export default {
       zoom: 8
     })
 
+    // Add sources and layers when map is ready
     this.map.on('load', () => {
       this.addRoutesSource()
       this.addLayers()
@@ -296,14 +308,18 @@ export default {
         this.updateMapData()
       })
 
-      this.registerClickHandler()
+      this.registerHandler()
     })
   },
   methods: {
+    /**
+     * Add GeoJSON sources to the map
+     */
     addRoutesSource() {
       this.map.addSource('routes', {
         type: 'geojson',
-        data: this.routesGeoJson
+        data: this.routesGeoJson,
+        promoteId: 'id'
       })
 
       this.map.addSource('endRadius', {
@@ -312,15 +328,37 @@ export default {
       })
     },
 
+    /**
+     * Add map layers for routes and points
+     */
     addLayers() {
+      // Hitbox for lines (for easier interaction)
+      this.map.addLayer({
+        id: 'routes-line-hitbox',
+        type: 'line',
+        source: 'routes',
+        paint: {
+          'line-width': 22,
+          'line-opacity': 0 // invisible
+        },
+        filter: ['==', ['geometry-type'], 'LineString']
+      })
+
       // Lines
       this.map.addLayer({
         id: 'routes-line',
         type: 'line',
         source: 'routes',
         paint: {
-          'line-color': '#4a4a4a',
-          'line-width': 3,
+          'line-width': 4,
+          'line-color': [
+            'case',
+            ['boolean', ['feature-state', 'selected'], false],
+            '#ff8c00', // selected color
+            ['boolean', ['feature-state', 'hover'], false],
+            '#f1c40f', // hover color
+            '#4a4a4a' // default line color
+          ],
           'line-opacity': [
             'case',
             ['boolean', ['feature-state', 'selected'], false],
@@ -371,6 +409,9 @@ export default {
       })
     },
 
+    /**
+     * Update map data sources
+     */
     updateMapData() {
       // Update routes
       if (this.map?.getSource('routes')) {
@@ -381,6 +422,8 @@ export default {
       if (this.map?.getSource('endRadius')) {
         this.map.getSource('endRadius').setData(this.endRadiusGeoJson)
       }
+
+      if (this.selectedTrips.length) return
 
       // Fit bounds to all visible geometries
       const allFeatures = [
@@ -398,28 +441,69 @@ export default {
       }
     },
 
-    registerClickHandler() {
-      this.map.on('click', 'routes-line', (e) => {
-        const feature = e.features[0]
-        const id = feature.properties.id
+    /**
+     * Register map interaction handlers
+     */
+    registerHandler() {
+      // Click on route line hitbox
+      this.map.on('click', 'routes-line-hitbox', (e) => {
+        const id = e.features[0].id
+        const trip = this.tripsFiltered.find(t => this.makeTripId(t) === id)
+        if (!trip) return
 
-        // Clear previous
-        this.clearMapSelection()
+        this.selectTrip(trip)
 
+        const lineFeature = e.features[0]
+        // Zoom to line and delivery area
+        const lineBbox = bbox({
+          type: 'FeatureCollection',
+          features: [
+            lineFeature,
+            ...this.endRadiusGeoJson.features.filter(f => f.properties.id.startsWith(id))
+          ]
+        })
+        this.map.fitBounds(lineBbox, { padding: 40, linear: true, duration: 1000 })
+      })
+
+      let hoveredLineId = null
+
+      // Hover on route line hitbox
+      this.map.on('mousemove', 'routes-line-hitbox', (e) => {
+        if (e.features.length === 0) return
+
+        const id = e.features[0].id
+
+        // Reset previous hover
+        if (hoveredLineId !== null && hoveredLineId !== id) {
+          this.map.setFeatureState(
+            { source: 'routes', id: hoveredLineId },
+            { hover: false }
+          )
+        }
+
+        // Set new hover
+        hoveredLineId = id
         this.map.setFeatureState(
           { source: 'routes', id },
-          { selected: true }
+          { hover: true }
         )
+      })
 
-        const bounds = bbox(this.routesGeoJson)
-        this.map.fitBounds(bounds, {
-          padding: 40,
-          linear: true,
-          duration: 1000
-        })
+      // Remove hover when leaving hitbox
+      this.map.on('mouseleave', 'routes-line-hitbox', () => {
+        if (hoveredLineId !== null) {
+          this.map.setFeatureState(
+            { source: 'routes', id: hoveredLineId },
+            { hover: false }
+          )
+        }
+        hoveredLineId = null
       })
     },
 
+    /**
+     * Clear all map selections
+     */
     clearMapSelection() {
       const features = this.map.querySourceFeatures('routes')
       features.forEach((f) => {
