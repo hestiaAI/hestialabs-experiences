@@ -22,7 +22,7 @@
     </div>
 
     <div class="content-area">
-      <!-- LEFT SIDE — Kepler Map -->
+      <!-- LEFT SIDE — MapLibre Map -->
       <div class="map-div">
         <h3>{{ mapTitle }}</h3>
         <div ref="mapContainer" class="map-frame"></div>
@@ -87,11 +87,11 @@
 <script>
 import 'maplibre-gl/dist/maplibre-gl.css'
 import maplibregl from 'maplibre-gl'
+import * as turf from '@turf/turf'
 import bbox from '@turf/bbox'
 import dayjs from 'dayjs'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
-import keplerConfigPoints from './kepler_config_points.js'
 import mixin from '@/components/chart/view/mixin'
 import { periodStore } from './store/periodStore'
 
@@ -105,10 +105,6 @@ export default {
     data: {
       type: Object,
       required: false
-    },
-    mapboxToken: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -192,28 +188,65 @@ export default {
         ? this.selectedTrips
         : this.tripsFiltered
 
+      const lineFeatures = trips.map(trip => ({
+        type: 'Feature',
+        properties: {
+          id: this.makeTripId(trip),
+          type: 'trip'
+        },
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [Number(trip.courierAcceptTripLng), Number(trip.courierAcceptTripLat)], // start
+            [Number(trip.courierBegintripLng), Number(trip.courierBegintripLat)] // end
+          ]
+        }
+      }))
+
+      const startPoints = trips.map(trip => ({
+        type: 'Feature',
+        properties: { id: this.makeTripId(trip) + '_start', pointType: 'start' },
+        geometry: {
+          type: 'Point',
+          coordinates: [
+            Number(trip.courierAcceptTripLng),
+            Number(trip.courierAcceptTripLat)
+          ]
+        }
+      }))
+
+      const endPoints = trips.map(trip => ({
+        type: 'Feature',
+        properties: {
+          id: this.makeTripId(trip) + '_end',
+          pointType: 'end',
+          radius: Number(trip.dropoffDeliveryDistanceKm) * 1000 // in meters
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [
+            Number(trip.courierBegintripLng),
+            Number(trip.courierBegintripLat)
+          ]
+        }
+      }))
+
       return {
         type: 'FeatureCollection',
-        features: trips.map(trip => ({
-          type: 'Feature',
-          properties: {
-            id: this.makeTripId(trip),
-            type: 'trip'
-          },
-          geometry: {
-            type: 'LineString',
-            coordinates: [
-              [
-                Number(trip.courierAcceptTripLng),
-                Number(trip.courierAcceptTripLat)
-              ],
-              [
-                Number(trip.courierBegintripLng),
-                Number(trip.courierBegintripLat)
-              ]
-            ]
-          }
-        }))
+        features: [...lineFeatures, ...startPoints, ...endPoints]
+      }
+    },
+    endRadiusGeoJson() {
+      const trips = this.selectedTrips.length ? this.selectedTrips : this.tripsFiltered
+
+      return {
+        type: 'FeatureCollection',
+        features: trips.map((trip) => {
+          const center = [Number(trip.courierBegintripLng), Number(trip.courierBegintripLat)]
+          const radius = Number(trip.dropoffDeliveryDistanceKm) * 1000 // meters
+
+          return turf.circle(center, radius, { units: 'meters', steps: 64, properties: { id: this.makeTripId(trip) + '_radius' } })
+        })
       }
     }
   },
@@ -257,17 +290,13 @@ export default {
     this.map.on('load', () => {
       this.addRoutesSource()
       this.addLayers()
-      this.updateMapData()
-      this.registerClickHandler()
 
-      if (this.routesGeoJson.features.length > 0) {
-        const bounds = bbox(this.routesGeoJson)
-        this.map.fitBounds(bounds, {
-          padding: 40,
-          linear: true,
-          duration: 1000
-        })
-      }
+      // Wait until Vue has computed the geojson
+      this.$nextTick(() => {
+        this.updateMapData()
+      })
+
+      this.registerClickHandler()
     })
   },
   methods: {
@@ -275,6 +304,11 @@ export default {
       this.map.addSource('routes', {
         type: 'geojson',
         data: this.routesGeoJson
+      })
+
+      this.map.addSource('endRadius', {
+        type: 'geojson',
+        data: this.endRadiusGeoJson
       })
     },
 
@@ -293,34 +327,74 @@ export default {
             1,
             0.4
           ]
-        }
+        },
+        filter: ['==', ['geometry-type'], 'LineString']
       })
 
-      // Accept points
+      // Start points (green)
       this.map.addLayer({
-        id: 'routes-points',
+        id: 'routes-start-points',
         type: 'circle',
         source: 'routes',
         paint: {
           'circle-radius': 6,
-          'circle-color': '#2ecc71'
+          'circle-color': '#2ecc71',
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff'
+        },
+        filter: ['==', ['get', 'pointType'], 'start']
+      })
+
+      // End points (blue)
+      this.map.addLayer({
+        id: 'routes-end-points',
+        type: 'circle',
+        source: 'routes',
+        paint: {
+          'circle-radius': 6,
+          'circle-color': '#3498db',
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff'
+        },
+        filter: ['==', ['get', 'pointType'], 'end']
+      })
+
+      // Delivery area circle around end point
+      this.map.addLayer({
+        id: 'endRadius-fill',
+        type: 'fill',
+        source: 'endRadius',
+        paint: {
+          'fill-color': 'rgba(52, 152, 219, 0.2)',
+          'fill-outline-color': 'rgba(52, 152, 219, 0.4)'
         }
       })
     },
 
     updateMapData() {
-      if (!this.map?.getSource('routes')) return
+      // Update routes
+      if (this.map?.getSource('routes')) {
+        this.map.getSource('routes').setData(this.routesGeoJson)
+      }
 
-      const data = this.routesGeoJson
-      this.map.getSource('routes').setData(this.routesGeoJson)
+      // Update delivery areas
+      if (this.map?.getSource('endRadius')) {
+        this.map.getSource('endRadius').setData(this.endRadiusGeoJson)
+      }
 
-      if (data.features.length > 0) {
-        const bounds = bbox(data)
-        this.map.fitBounds(bounds, {
-          padding: 40,
-          linear: true,
-          duration: 1000
+      // Fit bounds to all visible geometries
+      const allFeatures = [
+        ...this.routesGeoJson.features,
+        ...this.endRadiusGeoJson.features
+      ]
+
+      if (allFeatures.length) {
+        const combinedBbox = turf.bbox({
+          type: 'FeatureCollection',
+          features: allFeatures
         })
+
+        this.map.fitBounds(combinedBbox, { padding: 40 })
       }
     },
 
@@ -365,11 +439,7 @@ export default {
 
       // Force map redraw with full filtered dataset
       this.$nextTick(() => {
-        this.keplerRef?.callIframeFunction('update', {
-          keplerData: this.keplerData,
-          config: keplerConfigPoints,
-          mapboxToken: this.mapboxToken
-        })
+        this.updateMapData()
       })
     },
 
@@ -378,7 +448,7 @@ export default {
      * @param mode 'week' | 'month' | 'uncompleted'
      */
     setPeriodMode(mode) {
-      this.clearSelection()
+      this.selectedTrips = []
       periodStore.setMode(mode)
       if (mode === 'week') {
         const monday = dayjs(periodStore.periodStart).startOf('week').add(1, 'day')
@@ -389,13 +459,18 @@ export default {
         const end = start.endOf('month')
         periodStore.setPeriod(start.toISOString(), end.toISOString())
       }
+
+      this.$nextTick(() => {
+        this.updateMapData()
+      })
     },
 
     /**
      * Navigate to previous period
      */
     prevPeriod() {
-      this.clearSelection()
+      this.selectedTrips = []
+
       if (periodStore.mode === 'week') {
         const newStart = this.periodStart.subtract(7, 'day')
         const newEnd = newStart.add(6, 'day').endOf('day')
@@ -405,13 +480,18 @@ export default {
         const newEnd = newStart.endOf('month')
         periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
+
+      this.$nextTick(() => {
+        this.updateMapData()
+      })
     },
 
     /**
      * Navigate to next period
      */
     nextPeriod() {
-      this.clearSelection()
+      this.selectedTrips = []
+
       if (periodStore.mode === 'week') {
         const newStart = this.periodStart.add(7, 'day')
         const newEnd = newStart.add(6, 'day').endOf('day')
@@ -421,6 +501,10 @@ export default {
         const newEnd = newStart.endOf('month')
         periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
+
+      this.$nextTick(() => {
+        this.updateMapData()
+      })
     },
 
     /**
@@ -465,11 +549,6 @@ export default {
       } else {
         this.selectedTrips.push(trip)
       }
-
-      this.keplerRef?.callIframeFunction('update', {
-        keplerData: this.keplerData,
-        config: keplerConfigPoints
-      })
     }
   }
 }
