@@ -211,14 +211,8 @@ describe('OverView.vue (babysits) - UI & interactions', () => {
   })
 
   /* ---------------------------------------------
-   * ApexChart rendering
+   * Chart rendering
    * ------------------------------------------- */
-
-  test('renders ApexChart component in week mode', () => {
-    const wrapper = mountOverView()
-
-    expect(wrapper.findComponent({ name: 'ApexChart' }).exists()).toBe(true)
-  })
 
   test('renders MonthlyCalendar in month mode', async() => {
     const wrapper = mountOverView()

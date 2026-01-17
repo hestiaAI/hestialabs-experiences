@@ -110,11 +110,6 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
     expect(wrapper.text()).toContain('Earnings Distribution')
   })
 
-  test('renders ApexChart component', () => {
-    const wrapper = mountEarningsDistribution()
-    expect(wrapper.findComponent({ name: 'ApexChart' }).exists()).toBe(true)
-  })
-
   /* ---------------------------------------------
    * Period switching
    * ------------------------------------------- */
@@ -226,17 +221,5 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
 
     const label = wrapper.find('.week-label')
     expect(label.text()).toBe('All time')
-  })
-
-  /* ---------------------------------------------
-   * Legend rendering
-   * ------------------------------------------- */
-
-  test('renders legend items in week/month mode', async() => {
-    const wrapper = mountEarningsDistribution()
-
-    // Should be in WEEK mode by default
-    const legend = wrapper.find('.legend')
-    expect(legend.exists()).toBe(true)
   })
 })

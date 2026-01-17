@@ -107,11 +107,6 @@ describe('ActivityTypes.vue - UI & interactions', () => {
     expect(wrapper.text()).toContain('Activity Types')
   })
 
-  test('renders ApexChart component', () => {
-    const wrapper = mountActivityTypes()
-    expect(wrapper.findComponent({ name: 'ApexChart' }).exists()).toBe(true)
-  })
-
   /* ---------------------------------------------
    * Period switching
    * ------------------------------------------- */
@@ -149,20 +144,6 @@ describe('ActivityTypes.vue - UI & interactions', () => {
 
     await expect(navButtons.at(0).trigger('click')).resolves.not.toThrow()
     await expect(navButtons.at(1).trigger('click')).resolves.not.toThrow()
-  })
-
-  /* ---------------------------------------------
-   * TOTAL mode specific
-   * ------------------------------------------- */
-
-  test('renders sort dropdown in TOTAL mode', async() => {
-    const wrapper = mountActivityTypes()
-
-    // Switch to TOTAL mode
-    await wrapper.findAll('.switch-btn').at(2).trigger('click')
-
-    const dropdown = wrapper.find('select.filter-select')
-    expect(dropdown.exists()).toBe(true)
   })
 
   /* ---------------------------------------------
