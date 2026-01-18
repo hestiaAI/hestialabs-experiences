@@ -214,11 +214,11 @@ export default {
           heatmap: {
             colorScale: {
               ranges: [
-                { from: 0, to: 0, color: '#f0f0f0', name: '0h' },
-                { from: 0.1, to: 2, color: '#a8e6cf', name: '0-2h' },
-                { from: 2.1, to: 4, color: '#56c596', name: '2-4h' },
-                { from: 4.1, to: 8, color: '#2ecc71', name: '4-8h' },
-                { from: 8.1, to: 100, color: '#1e8449', name: '8h+' }
+                { from: 0, to: 0.1, color: '#f0f0f0', name: '<0.1h' },
+                { from: 0.1, to: 2, color: '#a8e6cf', name: '0.1-2h' },
+                { from: 2.1, to: 4, color: '#56c596', name: '2.1-4h' },
+                { from: 4.1, to: 8, color: '#2ecc71', name: '4.1-8h' },
+                { from: 8.1, to: 100, color: '#1e8449', name: '8.1h+' }
               ]
             }
           }
