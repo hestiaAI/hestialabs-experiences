@@ -5,10 +5,18 @@
         <button
           v-for="p in ['week', 'month', 'uncompleted']"
           :key="p"
-          :class="['switch-btn', { active: mode === p }]"
+          class="switch-btn"
+          :class="{ active: mode === p }"
           @click="setPeriodMode(p)"
         >
           {{ p.toUpperCase() }}
+
+          <span v-if="p === 'uncompleted'" class="info-wrapper">
+            <span class="info-icon">i</span>
+            <span class="tooltip">
+              These are all the trips that have not been completed successfully
+            </span>
+          </span>
         </button>
       </div>
 
@@ -22,14 +30,20 @@
     </div>
 
     <div class="content-area">
-      <!-- LEFT SIDE — Kepler Map -->
+      <!-- LEFT SIDE — MapLibre Map -->
       <div class="map-div">
-        <h3>{{ mapTitle }}</h3>
-        <UnitKepler
-          ref="keplerRef"
-          class="map-frame"
-          :args="keplerArgs"
-        />
+        <div class="map-header">
+          <h3>{{ mapTitle }}</h3>
+
+          <label class="area-toggle">
+            <input
+              type="checkbox"
+              v-model="showDeliveryArea"
+            />
+            Show delivery area
+          </label>
+        </div>
+        <div ref="mapContainer" class="map-frame"></div>
       </div>
 
       <!-- RIGHT SIDE — Selected Trips -->
@@ -38,7 +52,7 @@
           <h3>Selected Routes</h3>
           <button
             class="clear-btn"
-            @click="clearSelection"
+            @click="clearMapSelection"
           >
             Unselect
           </button>
@@ -89,11 +103,13 @@
 </template>
 
 <script>
-import UnitKepler from '@/components/unit/UnitKepler.vue'
+import 'maplibre-gl/dist/maplibre-gl.css'
+import maplibregl from 'maplibre-gl'
+import * as turf from '@turf/turf'
+import bbox from '@turf/bbox'
 import dayjs from 'dayjs'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
-import keplerConfigPoints from './kepler_config_points.js'
 import mixin from '@/components/chart/view/mixin'
 import { periodStore } from './store/periodStore'
 
@@ -102,22 +118,18 @@ dayjs.extend(isSameOrBefore)
 
 export default {
   name: 'MyRoutes',
-  components: { UnitKepler },
   mixins: [mixin],
   props: {
     data: {
       type: Object,
       required: false
-    },
-    mapboxToken: {
-      type: String,
-      default: ''
     }
   },
   data() {
     return {
-      keplerRef: null,
-      selectedTrips: []
+      map: null,
+      selectedTrips: [],
+      showDeliveryArea: true
     }
   },
   computed: {
@@ -184,60 +196,114 @@ export default {
       }
 
       // Sort newest → oldest
-      return result.sort((a, b) =>
+      result.sort((a, b) =>
         dayjs(b.courierAcceptTimestampLocal).valueOf() -
         dayjs(a.courierAcceptTimestampLocal).valueOf()
       )
+
+      // Put selected trips on top
+      return result.sort((a, b) => {
+        const aSelected = this.selectedTrips.includes(a)
+        const bSelected = this.selectedTrips.includes(b)
+
+        if (aSelected && !bSelected) return -1
+        if (!aSelected && bSelected) return 1
+
+        return 0
+      })
     },
 
-    // Data formatted for Kepler.gl
-    keplerData() {
+    // GeoJSON for all routes
+    routesGeoJson() {
+      // Use selected trips if any
+      const trips = this.selectedTrips.length
+        ? this.selectedTrips
+        : this.tripsFiltered
+
+      // Line features
+      const lineFeatures = trips.map(trip => ({
+        type: 'Feature',
+        properties: {
+          id: this.makeTripId(trip),
+          type: 'trip'
+        },
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [Number(trip.courierAcceptTripLng), Number(trip.courierAcceptTripLat)], // start
+            [Number(trip.courierBegintripLng), Number(trip.courierBegintripLat)] // end
+          ]
+        }
+      }))
+
+      // Start and end points
+      const startPoints = trips.map(trip => ({
+        type: 'Feature',
+        properties: { id: this.makeTripId(trip) + '_start', pointType: 'start' },
+        geometry: {
+          type: 'Point',
+          coordinates: [
+            Number(trip.courierAcceptTripLng),
+            Number(trip.courierAcceptTripLat)
+          ]
+        }
+      }))
+
+      // End points with delivery distance as radius property
+      const endPoints = trips.map(trip => ({
+        type: 'Feature',
+        properties: {
+          id: this.makeTripId(trip) + '_end',
+          pointType: 'end',
+          radius: Number(trip.dropoffDeliveryDistanceKm) * 1000 // in meters
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [
+            Number(trip.courierBegintripLng),
+            Number(trip.courierBegintripLat)
+          ]
+        }
+      }))
+
+      return {
+        type: 'FeatureCollection',
+        features: [...lineFeatures, ...startPoints, ...endPoints]
+      }
+    },
+
+    // GeoJSON for delivery area circles
+    endRadiusGeoJson() {
       const trips = this.selectedTrips.length ? this.selectedTrips : this.tripsFiltered
 
       return {
-        fields: [
-          { name: 'latitude', type: 'real' },
-          { name: 'longitude', type: 'real' },
-          { name: 'type', type: 'string' },
-          { name: 'fromLat', type: 'real' },
-          { name: 'fromLng', type: 'real' },
-          { name: 'toLat', type: 'real' },
-          { name: 'toLng', type: 'real' },
-          { name: 'radius', type: 'real' }
-        ],
-        rows: trips.flatMap(t => [
-          [
-            Number(t.courierAcceptTripLat),
-            Number(t.courierAcceptTripLng),
-            'accept',
-            Number(t.courierAcceptTripLat),
-            Number(t.courierAcceptTripLng),
-            Number(t.courierBegintripLat),
-            Number(t.courierBegintripLng),
-            0
-          ],
-          [
-            Number(t.courierBegintripLat),
-            Number(t.courierBegintripLng),
-            'begin',
-            Number(t.courierAcceptTripLat),
-            Number(t.courierAcceptTripLng),
-            Number(t.courierBegintripLat),
-            Number(t.courierBegintripLng),
-            Number(t.dropoffDeliveryDistanceKm) * 1000 // radius in metres
-          ]
-        ])
-      }
-    },
-    keplerArgs() {
-      return {
-        keplerData: this.keplerData,
-        config: keplerConfigPoints,
-        mapboxToken: this.mapboxToken
+        type: 'FeatureCollection',
+        features: trips.map((trip) => {
+          const center = [Number(trip.courierBegintripLng), Number(trip.courierBegintripLat)]
+          const radius = Number(trip.dropoffDeliveryDistanceKm) * 1000 // meters
+
+          return turf.circle(center, radius, { units: 'meters', steps: 64, properties: { id: this.makeTripId(trip) + '_radius' } })
+        })
       }
     }
   },
   watch: {
+    // React to trip selection changes
+    tripsFiltered() {
+      this.$nextTick(() => {
+        this.updateMapData()
+        this.zoomToVisibleTrips()
+      })
+    },
+
+    // React to trip selection changes
+    selectedTrips() {
+      this.$nextTick(() => {
+        this.updateMapData()
+        this.zoomToVisibleTrips()
+      })
+    },
+
     // React to period changes
     periodStart() {
       this.onPeriodChanged()
@@ -253,16 +319,15 @@ export default {
       this.onPeriodChanged()
     },
 
-    // Update Kepler map when data changes
-    keplerData: {
-      handler(newData) {
-        this.keplerRef?.callIframeFunction('update', {
-          keplerData: newData,
-          config: keplerConfigPoints,
-          mapboxToken: this.mapboxToken
-        })
-      },
-      deep: true
+    // Show/hide delivery area
+    showDeliveryArea(val) {
+      if (!this.map) return
+
+      const visibility = val ? 'visible' : 'none'
+
+      if (this.map.getLayer('endRadius-fill')) {
+        this.map.setLayoutProperty('endRadius-fill', 'visibility', visibility)
+      }
     }
   },
   mounted() {
@@ -272,9 +337,253 @@ export default {
       window.__continueRoutesTour = null
     }
 
-    this.keplerRef = this.$refs.keplerRef
+    // Initialize MapLibre map
+    this.map = new maplibregl.Map({
+      container: this.$refs.mapContainer,
+      style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+      center: [7.447, 46.948],
+      zoom: 8
+    })
+
+    // Add sources and layers when map is ready
+    this.map.on('load', () => {
+      this.addRoutesSource()
+      this.addLayers()
+
+      this.map.setLayoutProperty(
+        'endRadius-fill',
+        'visibility',
+        this.showDeliveryArea ? 'visible' : 'none'
+      )
+
+      // Wait until Vue has computed the geojson
+      this.$nextTick(() => {
+        this.updateMapData()
+        this.zoomToVisibleTrips()
+      })
+
+      this.registerHandler()
+    })
+
+    window.addEventListener('resize', this.resizeMap)
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resizeMap)
   },
   methods: {
+    /**
+     * Handle map resize
+     */
+    resizeMap() {
+      if (this.map) {
+        this.map.resize()
+      }
+    },
+    /**
+     * Add GeoJSON sources to the map
+     */
+    addRoutesSource() {
+      this.map.addSource('routes', {
+        type: 'geojson',
+        data: this.routesGeoJson,
+        promoteId: 'id'
+      })
+
+      this.map.addSource('endRadius', {
+        type: 'geojson',
+        data: this.endRadiusGeoJson
+      })
+    },
+
+    /**
+     * Add map layers for routes and points
+     */
+    addLayers() {
+      // Hitbox for lines (for easier interaction)
+      this.map.addLayer({
+        id: 'routes-line-hitbox',
+        type: 'line',
+        source: 'routes',
+        paint: {
+          'line-width': 22,
+          'line-opacity': 0 // invisible
+        },
+        filter: ['==', ['geometry-type'], 'LineString']
+      })
+
+      // Lines
+      this.map.addLayer({
+        id: 'routes-line',
+        type: 'line',
+        source: 'routes',
+        paint: {
+          'line-width': 4,
+          'line-color': [
+            'case',
+            ['boolean', ['feature-state', 'selected'], false],
+            '#ff8c00', // selected color
+            ['boolean', ['feature-state', 'hover'], false],
+            '#f1c40f', // hover color
+            '#4a4a4a' // default line color
+          ],
+          'line-opacity': [
+            'case',
+            ['boolean', ['feature-state', 'selected'], false],
+            1,
+            0.4
+          ]
+        },
+        filter: ['==', ['geometry-type'], 'LineString']
+      })
+
+      // Start points (green)
+      this.map.addLayer({
+        id: 'routes-start-points',
+        type: 'circle',
+        source: 'routes',
+        paint: {
+          'circle-radius': 6,
+          'circle-color': '#2ecc71',
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff'
+        },
+        filter: ['==', ['get', 'pointType'], 'start']
+      })
+
+      // End points (blue)
+      this.map.addLayer({
+        id: 'routes-end-points',
+        type: 'circle',
+        source: 'routes',
+        paint: {
+          'circle-radius': 6,
+          'circle-color': '#3498db',
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#ffffff'
+        },
+        filter: ['==', ['get', 'pointType'], 'end']
+      })
+
+      // Delivery area circle around end point
+      this.map.addLayer({
+        id: 'endRadius-fill',
+        type: 'fill',
+        source: 'endRadius',
+        paint: {
+          'fill-color': 'rgba(52, 152, 219, 0.2)',
+          'fill-outline-color': 'rgba(52, 152, 219, 0.4)'
+        }
+      })
+    },
+
+    /**
+     * Update map data sources
+     */
+    updateMapData() {
+      // Update routes
+      if (this.map?.getSource('routes')) {
+        this.map.getSource('routes').setData(this.routesGeoJson)
+      }
+
+      // Update delivery areas
+      if (this.map?.getSource('endRadius')) {
+        this.map.getSource('endRadius').setData(this.endRadiusGeoJson)
+      }
+    },
+
+    /**
+     * Zoom to show all routes
+     */
+    zoomToVisibleTrips() {
+      if (!this.map) return
+
+      const features = [
+        ...this.routesGeoJson.features,
+        ...this.endRadiusGeoJson.features
+      ]
+
+      if (!features.length) return
+
+      this.map.resize()
+
+      const bounds = bbox({
+        type: 'FeatureCollection',
+        features
+      })
+
+      this.map.fitBounds(bounds,
+        {
+          padding: 40,
+          linear: true,
+          duration: 800
+        })
+    },
+
+    /**
+     * Register map interaction handlers
+     */
+    registerHandler() {
+      // Click on route line hitbox
+      this.map.on('click', 'routes-line-hitbox', (e) => {
+        const id = e.features[0].id
+        const trip = this.tripsFiltered.find(t => this.makeTripId(t) === id)
+        if (!trip) return
+
+        this.selectTrip(trip)
+      })
+
+      let hoveredLineId = null
+
+      // Hover on route line hitbox
+      this.map.on('mousemove', 'routes-line-hitbox', (e) => {
+        if (e.features.length === 0) return
+
+        const id = e.features[0].id
+
+        // Reset previous hover
+        if (hoveredLineId !== null && hoveredLineId !== id) {
+          this.map.setFeatureState(
+            { source: 'routes', id: hoveredLineId },
+            { hover: false }
+          )
+        }
+
+        // Set new hover
+        hoveredLineId = id
+        this.map.setFeatureState(
+          { source: 'routes', id },
+          { hover: true }
+        )
+      })
+
+      // Remove hover when leaving hitbox
+      this.map.on('mouseleave', 'routes-line-hitbox', () => {
+        if (hoveredLineId !== null) {
+          this.map.setFeatureState(
+            { source: 'routes', id: hoveredLineId },
+            { hover: false }
+          )
+        }
+        hoveredLineId = null
+      })
+    },
+
+    /**
+     * Clear all map selections
+     */
+    clearMapSelection() {
+      this.selectedTrips = []
+
+      // clear feature states
+      const features = this.map.querySourceFeatures('routes')
+      features.forEach((f) => {
+        this.map.setFeatureState(
+          { source: 'routes', id: f.properties.id },
+          { selected: false }
+        )
+      })
+    },
+
     /**
      * Handle period changes
      */
@@ -284,11 +593,7 @@ export default {
 
       // Force map redraw with full filtered dataset
       this.$nextTick(() => {
-        this.keplerRef?.callIframeFunction('update', {
-          keplerData: this.keplerData,
-          config: keplerConfigPoints,
-          mapboxToken: this.mapboxToken
-        })
+        this.updateMapData()
       })
     },
 
@@ -297,7 +602,7 @@ export default {
      * @param mode 'week' | 'month' | 'uncompleted'
      */
     setPeriodMode(mode) {
-      this.clearSelection()
+      this.selectedTrips = []
       periodStore.setMode(mode)
       if (mode === 'week') {
         const monday = dayjs(periodStore.periodStart).startOf('week').add(1, 'day')
@@ -308,13 +613,18 @@ export default {
         const end = start.endOf('month')
         periodStore.setPeriod(start.toISOString(), end.toISOString())
       }
+
+      this.$nextTick(() => {
+        this.updateMapData()
+      })
     },
 
     /**
      * Navigate to previous period
      */
     prevPeriod() {
-      this.clearSelection()
+      this.selectedTrips = []
+
       if (periodStore.mode === 'week') {
         const newStart = this.periodStart.subtract(7, 'day')
         const newEnd = newStart.add(6, 'day').endOf('day')
@@ -324,13 +634,18 @@ export default {
         const newEnd = newStart.endOf('month')
         periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
+
+      this.$nextTick(() => {
+        this.updateMapData()
+      })
     },
 
     /**
      * Navigate to next period
      */
     nextPeriod() {
-      this.clearSelection()
+      this.selectedTrips = []
+
       if (periodStore.mode === 'week') {
         const newStart = this.periodStart.add(7, 'day')
         const newEnd = newStart.add(6, 'day').endOf('day')
@@ -340,6 +655,10 @@ export default {
         const newEnd = newStart.endOf('month')
         periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
+
+      this.$nextTick(() => {
+        this.updateMapData()
+      })
     },
 
     /**
@@ -384,22 +703,6 @@ export default {
       } else {
         this.selectedTrips.push(trip)
       }
-
-      this.keplerRef?.callIframeFunction('update', {
-        keplerData: this.keplerData,
-        config: keplerConfigPoints
-      })
-    },
-
-    /**
-     * Clear all selected trips on the map
-     */
-    clearSelection() {
-      this.selectedTrips = []
-      this.keplerRef?.callIframeFunction('update', {
-        keplerData: this.keplerData,
-        config: keplerConfigPoints
-      })
     }
   }
 }
@@ -479,28 +782,53 @@ export default {
 .content-area {
   display: flex;
   flex: 1;
+  justify-content: space-between;
+}
+
+.map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.area-toggle {
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .map-div {
   flex: 0 0 70%;
+  display: flex;
+  flex-direction: column;
   background-color: #e8e8e8;
   border: 2px solid #ccc;
   border-radius: 10px;
   margin-right: 16px;
   padding: 16px;
+  min-height: 0;
 }
 
 .map-div, .selected-routes {
   height: 600px;
 }
 
-.selected-routes {
+.map-frame {
   flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.selected-routes {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 28%;
   background-color: #e8e8e8;
   border: 2px solid #ccc;
   border-radius: 10px;
   padding: 16px;
-  overflow-y: auto;
 }
 
 .title-row {
@@ -524,15 +852,17 @@ export default {
 }
 
 .trip-list {
-  display: flex;
-  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
   gap: 12px;
+  padding-right: 4px;
 }
 
 .trip-item {
   background: white;
   border-radius: 8px;
   padding: 12px 16px;
+  margin-bottom: 12px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   cursor: pointer;
 }
@@ -557,6 +887,54 @@ export default {
   display: flex;
   justify-content: space-between;
   font-size: 0.9em;
+}
+
+/* Tooltip wrapper */
+.info-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-left: 8px;
+}
+
+/* Info icon */
+.info-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #666;
+  color: white;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  display: inline-block;
+  cursor: default;
+}
+
+/* Tooltip text */
+.tooltip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 220px;
+  background: #333;
+  color: #fff;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.2;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+/* Show tooltip on hover */
+.info-wrapper:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
 }
 
 .no-data {
