@@ -32,7 +32,17 @@
     <div class="content-area">
       <!-- LEFT SIDE — MapLibre Map -->
       <div class="map-div">
-        <h3>{{ mapTitle }}</h3>
+        <div class="map-header">
+          <h3>{{ mapTitle }}</h3>
+
+          <label class="area-toggle">
+            <input
+              type="checkbox"
+              v-model="showDeliveryArea"
+            />
+            Show delivery area
+          </label>
+        </div>
         <div ref="mapContainer" class="map-frame"></div>
       </div>
 
@@ -118,7 +128,8 @@ export default {
   data() {
     return {
       map: null,
-      selectedTrips: []
+      selectedTrips: [],
+      showDeliveryArea: true
     }
   },
   computed: {
@@ -306,6 +317,17 @@ export default {
     // React to mode changes
     mode() {
       this.onPeriodChanged()
+    },
+
+    // Show/hide delivery area
+    showDeliveryArea(val) {
+      if (!this.map) return
+
+      const visibility = val ? 'visible' : 'none'
+
+      if (this.map.getLayer('endRadius-fill')) {
+        this.map.setLayoutProperty('endRadius-fill', 'visibility', visibility)
+      }
     }
   },
   mounted() {
@@ -327,6 +349,12 @@ export default {
     this.map.on('load', () => {
       this.addRoutesSource()
       this.addLayers()
+
+      this.map.setLayoutProperty(
+        'endRadius-fill',
+        'visibility',
+        this.showDeliveryArea ? 'visible' : 'none'
+      )
 
       // Wait until Vue has computed the geojson
       this.$nextTick(() => {
@@ -754,6 +782,21 @@ export default {
 .content-area {
   display: flex;
   flex: 1;
+  justify-content: space-between;
+}
+
+.map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.area-toggle {
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .map-div {
@@ -781,6 +824,7 @@ export default {
 .selected-routes {
   display: flex;
   flex-direction: column;
+  flex: 0 0 28%;
   background-color: #e8e8e8;
   border: 2px solid #ccc;
   border-radius: 10px;
