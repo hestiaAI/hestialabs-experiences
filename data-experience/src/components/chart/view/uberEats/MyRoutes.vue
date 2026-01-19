@@ -5,10 +5,18 @@
         <button
           v-for="p in ['week', 'month', 'uncompleted']"
           :key="p"
-          :class="['switch-btn', { active: mode === p }]"
+          class="switch-btn"
+          :class="{ active: mode === p }"
           @click="setPeriodMode(p)"
         >
           {{ p.toUpperCase() }}
+
+          <span v-if="p === 'uncompleted'" class="info-wrapper">
+            <span class="info-icon">i</span>
+            <span class="tooltip">
+              These are all the trips that have not been completed successfully
+            </span>
+          </span>
         </button>
       </div>
 
@@ -177,10 +185,21 @@ export default {
       }
 
       // Sort newest → oldest
-      return result.sort((a, b) =>
+      result.sort((a, b) =>
         dayjs(b.courierAcceptTimestampLocal).valueOf() -
         dayjs(a.courierAcceptTimestampLocal).valueOf()
       )
+
+      // Put selected trips on top
+      return result.sort((a, b) => {
+        const aSelected = this.selectedTrips.includes(a)
+        const bSelected = this.selectedTrips.includes(b)
+
+        if (aSelected && !bSelected) return -1
+        if (!aSelected && bSelected) return 1
+
+        return 0
+      })
     },
 
     // GeoJSON for all routes
@@ -260,12 +279,18 @@ export default {
   watch: {
     // React to trip selection changes
     tripsFiltered() {
-      this.updateMapData()
+      this.$nextTick(() => {
+        this.updateMapData()
+        this.zoomToVisibleTrips()
+      })
     },
 
     // React to trip selection changes
     selectedTrips() {
-      this.updateMapData()
+      this.$nextTick(() => {
+        this.updateMapData()
+        this.zoomToVisibleTrips()
+      })
     },
 
     // React to period changes
@@ -306,12 +331,26 @@ export default {
       // Wait until Vue has computed the geojson
       this.$nextTick(() => {
         this.updateMapData()
+        this.zoomToVisibleTrips()
       })
 
       this.registerHandler()
     })
+
+    window.addEventListener('resize', this.resizeMap)
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resizeMap)
   },
   methods: {
+    /**
+     * Handle map resize
+     */
+    resizeMap() {
+      if (this.map) {
+        this.map.resize()
+      }
+    },
     /**
      * Add GeoJSON sources to the map
      */
@@ -422,23 +461,34 @@ export default {
       if (this.map?.getSource('endRadius')) {
         this.map.getSource('endRadius').setData(this.endRadiusGeoJson)
       }
+    },
 
-      if (this.selectedTrips.length) return
+    /**
+     * Zoom to show all routes
+     */
+    zoomToVisibleTrips() {
+      if (!this.map) return
 
-      // Fit bounds to all visible geometries
-      const allFeatures = [
+      const features = [
         ...this.routesGeoJson.features,
         ...this.endRadiusGeoJson.features
       ]
 
-      if (allFeatures.length) {
-        const combinedBbox = turf.bbox({
-          type: 'FeatureCollection',
-          features: allFeatures
-        })
+      if (!features.length) return
 
-        this.map.fitBounds(combinedBbox, { padding: 40 })
-      }
+      this.map.resize()
+
+      const bounds = bbox({
+        type: 'FeatureCollection',
+        features
+      })
+
+      this.map.fitBounds(bounds,
+        {
+          padding: 40,
+          linear: true,
+          duration: 800
+        })
     },
 
     /**
@@ -452,17 +502,6 @@ export default {
         if (!trip) return
 
         this.selectTrip(trip)
-
-        const lineFeature = e.features[0]
-        // Zoom to line and delivery area
-        const lineBbox = bbox({
-          type: 'FeatureCollection',
-          features: [
-            lineFeature,
-            ...this.endRadiusGeoJson.features.filter(f => f.properties.id.startsWith(id))
-          ]
-        })
-        this.map.fitBounds(lineBbox, { padding: 40, linear: true, duration: 1000 })
       })
 
       let hoveredLineId = null
@@ -505,6 +544,9 @@ export default {
      * Clear all map selections
      */
     clearMapSelection() {
+      this.selectedTrips = []
+
+      // clear feature states
       const features = this.map.querySourceFeatures('routes')
       features.forEach((f) => {
         this.map.setFeatureState(
@@ -716,11 +758,14 @@ export default {
 
 .map-div {
   flex: 0 0 70%;
+  display: flex;
+  flex-direction: column;
   background-color: #e8e8e8;
   border: 2px solid #ccc;
   border-radius: 10px;
   margin-right: 16px;
   padding: 16px;
+  min-height: 0;
 }
 
 .map-div, .selected-routes {
@@ -728,17 +773,18 @@ export default {
 }
 
 .map-frame {
+  flex: 1;
+  min-height: 0;
   width: 100%;
-  height: 100%;
 }
 
 .selected-routes {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
   background-color: #e8e8e8;
   border: 2px solid #ccc;
   border-radius: 10px;
   padding: 16px;
-  overflow-y: auto;
 }
 
 .title-row {
@@ -762,15 +808,17 @@ export default {
 }
 
 .trip-list {
-  display: flex;
-  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
   gap: 12px;
+  padding-right: 4px;
 }
 
 .trip-item {
   background: white;
   border-radius: 8px;
   padding: 12px 16px;
+  margin-bottom: 12px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   cursor: pointer;
 }
@@ -795,6 +843,54 @@ export default {
   display: flex;
   justify-content: space-between;
   font-size: 0.9em;
+}
+
+/* Tooltip wrapper */
+.info-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-left: 8px;
+}
+
+/* Info icon */
+.info-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #666;
+  color: white;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  display: inline-block;
+  cursor: default;
+}
+
+/* Tooltip text */
+.tooltip {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 220px;
+  background: #333;
+  color: #fff;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.2;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+/* Show tooltip on hover */
+.info-wrapper:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
 }
 
 .no-data {
