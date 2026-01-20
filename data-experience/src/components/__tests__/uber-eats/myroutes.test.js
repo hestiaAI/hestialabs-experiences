@@ -9,6 +9,9 @@ import MyRoutes from '@/components/chart/view/uberEats/MyRoutes.vue'
  * Mocks
  * --------------------------------------------------- */
 
+jest.mock('@turf/turf')
+jest.mock('@turf/bbox')
+
 // Mock periodStore
 jest.mock('@/components/chart/view/uberEats/store/periodStore', () => ({
   periodStore: {
