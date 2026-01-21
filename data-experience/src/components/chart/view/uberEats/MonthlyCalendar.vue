@@ -23,7 +23,7 @@
 
       <div class="stats" v-if="day.hours > 0 || day.earnings > 0">
         <div class="stat-hours">{{ day.hours.toFixed(1) }}h</div>
-        <div class="stat-money">{{ currency }} {{ day.earnings.toFixed(2) }}</div>
+        <div class="stat-money">{{ currency }} {{ day.earnings }}</div>
       </div>
 
       <div class=" stats empty-stats" v-else>
@@ -43,9 +43,9 @@ export default {
   mixins: [mixin],
   props: {
     year: Number,
-    month: Number, // 0–11
-    shifts: { type: Array, default: () => [] },
-    payments: { type: Array, default: () => [] }
+    month: Number,
+    dailyStats: { type: Object, required: true },
+    currency: { type: String, default: '$' }
   },
   emits: ['select-day'],
   setup(props, { emit }) {
@@ -61,11 +61,6 @@ export default {
       emit('select-day', day.date) // full ISO date string
     }
 
-    // Currency used in the month
-    const currency = computed(() => {
-      return props.shifts[0]?.currency || '$'
-    })
-
     // Offset for the first day of the month (0=Mon, 6=Sun)
     const firstDayOffset = computed(() => {
       const weekday = start.value.day() // Sunday=0
@@ -79,26 +74,14 @@ export default {
 
       for (let i = 1; i <= totalDays; i++) {
         const date = start.value.date(i)
-
-        const hoursWorked = props.shifts
-          .filter(s => s.begin_timestamp_utc && s.end_timestamp_utc)
-          .filter(s => dayjs(s.begin_timestamp_utc).isSame(date, 'day'))
-          .reduce((sum, s) => {
-            const begin = dayjs(s.begin_timestamp_utc)
-            const end = dayjs(s.end_timestamp_utc)
-            return sum + end.diff(begin, 'hour', true)
-          }, 0)
-
-        const totalEarnings = props.payments
-          .filter(p => p.recognizeTimestampLocal)
-          .filter(p => dayjs(p.recognizeTimestampLocal).isSame(date, 'day'))
-          .reduce((sum, p) => sum + Number(p.amountLocal || 0), 0)
+        const key = date.format('YYYY-MM-DD')
+        const stat = props.dailyStats[key] || { earnings: 0, minutes: 0 }
 
         days.push({
           day: i,
-          date: date.toString(),
-          hours: hoursWorked,
-          earnings: totalEarnings
+          date: date.toISOString(),
+          hours: Number((stat.minutes / 60).toFixed(1)),
+          earnings: Number(stat.earnings || 0)
         })
       }
 
@@ -111,7 +94,6 @@ export default {
       end,
       firstDayOffset,
       daysInMonth,
-      currency,
       selectDay
     }
   }

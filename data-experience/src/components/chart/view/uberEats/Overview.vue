@@ -53,8 +53,8 @@
           view-block-translation-prefix="uberEats.monthlyCalendar"
           :year="calendarYear"
           :month="calendarMonth"
-          :shifts="shiftsThisPeriod"
-          :payments="paymentsInRange"
+          :dailyStats="dailyStatsByDate"
+          :currency="currency"
           @select-day="onSelectDay"
         />
       </div>
@@ -206,6 +206,30 @@ export default {
       }, 0)
 
       return (minutes / 60).toFixed(1)
+    },
+
+    // payments & shifts grouped by day for calendar view
+    dailyStatsByDate() {
+      const map = {}
+
+      // Earnings
+      this.paymentsInRange.forEach((p) => {
+        const key = dayjs(p.recognizeTimestampLocal).format('YYYY-MM-DD')
+        if (!map[key]) map[key] = { earnings: 0, minutes: 0 }
+        map[key].earnings += Number(p.amountLocal) || 0
+      })
+
+      // Working minutes (exclude offline)
+      Object.keys(this.shiftsByDay).forEach((date) => {
+        const key = dayjs(date).format('YYYY-MM-DD')
+        if (!map[key]) map[key] = { earnings: 0, minutes: 0 }
+        this.shiftsByDay[date].forEach((s) => {
+          if (s.earner_state === 'offline') return
+          map[key].minutes += (s.endTs - s.beginTs) / 60000
+        })
+      })
+
+      return map
     },
 
     // shifts grouped by day (YYYY-MM-DD)
