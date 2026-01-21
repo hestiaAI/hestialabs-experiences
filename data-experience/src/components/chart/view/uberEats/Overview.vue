@@ -198,13 +198,13 @@ export default {
     // total hours from shifts (skip offline)
     totalHours() {
       const minutes = this.shiftsThisPeriod.reduce((sum, s) => {
-        if (!s.begin_timestamp_utc || !s.end_timestamp_utc) return sum
         if (s.earner_state === 'offline') return sum
-        const start = dayjs(s.begin_timestamp_utc)
-        const end = dayjs(s.end_timestamp_utc)
-        if (!start.isValid() || !end.isValid() || end.isBefore(start)) return sum
-        return sum + end.diff(start, 'minute')
+        const startTs = dayjs(s.begin_timestamp_utc).valueOf()
+        const endTs = dayjs(s.end_timestamp_utc).valueOf()
+        if (!startTs || !endTs || endTs < startTs) return sum
+        return sum + (endTs - startTs) / 60000
       }, 0)
+
       return (minutes / 60).toFixed(1)
     },
 
@@ -214,25 +214,26 @@ export default {
 
       this.itemsComputed.forEach((s) => {
         const begin = s.begin_timestamp_utc || s.beginTimestampUtc || s.begin_timestamp || s.begin
-        const end = s.end_timestamp_utc || s.endTimestampUtc || s.end_timestamp || s.end
-        if (!begin || !end) return
+        const finish = s.end_timestamp_utc || s.endTimestampUtc || s.end_timestamp || s.end
+        if (!begin || !finish) return
 
-        const start = dayjs(begin)
-        const finish = dayjs(end)
-        if (!start.isValid() || !finish.isValid()) return
+        const beginTs = dayjs(begin).valueOf()
+        const endTs = dayjs(finish).valueOf()
+        if (!beginTs || !endTs || endTs < beginTs) return
 
-        // split overnight shifts
-        const parts = this.splitOvernightShift({ begin: start, end: finish, raw: s })
+        const parts = this.splitOvernightShift({
+          beginTs,
+          endTs,
+          raw: s
+        })
 
         parts.forEach((p) => {
-          const d = dayjs(p.begin)
-          const key = d.format('YYYY-MM-DD')
+          const dayKey = dayjs(p.beginTs).format('YYYY-MM-DD')
+          if (!map[dayKey]) map[dayKey] = []
 
-          if (!map[key]) map[key] = []
-
-          map[key].push({
-            begin_timestamp_utc: p.begin,
-            end_timestamp_utc: p.end,
+          map[dayKey].push({
+            beginTs: p.beginTs,
+            endTs: p.endTs,
             earner_state: p.raw?.state || p.raw?.earner_state
           })
         })
@@ -279,32 +280,31 @@ export default {
 
     // payments grouped by day with total amount and hours
     paymentsByDayTotal() {
-      // Ignore periodStore completely (full payments)
       const map = {}
 
       this.payments.forEach((p) => {
-        const d = dayjs(p.recognizeTimestampLocal)
-        if (!d.isValid()) return
-        const key = d.format('YYYY-MM-DD')
-        const amt = Number(p.amountLocal) || 0
-        if (!map[key]) {
-          map[key] = { amount: 0, hours: 0 }
-        }
+        const ts = dayjs(p.recognizeTimestampLocal).valueOf()
+        if (!ts) return
 
-        map[key].amount += amt
+        const key = dayjs(ts).format('YYYY-MM-DD')
+        if (!map[key]) map[key] = { amount: 0, minutes: 0 }
+
+        map[key].amount += Number(p.amountLocal) || 0
       })
 
       Object.keys(map).forEach((date) => {
         const shifts = this.shiftsByDay[date] || []
-        map[date].hours = this.calcHoursFromShifts(shifts)
+        shifts.forEach((s) => {
+          if (s.earner_state === 'offline') return
+          map[date].minutes += (s.endTs - s.beginTs) / 60000
+        })
       })
 
-      // Convert to array sorted desc
       return Object.entries(map)
         .map(([date, v]) => ({
           date,
           amount: v.amount,
-          hours: v.hours
+          hours: Number((v.minutes / 60).toFixed(1))
         }))
         .sort((a, b) => b.amount - a.amount)
     },
@@ -361,22 +361,30 @@ export default {
     shiftsThisPeriod() {
       const res = []
       const { start, end } = this.periodRange
+
+      const startTs = start.valueOf()
+      const endTs = end.valueOf()
+
       this.itemsComputed.forEach((s) => {
         const begin = s.begin_timestamp_utc || s.beginTimestampUtc || s.begin_timestamp || s.begin
         const finish = s.end_timestamp_utc || s.endTimestampUtc || s.end_timestamp || s.end
         if (!begin || !finish) return
-        const startD = dayjs(begin)
-        const endD = dayjs(finish)
-        if (!startD.isValid() || !endD.isValid()) return
+        const startTsShift = dayjs(begin).valueOf()
+        const endTsShift = dayjs(finish).valueOf()
+        if (!startTsShift || !endTsShift) return
+        if (endTsShift < startTsShift) return
 
         // split overnight
-        const parts = this.splitOvernightShift({ begin: startD, end: endD, raw: s })
+        const parts = this.splitOvernightShift({ beginTs: startTsShift, endTs: endTsShift, raw: s })
         parts.forEach((p) => {
           // only include parts whose start lies inside the selected week
-          const st = dayjs(p.begin)
-          if (st.isSameOrAfter(start) && st.isSameOrBefore(end)) {
-            // attach original meta
-            res.push(Object.assign({}, p.raw || p, { begin_timestamp_utc: p.begin, end_timestamp_utc: p.end, earner_state: p.raw?.state }))
+          if (p.beginTs >= startTs && p.beginTs <= endTs) {
+            res.push({
+              ...p.raw,
+              begin_timestamp_utc: dayjs(p.beginTs).toISOString(),
+              end_timestamp_utc: dayjs(p.endTs).toISOString(),
+              earner_state: p.raw?.state || p.raw?.earner_state
+            })
           }
         })
       })
@@ -392,36 +400,34 @@ export default {
         ontrip: '#2196f3'
       }
 
-      const states = Object.keys(colors)
-
-      // Initialize structure with ALL weekdays
+      // Initialize series map
       const seriesMap = {}
-      states.forEach((state) => {
+      Object.keys(colors).forEach((state) => {
         seriesMap[state] = {
           name: state,
           color: colors[state],
-          data: WEEKDAYS.map(day => ({
-            x: day,
-            y: null // placeholder → forces category to exist
-          }))
+          data: WEEKDAYS.map(day => ({ x: day, y: null }))
         }
       })
 
+      // Populate series data
       this.shiftsThisPeriod.forEach((s) => {
-        const start = dayjs(s.begin_timestamp_utc)
-        const end = dayjs(s.end_timestamp_utc)
+        const startTs = dayjs(s.begin_timestamp_utc).valueOf()
+        const endTs = dayjs(s.end_timestamp_utc).valueOf()
+        if (!startTs || !endTs) return
 
-        const dow = start.day() === 0 ? 6 : start.day() - 1
+        const date = new Date(startTs)
+        const dow = date.getDay() === 0 ? 6 : date.getDay() - 1
         const dayLabel = WEEKDAYS[dow]
+
+        const startMin = date.getHours() * 60 + date.getMinutes()
+        const endMin = startMin + (endTs - startTs) / 60000
 
         const state = (s.state || s.earner_state || 'open').toLowerCase()
 
         seriesMap[state].data.push({
           x: dayLabel,
-          y: [
-            start.hour() * 60 + start.minute(),
-            end.hour() * 60 + end.minute()
-          ],
+          y: [startMin, endMin],
           meta: s
         })
       })
@@ -621,17 +627,26 @@ export default {
     // Splits a shift object if it crosses midnight.
     splitOvernightShift(s) {
       const raw = s.raw || s
-      const start = dayjs(s.begin)
-      const end = dayjs(s.end)
-      if (end.isAfter(start) && start.isSame(end, 'day')) {
-        return [{ begin: start.toISOString(), end: end.toISOString(), raw }]
+      const startTs = s.beginTs
+      const endTs = s.endTs
+
+      if (!startTs || !endTs) return []
+
+      const start = dayjs(startTs)
+      const end = dayjs(endTs)
+
+      // Same day → no split
+      if (start.isSame(end, 'day')) {
+        return [{ beginTs: startTs, endTs: endTs, raw }]
       }
-      // split
-      const endOfDay = start.endOf('day')
-      const startOfNext = end.startOf('day')
+
+      // Split into two parts
+      const endOfDayTs = start.endOf('day').valueOf()
+      const startOfNextDayTs = end.startOf('day').valueOf()
+
       return [
-        { begin: start.toISOString(), end: endOfDay.toISOString(), raw },
-        { begin: startOfNext.toISOString(), end: end.toISOString(), raw }
+        { beginTs: startTs, endTs: endOfDayTs, raw },
+        { beginTs: startOfNextDayTs, endTs: endTs, raw }
       ]
     }
   }

@@ -175,115 +175,110 @@ export default {
 
     // Filtered trips based on period and mode
     tripsFiltered() {
-      let result
+      const startTs = this.periodStart.valueOf()
+      const endTs = this.periodEnd.valueOf()
 
-      if (this.mode === 'uncompleted') {
-        // UNCOMPLETED → not completed
-        result = this.trips.filter((t) => {
-          return !t.deliveryStatus || t.deliveryStatus.toLowerCase() !== 'completed'
-        })
-      } else {
-        // WEEK / MONTH → completed within period
-        result = this.trips.filter((t) => {
-          if (!t.deliveryStatus || t.deliveryStatus.toLowerCase() !== 'completed') {
-            return false
-          }
+      const selectedSet = new Set(this.selectedTrips.map(t => this.makeTripId(t)))
 
-          const accept = dayjs(t.courierAcceptTimestampLocal)
-          return accept.isSameOrAfter(this.periodStart) &&
-                accept.isSameOrBefore(this.periodEnd)
-        })
-      }
+      const result = this.trips.filter((t) => {
+        const status = t.deliveryStatus?.toLowerCase()
 
-      // Sort newest → oldest
-      result.sort((a, b) =>
-        dayjs(b.courierAcceptTimestampLocal).valueOf() -
-        dayjs(a.courierAcceptTimestampLocal).valueOf()
-      )
+        if (this.mode === 'uncompleted') {
+          return status !== 'completed'
+        }
 
-      // Put selected trips on top
-      return result.sort((a, b) => {
-        const aSelected = this.selectedTrips.includes(a)
-        const bSelected = this.selectedTrips.includes(b)
+        if (status !== 'completed') return false
 
-        if (aSelected && !bSelected) return -1
-        if (!aSelected && bSelected) return 1
-
-        return 0
+        const ts = Date.parse(t.courierAcceptTimestampLocal)
+        return ts >= startTs && ts <= endTs
       })
+
+      // Single sort (newest first + selected on top)
+      result.sort((a, b) => {
+        const aSel = selectedSet.has(this.makeTripId(a))
+        const bSel = selectedSet.has(this.makeTripId(b))
+        if (aSel !== bSel) return aSel ? -1 : 1
+
+        return (
+          Date.parse(b.courierAcceptTimestampLocal) -
+          Date.parse(a.courierAcceptTimestampLocal)
+        )
+      })
+
+      return result
     },
 
     // GeoJSON for all routes
     routesGeoJson() {
-      // Use selected trips if any
       const trips = this.selectedTrips.length
         ? this.selectedTrips
         : this.tripsFiltered
 
-      // Line features
-      const lineFeatures = trips.map(trip => ({
-        type: 'Feature',
-        properties: {
-          id: this.makeTripId(trip),
-          type: 'trip'
-        },
-        geometry: {
-          type: 'LineString',
-          coordinates: [
-            [Number(trip.courierAcceptTripLng), Number(trip.courierAcceptTripLat)], // start
-            [Number(trip.courierBegintripLng), Number(trip.courierBegintripLat)] // end
-          ]
-        }
-      }))
+      const features = []
 
-      // Start and end points
-      const startPoints = trips.map(trip => ({
-        type: 'Feature',
-        properties: { id: this.makeTripId(trip) + '_start', pointType: 'start' },
-        geometry: {
-          type: 'Point',
-          coordinates: [
-            Number(trip.courierAcceptTripLng),
-            Number(trip.courierAcceptTripLat)
-          ]
-        }
-      }))
+      // Create LineString and Point features for each trip
+      trips.forEach((trip) => {
+        const id = this.makeTripId(trip)
 
-      // End points with delivery distance as radius property
-      const endPoints = trips.map(trip => ({
-        type: 'Feature',
-        properties: {
-          id: this.makeTripId(trip) + '_end',
-          pointType: 'end',
-          radius: Number(trip.dropoffDeliveryDistanceKm) * 1000 // in meters
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: [
-            Number(trip.courierBegintripLng),
-            Number(trip.courierBegintripLat)
-          ]
-        }
-      }))
+        const startLng = +trip.courierAcceptTripLng
+        const startLat = +trip.courierAcceptTripLat
+        const endLng = +trip.courierBegintripLng
+        const endLat = +trip.courierBegintripLat
 
-      return {
-        type: 'FeatureCollection',
-        features: [...lineFeatures, ...startPoints, ...endPoints]
-      }
+        features.push({
+          type: 'Feature',
+          properties: { id, type: 'trip' },
+          geometry: {
+            type: 'LineString',
+            coordinates: [[startLng, startLat], [endLng, endLat]]
+          }
+        })
+
+        features.push({
+          type: 'Feature',
+          properties: { id: id + '_start', pointType: 'start' },
+          geometry: {
+            type: 'Point',
+            coordinates: [startLng, startLat]
+          }
+        })
+
+        features.push({
+          type: 'Feature',
+          properties: {
+            id: id + '_end',
+            pointType: 'end',
+            radius: Number(trip.dropoffDeliveryDistanceKm) * 1000
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [endLng, endLat]
+          }
+        })
+      })
+
+      return { type: 'FeatureCollection', features }
     },
 
     // GeoJSON for delivery area circles
     endRadiusGeoJson() {
-      const trips = this.selectedTrips.length ? this.selectedTrips : this.tripsFiltered
+      const trips = this.selectedTrips.length
+        ? this.selectedTrips
+        : this.tripsFiltered
 
       return {
         type: 'FeatureCollection',
-        features: trips.map((trip) => {
-          const center = [Number(trip.courierBegintripLng), Number(trip.courierBegintripLat)]
-          const radius = Number(trip.dropoffDeliveryDistanceKm) * 1000 // meters
-
-          return turf.circle(center, radius, { units: 'meters', steps: 64, properties: { id: this.makeTripId(trip) + '_radius' } })
-        })
+        features: trips.map(trip =>
+          turf.circle(
+            [+trip.courierBegintripLng, +trip.courierBegintripLat],
+            Number(trip.dropoffDeliveryDistanceKm) * 1000,
+            {
+              units: 'meters',
+              steps: 32, // ⬅ was 64, visually identical, 2× faster
+              properties: { id: this.makeTripId(trip) + '_radius' }
+            }
+          )
+        )
       }
     }
   },
@@ -667,7 +662,12 @@ export default {
      */
     formatTime(timestamp) {
       if (!timestamp) return '-'
-      return dayjs(timestamp).format('HH:mm:ss')
+      const d = new Date(timestamp)
+      return (
+        String(d.getHours()).padStart(2, '0') + ':' +
+        String(d.getMinutes()).padStart(2, '0') + ':' +
+        String(d.getSeconds()).padStart(2, '0')
+      )
     },
 
     /**
@@ -676,7 +676,12 @@ export default {
      */
     formatDate(timestamp) {
       if (!timestamp) return '-'
-      return dayjs(timestamp).format('DD.MM.YY')
+      const d = new Date(timestamp)
+      return (
+        String(d.getDate()).padStart(2, '0') + '.' +
+        String(d.getMonth() + 1).padStart(2, '0') + '.' +
+        String(d.getFullYear()).slice(-2)
+      )
     },
 
     /**

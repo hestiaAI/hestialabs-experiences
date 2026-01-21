@@ -118,12 +118,18 @@ export default {
     // All days in the selected period as DD.MM.YYYY strings
     allDays() {
       const days = []
-      let current = this.periodStart
-      const end = this.periodEnd
+      let curTs = this.periodStart.valueOf()
+      const endTs = this.periodEnd.valueOf()
 
-      while (current.isSameOrBefore(end, 'day')) {
-        days.push(current.format('DD.MM.YYYY'))
-        current = current.add(1, 'day')
+      const ONE_DAY = 86400000
+
+      while (curTs <= endTs) {
+        const d = new Date(curTs)
+        const dd = String(d.getDate()).padStart(2, '0')
+        const mm = String(d.getMonth() + 1).padStart(2, '0')
+        const yyyy = d.getFullYear()
+        days.push(`${dd}.${mm}.${yyyy}`)
+        curTs += ONE_DAY
       }
 
       return days
@@ -134,13 +140,12 @@ export default {
       const out = {}
 
       this.shifts.forEach((s) => {
-        const start = dayjs(s.begin)
-        const end = dayjs(s.end)
+        const startTs = Date.parse(s.begin)
+        const endTs = Date.parse(s.end)
+        if (!startTs || !endTs || endTs <= startTs) return
 
-        if (!start.isValid() || !end.isValid() || end.isBefore(start)) return
-
-        const date = start.format('DD.MM.YYYY')
-        out[date] = (out[date] || 0) + end.diff(start, 'minute') / 60
+        const key = new Date(startTs).toLocaleDateString('de-CH')
+        out[key] = (out[key] || 0) + (endTs - startTs) / 3600000
       })
 
       return out
@@ -150,19 +155,25 @@ export default {
     earningsByDay() {
       const out = {}
 
+      // Pre-fill from allDays (authoritative keys)
       this.allDays.forEach((d) => {
         out[d] = { tips: 0, nonTips: 0 }
       })
 
       this.payments.forEach((p) => {
-        const date = dayjs(p.recognizeTimestampLocal).format('DD.MM.YYYY')
-        if (!(date in out)) return
+        const ts = Date.parse(p.recognizeTimestampLocal)
+        if (!ts) return
+
+        const key = this.formatDay(ts)
+        const bucket = out[key]
+        if (!bucket) return
 
         const amount = Number(p.amountLocal || 0)
-        const isTip = (p.category || '').toLowerCase() === 'tip'
-
-        if (isTip) out[date].tips += amount
-        else out[date].nonTips += amount
+        if ((p.category || '').toLowerCase() === 'tip') {
+          bucket.tips += amount
+        } else {
+          bucket.nonTips += amount
+        }
       })
 
       return out
@@ -173,7 +184,10 @@ export default {
       const out = {}
 
       this.payments.forEach((p) => {
-        const year = dayjs(p.recognizeTimestampLocal).format('YYYY')
+        const ts = Date.parse(p.recognizeTimestampLocal)
+        if (!ts) return
+
+        const year = new Date(ts).getFullYear()
         const amount = Number(p.amountLocal || 0)
         const isTip = (p.category || '').toLowerCase() === 'tip'
 
@@ -194,10 +208,12 @@ export default {
         const hours = this.hoursPerDay[date] || 0
         const e = this.earningsByDay[date]
 
-        out[date] =
-          hours > 0
-            ? { tips: e.tips / hours, nonTips: e.nonTips / hours }
-            : { tips: 0, nonTips: 0 }
+        out[date] = hours > 0
+          ? {
+              tips: e.tips / hours,
+              nonTips: e.nonTips / hours
+            }
+          : { tips: 0, nonTips: 0 }
       })
 
       return out
@@ -205,24 +221,22 @@ export default {
 
     // Avg earnings per year
     avgEarningsByYear() {
-      const out = {}
-
       const hoursByYear = {}
 
-      // Sum hours worked per year
       this.shifts.forEach((s) => {
-        const start = dayjs(s.begin)
-        const end = dayjs(s.end)
-        if (!start.isValid() || !end.isValid()) return
+        const startTs = Date.parse(s.begin)
+        const endTs = Date.parse(s.end)
+        if (!startTs || !endTs || endTs <= startTs) return
 
-        const year = start.format('YYYY')
-        const hours = end.diff(start, 'minute') / 60
-        hoursByYear[year] = (hoursByYear[year] || 0) + hours
+        const year = new Date(startTs).getFullYear()
+        hoursByYear[year] = (hoursByYear[year] || 0) + (endTs - startTs) / 3600000
       })
 
+      const out = {}
+
       for (const year in this.earningsByYear) {
-        const e = this.earningsByYear[year]
         const h = hoursByYear[year] || 0
+        const e = this.earningsByYear[year]
 
         out[year] = h > 0
           ? { tips: e.tips / h, nonTips: e.nonTips / h }
@@ -321,6 +335,19 @@ export default {
     this.drawChart()
   },
   methods: {
+    /**
+     * Transform timestamp to DD.MM.YYYY format
+     * @param ts {number}
+     */
+    formatDay(ts) {
+      const d = new Date(ts)
+      return (
+        String(d.getDate()).padStart(2, '0') + '.' +
+        String(d.getMonth() + 1).padStart(2, '0') + '.' +
+        d.getFullYear()
+      )
+    },
+
     /**
      * Set the period mode (week, month, total)
      * @param mode {string}
