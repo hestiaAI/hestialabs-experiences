@@ -23,7 +23,7 @@
 
       <div class="stats" v-if="day.hours > 0 || day.earnings > 0">
         <div class="stat-hours">{{ day.hours.toFixed(1) }}h</div>
-        <div class="stat-money">{{ currency }} {{ day.earnings }}</div>
+        <div class="stat-money">{{ currency }} {{ day.earnings.toFixed(2) }}</div>
       </div>
 
       <div class=" stats empty-stats" v-else>

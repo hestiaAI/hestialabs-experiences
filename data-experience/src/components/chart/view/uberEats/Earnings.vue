@@ -144,7 +144,7 @@ export default {
         const endTs = Date.parse(s.end)
         if (!startTs || !endTs || endTs <= startTs) return
 
-        const key = new Date(startTs).toLocaleDateString('de-CH')
+        const key = this.formatDay(startTs)
         out[key] = (out[key] || 0) + (endTs - startTs) / 3600000
       })
 
