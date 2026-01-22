@@ -43,27 +43,43 @@
           </h3>
         </div>
 
-        <div class="job-list">
-          <div
-            v-for="job in totalPanelJobs"
-            :key="job.job_id || job.date + job.start_time"
-            class="job-item"
-          >
-            <strong>{{ formatDate(job.date) }}</strong>
-            <div>
-              {{ job.start_time }} · {{ job.duration_hours || job.nbHours }}h
-            </div>
+        <div
+          v-for="activity in totalPanelActivities"
+          :key="activity.type"
+          class="job-item"
+        >
+          <div class="activity-row">
+            <span
+              class="activity-dot"
+              :style="{ backgroundColor: activity.color }"
+            />
+            <strong>{{ activity.type }}</strong>
+          </div>
+
+          <div class="activity-summary">
+            {{ activity.earnings.toFixed(2) }} {{ currency }}
+            {{ activity.hours.toFixed(1) }} h
+            {{ activity.count }} jobs
+          </div>
+
+          <div class="activity-jobs">
+            <div
+              v-for="job in activity.jobs"
+              :key="job.job_id || job.date + job.start_time"
+              class="activity-job"
+            >
+              <strong>{{ formatDate(job.date) }}</strong>
+              <div>
+                {{ job.job_type }} · {{ job.start_time }} ·
+                {{ job.duration_hours || job.nbHours }} h
+              </div>
             <div>
               {{ job.earnings }} {{ currency }}
             </div>
           </div>
-          <div v-if="selectedTotalBucket && totalPanelJobs.length === 0" class="no-data">
-            No jobs in this segment
-          </div>
-          <div v-if="!selectedTotalBucket" class="no-data">
-            Click on a bubble to see jobs
-          </div>
         </div>
+      </div>
+
       </div>
     </div>
 
@@ -130,16 +146,42 @@ export default {
   },
 
   computed: {
-    totalPanelJobs() {
+    totalPanelActivities() {
       if (this.currentPeriod !== 'total') return []
       if (!this.selectedTotalBucket) return []
 
-      return this.filteredJobs
+      const bucket = this.selectedTotalBucket
+
+      const jobs = this.filteredJobs
         .filter((job) => {
           const [h] = (job.start_time || '0:00').split(':').map(Number)
-          return this.getTimeBucketFromHour(h) === this.selectedTotalBucket
+          return this.getTimeBucketFromHour(h) === bucket
         })
         .sort((a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf())
+
+      if (!jobs.length) return []
+
+      const earnings = jobs.reduce((s, j) => s + (+j.earnings || 0), 0)
+      const hours = jobs.reduce(
+        (s, j) =>
+          s +
+          (j.nbHours ||
+            j.duration ||
+            j.duration_hours ||
+            j.hours ||
+            j.work_hours ||
+            0),
+        0
+      )
+
+      return [{
+        type: bucket,
+        color: this.timeBucketColors[bucket],
+        earnings,
+        hours,
+        count: jobs.length,
+        jobs
+      }]
     },
 
     baseHourSize() {
@@ -868,6 +910,38 @@ export default {
   padding: 40px 20px;
   color: #999;
   font-style: italic;
+}
+
+.activity-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.activity-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.activity-summary {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.activity-jobs {
+  border-top: 1px dashed #ddd;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.activity-job {
+  font-size: 0.85rem;
+  color: #666;
 }
 
 /* --- MEDIA QUERIES --- */
