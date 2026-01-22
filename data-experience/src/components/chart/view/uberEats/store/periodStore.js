@@ -4,7 +4,7 @@ import { reactive } from 'vue'
 export const periodStore = reactive({
   periodStart: null,
   periodEnd: null,
-  mode: 'week',
+  mode: 'month',
 
   setPeriod(start, end) {
     this.periodStart = start

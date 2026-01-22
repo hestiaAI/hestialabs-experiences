@@ -13,9 +13,21 @@
 
     <div class="week-nav">
       <div class="week-nav-wrapper">
-        <button class="nav-btn" @click="prevPeriod">←</button>
+        <button
+          class="nav-btn"
+          v-if="mode !== 'total'"
+          @click="prevPeriod"
+        >
+          ←
+        </button>
         <div class="week-label">{{ periodLabel }}</div>
-        <button class="nav-btn" @click="nextPeriod">→</button>
+        <button
+          class="nav-btn"
+          v-if="mode !== 'total'"
+          @click="nextPeriod"
+        >
+          →
+        </button>
       </div>
     </div>
 
@@ -723,16 +735,18 @@ export default {
   justify-content: flex-end;
   gap: 8px;
   margin-bottom: 12px;
+  height: 32px;
 }
 
 .week-nav-wrapper {
   width: 240px;
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 .nav-btn {
-  padding: 6px 10px;
+  padding: 3px 10px;
   border-radius: 6px;
   border: 1px solid #bbb;
   background: white;

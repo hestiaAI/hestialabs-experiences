@@ -109,8 +109,8 @@ export function createTour({ onSwitchTab }) {
   })
 
   tour.addStep({
-    id: 'earnings-adjusted',
-    attachTo: { element: '.earnings-adjusted', on: 'bottom' },
+    id: 'toggle-wrapper',
+    attachTo: { element: '.toggle-wrapper', on: 'bottom' },
     text: 'Use this toggle to switch between total daily earnings and earnings adjusted by working hours.',
     buttons: [{ text: 'Next', action: tour.next }]
   })

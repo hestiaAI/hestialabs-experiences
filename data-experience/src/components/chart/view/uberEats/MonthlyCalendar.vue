@@ -77,11 +77,13 @@ export default {
         const key = date.format('YYYY-MM-DD')
         const stat = props.dailyStats[key] || { earnings: 0, minutes: 0 }
 
+        console.log(stat.earnings)
+
         days.push({
           day: i,
           date: date.toISOString(),
           hours: Number((stat.minutes / 60).toFixed(1)),
-          earnings: Number(stat.earnings || 0)
+          earnings: stat.earnings || 0
         })
       }
 
@@ -140,17 +142,17 @@ export default {
 }
 
 .day-number {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
 }
 
 .stat-hours {
-  font-size: 12px;
+  font-size: 11px;
   color: #4caf50;
 }
 
 .stat-money {
-  font-size: 12px;
+  font-size: 11px;
   color: #2196f3;
   margin-bottom: 5px;
 }
@@ -159,5 +161,21 @@ export default {
   opacity: 0.3;
   font-size: 12px;
   text-align: center;
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+  .calendar-header {
+    font-size: 12px;
+    height: 24px;
+  }
+
+  .day-number {
+    font-size: 11px;
+  }
+
+  .stat-hours, .stat-money {
+    font-size: 9px;
+  }
 }
 </style>

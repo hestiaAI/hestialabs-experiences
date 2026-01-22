@@ -21,11 +21,21 @@
       </div>
 
       <div class="week-nav">
-        <button class="nav-btn" @click="prevPeriod">←</button>
-        <div class="week-label">
-          {{ periodLabel }}
-        </div>
-        <button class="nav-btn" @click="nextPeriod">→</button>
+        <button
+          class="nav-btn"
+          v-if="mode !== 'uncompleted'"
+          @click="prevPeriod"
+        >
+          ←
+        </button>
+        <div class="week-label">{{ periodLabel }}</div>
+        <button
+          class="nav-btn"
+          v-if="mode !== 'uncompleted'"
+          @click="nextPeriod"
+        >
+          →
+        </button>
       </div>
     </div>
 
@@ -762,10 +772,12 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
+  height: 32px;
+  justify-content: center;
 }
 
 .nav-btn {
-  padding: 6px 10px;
+  padding: 2px 10px;
   border-radius: 6px;
   border: 1px solid #bbb;
   background: white;
@@ -782,6 +794,8 @@ export default {
   font-weight: 700;
   color: #333;
   font-size: 1rem;
+  width: 240px;
+  text-align: center;
 }
 
 .content-area {

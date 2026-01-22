@@ -1,23 +1,36 @@
 <template>
   <div class="earnings-view">
+    <div class="controls-bar">
+      <!-- PERIOD MODE SWITCH -->
+      <div class="period-switch">
+        <button
+          v-for="p in ['week', 'month', 'total']"
+          :key="p"
+          :class="['switch-btn', { active: mode === p }]"
+          @click="setPeriodMode(p)"
+        >
+          {{ p.toUpperCase() }}
+        </button>
+      </div>
 
-    <!-- PERIOD MODE SWITCH -->
-    <div class="period-switch">
-      <button
-        v-for="p in ['week', 'month', 'total']"
-        :key="p"
-        :class="['switch-btn', { active: mode === p }]"
-        @click="setPeriodMode(p)"
-      >
-        {{ p.toUpperCase() }}
-      </button>
-    </div>
-
-    <!-- WEEK / MONTH NAVIGATION -->
-    <div class="week-nav">
-      <button class="nav-btn" @click="prevPeriod">←</button>
-      <div class="week-label">{{ periodLabel }}</div>
-      <button class="nav-btn" @click="nextPeriod">→</button>
+      <!-- WEEK / MONTH NAVIGATION -->
+      <div class="week-nav">
+        <button
+          class="nav-btn"
+          v-if="mode !== 'total'"
+          @click="prevPeriod"
+        >
+          ←
+        </button>
+        <div class="week-label">{{ periodLabel }}</div>
+        <button
+          class="nav-btn"
+          v-if="mode !== 'total'"
+          @click="nextPeriod"
+        >
+          →
+        </button>
+      </div>
     </div>
 
     <div class="box header-row">
@@ -411,6 +424,14 @@ export default {
   margin: 8px;
 }
 
+.controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 12px;
+}
+
 .period-switch {
   grid-column: 1 / 3;
   grid-row: 1 / 2;
@@ -446,7 +467,7 @@ export default {
 }
 
 .nav-btn {
-  padding: 6px 10px;
+  padding: 2px 10px;
   border-radius: 6px;
   border: 1px solid #bbb;
   background: white;
@@ -463,6 +484,8 @@ export default {
   font-weight: 700;
   color: #333;
   font-size: 1rem;
+  width: 240px;
+  text-align: center;
 }
 
 .box {
@@ -583,6 +606,10 @@ input:checked + .slider:before {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+  }
+
+  .controls-bar {
+    flex-direction: column;
   }
 
   .period-switch {
