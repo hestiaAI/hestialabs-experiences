@@ -219,6 +219,18 @@ export default {
           type: 'heatmap',
           toolbar: { show: false }
         },
+        states: {
+          hover: {
+            filter: {
+              type: 'none'
+            }
+          },
+          active: {
+            filter: {
+              type: 'none'
+            }
+          }
+        },
         dataLabels: {
           enabled: true,
           formatter: val => val > 0 ? `${val}h` : ''
@@ -295,6 +307,18 @@ export default {
         chart: {
           type: 'heatmap',
           toolbar: { show: false }
+        },
+        states: {
+          hover: {
+            filter: {
+              type: 'none'
+            }
+          },
+          active: {
+            filter: {
+              type: 'none'
+            }
+          }
         },
         dataLabels: {
           enabled: true,
