@@ -29,7 +29,7 @@ test:
 
 deploy:
   stage: deploy
-  manual: true
+  when: manual
   allow_failure: true
   only:
     - main
