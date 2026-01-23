@@ -223,10 +223,24 @@ export default {
     },
 
     weekLabel() {
-      if (this.currentPeriod === 'total') return 'Entire Period'
+      if (this.currentPeriod === 'total') {
+        const earliest = this.earliestJobDate
+        const latest = this.latestJobDate
+        if (!earliest || !latest) return 'Entire Period'
+        return `${earliest.format('DD.MM.YYYY')} - ${latest.format('DD.MM.YYYY')}`
+      }
       if (this.currentPeriod === 'month') return this.weekStart.format('MMMM YYYY')
 
       return `${this.weekStart.format('DD.MM')} - ${this.weekEnd.format('DD.MM.YYYY')}`
+    },
+
+    earliestJobDate() {
+      if (!this.jobs.length) return null
+
+      return this.jobs
+        .map(j => dayjs(j.date))
+        .filter(d => d.isValid())
+        .sort((a, b) => a.valueOf() - b.valueOf())[0]
     },
 
     filteredJobs() {

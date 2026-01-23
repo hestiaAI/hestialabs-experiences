@@ -220,7 +220,10 @@ export default {
 
     weekLabel() {
       if (this.currentPeriod === 'total') {
-        return 'Entire Period'
+        const earliest = this.earliestJobDate
+        const latest = this.latestJobDate
+        if (!earliest || !latest) return 'Entire Period'
+        return `${earliest.format('DD.MM.YYYY')} - ${latest.format('DD.MM.YYYY')}`
       }
 
       if (this.currentPeriod === 'month') {
@@ -230,6 +233,15 @@ export default {
       const s = this.weekStart
       const e = this.weekEnd
       return `${s.format('DD.MM')} - ${e.format('DD.MM.YYYY')}`
+    },
+
+    earliestJobDate() {
+      if (!this.jobs.length) return null
+
+      return this.jobs
+        .map(j => dayjs(j.date))
+        .filter(d => d.isValid())
+        .sort((a, b) => a.valueOf() - b.valueOf())[0]
     },
 
     weekStart() {
