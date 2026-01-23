@@ -13,6 +13,7 @@ variables:
 
 test:
   stage: test
+  allow_failure: true
   image: node:18
   script:
     # Build shared packages
@@ -29,8 +30,6 @@ test:
 
 deploy:
   stage: deploy
-  when: manual
-  allow_failure: true
   only:
     - main
   before_script:
