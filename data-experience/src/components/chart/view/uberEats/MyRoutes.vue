@@ -3,15 +3,15 @@
     <div class="controls-bar">
       <div class="period-switch">
         <button
-          v-for="p in ['week', 'month', 'uncompleted']"
+          v-for="p in ['week', 'month', 'total']"
           :key="p"
           class="switch-btn"
           :class="{ active: mode === p }"
           @click="setPeriodMode(p)"
         >
-          {{ p.toUpperCase() }}
+          {{ p === 'total' ? 'Uncompleted' : p.toUpperCase() }}
 
-          <span v-if="p === 'uncompleted'" class="info-wrapper">
+          <span v-if="p === 'total'" class="info-wrapper">
             <span class="info-icon">i</span>
             <span class="tooltip">
               These are all the trips that have not been completed successfully
@@ -23,7 +23,7 @@
       <div class="week-nav">
         <button
           class="nav-btn"
-          v-if="mode !== 'uncompleted'"
+          v-if="mode !== 'total'"
           @click="prevPeriod"
         >
           ←
@@ -31,7 +31,7 @@
         <div class="week-label">{{ periodLabel }}</div>
         <button
           class="nav-btn"
-          v-if="mode !== 'uncompleted'"
+          v-if="mode !== 'total'"
           @click="nextPeriod"
         >
           →
@@ -162,7 +162,7 @@ export default {
 
     // Period label for display
     periodLabel() {
-      if (periodStore.mode === 'uncompleted') return 'All time'
+      if (periodStore.mode === 'total') return 'All time'
       if (periodStore.mode === 'month') return this.periodStart.format('MMMM YYYY')
       return `${this.periodStart.format('DD.MM.YYYY')} – ${this.periodEnd.format('DD.MM.YYYY')}`
     },
@@ -193,7 +193,7 @@ export default {
       const result = this.trips.filter((t) => {
         const status = t.deliveryStatus?.toLowerCase()
 
-        if (this.mode === 'uncompleted') {
+        if (this.mode === 'total') {
           return status !== 'completed'
         }
 
@@ -604,7 +604,7 @@ export default {
 
     /**
      * Set the period mode (week, month, total)
-     * @param mode 'week' | 'month' | 'uncompleted'
+     * @param mode 'week' | 'month' | 'total'
      */
     setPeriodMode(mode) {
       this.selectedTrips = []

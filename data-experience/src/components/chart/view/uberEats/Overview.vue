@@ -182,6 +182,12 @@ export default {
 
     // payments between start and end date
     paymentsInRange() {
+      if (this.mode === 'month') {
+        return this.payments.filter(p =>
+          dayjs(p.recognizeTimestampLocal).isSame(this.periodStart, 'month')
+        )
+      }
+
       return this.filterByPeriod(
         this.payments,
         p => p.recognizeTimestampLocal

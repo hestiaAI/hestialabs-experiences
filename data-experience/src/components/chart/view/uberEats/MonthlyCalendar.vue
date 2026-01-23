@@ -77,8 +77,6 @@ export default {
         const key = date.format('YYYY-MM-DD')
         const stat = props.dailyStats[key] || { earnings: 0, minutes: 0 }
 
-        console.log(stat.earnings)
-
         days.push({
           day: i,
           date: date.toISOString(),
