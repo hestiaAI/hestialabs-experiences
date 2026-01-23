@@ -29,6 +29,8 @@ test:
 
 deploy:
   stage: deploy
+  manual: true
+  allow_failure: true
   only:
     - main
   before_script:
