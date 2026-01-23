@@ -12,9 +12,9 @@
     </div>
 
     <div class="week-nav">
-      <button class="nav-btn" @click="prevWeek">←</button>
+      <button class="nav-btn" @click="prevWeek" v-if="currentPeriod !== 'total'">←</button>
       <div class="week-label">{{ weekLabel }}</div>
-      <button class="nav-btn" @click="nextWeek">→</button>
+      <button class="nav-btn" @click="nextWeek" v-if="currentPeriod !== 'total'">→</button>
     </div>
 
     <div v-if="currentPeriod === 'total'" class="total-layout">
@@ -223,7 +223,7 @@ export default {
     },
 
     weekLabel() {
-      if (this.currentPeriod === 'total') return 'All time'
+      if (this.currentPeriod === 'total') return 'Entire Period'
       if (this.currentPeriod === 'month') return this.weekStart.format('MMMM YYYY')
 
       return `${this.weekStart.format('DD.MM')} - ${this.weekEnd.format('DD.MM.YYYY')}`
