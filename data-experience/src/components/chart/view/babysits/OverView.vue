@@ -390,15 +390,22 @@ export default {
             const start = dayjs('2025-01-01').hour(sh).minute(sm).valueOf()
             const end = dayjs('2025-01-01').hour(eh).minute(em).valueOf()
             const statusKey = (j.status || 'unknown').toLowerCase()
-            const color =
-              this.activityTypeColors[j.job_type] ||
-              this.statusColors[statusKey] ||
-              '#888'
+
+            let color
+            let opacity = 1
+
+            if (statusKey === 'cancelled' || j.earnings === 0) {
+              color = '#cccccc'
+              opacity = 0.4
+            } else {
+              color = this.activityTypeColors[j.job_type] || '#888'
+            }
 
             seriesData.push({
               x: dayName,
               y: [start, end],
               fillColor: color,
+              opacity,
               meta: j
             })
           })
@@ -422,7 +429,15 @@ export default {
             enabled: false
           }
         },
-        plotOptions: { bar: { horizontal: true, rangeBarGroupRows: true } },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            rangeBarGroupRows: true,
+            dataLabels: {
+              position: 'center'
+            }
+          }
+        },
         xaxis: {
           type: 'datetime',
           labels: { format: 'HH:mm' },
@@ -440,12 +455,26 @@ export default {
           custom: ({ seriesIndex, dataPointIndex, w }) => {
             const item = w.config.series[seriesIndex].data[dataPointIndex].meta
             if (item.status === 'none') return null
+
+            const durationMin = (() => {
+              const [sh, sm] = item.start_time.split(':').map(Number)
+              const [eh, em] = item.end_time.split(':').map(Number)
+              const start = sh * 60 + sm
+              let end = eh * 60 + em
+              if (end < start) end += 24 * 60
+              return end - start
+            })()
+
+            const durationH = Math.floor(durationMin / 60)
+            const durationM = durationMin % 60
+
             return `
               <div class="tooltip-box">
                 <strong>${item.job_type || 'Activity'}</strong><br>
                 ${item.date}<br>
                 ${item.start_time} - ${item.end_time}<br>
                 Status: ${item.status || '-'}<br>
+                Duration: ${durationH}h ${durationM}m<br>
                 Earnings: ${item.earnings || '-'}
               </div>
             `
@@ -524,7 +553,16 @@ export default {
           toolbar: { show: false }
         },
         dataLabels: {
-          enabled: false
+          enabled: true,
+          formatter: (val, opts) => {
+            const meta = opts.w.config.series[opts.seriesIndex].data[opts.dataPointIndex].meta
+            return meta?.job_type || ''
+          },
+          style: {
+            colors: ['#fff'],
+            fontSize: '11px',
+            fontWeight: 600
+          }
         },
         xaxis: {
           type: 'category',
