@@ -18,7 +18,6 @@
     </div>
 
     <div v-if="currentPeriod === 'total'" class="total-layout">
-      <!-- BOX 2 → Bubble Chart -->
       <div class="box box2 tour-earnings-chart">
         <div class="header-controls">
           <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
@@ -38,7 +37,6 @@
         />
       </div>
 
-      <!-- BOX 4 → Job List Panel -->
       <div class="box box4 tour-jobtype-filter">
         <div class="panel-header">
           <h3 v-if="selectedTotalBucket">
@@ -79,18 +77,16 @@
                 {{ job.job_type }} · {{ job.start_time }} ·
                 {{ job.duration_hours || job.nbHours }} h
               </div>
-            <div>
-              {{ job.earnings }} {{ currency }}
+              <div>
+                {{ job.earnings }} {{ currency }}
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      </div>
     </div>
 
-    <div v-else>
-      <!-- BOX 2 → Bubble Chart for week/month -->
+    <div v-else class="week-month-layout">
       <div class="box box2 tour-earnings-chart">
         <div class="header-controls">
           <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
@@ -117,10 +113,30 @@
             </div>
           </div>
 
-          <div v-if="filteredJobs.length === 0" class="no-data-overlay">
+          <div v-if="filteredJobsByActivity.length === 0" class="no-data-overlay">
             <p>No job data for this period</p>
           </div>
         </div>
+      </div>
+
+      <div class="box box4 tour-jobtype-filter">
+        <label for="activityFilter" class="filter-label">
+          <strong>Filter by activity</strong>
+        </label>
+        <select
+          id="activityFilter"
+          v-model="selectedActivity"
+          class="filter-select"
+        >
+          <option value="">All activities</option>
+          <option
+            v-for="type in activityTypes"
+            :key="type"
+            :value="type"
+          >
+            {{ type }}
+          </option>
+        </select>
       </div>
     </div>
   </div>
@@ -153,7 +169,8 @@ export default {
     return {
       currentWeekStart: this.getMondayOf(dayjs()),
       currentPeriod: 'week',
-      selectedTotalBucket: null
+      selectedTotalBucket: null,
+      selectedActivity: ''
     }
   },
 
@@ -286,6 +303,15 @@ export default {
       )
     },
 
+    activityTypes() {
+      return Array.from(new Set(this.filteredJobs.map(j => j.job_type).filter(Boolean)))
+    },
+
+    filteredJobsByActivity() {
+      if (!this.selectedActivity) return this.filteredJobs
+      return this.filteredJobs.filter(j => j.job_type === this.selectedActivity)
+    },
+
     timeBucketColors() {
       return {
         Morning: '#36A2EB',
@@ -304,7 +330,7 @@ export default {
     aggregatedData() {
       const data = {}
 
-      this.filteredJobs.forEach((job) => {
+      this.filteredJobsByActivity.forEach((job) => {
         const jobDate = dayjs(job.date)
 
         const dayIndex =
@@ -451,7 +477,7 @@ export default {
           }
         },
         tooltip: {
-          enabled: this.filteredJobs.length > 0,
+          enabled: this.filteredJobsByActivity.length > 0,
           custom: ({ seriesIndex, dataPointIndex, w }) => {
             const series = w.config.series[seriesIndex]
             const point = series.data[dataPointIndex]
@@ -665,6 +691,7 @@ export default {
   watch: {
     currentPeriod(newVal) {
       this.selectedTotalBucket = null
+      this.selectedActivity = ''
 
       if (!this.latestJobDate) return
 
@@ -727,14 +754,12 @@ export default {
 </script>
 
 <style scoped>
-/* --- LAYOUT --- */
 .layout-container {
   width: 94%;
   gap: 16px;
   margin-left: 16px;
 }
 
-/* Base box style */
 .box {
   background-color: #e8e8e8;
   border: 2px solid #ccc;
@@ -743,7 +768,6 @@ export default {
   font-size: 1.2rem;
 }
 
-/* BUBBLE CHART */
 .box2 {
   display: flex;
   flex-direction: column;
@@ -810,7 +834,6 @@ export default {
   font-size: 1rem;
 }
 
-/* Legend */
 .legend {
   display: flex;
   gap: 12px;
@@ -832,7 +855,6 @@ export default {
   border-radius: 3px;
 }
 
-/* Tooltip styling */
 .tooltip-box {
   padding: 12px;
   background: white;
@@ -883,7 +905,6 @@ export default {
   background: #d2d2d2;
 }
 
-/* Total layout - chart + panel side by side */
 .total-layout {
   display: flex;
   gap: 16px;
@@ -902,7 +923,55 @@ export default {
   overflow-y: auto;
 }
 
-/* Job list panel */
+.week-month-layout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.week-month-layout .box2 {
+  flex: 0 0 75%;
+  margin-bottom: 0;
+}
+
+.week-month-layout .box4 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.filter-label {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: #333;
+  display: block;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1.5px solid #ccc;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filter-select:hover {
+  border-color: #888;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #1e88e5;
+  box-shadow: 0 0 4px rgba(30, 136, 229, 0.5);
+}
+
 .panel-header {
   margin-bottom: 16px;
 }
@@ -913,12 +982,6 @@ export default {
   margin: 0;
 }
 
-.job-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
 .job-item {
   background: white;
   border-radius: 8px;
@@ -926,28 +989,11 @@ export default {
   cursor: pointer;
   transition: background 0.2s;
   border: 1px solid #ddd;
+  margin-bottom: 8px;
 }
 
 .job-item:hover {
   background: #f3f3f3;
-}
-
-.job-item strong {
-  display: block;
-  margin-bottom: 4px;
-  color: #333;
-}
-
-.job-item div {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.no-data {
-  text-align: center;
-  padding: 40px 20px;
-  color: #999;
-  font-style: italic;
 }
 
 .activity-row {
@@ -989,16 +1035,69 @@ export default {
   max-width: 720px;
 }
 
-/* --- MEDIA QUERIES --- */
 @media (max-width: 768px) {
-  .layout-container { width: 100%; margin-left: 8px; gap: 12px; }
-  .period-switch { position: static; justify-content: center; margin-bottom: 12px; }
-  .week-nav { justify-content: center; margin-bottom: 12px; }
-  .total-layout { flex-direction: column; align-items: stretch; }
-  .total-layout .box2 { flex: 1 1 100%; order: 1; margin-bottom: 12px; }
-  .total-layout .box4 { flex: 1 1 100%; order: 2; max-height: none; overflow: visible; }
-  .box { padding: 12px; }
-  .chart-wrapper { margin-top: 8px; }
-  .legend { justify-content: center; }
+  .layout-container {
+    width: 100%;
+    margin-left: 8px;
+    gap: 12px;
+    grid-template-rows: auto auto 1fr;
+  }
+
+  .period-switch {
+    position: static;
+    justify-content: center;
+    margin-bottom: 12px;
+    grid-row: 1 / 2;
+  }
+
+  .week-nav {
+    justify-content: center;
+    margin-bottom: 12px;
+    grid-row: 2 / 3;
+  }
+
+  .total-layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .total-layout .box2 {
+    flex: 1 1 100%;
+    order: 1;
+    margin-bottom: 12px;
+  }
+
+  .total-layout .box4 {
+    flex: 1 1 100%;
+    order: 2;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .week-month-layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .week-month-layout .box2 {
+    flex: 1 1 100%;
+    margin-bottom: 12px;
+  }
+
+  .week-month-layout .box4 {
+    flex: 1 1 100%;
+  }
+
+  .box {
+    padding: 12px;
+  }
+
+  .chart-wrapper {
+    margin-top: 8px;
+  }
+
+  .legend {
+    justify-content: center;
+  }
 }
 </style>
