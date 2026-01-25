@@ -33,6 +33,10 @@
           :options="weekHeatmapOptions"
           :series="weekHeatmapSeries"
         />
+        <p class="chart-explanation">
+          Each row represents an activity type.
+          Color intensity indicates the number of hours worked on a given day.
+        </p>
       </div>
 
       <!-- MONTH VIEW: Heatmap -->
@@ -44,6 +48,10 @@
           :options="monthHeatmapOptions"
           :series="monthHeatmapSeries"
         />
+        <p class="chart-explanation">
+          Each row represents an activity type.
+          Color intensity indicates the number of hours worked on a given day.
+        </p>
       </div>
 
       <!-- TOTAL VIEW: Bar chart -->
@@ -267,7 +275,17 @@ export default {
     // ---------- MONTH HEATMAP ----------
     monthHeatmapSeries() {
       const daysInMonth = this.weekStart.daysInMonth()
-      const dayLabels = Array.from({ length: daysInMonth }, (_, i) => `${i + 1}`)
+      const dayLabels = []
+
+      // Create labels like "1 Mon", "2 Tue", etc.
+      for (let i = 1; i <= daysInMonth; i++) {
+        const date = this.weekStart.date(i)
+        let wd = date.day()
+        wd = wd === 0 ? 6 : wd - 1
+        const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        dayLabels.push(`${i} ${dayNames[wd]}`)
+      }
+
       const jobTypes = this.pageJobTypes.length ? this.pageJobTypes : ['No data']
 
       const dataMap = {}
@@ -282,7 +300,13 @@ export default {
         if (!j.date) return
         const type = j.job_type || 'Other'
         const dayOfMonth = dayjs(j.date).date()
-        const dayLabel = `${dayOfMonth}`
+
+        // Find the label for this day (e.g., "15 Wed")
+        const date = this.weekStart.date(dayOfMonth)
+        let wd = date.day()
+        wd = wd === 0 ? 6 : wd - 1
+        const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        const dayLabel = `${dayOfMonth} ${dayNames[wd]}`
 
         const hours = parseFloat(
           j.nbHours || j.duration || j.duration_hours || j.hours || j.work_hours
@@ -606,6 +630,12 @@ export default {
   align-items: center;
   gap: 12px;
   margin-bottom: 12px;
+}
+
+.chart-explanation {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #555;
 }
 
 @media (max-width: 768px) {
