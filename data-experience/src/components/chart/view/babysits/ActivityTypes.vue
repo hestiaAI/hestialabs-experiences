@@ -34,9 +34,26 @@
           :series="weekHeatmapSeries"
         />
         <p class="chart-explanation">
-          Each row represents an activity type.
-          Color intensity indicates the number of hours worked on a given day.
+          <strong>How to read this visualization:</strong><br />
+          Rows show different activity types.<br />
+          Columns represent days of the week.<br />
+          Darker cells mean more hours worked for that activity on that day.
         </p>
+        <div class="activity-legend">
+          <div
+            v-for="item in activityLegendItems"
+            :key="item.type"
+            class="legend-item"
+          >
+            <span
+              class="legend-swatch"
+              :style="{ background: item.color }"
+            />
+            <div>
+              <strong>{{ item.type }}</strong><br />
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- MONTH VIEW: Heatmap -->
@@ -49,9 +66,26 @@
           :series="monthHeatmapSeries"
         />
         <p class="chart-explanation">
-          Each row represents an activity type.
-          Color intensity indicates the number of hours worked on a given day.
+          <strong>How to read this visualization:</strong><br />
+          Rows show different activity types.<br />
+          Columns represent days of the week.<br />
+          Darker cells mean more hours worked for that activity on that day.
         </p>
+        <div class="activity-legend">
+          <div
+            v-for="item in activityLegendItems"
+            :key="item.type"
+            class="legend-item"
+          >
+            <span
+              class="legend-swatch"
+              :style="{ background: item.color }"
+            />
+            <div>
+              <strong>{{ item.type }}</strong><br />
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- TOTAL VIEW: Bar chart -->
@@ -105,6 +139,35 @@ export default {
   },
 
   computed: {
+    activityTypeColors() {
+      const palette = [
+        '#1abc9c',
+        '#3498db',
+        '#9b59b6',
+        '#e67e22',
+        '#e74c3c',
+        '#2ecc71'
+      ]
+
+      const types = Array.from(
+        new Set(this.jobs.map(j => j.job_type).filter(Boolean))
+      )
+
+      const map = {}
+      types.forEach((t, i) => {
+        map[t] = palette[i % palette.length]
+      })
+
+      return map
+    },
+
+    activityLegendItems() {
+      return this.pageJobTypes.map(type => ({
+        type,
+        color: this.activityTypeColors[type] || '#999'
+      }))
+    },
+
     pageJobTypes() {
       const jobs = this.jobs
 
@@ -262,7 +325,15 @@ export default {
           title: { text: 'Day of Week' }
         },
         yaxis: {
-          title: { text: 'Job Type' }
+          labels: {
+            style: {
+              colors: this.pageJobTypes.map(
+                t => this.activityTypeColors[t] || '#333'
+              ),
+              fontSize: '12px',
+              fontWeight: 600
+            }
+          }
         },
         tooltip: {
           y: {
@@ -370,7 +441,15 @@ export default {
           title: { text: 'Day of Month' }
         },
         yaxis: {
-          title: { text: 'Job Type' }
+          labels: {
+            style: {
+              colors: this.pageJobTypes.map(
+                t => this.activityTypeColors[t] || '#333'
+              ),
+              fontSize: '12px',
+              fontWeight: 600
+            }
+          }
         },
         tooltip: {
           y: {
@@ -674,6 +753,29 @@ export default {
   .box2--fullwidth { grid-column: 1 / -1; }
   .filter-select { width: 100%; box-sizing: border-box; }
   .week-label { text-align: center; width: auto; }
+}
+
+.activity-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+.legend-item {
+  display: flex;
+  gap: 8px;
+  font-size: 0.85rem;
+  align-items: flex-start;
+}
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  margin-top: 2px;
+}
+.legend-desc {
+  color: #666;
+  font-size: 0.75rem;
 }
 
 :deep(.apexcharts-heatmap-rect:hover) {
