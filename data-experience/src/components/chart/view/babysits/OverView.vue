@@ -48,8 +48,15 @@
         />
 
         <div class="legend mt-4">
-          <div v-for="item in statusItems" :key="item.name" class="legend-item">
-            <span class="legend-swatch" :style="{ background: item.color }" />
+          <div
+            v-for="item in activityLegendItems"
+            :key="item.label"
+            class="legend-item"
+          >
+            <span
+              class="legend-swatch"
+              :style="{ background: item.color }"
+            />
             {{ item.label }} ({{ item.count }})
           </div>
         </div>
@@ -141,6 +148,28 @@ export default {
   },
 
   computed: {
+    activityTypeColors() {
+      const palette = [
+        '#1abc9c',
+        '#3498db',
+        '#9b59b6',
+        '#e67e22',
+        '#e74c3c',
+        '#2ecc71'
+      ]
+
+      const types = Array.from(
+        new Set(this.jobs.map(j => j.job_type).filter(Boolean))
+      )
+
+      const map = {}
+      types.forEach((t, i) => {
+        map[t] = palette[i % palette.length]
+      })
+
+      return map
+    },
+
     pageJobTypes() {
       const jobs = this.jobs
 
@@ -361,7 +390,10 @@ export default {
             const start = dayjs('2025-01-01').hour(sh).minute(sm).valueOf()
             const end = dayjs('2025-01-01').hour(eh).minute(em).valueOf()
             const statusKey = (j.status || 'unknown').toLowerCase()
-            const color = this.statusColors[statusKey] || this.statusColors.unknown
+            const color =
+              this.activityTypeColors[j.job_type] ||
+              this.statusColors[statusKey] ||
+              '#888'
 
             seriesData.push({
               x: dayName,
@@ -410,8 +442,10 @@ export default {
             if (item.status === 'none') return null
             return `
               <div class="tooltip-box">
-                <strong>${item.date}</strong><br>
+                <strong>${item.job_type || 'Activity'}</strong><br>
+                ${item.date}<br>
                 ${item.start_time} - ${item.end_time}<br>
+                Status: ${item.status || '-'}<br>
                 Earnings: ${item.earnings || '-'}
               </div>
             `
@@ -420,17 +454,18 @@ export default {
       }
     },
 
-    statusItems() {
+    activityLegendItems() {
       const counts = {}
+
       this.filteredJobs.forEach((j) => {
-        counts[j.status] = (counts[j.status] || 0) + 1
+        const type = j.job_type || 'Unknown'
+        counts[type] = (counts[type] || 0) + 1
       })
 
-      return Object.keys(counts).map(s => ({
-        name: s,
-        label: s.charAt(0).toUpperCase() + s.slice(1),
-        count: counts[s],
-        color: this.statusColors[s] || '#888'
+      return Object.keys(counts).map(t => ({
+        label: t,
+        count: counts[t],
+        color: this.activityTypeColors[t] || '#888'
       }))
     },
 

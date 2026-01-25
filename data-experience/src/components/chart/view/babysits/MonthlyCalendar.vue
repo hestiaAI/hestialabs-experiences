@@ -22,6 +22,9 @@
       <div class="day-number">{{ day.day }}</div>
 
       <div class="stats" v-if="day.hours > 0 || day.earnings > 0">
+        <div class="stat-job-type" v-if="day.jobTypes.length > 0">
+          {{ day.jobTypes.join(', ') }}
+        </div>
         <div class="stat-hours">{{ day.hours.toFixed(1) }}h</div>
         <div class="stat-money">{{ day.earnings.toFixed(2) }}{{ currency }}</div>
       </div>
@@ -74,31 +77,37 @@ export default {
       for (let i = 1; i <= totalDays; i++) {
         const date = start.value.date(i)
 
+        // Filter shifts for the current day
+        const dayShifts = props.shifts.filter(s => s.date && dayjs(s.date).isSame(date, 'day'))
+
         // Calculate hours worked from shifts (using duration_hours field)
-        const hoursWorked = props.shifts
-          .filter(s => s.date && dayjs(s.date).isSame(date, 'day'))
-          .reduce((sum, s) => {
-            const duration = parseFloat(
-              s.duration_hours ||
-              s.nbHours ||
-              s.duration ||
-              s.hours ||
-              s.work_hours ||
-              0
-            )
-            return sum + duration
-          }, 0)
+        const hoursWorked = dayShifts.reduce((sum, s) => {
+          const duration = parseFloat(
+            s.duration_hours ||
+            s.nbHours ||
+            s.duration ||
+            s.hours ||
+            s.work_hours ||
+            0
+          )
+          return sum + duration
+        }, 0)
 
         // Calculate total earnings from shifts
-        const totalEarnings = props.shifts
-          .filter(s => s.date && dayjs(s.date).isSame(date, 'day'))
-          .reduce((sum, s) => sum + (parseFloat(s.earnings) || 0), 0)
+        const totalEarnings = dayShifts.reduce((sum, s) => sum + (parseFloat(s.earnings) || 0), 0)
+
+        // Extract unique job types
+        const jobTypes = [...new Set(dayShifts
+          .map(s => s.job_type)
+          .filter(jt => jt)
+        )]
 
         days.push({
           day: i,
           date: date.toISOString(),
           hours: hoursWorked,
-          earnings: totalEarnings
+          earnings: totalEarnings,
+          jobTypes: jobTypes
         })
       }
 
@@ -139,7 +148,7 @@ export default {
 }
 
 .calendar-cell {
-  height: 62px;
+  height: 78px;
   overflow: hidden;
   border: 1px solid #ddd;
   padding: 3px;
@@ -170,6 +179,16 @@ export default {
   margin-top: 2px;
 }
 
+.stat-job-type {
+  font-size: 10px;
+  color: #ff9800;
+  font-weight: 500;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .stat-hours {
   font-size: 12px;
   color: #4caf50;
@@ -192,7 +211,7 @@ export default {
 @media (max-width: 480px) {
   .calendar { padding: 4px 6px 0 6px; gap: 4px; }
   .calendar-header { height: 24px; font-size: 12px; }
-  .calendar-cell { height: 52px; padding: 2px; }
+  .calendar-cell { height: 65px; padding: 2px; }
   .day-number { font-size: 12px; }
   .stat-hours, .stat-money { font-size: 11px; }
   .empty-stats { font-size: 11px; }
