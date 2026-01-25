@@ -21,7 +21,12 @@
       <!-- BOX 2 → Bubble Chart -->
       <div class="box box2 tour-earnings-chart">
         <div class="header-controls">
-          <h2 class="chart-title">Earnings Distribution</h2>
+          <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
+          <p class="chart-subtitle">
+            Bubble height shows total earnings.
+            Bubble size represents total working hours.
+            Compare income efficiency across times of day.
+          </p>
         </div>
 
         <ApexChart
@@ -87,7 +92,12 @@
       <!-- BOX 2 → Bubble Chart for week/month -->
       <div class="box box2 tour-earnings-chart">
         <div class="header-controls">
-          <h2 class="chart-title">Earnings Distribution</h2>
+          <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
+          <p class="chart-subtitle">
+            Bubble height shows total earnings.
+            Bubble size represents total working hours.
+            Compare income efficiency across times of day.
+          </p>
         </div>
 
         <div class="chart-wrapper">
@@ -146,6 +156,16 @@ export default {
   },
 
   computed: {
+    earningsHeaderTitle() {
+      if (this.currentPeriod === 'week') {
+        return `Earnings vs Time of Day (${this.weekLabel})`
+      }
+      if (this.currentPeriod === 'month') {
+        return `Earnings vs Time of Day (${this.weekLabel})`
+      }
+      return `Average earnings vs Time of Day (${this.weekLabel})`
+    },
+
     totalPanelActivities() {
       if (this.currentPeriod !== 'total') return []
       if (!this.selectedTotalBucket) return []
@@ -729,10 +749,11 @@ export default {
 }
 
 .header-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #e8e8e8;
+  padding-bottom: 10px;
 }
 
 .chart-title {
@@ -956,6 +977,13 @@ export default {
 .activity-job {
   font-size: 0.85rem;
   color: #666;
+}
+
+.chart-subtitle {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  color: #555;
+  max-width: 720px;
 }
 
 /* --- MEDIA QUERIES --- */
