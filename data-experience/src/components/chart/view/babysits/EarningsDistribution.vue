@@ -23,9 +23,10 @@
         <div class="header-controls">
           <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
           <p class="chart-subtitle">
-            Bubble height shows average earnings per hour.
-            Bubble size represents total working hours.
-            Compare income efficiency across times of day.
+            Each bubble represents a group of jobs.
+            <br>• Bubble height = average earnings
+            <br>• Bubble size = total working hours
+            <br>• Bubble color = time of day (Morning / Day / Evening / Night)
           </p>
         </div>
 
@@ -94,9 +95,10 @@
         <div class="header-controls">
           <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
           <p class="chart-subtitle">
-            Bubble height shows total earnings.
-            Bubble size represents total working hours.
-            Compare income efficiency across times of day.
+            Each bubble represents a group of jobs.
+            <br>• Bubble height = total earnings
+            <br>• Bubble size = total working hours
+            <br>• Bubble color = time of day (Morning / Day / Evening / Night)
           </p>
         </div>
 
@@ -158,12 +160,12 @@ export default {
   computed: {
     earningsHeaderTitle() {
       if (this.currentPeriod === 'week') {
-        return `Earnings vs Time of Day (${this.weekLabel})`
+        return `Earnings by Time of Day (${this.weekLabel})`
       }
       if (this.currentPeriod === 'month') {
-        return `Earnings vs Time of Day (${this.weekLabel})`
+        return `Earnings by Time of Day (${this.weekLabel})`
       }
-      return `Average earnings vs Time of Day (${this.weekLabel})`
+      return `Average Earnings by Time of Day (${this.weekLabel})`
     },
 
     totalPanelActivities() {
@@ -753,6 +755,7 @@ export default {
   top: 0;
   z-index: 5;
   background: #e8e8e8;
+  padding-top: 10px;
   padding-bottom: 10px;
 }
 
@@ -980,9 +983,9 @@ export default {
 }
 
 .chart-subtitle {
-  margin-top: 4px;
-  font-size: 0.9rem;
-  color: #555;
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.4;
   max-width: 720px;
 }
 
