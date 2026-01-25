@@ -23,7 +23,7 @@
         <div class="header-controls">
           <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
           <p class="chart-subtitle">
-            Bubble height shows total earnings.
+            Bubble height shows average earnings per hour.
             Bubble size represents total working hours.
             Compare income efficiency across times of day.
           </p>
