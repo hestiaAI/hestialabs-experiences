@@ -18,71 +18,89 @@
     </div>
 
     <div v-if="currentPeriod === 'total'" class="total-layout">
-      <div class="box box2 tour-earnings-chart">
-        <div class="header-controls">
-          <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
-          <p class="chart-subtitle">
-            Each bubble represents a group of jobs.
-            <br>• Bubble height = average earnings
-            <br>• Bubble size = total working hours
-            <br>• Bubble color = time of day (Morning / Day / Evening / Night)
-          </p>
-        </div>
-
-        <ApexChart
-          type="bubble"
-          height="450"
-          :series="totalScatterSeries"
-          :options="totalScatterOptions"
-        />
-      </div>
-
-      <div class="box box4 tour-jobtype-filter">
-        <div class="panel-header">
-          <h3 v-if="selectedTotalBucket">
-            {{ selectedTotalBucket }} jobs
-          </h3>
-          <h3 v-else>
-            Select a bubble
-          </h3>
-        </div>
-
-        <div
-          v-for="activity in totalPanelActivities"
-          :key="activity.type"
-          class="job-item"
-        >
-          <div class="activity-row">
-            <span
-              class="activity-dot"
-              :style="{ backgroundColor: activity.color }"
-            />
-            <strong>{{ activity.type }}</strong>
+      <div class="total-top">
+        <div class="box box2 tour-earnings-chart">
+          <div class="header-controls">
+            <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
+            <p class="chart-subtitle">
+              Each bubble represents a group of jobs.
+              <br>• Bubble height = average earnings
+              <br>• Bubble size = total working hours
+              <br>• Bubble color = time of day (Morning / Day / Evening / Night)
+            </p>
           </div>
 
-          <div class="activity-summary">
-            {{ activity.earnings.toFixed(2) }} {{ currency }}
-            {{ activity.hours.toFixed(1) }} h
-            {{ activity.count }} jobs
+          <ApexChart
+            type="bubble"
+            height="450"
+            :series="totalScatterSeries"
+            :options="totalScatterOptions"
+          />
+        </div>
+
+        <div class="box box4 tour-jobtype-filter">
+          <div class="panel-header">
+            <h3 v-if="selectedTotalBucket">
+              {{ selectedTotalBucket }} jobs
+            </h3>
+            <h3 v-else>
+              Select a bubble
+            </h3>
           </div>
 
-          <div class="activity-jobs">
-            <div
-              v-for="job in activity.jobs"
-              :key="job.job_id || job.date + job.start_time"
-              class="activity-job"
-            >
-              <strong>{{ formatDate(job.date) }}</strong>
-              <div>
-                {{ job.job_type }} · {{ job.start_time }} ·
-                {{ job.duration_hours || job.nbHours }} h
-              </div>
-              <div>
-                {{ job.earnings }} {{ currency }}
+          <div
+            v-for="activity in totalPanelActivities"
+            :key="activity.type"
+            class="job-item"
+          >
+            <div class="activity-row">
+              <span
+                class="activity-dot"
+                :style="{ backgroundColor: activity.color }"
+              />
+              <strong>{{ activity.type }}</strong>
+            </div>
+
+            <div class="activity-summary">
+              {{ activity.earnings.toFixed(2) }} {{ currency }}
+              {{ activity.hours.toFixed(1) }} h
+              {{ activity.count }} jobs
+            </div>
+
+            <div class="activity-jobs">
+              <div
+                v-for="job in activity.jobs"
+                :key="job.job_id || job.date + job.start_time"
+                class="activity-job"
+              >
+                <strong>{{ formatDate(job.date) }}</strong>
+                <div>
+                  {{ job.job_type }} · {{ job.start_time }} ·
+                  {{ job.duration_hours || job.nbHours }} h
+                </div>
+                <div>
+                  {{ job.earnings }} {{ currency }}
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="box total-bar-chart">
+        <div class="bar-header">
+          <h2 class="chart-title">Earnings per Hour by Activity</h2>
+          <select v-model="sortDirection" class="filter-select sort-select">
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
+          </select>
+        </div>
+        <ApexChart
+          type="bar"
+          height="350"
+          :series="earningsPerHourSeries"
+          :options="earningsPerHourOptions"
+        />
       </div>
     </div>
 
@@ -170,7 +188,8 @@ export default {
       currentWeekStart: this.getMondayOf(dayjs()),
       currentPeriod: 'week',
       selectedTotalBucket: null,
-      selectedActivity: ''
+      selectedActivity: '',
+      sortDirection: 'desc'
     }
   },
 
@@ -685,6 +704,82 @@ export default {
           show: false
         }
       }
+    },
+
+    earningsPerHourData() {
+      const map = {}
+
+      this.filteredJobs.forEach((j) => {
+        const type = j.job_type || 'Other'
+        if (!map[type]) map[type] = { earnings: 0, hours: 0 }
+        map[type].earnings += Number(j.earnings) || 0
+        map[type].hours += Number(
+          j.nbHours ||
+          j.duration ||
+          j.duration_hours ||
+          j.hours ||
+          j.work_hours
+        ) || 0
+      })
+
+      const entries = Object.entries(map).map(([type, stats]) => ({
+        type,
+        rate: stats.hours ? Number((stats.earnings / stats.hours).toFixed(2)) : 0
+      }))
+
+      entries.sort((a, b) => {
+        return this.sortDirection === 'asc'
+          ? a.rate - b.rate
+          : b.rate - a.rate
+      })
+
+      return entries
+    },
+
+    earningsPerHourSeries() {
+      const data = this.earningsPerHourData.map(item => item.rate)
+      return [{
+        name: `${this.currency}/hour`,
+        data
+      }]
+    },
+
+    earningsPerHourOptions() {
+      const categories = this.earningsPerHourData.map(item => item.type)
+
+      return {
+        chart: {
+          type: 'bar',
+          toolbar: { show: false }
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            borderRadius: 6
+          }
+        },
+        xaxis: {
+          categories,
+          title: {
+            text: `Earnings per hour (${this.currency}/h)`
+          }
+        },
+        yaxis: {
+          title: {
+            text: 'Activity Type'
+          }
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: val => `${val} ${this.currency}/h`
+        },
+        tooltip: {
+          y: {
+            formatter: val => `${val} ${this.currency}/h`
+          }
+        },
+        colors: ['#2ecc71']
+      }
     }
   },
 
@@ -907,20 +1002,42 @@ export default {
 
 .total-layout {
   display: flex;
+  flex-direction: column;
   gap: 16px;
-  align-items: flex-start;
   margin-bottom: 30px;
 }
 
-.total-layout .box2 {
+.total-top {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.total-top .box2 {
   flex: 0 0 65%;
   margin-bottom: 0;
 }
 
-.total-layout .box4 {
+.total-top .box4 {
   flex: 1;
   max-height: 500px;
   overflow-y: auto;
+}
+
+.total-bar-chart {
+  width: 100%;
+}
+
+.bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sort-select {
+  width: auto;
+  min-width: 200px;
 }
 
 .week-month-layout {
@@ -1058,20 +1175,32 @@ export default {
 
   .total-layout {
     flex-direction: column;
+  }
+
+  .total-top {
+    flex-direction: column;
     align-items: stretch;
   }
 
-  .total-layout .box2 {
+  .total-top .box2 {
     flex: 1 1 100%;
-    order: 1;
     margin-bottom: 12px;
   }
 
-  .total-layout .box4 {
+  .total-top .box4 {
     flex: 1 1 100%;
-    order: 2;
     max-height: none;
     overflow: visible;
+  }
+
+  .bar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .sort-select {
+    width: 100%;
   }
 
   .week-month-layout {
