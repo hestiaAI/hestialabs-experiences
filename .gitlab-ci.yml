@@ -13,7 +13,6 @@ variables:
 
 test:
   stage: test
-  allow_failure: true
   image: node:18
   script:
     # Build shared packages

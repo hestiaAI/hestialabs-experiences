@@ -91,7 +91,7 @@ describe('MyRoutes.vue UI & interactions', () => {
     expect(buttons.length).toBe(3)
     expect(wrapper.text()).toContain('WEEK')
     expect(wrapper.text()).toContain('MONTH')
-    expect(wrapper.text()).toContain('UNCOMPLETED')
+    expect(wrapper.text()).toContain('Uncompleted')
   })
 
   test('renders navigation buttons', () => {

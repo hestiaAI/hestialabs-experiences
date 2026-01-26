@@ -162,7 +162,15 @@ export default {
 
     // Period label for display
     periodLabel() {
-      if (periodStore.mode === 'total') return 'All time'
+      if (this.mode === 'total') {
+        const { allTimeStart, allTimeEnd } = periodStore
+
+        if (!allTimeStart || !allTimeEnd) {
+          return 'All time'
+        }
+
+        return `${dayjs(allTimeStart).format('DD.MM.YYYY')} – ${dayjs(allTimeEnd).format('DD.MM.YYYY')}`
+      }
       if (periodStore.mode === 'month') return this.periodStart.format('MMMM YYYY')
       return `${this.periodStart.format('DD.MM.YYYY')} – ${this.periodEnd.format('DD.MM.YYYY')}`
     },

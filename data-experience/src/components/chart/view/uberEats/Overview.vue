@@ -157,7 +157,15 @@ export default {
 
     // human-readable period label
     periodLabel() {
-      if (this.mode === 'total') return 'All time'
+      if (this.mode === 'total') {
+        const { allTimeStart, allTimeEnd } = periodStore
+
+        if (!allTimeStart || !allTimeEnd) {
+          return 'All time'
+        }
+
+        return `${dayjs(allTimeStart).format('DD.MM.YYYY')} – ${dayjs(allTimeEnd).format('DD.MM.YYYY')}`
+      }
       if (this.mode === 'month') {
         return this.periodStart.format('MMMM YYYY')
       }
