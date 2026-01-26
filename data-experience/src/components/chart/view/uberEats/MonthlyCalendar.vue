@@ -114,6 +114,7 @@ export default {
   text-align: center;
   font-weight: bold;
   background: #f4f4f4;
+  border: 1px solid #b9b9b9;
   height: 28px;
 }
 
@@ -136,7 +137,10 @@ export default {
 }
 
 .day-cell:hover {
-  background-color: #ddd;
+  background-color: #f2f2f2;
+  box-shadow:
+      0 2px 1px -1px rgba(0,0,0,.22),
+      0 1px 3px 0 rgba(0,0,0,.18);
 }
 
 .day-number {

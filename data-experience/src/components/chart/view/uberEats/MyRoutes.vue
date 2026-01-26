@@ -744,7 +744,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   gap: 12px;
 }
 
@@ -755,21 +755,18 @@ export default {
 
 .switch-btn {
   padding: 4px 12px;
-  border-radius: 6px;
   border: 1px solid #bbb;
-  background: #e0e0e0;
+  border-radius: 0;
+  background: #fff;
   color: #333;
   cursor: pointer;
   font-size: 0.85rem;
 }
 
 .switch-btn.active {
-  background: #bcbcbc;
-  font-weight: 700;
-}
-
-.switch-btn:hover {
-  background: #d2d2d2;
+  background: #e6e6e6;
+  font-weight: 600;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
 }
 
 .period-switch .switch-btn:nth-child(3) {
@@ -785,17 +782,28 @@ export default {
 }
 
 .nav-btn {
-  padding: 2px 10px;
-  border-radius: 6px;
+  padding: 4px 12px;
   border: 1px solid #bbb;
-  background: white;
+  border-radius: 0;
+  background: #fff;
   cursor: pointer;
-  transition: background 0.2s;
   font-size: 1rem;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.05s ease;
 }
 
-.nav-btn:hover {
-  background: #f3f3f3;
+.nav-btn:hover, .switch-btn:hover {
+  background: #f2f2f2;
+  box-shadow:
+    0 3px 1px -2px rgba(0,0,0,.25),
+    0 2px 4px 0 rgba(0,0,0,.20),
+    0 1px 8px 0 rgba(0,0,0,.18);
+  transform: translateY(-1px);
 }
 
 .week-label {
@@ -830,9 +838,10 @@ export default {
   flex: 0 0 70%;
   display: flex;
   flex-direction: column;
-  background-color: #e8e8e8;
-  border: 2px solid #ccc;
-  border-radius: 10px;
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),
+            0 2px 2px 0 rgba(0,0,0,.19),
+            0 1px 5px 0 rgba(0,0,0,.17);
+  border: 1px solid #bbbbbb99;
   margin-right: 16px;
   padding: 16px;
   min-height: 0;
@@ -852,9 +861,10 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 0 0 28%;
-  background-color: #e8e8e8;
-  border: 2px solid #ccc;
-  border-radius: 10px;
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),
+              0 2px 2px 0 rgba(0,0,0,.19),
+              0 1px 5px 0 rgba(0,0,0,.17);
+  border: 1px solid #bbbbbb99;
   padding: 16px;
 }
 
@@ -862,20 +872,22 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .clear-btn {
   padding: 4px 6px;
-  border-radius: 6px;
-  background: #cfcfcf;
+  background: #f2f2f2;
   border: 1px solid #aaa;
   cursor: pointer;
   font-size: 0.8rem;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+  transition: background 0.15s ease, box-shadow 0.15s ease;
 }
 
 .clear-btn:hover {
-  background: #bbbbbb;
+  background: #d9d9d9;
 }
 
 .trip-list {
@@ -889,18 +901,20 @@ export default {
   background: white;
   border-radius: 8px;
   padding: 12px 16px;
-  margin-bottom: 12px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  margin: 2px 0 10px 2px;
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),
+              0 2px 2px 0 rgba(0,0,0,.29),
+              0 1px 5px 0 rgba(0,0,0,.27);
   cursor: pointer;
 }
 
 .trip-item.selected {
-  background: #d7ebff;
+  background: #b2d5fd66;
   border: 2px solid #4a9eff;
 }
 
 .trip-item:hover {
-  background: #f7f7f7;
+  background: #f2f2f2;
 }
 
 .trip-header {

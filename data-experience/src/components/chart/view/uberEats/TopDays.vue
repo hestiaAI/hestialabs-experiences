@@ -51,14 +51,13 @@ export default {
 .top-days-wrapper {
   width: 100%;
   text-align: center;
+  margin-top: 28px;
 }
 
 .top-days-table {
-  margin-top: 16px;
   width: 70%;
-  margin-left: auto;
-  margin-right: auto;
   border-collapse: collapse;
+  margin: 24px auto 54px auto;
 }
 
 .top-days-table th,
@@ -68,6 +67,6 @@ export default {
 }
 
 .top-days-table th {
-  background-color: #ddd;
+  background-color: #f2f2f2;
 }
 </style>

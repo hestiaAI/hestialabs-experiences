@@ -724,21 +724,18 @@ export default {
 
 .switch-btn {
   padding: 4px 12px;
-  border-radius: 6px;
   border: 1px solid #bbb;
-  background: #e0e0e0;
+  border-radius: 0;
+  background: #fff;
   color: #333;
   cursor: pointer;
   font-size: 0.85rem;
 }
 
 .switch-btn.active {
-  background: #bcbcbc;
-  font-weight: 700;
-}
-
-.switch-btn:hover {
-  background: #d2d2d2;
+  background: #e6e6e6;
+  font-weight: 600;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
 }
 
 .week-nav {
@@ -748,33 +745,42 @@ export default {
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  margin-bottom: 12px;
   height: 32px;
 }
 
 .week-nav-wrapper {
-  width: 240px;
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
 .nav-btn {
-  padding: 3px 10px;
-  border-radius: 6px;
+  padding: 4px 12px;
   border: 1px solid #bbb;
-  background: white;
+  border-radius: 0;
+  background: #fff;
   cursor: pointer;
-  transition: background 0.2s;
   font-size: 1rem;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.05s ease;
 }
 
-.nav-btn:hover {
-  background: #f3f3f3;
+.nav-btn:hover, .switch-btn:hover {
+  background: #f2f2f2;
+  box-shadow:
+    0 3px 1px -2px rgba(0,0,0,.25),
+    0 2px 4px 0 rgba(0,0,0,.20),
+    0 1px 8px 0 rgba(0,0,0,.18);
+  transform: translateY(-1px);
 }
 
 .week-label {
-  width: 180px;
+  width: 240px;
   font-weight: 700;
   color: #333;
   font-size: 1rem;
@@ -786,9 +792,10 @@ export default {
 
 /* Base box style */
 .box {
-  background-color: #e8e8e8;
-  border: 2px solid #ccc;
-  border-radius: 10px;
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),
+            0 2px 2px 0 rgba(0,0,0,.19),
+            0 1px 5px 0 rgba(0,0,0,.17);
+  border: 1px solid #bbbbbb99;
   padding: 20px;
   font-size: 1.2rem;
 }
@@ -802,6 +809,7 @@ export default {
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
   align-items: center;
+  padding-bottom: 16px;
 }
 
 /* TIMELINE CHART (bottom left) */
@@ -810,17 +818,12 @@ export default {
   grid-row: 3 / 4;
   display: flex;
   flex-direction: column;
-  padding-bottom: 16px;
 }
 
 /* RIGHT COLUMN (bottom right) */
 .right-column {
   grid-column: 2 / 3;
   grid-row: 3 / 4;
-
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 16px;
 }
 
 .box3,
@@ -829,6 +832,8 @@ export default {
   flex-direction: column;
   justify-content: center;
   text-align: left;
+  padding-top: 28px;
+  margin-bottom: 16px;
 }
 
 /* legend */
@@ -858,14 +863,14 @@ export default {
     grid-column: 1 / 2;
     grid-row: auto;
     justify-content: center;
-    margin-bottom: 8px;
+    margin-bottom: 20px;
   }
 
   .week-nav {
     grid-column: 1 / 2;
     grid-row: auto;
     justify-content: center;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
   }
 
   .box1 {
