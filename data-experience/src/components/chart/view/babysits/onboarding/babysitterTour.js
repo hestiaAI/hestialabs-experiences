@@ -10,132 +10,143 @@ export function createBabysitterTour() {
     }
   })
 
-  /* ------------------------------
-    STEP 1 – Welcome
-  ------------------------------ */
+  /* ========== SHIFT TIMELINE PAGE ========== */
+
+  /* STEP 1 – Welcome */
   tour.addStep({
     id: 'intro',
-    text: 'Welcome! This page shows all your babysitting jobs and earnings.',
+    text: 'Welcome to your babysitting data dashboard! Let\'s explore how your work is visualized.',
     buttons: [
       { text: 'Skip', action: tour.cancel },
       { text: 'Start tutorial', action: tour.next }
     ]
   })
 
-  /* ------------------------------
-    STEP 2 – Period switch buttons
-  ------------------------------ */
+  /* STEP 2 – Period switch buttons */
   tour.addStep({
     id: 'period-switch',
     attachTo: { element: '.period-switch', on: 'bottom' },
-    text: 'Use these buttons to switch between week, month or total views.',
+    text: 'Switch between Week, Month, and Total views. Week shows detailed daily breakdown, Month displays a calendar, and Total covers all your data.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
-  /* ------------------------------
-     STEP 3 – Week navigation
-  ------------------------------ */
+  /* STEP 3 – Week navigation */
   tour.addStep({
     id: 'week-nav',
     attachTo: { element: '.week-nav', on: 'bottom' },
-    text: 'Navigate between weeks or months here.',
+    text: 'Use arrow buttons to navigate between weeks or months. The label shows the current date range.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
-  /* ------------------------------
-     STEP 4 – Timeline chart
-  ------------------------------ */
-  tour.addStep({
-    id: 'timeline',
-    attachTo: { element: '.box2', on: 'top' },
-    text: 'This timeline shows your job shifts for each day.',
-    buttons: [{ text: 'Next', action: tour.next }]
-  })
-
-  /* ------------------------------
-     STEP 5 – Legend
-  ------------------------------ */
-  tour.addStep({
-    id: 'legend',
-    attachTo: { element: '.legend', on: 'top' },
-    text: 'Here you can see what each job status color means.',
-    buttons: [{ text: 'Next', action: tour.next }]
-  })
-
-  /* ------------------------------
-     STEP 6 – Stats (top box)
-  ------------------------------ */
+  /* STEP 4 – Stats box */
   tour.addStep({
     id: 'stats',
     attachTo: { element: '.box1', on: 'bottom' },
-    text: 'This section summarizes your totals: earnings, hours worked and number of jobs.',
+    text: 'Your key metrics: Total Earnings, Hours Worked, and Number of Jobs for this period.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
+  /* STEP 5 – Timeline chart */
+  tour.addStep({
+    id: 'timeline',
+    attachTo: { element: '.box2', on: 'top' },
+    text: 'Week view: Each bar shows one job with its duration. Month view: Click on any day in the calendar to see job details. Total view: Heatmap shows all jobs grouped by month.',
+    buttons: [{ text: 'Next', action: tour.next }]
+  })
+
+  /* STEP 6 – Legend */
+  tour.addStep({
+    id: 'legend',
+    attachTo: { element: '.legend', on: 'top' },
+    text: 'Legend shows all activity types with their colors and job counts.',
+    buttons: [{ text: 'Next', action: tour.next }]
+  })
+
+  /* STEP 7 – Average Work Time */
+  tour.addStep({
+    id: 'avg-time',
+    attachTo: { element: '.avg-box', on: 'left' },
+    text: 'Average duration of your shifts in this period.',
+    buttons: [{ text: 'Next', action: tour.next }]
+  })
+
+  /* STEP 8 – Filter by Job Type */
+  tour.addStep({
+    id: 'jobtype-filter',
+    attachTo: { element: '.tour-jobtype-filter', on: 'left' },
+    text: 'Filter the timeline by activity type to focus on specific job categories.',
+    buttons: [{ text: 'Next', action: tour.next }]
+  })
+
+  /* ========== ACTIVITY TYPES PAGE ========== */
+
   tour.addStep({
     id: 'go-to-activity',
-    text: 'Next, let\'s look at your Activity Types overview.',
+    text: 'Now let\'s check the Activity Types page to see how your work is distributed across different job types.',
     buttons: [{
       text: 'Next',
       action: () => {
         window.__continueBabysitterTour = () => tour.next()
-
         const btn = document.getElementById('activityTypes')
         if (btn) btn.click()
       }
-    }
-    ]
+    }]
   })
 
-  /* ------------------------------
-    ACTIVITY DIAGRAM
-  ------------------------------ */
   tour.addStep({
     id: 'activity-chart',
     attachTo: { element: '.tour-activity-chart', on: 'top' },
-    text: 'This chart shows your shifts grouped by activity types and times.',
+    text: 'Activity Types visualization shows how hours are distributed across different job types. Week & Month views use heatmaps (darker = more hours), Total view uses a sortable bar chart.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
-  /* ------------------------------
-    JOB TYPE FILTER
-  ------------------------------ */
   tour.addStep({
-    id: 'jobtype-filter',
-    attachTo: { element: '.tour-jobtype-filter', on: 'left' },
-    text: 'Here you can filter jobs by activity type to narrow down what’s displayed.',
+    id: 'activity-explanation',
+    attachTo: { element: '.chart-explanation', on: 'top' },
+    text: 'Read the explanation below the chart to understand how to interpret the visualization. Rows = activity types, Columns = days/dates.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
-  /* ------------------------------
-    GO TO EARNINGS TAB
-  ------------------------------ */
+  tour.addStep({
+    id: 'activity-legend',
+    attachTo: { element: '.activity-legend', on: 'top' },
+    text: 'Legend displays all activity types you\'ve worked on with their assigned colors.',
+    buttons: [{ text: 'Next', action: tour.next }]
+  })
+
+  /* ========== EARNINGS DISTRIBUTION PAGE ========== */
+
   tour.addStep({
     id: 'go-to-earnings',
-    text: 'Now let’s check how your earnings are distributed.',
-    buttons: [
-      {
-        text: 'Next',
-        action: () => {
-          window.__continueBabysitterTour = () => tour.next()
-
-          const btn = document.getElementById('earningsDistribution')
-          if (btn) btn.click()
-        }
+    text: 'Finally, let\'s explore the Earnings Distribution page to analyze your income patterns.',
+    buttons: [{
+      text: 'Next',
+      action: () => {
+        window.__continueBabysitterTour = () => tour.next()
+        const btn = document.getElementById('earningsDistribution')
+        if (btn) btn.click()
       }
-    ]
+    }]
   })
 
-  /* ------------------------------
-    EARNINGS CHART
-  ------------------------------ */
   tour.addStep({
     id: 'earnings-chart',
-    attachTo: {
-      element: '.tour-earnings-chart',
-      on: 'top'
-    },
-    text: 'This bubble chart shows how your income is distributed by days and time of work.',
+    attachTo: { element: '.tour-earnings-chart', on: 'top' },
+    text: 'Earnings visualization shows your income patterns. Bubble size = hours worked, Bubble height = earnings per hour, Color = time of day (Morning/Day/Evening/Night).',
+    buttons: [{ text: 'Next', action: tour.next }]
+  })
+
+  tour.addStep({
+    id: 'earnings-filter',
+    attachTo: { element: '.tour-jobtype-filter', on: 'left' },
+    text: 'Click on any bubble to see detailed breakdown by activity type. Shows earnings, hours, and individual job entries.',
+    buttons: [{ text: 'Next', action: tour.next }]
+  })
+
+  tour.addStep({
+    id: 'earnings-bar-chart',
+    attachTo: { element: '.total-bar-chart', on: 'top' },
+    text: 'Bar chart shows earnings per hour for each activity type. You can sort ascending or descending to find your highest paying jobs.',
     buttons: [
       {
         text: 'Finish',
