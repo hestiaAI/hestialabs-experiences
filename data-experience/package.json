@@ -15,6 +15,7 @@
   "homepage": "https://github.com/hestiaAI/hestialabs-experiences/blob/master/data-experience/README.md",
   "scripts": {
     "test": "jest",
+    "perf": "jest src/__tests__/uber-eats/performance --runInBand",
     "postinstall": "node postinstall.cjs",
     "dev": "npm-run-all -p -r dev:bubble-server dev:monorepo dev:app",
     "dev:app": "vue-cli-service serve ./dev/main.js --open --host 0.0.0.0",
@@ -110,6 +111,7 @@
     "vuetify": "^2.6.7"
   },
   "jest": {
+    "testEnvironment": "jsdom",
     "setupFiles": [
       "jest-canvas-mock"
     ],
