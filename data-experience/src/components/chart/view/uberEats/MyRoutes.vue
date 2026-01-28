@@ -1,41 +1,43 @@
 <template>
   <div class="layout">
     <div class="controls-bar">
-      <div class="period-switch">
-        <button
-          v-for="p in ['week', 'month', 'total']"
-          :key="p"
-          class="switch-btn"
-          :class="{ active: mode === p }"
-          @click="setPeriodMode(p)"
-        >
-          {{ p === 'total' ? 'Uncompleted' : p.toUpperCase() }}
+      <button
+        class="switch-btn filters-btn"
+        :class="{ open: showFilters }"
+        @click="showFilters = !showFilters"
+      >
+        Filters
+        <span class="chevron">▾</span>
+      </button>
+    </div>
 
-          <span v-if="p === 'total'" class="info-wrapper">
-            <span class="info-icon">i</span>
-            <span class="tooltip">
-              These are all the trips that have not been completed successfully
-            </span>
-          </span>
-        </button>
+    <div v-if="showFilters" class="filters-panel">
+      <!-- Time range -->
+      <div class="filter-group">
+        <div class="filter-title">Time range</div>
+        <label>
+          From
+          <input type="date" v-model="filters.from" :min="minDate" :max="maxDate" />
+        </label>
+
+        <label>
+          To
+          <input type="date" v-model="filters.to" :min="minDate" :max="maxDate" />
+        </label>
       </div>
 
-      <div class="week-nav">
-        <button
-          class="nav-btn"
-          v-if="mode !== 'total'"
-          @click="prevPeriod"
-        >
-          ←
-        </button>
-        <div class="week-label">{{ periodLabel }}</div>
-        <button
-          class="nav-btn"
-          v-if="mode !== 'total'"
-          @click="nextPeriod"
-        >
-          →
-        </button>
+      <!-- Status -->
+      <div class="filter-group">
+        <div class="filter-title">Delivery status</div>
+        <label>
+          <input type="checkbox" v-model="filters.status.completed" />
+          Completed
+        </label>
+
+        <label>
+          <input type="checkbox" v-model="filters.status.uncompleted" />
+          Uncompleted
+        </label>
       </div>
     </div>
 
@@ -53,6 +55,32 @@
             Show delivery area
           </label>
         </div>
+        <!-- Map legend -->
+        <div class="map-legend">
+          <div class="legend-item">
+            <span class="legend-dot green"></span>
+            <span>Delivery accept point</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot blue"></span>
+            <span>Delivery start point</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-line"></span>
+            <span>Path from accept to start point</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-area"></span>
+            <span>Delivery area</span>
+          </div>
+        </div>
+        <div
+          v-if="sortedTrips.length > maxMapTrips"
+          class="map-warning"
+        >
+          Showing {{ maxMapTrips }} of {{ sortedTrips.length }} trips.
+          Please narrow your filters.
+        </div>
         <div ref="mapContainer" class="map-frame"></div>
       </div>
 
@@ -69,15 +97,15 @@
         </div>
 
         <div class="trip-list">
-          <div v-if="tripsFiltered.length === 0" class="no-data">
-            No trips available for this period.
+          <div v-if="sortedTrips.length === 0" class="no-data">
+            No trips available to show. Please adjust the filters.
           </div>
           <div
             v-else
-            v-for="(trip, index) in tripsFiltered"
+            v-for="(trip, index) in limitedTripsForList"
             :key="index"
             class="trip-item"
-            :class="{ selected: selectedTrips.includes(trip) }"
+            :class="{ selected: selectedTripsIds.has(trip._id) }"
             @click="selectTrip(trip)"
           >
             <div class="trip-header">
@@ -126,6 +154,8 @@ import { periodStore } from './store/periodStore'
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
 
+const MAX_MAP_TRIPS = 500
+
 export default {
   name: 'MyRoutes',
   mixins: [mixin],
@@ -139,7 +169,18 @@ export default {
     return {
       map: null,
       selectedTrips: [],
-      showDeliveryArea: true
+      showDeliveryArea: true,
+      showFilters: false,
+      filters: {
+        from: null,
+        to: null,
+        status: {
+          completed: true,
+          uncompleted: false
+        }
+      },
+      tripById: new Map(),
+      circleCache: new Map()
     }
   },
   computed: {
@@ -153,90 +194,111 @@ export default {
       return this.pipelineBlock.trips?.items ?? []
     },
 
+    // Set of selected trip IDs
+    selectedTripsIds() {
+      return new Set(this.selectedTrips.map(t => t._id))
+    },
+
+    // Limit trips for list display
+    limitedTripsForList() {
+      return this.sortedTrips.slice(0, MAX_MAP_TRIPS)
+    },
+
+    // Maximum trips allowed on map
+    maxMapTrips() {
+      return MAX_MAP_TRIPS
+    },
+
     // Map title based on mode
     mapTitle() {
-      return this.mode === 'week' || this.mode === 'month'
-        ? 'Map of Routes Completed'
-        : 'Map of Routes Uncompleted'
+      return 'Map of Routes'
     },
 
-    // Period label for display
-    periodLabel() {
-      if (this.mode === 'total') {
-        const { allTimeStart, allTimeEnd } = periodStore
+    // Minimum selectable date
+    minDate() {
+      return periodStore.allTimeStart
+        ? dayjs(periodStore.allTimeStart).format('YYYY-MM-DD')
+        : null
+    },
 
-        if (!allTimeStart || !allTimeEnd) {
-          return 'All time'
-        }
+    // Maximum selectable date
+    maxDate() {
+      return periodStore.allTimeEnd
+        ? dayjs(periodStore.allTimeEnd).format('YYYY-MM-DD')
+        : null
+    },
 
-        return `${dayjs(allTimeStart).format('DD.MM.YYYY')} – ${dayjs(allTimeEnd).format('DD.MM.YYYY')}`
+    // Whether any map filters are active
+    hasActiveMapFilters() {
+      const { from, to } = this.filters
+
+      return (
+        !!from ||
+        !!to
+      )
+    },
+
+    // Filtered trips based on user selections
+    filteredTrips() {
+      const { from, to, status } = this.filters
+
+      if (!from && !to && !status.completed && !status.uncompleted) {
+        return []
       }
-      if (periodStore.mode === 'month') return this.periodStart.format('MMMM YYYY')
-      return `${this.periodStart.format('DD.MM.YYYY')} – ${this.periodEnd.format('DD.MM.YYYY')}`
-    },
 
-    // Current period mode
-    mode: {
-      get() { return periodStore.mode },
-      set(v) { periodStore.mode = v }
-    },
+      const fromTs = from
+        ? dayjs(from).startOf('day').valueOf()
+        : null
 
-    // Period metadata
-    periodStart() {
-      return dayjs(periodStore.periodStart)
-    },
+      const toTs = to
+        ? dayjs(to).endOf('day').valueOf()
+        : null
 
-    // Period metadata
-    periodEnd() {
-      return dayjs(periodStore.periodEnd)
-    },
+      return this.trips.filter((trip) => {
+        // status filter
+        if (trip._isCompleted && !status.completed) return false
+        if (!trip._isCompleted && !status.uncompleted) return false
 
-    // Filtered trips based on period and mode
-    tripsFiltered() {
-      const startTs = this.periodStart.valueOf()
-      const endTs = this.periodEnd.valueOf()
+        // time filter
+        if (fromTs && trip._acceptTs < fromTs) return false
+        if (toTs && trip._acceptTs > toTs) return false
 
-      const selectedSet = new Set(this.selectedTrips.map(t => this.makeTripId(t)))
-
-      const result = this.trips.filter((t) => {
-        const status = t.deliveryStatus?.toLowerCase()
-
-        if (this.mode === 'total') {
-          return status !== 'completed'
-        }
-
-        if (status !== 'completed') return false
-
-        const ts = Date.parse(t.courierAcceptTimestampLocal)
-        return ts >= startTs && ts <= endTs
+        return true
       })
+    },
 
-      // Single sort (newest first + selected on top)
-      result.sort((a, b) => {
-        const aSel = selectedSet.has(this.makeTripId(a))
-        const bSel = selectedSet.has(this.makeTripId(b))
+    // Sorted trips: selected first, then by accept time desc
+    sortedTrips() {
+      const selectedSet = new Set(this.selectedTrips.map(t => t._id))
+
+      return [...this.filteredTrips].sort((a, b) => {
+        const aSel = selectedSet.has(a._id)
+        const bSel = selectedSet.has(b._id)
+
         if (aSel !== bSel) return aSel ? -1 : 1
 
-        return (
-          Date.parse(b.courierAcceptTimestampLocal) -
-          Date.parse(a.courierAcceptTimestampLocal)
-        )
+        return b._acceptTs - a._acceptTs
       })
+    },
 
-      return result
+    // Limit trips for map rendering
+    limitedTripsForMap() {
+      const trips = this.selectedTrips.length
+        ? this.selectedTrips
+        : this.sortedTrips
+
+      return trips.slice(0, MAX_MAP_TRIPS)
     },
 
     // GeoJSON for all routes
     routesGeoJson() {
-      const trips = this.selectedTrips.length
-        ? this.selectedTrips
-        : this.tripsFiltered
+      const trips = this.limitedTripsForMap
 
       const features = []
 
       // Create LineString and Point features for each trip
       trips.forEach((trip) => {
-        const id = this.makeTripId(trip)
+        const id = trip._id
 
         const startLng = +trip.courierAcceptTripLng
         const startLat = +trip.courierAcceptTripLat
@@ -280,61 +342,81 @@ export default {
 
     // GeoJSON for delivery area circles
     endRadiusGeoJson() {
-      const trips = this.selectedTrips.length
-        ? this.selectedTrips
-        : this.tripsFiltered
+      if (!this.showDeliveryArea) {
+        return { type: 'FeatureCollection', features: [] }
+      }
+
+      const trips = this.limitedTripsForMap
 
       return {
         type: 'FeatureCollection',
-        features: trips.map(trip =>
-          turf.circle(
-            [+trip.courierBegintripLng, +trip.courierBegintripLat],
-            Number(trip.dropoffDeliveryDistanceKm) * 1000,
-            {
-              units: 'meters',
-              steps: 32, // ⬅ was 64, visually identical, 2× faster
-              properties: { id: this.makeTripId(trip) + '_radius' }
-            }
-          )
-        )
+        features: trips.map(trip => this.getTripCircle(trip))
       }
     }
   },
   watch: {
     // React to trip selection changes
-    tripsFiltered() {
-      this.$nextTick(() => {
+    sortedTrips: {
+      handler() {
+        this.tripById.clear()
+        this.sortedTrips.forEach((t) => {
+          this.tripById.set(t._id, t)
+        })
+      },
+      immediate: true
+    },
+
+    // React to filter changes
+    filters: {
+      deep: true,
+      handler() {
+        this.selectedTrips = []
+
+        this.$nextTick(() => {
+          this.updateMapData()
+          this.zoomToVisibleTrips()
+        })
+      }
+    },
+
+    trips: {
+      immediate: true,
+      handler(trips) {
+        trips.forEach((trip) => {
+          // unique id (used everywhere)
+          if (!trip._id) {
+            trip._id = `${trip.courierAcceptTimestampLocal}_${trip.courierBegintripTimestampLocal}_${trip.courierBegintripToDropoffMiles}`
+          }
+
+          if (!trip._acceptTs) {
+            trip._acceptTs = Date.parse(trip.courierAcceptTimestampLocal)
+          }
+
+          // status flag
+          if (trip._isCompleted === undefined) {
+            trip._isCompleted = trip.deliveryStatus?.toLowerCase() === 'completed'
+          }
+        })
+      }
+    },
+
+    // React to selected trips changes
+    selectedTrips: {
+      handler() {
+        // Re-render the map data so the map shows only selected trips
         this.updateMapData()
-        this.zoomToVisibleTrips()
-      })
-    },
-
-    // React to trip selection changes
-    selectedTrips() {
-      this.$nextTick(() => {
-        this.updateMapData()
-        this.zoomToVisibleTrips()
-      })
-    },
-
-    // React to period changes
-    periodStart() {
-      this.onPeriodChanged()
-    },
-
-    // React to period changes
-    periodEnd() {
-      this.onPeriodChanged()
-    },
-
-    // React to mode changes
-    mode() {
-      this.onPeriodChanged()
+      },
+      deep: true
     },
 
     // Show/hide delivery area
     showDeliveryArea(val) {
       if (!this.map) return
+
+      if (this.map.getSource('endRadius')) {
+        // refresh data
+        this.map.getSource('endRadius').setData(this.endRadiusGeoJson)
+      }
 
       const visibility = val ? 'visible' : 'none'
 
@@ -354,8 +436,13 @@ export default {
     this.map = new maplibregl.Map({
       container: this.$refs.mapContainer,
       style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-      center: [7.447, 46.948],
-      zoom: 8
+      bounds: [
+        [-11.0, 34.5],
+        [31.5, 71.5]
+      ],
+      fitBoundsOptions: {
+        padding: 40
+      }
     })
 
     // Add sources and layers when map is ready
@@ -406,6 +493,26 @@ export default {
         type: 'geojson',
         data: this.endRadiusGeoJson
       })
+    },
+
+    /**
+     * Get or create cached delivery area circle for a trip
+     * @param trip
+     */
+    getTripCircle(trip) {
+      let circle = this.circleCache.get(trip._id)
+
+      if (!circle) {
+        circle = turf.circle(
+          [+trip.courierBegintripLng, +trip.courierBegintripLat],
+          Number(trip.dropoffDeliveryDistanceKm) * 1000,
+          { units: 'meters', steps: 32 }
+        )
+
+        this.circleCache.set(trip._id, circle)
+      }
+
+      return circle
     },
 
     /**
@@ -539,7 +646,7 @@ export default {
       // Click on route line hitbox
       this.map.on('click', 'routes-line-hitbox', (e) => {
         const id = e.features[0].id
-        const trip = this.tripsFiltered.find(t => this.makeTripId(t) === id)
+        const trip = this.tripById.get(id)
         if (!trip) return
 
         this.selectTrip(trip)
@@ -591,86 +698,9 @@ export default {
       const features = this.map.querySourceFeatures('routes')
       features.forEach((f) => {
         this.map.setFeatureState(
-          { source: 'routes', id: f.properties.id },
+          { source: 'routes', id: f.id },
           { selected: false }
         )
-      })
-    },
-
-    /**
-     * Handle period changes
-     */
-    onPeriodChanged() {
-      // Unselect everything
-      this.selectedTrips = []
-
-      // Force map redraw with full filtered dataset
-      this.$nextTick(() => {
-        this.updateMapData()
-      })
-    },
-
-    /**
-     * Set the period mode (week, month, total)
-     * @param mode 'week' | 'month' | 'total'
-     */
-    setPeriodMode(mode) {
-      this.selectedTrips = []
-      periodStore.setMode(mode)
-      if (mode === 'week') {
-        const monday = dayjs(periodStore.periodStart).startOf('week').add(1, 'day')
-        const sunday = monday.add(6, 'day').endOf('day')
-        periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
-      } else if (mode === 'month') {
-        const start = dayjs(periodStore.periodStart).startOf('month')
-        const end = start.endOf('month')
-        periodStore.setPeriod(start.toISOString(), end.toISOString())
-      }
-
-      this.$nextTick(() => {
-        this.updateMapData()
-      })
-    },
-
-    /**
-     * Navigate to previous period
-     */
-    prevPeriod() {
-      this.selectedTrips = []
-
-      if (periodStore.mode === 'week') {
-        const newStart = this.periodStart.subtract(7, 'day')
-        const newEnd = newStart.add(6, 'day').endOf('day')
-        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
-      } else if (periodStore.mode === 'month') {
-        const newStart = this.periodStart.subtract(1, 'month').startOf('month')
-        const newEnd = newStart.endOf('month')
-        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
-      }
-
-      this.$nextTick(() => {
-        this.updateMapData()
-      })
-    },
-
-    /**
-     * Navigate to next period
-     */
-    nextPeriod() {
-      this.selectedTrips = []
-
-      if (periodStore.mode === 'week') {
-        const newStart = this.periodStart.add(7, 'day')
-        const newEnd = newStart.add(6, 'day').endOf('day')
-        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
-      } else if (periodStore.mode === 'month') {
-        const newStart = this.periodStart.add(1, 'month').startOf('month')
-        const newEnd = newStart.endOf('month')
-        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
-      }
-
-      this.$nextTick(() => {
-        this.updateMapData()
       })
     },
 
@@ -703,28 +733,34 @@ export default {
     },
 
     /**
-     * Create a unique ID for a trip
-     * @param trip
-     */
-    makeTripId(trip) {
-      return `${trip.courierAcceptTimestampLocal}_${trip.courierBegintripTimestampLocal}_${trip.courierBegintripToDropoffMiles}`
-    },
-
-    /**
      * Select or unselect a trip
      * @param trip
      */
     selectTrip(trip) {
-      const id = this.makeTripId(trip)
+      if (!trip || !trip._id) {
+        console.warn('selectTrip called without trip', trip)
+        return
+      }
+
+      const id = trip._id
 
       const index = this.selectedTrips.findIndex(
-        t => this.makeTripId(t) === id
+        t => t._id === id
       )
 
-      if (index >= 0) {
+      const selected = index < 0
+
+      if (!selected) {
         this.selectedTrips.splice(index, 1)
       } else {
         this.selectedTrips.push(trip)
+      }
+
+      if (this.map?.getSource('routes')) {
+        this.map.setFeatureState(
+          { source: 'routes', id },
+          { selected }
+        )
       }
     }
   }
@@ -748,9 +784,75 @@ export default {
   gap: 12px;
 }
 
-.period-switch {
+.filters-btn {
   display: flex;
+  align-items: center;
   gap: 6px;
+}
+
+.filters-btn .chevron {
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
+
+/* Rotate chevron when open */
+.filters-btn.open .chevron {
+  transform: rotate(180deg);
+}
+
+.filters-panel {
+  margin: 8px 0 16px 0;
+  padding: 12px 16px;
+  border: 1px solid #bbbbbb99;
+  background: #fff;
+  box-shadow:
+    0 3px 1px -2px rgba(0,0,0,.2),
+    0 2px 2px 0 rgba(0,0,0,.19),
+    0 1px 5px 0 rgba(0,0,0,.17);
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 150px;
+  margin-right: 24px;
+}
+
+.filter-group:first-child label {
+  justify-content: space-between;
+}
+
+.filter-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.filter-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: #444;
+  cursor: pointer;
+}
+
+/* Date inputs */
+.filter-group input[type="date"] {
+  margin-left: 6px;
+  padding: 3px 6px;
+  border: 1px solid #bbb;
+  font-size: 0.8rem;
+}
+
+/* Checkbox alignment */
+.filter-group input[type="checkbox"] {
+  cursor: pointer;
 }
 
 .switch-btn {
@@ -767,10 +869,6 @@ export default {
   background: #e6e6e6;
   font-weight: 600;
   box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
-}
-
-.period-switch .switch-btn:nth-child(3) {
-  margin-left: 20px;
 }
 
 .week-nav {
@@ -832,6 +930,67 @@ export default {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.map-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 0.8rem;
+  color: #444;
+  margin-bottom: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+/* Dots */
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legend-dot.green {
+  background: #2ecc71;
+}
+
+.legend-dot.blue {
+  background: #3498db;
+}
+
+/* Line */
+.legend-line {
+  width: 18px;
+  height: 3px;
+  background: #4a4a4a;
+  opacity: 0.4;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* Area */
+.legend-area {
+  width: 14px;
+  height: 14px;
+  background: rgba(52, 152, 219, 0.2);
+  border: 1px solid rgba(52, 152, 219, 0.4);
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.map-warning {
+  font-size: 0.8rem;
+  color: #b45309;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  padding: 6px 10px;
+  margin-bottom: 6px;
 }
 
 .map-div {
@@ -1009,9 +1168,9 @@ export default {
     flex-direction: column;
   }
 
-  .period-switch {
-    justify-content: center;
-    margin-bottom: 8px;
+  .filters-panel {
+    flex-direction: column;
+    gap: 16px;
   }
 
   .week-nav {
