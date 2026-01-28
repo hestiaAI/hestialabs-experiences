@@ -84,21 +84,11 @@ describe('MyRoutes.vue UI & interactions', () => {
    * Basic rendering
    * ------------------------------------------- */
 
-  test('renders period switch buttons', () => {
+  test('renders Filters button', () => {
     const wrapper = mountComponent()
     const buttons = wrapper.findAll('.switch-btn')
-
-    expect(buttons.length).toBe(3)
-    expect(wrapper.text()).toContain('WEEK')
-    expect(wrapper.text()).toContain('MONTH')
-    expect(wrapper.text()).toContain('Uncompleted')
-  })
-
-  test('renders navigation buttons', () => {
-    const wrapper = mountComponent()
-    const navButtons = wrapper.findAll('.nav-btn')
-
-    expect(navButtons.length).toBe(2)
+    expect(buttons.length).toBe(1)
+    expect(wrapper.text()).toContain('Filters')
   })
 
   test('renders map container', () => {
@@ -112,35 +102,54 @@ describe('MyRoutes.vue UI & interactions', () => {
   })
 
   /* ---------------------------------------------
-   * Period switching
-   * ------------------------------------------- */
+ * Filters panel & checkboxes
+ * ------------------------------------------- */
 
-  test('clicking MONTH button does not crash', async () => {
+  test('Filters button toggles filter panel', async () => {
     const wrapper = mountComponent()
-    const monthBtn = wrapper.findAll('.switch-btn').at(1)
 
-    await expect(monthBtn.trigger('click')).resolves.not.toThrow()
+    // Panel should be hidden initially
+    expect(wrapper.find('.filters-panel').exists()).toBe(false)
+
+    // Click Filters button
+    const filtersBtn = wrapper.find('.switch-btn')
+    await filtersBtn.trigger('click')
+
+    // Panel should now exist
+    expect(wrapper.find('.filters-panel').exists()).toBe(true)
+
+    // Clicking again hides the panel
+    await filtersBtn.trigger('click')
+    expect(wrapper.find('.filters-panel').exists()).toBe(false)
   })
 
-  test('clicking UNCOMPLETED button does not crash', async () => {
+  test('Completed and Uncompleted checkboxes exist and are clickable', async () => {
     const wrapper = mountComponent()
-    const uncompletedBtn = wrapper.findAll('.switch-btn').at(2)
 
-    await expect(uncompletedBtn.trigger('click')).resolves.not.toThrow()
-  })
+    // Open the filters panel
+    const filtersBtn = wrapper.find('.switch-btn')
+    await filtersBtn.trigger('click')
 
-  /* ---------------------------------------------
-   * Navigation buttons
-   * ------------------------------------------- */
+    // Get all checkboxes
+    const allCheckboxes = wrapper.findAll('input[type="checkbox"]').wrappers
 
-  test('prev / next navigation buttons are clickable', async () => {
-    const wrapper = mountComponent()
-    const navButtons = wrapper.findAll('.nav-btn')
+    // Pick by parent label text
+    const completedCheckbox = allCheckboxes.find(c =>
+      c.element.parentElement.textContent.includes('Completed')
+    )
+    const uncompletedCheckbox = allCheckboxes.find(c =>
+      c.element.parentElement.textContent.includes('Uncompleted')
+    )
 
-    expect(navButtons.length).toBe(2)
+    expect(completedCheckbox).toBeTruthy()
+    expect(uncompletedCheckbox).toBeTruthy()
 
-    await navButtons.at(0).trigger('click')
-    await navButtons.at(1).trigger('click')
+    // Toggle checkboxes
+    await completedCheckbox.setChecked(false)
+    expect(wrapper.vm.filters.status.completed).toBe(false)
+
+    await uncompletedCheckbox.setChecked(true)
+    expect(wrapper.vm.filters.status.uncompleted).toBe(true)
   })
 
   /* ---------------------------------------------
