@@ -53,7 +53,7 @@ export function createTour({ onSwitchTab }) {
           // Make Shepherd wait for the next page to load
           window.__continueRoutesTour = () => tour.next()
 
-          // Click the button that navigates to MyRoutes
+          // Click the button that navigates to MyTrips
           const btn = document.getElementById('csv_courier_trips')
           if (btn) btn.click()
         }
@@ -62,7 +62,7 @@ export function createTour({ onSwitchTab }) {
   })
 
   /* ------------------------------
-      SECOND TAB: MyRoutes
+      SECOND TAB: MyTrips
   ------------------------------ */
 
   tour.addStep({

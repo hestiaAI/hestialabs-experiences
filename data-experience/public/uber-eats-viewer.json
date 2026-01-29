@@ -21,7 +21,7 @@
       "id": "csv_courier_trips",
       "customPipeline": "csv_courier_trips",
       "files": ["CourierLifetimeTripData"],
-      "visualization": "uberEats/MyRoutes.vue",
+      "visualization": "uberEats/MyTrips.vue",
       "title": "My Routes",
       "text": ""
     },

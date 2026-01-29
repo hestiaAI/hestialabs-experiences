@@ -3,7 +3,7 @@
  */
 
 import { shallowMount } from '@vue/test-utils'
-import MyRoutes from '@/components/chart/view/uberEats/MyRoutes.vue'
+import MyTrips from '@/components/chart/view/uberEats/MyTrips.vue'
 
 /* -----------------------------------------------------
  * Mocks
@@ -57,7 +57,7 @@ const mockValues = [
  * --------------------------------------------------- */
 
 function mountComponent(props = {}) {
-  return shallowMount(MyRoutes, {
+  return shallowMount(MyTrips, {
     props: {
       values: mockValues,
       mapboxToken: 'test-token',
@@ -75,7 +75,7 @@ function mountComponent(props = {}) {
  * Tests — UI & interactions
  * --------------------------------------------------- */
 
-describe('MyRoutes.vue UI & interactions', () => {
+describe('MyTrips.vue UI & interactions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })

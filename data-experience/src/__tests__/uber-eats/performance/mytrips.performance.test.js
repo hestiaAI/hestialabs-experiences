@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import MyRoutes from '@/components/chart/view/uberEats/MyRoutes.vue'
+import MyTrips from '@/components/chart/view/uberEats/MyTrips.vue'
 import { performance } from 'perf_hooks'
 
 // Helper to generate mock trips
@@ -27,14 +27,14 @@ jest.mock('@/components/chart/view/uberEats/store/periodStore', () => ({
   }
 }))
 
-describe('MyRoutes performance test', () => {
+describe('MyTrips performance test', () => {
   const testCounts = [100, 1000, 10000, 100000]
 
   testCounts.forEach((count) => {
     it(`Performance test with ${count} trips`, () => {
       const trips = generateMockTrips(count)
 
-      const wrapper = mount(MyRoutes, {
+      const wrapper = mount(MyTrips, {
         propsData: {
           data: {
             values: [

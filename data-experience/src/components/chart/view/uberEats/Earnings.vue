@@ -85,7 +85,12 @@ export default {
 
   data() {
     return {
-      showAvg: false
+      showAvg: false,
+      normalizedPaymentsCache: [],
+      earningsByDayCache: {},
+      earningsByYearCache: {},
+      avgEarningsByDayCache: {},
+      avgEarningsByYearCache: {}
     }
   },
 
@@ -136,6 +141,48 @@ export default {
       return this.block.payments?.items ?? []
     },
 
+    // Earnings grouped per day (cached)
+    chartData() {
+      if (this.mode === 'total') {
+        const src = this.showAvg ? this.avgEarningsByYearCache : this.earningsByYearCache
+        return Object.keys(src).map((year) => {
+          const entry = src[year] || { tips: 0, nonTips: 0 } // fallback
+          return { date: year, tips: entry.tips, nonTips: entry.nonTips }
+        })
+      }
+
+      return this.allDays.map((day) => {
+        const entry = this.showAvg
+          ? this.avgEarningsByDayCache[day]
+          : this.earningsByDayCache[day]
+        const safeEntry = entry || { tips: 0, nonTips: 0 } // fallback
+        return { date: day, tips: safeEntry.tips, nonTips: safeEntry.nonTips }
+      })
+    },
+
+    // Chart series data
+    chartSeries() {
+      return [
+        { name: 'Earnings (no tips)', data: this.chartData.map(d => Number(d.nonTips.toFixed(2))) },
+        { name: 'Tips', data: this.chartData.map(d => Number(d.tips.toFixed(2))) }
+      ]
+    },
+
+    // Chart options
+    chartOptions() {
+      const currency = this.payments[0]?.currencyCode || 'CHF'
+      return {
+        chart: { stacked: true, toolbar: { show: false }, animations: { enabled: true } },
+        dataLabels: { enabled: false },
+        plotOptions: { bar: { borderRadius: 4, columnWidth: '60%' } },
+        xaxis: { categories: this.chartData.map(d => d.date), labels: { rotate: -45 } },
+        yaxis: { labels: { formatter: val => `${currency} ${val.toFixed(0)}` } },
+        tooltip: { y: { formatter: val => `${currency} ${val.toFixed(2)}` } },
+        legend: { show: false },
+        colors: ['#2196f3', '#4caf50']
+      }
+    },
+
     // All days in the selected period as DD.MM.YYYY strings
     allDays() {
       const days = []
@@ -176,25 +223,16 @@ export default {
     earningsByDay() {
       const out = {}
 
-      // Pre-fill from allDays (authoritative keys)
       this.allDays.forEach((d) => {
         out[d] = { tips: 0, nonTips: 0 }
       })
 
-      this.payments.forEach((p) => {
-        const ts = Date.parse(p.recognizeTimestampLocal)
-        if (!ts) return
-
-        const key = this.formatDay(ts)
-        const bucket = out[key]
+      this.normalizedPaymentsCache.forEach((p) => {
+        const bucket = out[p.day]
         if (!bucket) return
 
-        const amount = Number(p.amountLocal || 0)
-        if ((p.category || '').toLowerCase() === 'tip') {
-          bucket.tips += amount
-        } else {
-          bucket.nonTips += amount
-        }
+        if (p.isTip) bucket.tips += p.amount
+        else bucket.nonTips += p.amount
       })
 
       return out
@@ -204,18 +242,11 @@ export default {
     earningsByYear() {
       const out = {}
 
-      this.payments.forEach((p) => {
-        const ts = Date.parse(p.recognizeTimestampLocal)
-        if (!ts) return
+      this.normalizedPaymentsCache.forEach((p) => {
+        if (!out[p.year]) out[p.year] = { tips: 0, nonTips: 0 }
 
-        const year = new Date(ts).getFullYear()
-        const amount = Number(p.amountLocal || 0)
-        const isTip = (p.category || '').toLowerCase() === 'tip'
-
-        if (!out[year]) out[year] = { tips: 0, nonTips: 0 }
-
-        if (isTip) out[year].tips += amount
-        else out[year].nonTips += amount
+        if (p.isTip) out[p.year].tips += p.amount
+        else out[p.year].nonTips += p.amount
       })
 
       return out
@@ -265,84 +296,30 @@ export default {
       }
 
       return out
-    },
+    }
+  },
+  watch: {
+    values: {
+      immediate: true,
+      handler() {
+        if (!this.values?.length) return
 
-    // Final chart dataset
-    chartData() {
-      if (this.mode === 'total') {
-        const src = this.showAvg
-          ? this.avgEarningsByYear
-          : this.earningsByYear
-
-        return Object.keys(src).map(year => ({
-          date: year, // X-axis label
-          tips: src[year].tips,
-          nonTips: src[year].nonTips
-        }))
-      }
-
-      return this.allDays.map((d) => {
-        const src = this.showAvg
-          ? this.avgEarningsPerDay[d]
-          : this.earningsByDay[d]
-
-        return { date: d, tips: src.tips, nonTips: src.nonTips }
-      })
-    },
-
-    // Chart series for ApexCharts
-    chartSeries() {
-      return [
-        {
-          name: 'Earnings (no tips)',
-          data: this.chartData.map(d => Number(d.nonTips.toFixed(2)))
-        },
-        {
-          name: 'Tips',
-          data: this.chartData.map(d => Number(d.tips.toFixed(2)))
-        }
-      ]
-    },
-
-    // Chart options for ApexCharts
-    chartOptions() {
-      const currency = this.payments[0]?.currencyCode || 'CHF'
-
-      return {
-        chart: {
-          stacked: true,
-          toolbar: { show: false },
-          animations: { enabled: true }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        plotOptions: {
-          bar: {
-            borderRadius: 4,
-            columnWidth: '60%'
+        // Normalize payments
+        this.normalizedPaymentsCache = this.payments.map((p) => {
+          const ts = Date.parse(p.recognizeTimestampLocal)
+          return {
+            day: this.formatDay(ts), // make sure to format day
+            year: new Date(ts).getFullYear(),
+            amount: Number(p.amountLocal || 0),
+            isTip: (p.category || '').toLowerCase() === 'tip'
           }
-        },
-        xaxis: {
-          categories: this.chartData.map(d => d.date),
-          labels: {
-            rotate: -45
-          }
-        },
-        yaxis: {
-          labels: {
-            formatter: val => `${currency} ${val.toFixed(0)}`
-          }
-        },
-        tooltip: {
-          y: {
-            formatter: val => `${currency} ${val.toFixed(2)}`
-          }
-        },
-        legend: {
-          show: false
-        },
-        colors: ['#2196f3', '#4caf50']
+        })
+
+        // Precompute earnings and averages
+        this.precomputeData()
+
+        // Redraw chart
+        this.drawChart()
       }
     }
   },
@@ -353,7 +330,10 @@ export default {
       window.__continueRoutesTour = null
     }
 
-    this.drawChart()
+    if (this.values?.length) {
+      this.precomputeData()
+      this.drawChart()
+    }
   },
   methods: {
     /**
@@ -367,6 +347,84 @@ export default {
         String(d.getMonth() + 1).padStart(2, '0') + '.' +
         d.getFullYear()
       )
+    },
+
+    /**
+     * Compute hours worked caches
+     */
+    computeHoursCache() {
+      const hoursDay = {}
+      const hoursYear = {}
+      this.shifts.forEach((s) => {
+        const startTs = Date.parse(s.begin)
+        const endTs = Date.parse(s.end)
+        if (!startTs || !endTs || endTs <= startTs) return
+        const day = this.formatDay(startTs)
+        const year = new Date(startTs).getFullYear()
+        hoursDay[day] = (hoursDay[day] || 0) + (endTs - startTs) / 3600000
+        hoursYear[year] = (hoursYear[year] || 0) + (endTs - startTs) / 3600000
+      })
+      this.hoursPerDayCache = hoursDay
+      this.hoursPerYearCache = hoursYear
+    },
+
+    /**
+     * Precompute earnings and averages caches
+     */
+    precomputeData() {
+      // Normalize payments
+      if (!this.normalizedPaymentsCache.length) {
+        this.normalizedPaymentsCache = this.payments.map((p) => {
+          const ts = Date.parse(p.recognizeTimestampLocal)
+          return {
+            day: this.formatDay(ts),
+            year: new Date(ts).getFullYear(),
+            amount: Number(p.amountLocal || 0),
+            isTip: (p.category || '').toLowerCase() === 'tip'
+          }
+        })
+      }
+
+      // Earnings by day/year
+      this.earningsByDayCache = {}
+      this.earningsByYearCache = {}
+
+      this.allDays.forEach((d) => { this.earningsByDayCache[d] = { tips: 0, nonTips: 0 } })
+
+      this.normalizedPaymentsCache.forEach((p) => {
+        if (!this.earningsByDayCache[p.day]) this.earningsByDayCache[p.day] = { tips: 0, nonTips: 0 }
+        if (!this.earningsByYearCache[p.year]) this.earningsByYearCache[p.year] = { tips: 0, nonTips: 0 }
+
+        if (p.isTip) {
+          this.earningsByDayCache[p.day].tips += p.amount
+          this.earningsByYearCache[p.year].tips += p.amount
+        } else {
+          this.earningsByDayCache[p.day].nonTips += p.amount
+          this.earningsByYearCache[p.year].nonTips += p.amount
+        }
+      })
+
+      this.computeHoursCache()
+
+      // Avg earnings caches
+      this.avgEarningsByDayCache = {}
+      this.avgEarningsByYearCache = {}
+
+      for (const d in this.earningsByDayCache) {
+        const e = this.earningsByDayCache[d]
+        const h = this.hoursPerDayCache[d] || 0
+        this.avgEarningsByDayCache[d] = h > 0
+          ? { tips: e.tips / h, nonTips: e.nonTips / h }
+          : { tips: 0, nonTips: 0 }
+      }
+
+      for (const y in this.earningsByYearCache) {
+        const e = this.earningsByYearCache[y]
+        const h = this.hoursPerYearCache[y] || 0
+        this.avgEarningsByYearCache[y] = h > 0
+          ? { tips: e.tips / h, nonTips: e.nonTips / h }
+          : { tips: 0, nonTips: 0 }
+      }
     },
 
     /**

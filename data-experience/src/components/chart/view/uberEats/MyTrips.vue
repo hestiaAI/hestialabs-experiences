@@ -87,7 +87,7 @@
       <!-- RIGHT SIDE — Selected Trips -->
       <div class="selected-routes">
         <div class="title-row">
-          <h3>Selected Routes</h3>
+          <h3>Selected Trips</h3>
           <button
             class="clear-btn"
             @click="clearMapSelection"
@@ -157,7 +157,7 @@ dayjs.extend(isSameOrBefore)
 const MAX_MAP_TRIPS = 500
 
 export default {
-  name: 'MyRoutes',
+  name: 'MyTrips',
   mixins: [mixin],
   props: {
     data: {
@@ -211,7 +211,7 @@ export default {
 
     // Map title based on mode
     mapTitle() {
-      return 'Map of Routes'
+      return 'Map of Trips in filtered range'
     },
 
     // Minimum selectable date
