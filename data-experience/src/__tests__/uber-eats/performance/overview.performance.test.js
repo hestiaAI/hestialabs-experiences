@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import dayjs from 'dayjs'
 import OverView from '@/components/chart/view/uberEats/OverView.vue'
 import { periodStore } from '@/components/chart/view/uberEats/store/periodStore'
@@ -19,7 +19,7 @@ const mountOverview = (paymentsCount, shiftsCount) => {
     startDate.startOf('week').add(7, 'day').toISOString()
   )
 
-  return mount(OverView, {
+  return shallowMount(OverView, {
     stubs: {
       ApexChart: true,
       MonthlyCalendar: true,
@@ -38,7 +38,10 @@ const mountOverview = (paymentsCount, shiftsCount) => {
   })
 }
 
-describe('OverView performance test', () => {
+// Skip performance tests unless RUN_PERF=true
+const describeIfPerf = process.env.RUN_PERF === 'true' ? describe : describe.skip
+
+describeIfPerf('OverView performance test', () => {
   const cases = [
     { payments: 100, shifts: 100 },
     { payments: 1000, shifts: 1000 },

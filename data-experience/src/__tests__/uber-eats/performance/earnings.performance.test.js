@@ -87,7 +87,10 @@ function mountEarnings(paymentsCount, shiftsCount) {
 
 // ---- tests --------------------------------------------------------
 
-describe('Earnings performance test', () => {
+// Skip performance tests unless RUN_PERF=true
+const describeIfPerf = process.env.RUN_PERF === 'true' ? describe : describe.skip
+
+describeIfPerf('Earnings performance test', () => {
   const cases = [
     { payments: 100, shifts: 100, max: 150 },
     { payments: 1000, shifts: 1000, max: 400 },

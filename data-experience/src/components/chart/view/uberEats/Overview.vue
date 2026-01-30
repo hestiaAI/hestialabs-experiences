@@ -128,6 +128,23 @@ export default {
     ApexChart: VueApexCharts
   },
   mixins: [mixin],
+  data() {
+    return {
+      // GLOBAL CACHES (built once)
+      shiftsByDayCache: {},
+      paymentsByDayCache: {},
+
+      // PERIOD CACHES (rebuilt on period change)
+      shiftsThisPeriodCache: [],
+      paymentsThisPeriodCache: [],
+      dailyStatsCache: {},
+      timelineSeriesCache: [],
+      paymentsByDayTotalCache: [],
+      top5DaysCache: [],
+
+      periodReady: false
+    }
+  },
   computed: {
     // periodStore period mode bindings
     mode: {
@@ -190,16 +207,7 @@ export default {
 
     // payments between start and end date
     paymentsInRange() {
-      if (this.mode === 'month') {
-        return this.payments.filter(p =>
-          dayjs(p.recognizeTimestampLocal).isSame(this.periodStart, 'month')
-        )
-      }
-
-      return this.filterByPeriod(
-        this.payments,
-        p => p.recognizeTimestampLocal
-      )
+      return this.paymentsThisPeriodCache
     },
 
     // raw trips CSV string
@@ -218,78 +226,26 @@ export default {
 
     // total earnings summed up
     totalEarnings() {
-      return this.paymentsInRange.reduce((s, p) => s + (Number(p.amountLocal) || 0), 0)
+      return this.paymentsThisPeriodCache.reduce((s, p) => s + (Number(p.amountLocal) || 0), 0)
     },
 
     // total hours from shifts (skip offline)
     totalHours() {
-      const minutes = this.shiftsThisPeriod.reduce((sum, s) => {
+      const minutes = this.shiftsThisPeriodCache.reduce((sum, s) => {
         if (s.earner_state === 'offline') return sum
-        const startTs = dayjs(s.begin_timestamp_utc).valueOf()
-        const endTs = dayjs(s.end_timestamp_utc).valueOf()
-        if (!startTs || !endTs || endTs < startTs) return sum
-        return sum + (endTs - startTs) / 60000
+        return sum + (s.endTs - s.beginTs) / 60000
       }, 0)
-
       return (minutes / 60).toFixed(1)
     },
 
     // payments & shifts grouped by day for calendar view
     dailyStatsByDate() {
-      const map = {}
-
-      // Earnings
-      this.paymentsInRange.forEach((p) => {
-        const key = dayjs(p.recognizeTimestampLocal).format('YYYY-MM-DD')
-        if (!map[key]) map[key] = { earnings: 0, minutes: 0 }
-        map[key].earnings += Number(p.amountLocal) || 0
-      })
-
-      // Working minutes (exclude offline)
-      Object.keys(this.shiftsByDay).forEach((date) => {
-        const key = dayjs(date).format('YYYY-MM-DD')
-        if (!map[key]) map[key] = { earnings: 0, minutes: 0 }
-        this.shiftsByDay[date].forEach((s) => {
-          if (s.earner_state === 'offline') return
-          map[key].minutes += (s.endTs - s.beginTs) / 60000
-        })
-      })
-
-      return map
+      return this.dailyStatsCache
     },
 
     // shifts grouped by day (YYYY-MM-DD)
     shiftsByDay() {
-      const map = {}
-
-      this.itemsComputed.forEach((s) => {
-        const begin = s.begin_timestamp_utc || s.beginTimestampUtc || s.begin_timestamp || s.begin
-        const finish = s.end_timestamp_utc || s.endTimestampUtc || s.end_timestamp || s.end
-        if (!begin || !finish) return
-
-        const beginTs = dayjs(begin).valueOf()
-        const endTs = dayjs(finish).valueOf()
-        if (!beginTs || !endTs || endTs < beginTs) return
-
-        const parts = this.splitOvernightShift({
-          beginTs,
-          endTs,
-          raw: s
-        })
-
-        parts.forEach((p) => {
-          const dayKey = dayjs(p.beginTs).format('YYYY-MM-DD')
-          if (!map[dayKey]) map[dayKey] = []
-
-          map[dayKey].push({
-            beginTs: p.beginTs,
-            endTs: p.endTs,
-            earner_state: p.raw?.state || p.raw?.earner_state
-          })
-        })
-      })
-
-      return map
+      return this.shiftsByDayCache
     },
 
     // filtered trips in the selected period
@@ -330,38 +286,12 @@ export default {
 
     // payments grouped by day with total amount and hours
     paymentsByDayTotal() {
-      const map = {}
-
-      this.payments.forEach((p) => {
-        const ts = dayjs(p.recognizeTimestampLocal).valueOf()
-        if (!ts) return
-
-        const key = dayjs(ts).format('YYYY-MM-DD')
-        if (!map[key]) map[key] = { amount: 0, minutes: 0 }
-
-        map[key].amount += Number(p.amountLocal) || 0
-      })
-
-      Object.keys(map).forEach((date) => {
-        const shifts = this.shiftsByDay[date] || []
-        shifts.forEach((s) => {
-          if (s.earner_state === 'offline') return
-          map[date].minutes += (s.endTs - s.beginTs) / 60000
-        })
-      })
-
-      return Object.entries(map)
-        .map(([date, v]) => ({
-          date,
-          amount: v.amount,
-          hours: Number((v.minutes / 60).toFixed(1))
-        }))
-        .sort((a, b) => b.amount - a.amount)
+      return this.paymentsByDayTotalCache
     },
 
     // 5 most earned days
     top5Days() {
-      return this.paymentsByDayTotal.slice(0, 5)
+      return this.top5DaysCache
     },
 
     // trips parsed from raw CSV if available (best-effort)
@@ -392,97 +322,38 @@ export default {
         }
       }
 
+      if (periodStore.mode === 'month') {
+        const base = dayjs(periodStore.periodStart || dayjs())
+        return {
+          start: base.startOf('month'),
+          end: base.endOf('month')
+        }
+      }
+
       const startStr = periodStore.periodStart
       const endStr = periodStore.periodEnd
 
       if (startStr && endStr) {
         return { start: dayjs(startStr), end: dayjs(endStr) }
       }
-      // default: current week (Monday..Sunday)
+
+      // fallback: current week
       const now = dayjs()
       const monday = now.startOf('week').add(1, 'day')
-      const mon = monday.day() === 1 ? monday : now.startOf('week').add(1, 'day')
-      const start = mon
-      const end = start.add(6, 'day').endOf('day')
-      return { start, end }
+      return {
+        start: monday,
+        end: monday.add(6, 'day').endOf('day')
+      }
     },
 
     // Shifts filtered for the time period & split overnight
     shiftsThisPeriod() {
-      const res = []
-      const { start, end } = this.periodRange
-
-      const startTs = start.valueOf()
-      const endTs = end.valueOf()
-
-      this.itemsComputed.forEach((s) => {
-        const begin = s.begin_timestamp_utc || s.beginTimestampUtc || s.begin_timestamp || s.begin
-        const finish = s.end_timestamp_utc || s.endTimestampUtc || s.end_timestamp || s.end
-        if (!begin || !finish) return
-        const startTsShift = dayjs(begin).valueOf()
-        const endTsShift = dayjs(finish).valueOf()
-        if (!startTsShift || !endTsShift) return
-        if (endTsShift < startTsShift) return
-
-        // split overnight
-        const parts = this.splitOvernightShift({ beginTs: startTsShift, endTs: endTsShift, raw: s })
-        parts.forEach((p) => {
-          // only include parts whose start lies inside the selected week
-          if (p.beginTs >= startTs && p.beginTs <= endTs) {
-            res.push({
-              ...p.raw,
-              begin_timestamp_utc: dayjs(p.beginTs).toISOString(),
-              end_timestamp_utc: dayjs(p.endTs).toISOString(),
-              earner_state: p.raw?.state || p.raw?.earner_state
-            })
-          }
-        })
-      })
-      return res
+      return this.shiftsThisPeriodCache
     },
 
     // Timeline chart series data
     timelineSeries() {
-      const colors = {
-        offline: '#cccccc',
-        open: '#4caf50',
-        enroute: '#ff9800',
-        ontrip: '#2196f3'
-      }
-
-      // Initialize series map
-      const seriesMap = {}
-      Object.keys(colors).forEach((state) => {
-        seriesMap[state] = {
-          name: state,
-          color: colors[state],
-          data: WEEKDAYS.map(day => ({ x: day, y: null }))
-        }
-      })
-
-      // Populate series data
-      this.shiftsThisPeriod.forEach((s) => {
-        const startTs = dayjs(s.begin_timestamp_utc).valueOf()
-        const endTs = dayjs(s.end_timestamp_utc).valueOf()
-        if (!startTs || !endTs) return
-
-        const date = new Date(startTs)
-        const dow = date.getDay() === 0 ? 6 : date.getDay() - 1
-        const dayLabel = WEEKDAYS[dow]
-
-        const startMin = date.getHours() * 60 + date.getMinutes()
-        const endMin = startMin + (endTs - startTs) / 60000
-
-        const state = (s.state || s.earner_state || 'open').toLowerCase()
-
-        seriesMap[state].data.push({
-          x: dayLabel,
-          y: [startMin, endMin],
-          meta: s
-        })
-      })
-
-      return Object.values(seriesMap)
+      return this.timelineSeriesCache
     },
 
     // Timeline chart options
@@ -510,8 +381,8 @@ export default {
         tooltip: {
           custom: ({ seriesIndex, dataPointIndex, w }) => {
             const d = w.config.series[seriesIndex].data[dataPointIndex]
-            const s = dayjs(d.meta.begin_timestamp_utc)
-            const e = dayjs(d.meta.end_timestamp_utc)
+            const s = dayjs(d.meta.beginTs)
+            const e = dayjs(d.meta.endTs)
             return `
               <div style="padding:8px;font-size:12px">
                 <strong>${w.config.series[seriesIndex].name.toUpperCase()}</strong><br/>
@@ -524,6 +395,67 @@ export default {
       }
     }
   },
+  watch: {
+    itemsComputed: {
+      immediate: true,
+      handler(items) {
+        const byDay = {}
+
+        items.forEach((s) => {
+          const beginTs = dayjs(
+            s.begin_timestamp_utc || s.begin
+          ).valueOf()
+          const endTs = dayjs(
+            s.end_timestamp_utc || s.end
+          ).valueOf()
+          if (!beginTs || !endTs || endTs <= beginTs) return
+
+          const start = dayjs(beginTs)
+          const end = dayjs(endTs)
+
+          const parts = start.isSame(end, 'day')
+            ? [{ beginTs, endTs }]
+            : [
+                { beginTs, endTs: start.endOf('day').valueOf() },
+                { beginTs: end.startOf('day').valueOf(), endTs }
+              ]
+
+          parts.forEach((p) => {
+            const key = dayjs(p.beginTs).format('YYYY-MM-DD')
+            if (!byDay[key]) byDay[key] = []
+            byDay[key].push({
+              beginTs: p.beginTs,
+              endTs: p.endTs,
+              earner_state: s.state || 'open',
+              raw: s
+            })
+          })
+        })
+
+        this.shiftsByDayCache = { ...byDay }
+        if (this.periodReady) {
+          this.recomputePeriodCaches()
+        }
+      }
+    },
+
+    payments: {
+      immediate: true,
+      handler(items) {
+        const byDay = {}
+        items.forEach((p) => {
+          const key = dayjs(p.recognizeTimestampLocal).format('YYYY-MM-DD')
+          if (!byDay[key]) byDay[key] = []
+          byDay[key].push(p)
+        })
+        this.paymentsByDayCache = byDay
+        this.recomputePeriodCaches()
+      }
+    },
+
+    periodStart: 'recomputePeriodCaches',
+    periodEnd: 'recomputePeriodCaches'
+  },
   mounted() {
     // Continue tutorial if needed
     if (window.__continueRoutesTour) {
@@ -531,6 +463,11 @@ export default {
       window.__continueRoutesTour = null
     }
     periodStore.initFromTrips(this.tripsParsed)
+
+    this.$nextTick(() => {
+      this.periodReady = true
+      this.recomputePeriodCaches()
+    })
 
     // Check if we need to start the tutorial
     const alreadyShown = localStorage.getItem('uberEatsTourShown')
@@ -583,6 +520,112 @@ export default {
 
       // Optional: redraw chart immediately
       this.redraw()
+    },
+
+    /**
+     * Recompute all period caches
+     */
+    recomputePeriodCaches() {
+      if (!this.periodReady) return
+      const { start, end } = this.periodRange
+      const startKey = start.format('YYYY-MM-DD')
+      const endKey = end.format('YYYY-MM-DD')
+
+      /* -------- shifts -------- */
+      this.shiftsThisPeriodCache = Object.keys(this.shiftsByDayCache)
+        .filter(d => d >= startKey && d <= endKey)
+        .flatMap(d => this.shiftsByDayCache[d])
+
+      /* -------- payments -------- */
+      this.paymentsThisPeriodCache = Object.keys(this.paymentsByDayCache)
+        .filter(d => d >= startKey && d <= endKey)
+        .flatMap(d => this.paymentsByDayCache[d])
+
+      /* -------- daily stats -------- */
+      const stats = {}
+      this.paymentsThisPeriodCache.forEach((p) => {
+        const k = dayjs(p.recognizeTimestampLocal).format('YYYY-MM-DD')
+        if (!stats[k]) stats[k] = { earnings: 0, minutes: 0 }
+        stats[k].earnings += Number(p.amountLocal) || 0
+      })
+
+      this.shiftsThisPeriodCache.forEach((s) => {
+        const k = dayjs(s.beginTs).format('YYYY-MM-DD')
+        if (!stats[k]) stats[k] = { earnings: 0, minutes: 0 }
+        if (s.earner_state !== 'offline') {
+          stats[k].minutes += (s.endTs - s.beginTs) / 60000
+        }
+      })
+
+      this.dailyStatsCache = { ...stats }
+
+      // Prepare ranked payments by day
+      const ranked = Object.entries(stats).map(([date, v]) => ({
+        date,
+        amount: v.earnings,
+        hours: +(v.minutes / 60).toFixed(1)
+      }))
+      ranked.sort((a, b) => b.amount - a.amount)
+
+      this.paymentsByDayTotalCache = ranked
+      this.top5DaysCache = ranked.slice(0, 5)
+
+      /* -------- timeline -------- */
+      this.timelineSeriesCache = this.buildTimeline(this.shiftsThisPeriodCache)
+    },
+
+    /**
+     * Build timeline chart series from shifts
+     */
+    buildTimeline(shifts) {
+      const colors = {
+        offline: '#ccc',
+        open: '#4caf50',
+        enroute: '#ff9800',
+        ontrip: '#2196f3'
+      }
+
+      const map = {}
+      Object.keys(colors).forEach((k) => {
+        map[k] = { name: k, color: colors[k], data: [] }
+      })
+
+      // Sort shifts into series
+      shifts.forEach((s) => {
+        const d = new Date(s.beginTs)
+        const dow = d.getDay() === 0 ? 6 : d.getDay() - 1
+        const start = d.getHours() * 60 + d.getMinutes()
+        const end = start + (s.endTs - s.beginTs) / 60000
+        const state = (s.state || s.earner_state || 'open').toLowerCase()
+
+        if (!map[state]) return
+
+        map[state].data.push({
+          x: WEEKDAYS[dow],
+          y: [start, end],
+          meta: s
+        })
+      })
+
+      const daysWithData = new Set()
+
+      Object.values(map).forEach((series) => {
+        series.data.forEach(p => daysWithData.add(p.x))
+      })
+
+      WEEKDAYS.forEach((day) => {
+        if (!daysWithData.has(day)) {
+          map.offline.data.push({
+            x: day,
+            y: [0, 0],
+            meta: { empty: true },
+            fillColor: 'transparent',
+            strokeColor: 'transparent'
+          })
+        }
+      })
+
+      return Object.values(map)
     },
 
     /**

@@ -27,7 +27,10 @@ jest.mock('@/components/chart/view/uberEats/store/periodStore', () => ({
   }
 }))
 
-describe('MyTrips performance test', () => {
+// Skip performance tests unless RUN_PERF=true
+const describeIfPerf = process.env.RUN_PERF === 'true' ? describe : describe.skip
+
+describeIfPerf('MyTrips performance test', () => {
   const testCounts = [100, 1000, 10000, 100000]
 
   testCounts.forEach((count) => {

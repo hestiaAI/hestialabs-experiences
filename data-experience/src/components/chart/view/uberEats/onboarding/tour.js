@@ -80,6 +80,13 @@ export function createTour({ onSwitchTab }) {
   })
 
   tour.addStep({
+    id: 'filters-btn',
+    attachTo: { element: '.filters-btn', on: 'bottom' },
+    text: 'Click this button to open the filters panel, where you can filter trips by status and time range.',
+    buttons: [{ text: 'Next', action: tour.next }]
+  })
+
+  tour.addStep({
     id: 'go-to-earnings',
     text: 'Finally, let’s look at your earnings overview.',
     buttons: [
