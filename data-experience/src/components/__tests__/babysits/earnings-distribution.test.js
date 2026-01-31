@@ -107,7 +107,7 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
 
   test('renders earnings distribution header', () => {
     const wrapper = mountEarningsDistribution()
-    expect(wrapper.text()).toContain('Earnings Distribution')
+    expect(wrapper.text()).toContain('Earnings by Time of Day')
   })
 
   /* ---------------------------------------------
@@ -220,6 +220,6 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
     await wrapper.findAll('.switch-btn').at(2).trigger('click')
 
     const label = wrapper.find('.week-label')
-    expect(label.text()).toBe('All time')
+    expect(label.text()).toBe('Entire Period')
   })
 })

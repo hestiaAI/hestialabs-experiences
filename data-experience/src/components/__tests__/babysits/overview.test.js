@@ -295,7 +295,7 @@ describe('OverView.vue (babysits) - UI & interactions', () => {
     await wrapper.findAll('.switch-btn').at(2).trigger('click')
 
     const label = wrapper.find('.week-label')
-    expect(label.text()).toBe('All time')
+    expect(label.text()).toBe('Entire Period')
   })
 
   /* ---------------------------------------------
