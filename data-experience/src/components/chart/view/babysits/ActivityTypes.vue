@@ -13,7 +13,7 @@
 
     <div class="week-nav">
       <button class="nav-btn" @click="prevWeek" v-if="currentPeriod !== 'total'">←</button>
-      <div class="week-label">{{ weekLabel }}</div>
+      <div class="week-label" :class="`mode-${currentPeriod}`">{{ weekLabel }}</div>
       <button class="nav-btn" @click="nextWeek" v-if="currentPeriod !== 'total'">→</button>
     </div>
 
@@ -669,9 +669,33 @@ export default {
 }
 
 .week-label {
-  font-weight: 700;
-  color: #333;
+  padding: 4px 12px;
+  font-weight: 800;
   font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #bbb;
+  width: 240px;
+}
+
+.week-label.mode-week {
+  background: #e3f2fd;
+  border-color: #2196f377;
+  color: #0d47a1;
+}
+
+.week-label.mode-month {
+  background: #e8f5e9;
+  border-color: #4caf5077;
+  color: #1b5e20;
+}
+
+.week-label.mode-total {
+  width: 280px;
+  background: #fff3e0;
+  border-color: #ff9800bb;
+  color: #e65100;
 }
 
 .period-switch {
