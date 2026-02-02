@@ -22,7 +22,7 @@
         >
           ←
         </button>
-        <div class="week-label">{{ periodLabel }}</div>
+        <div class="week-label" :class="`mode-${mode}`">{{ periodLabel }}</div>
         <button
           class="nav-btn"
           v-if="mode !== 'total'"
@@ -525,7 +525,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
 }
 
 .nav-btn {
@@ -554,11 +553,35 @@ export default {
 }
 
 .week-label {
-  font-weight: 700;
-  color: #333;
-  font-size: 1rem;
   width: 240px;
-  text-align: center;
+  padding: 4px 12px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #bbb;
+}
+
+.week-label.mode-week {
+  background: #e3f2fd;
+  border-color: #2196f377;
+  color: #0d47a1;
+}
+
+.week-label.mode-month {
+  background: #e8f5e9;
+  border-color: #4caf5077;
+  color: #1b5e20;
+}
+
+.week-label.mode-total {
+  width: 280px;
+  background: #fff3e0;
+  border-color: #ff9800bb;
+  color: #e65100;
 }
 
 .box {

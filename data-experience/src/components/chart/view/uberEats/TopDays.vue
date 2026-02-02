@@ -51,22 +51,44 @@ export default {
 .top-days-wrapper {
   width: 100%;
   text-align: center;
-  margin-top: 28px;
+  margin-top: 22px;
 }
 
 .top-days-table {
   width: 70%;
   border-collapse: collapse;
-  margin: 24px auto 54px auto;
+  margin: 22px auto 44px auto;
 }
 
 .top-days-table th,
 .top-days-table td {
-  border: 1px solid #aaa;
-  padding: 8px 12px;
+  padding: 12px 16px;
 }
 
-.top-days-table th {
-  background-color: #f2f2f2;
+.top-days-table th,
+.top-days-table tr:not(:last-child) {
+  border-bottom: 1px solid #ccc;
+}
+
+.top-days-table th:not(:last-child),
+.top-days-table td:not(:last-child) {
+  border-right: 1px solid #ccc;
+}
+
+.top-days-table thead {
+  background-color: #fff3e0;
+  font-weight: 600;
+}
+
+.top-days-table tbody tr:nth-child(odd) {
+  background-color: #fafafa;
+}
+
+.top-days-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.top-days-table tbody tr:last-child {
+  border-bottom: none;
 }
 </style>

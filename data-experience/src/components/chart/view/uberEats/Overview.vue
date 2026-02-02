@@ -20,7 +20,7 @@
         >
           ←
         </button>
-        <div class="week-label">{{ periodLabel }}</div>
+        <div class="week-label" :class="`mode-${mode}`">{{ periodLabel }}</div>
         <button
           class="nav-btn"
           v-if="mode !== 'total'"
@@ -54,7 +54,7 @@
       <div v-if="mode === 'week'" class="timeline-wrapper">
         <ApexChart
           type="rangeBar"
-          height="400"
+          height="396"
           :options="timelineOptions"
           :series="timelineSeries"
         />
@@ -364,7 +364,10 @@ export default {
           zoom: { enabled: false }
         },
         plotOptions: {
-          bar: { horizontal: true, rangeBarGroupRows: true }
+          bar: {
+            horizontal: true,
+            rangeBarGroupRows: true
+          }
         },
         xaxis: {
           min: 0,
@@ -453,6 +456,9 @@ export default {
       }
     },
 
+    mode() {
+      this.recomputePeriodCaches()
+    },
     periodStart: 'recomputePeriodCaches',
     periodEnd: 'recomputePeriodCaches'
   },
@@ -579,7 +585,7 @@ export default {
      */
     buildTimeline(shifts) {
       const colors = {
-        offline: '#ccc',
+        offline: '#9e9e9e',
         open: '#4caf50',
         enroute: '#ff9800',
         ontrip: '#2196f3'
@@ -618,9 +624,7 @@ export default {
           map.offline.data.push({
             x: day,
             y: [0, 0],
-            meta: { empty: true },
-            fillColor: 'transparent',
-            strokeColor: 'transparent'
+            meta: { empty: true }
           })
         }
       })
@@ -824,13 +828,34 @@ export default {
 
 .week-label {
   width: 240px;
-  font-weight: 700;
-  color: #333;
+  padding: 4px 12px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
   font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 8px;
+  border: 1px solid #bbb;
+}
+
+.week-label.mode-week {
+  background: #e3f2fd;
+  border-color: #2196f377;
+  color: #0d47a1;
+}
+
+.week-label.mode-month {
+  background: #e8f5e9;
+  border-color: #4caf5077;
+  color: #1b5e20;
+}
+
+.week-label.mode-total {
+  width: 280px;
+  background: #fff3e0;
+  border-color: #ff9800bb;
+  color: #e65100;
 }
 
 /* Base box style */
@@ -861,6 +886,7 @@ export default {
   grid-row: 3 / 4;
   display: flex;
   flex-direction: column;
+  padding: 16px 20px;
 }
 
 /* RIGHT COLUMN (bottom right) */
@@ -883,7 +909,7 @@ export default {
 .legend { display:flex; gap:12px; margin-top: 10px; justify-content: center; }
 .legend-item { display:flex; align-items:center; gap:8px; font-size: .9rem; }
 .color-box { width: 14px; height: 14px; border-radius: 3px; display:inline-block; }
-.color-box.offline { background-color: #cccccc; }
+.color-box.offline { background-color: #9e9e9e; }
 .color-box.open { background-color: #4caf50; }
 .color-box.enroute { background-color: #ff9800; }
 .color-box.ontrip { background-color: #2196f3; }
