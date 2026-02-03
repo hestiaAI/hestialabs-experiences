@@ -801,7 +801,7 @@ export default {
 }
 
 .filters-panel {
-  margin: 8px 0 16px 0;
+  margin: 0 0 16px 0;
   padding: 12px 16px;
   border: 1px solid #bbbbbb99;
   background: #fff;
@@ -871,31 +871,7 @@ export default {
   box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
 }
 
-.week-nav {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 32px;
-  justify-content: center;
-}
-
-.nav-btn {
-  padding: 4px 12px;
-  border: 1px solid #bbb;
-  border-radius: 0;
-  background: #fff;
-  cursor: pointer;
-  font-size: 1rem;
-
-  box-shadow: 0 1px 2px rgba(0,0,0,.15);
-
-  transition:
-    background 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.05s ease;
-}
-
-.nav-btn:hover, .switch-btn:hover {
+.switch-btn:hover {
   background: #f2f2f2;
   box-shadow:
     0 3px 1px -2px rgba(0,0,0,.25),
@@ -1171,11 +1147,6 @@ export default {
   .filters-panel {
     flex-direction: column;
     gap: 16px;
-  }
-
-  .week-nav {
-    justify-content: center;
-    margin-bottom: 12px;
   }
 
   .content-area {
