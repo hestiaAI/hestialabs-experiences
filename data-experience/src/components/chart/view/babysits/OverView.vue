@@ -6,9 +6,22 @@
         :key="p"
         :class="['switch-btn', { active: currentPeriod === p }]"
         @click="currentPeriod = p"
+        :title="getPeriodDescription(p)"
       >
         {{ p.toUpperCase() }}
       </button>
+    </div>
+
+    <div class="period-descriptions">
+      <div v-if="currentPeriod === 'week'" class="period-desc">
+        📅 Week view: See your shifts and key metrics for each day of the week
+      </div>
+      <div v-if="currentPeriod === 'month'" class="period-desc">
+        📆 Month view: Click on any day to view that week
+      </div>
+      <div v-if="currentPeriod === 'total'" class="period-desc">
+        📊 Total view: Your overall statistics and patterns across all time
+      </div>
     </div>
 
     <div class="week-nav">
@@ -68,6 +81,7 @@
           :month="calendarMonth"
           :shifts="shiftsThisPeriod"
           :payments="paymentsInRange"
+          :selectedDate="selectedCalendarDate"
           @select-day="onSelectDay"
         />
       </div>
@@ -143,7 +157,8 @@ export default {
       currentWeekStart: this.getMondayOf(dayjs()),
       currentPeriod: 'week',
       selectedJobType: '',
-      fromCalendarClick: false
+      fromCalendarClick: false,
+      selectedCalendarDate: null
     }
   },
 
@@ -682,8 +697,18 @@ export default {
       const d = dayjs(date)
 
       this.fromCalendarClick = true
+      this.selectedCalendarDate = date
       this.currentWeekStart = this.getMondayOf(d)
       this.currentPeriod = 'week'
+    },
+
+    getPeriodDescription(period) {
+      const descs = {
+        week: 'See your shifts and key metrics for each day of the week',
+        month: 'Click on any day to view that week',
+        total: 'Your overall statistics and patterns across all time'
+      }
+      return descs[period] || ''
     }
   }
 }
@@ -832,6 +857,21 @@ export default {
   position: absolute;
   display: flex;
   gap: 6px;
+}
+
+.period-descriptions {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  padding-top: 45px;
+  padding-left: 0;
+  margin-top: 0;
+}
+
+.period-desc {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 400;
+  margin: 0;
 }
 
 .switch-btn {

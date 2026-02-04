@@ -6,9 +6,22 @@
         :key="p"
         :class="['switch-btn', { active: currentPeriod === p }]"
         @click="currentPeriod = p"
+        :title="getPeriodDescription(p)"
       >
         {{ p.toUpperCase() }}
       </button>
+    </div>
+
+    <div class="period-descriptions">
+      <div v-if="currentPeriod === 'week'" class="period-desc">
+        📅 Week view: Earnings patterns by time of day (Morning/Day/Evening/Night)
+      </div>
+      <div v-if="currentPeriod === 'month'" class="period-desc">
+        📆 Month view: Earnings by time of day and filter by activity type
+      </div>
+      <div v-if="currentPeriod === 'total'" class="period-desc">
+        📊 Total view: Average earnings per hour by job activity type
+      </div>
     </div>
 
     <div class="week-nav">
@@ -843,6 +856,15 @@ export default {
       } else if (this.currentPeriod === 'week') {
         this.currentWeekStart = this.currentWeekStart.add(7, 'day')
       }
+    },
+
+    getPeriodDescription(period) {
+      const descs = {
+        week: 'Earnings patterns by time of day (Morning/Day/Evening/Night)',
+        month: 'Earnings by time of day and filter by activity type',
+        total: 'Average earnings per hour by job activity type'
+      }
+      return descs[period] || ''
     }
   }
 }
@@ -1003,6 +1025,18 @@ export default {
   position: absolute;
   display: flex;
   gap: 6px;
+}
+
+.period-descriptions {
+  margin-top: 45px;
+  margin-bottom: 12px;
+}
+
+.period-desc {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 400;
+  margin: 0;
 }
 
 .switch-btn {
