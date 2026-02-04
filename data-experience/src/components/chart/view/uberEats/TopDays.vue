@@ -50,8 +50,11 @@ export default {
 <style scoped>
 .top-days-wrapper {
   width: 100%;
-  text-align: center;
-  margin-top: 22px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px
 }
 
 .top-days-table {
@@ -62,7 +65,8 @@ export default {
 
 .top-days-table th,
 .top-days-table td {
-  padding: 12px 16px;
+  padding: 20px 24px;
+  text-align: center;
 }
 
 .top-days-table th,
@@ -90,5 +94,17 @@ export default {
 
 .top-days-table tbody tr:last-child {
   border-bottom: none;
+}
+
+@media (max-width: 768px) {
+  .top-days-table th,
+  .top-days-table td {
+    padding: 12px 12px;
+    text-align: center;
+  }
+
+  .top-days-table {
+    width: 90%;
+  }
 }
 </style>

@@ -94,6 +94,16 @@
         <p><strong>Average delivery time</strong></p>
         <p>{{ avgDeliveryTimeFormatted }}</p>
       </div>
+
+      <div class="box box5" v-if="mode === 'total'">
+        <p class="box5-title"><strong>Most Used Devices</strong></p>
+        <ApexChart
+          type="bar"
+          height="200"
+          :options="deviceChartOptions"
+          :series="deviceChartSeries"
+        />
+      </div>
     </div>
 
   </div>
@@ -197,6 +207,8 @@ export default {
 
     // online shifts array (raw objects from CSV)
     itemsComputed() {
+      console.log(this.block.online)
+      console.log(this.block.payments)
       return this.block.online?.items ?? []
     },
 
@@ -395,6 +407,57 @@ export default {
           }
         },
         legend: { show: false }
+      }
+    },
+
+    // Count devices only for total mode
+    deviceCounts() {
+      if (!this.tripsParsed || !this.tripsParsed.length) return {}
+      const counts = {}
+      this.tripsParsed.forEach((t) => {
+        const device = t.courierDevice || 'Unknown'
+        counts[device] = (counts[device] || 0) + 1
+      })
+      return counts
+    },
+
+    // Prepare ApexChart series
+    deviceChartSeries() {
+      const top3 = Object.entries(this.deviceCounts)
+        .sort((a, b) => b[1] - a[1]) // sort by count desc
+        .slice(0, 3)
+        .map(([_, count]) => count)
+
+      return [
+        { name: 'Deliveries', data: top3 }
+      ]
+    },
+
+    // Prepare ApexChart options
+    deviceChartOptions() {
+      const top3 = Object.entries(this.deviceCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([device]) => device)
+      return {
+        chart: {
+          type: 'bar',
+          toolbar: { show: false }
+        },
+        plotOptions: { bar: { horizontal: true, barHeight: '50%' } },
+        dataLabels: {
+          enabled: true,
+          offsetX: 4,
+          style: {
+            colors: ['#000']
+          },
+          formatter: val => val,
+          textAnchor: 'start'
+        },
+        xaxis: {
+          categories: top3
+        },
+        yaxis: {}
       }
     }
   },
@@ -889,6 +952,10 @@ export default {
   padding: 16px 20px;
 }
 
+.box2 div {
+  height: 100%;
+}
+
 /* RIGHT COLUMN (bottom right) */
 .right-column {
   grid-column: 2 / 3;
@@ -897,12 +964,28 @@ export default {
 
 .box3,
 .box4 {
+  margin-bottom: 16px;
+}
+
+.box3,
+.box4,
+.box5 {
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: left;
-  padding-top: 28px;
-  margin-bottom: 16px;
+  padding-top: 16px;
+}
+
+.box3 p,
+.box4 p {
+  margin: 8px 0;
+}
+
+.box5-title {
+  text-align: center;
+  margin: 0;
+  margin-top: 8px;
 }
 
 /* legend */
