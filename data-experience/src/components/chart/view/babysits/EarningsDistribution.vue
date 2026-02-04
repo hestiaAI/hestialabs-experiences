@@ -1,15 +1,23 @@
 <template>
   <div class="layout-container">
-    <div class="period-switch">
-      <button
-        v-for="p in ['week','month','total']"
-        :key="p"
-        :class="['switch-btn', { active: currentPeriod === p }]"
-        @click="currentPeriod = p"
-        :title="getPeriodDescription(p)"
-      >
-        {{ p.toUpperCase() }}
-      </button>
+    <div class="top-bar">
+      <div class="period-switch">
+        <button
+          v-for="p in ['week','month','total']"
+          :key="p"
+          :class="['switch-btn', { active: currentPeriod === p }]"
+          @click="currentPeriod = p"
+          :title="getPeriodDescription(p)"
+        >
+          {{ p.toUpperCase() }}
+        </button>
+      </div>
+
+      <div class="week-nav">
+        <button class="nav-btn" @click="prevWeek" v-if="currentPeriod !== 'total'">←</button>
+        <div class="week-label" :class="`mode-${currentPeriod}`">{{ weekLabel }}</div>
+        <button class="nav-btn" @click="nextWeek" v-if="currentPeriod !== 'total'">→</button>
+      </div>
     </div>
 
     <div class="period-descriptions">
@@ -22,12 +30,6 @@
       <div v-if="currentPeriod === 'total'" class="period-desc">
         📊 Total view: Average earnings per hour by job activity type
       </div>
-    </div>
-
-    <div class="week-nav">
-      <button class="nav-btn" @click="prevWeek" v-if="currentPeriod !== 'total'">←</button>
-      <div class="week-label" :class="`mode-${currentPeriod}`">{{ weekLabel }}</div>
-      <button class="nav-btn" @click="nextWeek" v-if="currentPeriod !== 'total'">→</button>
     </div>
 
     <div v-if="currentPeriod === 'total'" class="total-layout">
@@ -1022,7 +1024,6 @@ export default {
 }
 
 .period-switch {
-  position: absolute;
   display: flex;
   gap: 6px;
 }
@@ -1209,6 +1210,33 @@ export default {
   line-height: 1.4;
   max-width: 720px;
 }
+
+/* Top bar: align period switch and week-nav in one row */
+.top-bar {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.top-bar .period-switch {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 0;
+}
+
+.top-bar .week-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 0;
+}
+
+.period-descriptions { margin-top: 0; margin-bottom: 12px; }
 
 @media (max-width: 768px) {
   .layout-container {
