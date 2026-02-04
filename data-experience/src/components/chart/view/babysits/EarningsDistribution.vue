@@ -770,7 +770,8 @@ export default {
         plotOptions: {
           bar: {
             horizontal: true,
-            borderRadius: 6
+            borderRadius: 6,
+            barHeight: '90%'
           }
         },
         xaxis: {
@@ -786,6 +787,10 @@ export default {
         },
         dataLabels: {
           enabled: true,
+          style: {
+            fontSize: '14px',
+            fontWeight: 'bold'
+          },
           formatter: val => `${val} ${this.currency}/h`
         },
         tooltip: {
