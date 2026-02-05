@@ -437,8 +437,8 @@ export default {
       container: this.$refs.mapContainer,
       style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
       bounds: [
-        [-11.0, 34.5],
-        [31.5, 71.5]
+        [5.9559, 45.8179],
+        [10.4920, 47.8084]
       ],
       fitBoundsOptions: {
         padding: 40

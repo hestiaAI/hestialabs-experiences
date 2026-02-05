@@ -1,40 +1,35 @@
 <template>
   <div class="earnings-view">
     <div class="controls-bar">
-      <!-- FILTERS BUTTON -->
-      <button
-        class="switch-btn filters-btn"
-        :class="{ open: showFilters }"
-        @click="showFilters = !showFilters"
-      >
-        Filters
-        <span class="chevron">▾</span>
-      </button>
-    </div>
+      <!-- PERIOD MODE SWITCH -->
+      <div class="period-switch">
+        <button
+          v-for="p in ['week', 'month', 'total']"
+          :key="p"
+          :class="['switch-btn', { active: mode === p }]"
+          @click="setPeriodMode(p)"
+        >
+          {{ p.toUpperCase() }}
+        </button>
+      </div>
 
-    <div v-if="showFilters" class="filters-panel">
-      <div class="filter-group">
-        <div class="filter-title">Time range</div>
-
-        <label>
-          From
-          <input
-            type="date"
-            v-model="filters.from"
-            :min="minDate"
-            :max="maxDate"
-          />
-        </label>
-
-        <label>
-          To
-          <input
-            type="date"
-            v-model="filters.to"
-            :min="minDate"
-            :max="maxDate"
-          />
-        </label>
+      <!-- WEEK / MONTH NAVIGATION -->
+      <div class="week-nav">
+        <button
+          class="nav-btn"
+          v-if="mode !== 'total'"
+          @click="prevPeriod"
+        >
+          ←
+        </button>
+        <div class="week-label" :class="`mode-${mode}`">{{ periodLabel }}</div>
+        <button
+          class="nav-btn"
+          v-if="mode !== 'total'"
+          @click="nextPeriod"
+        >
+          →
+        </button>
       </div>
     </div>
 
@@ -53,12 +48,6 @@
         </div>
       </div>
       <div class="chart-container">
-        <div
-          v-if="chartData.every(d => d.tips === 0 && d.nonTips === 0)"
-          class="no-data-box"
-        >
-          No data available in the selected period. Please adjust the filters.
-        </div>
         <ApexChart
           type="bar"
           height="350"
@@ -97,38 +86,44 @@ export default {
   data() {
     return {
       showAvg: false,
-
-      showFilters: false,
-      filters: {
-        from: null,
-        to: null
-      },
-
       normalizedPaymentsCache: [],
       earningsByDayCache: {},
-      earningsByMonthCache: {},
       earningsByYearCache: {},
       avgEarningsByDayCache: {},
-      avgEarningsByMonthCache: {},
       avgEarningsByYearCache: {}
     }
   },
 
   computed: {
-    // Start of the selected period
-    activeFromTs() {
-      if (this.filters.from) {
-        return dayjs(this.filters.from).startOf('day').valueOf()
-      }
-      return null
+    // Period mode metadata
+    mode: {
+      get() { return periodStore.mode },
+      set(v) { periodStore.mode = v }
     },
 
-    // End of the selected period
-    activeToTs() {
-      if (this.filters.to) {
-        return dayjs(this.filters.to).endOf('day').valueOf()
+    // Period start as dayjs object
+    periodStart() {
+      return dayjs(periodStore.periodStart)
+    },
+
+    // Period end as dayjs object
+    periodEnd() {
+      return dayjs(periodStore.periodEnd)
+    },
+
+    // Period label for display
+    periodLabel() {
+      if (this.mode === 'total') {
+        const { allTimeStart, allTimeEnd } = periodStore
+
+        if (!allTimeStart || !allTimeEnd) {
+          return 'All time'
+        }
+
+        return `${dayjs(allTimeStart).format('DD.MM.YYYY')} – ${dayjs(allTimeEnd).format('DD.MM.YYYY')}`
       }
-      return null
+      if (this.mode === 'month') return this.periodStart.format('MMMM YYYY')
+      return `${this.periodStart.format('DD.MM')} – ${this.periodEnd.format('DD.MM.YYYY')}`
     },
 
     // Uber Eats specific block
@@ -146,134 +141,23 @@ export default {
       return this.block.payments?.items ?? []
     },
 
-    // Payments filtered by date range
-    filteredPayments() {
-      const { activeFromTs, activeToTs } = this
-      if (!activeFromTs && !activeToTs) return this.payments
-
-      return this.payments.filter((p) => {
-        const ts = Date.parse(p.recognizeTimestampLocal)
-        if (activeFromTs && ts < activeFromTs) return false
-        if (activeToTs && ts > activeToTs) return false
-        return true
-      })
-    },
-
-    // Shifts filtered by date range
-    filteredShifts() {
-      const { activeFromTs, activeToTs } = this
-      if (!activeFromTs && !activeToTs) return this.shifts
-
-      return this.shifts.filter((s) => {
-        const ts = Date.parse(s.begin)
-        if (activeFromTs && ts < activeFromTs) return false
-        if (activeToTs && ts > activeToTs) return false
-        return true
-      })
-    },
-
-    // Minimum selectable date for filters
-    minDate() {
-      return periodStore.allTimeStart
-        ? dayjs(periodStore.allTimeStart).format('YYYY-MM-DD')
-        : null
-    },
-
-    // Maximum selectable date for filters
-    maxDate() {
-      return periodStore.allTimeEnd
-        ? dayjs(periodStore.allTimeEnd).format('YYYY-MM-DD')
-        : null
-    },
-
-    // Range in days for the selected period
-    rangeInDays() {
-      if (!this.activeFromTs || !this.activeToTs) return 0
-      return Math.ceil((this.activeToTs - this.activeFromTs) / 86400000)
-    },
-
-    // Yearly view (>366 days)
-    isYearlyView() {
-      return this.rangeInDays > 366
-    },
-
-    // Monthly view (31-366 days)
-    isMonthlyView() {
-      return this.rangeInDays > 30 && this.rangeInDays <= 366
-    },
-
-    // Earnings grouped per day/month/year for chart
+    // Earnings grouped per day (cached)
     chartData() {
-      const from = this.activeFromTs
-      const to = this.activeToTs
-
-      // Helper: only include entries within filter
-      const inRange = (tsOrKey) => {
-        if (!from || !to) return true
-
-        // tsOrKey can be YYYY-MM-DD string, YYYY-MM, or YYYY
-        if (typeof tsOrKey === 'string') {
-          if (tsOrKey.includes('-')) {
-            // month
-            const monthStart = dayjs(tsOrKey, 'YYYY-MM').startOf('month').valueOf()
-            const monthEnd = dayjs(tsOrKey, 'YYYY-MM').endOf('month').valueOf()
-            return monthEnd >= from && monthStart <= to
-          } else {
-            // year
-            const yearStart = dayjs(tsOrKey, 'YYYY').startOf('year').valueOf()
-            const yearEnd = dayjs(tsOrKey, 'YYYY').endOf('year').valueOf()
-            return yearEnd >= from && yearStart <= to
-          }
-        }
-
-        // fallback: tsOrKey is day string DD.MM.YYYY
-        const ts = dayjs(tsOrKey, 'DD.MM.YYYY').valueOf()
-        return ts >= from && ts <= to
-      }
-
-      // YEARLY
-      if (this.isYearlyView) {
+      if (this.mode === 'total') {
         const src = this.showAvg ? this.avgEarningsByYearCache : this.earningsByYearCache
-        return Object.keys(src)
-          .filter(inRange)
-          .sort()
-          .map((year) => {
-            const e = src[year] || { tips: 0, nonTips: 0 }
-            return {
-              date: String(year),
-              tips: e.tips,
-              nonTips: e.nonTips
-            }
-          })
-      }
-
-      // MONTHLY
-      if (this.isMonthlyView) {
-        const src = this.showAvg ? this.avgEarningsByMonthCache : this.earningsByMonthCache
-        return this.allMonths
-          .filter(inRange)
-          .map((m) => {
-            const e = src[m] || { tips: 0, nonTips: 0 }
-            return {
-              date: dayjs(m, 'YYYY-MM').format('MMM YYYY'),
-              tips: e.tips,
-              nonTips: e.nonTips
-            }
-          })
-      }
-
-      // DAILY
-      return this.allDays
-        .filter(inRange)
-        .map((day) => {
-          const e = this.showAvg ? this.avgEarningsByDayCache[day] : this.earningsByDayCache[day]
-          const safe = e || { tips: 0, nonTips: 0 }
-          return {
-            date: day,
-            tips: safe.tips,
-            nonTips: safe.nonTips
-          }
+        return Object.keys(src).map((year) => {
+          const entry = src[year] || { tips: 0, nonTips: 0 } // fallback
+          return { date: year, tips: entry.tips, nonTips: entry.nonTips }
         })
+      }
+
+      return this.allDays.map((day) => {
+        const entry = this.showAvg
+          ? this.avgEarningsByDayCache[day]
+          : this.earningsByDayCache[day]
+        const safeEntry = entry || { tips: 0, nonTips: 0 } // fallback
+        return { date: day, tips: safeEntry.tips, nonTips: safeEntry.nonTips }
+      })
     },
 
     // Chart series data
@@ -288,7 +172,8 @@ export default {
     chartOptions() {
       const currency = this.payments[0]?.currencyCode || 'CHF'
       return {
-        chart: { stacked: true, toolbar: { show: false }, animations: { enabled: true } },
+        chart: { stacked: true, toolbar: { show: false }, animations: { enabled: true }, dropShadow: { enabled: false } },
+        states: { hover: { filter: { type: 'none' } }, active: { filter: { type: 'none' } } },
         dataLabels: { enabled: false },
         plotOptions: { bar: { borderRadius: 4, columnWidth: '60%' } },
         xaxis: { categories: this.chartData.map(d => d.date), labels: { rotate: -45 } },
@@ -299,47 +184,21 @@ export default {
       }
     },
 
-    // All months in the selected period as YYYY-MM strings
-    allMonths() {
-      let start = dayjs(this.activeFromTs).startOf('month')
-      const end = dayjs(this.activeToTs).endOf('month')
-
-      const months = []
-
-      while (start.isBefore(end) || start.isSame(end, 'month')) {
-        months.push(start.format('YYYY-MM'))
-        start = start.add(1, 'month')
-      }
-
-      return months
-    },
-
     // All days in the selected period as DD.MM.YYYY strings
     allDays() {
-      let startTs = this.activeFromTs
-      let endTs = this.activeToTs
-
-      // fallback: full data range
-      if (!startTs || !endTs) {
-        const ts = this.normalizedPaymentsCache.map(p =>
-          dayjs(p.day, 'DD.MM.YYYY').valueOf()
-        )
-
-        if (!ts.length) return []
-
-        startTs = Math.min(...ts)
-        endTs = Math.max(...ts)
-      }
-
       const days = []
+      let curTs = this.periodStart.valueOf()
+      const endTs = this.periodEnd.valueOf()
+
       const ONE_DAY = 86400000
 
-      let cur = dayjs(startTs).startOf('day').valueOf()
-      const end = dayjs(endTs).endOf('day').valueOf()
-
-      while (cur <= end) {
-        days.push(this.formatDay(cur))
-        cur += ONE_DAY
+      while (curTs <= endTs) {
+        const d = new Date(curTs)
+        const dd = String(d.getDate()).padStart(2, '0')
+        const mm = String(d.getMonth() + 1).padStart(2, '0')
+        const yyyy = d.getFullYear()
+        days.push(`${dd}.${mm}.${yyyy}`)
+        curTs += ONE_DAY
       }
 
       return days
@@ -447,7 +306,7 @@ export default {
         if (!this.values?.length) return
 
         // Normalize payments
-        this.normalizedPaymentsCache = this.filteredPayments.map((p) => {
+        this.normalizedPaymentsCache = this.payments.map((p) => {
           const ts = Date.parse(p.recognizeTimestampLocal)
           return {
             day: this.formatDay(ts), // make sure to format day
@@ -456,9 +315,6 @@ export default {
             isTip: (p.category || '').toLowerCase() === 'tip'
           }
         })
-
-        // Clear hours cache
-        this.normalizedPaymentsCache = []
 
         // Precompute earnings and averages
         this.precomputeData()
@@ -474,6 +330,8 @@ export default {
       window.__continueRoutesTour()
       window.__continueRoutesTour = null
     }
+
+    this.setPeriodMode(this.mode)
 
     if (this.values?.length) {
       this.precomputeData()
@@ -500,7 +358,7 @@ export default {
     computeHoursCache() {
       const hoursDay = {}
       const hoursYear = {}
-      this.filteredShifts.forEach((s) => {
+      this.shifts.forEach((s) => {
         const startTs = Date.parse(s.begin)
         const endTs = Date.parse(s.end)
         if (!startTs || !endTs || endTs <= startTs) return
@@ -517,100 +375,114 @@ export default {
      * Precompute earnings and averages caches
      */
     precomputeData() {
-      this.normalizedPaymentsCache = this.filteredPayments.map((p) => {
-        const ts = Date.parse(p.recognizeTimestampLocal)
+      // Normalize payments
+      if (!this.normalizedPaymentsCache.length) {
+        this.normalizedPaymentsCache = this.payments.map((p) => {
+          const ts = Date.parse(p.recognizeTimestampLocal)
+          return {
+            day: this.formatDay(ts),
+            year: new Date(ts).getFullYear(),
+            amount: Number(p.amountLocal || 0),
+            isTip: (p.category || '').toLowerCase() === 'tip'
+          }
+        })
+      }
 
-        return {
-          ts,
-          day: this.formatDay(ts),
-          month: dayjs(ts).format('YYYY-MM'),
-          year: new Date(ts).getFullYear(),
-          amount: Number(p.amountLocal || 0),
-          isTip: (p.category || '').toLowerCase() === 'tip'
-        }
-      })
-
+      // Earnings by day/year
       this.earningsByDayCache = {}
-      this.earningsByMonthCache = {}
       this.earningsByYearCache = {}
 
-      this.avgEarningsByDayCache = {}
-      this.avgEarningsByMonthCache = {}
-      this.avgEarningsByYearCache = {}
-
-      const hoursByDay = {}
-      const hoursByMonth = {}
-      const hoursByYear = {}
-
-      this.filteredShifts.forEach((s) => {
-        const startTs = Date.parse(s.begin)
-        const endTs = Date.parse(s.end)
-        if (!startTs || !endTs || endTs <= startTs) return
-
-        const hours = (endTs - startTs) / 3600000
-
-        const day = this.formatDay(startTs)
-        const month = dayjs(startTs).format('YYYY-MM')
-        const year = new Date(startTs).getFullYear()
-
-        hoursByDay[day] = (hoursByDay[day] || 0) + hours
-        hoursByMonth[month] = (hoursByMonth[month] || 0) + hours
-        hoursByYear[year] = (hoursByYear[year] || 0) + hours
-      })
+      this.allDays.forEach((d) => { this.earningsByDayCache[d] = { tips: 0, nonTips: 0 } })
 
       this.normalizedPaymentsCache.forEach((p) => {
-        // DAY
-        if (!this.earningsByDayCache[p.day]) {
-          this.earningsByDayCache[p.day] = { tips: 0, nonTips: 0 }
-        }
-
-        // MONTH
-        if (!this.earningsByMonthCache[p.month]) {
-          this.earningsByMonthCache[p.month] = { tips: 0, nonTips: 0 }
-        }
-
-        // YEAR
-        if (!this.earningsByYearCache[p.year]) {
-          this.earningsByYearCache[p.year] = { tips: 0, nonTips: 0 }
-        }
+        if (!this.earningsByDayCache[p.day]) this.earningsByDayCache[p.day] = { tips: 0, nonTips: 0 }
+        if (!this.earningsByYearCache[p.year]) this.earningsByYearCache[p.year] = { tips: 0, nonTips: 0 }
 
         if (p.isTip) {
           this.earningsByDayCache[p.day].tips += p.amount
-          this.earningsByMonthCache[p.month].tips += p.amount
           this.earningsByYearCache[p.year].tips += p.amount
         } else {
           this.earningsByDayCache[p.day].nonTips += p.amount
-          this.earningsByMonthCache[p.month].nonTips += p.amount
           this.earningsByYearCache[p.year].nonTips += p.amount
         }
       })
 
-      Object.keys(this.earningsByDayCache).forEach((day) => {
-        const e = this.earningsByDayCache[day]
-        const h = hoursByDay[day] || 0
+      this.computeHoursCache()
 
-        this.avgEarningsByDayCache[day] = h > 0
+      // Avg earnings caches
+      this.avgEarningsByDayCache = {}
+      this.avgEarningsByYearCache = {}
+
+      for (const d in this.earningsByDayCache) {
+        const e = this.earningsByDayCache[d]
+        const h = this.hoursPerDayCache[d] || 0
+        this.avgEarningsByDayCache[d] = h > 0
           ? { tips: e.tips / h, nonTips: e.nonTips / h }
           : { tips: 0, nonTips: 0 }
-      })
+      }
 
-      Object.keys(this.earningsByMonthCache).forEach((month) => {
-        const e = this.earningsByMonthCache[month]
-        const h = hoursByMonth[month] || 0
-
-        this.avgEarningsByMonthCache[month] = h > 0
+      for (const y in this.earningsByYearCache) {
+        const e = this.earningsByYearCache[y]
+        const h = this.hoursPerYearCache[y] || 0
+        this.avgEarningsByYearCache[y] = h > 0
           ? { tips: e.tips / h, nonTips: e.nonTips / h }
           : { tips: 0, nonTips: 0 }
-      })
+      }
+    },
 
-      Object.keys(this.earningsByYearCache).forEach((year) => {
-        const e = this.earningsByYearCache[year]
-        const h = hoursByYear[year] || 0
+    /**
+     * Set the period mode (week, month, total)
+     * @param mode {string}
+     */
+    setPeriodMode(mode) {
+      periodStore.setMode(mode)
 
-        this.avgEarningsByYearCache[year] = h > 0
-          ? { tips: e.tips / h, nonTips: e.nonTips / h }
-          : { tips: 0, nonTips: 0 }
-      })
+      if (mode === 'total') return
+
+      if (mode === 'month') {
+        const start = this.periodStart.startOf('month')
+        const end = this.periodStart.endOf('month')
+        return periodStore.setPeriod(start.toISOString(), end.toISOString())
+      }
+
+      // WEEK MODE
+      const monday = this.periodStart.startOf('week').add(1, 'day')
+      const sunday = monday.add(6, 'day').endOf('day')
+      periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
+    },
+
+    /**
+     * Navigate to previous period
+     */
+    prevPeriod() {
+      if (this.mode === 'total') return
+
+      if (this.mode === 'month') {
+        const start = this.periodStart.subtract(1, 'month').startOf('month')
+        const end = start.endOf('month')
+        return periodStore.setPeriod(start.toISOString(), end.toISOString())
+      }
+
+      const start = this.periodStart.subtract(7, 'day')
+      const end = start.add(6, 'day').endOf('day')
+      periodStore.setPeriod(start.toISOString(), end.toISOString())
+    },
+
+    /**
+     * Navigate to next period
+     */
+    nextPeriod() {
+      if (this.mode === 'total') return
+
+      if (this.mode === 'month') {
+        const start = this.periodStart.add(1, 'month').startOf('month')
+        const end = start.endOf('month')
+        return periodStore.setPeriod(start.toISOString(), end.toISOString())
+      }
+
+      const start = this.periodStart.add(7, 'day')
+      const end = start.add(6, 'day').endOf('day')
+      periodStore.setPeriod(start.toISOString(), end.toISOString())
     }
   }
 }
@@ -629,75 +501,11 @@ export default {
   gap: 12px;
 }
 
-.filters-btn {
+.period-switch {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
   display: flex;
-  align-items: center;
   gap: 6px;
-}
-
-.filters-btn .chevron {
-  font-size: 0.8rem;
-  transition: transform 0.2s ease;
-}
-
-/* Rotate chevron when open */
-.filters-btn.open .chevron {
-  transform: rotate(180deg);
-}
-
-.filters-panel {
-  margin: 8px 0 16px 0;
-  padding: 12px 16px;
-  border: 1px solid #bbbbbb99;
-  background: #fff;
-  box-shadow:
-    0 3px 1px -2px rgba(0,0,0,.2),
-    0 2px 2px 0 rgba(0,0,0,.19),
-    0 1px 5px 0 rgba(0,0,0,.17);
-  display: flex;
-  gap: 32px;
-  flex-wrap: wrap;
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 150px;
-  margin-right: 24px;
-}
-
-.filter-group:first-child label {
-  justify-content: space-between;
-}
-
-.filter-title {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 4px;
-}
-
-.filter-group label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
-  color: #444;
-  cursor: pointer;
-}
-
-/* Date inputs */
-.filter-group input[type="date"] {
-  margin-left: 6px;
-  padding: 3px 6px;
-  border: 1px solid #bbb;
-  font-size: 0.8rem;
-}
-
-/* Checkbox alignment */
-.filter-group input[type="checkbox"] {
-  cursor: pointer;
 }
 
 .switch-btn {
@@ -716,13 +524,67 @@ export default {
   box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
 }
 
-.switch-btn:hover {
+.week-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.nav-btn {
+  padding: 4px 12px;
+  border: 1px solid #bbb;
+  border-radius: 0;
+  background: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.05s ease;
+}
+
+.nav-btn:hover, .switch-btn:hover {
   background: #f2f2f2;
   box-shadow:
     0 3px 1px -2px rgba(0,0,0,.25),
     0 2px 4px 0 rgba(0,0,0,.20),
     0 1px 8px 0 rgba(0,0,0,.18);
   transform: translateY(-1px);
+}
+
+.week-label {
+  width: 240px;
+  padding: 4px 12px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #bbb;
+}
+
+.week-label.mode-week {
+  background: #e3f2fd;
+  border-color: #2196f377;
+  color: #0d47a1;
+}
+
+.week-label.mode-month {
+  background: #e8f5e9;
+  border-color: #4caf5077;
+  color: #1b5e20;
+}
+
+.week-label.mode-total {
+  width: 280px;
+  background: #fff3e0;
+  border-color: #ff9800bb;
+  color: #e65100;
 }
 
 .box {
@@ -806,30 +668,19 @@ input:checked + .slider:before {
   color: #333;
 }
 
-.no-data-box {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(240, 240, 240, 0.55); /* semi-transparent grey */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #666666;
-  font-size: 0.95rem;
-  font-weight: 500;
-  text-align: center;
-  padding: 12px;
-  border-radius: 4px;
-  z-index: 10; /* ensure it sits above the chart */
-}
-
 .chart-container {
-  position: relative;
   width: 100%;
   height: 350px;
   margin-bottom: 4px;
+}
+
+:deep(.apexcharts-bar-area:hover) {
+  stroke: #00000066;
+  stroke-width: 2px;
+}
+
+:deep(.apexcharts-xaxis-hover) {
+  display: none;
 }
 
 .legend {
@@ -868,6 +719,16 @@ input:checked + .slider:before {
 
   .controls-bar {
     flex-direction: column;
+  }
+
+  .period-switch {
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .week-nav {
+    justify-content: center;
+    margin-bottom: 20px;
   }
 }
 </style>

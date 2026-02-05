@@ -375,6 +375,18 @@ export default {
           toolbar: { show: false },
           zoom: { enabled: false }
         },
+        states: {
+          hover: {
+            filter: {
+              type: 'none'
+            }
+          },
+          active: {
+            filter: {
+              type: 'none'
+            }
+          }
+        },
         plotOptions: {
           bar: {
             horizontal: true,
@@ -394,6 +406,9 @@ export default {
         },
         yaxis: { categories: WEEKDAYS },
         tooltip: {
+          followCursor: false,
+          shared: false,
+          intersect: true,
           custom: ({ seriesIndex, dataPointIndex, w }) => {
             const d = w.config.series[seriesIndex].data[dataPointIndex]
             const s = dayjs(d.meta.beginTs)
@@ -443,6 +458,18 @@ export default {
         chart: {
           type: 'bar',
           toolbar: { show: false }
+        },
+        states: {
+          hover: {
+            filter: {
+              type: 'none'
+            }
+          },
+          active: {
+            filter: {
+              type: 'none'
+            }
+          }
         },
         plotOptions: { bar: { horizontal: true, barHeight: '50%' } },
         dataLabels: {
@@ -648,7 +675,7 @@ export default {
      */
     buildTimeline(shifts) {
       const colors = {
-        offline: '#9e9e9e',
+        offline: '#ccc',
         open: '#4caf50',
         enroute: '#ff9800',
         ontrip: '#2196f3'
@@ -988,11 +1015,16 @@ export default {
   margin-top: 8px;
 }
 
+:deep(.apexcharts-rangebar-area:hover) {
+  stroke: #00000066;
+  stroke-width: 2px;
+}
+
 /* legend */
 .legend { display:flex; gap:12px; margin-top: 10px; justify-content: center; }
 .legend-item { display:flex; align-items:center; gap:8px; font-size: .9rem; }
 .color-box { width: 14px; height: 14px; border-radius: 3px; display:inline-block; }
-.color-box.offline { background-color: #9e9e9e; }
+.color-box.offline { background-color: #ccc; }
 .color-box.open { background-color: #4caf50; }
 .color-box.enroute { background-color: #ff9800; }
 .color-box.ontrip { background-color: #2196f3; }
