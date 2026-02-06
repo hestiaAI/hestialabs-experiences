@@ -11,6 +11,18 @@
       </button>
     </div>
 
+    <div class="period-descriptions">
+      <div v-if="mode === 'week'" class="period-desc">
+        📅 Week view: See your shifts and key metrics for each day of the week
+      </div>
+      <div v-if="mode === 'month'" class="period-desc">
+        📆 Month view: Click on any day to view that week
+      </div>
+      <div v-if="mode === 'total'" class="period-desc">
+        📊 Total view: Your overall statistics and patterns across all time
+      </div>
+    </div>
+
     <div class="week-nav">
       <div class="week-nav-wrapper">
         <button
@@ -207,8 +219,6 @@ export default {
 
     // online shifts array (raw objects from CSV)
     itemsComputed() {
-      console.log(this.block.online)
-      console.log(this.block.payments)
       return this.block.online?.items ?? []
     },
 
@@ -525,6 +535,10 @@ export default {
           })
         })
 
+        Object.keys(byDay).forEach((key) => {
+          byDay[key] = this.filterEdgeOfflineShifts(byDay[key])
+        })
+
         this.shiftsByDayCache = { ...byDay }
         if (this.periodReady) {
           this.recomputePeriodCaches()
@@ -618,6 +632,27 @@ export default {
       this.redraw()
     },
 
+    filterEdgeOfflineShifts(shifts) {
+      if (!shifts || !shifts.length) return []
+
+      const sorted = [...shifts].sort((a, b) => a.beginTs - b.beginTs)
+
+      // Find first non-offline shift
+      let startIndex = 0
+      while (startIndex < sorted.length && sorted[startIndex].earner_state === 'offline') {
+        startIndex++
+      }
+
+      // Find last non-offline shift
+      let endIndex = sorted.length - 1
+      while (endIndex >= 0 && sorted[endIndex].earner_state === 'offline') {
+        endIndex--
+      }
+
+      // Return only the shifts from first to last non-offline shift
+      return sorted.slice(startIndex, endIndex + 1)
+    },
+
     /**
      * Recompute all period caches
      */
@@ -686,37 +721,54 @@ export default {
         map[k] = { name: k, color: colors[k], data: [] }
       })
 
-      // Sort shifts into series
+      // Collect data by day first
+      const dayMap = {}
       shifts.forEach((s) => {
         const d = new Date(s.beginTs)
         const dow = d.getDay() === 0 ? 6 : d.getDay() - 1
+        const day = WEEKDAYS[dow]
+        const state = (s.state || s.earner_state || 'open').toLowerCase()
         const start = d.getHours() * 60 + d.getMinutes()
         const end = start + (s.endTs - s.beginTs) / 60000
-        const state = (s.state || s.earner_state || 'open').toLowerCase()
 
-        if (!map[state]) return
+        if (!dayMap[day]) dayMap[day] = {}
+        if (!dayMap[day][state]) dayMap[day][state] = []
 
-        map[state].data.push({
-          x: WEEKDAYS[dow],
+        dayMap[day][state].push({
+          x: day,
           y: [start, end],
           meta: s
         })
       })
 
-      const daysWithData = new Set()
-
-      Object.values(map).forEach((series) => {
-        series.data.forEach(p => daysWithData.add(p.x))
+      // Ensure every day has an array for each state
+      WEEKDAYS.forEach((day) => {
+        if (!dayMap[day]) dayMap[day] = {}
+        Object.keys(colors).forEach((state) => {
+          if (!dayMap[day][state]) dayMap[day][state] = []
+          // Filter edge offline shifts for this state
+          if (state === 'offline') {
+            dayMap[day][state] = this.filterEdgeOfflineShifts(dayMap[day][state])
+          }
+        })
       })
 
-      WEEKDAYS.forEach((day) => {
-        if (!daysWithData.has(day)) {
-          map.offline.data.push({
-            x: day,
-            y: [0, 0],
-            meta: { empty: true }
-          })
-        }
+      // Build series arrays
+      Object.keys(map).forEach((state) => {
+        WEEKDAYS.forEach((day) => {
+          const data = dayMap[day][state]
+
+          // If offline and there are no shifts left after filtering, add placeholder
+          if (state === 'offline' && (!data || !data.length)) {
+            map[state].data.push({
+              x: day,
+              y: [0, 0],
+              meta: { empty: true }
+            })
+          } else {
+            map[state].data.push(...data)
+          }
+        })
       })
 
       return Object.values(map)
@@ -824,7 +876,7 @@ export default {
 
       // Same day → no split
       if (start.isSame(end, 'day')) {
-        return [{ beginTs: startTs, endTs: endTs, raw }]
+        return [{ beginTs: startTs, endTs, raw }]
       }
 
       // Split into two parts
@@ -833,7 +885,7 @@ export default {
 
       return [
         { beginTs: startTs, endTs: endOfDayTs, raw },
-        { beginTs: startOfNextDayTs, endTs: endTs, raw }
+        { beginTs: startOfNextDayTs, endTs, raw }
       ]
     }
   }
@@ -873,6 +925,21 @@ export default {
   background: #e6e6e6;
   font-weight: 600;
   box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
+}
+
+.period-descriptions {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  padding-top: 45px;
+  padding-left: 0;
+  margin-top: 0;
+}
+
+.period-desc {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 400;
+  margin: 0;
 }
 
 .week-nav {
@@ -1048,6 +1115,14 @@ export default {
     grid-row: auto;
     justify-content: center;
     margin-bottom: 20px;
+  }
+
+  .period-descriptions {
+    grid-column: 1 / 2;
+    grid-row: auto;
+    padding-top: 0;
+    margin-top: 0;
+    text-align: center;
   }
 
   .week-nav {

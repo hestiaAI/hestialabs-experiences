@@ -63,17 +63,20 @@ export default {
 
     // Offset for the first day of the month (0=Mon, 6=Sun)
     const firstDayOffset = computed(() => {
+      if (!start.value.isValid()) return 0
       const weekday = start.value.day() // Sunday=0
       return weekday === 0 ? 6 : weekday - 1
     })
 
     // Days in the month with aggregated stats
     const daysInMonth = computed(() => {
+      if (!start.value.isValid() || !end.value.isValid()) return []
+
       const days = []
       const totalDays = end.value.date()
 
       for (let i = 1; i <= totalDays; i++) {
-        const date = start.value.date(i)
+        const date = start.value.clone().date(i)
         const key = date.format('YYYY-MM-DD')
         const stat = props.dailyStats[key] || { earnings: 0, minutes: 0 }
 

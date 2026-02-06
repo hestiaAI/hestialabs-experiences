@@ -13,6 +13,18 @@
         </button>
       </div>
 
+      <div class="period-descriptions">
+        <div v-if="mode === 'week'" class="period-desc">
+          📅 Weekly earnings: Your total and average earnings per day for this week
+        </div>
+        <div v-if="mode === 'month'" class="period-desc">
+          📆 Monthly earnings: Daily earnings overview for the selected month
+        </div>
+        <div v-if="mode === 'total'" class="period-desc">
+          📊 All-time earnings: Your earnings history grouped by year
+        </div>
+      </div>
+
       <!-- WEEK / MONTH NAVIGATION -->
       <div class="week-nav">
         <button
@@ -494,16 +506,16 @@ export default {
 }
 
 .controls-bar {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto;
   align-items: center;
-  margin-bottom: 16px;
-  gap: 12px;
+  gap: 16px;
 }
 
 .period-switch {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
+  grid-column: 1 / 2;
+  grid-row: 1;
   display: flex;
   gap: 6px;
 }
@@ -524,7 +536,24 @@ export default {
   box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
 }
 
+.period-descriptions {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  padding-top: 0;
+  padding-left: 0;
+  margin-bottom: 16px;
+}
+
+.period-desc {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 400;
+  margin: 0;
+}
+
 .week-nav {
+  grid-column: 3 / 4;
+  grid-row: 1;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -717,16 +746,32 @@ input:checked + .slider:before {
     gap: 12px;
   }
 
-  .controls-bar {
-    flex-direction: column;
+  .controls-bar > * {
+    grid-column: 1 / -1;
   }
 
-  .period-switch {
-    justify-content: center;
+  .controls-bar {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
     margin-bottom: 20px;
   }
 
+  .period-switch {
+    grid-row: 1;
+    justify-content: center;
+  }
+
+  .period-descriptions {
+    grid-row: 2;
+    padding-top: 20px;
+  }
+
+  .period-desc {
+    text-align: center;
+  }
+
   .week-nav {
+    grid-row: 3;
     justify-content: center;
     margin-bottom: 20px;
   }

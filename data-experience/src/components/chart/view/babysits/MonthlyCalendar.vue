@@ -115,7 +115,7 @@ export default {
           date: date.toISOString(),
           hours: hoursWorked,
           earnings: totalEarnings,
-          jobTypes: jobTypes
+          jobTypes
         })
       }
 
