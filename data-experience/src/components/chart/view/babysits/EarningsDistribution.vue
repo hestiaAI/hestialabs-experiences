@@ -33,73 +33,29 @@
     </div>
 
     <div v-if="currentPeriod === 'total'" class="total-layout">
-      <div class="total-top">
-        <div class="box box2 tour-earnings-chart">
-          <div class="header-controls">
-            <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
-            <p class="chart-subtitle">
-              Each bubble represents a group of jobs.
-              <br>• Bubble height = average earnings
-              <br>• Bubble size = total working hours
-              <br>• Bubble color = time of day (Morning / Day / Evening / Night)
-            </p>
-          </div>
-
-          <ApexChart
-            type="bubble"
-            height="450"
-            :series="totalScatterSeries"
-            :options="totalScatterOptions"
-          />
-        </div>
-
-        <div class="box box4 tour-jobtype-filter">
-          <div class="panel-header">
-            <h3 v-if="selectedTotalBucket">
-              {{ selectedTotalBucket }} jobs
-            </h3>
-            <h3 v-else>
-              Select a bubble
-            </h3>
-          </div>
-
-          <div
-            v-for="activity in totalPanelActivities"
-            :key="activity.type"
-            class="job-item"
-          >
-            <div class="activity-row">
-              <span
-                class="activity-dot"
-                :style="{ backgroundColor: activity.color }"
-              />
-              <strong>{{ activity.type }}</strong>
-            </div>
-
-            <div class="activity-summary">
-              {{ activity.earnings.toFixed(2) }} {{ currency }}
-              {{ activity.hours.toFixed(1) }} h
-              {{ activity.count }} jobs
-            </div>
-
-            <div class="activity-jobs">
-              <div
-                v-for="job in activity.jobs"
-                :key="job.job_id || job.date + job.start_time"
-                class="activity-job"
+      <div class="box box2 tour-earnings-chart">
+        <div class="header-controls">
+          <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
+          <div class="data-mode-switch">
+            <span class="switch-label" :class="{ active: totalDataMode === 'total' }">Total</span>
+            <label class="switch">
+              <input
+                type="checkbox"
+                :checked="totalDataMode === 'average'"
+                @change="totalDataMode = totalDataMode === 'total' ? 'average' : 'total'"
               >
-                <strong>{{ formatDate(job.date) }}</strong>
-                <div>
-                  {{ job.job_type }} · {{ job.start_time }} ·
-                  {{ job.duration_hours || job.nbHours }} h
-                </div>
-                <div>
-                  {{ job.earnings }} {{ currency }}
-                </div>
-              </div>
-            </div>
+              <span class="slider"></span>
+            </label>
+            <span class="switch-label" :class="{ active: totalDataMode === 'average' }">Avg/Hour</span>
           </div>
         </div>
+
+        <ApexChart
+          type="bar"
+          height="450"
+          :series="totalStackedBarSeries"
+          :options="totalStackedBarOptions"
+        />
       </div>
 
       <div class="box total-bar-chart">
@@ -202,7 +158,8 @@ export default {
       currentPeriod: 'week',
       selectedTotalBucket: null,
       selectedActivity: '',
-      sortDirection: 'desc'
+      sortDirection: 'desc',
+      totalDataMode: 'total'
     }
   },
 
@@ -565,7 +522,18 @@ export default {
         plotOptions: {
           bubble: {
             maxBubbleRadius: 45,
-            minBubbleRadius: 8
+            minBubbleRadius: 8,
+            states: {
+              hover: {
+                filter: {
+                  type: 'none'
+                },
+                stroke: {
+                  width: 2,
+                  color: '#000'
+                }
+              }
+            }
           }
         },
         tooltip: {
@@ -627,23 +595,28 @@ export default {
       }).filter(item => item.count > 0)
     },
 
-    totalScatterData() {
-      const buckets = {}
+    totalStackedBarData() {
+      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
+      const data = {}
+      const hours = {}
+
+      bucketKeys.forEach((bucket) => {
+        data[bucket] = {}
+        hours[bucket] = {}
+      })
 
       this.filteredJobs.forEach((job) => {
         const [startH] = (job.start_time || '0:00').split(':').map(Number)
         const bucket = this.getTimeBucketFromHour(startH)
+        const activityType = job.job_type || 'Other'
 
-        if (!buckets[bucket]) {
-          buckets[bucket] = {
-            totalEarnings: 0,
-            totalDuration: 0,
-            count: 0
-          }
+        if (!data[bucket][activityType]) {
+          data[bucket][activityType] = 0
+          hours[bucket][activityType] = 0
         }
 
-        buckets[bucket].totalEarnings += Number(job.earnings) || 0
-        buckets[bucket].totalDuration += Number(
+        const earnings = Number(job.earnings) || 0
+        const jobHours = Number(
           job.nbHours ||
           job.duration ||
           job.duration_hours ||
@@ -651,134 +624,158 @@ export default {
           job.work_hours
         ) || 0
 
-        buckets[bucket].count += 1
+        data[bucket][activityType] += earnings
+        hours[bucket][activityType] += jobHours
       })
 
-      return buckets
+      if (this.totalDataMode === 'average') {
+        const avgData = {}
+        bucketKeys.forEach((bucket) => {
+          avgData[bucket] = {}
+          Object.entries(data[bucket]).forEach(([activity, earnings]) => {
+            const totalHours = hours[bucket][activity]
+            avgData[bucket][activity] = totalHours > 0 ? earnings / totalHours : 0
+          })
+        })
+        return avgData
+      }
+
+      return data
     },
 
-    totalScatterSeries() {
+    totalStackedBarSeries() {
       const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
+      const activityTypes = this.activityTypes
+      const data = this.totalStackedBarData
 
-      const data = bucketKeys.map((bucket, i) => {
-        const b = this.totalScatterData[bucket]
-
-        if (!b || b.count === 0 || b.totalDuration === 0) {
-          return [i, null, 0]
-        }
-
-        const avgPerHour = b.totalEarnings / b.totalDuration
-
-        return [
-          i,
-          Number(avgPerHour.toFixed(2)),
-          b.count * this.baseShiftSize
-        ]
-      })
-
-      return [{
-        name: 'Total Summary',
-        data
-      }]
+      return activityTypes.map(activityType => ({
+        name: activityType,
+        data: bucketKeys.map(bucket => data[bucket][activityType] || 0)
+      }))
     },
 
-    totalScatterOptions() {
-      const bucketKeys = Object.keys(TIME_BUCKETS)
+    totalStackedBarOptions() {
+      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
       const categories = bucketKeys.map(
         key => `${key}\n(${TIME_BUCKETS[key].from}-${TIME_BUCKETS[key].to})`
       )
 
       return {
         chart: {
-          type: 'bubble',
+          type: 'bar',
+          stacked: true,
           toolbar: { show: false },
-          zoom: { enabled: false },
-          events: {
-            dataPointSelection: (event, chartContext, config) => {
-              const index = config.dataPointIndex
-              const bucket = bucketKeys[index] || null
-              this.selectedTotalBucket = bucket
-            }
-          }
+          zoom: { enabled: false }
         },
-
-        colors: bucketKeys.map(b => this.timeBucketColors[b] || '#ccc'),
-
+        colors: this.activityTypes.map(
+          type => this.activityTypeColors[type] || this.activityTypeColors.Other
+        ),
         xaxis: {
-          type: 'numeric',
-          min: -0.5,
-          max: categories.length - 0.5,
-          tickAmount: categories.length,
+          categories,
+          title: {
+            text: 'Time of Day',
+            offsetY: 10
+          },
           labels: {
             rotate: -45,
             rotateAlways: true,
-            offsetX: 25,
-            formatter: v => categories[Math.round(v)] || ''
-          },
-          title: {
-            text: 'Time of Day',
-            offsetY: 50
+            style: {
+              fontSize: '12px'
+            }
           }
         },
+        yaxis: {
+          title: {
+            text: this.totalDataMode === 'average'
+              ? `Average earnings per hour (${this.currency})`
+              : `Total earnings (${this.currency})`
+          },
+          min: 0,
+          labels: {
+            formatter: (val) => {
+              if (val === 0) return '0'
+              return parseFloat(val.toFixed(2)).toString()
+            }
+          }
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            columnWidth: '60%',
+            dataLabels: {
+              position: 'top'
+            },
+            states: {
+              hover: {
+                filter: {
+                  type: 'none'
+                },
+                stroke: {
+                  width: 2,
+                  color: '#000'
+                }
+              },
+              active: {
+                filter: {
+                  type: 'none'
+                }
+              }
+            }
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        tooltip: {
+          shared: true,
+          intersect: false,
+          y: {
+            formatter: (val) => {
+              if (this.totalDataMode === 'average') {
+                return `${val.toFixed(2)} ${this.currency}/h`
+              }
+              return `${val.toFixed(2)} ${this.currency}`
+            }
+          },
+          custom: ({ seriesIndex, dataPointIndex, w }) => {
+            const data = this.totalStackedBarData
+            const bucketKey = ['Morning', 'Day', 'Evening', 'Night'][dataPointIndex]
+            const bucketRange = TIME_BUCKETS[bucketKey]
 
+            let html = `
+              <div class="tooltip-box">
+                <div class="tooltip-title">${bucketKey} (${bucketRange.from}-${bucketRange.to})</div>
+            `
+
+            const activityBreakdown = data[bucketKey]
+            let totalEarnings = 0
+            Object.entries(activityBreakdown).forEach(([activity, value]) => {
+              const displayValue = this.totalDataMode === 'average'
+                ? `${value.toFixed(2)} ${this.currency}/h`
+                : `${value.toFixed(2)} ${this.currency}`
+              html += `<p><strong>${activity}:</strong> ${displayValue}</p>`
+              totalEarnings += value
+            })
+
+            const totalLabel = this.totalDataMode === 'average' ? `${this.currency}/h` : this.currency
+            html += `
+                <p style="margin-top: 8px; border-top: 1px solid #ddd; padding-top: 8px;">
+                  <strong>Total: ${totalEarnings.toFixed(2)} ${totalLabel}</strong>
+                </p>
+              </div>
+            `
+
+            return html
+          }
+        },
+        legend: {
+          position: 'bottom',
+          offsetY: 10
+        },
         grid: {
           padding: {
             bottom: 50
           }
-        },
-
-        yaxis: {
-          min: 0,
-          title: {
-            text: `Average earnings per hour (${this.currency})`
-          }
-        },
-
-        plotOptions: {
-          bubble: {
-            minBubbleRadius: 12,
-            maxBubbleRadius: 50
-          }
-        },
-
-        dataLabels: {
-          enabled: false
-        },
-
-        tooltip: {
-          custom: ({ seriesIndex, dataPointIndex, w }) => {
-            const point = w.config.series[seriesIndex].data[dataPointIndex]
-
-            if (!point || point[1] == null || point[1] === 0) return ''
-
-            const bucketIndex = Math.round(point[0])
-            const bucketKey = bucketKeys[bucketIndex]
-            const range = TIME_BUCKETS[bucketKey]
-            const avg = point[1]
-
-            const bubbleZ = point[2]
-            const shifts = Math.round(bubbleZ / this.baseShiftSize)
-
-            const stats = this.totalScatterData[bucketKey]
-            if (!stats) return ''
-
-            const totalIncome = stats.totalEarnings.toFixed(2)
-            const totalHours = stats.totalDuration.toFixed(1)
-
-            return `
-              <div class="tooltip-box">
-                <div class="tooltip-title">${bucketKey} (${range.from}-${range.to})</div>
-                <p>Avg hourly income:<br><strong>${avg.toFixed(2)} ${this.currency}</strong></p>
-                <p>Shifts (bubble size): <strong>${shifts}</strong></p>
-                <p>Total income: <strong>${totalIncome} ${this.currency}</strong></p>
-                <p>Total hours: <strong>${totalHours} h</strong></p>
-              </div>
-            `
-          }
-        },
-
-        legend: {
-          show: false
         }
       }
     },
@@ -836,6 +833,17 @@ export default {
             barHeight: '90%',
             dataLabels: {
               position: 'right'
+            },
+            states: {
+              hover: {
+                filter: {
+                  type: 'none'
+                },
+                stroke: {
+                  width: 2,
+                  color: '#000'
+                }
+              }
             }
           }
         },
@@ -1139,23 +1147,6 @@ export default {
   margin-bottom: 30px;
 }
 
-.total-top {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-}
-
-.total-top .box2 {
-  flex: 0 0 65%;
-  margin-bottom: 0;
-}
-
-.total-top .box4 {
-  flex: 1;
-  max-height: 500px;
-  overflow-y: auto;
-}
-
 .total-bar-chart {
   width: 100%;
 }
@@ -1258,6 +1249,121 @@ export default {
   border-radius: 50%;
 }
 
+.data-mode-switch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.switch-label {
+  font-size: 0.9rem;
+  color: #999;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.switch-label.active {
+  color: #1e88e5;
+  font-weight: 600;
+}
+
+/* Switch styling */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: all 0.3s;
+  border-radius: 28px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: all 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input:checked + .slider {
+  background-color: #1e88e5;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.toggle-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  background: #e8e8e8;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.toggle-btn:hover {
+  background: #d8d8d8;
+  border-color: #888;
+}
+
+.toggle-btn.active {
+  background: #1e88e5;
+  color: white;
+  border-color: #1565c0;
+  font-weight: 600;
+}
+
+.activity-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legend-item-detailed {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  background: #f9f9f9;
+  font-size: 0.95rem;
+  color: #333;
+  border: 1px solid #eee;
+}
+
+.legend-swatch-large {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
 .activity-summary {
   font-size: 0.9rem;
   color: #555;
@@ -1334,22 +1440,6 @@ export default {
 
   .total-layout {
     flex-direction: column;
-  }
-
-  .total-top {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .total-top .box2 {
-    flex: 1 1 100%;
-    margin-bottom: 12px;
-  }
-
-  .total-top .box4 {
-    flex: 1 1 100%;
-    max-height: none;
-    overflow: visible;
   }
 
   .bar-header {
