@@ -527,13 +527,22 @@ export default {
               hover: {
                 filter: {
                   type: 'none'
-                },
-                stroke: {
-                  width: 2,
-                  color: '#000'
+                }
+              },
+              active: {
+                filter: {
+                  type: 'none'
                 }
               }
             }
+          }
+        },
+        markers: {
+          strokeWidth: 0,
+          strokeColors: 'transparent',
+          hover: {
+            strokeWidth: 2,
+            strokeColors: '#000'
           }
         },
         tooltip: {
@@ -705,12 +714,18 @@ export default {
             dataLabels: {
               position: 'top'
             },
+            stroke: {
+              show: true,
+              width: 0,
+              colors: ['transparent']
+            },
             states: {
               hover: {
                 filter: {
                   type: 'none'
                 },
                 stroke: {
+                  show: true,
                   width: 2,
                   color: '#000'
                 }
@@ -834,14 +849,25 @@ export default {
             dataLabels: {
               position: 'right'
             },
+            stroke: {
+              show: true,
+              width: 0,
+              colors: ['transparent']
+            },
             states: {
               hover: {
                 filter: {
                   type: 'none'
                 },
                 stroke: {
+                  show: true,
                   width: 2,
                   color: '#000'
+                }
+              },
+              active: {
+                filter: {
+                  type: 'none'
                 }
               }
             }
