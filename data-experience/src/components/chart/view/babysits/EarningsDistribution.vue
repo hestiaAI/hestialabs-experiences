@@ -125,9 +125,7 @@
           <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
           <p class="chart-subtitle">
             Each bubble represents a group of jobs.
-            <br>• Bubble height = total earnings
             <br>• Bubble size = total working hours
-            <br>• Bubble color = time of day (Morning / Day / Evening / Night)
           </p>
         </div>
 
@@ -355,10 +353,43 @@ export default {
       }
     },
 
+    activityTypeColors() {
+      const colors = {
+        Babysitting: '#FF6B6B',
+        Babysits: '#FF6B6B',
+        Housekeeping: '#4ECDC4',
+        'House Cleaning': '#4ECDC4',
+        Tutoring: '#45B7D1',
+        Tutors: '#45B7D1',
+        'Pet Care': '#FFA07A',
+        'Pet Sitting': '#FFA07A',
+        'Dog Walking': '#90EE90',
+        Errands: '#FFD700',
+        Shopping: '#FFD700',
+        Laundry: '#DDA0DD',
+        Other: '#CCCCCC'
+      }
+      // Auto-assign colors to unknown activity types
+      const types = this.activityTypes
+      const defaultColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#90EE90', '#FFD700', '#DDA0DD', '#FF9999', '#99CCFF', '#99FF99']
+      types.forEach((type, idx) => {
+        if (!colors[type]) {
+          colors[type] = defaultColors[idx % defaultColors.length]
+        }
+      })
+      return colors
+    },
+
     xLabels() {
-      return this.currentPeriod === 'month'
-        ? this.monthDays.map(d => d.toString())
-        : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      if (this.currentPeriod === 'month') {
+        const monthStart = this.currentWeekStart.startOf('month')
+        return this.monthDays.map((d) => {
+          const dayDate = monthStart.add(d - 1, 'day')
+          const dayName = dayDate.format('ddd')
+          return `${d} ${dayName}`
+        })
+      }
+      return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     },
 
     aggregatedData() {
@@ -374,10 +405,12 @@ export default {
 
         const [startH] = (job.start_time || '0:00').split(':').map(Number)
         const bucket = this.getTimeBucketFromHour(startH)
+        const activityType = job.job_type || 'Other'
 
         if (!data[dayIndex]) data[dayIndex] = {}
-        if (!data[dayIndex][bucket]) {
-          data[dayIndex][bucket] = {
+        if (!data[dayIndex][activityType]) data[dayIndex][activityType] = {}
+        if (!data[dayIndex][activityType][bucket]) {
+          data[dayIndex][activityType][bucket] = {
             totalEarnings: 0,
             totalDuration: 0,
             count: 0,
@@ -399,49 +432,65 @@ export default {
 
         const endMinutes = startMinutes + durationHours * 60
 
-        data[dayIndex][bucket].startTimes.push(startMinutes)
-        data[dayIndex][bucket].endTimes.push(endMinutes)
+        data[dayIndex][activityType][bucket].startTimes.push(startMinutes)
+        data[dayIndex][activityType][bucket].endTimes.push(endMinutes)
 
-        data[dayIndex][bucket].totalEarnings += Number(job.earnings) || 0
-        data[dayIndex][bucket].totalDuration += Number(
+        data[dayIndex][activityType][bucket].totalEarnings += Number(job.earnings) || 0
+        data[dayIndex][activityType][bucket].totalDuration += Number(
           job.nbHours ||
           job.duration ||
           job.duration_hours ||
           job.hours ||
           job.work_hours
         ) || 0
-        data[dayIndex][bucket].count += 1
+        data[dayIndex][activityType][bucket].count += 1
       })
 
       return data
     },
 
     chartSeries() {
-      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
+      const activityTypes = this.activityTypes
       const seriesMap = {}
 
-      bucketKeys.forEach((b) => {
-        seriesMap[b] = { name: b, data: [] }
+      activityTypes.forEach((type) => {
+        seriesMap[type] = { name: type, data: [] }
       })
 
-      Object.entries(this.aggregatedData).forEach(([idx, buckets]) => {
-        Object.entries(buckets).forEach(([bucket, metrics]) => {
-          if (!seriesMap[bucket]) return
+      Object.entries(this.aggregatedData).forEach(([idx, activities]) => {
+        Object.entries(activities).forEach(([activityType, buckets]) => {
+          if (!seriesMap[activityType]) {
+            seriesMap[activityType] = { name: activityType, data: [] }
+          }
 
-          seriesMap[bucket].data.push({
-            x: Number(idx),
-            y: Number(metrics.totalEarnings.toFixed(2)),
-            z: Number((metrics.totalDuration * this.baseHourSize).toFixed(1)),
-            count: metrics.count,
-            start: Math.min(...metrics.startTimes),
-            end: Math.max(...metrics.endTimes)
+          let totalEarnings = 0
+          let totalDuration = 0
+          let count = 0
+          const allStartTimes = []
+          const allEndTimes = []
+
+          Object.values(buckets).forEach((metrics) => {
+            totalEarnings += metrics.totalEarnings
+            totalDuration += metrics.totalDuration
+            count += metrics.count
+            allStartTimes.push(...metrics.startTimes)
+            allEndTimes.push(...metrics.endTimes)
           })
+
+          if (count > 0) {
+            seriesMap[activityType].data.push({
+              x: Number(idx),
+              y: Number(totalEarnings.toFixed(2)),
+              z: Number((totalDuration * this.baseHourSize).toFixed(1)),
+              count,
+              start: Math.min(...allStartTimes),
+              end: Math.max(...allEndTimes)
+            })
+          }
         })
       })
 
-      return bucketKeys
-        .map(k => seriesMap[k])
-        .filter(s => s.data.length > 0)
+      return Object.values(seriesMap).filter(s => s.data.length > 0)
     },
 
     maxEarnings() {
@@ -458,7 +507,7 @@ export default {
 
     chartOptions() {
       const seriesColors = this.chartSeries.map(s =>
-        this.timeBucketColors[s.name] || this.timeBucketColors.Other
+        this.activityTypeColors[s.name] || this.activityTypeColors.Other
       )
 
       return {
@@ -472,16 +521,22 @@ export default {
         colors: seriesColors,
         dataLabels: { enabled: false },
         fill: {
-          opacity: 0.8,
-          colors: ['#36A2EB', '#4BC0C0', '#FF6384', '#6A9BE8']
+          opacity: 0.8
         },
         xaxis: {
           type: 'numeric',
           min: 0.0,
           max: this.xLabels.length,
           tickAmount: this.xLabels.length,
+          title: {
+            text: this.currentPeriod === 'month'
+              ? 'Day of month'
+              : 'Day of week',
+            offsetY: 10
+          },
           labels: {
-            rotate: 0,
+            rotate: this.currentPeriod === 'month' ? -45 : 0,
+            rotateAlways: this.currentPeriod === 'month',
             formatter: v => this.xLabels[Math.round(v)] || '',
             style: {
               fontSize: '11px',
@@ -502,6 +557,9 @@ export default {
             lines: {
               show: true
             }
+          },
+          padding: {
+            bottom: this.currentPeriod === 'month' ? 40 : 10
           }
         },
         plotOptions: {
@@ -525,8 +583,9 @@ export default {
             return `
               <div class="tooltip-box">
                 <div class="tooltip-title">
-                  ${day} - ${series.name} (${fmt(point.start)}-${fmt(point.end)})
+                  ${day} - ${series.name}
                 </div>
+                <p>Time range: <strong>${fmt(point.start)}-${fmt(point.end)}</strong></p>
                 <p>Total income: <strong>${point.y.toFixed(2)} ${this.currency}</strong></p>
                 <p>Jobs: <strong>${point.count}</strong></p>
                 <p>Duration (bubble size): <strong>${(point.z / this.baseHourSize).toFixed(1)} h</strong></p>
@@ -550,16 +609,19 @@ export default {
     },
 
     legendItems() {
-      const keys = Object.keys(this.timeBucketColors)
-      return keys.map((type) => {
-        const count = Object.values(this.aggregatedData).reduce((sum, buckets) => {
-          return sum + (buckets[type]?.count || 0)
-        }, 0)
-        const range = TIME_BUCKETS[type]
+      return this.activityTypes.map((type) => {
+        let count = 0
+        Object.values(this.aggregatedData).forEach((activities) => {
+          if (activities[type]) {
+            Object.values(activities[type]).forEach((metrics) => {
+              count += metrics.count
+            })
+          }
+        })
         return {
           name: type,
-          label: `${type} (${range.from}-${range.to})`,
-          color: this.timeBucketColors[type],
+          label: type,
+          color: this.activityTypeColors[type] || this.activityTypeColors.Other,
           count
         }
       }).filter(item => item.count > 0)
