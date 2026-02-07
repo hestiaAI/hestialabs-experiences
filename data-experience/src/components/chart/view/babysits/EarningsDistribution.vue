@@ -833,7 +833,10 @@ export default {
           bar: {
             horizontal: true,
             borderRadius: 6,
-            barHeight: '90%'
+            barHeight: '90%',
+            dataLabels: {
+              position: 'right'
+            }
           }
         },
         xaxis: {
@@ -849,15 +852,18 @@ export default {
         },
         dataLabels: {
           enabled: true,
+          position: 'right',
+          offsetX: 0,
           style: {
             fontSize: '14px',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            colors: ['#333']
           },
-          formatter: val => `${val} ${this.currency}/h`
+          formatter: val => val.toFixed(2)
         },
         tooltip: {
           y: {
-            formatter: val => `${val} ${this.currency}/h`
+            formatter: val => `${val.toFixed(2)}`
           }
         },
         colors: ['#2ecc71']
