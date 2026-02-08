@@ -81,7 +81,17 @@
           Showing {{ maxMapTrips }} of {{ sortedTrips.length }} trips.
           Please narrow your filters.
         </div>
-        <div ref="mapContainer" class="map-frame"></div>
+        <div class="map-container">
+          <div ref="mapContainer" class="map-frame"></div>
+
+          <div
+            v-if="showMapEmptyState"
+            class="map-empty-overlay"
+          >
+            Nothing to show.<br />
+            Please adjust your filters.
+          </div>
+        </div>
       </div>
 
       <!-- RIGHT SIDE — Selected Trips -->
@@ -209,9 +219,30 @@ export default {
       return MAX_MAP_TRIPS
     },
 
-    // Map title based on mode
+    // Whether to show empty state on map
+    showMapEmptyState() {
+      return this.limitedTripsForList.length === 0
+    },
+
+    // Map title based on filters
     mapTitle() {
-      return 'Map of Trips in filtered range'
+      const { from, to } = this.filters
+      const fmt = d => dayjs(d).format('DD.MM')
+      const fmtWithYear = d => dayjs(d).format('DD.MM.YY')
+
+      if (from && to) {
+        return `Map of Trips from ${fmt(from)} to ${fmtWithYear(to)}`
+      }
+
+      if (from) {
+        return `Map of Trips from ${fmtWithYear(from)}`
+      }
+
+      if (to) {
+        return `Map of Trips until ${fmtWithYear(to)}`
+      }
+
+      return 'Map of Trips'
     },
 
     // Minimum selectable date
@@ -444,6 +475,14 @@ export default {
         padding: 40
       }
     })
+
+    this.filters.from = periodStore.periodStart
+      ? dayjs(periodStore.periodStart).format('YYYY-MM-DD')
+      : null
+
+    this.filters.to = periodStore.periodEnd
+      ? dayjs(periodStore.periodEnd).format('YYYY-MM-DD')
+      : null
 
     // Add sources and layers when map is ready
     this.map.on('load', () => {
@@ -901,6 +940,30 @@ export default {
   margin-bottom: 8px;
 }
 
+.map-container {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Overlay */
+.map-empty-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(240, 240, 240, 0.6);
+  color: #555;
+  font-size: 1rem;
+  text-align: center;
+  padding: 16px;
+  z-index: 3;
+
+  pointer-events: all;
+}
+
 .area-toggle {
   font-size: 0.85rem;
   display: flex;
@@ -911,10 +974,10 @@ export default {
 .map-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 8px 14px;
   font-size: 0.8rem;
   color: #444;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .legend-item {
@@ -990,6 +1053,7 @@ export default {
   flex: 1;
   min-height: 0;
   width: 100%;
+  height: 100%;
 }
 
 .selected-routes {
