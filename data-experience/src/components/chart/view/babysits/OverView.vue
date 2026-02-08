@@ -444,6 +444,18 @@ export default {
             enabled: false
           }
         },
+        states: {
+          hover: {
+            filter: {
+              type: 'none'
+            }
+          },
+          active: {
+            filter: {
+              type: 'none'
+            }
+          }
+        },
         plotOptions: {
           bar: {
             horizontal: true,
