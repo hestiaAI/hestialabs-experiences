@@ -475,6 +475,18 @@ export default {
           zoom: { enabled: false },
           pan: { enabled: false }
         },
+        states: {
+          hover: {
+            filter: {
+              type: 'none'
+            }
+          },
+          active: {
+            filter: {
+              type: 'none'
+            }
+          }
+        },
         colors: seriesColors,
         dataLabels: { enabled: false },
         fill: {
@@ -522,31 +534,22 @@ export default {
         plotOptions: {
           bubble: {
             maxBubbleRadius: 45,
-            minBubbleRadius: 8,
-            states: {
-              hover: {
-                filter: {
-                  type: 'none'
-                }
-              },
-              active: {
-                filter: {
-                  type: 'none'
-                }
-              }
-            }
+            minBubbleRadius: 8
           }
         },
         markers: {
           strokeWidth: 0,
           strokeColors: 'transparent',
           hover: {
-            strokeWidth: 2,
-            strokeColors: '#000'
+            strokeWidth: 0,
+            strokeColors: 'transparent'
           }
         },
         tooltip: {
           enabled: this.filteredJobsByActivity.length > 0,
+          followCursor: false,
+          intersect: true,
+          offsetY: 10,
           custom: ({ seriesIndex, dataPointIndex, w }) => {
             const series = w.config.series[seriesIndex]
             const point = series.data[dataPointIndex]
@@ -1503,5 +1506,8 @@ input:checked + .slider:before {
   .legend {
     justify-content: center;
   }
+}
+::v-deep(.apexcharts-tooltip) {
+  transform: translateY(10px);
 }
 </style>

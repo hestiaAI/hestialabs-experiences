@@ -155,7 +155,7 @@ export default {
   data() {
     return {
       currentWeekStart: this.getMondayOf(dayjs()),
-      currentPeriod: 'week',
+      currentPeriod: 'month',
       selectedJobType: '',
       fromCalendarClick: false,
       selectedCalendarDate: null
