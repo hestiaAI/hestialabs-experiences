@@ -96,21 +96,14 @@ export function createBabysitterTour() {
   tour.addStep({
     id: 'activity-chart',
     attachTo: { element: '.tour-activity-chart', on: 'top' },
-    text: 'Activity Types visualization shows how hours are distributed across different job types. Week & Month views use heatmaps (darker = more hours), Total view uses a sortable bar chart.',
-    buttons: [{ text: 'Next', action: tour.next }]
-  })
-
-  tour.addStep({
-    id: 'activity-explanation',
-    attachTo: { element: '.chart-explanation', on: 'top' },
-    text: 'Read the explanation below the chart to understand how to interpret the visualization. Rows = activity types, Columns = days/dates.',
+    text: 'Activity Types shows hours distribution across job types. Week view: daily breakdown with heatmap. Month view: calendar heatmap for the entire month. Total view: ranking of job types by total hours (sortable bar chart).',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
   tour.addStep({
     id: 'activity-legend',
     attachTo: { element: '.activity-legend', on: 'top' },
-    text: 'Legend displays all activity types you\'ve worked on with their assigned colors.',
+    text: 'Legend displays all activity types with their colors and total hours worked.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
@@ -132,21 +125,21 @@ export function createBabysitterTour() {
   tour.addStep({
     id: 'earnings-chart',
     attachTo: { element: '.tour-earnings-chart', on: 'top' },
-    text: 'Earnings visualization shows your income patterns. Bubble size = hours worked, Bubble height = earnings per hour, Color = time of day (Morning/Day/Evening/Night).',
+    text: 'Earnings Distribution shows income patterns. Week/Month: Bubble chart where bubble size = hours worked, position = earnings by time of day (Morning/Day/Evening/Night). Total: Bar chart showing earnings per hour by activity type.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
   tour.addStep({
     id: 'earnings-filter',
     attachTo: { element: '.tour-jobtype-filter', on: 'left' },
-    text: 'Click on any bubble to see detailed breakdown by activity type. Shows earnings, hours, and individual job entries.',
+    text: 'Filter chart by activity type to focus on specific job types and see detailed earnings breakdown for that category.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
   tour.addStep({
     id: 'earnings-bar-chart',
     attachTo: { element: '.total-bar-chart', on: 'top' },
-    text: 'Bar chart shows earnings per hour for each activity type. You can sort ascending or descending to find your highest paying jobs.',
+    text: 'In Total view, this chart shows average earnings per hour for each activity type. Sort ascending or descending to find your highest and lowest paying jobs.',
     buttons: [
       {
         text: 'Finish',
