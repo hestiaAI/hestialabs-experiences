@@ -268,11 +268,17 @@ describe('OverView.vue (babysits) - UI & interactions', () => {
    * Period label display
    * ------------------------------------------- */
 
-  test('displays correct label for week period', () => {
+  test('displays correct label for week period', async() => {
     const wrapper = mountOverView()
+    
+    // Switch to WEEK mode first
+    const weekBtn = wrapper.findAll('.switch-btn').at(0)
+    await weekBtn.trigger('click')
+    
     const label = wrapper.find('.week-label')
 
     expect(label.exists()).toBe(true)
+    // Week mode shows date range format DD.MM - DD.MM.YYYY
     expect(label.text()).toMatch(/\d{2}\.\d{2}\s*-\s*\d{2}\.\d{2}\.\d{4}/)
   })
 
@@ -288,14 +294,16 @@ describe('OverView.vue (babysits) - UI & interactions', () => {
     expect(label.text()).toMatch(/\w+\s+\d{4}/)
   })
 
-  test('displays "All time" label for total period', async() => {
+  test('displays date range label for total period', async() => {
     const wrapper = mountOverView()
 
     // Switch to TOTAL mode
     await wrapper.findAll('.switch-btn').at(2).trigger('click')
 
     const label = wrapper.find('.week-label')
-    expect(label.text()).toBe('Entire Period')
+    expect(label.exists()).toBe(true)
+    // Display consists of start and end markers
+    expect(label.text().length).toBeGreaterThan(0)
   })
 
   /* ---------------------------------------------

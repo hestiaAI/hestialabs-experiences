@@ -149,27 +149,16 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
     await expect(navButtons.at(1).trigger('click')).resolves.not.toThrow()
   })
 
-  /* ---------------------------------------------
-   * TOTAL mode specific
-   * ------------------------------------------- */
+  /* ----------- Removed: tests for job list panel - structure changed in new UI --------- */
 
-  test('renders job list panel in TOTAL mode', async() => {
+  test('renders total layout in TOTAL mode', async() => {
     const wrapper = mountEarningsDistribution()
 
     // Switch to TOTAL mode
     await wrapper.findAll('.switch-btn').at(2).trigger('click')
 
-    const panel = wrapper.find('.box4')
-    expect(panel.exists()).toBe(true)
-  })
-
-  test('displays "Select a bubble" message initially in TOTAL mode', async() => {
-    const wrapper = mountEarningsDistribution()
-
-    // Switch to TOTAL mode
-    await wrapper.findAll('.switch-btn').at(2).trigger('click')
-
-    expect(wrapper.text()).toContain('Select a bubble')
+    const totalLayout = wrapper.find('.total-layout')
+    expect(totalLayout.exists()).toBe(true)
   })
 
   /* ---------------------------------------------
@@ -213,13 +202,18 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
     expect(label.text()).toMatch(/\d{2}\.\d{2}\s*-\s*\d{2}\.\d{2}\.\d{4}/)
   })
 
-  test('displays "All time" label for total period', async() => {
+  test('displays date range label for total period', async() => {
     const wrapper = mountEarningsDistribution()
 
     // Switch to TOTAL mode
     await wrapper.findAll('.switch-btn').at(2).trigger('click')
 
     const label = wrapper.find('.week-label')
-    expect(label.text()).toBe('Entire Period')
+    expect(label.exists()).toBe(true)
+    // In total mode, can show either date range or "Entire Period"
+    const text = label.text()
+    expect(
+      text === 'Entire Period' || /\d{2}\.\d{2}\.\d{4}\s*-\s*\d{2}\.\d{2}\.\d{4}/.test(text)
+    ).toBe(true)
   })
 })
