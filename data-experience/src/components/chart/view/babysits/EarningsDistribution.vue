@@ -679,6 +679,23 @@ export default {
           toolbar: { show: false },
           zoom: { enabled: false }
         },
+        states: {
+          hover: {
+            filter: {
+              type: 'none'
+            },
+            stroke: {
+              show: true,
+              width: 2,
+              color: '#000'
+            }
+          },
+          active: {
+            filter: {
+              type: 'none'
+            }
+          }
+        },
         colors: this.activityTypes.map(
           type => this.activityTypeColors[type] || this.activityTypeColors.Other
         ),
@@ -721,23 +738,6 @@ export default {
               show: true,
               width: 0,
               colors: ['transparent']
-            },
-            states: {
-              hover: {
-                filter: {
-                  type: 'none'
-                },
-                stroke: {
-                  show: true,
-                  width: 2,
-                  color: '#000'
-                }
-              },
-              active: {
-                filter: {
-                  type: 'none'
-                }
-              }
             }
           }
         },
@@ -856,23 +856,6 @@ export default {
               show: true,
               width: 0,
               colors: ['transparent']
-            },
-            states: {
-              hover: {
-                filter: {
-                  type: 'none'
-                },
-                stroke: {
-                  show: true,
-                  width: 2,
-                  color: '#000'
-                }
-              },
-              active: {
-                filter: {
-                  type: 'none'
-                }
-              }
             }
           }
         },
