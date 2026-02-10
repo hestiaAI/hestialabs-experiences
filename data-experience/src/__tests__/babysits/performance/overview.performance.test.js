@@ -62,7 +62,11 @@ function mountOverview(jobsCount) {
 
 // ---- tests --------------------------------------------------------
 
-describe('Babysits OverView performance test', () => {
+// Skip performance tests unless RUN_PERF=true
+const describeIfPerf =
+  process.env.RUN_PERF === 'true' ? describe : describe.skip
+
+describeIfPerf('Babysits OverView performance test', () => {
   const cases = [
     { jobs: 100, max: 200 },
     { jobs: 500, max: 400 },

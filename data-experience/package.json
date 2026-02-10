@@ -15,7 +15,7 @@
   "homepage": "https://github.com/hestiaAI/hestialabs-experiences/blob/master/data-experience/README.md",
   "scripts": {
     "test": "jest",
-    "perf": "cross-env RUN_PERF=true jest src/__tests__/uber-eats/performance --runInBand",
+    "perf:ubereats": "cross-env RUN_PERF=true jest src/__tests__/uber-eats/performance --runInBand",
     "perf:babysits": "cross-env RUN_PERF=true jest src/__tests__/babysits/performance --runInBand",
     "perf:all": "cross-env RUN_PERF=true jest src/__tests__/{uber-eats,babysits}/performance --runInBand",
     "postinstall": "node postinstall.cjs",

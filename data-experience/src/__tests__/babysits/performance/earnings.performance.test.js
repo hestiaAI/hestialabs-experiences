@@ -56,7 +56,11 @@ function mountEarningsDistribution(jobsCount) {
 
 // ---- tests --------------------------------------------------------
 
-describe('Babysits EarningsDistribution performance test', () => {
+// Skip performance tests unless RUN_PERF=true
+const describeIfPerf =
+  process.env.RUN_PERF === 'true' ? describe : describe.skip
+
+describeIfPerf('Babysits EarningsDistribution performance test', () => {
   const cases = [
     { jobs: 100, max: 300 },
     { jobs: 500, max: 500 },
