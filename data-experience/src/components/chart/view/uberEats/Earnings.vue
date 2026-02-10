@@ -49,13 +49,17 @@
       <div class="earnings-adjusted">
         <h2>Earnings Breakdown</h2>
         <div class="toggle-wrapper">
+          <span class="switch-label" :class="{ active: !showAvg }">
+            Total
+          </span>
+
           <label class="switch">
             <input type="checkbox" v-model="showAvg" />
             <span class="slider"></span>
           </label>
 
-          <span class="toggle-label">
-            {{ showAvg ? 'Earnings per Hour' : 'Total Earnings' }}
+          <span class="switch-label" :class="{ active: showAvg }">
+            Avg / Hour
           </span>
         </div>
       </div>
@@ -650,6 +654,18 @@ export default {
   width: 120px;
 }
 
+.switch-label {
+  font-size: 0.9rem;
+  color: #888;
+  margin: 0 8px;
+  transition: color 0.2s ease, font-weight 0.2s ease;
+}
+
+.switch-label.active {
+  color: #2196f3;
+  font-weight: 600;
+}
+
 /* Simple toggle switch styling */
 .switch {
   position: relative;
@@ -684,7 +700,7 @@ export default {
 }
 
 input:checked + .slider {
-  background-color: #4caf50;
+  background-color: #2196f3;
 }
 
 input:checked + .slider:before {

@@ -17,6 +17,7 @@
       v-for="day in daysInMonth"
       :key="day.date"
       class="calendar-cell day-cell"
+      :class="{ selected: isSelectedDay(day) }"
       @click="selectDay(day)"
     >
       <div class="day-number">{{ day.day }}</div>
@@ -45,7 +46,8 @@ export default {
     year: Number,
     month: Number,
     dailyStats: { type: Object, required: true },
-    currency: { type: String, default: '$' }
+    currency: { type: String, default: '$' },
+    selectedDate: String
   },
   emits: ['select-day'],
   setup(props, { emit }) {
@@ -59,6 +61,12 @@ export default {
     // Handle day selection
     const selectDay = (day) => {
       emit('select-day', day.date) // full ISO date string
+    }
+
+    // Check if a day is selected
+    const isSelectedDay = (day) => {
+      if (!props.selectedDate) return false
+      return dayjs(props.selectedDate).isSame(dayjs(day.date), 'day')
     }
 
     // Offset for the first day of the month (0=Mon, 6=Sun)
@@ -97,6 +105,7 @@ export default {
       end,
       firstDayOffset,
       daysInMonth,
+      isSelectedDay,
       selectDay
     }
   }
@@ -137,6 +146,12 @@ export default {
 
 .day-cell {
   background: white;
+}
+
+.day-cell.selected {
+  background-color: #fff3e0;
+  border: 2px solid #ff9800;
+  box-shadow: 0 0 8px rgba(255, 152, 0, 0.3);
 }
 
 .day-cell:hover {

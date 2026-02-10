@@ -79,6 +79,7 @@
           :month="calendarMonth"
           :dailyStats="dailyStatsByDate"
           :currency="currency"
+          :selectedDate="selectedCalendarDate"
           @select-day="onSelectDay"
         />
       </div>
@@ -164,7 +165,8 @@ export default {
       paymentsByDayTotalCache: [],
       top5DaysCache: [],
 
-      periodReady: false
+      periodReady: false,
+      selectedCalendarDate: null
     }
   },
   computed: {
@@ -620,12 +622,14 @@ export default {
     onSelectDay(date) {
       periodStore.setMode('week')
 
-      // 2. Compute the Monday–Sunday of that date
+      this.selectedCalendarDate = date
+
+      // Compute the Monday–Sunday of that date
       const clicked = dayjs(date)
       const monday = clicked.startOf('week').add(1, 'day') // Monday
       const sunday = monday.add(6, 'day').endOf('day')
 
-      // 3. Update the store
+      // Update the store
       periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
 
       // Optional: redraw chart immediately
