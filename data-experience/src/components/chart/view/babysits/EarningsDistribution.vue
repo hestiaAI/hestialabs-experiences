@@ -844,11 +844,16 @@ export default {
           type: 'bar',
           toolbar: { show: false }
         },
+        grid: {
+          padding: {
+            right: 20
+          }
+        },
         plotOptions: {
           bar: {
             horizontal: true,
-            borderRadius: 6,
-            barHeight: '90%',
+            borderRadius: 10,
+            barHeight: '65%',
             dataLabels: {
               position: 'right'
             },
@@ -875,7 +880,7 @@ export default {
           position: 'right',
           offsetX: 0,
           style: {
-            fontSize: '14px',
+            fontSize: '13px',
             fontWeight: 'bold',
             colors: ['#333']
           },
@@ -1092,12 +1097,17 @@ export default {
 }
 
 .tooltip-box {
-  padding: 12px;
+  padding: 16px 18px;
   background: white;
   border: 1px solid #ccc;
   border-radius: 8px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip-box p {
+  margin: 6px 0;
 }
 
 .tooltip-title {
