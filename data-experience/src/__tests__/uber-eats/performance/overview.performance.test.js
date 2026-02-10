@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import dayjs from 'dayjs'
-import OverView from '@/components/chart/view/uberEats/OverView.vue'
+import OverView from '@/components/chart/view/uberEats/Overview.vue'
 import { periodStore } from '@/components/chart/view/uberEats/store/periodStore'
 
 jest.mock('@/components/chart/view/uberEats/onboarding/tour', () => ({

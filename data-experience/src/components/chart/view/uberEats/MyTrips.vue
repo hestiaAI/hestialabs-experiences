@@ -640,13 +640,21 @@ export default {
      */
     updateMapData() {
       // Update routes
-      if (this.map?.getSource('routes')) {
-        this.map.getSource('routes').setData(this.routesGeoJson)
+      if (
+        !this.map ||
+        typeof this.map.getSource !== 'function'
+      ) {
+        return
       }
 
-      // Update delivery areas
-      if (this.map?.getSource('endRadius')) {
-        this.map.getSource('endRadius').setData(this.endRadiusGeoJson)
+      const routes = this.map.getSource('routes')
+      if (routes) {
+        routes.setData(this.routesGeoJson)
+      }
+
+      const endRadius = this.map.getSource('endRadius')
+      if (endRadius) {
+        endRadius.setData(this.endRadiusGeoJson)
       }
     },
 
