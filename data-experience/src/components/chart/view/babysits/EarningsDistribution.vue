@@ -20,6 +20,24 @@
       </div>
     </div>
 
+    <!-- Active Filters Bar -->
+    <div class="active-filters" v-if="hasActiveFilters">
+      <span class="filters-label">Filters:</span>
+      <span v-if="selectedActivity" class="filter-badge">
+        {{ selectedActivity }}
+        <button class="badge-close" @click="selectedActivity = ''">✕</button>
+      </span>
+      <span v-if="currentPeriod === 'total' && totalDataMode !== 'total'" class="filter-badge">
+        Mode: {{ totalDataMode === 'average' ? 'Avg/Hour' : 'Total' }}
+        <button class="badge-close" @click="totalDataMode = 'total'">✕</button>
+      </span>
+      <span v-if="currentPeriod === 'total' && sortDirection !== 'desc'" class="filter-badge">
+        Sort: {{ sortDirection }}
+        <button class="badge-close" @click="sortDirection = 'desc'">✕</button>
+      </span>
+      <button class="clear-all-btn" @click="clearAllFilters">Clear All</button>
+    </div>
+
     <div class="period-descriptions">
       <div v-if="currentPeriod === 'week'" class="period-desc">
         📅 Week view: Earnings patterns by time of day (Morning/Day/Evening/Night)
@@ -294,6 +312,13 @@ export default {
 
     activityTypes() {
       return Array.from(new Set(this.filteredJobs.map(j => j.job_type).filter(Boolean)))
+    },
+
+    hasActiveFilters() {
+      if (this.selectedActivity) return true
+      if (this.currentPeriod === 'total' && this.totalDataMode !== 'total') return true
+      if (this.currentPeriod === 'total' && this.sortDirection !== 'desc') return true
+      return false
     },
 
     filteredJobsByActivity() {
@@ -965,6 +990,12 @@ export default {
         total: 'Average earnings per hour by job activity type'
       }
       return descs[period] || ''
+    },
+
+    clearAllFilters() {
+      this.selectedActivity = ''
+      this.totalDataMode = 'total'
+      this.sortDirection = 'desc'
     }
   }
 }
@@ -1438,6 +1469,68 @@ input:checked + .slider:before {
 }
 
 .period-descriptions { margin-top: 0; margin-bottom: 12px; }
+
+/* Active Filters Bar */
+.active-filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.filters-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.badge-close {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.badge-close:hover {
+  color: #e74c3c;
+}
+
+.clear-all-btn {
+  margin-left: auto;
+  padding: 4px 8px;
+  background: #f0f0f0;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.clear-all-btn:hover {
+  background: #e0e0e0;
+  color: #333;
+}
 
 @media (max-width: 768px) {
   .layout-container {

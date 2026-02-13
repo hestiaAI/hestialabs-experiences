@@ -30,6 +30,16 @@
       <button class="nav-btn" @click="nextWeek" v-if="currentPeriod !== 'total'">→</button>
     </div>
 
+    <!-- Active Filters Bar -->
+    <div class="active-filters" v-if="hasActiveFilters">
+      <span class="filters-label">Filters:</span>
+      <span v-if="currentPeriod === 'total' && totalSortDirection !== 'desc'" class="filter-badge">
+        Sort: {{ totalSortDirection }}
+        <button class="badge-close" @click="totalSortDirection = 'desc'">✕</button>
+      </span>
+      <button class="clear-all-btn" @click="clearAllFilters">Clear All</button>
+    </div>
+
     <!-- BOX 2 → Heatmap for Week/Month or Bar for Total -->
     <div
       class="box box2 tour-activity-chart"
@@ -197,6 +207,10 @@ export default {
       }
 
       return Array.from(new Set(periodJobs.map(j => j.job_type)))
+    },
+
+    hasActiveFilters() {
+      return this.currentPeriod === 'total' && this.totalSortDirection !== 'desc'
     },
 
     jobs() {
@@ -607,6 +621,10 @@ export default {
         total: 'Ranking of all job types by total hours worked'
       }
       return descs[period] || ''
+    },
+
+    clearAllFilters() {
+      this.totalSortDirection = 'desc'
     }
   }
 }
@@ -616,7 +634,7 @@ export default {
 .layout-container {
   display: grid;
   width: 94%;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto 1fr;
   grid-template-columns: 1fr;
   gap: 16px;
   margin-left: 16px;
@@ -633,7 +651,7 @@ export default {
 
 .box2 {
   grid-column: 1 / 2;
-  grid-row: 2 / 3;
+  grid-row: 3 / 4;
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
@@ -777,6 +795,80 @@ export default {
   margin-top: 10px;
   font-size: 0.85rem;
   color: #555;
+}
+
+.right-column {
+  align-content: start;
+  grid-column: 2 / 3;
+  grid-row: 3 / 4;
+
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 16px;
+}
+
+/* Active Filters Bar */
+.active-filters {
+  grid-column: 1 / 3;
+  grid-row: 2 / 3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.filters-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.badge-close {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.badge-close:hover {
+  color: #e74c3c;
+}
+
+.clear-all-btn {
+  margin-left: auto;
+  padding: 4px 8px;
+  background: #f0f0f0;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.clear-all-btn:hover {
+  background: #e0e0e0;
+  color: #333;
 }
 
 @media (max-width: 768px) {

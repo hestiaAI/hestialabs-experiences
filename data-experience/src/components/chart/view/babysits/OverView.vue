@@ -30,6 +30,16 @@
       <button class="nav-btn" @click="nextWeek" v-if="currentPeriod !== 'total'">→</button>
     </div>
 
+    <!-- Active Filters Bar -->
+    <div class="active-filters" v-if="hasActiveFilters">
+      <span class="filters-label">Filters:</span>
+      <span v-if="selectedJobType" class="filter-badge">
+        {{ selectedJobType }}
+        <button class="badge-close" @click="selectedJobType = ''">✕</button>
+      </span>
+      <button class="clear-all-btn" @click="clearAllFilters">Clear All</button>
+    </div>
+
     <!-- BOX 1 → Top Stats -->
     <div class="box box1">
       <div>
@@ -346,6 +356,10 @@ export default {
 
     currency() {
       return this.jobs[0]?.currency || 'CHF'
+    },
+
+    hasActiveFilters() {
+      return !!this.selectedJobType
     },
 
     /* ---------- AVERAGE WORK TIME ---------- */
@@ -721,6 +735,10 @@ export default {
         total: 'Your overall statistics and patterns across all time'
       }
       return descs[period] || ''
+    },
+
+    clearAllFilters() {
+      this.selectedJobType = ''
     }
   }
 }
@@ -731,7 +749,7 @@ export default {
 .layout-container {
   display: grid;
   width: 94%;
-  grid-template-rows: auto 20% 1fr;
+  grid-template-rows: auto auto 20% 1fr;
   grid-template-columns: 70% 1fr;
   gap: 16px;
   margin-left: 16px;
@@ -750,7 +768,7 @@ export default {
 /* TOP BAR */
 .box1 {
   grid-column: 1 / 3;
-  grid-row: 2 / 3;
+  grid-row: 3 / 4;
 
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -761,7 +779,7 @@ export default {
 /* TIMELINE */
 .box2 {
   grid-column: 1 / 2;
-  grid-row: 3 / 4;
+  grid-row: 4 / 5;
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
@@ -935,11 +953,75 @@ export default {
 .right-column {
   align-content: start;
   grid-column: 2 / 3;
-  grid-row: 3 / 4;
+  grid-row: 4 / 5;
 
   display: grid;
   grid-template-rows: auto auto;
   gap: 16px;
+}
+
+/* Active Filters Bar */
+.active-filters {
+  grid-column: 1 / 3;
+  grid-row: 2 / 3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.filters-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.badge-close {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.badge-close:hover {
+  color: #e74c3c;
+}
+
+.clear-all-btn {
+  margin-left: auto;
+  padding: 4px 8px;
+  background: #f0f0f0;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.clear-all-btn:hover {
+  background: #e0e0e0;
+  color: #333;
 }
 
 /* --- MEDIA QUERIES --- */
