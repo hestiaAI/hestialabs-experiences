@@ -129,7 +129,7 @@ describe('Overview.vue (Option A – UI & interactions)', () => {
    * Period switching
    * ------------------------------------------- */
 
-  test('clicking MONTH calls periodStore.setMode', async () => {
+  test('clicking MONTH calls periodStore.setMode', async() => {
     const wrapper = mountOverview()
 
     const btn = wrapper
@@ -147,7 +147,7 @@ describe('Overview.vue (Option A – UI & interactions)', () => {
     expect(periodStore.setMode).toHaveBeenCalledWith('month')
   })
 
-  test('clicking TOTAL calls periodStore.setMode', async () => {
+  test('clicking TOTAL calls periodStore.setMode', async() => {
     const wrapper = mountOverview()
 
     const btn = wrapper
@@ -169,7 +169,7 @@ describe('Overview.vue (Option A – UI & interactions)', () => {
    * Navigation
    * ------------------------------------------- */
 
-  test('navigation buttons call setPeriod when clicked', async () => {
+  test('navigation buttons call setPeriod when clicked', async() => {
     const wrapper = mountOverview()
     const navButtons = wrapper.findAll('.nav-btn')
 

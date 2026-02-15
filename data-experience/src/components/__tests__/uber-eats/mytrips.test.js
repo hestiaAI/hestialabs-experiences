@@ -105,7 +105,7 @@ describe('MyTrips.vue UI & interactions', () => {
  * Filters panel & checkboxes
  * ------------------------------------------- */
 
-  test('Filters button toggles filter panel', async () => {
+  test('Filters button toggles filter panel', async() => {
     const wrapper = mountComponent()
 
     // Panel should be hidden initially
@@ -123,7 +123,7 @@ describe('MyTrips.vue UI & interactions', () => {
     expect(wrapper.find('.filters-panel').exists()).toBe(false)
   })
 
-  test('Completed and Uncompleted checkboxes exist and are clickable', async () => {
+  test('Completed and Uncompleted checkboxes exist and are clickable', async() => {
     const wrapper = mountComponent()
 
     // Open the filters panel

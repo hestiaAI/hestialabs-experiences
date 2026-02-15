@@ -270,11 +270,11 @@ describe('OverView.vue (babysits) - UI & interactions', () => {
 
   test('displays correct label for week period', async() => {
     const wrapper = mountOverView()
-    
+
     // Switch to WEEK mode first
     const weekBtn = wrapper.findAll('.switch-btn').at(0)
     await weekBtn.trigger('click')
-    
+
     const label = wrapper.find('.week-label')
 
     expect(label.exists()).toBe(true)
