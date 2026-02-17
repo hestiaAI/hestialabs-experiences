@@ -99,12 +99,28 @@
     <!-- BOX 3 + BOX 4 → Distance + Avg Time -->
     <div class="right-column">
       <div class="box box3">
-        <p><strong>Distance travelled</strong></p>
+        <p class="metric-title">
+          <strong>Distance travelled</strong>
+          <span
+            class="info-icon"
+            title="Total for the selected period"
+          >
+            i
+          </span>
+        </p>
         <p>{{ totalDistance }} km</p>
       </div>
 
       <div class="box box4">
-        <p><strong>Average delivery time</strong></p>
+        <p class="metric-title">
+          <strong>Average delivery time</strong>
+          <span
+            class="info-icon"
+            title="Average for the deliveries of the selected period"
+          >
+            i
+          </span>
+        </p>
         <p>{{ avgDeliveryTimeFormatted }}</p>
       </div>
 
@@ -1091,6 +1107,31 @@ export default {
   stroke-width: 2px;
 }
 
+.metric-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #ccc;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.info-icon:hover {
+  background-color: #999;
+}
+
 /* legend */
 .legend { display:flex; gap:12px; margin-top: 10px; justify-content: center; }
 .legend-item { display:flex; align-items:center; gap:8px; font-size: .9rem; }
@@ -1158,6 +1199,10 @@ export default {
   .box3,
   .box4 {
     text-align: center;
+  }
+
+  .metric-title {
+    justify-content: center;
   }
 }
 </style>

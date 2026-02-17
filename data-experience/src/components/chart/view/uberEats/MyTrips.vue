@@ -135,8 +135,16 @@
                 <span class="value">{{ formatTime(trip.courierDropoffTimestampLocal) }}</span>
               </div>
               <div class="info-row">
-                <span class="label">Distance</span>
-                <span class="value">{{ trip.dropoffDeliveryDistanceKm }} km</span>
+                <span class="label">
+                  Delivery distance
+                  <span class="info-wrapper">
+                    <span class="info-icon">i</span>
+                    <span class="tooltip">
+                      Distance from pickup location to customer.
+                    </span>
+                  </span>
+                </span>
+                <span class="value">{{ Number(trip.dropoffDeliveryDistanceKm).toFixed(3) }} km</span>
               </div>
               <div class="info-row">
                 <span class="label">Status</span>
@@ -1141,7 +1149,7 @@ export default {
 .info-wrapper {
   position: relative;
   display: inline-block;
-  margin-left: 8px;
+  margin-left: 4px;
 }
 
 /* Info icon */

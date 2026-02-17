@@ -86,8 +86,11 @@
 <script>
 import VueApexCharts from 'vue-apexcharts'
 import dayjs from 'dayjs'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { periodStore } from './store/periodStore'
 import mixin from '@/components/chart/view/mixin'
+
+dayjs.extend(customParseFormat)
 
 export default {
   name: 'EarningsView',
@@ -192,7 +195,16 @@ export default {
         states: { hover: { filter: { type: 'none' } }, active: { filter: { type: 'none' } } },
         dataLabels: { enabled: false },
         plotOptions: { bar: { borderRadius: 4, columnWidth: '60%' } },
-        xaxis: { categories: this.chartData.map(d => d.date), labels: { rotate: -45 } },
+        xaxis: {
+          categories: this.chartData.map((d) => {
+            // if total mode → years only
+            if (this.mode === 'total') return d.date
+
+            const parsed = dayjs(d.date, 'DD.MM.YYYY')
+            return parsed.format('ddd DD.MM.YY') // e.g. "Mon 01.03.21"
+          }),
+          labels: { rotate: -45 }
+        },
         yaxis: { labels: { formatter: val => `${currency} ${val.toFixed(0)}` } },
         tooltip: { y: { formatter: val => `${currency} ${val.toFixed(2)}` } },
         legend: { show: false },
