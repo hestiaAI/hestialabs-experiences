@@ -876,7 +876,7 @@ export default {
     width: 100%;
     margin-left: 8px;
     gap: 12px;
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto auto auto 1fr; /* extra row for nav */
   }
 
   .period-switch {
@@ -886,10 +886,18 @@ export default {
     grid-row: 1 / 2;
   }
 
+  /* ensure description appears below the switch instead of overlapping */
+  .period-descriptions {
+    grid-column: 1 / -1;
+    grid-row: 2 / 3;
+    padding-top: 0;
+    margin-top: 0;
+  }
+
   .week-nav {
     justify-content: center;
     margin-bottom: 12px;
-    grid-row: 2 / 3;
+    grid-row: 3 / 4; /* ensure it's below description row */
   }
 
   .period-switch .switch-btn,
@@ -900,7 +908,7 @@ export default {
 
   .box2 {
     grid-column: 1 / -1;
-    grid-row: 3 / 4;
+    grid-row: 4 / 5; /* place heatmap/bar below week-nav */
     margin-bottom: 12px;
   }
 

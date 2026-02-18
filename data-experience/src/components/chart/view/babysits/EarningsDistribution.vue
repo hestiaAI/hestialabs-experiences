@@ -1553,6 +1553,16 @@ input:checked + .slider:before {
     grid-row: 2 / 3;
   }
 
+  /* stack switch and nav vertically on mobile */
+  .top-bar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .top-bar .week-nav {
+    margin-top: 8px;
+  }
+
   .total-layout {
     flex-direction: column;
   }
@@ -1575,10 +1585,13 @@ input:checked + .slider:before {
   .week-month-layout .box2 {
     flex: 1 1 100%;
     margin-bottom: 12px;
+    order: 2;
   }
 
   .week-month-layout .box4 {
     flex: 1 1 100%;
+    order: 1;
+    margin-bottom: 12px;
   }
 
   .box {

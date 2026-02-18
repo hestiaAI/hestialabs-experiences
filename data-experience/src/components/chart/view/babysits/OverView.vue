@@ -1030,7 +1030,8 @@ export default {
     width: 100%;
     margin-left: 8px;
     gap: 12px;
-    grid-template-rows: auto auto auto 1fr auto;
+    /* add an extra auto row for box1 so nav won't collide */
+    grid-template-rows: auto auto auto auto 1fr auto;
   }
 
   .period-switch {
@@ -1041,11 +1042,21 @@ export default {
     grid-row: 1 / 2;
   }
 
+  /* move description under the switch on small screens */
+  .period-descriptions {
+    grid-column: 1 / -1;
+    grid-row: 2 / 3;
+    padding-top: 0;
+    margin-top: 0;
+  }
+
   .week-nav {
     justify-content: center;
     margin-bottom: 12px;
     grid-column: 1 / -1;
-    grid-row: 2 / 3;
+    grid-row: 3 / 4; /* below period-descriptions */
+    background: #fff;
+    z-index: 2;
   }
 
   .period-switch .switch-btn,
@@ -1056,7 +1067,7 @@ export default {
 
   .box1 {
     grid-column: 1 / -1;
-    grid-row: 3 / 4;
+    grid-row: 4 / 5; /* move below nav */
     grid-template-columns: 1fr;
     padding: 12px;
     gap: 12px;
@@ -1064,14 +1075,14 @@ export default {
 
   .box2 {
     grid-column: 1 / -1;
-    grid-row: 4 / 5;
+    grid-row: 6 / 7; /* push timeline into its own row */
     margin-bottom: 12px;
     padding: 12px;
   }
 
   .right-column {
     grid-column: 1 / -1;
-    grid-row: 5 / 6;
+    grid-row: 5 / 6; /* positioned below the timeline box */
     display: block;
     gap: 12px;
   }
