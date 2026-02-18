@@ -873,8 +873,8 @@ export default {
 
 @media (max-width: 768px) {
   .layout-container {
-    width: 100%;
-    margin-left: 8px;
+    width: 95%;
+    margin: 0 auto;
     gap: 12px;
     grid-template-rows: auto auto auto 1fr; /* extra row for nav */
   }

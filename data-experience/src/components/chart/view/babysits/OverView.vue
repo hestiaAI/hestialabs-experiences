@@ -1027,8 +1027,8 @@ export default {
 /* --- MEDIA QUERIES --- */
 @media (max-width: 768px) {
   .layout-container {
-    width: 100%;
-    margin-left: 8px;
+    width: 95%;
+    margin: 0 auto;
     gap: 12px;
     /* add an extra auto row for box1 so nav won't collide */
     grid-template-rows: auto auto auto auto 1fr auto;
