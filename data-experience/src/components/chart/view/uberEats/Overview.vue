@@ -101,11 +101,18 @@
       <div class="box box3">
         <p class="metric-title">
           <strong>Distance travelled</strong>
-          <span
+
+          <button
             class="info-icon"
-            title="Total for the selected period"
+            type="button"
+            @click.stop="toggleInfo('distance')"
+            aria-label="Info about distance travelled"
           >
             i
+          </button>
+
+          <span v-if="openInfo === 'distance'" class="info-tooltip">
+            Total for the selected period
           </span>
         </p>
         <p>{{ totalDistance }} km</p>
@@ -114,11 +121,18 @@
       <div class="box box4">
         <p class="metric-title">
           <strong>Average delivery time</strong>
-          <span
+
+          <button
             class="info-icon"
-            title="Average for the deliveries of the selected period"
+            type="button"
+            @click.stop="toggleInfo('avgTime')"
+            aria-label="Info about average delivery time"
           >
             i
+          </button>
+
+          <span v-if="openInfo === 'avgTime'" class="info-tooltip">
+            Average for the deliveries of the selected period
           </span>
         </p>
         <p>{{ avgDeliveryTimeFormatted }}</p>
@@ -182,7 +196,8 @@ export default {
       top5DaysCache: [],
 
       periodReady: false,
-      selectedCalendarDate: null
+      selectedCalendarDate: null,
+      openInfo: null
     }
   },
   computed: {
@@ -630,6 +645,21 @@ export default {
 
       // Start the tour
       tour.start()
+    },
+
+    /**
+     * De-toggle info tooltip for a given key (e.g. 'distance' or 'avgTime')
+     * @param key
+     */
+    toggleInfo(key) {
+      this.openInfo = this.openInfo === key ? null : key
+    },
+
+    /**
+     * Close any open info tooltip
+     */
+    closeInfo() {
+      this.openInfo = null
     },
 
     /**
@@ -1109,8 +1139,8 @@ export default {
 
 .metric-title {
   display: flex;
-  align-items: center;
   gap: 8px;
+  position: relative;
 }
 
 .info-icon {
@@ -1121,11 +1151,33 @@ export default {
   height: 16px;
   border-radius: 50%;
   background-color: #ccc;
-  color: white;
+  border: 1px solid #999;
+  color: #fff;
   font-size: 11px;
   font-weight: bold;
   line-height: 1;
-  margin-top: 2px;
+  margin-top: 5px;
+  cursor: pointer;
+  padding: 0;
+  appearance: none;
+}
+
+.info-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 6px;
+  padding: 8px 10px;
+  width: max-content;
+  max-width: 220px;
+  background: #333;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: center;
+  z-index: 20;
 }
 
 .info-icon:hover {
