@@ -25,9 +25,11 @@
     </div>
 
     <div class="week-nav">
-      <button class="nav-btn" @click="prevWeek" v-if="currentPeriod !== 'total'">←</button>
-      <div class="week-label" :class="`mode-${currentPeriod}`">{{ weekLabel }}</div>
-      <button class="nav-btn" @click="nextWeek" v-if="currentPeriod !== 'total'">→</button>
+      <div class="week-nav-wrapper">
+        <button class="nav-btn" @click="prevWeek" v-if="currentPeriod !== 'total'">←</button>
+        <div class="week-label" :class="`mode-${currentPeriod}`">{{ weekLabel }}</div>
+        <button class="nav-btn" @click="nextWeek" v-if="currentPeriod !== 'total'">→</button>
+      </div>
     </div>
 
     <!-- Active Filters Bar -->
@@ -748,11 +750,124 @@ export default {
 /* --- LAYOUT --- */
 .layout-container {
   display: grid;
-  width: 94%;
-  grid-template-rows: auto auto 20% 1fr;
+  width: 98%;
+  grid-template-rows: auto 16% 1fr;
   grid-template-columns: 70% 1fr;
   gap: 16px;
-  margin-left: 16px;
+  margin-left: 12px;
+  margin-bottom: 24px;
+}
+
+.period-switch {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  position: absolute;
+  display: flex;
+  gap: 6px;
+}
+
+.switch-btn {
+  padding: 4px 12px;
+  border: 1px solid #bbb;
+  border-radius: 0;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.switch-btn.active {
+  background: #e6e6e6;
+  font-weight: 600;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
+}
+
+.period-descriptions {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  padding-top: 45px;
+  padding-left: 0;
+  margin-top: 0;
+}
+
+.period-desc {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 400;
+  margin: 0;
+}
+
+.week-nav {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  height: 32px;
+}
+
+.week-nav-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.nav-btn {
+  padding: 4px 12px;
+  border: 1px solid #bbb;
+  border-radius: 0;
+  background: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.05s ease;
+}
+
+.nav-btn:hover, .switch-btn:hover {
+  background: #f2f2f2;
+  box-shadow:
+    0 3px 1px -2px rgba(0,0,0,.25),
+    0 2px 4px 0 rgba(0,0,0,.20),
+    0 1px 8px 0 rgba(0,0,0,.18);
+  transform: translateY(-1px);
+}
+
+.week-label {
+  width: 240px;
+  padding: 4px 12px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #bbb;
+}
+
+.week-label.mode-week {
+  background: #e3f2fd;
+  border-color: #2196f377;
+  color: #0d47a1;
+}
+
+.week-label.mode-month {
+  background: #e8f5e9;
+  border-color: #4caf5077;
+  color: #1b5e20;
+}
+
+.week-label.mode-total {
+  width: 280px;
+  background: #fff3e0;
+  border-color: #ff9800bb;
+  color: #e65100;
 }
 
 /* Base box style */
@@ -768,18 +883,19 @@ export default {
 /* TOP BAR */
 .box1 {
   grid-column: 1 / 3;
-  grid-row: 3 / 4;
+  grid-row: 2 / 3;
 
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
   align-items: center;
+  text-align: center;
 }
 
 /* TIMELINE */
 .box2 {
   grid-column: 1 / 2;
-  grid-row: 4 / 5;
+  grid-row: 3 / 4;
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
@@ -827,109 +943,6 @@ export default {
   border-radius: 4px;
 }
 
-.week-nav {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.nav-btn {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: 1px solid #bbb;
-  background: white;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-size: 1rem;
-}
-
-.nav-btn:hover {
-  background: #f3f3f3;
-}
-
-.week-label {
-  padding: 4px 12px;
-  font-weight: 800;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #bbb;
-  width: 240px;
-}
-
-.week-label.mode-week {
-  background: #e3f2fd;
-  border-color: #2196f377;
-  color: #0d47a1;
-}
-
-.week-label.mode-month {
-  background: #e8f5e9;
-  border-color: #4caf5077;
-  color: #1b5e20;
-}
-
-.week-label.mode-total {
-  width: 280px;
-  background: #fff3e0;
-  border-color: #ff9800bb;
-  color: #e65100;
-}
-
-.period-switch {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-  position: absolute;
-  display: flex;
-  gap: 6px;
-}
-
-.period-descriptions {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-  padding-top: 45px;
-  padding-left: 0;
-  margin-top: 0;
-}
-
-.period-desc {
-  font-size: 0.85rem;
-  color: #666;
-  font-weight: 400;
-  margin: 0;
-}
-
-.switch-btn {
-  padding: 4px 12px;
-  border-radius: 6px;
-  border: 1px solid #bbb;
-  background: #e0e0e0;
-  color: #333;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.switch-btn.active {
-  background: #bcbcbc;
-  font-weight: 700;
-}
-
-.switch-btn:hover {
-  background: #d2d2d2;
-}
-
-.dev-placeholder{
-  text-align:center;
-  margin-top:120px;
-  color:#777;
-  font-size:1.1rem;
-}
-
 :deep(.apexcharts-heatmap-rect:hover) {
   stroke: #333;
   stroke-width: 1.5px;
@@ -953,7 +966,7 @@ export default {
 .right-column {
   align-content: start;
   grid-column: 2 / 3;
-  grid-row: 4 / 5;
+  grid-row: 3 / 4;
 
   display: grid;
   grid-template-rows: auto auto;
@@ -1027,11 +1040,9 @@ export default {
 /* --- MEDIA QUERIES --- */
 @media (max-width: 768px) {
   .layout-container {
-    width: 95%;
-    margin: 0 auto;
-    gap: 12px;
-    /* add an extra auto row for box1 so nav won't collide */
-    grid-template-rows: auto auto auto auto 1fr auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    width: 94%;
   }
 
   .period-switch {
@@ -1048,21 +1059,14 @@ export default {
     grid-row: 2 / 3;
     padding-top: 0;
     margin-top: 0;
+    text-align: center;
   }
 
   .week-nav {
     justify-content: center;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
     grid-column: 1 / -1;
     grid-row: 3 / 4; /* below period-descriptions */
-    background: #fff;
-    z-index: 2;
-  }
-
-  .period-switch .switch-btn,
-  .week-nav .nav-btn {
-    flex-shrink: 0;
-    margin: 0 6px;
   }
 
   .box1 {
@@ -1091,15 +1095,6 @@ export default {
     width: 100%;
     padding: 12px;
     margin-bottom: 12px;
-  }
-
-  .week-label {
-    text-align: center;
-    width: auto;
-  }
-
-  .nav-btn {
-    padding: 6px 8px;
   }
 }
 </style>

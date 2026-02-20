@@ -128,6 +128,9 @@ export default {
   background: #f4f4f4;
   border: 1px solid #b9b9b9;
   height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .calendar-cell {
@@ -146,6 +149,7 @@ export default {
 
 .day-cell {
   background: white;
+  cursor: pointer;
 }
 
 .day-cell.selected {

@@ -826,8 +826,8 @@ export default {
 .layout {
   display: flex;
   flex-direction: column;
-  width: 95%;
-  margin: 16px 0px 0px 16px;
+  width: 98%;
+  margin: 16px 0px 0px 12px;
   position: relative;
 }
 
@@ -1218,6 +1218,7 @@ export default {
 @media (max-width: 768px) {
   .layout {
     margin: 8px;
+    width: 94%;
   }
 
   .controls-bar {

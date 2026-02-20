@@ -150,6 +150,7 @@ export default {
   text-align: center;
   font-weight: bold;
   background: #f4f4f4;
+  border: 1px solid #b9b9b9;
   height: 28px;
   display: flex;
   align-items: center;
@@ -175,23 +176,22 @@ export default {
   cursor: pointer;
 }
 
-.day-cell:hover {
-  background-color: #ddd;
-}
-
 .day-cell.selected {
   background-color: #fff3e0;
   border: 2px solid #ff9800;
   box-shadow: 0 0 8px rgba(255, 152, 0, 0.3);
 }
 
-.day-number {
-  font-size: 14px;
-  font-weight: bold;
+.day-cell:hover {
+  background-color: #f2f2f2;
+  box-shadow:
+      0 2px 1px -1px rgba(0,0,0,.22),
+      0 1px 3px 0 rgba(0,0,0,.18);
 }
 
-.stats {
-  margin-top: 2px;
+.day-number {
+  font-size: 13px;
+  font-weight: bold;
 }
 
 .stat-job-type {
@@ -223,12 +223,12 @@ export default {
   margin-bottom: auto;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .calendar { padding: 4px 6px 0 6px; gap: 4px; }
   .calendar-header { height: 24px; font-size: 12px; }
-  .calendar-cell { height: 65px; padding: 2px; }
-  .day-number { font-size: 12px; }
-  .stat-hours, .stat-money { font-size: 11px; }
+  .calendar-cell { height: 90px; padding: 2px; }
+  .day-number { font-size: 11px; }
+  .stat-hours, .stat-money { font-size: 9px; }
   .empty-stats { font-size: 11px; }
 }
 </style>

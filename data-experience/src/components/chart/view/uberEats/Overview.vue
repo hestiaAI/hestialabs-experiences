@@ -945,11 +945,11 @@ export default {
 <style scoped>
 .layout-container {
   display: grid;
-  width: 94%;
+  width: 98%;
   grid-template-rows: auto 16% 1fr;
   grid-template-columns: 70% 1fr;
   gap: 16px;
-  margin-left: 16px;
+  margin-left: 12px;
   margin-bottom: 24px;
 }
 
@@ -1204,6 +1204,7 @@ export default {
   .layout-container {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
+    width: 94%;
   }
 
   .period-switch {
