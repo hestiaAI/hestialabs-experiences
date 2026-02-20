@@ -1256,7 +1256,6 @@ export default {
 
 .filter-label {
   font-weight: 600;
-  font-size: 1.1rem;
   margin-bottom: 8px;
   color: #333;
   display: block;
@@ -1592,10 +1591,6 @@ input:checked + .slider:before {
     flex: 1 1 100%;
     order: 1;
     margin-bottom: 12px;
-  }
-
-  .box {
-    padding: 12px;
   }
 
   .chart-wrapper {

@@ -143,7 +143,7 @@ export default {
   grid-auto-rows: 1fr;
   grid-template-rows: 28px repeat(6, 1fr);
   gap: 6px;
-  padding: 4px 10px 0px 10px;
+  padding-top: 4px;
 }
 
 .calendar-header {

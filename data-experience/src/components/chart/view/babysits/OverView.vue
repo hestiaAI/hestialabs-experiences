@@ -751,7 +751,7 @@ export default {
 .layout-container {
   display: grid;
   width: 98%;
-  grid-template-rows: auto 16% 1fr;
+  grid-template-rows: auto 108px 1fr;
   grid-template-columns: 70% 1fr;
   gap: 16px;
   margin-left: 12px;
@@ -889,7 +889,7 @@ export default {
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
   align-items: center;
-  text-align: center;
+  padding-bottom: 16px;
 }
 
 /* TIMELINE */
@@ -909,11 +909,15 @@ export default {
   text-align: left;
   height: auto;
   align-self: start;
+  padding-top: 16px;
+}
+
+.avg-box p {
+  margin: 8px 0;
 }
 
 .avg-value {
   font-size: 1.6rem;
-  margin-top: 8px;
 }
 
 /* Legend */
@@ -1073,15 +1077,14 @@ export default {
     grid-column: 1 / -1;
     grid-row: 4 / 5; /* move below nav */
     grid-template-columns: 1fr;
-    padding: 12px;
     gap: 12px;
+    text-align: center;
   }
 
   .box2 {
     grid-column: 1 / -1;
     grid-row: 6 / 7; /* push timeline into its own row */
     margin-bottom: 12px;
-    padding: 12px;
   }
 
   .right-column {
@@ -1093,7 +1096,6 @@ export default {
 
   .box4, .avg-box, .filter-box {
     width: 100%;
-    padding: 12px;
     margin-bottom: 12px;
   }
 }

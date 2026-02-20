@@ -946,7 +946,7 @@ export default {
 .layout-container {
   display: grid;
   width: 98%;
-  grid-template-rows: auto 16% 1fr;
+  grid-template-rows: auto 108px 1fr;
   grid-template-columns: 70% 1fr;
   gap: 16px;
   margin-left: 12px;
