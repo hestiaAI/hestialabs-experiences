@@ -64,7 +64,8 @@ async function csv_babysitter_jobs({ fileManager }: { fileManager: FileManager }
       earnings: Number.isFinite(price) ? price * duration : null,
       location: r.cityName || '',
       job_type: r.title || '',
-      status: (r.state || '').toLowerCase()
+      status: (r.state || '').toLowerCase(),
+      category: r.category || ''
     })
   }
 
@@ -79,6 +80,7 @@ async function csv_babysitter_jobs({ fileManager }: { fileManager: FileManager }
       "location",
       "job_type",
       "status",
+      "category",
     ],
     items
   }
