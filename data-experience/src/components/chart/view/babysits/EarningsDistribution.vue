@@ -635,7 +635,7 @@ export default {
     },
 
     totalStackedBarData() {
-      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
+      const bucketKeys = ['Morning', 'Day', 'Evening']
       const data = {}
       const hours = {}
 
@@ -683,7 +683,7 @@ export default {
     },
 
     totalStackedBarSeries() {
-      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
+      const bucketKeys = ['Morning', 'Day', 'Evening']
       const activityTypes = this.activityTypes
       const data = this.totalStackedBarData
 
@@ -694,9 +694,9 @@ export default {
     },
 
     totalStackedBarOptions() {
-      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
+      const bucketKeys = ['Morning', 'Day', 'Evening']
       const categories = bucketKeys.map(
-        key => `${key}\n(${TIME_BUCKETS[key].from}-${TIME_BUCKETS[key].to})`
+        key => `${TIME_BUCKETS[key].from}-${TIME_BUCKETS[key].to}`
       )
 
       return {
@@ -733,8 +733,8 @@ export default {
             offsetY: 10
           },
           labels: {
-            rotate: -45,
-            rotateAlways: true,
+            rotate: 0,
+            rotateAlways: false,
             style: {
               fontSize: '12px'
             }
