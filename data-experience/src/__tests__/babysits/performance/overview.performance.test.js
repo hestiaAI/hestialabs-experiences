@@ -88,9 +88,8 @@ describeIfPerf('Babysits OverView performance test', () => {
       void vm.totalEarnings
       void vm.totalHours
       void vm.totalJobs
-      void vm.dailyStats
-      void vm.timelineSeriesData
-      void vm.weekHeatmapSeries
+      void vm.chartSeries
+      void vm.heatmapSeries
 
       const t1 = performance.now()
       const duration = t1 - t0

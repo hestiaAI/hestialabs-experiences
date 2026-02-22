@@ -81,7 +81,7 @@ describeIfPerf('Babysits ActivityTypes performance test', () => {
       void vm.weekHeatmapSeries
       void vm.activityLegendItems
       void vm.monthHeatmapSeries
-      void vm.totalHeatmapSeries
+      void vm.totalTypeSeries
 
       const t1 = performance.now()
       const duration = t1 - t0

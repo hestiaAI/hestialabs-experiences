@@ -16,6 +16,7 @@ jest.mock('vue-apexcharts', () => ({
 
 function generateJobs(count, startDate) {
   const jobTypes = ['Evening babysit', 'Night shift', 'Weekend care', 'Holiday care', 'After-school care']
+  const categories = ['Ménage', 'Animaux', 'Aménagement', 'Garde d\'enfants']
   const jobs = []
 
   for (let i = 0; i < count; i++) {
@@ -32,6 +33,7 @@ function generateJobs(count, startDate) {
       earnings: (Math.random() * 30 + 15).toFixed(2),
       location: ['Basel', 'Zurich', 'Bern', 'Lucerne'][i % 4],
       job_type: jobTypes[i % jobTypes.length],
+      category: categories[i % categories.length],
       status: Math.random() > 0.3 ? 'completed' : 'paid',
       currency: 'CHF'
     })
@@ -77,9 +79,9 @@ describeIfPerf('Babysits EarningsDistribution performance test', () => {
 
       // Force evaluation of heavy computed properties
       void vm.filteredJobs
-      void vm.weekEarningsBucketSeries
-      void vm.monthEarningsBarSeries
-      void vm.totalBucketChartSeries
+      void vm.chartSeries
+      void vm.totalStackedBarSeries
+      void vm.earningsPerHourSeries 
       void vm.totalPanelActivities
       void vm.monthDays
       void vm.latestJobDate
