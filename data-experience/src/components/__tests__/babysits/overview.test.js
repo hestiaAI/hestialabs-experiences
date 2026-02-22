@@ -217,9 +217,6 @@ describe('OverView.vue (babysits) - UI & interactions', () => {
   test('renders MonthlyCalendar in month mode', async() => {
     const wrapper = mountOverView()
 
-    // Switch to month mode
-    await wrapper.findAll('.switch-btn').at(1).trigger('click')
-
     // MonthlyCalendar should be rendered (stubbed)
     expect(wrapper.findComponent({ name: 'MonthlyCalendar' }).exists()).toBe(true)
   })

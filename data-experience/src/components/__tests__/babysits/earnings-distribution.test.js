@@ -28,6 +28,7 @@ const mockPipelineValues = [
     start_time: '09:00',
     end_time: '11:00',
     job_type: 'babysitting',
+    category: 'Garde d\'enfants',
     duration_hours: 2,
     earnings: 40,
     currency: 'CHF',
@@ -39,6 +40,7 @@ const mockPipelineValues = [
     start_time: '14:00',
     end_time: '17:00',
     job_type: 'household',
+    category: 'Ménage',
     duration_hours: 3,
     earnings: 60,
     currency: 'CHF',
@@ -50,6 +52,7 @@ const mockPipelineValues = [
     start_time: '22:30',
     end_time: '23:30',
     job_type: 'babysitting',
+    category: 'Garde d\'enfants',
     duration_hours: 1,
     earnings: 25,
     currency: 'CHF',
@@ -215,5 +218,15 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
     expect(
       text === 'Entire Period' || /\d{2}\.\d{2}\.\d{4}\s*-\s*\d{2}\.\d{2}\.\d{4}/.test(text)
     ).toBe(true)
+  })
+
+  test('renders stacked bar chart in TOTAL mode with category data', async() => {
+    const wrapper = mountEarningsDistribution()
+
+    await wrapper.findAll('.switch-btn').at(2).trigger('click')
+
+    const vm = wrapper.vm
+    expect(vm.categoryTypes.length).toBeGreaterThan(0)
+    expect(vm.totalStackedBarSeries.length).toBeGreaterThan(0)
   })
 })
