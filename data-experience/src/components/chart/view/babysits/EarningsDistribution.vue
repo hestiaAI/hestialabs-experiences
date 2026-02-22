@@ -729,19 +729,6 @@ export default {
         xaxis: {
           categories,
           title: {
-            text: 'Time of Day',
-            offsetY: 10
-          },
-          labels: {
-            rotate: 0,
-            rotateAlways: false,
-            style: {
-              fontSize: '12px'
-            }
-          }
-        },
-        yaxis: {
-          title: {
             text: this.totalDataMode === 'average'
               ? `Average earnings per hour (${this.currency})`
               : `Total earnings (${this.currency})`
@@ -754,10 +741,24 @@ export default {
             }
           }
         },
+        yaxis: {
+          title: {
+            text: 'Time of Day',
+            offsetY: 10
+          },
+          labels: {
+            rotate: 0,
+            rotateAlways: false,
+            style: {
+              fontSize: '12px'
+            }
+          }
+        },
         plotOptions: {
           bar: {
-            borderRadius: 4,
-            columnWidth: '60%',
+            horizontal: true,
+            borderRadius: 6,
+            barHeight: '65%',
             dataLabels: {
               position: 'top'
             },
