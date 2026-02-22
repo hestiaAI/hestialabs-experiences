@@ -364,6 +364,23 @@ export default {
       return colors
     },
 
+    categoryTypes() {
+      return Array.from(new Set(this.filteredJobs.map(j => j.category).filter(Boolean)))
+    },
+
+    categoryColors() {
+      const palette = [
+        '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A',
+        '#90EE90', '#FFD700', '#DDA0DD', '#FF9999',
+        '#99CCFF', '#99FF99', '#FFB347', '#87CEEB'
+      ]
+      const result = {}
+      this.categoryTypes.forEach((cat, idx) => {
+        result[cat] = palette[idx % palette.length]
+      })
+      return result
+    },
+
     xLabels() {
       if (this.currentPeriod === 'month') {
         const monthStart = this.currentWeekStart.startOf('month')
@@ -647,33 +664,31 @@ export default {
       this.filteredJobs.forEach((job) => {
         const [startH] = (job.start_time || '0:00').split(':').map(Number)
         const bucket = this.getTimeBucketFromHour(startH)
-        const activityType = job.job_type || 'Other'
+        console.log(job.category)
+        const category = job.category || 'Other'
+        // console.log('Processing job:', { bucket, category: job.category, earnings: job.earnings, hours: job.nbHours || job.duration || job.duration_hours || job.hours || job.work_hours })
 
-        if (!data[bucket][activityType]) {
-          data[bucket][activityType] = 0
-          hours[bucket][activityType] = 0
+        if (!data[bucket][category]) {
+          data[bucket][category] = 0
+          hours[bucket][category] = 0
         }
 
         const earnings = Number(job.earnings) || 0
         const jobHours = Number(
-          job.nbHours ||
-          job.duration ||
-          job.duration_hours ||
-          job.hours ||
-          job.work_hours
+          job.nbHours || job.duration || job.duration_hours || job.hours || job.work_hours
         ) || 0
 
-        data[bucket][activityType] += earnings
-        hours[bucket][activityType] += jobHours
+        data[bucket][category] += earnings
+        hours[bucket][category] += jobHours
       })
 
       if (this.totalDataMode === 'average') {
         const avgData = {}
         bucketKeys.forEach((bucket) => {
           avgData[bucket] = {}
-          Object.entries(data[bucket]).forEach(([activity, earnings]) => {
-            const totalHours = hours[bucket][activity]
-            avgData[bucket][activity] = totalHours > 0 ? earnings / totalHours : 0
+          Object.entries(data[bucket]).forEach(([category, earnings]) => {
+            const totalHours = hours[bucket][category]
+            avgData[bucket][category] = totalHours > 0 ? earnings / totalHours : 0
           })
         })
         return avgData
@@ -684,12 +699,11 @@ export default {
 
     totalStackedBarSeries() {
       const bucketKeys = ['Morning', 'Day', 'Evening']
-      const activityTypes = this.activityTypes
       const data = this.totalStackedBarData
 
-      return activityTypes.map(activityType => ({
-        name: activityType,
-        data: bucketKeys.map(bucket => data[bucket][activityType] || 0)
+      return this.categoryTypes.map(category => ({
+        name: category,
+        data: bucketKeys.map(bucket => data[bucket][category] || 0)
       }))
     },
 
@@ -723,8 +737,8 @@ export default {
             }
           }
         },
-        colors: this.activityTypes.map(
-          type => this.activityTypeColors[type] || this.activityTypeColors.Other
+        colors: this.categoryTypes.map(
+          cat => this.categoryColors[cat] || '#CCCCCC'
         ),
         xaxis: {
           categories,
