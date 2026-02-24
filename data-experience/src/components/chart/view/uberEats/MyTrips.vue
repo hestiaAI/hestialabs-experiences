@@ -306,18 +306,10 @@ export default {
       })
     },
 
-    // Sorted trips: selected first, then by accept time desc
+    // Trips sorted by accept timestamp desc
     sortedTrips() {
-      const selectedSet = new Set(this.selectedTrips.map(t => t._id))
-
-      return [...this.filteredTrips].sort((a, b) => {
-        const aSel = selectedSet.has(a._id)
-        const bSel = selectedSet.has(b._id)
-
-        if (aSel !== bSel) return aSel ? -1 : 1
-
-        return b._acceptTs - a._acceptTs
-      })
+      return [...this.filteredTrips]
+        .sort((a, b) => b._acceptTs - a._acceptTs)
     },
 
     // Limit trips for map rendering

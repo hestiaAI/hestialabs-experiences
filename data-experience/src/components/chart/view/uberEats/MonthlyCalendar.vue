@@ -177,6 +177,12 @@ export default {
   justify-content: center;
 }
 
+.calendar-header:nth-child(6),
+.calendar-header:nth-child(7) {
+  background: #e3f2fd;
+  border-color: #2196f377;
+}
+
 .calendar-cell {
   height: 62px;
   overflow: hidden;
