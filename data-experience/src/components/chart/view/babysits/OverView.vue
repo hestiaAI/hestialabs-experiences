@@ -64,7 +64,17 @@
     <div class="box box2">
       <h2 class="mb-4">Shift Timeline</h2>
 
-      <div v-if="currentPeriod === 'week' && jobs.length">
+      <div v-if="currentPeriod === 'week' && jobs.length" class="chart-wrapper">
+        <!-- Overlay if no earnings data -->
+        <div v-if="!hasEarningsData" class="calendar-overlay">
+          <div class="overlay-box">
+            <div class="overlay-title">No earnings data</div>
+            <div class="overlay-text">
+              Check whether your dataset is empty, or select another period.
+            </div>
+          </div>
+        </div>
+
         <ApexChart
           type="rangeBar"
           height="450"
@@ -272,6 +282,10 @@ export default {
         const d = dayjs(j.date)
         return d.isBetween(this.weekStart, this.weekEnd, 'day', '[]')
       })
+    },
+
+    hasEarningsData() {
+      return this.filteredJobs.some(j => (parseFloat(j.earnings) || 0) > 0)
     },
 
     weekLabel() {
@@ -899,6 +913,37 @@ export default {
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
+}
+
+.chart-wrapper {
+  position: relative;
+}
+
+.calendar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(240, 240, 240, 0.6);
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+/* Message box */
+.overlay-box {
+  pointer-events: auto;
+  text-align: center;
+}
+
+.overlay-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.overlay-text {
+  font-size: 13px;
+  opacity: 0.85;
 }
 
 /* RIGHT COLUMN BOX 4 */

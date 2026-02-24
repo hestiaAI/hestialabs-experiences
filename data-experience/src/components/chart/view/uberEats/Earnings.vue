@@ -64,6 +64,16 @@
         </div>
       </div>
       <div class="chart-container">
+        <!-- Overlay if no earnings in current view -->
+        <div v-if="!hasEarningsData" class="chart-overlay">
+          <div class="overlay-box">
+            <div class="overlay-title">No earnings data</div>
+            <div class="overlay-text">
+              Check whether your dataset is empty, or select another period.
+            </div>
+          </div>
+        </div>
+
         <ApexChart
           type="bar"
           height="350"
@@ -158,6 +168,11 @@ export default {
     // payments/trips from pipeline
     payments() {
       return this.block.payments?.items ?? []
+    },
+
+    // true if at least one day has earnings > 0
+    hasEarningsData() {
+      return this.chartData.some(d => (d.tips ?? 0) > 0 || (d.nonTips ?? 0) > 0)
     },
 
     // Earnings grouped per day (cached)
@@ -639,6 +654,45 @@ export default {
   border: 1px solid #bbbbbb99;
   padding: 20px;
   font-size: 1.2rem;
+}
+
+.chart-container {
+  width: 100%;
+  height: 350px;
+  margin-bottom: 4px;
+  position: relative; /* important for overlay */
+}
+
+.chart-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(240, 240, 240, 0.6);
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+/* Fix: avoid stretching due to parent rules */
+.chart-overlay,
+.chart-overlay * {
+  height: auto !important;
+}
+
+.chart-overlay .overlay-box {
+  pointer-events: auto;
+  text-align: center;
+  margin: 4px;
+}
+
+.chart-overlay .overlay-title {
+  font-weight: 700;
+}
+
+.chart-overlay .overlay-text {
+  font-size: 13px;
+  opacity: 0.85;
 }
 
 .header-row {

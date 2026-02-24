@@ -1166,7 +1166,7 @@ export default {
 
 .no-data-overlay {
   position: absolute;
-  top: 50%;
+  top: 44%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;

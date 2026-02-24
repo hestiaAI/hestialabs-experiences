@@ -1,5 +1,15 @@
 <template>
   <div class="calendar">
+    <!-- Grey overlay if no month data -->
+    <div v-if="!hasMonthData" class="calendar-overlay">
+      <div class="overlay-box">
+        <div class="overlay-title">No data for this month</div>
+        <div class="overlay-text">
+          Check whether your dataset is empty, or select another month.
+        </div>
+      </div>
+    </div>
+
     <!-- Weekday headers -->
     <div class="calendar-header" v-for="d in weekDays" :key="d">
       {{ d }}
@@ -99,12 +109,18 @@ export default {
       return days
     })
 
+    // true if at least one day has hours or earnings > 0
+    const hasMonthData = computed(() =>
+      daysInMonth.value.some(d => (d.hours ?? 0) > 0 || (d.earnings ?? 0) > 0)
+    )
+
     return {
       weekDays,
       start,
       end,
       firstDayOffset,
       daysInMonth,
+      hasMonthData,
       isSelectedDay,
       selectDay
     }
@@ -114,12 +130,40 @@ export default {
 
 <style scoped>
 .calendar {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-auto-rows: 1fr;
   grid-template-rows: 28px repeat(6, 1fr);
   gap: 6px;
   padding-top: 4px;
+}
+
+/* Overlay on top of the calendar grid */
+.calendar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(240, 240, 240, 0.6);
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.overlay-box {
+  pointer-events: auto;
+  text-align: center;
+}
+
+.overlay-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.overlay-text {
+  font-size: 13px;
+  opacity: 0.85;
 }
 
 .calendar-header {

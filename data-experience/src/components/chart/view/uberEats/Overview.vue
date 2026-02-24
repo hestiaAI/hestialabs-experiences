@@ -64,6 +64,16 @@
     <!-- BOX 2 → Timeline chart -->
     <div class="box box2">
       <div v-if="mode === 'week'" class="timeline-wrapper">
+        <!-- Overlay if no shifts -->
+        <div v-if="!shiftsThisPeriodCache || shiftsThisPeriodCache.length === 0" class="timeline-overlay">
+          <div class="overlay-box">
+            <div class="overlay-title">No shifts for this period</div>
+            <div class="overlay-text">
+              Check whether your dataset is empty, or select another week.
+            </div>
+          </div>
+        </div>
+
         <ApexChart
           type="rangeBar"
           height="396"
@@ -1085,6 +1095,42 @@ export default {
   justify-items: center;
   align-items: center;
   padding-bottom: 16px;
+}
+
+.timeline-wrapper {
+  position: relative; /* important */
+}
+
+.timeline-overlay,
+.timeline-overlay * {
+  height: auto !important;
+}
+
+/* Overlay on top of the timeline chart */
+.timeline-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(240, 240, 240, 0.6);
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.overlay-box {
+  pointer-events: auto;
+  text-align: center;
+}
+
+.overlay-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.overlay-text {
+  font-size: 13px;
+  opacity: 0.85;
 }
 
 /* TIMELINE CHART (bottom left) */
