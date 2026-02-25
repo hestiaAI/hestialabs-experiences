@@ -51,12 +51,12 @@
 
       <div>
         <strong>Total Hours Worked</strong>
-        <div>{{ totalHours.toFixed(1) }} h</div>
+        <div>{{ Math.floor(totalHours) }}h {{ Math.round((totalHours - Math.floor(totalHours)) * 60) }}m</div>
       </div>
 
       <div>
         <strong>Number of Jobs</strong>
-        <div>{{ totalJobs.toFixed(1) }}</div>
+        <div>{{ totalJobs }}</div>
       </div>
     </div>
 
