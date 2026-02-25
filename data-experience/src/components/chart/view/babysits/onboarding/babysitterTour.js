@@ -30,7 +30,7 @@ export function createBabysitterTour() {
 
   tour.addStep({
     id: 'week-nav',
-    attachTo: { element: '.week-nav', on: 'bottom' },
+    attachTo: { element: '.week-nav-wrapper', on: 'bottom' },
     text: 'Navigate between weeks or months with the arrow buttons. The label shows the current date range.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
@@ -45,7 +45,7 @@ export function createBabysitterTour() {
   tour.addStep({
     id: 'timeline',
     attachTo: { element: '.box2', on: 'top' },
-    text: 'Shift Timeline: Week view shows each job as a bar with its time range. Month view shows a calendar — click any day to jump to that week. Total view shows a heatmap of all jobs by day and hour.',
+    text: 'Shift Timeline: Month view (default) shows a calendar — click any day to jump to that week. Week view shows each job as a bar with its time range. Total view shows a heatmap of all jobs by day and hour.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
@@ -123,14 +123,15 @@ export function createBabysitterTour() {
 
   tour.addStep({
     id: 'earnings-filter',
-    attachTo: { element: '.tour-jobtype-filter', on: 'left' },
+    attachTo: { element: '.week-month-layout .tour-jobtype-filter', on: 'left' },
     text: 'Filter the bubble chart by activity type to focus on a specific job category.',
+    beforeShowPromise: () => new Promise(resolve => setTimeout(resolve, 200)),
     buttons: [{
       text: 'Next',
       action: () => {
-        const totalBtn = document.querySelector('.period-switch .switch-btn:last-child')
+        const totalBtn = document.querySelector('.top-bar .period-switch .switch-btn:last-child')
         if (totalBtn) totalBtn.click()
-        setTimeout(() => tour.next(), 300)
+        setTimeout(() => tour.next(), 400)
       }
     }]
   })
@@ -139,6 +140,7 @@ export function createBabysitterTour() {
     id: 'earnings-total-chart',
     attachTo: { element: '.tour-earnings-chart', on: 'top' },
     text: 'Total view: Stacked bar chart showing earnings grouped by time of day (Morning/Day/Evening) and colored by job category. Toggle between Total earnings and Average per hour using the switch above.',
+    beforeShowPromise: () => new Promise(resolve => setTimeout(resolve, 400)),
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
