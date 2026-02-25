@@ -319,12 +319,22 @@ describe('OverView.vue (babysits) - UI & interactions', () => {
     const wrapper = mountOverView()
 
     expect(wrapper.text()).toContain('Total Hours Worked')
-    expect(wrapper.text()).toContain('h')
+    expect(wrapper.text()).toMatch(/\d+h \d+m/)
+  })
+
+  test('total hours are not displayed in decimal format', () => {
+    const wrapper = mountOverView()
+    expect(wrapper.text()).not.toMatch(/\d+\.\d+\s*h(?!\s*\d)/)
   })
 
   test('displays total jobs stat', () => {
     const wrapper = mountOverView()
 
     expect(wrapper.text()).toContain('Number of Jobs')
+  })
+
+  test('number of jobs is displayed as integer, not decimal', () => {
+    const wrapper = mountOverView()
+    expect(wrapper.text()).not.toMatch(/Number of Jobs[\s\S]{0,20}\d+\.\d/)
   })
 })
