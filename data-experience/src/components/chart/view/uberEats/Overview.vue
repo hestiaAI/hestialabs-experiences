@@ -167,6 +167,7 @@ import VueApexCharts from 'vue-apexcharts'
 import dayjs from 'dayjs'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
+import isoWeek from 'dayjs/plugin/isoWeek'
 import MonthlyCalendar from './MonthlyCalendar.vue'
 import TopDays from './TopDays.vue'
 import mixin from '@/components/chart/view/mixin'
@@ -175,6 +176,7 @@ import { createTour } from './onboarding/tour'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
+dayjs.extend(isoWeek)
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -682,8 +684,8 @@ export default {
 
       // Compute the Monday–Sunday of that date
       const clicked = dayjs(date)
-      const monday = clicked.startOf('week').add(1, 'day') // Monday
-      const sunday = monday.add(6, 'day').endOf('day')
+      const monday = clicked.startOf('isoWeek') // Monday
+      const sunday = clicked.endOf('isoWeek').endOf('day') // Sunday
 
       // Update the store
       periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
