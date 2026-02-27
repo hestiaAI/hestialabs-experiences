@@ -430,7 +430,8 @@ export default {
       return {
         chart: {
           type: 'heatmap',
-          toolbar: { show: false }
+          toolbar: { show: false },
+          height: 450
         },
         states: {
           hover: {
@@ -467,7 +468,16 @@ export default {
         },
         xaxis: {
           type: 'category',
-          title: { text: 'Day of Month' }
+          title: { text: 'Day of Month' },
+          tickAmount: 10,
+          labels: {
+            rotate: -45,
+            rotateAlways: true,
+            hideOverlappingLabels: true,
+            style: {
+              fontSize: '10px'
+            }
+          }
         },
         yaxis: {
           labels: {
@@ -483,6 +493,11 @@ export default {
         tooltip: {
           y: {
             formatter: val => `${val} hours`
+          }
+        },
+        grid: {
+          padding: {
+            bottom: 30
           }
         }
       }
