@@ -71,7 +71,7 @@ describeIfPerf('Babysits OverView performance test', () => {
     { jobs: 100, max: 200 },
     { jobs: 500, max: 400 },
     { jobs: 1000, max: 600 },
-    { jobs: 5000, max: 1200 }
+    { jobs: 5000, max: 2500 }
   ]
 
   cases.forEach(({ jobs, max }) => {

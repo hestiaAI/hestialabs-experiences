@@ -546,9 +546,11 @@ export default {
           title: {
             text: this.currentPeriod === 'month' ? 'Day of month' : 'Day of week'
           },
+          tickAmount: this.currentPeriod === 'month' ? 10 : undefined,
           labels: {
             rotate: this.currentPeriod === 'month' ? -45 : 0,
             rotateAlways: this.currentPeriod === 'month',
+            hideOverlappingLabels: true,
             style: { fontSize: '11px' }
           }
         },
@@ -639,9 +641,7 @@ export default {
       this.filteredJobs.forEach((job) => {
         const [startH] = (job.start_time || '0:00').split(':').map(Number)
         const bucket = this.getTimeBucketFromHour(startH)
-        console.log(job.category)
         const category = job.category || 'Other'
-        // console.log('Processing job:', { bucket, category: job.category, earnings: job.earnings, hours: job.nbHours || job.duration || job.duration_hours || job.hours || job.work_hours })
 
         if (!data[bucket][category]) {
           data[bucket][category] = 0
