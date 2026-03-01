@@ -28,6 +28,7 @@ const mockPipelineValues = [
     start_time: '09:00',
     end_time: '11:00',
     job_type: 'babysitting',
+    category: 'Garde d\'enfants',
     nbHours: 2,
     duration_hours: 2,
     status: 'completed'
@@ -38,6 +39,7 @@ const mockPipelineValues = [
     start_time: '14:00',
     end_time: '17:00',
     job_type: 'household',
+    category: 'Ménage',
     nbHours: 3,
     duration_hours: 3,
     status: 'completed'
@@ -48,6 +50,7 @@ const mockPipelineValues = [
     start_time: '10:30',
     end_time: '13:00',
     job_type: 'babysitting',
+    category: 'Garde d\'enfants',
     nbHours: 2.5,
     duration_hours: 2.5,
     status: 'completed'

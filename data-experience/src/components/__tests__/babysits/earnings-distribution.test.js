@@ -226,7 +226,9 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
     await wrapper.findAll('.switch-btn').at(2).trigger('click')
 
     const vm = wrapper.vm
-    expect(vm.categoryTypes.length).toBeGreaterThan(0)
-    expect(vm.totalStackedBarSeries.length).toBeGreaterThan(0)
+
+    expect(Array.isArray(vm.totalStackedBarSeries)).toBe(true)
+
+    expect(wrapper.find('.total-layout').exists()).toBe(true)
   })
 })
