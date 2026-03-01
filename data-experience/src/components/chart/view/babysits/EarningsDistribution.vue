@@ -100,14 +100,13 @@
         <div class="header-controls">
           <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
           <p class="chart-subtitle">
-            Each bubble represents a group of jobs.
-            <br>• Bubble size = total working hours
+            Each bar represents a group of jobs per day.
           </p>
         </div>
 
         <div class="chart-wrapper">
           <ApexChart
-            type="bubble"
+            type="bar"
             height="450"
             :options="chartOptions"
             :series="chartSeries"
@@ -452,46 +451,59 @@ export default {
 
     chartSeries() {
       const activityTypes = this.activityTypes
-      const seriesMap = {}
+      const labels = this.xLabels
 
+      const earningsMap = {}
       activityTypes.forEach((type) => {
-        seriesMap[type] = { name: type, data: [] }
+        earningsMap[type] = Array(labels.length).fill(0)
       })
 
-      Object.entries(this.aggregatedData).forEach(([idx, activities]) => {
-        Object.entries(activities).forEach(([activityType, buckets]) => {
-          if (!seriesMap[activityType]) {
-            seriesMap[activityType] = { name: activityType, data: [] }
-          }
+      this.filteredJobsByActivity.forEach((job) => {
+        const jobDate = dayjs(job.date)
+        const dayIndex = this.currentPeriod === 'month'
+          ? jobDate.date() - 1
+          : (jobDate.day() === 0 ? 6 : jobDate.day() - 1)
 
-          let totalEarnings = 0
-          let totalDuration = 0
-          let count = 0
-          const allStartTimes = []
-          const allEndTimes = []
-
-          Object.values(buckets).forEach((metrics) => {
-            totalEarnings += metrics.totalEarnings
-            totalDuration += metrics.totalDuration
-            count += metrics.count
-            allStartTimes.push(...metrics.startTimes)
-            allEndTimes.push(...metrics.endTimes)
-          })
-
-          if (count > 0) {
-            seriesMap[activityType].data.push({
-              x: Number(idx),
-              y: Number(totalEarnings.toFixed(2)),
-              z: Number((totalDuration * this.baseHourSize).toFixed(1)),
-              count,
-              start: Math.min(...allStartTimes),
-              end: Math.max(...allEndTimes)
-            })
-          }
-        })
+        const type = job.job_type || 'Other'
+        if (!earningsMap[type]) earningsMap[type] = Array(labels.length).fill(0)
+        earningsMap[type][dayIndex] += Number(job.earnings) || 0
       })
 
-      return Object.values(seriesMap).filter(s => s.data.length > 0)
+      return activityTypes.map(type => ({
+        name: type,
+        data: earningsMap[type].map(v => Number(v.toFixed(2)))
+      }))
+    },
+
+    chartTooltipMeta() {
+      const meta = {}
+
+      this.filteredJobsByActivity.forEach((job) => {
+        const jobDate = dayjs(job.date)
+        const dayIndex = this.currentPeriod === 'month'
+          ? jobDate.date() - 1
+          : (jobDate.day() === 0 ? 6 : jobDate.day() - 1)
+
+        const type = job.job_type || 'Other'
+        if (!meta[type]) meta[type] = {}
+        if (!meta[type][dayIndex]) {
+          meta[type][dayIndex] = { count: 0, totalDuration: 0, startTimes: [], endTimes: [] }
+        }
+
+        const [sh, sm] = (job.start_time || '0:00').split(':').map(Number)
+        const startMinutes = sh * 60 + sm
+        const duration = Number(
+          job.nbHours || job.duration || job.duration_hours || job.hours || job.work_hours
+        ) || 0
+        const endMinutes = startMinutes + duration * 60
+
+        meta[type][dayIndex].count += 1
+        meta[type][dayIndex].totalDuration += duration
+        meta[type][dayIndex].startTimes.push(startMinutes)
+        meta[type][dayIndex].endTimes.push(endMinutes)
+      })
+
+      return meta
     },
 
     maxEarnings() {
@@ -507,17 +519,12 @@ export default {
     },
 
     chartOptions() {
-      const seriesColors = this.chartSeries.map(s =>
-        this.activityTypeColors[s.name] || this.activityTypeColors.Other
-      )
-
       return {
         chart: {
-          type: 'bubble',
-          height: 450,
+          type: 'bar',
+          stacked: true,
           toolbar: { show: false },
-          zoom: { enabled: false },
-          pan: { enabled: false }
+          zoom: { enabled: false }
         },
         states: {
           hover: {
@@ -531,88 +538,53 @@ export default {
             }
           }
         },
-        colors: seriesColors,
-        dataLabels: { enabled: false },
-        fill: {
-          opacity: 0.8
-        },
+        colors: this.activityTypes.map(
+          t => this.activityTypeColors[t] || this.activityTypeColors.Other
+        ),
         xaxis: {
-          type: 'numeric',
-          min: 0.0,
-          max: this.xLabels.length,
-          tickAmount: this.xLabels.length,
+          categories: this.xLabels,
           title: {
-            text: this.currentPeriod === 'month'
-              ? 'Day of month'
-              : 'Day of week',
-            offsetY: 10
+            text: this.currentPeriod === 'month' ? 'Day of month' : 'Day of week'
           },
           labels: {
             rotate: this.currentPeriod === 'month' ? -45 : 0,
             rotateAlways: this.currentPeriod === 'month',
-            formatter: v => this.xLabels[Math.round(v)] || '',
-            style: {
-              fontSize: '11px',
-              textAnchor: 'middle'
-            }
+            style: { fontSize: '11px' }
           }
         },
         yaxis: {
-          title: {
-            text: `Earnings (${this.currency})`
-          },
-          min: 0,
-          max: this.maxEarnings * 1.15
-        },
-        grid: {
-          show: true,
-          xaxis: {
-            lines: {
-              show: true
-            }
-          },
-          padding: {
-            bottom: this.currentPeriod === 'month' ? 40 : 10
-          }
-        },
-        plotOptions: {
-          bubble: {
-            maxBubbleRadius: 45,
-            minBubbleRadius: 8
-          }
-        },
-        markers: {
-          strokeWidth: 0,
-          strokeColors: 'transparent',
-          hover: {
-            strokeWidth: 0,
-            strokeColors: 'transparent'
-          }
+          title: { text: `Earnings (${this.currency})` },
+          min: 0
         },
         tooltip: {
-          enabled: this.filteredJobsByActivity.length > 0,
-          followCursor: false,
+          shared: false,
           intersect: true,
-          offsetY: 10,
           custom: ({ seriesIndex, dataPointIndex, w }) => {
-            const series = w.config.series[seriesIndex]
-            const point = series.data[dataPointIndex]
-            if (!point) return ''
-
-            const day = this.xLabels[Math.round(point.x)]
+            const seriesName = w.config.series[seriesIndex].name
+            const earnings = w.config.series[seriesIndex].data[dataPointIndex]
+            const day = this.xLabels[dataPointIndex]
 
             const fmt = m =>
               `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`
 
+            const dayMeta = this.chartTooltipMeta[seriesName]?.[dataPointIndex]
+
+            const timeRange = dayMeta?.startTimes?.length
+              ? `${fmt(Math.min(...dayMeta.startTimes))}-${fmt(Math.max(...dayMeta.endTimes))}`
+              : '-'
+
+            const duration = dayMeta ? dayMeta.totalDuration.toFixed(1) : '0'
+            const count = dayMeta ? dayMeta.count : 0
+
             return `
               <div class="tooltip-box">
                 <div class="tooltip-title">
-                  ${day} - ${series.name}
+                  ${day} - ${seriesName}
                 </div>
-                <p>Time range: <strong>${fmt(point.start)}-${fmt(point.end)}</strong></p>
-                <p>Total income: <strong>${point.y.toFixed(2)} ${this.currency}</strong></p>
-                <p>Jobs: <strong>${point.count}</strong></p>
-                <p>Duration (bubble size): <strong>${(point.z / this.baseHourSize).toFixed(1)} h</strong></p>
+                <p>Time range: <strong>${timeRange}</strong></p>
+                <p>Total income: <strong>${Number(earnings).toFixed(2)} ${this.currency}</strong></p>
+                <p>Jobs: <strong>${count}</strong></p>
+                <p>Duration: <strong>${duration} h</strong></p>
               </div>
             `
           }
@@ -620,13 +592,16 @@ export default {
         legend: {
           show: false
         },
-        noData: {
-          text: 'No data available for this period',
-          align: 'center',
-          verticalAlign: 'middle',
-          style: {
-            color: '#888',
-            fontSize: '16px'
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            columnWidth: '60%'
+          }
+        },
+        dataLabels: { enabled: false },
+        grid: {
+          padding: {
+            bottom: this.currentPeriod === 'month' ? 40 : 10
           }
         }
       }
