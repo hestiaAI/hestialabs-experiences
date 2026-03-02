@@ -1,82 +1,112 @@
 <template>
   <div class="layout-container">
-    <div class="period-switch">
-      <button
-        v-for="p in ['week','month','total']"
-        :key="p"
-        :class="['switch-btn', { active: currentPeriod === p }]"
-        @click="currentPeriod = p"
-      >
-        {{ p.toUpperCase() }}
-      </button>
+    <div class="top-bar">
+      <div class="period-switch">
+        <button
+          v-for="p in ['week','month','total']"
+          :key="p"
+          :class="['switch-btn', { active: currentPeriod === p }]"
+          @click="currentPeriod = p"
+          :title="getPeriodDescription(p)"
+        >
+          {{ p.toUpperCase() }}
+        </button>
+      </div>
+
+      <div class="week-nav">
+        <div class="week-nav-wrapper">
+          <button class="nav-btn" @click="prevWeek" v-if="currentPeriod !== 'total'">←</button>
+          <div class="week-label" :class="`mode-${currentPeriod}`">{{ weekLabel }}</div>
+          <button class="nav-btn" @click="nextWeek" v-if="currentPeriod !== 'total'">→</button>
+        </div>
+      </div>
+
+      <div class="period-descriptions">
+        <div v-if="currentPeriod === 'week'" class="period-desc">
+          📅 Week view: Earnings patterns by time of day (Morning/Day/Evening/Night)
+        </div>
+        <div v-if="currentPeriod === 'month'" class="period-desc">
+          📆 Month view: Earnings by time of day and filter by activity type
+        </div>
+        <div v-if="currentPeriod === 'total'" class="period-desc">
+          📊 Total view: Average earnings per hour by job activity type
+        </div>
+      </div>
     </div>
 
-    <div class="week-nav">
-      <button class="nav-btn" @click="prevWeek">←</button>
-      <div class="week-label">{{ weekLabel }}</div>
-      <button class="nav-btn" @click="nextWeek">→</button>
+    <!-- Active Filters Bar -->
+    <div class="active-filters" v-if="hasActiveFilters">
+      <span class="filters-label">Filters:</span>
+      <span v-if="selectedActivity" class="filter-badge">
+        {{ selectedActivity }}
+        <button class="badge-close" @click="selectedActivity = ''">✕</button>
+      </span>
+      <span v-if="currentPeriod === 'total' && totalDataMode !== 'total'" class="filter-badge">
+        Mode: {{ totalDataMode === 'average' ? 'Avg/Hour' : 'Total' }}
+        <button class="badge-close" @click="totalDataMode = 'total'">✕</button>
+      </span>
+      <span v-if="currentPeriod === 'total' && sortDirection !== 'desc'" class="filter-badge">
+        Sort: {{ sortDirection }}
+        <button class="badge-close" @click="sortDirection = 'desc'">✕</button>
+      </span>
+      <button class="clear-all-btn" @click="clearAllFilters">Clear All</button>
     </div>
 
     <div v-if="currentPeriod === 'total'" class="total-layout">
-      <!-- BOX 2 → Bubble Chart -->
       <div class="box box2 tour-earnings-chart">
         <div class="header-controls">
-          <h2 class="chart-title">Earnings Distribution</h2>
+          <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
+          <div class="data-mode-switch">
+            <span class="switch-label" :class="{ active: totalDataMode === 'total' }">Total</span>
+            <label class="switch">
+              <input
+                type="checkbox"
+                :checked="totalDataMode === 'average'"
+                @change="totalDataMode = totalDataMode === 'total' ? 'average' : 'total'"
+              >
+              <span class="slider"></span>
+            </label>
+            <span class="switch-label" :class="{ active: totalDataMode === 'average' }">Avg/Hour</span>
+          </div>
         </div>
 
         <ApexChart
-          type="bubble"
+          type="bar"
           height="450"
-          :series="totalScatterSeries"
-          :options="totalScatterOptions"
+          :series="totalStackedBarSeries"
+          :options="totalStackedBarOptions"
         />
       </div>
 
-      <!-- BOX 4 → Job List Panel -->
-      <div class="box box4 tour-jobtype-filter">
-        <div class="panel-header">
-          <h3 v-if="selectedTotalBucket">
-            {{ selectedTotalBucket }} jobs
-          </h3>
-          <h3 v-else>
-            Select a bubble
-          </h3>
+      <div class="box total-bar-chart">
+        <div class="bar-header">
+          <h2 class="chart-title">Earnings per Hour by Activity</h2>
+          <select v-model="sortDirection" class="filter-select sort-select">
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
+          </select>
         </div>
-
-        <div class="job-list">
-          <div
-            v-for="job in totalPanelJobs"
-            :key="job.job_id || job.date + job.start_time"
-            class="job-item"
-          >
-            <strong>{{ formatDate(job.date) }}</strong>
-            <div>
-              {{ job.start_time }} · {{ job.duration_hours || job.nbHours }}h
-            </div>
-            <div>
-              {{ job.earnings }} {{ currency }}
-            </div>
-          </div>
-          <div v-if="selectedTotalBucket && totalPanelJobs.length === 0" class="no-data">
-            No jobs in this segment
-          </div>
-          <div v-if="!selectedTotalBucket" class="no-data">
-            Click on a bubble to see jobs
-          </div>
-        </div>
+        <ApexChart
+          type="bar"
+          height="350"
+          :series="earningsPerHourSeries"
+          :options="earningsPerHourOptions"
+        />
       </div>
     </div>
 
-    <div v-else>
-      <!-- BOX 2 → Bubble Chart for week/month -->
+    <div v-else class="week-month-layout">
       <div class="box box2 tour-earnings-chart">
         <div class="header-controls">
-          <h2 class="chart-title">Earnings Distribution</h2>
+          <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
+          <p class="chart-subtitle">
+            Each bar represents a group of jobs per day.
+          </p>
         </div>
 
         <div class="chart-wrapper">
           <ApexChart
-            type="bubble"
+            type="bar"
             height="450"
             :options="chartOptions"
             :series="chartSeries"
@@ -89,10 +119,30 @@
             </div>
           </div>
 
-          <div v-if="filteredJobs.length === 0" class="no-data-overlay">
+          <div v-if="filteredJobsByActivity.length === 0" class="no-data-overlay">
             <p>No job data for this period</p>
           </div>
         </div>
+      </div>
+
+      <div class="box box4 tour-jobtype-filter">
+        <label for="activityFilter" class="filter-label">
+          <strong>Filter by activity</strong>
+        </label>
+        <select
+          id="activityFilter"
+          v-model="selectedActivity"
+          class="filter-select"
+        >
+          <option value="">All activities</option>
+          <option
+            v-for="type in activityTypes"
+            :key="type"
+            :value="type"
+          >
+            {{ type }}
+          </option>
+        </select>
       </div>
     </div>
   </div>
@@ -125,21 +175,60 @@ export default {
     return {
       currentWeekStart: this.getMondayOf(dayjs()),
       currentPeriod: 'week',
-      selectedTotalBucket: null
+      selectedTotalBucket: null,
+      selectedActivity: '',
+      sortDirection: 'desc',
+      totalDataMode: 'total'
     }
   },
 
   computed: {
-    totalPanelJobs() {
+    earningsHeaderTitle() {
+      if (this.currentPeriod === 'week') {
+        return `Earnings by Time of Day (${this.weekLabel})`
+      }
+      if (this.currentPeriod === 'month') {
+        return `Earnings by Time of Day (${this.weekLabel})`
+      }
+      return `Average Earnings by Time of Day (${this.weekLabel})`
+    },
+
+    totalPanelActivities() {
       if (this.currentPeriod !== 'total') return []
       if (!this.selectedTotalBucket) return []
 
-      return this.filteredJobs
+      const bucket = this.selectedTotalBucket
+
+      const jobs = this.filteredJobs
         .filter((job) => {
           const [h] = (job.start_time || '0:00').split(':').map(Number)
-          return this.getTimeBucketFromHour(h) === this.selectedTotalBucket
+          return this.getTimeBucketFromHour(h) === bucket
         })
         .sort((a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf())
+
+      if (!jobs.length) return []
+
+      const earnings = jobs.reduce((s, j) => s + (+j.earnings || 0), 0)
+      const hours = jobs.reduce(
+        (s, j) =>
+          s +
+          (j.nbHours ||
+            j.duration ||
+            j.duration_hours ||
+            j.hours ||
+            j.work_hours ||
+            0),
+        0
+      )
+
+      return [{
+        type: bucket,
+        color: this.timeBucketColors[bucket],
+        earnings,
+        hours,
+        count: jobs.length,
+        jobs
+      }]
     },
 
     baseHourSize() {
@@ -181,10 +270,24 @@ export default {
     },
 
     weekLabel() {
-      if (this.currentPeriod === 'total') return 'All time'
+      if (this.currentPeriod === 'total') {
+        const earliest = this.earliestJobDate
+        const latest = this.latestJobDate
+        if (!earliest || !latest) return 'Entire Period'
+        return `${earliest.format('DD.MM.YYYY')} - ${latest.format('DD.MM.YYYY')}`
+      }
       if (this.currentPeriod === 'month') return this.weekStart.format('MMMM YYYY')
 
       return `${this.weekStart.format('DD.MM')} - ${this.weekEnd.format('DD.MM.YYYY')}`
+    },
+
+    earliestJobDate() {
+      if (!this.jobs.length) return null
+
+      return this.jobs
+        .map(j => dayjs(j.date))
+        .filter(d => d.isValid())
+        .sort((a, b) => a.valueOf() - b.valueOf())[0]
     },
 
     filteredJobs() {
@@ -208,6 +311,22 @@ export default {
       )
     },
 
+    activityTypes() {
+      return Array.from(new Set(this.filteredJobs.map(j => j.job_type).filter(Boolean)))
+    },
+
+    hasActiveFilters() {
+      if (this.selectedActivity) return true
+      if (this.currentPeriod === 'total' && this.totalDataMode !== 'total') return true
+      if (this.currentPeriod === 'total' && this.sortDirection !== 'desc') return true
+      return false
+    },
+
+    filteredJobsByActivity() {
+      if (!this.selectedActivity) return this.filteredJobs
+      return this.filteredJobs.filter(j => j.job_type === this.selectedActivity)
+    },
+
     timeBucketColors() {
       return {
         Morning: '#36A2EB',
@@ -217,16 +336,66 @@ export default {
       }
     },
 
+    activityTypeColors() {
+      const colors = {
+        Babysitting: '#FF6B6B',
+        Babysits: '#FF6B6B',
+        Housekeeping: '#4ECDC4',
+        'House Cleaning': '#4ECDC4',
+        Tutoring: '#45B7D1',
+        Tutors: '#45B7D1',
+        'Pet Care': '#FFA07A',
+        'Pet Sitting': '#FFA07A',
+        'Dog Walking': '#90EE90',
+        Errands: '#FFD700',
+        Shopping: '#FFD700',
+        Laundry: '#DDA0DD',
+        Other: '#CCCCCC'
+      }
+      // Auto-assign colors to unknown activity types
+      const types = this.activityTypes
+      const defaultColors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#90EE90', '#FFD700', '#DDA0DD', '#FF9999', '#99CCFF', '#99FF99']
+      types.forEach((type, idx) => {
+        if (!colors[type]) {
+          colors[type] = defaultColors[idx % defaultColors.length]
+        }
+      })
+      return colors
+    },
+
+    categoryTypes() {
+      return Array.from(new Set(this.filteredJobs.map(j => j.category).filter(Boolean)))
+    },
+
+    categoryColors() {
+      const palette = [
+        '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A',
+        '#90EE90', '#FFD700', '#DDA0DD', '#FF9999',
+        '#99CCFF', '#99FF99', '#FFB347', '#87CEEB'
+      ]
+      const result = {}
+      this.categoryTypes.forEach((cat, idx) => {
+        result[cat] = palette[idx % palette.length]
+      })
+      return result
+    },
+
     xLabels() {
-      return this.currentPeriod === 'month'
-        ? this.monthDays.map(d => d.toString())
-        : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      if (this.currentPeriod === 'month') {
+        const monthStart = this.currentWeekStart.startOf('month')
+        return this.monthDays.map((d) => {
+          const dayDate = monthStart.add(d - 1, 'day')
+          const dayName = dayDate.format('ddd')
+          return `${d} ${dayName}`
+        })
+      }
+      return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     },
 
     aggregatedData() {
       const data = {}
 
-      this.filteredJobs.forEach((job) => {
+      this.filteredJobsByActivity.forEach((job) => {
         const jobDate = dayjs(job.date)
 
         const dayIndex =
@@ -236,10 +405,12 @@ export default {
 
         const [startH] = (job.start_time || '0:00').split(':').map(Number)
         const bucket = this.getTimeBucketFromHour(startH)
+        const activityType = job.job_type || 'Other'
 
         if (!data[dayIndex]) data[dayIndex] = {}
-        if (!data[dayIndex][bucket]) {
-          data[dayIndex][bucket] = {
+        if (!data[dayIndex][activityType]) data[dayIndex][activityType] = {}
+        if (!data[dayIndex][activityType][bucket]) {
+          data[dayIndex][activityType][bucket] = {
             totalEarnings: 0,
             totalDuration: 0,
             count: 0,
@@ -261,49 +432,78 @@ export default {
 
         const endMinutes = startMinutes + durationHours * 60
 
-        data[dayIndex][bucket].startTimes.push(startMinutes)
-        data[dayIndex][bucket].endTimes.push(endMinutes)
+        data[dayIndex][activityType][bucket].startTimes.push(startMinutes)
+        data[dayIndex][activityType][bucket].endTimes.push(endMinutes)
 
-        data[dayIndex][bucket].totalEarnings += Number(job.earnings) || 0
-        data[dayIndex][bucket].totalDuration += Number(
+        data[dayIndex][activityType][bucket].totalEarnings += Number(job.earnings) || 0
+        data[dayIndex][activityType][bucket].totalDuration += Number(
           job.nbHours ||
           job.duration ||
           job.duration_hours ||
           job.hours ||
           job.work_hours
         ) || 0
-        data[dayIndex][bucket].count += 1
+        data[dayIndex][activityType][bucket].count += 1
       })
 
       return data
     },
 
     chartSeries() {
-      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
-      const seriesMap = {}
+      const activityTypes = this.activityTypes
+      const labels = this.xLabels
 
-      bucketKeys.forEach((b) => {
-        seriesMap[b] = { name: b, data: [] }
+      const earningsMap = {}
+      activityTypes.forEach((type) => {
+        earningsMap[type] = Array(labels.length).fill(0)
       })
 
-      Object.entries(this.aggregatedData).forEach(([idx, buckets]) => {
-        Object.entries(buckets).forEach(([bucket, metrics]) => {
-          if (!seriesMap[bucket]) return
+      this.filteredJobsByActivity.forEach((job) => {
+        const jobDate = dayjs(job.date)
+        const dayIndex = this.currentPeriod === 'month'
+          ? jobDate.date() - 1
+          : (jobDate.day() === 0 ? 6 : jobDate.day() - 1)
 
-          seriesMap[bucket].data.push({
-            x: Number(idx),
-            y: Number(metrics.totalEarnings.toFixed(2)),
-            z: Number((metrics.totalDuration * this.baseHourSize).toFixed(1)),
-            count: metrics.count,
-            start: Math.min(...metrics.startTimes),
-            end: Math.max(...metrics.endTimes)
-          })
-        })
+        const type = job.job_type || 'Other'
+        if (!earningsMap[type]) earningsMap[type] = Array(labels.length).fill(0)
+        earningsMap[type][dayIndex] += Number(job.earnings) || 0
       })
 
-      return bucketKeys
-        .map(k => seriesMap[k])
-        .filter(s => s.data.length > 0)
+      return activityTypes.map(type => ({
+        name: type,
+        data: earningsMap[type].map(v => Number(v.toFixed(2)))
+      }))
+    },
+
+    chartTooltipMeta() {
+      const meta = {}
+
+      this.filteredJobsByActivity.forEach((job) => {
+        const jobDate = dayjs(job.date)
+        const dayIndex = this.currentPeriod === 'month'
+          ? jobDate.date() - 1
+          : (jobDate.day() === 0 ? 6 : jobDate.day() - 1)
+
+        const type = job.job_type || 'Other'
+        if (!meta[type]) meta[type] = {}
+        if (!meta[type][dayIndex]) {
+          meta[type][dayIndex] = { count: 0, totalDuration: 0, startTimes: [], endTimes: [] }
+        }
+
+        const [sh, sm] = (job.start_time || '0:00').split(':').map(Number)
+        const startMinutes = sh * 60 + sm
+        const duration = Number(
+          job.nbHours || job.duration || job.duration_hours || job.hours || job.work_hours
+        ) || 0
+        const endMinutes = startMinutes + duration * 60
+
+        meta[type][dayIndex].count += 1
+        meta[type][dayIndex].totalDuration += duration
+        meta[type][dayIndex].startTimes.push(startMinutes)
+        meta[type][dayIndex].endTimes.push(endMinutes)
+      })
+
+      return meta
     },
 
     maxEarnings() {
@@ -319,79 +519,74 @@ export default {
     },
 
     chartOptions() {
-      const seriesColors = this.chartSeries.map(s =>
-        this.timeBucketColors[s.name] || this.timeBucketColors.Other
-      )
-
       return {
         chart: {
-          type: 'bubble',
-          height: 450,
+          type: 'bar',
+          stacked: true,
           toolbar: { show: false },
-          zoom: { enabled: false },
-          pan: { enabled: false }
+          zoom: { enabled: false }
         },
-        colors: seriesColors,
-        dataLabels: { enabled: false },
-        fill: {
-          opacity: 0.8,
-          colors: ['#36A2EB', '#4BC0C0', '#FF6384', '#6A9BE8']
-        },
-        xaxis: {
-          type: 'numeric',
-          min: 0.0,
-          max: this.xLabels.length,
-          tickAmount: this.xLabels.length,
-          labels: {
-            rotate: 0,
-            formatter: v => this.xLabels[Math.round(v)] || '',
-            style: {
-              fontSize: '11px',
-              textAnchor: 'middle'
+        states: {
+          hover: {
+            filter: {
+              type: 'none'
             }
+          },
+          active: {
+            filter: {
+              type: 'none'
+            }
+          }
+        },
+        colors: this.activityTypes.map(
+          t => this.activityTypeColors[t] || this.activityTypeColors.Other
+        ),
+        xaxis: {
+          categories: this.xLabels,
+          title: {
+            text: this.currentPeriod === 'month' ? 'Day of month' : 'Day of week'
+          },
+          tickAmount: this.currentPeriod === 'month' ? 10 : undefined,
+          labels: {
+            rotate: this.currentPeriod === 'month' ? -45 : 0,
+            rotateAlways: this.currentPeriod === 'month',
+            hideOverlappingLabels: true,
+            style: { fontSize: '11px' }
           }
         },
         yaxis: {
-          title: {
-            text: `Earnings (${this.currency})`
-          },
-          min: 0,
-          max: this.maxEarnings * 1.15
-        },
-        grid: {
-          show: true,
-          xaxis: {
-            lines: {
-              show: true
-            }
-          }
-        },
-        plotOptions: {
-          bubble: {
-            maxBubbleRadius: 45,
-            minBubbleRadius: 8
-          }
+          title: { text: `Earnings (${this.currency})` },
+          min: 0
         },
         tooltip: {
-          enabled: this.filteredJobs.length > 0,
+          shared: false,
+          intersect: true,
           custom: ({ seriesIndex, dataPointIndex, w }) => {
-            const series = w.config.series[seriesIndex]
-            const point = series.data[dataPointIndex]
-            if (!point) return ''
-
-            const day = this.xLabels[Math.round(point.x)]
+            const seriesName = w.config.series[seriesIndex].name
+            const earnings = w.config.series[seriesIndex].data[dataPointIndex]
+            const day = this.xLabels[dataPointIndex]
 
             const fmt = m =>
               `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`
 
+            const dayMeta = this.chartTooltipMeta[seriesName]?.[dataPointIndex]
+
+            const timeRange = dayMeta?.startTimes?.length
+              ? `${fmt(Math.min(...dayMeta.startTimes))}-${fmt(Math.max(...dayMeta.endTimes))}`
+              : '-'
+
+            const duration = dayMeta ? dayMeta.totalDuration.toFixed(1) : '0'
+            const count = dayMeta ? dayMeta.count : 0
+
             return `
               <div class="tooltip-box">
                 <div class="tooltip-title">
-                  ${day} - ${series.name} (${fmt(point.start)}-${fmt(point.end)})
+                  ${day} - ${seriesName}
                 </div>
-                <p>Total income: <strong>${point.y.toFixed(2)} ${this.currency}</strong></p>
-                <p>Jobs: <strong>${point.count}</strong></p>
-                <p>Duration (bubble size): <strong>${(point.z / this.baseHourSize).toFixed(1)} h</strong></p>
+                <p>Time range: <strong>${timeRange}</strong></p>
+                <p>Total income: <strong>${Number(earnings).toFixed(2)} ${this.currency}</strong></p>
+                <p>Jobs: <strong>${count}</strong></p>
+                <p>Duration: <strong>${duration} h</strong></p>
               </div>
             `
           }
@@ -399,187 +594,321 @@ export default {
         legend: {
           show: false
         },
-        noData: {
-          text: 'No data available for this period',
-          align: 'center',
-          verticalAlign: 'middle',
-          style: {
-            color: '#888',
-            fontSize: '16px'
+        plotOptions: {
+          bar: {
+            borderRadius: 4,
+            columnWidth: '60%'
+          }
+        },
+        dataLabels: { enabled: false },
+        grid: {
+          padding: {
+            bottom: this.currentPeriod === 'month' ? 40 : 10
           }
         }
       }
     },
 
     legendItems() {
-      const keys = Object.keys(this.timeBucketColors)
-      return keys.map((type) => {
-        const count = Object.values(this.aggregatedData).reduce((sum, buckets) => {
-          return sum + (buckets[type]?.count || 0)
-        }, 0)
-        const range = TIME_BUCKETS[type]
+      return this.activityTypes.map((type) => {
+        let count = 0
+        Object.values(this.aggregatedData).forEach((activities) => {
+          if (activities[type]) {
+            Object.values(activities[type]).forEach((metrics) => {
+              count += metrics.count
+            })
+          }
+        })
         return {
           name: type,
-          label: `${type} (${range.from}-${range.to})`,
-          color: this.timeBucketColors[type],
+          label: type,
+          color: this.activityTypeColors[type] || this.activityTypeColors.Other,
           count
         }
       }).filter(item => item.count > 0)
     },
 
-    totalScatterData() {
-      const buckets = {}
+    totalStackedBarData() {
+      const bucketKeys = ['Morning', 'Day', 'Evening']
+      const data = {}
+      const hours = {}
+
+      bucketKeys.forEach((bucket) => {
+        data[bucket] = {}
+        hours[bucket] = {}
+      })
 
       this.filteredJobs.forEach((job) => {
         const [startH] = (job.start_time || '0:00').split(':').map(Number)
         const bucket = this.getTimeBucketFromHour(startH)
+        const category = job.category || 'Other'
 
-        if (!buckets[bucket]) {
-          buckets[bucket] = {
-            totalEarnings: 0,
-            totalDuration: 0,
-            count: 0
-          }
+        if (!data[bucket][category]) {
+          data[bucket][category] = 0
+          hours[bucket][category] = 0
         }
 
-        buckets[bucket].totalEarnings += Number(job.earnings) || 0
-        buckets[bucket].totalDuration += Number(
-          job.nbHours ||
-          job.duration ||
-          job.duration_hours ||
-          job.hours ||
-          job.work_hours
+        const earnings = Number(job.earnings) || 0
+        const jobHours = Number(
+          job.nbHours || job.duration || job.duration_hours || job.hours || job.work_hours
         ) || 0
 
-        buckets[bucket].count += 1
+        data[bucket][category] += earnings
+        hours[bucket][category] += jobHours
       })
 
-      return buckets
+      if (this.totalDataMode === 'average') {
+        const avgData = {}
+        bucketKeys.forEach((bucket) => {
+          avgData[bucket] = {}
+          Object.entries(data[bucket]).forEach(([category, earnings]) => {
+            const totalHours = hours[bucket][category]
+            avgData[bucket][category] = totalHours > 0 ? earnings / totalHours : 0
+          })
+        })
+        return avgData
+      }
+
+      return data
     },
 
-    totalScatterSeries() {
-      const bucketKeys = ['Morning', 'Day', 'Evening', 'Night']
+    totalStackedBarSeries() {
+      const bucketKeys = ['Morning', 'Day', 'Evening']
+      const data = this.totalStackedBarData
 
-      const data = bucketKeys.map((bucket, i) => {
-        const b = this.totalScatterData[bucket]
-
-        if (!b || b.count === 0 || b.totalDuration === 0) {
-          return [i, null, 0]
-        }
-
-        const avgPerHour = b.totalEarnings / b.totalDuration
-
-        return [
-          i,
-          Number(avgPerHour.toFixed(2)),
-          b.count * this.baseShiftSize
-        ]
-      })
-
-      return [{
-        name: 'Total Summary',
-        data
-      }]
+      return this.categoryTypes.map(category => ({
+        name: category,
+        data: bucketKeys.map(bucket => data[bucket][category] || 0)
+      }))
     },
 
-    totalScatterOptions() {
-      const bucketKeys = Object.keys(TIME_BUCKETS)
+    totalStackedBarOptions() {
+      const bucketKeys = ['Morning', 'Day', 'Evening']
       const categories = bucketKeys.map(
-        key => `${key}\n(${TIME_BUCKETS[key].from}-${TIME_BUCKETS[key].to})`
+        key => `${TIME_BUCKETS[key].from}-${TIME_BUCKETS[key].to}`
       )
 
       return {
         chart: {
-          type: 'bubble',
+          type: 'bar',
+          stacked: true,
           toolbar: { show: false },
-          zoom: { enabled: false },
-          events: {
-            dataPointSelection: (event, chartContext, config) => {
-              const index = config.dataPointIndex
-              const bucket = bucketKeys[index] || null
-              this.selectedTotalBucket = bucket
+          zoom: { enabled: false }
+        },
+        states: {
+          hover: {
+            filter: {
+              type: 'none'
+            },
+            stroke: {
+              show: true,
+              width: 2,
+              color: '#000'
+            }
+          },
+          active: {
+            filter: {
+              type: 'none'
             }
           }
         },
-
-        colors: bucketKeys.map(b => this.timeBucketColors[b] || '#ccc'),
-
+        colors: this.categoryTypes.map(
+          cat => this.categoryColors[cat] || '#CCCCCC'
+        ),
         xaxis: {
-          type: 'numeric',
-          min: -0.5,
-          max: categories.length - 0.5,
-          tickAmount: categories.length,
-          labels: {
-            rotate: -45,
-            rotateAlways: true,
-            offsetX: 25,
-            formatter: v => categories[Math.round(v)] || ''
-          },
+          categories,
           title: {
-            text: 'Time of Day',
-            offsetY: 50
+            text: this.totalDataMode === 'average'
+              ? `Average earnings per hour (${this.currency})`
+              : `Total earnings (${this.currency})`
+          },
+          min: 0,
+          labels: {
+            formatter: (val) => {
+              if (val === 0) return '0'
+              return parseFloat(val.toFixed(2)).toString()
+            }
           }
         },
+        yaxis: {
+          title: {
+            text: 'Time of Day',
+            offsetY: 10
+          },
+          labels: {
+            rotate: 0,
+            rotateAlways: false,
+            style: {
+              fontSize: '12px'
+            }
+          }
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            borderRadius: 6,
+            barHeight: '65%',
+            dataLabels: {
+              position: 'top'
+            },
+            stroke: {
+              show: true,
+              width: 0,
+              colors: ['transparent']
+            }
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        tooltip: {
+          shared: true,
+          intersect: false,
+          y: {
+            formatter: (val) => {
+              if (this.totalDataMode === 'average') {
+                return `${val.toFixed(2)} ${this.currency}/h`
+              }
+              return `${val.toFixed(2)} ${this.currency}`
+            }
+          },
+          custom: ({ seriesIndex, dataPointIndex, w }) => {
+            const data = this.totalStackedBarData
+            const bucketKey = ['Morning', 'Day', 'Evening', 'Night'][dataPointIndex]
+            const bucketRange = TIME_BUCKETS[bucketKey]
 
+            let html = `
+              <div class="tooltip-box">
+                <div class="tooltip-title">${bucketKey} (${bucketRange.from}-${bucketRange.to})</div>
+            `
+
+            const activityBreakdown = data[bucketKey]
+            let totalEarnings = 0
+            Object.entries(activityBreakdown).forEach(([activity, value]) => {
+              const displayValue = this.totalDataMode === 'average'
+                ? `${value.toFixed(2)} ${this.currency}/h`
+                : `${value.toFixed(2)} ${this.currency}`
+              html += `<p><strong>${activity}:</strong> ${displayValue}</p>`
+              totalEarnings += value
+            })
+
+            const totalLabel = this.totalDataMode === 'average' ? `${this.currency}/h` : this.currency
+            html += `
+                <p style="margin-top: 8px; border-top: 1px solid #ddd; padding-top: 8px;">
+                  <strong>Total: ${totalEarnings.toFixed(2)} ${totalLabel}</strong>
+                </p>
+              </div>
+            `
+
+            return html
+          }
+        },
+        legend: {
+          position: 'bottom',
+          offsetY: 10
+        },
         grid: {
           padding: {
             bottom: 50
           }
-        },
-
-        yaxis: {
-          min: 0,
-          title: {
-            text: `Average earnings per hour (${this.currency})`
-          }
-        },
-
-        plotOptions: {
-          bubble: {
-            minBubbleRadius: 12,
-            maxBubbleRadius: 50
-          }
-        },
-
-        dataLabels: {
-          enabled: false
-        },
-
-        tooltip: {
-          custom: ({ seriesIndex, dataPointIndex, w }) => {
-            const point = w.config.series[seriesIndex].data[dataPointIndex]
-
-            if (!point || point[1] == null || point[1] === 0) return ''
-
-            const bucketIndex = Math.round(point[0])
-            const bucketKey = bucketKeys[bucketIndex]
-            const range = TIME_BUCKETS[bucketKey]
-            const avg = point[1]
-
-            const bubbleZ = point[2]
-            const shifts = Math.round(bubbleZ / this.baseShiftSize)
-
-            const stats = this.totalScatterData[bucketKey]
-            if (!stats) return ''
-
-            const totalIncome = stats.totalEarnings.toFixed(2)
-            const totalHours = stats.totalDuration.toFixed(1)
-
-            return `
-              <div class="tooltip-box">
-                <div class="tooltip-title">${bucketKey} (${range.from}-${range.to})</div>
-                <p>Avg hourly income:<br><strong>${avg.toFixed(2)} ${this.currency}</strong></p>
-                <p>Shifts (bubble size): <strong>${shifts}</strong></p>
-                <p>Total income: <strong>${totalIncome} ${this.currency}</strong></p>
-                <p>Total hours: <strong>${totalHours} h</strong></p>
-              </div>
-            `
-          }
-        },
-
-        legend: {
-          show: false
         }
+      }
+    },
+
+    earningsPerHourData() {
+      const map = {}
+
+      this.filteredJobs.forEach((j) => {
+        const type = j.job_type || 'Other'
+        if (!map[type]) map[type] = { earnings: 0, hours: 0 }
+        map[type].earnings += Number(j.earnings) || 0
+        map[type].hours += Number(
+          j.nbHours ||
+          j.duration ||
+          j.duration_hours ||
+          j.hours ||
+          j.work_hours
+        ) || 0
+      })
+
+      const entries = Object.entries(map).map(([type, stats]) => ({
+        type,
+        rate: stats.hours ? Number((stats.earnings / stats.hours).toFixed(2)) : 0
+      }))
+
+      entries.sort((a, b) => {
+        return this.sortDirection === 'asc'
+          ? a.rate - b.rate
+          : b.rate - a.rate
+      })
+
+      return entries
+    },
+
+    earningsPerHourSeries() {
+      const data = this.earningsPerHourData.map(item => item.rate)
+      return [{
+        name: `${this.currency}/hour`,
+        data
+      }]
+    },
+
+    earningsPerHourOptions() {
+      const categories = this.earningsPerHourData.map(item => item.type)
+
+      return {
+        chart: {
+          type: 'bar',
+          toolbar: { show: false }
+        },
+        grid: {
+          padding: {
+            right: 20
+          }
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            borderRadius: 10,
+            barHeight: '65%',
+            dataLabels: {
+              position: 'right'
+            },
+            stroke: {
+              show: true,
+              width: 0,
+              colors: ['transparent']
+            }
+          }
+        },
+        xaxis: {
+          categories,
+          title: {
+            text: `Earnings per hour (${this.currency}/h)`
+          }
+        },
+        yaxis: {
+          title: {
+            text: 'Activity Type'
+          }
+        },
+        dataLabels: {
+          enabled: true,
+          position: 'right',
+          offsetX: 0,
+          style: {
+            fontSize: '13px',
+            fontWeight: 'bold',
+            colors: ['#333']
+          },
+          formatter: val => val.toFixed(2)
+        },
+        tooltip: {
+          y: {
+            formatter: val => `${val.toFixed(2)}`
+          }
+        },
+        colors: ['#2ecc71']
       }
     }
   },
@@ -587,6 +916,7 @@ export default {
   watch: {
     currentPeriod(newVal) {
       this.selectedTotalBucket = null
+      this.selectedActivity = ''
 
       if (!this.latestJobDate) return
 
@@ -643,29 +973,147 @@ export default {
       } else if (this.currentPeriod === 'week') {
         this.currentWeekStart = this.currentWeekStart.add(7, 'day')
       }
+    },
+
+    getPeriodDescription(period) {
+      const descs = {
+        week: 'Earnings patterns by time of day (Morning/Day/Evening/Night)',
+        month: 'Earnings by time of day and filter by activity type',
+        total: 'Average earnings per hour by job activity type'
+      }
+      return descs[period] || ''
+    },
+
+    clearAllFilters() {
+      this.selectedActivity = ''
+      this.totalDataMode = 'total'
+      this.sortDirection = 'desc'
     }
   }
 }
 </script>
 
 <style scoped>
-/* --- LAYOUT --- */
 .layout-container {
-  width: 94%;
+  width: 98%;
   gap: 16px;
-  margin-left: 16px;
+  margin-left: 12px;
 }
 
-/* Base box style */
+.period-switch {
+  position: absolute;
+  display: flex;
+  gap: 6px;
+}
+
+.switch-btn {
+  padding: 4px 12px;
+  border: 1px solid #bbb;
+  border-radius: 0;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.switch-btn.active {
+  background: #e6e6e6;
+  font-weight: 600;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
+}
+
+.period-descriptions {
+  padding: 13px 0 16px 0;
+  margin-top: 0;
+}
+
+.period-desc {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 400;
+  margin: 0;
+}
+
+.week-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  height: 32px;
+}
+
+.week-nav-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.nav-btn {
+  padding: 4px 12px;
+  border: 1px solid #bbb;
+  border-radius: 0;
+  background: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.05s ease;
+}
+
+.nav-btn:hover, .switch-btn:hover {
+  background: #f2f2f2;
+  box-shadow:
+    0 3px 1px -2px rgba(0,0,0,.25),
+    0 2px 4px 0 rgba(0,0,0,.20),
+    0 1px 8px 0 rgba(0,0,0,.18);
+  transform: translateY(-1px);
+}
+
+.week-label {
+  width: 240px;
+  padding: 4px 12px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #bbb;
+}
+
+.week-label.mode-week {
+  background: #e3f2fd;
+  border-color: #2196f377;
+  color: #0d47a1;
+}
+
+.week-label.mode-month {
+  background: #e8f5e9;
+  border-color: #4caf5077;
+  color: #1b5e20;
+}
+
+.week-label.mode-total {
+  width: 280px;
+  background: #fff3e0;
+  border-color: #ff9800bb;
+  color: #e65100;
+}
+
 .box {
-  background-color: #e8e8e8;
-  border: 2px solid #ccc;
-  border-radius: 10px;
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),
+              0 2px 2px 0 rgba(0,0,0,.19),
+              0 1px 5px 0 rgba(0,0,0,.17);
+  border: 1px solid #bbbbbb99;
   padding: 20px;
   font-size: 1.2rem;
 }
 
-/* BUBBLE CHART */
 .box2 {
   display: flex;
   flex-direction: column;
@@ -673,10 +1121,10 @@ export default {
 }
 
 .header-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  position: sticky;
+  top: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .chart-title {
@@ -693,7 +1141,7 @@ export default {
 
 .no-data-overlay {
   position: absolute;
-  top: 50%;
+  top: 44%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
@@ -702,35 +1150,6 @@ export default {
   pointer-events: none;
 }
 
-.week-nav {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.nav-btn {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: 1px solid #bbb;
-  background: white;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-size: 1rem;
-}
-
-.nav-btn:hover {
-  background: #f3f3f3;
-}
-
-.week-label {
-  font-weight: 700;
-  color: #333;
-  font-size: 1rem;
-}
-
-/* Legend */
 .legend {
   display: flex;
   gap: 12px;
@@ -752,14 +1171,18 @@ export default {
   border-radius: 3px;
 }
 
-/* Tooltip styling */
 .tooltip-box {
-  padding: 12px;
+  padding: 16px 18px;
   background: white;
   border: 1px solid #ccc;
   border-radius: 8px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip-box p {
+  margin: 6px 0;
 }
 
 .tooltip-title {
@@ -778,51 +1201,77 @@ export default {
   color: #333;
 }
 
-.period-switch {
-  position: absolute;
-  display: flex;
-  gap: 6px;
-}
-
-.switch-btn {
-  padding: 4px 12px;
-  border-radius: 6px;
-  border: 1px solid #bbb;
-  background: #e0e0e0;
-  color: #333;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.switch-btn.active {
-  background: #bcbcbc;
-  font-weight: 700;
-}
-
-.switch-btn:hover {
-  background: #d2d2d2;
-}
-
-/* Total layout - chart + panel side by side */
 .total-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.total-bar-chart {
+  width: 100%;
+}
+
+.bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sort-select {
+  width: auto;
+  min-width: 200px;
+}
+
+.week-month-layout {
   display: flex;
   gap: 16px;
   align-items: flex-start;
   margin-bottom: 30px;
 }
 
-.total-layout .box2 {
-  flex: 0 0 65%;
+.week-month-layout .box2 {
+  flex: 0 0 75%;
   margin-bottom: 0;
 }
 
-.total-layout .box4 {
+.week-month-layout .box4 {
   flex: 1;
-  max-height: 500px;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
 }
 
-/* Job list panel */
+.filter-label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  display: block;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1.5px solid #ccc;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filter-select:hover {
+  border-color: #888;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #1e88e5;
+  box-shadow: 0 0 4px rgba(30, 136, 229, 0.5);
+}
+
 .panel-header {
   margin-bottom: 16px;
 }
@@ -833,12 +1282,6 @@ export default {
   margin: 0;
 }
 
-.job-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
 .job-item {
   background: white;
   border-radius: 8px;
@@ -846,40 +1289,309 @@ export default {
   cursor: pointer;
   transition: background 0.2s;
   border: 1px solid #ddd;
+  margin-bottom: 8px;
 }
 
 .job-item:hover {
   background: #f3f3f3;
 }
 
-.job-item strong {
-  display: block;
+.activity-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 4px;
-  color: #333;
 }
 
-.job-item div {
+.activity-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.data-mode-switch {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+.switch-label {
   font-size: 0.9rem;
+  color: #999;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.switch-label.active {
+  color: #1e88e5;
+  font-weight: 600;
+}
+
+/* Switch styling */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: all 0.3s;
+  border-radius: 28px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: all 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input:checked + .slider {
+  background-color: #1e88e5;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.toggle-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  background: #e8e8e8;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.toggle-btn:hover {
+  background: #d8d8d8;
+  border-color: #888;
+}
+
+.toggle-btn.active {
+  background: #1e88e5;
+  color: white;
+  border-color: #1565c0;
+  font-weight: 600;
+}
+
+.activity-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legend-item-detailed {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  background: #f9f9f9;
+  font-size: 0.95rem;
+  color: #333;
+  border: 1px solid #eee;
+}
+
+.legend-swatch-large {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.activity-summary {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.activity-jobs {
+  border-top: 1px dashed #ddd;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.activity-job {
+  font-size: 0.85rem;
   color: #666;
 }
 
-.no-data {
-  text-align: center;
-  padding: 40px 20px;
-  color: #999;
-  font-style: italic;
+.chart-subtitle {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.4;
+  max-width: 720px;
 }
 
-/* --- MEDIA QUERIES --- */
+/* Active Filters Bar */
+.active-filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+
+.filters-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.badge-close {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.badge-close:hover {
+  color: #e74c3c;
+}
+
+.clear-all-btn {
+  margin-left: auto;
+  padding: 4px 8px;
+  background: #f0f0f0;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.clear-all-btn:hover {
+  background: #e0e0e0;
+  color: #333;
+}
+
 @media (max-width: 768px) {
-  .layout-container { width: 100%; margin-left: 8px; gap: 12px; }
-  .period-switch { position: static; justify-content: center; margin-bottom: 12px; }
-  .week-nav { justify-content: center; margin-bottom: 12px; }
-  .total-layout { flex-direction: column; align-items: stretch; }
-  .total-layout .box2 { flex: 1 1 100%; order: 1; margin-bottom: 12px; }
-  .total-layout .box4 { flex: 1 1 100%; order: 2; max-height: none; overflow: visible; }
-  .box { padding: 12px; }
-  .chart-wrapper { margin-top: 8px; }
-  .legend { justify-content: center; }
+  .layout-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    width: 94%;
+  }
+
+  .period-switch {
+    position: static;
+    grid-column: 1 / 2;
+    grid-row: auto;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .period-descriptions {
+    grid-column: 1 / 2;
+    grid-row: auto;
+    padding-top: 0;
+    margin-top: 0;
+    text-align: center;
+  }
+
+  .week-nav {
+    grid-column: 1 / 2;
+    grid-row: auto;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  /* stack switch and nav vertically on mobile */
+  .top-bar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .top-bar .week-nav {
+    margin-top: 8px;
+  }
+
+  .total-layout {
+    flex-direction: column;
+  }
+
+  .bar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .sort-select {
+    width: 100%;
+  }
+
+  .week-month-layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .week-month-layout .box2 {
+    flex: 1 1 100%;
+    margin-bottom: 12px;
+    order: 2;
+  }
+
+  .week-month-layout .box4 {
+    flex: 1 1 100%;
+    order: 1;
+    margin-bottom: 12px;
+  }
+
+  .chart-wrapper {
+    margin-top: 8px;
+  }
+
+  .legend {
+    justify-content: center;
+  }
+}
+::v-deep(.apexcharts-tooltip) {
+  transform: translateY(10px);
 }
 </style>

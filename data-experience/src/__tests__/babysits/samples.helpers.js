@@ -1,6 +1,6 @@
-export const babysitterJobsCsv = `id,date,startHour,nbHours,pricePerHour,cityName,title,state
-job-1,15.10.2023,8.5,2.5,15.00,Basel,Evening babysit,completed
-job-2,16.10.2023,20,2,20.00,Zurich,Night shift,paid
+export const babysitterJobsCsv = `id,date,startHour,nbHours,pricePerHour,cityName,title,state,category
+job-1,15.10.2023,8.5,2.5,15.00,Basel,Evening babysit,completed,Babysitting
+job-2,16.10.2023,20,2,20.00,Zurich,Night shift,paid,Babysitting
 `
 
 export const expectedItems = [
@@ -13,7 +13,8 @@ export const expectedItems = [
     earnings: 37.5,
     location: 'Basel',
     job_type: 'Evening babysit',
-    status: 'completed'
+    status: 'completed',
+    category: 'Babysitting'
   },
   {
     job_id: 'job-2',
@@ -24,6 +25,7 @@ export const expectedItems = [
     earnings: 40,
     location: 'Zurich',
     job_type: 'Night shift',
-    status: 'paid'
+    status: 'paid',
+    category: 'Babysitting'
   }
 ]

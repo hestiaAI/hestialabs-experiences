@@ -6,15 +6,40 @@
         :key="p"
         :class="['switch-btn', { active: currentPeriod === p }]"
         @click="currentPeriod = p"
+        :title="getPeriodDescription(p)"
       >
         {{ p.toUpperCase() }}
       </button>
     </div>
 
+    <div class="period-descriptions">
+      <div v-if="currentPeriod === 'week'" class="period-desc">
+        📅 Week view: See your shifts and key metrics for each day of the week
+      </div>
+      <div v-if="currentPeriod === 'month'" class="period-desc">
+        📆 Month view: Click on any day to view that week
+      </div>
+      <div v-if="currentPeriod === 'total'" class="period-desc">
+        📊 Total view: Your overall statistics and patterns across all time
+      </div>
+    </div>
+
     <div class="week-nav">
-      <button class="nav-btn" @click="prevWeek">←</button>
-      <div class="week-label">{{ weekLabel }}</div>
-      <button class="nav-btn" @click="nextWeek">→</button>
+      <div class="week-nav-wrapper">
+        <button class="nav-btn" @click="prevWeek" v-if="currentPeriod !== 'total'">←</button>
+        <div class="week-label" :class="`mode-${currentPeriod}`">{{ weekLabel }}</div>
+        <button class="nav-btn" @click="nextWeek" v-if="currentPeriod !== 'total'">→</button>
+      </div>
+    </div>
+
+    <!-- Active Filters Bar -->
+    <div class="active-filters" v-if="hasActiveFilters">
+      <span class="filters-label">Filters:</span>
+      <span v-if="selectedJobType" class="filter-badge">
+        {{ selectedJobType }}
+        <button class="badge-close" @click="selectedJobType = ''">✕</button>
+      </span>
+      <button class="clear-all-btn" @click="clearAllFilters">Clear All</button>
     </div>
 
     <!-- BOX 1 → Top Stats -->
@@ -26,12 +51,12 @@
 
       <div>
         <strong>Total Hours Worked</strong>
-        <div>{{ totalHours.toFixed(1) }} h</div>
+        <div>{{ Math.floor(totalHours) }}h {{ Math.round((totalHours - Math.floor(totalHours)) * 60) }}m</div>
       </div>
 
       <div>
         <strong>Number of Jobs</strong>
-        <div>{{ totalJobs.toFixed(1) }}</div>
+        <div>{{ totalJobs }}</div>
       </div>
     </div>
 
@@ -39,7 +64,17 @@
     <div class="box box2">
       <h2 class="mb-4">Shift Timeline</h2>
 
-      <div v-if="currentPeriod === 'week' && jobs.length">
+      <div v-if="currentPeriod === 'week' && jobs.length" class="chart-wrapper">
+        <!-- Overlay if no earnings data -->
+        <div v-if="!hasEarningsData" class="calendar-overlay">
+          <div class="overlay-box">
+            <div class="overlay-title">No earnings data</div>
+            <div class="overlay-text">
+              Check whether your dataset is empty, or select another period.
+            </div>
+          </div>
+        </div>
+
         <ApexChart
           type="rangeBar"
           height="450"
@@ -48,8 +83,15 @@
         />
 
         <div class="legend mt-4">
-          <div v-for="item in statusItems" :key="item.name" class="legend-item">
-            <span class="legend-swatch" :style="{ background: item.color }" />
+          <div
+            v-for="item in activityLegendItems"
+            :key="item.label"
+            class="legend-item"
+          >
+            <span
+              class="legend-swatch"
+              :style="{ background: item.color }"
+            />
             {{ item.label }} ({{ item.count }})
           </div>
         </div>
@@ -61,6 +103,7 @@
           :month="calendarMonth"
           :shifts="shiftsThisPeriod"
           :payments="paymentsInRange"
+          :selectedDate="selectedCalendarDate"
           @select-day="onSelectDay"
         />
       </div>
@@ -134,13 +177,36 @@ export default {
   data() {
     return {
       currentWeekStart: this.getMondayOf(dayjs()),
-      currentPeriod: 'week',
+      currentPeriod: 'month',
       selectedJobType: '',
-      fromCalendarClick: false
+      fromCalendarClick: false,
+      selectedCalendarDate: null
     }
   },
 
   computed: {
+    activityTypeColors() {
+      const palette = [
+        '#1abc9c',
+        '#3498db',
+        '#9b59b6',
+        '#e67e22',
+        '#e74c3c',
+        '#2ecc71'
+      ]
+
+      const types = Array.from(
+        new Set(this.jobs.map(j => j.job_type).filter(Boolean))
+      )
+
+      const map = {}
+      types.forEach((t, i) => {
+        map[t] = palette[i % palette.length]
+      })
+
+      return map
+    },
+
     pageJobTypes() {
       const jobs = this.jobs
 
@@ -218,9 +284,16 @@ export default {
       })
     },
 
+    hasEarningsData() {
+      return this.filteredJobs.some(j => (parseFloat(j.earnings) || 0) > 0)
+    },
+
     weekLabel() {
       if (this.currentPeriod === 'total') {
-        return 'All time'
+        const earliest = this.earliestJobDate
+        const latest = this.latestJobDate
+        if (!earliest || !latest) return 'Entire Period'
+        return `${earliest.format('DD.MM.YYYY')} - ${latest.format('DD.MM.YYYY')}`
       }
 
       if (this.currentPeriod === 'month') {
@@ -230,6 +303,15 @@ export default {
       const s = this.weekStart
       const e = this.weekEnd
       return `${s.format('DD.MM')} - ${e.format('DD.MM.YYYY')}`
+    },
+
+    earliestJobDate() {
+      if (!this.jobs.length) return null
+
+      return this.jobs
+        .map(j => dayjs(j.date))
+        .filter(d => d.isValid())
+        .sort((a, b) => a.valueOf() - b.valueOf())[0]
     },
 
     weekStart() {
@@ -292,6 +374,10 @@ export default {
       return this.jobs[0]?.currency || 'CHF'
     },
 
+    hasActiveFilters() {
+      return !!this.selectedJobType
+    },
+
     /* ---------- AVERAGE WORK TIME ---------- */
 
     averageWorkTime() {
@@ -349,12 +435,22 @@ export default {
             const start = dayjs('2025-01-01').hour(sh).minute(sm).valueOf()
             const end = dayjs('2025-01-01').hour(eh).minute(em).valueOf()
             const statusKey = (j.status || 'unknown').toLowerCase()
-            const color = this.statusColors[statusKey] || this.statusColors.unknown
+
+            let color
+            let opacity = 1
+
+            if (statusKey === 'cancelled' || j.earnings === 0) {
+              color = '#cccccc'
+              opacity = 0.4
+            } else {
+              color = this.activityTypeColors[j.job_type] || '#888'
+            }
 
             seriesData.push({
               x: dayName,
               y: [start, end],
               fillColor: color,
+              opacity,
               meta: j
             })
           })
@@ -378,7 +474,27 @@ export default {
             enabled: false
           }
         },
-        plotOptions: { bar: { horizontal: true, rangeBarGroupRows: true } },
+        states: {
+          hover: {
+            filter: {
+              type: 'none'
+            }
+          },
+          active: {
+            filter: {
+              type: 'none'
+            }
+          }
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            rangeBarGroupRows: true,
+            dataLabels: {
+              position: 'center'
+            }
+          }
+        },
         xaxis: {
           type: 'datetime',
           labels: { format: 'HH:mm' },
@@ -396,10 +512,26 @@ export default {
           custom: ({ seriesIndex, dataPointIndex, w }) => {
             const item = w.config.series[seriesIndex].data[dataPointIndex].meta
             if (item.status === 'none') return null
+
+            const durationMin = (() => {
+              const [sh, sm] = item.start_time.split(':').map(Number)
+              const [eh, em] = item.end_time.split(':').map(Number)
+              const start = sh * 60 + sm
+              let end = eh * 60 + em
+              if (end < start) end += 24 * 60
+              return end - start
+            })()
+
+            const durationH = Math.floor(durationMin / 60)
+            const durationM = durationMin % 60
+
             return `
               <div class="tooltip-box">
-                <strong>${item.date}</strong><br>
+                <strong>${item.job_type || 'Activity'}</strong><br>
+                ${item.date}<br>
                 ${item.start_time} - ${item.end_time}<br>
+                Status: ${item.status || '-'}<br>
+                Duration: ${durationH}h ${durationM}m<br>
                 Earnings: ${item.earnings || '-'}
               </div>
             `
@@ -408,17 +540,18 @@ export default {
       }
     },
 
-    statusItems() {
+    activityLegendItems() {
       const counts = {}
+
       this.filteredJobs.forEach((j) => {
-        counts[j.status] = (counts[j.status] || 0) + 1
+        const type = j.job_type || 'Unknown'
+        counts[type] = (counts[type] || 0) + 1
       })
 
-      return Object.keys(counts).map(s => ({
-        name: s,
-        label: s.charAt(0).toUpperCase() + s.slice(1),
-        count: counts[s],
-        color: this.statusColors[s] || '#888'
+      return Object.keys(counts).map(t => ({
+        label: t,
+        count: counts[t],
+        color: this.activityTypeColors[t] || '#888'
       }))
     },
 
@@ -477,7 +610,16 @@ export default {
           toolbar: { show: false }
         },
         dataLabels: {
-          enabled: false
+          enabled: true,
+          formatter: (val, opts) => {
+            const meta = opts.w.config.series[opts.seriesIndex].data[opts.dataPointIndex].meta
+            return meta?.job_type || ''
+          },
+          style: {
+            colors: ['#fff'],
+            fontSize: '11px',
+            fontWeight: 600
+          }
         },
         xaxis: {
           type: 'category',
@@ -497,10 +639,10 @@ export default {
             enableShades: false,
             colorScale: {
               ranges: [
-                { from: 0, to: 0.1, color: '#eeeeee', name: 'No activity (0 h)' },
-                { from: 0.1, to: 2, color: '#b3d9ff', name: '0-2 h' },
-                { from: 2, to: 4, color: '#4da3ff', name: '2-4 h' },
-                { from: 4, to: 100, color: '#003f8c', name: 'More than 4 h' }
+                { from: 0, to: 0.1, color: '#eeeeee', name: 'No activity (<0.1 h)' },
+                { from: 0.1, to: 2.1, color: '#b3d9ff', name: '0.1-2 h' },
+                { from: 2.1, to: 4.1, color: '#4da3ff', name: '2.1-4 h' },
+                { from: 4.1, to: 100, color: '#003f8c', name: 'More than 4.1 h' }
               ]
             }
           }
@@ -597,8 +739,22 @@ export default {
       const d = dayjs(date)
 
       this.fromCalendarClick = true
+      this.selectedCalendarDate = date
       this.currentWeekStart = this.getMondayOf(d)
       this.currentPeriod = 'week'
+    },
+
+    getPeriodDescription(period) {
+      const descs = {
+        week: 'See your shifts and key metrics for each day of the week',
+        month: 'Click on any day to view that week',
+        total: 'Your overall statistics and patterns across all time'
+      }
+      return descs[period] || ''
+    },
+
+    clearAllFilters() {
+      this.selectedJobType = ''
     }
   }
 }
@@ -608,18 +764,132 @@ export default {
 /* --- LAYOUT --- */
 .layout-container {
   display: grid;
-  width: 94%;
-  grid-template-rows: auto 20% 1fr;
+  width: 98%;
+  grid-template-rows: auto 108px 1fr;
   grid-template-columns: 70% 1fr;
   gap: 16px;
-  margin-left: 16px;
+  margin-left: 12px;
+  margin-bottom: 24px;
+}
+
+.period-switch {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  position: absolute;
+  display: flex;
+  gap: 6px;
+}
+
+.switch-btn {
+  padding: 4px 12px;
+  border: 1px solid #bbb;
+  border-radius: 0;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.switch-btn.active {
+  background: #e6e6e6;
+  font-weight: 600;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
+}
+
+.period-descriptions {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  padding-top: 45px;
+  padding-left: 0;
+  margin-top: 0;
+}
+
+.period-desc {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 400;
+  margin: 0;
+}
+
+.week-nav {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  height: 32px;
+}
+
+.week-nav-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.nav-btn {
+  padding: 4px 12px;
+  border: 1px solid #bbb;
+  border-radius: 0;
+  background: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.05s ease;
+}
+
+.nav-btn:hover, .switch-btn:hover {
+  background: #f2f2f2;
+  box-shadow:
+    0 3px 1px -2px rgba(0,0,0,.25),
+    0 2px 4px 0 rgba(0,0,0,.20),
+    0 1px 8px 0 rgba(0,0,0,.18);
+  transform: translateY(-1px);
+}
+
+.week-label {
+  width: 240px;
+  padding: 4px 12px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #bbb;
+}
+
+.week-label.mode-week {
+  background: #e3f2fd;
+  border-color: #2196f377;
+  color: #0d47a1;
+}
+
+.week-label.mode-month {
+  background: #e8f5e9;
+  border-color: #4caf5077;
+  color: #1b5e20;
+}
+
+.week-label.mode-total {
+  width: 280px;
+  background: #fff3e0;
+  border-color: #ff9800bb;
+  color: #e65100;
 }
 
 /* Base box style */
 .box {
-  background-color: #e8e8e8;
-  border: 2px solid #ccc;
-  border-radius: 10px;
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),
+              0 2px 2px 0 rgba(0,0,0,.19),
+              0 1px 5px 0 rgba(0,0,0,.17);
+  border: 1px solid #bbbbbb99;
   padding: 20px;
   font-size: 1.2rem;
 }
@@ -633,6 +903,7 @@ export default {
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
   align-items: center;
+  padding-bottom: 16px;
 }
 
 /* TIMELINE */
@@ -644,6 +915,37 @@ export default {
   margin-bottom: 30px;
 }
 
+.chart-wrapper {
+  position: relative;
+}
+
+.calendar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(240, 240, 240, 0.6);
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+/* Message box */
+.overlay-box {
+  pointer-events: auto;
+  text-align: center;
+}
+
+.overlay-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.overlay-text {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
 /* RIGHT COLUMN BOX 4 */
 .box4 {
   display: flex;
@@ -652,11 +954,15 @@ export default {
   text-align: left;
   height: auto;
   align-self: start;
+  padding-top: 16px;
+}
+
+.avg-box p {
+  margin: 8px 0;
 }
 
 .avg-value {
   font-size: 1.6rem;
-  margin-top: 8px;
 }
 
 /* Legend */
@@ -684,70 +990,6 @@ export default {
   background: white;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-.week-nav {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.nav-btn {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: 1px solid #bbb;
-  background: white;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-size: 1rem;
-}
-
-.nav-btn:hover {
-  background: #f3f3f3;
-}
-
-.week-label {
-  font-weight: 700;
-  color: #333;
-  font-size: 1rem;
-}
-
-.period-switch {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-  position: absolute;
-  display: flex;
-  gap: 6px;
-}
-
-.switch-btn {
-  padding: 4px 12px;
-  border-radius: 6px;
-  border: 1px solid #bbb;
-  background: #e0e0e0;
-  color: #333;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.switch-btn.active {
-  background: #bcbcbc;
-  font-weight: 700;
-}
-
-.switch-btn:hover {
-  background: #d2d2d2;
-}
-
-.dev-placeholder{
-  text-align:center;
-  margin-top:120px;
-  color:#777;
-  font-size:1.1rem;
 }
 
 :deep(.apexcharts-heatmap-rect:hover) {
@@ -780,13 +1022,76 @@ export default {
   gap: 16px;
 }
 
+/* Active Filters Bar */
+.active-filters {
+  grid-column: 1 / 3;
+  grid-row: 2 / 3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.filters-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #333;
+}
+
+.badge-close {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.badge-close:hover {
+  color: #e74c3c;
+}
+
+.clear-all-btn {
+  margin-left: auto;
+  padding: 4px 8px;
+  background: #f0f0f0;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.clear-all-btn:hover {
+  background: #e0e0e0;
+  color: #333;
+}
+
 /* --- MEDIA QUERIES --- */
 @media (max-width: 768px) {
   .layout-container {
-    width: 100%;
-    margin-left: 8px;
-    gap: 12px;
-    grid-template-rows: auto auto auto 1fr auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    width: 94%;
   }
 
   .period-switch {
@@ -797,54 +1102,46 @@ export default {
     grid-row: 1 / 2;
   }
 
-  .week-nav {
-    justify-content: center;
-    margin-bottom: 12px;
+  /* move description under the switch on small screens */
+  .period-descriptions {
     grid-column: 1 / -1;
     grid-row: 2 / 3;
+    padding-top: 0;
+    margin-top: 0;
+    text-align: center;
   }
 
-  .period-switch .switch-btn,
-  .week-nav .nav-btn {
-    flex-shrink: 0;
-    margin: 0 6px;
+  .week-nav {
+    justify-content: center;
+    margin-bottom: 20px;
+    grid-column: 1 / -1;
+    grid-row: 3 / 4; /* below period-descriptions */
   }
 
   .box1 {
     grid-column: 1 / -1;
-    grid-row: 3 / 4;
+    grid-row: 4 / 5; /* move below nav */
     grid-template-columns: 1fr;
-    padding: 12px;
     gap: 12px;
+    text-align: center;
   }
 
   .box2 {
     grid-column: 1 / -1;
-    grid-row: 4 / 5;
+    grid-row: 6 / 7; /* push timeline into its own row */
     margin-bottom: 12px;
-    padding: 12px;
   }
 
   .right-column {
     grid-column: 1 / -1;
-    grid-row: 5 / 6;
+    grid-row: 5 / 6; /* positioned below the timeline box */
     display: block;
     gap: 12px;
   }
 
   .box4, .avg-box, .filter-box {
     width: 100%;
-    padding: 12px;
     margin-bottom: 12px;
-  }
-
-  .week-label {
-    text-align: center;
-    width: auto;
-  }
-
-  .nav-btn {
-    padding: 6px 8px;
   }
 }
 </style>

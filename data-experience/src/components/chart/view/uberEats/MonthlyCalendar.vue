@@ -1,5 +1,15 @@
 <template>
   <div class="calendar">
+    <!-- Grey overlay if no month data -->
+    <div v-if="!hasMonthData" class="calendar-overlay">
+      <div class="overlay-box">
+        <div class="overlay-title">No data for this month</div>
+        <div class="overlay-text">
+          Check whether your dataset is empty, or select another month.
+        </div>
+      </div>
+    </div>
+
     <!-- Weekday headers -->
     <div class="calendar-header" v-for="d in weekDays" :key="d">
       {{ d }}
@@ -17,6 +27,7 @@
       v-for="day in daysInMonth"
       :key="day.date"
       class="calendar-cell day-cell"
+      :class="{ selected: isSelectedDay(day) }"
       @click="selectDay(day)"
     >
       <div class="day-number">{{ day.day }}</div>
@@ -43,9 +54,10 @@ export default {
   mixins: [mixin],
   props: {
     year: Number,
-    month: Number, // 0–11
-    shifts: { type: Array, default: () => [] },
-    payments: { type: Array, default: () => [] }
+    month: Number,
+    dailyStats: { type: Object, required: true },
+    currency: { type: String, default: '$' },
+    selectedDate: String
   },
   emits: ['select-day'],
   setup(props, { emit }) {
@@ -61,49 +73,46 @@ export default {
       emit('select-day', day.date) // full ISO date string
     }
 
-    // Currency used in the month
-    const currency = computed(() => {
-      return props.shifts[0]?.currency || '$'
-    })
+    // Check if a day is selected
+    const isSelectedDay = (day) => {
+      if (!props.selectedDate) return false
+      return dayjs(props.selectedDate).isSame(dayjs(day.date), 'day')
+    }
 
     // Offset for the first day of the month (0=Mon, 6=Sun)
     const firstDayOffset = computed(() => {
+      if (!start.value.isValid()) return 0
       const weekday = start.value.day() // Sunday=0
       return weekday === 0 ? 6 : weekday - 1
     })
 
     // Days in the month with aggregated stats
     const daysInMonth = computed(() => {
+      if (!start.value.isValid() || !end.value.isValid()) return []
+
       const days = []
       const totalDays = end.value.date()
 
       for (let i = 1; i <= totalDays; i++) {
-        const date = start.value.date(i)
-
-        const hoursWorked = props.shifts
-          .filter(s => s.begin_timestamp_utc && s.end_timestamp_utc)
-          .filter(s => dayjs(s.begin_timestamp_utc).isSame(date, 'day'))
-          .reduce((sum, s) => {
-            const begin = dayjs(s.begin_timestamp_utc)
-            const end = dayjs(s.end_timestamp_utc)
-            return sum + end.diff(begin, 'hour', true)
-          }, 0)
-
-        const totalEarnings = props.payments
-          .filter(p => p.recognizeTimestampLocal)
-          .filter(p => dayjs(p.recognizeTimestampLocal).isSame(date, 'day'))
-          .reduce((sum, p) => sum + Number(p.amountLocal || 0), 0)
+        const date = start.value.clone().date(i)
+        const key = date.format('YYYY-MM-DD')
+        const stat = props.dailyStats[key] || { earnings: 0, minutes: 0 }
 
         days.push({
           day: i,
-          date: date.toString(),
-          hours: hoursWorked,
-          earnings: totalEarnings
+          date: date.toISOString(),
+          hours: Number((stat.minutes / 60).toFixed(1)),
+          earnings: stat.earnings || 0
         })
       }
 
       return days
     })
+
+    // true if at least one day has hours or earnings > 0
+    const hasMonthData = computed(() =>
+      daysInMonth.value.some(d => (d.hours ?? 0) > 0 || (d.earnings ?? 0) > 0)
+    )
 
     return {
       weekDays,
@@ -111,7 +120,8 @@ export default {
       end,
       firstDayOffset,
       daysInMonth,
-      currency,
+      hasMonthData,
+      isSelectedDay,
       selectDay
     }
   }
@@ -120,19 +130,57 @@ export default {
 
 <style scoped>
 .calendar {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-auto-rows: 1fr;
   grid-template-rows: 28px repeat(6, 1fr);
   gap: 6px;
-  padding: 4px 10px 0px 10px;
+  padding-top: 4px;
+}
+
+/* Overlay on top of the calendar grid */
+.calendar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(240, 240, 240, 0.6);
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.overlay-box {
+  pointer-events: auto;
+  text-align: center;
+}
+
+.overlay-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.overlay-text {
+  font-size: 13px;
+  opacity: 0.85;
 }
 
 .calendar-header {
   text-align: center;
   font-weight: bold;
   background: #f4f4f4;
+  border: 1px solid #b9b9b9;
   height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-header:nth-child(6),
+.calendar-header:nth-child(7) {
+  background: #e3f2fd;
+  border-color: #2196f377;
 }
 
 .calendar-cell {
@@ -151,24 +199,34 @@ export default {
 
 .day-cell {
   background: white;
+  cursor: pointer;
+}
+
+.day-cell.selected {
+  background-color: #fff3e0;
+  border: 2px solid #ff9800;
+  box-shadow: 0 0 8px rgba(255, 152, 0, 0.3);
 }
 
 .day-cell:hover {
-  background-color: #ddd;
+  background-color: #f2f2f2;
+  box-shadow:
+      0 2px 1px -1px rgba(0,0,0,.22),
+      0 1px 3px 0 rgba(0,0,0,.18);
 }
 
 .day-number {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
 }
 
 .stat-hours {
-  font-size: 12px;
+  font-size: 11px;
   color: #4caf50;
 }
 
 .stat-money {
-  font-size: 12px;
+  font-size: 11px;
   color: #2196f3;
   margin-bottom: 5px;
 }
@@ -177,5 +235,21 @@ export default {
   opacity: 0.3;
   font-size: 12px;
   text-align: center;
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+  .calendar-header {
+    font-size: 12px;
+    height: 24px;
+  }
+
+  .day-number {
+    font-size: 11px;
+  }
+
+  .stat-hours, .stat-money {
+    font-size: 9px;
+  }
 }
 </style>

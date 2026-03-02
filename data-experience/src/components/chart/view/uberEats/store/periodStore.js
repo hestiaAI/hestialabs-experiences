@@ -4,7 +4,9 @@ import { reactive } from 'vue'
 export const periodStore = reactive({
   periodStart: null,
   periodEnd: null,
-  mode: 'week',
+  mode: 'month',
+  allTimeStart: null,
+  allTimeEnd: null,
 
   setPeriod(start, end) {
     this.periodStart = start
@@ -19,22 +21,30 @@ export const periodStore = reactive({
   initFromTrips(trips) {
     if (!trips || !trips.length) return
 
-    // find most recent trip date
-    const latestTrip = trips.reduce((latest, t) => {
+    let earliest = null
+    let latest = null
+
+    trips.forEach((t) => {
       const d = dayjs(t.courierAcceptTimestampLocal || t.beginTimestampLocal)
-      return (!latest || d.isAfter(latest)) ? d : latest
-    }, null)
+      if (!d.isValid()) return
 
-    if (!latestTrip) return
+      if (!earliest || d.isBefore(earliest)) earliest = d
+      if (!latest || d.isAfter(latest)) latest = d
+    })
 
-    // Align to Monday–Sunday week
-    let monday = latestTrip.startOf('week') // Sunday = 0
-    // adjust because `startOf('week')` = Sunday
+    if (!latest) return
+
+    // Save alltime range
+    this.allTimeStart = earliest.startOf('day').toISOString()
+    this.allTimeEnd = latest.endOf('day').toISOString()
+
+    // Set initial period to latest week
+    let monday = latest.startOf('week') // Sunday = 0
     if (monday.day() !== 1) {
       monday = monday.add(1, 'day') // shift to Monday
     }
-    const sunday = monday.add(6, 'day').endOf('day')
 
+    const sunday = monday.add(6, 'day').endOf('day')
     this.setPeriod(monday.toISOString(), sunday.toISOString())
   }
 })

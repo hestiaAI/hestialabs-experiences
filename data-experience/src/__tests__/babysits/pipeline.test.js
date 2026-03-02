@@ -37,7 +37,8 @@ describe('babysits - csv_babysitter_jobs', () => {
       'earnings',
       'location',
       'job_type',
-      'status'
+      'status',
+      'category'
     ])
     expect(result.items).toHaveLength(2)
 
@@ -57,6 +58,7 @@ describe('babysits - csv_babysitter_jobs', () => {
     expect(item.duration_hours).toBeCloseTo(2.5)
     expect(item.earnings).toBeCloseTo(37.5)
     expect(item.status).toBe('completed')
+    expect(item.category).toBe('Babysitting')
   })
 
   test('handles integer start hour and status normalization correctly', async() => {
@@ -79,5 +81,6 @@ describe('babysits - csv_babysitter_jobs', () => {
     expect(item.job_type).toBe('Night shift')
 
     expect(item.status).toBe('paid')
+    expect(item.category).toBe('Babysitting')
   })
 })

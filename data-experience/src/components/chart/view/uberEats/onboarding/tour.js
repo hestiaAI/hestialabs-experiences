@@ -53,7 +53,7 @@ export function createTour({ onSwitchTab }) {
           // Make Shepherd wait for the next page to load
           window.__continueRoutesTour = () => tour.next()
 
-          // Click the button that navigates to MyRoutes
+          // Click the button that navigates to MyTrips
           const btn = document.getElementById('csv_courier_trips')
           if (btn) btn.click()
         }
@@ -62,7 +62,7 @@ export function createTour({ onSwitchTab }) {
   })
 
   /* ------------------------------
-      SECOND TAB: MyRoutes
+      SECOND TAB: MyTrips
   ------------------------------ */
 
   tour.addStep({
@@ -76,6 +76,13 @@ export function createTour({ onSwitchTab }) {
     id: 'selected-routes',
     attachTo: { element: '.selected-routes', on: 'top' },
     text: 'This list shows all route points displayed on the map. Click a point to highlight it and focus on that specific route.',
+    buttons: [{ text: 'Next', action: tour.next }]
+  })
+
+  tour.addStep({
+    id: 'filters-btn',
+    attachTo: { element: '.filters-btn', on: 'bottom' },
+    text: 'Click this button to open the filters panel, where you can filter trips by status and time range.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
@@ -109,8 +116,8 @@ export function createTour({ onSwitchTab }) {
   })
 
   tour.addStep({
-    id: 'earnings-adjusted',
-    attachTo: { element: '.earnings-adjusted', on: 'bottom' },
+    id: 'toggle-wrapper',
+    attachTo: { element: '.toggle-wrapper', on: 'bottom' },
     text: 'Use this toggle to switch between total daily earnings and earnings adjusted by working hours.',
     buttons: [{ text: 'Next', action: tour.next }]
   })

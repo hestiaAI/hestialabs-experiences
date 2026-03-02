@@ -1,7 +1,6 @@
 import type { FileManager } from '@/types/utils'
 
 async function combined_data_pipeline({ fileManager }: { fileManager: FileManager }) {
-  // Get driver online/offline
   const driverOnlineCsv =
     (await fileManager.getCsvItemsFromId("DriverOnlineOffline"))[0] ?? {
       headers: [],

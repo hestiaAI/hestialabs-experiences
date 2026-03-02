@@ -50,24 +50,61 @@ export default {
 <style scoped>
 .top-days-wrapper {
   width: 100%;
-  text-align: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px
 }
 
 .top-days-table {
-  margin-top: 16px;
   width: 70%;
-  margin-left: auto;
-  margin-right: auto;
   border-collapse: collapse;
+  margin: 22px auto 44px auto;
 }
 
 .top-days-table th,
 .top-days-table td {
-  border: 1px solid #aaa;
-  padding: 8px 12px;
+  padding: 20px 24px;
+  text-align: center;
 }
 
-.top-days-table th {
-  background-color: #ddd;
+.top-days-table th,
+.top-days-table tr:not(:last-child) {
+  border-bottom: 1px solid #ccc;
+}
+
+.top-days-table th:not(:last-child),
+.top-days-table td:not(:last-child) {
+  border-right: 1px solid #ccc;
+}
+
+.top-days-table thead {
+  background-color: #fff3e0;
+  font-weight: 600;
+}
+
+.top-days-table tbody tr:nth-child(odd) {
+  background-color: #fafafa;
+}
+
+.top-days-table tbody tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.top-days-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 768px) {
+  .top-days-table th,
+  .top-days-table td {
+    padding: 12px 12px;
+    text-align: center;
+  }
+
+  .top-days-table {
+    width: 90%;
+  }
 }
 </style>

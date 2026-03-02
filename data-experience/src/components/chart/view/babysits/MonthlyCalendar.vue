@@ -1,5 +1,15 @@
 <template>
   <div class="calendar">
+    <!-- Grey overlay if no month data -->
+    <div v-if="!hasMonthData" class="calendar-overlay">
+      <div class="overlay-box">
+        <div class="overlay-title">No data for this month</div>
+        <div class="overlay-text">
+          Check whether your dataset is empty, or select another month.
+        </div>
+      </div>
+    </div>
+
     <!-- Weekday headers -->
     <div class="calendar-header" v-for="d in weekDays" :key="d">
       {{ d }}
@@ -17,11 +27,16 @@
       v-for="day in daysInMonth"
       :key="day.date"
       class="calendar-cell day-cell"
+      :class="{ selected: isSelectedDay(day) }"
       @click="selectDay(day)"
+      :title="`${day.day} - Click to view week`"
     >
       <div class="day-number">{{ day.day }}</div>
 
       <div class="stats" v-if="day.hours > 0 || day.earnings > 0">
+        <div class="stat-job-type" v-if="day.jobTypes.length > 0">
+          {{ day.jobTypes.join(', ') }}
+        </div>
         <div class="stat-hours">{{ day.hours.toFixed(1) }}h</div>
         <div class="stat-money">{{ day.earnings.toFixed(2) }}{{ currency }}</div>
       </div>
@@ -45,7 +60,8 @@ export default {
     year: Number,
     month: Number, // 0–11
     shifts: { type: Array, default: () => [] },
-    payments: { type: Array, default: () => [] }
+    payments: { type: Array, default: () => [] },
+    selectedDate: String // ISO date string
   },
   emits: ['select-day'],
   setup(props, { emit }) {
@@ -62,6 +78,11 @@ export default {
       emit('select-day', day.date)
     }
 
+    const isSelectedDay = (day) => {
+      if (!props.selectedDate) return false
+      return dayjs(props.selectedDate).isSame(dayjs(day.date), 'day')
+    }
+
     const firstDayOffset = computed(() => {
       const weekday = start.value.day() // Sunday=0
       return weekday === 0 ? 6 : weekday - 1
@@ -74,36 +95,47 @@ export default {
       for (let i = 1; i <= totalDays; i++) {
         const date = start.value.date(i)
 
+        // Filter shifts for the current day
+        const dayShifts = props.shifts.filter(s => s.date && dayjs(s.date).isSame(date, 'day'))
+
         // Calculate hours worked from shifts (using duration_hours field)
-        const hoursWorked = props.shifts
-          .filter(s => s.date && dayjs(s.date).isSame(date, 'day'))
-          .reduce((sum, s) => {
-            const duration = parseFloat(
-              s.duration_hours ||
-              s.nbHours ||
-              s.duration ||
-              s.hours ||
-              s.work_hours ||
-              0
-            )
-            return sum + duration
-          }, 0)
+        const hoursWorked = dayShifts.reduce((sum, s) => {
+          const duration = parseFloat(
+            s.duration_hours ||
+            s.nbHours ||
+            s.duration ||
+            s.hours ||
+            s.work_hours ||
+            0
+          )
+          return sum + duration
+        }, 0)
 
         // Calculate total earnings from shifts
-        const totalEarnings = props.shifts
-          .filter(s => s.date && dayjs(s.date).isSame(date, 'day'))
-          .reduce((sum, s) => sum + (parseFloat(s.earnings) || 0), 0)
+        const totalEarnings = dayShifts.reduce((sum, s) => sum + (parseFloat(s.earnings) || 0), 0)
+
+        // Extract unique job types
+        const jobTypes = [...new Set(dayShifts
+          .map(s => s.job_type)
+          .filter(jt => jt)
+        )]
 
         days.push({
           day: i,
           date: date.toISOString(),
           hours: hoursWorked,
-          earnings: totalEarnings
+          earnings: totalEarnings,
+          jobTypes
         })
       }
 
       return days
     })
+
+    // true if at least one day has hours or earnings > 0
+    const hasMonthData = computed(() =>
+      daysInMonth.value.some(d => (d.hours ?? 0) > 0 || (d.earnings ?? 0) > 0)
+    )
 
     return {
       weekDays,
@@ -111,8 +143,10 @@ export default {
       end,
       firstDayOffset,
       daysInMonth,
+      hasMonthData,
       selectDay,
-      currency
+      currency,
+      isSelectedDay
     }
   }
 }
@@ -120,26 +154,61 @@ export default {
 
 <style scoped>
 .calendar {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-auto-rows: 1fr;
   grid-template-rows: 28px repeat(6, 1fr);
   gap: 6px;
-  padding: 4px 10px 0px 10px;
+  padding-top: 4px;
+}
+
+/* Overlay on top of the calendar grid */
+.calendar-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(240, 240, 240, 0.6);
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.overlay-box {
+  pointer-events: auto;
+  text-align: center;
+}
+
+.overlay-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.overlay-text {
+  font-size: 13px;
+  opacity: 0.85;
 }
 
 .calendar-header {
   text-align: center;
   font-weight: bold;
   background: #f4f4f4;
+  border: 1px solid #b9b9b9;
   height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.calendar-header:nth-child(6),
+.calendar-header:nth-child(7) {
+  background: #e3f2fd;
+  border-color: #2196f377;
+}
+
 .calendar-cell {
-  height: 62px;
+  height: 78px;
   overflow: hidden;
   border: 1px solid #ddd;
   padding: 3px;
@@ -157,17 +226,32 @@ export default {
   cursor: pointer;
 }
 
+.day-cell.selected {
+  background-color: #fff3e0;
+  border: 2px solid #ff9800;
+  box-shadow: 0 0 8px rgba(255, 152, 0, 0.3);
+}
+
 .day-cell:hover {
-  background-color: #ddd;
+  background-color: #f2f2f2;
+  box-shadow:
+      0 2px 1px -1px rgba(0,0,0,.22),
+      0 1px 3px 0 rgba(0,0,0,.18);
 }
 
 .day-number {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
 }
 
-.stats {
-  margin-top: 2px;
+.stat-job-type {
+  font-size: 10px;
+  color: #ff9800;
+  font-weight: 500;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-hours {
@@ -189,12 +273,12 @@ export default {
   margin-bottom: auto;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .calendar { padding: 4px 6px 0 6px; gap: 4px; }
   .calendar-header { height: 24px; font-size: 12px; }
-  .calendar-cell { height: 52px; padding: 2px; }
-  .day-number { font-size: 12px; }
-  .stat-hours, .stat-money { font-size: 11px; }
+  .calendar-cell { height: 90px; padding: 2px; }
+  .day-number { font-size: 11px; }
+  .stat-hours, .stat-money { font-size: 9px; }
   .empty-stats { font-size: 11px; }
 }
 </style>
