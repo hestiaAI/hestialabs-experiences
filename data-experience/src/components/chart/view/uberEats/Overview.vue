@@ -52,7 +52,7 @@
 
       <div>
         <strong>Total Hours Worked</strong>
-        <div>{{ totalHours }} h</div>
+        <div>{{ totalHours }}</div>
       </div>
 
       <div>
@@ -248,7 +248,7 @@ export default {
           return 'All time'
         }
 
-        return `${dayjs(allTimeStart).format('DD.MM.YYYY')} – ${dayjs(allTimeEnd).format('DD.MM.YYYY')}`
+        return `${dayjs(allTimeStart).format('DD.MM.YYYY')} – ${dayjs(allTimeEnd).format('DD.MM.YYYY')} (All time)`
       }
       if (this.mode === 'month') {
         return this.periodStart.format('MMMM YYYY')
@@ -302,7 +302,8 @@ export default {
         if (s.earner_state === 'offline') return sum
         return sum + (s.endTs - s.beginTs) / 60000
       }, 0)
-      return (minutes / 60).toFixed(1)
+
+      return this.formatMinutesAsHoursMin(minutes)
     },
 
     // payments & shifts grouped by day for calendar view
@@ -694,6 +695,22 @@ export default {
       this.redraw()
     },
 
+    /**
+     * Format total minutes as "Xh YYmin"
+     * @param totalMinutes
+     */
+    formatMinutesAsHoursMin(totalMinutes) {
+      const mins = Math.max(0, Math.round(totalMinutes || 0))
+      const hours = Math.floor(mins / 60)
+      const minutes = mins % 60
+      return `${hours}h ${minutes.toString().padStart(2, '0')}min`
+    },
+
+    /**
+     * Filter out leading and trailing offline shifts, keeping only those between the first and last non-offline shift.
+     * This helps clean up the timeline chart by removing irrelevant offline periods at the edges.
+     * @param shifts
+     */
     filterEdgeOfflineShifts(shifts) {
       if (!shifts || !shifts.length) return []
 
@@ -1071,7 +1088,7 @@ export default {
 }
 
 .week-label.mode-total {
-  width: 280px;
+  width: 324px;
   background: #fff3e0;
   border-color: #ff9800bb;
   color: #e65100;
@@ -1178,6 +1195,18 @@ export default {
   text-align: center;
   margin: 0;
   margin-top: 8px;
+}
+
+.box5 {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.box5 :deep(.apexcharts-canvas),
+.box5 :deep(.apexcharts-inner),
+.box5 :deep(svg) {
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 :deep(.apexcharts-rangebar-area:hover) {

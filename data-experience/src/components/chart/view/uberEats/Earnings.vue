@@ -149,7 +149,7 @@ export default {
           return 'All time'
         }
 
-        return `${dayjs(allTimeStart).format('DD.MM.YYYY')} – ${dayjs(allTimeEnd).format('DD.MM.YYYY')}`
+        return `${dayjs(allTimeStart).format('DD.MM.YYYY')} – ${dayjs(allTimeEnd).format('DD.MM.YYYY')} (All time)`
       }
       if (this.mode === 'month') return this.periodStart.format('MMMM YYYY')
       return `${this.periodStart.format('DD.MM')} – ${this.periodEnd.format('DD.MM.YYYY')}`
@@ -641,7 +641,7 @@ export default {
 }
 
 .week-label.mode-total {
-  width: 280px;
+  width: 324;
   background: #fff3e0;
   border-color: #ff9800bb;
   color: #e65100;
