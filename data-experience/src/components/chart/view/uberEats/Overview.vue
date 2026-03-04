@@ -130,25 +130,39 @@
 
       <div class="box box4">
         <p class="metric-title">
-          <strong>Average delivery time</strong>
-
-          <button
-            class="info-icon"
-            type="button"
-            @click.stop="toggleInfo('avgTime')"
-            aria-label="Info about average delivery time"
-          >
-            i
-          </button>
-
-          <span v-if="openInfo === 'avgTime'" class="info-tooltip">
-            Average for the deliveries of the selected period
+          <strong>Distance per trip</strong>
+          <button class="info-icon" type="button" @click.stop="toggleInfo('distTrip')" aria-label="Info about distance per trip">i</button>
+          <span v-if="openInfo === 'distTrip'" class="info-tooltip">
+            Min / average / max distance of one completed trip in the selected period.
           </span>
         </p>
-        <p>{{ avgDeliveryTimeFormatted }}</p>
+
+        <ApexChart
+          type="rangeBar"
+          height="120"
+          :options="tripDistanceRangeOptions"
+          :series="tripDistanceRangeSeries"
+        />
       </div>
 
-      <div class="box box5" v-if="mode === 'total'">
+      <div class="box box5">
+        <p class="metric-title">
+          <strong>Delivery time per trip</strong>
+          <button class="info-icon" type="button" @click.stop="toggleInfo('timeTrip')" aria-label="Info about delivery time per trip">i</button>
+          <span v-if="openInfo === 'timeTrip'" class="info-tooltip">
+            Min / average / max delivery time (pickup → dropoff) for completed trips in the selected period.
+          </span>
+        </p>
+
+        <ApexChart
+          type="rangeBar"
+          height="120"
+          :options="tripTimeRangeOptions"
+          :series="tripTimeRangeSeries"
+        />
+      </div>
+
+      <div class="box box6" v-if="mode === 'total'">
         <p class="box5-title"><strong>Most Used Devices</strong></p>
         <ApexChart
           type="bar"
@@ -304,6 +318,208 @@ export default {
       }, 0)
 
       return this.formatMinutesAsHoursMin(minutes)
+    },
+
+    tripDistanceStats() {
+      const values = this.tripsInPeriod
+        .map(t => Number(t.dropoffDeliveryDistanceKm))
+        .filter(v => Number.isFinite(v) && v >= 0)
+
+      if (!values.length) return { min: 0, avg: 0, max: 0 }
+
+      const min = Math.min(...values)
+      const max = Math.max(...values)
+      const avg = values.reduce((a, b) => a + b, 0) / values.length
+      return { min, avg, max }
+    },
+
+    tripDeliveryTimeStats() {
+      const values = this.tripsInPeriod
+        .map((t) => {
+          const start = dayjs(t.courierBegintripTimestampLocal)
+          const end = dayjs(t.courierDropoffTimestampLocal)
+          if (!start.isValid() || !end.isValid() || end.isBefore(start)) return null
+          return end.diff(start, 'minute')
+        })
+        .filter(v => Number.isFinite(v) && v >= 0)
+
+      if (!values.length) return { min: 0, avg: 0, max: 0 }
+
+      const min = Math.min(...values)
+      const max = Math.max(...values)
+      const avg = values.reduce((a, b) => a + b, 0) / values.length
+      return { min, avg, max }
+    },
+
+    tripDistanceStatsFormatted() {
+      const s = this.tripDistanceStats
+      return {
+        min: s.min.toFixed(2),
+        avg: s.avg.toFixed(2),
+        max: s.max.toFixed(2)
+      }
+    },
+
+    tripDeliveryTimeStatsFormatted() {
+      const s = this.tripDeliveryTimeStats
+      return {
+        min: Math.round(s.min),
+        avg: Math.round(s.avg),
+        max: Math.round(s.max)
+      }
+    },
+
+    tripDistanceRangeSeries() {
+      const { min, avg, max } = this.tripDistanceStats
+      return [
+        {
+          name: 'Range',
+          data: [
+            {
+              x: 'Distance per trip',
+              y: [Number(min.toFixed(2)), Number(max.toFixed(2))],
+              meta: { avg: Number(avg.toFixed(2)) }
+            }
+          ]
+        }
+      ]
+    },
+
+    tripDistanceRangeOptions() {
+      const { min, avg, max } = this.tripDistanceStats
+      const minV = Number(min.toFixed(2))
+      const avgV = Number(avg.toFixed(2))
+      const maxV = Number(max.toFixed(2))
+
+      return {
+        chart: {
+          type: 'rangeBar',
+          toolbar: { show: false },
+          redrawOnParentResize: true,
+          redrawOnWindowResize: true,
+          zoom: { enabled: false }
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            barHeight: '45%'
+          }
+        },
+        xaxis: {
+          min: 0,
+          // add a bit of headroom so the avg line isn’t at the very edge
+          max: Math.max(1, maxV * 1.05)
+        },
+        yaxis: {
+          labels: {
+            show: false
+          }
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: val => `${val[0]} – ${val[1]} km`
+        },
+        annotations: {
+          xaxis: [
+            {
+              x: avgV,
+              borderColor: '#000',
+              strokeDashArray: 0,
+              label: {
+                text: `Avg ${avgV} km`,
+                style: { color: '#000' }
+              }
+            }
+          ]
+        },
+        tooltip: {
+          custom: () => {
+            return `
+              <div style="padding:8px;font-size:12px">
+                <strong>Distance per trip</strong><br/>
+                Min: ${minV} km<br/>
+                Avg: ${avgV} km<br/>
+                Max: ${maxV} km
+              </div>`
+          }
+        },
+        legend: { show: false }
+      }
+    },
+
+    tripTimeRangeSeries() {
+      const { min, avg, max } = this.tripDeliveryTimeStats
+      return [
+        {
+          name: 'Range',
+          data: [
+            {
+              x: 'Delivery time per trip',
+              y: [Math.round(min), Math.round(max)],
+              meta: { avg: Math.round(avg) }
+            }
+          ]
+        }
+      ]
+    },
+
+    tripTimeRangeOptions() {
+      const { min, avg, max } = this.tripDeliveryTimeStats
+      const minV = Math.round(min)
+      const avgV = Math.round(avg)
+      const maxV = Math.round(max)
+
+      return {
+        chart: {
+          type: 'rangeBar',
+          toolbar: { show: false },
+          redrawOnParentResize: true,
+          redrawOnWindowResize: true,
+          zoom: { enabled: false }
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            barHeight: '45%'
+          }
+        },
+        xaxis: {
+          min: 0,
+          max: Math.max(1, Math.round(maxV * 1.05))
+        },
+        yaxis: {
+          labels: {
+            show: false
+          }
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: val => `${val[0]} – ${val[1]} min`
+        },
+        annotations: {
+          xaxis: [
+            {
+              x: avgV,
+              borderColor: '#000',
+              strokeDashArray: 0,
+              label: {
+                text: `Avg ${avgV} min`,
+                style: { color: '#000' }
+              }
+            }
+          ]
+        },
+        tooltip: {
+          custom: () => `
+            <div style="padding:8px;font-size:12px">
+              <strong>Delivery time per trip</strong><br/>
+              Min: ${minV} min<br/>
+              Avg: ${avgV} min<br/>
+              Max: ${maxV} min
+            </div>`
+        },
+        legend: { show: false }
+      }
     },
 
     // payments & shifts grouped by day for calendar view
@@ -532,7 +748,7 @@ export default {
           enabled: true,
           offsetX: 4,
           style: {
-            colors: ['#000']
+            colors: ['#fff']
           },
           formatter: val => val,
           textAnchor: 'start'
@@ -982,6 +1198,10 @@ export default {
   margin-bottom: 24px;
 }
 
+.layout-container > * {
+  min-width: 0;
+}
+
 .period-switch {
   grid-column: 1 / 3;
   grid-row: 1 / 2;
@@ -1169,21 +1389,56 @@ export default {
 .right-column {
   grid-column: 2 / 3;
   grid-row: 3 / 4;
+  height: 100%;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.box3,
-.box4 {
-  margin-bottom: 16px;
+.right-column > .box:last-child {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.box3 {
+  padding: 6px 20px;
+}
+
+.box4,
+.box5 {
+  padding: 12px 14px 4px 6px;
+}
+
+.box4,
+.box5,
+.right-column {
+  min-width: 0;
+}
+
+.box4 p,
+.box5 p {
+  padding-left: 14px;
+  padding-right: 20px;
+  margin: 0 !important;
+}
+
+.box4 div,
+.box5 div {
+  margin-top: -12px;
 }
 
 .box3,
 .box4,
-.box5 {
+.box5,
+.box6 {
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: left;
-  padding-top: 16px;
+  overflow: hidden;
 }
 
 .box3 p,
