@@ -250,7 +250,7 @@ export default {
         const earliest = this.earliestJobDate
         const latest = this.latestJobDate
         if (!earliest || !latest) return 'Entire Period'
-        return `${earliest.format('DD.MM.YYYY')} - ${latest.format('DD.MM.YYYY')}`
+        return `${earliest.format('DD.MM.YYYY')} - ${latest.format('DD.MM.YYYY')} (All time)`
       }
       if (this.currentPeriod === 'month') return this.weekStart.format('MMMM YYYY')
       return `${this.weekStart.format('DD.MM')} - ${this.weekEnd.format('DD.MM.YYYY')}`
@@ -761,7 +761,7 @@ export default {
 }
 
 .week-label.mode-total {
-  width: 280px;
+  width: 324px;
   background: #fff3e0;
   border-color: #ff9800bb;
   color: #e65100;
@@ -939,7 +939,6 @@ export default {
 
   .box2--fullwidth { grid-column: 1 / -1; }
   .filter-select { width: 100%; box-sizing: border-box; }
-  .week-label { text-align: center; width: auto; }
 }
 
 .activity-legend {

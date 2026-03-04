@@ -293,7 +293,7 @@ export default {
         const earliest = this.earliestJobDate
         const latest = this.latestJobDate
         if (!earliest || !latest) return 'Entire Period'
-        return `${earliest.format('DD.MM.YYYY')} - ${latest.format('DD.MM.YYYY')}`
+        return `${earliest.format('DD.MM.YYYY')} - ${latest.format('DD.MM.YYYY')} (All time)`
       }
 
       if (this.currentPeriod === 'month') {
@@ -878,7 +878,7 @@ export default {
 }
 
 .week-label.mode-total {
-  width: 280px;
+  width: 324px;
   background: #fff3e0;
   border-color: #ff9800bb;
   color: #e65100;
