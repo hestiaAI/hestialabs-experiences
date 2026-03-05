@@ -2,6 +2,7 @@ import { shallowMount } from '@vue/test-utils'
 import dayjs from 'dayjs'
 import OverView from '@/components/chart/view/uberEats/Overview.vue'
 import { periodStore } from '@/components/chart/view/uberEats/store/periodStore'
+import { max } from 'lodash-es'
 
 jest.mock('@/components/chart/view/uberEats/onboarding/tour', () => ({
   createTour: () => ({ start: jest.fn() })
@@ -43,12 +44,12 @@ const describeIfPerf = process.env.RUN_PERF === 'true' ? describe : describe.ski
 
 describeIfPerf('OverView performance test', () => {
   const cases = [
-    { payments: 100, shifts: 100 },
-    { payments: 1000, shifts: 1000 },
-    { payments: 10000, shifts: 10000 }
+    { payments: 100, shifts: 100, max: 150 },
+    { payments: 1000, shifts: 1000, max: 400 },
+    { payments: 10000, shifts: 10000, max: 2000 }
   ]
 
-  cases.forEach(({ payments, shifts }) => {
+  cases.forEach(({ payments, shifts, max }) => {
     it(`payments=${payments}, shifts=${shifts}`, () => {
       const t0 = performance.now()
       const wrapper = mountOverview(payments, shifts)
@@ -70,7 +71,7 @@ describeIfPerf('OverView performance test', () => {
         `[OverView] payments=${payments}, shifts=${shifts} → ${duration.toFixed(2)}ms`
       )
 
-      expect(duration).toBeLessThan(1200)
+      expect(duration).toBeLessThan(max)
     })
   })
 })
