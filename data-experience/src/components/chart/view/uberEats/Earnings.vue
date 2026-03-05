@@ -641,7 +641,7 @@ export default {
 }
 
 .week-label.mode-total {
-  width: 324;
+  width: 324px;
   background: #fff3e0;
   border-color: #ff9800bb;
   color: #e65100;

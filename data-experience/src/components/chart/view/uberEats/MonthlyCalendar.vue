@@ -33,7 +33,7 @@
       <div class="day-number">{{ day.day }}</div>
 
       <div class="stats" v-if="day.hours > 0 || day.earnings > 0">
-        <div class="stat-hours">{{ day.hours.toFixed(1) }}h</div>
+        <div class="stat-hours">{{ formatMinutesToHM(day.minutes) }}</div>
         <div class="stat-money">{{ currency }} {{ day.earnings.toFixed(2) }}</div>
       </div>
 
@@ -98,16 +98,27 @@ export default {
         const key = date.format('YYYY-MM-DD')
         const stat = props.dailyStats[key] || { earnings: 0, minutes: 0 }
 
+        const minutes = Number(stat.minutes || 0)
+
         days.push({
           day: i,
           date: date.toISOString(),
-          hours: Number((stat.minutes / 60).toFixed(1)),
+          minutes,
+          hours: minutes / 60, // optional
           earnings: stat.earnings || 0
         })
       }
 
       return days
     })
+
+    // Helper to format minutes to "Xh YYmin"
+    const formatMinutesToHM = (totalMinutes) => {
+      const m = Math.max(0, Math.round(totalMinutes || 0))
+      const h = Math.floor(m / 60)
+      const mm = m % 60
+      return `${String(h).padStart(2, '0')}h ${String(mm).padStart(2, '0')}min`
+    }
 
     // true if at least one day has hours or earnings > 0
     const hasMonthData = computed(() =>
@@ -121,6 +132,7 @@ export default {
       firstDayOffset,
       daysInMonth,
       hasMonthData,
+      formatMinutesToHM,
       isSelectedDay,
       selectDay
     }
