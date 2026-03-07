@@ -6,7 +6,7 @@
           v-for="p in ['week','month','total']"
           :key="p"
           :class="['switch-btn', { active: currentPeriod === p }]"
-          @click="currentPeriod = p"
+          @click="periodStore.setMode(p)"
           :title="getPeriodDescription(p)"
         >
           {{ p.toUpperCase() }}
@@ -155,6 +155,7 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/en'
 import weekday from 'dayjs/plugin/weekday'
 import isBetween from 'dayjs/plugin/isBetween'
+import { periodStore } from './store/periodStore'
 
 dayjs.extend(weekday)
 dayjs.extend(isBetween)
@@ -173,8 +174,6 @@ export default {
 
   data() {
     return {
-      currentWeekStart: this.getMondayOf(dayjs()),
-      currentPeriod: 'week',
       selectedTotalBucket: null,
       selectedActivity: '',
       sortDirection: 'desc',
@@ -183,6 +182,12 @@ export default {
   },
 
   computed: {
+    currentPeriod() {
+      return periodStore.mode
+    },
+    currentWeekStart() {
+      return dayjs(periodStore.periodStart)
+    },
     earningsHeaderTitle() {
       if (this.currentPeriod === 'week') {
         return `Earnings by Time of Day (${this.weekLabel})`
@@ -914,23 +919,30 @@ export default {
   },
 
   watch: {
-    currentPeriod(newVal) {
+    'periodStore.mode': function(newVal) {
       this.selectedTotalBucket = null
       this.selectedActivity = ''
 
-      if (!this.latestJobDate) return
+      const currentDate = dayjs(periodStore.periodStart || dayjs())
 
       if (newVal === 'month') {
-        this.currentWeekStart = this.latestJobDate.startOf('month')
+        const monthStart = currentDate.startOf('month')
+        const monthEnd = currentDate.endOf('month')
+        periodStore.setPeriod(monthStart.toISOString(), monthEnd.toISOString())
       } else if (newVal === 'week') {
-        this.currentWeekStart = this.getMondayOf(this.latestJobDate)
+        const monday = this.getMondayOf(currentDate)
+        periodStore.setPeriod(monday.toISOString(), monday.add(6, 'day').endOf('day').toISOString())
       }
     }
   },
 
   mounted() {
+    // Initialize period store from jobs
+    periodStore.initFromShifts(this.jobs)
+
     if (this.latestJobDate) {
-      this.currentWeekStart = this.getMondayOf(this.latestJobDate)
+      const monday = this.getMondayOf(this.latestJobDate)
+      periodStore.setPeriod(monday.toISOString(), monday.add(6, 'day').endOf('day').toISOString())
     }
 
     if (window.__continueBabysitterTour) {
@@ -960,18 +972,30 @@ export default {
     },
 
     prevWeek() {
-      if (this.currentPeriod === 'month') {
-        this.currentWeekStart = this.currentWeekStart.subtract(1, 'month')
-      } else if (this.currentPeriod === 'week') {
-        this.currentWeekStart = this.currentWeekStart.subtract(7, 'day')
+      const currentStart = dayjs(periodStore.periodStart)
+      const currentEnd = dayjs(periodStore.periodEnd)
+      if (periodStore.mode === 'month') {
+        const newStart = currentStart.subtract(1, 'month')
+        const newEnd = currentEnd.subtract(1, 'month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+      } else if (periodStore.mode === 'week') {
+        const newStart = currentStart.subtract(7, 'day')
+        const newEnd = currentEnd.subtract(7, 'day')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
     },
 
     nextWeek() {
-      if (this.currentPeriod === 'month') {
-        this.currentWeekStart = this.currentWeekStart.add(1, 'month')
-      } else if (this.currentPeriod === 'week') {
-        this.currentWeekStart = this.currentWeekStart.add(7, 'day')
+      const currentStart = dayjs(periodStore.periodStart)
+      const currentEnd = dayjs(periodStore.periodEnd)
+      if (periodStore.mode === 'month') {
+        const newStart = currentStart.add(1, 'month')
+        const newEnd = currentEnd.add(1, 'month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+      } else if (periodStore.mode === 'week') {
+        const newStart = currentStart.add(7, 'day')
+        const newEnd = currentEnd.add(7, 'day')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
     },
 

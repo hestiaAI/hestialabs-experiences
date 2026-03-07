@@ -5,7 +5,7 @@
         v-for="p in ['week','month','total']"
         :key="p"
         :class="['switch-btn', { active: currentPeriod === p }]"
-        @click="currentPeriod = p"
+        @click="periodStore.setMode(p)"
         :title="getPeriodDescription(p)"
       >
         {{ p.toUpperCase() }}
@@ -163,6 +163,7 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/en'
 import weekday from 'dayjs/plugin/weekday'
 import isBetween from 'dayjs/plugin/isBetween'
+import { periodStore } from './store/periodStore'
 dayjs.extend(isBetween)
 dayjs.extend(weekday)
 
@@ -176,8 +177,6 @@ export default {
 
   data() {
     return {
-      currentWeekStart: this.getMondayOf(dayjs()),
-      currentPeriod: 'month',
       selectedJobType: '',
       fromCalendarClick: false,
       selectedCalendarDate: null
@@ -185,6 +184,12 @@ export default {
   },
 
   computed: {
+    currentPeriod() {
+      return periodStore.mode
+    },
+    currentWeekStart() {
+      return dayjs(periodStore.periodStart)
+    },
     activityTypeColors() {
       const palette = [
         '#1abc9c',
@@ -670,7 +675,7 @@ export default {
   },
 
   watch: {
-    currentPeriod(newVal) {
+    'periodStore.mode': function(newVal) {
       this.selectedJobType = ''
 
       if (this.fromCalendarClick) {
@@ -678,10 +683,12 @@ export default {
         return
       }
 
-      if (!this.latestJobDate) return
+      const currentDate = dayjs(periodStore.periodStart || dayjs())
 
       if (newVal === 'month') {
-        this.currentWeekStart = this.latestJobDate.startOf('month')
+        const monthStart = currentDate.startOf('month')
+        const monthEnd = currentDate.endOf('month')
+        periodStore.setPeriod(monthStart.toISOString(), monthEnd.toISOString())
         return
       }
 
@@ -689,17 +696,23 @@ export default {
         return
       }
 
-      this.currentWeekStart = this.getMondayOf(this.latestJobDate)
+      // For 'week', set to the week containing currentDate
+      const monday = this.getMondayOf(currentDate)
+      periodStore.setPeriod(monday.toISOString(), monday.add(6, 'day').endOf('day').toISOString())
     }
   },
 
   mounted() {
+    // Initialize period store from jobs
+    periodStore.initFromShifts(this.jobs)
+
     if (!this.latestJobDate) return
 
-    if (this.currentPeriod === 'month') {
-      this.currentWeekStart = this.latestJobDate.startOf('month')
+    if (periodStore.mode === 'month') {
+      periodStore.setPeriod(this.latestJobDate.startOf('month').toISOString(), this.latestJobDate.endOf('month').toISOString())
     } else {
-      this.currentWeekStart = this.getMondayOf(this.latestJobDate)
+      const monday = this.getMondayOf(this.latestJobDate)
+      periodStore.setPeriod(monday.toISOString(), monday.add(6, 'day').endOf('day').toISOString())
     }
 
     const alreadyShown = localStorage.getItem('babysitterTourShown')
@@ -713,18 +726,30 @@ export default {
 
   methods: {
     prevWeek() {
-      if (this.currentPeriod === 'month') {
-        this.currentWeekStart = this.currentWeekStart.subtract(1, 'month')
+      const currentStart = dayjs(periodStore.periodStart)
+      const currentEnd = dayjs(periodStore.periodEnd)
+      if (periodStore.mode === 'month') {
+        const newStart = currentStart.subtract(1, 'month')
+        const newEnd = currentEnd.subtract(1, 'month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       } else {
-        this.currentWeekStart = this.currentWeekStart.subtract(7, 'day')
+        const newStart = currentStart.subtract(7, 'day')
+        const newEnd = currentEnd.subtract(7, 'day')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
     },
 
     nextWeek() {
-      if (this.currentPeriod === 'month') {
-        this.currentWeekStart = this.currentWeekStart.add(1, 'month')
+      const currentStart = dayjs(periodStore.periodStart)
+      const currentEnd = dayjs(periodStore.periodEnd)
+      if (periodStore.mode === 'month') {
+        const newStart = currentStart.add(1, 'month')
+        const newEnd = currentEnd.add(1, 'month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       } else {
-        this.currentWeekStart = this.currentWeekStart.add(7, 'day')
+        const newStart = currentStart.add(7, 'day')
+        const newEnd = currentEnd.add(7, 'day')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
     },
 
@@ -740,8 +765,9 @@ export default {
 
       this.fromCalendarClick = true
       this.selectedCalendarDate = date
-      this.currentWeekStart = this.getMondayOf(d)
-      this.currentPeriod = 'week'
+      const monday = this.getMondayOf(d)
+      periodStore.setPeriod(monday.toISOString(), monday.add(6, 'day').endOf('day').toISOString())
+      periodStore.setMode('week')
     },
 
     getPeriodDescription(period) {
