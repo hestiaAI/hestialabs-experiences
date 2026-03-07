@@ -105,7 +105,7 @@ export default {
         const date = start.value.clone().date(i)
 
         const dayShifts = props.shifts.filter(
-          (s) => s.date && dayjs(s.date).isSame(date, 'day')
+          s => s.date && dayjs(s.date).isSame(date, 'day')
         )
 
         // Sum minutes (prefer a minutes field if it exists; otherwise derive from hours)
@@ -132,7 +132,7 @@ export default {
         )
 
         const jobTypes = [
-          ...new Set(dayShifts.map((s) => s.job_type).filter(Boolean))
+          ...new Set(dayShifts.map(s => s.job_type).filter(Boolean))
         ]
 
         days.push({

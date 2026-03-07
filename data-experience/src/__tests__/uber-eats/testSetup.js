@@ -19,10 +19,10 @@ export function mockUberEatsFileManager(fileManager) {
   beforeAll(() => {
     jest
       .spyOn(fileManager, 'getCsvItemsFromId')
-      .mockImplementation(async (id) => {
+      .mockImplementation(async(id) => {
         if (id === 'DriverOnlineOffline') {
           return [{
-            headers: ['beginTimestampLocal','endTimestampLocal','durationMs','earnerState'],
+            headers: ['beginTimestampLocal', 'endTimestampLocal', 'durationMs', 'earnerState'],
             items: [{
               beginTimestampLocal: '2023-10-14T08:00:00.000Z',
               endTimestampLocal: '2023-10-14T12:30:00.000Z',
@@ -34,7 +34,7 @@ export function mockUberEatsFileManager(fileManager) {
 
         if (id === 'DriverPayments') {
           return [{
-            headers: ['cityName','amountLocal','currencyCode'],
+            headers: ['cityName', 'amountLocal', 'currencyCode'],
             items: [{}, {}]
           }]
         }
@@ -42,14 +42,14 @@ export function mockUberEatsFileManager(fileManager) {
         if (id === 'CourierLifetimeTripData') {
           return [{
             headers: [
-              'cityName','courierAcceptTimestampLocal','courierAcceptTimestampUtc',
-              'courierAcceptToPickupDistanceMiles','courierAcceptToPickupDurationSeconds',
-              'courierAcceptTripLat','courierAcceptTripLng','courierAppVersion',
-              'courierArrivalPickupTimestampLocal','courierBegintripLat','courierBegintripLng',
-              'courierBegintripTimestampLocal','courierBegintripToDropoffMiles',
-              'courierBegintripToDropoffSeconds','courierCommissionRate','courierDevice',
-              'courierArrivalDropoffTimestampLocal','courierDropoffTimestampLocal','deliveryStatus',
-              'dropoffDeliveryDistanceKm','restaurantRequestTimestampLocal','licensePlate'
+              'cityName', 'courierAcceptTimestampLocal', 'courierAcceptTimestampUtc',
+              'courierAcceptToPickupDistanceMiles', 'courierAcceptToPickupDurationSeconds',
+              'courierAcceptTripLat', 'courierAcceptTripLng', 'courierAppVersion',
+              'courierArrivalPickupTimestampLocal', 'courierBegintripLat', 'courierBegintripLng',
+              'courierBegintripTimestampLocal', 'courierBegintripToDropoffMiles',
+              'courierBegintripToDropoffSeconds', 'courierCommissionRate', 'courierDevice',
+              'courierArrivalDropoffTimestampLocal', 'courierDropoffTimestampLocal', 'deliveryStatus',
+              'dropoffDeliveryDistanceKm', 'restaurantRequestTimestampLocal', 'licensePlate'
             ],
             items: [
               {

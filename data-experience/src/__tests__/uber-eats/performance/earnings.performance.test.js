@@ -2,16 +2,16 @@
  * @jest-environment jsdom
  */
 
+import { mount } from '@vue/test-utils'
+import dayjs from 'dayjs'
+import Earnings from '@/components/chart/view/uberEats/Earnings.vue'
+import { periodStore } from '@/components/chart/view/uberEats/store/periodStore'
+
 jest.mock('@/components/chart/view/mixin', () => ({
   methods: {
     drawChart: jest.fn()
   }
 }))
-
-import { mount } from '@vue/test-utils'
-import dayjs from 'dayjs'
-import Earnings from '@/components/chart/view/uberEats/Earnings.vue'
-import { periodStore } from '@/components/chart/view/uberEats/store/periodStore'
 
 // Stub ApexCharts (we test data prep, not rendering)
 jest.mock('vue-apexcharts', () => ({

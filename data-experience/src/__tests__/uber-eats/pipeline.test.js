@@ -9,7 +9,7 @@ const fileManager = new FileManager(preprocessors, null, files, keepOnlyFiles)
 mockUberEatsFileManager(fileManager) // sets up the beforeAll and mocks
 
 describe('ubereats – combined_data_pipeline', () => {
-  test('returns combined online, payments and trips data', async () => {
+  test('returns combined online, payments and trips data', async() => {
     const pipeline = getCustomPipelineFromBlock(
       experience,
       'combined_data_pipeline'
@@ -62,7 +62,7 @@ describe('ubereats – combined_data_pipeline', () => {
 })
 
 describe('ubereats – csv_courier_trips', () => {
-  test('returns raw courier trip csv', async () => {
+  test('returns raw courier trip csv', async() => {
     const pipeline = getCustomPipelineFromBlock(
       experience,
       'csv_courier_trips'
@@ -102,4 +102,3 @@ describe('ubereats – csv_courier_trips', () => {
     expect(trips.items).toHaveLength(1)
   })
 })
-
