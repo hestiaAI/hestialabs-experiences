@@ -158,6 +158,7 @@ export default {
 
   data() {
     return {
+      periodStore,
       totalSortDirection: 'desc'
     }
   },

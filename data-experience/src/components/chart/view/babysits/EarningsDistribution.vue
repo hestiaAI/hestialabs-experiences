@@ -174,6 +174,7 @@ export default {
 
   data() {
     return {
+      periodStore,
       selectedTotalBucket: null,
       selectedActivity: '',
       sortDirection: 'desc',

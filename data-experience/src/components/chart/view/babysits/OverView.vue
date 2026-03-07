@@ -177,6 +177,7 @@ export default {
 
   data() {
     return {
+      periodStore,
       selectedJobType: '',
       fromCalendarClick: false,
       selectedCalendarDate: null
