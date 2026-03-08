@@ -1,6 +1,15 @@
 import Shepherd from 'shepherd.js'
 
 export function createBabysitterTour() {
+  // If Shepherd is not present (e.g. in test env), return a no-op tour
+  if (typeof Shepherd === 'undefined') {
+    return {
+      start: () => {},
+      next: () => {},
+      cancel: () => {}
+    }
+  }
+
   const tour = new Shepherd.Tour({
     useModalOverlay: true,
     defaultStepOptions: {
@@ -117,14 +126,14 @@ export function createBabysitterTour() {
   tour.addStep({
     id: 'earnings-chart',
     attachTo: { element: '.tour-earnings-chart', on: 'top' },
-    text: 'Earnings Distribution — Week/Month: Bubble chart where each bubble = a group of jobs. Bubble size = total hours worked, vertical position = total earnings. Bubbles are colored by activity type.',
+    text: 'Earnings Distribution — Week/Month: Bar chart where each bar = a group of jobs. Bar height = total earnings. Bars are colored by activity type.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
   tour.addStep({
     id: 'earnings-filter',
     attachTo: { element: '.week-month-layout .tour-jobtype-filter', on: 'left' },
-    text: 'Filter the bubble chart by activity type to focus on a specific job category.',
+    text: 'Filter the bar chart by activity type to focus on a specific job type.',
     beforeShowPromise: () => new Promise(resolve => setTimeout(resolve, 200)),
     buttons: [{
       text: 'Next',
