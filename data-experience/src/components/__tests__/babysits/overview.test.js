@@ -107,7 +107,8 @@ function mountOverView(props = {}) {
     },
     global: {
       stubs: {
-        ApexChart: true,
+        ShiftRangeChart: true,
+        HeatmapChart: true,
         MonthlyCalendar: true
       }
     }

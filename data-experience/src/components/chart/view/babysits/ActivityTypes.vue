@@ -51,12 +51,11 @@
 
       <!-- WEEK VIEW: Heatmap -->
       <div v-if="currentPeriod === 'week' && filteredJobs.length">
-        <ApexChart
+        <HeatmapChart
           :key="'week-heatmap-' + currentWeekStart.format('YYYY-MM-DD')"
-          type="heatmap"
-          height="450"
           :options="weekHeatmapOptions"
           :series="weekHeatmapSeries"
+          height="450"
         />
         <p class="chart-explanation">
           <strong>How to read this visualization:</strong><br />
@@ -83,12 +82,11 @@
 
       <!-- MONTH VIEW: Heatmap -->
       <div v-else-if="currentPeriod === 'month' && filteredJobs.length">
-        <ApexChart
+        <HeatmapChart
           :key="'month-heatmap-' + currentWeekStart.format('YYYY-MM')"
-          type="heatmap"
-          height="450"
           :options="monthHeatmapOptions"
           :series="monthHeatmapSeries"
+          height="450"
         />
         <p class="chart-explanation">
           <strong>How to read this visualization:</strong><br />
@@ -123,12 +121,11 @@
           </select>
         </div>
 
-        <ApexChart
+        <HorizontalBarChart
           :key="'total-' + totalSortDirection"
-          type="bar"
-          height="450"
           :options="totalBarOptions"
           :series="totalTypeSeries.series"
+          height="450"
         />
       </div>
 
@@ -140,7 +137,8 @@
 
 <script>
 import mixin from '@/components/chart/view/mixin'
-import VueApexCharts from 'vue-apexcharts'
+import HeatmapChart from './charts/HeatmapChart.vue'
+import HorizontalBarChart from './charts/HorizontalBarChart.vue'
 import dayjs from 'dayjs'
 import 'dayjs/locale/en'
 import weekday from 'dayjs/plugin/weekday'
@@ -152,7 +150,8 @@ dayjs.extend(weekday)
 export default {
   name: 'BabysitsActivityTypes',
   components: {
-    ApexChart: VueApexCharts
+    HeatmapChart,
+    HorizontalBarChart
   },
   mixins: [mixin],
 

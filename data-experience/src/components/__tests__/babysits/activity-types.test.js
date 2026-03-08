@@ -69,7 +69,8 @@ function mountActivityTypes(props = {}) {
     },
     global: {
       stubs: {
-        ApexChart: true
+        HeatmapChart: true,
+        HorizontalBarChart: true
       }
     }
   })

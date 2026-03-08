@@ -75,12 +75,7 @@
           </div>
         </div>
 
-        <ApexChart
-          type="rangeBar"
-          height="450"
-          :options="chartOptions"
-          :series="chartSeries"
-        />
+        <ShiftRangeChart :options="chartOptions" :series="chartSeries" height="450" />
 
         <div class="legend mt-4">
           <div
@@ -109,13 +104,7 @@
       </div>
 
       <div v-else-if="currentPeriod === 'total'">
-        <ApexChart
-        type="heatmap"
-        height="450"
-        :key="'heatmap-total'"
-        :series="heatmapSeries"
-        :options="heatmapOptions"
-      />
+        <HeatmapChart :key="'heatmap-total'" :series="heatmapSeries" :options="heatmapOptions" height="450" />
       </div>
 
       <p v-else>No job data found.</p>
@@ -158,7 +147,8 @@
 import { createBabysitterTour } from './onboarding/babysitterTour'
 import MonthlyCalendar from './MonthlyCalendar.vue'
 import mixin from '@/components/chart/view/mixin'
-import VueApexCharts from 'vue-apexcharts'
+import ShiftRangeChart from './charts/ShiftRangeChart.vue'
+import HeatmapChart from './charts/HeatmapChart.vue'
 import dayjs from 'dayjs'
 import 'dayjs/locale/en'
 import weekday from 'dayjs/plugin/weekday'
@@ -170,8 +160,9 @@ dayjs.extend(weekday)
 export default {
   name: 'BabysitsShiftTimeline',
   components: {
-    ApexChart: VueApexCharts,
-    MonthlyCalendar
+    MonthlyCalendar,
+    ShiftRangeChart,
+    HeatmapChart
   },
   mixins: [mixin],
 
