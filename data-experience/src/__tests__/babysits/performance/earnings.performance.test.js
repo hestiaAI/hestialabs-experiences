@@ -51,7 +51,10 @@ function mountEarningsDistribution(jobsCount) {
       values: jobs
     },
     stubs: {
-      ApexChart: true
+      ApexChart: true,
+      EarningsByDay: true,
+      TotalStackedBar: true,
+      EarningsPerHourBar: true
     }
   })
 }

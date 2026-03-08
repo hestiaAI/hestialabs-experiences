@@ -70,11 +70,10 @@
           </div>
         </div>
 
-        <ApexChart
-          type="bar"
-          height="450"
+        <TotalStackedBar
           :series="totalStackedBarSeries"
           :options="totalStackedBarOptions"
+          height="450"
         />
       </div>
 
@@ -86,11 +85,10 @@
             <option value="asc">Ascending</option>
           </select>
         </div>
-        <ApexChart
-          type="bar"
-          height="350"
+        <EarningsPerHourBar
           :series="earningsPerHourSeries"
           :options="earningsPerHourOptions"
+          height="350"
         />
       </div>
     </div>
@@ -105,11 +103,10 @@
         </div>
 
         <div class="chart-wrapper">
-          <ApexChart
-            type="bar"
-            height="450"
-            :options="chartOptions"
+          <EarningsByDay
             :series="chartSeries"
+            :options="chartOptions"
+            height="450"
           />
 
           <div v-if="legendItems.length" class="legend mt-4">
@@ -150,7 +147,9 @@
 
 <script>
 import mixin from '@/components/chart/view/mixin'
-import VueApexCharts from 'vue-apexcharts'
+import EarningsByDay from './charts/EarningsByDay.vue'
+import TotalStackedBar from './charts/TotalStackedBar.vue'
+import EarningsPerHourBar from './charts/EarningsPerHourBar.vue'
 import dayjs from 'dayjs'
 import 'dayjs/locale/en'
 import weekday from 'dayjs/plugin/weekday'
@@ -169,7 +168,7 @@ const TIME_BUCKETS = {
 
 export default {
   name: 'BabysitsEarningsDistribution',
-  components: { ApexChart: VueApexCharts },
+  components: { EarningsByDay, TotalStackedBar, EarningsPerHourBar },
   mixins: [mixin],
 
   data() {

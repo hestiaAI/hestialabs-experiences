@@ -3,6 +3,9 @@
  */
 
 import { mount } from '@vue/test-utils'
+
+// (MonthlyCalendar is mocked above before importing OverView)
+
 import OverView from '@/components/chart/view/babysits/OverView.vue'
 
 /* --------------------------
@@ -22,6 +25,15 @@ jest.mock('@/components/chart/view/babysits/onboarding/babysitterTour', () => ({
     start: jest.fn(),
     next: jest.fn()
   }))
+}))
+
+// Stub MonthlyCalendar module to avoid rendering complex calendar in unit tests
+jest.mock('@/components/chart/view/babysits/MonthlyCalendar.vue', () => ({
+  __esModule: true,
+  default: {
+    name: 'MonthlyCalendar',
+    render: () => null
+  }
 }))
 
 /* --------------------------
@@ -110,6 +122,13 @@ describe('OverView.vue (babysits) - UI & interactions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     localStorage.clear()
+    // Reset periodStore to default to avoid state leak between tests
+    const { periodStore } = require('@/components/chart/view/babysits/store/periodStore')
+    periodStore.mode = 'month'
+    periodStore.periodStart = null
+    periodStore.periodEnd = null
+    periodStore.allTimeStart = null
+    periodStore.allTimeEnd = null
   })
 
   /* ---------------------------------------------

@@ -82,6 +82,24 @@ function mountActivityTypes(props = {}) {
 describe('ActivityTypes.vue - UI & interactions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    // Reset periodStore between tests
+    const { periodStore } = require('@/components/chart/view/babysits/store/periodStore')
+    periodStore.mode = 'week'
+    periodStore.periodStart = null
+    periodStore.periodEnd = null
+    periodStore.allTimeStart = null
+    periodStore.allTimeEnd = null
+    // Initialize week period based on test data
+    const dayjs = require('dayjs')
+    const latest = mockPipelineValues
+      .map(v => dayjs(v.date))
+      .filter(d => d.isValid())
+      .sort((a, b) => b.valueOf() - a.valueOf())[0]
+    if (latest) {
+      const day = latest.day()
+      const monday = day === 0 ? latest.subtract(6, 'day').startOf('day') : latest.subtract(day - 1, 'day').startOf('day')
+      periodStore.setPeriod(monday.toISOString(), monday.add(6, 'day').endOf('day').toISOString())
+    }
   })
 
   /* ---------------------------------------------
