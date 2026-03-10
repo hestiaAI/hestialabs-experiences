@@ -104,6 +104,7 @@
 
         <div class="chart-wrapper">
           <EarningsByDay
+            :key="chartRenderKey"
             :series="chartSeries"
             :options="chartOptions"
             height="450"
@@ -481,6 +482,18 @@ export default {
       })
 
       return data
+    },
+
+    // Get a unique key for the earnings by day chart to force re-render
+    // when relevant data or filters change
+    chartRenderKey() {
+      return [
+        this.currentPeriod,
+        this.weekLabel,
+        this.selectedActivity || 'all',
+        this.filteredJobsByActivity.length,
+        this.activityTypes.join('|')
+      ].join('__')
     },
 
     // Get the series data for the earnings by day chart, aggregating
