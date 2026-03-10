@@ -12,6 +12,10 @@
 <script>
 import VueApexCharts from 'vue-apexcharts'
 
+// This component is a simple wrapper around ApexCharts to render an earnings by
+// day bar chart with consistent styling and responsive width. It accepts the same
+// props as a standard ApexChart, but ensures that the chart fills the width of
+// its container and has a default height of 450px.
 export default {
   name: 'EarningsByDay',
   components: { ApexChart: VueApexCharts },

@@ -176,12 +176,17 @@ export default {
   },
 
   computed: {
+    // Current period mode (week, month, total)
     currentPeriod() {
       return periodStore.mode
     },
+
+    // Start of the current week (Monday)
     currentWeekStart() {
       return dayjs(periodStore.periodStart)
     },
+
+    // Mapping of job types to colors for the timeline
     activityTypeColors() {
       const palette = [
         '#1abc9c',
@@ -204,6 +209,7 @@ export default {
       return map
     },
 
+    // Get unique job types for the current period to populate filter dropdown
     pageJobTypes() {
       const jobs = this.jobs
 
@@ -233,26 +239,32 @@ export default {
       )
     },
 
+    // All jobs from the dataset
     jobs() {
       return this.values || []
     },
 
+    // Year and month for the calendar view
     calendarYear() {
       return this.weekStart.year()
     },
 
+    // Month is 0-indexed in dayjs, but we want to display it as 1-12
     calendarMonth() {
       return this.weekStart.month()
     },
 
+    // Shifts for the current period, used in the calendar view
     shiftsThisPeriod() {
       return this.filteredJobs
     },
 
+    // Payments for the current period, used in the calendar view
     paymentsInRange() {
       return []
     },
 
+    // Filtered jobs based on selected period and job type
     filteredJobs() {
       let jobs = this.jobs
 
@@ -281,10 +293,12 @@ export default {
       })
     },
 
+    // Check if there is any earnings data in the filtered jobs for the current period
     hasEarningsData() {
       return this.filteredJobs.some(j => (parseFloat(j.earnings) || 0) > 0)
     },
 
+    // Label to display for the current period (e.g. "01.09.2023 - 07.09.2023" for week, "September 2023" for month)
     weekLabel() {
       if (this.currentPeriod === 'total') {
         const earliest = this.earliestJobDate
@@ -302,6 +316,7 @@ export default {
       return `${s.format('DD.MM')} - ${e.format('DD.MM.YYYY')}`
     },
 
+    // Get the earliest job date from the dataset, used for labeling the total period
     earliestJobDate() {
       if (!this.jobs.length) return null
 
@@ -311,6 +326,7 @@ export default {
         .sort((a, b) => a.valueOf() - b.valueOf())[0]
     },
 
+    // Start of the week for the current period, used for filtering jobs and labeling
     weekStart() {
       if (this.currentPeriod === 'month') {
         return this.currentWeekStart.startOf('month')
@@ -319,6 +335,7 @@ export default {
       return this.currentWeekStart
     },
 
+    // End of the week for the current period, used for filtering jobs and labeling
     weekEnd() {
       if (this.currentPeriod === 'month') {
         return this.currentWeekStart.endOf('month')
@@ -327,6 +344,7 @@ export default {
       return this.currentWeekStart.add(6, 'day').endOf('day')
     },
 
+    // Get the latest job date from the dataset, used for labeling the total period
     latestJobDate() {
       if (!this.jobs.length) return null
 
@@ -336,8 +354,7 @@ export default {
         .sort((a, b) => b.valueOf() - a.valueOf())[0]
     },
 
-    /* ---------- TOP STATS ---------- */
-
+    // Calculate total earnings for the filtered jobs in the current period
     totalEarnings() {
       return this.filteredJobs.reduce(
         (s, j) => s + (parseFloat(j.earnings) || 0),
@@ -345,10 +362,12 @@ export default {
       )
     },
 
+    // Calculate total number of jobs for the filtered jobs in the current period
     totalJobs() {
       return this.filteredJobs.length
     },
 
+    // Calculate total hours worked for the filtered jobs in the current period
     totalHours() {
       let min = 0
 
@@ -367,16 +386,17 @@ export default {
       return min / 60
     },
 
+    // Get the currency from the first job in the dataset, or default to 'CHF' if not available
     currency() {
       return this.jobs[0]?.currency || 'CHF'
     },
 
+    // Check if any filters are currently active (e.g. job type filter)
     hasActiveFilters() {
       return !!this.selectedJobType
     },
 
-    /* ---------- AVERAGE WORK TIME ---------- */
-
+    // Calculate average work time per job for the filtered jobs in the current period, and format it as "Xh Ym"
     averageWorkTime() {
       if (!this.filteredJobs.length) return '0h 0m'
 
@@ -399,8 +419,7 @@ export default {
       return `${h}h ${m}m`
     },
 
-    /* ---------- CHART DATA ---------- */
-
+    // Prepare ApexChart series data for the timeline chart based on the filtered jobs in the current period
     chartSeries() {
       const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -457,6 +476,7 @@ export default {
       return [{ name: 'Shift', data: seriesData }]
     },
 
+    // Prepare ApexChart options for the timeline chart
     chartOptions() {
       return {
         chart: {
@@ -537,6 +557,7 @@ export default {
       }
     },
 
+    // Generate legend items for the activity types based on the filtered jobs in the current period
     activityLegendItems() {
       const counts = {}
 
@@ -552,6 +573,7 @@ export default {
       }))
     },
 
+    // Calculate total earnings for the filtered jobs in the current period
     statusColors() {
       return {
         completed: '#1e8449',
@@ -563,6 +585,7 @@ export default {
       }
     },
 
+    // Build ApexChart series data for the heatmap chart based on the filtered jobs in the current period
     heatmapSeries() {
       const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -600,6 +623,7 @@ export default {
       }))
     },
 
+    // Prepare ApexChart options for the heatmap chart
     heatmapOptions() {
       return {
         chart: {
@@ -667,6 +691,8 @@ export default {
   },
 
   watch: {
+    // When the period mode changes, reset the selected job
+    // type filter and update the period based on the new mode
     'periodStore.mode': function(newVal) {
       this.selectedJobType = ''
 
@@ -717,6 +743,11 @@ export default {
   },
 
   methods: {
+    /**
+     * Navigate to the previous week or month based on the current period mode.
+       For 'week' mode, subtract 7 days from the current period start and end.
+       For 'month' mode, subtract 1 month from the current period start and end.
+     */
     prevWeek() {
       const currentStart = dayjs(periodStore.periodStart)
       const currentEnd = dayjs(periodStore.periodEnd)
@@ -731,6 +762,11 @@ export default {
       }
     },
 
+    /**
+     * Navigate to the next week or month based on the current period mode.
+       For 'week' mode, add 7 days to the current period start and end.
+       For 'month' mode, add 1 month to the current period start and end.
+     */
     nextWeek() {
       const currentStart = dayjs(periodStore.periodStart)
       const currentEnd = dayjs(periodStore.periodEnd)
@@ -745,6 +781,10 @@ export default {
       }
     },
 
+    /**
+     * Get the Monday of the week for a given date
+     * @param d
+     */
     getMondayOf(d) {
       const day = d.day()
       return day === 0
@@ -752,6 +792,10 @@ export default {
         : d.subtract(day - 1, 'day').startOf('day')
     },
 
+    /**
+     * On calendar day selection, update the period to the week containing the selected date
+     * @param date
+     */
     onSelectDay(date) {
       const d = dayjs(date)
 
@@ -762,6 +806,10 @@ export default {
       periodStore.setMode('week')
     },
 
+    /**
+     * Get the description for a given period
+     * @param period
+     */
     getPeriodDescription(period) {
       const descs = {
         week: 'See your shifts and key metrics for each day of the week',
@@ -771,6 +819,10 @@ export default {
       return descs[period] || ''
     },
 
+    /**
+     * Clear all acitve filters (currently only job type filter) and reset to default view
+       This is called when the "Clear All" button is clicked in the active filters bar
+     */
     clearAllFilters() {
       this.selectedJobType = ''
     }

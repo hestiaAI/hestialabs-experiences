@@ -8,16 +8,18 @@ export const periodStore = reactive({
   allTimeStart: null,
   allTimeEnd: null,
 
+  // Set the period range (start and end dates)
   setPeriod(start, end) {
     this.periodStart = start
     this.periodEnd = end
   },
 
+  // Set the period mode (week/month/total)
   setMode(newMode) {
     this.mode = newMode
   },
 
-  /** Initialize based on the latest available shift */
+  // Initialize based on the latest available shift
   initFromShifts(shifts) {
     if (!shifts || !shifts.length) return
 

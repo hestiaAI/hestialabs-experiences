@@ -12,6 +12,8 @@
 <script>
 import VueApexCharts from 'vue-apexcharts'
 
+// This component is a simple wrapper around ApexCharts to display
+// a total stacked bar chart
 export default {
   name: 'TotalStackedBar',
   components: { ApexChart: VueApexCharts },

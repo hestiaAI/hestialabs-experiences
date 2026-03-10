@@ -70,24 +70,29 @@ export default {
     const start = computed(() => dayjs().year(props.year).month(props.month).startOf('month'))
     const end = computed(() => start.value.endOf('month'))
 
+    // Determine the currency to display based on the first shift's currency (if available)
     const currency = computed(() => {
       return props.shifts[0]?.currency || 'CHF'
     })
 
+    // On day selection, emit the 'select-day' event with the selected date
     const selectDay = (day) => {
       emit('select-day', day.date)
     }
 
+    // Check if a given day is the currently selected day (for highlighting in the calendar)
     const isSelectedDay = (day) => {
       if (!props.selectedDate) return false
       return dayjs(props.selectedDate).isSame(dayjs(day.date), 'day')
     }
 
+    // Calculate the offset for the first day of the month to determine how many empty cells to render before it
     const firstDayOffset = computed(() => {
       const weekday = start.value.day() // Sunday=0
       return weekday === 0 ? 6 : weekday - 1
     })
 
+    // Prepare the data for each day in the month by aggregating shifts and payments
     const formatMinutesToHM = (totalMinutes) => {
       const m = Math.max(0, Math.round(totalMinutes || 0))
       const h = Math.floor(m / 60)
@@ -95,6 +100,7 @@ export default {
       return `${String(h).padStart(2, '0')}h ${String(mm).padStart(2, '0')}min`
     }
 
+    // For each day of the month, calculate total minutes worked, total earnings, and job types
     const daysInMonth = computed(() => {
       if (!start.value.isValid() || !end.value.isValid()) return []
 

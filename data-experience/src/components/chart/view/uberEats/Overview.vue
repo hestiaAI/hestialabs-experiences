@@ -282,13 +282,13 @@ export default {
       return this.block.trips?.rawCsv ?? ''
     },
 
-    // currency guess: fallback '$'
+    // currency guess: fallback 'CHF'
     currency() {
       // Try to infer from payments if present
       if (this.payments.length > 0 && this.payments[0].currencyCode) {
         return this.payments[0].currencyCode
       }
-      return this.block.currency ?? '$'
+      return this.block.currency ?? 'CHF'
     },
 
     // total earnings summed up
