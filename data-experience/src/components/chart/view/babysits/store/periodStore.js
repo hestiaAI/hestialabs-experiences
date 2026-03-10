@@ -23,6 +23,8 @@ export const periodStore = reactive({
   initFromShifts(shifts) {
     if (!shifts || !shifts.length) return
 
+    if (this.periodStart) return
+
     let earliest = null
     let latest = null
 

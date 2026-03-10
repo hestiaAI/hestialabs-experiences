@@ -635,15 +635,6 @@ export default {
     // Initialize period store from jobs
     periodStore.initFromShifts(this.jobs)
 
-    if (!this.latestJobDate) return
-
-    if (periodStore.mode === 'month') {
-      periodStore.setPeriod(this.latestJobDate.startOf('month').toISOString(), this.latestJobDate.endOf('month').toISOString())
-    } else {
-      const monday = this.getMondayOf(this.latestJobDate)
-      periodStore.setPeriod(monday.toISOString(), monday.add(6, 'day').endOf('day').toISOString())
-    }
-
     if (window.__continueBabysitterTour) {
       window.__continueBabysitterTour()
       window.__continueBabysitterTour = null
