@@ -1,6 +1,6 @@
 {
   "title": "Uber Eats",
-  "icon": "",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/ubereats.png",
   "messages": {
     "en": {
       "viewBlocks": {}

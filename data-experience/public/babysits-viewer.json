@@ -1,6 +1,6 @@
 {
   "title": "Babysits",
-  "icon": "",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/babysits.png",
   "messages": {
     "en": {
       "viewBlocks": {}
