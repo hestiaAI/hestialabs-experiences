@@ -1025,6 +1025,7 @@ export default {
   height: auto;
   align-self: start;
   padding-top: 16px;
+  min-width: 0;
 }
 
 .avg-box p {
@@ -1207,11 +1208,13 @@ export default {
     grid-row: 5 / 6; /* positioned below the timeline box */
     display: block;
     gap: 12px;
+    min-width: 0;
   }
 
   .box4, .avg-box, .filter-box {
     width: 100%;
     margin-bottom: 12px;
+    text-align: center;
   }
 }
 </style>
