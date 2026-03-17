@@ -3,6 +3,7 @@
  */
 
 import { mount } from '@vue/test-utils'
+import { periodStore } from '@/components/chart/view/babysits/store/periodStore'
 
 // (MonthlyCalendar is mocked above before importing OverView)
 
@@ -238,6 +239,10 @@ describe('OverView.vue (babysits) - UI & interactions', () => {
    * ------------------------------------------- */
 
   test('renders MonthlyCalendar in month mode', async() => {
+    periodStore.mode = 'month'
+    periodStore.periodStart = '2025-05-01'
+    periodStore.periodEnd = '2025-05-31'
+
     const wrapper = mountOverView()
 
     // MonthlyCalendar should be rendered (stubbed)

@@ -944,7 +944,6 @@ export default {
   width: 240px;
   padding: 4px 12px;
   font-weight: 800;
-  font-size: 1.05rem;
   letter-spacing: 0.02em;
   font-size: 1rem;
   display: flex;
