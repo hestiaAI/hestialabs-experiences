@@ -5,7 +5,7 @@
         v-for="p in ['week', 'month', 'total']"
         :key="p"
         :class="['switch-btn', { active: mode === p }]"
-        @click="setPeriodMode(p)"
+        @click="periodStore.setMode(p)"
       >
         {{ p.toUpperCase() }}
       </button>
@@ -71,8 +71,9 @@
         :showLegend="true"
       />
 
-      <div v-else-if="mode === 'month'">
+      <div v-else-if="mode === 'month' && periodReady && periodStart.isValid()">
         <MonthlyCalendar
+          :key="`ue-${calendarYear}-${calendarMonth}-${periodStore.periodStart}-${periodStore.periodEnd}`"
           view-block-translation-prefix="uberEats.monthlyCalendar"
           :year="calendarYear"
           :month="calendarMonth"
@@ -209,7 +210,9 @@ export default {
 
       periodReady: false,
       selectedCalendarDate: null,
-      openInfo: null
+      openInfo: null,
+      fromCalendarClick: false,
+      periodStore
     }
   },
   computed: {
@@ -440,7 +443,7 @@ export default {
 
       // fallback: current week
       const now = dayjs()
-      const monday = now.startOf('week').add(1, 'day')
+      const monday = now.startOf('isoWeek')
       return {
         start: monday,
         end: monday.add(6, 'day').endOf('day')
@@ -478,6 +481,16 @@ export default {
     // Counts for the top 3 devices
     deviceTop3Counts() {
       return this.deviceTop3.map(([_, count]) => count)
+    },
+
+    // Date of the latest trip (for onboarding tour targeting)
+    latestTripDate() {
+      if (!this.tripsParsed.length) return null
+
+      return this.tripsParsed
+        .map(t => dayjs(t.courierAcceptTimestampLocal || t.beginTimestampLocal || t.courierBegintripTimestampLocal))
+        .filter(d => d.isValid())
+        .sort((a, b) => b.valueOf() - a.valueOf())[0] || null
     }
   },
   watch: {
@@ -487,12 +500,11 @@ export default {
         const byDay = {}
 
         items.forEach((s) => {
-          const beginTs = dayjs(
-            s.begin_timestamp_utc || s.begin
-          ).valueOf()
-          const endTs = dayjs(
-            s.end_timestamp_utc || s.end
-          ).valueOf()
+          const _begin = s.begin || s.begin_timestamp_local || s.begin_timestamp_utc
+          const _end = s.end || s.end_timestamp_local || s.end_timestamp_utc
+
+          const beginTs = this.parseMaybeLocalTimestamp(_begin).valueOf()
+          const endTs = this.parseMaybeLocalTimestamp(_end).valueOf()
           if (!beginTs || !endTs || endTs <= beginTs) return
 
           const start = dayjs(beginTs)
@@ -542,8 +554,37 @@ export default {
       }
     },
 
-    mode() {
-      this.recomputePeriodCaches()
+    'periodStore.mode': function(newVal) {
+      if (this.fromCalendarClick) {
+        this.fromCalendarClick = false
+        this.recomputePeriodCaches()
+        return
+      }
+
+      const currentDate = dayjs(periodStore.periodStart)
+      const base = currentDate.isValid()
+        ? currentDate
+        : this.latestTripDate
+
+      if (!base || !base.isValid()) return
+
+      if (newVal === 'month') {
+        const monthStart = base.startOf('month')
+        const monthEnd = base.endOf('month')
+        periodStore.setPeriod(monthStart.toISOString(), monthEnd.toISOString())
+        return
+      }
+
+      if (newVal === 'total') {
+        this.recomputePeriodCaches()
+        return
+      }
+
+      const monday = this.getMondayOf(base)
+      periodStore.setPeriod(
+        monday.toISOString(),
+        monday.add(6, 'day').endOf('day').toISOString()
+      )
     },
     periodStart: 'recomputePeriodCaches',
     periodEnd: 'recomputePeriodCaches'
@@ -555,6 +596,21 @@ export default {
       window.__continueRoutesTour = null
     }
     periodStore.initFromTrips(this.tripsParsed)
+
+    if (this.latestTripDate) {
+      if (periodStore.mode === 'month') {
+        periodStore.setPeriod(
+          this.latestTripDate.startOf('month').toISOString(),
+          this.latestTripDate.endOf('month').toISOString()
+        )
+      } else if (periodStore.mode === 'week') {
+        const monday = this.getMondayOf(this.latestTripDate)
+        periodStore.setPeriod(
+          monday.toISOString(),
+          monday.add(6, 'day').endOf('day').toISOString()
+        )
+      }
+    }
 
     this.$nextTick(() => {
       this.periodReady = true
@@ -612,23 +668,43 @@ export default {
     },
 
     /**
+     * Parse a timestamp that may be in local time (without timezone) or UTC (with 'Z'), returning a dayjs object.
+     * If the timestamp ends with 'Z', it's treated as UTC. Otherwise, it's treated as local time.
+     * @param ts
+     */
+    parseMaybeLocalTimestamp(ts) {
+      if (!ts) return dayjs('')
+
+      return dayjs(String(ts).replace(/Z$/, ''))
+    },
+
+    /**
+     * Get the Monday of the week for a given date
+     * @param d
+     */
+    getMondayOf(d) {
+      const day = d.day()
+      return day === 0
+        ? d.subtract(6, 'day').startOf('day')
+        : d.subtract(day - 1, 'day').startOf('day')
+    },
+
+    /**
      * Handle day selection from MonthlyCalendar
      */
     onSelectDay(date) {
-      periodStore.setMode('week')
+      const d = dayjs(date)
+      if (!d.isValid()) return
 
+      this.fromCalendarClick = true
       this.selectedCalendarDate = date
 
-      // Compute the Monday–Sunday of that date
-      const clicked = dayjs(date)
-      const monday = clicked.startOf('isoWeek') // Monday
-      const sunday = clicked.endOf('isoWeek').endOf('day') // Sunday
-
-      // Update the store
-      periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
-
-      // Optional: redraw chart immediately
-      this.redraw()
+      const monday = this.getMondayOf(d)
+      periodStore.setPeriod(
+        monday.toISOString(),
+        monday.add(6, 'day').endOf('day').toISOString()
+      )
+      periodStore.setMode('week')
     },
 
     /**
@@ -715,28 +791,6 @@ export default {
 
       this.paymentsByDayTotalCache = ranked
       this.top5DaysCache = ranked.slice(0, 5)
-    },
-
-    /**
-     * Set the period mode (week, month, total)
-     */
-    setPeriodMode(mode) {
-      periodStore.setMode(mode)
-
-      if (mode === 'total') return
-
-      if (mode === 'month') {
-        const start = this.periodStart.startOf('month')
-        const end = this.periodStart.endOf('month')
-        periodStore.setPeriod(start.toISOString(), end.toISOString())
-        return
-      }
-
-      // week mode
-      const monday = this.periodStart.startOf('week').add(1, 'day')
-      const sunday = monday.add(6, 'day').endOf('day')
-
-      periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
     },
 
     /**

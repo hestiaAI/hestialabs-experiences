@@ -92,8 +92,9 @@
         </div>
       </div>
 
-      <div v-else-if="currentPeriod == 'month'">
+      <div v-else-if="currentPeriod == 'month' && currentWeekStart.isValid()">
         <MonthlyCalendar
+          :key="`bs-${calendarYear}-${calendarMonth}-${periodStore.periodStart}-${periodStore.periodEnd}`"
           :year="calendarYear"
           :month="calendarMonth"
           :shifts="shiftsThisPeriod"

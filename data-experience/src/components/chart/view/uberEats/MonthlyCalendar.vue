@@ -65,8 +65,18 @@ export default {
     const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
     // Start and end of the month
-    const start = computed(() => dayjs().year(props.year).month(props.month).startOf('month'))
-    const end = computed(() => start.value.endOf('month'))
+    const start = computed(() => {
+      if (
+        typeof props.year !== 'number' ||
+        typeof props.month !== 'number'
+      ) return dayjs.invalid()
+
+      return dayjs(`${props.year}-${String(props.month + 1).padStart(2, '0')}-01`)
+    })
+
+    const end = computed(() => {
+      return start.value.isValid() ? start.value.endOf('month') : dayjs.invalid()
+    })
 
     // Handle day selection
     const selectDay = (day) => {
@@ -102,9 +112,9 @@ export default {
 
         days.push({
           day: i,
-          date: date.toISOString(),
+          date: key,
           minutes,
-          hours: minutes / 60, // optional
+          hours: minutes / 60,
           earnings: stat.earnings || 0
         })
       }

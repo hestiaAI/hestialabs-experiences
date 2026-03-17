@@ -7,7 +7,7 @@
           v-for="p in ['week', 'month', 'total']"
           :key="p"
           :class="['switch-btn', { active: mode === p }]"
-          @click="setPeriodMode(p)"
+          @click="periodStore.setMode(p)"
         >
           {{ p.toUpperCase() }}
         </button>
@@ -114,6 +114,7 @@ export default {
 
   data() {
     return {
+      periodStore,
       showAvg: false,
       normalizedPaymentsCache: [],
       earningsByDayCache: {},
@@ -153,6 +154,27 @@ export default {
       }
       if (this.mode === 'month') return this.periodStart.format('MMMM YYYY')
       return `${this.periodStart.format('DD.MM')} – ${this.periodEnd.format('DD.MM.YYYY')}`
+    },
+
+    // Date of the latest payment (for onboarding tour targeting)
+    latestPaymentDate() {
+      if (!this.payments.length) return null
+
+      return this.payments
+        .map(p => dayjs(p.recognizeTimestampLocal))
+        .filter(d => d.isValid())
+        .sort((a, b) => b.valueOf() - a.valueOf())[0] || null
+    },
+
+    // Base date for onboarding tour targeting (prefer period start, then latest payment, then latest trip)
+    baseDate() {
+      const start = dayjs(periodStore.periodStart)
+      if (start.isValid()) return start
+
+      const allTimeEnd = dayjs(periodStore.allTimeEnd)
+      if (allTimeEnd.isValid()) return allTimeEnd
+
+      return this.latestPaymentDate
     },
 
     // Uber Eats specific block
@@ -348,37 +370,73 @@ export default {
       handler() {
         if (!this.values?.length) return
 
-        // Normalize payments
         this.normalizedPaymentsCache = this.payments.map((p) => {
           const ts = Date.parse(p.recognizeTimestampLocal)
           return {
-            day: this.formatDay(ts), // make sure to format day
+            day: this.formatDay(ts),
             year: new Date(ts).getFullYear(),
             amount: Number(p.amountLocal || 0),
             isTip: (p.category || '').toLowerCase() === 'tip'
           }
         })
 
-        // Precompute earnings and averages
         this.precomputeData()
-
-        // Redraw chart
-        this.drawChart()
       }
+    },
+
+    'periodStore.mode': function(newVal) {
+      const base = this.baseDate
+      if (!base || !base.isValid()) return
+
+      if (newVal === 'month') {
+        const start = base.startOf('month')
+        const end = base.endOf('month')
+        periodStore.setPeriod(start.toISOString(), end.toISOString())
+        return
+      }
+
+      if (newVal === 'total') {
+        return
+      }
+
+      const monday = this.getMondayOf(base)
+      periodStore.setPeriod(
+        monday.toISOString(),
+        monday.add(6, 'day').endOf('day').toISOString()
+      )
+    },
+
+    'periodStore.periodStart'() {
+      this.precomputeData()
+    },
+
+    'periodStore.periodEnd'() {
+      this.precomputeData()
     }
   },
   mounted() {
-    // Continue tutorial if applicable
     if (window.__continueRoutesTour) {
       window.__continueRoutesTour()
       window.__continueRoutesTour = null
     }
 
-    this.setPeriodMode(this.mode)
-
     if (this.values?.length) {
       this.precomputeData()
-      this.drawChart()
+    }
+
+    if (this.latestPaymentDate) {
+      if (periodStore.mode === 'month') {
+        periodStore.setPeriod(
+          this.latestPaymentDate.startOf('month').toISOString(),
+          this.latestPaymentDate.endOf('month').toISOString()
+        )
+      } else if (periodStore.mode === 'week') {
+        const monday = this.getMondayOf(this.latestPaymentDate)
+        periodStore.setPeriod(
+          monday.toISOString(),
+          monday.add(6, 'day').endOf('day').toISOString()
+        )
+      }
     }
   },
   methods: {
@@ -474,24 +532,14 @@ export default {
     },
 
     /**
-     * Set the period mode (week, month, total)
-     * @param mode {string}
+     * Get Monday of the week for a given dayjs date
+     * @param d
      */
-    setPeriodMode(mode) {
-      periodStore.setMode(mode)
-
-      if (mode === 'total') return
-
-      if (mode === 'month') {
-        const start = this.periodStart.startOf('month')
-        const end = this.periodStart.endOf('month')
-        return periodStore.setPeriod(start.toISOString(), end.toISOString())
-      }
-
-      // WEEK MODE
-      const monday = this.periodStart.startOf('week').add(1, 'day')
-      const sunday = monday.add(6, 'day').endOf('day')
-      periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
+    getMondayOf(d) {
+      const day = d.day()
+      return day === 0
+        ? d.subtract(6, 'day').startOf('day')
+        : d.subtract(day - 1, 'day').startOf('day')
     },
 
     /**
@@ -500,15 +548,21 @@ export default {
     prevPeriod() {
       if (this.mode === 'total') return
 
+      const currentStart = dayjs(periodStore.periodStart)
+      const currentEnd = dayjs(periodStore.periodEnd)
+
+      if (!currentStart.isValid() || !currentEnd.isValid()) return
+
       if (this.mode === 'month') {
-        const start = this.periodStart.subtract(1, 'month').startOf('month')
-        const end = start.endOf('month')
-        return periodStore.setPeriod(start.toISOString(), end.toISOString())
+        const newStart = currentStart.subtract(1, 'month')
+        const newEnd = currentEnd.subtract(1, 'month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+        return
       }
 
-      const start = this.periodStart.subtract(7, 'day')
-      const end = start.add(6, 'day').endOf('day')
-      periodStore.setPeriod(start.toISOString(), end.toISOString())
+      const newStart = currentStart.subtract(7, 'day')
+      const newEnd = currentEnd.subtract(7, 'day')
+      periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
     },
 
     /**
@@ -517,15 +571,21 @@ export default {
     nextPeriod() {
       if (this.mode === 'total') return
 
+      const currentStart = dayjs(periodStore.periodStart)
+      const currentEnd = dayjs(periodStore.periodEnd)
+
+      if (!currentStart.isValid() || !currentEnd.isValid()) return
+
       if (this.mode === 'month') {
-        const start = this.periodStart.add(1, 'month').startOf('month')
-        const end = start.endOf('month')
-        return periodStore.setPeriod(start.toISOString(), end.toISOString())
+        const newStart = currentStart.add(1, 'month')
+        const newEnd = currentEnd.add(1, 'month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+        return
       }
 
-      const start = this.periodStart.add(7, 'day')
-      const end = start.add(6, 'day').endOf('day')
-      periodStore.setPeriod(start.toISOString(), end.toISOString())
+      const newStart = currentStart.add(7, 'day')
+      const newEnd = currentEnd.add(7, 'day')
+      periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
     }
   }
 }

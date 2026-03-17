@@ -51,11 +51,9 @@
 <script>
 import { computed } from 'vue'
 import dayjs from 'dayjs'
-import mixin from '@/components/chart/view/mixin'
 
 export default {
   name: 'MonthlyCalendar',
-  mixins: [mixin],
   props: {
     year: Number,
     month: Number, // 0–11
@@ -67,8 +65,18 @@ export default {
   setup(props, { emit }) {
     const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-    const start = computed(() => dayjs().year(props.year).month(props.month).startOf('month'))
-    const end = computed(() => start.value.endOf('month'))
+    const start = computed(() => {
+      if (
+        typeof props.year !== 'number' ||
+        typeof props.month !== 'number'
+      ) return dayjs.invalid()
+
+      return dayjs(`${props.year}-${String(props.month + 1).padStart(2, '0')}-01`)
+    })
+
+    const end = computed(() => {
+      return start.value.isValid() ? start.value.endOf('month') : dayjs.invalid()
+    })
 
     // Determine the currency to display based on the first shift's currency (if available)
     const currency = computed(() => {
@@ -88,6 +96,7 @@ export default {
 
     // Calculate the offset for the first day of the month to determine how many empty cells to render before it
     const firstDayOffset = computed(() => {
+      if (!start.value.isValid()) return 0
       const weekday = start.value.day() // Sunday=0
       return weekday === 0 ? 6 : weekday - 1
     })
@@ -143,7 +152,7 @@ export default {
 
         days.push({
           day: i,
-          date: date.toISOString(),
+          date: date.format('YYYY-MM-DD'),
           minutes: minutesWorked,
           hours: hoursWorked,
           earnings: totalEarnings,
