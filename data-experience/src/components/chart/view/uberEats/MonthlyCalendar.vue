@@ -33,7 +33,7 @@
       <div class="day-number">{{ day.day }}</div>
 
       <div class="stats" v-if="day.hours > 0 || day.earnings > 0">
-        <div class="stat-hours">{{ day.hours.toFixed(1) }}h</div>
+        <div class="stat-hours">{{ formatMinutesToHM(day.minutes) }}</div>
         <div class="stat-money">{{ currency }} {{ day.earnings.toFixed(2) }}</div>
       </div>
 
@@ -65,8 +65,18 @@ export default {
     const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
     // Start and end of the month
-    const start = computed(() => dayjs().year(props.year).month(props.month).startOf('month'))
-    const end = computed(() => start.value.endOf('month'))
+    const start = computed(() => {
+      if (
+        typeof props.year !== 'number' ||
+        typeof props.month !== 'number'
+      ) return dayjs.invalid()
+
+      return dayjs(`${props.year}-${String(props.month + 1).padStart(2, '0')}-01`)
+    })
+
+    const end = computed(() => {
+      return start.value.isValid() ? start.value.endOf('month') : dayjs.invalid()
+    })
 
     // Handle day selection
     const selectDay = (day) => {
@@ -98,16 +108,27 @@ export default {
         const key = date.format('YYYY-MM-DD')
         const stat = props.dailyStats[key] || { earnings: 0, minutes: 0 }
 
+        const minutes = Number(stat.minutes || 0)
+
         days.push({
           day: i,
-          date: date.toISOString(),
-          hours: Number((stat.minutes / 60).toFixed(1)),
+          date: key,
+          minutes,
+          hours: minutes / 60,
           earnings: stat.earnings || 0
         })
       }
 
       return days
     })
+
+    // Helper to format minutes to "Xh YYmin"
+    const formatMinutesToHM = (totalMinutes) => {
+      const m = Math.max(0, Math.round(totalMinutes || 0))
+      const h = Math.floor(m / 60)
+      const mm = m % 60
+      return `${String(h).padStart(2, '0')}h ${String(mm).padStart(2, '0')}min`
+    }
 
     // true if at least one day has hours or earnings > 0
     const hasMonthData = computed(() =>
@@ -121,6 +142,7 @@ export default {
       firstDayOffset,
       daysInMonth,
       hasMonthData,
+      formatMinutesToHM,
       isSelectedDay,
       selectDay
     }

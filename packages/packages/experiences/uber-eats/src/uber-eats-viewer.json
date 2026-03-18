@@ -1,6 +1,6 @@
 {
   "title": "Uber Eats",
-  "icon": "",
+  "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/ubereats.png",
   "messages": {
     "en": {
       "viewBlocks": {}
@@ -36,7 +36,7 @@
     }
   ],
   "dataSamples": [
-    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/uber-eats-sample.zip"
+    "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/data-samples/uber-eats-sample.zip?contenthash=0631c1595fef379b2cfba284d4a74ab597f61923bcc3a585048e6928b5e4b314&filename=uber-eats-sample.zip"
   ],
   "dataPortal": "https://myprivacy.uber.com/privacy/exploreyourdata/download",
   "version": 1

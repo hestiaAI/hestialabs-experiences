@@ -37,7 +37,7 @@
         <div class="stat-job-type" v-if="day.jobTypes.length > 0">
           {{ day.jobTypes.join(', ') }}
         </div>
-        <div class="stat-hours">{{ day.hours.toFixed(1) }}h</div>
+        <div class="stat-hours">{{ formatMinutesToHM(day.minutes) }}</div>
         <div class="stat-money">{{ day.earnings.toFixed(2) }}{{ currency }}</div>
       </div>
 
@@ -51,11 +51,9 @@
 <script>
 import { computed } from 'vue'
 import dayjs from 'dayjs'
-import mixin from '@/components/chart/view/mixin'
 
 export default {
   name: 'MonthlyCalendar',
-  mixins: [mixin],
   props: {
     year: Number,
     month: Number, // 0–11
@@ -67,62 +65,95 @@ export default {
   setup(props, { emit }) {
     const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
-    const start = computed(() => dayjs().year(props.year).month(props.month).startOf('month'))
-    const end = computed(() => start.value.endOf('month'))
+    const start = computed(() => {
+      if (
+        typeof props.year !== 'number' ||
+        typeof props.month !== 'number'
+      ) return dayjs.invalid()
 
+      return dayjs(`${props.year}-${String(props.month + 1).padStart(2, '0')}-01`)
+    })
+
+    const end = computed(() => {
+      return start.value.isValid() ? start.value.endOf('month') : dayjs.invalid()
+    })
+
+    // Determine the currency to display based on the first shift's currency (if available)
     const currency = computed(() => {
       return props.shifts[0]?.currency || 'CHF'
     })
 
+    // On day selection, emit the 'select-day' event with the selected date
     const selectDay = (day) => {
       emit('select-day', day.date)
     }
 
+    // Check if a given day is the currently selected day (for highlighting in the calendar)
     const isSelectedDay = (day) => {
       if (!props.selectedDate) return false
       return dayjs(props.selectedDate).isSame(dayjs(day.date), 'day')
     }
 
+    // Calculate the offset for the first day of the month to determine how many empty cells to render before it
     const firstDayOffset = computed(() => {
+      if (!start.value.isValid()) return 0
       const weekday = start.value.day() // Sunday=0
       return weekday === 0 ? 6 : weekday - 1
     })
 
+    // Prepare the data for each day in the month by aggregating shifts and payments
+    const formatMinutesToHM = (totalMinutes) => {
+      const m = Math.max(0, Math.round(totalMinutes || 0))
+      const h = Math.floor(m / 60)
+      const mm = m % 60
+      return `${String(h).padStart(2, '0')}h ${String(mm).padStart(2, '0')}min`
+    }
+
+    // For each day of the month, calculate total minutes worked, total earnings, and job types
     const daysInMonth = computed(() => {
+      if (!start.value.isValid() || !end.value.isValid()) return []
+
       const days = []
       const totalDays = end.value.date()
 
       for (let i = 1; i <= totalDays; i++) {
-        const date = start.value.date(i)
+        const date = start.value.clone().date(i)
 
-        // Filter shifts for the current day
-        const dayShifts = props.shifts.filter(s => s.date && dayjs(s.date).isSame(date, 'day'))
+        const dayShifts = props.shifts.filter(
+          s => s.date && dayjs(s.date).isSame(date, 'day')
+        )
 
-        // Calculate hours worked from shifts (using duration_hours field)
-        const hoursWorked = dayShifts.reduce((sum, s) => {
-          const duration = parseFloat(
+        // Sum minutes (prefer a minutes field if it exists; otherwise derive from hours)
+        const minutesWorked = dayShifts.reduce((sum, s) => {
+          const mins = parseFloat(s.minutes || s.duration_minutes || 0)
+          if (!Number.isNaN(mins) && mins > 0) return sum + mins
+
+          const hours = parseFloat(
             s.duration_hours ||
-            s.nbHours ||
-            s.duration ||
-            s.hours ||
-            s.work_hours ||
-            0
+              s.nbHours ||
+              s.duration ||
+              s.hours ||
+              s.work_hours ||
+              0
           )
-          return sum + duration
+          return sum + (Number.isFinite(hours) ? hours * 60 : 0)
         }, 0)
 
-        // Calculate total earnings from shifts
-        const totalEarnings = dayShifts.reduce((sum, s) => sum + (parseFloat(s.earnings) || 0), 0)
+        const hoursWorked = minutesWorked / 60
 
-        // Extract unique job types
-        const jobTypes = [...new Set(dayShifts
-          .map(s => s.job_type)
-          .filter(jt => jt)
-        )]
+        const totalEarnings = dayShifts.reduce(
+          (sum, s) => sum + (parseFloat(s.earnings) || 0),
+          0
+        )
+
+        const jobTypes = [
+          ...new Set(dayShifts.map(s => s.job_type).filter(Boolean))
+        ]
 
         days.push({
           day: i,
-          date: date.toISOString(),
+          date: date.format('YYYY-MM-DD'),
+          minutes: minutesWorked,
           hours: hoursWorked,
           earnings: totalEarnings,
           jobTypes
@@ -144,6 +175,7 @@ export default {
       firstDayOffset,
       daysInMonth,
       hasMonthData,
+      formatMinutesToHM,
       selectDay,
       currency,
       isSelectedDay

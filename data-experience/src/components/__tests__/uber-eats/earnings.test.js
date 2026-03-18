@@ -33,7 +33,6 @@ jest.mock('vue-apexcharts', () => ({
   }
 }))
 
-
 jest.mock('@/components/chart/view/mixin', () => ({
   methods: {
     drawChart: jest.fn()
@@ -44,7 +43,6 @@ jest.mock('@/components/chart/view/mixin', () => ({
     }
   }
 }))
-
 
 /* -----------------------------------------------------
  * Test data
@@ -148,21 +146,21 @@ describe('Earnings.vue - UI & interactions', () => {
    * Period switching
    * ------------------------------------------- */
 
-  test('clicking WEEK button does not crash', async () => {
+  test('clicking WEEK button does not crash', async() => {
     const wrapper = mountComponent()
     const weekBtn = wrapper.findAll('.switch-btn').at(0)
 
     await expect(weekBtn.trigger('click')).resolves.not.toThrow()
   })
 
-  test('clicking MONTH button does not crash', async () => {
+  test('clicking MONTH button does not crash', async() => {
     const wrapper = mountComponent()
     const monthBtn = wrapper.findAll('.switch-btn').at(1)
 
     await expect(monthBtn.trigger('click')).resolves.not.toThrow()
   })
 
-  test('clicking TOTAL button does not crash', async () => {
+  test('clicking TOTAL button does not crash', async() => {
     const wrapper = mountComponent()
     const totalBtn = wrapper.findAll('.switch-btn').at(2)
 
@@ -173,7 +171,7 @@ describe('Earnings.vue - UI & interactions', () => {
    * Navigation buttons
    * ------------------------------------------- */
 
-  test('prev / next buttons are clickable', async () => {
+  test('prev / next buttons are clickable', async() => {
     const wrapper = mountComponent()
     const navButtons = wrapper.findAll('.nav-btn')
 
@@ -190,7 +188,7 @@ describe('Earnings.vue - UI & interactions', () => {
     expect(wrapper.find('input[type="checkbox"]').exists()).toBe(true)
   })
 
-  test('toggling avg checkbox does not crash', async () => {
+  test('toggling avg checkbox does not crash', async() => {
     const wrapper = mountComponent()
     const checkbox = wrapper.find('input[type="checkbox"]')
 

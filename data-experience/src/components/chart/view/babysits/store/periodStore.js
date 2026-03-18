@@ -19,15 +19,17 @@ export const periodStore = reactive({
     this.mode = newMode
   },
 
-  // Initialize based on the latest available trip
-  initFromTrips(trips) {
-    if (!trips || !trips.length) return
+  // Initialize based on the latest available shift
+  initFromShifts(shifts) {
+    if (!shifts || !shifts.length) return
+
+    if (this.periodStart) return
 
     let earliest = null
     let latest = null
 
-    trips.forEach((t) => {
-      const d = dayjs(t.courierAcceptTimestampLocal || t.beginTimestampLocal)
+    shifts.forEach((s) => {
+      const d = dayjs(s.date)
       if (!d.isValid()) return
 
       if (!earliest || d.isBefore(earliest)) earliest = d

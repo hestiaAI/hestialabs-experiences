@@ -72,7 +72,10 @@ function mountEarningsDistribution(props = {}) {
     },
     global: {
       stubs: {
-        ApexChart: true
+        ApexChart: true,
+        EarningsByDay: true,
+        TotalStackedBar: true,
+        EarningsPerHourBar: true
       }
     }
   })
@@ -85,6 +88,24 @@ function mountEarningsDistribution(props = {}) {
 describe('EarningsDistribution.vue - UI & interactions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    // Reset periodStore between tests
+    const { periodStore } = require('@/components/chart/view/babysits/store/periodStore')
+    periodStore.mode = 'week'
+    periodStore.periodStart = null
+    periodStore.periodEnd = null
+    periodStore.allTimeStart = null
+    periodStore.allTimeEnd = null
+    // Initialize period to match test data so week label is predictable
+    const dayjs = require('dayjs')
+    const latest = mockPipelineValues
+      .map(v => dayjs(v.date))
+      .filter(d => d.isValid())
+      .sort((a, b) => b.valueOf() - a.valueOf())[0]
+    if (latest) {
+      const day = latest.day()
+      const monday = day === 0 ? latest.subtract(6, 'day').startOf('day') : latest.subtract(day - 1, 'day').startOf('day')
+      periodStore.setPeriod(monday.toISOString(), monday.add(6, 'day').endOf('day').toISOString())
+    }
   })
 
   /* ---------------------------------------------

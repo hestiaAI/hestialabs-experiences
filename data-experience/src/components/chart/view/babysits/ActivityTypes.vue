@@ -5,7 +5,7 @@
         v-for="p in ['week','month','total']"
         :key="p"
         :class="['switch-btn', { active: currentPeriod === p }]"
-        @click="currentPeriod = p"
+        @click="periodStore.setMode(p)"
         :title="getPeriodDescription(p)"
       >
         {{ p.toUpperCase() }}
@@ -51,12 +51,11 @@
 
       <!-- WEEK VIEW: Heatmap -->
       <div v-if="currentPeriod === 'week' && filteredJobs.length">
-        <ApexChart
+        <HeatmapChart
           :key="'week-heatmap-' + currentWeekStart.format('YYYY-MM-DD')"
-          type="heatmap"
-          height="450"
           :options="weekHeatmapOptions"
           :series="weekHeatmapSeries"
+          height="450"
         />
         <p class="chart-explanation">
           <strong>How to read this visualization:</strong><br />
@@ -83,12 +82,11 @@
 
       <!-- MONTH VIEW: Heatmap -->
       <div v-else-if="currentPeriod === 'month' && filteredJobs.length">
-        <ApexChart
+        <HeatmapChart
           :key="'month-heatmap-' + currentWeekStart.format('YYYY-MM')"
-          type="heatmap"
-          height="450"
           :options="monthHeatmapOptions"
           :series="monthHeatmapSeries"
+          height="450"
         />
         <p class="chart-explanation">
           <strong>How to read this visualization:</strong><br />
@@ -123,12 +121,11 @@
           </select>
         </div>
 
-        <ApexChart
+        <HorizontalBarChart
           :key="'total-' + totalSortDirection"
-          type="bar"
-          height="450"
           :options="totalBarOptions"
           :series="totalTypeSeries.series"
+          height="450"
         />
       </div>
 
@@ -140,30 +137,43 @@
 
 <script>
 import mixin from '@/components/chart/view/mixin'
-import VueApexCharts from 'vue-apexcharts'
+import HeatmapChart from './charts/HeatmapChart.vue'
+import HorizontalBarChart from './charts/HorizontalBarChart.vue'
 import dayjs from 'dayjs'
 import 'dayjs/locale/en'
 import weekday from 'dayjs/plugin/weekday'
 import isBetween from 'dayjs/plugin/isBetween'
+import { periodStore } from './store/periodStore'
 dayjs.extend(isBetween)
 dayjs.extend(weekday)
 
 export default {
   name: 'BabysitsActivityTypes',
   components: {
-    ApexChart: VueApexCharts
+    HeatmapChart,
+    HorizontalBarChart
   },
   mixins: [mixin],
 
   data() {
     return {
-      currentWeekStart: this.getMondayOf(dayjs()),
-      currentPeriod: 'week',
+      periodStore,
       totalSortDirection: 'desc'
     }
   },
 
   computed: {
+    // Get the description text for each period mode to show in the tooltip
+    currentPeriod() {
+      return periodStore.mode
+    },
+
+    // Get the start date of the current week based on the period store
+    currentWeekStart() {
+      return dayjs(periodStore.periodStart)
+    },
+
+    // Get a mapping of activity types to colors for consistent coloring across charts and legends
     activityTypeColors() {
       const palette = [
         '#1abc9c',
@@ -186,6 +196,8 @@ export default {
       return map
     },
 
+    // Get the list of activity types present in the current filtered jobs,
+    // to show in the legends and charts
     activityLegendItems() {
       return this.pageJobTypes.map(type => ({
         type,
@@ -193,6 +205,8 @@ export default {
       }))
     },
 
+    // Get the list of activity types present in the current filtered jobs,
+    // to show in the legends and charts
     pageJobTypes() {
       const jobs = this.jobs
 
@@ -211,14 +225,20 @@ export default {
       return Array.from(new Set(periodJobs.map(j => j.job_type)))
     },
 
+    // Get the series data for the week heatmap, aggregating hours worked by
+    // activity type and day of week
     hasActiveFilters() {
       return this.currentPeriod === 'total' && this.totalSortDirection !== 'desc'
     },
 
+    // Get the list of all jobs from the props, which will be filtered and processed
     jobs() {
       return this.values || []
     },
 
+    // Get the filtered list of jobs based on the current period selection, to be
+    // used in all charts and calculations, ensuring that only relevant jobs are
+    // considered for the selected time frame
     filteredJobs() {
       const jobs = this.jobs
 
@@ -235,27 +255,32 @@ export default {
       return jobs.filter(j => j.date && dayjs(j.date).isBetween(this.weekStart, this.weekEnd, 'day', '[]'))
     },
 
+    // Get the categories (days of week) for the heatmap charts,
+    // which will be the same for both week and month views
     weekStart() {
       if (this.currentPeriod === 'month') return this.currentWeekStart.startOf('month')
       return this.currentWeekStart
     },
 
+    // Get the end date of the current week based on the period store
     weekEnd() {
       if (this.currentPeriod === 'month') return this.currentWeekStart.endOf('month')
       return this.currentWeekStart.add(6, 'day').endOf('day')
     },
 
+    // Get the label to display in the center of the week navigation
     weekLabel() {
       if (this.currentPeriod === 'total') {
         const earliest = this.earliestJobDate
         const latest = this.latestJobDate
         if (!earliest || !latest) return 'Entire Period'
-        return `${earliest.format('DD.MM.YYYY')} - ${latest.format('DD.MM.YYYY')}`
+        return `${earliest.format('DD.MM.YYYY')} - ${latest.format('DD.MM.YYYY')} (All time)`
       }
       if (this.currentPeriod === 'month') return this.weekStart.format('MMMM YYYY')
       return `${this.weekStart.format('DD.MM')} - ${this.weekEnd.format('DD.MM.YYYY')}`
     },
 
+    // Get the earliest job date from all jobs, to show in the total view label
     earliestJobDate() {
       if (!this.jobs.length) return null
 
@@ -265,6 +290,7 @@ export default {
         .sort((a, b) => a.valueOf() - b.valueOf())[0]
     },
 
+    // Get the latest job date from all jobs, to show in the total view label
     latestJobDate() {
       if (!this.jobs.length) return null
 
@@ -274,7 +300,8 @@ export default {
         .sort((a, b) => b.valueOf() - a.valueOf())[0]
     },
 
-    // ---------- WEEK HEATMAP ----------
+    // Get the series data for the week heatmap, aggregating hours worked
+    // by activity type and day of week
     weekHeatmapSeries() {
       const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
       const jobTypes = this.pageJobTypes.length ? this.pageJobTypes : ['No data']
@@ -313,6 +340,8 @@ export default {
       }))
     },
 
+    // Get the options for the week heatmap, configuring the appearance
+    // and behavior of the chart
     weekHeatmapOptions() {
       return {
         chart: {
@@ -372,7 +401,8 @@ export default {
       }
     },
 
-    // ---------- MONTH HEATMAP ----------
+    // Get the series data for the month heatmap, aggregating hours worked
+    // by activity type and day of month, with labels like "15 Wed" for each day
     monthHeatmapSeries() {
       const daysInMonth = this.weekStart.daysInMonth()
       const dayLabels = []
@@ -426,6 +456,7 @@ export default {
       }))
     },
 
+    // Get the options for the month heatmap
     monthHeatmapOptions() {
       return {
         chart: {
@@ -503,7 +534,7 @@ export default {
       }
     },
 
-    // ---------- TOTAL BAR ----------
+    // Get the series data for the total view bar chart, aggregating total hours worked
     totalTypeSeries() {
       const map = {}
 
@@ -544,6 +575,7 @@ export default {
       }
     },
 
+    // Get the options for the total view bar chart
     totalBarOptions() {
       return {
         chart: {
@@ -583,25 +615,25 @@ export default {
   },
 
   watch: {
-    currentPeriod(newVal) {
-      if (!this.latestJobDate) return
+    // Watch for changes in the period mode (week/month/total)
+    // and update the period accordingly
+    'periodStore.mode': function(newVal) {
+      const currentDate = dayjs(periodStore.periodStart || dayjs())
 
       if (newVal === 'month') {
-        this.currentWeekStart = this.latestJobDate.startOf('month')
+        const monthStart = currentDate.startOf('month')
+        const monthEnd = currentDate.endOf('month')
+        periodStore.setPeriod(monthStart.toISOString(), monthEnd.toISOString())
       } else if (newVal === 'week') {
-        this.currentWeekStart = this.getMondayOf(this.latestJobDate)
+        const monday = this.getMondayOf(currentDate)
+        periodStore.setPeriod(monday.toISOString(), monday.add(6, 'day').endOf('day').toISOString())
       }
     }
   },
 
   mounted() {
-    if (!this.latestJobDate) return
-
-    if (this.currentPeriod === 'month') {
-      this.currentWeekStart = this.latestJobDate.startOf('month')
-    } else {
-      this.currentWeekStart = this.getMondayOf(this.latestJobDate)
-    }
+    // Initialize period store from jobs
+    periodStore.initFromShifts(this.jobs)
 
     if (window.__continueBabysitterTour) {
       window.__continueBabysitterTour()
@@ -610,20 +642,45 @@ export default {
   },
 
   methods: {
+    /**
+     * Navigates to the previous week or month based on the current period mode,
+     * by calculating the new start and end dates and updating the period store accordingly
+     */
     prevWeek() {
-      if (this.currentPeriod === 'month') {
-        this.currentWeekStart = this.currentWeekStart.subtract(1, 'month')
-      } else if (this.currentPeriod === 'week') {
-        this.currentWeekStart = this.currentWeekStart.subtract(7, 'day')
+      const currentStart = dayjs(periodStore.periodStart)
+      const currentEnd = dayjs(periodStore.periodEnd)
+      if (periodStore.mode === 'month') {
+        const newStart = currentStart.subtract(1, 'month')
+        const newEnd = currentEnd.subtract(1, 'month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+      } else if (periodStore.mode === 'week') {
+        const newStart = currentStart.subtract(7, 'day')
+        const newEnd = currentEnd.subtract(7, 'day')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
     },
+
+    /**
+     * Navigates to the next week or month based on the current period mode
+     */
     nextWeek() {
-      if (this.currentPeriod === 'month') {
-        this.currentWeekStart = this.currentWeekStart.add(1, 'month')
-      } else if (this.currentPeriod === 'week') {
-        this.currentWeekStart = this.currentWeekStart.add(7, 'day')
+      const currentStart = dayjs(periodStore.periodStart)
+      const currentEnd = dayjs(periodStore.periodEnd)
+      if (periodStore.mode === 'month') {
+        const newStart = currentStart.add(1, 'month')
+        const newEnd = currentEnd.add(1, 'month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+      } else if (periodStore.mode === 'week') {
+        const newStart = currentStart.add(7, 'day')
+        const newEnd = currentEnd.add(7, 'day')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
     },
+
+    /**
+     * Gets the Monday of the week containing the given date
+     * @param d
+     */
     getMondayOf(d) {
       const day = d.day()
       return day === 0
@@ -631,6 +688,10 @@ export default {
         : d.subtract(day - 1, 'day').startOf('day')
     },
 
+    /**
+     * Gets the description for a given period mode
+     * @param period
+     */
     getPeriodDescription(period) {
       const descs = {
         week: 'Hours distribution across job types for each day',
@@ -640,6 +701,9 @@ export default {
       return descs[period] || ''
     },
 
+    /**
+     * Clears all active filters by resetting the total sort direction to its default value
+     */
     clearAllFilters() {
       this.totalSortDirection = 'desc'
     }
@@ -761,7 +825,7 @@ export default {
 }
 
 .week-label.mode-total {
-  width: 280px;
+  width: 324px;
   background: #fff3e0;
   border-color: #ff9800bb;
   color: #e65100;
@@ -939,7 +1003,6 @@ export default {
 
   .box2--fullwidth { grid-column: 1 / -1; }
   .filter-select { width: 100%; box-sizing: border-box; }
-  .week-label { text-align: center; width: auto; }
 }
 
 .activity-legend {

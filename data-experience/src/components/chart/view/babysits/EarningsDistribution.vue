@@ -6,7 +6,7 @@
           v-for="p in ['week','month','total']"
           :key="p"
           :class="['switch-btn', { active: currentPeriod === p }]"
-          @click="currentPeriod = p"
+          @click="periodStore.setMode(p)"
           :title="getPeriodDescription(p)"
         >
           {{ p.toUpperCase() }}
@@ -70,11 +70,10 @@
           </div>
         </div>
 
-        <ApexChart
-          type="bar"
-          height="450"
+        <TotalStackedBar
           :series="totalStackedBarSeries"
           :options="totalStackedBarOptions"
+          height="450"
         />
       </div>
 
@@ -86,11 +85,10 @@
             <option value="asc">Ascending</option>
           </select>
         </div>
-        <ApexChart
-          type="bar"
-          height="350"
+        <EarningsPerHourBar
           :series="earningsPerHourSeries"
           :options="earningsPerHourOptions"
+          height="350"
         />
       </div>
     </div>
@@ -105,11 +103,11 @@
         </div>
 
         <div class="chart-wrapper">
-          <ApexChart
-            type="bar"
-            height="450"
-            :options="chartOptions"
+          <EarningsByDay
+            :key="chartRenderKey"
             :series="chartSeries"
+            :options="chartOptions"
+            height="450"
           />
 
           <div v-if="legendItems.length" class="legend mt-4">
@@ -150,11 +148,14 @@
 
 <script>
 import mixin from '@/components/chart/view/mixin'
-import VueApexCharts from 'vue-apexcharts'
+import EarningsByDay from './charts/EarningsByDay.vue'
+import TotalStackedBar from './charts/TotalStackedBar.vue'
+import EarningsPerHourBar from './charts/EarningsPerHourBar.vue'
 import dayjs from 'dayjs'
 import 'dayjs/locale/en'
 import weekday from 'dayjs/plugin/weekday'
 import isBetween from 'dayjs/plugin/isBetween'
+import { periodStore } from './store/periodStore'
 
 dayjs.extend(weekday)
 dayjs.extend(isBetween)
@@ -168,13 +169,12 @@ const TIME_BUCKETS = {
 
 export default {
   name: 'BabysitsEarningsDistribution',
-  components: { ApexChart: VueApexCharts },
+  components: { EarningsByDay, TotalStackedBar, EarningsPerHourBar },
   mixins: [mixin],
 
   data() {
     return {
-      currentWeekStart: this.getMondayOf(dayjs()),
-      currentPeriod: 'week',
+      periodStore,
       selectedTotalBucket: null,
       selectedActivity: '',
       sortDirection: 'desc',
@@ -183,6 +183,17 @@ export default {
   },
 
   computed: {
+    // Get the current period mode (week, month, total) from the period store
+    currentPeriod() {
+      return periodStore.mode
+    },
+
+    // Navigate to the previous week by subtracting 7 days from the current period start
+    currentWeekStart() {
+      return dayjs(periodStore.periodStart)
+    },
+
+    // Get the header title for the earnings chart based on the current period
     earningsHeaderTitle() {
       if (this.currentPeriod === 'week') {
         return `Earnings by Time of Day (${this.weekLabel})`
@@ -193,6 +204,7 @@ export default {
       return `Average Earnings by Time of Day (${this.weekLabel})`
     },
 
+    // Navigate to the previous week
     totalPanelActivities() {
       if (this.currentPeriod !== 'total') return []
       if (!this.selectedTotalBucket) return []
@@ -231,35 +243,43 @@ export default {
       }]
     },
 
+    // Get the base size for each hour block in the charts
     baseHourSize() {
       return 10
     },
 
+    // Get the base size for each shift block in the charts (used for scaling)
     baseShiftSize() {
       return 8
     },
 
+    // Get the labels for the days of the month to display on the x-axis in month view
     monthDays() {
       const daysInMonth = this.weekStart.daysInMonth()
       return Array.from({ length: daysInMonth }, (_, i) => i + 1)
     },
 
+    // Get the list of jobs from the input values (shifts) and ensure it's an array
     jobs() {
       return this.values || []
     },
 
+    // Determine the currency to display based on the first job's currency (if available)
     currency() {
       return this.jobs[0]?.currency || 'CHF'
     },
 
+    // Get the start of the current week based on the period store's periodStart
     weekStart() {
       return this.currentWeekStart
     },
 
+    // Get the end of the current week by adding 6 days to the week start
     weekEnd() {
       return this.currentWeekStart.add(6, 'day').endOf('day')
     },
 
+    // Get the latest job date from the list of jobs to determine the end of the total period
     latestJobDate() {
       if (!this.jobs.length) return null
 
@@ -269,18 +289,20 @@ export default {
         .sort((a, b) => b.valueOf() - a.valueOf())[0]
     },
 
+    // Get the label to display for the current week or month based on the current period
     weekLabel() {
       if (this.currentPeriod === 'total') {
         const earliest = this.earliestJobDate
         const latest = this.latestJobDate
         if (!earliest || !latest) return 'Entire Period'
-        return `${earliest.format('DD.MM.YYYY')} - ${latest.format('DD.MM.YYYY')}`
+        return `${earliest.format('DD.MM.YYYY')} - ${latest.format('DD.MM.YYYY')} (All time)`
       }
       if (this.currentPeriod === 'month') return this.weekStart.format('MMMM YYYY')
 
       return `${this.weekStart.format('DD.MM')} - ${this.weekEnd.format('DD.MM.YYYY')}`
     },
 
+    // Get the earliest job date from the list of jobs to determine the start of the total period
     earliestJobDate() {
       if (!this.jobs.length) return null
 
@@ -290,6 +312,7 @@ export default {
         .sort((a, b) => a.valueOf() - b.valueOf())[0]
     },
 
+    // Get the list of jobs filtered by the current period (week/month) and excluding cancelled jobs
     filteredJobs() {
       const jobs = this.jobs.filter(j => j.status !== 'cancelled')
 
@@ -311,10 +334,14 @@ export default {
       )
     },
 
+    // Get the unique activity types from the filtered jobs to
+    // populate the activity filter dropdown
     activityTypes() {
       return Array.from(new Set(this.filteredJobs.map(j => j.job_type).filter(Boolean)))
     },
 
+    // Determine if there are any active filters applied (activity filter
+    // or total view filters) to conditionally show the active filters bar
     hasActiveFilters() {
       if (this.selectedActivity) return true
       if (this.currentPeriod === 'total' && this.totalDataMode !== 'total') return true
@@ -322,11 +349,13 @@ export default {
       return false
     },
 
+    // Get the list of jobs further filtered by the selected activity type (if any)
     filteredJobsByActivity() {
       if (!this.selectedActivity) return this.filteredJobs
       return this.filteredJobs.filter(j => j.job_type === this.selectedActivity)
     },
 
+    // Define colors for each time bucket to use in the charts and legends
     timeBucketColors() {
       return {
         Morning: '#36A2EB',
@@ -336,6 +365,7 @@ export default {
       }
     },
 
+    // Get the unique activity types from the filtered jobs to create legend items with counts and colors
     activityTypeColors() {
       const colors = {
         Babysitting: '#FF6B6B',
@@ -363,10 +393,12 @@ export default {
       return colors
     },
 
+    // Get the unique activity types from the filtered jobs to create legend items with counts and colors
     categoryTypes() {
       return Array.from(new Set(this.filteredJobs.map(j => j.category).filter(Boolean)))
     },
 
+    // Get the colors for each category to use in the charts and legends, auto-assigning colors to unknown categories
     categoryColors() {
       const palette = [
         '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A',
@@ -380,6 +412,8 @@ export default {
       return result
     },
 
+    // Get the labels for the x-axis based on the current period (days of
+    // month for month view, weekdays for week view)
     xLabels() {
       if (this.currentPeriod === 'month') {
         const monthStart = this.currentWeekStart.startOf('month')
@@ -392,6 +426,7 @@ export default {
       return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     },
 
+    // Get the time bucket (Morning/Day/Evening/Night) for a given hour of the day
     aggregatedData() {
       const data = {}
 
@@ -449,6 +484,20 @@ export default {
       return data
     },
 
+    // Get a unique key for the earnings by day chart to force re-render
+    // when relevant data or filters change
+    chartRenderKey() {
+      return [
+        this.currentPeriod,
+        this.weekLabel,
+        this.selectedActivity || 'all',
+        this.filteredJobsByActivity.length,
+        this.activityTypes.join('|')
+      ].join('__')
+    },
+
+    // Get the series data for the earnings by day chart, aggregating
+    // earnings by activity type and time bucket for each day
     chartSeries() {
       const activityTypes = this.activityTypes
       const labels = this.xLabels
@@ -475,6 +524,8 @@ export default {
       }))
     },
 
+    // Get the metadata for the tooltip, aggregating counts,
+    // total duration, and time ranges by activity type and day index
     chartTooltipMeta() {
       const meta = {}
 
@@ -506,6 +557,8 @@ export default {
       return meta
     },
 
+    // Get the maximum earnings value across all series and
+    // days to set the y-axis scale for the charts
     maxEarnings() {
       let max = 0
 
@@ -518,6 +571,7 @@ export default {
       return max
     },
 
+    // Get the chart options for the earnings by day chart, configuring
     chartOptions() {
       return {
         chart: {
@@ -609,6 +663,8 @@ export default {
       }
     },
 
+    // Get the legend items to display below the chart, showing activity
+    // types with their corresponding colors and counts
     legendItems() {
       return this.activityTypes.map((type) => {
         let count = 0
@@ -628,6 +684,8 @@ export default {
       }).filter(item => item.count > 0)
     },
 
+    // Get the data for the total stacked bar chart, aggregating earnings
+    // by category and time bucket, and calculating averages if in average mode
     totalStackedBarData() {
       const bucketKeys = ['Morning', 'Day', 'Evening']
       const data = {}
@@ -672,6 +730,8 @@ export default {
       return data
     },
 
+    // Get the series data for the total stacked bar chart, transforming
+    // the aggregated data into the format required by ApexCharts
     totalStackedBarSeries() {
       const bucketKeys = ['Morning', 'Day', 'Evening']
       const data = this.totalStackedBarData
@@ -682,6 +742,7 @@ export default {
       }))
     },
 
+    // Get the chart options for the total stacked bar chart, configuring
     totalStackedBarOptions() {
       const bucketKeys = ['Morning', 'Day', 'Evening']
       const categories = bucketKeys.map(
@@ -815,6 +876,7 @@ export default {
       }
     },
 
+    // Get the data for the earnings per hour bar chart, calculating the average
     earningsPerHourData() {
       const map = {}
 
@@ -845,6 +907,7 @@ export default {
       return entries
     },
 
+    // Get the series data for the earnings per hour bar chart, transforming
     earningsPerHourSeries() {
       const data = this.earningsPerHourData.map(item => item.rate)
       return [{
@@ -853,6 +916,7 @@ export default {
       }]
     },
 
+    // Get the chart options for the earnings per hour bar chart, configuring
     earningsPerHourOptions() {
       const categories = this.earningsPerHourData.map(item => item.type)
 
@@ -914,24 +978,27 @@ export default {
   },
 
   watch: {
-    currentPeriod(newVal) {
+    // Watch for changes in the period mode (week/month/total) and update the selected filters and period accordingly
+    'periodStore.mode': function(newVal) {
       this.selectedTotalBucket = null
       this.selectedActivity = ''
 
-      if (!this.latestJobDate) return
+      const currentDate = dayjs(periodStore.periodStart || dayjs())
 
       if (newVal === 'month') {
-        this.currentWeekStart = this.latestJobDate.startOf('month')
+        const monthStart = currentDate.startOf('month')
+        const monthEnd = currentDate.endOf('month')
+        periodStore.setPeriod(monthStart.toISOString(), monthEnd.toISOString())
       } else if (newVal === 'week') {
-        this.currentWeekStart = this.getMondayOf(this.latestJobDate)
+        const monday = this.getMondayOf(currentDate)
+        periodStore.setPeriod(monday.toISOString(), monday.add(6, 'day').endOf('day').toISOString())
       }
     }
   },
 
   mounted() {
-    if (this.latestJobDate) {
-      this.currentWeekStart = this.getMondayOf(this.latestJobDate)
-    }
+    // Initialize period store from jobs
+    periodStore.initFromShifts(this.jobs)
 
     if (window.__continueBabysitterTour) {
       window.__continueBabysitterTour()
@@ -940,10 +1007,18 @@ export default {
   },
 
   methods: {
+    /**
+     * Formats a date using dayjs to the format "DD.MM.YYYY"
+     * @param date
+     */
     formatDate(date) {
       return dayjs(date).format('DD.MM.YYYY')
     },
 
+    /**
+     * Gets the Monday of the week containing the given date
+     * @param d
+     */
     getMondayOf(d) {
       const day = d.day()
       return day === 0
@@ -951,6 +1026,11 @@ export default {
         : d.subtract(day - 1, 'day').startOf('day')
     },
 
+    /**
+     * Determines the time bucket for a given hour of the day, categorizing
+     * it into Morning, Day, Evening, or Night
+     * @param h
+     */
     getTimeBucketFromHour(h) {
       if (h == null || isNaN(h)) return 'Other'
       if (h >= 8 && h < 12) return 'Morning'
@@ -959,22 +1039,45 @@ export default {
       return 'Night'
     },
 
+    /**
+     * Navigates to the previous week or month by updating the period
+     * store's periodStart and periodEnd based on the current mode (week or month)
+     */
     prevWeek() {
-      if (this.currentPeriod === 'month') {
-        this.currentWeekStart = this.currentWeekStart.subtract(1, 'month')
-      } else if (this.currentPeriod === 'week') {
-        this.currentWeekStart = this.currentWeekStart.subtract(7, 'day')
+      const currentStart = dayjs(periodStore.periodStart)
+      const currentEnd = dayjs(periodStore.periodEnd)
+      if (periodStore.mode === 'month') {
+        const newStart = currentStart.subtract(1, 'month')
+        const newEnd = currentEnd.subtract(1, 'month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+      } else if (periodStore.mode === 'week') {
+        const newStart = currentStart.subtract(7, 'day')
+        const newEnd = currentEnd.subtract(7, 'day')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
     },
 
+    /**
+     * Navigates to the next week or month
+     */
     nextWeek() {
-      if (this.currentPeriod === 'month') {
-        this.currentWeekStart = this.currentWeekStart.add(1, 'month')
-      } else if (this.currentPeriod === 'week') {
-        this.currentWeekStart = this.currentWeekStart.add(7, 'day')
+      const currentStart = dayjs(periodStore.periodStart)
+      const currentEnd = dayjs(periodStore.periodEnd)
+      if (periodStore.mode === 'month') {
+        const newStart = currentStart.add(1, 'month')
+        const newEnd = currentEnd.add(1, 'month')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
+      } else if (periodStore.mode === 'week') {
+        const newStart = currentStart.add(7, 'day')
+        const newEnd = currentEnd.add(7, 'day')
+        periodStore.setPeriod(newStart.toISOString(), newEnd.toISOString())
       }
     },
 
+    /**
+     * Gets the description text for each period mode to show in the tooltip
+     * @param period
+     */
     getPeriodDescription(period) {
       const descs = {
         week: 'Earnings patterns by time of day (Morning/Day/Evening/Night)',
@@ -984,6 +1087,10 @@ export default {
       return descs[period] || ''
     },
 
+    /**
+     * Clears all active filters (activity filter, total view mode, and sort direction)
+     * and resets them to their default values
+     */
     clearAllFilters() {
       this.selectedActivity = ''
       this.totalDataMode = 'total'
@@ -1099,7 +1206,7 @@ export default {
 }
 
 .week-label.mode-total {
-  width: 280px;
+  width: 324px;
   background: #fff3e0;
   border-color: #ff9800bb;
   color: #e65100;

@@ -15,7 +15,7 @@
         <tr v-for="d in days" :key="d.date">
           <td>{{ format(d.date) }}</td>
           <td>{{ d.amount.toFixed(2) }} {{ currency }}</td>
-          <td>{{ d.hours }} h</td>
+          <td>{{ formatHoursToHoursMin(d.hours) }}</td>
         </tr>
       </tbody>
     </table>
@@ -42,6 +42,21 @@ export default {
      */
     format(d) {
       return dayjs(d).format('DD.MM.YYYY')
+    },
+
+    /**
+     * Convert hours in decimal format to "Xh YYmin" format
+     * @param hoursDecimal
+     * @returns {string}
+     */
+    formatHoursToHoursMin(hoursDecimal) {
+      if (!Number.isFinite(hoursDecimal)) return '0h 00min'
+
+      const totalMinutes = Math.round(hoursDecimal * 60)
+      const hours = Math.floor(totalMinutes / 60)
+      const minutes = totalMinutes % 60
+
+      return `${hours}h ${minutes.toString().padStart(2, '0')}min`
     }
   }
 }
@@ -54,7 +69,8 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px
+  margin-top: 8%;
+  margin-bottom: 32px;
 }
 
 .top-days-table {

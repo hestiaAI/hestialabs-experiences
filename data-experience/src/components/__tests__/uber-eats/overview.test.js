@@ -114,7 +114,8 @@ describe('Overview.vue (Option A – UI & interactions)', () => {
     expect(wrapper.text()).toContain('Total Hours Worked')
     expect(wrapper.text()).toContain('Number of Deliveries')
     expect(wrapper.text()).toContain('Distance travelled')
-    expect(wrapper.text()).toContain('Average delivery time')
+    expect(wrapper.text()).toContain('Distance per trip')
+    expect(wrapper.text()).toContain('Delivery time per trip')
   })
 
   test('renders period mode buttons', () => {

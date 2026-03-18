@@ -51,7 +51,10 @@ function mountEarningsDistribution(jobsCount) {
       values: jobs
     },
     stubs: {
-      ApexChart: true
+      ApexChart: true,
+      EarningsByDay: true,
+      TotalStackedBar: true,
+      EarningsPerHourBar: true
     }
   })
 }
@@ -81,7 +84,7 @@ describeIfPerf('Babysits EarningsDistribution performance test', () => {
       void vm.filteredJobs
       void vm.chartSeries
       void vm.totalStackedBarSeries
-      void vm.earningsPerHourSeries 
+      void vm.earningsPerHourSeries
       void vm.totalPanelActivities
       void vm.monthDays
       void vm.latestJobDate

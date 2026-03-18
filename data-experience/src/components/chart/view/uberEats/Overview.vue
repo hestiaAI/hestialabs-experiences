@@ -5,7 +5,7 @@
         v-for="p in ['week', 'month', 'total']"
         :key="p"
         :class="['switch-btn', { active: mode === p }]"
-        @click="setPeriodMode(p)"
+        @click="periodStore.setMode(p)"
       >
         {{ p.toUpperCase() }}
       </button>
@@ -52,7 +52,7 @@
 
       <div>
         <strong>Total Hours Worked</strong>
-        <div>{{ totalHours }} h</div>
+        <div>{{ totalHours }}</div>
       </div>
 
       <div>
@@ -63,27 +63,17 @@
 
     <!-- BOX 2 → Timeline chart -->
     <div class="box box2">
-      <div v-if="mode === 'week'" class="timeline-wrapper">
-        <!-- Overlay if no shifts -->
-        <div v-if="!shiftsThisPeriodCache || shiftsThisPeriodCache.length === 0" class="timeline-overlay">
-          <div class="overlay-box">
-            <div class="overlay-title">No shifts for this period</div>
-            <div class="overlay-text">
-              Check whether your dataset is empty, or select another week.
-            </div>
-          </div>
-        </div>
+      <TimelineChart
+        v-if="mode === 'week'"
+        :height="396"
+        :shifts="shiftsThisPeriodCache"
+        :showEmptyOverlay="!shiftsThisPeriodCache || shiftsThisPeriodCache.length === 0"
+        :showLegend="true"
+      />
 
-        <ApexChart
-          type="rangeBar"
-          height="396"
-          :options="timelineOptions"
-          :series="timelineSeries"
-        />
-      </div>
-
-      <div v-else-if="mode === 'month'">
+      <div v-else-if="mode === 'month' && periodReady && periodStart.isValid()">
         <MonthlyCalendar
+          :key="`ue-${calendarYear}-${calendarMonth}-${periodStore.periodStart}-${periodStore.periodEnd}`"
           view-block-translation-prefix="uberEats.monthlyCalendar"
           :year="calendarYear"
           :month="calendarMonth"
@@ -96,13 +86,6 @@
 
       <div v-else>
         <TopDays :days="top5Days" :currency="currency" />
-      </div>
-
-      <div class="legend" v-if="mode === 'week'">
-        <div class="legend-item"><span class="color-box offline"></span> Offline</div>
-        <div class="legend-item"><span class="color-box open"></span> Open</div>
-        <div class="legend-item"><span class="color-box enroute"></span> Enroute</div>
-        <div class="legend-item"><span class="color-box ontrip"></span> On Trip</div>
       </div>
     </div>
 
@@ -130,31 +113,48 @@
 
       <div class="box box4">
         <p class="metric-title">
-          <strong>Average delivery time</strong>
-
-          <button
-            class="info-icon"
-            type="button"
-            @click.stop="toggleInfo('avgTime')"
-            aria-label="Info about average delivery time"
-          >
-            i
-          </button>
-
-          <span v-if="openInfo === 'avgTime'" class="info-tooltip">
-            Average for the deliveries of the selected period
+          <strong>Distance per trip</strong>
+          <button class="info-icon" type="button" @click.stop="toggleInfo('distTrip')" aria-label="Info about distance per trip">i</button>
+          <span v-if="openInfo === 'distTrip'" class="info-tooltip">
+            Min / average / max distance of one completed trip in the selected period.
           </span>
         </p>
-        <p>{{ avgDeliveryTimeFormatted }}</p>
+
+        <TripRangeChart
+          label="Distance per trip"
+          unit="km"
+          :min="Number(tripDistanceStats.min.toFixed(2))"
+          :avg="Number(tripDistanceStats.avg.toFixed(2))"
+          :max="Number(tripDistanceStats.max.toFixed(2))"
+          :height="120"
+        />
       </div>
 
-      <div class="box box5" v-if="mode === 'total'">
+      <div class="box box5">
+        <p class="metric-title">
+          <strong>Delivery time per trip</strong>
+          <button class="info-icon" type="button" @click.stop="toggleInfo('timeTrip')" aria-label="Info about delivery time per trip">i</button>
+          <span v-if="openInfo === 'timeTrip'" class="info-tooltip">
+            Min / average / max delivery time (pickup → dropoff) for completed trips in the selected period.
+          </span>
+        </p>
+
+        <TripRangeChart
+          label="Delivery time per trip"
+          unit="min"
+          :min="Math.round(tripDeliveryTimeStats.min)"
+          :avg="Math.round(tripDeliveryTimeStats.avg)"
+          :max="Math.round(tripDeliveryTimeStats.max)"
+          :height="120"
+        />
+      </div>
+
+      <div class="box box6" v-if="mode === 'total'">
         <p class="box5-title"><strong>Most Used Devices</strong></p>
-        <ApexChart
-          type="bar"
-          height="200"
-          :options="deviceChartOptions"
-          :series="deviceChartSeries"
+        <DeviceChart
+          :height="200"
+          :categories="deviceTop3Categories"
+          :counts="deviceTop3Counts"
         />
       </div>
     </div>
@@ -163,12 +163,14 @@
 </template>
 
 <script>
-import VueApexCharts from 'vue-apexcharts'
 import dayjs from 'dayjs'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import isoWeek from 'dayjs/plugin/isoWeek'
 import MonthlyCalendar from './MonthlyCalendar.vue'
+import TimelineChart from './charts/TimelineChart.vue'
+import TripRangeChart from './charts/TripRangeChart.vue'
+import DeviceChart from './charts/DeviceChart.vue'
 import TopDays from './TopDays.vue'
 import mixin from '@/components/chart/view/mixin'
 import { periodStore } from './store/periodStore'
@@ -177,8 +179,6 @@ import { createTour } from './onboarding/tour'
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isoWeek)
-
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 /**
  * OverView.vue
@@ -190,7 +190,9 @@ export default {
   components: {
     MonthlyCalendar,
     TopDays,
-    ApexChart: VueApexCharts
+    TimelineChart,
+    TripRangeChart,
+    DeviceChart
   },
   mixins: [mixin],
   data() {
@@ -203,13 +205,14 @@ export default {
       shiftsThisPeriodCache: [],
       paymentsThisPeriodCache: [],
       dailyStatsCache: {},
-      timelineSeriesCache: [],
       paymentsByDayTotalCache: [],
       top5DaysCache: [],
 
       periodReady: false,
       selectedCalendarDate: null,
-      openInfo: null
+      openInfo: null,
+      fromCalendarClick: false,
+      periodStore
     }
   },
   computed: {
@@ -248,7 +251,7 @@ export default {
           return 'All time'
         }
 
-        return `${dayjs(allTimeStart).format('DD.MM.YYYY')} – ${dayjs(allTimeEnd).format('DD.MM.YYYY')}`
+        return `${dayjs(allTimeStart).format('DD.MM.YYYY')} – ${dayjs(allTimeEnd).format('DD.MM.YYYY')} (All time)`
       }
       if (this.mode === 'month') {
         return this.periodStart.format('MMMM YYYY')
@@ -282,13 +285,13 @@ export default {
       return this.block.trips?.rawCsv ?? ''
     },
 
-    // currency guess: fallback '$'
+    // currency guess: fallback 'CHF'
     currency() {
       // Try to infer from payments if present
       if (this.payments.length > 0 && this.payments[0].currencyCode) {
         return this.payments[0].currencyCode
       }
-      return this.block.currency ?? '$'
+      return this.block.currency ?? 'CHF'
     },
 
     // total earnings summed up
@@ -302,7 +305,41 @@ export default {
         if (s.earner_state === 'offline') return sum
         return sum + (s.endTs - s.beginTs) / 60000
       }, 0)
-      return (minutes / 60).toFixed(1)
+
+      return this.formatMinutesAsHoursMin(minutes)
+    },
+
+    // distance stats for trips in the selected period
+    tripDistanceStats() {
+      const values = this.tripsInPeriod
+        .map(t => Number(t.dropoffDeliveryDistanceKm))
+        .filter(v => Number.isFinite(v) && v >= 0)
+
+      if (!values.length) return { min: 0, avg: 0, max: 0 }
+
+      const min = Math.min(...values)
+      const max = Math.max(...values)
+      const avg = values.reduce((a, b) => a + b, 0) / values.length
+      return { min, avg, max }
+    },
+
+    // delivery time stats for trips in the selected period
+    tripDeliveryTimeStats() {
+      const values = this.tripsInPeriod
+        .map((t) => {
+          const start = dayjs(t.courierBegintripTimestampLocal)
+          const end = dayjs(t.courierDropoffTimestampLocal)
+          if (!start.isValid() || !end.isValid() || end.isBefore(start)) return null
+          return end.diff(start, 'minute')
+        })
+        .filter(v => Number.isFinite(v) && v >= 0)
+
+      if (!values.length) return { min: 0, avg: 0, max: 0 }
+
+      const min = Math.min(...values)
+      const max = Math.max(...values)
+      const avg = values.reduce((a, b) => a + b, 0) / values.length
+      return { min, avg, max }
     },
 
     // payments & shifts grouped by day for calendar view
@@ -406,7 +443,7 @@ export default {
 
       // fallback: current week
       const now = dayjs()
-      const monday = now.startOf('week').add(1, 'day')
+      const monday = now.startOf('isoWeek')
       return {
         start: monday,
         end: monday.add(6, 'day').endOf('day')
@@ -416,68 +453,6 @@ export default {
     // Shifts filtered for the time period & split overnight
     shiftsThisPeriod() {
       return this.shiftsThisPeriodCache
-    },
-
-    // Timeline chart series data
-    timelineSeries() {
-      return this.timelineSeriesCache
-    },
-
-    // Timeline chart options
-    timelineOptions() {
-      return {
-        chart: {
-          toolbar: { show: false },
-          zoom: { enabled: false }
-        },
-        states: {
-          hover: {
-            filter: {
-              type: 'none'
-            }
-          },
-          active: {
-            filter: {
-              type: 'none'
-            }
-          }
-        },
-        plotOptions: {
-          bar: {
-            horizontal: true,
-            rangeBarGroupRows: true
-          }
-        },
-        xaxis: {
-          min: 0,
-          max: 1440,
-          tickAmount: 8,
-          labels: {
-            formatter: (v) => {
-              const h = Math.floor(v / 60)
-              return `${h}:00`
-            }
-          }
-        },
-        yaxis: { categories: WEEKDAYS },
-        tooltip: {
-          followCursor: false,
-          shared: false,
-          intersect: true,
-          custom: ({ seriesIndex, dataPointIndex, w }) => {
-            const d = w.config.series[seriesIndex].data[dataPointIndex]
-            const s = dayjs(d.meta.beginTs)
-            const e = dayjs(d.meta.endTs)
-            return `
-              <div style="padding:8px;font-size:12px">
-                <strong>${w.config.series[seriesIndex].name.toUpperCase()}</strong><br/>
-                ${s.format('DD.MM.YY')}<br/>
-                ${s.format('HH:mm')} – ${e.format('HH:mm')}
-              </div>`
-          }
-        },
-        legend: { show: false }
-      }
     },
 
     // Count devices only for total mode
@@ -491,56 +466,31 @@ export default {
       return counts
     },
 
-    // Prepare ApexChart series
-    deviceChartSeries() {
-      const top3 = Object.entries(this.deviceCounts)
-        .sort((a, b) => b[1] - a[1]) // sort by count desc
-        .slice(0, 3)
-        .map(([_, count]) => count)
-
-      return [
-        { name: 'Deliveries', data: top3 }
-      ]
-    },
-
-    // Prepare ApexChart options
-    deviceChartOptions() {
-      const top3 = Object.entries(this.deviceCounts)
+    // Top 3 devices by count
+    deviceTop3() {
+      return Object.entries(this.deviceCounts)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 3)
-        .map(([device]) => device)
-      return {
-        chart: {
-          type: 'bar',
-          toolbar: { show: false }
-        },
-        states: {
-          hover: {
-            filter: {
-              type: 'none'
-            }
-          },
-          active: {
-            filter: {
-              type: 'none'
-            }
-          }
-        },
-        plotOptions: { bar: { horizontal: true, barHeight: '50%' } },
-        dataLabels: {
-          enabled: true,
-          offsetX: 4,
-          style: {
-            colors: ['#000']
-          },
-          formatter: val => val,
-          textAnchor: 'start'
-        },
-        xaxis: {
-          categories: top3
-        },
-        yaxis: {}
-      }
+    },
+
+    // Categories (device names) for the top 3 devices
+    deviceTop3Categories() {
+      return this.deviceTop3.map(([device]) => device)
+    },
+
+    // Counts for the top 3 devices
+    deviceTop3Counts() {
+      return this.deviceTop3.map(([_, count]) => count)
+    },
+
+    // Date of the latest trip (for onboarding tour targeting)
+    latestTripDate() {
+      if (!this.tripsParsed.length) return null
+
+      return this.tripsParsed
+        .map(t => dayjs(t.courierAcceptTimestampLocal || t.beginTimestampLocal || t.courierBegintripTimestampLocal))
+        .filter(d => d.isValid())
+        .sort((a, b) => b.valueOf() - a.valueOf())[0] || null
     }
   },
   watch: {
@@ -550,12 +500,11 @@ export default {
         const byDay = {}
 
         items.forEach((s) => {
-          const beginTs = dayjs(
-            s.begin_timestamp_utc || s.begin
-          ).valueOf()
-          const endTs = dayjs(
-            s.end_timestamp_utc || s.end
-          ).valueOf()
+          const _begin = s.begin || s.begin_timestamp_local || s.begin_timestamp_utc
+          const _end = s.end || s.end_timestamp_local || s.end_timestamp_utc
+
+          const beginTs = this.parseMaybeLocalTimestamp(_begin).valueOf()
+          const endTs = this.parseMaybeLocalTimestamp(_end).valueOf()
           if (!beginTs || !endTs || endTs <= beginTs) return
 
           const start = dayjs(beginTs)
@@ -605,8 +554,37 @@ export default {
       }
     },
 
-    mode() {
-      this.recomputePeriodCaches()
+    'periodStore.mode': function(newVal) {
+      if (this.fromCalendarClick) {
+        this.fromCalendarClick = false
+        this.recomputePeriodCaches()
+        return
+      }
+
+      const currentDate = dayjs(periodStore.periodStart)
+      const base = currentDate.isValid()
+        ? currentDate
+        : this.latestTripDate
+
+      if (!base || !base.isValid()) return
+
+      if (newVal === 'month') {
+        const monthStart = base.startOf('month')
+        const monthEnd = base.endOf('month')
+        periodStore.setPeriod(monthStart.toISOString(), monthEnd.toISOString())
+        return
+      }
+
+      if (newVal === 'total') {
+        this.recomputePeriodCaches()
+        return
+      }
+
+      const monday = this.getMondayOf(base)
+      periodStore.setPeriod(
+        monday.toISOString(),
+        monday.add(6, 'day').endOf('day').toISOString()
+      )
     },
     periodStart: 'recomputePeriodCaches',
     periodEnd: 'recomputePeriodCaches'
@@ -618,6 +596,21 @@ export default {
       window.__continueRoutesTour = null
     }
     periodStore.initFromTrips(this.tripsParsed)
+
+    if (this.latestTripDate) {
+      if (periodStore.mode === 'month') {
+        periodStore.setPeriod(
+          this.latestTripDate.startOf('month').toISOString(),
+          this.latestTripDate.endOf('month').toISOString()
+        )
+      } else if (periodStore.mode === 'week') {
+        const monday = this.getMondayOf(this.latestTripDate)
+        periodStore.setPeriod(
+          monday.toISOString(),
+          monday.add(6, 'day').endOf('day').toISOString()
+        )
+      }
+    }
 
     this.$nextTick(() => {
       this.periodReady = true
@@ -675,25 +668,61 @@ export default {
     },
 
     /**
+     * Parse a timestamp that may be in local time (without timezone) or UTC (with 'Z'), returning a dayjs object.
+     * If the timestamp ends with 'Z', it's treated as UTC. Otherwise, it's treated as local time.
+     * @param ts
+     */
+    parseMaybeLocalTimestamp(ts) {
+      if (!ts) return dayjs('')
+
+      return dayjs(String(ts).replace(/Z$/, ''))
+    },
+
+    /**
+     * Get the Monday of the week for a given date
+     * @param d
+     */
+    getMondayOf(d) {
+      const day = d.day()
+      return day === 0
+        ? d.subtract(6, 'day').startOf('day')
+        : d.subtract(day - 1, 'day').startOf('day')
+    },
+
+    /**
      * Handle day selection from MonthlyCalendar
      */
     onSelectDay(date) {
-      periodStore.setMode('week')
+      const d = dayjs(date)
+      if (!d.isValid()) return
 
+      this.fromCalendarClick = true
       this.selectedCalendarDate = date
 
-      // Compute the Monday–Sunday of that date
-      const clicked = dayjs(date)
-      const monday = clicked.startOf('isoWeek') // Monday
-      const sunday = clicked.endOf('isoWeek').endOf('day') // Sunday
-
-      // Update the store
-      periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
-
-      // Optional: redraw chart immediately
-      this.redraw()
+      const monday = this.getMondayOf(d)
+      periodStore.setPeriod(
+        monday.toISOString(),
+        monday.add(6, 'day').endOf('day').toISOString()
+      )
+      periodStore.setMode('week')
     },
 
+    /**
+     * Format total minutes as "Xh YYmin"
+     * @param totalMinutes
+     */
+    formatMinutesAsHoursMin(totalMinutes) {
+      const mins = Math.max(0, Math.round(totalMinutes || 0))
+      const hours = Math.floor(mins / 60)
+      const minutes = mins % 60
+      return `${hours}h ${minutes.toString().padStart(2, '0')}min`
+    },
+
+    /**
+     * Filter out leading and trailing offline shifts, keeping only those between the first and last non-offline shift.
+     * This helps clean up the timeline chart by removing irrelevant offline periods at the edges.
+     * @param shifts
+     */
     filterEdgeOfflineShifts(shifts) {
       if (!shifts || !shifts.length) return []
 
@@ -762,118 +791,6 @@ export default {
 
       this.paymentsByDayTotalCache = ranked
       this.top5DaysCache = ranked.slice(0, 5)
-
-      /* -------- timeline -------- */
-      this.timelineSeriesCache = this.buildTimeline(this.shiftsThisPeriodCache)
-    },
-
-    /**
-     * Build timeline chart series from shifts
-     */
-    buildTimeline(shifts) {
-      const colors = {
-        offline: '#ccc',
-        open: '#4caf50',
-        enroute: '#ff9800',
-        ontrip: '#2196f3'
-      }
-
-      const map = {}
-      Object.keys(colors).forEach((k) => {
-        map[k] = { name: k, color: colors[k], data: [] }
-      })
-
-      // Collect data by day first
-      const dayMap = {}
-      shifts.forEach((s) => {
-        const d = new Date(s.beginTs)
-        const dow = d.getDay() === 0 ? 6 : d.getDay() - 1
-        const day = WEEKDAYS[dow]
-        const state = (s.state || s.earner_state || 'open').toLowerCase()
-        const start = d.getHours() * 60 + d.getMinutes()
-        const end = start + (s.endTs - s.beginTs) / 60000
-
-        if (!dayMap[day]) dayMap[day] = {}
-        if (!dayMap[day][state]) dayMap[day][state] = []
-
-        dayMap[day][state].push({
-          x: day,
-          y: [start, end],
-          meta: s
-        })
-      })
-
-      // Ensure every day has an array for each state
-      WEEKDAYS.forEach((day) => {
-        if (!dayMap[day]) dayMap[day] = {}
-        Object.keys(colors).forEach((state) => {
-          if (!dayMap[day][state]) dayMap[day][state] = []
-          // Filter edge offline shifts for this state
-          if (state === 'offline') {
-            dayMap[day][state] = this.filterEdgeOfflineShifts(dayMap[day][state])
-          }
-        })
-      })
-
-      // Build series arrays
-      Object.keys(map).forEach((state) => {
-        WEEKDAYS.forEach((day) => {
-          const data = dayMap[day][state]
-
-          // If offline and there are no shifts left after filtering, add placeholder
-          if (state === 'offline' && (!data || !data.length)) {
-            map[state].data.push({
-              x: day,
-              y: [0, 0],
-              meta: { empty: true }
-            })
-          } else {
-            map[state].data.push(...data)
-          }
-        })
-      })
-
-      return Object.values(map)
-    },
-
-    /**
-     * Calculate total hours from shifts array
-     */
-    calcHoursFromShifts(shifts) {
-      const minutes = shifts.reduce((sum, s) => {
-        if (!s.begin_timestamp_utc || !s.end_timestamp_utc) return sum
-        if (s.earner_state === 'offline') return sum
-
-        const start = dayjs(s.begin_timestamp_utc)
-        const end = dayjs(s.end_timestamp_utc)
-        if (!start.isValid() || !end.isValid() || end.isBefore(start)) return sum
-
-        return sum + end.diff(start, 'minute')
-      }, 0)
-
-      return Number((minutes / 60).toFixed(1))
-    },
-
-    /**
-     * Set the period mode (week, month, total)
-     */
-    setPeriodMode(mode) {
-      periodStore.setMode(mode)
-
-      if (mode === 'total') return
-
-      if (mode === 'month') {
-        const start = this.periodStart.startOf('month')
-        const end = this.periodStart.endOf('month')
-        periodStore.setPeriod(start.toISOString(), end.toISOString())
-        return
-      }
-
-      // week mode
-      const monday = this.periodStart.startOf('week').add(1, 'day')
-      const sunday = monday.add(6, 'day').endOf('day')
-
-      periodStore.setPeriod(monday.toISOString(), sunday.toISOString())
     },
 
     /**
@@ -923,32 +840,6 @@ export default {
         const d = dayjs(getDateFn(i))
         return d.isValid() && d.isSameOrAfter(start) && d.isSameOrBefore(end)
       })
-    },
-
-    // Splits a shift object if it crosses midnight.
-    splitOvernightShift(s) {
-      const raw = s.raw || s
-      const startTs = s.beginTs
-      const endTs = s.endTs
-
-      if (!startTs || !endTs) return []
-
-      const start = dayjs(startTs)
-      const end = dayjs(endTs)
-
-      // Same day → no split
-      if (start.isSame(end, 'day')) {
-        return [{ beginTs: startTs, endTs, raw }]
-      }
-
-      // Split into two parts
-      const endOfDayTs = start.endOf('day').valueOf()
-      const startOfNextDayTs = end.startOf('day').valueOf()
-
-      return [
-        { beginTs: startTs, endTs: endOfDayTs, raw },
-        { beginTs: startOfNextDayTs, endTs, raw }
-      ]
     }
   }
 }
@@ -963,6 +854,10 @@ export default {
   gap: 16px;
   margin-left: 12px;
   margin-bottom: 24px;
+}
+
+.layout-container > * {
+  min-width: 0;
 }
 
 .period-switch {
@@ -1049,7 +944,6 @@ export default {
   width: 240px;
   padding: 4px 12px;
   font-weight: 800;
-  font-size: 1.05rem;
   letter-spacing: 0.02em;
   font-size: 1rem;
   display: flex;
@@ -1071,7 +965,7 @@ export default {
 }
 
 .week-label.mode-total {
-  width: 280px;
+  width: 324px;
   background: #fff3e0;
   border-color: #ff9800bb;
   color: #e65100;
@@ -1099,42 +993,6 @@ export default {
   padding-bottom: 16px;
 }
 
-.timeline-wrapper {
-  position: relative; /* important */
-}
-
-.timeline-overlay,
-.timeline-overlay * {
-  height: auto !important;
-}
-
-/* Overlay on top of the timeline chart */
-.timeline-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(240, 240, 240, 0.6);
-  color: #555;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: auto;
-}
-
-.overlay-box {
-  pointer-events: auto;
-  text-align: center;
-}
-
-.overlay-title {
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.overlay-text {
-  font-size: 13px;
-  opacity: 0.85;
-}
-
 /* TIMELINE CHART (bottom left) */
 .box2 {
   grid-column: 1 / 2;
@@ -1152,21 +1010,56 @@ export default {
 .right-column {
   grid-column: 2 / 3;
   grid-row: 3 / 4;
+  height: 100%;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.box3,
-.box4 {
-  margin-bottom: 16px;
+.right-column > .box:last-child {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.box3 {
+  padding: 6px 20px;
+}
+
+.box4,
+.box5 {
+  padding: 12px 14px 4px 6px;
+}
+
+.box4,
+.box5,
+.right-column {
+  min-width: 0;
+}
+
+.box4 p,
+.box5 p {
+  padding-left: 14px;
+  padding-right: 20px;
+  margin: 0 !important;
+}
+
+.box4 div,
+.box5 div {
+  margin-top: -12px;
 }
 
 .box3,
 .box4,
-.box5 {
+.box5,
+.box6 {
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: left;
-  padding-top: 16px;
+  overflow: hidden;
 }
 
 .box3 p,
@@ -1178,6 +1071,11 @@ export default {
   text-align: center;
   margin: 0;
   margin-top: 8px;
+}
+
+.box5 {
+  min-width: 0;
+  overflow: hidden;
 }
 
 :deep(.apexcharts-rangebar-area:hover) {
@@ -1231,15 +1129,6 @@ export default {
 .info-icon:hover {
   background-color: #999;
 }
-
-/* legend */
-.legend { display:flex; gap:12px; margin-top: 10px; justify-content: center; }
-.legend-item { display:flex; align-items:center; gap:8px; font-size: .9rem; }
-.color-box { width: 14px; height: 14px; border-radius: 3px; display:inline-block; }
-.color-box.offline { background-color: #ccc; }
-.color-box.open { background-color: #4caf50; }
-.color-box.enroute { background-color: #ff9800; }
-.color-box.ontrip { background-color: #2196f3; }
 
 /* tooltip (will be appended to component root) */
 .ov-tooltip { z-index: 50; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }

@@ -3,6 +3,10 @@
  */
 
 import { mount } from '@vue/test-utils'
+import { periodStore } from '@/components/chart/view/babysits/store/periodStore'
+
+// (MonthlyCalendar is mocked above before importing OverView)
+
 import OverView from '@/components/chart/view/babysits/OverView.vue'
 
 /* --------------------------
@@ -22,6 +26,15 @@ jest.mock('@/components/chart/view/babysits/onboarding/babysitterTour', () => ({
     start: jest.fn(),
     next: jest.fn()
   }))
+}))
+
+// Stub MonthlyCalendar module to avoid rendering complex calendar in unit tests
+jest.mock('@/components/chart/view/babysits/MonthlyCalendar.vue', () => ({
+  __esModule: true,
+  default: {
+    name: 'MonthlyCalendar',
+    render: () => null
+  }
 }))
 
 /* --------------------------
@@ -95,7 +108,8 @@ function mountOverView(props = {}) {
     },
     global: {
       stubs: {
-        ApexChart: true,
+        ShiftRangeChart: true,
+        HeatmapChart: true,
         MonthlyCalendar: true
       }
     }
@@ -110,6 +124,13 @@ describe('OverView.vue (babysits) - UI & interactions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     localStorage.clear()
+    // Reset periodStore to default to avoid state leak between tests
+    const { periodStore } = require('@/components/chart/view/babysits/store/periodStore')
+    periodStore.mode = 'month'
+    periodStore.periodStart = null
+    periodStore.periodEnd = null
+    periodStore.allTimeStart = null
+    periodStore.allTimeEnd = null
   })
 
   /* ---------------------------------------------
@@ -218,6 +239,10 @@ describe('OverView.vue (babysits) - UI & interactions', () => {
    * ------------------------------------------- */
 
   test('renders MonthlyCalendar in month mode', async() => {
+    periodStore.mode = 'month'
+    periodStore.periodStart = '2025-05-01'
+    periodStore.periodEnd = '2025-05-31'
+
     const wrapper = mountOverView()
 
     // MonthlyCalendar should be rendered (stubbed)
