@@ -82,6 +82,26 @@ These pipelines:
 
 ---
 
+## How an Experience Works
+
+Each experience consists of three main parts:
+
+1. Data pipeline  
+   → transforms raw input data into structured format  
+   (viewer-functions.ts)
+
+2. Configuration  
+   → defines which views and components are used  
+   (viewer.json)
+
+3. Visual components  
+   → render the processed data  
+   (Vue components in data-experience)
+
+These parts are connected through the experience configuration.
+
+---
+
 ## Adding New Experiences
 
 The previous sections **Components**, **Experience Configuration**, and **Data Processing Pipelines** provide a brief overview of how the Uber Eats and Babysits experiences were implemented within the existing project structure. These sections give a glimpse of how a new experience can be integrated following the setup and architectural conventions of the repository.
