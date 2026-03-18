@@ -208,7 +208,7 @@ npm run perf:babysits
 
 # Notes
 
-### Client-side processing
+## Client-side processing
 The Uber Eats and Babysits experiences run **entirely client-side in the browser**.  
 This means:
 
@@ -220,14 +220,14 @@ This follows the privacy-first architecture used in the Digipower platform.
 
 ---
 
-### Bubble server not required
+## Bubble server not required
 The setup described in this document does **not require the Bubble Server**, which is normally part of the full Digipower platform setup.
 
 The experiences implemented in this project work entirely within the frontend environment and therefore can be tested without running the backend service.
 
 ---
 
-### Node and npm versions
+## Node and npm versions
 The root project [README.md](README.md) recommends using:
 
 - **Node 18.x**
@@ -242,7 +242,7 @@ If dependency or build issues occur, we recommend following the original project
 
 ---
 
-### Test datasets
+## Test datasets
 The experiences can be tested using either:
 
 - sample datasets included in the repository  
@@ -252,7 +252,26 @@ No external data services are required.
 
 ---
 
-### Development scope
+## Development scope
 The Uber Eats and Babysits experiences were implemented as **extensions of the existing Digipower platform**, following the modular architecture of the repository.
 
 Core platform components were not modified, instead the experiences were added through the existing **experience-based extension model**.
+
+---
+
+## CI/CD and Docker setup
+
+This project includes a GitLab CI/CD pipeline configuration and a Dockerfile that were used during development and testing.
+
+- The **GitLab pipeline** was used to automate build and deployment steps in the FHNW environment.
+- The **Dockerfile** defines a containerized setup to ensure consistent builds and reproducible environments.
+
+For the final integration into the client’s system, these files are **not required**, as the deployment is handled through the client’s own GitHub-based workflow and infrastructure.
+
+However, the pipeline configuration and Docker setup are intentionally kept in the repository, as they may still be useful:
+
+- for future development or testing setups  
+- for recreating a local or independent deployment environment  
+- as a reference for alternative CI/CD configurations  
+
+They can therefore be reused or adapted if needed in future extensions of the project.
