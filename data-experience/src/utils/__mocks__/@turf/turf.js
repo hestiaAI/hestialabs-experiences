@@ -1,0 +1,5 @@
+export const circle = jest.fn()
+export const bbox = jest.fn(() => [0, 0, 1, 1])
+export const featureCollection = jest.fn(() => ({}))
+export const lineString = jest.fn(() => ({}))
+export const point = jest.fn(() => ({}))

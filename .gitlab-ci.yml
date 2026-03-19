@@ -1,0 +1,66 @@
+image: docker:24.0.5
+
+services:
+  - name: docker:24.0.5-dind
+    command: ["--tls=false"]
+
+stages:
+  - test
+  - deploy
+
+variables:
+  DOCKER_TLS_CERTDIR: ""
+
+test:
+  stage: test
+  image: node:18
+  script:
+    # Build shared packages
+    - cd packages
+    - npm ci
+    - npm run build
+    - npm run prepare
+    - cd ..
+
+    # Install + test data-experience
+    - cd data-experience
+    - npm ci
+    - npm run test
+
+deploy:
+  stage: deploy
+  only:
+    - main
+  before_script:
+    - apk add --no-cache openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+
+  script:
+    # Build image in CI
+    - docker build -t data-experience:latest .
+
+    # Stream image to server (NO /tmp usage)
+    - |
+      docker save data-experience:latest | gzip | \
+      ssh "$SERVER_USER@$SERVER_IP" 'gunzip | docker load'
+
+    # Deploy remotely
+    - |
+      ssh "$SERVER_USER@$SERVER_IP" << 'EOF'
+        set -e
+        docker stop data-experience || true
+        docker rm data-experience || true
+        docker run -d \
+          --name data-experience \
+          --restart unless-stopped \
+          -p 80:8080 \
+          data-experience:latest
+        docker image prune -af
+        docker builder prune -af
+      EOF
+
+  after_script:
+    - docker system prune -af
