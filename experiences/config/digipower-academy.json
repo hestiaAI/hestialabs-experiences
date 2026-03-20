@@ -6,6 +6,7 @@
   "experiences": [
     "ad-radar",
     "apple-tracker",
+    "babysits",
     "chatgpt",
     "facebook",
     "fitbit",
@@ -23,6 +24,7 @@
     "uber",
     "uber-driver",
     "uber-rider",
+    "uber-eats",
     "youtube",
     "explorer",
     "explorer-timeline"
