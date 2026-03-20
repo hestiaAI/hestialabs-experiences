@@ -120,92 +120,6 @@ PERFORMANCE OF THIS SOFTWARE.
  */
 
 
-/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
-
-
-/**
- * MapLibre GL JS
- * @license 3-Clause BSD. Full text of license: https://github.com/maplibre/maplibre-gl-js/blob/v5.16.0/LICENSE.txt
- */
-
-
-/**
- * @license
- * Lodash <https://lodash.com/>
- * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
- * Released under MIT license <https://lodash.com/license>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
- * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- */
-
-
-/*!
-  * @svgdotjs/svg.resize.js - An extension for svg.js which allows to resize elements which are selected
-  * @version 2.0.4
-  * https://github.com/svgdotjs/svg.resize.js
-  *
-  * @copyright [object Object]
-  * @license MIT
-  *
-  * BUILT: Fri Sep 13 2024 12:43:14 GMT+0200 (Central European Summer Time)
-  */
-
-/*!
-  * @svgdotjs/svg.select.js - An extension of svg.js which allows to select elements with mouse
-  * @version 4.0.1
-  * https://github.com/svgdotjs/svg.select.js
-  *
-  * @copyright Ulrich-Matthias Schäfer
-  * @license MIT
-  *
-  * BUILT: Mon Jul 01 2024 15:04:42 GMT+0200 (Central European Summer Time)
-  */
-
-/*!
- * ApexCharts v5.3.6
- * (c) 2018-2025 ApexCharts
- */
-
-
-/** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
-
-
-/*! shepherd.js 14.5.1 */
-
-
-/* @license
-Papa Parse
-v5.4.1
-https://github.com/mholt/PapaParse
-License: MIT
-*/
-
-
-/*!
- * Vue.js v2.7.14
- * (c) 2014-2022 Evan You
- * Released under the MIT License.
- */
-
-/*!
- * cookie
- * Copyright(c) 2012-2014 Roman Shtylman
- * Copyright(c) 2015 Douglas Christopher Wilson
- * MIT Licensed
- */
-
-
-/* @license
-Papa Parse
-v5.3.2
-https://github.com/mholt/PapaParse
-License: MIT
-*/
-
-
-/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
-
-
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -3398,3 +3312,97 @@ License: MIT
 /*!******************************************************************************!*\
   !*** external {"commonjs":"vue","commonjs2":"vue","amd":"vue","root":"Vue"} ***!
   \******************************************************************************/
+
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+
+
+/**
+ * MapLibre GL JS
+ * @license 3-Clause BSD. Full text of license: https://github.com/maplibre/maplibre-gl-js/blob/v5.16.0/LICENSE.txt
+ */
+
+
+/**
+ * @license
+ * Lodash <https://lodash.com/>
+ * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+
+/*!
+  * @svgdotjs/svg.resize.js - An extension for svg.js which allows to resize elements which are selected
+  * @version 2.0.4
+  * https://github.com/svgdotjs/svg.resize.js
+  *
+  * @copyright [object Object]
+  * @license MIT
+  *
+  * BUILT: Fri Sep 13 2024 12:43:14 GMT+0200 (Central European Summer Time)
+  */
+
+/*!
+  * @svgdotjs/svg.select.js - An extension of svg.js which allows to select elements with mouse
+  * @version 4.0.1
+  * https://github.com/svgdotjs/svg.select.js
+  *
+  * @copyright Ulrich-Matthias Schäfer
+  * @license MIT
+  *
+  * BUILT: Mon Jul 01 2024 15:04:42 GMT+0200 (Central European Summer Time)
+  */
+
+/*!
+ * ApexCharts v5.3.6
+ * (c) 2018-2025 ApexCharts
+ */
+
+
+/** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
+
+
+/*! shepherd.js 14.5.1 */
+
+
+/* @license
+Papa Parse
+v5.4.1
+https://github.com/mholt/PapaParse
+License: MIT
+*/
+
+
+/*!
+ * Vue.js v2.7.14
+ * (c) 2014-2022 Evan You
+ * Released under the MIT License.
+ */
+
+/*!
+ * cookie
+ * Copyright(c) 2012-2014 Roman Shtylman
+ * Copyright(c) 2015 Douglas Christopher Wilson
+ * MIT Licensed
+ */
+
+
+/* @license
+Papa Parse
+v5.3.2
+https://github.com/mholt/PapaParse
+License: MIT
+*/
+
+
+/* @license
+Papa Parse
+v5.3.2
+https://github.com/mholt/PapaParse
+License: MIT
+*/
+
+
+/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
