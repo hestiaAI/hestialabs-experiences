@@ -2,9 +2,10 @@
 
 This repo currently contains three projects:
 - [packages](packages/README.md): Monorepo for packages used throughout the system, including data experience packages.
-- [data-experience](data-experience/README.md): Vue component for the data experience to visualize one data set. Every new dataset we want to visualise starts from there.
+- [data-experience](data-experience/README.md): Vue component for the data experience to visualize one data set. 
 - [dc-dashboard](dc-dashboard/README.md): A library to generate interactive dashboards.
-- [experiences](experiences/README.md): Nuxt app, where [digipower.academy](https://digipower.academy) lives.
+- [experiences](experiences/README.md): Nuxt app, this builds [digipower.academy](https://digipower.academy).
+
 
 This repo is also dependent on the [bubble-server](https://github.com/hestiaAI/hestialabs-bubble-server)
 
@@ -84,3 +85,15 @@ You can run the Nuxt app in development mode with
 ```sh
 npm run dev
 ```
+
+## Viewer JSON Sync Check
+
+Run this from the repository root to verify that files in `data-experience/public/*-viewer.json`
+match their counterparts in `packages/packages/experiences/*/src/*-viewer.json`:
+
+```sh
+npm run check:viewer-sync
+```
+
+The check fails on unexpected drift and allows explicit exceptions listed in
+`.viewer-sync-allowlist` (one basename per line).

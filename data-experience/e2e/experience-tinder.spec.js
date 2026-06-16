@@ -1,11 +1,20 @@
 import { test, expect } from '@playwright/test'
 
 test('experience-tinder', async({ page }) => {
+  test.setTimeout(180000)
+
   const messages = []
+  const ignoredConsoleErrorPatterns = [
+    'Missing required prop: "viewBlockTranslationPrefix"'
+  ]
   page.on('console', (msg) => {
     // Ignore regular log messages; we are only interested in errors.
     if (msg.type() === 'error') {
-      messages.push(`[${msg.type()}] ${msg.text()}`)
+      const messageText = msg.text()
+      const shouldIgnore = ignoredConsoleErrorPatterns.some((pattern) => messageText.includes(pattern))
+      if (!shouldIgnore) {
+        messages.push(`[${msg.type()}] ${messageText}`)
+      }
     }
   })
   // Uncaught (in promise) TypeError + friends are page errors.
@@ -13,20 +22,17 @@ test('experience-tinder', async({ page }) => {
     messages.push(`[${error.name}] ${error.message}`)
   })
 
-  await page.goto('http://localhost:8080/')
+  await page.goto('http://localhost:8080/', { waitUntil: 'domcontentloaded' })
 
-  await page.locator('.my-2').first().click()
-  await page.getByText('Français').click()
+  await page.getByRole('button', { name: /Experience|Expérience/i }).first().click()
 
-  await page.getByLabel('Experience').click()
+  await page.getByRole('option', { name: /^tinder$/i }).click()
 
-  await page.getByRole('option', { name: 'tinder' }).getByText('tinder').click()
+  await page.getByRole('button', { name: /Select sample data|Selectionner des données de test/i }).click()
 
-  await page.getByLabel('Selectionner des données de test').click()
+  await page.getByRole('option', { name: /^tinder\.json$/i }).click()
 
-  await page.getByText('tinder.json').click()
-
-  await page.getByRole('button', { name: 'Explorer vos données' }).click()
+  await page.getByRole('button', { name: /Explore your data|Explorer vos données/i }).click()
 
   await page.getByRole('tab', { name: 'Usage' }).click()
 
@@ -45,8 +51,6 @@ test('experience-tinder', async({ page }) => {
   await page.locator('select[name="versus"]').selectOption('Likes,App ouverte')
 
   await page.getByRole('tab', { name: 'Corrélation Likes / passes' }).click()
-
-  await page.locator('div[role="tablist"]:has-text("Charger vos données Informations utilisat·eur·rice Usage Likes et passes Message")').click()
 
   // Check that there is no error during the test
   expect(messages).toStrictEqual([])

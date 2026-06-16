@@ -4,7 +4,7 @@
   "messages": {
     "fr": {
       "app": {
-        "name": "Досвід HestiaLabs"
+        "name": "HestiaLabs"
       }
     }
   },
@@ -13,8 +13,10 @@
   "logoLink": "https://digipower.academy",
   "experiences": [
     "ad-radar",
+    "anthropic",
     "apple-tracker",
     "babysits",
+    "bolt-driver",
     "chatgpt",
     "facebook",
     "fitbit",
@@ -25,6 +27,7 @@
     "netflix",
     "other",
     "strava",
+    "structure",
     "tiktok",
     "tinder",
     "tracker-control",

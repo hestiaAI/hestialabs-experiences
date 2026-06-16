@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "check:viewer-sync": "bash ./scripts/check-viewer-sync.sh"
+  },
   "dependencies": {
     "shepherd.js": "^14.5.1"
   }

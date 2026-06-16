@@ -1,0 +1,6 @@
+# One basename per line.
+# These files are intentionally allowed to differ from packages/packages/experiences/*/src.
+
+apple-tracker-viewer.json
+google-viewer.json
+linkedin-agg-viewer.json

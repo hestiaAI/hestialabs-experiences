@@ -18,7 +18,7 @@
     "dev": "npm run webpack -- --mode=development --watch",
     "build": "npm run webpack -- --mode=production",
     "clean": "lerna run clean",
-    "test:ts-node": "node --experimental-specifier-resolution node --loader ts-node/esm ./test.ts",
+    "test:ts-node": "node --experimental-specifier-resolution=node --loader ts-node/esm ./test.ts",
     "test": "npm run build && npm run test:ts-node",
     "lerna:version": "lerna version",
     "lerna:publish": "lerna publish from-package",

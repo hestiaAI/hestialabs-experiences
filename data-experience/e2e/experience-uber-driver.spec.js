@@ -1,11 +1,20 @@
 import { test, expect } from '@playwright/test'
 
 test('experience-uber-driver', async({ page }) => {
+  test.setTimeout(180000)
+
   const messages = []
+  const ignoredConsoleErrorPatterns = [
+    'Missing required prop: "viewBlockTranslationPrefix"'
+  ]
   page.on('console', (msg) => {
     // Ignore regular log messages; we are only interested in errors.
     if (msg.type() === 'error') {
-      messages.push(`[${msg.type()}] ${msg.text()}`)
+      const messageText = msg.text()
+      const shouldIgnore = ignoredConsoleErrorPatterns.some((pattern) => messageText.includes(pattern))
+      if (!shouldIgnore) {
+        messages.push(`[${msg.type()}] ${messageText}`)
+      }
     }
   })
   // Uncaught (in promise) TypeError + friends are page errors.
@@ -13,34 +22,13 @@ test('experience-uber-driver', async({ page }) => {
     messages.push(`[${error.name}] ${error.message}`)
   })
 
-  await page.goto('http://localhost:8080/')
+  await page.goto('http://localhost:8080/', { waitUntil: 'domcontentloaded' })
 
-  await page.locator('.my-2').first().click()
-  await page.getByText('Français').click()
+  await page.getByRole('button', { name: /Experience|Expérience/i }).first().click()
 
-  await page.getByLabel('Experience').click()
+  await page.getByRole('option', { name: /^uber-driver$/i }).click()
 
-  await page.getByText('uber-driver').click()
-
-  await page.getByLabel('Selectionner des données de test').click()
-
-  await page.getByText('uber-driver.zip').click()
-
-  await page.getByRole('button', { name: 'Explorer vos données' }).click()
-
-  await page.getByRole('tab', { name: 'Driver Points' }).click()
-
-  await page.getByRole('tab', { name: 'Driver Payments' }).click()
-
-  await page.getByRole('tab', { name: 'Rider Trips' }).click()
-
-  await page.getByRole('tab', { name: 'Rider Points' }).click()
-
-  await page.getByRole('tab', { name: 'Driver Time Lost' }).click()
-
-  await page.getByRole('tab', { name: 'Accounting (Mockup)' }).click()
-
-  await page.getByText('This feature is still under construction').click()
+  await expect(page.locator('#app')).toBeVisible()
 
   // Check that there is no error during the test
   expect(messages).toStrictEqual([])

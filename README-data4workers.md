@@ -131,7 +131,7 @@ If compatibility issues occur, follow the original project recommendation and us
 
 To change the npm version you can install `nvm` if you don't have it already: [install instruction](https://github.com/nvm-sh/nvm) or with HomeBrew `brew install nvm`. Then install `lts/hydrogen`: 
 ```sh
-nvm install nvm/hydrogen
+nvm install lts/hydrogen
 ```
 And finally set the correct version of `npm` to run this project: 
 ```sh
