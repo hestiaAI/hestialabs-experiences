@@ -97,3 +97,8 @@ npm run check:viewer-sync
 
 The check fails on unexpected drift and allows explicit exceptions listed in
 `.viewer-sync-allowlist` (one basename per line).
+
+# Credits
+The experiences Babysits/Yojoo have been developed by Serhii Moshtakov and Fabian Studer, students at FHNW University of Applied Sciences and Arts Northwestern Switzerland with Prof. Anton Fedosov. 
+This project has been improved under SPARK project "Participatory Methodology for AI Accountability in the Gig Economy: A Comparative Study of (Digital)
+Labour Conditions Between the French- and German-Speaking Cantons of Switzerland" (Principal Investigator: Jessica Pidoux, University of Neuchatel).
