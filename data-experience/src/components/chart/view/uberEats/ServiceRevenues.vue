@@ -9,7 +9,7 @@
       @next="nextPeriod"
     />
 
-    <ViewCard class="header-row mt-3" title="Earnings Breakdown">
+    <ViewCard class="header-row mt-3" title="Service revenues breakdown">
       <template #actions>
         <VSwitch
           v-model="showAvg"
@@ -24,7 +24,7 @@
         <!-- Overlay if no earnings in current view -->
         <div v-if="!hasEarningsData" class="chart-overlay">
           <div class="overlay-box">
-            <div class="overlay-title">No earnings data</div>
+            <div class="overlay-title">No service revenues</div>
             <div class="overlay-text">
               Check whether your dataset is empty, or select another period.
             </div>
@@ -41,7 +41,7 @@
 
       <div class="legend legend-earnings">
         <div class="legend-item">
-          <span class="color-box earnings"></span> Earnings (no tips)
+          <span class="color-box earnings"></span> Base revenue (no tips)
         </div>
         <div class="legend-item">
           <span class="color-box tips"></span> Tips
@@ -63,7 +63,7 @@ import ViewCard from '../shared/ViewCard.vue'
 dayjs.extend(customParseFormat)
 
 export default {
-  name: 'EarningsView',
+  name: 'ServiceRevenuesView',
   components: {
     ApexChart: VueApexCharts,
     PeriodToolbar,
@@ -89,9 +89,9 @@ export default {
   computed: {
     periodDescriptions() {
       return {
-        week: '📅 Weekly earnings: Your total and average earnings per day for this week',
-        month: '📆 Monthly earnings: Daily earnings overview for the selected month',
-        total: '📊 All-time earnings: Your earnings history grouped by year'
+        week: '📅 Weekly service revenues: your total and average per day for this week',
+        month: '📆 Monthly service revenues: daily overview for the selected month',
+        total: '📊 All-time service revenues: grouped by year'
       }
     },
 
@@ -189,7 +189,7 @@ export default {
     // Chart series data
     chartSeries() {
       return [
-        { name: 'Earnings (no tips)', data: this.chartData.map(d => Number(d.nonTips.toFixed(2))) },
+        { name: 'Base revenue (no tips)', data: this.chartData.map(d => Number(d.nonTips.toFixed(2))) },
         { name: 'Tips', data: this.chartData.map(d => Number(d.tips.toFixed(2))) }
       ]
     },

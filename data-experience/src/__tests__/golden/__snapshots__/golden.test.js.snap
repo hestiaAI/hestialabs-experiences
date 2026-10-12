@@ -4995,6 +4995,51 @@ Object {
 }
 `;
 
+exports[`uber-eats with uber-eats-sample.zip view block outputs match the snapshots: service_revenues 1`] = `
+Object {
+  "count": 81,
+  "firstItems": Array [
+    Object {
+      "base": 472.85,
+      "currency": "CHF",
+      "granularity": "month",
+      "other": 0,
+      "period": "2023-11",
+      "tips": 15.07,
+      "vat": 0,
+    },
+    Object {
+      "base": 121.72,
+      "currency": "CHF",
+      "granularity": "month",
+      "other": 0,
+      "period": "2023-12",
+      "tips": 0,
+      "vat": 0,
+    },
+    Object {
+      "base": 1848.17,
+      "currency": "CHF",
+      "granularity": "month",
+      "other": 0,
+      "period": "2024-01",
+      "tips": 50.88,
+      "vat": 0,
+    },
+  ],
+  "headers": Array [
+    "period",
+    "granularity",
+    "base",
+    "tips",
+    "vat",
+    "other",
+    "currency",
+  ],
+  "sha256": "5952205d96a1aec47602b391a8484a4a2b762c90dd57a4e5eafe5aa8611592b9",
+}
+`;
+
 exports[`uber-eats with uber-eats-sample.zip view block outputs match the snapshots: trips_by_weekday_hour 1`] = `
 Object {
   "count": 168,
@@ -5033,6 +5078,51 @@ Object {
     "activeWeeks",
   ],
   "sha256": "6046c0264f0abc80558ef88e83406b6fe34e211dd66fafff6ea848d3059e444a",
+}
+`;
+
+exports[`uber-eats with uber-eats-sample.zip view block outputs match the snapshots: trips_per_hour 1`] = `
+Object {
+  "count": 82,
+  "firstItems": Array [
+    Object {
+      "activeHours": 10.41,
+      "granularity": "month",
+      "onlineHours": 12.25,
+      "period": "2023-11",
+      "tphActive": 3.26,
+      "tphOnline": 2.77,
+      "trips": 34,
+    },
+    Object {
+      "activeHours": 2.71,
+      "granularity": "month",
+      "onlineHours": 2.77,
+      "period": "2023-12",
+      "tphActive": 2.95,
+      "tphOnline": 2.89,
+      "trips": 8,
+    },
+    Object {
+      "activeHours": 40.05,
+      "granularity": "month",
+      "onlineHours": 44.82,
+      "period": "2024-01",
+      "tphActive": 3.02,
+      "tphOnline": 2.7,
+      "trips": 121,
+    },
+  ],
+  "headers": Array [
+    "period",
+    "granularity",
+    "tphOnline",
+    "tphActive",
+    "trips",
+    "onlineHours",
+    "activeHours",
+  ],
+  "sha256": "691dbe0707258ed641decadbb6c345d0aa48b9e93f9cc8fb00c0ffead7dfd59d",
 }
 `;
 
@@ -5440,6 +5530,59 @@ Object {
     "category",
   ],
   "sha256": "17e4169feaa99b47757211e90ee8cf97156bd5efd22a852f55d63922479fbde9",
+}
+`;
+
+exports[`yoojo with yoojo-sample.zip view block outputs match the snapshots: effectiveWork 1`] = `
+Object {
+  "count": 10,
+  "firstItems": Array [
+    Object {
+      "bookingRate": 0.25,
+      "category": "",
+      "hoursApplied": 230,
+      "hoursBooked": 74,
+      "jobsApplied": 114,
+      "jobsBooked": 28,
+      "jobsBookedCanceled": 2,
+      "jobsWithoutHours": 40,
+      "scope": "total",
+    },
+    Object {
+      "bookingRate": 0.23,
+      "category": "Animaux",
+      "hoursApplied": 64,
+      "hoursBooked": 27,
+      "jobsApplied": 47,
+      "jobsBooked": 11,
+      "jobsBookedCanceled": 0,
+      "jobsWithoutHours": 38,
+      "scope": "category",
+    },
+    Object {
+      "bookingRate": 0.31,
+      "category": "Ménage",
+      "hoursApplied": 80,
+      "hoursBooked": 29,
+      "jobsApplied": 35,
+      "jobsBooked": 11,
+      "jobsBookedCanceled": 2,
+      "jobsWithoutHours": 0,
+      "scope": "category",
+    },
+  ],
+  "headers": Array [
+    "scope",
+    "category",
+    "jobsApplied",
+    "jobsBooked",
+    "jobsBookedCanceled",
+    "hoursApplied",
+    "hoursBooked",
+    "jobsWithoutHours",
+    "bookingRate",
+  ],
+  "sha256": "43c5324961f68d289e80ef05590248206842db483bad0e0edba120f10fa569a3",
 }
 `;
 
