@@ -16,8 +16,8 @@
   "scripts": {
     "test": "jest",
     "perf:ubereats": "cross-env RUN_PERF=true jest src/__tests__/uber-eats/performance --runInBand",
-    "perf:babysits": "cross-env RUN_PERF=true jest src/__tests__/babysits/performance --runInBand",
-    "perf:all": "cross-env RUN_PERF=true jest src/__tests__/{uber-eats,babysits}/performance --runInBand",
+    "perf:yoojo": "cross-env RUN_PERF=true jest src/__tests__/yoojo/performance --runInBand",
+    "perf:all": "cross-env RUN_PERF=true jest \"src/__tests__/(uber-eats|yoojo)/performance\" --runInBand",
     "postinstall": "node postinstall.cjs",
     "dev": "npm-run-all -p -r dev:bubble-server dev:monorepo dev:app",
     "dev:app": "vue-cli-service serve ./dev/main.js --open --host 0.0.0.0",
@@ -28,7 +28,8 @@
     "build-watch": "npm run build -- --watch",
     "build:demo": "vue-cli-service build --dest demo ./dev/main.js",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
-    "lint:fix": "npx eslint . --ext .js,.vue --fix"
+    "lint:fix": "npx eslint . --ext .js,.vue --fix",
+    "test:golden": "jest src/__tests__/golden"
   },
   "main": "dist/DataExperience.umd.js",
   "dependencies": {
@@ -84,7 +85,6 @@
     "@vue/test-utils": "^1.3.0",
     "@vue/vue2-jest": "^27.0.0-alpha.3",
     "babel-plugin-transform-import-meta": "^2.2.0",
-    "canvas": "^2.10.2",
     "cross-env": "^7.0.3",
     "cross-spawn": "^7.0.3",
     "dotenv": "^16.0.3",
@@ -114,6 +114,7 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
+    "globalSetup": "./jest.global-setup.cjs",
     "setupFiles": [
       "jest-canvas-mock"
     ],
@@ -152,7 +153,6 @@
     "testPathIgnorePatterns": [
       "<rootDir>/node_modules/",
       "<rootDir>/e2e/",
-      "<rootDir>/tests-examples/",
       "\\.helpers\\.js",
       "testSetup.js"
     ],

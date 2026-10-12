@@ -98,7 +98,6 @@ export default {
       items: [
         { title: this.$t('Home'), icon: '$vuetify.icons.mdiHome', to: this.localePath({ name: '/' }) },
         { title: this.$t('Experiences'), icon: '$vuetify.icons.mdiChartScatterPlot', to: this.localePath({ name: 'experiences' }) },
-        { title: this.$tc('Data Space', 2), icon: '$vuetify.icons.mdiDatabase', to: this.localePath({ name: 'spaces' }) },
         { title: this.$t('TL Data Stories'), icon: '$vuetify.icons.mdiAccountDetails', to: this.localePath({ name: 'story-id', params: { id: 'getting-around-the-lausanne-area' } }) },
         { title: this.$tc('Tool', 2), icon: '$vuetify.icons.mdiTools', to: this.localePath({ name: 'tools' }) },
         { title: this.$t('Privacy'), icon: '$vuetify.icons.mdiShieldLockOutline', to: this.localePath({ name: 'privacy' }) },

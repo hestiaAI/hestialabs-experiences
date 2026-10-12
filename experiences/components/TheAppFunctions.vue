@@ -70,21 +70,6 @@
       </template>
       <span>{{ $tc('Data Experience', 2) }}</span>
     </VTooltip>
-    <VTooltip v-if="hasBubbles" bottom>
-      <template #activator="{ on, attrs }">
-        <VBtn
-          icon
-          :to="localePath({ name: 'spaces' })"
-          v-bind="attrs"
-          v-on="on"
-        >
-          <VAvatar rounded size="30">
-            <img src="/data-space.png">
-          </VAvatar>
-        </VBtn>
-      </template>
-      <span>{{ $tc('Data Space', 2) }}</span>
-    </VTooltip>
   </div>
 </template>
 
@@ -94,10 +79,6 @@ import { mapState } from 'vuex'
 export default {
   computed: {
     ...mapState(['config']),
-    hasBubbles() {
-      const { bubbleConfig } = this.config
-      return bubbleConfig && Object.keys(bubbleConfig).length > 0
-    },
     homeButtonProps() {
       // check for an external home page
       const { homePath } = this.config

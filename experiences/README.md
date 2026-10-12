@@ -1,12 +1,12 @@
 # HestiaLabs Experiences
 
-![npm](https://img.shields.io/badge/npm-8.x-blue) ![node](https://img.shields.io/badge/node-18.x-brightgreen)
+![npm](https://img.shields.io/badge/npm-%3E%3D10-blue) ![node](https://img.shields.io/badge/node-22-brightgreen)
 
 The experiences developed by HestiaLabs are targeted for any user willing to better understand their personal data. It takes the form of an easy-to-use web app that locally processes the raw personal data downloaded from various sources (Twitter, Facebook, Uber, etc) and creates meaningful visualizations.
 
 ## Setup
 
-0. Check that you have the correct versions for npm and node (see "engines" in package.json: node 18.x, npm 8.x) by running `npm version`
+0. Check that you have the correct versions for npm and node (see "engines" in package.json: node 22 or later, npm 10 or later) by running `npm version`
 
 1. In the `packages` folder, install the root package:
 
@@ -15,17 +15,15 @@ $ cd ../packages
 $ npm install
 ```
 
-2. Then, still in the folder `packages`, build the packages in the monorepo and create symlinks to them. This saves the packages in the global `node_modules/` folder (see [npm-link documentation](https://docs.npmjs.com/cli/v8/commands/npm-link)).
+2. Then, still in the folder `packages`, build the packages in the monorepo:
 
 ```sh
 $ npm run build
 ```
 
-```sh
-$ npm link --workspaces
-```
+3. Navigate back to folder `experiences` and install the root package. This triggers the [`postinstall`](./postinstall.cjs) [post script](https://docs.npmjs.com/cli/v8/using-npm/scripts#pre--post-scripts) that symlinks the experiences listed in `config/${CONFIG_NAME}.json` (default `dev`) from `../packages` into `node_modules/@hestia.ai/`.
 
-3. Navigate back to folder `experiences` and install the root package. This triggers the [`postinstall`](./postinstall.js) [post script](https://docs.npmjs.com/cli/v8/using-npm/scripts#pre--post-scripts) that creates symlinks from the previously globally-linked packages to the `node_modules/` of the current folder.
+(`npm run setup -- --site` from the repository root does steps 1–3 and builds `dc-dashboard` and `data-experience` too.)
 
 ```sh
 $ cd ../experiences
@@ -64,32 +62,22 @@ $ cd experiences
 
 ### Deployment
 
-Update the deployment branch.
+Deployment is manual; CI does not deploy. Each Netlify site serves the prebuilt `experiences/dist` committed on its branch (see [Instances](#instances) and `netlify.toml`), and Netlify only redeploys when `dist` changes.
+
+To deploy https://digipower.academy:
 
 ```bash
-# in this example we're deploying to https://digipower.academy
+# from the repository root
 git checkout netlify-academy
 git pull
 # replace current files with what's in master
 git merge -X theirs master
+./deploy_digipower.sh
 ```
 
-Make sure you have the latest version of all packages
+`deploy_digipower.sh` runs `scripts/setup.sh --site` with `CONFIG_NAME=digipower-academy` (installs and builds `packages`, `dc-dashboard` and the `data-experience` library, then installs this site), builds the site into `dist` and commits and pushes it. Netlify then redeploys the website.
 
-```bash
-cd ../packages
-npm install
-npm run build
-npm link --workspaces
-cd ../data-experience
-npm install
-npm run build
-cd ../experiences
-npm install
-rm -rf dist
-```
-
-Run the build using the appropriate environment variables.
+For another instance, do the same on its branch with its own variables:
 
 | website             | build command                                                                                                         |
 | ------------------- | --------------------------------------------------------------------------------------------------------------------- |
@@ -99,27 +87,20 @@ Run the build using the appropriate environment variables.
 Here's what these variables configure.
 | Environment variable | Description |
 |---------------------------|-------------------------------------------------------------------------------------------------|
-| CONFIG_NAME | Name of the configuration file (without extension: "workshop", "digipower" ...) |
+| CONFIG_NAME | Name of the configuration file (without extension: "digipower-academy", "dev" ...). Set it for `npm install` too: it selects which experiences are linked. |
 | BASE_URL | Url where the website is deployed (with protocol: "https://test.hestialabs.org") |
-| API_URL | URL of the rest api (with protocol: "https://bubbles.hestialabs.com") |
-| HESTIA_OWNER_GITHUB_TOKEN | Access token that allows using github packages (only needed to configure build done on netlify) |
+| API_URL | URL of the bubble server (with protocol: "https://bubbles.hestialabs.org") |
 
 Documentation for the configuration file can be found in [config/README.md](config)
 
-```bash
-# in this example we're building digipower.academy
-CONFIG_NAME=digipower-academy BASE_URL=https://digipower.academy API_URL=https://bubbles.hestialabs.org npm run build
-```
+What the deployed site loads at runtime:
 
-Commit and push.
+- **Experiences listed in the config** are built into the site from this monorepo (`npm install` links them; it installs them from npm only when `NODE_ENV=production`). They need not be published to npm.
+- **Viewer options**: experiences listed under `experienceViewerOptions` in the config fetch their viewer JSON from that URL (the [experience-viewer-options](https://github.com/digipower-academy/experience-viewer-options) repo for digipower.academy). Experiences not listed there, such as `yoojo` and `uber-eats`, use the viewer JSON in their package. If you add an experience to that map, add its `<name>-viewer.json` to that repo first.
+- **Experiences a bubble uses but the site does not list** are loaded from jsDelivr (`https://cdn.jsdelivr.net/npm/@hestia.ai/<name>`), so they must be published to npm (see `packages/README.md`).
+- **Bubbles** are served by the bubble server at `API_URL`, deployed separately (see the [hestialabs-bubble-server](https://github.com/digipower-academy/hestialabs-bubble-server) README).
 
-```bash
-git add dist
-git commit -m rebuilt
-git push
-```
-
-Netlify then automatically redeploys the website.
+`.gitlab-ci.yml` deploys only the `data-experience` dev app, not these sites.
 
 ### Build Setup
 
