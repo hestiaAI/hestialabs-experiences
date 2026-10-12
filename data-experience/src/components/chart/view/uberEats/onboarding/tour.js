@@ -88,7 +88,7 @@ export function createTour({ onSwitchTab }) {
 
   tour.addStep({
     id: 'go-to-earnings',
-    text: 'Finally, let’s look at your earnings overview.',
+    text: 'Finally, let’s look at your service revenues.',
     buttons: [
       {
         text: 'Next',
@@ -111,14 +111,14 @@ export function createTour({ onSwitchTab }) {
   tour.addStep({
     id: 'chart-container',
     attachTo: { element: '.chart-container', on: 'top' },
-    text: 'This chart shows your total earnings per day. Tips are shown in green and your base earnings in blue.',
+    text: 'This chart shows your service revenues per day: what Uber paid for your deliveries. Tips are shown in green and the base revenue in blue.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 
   tour.addStep({
     id: 'toggle-wrapper',
     attachTo: { element: '.toggle-wrapper', on: 'bottom' },
-    text: 'Use this toggle to switch between total daily earnings and earnings adjusted by working hours.',
+    text: 'Use this toggle to switch between the total per day and the revenue per hour worked.',
     buttons: [{ text: 'Next', action: tour.next }]
   })
 

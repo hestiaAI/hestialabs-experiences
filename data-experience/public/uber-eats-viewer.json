@@ -42,6 +42,27 @@
               "noData": "Aucun temps en ligne ni course terminée dans cet export."
             }
           }
+        },
+        "service_revenues": {
+          "title": "Revenus dans le temps",
+          "text": "Revenus de service par mois ou par semaine, d'après les paiements de votre export, datés au moment où Uber les a enregistrés. Le revenu de base correspond aux tarifs de livraison (prise en charge, distance, dépôt, réductions groupées et ajustements) ; les pourboires s'y ajoutent. La TVA est présentée à part : elle est perçue pour les autorités fiscales et n'est pas ajoutée aux barres.",
+          "vizProps": {
+            "messages": {
+              "title": "Revenus de service dans le temps",
+              "month": "Mois",
+              "week": "Semaine",
+              "base": "Revenu de base",
+              "tips": "Pourboires",
+              "vat": "TVA (non incluse)",
+              "other": "Autres éléments",
+              "noData": "Aucun paiement dans cet export.",
+              "vatNote": "Les barres montrent le revenu de base et les pourboires, ainsi que les autres éléments (frais, ajustements) s'il y en a. La TVA est perçue pour les autorités fiscales : elle est présentée à part et n'est pas ajoutée."
+            }
+          }
+        },
+        "earnings": {
+          "title": "Revenus de service",
+          "text": "Ce qu'Uber a payé pour vos services, par jour, semaine ou année. Il s'agit de paiements pour des services, pas forcément de ce que vous gagnez : si vous êtes employé·e par un intermédiaire (un opérateur de flotte), votre fiche de paie peut être différente."
         }
       }
     }
@@ -88,9 +109,18 @@
       "id": "earnings",
       "customPipeline": "combined_data_pipeline",
       "files": ["DriverOnlineOffline", "DriverPayments", "CourierLifetimeTripData"],
-      "visualization": "uberEats/Earnings.vue",
-      "title": "Earnings",
-      "text": ""
+      "visualization": "uberEats/ServiceRevenues.vue",
+      "title": "Service revenues",
+      "text": "What Uber paid for your services, per day, week or year. These are payments for services, not necessarily what you earn: if you are employed by an intermediary (a fleet operator), your payslip may differ."
+    },
+    {
+      "showTable": false,
+      "id": "service_revenues",
+      "customPipeline": "service_revenues",
+      "files": ["DriverPayments"],
+      "visualization": "uberEats/ServiceRevenuesOverTime.vue",
+      "title": "Revenues over time",
+      "text": "Service revenues by month or by week, from the payments in your export, dated when Uber recorded them. Base revenue is the delivery fares (pickup, distance, drop-off, batch discounts and adjustments); tips are shown on top. VAT is shown apart: it is collected for the tax authorities and not added to the bars."
     }
   ],
   "dataSamples": [

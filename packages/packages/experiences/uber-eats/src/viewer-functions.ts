@@ -258,6 +258,92 @@ async function trips_per_hour({ fileManager }: { fileManager: FileManager }) {
   }
 }
 
+type RevenueKind = 'base' | 'tips' | 'vat' | 'other'
+
+// How "23a - Driver Payments.csv" lines are grouped. VAT is collected for the
+// tax authority, so it is reported apart from what the deliveries earned.
+function revenueKind(classification: string, category: string): RevenueKind {
+  if (classification === 'transport.misc.tip' || category === 'tip') {
+    return 'tips'
+  }
+  if (classification === 'delivery.courier.tax.vat' || category === 'tax') {
+    return 'vat'
+  }
+  if (
+    classification.startsWith('delivery.fare.') ||
+    category === 'driver_payment_fares'
+  ) {
+    return 'base'
+  }
+  return 'other'
+}
+
+// Service revenues (payments for services, not necessarily what the courier
+// earns) by month and by week, split into base revenue, tips, VAT and other
+// items, per currency, dated by recognize_timestamp_local.
+async function service_revenues({ fileManager }: { fileManager: FileManager }) {
+  const payments = (
+    await fileManager.getCsvItemsFromId('DriverPayments')
+  )[0] ?? {
+    headers: [],
+    items: []
+  }
+  type Sums = Record<RevenueKind, number>
+  const sums = new Map<string, Sums>()
+  for (const row of payments.items) {
+    const time = parseLocalTime(row.recognizeTimestampLocal)
+    const amount = Number(row.amountLocal)
+    if (!time || !Number.isFinite(amount)) {
+      continue
+    }
+    const kind = revenueKind(row.classification ?? '', row.category ?? '')
+    const currency = row.currencyCode || ''
+    for (const granularity of ['month', 'week'] as Granularity[]) {
+      const key = [
+        granularity,
+        periodOf(localMillis(time), granularity).key,
+        currency
+      ].join('|')
+      const entry = sums.get(key) ?? { base: 0, tips: 0, vat: 0, other: 0 }
+      entry[kind] += amount
+      sums.set(key, entry)
+    }
+  }
+  const round = (value: number) => Math.round(value * 100) / 100
+  const order = { month: 0, week: 1 } as Record<string, number>
+  const items = [...sums.entries()]
+    .map(([key, entry]) => {
+      const [granularity, period, currency] = key.split('|')
+      return {
+        period,
+        granularity,
+        base: round(entry.base),
+        tips: round(entry.tips),
+        vat: round(entry.vat),
+        other: round(entry.other),
+        currency
+      }
+    })
+    .sort(
+      (a, b) =>
+        order[a.granularity] - order[b.granularity] ||
+        a.period.localeCompare(b.period) ||
+        a.currency.localeCompare(b.currency)
+    )
+  return {
+    headers: [
+      'period',
+      'granularity',
+      'base',
+      'tips',
+      'vat',
+      'other',
+      'currency'
+    ],
+    items
+  }
+}
+
 const viewerFunctions = {
   postprocessors: {
     // add named postprocessors if needed
@@ -266,7 +352,8 @@ const viewerFunctions = {
     combined_data_pipeline,
     csv_courier_trips,
     trips_by_weekday_hour,
-    trips_per_hour
+    trips_per_hour,
+    service_revenues
   }
 }
 
