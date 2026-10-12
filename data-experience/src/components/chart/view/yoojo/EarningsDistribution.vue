@@ -1,38 +1,13 @@
 <template>
-  <div class="layout-container">
-    <div class="top-bar">
-      <div class="period-switch">
-        <button
-          v-for="p in ['week','month','total']"
-          :key="p"
-          :class="['switch-btn', { active: currentPeriod === p }]"
-          @click="periodStore.setMode(p)"
-          :title="getPeriodDescription(p)"
-        >
-          {{ p.toUpperCase() }}
-        </button>
-      </div>
-
-      <div class="week-nav">
-        <div class="week-nav-wrapper">
-          <button class="nav-btn" @click="prevWeek" v-if="currentPeriod !== 'total'">←</button>
-          <div class="week-label" :class="`mode-${currentPeriod}`">{{ weekLabel }}</div>
-          <button class="nav-btn" @click="nextWeek" v-if="currentPeriod !== 'total'">→</button>
-        </div>
-      </div>
-
-      <div class="period-descriptions">
-        <div v-if="currentPeriod === 'week'" class="period-desc">
-          📅 Week view: Earnings patterns by time of day (Morning/Day/Evening/Night)
-        </div>
-        <div v-if="currentPeriod === 'month'" class="period-desc">
-          📆 Month view: Earnings by time of day and filter by activity type
-        </div>
-        <div v-if="currentPeriod === 'total'" class="period-desc">
-          📊 Total view: Average earnings per hour by job activity type
-        </div>
-      </div>
-    </div>
+  <div class="fhnw-view">
+    <PeriodToolbar
+      :mode="currentPeriod"
+      :label="weekLabel"
+      :descriptions="periodDescriptions"
+      @mode="periodStore.setMode($event)"
+      @prev="prevWeek"
+      @next="nextWeek"
+    />
 
     <!-- Active Filters Bar -->
     <div class="active-filters" v-if="hasActiveFilters">
@@ -52,97 +27,87 @@
       <button class="clear-all-btn" @click="clearAllFilters">Clear All</button>
     </div>
 
-    <div v-if="currentPeriod === 'total'" class="total-layout">
-      <div class="box box2 tour-earnings-chart">
-        <div class="header-controls">
-          <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
-          <div class="data-mode-switch">
-            <span class="switch-label" :class="{ active: totalDataMode === 'total' }">Total</span>
-            <label class="switch">
-              <input
-                type="checkbox"
-                :checked="totalDataMode === 'average'"
-                @change="totalDataMode = totalDataMode === 'total' ? 'average' : 'total'"
-              >
-              <span class="slider"></span>
-            </label>
-            <span class="switch-label" :class="{ active: totalDataMode === 'average' }">Avg/Hour</span>
-          </div>
-        </div>
-
-        <TotalStackedBar
-          :series="totalStackedBarSeries"
-          :options="totalStackedBarOptions"
-          height="450"
-        />
-      </div>
-
-      <div class="box total-bar-chart">
-        <div class="bar-header">
-          <h2 class="chart-title">Earnings per Hour by Activity</h2>
-          <select v-model="sortDirection" class="filter-select sort-select">
-            <option value="desc">Descending</option>
-            <option value="asc">Ascending</option>
-          </select>
-        </div>
-        <EarningsPerHourBar
-          :series="earningsPerHourSeries"
-          :options="earningsPerHourOptions"
-          height="350"
-        />
-      </div>
-    </div>
-
-    <div v-else class="week-month-layout">
-      <div class="box box2 tour-earnings-chart">
-        <div class="header-controls">
-          <h2 class="chart-title">{{ earningsHeaderTitle }}</h2>
-          <p class="chart-subtitle">
-            Each bar represents a group of jobs per day.
-          </p>
-        </div>
-
-        <div class="chart-wrapper">
-          <EarningsByDay
-            :key="chartRenderKey"
-            :series="chartSeries"
-            :options="chartOptions"
+    <VRow v-if="currentPeriod === 'total'" class="total-layout mt-1">
+      <VCol cols="12">
+        <ViewCard class="box2 tour-earnings-chart" :title="earningsHeaderTitle">
+          <template #actions>
+            <VSwitch
+              class="data-mode-switch mt-0"
+              :input-value="totalDataMode === 'average'"
+              label="Avg / hour"
+              dense
+              hide-details
+              @change="totalDataMode = $event ? 'average' : 'total'"
+            />
+          </template>
+          <TotalStackedBar
+            :series="totalStackedBarSeries"
+            :options="totalStackedBarOptions"
             height="450"
           />
+        </ViewCard>
+      </VCol>
+      <VCol cols="12">
+        <ViewCard class="total-bar-chart" title="Earnings per Hour by Activity">
+          <template #actions>
+            <VSelect
+              v-model="sortDirection"
+              class="sort-select"
+              :items="[{ text: 'Descending', value: 'desc' }, { text: 'Ascending', value: 'asc' }]"
+              outlined
+              dense
+              hide-details
+            />
+          </template>
+          <EarningsPerHourBar
+            :series="earningsPerHourSeries"
+            :options="earningsPerHourOptions"
+            height="350"
+          />
+        </ViewCard>
+      </VCol>
+    </VRow>
 
-          <div v-if="legendItems.length" class="legend mt-4">
-            <div v-for="item in legendItems" :key="item.name" class="legend-item">
-              <span class="legend-swatch" :style="{ backgroundColor: item.color }" />
-              {{ item.label }} ({{ item.count }})
+    <VRow v-else class="week-month-layout mt-1">
+      <VCol cols="12" md="8">
+        <ViewCard
+          class="box2 tour-earnings-chart"
+          :title="earningsHeaderTitle"
+          subtitle="Each bar represents a group of jobs per day."
+        >
+          <div class="chart-wrapper">
+            <EarningsByDay
+              :key="chartRenderKey"
+              :series="chartSeries"
+              :options="chartOptions"
+              height="450"
+            />
+
+            <div v-if="legendItems.length" class="legend mt-4">
+              <div v-for="item in legendItems" :key="item.name" class="legend-item">
+                <span class="legend-swatch" :style="{ backgroundColor: item.color }" />
+                {{ item.label }} ({{ item.count }})
+              </div>
+            </div>
+
+            <div v-if="filteredJobsByActivity.length === 0" class="no-data-overlay">
+              <p>No job data for this period</p>
             </div>
           </div>
-
-          <div v-if="filteredJobsByActivity.length === 0" class="no-data-overlay">
-            <p>No job data for this period</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="box box4 tour-jobtype-filter">
-        <label for="activityFilter" class="filter-label">
-          <strong>Filter by activity</strong>
-        </label>
-        <select
-          id="activityFilter"
-          v-model="selectedActivity"
-          class="filter-select"
-        >
-          <option value="">All activities</option>
-          <option
-            v-for="type in activityTypes"
-            :key="type"
-            :value="type"
-          >
-            {{ type }}
-          </option>
-        </select>
-      </div>
-    </div>
+        </ViewCard>
+      </VCol>
+      <VCol cols="12" md="4">
+        <ViewCard class="box4 tour-jobtype-filter" title="Filter by activity">
+          <VSelect
+            v-model="selectedActivity"
+            :items="[{ text: 'All activities', value: '' }, ...activityTypes]"
+            outlined
+            dense
+            hide-details
+          />
+        </ViewCard>
+      </VCol>
+    </VRow>
   </div>
 </template>
 
@@ -156,6 +121,8 @@ import 'dayjs/locale/en'
 import weekday from 'dayjs/plugin/weekday'
 import isBetween from 'dayjs/plugin/isBetween'
 import { periodStore } from './store/periodStore'
+import PeriodToolbar from '../shared/PeriodToolbar.vue'
+import ViewCard from '../shared/ViewCard.vue'
 
 dayjs.extend(weekday)
 dayjs.extend(isBetween)
@@ -169,7 +136,7 @@ const TIME_BUCKETS = {
 
 export default {
   name: 'YoojoEarningsDistribution',
-  components: { EarningsByDay, TotalStackedBar, EarningsPerHourBar },
+  components: { EarningsByDay, TotalStackedBar, EarningsPerHourBar, PeriodToolbar, ViewCard },
   mixins: [mixin],
 
   data() {
@@ -183,6 +150,14 @@ export default {
   },
 
   computed: {
+    periodDescriptions() {
+      return {
+        week: '📅 Week view: Earnings patterns by time of day (Morning/Day/Evening/Night)',
+        month: '📆 Month view: Earnings by time of day and filter by activity type',
+        total: '📊 Total view: Average earnings per hour by job activity type'
+      }
+    },
+
     // Get the current period mode (week, month, total) from the period store
     currentPeriod() {
       return periodStore.mode
@@ -1101,144 +1076,8 @@ export default {
 </script>
 
 <style scoped>
-.layout-container {
-  width: 98%;
-  gap: 16px;
-  margin-left: 12px;
-}
-
-.period-switch {
-  position: absolute;
-  display: flex;
-  gap: 6px;
-}
-
-.switch-btn {
-  padding: 4px 12px;
-  border: 1px solid #bbb;
-  border-radius: 0;
-  background: #fff;
-  color: #333;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.switch-btn.active {
-  background: #e6e6e6;
-  font-weight: 600;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
-}
-
-.period-descriptions {
-  padding: 13px 0 16px 0;
-  margin-top: 0;
-}
-
-.period-desc {
-  font-size: 0.85rem;
-  color: #666;
-  font-weight: 400;
-  margin: 0;
-}
-
-.week-nav {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  height: 32px;
-}
-
-.week-nav-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.nav-btn {
-  padding: 4px 12px;
-  border: 1px solid #bbb;
-  border-radius: 0;
-  background: #fff;
-  cursor: pointer;
-  font-size: 1rem;
-
-  box-shadow: 0 1px 2px rgba(0,0,0,.15);
-
-  transition:
-    background 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.05s ease;
-}
-
-.nav-btn:hover, .switch-btn:hover {
-  background: #f2f2f2;
-  box-shadow:
-    0 3px 1px -2px rgba(0,0,0,.25),
-    0 2px 4px 0 rgba(0,0,0,.20),
-    0 1px 8px 0 rgba(0,0,0,.18);
-  transform: translateY(-1px);
-}
-
-.week-label {
-  width: 240px;
-  padding: 4px 12px;
-  font-weight: 800;
-  font-size: 1.05rem;
-  letter-spacing: 0.02em;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #bbb;
-}
-
-.week-label.mode-week {
-  background: #e3f2fd;
-  border-color: #2196f377;
-  color: #0d47a1;
-}
-
-.week-label.mode-month {
-  background: #e8f5e9;
-  border-color: #4caf5077;
-  color: #1b5e20;
-}
-
-.week-label.mode-total {
-  width: 324px;
-  background: #fff3e0;
-  border-color: #ff9800bb;
-  color: #e65100;
-}
-
-.box {
-  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),
-              0 2px 2px 0 rgba(0,0,0,.19),
-              0 1px 5px 0 rgba(0,0,0,.17);
-  border: 1px solid #bbbbbb99;
-  padding: 20px;
-  font-size: 1.2rem;
-}
-
-.box2 {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 30px;
-}
-
-.header-controls {
-  position: sticky;
-  top: 0;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-.chart-title {
-  font-size: 1.5rem;
-  color: #333;
-  font-weight: 700;
-  margin: 0;
+.sort-select {
+  max-width: 200px;
 }
 
 .chart-wrapper {
@@ -1276,285 +1115,6 @@ export default {
   width: 14px;
   height: 14px;
   border-radius: 3px;
-}
-
-.tooltip-box {
-  padding: 16px 18px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.tooltip-box p {
-  margin: 6px 0;
-}
-
-.tooltip-title {
-  font-weight: 700;
-  margin-bottom: 6px;
-  font-size: 1rem;
-  color: #333;
-}
-
-.tooltip-box p {
-  margin: 4px 0;
-  color: #555;
-}
-
-.tooltip-box strong {
-  color: #333;
-}
-
-.total-layout {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 30px;
-}
-
-.total-bar-chart {
-  width: 100%;
-}
-
-.bar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.sort-select {
-  width: auto;
-  min-width: 200px;
-}
-
-.week-month-layout {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  margin-bottom: 30px;
-}
-
-.week-month-layout .box2 {
-  flex: 0 0 75%;
-  margin-bottom: 0;
-}
-
-.week-month-layout .box4 {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-}
-
-.filter-label {
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #333;
-  display: block;
-}
-
-.filter-select {
-  width: 100%;
-  padding: 10px 12px;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1.5px solid #ccc;
-  background: white;
-  cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.filter-select:hover {
-  border-color: #888;
-}
-
-.filter-select:focus {
-  outline: none;
-  border-color: #1e88e5;
-  box-shadow: 0 0 4px rgba(30, 136, 229, 0.5);
-}
-
-.panel-header {
-  margin-bottom: 16px;
-}
-
-.panel-header h3 {
-  font-size: 1.2rem;
-  color: #333;
-  margin: 0;
-}
-
-.job-item {
-  background: white;
-  border-radius: 8px;
-  padding: 10px 12px;
-  cursor: pointer;
-  transition: background 0.2s;
-  border: 1px solid #ddd;
-  margin-bottom: 8px;
-}
-
-.job-item:hover {
-  background: #f3f3f3;
-}
-
-.activity-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
-}
-
-.activity-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.data-mode-switch {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 0;
-}
-
-.switch-label {
-  font-size: 0.9rem;
-  color: #999;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.switch-label.active {
-  color: #1e88e5;
-  font-weight: 600;
-}
-
-/* Switch styling */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 28px;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: all 0.3s;
-  border-radius: 28px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 22px;
-  width: 22px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: all 0.3s;
-  border-radius: 50%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-input:checked + .slider {
-  background-color: #1e88e5;
-}
-
-input:checked + .slider:before {
-  transform: translateX(22px);
-}
-
-.toggle-btn {
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: 1px solid #bbb;
-  background: #e8e8e8;
-  color: #333;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.toggle-btn:hover {
-  background: #d8d8d8;
-  border-color: #888;
-}
-
-.toggle-btn.active {
-  background: #1e88e5;
-  color: white;
-  border-color: #1565c0;
-  font-weight: 600;
-}
-
-.activity-legend {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.legend-item-detailed {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px;
-  border-radius: 6px;
-  background: #f9f9f9;
-  font-size: 0.95rem;
-  color: #333;
-  border: 1px solid #eee;
-}
-
-.legend-swatch-large {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
-  flex-shrink: 0;
-}
-
-.activity-summary {
-  font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 8px;
-}
-
-.activity-jobs {
-  border-top: 1px dashed #ddd;
-  padding-top: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.activity-job {
-  font-size: 0.85rem;
-  color: #666;
-}
-
-.chart-subtitle {
-  font-size: 0.95rem;
-  color: #333;
-  line-height: 1.4;
-  max-width: 720px;
 }
 
 /* Active Filters Bar */
@@ -1620,75 +1180,6 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 768px) {
-  .layout-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    width: 94%;
-  }
-
-  .period-switch {
-    position: static;
-    grid-column: 1 / 2;
-    grid-row: auto;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-
-  .period-descriptions {
-    grid-column: 1 / 2;
-    grid-row: auto;
-    padding-top: 0;
-    margin-top: 0;
-    text-align: center;
-  }
-
-  .week-nav {
-    grid-column: 1 / 2;
-    grid-row: auto;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-
-  /* stack switch and nav vertically on mobile */
-  .top-bar {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .top-bar .week-nav {
-    margin-top: 8px;
-  }
-
-  .total-layout {
-    flex-direction: column;
-  }
-
-  .bar-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .sort-select {
-    width: 100%;
-  }
-
-  .week-month-layout {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .week-month-layout .box2 {
-    flex: 1 1 100%;
-    margin-bottom: 12px;
-    order: 2;
-  }
-
-  .week-month-layout .box4 {
-    flex: 1 1 100%;
-    order: 1;
-    margin-bottom: 12px;
-  }
 
   .chart-wrapper {
     margin-top: 8px;
@@ -1700,5 +1191,35 @@ input:checked + .slider:before {
 }
 ::v-deep(.apexcharts-tooltip) {
   transform: translateY(10px);
+}
+
+.tooltip-box {
+  padding: 16px 18px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip-box p {
+  margin: 6px 0;
+}
+
+.tooltip-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.tooltip-box p {
+  margin: 4px 0;
+  color: #555;
+}
+
+.tooltip-box strong {
+  color: #333;
 }
 </style>

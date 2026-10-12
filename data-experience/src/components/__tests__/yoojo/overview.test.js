@@ -3,6 +3,7 @@
  */
 
 import { mount } from '@vue/test-utils'
+import { vuetify } from '../vuetify.helpers'
 import { periodStore } from '@/components/chart/view/yoojo/store/periodStore'
 
 // (MonthlyCalendar is mocked above before importing OverView)
@@ -102,6 +103,7 @@ const mockPipelineValues = [
 
 function mountOverView(props = {}) {
   return mount(OverView, {
+    vuetify: vuetify(),
     props: {
       values: mockPipelineValues,
       ...props
@@ -164,7 +166,7 @@ describe('OverView.vue (yoojo) - UI & interactions', () => {
 
   test('renders job type filter dropdown', () => {
     const wrapper = mountOverView()
-    const select = wrapper.find('select#jobTypeSelect')
+    const select = wrapper.find('.tour-jobtype-filter .v-select')
 
     expect(select.exists()).toBe(true)
   })
@@ -214,24 +216,22 @@ describe('OverView.vue (yoojo) - UI & interactions', () => {
 
   test('job type filter dropdown is functional', async() => {
     const wrapper = mountOverView()
-    const select = wrapper.find('select#jobTypeSelect')
+    const select = wrapper.findComponent({ name: 'v-select' })
 
     expect(select.exists()).toBe(true)
 
-    // Get available options
-    const options = select.findAll('option')
-    expect(options.length).toBeGreaterThan(0)
+    // Available options: "All" plus the job types
+    expect(select.props('items')[0]).toEqual({ text: 'All', value: '' })
   })
 
   test('can select job type from dropdown', async() => {
     const wrapper = mountOverView()
-    const select = wrapper.find('select#jobTypeSelect')
+    const select = wrapper.findComponent({ name: 'v-select' })
 
-    // Change value (if options are available)
-    if (select.findAll('option').length > 1) {
-      await select.setValue('babysitting')
-      expect(select.element.value).toBe('babysitting')
-    }
+    // Choosing an option updates the filter
+    select.vm.$emit('input', 'babysitting')
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.selectedJobType).toBe('babysitting')
   })
 
   /* ---------------------------------------------

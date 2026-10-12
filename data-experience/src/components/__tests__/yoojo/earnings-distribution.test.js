@@ -3,6 +3,7 @@
  */
 
 import { mount } from '@vue/test-utils'
+import { vuetify } from '../vuetify.helpers'
 import EarningsDistribution from '@/components/chart/view/yoojo/EarningsDistribution.vue'
 
 /* --------------------------
@@ -66,6 +67,7 @@ const mockPipelineValues = [
 
 function mountEarningsDistribution(props = {}) {
   return mount(EarningsDistribution, {
+    vuetify: vuetify(),
     props: {
       values: mockPipelineValues,
       ...props

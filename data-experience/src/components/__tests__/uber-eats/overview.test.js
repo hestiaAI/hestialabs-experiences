@@ -3,6 +3,7 @@
  */
 
 import { mount } from '@vue/test-utils'
+import { vuetify } from '../vuetify.helpers'
 import Overview from '@/components/chart/view/uberEats/Overview.vue'
 
 /* --------------------------
@@ -79,6 +80,7 @@ const mockPipelineValues = [
 
 function mountOverview(props = {}) {
   return mount(Overview, {
+    vuetify: vuetify(),
     props: {
       values: mockPipelineValues,
       ...props

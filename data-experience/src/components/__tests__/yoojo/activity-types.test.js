@@ -3,6 +3,7 @@
  */
 
 import { mount } from '@vue/test-utils'
+import { vuetify } from '../vuetify.helpers'
 import ActivityTypes from '@/components/chart/view/yoojo/ActivityTypes.vue'
 
 /* --------------------------
@@ -63,6 +64,7 @@ const mockPipelineValues = [
 
 function mountActivityTypes(props = {}) {
   return mount(ActivityTypes, {
+    vuetify: vuetify(),
     props: {
       values: mockPipelineValues,
       ...props

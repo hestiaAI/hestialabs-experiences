@@ -1,39 +1,16 @@
 <template>
-  <div class="layout-container">
-    <div class="period-switch">
-      <button
-        v-for="p in ['week','month','total']"
-        :key="p"
-        :class="['switch-btn', { active: currentPeriod === p }]"
-        @click="periodStore.setMode(p)"
-        :title="getPeriodDescription(p)"
-      >
-        {{ p.toUpperCase() }}
-      </button>
-    </div>
-
-    <div class="period-descriptions">
-      <div v-if="currentPeriod === 'week'" class="period-desc">
-        📅 Week view: See your shifts and key metrics for each day of the week
-      </div>
-      <div v-if="currentPeriod === 'month'" class="period-desc">
-        📆 Month view: Click on any day to view that week
-      </div>
-      <div v-if="currentPeriod === 'total'" class="period-desc">
-        📊 Total view: Your overall statistics and patterns across all time
-      </div>
-    </div>
-
-    <div class="week-nav">
-      <div class="week-nav-wrapper">
-        <button class="nav-btn" @click="prevWeek" v-if="currentPeriod !== 'total'">←</button>
-        <div class="week-label" :class="`mode-${currentPeriod}`">{{ weekLabel }}</div>
-        <button class="nav-btn" @click="nextWeek" v-if="currentPeriod !== 'total'">→</button>
-      </div>
-    </div>
+  <div class="yoojo-view">
+    <PeriodToolbar
+      :mode="currentPeriod"
+      :label="weekLabel"
+      :descriptions="periodDescriptions"
+      @mode="periodStore.setMode($event)"
+      @prev="prevWeek"
+      @next="nextWeek"
+    />
 
     <!-- Active Filters Bar -->
-    <div class="active-filters" v-if="hasActiveFilters">
+    <div v-if="hasActiveFilters" class="active-filters mt-3">
       <span class="filters-label">Filters:</span>
       <span v-if="selectedJobType" class="filter-badge">
         {{ selectedJobType }}
@@ -42,105 +19,74 @@
       <button class="clear-all-btn" @click="clearAllFilters">Clear All</button>
     </div>
 
-    <!-- BOX 1 → Top Stats -->
-    <div class="box box1">
-      <div>
-        <strong>Total Earnings</strong>
-        <div>{{ totalEarnings.toFixed(2) }} {{ currency }}</div>
-      </div>
+    <KpiTiles class="box1 mt-3" :items="kpis" />
 
-      <div>
-        <strong>Total Hours Worked</strong>
-        <div>{{ Math.floor(totalHours) }}h {{ Math.round((totalHours - Math.floor(totalHours)) * 60) }}m</div>
-      </div>
+    <VRow class="mt-1">
+      <VCol cols="12" md="8">
+        <ViewCard class="box2" title="Shift Timeline">
+          <div v-if="currentPeriod === 'week' && jobs.length" class="chart-wrapper">
+            <!-- Overlay if no earnings data -->
+            <div v-if="!hasEarningsData" class="calendar-overlay">
+              <div class="overlay-box">
+                <div class="overlay-title">No earnings data</div>
+                <div class="overlay-text">
+                  Check whether your dataset is empty, or select another period.
+                </div>
+              </div>
+            </div>
 
-      <div>
-        <strong>Number of Jobs</strong>
-        <div>{{ totalJobs }}</div>
-      </div>
-    </div>
+            <ShiftRangeChart :options="chartOptions" :series="chartSeries" height="450" />
 
-    <!-- BOX 2 → Apex Timeline -->
-    <div class="box box2">
-      <h2 class="mb-4">Shift Timeline</h2>
-
-      <div v-if="currentPeriod === 'week' && jobs.length" class="chart-wrapper">
-        <!-- Overlay if no earnings data -->
-        <div v-if="!hasEarningsData" class="calendar-overlay">
-          <div class="overlay-box">
-            <div class="overlay-title">No earnings data</div>
-            <div class="overlay-text">
-              Check whether your dataset is empty, or select another period.
+            <div class="legend mt-4">
+              <div
+                v-for="item in activityLegendItems"
+                :key="item.label"
+                class="legend-item"
+              >
+                <span
+                  class="legend-swatch"
+                  :style="{ background: item.color }"
+                />
+                {{ item.label }} ({{ item.count }})
+              </div>
             </div>
           </div>
-        </div>
 
-        <ShiftRangeChart :options="chartOptions" :series="chartSeries" height="450" />
-
-        <div class="legend mt-4">
-          <div
-            v-for="item in activityLegendItems"
-            :key="item.label"
-            class="legend-item"
-          >
-            <span
-              class="legend-swatch"
-              :style="{ background: item.color }"
+          <div v-else-if="currentPeriod == 'month' && currentWeekStart.isValid()">
+            <MonthlyCalendar
+              :key="`bs-${calendarYear}-${calendarMonth}-${periodStore.periodStart}-${periodStore.periodEnd}`"
+              :year="calendarYear"
+              :month="calendarMonth"
+              :shifts="shiftsThisPeriod"
+              :payments="paymentsInRange"
+              :selectedDate="selectedCalendarDate"
+              @select-day="onSelectDay"
             />
-            {{ item.label }} ({{ item.count }})
           </div>
-        </div>
-      </div>
 
-      <div v-else-if="currentPeriod == 'month' && currentWeekStart.isValid()">
-        <MonthlyCalendar
-          :key="`bs-${calendarYear}-${calendarMonth}-${periodStore.periodStart}-${periodStore.periodEnd}`"
-          :year="calendarYear"
-          :month="calendarMonth"
-          :shifts="shiftsThisPeriod"
-          :payments="paymentsInRange"
-          :selectedDate="selectedCalendarDate"
-          @select-day="onSelectDay"
-        />
-      </div>
+          <div v-else-if="currentPeriod === 'total'">
+            <HeatmapChart :key="'heatmap-total'" :series="heatmapSeries" :options="heatmapOptions" height="450" />
+          </div>
 
-      <div v-else-if="currentPeriod === 'total'">
-        <HeatmapChart :key="'heatmap-total'" :series="heatmapSeries" :options="heatmapOptions" height="450" />
-      </div>
+          <p v-else>No job data found.</p>
+        </ViewCard>
+      </VCol>
 
-      <p v-else>No job data found.</p>
-    </div>
-
-    <!-- BOX 4 → Average Work Time -->
-    <div class="right-column">
-      <div class="box box4 avg-box">
-        <p><strong>Average Work Time</strong></p>
-        <p class="avg-value">{{ averageWorkTime }}</p>
-      </div>
-
-      <div
-        class="box box4 filter-box tour-jobtype-filter"
-      >
-        <label for="jobTypeSelect" class="filter-label">
-          <strong>Filter by Job Type</strong>
-        </label>
-        <select
-          id="jobTypeSelect"
-          v-model="selectedJobType"
-          class="filter-select"
-        >
-          <option value="">All</option>
-          <option
-            v-for="type in pageJobTypes"
-            :key="type"
-            :value="type"
-          >
-            {{ type }}
-          </option>
-        </select>
-      </div>
-    </div>
-
+      <VCol cols="12" md="4">
+        <ViewCard class="avg-box" title="Average Work Time">
+          <span class="text-h5">{{ averageWorkTime }}</span>
+        </ViewCard>
+        <ViewCard class="tour-jobtype-filter mt-3" title="Filter by Job Type">
+          <VSelect
+            v-model="selectedJobType"
+            :items="jobTypeItems"
+            outlined
+            dense
+            hide-details
+          />
+        </ViewCard>
+      </VCol>
+    </VRow>
   </div>
 </template>
 
@@ -150,6 +96,9 @@ import MonthlyCalendar from './MonthlyCalendar.vue'
 import mixin from '@/components/chart/view/mixin'
 import ShiftRangeChart from './charts/ShiftRangeChart.vue'
 import HeatmapChart from './charts/HeatmapChart.vue'
+import KpiTiles from '../shared/KpiTiles.vue'
+import PeriodToolbar from '../shared/PeriodToolbar.vue'
+import ViewCard from '../shared/ViewCard.vue'
 import dayjs from 'dayjs'
 import 'dayjs/locale/en'
 import weekday from 'dayjs/plugin/weekday'
@@ -163,7 +112,10 @@ export default {
   components: {
     MonthlyCalendar,
     ShiftRangeChart,
-    HeatmapChart
+    HeatmapChart,
+    KpiTiles,
+    PeriodToolbar,
+    ViewCard
   },
   mixins: [mixin],
 
@@ -177,6 +129,28 @@ export default {
   },
 
   computed: {
+    periodDescriptions() {
+      return {
+        week: '📅 Week view: See your shifts and key metrics for each day of the week',
+        month: '📆 Month view: Click on any day to view that week',
+        total: '📊 Total view: Your overall statistics and patterns across all time'
+      }
+    },
+
+    kpis() {
+      const hours = Math.floor(this.totalHours)
+      const minutes = Math.round((this.totalHours - hours) * 60)
+      return [
+        { label: 'Total Earnings', value: `${this.totalEarnings.toFixed(2)} ${this.currency}` },
+        { label: 'Total Hours Worked', value: `${hours}h ${minutes}m` },
+        { label: 'Number of Jobs', value: this.totalJobs }
+      ]
+    },
+
+    jobTypeItems() {
+      return [{ text: 'All', value: '' }, ...this.pageJobTypes]
+    },
+
     // Current period mode (week, month, total)
     currentPeriod() {
       return periodStore.mode
@@ -832,159 +806,6 @@ export default {
 </script>
 
 <style scoped>
-/* --- LAYOUT --- */
-.layout-container {
-  display: grid;
-  width: 98%;
-  grid-template-rows: auto 108px 1fr;
-  grid-template-columns: 70% 1fr;
-  gap: 16px;
-  margin-left: 12px;
-  margin-bottom: 24px;
-}
-
-.period-switch {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-  position: absolute;
-  display: flex;
-  gap: 6px;
-}
-
-.switch-btn {
-  padding: 4px 12px;
-  border: 1px solid #bbb;
-  border-radius: 0;
-  background: #fff;
-  color: #333;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.switch-btn.active {
-  background: #e6e6e6;
-  font-weight: 600;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
-}
-
-.period-descriptions {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-  padding-top: 45px;
-  padding-left: 0;
-  margin-top: 0;
-}
-
-.period-desc {
-  font-size: 0.85rem;
-  color: #666;
-  font-weight: 400;
-  margin: 0;
-}
-
-.week-nav {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  height: 32px;
-}
-
-.week-nav-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.nav-btn {
-  padding: 4px 12px;
-  border: 1px solid #bbb;
-  border-radius: 0;
-  background: #fff;
-  cursor: pointer;
-  font-size: 1rem;
-
-  box-shadow: 0 1px 2px rgba(0,0,0,.15);
-
-  transition:
-    background 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.05s ease;
-}
-
-.nav-btn:hover, .switch-btn:hover {
-  background: #f2f2f2;
-  box-shadow:
-    0 3px 1px -2px rgba(0,0,0,.25),
-    0 2px 4px 0 rgba(0,0,0,.20),
-    0 1px 8px 0 rgba(0,0,0,.18);
-  transform: translateY(-1px);
-}
-
-.week-label {
-  width: 240px;
-  padding: 4px 12px;
-  font-weight: 800;
-  font-size: 1.05rem;
-  letter-spacing: 0.02em;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #bbb;
-}
-
-.week-label.mode-week {
-  background: #e3f2fd;
-  border-color: #2196f377;
-  color: #0d47a1;
-}
-
-.week-label.mode-month {
-  background: #e8f5e9;
-  border-color: #4caf5077;
-  color: #1b5e20;
-}
-
-.week-label.mode-total {
-  width: 324px;
-  background: #fff3e0;
-  border-color: #ff9800bb;
-  color: #e65100;
-}
-
-/* Base box style */
-.box {
-  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),
-              0 2px 2px 0 rgba(0,0,0,.19),
-              0 1px 5px 0 rgba(0,0,0,.17);
-  border: 1px solid #bbbbbb99;
-  padding: 20px;
-  font-size: 1.2rem;
-}
-
-/* TOP BAR */
-.box1 {
-  grid-column: 1 / 3;
-  grid-row: 2 / 3;
-
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  justify-items: center;
-  align-items: center;
-  padding-bottom: 16px;
-}
-
-/* TIMELINE */
-.box2 {
-  grid-column: 1 / 2;
-  grid-row: 3 / 4;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 30px;
-}
 
 .chart-wrapper {
   position: relative;
@@ -1017,26 +838,6 @@ export default {
   opacity: 0.85;
 }
 
-/* RIGHT COLUMN BOX 4 */
-.box4 {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: left;
-  height: auto;
-  align-self: start;
-  padding-top: 16px;
-  min-width: 0;
-}
-
-.avg-box p {
-  margin: 8px 0;
-}
-
-.avg-value {
-  font-size: 1.6rem;
-}
-
 /* Legend */
 .legend {
   display:flex;
@@ -1056,48 +857,13 @@ export default {
   border-radius: 3px;
 }
 
-/* Tooltip */
-.tooltip-box {
-  padding: 8px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
 :deep(.apexcharts-heatmap-rect:hover) {
   stroke: #333;
   stroke-width: 1.5px;
 }
 
-.filter-select {
-  margin-top: 8px;
-  padding: 8px 10px;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: 1px solid #bbb;
-  background: white;
-  cursor: pointer;
-}
-
-.filter-select:focus {
-  outline: none;
-  border-color: #666;
-}
-
-.right-column {
-  align-content: start;
-  grid-column: 2 / 3;
-  grid-row: 3 / 4;
-
-  display: grid;
-  grid-template-rows: auto auto;
-  gap: 16px;
-}
-
 /* Active Filters Bar */
 .active-filters {
-  grid-column: 1 / 3;
-  grid-row: 2 / 3;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -1159,63 +925,11 @@ export default {
 }
 
 /* --- MEDIA QUERIES --- */
-@media (max-width: 768px) {
-  .layout-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    width: 94%;
-  }
 
-  .period-switch {
-    position: static;
-    justify-content: center;
-    margin-bottom: 12px;
-    grid-column: 1 / -1;
-    grid-row: 1 / 2;
-  }
-
-  /* move description under the switch on small screens */
-  .period-descriptions {
-    grid-column: 1 / -1;
-    grid-row: 2 / 3;
-    padding-top: 0;
-    margin-top: 0;
-    text-align: center;
-  }
-
-  .week-nav {
-    justify-content: center;
-    margin-bottom: 20px;
-    grid-column: 1 / -1;
-    grid-row: 3 / 4; /* below period-descriptions */
-  }
-
-  .box1 {
-    grid-column: 1 / -1;
-    grid-row: 4 / 5; /* move below nav */
-    grid-template-columns: 1fr;
-    gap: 12px;
-    text-align: center;
-  }
-
-  .box2 {
-    grid-column: 1 / -1;
-    grid-row: 6 / 7; /* push timeline into its own row */
-    margin-bottom: 12px;
-  }
-
-  .right-column {
-    grid-column: 1 / -1;
-    grid-row: 5 / 6; /* positioned below the timeline box */
-    display: block;
-    gap: 12px;
-    min-width: 0;
-  }
-
-  .box4, .avg-box, .filter-box {
-    width: 100%;
-    margin-bottom: 12px;
-    text-align: center;
-  }
+.tooltip-box {
+  padding: 8px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 </style>
