@@ -1,36 +1,13 @@
 <template>
-  <div class="layout-container">
-    <div class="period-switch">
-      <button
-        v-for="p in ['week','month','total']"
-        :key="p"
-        :class="['switch-btn', { active: currentPeriod === p }]"
-        @click="periodStore.setMode(p)"
-        :title="getPeriodDescription(p)"
-      >
-        {{ p.toUpperCase() }}
-      </button>
-    </div>
-
-    <div class="period-descriptions">
-      <div v-if="currentPeriod === 'week'" class="period-desc">
-        📅 Week view: Hours distribution across job types for each day
-      </div>
-      <div v-if="currentPeriod === 'month'" class="period-desc">
-        📆 Month view: Hours distribution across all days of the month
-      </div>
-      <div v-if="currentPeriod === 'total'" class="period-desc">
-        📊 Total view: Ranking of all job types by total hours worked
-      </div>
-    </div>
-
-    <div class="week-nav">
-      <div class="week-nav-wrapper">
-        <button class="nav-btn" @click="prevWeek" v-if="currentPeriod !== 'total'">←</button>
-        <div class="week-label" :class="`mode-${currentPeriod}`">{{ weekLabel }}</div>
-        <button class="nav-btn" @click="nextWeek" v-if="currentPeriod !== 'total'">→</button>
-      </div>
-    </div>
+  <div class="fhnw-view">
+    <PeriodToolbar
+      :mode="currentPeriod"
+      :label="weekLabel"
+      :descriptions="periodDescriptions"
+      @mode="periodStore.setMode($event)"
+      @prev="prevWeek"
+      @next="nextWeek"
+    />
 
     <!-- Active Filters Bar -->
     <div class="active-filters" v-if="hasActiveFilters">
@@ -43,11 +20,7 @@
     </div>
 
     <!-- BOX 2 → Heatmap for Week/Month or Bar for Total -->
-    <div
-      class="box box2 tour-activity-chart"
-      :class="{ 'box2--fullwidth': true }"
-    >
-      <h2 class="mb-4">Activity Types</h2>
+    <ViewCard class="box2 tour-activity-chart mt-3" title="Activity Types">
 
       <!-- WEEK VIEW: Heatmap -->
       <div v-if="currentPeriod === 'week' && filteredJobs.length">
@@ -113,13 +86,15 @@
 
       <!-- TOTAL VIEW: Bar chart -->
       <div v-else-if="currentPeriod === 'total' && filteredJobs.length">
-        <div class="total-sort">
-          <label><strong>Sort activities by time worked</strong></label>
-          <select v-model="totalSortDirection" class="filter-select">
-            <option value="desc">Descending</option>
-            <option value="asc">Ascending</option>
-          </select>
-        </div>
+        <VSelect
+          v-model="totalSortDirection"
+          class="total-sort"
+          label="Sort activities by time worked"
+          :items="[{ text: 'Descending', value: 'desc' }, { text: 'Ascending', value: 'asc' }]"
+          outlined
+          dense
+          hide-details
+        />
 
         <HorizontalBarChart
           :key="'total-' + totalSortDirection"
@@ -130,7 +105,7 @@
       </div>
 
       <p v-else>No job data found for this {{ currentPeriod }}.</p>
-    </div>
+    </ViewCard>
 
   </div>
 </template>
@@ -144,6 +119,8 @@ import 'dayjs/locale/en'
 import weekday from 'dayjs/plugin/weekday'
 import isBetween from 'dayjs/plugin/isBetween'
 import { periodStore } from './store/periodStore'
+import PeriodToolbar from '../shared/PeriodToolbar.vue'
+import ViewCard from '../shared/ViewCard.vue'
 dayjs.extend(isBetween)
 dayjs.extend(weekday)
 
@@ -151,7 +128,9 @@ export default {
   name: 'YoojoActivityTypes',
   components: {
     HeatmapChart,
-    HorizontalBarChart
+    HorizontalBarChart,
+    PeriodToolbar,
+    ViewCard
   },
   mixins: [mixin],
 
@@ -163,6 +142,14 @@ export default {
   },
 
   computed: {
+    periodDescriptions() {
+      return {
+        week: '📅 Week view: Hours distribution across job types for each day',
+        month: '📆 Month view: Hours distribution across all days of the month',
+        total: '📊 Total view: Ranking of all job types by total hours worked'
+      }
+    },
+
     // Get the description text for each period mode to show in the tooltip
     currentPeriod() {
       return periodStore.mode
@@ -712,176 +699,8 @@ export default {
 </script>
 
 <style scoped>
-.layout-container {
-  display: grid;
-  width: 98%;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  margin-left: 12px;
-}
-
-.period-switch {
-  grid-row: 1 / 2;
-  position: absolute;
-  display: flex;
-  gap: 6px;
-}
-
-.switch-btn {
-  padding: 4px 12px;
-  border: 1px solid #bbb;
-  border-radius: 0;
-  background: #fff;
-  color: #333;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.switch-btn.active {
-  background: #e6e6e6;
-  font-weight: 600;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
-}
-
-.period-descriptions {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-  padding-top: 45px;
-  padding-left: 0;
-  margin-top: 0;
-}
-
-.period-desc {
-  font-size: 0.85rem;
-  color: #666;
-  font-weight: 400;
-  margin: 0;
-}
-
-.week-nav {
-  grid-row: 1 / 2;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  height: 32px;
-}
-
-.week-nav-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.nav-btn {
-  padding: 4px 12px;
-  border: 1px solid #bbb;
-  border-radius: 0;
-  background: #fff;
-  cursor: pointer;
-  font-size: 1rem;
-
-  box-shadow: 0 1px 2px rgba(0,0,0,.15);
-
-  transition:
-    background 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.05s ease;
-}
-
-.nav-btn:hover, .switch-btn:hover {
-  background: #f2f2f2;
-  box-shadow:
-    0 3px 1px -2px rgba(0,0,0,.25),
-    0 2px 4px 0 rgba(0,0,0,.20),
-    0 1px 8px 0 rgba(0,0,0,.18);
-  transform: translateY(-1px);
-}
-
-.week-label {
-  width: 240px;
-  padding: 4px 12px;
-  font-weight: 800;
-  font-size: 1.05rem;
-  letter-spacing: 0.02em;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #bbb;
-}
-
-.week-label.mode-week {
-  background: #e3f2fd;
-  border-color: #2196f377;
-  color: #0d47a1;
-}
-
-.week-label.mode-month {
-  background: #e8f5e9;
-  border-color: #4caf5077;
-  color: #1b5e20;
-}
-
-.week-label.mode-total {
-  width: 324px;
-  background: #fff3e0;
-  border-color: #ff9800bb;
-  color: #e65100;
-}
-
-.box {
-  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),
-              0 2px 2px 0 rgba(0,0,0,.19),
-              0 1px 5px 0 rgba(0,0,0,.17);
-  border: 1px solid #bbbbbb99;
-  padding: 20px;
-  font-size: 1.2rem;
-}
-
-.box2 {
-  grid-column: 1 / 2;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 30px;
-}
-
-.filter-label {
-  font-weight: 600;
-  font-size: 1.1rem;
-  margin-bottom: 6px;
-  color: #333;
-}
-
-.filter-select {
-  margin-top: 4px;
-  padding: 8px 12px;
-  font-size: 1rem;
-  border: 1.5px solid #ccc;
-  border-radius: 8px;
-  background-color: #fff;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  cursor: pointer;
-}
-
-.filter-select:hover {
-  border-color: #888;
-}
-.filter-select:focus {
-  border-color: #1e88e5;
-  box-shadow: 0 0 4px rgba(30, 136, 229, 0.5);
-  outline: none;
-}
-
-.box2--fullwidth {
-  grid-column: 1 / 4;
-}
-
 .total-sort {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  max-width: 320px;
   margin-bottom: 12px;
 }
 
@@ -891,20 +710,8 @@ export default {
   color: #555;
 }
 
-.right-column {
-  align-content: start;
-  grid-column: 2 / 3;
-  grid-row: 3 / 4;
-
-  display: grid;
-  grid-template-rows: auto auto;
-  gap: 16px;
-}
-
 /* Active Filters Bar */
 .active-filters {
-  grid-column: 1 / 3;
-  grid-row: 2 / 3;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -965,46 +772,6 @@ export default {
   color: #333;
 }
 
-@media (max-width: 768px) {
-  .layout-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    width: 94%;
-  }
-
-  .period-switch {
-    position: static;
-    grid-column: 1 / 2;
-    grid-row: auto;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-
-  .period-descriptions {
-    grid-column: 1 / 2;
-    grid-row: auto;
-    padding-top: 0;
-    margin-top: 0;
-    text-align: center;
-  }
-
-  .week-nav {
-    grid-column: 1 / 2;
-    grid-row: auto;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-
-  .box2 {
-    grid-column: 1 / -1;
-    grid-row: 4 / 5; /* place heatmap/bar below week-nav */
-    margin-bottom: 12px;
-  }
-
-  .box2--fullwidth { grid-column: 1 / -1; }
-  .filter-select { width: 100%; box-sizing: border-box; }
-}
-
 .activity-legend {
   display: flex;
   flex-wrap: wrap;
@@ -1022,10 +789,6 @@ export default {
   height: 14px;
   border-radius: 3px;
   margin-top: 2px;
-}
-.legend-desc {
-  color: #666;
-  font-size: 0.75rem;
 }
 
 :deep(.apexcharts-heatmap-rect:hover) {

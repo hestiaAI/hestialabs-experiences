@@ -1,17 +1,21 @@
 <template>
   <div class="layout">
     <div class="controls-bar">
-      <button
-        class="switch-btn filters-btn"
-        :class="{ open: showFilters }"
+      <VBtn
+        class="filters-btn"
+        outlined
+        small
+        :input-value="showFilters"
         @click="showFilters = !showFilters"
       >
+        <VIcon left small>
+          $vuetify.icons.mdiFilter
+        </VIcon>
         Filters
-        <span class="chevron">▾</span>
-      </button>
+      </VBtn>
     </div>
 
-    <div v-if="showFilters" class="filters-panel">
+    <VCard v-if="showFilters" outlined class="filters-panel">
       <!-- Time range -->
       <div class="filter-group">
         <div class="filter-title">Time range</div>
@@ -39,13 +43,13 @@
           Uncompleted
         </label>
       </div>
-    </div>
+    </VCard>
 
     <div class="content-area">
       <!-- LEFT SIDE — MapLibre Map -->
-      <div class="map-div">
+      <VCard outlined class="map-div">
         <div class="map-header">
-          <h3>{{ mapTitle }}</h3>
+          <h3 class="text-subtitle-1 font-weight-bold">{{ mapTitle }}</h3>
 
           <label class="area-toggle">
             <input
@@ -92,18 +96,21 @@
             Please adjust your filters.
           </div>
         </div>
-      </div>
+      </VCard>
 
       <!-- RIGHT SIDE — Selected Trips -->
-      <div class="selected-routes">
+      <VCard outlined class="selected-routes">
         <div class="title-row">
-          <h3>Selected Trips</h3>
-          <button
+          <h3 class="text-subtitle-1 font-weight-bold">Selected Trips</h3>
+          <VBtn
             class="clear-btn"
+            text
+            small
+            color="primary"
             @click="clearMapSelection"
           >
             Unselect
-          </button>
+          </VBtn>
         </div>
 
         <div class="trip-list">
@@ -153,7 +160,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </VCard>
     </div>
   </div>
 </template>
@@ -837,25 +844,9 @@ export default {
   gap: 6px;
 }
 
-.filters-btn .chevron {
-  font-size: 0.8rem;
-  transition: transform 0.2s ease;
-}
-
-/* Rotate chevron when open */
-.filters-btn.open .chevron {
-  transform: rotate(180deg);
-}
-
 .filters-panel {
   margin: 0 0 16px 0;
   padding: 12px 16px;
-  border: 1px solid #bbbbbb99;
-  background: #fff;
-  box-shadow:
-    0 3px 1px -2px rgba(0,0,0,.2),
-    0 2px 2px 0 rgba(0,0,0,.19),
-    0 1px 5px 0 rgba(0,0,0,.17);
   display: flex;
   gap: 32px;
   flex-wrap: wrap;
@@ -900,39 +891,6 @@ export default {
 /* Checkbox alignment */
 .filter-group input[type="checkbox"] {
   cursor: pointer;
-}
-
-.switch-btn {
-  padding: 4px 12px;
-  border: 1px solid #bbb;
-  border-radius: 0;
-  background: #fff;
-  color: #333;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.switch-btn.active {
-  background: #e6e6e6;
-  font-weight: 600;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
-}
-
-.switch-btn:hover {
-  background: #f2f2f2;
-  box-shadow:
-    0 3px 1px -2px rgba(0,0,0,.25),
-    0 2px 4px 0 rgba(0,0,0,.20),
-    0 1px 8px 0 rgba(0,0,0,.18);
-  transform: translateY(-1px);
-}
-
-.week-label {
-  font-weight: 700;
-  color: #333;
-  font-size: 1rem;
-  width: 240px;
-  text-align: center;
 }
 
 .content-area {
@@ -1044,10 +1002,6 @@ export default {
   flex: 0 0 70%;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),
-            0 2px 2px 0 rgba(0,0,0,.19),
-            0 1px 5px 0 rgba(0,0,0,.17);
-  border: 1px solid #bbbbbb99;
   margin-right: 16px;
   padding: 16px;
   min-height: 0;
@@ -1068,10 +1022,6 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 0 0 28%;
-  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),
-              0 2px 2px 0 rgba(0,0,0,.19),
-              0 1px 5px 0 rgba(0,0,0,.17);
-  border: 1px solid #bbbbbb99;
   padding: 16px;
 }
 
@@ -1080,21 +1030,6 @@ export default {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
-}
-
-.clear-btn {
-  padding: 4px 6px;
-  background: #f2f2f2;
-  border: 1px solid #aaa;
-  cursor: pointer;
-  font-size: 0.8rem;
-
-  box-shadow: 0 1px 2px rgba(0,0,0,.15);
-  transition: background 0.15s ease, box-shadow 0.15s ease;
-}
-
-.clear-btn:hover {
-  background: #d9d9d9;
 }
 
 .trip-list {
@@ -1192,20 +1127,6 @@ export default {
   color: #666;
 }
 
-.map-unavailable {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 84%;
-  font-size: 1rem;
-  color: #555;
-  background-color: #f0f0f0;
-  border-radius: 8px;
-  text-align: center;
-  padding: 16px;
-  margin-top: 4px;
-}
-
 /* Mobile layout */
 @media (max-width: 768px) {
   .layout {
@@ -1237,10 +1158,6 @@ export default {
     width: 100%;
     height: auto;
     max-height: 420px;
-  }
-
-  .nav-btn {
-    padding: 8px 12px;
   }
 }
 </style>
