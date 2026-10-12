@@ -7,7 +7,7 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 import { mount } from '@vue/test-utils'
 import { vuetify } from '../vuetify.helpers'
-import EarningsView from '@/components/chart/view/uberEats/Earnings.vue'
+import EarningsView from '@/components/chart/view/uberEats/ServiceRevenues.vue'
 
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isSameOrAfter)
@@ -101,7 +101,7 @@ function mountComponent(props = {}) {
  * Tests — UI & interactions
  * --------------------------------------------------- */
 
-describe('Earnings.vue - UI & interactions', () => {
+describe('ServiceRevenues.vue - UI & interactions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -129,7 +129,7 @@ describe('Earnings.vue - UI & interactions', () => {
 
   test('renders earnings header', () => {
     const wrapper = mountComponent()
-    expect(wrapper.text()).toContain('Earnings Breakdown')
+    expect(wrapper.text()).toContain('Service revenues breakdown')
   })
 
   test('renders Apex chart container', () => {
@@ -140,7 +140,7 @@ describe('Earnings.vue - UI & interactions', () => {
   test('renders earnings legend', () => {
     const wrapper = mountComponent()
 
-    expect(wrapper.text()).toContain('Earnings (no tips)')
+    expect(wrapper.text()).toContain('Base revenue (no tips)')
     expect(wrapper.text()).toContain('Tips')
   })
 

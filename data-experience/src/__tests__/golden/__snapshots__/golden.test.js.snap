@@ -4995,6 +4995,51 @@ Object {
 }
 `;
 
+exports[`uber-eats with uber-eats-sample.zip view block outputs match the snapshots: service_revenues 1`] = `
+Object {
+  "count": 81,
+  "firstItems": Array [
+    Object {
+      "base": 472.85,
+      "currency": "CHF",
+      "granularity": "month",
+      "other": 0,
+      "period": "2023-11",
+      "tips": 15.07,
+      "vat": 0,
+    },
+    Object {
+      "base": 121.72,
+      "currency": "CHF",
+      "granularity": "month",
+      "other": 0,
+      "period": "2023-12",
+      "tips": 0,
+      "vat": 0,
+    },
+    Object {
+      "base": 1848.17,
+      "currency": "CHF",
+      "granularity": "month",
+      "other": 0,
+      "period": "2024-01",
+      "tips": 50.88,
+      "vat": 0,
+    },
+  ],
+  "headers": Array [
+    "period",
+    "granularity",
+    "base",
+    "tips",
+    "vat",
+    "other",
+    "currency",
+  ],
+  "sha256": "5952205d96a1aec47602b391a8484a4a2b762c90dd57a4e5eafe5aa8611592b9",
+}
+`;
+
 exports[`uber-eats with uber-eats-sample.zip view block outputs match the snapshots: trips_by_weekday_hour 1`] = `
 Object {
   "count": 168,
