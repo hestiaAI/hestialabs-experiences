@@ -148,7 +148,7 @@ dayjs.extend(isBetween)
 dayjs.extend(weekday)
 
 export default {
-  name: 'BabysitsActivityTypes',
+  name: 'YoojoActivityTypes',
   components: {
     HeatmapChart,
     HorizontalBarChart
@@ -635,9 +635,9 @@ export default {
     // Initialize period store from jobs
     periodStore.initFromShifts(this.jobs)
 
-    if (window.__continueBabysitterTour) {
-      window.__continueBabysitterTour()
-      window.__continueBabysitterTour = null
+    if (window.__continueYoojoTour) {
+      window.__continueYoojoTour()
+      window.__continueYoojoTour = null
     }
   },
 

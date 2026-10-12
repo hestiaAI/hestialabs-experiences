@@ -168,7 +168,7 @@ const TIME_BUCKETS = {
 }
 
 export default {
-  name: 'BabysitsEarningsDistribution',
+  name: 'YoojoEarningsDistribution',
   components: { EarningsByDay, TotalStackedBar, EarningsPerHourBar },
   mixins: [mixin],
 
@@ -1000,9 +1000,9 @@ export default {
     // Initialize period store from jobs
     periodStore.initFromShifts(this.jobs)
 
-    if (window.__continueBabysitterTour) {
-      window.__continueBabysitterTour()
-      window.__continueBabysitterTour = null
+    if (window.__continueYoojoTour) {
+      window.__continueYoojoTour()
+      window.__continueYoojoTour = null
     }
   },
 

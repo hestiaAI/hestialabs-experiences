@@ -1,6 +1,6 @@
 # Experience Development: Implementation Guide
 
-This document provides comprehensive technical specifications and procedures for the development and deployment of new experiences within the Hestia Labs platform. Procedures described herein are based upon reviewed implementations of existing experiences, including Uber Eats and Babysits.
+This document provides comprehensive technical specifications and procedures for the development and deployment of new experiences within the Hestia Labs platform. Procedures described herein are based upon reviewed implementations of existing experiences, including Uber Eats and Yoojo.
 
 ### Project Structure (Monorepo Layout)
 
@@ -836,7 +836,7 @@ Update the development configuration file `experiences/config/dev.json`:
 
 ```json
 {
-  "experiences": ["my-experience", "uber-eats", "babysits"]
+  "experiences": ["my-experience", "uber-eats", "yoojo"]
 }
 ```
 
@@ -953,7 +953,7 @@ The following performance targets define acceptable thresholds for production de
 
 ## 18. Maintenance and Expansion of Existing Experiences
 
-This section provides guidance for maintaining and extending the existing Uber Eats and Babysits experiences within the platform.
+This section provides guidance for maintaining and extending the existing Uber Eats and Yoojo experiences within the platform.
 
 ### 18.1 Schema Evolution and Format Changes
 
@@ -998,7 +998,7 @@ To extend an experience with new metrics or charts (e.g., "Tips over Time" for U
 | Experience | Data Logic Path | UI Components Path |
 |------------|-----------------|-------------------|
 | **Uber Eats** | `packages/packages/experiences/uber-eats/src/` | `data-experience/src/components/chart/view/uberEats/` |
-| **Babysits** | `packages/packages/experiences/babysits/src/` | `data-experience/src/components/chart/view/babysits/` |
+| **Yoojo** | `packages/packages/experiences/yoojo/src/` | `data-experience/src/components/chart/view/yoojo/` |
 
 ### 18.4 Updating Onboarding Tours
 

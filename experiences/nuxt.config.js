@@ -135,6 +135,10 @@ export default {
     }
   },
 
+  router: {
+    middleware: ['renamed-experiences']
+  },
+
   i18n: {
     baseUrl,
     locales: locales.filter(({ code }) => i18nLocales.includes(code)),

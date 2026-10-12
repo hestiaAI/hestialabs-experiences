@@ -145,7 +145,7 @@
 </template>
 
 <script>
-import { createBabysitterTour } from './onboarding/babysitterTour'
+import { createYoojoTour } from './onboarding/yoojoTour'
 import MonthlyCalendar from './MonthlyCalendar.vue'
 import mixin from '@/components/chart/view/mixin'
 import ShiftRangeChart from './charts/ShiftRangeChart.vue'
@@ -159,7 +159,7 @@ dayjs.extend(isBetween)
 dayjs.extend(weekday)
 
 export default {
-  name: 'BabysitsShiftTimeline',
+  name: 'YoojoShiftTimeline',
   components: {
     MonthlyCalendar,
     ShiftRangeChart,
@@ -734,12 +734,12 @@ export default {
       periodStore.setPeriod(monday.toISOString(), monday.add(6, 'day').endOf('day').toISOString())
     }
 
-    const alreadyShown = localStorage.getItem('babysitterTourShown')
+    const alreadyShown = localStorage.getItem('yoojoTourShown')
 
     if (!alreadyShown) {
-      const tour = createBabysitterTour()
+      const tour = createYoojoTour()
       tour.start()
-      localStorage.setItem('babysitterTourShown', 'yes')
+      localStorage.setItem('yoojoTourShown', 'yes')
     }
   },
 

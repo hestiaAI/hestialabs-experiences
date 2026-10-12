@@ -4,13 +4,7 @@
 
 import { mount } from '@vue/test-utils'
 import dayjs from 'dayjs'
-import OverView from '@/components/chart/view/babysits/OverView.vue'
-import MonthlyCalendar from '@/components/chart/view/babysits/MonthlyCalendar.vue'
-
-// Mock the tour
-jest.mock('@/components/chart/view/babysits/onboarding/babysitterTour', () => ({
-  createBabysitterTour: () => ({ start: jest.fn() })
-}))
+import EarningsDistribution from '@/components/chart/view/yoojo/EarningsDistribution.vue'
 
 // Stub ApexCharts
 jest.mock('vue-apexcharts', () => ({
@@ -22,6 +16,7 @@ jest.mock('vue-apexcharts', () => ({
 
 function generateJobs(count, startDate) {
   const jobTypes = ['Evening babysit', 'Night shift', 'Weekend care', 'Holiday care', 'After-school care']
+  const categories = ['Ménage', 'Animaux', 'Aménagement', 'Garde d\'enfants']
   const jobs = []
 
   for (let i = 0; i < count; i++) {
@@ -38,24 +33,28 @@ function generateJobs(count, startDate) {
       earnings: (Math.random() * 30 + 15).toFixed(2),
       location: ['Basel', 'Zurich', 'Bern', 'Lucerne'][i % 4],
       job_type: jobTypes[i % jobTypes.length],
-      status: Math.random() > 0.3 ? 'completed' : 'paid'
+      category: categories[i % categories.length],
+      status: Math.random() > 0.3 ? 'completed' : 'paid',
+      currency: 'CHF'
     })
   }
 
   return jobs
 }
 
-function mountOverview(jobsCount) {
+function mountEarningsDistribution(jobsCount) {
   const startDate = dayjs('2023-01-02')
   const jobs = generateJobs(jobsCount, startDate)
 
-  return mount(OverView, {
+  return mount(EarningsDistribution, {
     propsData: {
       values: jobs
     },
     stubs: {
       ApexChart: true,
-      MonthlyCalendar: true
+      EarningsByDay: true,
+      TotalStackedBar: true,
+      EarningsPerHourBar: true
     }
   })
 }
@@ -66,36 +65,36 @@ function mountOverview(jobsCount) {
 const describeIfPerf =
   process.env.RUN_PERF === 'true' ? describe : describe.skip
 
-describeIfPerf('Babysits OverView performance test', () => {
+describeIfPerf('Yoojo EarningsDistribution performance test', () => {
   const cases = [
-    { jobs: 100, max: 200 },
-    { jobs: 500, max: 400 },
-    { jobs: 1000, max: 600 },
-    { jobs: 5000, max: 3000 }
+    { jobs: 100, max: 300 },
+    { jobs: 500, max: 500 },
+    { jobs: 1000, max: 800 },
+    { jobs: 5000, max: 1800 }
   ]
 
   cases.forEach(({ jobs, max }) => {
     it(`jobs=${jobs}`, () => {
       const t0 = performance.now()
 
-      const wrapper = mountOverview(jobs)
+      const wrapper = mountEarningsDistribution(jobs)
       const vm = wrapper.vm
 
       // Force evaluation of heavy computed properties
       void vm.filteredJobs
-      void vm.pageJobTypes
-      void vm.activityTypeColors
-      void vm.totalEarnings
-      void vm.totalHours
-      void vm.totalJobs
       void vm.chartSeries
-      void vm.heatmapSeries
+      void vm.totalStackedBarSeries
+      void vm.earningsPerHourSeries
+      void vm.totalPanelActivities
+      void vm.monthDays
+      void vm.latestJobDate
+      void vm.earliestJobDate
 
       const t1 = performance.now()
       const duration = t1 - t0
 
       console.log(
-        `[OverView] jobs=${jobs} → ${duration.toFixed(2)}ms`
+        `[EarningsDistribution] jobs=${jobs} → ${duration.toFixed(2)}ms`
       )
 
       expect(duration).toBeLessThan(max)

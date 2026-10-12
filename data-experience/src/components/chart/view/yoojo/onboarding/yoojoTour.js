@@ -1,6 +1,6 @@
 import Shepherd from 'shepherd.js'
 
-export function createBabysitterTour() {
+export function createYoojoTour() {
   // If Shepherd is not present (e.g. in test env), return a no-op tour
   if (typeof Shepherd === 'undefined') {
     return {
@@ -87,7 +87,7 @@ export function createBabysitterTour() {
     buttons: [{
       text: 'Next',
       action: () => {
-        window.__continueBabysitterTour = () => tour.next()
+        window.__continueYoojoTour = () => tour.next()
         const btn = document.getElementById('activityTypes')
         if (btn) btn.click()
       }
@@ -116,7 +116,7 @@ export function createBabysitterTour() {
     buttons: [{
       text: 'Next',
       action: () => {
-        window.__continueBabysitterTour = () => tour.next()
+        window.__continueYoojoTour = () => tour.next()
         const btn = document.getElementById('earningsDistribution')
         if (btn) btn.click()
       }

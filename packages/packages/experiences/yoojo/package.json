@@ -1,13 +1,13 @@
 {
-  "name": "@hestia.ai/babysits",
+  "name": "@hestia.ai/yoojo",
   "version": "0.0.1",
   "main": "dist/index.mjs",
   "type": "module",
-  "files": ["dist", "src/babysits-viewer.json"],
+  "files": ["dist", "src/yoojo-viewer.json"],
   "repository": {
     "type": "git",
     "url": "https://github.com/hestiaai/hestialabs-experiences",
-    "directory": "packages/packages/experiences/babysits"
+    "directory": "packages/packages/experiences/yoojo"
   },
   "publishConfig": {
     "access": "public"
