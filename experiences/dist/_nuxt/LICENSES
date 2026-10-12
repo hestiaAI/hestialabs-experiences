@@ -17,25 +17,6 @@
  */
 
 
-/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
-
-
-/**
- * Takes a string with placeholder variables like `%{smart_count} file selected`
- * and replaces it with values from options `{smart_count: 5}`
- *
- * @license https://github.com/airbnb/polyglot.js/blob/master/LICENSE
- * taken from https://github.com/airbnb/polyglot.js/blob/master/lib/polyglot.js#L299
- *
- * @param {string} phrase that needs interpolation, with placeholders
- * @param {object} options with values that will be used to replace placeholders
- * @returns {any[]} interpolated
- */
-
-
-/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
-
-
 /* @license
 Papa Parse
 v5.3.2
@@ -125,6 +106,80 @@ PERFORMANCE OF THIS SOFTWARE.
 /*! dom-to-image-more 06-09-2022 */
 
 /** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
+
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+
+
+/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+
+/**
+ * Takes a string with placeholder variables like `%{smart_count} file selected`
+ * and replaces it with values from options `{smart_count: 5}`
+ *
+ * @license https://github.com/airbnb/polyglot.js/blob/master/LICENSE
+ * taken from https://github.com/airbnb/polyglot.js/blob/master/lib/polyglot.js#L299
+ *
+ * @param {string} phrase that needs interpolation, with placeholders
+ * @param {object} options with values that will be used to replace placeholders
+ * @returns {any[]} interpolated
+ */
+
+
+/* @license
+Papa Parse
+v5.4.1
+https://github.com/mholt/PapaParse
+License: MIT
+*/
+
+
+/**
+ * MapLibre GL JS
+ * @license 3-Clause BSD. Full text of license: https://github.com/maplibre/maplibre-gl-js/blob/v5.16.0/LICENSE.txt
+ */
+
+
+/**
+ * @license
+ * Lodash <https://lodash.com/>
+ * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+
+/*!
+  * @svgdotjs/svg.resize.js - An extension for svg.js which allows to resize elements which are selected
+  * @version 2.0.4
+  * https://github.com/svgdotjs/svg.resize.js
+  *
+  * @copyright [object Object]
+  * @license MIT
+  *
+  * BUILT: Fri Sep 13 2024 12:43:14 GMT+0200 (Central European Summer Time)
+  */
+
+/*!
+  * @svgdotjs/svg.select.js - An extension of svg.js which allows to select elements with mouse
+  * @version 4.0.1
+  * https://github.com/svgdotjs/svg.select.js
+  *
+  * @copyright Ulrich-Matthias Schäfer
+  * @license MIT
+  *
+  * BUILT: Mon Jul 01 2024 15:04:42 GMT+0200 (Central European Summer Time)
+  */
+
+/*!
+ * ApexCharts v5.3.6
+ * (c) 2018-2025 ApexCharts
+ */
+
+
+/*! shepherd.js 14.5.1 */
 
 
 /*!
@@ -3321,67 +3376,17 @@ PERFORMANCE OF THIS SOFTWARE.
   \******************************************************************************/
 
 
-/* @license
-Papa Parse
-v5.4.1
-https://github.com/mholt/PapaParse
-License: MIT
-*/
-
-
 /**
- * MapLibre GL JS
- * @license 3-Clause BSD. Full text of license: https://github.com/maplibre/maplibre-gl-js/blob/v5.16.0/LICENSE.txt
+ * Takes a string with placeholder variables like `%{smart_count} file selected`
+ * and replaces it with values from options `{smart_count: 5}`
+ *
+ * @license https://github.com/airbnb/polyglot.js/blob/master/LICENSE
+ * taken from https://github.com/airbnb/polyglot.js/blob/master/lib/polyglot.js#L299
+ *
+ * @param {string} phrase that needs interpolation, with placeholders
+ * @param {object} options with values that will be used to replace placeholders
+ * @returns {any[]} interpolated
  */
-
-
-/**
- * @license
- * Lodash <https://lodash.com/>
- * Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
- * Released under MIT license <https://lodash.com/license>
- * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
- * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
- */
-
-
-/*!
-  * @svgdotjs/svg.resize.js - An extension for svg.js which allows to resize elements which are selected
-  * @version 2.0.4
-  * https://github.com/svgdotjs/svg.resize.js
-  *
-  * @copyright [object Object]
-  * @license MIT
-  *
-  * BUILT: Fri Sep 13 2024 12:43:14 GMT+0200 (Central European Summer Time)
-  */
-
-/*!
-  * @svgdotjs/svg.select.js - An extension of svg.js which allows to select elements with mouse
-  * @version 4.0.1
-  * https://github.com/svgdotjs/svg.select.js
-  *
-  * @copyright Ulrich-Matthias Schäfer
-  * @license MIT
-  *
-  * BUILT: Mon Jul 01 2024 15:04:42 GMT+0200 (Central European Summer Time)
-  */
-
-/*!
- * ApexCharts v5.3.6
- * (c) 2018-2025 ApexCharts
- */
-
-
-/*! shepherd.js 14.5.1 */
-
-
-/* @license
-Papa Parse
-v5.3.2
-https://github.com/mholt/PapaParse
-License: MIT
-*/
 
 
 /*!
