@@ -38,16 +38,6 @@
       </VListItem>
     </VListGroup>
 
-    <VListItem
-      link
-      :to="localePath({ name: 'spaces' })"
-    >
-      <VListItemIcon>
-        <VIcon>$vuetify.icons.mdiDatabase</VIcon>
-      </VListItemIcon>
-      <VListItemTitle>{{ $tc('Data Space', 2) }}</VListItemTitle>
-    </VListItem>
-
     <VListGroup
       :value="false"
       no-action
@@ -75,13 +65,6 @@
         :to="localePath({ name: 'tools-graphulator' })"
       >
         <VListItemTitle>{{ $t("Graphulator") }}</VListItemTitle>
-      </VListItem>
-      <VListItem
-        link
-        href="https://personaldata.io/digipower-academy-questionnaire/"
-        target="_blank"
-      >
-        <VListItemTitle>{{ $t("Data Spaces Creator") }}</VListItemTitle>
       </VListItem>
     </VListGroup>
 

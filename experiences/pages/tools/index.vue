@@ -18,14 +18,6 @@
           <VListItemTitle>{{ $t(name) }}</VListItemTitle>
         </VListItemContent>
       </VListItem>
-      <VListItem
-        href="https://personaldata.io/digipower-academy-questionnaire/"
-        target="_blank"
-      >
-        <VListItemContent>
-          <VListItemTitle>{{ $t("Data Spaces Creator") }}</VListItemTitle>
-        </VListItemContent>
-      </VListItem>
     </VList>
   </VContainer>
 </template>
