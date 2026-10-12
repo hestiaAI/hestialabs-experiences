@@ -1,5 +1,10 @@
 import type { FileManager } from '@/types/utils'
-import { isoWeekday, parseLocalTime, weekStart } from './local-time'
+import {
+  isoWeekday,
+  localMillis,
+  parseLocalTime,
+  weekStart
+} from './local-time'
 
 async function combined_data_pipeline({
   fileManager
@@ -123,6 +128,136 @@ async function trips_by_weekday_hour({
   }
 }
 
+const HOUR_MS = 3600 * 1000
+const DAY_MS = 24 * HOUR_MS
+const ONLINE_STATES = ['open', 'enroute', 'ontrip'] // P1, P2, P3
+const ACTIVE_STATES = ['enroute', 'ontrip'] // P2, P3
+
+type Granularity = 'month' | 'week'
+
+// Period key and end (exclusive), in local milliseconds, of the period containing `ms`
+function periodOf(ms: number, granularity: Granularity) {
+  const date = new Date(ms)
+  const year = date.getUTCFullYear()
+  const month = date.getUTCMonth()
+  if (granularity === 'month') {
+    const key = `${year}-${String(month + 1).padStart(2, '0')}`
+    return { key, end: Date.UTC(year, month + 1, 1) }
+  }
+  const weekday = (date.getUTCDay() + 6) % 7 // 0 = Monday
+  const start = Date.UTC(year, month, date.getUTCDate() - weekday)
+  return {
+    key: new Date(start).toISOString().slice(0, 10),
+    end: start + 7 * DAY_MS
+  }
+}
+
+// Completed trips per hour online (P1 + P2 + P3) and per hour active
+// (P2 + P3), by month and by week (starting Monday). State periods are split
+// at period boundaries; trips are counted at courier_accept_timestamp_local.
+async function trips_per_hour({ fileManager }: { fileManager: FileManager }) {
+  const online = (
+    await fileManager.getCsvItemsFromId('DriverOnlineOffline')
+  )[0] ?? {
+    headers: [],
+    items: []
+  }
+  const trips = (
+    await fileManager.getCsvItemsFromId('CourierLifetimeTripData')
+  )[0] ?? {
+    headers: [],
+    items: []
+  }
+
+  type Totals = { trips: number; onlineMs: number; activeMs: number }
+  const totals: Record<Granularity, Map<string, Totals>> = {
+    month: new Map(),
+    week: new Map()
+  }
+  const bucket = (granularity: Granularity, key: string) => {
+    let entry = totals[granularity].get(key)
+    if (!entry) {
+      entry = { trips: 0, onlineMs: 0, activeMs: 0 }
+      totals[granularity].set(key, entry)
+    }
+    return entry
+  }
+
+  for (const row of online.items) {
+    const state = row.earnerState
+    if (!ONLINE_STATES.includes(state)) {
+      continue
+    }
+    const begin = parseLocalTime(row.beginTimestampLocal)
+    const end = parseLocalTime(row.endTimestampLocal)
+    if (!begin || !end) {
+      continue
+    }
+    const active = ACTIVE_STATES.includes(state)
+    for (const granularity of ['month', 'week'] as Granularity[]) {
+      let from = localMillis(begin)
+      const to = localMillis(end)
+      while (from < to) {
+        const period = periodOf(from, granularity)
+        const until = Math.min(to, period.end)
+        const entry = bucket(granularity, period.key)
+        entry.onlineMs += until - from
+        if (active) {
+          entry.activeMs += until - from
+        }
+        from = until
+      }
+    }
+  }
+
+  for (const trip of trips.items) {
+    if (trip.deliveryStatus !== 'completed') {
+      continue
+    }
+    const time = parseLocalTime(trip.courierAcceptTimestampLocal)
+    if (!time) {
+      continue
+    }
+    for (const granularity of ['month', 'week'] as Granularity[]) {
+      bucket(
+        granularity,
+        periodOf(localMillis(time), granularity).key
+      ).trips += 1
+    }
+  }
+
+  const round = (value: number) => Math.round(value * 100) / 100
+  const items = (['month', 'week'] as Granularity[]).flatMap(granularity =>
+    [...totals[granularity].entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([period, { trips, onlineMs, activeMs }]) => {
+        const onlineHours = onlineMs / HOUR_MS
+        const activeHours = activeMs / HOUR_MS
+        return {
+          period,
+          granularity,
+          tphOnline: onlineHours ? round(trips / onlineHours) : null,
+          tphActive: activeHours ? round(trips / activeHours) : null,
+          trips,
+          onlineHours: round(onlineHours),
+          activeHours: round(activeHours)
+        }
+      })
+  )
+  return {
+    headers: [
+      'period',
+      'granularity',
+      'tphOnline',
+      'tphActive',
+      'trips',
+      'onlineHours',
+      'activeHours'
+    ],
+    items
+  }
+}
+
 const viewerFunctions = {
   postprocessors: {
     // add named postprocessors if needed
@@ -130,7 +265,8 @@ const viewerFunctions = {
   customPipelines: {
     combined_data_pipeline,
     csv_courier_trips,
-    trips_by_weekday_hour
+    trips_by_weekday_hour,
+    trips_per_hour
   }
 }
 

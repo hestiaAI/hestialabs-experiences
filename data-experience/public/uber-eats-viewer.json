@@ -27,6 +27,21 @@
               "noData": "Aucune course terminée dans cet export."
             }
           }
+        },
+        "trips_per_hour": {
+          "title": "Courses par heure",
+          "text": "Le nombre de courses par heure (TPH, « trips per hour ») est la mesure que certains opérateurs de flotte utilisent pour évaluer la performance d'un coursier. Votre temps en ligne comporte trois phases : P1, l'attente d'une commande (open) ; P2, le trajet vers le restaurant (en route) ; P3, la livraison (on trip). Le TPH en ligne divise vos courses terminées par votre temps en ligne (P1 + P2 + P3), attente comprise. Le TPH actif les divise par le temps passé à traiter des commandes (P2 + P3), c'est-à-dire le temps de travail selon Uber. Les courses sont comptées au moment où vous les avez acceptées ; le temps est réparti entre mois et semaines (les semaines commencent le lundi).",
+          "vizProps": {
+            "messages": {
+              "title": "Courses terminées par heure",
+              "month": "Mois",
+              "week": "Semaine",
+              "tphOnline": "TPH en ligne",
+              "tphActive": "TPH actif",
+              "trips": "Courses terminées",
+              "noData": "Aucun temps en ligne ni course terminée dans cet export."
+            }
+          }
         }
       }
     }
@@ -58,6 +73,15 @@
       "visualization": "uberEats/TripsHeatmap.vue",
       "title": "When you work",
       "text": "When you accept orders: each cell counts the completed trips accepted on that weekday and hour (local time). By default it shows the average per active week, meaning per week (Monday to Sunday) with at least one completed trip, so periods of different lengths can be compared. Switch to Total for the number over the whole export."
+    },
+    {
+      "showTable": false,
+      "id": "trips_per_hour",
+      "customPipeline": "trips_per_hour",
+      "files": ["DriverOnlineOffline", "CourierLifetimeTripData"],
+      "visualization": "uberEats/TripsPerHour.vue",
+      "title": "Trips per hour",
+      "text": "Trips per hour (TPH) is how some fleet operators measure a courier's performance. Your online time has three phases: P1, waiting for an order (open); P2, going to the restaurant (en route); P3, delivering (on trip). TPH online divides your completed trips by your time online (P1 + P2 + P3), including waiting. TPH active divides them by the time spent handling orders (P2 + P3), which is the working time according to Uber. Trips are counted when you accepted them; time is split at month and week boundaries (weeks start on Monday)."
     },
     {
       "showTable": false,
