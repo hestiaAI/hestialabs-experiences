@@ -5,7 +5,8 @@
 import dayjs from 'dayjs'
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
+import { vuetify } from '../vuetify.helpers'
 import EarningsView from '@/components/chart/view/uberEats/Earnings.vue'
 
 dayjs.extend(isSameOrBefore)
@@ -82,7 +83,8 @@ const mockValues = [
  * --------------------------------------------------- */
 
 function mountComponent(props = {}) {
-  return shallowMount(EarningsView, {
+  return mount(EarningsView, {
+    vuetify: vuetify(),
     props: {
       values: mockValues,
       ...props

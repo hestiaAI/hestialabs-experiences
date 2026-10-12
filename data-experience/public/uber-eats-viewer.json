@@ -1,9 +1,34 @@
 {
   "title": "Uber Eats",
   "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/ubereats.png",
+  "credits": "Developed by Serhii Moshtakov and Fabian Studer, students at <a href=\"https://www.fhnw.ch\" target=\"_blank\" rel=\"noopener noreferrer\">FHNW University of Applied Sciences and Arts Northwestern Switzerland</a>, with Prof. Anton Fedosov. Improved under the SPARK project “Participatory Methodology for AI Accountability in the Gig Economy” (Principal Investigator: Jessica Pidoux, University of Neuchâtel).",
   "messages": {
     "en": {
       "viewBlocks": {}
+    },
+    "fr": {
+      "intro": {
+        "credits": "Développée par Serhii Moshtakov et Fabian Studer, étudiants de la <a href=\"https://www.fhnw.ch\" target=\"_blank\" rel=\"noopener noreferrer\">Haute école spécialisée du Nord-Ouest de la Suisse (FHNW)</a>, avec le Prof. Anton Fedosov. Améliorée dans le cadre du projet SPARK « Participatory Methodology for AI Accountability in the Gig Economy » (requérante principale : Jessica Pidoux, Université de Neuchâtel)."
+      },
+      "viewBlocks": {
+        "trips_by_weekday_hour": {
+          "title": "Quand vous travaillez",
+          "text": "Quand vous acceptez des commandes : chaque case compte les courses terminées acceptées ce jour de la semaine et à cette heure (heure locale). Par défaut, elle montre la moyenne par semaine active, c'est-à-dire par semaine (du lundi au dimanche) comptant au moins une course terminée, pour pouvoir comparer des périodes de durées différentes. Choisissez « Total » pour le nombre sur toute la période de l'export.",
+          "vizProps": {
+            "messages": {
+              "title": "Courses terminées par jour et heure",
+              "perActiveWeek": "Par semaine active",
+              "total": "Total",
+              "perActiveWeekHelp": "Nombre moyen de courses terminées acceptées à chaque heure, par semaine comptant au moins une course terminée.",
+              "totalHelp": "Nombre de courses terminées acceptées à chaque heure, sur toute la période de l'export.",
+              "completedTrips": "Courses terminées",
+              "activeWeeks": "Semaines actives",
+              "busiest": "Heure la plus chargée",
+              "noData": "Aucune course terminée dans cet export."
+            }
+          }
+        }
+      }
     }
   },
   "viewBlocks": [
@@ -24,6 +49,15 @@
       "visualization": "uberEats/MyTrips.vue",
       "title": "My Trips",
       "text": ""
+    },
+    {
+      "showTable": false,
+      "id": "trips_by_weekday_hour",
+      "customPipeline": "trips_by_weekday_hour",
+      "files": ["CourierLifetimeTripData"],
+      "visualization": "uberEats/TripsHeatmap.vue",
+      "title": "When you work",
+      "text": "When you accept orders: each cell counts the completed trips accepted on that weekday and hour (local time). By default it shows the average per active week, meaning per week (Monday to Sunday) with at least one completed trip, so periods of different lengths can be compared. Switch to Total for the number over the whole export."
     },
     {
       "showTable": false,

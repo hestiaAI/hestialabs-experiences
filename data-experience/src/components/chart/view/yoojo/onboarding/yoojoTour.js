@@ -138,7 +138,7 @@ export function createYoojoTour() {
     buttons: [{
       text: 'Next',
       action: () => {
-        const totalBtn = document.querySelector('.top-bar .period-switch .switch-btn:last-child')
+        const totalBtn = document.querySelector('.period-switch .v-btn:last-child')
         if (totalBtn) totalBtn.click()
         setTimeout(() => tour.next(), 400)
       }

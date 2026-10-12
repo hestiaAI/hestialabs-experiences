@@ -36,3 +36,4 @@ The viewer format has one integer version: `"version"` in each file, and `loader
 ## Changelog
 
 - **v1** (2026-10): first published schema, describing the format all 32 experiences already used.
+- **v1**, non-breaking (2026-10): optional `credits` (and `messages.<lang>.intro.credits`).

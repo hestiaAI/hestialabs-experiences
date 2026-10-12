@@ -155,8 +155,9 @@ export default {
   position: relative;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: 1fr;
-  grid-template-rows: 28px repeat(6, 1fr);
+  /* only as many week rows as the month needs */
+  grid-template-rows: 28px;
+  grid-auto-rows: auto;
   gap: 6px;
   padding-top: 4px;
 }
@@ -206,7 +207,7 @@ export default {
 }
 
 .calendar-cell {
-  height: 62px;
+  min-height: 62px;
   overflow: hidden;
   border: 1px solid #ddd;
   padding: 3px;

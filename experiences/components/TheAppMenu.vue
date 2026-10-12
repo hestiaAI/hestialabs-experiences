@@ -87,6 +87,16 @@
       </VListItemIcon>
       <VListItemTitle>{{ $t('About') }}</VListItemTitle>
     </VListItem>
+
+    <VListItem
+      link
+      :to="localePath({ name: 'contributors' })"
+    >
+      <VListItemIcon>
+        <VIcon>$vuetify.icons.mdiAccountGroup</VIcon>
+      </VListItemIcon>
+      <VListItemTitle>{{ $t('Contributors') }}</VListItemTitle>
+    </VListItem>
   </VList>
 </template>
 <script>

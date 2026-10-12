@@ -189,8 +189,9 @@ export default {
   position: relative;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: 1fr;
-  grid-template-rows: 28px repeat(6, 1fr);
+  /* only as many week rows as the month needs */
+  grid-template-rows: 28px;
+  grid-auto-rows: auto;
   gap: 6px;
   padding-top: 4px;
 }
@@ -240,7 +241,7 @@ export default {
 }
 
 .calendar-cell {
-  height: 78px;
+  min-height: 78px;
   overflow: hidden;
   border: 1px solid #ddd;
   padding: 3px;
@@ -308,7 +309,7 @@ export default {
 @media (max-width: 768px) {
   .calendar { padding: 4px 6px 0 6px; gap: 4px; }
   .calendar-header { height: 24px; font-size: 12px; }
-  .calendar-cell { height: 90px; padding: 2px; }
+  .calendar-cell { min-height: 90px; padding: 2px; }
   .day-number { font-size: 11px; }
   .stat-hours, .stat-money { font-size: 9px; }
   .empty-stats { font-size: 11px; }

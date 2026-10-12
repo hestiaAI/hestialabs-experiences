@@ -63,6 +63,7 @@ const defaultLoaderOptions: Partial<LoaderOptions> = {
 }
 const defaultViewerOptions: Partial<ViewerOptions> = {
   collaborator: undefined,
+  credits: undefined,
   dataPortal: undefined,
   dataPortalMessage: undefined,
   dataPortalHtml: undefined,
@@ -100,7 +101,8 @@ const viewerOptionKeys = [
   'tutorialVideos',
   'url',
   'viewBlocks',
-  'collaborator'
+  'collaborator',
+  'credits'
 ]
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function cloneKeys(obj: any, keys: string[]) {

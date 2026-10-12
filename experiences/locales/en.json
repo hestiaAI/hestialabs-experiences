@@ -8,6 +8,10 @@
   "Available on-demand": "Available on-demand",
   "Connected to data space": "Connected to data space",
   "Contact us": "Contact us",
+  "Contributors": "Contributors",
+  "contributors": {
+    "intro": "The people and projects who built and funded these data experiences."
+  },
   "Data Experience": "Data Experience | Data Experiences",
   "Data Space": "Data Space | Data Spaces",
   "footer-digipower-academy": "The Digipower.academy has emerged out of projects initiated separately by {sitra}, {migros} (via {hestialabs} and {personaldataio})",

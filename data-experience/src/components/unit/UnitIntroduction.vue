@@ -29,10 +29,15 @@
               class="body-1"
               v-html="$tev(k('dataPortalMessage'), dataPortalMessage || '')"
             />
-            <!-- eslint-enable vue/no-v-html -->
             <p class="disclaimer">
               {{ $t('load-data.disclaimer') }}
             </p>
+            <p
+              v-if="$te(k('credits')) || credits"
+              class="body-2 text--secondary mt-4"
+              v-html="$tev(k('credits'), credits)"
+            />
+            <!-- eslint-enable vue/no-v-html -->
           </VCol>
         </VRow>
         <VRow>
@@ -89,6 +94,7 @@ const experienceProps = [
   'dataPortal',
   'dataPortalHtml',
   'dataPortalMessage',
+  'credits',
   'tutorialVideos',
   'videoHeight',
   'slug'

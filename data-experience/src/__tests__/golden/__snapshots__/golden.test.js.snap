@@ -4995,6 +4995,47 @@ Object {
 }
 `;
 
+exports[`uber-eats with uber-eats-sample.zip view block outputs match the snapshots: trips_by_weekday_hour 1`] = `
+Object {
+  "count": 168,
+  "firstItems": Array [
+    Object {
+      "activeWeeks": 62,
+      "day": "Mon",
+      "hour": 0,
+      "perActiveWeek": 0,
+      "trips": 0,
+      "weekday": 1,
+    },
+    Object {
+      "activeWeeks": 62,
+      "day": "Mon",
+      "hour": 1,
+      "perActiveWeek": 0,
+      "trips": 0,
+      "weekday": 1,
+    },
+    Object {
+      "activeWeeks": 62,
+      "day": "Mon",
+      "hour": 2,
+      "perActiveWeek": 0,
+      "trips": 0,
+      "weekday": 1,
+    },
+  ],
+  "headers": Array [
+    "weekday",
+    "day",
+    "hour",
+    "trips",
+    "perActiveWeek",
+    "activeWeeks",
+  ],
+  "sha256": "6046c0264f0abc80558ef88e83406b6fe34e211dd66fafff6ea848d3059e444a",
+}
+`;
+
 exports[`uber-rider with uber-driver-fr-paris.zip view block outputs match the snapshots: driverAccounting 1`] = `
 Object {
   "count": 30,

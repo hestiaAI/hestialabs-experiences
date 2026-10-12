@@ -26,6 +26,10 @@
       "description": "Additional HTML hints shown with the data portal.",
       "type": "string"
     },
+    "credits": {
+      "description": "Who built the experience and who funded it (HTML). Shown on the experience's introduction and on the Contributors page.",
+      "type": "string"
+    },
     "icon": {
       "description": "URL or path of an icon, typically the company logo.",
       "type": "string"
@@ -128,7 +132,8 @@
             "subtitle": { "type": "string" },
             "dataPortal": { "type": "string" },
             "dataPortalHtml": { "type": "string" },
-            "dataPortalMessage": { "type": "string" }
+            "dataPortalMessage": { "type": "string" },
+            "credits": { "type": "string" }
           }
         },
         "viewBlocks": {

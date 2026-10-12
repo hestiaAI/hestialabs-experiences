@@ -86,7 +86,7 @@ describe('MyTrips.vue UI & interactions', () => {
 
   test('renders Filters button', () => {
     const wrapper = mountComponent()
-    const buttons = wrapper.findAll('.switch-btn')
+    const buttons = wrapper.findAll('.filters-btn')
     expect(buttons.length).toBe(1)
     expect(wrapper.text()).toContain('Filters')
   })
@@ -112,7 +112,7 @@ describe('MyTrips.vue UI & interactions', () => {
     expect(wrapper.find('.filters-panel').exists()).toBe(false)
 
     // Click Filters button
-    const filtersBtn = wrapper.find('.switch-btn')
+    const filtersBtn = wrapper.find('.filters-btn')
     await filtersBtn.trigger('click')
 
     // Panel should now exist
@@ -127,7 +127,7 @@ describe('MyTrips.vue UI & interactions', () => {
     const wrapper = mountComponent()
 
     // Open the filters panel
-    const filtersBtn = wrapper.find('.switch-btn')
+    const filtersBtn = wrapper.find('.filters-btn')
     await filtersBtn.trigger('click')
 
     // Get all checkboxes

@@ -1,164 +1,89 @@
 <template>
-  <div class="layout-container">
-    <div class="period-switch">
-      <button
-        v-for="p in ['week', 'month', 'total']"
-        :key="p"
-        :class="['switch-btn', { active: mode === p }]"
-        @click="periodStore.setMode(p)"
-      >
-        {{ p.toUpperCase() }}
-      </button>
-    </div>
+  <div class="fhnw-view">
+    <PeriodToolbar
+      :mode="mode"
+      :label="periodLabel"
+      :descriptions="periodDescriptions"
+      @mode="periodStore.setMode($event)"
+      @prev="prevPeriod"
+      @next="nextPeriod"
+    />
 
-    <div class="period-descriptions">
-      <div v-if="mode === 'week'" class="period-desc">
-        📅 Week view: See your shifts and key metrics for each day of the week
-      </div>
-      <div v-if="mode === 'month'" class="period-desc">
-        📆 Month view: Click on any day to view that week
-      </div>
-      <div v-if="mode === 'total'" class="period-desc">
-        📊 Total view: Your overall statistics and patterns across all time
-      </div>
-    </div>
+    <KpiTiles class="box1 mt-3" :items="kpis" />
 
-    <div class="week-nav">
-      <div class="week-nav-wrapper">
-        <button
-          class="nav-btn"
-          v-if="mode !== 'total'"
-          @click="prevPeriod"
+    <VRow class="mt-1">
+      <VCol cols="12" md="8">
+        <ViewCard class="box2">
+          <TimelineChart
+            v-if="mode === 'week'"
+            :height="396"
+            :shifts="shiftsThisPeriodCache"
+            :showEmptyOverlay="!shiftsThisPeriodCache || shiftsThisPeriodCache.length === 0"
+            :showLegend="true"
+          />
+          <div v-else-if="mode === 'month' && periodReady && periodStart.isValid()">
+            <MonthlyCalendar
+              :key="`ue-${calendarYear}-${calendarMonth}-${periodStore.periodStart}-${periodStore.periodEnd}`"
+              view-block-translation-prefix="uberEats.monthlyCalendar"
+              :year="calendarYear"
+              :month="calendarMonth"
+              :dailyStats="dailyStatsByDate"
+              :currency="currency"
+              :selectedDate="selectedCalendarDate"
+              @select-day="onSelectDay"
+            />
+          </div>
+          <div v-else>
+            <TopDays :days="top5Days" :currency="currency" />
+          </div>
+        </ViewCard>
+      </VCol>
+
+      <VCol cols="12" md="4" class="right-column">
+        <ViewCard
+          class="box3"
+          title="Distance travelled"
+          info="Total for the selected period"
         >
-          ←
-        </button>
-        <div class="week-label" :class="`mode-${mode}`">{{ periodLabel }}</div>
-        <button
-          class="nav-btn"
-          v-if="mode !== 'total'"
-          @click="nextPeriod"
+          <span class="text-h5">{{ totalDistance }} km</span>
+        </ViewCard>
+        <ViewCard
+          class="box4 mt-3"
+          title="Distance per trip"
+          info="Min / average / max distance of one completed trip in the selected period."
         >
-          →
-        </button>
-      </div>
-    </div>
-
-    <!-- BOX 1 → Top full width stats -->
-    <div class="box box1">
-      <div>
-        <strong>Total Earnings</strong>
-        <div>{{ currency }} {{ totalEarnings.toFixed(2) }}</div>
-      </div>
-
-      <div>
-        <strong>Total Hours Worked</strong>
-        <div>{{ totalHours }}</div>
-      </div>
-
-      <div>
-        <strong>Number of Deliveries</strong>
-        <div>{{ deliveryCount }}</div>
-      </div>
-    </div>
-
-    <!-- BOX 2 → Timeline chart -->
-    <div class="box box2">
-      <TimelineChart
-        v-if="mode === 'week'"
-        :height="396"
-        :shifts="shiftsThisPeriodCache"
-        :showEmptyOverlay="!shiftsThisPeriodCache || shiftsThisPeriodCache.length === 0"
-        :showLegend="true"
-      />
-
-      <div v-else-if="mode === 'month' && periodReady && periodStart.isValid()">
-        <MonthlyCalendar
-          :key="`ue-${calendarYear}-${calendarMonth}-${periodStore.periodStart}-${periodStore.periodEnd}`"
-          view-block-translation-prefix="uberEats.monthlyCalendar"
-          :year="calendarYear"
-          :month="calendarMonth"
-          :dailyStats="dailyStatsByDate"
-          :currency="currency"
-          :selectedDate="selectedCalendarDate"
-          @select-day="onSelectDay"
-        />
-      </div>
-
-      <div v-else>
-        <TopDays :days="top5Days" :currency="currency" />
-      </div>
-    </div>
-
-    <!-- BOX 3 + BOX 4 → Distance + Avg Time -->
-    <div class="right-column">
-      <div class="box box3">
-        <p class="metric-title">
-          <strong>Distance travelled</strong>
-
-          <button
-            class="info-icon"
-            type="button"
-            @click.stop="toggleInfo('distance')"
-            aria-label="Info about distance travelled"
-          >
-            i
-          </button>
-
-          <span v-if="openInfo === 'distance'" class="info-tooltip">
-            Total for the selected period
-          </span>
-        </p>
-        <p>{{ totalDistance }} km</p>
-      </div>
-
-      <div class="box box4">
-        <p class="metric-title">
-          <strong>Distance per trip</strong>
-          <button class="info-icon" type="button" @click.stop="toggleInfo('distTrip')" aria-label="Info about distance per trip">i</button>
-          <span v-if="openInfo === 'distTrip'" class="info-tooltip">
-            Min / average / max distance of one completed trip in the selected period.
-          </span>
-        </p>
-
-        <TripRangeChart
-          label="Distance per trip"
-          unit="km"
-          :min="Number(tripDistanceStats.min.toFixed(2))"
-          :avg="Number(tripDistanceStats.avg.toFixed(2))"
-          :max="Number(tripDistanceStats.max.toFixed(2))"
-          :height="120"
-        />
-      </div>
-
-      <div class="box box5">
-        <p class="metric-title">
-          <strong>Delivery time per trip</strong>
-          <button class="info-icon" type="button" @click.stop="toggleInfo('timeTrip')" aria-label="Info about delivery time per trip">i</button>
-          <span v-if="openInfo === 'timeTrip'" class="info-tooltip">
-            Min / average / max delivery time (pickup → dropoff) for completed trips in the selected period.
-          </span>
-        </p>
-
-        <TripRangeChart
-          label="Delivery time per trip"
-          unit="min"
-          :min="Math.round(tripDeliveryTimeStats.min)"
-          :avg="Math.round(tripDeliveryTimeStats.avg)"
-          :max="Math.round(tripDeliveryTimeStats.max)"
-          :height="120"
-        />
-      </div>
-
-      <div class="box box6" v-if="mode === 'total'">
-        <p class="box5-title"><strong>Most Used Devices</strong></p>
-        <DeviceChart
-          :height="200"
-          :categories="deviceTop3Categories"
-          :counts="deviceTop3Counts"
-        />
-      </div>
-    </div>
-
+          <TripRangeChart
+            label="Distance per trip"
+            unit="km"
+            :min="Number(tripDistanceStats.min.toFixed(2))"
+            :avg="Number(tripDistanceStats.avg.toFixed(2))"
+            :max="Number(tripDistanceStats.max.toFixed(2))"
+            :height="120"
+          />
+        </ViewCard>
+        <ViewCard
+          class="box5 mt-3"
+          title="Delivery time per trip"
+          info="Min / average / max delivery time (pickup → dropoff) for completed trips in the selected period."
+        >
+          <TripRangeChart
+            label="Delivery time per trip"
+            unit="min"
+            :min="Math.round(tripDeliveryTimeStats.min)"
+            :avg="Math.round(tripDeliveryTimeStats.avg)"
+            :max="Math.round(tripDeliveryTimeStats.max)"
+            :height="120"
+          />
+        </ViewCard>
+        <ViewCard v-if="mode === 'total'" class="box6 mt-3" title="Most Used Devices">
+          <DeviceChart
+            :height="200"
+            :categories="deviceTop3Categories"
+            :counts="deviceTop3Counts"
+          />
+        </ViewCard>
+      </VCol>
+    </VRow>
   </div>
 </template>
 
@@ -175,6 +100,9 @@ import TopDays from './TopDays.vue'
 import mixin from '@/components/chart/view/mixin'
 import { periodStore } from './store/periodStore'
 import { createTour } from './onboarding/tour'
+import KpiTiles from '../shared/KpiTiles.vue'
+import PeriodToolbar from '../shared/PeriodToolbar.vue'
+import ViewCard from '../shared/ViewCard.vue'
 
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
@@ -192,7 +120,10 @@ export default {
     TopDays,
     TimelineChart,
     TripRangeChart,
-    DeviceChart
+    DeviceChart,
+    KpiTiles,
+    PeriodToolbar,
+    ViewCard
   },
   mixins: [mixin],
   data() {
@@ -210,12 +141,27 @@ export default {
 
       periodReady: false,
       selectedCalendarDate: null,
-      openInfo: null,
       fromCalendarClick: false,
       periodStore
     }
   },
   computed: {
+    kpis() {
+      return [
+        { label: 'Total Earnings', value: `${this.currency} ${this.totalEarnings.toFixed(2)}` },
+        { label: 'Total Hours Worked', value: this.totalHours },
+        { label: 'Number of Deliveries', value: this.deliveryCount }
+      ]
+    },
+
+    periodDescriptions() {
+      return {
+        week: '📅 Week view: See your shifts and key metrics for each day of the week',
+        month: '📆 Month view: Click on any day to view that week',
+        total: '📊 Total view: Your overall statistics and patterns across all time'
+      }
+    },
+
     // periodStore period mode bindings
     mode: {
       get() { return periodStore.mode },
@@ -653,21 +599,6 @@ export default {
     },
 
     /**
-     * De-toggle info tooltip for a given key (e.g. 'distance' or 'avgTime')
-     * @param key
-     */
-    toggleInfo(key) {
-      this.openInfo = this.openInfo === key ? null : key
-    },
-
-    /**
-     * Close any open info tooltip
-     */
-    closeInfo() {
-      this.openInfo = null
-    },
-
-    /**
      * Parse a timestamp that may be in local time (without timezone) or UTC (with 'Z'), returning a dayjs object.
      * If the timestamp ends with 'Z', it's treated as UTC. Otherwise, it's treated as local time.
      * @param ts
@@ -846,353 +777,8 @@ export default {
 </script>
 
 <style scoped>
-.layout-container {
-  display: grid;
-  width: 98%;
-  grid-template-rows: auto 108px 1fr;
-  grid-template-columns: 70% 1fr;
-  gap: 16px;
-  margin-left: 12px;
-  margin-bottom: 24px;
-}
-
-.layout-container > * {
-  min-width: 0;
-}
-
-.period-switch {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-  position: absolute;
-  display: flex;
-  gap: 6px;
-}
-
-.switch-btn {
-  padding: 4px 12px;
-  border: 1px solid #bbb;
-  border-radius: 0;
-  background: #fff;
-  color: #333;
-  cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.switch-btn.active {
-  background: #e6e6e6;
-  font-weight: 600;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,.15);
-}
-
-.period-descriptions {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-  padding-top: 45px;
-  padding-left: 0;
-  margin-top: 0;
-}
-
-.period-desc {
-  font-size: 0.85rem;
-  color: #666;
-  font-weight: 400;
-  margin: 0;
-}
-
-.week-nav {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  height: 32px;
-}
-
-.week-nav-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.nav-btn {
-  padding: 4px 12px;
-  border: 1px solid #bbb;
-  border-radius: 0;
-  background: #fff;
-  cursor: pointer;
-  font-size: 1rem;
-
-  box-shadow: 0 1px 2px rgba(0,0,0,.15);
-
-  transition:
-    background 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.05s ease;
-}
-
-.nav-btn:hover, .switch-btn:hover {
-  background: #f2f2f2;
-  box-shadow:
-    0 3px 1px -2px rgba(0,0,0,.25),
-    0 2px 4px 0 rgba(0,0,0,.20),
-    0 1px 8px 0 rgba(0,0,0,.18);
-  transform: translateY(-1px);
-}
-
-.week-label {
-  width: 240px;
-  padding: 4px 12px;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #bbb;
-}
-
-.week-label.mode-week {
-  background: #e3f2fd;
-  border-color: #2196f377;
-  color: #0d47a1;
-}
-
-.week-label.mode-month {
-  background: #e8f5e9;
-  border-color: #4caf5077;
-  color: #1b5e20;
-}
-
-.week-label.mode-total {
-  width: 324px;
-  background: #fff3e0;
-  border-color: #ff9800bb;
-  color: #e65100;
-}
-
-/* Base box style */
-.box {
-  box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),
-            0 2px 2px 0 rgba(0,0,0,.19),
-            0 1px 5px 0 rgba(0,0,0,.17);
-  border: 1px solid #bbbbbb99;
-  padding: 20px;
-  font-size: 1.2rem;
-}
-
-/* TOP BAR */
-.box1 {
-  grid-column: 1 / 3;
-  grid-row: 2 / 3;
-
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  justify-items: center;
-  align-items: center;
-  padding-bottom: 16px;
-}
-
-/* TIMELINE CHART (bottom left) */
-.box2 {
-  grid-column: 1 / 2;
-  grid-row: 3 / 4;
-  display: flex;
-  flex-direction: column;
-  padding: 16px 20px;
-}
-
-.box2 div {
-  height: 100%;
-}
-
-/* RIGHT COLUMN (bottom right) */
-.right-column {
-  grid-column: 2 / 3;
-  grid-row: 3 / 4;
-  height: 100%;
-  min-height: 0;
-
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.right-column > .box:last-child {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.box3 {
-  padding: 6px 20px;
-}
-
-.box4,
-.box5 {
-  padding: 12px 14px 4px 6px;
-}
-
-.box4,
-.box5,
-.right-column {
-  min-width: 0;
-}
-
-.box4 p,
-.box5 p {
-  padding-left: 14px;
-  padding-right: 20px;
-  margin: 0 !important;
-}
-
-.box4 div,
-.box5 div {
-  margin-top: -12px;
-}
-
-.box3,
-.box4,
-.box5,
-.box6 {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: left;
-  overflow: hidden;
-}
-
-.box3 p,
-.box4 p {
-  margin: 8px 0;
-}
-
-.box5-title {
-  text-align: center;
-  margin: 0;
-  margin-top: 8px;
-}
-
-.box5 {
-  min-width: 0;
-  overflow: hidden;
-}
-
 :deep(.apexcharts-rangebar-area:hover) {
   stroke: #00000066;
   stroke-width: 2px;
-}
-
-.metric-title {
-  display: flex;
-  gap: 8px;
-  position: relative;
-}
-
-.info-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: #ccc;
-  border: 1px solid #999;
-  color: #fff;
-  font-size: 11px;
-  font-weight: bold;
-  line-height: 1;
-  margin-top: 5px;
-  cursor: pointer;
-  padding: 0;
-  appearance: none;
-}
-
-.info-tooltip {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: 6px;
-  padding: 8px 10px;
-  width: max-content;
-  max-width: 220px;
-  background: #333;
-  color: #fff;
-  border-radius: 6px;
-  font-size: 12px;
-  line-height: 1.2;
-  text-align: center;
-  z-index: 20;
-}
-
-.info-icon:hover {
-  background-color: #999;
-}
-
-/* tooltip (will be appended to component root) */
-.ov-tooltip { z-index: 50; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-
-/* small active button */
-.v-btn.active { background-color: #2e7d32 !important; color: white !important; }
-
-/* Mobile layout */
-@media (max-width: 768px) {
-  .layout-container {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    width: 94%;
-  }
-
-  .period-switch {
-    position: static;
-    grid-column: 1 / 2;
-    grid-row: auto;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-
-  .period-descriptions {
-    grid-column: 1 / 2;
-    grid-row: auto;
-    padding-top: 0;
-    margin-top: 0;
-    text-align: center;
-  }
-
-  .week-nav {
-    grid-column: 1 / 2;
-    grid-row: auto;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-
-  .box1 {
-    grid-column: 1 / 2;
-    grid-row: auto;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    text-align: center;
-  }
-
-  .box2 {
-    grid-column: 1 / 2;
-    grid-row: auto;
-  }
-
-  .right-column {
-    grid-column: 1 / 2;
-    grid-row: auto;
-    grid-template-rows: auto;
-  }
-
-  .box3,
-  .box4 {
-    text-align: center;
-  }
-
-  .metric-title {
-    justify-content: center;
-  }
 }
 </style>
