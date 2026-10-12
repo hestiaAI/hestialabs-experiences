@@ -1,4 +1,4 @@
-import experience from '@hestia.ai/babysits'
+import experience from '@hestia.ai/yoojo'
 import FileManager from '~/utils/file-manager'
 import NodeFile from '~/utils/node-file'
 import { getCustomPipelineFromBlock } from '~/utils/test-utils'
@@ -18,7 +18,7 @@ const normalizeDate = (isoDate) => {
   return { y, m, d }
 }
 
-describe('babysits - csv_babysitter_jobs', () => {
+describe('yoojo - csv_yoojo_jobs', () => {
   beforeAll(async() => {
     await fileManager.init([babysitterFile])
   })
@@ -82,5 +82,15 @@ describe('babysits - csv_babysitter_jobs', () => {
 
     expect(item.status).toBe('paid')
     expect(item.category).toBe('Babysitting')
+  })
+})
+
+describe('yoojo - export file name', () => {
+  test('accepts the jobs export of any account', async() => {
+    const otherAccount = new FileManager(preprocessors, null, files, keepOnlyFiles)
+    await otherAccount.init([new NodeFile('export/data_jobs_9876543.csv', babysitterJobsCsv)])
+    const pipeline = getCustomPipelineFromBlock(experience, 'activityTypes')
+    const { items } = await pipeline({ fileManager: otherAccount })
+    expect(items.length).toBeGreaterThan(0)
   })
 })

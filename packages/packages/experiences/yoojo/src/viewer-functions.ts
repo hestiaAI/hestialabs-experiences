@@ -1,11 +1,7 @@
 import type { FileManager } from '@/types/utils'
 
-async function csv_babysitter_jobs({
-  fileManager
-}: {
-  fileManager: FileManager
-}) {
-  const csv = (await fileManager.getCsvItemsFromId('BabysitterJobs'))[0] ?? {
+async function csv_yoojo_jobs({ fileManager }: { fileManager: FileManager }) {
+  const csv = (await fileManager.getCsvItemsFromId('jobs'))[0] ?? {
     headers: [],
     items: []
   }
@@ -93,7 +89,7 @@ async function csv_babysitter_jobs({
 const viewerFunctions = {
   postprocessors: {},
   customPipelines: {
-    csv_babysitter_jobs
+    csv_yoojo_jobs
   }
 }
 

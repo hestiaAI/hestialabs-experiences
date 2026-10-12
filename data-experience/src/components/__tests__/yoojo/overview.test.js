@@ -3,11 +3,11 @@
  */
 
 import { mount } from '@vue/test-utils'
-import { periodStore } from '@/components/chart/view/babysits/store/periodStore'
+import { periodStore } from '@/components/chart/view/yoojo/store/periodStore'
 
 // (MonthlyCalendar is mocked above before importing OverView)
 
-import OverView from '@/components/chart/view/babysits/OverView.vue'
+import OverView from '@/components/chart/view/yoojo/OverView.vue'
 
 /* --------------------------
  * Mocks
@@ -21,15 +21,15 @@ jest.mock('vue-apexcharts', () => ({
   }
 }))
 
-jest.mock('@/components/chart/view/babysits/onboarding/babysitterTour', () => ({
-  createBabysitterTour: jest.fn(() => ({
+jest.mock('@/components/chart/view/yoojo/onboarding/yoojoTour', () => ({
+  createYoojoTour: jest.fn(() => ({
     start: jest.fn(),
     next: jest.fn()
   }))
 }))
 
 // Stub MonthlyCalendar module to avoid rendering complex calendar in unit tests
-jest.mock('@/components/chart/view/babysits/MonthlyCalendar.vue', () => ({
+jest.mock('@/components/chart/view/yoojo/MonthlyCalendar.vue', () => ({
   __esModule: true,
   default: {
     name: 'MonthlyCalendar',
@@ -120,12 +120,12 @@ function mountOverView(props = {}) {
  * Tests
  * -------------------------- */
 
-describe('OverView.vue (babysits) - UI & interactions', () => {
+describe('OverView.vue (yoojo) - UI & interactions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     localStorage.clear()
     // Reset periodStore to default to avoid state leak between tests
-    const { periodStore } = require('@/components/chart/view/babysits/store/periodStore')
+    const { periodStore } = require('@/components/chart/view/yoojo/store/periodStore')
     periodStore.mode = 'month'
     periodStore.periodStart = null
     periodStore.periodEnd = null

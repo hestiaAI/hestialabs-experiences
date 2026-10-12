@@ -1,0 +1,42 @@
+{
+  "title": "Yoojo",
+  "icon": "https://raw.githubusercontent.com/digipower-academy/hestialabs-experiences/master/packages/lib/icons/yoojo.png",
+  "messages": {
+    "en": {
+      "viewBlocks": {}
+    }
+  },
+  "viewBlocks": [
+    {
+      "showTable": false,
+      "id": "shiftTimeline",
+      "customPipeline": "csv_yoojo_jobs",
+      "files": ["jobs"],
+      "visualization": "yoojo/OverView.vue",
+      "title": "Shift Timeline",
+      "text": "Overview of your Yoojo jobs over time."
+    },
+    {
+      "showTable": false,
+      "id": "activityTypes",
+      "customPipeline": "csv_yoojo_jobs",
+      "files": ["jobs"],
+      "visualization": "yoojo/ActivityTypes.vue",
+      "title": "Activity Types",
+      "text": "Activity types over time."
+    },
+    {
+      "showTable": false,
+      "id": "earningsDistribution",
+      "customPipeline": "csv_yoojo_jobs",
+      "files": ["jobs"],
+      "visualization": "yoojo/EarningsDistribution.vue",
+      "title": "Earnings Distribution",
+      "text": "Earnings over time."
+    }
+  ],
+  "dataSamples": [
+    "https://raw.githubusercontent.com/digipower-academy/hestialabs-experiences/master/packages/lib/data-samples/yoojo-sample.zip?contenthash=540b127f5a592687411c4352bef711c935ad41e226822e69ac42fe4d6a3855c6&filename=yoojo-sample.zip"
+  ],
+  "version": 1
+}

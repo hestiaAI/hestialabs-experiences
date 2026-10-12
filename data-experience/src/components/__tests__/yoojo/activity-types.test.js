@@ -3,7 +3,7 @@
  */
 
 import { mount } from '@vue/test-utils'
-import EarningsDistribution from '@/components/chart/view/babysits/EarningsDistribution.vue'
+import ActivityTypes from '@/components/chart/view/yoojo/ActivityTypes.vue'
 
 /* --------------------------
  * Mocks
@@ -29,9 +29,8 @@ const mockPipelineValues = [
     end_time: '11:00',
     job_type: 'babysitting',
     category: 'Garde d\'enfants',
+    nbHours: 2,
     duration_hours: 2,
-    earnings: 40,
-    currency: 'CHF',
     status: 'completed'
   },
   {
@@ -41,21 +40,19 @@ const mockPipelineValues = [
     end_time: '17:00',
     job_type: 'household',
     category: 'Ménage',
+    nbHours: 3,
     duration_hours: 3,
-    earnings: 60,
-    currency: 'CHF',
     status: 'completed'
   },
   {
     job_id: 'job_3',
     date: '2024-01-17',
-    start_time: '22:30',
-    end_time: '23:30',
+    start_time: '10:30',
+    end_time: '13:00',
     job_type: 'babysitting',
     category: 'Garde d\'enfants',
-    duration_hours: 1,
-    earnings: 25,
-    currency: 'CHF',
+    nbHours: 2.5,
+    duration_hours: 2.5,
     status: 'completed'
   }
 ]
@@ -64,18 +61,16 @@ const mockPipelineValues = [
  * Helpers
  * -------------------------- */
 
-function mountEarningsDistribution(props = {}) {
-  return mount(EarningsDistribution, {
+function mountActivityTypes(props = {}) {
+  return mount(ActivityTypes, {
     props: {
       values: mockPipelineValues,
       ...props
     },
     global: {
       stubs: {
-        ApexChart: true,
-        EarningsByDay: true,
-        TotalStackedBar: true,
-        EarningsPerHourBar: true
+        HeatmapChart: true,
+        HorizontalBarChart: true
       }
     }
   })
@@ -85,17 +80,17 @@ function mountEarningsDistribution(props = {}) {
  * Tests
  * -------------------------- */
 
-describe('EarningsDistribution.vue - UI & interactions', () => {
+describe('ActivityTypes.vue - UI & interactions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     // Reset periodStore between tests
-    const { periodStore } = require('@/components/chart/view/babysits/store/periodStore')
+    const { periodStore } = require('@/components/chart/view/yoojo/store/periodStore')
     periodStore.mode = 'week'
     periodStore.periodStart = null
     periodStore.periodEnd = null
     periodStore.allTimeStart = null
     periodStore.allTimeEnd = null
-    // Initialize period to match test data so week label is predictable
+    // Initialize week period based on test data
     const dayjs = require('dayjs')
     const latest = mockPipelineValues
       .map(v => dayjs(v.date))
@@ -113,7 +108,7 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
    * ------------------------------------------- */
 
   test('renders period switch buttons', () => {
-    const wrapper = mountEarningsDistribution()
+    const wrapper = mountActivityTypes()
     const buttons = wrapper.findAll('.switch-btn')
 
     expect(buttons.length).toBe(3)
@@ -123,15 +118,15 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
   })
 
   test('renders navigation buttons', () => {
-    const wrapper = mountEarningsDistribution()
+    const wrapper = mountActivityTypes()
     const navButtons = wrapper.findAll('.nav-btn')
 
     expect(navButtons.length).toBe(2)
   })
 
-  test('renders earnings distribution header', () => {
-    const wrapper = mountEarningsDistribution()
-    expect(wrapper.text()).toContain('Earnings by Time of Day')
+  test('renders activity types header', () => {
+    const wrapper = mountActivityTypes()
+    expect(wrapper.text()).toContain('Activity Types')
   })
 
   /* ---------------------------------------------
@@ -139,21 +134,21 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
    * ------------------------------------------- */
 
   test('clicking WEEK button does not crash', async() => {
-    const wrapper = mountEarningsDistribution()
+    const wrapper = mountActivityTypes()
     const weekBtn = wrapper.findAll('.switch-btn').at(0)
 
     await expect(weekBtn.trigger('click')).resolves.not.toThrow()
   })
 
   test('clicking MONTH button does not crash', async() => {
-    const wrapper = mountEarningsDistribution()
+    const wrapper = mountActivityTypes()
     const monthBtn = wrapper.findAll('.switch-btn').at(1)
 
     await expect(monthBtn.trigger('click')).resolves.not.toThrow()
   })
 
   test('clicking TOTAL button does not crash', async() => {
-    const wrapper = mountEarningsDistribution()
+    const wrapper = mountActivityTypes()
     const totalBtn = wrapper.findAll('.switch-btn').at(2)
 
     await expect(totalBtn.trigger('click')).resolves.not.toThrow()
@@ -164,7 +159,7 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
    * ------------------------------------------- */
 
   test('prev / next navigation buttons are clickable', async() => {
-    const wrapper = mountEarningsDistribution()
+    const wrapper = mountActivityTypes()
     const navButtons = wrapper.findAll('.nav-btn')
 
     expect(navButtons.length).toBe(2)
@@ -173,24 +168,12 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
     await expect(navButtons.at(1).trigger('click')).resolves.not.toThrow()
   })
 
-  /* ----------- Removed: tests for job list panel - structure changed in new UI --------- */
-
-  test('renders total layout in TOTAL mode', async() => {
-    const wrapper = mountEarningsDistribution()
-
-    // Switch to TOTAL mode
-    await wrapper.findAll('.switch-btn').at(2).trigger('click')
-
-    const totalLayout = wrapper.find('.total-layout')
-    expect(totalLayout.exists()).toBe(true)
-  })
-
   /* ---------------------------------------------
    * Data validation
    * ------------------------------------------- */
 
   test('renders without crashing with empty values', () => {
-    const wrapper = mountEarningsDistribution({
+    const wrapper = mountActivityTypes({
       values: []
     })
 
@@ -198,15 +181,13 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
   })
 
   test('renders without crashing with minimal data', () => {
-    const wrapper = mountEarningsDistribution({
+    const wrapper = mountActivityTypes({
       values: [
         {
           job_id: 'test_1',
           date: '2024-01-15',
-          start_time: '09:00',
-          duration_hours: 1,
-          earnings: 20,
-          currency: 'CHF'
+          job_type: 'babysitting',
+          nbHours: 1
         }
       ]
     })
@@ -219,7 +200,7 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
    * ------------------------------------------- */
 
   test('displays correct label for week period', () => {
-    const wrapper = mountEarningsDistribution()
+    const wrapper = mountActivityTypes()
     const label = wrapper.find('.week-label')
 
     expect(label.exists()).toBe(true)
@@ -227,29 +208,17 @@ describe('EarningsDistribution.vue - UI & interactions', () => {
   })
 
   test('displays date range label for total period', async() => {
-    const wrapper = mountEarningsDistribution()
+    const wrapper = mountActivityTypes()
 
     // Switch to TOTAL mode
     await wrapper.findAll('.switch-btn').at(2).trigger('click')
 
     const label = wrapper.find('.week-label')
     expect(label.exists()).toBe(true)
-    // In total mode, can show either date range or "Entire Period"
+    // In total mode, can show either date range or "Entire Period" if data parsing fails
     const text = label.text()
     expect(
       text === 'Entire Period' || /\d{2}\.\d{2}\.\d{4}\s*-\s*\d{2}\.\d{2}\.\d{4}/.test(text)
     ).toBe(true)
-  })
-
-  test('renders stacked bar chart in TOTAL mode with category data', async() => {
-    const wrapper = mountEarningsDistribution()
-
-    await wrapper.findAll('.switch-btn').at(2).trigger('click')
-
-    const vm = wrapper.vm
-
-    expect(Array.isArray(vm.totalStackedBarSeries)).toBe(true)
-
-    expect(wrapper.find('.total-layout').exists()).toBe(true)
   })
 })

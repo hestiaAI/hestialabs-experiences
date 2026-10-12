@@ -1,6 +1,6 @@
-# Data4Workers Experiences (Uber Eats & Babysits)
+# Data4Workers Experiences (Uber Eats & Yoojo)
 
-This document explains how to run and test the **Uber Eats** and **Babysits** worker experiences developed in the Data4Workers project.
+This document explains how to run and test the **Uber Eats** and **Yoojo** worker experiences developed in the Data4Workers project.
 
 The setup is similar to the main repository setup described in the root [README.md](README.md), but **without the Bubble Server**, since these two experiences do not require it. The Bubble Server remains available for internal use within the main platform but is not needed for running or testing these experiences.
 
@@ -13,7 +13,7 @@ The setup is similar to the main repository setup described in the root [README.
 The visualization components for the experiences are implemented in the [data-experience](data-experience) project:
 
 - [`data-experience/src/components/chart/view/uberEats`](data-experience/src/components/chart/view/uberEats)
-- [`data-experience/src/components/chart/view/babysits`](data-experience/src/components/chart/view/babysits)
+- [`data-experience/src/components/chart/view/yoojo`](data-experience/src/components/chart/view/yoojo)
 
 ---
 
@@ -22,7 +22,7 @@ The visualization components for the experiences are implemented in the [data-ex
 Component tests are located in:
 
 - [`data-experience/src/components/__tests__/uber-eats`](data-experience/src/components/__tests__/uber-eats)
-- [`data-experience/src/components/__tests__/babysits`](data-experience/src/components/__tests__/babysits)
+- [`data-experience/src/components/__tests__/yoojo`](data-experience/src/components/__tests__/yoojo)
 
 These tests verify:
 
@@ -37,7 +37,7 @@ These tests verify:
 Performance and pipeline tests are stored in:
 
 - [`data-experience/src/__tests__/uber-eats`](data-experience/src/__tests__/uber-eats)
-- [`data-experience/src/__tests__/babysits`](data-experience/src/__tests__/babysits)
+- [`data-experience/src/__tests__/yoojo`](data-experience/src/__tests__/yoojo)
 
 These tests validate:
 
@@ -52,12 +52,12 @@ These tests validate:
 The configuration of the experiences is located in the [packages](packages) project:
 
 - [`packages/packages/experiences/uber-eats`](packages/packages/experiences/uber-eats)
-- [`packages/packages/experiences/babysits`](packages/packages/experiences/babysits)
+- [`packages/packages/experiences/yoojo`](packages/packages/experiences/yoojo)
 
 The files:
 
 - `uber-eats-viewer.json`
-- `babysits-viewer.json`
+- `yoojo-viewer.json`
 
 define:
 
@@ -72,7 +72,7 @@ define:
 Data processing is implemented in:
 
 - [`packages/packages/experiences/uber-eats/src/viewer-functions.ts`](packages/packages/experiences/uber-eats/src/viewer-functions.ts)
-- [`packages/packages/experiences/babysits/src/viewer-functions.ts`](packages/packages/experiences/babysits/src/viewer-functions.ts)
+- [`packages/packages/experiences/yoojo/src/viewer-functions.ts`](packages/packages/experiences/yoojo/src/viewer-functions.ts)
 
 These pipelines:
 
@@ -104,7 +104,7 @@ These parts are connected through the experience configuration.
 
 ## Adding New Experiences
 
-The previous sections **Components**, **Experience Configuration**, and **Data Processing Pipelines** provide a brief overview of how the Uber Eats and Babysits experiences were implemented within the existing project structure. These sections give a glimpse of how a new experience can be integrated following the setup and architectural conventions of the repository.
+The previous sections **Components**, **Experience Configuration**, and **Data Processing Pipelines** provide a brief overview of how the Uber Eats and Yoojo experiences were implemented within the existing project structure. These sections give a glimpse of how a new experience can be integrated following the setup and architectural conventions of the repository.
 
 To understand the full architecture of the project and the complete process for creating and integrating a new experience, refer to the following documentation:
 
@@ -172,7 +172,7 @@ npm run dev:app
 ```
 
 # Running Tests
-Run all tests (including Uber Eats and Babysits tests):
+Run all tests (including Uber Eats and Yoojo tests):
 
 ```sh
 cd ../data-experience
@@ -188,15 +188,15 @@ Uber Eats performance tests:
 npm run perf:ubereats
 ```
 
-Babysits performance tests:
+Yoojo performance tests:
 ```sh
-npm run perf:babysits
+npm run perf:yoojo
 ```
 
 # Notes
 
 ## Client-side processing
-The Uber Eats and Babysits experiences run **entirely client-side in the browser**.  
+The Uber Eats and Yoojo experiences run **entirely client-side in the browser**.  
 This means:
 
 - Personal data is processed locally
@@ -223,14 +223,14 @@ See [Node and npm versions](#node-and-npm-versions) above: **Node 22** and **npm
 The experiences can be tested using either:
 
 - sample datasets included in the repository  
-- personal datasets exported from the respective platforms (Uber Eats or Babysits)
+- personal datasets exported from the respective platforms (Uber Eats or Yoojo)
 
 No external data services are required.
 
 ---
 
 ## Development scope
-The Uber Eats and Babysits experiences were implemented as **extensions of the existing Digipower platform**, following the modular architecture of the repository.
+The Uber Eats and Yoojo experiences were implemented as **extensions of the existing Digipower platform**, following the modular architecture of the repository.
 
 Core platform components were not modified, instead the experiences were added through the existing **experience-based extension model**.
 

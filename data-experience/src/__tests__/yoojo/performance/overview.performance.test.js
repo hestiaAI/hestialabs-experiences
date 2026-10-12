@@ -4,7 +4,13 @@
 
 import { mount } from '@vue/test-utils'
 import dayjs from 'dayjs'
-import ActivityTypes from '@/components/chart/view/babysits/ActivityTypes.vue'
+import OverView from '@/components/chart/view/yoojo/OverView.vue'
+import MonthlyCalendar from '@/components/chart/view/yoojo/MonthlyCalendar.vue'
+
+// Mock the tour
+jest.mock('@/components/chart/view/yoojo/onboarding/yoojoTour', () => ({
+  createYoojoTour: () => ({ start: jest.fn() })
+}))
 
 // Stub ApexCharts
 jest.mock('vue-apexcharts', () => ({
@@ -39,16 +45,17 @@ function generateJobs(count, startDate) {
   return jobs
 }
 
-function mountActivityTypes(jobsCount) {
+function mountOverview(jobsCount) {
   const startDate = dayjs('2023-01-02')
   const jobs = generateJobs(jobsCount, startDate)
 
-  return mount(ActivityTypes, {
+  return mount(OverView, {
     propsData: {
       values: jobs
     },
     stubs: {
-      ApexChart: true
+      ApexChart: true,
+      MonthlyCalendar: true
     }
   })
 }
@@ -59,35 +66,36 @@ function mountActivityTypes(jobsCount) {
 const describeIfPerf =
   process.env.RUN_PERF === 'true' ? describe : describe.skip
 
-describeIfPerf('Babysits ActivityTypes performance test', () => {
+describeIfPerf('Yoojo OverView performance test', () => {
   const cases = [
-    { jobs: 100, max: 250 },
-    { jobs: 500, max: 450 },
-    { jobs: 1000, max: 700 },
-    { jobs: 5000, max: 1500 }
+    { jobs: 100, max: 200 },
+    { jobs: 500, max: 400 },
+    { jobs: 1000, max: 600 },
+    { jobs: 5000, max: 3000 }
   ]
 
   cases.forEach(({ jobs, max }) => {
     it(`jobs=${jobs}`, () => {
       const t0 = performance.now()
 
-      const wrapper = mountActivityTypes(jobs)
+      const wrapper = mountOverview(jobs)
       const vm = wrapper.vm
 
       // Force evaluation of heavy computed properties
       void vm.filteredJobs
       void vm.pageJobTypes
       void vm.activityTypeColors
-      void vm.weekHeatmapSeries
-      void vm.activityLegendItems
-      void vm.monthHeatmapSeries
-      void vm.totalTypeSeries
+      void vm.totalEarnings
+      void vm.totalHours
+      void vm.totalJobs
+      void vm.chartSeries
+      void vm.heatmapSeries
 
       const t1 = performance.now()
       const duration = t1 - t0
 
       console.log(
-        `[ActivityTypes] jobs=${jobs} → ${duration.toFixed(2)}ms`
+        `[OverView] jobs=${jobs} → ${duration.toFixed(2)}ms`
       )
 
       expect(duration).toBeLessThan(max)
