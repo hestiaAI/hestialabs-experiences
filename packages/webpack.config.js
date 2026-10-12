@@ -9,9 +9,21 @@ const __dirname = path.dirname(__filename)
 
 const prefixPath = 'packages/experiences'
 const experiencesPath = path.resolve(__dirname, prefixPath)
-const packages = readdirSync(experiencesPath, { withFileTypes: true })
+const allPackages = readdirSync(experiencesPath, { withFileTypes: true })
   .filter(dirent => dirent.isDirectory())
   .map(dirent => dirent.name)
+
+// EXPERIENCES=yoojo,uber-eats builds only those experiences, for quick local
+// iteration. `npm test` validates every experience, so it needs a full build.
+const only = (process.env.EXPERIENCES || '')
+  .split(',')
+  .map(name => name.trim())
+  .filter(Boolean)
+const unknown = only.filter(name => !allPackages.includes(name))
+if (unknown.length) {
+  throw new Error(`EXPERIENCES: unknown experience(s): ${unknown.join(', ')}`)
+}
+const packages = only.length ? only : allPackages
 
 export default {
   externalsPresets: {
