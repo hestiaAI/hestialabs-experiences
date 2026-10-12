@@ -1,14 +1,46 @@
+/*!
+	Copyright (c) 2018 Jed Watson.
+	Licensed under the MIT License (MIT), see
+	http://jedwatson.github.io/classnames
+*/
+
+/**
+ * Takes a string with placeholder variables like `%{smart_count} file selected`
+ * and replaces it with values from options `{smart_count: 5}`
+ *
+ * @license https://github.com/airbnb/polyglot.js/blob/master/LICENSE
+ * taken from https://github.com/airbnb/polyglot.js/blob/master/lib/polyglot.js#L299
+ *
+ * @param {string} phrase that needs interpolation, with placeholders
+ * @param {object} options with values that will be used to replace placeholders
+ * @returns {any[]} interpolated
+ */
+
+
+/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+
+/**
+ * Takes a string with placeholder variables like `%{smart_count} file selected`
+ * and replaces it with values from options `{smart_count: 5}`
+ *
+ * @license https://github.com/airbnb/polyglot.js/blob/master/LICENSE
+ * taken from https://github.com/airbnb/polyglot.js/blob/master/lib/polyglot.js#L299
+ *
+ * @param {string} phrase that needs interpolation, with placeholders
+ * @param {object} options with values that will be used to replace placeholders
+ * @returns {any[]} interpolated
+ */
+
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+
+
 /* @license
 Papa Parse
 v5.3.2
 https://github.com/mholt/PapaParse
 License: MIT
-*/
-
-/*!
-	Copyright (c) 2018 Jed Watson.
-	Licensed under the MIT License (MIT), see
-	http://jedwatson.github.io/classnames
 */
 
 /*!
@@ -92,32 +124,7 @@ PERFORMANCE OF THIS SOFTWARE.
 
 /*! dom-to-image-more 06-09-2022 */
 
-/**
- * Takes a string with placeholder variables like `%{smart_count} file selected`
- * and replaces it with values from options `{smart_count: 5}`
- *
- * @license https://github.com/airbnb/polyglot.js/blob/master/LICENSE
- * taken from https://github.com/airbnb/polyglot.js/blob/master/lib/polyglot.js#L299
- *
- * @param {string} phrase that needs interpolation, with placeholders
- * @param {object} options with values that will be used to replace placeholders
- * @returns {any[]} interpolated
- */
-
 /** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
-
-
-/**
- * Takes a string with placeholder variables like `%{smart_count} file selected`
- * and replaces it with values from options `{smart_count: 5}`
- *
- * @license https://github.com/airbnb/polyglot.js/blob/master/LICENSE
- * taken from https://github.com/airbnb/polyglot.js/blob/master/lib/polyglot.js#L299
- *
- * @param {string} phrase that needs interpolation, with placeholders
- * @param {object} options with values that will be used to replace placeholders
- * @returns {any[]} interpolated
- */
 
 
 /*!
@@ -3314,7 +3321,12 @@ PERFORMANCE OF THIS SOFTWARE.
   \******************************************************************************/
 
 
-/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+/* @license
+Papa Parse
+v5.4.1
+https://github.com/mholt/PapaParse
+License: MIT
+*/
 
 
 /**
@@ -3361,15 +3373,12 @@ PERFORMANCE OF THIS SOFTWARE.
  */
 
 
-/** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
-
-
 /*! shepherd.js 14.5.1 */
 
 
 /* @license
 Papa Parse
-v5.4.1
+v5.3.2
 https://github.com/mholt/PapaParse
 License: MIT
 */
@@ -3388,21 +3397,8 @@ License: MIT
  * MIT Licensed
  */
 
-
-/* @license
-Papa Parse
-v5.3.2
-https://github.com/mholt/PapaParse
-License: MIT
-*/
-
-
-/* @license
-Papa Parse
-v5.3.2
-https://github.com/mholt/PapaParse
-License: MIT
-*/
-
-
-/*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
+/*!
+ * vuex v3.6.2
+ * (c) 2021 Evan You
+ * @license MIT
+ */
