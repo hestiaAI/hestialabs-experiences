@@ -23,10 +23,6 @@ const dataExperienceModule = '@hestia.ai/data-experience'
 if (experiences) {
   if (NODE_ENV === 'production') {
     const { spawnSync } = require('child_process')
-    // const { spawnSync, execSync } = require('child_process')
-    // const npmrcPath = resolve(__dirname, '.npmrc')
-    // const cmd = `echo "//npm.pkg.github.com/:_authToken=$\{HESTIA_OWNER_GITHUB_TOKEN}" >> ${npmrcPath}`
-    // execSync(cmd)
     const experiencePackages = experiences.map(
       packageNameAndTag => `@hestia.ai/${packageNameAndTag}`
     )
