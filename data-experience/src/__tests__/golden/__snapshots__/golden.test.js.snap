@@ -5533,6 +5533,59 @@ Object {
 }
 `;
 
+exports[`yoojo with yoojo-sample.zip view block outputs match the snapshots: effectiveWork 1`] = `
+Object {
+  "count": 10,
+  "firstItems": Array [
+    Object {
+      "bookingRate": 0.25,
+      "category": "",
+      "hoursApplied": 230,
+      "hoursBooked": 74,
+      "jobsApplied": 114,
+      "jobsBooked": 28,
+      "jobsBookedCanceled": 2,
+      "jobsWithoutHours": 40,
+      "scope": "total",
+    },
+    Object {
+      "bookingRate": 0.23,
+      "category": "Animaux",
+      "hoursApplied": 64,
+      "hoursBooked": 27,
+      "jobsApplied": 47,
+      "jobsBooked": 11,
+      "jobsBookedCanceled": 0,
+      "jobsWithoutHours": 38,
+      "scope": "category",
+    },
+    Object {
+      "bookingRate": 0.31,
+      "category": "Ménage",
+      "hoursApplied": 80,
+      "hoursBooked": 29,
+      "jobsApplied": 35,
+      "jobsBooked": 11,
+      "jobsBookedCanceled": 2,
+      "jobsWithoutHours": 0,
+      "scope": "category",
+    },
+  ],
+  "headers": Array [
+    "scope",
+    "category",
+    "jobsApplied",
+    "jobsBooked",
+    "jobsBookedCanceled",
+    "hoursApplied",
+    "hoursBooked",
+    "jobsWithoutHours",
+    "bookingRate",
+  ],
+  "sha256": "43c5324961f68d289e80ef05590248206842db483bad0e0edba120f10fa569a3",
+}
+`;
+
 exports[`yoojo with yoojo-sample.zip view block outputs match the snapshots: shiftTimeline 1`] = `
 Object {
   "count": 65,
