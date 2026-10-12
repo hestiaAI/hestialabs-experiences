@@ -9,6 +9,29 @@
     "fr": {
       "intro": {
         "credits": "Développée par Serhii Moshtakov et Fabian Studer, étudiants de la <a href=\"https://www.fhnw.ch\" target=\"_blank\" rel=\"noopener noreferrer\">Haute école spécialisée du Nord-Ouest de la Suisse (FHNW)</a>, avec le Prof. Anton Fedosov. Améliorée dans le cadre du projet SPARK « Participatory Methodology for AI Accountability in the Gig Economy » (requérante principale : Jessica Pidoux, Université de Neuchâtel)."
+      },
+      "viewBlocks": {
+        "effectiveWork": {
+          "title": "Travail effectif",
+          "text": "Quelle part de vos efforts sur Yoojo devient du travail payé : les missions (et les heures) auxquelles vous avez postulé, comparées à celles qu'un client a réservées, au total et par catégorie. Le taux de réservation est le nombre de missions réservées divisé par le nombre de missions postulées.",
+          "vizProps": {
+            "messages": {
+              "jobsApplied": "Missions postulées",
+              "jobsBooked": "Missions réservées",
+              "bookingRate": "Taux de réservation",
+              "hoursApplied": "Heures postulées",
+              "hoursBooked": "Heures réservées",
+              "jobsTitle": "Missions par catégorie",
+              "hoursTitle": "Heures par catégorie",
+              "applied": "Postulées",
+              "booked": "Réservées",
+              "uncategorised": "Sans catégorie",
+              "definitions": "Chaque mission de l'export compte comme postulée. Une mission compte comme réservée quand le client l'a réservée.",
+              "withoutHours": "{n} missions n'ont pas de nombre d'heures et ne sont pas comptées dans les heures.",
+              "bookedCanceled": "{n} missions réservées ont été annulées ensuite ; elles comptent quand même comme réservées."
+            }
+          }
+        }
       }
     }
   },
@@ -39,6 +62,15 @@
       "visualization": "yoojo/EarningsDistribution.vue",
       "title": "Earnings Distribution",
       "text": "Earnings over time."
+    },
+    {
+      "showTable": false,
+      "id": "effectiveWork",
+      "customPipeline": "yoojo_effective_work",
+      "files": ["jobs"],
+      "visualization": "yoojo/EffectiveWork.vue",
+      "title": "Effective work",
+      "text": "How much of your effort on Yoojo turns into paid work: the jobs (and hours) you applied for, compared with those a client booked, overall and by category. The booking rate is jobs booked divided by jobs applied for."
     }
   ],
   "dataSamples": [
