@@ -24,9 +24,12 @@ npm run setup -- --site    # also dc-dashboard, data-experience library, Nuxt si
 npm test                   # the same checks as CI (.github/workflows/ci.yml)
 ```
 
+Re-running setup is quick: it skips `npm ci` in a folder whose lockfile (and Node version, and `CONFIG_NAME`) hasn't changed, and skips a build whose sources haven't changed. `npm run setup -- --clean` forces everything.
+
 **Done means `npm test` passes and CI is green on the PR.** Run focused checks while iterating:
 
-- one experience's config: `cd packages && npm run build && npm run test:ts-node -- <name>`
+- one experience's config: `cd packages && EXPERIENCES=<name> npm run build && npm run test:ts-node -- <name>` (`EXPERIENCES=a,b` builds only those; `npm test` needs a full build)
+- views, without building anything: `cd packages && npm run dev` (rebuilds on change) and `cd data-experience && npm run dev:app` (http://localhost:8080, hot reload); pick the experience in the dropdown and drop in a sample from `packages/lib/data-samples/`
 - one Jest file: `cd data-experience && npx jest src/__tests__/<name>`
 - lint one file: `cd data-experience && npx eslint <file>`
 - golden tests (every tab's output on sample data, compared with snapshots): `cd data-experience && npm run test:golden`; after an intended change, `npm run test:golden -- -u` and explain the snapshot diff in the PR. See `data-experience/src/__tests__/golden/README.md`.
