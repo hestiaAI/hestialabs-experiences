@@ -1,9 +1,15 @@
 {
   "title": "Uber Eats",
   "icon": "https://raw.githubusercontent.com/hestiaAI/hestialabs-experiences/master/packages/lib/icons/ubereats.png",
+  "credits": "Developed by Serhii Moshtakov and Fabian Studer, students at <a href=\"https://www.fhnw.ch\" target=\"_blank\" rel=\"noopener noreferrer\">FHNW University of Applied Sciences and Arts Northwestern Switzerland</a>, with Prof. Anton Fedosov. Improved under the SPARK project “Participatory Methodology for AI Accountability in the Gig Economy” (Principal Investigator: Jessica Pidoux, University of Neuchâtel).",
   "messages": {
     "en": {
       "viewBlocks": {}
+    },
+    "fr": {
+      "intro": {
+        "credits": "Développée par Serhii Moshtakov et Fabian Studer, étudiants de la <a href=\"https://www.fhnw.ch\" target=\"_blank\" rel=\"noopener noreferrer\">Haute école spécialisée du Nord-Ouest de la Suisse (FHNW)</a>, avec le Prof. Anton Fedosov. Améliorée dans le cadre du projet SPARK « Participatory Methodology for AI Accountability in the Gig Economy » (requérante principale : Jessica Pidoux, Université de Neuchâtel)."
+      }
     }
   },
   "viewBlocks": [
