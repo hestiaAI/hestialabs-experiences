@@ -7,6 +7,10 @@
   "About": "À propos",
   "Available on-demand": "Disponible sur demande",
   "Connected to data space": "Connecté à l'espace de données",
+  "Contributors": "Contributeurs",
+  "contributors": {
+    "intro": "Les personnes et projets qui ont développé et financé ces expériences de données."
+  },
   "Contact us": "Contactez-nous",
   "Data Experience": "Expérience | Expériences",
   "Data Space": "Espace de données | Espaces de données",

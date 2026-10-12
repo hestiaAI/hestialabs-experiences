@@ -43,6 +43,9 @@ export type ViewerOptions = {
   dataPortal?: string
   dataPortalHtml?: string
   dataPortalMessage?: string
+  /** Who built the experience and who funded it (HTML).
+   * Shown on the experience's introduction and the Contributors page. */
+  credits?: string
 
   /**
    * The translations contain multilingual messages

@@ -105,6 +105,11 @@
       "icon": "mdiHelp"
     },
     {
+      "url": "/contributors",
+      "name": "Contributors",
+      "icon": "mdiAccountGroup"
+    },
+    {
       "url": "/privacy",
       "name": "Privacy",
       "icon": "mdiShieldLockOutline"
