@@ -124,7 +124,7 @@ export default {
     include() {
       const { bubble } = this.$route.params
       if (bubble) {
-        return this.config.bubbleConfig[bubble].experiences
+        return this.config.bubbleConfig?.[bubble]?.experiences || []
       }
       return this.config.experiences
     },

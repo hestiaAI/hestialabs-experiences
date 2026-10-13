@@ -59,6 +59,9 @@ export const mutations = {
   setConfig(state, config) {
     state.config = config
   },
+  setBubbleConfig(state, { key, value }) {
+    set(state.config.bubbleConfig, key, value)
+  },
   setExperiences(state, experiences) {
     state.experiences = experiences
   },
@@ -67,7 +70,34 @@ export const mutations = {
   }
 }
 
+function bubbleAPI() {
+  return new BubbleAPI(process.env.apiUrl)
+}
+
 export const actions = {
+  // Fetch a bubble's config the first time one of its pages is opened.
+  // `key` is the route parameter: a bubble name, or name@host for other servers.
+  // Returns the config, or undefined if the bubble is unknown or unavailable.
+  async ensureBubbleConfig({ commit, state }, key) {
+    const { bubbles = [], bubbleConfig = {} } = state.config
+    if (bubbleConfig[key]) {
+      return bubbleConfig[key]
+    }
+    const bubble = bubbles.find(b => bubbleKey(b, process.env.apiUrl) === key)
+    if (!bubble) {
+      return undefined
+    }
+    try {
+      const data = await bubbleAPI().getConfig(bubble)
+      if (data) {
+        commit('setBubbleConfig', { key, value: data })
+      }
+      return data
+    } catch (error) {
+      console.error(error)
+      return undefined
+    }
+  },
   async loadPage({ commit, state }, { pageId }) {
     if (pageId in state.pages) { return }
 
@@ -136,22 +166,23 @@ export const actions = {
       }
 
       if (config.bubbles?.length) {
-        const bubbleAPI = new BubbleAPI(process.env.apiUrl)
+        // Only the bubbles shown on the home page are needed to render it;
+        // the others are fetched when their page is opened (ensureBubbleConfig).
+        // Fetch them in parallel: one slow or failing server must not hold up the rest.
         config.bubbleConfig = {}
-        for (const bubble of config.bubbles) {
-          try {
-            const data = await bubbleAPI.getConfig(bubble)
-            if (data) {
-              // a name on the default server, or a URL (https://<server>/bubbles/<name>)
-              config.bubbleConfig[bubbleKey(bubble, process.env.apiUrl)] = data
-            }
-          } catch (error) {
-            console.error(error)
-            if (error.message === 'Network Error') {
-              // avoid multiple API calls if there is a network error
-              // for instance, when the server is off during development
-              break
-            }
+        const homePage = new Set(config.homePageBubbles || [])
+        const results = await Promise.allSettled(
+          config.bubbles
+            .filter(bubble => homePage.has(bubble))
+            .map(async bubble => [bubble, await bubbleAPI().getConfig(bubble)])
+        )
+        for (const result of results) {
+          if (result.status === 'rejected') {
+            console.error(result.reason)
+          } else if (result.value[1]) {
+            const [bubble, data] = result.value
+            // a name on the default server, or a URL (https://<server>/bubbles/<name>)
+            config.bubbleConfig[bubbleKey(bubble, process.env.apiUrl)] = data
           }
         }
         // homePageBubbles may also use URLs; match them by key
