@@ -33,8 +33,9 @@ Re-running setup is quick: it skips `npm ci` in a folder whose lockfile (and Nod
 - one Jest file: `cd data-experience && npx jest src/__tests__/<name>`
 - lint one file: `cd data-experience && npx eslint <file>`
 - golden tests (every tab's output on sample data, compared with snapshots): `cd data-experience && npm run test:golden`; after an intended change, `npm run test:golden -- -u` and explain the snapshot diff in the PR. See `data-experience/src/__tests__/golden/README.md`.
+- screenshot tests (every tab of the experiences listed in `data-experience/e2e/visual/experiences.spec.js`, in English and French, desktop and phone): `cd data-experience && npm run test:visual`. Needs Docker; runs in CI. After an intended change, `npm run test:visual -- --update-snapshots`. See `data-experience/e2e/README.md`.
 
-Playwright (`data-experience/e2e`) is not in CI yet: it needs `npm run dev:app` in `data-experience` on port 8080 and the bubble server on port 8000. `e2e/fixtures.js` serves CDN assets locally; the Facebook and Google specs still need internet access for the Kepler map (unpkg).
+The other Playwright specs (`data-experience/e2e`) are not in CI yet: they need `npm run dev:app` in `data-experience` on port 8080 and the bubble server on port 8000. `e2e/fixtures.js` serves CDN assets locally; the Facebook and Google specs still need internet access for the Kepler map (unpkg).
 
 ## How an experience works
 
@@ -65,6 +66,7 @@ When you add an experience, also:
 - **Personal data.** Never commit a real person's export unless their consent is recorded. Put real exports for development in `experience-intake/inbox/` (git-ignored). Test fixtures should be synthetic.
 - **Anything that changes what leaves the visitor's browser needs a human reviewer.** That includes the consent form (`UnitConsentForm.vue`), encryption (`utils/encryption.js`), uploads to bubbles (`utils/bubble-api.js`), and new network requests.
 - **Never skip or disable a failing test to get green.** Fix the cause, or report it.
+- **No visual change without an explained screenshot diff.** If a PR changes a screenshot, update it in the same PR and say in the description what changed and why. A refactor (moving logic into a shared layer, switching to shared components) must leave every screenshot unchanged.
 - **Don't edit generated output:** `packages/packages/experiences/*/dist`, `data-experience/dist`, `experiences/dist`.
 - **Don't publish to npm or deploy.** That's done by maintainers (`packages/README.md`, `deploy_digipower.sh`).
 - **Keep changes minimal and in scope.** One goal or fix per PR, and say in the PR how you verified it.

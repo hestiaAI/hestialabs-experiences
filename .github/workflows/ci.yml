@@ -95,3 +95,36 @@ jobs:
             data-experience/package-lock.json
       - run: npm run setup
       - run: npm test
+
+  visual:
+    name: visual (screenshots of every tab)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            packages/package-lock.json
+            data-experience/package-lock.json
+      # the dev app imports every experience package
+      - name: Build packages
+        working-directory: packages
+        run: |
+          npm ci
+          npm run build
+      - working-directory: data-experience
+        run: npm ci
+      # starts the dev app, then compares the screenshots in the Playwright Docker image
+      - run: bash ./scripts/visual-tests.sh
+      - name: Upload the differences
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-differences
+          path: |
+            data-experience/test-results/
+            data-experience/playwright-report/
+            data-experience/visual-dev-app.log
+          retention-days: 14

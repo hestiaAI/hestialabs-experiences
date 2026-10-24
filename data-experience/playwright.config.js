@@ -14,6 +14,8 @@ import { devices } from '@playwright/test'
  */
 const config = {
   testDir: './e2e',
+  /* Screenshot tests have their own config: playwright.visual.config.js */
+  testIgnore: 'visual/**',
   /* Maximum time one test can run for. */
   timeout: 60 * 1000,
   expect: {

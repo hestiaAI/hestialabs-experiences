@@ -29,7 +29,8 @@
     "build:demo": "vue-cli-service build --dest demo ./dev/main.js",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
     "lint:fix": "npx eslint . --ext .js,.vue --fix",
-    "test:golden": "jest src/__tests__/golden"
+    "test:golden": "jest src/__tests__/golden",
+    "test:visual": "bash ../scripts/visual-tests.sh"
   },
   "main": "dist/DataExperience.umd.js",
   "dependencies": {
@@ -77,6 +78,7 @@
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
     "@babel/preset-env": "^7.19.4",
+    "@fontsource/roboto": "5.1.0",
     "@intlify/vue-i18n-loader": "^1.1.0",
     "@mdi/js": "^7.0.96",
     "@playwright/test": "^1.27.1",

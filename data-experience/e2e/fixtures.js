@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs'
 import { createRequire } from 'module'
+import { fileURLToPath } from 'url'
 import { test as base, expect } from '@playwright/test'
 
 const require = createRequire(import.meta.url)
@@ -16,8 +17,27 @@ const cdnAssets = [
     url: /^https:\/\/cdn\.jsdelivr\.net\/npm\/d3-time-format@4\/locale\/([\w-]+)\.json$/,
     path: ([, iso]) => require.resolve(`d3-time-format/locale/${iso}`),
     contentType: 'application/json'
+  },
+  // Sample data, from this checkout rather than from master on GitHub
+  {
+    url: /^https:\/\/raw\.githubusercontent\.com\/hestiaAI\/hestialabs-experiences\/[^/]+\/packages\/lib\/data-samples\/([^?]+)(\?.*)?$/,
+    path: ([, file]) => fileURLToPath(new URL(`../../packages/lib/data-samples/${decodeURIComponent(file)}`, import.meta.url)),
+    contentType: 'application/octet-stream'
+  },
+  // Roboto font files, referenced by the stylesheet below
+  {
+    url: /^https:\/\/fonts\.gstatic\.com\/fontsource\/([\w-]+\.woff2?)$/,
+    path: ([, file]) => require.resolve(`@fontsource/roboto/files/${file}`),
+    contentType: 'font/woff2'
   }
 ]
+
+// Answers the Google Fonts request for Roboto with the same font from @fontsource/roboto,
+// so screenshots render the real font without network access.
+const robotoStylesheet = () => ['100', '300', '400', '500', '700', '900']
+  .map(weight => readFileSync(require.resolve(`@fontsource/roboto/${weight}.css`), 'utf8'))
+  .join('\n')
+  .replaceAll('url(./files/', 'url(https://fonts.gstatic.com/fontsource/')
 
 // Third-party resources the tests don't check (icon font, embedded tutorial videos): answer with an empty body.
 const stubbedUrls = [
@@ -34,6 +54,10 @@ export const test = base.extend({
         headers: { 'access-control-allow-origin': '*' }
       }))
     }
+    await page.route(/^https:\/\/fonts\.googleapis\.com\/css\?family=Roboto/, route => route.fulfill({
+      body: robotoStylesheet(),
+      contentType: 'text/css'
+    }))
     for (const { url, contentType } of stubbedUrls) {
       await page.route(url, route => route.fulfill({ body: '', contentType }))
     }
